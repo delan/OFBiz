@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.4  2001/09/19 08:35:19  jonesde
+ * Initial checkin of refactored entity engine.
+ *
  * Revision 1.3  2001/09/11 09:41:29  jonesde
  * Cleaned up induceKeywords function, removed unneeded helper parameter.
  *
@@ -62,13 +65,13 @@ import org.ofbiz.core.util.*;
  *@version 1.0
  *@created Sep 4, 2001
  */
-public class KeywordSearch {  
+public class KeywordSearch {
   /** Does a product search by keyword using the PRODUCT_KEYWORD table.
    *@param keywordsString A space separated list of keywords with '%' or '*' as wildcards for 0..many characters and '_' or '?' for wildcard for 1 character.
    *@param delegator The delegator to look up the name of the helper/server to get a connection to
    *@return Collection of productId Strings
    */
-  public static Collection productsByKeywords(String keywordsString, GenericDelegator delegator) {
+  public static Collection productsByKeywords(String keywordsString, GenericDelegator delegator, String groupName) {
     if(delegator == null) return null;
     String helperName = null;
     helperName = delegator.getEntityHelperName("ProductKeyword");
@@ -179,14 +182,13 @@ public class KeywordSearch {
     Debug.logInfo("[KeywordSearch] sql=" + sql);
     return sql;
   }
-
+  
   public static String tokens = ";: ,.!?\t\"\'\r\n()[]{}*%<>";
-  public static void induceKeywords(GenericValue product)
-  {
+  public static void induceKeywords(GenericValue product, String groupName) throws GenericEntityException {
     if(product == null) return;
     GenericDelegator delegator = product.getDelegator();
     if(delegator == null) return;
-
+    
     Collection keywords = new TreeSet();
     keywords.add(product.getString("productId").toLowerCase());
     
@@ -197,26 +199,23 @@ public class KeywordSearch {
     if(product.getString("longDescription") != null) strings.add(product.getString("longDescription"));
     
     Iterator strIter = strings.iterator();
-    while(strIter.hasNext())
-    {
+    while(strIter.hasNext()) {
       String str = (String)strIter.next();
-      if(str.length() > 0)
-      {
+      if(str.length() > 0) {
         StringTokenizer tokener = new StringTokenizer(str, tokens, false);
-
-        while(tokener.hasMoreTokens())
-        {
+        
+        while(tokener.hasMoreTokens()) {
           keywords.add(tokener.nextToken().toLowerCase());
         }
       }
     }
     
     Iterator kiter = keywords.iterator();
-    while(kiter.hasNext())
-    {
+    while(kiter.hasNext()) {
       String keyword = (String)kiter.next();
-      try { delegator.create("ProductKeyword", UtilMisc.toMap("productId", product.getString("productId"), "keyword", keyword)); }
-      catch(Exception e) {}
+      GenericValue productKeyword = delegator.makeValue("ProductKeyword", UtilMisc.toMap("productId", product.getString("productId"), "keyword", keyword, "groupName", groupName));
+      if(delegator.findByPrimaryKey(productKeyword.getPrimaryKey()) != null) continue;
+      productKeyword.create();
     }
   }
 }

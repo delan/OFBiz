@@ -114,8 +114,10 @@ public class ProductEvents {
     Double weight = null;
 
     String taxable = request.getParameter("TAXABLE");
-    String showInSearch = request.getParameter("SHOW_IN_SEARCH");
+    String autoCreateKeywords = request.getParameter("AUTO_CREATE_KEYWORDS");
 
+    String groupName = request.getParameter("GROUP_NAME");
+    if(!UtilValidate.isNotEmpty(groupName)) groupName = "default";
 
     if(UtilValidate.isNotEmpty(introductionDateStr))
     {
@@ -175,7 +177,7 @@ public class ProductEvents {
     product.set("weightUomId", weightUomId);
     product.set("weight", weight);
     product.set("taxable", taxable);
-    product.set("showInSearch", showInSearch);
+    product.set("autoCreateKeywords", autoCreateKeywords);
     
     if(UtilValidate.isNotEmpty(primaryProductCategoryId)) {
       product.preStoreOther(delegator.makeValue("ProductCategoryMember", UtilMisc.toMap("productId", productId, "productCategoryId", primaryProductCategoryId)));
@@ -189,7 +191,15 @@ public class ProductEvents {
         request.setAttribute("ERROR_MESSAGE", "Could not create product (write error)");
         return "error";
       }
-      KeywordSearch.induceKeywords(product);
+      if(product != null && !"n".equalsIgnoreCase(product.getString("autoCreateKeywords"))) {
+        try { 
+          KeywordSearch.induceKeywords(product, groupName); 
+        }
+        catch(GenericEntityException e) {
+          request.setAttribute("ERROR_MESSAGE", "Could not create keywords (write error).");
+          return "error";
+        }
+      }
     }
     else if(updateMode.equals("UPDATE")) {
       try { product.store(); }
@@ -198,7 +208,15 @@ public class ProductEvents {
         Debug.logWarning("[ProductEvents.updateProduct] Could not update product (write error); message: " + e.getMessage());
         return "error";
       }
-      KeywordSearch.induceKeywords(product);
+      if(product != null && !"n".equalsIgnoreCase(product.getString("autoCreateKeywords"))) {
+        try { 
+          KeywordSearch.induceKeywords(product, groupName); 
+        }
+        catch(GenericEntityException e) {
+          request.setAttribute("ERROR_MESSAGE", "Could not create keywords (write error).");
+          return "error";
+        }
+      }
     }
     else {
       request.setAttribute("ERROR_MESSAGE", "Specified update mode: \"" + updateMode + "\" is not supported.");
@@ -233,6 +251,8 @@ public class ProductEvents {
 
     String productId = request.getParameter("PRODUCT_ID");
     String keyword = request.getParameter("KEYWORD");
+    String groupName = request.getParameter("GROUP_NAME");
+    if(!UtilValidate.isNotEmpty(groupName)) groupName = "default";
     
     if(!UtilValidate.isNotEmpty(productId)) errMsg += "<li>Product ID is missing.";
     if(!UtilValidate.isNotEmpty(keyword)) errMsg += "<li>Keyword is missing.";
@@ -243,7 +263,7 @@ public class ProductEvents {
     }
     
     if(updateMode.equals("CREATE")) {
-      GenericValue productKeyword = delegator.makeValue("ProductKeyword", UtilMisc.toMap("productId", productId, "keyword", keyword));
+      GenericValue productKeyword = delegator.makeValue("ProductKeyword", UtilMisc.toMap("productId", productId, "keyword", keyword, "groupName", groupName));
       GenericValue newValue = null;
       try { newValue = delegator.findByPrimaryKey(productKeyword.getPrimaryKey()); }
       catch(GenericEntityException e) { Debug.logWarning(e.getMessage()); newValue = null; }
@@ -262,7 +282,7 @@ public class ProductEvents {
     }
     else if(updateMode.equals("DELETE")) {
       GenericValue productKeyword = null;
-      try { productKeyword = delegator.findByPrimaryKey("ProductKeyword", UtilMisc.toMap("productId", productId, "keyword", keyword)); }
+      try { productKeyword = delegator.findByPrimaryKey("ProductKeyword", UtilMisc.toMap("productId", productId, "keyword", keyword, "groupName", groupName)); }
       catch(GenericEntityException e) { Debug.logWarning(e.getMessage()); productKeyword = null; }
       if(productKeyword == null) {
         request.setAttribute("ERROR_MESSAGE", "Could not remove product-keyword (does not exist)");
@@ -311,6 +331,9 @@ public class ProductEvents {
       request.setAttribute("ERROR_MESSAGE", "No Product ID specified, cannot update keywords.");
       return "error";
     }
+
+    String groupName = request.getParameter("GROUP_NAME");
+    if(!UtilValidate.isNotEmpty(groupName)) groupName = "default";
     
     GenericValue product = null;
     try { product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId)); }
@@ -321,7 +344,13 @@ public class ProductEvents {
     }
 
     if(updateMode.equals("CREATE")) {
-      KeywordSearch.induceKeywords(product);
+      try { 
+        KeywordSearch.induceKeywords(product, groupName); 
+      }
+      catch(GenericEntityException e) {
+        request.setAttribute("ERROR_MESSAGE", "Could not create keywords (write error).");
+        return "error";
+      }
     }
     else if(updateMode.equals("DELETE")) {
       try { product.removeRelated("ProductKeyword"); }
@@ -356,6 +385,9 @@ public class ProductEvents {
       return "error";
     }
 
+    String groupName = request.getParameter("GROUP_NAME");
+    if(!UtilValidate.isNotEmpty(groupName)) groupName = "default";
+
     Iterator iterator = null;
     try { iterator = UtilMisc.toIterator(delegator.findAll("Product", null)); }
     catch(GenericEntityException e) { Debug.logWarning(e.getMessage()); iterator = null; }
@@ -363,8 +395,15 @@ public class ProductEvents {
     int numProds = 0;
     while(iterator != null && iterator.hasNext()) {
       GenericValue product = (GenericValue)iterator.next();
-      if(product != null) {
-        KeywordSearch.induceKeywords(product);
+      if(product != null && !"n".equalsIgnoreCase(product.getString("autoCreateKeywords"))) {
+        try { 
+          KeywordSearch.induceKeywords(product, groupName); 
+        }
+        catch(GenericEntityException e) {
+          request.setAttribute("ERROR_MESSAGE", "Could not create keywords (write error).");
+          Debug.logWarning("[ProductEvents.updateAllKeywords] Could nindex product-keyword (write error); message: " + e.getMessage());
+          return "error";
+        }
       }
       numProds++;
     }

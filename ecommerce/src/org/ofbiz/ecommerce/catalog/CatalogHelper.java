@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.23  2001/09/26 03:00:05  jonesde
+ * Started cart assoc prods
+ *
  * Revision 1.22  2001/09/25 23:05:22  jonesde
  * Added cross sell, up sell, and obsolete product association support.
  *
@@ -285,6 +288,19 @@ public class CatalogHelper {
    *@param attributePrefix A prefix to put on each attribute name in the pageContext
    */
   public static void getKeywordSearchProducts(PageContext pageContext, String attributePrefix) {
+    getKeywordSearchProducts(pageContext, attributePrefix, "default");
+  }
+
+  /**
+   * Puts the following into the pageContext attribute list with a prefix if specified:
+   *  searchProductList, keywordString, viewIndex, viewSize, lowIndex, highIndex, listSize
+   * Puts the following into the session attribute list:
+   *  CACHE_SEARCH_RESULTS, CACHE_SEARCH_RESULTS_NAME
+   *@param pageContext The pageContext of the calling JSP
+   *@param attributePrefix A prefix to put on each attribute name in the pageContext
+   *@param groupName The keyword search group name for this search
+   */
+  public static void getKeywordSearchProducts(PageContext pageContext, String attributePrefix, String groupName) {
     GenericDelegator delegator = (GenericDelegator)pageContext.getServletContext().getAttribute("delegator");
     
     int viewIndex = 0;
@@ -305,7 +321,7 @@ public class CatalogHelper {
       Debug.logInfo("-=-=-=-=- curFindString:" + curFindString + " resultArrayName:" + resultArrayName);
       
       //sort by productId (only available sort for now...)
-      Collection unsortedIds = KeywordSearch.productsByKeywords(keywordString, delegator);
+      Collection unsortedIds = KeywordSearch.productsByKeywords(keywordString, delegator, groupName);
       if(unsortedIds != null && unsortedIds.size() > 0) {
         TreeSet productIdTree = new TreeSet(unsortedIds);
         productIds = new ArrayList(productIdTree);

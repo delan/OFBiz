@@ -214,8 +214,8 @@
     </td>
   </tr>
   <tr>
-    <%fieldName = "showInSearch";%><%paramName = "SHOW_IN_SEARCH";%>
-    <td width="26%"><div class="tabletext">Show In Search?</div></td>
+    <%fieldName = "autoCreateKeywords";%><%paramName = "AUTO_CREATE_KEYWORDS";%>
+    <td width="26%"><div class="tabletext">Allow Auto Create Keywords?</div></td>
     <td width="74%">
       <SELECT name='<%=paramName%>'>
         <OPTION><%=UtilFormatOut.checkNull(useValues?product.getString(fieldName):request.getParameter(paramName))%>
