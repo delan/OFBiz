@@ -82,7 +82,7 @@ public class ModelField {
     }
 
     /** DB Names Constructor */
-    public ModelField(GenericDAO.ColumnCheckInfo ccInfo, ModelFieldTypeReader modelFieldTypeReader) {
+    public ModelField(DatabaseUtil.ColumnCheckInfo ccInfo, ModelFieldTypeReader modelFieldTypeReader) {
         this.colName = ccInfo.columnName.toUpperCase();
         this.name = ModelUtil.dbNameToVarName(this.colName);
 

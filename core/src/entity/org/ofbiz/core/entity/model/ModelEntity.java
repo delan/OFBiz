@@ -152,7 +152,7 @@ public class ModelEntity implements Comparable {
         Iterator columns = colList.iterator();
 
         while (columns.hasNext()) {
-            GenericDAO.ColumnCheckInfo ccInfo = (GenericDAO.ColumnCheckInfo) columns.next();
+            DatabaseUtil.ColumnCheckInfo ccInfo = (DatabaseUtil.ColumnCheckInfo) columns.next();
             ModelField newField = new ModelField(ccInfo, modelFieldTypeReader);
 
             this.fields.add(newField);
