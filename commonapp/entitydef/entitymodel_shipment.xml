@@ -282,6 +282,8 @@
       <field name="statusId" type="id-ne"></field>
       <field name="originFacilityId" type="id"></field>
       <field name="destinationFacilityId" type="id"></field>
+      <field name="originContactMechId" type="id"></field>
+      <field name="destinationContactMechId" type="id"></field>
       <field name="primaryOrderId" type="id"></field>
       <field name="partyIdTo" type="id"></field>
       <field name="partyIdFrom" type="id"></field>
@@ -307,6 +309,18 @@
       </relation>
       <relation type="one" fk-name="SHPMNT_DFAC" title="Destination" rel-entity-name="Facility">
         <key-map field-name="destinationFacilityId" rel-field-name="facilityId"/>
+      </relation>
+      <relation type="one-nofk" title="Origin" rel-entity-name="ContactMech">
+        <key-map field-name="originContactMechId" rel-field-name="contactMechId"/>
+      </relation>
+      <relation type="one-nofk" title="Dest" rel-entity-name="ContactMech">
+        <key-map field-name="destinationContactMechId" rel-field-name="contactMechId"/>
+      </relation>
+      <relation type="one" fk-name="SHPMNT_OPAD" title="Origin" rel-entity-name="PostalAddress">
+        <key-map field-name="originContactMechId" rel-field-name="contactMechId"/>
+      </relation>
+      <relation type="one" fk-name="SHPMNT_DPAD" title="Destination" rel-entity-name="PostalAddress">
+        <key-map field-name="destinationContactMechId" rel-field-name="contactMechId"/>
       </relation>
       <relation type="one" fk-name="SHPMNT_PODR" title="Primary" rel-entity-name="OrderHeader">
         <key-map field-name="primaryOrderId" rel-field-name="orderId"/>
@@ -660,6 +674,8 @@
       <field name="deliveryId" type="id"></field>
       <field name="originFacilityId" type="id"></field>
       <field name="destFacilityId" type="id"></field>
+      <field name="originContactMechId" type="id"></field>
+      <field name="destContactMechId" type="id"></field>
       <field name="carrierPartyId" type="id"></field>
       <field name="shipmentMethodTypeId" type="id"></field>
       <field name="actualCost" type="currency-amount"></field>
@@ -689,6 +705,18 @@
       </relation>
       <relation type="one" fk-name="SHPMT_RTSEG_DFAC" title="Dest" rel-entity-name="Facility">
         <key-map field-name="destFacilityId" rel-field-name="facilityId"/>
+      </relation>
+      <relation type="one-nofk" title="Origin" rel-entity-name="ContactMech">
+        <key-map field-name="originContactMechId" rel-field-name="contactMechId"/>
+      </relation>
+      <relation type="one-nofk" title="Dest" rel-entity-name="ContactMech">
+        <key-map field-name="destContactMechId" rel-field-name="contactMechId"/>
+      </relation>
+      <relation type="one" fk-name="SHPMT_RTSEG_OPAD" title="Origin" rel-entity-name="PostalAddress">
+        <key-map field-name="originContactMechId" rel-field-name="contactMechId"/>
+      </relation>
+      <relation type="one" fk-name="SHPMT_RTSEG_DPAD" title="Dest" rel-entity-name="PostalAddress">
+        <key-map field-name="destContactMechId" rel-field-name="contactMechId"/>
       </relation>
       <relation type="one" fk-name="SHPMT_RTSEG_SHMT" rel-entity-name="ShipmentMethodType">
         <key-map field-name="shipmentMethodTypeId"/>

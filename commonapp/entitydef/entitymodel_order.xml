@@ -781,7 +781,6 @@
       <field name="inventoryItemId" type="id-ne"></field>
       <field name="reserveOrderEnumId" type="id-ne"></field>
       <field name="quantity" type="floating-point"></field>
-      <field name="statusId" type="id-ne"></field>
       <field name="reservedDatetime" type="date-time"></field>
       <field name="createdDatetime" type="date-time"></field>
       <prim-key field="orderId"/>
@@ -796,9 +795,6 @@
       </relation>
       <relation type="one" fk-name="ORDER_ITIR_INVITM" rel-entity-name="InventoryItem">
         <key-map field-name="inventoryItemId"/>
-      </relation>
-      <relation type="one" fk-name="ORDER_ITIR_STTS" rel-entity-name="StatusItem">
-        <key-map field-name="statusId"/>
       </relation>
       <relation type="many" rel-entity-name="ItemIssuance">
         <key-map field-name="orderId"/>

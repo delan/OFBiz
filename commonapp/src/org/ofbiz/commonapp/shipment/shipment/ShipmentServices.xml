@@ -105,29 +105,14 @@
         <make-value entity-name="OrderItem" value-name="orderItemLookupPk"/>
         <set-pk-fields value-name="orderItemLookupPk" map-name="parameters"/>
         <find-by-primary-key entity-name="OrderItem" map-name="orderItemLookupPk" value-name="orderItem"/>
+        <!-- get inventoryItem -->
+        <make-value entity-name="InventoryItem" value-name="inventoryItemLookupPk"/>
+        <set-pk-fields value-name="inventoryItemLookupPk" map-name="parameters"/>
+        <find-by-primary-key entity-name="InventoryItem" map-name="inventoryItemLookupPk" value-name="inventoryItem"/>
         
-        <!-- make sure OrderItemInventoryRes is not in the OIIR_CANCELLED status -->
-        <if-compare value="OIIR_CANCELLED" operator="equals" field-name="statusId" map-name="orderItemInventoryRes">
-            <string-to-list string="Not issuing Order Item Inventory Reservation to shipment [${parameters.shipmentId}] because the status is [${orderItemInventoryRes.statusId}] for order [${orderItemInventoryRes.orderId}] order item [${orderItemInventoryRes.orderItemSeqId}] inventoryItem [${orderItemInventoryRes.inventoryItemId}]" list-name="error_list"/>
-        </if-compare>
-        <!-- make sure specified quantity is not greater than reserved quantity left to be issued, ie orderItemInventoryRes.quantity - (total of existing itemIssuance.quantity) -->
-        <get-related list-name="currentItemIssuances" relation-name="ItemIssuance" value-name="orderItemInventoryRes"/>
-        <calculate field-name="totalQuantityIssued"><number value="0"/></calculate>
-        <iterate entry-name="currentItemIssuance" list-name="currentItemIssuances">
-            <calculate field-name="totalQuantityIssued">
-                <calcop operator="add" field-name="totalQuantityIssued">
-                    <calcop operator="get" field-name="quantity" map-name="currentItemIssuance"/>
-                </calcop>
-            </calculate>
-        </iterate>
-        <calculate field-name="quantityLeftToIssue">
-            <calcop operator="subtract">
-                <calcop operator="get" field-name="quantity" map-name="orderItemInventoryRes"/>
-                <calcop operator="get" field-name="totalQuantityIssued"/>
-            </calcop>
-        </calculate>
-        <if-compare-field field-name="parameters.quantity" operator="greater" to-field-name="quantityLeftToIssue" type="Double">
-            <string-to-list string="Not issuing Order Item Inventory Reservation to shipment [${parameters.shipmentId}] because the quantity to issue [${parameters.quantity}] is greater than the quantity left to issue [${quantityLeftToIssue}] for order [${orderItemInventoryRes.orderId}] order item [${orderItemInventoryRes.orderItemSeqId}] inventoryItem [${orderItemInventoryRes.inventoryItemId}]" list-name="error_list"/>
+        <!-- make sure specified quantity is not greater than reserved quantity left to be issued, ie orderItemInventoryRes.quantity -->
+        <if-compare-field field-name="parameters.quantity" operator="greater" to-field-name="orderItemInventoryRes.quantity" type="Double">
+            <string-to-list string="Not issuing Order Item Inventory Reservation to shipment [${parameters.shipmentId}] because the quantity to issue [${parameters.quantity}] is greater than the quantity left to issue [${orderItemInventoryRes.quantity}] for order [${orderItemInventoryRes.orderId}] order item [${orderItemInventoryRes.orderItemSeqId}] inventoryItem [${orderItemInventoryRes.inventoryItemId}]" list-name="error_list"/>
         </if-compare-field>
         <check-errors error-list-name="error_list"/>
         
@@ -165,16 +150,43 @@
         <field-to-field field-name="orderId" map-name="orderItemInventoryRes" to-map-name="itemIssuanceCreate"/>
         <field-to-field field-name="orderItemSeqId" map-name="orderItemInventoryRes" to-map-name="itemIssuanceCreate"/>
         <field-to-field field-name="inventoryItemId" map-name="orderItemInventoryRes" to-map-name="itemIssuanceCreate"/>
-        <call-service service-name="createItemIssuance" in-map-name="itemIssuanceCreate">
-            <result-to-result result-name="itemIssuanceId"/>
+        <call-service service-name="createItemIssuance" in-map-name="itemIssuanceCreate" >
+            <result-to-field result-name="itemIssuanceId"/>
         </call-service>
+        <field-to-result field-name="itemIssuanceId"/>
         
-        <!-- TODO: Add ItemIssuanceRole for party that issues this... -->
+        <!-- make sure the party is in the PACKER role -->
+        <string-to-field string="PACKER" field-name="roleTypeId" map-name="roleCreate"/>
+        <call-service service-name="createPartyRole" break-on-error="false" in-map-name="roleCreate"/>
         
-        <!-- TODO: If we have not issued the full reservation, mark it as picked -->
+        <!-- Add ItemIssuanceRole for party that issues this... -->
+        <env-to-field env-name="itemIssuanceId" map-name="itemIssuanceRoleCreate"/>
+        <field-to-field field-name="partyId" map-name="userLogin" to-map-name="itemIssuanceRoleCreate"/>
+        <string-to-field string="PACKER" field-name="roleTypeId" map-name="itemIssuanceRoleCreate"/>
+        <call-service service-name="createItemIssuanceRole" in-map-name="itemIssuanceRoleCreate"/>
         
-        <!-- TODO: Decrement InventoryItem quantityOnHand -->
+        <!-- decrement quantity still reserved -->
+        <calculate field-name="quantity" map-name="orderItemInventoryRes">
+            <calcop operator="subtract">
+                <calcop operator="get" field-name="quantity" map-name="orderItemInventoryRes"/>
+                <calcop operator="get" field-name="quantity" map-name="parameters"/>
+            </calcop>
+        </calculate>
+        <if-compare value="0" operator="equals" field-name="quantity" map-name="orderItemInventoryRes" type="Double">
+            <remove-value value-name="orderItemInventoryRes"/>
+        <else>
+            <store-value value-name="orderItemInventoryRes"/>
+        </else>
+        </if-compare>
         
+        <!-- Decrement InventoryItem quantityOnHand -->
+        <calculate field-name="quantityOnHand" map-name="inventoryItem">
+            <calcop operator="subtract">
+                <calcop operator="get" field-name="quantityOnHand" map-name="inventoryItem"/>
+                <calcop operator="get" field-name="quantity" map-name="parameters"/>
+            </calcop>
+        </calculate>
+        <store-value value-name="inventoryItem"/>
     </simple-method>
     
     <!-- ShipmentItem services -->

@@ -80,10 +80,8 @@ if (UtilValidate.isNotEmpty(orderId) && shipment != null) {
                 orderItemInventoryResData = new HashMap();
                 orderItemInventoryResData.put("orderItemInventoryRes", orderItemInventoryRes);
                 orderItemInventoryResData.put("itemIssuances", itemIssuances);
-                orderItemInventoryResData.put("resStatus", orderItemInventoryRes.getRelatedOne("StatusItem"));
                 orderItemInventoryResData.put("inventoryItem", orderItemInventoryRes.getRelatedOne("InventoryItem"));
                 orderItemInventoryResData.put("totalQuantityIssued", totalQuantityIssued);
-                orderItemInventoryResData.put("quantityLeftToIssue", quantityLeftToIssue);
                 orderItemInventoryResDatas.add(orderItemInventoryResData);
             }
             
