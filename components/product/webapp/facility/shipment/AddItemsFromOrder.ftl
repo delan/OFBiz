@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003-2004 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -115,19 +115,19 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
                 <td>
                     <div class="tabletext">
                         <#if isSalesOrder>
-                            <#if (totalQuantityIssuedAndReserved != orderItemAndShipGroupAssoc.shipGroupQuantity)><span style="color: red;"><#else><span></#if>
+                            <#if (totalQuantityIssuedAndReserved != orderItemAndShipGroupAssoc.quantity)><span style="color: red;"><#else><span></#if>
                                 [${totalQuantityIssued} + ${totalQuantityReserved} = ${totalQuantityIssuedAndReserved}]
                                 <b>
-                                    <#if (totalQuantityIssuedAndReserved > orderItemAndShipGroupAssoc.shipGroupQuantity)>&gt;<#else><#if (totalQuantityIssuedAndReserved < orderItemAndShipGroupAssoc.shipGroupQuantity)>&lt;<#else>=</#if></#if>
-                                    ${orderItemAndShipGroupAssoc.shipGroupQuantity}
+                                    <#if (totalQuantityIssuedAndReserved > orderItemAndShipGroupAssoc.quantity)>&gt;<#else><#if (totalQuantityIssuedAndReserved < orderItemAndShipGroupAssoc.quantity)>&lt;<#else>=</#if></#if>
+                                    ${orderItemAndShipGroupAssoc.quantity}
                                 </b>
                             </span>
                         <#else>
-                            <#if (totalQuantityIssued > orderItemAndShipGroupAssoc.shipGroupQuantity)><span style="color: red;"><#else><span></#if>
+                            <#if (totalQuantityIssued > orderItemAndShipGroupAssoc.quantity)><span style="color: red;"><#else><span></#if>
                                 ${totalQuantityIssued}
                                 <b>
-                                    <#if (totalQuantityIssued > orderItemAndShipGroupAssoc.shipGroupQuantity)>&gt;<#else><#if (totalQuantityIssued < orderItemAndShipGroupAssoc.shipGroupQuantity)>&lt;<#else>=</#if></#if>
-                                    ${orderItemAndShipGroupAssoc.shipGroupQuantity}
+                                    <#if (totalQuantityIssued > orderItemAndShipGroupAssoc.quantity)>&gt;<#else><#if (totalQuantityIssued < orderItemAndShipGroupAssoc.quantity)>&lt;<#else>=</#if></#if>
+                                    ${orderItemAndShipGroupAssoc.quantity}
                                 </b>
                             </span>
                         </#if>
@@ -139,7 +139,7 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
                     <td><div class="tabletext">&nbsp;</div></td>
                     <td><div class="tabletext">&nbsp;</div></td>
                 <#else>
-                    <#assign quantityNotIssued = orderItemAndShipGroupAssoc.shipGroupQuantity - totalQuantityIssued>
+                    <#assign quantityNotIssued = orderItemAndShipGroupAssoc.quantity - totalQuantityIssued>
                     <#if (quantityNotIssued > 0)>
                         <td>
                             <input type="hidden" name="shipmentId_o_${rowCount}" value="${shipmentId}"/>

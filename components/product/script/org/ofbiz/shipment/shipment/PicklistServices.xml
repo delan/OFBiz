@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
- *  Copyright (c) 2003-2004 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -33,11 +33,11 @@
          + OrderHeader.statusId = ORDER_APPROVED
          + OrderItem.statusId = ITEM_APPROVED
          + total number of orders to pick: limit to X
-         + OrderShipmentPreference.shipmentMethodTypeId = group by
+         + OrderItemShipGroup.shipmentMethodTypeId = group by
          + ShipmentMethodType.sequenceNum = order display of methods by
-         x OrderShipmentPreference.carrierPartyId = group by along with ship method?
-         + OrderShipmentPreference.shipAfterDate is null or <= now
-         + OrderShipmentPreference.maySplit = decide to include based on whether all items available or not
+         x OrderItemShipGroup.carrierPartyId = group by along with ship method?
+         + OrderItemShipGroup.shipAfterDate is null or <= now
+         + OrderItemShipGroup.maySplit = decide to include based on whether all items available or not
          x OrderItemShipGrpInvRes.reservedDatetime = sort by, or by order date?
          + OrderItemShipGrpInvRes.quantityNotAvailable = if not null and not 0, and maySplit is N, exclude whole order
          + OrderItemShipGrpInvRes.pickStartDate = if not null already being picked, set when creating the pick list
@@ -51,8 +51,8 @@
          + orderNeedsStockMoveInfoList
          With each list containing a Map with:
          + orderHeader
-         + orderShipmentPreference
-         + orderItemList
+         + orderItemShipGroup
+         + orderItemAndShipGroupAssocList
          + orderItemShipGrpInvResList
          + orderItemShipGrpInvResInfoList
          Each entry in the orderItemShipGrpInvResInfoList is a Map with:
@@ -74,122 +74,131 @@
         <find-by-and list-name="orderHeaderList" entity-name="OrderHeader" map-name="orderHeaderLkpMp" order-by-list-name="orderHeaderOrdLst"/>
 
         <iterate entry-name="orderHeader" list-name="orderHeaderList">
-            <!-- get the order items and the order item inventory res entries -->
-            <field-to-field field-name="orderId" map-name="orderHeader" to-map-name="orderShipmentPreferenceLkupMap"/>
-            <string-to-field string="_NA_" field-name="orderItemSeqId" map-name="orderShipmentPreferenceLkupMap"/>
-            <find-by-primary-key entity-name="OrderShipmentPreference" map-name="orderShipmentPreferenceLkupMap" value-name="orderShipmentPreference"/>
+            <!-- get all ship groups, and iterate over them for each order -->
+            <entity-and entity-name="OrderItemShipGroup" list-name="orderItemShipGroupList">
+                <field-map field-name="orderId" env-name="orderHeader.orderId"/>
+                <order-by field-name="shipGroupSeqId"/>
+            </entity-and>
 
-            <!-- if a shipmentMethodTypeId was not passed or is the same as the current, then process this order -->
-            <if>
-                <condition>
-                    <and>
-                        <!-- only pick if it is the right shipmentMethodTypeId, if one was passed in -->
-                        <or>
-                            <if-empty field-name="parameters.shipmentMethodTypeId"/>
-                            <if-compare-field field-name="parameters.shipmentMethodTypeId" operator="equals" to-field-name="orderShipmentPreference.shipmentMethodTypeId"/>
-                        </or>
-                        <!-- only pick if now is after the shipAfterDate or the shipAfterDate is empty -->
-                        <or>
-                            <if-empty field-name="orderShipmentPreference.shipAfterDate"/>
-                            <if-compare-field field-name="nowTimestamp" operator="greater-equals" to-field-name="orderShipmentPreference.shipAfterDate"/>
-                        </or>
-                    </and>
-                </condition>
-                <then>
-                    <get-related value-name="orderHeader" relation-name="OrderItemShipGrpInvRes" list-name="orderItemShipGrpInvResList"/>
-                    <string-to-list string="+orderItemSeqId" list-name="orderItemOrdLst"/>
-                    <get-related value-name="orderHeader" relation-name="OrderItem" list-name="orderItemList" order-by-list-name="orderItemOrdLst"/>
-
-                    <!-- only add to picklist if inventory is not available (quantityNotAvailable on OIIR greater than 0) when maySplit is N (wait until all available to ship) -->
-                    <string-to-field string="Y" field-name="pickThisOrder"/>
-                    <string-to-field string="N" field-name="needsStockMove"/>
-                    <string-to-field string="Y" field-name="allPickStarted"/>
-                    <iterate entry-name="orderItemShipGrpInvRes" list-name="orderItemShipGrpInvResList">
-                        <if-compare field-name="pickThisOrder" operator="equals" value="Y">
-                            <get-related-one value-name="orderItemShipGrpInvRes" relation-name="InventoryItem" to-value-name="inventoryItem"/>
-                            <!-- if all orderItemShipGrpInvRes.pickStartDate are set, don't include order as a pick candidate; keep a flag to see -->
-                            <if-empty field-name="orderItemShipGrpInvRes.pickStartDate">
-                                <!-- note that this is separate because we can't really use it as a break condition, must check all of them before any useful information is to be had -->
-                                <string-to-field string="N" field-name="allPickStarted"/>
-
-                                <if>
-                                    <condition>
-                                        <or>
-                                            <!-- check all OIIRs and if quantityNotAvailable is not empty and > 0 for any, don't pick order -->
-                                            <and>
-                                                <if-compare field-name="maySplit"  map-name="orderShipmentPreference" operator="equals" value="N"/>
-                                                <not><if-empty field-name="orderItemShipGrpInvRes.quantityNotAvailable"/></not>
-                                                <if-compare field-name="orderItemShipGrpInvRes.quantityNotAvailable" operator="greater" value="0" type="Double"/>
-                                            </and>
-                                            <!-- make sure the inventoryItem is in the specified facility -->
-                                            <if-compare-field field-name="parameters.facilityId" operator="not-equals" to-field-name="inventoryItem.facilityId"/>
-                                        </or>
-                                    </condition>
-                                    <then>
-                                        <string-to-field string="N" field-name="pickThisOrder"/>
-                                    </then>
-                                    <else>
-                                        <!-- check InventoryItem->FacilityLocation (if exists), if it is of type FLT_BULK set needs stock move to true -->
-                                        <get-related-one value-name="inventoryItem" relation-name="FacilityLocation" to-value-name="facilityLocation"/>
-                                        <if-not-empty field-name="facilityLocation">
-                                            <if-compare field-name="facilityLocation.locationTypeEnumId" operator="equals" value="FLT_BULK">
-                                                <string-to-field string="Y" field-name="needsStockMove"/>
-                                            </if-compare>
-                                        </if-not-empty>
-
-                                        <!-- make the orderItemShipGrpInvResInfo and add it to the orderItemShipGrpInvResInfoList -->
-                                        <env-to-env env-name="orderItemShipGrpInvRes" to-env-name="orderItemShipGrpInvResInfo.orderItemShipGrpInvRes"/>
-                                        <env-to-env env-name="inventoryItem" to-env-name="orderItemShipGrpInvResInfo.inventoryItem"/>
-                                        <env-to-env env-name="facilityLocation" to-env-name="orderItemShipGrpInvResInfo.facilityLocation"/>
-                                        <field-to-list field-name="orderItemShipGrpInvResInfo" list-name="orderItemShipGrpInvResInfoList"/>
-                                        <clear-field field-name="orderItemShipGrpInvResInfo"/>
-                                    </else>
-                                </if>
-                            </if-empty>
-                        </if-compare>
-                    </iterate>
-
-                    <if>
-                        <condition>
-                            <and>
-                                <if-compare field-name="pickThisOrder" operator="equals" value="Y"/>
-                                <if-compare field-name="allPickStarted" operator="equals" value="N"/>
-                            </and>
-                        </condition>
-                        <then>
-                            <!-- make the info map for this orderHeader -->
-                            <env-to-env env-name="orderHeader" to-env-name="orderHeaderInfo.orderHeader"/>
-                            <env-to-env env-name="orderShipmentPreference" to-env-name="orderHeaderInfo.orderShipmentPreference"/>
-                            <env-to-env env-name="orderItemList" to-env-name="orderHeaderInfo.orderItemList"/>
-                            <env-to-env env-name="orderItemShipGrpInvResList" to-env-name="orderHeaderInfo.orderItemShipGrpInvResList"/>
-                            <env-to-env env-name="orderItemShipGrpInvResInfoList" to-env-name="orderHeaderInfo.orderItemShipGrpInvResInfoList"/>
-
-                            <!-- pick now, or needs stock move first? -->
-                            <!-- put in pick or move lists for the given shipmentMethodTypeId -->
-                            <env-to-env env-name="orderShipmentPreference.shipmentMethodTypeId" to-env-name="shipmentMethodTypeId"/>
-                            <if-empty field-name="pickMoveByShipmentMethodInfoMap.${shipmentMethodTypeId}">
-                                <get-related-one value-name="orderShipmentPreference" relation-name="ShipmentMethodType" to-value-name="pickMoveByShipmentMethodInfoMap.${shipmentMethodTypeId}.shipmentMethodType"/>
-                            </if-empty>
-                            <if-compare field-name="needsStockMove" operator="equals" value="Y">
-                                <field-to-list field-name="orderHeaderInfo" list-name="pickMoveByShipmentMethodInfoMap.${shipmentMethodTypeId}.orderNeedsStockMoveInfoList"/>
-                            <else>
-                                <field-to-list field-name="orderHeaderInfo" list-name="pickMoveByShipmentMethodInfoMap.${shipmentMethodTypeId}.orderReadyToPickInfoList"/>
-                            </else>
+            <iterate entry-name="orderItemShipGroup" list-name="orderItemShipGroupList">
+                <!-- get the order items and the order item inventory res entries -->
+                
+                <!-- if a shipmentMethodTypeId was not passed or is the same as the current, then process this order -->
+                <if>
+                    <condition>
+                        <and>
+                            <!-- only pick if it is the right shipmentMethodTypeId, if one was passed in -->
+                            <or>
+                                <if-empty field-name="parameters.shipmentMethodTypeId"/>
+                                <if-compare-field field-name="parameters.shipmentMethodTypeId" operator="equals" to-field-name="orderItemShipGroup.shipmentMethodTypeId"/>
+                            </or>
+                            <!-- only pick if now is after the shipAfterDate or the shipAfterDate is empty -->
+                            <or>
+                                <if-empty field-name="orderItemShipGroup.shipAfterDate"/>
+                                <if-compare-field field-name="nowTimestamp" operator="greater-equals" to-field-name="orderItemShipGroup.shipAfterDate"/>
+                            </or>
+                        </and>
+                    </condition>
+                    <then>
+                        <!-- get only for current OrderItemShipGroup -->
+                        <entity-and entity-name="OrderItemShipGrpInvRes" list-name="orderItemShipGrpInvResList">
+                            <field-map field-name="orderId" env-name="orderItemShipGroup.orderId"/>
+                            <field-map field-name="shipGroupSeqId" env-name="orderItemShipGroup.shipGroupSeqId"/>
+                        </entity-and>
+                        <entity-and entity-name="OrderItemAndShipGroupAssoc" list-name="orderItemAndShipGroupAssocList">
+                            <field-map field-name="orderId" env-name="orderItemShipGroup.orderId"/>
+                            <field-map field-name="shipGroupSeqId" env-name="orderItemShipGroup.shipGroupSeqId"/>
+                            <order-by field-name="+orderItemSeqId"/>
+                        </entity-and>
+    
+                        <!-- only add to picklist if inventory is not available (quantityNotAvailable on OISGIR greater than 0) when maySplit is N (wait until all available to ship) -->
+                        <string-to-field string="Y" field-name="pickThisOrder"/>
+                        <string-to-field string="N" field-name="needsStockMove"/>
+                        <string-to-field string="Y" field-name="allPickStarted"/>
+                        <iterate entry-name="orderItemShipGrpInvRes" list-name="orderItemShipGrpInvResList">
+                            <if-compare field-name="pickThisOrder" operator="equals" value="Y">
+                                <get-related-one value-name="orderItemShipGrpInvRes" relation-name="InventoryItem" to-value-name="inventoryItem"/>
+                                <!-- if all orderItemShipGrpInvRes.pickStartDate are set, don't include order as a pick candidate; keep a flag to see -->
+                                <if-empty field-name="orderItemShipGrpInvRes.pickStartDate">
+                                    <!-- note that this is separate because we can't really use it as a break condition, must check all of them before any useful information is to be had -->
+                                    <string-to-field string="N" field-name="allPickStarted"/>
+    
+                                    <if>
+                                        <condition>
+                                            <or>
+                                                <!-- check all OISGIRs and if quantityNotAvailable is not empty and > 0 for any, don't pick order -->
+                                                <and>
+                                                    <if-compare field-name="maySplit"  map-name="orderItemShipGroup" operator="equals" value="N"/>
+                                                    <not><if-empty field-name="orderItemShipGrpInvRes.quantityNotAvailable"/></not>
+                                                    <if-compare field-name="orderItemShipGrpInvRes.quantityNotAvailable" operator="greater" value="0" type="Double"/>
+                                                </and>
+                                                <!-- make sure the inventoryItem is in the specified facility -->
+                                                <if-compare-field field-name="parameters.facilityId" operator="not-equals" to-field-name="inventoryItem.facilityId"/>
+                                            </or>
+                                        </condition>
+                                        <then>
+                                            <string-to-field string="N" field-name="pickThisOrder"/>
+                                        </then>
+                                        <else>
+                                            <!-- check InventoryItem->FacilityLocation (if exists), if it is of type FLT_BULK set needs stock move to true -->
+                                            <get-related-one value-name="inventoryItem" relation-name="FacilityLocation" to-value-name="facilityLocation"/>
+                                            <if-not-empty field-name="facilityLocation">
+                                                <if-compare field-name="facilityLocation.locationTypeEnumId" operator="equals" value="FLT_BULK">
+                                                    <string-to-field string="Y" field-name="needsStockMove"/>
+                                                </if-compare>
+                                            </if-not-empty>
+    
+                                            <!-- make the orderItemShipGrpInvResInfo and add it to the orderItemShipGrpInvResInfoList -->
+                                            <env-to-env env-name="orderItemShipGrpInvRes" to-env-name="orderItemShipGrpInvResInfo.orderItemShipGrpInvRes"/>
+                                            <env-to-env env-name="inventoryItem" to-env-name="orderItemShipGrpInvResInfo.inventoryItem"/>
+                                            <env-to-env env-name="facilityLocation" to-env-name="orderItemShipGrpInvResInfo.facilityLocation"/>
+                                            <field-to-list field-name="orderItemShipGrpInvResInfo" list-name="orderItemShipGrpInvResInfoList"/>
+                                            <clear-field field-name="orderItemShipGrpInvResInfo"/>
+                                        </else>
+                                    </if>
+                                </if-empty>
                             </if-compare>
-                            <clear-field field-name="orderHeaderInfo"/>
-                        </then>
-                    </if>
-
-                    <clear-field field-name="orderShipmentPreference"/>
-                    <clear-field field-name="orderItemList"/>
-                    <clear-field field-name="orderItemShipGrpInvResInfoList"/>
-                </then>
-            </if>
+                        </iterate>
+    
+                        <if>
+                            <condition>
+                                <and>
+                                    <if-compare field-name="pickThisOrder" operator="equals" value="Y"/>
+                                    <if-compare field-name="allPickStarted" operator="equals" value="N"/>
+                                </and>
+                            </condition>
+                            <then>
+                                <!-- make the info map for this orderHeader -->
+                                <env-to-env env-name="orderHeader" to-env-name="orderHeaderInfo.orderHeader"/>
+                                <env-to-env env-name="orderItemShipGroup" to-env-name="orderHeaderInfo.orderItemShipGroup"/>
+                                <env-to-env env-name="orderItemAndShipGroupAssocList" to-env-name="orderHeaderInfo.orderItemAndShipGroupAssocList"/>
+                                <env-to-env env-name="orderItemShipGrpInvResList" to-env-name="orderHeaderInfo.orderItemShipGrpInvResList"/>
+                                <env-to-env env-name="orderItemShipGrpInvResInfoList" to-env-name="orderHeaderInfo.orderItemShipGrpInvResInfoList"/>
+    
+                                <!-- pick now, or needs stock move first? -->
+                                <!-- put in pick or move lists for the given shipmentMethodTypeId -->
+                                <env-to-env env-name="orderItemShipGroup.shipmentMethodTypeId" to-env-name="shipmentMethodTypeId"/>
+                                <if-empty field-name="pickMoveByShipmentMethodInfoMap.${shipmentMethodTypeId}">
+                                    <get-related-one value-name="orderItemShipGroup" relation-name="ShipmentMethodType" to-value-name="pickMoveByShipmentMethodInfoMap.${shipmentMethodTypeId}.shipmentMethodType"/>
+                                </if-empty>
+                                <if-compare field-name="needsStockMove" operator="equals" value="Y">
+                                    <field-to-list field-name="orderHeaderInfo" list-name="pickMoveByShipmentMethodInfoMap.${shipmentMethodTypeId}.orderNeedsStockMoveInfoList"/>
+                                <else>
+                                    <field-to-list field-name="orderHeaderInfo" list-name="pickMoveByShipmentMethodInfoMap.${shipmentMethodTypeId}.orderReadyToPickInfoList"/>
+                                </else>
+                                </if-compare>
+                                <clear-field field-name="orderHeaderInfo"/>
+                            </then>
+                        </if>
+    
+                        <clear-field field-name="orderItemAndShipGroupAssocList"/>
+                        <clear-field field-name="orderItemShipGrpInvResInfoList"/>
+                    </then>
+                </if>
+            </iterate>
 
             <clear-field field-name="orderHeaderInfo"/>
-            <clear-field field-name="orderShipmentPreference"/>
-            <clear-field field-name="orderShipmentPreferenceLkupMap"/>
-            <clear-field field-name="orderShipmentPreferenceLkupMap"/>
+            <clear-field field-name="orderItemShipGroupList"/>
         </iterate>
 
         <!-- find all ShipmentMethodType in order by sequenceNum, for each one get the value from the pickMoveByShipmentMethodInfoMap and add it to the pickMoveByShipmentMethodInfoList -->
@@ -255,11 +264,11 @@
 
         <iterate entry-name="pickMoveByShipmentMethodInfo" list-name="limitedPickMoveByShipmentMethodInfoList">
             <iterate entry-name="orderReadyToPickInfo" list-name="pickMoveByShipmentMethodInfo.orderReadyToPickInfoList">
-                <iterate entry-name="orderItem" list-name="orderReadyToPickInfo.orderItemList">
-                    <if-compare value="ITEM_APPROVED" operator="equals" field-name="orderItem.statusId">
+                <iterate entry-name="orderItemAndShipGroupAssoc" list-name="orderReadyToPickInfo.orderItemAndShipGroupAssocList">
+                    <if-compare value="ITEM_APPROVED" operator="equals" field-name="orderItemAndShipGroupAssoc.statusId">
                         <calculate field-name="reservedQuantity" type="Double"><number value="0"/></calculate>
 
-                        <field-to-field field-name="orderItemSeqId" map-name="orderItem" to-map-name="itemFilterMap"/>
+                        <field-to-field field-name="orderItemSeqId" map-name="orderItemAndShipGroupAssoc" to-map-name="itemFilterMap"/>
                         <filter-list-by-and to-list-name="perItemResList" map-name="itemFilterMap" list-name="orderReadyToPickInfo.orderItemShipGrpInvResList"/>
                         <iterate entry-name="orderItemShipGrpInvRes" list-name="perItemResList">
                             <field-to-env field-name="inventoryItemId" map-name="orderItemShipGrpInvRes"/>
@@ -275,7 +284,7 @@
                                 <field-to-list field-name="orderItemShipGrpInvRes" list-name="perItemResListValid"/>
 
                                 <field-to-env field-name="${inventoryItemId}" map-name="inventoryItemOrderItems" env-name="inventoryItemOrderItemList"/>
-                                <field-to-list field-name="orderItem" list-name="inventoryItemOrderItemList"/>
+                                <field-to-list field-name="orderItemAndShipGroupAssoc" list-name="inventoryItemOrderItemList"/>
                                 <env-to-field env-name="inventoryItemOrderItemList" field-name="${orderItemShipGrpInvRes.inventoryItemId}" map-name="inventoryItemOrderItems"/>
                                 <clear-field field-name="inventoryItemOrderItemList"/>
                                 <if-not-empty field-name="inventoryItemQuantities.${inventoryItemId}">
@@ -305,9 +314,9 @@
                         </iterate>
 
                         <if-not-empty field-name="perItemResListValid">
-                            <env-to-field env-name="orderItem" map-name="orderItemInfo"/>
+                            <env-to-field env-name="orderItemAndShipGroupAssoc" map-name="orderItemInfo"/>
                             <env-to-field env-name="perItemResListValid" field-name="orderItemShipGrpInvResList" map-name="orderItemInfo"/>
-                            <get-related-one value-name="orderItem" relation-name="Product" to-value-name="orderItemInfo.product"/>
+                            <get-related-one value-name="orderItemAndShipGroupAssoc" relation-name="Product" to-value-name="orderItemInfo.product"/>
                             <field-to-list field-name="orderItemInfo" list-name="orderItemInfoList"/>
                             <clear-field field-name="orderItemInfo"/>
                         </if-not-empty>
@@ -315,7 +324,7 @@
 
                         <!-- warn if wrong inventory has been reserved+issued -->
                         <!-- must include issued items as well, otherwise can't really do an effective check... -->
-                        <get-related value-name="orderItem" relation-name="ItemIssuance" list-name="itemIssuances"/>
+                        <get-related value-name="orderItemAndShipGroupAssoc" relation-name="ItemIssuance" list-name="itemIssuances"/>
                         <calculate field-name="issuedQuantity" type="Double"><number value="0"/></calculate>
                         <iterate entry-name="itemIssuance" list-name="itemIssuances">
                             <calculate field-name="issuedQuantity" type="Double">
@@ -330,8 +339,8 @@
                                 <calcop operator="get" field-name="issuedQuantity"/>
                             </calcop>
                         </calculate>
-                        <if-compare-field field-name="reservedIssuedQuantity" operator="not-equals" to-field-name="orderItem.quantity" type="Double">
-                            <env-to-field env-name="orderItem" map-name="wrongQuantityReserved"/>
+                        <if-compare-field field-name="reservedIssuedQuantity" operator="not-equals" to-field-name="orderItemAndShipGroupAssoc.quantity" type="Double">
+                            <env-to-field env-name="orderItemAndShipGroupAssoc" map-name="wrongQuantityReserved"/>
                             <env-to-field env-name="reservedQuantity" map-name="wrongQuantityReserved"/>
                             <env-to-field env-name="issuedQuantity" map-name="wrongQuantityReserved"/>
                             <env-to-field env-name="reservedIssuedQuantity" map-name="wrongQuantityReserved"/>
@@ -783,12 +792,12 @@
 
         <!-- Start by processing all OrderItemShipGrpInvRes from the origin FacilityLocation, and transfer to target, OrderItem.statusId (approved), orderBy reservedDatetime -->
         <string-to-field string="ITEM_APPROVED" field-name="orderItemStatusId" map-name="findOiirailMap"/>
-        <call-simple-method method-name="processOiirMoveByStatusInline"/>
+        <call-simple-method method-name="processOisgirMoveByStatusInline"/>
         <!-- should only need to pay attention to two statuses: ITEM_APPROVED, ITEM_CREATED, then the rest can go to non-reserved -->
         <string-to-field string="ITEM_CREATED" field-name="orderItemStatusId" map-name="findOiirailMap"/>
-        <call-simple-method method-name="processOiirMoveByStatusInline"/>
+        <call-simple-method method-name="processOisgirMoveByStatusInline"/>
 
-        <!-- Now for any remaining quantity, do a simple, ie non-OIIR, stock move -->
+        <!-- Now for any remaining quantity, do a simple, ie non-OISGIR, stock move -->
         <if-compare field-name="quantityLeftToProcess" operator="greater" value="0" type="Double">
             <!-- find InventoryItems in the origin location with some availableToPromise to move -->
             <field-to-field field-name="productId" map-name="parameters" to-map-name="findIiMap"/>
@@ -799,9 +808,10 @@
             <find-by-and entity-name="InventoryItem" map-name="findIiMap" order-by-list-name="inventoryItemOrderByList" list-name="inventoryItemList"/>
 
             <iterate entry-name="inventoryItem" list-name="inventoryItemList">
-                <!-- for each inventoryItem only process if quantityLeftToProcess > 0 and inventoryItem.availableToPromise > 0 -->
+                <!-- for each inventoryItem only process if quantityLeftToProcess > 0 and inventoryItem.availableToPromiseTotal > 0 -->
                 <if-compare field-name="quantityLeftToProcess" operator="greater" value="0" type="Double">
                     <if-compare field-name="inventoryItem.availableToPromiseTotal" operator="greater" value="0" type="Double">
+                        <!-- set the currentQuantityToMove to the lower of these two values to ensure we don't move too much -->
                         <if-compare-field field-name="quantityLeftToProcess" operator="greater" to-field-name="inventoryItem.availableToPromiseTotal" type="Double">
                             <env-to-env env-name="inventoryItem.availableToPromiseTotal" to-env-name="currentQuantityToMove"/>
                         <else>
@@ -811,7 +821,7 @@
 
                         <!-- create a new InventoryItem for the targetInventoryItem -->
                         <make-value entity-name="InventoryItem" map-name="inventoryItem" value-name="targetInventoryItem"/>
-                        <field-to-field field-name="targetLocationSeqId" map-name="parameters" to-field-name="locationSeqId" to-map-name="targetInventoryItem"/>
+                        <env-to-env env-name="parameters.targetLocationSeqId" to-env-name="targetInventoryItem.locationSeqId"/>
                         <!-- now that targetInventoryItem is populated with quantities, etc, call createInventoryItem service -->
                         <set-service-fields map-name="targetInventoryItem" service-name="createInventoryItem" to-map-name="createInventoryItemMap"/>
                         <call-service service-name="createInventoryItem" in-map-name="createInventoryItemMap">
@@ -835,6 +845,9 @@
                         </calculate>
                         <call-service service-name="createInventoryItemDetail" in-map-name="createDetailMap"/>
                         <clear-field field-name="createDetailMap"/>
+
+                        <refresh-value value-name="targetInventoryItem"/>
+                        <log level="info" message="Just created new targetInventoryItem from non-OISGIR (ie location level based) [${targetInventoryItem}]"/>
                     </if-compare>
                 </if-compare>
             </iterate>
@@ -847,7 +860,7 @@
 
         <field-to-result field-name="warningMessageList"/>
     </simple-method>
-    <simple-method method-name="processOiirMoveByStatusInline" short-description="Inline method to process OIIR stock move for a specific OrderItem.statusId">
+    <simple-method method-name="processOisgirMoveByStatusInline" short-description="Inline method to process OISGIR stock move for a specific OrderItem.statusId">
         <field-to-field field-name="productId" map-name="parameters" to-map-name="findOiirailMap"/>
         <field-to-field field-name="facilityId" map-name="parameters" to-map-name="findOiirailMap"/>
         <field-to-field field-name="locationSeqId" map-name="parameters" to-map-name="findOiirailMap"/>
@@ -856,6 +869,7 @@
         <find-by-and entity-name="OrderItemShipGrpInvResAndItemLocation" map-name="findOiirailMap" order-by-list-name="orderItemShipGrpInvResAndItemLocationOrderByList" list-name="orderItemShipGrpInvResAndItemLocationList"/>
 
         <clear-field field-name="oiirailByInvItemMap"/>
+        <log level="info" message="In processOisgirMoveByStatusInline orderItemShipGrpInvResAndItemLocationList=${orderItemShipGrpInvResAndItemLocationList}"/>
         <iterate entry-name="orderItemShipGrpInvResAndItemLocation" list-name="orderItemShipGrpInvResAndItemLocationList">
             <field-to-list field-name="orderItemShipGrpInvResAndItemLocation" list-name="oiirailByInvItemMap.${orderItemShipGrpInvResAndItemLocation.inventoryItemId}"/>
         </iterate>
@@ -877,7 +891,7 @@
             <if-compare field-name="inventoryItem.inventoryItemTypeId" operator="equals" value="NON_SERIAL_INV_ITEM">
                 <!-- create a new InventoryItem for the targetInventoryItem -->
                 <make-value entity-name="InventoryItem" map-name="inventoryItem" value-name="targetInventoryItem"/>
-                <field-to-field field-name="targetLocationSeqId" map-name="parameters" to-field-name="locationSeqId" to-map-name="targetInventoryItem"/>
+                <env-to-env env-name="parameters.targetLocationSeqId" to-env-name="targetInventoryItem.locationSeqId"/>
                 <!-- now that targetInventoryItem is populated with initial values, call createInventoryItem service -->
                 <set-service-fields map-name="targetInventoryItem" service-name="createInventoryItem" to-map-name="createInventoryItemMap"/>
                 <call-service service-name="createInventoryItem" in-map-name="createInventoryItemMap">
@@ -886,85 +900,140 @@
                 <!-- refresh the value object now that the create has been done -->
                 <refresh-value value-name="targetInventoryItem"/>
                 
+                <!-- if we don't end up setting any detail for this inventory item, then we'll delete it after -->
+                <string-to-field string="N" field-name="haveSetIiDetail"/>
+                
+                <!-- <log level="info" message="Just created new targetInventoryItem from OISGIR [${targetInventoryItem}]"/> -->
+                
                 <!--
                     go through OrderItemShipGrpInvRes and move each one over, starting with the older making
                     sure to stay within quantityOnHand
                 -->
                 <env-to-env env-name="inventoryItem.quantityOnHandTotal" to-env-name="remainingQuantityOnHand"/>
                 <iterate entry-name="orderItemShipGrpInvResAndItemLocation" list-name="orderItemShipGrpInvResAndItemLocationList">
+                    <get-related-one value-name="orderItemShipGrpInvResAndItemLocation" relation-name="OrderItemShipGrpInvRes" to-value-name="orderItemShipGrpInvRes"/>
+                    
                     <!-- see if there is enough physically moved over to move this reservation -->
-                    <if-compare-field field-name="quantityLeftToProcess" operator="greater-equals" to-field-name="orderItemShipGrpInvResAndItemLocation.quantity" type="Double">
-                        <get-related-one value-name="orderItemShipGrpInvResAndItemLocation" relation-name="OrderItemShipGrpInvRes" to-value-name="orderItemShipGrpInvRes"/>
-
-                        <!-- if there aren't enough to move, put this on a list for insufficient quantities and handle later -->
-                        <if>
-                            <condition>
-                                <or>
-                                    <if-empty field-name="remainingQuantityOnHand"/>
-                                    <if-compare-field field-name="orderItemShipGrpInvRes.quantity" operator="greater" to-field-name="remainingQuantityOnHand" type="Double"/>
-                                </or>
-                            </condition>
-                            <then>
-                                <field-to-list field-name="orderItemShipGrpInvRes" list-name="insufficientQuantityOiirList"/>
-                            </then>
-                            <else>
-                                <!-- make a new OIIR value object -->
-                                <make-value entity-name="OrderItemShipGrpInvRes" map-name="orderItemShipGrpInvRes" value-name="targetOrderItemShipGrpInvRes"/>
-                                <field-to-field field-name="inventoryItemId" map-name="targetInventoryItem" to-map-name="targetOrderItemShipGrpInvRes"/>
-
-                                <!-- okay, move it over, start by calculating new QOHs -->
-                                <!-- instead of updating InventoryItem, add an InventoryItemDetail -->
-                                <env-to-env env-name="inventoryItem.inventoryItemId" to-env-name="createDetailMap.inventoryItemId"/>
-                                <env-to-env env-name="targetInventoryItem.inventoryItemId" to-env-name="createTargetDetailMap.inventoryItemId"/>
-                                <calculate field-name="createDetailMap.quantityOnHandDiff" type="Double">
-                                    <calcop field-name="orderItemShipGrpInvRes.quantity" operator="negative"/>
-                                </calculate>
-                                <calculate field-name="createTargetDetailMap.quantityOnHandDiff" type="Double">
-                                    <calcop field-name="orderItemShipGrpInvRes.quantity" operator="get"/>
-                                </calculate>
-
-
-
-                                <!--
-                                    note that nothing needs to be done with the OIIR.quantity because if all is
-                                    balanced the new one should have a zero availableToPromise until the
-                                    ProductFacilityLocation based pre-emptive move is done
-                                -->
-                                <!-- if the OIIR has a quantityNotAvailable, move that over by adding it to the origin, and subtracting it from the target -->
-                                <if-not-empty field-name="orderItemShipGrpInvRes.quantityNotAvailable">
-                                    <if-compare field-name="orderItemShipGrpInvRes.quantityNotAvailable" operator="greater" value="0" type="Double">
-                                        <calculate field-name="createDetailMap.availableToPromiseDiff" type="Double">
-                                            <calcop field-name="orderItemShipGrpInvRes.quantityNotAvailable" operator="get"/>
-                                        </calculate>
-                                        <calculate field-name="createTargetDetailMap.availableToPromiseDiff" type="Double">
-                                            <calcop field-name="orderItemShipGrpInvRes.quantityNotAvailable" operator="negative"/>
-                                        </calculate>
-                                    </if-compare>
-                                </if-not-empty>
-
-                                <call-service service-name="createInventoryItemDetail" in-map-name="createDetailMap"/>
-                                <call-service service-name="createInventoryItemDetail" in-map-name="createTargetDetailMap"/>
-                                <clear-field field-name="createDetailMap"/>
-                                <clear-field field-name="createTargetDetailMap"/>
-
-                                <!-- create the new and remove the old OIIRs -->
-                                <create-value value-name="targetOrderItemShipGrpInvRes"/>
-                                <remove-value value-name="orderItemShipGrpInvRes"/>
-
-                                <!-- deduct the orderItemShipGrpInvRes.quantity from quantityLeftToProcess -->
-                                <calculate field-name="quantityLeftToProcess" type="Double">
-                                    <calcop field-name="quantityLeftToProcess" operator="subtract"><calcop field-name="orderItemShipGrpInvRes.quantity" operator="get"/></calcop>
-                                </calculate>
-                                <calculate field-name="remainingQuantityOnHand" type="Double">
-                                    <calcop field-name="remainingQuantityOnHand" operator="subtract"><calcop field-name="orderItemShipGrpInvRes.quantity" operator="get"/></calcop>
-                                </calculate>
-                            </else>
-                        </if>
+                    <!-- note that we need to check this because if there was a reservation against an 
+                         InventoryItem then the full quantity will be against that item for the given 
+                         OISGIR (reservation), so we would have to split it up
+                    -->
+                    <clear-field field-name="reservedQuantityLeftOver"/>
+                    <if-compare-field field-name="quantityLeftToProcess" operator="less" to-field-name="orderItemShipGrpInvRes.quantity" type="Double">
+                        <!-- the complicated part: can split up the OISGIR (reservation) into two parts, and then transfer the inventory, somewhat complicated... -->
+                        <calculate field-name="reservedQuantityLeftOver" type="Double">
+                            <calcop field-name="orderItemShipGrpInvRes.quantity" operator="get"/>
+                            <calcop field-name="quantityLeftToProcess" operator="negative"/>
+                        </calculate>
+                        
+                        <env-to-env env-name="quantityLeftToProcess" to-env-name="currentQuantityToMove"/>
+                        
+                        <!-- NOTE: we are now handling this scenario, so we'll not log this message
+                        <string-to-field string="WARNING: In process stock move: quantityLeftToProcess [${quantityLeftToProcess}] was &lt; orderItemShipGrpInvRes.quantity [${orderItemShipGrpInvResAndItemLocation.quantity}] for orderItemShipGrpInvRes [${orderItemShipGrpInvRes}], which shouldn't happen from the inventory reservation process and must has happened from a later inventory change; the reservation or other information may need be manually corrected for this stock move to go through." field-name="quantityErrorMessage"/>
+                        <log level="warning" message="${quantityErrorMessage}"/>
+                        -->
+                    <else>
+                        <env-to-env env-name="orderItemShipGrpInvRes.quantity" to-env-name="currentQuantityToMove"/>
+                    </else>
                     </if-compare-field>
-                </iterate>
+                    
+                    <!-- now make sure that the currentQuantityToMove we decided on is not greater than remainingQuantityOnHand... -->
+                    <if-compare-field field-name="currentQuantityToMove" operator="greater" to-field-name="remainingQuantityOnHand">
+                        <env-to-env env-name="remainingQuantityOnHand" to-env-name="currentQuantityToMove"/>
+                    </if-compare-field>
+                    
+                    <!-- now one other little trick: reservedQuantityLeftOver is not empty and if orderItemShipGrpInvRes.quantityNotAvailable is greater than reservedQuantityLeftOver, then the difference should be moved -->
+                    <if>
+                        <condition>
+                            <and>
+                                <not><if-empty field-name="reservedQuantityLeftOver"/></not>
+                                <if-compare-field field-name="orderItemShipGrpInvRes.quantityNotAvailable" operator="greater" to-field-name="reservedQuantityLeftOver" type="Double"/>
+                            </and>
+                        </condition>
+                        <then>
+                            <calculate field-name="quantityNotAvailableToMove">
+                                <calcop field-name="orderItemShipGrpInvRes.quantityNotAvailable" operator="get"/>
+                                <calcop field-name="reservedQuantityLeftOver" operator="negative"/>
+                            </calculate>
+                        </then>
+                        <else>
+                            <env-to-env env-name="orderItemShipGrpInvRes.quantityNotAvailable" to-env-name="quantityNotAvailableToMove"/>
+                        </else>
+                    </if>
 
-                <!-- TODO: something with the insufficientQuantityOiirList, add to warningMessageList -->
-                <!-- <field-to-result field-name="insufficientQuantityOiirList"/> -->
+                    <!-- make a new OISGIR value object -->
+                    <make-value entity-name="OrderItemShipGrpInvRes" map-name="orderItemShipGrpInvRes" value-name="targetOrderItemShipGrpInvRes"/>
+                    <env-to-env env-name="targetInventoryItem.inventoryItemId" to-env-name="targetOrderItemShipGrpInvRes.inventoryItemId"/>
+
+                    <!-- okay, move it over, start by calculating new QOHs; note that don't need to modify the ATP since with an OISGIR that has already been subtracted out, so it shouldn't be subtracted from the source or added to the target -->
+                    <!-- instead of updating InventoryItem, add an InventoryItemDetail -->
+                    <env-to-env env-name="inventoryItem.inventoryItemId" to-env-name="createDetailMap.inventoryItemId"/>
+                    <env-to-env env-name="targetInventoryItem.inventoryItemId" to-env-name="createTargetDetailMap.inventoryItemId"/>
+                    <calculate field-name="createDetailMap.quantityOnHandDiff" type="Double">
+                        <calcop field-name="currentQuantityToMove" operator="negative"/>
+                    </calculate>
+                    <calculate field-name="createTargetDetailMap.quantityOnHandDiff" type="Double">
+                        <calcop field-name="currentQuantityToMove" operator="get"/>
+                    </calculate>
+
+                    <!--
+                        note that nothing needs to be done with the OISGIR.quantity because if all is
+                        balanced the new one should have a zero availableToPromise, of course that is different when a
+                        ProductFacilityLocation based pre-emptive move is done
+                    -->
+                    <!-- if the OISGIR has a quantityNotAvailable, move that over by adding it to the origin, and subtracting it from the target -->
+                    <if-not-empty field-name="orderItemShipGrpInvRes.quantityNotAvailable">
+                        <if-compare field-name="orderItemShipGrpInvRes.quantityNotAvailable" operator="greater" value="0" type="Double">
+                            <calculate field-name="createDetailMap.availableToPromiseDiff" type="Double">
+                                <calcop field-name="quantityNotAvailableToMove" operator="get"/>
+                            </calculate>
+                            <calculate field-name="createTargetDetailMap.availableToPromiseDiff" type="Double">
+                                <calcop field-name="quantityNotAvailableToMove" operator="negative"/>
+                            </calculate>
+                        </if-compare>
+                    </if-not-empty>
+
+                    <call-service service-name="createInventoryItemDetail" in-map-name="createDetailMap"/>
+                    <call-service service-name="createInventoryItemDetail" in-map-name="createTargetDetailMap"/>
+                    <clear-field field-name="createDetailMap"/>
+                    <clear-field field-name="createTargetDetailMap"/>
+
+                    <!-- create the new and remove or update the old OISGIRs -->
+                    <create-value value-name="targetOrderItemShipGrpInvRes"/>
+                    <if-empty field-name="reservedQuantityLeftOver">
+                        <remove-value value-name="orderItemShipGrpInvRes"/>
+                    <else>
+                        <calculate field-name="orderItemShipGrpInvRes.quantity" type="Double">
+                            <calcop field-name="orderItemShipGrpInvRes.quantity" operator="get"/>
+                            <calcop field-name="reservedQuantityLeftOver" operator="negative"/>
+                        </calculate>
+                        <calculate field-name="orderItemShipGrpInvRes.quantityNotAvailable" type="Double">
+                            <calcop field-name="orderItemShipGrpInvRes.quantityNotAvailable" operator="get"/>
+                            <calcop field-name="quantityNotAvailableToMove" operator="negative"/>
+                        </calculate>
+                        <store-value value-name="orderItemShipGrpInvRes"/>
+                    </else>
+                    </if-empty>
+
+                    <string-to-field string="Y" field-name="haveSetIiDetail"/>
+
+                    <!-- deduct the orderItemShipGrpInvRes.quantity from quantityLeftToProcess -->
+                    <calculate field-name="quantityLeftToProcess" type="Double">
+                        <calcop field-name="quantityLeftToProcess" operator="get"/>
+                        <calcop field-name="currentQuantityToMove" operator="negative"/>
+                    </calculate>
+                    <calculate field-name="remainingQuantityOnHand" type="Double">
+                        <calcop field-name="remainingQuantityOnHand" operator="subtract"/>
+                        <calcop field-name="currentQuantityToMove" operator="negative"/>
+                    </calculate>
+                    <!-- part of the following log data prep: <refresh-value value-name="targetInventoryItem"/> -->
+                    <!-- <log level="info" message="Just update targetInventoryItem from OISGIR [${targetInventoryItem}]"/> -->
+                </iterate>
+                
+                <if-compare field-name="haveSetIiDetail" operator="equals" value="N">
+                    <log level="info" message="Did not end up finding an OISGIR that we could move inventory with, so removing targetInventoryItem: ${targetInventoryItem}"/>
+                    <remove-value value-name="targetInventoryItem"/>
+                </if-compare>
             </if-compare>
         </iterate-map>
     </simple-method>
