@@ -8,9 +8,10 @@
     <!-- Thread pool configuration (max/min threads, uses to live and time to live) -->
     <thread-pool send-to-pool="pool"
                  purge-job-days="30"
+                 failed-retry-min="30"
                  ttl="18000000"
                  wait-millis="750"
-                 jobs="3"
+                 jobs="10"
                  min-threads="5"
                  max-threads="20"
                  poll-enabled="true"

@@ -1,5 +1,5 @@
 /*
- * $Id: GenericServiceJob.java,v 1.1 2003/08/17 05:12:38 ajzeneski Exp $
+ * $Id: GenericServiceJob.java,v 1.2 2003/11/05 22:41:55 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -39,7 +39,7 @@ import org.ofbiz.service.ModelService;
  * Generic Service Job - A generic async-service Job.
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> *
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class GenericServiceJob extends AbstractJob {
@@ -95,8 +95,9 @@ public class GenericServiceJob extends AbstractJob {
             LocalDispatcher dispatcher = dctx.getDispatcher();
             Map result = dispatcher.runSync(getServiceName(), getContext());
 
-            if (requester != null)
+            if (requester != null) {
                 requester.receiveResult(result);
+            }
 
             // call the finish method
             finish();
@@ -117,6 +118,8 @@ public class GenericServiceJob extends AbstractJob {
                     } catch (GenericTransactionException te) {
                         Debug.logError(te, "Cannot rollback transaction", module);
                     }
+                    String errorMessage = (String) result.get(ModelService.ERROR_MESSAGE);
+                    failed(new Exception(errorMessage));
                 }
             }
         } catch (Exception e) {            
@@ -129,9 +132,10 @@ public class GenericServiceJob extends AbstractJob {
             } 
             
             // pass the exception back to the requester.
-            if (requester != null)
-                requester.receiveException(e);  
-            
+            if (requester != null) {
+                requester.receiveException(e);
+            }
+
             // call the failed method
             failed(e);         
         }
@@ -153,8 +157,8 @@ public class GenericServiceJob extends AbstractJob {
     }
     
     /**
-     * Method is called when the service fails due to an exception.
-     * @param e Exception thrown by the service engine.
+     * Method is called when the service fails.
+     * @param e Exception
      */
     protected void failed(Exception e) {
         Debug.logError(e, "Async-Service failed.", module);

@@ -1,5 +1,5 @@
 /*
- * $Id: ServiceConfigUtil.java,v 1.4 2003/09/25 20:38:28 ajzeneski Exp $
+ * $Id: ServiceConfigUtil.java,v 1.5 2003/11/05 22:41:55 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -40,7 +40,7 @@ import org.w3c.dom.Element;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.0
  */
 public class ServiceConfigUtil {
@@ -105,5 +105,17 @@ public class ServiceConfigUtil {
             purgeDays = 0;
         }
         return purgeDays;
-    }              
+    }
+
+    public static int getFailedRetryMin() {
+        String minString = getElementAttr("thread-pool", "failed-retry-min");
+        int retryMin = 30;
+        try {
+            retryMin = Integer.parseInt(minString);
+        } catch (NumberFormatException e) {
+            Debug.logError(e, "Unable to parse retry minutes; using default of 30", module);
+            retryMin = 30;
+        }
+        return retryMin;
+    }
 }
