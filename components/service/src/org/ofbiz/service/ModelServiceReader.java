@@ -32,24 +32,23 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.ofbiz.base.config.GenericConfigException;
 import org.ofbiz.base.config.ResourceHandler;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
-import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.base.util.UtilTimer;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.base.util.cache.UtilCache;
-import org.ofbiz.base.util.collections.OrderedMap;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.model.ModelEntity;
 import org.ofbiz.entity.model.ModelField;
 import org.ofbiz.entity.model.ModelFieldType;
+
+import org.apache.commons.collections.map.LinkedMap;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -182,8 +181,7 @@ public class ModelServiceReader {
                             utilTimer.timerString("Before start of service loop in file " + readerURL);
                         } else {
                             utilTimer.timerString("Before start of service loop in " + handler);
-                        }
-                        int servicesLoaded = 0;
+                        }                        ;
 
                         do {
                             if (curChild.getNodeType() == Node.ELEMENT_NODE && "service".equals(curChild.getNodeName())) {
@@ -452,7 +450,7 @@ public class ModelServiceReader {
         }
         
         if (delegator != null && entityName != null) {
-            Map modelParamMap = new OrderedMap();
+            Map modelParamMap = new LinkedMap();
             try {            
                 ModelEntity entity = delegator.getModelEntity(entityName);
                 if (entity == null) {

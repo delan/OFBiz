@@ -37,12 +37,13 @@ import java.util.TreeSet;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.ObjectType;
-import org.ofbiz.base.util.collections.OrderedSet;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.security.Security;
 import org.ofbiz.service.group.GroupModel;
 import org.ofbiz.service.group.GroupServiceModel;
 import org.ofbiz.service.group.ServiceGroupReader;
+
+import org.apache.commons.collections.set.ListOrderedSet;
 
 /**
  * Generic Service Model Class
@@ -115,10 +116,10 @@ public class ModelService {
     public int maxRetry = -1;
 
     /** Set of services this service implements */
-    public Set implServices = new OrderedSet();  
+    public Set implServices = new ListOrderedSet();  
     
     /** Set of override parameters */
-    public Set overrideParameters = new OrderedSet();
+    public Set overrideParameters = new ListOrderedSet();
 
     /** List of permission groups for service invocation */
     public List permissionGroups = new LinkedList();
