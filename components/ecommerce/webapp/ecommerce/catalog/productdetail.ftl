@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.23 $
+ *@version    $Revision: 1.24 $
  *@since      2.1
 -->
 <#-- variable setup -->
@@ -46,7 +46,7 @@ ${requestAttributes.virtualJavaScript?if_exists}
     }
 
     function popupDetail() {
-        var defaultDetailImage = "${firstDetailImage?default("_NONE_")}";
+        var defaultDetailImage = "${firstDetailImage?default(mainDetailImageUrl?default("_NONE_"))}";
         if (defaultDetailImage == null || defaultDetailImage == "null") {
             defaultDetailImage = "_NONE_";
         }

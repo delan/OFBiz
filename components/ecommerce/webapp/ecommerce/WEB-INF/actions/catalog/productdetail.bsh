@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski
  *@author     David E. Jones
- *@version    $Revision: 1.23 $
+ *@version    $Revision: 1.24 $
  *@since      2.1
  */
 
@@ -115,6 +115,13 @@ if (product != null) {
     // make the productContentWrapper
     ProductContentWrapper productContentWrapper = new ProductContentWrapper(product, request);
     request.setAttribute("productContentWrapper", productContentWrapper);
+
+    // get the main detail image (virtual or single product)
+    mainDetailImage = productContentWrapper.get("DETAIL_IMAGE_URL");
+    if (mainDetailImage != null && mainDetailImage.length() > 0) {
+        mainDetailImageUrl = URLEncoder.encode(Base64.base64Encode(mainDetailImage), "UTF-8");
+        context.put("mainDetailImageUrl", mainDetailImageUrl);
+    }
 
     // get next/previous information for category
     categoryId = requestParams.get("category_id");
