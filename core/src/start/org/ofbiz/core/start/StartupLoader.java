@@ -24,30 +24,27 @@
  */
 package org.ofbiz.core.start;
 
-import java.io.File;
-
 /**
- * ServerLoader - Interface for loading server components (http, jms, etc)
+ * StartupLoader - Interface for loading server startup classes
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
   *@version    $Revision$
  * @since      2.2
  */
-public interface StartupContainer {
+public interface StartupLoader {
     
     /**
-     * Start the container
+     * Load a startup class
      * 
-     * @param configFileLocation Location of master OFBiz configuration file
-     * @return true if server started
+     * @param args Startup arguments    
      * @throws StartupException
      */
-    public boolean start(String configFileLocation) throws StartupException;
+    public void load(String args[]) throws StartupException;
 
     /**
      * Stop the container
      *     
      * @throws StartupException
      */
-    public void stop() throws StartupException;
+    public void unload() throws StartupException;
 }

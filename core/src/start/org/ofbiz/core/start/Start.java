@@ -465,6 +465,37 @@ class Configuration {
 
 /* to add
 
+
+    public static void main(String[] args) throws Exception {
+        String firstArg = args.length > 0 ? args[0] : "";
+        
+        if (firstArg.equals("-shutdown")) {
+            System.out.println("Shutting down server : " + Start.shutdown());
+        } else if (firstArg.equals("-start")) {
+            Start.start(args);        
+        } else if (firstArg.equals("-status")) {
+            System.out.println("Current Status : " + Start.status());                               
+        } else if (firstArg.equals("-shutdown")) {
+            System.out.println("Shutting down server : " + Start.shutdown());
+        } else if (firstArg.equals("-help") || firstArg.equals("-?")) {
+            printHelp();
+        } else {
+            printHelp();
+            System.out.println("Error: Invalid Option");            
+        }                
+    }
+    
+    private static void printHelp() {
+        System.out.println("");
+        System.out.println("Usage: java -jar ofbiz.jar [options] [config]");
+        System.out.println("-help, -? ---> This screen");
+        System.out.println("-status -----> Status of the server");
+        System.out.println("-start ------> Start of the server");
+        System.out.println("-shutdown ---> Shutdown the server");               
+    }
+    
+    
+
         try {
             Method shutdownHook = java.lang.Runtime.class.getMethod("addShutdownHook",new Class[] {java.lang.Thread.class});
             Thread hook = new Thread() {
