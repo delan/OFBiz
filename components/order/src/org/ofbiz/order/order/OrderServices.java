@@ -1,5 +1,5 @@
 /*
- * $Id: OrderServices.java,v 1.28 2004/01/15 06:34:29 ajzeneski Exp $
+ * $Id: OrderServices.java,v 1.29 2004/01/22 17:47:24 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -52,7 +52,7 @@ import org.ofbiz.workflow.WfUtil;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.28 $
+ * @version    $Revision: 1.29 $
  * @since      2.0
  */
 
@@ -709,15 +709,15 @@ public class OrderServices {
             while (itemIter.hasNext()) {
                 GenericValue item = (GenericValue) itemIter.next();
                 String statusId = item.getString("statusId");
-                Debug.log("Item Status: " + statusId, module);
+                //Debug.log("Item Status: " + statusId, module);
                 if (!"ITEM_CANCELLED".equals(statusId)) {
-                    Debug.log("Not set to cancel", module);
+                    //Debug.log("Not set to cancel", module);
                     allCanceled = false;
                     if (!"ITEM_COMPLETED".equals(statusId)) {
-                        Debug.log("Not set to complete", module);
+                        //Debug.log("Not set to complete", module);
                         allComplete = false;
                         if (!"ITEM_APPROVED".equals(statusId)) {
-                            Debug.log("Not set to approve", module);
+                            //Debug.log("Not set to approve", module);
                             allApproved = false;
                             break;
                         }
@@ -2297,7 +2297,7 @@ public class OrderServices {
                         // TODO: handle manual refunds (accounts payable)
                     }
 
-                    Debug.log("Finished handing refund payments", module);
+                    //Debug.log("Finished handing refund payments", module);
 
                     // now; for all timestamps
                     Timestamp now = UtilDateTime.nowTimestamp();
@@ -2313,7 +2313,7 @@ public class OrderServices {
                         response.set("paymentId", paymentId);
                     }
 
-                    Debug.log("About to create return response", module);
+                    //Debug.log("About to create return response", module);
 
                     try {
                         delegator.create(response);
@@ -2322,7 +2322,7 @@ public class OrderServices {
                         return ServiceUtil.returnError("Problems creating ReturnItemResponse entity");
                     }
 
-                    Debug.log("Return response created", module);
+                    //Debug.log("Return response created", module);
 
                     // set the response on each item
                     Iterator itemsIter = itemList.iterator();
@@ -2339,7 +2339,7 @@ public class OrderServices {
                         returnStatus.set("returnItemSeqId", item.get("returnItemSeqId"));
                         returnStatus.set("statusDatetime", now);
 
-                        Debug.log("Updating item status", module);
+                        //Debug.log("Updating item status", module);
                         try {
                             item.store();
                             delegator.create(returnStatus);
@@ -2348,13 +2348,13 @@ public class OrderServices {
                             return ServiceUtil.returnError("Problem updating ReturnItem (returnItemResponseId)");
                         }
 
-                        Debug.log("Item status and return status history created", module);
+                        //Debug.log("Item status and return status history created", module);
                     }
                 }
             }
         }
 
-        Debug.log("Finished refund process");
+        //Debug.log("Finished refund process");
         return ServiceUtil.returnSuccess();
     }
 
@@ -2710,8 +2710,8 @@ public class OrderServices {
                     cal.add(Calendar.DAY_OF_YEAR, daysTillCancel);
                     Date cancelDate = cal.getTime();
                     Date nowDate = new Date();
-                    Debug.log("Cancel Date : " + cancelDate, module);
-                    Debug.log("Current Date : " + nowDate, module);
+                    //Debug.log("Cancel Date : " + cancelDate, module);
+                    //Debug.log("Current Date : " + nowDate, module);
                     if (cancelDate.equals(nowDate) || nowDate.after(cancelDate)) {
                         // cancel the order item(s)
                         Map svcCtx = UtilMisc.toMap("orderId", orderId, "statusId", "ITEM_CANCELLED", "userLogin", userLogin);

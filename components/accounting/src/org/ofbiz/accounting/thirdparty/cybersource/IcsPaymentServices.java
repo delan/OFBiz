@@ -1,5 +1,5 @@
 /*
- * $Id: IcsPaymentServices.java,v 1.7 2004/01/21 16:17:57 ajzeneski Exp $
+ * $Id: IcsPaymentServices.java,v 1.8 2004/01/22 17:47:24 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -42,7 +42,7 @@ import com.cybersource.ws.client.axis.AxisFaultException;
  * CyberSource WS Integration Services
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.7 $
+ * @version    $Revision: 1.8 $
  * @since      3.0
  */
 public class IcsPaymentServices {
@@ -221,7 +221,7 @@ public class IcsPaymentServices {
             props.put("keyFilename", keysFile);
         }
         props.put("demo", demo);
-        Debug.logInfo("Created CyberSource Properties : " + props, module);
+        //Debug.logInfo("Created CyberSource Properties : " + props, module);
 
         return props;
     }

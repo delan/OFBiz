@@ -1,5 +1,5 @@
 /*
- * $Id: InvoiceServices.java,v 1.7 2003/12/13 23:50:59 ajzeneski Exp $
+ * $Id: InvoiceServices.java,v 1.8 2004/01/22 17:47:24 ajzeneski Exp $
  *
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -49,7 +49,7 @@ import org.ofbiz.product.product.ProductWorker;
  * InvoiceServices - Services for creating invoices
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
- * @version    $Revision: 1.7 $
+ * @version    $Revision: 1.8 $
  * @since      2.2
  */
 public class InvoiceServices {
@@ -577,7 +577,7 @@ public class InvoiceServices {
 
         // store value objects
         try {
-            Debug.log("Storing : " + toStore, module);
+            //Debug.log("Storing : " + toStore, module);
             delegator.storeAll(toStore);
         } catch (GenericEntityException e) {
             Debug.logError(e, "Problems storing invoice items", module);
@@ -797,8 +797,8 @@ public class InvoiceServices {
 
         if (totalPayments > 0.00) {
             double invoiceTotal = InvoiceWorker.getInvoiceTotal(delegator, invoiceId);
-            Debug.log("Invoice #" + invoiceId + " total: " + invoiceTotal, module);
-            Debug.log("Total payments : " + totalPayments, module);
+            //Debug.log("Invoice #" + invoiceId + " total: " + invoiceTotal, module);
+            //Debug.log("Total payments : " + totalPayments, module);
             if (totalPayments >= invoiceTotal) {
                 // this invoice is paid
                 Map svcCtx = UtilMisc.toMap("statusId", "INVOICE_PAID", "invoiceId", invoiceId, "userLogin", userLogin);
@@ -817,7 +817,7 @@ public class InvoiceServices {
     }
 
     private static double calcHeaderAdj(GenericDelegator delegator, GenericValue adj, String invoiceId, int itemSeqId, List toStore, double divisor, double multiplier, double invoiceQuantity) {
-        Debug.log("Divisor : " + divisor + " / Multiplier: " + multiplier, module);
+        //Debug.log("Divisor : " + divisor + " / Multiplier: " + multiplier, module);
         double adjAmount = 0.00;
         if (adj.get("amount") != null) {
             // pro-rate the amount
