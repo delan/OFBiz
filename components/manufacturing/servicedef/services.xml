@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE services PUBLIC "-//OFBiz//DTD Services Config//EN" "http://www.ofbiz.org/dtds/services.dtd">
+
+<services>
+    <description>Common Application Shared Manufacturing Services</description>
+    <vendor>OFBiz</vendor>
+    <version>1.0</version>
+
+    <!-- Routing services -->
+    <service name="createMachineGroup" engine="simple"
+            location="org/ofbiz/manufacturing/techdata/RoutingSimpleMethods.xml" invoke="createMachineGroup">
+        <description>Create a Machine Group</description>
+        <attribute name="machineGroupId" type="String" mode="IN" optional="false"/>
+        <attribute name="description" type="String" mode="IN" optional="true"/>
+    </service>
+    <service name="updateMachineGroup" engine="simple"
+            location="org/ofbiz/manufacturing/techdata/RoutingSimpleMethods.xml" invoke="updateMachineGroup">
+        <description>Update a Machine Group</description>
+        <attribute name="machineGroupId" type="String" mode="IN" optional="false"/>
+        <attribute name="description" type="String" mode="IN" optional="true"/>
+    </service>
+
+    <service name="createCalendar" engine="simple"
+            location="org/ofbiz/manufacturing/techdata/RoutingSimpleMethods.xml" invoke="createCalendar">
+        <description>Create a calendar</description>
+        <attribute name="calendarId" type="String" mode="IN" optional="false"/>
+        <attribute name="description" type="String" mode="IN" optional="true"/>
+        <attribute name="calendarWeekId" type="String" mode="IN" optional="true"/>
+    </service>
+    <service name="updateCalendar" engine="simple"
+            location="org/ofbiz/manufacturing/techdata/RoutingSimpleMethods.xml" invoke="updateCalendar">
+        <description>Update a calendar</description>
+        <attribute name="calendarId" type="String" mode="IN" optional="false"/>
+        <attribute name="description" type="String" mode="IN" optional="true"/>
+        <attribute name="calendarWeekId" type="String" mode="IN" optional="true"/>
+    </service>
+    
+    <service name="createCalendarExceptionDay" engine="simple"
+            location="org/ofbiz/manufacturing/techdata/RoutingSimpleMethods.xml" invoke="createCalendarExceptionDay">
+        <description>Create a calendar ExceptionDay</description>
+        <attribute name="calendarId" type="String" mode="IN" optional="false"/>
+        <attribute name="description" type="String" mode="IN" optional="true"/>
+        <attribute name="exceptionDateStartTime" type="java.sql.Timestamp" mode="IN" optional="false"/>
+        <attribute name="exceptionCapacity" type="Double" mode="IN" optional="true"/>
+    </service>
+    <service name="updateCalendarExceptionDay" engine="simple"
+            location="org/ofbiz/manufacturing/techdata/RoutingSimpleMethods.xml" invoke="updateCalendarExceptionDay">
+        <description>Update a calendar ExceptionDay</description>
+        <attribute name="calendarId" type="String" mode="IN" optional="false"/>
+        <attribute name="description" type="String" mode="IN" optional="true"/>
+        <attribute name="exceptionDateStartTime" type="java.sql.Timestamp" mode="IN" optional="false"/>
+        <attribute name="exceptionCapacity" type="Double" mode="IN" optional="true"/>
+    </service>
+    <service name="removeCalendarExceptionDay" engine="simple"
+            location="org/ofbiz/manufacturing/techdata/RoutingSimpleMethods.xml" invoke="removeCalendarExceptionDay">
+        <description>Update a calendar ExceptionDay</description>
+        <attribute name="calendarId" type="String" mode="IN" optional="false"/>
+        <attribute name="exceptionDateStartTime" type="java.sql.Timestamp" mode="IN" optional="false"/>
+    </service>
+    
+     <service name="createCalendarExceptionWeek" engine="simple"
+            location="org/ofbiz/manufacturing/techdata/RoutingSimpleMethods.xml" invoke="createCalendarExceptionWeek">
+        <description>Create a Calendar Exception Week</description>
+        <attribute name="calendarId" type="String" mode="IN" optional="false"/>
+        <attribute name="description" type="String" mode="IN" optional="true"/>
+        <attribute name="exceptionDateStart" type="java.sql.Date" mode="IN" optional="false"/>
+        <attribute name="calendarWeekId" type="String" mode="IN" optional="true"/>
+    </service>
+    <service name="updateCalendarExceptionWeek" engine="simple"
+            location="org/ofbiz/manufacturing/techdata/RoutingSimpleMethods.xml" invoke="updateCalendarExceptionWeek">
+        <description>Update a Calendar Exception Week</description>
+        <attribute name="calendarId" type="String" mode="IN" optional="false"/>
+        <attribute name="description" type="String" mode="IN" optional="true"/>
+        <attribute name="exceptionDateStart" type="java.sql.Date" mode="IN" optional="false"/>
+        <attribute name="calendarWeekId" type="String" mode="IN" optional="true"/>
+    </service>
+    <service name="removeCalendarExceptionWeek" engine="simple"
+            location="org/ofbiz/manufacturing/techdata/RoutingSimpleMethods.xml" invoke="removeCalendarExceptionWeek">
+        <description>Remove a Calendar Exception Week</description>
+        <attribute name="calendarId" type="String" mode="IN" optional="false"/>
+        <attribute name="exceptionDateStart" type="java.sql.Date" mode="IN" optional="false"/>
+    </service>
+    
+</services>

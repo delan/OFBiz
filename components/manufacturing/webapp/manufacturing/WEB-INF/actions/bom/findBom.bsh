@@ -1,0 +1,138 @@
+/*
+ *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a 
+ *  copy of this software and associated documentation files (the "Software"), 
+ *  to deal in the Software without restriction, including without limitation 
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+ *  and/or sell copies of the Software, and to permit persons to whom the 
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included 
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ *@author     Andy Zeneski (jaz@ofbiz.org)
+ *@version    $Revision: 1.1 $
+ *@since      2.2
+*/
+
+import java.util.*;
+import java.sql.Timestamp;
+import org.ofbiz.entity.*;
+import org.ofbiz.entity.condition.*;
+import org.ofbiz.base.util.*;
+import org.ofbiz.manufacturing.bom.*;
+
+
+delegator = request.getAttribute("delegator");
+
+
+// get the part types
+bomTypes = delegator.findByAnd("ProductAssocType", UtilMisc.toMap("parentTypeId", "PRODUCT_COMPONENT"), UtilMisc.toList("productAssocTypeId", "description"));
+context.put("bomTypes", bomTypes);
+
+// current selected status
+currentBomTypeId = request.getParameter("partBomTypeId");
+if (currentBomTypeId != null && currentBomTypeId.length() > 0) {
+    currentBomType = delegator.findByPrimaryKeyCache("ProductAssocType", UtilMisc.toMap("productAssocTypeId", currentBomTypeId));
+    context.put("currentPartBomTypeId", currentBomType);
+}
+
+// create the fromDate for calendar
+fromCal = Calendar.getInstance();
+fromCal.setTime(new java.util.Date());
+fromCal.set(Calendar.HOUR_OF_DAY, fromCal.getActualMinimum(Calendar.HOUR_OF_DAY));
+fromCal.set(Calendar.MINUTE, fromCal.getActualMinimum(Calendar.MINUTE));
+fromCal.set(Calendar.SECOND, fromCal.getActualMinimum(Calendar.SECOND));
+fromCal.set(Calendar.MILLISECOND, fromCal.getActualMinimum(Calendar.MILLISECOND));
+fromTs = new Timestamp(fromCal.getTimeInMillis());
+fromStr = fromTs.toString();
+fromStr = fromStr.substring(0, fromStr.indexOf('.'));
+context.put("fromDateStr", fromStr);
+
+
+// get the lookup flag
+lookupFlag = request.getParameter("lookupFlag");
+
+// blank param list
+paramList = "";
+
+bomList = null;
+treeArray = null;
+treeQty = null;
+
+if (lookupFlag != null) {
+    paramList = paramList + "&lookupFlag=" + lookupFlag;
+    lookupErrorMessage = null;   
+    andExprs = new ArrayList();
+    entityName = "PartBom"; 
+           
+    // now do the filtering
+    if (lookupErrorMessage == null) {
+        productId = request.getParameter("productId");
+        partIdFor = request.getParameter("partId");
+        partBomTypeId = request.getParameter("partBomTypeId");
+        fromDate = request.getParameter("fromDate");
+        rootQuantity = request.getParameter("rootQuantity");
+
+        if (fromDate != null && fromDate.length() > 8) {            
+            fromDate = fromDate.trim();
+            if (fromDate.length() < 14) fromDate = fromDate + " " + "00:00:00.000";
+            paramList = paramList + "&fromDate=" + fromDate;
+        }
+
+        if (productId != null && productId.length() > 0) {
+            paramList = paramList + "&productId=" + productId;
+        }
+
+        if (partIdFor != null && partIdFor.length() > 0) {
+            paramList = paramList + "&partId=" + partIdFor;
+        }
+
+        if ((partIdFor != null && partIdFor.length() > 0) ||
+            (productId != null && productId.length() > 0)) {
+        
+            if (partBomTypeId != null) {
+                rootQuantityFloat = 0.0;
+                if (rootQuantity != null && rootQuantity.length() > 0) {
+                    try {
+                        rootQuantityFloat = Float.parseFloat(rootQuantity);
+                    } catch(Exception exc) {
+                        rootQuantity = "1";
+                        rootQuantityFloat = 1.0;
+                    }
+                    paramList = paramList + "&rootQuantity=" + rootQuantity;
+                    
+                }
+
+                paramList = paramList + "&partBomTypeId=" + partBomTypeId;
+
+                tree = new ItemConfigurationTree(productId, partIdFor, partBomTypeId, new Date(), delegator);
+                tree.setRootQuantity((float)rootQuantityFloat);
+                treeArray = new ArrayList();
+                tree.print(treeArray);
+                treeQty = new HashMap();
+                tree.sumQuantities(treeQty);
+            }
+        }
+
+    }
+    
+    context.put("tree", treeArray);
+    context.put("treeQty", treeQty.values());
+    
+    if (lookupErrorMessage != null) {
+        context.put("lookupErrorMessage", lookupErrorMessage);
+    }
+}
+
+context.put("paramList", paramList);
+
