@@ -169,6 +169,7 @@ public final class Debug {
         }
     }
 
+    /** @deprecated */
     public static void log(String msg) {
         log(Debug.ALWAYS, null, msg, noModuleModule);
     }
@@ -177,10 +178,12 @@ public final class Debug {
         log(Debug.ALWAYS, null, msg, module);
     }
 
+    /** @deprecated */
     public static void log(Throwable t) {
         log(Debug.ALWAYS, t, null, noModuleModule);
     }
 
+    /** @deprecated */
     public static void log(Throwable t, String msg) {
         log(Debug.ALWAYS, t, msg, noModuleModule);
     }
@@ -193,6 +196,7 @@ public final class Debug {
         return isOn(Debug.VERBOSE);
     }
 
+    /** @deprecated */
     public static void logVerbose(String msg) {
         log(Debug.VERBOSE, null, msg, noModuleModule);
     }
@@ -201,10 +205,12 @@ public final class Debug {
         log(Debug.VERBOSE, null, msg, module);
     }
 
+    /** @deprecated */
     public static void logVerbose(Throwable t) {
         log(Debug.VERBOSE, t, null, noModuleModule);
     }
 
+    /** @deprecated */
     public static void logVerbose(Throwable t, String msg) {
         log(Debug.VERBOSE, t, msg, noModuleModule);
     }
@@ -217,6 +223,7 @@ public final class Debug {
         return isOn(Debug.TIMING);
     }
 
+    /** @deprecated */
     public static void logTiming(String msg) {
         log(Debug.TIMING, null, msg, noModuleModule);
     }
@@ -225,10 +232,12 @@ public final class Debug {
         log(Debug.TIMING, null, msg, module);
     }
 
+    /** @deprecated */
     public static void logTiming(Throwable t) {
         log(Debug.TIMING, t, null, noModuleModule);
     }
 
+    /** @deprecated */
     public static void logTiming(Throwable t, String msg) {
         log(Debug.TIMING, t, msg, noModuleModule);
     }
@@ -241,18 +250,21 @@ public final class Debug {
         return isOn(Debug.INFO);
     }
 
+    /** @deprecated */
     public static void logInfo(String msg) {
         log(Debug.INFO, null, msg, noModuleModule);
     }
-
+    
     public static void logInfo(String msg, String module) {
         log(Debug.INFO, null, msg, module);
     }
 
+    /** @deprecated */
     public static void logInfo(Throwable t) {
         log(Debug.INFO, t, null, noModuleModule);
     }
 
+    /** @deprecated */
     public static void logInfo(Throwable t, String msg) {
         log(Debug.INFO, t, msg, noModuleModule);
     }
@@ -265,6 +277,7 @@ public final class Debug {
         return isOn(Debug.IMPORTANT);
     }
 
+    /** @deprecated */
     public static void logImportant(String msg) {
         log(Debug.IMPORTANT, null, msg, noModuleModule);
     }
@@ -273,10 +286,12 @@ public final class Debug {
         log(Debug.IMPORTANT, null, msg, module);
     }
 
+    /** @deprecated */
     public static void logImportant(Throwable t) {
         log(Debug.IMPORTANT, t, null, noModuleModule);
     }
 
+    /** @deprecated */
     public static void logImportant(Throwable t, String msg) {
         log(Debug.IMPORTANT, t, msg, noModuleModule);
     }
@@ -289,6 +304,7 @@ public final class Debug {
         return isOn(Debug.WARNING);
     }
 
+    /** @deprecated */
     public static void logWarning(String msg) {
         log(Debug.WARNING, null, msg, noModuleModule);
     }
@@ -297,10 +313,12 @@ public final class Debug {
         log(Debug.WARNING, null, msg, module);
     }
 
+    /** @deprecated */
     public static void logWarning(Throwable t) {
         log(Debug.WARNING, t, null, noModuleModule);
     }
 
+    /** @deprecated */
     public static void logWarning(Throwable t, String msg) {
         log(Debug.WARNING, t, msg, noModuleModule);
     }
@@ -313,6 +331,7 @@ public final class Debug {
         return isOn(Debug.ERROR);
     }
 
+    /** @deprecated */
     public static void logError(String msg) {
         log(Debug.ERROR, null, msg, noModuleModule);
     }
@@ -321,10 +340,12 @@ public final class Debug {
         log(Debug.ERROR, null, msg, module);
     }
 
+    /** @deprecated */
     public static void logError(Throwable t) {
         log(Debug.ERROR, t, null, noModuleModule);
     }
 
+    /** @deprecated */
     public static void logError(Throwable t, String msg) {
         log(Debug.ERROR, t, msg, noModuleModule);
     }
@@ -337,6 +358,7 @@ public final class Debug {
         return isOn(Debug.FATAL);
     }
 
+    /** @deprecated */
     public static void logFatal(String msg) {
         log(Debug.FATAL, null, msg, noModuleModule);
     }
@@ -345,10 +367,12 @@ public final class Debug {
         log(Debug.FATAL, null, msg, module);
     }
 
+    /** @deprecated */
     public static void logFatal(Throwable t) {
         log(Debug.FATAL, t, null, noModuleModule);
     }
 
+    /** @deprecated */
     public static void logFatal(Throwable t, String msg) {
         log(Debug.FATAL, t, msg, noModuleModule);
     }
