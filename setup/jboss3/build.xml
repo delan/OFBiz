@@ -56,7 +56,7 @@
         <copy file="setup/jboss3/server/ofbiz/conf/debug.properties" toDir="${conf.dir}" />
         <copy file="setup/jboss3/server/ofbiz/deploy/entityengine.xml" toDir="${j2eedeploy.dir}" />
 
-        <copy file="lib/common/pgjdbc2.jar" toDir="${j2eedeploy.dir}"/>
+        <copy file="lib/common/postgresql.jar" toDir="${j2eedeploy.dir}"/>
         <copy file="lib/common/mm.mysql-2.0.8-bin.jar" toDir="${j2eedeploy.dir}"/>
         <copy file="lib/common/ots-jts_1.0.jar" toDir="${j2eedeploy.dir}"/>
         <copy file="lib/share/bsh-1.2b6.jar" toDir="${j2eedeploy.dir}"/>
