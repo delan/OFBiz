@@ -69,17 +69,21 @@ public class Calculate extends MethodOperation {
             type = this.TYPE_DOUBLE;
         }
         
-        List calcopElements = UtilXml.childElementList(element, "calcop");
+        List calcopElements = UtilXml.childElementList(element, null);
         calcops = new Calculate.SubCalc[calcopElements.size()];
         Iterator calcopIter = calcopElements.iterator();
         int i = 0;
         while (calcopIter.hasNext()) {
             Element calcopElement = (Element) calcopIter.next();
-            if ("calcop".equals(calcopElement.getNodeName())) {
+            String nodeName = calcopElement.getNodeName();
+            if ("calcop".equals(nodeName)) {
                 calcops[i] = new Calculate.CalcOp(calcopElement);
-            } else if ("number".equals(calcopElement.getNodeName())) {
+            } else if ("number".equals(nodeName)) {
                 calcops[i] = new Calculate.NumberOp(calcopElement);
+            } else {
+                Debug.logError("Error: calculate operation with type " + nodeName);
             }
+            //Debug.logInfo("Added operation type " + nodeName + " in position " + i);
             i++;
         }
     }
@@ -89,6 +93,7 @@ public class Calculate extends MethodOperation {
         
         for (int i = 0; i < calcops.length; i++) {
             resultValue += calcops[i].calcValue(methodContext);
+            //Debug.logInfo("main total so far: " + resultValue);
         }
         
         Object resultObj = null;
@@ -140,6 +145,7 @@ public class Calculate extends MethodOperation {
         }
         
         public double calcValue(MethodContext methodContext) {
+            //Debug.logInfo("calcValue number: " + value);
             return value;
         }
         
@@ -182,11 +188,15 @@ public class Calculate extends MethodOperation {
             int i = 0;
             while (calcopIter.hasNext()) {
                 Element calcopElement = (Element) calcopIter.next();
+                String nodeName = calcopElement.getNodeName();
                 if ("calcop".equals(calcopElement.getNodeName())) {
                     calcops[i] = new Calculate.CalcOp(calcopElement);
                 } else if ("number".equals(calcopElement.getNodeName())) {
                     calcops[i] = new Calculate.NumberOp(calcopElement);
+                } else {
+                    Debug.logError("Error: calculate operation with type " + nodeName);
                 }
+                //Debug.logInfo("Added operation type " + nodeName + " in position " + i);
                 i++;
             }
         }
@@ -211,9 +221,19 @@ public class Calculate extends MethodOperation {
                 }
                 
                 if (fieldObj != null) {
-                    resultValue = ((Number) fieldObj).doubleValue();
+                    if (fieldObj instanceof Double) {
+                        resultValue = ((Double) fieldObj).doubleValue();
+                    } else if (fieldObj instanceof Long) {
+                        resultValue = (double) ((Long) fieldObj).longValue();
+                    } else if (fieldObj instanceof Float) {
+                        resultValue = (double) ((Float) fieldObj).floatValue();
+                    } else if (fieldObj instanceof Integer) {
+                        resultValue = (double) ((Integer) fieldObj).intValue();
+                    }
                     if (operator == OPERATOR_NEGATIVE) resultValue = -resultValue;
                     isFirst = false;
+                } else {
+                    if (Debug.infoOn()) Debug.logInfo("Field not found with field-name " + fieldName + ", and map-name " + mapName + "using a default of 0");
                 }
             }
             
@@ -239,7 +259,9 @@ public class Calculate extends MethodOperation {
                             break;
                     }
                 }
+                //Debug.logInfo("sub total so far: " + resultValue);
             }
+            //Debug.logInfo("calcValue calcop: " + resultValue + "(field=" + fieldName + ", map=" + mapName + ")");
             return resultValue;
         }
     }
