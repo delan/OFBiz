@@ -27,6 +27,10 @@ class name is org.ofbiz.core.entity.transaction.WeblogicFactory, as
 referenced in the entityengine.properties file (which must replace the
 entityengine.properties file in commonapp/etc).
 
+By the way, sorry the config.xml file is all out of order. Weblogic likes to 
+read that file and write it out again every time the server runs and it
+puts things in the worst order.
+
 Hope that helps.
 -David E. Jones
 2 Feb 2002

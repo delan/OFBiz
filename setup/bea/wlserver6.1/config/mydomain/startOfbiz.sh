@@ -29,6 +29,11 @@
 # For additional information, refer to Installing and Setting up WebLogic 
 # Server (http://e-docs.bea.com/wls/docs61/install/index.html).
 
+if [ -z "$OFBIZ_HOME" ] ; then
+  echo You must set OFBIZ_HOME to point at your Open For Business installation
+  exit 1
+fi
+
 # Set user-defined variables.
 JAVA_HOME=/usr/java/jdk1.3.1_01
 WL_HOME=/ofbiz/bea/wlserver6.1
@@ -177,13 +182,4 @@ java $JAVA_OPTIONS -classpath $CLASSPATH -Dweblogic.Domain=mydomain -Dweblogic.N
 cd config/mydomain
 
 fi
-
-
-
-
-
-
-
-
-
 
