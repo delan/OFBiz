@@ -34,7 +34,15 @@
     
     <service name="quickShipEntireOrder" engine="simple"
             location="org/ofbiz/shipment/shipment/ShipmentServices.xml" invoke="quickShipEntireOrder" auth="true">
-        <description>Quick Ships An Entire Order</description>      
+        <description>Quick Ships An Entire Order</description>
+        <attribute name="orderId" type="String" mode="IN" optional="false"/>
+        <attribute name="originFacilityId" type="String" mode="IN" optional="true"/>
+        <attribute name="setPackedOnly" type="String" mode="IN" optional="true"/>
+        <attribute name="shipmentId" type="String" mode="OUT" optional="false"/>
+    </service>
+    <service name="quickShipEntireOrderMultipleFacilities" engine="simple"
+            location="org/ofbiz/shipment/shipment/ShipmentServices.xml" invoke="quickShipEntireOrderMultipleFacilities" auth="true">
+        <description>Quick Ships An Entire Order Creating One Package Per Facility</description>
         <attribute name="orderId" type="String" mode="IN" optional="false"/>
         <attribute name="originFacilityId" type="String" mode="IN" optional="true"/>
         <attribute name="setPackedOnly" type="String" mode="IN" optional="true"/>
