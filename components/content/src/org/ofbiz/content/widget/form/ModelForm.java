@@ -73,6 +73,7 @@ public class ModelForm {
     protected String name;
     protected String type;
     protected FlexibleStringExpander target;
+    protected String targetType;
     protected String title;
     protected String tooltip;
     protected String listName;
@@ -113,6 +114,7 @@ public class ModelForm {
      */
     protected Map fieldMap = new HashMap();
     
+    public static String DEFAULT_TARGET_TYPE = "intra-app";
     public static int DEFAULT_PAGE_SIZE = 100;
     protected int viewIndex = 0;
     protected int viewSize = DEFAULT_PAGE_SIZE;
@@ -192,6 +194,7 @@ public class ModelForm {
                 this.fieldList = parent.fieldList;
                 this.fieldMap = parent.fieldMap;
                 this.separateColumns = parent.separateColumns;
+                this.targetType = parent.targetType;
             }
         }
 
@@ -228,6 +231,8 @@ public class ModelForm {
             this.itemIndexSeparator = formElement.getAttribute("item-index-separator");
         if (this.paginateTarget == null || formElement.hasAttribute("paginate-target"))
             this.paginateTarget = new FlexibleStringExpander(formElement.getAttribute("paginate-target"));
+        if (this.targetType == null || formElement.hasAttribute("target-type"))
+            this.targetType = formElement.getAttribute("target-type");
         
         paginate = "true".equals(formElement.getAttribute("true"));
         if (formElement.hasAttribute("separate-columns")) {
@@ -1045,6 +1050,10 @@ public class ModelForm {
         return delegator;
     }
 
+    public String getTargetType() {
+        return this.targetType;   
+    }
+    
     /**
      * @return
      */

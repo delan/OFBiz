@@ -49,6 +49,7 @@ import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
+import org.ofbiz.security.Security;
 
 /**
  * ContentServices Class
@@ -951,5 +952,26 @@ public class ContentServices {
         }
 
         return results;
+    }
+    
+    public static Map publishContent(DispatchContext dctx, Map context) throws GenericServiceException{
+        
+        Map result = null;
+        GenericDelegator delegator = dctx.getDelegator();
+        GenericValue content = (GenericValue)context.get("content");
+        GenericValue userLogin = (GenericValue)context.get("userLogin");
+        Security security = dctx.getSecurity();
+        if (!security.hasEntityPermission("CONTENTMGR", "_ADMIN", userLogin)) {
+            return ServiceUtil.returnError("Permission denied.");
+        }
+        
+        try {
+            content.put("statusId", "BLOG_PUBLISHED");
+            content.store(); 
+        } catch(GenericEntityException e) {
+            Debug.logError(e.getMessage(), module);
+            return ServiceUtil.returnError(e.getMessage());
+        }
+        return result;
     }
 }

@@ -700,9 +700,11 @@ public class HtmlFormRenderer implements FormStringRenderer {
     public void renderFormOpen(StringBuffer buffer, Map context, ModelForm modelForm) {
         buffer.append("<form method=\"POST\" ");
         String targ = modelForm.getTarget(context);
+        String targetType = modelForm.getTargetType();
         if (targ != null && targ.length() > 0) {
             buffer.append(" action=\"");
-            this.appendOfbizUrl(buffer, "/" + targ);
+            //this.appendOfbizUrl(buffer, "/" + targ);
+            WidgetWorker.buildHyperlinkUrl(buffer, targ, targetType, request, response, context);
             buffer.append("\" ");
         }
 

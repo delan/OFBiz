@@ -1508,4 +1508,55 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
         return result;
     }
 
+    public static Map followNodeChildren(DispatchContext dctx, Map context) throws GenericServiceException{
+        
+        Map result = null;
+        GenericDelegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        String contentId = (String)context.get("contentId");
+        String serviceName = (String)context.get("serviceName");
+        GenericValue userLogin = (GenericValue)context.get("userLogin");
+        Map ctx = new HashMap();
+        ctx.put("userLogin", serviceName);
+        try {
+            
+            GenericValue content = delegator.findByPrimaryKey("Content", UtilMisc.toMap("contentId", contentId));
+            result = followNodeChildrenMethod(content, dispatcher, serviceName, ctx);
+        } catch(GenericEntityException e) {
+            Debug.logError(e.getMessage(), module);
+            return ServiceUtil.returnError(e.getMessage());
+        }
+        return result;
+    }
+    public static Map followNodeChildrenMethod(GenericValue content,  LocalDispatcher dispatcher, String serviceName, Map context) 
+        throws GenericEntityException, GenericServiceException {
+        
+        Map result = null;
+    	String contentId = content.getString("contentId");
+    	Set visitedSet = (Set)context.get("visitedSet");
+    	if (visitedSet == null) {
+            visitedSet = new HashSet();
+            context.put("visitedSet", visitedSet);
+        } else {
+        	if (visitedSet.contains(contentId)) {
+        		Debug.logWarning("visitedSet already contains:" + contentId, module);
+                return ServiceUtil.returnError("visitedSet already contains:" + contentId);
+            } else {
+                visitedSet.add(contentId);   
+            }
+        }
+
+        context.put("content", content);
+        result = dispatcher.runSync(serviceName, context);
+        
+        List kids = ContentWorker.getAssociatedContent(content, "from", UtilMisc.toList("SUB_CONTENT"), null, null, null);
+        Iterator iter = kids.iterator();
+        while (iter.hasNext()) {
+        	GenericValue kidContent = (GenericValue)iter.next();
+        	followNodeChildrenMethod(kidContent, dispatcher, serviceName, context);
+        }
+        return result;
+    }
+
+
 }
