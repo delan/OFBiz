@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -32,16 +32,24 @@ import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.PageContext;
+import javax.transaction.InvalidTransactionException;
+import javax.transaction.SystemException;
+import javax.transaction.Transaction;
+import javax.transaction.TransactionManager;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilFormatOut;
+import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.transaction.GenericTransactionException;
+import org.ofbiz.entity.transaction.TransactionFactory;
+import org.ofbiz.entity.transaction.TransactionUtil;
 
 /**
  * Common Workers
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class LoginWorker {
@@ -122,6 +130,53 @@ public class LoginWorker {
         String sesExtKey = (String) session.getAttribute(EXTERNAL_LOGIN_KEY_ATTR);
         if (sesExtKey != null) {
             externalLoginKeys.remove(sesExtKey);
+        }
+    }
+
+    public static void setLoggedOut(GenericValue userLogin) {
+        // set the logged out flag - need a mutable object first
+        userLogin = new GenericValue(userLogin);
+        userLogin.set("hasLoggedOut", "Y");
+
+        TransactionManager txMgr = TransactionFactory.getTransactionManager();
+        Transaction parentTx = null;
+        boolean beganTransaction = false;
+
+        try {
+            if (txMgr != null) {
+                try {
+                    parentTx = txMgr.suspend();
+                    beganTransaction = TransactionUtil.begin();
+                } catch (SystemException se) {
+                    Debug.logError(se, "Cannot suspend transaction: " + se.getMessage(), module);
+                } catch (GenericTransactionException e) {
+                    Debug.logError(e, "Cannot begin nested transaction: " + e.getMessage(), module);
+                }
+            }
+
+            try {
+                userLogin.store();
+            } catch (GenericEntityException e) {
+                Debug.logWarning(e, "Unable to set logged out flag on UserLogin", module);
+            }
+
+            try {
+                TransactionUtil.commit(beganTransaction);
+            } catch (GenericTransactionException e) {
+                Debug.logError(e, "Could not commit nested transaction: " + e.getMessage(), module);
+            }
+        } finally {
+            // resume/restore parent transaction
+            if (parentTx != null) {
+                try {
+                    txMgr.resume(parentTx);
+                    Debug.logVerbose("Resumed the parent transaction.", module);
+                } catch (InvalidTransactionException ite) {
+                    Debug.logError(ite, "Cannot resume transaction: " + ite.getMessage(), module);
+                } catch (SystemException se) {
+                    Debug.logError(se, "Unexpected transaction error: " + se.getMessage(), module);
+                }
+            }
         }
     }
 }
