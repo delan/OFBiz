@@ -85,7 +85,14 @@
                     results.add("["+fileNumber +"] [vvv] " + curEntityName + " skipping view entity");
                     continue;
                 }
-                values = delegator.findListIteratorByCondition(curEntityName, null, null, null, me.getPkFieldNames(), null);
+                
+                // some databases don't support cursors, or other problems may happen, so if there is an error here log it and move on to get as much as possible
+                try {
+                    values = delegator.findListIteratorByCondition(curEntityName, null, null, null, me.getPkFieldNames(), null);
+                } catch (Exception entityEx) {
+                    results.add("["+fileNumber +"] [xxx] Error when writing " + curEntityName + ": " + entityEx);
+                    continue;
+                }
                 
                 //Don't bother writing the file if there's nothing
                 //to put into it
