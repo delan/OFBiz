@@ -172,7 +172,7 @@ public class GenericDAO {
         
         //no non-primaryKey fields, update doesn't make sense, so don't do it
         if (fieldsToSave.size() <= 0) {
-            Debug.logInfo("Trying to do an update on an entity with no non-PK fields, returning having done nothing; entity=" + entity);
+            Debug.logVerbose("Trying to do an update on an entity with no non-PK fields, returning having done nothing; entity=" + entity);
             return;
         }
         

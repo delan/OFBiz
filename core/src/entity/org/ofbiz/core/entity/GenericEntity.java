@@ -351,6 +351,7 @@ public class GenericEntity extends Observable implements Map, Serializable, Comp
             ModelField curField = (ModelField) iter.next();
             if (fields.containsKey(curField.getName())) {
                 Object field = fields.get(curField.getName());
+                //Debug.logVerbose("Setting field " + curField.getName() + ": " + field + ", setIfEmpty = " + setIfEmpty);
                 if (setIfEmpty) {
                     //if empty string, set to null
                     if (field != null && field instanceof String && ((String)field).length() == 0) {
