@@ -40,7 +40,7 @@
     <dbname>Hsql</dbname>
     <!-- <jndiName>java:/HsqlDataSource</jndiName> -->
     <driver>org.hsqldb.jdbcDriver</driver>
-    <url>jdbc:hsqldb:../data/ofbiz</url>
+    <url>jdbc:hsqldb:../../data/ofbiz</url>
     <username>sa</username>
     <password></password>
     <minimumSize>2</minimumSize>
