@@ -2,6 +2,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2001/11/30 14:20:24  jonesde
+ * Refactored for changes in Application, DataField and FormalParam; started Activity implementations
+ *
  * Revision 1.4  2001/11/29 16:14:47  jonesde
  * Added a bit more, changed so handle TransitionRestriction info being in the WorkflowActivity entity
  *
@@ -356,7 +359,7 @@ public class XpdlReader {
         List formalParameters = UtilXml.childElementList(formalParametersElement, "FormalParameter");
         readFormalParameters(formalParameters, packageId, processId, "_NA_");
 
-        //(%Type;)*
+        //(%Type;)* TODO
 
         //DataFields?
         Element dataFieldsElement = UtilXml.firstChildElement(workflowProcessElement, "DataFields");
@@ -532,21 +535,83 @@ public class XpdlReader {
         subFlowValue.set("activityId", activityId);
         subFlowValue.set("subFlowProcessId", subFlowElement.getAttribute("Id"));
 
-        //TODO: write method
+        if (subFlowElement.getAttribute("Execution") != null)
+            subFlowValue.set("executionEnumId", "WSE_" + subFlowElement.getAttribute("Execution"));
+        else
+            subFlowValue.set("executionEnumId", "WSE_ASYNCHR");
+
+        //ActualParameters?
+        Element actualParametersElement = UtilXml.firstChildElement(subFlowElement, "ActualParameters");
+        List actualParameters = UtilXml.childElementList(actualParametersElement, "ActualParameter");
+        subFlowValue.set("actualParameters", readActualParameters(actualParameters));
     }
 
     protected void readLoop(Element loopElement, String packageId, String processId, String activityId) throws DefinitionParserException {
         if (loopElement == null)
             return;
 
-        //TODO: write method
+        GenericValue loopValue = delegator.makeValue("WorkflowActivityTool", null);
+        values.add(loopValue);
+
+        loopValue.set("packageId", packageId);
+        loopValue.set("processId", processId);
+        loopValue.set("activityId", activityId);
+
+        if (loopElement.getAttribute("Kind") != null)
+            loopValue.set("loopKindEnumId", "WLK_" + loopElement.getAttribute("Kind"));
+        else
+            loopValue.set("loopKindEnumId", "WLK_WHILE");
+
+        //Condition?
+        loopValue.set("conditionExpr", UtilXml.childElementValue(loopElement, "Condition"));
     }
 
     protected void readTools(List tools, String packageId, String processId, String activityId) throws DefinitionParserException {
         if (tools == null || tools.size() == 0)
             return;
+        Iterator toolsIter = tools.iterator();
+        while (toolsIter.hasNext()) {
+            Element toolElement = (Element) toolsIter.next();
+            readTool(toolElement, packageId, processId, activityId);
+        }
+    }
 
-        //TODO: write method
+    protected void readTool(Element toolElement, String packageId, String processId, String activityId) throws DefinitionParserException {
+        if (toolElement == null)
+            return;
+
+        GenericValue toolValue = delegator.makeValue("WorkflowActivityTool", null);
+        values.add(toolValue);
+
+        toolValue.set("packageId", packageId);
+        toolValue.set("processId", processId);
+        toolValue.set("activityId", activityId);
+        toolValue.set("toolId", toolElement.getAttribute("Id"));
+
+        if (toolElement.getAttribute("Type") != null)
+            toolValue.set("toolTypeEnumId", "WTT_" + toolElement.getAttribute("Type"));
+        else
+            toolValue.set("toolTypeEnumId", "WTT_PROCEDURE");
+
+        //Description?
+        toolValue.set("description", UtilXml.childElementValue(toolElement, "Description"));
+
+        //ActualParameters?
+        Element actualParametersElement = UtilXml.firstChildElement(toolElement, "ActualParameters");
+        List actualParameters = UtilXml.childElementList(actualParametersElement, "ActualParameter");
+        toolValue.set("actualParameters", readActualParameters(actualParameters));
+    }
+
+    protected String readActualParameters(List actualParameters) {
+        StringBuffer actualParametersBuf = new StringBuffer();
+        Iterator actualParametersIter = actualParameters.iterator();
+        while (actualParametersIter.hasNext()) {
+            Element actualParameterElement = (Element) actualParametersIter.next();
+            actualParametersBuf.append(UtilXml.elementValue(actualParameterElement));
+            if (actualParametersIter.hasNext())
+                actualParametersBuf.append(',');
+        }
+        return actualParametersBuf.toString();
     }
 
     protected void readTransitions(List transitions, String packageId, String processId) throws DefinitionParserException {
@@ -560,6 +625,9 @@ public class XpdlReader {
     }
 
     protected void readTransition(Element transitionElement, String packageId, String processId) throws DefinitionParserException {
+        if (transitionElement == null)
+            return;
+
         GenericValue transitionValue = delegator.makeValue("WorkflowTransition", null);
         values.add(transitionValue);
 
