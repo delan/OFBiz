@@ -179,6 +179,19 @@ A.buttontext:hover {
 color: red;
 }
 
+A.headerbuttontext {
+font-family: Verdana, Arial, Helvetica, sans-serif;
+font-size: x-small;
+font-weight: bold;
+text-decoration: none;
+color: blue;
+}
+
+
+A.headerbuttontext:hover {
+color: red;
+}
+
 .buttontextdisabled {
 font-family: Verdana, Arial, Helvetica, sans-serif;
 font-size: x-small;
