@@ -41,7 +41,7 @@
       &nbsp;<a href="javascript:document.editeftaccountform.submit()" class="buttontext">[Save]</a>
       <form method="post" action='<@ofbizUrl>/updateEftAccount?DONE_PAGE=${donePage}</@ofbizUrl>' name="editeftaccountform" style='margin: 0;'>
       <table width="90%" border="0" cellpadding="2" cellspacing="0">
-        <input type=hidden name='paymentMethodId' value='<ofbiz:print ${paymentMethodId}'>
+        <input type=hidden name='paymentMethodId' value='${paymentMethodId}'>
     </#if>
 
     <tr>
