@@ -835,6 +835,7 @@
     <entity-group group="org.ofbiz.commonapp" entity="WorkEffortAssocTypeAttr" />
     <entity-group group="org.ofbiz.commonapp" entity="WorkEffortAttribute" />
     <entity-group group="org.ofbiz.commonapp" entity="WorkEffortBilling" />
+    <entity-group group="org.ofbiz.commonapp" entity="WorkEffortContactMech" />    
     <entity-group group="org.ofbiz.commonapp" entity="WorkEffortDeliverableProd" />
     <entity-group group="org.ofbiz.commonapp" entity="WorkEffortFixedAssetAssign" />
     <entity-group group="org.ofbiz.commonapp" entity="WorkEffortFixedAssetStd" />

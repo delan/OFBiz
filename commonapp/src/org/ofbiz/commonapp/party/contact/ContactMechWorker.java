@@ -47,13 +47,28 @@ public class ContactMechWorker {
     }
     
     public static List getPartyContactMechValueMaps(GenericDelegator delegator, String partyId, boolean showOld) {
+       return getPartyContactMechValueMaps(delegator, partyId, showOld, null);    
+    }
+    
+    public static List getPartyContactMechValueMaps(GenericDelegator delegator, String partyId, boolean showOld, String contactMechTypeId) {
         List partyContactMechValueMaps = new LinkedList();
 
         Iterator allPartyContactMechs = null;
 
         try {
             List tempCol = delegator.findByAnd("PartyContactMech", UtilMisc.toMap("partyId", partyId));
-
+            if(contactMechTypeId != null) {
+                List tempColTemp = new LinkedList();
+                for(Iterator iterator = tempCol.iterator(); iterator.hasNext();) {
+                    GenericValue partyContactMech = (GenericValue) iterator.next();
+                    GenericValue contactMech = delegator.getRelatedOne("ContactMech", partyContactMech);
+                    if(contactMech != null && contactMechTypeId.equals(contactMech.getString("contactMechTypeId"))) {
+                        tempColTemp.add(partyContactMech);
+                    }
+                        
+                }
+                tempCol = tempColTemp;
+            } 
             if (!showOld) tempCol = EntityUtil.filterByDate(tempCol, true);
             allPartyContactMechs = UtilMisc.toIterator(tempCol);
         } catch (GenericEntityException e) {
@@ -167,6 +182,55 @@ public class ContactMechWorker {
         }
     }
 
+    public static Collection getWorkEffortContactMechValueMaps(GenericDelegator delegator, String workEffortId) {
+        Collection workEffortContactMechValueMaps = new LinkedList();
+
+        Iterator allWorkEffortContactMechs = null;
+
+        try {
+            Collection tempCol = delegator.findByAnd("WorkEffortContactMech", UtilMisc.toMap("workEffortId", workEffortId));
+            allWorkEffortContactMechs = UtilMisc.toIterator(tempCol);
+        } catch (GenericEntityException e) {
+            Debug.logWarning(e);
+        }
+
+        while (allWorkEffortContactMechs != null && allWorkEffortContactMechs.hasNext()) {
+            GenericValue workEffortContactMech = (GenericValue) allWorkEffortContactMechs.next();
+            GenericValue contactMech = null;
+
+            try {
+                contactMech = workEffortContactMech.getRelatedOne("ContactMech");
+            } catch (GenericEntityException e) {
+                Debug.logWarning(e);
+            }
+            if (contactMech != null) {
+                Map workEffortContactMechValueMap = new HashMap();
+
+                workEffortContactMechValueMaps.add(workEffortContactMechValueMap);
+                workEffortContactMechValueMap.put("contactMech", contactMech);
+                workEffortContactMechValueMap.put("workEffortContactMech", workEffortContactMech);
+
+                try {
+                    workEffortContactMechValueMap.put("contactMechType", contactMech.getRelatedOneCache("ContactMechType"));
+                } catch (GenericEntityException e) {
+                    Debug.logWarning(e);
+                }
+
+                try {
+                    if ("POSTAL_ADDRESS".equals(contactMech.getString("contactMechTypeId"))) {
+                        workEffortContactMechValueMap.put("postalAddress", contactMech.getRelatedOne("PostalAddress"));
+                    } else if ("TELECOM_NUMBER".equals(contactMech.getString("contactMechTypeId"))) {
+                        workEffortContactMechValueMap.put("telecomNumber", contactMech.getRelatedOne("TelecomNumber"));
+                    }
+                } catch (GenericEntityException e) {
+                    Debug.logWarning(e);
+                }
+            }
+        }
+
+        return workEffortContactMechValueMaps.size() > 0 ? workEffortContactMechValueMaps : null;
+    }
+    
     /** TO BE REMOVED (DEJ 20030221): This method was for use in a JSP and when they are removed this can be removed as well rather than being maintained, should be removed when eCommerce and party mgr and possible other places are converted to FTL */
     public static void getContactMechAndRelated(PageContext pageContext, String partyId, String contactMechAttr, String contactMechIdAttr,
         String partyContactMechAttr, String partyContactMechPurposesAttr, String contactMechTypeIdAttr, String contactMechTypeAttr, String purposeTypesAttr,
