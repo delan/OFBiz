@@ -1,5 +1,5 @@
 /*
- * $Id: UpsServices.java,v 1.3 2004/08/13 18:57:03 ajzeneski Exp $
+ * $Id: UpsServices.java,v 1.4 2004/08/15 00:58:52 ajzeneski Exp $
  *
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -63,7 +63,7 @@ import org.xml.sax.SAXException;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.2
  */
 public class UpsServices {
@@ -1482,13 +1482,15 @@ public class UpsServices {
         }
 
         // package info
-        Element packageElement = UtilXml.addChildElement(shipmentElement, "Package", rateRequestDoc);
-        Element packagingTypeElement = UtilXml.addChildElement(packageElement, "PackagingType", rateRequestDoc);
-        UtilXml.addChildElementValue(packagingTypeElement, "Code", "00", rateRequestDoc);
-        UtilXml.addChildElementValue(packagingTypeElement, "Description", "Unknown PackagingType", rateRequestDoc);
-        UtilXml.addChildElementValue(packageElement, "Description", "Package Description", rateRequestDoc);
-        Element packageWeightElement = UtilXml.addChildElement(packageElement, "PackageWeight", rateRequestDoc);
-        UtilXml.addChildElementValue(packageWeightElement, "Weight", shippableWeight.toString(), rateRequestDoc);
+        String maxWeightStr = UtilProperties.getPropertyValue(serviceConfigProps, "shipment.ups.max.estimate.weight", "99");
+        double maxWeight = 99;
+        try {
+            maxWeight = Double.parseDouble(maxWeightStr);
+        } catch (NumberFormatException e) {
+            maxWeight = 99;
+        }
+
+        splitEstimatePackages(rateRequestDoc, shipmentElement, shippableItemInfo, maxWeight);
 
         // service options
         UtilXml.addChildElement(shipmentElement, "ShipmentServiceOptions", rateRequestDoc);
@@ -1547,6 +1549,102 @@ public class UpsServices {
 
         return handleUpsRateInquireResponse(rateResponseDocument);
 
+    }
+
+    private static void splitEstimatePackages(Document requestDoc, Element shipmentElement, List shippableItemInfo, double maxWeight) {
+        List packages = getPackageSplit(shippableItemInfo, maxWeight);
+        Iterator i = packages.iterator();
+        while (i.hasNext()) {
+            Map packageMap = (Map) i.next();
+            double packageWeight = calcPackageWeight(packageMap, shippableItemInfo, 0);
+            Debug.log("Package Weight : " + packageWeight, module);
+
+            // package info
+            Element packageElement = UtilXml.addChildElement(shipmentElement, "Package", requestDoc);
+            Element packagingTypeElement = UtilXml.addChildElement(packageElement, "PackagingType", requestDoc);
+            UtilXml.addChildElementValue(packagingTypeElement, "Code", "00", requestDoc);
+            UtilXml.addChildElementValue(packagingTypeElement, "Description", "Unknown PackagingType", requestDoc);
+            UtilXml.addChildElementValue(packageElement, "Description", "Package Description", requestDoc);
+            Element packageWeightElement = UtilXml.addChildElement(packageElement, "PackageWeight", requestDoc);
+            UtilXml.addChildElementValue(packageWeightElement, "Weight", new Double(packageWeight).toString(), requestDoc);
+        }
+    }
+
+    private static List getPackageSplit(List shippableItemInfo, double maxWeight) {
+        // create the package list w/ the first pacakge
+        List packages = new LinkedList();
+
+        if (shippableItemInfo != null) {
+            Iterator sii = shippableItemInfo.iterator();
+            while (sii.hasNext()) {
+                Map itemInfo = (Map) sii.next();
+                double quantity = ((Double) itemInfo.get("quantity")).doubleValue();
+                double weight = ((Double) itemInfo.get("weight")).doubleValue();
+                String productId = (String) itemInfo.get("productId");
+
+                for (int i = 1; i <= quantity; i++) {
+                    if (weight >= maxWeight) {
+                        Map newPackage = new HashMap();
+                        newPackage.put(productId, new Double(1));
+                        packages.add(newPackage);
+                    } else {
+                        // create the first package
+                        if (packages.size() == 0) {
+                            packages.add(new HashMap());
+                        }
+
+                        // package loop
+                        int packageSize = packages.size();
+                        boolean addedToPackage = false;
+                        for (int pi = 0; pi < packageSize; pi++) {
+                            if (!addedToPackage) {
+                                Map packageMap = (Map) packages.get(pi);
+                                double packageWeight = calcPackageWeight(packageMap, shippableItemInfo, weight);
+                                if (packageWeight <= maxWeight) {
+                                    Double qtyD = (Double) packageMap.get(productId);
+                                    double qty = qtyD == null ? 0 : qtyD.doubleValue();                                    
+                                    packageMap.put(productId, new Double(++qty));
+                                    addedToPackage = true;
+                                }
+                            }
+                        }
+                        if (!addedToPackage) {
+                            Map packageMap = new HashMap();
+                            packageMap.put(productId, new Double(1));
+                            packages.add(packageMap);
+                        }
+                    }
+                }
+            }
+        }
+        return packages;
+    }
+
+    private static double calcPackageWeight(Map packageMap, List shippableItemInfo, double additionalWeight) {
+        double totalWeight = 0.00;
+        Iterator i = packageMap.keySet().iterator();
+        while (i.hasNext()) {
+            String productId = (String) i.next();
+            Map productInfo = getProductItemInfo(shippableItemInfo, productId);
+            double productWeight = ((Double) productInfo.get("weight")).doubleValue();
+            double quantity = ((Double) packageMap.get(productId)).doubleValue();
+            totalWeight += (productWeight * quantity);
+        }
+        return totalWeight + additionalWeight;
+    }
+
+    private static Map getProductItemInfo(List shippableItemInfo, String productId) {
+        if (shippableItemInfo != null) {
+            Iterator i = shippableItemInfo.iterator();
+            while (i.hasNext()) {
+                Map testMap = (Map) i.next();
+                String id = (String) testMap.get("productId");
+                if (productId.equals(id)) {
+                    return testMap;
+                }
+            }
+        }
+        return null;
     }
 
     public static Map handleUpsRateInquireResponse(Document rateResponseDocument) {
@@ -1614,19 +1712,19 @@ public class UpsServices {
         UtilXml.addChildElementValue(accessRequestElement, "Password", UtilProperties.getPropertyValue(props, "shipment.ups.access.password"), accessRequestDocument);
         return accessRequestDocument;
     }
-    
+
     public static void handleErrors(Element responseElement, List errorList) {
         List errorElements = UtilXml.childElementList(responseElement, "Error");
         Iterator errorElementIter = errorElements.iterator();
         while (errorElementIter.hasNext()) {
             StringBuffer errorMessageBuf = new StringBuffer();
             Element errorElement = (Element) errorElementIter.next();
-            
+
             String errorSeverity = UtilXml.childElementValue(errorElement, "ErrorSeverity");
             String errorCode = UtilXml.childElementValue(errorElement, "ErrorCode");
             String errorDescription = UtilXml.childElementValue(errorElement, "ErrorDescription");
             String minimumRetrySeconds = UtilXml.childElementValue(errorElement, "MinimumRetrySeconds");
-            
+
             errorMessageBuf.append("An error occurred [code:");
             errorMessageBuf.append(errorCode);
             errorMessageBuf.append("] with severity ");
@@ -1640,14 +1738,14 @@ public class UpsServices {
             } else {
                 errorMessageBuf.append(". ");
             }
-            
+
             List errorLocationElements = UtilXml.childElementList(errorElement, "ErrorLocation");
             Iterator errorLocationElementIter = errorLocationElements.iterator();
             while (errorLocationElementIter.hasNext()) {
                 Element errorLocationElement = (Element) errorLocationElementIter.next();
                 String errorLocationElementName = UtilXml.childElementValue(errorLocationElement, "ErrorLocationElementName");
                 String errorLocationAttributeName = UtilXml.childElementValue(errorLocationElement, "ErrorLocationAttributeName");
-                
+
                 errorMessageBuf.append("The error was at Element [");
                 errorMessageBuf.append(errorLocationElementName);
                 errorMessageBuf.append("]");
@@ -1657,7 +1755,7 @@ public class UpsServices {
                     errorMessageBuf.append(errorLocationAttributeName);
                     errorMessageBuf.append("]");
                 }
-                
+
                 List errorDigestElements = UtilXml.childElementList(errorLocationElement, "ErrorDigest");
                 Iterator errorDigestElementIter = errorDigestElements.iterator();
                 while (errorDigestElementIter.hasNext()) {
@@ -1667,11 +1765,11 @@ public class UpsServices {
                     errorMessageBuf.append("]");
                 }
             }
-            
+
             errorList.add(errorMessageBuf.toString());
         }
     }
-    
+
     /**
      * Opens a URL to UPS and makes a request.
      * @param upsService Name of the UPS service to invoke
