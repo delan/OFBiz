@@ -149,6 +149,13 @@
     <entity-group group="org.ofbiz.commonapp" entity="CurrencyCode" />
 
   <!-- ========================================================= -->
+  <!-- org.ofbiz.commonapp.common.enum -->
+  <!-- ========================================================= -->
+	
+    <entity-group group="org.ofbiz.commonapp" entity="Enumeration" />	
+    <entity-group group="org.ofbiz.commonapp" entity="EnumerationType" />
+
+  <!-- ========================================================= -->
   <!-- org.ofbiz.commonapp.common.geo -->
   <!-- ========================================================= -->
 	
@@ -184,7 +191,8 @@
   <!-- ========================================================= -->
 	
     <entity-group group="org.ofbiz.commonapp" entity="StatusItem" />	
-    <entity-group group="org.ofbiz.commonapp" entity="StatusType" />
+    <entity-group group="org.ofbiz.commonapp" entity="StatusType" />	
+    <entity-group group="org.ofbiz.commonapp" entity="StatusValidChange" />
 
   <!-- ========================================================= -->
   <!-- org.ofbiz.commonapp.common.uom -->
@@ -206,7 +214,14 @@
     <entity-group group="org.ofbiz.commonapp" entity="ContentDataObjectUsage" />	
     <entity-group group="org.ofbiz.commonapp" entity="ContentRole" />	
     <entity-group group="org.ofbiz.commonapp" entity="ContentType" />	
-    <entity-group group="org.ofbiz.commonapp" entity="ContentTypeAttr" />	
+    <entity-group group="org.ofbiz.commonapp" entity="ContentTypeAttr" />
+
+  <!-- ========================================================= -->
+  <!-- org.ofbiz.commonapp.content.data -->
+  <!-- ========================================================= -->
+	
+    <entity-group group="org.ofbiz.commonapp" entity="DataCategory" />	
+    <entity-group group="org.ofbiz.commonapp" entity="DataCategoryMember" />	
     <entity-group group="org.ofbiz.commonapp" entity="DataObject" />	
     <entity-group group="org.ofbiz.commonapp" entity="DataObjectAttribute" />	
     <entity-group group="org.ofbiz.commonapp" entity="DataObjectPurpose" />	
@@ -624,19 +639,23 @@
   <!-- ========================================================= -->
   <!-- org.ofbiz.commonapp.workeffort.definition -->
   <!-- ========================================================= -->
-
+	
     <entity-group group="org.ofbiz.commonapp" entity="WorkEffortDef" />	
     <entity-group group="org.ofbiz.commonapp" entity="WorkEffortDefAssoc" />	
     <entity-group group="org.ofbiz.commonapp" entity="WorkEffortDefAssocAttr" />	
     <entity-group group="org.ofbiz.commonapp" entity="WorkEffortDefAttribute" />	
+    <entity-group group="org.ofbiz.commonapp" entity="WorkflowPackage" />	
+    <entity-group group="org.ofbiz.commonapp" entity="WorkflowPackageExternal" />	
+    <entity-group group="org.ofbiz.commonapp" entity="WorkflowSpecification" />
 
   <!-- ========================================================= -->
   <!-- org.ofbiz.commonapp.workeffort.scheduler -->
   <!-- ========================================================= -->
 	
+    <entity-group group="org.ofbiz.commonapp" entity="JobSandbox" />	
     <entity-group group="org.ofbiz.commonapp" entity="RecurrenceInfo" />	
-    <entity-group group="org.ofbiz.commonapp" entity="RuntimeData" />	
-  
+    <entity-group group="org.ofbiz.commonapp" entity="RuntimeData" />
+
   <!-- ========================================================= -->
   <!-- org.ofbiz.commonapp.workeffort.timesheet -->
   <!-- ========================================================= -->
@@ -666,14 +685,12 @@
     <entity-group group="org.ofbiz.commonapp" entity="WorkEffortCategory" />	
     <entity-group group="org.ofbiz.commonapp" entity="WorkEffortCategoryMember" />	
     <entity-group group="org.ofbiz.commonapp" entity="WorkEffortDeliverableProd" />	
-    <entity-group group="org.ofbiz.commonapp" entity="WorkEffortExpectation" />	
     <entity-group group="org.ofbiz.commonapp" entity="WorkEffortFixedAssetAssign" />	
     <entity-group group="org.ofbiz.commonapp" entity="WorkEffortFixedAssetStd" />	
     <entity-group group="org.ofbiz.commonapp" entity="WorkEffortGoodStandard" />	
     <entity-group group="org.ofbiz.commonapp" entity="WorkEffortInventoryAssign" />	
     <entity-group group="org.ofbiz.commonapp" entity="WorkEffortInventoryProduced" />	
     <entity-group group="org.ofbiz.commonapp" entity="WorkEffortPartyAssignment" />	
-    <entity-group group="org.ofbiz.commonapp" entity="WorkEffortScope" />	
     <entity-group group="org.ofbiz.commonapp" entity="WorkEffortSkillStandard" />	
     <entity-group group="org.ofbiz.commonapp" entity="WorkEffortStatus" />	
     <entity-group group="org.ofbiz.commonapp" entity="WorkEffortType" />	
