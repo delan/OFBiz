@@ -102,10 +102,10 @@
                     writer.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
                     writer.println("<entity-engine-xml>");
 
-                    while ((value = (GenericValue) values.next()) != null) {
+                    do {
                         value.writeXmlText(writer, "");
                         numberWritten++;
-                    }
+                    } while ((value = (GenericValue) values.next()) != null);
                     writer.println("</entity-engine-xml>");
                     writer.close();
                     results.add("["+fileNumber +"] [" + numberWritten + "] " + curEntityName + " wrote " + numberWritten + " records");
