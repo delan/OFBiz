@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.9 $
+ *@version    $Revision: 1.10 $
  *@since      3.0
 -->
 
@@ -43,7 +43,7 @@
 <#-- survey ID -->
 <input type="hidden" name="surveyId" value="${survey.surveyId}">
 
-<div class="head2">${survey.description?if_exists}</div>
+<div class="head1">${survey.description?if_exists}</div>
 <br>
 
 <table border="0" cellpadding="2" cellspacing="0">
@@ -70,8 +70,11 @@
         <td width='1'>&nbsp;</td>
         <td align="${align}">
           <#if question.surveyQuestionTypeId == "BOOLEAN">
-            <#assign selectedOption = answer.booleanResponse?default("Y")>
+            <#assign selectedOption = (answer.booleanResponse)?default("Y")>
             <select class="selectBox" name="answers_${question.surveyQuestionId}">
+              <#if question.requiredField?default("N") != "Y">
+                <option value=""></option>
+              </#if>
               <option <#if "Y" == selectedOption>SELECTED</#if>>Y</option>
               <option <#if "N" == selectedOption>SELECTED</#if>>N</option>
             </select>
@@ -101,8 +104,11 @@
             <input type="password" size="30" class="textBox" name="answers_${question.surveyQuestionId}" value="${(answer.textResponse)?if_exists}">
           <#elseif question.surveyQuestionTypeId == "OPTION">
             <#assign options = question.getRelated("SurveyQuestionOption", sequenceSort)?if_exists>
-            <#assign selectedOption = answer.surveyOptionSeqId?default("_NA_")>
+            <#assign selectedOption = (answer.surveyOptionSeqId)?default("_NA_")>
             <select class="selectBox" name="answers_${question.surveyQuestionId}">
+              <#if question.requiredField?default("N") != "Y">
+                <option value=""></option>
+              </#if>
               <#if options?has_content>
                 <#list options as option>
                   <option value="${option.surveyOptionSeqId}" <#if option.surveyOptionSeqId == selectedOption>SELECTED</#if>>${option.description?if_exists}</option>
