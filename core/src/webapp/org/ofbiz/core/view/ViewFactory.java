@@ -43,6 +43,9 @@ public class ViewFactory {
     public static final String module = ViewFactory.class.getName();
 
     public static ViewHandler getViewHandler(RequestHandler rh, String type) throws ViewHandlerException {
+        if (type == null || type.length() == 0)
+            type = "default";
+        
         if (handlers.size() == 0) {
             try {
                 ViewHandler h = (ViewHandler) ObjectType.getInstance("org.ofbiz.core.view.JspViewHandler");
@@ -59,7 +62,7 @@ public class ViewFactory {
                 if (handler == null) {
                     String handlerClass = rh.getRequestManager().getHandlerClass(type, RequestManager.VIEW_HANDLER_KEY);
                     if (handlerClass == null)
-                        throw new ViewHandlerException("Unknown handler");
+                        throw new ViewHandlerException("Unknown handler type: " + type);
                     try {
                         handler = (ViewHandler) ObjectType.getInstance(handlerClass);
                         handler.init(rh.getServletContext());
