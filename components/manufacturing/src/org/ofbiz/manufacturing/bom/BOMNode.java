@@ -453,6 +453,9 @@ public class BOMNode {
                 serviceContext.put("productId", getSubstitutedNode().getProduct().getString("productId"));
                 serviceContext.put("facilityId", getSubstitutedNode().getProduct().getString("facilityId"));
             }
+            if (facilityId != null) {
+                serviceContext.put("facilityId", facilityId);
+            }
             serviceContext.put("pRQuantity", new Double(getQuantity()));
             serviceContext.put("startDate", startDate);
             serviceContext.put("userLogin", userLogin);
