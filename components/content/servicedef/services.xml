@@ -1424,4 +1424,12 @@
     <attribute mode="IN" name="pageMode" optional="true" type="String"/>
   </service>
 
+  <service auth="false" engine="java" name="findSubNodes" validate="true"
+        transaction-timout="72000" 
+        location="org.ofbiz.content.ContentManagementServices" invoke="findSubNodes">
+    <description>Get children of content</description>
+    <attribute mode="IN" name="contentId" optional="false" type="String"/>
+    <attribute mode="OUT" name="_LIST_" optional="true" type="List"/>
+  </service>
+
 </services>

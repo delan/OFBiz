@@ -51,6 +51,7 @@ import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.model.ModelUtil;
 import org.ofbiz.entity.util.ByteWrapper;
 import org.ofbiz.entity.util.EntityUtil;
+import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.entity.transaction.GenericTransactionException;
 import org.ofbiz.security.Security;
@@ -873,8 +874,10 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
      */
     public static Map updatePageType(DispatchContext dctx, Map context) throws GenericServiceException{
         
+            return ServiceUtil.returnError("This service has been disabled.");
+            /*
         GenericDelegator delegator = dctx.getDelegator();
-    	Map results = new HashMap();
+        Map results = new HashMap();
     	String pageMode = (String)context.get("pageMode");
     	String contentId = (String)context.get("contentId");
         String contentTypeId = "PAGE_NODE";
@@ -903,6 +906,7 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
         }
             
         return results;
+        */
     }
     
     public static void updatePageNodeChildren(GenericValue content) throws GenericEntityException {
@@ -959,4 +963,25 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
         return;
     }
 
+    public static Map findSubNodes(DispatchContext dctx, Map context) throws GenericServiceException{
+    	Map results = null;
+        GenericDelegator delegator = dctx.getDelegator();
+    	String contentIdTo = (String)context.get("contentId");
+    	List condList = new ArrayList();
+        EntityExpr expr = new EntityExpr("caContentIdTo", EntityOperator.EQUALS, contentIdTo);
+        condList.add(expr);
+        expr = new EntityExpr("caContentAssocTypeId", EntityOperator.EQUALS, "SUB_CONTENT");
+        condList.add(expr);
+        expr = new EntityExpr("caThruDate", EntityOperator.EQUALS, null);
+        condList.add(expr);
+        EntityConditionList entityCondList = new EntityConditionList(condList, EntityOperator.AND);
+         try {
+             List lst = delegator.findByCondition("ContentAssocDataResourceViewFrom", entityCondList, null, UtilMisc.toList("caSequenceNum", "caFromDate", "createdDate"));
+             results.put("_LIST_", lst);
+        } catch(GenericEntityException e) {
+            Debug.logError(e, module);
+            return ServiceUtil.returnError(e.getMessage());             
+        }
+        return results;
+    }
 }
