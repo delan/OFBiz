@@ -99,7 +99,7 @@
         <td>&nbsp;</td>
         <td width="74%">
           <%-- <input type="text" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(tryEntity?facility.getString(fieldName):request.getParameter(paramName))%>" size="20" maxlength="20"> --%>
-          <select name="facilityTypeId" size=1>
+          <select name="facilityTypeId" size=1 class='selectBox'>
             <option selected value='<ofbiz:inputvalue entityAttr="facilityType" field="facilityTypeId"/>'><ofbiz:inputvalue entityAttr="facilityType" field="description"/> <%--<ofbiz:entityfield attribute="facilityType" field="facilityTypeId" prefix="[" suffix="]"/>--%></option>
             <option value='<ofbiz:inputvalue entityAttr="facilityType" field="facilityTypeId"/>'>----</option>
             <ofbiz:iterator name="nextFacilityType" property="facilityTypes">
@@ -111,17 +111,17 @@
       <tr>
         <td width="26%" align=right><div class="tabletext">Name</div></td>
         <td>&nbsp;</td>
-        <td width="74%"><input type="text" <ofbiz:inputvalue entityAttr="facility" field="facilityName" fullattrs="true"/> size="30" maxlength="60"></td>
+        <td width="74%"><input type="text" class="inputBox" <ofbiz:inputvalue entityAttr="facility" field="facilityName" fullattrs="true"/> size="30" maxlength="60"></td>
       </tr>
       <tr>
         <td width="26%" align=right><div class="tabletext">Square Footage</div></td>
         <td>&nbsp;</td>
-        <td width="74%"><input type="text" <ofbiz:inputvalue entityAttr="facility" field="squareFootage" fullattrs="true"/> size="10" maxlength="20"></td>
+        <td width="74%"><input type="text" class="inputBox" <ofbiz:inputvalue entityAttr="facility" field="squareFootage" fullattrs="true"/> size="10" maxlength="20"></td>
       </tr>
       <tr>
         <td width="26%" align=right><div class="tabletext">Description</div></td>
         <td>&nbsp;</td>
-        <td width="74%"><input type="text" <ofbiz:inputvalue entityAttr="facility" field="description" fullattrs="true"/> size="60" maxlength="250"></td>
+        <td width="74%"><input type="text" class="inputBox" <ofbiz:inputvalue entityAttr="facility" field="description" fullattrs="true"/> size="60" maxlength="250"></td>
       </tr>
 
   <tr>

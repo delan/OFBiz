@@ -84,7 +84,7 @@
       <tr>
         <td width="26%" align=right><div class="tabletext">Facility</div></td>
         <td>&nbsp;</td>
-        <td width="74%"><input type="text" value='<ofbiz:print attribute="facilityId"/>' size="19" maxlength="20"></td>
+        <td width="74%"><input type="text" class="inputBox" value='<ofbiz:print attribute="facilityId"/>' size="19" maxlength="20"></td>
       </tr>
       <%} else { %>
       <input type="hidden" name="facilityId" value="<%=facilityId%>">
@@ -92,33 +92,33 @@
       <tr>
         <td width="26%" align=right><div class="tabletext">Location SeqID</div></td>
         <td>&nbsp;</td>
-        <td width="74%"><input type="text" name="locationSeqId" value='<ofbiz:print attribute="locationSeqId"/>' size="19" maxlength="20"></td>
+        <td width="74%"><input type="text" class="inputBox" name="locationSeqId" value='<ofbiz:print attribute="locationSeqId"/>' size="19" maxlength="20"></td>
       </tr>
       <tr>
       <tr>
         <td width="26%" align=right><div class="tabletext">Area</div></td>
         <td>&nbsp;</td>
-        <td width="74%"><input type="text" name="areaId" value='<ofbiz:print attribute="areaId"/>' size="19" maxlength="20"></td>
+        <td width="74%"><input type="text" class="inputBox" name="areaId" value='<ofbiz:print attribute="areaId"/>' size="19" maxlength="20"></td>
       </tr>
       <tr>
         <td width="26%" align=right><div class="tabletext">Aisle</div></td>
         <td>&nbsp;</td>
-        <td width="74%"><input type="text" name="aisleId" value='<ofbiz:print attribute="aisleId"/>' size="19" maxlength="20"></td>
+        <td width="74%"><input type="text" class="inputBox" name="aisleId" value='<ofbiz:print attribute="aisleId"/>' size="19" maxlength="20"></td>
       </tr>
       <tr>
         <td width="26%" align=right><div class="tabletext">Section</div></td>
         <td>&nbsp;</td>
-        <td width="74%"><input type="text" name="sectionId" value='<ofbiz:print attribute="sectionId"/>' size="19" maxlength="20"></td>
+        <td width="74%"><input type="text" class="inputBox" name="sectionId" value='<ofbiz:print attribute="sectionId"/>' size="19" maxlength="20"></td>
       </tr>
       <tr>
         <td width="26%" align=right><div class="tabletext">Level</div></td>
         <td>&nbsp;</td>
-        <td width="74%"><input type="text" name="levelId" value='<ofbiz:print attribute="levelId"/>' size="19" maxlength="20"></td>
+        <td width="74%"><input type="text" class="inputBox" name="levelId" value='<ofbiz:print attribute="levelId"/>' size="19" maxlength="20"></td>
       </tr>
       <tr>
         <td width="26%" align=right><div class="tabletext">Position</div></td>
         <td>&nbsp;</td>
-        <td width="74%"><input type="text" name="positionId" value='<ofbiz:print attribute="positionId"/>' size="19" maxlength="20"></td>
+        <td width="74%"><input type="text" class="inputBox" name="positionId" value='<ofbiz:print attribute="positionId"/>' size="19" maxlength="20"></td>
       </tr>     
       
       <tr>

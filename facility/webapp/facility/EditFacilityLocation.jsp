@@ -113,27 +113,27 @@
       <tr>
         <td width="26%" align=right><div class="tabletext">Area</div></td>
         <td>&nbsp;</td>
-        <td width="74%"><input type="text" <ofbiz:inputvalue entityAttr="facilityLocation" field="areaId" fullattrs="true"/> size="19" maxlength="20"></td>
+        <td width="74%"><input type="text" class="inputBox" <ofbiz:inputvalue entityAttr="facilityLocation" field="areaId" fullattrs="true"/> size="19" maxlength="20"></td>
       </tr>
       <tr>
         <td width="26%" align=right><div class="tabletext">Aisle</div></td>
         <td>&nbsp;</td>
-        <td width="74%"><input type="text" <ofbiz:inputvalue entityAttr="facilityLocation" field="aisleId" fullattrs="true"/> size="19" maxlength="20"></td>
+        <td width="74%"><input type="text" class="inputBox" <ofbiz:inputvalue entityAttr="facilityLocation" field="aisleId" fullattrs="true"/> size="19" maxlength="20"></td>
       </tr>
       <tr>
         <td width="26%" align=right><div class="tabletext">Section</div></td>
         <td>&nbsp;</td>
-        <td width="74%"><input type="text" <ofbiz:inputvalue entityAttr="facilityLocation" field="sectionId" fullattrs="true"/> size="19" maxlength="20"></td>
+        <td width="74%"><input type="text" class="inputBox" <ofbiz:inputvalue entityAttr="facilityLocation" field="sectionId" fullattrs="true"/> size="19" maxlength="20"></td>
       </tr>
       <tr>
         <td width="26%" align=right><div class="tabletext">Level</div></td>
         <td>&nbsp;</td>
-        <td width="74%"><input type="text" <ofbiz:inputvalue entityAttr="facilityLocation" field="levelId" fullattrs="true"/> size="19" maxlength="20"></td>
+        <td width="74%"><input type="text" class="inputBox" <ofbiz:inputvalue entityAttr="facilityLocation" field="levelId" fullattrs="true"/> size="19" maxlength="20"></td>
       </tr>
       <tr>
         <td width="26%" align=right><div class="tabletext">Position</div></td>
         <td>&nbsp;</td>
-        <td width="74%"><input type="text" <ofbiz:inputvalue entityAttr="facilityLocation" field="positionId" fullattrs="true"/> size="19" maxlength="20"></td>
+        <td width="74%"><input type="text" class="inputBox" <ofbiz:inputvalue entityAttr="facilityLocation" field="positionId" fullattrs="true"/> size="19" maxlength="20"></td>
       </tr>
    
       <tr>

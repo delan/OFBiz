@@ -100,9 +100,9 @@
             <input type=hidden <ofbiz:inputvalue entityAttr="facilityGroupRollup" field="facilityGroupId" fullattrs="true"/>>
             <input type=hidden <ofbiz:inputvalue entityAttr="facilityGroupRollup" field="parentFacilityGroupId" fullattrs="true"/>>
             <input type=hidden <ofbiz:inputvalue entityAttr="facilityGroupRollup" field="fromDate" fullattrs="true"/>>
-            <input type=text size='22' <ofbiz:inputvalue entityAttr="facilityGroupRollup" field="thruDate" fullattrs="true"/> style='font-size: x-small;<%=(facilityGroupRollup.getTimestamp("thruDate") != null && UtilDateTime.nowTimestamp().after(facilityGroupRollup.getTimestamp("thruDate")))?" color: red;":""%>'>
+            <input type=text size='22' <ofbiz:inputvalue entityAttr="facilityGroupRollup" field="thruDate" fullattrs="true"/> class="inputBox" style='<%=(facilityGroupRollup.getTimestamp("thruDate") != null && UtilDateTime.nowTimestamp().after(facilityGroupRollup.getTimestamp("thruDate")))?" color: red;":""%>'>
             <a href='#' onclick='setLineThruDateParent("<%=lineParent%>")' class='buttontext'>[Now]</a>
-            <input type=text size='5' <ofbiz:inputvalue entityAttr="facilityGroupRollup" field="sequenceNum" fullattrs="true"/> style='font-size: x-small;'>
+            <input type=text size='5' <ofbiz:inputvalue entityAttr="facilityGroupRollup" field="sequenceNum" fullattrs="true"/> class="inputBox">
             <INPUT type=submit value='Update' style='font-size: x-small;'>
         </FORM>
       </td>
@@ -125,7 +125,7 @@
   <input type="hidden" name="facilityGroupId" value="<%=facilityGroupId%>">
   <input type="hidden" name="showFacilityGroupId" value="<%=facilityGroupId%>">
   <div class='tabletext'>Add <b>Parent</b> Group (select Category and enter From Date):</div>
-    <select name="parentFacilityGroupId">
+    <select name="parentFacilityGroupId" class="selectBox">
     <%Iterator pit = UtilMisc.toIterator(facilityGroups);%>
     <%while(pit != null && pit.hasNext()) {%>
       <%GenericValue curGroup = (GenericValue)pit.next();%>
@@ -138,7 +138,7 @@
       function setPctcParentFromDate() { document.addParentForm.fromDate.value="<%=UtilDateTime.nowTimestamp().toString()%>"; }
   </script>
   <a href='#' onclick='setPctcParentFromDate()' class='buttontext'>[Now]</a>
-  <input type=text size='22' name='fromDate'>
+  <input type=text class="inputBox" size='22' name='fromDate'>
   <input type="submit" value="Add">
 </form>
 <br>
@@ -167,9 +167,9 @@
             <input type=hidden <ofbiz:inputvalue entityAttr="facilityGroupRollup" field="facilityGroupId" fullattrs="true"/>>
             <input type=hidden <ofbiz:inputvalue entityAttr="facilityGroupRollup" field="parentFacilityGroupId" fullattrs="true"/>>
             <input type=hidden <ofbiz:inputvalue entityAttr="facilityGroupRollup" field="fromDate" fullattrs="true"/>>
-            <input type=text size='22' <ofbiz:inputvalue entityAttr="facilityGroupRollup" field="thruDate" fullattrs="true"/> style='font-size: x-small;<%=(facilityGroupRollup.getTimestamp("thruDate") != null && UtilDateTime.nowTimestamp().after(facilityGroupRollup.getTimestamp("thruDate")))?" color: red;":""%>'>
+            <input type=text size='22' <ofbiz:inputvalue entityAttr="facilityGroupRollup" field="thruDate" fullattrs="true"/> class="inputBox" style='<%=(facilityGroupRollup.getTimestamp("thruDate") != null && UtilDateTime.nowTimestamp().after(facilityGroupRollup.getTimestamp("thruDate")))?" color: red;":""%>'>
             <a href='#' onclick='setLineThruDateChild("<%=lineChild%>")' class='buttontext'>[Now]</a>
-            <input type=text size='5' <ofbiz:inputvalue entityAttr="facilityGroupRollup" field="sequenceNum" fullattrs="true"/> style='font-size: x-small;'>
+            <input type=text size='5' <ofbiz:inputvalue entityAttr="facilityGroupRollup" field="sequenceNum" fullattrs="true"/> class="inputBox">
             <INPUT type=submit value='Update' style='font-size: x-small;'>
         </FORM>
       </td>
@@ -191,7 +191,7 @@
   <input type="hidden" name="showFacilityGroupId" value="<%=facilityGroupId%>">
   <input type="hidden" name="parentFacilityGroupId" value="<%=facilityGroupId%>">
   <div class='tabletext'>Add <b>Child</b> Group (select Group and enter From Date):</div>
-    <select name="facilityGroupId">
+    <select name="facilityGroupId" class='selectBox'>
     <%Iterator cit = UtilMisc.toIterator(facilityGroups);%>
     <%while (cit != null && cit.hasNext()) {%>
       <%GenericValue curGroup = (GenericValue)cit.next();%>
@@ -204,7 +204,7 @@
       function setPctcChildFromDate() { document.addChildForm.fromDate.value="<%=UtilDateTime.nowTimestamp().toString()%>"; }
   </script>
   <a href='#' onclick='setPctcChildFromDate()' class='buttontext'>[Now]</a>
-  <input type=text size='22' name='fromDate'>
+  <input type=text class="inputBox" size='22' name='fromDate'>
   <input type="submit" value="Add">
 </form>
 <%}%>

@@ -97,7 +97,7 @@
         <td width="26%" align=right><div class="tabletext">Facility Group Type</div></td>
         <td>&nbsp;</td>
         <td width="74%">
-          <select name="facilityGroupTypeId" size=1>
+          <select name="facilityGroupTypeId" size=1 class="selectBox">
             <option selected value='<ofbiz:inputvalue entityAttr="facilityGroupType" field="facilityGroupTypeId"/>'><ofbiz:inputvalue entityAttr="facilityGroupType" field="description"/></option>
             <option value='<ofbiz:inputvalue entityAttr="facilityGroupType" field="facilityGroupTypeId"/>'>----</option>
             <ofbiz:iterator name="nextFacilityGroupType" property="facilityGroupTypes">
@@ -111,7 +111,7 @@
         <td width="26%" align=right><div class="tabletext">Primary Parent Group</div></td>
         <td>&nbsp;</td>
         <td width="74%">
-          <select name="primaryParentGroupId" size=1>
+          <select name="primaryParentGroupId" size=1 class="selectBox">
             <%               
                GenericValue currentPrimaryParent = null;
                if (facilityGroup != null)
@@ -132,12 +132,12 @@
       <tr>
         <td width="26%" align=right><div class="tabletext">Name</div></td>
         <td>&nbsp;</td>
-        <td width="74%"><input type="text" <ofbiz:inputvalue entityAttr="facilityGroup" field="facilityGroupName" fullattrs="true"/> size="30" maxlength="60"></td>
+        <td width="74%"><input type="text" class="inputBox" <ofbiz:inputvalue entityAttr="facilityGroup" field="facilityGroupName" fullattrs="true"/> size="30" maxlength="60"></td>
       </tr>    
       <tr>
         <td width="26%" align=right><div class="tabletext">Description</div></td>
         <td>&nbsp;</td>
-        <td width="74%"><input type="text" <ofbiz:inputvalue entityAttr="facilityGroup" field="description" fullattrs="true"/> size="60" maxlength="250"></td>
+        <td width="74%"><input type="text" class="inputBox" <ofbiz:inputvalue entityAttr="facilityGroup" field="description" fullattrs="true"/> size="60" maxlength="250"></td>
       </tr>
 
   <tr>

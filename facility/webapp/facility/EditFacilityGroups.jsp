@@ -158,9 +158,9 @@
             <input type=hidden <ofbiz:inputvalue entityAttr="facilityGroupMember" field="facilityId" fullattrs="true"/>>
             <input type=hidden <ofbiz:inputvalue entityAttr="facilityGroupMember" field="facilityGroupId" fullattrs="true"/>>
             <input type=hidden <ofbiz:inputvalue entityAttr="facilityGroupMember" field="fromDate" fullattrs="true"/>>
-            <input type=text size='22' <ofbiz:inputvalue entityAttr="facilityGroupMember" field="thruDate" fullattrs="true"/> style='font-size: x-small; <%if (hasExpired) {%>color: red;<%}%>'>
+            <input type=text size='22' <ofbiz:inputvalue entityAttr="facilityGroupMember" field="thruDate" fullattrs="true"/> class="inputBox" style='<%if (hasExpired) {%>color: red;<%}%>'>
             <a href='#' onclick='setLineThruDate("<%=line%>")' class='buttontext'>[Now]</a>
-            <input type=text size='5' <ofbiz:inputvalue entityAttr="facilityGroupMember" field="sequenceNum" fullattrs="true"/> style='font-size: x-small;'>           
+            <input type=text size='5' <ofbiz:inputvalue entityAttr="facilityGroupMember" field="sequenceNum" fullattrs="true"/> class="inputBox">           
             <INPUT type=submit value='Update' style='font-size: x-small;'>
         </FORM>
     </td>
@@ -204,7 +204,7 @@
   <div class='head2'>Add FacilityGroupMember:</div>
   <div class='tabletext'>
     Facility Group ID: <input type=text size='20' name='facilityGroupId'>
-    From Date: <a href='#' onclick='setPcmFromDate()' class='buttontext'>[Now]</a> <input type=text size='22' name='fromDate'>
+    From Date: <a href='#' onclick='setPcmFromDate()' class='buttontext'>[Now]</a> <input type=text size='22' class="inputBox" name='fromDate'>
     <input type="submit" value="Add">
   </div>
 </form>

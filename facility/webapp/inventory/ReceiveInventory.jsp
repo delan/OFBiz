@@ -96,7 +96,7 @@
         <td width="25%" align='right'><div class="tabletext">Product ID</div></td>
         <td>&nbsp;</td>
         <td width="25%">
-          <input type="text" name="productId" size="20" maxlength="20">
+          <input type="text" class="inputBox" name="productId" size="20" maxlength="20">
           <input type="hidden" name="facilityId" value="<%=facilityId%>">
         </td>
         <td width="50%">
@@ -139,7 +139,7 @@
         <td width='6%' align='right' nowrap><div class="tabletext">Item Description</div></td>
         <td width='6%'>&nbsp;</td>
         <td width='74%'>
-          <input type='text' name='itemDescription' size='30' maxlength='60' style='font-size: x-small;'>
+          <input type='text' name='itemDescription' size='30' maxlength='60' class="inputBox">
         </td>                
       </tr>	
       <tr>
@@ -147,7 +147,7 @@
         <td width='6%' align='right' nowrap><div class="tabletext">Inventory Item <br>(optional will create new if empty)</div></td>
         <td width='6%'>&nbsp;</td>
         <td width='74%'>
-          <input type='text' name='inventoryItemId' size='20' maxlength='20' style='font-size: x-small;'>
+          <input type='text' name='inventoryItemId' size='20' maxlength='20' class="inputBox">
         </td>                
       </tr>	
       <tr>
@@ -155,7 +155,7 @@
         <td width='6%' align='right' nowrap><div class="tabletext">Inventory Item Type</div></td>
         <td width='6%'>&nbsp;</td>
         <td width='74%'>
-          <select name="inventoryItemTypeId" size=1 style='font-size: x-small;'>                        
+          <select name="inventoryItemTypeId" size=1 class="selectBox">                        
             <ofbiz:iterator name="nextInventoryItemType" property="inventoryItemTypes">
               <option value='<ofbiz:inputvalue entityAttr="nextInventoryItemType" field="inventoryItemTypeId"/>'><ofbiz:inputvalue entityAttr="nextInventoryItemType" field="description"/></option>
             </ofbiz:iterator>
@@ -170,7 +170,7 @@
         <td width='6%' align='right' nowrap><div class="tabletext">Date Received</div></td>
         <td width='6%'>&nbsp;</td>
         <td width='74%'>
-          <input type='text' name='datetimeReceived' size='22' value="<%=UtilDateTime.nowTimestamp()%>" style='font-size: x-small;'>
+          <input type='text' name='datetimeReceived' size='22' value="<%=UtilDateTime.nowTimestamp()%>" class="inputBox">
           <!--<a href='#' onclick='setNow("datetimeReceived")' class='buttontext'>[Now]</a>-->
         </td>                
       </tr>	
@@ -179,7 +179,7 @@
         <td width='6%' align='right' nowrap><div class="tabletext">Facility Location</div></td>
         <td width='6%'>&nbsp;</td>
         <td width='74%'>
-          <input type='text' name='locationSeqId' size='20' maxlength="20" style='font-size: x-small;'>
+          <input type='text' name='locationSeqId' size='20' maxlength="20" class="inputBox">
         </td>                
       </tr>	
       <tr>
@@ -187,7 +187,7 @@
         <td width='6%' align='right' nowrap><div class="tabletext">Rejected Reason</div></td>
         <td width='6%'>&nbsp;</td>
         <td width='74%'>
-          <select name="rejectionId" size=1 style='font-size: x-small;'>   
+          <select name="rejectionId" size=1 class='selectBox'>   
             <option></option>                     
             <ofbiz:iterator name="nextRejection" property="rejectReasons">
               <option value='<ofbiz:inputvalue entityAttr="nextRejection" field="rejectionId"/>'><ofbiz:inputvalue entityAttr="nextRejection" field="description"/></option>
@@ -200,7 +200,7 @@
         <td width='6%' align='right' nowrap><div class="tabletext">Quantity Rejected</div></td>
         <td width='6%'>&nbsp;</td>
         <td width='74%'>
-          <input type='text' name='quantityRejected' size='5' value='0' style='font-size: x-small;'>
+          <input type='text' name='quantityRejected' size='5' value='0' class="inputBox">
         </td>                
       </tr>	
       <tr>
@@ -208,7 +208,7 @@
         <td width='6%' align='right' nowrap><div class="tabletext">Quantity Accepted</div></td>
         <td width='6%'>&nbsp;</td>
         <td width='74%'>
-          <input type='text' name='quantityAccepted' size='5' value='1' style='font-size: x-small;'>
+          <input type='text' name='quantityAccepted' size='5' value='1' class="inputBox">
         </td>                
       </tr>	
       <tr>

@@ -129,7 +129,7 @@
         <td width="25%" align='right'><div class="tabletext">Inventory Item ID</div></td>
         <td width='6%'>&nbsp;</td>
         <td width="25%">
-          <input type="text" name="inventoryItemId" size="20" maxlength="20">
+          <input type="text" class="inputBox" name="inventoryItemId" size="20" maxlength="20">
           <input type="hidden" name="facilityId" value="<%=facilityId%>">
         </td>
         <td width="50%">
@@ -234,7 +234,7 @@
         <td width='6%' align='right' nowrap><div class="tabletext">Transfer Status</div></td>
         <td width='6%'>&nbsp;</td>
         <td width='74%'
-          <select name="statusId" style='font-size: x-small;'>
+          <select name="statusId" class='selectBox'>
             <%GenericValue curStatusItem = inventoryTransfer == null ? null : inventoryTransfer.getRelatedOneCache("StatusItem");%>
             <option value='<ofbiz:inputvalue entityAttr="inventoryTransfer" field="statusId"/>'><%if (curStatusItem != null) {%><%=curStatusItem.getString("description")%><%} else {%><ofbiz:entityfield attribute="inventoryTransfer" field="statusId" prefix="[" suffix="]"/><%}%></option>
             <option value='<ofbiz:inputvalue entityAttr="inventoryTransfer" field="statusId"/>'>----</option>
@@ -249,7 +249,7 @@
         <td width='6%' align='right' nowrap><div class="tabletext">Transfer Send Date</div></td>
         <td width='6%'>&nbsp;</td>
         <td width='74%'
-          <input type="text" <ofbiz:inputvalue entityAttr="inventoryTransfer" field="sendDate" fullattrs="true"/> size="22" style='font-size: x-small;'>
+          <input type="text" <ofbiz:inputvalue entityAttr="inventoryTransfer" field="sendDate" fullattrs="true"/> size="22" class="inputBox">
           <a href='#' onclick='setNow("sendDate")' class='buttontext'>[Now]</a>
         </td>
       </tr>
@@ -260,14 +260,14 @@
         <td width='6%'>&nbsp;</td>
         <td width='74%'
           <span class='tabletext'>Select a Facility:</span>
-          <select name="facilityIdTo" style='font-size: x-small;'>           
+          <select name="facilityIdTo" class='selectBox'>           
             <ofbiz:iterator name="nextFacility" property="facilities">
               <option value='<ofbiz:inputvalue entityAttr="nextFacility" field="facilityId"/>'><ofbiz:inputvalue entityAttr="nextFacility" field="facilityName"/> <ofbiz:entityfield attribute="nextFacility" field="facilityId" prefix="[" suffix="]"/></option>
             </ofbiz:iterator>
           </select>            
           <br>
           <span class='tabletext'>OR enter a Container ID:</span>
-          <input type="text" name="containerIdTo" value='<ofbiz:inputvalue entityAttr="inventoryTransfer" field="containerIdTo"/>' size="20" maxlength="20" style='font-size: x-small;'>
+          <input type="text" name="containerIdTo" value='<ofbiz:inputvalue entityAttr="inventoryTransfer" field="containerIdTo"/>' size="20" maxlength="20" class="inputBox">
         </td>
       </tr>
       <tr>
@@ -275,7 +275,7 @@
         <td width='6%' align='right' nowrap><div class="tabletext">To Location</div></td>
         <td width='6%'>&nbsp;</td>
         <td width='74%'
-          <input type="text" size="20" name="locationSeqIdTo" value='<ofbiz:inputvalue entityAttr="inventoryTransfer" field="locationSeqIdTo"/>' maxlength="20" style='font-size: x-small;'>
+          <input type="text" size="20" name="locationSeqIdTo" value='<ofbiz:inputvalue entityAttr="inventoryTransfer" field="locationSeqIdTo"/>' maxlength="20" class="inputBox">
         </td>
       </tr>      
       <tr>
@@ -283,7 +283,7 @@
         <td width='6%' align='right' nowrap><div class="tabletext">Comments</div></td>
         <td width='6%'>&nbsp;</td>
         <td width='74%'
-          <input type="text" name="comments" size="60" maxlength="250" style='font-size: x-small;'>
+          <input type="text" name="comments" size="60" maxlength="250" class="inputBox">
         </td>
       </tr>  
       <tr>
@@ -292,7 +292,7 @@
         <td width='6%'>&nbsp;</td>
         <td width='74%'
           <%if (inventoryItem != null && "NON_SERIAL_INV_ITEM".equals(inventoryItem.getString("inventoryItemTypeId"))) {%>
-            <input type=text size='5' name='xferQty' value='<ofbiz:inputvalue entityAttr="inventoryItem" field="availableToPromise"/>' style='font-size: x-small;'>
+            <input type=text size='5' name='xferQty' value='<ofbiz:inputvalue entityAttr="inventoryItem" field="availableToPromise"/>' class="inputBox">
           <%} else if (inventoryItem != null && "SERIALIZED_INV_ITEM".equals(inventoryItem.getString("inventoryItemTypeId"))) {%>
             <input type="hidden" name="xferQty" value="1">
             <div class="tabletext">1</div>
@@ -307,7 +307,7 @@
         <td width='6%' align='right' nowrap><div class="tabletext">Transfer Receive Date</div></td>
         <td width='6%'>&nbsp;</td>
         <td width='74%'
-          <input type="text" <ofbiz:inputvalue entityAttr="inventoryTransfer" field="receiveDate" fullattrs="true"/> size="22" style='font-size: x-small;'>
+          <input type="text" <ofbiz:inputvalue entityAttr="inventoryTransfer" field="receiveDate" fullattrs="true"/> size="22" class="inputBox">
           <a href='#' onclick='setNow("receiveDate")' class='buttontext'>[Now]</a>
         </td>
       </tr>
@@ -323,7 +323,7 @@
         <td width='6%' align='right' nowrap><div class="tabletext">To Location</div></td>
         <td width='6%'>&nbsp;</td>
         <td width='74%'
-          <input type="text" size="20" name="locationSeqIdTo" value='<ofbiz:inputvalue entityAttr="inventoryTransfer" field="locationSeqIdTo"/>' maxlength="20" style='font-size: x-small;'>
+          <input type="text" size="20" name="locationSeqIdTo" value='<ofbiz:inputvalue entityAttr="inventoryTransfer" field="locationSeqIdTo"/>' maxlength="20" class="inputBox">
         </td>
       </tr>  
       <tr>
@@ -331,7 +331,7 @@
         <td width='6%' align='right' nowrap><div class="tabletext">Comments</div></td>
         <td width='6%'>&nbsp;</td>
         <td width='74%'
-          <input type="text" name="comments" value='<ofbiz:inputvalue entityAttr="inventoryTransfer" field="comments"/>' size="60" maxlength="250" style='font-size: x-small;'>
+          <input type="text" name="comments" value='<ofbiz:inputvalue entityAttr="inventoryTransfer" field="comments"/>' size="60" maxlength="250" class="inputBox">
         </td>
       </tr>      
       <% } %>

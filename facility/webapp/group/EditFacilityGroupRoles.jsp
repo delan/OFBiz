@@ -83,9 +83,9 @@
   <input type="hidden" name="facilityGroupId" value="<%=facilityGroupId%>">  
   <div class='head2'>Add FacilityGroup Party Role:</div>
   <div class='tabletext'>
-    Party ID: <input type='text' size='20' name='partyId'>
+    Party ID: <input type='text' class="inputBox" size='20' name='partyId'>
     From Date:
-    <select name='roleTypeId'><option></option>
+    <select name='roleTypeId' class="selectBox"><option></option>
 	  <ofbiz:iterator name="role" property="roles">
 	    <option value="<ofbiz:entityfield attribute="role" field="roleTypeId"/>"><ofbiz:entityfield attribute="role" field="description"/></option>
       </ofbiz:iterator>
