@@ -1,5 +1,5 @@
 /*
- * $Id: Start.java,v 1.6 2003/08/20 05:55:59 ajzeneski Exp $
+ * $Id: Start.java,v 1.7 2003/08/20 06:02:15 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -43,7 +43,7 @@ import java.util.Properties;
  * Start - OFBiz Container(s) Startup Class
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
-  *@version    $Revision: 1.6 $
+  *@version    $Revision: 1.7 $
  * @since      2.1
  */
 public class Start implements Runnable {
@@ -98,9 +98,9 @@ public class Start implements Runnable {
             if (!key.equals(config.adminKey)) {        
                 return "FAIL";
             } else {
-                if (command.equals(Start.SHUTDOWN_COMMAND)) {                             
-                    serverRunning = false;
-                    System.out.println("Shutdown initiated from: " + client.getInetAddress().getHostAddress() + ":" + client.getPort());        
+                if (command.equals(Start.SHUTDOWN_COMMAND)) {                                                 
+                    System.out.println("Shutdown initiated from: " + client.getInetAddress().getHostAddress() + ":" + client.getPort());
+                    shutdownServer();        
                 } else if (command.equals(Start.STATUS_COMMAND)) {
                     return serverRunning ? "Running" : "Stopped";
                 }
@@ -169,7 +169,7 @@ public class Start implements Runnable {
     
     private void setShutdownHook() {
         try {
-            Method shutdownHook = java.lang.Runtime.class.getMethod("addShutdownHook",new Class[] {java.lang.Thread.class});
+            Method shutdownHook = java.lang.Runtime.class.getMethod("addShutdownHook", new Class[] { java.lang.Thread.class });
             Thread hook = new Thread() {
                 public void run() {                
                     setName("OFBiz_Shutdown_Hook");
@@ -183,9 +183,10 @@ public class Start implements Runnable {
                 }
             };
             
-            shutdownHook.invoke(Runtime.getRuntime(), new Object[]{hook});
-        } catch(Exception e) {                            
+            shutdownHook.invoke(Runtime.getRuntime(), new Object[] { hook });
+        } catch (Exception e) {                                    
             // VM Does not support shutdown hook
+            e.printStackTrace();
         }        
     }
     
