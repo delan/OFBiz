@@ -40,8 +40,10 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='headerboxbottom'>
         <tr>
           <td class="headerButtonLeft"><a href="<ofbiz:url>/main</ofbiz:url>" class="headerbuttontext">Main</a></td>
+          <td class="headerButtonLeft"><a href="<ofbiz:url>/FindFacility</ofbiz:url>" class="headerbuttontext">Facilities</a></td>
+          <td class="headerButtonLeft"><a href="<ofbiz:url>/FindFacilityGroup</ofbiz:url>" class="headerbuttontext">Facility Groups</a></td>
 
-          <td width="90%" align=center class='headerCenter'>&nbsp;</td>
+          <td width="65%" align=center class='headerCenter'>&nbsp;</td>
 
           <ofbiz:unless name="userLogin">
             <td class="headerButtonRight"><a href='<ofbiz:url><%=CommonWorkers.makeLoginUrl(pageContext)%></ofbiz:url>' class='headerbuttontext'>Login</a></td>
