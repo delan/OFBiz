@@ -1,7 +1,8 @@
 /*
  * $Id$
- * 
- *  Copyright (c) 2001 The Open For Business Project and repected authors.
+ *
+ *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
  *  to deal in the Software without restriction, including without limitation
@@ -28,9 +29,6 @@ import javax.servlet.jsp.*;
 
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.util.*;
-
-import org.ofbiz.commonapp.accounting.invoice.InvoiceWorker;
-import org.ofbiz.commonapp.order.order.OrderReadHelper;
 
 /**
  * Worker methods for Payments
@@ -175,53 +173,35 @@ public class PaymentWorker {
         }
                 
         return webSitePayment;                          
-    }
+    }  
     
-    public static double getBillingAccountBalance(GenericDelegator delegator, String billingAccountId) {
-        double balance = 0.00;
+    public static GenericValue getPaymentAddress(GenericDelegator delegator, String webSiteId, String paymentMethodTypeId) {
+        GenericValue paymentSettings = PaymentWorker.getPaymentSetting(delegator, webSiteId, paymentMethodTypeId);
+        String paymentConfig = paymentSettings != null && paymentSettings.get("paymentConfiguration") != null ? paymentSettings.getString("paymentConfiguration") : null;
+        if (paymentConfig == null) paymentConfig = "payment.properties";
+        String payToPartyId = UtilProperties.getPropertyValue(paymentConfig, "payment.general.payTo", "Company");      
         
-        // first get all the pending orders (not cancelled, rejected or completed)
-        List orderHeaders = null;
-        List exprs1 = new LinkedList();
-        exprs1.add(new EntityExpr("billingAccountId", EntityOperator.EQUALS, billingAccountId));
-        exprs1.add(new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "ORDER_REJECTED"));
-        exprs1.add(new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "ORDER_CANCELLED"));
-        exprs1.add(new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "ORDER_COMPLETED"));
+        List paymentAddresses = null;        
         try {
-            orderHeaders = delegator.findByAnd("OrderHeader", exprs1);
+            paymentAddresses = delegator.findByAnd("PartyContactMechPurpose", 
+                UtilMisc.toMap("partyId", payToPartyId, "contactMechPurposeTypeId", "PAYMENT_LOCATION"), 
+                UtilMisc.toList("-fromDate"));
+            paymentAddresses = EntityUtil.filterByDate(paymentAddresses);                
         } catch (GenericEntityException e) {
-            Debug.logError(e, "Trouble getting OrderHeader list", module);
-            return 0.01;
+            Debug.logError(e, "Trouble getting PartyContactMechPurpose entity list", module);            
         }
-        if (orderHeaders != null) {
-            Iterator ohi = orderHeaders.iterator();
-            while (ohi.hasNext()) {
-                GenericValue orderHeader = (GenericValue) ohi.next();
-                OrderReadHelper orh = new OrderReadHelper(orderHeader);
-                balance += orh.getOrderGrandTotal();            
+        
+        // get the address for the primary contact mech
+        GenericValue purpose = EntityUtil.getFirst(paymentAddresses);
+        GenericValue postalAddress = null;
+        if (purpose != null) {
+            try {
+                postalAddress = delegator.findByPrimaryKey("PostalAddress", UtilMisc.toMap("contactMechId", purpose.getString("contactMechId")));
+            } catch (GenericEntityException e) {
+                Debug.logError(e, "Trouble getting PostalAddress record for contactMechId: " + purpose.getString("contactMechId"), module);
             }
         }
-        
-        // next get all the un-paid invoices (this will include all completed orders)
-        List invoices = null;
-        List exprs2 = new LinkedList();
-        exprs2.add(new EntityExpr("billingAccountId", EntityOperator.EQUALS, billingAccountId));
-        exprs2.add(new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "INVOICE_PAID"));
-        exprs2.add(new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
-        try {
-            invoices = delegator.findByAnd("Invoice", exprs2);
-        } catch (GenericEntityException e) {
-            Debug.logError(e, "Trouble getting Invoice list", module);
-            return 0.01;
-        }
-        if (invoices != null) {
-            Iterator ii = invoices.iterator();
-            while (ii.hasNext()) {
-                GenericValue invoice = (GenericValue) ii.next();
-                balance += InvoiceWorker.getInvoiceTotal(invoice);              
-            }
-        }
-        
-        return balance;
-    }
+                                
+        return postalAddress;   
+    }           
 }
