@@ -363,12 +363,25 @@ public class CheckOutEvents {
 
         // build the server root string
         StringBuffer serverRoot = new StringBuffer();
-        String server = UtilProperties.getPropertyValue("url.properties", "force.http.host", request.getServerName());
-        String port = UtilProperties.getPropertyValue("url.properties", "port.http", "80");
-        serverRoot.append("http://");
-        serverRoot.append(server);
-        if (!port.equals("80"))
-            serverRoot.append(":" + port);
+        if (request.isSecure()) {
+            String server = UtilProperties.getPropertyValue("url.properties", "force.https.host", request.getServerName());
+            String port = UtilProperties.getPropertyValue("url.properties", "port.https", "443");
+            serverRoot.append("https://");
+            serverRoot.append(server);
+            if (!"443".equals(port)) {
+                serverRoot.append(":");
+                serverRoot.append(port);
+            }
+        } else {
+            String server = UtilProperties.getPropertyValue("url.properties", "force.http.host", request.getServerName());
+            String port = UtilProperties.getPropertyValue("url.properties", "port.http", "80");
+            serverRoot.append("http://");
+            serverRoot.append(server);
+            if (!"80".equals(port)) {
+                serverRoot.append(":");
+                serverRoot.append(port);
+            }
+        }
 
         try {
             URL url = new URL(serverRoot.toString() + controlPath + "/confirmorder?order_id=" + request.getAttribute("order_id") + "&security_code=" + ORDER_SECURITY_CODE);
