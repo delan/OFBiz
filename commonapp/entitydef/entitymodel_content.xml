@@ -98,6 +98,9 @@
       <relation type="many" rel-entity-name="ContentAttribute">
         <key-map field-name="contentId"/>
       </relation>
+      <relation type="many" rel-entity-name="ContentMetaData">
+        <key-map field-name="contentId"/>
+      </relation>
       <relation type="many" title="From" rel-entity-name="ContentAssoc">
         <key-map field-name="contentId"/>
       </relation>
