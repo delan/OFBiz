@@ -29,6 +29,7 @@
 <h3>Table of Contents</h3>
 <ul>
   <li class='contenttext'><a href="#CVS">CVS - Current</a></li>
+  <li class='contenttext'><a href="#3.0.0">Release 3.0.0 - 11 March 2004</a></li>
   <li class='contenttext'><a href="#2.1.1">Release 2.1.1 - 06 May 2003</a></li>
   <li class='contenttext'><a href="#2.1.0">Release 2.1.0 - 24 April 2003</a></li>
   <li class='contenttext'><a href="#2.0.0">Release 2.0.0 - 20 January 2003</a></li>
@@ -49,11 +50,150 @@
 <br/>
 
 <hr class='sepbar'/>
-<h3><a name="CVS">Current</a></h3>
+<h3><a name="CVS">CVS - Current</a></h3>
 <hr class='sepbar'/>
 <h4>Overview</h4>
 
-<p class='contenttext'>No overview available.</p>
+<p class='contenttext'>No overview available. Work in progress.</p>
+
+<hr class='sepbar'/>
+<h3><a name="3.0.0">Release 3.0.0 - 11 March 2004</a></h3>
+<hr class='sepbar'/>
+<h4>Overview</h4>
+
+<p class='contenttext'>This is the long awaited 3.0.0 release. We have been planning on doing this release
+for quite some time now, but things have been moving so fast (a good thing), especially over the last few
+months, that there hasn't been much of a chance for new features to stabilize. But now it's here. With this
+release we are aware of various outstanding issues as can be seen in our issue tracker on the OFBiz java.net
+site, but in general things are working properly, especially the more mature parts of the system.</p>
+
+<p class='contenttext'>One of the biggest changes you will see right away in the 3.0 series is the reorganization
+of the directory structure and the componentization of the project. If you have ever wondered which entities or 
+services or other artifacts go with which parts of the project you can easily see so right now. Also, if you are
+using a fully supported application server there is a lot that can be configured much more easily, even to the
+point where you can drop in a new component into the hot-deploy directory and on start-up all artifacts will be
+available in the system, including: classpath resources, entity definitions and seed data files, service definitions,
+and web applications.</p>
+
+<p class='contenttext'>Beyond that nearly every part of the project has been updated with new features and enhanced
+functionality. In addition to significant progress in Manufacturing, WorkEffort, Accounting, and so on we have 
+established all of the basic functionality required to run a fulfillment oriented business including everything
+from purchasing and receiving to stock moves, picking, packing and shipping. Inventory reservation and issuance are 
+tracked and full support for back ordering is included. It can even send back-order notices according to the FTC 
+guidelines and is smart enough to not only look at what you have in stock, but also the in-coming shipments and it
+even does an on-the-fly assignment of outstanding back-ordered quantities by the purchase date to see which in-coming
+shipment would fill the needs of a particular order. And to make your life easier we even have an XML-based UPS 
+integration so you can get exact rates, get tracking codes immediately, and even print UPS labels on-the-fly during
+packing of shipments. There is even support for serial scales to weigh each package before sending off to get an
+exact rate.</p>
+
+<p class='contenttext'>In general, if you haven't looked at OFBiz in a while you will be amazed at what is new.
+While we have put some effort into compiling this list of new things, it is still far from complete but should
+give you a good idea about what is new and improved in OFBiz.</p>
+
+<h4>New Features & Improvements</h4>
+<p class='contenttext'>New features and improvements include:</p>
+<ul>
+  <li class='contenttext'>eCommerce
+  <ul>
+    <li class='contenttext'>Shopping List enhancements: parent/child lists, add to cart from list, add to list from cart, display list totals.</li>
+    <li class='contenttext'>New payment capture (settle) functionality</li>
+    <li class='contenttext'>Payment captures will now attempt re-auth the credit card on failure</li>
+    <li class='contenttext'>Added last viewed items to ecommerce</li>
+    <li class='contenttext'>Integration with ClearCommerce payment gateway</li>
+    <li class='contenttext'>Integration with ValueLink for Gift Cards, including support for purchasing cards, re-charging cards, balance inquiries and using cards for payment</li>
+    <li class='contenttext'>Promotion engine totally re-written; now supports use limits per promotion/customer/order; 
+    	can require promotion codes limited by association with Party or email address and with use limit by code/customer;
+    	now supports new types of conditions and actions limited by associated products and/or categories;
+    	supports promotions such as buy X get Y for Z% discount, but X for Y dollars, and many many more (includes improved versions of old ones such as order discounts, free shipping, etc)</li>
+    <li class='contenttext'>New Product Search functionality can search by a List of constraints including 
+    	category, feature, and keyword constraints for a full parametric search (others can be easily added), 
+    	also supports multiple result ordering options including by keyword relevancy and by product name (others can be easily added)</li>
+    <li class='contenttext'>All search constraints are shown with search results and can be individually removed for a broader search, or you can refine the
+    	search because any time you go back to the advanced search page it remembers your last search and allows you to refine the previous search, or start fresh</li>
+  </ul>
+  <li class='contenttext'>Content Management
+  <ul>
+    <li class='contenttext'>URL settings for HTTP/HTTPS now configurable by WebSite</li>
+    <li class='contenttext'>New Form Widget: describe your form in XML, auto-create fields from services and entities, do create/edit/list/lookup-popup and many other types of forms</li>
+    <li class='contenttext'>DataResource and Content creation and editing</li>
+    <li class='contenttext'>Supports localized content</li>
+    <li class='contenttext'>New layout editor can be used to easily create new content from existing templates and new or existing content and data resources</li>
+  </ul>
+  <li class='contenttext'>Catalog Management
+  <ul>
+    <li class='contenttext'>Implemented ProductStore; moved inventory/shipping/tax/payment/email settings to here</li>
+    <li class='contenttext'>Shipping and Tax rates now configurable by ProductStore</li>
+    <li class='contenttext'>Payment and Email notification settings now configurable by ProductStore</li>
+    <li class='contenttext'>Content can now be flexibly associated with Products for names, descriptions, images, and any additional information desired</li>
+  </ul>
+  <li class='contenttext'>Order Management
+  <ul>
+    <li class='contenttext'>Refactor Order Entry & added support for purchase orders</li>
+    <li class='contenttext'>Refactor of order processing workflow to handle getting sales and purchase orders to approved status only (optional)</li>
+    <li class='contenttext'>Order status changes to Completed or Cancelled now automatic based on the status of the items</li>
+    <li class='contenttext'>Refactor Find Order page; now uses a filtering approach and runs much more efficiently</li>
+  </ul>
+  <li class='contenttext'>Facility Management
+  <ul>
+    <li class='contenttext'>Implemented Inventory Receive PO and Receive Shipment</li>
+    <li class='contenttext'>New Shipment functionality</li>
+    <li class='contenttext'>Integration with UPS shipping services (using XPCI, the XML-based UPS interface)</li>
+    <li class='contenttext'>New product return functionality supports refunds and credits</li>
+    <li class='contenttext'>New customizable JasperReport for shipping manifest (packing slip)</li>
+    <li class='contenttext'>New pick list and stock move functionality (pick list create PDF file using XSL:FO and FOP)</li>
+  </ul>
+  <li class='contenttext'>Accounting Management
+  <ul>
+    <li class='contenttext'>Create Invoice triggered on shipment status change</li>
+    <li class='contenttext'>Capture payment triggered on invoice creation</li>
+    <li class='contenttext'>Started Chart of Accounts functionality and infrastructure for the GL</li>
+  </ul>
+  <li class='contenttext'>Manufacturing Management
+  <ul>
+    <li class='contenttext'>Bill of materials management, including flexible substitutions or option selection using the virtual/variant product model</li>
+    <li class='contenttext'>Job resource management and scheduling</li>
+  </ul>
+  <li class='contenttext'>Service Engine
+  <ul>
+    <li class='contenttext'>New auto-attributes functionality; will import fields from entities into service definitions; also can exclude and override attributes now</li>  
+    <li class='contenttext'>New option in service definition to set the timeout for the transaction; only if the service starts a transaction</li>
+    <li class='contenttext'>New option in service definition to set the timeout for the transaction; only if the service starts a transaction</li>
+    <li class='contenttext'>New debug mode on services; will enable verbose debugging until the service completes</li>
+    <li class='contenttext'>Now printing the service name in many error messages; helps with debugging</li>
+  </ul>
+  <li class='contenttext'>Entity Engine
+  <ul>
+    <li class='contenttext'>Various extensions and new features for view entities</li>
+    <li class='contenttext'>Dynamic view entities now allow you to create your view entities on the fly for improved flexibility and efficiency</li>
+    <li class='contenttext'>Updated TransactionUtil.begin() to accept the transaction timeout in seconds</li>
+    <li class='contenttext'>New Entity Synchronization tool does large scale one-way timestamp based synchronization; supports multiple target systems, flexible specification of entities and entity packages to include or exclude, full tracking of sync history and statistics, and various other features; does remote synchronization using the Service Engine</li>
+  </ul>
+  <li class='contenttext'>Workflow Engine
+  <ul>
+    <li class='contenttext'>XPDL Reader now will read XPDL 1.0 generated by JAwE</li>
+    <li class='contenttext'>Workflow will now auto version packages/processes if no version is passed</li>
+    <li class='contenttext'>Process/Activity names/description can include variables from the context '${variable}'</li>
+    <li class='contenttext'>Changed some workflow exceptions to be more informative</li>
+    <li class='contenttext'>Implemented activity/process functionality</li>
+    <li class='contenttext'>New participantId can be used as the partyId or roleTypeId depending on the participantTypeId</li>
+    <li class='contenttext'>Refactor of WfFactory to no longer hold created objects; fixes many bugs with caching deleted assignments and re-loading new versions of workflows</li>
+  </ul>
+  <li class='contenttext'>General &amp; Infrastructure
+  <ul>
+    <li class='contenttext'>Security improvements; logging out of one application will now log out of all, can automatically login to other applications through a temporary external login key generated for each page request.</li>
+    <li class='contenttext'>Updated lastest versions of JPublish, JOTM; added Minerva for the default XA-aware connection pool</li>
+    <li class='contenttext'>Added new JPublishWrapper class available in the ServletContext</li>
+    <li class='contenttext'>Refactor JPublishViewHandler to use the JPublishWrapper (better reuse)</li>  
+    <li class='contenttext'>Added jpublish.xml to all applications</li>
+    <li class='contenttext'>Added base actions and FTL templates to all applications in preparation for migration</li>
+    <li class='contenttext'>Migrated OrderMgr, Catalog, PartyMgr, WorkEffort and most other applications to use JP/FTL/BSH</li>
+    <li class='contenttext'>Added shutdown hook in ofbiz.jar</li>
+    <li class='contenttext'>New configurable options for logs dir, log4j configuration, plus all options can be overridden on the command line</li>
+    <li class='contenttext'>Now prints all connections to the admin port of ofbiz.jar</li>
+    <li class='contenttext'>All debug statements now pass log4j category, we can now filter to the class level using log4j</li>
+  </ul>
+</ul>
 
 <h4>Bug Fixes</h4>
 <p class='contenttext'>Bug Fixes include:</p>
@@ -64,55 +204,6 @@
   <li class='contenttext'>Bug fixes in completing multiple assignments (WF)</li>	
 </ul>
 
-<h4>New Features & Improvements</h4>
-<p class='contenttext'>New features and improvements include:</p>
-<ul>
-  <li class='contenttext'>Security improvements; logging out of one application will now log out of all.</li>
-  <li class='contenttext'>Shopping List enhancements: parent/child lists, add to cart from list, add to list from cart, display list totals.</li>
-  <li class='contenttext'>New payment capture (settle) functionality</li>
-  <li class='contenttext'>Payment captures will now attempt re-auth the credit card on failure</li>
-  <li class='contenttext'>Updated lastest versions of JPublish, JOTM and XAPool</li>
-  <li class='contenttext'>Added new JPublishWrapper class available in the ServletContext</li>
-  <li class='contenttext'>Refactor JPublishViewHandler to use the JPublishWrapper (better reuse)</li>  
-  <li class='contenttext'>Added jpublish.xml to all applications</li>
-  <li class='contenttext'>Added base actions and FTL templates to all applications in preparation for migration</li>
-  <li class='contenttext'>Migrated OrderMgr and Catalog applications to use JP/FTL/BSH</li>
-  <li class='contenttext'>Began migration of WorkEffort and PartyMgr applications to use JP/FTL/BSH</li>
-  <li class='contenttext'>Implemented ProductStore; moved inventory/shipping/tax/payment/email settings here</li>
-  <li class='contenttext'>Shipping and Tax rates now configurable by ProductStore</li>
-  <li class='contenttext'>Payment and Email notification settings now configurable by ProductStore</li>
-  <li class='contenttext'>URL settings for HTTP/HTTPS now configurable by WebSite</li>
-  <li class='contenttext'>Refactor Order Entry & added support for purchase orders</li>
-  <li class='contenttext'>Implemented Inventory Receive PO and Receive Shipment</li>
-  <li class='contenttext'>Refactor of order processing workflow to handle getting sales and purchase orders to approved status only</li>
-  <li class='contenttext'>New create shipment functionality</li>
-  <li class='contenttext'>Create Invoice triggered on shipment status change</li>
-  <li class='contenttext'>Capture payment triggered on invoice creation</li>
-  <li class='contenttext'>Order status changes to Completed or Cancelled now automatic based on the status of the items</li>
-  <li class='contenttext'>Added last viewed items to ecommerce</li>
-  <li class='contenttext'>Integration with UPS shipping services</li>
-  <li class='contenttext'>Integration with ClearCommerce payment gateway</li>
-  <li class='contenttext'>Refactor Find Order page; now uses a filtering approach</li>
-  <li class='contenttext'>New product return functionality supports refunds and credits</li>
-  <li class='contenttext'>New customizable JasperReport for shipping manifest (packing slip)</li>
-  <li class='contenttext'>New pick list functionality</li>
-  <li class='contenttext'>XPDL Reader now will read XPDL 1.0 generated by JAwE</li>
-  <li class='contenttext'>Workflow will now auto version packages/processes if no version is passed</li>
-  <li class='contenttext'>Process/Activity names/description can include variables from the context '${variable}'</li>
-  <li class='contenttext'>Changed some workflow exceptions to be more informative</li>
-  <li class='contenttext'>Implemented activity/process functionality</li>
-  <li class='contenttext'>New participantId can be used as the partyId or roleTypeId depending on the participantTypeId</li>
-  <li class='contenttext'>Refactor of WfFactory to no longer hold created objects; fixes many bugs with caching deleted assignments and re-loading new versions of workflows</li>
-  <li class='contenttext'>New auto-attributes functionality; will import fields from entities into service definitions; also can exclude and override attributes now</li>  
-  <li class='contenttext'>Updated TransactionUtil.begin() to accept the transaction timeout in seconds</li>
-  <li class='contenttext'>New option in service definition to set the timeout for the transaction; only if the service starts a transaction</li>
-  <li class='contenttext'>New debug mode on services; will enable verbose debugging until the service completes</li>
-  <li class='contenttext'>Now printing the service name in many error messages; helps with debugging</li>
-  <li class='contenttext'>Added shutdown hook in ofbiz.jar</li>
-  <li class='contenttext'>New configurable options for logs dir, log4j configuration, plus all options can be overridden on the command line</li>
-  <li class='contenttext'>Now prints all connections to the admin port of ofbiz.jar</li>
-  <li class='contenttext'>All debug statements now pass log4j category, we can now filter to the class level using log4j</li>
-</ul>
 
 <hr class='sepbar'/>
 <h3><a name="2.1.1">Release 2.1.1 - 06 May 2003</a></h3>
