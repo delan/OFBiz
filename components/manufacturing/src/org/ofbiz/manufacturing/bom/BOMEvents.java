@@ -1,5 +1,5 @@
 /*
- * $Id: BOMEvents.java,v 1.1 2003/11/05 14:22:35 jacopo Exp $
+ * $Id: BOMEvents.java,v 1.2 2003/11/25 15:25:17 jacopo Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -43,7 +43,7 @@ import org.ofbiz.security.Security;
  * Product Information Related Events
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class BOMEvents {
@@ -164,9 +164,12 @@ public class BOMEvents {
         String reason = request.getParameter("REASON");
         String instruction = request.getParameter("INSTRUCTION");
         String quantityStr = request.getParameter("QUANTITY");
+        String scrapFactorStr = request.getParameter("SCRAP_FACTOR");
+        String routingWorkEffortId = request.getParameter("WORK_EFFORT_ID");
         String sequenceNumStr = request.getParameter("SEQUENCE_NUM");
         Timestamp thruDate = null;
         Double quantity = null;
+        Double scrapFactor = null;
         Long sequenceNum = null;
 
         if (UtilValidate.isNotEmpty(thruDateStr)) {
@@ -181,6 +184,13 @@ public class BOMEvents {
                 quantity = Double.valueOf(quantityStr);
             } catch (Exception e) {
                 errMsg += "<li>Quantity not formatted correctly.";
+            }
+        }
+        if (UtilValidate.isNotEmpty(scrapFactorStr)) {
+            try {
+                scrapFactor = Double.valueOf(scrapFactorStr);
+            } catch (Exception e) {
+                errMsg += "<li>Scrap Factor not formatted correctly.";
             }
         }
         if (UtilValidate.isNotEmpty(sequenceNumStr)) {
@@ -201,6 +211,8 @@ public class BOMEvents {
         tempProductAssoc.set("instruction", instruction);
         tempProductAssoc.set("quantity", quantity);
         tempProductAssoc.set("sequenceNum", sequenceNum);
+        tempProductAssoc.set("scrapFactor", scrapFactor);
+//        tempProductAssoc.set("routingWorkEffortId", routingWorkEffortId);
 
         if (updateMode.equals("CREATE")) {
             // if no from date specified, set to now

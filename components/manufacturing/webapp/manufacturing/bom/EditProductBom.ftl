@@ -22,7 +22,7 @@
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Brad Steiner (bsteiner@thehungersite.com)
  *@author     Jacopo Cappellato (tiz@sastau.it)
- *@version    $Revision: 1.4 $
+ *@version    $Revision: 1.5 $
  *@since      2.2
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -204,6 +204,12 @@ ${pages.get("/bom/BomTabBar.ftl")}
         <td>&nbsp;</td>
         <td width="74%"><input type="text" class="inputBox" name="QUANTITY" <#if useValues>value="${(productAssoc.quantity)?if_exists}"<#else>value="${(request.getParameter("QUANTITY"))?if_exists}"</#if> size="10" maxlength="15"></td>
     </tr>
+
+    <tr>
+        <td width="26%" align=right><div class='tableheadtext'>${uiLabelMap.ManufacturingScrapFactor}:</div></td>
+        <td>&nbsp;</td>
+        <td width="74%"><input type="text" class="inputBox" name="SCRAP_FACTOR" <#if useValues>value="${(productAssoc.scrapFactor)?if_exists}"<#else>value="${(request.getParameter("SCRAP_FACTOR"))?if_exists}"</#if> size="10" maxlength="15"></td>
+    </tr>
     
     <tr>
         <td colspan="2">&nbsp;</td>
@@ -224,6 +230,7 @@ ${pages.get("/bom/BomTabBar.ftl")}
             <td><div class="tabletext"><b>${uiLabelMap.CommonThruDate}</b></div></td>
             <td><div class="tabletext"><b>${uiLabelMap.CommonSequenceNum}</b></div></td>
             <td><div class="tabletext"><b>${uiLabelMap.ManufacturingQuantity}</b></div></td>
+            <td><div class="tabletext"><b>${uiLabelMap.ManufacturingScrapFactor}</b></div></td>
             <td><div class="tabletext"><b>${uiLabelMap.ManufacturingPartBOMType}</b></div></td>
             <td><div class="tabletext"><b>&nbsp;</b></div></td>
             <td><div class="tabletext"><b>&nbsp;</b></div></td>
@@ -240,6 +247,7 @@ ${pages.get("/bom/BomTabBar.ftl")}
                 ${(assocFromProduct.thruDate)?if_exists}&nbsp;</div></td>
                 <td><div class="tabletext">&nbsp;${(assocFromProduct.sequenceNum)?if_exists}</div></td>
                 <td><div class="tabletext">&nbsp;${(assocFromProduct.quantity)?if_exists}</div></td>
+                <td><div class="tabletext">&nbsp;${(assocFromProduct.scrapFactor)?if_exists}</div></td>
                 <td><div class="tabletext"><#if curProductAssocType?exists> ${(curProductAssocType.description)?if_exists}<#else>${(assocFromProduct.productAssocTypeId)?if_exists}</#if></div></td>
                 <td>
                 <a href="<@ofbizUrl>/UpdateProductBom?UPDATE_MODE=DELETE&PRODUCT_ID=${productId}&PRODUCT_ID_TO=${(assocFromProduct.productIdTo)?if_exists}&PRODUCT_ASSOC_TYPE_ID=${(assocFromProduct.productAssocTypeId)?if_exists}&FROM_DATE=${Static["org.ofbiz.base.util.UtilFormatOut"].encodeQueryValue(assocFromProduct.getTimestamp("fromDate").toString())}&useValues=true</@ofbizUrl>" class="buttontext">
