@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -241,6 +241,11 @@ public class ScreenWidgetViewHandler implements ViewHandler {
         }
         context.put("eventMessageList", eventMessageList);
         context.put("errorMessageList", errorMessageList);
+        
+        if (request.getAttribute("serviceValidationException") != null) {
+            context.put("serviceValidationException", request.getAttribute("serviceValidationException"));
+            request.removeAttribute("serviceValidationException");
+        }
         
         // if there was an error message, this is an error
         if (errorMessageList.size() > 0) {

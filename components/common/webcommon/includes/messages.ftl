@@ -1,10 +1,13 @@
 
+<#if requestAttributes.errorMessageList?has_content><#assign errorMessageList=requestAttributes.errorMessageList></#if>
+<#if requestAttributes.eventMessageList?has_content><#assign eventMessageList=requestAttributes.eventMessageList></#if>
+<#if requestAttributes.serviceValidationException?exists><#assign serviceValidationException = requestAttributes.serviceValidationException></#if>
+
 <#-- special error message override -->
-<#if requestAttributes.serviceValidationException?exists>
-  <#assign serviceException = requestAttributes.serviceValidationException>
-  <#assign serviceName = serviceException.getServiceName()?if_exists>
-  <#assign missingList = serviceException.getMissingFields()?if_exists>
-  <#assign extraList = serviceException.getExtraFields()?if_exists>
+<#if serviceValidationException?exists>
+  <#assign serviceName = serviceValidationException.getServiceName()?if_exists>
+  <#assign missingList = serviceValidationException.getMissingFields()?if_exists>
+  <#assign extraList = serviceValidationException.getExtraFields()?if_exists>
 
   <#--  need if statement for EACH service (see the controller.xml file for service names) -->
   <#if serviceName?has_content && serviceName == "createPartyContactMechPurpose">
@@ -37,19 +40,19 @@
 </#if>
 
 <#-- display the error messages -->
-<#if requestAttributes.errorMessageList?has_content>
+<#if errorMessageList?has_content>
 <div class="errorMessage">The following errors occurred:</div><br>
 <ul>
-  <#list requestAttributes.errorMessageList as errorMsg>
+  <#list errorMessageList as errorMsg>
     <li class="errorMessage">${errorMsg}</li>
   </#list>
 </ul>
 <br>
 </#if>
-<#if requestAttributes.eventMessageList?has_content>
+<#if eventMessageList?has_content>
 <div class="eventMessage">The following occurred:</div><br>
 <ul>
-  <#list requestAttributes.eventMessageList as eventMsg>
+  <#list eventMessageList as eventMsg>
     <li class="eventMessage">${eventMsg}</li>
   </#list>
 </ul>
