@@ -26,3 +26,6 @@
 # spread out over the entire source repository.
 
 all -a setup lib core commonapp ecommerce catalog ordermgr partymgr webtools workeffort website
+
+base -a core commonapp webtools
+apps -a ecommerce catalog ordermgr partymgr workeffort
