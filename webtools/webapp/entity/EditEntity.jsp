@@ -1,7 +1,7 @@
 <%@page contentType="text/html"%>
-<%
- /*  Copyright (c) 2001 The Open For Business Project and respected authors.
- 
+<%--
+ *  Copyright (c) 2001 The Open For Business Project and respected authors.
+ *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
  *  to deal in the Software without restriction, including without limitation 
@@ -23,8 +23,7 @@
  * @author Andy Zeneski (jaz@zsolv.com)
  * @author David E. Jones (jonesde@ofbiz.org)
  * @version 1.0
- */
-%>
+--%>
 
 <%@ page import="java.util.*" %>
 <%@ page import="org.ofbiz.core.util.*" %>
@@ -370,9 +369,9 @@ The following errors occurred:
         <td>
           <INPUT type=SUBMIT value='Set'>
         </td>
-        <TD><A href='<ofbiz:url>/view/EditEntity?entityName=<%=entityName%>&relNum=<%=r%>&event=removeRelation"%></ofbiz:url>'>Remove</A></TD>
-        <TD><A href='<ofbiz:url>/view/EditEntity?entityName=<%=entityName%>&relNum=<%=r%>&event=addKeyMap"%></ofbiz:url>'>Add&nbsp;KeyMap</A></TD>
-        <TD><A href='<ofbiz:url>/view/EditEntity?entityName=<%=entityName%>&relNum=<%=r%>&event=addReverse"%></ofbiz:url>'>Add&nbsp;Reverse</A></TD>
+        <TD><A href='<ofbiz:url>/view/EditEntity?entityName=<%=entityName%>&relNum=<%=r%>&event=removeRelation</ofbiz:url>'>Remove</A></TD>
+        <TD><A href='<ofbiz:url>/view/EditEntity?entityName=<%=entityName%>&relNum=<%=r%>&event=addKeyMap</ofbiz:url>'>Add&nbsp;KeyMap</A></TD>
+        <TD><A href='<ofbiz:url>/view/EditEntity?entityName=<%=entityName%>&relNum=<%=r%>&event=addReverse</ofbiz:url>'>Add&nbsp;Reverse</A></TD>
       </FORM>
     </tr>
     <%for (int km=0; km<relation.getKeyMapsSize(); km++){ ModelKeyMap keyMap = (ModelKeyMap)relation.getKeyMap(km);%>
@@ -400,7 +399,7 @@ The following errors occurred:
           <td>
             <INPUT type=SUBMIT value='Set'>
           </td>          
-          <TD><A href='<ofbiz:url>/view/EditEntity?entityName=<%=entityName%>&relNum=<%=r%>&kmNum=<%=km%>&event=removeKeyMap"%></ofbiz:url>'>Remove</A></TD>
+          <TD><A href='<ofbiz:url>/view/EditEntity?entityName=<%=entityName%>&relNum=<%=r%>&kmNum=<%=km%>&event=removeKeyMap</ofbiz:url>'>Remove</A></TD>
         </FORM>
       </tr>
     <%}%>			
