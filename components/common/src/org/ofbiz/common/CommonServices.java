@@ -1,5 +1,5 @@
 /*
- * $Id: CommonServices.java,v 1.6 2003/12/09 16:54:46 ajzeneski Exp $
+ * $Id: CommonServices.java,v 1.7 2003/12/10 17:51:26 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -46,11 +46,11 @@ import org.ofbiz.service.ServiceXaWrapper;
  * Common Services
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.6 $
+ * @version    $Revision: 1.7 $
  * @since      2.0
  */
 public class CommonServices {
-    
+
     public final static String module = CommonServices.class.getName();
 
     /**
@@ -82,7 +82,7 @@ public class CommonServices {
         System.out.println("----- SVC: " + dctx.getName() + " -----");
         return response;
     }
-    
+
     public static Map testWorkflowCondition(DispatchContext dctx, Map context) {
         Map result = new HashMap();
         result.put("evaluationResult", new Boolean(true));
@@ -203,9 +203,9 @@ public class CommonServices {
 
         return ServiceUtil.returnSuccess();
     }
-    
-    /** 
-     * Echo service; returns exactly what was sent. 
+
+    /**
+     * Echo service; returns exactly what was sent.
      * This service does not have required parameters and does not validate
      */
      public static Map echoService(DispatchContext dctx, Map context) {
@@ -236,11 +236,13 @@ public class CommonServices {
             return ServiceUtil.returnError("Unable to create test entity");
         }
 
+        /*
         try {
             newEntity.remove();
         } catch(GenericEntityException e) {
             Debug.logError(e, module);
         }
+        */
 
         return ServiceUtil.returnSuccess();
     }
