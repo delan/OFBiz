@@ -18,37 +18,43 @@
 </ofbiz:unless>
 
 <ofbiz:if name="productValue">
+  <ofbiz:object name="productValue" property="productValue" />
   <br>
   <table border="0" width="100%" cellpadding="3">
-  <ofbiz:object name="mainProduct" property="productValue" />
     <tr><td colspan="2"><hr class='sepbar'></td></tr>
     <tr>
       <td align="left" valign="top" width="0">
-        <%String largeImageUrl = mainProduct.getString("largeImageUrl");%>
-        <% if(largeImageUrl != null && largeImageUrl.length() > 0) { %>
-          <img src="<%=largeImageUrl%>" vspace="5" hspace="5" border="1" width='200' align=left>
-        <% } %>
+        <ofbiz:entityfield attribute="productValue" field="largeImageUrl" prefix="<img src='" suffix="' vspace='5' hspace='5' border='1' width='200' align=left>"/>
       </td>
       <td align="right" valign="top">
         <form method="POST" action="<ofbiz:url>/additem<%=UtilFormatOut.ifNotEmpty((String)request.getAttribute(SiteDefs.CURRENT_VIEW), "/", "")%></ofbiz:url>" name="addform" style='margin: 0;'>
-          <input type='hidden' name="product_id" value="<%=mainProduct.getString("productId")%>">
-          <input type='hidden' name="add_product_id" value="<%=mainProduct.getString("productId")%>">
+          <input type='hidden' name="product_id" value='<ofbiz:entityfield attribute="productValue" field="productId"/>'>
+          <input type='hidden' name="add_product_id" value='<ofbiz:entityfield attribute="productValue" field="productId"/>'>
           <input type="text" size="5" name="quantity" value="1">
           <%=UtilFormatOut.ifNotEmpty(request.getParameter("category_id"), "<input type='hidden' name='category_id' value='", "'>")%>
           <a href="javascript:document.addform.submit()" class="buttontext"><nobr>[Add to Cart]</nobr></a>
         </form>
         <br>
-        <div class="head2"><%=UtilFormatOut.checkNull(mainProduct.getString("productName"))%></div>
-        <div class="tabletext"><%=UtilFormatOut.checkNull(mainProduct.getString("description"))%></div>
-        <div class="tabletext"><b><%=UtilFormatOut.checkNull(mainProduct.getString("productId"))%></b></div>
-        <div class="tabletext"><b>Our price: <font color="#126544"><%=UtilFormatOut.formatPrice(mainProduct.getDouble("defaultPrice"))%></font></b>
-           (Reg. <%=UtilFormatOut.formatPrice(mainProduct.getDouble("defaultPrice"))%>)</div>
+        <div class="head2"><ofbiz:entityfield attribute="productValue" field="productName"/></div>
+        <div class="tabletext"><ofbiz:entityfield attribute="productValue" field="description"/></div>
+        <div class="tabletext"><b><ofbiz:entityfield attribute="productValue" field="productId"/></b></div>
+        <div class="tabletext"><b>Our price: <font color="#126544"><ofbiz:entityfield attribute="productValue" field="defaultPrice"/></font></b>
+           (Reg. <ofbiz:entityfield attribute="productValue" field="defaultPrice"/>)</div>
+        <div class="tabletext">Size:
+            <%if (productValue.get("quantityIncluded") != null && productValue.getDouble("quantityIncluded").doubleValue() != 0) {%>
+                <ofbiz:entityfield attribute="productValue" field="quantityIncluded"/>
+            <%}%>
+            <ofbiz:entityfield attribute="productValue" field="quantityUomId"/>
+        </div>
+        <%if (productValue.get("piecesIncluded") != null && productValue.getLong("piecesIncluded").longValue() != 0) {%>
+            <ofbiz:entityfield attribute="productValue" field="piecesIncluded" prefix="<div class='tabletext'>Pieces: " suffix="</div>"/>
+        <%}%>
       </td>
     </tr>
     <tr><td colspan="2"><hr class='sepbar'></td></tr>
     <tr>
       <td colspan="2">
-        <div class="tabletext"><%=UtilFormatOut.checkNull(mainProduct.getString("longDescription"))%></div>
+        <div class="tabletext"><ofbiz:entityfield attribute="productValue" field="longDescription"/></div>
       </td>
     </tr>
     <tr><td colspan="2"><hr class='sepbar'></td></tr>
@@ -59,14 +65,14 @@
 <!-- obsolete by -->
     <ofbiz:if name="obsoleteby">
       <tr><td>&nbsp;</td></tr>
-      <tr><td colspan="2"><div class="head2"><%=UtilFormatOut.checkNull(mainProduct.getString("productName"))%> is made obsolete by these products:</div></td></tr>
+      <tr><td colspan="2"><div class="head2"><ofbiz:entityfield attribute="productValue" field="productName"/> is made obsolete by these products:</div></td></tr>
       <tr><td><hr class='sepbar'></td></tr>
 
       <ofbiz:iterator name="productAssoc" property="obsoleteby">
         <tr><td>
           <div class="tabletext">
-            <a href="<ofbiz:url>/product?product_id=<%=productAssoc.getString("productIdTo")%></ofbiz:url>" class="buttontext"><%=productAssoc.getString("productIdTo")%></a>
-            - <b><%=UtilFormatOut.checkNull(productAssoc.getString("reason"))%></b>
+            <a href='<ofbiz:url>/product?product_id=<ofbiz:entityfield attribute="productAssoc" field="productIdTo"/></ofbiz:url>' class="buttontext"><ofbiz:entityfield attribute="productAssoc" field="productIdTo"/></a>
+            - <b><ofbiz:entityfield attribute="productAssoc" field="reason"/></b>
           </div>
         </td></tr>
         <%{%>
@@ -92,8 +98,8 @@
       <ofbiz:iterator name="productAssoc" property="complement">
         <tr><td>
           <div class="tabletext">
-            <a href="<ofbiz:url>/product?product_id=<%=productAssoc.getString("productIdTo")%></ofbiz:url>" class="buttontext"><%=productAssoc.getString("productIdTo")%></a>
-            - <b><%=UtilFormatOut.checkNull(productAssoc.getString("reason"))%></b>
+            <a href='<ofbiz:url>/product?product_id=<ofbiz:entityfield attribute="productAssoc" field="productIdTo"/></ofbiz:url>' class="buttontext"><ofbiz:entityfield attribute="productAssoc" field="productIdTo"/></a>
+            - <b><ofbiz:entityfield attribute="productAssoc" field="reason"/></b>
           </div>
         </td></tr>
         <%{%>
@@ -113,14 +119,14 @@
 <!-- up sells -->
     <ofbiz:if name="upgrade">
       <tr><td>&nbsp;</td></tr>
-      <tr><td colspan="2"><div class="head2">Try these instead of <%=UtilFormatOut.checkNull(mainProduct.getString("productName"))%>:</div></td></tr>
+      <tr><td colspan="2"><div class="head2">Try these instead of <ofbiz:entityfield attribute="productValue" field="productName"/>:</div></td></tr>
       <tr><td><hr class='sepbar'></td></tr>
 
       <ofbiz:iterator name="productAssoc" property="upgrade">
         <tr><td>
           <div class="tabletext">
-            <a href="<ofbiz:url>/product?product_id=<%=productAssoc.getString("productIdTo")%></ofbiz:url>" class="buttontext"><%=productAssoc.getString("productIdTo")%></a>
-            - <b><%=UtilFormatOut.checkNull(productAssoc.getString("reason"))%></b>
+            <a href='<ofbiz:url>/product?product_id=<ofbiz:entityfield attribute="productAssoc" field="productIdTo"/></ofbiz:url>' class="buttontext"><ofbiz:entityfield attribute="productAssoc" field="productIdTo"/></a>
+            - <b><ofbiz:entityfield attribute="productAssoc" field="reason"/></b>
           </div>
         </td></tr>
         <%{%>
@@ -140,14 +146,14 @@
 <!-- obsolescence -->
     <ofbiz:if name="obsolescence">
       <tr><td>&nbsp;</td></tr>
-      <tr><td colspan="2"><div class="head2"><%=UtilFormatOut.checkNull(mainProduct.getString("productName"))%> makes these products obsolete:</div></td></tr>
+      <tr><td colspan="2"><div class="head2"><ofbiz:entityfield attribute="productValue" field="productName"/> makes these products obsolete:</div></td></tr>
       <tr><td><hr class='sepbar'></td></tr>
 
       <ofbiz:iterator name="productAssoc" property="obsolescence">
         <tr><td>
           <div class="tabletext">
             <a href="<ofbiz:url>/product?product_id=<%=productAssoc.getString("productId")%></ofbiz:url>" class="buttontext"><%=productAssoc.getString("productId")%></a>
-            - <b><%=UtilFormatOut.checkNull(productAssoc.getString("reason"))%></b>
+            - <b><ofbiz:entityfield attribute="productAssoc" field="reason"/></b>
           </div>
         </td></tr>
         <%{%>
@@ -166,7 +172,6 @@
 
   </table>
 </ofbiz:if>
-
 
 <%@ include file="/includes/rightcolumn.jsp" %> 
 <%@ include file="/includes/footer.jsp" %>
