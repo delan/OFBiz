@@ -86,10 +86,12 @@ public class RequestHandler implements Serializable {
                 if (UtilProperties.propertyValueEqualsIgnoreCase("url.properties", "port.https.enabled", "Y")) {
                     StringBuffer newUrl = new StringBuffer();
                     newUrl.append("https://");
-                    newUrl.append(request.getServerName());
-                    if (!port.equals("443"))
+                    String server = UtilProperties.getPropertyValue("url.properties", "force.http.host", request.getServerName());
+                    newUrl.append(server);
+                    if (!port.equals("443")) {
                         newUrl.append(":" + port);
-                    newUrl.append((String)request.getAttribute(SiteDefs.CONTROL_PATH));
+                    }
+                    newUrl.append((String) request.getAttribute(SiteDefs.CONTROL_PATH));
                     newUrl.append(request.getPathInfo());
                     if (request.getQueryString() != null)
                         newUrl.append("?" + request.getQueryString());
