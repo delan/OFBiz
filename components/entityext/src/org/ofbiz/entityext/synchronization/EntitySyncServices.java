@@ -159,7 +159,10 @@ public class EntitySyncServices {
                 
                 // maintain the original timestamps when doing storage of synced data, by default with will update the timestamps to now
                 valueToCreate.setIsFromEntitySync(true);
-                
+
+                // check to make sure all foreign keys are created; if not create dummy values as place holders
+                valueToCreate.checkFks(true);
+
                 GenericValue existingValue = delegator.findByPrimaryKey(valueToCreate.getPrimaryKey());
                 if (existingValue == null) {
                     delegator.create(valueToCreate);
