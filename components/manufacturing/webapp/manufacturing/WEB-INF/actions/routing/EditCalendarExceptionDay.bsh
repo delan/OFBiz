@@ -1,26 +1,26 @@
 /*
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
- *  Permission is hereby granted, free of charge, to any person obtaining a 
- *  copy of this software and associated documentation files (the "Software"), 
- *  to deal in the Software without restriction, including without limitation 
- *  the rights to use, copy, modify, merge, publish, distribute, sublicense, 
- *  and/or sell copies of the Software, and to permit persons to whom the 
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
  *  Software is furnished to do so, subject to the following conditions:
  *
- *  The above copyright notice and this permission notice shall be included 
+ *  The above copyright notice and this permission notice shall be included
  *  in all copies or substantial portions of the Software.
  *
- *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
- *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
- *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
- *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Olivier.Heintz@nereide.biz
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      3.0
  */
 
@@ -43,10 +43,10 @@ List calendarExceptionDays = null;
 
 String calendarId = request.getParameter("calendarId");
 if (calendarId == null)  calendarId = request.getAttribute("calendarId");
-if (calendarId != null) 
+if (calendarId != null)
 	techDataCalendar = delegator.findByPrimaryKey("TechDataCalendar", UtilMisc.toMap("calendarId", calendarId));
-if (techDataCalendar != null) 
-    calendarExceptionDays = techDataCalendar.getRelated("TechDataCalendarExceptionDay");
+if (techDataCalendar != null)
+    calendarExceptionDays = techDataCalendar.getRelated("TechDataCalendarExcDay");
 
 HtmlFormWrapper listCalendarExceptionDayWrapper = new HtmlFormWrapper("/routing/CalendarForms.xml", "ListCalendarExceptionDay", request, response);
 listCalendarExceptionDayWrapper.putInContext("calendarExceptionDays", calendarExceptionDays);
@@ -61,11 +61,11 @@ context.put("listCalendarExceptionDayWrapper", listCalendarExceptionDayWrapper);
 context.put("addCalendarExceptionDayWrapper", addCalendarExceptionDayWrapper);
 
 String exceptionDateStartTime = request.getParameter("exceptionDateStartTime");
-if (exceptionDateStartTime == null) 
+if (exceptionDateStartTime == null)
     exceptionDateStartTime = request.getAttribute("exceptionDateStartTime");
 if (exceptionDateStartTime != null) {
-	calendarExceptionDay = delegator.findByPrimaryKey("TechDataCalendarExceptionDay", UtilMisc.toMap("calendarId", calendarId,"exceptionDateStartTime", exceptionDateStartTime));
-	if (calendarExceptionDay != null) { 
+	calendarExceptionDay = delegator.findByPrimaryKey("TechDataCalendarExcDay", UtilMisc.toMap("calendarId", calendarId,"exceptionDateStartTime", exceptionDateStartTime));
+	if (calendarExceptionDay != null) {
 		HtmlFormWrapper updateCalendarExceptionDayWrapper = new HtmlFormWrapper("/routing/CalendarForms.xml", "UpdateCalendarExceptionDay", request, response);
 		updateCalendarExceptionDayWrapper.putInContext("calendarExceptionDay", calendarExceptionDay);
 		updateCalendarExceptionDayWrapper.putInContext("uiLabelMap", request.getAttribute("uiLabelMap"));

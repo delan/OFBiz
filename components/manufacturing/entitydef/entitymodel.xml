@@ -26,7 +26,7 @@
  *
  *@author     Jacopo Cappellato (tiz@sastau.it)
  *@author     Olivier.Heintz@nereide.biz
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  */
 -->
 
@@ -79,7 +79,7 @@
             package-name="org.ofbiz.manufacturing.techdata"
             title="Tech Data Machine Group"
             author="Olivier Heintz">
- 	<description>Used to group similar machine, a routing operation is done on a machine group</description>
+      <description>Used to group similar machine, a routing operation is done on a machine group</description>
       <field name="machineGroupId" type="id-ne"></field>
       <field name="description" type="description"></field>
       <prim-key field="machineGroupId"/>
@@ -91,7 +91,7 @@
             package-name="org.ofbiz.manufacturing.techdata"
             title="Week definition entity"
             author="Olivier Heintz">
- 	<description>Used to defined the week definition disponibility for machine</description>
+      <description>Used to defined the week definition disponibility for machine</description>
       <field name="calendarWeekId" type="id-ne"></field>
       <field name="description" type="description"></field>
       <field name="mondayStartTime" type="time"></field>
@@ -113,7 +113,7 @@
       <relation type="many"  rel-entity-name="TechDataCalendar">
         <key-map field-name="calendarWeekId"/>
       </relation>
-      <relation type="many"  rel-entity-name="TechDataCalendarWeekException">
+      <relation type="many"  rel-entity-name="TechDataCalendarExcWeek">
         <key-map field-name="calendarWeekId"/>
       </relation>
     </entity>
@@ -121,9 +121,9 @@
             package-name="org.ofbiz.manufacturing.techdata"
             title="Calendar entity"
             author="Olivier Heintz">
- 	<description>Used to defined the availability of the machines, this entity define the Id and the week definition.
- 	The Id is used in the exception calendar table as reference
- 	</description>
+      <description>Used to defined the availability of the machines, this entity define the Id and the week definition.
+      The Id is used in the exception calendar table as reference
+      </description>
       <field name="calendarId" type="id-ne"></field>
       <field name="description" type="description"></field>
       <field name="calendarWeekId" type="id-ne"></field>
@@ -131,56 +131,56 @@
       <relation type="one" fk-name="CALENDAR_WEEK" rel-entity-name="TechDataCalendarWeek">
         <key-map field-name="calendarWeekId"/>
       </relation>
-      <relation type="many"  rel-entity-name="TechDataCalendarExceptionDay">
+      <relation type="many"  rel-entity-name="TechDataCalendarExcDay">
         <key-map field-name="calendarId"/>
       </relation>
-      <relation type="many"  rel-entity-name="TechDataCalendarExceptionWeek">
+      <relation type="many"  rel-entity-name="TechDataCalendarExcWeek">
         <key-map field-name="calendarId"/>
       </relation>
       <relation type="many"  rel-entity-name="TechDataMachine">
         <key-map field-name="calendarId"/>
       </relation>
     </entity>
-    <entity entity-name="TechDataCalendarExceptionDay"
+    <entity entity-name="TechDataCalendarExcDay"
             package-name="org.ofbiz.manufacturing.techdata"
             title="Calendar Exception Day entity"
             author="Olivier Heintz">
- 	<description>Used to defined some days which differ from the normal day definition in the weekId associated in the calendar.
- 	</description>
+      <description>Used to defined some days which differ from the normal day definition in the weekId associated in the calendar.
+      </description>
       <field name="calendarId" type="id-ne"></field>
       <field name="exceptionDateStartTime" type="date-time"></field>
       <field name="exceptionCapacity" type="floating-point"></field>
       <field name="description" type="description"></field>
       <prim-key field="calendarId"/>
       <prim-key field="exceptionDateStartTime"/>
-      <relation type="one" fk-name="EXCEPT_DAY_CALENDAR" rel-entity-name="TechDataCalendar">
+      <relation type="one" fk-name="EXC_DAY_CALENDAR" rel-entity-name="TechDataCalendar">
         <key-map field-name="calendarId"/>
       </relation>
     </entity>
-    <entity entity-name="TechDataCalendarExceptionWeek"
+    <entity entity-name="TechDataCalendarExcWeek"
             package-name="org.ofbiz.manufacturing.techdata"
             title="Calendar Exception Week entity"
             author="Olivier Heintz">
- 	<description>Used to defined some weeks which differ from the normal week defined in the calendar.
- 	</description>
+      <description>Used to defined some weeks which differ from the normal week defined in the calendar.
+      </description>
       <field name="calendarId" type="id-ne"></field>
       <field name="exceptionDateStart" type="date"></field>
       <field name="calendarWeekId" type="id-ne"></field>
       <field name="description" type="description"></field>
       <prim-key field="calendarId"/>
       <prim-key field="exceptionDateStart"/>
-      <relation type="one" fk-name="EXCEPT_WEEK_CALENDAR" rel-entity-name="TechDataCalendar">
+      <relation type="one" fk-name="EXC_WEEK_CALENDAR" rel-entity-name="TechDataCalendar">
         <key-map field-name="calendarId"/>
       </relation>
-      <relation type="one" fk-name="EXCEPT_WEEK_WEEK" rel-entity-name="TechDataCalendarWeek">
+      <relation type="one" fk-name="EXC_WEEK_WEEK" rel-entity-name="TechDataCalendarWeek">
         <key-map field-name="calendarWeekId"/>
       </relation>
     </entity>
     <entity entity-name="TechDataMachine"
             package-name="org.ofbiz.manufacturing.techdata"
             title="Machine entity">
- 	<description>A machine is a element of a machineGroup, which is used by the operation entity or routing entity. This is used by the delay and capacity calculation.
- 	</description>
+      <description>A machine is a element of a machineGroup, which is used by the operation entity or routing entity. This is used by the delay and capacity calculation.
+      </description>
       <field name="machineId" type="id-ne"></field>
       <field name="description" type="description"></field>
       <field name="machineGroupId" type="id-ne"></field>
