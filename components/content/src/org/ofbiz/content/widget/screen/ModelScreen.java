@@ -26,9 +26,12 @@ package org.ofbiz.content.widget.screen;
 import java.io.Writer;
 import java.util.Map;
 
+import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntity;
+import org.ofbiz.entity.GenericEntityException;
+import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.service.LocalDispatcher;
 import org.w3c.dom.Element;
 
@@ -88,9 +91,46 @@ public class ModelScreen {
     public void renderScreenString(Writer writer, Map context, ScreenStringRenderer screenStringRenderer) {
         // make sure the "null" object is in there for entity ops
         context.put("null", GenericEntity.NULL_FIELD);
-        
-        // render the screen, starting with the top-level section
-        this.section.renderWidgetString(writer, context, screenStringRenderer);
+
+        // wrap the whole screen rendering in a transaction, should improve performance in querying and such
+        boolean beganTransaction = false;
+        try {
+            beganTransaction = TransactionUtil.begin();
+
+            // render the screen, starting with the top-level section
+            this.section.renderWidgetString(writer, context, screenStringRenderer);
+        } catch (RuntimeException e) {
+            Debug.logError(e, "Failure in operation, rolling back transaction", module);
+            try {
+                // only rollback the transaction if we started one...
+                TransactionUtil.rollback(beganTransaction);
+            } catch (GenericEntityException e2) {
+                Debug.logError(e2, "Could not rollback transaction: " + e2.toString(), module);
+            }
+            // after rolling back, rethrow the exception
+            throw e;
+        } catch (Exception e) {
+            Debug.logError(e, "Failure in operation, rolling back transaction", module);
+            try {
+                // only rollback the transaction if we started one...
+                TransactionUtil.rollback(beganTransaction);
+            } catch (GenericEntityException e2) {
+                Debug.logError(e2, "Could not rollback transaction: " + e2.toString(), module);
+            }
+            
+            String errMsg = "Error rendering screen [" + this.name + "]: " + e.toString();
+            Debug.logError(e, errMsg, module);
+            
+            // after rolling back, rethrow the exception
+            throw new RuntimeException(errMsg);
+        } finally {
+            // only commit the transaction if we started one... this will throw an exception if it fails
+            try {
+                TransactionUtil.commit(beganTransaction);
+            } catch (GenericEntityException e2) {
+                Debug.logError(e2, "Could not commit transaction: " + e2.toString(), module);
+            }
+        }
     }
 
     public LocalDispatcher getDispatcher(Map context) {
