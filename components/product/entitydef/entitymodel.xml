@@ -1619,6 +1619,9 @@
       <relation type="one" fk-name="PROD_LMB_USERLOGIN" title="LastModifiedBy" rel-entity-name="UserLogin">
         <key-map field-name="lastModifiedByUserLogin" rel-field-name="userLoginId"/>
       </relation>
+      <relation type="many" rel-entity-name="ProductFeatureAndAppl">
+        <key-map field-name="productId"/>
+      </relation>
       <relation type="many" rel-entity-name="SimpleSalesTaxLookup">
         <key-map field-name="taxCategory"/>
       </relation>

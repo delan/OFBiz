@@ -25,6 +25,7 @@ package org.ofbiz.product.product;
 
 import java.sql.Timestamp;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -43,11 +44,14 @@ import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
+import org.ofbiz.entity.GenericPK;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityConditionList;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.entity.transaction.GenericTransactionException;
+import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.product.store.ProductStoreWorker;
@@ -927,106 +931,131 @@ public class ProductEvents {
         String productId0 = request.getParameter("productId0");
         String useImagesProdId = request.getParameter("useImages");
         String productFeatureTypeId = request.getParameter("productFeatureTypeId");
+        
+        if (UtilValidate.isEmpty(productFeatureTypeId)) {
+            String errMsg = "Error: please select a ProductFeature Type to add or update variant features.";
+            request.setAttribute("_ERROR_MESSAGE_", errMsg);
+            return "error";
+        }
 
         try {
-            // check for productId0 - this will mean that we have multiple ship info to update
-            if (productId0 != null) {
-                // multiple products, so use a numeric suffix to get them all
-                int attribIdx = 0;
-                GenericValue product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
-                do {
-                    GenericValue product0 = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId0));
-                    String description = request.getParameter("description" + attribIdx);
-                    // blank means null, which means delete the feature
-                    if ((description != null) && (description.trim().length() < 1)) {
-                        description = null;
-                    }
-                    GenericValue productFeature = null;
-                    String productFeatureId = null;
-
-                    // get features for variant
-                    List variantFeatureAppls = product0.getRelatedByAnd("ProductFeatureAppl",
-                            UtilMisc.toMap("productFeatureApplTypeId", "STANDARD_FEATURE"));
-                    for (int i = 0; i < variantFeatureAppls.size(); i++) {
-                        GenericValue variantFeatureAppl = (GenericValue)variantFeatureAppls.get(i);
-                        GenericValue variantFeature = variantFeatureAppl.getRelatedOne("ProductFeature");
-                        if (variantFeature.getString("productFeatureTypeId").equals(productFeatureTypeId)) {
-                            // found our feature
-                            productFeature = variantFeature;
-                            break;
+            boolean beganTransaction = TransactionUtil.begin();
+            try {
+                GenericValue productFeatureType = delegator.findByPrimaryKey("ProductFeatureType", UtilMisc.toMap("productFeatureTypeId", productFeatureTypeId));
+                if (productFeatureType == null) {
+                    String errMsg = "Error: the ProductFeature Type specified was not valid and one is require to add or update variant features.";
+                    request.setAttribute("_ERROR_MESSAGE_", errMsg);
+                    return "error";
+                }
+                
+                // check for productId0 - this will mean that we have multiple ship info to update
+                if (productId0 != null) {
+                    // multiple products, so use a numeric suffix to get them all
+                    int attribIdx = 0;
+                    GenericValue product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
+                    do {
+                        GenericValue product0 = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId0));
+                        String description = request.getParameter("description" + attribIdx);
+                        // blank means null, which means delete the feature
+                        if ((description != null) && (description.trim().length() < 1)) {
+                            description = null;
                         }
-                    }
-
-                    if (productFeature == null) {
-                        // no existing feature
-                        if ((description != null) && (productFeatureTypeId != null)) {
-                            // doesn't exist, so create it and its relation
-                            productFeatureId = delegator.getNextSeqId("ProductFeature");
-                            productFeature = delegator.makeValue("ProductFeature",
-                                    UtilMisc.toMap("productFeatureId", productFeatureId,
-                                            "productFeatureTypeId", productFeatureTypeId,
-                                            "lastUpdatedStamp", nowTimestamp,
-                                            "createdStamp", nowTimestamp,
-                                            "description", description));
-
-                            // if there is a productFeatureCategory with the same id as the productFeatureType, use that category.
-                            // otherwise, use a default category from the configuration
-                            if (delegator.findByPrimaryKey("ProductFeatureCategory",
-                                    UtilMisc.toMap("productFeatureCategoryId", productFeatureTypeId)) != null) {
-                                productFeature.set("productFeatureCategoryId", productFeatureTypeId);
-                            } else {
-                                productFeature.set("productFeatureCategoryId", UtilProperties.getPropertyValue("catalog",
-                                        "default.product.feature.category.id"));
+                        GenericValue productFeature = null;
+                        String productFeatureId = null;
+    
+                        // get features for variant
+                        List variantFeatureAppls = product0.getRelatedByAnd("ProductFeatureAppl", UtilMisc.toMap("productFeatureApplTypeId", "STANDARD_FEATURE"));
+                        variantFeatureAppls = EntityUtil.filterByDate(variantFeatureAppls, true);
+                        Iterator variantFeatureApplIter = variantFeatureAppls.iterator();
+                        while (variantFeatureApplIter.hasNext()) {
+                            GenericValue variantFeatureAppl = (GenericValue) variantFeatureApplIter.next();
+                            GenericValue variantFeature = variantFeatureAppl.getRelatedOneCache("ProductFeature");
+                            if (variantFeature.getString("productFeatureTypeId").equals(productFeatureTypeId)) {
+                                // found our feature
+                                productFeature = variantFeature;
+                                break;
                             }
-                            productFeature = productFeature.create();
-
-                            delegator.create("ProductFeatureAppl",
-                                    UtilMisc.toMap("productId", productId0,
-                                            "productFeatureId", productFeatureId,
-                                            "productFeatureApplTypeId", "STANDARD_FEATURE",
-                                            "fromDate", nowTimestamp,
-                                            "lastUpdatedStamp", nowTimestamp,
-                                            "createdStamp", nowTimestamp));
-                            delegator.create("ProductFeatureAppl",
-                                    UtilMisc.toMap("productId", productId,
-                                            "productFeatureId", productFeatureId,
-                                            "productFeatureApplTypeId", "SELECTABLE_FEATURE",
-                                            "fromDate", nowTimestamp,
-                                            "lastUpdatedStamp", nowTimestamp,
-                                            "createdStamp", nowTimestamp));
                         }
-                    } else {
-                        if (description == null) {
-                            // delete feature and appls
-                            productFeature.removeRelated("ProductFeatureAppl");
-                            productFeature.remove();
+    
+                        if (productFeature == null) {
+                            // no existing feature
+                            if ((description != null) && (productFeatureTypeId != null)) {
+                                // doesn't exist, so create it and its relation
+                                productFeatureId = delegator.getNextSeqId("ProductFeature").toString();
+                                productFeature = delegator.makeValue("ProductFeature",
+                                        UtilMisc.toMap("productFeatureId", productFeatureId,
+                                                "productFeatureTypeId", productFeatureTypeId,
+                                                "lastUpdatedStamp", nowTimestamp,
+                                                "createdStamp", nowTimestamp,
+                                                "description", description));
+    
+                                // if there is a productFeatureCategory with the same id as the productFeatureType, use that category.
+                                // otherwise, create a category for the feature type
+                                if (delegator.findByPrimaryKey("ProductFeatureCategory", UtilMisc.toMap("productFeatureCategoryId", productFeatureTypeId)) == null) {
+                                    GenericValue productFeatureCategory = delegator.makeValue("ProductFeatureCategory", null);
+                                    productFeatureCategory.set("productFeatureCategoryId", productFeatureTypeId);
+                                    productFeatureCategory.set("description", productFeatureType.get("description"));
+                                    productFeatureCategory.create();
+                                }
+                                productFeature.set("productFeatureCategoryId", productFeatureTypeId);
+                                productFeature = productFeature.create();
+    
+                                delegator.create("ProductFeatureAppl",
+                                        UtilMisc.toMap("productId", productId0,
+                                                "productFeatureId", productFeatureId,
+                                                "productFeatureApplTypeId", "STANDARD_FEATURE",
+                                                "fromDate", nowTimestamp,
+                                                "lastUpdatedStamp", nowTimestamp,
+                                                "createdStamp", nowTimestamp));
+                                delegator.create("ProductFeatureAppl",
+                                        UtilMisc.toMap("productId", productId,
+                                                "productFeatureId", productFeatureId,
+                                                "productFeatureApplTypeId", "SELECTABLE_FEATURE",
+                                                "fromDate", nowTimestamp,
+                                                "lastUpdatedStamp", nowTimestamp,
+                                                "createdStamp", nowTimestamp));
+                            }
                         } else {
-                            // just update description, date
-                            productFeature.set("description", description);
-                            productFeature.set("lastUpdatedStamp", nowTimestamp);
-                            productFeature.store();
+                            if (description == null) {
+                                // delete feature and appls
+                                productFeature.removeRelated("ProductFeatureAppl");
+                                productFeature.remove();
+                            } else {
+                                // just update description, date
+                                productFeature.set("description", description);
+                                productFeature.set("lastUpdatedStamp", nowTimestamp);
+                                productFeature.store();
+                            }
                         }
-                    }
-                    // update image urls
-                    if ((useImagesProdId != null) && (useImagesProdId.equals(productId0))) {
-                        product.setString("smallImageUrl", product0.getString("smallImageUrl"));
-                        product.setString("mediumImageUrl", product0.getString("mediumImageUrl"));
-                        product.store();
-                    }
-                    attribIdx++;
-                    productId0 = request.getParameter("productId" + attribIdx);
-                } while (productId0 != null);
-            }
+                        // update image urls
+                        if ((useImagesProdId != null) && (useImagesProdId.equals(productId0))) {
+                            product.setString("smallImageUrl", product0.getString("smallImageUrl"));
+                            product.setString("mediumImageUrl", product0.getString("mediumImageUrl"));
+                            product.store();
+                        }
+                        attribIdx++;
+                        productId0 = request.getParameter("productId" + attribIdx);
+                    } while (productId0 != null);
+                }
 
-        } catch (GenericEntityException e) {
-            String errMsg = "Error creating new virtual product from variant products: " + e.toString();
+                TransactionUtil.commit(beganTransaction);
+            } catch (GenericEntityException e) {
+                String errMsg = "Error creating new virtual product from variant products: " + e.toString();
+                Debug.logError(e, errMsg, module);
+                request.setAttribute("_ERROR_MESSAGE_", errMsg);
+                TransactionUtil.rollback(beganTransaction);
+                return "error";
+            }
+        } catch (GenericTransactionException gte) {
+            String errMsg = "Error creating new virtual product from variant products: " + gte.toString();
+            Debug.logError(gte, errMsg, module);
             request.setAttribute("_ERROR_MESSAGE_", errMsg);
             return "error";
         }
         return "success";
     }
 
-    public static String removeFeaturesByFeatureTypeId(HttpServletRequest request, HttpServletResponse response) {
+    public static String removeFeatureApplsByFeatureTypeId(HttpServletRequest request, HttpServletResponse response) {
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
         Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
         GenericValue userLogin = (GenericValue) request.getSession().getAttribute("userLogin");
@@ -1041,24 +1070,23 @@ public class ProductEvents {
             for (int i = 0; i < variants.size(); i++) {
                 GenericValue variant = (GenericValue)variants.get(i);
                 // get the selectable features for the variant
-                List selFeatures = ProductWorker.getProductFeaturesByApplTypeId(variant, "SELECTABLE_FEATURE");
-                for (int j = 0; j < selFeatures.size(); j++) {
-                    GenericValue selFeature = (GenericValue)selFeatures.get(j);
-                    if (productFeatureTypeId.equals(selFeature.getString("productFeatureTypeId"))) {
-                        selFeature.removeRelated("ProductFeatureAppl");
-                        selFeature.remove();
-                    }
+                List productFeatureAndAppls = variant.getRelated("ProductFeatureAndAppl", UtilMisc.toMap("productFeatureTypeId", productFeatureTypeId, "productFeatureApplTypeId", "SELECTABLE_FEATURE"), null);
+                Iterator productFeatureAndApplIter = productFeatureAndAppls.iterator();
+                while (productFeatureAndApplIter.hasNext()) {
+                    GenericValue productFeatureAndAppl = (GenericValue) productFeatureAndApplIter.next();
+                    GenericPK productFeatureApplPK = delegator.makePK("ProductFeatureAppl", null);
+                    productFeatureApplPK.setPKFields(productFeatureAndAppl);
+                    delegator.removeByPrimaryKey(productFeatureApplPK);
                 }
             }
-            List selFeatures = ProductWorker.getProductFeaturesByApplTypeId(product, "SELECTABLE_FEATURE");
-            for (int j = 0; j < selFeatures.size(); j++) {
-                GenericValue selFeature = (GenericValue)selFeatures.get(j);
-                if (productFeatureTypeId.equals(selFeature.getString("productFeatureTypeId"))) {
-                    selFeature.removeRelated("ProductFeatureAppl");
-                    selFeature.remove();
-                }
+            List productFeatureAndAppls = product.getRelated("ProductFeatureAndAppl", UtilMisc.toMap("productFeatureTypeId", productFeatureTypeId, "productFeatureApplTypeId", "SELECTABLE_FEATURE"), null);
+            Iterator productFeatureAndApplIter = productFeatureAndAppls.iterator();
+            while (productFeatureAndApplIter.hasNext()) {
+                GenericValue productFeatureAndAppl = (GenericValue) productFeatureAndApplIter.next();
+                GenericPK productFeatureApplPK = delegator.makePK("ProductFeatureAppl", null);
+                productFeatureApplPK.setPKFields(productFeatureAndAppl);
+                delegator.removeByPrimaryKey(productFeatureApplPK);
             }
-
         } catch (GenericEntityException e) {
             String errMsg = "Error creating new virtual product from variant products: " + e.toString();
             request.setAttribute("_ERROR_MESSAGE_", errMsg);
@@ -1067,17 +1095,21 @@ public class ProductEvents {
         return "success";
     }
 
-    public static String removeProductFeature(HttpServletRequest request, HttpServletResponse response) {
+    public static String removeProductFeatureAppl(HttpServletRequest request, HttpServletResponse response) {
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
         Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
         GenericValue userLogin = (GenericValue) request.getSession().getAttribute("userLogin");
+        String productId = request.getParameter("productId");
         String productFeatureId = request.getParameter("productFeatureId");
+        
+        if (UtilValidate.isEmpty(productId) || UtilValidate.isEmpty(productFeatureId)) {
+            String errMsg = "Must specify both a productId [was:" + productId + "] and a productFeatureId [was:" + productFeatureId + "] to remove the feature from the product.";
+            request.setAttribute("_ERROR_MESSAGE_", errMsg);
+            return "error";
+        }
 
         try {
-            GenericValue productFeature = delegator.findByPrimaryKey("ProductFeature", UtilMisc.toMap("productFeatureId", productFeatureId));
-            productFeature.removeRelated("ProductFeatureAppl");
-            productFeature.remove();
-
+            delegator.removeByAnd("ProductFeatureAppl", UtilMisc.toMap("productFeatureId", productFeatureId, "productId", productId));
         } catch (GenericEntityException e) {
             String errMsg = "Error removing product feature: " + e.toString();
             request.setAttribute("_ERROR_MESSAGE_", errMsg);

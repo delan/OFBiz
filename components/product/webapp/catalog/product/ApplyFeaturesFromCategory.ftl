@@ -108,7 +108,7 @@ ${pages.get("/product/ProductTabBar.ftl")}
 </#list>
 <tr><td colspan="9" align="center"><input type=submit value='Apply'></td></tr>
 </#if>
-<input type="hidden" name="_rowCount" value="${rowCount}">
+<input type="hidden" name="_rowCount" value="${rowCount?if_exists}">
 </form>
 </table>
 <br>
