@@ -1,5 +1,5 @@
 /*
- * $Id: MapStack.java,v 1.3 2004/07/08 04:42:31 jonesde Exp $
+ * $Id: MapStack.java,v 1.4 2004/07/15 22:24:59 jonesde Exp $
  *
  *  Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -38,10 +38,12 @@ import java.util.Set;
  * Map Stack
  * 
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      3.1
  */
 public class MapStack implements Map {
+
+    public static final String module = MapStack.class.getName();
 
     List stackList = new LinkedList();
     
@@ -49,6 +51,11 @@ public class MapStack implements Map {
         super();
         // initialize with a single entry
         push();
+    }
+    
+    public MapStack(Map baseMap) {
+        super();
+        this.stackList.add(0, baseMap);
     }
     
     /** Does a shallow copy of the internal stack of the passed MapStack; enables simultaneous stacks that share common parent Maps */
