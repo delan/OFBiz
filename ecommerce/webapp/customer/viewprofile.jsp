@@ -203,6 +203,14 @@
                 <%=UtilFormatOut.checkNull(postalAddress.getString("postalCode"))%>
                 <%=UtilFormatOut.ifNotEmpty(postalAddress.getString("countryGeoId"),"<br>","")%>
               </div>
+              <%if(UtilValidate.isEmpty(postalAddress.getString("countryGeoId")) || postalAddress.getString("countryGeoId").equals("USA")) {%>
+                <%String addr1 = UtilFormatOut.checkNull(postalAddress.getString("address1"));%>
+                <%if(addr1.indexOf(' ') > 0) {%>
+                  <%String addressNum = addr1.substring(0, addr1.indexOf(' '));%>
+                  <%String addressOther = addr1.substring(addr1.indexOf(' ')+1);%>
+                  <a target='_blank' href='http://www.whitepages.com/find_person_results.pl?fid=a&s_n=<%=addressNum%>&s_a=<%=addressOther%>&c=<%=UtilFormatOut.checkNull(postalAddress.getString("city"))%>&s=<%=UtilFormatOut.checkNull(postalAddress.getString("stateProvinceGeoId"))%>&x=29&y=18' class='buttontext'>(lookup:whitepages.com)</a>
+                <%}%>
+              <%}%>
           <%}else if("TELECOM_NUMBER".equals(contactMech.getString("contactMechTypeId"))){%>
             <%GenericValue telecomNumber = contactMech.getRelatedOne("TelecomNumber");%>
               <div class="tabletext">
@@ -210,11 +218,27 @@
                   <%=UtilFormatOut.checkNull(telecomNumber.getString("countryCode"))%>
                   <%=UtilFormatOut.ifNotEmpty(telecomNumber.getString("areaCode"), "", "-")%><%=UtilFormatOut.checkNull(telecomNumber.getString("contactNumber"))%>
                   <%=UtilFormatOut.ifNotEmpty(partyContactMech.getString("extension"), "ext&nbsp;", "")%>
+                  <%if(UtilValidate.isEmpty(telecomNumber.getString("countryCode")) || telecomNumber.getString("countryCode").equals("011")) {%>
+                    <a target='_blank' href='http://www.anywho.com/qry/wp_rl?npa=<%=UtilFormatOut.checkNull(telecomNumber.getString("areaCode"))%>&telephone=<%=UtilFormatOut.checkNull(telecomNumber.getString("contactNumber"))%>&btnsubmit.x=20&btnsubmit.y=8' class='buttontext'>(lookup:anywho.com)</a>
+                    <a target='_blank' href='http://whitepages.com/find_person_results.pl?fid=p&ac=<%=UtilFormatOut.checkNull(telecomNumber.getString("areaCode"))%>&s=&p=<%=UtilFormatOut.checkNull(telecomNumber.getString("contactNumber"))%>&pt=b&x=40&y=9' class='buttontext'>(lookup:whitepages.com)</a>
+                  <%}%>
                 <%}else{%>
                   <div class="tabletext">Phone Number Information Not Found</div>
                 <%}%>
               </div>
           <%}else if("EMAIL_ADDRESS".equals(contactMech.getString("contactMechTypeId"))){%>
+              <div class="tabletext">
+                <%=UtilFormatOut.checkNull(contactMech.getString("infoString"))%>
+                <a href='mailto:<%=UtilFormatOut.checkNull(contactMech.getString("infoString"))%>' class='buttontext'>(send&nbsp;email)</a>
+              </div>
+          <%}else if("WEB_ADDRESS".equals(contactMech.getString("contactMechTypeId"))){%>
+              <div class="tabletext">
+                <%=UtilFormatOut.checkNull(contactMech.getString("infoString"))%>
+                <%String openAddress = UtilFormatOut.checkNull(contactMech.getString("infoString"));%>
+                <%if(!openAddress.startsWith("http") && !openAddress.startsWith("HTTP")) openAddress = "http://" + openAddress;%>
+                <a target='_blank' href='<%=openAddress%>' class='buttontext'>(open&nbsp;site&nbsp;in&nbsp;new&nbsp;window)</a>
+              </div>
+          <%}else{%>
               <div class="tabletext">
                 <%=UtilFormatOut.checkNull(contactMech.getString("infoString"))%>
               </div>

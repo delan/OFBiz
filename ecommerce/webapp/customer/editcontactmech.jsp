@@ -229,7 +229,15 @@
     <tr>
       <td width="26%"><div class="tabletext">Email address</div></td>
       <td width="74%">
-          <input type="text" name="CM_INFO_STRING" value="<%=UtilFormatOut.checkNull(useValues?contactMech.getString("infoString"):request.getParameter("CM_INFO_STRING"))%>" size="40" maxlength="80"> *
+          <input type="text" name="CM_INFO_STRING" value="<%=UtilFormatOut.checkNull(useValues?contactMech.getString("infoString"):request.getParameter("CM_INFO_STRING"))%>" size="60" maxlength="255"> *
+      </td>
+    </tr>
+  <%}else{%>
+    <%GenericValue curContactMechType = helper.findByPrimaryKey("ContactMechType", UtilMisc.toMap("contactMechTypeId", contactMechTypeId));%>
+    <tr>
+      <td width="26%"><div class="tabletext"><%=curContactMechType.getString("description")%></div></td>
+      <td width="74%">
+          <input type="text" name="CM_INFO_STRING" value="<%=UtilFormatOut.checkNull(useValues?contactMech.getString("infoString"):request.getParameter("CM_INFO_STRING"))%>" size="60" maxlength="255"> *
       </td>
     </tr>
   <%}%>
