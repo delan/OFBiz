@@ -14,6 +14,43 @@
         <attribute name="newProductId" type="String" mode="IN" optional="false"/>
     </service>
     
+    <!-- Product Inventory Services -->
+    <service name="createInventoryItem" engine="simple"
+                location="org/ofbiz/commonapp/product/inventory/InventoryServices.xml" invoke="createInventoryItem" auth="true">
+        <description>Create an InventoryItem</description>
+        <attribute name="inventoryItemTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="productId" type="String" mode="IN" optional="false"/>
+        <attribute name="partyId" type="String" mode="IN" optional="true"/>
+        <attribute name="statusId" type="String" mode="IN" optional="true"/>
+        <attribute name="facilityId" type="String" mode="IN" optional="true"/>
+        <attribute name="containerId" type="String" mode="IN" optional="true"/>
+        <attribute name="lotId" type="String" mode="IN" optional="true"/>
+        <attribute name="uomId" type="String" mode="IN" optional="true"/>
+        <attribute name="quantityOnHand" type="Double" mode="IN" optional="true"/>
+        <attribute name="serialNumber" type="String" mode="IN" optional="true"/>
+        <attribute name="inventoryItemId" type="String" mode="OUT" optional="false"/>
+    </service>
+    <service name="updateInventoryItem" engine="simple"
+                location="org/ofbiz/commonapp/product/inventory/InventoryServices.xml" invoke="updateInventoryItem" auth="true">
+        <description>Update an InventoryItem</description>
+        <attribute name="inventoryItemId" type="String" mode="IN" optional="false"/>
+        <attribute name="inventoryItemTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="productId" type="String" mode="IN" optional="false"/>
+        <attribute name="partyId" type="String" mode="IN" optional="true"/>
+        <attribute name="statusId" type="String" mode="IN" optional="true"/>
+        <attribute name="facilityId" type="String" mode="IN" optional="true"/>
+        <attribute name="containerId" type="String" mode="IN" optional="true"/>
+        <attribute name="lotId" type="String" mode="IN" optional="true"/>
+        <attribute name="uomId" type="String" mode="IN" optional="true"/>
+        <attribute name="quantityOnHand" type="Double" mode="IN" optional="true"/>
+        <attribute name="serialNumber" type="String" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteInventoryItem" engine="simple"
+                location="org/ofbiz/commonapp/product/inventory/InventoryServices.xml" invoke="deleteInventoryItem" auth="true">
+        <description>Delete an InventoryItem</description>
+        <attribute name="inventoryItemId" type="String" mode="IN" optional="false"/>
+    </service>
+    
     <!-- Product Feature Services -->
     <service name="createProductFeatureCategory" engine="simple"
                 location="org/ofbiz/commonapp/product/feature/ProductFeatureServices.xml" invoke="createProductFeatureCategory" auth="true">
