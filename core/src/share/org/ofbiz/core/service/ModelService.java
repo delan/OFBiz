@@ -30,20 +30,33 @@ import org.ofbiz.core.util.*;
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
+ *@author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@created    Oct 20 2001
  *@version    1.0
  */
 public class ModelService {
+    
   /** The name of this service */
   public String name;
-
   public String engineName;
   public String location;
   public String invoke;
 
   /** Context Information, a list of parameters required by the service */
   public Map contextInfo;
+  
   /** Result Information, a list of values returned by the service */
   public Map resultInfo;
+  
+  public boolean validate(Map context) {
+      // validate keys first
+      Set testSet = context.keySet();
+      Set keySet = contextInfo.keySet();
+      if ( !testSet.containsAll(keySet) || !keySet.containsAll(testSet) )
+          return false;
+      // validate types next
+      
+      return true;
+  }
 }

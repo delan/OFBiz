@@ -30,7 +30,7 @@ import org.ofbiz.core.workflow.*;
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *@author     Andy Zeneski (jaz@zsolv.com)
+ *@author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
  *@created    November 15, 2001
  *@version    1.0
  */

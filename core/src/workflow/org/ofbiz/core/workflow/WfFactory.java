@@ -30,11 +30,10 @@ import org.ofbiz.core.workflow.impl.*;
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *@author     Andy Zeneski (jaz@zsolv.com)
+ *@author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
  *@created    October 31, 2001
  *@version    1.0
  */
-
 public class WfFactory {
   
   
@@ -42,7 +41,7 @@ public class WfFactory {
    * @throws WfException
    * @return An instance of the WfActivify Interface
    */
-  public static WfActivity newWfActivity(String name, String description) throws WfException {
+  public static WfActivity newWfActivity(String name, String description) {
       return new WfActivityImpl(name,description);      
   }
   
@@ -51,7 +50,7 @@ public class WfFactory {
    * @throws WfException
    * @return An instance of the WfAssignment Interface
    */
-  public static WfAssignment newWfAssignment(WfActivity activity, WfResource resource) throws WfException {
+  public static WfAssignment newWfAssignment(WfActivity activity, WfResource resource) {
       return new WfAssignmentImpl(activity,resource);
   }
   
@@ -60,7 +59,7 @@ public class WfFactory {
    * @throws WfException
    * @return An instance of the WfProcess Interface.
    */
-  public static WfProcess newWfProcess(String name, String description) throws WfException {
+  public static WfProcess newWfProcess(String name, String description) {
       return new WfProcessImpl(name,description);      
   }
   
@@ -69,7 +68,7 @@ public class WfFactory {
    * @throws WfException
    * @return An instance of the WfProcessMgr Interface.
    */
-  public static WfProcessMgr newWfProcessMgr() throws WfException {
+  public static WfProcessMgr newWfProcessMgr()  {
       return null;
   }
   
@@ -77,15 +76,15 @@ public class WfFactory {
    * @throws WfException
    * @return An instance of the WfRequester Interface.
    */
-  public static WfRequester newWfRequester(String name) throws WfException {
-      return new WfRequesterImpl(name);
+  public static WfRequester newWfRequester()  {
+      return new WfRequesterImpl();
   }
   
   /** Creates a new {@link WfResource} instance.
    * @throws WfException
    * @return An instance of the WfResource Interface.
    */
-  public static WfResource newWfResource(String name, String key, List items) throws WfException {
+  public static WfResource newWfResource(String name, String key, List items) {
       return new WfResourceImpl(name,key,items);
   }
 }

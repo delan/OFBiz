@@ -31,7 +31,7 @@ import java.util.List;
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *@author     Andy Zeneski (jaz@zsolv.com)
+ *@author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
  *@created    October 29, 2001
  *@version    1.0
  */
@@ -114,12 +114,13 @@ public interface WfProcessMgr  {
   public Map resultSignature() throws WfException;
   
   /**
+   * Create a WfProcess object
    * @param requester
    * @throws WfException
    * @throws NotEnabled
    * @throws InvalidRequester
    * @throws RequesterRequired
-   * @return
+   * @return WfProcess created
    */
   public WfProcess createProcess(WfRequester requester) throws WfException, NotEnabled, InvalidRequester, RequesterRequired;
   
