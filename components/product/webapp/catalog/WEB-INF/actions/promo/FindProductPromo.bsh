@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones
  *@author     Brad Steiner
- *@version    $Revision: 1.4 $
+ *@version    $Revision: 1.5 $
  *@since      2.2
  */
 
@@ -44,7 +44,6 @@ if (UtilValidate.isEmpty(manualOnly)) {
     manualOnly = "Y";
 }
 
-productPromos = null;
 filterMap = null;
 if ("Y".equals(manualOnly)) {
     filterMap = UtilMisc.toMap("userEntered", "Y");

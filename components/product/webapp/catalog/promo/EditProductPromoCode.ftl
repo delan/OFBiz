@@ -22,19 +22,19 @@
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Brad Steiner (bsteiner@thehungersite.com)
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Revision: 1.4 $
+ *@version    $Revision: 1.1 $
  *@since      2.2
 -->
 
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#if hasPermission>
 ${pages.get("/promo/PromoTabBar.ftl")}
-    <div class="head1">${uiLabelMap.ProductPromotion}&nbsp;<span class='head2'><#if productPromo?exists>${(productPromo.promoName)?if_exists}</#if>[${(productPromo.productPromoId)?if_exists}]</span></div>
+    <div class="head1">Promotion Code</div>
     <div>
-        <a href="<@ofbizUrl>/EditProductPromo</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewProductPromo}]</a>
+        <a href="<@ofbizUrl>/EditProductPromoCode?productPromoId=${productPromoId?if_exists}</@ofbizUrl>" class="buttontext">[New Promotion Code]</a>
     </div>
 
-    ${productPromoFormWrapper.renderFormString()}
+    ${productPromoCodeFormWrapper.renderFormString()}
 <#else>
   <h3>${uiLabelMap.ProductViewPermissionError}</h3>
 </#if>

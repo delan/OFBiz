@@ -857,6 +857,62 @@
         <response name="error" type="view" value="EditProductPriceRules"/>
     </request-map>
 
+    <!-- ================ ProductPromoCode Requests ================= -->
+    <request-map uri="FindProductPromoCode"><security https="true" auth="true"/>
+        <response name="success" type="view" value="FindProductPromoCode"/>
+    </request-map>
+    <request-map uri="deleteProductPromoCode"><security https="true" auth="true"/>
+        <event type="service" path="" invoke="deleteProductPromoCode"/>
+        <response name="success" type="view" value="FindProductPromoCode"/>
+        <response name="error" type="view" value="FindProductPromoCode"/>
+    </request-map>
+
+    <request-map uri="EditProductPromoCode"><security https="true" auth="true"/>
+        <response name="success" type="view" value="EditProductPromoCode"/>
+    </request-map>
+    <request-map uri="createProductPromoCode"><security https="true" auth="true"/>
+        <event type="service" path="" invoke="createProductPromoCode"/>
+        <response name="success" type="view" value="EditProductPromoCode"/>
+        <response name="error" type="view" value="EditProductPromoCode"/>
+    </request-map>
+    <request-map uri="updateProductPromoCode"><security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateProductPromoCode"/>
+        <response name="success" type="view" value="EditProductPromoCode"/>
+        <response name="error" type="view" value="EditProductPromoCode"/>
+    </request-map>
+
+    <request-map uri="createProductPromoCodeEmail"><security https="true" auth="true"/>
+        <event type="service" path="" invoke="createProductPromoCodeEmail"/>
+        <response name="success" type="view" value="EditProductPromoCode"/>
+        <response name="error" type="view" value="EditProductPromoCode"/>
+    </request-map>
+    <request-map uri="updateProductPromoCodeEmail"><security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateProductPromoCodeEmail"/>
+        <response name="success" type="view" value="EditProductPromoCode"/>
+        <response name="error" type="view" value="EditProductPromoCode"/>
+    </request-map>
+    <request-map uri="deleteProductPromoCodeEmail"><security https="true" auth="true"/>
+        <event type="service" path="" invoke="deleteProductPromoCodeEmail"/>
+        <response name="success" type="view" value="EditProductPromoCode"/>
+        <response name="error" type="view" value="EditProductPromoCode"/>
+    </request-map>
+
+    <request-map uri="createProductPromoCodeParty"><security https="true" auth="true"/>
+        <event type="service" path="" invoke="createProductPromoCodeParty"/>
+        <response name="success" type="view" value="EditProductPromoCode"/>
+        <response name="error" type="view" value="EditProductPromoCode"/>
+    </request-map>
+    <request-map uri="updateProductPromoCodeParty"><security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateProductPromoCodeParty"/>
+        <response name="success" type="view" value="EditProductPromoCode"/>
+        <response name="error" type="view" value="EditProductPromoCode"/>
+    </request-map>
+    <request-map uri="deleteProductPromoCodeParty"><security https="true" auth="true"/>
+        <event type="service" path="" invoke="deleteProductPromoCodeParty"/>
+        <response name="success" type="view" value="EditProductPromoCode"/>
+        <response name="error" type="view" value="EditProductPromoCode"/>
+    </request-map>
+
     <!-- ================ Product Store Requests ============= -->
     <request-map uri="FindProductStore">
         <security https="true" auth="true"/>
@@ -1135,6 +1191,8 @@
     <view-map name="EditProductPromo" type="jpublish" page="/promo/EditProductPromo.ftl"/>
     <view-map name="EditProductPromoRules" type="jpublish" page="/promo/EditProductPromoRules.ftl"/>
     <view-map name="EditProductPromoStores" type="jpublish" page="/promo/EditProductPromoStores.ftl"/>
+    <view-map name="FindProductPromoCode" type="jpublish" page="/promo/FindProductPromoCode.ftl"/>
+    <view-map name="EditProductPromoCode" type="jpublish" page="/promo/EditProductPromoCode.ftl"/>
 
     <view-map name="FindPriceRules" type="jpublish" page="/price/FindProductPriceRule.ftl"/>
     <view-map name="EditProductPriceRules" type="jpublish" page="/price/EditProductPriceRules.ftl"/>
