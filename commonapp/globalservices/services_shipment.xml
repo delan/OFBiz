@@ -20,7 +20,7 @@
     	<attribute name="datetimeReceived" type="Timestamp" mode="IN" optional="true"/>
     	<attribute name="itemDescription" type="String" mode="IN" optional="true"/>
     	<attribute name="quantityAccepted" type="Double" mode="IN" optional="false"/>
-    	<attribute name="quantityRejected" type="Double" mode="IN" optional="false"/>    	
+    	<attribute name="quantityRejected" type="Double" mode="IN" optional="false"/>
     </service>
     <service name="createShipmentReceipt" engine="simple"
     		location="org/ofbiz/commonapp/shipment/receipt/ShipmentReceiptServices.xml" invoke="createShipmentReceipt" auth="true">
@@ -91,5 +91,17 @@
                 location="org.ofbiz.commonapp.shipment.shipment.ShipmentServices" invoke="removeShipmentEstimate" auth="true">
         <description>Remove Shipment Estimate</description>
         <attribute name="shipmentCostEstimateId" type="String" mode="IN" optional="false"/>
+    </service>
+    
+	<!-- Picklist Data Services -->    
+    <service name="getPicklistData" engine="simple"
+            location="org/ofbiz/commonapp/shipment/shipment/PicklistServices.xml" invoke="getPicklistData">
+        <description>Gets Picklist Data</description>
+        <attribute name="orderHeaderList" type="List" mode="IN" optional="true"/>
+        <attribute name="facilityId" type="String" mode="IN" optional="false"/>
+        <attribute name="inventoryItemInfoList" type="List" mode="OUT" optional="true"/>
+        <attribute name="orderHeaderInfoList" type="List" mode="OUT" optional="true"/>
+        <attribute name="wrongQuantityReservedList" type="List" mode="OUT" optional="true"/>
+        <attribute name="insufficientQohList" type="List" mode="OUT" optional="true"/>
     </service>
 </services>

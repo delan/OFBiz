@@ -66,20 +66,30 @@
 						<field-to-env field-name="inventoryItemId" map-name="orderItemInventoryRes" env-name="inventoryItemId"/>
 				    	<!-- update reserved quantity per inventoryItem, keep track of orderItems this came from -->
 				    	<if-compare value="OIIR_RESERVED" operator="equals" field-name="orderItemInventoryRes.statusId">
-				    		<field-to-env field-name="${inventoryItemId}" map-name="inventoryItemOrderItems" env-name="inventoryItemOrderItemList"/>
-			    			<field-to-list field-name="orderItem" list-name="inventoryItemOrderItemList"/>
-			    			<env-to-field env-name="inventoryItemOrderItemList" field-name="${orderItemInventoryRes.inventoryItemId}" map-name="inventoryItemOrderItems"/>
-			    			<clear-field field-name="inventoryItemOrderItemList"/>
-				    		<if-not-empty field-name="inventoryItemQuantities.${inventoryItemId}">
-				    			<calculate field-name="inventoryItemQuantities.${inventoryItemId}" type="Double">
-				    				<calcop field-name="inventoryItemQuantities.${inventoryItemId}" operator="add">
-				    					<calcop field-name="orderItemInventoryRes.quantity" operator="get"/>
-				    				</calcop>
-				    			</calculate>
-				    		<else>
-				    			<env-to-field env-name="orderItemInventoryRes.quantity" field-name="inventoryItemQuantities.${inventoryItemId}"/>
-				    		</else>
-				    		</if-not-empty>
+				    		<field-to-env field-name="${inventoryItemId}" map-name="inventoryItems" env-name="inventoryItem"/>
+    						<if-empty field-name="inventoryItem">
+								<env-to-field env-name="inventoryItemId" map-name="invItmLookupMap"/>
+								<find-by-primary-key value-name="inventoryItem" entity-name="InventoryItem" map-name="invItmLookupMap"/>
+								<env-to-field env-name="inventoryItem" field-name="${inventoryItemId}" map-name="inventoryItems"/>
+    						</if-empty>
+							
+							<if-compare-field field-name="inventoryItem.facilityId" operator="equals" to-field-name="parameters.facilityId">
+								<field-to-env field-name="${inventoryItemId}" map-name="inventoryItemOrderItems" env-name="inventoryItemOrderItemList"/>
+								<field-to-list field-name="orderItem" list-name="inventoryItemOrderItemList"/>
+								<env-to-field env-name="inventoryItemOrderItemList" field-name="${orderItemInventoryRes.inventoryItemId}" map-name="inventoryItemOrderItems"/>
+								<clear-field field-name="inventoryItemOrderItemList"/>
+								<if-not-empty field-name="inventoryItemQuantities.${inventoryItemId}">
+									<calculate field-name="inventoryItemQuantities.${inventoryItemId}" type="Double">
+										<calcop field-name="inventoryItemQuantities.${inventoryItemId}" operator="add">
+											<calcop field-name="orderItemInventoryRes.quantity" operator="get"/>
+										</calcop>
+									</calculate>
+								<else>
+									<env-to-field env-name="orderItemInventoryRes.quantity" field-name="inventoryItemQuantities.${inventoryItemId}"/>
+								</else>
+								</if-not-empty>
+							</if-compare-field>
+				    		<clear-field field-name="inventoryItem"/>
 				    	</if-compare>
 					    <!-- update total quantity reserved, picked, etc per line item to check to see if all and not more is reserved -->
 				    	<if-compare value="OIIR_CANCELLED" operator="not-equals" field-name="orderItemInventoryRes.statusId">
@@ -120,9 +130,7 @@
 	    <!-- go through all quantities and get inventoryItem and facilityLocation -->
     	<!-- warn if insufficient QOH for reserved amount -->
     	<iterate-map key-name="inventoryItemId" value-name="quantityNeeded" map-name="inventoryItemQuantities">
-    		<env-to-field env-name="inventoryItemId" map-name="invItmLookupMap"/>
-    		<find-by-primary-key value-name="inventoryItem" entity-name="InventoryItem" map-name="invItmLookupMap"/>
-    		<env-to-field env-name="inventoryItem" field-name="${inventoryItemId}" map-name="inventoryItems"/>
+    		<field-to-env field-name="${inventoryItemId}" map-name="inventoryItems" env-name="inventoryItem"/>
     		
     		<if>
     			<condition>
