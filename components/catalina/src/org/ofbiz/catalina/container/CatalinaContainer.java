@@ -1,5 +1,5 @@
 /*
- * $Id: CatalinaContainer.java,v 1.8 2004/05/26 16:16:13 ajzeneski Exp $
+ * $Id: CatalinaContainer.java,v 1.9 2004/06/02 20:34:03 ajzeneski Exp $
  *
  */
 package org.ofbiz.catalina.container;
@@ -100,8 +100,8 @@ import org.xml.sax.SAXException;
  *
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.8 $
- * @since      May 21, 2004
+ * @version    $Revision: 1.9 $
+ * @since      3.1
  */
 public class CatalinaContainer implements Container {
 
