@@ -313,7 +313,7 @@ public class StringUtil {
     }
 
     private static char[] hexChar = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
-    private static int convertChar(char c) {
+    public static int convertChar(char c) {
         if ( '0' <= c && c <= '9' ) {
             return c - '0' ;
         } else if ( 'a' <= c && c <= 'f' ) {
@@ -323,5 +323,17 @@ public class StringUtil {
         } else {
             throw new IllegalArgumentException("Invalid hex character: [" + c + "]");
         }
+    }
+
+    public static char[] encodeInt(int i, int j, char digestChars[]) {
+        if (i < 16) {
+            digestChars[j] = '0';
+        }
+        j++;
+        do {
+            digestChars[j--] = hexChar[i & 0xf];
+            i >>>= 4;
+        } while (i != 0);
+        return digestChars;
     }
 }
