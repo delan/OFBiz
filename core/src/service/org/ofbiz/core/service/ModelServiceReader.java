@@ -220,10 +220,11 @@ public class ModelServiceReader {
      */
     public Iterator getServiceNamesIterator() {
         Collection collection = getServiceNames();
-        if (collection != null)
+        if (collection != null) {
             return collection.iterator();
-        else
+        } else {
             return null;
+        }
     }
 
     /** Creates a Collection with the serviceName of each Service defined in the specified XML Service Descriptor file.
@@ -241,14 +242,15 @@ public class ModelServiceReader {
         service.engineName = UtilXml.checkEmpty(serviceElement.getAttribute("engine"));
         service.location = UtilXml.checkEmpty(serviceElement.getAttribute("location"));
         service.invoke = UtilXml.checkEmpty(serviceElement.getAttribute("invoke"));
-        service.auth = checkBoolean(serviceElement.getAttribute("auth"));
-        service.export = checkBoolean(serviceElement.getAttribute("export"));
-        service.validate = checkBoolean(serviceElement.getAttribute("validate"));
+        service.auth = "true".equalsIgnoreCase(serviceElement.getAttribute("auth"));
+        service.export = "true".equalsIgnoreCase(serviceElement.getAttribute("export"));
+        //this defaults to true, so if anything but false, make it true
+        service.validate = !"false".equalsIgnoreCase(serviceElement.getAttribute("validate"));
         service.description = getCDATADef(serviceElement, "description");
         service.nameSpace = getCDATADef(serviceElement, "namespace");
         service.contextInfo = new HashMap();
 
-        createAttrDefs(serviceElement, "attribute", service.contextInfo);
+        createAttrDefs(serviceElement, service);
         return service;
     }
 
@@ -267,8 +269,21 @@ public class ModelServiceReader {
         return value;
     }
 
-    protected void createAttrDefs(Element baseElement, String parentNodeName,
-                                  Map contextMap) {
+    protected void createAttrDefs(Element baseElement, ModelService service) {
+        // Add in the defined attributes (override the above defaults if specified)
+        List paramElements = UtilXml.childElementList(baseElement, "attribute");
+        Iterator paramIter = paramElements.iterator();
+        while (paramIter.hasNext()) {
+            Element attribute = (Element) paramIter.next();
+            ModelParam param = new ModelParam();
+            param.name = UtilXml.checkEmpty(attribute.getAttribute("name"));
+            param.type = UtilXml.checkEmpty(attribute.getAttribute("type"));
+            param.mode = UtilXml.checkEmpty(attribute.getAttribute("mode"));
+            // defaults to false, if anything but true will be false
+            param.optional = "true".equalsIgnoreCase(attribute.getAttribute("optional"));
+            service.addParam(param);
+        }
+
         // Add the default optional parameters
         ModelParam def = null;
         // responseMessage
@@ -277,72 +292,42 @@ public class ModelServiceReader {
         def.type = "String";
         def.mode = "OUT";
         def.optional = true;
-        def.order = -1;
-        contextMap.put(def.name, def);
+        service.addParam(def);
         // errorMessage
         def = new ModelParam();
         def.name = ModelService.ERROR_MESSAGE;
         def.type = "String";
         def.mode = "OUT";
         def.optional = true;
-        def.order = -1;
-        contextMap.put(def.name, def);
+        service.addParam(def);
         // errorMessageList
         def = new ModelParam();
         def.name = ModelService.ERROR_MESSAGE_LIST;
         def.type = "java.util.List";
         def.mode = "OUT";
         def.optional = true;
-        def.order = -1;
-        contextMap.put(def.name, def);
+        service.addParam(def);
         // successMessage
         def = new ModelParam();
         def.name = ModelService.SUCCESS_MESSAGE;
         def.type = "String";
         def.mode = "OUT";
         def.optional = true;
-        def.order = -1;
-        contextMap.put(def.name, def);
+        service.addParam(def);
         // successMessageList
         def = new ModelParam();
         def.name = ModelService.SUCCESS_MESSAGE_LIST;
         def.type = "java.util.List";
         def.mode = "OUT";
         def.optional = true;
-        def.order = -1;
-        contextMap.put(def.name, def);
+        service.addParam(def);
         // userLogin
         def = new ModelParam();
         def.name = "userLogin";
         def.type = "org.ofbiz.core.entity.GenericValue";
         def.mode = "IN";
         def.optional = true;
-        def.order = -1;
-        contextMap.put(def.name, def);
-
-        // Add in the defined attributes (override the above defaults if specified)
-        NodeList attrList = baseElement.getElementsByTagName(parentNodeName);
-        int orderCount = 0;
-        for (int i = 0; i < attrList.getLength(); i++) {
-            Element attribute = (Element) attrList.item(i);
-            ModelParam param = new ModelParam();
-            param.name = UtilXml.checkEmpty(attribute.getAttribute("name"));
-            param.type = UtilXml.checkEmpty(attribute.getAttribute("type"));
-            param.mode = UtilXml.checkEmpty(attribute.getAttribute("mode"));
-            param.optional = checkBoolean(attribute.getAttribute("optional"));
-            if ((param.mode.equals("IN") || param.mode.equals("INOUT")) &&
-                    !param.optional)
-                param.order = orderCount++;
-            else
-                param.order = -1;
-            contextMap.put(param.name, param);
-        }
-    }
-
-    protected boolean checkBoolean(String string) {
-        if (string != null && string.equalsIgnoreCase("true"))
-            return true;
-        return false;
+        service.addParam(def);
     }
 
     protected Document getDocument(URL url) {
@@ -367,4 +352,3 @@ public class ModelServiceReader {
         return document;
     }
 }
-

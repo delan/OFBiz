@@ -36,7 +36,6 @@ import java.util.*;
  *@version    1.0
  */
 public class ModelParam {
-
     /** Parameter name */
     public String name;
 
@@ -46,10 +45,7 @@ public class ModelParam {
     /** Parameter mode (IN/OUT/INOUT) */
     public String mode;
 
-    /** Parameter required */
-    public boolean optional;
-
-    /** Parameter order (for IN modes only) */
-    public int order;
+    /** Is this Parameter required or optional? Default to false, or required. */
+    public boolean optional = false;
 }
 

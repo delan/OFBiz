@@ -93,7 +93,8 @@ public final class SOAPClientEngine extends GenericAsyncEngine {
             throw new GenericServiceException("Location not a valid URL", e);
         }
 
-        Object[] params = new Object[context.size()];
+        List inModelParamList = modelService.getInModelParamList();
+        Object[] params = new Object[inModelParamList.size()];
         Debug.logInfo("[SOAPClientEngine.invoke] : Parameter length - " +
                       params.length, module);
 
@@ -102,15 +103,16 @@ public final class SOAPClientEngine extends GenericAsyncEngine {
         if (!modelService.nameSpace.equals(""))
             call.setProperty(Call.NAMESPACE, modelService.nameSpace);
 
-        Iterator i = context.keySet().iterator();
-        while (i.hasNext()) {
-            Object key = i.next();
-            Object value = context.get(key);
-            ModelParam p = (ModelParam) modelService.contextInfo.get(key);
+        Iterator iter = inModelParamList.iterator();
+        int i = 0;
+        while (iter.hasNext()) {
+            ModelParam p = (ModelParam) iter.next();
             Debug.logInfo("[SOAPClientEngine.invoke} : Parameter : " + p.name + " (" +
-                          p.mode + ") - " + p.order, module);
-            if (p.order > -1)
-                params[p.order] = value;
+                          p.mode + ") - " + i, module);
+
+            //if the value is null, that's fine, it will go in null...
+            params[i] = context.get(p.name);
+            i++;
         }
 
         Object result = null;

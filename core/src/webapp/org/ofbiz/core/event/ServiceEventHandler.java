@@ -88,7 +88,7 @@ public class ServiceEventHandler implements EventHandler {
         
         // we have a service and the model; build the context
         Map serviceContext = new HashMap();
-        Iterator ci = model.contextInfo.keySet().iterator();
+        Iterator ci = model.getInParamNames().iterator();
         while (ci.hasNext()) {
             String name = (String) ci.next();
             String value = request.getParameter(name);

@@ -80,8 +80,10 @@ public class ModelService {
     /** Validate the context info for this service */
     public boolean validate;
 
-    /** Context Information, a list of parameters required by the service */
-    public Map contextInfo;
+    /** Context Information, a list of parameters used by the service, contains ModelParam objects */
+    protected Map contextInfo = new HashMap();
+    /** Context Information, a list of parameters used by the service, contains ModelParam objects */
+    protected List contextParamList = new LinkedList();
 
     /** Gets the ModelParam by name
      * @param name The name of the parameter to get
@@ -92,7 +94,37 @@ public class ModelService {
             return (ModelParam) contextInfo.get(name);
         return null;
     }
+    
+    /** Adds a parameter definition to this service; puts on list in order added
+     * then sorts by order if specified.
+     */
+    public void addParam(ModelParam param) {
+        contextInfo.put(param.name, param);
+        contextParamList.add(param);
+    }
 
+    public List getAllParamNames() {
+        List nameList = new LinkedList();
+        Iterator i = this.contextParamList.iterator();
+        while (i.hasNext()) {
+            ModelParam p = (ModelParam) i.next();
+            nameList.add(p.name);
+        }
+        return nameList;
+    }
+    
+    public List getInParamNames() {
+        List nameList = new LinkedList();
+        Iterator i = this.contextParamList.iterator();
+        while (i.hasNext()) {
+            ModelParam p = (ModelParam) i.next();
+            //don't include OUT parameters in this list, only IN and INOUT
+            if ("OUT".equals(p.mode)) continue;
+            nameList.add(p.name);
+        }
+        return nameList;
+    }
+    
     /** Validates a Map against the IN or OUT parameter information
      * @param test The Map object to test
      * @param mode Test either mode IN or mode OUT
@@ -254,27 +286,28 @@ public class ModelService {
     }
 
     /**
-     * Gets the parameter names of the specified mode (IN/OUT/INOUT)
-     * Note: IN and OUT will also contains INOUT parameters
+     * Gets the parameter names of the specified mode (IN/OUT/INOUT). The 
+     * parameters will be returned in the order specified in the file.
+     * Note: IN and OUT will also contains INOUT parameters.
      * @param mode The mode (IN/OUT/INOUT)
      * @param optional True if to include optional parameters
      * @return List of parameter names
      */
     public List getParameterNames(String mode, boolean optional) {
         List names = new ArrayList();
-        if (!mode.equals("IN") && !mode.equals("OUT") && !mode.equals("INOUT"))
+        if (!"IN".equals(mode) && !"OUT".equals(mode) && !"INOUT".equals(mode)) {
             return names;
-        if (contextInfo == null || contextInfo.size() == 0)
+        }
+        if (contextInfo.size() == 0) {
             return names;
-        Set keySet = contextInfo.keySet();
-        Iterator i = keySet.iterator();
+        }
+        Iterator i = contextParamList.iterator();
         while (i.hasNext()) {
-            Object key = i.next();
-            String name = (String) key;
-            ModelParam param = (ModelParam) contextInfo.get(key);
+            ModelParam param = (ModelParam) i.next();
             if (param.mode.equals("INOUT") || param.mode.equals(mode)) {
-                if (optional || (!optional && !param.optional))
+                if (optional || (!optional && !param.optional)) {
                     names.add(name);
+                }
             }
         }
         return names;
@@ -288,18 +321,22 @@ public class ModelService {
      */
     public Map makeValid(Map source, String mode) {
         Map target = new HashMap();
-        if (source == null)
+        if (source == null) {
             return target;
-        if (!mode.equals("IN") && !mode.equals("OUT") && !mode.equals("INOUT"))
+        }
+        if (!"IN".equals(mode) && !"OUT".equals(mode) && !"INOUT".equals(mode)) {
             return target;
-        if (contextInfo == null || contextInfo.size() == 0)
+        }
+        if (contextInfo.size() == 0) {
             return target;
+        }
         List names = getParameterNames(mode, true);
         Iterator i = names.iterator();
         while (i.hasNext()) {
             Object key = i.next();
-            if (source.containsKey(key))
+            if (source.containsKey(key)) {
                 target.put(key, source.get(key));
+            }
         }
         return target;
     }
@@ -308,22 +345,47 @@ public class ModelService {
      * Gets a list of required IN parameters in sequence.
      * @return A list of required IN parameters in the order which they were defined.
      */
-     public List getParameterSequence(Map source) {
-        List target = new ArrayList();
-        if (source == null)
+     public List getInParameterSequence(Map source) {
+        List target = new LinkedList();
+        if (source == null) {
             return target;
-        if (contextInfo == null || contextInfo.size() == 0)
+        }
+        if (contextInfo == null || contextInfo.size() == 0) {
             return target;
-        List names = getParameterNames(IN_PARAM, false);
-        target = new ArrayList(names.size());
-        Iterator i = names.iterator();
+        }
+        Iterator i = this.contextParamList.iterator();
         while (i.hasNext()) {
-            String name = (String) i.next();
-            ModelParam p = getParam(name);
-            if (p.order > -1)
-                target.add(p.order, source.get(name));
+            ModelParam p = (ModelParam) i.next();
+            //don't include OUT parameters in this list, only IN and INOUT
+            if ("OUT".equals(p.mode)) continue;
+            
+            Object srcObject = source.get(p.name);
+            if (srcObject != null) {
+                target.add(srcObject);
+            }
         }
         return target;
     }
+     
+    /** Returns a list of ModelParam objects in the order they were defined when 
+     * the service was created.
+     */
+    public List getModelParamList() {
+        return new LinkedList(this.contextParamList);
+    }
+     
+    /** Returns a list of ModelParam objects in the order they were defined when 
+     * the service was created.
+     */
+    public List getInModelParamList() {
+        List inList = new LinkedList();
+        Iterator i = this.contextParamList.iterator();
+        while (i.hasNext()) {
+            ModelParam p = (ModelParam) i.next();
+            //don't include OUT parameters in this list, only IN and INOUT
+            if ("OUT".equals(p.mode)) continue;
+            inList.add(p);
+        }
+        return inList;
+    }
 }
-
