@@ -1,5 +1,5 @@
 /*
- * $Id$ 
+ * $Id$
  */
 
 package org.ofbiz.core.control;
@@ -36,9 +36,9 @@ import org.ofbiz.core.util.*;
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *@author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a> 
+ *@author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- *@author Dustin Caldwell
+ *@author     Dustin Caldwell
  *@created    June 28, 2001
  *@version    1.0
  */
@@ -46,7 +46,7 @@ public class RequestHandler implements Serializable {
     
     private ServletContext context;
     private RequestManager rm;
-            
+    
     public void init( ServletContext context ) {
         this.context = context;
         Debug.logInfo("Loading RequestManager...");
@@ -73,7 +73,8 @@ public class RequestHandler implements Serializable {
             requestUri = getRequestUri(chain);
             nextView = getNextPageUri(chain);
             Debug.logInfo("Chain in place: requestUri=" + requestUri + " nextView=" + nextView);
-        } else {
+        }
+        else {
             // Invoke the pre-processor (but NOT in a chain)
             Collection preProcEvents = rm.getPreProcessor();
             if ( preProcEvents != null ) {
@@ -110,7 +111,7 @@ public class RequestHandler implements Serializable {
             String checkLoginReturnString = null;
             try {
                 EventHandler loginEvent = EventFactory.getEventHandler(rm,checkLoginType);
-                loginEvent.initialize(checkLoginPath,checkLoginMethod);                
+                loginEvent.initialize(checkLoginPath,checkLoginMethod);
                 checkLoginReturnString = loginEvent.invoke(request,response);
             }
             catch ( EventHandlerException e ) {
@@ -138,7 +139,7 @@ public class RequestHandler implements Serializable {
             if ( eventType != null && eventPath != null && eventMethod != null ) {
                 try {
                     EventHandler eh = EventFactory.getEventHandler(rm,eventType);
-                    eh.initialize(eventPath,eventMethod);                    
+                    eh.initialize(eventPath,eventMethod);
                     eventReturnString = eh.invoke(request,response);
                 }
                 catch ( EventHandlerException e ) {
@@ -154,7 +155,7 @@ public class RequestHandler implements Serializable {
         if(eventReturn != null && !"success".equalsIgnoreCase(eventReturnString)) nextView = eventReturn;
         Debug.logInfo("Next View after eventReturn: " + nextView);
         
-        // check for a chain request. 
+        // check for a chain request.
         if ( nextView != null && nextView.startsWith("request:") ) {
             nextView = nextView.substring(8);
             chainRequest = true;
@@ -168,11 +169,11 @@ public class RequestHandler implements Serializable {
         
         // check for a no dispatch return (meaning the return was processed by the event
         if ( nextView != null && nextView.startsWith("none:") ) {
-            nextView = nextView.substring(5);
+            nextView = nextView.substring(5);  // *PLEASE NOTE* This is useless. View type NONE ignores the value of nextView
             noDispatch = true;
         }
         
-        // get the next view. 
+        // get the next view.
         if ( !chainRequest && !redirect && !noDispatch ) {
             String tempView = nextView;
             if(tempView != null && tempView.length() > 0 && tempView.charAt(0) == '/') tempView = tempView.substring(1);
@@ -182,7 +183,7 @@ public class RequestHandler implements Serializable {
             request.setAttribute(SiteDefs.CURRENT_VIEW, tempView);
             
             tempView = rm.getViewPage(tempView);
-            nextPage = tempView != null ? tempView : "/"+nextView;
+            nextPage = tempView != null ? tempView : "/" + nextView;
             Debug.logInfo("Mapped To: " + nextPage);
         }
         
@@ -201,8 +202,8 @@ public class RequestHandler implements Serializable {
             Debug.logInfo("Running Chained Request: " + nextView);
             nextPage = doRequest(request,response,nextView);
         }
-               
-        // if previous request exists, and a login just succeeded, do that now... 
+        
+        // if previous request exists, and a login just succeeded, do that now...
         if(requestUri.equals(SiteDefs.LOGIN_REQUEST_URI) && "success".equalsIgnoreCase(eventReturnString)) {
             String previousRequest = (String) request.getSession().getAttribute(SiteDefs.PREVIOUS_REQUEST);
             if ( previousRequest != null ) {
@@ -216,7 +217,7 @@ public class RequestHandler implements Serializable {
         // if noDispatch return null to the control servlet
         if ( noDispatch )
             return null;
-                
+        
         // if redirect - redirect to the url and return null to the control servlet
         if ( redirect ) {
             Debug.logInfo("Sending redirect: " + nextView);
@@ -231,7 +232,7 @@ public class RequestHandler implements Serializable {
             }
             return null;
         }
-                            
+        
         return nextPage;
     }
     
