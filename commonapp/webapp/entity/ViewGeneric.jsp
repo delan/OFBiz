@@ -35,7 +35,6 @@
 <%@ page import="org.ofbiz.core.entity.*" %>
 <%@ page import="org.ofbiz.core.entity.model.*" %>
 
-<%String controlPath=(String)request.getAttribute(SiteDefs.CONTROL_PATH);%>
 <%pageContext.setAttribute("PageName", "ViewGeneric"); %>
 
 <%@ include file="/includes/header.jsp" %>

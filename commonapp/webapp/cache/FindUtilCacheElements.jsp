@@ -37,7 +37,6 @@
 
 <%boolean hasUtilCacheEdit=security.hasPermission("UTIL_CACHE_EDIT", session);%>
 <%String cacheName=request.getParameter("UTIL_CACHE_NAME");%>
-<%String controlPath=(String)request.getAttribute(SiteDefs.CONTROL_PATH);%>
 
 <br>
 <h2 style='margin:0;'>Cache Element Maintenance Page</h2>

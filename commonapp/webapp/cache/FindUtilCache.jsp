@@ -36,8 +36,6 @@
 <%@ include file="/includes/onecolumn.jsp" %> 
 
 <%boolean hasUtilCacheEdit=security.hasPermission("UTIL_CACHE_EDIT", session);%>
-<%String controlPath=(String)request.getAttribute(SiteDefs.CONTROL_PATH);%>
-
 <br>
 <h2 style='margin:0;'>Cache Maintenance Page</h2>
 

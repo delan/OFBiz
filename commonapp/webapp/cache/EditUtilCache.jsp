@@ -36,7 +36,6 @@
 <%@ include file="/includes/onecolumn.jsp" %> 
 
 <%String cacheName=request.getParameter("UTIL_CACHE_NAME");%>
-<%String controlPath=(String)request.getAttribute(SiteDefs.CONTROL_PATH);%>
 
 <br>
 <h2 style='margin:0;'>Cache Maintenance Edit Page</h2>
