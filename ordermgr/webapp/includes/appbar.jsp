@@ -19,7 +19,7 @@
     <TD width='100%'>
       <table width='100%' border=0 cellpadding='<%=headerBoxBottomPadding%>' cellspacing=0 bgcolor='<%=headerBoxBottomColor%>'>
         <tr>
-          <td bgcolor="<%=headerBoxBottomColor%>" onmouseover='mOvr(this,"<%=headerBoxBottomColorAlt%>");' onmouseout='mOut(this,"<%=headerBoxBottomColor%>");' onclick="mClk(this);" class="headerButtonLeft"><a href="javascript:document.commonappform.submit()" class="buttontext">CommonApp</a></td>
+          <td bgcolor="<%=headerBoxBottomColor%>" onmouseover='mOvr(this,"<%=headerBoxBottomColorAlt%>");' onmouseout='mOut(this,"<%=headerBoxBottomColor%>");' onclick="mClk(this);" class="headerButtonLeft"><a href="javascript:document.webtoolsform.submit()" class="buttontext">WebTools</a></td>
           <TD bgcolor="<%=headerBoxBottomColor%>" width="90%" align=center class='headerCenter'>App Links</TD>
           <%if(security.hasEntityPermission("WORKEFFORTMGR", "_VIEW", session)) {%>
             <td bgcolor="<%=headerBoxBottomColor%>" onmouseover='mOvr(this,"<%=headerBoxBottomColorAlt%>");' onmouseout='mOut(this,"<%=headerBoxBottomColor%>");' onclick="mClk(this);" class="headerButtonRight"><a href="javascript:document.workeffortform.submit()" class="buttontext">WorkEffort</a></td>
@@ -39,7 +39,7 @@
   </TR>
 </TABLE>
 
-  <form method="POST" action="<%=response.encodeURL("/commonapp/control/login/main")%>" name="commonappform" style='margin: 0;'>
+  <form method="POST" action="<%=response.encodeURL("/webtools/control/login/main")%>" name="webtoolsform" style='margin: 0;'>
     <input type="hidden" name="USERNAME" value="<%=userLogin.getString("userLoginId")%>">
     <input type="hidden" name="PASSWORD" value="<%=userLogin.getString("currentPassword")%>">
   </form>
