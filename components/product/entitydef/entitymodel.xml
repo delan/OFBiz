@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.60 $
+ * @version    $Revision: 1.61 $
  */
 -->
 
@@ -765,6 +765,17 @@
         <key-map field-name="productFeatureGroupId"/>
       </relation>
     </entity>
+    <view-entity entity-name="ProductFeatureGroupAndAppl"
+            package-name="org.ofbiz.product.feature"
+            title="Product Feature Group And Applicability View Entity">
+      <member-entity entity-alias="PFGA" entity-name="ProductFeatureGroupAppl"/>
+      <member-entity entity-alias="PF" entity-name="ProductFeature"/>
+      <alias-all entity-alias="PFGA"/>
+      <alias-all entity-alias="PF"/>
+      <view-link entity-alias="PFGA" rel-entity-alias="PF">
+        <key-map field-name="productFeatureId"/>
+      </view-link>
+    </view-entity>
     <entity entity-name="ProductFeatureGroupAppl"
             package-name="org.ofbiz.product.feature"
             title="Product Feature Group Applicability Entity">
