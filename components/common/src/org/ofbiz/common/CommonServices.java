@@ -1,5 +1,5 @@
 /*
- * $Id: CommonServices.java,v 1.2 2003/08/26 14:08:25 ajzeneski Exp $
+ * $Id: CommonServices.java,v 1.3 2003/11/13 21:21:00 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -37,6 +37,7 @@ import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import javax.transaction.xa.XAException;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.HttpClient;
@@ -51,12 +52,13 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
+import org.ofbiz.service.ServiceXaWrapper;
 
 /**
  * Common Services
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class CommonServices {
@@ -65,7 +67,7 @@ public class CommonServices {
 
     /**
      * Generic Test Service
-     *@param ctx The DispatchContext that this service is operating in
+     *@param dctx The DispatchContext that this service is operating in
      *@param context Map containing the input parameters
      *@return Map with the result of the service, the output parameters
      */
@@ -97,6 +99,28 @@ public class CommonServices {
         Map result = new HashMap();
         result.put("evaluationResult", new Boolean(true));
         return result;
+    }
+
+    public static Map testRollbackListener(DispatchContext dctx, Map context) {
+        ServiceXaWrapper xar = new ServiceXaWrapper(dctx);
+        xar.setRollbackService("testScv", context);
+        try {
+            xar.enlist();
+        } catch (XAException e) {
+            Debug.logError(e, module);
+        }
+        return ServiceUtil.returnError("Rolling back!");
+    }
+
+    public static Map testCommitListener(DispatchContext dctx, Map context) {
+        ServiceXaWrapper xar = new ServiceXaWrapper(dctx);
+        xar.setCommitService("testScv", context);
+        try {
+            xar.enlist();
+        } catch (XAException e) {
+            Debug.logError(e, module);
+        }
+        return ServiceUtil.returnSuccess();
     }
 
     /**

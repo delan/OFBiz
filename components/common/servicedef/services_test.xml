@@ -23,7 +23,19 @@
         <attribute name="serviceName" type="String" mode="IN" optional="true"/>
         <attribute name="evaluationResult" type="Boolean" mode="OUT"/>
     </service>
-    
+    <service name="testRollback" engine="java" export="true" validate="false"
+            location="org.ofbiz.common.CommonServices" invoke="testRollbackListener">
+        <description>Test service</description>
+        <attribute name="message" type="String" mode="IN" optional="true"/>
+        <attribute name="resp" type="String" mode="OUT"/>
+    </service>
+    <service name="testCommit" engine="java" export="true" validate="false"
+            location="org.ofbiz.common.CommonServices" invoke="testCommitListener">
+        <description>Test service</description>
+        <attribute name="message" type="String" mode="IN" optional="true"/>
+        <attribute name="resp" type="String" mode="OUT"/>
+    </service>
+
     <service name="groupTest" engine="group" location="testGroup" invoke=""/>
 
     <service name="testHttp" engine="http" 
