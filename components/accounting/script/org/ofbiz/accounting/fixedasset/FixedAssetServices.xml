@@ -187,7 +187,7 @@
 		<string-to-field string="addFixedAssetToFixedAsset" field-name="callingMethodName"/>
 		<string-to-field string="CREATE" field-name="checkAction"/>
 		<!-- note the the user must be associated with the parent FixedAsset with the role limited permission -->
-		<string-to-field string="parentFixedAssetId" field-name="FixedAssetIdName"/>
+		<string-to-field string="parentFixedAssetId" field-name="fixedAssetIdName"/>
     	<call-simple-method method-name="checkFixedAssetRelatedPermission"/>
         <check-errors/>
 
@@ -207,7 +207,7 @@
 		<string-to-field string="updateFixedAssetToFixedAsset" field-name="callingMethodName"/>
 		<string-to-field string="UPDATE" field-name="checkAction"/>
 		<!-- note the the user must be associated with the parent FixedAsset with the role limited permission -->
-		<string-to-field string="parentFixedAssetId" field-name="FixedAssetIdName"/>
+		<string-to-field string="parentFixedAssetId" field-name="fixedAssetIdName"/>
     	<call-simple-method method-name="checkFixedAssetRelatedPermission"/>
         <check-errors/>
 
@@ -222,7 +222,7 @@
 		<string-to-field string="removeFixedAssetFromFixedAsset" field-name="callingMethodName"/>
 		<string-to-field string="DELETE" field-name="checkAction"/>
 		<!-- note the the user must be associated with the parent FixedAsset with the role limited permission -->
-		<string-to-field string="parentFixedAssetId" field-name="FixedAssetIdName"/>
+		<string-to-field string="parentFixedAssetId" field-name="fixedAssetIdName"/>
     	<call-simple-method method-name="checkFixedAssetRelatedPermission"/>
         <check-errors/>
 
@@ -240,11 +240,11 @@
 		<string-to-field string="copyFixedAssetProductMembers" field-name="callingMethodName"/>
 		<string-to-field string="CREATE" field-name="checkAction"/>
 		<!-- note the the user must be associated with the target FixedAsset with the role limited permission -->
-		<string-to-field string="FixedAssetIdTo" field-name="FixedAssetIdName"/>
+		<string-to-field string="fixedAssetIdTo" field-name="fixedAssetIdName"/>
     	<call-simple-method method-name="checkFixedAssetRelatedPermission"/>
         <check-errors/>
 
-        <field-to-field field-name="FixedAssetId" map-name="parameters" to-map-name="lookupMap"/>
+        <field-to-field field-name="fixedAssetId" map-name="parameters" to-map-name="lookupMap"/>
         <find-by-and entity-name="FixedAssetMember" map-name="lookupMap" list-name="FixedAssetMembers"/>
 
         <field-to-env field-name="validDate" map-name="parameters" env-name="validDate"/>
@@ -255,14 +255,14 @@
         <!-- add each to a list to store and then store all and let the entity engine do inserts or updates as needed; much more reliable/useful -->
         <iterate entry-name="FixedAssetMember" list-name="FixedAssetMembers">
             <clone-value value-name="FixedAssetMember" new-value-name="newFixedAssetMember"/>
-            <field-to-field field-name="FixedAssetIdTo" map-name="parameters" to-field-name="FixedAssetId" to-map-name="newFixedAssetMember"/>
+            <field-to-field field-name="fixedAssetIdTo" map-name="parameters" to-field-name="fixedAssetId" to-map-name="newFixedAssetMember"/>
             <field-to-list field-name="newFixedAssetMember" list-name="pcmsToStore"/>
         </iterate>
         <store-list list-name="pcmsToStore"/>
 
         <if-compare field-name="recurse" map-name="parameters" operator="equals" value="Y">
             <!-- call this service for each sub-FixedAsset in the rollup with the same FixedAssetIdTo -->
-            <field-to-field field-name="FixedAssetId" map-name="parameters" to-field-name="parentFixedAssetId" to-map-name="lookupChildrenMap"/>
+            <field-to-field field-name="fixedAssetId" map-name="parameters" to-field-name="parentFixedAssetId" to-map-name="lookupChildrenMap"/>
             <find-by-and entity-name="FixedAssetRollup" map-name="lookupChildrenMap" list-name="FixedAssetRollups"/>
 
             <if-not-empty field-name="validDate">
@@ -270,8 +270,8 @@
             </if-not-empty>
 
             <iterate entry-name="FixedAssetRollup" list-name="FixedAssetRollups">
-                <field-to-field field-name="FixedAssetId" map-name="FixedAssetRollup" to-map-name="callServiceMap"/>
-                <field-to-field field-name="FixedAssetIdTo" map-name="parameters" to-map-name="callServiceMap"/>
+                <field-to-field field-name="fixedAssetId" map-name="FixedAssetRollup" to-map-name="callServiceMap"/>
+                <field-to-field field-name="fixedAssetIdTo" map-name="parameters" to-map-name="callServiceMap"/>
                 <field-to-field field-name="validDate" map-name="parameters" to-map-name="callServiceMap"/>
                 <field-to-field field-name="recurse" map-name="parameters" to-map-name="callServiceMap"/>
                 <call-service service-name="copyFixedAssetProductMembers" in-map-name="callServiceMap"/>
@@ -292,7 +292,7 @@
             </else>
         </if-not-empty>
         
-        <field-to-field field-name="FixedAssetId" map-name="parameters" to-map-name="lookupMap"/>
+        <field-to-field field-name="fixedAssetId" map-name="parameters" to-map-name="lookupMap"/>
         <find-by-and entity-name="FixedAssetMember" map-name="lookupMap" list-name="FixedAssetMembers"/>
         
         <iterate entry-name="FixedAssetMember" list-name="FixedAssetMembers">
@@ -313,7 +313,7 @@
             </else>
         </if-not-empty>
         
-        <field-to-field field-name="FixedAssetId" map-name="parameters" to-map-name="lookupMap"/>
+        <field-to-field field-name="fixedAssetId" map-name="parameters" to-map-name="lookupMap"/>
         <find-by-and entity-name="FixedAssetMember" map-name="lookupMap" list-name="FixedAssetMembers"/>
         
         <iterate entry-name="FixedAssetMember" list-name="FixedAssetMembers">
@@ -349,7 +349,7 @@
         
         <!-- create FixedAssetMember -->
         <env-to-field env-name="productId" map-name="callCreateFixedAssetMemberMap"/>
-        <field-to-field field-name="FixedAssetId" map-name="parameters" to-map-name="callCreateFixedAssetMemberMap"/>
+        <field-to-field field-name="fixedAssetId" map-name="parameters" to-map-name="callCreateFixedAssetMemberMap"/>
         <call-service service-name="addProductToFixedAsset" in-map-name="callCreateFixedAssetMemberMap"/>
         
         <!-- create defaultPrice and averageCost ProductPrice -->

@@ -9,14 +9,14 @@
         <description>Create an FixedAsset</description>
         <auto-attributes include="pk" mode="INOUT" optional="true"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
-        <override name="FixedAssetTypeId" optional="false"/>
+        <override name="fixedAssetTypeId" optional="false"/>
     </service>
     <service name="updateFixedAsset" default-entity-name="FixedAsset" engine="simple"
                 location="org/ofbiz/accounting/fixedasset/FixedAssetServices.xml" invoke="updateFixedAsset" auth="true">
         <description>Update an FixedAsset</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
-        <override name="FixedAssetTypeId" optional="false"/>
+        <override name="fixedAssetTypeId" optional="false"/>
     </service>
 
 	<!-- Product to Fixed Asset maintenance -->
@@ -58,7 +58,7 @@
     <service name="addPartyToFixedAsset" engine="simple"
                 location="org/ofbiz/accounting/fixedasset/FixedAssetServices.xml" invoke="addPartyToFixedAsset" auth="true">
         <description>Add Party To Fixed Asset</description>
-        <attribute name="FixedAssetId" type="String" mode="IN" optional="false"/>
+        <attribute name="fixedAssetId" type="String" mode="IN" optional="false"/>
         <attribute name="partyId" type="String" mode="IN" optional="false"/>
         <attribute name="roleTypeId" type="String" mode="IN" optional="false"/>
         <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
@@ -69,7 +69,7 @@
     <service name="updatePartyToFixedAsset" engine="simple"
                 location="org/ofbiz/accounting/fixedasset/FixedAssetServices.xml" invoke="updatePartyToFixedAsset" auth="true">
         <description>Update Party To Fixed Asset Information</description>
-        <attribute name="FixedAssetId" type="String" mode="IN" optional="false"/>
+        <attribute name="fixedAssetId" type="String" mode="IN" optional="false"/>
         <attribute name="partyId" type="String" mode="IN" optional="false"/>
         <attribute name="roleTypeId" type="String" mode="IN" optional="false"/>
         <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
@@ -80,7 +80,7 @@
     <service name="removePartyFromFixedAsset" engine="simple"
                 location="org/ofbiz/accounting/fixedasset/FixedAssetServices.xml" invoke="removePartyFromFixedAsset" auth="true">
         <description>Remove Party From Fixed Asset</description>
-        <attribute name="FixedAssetId" type="String" mode="IN" optional="false"/>
+        <attribute name="fixedAssetId" type="String" mode="IN" optional="false"/>
         <attribute name="partyId" type="String" mode="IN" optional="false"/>
         <attribute name="roleTypeId" type="String" mode="IN" optional="false"/>
         <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
@@ -90,7 +90,7 @@
    <service name="addFixedAssetToFixedAsset" engine="simple"
                 location="org/ofbiz/accounting/fixedasset/FixedAssetServices.xml" invoke="addFixedAssetToFixedAsset" auth="true">
         <description>Add FixedAsset To FixedAsset</description>
-        <attribute name="FixedAssetId" type="String" mode="IN" optional="false"/>
+        <attribute name="fixedAssetId" type="String" mode="IN" optional="false"/>
         <attribute name="parentFixedAssetId" type="String" mode="IN" optional="false"/>
         <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
@@ -100,7 +100,7 @@
     <service name="updateFixedAssetToFixedAsset" engine="simple"
                 location="org/ofbiz/accounting/fixedasset/FixedAssetServices.xml" invoke="updateFixedAssetToFixedAsset" auth="true">
         <description>Update FixedAsset To FixedAsset</description>
-        <attribute name="FixedAssetId" type="String" mode="IN" optional="false"/>
+        <attribute name="fixedAssetId" type="String" mode="IN" optional="false"/>
         <attribute name="parentFixedAssetId" type="String" mode="IN" optional="false"/>
         <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
         <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
@@ -110,7 +110,7 @@
     <service name="removeFixedAssetFromFixedAsset" engine="simple"
                 location="org/ofbiz/accounting/fixedasset/FixedAssetServices.xml" invoke="removeFixedAssetFromFixedAsset" auth="true">
         <description>Remove FixedAsset From FixedAsset</description>
-        <attribute name="FixedAssetId" type="String" mode="IN" optional="false"/>
+        <attribute name="fixedAssetId" type="String" mode="IN" optional="false"/>
         <attribute name="parentFixedAssetId" type="String" mode="IN" optional="false"/>
         <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
     </service>
