@@ -68,7 +68,7 @@ public class I18nBundleTag extends TagSupport {
 
     public int doStartTag() throws JspException {
         try {
-            this.bundle = UtilProperties.getResourceBundle(this.baseName, UtilMisc.getLocale((HttpServletRequest) pageContext.getRequest()));
+            this.bundle = UtilProperties.getResourceBundle(this.baseName, UtilHttp.getLocale((HttpServletRequest) pageContext.getRequest()));
 
             if (this.getId() != null) {
                 pageContext.setAttribute(this.getId(), this.bundle);

@@ -47,9 +47,9 @@ import org.ofbiz.core.view.*;
 public class RequestHandler implements Serializable {
 
     public static final String module = RequestHandler.class.getName();
-
-    private ServletContext context;
-    private RequestManager rm;
+    
+    private ServletContext context = null;
+    private RequestManager rm = null;
 
     public void init(ServletContext context) {
         this.context = context;
@@ -65,7 +65,7 @@ public class RequestHandler implements Serializable {
         String eventMethod = null;
 
         // workaraound if we are in the root webapp
-        String cname = UtilMisc.getApplicationName(request);
+        String cname = UtilHttp.getApplicationName(request);
 
         // Grab data from request object to process
         String requestUri = RequestHandler.getRequestUri(request.getPathInfo());
@@ -378,7 +378,7 @@ public class RequestHandler implements Serializable {
         GenericValue userLogin = (GenericValue) req.getSession().getAttribute("userLogin");
         GenericDelegator delegator = (GenericDelegator) req.getAttribute("delegator");
         // workaraound if we are in the root webapp
-        String cname = UtilMisc.getApplicationName(req);
+        String cname = UtilHttp.getApplicationName(req);
         String oldView = view;
 
         if (view != null && view.length() > 0 && view.charAt(0) == '/') view = view.substring(1);
@@ -473,4 +473,49 @@ public class RequestHandler implements Serializable {
                 System.currentTimeMillis() - viewStartTime, userLogin, delegator);
         }
     }
+    
+    
+    public String makeLink(HttpServletRequest request, HttpServletResponse response, String url) {
+        String httpsPort = UtilProperties.getPropertyValue("url.properties", "port.https", "443");
+        String httpsServer = UtilProperties.getPropertyValue("url.properties", "force.https.host");
+        String httpPort = UtilProperties.getPropertyValue("url.properties", "port.http", "80");
+        String httpServer = UtilProperties.getPropertyValue("url.properties", "force.http.host");
+        
+        String controlPath = (String) request.getAttribute(SiteDefs.CONTROL_PATH);              
+        
+        String requestUri = RequestHandler.getRequestUri(url);
+        StringBuffer newURL = new StringBuffer();
+
+        boolean useHttps = UtilProperties.propertyValueEqualsIgnoreCase("url.properties", "port.https.enabled", "Y");
+
+        if (useHttps) {
+            if (rm.requiresHttps(requestUri) && !request.isSecure()) {
+                String server = httpsServer;
+
+                if (server == null || server.length() == 0) {
+                    server = request.getServerName();
+                }
+                newURL.append("https://");
+                newURL.append(server);
+                if (!httpsPort.equals("443")) {
+                    newURL.append(":" + httpsPort);
+                }
+            } else if (!rm.requiresHttps(requestUri) && request.isSecure()) {
+                String server = httpServer;
+
+                if (server == null || server.length() == 0) {
+                    server = request.getServerName();
+                }
+                newURL.append("http://");
+                newURL.append(server);
+                if (!httpPort.equals("80")) {
+                    newURL.append(":" + httpPort);
+                }
+            }
+        }
+        
+        newURL.append(controlPath);
+        newURL.append(url);
+        return response.encodeURL(newURL.toString());                
+    }    
 }

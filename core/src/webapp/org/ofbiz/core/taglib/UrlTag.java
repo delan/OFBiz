@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -22,9 +22,7 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-
 package org.ofbiz.core.taglib;
-
 
 import java.io.*;
 import javax.servlet.*;
@@ -35,86 +33,33 @@ import javax.servlet.jsp.tagext.*;
 import org.ofbiz.core.control.*;
 import org.ofbiz.core.util.*;
 
-
 /**
  * UrlTag - Creates a URL string prepending the current control path.
  *
- * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
- * @version    1.0
- * @created    August 4, 2001
+ * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
+ * @version    $Revision$
+ * @since      2.0
  */
 public class UrlTag extends BodyTagSupport {
 
     public static final String module = UrlTag.class.getName();
-    public static String httpsPort = UtilProperties.getPropertyValue("url.properties", "port.https", "443");
-    public static String httpsServer = UtilProperties.getPropertyValue("url.properties", "force.https.host");
-    public static String httpPort = UtilProperties.getPropertyValue("url.properties", "port.http", "80");
-    public static String httpServer = UtilProperties.getPropertyValue("url.properties", "force.http.host");
 
     public int doEndTag() throws JspException {
         HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
         HttpServletResponse response = (HttpServletResponse) pageContext.getResponse();
-
-        String controlPath = (String) request.getAttribute(SiteDefs.CONTROL_PATH);
+       
         ServletContext context = (ServletContext) request.getAttribute("servletContext");
-        RequestHandler rh = (RequestHandler) context.getAttribute(SiteDefs.REQUEST_HANDLER);
-        RequestManager rm = rh.getRequestManager();
+        RequestHandler rh = (RequestHandler) context.getAttribute(SiteDefs.REQUEST_HANDLER);        
 
         BodyContent body = getBodyContent();
 
         String baseURL = body.getString();
-        String requestUri = RequestHandler.getRequestUri(baseURL);
-
-        StringBuffer newURL = new StringBuffer();
-
-        boolean useHttps = UtilProperties.propertyValueEqualsIgnoreCase("url.properties", "port.https.enabled", "Y");
-
-        if (useHttps) {
-            if (rm.requiresHttps(requestUri) && !request.isSecure()) {
-                String server = httpsServer;
-
-                if (server == null || server.length() == 0) {
-                    server = request.getServerName();
-                }
-                newURL.append("https://");
-                newURL.append(server);
-                if (!httpsPort.equals("443")) {
-                    newURL.append(":" + httpsPort);
-                }
-            } else if (!rm.requiresHttps(requestUri) && request.isSecure()) {
-                String server = httpServer;
-
-                if (server == null || server.length() == 0) {
-                    server = request.getServerName();
-                }
-                newURL.append("http://");
-                newURL.append(server);
-                if (!httpPort.equals("80")) {
-                    newURL.append(":" + httpPort);
-                }
-            }
-        }
-
-        if (Debug.verboseOn()) Debug.logVerbose("UseHTTPS: " + useHttps + " -- URI: " + requestUri + " -> " + rm.requiresHttps(requestUri), module);
-        newURL.append(controlPath);
-        newURL.append(baseURL);
-
+        String newURL = rh.makeLink(request, response, baseURL);        
+     
         body.clearBody();
 
-        try {
-            String encodedURL = newURL.toString();
-
-            /* This doesn't work, leaving here as a painful reminder that each parameter must be encoded independently
-             //encode for character escaping, etc with the URLEncoder.encode method
-             int qmLoc = encodedURL.indexOf('?');
-             if (qmLoc > 0) {
-             String encodedQueryString = java.net.URLEncoder.encode(encodedURL.substring(qmLoc + 1));
-             encodedURL = encodedURL.subSequence(0, qmLoc) + "?" + encodedQueryString;
-             }
-             */
-            // encode for session maintenance with the response.encodeURL method
-            encodedURL = response.encodeURL(encodedURL);
-            getPreviousOut().print(encodedURL);
+        try {            
+            getPreviousOut().print(newURL);
         } catch (IOException e) {
             if (UtilJ2eeCompat.useNestedJspException(pageContext.getServletContext())) {
                 throw new JspException(e.getMessage(), e);

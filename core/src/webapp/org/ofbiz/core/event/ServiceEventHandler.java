@@ -75,7 +75,7 @@ public class ServiceEventHandler implements EventHandler {
         }
 
         GenericValue userLogin = (GenericValue) request.getSession().getAttribute(SiteDefs.USER_LOGIN);
-        Locale locale = UtilMisc.getLocale(request);
+        Locale locale = UtilHttp.getLocale(request);
         
         DispatchContext dctx = dispatcher.getDispatchContext();
                 

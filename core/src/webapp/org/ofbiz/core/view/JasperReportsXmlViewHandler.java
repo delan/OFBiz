@@ -74,7 +74,7 @@ public class JasperReportsXmlViewHandler implements ViewHandler {
         try {
             String datasourceName = delegator.getEntityHelperName(info);
             InputStream is = context.getResourceAsStream(page);
-            Map parameters = UtilMisc.getParameterMap(request);
+            Map parameters = UtilHttp.getParameterMap(request);
 
             JasperReport report = JasperCompileManager.compileReport(is);
 

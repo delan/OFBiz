@@ -175,7 +175,7 @@ public class CoreEvents {
         Security security = (Security) request.getAttribute("security");
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         
-        Map params = UtilMisc.getParameterMap(request);
+        Map params = UtilHttp.getParameterMap(request);
         // get the schedule parameters
         String serviceName = (String) params.remove("SERVICE_NAME");
         String serviceTime = (String) params.remove("SERVICE_TIME");

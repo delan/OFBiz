@@ -106,7 +106,7 @@ public class ControlServlet extends HttpServlet {
         GenericValue userLogin = (GenericValue) request.getSession().getAttribute(SiteDefs.USER_LOGIN);
 
         // workaraound if we are in the root webapp
-        String webappName = UtilMisc.getApplicationName(request);
+        String webappName = UtilHttp.getApplicationName(request);
 
         String rname = "";
         if (request.getPathInfo() != null) {
@@ -196,7 +196,7 @@ public class ControlServlet extends HttpServlet {
         ServletContext servletContext = getServletContext();
         request.setAttribute("servletContext", servletContext);
 
-        StringBuffer serverRootUrl = UtilMisc.getServerRootUrl(request);
+        StringBuffer serverRootUrl = UtilHttp.getServerRootUrl(request);
         request.setAttribute(SiteDefs.SERVER_ROOT_URL, serverRootUrl.toString());
 
         if (Debug.timingOn()) timer.timerString("[" + rname + "] Setup done, doing Event(s) and View(s)", module);
