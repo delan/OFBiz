@@ -29,21 +29,25 @@
 -->
 
 <!-- ====================== Root Element ======================= -->
-<!ELEMENT entity-config ( transaction-factory, jndi-server*, delegator+, 
+<!ELEMENT entity-config ( resource-loader+, jndi-server*, transaction-factory, delegator+, 
         entity-model-reader+, entity-group-reader+, field-type+, datasource+ )>
 
-<!ELEMENT file-resource EMPTY>
-<!ATTLIST file-resource
-    location CDATA #REQUIRED
+<!ELEMENT resource-loader EMPTY>
+<!ATTLIST resource-loader
+    name CDATA #REQUIRED
+    class CDATA #REQUIRED
     prepend-env CDATA #IMPLIED
+    prefix CDATA #IMPLIED
 >
-<!ELEMENT classpath-resource EMPTY>
-<!ATTLIST classpath-resource
-    location CDATA #REQUIRED
->
-<!ELEMENT url-resource EMPTY>
-<!ATTLIST url-resource
-    location CDATA #REQUIRED
+
+<!ELEMENT jndi-server EMPTY>
+<!ATTLIST jndi-server 
+    name CDATA #REQUIRED
+    context-provider-url CDATA #IMPLIED
+    initial-context-factory CDATA #IMPLIED
+    url-pkg-prefixes CDATA #IMPLIED
+    security-principal CDATA #IMPLIED
+    security-credentials CDATA #IMPLIED
 >
 
 <!ELEMENT transaction-factory ( user-transaction-jndi?, transaction-manager-jndi? )>
@@ -61,16 +65,6 @@
         jndi-name CDATA #REQUIRED
     >
 
-<!ELEMENT jndi-server EMPTY>
-<!ATTLIST jndi-server 
-    name CDATA #REQUIRED
-    context-provider-url CDATA #IMPLIED
-    initial-context-factory CDATA #IMPLIED
-    url-pkg-prefixes CDATA #IMPLIED
-    security-principal CDATA #IMPLIED
-    security-credentials CDATA #IMPLIED
->
-
 <!ELEMENT delegator (group-map+)>
 <!ATTLIST delegator
     name CDATA #REQUIRED
@@ -83,19 +77,28 @@
         datasource-name CDATA #REQUIRED
     >
 
-<!ELEMENT entity-model-reader ( ( file-resource | classpath-resource | url-resource )* )>
+<!ELEMENT entity-model-reader ( resource* )>
 <!ATTLIST entity-model-reader
     name CDATA #REQUIRED
 >
+    <!ELEMENT resource EMPTY>
+    <!ATTLIST resource
+        loader CDATA #REQUIRED
+        location CDATA #REQUIRED
+    >
 
-<!ELEMENT entity-group-reader ( file-resource | classpath-resource | url-resource )>
+<!ELEMENT entity-group-reader EMPTY>
 <!ATTLIST entity-group-reader
     name CDATA #REQUIRED
+    loader CDATA #REQUIRED
+    location CDATA #REQUIRED
 >
 
-<!ELEMENT field-type ( file-resource | classpath-resource | url-resource )>
+<!ELEMENT field-type EMPTY>
 <!ATTLIST field-type
     name CDATA #REQUIRED
+    loader CDATA #REQUIRED
+    location CDATA #REQUIRED
 >
 
 <!ELEMENT datasource ( sql-load-path*, ( inline-jdbc | jndi-jdbc | ANY) )>
