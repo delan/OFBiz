@@ -34,6 +34,13 @@ import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
+import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.condition.EntityConditionList;
+import org.ofbiz.entity.condition.EntityExpr;
+import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.entity.util.EntityListIterator;
+import org.ofbiz.entity.util.EntityUtil;
+import org.ofbiz.service.ServiceAuthException;
 
 
 
@@ -41,7 +48,7 @@ import org.ofbiz.service.ServiceUtil;
  * ContentManagementServices Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.24 $
+ * @version    $Revision: 1.25 $
  * @since      3.0
  *
  * 
@@ -672,6 +679,60 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
             Debug.logError(e, module);
             return ServiceUtil.returnError(e.getMessage());         	
          }
+         
+       
+        return result;
+    }
+    
+    public static Map changeLeafToNode(DispatchContext dctx, Map context) throws GenericServiceException{
+
+        Map result = new HashMap();
+        GenericDelegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        String contentId = (String)context.get("caContentIdTo");
+        GenericValue userLogin = (GenericValue)context.get("userLogin");
+        String userLoginId = userLogin.getString("userLoginId");
+        int seqNum = 9999;
+        try {
+        	GenericValue content = delegator.findByPrimaryKey("Content", UtilMisc.toMap("contentId", contentId));
+        	if (content == null) {
+        		Debug.logError("content was null", module);
+        		return ServiceUtil.returnError("content was null");
+        	}
+        	String dataResourceId = content.getString("dataResourceId");
+        	String dataTemplateTypeId = content.getString("dataTemplateTypeId");
+        	content.set("dataTemplateTypeId", "NONE");
+        	content.set("dataResourceId", null);
+        	content.set("lastModifedDate", UtilDateTime.nowTimestamp());
+        	content.set("lastModifedByUserLogin", userLoginId);
+        	content.store();
+        	
+        	if (UtilValidate.isNotEmpty(dataResourceId)) {
+        	// add previous DataResource as part of new subcontent
+        	GenericValue contentClone = (GenericValue)content.clone();
+        	contentClone.set("dataTemplateTypeId", dataTemplateTypeId);
+        	contentClone.set("dataResourceId", dataResourceId);
+        	content.set("lastModifedDate", UtilDateTime.nowTimestamp());
+        	content.set("lastModifedByUserLogin", userLoginId);
+        	content.set("createdDate", UtilDateTime.nowTimestamp());
+        	content.set("createdByUserLogin", userLoginId);
+        	
+        	contentClone.set("contentId", null);
+        	Map serviceIn = new HashMap();
+        	serviceIn.putAll(contentClone);
+        	serviceIn.put("caContentIdTo", contentId);
+        	serviceIn.put("caContentAssocTypeId", "SUB_CONTENT");
+            try {
+                result = dispatcher.runSync("persistContentAndAssoc", serviceIn);
+            } catch(ServiceAuthException e) {
+                return ServiceUtil.returnError(e.getMessage());         	
+            }
+        	}
+        	
+        } catch(GenericEntityException e) {
+            Debug.logError(e, module);
+            return ServiceUtil.returnError(e.getMessage());         	
+        }
          
        
         return result;

@@ -1,5 +1,5 @@
 /*
- * $Id: ModelMenu.java,v 1.8 2004/07/01 08:37:50 jonesde Exp $
+ * $Id: ModelMenu.java,v 1.9 2004/08/18 16:12:34 byersa Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -38,6 +38,7 @@ import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.service.LocalDispatcher;
+import org.ofbiz.content.content.EntityPermissionChecker;
 import org.w3c.dom.Element;
 
 import bsh.EvalError;
@@ -48,7 +49,7 @@ import bsh.Interpreter;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.8 $
+ * @version    $Revision: 1.9 $
  * @since      2.2
  */
 public class ModelMenu {
@@ -98,7 +99,9 @@ public class ModelMenu {
      */
     protected Map menuItemMap = new HashMap();
 
-    // ===== CONSTRUCTORS =====
+    protected EntityPermissionChecker permissionChecker;
+    
+   // ===== CONSTRUCTORS =====
     /** Default Constructor */
     public ModelMenu() {}
 
@@ -224,6 +227,9 @@ public class ModelMenu {
             modelMenuItem = this.addUpdateMenuItem(modelMenuItem);
             //Debug.logInfo("Added item " + modelMenuItem.getName() + " from def, mapName=" + modelMenuItem.getMapName(), module);
         }
+        Element permissionElement = UtilXml.firstChildElement(menuElement, "if-entity-permission");
+        if (permissionElement != null)
+            permissionChecker = new EntityPermissionChecker(permissionElement);
 
     }
 
@@ -286,12 +292,18 @@ public class ModelMenu {
      *   use the same menu definitions for many types of menu UIs
      */
     public void renderMenuString(StringBuffer buffer, Map context, MenuStringRenderer menuStringRenderer) {
+    	
+    	boolean passed = true;
+    	if (permissionChecker != null)
+    		passed = permissionChecker.runPermissionCheck(context);
 
             Debug.logInfo("in ModelMenu, name:" + this.getName(), module);
-        if ("simple".equals(this.type)) {
-            this.renderSimpleMenuString(buffer, context, menuStringRenderer);
-        } else {
-            throw new IllegalArgumentException("The type " + this.getType() + " is not supported for menu with name " + this.getName());
+        if (passed) {
+	        if ("simple".equals(this.type)) {
+	            this.renderSimpleMenuString(buffer, context, menuStringRenderer);
+	        } else {
+	            throw new IllegalArgumentException("The type " + this.getType() + " is not supported for menu with name " + this.getName());
+	        }
         }
             //Debug.logInfo("in ModelMenu, buffer:" + buffer.toString(), module);
     }
