@@ -128,7 +128,8 @@
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
       <field name="comments" type="comment"></field>
-      <field name="sequenceNum" type="numeric"></field>	
+      <field name="sequenceNum" type="numeric"></field>
+      <field name="quantity" type="floating-point"></field>	
       <prim-key field="productCategoryId" />	
       <prim-key field="productId" />	
       <prim-key field="fromDate" />
