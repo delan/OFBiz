@@ -31,19 +31,13 @@
     primaryParentCategoryId="2011" productCategoryId="20111"/>
   <ProductCategory description="Featured Products" productCategoryId="PROMOTIONS"/>
   <ProductCategory description="Catalog1 Search Products"
-    longDescription="Catalog1 Search Products - only products in this category will show up in a search in catalog1" productCategoryId="CATALOG1_SEARCH"/>
+    longDescription="Catalog1 Search Products - only products in this category will show up in a search in catalog1"
+    productCategoryId="CATALOG1_SEARCH"/>
   <ProductCategory description="Main Quick Add Products"
     longDescription="For quick orders, you have found the right place!" productCategoryId="CATALOG1_QUICKADD1"/>
   <ProductCategory description="Widget Quick Add Products"
     longDescription="Get all you widgets here!" productCategoryId="CATALOG1_QUICKADD2"/>
-  <ProductAssocType description="Upgrade or Up-Sell" hasTable="N" productAssocTypeId="PRODUCT_UPGRADE"/>
-  <ProductAssocType description="Complementary or Cross-Sell" hasTable="N" productAssocTypeId="PRODUCT_COMPLEMENT"/>
-  <ProductAssocType description="Incompatable" hasTable="N" productAssocTypeId="PRODUCT_INCOMPATABLE"/>
-  <ProductAssocType description="New Version, Replacement" hasTable="N" productAssocTypeId="PRODUCT_OBSOLESCENCE"/>
-  <ProductAssocType description="Marketing Package Component" hasTable="N" productAssocTypeId="MARKETING_PACKAGE"/>
-  <ProductAssocType description="Actual Product Component" hasTable="N" productAssocTypeId="PRODUCT_COMPONENT"/>
-  <ProductAssocType description="Equivalent or Substitute" hasTable="N" productAssocTypeId="PRODUCT_SUBSTITUTE"/>
-  <ProductAssocType description="Product Variant" hasTable="N" productAssocTypeId="PRODUCT_VARIANT"/>
+
   <Product defaultPrice="47.99" description="Round Gizmo w/ Lights"
     longDescription="A small round gizmo with multi-colored lights. Works great in the dark. Small and compact."
     primaryProductCategoryId="101" productId="GZ-2644"
@@ -65,15 +59,7 @@
     longDescription="This giant widget is mobile. It will seat one person safely. The wheels will never rust or break. Quite a unique item."
     primaryProductCategoryId="202" productId="WG-9943"
     productName="Giant Widget" quantityIncluded="10.0" weight="22.0"/>
-  <Product comments="They are safer than doing it yourself"
-    defaultPrice="24.99"
-    description="Inexpensive and Effective Knuckle Poppers"
-    longDescription="These are the one and only knuckle poppers.  No one already his this in such a great form."
-    productId="testProduct1" productName="Knuckle Poppers"/>
-  <Product comments="Wont burn curious children" defaultPrice="15.99"
-    description="Get it now while popcorn is popular"
-    longDescription="These are the one and only Popcorn Popper."
-    productId="testProduct2" productName="Popcorn Popper"/>
+
   <ProductAssoc fromDate="2001-01-01 12:00:00.0"
     productAssocTypeId="PRODUCT_UPGRADE" productId="WG-5569"
     productIdTo="WG-9943" quantity="1.0" reason="A little bit more expensive, but worth every penny!"/>
@@ -104,6 +90,7 @@
   <ProductAssoc fromDate="2001-01-01 12:00:00.0"
     productAssocTypeId="PRODUCT_OBSOLESCENCE" productId="GZ-8544"
     productIdTo="WG-9943" quantity="1.0" reason="The Giant Widget is much better than the Big Gizmo, so much so that it makes the Big Gizmo obsolete."/>
+
   <ProductCategoryMember fromDate="2001-01-01 12:00:00.0"
     productCategoryId="202" productId="WG-9943"/>
   <ProductCategoryMember fromDate="2001-01-01 12:00:00.0"
@@ -146,6 +133,7 @@
     productCategoryId="CATALOG1_QUICKADD2" productId="WG-5569"/>
   <ProductCategoryMember fromDate="2001-01-01 12:00:00.0"
     productCategoryId="CATALOG1_QUICKADD2" productId="WG-1111"/>
+
   <ProductCategoryRollup parentProductCategoryId="CATALOG1" productCategoryId="100"/>
   <ProductCategoryRollup parentProductCategoryId="100" productCategoryId="101"/>
   <ProductCategoryRollup parentProductCategoryId="100" productCategoryId="102"/>
