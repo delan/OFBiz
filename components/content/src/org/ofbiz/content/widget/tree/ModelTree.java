@@ -399,8 +399,12 @@ public class ModelTree {
 				//if (Debug.infoOn()) Debug.logInfo(" context:" +
 				// context.entrySet(), module);
 				try {
-				    String screenName = screenNameExdr.expandString(context);
-				    String screenLocation = screenLocationExdr.expandString(context);
+				    String screenName = null;
+				    if (screenNameExdr != null)
+				        screenName = screenNameExdr.expandString(context);
+				    String screenLocation = null;
+				    if (screenLocationExdr != null)
+				        screenLocation = screenLocationExdr.expandString(context);
 					if (screenName != null && screenLocation != null) {
 						ScreenStringRenderer screenStringRenderer = treeStringRenderer .getScreenStringRenderer(context);
 						ModelScreen modelScreen = ScreenFactory .getScreenFromLocation(screenLocation, screenName);
