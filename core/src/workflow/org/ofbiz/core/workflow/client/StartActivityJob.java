@@ -69,12 +69,13 @@ public class StartActivityJob extends AbstractJob {
             activityIds = activity.getDefinitionObject().getString("activityId") + " / " + 
                     activity.getRuntimeObject().getString("workEffortId");
             activity.activate();
+            if (requester != null)
+                requester.receiveResult(new HashMap());
         } catch (Exception e) {            
             Debug.logError(e, "Start Activity [" + activityIds + "] Failed", module);
             if (requester != null)
                 requester.receiveException(e);
-        }
-        requester.receiveResult(new HashMap());
+        }       
         finish();
     }
 }
