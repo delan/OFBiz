@@ -203,6 +203,7 @@ public class DispatchContext {
     private Map addGlobal() {
         Map globalMap = new HashMap();
         String path = UtilProperties.getPropertyValue("servicesengine","global.paths");
+        Debug.logInfo("[addGlobal] paths: " + path);
         if ( path == null )
             return null;
         List paths = StringUtil.split(path,";");
