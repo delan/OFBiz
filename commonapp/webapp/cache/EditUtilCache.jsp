@@ -32,6 +32,7 @@
 <%@ page import="java.util.*" %>
 
 <% pageContext.setAttribute("PageName", "EditUtilCache"); %> 
+<%@ include file="/includes/envsetup.jsp" %>
 <%@ include file="/includes/header.jsp" %>
 <%@ include file="/includes/onecolumn.jsp" %> 
 
