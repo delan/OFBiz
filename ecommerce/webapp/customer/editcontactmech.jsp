@@ -35,8 +35,8 @@
 <%@ include file="/includes/envsetup.jsp" %>
 <%@ include file="/includes/header.jsp" %>
 <%@ include file="/includes/onecolumn.jsp" %>
-<%ContactMechWorker.getContactMechAndRelated(pageContext, "contactMech", "contactMechId", "partyContactMech", "partyContactMechPurposes",
-    "contactMechTypeId", "contactMechType", "purposeTypes", "postalAddress", "telecomNumber", "requestName", "tryEntity");%>
+<%ContactMechWorker.getContactMechAndRelated(pageContext, userLogin.getString("partyId"), "contactMech", "contactMechId", "partyContactMech", "partyContactMechPurposes",
+    "contactMechTypeId", "contactMechType", "purposeTypes", "postalAddress", "telecomNumber", "requestName", "tryEntity", "contactMechTypes");%>
 
 <%if (!security.hasPermission("USER_ADMIN", session) && pageContext.getAttribute("partyContactMech") == null && pageContext.getAttribute("contactMech") != null){%>
   <p><h3>The contact information specified does not belong to you, you may not view or edit it.</h3></p>
@@ -53,11 +53,9 @@
           <td width="26%"><div class="tabletext">Select Contact Type:</div></td>
           <td width="74%">
             <select name="preContactMechTypeId">
-              <%Iterator contactMechTypes = UtilMisc.toIterator(delegator.findAll("ContactMechType", null));%>
-              <%while(contactMechTypes != null && contactMechTypes.hasNext()){%>
-                <%GenericValue contactMechType = (GenericValue)contactMechTypes.next();%>
-                <option value='<%=contactMechType.getString("contactMechTypeId")%>'><%=contactMechType.getString("description")%></option>
-              <%}%>
+              <ofbiz:iterator name="contactMechType" property="contactMechTypes">
+                <option value='<ofbiz:entityfield attribute="contactMechType" field="contactMechTypeId"/>'><ofbiz:entityfield attribute="contactMechType" field="description"/></option>
+              </ofbiz:iterator>
             </select>&nbsp;<a href="javascript:document.createcontactmechform.submit()" class="buttontext">[Create]</a>
           </td>
         </tr>
@@ -252,7 +250,6 @@
     &nbsp;<a href='<ofbiz:url>/authview/<ofbiz:print attribute="donePage"/></ofbiz:url>' class="buttontext">[Done/Cancel]</a>
   </ofbiz:unless>
 <%}%>
-
 
 <%@ include file="/includes/onecolumnclose.jsp" %>
 <%@ include file="/includes/footer.jsp" %>

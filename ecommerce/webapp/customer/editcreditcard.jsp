@@ -29,64 +29,38 @@
 %>
 
 <%@ page import="java.util.*" %>
-<%@ page import="org.ofbiz.core.entity.*" %>
+<%@ page import="org.ofbiz.core.entity.*, org.ofbiz.commonapp.party.contact.*" %>
 
-<% pageContext.setAttribute("PageName", "editcreditcard"); %>
+<% pageContext.setAttribute("PageName", "Edit Credit Card Info"); %>
 <%@ include file="/includes/envsetup.jsp" %>
 <%@ include file="/includes/header.jsp" %>
 <%@ include file="/includes/onecolumn.jsp" %>
-<%
-    boolean tryEntity = true;
-    if(request.getAttribute(SiteDefs.ERROR_MESSAGE) != null)
-        tryEntity = false;
 
-    String donePage = request.getParameter("DONE_PAGE");
-    if (donePage == null || donePage.length() <= 0)
-        donePage = "viewprofile";
+<%ContactMechWorker.getCreditCardInfoAndRelated(pageContext, userLogin.getString("partyId"), "creditCard", "creditCardId",
+    "curContactMechId", "curPartyContactMech", "curContactMech", "curPostalAddress", "curPartyContactMechPurposes", "donePage", "tryEntity");%>
 
-    String creditCardId = request.getParameter("creditCardId");
-    if (request.getAttribute("creditCardId") != null)
-        creditCardId = (String)request.getAttribute("creditCardId");
+<%ContactMechWorker.getPartyPostalAddresses(pageContext, userLogin.getString("partyId"), (String) pageContext.getAttribute("curContactMechId"), "postalAddressInfos");%>
 
-    Iterator partyContactMechIterator = UtilMisc.toIterator(EntityUtil.filterByDate(delegator.findByAnd("PartyContactMech", UtilMisc.toMap("partyId", userLogin.get("partyId")), null)));
-    GenericValue creditCard = null;
-    if (UtilValidate.isNotEmpty(creditCardId))
-        creditCard = delegator.findByPrimaryKey("CreditCardInfo", UtilMisc.toMap("creditCardId", creditCardId));
-    if (creditCard != null)
-        pageContext.setAttribute("creditCard", creditCard);
-    else
-        tryEntity = false;
-
-    
-    String curContactMechId = UtilFormatOut.checkNull(tryEntity?creditCard.getString("contactMechId"):request.getParameter("contactMechId"));
-    Collection partyContactMechs = EntityUtil.filterByDate(delegator.findByAnd("PartyContactMech", UtilMisc.toMap("partyId", userLogin.get("partyId"), "contactMechId", curContactMechId), null));
-    GenericValue curPartyContactMech = EntityUtil.getFirst(partyContactMechs);
-
-    GenericValue curContactMech = curPartyContactMech!=null?curPartyContactMech.getRelatedOne("ContactMech"):null;
-    GenericValue curPostalAddress = curContactMech!=null?curContactMech.getRelatedOne("PostalAddress"):null;
-
-    pageContext.setAttribute("tryEntity", new Boolean(tryEntity));
-%>
-
-<%if (!security.hasPermission("USER_ADMIN", session) && creditCard != null && 
-      !userLogin.getString("partyId").equals(creditCard.getString("partyId"))) {%>
+<%if (!security.hasPermission("USER_ADMIN", session) && pageContext.getAttribute("creditCard") != null && 
+      !userLogin.getString("partyId").equals(((GenericValue) pageContext.getAttribute("creditCard")).getString("partyId"))) {%>
   <p><h3>The credit card specified does not belong to you, you may not view or edit it.</h3></p>
-&nbsp;<a href="<ofbiz:url>/authview/<%=donePage%></ofbiz:url>" class="buttontext">[Back]</a>
+&nbsp;<a href='<ofbiz:url>/authview/<ofbiz:print attribute="donePage"/></ofbiz:url>' class="buttontext">[Back]</a>
 <%} else {%>
-    <%if (creditCard == null){%>
+    <ofbiz:unless name="creditCard">
       <p class="head1">Add New Credit Card</p>
-      &nbsp;<a href="<ofbiz:url>/authview/<%=donePage%></ofbiz:url>" class="buttontext">[Done/Cancel]</a>
+      &nbsp;<a href='<ofbiz:url>/authview/<ofbiz:print attribute="donePage"/></ofbiz:url>' class="buttontext">[Done/Cancel]</a>
       &nbsp;<a href="javascript:document.editcreditcardform.submit()" class="buttontext">[Save]</a>
-      <form method="post" action="<ofbiz:url>/createCreditCardInfo?DONE_PAGE=<%=donePage%></ofbiz:url>" name="editcreditcardform" style='margin: 0;'>
+      <form method="post" action='<ofbiz:url>/createCreditCardInfo?DONE_PAGE=<ofbiz:print attribute="donePage"/></ofbiz:url>' name="editcreditcardform" style='margin: 0;'>
       <table width="90%" border="0" cellpadding="2" cellspacing="0">
-    <%} else {%>
+    </ofbiz:unless>
+    <ofbiz:if name="creditCard">
       <p class="head1">Edit Credit Card</p>
-      &nbsp;<a href="<ofbiz:url>/authview/<%=donePage%></ofbiz:url>" class="buttontext">[Done/Cancel]</a>
+      &nbsp;<a href='<ofbiz:url>/authview/<ofbiz:print attribute="donePage"/></ofbiz:url>' class="buttontext">[Done/Cancel]</a>
       &nbsp;<a href="javascript:document.editcreditcardform.submit()" class="buttontext">[Save]</a>
-      <form method="post" action="<ofbiz:url>/updateCreditCardInfo?DONE_PAGE=<%=donePage%></ofbiz:url>" name="editcreditcardform" style='margin: 0;'>
+      <form method="post" action='<ofbiz:url>/updateCreditCardInfo?DONE_PAGE=<ofbiz:print attribute="donePage"/></ofbiz:url>' name="editcreditcardform" style='margin: 0;'>
       <table width="90%" border="0" cellpadding="2" cellspacing="0">
-        <input type=hidden name="creditCardId" value="<%=creditCardId%>">
-    <%}%>
+        <input type=hidden name='creditCardId' value='<ofbiz:print attribute="creditCardId"/>'>
+    </ofbiz:if>
 
     <tr>
       <td width="26%" align=right valign=top><div class="tabletext">Name on Card</div></td>
@@ -139,8 +113,8 @@
       <td width="74%">
         <%String expMonth = "";%>
         <%String expYear = "";%>
-        <%if (creditCard != null){%>
-          <%String expDate = creditCard.getString("expireDate");%>
+        <%if (pageContext.getAttribute("creditCard") != null) {%>
+          <%String expDate = ((GenericValue) pageContext.getAttribute("creditCard")).getString("expireDate");%>
           <%if (expDate != null && expDate.indexOf('/') > 0){%>
             <%expMonth = expDate.substring(0,expDate.indexOf('/'));%>
             <%expYear = expDate.substring(expDate.indexOf('/')+1);%>
@@ -183,16 +157,14 @@
           [Create New Address]</a>&nbsp;&nbsp;
         --%>
         <table width="100%" border="0" cellpadding="1">
-        <%if(curPostalAddress != null){%>
-          <%Iterator curPartyContactMechPurposesIter = UtilMisc.toIterator(EntityUtil.filterByDate(curPartyContactMech.getRelated("PartyContactMechPurpose")));%>
+        <ofbiz:if name="curPostalAddress">
           <tr>
             <td align="right" valign="top" width="1%">
-              <INPUT type=radio name='contactMechId' value='<%=curContactMech.getString("contactMechId")%>' checked>
+              <INPUT type=radio name='contactMechId' value='<ofbiz:print attribute="curContactMechId"/>' checked>
             </td>
             <td align="left" valign="top" width="80%">
               <div class="tabletext"><b>Use Current Address:</b></div>
-              <%while(curPartyContactMechPurposesIter != null && curPartyContactMechPurposesIter.hasNext()){%>
-                <%GenericValue curPartyContactMechPurpose = (GenericValue)curPartyContactMechPurposesIter.next();%>
+              <ofbiz:iterator name="curPartyContactMechPurpose" property="curPartyContactMechPurposes">
                 <%GenericValue curContactMechPurposeType = curPartyContactMechPurpose.getRelatedOne("ContactMechPurposeType");%>
                   <div class="tabletext">
                     <b><%=curContactMechPurposeType.getString("description")%></b>
@@ -200,28 +172,29 @@
                       (Expire:<%=UtilDateTime.toDateTimeString(curPartyContactMechPurpose.getTimestamp("thruDate"))%>)
                     <%}%>
                   </div>
-              <%}%>
+              </ofbiz:iterator>
               <div class="tabletext">
-                <%=UtilFormatOut.ifNotEmpty(curPostalAddress.getString("toName"), "<b>To:</b> ", "<br>")%>
-                <%=UtilFormatOut.ifNotEmpty(curPostalAddress.getString("attnName"), "<b>Attn:</b> ", "<br>")%>
-                <%=UtilFormatOut.checkNull(curPostalAddress.getString("address1"))%><br>
-                <%=UtilFormatOut.ifNotEmpty(curPostalAddress.getString("address2"), "", "<br>")%>
-                <%=UtilFormatOut.checkNull(curPostalAddress.getString("city"))%>, 
-                <%=UtilFormatOut.checkNull(curPostalAddress.getString("stateProvinceGeoId"))%> 
-                <%=UtilFormatOut.checkNull(curPostalAddress.getString("postalCode"))%>
-                <%=UtilFormatOut.ifNotEmpty(curPostalAddress.getString("countryGeoId"),"<br>","")%>
+                <ofbiz:entityfield attribute="curPostalAddress" field="toName" prefix="<b>To:</b> " suffix="<br>"/>
+                <ofbiz:entityfield attribute="curPostalAddress" field="attnName" prefix="<b>Attn:</b> " suffix="<br>"/>
+                <ofbiz:entityfield attribute="curPostalAddress" field="address1"/><br>
+                <ofbiz:entityfield attribute="curPostalAddress" field="address2" prefix="" suffix="<br>"/>
+                <ofbiz:entityfield attribute="postalAddress" field="city"/>,
+                <ofbiz:entityfield attribute="curPostalAddress" field="stateProvinceGeoId"/>
+                <ofbiz:entityfield attribute="curPostalAddress" field="postalCode"/>
+                <ofbiz:entityfield attribute="curPostalAddress" field="countryGeoId" prefix="<br>" suffix=""/>
               </div>
-              <div class="tabletext">(Updated:&nbsp;<%=UtilDateTime.toDateTimeString(curPartyContactMech.getTimestamp("fromDate"))%>)</div>
-              <%=UtilFormatOut.ifNotEmpty(UtilDateTime.toDateTimeString(curPartyContactMech.getTimestamp("thruDate")), "<div class=\"tabletext\"><b>Delete:&nbsp;", "</b></div>")%>
+              <div class="tabletext">(Updated:&nbsp;<ofbiz:entityfield attribute="curPartyContactMech" field="fromDate"/>)</div>
+              <ofbiz:entityfield attribute="curPartyContactMech" field="thruDate" prefix="<div class='tabletext'><b>Delete:&nbsp;" suffix="</b></div>"/>
             </td>
           </tr>
-        <%}else{%>
+        </ofbiz:if>
+        <ofbiz:unless name="curPostalAddress">
            <%-- <tr>
             <td align="left" valign="top" colspan='2'>
               <div class="tabletext">No Billing Address Selected</div>
             </td>
           </tr> --%>
-        <%}%>
+        </ofbiz:unless>
           <%-- is confusing
           <tr>
             <td align="left" valign="top" colspan='2'>
@@ -229,57 +202,46 @@
             </td>
           </tr>
           --%>
-          <%if(partyContactMechIterator != null && partyContactMechIterator.hasNext()){%>
-            <%while(partyContactMechIterator.hasNext()) {%>
-              <%GenericValue partyContactMech = (GenericValue)partyContactMechIterator.next();%>
-              <%GenericValue contactMech = partyContactMech.getRelatedOne("ContactMech");%>
-              <%Iterator partyContactMechPurposesIter = UtilMisc.toIterator(EntityUtil.filterByDate(partyContactMech.getRelated("PartyContactMechPurpose")));%>
-                <%if("POSTAL_ADDRESS".equals(contactMech.getString("contactMechTypeId")) && !contactMech.getString("contactMechId").equals(curContactMechId)){%>
-                  <%GenericValue postalAddress = contactMech.getRelatedOne("PostalAddress");%>
-                <tr>
-                  <td align="right" valign="top" width="1%">
-                    <INPUT type=radio name='contactMechId' value='<%=contactMech.getString("contactMechId")%>'>
-                  </td>
-                  <td align="left" valign="top" width="80%">
-                    <%while(partyContactMechPurposesIter != null && partyContactMechPurposesIter.hasNext()){%>
-                        <%GenericValue partyContactMechPurpose = (GenericValue)partyContactMechPurposesIter.next();%>
-                        <%GenericValue contactMechPurposeType = partyContactMechPurpose.getRelatedOne("ContactMechPurposeType");%>
-                        <div class="tabletext">
-                          <b><%=contactMechPurposeType.getString("description")%></b>
-                          <%if(partyContactMechPurpose.get("thruDate") != null){%>
-                            (Expire:<%=UtilDateTime.toDateTimeString(partyContactMechPurpose.getTimestamp("thruDate"))%>)
-                          <%}%>
-                        </div>
-                    <%}%>
+          <ofbiz:iterator name="postalAddressInfo" property="postalAddressInfos" type="java.util.Map" expandMap="true">
+            <tr>
+              <td align="right" valign="top" width="1%">
+                <INPUT type=radio name='contactMechId' value='<ofbiz:entityfield attribute="contactMech" field="contactMechId"/>'>
+              </td>
+              <td align="left" valign="top" width="80%">
+                <ofbiz:iterator name="partyContactMechPurpose" property="partyContactMechPurposes">
+                    <%GenericValue contactMechPurposeType = partyContactMechPurpose.getRelatedOne("ContactMechPurposeType");%>
                     <div class="tabletext">
-                      <%=UtilFormatOut.ifNotEmpty(postalAddress.getString("toName"), "<b>To:</b> ", "<br>")%>
-                      <%=UtilFormatOut.ifNotEmpty(postalAddress.getString("attnName"), "<b>Attn:</b> ", "<br>")%>
-                      <%=UtilFormatOut.checkNull(postalAddress.getString("address1"))%><br>
-                      <%=UtilFormatOut.ifNotEmpty(postalAddress.getString("address2"), "", "<br>")%>
-                      <%=UtilFormatOut.checkNull(postalAddress.getString("city"))%>, 
-                      <%=UtilFormatOut.checkNull(postalAddress.getString("stateProvinceGeoId"))%> 
-                      <%=UtilFormatOut.checkNull(postalAddress.getString("postalCode"))%>
-                      <%=UtilFormatOut.ifNotEmpty(postalAddress.getString("countryGeoId"),"<br>","")%>
+                      <b><%=contactMechPurposeType.getString("description")%></b>
+                      <ofbiz:entityfield attribute="partyContactMechPurpose" field="thruDate" prefix="(Expire:" suffix=")"/>
                     </div>
-                    <div class="tabletext">(Updated:&nbsp;<%=UtilDateTime.toDateTimeString(partyContactMech.getTimestamp("fromDate"))%>)</div>
-                    <%=UtilFormatOut.ifNotEmpty(UtilDateTime.toDateTimeString(partyContactMech.getTimestamp("thruDate")), "<div class=\"tabletext\"><b>Delete:&nbsp;", "</b></div>")%>
-                  </td>
-                </tr>
-                <%}%>
-            <%}%>
-          <%} else {%>
+                </ofbiz:iterator>
+                <div class="tabletext">
+                  <ofbiz:entityfield attribute="postalAddress" field="toName" prefix="<b>To:</b> " suffix="<br>"/>
+                  <ofbiz:entityfield attribute="postalAddress" field="attnName" prefix="<b>Attn:</b> " suffix="<br>"/>
+                  <ofbiz:entityfield attribute="postalAddress" field="address1"/><br>
+                  <ofbiz:entityfield attribute="postalAddress" field="address2" prefix="" suffix="<br>"/>
+                  <ofbiz:entityfield attribute="postalAddress" field="city"/>,
+                  <ofbiz:entityfield attribute="postalAddress" field="stateProvinceGeoId"/>
+                  <ofbiz:entityfield attribute="postalAddress" field="postalCode"/>
+                  <ofbiz:entityfield attribute="postalAddress" field="countryGeoId" prefix="<br>" suffix=""/>
+                </div>
+                <div class="tabletext">(Updated:&nbsp;<ofbiz:entityfield attribute="partyContactMech" field="fromDate"/>)</div>
+                <ofbiz:entityfield attribute="partyContactMech" field="thruDate" prefix="<div class='tabletext'><b>Delete:&nbsp;" suffix="</b></div>"/>
+              </td>
+            </tr>
+          </ofbiz:iterator>
+          <ofbiz:unless name="postalAddressInfos" size="0">
             <p>No contact information on file.</p><br>
-          <%}%>
+          </ofbiz:unless>
         </table>
       </td>
     </tr>
   </table>
   </form>
 
-  &nbsp;<a href="<ofbiz:url>/authview/<%=donePage%></ofbiz:url>" class="buttontext">[Done/Cancel]</a>
+  &nbsp;<a href='<ofbiz:url>/authview/<ofbiz:print attribute="donePage"/></ofbiz:url>' class="buttontext">[Done/Cancel]</a>
   &nbsp;<a href="javascript:document.editcreditcardform.submit()" class="buttontext">[Save]</a>
 <%}%>
-
 
 <%@ include file="/includes/onecolumnclose.jsp" %>
 <%@ include file="/includes/footer.jsp" %>
