@@ -103,16 +103,27 @@ public class ParametricSearch {
         return featureByType;
     }
     
-    public static void filterProductIdListByFeatures(List productIds, Map featureByType) {
+    public static void filterProductIdListByFeatures(List productIds, Map featureByType, GenericDelegator delegator) {
         if (productIds == null || productIds.size() == 0) return;
-        //TODO: filter search results by features
+        //filter search results by features
         
         // the fun part: go through each product and make sure it has all specified features
         Iterator productIdsIter = productIds.iterator();
         while (productIdsIter.hasNext()) {
             String productId = (String) productIdsIter.next();
             
-            if (false) {
+            // for now only constraining by productId, so any appl type will be included... 
+            List productFeatureAppl = null;
+            try {
+                productFeatureAppl = delegator.findByAndCache("ProductFeatureAppl", UtilMisc.toMap("productId", productId));
+            } catch (GenericEntityException e) {
+                Debug.logError(e, "Error getting features associated with the product with ID: " + productId + ", removing product from search match list.");
+                productIdsIter.remove();
+                continue;
+            }
+            
+            productFeatureAppl = EntityUtil.filterByDate(productFeatureAppl, true);
+            if (productFeatureAppl == null || productFeatureAppl.size() == 0) {
                 productIdsIter.remove();
             }
         }
@@ -120,7 +131,7 @@ public class ParametricSearch {
     
     public static List parametricKeywordSearch(Map featureByType, String keywordsString, GenericDelegator delegator, String categoryId, String visitId, boolean anyPrefix, boolean anySuffix, String intraKeywordOperator) {
         ArrayList productIds = KeywordSearch.productsByKeywords(keywordsString, delegator, categoryId, visitId, anyPrefix, anySuffix, intraKeywordOperator);
-        filterProductIdListByFeatures(productIds, featureByType);
+        filterProductIdListByFeatures(productIds, featureByType, delegator);
         return productIds;
     }
 }
