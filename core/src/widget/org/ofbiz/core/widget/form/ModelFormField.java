@@ -56,7 +56,7 @@ public class ModelFormField {
     protected String redWhen;
     protected String useWhen;
     
-    protected FieldInfo fieldInfo;
+    protected FieldInfo fieldInfo = null;
 
     // ===== CONSTRUCTORS =====
     /** Default Constructor */
@@ -88,7 +88,40 @@ public class ModelFormField {
             }
         }
         
-        // TODO: get sub-element and set fieldInfo
+        // get sub-element and set fieldInfo
+        Element subElement = UtilXml.firstChildElement(formElement, null);
+        if (subElement != null) {
+            String subElementName = subElement.getTagName();
+            if (Debug.infoOn()) Debug.logInfo("Processing field " + this.name + " with type info tag " + subElementName);
+            
+            if ("display".equals(subElementName)) {
+                this.fieldInfo = new DisplayField(subElement, this);
+            } else if ("hyperlink".equals(subElementName)) {
+                this.fieldInfo = new HyperlinkField(subElement, this);
+            } else if ("text".equals(subElementName)) {
+                this.fieldInfo = new TextField(subElement, this);
+            } else if ("textarea".equals(subElementName)) {
+                this.fieldInfo = new TextareaField(subElement, this);
+            } else if ("date-time".equals(subElementName)) {
+                this.fieldInfo = new DateTimeField(subElement, this);
+            } else if ("drop-down".equals(subElementName)) {
+                this.fieldInfo = new DropDownField(subElement, this);
+            } else if ("check".equals(subElementName)) {
+                this.fieldInfo = new CheckField(subElement, this);
+            } else if ("radio".equals(subElementName)) {
+                this.fieldInfo = new RadioField(subElement, this);
+            } else if ("submit".equals(subElementName)) {
+                this.fieldInfo = new SubmitField(subElement, this);
+            } else if ("reset".equals(subElementName)) {
+                this.fieldInfo = new ResetField(subElement, this);
+            } else if ("hidden".equals(subElementName)) {
+                this.fieldInfo = new HiddenField(subElement, this);
+            } else if ("ignored".equals(subElementName)) {
+                this.fieldInfo = new IgnoredField(subElement, this);
+            } else {
+                throw new IllegalArgumentException("The field sub-element with name " + subElementName + " is not supported");
+            }
+        }
     }
     
     /**
