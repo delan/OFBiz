@@ -20,15 +20,15 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.2
  */
 
 import java.util.*;
-import org.ofbiz.core.entity.*;
-import org.ofbiz.core.util.*;
-import org.ofbiz.commonapp.security.login.*;
-import org.ofbiz.commonapp.common.*;
+import org.ofbiz.entity.*;
+import org.ofbiz.base.util.*;
+import org.ofbiz.securityext.login.*;
+import org.ofbiz.common.*;
 
 userLogin = session.getAttribute("userLogin");
 if (userLogin != null) request.setAttribute("userLogin", userLogin);
@@ -37,7 +37,7 @@ person = session.getAttribute("_PERSON_");
 partyGroup = session.getAttribute("_PARTY_GROUP_");
 if (person == null) {
     person = userLogin == null ? null : userLogin.getRelatedOne("Person");
-    if (person != null) session.setAttribute"_PERSON_", person);
+    if (person != null) session.setAttribute("_PERSON_", person);
 }
 if (person != null) {
     request.setAttribute("person", person);
@@ -47,9 +47,9 @@ if (person != null) {
 }
 if (partyGroup != null) request.setAttribute("partyGroup", partyGroup);
 
-controlPath = request.getAttribute(SiteDefs.CONTROL_PATH);
-contextRoot = request.getAttribute(SiteDefs.CONTEXT_ROOT);
-serverRoot = request.getAttribute(SiteDefs.SERVER_ROOT_URL);
+controlPath = request.getAttribute("_CONTROL_PATH_");
+contextRoot = request.getAttribute("_CONTEXT_ROOT_");
+serverRoot = request.getAttribute("_SERVER_ROOT_URL_");
 
 layoutSettings = new HashMap();
 request.setAttribute("layoutSettings", layoutSettings);
