@@ -8,7 +8,12 @@
 
   <SecurityGroup description="Full Admin group, has all general permissions." groupId="FULLADMIN"/>
   <SecurityGroup description="Flexible Admin group, has all granular permissions." groupId="FLEXADMIN"/>
+  <SecurityGroup description="Demo Admin group, has all view permissions." groupId="VIEWADMIN"/>
   <SecurityGroup description="Admin group for restricted order processing." groupId="ORDERPROC"/>
+  <SecurityGroup description="Order Entry Admin group; permissions for creating orders." groupId="ORDERENTRY"/>
+  <SecurityGroup description="Catalog Admin group, has all catalog permissions." groupId="CATALOGADMIN"/>
+  <SecurityGroup description="Order Admin group, has all order permissions." groupId="ORDERADMIN"/>
+  <SecurityGroup description="Party Admin group, has all party permissions." groupId="PARTYADMIN"/>
 
   <SecurityPermission description="View the Server Statistics pages." permissionId="SERVER_STATS_VIEW"/>
   <SecurityPermission description="Use the Data File Maintenance pages." permissionId="DATAFILE_MAINT"/>
@@ -217,13 +222,47 @@
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="CONTENTMGR_VIEW"/>
   <SecurityGroupPermission groupId="FULLADMIN" permissionId="CONTENTMGR_ADMIN"/>
   
+  <SecurityGroupPermission groupId="VIEWADMIN" permissionId="SERVER_STATS_VIEW"/>
+  <SecurityGroupPermission groupId="VIEWADMIN" permissionId="UTIL_CACHE_VIEW"/>
+  <SecurityGroupPermission groupId="VIEWADMIN" permissionId="UTIL_DEBUG_VIEW"/>
+  <SecurityGroupPermission groupId="VIEWADMIN" permissionId="ENTITY_DATA_VIEW"/>
+  <SecurityGroupPermission groupId="VIEWADMIN" permissionId="PARTYMGR_VIEW"/>
+  <SecurityGroupPermission groupId="VIEWADMIN" permissionId="PARTYMGR_NOTE"/>
+  <SecurityGroupPermission groupId="VIEWADMIN" permissionId="ORDERMGR_VIEW"/>
+  <SecurityGroupPermission groupId="VIEWADMIN" permissionId="ORDERMGR_NOTE"/>
+  <SecurityGroupPermission groupId="VIEWADMIN" permissionId="SHIPRATE_VIEW"/>
+  <SecurityGroupPermission groupId="VIEWADMIN" permissionId="TAXRATE_VIEW"/>
+  <SecurityGroupPermission groupId="VIEWADMIN" permissionId="PAY_INFO_VIEW"/>
+  <SecurityGroupPermission groupId="VIEWADMIN" permissionId="SECURITY_VIEW"/>
+  <SecurityGroupPermission groupId="VIEWADMIN" permissionId="WORKEFFORTMGR_VIEW"/>
+  <SecurityGroupPermission groupId="VIEWADMIN" permissionId="ACCOUNTING_VIEW"/>
+  <SecurityGroupPermission groupId="VIEWADMIN" permissionId="FACILITY_VIEW"/>
+  <SecurityGroupPermission groupId="VIEWADMIN" permissionId="MARKETING_VIEW"/>
+  <SecurityGroupPermission groupId="VIEWADMIN" permissionId="CONTENTMGR_VIEW"/>
+  
   <SecurityGroupPermission groupId="ORDERPROC" permissionId="ORDERMGR_VIEW_ROLE"/>
   <SecurityGroupPermission groupId="ORDERPROC" permissionId="ORDERMGR_NOTE"/>
   <SecurityGroupPermission groupId="ORDERPROC" permissionId="PARTYMGR_VIEW"/>
   <SecurityGroupPermission groupId="ORDERPROC" permissionId="PARTYMGR_NOTE"/>
   
-  <UserLogin currentPassword="ofbiz" partyId="admin" passwordHint="" userLoginId="admin"/>
-  <UserLogin currentPassword="ofbiz" partyId="" passwordHint="" userLoginId="flexadmin"/>
+  <SecurityGroupPermission groupId="ORDERENTRY" permissionId="ORDERMGR_VIEW_ROLE"/>
+  <SecurityGroupPermission groupId="ORDERENTRY" permissionId="ORDERMGR_NOTE"/>
+  <SecurityGroupPermission groupId="ORDERENTRY" permissionId="ORDERMGR_CREATE"/>
+  <SecurityGroupPermission groupId="ORDERENTRY" permissionId="PARTYMGR_VIEW"/>
+  <SecurityGroupPermission groupId="ORDERENTRY" permissionId="PARTYMGR_CREATE"/>
+  <SecurityGroupPermission groupId="ORDERENTRY" permissionId="PARTYMGR_UPDATE"/>
+  <SecurityGroupPermission groupId="ORDERENTRY" permissionId="PARTYMGR_NOTE"/>
+  <SecurityGroupPermission groupId="ORDERENTRY" permissionId="CATALOG_VIEW"/>
+  
+  <SecurityGroupPermission groupId="CATALOGADMIN" permissionId="CATALOG_ADMIN"/>  
+  <SecurityGroupPermission groupId="ORDERADMIN" permissionId="ORDER_ADMIN"/>
+  <SecurityGroupPermission groupId="PARTYADMIN" permissionId="PARTY_ADMIN"/>
+  
+  <UserLogin userLoginId="admin" partyId="admin" currentPassword="ofbiz" passwordHint="" />
+  <UserLogin userLoginId="flexadmin" partyId="admin" currentPassword="ofbiz" passwordHint="" />
+  <UserLogin userLoginId="demoadmin" partyId="admin" currentPassword="ofbiz" passwordHint="" />
+
   <UserLoginSecurityGroup groupId="FULLADMIN" userLoginId="admin" fromDate="2001-01-01 12:00:00.0"/>
   <UserLoginSecurityGroup groupId="FLEXADMIN" userLoginId="flexadmin" fromDate="2001-01-01 12:00:00.0"/>
+  <UserLoginSecurityGroup groupId="VIEWADMIN" userLoginId="demoadmin" fromDate="2001-01-01 12:00:00.0"/>
 </entity-engine-xml>
