@@ -267,7 +267,7 @@ public class UtilHttp {
             streamContent(out, in, bytes.length);
         } catch (IOException e) {
             in.close();
-            out.close();
+            out.close(); // should we close the ServletOutputStream on error??
             throw e;
         }
         
