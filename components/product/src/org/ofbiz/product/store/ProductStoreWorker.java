@@ -1,5 +1,5 @@
 /*
- * $Id: ProductStoreWorker.java,v 1.24 2004/06/17 00:50:08 ajzeneski Exp $
+ * $Id: ProductStoreWorker.java,v 1.25 2004/06/22 16:43:52 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -52,7 +52,7 @@ import org.ofbiz.service.LocalDispatcher;
  * ProductStoreWorker - Worker class for store related functionality
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.24 $
+ * @version    $Revision: 1.25 $
  * @since      2.0
  */
 public class ProductStoreWorker {
@@ -87,6 +87,28 @@ public class ProductStoreWorker {
             }
         }
         return null;
+    }
+
+    public static String makeProductStoreOrderId(GenericDelegator delegator, String productStoreId) {
+        Long orderId = delegator.getNextSeqId("OrderHeader");
+        if (orderId == null) {
+            throw new IllegalArgumentException("Unable to obtain orderId from delegator");
+        }
+        return makeProductStoreOrderId(delegator, productStoreId, orderId.toString());
+    }
+
+    public static String makeProductStoreOrderId(GenericDelegator delegator, String productStoreId, String orderId) {
+        if (UtilValidate.isEmpty(orderId) || UtilValidate.isEmpty(productStoreId) || delegator == null) {
+            throw new IllegalArgumentException();
+        }
+
+        GenericValue store = getProductStore(productStoreId, delegator);
+        String prefix = store.getString("orderNumberPrefix");
+        if (!UtilValidate.isEmpty(prefix)) {
+            return prefix.trim() + orderId.trim();
+        } else {
+            return orderId.trim();
+        }
     }
 
     public static String getProductStorePaymentProperties(ServletRequest request, String paymentMethodTypeId, String paymentServiceTypeEnumId, boolean anyServiceType) {

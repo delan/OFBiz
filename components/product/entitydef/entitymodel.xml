@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.89 $
+ * @version    $Revision: 1.90 $
  */
 -->
 
@@ -2397,6 +2397,7 @@
       <field name="reserveInventory" type="indicator"></field>
       <field name="reserveOrderEnumId" type="id"></field>
       <field name="requireInventory" type="indicator"></field>
+      <field name="orderNumberPrefix" type="id-long"></field>
       <field name="defaultLocaleString" type="very-short"></field>
       <field name="defaultCurrencyUomId" type="id"></field>
       <field name="allowPassword" type="indicator"></field>

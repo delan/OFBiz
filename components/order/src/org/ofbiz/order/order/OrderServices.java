@@ -1,5 +1,5 @@
 /*
- * $Id: OrderServices.java,v 1.39 2004/06/17 06:11:33 ajzeneski Exp $
+ * $Id: OrderServices.java,v 1.40 2004/06/22 16:43:53 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -76,7 +76,7 @@ import org.ofbiz.workflow.WfUtil;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.39 $
+ * @version    $Revision: 1.40 $
  * @since      2.0
  */
 
@@ -243,7 +243,7 @@ public class OrderServices {
         result.put("statusId", initialStatus);
 
         // create the order object
-        String orderId = delegator.getNextSeqId("OrderHeader").toString();
+        String orderId = ProductStoreWorker.makeProductStoreOrderId(delegator, productStoreId);
         String billingAccountId = (String) context.get("billingAccountId");
         GenericValue order = delegator.makeValue("OrderHeader",
                 UtilMisc.toMap("orderId", orderId, "orderTypeId", orderTypeId,
