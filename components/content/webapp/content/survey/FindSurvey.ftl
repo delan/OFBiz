@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      3.0
 -->
 
@@ -55,7 +55,8 @@
           </td>
         </tr>
       </table>
-      <a href="<@ofbizUrl>/EditSurvey</@ofbizUrl>" class="buttontext">Create Survey</a>
+      <div class="tabletext"><a href="<@ofbizUrl>/EditSurvey</@ofbizUrl>" class="buttontext">[Create New Survey]</a></div>
+      <br>
       <table width="100%" border="0" cellspacing="0" cellpadding="2" class="boxbottom">
         <tr>
           <td align="left"><div class="tableheadtext">Survey ID</div></td>

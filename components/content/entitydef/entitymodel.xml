@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.12 $
+ * @version    $Revision: 1.13 $
  */
 -->
 
@@ -1008,6 +1008,34 @@
         <key-map field-name="surveyQuestionCategoryId"/>
       </relation>
     </entity>
+    <view-entity entity-name="SurveyQuestionAndAppl"
+            package-name="org.ofbiz.content.survey"
+            title="Survey Question And Application View Entity">
+      <member-entity entity-alias="SQ" entity-name="SurveyQuestion"/>
+      <member-entity entity-alias="SA" entity-name="SurveyQuestionAppl"/>
+      <alias entity-alias="SQ" name="surveyQuestionId"/>
+      <alias entity-alias="SQ" name="surveyQuestionCategoryId"/>
+      <alias entity-alias="SQ" name="surveyQuestionTypeId"/>
+      <alias entity-alias="SQ" name="description"/>
+      <alias entity-alias="SQ" name="question"/>
+      <alias entity-alias="SQ" name="hint"/>
+      <alias entity-alias="SA" name="surveyId"/>
+      <alias entity-alias="SA" name="fromDate"/>
+      <alias entity-alias="SA" name="thruDate"/>
+      <alias entity-alias="SA" name="sequenceNum"/>
+      <view-link entity-alias="SQ" rel-entity-alias="SA">
+        <key-map field-name="surveyQuestionId"/>
+      </view-link>
+      <relation type="one-nofk" rel-entity-name="SurveyQuestionCategory">
+        <key-map field-name="surveyQuestionCategoryId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="SurveyQuestionType">
+        <key-map field-name="surveyQuestionTypeId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="Survey">
+        <key-map field-name="surveyId"/>
+      </relation>
+    </view-entity>
     <entity entity-name="SurveyQuestionAppl"
             package-name="org.ofbiz.content.survey"
             title="Survey Question Application Entity">

@@ -66,13 +66,25 @@
         
         <field name="surveyId"><hidden value="${surveyId}"/></field>
         <field name="surveyQuestionSeqId"><ignored/></field>
-
+        <field name="surveyQuestionCategoryId">
+            <drop-down allow-empty="false">
+               <entity-options entity-name="SurveyQuestionCategory" description="${description}"/>
+            </drop-down>
+        </field>
         <field name="surveyQuestionTypeId">
             <drop-down allow-empty="false">
                <entity-options entity-name="SurveyQuestionType" description="${description}"/>
             </drop-down>
         </field>
         
+        <field name="submitButton" title="Create" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    <form name="CreateSurveyQuestionCategory" type="single"
+        target="createSurveyQuestionCategory" title=""
+        default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+
+        <auto-fields-service service-name="createSurveyQuestionCategory"/>
+        <field name="surveyId"><hidden value="${surveyId}"/></field>
         <field name="submitButton" title="Create" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 </forms>
