@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     Jacopo Cappellato (tiz@sastau.it)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.2
 */
 
@@ -45,6 +45,11 @@ if (currentBomTypeId != null && currentBomTypeId.length() > 0) {
     currentBomType = delegator.findByPrimaryKeyCache("ProductAssocType", UtilMisc.toMap("productAssocTypeId", currentBomTypeId));
     context.put("currentPartBomTypeId", currentBomType);
 }
+currentTreeType = request.getParameter("treeType");
+if (currentTreeType == null || currentTreeType.length() == 0) {
+    currentTreeType ="EXPLOSION";
+}
+
 // create the fromDate for calendar
 fromCal = Calendar.getInstance();
 fromCal.setTime(new java.util.Date());
@@ -63,7 +68,7 @@ paramList = "";
 
 bomList = null;
 treeArray = null;
-treeQty = null;
+treeQty = new HashMap();
 
 if (lookupFlag != null) {
     paramList = paramList + "&lookupFlag=" + lookupFlag;
@@ -77,6 +82,8 @@ if (lookupFlag != null) {
         partBomTypeId = request.getParameter("partBomTypeId");
         fromDate = request.getParameter("fromDate");
         rootQuantity = request.getParameter("rootQuantity");
+        explosion = currentTreeType.equals("EXPLOSION");
+        paramList = paramList + "&treeType=" + currentTreeType;
 
         if (fromDate != null && fromDate.length() > 8) {            
             fromDate = fromDate.trim();
@@ -102,7 +109,7 @@ if (lookupFlag != null) {
                 }
                 paramList = paramList + "&partBomTypeId=" + partBomTypeId;
                 //tree = new ItemConfigurationTree(productId, partIdFor, partBomTypeId, new Date(), delegator);
-                tree = new ItemConfigurationTree(productId, partBomTypeId, new Date(), delegator);
+                tree = new ItemConfigurationTree(productId, partBomTypeId, new Date(), explosion, delegator);
                 tree.setRootQuantity((float)rootQuantityFloat);
                 treeArray = new ArrayList();
                 tree.print(treeArray);
