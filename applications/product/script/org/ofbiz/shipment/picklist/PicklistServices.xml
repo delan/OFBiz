@@ -430,7 +430,7 @@
                 <clear-field field-name="inventoryItemIdList"/>
                 <env-to-env env-name="inventoryItemsByLocation.${facilityLocation.locationSeqId}" to-env-name="inventoryItemIdList"/>
                 <field-to-list field-name="inventoryItemId" list-name="inventoryItemIdList"/>
-                <env-to-field env-name="inventoryItemIdList" to-env-name="inventoryItemsByLocation.${facilityLocation.locationSeqId}"/>
+                <env-to-env env-name="inventoryItemIdList" to-env-name="inventoryItemsByLocation.${facilityLocation.locationSeqId}"/>
             <else>
                 <field-to-list field-name="inventoryItemId" list-name="noLocationInventoryItemIds"/>
             </else>
@@ -564,4 +564,190 @@
         </if-not-empty>
     </simple-method>
 
+    <!-- Picklist -->
+    <simple-method method-name="createPicklist" short-description="Create Picklist">
+        <check-permission permission="FACILITY" action="_CREATE">
+            <fail-message message="Security Error: to run createPicklist you must have the FACILITY_CREATE or FACILITY_ADMIN permission"/>
+        </check-permission>
+        <check-errors/>
+
+        <make-value value-name="newEntity" entity-name="Picklist"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+
+        <sequenced-id-to-env sequence-name="Picklist" env-name="newEntity.picklistId"/>
+        <field-to-result field-name="newEntity.picklistId" result-name="picklistId"/>
+
+        <!-- set the created and lastModified info -->
+        <field-to-field field-name="userLogin.userLoginId" to-field-name="newEntity.createdByUserLogin"/>
+        <field-to-field field-name="userLogin.userLoginId" to-field-name="newEntity.lastModifiedByUserLogin"/>
+
+        <create-value value-name="newEntity"/>
+    </simple-method>
+    <simple-method method-name="updatePicklist" short-description="Update Picklist">
+        <check-permission permission="FACILITY" action="_UPDATE">
+            <fail-message message="Security Error: to run updatePicklist you must have the FACILITY_UPDATE or FACILITY_ADMIN permission"/>
+        </check-permission>
+
+        <make-value value-name="lookupPKMap" entity-name="Picklist"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
+        <find-by-primary-key map-name="lookupPKMap" value-name="lookedUpValue"/>
+
+        <if-not-empty field-name="parameters.statusId">
+            <if-compare-field field-name="parameters.statusId" operator="not-equals" to-field-name="lookedUpValue.statusId">
+                <!-- make sure a StatusValidChange record exists, if not return error -->
+                <entity-one entity-name="StatusValidChange" value-name="checkStatusValidChange" auto-field-map="false">
+                    <field-map env-name="lookedUpValue.statusId" field-name="statusId"/>
+                    <field-map env-name="parameters.statusId" field-name="statusIdTo"/>
+                </entity-one>
+                <if-empty field-name="checkStatusValidChange">
+                    <string-to-list string="ERROR: Changing the status from ${lookedUpValue.statusId} to ${parameters.statusId} is not allowed." list-name="error_list"/>
+                </if-empty>
+
+                <make-value entity-name="PicklistStatusHistory" value-name="newStatusValue"/>
+                <env-to-env env-name="parameters.picklistId" to-env-name="newStatusValue.picklistId"/>
+                <env-to-env env-name="lookedUpValue.statusId" to-env-name="newStatusValue.statusId"/>
+                <env-to-env env-name="parameters.statusId" to-env-name="newStatusValue.statusIdTo"/>
+                <now-timestamp-to-env env-name="newStatusValue.changeDate"/>
+                <env-to-env env-name="userLogin.userLoginId" to-env-name="newStatusValue.changeUserLoginId"/>
+                <create-value value-name="newStatusValue"/>
+            </if-compare-field>
+        </if-not-empty>
+
+        <!-- now finally check for errors -->
+        <check-errors/>
+
+        <!-- finally before setting nonpk fields, set the oldStatusId -->
+        <field-to-result field-name="lookedUpValue.statusId" result-name="oldStatusId"/>
+
+        <!-- now that all changes have been checked, set the nonpks -->
+        <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
+        <env-to-env env-name="userLogin.userLoginId" to-env-name="lookedUpValue.lastModifiedByUserLogin"/>
+
+        <store-value value-name="lookedUpValue"/>
+    </simple-method>
+    <simple-method method-name="deletePicklist" short-description="Delete Picklist">
+        <check-permission permission="FACILITY" action="_DELETE">
+            <fail-message message="Security Error: to run deletePicklist you must have the FACILITY_DELETE or FACILITY_ADMIN permission"/>
+        </check-permission>
+        <check-errors/>
+
+        <make-value value-name="lookupPKMap" entity-name="Picklist"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
+        <find-by-primary-key map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <remove-value value-name="lookedUpValue"/>
+    </simple-method>
+
+    <!-- PicklistBin -->
+    <simple-method method-name="createPicklistBin" short-description="Create PicklistBin">
+        <check-permission permission="FACILITY" action="_CREATE">
+            <fail-message message="Security Error: to run createPicklistBin you must have the FACILITY_CREATE or FACILITY_ADMIN permission"/>
+        </check-permission>
+        <check-errors/>
+
+        <make-value value-name="newEntity" entity-name="PicklistBin"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+
+        <sequenced-id-to-env sequence-name="PicklistBin" env-name="newEntity.picklistBinId"/>
+        <field-to-result field-name="newEntity.picklistBinId" result-name="picklistBinId"/>
+
+        <create-value value-name="newEntity"/>
+    </simple-method>
+    <simple-method method-name="updatePicklistBin" short-description="Update PicklistBin">
+        <check-permission permission="FACILITY" action="_UPDATE">
+            <fail-message message="Security Error: to run updatePicklistBin you must have the FACILITY_UPDATE or FACILITY_ADMIN permission"/>
+        </check-permission>
+
+        <make-value value-name="lookupPKMap" entity-name="PicklistBin"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
+        <find-by-primary-key map-name="lookupPKMap" value-name="lookedUpValue"/>
+
+        <store-value value-name="lookedUpValue"/>
+    </simple-method>
+    <simple-method method-name="deletePicklistBin" short-description="Delete PicklistBin">
+        <check-permission permission="FACILITY" action="_DELETE">
+            <fail-message message="Security Error: to run deletePicklistBin you must have the FACILITY_DELETE or FACILITY_ADMIN permission"/>
+        </check-permission>
+        <check-errors/>
+
+        <make-value value-name="lookupPKMap" entity-name="PicklistBin"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
+        <find-by-primary-key map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <remove-value value-name="lookedUpValue"/>
+    </simple-method>
+
+    <!-- PicklistItem -->
+    <simple-method method-name="createPicklistItem" short-description="Create PicklistItem">
+        <check-permission permission="FACILITY" action="_CREATE">
+            <fail-message message="Security Error: to run createPicklistItem you must have the FACILITY_CREATE or FACILITY_ADMIN permission"/>
+        </check-permission>
+        <check-errors/>
+
+        <make-value value-name="newEntity" entity-name="PicklistItem"/>
+        <set-pk-fields map-name="parameters" value-name="newEntity"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+
+        <create-value value-name="newEntity"/>
+    </simple-method>
+    <simple-method method-name="updatePicklistItem" short-description="Update PicklistItem">
+        <check-permission permission="FACILITY" action="_UPDATE">
+            <fail-message message="Security Error: to run updatePicklistItem you must have the FACILITY_UPDATE or FACILITY_ADMIN permission"/>
+        </check-permission>
+
+        <make-value value-name="lookupPKMap" entity-name="PicklistItem"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
+        <find-by-primary-key map-name="lookupPKMap" value-name="lookedUpValue"/>
+
+        <store-value value-name="lookedUpValue"/>
+    </simple-method>
+    <simple-method method-name="deletePicklistItem" short-description="Delete PicklistItem">
+        <check-permission permission="FACILITY" action="_DELETE">
+            <fail-message message="Security Error: to run deletePicklistItem you must have the FACILITY_DELETE or FACILITY_ADMIN permission"/>
+        </check-permission>
+        <check-errors/>
+
+        <make-value value-name="lookupPKMap" entity-name="PicklistItem"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
+        <find-by-primary-key map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <remove-value value-name="lookedUpValue"/>
+    </simple-method>
+
+    <!-- PicklistRole -->
+    <simple-method method-name="createPicklistRole" short-description="Create PicklistRole">
+        <check-permission permission="FACILITY" action="_CREATE">
+            <fail-message message="Security Error: to run createPicklistRole you must have the FACILITY_CREATE or FACILITY_ADMIN permission"/>
+        </check-permission>
+        <check-errors/>
+
+        <make-value value-name="newEntity" entity-name="PicklistRole"/>
+        <set-pk-fields map-name="parameters" value-name="newEntity"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+        
+        <if-empty field-name="newEntity.fromDate">
+            <now-timestamp-to-env env-name="newEntity.fromDate"/>
+        </if-empty>
+
+        <create-value value-name="newEntity"/>
+    </simple-method>
+    <simple-method method-name="updatePicklistRole" short-description="Update PicklistRole">
+        <check-permission permission="FACILITY" action="_UPDATE">
+            <fail-message message="Security Error: to run updatePicklistRole you must have the FACILITY_UPDATE or FACILITY_ADMIN permission"/>
+        </check-permission>
+
+        <make-value value-name="lookupPKMap" entity-name="PicklistRole"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
+        <find-by-primary-key map-name="lookupPKMap" value-name="lookedUpValue"/>
+
+        <store-value value-name="lookedUpValue"/>
+    </simple-method>
+    <simple-method method-name="deletePicklistRole" short-description="Delete PicklistRole">
+        <check-permission permission="FACILITY" action="_DELETE">
+            <fail-message message="Security Error: to run deletePicklistRole you must have the FACILITY_DELETE or FACILITY_ADMIN permission"/>
+        </check-permission>
+        <check-errors/>
+
+        <make-value value-name="lookupPKMap" entity-name="PicklistRole"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
+        <find-by-primary-key map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <remove-value value-name="lookedUpValue"/>
+    </simple-method>
 </simple-methods>

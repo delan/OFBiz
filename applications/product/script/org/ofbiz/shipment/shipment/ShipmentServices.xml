@@ -111,14 +111,15 @@
 
         <make-value value-name="lookupPKMap" entity-name="Shipment"/>
         <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
-        <find-by-primary-key entity-name="Shipment" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <find-by-primary-key map-name="lookupPKMap" value-name="lookedUpValue"/>
 
         <if-not-empty field-name="parameters.statusId">
             <if-compare-field field-name="parameters.statusId" operator="not-equals" to-field-name="lookedUpValue.statusId">
                 <!-- make sure a StatusValidChange record exists, if not return error -->
-                <env-to-field env-name="lookedUpValue.statusId" field-name="statusId" map-name="checkStatusValidChangeMap"/>
-                <env-to-field env-name="parameters.statusId" field-name="statusIdTo" map-name="checkStatusValidChangeMap"/>
-                <find-by-primary-key entity-name="StatusValidChange" map-name="checkStatusValidChangeMap" value-name="checkStatusValidChange"/>
+                <entity-one entity-name="StatusValidChange" value-name="checkStatusValidChange" auto-field-map="false">
+                    <field-map env-name="lookedUpValue.statusId" field-name="statusId"/>
+                    <field-map env-name="parameters.statusId" field-name="statusIdTo"/>
+                </entity-one>
                 <if-empty field-name="checkStatusValidChange">
                     <string-to-list string="ERROR: Changing the status from ${lookedUpValue.statusId} to ${parameters.statusId} is not allowed." list-name="error_list"/>
                 </if-empty>
@@ -246,7 +247,7 @@
 
         <make-value value-name="lookupPKMap" entity-name="Shipment"/>
         <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
-        <find-by-primary-key entity-name="Shipment" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <find-by-primary-key map-name="lookupPKMap" value-name="lookedUpValue"/>
         <remove-value value-name="lookedUpValue"/>
     </simple-method>
     <simple-method method-name="setShipmentSettingsFromPrimaryOrder" short-description="Set Shipment Settings From Primary Order">
