@@ -1441,6 +1441,9 @@
       <relation type="many" rel-entity-name="BillingAccountRole">
         <key-map field-name="billingAccountId"/>
       </relation>
+      <relation type="many" rel-entity-name="BillingAccountTerm">
+        <key-map field-name="billingAccountId"/>
+      </relation>      
       <relation type="many" rel-entity-name="Invoice">
         <key-map field-name="billingAccountId"/>
       </relation>
