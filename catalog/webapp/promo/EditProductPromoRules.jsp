@@ -54,7 +54,6 @@
     if (orderAdjustmentTypes != null) pageContext.setAttribute("orderAdjustmentTypes", orderAdjustmentTypes);
 %>
 
-<br>
 <%if(productPromoId != null && productPromoId.length() > 0){%>
   <div class='tabContainer'>
   <a href="<ofbiz:url>/EditProductPromo?productPromoId=<%=productPromoId%></ofbiz:url>" class="tabButton">Promo</a>

@@ -85,7 +85,6 @@
     Debug.logInfo("Low Index: " + lowIndex);
     Debug.logInfo("View Size: " + viewSize);
 %>
-<br>
 
 <%if(productCategoryId != null && productCategoryId.length() > 0) {%>
   <div class='tabContainer'>

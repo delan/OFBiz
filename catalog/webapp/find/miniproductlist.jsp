@@ -54,7 +54,7 @@
 <ofbiz:object name='lowIndex' type='java.lang.Integer'/>
 <ofbiz:object name='highIndex' type='java.lang.Integer'/>
 <ofbiz:object name='listSize' type='java.lang.Integer'/>
-<BR>
+
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>

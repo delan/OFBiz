@@ -37,7 +37,6 @@
     static Object SessionIdLock = new Object();
 %>
 
-<br>
 <%if(security.hasEntityPermission("CATALOG", "_VIEW", session)) {%>
 <%
     URL catalogPropertiesURL = application.getResource("/WEB-INF/catalog.properties");

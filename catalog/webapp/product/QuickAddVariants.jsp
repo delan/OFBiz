@@ -70,7 +70,6 @@
         indices[i] = 0;
     }
 %>
-<br>
 
 <%if(productId != null && productId.length() > 0){%>
   <div class='tabContainer'>

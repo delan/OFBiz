@@ -52,7 +52,6 @@
     if ("true".equalsIgnoreCase((String)request.getParameter("tryEntity"))) tryEntity = true;
 %>
 
-<br>
 <%if(productPromoId != null && productPromoId.length() > 0){%>
   <div class='tabContainer'>
   <a href="<ofbiz:url>/EditProductPromo?productPromoId=<%=productPromoId%></ofbiz:url>" class="tabButton">Promo</a>

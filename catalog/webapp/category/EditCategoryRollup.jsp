@@ -59,7 +59,7 @@
     function setLineThruDateChild(line) { eval('document.lineChildForm' + line + '.thruDate.value="<%=UtilDateTime.nowTimestamp().toString()%>"'); }
     function setLineThruDateParent(line) { eval('document.lineParentForm' + line + '.thruDate.value="<%=UtilDateTime.nowTimestamp().toString()%>"'); }
 </script>
-<br>
+
 <%if(productCategoryId != null && productCategoryId.length() > 0) {%>
   <div class='tabContainer'>
     <a href="<ofbiz:url>/EditCategory?productCategoryId=<%=productCategoryId%></ofbiz:url>" class='tabButton'>Category</a>

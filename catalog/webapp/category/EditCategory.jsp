@@ -63,7 +63,7 @@
     Collection productCategoryTypes = delegator.findAll("ProductCategoryType");
     if (productCategoryTypes != null) pageContext.setAttribute("productCategoryTypes", productCategoryTypes);
 %>
-<br>
+
 <%if(productCategoryId != null && productCategoryId.length() > 0) {%>
   <div class='tabContainer'>
     <a href="<ofbiz:url>/EditCategory?productCategoryId=<%=productCategoryId%></ofbiz:url>" class='tabButtonSelected'>Category</a>

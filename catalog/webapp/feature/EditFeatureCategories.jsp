@@ -36,7 +36,6 @@
     Collection productFeatureCategories = delegator.findAll("ProductFeatureCategory", UtilMisc.toList("description"));
     if (productFeatureCategories != null) pageContext.setAttribute("productFeatureCategories", productFeatureCategories);
 %>
-<br>
 
 <div class="head1">Product Feature Categories</div>
 

@@ -76,7 +76,7 @@ function insertImageName(size,ext) {
   eval('document.productForm.' + size + 'ImageUrl.value="<%=UtilProperties.getPropertyValue(catalogPropertiesURL, "image.url.prefix")%>/product.<%=productId%>.' + size + '.' + ext + '";');
 };
 </SCRIPT>
-<br>
+
 <%if(productId != null && productId.length() > 0){%>
   <div class='tabContainer'>
   <a href="<ofbiz:url>/EditProduct?productId=<%=productId%></ofbiz:url>" class="tabButtonSelected">Product</a>

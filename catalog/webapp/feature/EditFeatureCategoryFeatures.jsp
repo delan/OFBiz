@@ -55,7 +55,6 @@
         if (productFeatureApplTypes != null) pageContext.setAttribute("productFeatureApplTypes", productFeatureApplTypes);
     }
 %>
-<br>
 
 <div class="head1">Edit Features for Feature Category "<%=curProductFeatureCategory.getString("description")%>"</div>
 <%if (productId != null && productId.length() > 0) {%>

@@ -54,7 +54,6 @@
 
     if ("true".equalsIgnoreCase((String)request.getParameter("tryEntity"))) tryEntity = true;
 %>
-<br>
 
 <%if(prodCatalogId != null && prodCatalogId.length() > 0){%>
   <div class='tabContainer'>

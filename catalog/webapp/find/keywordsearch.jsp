@@ -43,7 +43,6 @@
 <ofbiz:object name="listSize" property="listSize" type='java.lang.Integer' />
 <ofbiz:object name="keywordString" property="keywordString" type='java.lang.String' />
 
-<br>
 <div class='head1'>
     Search Results for "<%=UtilFormatOut.checkNull((String)pageContext.getAttribute("keywordString"))%>" 
     in Category with id "<%=UtilFormatOut.checkNull(searchCategoryId)%>"

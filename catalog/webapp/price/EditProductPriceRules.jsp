@@ -51,7 +51,6 @@
     List productPriceActionTypes = delegator.findAllCache("ProductPriceActionType", UtilMisc.toList("description"));
     if (productPriceActionTypes != null) pageContext.setAttribute("productPriceActionTypes", productPriceActionTypes);
 %>
-<br>
 
 <div class="head1">Global Price Rule</div>
 <a href="<ofbiz:url>/FindProductPriceRules</ofbiz:url>" class="buttontext">[Find Rule]</a>

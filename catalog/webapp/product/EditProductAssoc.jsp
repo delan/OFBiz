@@ -56,7 +56,6 @@ try {
   Collection assocTypes = delegator.findAll("ProductAssocType");
 %>
 
-<br>
 <%if(productId != null && productId.length() > 0){%>
   <div class='tabContainer'>
   <a href="<ofbiz:url>/EditProduct?productId=<%=productId%></ofbiz:url>" class="tabButton">Product</a>

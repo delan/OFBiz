@@ -42,7 +42,6 @@
     if (productPriceRules != null && productPriceRules.size() > 0) pageContext.setAttribute("productPriceRules", productPriceRules);
 %>
 
-<br>
 <div class="head1">Global Price Rules</div>
 <a href="<ofbiz:url>/EditProductPriceRules</ofbiz:url>" class="buttontext">[Create Rule]</a>
 <%if (activeOnly) {%>

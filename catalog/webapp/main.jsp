@@ -34,7 +34,7 @@
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 
 <jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="request" />
-<BR>
+
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>

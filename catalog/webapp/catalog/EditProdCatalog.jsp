@@ -59,7 +59,6 @@
     if (reserveOrderEnums != null) pageContext.setAttribute("reserveOrderEnums", reserveOrderEnums);
 %>
 
-<br>
 <%if(prodCatalogId != null && prodCatalogId.length() > 0){%>
   <div class='tabContainer'>
   <a href="<ofbiz:url>/EditProdCatalog?prodCatalogId=<%=prodCatalogId%></ofbiz:url>" class="tabButtonSelected">Catalog</a>

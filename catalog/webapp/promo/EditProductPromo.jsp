@@ -44,7 +44,6 @@
     }
 %>
 
-<br>
 <%if(productPromoId != null && productPromoId.length() > 0){%>
   <div class='tabContainer'>
   <a href="<ofbiz:url>/EditProductPromo?productPromoId=<%=productPromoId%></ofbiz:url>" class="tabButtonSelected">Promo</a>

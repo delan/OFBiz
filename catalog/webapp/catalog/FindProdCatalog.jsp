@@ -37,7 +37,6 @@
     Collection prodCatalogs = delegator.findAll("ProdCatalog");
     if (prodCatalogs != null) pageContext.setAttribute("prodCatalogs", prodCatalogs);
 %>
-<br>
 
 <div class="head1">Product Catalogs List</div>
 <div><a href='<ofbiz:url>/EditProdCatalog</ofbiz:url>' class="buttontext">[Create New ProdCatalog]</a></div>

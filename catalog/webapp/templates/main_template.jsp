@@ -14,6 +14,7 @@
 <region:render section='appbar'/>
 <region:render section='header'/>
 
+<br>
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
  <tr>
   <region:render section='leftbar'/>

@@ -36,7 +36,6 @@
     Collection productPromos = delegator.findAll("ProductPromo");
     if (productPromos != null) pageContext.setAttribute("productPromos", productPromos);
 %>
-<br>
 
 <div class="head1">Product Promotions List</div>
 <div><a href='<ofbiz:url>/EditProductPromo</ofbiz:url>' class="buttontext">[Create New ProductPromo]</a></div>
