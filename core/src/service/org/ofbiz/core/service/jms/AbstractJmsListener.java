@@ -47,12 +47,15 @@ public abstract class AbstractJmsListener implements GenericMessageListener, Exc
     protected LocalDispatcher dispatcher;
     protected boolean isConnected = false;
 
-    public AbstractJmsListener(ServiceDispatcher dispatcher) {
+    /**
+     * Initializes the LocalDispatcher for this service listener.     * @param dispatcher     */
+    protected AbstractJmsListener(ServiceDispatcher dispatcher) {
         DispatchContext dctx = new DispatchContext("JMSDispatcher", null, this.getClass().getClassLoader(), null);
-
         this.dispatcher = new LocalDispatcher(dctx, dispatcher);
     }
 
+    /**
+     * Runs the service defined in the MapMessage     * @param message     * @return Map     */
     protected Map runService(MapMessage message) {
         Map context = null;
         String serviceName = null;
@@ -78,8 +81,8 @@ public abstract class AbstractJmsListener implements GenericMessageListener, Exc
         }
 
         if (Debug.verboseOn()) Debug.logVerbose("Running service: " + serviceName, module);
+        
         Map result = null;
-
         if (context != null) {
             try {
                 result = dispatcher.runSync(serviceName, context);
@@ -90,10 +93,13 @@ public abstract class AbstractJmsListener implements GenericMessageListener, Exc
         return result;
     }
 
+    /**
+     * Receives the MapMessage and processes the service.      * @see javax.jms.MessageListener#onMessage(Message)     */
     public void onMessage(Message message) {
         MapMessage mapMessage = null;
 
         if (Debug.verboseOn()) Debug.logVerbose("JMS Message Received --> " + message, module);
+        
         if (message instanceof MapMessage) {
             mapMessage = (MapMessage) message;
         } else {
@@ -103,6 +109,8 @@ public abstract class AbstractJmsListener implements GenericMessageListener, Exc
         runService(mapMessage);
     }
 
+    /**
+     * On exception try to re-establish connection to the JMS server.     * @see javax.jms.ExceptionListener#onException(JMSException)     */
     public void onException(JMSException je) {
         this.setConnected(false);
         Debug.logError(je, "JMS connection exception", module);
@@ -118,15 +126,21 @@ public abstract class AbstractJmsListener implements GenericMessageListener, Exc
         }
     }
 
+    /**
+     *     * @see org.ofbiz.core.service.jms.GenericMessageListener#refresh()     */
     public void refresh() throws GenericServiceException {
         this.close();
         this.load();
     }
 
+    /**
+     *      * @see org.ofbiz.core.service.jms.GenericMessageListener#isConnected()     */
     public boolean isConnected() {
         return this.isConnected;
     }
 
+    /**
+     * Setter method for the connected field.     * @param connected     */
     protected void setConnected(boolean connected) {
         this.isConnected = connected;
     }
