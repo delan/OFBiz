@@ -90,6 +90,7 @@
                 <input type="text" class="inputBox" name="productId" size="10" maxlength="20" value="${requestParameters.productId?if_exists}">
                 <select class="selectBox" name="DUMMYPAGE" onChange="submitProductJump()" style="width: 110px;">
                     <option value="<@ofbizUrl>EditProduct</@ofbizUrl>">-Product Jump-</option>
+                    <option value="<@ofbizUrl>EditProductQuickAdmin</@ofbizUrl>">${uiLabelMap.ProductQuickAdmin}</option>
                     <option value="<@ofbizUrl>EditProduct</@ofbizUrl>">${uiLabelMap.ProductProduct}</option>
                     <option value="<@ofbizUrl>EditProductPrices</@ofbizUrl>">${uiLabelMap.ProductPrices}</option>
                     <option value="<@ofbizUrl>EditProductContent</@ofbizUrl>">${uiLabelMap.ProductContent}</option>

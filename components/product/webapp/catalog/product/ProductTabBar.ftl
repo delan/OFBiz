@@ -44,8 +44,6 @@
         <a href="<@ofbizUrl>/EditProductInventoryItems?productId=${productId}</@ofbizUrl>" class="${selectedClassMap.EditProductInventoryItems?default(unselectedClassName)}">${uiLabelMap.ProductInventory}</a>
         <a href="<@ofbizUrl>/EditProductSuppliers?productId=${productId}</@ofbizUrl>" class="${selectedClassMap.EditSupplierProduct?default(unselectedClassName)}">${uiLabelMap.ProductSuppliers}</a>
         <a href="<@ofbizUrl>/EditProductGlAccounts?productId=${productId}</@ofbizUrl>" class="${selectedClassMap.EditProductGlAccounts?default(unselectedClassName)}">${uiLabelMap.ProductAccounts}</a>
-        <#if product?exists>
-            <a href="<@ofbizUrl>/EditProductQuickAdmin?productId=${productId}</@ofbizUrl>" class="${selectedClassMap.EditProductQuickAdmin?default(unselectedClassName)}">${uiLabelMap.ProductQuickAdmin}</a>
-        </#if>
+        <a href="<@ofbizUrl>/EditProductQuickAdmin?productId=${productId}</@ofbizUrl>" class="${selectedClassMap.EditProductQuickAdmin?default(unselectedClassName)}">${uiLabelMap.ProductQuickAdmin}</a>
     </div>
 </#if>
