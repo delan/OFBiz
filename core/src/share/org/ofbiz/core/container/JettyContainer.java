@@ -234,11 +234,11 @@ class Log4jSink implements LogSink {
         Priority priority = Priority.INFO;
 
         if (Log.DEBUG.equals(tag)) {
-            priority=Priority.DEBUG;
+            priority = Priority.DEBUG;
         } else if (Log.WARN.equals(tag) || Log.ASSERT.equals(tag)) {
-            priority=Priority.ERROR;
+            priority = Priority.ERROR;
         } else if (Log.FAIL.equals(tag)) {
-            priority=Priority.FATAL;
+            priority = Priority.FATAL;
         }
         
         if (!log.isEnabledFor(priority)) {
