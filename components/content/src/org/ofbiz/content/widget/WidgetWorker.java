@@ -1,5 +1,5 @@
 /*
- * $Id: WidgetWorker.java,v 1.1 2004/04/25 05:34:56 byersa Exp $
+ * $Id: WidgetWorker.java,v 1.2 2004/05/03 14:02:15 byersa Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -139,12 +139,12 @@ public class WidgetWorker {
             Iterator iter = paramList.iterator();
             while (iter.hasNext()) {
                 MenuParam param = (MenuParam)iter.next();
-                if (Debug.infoOn()) Debug.logInfo("in renderParams, paramName:" + param.getName(), module);
+                //if (Debug.infoOn()) Debug.logInfo("in renderParams, paramName:" + param.getName(), module);
                 Map map = param.getParamMap(context);
                 if (map != null) 
                     thisParamMap.putAll(map);
             }
-                if (Debug.infoOn()) Debug.logInfo("in renderParams, paramMap:" + thisParamMap, module);
+                //if (Debug.infoOn()) Debug.logInfo("in renderParams, paramMap:" + thisParamMap, module);
             String paramStr = UtilHttp.urlEncodeArgs(thisParamMap);
             //String questionMark = UtilValidate.isNotEmpty(paramStr) ? "?" : "";
             //String url = "/" + this.requestName + questionMark + paramStr;
