@@ -105,6 +105,10 @@ if (product != null) {
     priceMap = dispatcher.runSync("calculateProductPrice", fieldMap);
     request.setAttribute("priceMap", priceMap);
     
+    // get the product review(s)
+    reviews = product.getRelated("ProductReview", null, UtilMisc.toList("-postedDateTime"));
+    request.setAttribute("productReviews", reviews);
+    
     // Special Variant Code 
     if ("Y".equals(product.getString("isVirtual"))) {
         featureMap = dispatcher.runSync("getProductFeatureSet", UtilMisc.toMap("productId", productId));

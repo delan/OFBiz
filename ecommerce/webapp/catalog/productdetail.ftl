@@ -206,6 +206,64 @@ ${requestAttributes.virtualJavaScript?if_exists}
   <tr><td colspan="2"><hr class='sepbar'></td></tr>
   
   <#-- Any attributes/etc may go here -->
+  
+  <#-- Product Reviews -->
+  <tr>
+    <td colspan="2">
+      <div class="tableheadtext">Customer Reviews:</div>
+    </td>
+  </tr> 
+  <tr><td colspan="2"><hr class='sepbar'></td></tr>
+  <#if requestAttributes.productReviews?has_content>
+    <#list requestAttributes.productReviews as productReview>
+      <#assign postedUserLogin = productReview.getRelatedOne("UserLogin")>
+      <#assign postedPerson = postedUserLogin.getRelatedOne("Person")>
+      <tr>
+        <td colspan="2">
+          <table border="0" width="100%" cellpadding="0" cellspacing='0'>
+            <tr>              
+              <td>
+                <div class="tabletext"><b>By: </b><#if productReview.postedAnonymous?default("N") == "Y">Anonymous<#else>${postedPerson.firstName} ${postedPerson.lastName}</#if></div>
+              </td>
+              <td>
+                <div class="tabletext"><b>On: </b>${productReview.postedDateTime?if_exists}</div>
+              </td>
+              <td>
+                <div class="tabletext"><b>Ranking: </b>${productReview.productRating?if_exists?string}</div>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="3">
+                <div class="tabletext">&nbsp;</div>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="3">
+                <div class="tabletext">${productReview.productReview?if_exists}</div>
+              </td>
+            </tr>
+            <tr><td colspan="3"><hr class='sepbar'></td></tr>
+          </table>
+        </td>
+      </tr>
+    </#list>
+    <tr>
+      <td colspan="2">
+        <a href="<@ofbizUrl>/reviewProduct?category_id=${requestAttributes.categoryId?if_exists}&product_id=${product.productId}</@ofbizUrl>" class="buttontext">Review This Product!</a>      
+      </td>
+    </tr>    
+  <#else>
+    <tr>
+      <td colspan="2">
+        <div class="tabletext">This product hasn't been reviewed yet.</div>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2">
+        <a href="<@ofbizUrl>/reviewProduct?category_id=${requestAttributes.categoryId?if_exists}&product_id=${product.productId}</@ofbizUrl>" class="buttontext">Be The First To Review This Product!</a>      
+      </td>
+    </tr>       
+  </#if>  
 </table>
 
 <#-- Upgrades/Up-Sell/Cross-Sell -->

@@ -76,6 +76,16 @@
         <attribute name="productId" type="String" mode="IN" optional="false"/>
         <attribute name="productInstance" type="GenericValue" mode="IN" optional="true"/>
     </service>
+    
+    <service name="createProductReview" engine="simple"
+            location="org/ofbiz/commonapp/product/product/ProductServices.xml" invoke="createProductReview" auth="true">
+        <description>Create a product review entity</description>     
+        <attribute name="productId" type="String" mode="IN" optional="false"/>        
+        <attribute name="postedAnonymous" type="Boolean" mode="IN" optional="true"/>
+        <attribute name="productRating" type="Double" mode="IN" optional="false"/>
+        <attribute name="productReview" type="String" mode="IN" optional="false"/>
+        <attribute name="productReviewId" type="String" mode="OUT" optional="false"/>
+    </service>
 
     <!-- Product Price Services -->
     <service name="createProductPrice" engine="simple"

@@ -402,4 +402,23 @@
             </then>
         </if>
     </simple-method>
+    
+    <simple-method method-name="createProductReview" short-description="Create an ProductReview">    	
+        <make-value value-name="newEntity" entity-name="ProductReview"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>        
+        <field-to-field field-name="userLoginId" map-name="userLogin" to-map-name="newEntity"/>
+        
+        <sequenced-id-to-env sequence-name="ProductReview" env-name="productReviewId"/>
+        <to-string field-name="productReviewId"/>
+        <env-to-field env-name="productReviewId" map-name="newEntity"/>
+        <field-to-result field-name="productReviewId" result-name="productReviewId"/>
+        
+        <if-empty field-name="postedDateTime" map-name="newEntity">
+            <now-timestamp-to-env env-name="nowTimestamp"/>
+            <env-to-field env-name="nowTimestamp" field-name="postedDateTime" map-name="newEntity"/>
+        </if-empty>            
+                
+        <create-value value-name="newEntity"/>
+    </simple-method>    
+    
 </simple-methods>

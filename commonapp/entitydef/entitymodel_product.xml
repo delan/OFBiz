@@ -1466,6 +1466,9 @@
       <relation type="many" rel-entity-name="ProductPrice">
         <key-map field-name="productId"/>
       </relation>
+      <relation type="many" rel-entity-name="ProductReview">
+        <key-map field-name="productId"/>
+      </relation>
       <relation type="many" rel-entity-name="InvoiceItem">
         <key-map field-name="productId"/>
       </relation>
@@ -1641,6 +1644,24 @@
       <relation type="one-nofk" rel-entity-name="ProductCategory">
         <key-map field-name="productCategoryId"/>
       </relation>
+    </entity>
+    <entity entity-name="ProductReview"
+            package-name="org,ofbiz.commonapp.product.product"
+            title="Product Review Entity">
+        <field name="productReviewId" type="id-ne"></field>
+        <field name="productId" type="id-ne"></field>
+        <field name="userLoginId" type="id-vlong-ne"></field>
+        <field name="postedAnonymous" type="indicator"></field>
+        <field name="postedDateTime" type="date-time"></field>
+        <field name="productRating" type="floating-point"></field>
+        <field name="productReview" type="very-long"></field>
+        <prim-key field="productReviewId"/>
+        <relation type="one" fk-name="PROD_REVIEW_PROD" rel-entity-name="Product">
+          <key-map field-name="productId" rel-field-name="productId"/>
+        </relation>
+        <relation type="one" fk-name="PROD_REVIEW_ULH" rel-entity-name="UserLogin">
+          <key-map field-name="userLoginId" rel-field-name="userLoginId"/>
+        </relation>
     </entity>
     <entity entity-name="ProductType"
             package-name="org.ofbiz.commonapp.product.product"
