@@ -1,5 +1,5 @@
 /*
- * $Id: ServiceXaWrapper.java,v 1.5 2003/12/05 02:28:42 ajzeneski Exp $
+ * $Id: ServiceXaWrapper.java,v 1.6 2003/12/13 23:50:35 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -40,7 +40,7 @@ import org.ofbiz.entity.transaction.GenericTransactionException;
  * ServiceXaWrapper - XA Resource wrapper for running services on commit() or rollback()
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      3.0
  */
 public class ServiceXaWrapper extends GenericXaResource {
@@ -138,7 +138,9 @@ public class ServiceXaWrapper extends GenericXaResource {
             // invoke the service
             boolean serviceError = false;
             try {
-                this.dctx.getDispatcher().runSyncIgnore(this.commitService, this.commitContext);
+                ModelService model = dctx.getModelService(this.commitService);
+                Map thisContext = model.makeValid(this.commitContext, ModelService.IN_PARAM);
+                dctx.getDispatcher().runSyncIgnore(this.commitService, thisContext);
             } catch (GenericServiceException e) {
                 Debug.logError(e, "Problem calling sync service : " + this.commitService + " / " + this.commitContext, module);
                 serviceError = true; // don't throw the exception until we resume the transaction
@@ -205,7 +207,9 @@ public class ServiceXaWrapper extends GenericXaResource {
 
             // invoke the service
             try {
-                this.dctx.getDispatcher().runAsync(this.rollbackService, this.rollbackContext, true);
+                ModelService model = dctx.getModelService(this.rollbackService);
+                Map thisContext = model.makeValid(this.rollbackContext, ModelService.IN_PARAM);
+                dctx.getDispatcher().runAsync(this.rollbackService, thisContext, true);
             } catch (GenericServiceException e) {
                 Debug.logError(e, "Problem calling async service : " + this.rollbackService + " / " + this.rollbackContext, module);
             }

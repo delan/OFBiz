@@ -1,5 +1,5 @@
 /*
- * $Id: PersistedServiceJob.java,v 1.5 2003/11/25 23:56:08 ajzeneski Exp $
+ * $Id: PersistedServiceJob.java,v 1.6 2003/12/13 23:50:35 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -36,6 +36,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -52,7 +53,7 @@ import org.xml.sax.SAXException;
  * Entity Service Job - Store => Schedule => Run
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      2.0
  */
 public class PersistedServiceJob extends GenericServiceJob {
@@ -78,6 +79,7 @@ public class PersistedServiceJob extends GenericServiceJob {
         this.runtime = storedDate.getTime();
         
         // set the start time to now
+        jobValue.set("runByInstanceId", UtilProperties.getPropertyValue("general.properties", "unique.instanceId"));
         jobValue.set("startDateTime", UtilDateTime.nowTimestamp());
         try {
             jobValue.store();
@@ -106,7 +108,7 @@ public class PersistedServiceJob extends GenericServiceJob {
         } catch (GenericEntityException e) {
             throw new RuntimeException(e.getMessage());
         }
-        if (Debug.verboseOn()) Debug.logVerbose(this.toString() + " -- Next runtime: " + runtime, module);
+        if (Debug.infoOn()) Debug.logInfo(this.toString() + " -- Next runtime: " + nextRecurrence, module);
     }
 
     private void createRecurrence(GenericValue job, long next) throws GenericEntityException {
