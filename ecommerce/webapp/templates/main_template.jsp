@@ -9,7 +9,7 @@
     <title><%EntityField.run("layoutSettings", "companyName", pageContext);%>: <region:render section='title'/></title>
     <link rel="stylesheet" href="<%=request.getContextPath()%>/includes/maincss.css" type="text/css">
 </head>
-<body <%EntityField.run("layoutSettings", "bodyTopMargin", "topmargin='","'", pageContext);%> <%EntityField.run("layoutSettings", "bodyLeftMargin", "leftmargin='","'", pageContext);%> <%EntityField.run("layoutSettings", "bodyRightMargin", "rightmargin='","'", pageContext);%> <%EntityField.run("layoutSettings", "bodyMarginHeight", "marginheight='","'", pageContext);%> <%EntityField.run("layoutSettings", "bodyMarginWidth", "marginwidth='","'", pageContext);%>>
+<body>
 <region:render section='header'/>
 
 <table width="100%" border="0" cellpadding="0" cellspacing="0">

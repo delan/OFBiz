@@ -28,12 +28,6 @@
     layoutSettings.put("headerMiddleBackgroundUrl", UtilProperties.getPropertyValue(ecommercePropertiesUrl, "header.middle.background.url"));
     layoutSettings.put("headerRightBackgroundUrl", UtilProperties.getPropertyValue(ecommercePropertiesUrl, "header.right.background.url"));
 
-    layoutSettings.put("bodyTopMargin", UtilProperties.getPropertyValue(ecommercePropertiesUrl, "body.topmargin"));
-    layoutSettings.put("bodyLeftMargin", UtilProperties.getPropertyValue(ecommercePropertiesUrl, "body.leftmargin"));
-    layoutSettings.put("bodyRightMargin", UtilProperties.getPropertyValue(ecommercePropertiesUrl, "body.rightmargin"));
-    layoutSettings.put("bodyMarginHeight", UtilProperties.getPropertyValue(ecommercePropertiesUrl, "body.marginheight"));
-    layoutSettings.put("bodyMarginWidth", UtilProperties.getPropertyValue(ecommercePropertiesUrl, "body.marginwidth"));
-
     layoutSettings.put("headerBoxBorderColor", UtilProperties.getPropertyValue(ecommercePropertiesUrl, "header.box.border.color", "black"));
     layoutSettings.put("headerBoxBorderWidth", UtilProperties.getPropertyValue(ecommercePropertiesUrl, "header.box.border.width", "1"));
     layoutSettings.put("headerBoxTopColor", UtilProperties.getPropertyValue(ecommercePropertiesUrl, "header.box.top.color", "#678475"));
