@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.33 $
+ * @version    $Revision: 1.34 $
  */
 -->
 
@@ -1975,9 +1975,11 @@
       <field name="promoText" type="description"></field>
       <field name="userEntered" type="indicator"></field>
       <field name="showToCustomer" type="indicator"></field>
+      <field name="requireCode" type="indicator"></field>
       <field name="useLimitPerOrder" type="numeric"></field>
       <field name="useLimitPerCustomer" type="numeric"></field>
       <field name="useLimitPerPromotion" type="numeric"></field>
+      <field name="billbackFactor" type="floating-point"></field>
       <field name="createdDate" type="date-time"></field>
       <field name="createdByUserLogin" type="id-vlong"></field>
       <field name="lastModifiedDate" type="date-time"></field>
