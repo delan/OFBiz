@@ -1,5 +1,5 @@
 /*
- * $Id: ContentServicesComplex.java,v 1.12 2004/04/20 21:01:17 byersa Exp $
+ * $Id: ContentServicesComplex.java,v 1.13 2004/05/11 14:42:47 byersa Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -36,6 +36,7 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -53,7 +54,7 @@ import org.ofbiz.service.ServiceUtil;
  * ContentServicesComplex Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.12 $
+ * @version    $Revision: 1.13 $
  * @since      2.2
  *
  * 
@@ -225,6 +226,14 @@ public class ContentServicesComplex {
 
     public static Map getAssocAndContentAndDataResourceCacheMethod(GenericDelegator delegator, String contentId, String mapKey, String direction, 
                           Timestamp fromDate, String fromDateStr, List assocTypes, List contentTypes, Boolean nullThruDatesOnly, String contentAssocPredicateId) throws GenericEntityException, MiniLangException {
+            Map results = getAssocAndContentAndDataResourceCacheMethod(delegator,
+                          contentId, mapKey, direction, fromDate, fromDateStr, assocTypes, 
+                          contentTypes, nullThruDatesOnly, contentAssocPredicateId, null);
+            return results;
+    }
+
+    public static Map getAssocAndContentAndDataResourceCacheMethod(GenericDelegator delegator, String contentId, String mapKey, String direction, 
+                          Timestamp fromDate, String fromDateStr, List assocTypes, List contentTypes, Boolean nullThruDatesOnly, String contentAssocPredicateId, String orderBy) throws GenericEntityException, MiniLangException {
 
         List exprList = new ArrayList();
         EntityExpr joinExpr = null;
@@ -328,6 +337,11 @@ public class ContentServicesComplex {
             contentAssocDataResourceList.add(contentAssocDataResourceView );
         }
 
+        List orderByList = null;
+        if (UtilValidate.isNotEmpty(orderBy)) {
+           orderByList = StringUtil.split(orderBy, "|");
+           contentAssocDataResourceList = EntityUtil.orderBy(contentAssocDataResourceList, orderByList);
+        }
         HashMap results = new HashMap();
         results.put("entityList", contentAssocDataResourceList);
         return results;
