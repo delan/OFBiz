@@ -4,9 +4,11 @@
 
 package org.ofbiz.core.service;
 
+import java.io.*;
 import java.util.*;
 import org.ofbiz.core.calendar.*;
 import org.ofbiz.core.entity.*;
+import org.ofbiz.core.serialize.*;
 import org.ofbiz.core.service.scheduler.*;
 import org.ofbiz.core.util.*;
 
@@ -78,6 +80,8 @@ public abstract class GenericAsyncEngine implements GenericEngine {
      *@param requester Object implementing GenericRequester interface which will receive the result
      */
     public void runAsync(ModelService modelService, Map context, GenericRequester requester) throws GenericServiceException {
+        
+        String exceptionMessage = "Cannot begin asynchronous service.";
         GenericValue job = null;
         
         // Build the value object(s).
@@ -93,15 +97,31 @@ public abstract class GenericAsyncEngine implements GenericEngine {
             rule.set("intervalNumber",new Long(1));
             rule.set("countNumber",new Long(1));
             info.preStoreOther(rule);
+            
+            // Create the runtime data 
+            String dataId = dispatcher.getDelegator().getNextSeqId("RuntimeData").toString();
+            GenericValue runtimeData = dispatcher.getDelegator().makeValue("RuntimeInfo",UtilMisc.toMap("runtimeDataId",dataId));
+            runtimeData.set("runtimeInfo",XmlSerializer.serialize(context));
+            
             // Create the job info
             String jobName = new String(new Long((new Date().getTime())).toString());
             Map jFields = UtilMisc.toMap("jobName",jobName,"serviceName",modelService.name,"loaderName",loader,"recurrenceInfoId",infoId);
             job = dispatcher.getDelegator().makeValue("JobSandbox",jFields);
+            job.preStoreOther(runtimeData);
             job.preStoreOther(info);
             dispatcher.getDelegator().create(job);           
         }
         catch ( GenericEntityException e ) {
-            throw new GenericServiceException("Cannot begin asynchronous service.",e);
+            throw new GenericServiceException(exceptionMessage,e);
+        }
+        catch ( SerializeException e ) {
+            throw new GenericServiceException(exceptionMessage,e);
+        }
+        catch ( FileNotFoundException e ) {
+            throw new GenericServiceException(exceptionMessage,e);
+        }
+        catch ( IOException e ) {
+            throw new GenericServiceException(exceptionMessage,e);
         }
         
         if ( job == null )
