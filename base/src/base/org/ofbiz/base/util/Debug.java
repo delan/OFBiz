@@ -1,5 +1,5 @@
 /*
- * $Id: Debug.java,v 1.2 2003/08/17 06:09:29 ajzeneski Exp $
+ * $Id: Debug.java,v 1.3 2003/08/20 20:53:41 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -26,19 +26,21 @@ package org.ofbiz.base.util;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.text.DateFormat;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.log4j.Category;
-import org.apache.log4j.Priority;
+import org.apache.log4j.Logger;
+import org.apache.log4j.Level;
 import org.apache.log4j.PropertyConfigurator;
+import org.apache.log4j.spi.LoggerRepository;
 
 /**
  * Configurable Debug logging wrapper class
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public final class Debug {
@@ -48,6 +50,7 @@ public final class Debug {
     
     static DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM);
 
+    public static final String SYS_DEBUG = System.getProperty("DEBUG");
     public static final int ALWAYS = 0;
     public static final int VERBOSE = 1;
     public static final int TIMING = 2;
@@ -59,7 +62,7 @@ public final class Debug {
 
     public static final String[] levels = {"Always", "Verbose", "Timing", "Info", "Important", "Warning", "Error", "Fatal"};
     public static final String[] levelProps = {"", "print.verbose", "print.timing", "print.info", "print.important", "print.warning", "print.error", "print.fatal"};
-    public static final Priority[] levelObjs = {Priority.INFO, Priority.DEBUG, Priority.DEBUG, Priority.INFO, Priority.INFO, Priority.WARN, Priority.ERROR, Priority.FATAL};
+    public static final Level[] levelObjs = {Level.INFO, Level.DEBUG, Level.DEBUG, Level.INFO, Level.INFO, Level.WARN, Level.ERROR, Level.FATAL};
 
     protected static Map levelStringMap = new HashMap();
     
@@ -68,6 +71,8 @@ public final class Debug {
 
     protected static boolean levelOnCache[] = new boolean[8];
     protected static final boolean useLevelOnCache = true;
+    
+    protected static Logger root = Logger.getRootLogger();
 
     static {
         levelStringMap.put("verbose", new Integer(Debug.VERBOSE));
@@ -86,10 +91,21 @@ public final class Debug {
         for (int i = 0; i < 8; i++) {
             levelOnCache[i] = (i == Debug.ALWAYS || UtilProperties.propertyValueEqualsIgnoreCase("debug.properties", levelProps[i], "true"));
         }
+        
+        if (SYS_DEBUG != null) {
+            for (int x = 0; x < 8; x++) {
+                levelOnCache[x] = true;
+            }
+            LoggerRepository repo = root.getLoggerRepository();
+            Enumeration enum = repo.getCurrentLoggers();
+            while (enum.hasMoreElements()) {
+                Logger thisLogger = (Logger) enum.nextElement();
+                thisLogger.setLevel(Level.DEBUG);
+            }
+            
+        }
     }
-
-    static Category root = Category.getRoot();
-
+    
     public static PrintStream getPrintStream() {
         return printStream;
     }
@@ -103,9 +119,9 @@ public final class Debug {
         return printWriter;
     }
 
-    public static Category getLogger(String module) {
+    public static Logger getLogger(String module) {
         if (module != null && module.length() > 0) {
-            return Category.getInstance(module);
+            return Logger.getLogger(module);
         } else {
             return root;
         }
@@ -134,7 +150,10 @@ public final class Debug {
     public static void log(int level, Throwable t, String msg, String module, String callingClass) {
         if (isOn(level)) {
             if (useLog4J) {
-                Category logger = getLogger(module);
+                Logger logger = getLogger(module);
+                if (SYS_DEBUG != null) {
+                    logger.setLevel(Level.DEBUG);
+                }
                 logger.log(callingClass, levelObjs[level], msg, t);
             } else {
                 StringBuffer prefixBuf = new StringBuffer();
