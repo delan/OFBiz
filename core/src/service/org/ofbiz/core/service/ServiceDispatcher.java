@@ -330,9 +330,22 @@ public class ServiceDispatcher {
      * @throws GenericServiceException
      */
     public void closeListener(String jmsName) throws GenericServiceException {
-        Object listener = (Object) jmsListeners.get(jmsName);
+        GenericMessageListener listener = (GenericMessageListener) jmsListeners.get(jmsName);
         if (listener == null)
             throw new GenericServiceException("No listener found with that name.");
+        listener.close();
+    }
+
+    /**
+     * Refresh a JMS message listener.
+     * @param jmsName Name of the jms-service
+     * @throws GenericServiceException
+     */
+    public void refreshListener(String jmsName) throws GenericServiceException {
+        GenericMessageListener listener = (GenericMessageListener) jmsListeners.get(jmsName);
+        if (listener == null)
+            throw new GenericServiceException("No listener found with that name.");
+        listener.refresh();
     }
 
     /**

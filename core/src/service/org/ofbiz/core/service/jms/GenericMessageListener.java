@@ -28,13 +28,13 @@ import javax.jms.*;
 import org.ofbiz.core.service.*;
 
 /**
- * GenericServiceListener - Estension to MessageListener
+ * GenericMessageListener - Estension to MessageListener
  *
  * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
  * @created    Jul 18, 2002
  * @version    1.0
  */
-public interface GenericServiceListener extends MessageListener {
+public interface GenericMessageListener extends MessageListener {
 
     /**
      * Shutdown the listener and all connection(s).

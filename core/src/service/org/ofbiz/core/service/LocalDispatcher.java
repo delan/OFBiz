@@ -280,5 +280,14 @@ public class LocalDispatcher {
     public void closeListener(String jmsName) throws GenericServiceException {
         dispatcher.closeListener(jmsName);
     }
+
+    /**
+     * Refresh a JMS message listener.
+     * @param jmsName Name of the jms-service
+     * @throws GenericServiceException
+     */
+    public void refreshListener(String jmsName) throws GenericServiceException {
+        dispatcher.closeListener(jmsName);
+    }
 }
 
