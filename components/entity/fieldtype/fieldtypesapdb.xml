@@ -3,7 +3,7 @@
 
 <!--
 /**
- *  $Id: fieldtypesapdb.xml,v 1.4 2004/07/27 06:09:49 ajzeneski Exp $
+ *  $Id$
  *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
@@ -60,7 +60,7 @@
     <field-type-def type="value" sql-type="VARCHAR(255) UNICODE" sql-type-alias="VARCHAR() UNICODE" java-type="String"></field-type-def>
     
    <!-- Specialized Types -->
-    <field-type-def type="credit-card-number" sql-type="VARCHAR(40) UNICODE" sql-type-alias="VARCHAR() UNICODE" java-type="String"><validate method="isAnyCard" /></field-type-def>
+    <field-type-def type="credit-card-number" sql-type="VARCHAR(255) UNICODE" sql-type-alias="VARCHAR() UNICODE" java-type="String"><validate method="isAnyCard" /></field-type-def>
     <field-type-def type="credit-card-date" sql-type="VARCHAR(20) UNICODE" sql-type-alias="VARCHAR() UNICODE" java-type="String"><validate method="isDateAfterToday" /></field-type-def>
     <field-type-def type="email" sql-type="VARCHAR(255) UNICODE" sql-type-alias="VARCHAR() UNICODE" java-type="String"><validate method="isEmail" /></field-type-def>
     <field-type-def type="url" sql-type="VARCHAR(255) UNICODE" sql-type-alias="VARCHAR() UNICODE" java-type="String"></field-type-def>
