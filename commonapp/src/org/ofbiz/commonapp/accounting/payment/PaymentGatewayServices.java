@@ -136,15 +136,16 @@ public class PaymentGatewayServices {
             // handle the response
             if (processorResult != null) {
                 GenericValue paymentSettings = (GenericValue) processorResult.get("paymentSettings");
-                Double thisAmount = (Double) processorResult.get("processAmount");
-                finished.add(processorResult);
+                Double thisAmount = (Double) processorResult.get("processAmount");                
 
                 // process the auth results             
                 boolean processResult = false;
                 try {
                     processResult = processResult(dctx, processorResult, userLogin, paymentPref, paymentSettings);
-                    if (processResult)
+                    if (processResult) {
                         amountToBill -= thisAmount.doubleValue();
+                        finished.add(processorResult);
+                    }
                 } catch (GeneralException e) {
                     Debug.logError(e, "Trouble processing the result; processorResult: " + processorResult, module);
                     ServiceUtil.returnError("Trouble processing the auth results");                     
