@@ -1,5 +1,5 @@
 /*
- * $Id: DataResourceDocument.java,v 1.1 2004/05/14 20:31:13 byersa Exp $
+ * $Id: DataResourceDocument.java,v 1.2 2004/06/16 22:16:04 byersa Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -43,7 +43,7 @@ import org.ofbiz.entity.GenericValue;
  * DataResourceDocument Class
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  * @since 3.1
  * 
  *  
@@ -88,8 +88,9 @@ public class DataResourceDocument {
 	  		Debug.logError(e, module);
 	  	}
 	  	String text = outWriter.toString();
-	  	//Debug.logInfo("in DataResourceDocument, text:" + text, module);
-	  	doc.add(Field.Text("content", text));
+	  	Debug.logInfo("in DataResourceDocument, text:" + text, module);
+                if (UtilValidate.isNotEmpty(text)) 
+	  	    doc.add(Field.UnStored("content", text));
 	    
 	    return doc;
 	}

@@ -25,7 +25,7 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
- *  $Id: widget-form.dtd,v 1.5 2004/03/15 14:49:02 byersa Exp $
+ *  $Id: widget-form.dtd,v 1.6 2004/06/16 22:16:03 byersa Exp $
 -->
 
 <!ENTITY % AllFields "display | hyperlink | lookup | text | textarea | date-time | drop-down | check | radio | submit | reset | hidden | ignored | file | text-find | date-find | range-find | password | image">
@@ -58,6 +58,7 @@
     default-title-style CDATA #IMPLIED
     default-widget-style CDATA #IMPLIED
     default-tooltip-style CDATA #IMPLIED
+    default-required-field-style CDATA #IMPLIED
     item-index-separator CDATA "_o_"
     extends CDATA #IMPLIED
     extends-resource CDATA #IMPLIED

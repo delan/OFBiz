@@ -1,5 +1,5 @@
 /*
- * $Id: ContentDocument.java,v 1.1 2004/05/14 20:31:13 byersa Exp $
+ * $Id: ContentDocument.java,v 1.2 2004/06/16 22:16:04 byersa Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -28,22 +28,30 @@ import org.apache.lucene.document.*;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.content.content.ContentWorker;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.sql.Timestamp;
 
 /**
  * ContentDocument Class
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  * @since 3.1
  * 
  *  
  */
 
 public class ContentDocument {
-	static char dirSep = System.getProperty("file.separator").charAt(0);
+
+    static char dirSep = System.getProperty("file.separator").charAt(0);
     public static final String module = ContentDocument.class.getName();
 	
 	public static Document Document(String id, GenericDelegator delegator) throws InterruptedException  {
@@ -58,7 +66,7 @@ public class ContentDocument {
 	  	}
 	  	
 	  	doc = Document(content);
-	  		  	return doc;
+                return doc;
 	}
 	
 	public static Document Document(GenericValue content) throws InterruptedException  {
@@ -67,17 +75,36 @@ public class ContentDocument {
 	  	// make a new, empty document
 	  	doc = new Document();
 	  	
-	  	doc.add(Field.Keyword("contentId", content.getString("contentId")));
+	  	String contentId = content.getString("contentId");
+	  	doc.add(Field.Keyword("contentId", contentId));
 	    
 	    // Add the last modified date of the file a field named "modified".  Use a
 	    // Keyword field, so that it's searchable, but so that no attempt is made
 	    // to tokenize the field into words.
-	  	doc.add(Field.Keyword("modified", content.get("lastModifiedDate").toString()));
+                Timestamp modDate = (Timestamp)content.get("lastModifiedDate");
+                if (modDate == null) {
+                    modDate = (Timestamp)content.get("createdDate");
+                }
+
+                if (modDate != null) {
+	  	    doc.add(Field.Keyword("modified", modDate.toString()));
+                }
 	  	
-	  	doc.add(Field.Text("title", content.get("contentName").toString()));
+                String contentName = content.getString("contentName");
+                if (UtilValidate.isNotEmpty(contentName) )
+	  	    doc.add(Field.Text("title", contentName));
 	    
-	  	doc.add(Field.Text("description", content.get("description").toString()));
+                String description = content.getString("description");
+                if (UtilValidate.isNotEmpty(description) )
+	  	    doc.add(Field.Text("description", description));
 	    
+                List ancestorList = new ArrayList();
+                GenericDelegator delegator = content.getDelegator();
+                ContentWorker.getContentAncestryAll(delegator, contentId, "WEB_SITE_PUB_PT", "TO", ancestorList);
+                String ancestorString = StringUtil.join(ancestorList, " ");
+	  	Debug.logInfo("in ContentDocument, ancestorString:" + ancestorString, module);
+                if (UtilValidate.isNotEmpty(ancestorString) )
+	  	    doc.add(Field.UnStored("categories", ancestorString));
 
 	  	return doc;
 	}
