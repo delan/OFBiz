@@ -25,7 +25,7 @@
  *  $Id$
 -->
 
-<project name="Open For Business Party Manager Component" default="war" basedir=".">
+<project name="Open For Business Party Manager Component" default="jar" basedir=".">
 
 
     <!-- ================================================================== -->

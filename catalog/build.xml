@@ -25,7 +25,7 @@
  *  $Id$
 -->
 
-<project name="Open For Business Catalog Component" default="war" basedir=".">
+<project name="Open For Business Catalog Component" default="jar" basedir=".">
 
 
     <!-- ================================================================== -->

@@ -87,19 +87,19 @@
 
     <target name="clean" depends="clean-lib">
         <echo message="[clean] ===== Cleaning core =====" />
-        <ant dir="core" target="clean" />        
+        <ant dir="core" target="clean" inheritAll="false" />
         <echo message="[clean] ===== Cleaning commonapp =====" />
-        <ant dir="commonapp" target="clean" />        
+        <ant dir="commonapp" target="clean" inheritAll="false" />
         
         <echo message="[clean] ===== Cleaning ecommerce =====" />
-        <ant dir="ecommerce" target="clean" />        
+        <ant dir="ecommerce" target="clean" inheritAll="false" />
         
         <echo message="[clean] ===== Cleaning catalog =====" />
-        <ant dir="catalog" target="clean" />        
+        <ant dir="catalog" target="clean" inheritAll="false" />
         <echo message="[clean] ===== Cleaning partymgr =====" />
-        <ant dir="partymgr" target="clean" />        
+        <ant dir="partymgr" target="clean" inheritAll="false" />
         <echo message="[clean] ===== Cleaning ordermgr =====" />
-        <ant dir="ordermgr" target="clean" />        
+        <ant dir="ordermgr" target="clean" inheritAll="false" />
         
         <echo message="[clean] ===== Done Cleaning =====" />
     </target>
@@ -144,27 +144,48 @@
         <echo message="[build] ===== Done Building =====" />
     </target>
 	
+    <target name="war" depends="build">
+        <!-- core has no war
+          <echo message="[build] ===== Building core =====" />
+          <ant dir="core" target="war" />
+        -->
+        <echo message="[build] ===== Building commonapp =====" />
+        <ant dir="commonapp" target="war" />
+        
+        <echo message="[build] ===== Building ecommerce =====" />
+        <ant dir="ecommerce" target="war" />
+        
+        <echo message="[build] ===== Building catalog =====" />
+        <ant dir="catalog" target="war" />
+        <echo message="[build] ===== Building partymgr =====" />
+        <ant dir="partymgr" target="war" />
+        <echo message="[build] ===== Building ordermgr =====" />
+        <ant dir="ordermgr" target="war" />
+        
+        <echo message="[build] ===== Done Building =====" />
+    </target>
+	
     <!-- ================================================================== -->
     <!-- Build JavaDocs                                                     -->
     <!-- ================================================================== -->
 
-    <target name="javadoc" depends="">
-        <echo message="[javadoc] ===== Javadoc core =====" />
-        <ant dir="core" target="javadoc" />        
-        <echo message="[javadoc] ===== Javadoc commonapp =====" />
-        <ant dir="commonapp" target="javadoc" />        
+    <target name="docs" depends="">
+        <echo message="[docs] ===== Javadoc core =====" />
+        <ant dir="core" target="docs" />        
+        <echo message="[docs] ===== Javadoc commonapp =====" />
+        <ant dir="commonapp" target="docs" />        
         
-        <echo message="[javadoc] ===== Javadoc ecommerce =====" />
-        <ant dir="ecommerce" target="javadoc" />        
+        <echo message="[docs] ===== Javadoc ecommerce =====" />
+        <ant dir="ecommerce" target="docs" />        
         
-        <echo message="[javadoc] ===== Javadoc catalog =====" />
-        <ant dir="catalog" target="javadoc" />        
-        <echo message="[javadoc] ===== Javadoc partymgr =====" />
-        <ant dir="partymgr" target="javadoc" />        
-        <echo message="[javadoc] ===== Javadoc ordermgr =====" />
-        <ant dir="ordermgr" target="javadoc" />        
+        <echo message="[docs] ===== Javadoc catalog =====" />
+        <ant dir="catalog" target="docs" />        
+        <echo message="[docs] ===== Javadoc partymgr =====" />
+        <ant dir="partymgr" target="docs" />        
+        <echo message="[docs] ===== Javadoc ordermgr =====" />
+        <ant dir="ordermgr" target="docs" />        
         
-        <echo message="[javadoc] ===== Done Cleaning =====" />
+        <echo message="[docs] ===== Done Cleaning =====" />
     </target>
 	
     <!-- ================================================================== -->
@@ -187,9 +208,6 @@
         <copy file="core/lib/ofbcore-ejb.jar"
             toFile="${j2eedeploy.dir}/ofbcore-ejb.jar" />    
 
-        <copy file="commonapp/lib/ofbcommonapp.jar"
-            toFile="${lib.dir}/ofbcommonapp.jar" />        
-
         <copy file="ecommerce/etc/ecommerce.properties"
             toFile="${etc.dir}/ecommerce.properties" />
         <copy file="ecommerce/lib/ofbecom.jar"
@@ -204,7 +222,7 @@
     </target>
 
     <!-- Copy all files necessary for EXTERNAL running -->
-    <target name="external-deploy" depends="deploy">
+    <target name="deploy-ext" depends="deploy, war">
         <mkdir dir="${home.dir}/commonapp/entitydef" />
         <copy file="commonapp/entitydef/entitymodel.xml"
             toFile="${home.dir}/commonapp/entitydef/entitymodel.xml" />

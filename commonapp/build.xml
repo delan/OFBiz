@@ -21,11 +21,11 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *  This is the  Open for Business CORE component build script.
+ *  This is the  Open for Business CommonApp component build script.
  *  $Id$
 -->
 
-<project name="Open For Business CommonApp Component" default="war" basedir=".">
+<project name="Open For Business CommonApp Component" default="jar" basedir=".">
 
 
     <!-- ================================================================== -->
