@@ -33,12 +33,27 @@ import org.ofbiz.core.util.*;
 public class ModelViewEntity extends ModelEntity {
   /** Contains member-entity definitions: key is alias, value is entity-name */
   public Map memberEntities = new HashMap();
+  /** Contains member-entity ModelEntities: key is alias, value is ModelEntity; populated with fields */
+  public Map memberModelEntities = new HashMap();
   /** List of aliases with information in addition to what is in the standard field list */
   public Vector aliases = new Vector();
   /** List of view links to define how entities are connected (or "joined") */
   public Vector viewLinks = new Vector();
   
   public void populateFields(Map entityCache) {
+    Iterator meIter = memberEntities.entrySet().iterator();
+    while(meIter.hasNext()) {
+      Map.Entry entry = (Map.Entry)meIter.next();
+
+      String aliasedEntityName = (String)entry.getValue();
+      ModelEntity aliasedEntity = (ModelEntity)entityCache.get(aliasedEntityName);
+      if(aliasedEntity == null) {
+        Debug.logError("[ModelViewEntity.populateFields] ERROR: could not find ModelEntity for entity name: " + aliasedEntityName);
+        continue;
+      }
+      memberModelEntities.put(entry.getKey(), aliasedEntity);
+    }
+    
     for(int i=0; i<aliases.size(); i++) {
       ModelAlias alias = (ModelAlias)aliases.get(i);
 
