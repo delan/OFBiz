@@ -339,13 +339,13 @@
     <ProductPromoRule productPromoId="9015" productPromoRuleId="01" ruleName="Test multiple promotion"/>
     <ProductPromoRule productPromoId="9016" productPromoRuleId="01" ruleName="Dollar discount on Small Gizmos"/>
     <ProductPromoAction productPromoId="9000" productPromoRuleId="01" productPromoActionSeqId="01" productPromoActionEnumId="PROMO_GWP" orderAdjustmentTypeId="PROMOTION_ADJUSTMENT" quantity="1.0" productId="WG-1111"/>
-    <ProductPromoAction productPromoId="9010" productPromoRuleId="01" productPromoActionSeqId="01" productPromoActionEnumId="PROMO_PROD_DISC" orderAdjustmentTypeId="PROMOTION_ADJUSTMENT" quantity="1.0" amount="-20.0"/>
-    <ProductPromoAction productPromoId="9011" productPromoRuleId="01" productPromoActionSeqId="01" productPromoActionEnumId="PROMO_ORDER_PERCENT" orderAdjustmentTypeId="PROMOTION_ADJUSTMENT" amount="-10.0"/>
-    <ProductPromoAction productPromoId="9012" productPromoRuleId="01" productPromoActionSeqId="01" productPromoActionEnumId="PROMO_ORDER_AMOUNT" orderAdjustmentTypeId="PROMOTION_ADJUSTMENT" amount="-10.0"/>
-    <ProductPromoAction productPromoId="9013" productPromoRuleId="01" productPromoActionSeqId="01" productPromoActionEnumId="PROMO_PROD_DISC" orderAdjustmentTypeId="PROMOTION_ADJUSTMENT" quantity="2.0" amount="-100.0"/>
-    <ProductPromoAction productPromoId="9014" productPromoRuleId="01" productPromoActionSeqId="01" productPromoActionEnumId="PROMO_PROD_DISC" orderAdjustmentTypeId="PROMOTION_ADJUSTMENT" quantity="1.0" amount="-50.0"/>
+    <ProductPromoAction productPromoId="9010" productPromoRuleId="01" productPromoActionSeqId="01" productPromoActionEnumId="PROMO_PROD_DISC" orderAdjustmentTypeId="PROMOTION_ADJUSTMENT" quantity="1.0" amount="20.0"/>
+    <ProductPromoAction productPromoId="9011" productPromoRuleId="01" productPromoActionSeqId="01" productPromoActionEnumId="PROMO_ORDER_PERCENT" orderAdjustmentTypeId="PROMOTION_ADJUSTMENT" amount="10.0"/>
+    <ProductPromoAction productPromoId="9012" productPromoRuleId="01" productPromoActionSeqId="01" productPromoActionEnumId="PROMO_ORDER_AMOUNT" orderAdjustmentTypeId="PROMOTION_ADJUSTMENT" amount="10.0"/>
+    <ProductPromoAction productPromoId="9013" productPromoRuleId="01" productPromoActionSeqId="01" productPromoActionEnumId="PROMO_PROD_DISC" orderAdjustmentTypeId="PROMOTION_ADJUSTMENT" quantity="2.0" amount="100.0"/>
+    <ProductPromoAction productPromoId="9014" productPromoRuleId="01" productPromoActionSeqId="01" productPromoActionEnumId="PROMO_PROD_DISC" orderAdjustmentTypeId="PROMOTION_ADJUSTMENT" quantity="1.0" amount="50.0"/>
     <ProductPromoAction productPromoId="9015" productPromoRuleId="01" productPromoActionSeqId="01" productPromoActionEnumId="PROMO_PROD_PRICE" orderAdjustmentTypeId="PROMOTION_ADJUSTMENT" quantity="4.0" amount="50.0"/>
-    <ProductPromoAction productPromoId="9016" productPromoRuleId="01" productPromoActionSeqId="01" productPromoActionEnumId="PROMO_PROD_AMDISC" orderAdjustmentTypeId="PROMOTION_ADJUSTMENT" quantity="1.0" amount="-500.0"/>
+    <ProductPromoAction productPromoId="9016" productPromoRuleId="01" productPromoActionSeqId="01" productPromoActionEnumId="PROMO_PROD_AMDISC" orderAdjustmentTypeId="PROMOTION_ADJUSTMENT" quantity="1.0" amount="500.0"/>
     <ProductPromoCond productPromoId="9000" productPromoRuleId="01" productPromoCondSeqId="01" inputParamEnumId="PPIP_ORDER_TOTAL" operatorEnumId="PPC_GT" condValue="100"/>
     <ProductPromoCond productPromoId="9012" productPromoRuleId="01" productPromoCondSeqId="01" inputParamEnumId="PPIP_ORDER_TOTAL" operatorEnumId="PPC_GTE" condValue="50"/>
     <ProductPromoCond productPromoId="9013" productPromoRuleId="01" productPromoCondSeqId="01" inputParamEnumId="PPIP_PRODUCT_QUANT" operatorEnumId="PPC_EQ" condValue="3"/>
