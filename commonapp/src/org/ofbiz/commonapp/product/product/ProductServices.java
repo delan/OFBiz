@@ -77,6 +77,36 @@ public class ProductServices {
     }
 
     /**
+     * Finds a Set of feature types in sequence.
+     */
+    public static Map prodFindFeatureTypes(DispatchContext dctx, Map context) {
+        // * String productId      -- Product ID to look up feature types
+        GenericDelegator delegator = dctx.getDelegator();
+        Map result = new HashMap();
+        String productId = (String) context.get("productId");
+        Set featureSet = null;
+        try {
+            Map fields = UtilMisc.toMap("productId", productId);
+            List order = UtilMisc.toList("sequenceNum", "productFeatureTypeId");
+            Collection features = delegator.findByAndCache("ProductFeatureAndAppl", fields, order);
+            featureSet = new OrderedSet(features);
+        } catch (GenericEntityException e) {
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, "Problem reading product features: " + e.getMessage());
+            return result;
+        }
+
+        if (featureSet == null) {
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, "Problem reading product features");
+            return result;
+        } else {
+            result.put("featureSet", featureSet);
+            return result;
+        }
+    }
+
+    /**
      * Builds a variant feature tree.
      */
     public static Map prodMakeFeatureTree(DispatchContext dctx, Map context) {
