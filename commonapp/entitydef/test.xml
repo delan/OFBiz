@@ -1,0 +1,254 @@
+<?xml version="1.0"?>
+
+<!--
+/**
+ *  Title: Entity Generator Definitions - Test Cases
+ *  Description: None
+ *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a 
+ *  copy of this software and associated documentation files (the "Software"), 
+ *  to deal in the Software without restriction, including without limitation 
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+ *  and/or sell copies of the Software, and to permit persons to whom the 
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included 
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ *@author     David E. Jones
+ *@created    May 16, 2001
+ *@version    1.0
+ */
+-->
+
+<entitygen>
+  <!-- ========================================================= -->
+  <!-- ======================== Defaults ======================= -->
+  <!-- ========================================================= -->
+    <title>Entity of an Open For Business Project Component</title>
+    <description>None</description>
+    <copyright>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org</copyright>
+    <author>David E. Jones</author>
+    <version>1.0</version>
+  <!-- ===================== field-type-def ==================== -->
+   <!-- General Types --> 
+    <field-type-def><field-type>comment</field-type><sql-type>VARCHAR(255)</sql-type><java-type>String</java-type></field-type-def>
+    <field-type-def><field-type>currency-amount</field-type><sql-type>NUMERIC(18,2)</sql-type><java-type>Double</java-type><validate>isSignedDouble</validate></field-type-def>
+    <field-type-def><field-type>date-time</field-type><sql-type>DATETIME</sql-type><java-type>java.util.Date</java-type></field-type-def>
+    <field-type-def><field-type>description</field-type><sql-type>VARCHAR(255)</sql-type><java-type>String</java-type></field-type-def>
+    <field-type-def><field-type>floating-point</field-type><sql-type>NUMERIC(18,4)</sql-type><java-type>Double</java-type><validate>isSignedDouble</validate></field-type-def>
+    <field-type-def><field-type>id</field-type><sql-type>VARCHAR(20)</sql-type><java-type>String</java-type></field-type-def>
+    <field-type-def><field-type>id-long</field-type><sql-type>VARCHAR(60)</sql-type><java-type>String</java-type></field-type-def>
+    <field-type-def><field-type>indicator</field-type><sql-type>CHAR(1)</sql-type><java-type>String</java-type></field-type-def>
+    <field-type-def><field-type>long-varchar</field-type><sql-type>VARCHAR(255)</sql-type><java-type>String</java-type></field-type-def>
+    <field-type-def><field-type>name</field-type><sql-type>VARCHAR(60)</sql-type><java-type>String</java-type></field-type-def>
+    <field-type-def><field-type>numeric</field-type><sql-type>NUMERIC(18,0)</sql-type><java-type>Long</java-type><validate>isSignedLong</validate></field-type-def>
+    <field-type-def><field-type>short-varchar</field-type><sql-type>VARCHAR(60)</sql-type><java-type>String</java-type></field-type-def>
+    <field-type-def><field-type>value</field-type><sql-type>VARCHAR(255)</sql-type><java-type>String</java-type></field-type-def>
+    <field-type-def><field-type>very-long</field-type><sql-type>TEXT</sql-type><java-type>String</java-type></field-type-def>
+    <field-type-def><field-type>very-short</field-type><sql-type>VARCHAR(10)</sql-type><java-type>String</java-type></field-type-def>
+   <!-- Specialized Types -->
+    <field-type-def><field-type>credit-card-number</field-type><sql-type>VARCHAR(40)</sql-type><java-type>String</java-type><validate>isAnyCard</validate></field-type-def>
+    <field-type-def><field-type>credit-card-date</field-type><sql-type>VARCHAR(20)</sql-type><java-type>String</java-type><validate>isDateAfterToday</validate></field-type-def>
+    <field-type-def><field-type>email</field-type><sql-type>VARCHAR(255)</sql-type><java-type>String</java-type><validate>isEmail</validate></field-type-def>
+    <field-type-def><field-type>id-ne</field-type><sql-type>VARCHAR(20)</sql-type><java-type>String</java-type><validate>isNotEmpty</validate></field-type-def>
+    <field-type-def><field-type>id-long-ne</field-type><sql-type>VARCHAR(60)</sql-type><java-type>String</java-type><validate>isNotEmpty</validate></field-type-def>
+    <field-type-def><field-type>tel-number</field-type><sql-type>VARCHAR(60)</sql-type><java-type>String</java-type><validate>isInternationalPhoneNumber</validate></field-type-def>
+  <!-- ========================================================= -->
+  <!-- ========================= Person ======================== -->
+  <!-- ========================================================= -->
+    <entity>
+      <title>Person-Test Component - Person Entity</title>
+      <package-name>org.ofbiz.commonapp.test</package-name>
+      <table-name>TEST_PERSON</table-name>
+      <use-cache>false</use-cache>
+      <cmp-field><column-name>USERNAME</column-name><field-type>id-ne</field-type></cmp-field>
+      <cmp-field><column-name>ID</column-name><field-type>id</field-type></cmp-field>
+      <cmp-field><column-name>ID_NE</column-name><field-type>id-ne</field-type></cmp-field>
+      <cmp-field><column-name>ID_LONG</column-name><field-type>id-long</field-type></cmp-field>
+      <cmp-field><column-name>ID_LONG_NE</column-name><field-type>id-long-ne</field-type></cmp-field>
+      <cmp-field><column-name>TEL_NUMBER</column-name><field-type>tel-number</field-type></cmp-field>
+      <cmp-field><column-name>EMAIL</column-name><field-type>email</field-type><validate>isNotEmpty</validate></cmp-field>
+      <cmp-field><column-name>CREDIT_CARD_NUMBER</column-name><field-type>credit-card-number</field-type></cmp-field>
+      <cmp-field><column-name>CREDIT_CARD_DATE</column-name><field-type>credit-card-date</field-type></cmp-field>
+      <cmp-field><column-name>REQUIRED_NAME</column-name><field-type>name</field-type><validate>isNotEmpty</validate></cmp-field>
+      <cmp-field><column-name>OPTIONAL_NAME</column-name><field-type>name</field-type></cmp-field>
+      <cmp-field><column-name>COMMENT</column-name><field-type>comment</field-type></cmp-field>
+      <cmp-field><column-name>CURRENCY_AMOUNT</column-name><field-type>currency-amount</field-type></cmp-field>
+      <cmp-field><column-name>DATE_TIME</column-name><field-type>date-time</field-type></cmp-field>
+      <cmp-field><column-name>DESCRIPTION</column-name><field-type>description</field-type></cmp-field>
+      <cmp-field><column-name>FLOATING_POINT</column-name><field-type>floating-point</field-type></cmp-field>
+      <cmp-field><column-name>INDICATOR</column-name><field-type>indicator</field-type></cmp-field>
+      <cmp-field><column-name>LONG_VARCHAR</column-name><field-type>long-varchar</field-type></cmp-field>
+      <cmp-field><column-name>NUMERIC</column-name><field-type>numeric</field-type></cmp-field>
+      <cmp-field><column-name>SHORT_VARCHAR</column-name><field-type>short-varchar</field-type></cmp-field>
+      <cmp-field><column-name>VALUE</column-name><field-type>value</field-type></cmp-field>
+      <cmp-field><column-name>VERY_LONG</column-name><field-type>very-long</field-type></cmp-field>
+      <cmp-field><column-name>VERY_SHORT</column-name><field-type>very-short</field-type></cmp-field>
+      <prim-key-column>USERNAME</prim-key-column>
+      <finder><column-name>FIRST_NAME</column-name></finder>
+      <finder><column-name>HOME_PHONE</column-name></finder>
+      <finder><column-name>EMAIL</column-name></finder>
+      <relation>
+        <relation-type>many</relation-type>
+        <related-table-name>TEST_PERSON_PERSON_TYPE</related-table-name>
+        <key-map><column-name>USERNAME</column-name></key-map>
+        <relation>
+          <relation-type>many</relation-type>
+          <related-table-name>TEST_PERSON_TYPE_ATTRIBUTE</related-table-name>
+          <key-map><column-name>TYPE_ID</column-name></key-map>
+          <relation>
+            <relation-type>one</relation-type>
+            <related-table-name>TEST_PERSON_ATTRIBUTE</related-table-name>
+            <key-map><column-name>USERNAME</column-name></key-map> <!-- this column-name is from the parent in the relation heirarchy, ie TEST_PERSON_PERSON_TYPE, and that must be supported -->
+            <key-map><column-name>NAME</column-name></key-map>
+          </relation>
+        </relation>
+        <relation>
+          <relation-type>one</relation-type>
+          <related-table-name>TEST_PERSON_TYPE</related-table-name>
+          <key-map><column-name>TYPE_ID</column-name></key-map>
+        </relation>
+      </relation>
+      <relation>
+        <relation-type>many</relation-type>
+        <related-table-name>TEST_PERSON_ATTRIBUTE</related-table-name>
+        <key-map><column-name>USERNAME</column-name></key-map>
+      </relation>
+    </entity>
+  <!-- ========================================================= -->    
+    <entity>
+      <title>Person-Test Component - Person Attribute Entity</title>
+      <package-name>org.ofbiz.commonapp.test</package-name>
+      <table-name>TEST_PERSON_ATTRIBUTE</table-name>
+      <use-cache>false</use-cache>
+      <cmp-field><column-name>USERNAME</column-name><field-type>id-ne</field-type></cmp-field>
+      <cmp-field><column-name>NAME</column-name><field-type>id-long-ne</field-type></cmp-field>
+      <cmp-field><column-name>VALUE</column-name><field-type>value</field-type></cmp-field>
+      <prim-key-column>USERNAME</prim-key-column>
+      <prim-key-column>NAME</prim-key-column>
+      <finder><column-name>USERNAME</column-name></finder>
+      <finder><column-name>NAME</column-name></finder>
+      <relation>
+        <relation-type>one</relation-type>
+        <related-table-name>TEST_PERSON</related-table-name>
+        <key-map><column-name>USERNAME</column-name></key-map>
+      </relation>
+    </entity>
+  <!-- ========================================================= -->    
+    <entity>
+      <title>Person-Test Component - Person Type Entity</title>
+      <package-name>org.ofbiz.commonapp.test</package-name>
+      <table-name>TEST_PERSON_TYPE</table-name>
+      <use-cache>false</use-cache>
+      <cmp-field><column-name>TYPE_ID</column-name><field-type>id-ne</field-type></cmp-field>
+      <cmp-field><column-name>DESCRIPTION</column-name><field-type>description</field-type></cmp-field>
+      <prim-key-class>java.lang.String</prim-key-class>
+      <prim-key-column>TYPE_ID</prim-key-column>
+      <relation>
+        <relation-type>many</relation-type>
+        <related-table-name>TEST_PERSON_TYPE_ATTRIBUTE</related-table-name>
+        <key-map><column-name>TYPE_ID</column-name></key-map>
+      </relation>
+      <relation>
+        <relation-type>many</relation-type>
+        <related-table-name>TEST_PERSON_PERSON_TYPE</related-table-name>
+        <key-map><column-name>TYPE_ID</column-name></key-map>
+        <relation>
+          <relation-type>one</relation-type>
+          <related-table-name>TEST_PERSON</related-table-name>
+          <key-map><column-name>USERNAME</column-name></key-map>
+        </relation>
+      </relation>
+    </entity>
+  <!-- ========================================================= -->    
+    <entity>
+      <title>Person-Test Component - Person Type Attribute Entity</title>
+      <package-name>org.ofbiz.commonapp.test</package-name>
+      <table-name>TEST_PERSON_TYPE_ATTRIBUTE</table-name>
+      <use-cache>false</use-cache>
+      <cmp-field><column-name>TYPE_ID</column-name><field-type>id-ne</field-type></cmp-field>
+      <cmp-field><column-name>NAME</column-name><field-type>id-long-ne</field-type></cmp-field>
+      <prim-key-column>TYPE_ID</prim-key-column>
+      <prim-key-column>NAME</prim-key-column>
+      <finder><column-name>TYPE_ID</column-name></finder>
+      <finder><column-name>NAME</column-name></finder>
+      <relation>
+        <relation-type>one</relation-type>
+        <related-table-name>PERSON_TYPE</related-table-name>
+        <key-map><column-name>TYPE_ID</column-name></key-map>
+      </relation>
+    </entity>
+  <!-- ========================================================= -->    
+    <entity>
+      <title>Person-Test Component - Person Person Type Entity</title>
+      <description>Maps a Person to a Person Type; necessary so a person can be of multiple types.</description>
+      <package-name>org.ofbiz.commonapp.test</package-name>
+      <table-name>TEST_PERSON_PERSON_TYPE</table-name>
+      <use-cache>false</use-cache>
+      <cmp-field><column-name>USERNAME</column-name><field-type>id-ne</field-type></cmp-field>
+      <cmp-field><column-name>TYPE_ID</column-name><field-type>id-ne</field-type></cmp-field>
+      <prim-key-column>USERNAME</prim-key-column>
+      <prim-key-column>TYPE_ID</prim-key-column>
+      <finder><column-name>USERNAME</column-name></finder>
+      <finder><column-name>TYPE_ID</column-name></finder>
+      <relation>
+        <relation-type>one</relation-type>
+        <related-table-name>TEST_PERSON</related-table-name>
+        <key-map><column-name>USERNAME</column-name></key-map>
+      </relation>
+      <relation>
+        <relation-type>one</relation-type>
+        <related-table-name>TEST_PERSON_TYPE</related-table-name>
+        <key-map><column-name>TYPE_ID</column-name></key-map>
+      </relation>
+      <relation>
+        <relation-type>many</relation-type>
+        <related-table-name>TEST_PERSON_TYPE_ATTRIBUTE</related-table-name>
+        <key-map><column-name>TYPE_ID</column-name></key-map>
+        <relation>
+          <relation-type>one</relation-type>
+          <related-table-name>TEST_PERSON_ATTRIBUTE</related-table-name>
+          <key-map><column-name>USERNAME</column-name></key-map> <!-- this column-name is from the parent in the relation heirarchy, ie TEST_PERSON_PERSON_TYPE, and that must be supported -->
+          <key-map><column-name>NAME</column-name></key-map>
+        </relation>
+      </relation>
+    </entity>
+  <!-- ========================================================= -->    
+    <entity>
+      <title>Test Long Double Key</title>
+      <package-name>org.ofbiz.commonapp.test</package-name>
+      <table-name>TEST_LONG_DOUBLE_KEY</table-name>
+      <use-cache>false</use-cache>
+      <cmp-field><column-name>LONG_KEY</column-name><field-type>numeric</field-type><validate>isNotEmpty</validate></cmp-field>
+      <cmp-field><column-name>DOUBLE_KEY</column-name><field-type>floating-point</field-type><validate>isNotEmpty</validate></cmp-field>
+      <cmp-field><column-name>VALUE</column-name><field-type>value</field-type></cmp-field>
+      <prim-key-column>LONG_KEY</prim-key-column>
+      <prim-key-column>DOUBLE_KEY</prim-key-column>
+      <finder><column-name>LONG_KEY</column-name></finder>
+      <finder><column-name>DOUBLE_KEY</column-name></finder>
+    </entity>
+  <!-- ========================================================= -->    
+    <entity>
+      <title>Test Long Double Key</title>
+      <package-name>org.ofbiz.commonapp.test</package-name>
+      <table-name>TEST_DATE_STRING_KEY</table-name>
+      <use-cache>false</use-cache>
+      <cmp-field><column-name>DATE_KEY</column-name><field-type>date-time</field-type><validate>isNotEmpty</validate></cmp-field>
+      <cmp-field><column-name>STRING_KEY</column-name><field-type>id</field-type><validate>isNotEmpty</validate></cmp-field>
+      <cmp-field><column-name>VALUE</column-name><field-type>value</field-type></cmp-field>
+      <prim-key-column>DATE_KEY</prim-key-column>
+      <prim-key-column>STRING_KEY</prim-key-column>
+      <finder><column-name>DATE_KEY</column-name></finder>
+      <finder><column-name>STRING_KEY</column-name></finder>
+    </entity>
+</entitygen>

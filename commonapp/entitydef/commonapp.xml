@@ -41,11 +41,12 @@
     <version>1.0</version>
   <!-- ===================== field-type-def ==================== -->
    <!-- General Types --> 
+    <field-type-def><field-type>blob</field-type><sql-type>BLOB</sql-type><java-type>java.lang.Object</java-type></field-type-def>
     <field-type-def><field-type>comment</field-type><sql-type>VARCHAR(255)</sql-type><java-type>String</java-type></field-type-def>
     <field-type-def><field-type>currency-amount</field-type><sql-type>NUMERIC(18,2)</sql-type><java-type>Double</java-type><validate>isSignedDouble</validate></field-type-def>
     <field-type-def><field-type>date-time</field-type><sql-type>DATETIME</sql-type><java-type>java.util.Date</java-type></field-type-def>
     <field-type-def><field-type>description</field-type><sql-type>VARCHAR(255)</sql-type><java-type>String</java-type></field-type-def>
-    <field-type-def><field-type>floating-point</field-type><sql-type>NUMERIC(18,4)</sql-type><java-type>Double</java-type><validate>isSignedDouble</validate></field-type-def>
+    <field-type-def><field-type>floating-point</field-type><sql-type>NUMERIC(18,6)</sql-type><java-type>Double</java-type><validate>isSignedDouble</validate></field-type-def>
     <field-type-def><field-type>id</field-type><sql-type>VARCHAR(20)</sql-type><java-type>String</java-type></field-type-def>
     <field-type-def><field-type>id-long</field-type><sql-type>VARCHAR(60)</sql-type><java-type>String</java-type></field-type-def>
     <field-type-def><field-type>indicator</field-type><sql-type>CHAR(1)</sql-type><java-type>String</java-type></field-type-def>
@@ -63,184 +64,84 @@
     <field-type-def><field-type>id-ne</field-type><sql-type>VARCHAR(20)</sql-type><java-type>String</java-type><validate>isNotEmpty</validate></field-type-def>
     <field-type-def><field-type>id-long-ne</field-type><sql-type>VARCHAR(60)</sql-type><java-type>String</java-type><validate>isNotEmpty</validate></field-type-def>
     <field-type-def><field-type>tel-number</field-type><sql-type>VARCHAR(60)</sql-type><java-type>String</java-type><validate>isInternationalPhoneNumber</validate></field-type-def>
+  
   <!-- ========================================================= -->
-  <!-- ========================= Person ======================== -->
+  <!-- ========================= Security ====================== -->
   <!-- ========================================================= -->
+  
+  <!-- ========================================================= -->    
+  <!-- ========================================================= -->    
     <entity>
-      <title>Person Component - Person Entity</title>
-      <package-name>org.ofbiz.commonapp.person</package-name>
-      <table-name>PERSON</table-name>
-      <use-cache>false</use-cache>
-      <cmp-field><column-name>USERNAME</column-name><field-type>id-ne</field-type></cmp-field>
-      <cmp-field><column-name>PASSWORD</column-name><field-type>id-ne</field-type></cmp-field>
-      <cmp-field><column-name>FIRST_NAME</column-name><field-type>name</field-type><validate>isNotEmpty</validate></cmp-field>
-      <cmp-field><column-name>MIDDLE_NAME</column-name><field-type>name</field-type></cmp-field>
-      <cmp-field><column-name>LAST_NAME</column-name><field-type>name</field-type><validate>isNotEmpty</validate></cmp-field>
-      <cmp-field><column-name>TITLE</column-name><field-type>very-short</field-type></cmp-field>
-      <cmp-field><column-name>SUFFIX</column-name><field-type>very-short</field-type></cmp-field>
-      <cmp-field><column-name>HOME_PHONE</column-name><field-type>tel-number</field-type></cmp-field>
-      <cmp-field><column-name>WORK_PHONE</column-name><field-type>tel-number</field-type></cmp-field>
-      <cmp-field><column-name>FAX</column-name><field-type>tel-number</field-type></cmp-field>
-      <cmp-field><column-name>EMAIL</column-name><field-type>email</field-type><validate>isNotEmpty</validate></cmp-field>
-      <cmp-field><column-name>HOME_STREET1</column-name><field-type>long-varchar</field-type></cmp-field>
-      <cmp-field><column-name>HOME_STREET2</column-name><field-type>long-varchar</field-type></cmp-field>
-      <cmp-field><column-name>HOME_CITY</column-name><field-type>short-varchar</field-type></cmp-field>
-      <cmp-field><column-name>HOME_COUNTY</column-name><field-type>short-varchar</field-type></cmp-field>
-      <cmp-field><column-name>HOME_STATE</column-name><field-type>short-varchar</field-type></cmp-field>
-      <cmp-field><column-name>HOME_COUNTRY</column-name><field-type>short-varchar</field-type></cmp-field>
-      <cmp-field><column-name>HOME_POSTAL_CODE</column-name><field-type>short-varchar</field-type></cmp-field>
-      <prim-key-column>USERNAME</prim-key-column>
-      <finder><column-name>FIRST_NAME</column-name></finder>
-      <finder><column-name>LAST_NAME</column-name></finder>
-      <finder><column-name>FIRST_NAME</column-name><column-name>LAST_NAME</column-name></finder>
-      <finder><column-name>HOME_PHONE</column-name></finder>
-      <finder><column-name>EMAIL</column-name></finder>
+      <title>User Login Entity</title>
+      <package-name>org.ofbiz.commonapp.security.login</package-name>
+      <table-name>USER_LOGIN</table-name>
+      <cmp-field><column-name>USER_LOGIN_ID</column-name><field-type>id-ne</field-type></cmp-field>
+      <cmp-field><column-name>PARTY_ID</column-name><field-type>id</field-type></cmp-field>
+      <cmp-field><column-name>CONTACT_MECHANISM_ID</column-name><field-type>id</field-type></cmp-field>
+      <cmp-field><column-name>CURRENT_USER_ID</column-name><field-type>id</field-type></cmp-field>
+      <cmp-field><column-name>CURRENT_PASSWORD</column-name><field-type>short-varchar</field-type></cmp-field>
+      <prim-key-column>USER_LOGIN_ID</prim-key-column>
+      <finder><column-name>PARTY_ID</column-name></finder>
+      <finder><column-name>CONTACT_MECHANISM_ID</column-name></finder>
+      <finder><column-name>CURRENT_USER_ID</column-name></finder>
+      <!-- <relation>
+        <relation-type>one</relation-type>
+        <related-table-name>PARTY</related-table-name>
+        <key-map><column-name>PARTY_ID</column-name></key-map>
+      </relation> -->
       <relation>
         <relation-type>many</relation-type>
-        <related-table-name>PERSON_PERSON_TYPE</related-table-name>
-        <key-map><column-name>USERNAME</column-name></key-map>
-        <relation>
-          <relation-type>many</relation-type>
-          <related-table-name>PERSON_TYPE_ATTRIBUTE</related-table-name>
-          <key-map><column-name>TYPE_ID</column-name></key-map>
-          <relation>
-            <relation-type>one</relation-type>
-            <related-table-name>PERSON_ATTRIBUTE</related-table-name>
-            <key-map><column-name>USERNAME</column-name></key-map> <!-- this column-name is from the parent in the relation heirarchy, ie PERSON_PERSON_TYPE, and that must be supported -->
-            <key-map><column-name>NAME</column-name></key-map>
-          </relation>
-        </relation>
-        <relation>
-          <relation-type>one</relation-type>
-          <related-table-name>PERSON_TYPE</related-table-name>
-          <key-map><column-name>TYPE_ID</column-name></key-map>
-        </relation>
-      </relation>
-      <relation>
-        <relation-type>many</relation-type>
-        <related-table-name>PERSON_ATTRIBUTE</related-table-name>
-        <key-map><column-name>USERNAME</column-name></key-map>
-      </relation>
-      <relation>
-        <relation-type>many</relation-type>
-        <related-table-name>PERSON_SECURITY_GROUP</related-table-name>
-        <key-map><column-name>USERNAME</column-name></key-map>
+        <related-table-name>USER_LOGIN_SECURITY_GROUP</related-table-name>
+        <key-map><column-name>USER_LOGIN_ID</column-name></key-map>
         <relation>
           <relation-type>one</relation-type>
           <related-table-name>SECURITY_GROUP</related-table-name>
           <key-map><column-name>GROUP_ID</column-name></key-map>
-        </relation>
-        <!-- It may be a little too much to display all of the permissions, so just display the groups and let them drill down if they wish
-        <relation>
-          <relation-type>many</relation-type>
-          <related-table-name>SECURITY_GROUP_PERMISSION</related-table-name>
-          <key-map><column-name>GROUP_ID</column-name></key-map>
           <relation>
-            <relation-type>one</relation-type>
-            <related-table-name>SECURITY_PERMISSION</related-table-name>
-            <key-map><column-name>PERMISSION_ID</column-name></key-map>
+            <relation-type>many</relation-type>
+            <related-table-name>SECURITY_GROUP_PERMISSION</related-table-name>
+            <key-map><column-name>GROUP_ID</column-name></key-map>
+            <relation>
+              <relation-type>one</relation-type>
+              <related-table-name>SECURITY_PERMISSION</related-table-name>
+              <key-map><column-name>PERMISSION_ID</column-name></key-map>
+            </relation>
           </relation>
         </relation>
-        -->
-      </relation>
-    </entity>
-  <!-- ========================================================= -->    
-    <entity>
-      <title>Person Component - Person Attribute Entity</title>
-      <package-name>org.ofbiz.commonapp.person</package-name>
-      <table-name>PERSON_ATTRIBUTE</table-name>
-      <use-cache>false</use-cache>
-      <cmp-field><column-name>USERNAME</column-name><field-type>id-ne</field-type></cmp-field>
-      <cmp-field><column-name>NAME</column-name><field-type>id-long-ne</field-type></cmp-field>
-      <cmp-field><column-name>VALUE</column-name><field-type>value</field-type></cmp-field>
-      <prim-key-column>USERNAME</prim-key-column>
-      <prim-key-column>NAME</prim-key-column>
-      <finder><column-name>USERNAME</column-name></finder>
-      <finder><column-name>NAME</column-name></finder>
-      <relation>
-        <relation-type>one</relation-type>
-        <related-table-name>PERSON</related-table-name>
-        <key-map><column-name>USERNAME</column-name></key-map>
-      </relation>
-    </entity>
-  <!-- ========================================================= -->    
-    <entity>
-      <title>Person Component - Person Type Entity</title>
-      <package-name>org.ofbiz.commonapp.person</package-name>
-      <table-name>PERSON_TYPE</table-name>
-      <use-cache>false</use-cache>
-      <cmp-field><column-name>TYPE_ID</column-name><field-type>id-ne</field-type></cmp-field>
-      <cmp-field><column-name>DESCRIPTION</column-name><field-type>description</field-type></cmp-field>
-      <prim-key-class>java.lang.String</prim-key-class>
-      <prim-key-column>TYPE_ID</prim-key-column>
-      <relation>
-        <relation-type>many</relation-type>
-        <related-table-name>PERSON_TYPE_ATTRIBUTE</related-table-name>
-        <key-map><column-name>TYPE_ID</column-name></key-map>
       </relation>
       <relation>
         <relation-type>many</relation-type>
-        <related-table-name>PERSON_PERSON_TYPE</related-table-name>
-        <key-map><column-name>TYPE_ID</column-name></key-map>
-        <relation>
-          <relation-type>one</relation-type>
-          <related-table-name>PERSON</related-table-name>
-          <key-map><column-name>USERNAME</column-name></key-map>
-        </relation>
+        <related-table-name>LOGIN_ACCOUNT_HISTORY</related-table-name>
+        <key-map><column-name>USER_LOGIN_ID</column-name></key-map>
       </relation>
     </entity>
-  <!-- ========================================================= -->    
+    <!-- ========================================================= -->    
     <entity>
-      <title>Person Component - Person Type Attribute Entity</title>
-      <package-name>org.ofbiz.commonapp.person</package-name>
-      <table-name>PERSON_TYPE_ATTRIBUTE</table-name>
-      <use-cache>false</use-cache>
-      <cmp-field><column-name>TYPE_ID</column-name><field-type>id-ne</field-type></cmp-field>
-      <cmp-field><column-name>NAME</column-name><field-type>id-long-ne</field-type></cmp-field>
-      <prim-key-column>TYPE_ID</prim-key-column>
-      <prim-key-column>NAME</prim-key-column>
-      <finder><column-name>TYPE_ID</column-name></finder>
-      <finder><column-name>NAME</column-name></finder>
+      <title>Login Account History Entity</title>
+      <package-name>org.ofbiz.commonapp.security.login</package-name>
+      <table-name>LOGIN_ACCOUNT_HISTORY</table-name>
+      <cmp-field><column-name>USER_LOGIN_ID</column-name><field-type>id-ne</field-type></cmp-field>
+      <cmp-field><column-name>USER_LOGIN_SEQ_ID</column-name><field-type>id-ne</field-type></cmp-field>
+      <cmp-field><column-name>FROM_DATE</column-name><field-type>date-time</field-type></cmp-field>
+      <cmp-field><column-name>THRU_DATE</column-name><field-type>date-time</field-type></cmp-field>      
+      <cmp-field><column-name>PARTY_ID</column-name><field-type>id</field-type></cmp-field>
+      <cmp-field><column-name>USER_ID</column-name><field-type>id</field-type></cmp-field>
+      <cmp-field><column-name>PASSWORD</column-name><field-type>short-varchar</field-type></cmp-field>
+      <prim-key-column>USER_LOGIN_ID</prim-key-column>
+      <prim-key-column>USER_LOGIN_SEQ_ID</prim-key-column>
+      <finder><column-name>USER_LOGIN_ID</column-name></finder>
+      <finder><column-name>USER_ID</column-name></finder>
+      <finder><column-name>PARTY_ID</column-name></finder>
       <relation>
         <relation-type>one</relation-type>
-        <related-table-name>PERSON_TYPE</related-table-name>
-        <key-map><column-name>TYPE_ID</column-name></key-map>
+        <related-table-name>USER_LOGIN</related-table-name>
+        <key-map><column-name>USER_LOGIN_ID</column-name></key-map>
       </relation>
-    </entity>
-  <!-- ========================================================= -->    
-    <entity>
-      <title>Person Component - Person Person Type Entity</title>
-      <description>Maps a Person to a Person Type; necessary so a person can be of multiple types.</description>
-      <package-name>org.ofbiz.commonapp.person</package-name>
-      <table-name>PERSON_PERSON_TYPE</table-name>
-      <use-cache>false</use-cache>
-      <cmp-field><column-name>USERNAME</column-name><field-type>id-ne</field-type></cmp-field>
-      <cmp-field><column-name>TYPE_ID</column-name><field-type>id-ne</field-type></cmp-field>
-      <prim-key-column>USERNAME</prim-key-column>
-      <prim-key-column>TYPE_ID</prim-key-column>
-      <finder><column-name>USERNAME</column-name></finder>
-      <finder><column-name>TYPE_ID</column-name></finder>
-      <relation>
+      <!-- <relation>
         <relation-type>one</relation-type>
-        <related-table-name>PERSON</related-table-name>
-        <key-map><column-name>USERNAME</column-name></key-map>
-      </relation>
-      <relation>
-        <relation-type>one</relation-type>
-        <related-table-name>PERSON_TYPE</related-table-name>
-        <key-map><column-name>TYPE_ID</column-name></key-map>
-      </relation>
-      <relation>
-        <relation-type>many</relation-type>
-        <related-table-name>PERSON_TYPE_ATTRIBUTE</related-table-name>
-        <key-map><column-name>TYPE_ID</column-name></key-map>
-        <relation>
-          <relation-type>one</relation-type>
-          <related-table-name>PERSON_ATTRIBUTE</related-table-name>
-          <key-map><column-name>USERNAME</column-name></key-map> <!-- this column-name is from the parent in the relation heirarchy, ie PERSON_PERSON_TYPE, and that must be supported -->
-          <key-map><column-name>NAME</column-name></key-map>
-        </relation>
-      </relation>
+        <related-table-name>PARTY</related-table-name>
+        <key-map><column-name>PARTY_ID</column-name></key-map>
+      </relation> -->
     </entity>
   <!-- ========================================================= -->    
   <!-- ========================================================= -->    
@@ -248,10 +149,19 @@
       <title>Security Component - Security Group Entity</title>
       <package-name>org.ofbiz.commonapp.security.securitygroup</package-name>
       <table-name>SECURITY_GROUP</table-name>
-      <use-cache>false</use-cache>
       <cmp-field><column-name>GROUP_ID</column-name><field-type>id-ne</field-type></cmp-field>
       <cmp-field><column-name>DESCRIPTION</column-name><field-type>description</field-type></cmp-field>
       <prim-key-column>GROUP_ID</prim-key-column>
+      <relation>
+        <relation-type>many</relation-type>
+        <related-table-name>USER_LOGIN_SECURITY_GROUP</related-table-name>
+        <key-map><column-name>GROUP_ID</column-name></key-map>
+        <relation>
+          <relation-type>one</relation-type>
+          <related-table-name>USER_LOGIN</related-table-name>
+          <key-map><column-name>USERNAME</column-name></key-map>
+        </relation>
+      </relation>
       <relation>
         <relation-type>many</relation-type>
         <related-table-name>SECURITY_GROUP_PERMISSION</related-table-name>
@@ -263,12 +173,11 @@
         </relation>
       </relation>
     </entity>
-  <!-- ========================================================= -->    
+    <!-- ========================================================= -->    
     <entity>
       <title>Security Component - Security Permission Entity</title>
       <package-name>org.ofbiz.commonapp.security.securitygroup</package-name>
       <table-name>SECURITY_PERMISSION</table-name>
-      <use-cache>false</use-cache>
       <cmp-field><column-name>PERMISSION_ID</column-name><field-type>id-long-ne</field-type></cmp-field>
       <cmp-field><column-name>DESCRIPTION</column-name><field-type>description</field-type></cmp-field>
       <prim-key-column>PERMISSION_ID</prim-key-column>
@@ -284,13 +193,12 @@
         </relation>
       </relation>
     </entity>
-  <!-- ========================================================= -->    
+    <!-- ========================================================= -->    
     <entity>
       <title>Security Component - Security Group Permission Entity</title>
       <description>Defines a permission available to a security group</description>
       <package-name>org.ofbiz.commonapp.security.securitygroup</package-name>
       <table-name>SECURITY_GROUP_PERMISSION</table-name>
-      <use-cache>false</use-cache>
       <cmp-field><column-name>GROUP_ID</column-name><field-type>id-ne</field-type></cmp-field>
       <cmp-field><column-name>PERMISSION_ID</column-name><field-type>id-long-ne</field-type></cmp-field>
       <prim-key-column>GROUP_ID</prim-key-column>
@@ -308,23 +216,22 @@
         <key-map><column-name>PERMISSION_ID</column-name></key-map>
       </relation>
     </entity>
-  <!-- ========================================================= -->    
+    <!-- ========================================================= -->    
     <entity>
-      <title>Security Component - Person Security Group Entity</title>
+      <title>Security Component - User Login Security Group Entity</title>
       <description>Defines a permission available to a security group</description>
-      <package-name>org.ofbiz.commonapp.security.person</package-name>
-      <table-name>PERSON_SECURITY_GROUP</table-name>
-      <use-cache>false</use-cache>
-      <cmp-field><column-name>USERNAME</column-name><field-type>id-ne</field-type></cmp-field>
+      <package-name>org.ofbiz.commonapp.security.securitygroup</package-name>
+      <table-name>USER_LOGIN_SECURITY_GROUP</table-name>
+      <cmp-field><column-name>USER_LOGIN_ID</column-name><field-type>id-ne</field-type></cmp-field>
       <cmp-field><column-name>GROUP_ID</column-name><field-type>id-ne</field-type></cmp-field>
-      <prim-key-column>USERNAME</prim-key-column>
+      <prim-key-column>USER_LOGIN_ID</prim-key-column>
       <prim-key-column>GROUP_ID</prim-key-column>
-      <finder><column-name>USERNAME</column-name></finder>
+      <finder><column-name>USER_LOGIN_ID</column-name></finder>
       <finder><column-name>GROUP_ID</column-name></finder>
       <relation>
         <relation-type>one</relation-type>
-        <related-table-name>PERSON</related-table-name>
-        <key-map><column-name>USERNAME</column-name></key-map>
+        <related-table-name>USER_LOGIN</related-table-name>
+        <key-map><column-name>USER_LOGIN_ID</column-name></key-map>
       </relation>
       <relation>
         <relation-type>one</relation-type>
@@ -342,82 +249,4 @@
         </relation>
       </relation>
     </entity>
-
-  <!-- ========================================================= -->
-  <!-- ======================== Company ======================== -->
-  <!-- ========================================================= -->
-
-  <!-- ========================================================= -->
-  <!-- ======================== Catalog ======================== -->
-  <!-- ========================================================= -->
-    <entity>
-      <title>Catalog Component - Product Entity</title>
-      <package-name>org.ofbiz.commonapp.catalog.product</package-name>
-      <table-name>PRODUCT</table-name>
-      <use-cache>true</use-cache>
-      <cmp-field><column-name>SKU</column-name><sql-type>VARCHAR(40)</sql-type><java-type>String</java-type></cmp-field>
-      <cmp-field><column-name>SHORT_DESC</column-name><sql-type>VARCHAR(255)</sql-type><java-type>String</java-type></cmp-field>
-      <cmp-field><column-name>LONG_DESC</column-name><sql-type>TEXT</sql-type><java-type>String</java-type></cmp-field>
-      <cmp-field><column-name>SMALL_IMAGE_URL</column-name><sql-type>VARCHAR(255)</sql-type><java-type>String</java-type></cmp-field>
-      <cmp-field><column-name>LARGE_IMAGE_URL</column-name><sql-type>VARCHAR(255)</sql-type><java-type>String</java-type></cmp-field>
-      <cmp-field><column-name>PROMO_IMAGE_URL</column-name><sql-type>VARCHAR(255)</sql-type><java-type>String</java-type></cmp-field>
-      <cmp-field><column-name>MORE_INFO_URL</column-name><sql-type>VARCHAR(255)</sql-type><java-type>String</java-type></cmp-field>
-      <cmp-field><column-name>TYPE_ID</column-name><sql-type>VARCHAR(20)</sql-type><java-type>String</java-type></cmp-field>
-      <cmp-field><column-name>UNIT_OF_MEASURE</column-name><sql-type>VARCHAR(10)</sql-type><java-type>String</java-type></cmp-field>
-      <cmp-field><column-name>PRODUCT_TYPE</column-name><sql-type>NUMERIC</sql-type><java-type>Long</java-type></cmp-field>
-      <cmp-field><column-name>WEIGHT</column-name><sql-type>NUMERIC</sql-type><java-type>Double</java-type></cmp-field>
-      <prim-key-column>SKU</prim-key-column>
-    </entity>
-
-  <!-- ========================================================= -->
-  <!-- ======================= Fixed Asset ===================== -->
-  <!-- ========================================================= -->
-    <entity>      
-      <title>Fixed Asset Component - Fixed Asset Entity</title>
-      <package-name>org.ofbiz.commonapp.fixedasset.fixedasset</package-name>
-      <table-name>FIXED_ASSET</table-name>
-      <use-cache>false</use-cache>
-      <cmp-field><column-name>FIXED_ASSET_ID</column-name><sql-type>VARCHAR(20)</sql-type><java-type>String</java-type></cmp-field>
-      <cmp-field><column-name>COMPANY_UNIT_ID</column-name><sql-type>VARCHAR(40)</sql-type><java-type>String</java-type></cmp-field>
-      <cmp-field><column-name>OWNER_USERNAME</column-name><sql-type>VARCHAR(20)</sql-type><java-type>String</java-type></cmp-field>
-      <cmp-field><column-name>SALE_TRANS_ID</column-name><sql-type>VARCHAR(20)</sql-type><java-type>String</java-type></cmp-field>
-      <cmp-field><column-name>SALE_TRANS_LINE_ID</column-name><sql-type>VARCHAR(20)</sql-type><java-type>String</java-type></cmp-field>
-      <cmp-field><column-name>PURCHASE_TRANS_ID</column-name><sql-type>VARCHAR(20)</sql-type><java-type>String</java-type></cmp-field>
-      <cmp-field><column-name>PURCHASE_TRANS_LINE_ID</column-name><sql-type>VARCHAR(20)</sql-type><java-type>String</java-type></cmp-field>
-      <cmp-field><column-name>DESCRIPTION</column-name><sql-type>VARCHAR(255)</sql-type><java-type>String</java-type></cmp-field>
-      <cmp-field><column-name>TYPE_ID</column-name><sql-type>VARCHAR(20)</sql-type><java-type>String</java-type></cmp-field>
-      <cmp-field><column-name>SERIAL_NUMBER</column-name><sql-type>VARCHAR(80)</sql-type><java-type>String</java-type></cmp-field>
-      <cmp-field><column-name>MAKE</column-name><sql-type>VARCHAR(40)</sql-type><java-type>String</java-type></cmp-field>
-      <cmp-field><column-name>MODEL</column-name><sql-type>VARCHAR(40)</sql-type><java-type>String</java-type></cmp-field>
-      <cmp-field><column-name>YEAR</column-name><sql-type>VARCHAR(10)</sql-type><java-type>String</java-type></cmp-field>
-      <cmp-field><column-name>STATUS</column-name><sql-type>VARCHAR(20)</sql-type><java-type>String</java-type></cmp-field>
-      <cmp-field><column-name>NOTES</column-name><sql-type>TEXT</sql-type><java-type>String</java-type></cmp-field>
-      <prim-key-column>FIXED_ASSET_ID</prim-key-column>
-      <finder><column-name>COMPANY_UNIT_ID</column-name></finder>
-      <finder><column-name>COMPANY_UNIT_ID</column-name><column-name>TYPE_ID</column-name></finder>
-      <finder><column-name>OWNER_USERNAME</column-name></finder>
-      <finder><column-name>SALE_TRANS_ID</column-name></finder>
-      <finder><column-name>SALE_TRANS_ID</column-name><column-name>SALE_TRANS_LINE_ID</column-name></finder>
-      <finder><column-name>PURCHASE_TRANS_ID</column-name></finder>
-      <finder><column-name>PURCHASE_TRANS_ID</column-name><column-name>PURCHASE_TRANS_LINE_ID</column-name></finder>
-    </entity>
-  <!-- ========================================================= -->    
-    <entity>
-      <title>Fixed Asset Component - Fixed Asset Attribute Entity</title>
-      <description>Named Attribute of a Fixed Asset</description>
-      <package-name>org.ofbiz.commonapp.fixedasset.fixedasset</package-name>
-      <table-name>FIXED_ASSET_ATTRIBUTE</table-name>
-      <use-cache>false</use-cache>
-      <cmp-field><column-name>FIXED_ASSET_ID</column-name><sql-type>VARCHAR(20)</sql-type><java-type>String</java-type></cmp-field>
-      <cmp-field><column-name>NAME</column-name><sql-type>VARCHAR(40)</sql-type><java-type>String</java-type></cmp-field>
-      <cmp-field><column-name>VALUE</column-name><sql-type>VARCHAR(255)</sql-type><java-type>String</java-type></cmp-field>
-      <prim-key-column>FIXED_ASSET_ID</prim-key-column>
-      <prim-key-column>NAME</prim-key-column>
-      <finder><column-name>FIXED_ASSET_ID</column-name></finder>
-    </entity>
-
-  <!-- ========================================================= -->
-  <!-- ======================= Transaction ===================== -->
-  <!-- ========================================================= -->
-
 </entitygen>
