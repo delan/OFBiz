@@ -407,7 +407,19 @@ public class ModelService {
      * @param mode The mode which to build the new map
      * @returns Map a new Map of only valid parameters
      */
-    public Map makeValid(Map source, String mode) {        
+    public Map makeValid(Map source, String mode) {
+        return makeValid(source, mode, true);
+    }
+    
+    /**
+     * Creates a new Map based from an existing map with just valid parameters. 
+     * Tries to convert parameters to required type.
+     * @param source The source map
+     * @param mode The mode which to build the new map
+     * @param includeInternal When false will exclude internal fields
+     * @returns Map a new Map of only valid parameters
+     */    
+    public Map makeValid(Map source, String mode, boolean includeInternal) {        
         Map target = new HashMap();
 
         if (source == null) {
@@ -423,25 +435,24 @@ public class ModelService {
 
         while (i.hasNext()) {
             ModelParam param = (ModelParam) i.next();
+            boolean internalParam = param.internal;
 
             if (param.mode.equals("INOUT") || param.mode.equals(mode)) {
                 Object key = param.name;
 
                 if (source.containsKey(key)) {
-                    Object value = source.get(key);
-
-                    try {
-                        value = ObjectType.simpleTypeConvert(value, param.type, null, null);
-                    } catch (GeneralException e) {
-                        Debug.logWarning("[ModelService.makeValid] : Simple type conversion of param " +
-                            key + " failed: " + e.toString(), module);
-                        // let this go. service invokation will catch it
+                    if ((param.internal && includeInternal) || (!param.internal)) {
+                        Object value = source.get(key);
+    
+                        try {
+                            value = ObjectType.simpleTypeConvert(value, param.type, null, null);
+                        } catch (GeneralException e) {
+                            Debug.logWarning("[ModelService.makeValid] : Simple type conversion of param " +
+                                key + " failed: " + e.toString(), module);                        
+                        }
+                       
+                        target.put(key, value);
                     }
-                    // always put values in, even if they are null because 
-                    //there is a difference in most services between null 
-                    //(meaning null the stored value) and not specified 
-                    //(meaning leave whatever is already there)
-                    target.put(key, value);
                 }
             }
         }
