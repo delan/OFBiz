@@ -34,8 +34,20 @@
         <action service="saveProductPriceChange" mode="sync"/>
     </eca>
 
-    <!-- Product Price Change ECAs -->
+    <!-- Product Party ECAs -->
     <eca service="addPartyToCategory" event="invoke">
+    	<condition field-name="roleTypeId" operator="equals" value="_NA_"/>
+        <action service="ensureNaPartyRole" mode="sync"/>
+    </eca>
+    <eca service="addPartyToFacility" event="invoke">
+    	<condition field-name="roleTypeId" operator="equals" value="_NA_"/>
+        <action service="ensureNaPartyRole" mode="sync"/>
+    </eca>
+    <eca service="addPartyToFacilityGroup" event="invoke">
+    	<condition field-name="roleTypeId" operator="equals" value="_NA_"/>
+        <action service="ensureNaPartyRole" mode="sync"/>
+    </eca>
+    <eca service="addProdCatalogToParty" event="invoke">
     	<condition field-name="roleTypeId" operator="equals" value="_NA_"/>
         <action service="ensureNaPartyRole" mode="sync"/>
     </eca>
