@@ -245,6 +245,16 @@
       <prim-key field="agreementId"/>
       <prim-key field="agreementItemSeqId"/>
       <prim-key field="partyId"/>
+      <relation type="one" fk-name="AGRMNT_ORGA_AGR" rel-entity-name="Agreement">
+        <key-map field-name="agreementId"/>
+      </relation>
+      <relation type="one" fk-name="AGRMNT_ORGA_AITM" rel-entity-name="AgreementItem">
+        <key-map field-name="agreementId"/>
+        <key-map field-name="agreementItemSeqId"/>
+      </relation>
+      <relation type="one" fk-name="AGRMNT_ORGA_PTY" rel-entity-name="Party">
+        <key-map field-name="partyId"/>
+      </relation>
     </entity>
     <entity entity-name="AgreementProductApplic"
             package-name="org.ofbiz.commonapp.party.agreement"
@@ -255,6 +265,16 @@
       <prim-key field="agreementId"/>
       <prim-key field="agreementItemSeqId"/>
       <prim-key field="productId"/>
+      <relation type="one" fk-name="AGRMNT_PRDA_AGR" rel-entity-name="Agreement">
+        <key-map field-name="agreementId"/>
+      </relation>
+      <relation type="one" fk-name="AGRMNT_PRDA_AITM" rel-entity-name="AgreementItem">
+        <key-map field-name="agreementId"/>
+        <key-map field-name="agreementItemSeqId"/>
+      </relation>
+      <relation type="one" fk-name="AGRMNT_PRDA_PRD" rel-entity-name="Product">
+        <key-map field-name="productId"/>
+      </relation>
     </entity>
     <entity entity-name="AgreementRole"
             package-name="org.ofbiz.commonapp.party.agreement"
@@ -265,6 +285,19 @@
       <prim-key field="agreementId"/>
       <prim-key field="partyId"/>
       <prim-key field="roleTypeId"/>
+      <relation type="one" fk-name="AGRMNT_ROLE_AGR" rel-entity-name="Agreement">
+        <key-map field-name="agreementId"/>
+      </relation>
+      <relation type="one" fk-name="AGRMNT_ROLE_PTY" rel-entity-name="Party">
+        <key-map field-name="partyId"/>
+      </relation>
+      <relation type="one" fk-name="AGRMNT_ROLE_RTYP" rel-entity-name="RoleType">
+        <key-map field-name="roleTypeId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="PartyRole">
+        <key-map field-name="partyId"/>
+        <key-map field-name="roleTypeId"/>
+      </relation>
     </entity>
     <entity entity-name="AgreementTerm"
             package-name="org.ofbiz.commonapp.party.agreement"
@@ -277,6 +310,16 @@
       <field name="thruDate" type="date-time"></field>
       <field name="termValue" type="numeric"></field>
       <prim-key field="agreementTermId"/>
+      <relation type="one" fk-name="AGRMNT_TERM_TTYP" rel-entity-name="TermType">
+        <key-map field-name="termTypeId"/>
+      </relation>
+      <relation type="one" fk-name="AGRMNT_TERM_AGR" rel-entity-name="Agreement">
+        <key-map field-name="agreementId"/>
+      </relation>
+      <relation type="one" fk-name="AGRMNT_TERM_AITM" rel-entity-name="AgreementItem">
+        <key-map field-name="agreementId"/>
+        <key-map field-name="agreementItemSeqId"/>
+      </relation>
     </entity>
     <entity entity-name="AgreementTermAttribute"
             package-name="org.ofbiz.commonapp.party.agreement"
@@ -424,6 +467,35 @@
       <relation type="many" rel-entity-name="CommunicationEventPurpose">
         <key-map field-name="communicationEventId"/>
       </relation>
+      <relation type="one" fk-name="COM_EVNT_TPTY" title="To" rel-entity-name="Party">
+        <key-map field-name="partyIdTo" rel-field-name="partyId"/>
+      </relation>
+      <relation type="one" fk-name="COM_EVNT_TRTYP" title="To" rel-entity-name="RoleType">
+        <key-map field-name="roleTypeIdTo" rel-field-name="roleTypeId"/>
+      </relation>
+      <relation type="one-nofk" title="To" rel-entity-name="PartyRole">
+        <key-map field-name="partyIdTo" rel-field-name="partyId"/>
+        <key-map field-name="roleTypeIdTo" rel-field-name="roleTypeId"/>
+      </relation>
+      <relation type="one" fk-name="COM_EVNT_FPTY" title="From" rel-entity-name="Party">
+        <key-map field-name="partyIdFrom" rel-field-name="partyId"/>
+      </relation>
+      <relation type="one" fk-name="COM_EVNT_FRTYP" title="From" rel-entity-name="RoleType">
+        <key-map field-name="roleTypeIdFrom" rel-field-name="roleTypeId"/>
+      </relation>
+      <relation type="one-nofk" title="From" rel-entity-name="PartyRole">
+        <key-map field-name="partyIdFrom" rel-field-name="partyId"/>
+        <key-map field-name="roleTypeIdFrom" rel-field-name="roleTypeId"/>
+      </relation>
+      <relation type="one" fk-name="COM_EVNT_STTS" rel-entity-name="StatusItem">
+        <key-map field-name="statusId"/>
+      </relation>
+      <relation type="one" fk-name="COM_EVNT_ISCS" rel-entity-name="IssueCase">
+        <key-map field-name="issueCaseId"/>
+      </relation>
+      <relation type="one" fk-name="COM_EVNT_CMTP" rel-entity-name="ContactMechType">
+        <key-map field-name="contactMechTypeId"/>
+      </relation>
     </entity>
     <entity entity-name="CommunicationEventPrpTyp"
             package-name="org.ofbiz.commonapp.party.communication"
@@ -467,6 +539,19 @@
       <prim-key field="communicationEventId"/>
       <prim-key field="partyId"/>
       <prim-key field="roleTypeId"/>
+      <relation type="one" fk-name="COM_EVRL_CMEV" rel-entity-name="CommunicationEvent">
+        <key-map field-name="communicationEventId"/>
+      </relation>
+      <relation type="one" fk-name="COM_EVRL_PTY" rel-entity-name="Party">
+        <key-map field-name="partyId"/>
+      </relation>
+      <relation type="one" fk-name="COM_EVRL_RTYP" rel-entity-name="RoleType">
+        <key-map field-name="roleTypeId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="PartyRole">
+        <key-map field-name="partyId"/>
+        <key-map field-name="roleTypeId"/>
+      </relation>
     </entity>
     <entity entity-name="CommunicationEventType"
             package-name="org.ofbiz.commonapp.party.communication"
@@ -494,6 +579,9 @@
       <field name="description" type="description"></field>
       <field name="startDatetime" type="date-time"></field>
       <prim-key field="issueCaseId"/>
+      <relation type="one" fk-name="ISSUE_CAS_STTS" rel-entity-name="StatusItem">
+        <key-map field-name="statusId"/>
+      </relation>
     </entity>
     <entity entity-name="IssueCaseRole"
             package-name="org.ofbiz.commonapp.party.communication"
@@ -504,6 +592,19 @@
       <prim-key field="issueCaseId"/>
       <prim-key field="partyId"/>
       <prim-key field="roleTypeId"/>
+      <relation type="one" fk-name="ISSUE_CSRL_ISCS" rel-entity-name="IssueCase">
+        <key-map field-name="issueCaseId"/>
+      </relation>
+      <relation type="one" fk-name="ISSUE_CSRL_PTY" rel-entity-name="Party">
+        <key-map field-name="partyId"/>
+      </relation>
+      <relation type="one" fk-name="ISSUE_CSRL_RTYP" rel-entity-name="RoleType">
+        <key-map field-name="roleTypeId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="PartyRole">
+        <key-map field-name="partyId"/>
+        <key-map field-name="roleTypeId"/>
+      </relation>
     </entity>
 
   <!-- ========================================================= -->
@@ -825,6 +926,34 @@
       <prim-key field="partyNeedId"/>
       <prim-key field="partyId"/>
       <prim-key field="roleTypeId"/>
+      <relation type="one" fk-name="PARTY_NEED_NDTP" rel-entity-name="NeedType">
+        <key-map field-name="needTypeId"/>
+      </relation>
+      <relation type="one" fk-name="PARTY_NEED_PTY" rel-entity-name="Party">
+        <key-map field-name="partyId"/>
+      </relation>
+      <relation type="one" fk-name="PARTY_NEED_RTYP" rel-entity-name="RoleType">
+        <key-map field-name="roleTypeId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="PartyRole">
+        <key-map field-name="partyId"/>
+        <key-map field-name="roleTypeId"/>
+      </relation>
+      <relation type="one" fk-name="PARTY_NEED_PTTP" rel-entity-name="PartyType">
+        <key-map field-name="partyTypeId"/>
+      </relation>
+      <relation type="one" fk-name="PARTY_NEED_CMEV" rel-entity-name="CommunicationEvent">
+        <key-map field-name="communicationEventId"/>
+      </relation>
+      <relation type="one" fk-name="PARTY_NEED_PROD" rel-entity-name="Product">
+        <key-map field-name="productId"/>
+      </relation>
+      <relation type="one" fk-name="PARTY_NEED_PCAT" rel-entity-name="ProductCategory">
+        <key-map field-name="productCategoryId"/>
+      </relation>
+      <relation type="one" fk-name="PARTY_NEED_VSIT" rel-entity-name="Visit">
+        <key-map field-name="visitId"/>
+      </relation>
     </entity>
 
   <!-- ========================================================= -->
