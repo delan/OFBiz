@@ -121,6 +121,7 @@
         entity-name CDATA #REQUIRED
         use-cache ( true | false ) "false"
         filter-by-date ( true | false | by-name ) "false"
+        result-set-type ( forward | scroll ) "forward"
     >
 
     <!ELEMENT order-by EMPTY>
@@ -162,6 +163,7 @@
         filter-by-date ( true | false | by-name ) "false"
         distinct ( true | false ) "false"
         delegator-name CDATA #IMPLIED
+        result-set-type ( forward | scroll ) "forward"
     >
         <!ELEMENT condition-list ( ( condition-expr | condition-list )+ )>
         <!ATTLIST condition-list

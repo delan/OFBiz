@@ -819,7 +819,7 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
         EntityCondition conditionType = new EntityConditionList(condList, EntityOperator.OR);
         EntityCondition conditionMain = new EntityConditionList(UtilMisc.toList( new EntityExpr("contentIdTo", EntityOperator.EQUALS, contentIdTo), conditionType), EntityOperator.AND);
          try {
-             List listAll = delegator.findByConditionCache("ContentAssoc", conditionMain, null, UtilMisc.toList("sequenceNum", "fromDate", "createdDate"));
+             List listAll = delegator.findByCondition("ContentAssoc", conditionMain, null, UtilMisc.toList("sequenceNum", "fromDate", "createdDate"));
              List listFiltered = EntityUtil.filterByDate(listAll);
              Iterator iter = listFiltered.iterator();
              int seqNum = seqIncrement;
