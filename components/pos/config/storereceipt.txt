@@ -1,0 +1,28 @@
+#price.length=0
+#infoString.length=0
+#dateFormat=EEE, d MMM yyyy HH:mm:ss z
+${CENTER}${DOUBLE_HEIGHT}${BOLD}Company XYZ
+${CENTER}${BOLD}7 E. 8th St. #308
+${CENTER}${BOLD}New York, NY 10003
+${CENTER}${BOLD}212.655.3052
+
+${CENTER}Sale: ${orderId} Tx: ${transactionId} Dr: ${drawerNo} Clerk: ${userId}
+${CENTER}${dateStamp}
+
+${CENTER}${titleOnCard} ${firstNameOnCard} ${middleNameOnCard} ${lastNameOnCard} ${suffixOnCard}
+${CENTER}${cardType} : ${cardNumber} : ${expireDate}
+${CENTER}${authInfoString}
+
+
+${CENTER}${BOLD}$${amount}
+
+
+
+
+
+${CENTER}X____________________________________________
+
+
+
+
+[ORDER BARCODE]
