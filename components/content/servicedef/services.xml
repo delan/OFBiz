@@ -1289,4 +1289,20 @@
         <attribute mode="IN" name="newTopicDescription" optional="true" type="String"/>
     </service>
 
+  <service auth="true" engine="java" name="updateSiteRoles"
+    location="org.ofbiz.content.ContentManagementServices" invoke="updateSiteRoles">
+    <description>Update site roles</description>
+    <attribute mode="IN" name="partyId" optional="true" type="String"/>
+    <attribute mode="IN" name="contentId" optional="true" type="String"/>
+    <attribute mode="IN" name="blogUser" optional="true" type="String"/>
+    <attribute mode="IN" name="blogAuthor" optional="true" type="String"/>
+    <attribute mode="IN" name="blogEditor" optional="true" type="String"/>
+    <attribute mode="IN" name="blogAdmin" optional="true" type="String"/>
+    <attribute mode="IN" name="blogPublisher" optional="true" type="String"/>
+    <attribute mode="IN" name="blogUserFromDate" optional="true" type="Timestamp"/>
+    <attribute mode="IN" name="blogAuthorFromDate" optional="true" type="Timestamp"/>
+    <attribute mode="IN" name="blogEditorFromDate" optional="true" type="Timestamp"/>
+    <attribute mode="IN" name="blogAdminFromDate" optional="true" type="Timestamp"/>
+    <attribute mode="IN" name="blogPublisherFromDate" optional="true" type="Timestamp"/>
+  </service>
 </services>
