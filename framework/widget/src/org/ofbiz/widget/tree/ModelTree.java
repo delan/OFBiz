@@ -112,15 +112,15 @@ public class ModelTree {
         this.dispatcher = dispatcher;
         setDefaultEntityName( treeElement.getAttribute("entity-name") );
         try {
-        	openDepth = Integer.parseInt(treeElement.getAttribute("open-depth"));
+            openDepth = Integer.parseInt(treeElement.getAttribute("open-depth"));
         } catch(NumberFormatException e) {
-        	openDepth = 0;
+            openDepth = 0;
         }
 
         try {
-        	postTrailOpenDepth = Integer.parseInt(treeElement.getAttribute("post-trail-open-depth"));
+            postTrailOpenDepth = Integer.parseInt(treeElement.getAttribute("post-trail-open-depth"));
         } catch(NumberFormatException e) {
-        	postTrailOpenDepth = 999;
+            postTrailOpenDepth = 999;
         }
 
         List nodeElements = UtilXml.childElementList(treeElement, "node");
@@ -155,11 +155,11 @@ public class ModelTree {
     }
     
     public String getDefaultEntityName() {
-    	return this.defaultEntityName;
+        return this.defaultEntityName;
     }
     
     public String getDefaultPkName() {
-    	return this.defaultPkName;
+        return this.defaultPkName;
     }
     
     public String getRootNodeName() {
@@ -171,29 +171,29 @@ public class ModelTree {
     }
     
     public int getOpenDepth() {
-    	return openDepth;
+        return openDepth;
     }
     
     public int getPostTrailOpenDepth() {
-    	return postTrailOpenDepth;
+        return postTrailOpenDepth;
     }
     
     public int getNodeIndexAtDepth(int i) {
-    	return nodeIndices[i];
+        return nodeIndices[i];
     }
     
     public void setNodeIndexAtDepth(int i, int val) {
-    	nodeIndices[i] = val;
+        nodeIndices[i] = val;
     }
     
     public String getExpandCollapseRequest(Map context) {
         String expColReq = this.expandCollapseRequestExdr.expandString(context);
         if (UtilValidate.isEmpty(expColReq)) {
-        	HttpServletRequest request = (HttpServletRequest)context.get("request");
+            HttpServletRequest request = (HttpServletRequest)context.get("request");
             String s1 = request.getRequestURI();
             int pos = s1.lastIndexOf("/");
             if (pos >= 0)
-            	expColReq = s1.substring(pos + 1);
+                expColReq = s1.substring(pos + 1);
             else 
                 expColReq = s1;
         }
@@ -205,15 +205,15 @@ public class ModelTree {
     }
     
     public List getTrailList() {
-    	return trail;
+        return trail;
     }
     
     public void setTrailList(List trailList) {
-    	this.trail = trailList;
+        this.trail = trailList;
     }
     
     public List getCurrentNodeTrail() {
-    	return currentNodeTrail;
+        return currentNodeTrail;
     }
     
 
@@ -247,11 +247,11 @@ public class ModelTree {
         String trailName = trailNameExdr.expandString(context);
         String treeString = (String)context.get(trailName);
         if (UtilValidate.isEmpty(treeString)) {
-        	Map parameters = (Map)context.get("parameters");
-        	treeString = (String)parameters.get(trailName);
+            Map parameters = (Map)context.get("parameters");
+            treeString = (String)parameters.get(trailName);
         }
         if (UtilValidate.isNotEmpty(treeString)) {
-        	trail = StringUtil.split(treeString, "|");
+            trail = StringUtil.split(treeString, "|");
             if (trail == null || trail.size() == 0)
                 throw new RuntimeException("Tree 'trail' value is empty.");
             
@@ -386,127 +386,128 @@ public class ModelTree {
         }
     
         public void renderNodeString(Writer writer, Map context,
-				TreeStringRenderer treeStringRenderer, int depth, boolean isLast)
-				throws IOException {
-			boolean passed = true;
-			if (this.condition != null) {
-				if (!this.condition.eval(context)) {
-					passed = false;
-				}
-			}
-			//Debug.logInfo("in ModelMenu, name:" + this.getName(), module);
-			if (passed) {
-				//this.subNodeValues = new ArrayList();
-				//context.put("subNodeValues", new ArrayList());
-				//if (Debug.infoOn()) Debug .logInfo(" renderNodeString, " + modelTree.getdefaultPkName() + " :" + context.get(modelTree.getdefaultPkName()), module);
-				context.put("processChildren", new Boolean(true));
-				// this action will usually obtain the "current" entity
-				ModelTreeAction.runSubActions(this.actions, context);
-    			String pkName = getPkName();
-				String id = null;
-    			if (UtilValidate.isNotEmpty(this.entryName)) {
-    			    Map map = (Map)context.get(this.entryName);
+                TreeStringRenderer treeStringRenderer, int depth, boolean isLast)
+                throws IOException {
+            boolean passed = true;
+            if (this.condition != null) {
+                if (!this.condition.eval(context)) {
+                    passed = false;
+                }
+            }
+            //Debug.logInfo("in ModelMenu, name:" + this.getName(), module);
+            if (passed) {
+                //this.subNodeValues = new ArrayList();
+                //context.put("subNodeValues", new ArrayList());
+                //if (Debug.infoOn()) Debug .logInfo(" renderNodeString, " + modelTree.getdefaultPkName() + " :" + context.get(modelTree.getdefaultPkName()), module);
+                context.put("processChildren", new Boolean(true));
+                // this action will usually obtain the "current" entity
+                ModelTreeAction.runSubActions(this.actions, context);
+                String pkName = getPkName();
+                String id = null;
+                if (UtilValidate.isNotEmpty(this.entryName)) {
+                    Map map = (Map)context.get(this.entryName);
                     id = (String)map.get(pkName);
                 } else {
-				    id = (String) context.get(pkName);
+                    id = (String) context.get(pkName);
                 }
-				modelTree.currentNodeTrail.add(id);
-				context.put("currentNodeTrail", modelTree.currentNodeTrail);
-				String currentNodeTrailPiped = StringUtil.join( modelTree.currentNodeTrail, "|");
-				context.put("currentNodeTrailPiped", currentNodeTrailPiped);
-				treeStringRenderer.renderNodeBegin(writer, context, this, depth, isLast);
-				//if (Debug.infoOn()) Debug.logInfo(" context:" +
-				// context.entrySet(), module);
-				try {
-				    String screenName = null;
-				    if (screenNameExdr != null)
-				        screenName = screenNameExdr.expandString(context);
-				    String screenLocation = null;
-				    if (screenLocationExdr != null)
-				        screenLocation = screenLocationExdr.expandString(context);
-					if (screenName != null && screenLocation != null) {
-						ScreenStringRenderer screenStringRenderer = treeStringRenderer .getScreenStringRenderer(context);
-						ModelScreen modelScreen = ScreenFactory .getScreenFromLocation(screenLocation, screenName);
-						modelScreen.renderScreenString(writer, context, screenStringRenderer);
-					}
-					if (label != null) {
-						label.renderLabelString(writer, context, treeStringRenderer);
-					}
-					if (link != null) {
-						link.renderLinkString(writer, context, treeStringRenderer);
-					}
-					Boolean processChildren = (Boolean) context .get("processChildren");
-					//if (Debug.infoOn()) Debug.logInfo(" processChildren:" + processChildren, module);
-					if (processChildren.booleanValue()) {
-						getChildren(context);
-						Iterator nodeIter = this.subNodeValues.iterator();
-						int nodeIndex = -1;
-						int newDepth = depth + 1;
-						while (nodeIter.hasNext()) {
-							nodeIndex++;
-							modelTree.setNodeIndexAtDepth(newDepth, nodeIndex);
-							Object[] arr = (Object[]) nodeIter.next();
-							ModelNode node = (ModelNode) arr[0];
-							Map val = (Map) arr[1];
-							//GenericPK pk = val.getPrimaryKey();
-							//if (Debug.infoOn()) Debug.logInfo(" pk:" + pk,
-							// module);
-							String thisPkName = node.getPkName();
-							String thisEntityId = (String) val.get(thisPkName);
-							Map newContext = ((MapStack) context) .standAloneChildStack();
-							String nodeEntryName = node.getEntryName();
-							if (UtilValidate.isNotEmpty(nodeEntryName)) {
+                modelTree.currentNodeTrail.add(id);
+                context.put("currentNodeTrail", modelTree.currentNodeTrail);
+                String currentNodeTrailPiped = StringUtil.join( modelTree.currentNodeTrail, "|");
+                context.put("currentNodeTrailPiped", currentNodeTrailPiped);
+                treeStringRenderer.renderNodeBegin(writer, context, this, depth, isLast);
+                //if (Debug.infoOn()) Debug.logInfo(" context:" +
+                // context.entrySet(), module);
+                try {
+                    String screenName = null;
+                    if (screenNameExdr != null)
+                        screenName = screenNameExdr.expandString(context);
+                    String screenLocation = null;
+                    if (screenLocationExdr != null)
+                        screenLocation = screenLocationExdr.expandString(context);
+                    if (screenName != null && screenLocation != null) {
+                        ScreenStringRenderer screenStringRenderer = treeStringRenderer .getScreenStringRenderer(context);
+                        ModelScreen modelScreen = ScreenFactory .getScreenFromLocation(screenLocation, screenName);
+                        modelScreen.renderScreenString(writer, context, screenStringRenderer);
+                    }
+                    if (label != null) {
+                        label.renderLabelString(writer, context, treeStringRenderer);
+                    }
+                    if (link != null) {
+                        link.renderLinkString(writer, context, treeStringRenderer);
+                    }
+                    Boolean processChildren = (Boolean) context .get("processChildren");
+                    //if (Debug.infoOn()) Debug.logInfo(" processChildren:" + processChildren, module);
+                    if (processChildren.booleanValue()) {
+                        getChildren(context);
+                        Iterator nodeIter = this.subNodeValues.iterator();
+                        int nodeIndex = -1;
+                        int newDepth = depth + 1;
+                        while (nodeIter.hasNext()) {
+                            nodeIndex++;
+                            modelTree.setNodeIndexAtDepth(newDepth, nodeIndex);
+                            Object[] arr = (Object[]) nodeIter.next();
+                            ModelNode node = (ModelNode) arr[0];
+                            Map val = (Map) arr[1];
+                            //GenericPK pk = val.getPrimaryKey();
+                            //if (Debug.infoOn()) Debug.logInfo(" pk:" + pk,
+                            // module);
+                            String thisPkName = node.getPkName();
+                            String thisEntityId = (String) val.get(thisPkName);
+                            Map newContext = ((MapStack) context) .standAloneChildStack();
+                            String nodeEntryName = node.getEntryName();
+                            if (UtilValidate.isNotEmpty(nodeEntryName)) {
                                 newContext.put(nodeEntryName, val);                        
                             } else {
-							    newContext.putAll(val);
+                                newContext.putAll(val);
                             }
-							newContext.put("currentNodeIndex", new Integer(nodeIndex));
-							String targetEntityId = null;
-							List targetNodeTrail = this.modelTree .getTrailList();
-							if (newDepth < targetNodeTrail.size()) {
-								targetEntityId = (String) targetNodeTrail .get(newDepth);
-							}
-							if ((targetEntityId != null && targetEntityId .equals(thisEntityId)) || this.showPeers(newDepth)) {
-								boolean lastNode = !nodeIter.hasNext();
-								newContext.put("lastNode", new Boolean(lastNode));
-								node.renderNodeString(writer, newContext, treeStringRenderer, newDepth, lastNode);
-							}
-						}
-					}
-				} catch (SAXException e) {
-					String errMsg = "Error rendering included label with name ["
-							+ name + "] : " + e.toString();
-					Debug.logError(e, errMsg, module);
-					throw new RuntimeException(errMsg);
-				} catch (ParserConfigurationException e3) {
-					String errMsg = "Error rendering included label with name ["
-							+ name + "] : " + e3.toString();
-					Debug.logError(e3, errMsg, module);
-					throw new RuntimeException(errMsg);
-				} catch (IOException e2) {
-					String errMsg = "Error rendering included label with name ["
-							+ name + "] : " + e2.toString();
-					Debug.logError(e2, errMsg, module);
-					throw new RuntimeException(errMsg);
-				}
-				treeStringRenderer.renderNodeEnd(writer, context, this);
-				modelTree.currentNodeTrail.remove(modelTree.currentNodeTrail .size() - 1);
-			}
-		}
+                            newContext.put("currentNodeIndex", new Integer(nodeIndex));
+                            String targetEntityId = null;
+                            List targetNodeTrail = this.modelTree .getTrailList();
+                            if (newDepth < targetNodeTrail.size()) {
+                                targetEntityId = (String) targetNodeTrail .get(newDepth);
+                            }
+                            if ((targetEntityId != null && targetEntityId .equals(thisEntityId)) || this.showPeers(newDepth)) {
+                                boolean lastNode = !nodeIter.hasNext();
+                                newContext.put("lastNode", new Boolean(lastNode));
+                                node.renderNodeString(writer, newContext, treeStringRenderer, newDepth, lastNode);
+                            }
+                        }
+                    }
+                } catch (SAXException e) {
+                    String errMsg = "Error rendering included label with name ["
+                            + name + "] : " + e.toString();
+                    Debug.logError(e, errMsg, module);
+                    throw new RuntimeException(errMsg);
+                } catch (ParserConfigurationException e3) {
+                    String errMsg = "Error rendering included label with name ["
+                            + name + "] : " + e3.toString();
+                    Debug.logError(e3, errMsg, module);
+                    throw new RuntimeException(errMsg);
+                } catch (IOException e2) {
+                    String errMsg = "Error rendering included label with name ["
+                            + name + "] : " + e2.toString();
+                    Debug.logError(e2, errMsg, module);
+                    throw new RuntimeException(errMsg);
+                }
+                treeStringRenderer.renderNodeEnd(writer, context, this);
+                int removeIdx = modelTree.currentNodeTrail.size() - 1;
+                if (removeIdx >= 0) modelTree.currentNodeTrail.remove(removeIdx);
+            }
+        }
 
         public boolean hasChildren(Map context) {
 
              boolean hasChildren = false;
              Long nodeCount = null;
              String countFieldName = "childBranchCount";
-       		Object obj = null;
+               Object obj = null;
              if (UtilValidate.isNotEmpty(this.entryName)) {
-    			    Map map = (Map)context.get(this.entryName);
+                    Map map = (Map)context.get(this.entryName);
                  obj = map.get(countFieldName);
              } else {
-       		    obj = context.get(countFieldName);
+                   obj = context.get(countFieldName);
              }
-       		if (obj != null)
+               if (obj != null)
                 nodeCount = (Long)obj;
              String entName = this.getEntityName();
              GenericDelegator delegator = modelTree.getDelegator();
@@ -517,43 +518,43 @@ public class ModelTree {
                  /*
                  String id = (String)context.get(modelTree.getPkName());
                  if (UtilValidate.isNotEmpty(id)) {
-                 	try {
-                 		int leafCount = ContentManagementWorker.updateStatsTopDown(delegator, id, UtilMisc.toList("SUB_CONTENT", "PUBLISH_LINK"));
-                 		GenericValue entity = delegator.findByPrimaryKeyCache(entName, UtilMisc.toMap(modelTree.getPkName(), id));
-                 		obj = entity.get("childBranchCount");
+                     try {
+                         int leafCount = ContentManagementWorker.updateStatsTopDown(delegator, id, UtilMisc.toList("SUB_CONTENT", "PUBLISH_LINK"));
+                         GenericValue entity = delegator.findByPrimaryKeyCache(entName, UtilMisc.toMap(modelTree.getPkName(), id));
+                         obj = entity.get("childBranchCount");
                         if (obj != null)
                             nodeCount = (Long)obj;
-                 	} catch(GenericEntityException e) {
-                 		Debug.logError(e, module); 
-                		throw new RuntimeException(e.getMessage());
-                 	}
+                     } catch(GenericEntityException e) {
+                         Debug.logError(e, module); 
+                        throw new RuntimeException(e.getMessage());
+                     }
                  }
                  */
                  nodeCount = new Long(this.subNodeValues.size());
-    			String pkName = this.getPkName();
-				String id = null;
-    			if (UtilValidate.isNotEmpty(this.entryName)) {
-    			    Map map = (Map)context.get(this.entryName);
+                String pkName = this.getPkName();
+                String id = null;
+                if (UtilValidate.isNotEmpty(this.entryName)) {
+                    Map map = (Map)context.get(this.entryName);
                     id = (String)map.get(pkName);
                 } else {
-				    id = (String) context.get(pkName);
+                    id = (String) context.get(pkName);
                 }
-                 	try {
-                 		GenericValue entity = delegator.findByPrimaryKey(entName, UtilMisc.toMap(pkName, id));
-                 	    entity.put("childBranchCount", nodeCount);
-                 	    entity.store();
-                 	} catch(GenericEntityException e) {
-                 		Debug.logError(e, module); 
-                		throw new RuntimeException(e.getMessage());
-                 	}
+                     try {
+                         GenericValue entity = delegator.findByPrimaryKey(entName, UtilMisc.toMap(pkName, id));
+                         entity.put("childBranchCount", nodeCount);
+                         entity.store();
+                     } catch(GenericEntityException e) {
+                         Debug.logError(e, module); 
+                        throw new RuntimeException(e.getMessage());
+                     }
              } else if (nodeCount == null ) {
-             	getChildren(context);
+                 getChildren(context);
                 if (subNodeValues != null )
                     nodeCount = new Long(subNodeValues.size());
              }
              
              if (nodeCount != null && nodeCount.intValue() > 0) 
-             	hasChildren = true;
+                 hasChildren = true;
                 
              
              return hasChildren;
@@ -579,10 +580,10 @@ public class ModelTree {
                      this.subNodeValues.add(arr);
                  }
                  if (dataIter instanceof EntityListIterator) {
-                 	try {
-                 	((EntityListIterator)dataIter).close();
+                     try {
+                     ((EntityListIterator)dataIter).close();
                     } catch(GenericEntityException e) {
-                    	throw new RuntimeException(e.getMessage());
+                        throw new RuntimeException(e.getMessage());
                     }
                  }
                  
@@ -600,15 +601,15 @@ public class ModelTree {
         }
 
         public String getRenderStyle() {
-        	String rStyle = this.renderStyle;
+            String rStyle = this.renderStyle;
             if (UtilValidate.isEmpty(rStyle))
                 rStyle = modelTree.getRenderStyle();
-        	return rStyle;
-    	}
+            return rStyle;
+        }
     
         public boolean isExpandCollapse() {
-        	boolean isExpCollapse = false;
-        	String rStyle = getRenderStyle();
+            boolean isExpCollapse = false;
+            String rStyle = getRenderStyle();
             if (rStyle != null && rStyle.equals("expand-collapse"))
                 isExpCollapse = true;
             
@@ -616,8 +617,8 @@ public class ModelTree {
         }
         
         public boolean isFollowTrail() {
-        	boolean isFollowTrail = false;
-        	String rStyle = getRenderStyle();
+            boolean isFollowTrail = false;
+            String rStyle = getRenderStyle();
             if (rStyle != null && (rStyle.equals("follow-trail") || rStyle.equals("show-peers") || rStyle.equals("follow-trail")))
                 isFollowTrail = true;
             
@@ -626,15 +627,15 @@ public class ModelTree {
     
         public boolean showPeers(int currentDepth) {
         
-        	int trailSize = 0;
+            int trailSize = 0;
             List trail = modelTree.getTrailList();
             int openDepth = modelTree.getOpenDepth();
             int postTrailOpenDepth = modelTree.getPostTrailOpenDepth();
             if (trail != null)
-            	trailSize = trail.size();
-            	
-        	boolean showPeers = false;
-        	String rStyle = getRenderStyle();
+                trailSize = trail.size();
+                
+            boolean showPeers = false;
+            String rStyle = getRenderStyle();
             if (rStyle == null )
                 showPeers = true;
             else if (!isFollowTrail() )
@@ -647,7 +648,7 @@ public class ModelTree {
                 
                 int depthAfterTrail = currentDepth - trailSize;
                 if (depthAfterTrail >= 0 && depthAfterTrail <= postTrailOpenDepth)
-                	showPeers = true;
+                    showPeers = true;
             }
             
             return showPeers;
@@ -665,32 +666,32 @@ public class ModelTree {
         }
     
         public ModelTree getModelTree() {
-        	return this.modelTree;
+            return this.modelTree;
         }
         
         public void setEntityName(String name) {
          
             this.entityName = name;
             if (UtilValidate.isNotEmpty(this.entityName)) {
-            	ModelEntity modelEntity = modelTree.delegator.getModelEntity(this.entityName);
-            	ModelField modelField = modelEntity.getPk(0);
-            	this.pkName = modelField.getName();
+                ModelEntity modelEntity = modelTree.delegator.getModelEntity(this.entityName);
+                ModelField modelField = modelEntity.getPk(0);
+                this.pkName = modelField.getName();
             }
         }
         
         public String getEntityName() {
             if (UtilValidate.isNotEmpty(this.entityName)) {
-            	return this.entityName;
+                return this.entityName;
             } else {
-            	return this.modelTree.getDefaultEntityName();
+                return this.modelTree.getDefaultEntityName();
             }
         }
     
         public String getPkName() {
             if (UtilValidate.isNotEmpty(this.pkName)) {
-            	return this.pkName;
+                return this.pkName;
             } else {
-            	return this.modelTree.getDefaultPkName();
+                return this.modelTree.getDefaultPkName();
             }
         }
     
@@ -734,7 +735,7 @@ public class ModelTree {
             }
             
             public ModelTree.ModelNode getNode() {
-            	return this.rootNode;
+                return this.rootNode;
             }
         
             public String getNodeName(Map context) {
@@ -746,14 +747,12 @@ public class ModelTree {
             }
             
             public void setListIterator(ListIterator iter) {
-        	    listIterator = iter;
+                listIterator = iter;
             }
         
             public ListIterator getListIterator() {
-        	    return listIterator;
+                return listIterator;
             }
-    
-    
         }
     
         public static class Label {
