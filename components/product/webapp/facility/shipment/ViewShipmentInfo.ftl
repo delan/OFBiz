@@ -21,12 +21,17 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      3.0
 -->
 
   <#if shipment?exists>
     <table border="0" cellpadding="2" cellspacing="0">
+      <tr>
+        <td width="20%" align="right"><span class="tableheadtext">Shipment ID</span></td>
+        <td><span class="tabletext">&nbsp;</span></td>
+        <td width="80%" align="left"><span class="tabletext">${shipment.shipmentId}</span></td>
+      </tr>    
       <tr>
         <td width="20%" align="right"><span class="tableheadtext">Shipment Type</span></td>
         <td><span class="tabletext">&nbsp;</span></td>
