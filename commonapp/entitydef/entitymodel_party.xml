@@ -4,7 +4,7 @@
 /**
  *  Title: Entity Generator Definitions for the General Data Model
  *  Description: None
- *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -36,7 +36,7 @@
   <!-- ========================================================= -->
     <title>Entity of an Open For Business Project Component</title>
     <description>None</description>
-    <copyright>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org</copyright>
+    <copyright>Copyright (c) 2002 The Open For Business Project - www.ofbiz.org</copyright>
     <author>None</author>
     <version>1.0</version>
 
@@ -1178,19 +1178,6 @@
       <relation type="many" rel-entity-name="WorkEffortPartyAssignment">
         <key-map field-name="partyId" />
         <key-map field-name="roleTypeId" />
-      </relation>
-    </entity>
-    <entity entity-name="PartySurveyResponse" table-name="PARTY_SURVEY_RESPONSE" 
-            package-name="org.ofbiz.commonapp.party.party"
-            title="Party Survey Response Entity">
-      <field name="partyId" type="id-ne"></field>
-      <field name="surveyId" type="id-long"></field>
-      <field name="surveyResponse" type="very-long"></field>
-      <field name="responseDateTime" type="date-time"></field>	
-      <prim-key field="partyId" />	
-      <prim-key field="surveyId" />
-      <relation type="one" rel-entity-name="Party">
-        <key-map field-name="partyId" />
       </relation>
     </entity>
     <entity entity-name="PartyType" 

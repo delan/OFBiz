@@ -3,7 +3,7 @@
 /**
  *  Title: Entity Engine Definitions for a Minimal Data Model (security, login, etc)
  *  Description: None
- *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -112,7 +112,7 @@
   <!-- ========================================================= -->
     <title>Entity of an Open For Business Project Component</title>
     <description>None</description>
-    <copyright>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org</copyright>
+    <copyright>Copyright (c) 2002 The Open For Business Project - www.ofbiz.org</copyright>
     <author>None</author>
     <version>1.0</version>
 
