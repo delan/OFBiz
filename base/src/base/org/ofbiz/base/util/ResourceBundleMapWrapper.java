@@ -1,5 +1,5 @@
 /*
- * $Id: ResourceBundleMapWrapper.java,v 1.3 2004/06/03 01:54:33 jonesde Exp $
+ * $Id: ResourceBundleMapWrapper.java,v 1.4 2004/06/17 17:20:10 jonesde Exp $
  *
  *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -28,6 +28,7 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.MissingResourceException;
 import java.util.Set;
 
 
@@ -35,7 +36,7 @@ import java.util.Set;
  * Generic ResourceBundle Map Wrapper, given ResourceBundle allows it to be used as a Map
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      3.1
  */
 public class ResourceBundleMapWrapper implements Map {
@@ -102,10 +103,18 @@ public class ResourceBundleMapWrapper implements Map {
         Object value = this.topLevelMap.get(arg0);
         if (resourceBundle != null) {
             if (value == null) {
-                value = this.resourceBundle.getObject((String) arg0);
+                try {
+                    value = this.resourceBundle.getObject((String) arg0);
+                } catch(MissingResourceException mre) {
+                    // do nothing, this will be handled by recognition that the value is still null
+                }
             }
             if (value == null) {
-                value = this.resourceBundle.getString((String) arg0);
+                try {
+                    value = this.resourceBundle.getString((String) arg0);
+                } catch(MissingResourceException mre) {
+                    // do nothing, this will be handled by recognition that the value is still null
+                }
             }
         }
         if (value == null) {
