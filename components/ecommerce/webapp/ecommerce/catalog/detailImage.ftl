@@ -20,14 +20,15 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      3.0
 -->
 <html>
   <body>
     <center>
       <#if requestParameters.detail?has_content>
-        <img src="${requestParameters.detail}" border="0" width='500'>
+        <#assign detailImage = Static["org.ofbiz.base.util.Base64"].base64Decode(requestParameters.detail)>
+        <img src="detailImage" border="0" width='500'>
       <#else>
         <script language="javascript">
         <!-- //
