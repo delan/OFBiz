@@ -1,7 +1,4 @@
-<%
-/**
- *  Title: Calendar Event Editor Page
- *  Description: None
+<%--
  *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
@@ -25,8 +22,7 @@
  *@author     David E. Jones
  *@created    May 22 2001
  *@version    1.0
- */
-%>
+--%>
 
 <%@ page import="java.util.*" %>
 <%@ page import="org.ofbiz.core.security.*, org.ofbiz.core.entity.*, org.ofbiz.core.util.*, org.ofbiz.core.pseudotag.*" %>
@@ -71,6 +67,7 @@
               </ofbiz:if>
               <ofbiz:unless name="workEffort">
                 <form action="<ofbiz:url>/createevent</ofbiz:url>" method=POST style='margin: 0;'>
+                <input type='hidden' name='quickAssignPartyId' value='<ofbiz:entityfield field="partyId" attribute="userLogin"/>'>
                 <table border='0' cellpadding='2' cellspacing='0'>
                   <input type='hidden' name='workEffortTypeId' value='EVENT'>
                   <ofbiz:if name="workEffortId">
