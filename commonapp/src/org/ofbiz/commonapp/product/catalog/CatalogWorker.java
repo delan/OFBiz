@@ -722,26 +722,40 @@ public class CatalogWorker {
                 ShoppingCartItem item = (ShoppingCartItem) cartiter.next();
                 // Collection upgradeProducts = delegator.findByAndCache("ProductAssoc", UtilMisc.toMap("productId", item.getProductId(), "productAssocTypeId", "PRODUCT_UPGRADE"), null);
                 List complementProducts = delegator.findByAndCache("ProductAssoc", UtilMisc.toMap("productId", item.getProductId(), "productAssocTypeId", "PRODUCT_COMPLEMENT"), null);
-
                 // since ProductAssoc records have a fromDate and thruDate, we can filter by now so that only assocs in the date range are included
                 complementProducts = EntityUtil.filterByDate(complementProducts, true);
-
-                // if desired check view allow category
-                if (checkViewAllow) {
-                    String currentCatalogId = CatalogWorker.getCurrentCatalogId(request);
-                    String viewProductCategoryId = CatalogWorker.getCatalogViewAllowCategoryId(delegator, currentCatalogId);
-                    if (viewProductCategoryId != null) {
-                        complementProducts = CategoryWorker.filterProductsInCategory(delegator, complementProducts, viewProductCategoryId, "productIdTo");
+                
+                List productsCategories = delegator.findByAndCache("ProductCategoryMember", UtilMisc.toMap("productId", item.getProductId()), null);
+                productsCategories = EntityUtil.filterByDate(productsCategories, true);
+                if (productsCategories != null) {
+                    Iterator productsCategoriesIter = productsCategories.iterator();
+                    while (productsCategoriesIter.hasNext()) {
+                        GenericValue productsCategoryMember = (GenericValue) productsCategoriesIter.next();
+                        GenericValue productsCategory = productsCategoryMember.getRelatedOneCache("ProductCategory");
+                        if ("CROSS_SELL_CATEGORY".equals(productsCategory.getString("productCategoryTypeId"))) {
+                            List curPcms = productsCategory.getRelatedCache("ProductCategoryMember");
+                            if (curPcms != null) {
+                                Iterator curPcmsIter = curPcms.iterator();
+                                while (curPcmsIter.hasNext()) {
+                                    GenericValue curPcm = (GenericValue) curPcmsIter.next();
+                                    if (!products.containsKey(curPcm.getString("productId"))) {
+                                        GenericValue product = curPcm.getRelatedOneCache("Product");
+                                        products.put(product.getString("productId"), product);
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
 
-                // if (upgradeProducts != null && upgradeProducts.size() > 0) pageContext.setAttribute(assocPrefix + "upgrade", upgradeProducts);
                 if (complementProducts != null && complementProducts.size() > 0) {
                     Iterator complIter = complementProducts.iterator();
                     while (complIter.hasNext()) {
                         GenericValue productAssoc = (GenericValue) complIter.next();
-                        GenericValue product = productAssoc.getRelatedOneCache("AssocProduct");
-                        products.put(product.getString("productId"), product);
+                        if (!products.containsKey(productAssoc.getString("productIdTo"))) {
+                            GenericValue product = productAssoc.getRelatedOneCache("AssocProduct");
+                            products.put(product.getString("productId"), product);
+                        }
                     }
                 }
             }
@@ -753,8 +767,21 @@ public class CatalogWorker {
                 products.remove(item.getProductId());
             }
 
-            cartAssocs = new ArrayList(products.values());
+            // if desired check view allow category
+            if (checkViewAllow) {
+                String currentCatalogId = CatalogWorker.getCurrentCatalogId(request);
+                String viewProductCategoryId = CatalogWorker.getCatalogViewAllowCategoryId(delegator, currentCatalogId);
+                if (viewProductCategoryId != null) {
+                    List tempList = new ArrayList(products.values());
+                    tempList = CategoryWorker.filterProductsInCategory(delegator, tempList, viewProductCategoryId, "productId");
+                    cartAssocs = new ArrayList(tempList);
+                }
+            }
             
+            if (cartAssocs == null) {
+                cartAssocs = new ArrayList(products.values());
+            }
+
             // randomly remove products while there are more than 3
             while (cartAssocs.size() > 3) {
                 int toRemove = (int) (Math.random() * (double) (cartAssocs.size()));
@@ -764,7 +791,7 @@ public class CatalogWorker {
             Debug.logWarning(e);
         }
         
-        if (cartAssocs.size() > 0) {
+        if (cartAssocs != null && cartAssocs.size() > 0) {
             return cartAssocs;
         } else {
             return null;
