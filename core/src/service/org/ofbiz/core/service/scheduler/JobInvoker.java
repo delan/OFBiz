@@ -37,25 +37,77 @@ import org.ofbiz.core.util.*;
  * @version    1.0
  */
 public class JobInvoker implements Runnable {
-    
-    private Job job;
-    private ServiceDispatcher dispatcher;
+
+    public static final String module = JobInvoker.class.getName();
+
     private Thread thread;
-    
-    /** Creates new JobInvoker */
-    public JobInvoker(Job job, ServiceDispatcher dispatcher) {
-        this.job = job;
-        this.dispatcher = dispatcher;
-        long runtime = job.getRuntime();
-        String threadName = (String) (new Long(runtime)).toString();
-        // Start the invoker thread.
-        thread = new Thread(this, threadName);
+    private JobScheduler js;
+    private Job job;
+    private Date created;
+    private int count;
+    private String name;
+
+    public JobInvoker() {
+        this.created = new Date();
+        this.count = 0;
+
+        // get a new thread
+        thread = new Thread(this);
+        name = thread.getName();
         thread.setDaemon(false);
+    }
+
+    /**
+     * Invoke a job.
+     */
+    public void invoke(JobScheduler js, Job job) {
+        if (job == null)
+            throw new IllegalArgumentException("Cannot invoke null job");
+        if (js == null)
+            throw new IllegalArgumentException("Invalid scheduler");
+        this.job = job;
+        this.js = js;
+        long runtime = job.getRuntime();
+        Debug.logVerbose("JobInvoker: Invoking -- " + runtime, module);
         thread.start();
     }
-    
+
+    /**
+     * Set this thread up for future use.
+     * @return This thread.
+     */
+    public JobInvoker release() {
+        Debug.logVerbose("JobInvoker: Releasing thread back to the pool.", module);
+        // reset the reused variables
+        job = null;
+        js = null;
+        count++;
+
+        // get a fresh thread
+        thread = new Thread(this, name);
+        thread.setDaemon(false);
+        return this;
+    }
+
+    /**
+     * Gets the number of times this thread was used.
+     * @return The number of times used.
+     */
+    public int getUsage() {
+        return count;
+    }
+
+    /**
+     * Gets the Date object when this thread was created.
+     * @returns Date when this was created.
+     */
+    public long getTime() {
+        return created.getTime();
+    }
+
     public void run() {
-        Debug.logInfo("JobInvoker: Thread (" + thread.getName() + ") Running...");
+        Debug.logInfo("JobInvoker: Thread (" + thread.getName() + ") Running...", module);
+        ServiceDispatcher dispatcher = js.getManager().getDispatcher();
         Map result = null;
         try {
             DispatchContext ctx = dispatcher.getLocalContext(job.getLoader());
@@ -65,6 +117,9 @@ public class JobInvoker implements Runnable {
         catch ( GenericServiceException e ) {
             e.printStackTrace();
         }
+        Debug.logInfo("JobInvoker: Finished invocation.", module);
         job.receiveNotice(result);
+        js.putInvoker(release());
     }
+
 }
