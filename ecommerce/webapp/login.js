@@ -23,8 +23,6 @@
  *@version    1.0
  */
 
-importPackage(Packages.java.lang);
-//importPackage(Packages.java.util);
 importClass(Packages.org.ofbiz.core.util.SiteDefs);
 importClass(Packages.org.ofbiz.commonapp.common.CommonWorkers);
 
