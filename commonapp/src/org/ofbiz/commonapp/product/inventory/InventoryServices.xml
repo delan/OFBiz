@@ -210,6 +210,7 @@
             availableToPromise will be used to track quantity ordered beyond what is in stock.
         -->
 
+        <log level="info" message="Parameters : ${parameters}"/>
         <field-to-field field-name="productId" map-name="parameters" to-map-name="lookupFieldMap"/>
         <field-to-field field-name="facilityId" map-name="parameters" to-map-name="lookupFieldMap"/>
         <field-to-field field-name="containerId" map-name="parameters" to-map-name="lookupFieldMap"/>
