@@ -27,6 +27,7 @@ package org.ofbiz.entityext.synchronization;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -96,6 +97,16 @@ public class EntitySyncContext {
     public Set entityNameToUseSet;
     public Timestamp currentRunStartTime;
     public Timestamp currentRunEndTime;
+
+    // these values are used to make this more efficient; if we run into an entity that has 0 
+    //results for a given time block, we will do a query to find the next create/update/remove
+    //time for that entity, and also keep track of a global next with the lowest future next value;
+    //using these we can skip a lot of queries and speed this up significantly
+    public Map nextEntityCreateTxTime = new HashMap();
+    public Map nextEntityUpdateTxTime = new HashMap();
+    public Timestamp nextCreateTxTime = null;
+    public Timestamp nextUpdateTxTime = null;
+    public Timestamp nextRemoveTxTime = null;
     
     // this is the other part of the history PK, leave null until we create the history object
     public Timestamp startDate = null;
@@ -209,20 +220,32 @@ public class EntitySyncContext {
     public ArrayList assembleValuesToCreate() throws SyncDataErrorException {
         // first grab all values inserted in the date range, then get the updates (leaving out all values inserted in the data range)
         ArrayList valuesToCreate = new ArrayList(); // make it an ArrayList to easily merge in sorted lists
+        
+        if (this.nextCreateTxTime != null && (this.nextCreateTxTime.equals(currentRunEndTime) || this.nextCreateTxTime.after(currentRunEndTime))) {
+            // this means that for all entities in this pack we found on the last pass that there would be nothing for this one, so just return nothing...
+            return valuesToCreate;
+        }
 
         // iterate through entities, get all records with tx stamp in the current time range, put all in a single list
         Iterator entityModelToUseCreateIter = entityModelToUseList.iterator();
         while (entityModelToUseCreateIter.hasNext()) {
             int insertBefore = 0;
             ModelEntity modelEntity = (ModelEntity) entityModelToUseCreateIter.next();
-            // get the values created within the current time range
-            EntityCondition findValCondition = new EntityConditionList(UtilMisc.toList(
-                    new EntityExpr(ModelEntity.CREATE_STAMP_TX_FIELD, EntityOperator.GREATER_THAN_EQUAL_TO, currentRunStartTime), 
-                    new EntityExpr(ModelEntity.CREATE_STAMP_TX_FIELD, EntityOperator.LESS_THAN, currentRunEndTime)), EntityOperator.AND);
+
+            // first test to see if we know that there are no records for this entity in this time period...
+            Timestamp knownNextCreateTime = (Timestamp) this.nextEntityCreateTxTime.get(modelEntity.getEntityName());
+            if (knownNextCreateTime != null && (knownNextCreateTime.equals(currentRunEndTime) || knownNextCreateTime.after(currentRunEndTime))) {
+                continue;
+            }
+            
             try {
+                // get the values created within the current time range
+                EntityCondition findValCondition = new EntityConditionList(UtilMisc.toList(
+                        new EntityExpr(ModelEntity.CREATE_STAMP_TX_FIELD, EntityOperator.GREATER_THAN_EQUAL_TO, currentRunStartTime), 
+                        new EntityExpr(ModelEntity.CREATE_STAMP_TX_FIELD, EntityOperator.LESS_THAN, currentRunEndTime)), EntityOperator.AND);
                 EntityListIterator eli = delegator.findListIteratorByCondition(modelEntity.getEntityName(), findValCondition, null, UtilMisc.toList(ModelEntity.CREATE_STAMP_TX_FIELD, ModelEntity.CREATE_STAMP_FIELD));
                 GenericValue nextValue = null;
-                //long valuesPerEntity = 0;
+                long valuesPerEntity = 0;
                 while ((nextValue = (GenericValue) eli.next()) != null) {
                     // sort by the tx stamp and then the record stamp 
                     // find first value in valuesToStore list, starting with the current insertBefore value, that has a CREATE_STAMP_TX_FIELD after the nextValue.CREATE_STAMP_TX_FIELD, then do the same with CREATE_STAMP_FIELD
@@ -233,17 +256,36 @@ public class EntitySyncContext {
                         insertBefore++;
                     }
                     valuesToCreate.add(insertBefore, nextValue);
-                    //valuesPerEntity++;
+                    valuesPerEntity++;
                 }
                 eli.close();
+                
+                // definately remove this message and related data gathering
+                long preCount = delegator.findCountByCondition(modelEntity.getEntityName(), findValCondition, null);
+                long entityTotalCount = delegator.findCountByCondition(modelEntity.getEntityName(), null, null);
+                if (entityTotalCount > 0 || preCount > 0 || valuesPerEntity > 0) Debug.logInfo("Got " + valuesPerEntity + "/" + preCount + "/" + entityTotalCount + " values for entity " + modelEntity.getEntityName(), module);
+                
+                // if we didn't find anything for this entity, find the next value's Timestamp and keep track of it
+                if (valuesPerEntity == 0) {
+                    EntityCondition findNextCondition = new EntityExpr(ModelEntity.CREATE_STAMP_TX_FIELD, EntityOperator.GREATER_THAN_EQUAL_TO, currentRunEndTime);
+                    EntityListIterator eliNext = delegator.findListIteratorByCondition(modelEntity.getEntityName(), findNextCondition, null, UtilMisc.toList(ModelEntity.CREATE_STAMP_TX_FIELD));
+                    // get the first element and it's tx time value...
+                    GenericValue firstVal = (GenericValue) eliNext.next();
+                    eliNext.close();
+                    if (firstVal != null) {
+                        Timestamp nextTxTime = firstVal.getTimestamp(ModelEntity.CREATE_STAMP_TX_FIELD);
+                        if (this.nextCreateTxTime == null || nextTxTime.before(this.nextCreateTxTime)) {
+                            this.nextCreateTxTime = nextTxTime;
+                        }
+                        Timestamp curEntityNextTxTime = (Timestamp) this.nextEntityCreateTxTime.get(modelEntity.getEntityName());
+                        if (curEntityNextTxTime == null || nextTxTime.before(curEntityNextTxTime)) {
+                            this.nextEntityCreateTxTime.put(modelEntity.getEntityName(), nextTxTime);
+                        }
+                    }
+                }
             } catch (GenericEntityException e) {
                 throw new SyncDataErrorException("Error getting values to create from the datasource", e);
             }
-            
-            // definately remove this message and related data gathering
-            //long preCount = delegator.findCountByCondition(modelEntity.getEntityName(), findValCondition, null);
-            //long entityTotalCount = delegator.findCountByCondition(modelEntity.getEntityName(), null, null);
-            //if (entityTotalCount > 0 || preCount > 0 || valuesPerEntity > 0) Debug.logInfo("Got " + valuesPerEntity + "/" + preCount + "/" + entityTotalCount + " values for entity " + modelEntity.getEntityName(), module);
         }
         
         // TEST SECTION: leave false for normal use
@@ -270,25 +312,37 @@ public class EntitySyncContext {
         // simulate two ordered lists and merge them on-the-fly for faster combined sorting
         ArrayList valuesToStore = new ArrayList(); // make it an ArrayList to easily merge in sorted lists
 
+        if (this.nextUpdateTxTime != null && (this.nextUpdateTxTime.equals(currentRunEndTime) || this.nextUpdateTxTime.after(currentRunEndTime))) {
+            // this means that for all entities in this pack we found on the last pass that there would be nothing for this one, so just return nothing...
+            return valuesToStore;
+        }
+
         // iterate through entities, get all records with tx stamp in the current time range, put all in a single list
         Iterator entityModelToUseUpdateIter = entityModelToUseList.iterator();
         while (entityModelToUseUpdateIter.hasNext()) {
             int insertBefore = 0;
             ModelEntity modelEntity = (ModelEntity) entityModelToUseUpdateIter.next();
-            // get all values that were updated, but NOT created in the current time range; if no info on created stamp, that's okay we'll include it here because it won't have been included in the valuesToCreate list
-            EntityCondition createdBeforeStartCond = new EntityExpr(
-                    new EntityExpr(ModelEntity.CREATE_STAMP_TX_FIELD, EntityOperator.EQUALS, null), 
-                    EntityOperator.OR, 
-                    new EntityExpr(ModelEntity.CREATE_STAMP_TX_FIELD, EntityOperator.LESS_THAN, currentRunStartTime));
-            EntityCondition findValCondition = new EntityConditionList(UtilMisc.toList(
-                    new EntityExpr(ModelEntity.STAMP_TX_FIELD, EntityOperator.GREATER_THAN_EQUAL_TO, currentRunStartTime), 
-                    new EntityExpr(ModelEntity.STAMP_TX_FIELD, EntityOperator.LESS_THAN, currentRunEndTime), 
-                    createdBeforeStartCond), 
-                    EntityOperator.AND);
+            
+            // first test to see if we know that there are no records for this entity in this time period...
+            Timestamp knownNextUpdateTime = (Timestamp) this.nextEntityUpdateTxTime.get(modelEntity.getEntityName());
+            if (knownNextUpdateTime != null && (knownNextUpdateTime.equals(currentRunEndTime) || knownNextUpdateTime.after(currentRunEndTime))) {
+                continue;
+            }
+            
             try {
+                // get all values that were updated, but NOT created in the current time range; if no info on created stamp, that's okay we'll include it here because it won't have been included in the valuesToCreate list
+                EntityCondition createdBeforeStartCond = new EntityExpr(
+                        new EntityExpr(ModelEntity.CREATE_STAMP_TX_FIELD, EntityOperator.EQUALS, null), 
+                        EntityOperator.OR, 
+                        new EntityExpr(ModelEntity.CREATE_STAMP_TX_FIELD, EntityOperator.LESS_THAN, currentRunStartTime));
+                EntityCondition findValCondition = new EntityConditionList(UtilMisc.toList(
+                        new EntityExpr(ModelEntity.STAMP_TX_FIELD, EntityOperator.GREATER_THAN_EQUAL_TO, currentRunStartTime), 
+                        new EntityExpr(ModelEntity.STAMP_TX_FIELD, EntityOperator.LESS_THAN, currentRunEndTime), 
+                        createdBeforeStartCond), 
+                        EntityOperator.AND);
                 EntityListIterator eli = delegator.findListIteratorByCondition(modelEntity.getEntityName(), findValCondition, null, UtilMisc.toList(ModelEntity.STAMP_TX_FIELD, ModelEntity.STAMP_FIELD));
                 GenericValue nextValue = null;
-                //long valuesPerEntity = 0;
+                long valuesPerEntity = 0;
                 while ((nextValue = (GenericValue) eli.next()) != null) {
                     // sort by the tx stamp and then the record stamp 
                     // find first value in valuesToStore list, starting with the current insertBefore value, that has a STAMP_TX_FIELD after the nextValue.STAMP_TX_FIELD, then do the same with STAMP_FIELD
@@ -299,17 +353,39 @@ public class EntitySyncContext {
                         insertBefore++;
                     }
                     valuesToStore.add(insertBefore, nextValue);
-                    //valuesPerEntity++;
+                    valuesPerEntity++;
                 }
                 eli.close();
+                
+                // definately remove this message and related data gathering
+                //long preCount = delegator.findCountByCondition(modelEntity.getEntityName(), findValCondition, null);
+                //long entityTotalCount = delegator.findCountByCondition(modelEntity.getEntityName(), null, null);
+                //if (entityTotalCount > 0 || preCount > 0 || valuesPerEntity > 0) Debug.logInfo("Got " + valuesPerEntity + "/" + preCount + "/" + entityTotalCount + " values for entity " + modelEntity.getEntityName(), module);
+
+                // if we didn't find anything for this entity, find the next value's Timestamp and keep track of it
+                if (valuesPerEntity == 0) {
+                    EntityCondition findNextCondition = new EntityConditionList(UtilMisc.toList(
+                            new EntityExpr(ModelEntity.STAMP_TX_FIELD, EntityOperator.GREATER_THAN_EQUAL_TO, currentRunEndTime), 
+                            new EntityExpr(ModelEntity.CREATE_STAMP_TX_FIELD, EntityOperator.LESS_THAN, currentRunEndTime)), 
+                            EntityOperator.AND);
+                    EntityListIterator eliNext = delegator.findListIteratorByCondition(modelEntity.getEntityName(), findNextCondition, null, UtilMisc.toList(ModelEntity.STAMP_TX_FIELD));
+                    // get the first element and it's tx time value...
+                    GenericValue firstVal = (GenericValue) eliNext.next();
+                    eliNext.close();
+                    if (firstVal != null) {
+                        Timestamp nextTxTime = firstVal.getTimestamp(ModelEntity.STAMP_TX_FIELD);
+                        if (this.nextUpdateTxTime == null || nextTxTime.before(this.nextUpdateTxTime)) {
+                            this.nextUpdateTxTime = nextTxTime;
+                        }
+                        Timestamp curEntityNextTxTime = (Timestamp) this.nextEntityUpdateTxTime.get(modelEntity.getEntityName());
+                        if (curEntityNextTxTime == null || nextTxTime.before(curEntityNextTxTime)) {
+                            this.nextEntityUpdateTxTime.put(modelEntity.getEntityName(), nextTxTime);
+                        }
+                    }
+                }
             } catch (GenericEntityException e) {
                 throw new SyncDataErrorException("Error getting values to store from the datasource", e);
             }
-            
-            // definately remove this message and related data gathering
-            //long preCount = delegator.findCountByCondition(modelEntity.getEntityName(), findValCondition, null);
-            //long entityTotalCount = delegator.findCountByCondition(modelEntity.getEntityName(), null, null);
-            //if (entityTotalCount > 0 || preCount > 0 || valuesPerEntity > 0) Debug.logInfo("Got " + valuesPerEntity + "/" + preCount + "/" + entityTotalCount + " values for entity " + modelEntity.getEntityName(), module);
         }
 
         // TEST SECTION: leave false for normal use
@@ -335,11 +411,17 @@ public class EntitySyncContext {
     public LinkedList assembleKeysToRemove() throws SyncDataErrorException {
         // get all removed items from the given time range, add to list for those
         LinkedList keysToRemove = new LinkedList();
-        // find all instances of this entity with the STAMP_TX_FIELD != null, sort ascending to get lowest/oldest value first, then grab first and consider as candidate currentRunStartTime
-        EntityCondition findValCondition = new EntityConditionList(UtilMisc.toList(
-                new EntityExpr(ModelEntity.STAMP_TX_FIELD, EntityOperator.GREATER_THAN_EQUAL_TO, currentRunStartTime), 
-                new EntityExpr(ModelEntity.STAMP_TX_FIELD, EntityOperator.LESS_THAN, currentRunEndTime)), EntityOperator.AND);
+
+        if (this.nextRemoveTxTime != null && (this.nextRemoveTxTime.equals(currentRunEndTime) || this.nextRemoveTxTime.after(currentRunEndTime))) {
+            // this means that for all entities in this pack we found on the last pass that there would be nothing for this one, so just return nothing...
+            return keysToRemove;
+        }
+
         try {
+            // find all instances of this entity with the STAMP_TX_FIELD != null, sort ascending to get lowest/oldest value first, then grab first and consider as candidate currentRunStartTime
+            EntityCondition findValCondition = new EntityConditionList(UtilMisc.toList(
+                    new EntityExpr(ModelEntity.STAMP_TX_FIELD, EntityOperator.GREATER_THAN_EQUAL_TO, currentRunStartTime), 
+                    new EntityExpr(ModelEntity.STAMP_TX_FIELD, EntityOperator.LESS_THAN, currentRunEndTime)), EntityOperator.AND);
             EntityListIterator removeEli = delegator.findListIteratorByCondition("EntitySyncRemove", findValCondition, null, UtilMisc.toList(ModelEntity.STAMP_TX_FIELD, ModelEntity.STAMP_FIELD));
             GenericValue entitySyncRemove = null;
             while ((entitySyncRemove = (GenericValue) removeEli.next()) != null) {
@@ -377,6 +459,21 @@ public class EntitySyncContext {
                 }
             }
             removeEli.close();
+
+            // if we didn't find anything for this entity, find the next value's Timestamp and keep track of it
+            if (keysToRemove.size() == 0) {
+                EntityCondition findNextCondition = new EntityExpr(ModelEntity.STAMP_TX_FIELD, EntityOperator.GREATER_THAN_EQUAL_TO, currentRunEndTime);
+                EntityListIterator eliNext = delegator.findListIteratorByCondition("EntitySyncRemove", findNextCondition, null, UtilMisc.toList(ModelEntity.STAMP_TX_FIELD));
+                // get the first element and it's tx time value...
+                GenericValue firstVal = (GenericValue) eliNext.next();
+                eliNext.close();
+                if (firstVal != null) {
+                    Timestamp nextTxTime = firstVal.getTimestamp(ModelEntity.STAMP_TX_FIELD);
+                    if (this.nextUpdateTxTime == null || nextTxTime.before(this.nextUpdateTxTime)) {
+                        this.nextUpdateTxTime = nextTxTime;
+                    }
+                }
+            }
         } catch (GenericEntityException e) {
             throw new SyncDataErrorException("Error getting keys to remove from the datasource", e);
         }
