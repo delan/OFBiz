@@ -398,7 +398,7 @@ public class ModelServiceReader {
                     Iterator setIter = keySet.iterator();
                     while (setIter.hasNext()) {
                         ModelParam thisParam = (ModelParam) modelParamMap.get(setIter.next()); 
-                        //Debug.logInfo("Adding Param to " + service.name + ": " + thisParam.name + "[" + thisParam.mode + "]" + " " + thisParam.type + " (" + thisParam.optional + ")", module);                       
+                        //Debug.logInfo("Adding Param to " + service.name + ": " + thisParam.name + " [" + thisParam.mode + "] " + thisParam.type + " (" + thisParam.optional + ")", module);                       
                         service.addParam(thisParam);
                     }                    
                 }
@@ -429,7 +429,7 @@ public class ModelServiceReader {
             // set the entity name to the default if not specified
             if (param.entityName.length() == 0) {
                 param.entityName = service.defaultEntityName;
-            }
+            }            
             service.addParam(param);
         }
 
@@ -502,29 +502,37 @@ public class ModelServiceReader {
             Element attribute = (Element) paramIter.next();
             String name = UtilXml.checkEmpty(attribute.getAttribute("name"));
             ModelParam param = service.getParam(name);
-            if (param != null) {            
-                if (attribute.getAttribute("type") != null && attribute.getAttribute("type").length() > 0) {                
-                    param.name = UtilXml.checkEmpty(attribute.getAttribute("type"));
-                }
-                if (attribute.getAttribute("mode") != null && attribute.getAttribute("mode").length() > 0) {                            
-                    param.mode = UtilXml.checkEmpty(attribute.getAttribute("mode"));
-                }
-                if (attribute.getAttribute("entity-name") != null && attribute.getAttribute("entity-name").length() > 0) {
-                    param.entityName = UtilXml.checkEmpty(attribute.getAttribute("entity-name"));
-                }
-                if (attribute.getAttribute("field-name") != null && attribute.getAttribute("field-name").length() > 0) {
-                    param.fieldName = UtilXml.checkEmpty(attribute.getAttribute("field-name"));
-                }
-                if (attribute.getAttribute("form-label") != null && attribute.getAttribute("form-label").length() > 0) {                
-                    param.formLabel = UtilXml.checkEmpty(attribute.getAttribute("form-label"));
-                }
-                if (attribute.getAttribute("optional") != null && attribute.getAttribute("optional").length() > 0) {                            
-                    param.optional = "true".equalsIgnoreCase(attribute.getAttribute("optional")); // default to true
-                }
-                if (attribute.getAttribute("form-display") != null && attribute.getAttribute("form-display").length() > 0) {                
-                    param.formDisplay = !"false".equalsIgnoreCase(attribute.getAttribute("form-display")); // default to false
-                }
-            }            
+            if (param == null) {
+                // we will create a new one in case we implement a service                
+                param = new ModelParam();
+                param.name = name;
+            }
+                        
+            Debug.log(service.name + " param(b): " + param.name + " = " + param.toString(), module);
+            if (attribute.getAttribute("type") != null && attribute.getAttribute("type").length() > 0) {                
+                param.name = UtilXml.checkEmpty(attribute.getAttribute("type"));
+            }
+            if (attribute.getAttribute("mode") != null && attribute.getAttribute("mode").length() > 0) {                            
+                param.mode = UtilXml.checkEmpty(attribute.getAttribute("mode"));
+            }
+            if (attribute.getAttribute("entity-name") != null && attribute.getAttribute("entity-name").length() > 0) {
+               param.entityName = UtilXml.checkEmpty(attribute.getAttribute("entity-name"));
+            }
+            if (attribute.getAttribute("field-name") != null && attribute.getAttribute("field-name").length() > 0) {
+                param.fieldName = UtilXml.checkEmpty(attribute.getAttribute("field-name"));
+            }
+            if (attribute.getAttribute("form-label") != null && attribute.getAttribute("form-label").length() > 0) {                
+                param.formLabel = UtilXml.checkEmpty(attribute.getAttribute("form-label"));
+            }
+            if (attribute.getAttribute("optional") != null && attribute.getAttribute("optional").length() > 0) {                            
+                param.optional = "true".equalsIgnoreCase(attribute.getAttribute("optional")); // default to true
+            }
+            if (attribute.getAttribute("form-display") != null && attribute.getAttribute("form-display").length() > 0) {                
+                param.formDisplay = !"false".equalsIgnoreCase(attribute.getAttribute("form-display")); // default to false
+            }
+            
+            Debug.log(service.name + " param(a): " + param.name + " = " + param.toString(), module);               
+            service.addParam(param);                                     
         }        
     }
 
