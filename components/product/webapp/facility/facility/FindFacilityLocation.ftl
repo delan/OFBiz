@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones
  *@author     Brad Steiner
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.2
 -->
 
@@ -88,7 +88,8 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
         <table border="1" cellpadding="2" cellspacing="0">
         <tr>
             <td><div class="tabletext"><b>Facility</b></div></td>
-            <td><div class="tabletext"><b>LocationSeqID</b></div></td>
+            <td><div class="tabletext"><b>SeqID</b></div></td>
+            <td><div class="tabletext"><b>Type</b></div></td>
             <td><div class="tabletext"><b>Area</b></div></td>
             <td><div class="tabletext"><b>Aisle</b></div></td>
             <td><div class="tabletext"><b>Section</b></div></td>
@@ -101,9 +102,11 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
             </#if>
         </tr>
         <#list foundLocations as location>
+        <#assign locationTypeEnum = location.getRelatedOneCache("TypeEnumeration")?if_exists>
         <tr>
             <td><div class="tabletext"><a href="<@ofbizUrl>/EditFacility?facilityId=${(location.facilityId)?if_exists}</@ofbizUrl>" class="buttontext">&nbsp;${(location.facilityId)?if_exists}</a></div></td>
             <td><div class="tabletext">&nbsp;<a href="<@ofbizUrl>/EditFacilityLocation?facilityId=${facilityId}&locationSeqId=${(location.locationSeqId)?if_exists}</@ofbizUrl>" class="buttontext">${(location.locationSeqId)?if_exists}</a></div></td>
+            <td><div class="tabletext">&nbsp;${(locationTypeEnum.description)?default(location.locationTypeEnumId?if_exists)}</div></td>
             <td><div class="tabletext">&nbsp;${(location.areaId)?if_exists}</div></td>
             <td><div class="tabletext">&nbsp;${(location.aisleId)?if_exists}</div></td>
             <td><div class="tabletext">&nbsp;${(location.sectionId)?if_exists}</div></td>
