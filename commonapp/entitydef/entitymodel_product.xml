@@ -172,7 +172,7 @@
             title="Product Category Attribute Entity">
       <field name="productCategoryId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
-      <field name="value" type="value"></field>	
+      <field name="attrValue" type="value"></field>	
       <prim-key field="productCategoryId" />	
       <prim-key field="attrName" />
       <relation type="one" rel-entity-name="ProductCategory">
@@ -329,7 +329,7 @@
             title="Cost Component Attribute Entity">
       <field name="costComponentId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
-      <field name="value" type="value"></field>	
+      <field name="attrValue" type="value"></field>	
       <prim-key field="costComponentId" />	
       <prim-key field="attrName" />
       <relation type="one" rel-entity-name="CostComponent">
@@ -574,7 +574,7 @@
       <relation type="one" rel-entity-name="Party">
         <key-map field-name="partyId" />
       </relation>
-      <relation type="one" rel-entity-name="Status">
+      <relation type="one" rel-entity-name="StatusItem">
         <key-map field-name="statusId" />
       </relation>
       <relation type="one" rel-entity-name="Facility">
@@ -601,7 +601,7 @@
             title="Inventory Item Attribute Entity">
       <field name="inventoryItemId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
-      <field name="value" type="value"></field>	
+      <field name="attrValue" type="value"></field>	
       <prim-key field="inventoryItemId" />	
       <prim-key field="attrName" />
       <relation type="one" rel-entity-name="InventoryItem">
@@ -813,7 +813,7 @@
             title="Price Component Attribute Entity">
       <field name="priceComponentId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
-      <field name="value" type="value"></field>	
+      <field name="attrValue" type="value"></field>	
       <prim-key field="priceComponentId" />	
       <prim-key field="attrName" />
       <relation type="one" rel-entity-name="PriceComponent">
@@ -1068,7 +1068,7 @@
             title="Product Attribute Entity">
       <field name="productId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
-      <field name="value" type="value"></field>	
+      <field name="attrValue" type="value"></field>	
       <prim-key field="productId" />	
       <prim-key field="attrName" />
       <relation type="one" rel-entity-name="Product">
@@ -1234,7 +1234,7 @@
             title="Facility Attribute Entity">
       <field name="facilityId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
-      <field name="value" type="value"></field>	
+      <field name="attrValue" type="value"></field>	
       <prim-key field="facilityId" />	
       <prim-key field="attrName" />
       <relation type="one" rel-entity-name="Facility">

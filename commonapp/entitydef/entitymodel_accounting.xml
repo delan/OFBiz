@@ -144,7 +144,7 @@
             title="Budget Attribute Entity">
       <field name="budgetId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
-      <field name="value" type="value"></field>	
+      <field name="attrValue" type="value"></field>	
       <prim-key field="budgetId" />	
       <prim-key field="attrName" />
       <relation type="one" rel-entity-name="Budget">
@@ -182,7 +182,7 @@
       <field name="budgetId" type="id-ne"></field>
       <field name="budgetItemSeqId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
-      <field name="value" type="value"></field>	
+      <field name="attrValue" type="value"></field>	
       <prim-key field="budgetId" />	
       <prim-key field="budgetItemSeqId" />	
       <prim-key field="attrName" />
@@ -412,7 +412,7 @@
             title="Fixed Asset Attribute Entity">
       <field name="fixedAssetId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
-      <field name="value" type="value"></field>	
+      <field name="attrValue" type="value"></field>	
       <prim-key field="fixedAssetId" />	
       <prim-key field="attrName" />
       <relation type="one" rel-entity-name="FixedAsset">
@@ -522,7 +522,7 @@
             title="Invoice Attribute Entity">
       <field name="invoiceId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
-      <field name="value" type="value"></field>	
+      <field name="attrValue" type="value"></field>	
       <prim-key field="invoiceId" />	
       <prim-key field="attrName" />
       <relation type="one" rel-entity-name="Invoice">
@@ -569,7 +569,7 @@
       <field name="invoiceId" type="id-ne"></field>
       <field name="invoiceItemSeqId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
-      <field name="value" type="value"></field>	
+      <field name="attrValue" type="value"></field>	
       <prim-key field="invoiceId" />	
       <prim-key field="invoiceItemSeqId" />	
       <prim-key field="attrName" />
@@ -625,7 +625,7 @@
       <field name="invoiceId" type="id-ne"></field>
       <field name="partyId" type="id-ne"></field>
       <field name="roleTypeId" type="id-ne"></field>
-      <field name="datetime" type="date-time"></field>
+      <field name="datetimePerformed" type="date-time"></field>
       <field name="percentage" type="floating-point"></field>	
       <prim-key field="invoiceId" />	
       <prim-key field="partyId" />	
@@ -656,7 +656,7 @@
             title="Invoice Term Attribute Entity">
       <field name="invoiceTermId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
-      <field name="value" type="value"></field>	
+      <field name="attrValue" type="value"></field>	
       <prim-key field="invoiceTermId" />	
       <prim-key field="attrName" />
       <relation type="one" rel-entity-name="InvoiceTerm">
@@ -760,7 +760,7 @@
             title="Accounting Transaction Attribute Entity">
       <field name="acctgTransId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
-      <field name="value" type="value"></field>	
+      <field name="attrValue" type="value"></field>	
       <prim-key field="acctgTransId" />	
       <prim-key field="attrName" />
       <relation type="one" rel-entity-name="AcctgTrans">
@@ -996,7 +996,7 @@
             title="Financial Account Attribute Entity">
       <field name="finAccountId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
-      <field name="value" type="value"></field>	
+      <field name="attrValue" type="value"></field>	
       <prim-key field="finAccountId" />	
       <prim-key field="attrName" />
       <relation type="one" rel-entity-name="FinAccount">
@@ -1044,7 +1044,7 @@
             title="Financial Account Transaction Attribute Entity">
       <field name="finAccountTransId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
-      <field name="value" type="value"></field>	
+      <field name="attrValue" type="value"></field>	
       <prim-key field="finAccountTransId" />	
       <prim-key field="attrName" />
       <relation type="one" rel-entity-name="FinAccountTrans">
@@ -1180,7 +1180,7 @@
             title="Payment Attribute Entity">
       <field name="paymentId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
-      <field name="value" type="value"></field>	
+      <field name="attrValue" type="value"></field>	
       <prim-key field="paymentId" />	
       <prim-key field="attrName" />
       <relation type="one" rel-entity-name="Payment">

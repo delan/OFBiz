@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.23  2001/10/14 05:57:42  jonesde
+ * Changed ecommerce.properties access to go through URL object
+ *
  * Revision 1.22  2001/10/03 20:22:45  jonesde
  * Added sorting by metric on occurances and quantity to quick reorder
  *

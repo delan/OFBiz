@@ -205,7 +205,7 @@
             title="Agreement Attribute Entity">
       <field name="agreementId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
-      <field name="value" type="value"></field>	
+      <field name="attrValue" type="value"></field>	
       <prim-key field="agreementId" />	
       <prim-key field="attrName" />
       <relation type="one" rel-entity-name="Agreement">
@@ -259,7 +259,7 @@
       <field name="agreementId" type="id-ne"></field>
       <field name="agreementItemSeqId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
-      <field name="value" type="value"></field>	
+      <field name="attrValue" type="value"></field>	
       <prim-key field="agreementId" />	
       <prim-key field="agreementItemSeqId" />	
       <prim-key field="attrName" />
@@ -356,7 +356,7 @@
             title="Agreement Term Attribute Entity">
       <field name="agreementTermId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
-      <field name="value" type="value"></field>	
+      <field name="attrValue" type="value"></field>	
       <prim-key field="agreementTermId" />	
       <prim-key field="attrName" />
       <relation type="one" rel-entity-name="AgreementTerm">
@@ -629,7 +629,7 @@
             title="Contact Mechanism Attribute Entity">
       <field name="contactMechId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
-      <field name="value" type="value"></field>	
+      <field name="attrValue" type="value"></field>	
       <prim-key field="contactMechId" />	
       <prim-key field="attrName" />
       <relation type="one" rel-entity-name="ContactMech">
@@ -915,7 +915,7 @@
       <field name="productId" type="id"></field>
       <field name="productCategoryId" type="id"></field>
       <field name="visitId" type="id"></field>
-      <field name="datetime" type="date-time"></field>
+      <field name="datetimeRecorded" type="date-time"></field>
       <field name="description" type="description"></field>	
       <prim-key field="partyNeedId" />	
       <prim-key field="partyId" />	
@@ -997,7 +997,7 @@
             title="Party Attribute Entity">
       <field name="partyId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
-      <field name="value" type="value"></field>	
+      <field name="attrValue" type="value"></field>	
       <prim-key field="partyId" />	
       <prim-key field="attrName" />
       <relation type="one" rel-entity-name="Party">
@@ -1098,7 +1098,7 @@
         <key-map field-name="partyIdTo" rel-field-name="partyId" />
         <key-map field-name="roleTypeIdTo" rel-field-name="roleTypeId" />
       </relation>
-      <relation type="one" rel-entity-name="Status">
+      <relation type="one" rel-entity-name="StatusItem">
         <key-map field-name="statusId" />
       </relation>
       <relation type="one" rel-entity-name="PriorityType">

@@ -161,13 +161,13 @@
   <!-- org.ofbiz.commonapp.common.sequence -->
   <!-- ========================================================= -->
 	
-    <entity-group group="org.ofbiz.commonapp" entity="Sequence" />
+    <entity-group group="org.ofbiz.commonapp" entity="SequenceValueItem" />
 
   <!-- ========================================================= -->
   <!-- org.ofbiz.commonapp.common.status -->
   <!-- ========================================================= -->
 	
-    <entity-group group="org.ofbiz.commonapp" entity="Status" />	
+    <entity-group group="org.ofbiz.commonapp" entity="StatusItem" />	
     <entity-group group="org.ofbiz.commonapp" entity="StatusType" />
 
   <!-- ========================================================= -->

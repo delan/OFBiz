@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.11  2001/09/28 21:51:21  jonesde
+ * Big update for fromDate PK use, organization stuff
+ *
  * Revision 1.10  2001/09/27 15:56:13  epabst
  * refactored code to use getRelatedByAnd, filterByDate
  *

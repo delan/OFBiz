@@ -222,7 +222,7 @@
   <!-- org.ofbiz.commonapp.common.sequence -->
   <!-- ========================================================= -->
 	
-    <entity entity-name="Sequence" 
+    <entity entity-name="SequenceValueItem" 
             package-name="org.ofbiz.commonapp.common.sequence"
             title="Sequence Entity">
       <field name="seqName" type="id-long-ne"></field>
@@ -234,7 +234,7 @@
   <!-- org.ofbiz.commonapp.common.status -->
   <!-- ========================================================= -->
 	
-    <entity entity-name="Status" 
+    <entity entity-name="StatusItem" 
             package-name="org.ofbiz.commonapp.common.status"
             title="Status Entity">
       <field name="statusId" type="id-ne"></field>
@@ -263,7 +263,7 @@
       <relation type="many" title="Child" rel-entity-name="StatusType">
         <key-map field-name="statusTypeId" rel-field-name="parentTypeId" />
       </relation>
-      <relation type="many" rel-entity-name="Status">
+      <relation type="many" rel-entity-name="StatusItem">
         <key-map field-name="statusTypeId" />
       </relation>
     </entity>
@@ -338,7 +338,7 @@
       <field name="fileLocation" type="long-varchar"></field>
       <field name="urlLocation" type="long-varchar"></field>	
       <prim-key field="contentId" />
-      <relation type="one" rel-entity-name="Status">
+      <relation type="one" rel-entity-name="StatusItem">
         <key-map field-name="statusId" />
       </relation>
       <relation type="one" rel-entity-name="ContentType">
@@ -373,7 +373,7 @@
             title="Content Attribute Entity">
       <field name="contentId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
-      <field name="value" type="value"></field>	
+      <field name="attrValue" type="value"></field>	
       <prim-key field="contentId" />	
       <prim-key field="attrName" />
       <relation type="one" rel-entity-name="Content">
@@ -530,7 +530,7 @@
             title="Data Object Attribute Entity">
       <field name="dataObjectId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
-      <field name="value" type="value"></field>	
+      <field name="attrValue" type="value"></field>	
       <prim-key field="dataObjectId" />	
       <prim-key field="attrName" />
       <relation type="one" rel-entity-name="DataObject">
@@ -670,7 +670,7 @@
             title="Document Attribute Entity">
       <field name="documentId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
-      <field name="value" type="value"></field>	
+      <field name="attrValue" type="value"></field>	
       <prim-key field="documentId" />	
       <prim-key field="attrName" />
       <relation type="one" rel-entity-name="Document">
@@ -844,7 +844,7 @@
             title="Subscription Attribute Entity">
       <field name="subscriptionId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
-      <field name="value" type="value"></field>	
+      <field name="attrValue" type="value"></field>	
       <prim-key field="subscriptionId" />	
       <prim-key field="attrName" />
       <relation type="one" rel-entity-name="Subscription">
@@ -947,7 +947,7 @@
             package-name="org.ofbiz.commonapp.content.visit"
             title="Server Hit Entity">
       <field name="visitId" type="id-ne"></field>
-      <field name="datetime" type="date-time"></field>
+      <field name="hitDatetime" type="date-time"></field>
       <field name="partyId" type="id"></field>
       <field name="idByIpContactMechId" type="id"></field>
       <field name="refByWebContactMechId" type="id"></field>
@@ -957,7 +957,7 @@
       <field name="contentId" type="id"></field>
       <field name="numOfBytes" type="numeric"></field>	
       <prim-key field="visitId" />	
-      <prim-key field="datetime" />
+      <prim-key field="hitDatetime" />
       <relation type="one" rel-entity-name="Visit">
         <key-map field-name="visitId" />
       </relation>
@@ -970,7 +970,7 @@
       <relation type="one" title="RefByWeb" rel-entity-name="ContactMech">
         <key-map field-name="refByWebContactMechId" rel-field-name="contactMechId" />
       </relation>
-      <relation type="one" rel-entity-name="Status">
+      <relation type="one" rel-entity-name="StatusItem">
         <key-map field-name="statusId" />
       </relation>
       <relation type="one" rel-entity-name="UserAgent">

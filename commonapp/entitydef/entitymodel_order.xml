@@ -152,7 +152,7 @@
             title="Order Adjustment Attribute Entity">
       <field name="orderAdjustmentId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
-      <field name="value" type="value"></field>	
+      <field name="attrValue" type="value"></field>	
       <prim-key field="orderAdjustmentId" />	
       <prim-key field="attrName" />
       <relation type="one" rel-entity-name="OrderAdjustment">
@@ -205,7 +205,7 @@
             title="Order Attribute Entity">
       <field name="orderId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
-      <field name="value" type="value"></field>	
+      <field name="attrValue" type="value"></field>	
       <prim-key field="orderId" />	
       <prim-key field="attrName" />
       <relation type="one" rel-entity-name="OrderHeader">
@@ -426,7 +426,7 @@
       <field name="orderId" type="id-ne"></field>
       <field name="orderItemSeqId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
-      <field name="value" type="value"></field>	
+      <field name="attrValue" type="value"></field>	
       <prim-key field="orderId" />	
       <prim-key field="orderItemSeqId" />	
       <prim-key field="attrName" />
@@ -674,7 +674,7 @@
       <field name="orderItemSeqId" type="id"></field>
       <field name="statusDatetime" type="date-time"></field>	
       <prim-key field="orderStatusId" />
-      <relation type="one" rel-entity-name="Status">
+      <relation type="one" rel-entity-name="StatusItem">
         <key-map field-name="statusId" />
       </relation>
       <relation type="one" rel-entity-name="OrderHeader">
@@ -710,7 +710,7 @@
             title="Order Term Attribute Entity">
       <field name="orderTermId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
-      <field name="value" type="value"></field>	
+      <field name="attrValue" type="value"></field>	
       <prim-key field="orderTermId" />	
       <prim-key field="attrName" />
       <relation type="one" rel-entity-name="OrderTerm">
@@ -879,7 +879,7 @@
             title="Quote Attribute Entity">
       <field name="quoteId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
-      <field name="value" type="value"></field>	
+      <field name="attrValue" type="value"></field>	
       <prim-key field="quoteId" />	
       <prim-key field="attrName" />
       <relation type="one" rel-entity-name="Quote">
@@ -934,7 +934,7 @@
             title="Quote Term Attribute Entity">
       <field name="quoteTermId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
-      <field name="value" type="value"></field>	
+      <field name="attrValue" type="value"></field>	
       <prim-key field="quoteTermId" />	
       <prim-key field="attrName" />
       <relation type="one" rel-entity-name="QuoteTerm">
@@ -1011,7 +1011,7 @@
             title="Customer Request Attribute Entity">
       <field name="custRequestId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
-      <field name="value" type="value"></field>	
+      <field name="attrValue" type="value"></field>	
       <prim-key field="custRequestId" />	
       <prim-key field="attrName" />
       <relation type="one" rel-entity-name="CustRequest">
@@ -1130,7 +1130,7 @@
             title="Requirement Attribute Entity">
       <field name="requirementId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
-      <field name="value" type="value"></field>	
+      <field name="attrValue" type="value"></field>	
       <prim-key field="requirementId" />	
       <prim-key field="attrName" />
       <relation type="one" rel-entity-name="Requirement">

@@ -288,7 +288,7 @@
       <field name="workEffortIdFrom" type="id-ne"></field>
       <field name="workEffortIdTo" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
-      <field name="value" type="value"></field>	
+      <field name="attrValue" type="value"></field>	
       <prim-key field="workEffortIdFrom" />	
       <prim-key field="workEffortIdTo" />	
       <prim-key field="attrName" />
@@ -352,7 +352,7 @@
             title="Work Effort Attribute Entity">
       <field name="workEffortId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
-      <field name="value" type="value"></field>	
+      <field name="attrValue" type="value"></field>	
       <prim-key field="workEffortId" />	
       <prim-key field="attrName" />
       <relation type="one" rel-entity-name="WorkEffort">
@@ -419,7 +419,7 @@
       <field name="workEffortDefIdFrom" type="id-ne"></field>
       <field name="workEffortDefIdTo" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
-      <field name="value" type="value"></field>	
+      <field name="attrValue" type="value"></field>	
       <prim-key field="workEffortDefIdFrom" />	
       <prim-key field="workEffortDefIdTo" />	
       <prim-key field="attrName" />
@@ -436,7 +436,7 @@
             title="Work Effort Definition Attribute Entity">
       <field name="workEffortDefId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
-      <field name="value" type="value"></field>	
+      <field name="attrValue" type="value"></field>	
       <prim-key field="workEffortDefId" />	
       <prim-key field="attrName" />
       <relation type="one" rel-entity-name="WorkEffortDef">
@@ -537,9 +537,10 @@
             title="Work Effort Status Entity">
       <field name="workEffortId" type="id-ne"></field>
       <field name="statusId" type="id-ne"></field>
-      <field name="datetime" type="date-time"></field>	
+      <field name="statusDatetime" type="date-time"></field>	
       <prim-key field="workEffortId" />	
       <prim-key field="statusId" />
+      <prim-key field="statusDatetime" />
     </entity>	
     <entity entity-name="WorkEffortType" 
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
