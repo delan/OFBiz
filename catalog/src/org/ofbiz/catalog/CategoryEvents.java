@@ -3,6 +3,7 @@ package org.ofbiz.catalog;
 import javax.servlet.http.*;
 import javax.servlet.*;
 import java.util.*;
+import java.sql.*;
 
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.entity.*;
@@ -164,15 +165,21 @@ public class CategoryEvents {
     }
         
     if(updateMode.equals("CREATE")) {
-      GenericValue productCategoryMember = delegator.makeValue("ProductCategoryMember", UtilMisc.toMap("productId", productId, "productCategoryId", productCategoryId));
       GenericValue dummyValue = null;
-      try { dummyValue = delegator.findByPrimaryKey(productCategoryMember.getPrimaryKey()); }
+      try {
+        Collection dummyCol = EntityUtil.filterByDate(delegator.findByAnd("ProductCategoryMember", UtilMisc.toMap("productId", productId, "productCategoryId", productCategoryId), null));
+        dummyValue = EntityUtil.getFirst(dummyCol);
+      }
       catch(GenericEntityException e) { Debug.logWarning(e.getMessage()); dummyValue = null; }
       if(dummyValue != null) {
         request.setAttribute("ERROR_MESSAGE", "Could not create product-category entry (already exists)");
         return "error";
       }
-      try { productCategoryMember = productCategoryMember.create(); }
+
+      GenericValue productCategoryMember = null;
+      try { 
+        productCategoryMember = delegator.create("ProductCategoryMember", UtilMisc.toMap("productId", productId, "productCategoryId", productCategoryId, "fromDate", UtilDateTime.nowTimestamp()));
+      }
       catch(GenericEntityException e) { Debug.logWarning(e.getMessage()); productCategoryMember = null; }
       if(productCategoryMember == null) {
         request.setAttribute("ERROR_MESSAGE", "Could not create product-category entry (write error)");
@@ -180,8 +187,16 @@ public class CategoryEvents {
       }
     }
     else if(updateMode.equals("DELETE")) {
+      String fromDateStr = request.getParameter("FROM_DATE");
+      Timestamp fromDate = null;
+      try { fromDate = Timestamp.valueOf(fromDateStr); }
+      catch(Exception e) {
+        request.setAttribute("ERROR_MESSAGE", "<li>ERROR: Could not delete product-category entry, from date \"" + fromDateStr + "\" was not valid.");
+        return "error";
+      }
+
       GenericValue productCategoryMember = null;
-      try { productCategoryMember = delegator.findByPrimaryKey("ProductCategoryMember", UtilMisc.toMap("productId", productId, "productCategoryId", productCategoryId)); }
+      try { productCategoryMember = delegator.findByPrimaryKey("ProductCategoryMember", UtilMisc.toMap("productId", productId, "productCategoryId", productCategoryId, "fromDate", fromDate)); }
       catch(GenericEntityException e) { Debug.logWarning(e.getMessage()); productCategoryMember = null; }
       if(productCategoryMember == null) {
         request.setAttribute("ERROR_MESSAGE", "Could not remove product-category (does not exist)");

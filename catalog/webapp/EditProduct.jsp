@@ -249,6 +249,7 @@
   <tr>
     <td><b>Category ID</b></td>
     <td><b>Description</b></td>
+    <td><b>From&nbsp;Date&nbsp;&amp;&nbsp;Time</b></td>
     <td><b></b></td>
   </tr>
 <%Iterator pcIterator = UtilMisc.toIterator(product.getRelated("ProductCategoryMember"));%>
@@ -258,8 +259,9 @@
   <tr valign="middle">
     <td><a href="<ofbiz:url>/EditCategory?PRODUCT_CATEGORY_ID=<%=productCategoryMember.getString("productCategoryId")%></ofbiz:url>" class="buttontext"><%=productCategoryMember.getString("productCategoryId")%></a></td>
     <td><%if(category!=null){%><a href="<ofbiz:url>/EditCategory?PRODUCT_CATEGORY_ID=<%=productCategoryMember.getString("productCategoryId")%></ofbiz:url>" class="buttontext"><%=category.getString("description")%></a><%}%>&nbsp;</td>
+    <td><div class='tabletext'><%=productCategoryMember.getTimestamp("fromDate")%></div></td>
     <td>
-      <a href="<ofbiz:url>/UpdateProductCategoryMember?UPDATE_MODE=DELETE&PRODUCT_ID=<%=productId%>&PRODUCT_CATEGORY_ID=<%=productCategoryMember.getString("productCategoryId")%></ofbiz:url>" class="buttontext">
+      <a href="<ofbiz:url>/UpdateProductCategoryMember?UPDATE_MODE=DELETE&PRODUCT_ID=<%=productId%>&PRODUCT_CATEGORY_ID=<%=productCategoryMember.getString("productCategoryId") + "&FROM_DATE=" + UtilFormatOut.encodeQueryValue(productCategoryMember.getTimestamp("fromDate").toString())%></ofbiz:url>" class="buttontext">
       [Delete]</a>
     </td>
   </tr>

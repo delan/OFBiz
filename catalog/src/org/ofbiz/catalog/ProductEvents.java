@@ -180,7 +180,15 @@ public class ProductEvents {
     product.set("autoCreateKeywords", autoCreateKeywords);
     
     if(UtilValidate.isNotEmpty(primaryProductCategoryId)) {
-      product.preStoreOther(delegator.makeValue("ProductCategoryMember", UtilMisc.toMap("productId", productId, "productCategoryId", primaryProductCategoryId)));
+      GenericValue dummyValue = null;
+      try {
+        Collection dummyCol = EntityUtil.filterByDate(delegator.findByAnd("ProductCategoryMember", UtilMisc.toMap("productId", productId, "productCategoryId", primaryProductCategoryId), null));
+        dummyValue = EntityUtil.getFirst(dummyCol);
+      }
+      catch(GenericEntityException e) { Debug.logWarning(e.getMessage()); dummyValue = null; }
+      if(dummyValue == null) {
+        product.preStoreOther(delegator.makeValue("ProductCategoryMember", UtilMisc.toMap("productId", productId, "productCategoryId", primaryProductCategoryId, "fromDate", UtilDateTime.nowTimestamp())));
+      }
     }
 
     if(updateMode.equals("CREATE")) {
