@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCartItem.java,v 1.25 2003/12/09 16:32:18 ajzeneski Exp $
+ * $Id: ShoppingCartItem.java,v 1.26 2003/12/20 08:27:43 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -23,19 +23,31 @@
  */
 package org.ofbiz.order.shoppingcart;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
-import org.ofbiz.base.util.*;
+import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilDateTime;
+import org.ofbiz.base.util.UtilFormatOut;
+import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilProperties;
+import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
-import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.GenericPK;
+import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.order.order.OrderReadHelper;
 import org.ofbiz.product.catalog.CatalogWorker;
 import org.ofbiz.product.category.CategoryWorker;
+import org.ofbiz.product.product.ProductContentWrapper;
 import org.ofbiz.product.product.ProductWorker;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
@@ -47,7 +59,7 @@ import org.ofbiz.service.ModelService;
  *
  * @author     <a href="mailto:jaz@ofbiz.org.com">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.25 $
+ * @version    $Revision: 1.26 $
  * @since      2.0
  */
 public class ShoppingCartItem implements java.io.Serializable {
@@ -74,6 +86,8 @@ public class ShoppingCartItem implements java.io.Serializable {
     private Map attributes = null;
     private String orderItemSeqId = null;
     private GenericValue orderShipmentPreference = null;
+    
+    private Locale locale = null;
 
     private Map contactMechIdsMap = new HashMap();
     private List orderItemPriceInfos = null;
@@ -151,7 +165,7 @@ public class ShoppingCartItem implements java.io.Serializable {
      * @throws CartItemModifyException
      */
     public static ShoppingCartItem makeItem(Integer cartLocation, GenericValue product, double selectedAmount, double quantity, Map additionalProductFeatureAndAppls, Map attributes, String prodCatalogId, LocalDispatcher dispatcher, ShoppingCart cart, boolean doPromotions) throws CartItemModifyException {
-        ShoppingCartItem newItem = new ShoppingCartItem(product, additionalProductFeatureAndAppls, attributes, prodCatalogId);
+        ShoppingCartItem newItem = new ShoppingCartItem(product, additionalProductFeatureAndAppls, attributes, prodCatalogId, cart.getLocale());
 
         // check to see if product is virtual
         if ("Y".equals(product.getString("isVirtual"))) {
@@ -226,7 +240,7 @@ public class ShoppingCartItem implements java.io.Serializable {
      */
     public static ShoppingCartItem makeItem(Integer cartLocation, String itemType, String itemDescription, String productCategoryId, double basePrice, double selectedAmount, double quantity, Map attributes, String prodCatalogId, LocalDispatcher dispatcher, ShoppingCart cart, boolean doPromotions) throws CartItemModifyException {
         GenericDelegator delegator = cart.getDelegator();
-        ShoppingCartItem newItem = new ShoppingCartItem(delegator, itemType, itemDescription, productCategoryId, basePrice, attributes, prodCatalogId);
+        ShoppingCartItem newItem = new ShoppingCartItem(delegator, itemType, itemDescription, productCategoryId, basePrice, attributes, prodCatalogId, cart.getLocale());
 
         // add to cart before setting quantity so that we can get order total, etc
         if (cartLocation == null) {
@@ -268,6 +282,7 @@ public class ShoppingCartItem implements java.io.Serializable {
         this.listPrice = item.getListPrice();
         this.isPromo = item.getIsPromo();
         this.promoQuantityUsed = item.promoQuantityUsed;
+        this.locale = item.locale;
         this.quantityUsedPerPromoCandidate = new HashMap(item.quantityUsedPerPromoCandidate);
         this.quantityUsedPerPromoFailed = new HashMap(item.quantityUsedPerPromoFailed);
         this.quantityUsedPerPromoActual = new HashMap(item.quantityUsedPerPromoActual);
@@ -288,7 +303,7 @@ public class ShoppingCartItem implements java.io.Serializable {
     protected ShoppingCartItem() {}
 
     /** Creates new ShoppingCartItem object. */
-    protected ShoppingCartItem(GenericValue product, Map additionalProductFeatureAndAppls, Map attributes, String prodCatalogId) {
+    protected ShoppingCartItem(GenericValue product, Map additionalProductFeatureAndAppls, Map attributes, String prodCatalogId, Locale locale) {
         this._product = product;
         this.productId = _product.getString("productId");
         this.itemType = "PRODUCT_ORDER_ITEM";
@@ -299,10 +314,11 @@ public class ShoppingCartItem implements java.io.Serializable {
         this.delegatorName = _product.getDelegator().getDelegatorName();
         this.orderShipmentPreference = delegator.makeValue("OrderShipmentPreference", null);
         this.addAllProductFeatureAndAppls(additionalProductFeatureAndAppls);
+        this.locale = locale;
     }
 
     /** Creates new ShopingCartItem object. */
-    protected ShoppingCartItem(GenericDelegator delegator, String itemTypeId, String description, String categoryId, double basePrice, Map attributes, String prodCatalogId) {
+    protected ShoppingCartItem(GenericDelegator delegator, String itemTypeId, String description, String categoryId, double basePrice, Map attributes, String prodCatalogId, Locale locale) {
         this.delegator = delegator;
         this.itemType = itemTypeId;
         this.itemDescription = description;
@@ -311,7 +327,8 @@ public class ShoppingCartItem implements java.io.Serializable {
         this.attributes = attributes;
         this.prodCatalogId = prodCatalogId;
         this.delegatorName = delegator.getDelegatorName();
-    }
+        this.locale = locale;
+       }
 
     public String getProdCatalogId() {
         return this.prodCatalogId;
@@ -647,13 +664,16 @@ public class ShoppingCartItem implements java.io.Serializable {
 
     /** Returns the item's description. */
     public String getName() {
-        if (_product != null) {
-            String productName = getProduct().getString("productName");
+        if (getProduct() != null) {
+            String productName = ProductContentWrapper.getProductContentAsText(getProduct(), "PRODUCT_NAME", this.locale, null, null);
 
             // if the productName is null or empty, see if there is an associated virtual product and get the productName of that product
             if (UtilValidate.isEmpty(productName)) {
                 GenericValue parentProduct = this.getParentProduct();
-                if (parentProduct != null) productName = parentProduct.getString("productName");
+                if (parentProduct != null) {
+                    productName = ProductContentWrapper.getProductContentAsText(parentProduct, "PRODUCT_NAME", this.locale, null, null);
+                    productName = parentProduct.getString("productName");
+                }
             }
 
             return productName;
@@ -664,13 +684,15 @@ public class ShoppingCartItem implements java.io.Serializable {
 
     /** Returns the item's description. */
     public String getDescription() {
-        if (_product != null) {
-            String description = getProduct().getString("description");
+        if (getProduct() != null) {
+            String description = ProductContentWrapper.getProductContentAsText(getProduct(), "DESCRIPTION", this.locale, null, null);
 
             // if the description is null or empty, see if there is an associated virtual product and get the description of that product
             if (UtilValidate.isEmpty(description)) {
                 GenericValue parentProduct = this.getParentProduct();
-                if (parentProduct != null) description = parentProduct.getString("description");
+                if (parentProduct != null) {
+                    description = ProductContentWrapper.getProductContentAsText(parentProduct, "DESCRIPTION", this.locale, null, null);
+                }
             }
 
             return description;
@@ -1205,8 +1227,9 @@ public class ShoppingCartItem implements java.io.Serializable {
             // add the cloned item(s) to the cart
             Iterator newItemsItr = newItems.iterator();
 
-            while (newItemsItr.hasNext())
+            while (newItemsItr.hasNext()) {
                 cart.addItem(thisIndex, (ShoppingCartItem) newItemsItr.next());
+            }
         }
     }
 }

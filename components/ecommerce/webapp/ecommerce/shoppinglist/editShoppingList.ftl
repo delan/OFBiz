@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.4 $
+ *@version    $Revision: 1.5 $
  *@since      2.1.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -263,6 +263,7 @@
                   <#list shoppingListItemDatas as shoppingListItemData>
                     <#assign shoppingListItem = shoppingListItemData.shoppingListItem>
                     <#assign product = shoppingListItemData.product>
+                    <#assign productContentWrapper = Static["org.ofbiz.product.product.ProductContentWrapper"].makeProductContentWrapper(product, request)>
                     <#assign unitPrice = shoppingListItemData.unitPrice>
                     <#assign totalPrice = shoppingListItemData.totalPrice>
                     <#assign productVariantAssocs = shoppingListItemData.productVariantAssocs?if_exists>
@@ -272,7 +273,7 @@
                         <td>
                           <div class='tabletext'>
                              <a href="<@ofbizUrl>/product?product_id=${shoppingListItem.productId}</@ofbizUrl>" class='buttontext'>${shoppingListItem.productId} - 
-                             ${product.productName?if_exists}</a> : ${product.description?if_exists}
+                             ${productContentWrapper.get("PRODUCT_NAME")?if_exists}</a> : ${productContentWrapper.get("DESCRIPTION")?if_exists}
                           </div>
                         </td>
                         <td nowrap align="center">
@@ -310,7 +311,8 @@
                               	<#list productVariantAssocs as productVariantAssoc>
                               	  <#assign variantProduct = productVariantAssoc.getRelatedOneCache("AssocProduct")>
                               	  <#if variantProduct?exists>
-                              	    <option value="${variantProduct.productId}">${variantProduct.productName} [${variantProduct.productId}]</option>
+                                    <#assign variantProductContentWrapper = Static["org.ofbiz.product.product.ProductContentWrapper"].makeProductContentWrapper(variantProduct, request)>
+                              	    <option value="${variantProduct.productId}">${variantProductContentWrapper.get("PRODUCT_NAME")} [${variantProduct.productId}]</option>
                               	  </#if>
                               	</#list>
                               </select>
