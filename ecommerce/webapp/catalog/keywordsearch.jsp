@@ -7,7 +7,8 @@
 <%@ include file="/includes/header.jsp" %>
 <%@ include file="/includes/leftcolumn.jsp" %> 
 
-<%ProductWorker.getKeywordSearchProducts(pageContext, "");%>
+<%String searchCategoryId = request.getParameter("SEARCH_CATEGORY_ID");%>
+<%ProductWorker.getKeywordSearchProducts(pageContext, "", searchCategoryId);%>
 <ofbiz:object name="viewIndex" property="viewIndex" type='java.lang.Integer' />
 <ofbiz:object name="viewSize" property="viewSize" type='java.lang.Integer' />
 <ofbiz:object name="lowIndex" property="lowIndex" type='java.lang.Integer' />

@@ -5,8 +5,8 @@
 <%@ include file="/includes/leftcolumn.jsp" %> 
 <%@ page import="org.ofbiz.commonapp.product.category.*" %>
 
-<%-- Get a list of all available products. --%>
-<%CategoryWorker.getRelatedProducts(pageContext,"","PROMOTIONS");%>
+<%-- Get a list of all available products in the promotions category for the current catalog. --%>
+<%CategoryWorker.getRelatedProducts(pageContext,"",CatalogWorker.getCatalogPromotionsCategoryId(pageContext, CatalogWorker.getCurrentCatalogId(pageContext)));%>
 
 <%-- Main Heading --%>
 <br>

@@ -86,6 +86,7 @@
 </table>
 </ofbiz:if>
 
+<ofbiz:if name="productList" size="0">
 <center>
   <table width='100%'>
     <%int listIndex = lowIndex.intValue();%>
@@ -100,6 +101,7 @@
     </ofbiz:iterator>
   </table>
 </center>
+</ofbiz:if>
 
 <ofbiz:if name="productList" size="0">
 <table border="0" width="100%" cellpadding="2">

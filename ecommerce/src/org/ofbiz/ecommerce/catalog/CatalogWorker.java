@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.1  2001/10/05 02:29:27  jonesde
+ * Refactored CatalogHelper: split into CatalogWorker and in commonapp CategoryWorker and ProductWorker
+ *
  * Revision 1.29  2001/10/03 20:22:45  jonesde
  * Added sorting by metric on occurances and quantity to quick reorder
  *
@@ -98,14 +101,17 @@
 package org.ofbiz.ecommerce.catalog;
 
 import java.util.*;
+import java.net.*;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.http.HttpSession;
-import javax.servlet.ServletRequest;
+import javax.servlet.*;
 
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.entity.*;
 
 import org.ofbiz.ecommerce.shoppingcart.*;
+
+import org.ofbiz.commonapp.product.category.*;
 
 /**
  * <p><b>Title:</b> CatalogWorker.java
@@ -135,6 +141,79 @@ import org.ofbiz.ecommerce.shoppingcart.*;
  * Created on August 23, 2001, 7:58 PM
  */
 public class CatalogWorker {
+  
+  public static String getEcommercePropertiesValue(PageContext pageContext, String propertyName) {
+    return getEcommercePropertiesValue(pageContext.getServletContext(), propertyName);
+  }
+  public static String getEcommercePropertiesValue(ServletContext servletContext, String propertyName) {
+    URL url = (URL)servletContext.getAttribute("ECOMMERCE_PROPERTIES_URL");
+    if(url == null) {
+      try { url = servletContext.getResource("/WEB-INF/ecommerce.properties"); }
+      catch(java.net.MalformedURLException e) { Debug.logError(e); }
+      if(url != null) servletContext.setAttribute("ECOMMERCE_PROPERTIES_URL", url);
+    }
+    if(url == null) return null;
+    else return UtilProperties.getPropertyValue(url, propertyName);
+  }
+  
+  public static String getCurrentCatalogId(PageContext pageContext) {
+    String catalogId;
+    boolean fromSession = false;
+    //first see if a new catalog was specified as a parameter
+    catalogId = pageContext.getRequest().getParameter("CURRENT_CATALOG_ID");
+    //if no parameter, try from session
+    if(catalogId == null) {
+      catalogId = (String)pageContext.getSession().getAttribute("CURRENT_CATALOG_ID");
+      if(catalogId != null) fromSession = true;
+    }
+    //if nothing else, just use a default top category name
+    if(catalogId == null) catalogId = getEcommercePropertiesValue(pageContext, "catalog.id.default");
+    if(catalogId == null) catalogId = "catalog1";
+    
+    if(!fromSession) {
+      Debug.logInfo("[CatalogWorker.getCurrentCatalogId] Setting new catalog name: " + catalogId);
+      pageContext.getSession().setAttribute("CURRENT_CATALOG_ID", catalogId);
+      CategoryWorker.setTrail(pageContext, new ArrayList());
+    }
+    return catalogId;
+  }
+  
+  public static Collection getCatalogIdsAvailable(PageContext pageContext) {
+    String catsList = getEcommercePropertiesValue(pageContext, "catalog.ids.available");
+    Collection categoryIds = new LinkedList();
+    StringTokenizer tokenizer = new StringTokenizer(catsList, ", ");
+    while (tokenizer.hasMoreTokens()) { categoryIds.add(tokenizer.nextToken()); }
+    return categoryIds;
+  }
+  
+  public static String getCatalogName(PageContext pageContext, String catalogId) {
+    if(catalogId == null || catalogId.length() <= 0) return null;
+    return getEcommercePropertiesValue(pageContext, catalogId + ".name");
+  }
+  
+  public static String getCatalogTopCategoryId(PageContext pageContext, String catalogId) {
+    if(catalogId == null || catalogId.length() <= 0) return null;
+    return getEcommercePropertiesValue(pageContext, catalogId + ".top.category");
+  }
+  
+  public static String getCatalogSearchCategoryId(PageContext pageContext, String catalogId) {
+    if(catalogId == null || catalogId.length() <= 0) return null;
+    return getEcommercePropertiesValue(pageContext, catalogId + ".search.category");
+  }
+  
+  public static String getCatalogPromotionsCategoryId(PageContext pageContext, String catalogId) {
+    if(catalogId == null || catalogId.length() <= 0) return null;
+    return getEcommercePropertiesValue(pageContext, catalogId + ".promotions.category");
+  }
+  
+  public static Collection getCatalogQuickaddCategories(PageContext pageContext, String catalogId) {
+    if(catalogId == null || catalogId.length() <= 0) return null;
+    String catsList = getEcommercePropertiesValue(pageContext, catalogId + ".quickadd.categories");
+    Collection categoryIds = new LinkedList();
+    StringTokenizer tokenizer = new StringTokenizer(catsList, ", ");
+    while (tokenizer.hasMoreTokens()) { categoryIds.add(tokenizer.nextToken()); }
+    return categoryIds;
+  }
   
   public static void getRandomCartProductAssoc(PageContext pageContext, String assocsAttrName) {
     GenericDelegator delegator = (GenericDelegator)pageContext.getServletContext().getAttribute("delegator");
