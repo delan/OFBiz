@@ -222,6 +222,7 @@ public class ModelForm {
                 this.fieldMap = parent.fieldMap;
                 this.separateColumns = parent.separateColumns;
                 this.targetType = parent.targetType;
+                this.defaultMapName = parent.defaultMapName;
                 
                 // Update the parent's fields with this form
                 Iterator fieldListIter = this.fieldList.iterator();
