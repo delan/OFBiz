@@ -104,14 +104,11 @@
 </h3>
 <hr>
 <p>This is where the service is actually invoked. Each service has an engine name
-  assigned in its definition. This engine name is mapped via the servicesengine.properties
+  assigned in its definition. This engine name is mapped via the servicesengine.xml
   file and is instantiated by the GenericEngineFactory when called upon. Third-party
   engines are supported and must follow the GenericEngine interface when implemented.
-  Engines defined in the servicesengine.properties file:</p>
-<pre>java.engine=org.ofbiz.core.service.StandJavaEngine
-workflow.engine=org.ofbiz.core.workflow.WorkflowEngine
-beanshll.engine=org.ofbiz.core.service.BeanShellEngine
-soap.engine=org.ofbiz.core.service.SOAPClientEngine</pre>
+  See the Service Engine configuration guild for details on defining engines.</p>
+
 <p>It is the job of the engine to handle invocation of both synchronous and asynchronous
   services. Engines which use the <a href="#JobScheduler">Job Scheduler</a> for
   asynchronous services can extend the GenericAsyncEngine.<br>
@@ -172,13 +169,17 @@ soap.engine=org.ofbiz.core.service.SOAPClientEngine</pre>
 <p><b>SERVICE ELEMENT:</b></p>
 <ul>
   <li><b>name</b> - The unique name of the service </li>
-  <li><b>engine</b> - The name of the engine (defined in servicesengine.properties)</li>
+  <li><b>engine</b> - The name of the engine (defined in servicesengine.xml)</li>
   <li><b>location </b>- The location or package of the service's class</li>
   <li><b>invoke</b> - The method name of the service</li>
   <li><b>auth</b> - Does this service require authorization (true/<u>false</u>)</li>
   <li><b>export</b> - Is this service allowed to be accessed via SOAP (true/<u>false</u>)</li>
   <li><b>validate</b> - Do we validate the attributes found below for name and
     type matching (<u>true</u>/false)</li>
+</ul>
+<p><b>IMPLEMENTS ELEMENT:</b></p>
+<ul>
+  <li><b>sevice</b> - The name of the service which this service implements. All attributes are inherited</li>
 </ul>
 <p><b>ATTRIBUTE ELEMENT:</b></p>
 <ul>
