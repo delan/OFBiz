@@ -20,14 +20,22 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.2 $
+ *@author     Olivier Heintz (olivier.heintz@nereide.biz) 
+ *@version    $Revision: 1.3 $
  *@since      2.1
 -->
 
-<#assign previousParams = sessionAttributes._PREVIOUS_PARAMS_?if_exists>
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
+<#assign previousParams = sessionAttributes._PREVIOUS_PARAMS_?if_exists>
 <#if previousParams?has_content>
   <#assign previousParams = "?" + previousParams>
+</#if>
+
+<#assign username = requestParameters.USERNAME?default((sessionAttributes.autoUserLogin.userLoginId)?default(""))>
+<#if username != "">
+  <#assign focusName = false>
+<#else>
+  <#assign focusName = true>
 </#if>
 
 <table width='300' border='0' cellpadding='0' cellspacing='0' align='center'>
@@ -57,7 +65,7 @@
                           <span class="tabletext">${uiLabelMap.CommonUsername}&nbsp;</span>
                         </td>
                         <td>
-                          <input type="text" class="inputBox" name="USERNAME" value="${requestParameters.USERNAME?if_exists}" size="20">
+                          <input type="text" class="inputBox" name="USERNAME" value="${username}" size="20">
                         </td>
                       </tr>
                       <tr>
@@ -71,7 +79,7 @@
                       <tr>
                         <td colspan="2" align="center">
                           <!--<a href="javascript:document.loginform.submit()" class="buttontext">[Login]</a>-->
-                          <input type="submit" value="${uiLabelMap.CommonLogin}" class="loginButton">
+                          <input type="submit" value=${uiLabelMap.CommonLogin} class="loginButton">
                         </td>
                       </tr>
                     </table>
@@ -88,6 +96,10 @@
 
 <script language="JavaScript" type="text/javascript">
 <!--
-  document.loginform.USERNAME.focus();
+  <#if focusName>
+    document.loginform.USERNAME.focus();
+  <#else>
+    document.loginform.PASSWORD.focus();
+  </#if>
 //-->
 </script>
