@@ -1,5 +1,5 @@
 /*
- * $Id: ModelReader.java,v 1.10 2004/07/04 07:35:22 jonesde Exp $
+ * $Id: ModelReader.java,v 1.11 2004/07/06 21:49:06 doogie Exp $
  *
  *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -55,7 +55,7 @@ import org.w3c.dom.Node;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.10 $
+ * @version    $Revision: 1.11 $
  * @since      2.0
  */
 public class ModelReader {
@@ -171,9 +171,6 @@ public class ModelReader {
                             throw new GenericEntityConfException("Could not get document for " + entityResourceHandler.toString());
                         }
 
-                        Hashtable docElementValues = null;
-                        docElementValues = new Hashtable();
-
                         // utilTimer.timerString("Before getDocumentElement in " + entityResourceHandler.toString());
                         Element docElement = document.getDocumentElement();
 
@@ -184,6 +181,8 @@ public class ModelReader {
                         docElement.normalize();
                         Node curChild = docElement.getFirstChild();
 
+                        ModelInfo def = new ModelInfo();
+                        def.populateFromElements(docElement);
                         int i = 0;
 
                         if (curChild != null) {
@@ -220,14 +219,14 @@ public class ModelReader {
                                     entityResourceHandlerMap.put(entityName, entityResourceHandler);
 
                                     // utilTimer.timerString("  After entityEntityName -- " + i + " --");
-                                    // ModelEntity entity = createModelEntity(curEntity, docElement, utilTimer, docElementValues);
+                                    // ModelEntity entity = createModelEntity(curEntity, utilTimer);
 
                                     ModelEntity entity = null;
 
                                     if (isEntity) {
-                                        entity = createModelEntity(curEntity, docElement, null, docElementValues);
+                                        entity = createModelEntity(curEntity, null, def);
                                     } else {
-                                        entity = createModelViewEntity(curEntity, docElement, null, docElementValues);
+                                        entity = createModelViewEntity(curEntity, null, def);
                                         // put the view entity in a list to get ready for the second pass to populate fields...
                                         tempViewEntityList.add(entity);
                                     }
@@ -476,17 +475,17 @@ public class ModelReader {
         return ec.keySet();
     }
 
-    ModelEntity createModelEntity(Element entityElement, Element docElement, UtilTimer utilTimer, Hashtable docElementValues) {
+    ModelEntity createModelEntity(Element entityElement, UtilTimer utilTimer, ModelInfo def) {
         if (entityElement == null) return null;
         this.numEntities++;
-        ModelEntity entity = new ModelEntity(this, entityElement, docElement, utilTimer, docElementValues);
+        ModelEntity entity = new ModelEntity(this, entityElement, utilTimer, def);
         return entity;
     }
 
-    ModelEntity createModelViewEntity(Element entityElement, Element docElement, UtilTimer utilTimer, Hashtable docElementValues) {
+    ModelEntity createModelViewEntity(Element entityElement, UtilTimer utilTimer, ModelInfo def) {
         if (entityElement == null) return null;
         this.numViewEntities++;
-        ModelViewEntity entity = new ModelViewEntity(this, entityElement, docElement, utilTimer, docElementValues);
+        ModelViewEntity entity = new ModelViewEntity(this, entityElement, utilTimer, def);
         return entity;
     }
 
@@ -512,7 +511,7 @@ public class ModelReader {
         return field;
     }
     
-    public ModelField createModelField(Element fieldElement, Element docElement, Hashtable docElementValues) {
+    public ModelField createModelField(Element fieldElement) {
         if (fieldElement == null) {
             return null;
         }

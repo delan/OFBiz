@@ -1,5 +1,5 @@
 /*
- * $Id: ModelEntity.java,v 1.13 2004/06/18 14:46:23 jonesde Exp $
+ * $Id: ModelEntity.java,v 1.14 2004/07/06 21:49:06 doogie Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -45,10 +45,10 @@ import org.w3c.dom.NodeList;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.13 $
+ * @version    $Revision: 1.14 $
  * @since      2.0
  */
-public class ModelEntity implements Comparable {
+public class ModelEntity extends ModelInfo implements Comparable {
     
     public static final String module = ModelEntity.class.getName();
 
@@ -75,22 +75,6 @@ public class ModelEntity implements Comparable {
 
     /** The entity-name of the Entity that this Entity is dependent on, if empty then no dependency */
     protected String dependentOn = "";
-
-    // Strings to go in the comment header.
-    /** The title for documentation purposes */
-    protected String title = "";
-
-    /** The description for documentation purposes */
-    protected String description = "";
-
-    /** The copyright for documentation purposes */
-    protected String copyright = "";
-
-    /** The author for documentation purposes */
-    protected String author = "";
-
-    /** The version for documentation purposes */
-    protected String version = "";
 
     /** A List of the Field objects for the Entity */
     protected List fields = new ArrayList();
@@ -125,16 +109,23 @@ public class ModelEntity implements Comparable {
     public ModelEntity() {}
 
     /** XML Constructor */
-    public ModelEntity(ModelReader reader, Element entityElement, Element docElement, UtilTimer utilTimer, Hashtable docElementValues) {
+    protected ModelEntity(ModelReader reader, Element entityElement, ModelInfo def) {
+        super(def);
+        populateFromAttributes(entityElement);
         this.modelReader = reader;
+    }
+
+    /** XML Constructor */
+    public ModelEntity(ModelReader reader, Element entityElement, UtilTimer utilTimer, ModelInfo def) {
+        this(reader, entityElement, def);
 
         if (utilTimer != null) utilTimer.timerString("  createModelEntity: before general/basic info");
-        this.populateBasicInfo(entityElement, docElement, docElementValues);
+        this.populateBasicInfo(entityElement);
 
         if (utilTimer != null) utilTimer.timerString("  createModelEntity: before fields");
         NodeList fieldList = entityElement.getElementsByTagName("field");
         for (int i = 0; i < fieldList.getLength(); i++) {
-            ModelField field = reader.createModelField((Element) fieldList.item(i), docElement, docElementValues);
+            ModelField field = reader.createModelField((Element) fieldList.item(i));
             if (field != null) this.fields.add(field);
         }
         
@@ -218,7 +209,7 @@ public class ModelEntity implements Comparable {
         this.updatePkLists();
     }
 
-    protected void populateBasicInfo(Element entityElement, Element docElement, Hashtable docElementValues) {
+    protected void populateBasicInfo(Element entityElement) {
         this.entityName = UtilXml.checkEmpty(entityElement.getAttribute("entity-name"));
         this.tableName = UtilXml.checkEmpty(entityElement.getAttribute("table-name"), ModelUtil.javaNameToDbName(this.entityName));
         this.packageName = UtilXml.checkEmpty(entityElement.getAttribute("package-name"));
@@ -227,25 +218,6 @@ public class ModelEntity implements Comparable {
         this.doLock = UtilXml.checkBoolean(entityElement.getAttribute("enable-lock"), false);
         this.noAutoStamp = UtilXml.checkBoolean(entityElement.getAttribute("no-auto-stamp"), false);
         this.neverCache = UtilXml.checkBoolean(entityElement.getAttribute("never-cache"), false);
-
-        if (docElementValues == null) {
-            this.title = UtilXml.checkEmpty(entityElement.getAttribute("title"), UtilXml.childElementValue(docElement, "title"), "None");
-            this.description = UtilXml.checkEmpty(UtilXml.childElementValue(entityElement, "description"), UtilXml.childElementValue(docElement, "description"), "None");
-            this.copyright = UtilXml.checkEmpty(entityElement.getAttribute("copyright"), UtilXml.childElementValue(docElement, "copyright"), "Copyright (c) 2001 The Open For Business Project - www.ofbiz.org");
-            this.author = UtilXml.checkEmpty(entityElement.getAttribute("author"), UtilXml.childElementValue(docElement, "author"), "None");
-            this.version = UtilXml.checkEmpty(entityElement.getAttribute("version"), UtilXml.childElementValue(docElement, "version"), "1.0");
-        } else {
-            if (!docElementValues.containsKey("title")) docElementValues.put("title", UtilXml.childElementValue(docElement, "title"));
-            if (!docElementValues.containsKey("description")) docElementValues.put("description", UtilXml.childElementValue(docElement, "description"));
-            if (!docElementValues.containsKey("copyright")) docElementValues.put("copyright", UtilXml.childElementValue(docElement, "copyright"));
-            if (!docElementValues.containsKey("author")) docElementValues.put("author", UtilXml.childElementValue(docElement, "author"));
-            if (!docElementValues.containsKey("version")) docElementValues.put("version", UtilXml.childElementValue(docElement, "version"));
-            this.title = UtilXml.checkEmpty(entityElement.getAttribute("title"), (String) docElementValues.get("title"), "None");
-            this.description = UtilXml.checkEmpty(UtilXml.childElementValue(entityElement, "description"), (String) docElementValues.get("description"), "None");
-            this.copyright = UtilXml.checkEmpty(entityElement.getAttribute("copyright"), (String) docElementValues.get("copyright"), "Copyright (c) 2001 The Open For Business Project - www.ofbiz.org");
-            this.author = UtilXml.checkEmpty(entityElement.getAttribute("author"), (String) docElementValues.get("author"), "None");
-            this.version = UtilXml.checkEmpty(entityElement.getAttribute("version"), (String) docElementValues.get("version"), "1.0");
-        }
     }
 
     protected void populateRelated(ModelReader reader, Element entityElement) {
@@ -344,52 +316,6 @@ public class ModelEntity implements Comparable {
 
     public void setDependentOn(String dependentOn) {
         this.dependentOn = dependentOn;
-    }
-
-    // Strings to go in the comment header.
-    /** The title for documentation purposes */
-    public String getTitle() {
-        return this.title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    /** The description for documentation purposes */
-    public String getDescription() {
-        return this.description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    /** The copyright for documentation purposes */
-    public String getCopyright() {
-        return this.copyright;
-    }
-
-    public void setCopyright(String copyright) {
-        this.copyright = copyright;
-    }
-
-    /** The author for documentation purposes */
-    public String getAuthor() {
-        return this.author;
-    }
-
-    public void setAuthor(String author) {
-        this.author = author;
-    }
-
-    /** The version for documentation purposes */
-    public String getVersion() {
-        return this.version;
-    }
-
-    public void setVersion(String version) {
-        this.version = version;
     }
 
     /** An indicator to specify if this entity is never cached. 
