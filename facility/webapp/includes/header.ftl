@@ -37,7 +37,7 @@
   <div class="col"><a href="<@ofbizUrl>/FindFacilityGroup</@ofbizUrl>" class="${selectedLeftClassMap.facilityGroup?default(unselectedLeftClassName)}">Facility&nbsp;Groups</a></div>
   
   <#if requestAttributes.userLogin?has_content>
-    <div class="col-right"><a href="<@ofbizUrl>/logout</@ofbizUrl>" class="headerButtonRight">Logout</a></div>
+    <div class="col-right"><a href="<@ofbizUrl>/logout</@ofbizUrl>" class="${selectedRightClassMap.logout?default(unselectedRightClassName)}">Logout</a></div>
   <#else>
     <div class="col-right"><a href='<@ofbizUrl>${requestAttributes.checkLoginUrl?if_exists}</@ofbizUrl>' class='${selectedRightClassMap.login?default(unselectedRightClassName)}'>Login</a></div>
   </#if>
