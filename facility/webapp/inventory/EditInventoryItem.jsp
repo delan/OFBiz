@@ -35,6 +35,8 @@
 	String facilityId = request.getParameter("facilityId");
 	String locationSeqId = request.getParameter("locationSeqId");
 
+	session.removeAttribute("inventoryItemId");
+
     boolean tryEntity = true;
     if(request.getAttribute(SiteDefs.ERROR_MESSAGE) != null) tryEntity = false;
 
@@ -223,6 +225,7 @@
           </ofbiz:if>
           <ofbiz:if name="inventoryItem">          
             <input type="text" size="20" maxsize="20" <ofbiz:inputvalue entityAttr="inventoryItem" field="locationSeqId" fullattrs="true"/> style='font-size: x-small;'>
+            &nbsp;<a href="<ofbiz:url>/FindFacilityLocations?facilityId=<%=facilityId%>&inventoryItemId=<%=inventoryItemId%></ofbiz:url>" class="buttontext">[Find Location]</a>
           </ofbiz:if>
           <ofbiz:unless name="inventoryItem">
             <input type="text" size="20" maxsize="20" name="locationSeqId" value="<%=locationSeqId%>" style='font-size: x-small;'>

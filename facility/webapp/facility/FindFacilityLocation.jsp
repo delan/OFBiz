@@ -36,6 +36,11 @@
 <%
 	String facilityId = request.getParameter("facilityId");
 	String lookup = request.getParameter("look_up");
+	String itemId = request.getParameter("inventoryItemId");
+	if (itemId != null)
+		session.setAttribute("inventoryItemId", itemId);
+	
+	itemId = (String) session.getAttribute("inventoryItemId");
 	GenericValue facility = delegator.findByPrimaryKey("Facility", UtilMisc.toMap("facilityId", facilityId));
 	UtilMisc.parametersToAttributes(request);
 
@@ -149,6 +154,9 @@
           <div class="tabletext">
             <a href='<ofbiz:url>/EditFacilityLocation?facilityId=<ofbiz:inputvalue entityAttr="location" field="facilityId"/>&locationSeqId=<ofbiz:inputvalue entityAttr="location" field="locationSeqId"/></ofbiz:url>' class='buttontext'>[Edit]</a>
             <a href='<ofbiz:url>/EditInventoryItem?facilityId=<ofbiz:inputvalue entityAttr="location" field="facilityId"/>&locationSeqId=<ofbiz:inputvalue entityAttr="location" field="locationSeqId"/></ofbiz:url>' class='buttontext'>[New Inventory Item]</a>
+            <% if (itemId != null) {%>
+            <a href='<ofbiz:url>/UpdateInventoryItem?inventoryItemId=<%=itemId%>&facilityId=<%=facilityId%>&locationSeqId=<ofbiz:inputvalue entityAttr="location" field="locationSeqId"/></ofbiz:url>' class='buttontext'>[Set Item #<%=itemId%>]</a>
+            <%}%>
           </div>
         </td>
       </tr>
