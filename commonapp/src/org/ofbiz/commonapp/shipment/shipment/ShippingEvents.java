@@ -34,6 +34,7 @@ import javax.servlet.http.*;
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.commonapp.order.shoppingcart.*;
+import org.ofbiz.commonapp.product.store.ProductStoreWorker;
 
 /**
  * ShippingEvents - Events used for processing shipping fees
@@ -66,12 +67,15 @@ public class ShippingEvents {
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>Please Select a Shipping Method");
             return "error";
         }
+        
+        // get the store
+        String productStoreId = ProductStoreWorker.getProductStoreId(request);
 
         // Get the ShipmentCostEstimate(s)
         Collection estimates = null;
 
         try {
-            Map fields = UtilMisc.toMap("shipmentMethodTypeId", shipmentMethodTypeId, "carrierPartyId", carrierPartyId, "carrierRoleTypeId", "CARRIER");
+            Map fields = UtilMisc.toMap("productStoreId", productStoreId, "shipmentMethodTypeId", shipmentMethodTypeId, "carrierPartyId", carrierPartyId, "carrierRoleTypeId", "CARRIER");
 
             estimates = delegator.findByAnd("ShipmentCostEstimate", fields);
             if (Debug.verboseOn()) Debug.logVerbose("Estimate fields: " + fields, module);

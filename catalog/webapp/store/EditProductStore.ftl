@@ -30,6 +30,7 @@
       <a href="<@ofbizUrl>/EditProductStore?productStoreId=${productStoreId}</@ofbizUrl>" class="tabButtonSelected">Store</a>
       <a href="<@ofbizUrl>/ProductStoreWebSites?productStoreId=${productStoreId}</@ofbizUrl>" class="tabButton">WebSites</a>
       <a href="<@ofbizUrl>/ProductStoreTaxSetup?productStoreId=${productStoreId}</@ofbizUrl>" class="tabButton">Sales Tax</a>
+      <a href="<@ofbizUrl>/ProductStoreShipSetup?productStoreId=${productStoreId}</@ofbizUrl>" class="tabButton">Shipping</a>
     </div>
   </#if>
   <div class="head1">Product Store <span class='head2'><#if (productStore.storeName)?has_content>"${productStore.storeName}"</#if> [ID:${productStoreId?if_exists}]</span></div>

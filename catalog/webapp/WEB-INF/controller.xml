@@ -924,7 +924,47 @@
         <event type="service" invoke="removeTaxRate"/>
         <response name="success" type="view" value="ProductStoreTaxSetup"/>
         <response name="error" type="view" value="ProductStoreTaxSetup"/>
-    </request-map>    
+    </request-map> 
+    <request-map uri="ProductStoreShipSetup">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ProductStoreShipSetup"/>
+    </request-map>
+    <request-map uri="storeCreateShipRate">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createShipmentEstimate"/>
+        <response name="success" type="view" value="ProductStoreShipSetup"/>
+        <response name="error" type="view" value="ProductStoreShipSetup"/>
+    </request-map>
+    <request-map uri="storeRemoveShipRate">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="removeShipmentEstimate"/>
+        <response name="success" type="view" value="ProductStoreShipSetup"/>
+        <response name="error" type="view" value="ProductStoreShipSetup"/>
+    </request-map>
+    <request-map uri="createShipmentMethodType">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createShipmentMethodType"/>
+        <response name="success" type="view" value="ProductStoreShipSetup"/>
+        <response name="error" type="view" value="ProductStoreShipSetup"/>
+    </request-map>
+    <request-map uri="updateShipmentMethodType">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateShipmentMethodType"/>
+        <response name="success" type="view" value="ProductStoreShipSetup"/>
+        <response name="error" type="view" value="ProductStoreShipSetup"/>
+    </request-map>        
+    <request-map uri="createCarrierShipmentMethod">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createCarrierShipmentMethod"/>
+        <response name="success" type="view" value="ProductStoreShipSetup"/>
+        <response name="error" type="view" value="ProductStoreShipSetup"/>
+    </request-map>
+    <request-map uri="updateCarrierShipmentMethod">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateCarrierShipmentMethod"/>
+        <response name="success" type="view" value="ProductStoreShipSetup"/>
+        <response name="error" type="view" value="ProductStoreShipSetup"/>
+    </request-map>           
 
     <!-- end of request mappings -->
 
@@ -984,8 +1024,9 @@
     <view-map name="EditProductPriceRules" type="region"/>
     
     <view-map name="FindProductStore" type="jpublish" page="/store/FindProductStore.ftl"/>
-    <view-map name="EditProductStore" type="jpublish" page="/store/EditProductStore.ftl"/>
-    <view-map name="ProductStoreWebSites" type="jpublish" page="/store/ProductStoreWebSites.ftl"/>
+    <view-map name="EditProductStore" type="jpublish" page="/store/EditProductStore.ftl"/>    
+    <view-map name="ProductStoreShipSetup" type="jpublish" page="/store/ProductStoreShipSetup.ftl"/>
     <view-map name="ProductStoreTaxSetup" type="jpublish" page="/store/ProductStoreTaxSetup.ftl"/>
+    <view-map name="ProductStoreWebSites" type="jpublish" page="/store/ProductStoreWebSites.ftl"/>
     <!-- end of view mappings -->
 </site-conf>

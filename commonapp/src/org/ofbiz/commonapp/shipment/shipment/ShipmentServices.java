@@ -50,11 +50,12 @@ public class ShipmentServices {
 
         // Create the basic entity.
         GenericValue estimate = delegator.makeValue("ShipmentCostEstimate", null);
-
+        
         estimate.set("shipmentCostEstimateId", delegator.getNextSeqId("ShipmentCostEstimate").toString());
         estimate.set("shipmentMethodTypeId", shipMethodSplit.get(1));
         estimate.set("carrierPartyId", shipMethodSplit.get(0));
         estimate.set("carrierRoleTypeId", "CARRIER");
+        estimate.set("productStoreId", context.get("productStoreId"));
         estimate.set("geoIdTo", context.get("toGeo"));
         estimate.set("geoIdFrom", context.get("fromGeo"));
         estimate.set("partyId", context.get("partyId"));

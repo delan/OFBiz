@@ -25,9 +25,6 @@
 -->
 
 <div class='tabContainer'>
-  <#if security.hasEntityPermission("SHIPRATE", "_VIEW", session)>
-  <a href="<@ofbizUrl>/shipsetup</@ofbizUrl>" class='tabButton'>Ship&nbsp;Rate&nbsp;Setup</a>
-  </#if>  
   <#if security.hasEntityPermission("PAYPROC", "_VIEW", session)>
   <a href="<@ofbizUrl>/paysetup</@ofbizUrl>" class='tabButtonSelected'>Payment&nbsp;Setup</a>
   </#if>

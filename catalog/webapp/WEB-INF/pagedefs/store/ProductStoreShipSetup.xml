@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <template>main</template> 
+    <property name="title">Product Store Ship Setup</property>
+    <property name="leftbar">/templates/leftbar.ftl</property>
+    <property name="headerItem">store</property>
+    <page-action name="/store/ProductStoreShipSetup.bsh"/>
+</page>

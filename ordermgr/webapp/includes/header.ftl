@@ -50,8 +50,7 @@
     <div class="col-right"><a href="<@ofbizUrl>/logout</@ofbizUrl>" class="${selectedRightClassMap.logout?default(unselectedRightClassName)}">Logout</a></div>
   <#else>
     <div class="col-right"><a href='<@ofbizUrl>${requestAttributes.checkLoginUrl?if_exists}</@ofbizUrl>' class='${selectedRightClassMap.login?default(unselectedRightClassName)}'>Login</a></div>
-  </#if>
-  <div class="col-right"><a href='<@ofbizUrl>/shipsetup</@ofbizUrl>' class="${selectedRightClassMap.setup?default(unselectedRightClassName)}">Setup</a></div>
+  </#if>  
   <div class="col-right"><a href='<@ofbizUrl>/orderreportlist</@ofbizUrl>' class="${selectedRightClassMap.reports?default(unselectedRightClassName)}">Reports</a></div>
   <div class="col-right"><a href='<@ofbizUrl>/orderstats</@ofbizUrl>' class="${selectedRightClassMap.stats?default(unselectedRightClassName)}">Stats</a></div>
   <div class="col-fill">&nbsp;</div>

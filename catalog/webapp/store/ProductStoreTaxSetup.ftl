@@ -30,9 +30,10 @@
       <a href="<@ofbizUrl>/EditProductStore?productStoreId=${productStoreId}</@ofbizUrl>" class="tabButton">Store</a>
       <a href="<@ofbizUrl>/ProductStoreWebSites?productStoreId=${productStoreId}</@ofbizUrl>" class="tabButton">WebSites</a>
       <a href="<@ofbizUrl>/ProductStoreTaxSetup?productStoreId=${productStoreId}</@ofbizUrl>" class="tabButtonSelected">Sales Tax</a>
+      <a href="<@ofbizUrl>/ProductStoreShipSetup?productStoreId=${productStoreId}</@ofbizUrl>" class="tabButton">Shipping</a>
     </div>
   </#if>
-  <div class="head1">Product Store WebSites <span class='head2'><#if (productStore.storeName)?has_content>"${productStore.storeName}"</#if> [ID:${productStoreId?if_exists}]</span></div>
+  <div class="head1">Product Store Tax Settings <span class='head2'><#if (productStore.storeName)?has_content>"${productStore.storeName}"</#if> [ID:${productStoreId?if_exists}]</span></div>
   <a href="<@ofbizUrl>/EditProductStore</@ofbizUrl>" class="buttontext">[New Product Store]</a>
   <br>
   <br>   

@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<page>
-    <template>main</template> 
-    <property name="title">Shipping Rate Settings</property>
-    <property name="headerItem">setup</property>
-    <content-action name="/setup/shippingsetup.bsh"/>
-</page>

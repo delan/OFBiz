@@ -7,6 +7,29 @@
     <version>1.0</version>
     
     <!-- Shipment Services -->
+    <service name="createCarrierShipmentMethod" engine="simple"
+            location="org/ofbiz/commonapp/shipment/shipment/ShipmentServices.xml" invoke="createCarrierShipmentMethod" auth="true">
+        <description>Creates A CarrierShipmentMethod</description>
+        <auto-attributes entity-name="CarrierShipmentMethod" include="pk" mode="IN" optional="false"/>
+        <auto-attributes entity-name="CarrierShipmentMethod" include="nonpk" mode="IN" optional="true"/>        
+    </service>
+    <service name="updateCarrierShipmentMethod" engine="simple"
+            location="org/ofbiz/commonapp/shipment/shipment/ShipmentServices.xml" invoke="updateCarrierShipmentMethod" auth="true">
+        <description>Updates A CarrierShipmentMethod</description>
+        <auto-attributes entity-name="CarrierShipmentMethod" include="pk" mode="IN" optional="false"/>
+        <auto-attributes entity-name="CarrierShipmentMethod" include="nonpk" mode="IN" optional="true"/>        
+    </service>         
+    <service name="createShipmentMethodType" engine="simple"
+            location="org/ofbiz/commonapp/shipment/shipment/ShipmentServices.xml" invoke="createShipmentMethodType" auth="true">
+        <description>Creates A ShipmentMethodType</description>      
+        <auto-attributes entity-name="ShipmentMethodType" mode="IN" optional="false"/>                    
+    </service>
+    <service name="updateShipmentMethodType" engine="simple"
+            location="org/ofbiz/commonapp/shipment/shipment/ShipmentServices.xml" invoke="updateShipmentMethodType" auth="true">
+        <description>Updates A ShipmentMethodType</description>      
+        <auto-attributes entity-name="ShipmentMethodType" mode="IN" optional="false"/>                    
+    </service>    
+    
     <service name="createShipment" default-entity-name="Shipment" engine="simple"
             location="org/ofbiz/commonapp/shipment/shipment/ShipmentServices.xml" invoke="createShipment" auth="true">
         <description>Create Shipment</description>
@@ -308,6 +331,7 @@
                 location="org.ofbiz.commonapp.shipment.shipment.ShipmentServices" invoke="createShipmentEstimate" auth="true">
         <description>Create Shipment Estimate</description>
         <attribute name="shipMethod" type="String" mode="IN" optional="false"/>
+        <attribute name="productStoreId" type="String" mode="IN" optional="false"/>
         <attribute name="toGeo" type="String" mode="IN" optional="true"/>
         <attribute name="fromGeo" type="String" mode="IN" optional="true"/>
         <attribute name="partyId" type="String" mode="IN" optional="true"/>

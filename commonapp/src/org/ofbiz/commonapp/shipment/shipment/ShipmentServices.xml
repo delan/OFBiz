@@ -903,6 +903,36 @@
             </then>
         </if>
     </simple-method>
+    
+    <!-- shipment method type services -->
+	<simple-method method-name="createCarrierShipmentMethod" short-description="Creates a CarrierShipmentMethod">		
+		<make-value value-name="carrierShipmentMethod" entity-name="CarrierShipmentMethod"/>
+		<set-pk-fields map-name="parameters" value-name="carrierShipmentMethod"/>
+		<set-nonpk-fields map-name="parameters" value-name="carrierShipmentMethod"/>
+		<create-value value-name="carrierShipmentMethod"/>						
+	</simple-method>
+	<simple-method method-name="updateCarrierShipmentMethod" short-description="Updates a CarrierShipmentMethod">		
+		<make-value value-name="lookupMap" entity-name="CarrierShipmentMethod"/>
+		<set-pk-fields map-name="parameters" value-name="lookupMap"/>
+		<find-by-primary-key entity-name="CarrierShipmentMethod" map-name="lookupMap" value-name="carrierShipmentMethod"/>
+		
+		<set-nonpk-fields map-name="parameters" value-name="carrierShipmentMethod"/>
+		<store-value value-name="carrierShipmentMethod"/>						
+	</simple-method>	
+	<simple-method method-name="createShipmentMethodType" short-description="Creates a ShipmentMethodType">
+		<make-value value-name="shipmentMethodType" entity-name="ShipmentMethodType"/>
+		<set-pk-fields map-name="parameters" value-name="shipmentMethodType"/>
+		<set-nonpk-fields map-name="parameters" value-name="shipmentMethodType"/>
+		<create-value value-name="shipmentMethodType"/>						
+	</simple-method>
+	<simple-method method-name="updateShipmentMethodType" short-description="Updates a ShipmentMethodType">
+		<make-value value-name="lookupMap" entity-name="ShipmentMethodType"/>
+		<set-pk-fields map-name="parameters" value-name="lookupMap"/>
+		<find-by-primary-key entity-name="ShipmentMethodType" map-name="lookupMap" value-name="shipmentMethodType"/>
+		
+		<set-nonpk-fields map-name="parameters" value-name="shipmentMethodType"/>
+		<store-value value-name="shipmentMethodType"/>						
+	</simple-method>		 	   
 </simple-methods>
 
     <!-- FooBar services -->
