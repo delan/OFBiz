@@ -22,19 +22,25 @@
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Brad Steiner (bsteiner@thehungersite.com)
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Revision: 1.5 $
+ *@version    $Revision: 1.6 $
  *@since      2.2
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#if hasPermission>
     <div class="head1">${uiLabelMap.ProductProductPromotionsList}</div>
-    <div>
+    <div class="tabletext">
         <a href="<@ofbizUrl>/EditProductPromo</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductCreateNewProductPromo}]</a>
         <#if manualOnly?if_exists == "Y">
             <a href="<@ofbizUrl>/FindProductPromo?manualOnly=N</@ofbizUrl>" class="buttontext">[View Manual and Imported]</a>
         <#else>
             <a href="<@ofbizUrl>/FindProductPromo?manualOnly=Y</@ofbizUrl>" class="buttontext">[View Manual Only]</a>
         </#if>
+    </div>
+    <div class="tabletext">
+        <form method="POST" action="<@ofbizUrl>/EditProductPromoCode</@ofbizUrl>" style="margin: 0;">
+            Promotion Code: <input type=text size="10" name="productPromoCodeId" class="inputBox">
+            <input type="submit" value="${uiLabelMap.CommonEdit}">
+        </form>
     </div>
     <br>
     <table border="1" cellpadding="2" cellspacing="0">

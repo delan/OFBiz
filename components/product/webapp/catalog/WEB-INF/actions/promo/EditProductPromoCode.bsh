@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones
  *@author     Brad Steiner
- *@version    $Revision: 1.5 $
+ *@version    $Revision: 1.1 $
  *@since      2.2
  */
 
@@ -39,16 +39,31 @@ if(security.hasEntityPermission("CATALOG", "_VIEW", session)) {
 } else {
     context.put("hasPermission", Boolean.FALSE);
 }
-productPromoId = request.getParameter("productPromoId");
-if (UtilValidate.isEmpty(productPromoId)) {
-    productPromoId = request.getAttribute("productPromoId");
-}
-productPromo = delegator.findByPrimaryKey("ProductPromo", UtilMisc.toMap("productPromoId", productPromoId));
 
-HtmlFormWrapper productPromoFormWrapper = new HtmlFormWrapper("/promo/PromoForms.xml", "EditProductPromo", request, response);
-productPromoFormWrapper.putInContext("productPromoId", productPromoId);
-productPromoFormWrapper.putInContext("productPromo", productPromo);
+productPromoCodeId = request.getParameter("productPromoCodeId");
+if (UtilValidate.isEmpty(productPromoCodeId)) {
+    productPromoCodeId = request.getAttribute("productPromoCodeId");
+}
+productPromoCode = delegator.findByPrimaryKey("ProductPromoCode", UtilMisc.toMap("productPromoCodeId", productPromoCodeId));
+
+productPromoId = null;
+if (productPromoCode != null) {
+    productPromoId = productPromoCode.get("productPromoId");
+} else {
+    productPromoId = request.getParameter("productPromoId");
+}
+
+productPromo = null;
+if (productPromoId != null) {
+    productPromo = delegator.findByPrimaryKey("ProductPromo", UtilMisc.toMap("productPromoId", productPromoId));
+}
+
+HtmlFormWrapper productPromoCodeFormWrapper = new HtmlFormWrapper("/promo/PromoForms.xml", "EditProductPromoCode", request, response);
+productPromoCodeFormWrapper.putInContext("productPromoCodeId", productPromoCodeId);
+productPromoCodeFormWrapper.putInContext("productPromoCode", productPromoCode);
 
 context.put("productPromoId", productPromoId);
 context.put("productPromo", productPromo);
-context.put("productPromoFormWrapper", productPromoFormWrapper);
+context.put("productPromoCodeId", productPromoCodeId);
+context.put("productPromoCode", productPromoCode);
+context.put("productPromoCodeFormWrapper", productPromoCodeFormWrapper);

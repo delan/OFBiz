@@ -22,7 +22,7 @@
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Brad Steiner (bsteiner@thehungersite.com)
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Revision: 1.11 $
+ *@version    $Revision: 1.12 $
  *@since      2.2
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -370,14 +370,14 @@ ${pages.get("/promo/PromoTabBar.ftl")}
 
         <br>
 
-        <div class="head3">${uiLabelMap.ProductAddPromoRule} :</div>
-        <form method="POST" action="<@ofbizUrl>/createProductPromoRule</@ofbizUrl>" style="margin: 0;">
-            <input type="hidden" name="productPromoId" value="${productPromoId?if_exists}">
-
-            <br>
-            ${uiLabelMap.ProductName} : <input type=text size="30" name="ruleName" class="inputBox">
-            <input type="submit" value="${uiLabelMap.CommonAdd}">
-        </form>
+        <div class="head3">${uiLabelMap.ProductAddPromoRule}:</div>
+        <div class="tabletext">
+            <form method="POST" action="<@ofbizUrl>/createProductPromoRule</@ofbizUrl>" style="margin: 0;">
+                <input type="hidden" name="productPromoId" value="${productPromoId?if_exists}">
+                ${uiLabelMap.ProductName} : <input type=text size="30" name="ruleName" class="inputBox">
+                <input type="submit" value="${uiLabelMap.CommonAdd}">
+            </form>
+        </div>
 
         <br/>
 
