@@ -35,17 +35,28 @@ import org.ofbiz.core.util.*;
  * @version    1.0
  */
 public class TransactionUtil implements javax.transaction.Status {
-    /** Begins a transaction in the current thread IF transactions are available */
-    public static void begin() throws GenericTransactionException  {
+    /** Begins a transaction in the current thread IF transactions are available; only
+     * tries if the current transaction status is ACTIVE, if not active it returns false.
+     * If and on only if it begins a transaction it will return true. In other words, if
+     * a transaction is already in place it will return false and do nothing.
+     */
+    public static boolean begin() throws GenericTransactionException  {
         UserTransaction ut = TransactionFactory.getUserTransaction();
         if (ut != null) {
             try {
+                if (ut.getStatus() == TransactionUtil.STATUS_ACTIVE) {
+                    return false;
+                }
                 ut.begin();
+                return true;
             } catch (NotSupportedException e) {
                 throw new GenericTransactionException("Not Supported error, could not begin transaction (probably a nesting problem)", e);
             } catch (SystemException e) {
                 throw new GenericTransactionException("System error, could not begin transaction", e);
             }
+        } else {
+            //no transaction, so none begun
+            return false;
         }
     }
     
@@ -62,6 +73,14 @@ public class TransactionUtil implements javax.transaction.Status {
         }  else {
             return STATUS_NO_TRANSACTION;
         }
+    }
+    
+    /** Commits the transaction in the current thread IF transactions are available 
+     *  AND if beganTransaction is true
+     */
+    public static void commit(boolean beganTransaction) throws GenericTransactionException {
+        if (beganTransaction)
+            TransactionUtil.commit();
     }
     
     /** Commits the transaction in the current thread IF transactions are available */
@@ -82,6 +101,14 @@ public class TransactionUtil implements javax.transaction.Status {
                 throw new GenericTransactionException("System error, could not commit transaction", e);
             }
         }
+    }
+    
+    /** Rolls back transaction in the current thread IF transactions are available 
+     *  AND if beganTransaction is true
+     */
+    public static void rollback(boolean beganTransaction) throws GenericTransactionException {
+        if (beganTransaction)
+            TransactionUtil.rollback();
     }
     
     /** Rolls back transaction in the current thread IF transactions are available */

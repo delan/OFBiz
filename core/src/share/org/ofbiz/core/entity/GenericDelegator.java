@@ -890,9 +890,8 @@ public class GenericDelegator {
         boolean beganTransaction = false;
         try {
             //if there are multiple helpers and no transaction is active, begin one
-            if (valuesPerHelper.size() > 1 && TransactionUtil.getStatus() != TransactionUtil.STATUS_ACTIVE) {
-                TransactionUtil.begin();
-                beganTransaction = true;
+            if (valuesPerHelper.size() > 1) {
+                beganTransaction = TransactionUtil.begin();
             }
 
             Iterator helperIter = valuesPerHelper.entrySet().iterator();
@@ -905,13 +904,11 @@ public class GenericDelegator {
             }
 
             //only commit the transaction if we started one...
-            if (beganTransaction)
-                TransactionUtil.commit();
+            TransactionUtil.commit(beganTransaction);
         } catch (GenericEntityException e) {
             try {
                 //only rollback the transaction if we started one...
-                if (beganTransaction)
-                    TransactionUtil.rollback();
+                TransactionUtil.rollback(beganTransaction);
             } catch(GenericEntityException e2) {
                 Debug.logError("[GenericDelegator.removeAll] Could not rollback transaction: ");
                 Debug.logError(e2);
@@ -953,9 +950,8 @@ public class GenericDelegator {
         boolean beganTransaction = false;
         try {
             //if there are multiple helpers and no transaction is active, begin one
-            if (valuesPerHelper.size() > 1 && TransactionUtil.getStatus() != TransactionUtil.STATUS_ACTIVE) {
-                TransactionUtil.begin();
-                beganTransaction = true;
+            if (valuesPerHelper.size() > 1) {
+                beganTransaction = TransactionUtil.begin();
             }
 
             Iterator helperIter = valuesPerHelper.entrySet().iterator();
