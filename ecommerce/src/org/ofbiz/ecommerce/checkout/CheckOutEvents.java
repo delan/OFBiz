@@ -65,7 +65,7 @@ public class CheckOutEvents {
         if (cart != null && cart.size() > 0) {
             String shippingMethod = request.getParameter("shipping_method");
             String shippingContactMechId = request.getParameter("shipping_contact_mech_id");
-            String paymentMethodId = request.getParameter("paymentMethodId");
+            String checkOutPaymentId = request.getParameter("checkOutPaymentId");
             String billingAccountId = request.getParameter("billing_account_id");
             String correspondingPoId = request.getParameter("corresponding_po_id");
             String shippingInstructions = request.getParameter("shipping_instructions");
@@ -110,8 +110,13 @@ public class CheckOutEvents {
                 errorMessage.append("<li>Please Select a Shipping Destination");
             }
 
-            if (UtilValidate.isNotEmpty(paymentMethodId)) {
-                cart.setPaymentMethodId(paymentMethodId);
+            if (UtilValidate.isNotEmpty(checkOutPaymentId)) {
+                //all payment method ids will be numeric, type ids will start with letter
+                if (Character.isLetter(checkOutPaymentId.charAt(0))) {
+                    cart.addPaymentMethodTypeId(checkOutPaymentId);
+                } else {
+                    cart.addPaymentMethodId(checkOutPaymentId);
+                }
             }
             if (UtilValidate.isNotEmpty(billingAccountId)) {
                 cart.setBillingAccountId(billingAccountId);
@@ -119,7 +124,7 @@ public class CheckOutEvents {
                 if (UtilValidate.isEmpty(cart.getPoNumber())) {
                     cart.setPoNumber("(none)");
                 }//else ok
-            } else if (UtilValidate.isEmpty(paymentMethodId)) {
+            } else if (UtilValidate.isEmpty(checkOutPaymentId)) {
                 errorMessage.append("<li>Please Select a Method of Billing");
             }
         } else {
@@ -181,19 +186,15 @@ public class CheckOutEvents {
                 return "error";
             }
         }
+        
+        cart.clear();
 
         // set the orderId for future use
         request.setAttribute("order_id", orderId);
         request.setAttribute("orderAdditionalEmails", cart.getOrderAdditionalEmails());
 
-        // get the payment method - return proper result
-        GenericValue paymentMethod = cart.getPaymentMethod(delegator);
-        if (paymentMethod != null && paymentMethod.getString("paymentMethodTypeId").equals("CREDIT_CARD"))
-            return "cc";
-        else if (paymentMethod != null && paymentMethod.getString("paymentMethodTypeId").equals("EFT"))
-            return "eft";
-        else
-            return "success";
+        // TODO: we should do, or invoke, the payment processing here...
+        return "success";
 
     }
 
@@ -257,7 +258,11 @@ public class CheckOutEvents {
             final String ORDER_BCC = UtilProperties.getPropertyValue(ecommercePropertiesUrl, "order.confirmation.email.bcc");
             final String ORDER_CC = UtilProperties.getPropertyValue(ecommercePropertiesUrl, "order.confirmation.email.cc");
             GenericValue userLogin = (GenericValue) request.getSession().getAttribute(SiteDefs.USER_LOGIN);
-            StringBuffer emails = new StringBuffer((String) request.getAttribute("orderAdditionalEmails"));
+            String orderAdditionalEmails = (String) request.getAttribute("orderAdditionalEmails");
+            StringBuffer emails = new StringBuffer();
+            if (orderAdditionalEmails != null) {
+                emails.append(orderAdditionalEmails);
+            }
             GenericValue party = null;
             try {
                 party = userLogin.getRelatedOne("Party");

@@ -234,14 +234,53 @@ public class OrderReadHelper {
     }
 
     public double getOrderAdjustments() {
-        return calcOrderAdjustments(getOrderAdjustmentCollection(), getOrderItemsTotal());
+        return calcOrderAdjustments(getOrderAdjustmentCollection(), getOrderItemsSubTotal(), true, true, true);
     }
 
-    public double getOrderItemsTotal() {
+    // ================= Order Adjustments =================
+
+    public static double calcOrderAdjustments(Collection adjustments, double subTotal, boolean includeOther, boolean includeTax, boolean includeShipping) {
+        double adjTotal = 0.0;
+        if (adjustments != null && adjustments.size() > 0) {
+            Iterator adjIt = adjustments.iterator();
+            while (adjIt.hasNext()) {
+                GenericValue orderAdjustment = (GenericValue) adjIt.next();
+
+                boolean includeAdjustment = false;
+                if ("SALES_TAX".equals(orderAdjustment.getString("orderAdjustmentTypeId"))) {
+                    if (includeTax) includeAdjustment = true;
+                } else if ("SHIPPING_CHARGES".equals(orderAdjustment.getString("orderAdjustmentTypeId"))) {
+                    if (includeShipping) includeAdjustment = true;
+                } else {
+                    if (includeOther) includeAdjustment = true;
+                }
+                
+                if (includeAdjustment) {
+                    adjTotal += OrderReadHelper.calcOrderAdjustment(orderAdjustment, subTotal);
+                }
+            }
+        }
+        return adjTotal;
+    }
+
+    public static double calcOrderAdjustment(GenericValue orderAdjustment, double orderSubTotal) {
+        double adjustment = 0.0;
+        if (orderAdjustment.get("amount") != null && orderAdjustment.getDouble("amount").doubleValue() > 0) {
+            adjustment += orderAdjustment.getDouble("amount").doubleValue();
+        }
+        if (orderAdjustment.get("percentage") != null && orderAdjustment.getDouble("percentage").doubleValue() > 0) {
+            adjustment += (orderAdjustment.getDouble("percentage").doubleValue() * orderSubTotal);
+        }
+        return adjustment;
+    }
+
+    // ================= Order Item Adjustments =================
+    
+    public double getOrderItemsSubTotal() {
         double result = 0.0;
         Iterator itemIter = UtilMisc.toIterator(getOrderItems());
         while (itemIter != null && itemIter.hasNext()) {
-            result += getOrderItemTotal((GenericValue) itemIter.next());
+            result += getOrderItemSubTotal((GenericValue) itemIter.next());
         }
         return result;
     }
@@ -254,81 +293,87 @@ public class OrderReadHelper {
             return 0.0;
         }
         double result = unitPrice.doubleValue() * quantity.doubleValue();
+        
+        //subtotal also includes non tax and shipping adjustments; tax and shipping will be calculated using this adjusted value
+        result += getOrderItemAdjustments(orderItem, true, false, false);
+        
+        return result;
+    }
+
+    public double getOrderItemsTotal() {
+        double result = 0.0;
+        Iterator itemIter = UtilMisc.toIterator(getOrderItems());
+        while (itemIter != null && itemIter.hasNext()) {
+            result += getOrderItemTotal((GenericValue) itemIter.next());
+        }
         return result;
     }
 
     public double getOrderItemTotal(GenericValue orderItem) {
-        return (getOrderItemSubTotal(orderItem) + getOrderItemAdjustments(orderItem, true, true));
+        //add tax and shipping to subtotal
+        return (getOrderItemSubTotal(orderItem) + getOrderItemAdjustments(orderItem, false, true, true));
     }
 
-    public double getOrderItemAdjustments(GenericValue orderItem, boolean includeTax, boolean includeShipping) {
+    public double getOrderItemAdjustments(GenericValue orderItem, boolean includeOther, boolean includeTax, boolean includeShipping) {
         List contraints = new LinkedList();
         contraints.add(new EntityExpr("orderItemSeqId", EntityOperator.EQUALS, orderItem.get("orderItemSeqId")));
-        if (!includeTax)
-            contraints.add(new EntityExpr("orderAdjustmentTypeId", EntityOperator.NOT_EQUAL, "SALES_TAX"));
-        if (!includeShipping)
-            contraints.add(new EntityExpr("orderAdjustmentTypeId", EntityOperator.NOT_EQUAL, "SHIPPING_CHARGES"));
-        contraints.add(new EntityExpr("orderAdjustmentTypeId", EntityOperator.EQUALS, "SALES_TAX"));
         Collection adj = EntityUtil.filterByAnd(getAdjustments(), contraints);
-        return calcItemAdjustments(orderItem, adj);
+        return calcItemAdjustments(orderItem, adj, includeOther, includeTax, includeShipping);
     }
 
     public double getOrderItemTax(GenericValue orderItem) {
-        List contraints = new LinkedList();
-        contraints.add(new EntityExpr("orderItemSeqId", EntityOperator.EQUALS, orderItem.get("orderItemSeqId")));
-        contraints.add(new EntityExpr("orderAdjustmentTypeId", EntityOperator.EQUALS, "SALES_TAX"));
-        Collection adj = EntityUtil.filterByAnd(getAdjustments(), contraints);
-        return calcItemAdjustments(orderItem, adj);
+        return getOrderItemAdjustments(orderItem, false, true, false);
     }
 
     public double getOrderItemShipping(GenericValue orderItem) {
-        List contraints = new LinkedList();
-        contraints.add(new EntityExpr("orderItemSeqId", EntityOperator.EQUALS, orderItem.get("orderItemSeqId")));
-        contraints.add(new EntityExpr("orderAdjustmentTypeId", EntityOperator.EQUALS, "SHIPPING_CHARGES"));
-        Collection adj = EntityUtil.filterByAnd(getAdjustments(), contraints);
-        return calcItemAdjustments(orderItem, adj);
+        return getOrderItemAdjustments(orderItem, false, false, true);
     }
 
-    private double calcOrderAdjustments(Collection adjustments, double subTotal) {
+    //Order Item Adjs Utility Methods
+    
+    public static double calcItemAdjustments(GenericValue orderItem, Collection adjustments, boolean includeOther, boolean includeTax, boolean includeShipping) {
+        return calcItemAdjustments(orderItem.getDouble("quantity"), orderItem.getDouble("unitPrice"), adjustments, includeOther, includeTax, includeShipping);
+    }
+    
+    public static double calcItemAdjustments(Double quantity, Double unitPrice, Collection adjustments, boolean includeOther, boolean includeTax, boolean includeShipping) {
         double adjTotal = 0.0;
         if (adjustments != null && adjustments.size() > 0) {
             Iterator adjIt = adjustments.iterator();
             while (adjIt.hasNext()) {
-                GenericValue gv = (GenericValue) adjIt.next();
-                adjTotal += OrderReadHelper.calcOrderAdjustment(gv, subTotal);
+                GenericValue orderAdjustment = (GenericValue) adjIt.next();
+                
+                boolean includeAdjustment = false;
+                if ("SALES_TAX".equals(orderAdjustment.getString("orderAdjustmentTypeId"))) {
+                    if (includeTax) includeAdjustment = true;
+                } else if ("SHIPPING_CHARGES".equals(orderAdjustment.getString("orderAdjustmentTypeId"))) {
+                    if (includeShipping) includeAdjustment = true;
+                } else {
+                    if (includeOther) includeAdjustment = true;
+                }
+                
+                if (includeAdjustment) {
+                    adjTotal += OrderReadHelper.calcItemAdjustment(orderAdjustment, quantity, unitPrice);
+                }
             }
         }
         return adjTotal;
-    }
-
-    private double calcItemAdjustments(GenericValue orderItem, Collection adjustments) {
-        double adjTotal = 0.0;
-        if (adjustments != null && adjustments.size() > 0) {
-            Iterator adjIt = adjustments.iterator();
-            while (adjIt.hasNext()) {
-                GenericValue gv = (GenericValue) adjIt.next();
-                adjTotal += OrderReadHelper.calcItemAdjustment(gv, orderItem);
-            }
-        }
-        return adjTotal;
-    }
-
-    public static double calcOrderAdjustment(GenericValue orderAdjustment, double orderTotal) {
-        double adjustment = 0.0;
-        if (orderAdjustment.get("amount") != null && orderAdjustment.getDouble("amount").doubleValue() > 0)
-            adjustment += orderAdjustment.getDouble("amount").doubleValue();
-        if (orderAdjustment.get("percentage") != null && orderAdjustment.getDouble("percentage").doubleValue() > 0)
-            adjustment += (orderAdjustment.getDouble("percentage").doubleValue() * orderTotal);
-        return adjustment;
     }
 
     public static double calcItemAdjustment(GenericValue itemAdjustment, GenericValue item) {
+        return calcItemAdjustment(itemAdjustment, item.getDouble("quantity"), item.getDouble("unitPrice"));
+    }
+    
+    public static double calcItemAdjustment(GenericValue itemAdjustment, Double quantity, Double unitPrice) {
         double adjustment = 0.0;
-        if (itemAdjustment.get("amount") != null && itemAdjustment.getDouble("amount").doubleValue() > 0)
+        if (itemAdjustment.get("amount") != null && itemAdjustment.getDouble("amount").doubleValue() > 0) {
             adjustment += itemAdjustment.getDouble("amount").doubleValue();
-        if (itemAdjustment.get("percentage") != null && itemAdjustment.getDouble("percentage").doubleValue() > 0)
-            adjustment += (itemAdjustment.getDouble("percentage").doubleValue() * item.getDouble("unitPrice").doubleValue());
+        }
+        if (itemAdjustment.get("amountPerQuantity") != null && itemAdjustment.getDouble("amountPerQuantity").doubleValue() > 0 && quantity != null) {
+            adjustment += itemAdjustment.getDouble("amountPerQuantity").doubleValue() * quantity.doubleValue();
+        }
+        if (itemAdjustment.get("percentage") != null && itemAdjustment.getDouble("percentage").doubleValue() > 0 && unitPrice != null) {
+            adjustment += (itemAdjustment.getDouble("percentage").doubleValue() * unitPrice.doubleValue());
+        }
         return adjustment;
     }
-
 }

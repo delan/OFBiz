@@ -272,7 +272,16 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom' style='height: 100%;'>
         <tr>
           <td valign=top>
-
+<%
+    String checkOutPaymentId = "";
+    if (cart != null) {
+        if (cart.getPaymentMethodIds().size() > 0) {
+            checkOutPaymentId = (String) cart.getPaymentMethodIds().get(0);
+        } else if (cart.getPaymentMethodTypeIds().size() > 0) {
+            checkOutPaymentId = (String) cart.getPaymentMethodTypeIds().get(0);
+        }
+    }
+%>
 <table width="100%" cellpadding="1" cellspacing="0" border="0">
   <tr><td colspan="2">
     <span class='tabletext'>Add:</span>
@@ -282,8 +291,8 @@
   <tr><td colspan="2"><hr class='sepbar'></td></tr>
   <tr>
     <td width="1%" nowrap>
-      <input type="radio" name="paymentMethodId" value="_OFFLINE_"
-      <ofbiz:if name="cart"><%="_OFFLINE_".equals(cart.getPaymentMethodId()) ? "CHECKED" : ""%></ofbiz:if>>
+      <input type="radio" name="checkOutPaymentId" value="OFFLINE"
+        <%="OFFLINE".equals(checkOutPaymentId) ? "CHECKED" : ""%>>
     </td>
     <td width="50%" nowrap>
       <span class="tabletext">Offline:&nbsp;Check/Money Order</span>
@@ -297,8 +306,8 @@
           <tr>
             <td width="1%" nowrap>
               <%String paymentMethodId = paymentMethod.getString("paymentMethodId");%>
-              <input type="radio" name="paymentMethodId" value="<%=paymentMethodId%>"
-              <ofbiz:if name="cart"><%=paymentMethodId.equals(cart.getPaymentMethodId()) ? "CHECKED" : ""%></ofbiz:if>>
+              <input type="radio" name="checkOutPaymentId" value="<%=paymentMethodId%>"
+                  <%=paymentMethodId.equals(checkOutPaymentId) ? "CHECKED" : ""%>>
             </td>
             <td width="50%" nowrap>
               <span class="tabletext">CC:&nbsp;<%=ContactHelper.formatCreditCard(creditCard)%></span>
@@ -311,8 +320,8 @@
           <tr>
             <td width="1%" nowrap>
               <%String paymentMethodId = paymentMethod.getString("paymentMethodId");%>
-              <input type="radio" name="paymentMethodId" value="<%=paymentMethodId%>"
-              <ofbiz:if name="cart"><%=paymentMethodId.equals(cart.getPaymentMethodId()) ? "CHECKED" : ""%></ofbiz:if>>
+              <input type="radio" name="checkOutPaymentId" value="<%=paymentMethodId%>"
+                <%=paymentMethodId.equals(checkOutPaymentId) ? "CHECKED" : ""%>>
             </td>
             <td width="50%" nowrap>
               <span class="tabletext">

@@ -4,11 +4,13 @@
 
 package org.ofbiz.ecommerce.shoppingcart;
 
+import java.text.*;
 import java.util.*;
 
 import org.ofbiz.core.entity.*;
+import org.ofbiz.core.service.*;
 import org.ofbiz.core.util.*;
-import org.ofbiz.commonapp.order.order.Adjustment;
+import org.ofbiz.commonapp.order.order.OrderReadHelper;
 
 /**
  * <p><b>Title:</b> ShoppingCart.java
@@ -41,86 +43,62 @@ import org.ofbiz.commonapp.order.order.Adjustment;
 public class ShoppingCart implements java.io.Serializable {
 
     //either paymentMethodId or poNumber must be null (use one or the other)
-    private String paymentMethodId;
-    private String poNumber;
-    private String orderId;
+    private List paymentMethodIds = new LinkedList();
+    private List paymentMethodTypeIds = new LinkedList();
+    private String poNumber = null;
+    private String orderId = null;
 
-    private String shippingContactMechId;
-    private String billingAccountId;
-    private String shippingInstructions;
-    private String giftMessage;
-    private Boolean isGift;
-    private Boolean maySplit;
+    private String shippingContactMechId = null;
+    private String billingAccountId = null;
+    private String shippingInstructions = null;
+    private Boolean maySplit = null;
+    private String giftMessage = null;
+    private Boolean isGift = null;
 
-    /** stored in the format of [shipment method type id]@[carrier party id] */
-    private String shipmentMethodTypeId;
-    private String carrierPartyId;
-    private String cartDiscountString;
-    private String orderAdditionalEmails;
-    private String taxString;
-    private double salesTax;
-    private double shipping;
-    private double cartDiscount;
+    private String shipmentMethodTypeId = "";
+    private String carrierPartyId = "";
+    private String orderAdditionalEmails = null;
+    private String freeShippingPromoId = null;
     private boolean viewCartOnAdd = true;
 
-    /** Holds value of property adjustments. */
-    private List adjustments;
-    private List cartLines;
+    /** Holds value of order adjustments. */
+    private List adjustments = new LinkedList();
+    private List cartLines = new ArrayList();
 
     private GenericDelegator delegator;
 
+    /** don't allow empty constructor */
+    protected ShoppingCart() {}
+    
     /** Creates new empty ShoppingCart object. */
     public ShoppingCart(GenericDelegator delegator) {
-        cartLines = new ArrayList();
-        adjustments = new LinkedList();
-        shipping = 0.00;
-        salesTax = 0.00;
-        cartDiscount = 0.00;
-        shippingContactMechId = "";
-        taxString = "";
-        cartDiscountString = "";
-        orderId = null;
         this.delegator = delegator;
     }
+
+    // =======================================================================
+    // Methods for cart items
+    // =======================================================================
 
     /** Add an item to the shopping cart, or if already there, increase the quantity.
      *  @return the new/increased item index
      */
-    public int addOrIncreaseItem(GenericValue product, double quantity, HashMap attributes) {
-        if ("Y".equals(product.getString("isVirtual"))) {
-            Debug.logWarning("Tried to add a Virtual Product to the cart with productId " + product.getString("productId"));
-            return -1;
-        }
-
-        // create a new shopping cart item.
-        ShoppingCartItem newItem = new ShoppingCartItem(product, quantity, attributes);
-        Debug.logInfo("New item created: " + newItem.getProductId());
+    public int addOrIncreaseItem(GenericDelegator delegator, String productId, double quantity, HashMap features, HashMap attributes, String prodCatalogId, LocalDispatcher dispatcher) throws CartItemModifyException {
+    //public int addOrIncreaseItem(GenericValue product, double quantity, HashMap features) {
 
         // Check for existing cart item.
-        Debug.logInfo("Cart size: " + this.size());
         for (int i = 0; i < this.cartLines.size(); i++) {
             ShoppingCartItem sci = (ShoppingCartItem) cartLines.get(i);
-            Debug.logInfo("Comparing to item: " + sci.getProductId());
-            if (sci.equals(newItem)) {
-                Debug.logInfo("Found a match, updating quantity.");
-                sci.setQuantity(sci.getQuantity() + quantity);
+            if (sci.equals(productId, features, attributes, prodCatalogId)) {
+                double newQuantity = sci.getQuantity() + quantity;
+                Debug.logVerbose("Found a match for id " + productId + " on line " + i + ", updating quantity to " + newQuantity);
+                sci.setQuantity(newQuantity, dispatcher);
                 return i;
             }
         }
 
         // Add the new item to the shopping cart if it wasn't found.
-        return this.addItem(0, newItem);
+        return this.addItem(0, ShoppingCartItem.makeItem(delegator, productId, quantity, features, attributes, prodCatalogId, dispatcher));
     }
-
-    /** Add an item to the shopping cart. */
-    public int addItem(GenericValue product, double quantity, HashMap attributes) {
-        if ("Y".equals(product.getString("isVirtual"))) {
-            Debug.logWarning("Tried to add a Virtual Product to the cart with productId " + product.getString("productId"));
-            return -1;
-        }
-        return addItem(new ShoppingCartItem(product, quantity, attributes));
-    }
-
     /** Add an item to the shopping cart. */
     public int addItem(int index, ShoppingCartItem item) {
         cartLines.add(index, item);
@@ -128,23 +106,30 @@ public class ShoppingCart implements java.io.Serializable {
     }
 
     /** Add an item to the shopping cart. */
-    public int addItem(ShoppingCartItem item) {
+    public int addItemToEnd(GenericDelegator delegator, String productId, double quantity, HashMap features, HashMap attributes, String prodCatalogId, LocalDispatcher dispatcher) throws CartItemModifyException {
+        return addItemToEnd(ShoppingCartItem.makeItem(delegator, productId, quantity, features, attributes, prodCatalogId, dispatcher));
+    }
+    /** Add an item to the shopping cart. */
+    public int addItemToEnd(ShoppingCartItem item) {
         cartLines.add(item);
         return cartLines.size() - 1;
     }
 
     /** Get a ShoppingCartItem from the cart object. */
-    public ShoppingCartItem findCartItem(GenericValue product, HashMap attributes) {
-        ShoppingCartItem newItem = new ShoppingCartItem(product, 0.0, attributes);
-
+    public ShoppingCartItem findCartItem(String productId, HashMap features, HashMap attributes, String prodCatalogId) {
         // Check for existing cart item.
         for (int i = 0; i < this.cartLines.size(); i++) {
             ShoppingCartItem sci = (ShoppingCartItem) cartLines.get(i);
-            if (sci.equals(newItem)) {
+            if (sci.equals(productId, features, attributes, prodCatalogId)) {
                 return sci;
             }
         }
         return null;
+    }
+
+    /** Returns this item's index. */
+    public int getItemIndex(ShoppingCartItem item) {
+        return cartLines.indexOf(item);
     }
 
     /** Get a ShoppingCartItem from the cart object. */
@@ -155,279 +140,171 @@ public class ShoppingCart implements java.io.Serializable {
     }
 
     /** Remove an item from the cart object. */
-    public ShoppingCartItem removeCartItem(int index) {
-        if (cartLines.size() <= index) return null;
-        return (ShoppingCartItem) cartLines.remove(index);
+    public void removeCartItem(int index, LocalDispatcher dispatcher) throws CartItemModifyException {
+        if (cartLines.size() <= index) return;
+        ShoppingCartItem item = (ShoppingCartItem) cartLines.remove(index);
+        //set quantity to 0 to trigger necessary events
+        item.setQuantity(0.0, dispatcher);
+    }
+
+    /** Moves a line item to a differnt index. */
+    public void moveCartItem(int fromIndex, int toIndex) {
+        if (toIndex < fromIndex) {
+            cartLines.add(toIndex, cartLines.remove(fromIndex));
+        } else if (toIndex > fromIndex) {
+            cartLines.add(toIndex - 1, cartLines.remove(fromIndex));
+        }
     }
 
     /** Returns the number of items in the cart object. */
     public int size() {
         return cartLines.size();
     }
-
     /** Returns a Collection of items in the cart object. */
     public Collection items() {
         return (Collection) cartLines;
     }
-
     /** Returns an iterator of cart items. */
     public Iterator iterator() {
         return cartLines.iterator();
     }
 
-    /** Returns an collection of order items. */
-    public Collection makeOrderItems(GenericDelegator delegator) {
-        synchronized (cartLines) {
-            Collection result = new LinkedList();
-            Iterator itemIter = cartLines.iterator();
-            int seqId = 1;
-            while (itemIter.hasNext()) {
-                ShoppingCartItem item = (ShoppingCartItem) itemIter.next();
-                String orderItemSeqId = String.valueOf(seqId++);
-                GenericValue orderItem = delegator.makeValue("OrderItem", UtilMisc.toMap(
-                        "orderItemSeqId", orderItemSeqId,
-                        "orderItemTypeId", "SALES_ORDER_ITEM",
-                        "productId", item.getProductId(),
-                        "quantity", new Double(item.getQuantity()),
-                        "unitPrice", new Double(item.getPrice())));
-                orderItem.set("itemDescription", item.getName());
-                orderItem.set("comments", item.getItemComment());
-                orderItem.set("correspondingPoId", this.getPoNumber());
-                orderItem.set("statusId", "Ordered");
-                result.add(orderItem);
-            }
-            return result;
-        }
-    }
-
-    /** Returns a Map of cart values */
-    public Map makeCartMap(GenericDelegator delegator) {
-        Map result = new HashMap();
-        result.put("orderItems", makeOrderItems(delegator));
-        result.put("billingAccountId", getBillingAccountId());
-        result.put("cartDiscount", new Double(getCartDiscount()));
-
-        result.put("orderAdjustments", getAdjustments());
-
-        result.put("shippingContactMechId", getShippingContactMechId());
-        result.put("shipmentMethodTypeId", getShipmentMethodTypeId());
-        result.put("carrierPartyId", getCarrierPartyId());
-        result.put("shippingInstructions", getShippingInstructions());
-        result.put("maySplit", getMaySplit());
-        result.put("giftMessage", getGiftMessage());
-        result.put("isGift", getIsGift());
-        result.put("paymentMethodId", getPaymentMethodId());
-        result.put("paymentMethod", getPaymentMethod(delegator));
-        return result;
-    }
-
-    /** Getter for property adjustments.
-     * @return Value of property adjustments.
-     */
-    public List getAdjustments() {
-        return adjustments;
-    }
-
-    /** Setter for property adjustments.
-     * @param adjustments New value of property adjustments.
-     */
-    public void setAdjustments(List adjustments) {
-        this.adjustments = adjustments;
-    }
-
-    public void addAdjustment(GenericValue adjustment) {
-        adjustments.add(adjustment);
-    }
-
-    public List makeAdjustments(GenericDelegator delegator) {
-        // make a sales tax adjustment if tax is done by order.
-        if (this.getSalesTax() > 0) {
-            addAdjustment(delegator.makeValue("OrderAdjustment",
-                    UtilMisc.toMap("orderAdjustmentId", delegator.getNextSeqId("OrderAdjustment").toString(),
-                            "orderAdjustmentTypeId", "SALES_TAX",
-                            "amount", new Double(this.getSalesTax()))));
-        }
-        // make a shipping adjustment if shipping is done by order.
-        if (this.getShipping() > 0) {
-            addAdjustment(delegator.makeValue("OrderAdjustment",
-                    UtilMisc.toMap("orderAdjustmentId", delegator.getNextSeqId("OrderAdjustment").toString(),
-                            "orderAdjustmentTypeId", "SHIPPING_CHARGES",
-                            "amount", new Double(this.getShipping()))));
-        }
-        return this.getAdjustments();
-    }
-
-    /** Returns this item's index. */
-    public int getItemIndex(Object item) {
-        return cartLines.indexOf(item);
-    }
+    // =======================================================================
+    // Methods for cart fields
+    // =======================================================================
 
     /** Clears out the cart. */
     public void clear() {
-        salesTax = 0.00;
-        shipping = 0.00;
+        poNumber = null;
         orderId = null;
-        cartLines.clear();
-    }
 
-    /** Moves a line item to a differnt index. */
-    public void moveCartItem(int fromIndex, int toIndex) {
-        if (toIndex < fromIndex)
-            cartLines.add(toIndex, cartLines.remove(fromIndex));
-        else if (toIndex > fromIndex)
-            cartLines.add(toIndex - 1, cartLines.remove(fromIndex));
+        shippingInstructions = null;
+        maySplit = null;
+        giftMessage = null;
+        isGift = null;
+
+        orderAdditionalEmails = null;
+        freeShippingPromoId = null;
+
+        paymentMethodIds.clear();
+        paymentMethodTypeIds.clear();
+        adjustments.clear();
+        cartLines.clear();
     }
 
     /** Sets the PO Number in the cart. */
     public void setPoNumber(String poNumber) {
         this.poNumber = poNumber;
     }
-
-    /** Sets the Payment Method Id in the cart. */
-    public void setPaymentMethodId(String paymentMethodId) {
-        this.paymentMethodId = paymentMethodId;
+    /** Returns the po number. */
+    public String getPoNumber() {
+        return poNumber;
     }
 
-    /** Sets the shipping amount in the cart. */
-    public void setShipping(double shipping) {
-        this.shipping = shipping;
-        addAdjustment(delegator.makeValue("OrderAdjustment",
-                UtilMisc.toMap("orderAdjustmentId", delegator.getNextSeqId("OrderAdjustment").toString(),
-                        "orderAdjustmentTypeId", "SHIPPING_CHARGES",
-                        "amount", new Double(this.getShipping()))));
+    /** Add the Payment Method Id to the cart. */
+    public void addPaymentMethodId(String paymentMethodId) {
+        this.paymentMethodIds.add(paymentMethodId);
+    }
+    /** Returns the Payment Method Ids. */
+    public List getPaymentMethodIds() {
+        return paymentMethodIds;
     }
 
-    /** Sets the billing message string. */
+    /** Add the Payment Method Type Id to the cart. */
+    public void addPaymentMethodTypeId(String paymentMethodTypeId) {
+        this.paymentMethodTypeIds.add(paymentMethodTypeId);
+    }
+    /** Returns the Payment Method Ids. */
+    public List getPaymentMethodTypeIds() {
+        return paymentMethodTypeIds;
+    }
+
+    /** Sets the billing account id string. */
     public void setBillingAccountId(String billingAccountId) {
         this.billingAccountId = billingAccountId;
     }
+    /** Returns the billing message string. */
+    public String getBillingAccountId() {
+        return billingAccountId;
+    }
 
-    /** Sets the shipping message string. */
+    /** Sets the shipping contact mech id. */
     public void setShippingContactMechId(String shippingContactMechId) {
         this.shippingContactMechId = shippingContactMechId;
     }
-
-    /** Sets the shipping instructions. */
-    public void setShippingInstructions(String shippingInstructions) {
-        this.shippingInstructions = shippingInstructions;
-    }
-
-    public void setGiftMessage(String giftMessage) {
-        this.giftMessage = giftMessage;
-    }
-
-    public void setIsGift(Boolean isGift) {
-        this.isGift = isGift;
-    }
-
-    public void setMaySplit(Boolean maySplit) {
-        this.maySplit = maySplit;
+    /** Returns the shipping message string. */
+    public String getShippingContactMechId() {
+        return shippingContactMechId;
     }
 
     /** Sets the shipment method type. */
     public void setShipmentMethodTypeId(String shipmentMethodTypeId) {
         this.shipmentMethodTypeId = shipmentMethodTypeId;
     }
-
-    public void setCarrierPartyId(String carrierPartyId) {
-        this.carrierPartyId = carrierPartyId;
-    }
-
-    public void setOrderAdditionalEmails(String orderAdditionalEmails) {
-        this.orderAdditionalEmails = orderAdditionalEmails;
-    }
-
-    /** Sets the tax dollar amount in the cart. */
-    public void setTax(double salesTax) {
-        this.salesTax = salesTax;
-        addAdjustment(delegator.makeValue("OrderAdjustment",
-                UtilMisc.toMap("orderAdjustmentId", delegator.getNextSeqId("OrderAdjustment").toString(),
-                        "orderAdjustmentTypeId", "SALES_TAX",
-                        "amount", new Double(this.getSalesTax()))));
-    }
-
-    /** Sets the tax message string. */
-    public void setTaxString(String taxString) {
-        this.taxString = taxString;
-    }
-
-    /** Sets the cart discount amount. */
-    public void setCartDiscount(double cartDiscount) {
-        this.cartDiscount = cartDiscount;
-    }
-
-    /** Sets the cart discount message string. */
-    public void setCartDiscountString(String cartDiscountString) {
-        this.cartDiscountString = cartDiscountString;
-    }
-
-    /** Returns the Payment Method Id. */
-    public String getPaymentMethodId() {
-        return paymentMethodId;
-    }
-
-    /** Returns the po number. */
-    public String getPoNumber() {
-        return poNumber;
-    }
-
-    /** Returns the shipping amount from the cart object. */
-    public double getShipping() {
-        return shipping;
-    }
-
-    /** Returns the shipping message string. */
-    public String getShippingContactMechId() {
-        return shippingContactMechId;
-    }
-
-    /** Returns the billing message string. */
-    public String getBillingAccountId() {
-        return billingAccountId;
-    }
-
-    /** Returns the shipping instructions. */
-    public String getShippingInstructions() {
-        return shippingInstructions;
-    }
-
-    public String getGiftMessage() {
-        return giftMessage;
-    }
-
-    public Boolean getIsGift() {
-        return isGift;
-    }
-
-    /** Returns Boolean.TRUE if the order may be shipped (null if unspecified) */
-    public Boolean getMaySplit() {
-        return maySplit;
-    }
-
     /** Returns the shipment method type */
     public String getShipmentMethodTypeId() {
         return shipmentMethodTypeId;
     }
 
+    /** Sets the shipping instructions. */
+    public void setShippingInstructions(String shippingInstructions) {
+        this.shippingInstructions = shippingInstructions;
+    }
+    /** Returns the shipping instructions. */
+    public String getShippingInstructions() {
+        return shippingInstructions;
+    }
+
+    public void setMaySplit(Boolean maySplit) {
+        this.maySplit = maySplit;
+    }
+    /** Returns Boolean.TRUE if the order may be shipped (null if unspecified) */
+    public Boolean getMaySplit() {
+        return maySplit;
+    }
+
+    public void setGiftMessage(String giftMessage) {
+        this.giftMessage = giftMessage;
+    }
+    public String getGiftMessage() {
+        return giftMessage;
+    }
+
+    public void setIsGift(Boolean isGift) {
+        this.isGift = isGift;
+    }
+    public Boolean getIsGift() {
+        return isGift;
+    }
+
+    public void setCarrierPartyId(String carrierPartyId) {
+        this.carrierPartyId = carrierPartyId;
+    }
     public String getCarrierPartyId() {
         return carrierPartyId;
     }
 
+    public void setOrderAdditionalEmails(String orderAdditionalEmails) {
+        this.orderAdditionalEmails = orderAdditionalEmails;
+    }
     public String getOrderAdditionalEmails() {
         return orderAdditionalEmails;
     }
 
-    public GenericValue getPaymentMethod(GenericDelegator delegator) {
-        if (this.paymentMethodId != null) {
-            try {
-                return delegator.findByPrimaryKey("PaymentMethod", UtilMisc.toMap("paymentMethodId", this.paymentMethodId));
-            } catch (GenericEntityException e) {
-                Debug.logWarning(e.toString());
-                return null;
+    public List getPaymentMethods(GenericDelegator delegator) {
+        List paymentMethods = new LinkedList();
+        if (paymentMethodIds != null && paymentMethodIds.size() > 0) {
+            Iterator pmIdsIter = paymentMethodIds.iterator();
+            while (pmIdsIter.hasNext()) {
+                String paymentMethodId = (String) pmIdsIter.next();
+                try {
+                    paymentMethods.add(delegator.findByPrimaryKey("PaymentMethod", UtilMisc.toMap("paymentMethodId", paymentMethodId)));
+                } catch (GenericEntityException e) {
+                    Debug.logError(e);
+                }
             }
-        } else {
-            return null;
         }
+        return paymentMethods;
     }
 
     public GenericValue getShippingAddress(GenericDelegator delegator) {
@@ -443,100 +320,126 @@ public class ShoppingCart implements java.io.Serializable {
         }
     }
 
-    public GenericValue getBillingAddress(GenericDelegator delegator) {
-        if (this.billingAccountId != null) {
-            try {
-                return delegator.findByPrimaryKey("PostalAddress", UtilMisc.toMap("contactMechId", this.billingAccountId));
-            } catch (GenericEntityException e) {
-                Debug.logWarning(e.toString());
-                return null;
-            }
-        } else {
-            return null;
+    /** Returns the tax amount from the cart object. */
+    public double getTotalSalesTax() {
+        double tempTax = 0.0;
+        Iterator i = iterator();
+        while (i.hasNext()) {
+            tempTax += ((ShoppingCartItem) i.next()).getItemTax();
         }
-    }
+        
+        tempTax += OrderReadHelper.calcOrderAdjustments(this.getAdjustments(), getSubTotal(), false, true, false);
 
-    /** Returns the dollar tax amount from the cart object. */
-    public double getSalesTax() {
-        return salesTax;
+        return tempTax;
     }
+    /** Returns the shipping amount from the cart object. */
+    public double getTotalShipping() {
+        double tempShipping = 0.0;
+        Iterator i = iterator();
+        while (i.hasNext()) {
+            tempShipping += ((ShoppingCartItem) i.next()).getItemShipping();
+        }
+        
+        tempShipping += OrderReadHelper.calcOrderAdjustments(this.getAdjustments(), getSubTotal(), false, false, true);
 
-    /** Returns the tax shipping string. */
-    public String getTaxString() {
-        return taxString;
-    }
-
-    /** Returns the cart discount amount. */
-    public double getCartDiscount() {
-        return cartDiscount;
-    }
-
-    /** Returns the cart discount message string. */
-    public String getCartDiscountString() {
-        return cartDiscountString;
+        return tempShipping;
     }
 
     /** Returns the item-total in the cart (not including discount/tax/shipping). */
     public double getItemTotal() {
         double itemTotal = 0.00;
         Iterator i = iterator();
-        while (i.hasNext())
-            itemTotal += ((ShoppingCartItem) i.next()).getTotalPrice();
+        while (i.hasNext()) {
+            itemTotal += ((ShoppingCartItem) i.next()).getBasePrice();
+        }
         return itemTotal;
     }
 
     /** Returns the sub-total in the cart (item-total - discount). */
     public double getSubTotal() {
-        return (getItemTotal() - cartDiscount);
+        double itemTotal = 0.00;
+        Iterator i = iterator();
+        while (i.hasNext()) {
+            itemTotal += ((ShoppingCartItem) i.next()).getItemSubTotal();
+        }
+        return itemTotal;
     }
 
+    /** Get a List of adjustments on the order (ie cart) */
+    public List getAdjustments() {
+        return adjustments;
+    }
+    /** Add an adjustment to the order; don't worry about setting the orderId, orderItemSeqId or orderAdjustmentId; they will be set when the order is created */
+    public void addAdjustment(GenericValue adjustment) {
+        adjustments.add(adjustment);
+    }
+    /** go through the order adjustments and remove all adjustments with the given type */
+    public void removeAdjustmentByType(String orderAdjustmentTypeId) {
+        if (orderAdjustmentTypeId == null) return;
+        List adjs = this.getAdjustments();
+        if (adjs != null) {
+            Iterator adjsIter = adjs.iterator();
+            while (adjsIter.hasNext()) {
+                GenericValue orderAdjustment = (GenericValue) adjsIter.next();
+                if (orderAdjustmentTypeId.equals(orderAdjustment.getString("orderAdjustmentTypeId"))) {
+                    adjs.remove(orderAdjustment);
+                }
+            }
+        }
+    }
+    public double getOrderOtherAdjustmentTotal() {
+        return OrderReadHelper.calcOrderAdjustments(this.getAdjustments(), getSubTotal(), true, false, false);
+    }
 
     /** Returns the total from the cart, including tax/shipping. */
     public double getGrandTotal() {
-        return (getSubTotal() + shipping + salesTax);
+        return (getSubTotal() + getOrderOtherAdjustmentTotal() + getTotalShipping() + getTotalSalesTax());
     }
 
     /** Returns the SHIPABLE item-total in the cart. */
     public double getShippableTotal() {
-        double itemTotal = 0.00;
+        double itemTotal = 0.0;
         Iterator i = iterator();
         while (i.hasNext()) {
             ShoppingCartItem item = (ShoppingCartItem) i.next();
             if (item.shippingApplies())
-                itemTotal += item.getTotalPrice();
+                itemTotal += item.getItemSubTotal();
         }
         return itemTotal;
     }
 
     /** Returns the total quantity in the cart. */
     public double getTotalQuantity() {
-        double count = 0.000000;
+        double count = 0.0;
         Iterator i = iterator();
-        while (i.hasNext())
+        while (i.hasNext()) {
             count += ((ShoppingCartItem) i.next()).getQuantity();
+        }
         return count;
     }
 
     /** Returns the total SHIPABLE quantity in the cart. */
     public double getShippableQuantity() {
-        double count = 0.000000;
+        double count = 0.0;
         Iterator i = iterator();
         while (i.hasNext()) {
             ShoppingCartItem item = (ShoppingCartItem) i.next();
-            if (item.shippingApplies())
+            if (item.shippingApplies()) {
                 count += item.getQuantity();
+            }
         }
         return count;
     }
 
     /** Returns the total SHIPABLE weight in the cart. */
     public double getShippableWeight() {
-        double weight = 0.000000;
+        double weight = 0.0;
         Iterator i = iterator();
         while (i.hasNext()) {
             ShoppingCartItem item = (ShoppingCartItem) i.next();
-            if (item.shippingApplies())
+            if (item.shippingApplies()) {
                 weight += (item.getWeight() * item.getQuantity());
+            }
         }
         return weight;
     }
@@ -544,7 +447,7 @@ public class ShoppingCart implements java.io.Serializable {
 
     /** Returns the total weight in the cart. */
     public double getTotalWeight() {
-        double weight = 0.000000;
+        double weight = 0.0;
         Iterator i = iterator();
         while (i.hasNext()) {
             ShoppingCartItem item = (ShoppingCartItem) i.next();
@@ -557,20 +460,111 @@ public class ShoppingCart implements java.io.Serializable {
     public boolean viewCartOnAdd() {
         return viewCartOnAdd;
     }
-
     /** Returns true if the user wishes to view the cart everytime an item is added. */
-    public boolean viewCartOnAdd(boolean viewCartOnAdd) {
+    public void setViewCartOnAdd(boolean viewCartOnAdd) {
         this.viewCartOnAdd = viewCartOnAdd;
-        return this.viewCartOnAdd;
     }
 
     /** Returns the order ID associated with this cart or null if no order has been created yet. */
     public String getOrderId() {
         return this.orderId;
     }
-
     /** Sets the orderId associated with this cart. */
     public void setOrderId(String orderId) {
         this.orderId = orderId;
     }
+    
+    // =======================================================================
+    // Methods used for order creation
+    // =======================================================================
+    
+    /** Returns an collection of order items. */
+    public Collection makeOrderItems(GenericDelegator delegator) {
+        synchronized (cartLines) {
+            Collection result = new LinkedList();
+            Iterator itemIter = cartLines.iterator();
+            long cartLineSize = cartLines.size();
+            long seqId = 1;
+            while (itemIter.hasNext()) {
+                ShoppingCartItem item = (ShoppingCartItem) itemIter.next();
+                
+                //format the string with enough leading zeroes for the number of cartLines
+                NumberFormat nf = NumberFormat.getNumberInstance();
+                if (cartLineSize > 9) {
+                    nf.setMinimumIntegerDigits(2);
+                } else if (cartLineSize > 99) {
+                    nf.setMinimumIntegerDigits(3);
+                } else if (cartLineSize > 999) {
+                    nf.setMinimumIntegerDigits(4);
+                } else if (cartLineSize > 9999) {
+                    //if it's more than 9999, something's up... hit the sky
+                    nf.setMinimumIntegerDigits(18);
+                }
+                String orderItemSeqId = nf.format(seqId);
+                seqId++;
+                item.setOrderItemSeqId(orderItemSeqId);
+                
+                GenericValue orderItem = delegator.makeValue("OrderItem", null);
+                orderItem.set("orderItemSeqId", orderItemSeqId);
+                orderItem.set("orderItemTypeId", "SALES_ORDER_ITEM");
+                orderItem.set("productId", item.getProductId());
+                orderItem.set("quantity", new Double(item.getQuantity()));
+                orderItem.set("unitPrice", new Double(item.getBasePrice()));
+                
+                orderItem.set("itemDescription", item.getName());
+                orderItem.set("comments", item.getItemComment());
+                orderItem.set("correspondingPoId", this.getPoNumber());
+                orderItem.set("statusId", "Ordered");
+                result.add(orderItem);
+                //don't do anything with adjustments here, those will be added below in makeAllAdjustments
+            }
+            return result;
+        }
+    }
+    /** make a list of all adjustments including order adjustments, order line adjustments, and special adjustments (shipping and tax if applicable) */
+    public List makeAllAdjustments(GenericDelegator delegator) {
+        List allAdjs = new LinkedList(this.getAdjustments());
+        
+        if (this.freeShippingPromoId != null) {
+            allAdjs.add(delegator.makeValue("OrderAdjustment",
+                    UtilMisc.toMap("orderAdjustmentTypeId", "DISCOUNT", "amount", new Double(-this.getTotalShipping()),
+                    "productPromoId", freeShippingPromoId)));
+        }
+        
+        //add all of the item adjustments to this list too
+        Iterator itemIter = cartLines.iterator();
+        int seqId = 1;
+        while (itemIter.hasNext()) {
+            ShoppingCartItem item = (ShoppingCartItem) itemIter.next();
+            Collection adjs = item.getAdjustments();
+            if (adjs != null) {
+                Iterator adjIter = adjs.iterator();
+                while (adjIter.hasNext()) {
+                    GenericValue orderAdjustment = (GenericValue) adjIter.next();
+                    orderAdjustment.set("orderItemSeqId", item.getOrderItemSeqId());
+                    allAdjs.add(orderAdjustment);
+                }
+            }
+        }
+        
+        return allAdjs;
+    }
+    /** Returns a Map of cart values */
+    public Map makeCartMap(GenericDelegator delegator) {
+        Map result = new HashMap();
+        result.put("orderItems", makeOrderItems(delegator));
+        result.put("orderAdjustments", makeAllAdjustments(delegator));
+
+        result.put("billingAccountId", getBillingAccountId());
+        result.put("shippingContactMechId", getShippingContactMechId());
+        result.put("shipmentMethodTypeId", getShipmentMethodTypeId());
+        result.put("carrierPartyId", getCarrierPartyId());
+        result.put("shippingInstructions", getShippingInstructions());
+        result.put("maySplit", getMaySplit());
+        result.put("giftMessage", getGiftMessage());
+        result.put("isGift", getIsGift());
+        result.put("paymentMethods", getPaymentMethods(delegator));
+        result.put("paymentMethodTypeIds", getPaymentMethodTypeIds());
+        return result;
+    }    
 }

@@ -28,6 +28,7 @@ import java.util.*;
 import java.text.*;
 import javax.servlet.http.*;
 import javax.servlet.*;
+import org.ofbiz.core.service.*;
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.ecommerce.catalog.*;
@@ -44,12 +45,14 @@ public class ShoppingCartEvents {
     
     /** Event to add an item to the shopping cart. */
     public static String addToCart(HttpServletRequest request, HttpServletResponse response) {
+        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
+        LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+        ShoppingCart cart = getCartObject(request);
+        
         String productId = null;
         String quantityStr = null;
         double quantity = 0;
         HashMap attributes = null;
-        
-        ShoppingCart cart = getCartObject(request);
         
         // Get the parameters as a MAP, remove the productId and quantity params.
         // The rest should be product attributes.This only works w/ servlet api 2.3
@@ -61,7 +64,7 @@ public class ShoppingCartEvents {
             productId = (String) paramMap.remove("add_product_id");
         }
         if (productId == null) {
-            request.setAttribute(SiteDefs.ERROR_MESSAGE,"No add_product_id passed.");
+            request.setAttribute(SiteDefs.ERROR_MESSAGE,"No add_product_id passed, not adding anything to cart.");
             return "error";
         }
         
@@ -81,45 +84,22 @@ public class ShoppingCartEvents {
         }
         
         // Create a HashMap of product attributes.
-        if (paramMap.size() > 0)
+        if (paramMap.size() > 0) {
             attributes = new HashMap(paramMap);
+        }
         
-        // Get the product
-        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
-        GenericValue product = null;
         try {
-            product = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", productId));
-        } catch (GenericEntityException e) {
-            Debug.logWarning(e.getMessage());
-            product = null;
+            cart.addOrIncreaseItem(delegator, productId, quantity, null, attributes, CatalogWorker.getCurrentCatalogId(request), dispatcher);
+        } catch (CartItemModifyException e) {
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, e.getMessage());
+            return "success"; //don't return error because this is a non-critical error and should go back to the same page
         }
         
-        if (product == null) {
-            request.setAttribute(SiteDefs.ERROR_MESSAGE,"Product not found, cannot add to cart. [productId: " + product.getString("productId") + "]");
-            return "error";
-        }
-        
-        if ("Y".equals(product.getString("isVirtual"))) {
-            request.setAttribute(SiteDefs.ERROR_MESSAGE, "Cannot add a Virtual Product to the cart [productId: " + product.getString("productId") + "]");
-            return "error";
-        }
-
-        ShoppingCartItem cartItem = cart.findCartItem(product, attributes);
-        double newQuantity = cartItem == null ? quantity : cartItem.getQuantity() + quantity;
-        
-        //check inventory
-        if (!CatalogWorker.isCatalogInventoryAvailable(request, productId, newQuantity)) {
-            request.setAttribute(SiteDefs.ERROR_MESSAGE, "Sorry, we do not have enough of the product " + product.getString("productName") + " [product ID: " + productId + "] in stock, not adding to cart. Please try back later or call customer service for more information.");
-            //return success since this isn't really a critical error...
+        if (cart.viewCartOnAdd()) {
+            return "viewcart";
+        } else {
             return "success";
         }
-        
-        cart.addOrIncreaseItem(product, quantity, attributes);
-        
-        if (cart.viewCartOnAdd())
-            return "success";
-        else
-            return null;
     }
     
     public static String addToCartFromOrder(HttpServletRequest request, HttpServletResponse response) {
@@ -133,6 +113,7 @@ public class ShoppingCartEvents {
         
         ShoppingCart cart = getCartObject(request);
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
+        LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         
         boolean noItems = true;
         if ("true".equals(request.getParameter("add_all"))) {
@@ -148,29 +129,18 @@ public class ShoppingCartEvents {
                 String errMsg = "";
                 while(itemIter.hasNext()) {
                     GenericValue orderItem = (GenericValue) itemIter.next();
-                    try {
-                        GenericValue relProd = orderItem.getRelatedOne("Product");
-                        if ("Y".equals(relProd.getString("isVirtual"))) {
-                            errMsg += "<li>Did not add Virtual Product to the cart [productId: " + relProd.getString("productId") + "]";
-                        } else {
-                            if (orderItem.get("quantity") != null) {
-                                //check inventory
-                                if (!CatalogWorker.isCatalogInventoryAvailable(request, relProd.getString("productId"), orderItem.getDouble("quantity").doubleValue())) {
-                                    errMsg += "<li>Sorry, we do not have enough of the product " + relProd.getString("productName") + " [product ID: " + relProd.getString("productId") + "] in stock, not adding to cart.";
-                                } else {
-                                    cart.addOrIncreaseItem(relProd, orderItem.getDouble("quantity").doubleValue(), null);
-                                    noItems = false;
-                                }
-                            }
+                    if (orderItem.get("productId") != null && orderItem.get("quantity") != null) {
+                        try {
+                            cart.addOrIncreaseItem(delegator, orderItem.getString("productId"), orderItem.getDouble("quantity").doubleValue(), null, null, CatalogWorker.getCurrentCatalogId(request), dispatcher);
+                            noItems = false;
+                        } catch (CartItemModifyException e) {
+                            errMsg += "<li>" + e.getMessage();
                         }
-                    } catch(GenericEntityException e) {
-                        Debug.logWarning(e.getMessage());
-                        errMsg += "<li>Product with ID \"" + orderItem.getString("productId") + "\" not found, line " + orderItem.getString("orderItemSeqId") + " not added.";
                     }
                 }
                 if (errMsg.length() > 0) {
                     request.setAttribute(SiteDefs.ERROR_MESSAGE, "<ul>" + errMsg + "</ul>");
-                    return "error";
+                    return "success"; //don't return error because this is a non-critical error and should go back to the same page
                 }
             } else {
                 noItems = true;
@@ -190,37 +160,26 @@ public class ShoppingCartEvents {
                         continue;
                     }
                     if (orderItem != null) {
-                        try {
-                            GenericValue relProd = orderItem.getRelatedOne("Product");
-                            if ("Y".equals(relProd.getString("isVirtual"))) {
-                                errMsg += "<li>Did not add Virtual Product to the cart [productId: " + relProd.getString("productId") + "]";
-                            } else {
-                                if (orderItem.get("quantity") != null) {
-                                    //check inventory
-                                    if (!CatalogWorker.isCatalogInventoryAvailable(request, relProd.getString("productId"), orderItem.getDouble("quantity").doubleValue())) {
-                                        errMsg += "<li>Sorry, we do not have enough of the product " + relProd.getString("productName") + " [product ID: " + relProd.getString("productId") + "] in stock, not adding to cart.";
-                                    } else {
-                                        cart.addOrIncreaseItem(relProd, orderItem.getDouble("quantity").doubleValue(), null);
-                                        noItems = false;
-                                    }
-                                }
+                        if (orderItem.get("productId") != null && orderItem.get("quantity") != null) {
+                            try {
+                                cart.addOrIncreaseItem(delegator, orderItem.getString("productId"), orderItem.getDouble("quantity").doubleValue(), null, null, CatalogWorker.getCurrentCatalogId(request), dispatcher);
+                                noItems = false;
+                            } catch (CartItemModifyException e) {
+                                errMsg += "<li>" + e.getMessage();
                             }
-                        } catch(GenericEntityException e) {
-                            Debug.logWarning(e.getMessage());
-                            errMsg += "<li>Product with ID \"" + orderItem.getString("productId") + "\" not found, line " + orderItem.getString("orderItemSeqId") + " not added.";
                         }
                     }
                 }
                 if (errMsg.length() > 0) {
                     request.setAttribute(SiteDefs.ERROR_MESSAGE, "<ul>" + errMsg + "</ul>");
-                    return "error";
+                    return "success"; //don't return error because this is a non-critical error and should go back to the same page
                 }
             }//else no items
         }
         
         if (noItems) {
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "No items found to add.");
-            return "error";
+            return "success"; //don't return error because this is a non-critical error and should go back to the same page
         }
         
         return "success";
@@ -240,6 +199,7 @@ public class ShoppingCartEvents {
         
         ShoppingCart cart = getCartObject(request);
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
+        LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         
         Collection prodCatMemberCol = null;
         try {
@@ -265,29 +225,17 @@ public class ShoppingCartEvents {
                 try { quantity = Double.parseDouble(quantStr); }
                 catch(NumberFormatException nfe) { quantity = 0; }
                 if (quantity > 0.0) {
-                    GenericValue product = null;
-                    try { product = productCategoryMember.getRelatedOneCache("Product"); }
-                    catch(GenericEntityException e) { Debug.logWarning(e.getMessage()); product = null; }
-                    if (product == null) {
-                        errMsg += "<li>Did not add product with id \"" + productCategoryMember.getString("productId") + "\" because a product with that ID could not be found.";
-                    } else {
-                        if ("Y".equals(product.getString("isVirtual"))) {
-                            errMsg += "<li>Did not add Virtual Product named " + product.getString("productName") + " to the cart [productId: " + product.getString("productId") + "]";
-                        } else {
-                            //check inventory
-                            if (!CatalogWorker.isCatalogInventoryAvailable(request, product.getString("productId"), quantity)) {
-                                errMsg += "<li>Sorry, we do not have enough of the product " + product.getString("productName") + " [product ID: " + product.getString("productId") + "] in stock, not adding to cart.";
-                            } else {
-                                cart.addOrIncreaseItem(product, quantity, null);
-                            }
-                        }
+                    try {
+                        cart.addOrIncreaseItem(delegator, productCategoryMember.getString("productId"), quantity, null, null, CatalogWorker.getCurrentCatalogId(request), dispatcher);
+                    } catch (CartItemModifyException e) {
+                        errMsg += "<li>" + e.getMessage();
                     }
                 }
             }
         }
         if (errMsg.length() > 0) {
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "<ul>" + errMsg + "</ul>");
-            return "error";
+            return "success"; //don't return error because this is a non-critical error and should go back to the same page
         }
         
         return "success";
@@ -307,6 +255,7 @@ public class ShoppingCartEvents {
         
         ShoppingCart cart = getCartObject(request);
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
+        LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         
         Collection prodCatMemberCol = null;
         try {
@@ -329,33 +278,17 @@ public class ShoppingCartEvents {
             GenericValue productCategoryMember = (GenericValue)pcmIter.next();
             Double quantity = productCategoryMember.getDouble("quantity");
             if (quantity != null && quantity.doubleValue() > 0.0) {
-                GenericValue product = null;
                 try {
-                    product = productCategoryMember.getRelatedOneCache("Product");
-                } catch (GenericEntityException e) {
-                    Debug.logWarning(e.getMessage());
-                    product = null;
-                }
-                if (product == null) {
-                    errMsg += "<li>Did not add product with id \"" + productCategoryMember.getString("productId") + "\" because a product with that ID could not be found.";
-                } else {
-                    if ("Y".equals(product.getString("isVirtual"))) {
-                        errMsg += "<li>Did not add Virtual Product named " + product.getString("productName") + " to the cart [productId: " + product.getString("productId") + "]";
-                    } else {
-                        //check inventory
-                        if (!CatalogWorker.isCatalogInventoryAvailable(request, product.getString("productId"), quantity.doubleValue())) {
-                            errMsg += "<li>Sorry, we do not have enough of the product " + product.getString("productName") + " [product ID: " + product.getString("productId") + "] in stock, not adding to cart.";
-                        } else {
-                            cart.addOrIncreaseItem(product, quantity.doubleValue(), null);
-                            totalQuantity += quantity.doubleValue();
-                        }
-                    }
+                    cart.addOrIncreaseItem(delegator, productCategoryMember.getString("productId"), quantity.doubleValue(), null, null, CatalogWorker.getCurrentCatalogId(request), dispatcher);
+                    totalQuantity += quantity.doubleValue();
+                } catch (CartItemModifyException e) {
+                    errMsg += "<li>" + e.getMessage();
                 }
             }
         }
         if (errMsg.length() > 0) {
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "<ul>" + errMsg + "</ul>");
-            return "error";
+            return "success"; //don't return error because this is a non-critical error and should go back to the same page
         }
         
         request.setAttribute(SiteDefs.EVENT_MESSAGE, "Added " + UtilFormatOut.formatQuantity(totalQuantity) + " items to the cart.");
@@ -365,26 +298,39 @@ public class ShoppingCartEvents {
     /** Delete an item from the shopping cart. */
     public static String deleteFromCart(HttpServletRequest request, HttpServletResponse response) {
         ShoppingCart cart = getCartObject(request);
+        LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         Map paramMap = UtilMisc.getParameterMap(request);
         Set names = paramMap.keySet();
         Iterator i = names.iterator();
+        
+        String errMsg = "";
         while ( i.hasNext() ) {
             String o = (String) i.next();
             if ( o.toUpperCase().startsWith("DELETE") ) {
                 try {
                     String indexStr = o.substring(o.lastIndexOf('_')+1);
                     int index = Integer.parseInt(indexStr);
-                    cart.removeCartItem(index);
-                }
-                catch ( NumberFormatException nfe ) { }
+                    try {
+                        cart.removeCartItem(index, dispatcher);
+                    } catch (CartItemModifyException e) {
+                        errMsg += "<li>" + e.getMessage();
+                    }
+                } catch ( NumberFormatException nfe ) { }
             }
         }
+
+        if (errMsg.length() > 0) {
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "<ul>" + errMsg + "</ul>");
+            return "success"; //don't return error because this is a non-critical error and should go back to the same page
+        }
+
         return "success";
     }
     
     /** Update the items in the shopping cart. */
     public static String modifyCart(HttpServletRequest request, HttpServletResponse response) {
         ShoppingCart cart = getCartObject(request);
+        LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         ArrayList deleteList = new ArrayList();
         Map paramMap = UtilMisc.getParameterMap(request);
         String errMsg = "";
@@ -409,14 +355,11 @@ public class ShoppingCartEvents {
                         } else {
                             ShoppingCartItem item = cart.findCartItem(index);
                             if (item != null) {
-                                GenericValue product = item.getProduct();
-                                
-                                //check inventory
-                                if (quantity > item.getQuantity() && !CatalogWorker.isCatalogInventoryAvailable(request, product.getString("productId"), quantity)) {
-                                    errMsg += "<li>Sorry, we do not have enough of the product " + product.getString("productName") + " [product ID: " + product.getString("productId") + "] in stock, not updating quantity.";
-                                } else {
+                                try {
                                     Debug.logInfo("Setting quantity.");
-                                    item.setQuantity(quantity);
+                                    item.setQuantity(quantity, dispatcher);
+                                } catch (CartItemModifyException e) {
+                                    errMsg += "<li>" + e.getMessage();
                                 }
                             }
                         }
@@ -438,13 +381,18 @@ public class ShoppingCartEvents {
         
         Iterator di = deleteList.iterator();
         while (di.hasNext()) {
-            Object o = di.next();
-            Debug.logInfo("Removing item index: " + cart.getItemIndex(o));
-            cart.removeCartItem(cart.getItemIndex(o));
+            ShoppingCartItem item = (ShoppingCartItem) di.next();
+            int itemIndex = cart.getItemIndex(item);
+            Debug.logInfo("Removing item index: " + itemIndex);
+            try {
+                cart.removeCartItem(itemIndex, dispatcher);
+            } catch (CartItemModifyException e) {
+                errMsg += "<li>" + e.getMessage();
+            }
         }
         
         if (!paramMap.containsKey("always_showcart")) {
-            cart.viewCartOnAdd(false);
+            cart.setViewCartOnAdd(false);
         }
 
         if (errMsg.length() > 0) {
@@ -468,8 +416,9 @@ public class ShoppingCartEvents {
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
         HttpSession session = request.getSession(true);
         ShoppingCart cart = (ShoppingCart) session.getAttribute(SiteDefs.SHOPPING_CART);
-        if (cart == null)
+        if (cart == null) {
             cart = new ShoppingCart(delegator);
+        }
         session.setAttribute(SiteDefs.SHOPPING_CART,cart);
         return cart;
     }

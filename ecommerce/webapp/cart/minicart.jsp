@@ -45,7 +45,7 @@
           <%=miniShoppingCartItem.getName()%></a></div>
         </td>
         <td align="right" valign="top"><div class="tabletext" nowrap>
-          <%=UtilFormatOut.formatPrice(miniShoppingCartItem.getTotalPrice())%></div>
+          <%=UtilFormatOut.formatPrice(miniShoppingCartItem.getItemSubTotal())%></div>
         </td>
       </tr>
     <%}%>

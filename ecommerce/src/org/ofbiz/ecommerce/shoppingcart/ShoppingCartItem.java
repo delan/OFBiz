@@ -6,7 +6,10 @@ package org.ofbiz.ecommerce.shoppingcart;
 
 import java.util.*;
 import org.ofbiz.core.entity.*;
+import org.ofbiz.core.service.*;
 import org.ofbiz.core.util.*;
+import org.ofbiz.commonapp.product.catalog.CatalogWorker;
+import org.ofbiz.commonapp.order.order.OrderReadHelper;
 
 /**
  * <p><b>Title:</b> ShoppingCartItem.java
@@ -36,180 +39,261 @@ import org.ofbiz.core.util.*;
  */
 public class ShoppingCartItem implements java.io.Serializable {
     
-    private transient GenericValue _product;
-    private String delegatorName;
-    private String productId;    
-    private String itemComment;
-    private double discountAmount;
-    private double quantity;            
-    private Map features;
-    private Map attributes;
-    private int type;
-    private List itemAdjustments;
+    private transient GenericDelegator delegator = null;
+    private String delegatorName = null;
 
-    /** Creates new ShoppingCartItem object. */
-    public ShoppingCartItem(GenericValue product, double quantity) {
-        this(product,quantity,null);
-    }
-       
-    /** Creates new ShoppingCartItem object. */
-    public ShoppingCartItem(GenericValue product, double quantity, HashMap features) {
-        this._product = product;
-        this.productId = _product.getString("productId");        
-        this.quantity = quantity;
-        this.features = features;
-        this.discountAmount = 0.00;
-        this.itemComment = null;        
-        this.type = 0;
-        this.attributes = new HashMap();
-        this.delegatorName = _product.getDelegator().getDelegatorName();
-        this.itemAdjustments = new LinkedList();
-    }
-        
-    /** Sets the quantity for the item. */
-    public void setQuantity(double quantity) {
-        this.quantity = quantity;
+    private transient GenericValue _product = null;
+    private String prodCatalogId = null;
+    private String productId = null;
+    private String itemComment = null;
+    private double quantity = 0.0;
+    private Map features = null;
+    private Map attributes = null;
+    private String orderItemSeqId = null;
+    
+    private List itemAdjustments = new LinkedList();
+    private boolean isPromo = false;
+
+    public static ShoppingCartItem makeItem(GenericValue product, double quantity, String prodCatalogId, LocalDispatcher dispatcher) throws CartItemModifyException {
+        return makeItem(product, quantity, null, null, prodCatalogId, dispatcher);
     }
     
-    /** Sets the discount dollar amount for the item. */
-    public void setDiscountAmount(double discountAmount) {
-        this.discountAmount = discountAmount;
+    public static ShoppingCartItem makeItem(GenericDelegator delegator, String productId, double quantity, HashMap features, HashMap attributes, String prodCatalogId, LocalDispatcher dispatcher) throws CartItemModifyException {
+        GenericValue product = null;
+        try {
+            product = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", productId));
+        } catch (GenericEntityException e) {
+            Debug.logWarning(e.getMessage());
+            product = null;
+        }
+        
+        if (product == null) {
+            String excMsg = "Product not found, not adding to cart. [productId: " + product.getString("productId") + "]";
+            Debug.logWarning(excMsg);
+            throw new CartItemModifyException(excMsg);
+        }
+        
+        return makeItem(product, quantity, features, attributes, prodCatalogId, dispatcher);
+    }
+    
+    public static ShoppingCartItem makeItem(GenericValue product, double quantity, HashMap features, HashMap attributes, String prodCatalogId, LocalDispatcher dispatcher) throws CartItemModifyException {
+        ShoppingCartItem newItem = new ShoppingCartItem(product, features, attributes, prodCatalogId);
+
+        if ("Y".equals(product.getString("isVirtual"))) {
+            String excMsg = "Tried to add the Virtual Product " + product.getString("productName") + 
+                    " (productId: " + product.getString("productId") + ") to the cart, not adding.";
+            Debug.logWarning(excMsg);
+            throw new CartItemModifyException(excMsg);
+        }
+        
+        newItem.setQuantity(quantity, dispatcher);
+        return newItem;
+    }
+    
+    /** can't create shopping cart item with no parameters */
+    protected ShoppingCartItem() {}
+    
+    /** Creates new ShoppingCartItem object. */
+    protected ShoppingCartItem(GenericValue product, HashMap features, HashMap attributes, String prodCatalogId) {
+        this._product = product;
+        this.productId = _product.getString("productId");
+        this.prodCatalogId = prodCatalogId;
+        this.itemComment = null;
+        this.attributes = attributes;
+        this.features = features;
+        this.delegatorName = _product.getDelegator().getDelegatorName();
+    }
+
+    /** Sets the quantity for the item and validates the change in quantity, etc */
+    public void setQuantity(double quantity, LocalDispatcher dispatcher) throws CartItemModifyException {
+        //check inventory
+        if (!CatalogWorker.isCatalogInventoryAvailable(this.prodCatalogId, productId, quantity, getDelegator(), dispatcher)) {
+            String excMsg = "Sorry, we do not have enough (you tried " + UtilFormatOut.formatQuantity(quantity) + ") of the product " + getProduct().getString("productName") + " (product ID: " + productId + ") in stock, not adding to cart. Please try a lower quantity, try again later, or call customer service for more information.";
+            Debug.logWarning(excMsg);
+            throw new CartItemModifyException(excMsg);
+        }
+        
+        this.quantity = quantity;
+    }
+    /** Returns the quantity. */
+    public double getQuantity() {
+        return quantity;
     }
     
     /** Sets the item comment. */
-    public void setComment(String itemComment) {
+    public void setItemComment(String itemComment) {
         this.itemComment = itemComment;
     }
+    /** Returns the item's comment. */
+    public String getItemComment() {
+        return itemComment;
+    }
+
+    public void setOrderItemSeqId(String orderItemSeqId) {
+        this.orderItemSeqId = orderItemSeqId;
+    }
+    public String getOrderItemSeqId() {
+        return orderItemSeqId;
+    }
         
-    /** Sets an item features. */
-    public void setFeature(String name, String value) {
-        features.put(name,value);
-    }
-    /** Return a specific features. */
-    public String getFeature(String name) {
-        return (String) features.get(name);
-    }        
-    
-    /** Sets an item attribute. */
-    public void setAttribute(String name, String value) {
-        attributes.put(name,value);
-    }
-    /** Return a specific attribute. */
-    public String getAttribute(String name) {
-        return (String) attributes.get(name);
-    }        
-    
     /** Returns true if shipping charges apply to this item. */
     public boolean shippingApplies() {
         Boolean shipCharge = getProduct().getBoolean("chargeShipping");
-        if (shipCharge == null)
+        if (shipCharge == null) {
             return true;
-        else
-            return shipCharge.booleanValue();      
+        } else {
+            return shipCharge.booleanValue();
+        }
+    }
+    
+    /** Returns true if tax charges apply to this item. */
+    public boolean taxApplies() {
+        Boolean taxable = getProduct().getBoolean("taxable");
+        if (taxable == null) {
+            return true;
+        } else {
+            return taxable.booleanValue();
+        }
     }
     
     /** Returns the item's productId. */
     public String getProductId() {
         return productId;
     }
-    
     /** Returns the item's description. */
     public String getName() {
         return getProduct().getString("productName");
     }
-    
     /** Returns the item's description. */
     public String getDescription() {
         return getProduct().getString("description");
     }
-    
-    /** Returns the item's comment. */
-    public String getItemComment() {
-        return itemComment;
-    }
-    
     /** Returns the item's unit weight */
     public double getWeight() {
         Double weight = getProduct().getDouble("weight");
-        if (weight == null)
+        if (weight == null) {
             return 0;
-        else 
+        } else {
             return weight.doubleValue();
+        }
     }
                 
-    /** Returns the quantity. */
-    public double getQuantity() {
-        return quantity;
-    }
-    
     /** Returns the base price. */
     public double getBasePrice() {
         // todo calculate the price using price component.
         Double defaultPrice = getProduct().getDouble("defaultPrice");
-        if (defaultPrice != null)
-            return defaultPrice.doubleValue();
-        else
-            return 0.0;
+        double defPrice = 0.0;
+        if (defaultPrice != null) {
+            defPrice = defaultPrice.doubleValue();
+        }
+
+        return defPrice;
     }
-    
-    /** Returns the discount dollar amount. */
-    public double getDiscountAmount() {
-        return discountAmount;
+    /** Returns the "other" adjustments. */
+    public double getOtherAdjustments() {
+        return OrderReadHelper.calcItemAdjustments(new Double(quantity), new Double(getBasePrice()), this.getAdjustments(), true, false, false);
     }
-    
-    /** Returns the adjusted price amount. */
-    public double getPrice() {
-        return (getBasePrice() - discountAmount);
-    }
-    
     /** Returns the total line price. */
-    public double getTotalPrice() {
-        return (getBasePrice() - discountAmount) * quantity;
+    public double getItemSubTotal() {
+        return (getBasePrice() * quantity) + getOtherAdjustments();
+    }
+
+    /** Returns the tax adjustments. */
+    public double getItemTax() {
+        return OrderReadHelper.calcItemAdjustments(new Double(quantity), new Double(getBasePrice()), this.getAdjustments(), false, true, false);
+    }
+    /** Returns the shipping adjustments. */
+    public double getItemShipping() {
+        return OrderReadHelper.calcItemAdjustments(new Double(quantity), new Double(getBasePrice()), this.getAdjustments(), false, false, true);
     }
     
     /** Returns the features for the item. */
     public Map getFeatures() {
         return features;
     }
-    
-    /** Returns a collection of attribute names. */
+    /* * Returns a collection of attribute names. * /
     public Collection getFeatureNames() {
         if (features == null || features.size() < 1)
             return null;       
         return (Collection) features.keySet();
     }
-    
-    /** Returns a collection of attribute values. */
+    / * * Returns a collection of attribute values. * /
     public Collection getFeatureValues() {
         if (features == null || features.size() < 1)
             return null;
         return features.values();
-    }     
+    }
+     */  
+
+    /** Sets an item features. */
+    public void setFeature(String name, String value) {
+        if (features == null) features = new HashMap();
+        features.put(name,value);
+    }
+    /** Return a specific features. */
+    public String getFeature(String name) {
+        if (features == null) return null;
+        return (String) features.get(name);
+    }        
     
+    /** Sets an item attribute. */
+    public void setAttribute(String name, String value) {
+        if (attributes == null) attributes = new HashMap();
+        attributes.put(name,value);
+    }
+    /** Return a specific attribute. */
+    public String getAttribute(String name) {
+        if (attributes == null) return null;
+        return (String) attributes.get(name);
+    }        
+    /** Returns the attributes for the item. */
+    public Map getAttributes() {
+        return attributes;
+    }
+    
+    /** Add an adjustment to the order item; don't worry about setting the orderId, orderItemSeqId or orderAdjustmentId; they will be set when the order is created */
+    public void addAdjustment(GenericValue adjustment) {
+        itemAdjustments.add(adjustment);
+    }
+    public void removeAdjustment(GenericValue adjustment) {
+        itemAdjustments.remove(adjustment);
+    }
+    public Collection getAdjustments() {
+        return itemAdjustments;
+    }
+
     /** Compares the specified object with this cart item. */
     public boolean equals(ShoppingCartItem item) {
-        if (item == null) 
+        if (item == null) return false;
+        return this.equals(item.getProductId(), item.getFeatures(), item.getAttributes(), item.prodCatalogId);
+    }
+    
+    /** Compares the specified object with this cart item. */
+    public boolean equals(String productId, Map features, Map attributes, String prodCatalogId) {
+        if (!this.productId.equals(productId)) {
             return false;
-        if (!item.getProductId().equals(getProductId())) {
+        }
+        
+        if (!this.prodCatalogId.equals(prodCatalogId)) {
             return false;
         }
 
-        if (this.features != null && item.features == null ||
-                this.features == null && item.features != null) {
+        if (this.features != null && features == null ||
+                this.features == null && features != null) {
             return false;
         }
-        if (this.features != null && item.features != null) {
-            if (!item.features.equals(this.features)) {
+        if (this.features != null && features != null) {
+            if (!this.features.equals(features)) {
                 return false;
             }
         }
 
-        if (this.attributes != null && item.attributes == null ||
-                this.attributes == null && item.attributes != null) {
+        if (this.attributes != null && attributes == null ||
+                this.attributes == null && attributes != null) {
             return false;
         }
-        if (this.attributes != null && item.attributes != null) {
-            if (!item.attributes.equals(this.attributes)) {
+        if (this.attributes != null && attributes != null) {
+            if (!this.attributes.equals(attributes)) {
                 return false;
             }
         }
@@ -219,29 +303,25 @@ public class ShoppingCartItem implements java.io.Serializable {
     
     // Gets the Product entity if its not there
     public GenericValue getProduct() {
-        if (_product != null) 
+        if (_product != null) {
             return _product;
-        if (delegatorName == null || productId == null)
+        }
+        if (delegatorName == null || productId == null) {
             throw new IllegalStateException("Bad delegator name or product id");
-        GenericDelegator delegator = GenericDelegator.getGenericDelegator(delegatorName);
+        }
         try {
-            Map fields = UtilMisc.toMap("productId", productId);
-            _product = delegator.findByPrimaryKeyCache("Product", fields);
+            _product = this.getDelegator().findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", productId));
         } catch (GenericEntityException e) {
             throw new RuntimeException("Error with Entity Engine ("+e.getMessage()+")");
         }
         return _product;
     }
-
-    public void addAdjustment(GenericValue adjustment) {
-        itemAdjustments.add(adjustment);
+    
+    public GenericDelegator getDelegator() {
+        if (delegator == null) {
+            delegator = GenericDelegator.getGenericDelegator(delegatorName);
+        }
+        return delegator;
     }
 
-    public void removeAdjustment(GenericValue adjustment) {
-        itemAdjustments.remove(adjustment);
-    }
-
-    public Collection getAdjustments() {
-        return itemAdjustments;
-    }
 }

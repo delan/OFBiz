@@ -23,7 +23,6 @@
         <attribute name="orderAdjustments" type="java.util.List" mode="IN"/>
         <attribute name="shippingInstructions" type="String" mode="IN"/>
         <attribute name="billingAccountId" type="String" mode="IN"/>
-        <attribute name="cartDiscount" type="Double" mode="IN"/>
         <attribute name="shippingAmount" type="Double" mode="IN" optional="true"/>
         <attribute name="taxAmount" type="Double" mode="IN" optional="true"/>
         <attribute name="shippingContactMechId" type="String" mode="IN"/>
@@ -32,8 +31,8 @@
         <attribute name="maySplit" type="Boolean" mode="IN"/>
         <attribute name="giftMessage" type="String" mode="IN"/>
         <attribute name="isGift" type="Boolean" mode="IN"/>
-        <attribute name="paymentMethodId" type="String" mode="IN"/>
-        <attribute name="paymentMethod" type="org.ofbiz.core.entity.GenericValue" mode="IN" optional="true"/>
+        <attribute name="paymentMethods" type="java.util.List" mode="IN" optional="true"/>
+        <attribute name="paymentMethodTypeIds" type="java.util.List" mode="IN" optional="true"/>
         <attribute name="orderId" type="String" mode="OUT"/>
     </service>
     <service name="changeOrderStatus" engine="java"

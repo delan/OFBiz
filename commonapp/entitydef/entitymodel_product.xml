@@ -1294,6 +1294,9 @@
       <relation type="many" rel-entity-name="ProdCatalogPromoAppl">
         <key-map field-name="productPromoId"/>
       </relation>
+      <relation type="many" rel-entity-name="OrderAdjustment">
+        <key-map field-name="productPromoId"/>
+      </relation>
     </entity>
     <entity entity-name="ProductPromoAction"
             package-name="org.ofbiz.commonapp.product.promo"

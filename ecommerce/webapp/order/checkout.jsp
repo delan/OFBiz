@@ -51,22 +51,32 @@
 <%pageContext.setAttribute("cart", cart);%>
 <ofbiz:if name="cart" size="0">
 <%
-  GenericValue shippingAddress = cart.getShippingAddress(delegator);
-  GenericValue paymentMethod = cart.getPaymentMethod(delegator);
-  GenericValue billingAddress = cart.getBillingAddress(delegator);
-  GenericValue billingAccount = cart.getBillingAccountId() != null ? delegator.findByPrimaryKey("BillingAccount", UtilMisc.toMap("billingAccountId", cart.getBillingAccountId())) : null;
+    GenericValue shippingAddress = cart.getShippingAddress(delegator);
+    List paymentMethods = cart.getPaymentMethods(delegator);
+    GenericValue paymentMethod = null;
+    if (paymentMethods != null && paymentMethods.size() > 0) {
+        paymentMethod = (GenericValue) paymentMethods.get(0);
+    }
+    GenericValue billingAddress = null;
+    if (paymentMethod != null) {
+        GenericValue creditCard = paymentMethod.getRelatedOne("CreditCard");
+        if (creditCard != null) {
+            billingAddress = creditCard.getRelatedOne("PostalAddress");
+        }
+    }
+    GenericValue billingAccount = cart.getBillingAccountId() != null ? delegator.findByPrimaryKey("BillingAccount", UtilMisc.toMap("billingAccountId", cart.getBillingAccountId())) : null;
 
-  String customerPoNumber = cart.getPoNumber();
-  String carrierPartyId = cart.getCarrierPartyId();
-  String shipmentMethodTypeId = cart.getShipmentMethodTypeId();
-  String shippingInstructions = cart.getShippingInstructions();
-  Boolean maySplit = cart.getMaySplit();
-  String giftMessage = cart.getGiftMessage();
-  Boolean isGift = cart.getIsGift();
-//  if (creditCardInfo == null) {
+    String customerPoNumber = cart.getPoNumber();
+    String carrierPartyId = cart.getCarrierPartyId();
+    String shipmentMethodTypeId = cart.getShipmentMethodTypeId();
+    String shippingInstructions = cart.getShippingInstructions();
+    Boolean maySplit = cart.getMaySplit();
+    String giftMessage = cart.getGiftMessage();
+    Boolean isGift = cart.getIsGift();
+    //  if (creditCardInfo == null) {
 
-  Collection orderItemList = cart.makeOrderItems(delegator);
-  Collection orderAdjustments = cart.getAdjustments();
+    Collection orderItemList = cart.makeOrderItems(delegator);
+    Collection orderAdjustments = cart.getAdjustments();
 %>
 
 <%@ include file="orderinformation.jsp" %>

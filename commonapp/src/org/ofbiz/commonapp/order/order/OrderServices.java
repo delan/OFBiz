@@ -107,21 +107,23 @@ public class OrderServices {
                         "statusId", "ORDERED", "billingAccountId", billingAccountId));
         toBeStored.add(order);
 
-
-        // add in discount adjustment
-        Double cartDiscount = (Double) context.get("cartDiscount");
-        if (cartDiscount.doubleValue() != 0.0) {
-            toBeStored.add(delegator.makeValue("OrderAdjustment",
-                    UtilMisc.toMap("orderAdjustmentId", delegator.getNextSeqId("OrderAdjustment").toString(),
-                            "orderAdjustmentTypeId", "DISCOUNT_ADJUSTMENT", "orderId", orderId, "orderItemSeqId", DataModelConstants.SEQ_ID_NA,
-                            "percentage", cartDiscount)));
-        }
-
+        //set the orderId on all adjustments; this list will include order and item adjustments...
         List orderAdjustments = (List) context.get("orderAdjustments");
         Iterator iter = orderAdjustments.iterator();
         while (iter.hasNext()) {
             GenericValue orderAdjustment = (GenericValue) iter.next();
+            Long adjSeqId = delegator.getNextSeqId("OrderAdjustment");
+            if (adjSeqId == null) {
+                result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+                result.put(ModelService.ERROR_MESSAGE, "ERROR: Could not get next sequence id for OrderAdjustment, cannot create order.");
+                return result;
+            }
+            orderAdjustment.set("orderAdjustmentId", adjSeqId.toString());
             orderAdjustment.set("orderId", orderId);
+            //set the orderItemSeqId to _NA_ if not alredy set...
+            if (orderAdjustment.get("orderItemSeqId") == null || orderAdjustment.getString("orderItemSeqId").length() == 0) {
+                orderAdjustment.set("orderItemSeqId", DataModelConstants.SEQ_ID_NA);
+            }
             toBeStored.add(orderAdjustment);
         }
 
@@ -187,27 +189,30 @@ public class OrderServices {
                 UtilMisc.toMap("orderStatusId", delegator.getNextSeqId("OrderStatus").toString(),
                         "statusId", "ORDERED", "orderId", orderId, "statusDatetime", UtilDateTime.nowTimestamp())));
 
-        // set the order payment preference
-        GenericValue paymentMethod = (GenericValue) context.get("paymentMethod");
-        String paymentMethodId = (String) context.get("paymentMethodId");
-
-        if (paymentMethod != null) {
-            if (paymentMethodId != null) {
-                toBeStored.add(delegator.makeValue("OrderPaymentPreference",
-                        UtilMisc.toMap("orderPaymentPreferenceId", delegator.getNextSeqId("OrderPaymentPreference").toString(),
-                                "orderId", orderId, "paymentMethodTypeId", paymentMethod.get("paymentMethodTypeId"),
-                                "paymentMethodId", paymentMethodId)));
-            } else {
+        // set the order payment preferences
+        List paymentMethods = (List) context.get("paymentMethods");
+        if (paymentMethods != null && paymentMethods.size() > 0) {
+            Iterator pmsIter = paymentMethods.iterator();
+            while (pmsIter.hasNext()) {
+                GenericValue paymentMethod = (GenericValue) pmsIter.next();
                 toBeStored.add(delegator.makeValue("OrderPaymentPreference",
                         UtilMisc.toMap("orderPaymentPreferenceId", delegator.getNextSeqId("OrderPaymentPreference").toString(),
                                 "orderId", orderId, "paymentMethodTypeId", paymentMethod.get("paymentMethodTypeId"),
                                 "paymentMethodId", paymentMethod.get("paymentMethodId"))));
             }
-        } else {
-            if (paymentMethodId != null && paymentMethodId.equals("_OFFLINE_")) {
+        } 
+
+        // set by payment method type ids as well
+        List paymentMethodTypeIds = (List) context.get("paymentMethodTypeIds");
+        if (paymentMethodTypeIds != null && paymentMethodTypeIds.size() > 0) {
+
+            Iterator pmtsIter = paymentMethodTypeIds.iterator();
+            while (pmtsIter.hasNext()) {
+                String paymentMethodTypeId = (String) pmtsIter.next();
+                
                 toBeStored.add(delegator.makeValue("OrderPaymentPreference",
                         UtilMisc.toMap("orderPaymentPreferenceId", delegator.getNextSeqId("OrderPaymentPreference").toString(),
-                                "orderId", orderId, "paymentMethodTypeId", "OFFLINE")));
+                                "orderId", orderId, "paymentMethodTypeId", paymentMethodTypeId)));
             }
         }
 

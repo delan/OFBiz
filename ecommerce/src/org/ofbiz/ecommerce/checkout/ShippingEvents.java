@@ -243,8 +243,14 @@ public class ShippingEvents {
         
         double shippingTotal = weightAmount + quantityAmount + priceAmount + orderFlat + itemFlatAmount + orderPercentage;
         Debug.logInfo("[ShippingEvents.getShipEstimate] Setting shipping amount : " + shippingTotal);
-        cart.setShipping(shippingTotal);
+
+        //remove old shipping adjustments if there
+        cart.removeAdjustmentByType("SHIPPING_CHARGES");
         
+        GenericValue orderAdjustment = delegator.makeValue("OrderAdjustment",
+                UtilMisc.toMap("orderAdjustmentTypeId", "SHIPPING_CHARGES", "amount", new Double(shippingTotal)));
+        cart.addAdjustment(orderAdjustment);
+
         return "success";
     }
     

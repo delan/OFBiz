@@ -146,22 +146,6 @@
     <request-map uri="processorder">
         <security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.ecommerce.checkout.CheckOutEvents" invoke="createOrder"/>
-        <response name="success" type="request" value="clearCartForOrder"/>
-        <response name="eft" type="request" value="authorizePayment"/>
-        <response name="cc" type="request" value="authorizePayment"/>
-        <response name="error" type="view" value="checkout"/>
-    </request-map>
-
-    <request-map uri="authorizePayment">
-        <security https="true" auth="true"/>
-        <event type="java" path="org.ofbiz.core.event.CoreEvents" invoke="returnSuccess"/>
-        <response name="success" type="request" value="clearCartForOrder"/>
-        <response name="error" type="view" value="checkout"/>
-    </request-map>
-
-    <request-map uri="clearCartForOrder">
-        <security https="true" auth="true"/>
-        <event type="java" path="org.ofbiz.ecommerce.shoppingcart.ShoppingCartEvents" invoke="clearCart"/>
         <response name="success" type="request" value="renderconfirmorder"/>
         <response name="error" type="view" value="checkout"/>
     </request-map>
@@ -173,15 +157,15 @@
         <response name="error" type="view" value="orderhistory"/>
     </request-map>
 
-    <request-map uri="confirmorder">
-        <response name="success" type="view" value="confirmorder"/>
-    </request-map>
-
     <request-map uri="emailorder">
         <security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.ecommerce.checkout.CheckOutEvents" invoke="emailOrder"/>
         <response name="success" type="view" value="showconfirmorder"/>
         <response name="error" type="view" value="showconfirmorder"/>
+    </request-map>
+
+    <request-map uri="confirmorder">
+        <response name="success" type="view" value="confirmorder"/>
     </request-map>
 
     <request-map uri="catalog">

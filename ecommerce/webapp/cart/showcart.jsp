@@ -89,7 +89,8 @@
           <TD NOWRAP><div class='tabletext'><b>Product</b></div></TD>
           <TD NOWRAP align=center><div class='tabletext'><b>Quantity</b></div></TD>
           <TD NOWRAP align=right><div class='tabletext'><b>Unit Price</b></div></TD>
-          <TD NOWRAP align=right><div class='tabletext'><b>Total</b></div></TD>
+          <TD NOWRAP align=right><div class='tabletext'><b>Adjustments</b></div></TD>
+          <TD NOWRAP align=right><div class='tabletext'><b>Item Total</b></div></TD>
           <%-- <TD NOWRAP align=center><div class='tabletext'><b>Remove</b></div></TD> --%>
         </TR>
 
@@ -99,7 +100,8 @@
             <TD><div class='tabletext'><%-- <b><%= cart.getItemIndex(item)%></b> - --%><a href='<ofbiz:url>/product?product_id=<%=item.getProductId()%></ofbiz:url>' class='buttontext'><%=item.getProductId()%> - <%=UtilFormatOut.checkNull(item.getName())%></a> : <%=UtilFormatOut.checkNull(item.getDescription())%></div></TD>
             <TD NOWRAP ALIGN="center"><div class='tabletext'><input size="10" type="text" name="update_<%=cart.getItemIndex(item)%>" value="<ofbiz:format><%=item.getQuantity()%></ofbiz:format>"></div></TD>
             <TD NOWRAP ALIGN="right"><div class='tabletext'><ofbiz:format type="c"><%=item.getBasePrice()%></ofbiz:format></div></TD>
-            <TD NOWRAP ALIGN="right"><div class='tabletext'><ofbiz:format type="c"><%=item.getTotalPrice()%></ofbiz:format></div></TD>
+            <TD NOWRAP ALIGN="right"><div class='tabletext'><ofbiz:format type="c"><%=item.getOtherAdjustments()%></ofbiz:format></div></TD>
+            <TD NOWRAP ALIGN="right"><div class='tabletext'><ofbiz:format type="c"><%=item.getItemSubTotal()%></ofbiz:format></div></TD>
             <%-- <TD NOWRAP ALIGN="center"><div class='tabletext'><input type="checkbox" name="delete_<%= cart.getItemIndex(item) %>" value="0"></div></TD> --%>
           </TR>
         </ofbiz:iterator>
@@ -118,7 +120,7 @@
           </TD>
           <TD ALIGN="right" valign=bottom>
             <HR SIZE=1>
-            <div class='tabletext'><b><ofbiz:format type="c"><%= cart.getGrandTotal() %></ofbiz:format></b></div>
+            <div class='tabletext'><b><ofbiz:format type="c"><%=cart.getGrandTotal()%></ofbiz:format></b></div>
           </TD>
         </TR>
       </table>

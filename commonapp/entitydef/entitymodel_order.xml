@@ -62,7 +62,9 @@
       <field name="orderId" type="id"></field>
       <field name="orderItemSeqId" type="id"></field>
       <field name="amount" type="currency-amount"></field>
+      <field name="amountPerQuantity" type="currency-amount"></field>
       <field name="percentage" type="floating-point"></field>
+      <field name="productPromoId" type="id"></field>
       <prim-key field="orderAdjustmentId"/>
       <relation type="one" rel-entity-name="OrderAdjustmentType">
         <key-map field-name="orderAdjustmentTypeId"/>
@@ -79,6 +81,9 @@
       <relation type="one-nofk" rel-entity-name="OrderItem">
         <key-map field-name="orderId"/>
         <key-map field-name="orderItemSeqId"/>
+      </relation>
+      <relation type="one" rel-entity-name="ProductPromo">
+        <key-map field-name="productPromoId"/>
       </relation>
     </entity>
     <entity entity-name="OrderAdjustmentAttribute"
