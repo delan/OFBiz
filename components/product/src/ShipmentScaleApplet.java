@@ -1,5 +1,5 @@
 /*
- * $Id: ShipmentScaleApplet.java,v 1.2 2003/09/09 22:13:18 ajzeneski Exp $
+ * $Id: ShipmentScaleApplet.java,v 1.1 2003/09/11 00:18:51 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -21,23 +21,31 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package org.ofbiz.shipment;
-
-import javax.comm.*;
-
-import netscape.javascript.*;
 
 import java.applet.Applet;
 import java.applet.AppletContext;
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.StringTokenizer;
 import java.util.TooManyListenersException;
+
+import javax.comm.CommPortIdentifier;
+import javax.comm.CommPortOwnershipListener;
+import javax.comm.NoSuchPortException;
+import javax.comm.PortInUseException;
+import javax.comm.SerialPort;
+import javax.comm.SerialPortEvent;
+import javax.comm.SerialPortEventListener;
+import javax.comm.UnsupportedCommOperationException;
+
+import netscape.javascript.JSObject;
 
 /**
  * ShipmentScaleApplet - Applet for reading weight from a scale and input into the browser
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.1 $
  * @since      3.0
  */
 public class ShipmentScaleApplet extends Applet implements SerialPortEventListener, CommPortOwnershipListener {

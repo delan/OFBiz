@@ -21,7 +21,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *  This is the Open for Business Product Build Script.
- *  $Id: build.xml,v 1.5 2003/09/05 23:18:16 jonesde Exp $
+ *  $Id: build.xml,v 1.6 2003/09/11 00:18:51 ajzeneski Exp $
 -->
 
 <project name="OFBiz - Product Component" default="jar" basedir=".">
@@ -53,6 +53,8 @@
             <fileset dir="../minilang/build/lib" includes="*.jar"/>
             <fileset dir="../content/build/lib" includes="*.jar"/>
         </path>
+        <available classname="javax.comm.SerialPort" classpathref="local.class.path" property="comm.avail"/>
+        <available classname="netscape.javascript.JSObject" classpathref="local.class.path" property="jsobject.avail"/>
     </target>
     
     <!-- ================================================================== -->
@@ -85,12 +87,19 @@
     <!-- ================================================================== -->               
 
     <target name="classes" depends="prepare,classpath">
+        <condition property="applet.nocomm" value="ShipmentScaleApplet.java">
+            <isfalse value="${comm.avail}"/>
+        </condition>
+        <condition property="applet.nojs" value="ShipmentScaleApplet.java">
+            <isfalse value="${jsobject.avail}"/>
+        </condition>           
     	<javac debug="on" deprecation="on" destdir="${build.dir}/classes">
             <classpath>
                 <path refid="local.class.path"/>                
             </classpath>
             <src path="${src.dir}"/>
-            <exclude name="org/ofbiz/shipment/ShipmentScaleApplet.java"/>
+            <exclude name="${applet.nocomm}"/>
+            <exclude name="${applet.nojs}"/>
         </javac>
         <!-- also put the DTDs in the jar file... -->
         <copy todir="${build.dir}/classes">
