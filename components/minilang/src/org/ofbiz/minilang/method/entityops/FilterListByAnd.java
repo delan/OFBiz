@@ -37,7 +37,7 @@ import org.w3c.dom.Element;
  * Uses the delegator to find entity values by anding the map fields
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class FilterListByAnd extends MethodOperation {
@@ -61,5 +61,14 @@ public class FilterListByAnd extends MethodOperation {
         }
         toListAcsr.put(methodContext, EntityUtil.filterByAnd((List) listAcsr.get(methodContext), theMap));
         return true;
+    }
+
+    public String rawString() {
+        // TODO: something more than the empty tag
+        return "<filter-list-by-and/>";
+    }
+    public String expandedString(MethodContext methodContext) {
+        // TODO: something more than a stub/dummy
+        return this.rawString();
     }
 }

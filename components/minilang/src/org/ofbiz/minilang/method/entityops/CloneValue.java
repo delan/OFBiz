@@ -35,7 +35,7 @@ import org.w3c.dom.Element;
  * Uses the delegator to find entity values by anding the map fields
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class CloneValue extends MethodOperation {
@@ -60,5 +60,14 @@ public class CloneValue extends MethodOperation {
 
         newValueAcsr.put(methodContext, new GenericValue(value));
         return true;
+    }
+
+    public String rawString() {
+        // TODO: something more than the empty tag
+        return "<clone-value/>";
+    }
+    public String expandedString(MethodContext methodContext) {
+        // TODO: something more than a stub/dummy
+        return this.rawString();
     }
 }

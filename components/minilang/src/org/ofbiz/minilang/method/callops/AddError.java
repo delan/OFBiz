@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -34,7 +34,7 @@ import org.ofbiz.minilang.method.*;
  * Adds the fail-message or fail-property value to the error-list.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class AddError extends MethodOperation {
@@ -95,5 +95,14 @@ public class AddError extends MethodOperation {
             messages.add("Simple Method error occurred, but no message was found, sorry.");
             // if (Debug.infoOn()) Debug.logInfo("[SimpleMapOperation.addMessage] ERROR: No message found", module);
         }
+    }
+
+    public String rawString() {
+        // TODO: something more than the empty tag
+        return "<add-error/>";
+    }
+    public String expandedString(MethodContext methodContext) {
+        // TODO: something more than a stub/dummy
+        return this.rawString();
     }
 }

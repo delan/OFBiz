@@ -34,7 +34,7 @@ import org.ofbiz.minilang.method.*;
  * Iff the specified field is not empty process sub-operations
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class IfEmpty extends MethodOperation {
@@ -93,5 +93,13 @@ public class IfEmpty extends MethodOperation {
                 return true;
             }
         }
+    }
+
+    public String rawString() {
+        return "<if-empty field-name=\"" + this.fieldAcsr + "\" map-name=\"" + this.mapAcsr + "\"/>";
+    }
+    public String expandedString(MethodContext methodContext) {
+        // TODO: something more than a stub/dummy
+        return this.rawString();
     }
 }

@@ -83,4 +83,13 @@ public class MakeNextSeqId extends MethodOperation {
         
         return true;
     }
+
+    public String rawString() {
+        // TODO: something more than the empty tag
+        return "<make-next-seq-id/>";
+    }
+    public String expandedString(MethodContext methodContext) {
+        // TODO: something more than a stub/dummy
+        return this.rawString();
+    }
 }

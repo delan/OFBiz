@@ -34,7 +34,7 @@ import org.ofbiz.minilang.method.*;
  * Copies an environment field to a list
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class FieldToList extends MethodOperation {
@@ -84,5 +84,13 @@ public class FieldToList extends MethodOperation {
 
         toList.add(fieldVal);
         return true;
+    }
+
+    public String rawString() {
+        return "<field-to-list list-name=\"" + this.listAcsr + "\" field-name=\"" + this.fieldAcsr + "\" map-name=\"" + this.mapAcsr + "\"/>";
+    }
+    public String expandedString(MethodContext methodContext) {
+        // TODO: something more than a stub/dummy
+        return this.rawString();
     }
 }

@@ -340,6 +340,15 @@ public class CallService extends MethodOperation {
         }
     }
 
+    public String rawString() {
+        // TODO: something more than the empty tag
+        return "<call-service/>";
+    }
+    public String expandedString(MethodContext methodContext) {
+        // TODO: something more than a stub/dummy
+        return this.rawString();
+    }
+
     public static class ResultToFieldDef {
         public String resultName;
         public ContextAccessor mapAcsr;

@@ -36,7 +36,7 @@ import org.ofbiz.minilang.method.*;
  * Appends the specified String to a field
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.2
  */
 public class StringAppend extends MethodOperation {
@@ -109,5 +109,14 @@ public class StringAppend extends MethodOperation {
         }
         
         return newValue.toString();
+    }
+
+    public String rawString() {
+        // TODO: something more than the empty tag
+        return "<string-append string=\"" + this.string + "\" prefix=\"" + this.prefix + "\" suffix=\"" + this.suffix + "\" field-name=\"" + this.fieldAcsr + "\" map-name=\"" + this.mapAcsr + "\"/>";
+    }
+    public String expandedString(MethodContext methodContext) {
+        // TODO: something more than a stub/dummy
+        return this.rawString();
     }
 }

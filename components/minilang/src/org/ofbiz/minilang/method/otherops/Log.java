@@ -34,7 +34,7 @@ import org.ofbiz.minilang.method.*;
  * Calculates a result based on nested calcops.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class Log extends MethodOperation {
@@ -103,5 +103,14 @@ public class Log extends MethodOperation {
         Debug.log(level, null, buf.toString(), module);
         
         return true;
+    }
+
+    public String rawString() {
+        // TODO: add all attributes and other info
+        return "<log level=\"" + this.levelStr + "\" message=\"" + this.message + "\"/>";
+    }
+    public String expandedString(MethodContext methodContext) {
+        // TODO: something more than a stub/dummy
+        return this.rawString();
     }
 }

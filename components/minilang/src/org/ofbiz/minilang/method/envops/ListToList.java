@@ -34,7 +34,7 @@ import org.ofbiz.minilang.method.*;
  * Copies an environment field to a list
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class ListToList extends MethodOperation {
@@ -69,5 +69,14 @@ public class ListToList extends MethodOperation {
 
         toList.addAll(fromList);
         return true;
+    }
+
+    public String rawString() {
+        // TODO: something more than the empty tag
+        return "<list-to-list/>";
+    }
+    public String expandedString(MethodContext methodContext) {
+        // TODO: something more than a stub/dummy
+        return this.rawString();
     }
 }

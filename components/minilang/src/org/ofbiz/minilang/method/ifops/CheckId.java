@@ -35,7 +35,7 @@ import org.ofbiz.minilang.method.*;
  * or fail-property sub-elements are used to add a message to the error-list.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class CheckId extends MethodOperation {
@@ -161,5 +161,14 @@ public class CheckId extends MethodOperation {
         } else {
             messages.add(defaultMessage + errorDetails);
         }
+    }
+
+    public String rawString() {
+        // TODO: add all attributes and other info
+        return "<check-id field-name=\"" + this.fieldAcsr + "\" map-name=\"" + this.mapAcsr + "\"/>";
+    }
+    public String expandedString(MethodContext methodContext) {
+        // TODO: something more than a stub/dummy
+        return this.rawString();
     }
 }

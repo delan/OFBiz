@@ -36,7 +36,7 @@ import org.ofbiz.minilang.method.*;
  * Copies the specified String to a field
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class StringToField extends MethodOperation {
@@ -89,5 +89,14 @@ public class StringToField extends MethodOperation {
         }
 
         return true;
+    }
+
+    public String rawString() {
+        // TODO: something more than the empty tag
+        return "<string-to-field string=\"" + this.string + "\" field-name=\"" + this.fieldAcsr + "\" map-name=\"" + this.mapAcsr + "\"/>";
+    }
+    public String expandedString(MethodContext methodContext) {
+        // TODO: something more than a stub/dummy
+        return this.rawString();
     }
 }

@@ -38,7 +38,7 @@ import org.w3c.dom.Element;
  * Uses the delegator to find entity values by anding the map fields
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class FilterListByDate extends MethodOperation {
@@ -77,6 +77,15 @@ public class FilterListByDate extends MethodOperation {
             toListAcsr.put(methodContext, EntityUtil.filterByDate((List) listAcsr.get(methodContext), UtilDateTime.nowTimestamp(), fromFieldName, thruFieldName, true));
         }
         return true;
+    }
+
+    public String rawString() {
+        // TODO: something more than the empty tag
+        return "<filter-list-by-date/>";
+    }
+    public String expandedString(MethodContext methodContext) {
+        // TODO: something more than a stub/dummy
+        return this.rawString();
     }
 }
 

@@ -36,7 +36,7 @@ import org.ofbiz.minilang.operation.*;
  * Iff the comparison between the constant and the specified field is true process sub-operations
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class IfCompare extends MethodOperation {
@@ -130,5 +130,14 @@ public class IfCompare extends MethodOperation {
                 return true;
             }
         }
+    }
+
+    public String rawString() {
+        // TODO: add all attributes and other info
+        return "<if-compare field-name=\"" + this.fieldAcsr + "\" map-name=\"" + this.mapAcsr + "\" value=\"" + value + "\"/>";
+    }
+    public String expandedString(MethodContext methodContext) {
+        // TODO: something more than a stub/dummy
+        return this.rawString();
     }
 }

@@ -36,7 +36,7 @@ import org.ofbiz.minilang.method.*;
  * Appends the specified String to a List
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class StringToList extends MethodOperation {
@@ -81,5 +81,14 @@ public class StringToList extends MethodOperation {
         toList.add(value);
 
         return true;
+    }
+
+    public String rawString() {
+        // TODO: something more than the empty tag
+        return "<string-to-list string=\"" + this.string + "\" list-name=\"" + this.listAcsr + "\"/>";
+    }
+    public String expandedString(MethodContext methodContext) {
+        // TODO: something more than a stub/dummy
+        return this.rawString();
     }
 }

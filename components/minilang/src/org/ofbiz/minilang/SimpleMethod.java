@@ -551,7 +551,7 @@ public class SimpleMethod {
         } catch (Throwable t) {
             // make SURE nothing gets thrown through
             String errMsg = UtilProperties.getMessage(SimpleMethod.err_resource, "simpleMethod.error_running", locale) + ": " + t.getMessage();                                
-            Debug.log(t, errMsg, module);
+            Debug.logError(errMsg, module);
             finished = false;
             errorMsg += errMsg + "<br>";
         }
@@ -876,8 +876,14 @@ public class SimpleMethod {
         Iterator methodOpsIter = methodOperations.iterator();
         while (methodOpsIter.hasNext()) {
             MethodOperation methodOperation = (MethodOperation) methodOpsIter.next();
-            if (!methodOperation.exec(methodContext)) {
-                return false;
+            try {
+                if (!methodOperation.exec(methodContext)) {
+                    return false;
+                }
+            } catch (Throwable t) {
+                String errMsg = "Error in simple-method operation [" + methodOperation.rawString() + "]: " + t.toString();
+                Debug.logError(t, errMsg, module);
+                throw new RuntimeException(errMsg);
             }
         }
         return true;

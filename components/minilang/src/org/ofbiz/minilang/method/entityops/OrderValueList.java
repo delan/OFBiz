@@ -36,7 +36,7 @@ import org.w3c.dom.Element;
  * Order the given list of GenericValue objects
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class OrderValueList extends MethodOperation {
@@ -60,5 +60,14 @@ public class OrderValueList extends MethodOperation {
         }
         toListAcsr.put(methodContext, EntityUtil.orderBy((List) listAcsr.get(methodContext), orderByList));
         return true;
+    }
+
+    public String rawString() {
+        // TODO: something more than the empty tag
+        return "<order-value-list/>";
+    }
+    public String expandedString(MethodContext methodContext) {
+        // TODO: something more than a stub/dummy
+        return this.rawString();
     }
 }

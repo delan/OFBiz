@@ -36,7 +36,7 @@ import org.w3c.dom.Element;
  * Uses the delegator to store the specified value object entity in the datasource
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class StoreValue extends MethodOperation {
@@ -86,5 +86,14 @@ public class StoreValue extends MethodOperation {
             return false;
         }
         return true;
+    }
+
+    public String rawString() {
+        // TODO: something more than the empty tag
+        return "<store-value/>";
+    }
+    public String expandedString(MethodContext methodContext) {
+        // TODO: something more than a stub/dummy
+        return this.rawString();
     }
 }

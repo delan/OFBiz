@@ -34,7 +34,7 @@ import org.ofbiz.minilang.method.*;
  * Copies a map field to a map field
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class FieldToField extends MethodOperation {
@@ -103,5 +103,13 @@ public class FieldToField extends MethodOperation {
         }
 
         return true;
+    }
+
+    public String rawString() {
+        return "<field-to-field field-name=\"" + this.fieldAcsr + "\" map-name=\"" + this.mapAcsr + "\" to-field-name=\"" + this.toFieldAcsr + "\" to-map-name=\"" + this.toMapAcsr + "\"/>";
+    }
+    public String expandedString(MethodContext methodContext) {
+        // TODO: something more than a stub/dummy
+        return this.rawString();
     }
 }

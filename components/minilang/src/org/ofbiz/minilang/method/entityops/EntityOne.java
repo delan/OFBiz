@@ -36,7 +36,7 @@ import org.w3c.dom.Element;
  * Uses the delegator to find entity values by a primary key
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      3.1
  */
 public class EntityOne extends MethodOperation {
@@ -68,6 +68,15 @@ public class EntityOne extends MethodOperation {
             return false;
         }
         return true;
+    }
+
+    public String rawString() {
+        // TODO: something more than the empty tag
+        return "<entity-one/>";
+    }
+    public String expandedString(MethodContext methodContext) {
+        // TODO: something more than a stub/dummy
+        return this.rawString();
     }
 }
 

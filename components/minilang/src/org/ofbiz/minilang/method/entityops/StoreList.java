@@ -37,7 +37,7 @@ import org.w3c.dom.Element;
  * Uses the delegator to store the specified value object list in the datasource
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class StoreList extends MethodOperation {
@@ -78,5 +78,14 @@ public class StoreList extends MethodOperation {
             return false;
         }
         return true;
+    }
+
+    public String rawString() {
+        // TODO: something more than the empty tag
+        return "<store-list/>";
+    }
+    public String expandedString(MethodContext methodContext) {
+        // TODO: something more than a stub/dummy
+        return this.rawString();
     }
 }

@@ -39,7 +39,7 @@ import org.w3c.dom.Element;
  * Gets a list of related entity instance according to the specified relation-name
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class GetRelated extends MethodOperation {
@@ -96,5 +96,14 @@ public class GetRelated extends MethodOperation {
             return false;
         }
         return true;
+    }
+
+    public String rawString() {
+        // TODO: something more than the empty tag
+        return "<get-related/>";
+    }
+    public String expandedString(MethodContext methodContext) {
+        // TODO: something more than a stub/dummy
+        return this.rawString();
     }
 }

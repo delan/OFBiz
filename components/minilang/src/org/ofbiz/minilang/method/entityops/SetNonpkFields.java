@@ -37,7 +37,7 @@ import org.w3c.dom.Element;
  * Looks for each non-PK field in the named map and if it exists there it will copy it into the named value object.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class SetNonpkFields extends MethodOperation {
@@ -80,5 +80,14 @@ public class SetNonpkFields extends MethodOperation {
             value.setNonPKFields(theMap, setIfNull);
         }
         return true;
+    }
+
+    public String rawString() {
+        // TODO: something more than the empty tag
+        return "<set-nonpk-fields/>";
+    }
+    public String expandedString(MethodContext methodContext) {
+        // TODO: something more than a stub/dummy
+        return this.rawString();
     }
 }

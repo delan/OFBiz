@@ -37,7 +37,7 @@ import org.w3c.dom.Element;
  * Uses the delegator to remove the specified value object (or psuedo-pk) list from the datasource
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class RemoveList extends MethodOperation {
@@ -87,5 +87,14 @@ public class RemoveList extends MethodOperation {
             return false;
         }
         return true;
+    }
+
+    public String rawString() {
+        // TODO: something more than the empty tag
+        return "<remove-list/>";
+    }
+    public String expandedString(MethodContext methodContext) {
+        // TODO: something more than a stub/dummy
+        return this.rawString();
     }
 }

@@ -33,7 +33,7 @@ import org.ofbiz.minilang.method.*;
  * Uses the delegator to find entity values by anding the map fields
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class MakeValue extends MethodOperation {
@@ -54,5 +54,14 @@ public class MakeValue extends MethodOperation {
         Map ctxMap = (Map) (mapAcsr.isEmpty() ? null : mapAcsr.get(methodContext));
         valueAcsr.put(methodContext, methodContext.getDelegator().makeValidValue(entityName, ctxMap));
         return true;
+    }
+
+    public String rawString() {
+        // TODO: something more than the empty tag
+        return "<make-value/>";
+    }
+    public String expandedString(MethodContext methodContext) {
+        // TODO: something more than a stub/dummy
+        return this.rawString();
     }
 }
