@@ -511,4 +511,21 @@ public class OrderReadHelper {
         }
         return newOrderAdjustmentsList;
     }
+	
+	/** Getter for property orderHeader.
+	 * @return Value of property orderHeader.
+	 */
+	public org.ofbiz.core.entity.GenericValue getOrderHeader()
+	{
+		return orderHeader;
+	}
+	
+	/** Setter for property orderHeader.
+	 * @param orderHeader New value of property orderHeader.
+	 */
+	public void setOrderHeader(org.ofbiz.core.entity.GenericValue orderHeader)
+	{
+		this.orderHeader = orderHeader;
+	}
+	
 }
