@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.5 $
+ *@version    $Revision: 1.6 $
  *@since      2.2
  */
  
@@ -71,8 +71,11 @@ context.put("billingAccountList", billingAccountList);
 facilityList = delegator.findAll("Facility", UtilMisc.toList("facilityName"));
 context.put("facilityList", facilityList);
 
-returnStatus = delegator.findByAnd("StatusItem", UtilMisc.toMap("statusTypeId", "ORDER_RETURN_STTS"), UtilMisc.toList("sequenceId"));
-context.put("returnStatus", returnStatus);
+currentStatus = returnHeader != null ? returnHeader.getString("statusId") : null;
+if (currentStatus != null) {
+    returnStatus = delegator.findByAnd("StatusValidChangeToDetail", UtilMisc.toMap("statusId", currentStatus), UtilMisc.toList("sequenceId"));
+    context.put("returnStatus", returnStatus);
+}
 
 orderRole = null;
 if (orderId != null) {
