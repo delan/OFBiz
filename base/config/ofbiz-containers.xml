@@ -23,7 +23,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
  *  OFBiz Containers
- *  $Id: ofbiz-containers.xml,v 1.24 2004/07/04 02:57:12 ajzeneski Exp $
+ *  $Id: ofbiz-containers.xml,v 1.25 2004/07/04 05:58:18 ajzeneski Exp $
 -->
 
 <ofbiz-containers>
@@ -59,11 +59,13 @@
     <!-- load catalina (tomcat) and all web applications -->
     <container name="catalina-container" class="org.ofbiz.catalina.container.CatalinaContainer">
         <!-- static configuration for tomcat -->
+        <property name="delegator-name" value="default"/>
         <property name="use-naming" value="false"/>
         <property name="debug" value="0"/>
-        <property name="apps-context-reloadable" value="true"/>
-        <property name="apps-cross-context" value="true"/>
-        <property name="apps-distributable" value="true"/>
+        <property name="apps-context-reloadable" value="false"/>
+        <property name="apps-cross-context" value="false"/>
+        <property name="apps-distributable" value="false"/>
+        <property name="apps-persistent-mgr" value="true"/>
         <!-- one or more tomcat engines (servers); components map to this + host -->
         <property name="default-server" value="engine">
             <property name="default-host" value="0.0.0.0"/>
@@ -76,7 +78,6 @@
             <property name="access-log-prefix" value="access_log."/>
             <property name="access-log-dir" value="logs"/>
             <property name="enable-request-dump" value="false"/>
-            <property name="enable-persistence-mgr" value="true"/>
             <!-- uncomment for cluster support
             <property name="default-server-cluster" value="cluster">
                 <property name="rep-valve-filter">
