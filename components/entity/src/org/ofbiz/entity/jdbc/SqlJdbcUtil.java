@@ -1,5 +1,5 @@
 /*
- * $Id: SqlJdbcUtil.java,v 1.19 2004/04/23 05:28:00 doogie Exp $
+ * $Id: SqlJdbcUtil.java,v 1.20 2004/04/23 05:38:07 doogie Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -66,7 +66,7 @@ import org.ofbiz.entity.model.ModelViewEntity;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jdonnerstag@eds.de">Juergen Donnerstag</a>
  * @author     <a href="mailto:peterm@miraculum.com">Peter Moon</a>
- * @version    $Revision: 1.19 $
+ * @version    $Revision: 1.20 $
  * @since      2.0
  */
 public class SqlJdbcUtil {
@@ -734,7 +734,7 @@ public class SqlJdbcUtil {
 
             switch (typeValue) {
             case 1:
-                sqlP.setValue((String) strValue);
+                sqlP.setValue((String) fieldValue);
                 break;
 
             case 2:
