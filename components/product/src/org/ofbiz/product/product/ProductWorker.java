@@ -1,5 +1,5 @@
 /*
- * $Id: ProductWorker.java,v 1.1 2003/08/17 18:04:22 ajzeneski Exp $
+ * $Id: ProductWorker.java,v 1.2 2003/08/18 17:03:08 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -23,7 +23,7 @@
  */
 package org.ofbiz.product.product;
 
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
 import java.util.Map;
 
@@ -47,7 +47,7 @@ import org.ofbiz.product.feature.ParametricSearch;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class ProductWorker {
@@ -265,6 +265,73 @@ public class ProductWorker {
         } catch (GenericEntityException e) {
             Debug.logWarning(e, module);
         }
+    }
+    
+    // product calc methods
+    
+    public static double calcOrderAdjustments(List orderHeaderAdjustments, double subTotal, boolean includeOther, boolean includeTax, boolean includeShipping) {
+        double adjTotal = 0.0;
+
+        if (orderHeaderAdjustments != null && orderHeaderAdjustments.size() > 0) {
+            List filteredAdjs = filterOrderAdjustments(orderHeaderAdjustments, includeOther, includeTax, includeShipping, false, false);
+            Iterator adjIt = filteredAdjs.iterator();
+
+            while (adjIt.hasNext()) {
+                GenericValue orderAdjustment = (GenericValue) adjIt.next();
+
+                adjTotal += calcOrderAdjustment(orderAdjustment, subTotal);
+            }
+        }
+        return adjTotal;
+    }
+    
+    public static double calcOrderAdjustment(GenericValue orderAdjustment, double orderSubTotal) {
+        double adjustment = 0.0;
+
+        if (orderAdjustment.get("amount") != null) {
+            adjustment += orderAdjustment.getDouble("amount").doubleValue();
+        }
+        if (orderAdjustment.get("percentage") != null) {
+            adjustment += (orderAdjustment.getDouble("percentage").doubleValue() * orderSubTotal);
+        }
+        return adjustment;
+    }    
+    
+    public static List filterOrderAdjustments(List adjustments, boolean includeOther, boolean includeTax, boolean includeShipping, boolean forTax, boolean forShipping) {
+        List newOrderAdjustmentsList = new LinkedList();
+
+        if (adjustments != null && adjustments.size() > 0) {
+            Iterator adjIt = adjustments.iterator();
+
+            while (adjIt.hasNext()) {
+                GenericValue orderAdjustment = (GenericValue) adjIt.next();
+
+                boolean includeAdjustment = false;
+
+                if ("SALES_TAX".equals(orderAdjustment.getString("orderAdjustmentTypeId"))) {
+                    if (includeTax) includeAdjustment = true;
+                } else if ("SHIPPING_CHARGES".equals(orderAdjustment.getString("orderAdjustmentTypeId"))) {
+                    if (includeShipping) includeAdjustment = true;
+                } else {
+                    if (includeOther) includeAdjustment = true;
+                }
+
+                // default to yes, include for shipping; so only exclude if includeInShipping is N, or false; if Y or null or anything else it will be included
+                if (forTax && "N".equals(orderAdjustment.getString("includeInTax"))) {
+                    includeAdjustment = false;
+                }
+
+                // default to yes, include for shipping; so only exclude if includeInShipping is N, or false; if Y or null or anything else it will be included
+                if (forShipping && "N".equals(orderAdjustment.getString("includeInShipping"))) {
+                    includeAdjustment = false;
+                }
+
+                if (includeAdjustment) {
+                    newOrderAdjustmentsList.add(orderAdjustment);
+                }
+            }
+        }
+        return newOrderAdjustmentsList;
     }
 }
 

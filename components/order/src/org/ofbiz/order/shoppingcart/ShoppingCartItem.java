@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCartItem.java,v 1.1 2003/08/18 03:51:15 ajzeneski Exp $
+ * $Id: ShoppingCartItem.java,v 1.1 2003/08/18 17:03:08 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -21,7 +21,7 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package org.ofbiz.product.shoppingcart;
+package org.ofbiz.order.shoppingcart;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -39,6 +39,7 @@ import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityUtil;
+import org.ofbiz.order.order.OrderReadHelper;
 import org.ofbiz.product.catalog.CatalogWorker;
 import org.ofbiz.product.category.CategoryWorker;
 import org.ofbiz.service.GenericServiceException;
@@ -338,7 +339,7 @@ public class ShoppingCartItem implements java.io.Serializable {
 
         // apply/unapply promotions - only for sales orders
         if (doPromotions && cart.getOrderType().equals("SALES_ORDER")) {
-            org.ofbiz.product.promo.ProductPromoWorker.doPromotions(cart, this, oldQuantity, getDelegator(), dispatcher);
+            org.ofbiz.order.shoppingcart.product.ProductPromoWorker.doPromotions(cart, this, oldQuantity, getDelegator(), dispatcher);
         }
     }
 

@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCart.java,v 1.1 2003/08/18 03:51:14 ajzeneski Exp $
+ * $Id: ShoppingCart.java,v 1.1 2003/08/18 17:03:09 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -21,7 +21,7 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package org.ofbiz.product.shoppingcart;
+package org.ofbiz.order.shoppingcart;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -39,6 +39,7 @@ import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericPK;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.order.order.OrderReadHelper;
 import org.ofbiz.service.LocalDispatcher;
 
 /**

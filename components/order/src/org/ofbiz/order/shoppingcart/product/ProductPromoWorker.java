@@ -1,5 +1,5 @@
 /*
- * $Id: ProductPromoWorker.java,v 1.2 2003/08/18 03:51:39 ajzeneski Exp $
+ * $Id: ProductPromoWorker.java,v 1.1 2003/08/18 17:03:09 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -21,7 +21,7 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package org.ofbiz.product.promo;
+package org.ofbiz.order.shoppingcart.product;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -38,10 +38,10 @@ import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityUtil;
-import org.ofbiz.product.shoppingcart.CartItemModifyException;
-import org.ofbiz.product.shoppingcart.ShoppingCart;
-import org.ofbiz.product.shoppingcart.ShoppingCartEvents;
-import org.ofbiz.product.shoppingcart.ShoppingCartItem;
+import org.ofbiz.order.shoppingcart.CartItemModifyException;
+import org.ofbiz.order.shoppingcart.ShoppingCart;
+import org.ofbiz.order.shoppingcart.ShoppingCartEvents;
+import org.ofbiz.order.shoppingcart.ShoppingCartItem;
 import org.ofbiz.product.store.ProductStoreWorker;
 import org.ofbiz.service.LocalDispatcher;
 
@@ -50,7 +50,7 @@ import org.ofbiz.service.LocalDispatcher;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.1 $
  * @since      2.0
  */
 public class ProductPromoWorker {

@@ -1,5 +1,5 @@
 /*
- * $Id: ProductStoreWorker.java,v 1.2 2003/08/18 03:51:39 ajzeneski Exp $
+ * $Id: ProductStoreWorker.java,v 1.3 2003/08/18 17:03:09 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -28,6 +28,7 @@ import java.util.Map;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
@@ -36,8 +37,6 @@ import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.product.catalog.CatalogWorker;
-import org.ofbiz.product.shoppingcart.ShoppingCart;
-import org.ofbiz.product.shoppingcart.ShoppingCartItem;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
@@ -46,7 +45,7 @@ import org.ofbiz.service.ModelService;
  * ProductStoreWorker - Worker class for store related functionality
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class ProductStoreWorker {
@@ -71,9 +70,9 @@ public class ProductStoreWorker {
     
     public static String getProductStoreId(ServletRequest request) {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
-        ShoppingCart cart = (ShoppingCart) httpRequest.getSession().getAttribute("shoppingCart");
-        if (cart != null && cart.getProductStoreId() != null) {
-            return cart.getProductStoreId();
+        HttpSession session = httpRequest.getSession();
+        if (session.getAttribute("productStoreId") != null) {
+            return (String) session.getAttribute("productStoreId");        
         } else {
             GenericValue webSite = CatalogWorker.getWebSite(request);
             if (webSite != null) {
@@ -97,10 +96,6 @@ public class ProductStoreWorker {
         return isStoreInventoryRequired(productStoreId, product, delegator);
     }
 
-    public static boolean isStoreInventoryRequired(ShoppingCartItem item) {
-        return isStoreInventoryRequired(item.getProdCatalogId(), item.getProduct(), item.getDelegator());
-    }
-       
     public static boolean isStoreInventoryRequired(String productStoreId, GenericValue product, GenericDelegator delegator) {
         // look at the product first since it over-rides the ProductStore setting; if empty or null use the ProductStore setting
         
@@ -137,10 +132,6 @@ public class ProductStoreWorker {
         return isStoreInventoryRequired(productStore.getString("productStoreId"), product, delegator);
     }    
 
-    public static boolean isStoreInventoryAvailable(ShoppingCartItem item, LocalDispatcher dispatcher) {
-        return isStoreInventoryAvailable(item.getProdCatalogId(), item.getProductId(), item.getQuantity(), item.getDelegator(), dispatcher);
-    }
-    
     /** check inventory availability for the given catalog, product, quantity, etc */
     public static boolean isStoreInventoryAvailable(String productStoreId, String productId, double quantity, GenericDelegator delegator, LocalDispatcher dispatcher) {
         GenericValue productStore = getProductStore(productStoreId, delegator);
