@@ -1,5 +1,5 @@
 /*
- * $Id: EntityFieldMap.java,v 1.9 2004/07/07 06:01:43 doogie Exp $
+ * $Id: EntityFieldMap.java,v 1.10 2004/07/08 04:25:47 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -41,7 +41,7 @@ import org.ofbiz.entity.model.ModelField;
  * Encapsulates simple expressions used for specifying queries
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.9 $
+ * @version    $Revision: 1.10 $
  * @since      2.0
  */
 public class EntityFieldMap extends EntityCondition {
@@ -53,6 +53,7 @@ public class EntityFieldMap extends EntityCondition {
 
     public EntityFieldMap(Map fieldMap, EntityJoinOperator operator) {
         this.fieldMap = fieldMap;
+        if (this.fieldMap == null) this.fieldMap = new LinkedHashMap();
         this.operator = operator;
     }
 
