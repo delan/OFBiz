@@ -233,6 +233,7 @@ public class WorkflowClient {
             Map oCtx = obj.processContext();
             oCtx.putAll(append);
             obj.setProcessContext(oCtx);
+            Debug.logVerbose("ProcessContext (" + workEffortId + ") => " + obj.processContext(), module);
         }
     }
 
@@ -243,6 +244,8 @@ public class WorkflowClient {
      */
     public Map getContext(String workEffortId) throws WfException {
         WfExecutionObject obj = getExecutionObject(workEffortId);
+        if (obj == null) throw new WfException("Invalid Execution Object (null value)");
+        Debug.logVerbose("ProcessContext (" + workEffortId + ") => " + obj.processContext(), module);
         return obj.processContext();
     }
 
@@ -253,6 +256,8 @@ public class WorkflowClient {
      */
     public String getState(String workEffortId) throws WfException {
         WfExecutionObject obj = getExecutionObject(workEffortId);
+        if (obj == null) throw new WfException("Invalid Execution Object (null value)");
+        Debug.logVerbose("Current State (" + workEffortId + ") => " + obj.state(), module);
         return obj.state();
     }
 
@@ -265,7 +270,9 @@ public class WorkflowClient {
      */
     public void setState(String workEffortId, String state) throws WfException {
         WfExecutionObject obj = getExecutionObject(workEffortId);
+        if (obj == null) throw new WfException("Invalid Execution Object (null value)");
         obj.changeState(state);
+        Debug.logVerbose("Current State (" + workEffortId + ") => " + obj.state(), module);
     }
 
     /**
@@ -276,6 +283,8 @@ public class WorkflowClient {
      */
     public long getPriority(String workEffortId) throws WfException {
         WfExecutionObject obj = getExecutionObject(workEffortId);
+        if (obj == null) throw new WfException("Invalid Execution Object (null value)");
+        Debug.logVerbose("Current Priority (" + workEffortId + ") => " + obj.priority(), module);
         return obj.priority();
     }
 
@@ -287,7 +296,9 @@ public class WorkflowClient {
      */
     public void setPriority(String workEffortId, long priority) throws WfException {
         WfExecutionObject obj = getExecutionObject(workEffortId);
+        if (obj == null) throw new WfException("Invalid Execution Object (null value)");
         obj.setPriority(priority);
+        Debug.logVerbose("Current Priority (" + workEffortId + ") => " + obj.priority(), module);
     }
 
     private WfExecutionObject getExecutionObject(String workEffortId) {
