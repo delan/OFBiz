@@ -59,7 +59,7 @@ public class TaxwareServices {
             for (int i = 0; i < items.size(); i++) {
                 GenericValue p = (GenericValue) items.get(i);
                 Double amount = (Double) amnts.get(i);
-                Double ishp = (Double) ishpn.get(i);
+                Double ishp = ishpn != null ? (Double) ishpn.get(i) : new Double(0);
                 utl.addItem(p, amount.doubleValue(), ishp.doubleValue());
             }
 
