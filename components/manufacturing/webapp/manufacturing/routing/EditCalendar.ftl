@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Olivier.Heintz@nereide.biz
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      3.0
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -70,9 +70,8 @@ ${pages.get("/routing/CalendarTabBar.ftl")}
     </tr>
     <tr>
       <td width="26%" align="right" valign="top">
-        <input type="submit" value="${uiLabelMap.CommonSave}" class="smallSubmit">
       <td width="5">&nbsp;</td>
-      <td width="74%">&nbsp;</td>
+      <td width="74%"><input type="submit" value="${uiLabelMap.CommonUpdate}" class="smallSubmit"></td>
     </tr>
   </table>
 </form>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <page>
     <template>main</template>
-    <property name="titleProperty">PageTitleEditMachineGroup</property>
+    <property name="titleProperty">PageTitleEditMachine</property>
     <property name="headerItem">machine</property>   
-    <content-action name="/routing/EditMachineGroup.bsh"/> 
+    <content-action name="/routing/EditMachine.bsh"/> 
 </page>

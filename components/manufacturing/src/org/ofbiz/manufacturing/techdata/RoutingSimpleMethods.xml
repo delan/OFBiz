@@ -24,7 +24,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * @author     Olivier Heintz (olivier.heintz@nereide.biz)
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.0
 -->
 
@@ -99,6 +99,98 @@
         <find-by-primary-key entity-name="TechDataCalendar" map-name="lookupPKMap" value-name="lookedUpValue"/>
         <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
         <store-value value-name="lookedUpValue"/>
+    </simple-method>
+
+    <simple-method method-name="removeCalendar" short-description="Remove Calendar">
+        <check-permission permission="MANUFACTURING" action="_DELETE"><fail-property resource="ManufacturingUiLabels" property="ManufacturingCalendarPermissionError"/></check-permission>
+        <check-errors/>
+        <make-value value-name="lookupPKMap" entity-name="TechDataCalendar"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>        
+        <get-related value-name="lookupPKMap" relation-name="TechDataCalendarExceptionDay" list-name="relatedResultList" />
+        <first-from-list entry-name="relatedResult" list-name="relatedResultList"/>
+        <if-not-empty  field-name="relatedResult">
+			<add-error>
+				<fail-property resource="ManufacturingUiLabels" property="ManufacturingCalendarExceptionDayUseCalendar"/>
+        		<string-to-field  field-name="errorExist" string="error"/>
+			</add-error>
+    		<check-errors/>
+        </if-not-empty>
+        <get-related value-name="lookupPKMap" relation-name="TechDataCalendarExceptionWeek" list-name="relatedResultList" />
+        <first-from-list entry-name="relatedResult" list-name="relatedResultList"/>
+        <if-not-empty  field-name="relatedResult">
+			<add-error>
+				<fail-property resource="ManufacturingUiLabels" property="ManufacturingCalendarExceptionWeekUseCalendar"/>
+        		<string-to-field  field-name="errorExist" string="error"/>
+			</add-error>
+    		<check-errors/>
+        </if-not-empty>
+        <find-by-primary-key entity-name="TechDataCalendar" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <if-not-empty map-name="lookedUpValue" field-name="calendarWeekId">
+	        <if-empty  field-name="errorExist">
+    	        <remove-value value-name="lookedUpValue"/>
+        	</if-empty>
+        </if-not-empty>
+    </simple-method>
+
+    <simple-method method-name="createCalendarWeek" short-description="Create Calendar Week">
+    	<check-permission permission="MANUFACTURING" action="_CREATE"><fail-property resource="ManufacturingUiLabels" property="ManufacturingCalendarPermissionError"/></check-permission>
+    	<check-errors/>
+        <make-value value-name="lookupPKMap" entity-name="TechDataCalendarWeek"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>        
+        <find-by-primary-key entity-name="TechDataCalendarWeek" map-name="lookupPKMap" value-name="newEntity"/>
+       <if-not-empty field-name="calendarWeekId" map-name="newEntity">
+			<add-error>
+				<fail-property resource="ManufacturingUiLabels" property="ManufacturingCalendarWeekIdAlreadyExist"/>
+			</add-error>
+    		<check-errors/>
+		<else> 
+         		<make-value value-name="newEntity" entity-name="TechDataCalendarWeek"/>  
+        		<set-pk-fields map-name="parameters" value-name="newEntity"/>  
+        		<set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+        		<create-value value-name="newEntity"/>
+		</else>	
+		</if-not-empty> 
+    </simple-method>
+
+    <simple-method method-name="updateCalendarWeek" short-description="Update CalendarWeek">
+        <check-permission permission="MANUFACTURING" action="_UPDATE"><fail-property resource="ManufacturingUiLabels" property="ManufacturingCalendarPermissionError"/></check-permission>
+        <check-errors/>
+        <make-value value-name="lookupPKMap" entity-name="TechDataCalendarWeek"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>        
+        <find-by-primary-key entity-name="TechDataCalendarWeek" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
+        <store-value value-name="lookedUpValue"/>
+    </simple-method>
+
+    <simple-method method-name="removeCalendarWeek" short-description="Remove CalendarWeek">
+        <check-permission permission="MANUFACTURING" action="_DELETE"><fail-property resource="ManufacturingUiLabels" property="ManufacturingCalendarPermissionError"/></check-permission>
+        <check-errors/>
+        <make-value value-name="lookupPKMap" entity-name="TechDataCalendarWeek"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>        
+        <get-related value-name="lookupPKMap" relation-name="TechDataCalendar" list-name="relatedResultList" />
+        <first-from-list entry-name="relatedResult" list-name="relatedResultList"/>
+        <if-not-empty  field-name="relatedResult">
+			<add-error>
+				<fail-property resource="ManufacturingUiLabels" property="ManufacturingCalendarUseCalendarWeek"/>
+        		<string-to-field  field-name="errorExist" string="error"/>
+			</add-error>
+    		<check-errors/>
+        </if-not-empty>
+        <get-related value-name="lookupPKMap" relation-name="TechDataCalendarExceptionWeek" list-name="relatedResultList" />
+        <first-from-list entry-name="relatedResult" list-name="relatedResultList"/>
+        <if-not-empty  field-name="relatedResult">
+			<add-error>
+				<fail-property resource="ManufacturingUiLabels" property="ManufacturingCalendarWeekExceptionUseCalendarWeek"/>
+        		<string-to-field  field-name="errorExist" string="error"/>
+			</add-error>
+    		<check-errors/>
+        </if-not-empty>
+        <find-by-primary-key entity-name="TechDataCalendarWeek" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <if-not-empty map-name="lookedUpValue" field-name="calendarWeekId">
+	        <if-empty  field-name="errorExist">
+    	        <remove-value value-name="lookedUpValue"/>
+        	</if-empty>
+        </if-not-empty>
     </simple-method>
 
     <simple-method method-name="createCalendarExceptionDay" short-description="Create Calendar Exception Day">
@@ -180,6 +272,49 @@
         <find-by-primary-key entity-name="TechDataCalendarExceptionWeek" map-name="lookupPKMap" value-name="lookedUpValue"/>
         <if-not-empty map-name="lookedUpValue" field-name="calendarId">
             <remove-value value-name="lookedUpValue"/>
+        </if-not-empty>
+    </simple-method>
+
+    <simple-method method-name="createMachine" short-description="Create Machine">
+    	<check-permission permission="MANUFACTURING" action="_CREATE"><fail-property resource="ManufacturingUiLabels" property="ManufacturingMachinePermissionError"/></check-permission>
+    	<check-errors/>
+        <make-value value-name="lookupPKMap" entity-name="TechDataMachine"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>        
+        <find-by-primary-key entity-name="TechDataMachine" map-name="lookupPKMap" value-name="newEntity"/>
+        <if-not-empty field-name="machineId" map-name="newEntity">
+			<add-error>
+				<fail-property resource="ManufacturingUiLabels" property="ManufacturingMachineIdAlreadyExist"/>
+			</add-error>
+    		<check-errors/>
+		<else>  
+         		<make-value value-name="newEntity" entity-name="TechDataMachine"/>  
+        		<set-pk-fields map-name="parameters" value-name="newEntity"/>  
+        		<set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+        		<create-value value-name="newEntity"/>
+		</else>	
+		</if-not-empty> 
+    </simple-method>
+
+    <simple-method method-name="updateMachine" short-description="Update Machine">
+        <check-permission permission="MANUFACTURING" action="_UPDATE"><fail-property resource="ManufacturingUiLabels" property="ManufacturingMachinePermissionError"/></check-permission>
+        <check-errors/>
+        <make-value value-name="lookupPKMap" entity-name="TechDataMachine"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>        
+        <find-by-primary-key entity-name="TechDataMachine" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
+        <store-value value-name="lookedUpValue"/>
+    </simple-method>
+
+    <simple-method method-name="removeMachine" short-description="Remove Machine">
+        <check-permission permission="MANUFACTURING" action="_DELETE"><fail-property resource="ManufacturingUiLabels" property="ManufacturingMachinePermissionError"/></check-permission>
+        <check-errors/>
+        <make-value value-name="lookupPKMap" entity-name="TechDataMachine"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>        
+        <find-by-primary-key entity-name="TechDataMachine" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <if-not-empty map-name="lookedUpValue" field-name="machineId">
+	        <if-empty  field-name="errorExist">
+    	        <remove-value value-name="lookedUpValue"/>
+        	</if-empty>
         </if-not-empty>
     </simple-method>
 

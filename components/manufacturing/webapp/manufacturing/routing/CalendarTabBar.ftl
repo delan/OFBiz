@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Olivier.Heintz@nereide.biz
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      3.0
 -->
 
@@ -33,6 +33,6 @@
         <a href="<@ofbizUrl>/EditCalendar?calendarId=${techDataCalendar.calendarId}</@ofbizUrl>" class="${selectedClassMap.calendar?default(unselectedClassName)}">${uiLabelMap.ManufacturingCalendar}</a>
         <a href="<@ofbizUrl>/EditCalendarExceptionDay?calendarId=${techDataCalendar.calendarId}</@ofbizUrl>" class="${selectedClassMap.calendarExceptionDay?default(unselectedClassName)}">${uiLabelMap.ManufacturingCalendarExceptionDate}</a>
         <a href="<@ofbizUrl>/EditCalendarExceptionWeek?calendarId=${techDataCalendar.calendarId}</@ofbizUrl>" class="${selectedClassMap.calendarExceptionWeek?default(unselectedClassName)}">${uiLabelMap.ManufacturingCalendarExceptionWeek}</a>
-        <a href="<@ofbizUrl>/EditCalendarWeek?calendarId=${techDataCalendar.calendarId}</@ofbizUrl>" class="${selectedClassMap.CalendarWeek?default(unselectedClassName)}">${uiLabelMap.ManufacturingCalendarWeek}</a>
+        <a href="<@ofbizUrl>/ListCalendarWeek</@ofbizUrl>" class="${selectedClassMap.CalendarWeek?default(unselectedClassName)}">${uiLabelMap.ManufacturingCalendarWeek}</a>
     </div>
 </#if>

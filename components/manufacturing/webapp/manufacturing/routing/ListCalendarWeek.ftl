@@ -20,36 +20,28 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Olivier.Heintz@nereide.biz
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.1 $
  *@since      3.0
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#assign locale = requestAttributes.locale>
 
 <#if hasPermission>
-<div class='tabContainer'>
-        <a href="<@ofbizUrl>/EditMachine</@ofbizUrl>" class="tabButton">${uiLabelMap.ManufacturingMachine}</a>
-        <a href="<@ofbizUrl>/FindMachineGroup</@ofbizUrl>" class="tabButtonSelected">${uiLabelMap.ManufacturingMachineGroup}</a>
-</div>
-
-	<div class="head1">${uiLabelMap.ManufacturingEditMachineGroup}&nbsp; 
+    <div class='tabContainer'>
+        <a href="<@ofbizUrl>/FindCalendar</@ofbizUrl>" class="tabButton">${uiLabelMap.ManufacturingCalendar}</a>
+        <a href="<@ofbizUrl>/ListCalendarWeek</@ofbizUrl>" class="tabButtonSelected">${uiLabelMap.ManufacturingCalendarWeek}</a>
 	</div>
+
+	<div class="head1">${uiLabelMap.ManufacturingListCalendarWeek}&nbsp; </div>
+	<div><a href="<@ofbizUrl>/EditCalendarWeek</@ofbizUrl>" class="buttontext">[${uiLabelMap.ManufacturingNewCalendarWeek}]</a></div>
 	<br>
-	<#if machineGroup?has_content>
-			${updateMachineGroupWrapper.renderFormString()}
-			<br>
-			<hr class="sepbar">
+	<#if allCalendarWeek?has_content>
+		${listCalendarWeekWrapper.renderFormString()} 
 	</#if>
-	<#if allMachineGroups?has_content>
-		${listMachineGroupWrapper.renderFormString()}
-		<br>
-		<hr class="sepbar">
-	</#if>
-	${addMachineGroupWrapper.renderFormString()} 
 	<br>
 
 <#else>
- 	<h3>${uiLabelMap.ManufacturingMachinePermissionError}</h3>
+ 	<h3>${uiLabelMap.ManufacturingCalendarPermissionError}</h3>
 </#if>
 
 	

@@ -19,16 +19,40 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *@author     Olivier Heintz (olivier.heintz@nereide.biz)
- *@version    $Revision: 1.2 $
+ *@author     Olivier.Heintz@nereide.biz
+ *@version    $Revision: 1.1 $
  *@since      3.0
  */
- 
+
+
 import java.util.*;
-import org.ofbiz.entity.*;
 import org.ofbiz.base.util.*;
+import org.ofbiz.entity.*;
+import org.ofbiz.content.widget.html.*;
 
 requestParams = UtilHttp.getParameterMap(request);
+security = request.getAttribute("security");
 delegator = request.getAttribute("delegator");
-List allCalendar = delegator.findAll("TechDataCalendar");
-context.put("techDataCalendars", allCalendar);
+
+if(security.hasEntityPermission("MANUFACTURING", "_VIEW", session)) {
+    context.put("hasPermission", Boolean.TRUE);
+} else {
+    context.put("hasPermission", Boolean.FALSE);
+}
+GenericValue techDataCalendar = null;
+List calendarWeeks = null;
+
+String calendarWeekId = request.getParameter("calendarWeekId");
+calendarWeekData = new HashMap();
+if (calendarWeekId == null)  calendarWeekId = request.getAttribute("calendarWeekId");
+if (calendarWeekId != null) {
+		calendarWeek = delegator.findByPrimaryKey("TechDataCalendarWeek", UtilMisc.toMap("calendarWeekId", calendarWeekId));
+		context.put("calendarWeek",calendarWeek);
+		calendarWeekData = calendarWeek;
+}
+errorMessage = request.getAttribute("_ERROR_MESSAGE_");
+if (errorMessage != null && errorMessage.length() > 0) {
+    calendarWeekData = requestParams;
+}
+if (calendarWeekData == null) calendarWeekData = new HashMap();
+context.put("calendarWeekData", calendarWeekData);
