@@ -53,7 +53,8 @@ public class CompleteAssignmentJob extends AbstractJob {
 
     public void exec() {
         try {
-            assign.setResult(result);
+            if (result != null && result.size() > 0)
+                assign.setResult(result);
             assign.complete();
         } catch (Exception e) {
             Debug.logError("Complete Assignment Failed.");

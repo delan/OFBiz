@@ -299,6 +299,7 @@ public class WorkflowServices {
 
     public static boolean hasPermission(Security security, String workEffortId, GenericValue userLogin) {
         if (userLogin == null || workEffortId == null) {
+            Debug.logWarning("No UserLogin object or no Workeffort ID was passed.");
             return false;
         }
         if (security.hasPermission("WORKFLOW_MAINT", userLogin)) {
@@ -312,12 +313,13 @@ public class WorkflowServices {
             expr.add(new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "CAL_COMPLETED"));
             expr.add(new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "CAL_CANCELLED"));
             expr.add(new EntityExpr("workEffortId", EntityOperator.EQUALS, workEffortId));
-            expr.add(new EntityExpr("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.nowTimestamp()));
+            expr.add(new EntityExpr("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.nowTimestamp()));
 
             Collection c = null;
 
             try {
                 c = userLogin.getDelegator().findByAnd("WorkEffortAndPartyAssign", expr);
+                Debug.logInfo("Found " + c.size() + " records.");
             } catch (GenericEntityException e) {
                 Debug.logWarning(e);
                 return false;
@@ -330,9 +332,10 @@ public class WorkflowServices {
                 expr.add(new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "CAL_COMPLETED"));
                 expr.add(new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "CAL_CANCELLED"));
                 expr.add(new EntityExpr("workEffortParentId", EntityOperator.EQUALS, workEffortId));
-                expr.add(new EntityExpr("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.nowTimestamp()));
+                expr.add(new EntityExpr("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.nowTimestamp()));
                 try {
                     c = userLogin.getDelegator().findByAnd("WorkEffortAndPartyAssign", expr);
+                    Debug.logInfo("Found " + c.size() + " records.");
                 } catch (GenericEntityException e) {
                     Debug.logWarning(e);
                     return false;
