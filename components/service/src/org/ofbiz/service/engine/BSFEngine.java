@@ -1,5 +1,5 @@
 /*
- * $Id: BSFEngine.java,v 1.1 2003/08/17 05:12:39 ajzeneski Exp $
+ * $Id: BSFEngine.java,v 1.2 2003/12/18 02:13:03 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -46,7 +46,7 @@ import com.ibm.bsf.BSFManager;
  * BSF Service Engine
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.1
  */
 public class BSFEngine extends GenericAsyncEngine {
@@ -95,16 +95,9 @@ public class BSFEngine extends GenericAsyncEngine {
         // create the manager object and set the classloader    
         BSFManager mgr = new BSFManager();
         mgr.setClassLoader(cl);
-        
-        // set the input parameters
-        Set keySet = context.keySet();
-        Iterator i = keySet.iterator();
-        while (i.hasNext()) {
-            String key = (String) i.next();
-            Object value = context.get(key);
-            mgr.registerBean(key, value);
-        }
-        mgr.registerBean("response", new HashMap());
+
+        mgr.registerBean("dctx", dctx);
+        mgr.registerBean("context", context);
         
         // pre-load the engine to make sure we were called right
         com.ibm.bsf.BSFEngine bsfEngine = null;        
