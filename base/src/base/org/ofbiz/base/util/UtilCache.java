@@ -24,6 +24,9 @@
 package org.ofbiz.base.util;
 
 import java.util.*;
+import java.io.Serializable;
+import java.lang.ref.SoftReference;
+import java.lang.ref.ReferenceQueue;
 
 /**
  * Generalized caching utility. Provides a number of caching features:
@@ -39,7 +42,9 @@ import java.util.*;
  * @version    $Rev$
  * @since      2.0
  */
-public class UtilCache {
+public class UtilCache implements Serializable {
+
+    public static final String module = UtilCache.class.getName();
 
     /** A static Map to keep track of all of the UtilCache instances. */
     public static Map utilCacheTable = new WeakHashMap();
@@ -301,6 +306,15 @@ public class UtilCache {
         }
 
         return valuesList;
+    }
+
+    public long getSizeInBytes() {
+        long totalSize = 0;
+        Iterator i = cacheLineTable.values().iterator();
+        while (i.hasNext()) {
+            totalSize += ((UtilCache.CacheLine) i.next()).getSizeInBytes();
+        }
+        return totalSize;
     }
 
     /** Removes an element from the cache according to the specified key
@@ -615,7 +629,7 @@ public class UtilCache {
         }
     }
 
-    public static class CacheLine {
+    public static class CacheLine implements Serializable {
         public UtilCache utilCache;
         public Object valueRef = null;
         public long loadTime = 0;
@@ -624,7 +638,7 @@ public class UtilCache {
         public CacheLine(UtilCache utilCache, Object value, boolean useSoftReference) {
             this.utilCache = utilCache;
             if (useSoftReference) {
-                this.valueRef = new java.lang.ref.SoftReference(value);
+                this.valueRef = new UtilCache.CacheSoftRef(value);
             } else {
                 this.valueRef = value;
             }
@@ -660,6 +674,35 @@ public class UtilCache {
 
         public boolean hasExpired() {
             return utilCache.hasExpired(this);
+        }
+
+        public long getSizeInBytes() {
+            return UtilObject.getByteCount(this);
+        }
+    }
+
+    public static class CacheSoftRef extends SoftReference implements Serializable {
+
+        public CacheSoftRef(Object o) {
+            super(o);
+        }
+
+        public CacheSoftRef(Object o, ReferenceQueue referenceQueue) {
+            super(o, referenceQueue);
+        }
+
+        public void clear() {
+            if (Debug.verboseOn()) {
+                Debug.logVerbose(new Exception("UtilCache.CacheSoftRef.clear()"), "Clearing UtilCache SoftReference - " + get(), module);
+            }
+            super.clear();
+        }
+
+        public void finalize() throws Throwable {
+            if (Debug.verboseOn()) {
+                Debug.logVerbose(new Exception("UtilCache.CacheSoftRef.finalize()"), "Finalize UtilCache SoftReference - " + get(), module);
+            }
+            super.finalize();
         }
     }
 

@@ -32,10 +32,11 @@ import org.ofbiz.base.util.*;
  * Loads resources from the classpath
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
-public class ClasspathLoader extends ResourceLoader {
+public class ClasspathLoader extends ResourceLoader implements java.io.Serializable {
+
     public URL getURL(String location) throws GenericConfigException {
         String fullLocation = fullLocation(location);
         URL url = UtilURL.fromResource(fullLocation);

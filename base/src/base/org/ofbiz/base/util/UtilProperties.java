@@ -40,10 +40,10 @@ import org.ofbiz.base.util.string.FlexibleStringExpander;
  * Generic Property Accessor with Cache - Utilities for working with properties files
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      1.0
  */
-public class UtilProperties {
+public class UtilProperties implements java.io.Serializable {
     
     public static final String module = UtilProperties.class.getName();
 
