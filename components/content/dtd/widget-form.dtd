@@ -25,10 +25,10 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
- *  $Id: widget-form.dtd,v 1.1 2003/08/17 08:40:02 ajzeneski Exp $
+ *  $Id: widget-form.dtd,v 1.2 2003/11/05 00:18:15 byersa Exp $
 -->
 
-<!ENTITY % AllFields "display | hyperlink | lookup | text | textarea | date-time | drop-down | check | radio | submit | reset | hidden | ignored">
+<!ENTITY % AllFields "display | hyperlink | lookup | text | textarea | date-time | drop-down | check | radio | submit | reset | hidden | ignored | file">
 
 <!ELEMENT forms ( form+ )>
 
@@ -45,8 +45,8 @@
 <!ELEMENT form ( alt-target*, auto-fields-service*, auto-fields-entity*, field*, sort-order? )>
 <!ATTLIST form
     name CDATA #REQUIRED
-    type ( single | list | multi ) #REQUIRED
-    target CDATA #REQUIRED
+    type ( single | list | multi | upload ) #REQUIRED
+    target CDATA #IMPLIED
     paginate-target CDATA #IMPLIED
     title CDATA #IMPLIED
     tooltip CDATA #IMPLIED
@@ -137,6 +137,7 @@
     position CDATA "1"
     red-when ( never | before-now | after-now | by-name ) "by-name"
     use-when CDATA #IMPLIED
+    id-name CDATA #IMPLIED
 >
 
 <!--
@@ -322,5 +323,12 @@
 <!ELEMENT sort-field EMPTY>
 <!ATTLIST sort-field
     name CDATA #REQUIRED
+>
+
+<!ELEMENT file ( sub-hyperlink? )>
+<!ATTLIST file
+    size CDATA "25"
+    maxlength CDATA #IMPLIED
+    default-value CDATA #IMPLIED
 >
 
