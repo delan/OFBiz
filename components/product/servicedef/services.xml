@@ -542,6 +542,18 @@
         <description>Delete a ProductPromoCodeParty</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
+    
+    <service name="createProductPromoCodeSet" default-entity-name="ProductPromoCode" engine="java"
+            location="org.ofbiz.product.promo.PromoServices" invoke="createProductPromoCodeSet" auth="true">
+    	<description>Create a Product Promo Code Set</description>
+        <auto-attributes include="nonpk" mode="IN" optional="true">
+            <exclude field-name="createdDate"/>
+            <exclude field-name="createdByUserLogin"/>
+            <exclude field-name="lastModifiedDate"/>
+            <exclude field-name="lastModifiedByUserLogin"/>
+        </auto-attributes>
+        <attribute name="quantity" type="Long" mode="IN" optional="false"/>
+    </service>
 
     <service name="createProductPromoCond" default-entity-name="ProductPromoCond" engine="simple"
                 location="org/ofbiz/product/promo/PromoServices.xml" invoke="createProductPromoCond" auth="true">
