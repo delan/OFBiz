@@ -35,7 +35,7 @@ import javax.servlet.http.HttpServletRequest;
  * LayoutWorker Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.0
  *
  * 
@@ -52,7 +52,7 @@ public class LayoutWorker {
      */
     public static Map uploadImageAndParameters(HttpServletRequest request, String uploadField) {
 
-        //Debug.logInfo("in uploadAndStoreImage", "");
+        //Debug.logVerbose("in uploadAndStoreImage", "");
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
 
         HashMap results = new HashMap();
@@ -83,7 +83,7 @@ public class LayoutWorker {
 	    String fieldStr = fi.getString();
             if (fi.isFormField()) {
                 formInput.put(fieldName, fieldStr);
-            //Debug.logInfo("in uploadAndStoreImage, fieldName:" + fieldName + " fieldStr:" + fieldStr, "");
+            //Debug.logVerbose("in uploadAndStoreImage, fieldName:" + fieldName + " fieldStr:" + fieldStr, "");
             }
             if (fieldName.equals(uploadField)) imageFi = fi;
         }
@@ -99,7 +99,7 @@ public class LayoutWorker {
         results.put("imageData", byteWrap);
         results.put("imageFileName", imageFi.getName());
       
-        //Debug.logInfo("in uploadAndStoreImage, results:" + results, "");
+        //Debug.logVerbose("in uploadAndStoreImage, results:" + results, "");
         return results;
 
     }

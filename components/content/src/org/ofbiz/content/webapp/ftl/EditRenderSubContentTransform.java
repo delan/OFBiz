@@ -1,5 +1,5 @@
 /*
- * $Id: EditRenderSubContentTransform.java,v 1.8 2003/12/30 05:35:50 byersa Exp $
+ * $Id: EditRenderSubContentTransform.java,v 1.9 2004/01/07 19:30:11 byersa Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -49,7 +49,7 @@ import freemarker.template.TemplateTransformModel;
  * This is an interactive FreeMarker tranform that allows the user to modify the contents that are placed within it.
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  * @since 3.0
  */
 public class EditRenderSubContentTransform implements TemplateTransformModel {
@@ -243,6 +243,7 @@ public class EditRenderSubContentTransform implements TemplateTransformModel {
                         templateContext.put("templateContentId", null);
                         templateContext.put("subDataResourceTypeId", null);
                         templateContext.put("mimeTypeId", null);
+                        templateContext.put("wrappedFTL", null);
                         if (Debug.verboseOn()) Debug.logVerbose("in ERSC, after.", module);
                         if (Debug.verboseOn()) Debug.logVerbose("in ERSC, mapKey:" + mapKey, module);
                         if (Debug.verboseOn()) Debug.logVerbose("in ERSC, subContentId:" + subContentId, module);

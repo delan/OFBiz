@@ -1,5 +1,5 @@
 /*
- * $Id: ContentServices.java,v 1.14 2003/12/30 05:44:33 byersa Exp $
+ * $Id: ContentServices.java,v 1.15 2004/01/07 19:30:11 byersa Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -54,7 +54,7 @@ import org.ofbiz.service.ServiceUtil;
  * ContentServices Class
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.14 $
+ * @version $Revision: 1.15 $
  * @since 2.2
  * 
  *  
@@ -137,7 +137,7 @@ public class ContentServices {
         } else {
             direction = "To";
         }
-        //Debug.logInfo("contentId(start):" + contentId, null);
+        //Debug.logVerbose("contentId(start):" + contentId, null);
         if (contentId == null)
             contentId = "PUBLISH_ROOT";
         GenericValue content = null;
@@ -147,7 +147,7 @@ public class ContentServices {
             System.out.println("Entity Error:" + e.getMessage());
             return ServiceUtil.returnError("Error in retrieving Content. " + e.getMessage());
         }
-        //Debug.logInfo("content(start):" + content, null);
+        //Debug.logVerbose("content(start):" + content, null);
         String fromDateStr = (String) context.get("fromDateStr");
         String thruDateStr = (String) context.get("thruDateStr");
         Timestamp fromDate = null;
@@ -168,9 +168,9 @@ public class ContentServices {
             startContentAssocTypeId = "PUBLISH";
         Map nodeMap = new HashMap();
         List pickList = new ArrayList();
-        //Debug.logInfo("whenMap(start):" + whenMap,null);
+        //Debug.logVerbose("whenMap(start):" + whenMap,null);
         ContentWorker.traverse(delegator, content, fromDate, thruDate, whenMap, 0, nodeMap, startContentAssocTypeId, pickList, direction);
-        //Debug.logInfo("After travers",null);
+        //Debug.logVerbose("After travers",null);
 
         results.put("nodeMap", nodeMap);
         results.put("pickList", pickList);
@@ -220,7 +220,7 @@ public class ContentServices {
             content.put("lastModifiedByUserLogin", lastModifiedByUserLogin);
             content.put("createdDate", createdDate);
             content.put("lastModifiedDate", lastModifiedDate);
-            //Debug.logInfo("in createContent, content:" + content, "");
+            //Debug.logVerbose("in createContent, content:" + content, "");
             try {
                 content.create();
             } catch (GenericEntityException e) {
@@ -268,9 +268,9 @@ public class ContentServices {
         String contentIdFrom = (String) context.get("contentIdFrom");
         String contentIdTo = (String) context.get("contentIdTo");
         String contentId = (String) context.get("contentId");
-        Debug.logInfo("CREATING CONTENTASSOC contentIdFrom(1):" + contentIdFrom, null);
-        Debug.logInfo("CREATING CONTENTASSOC contentIdTo(1):" + contentIdTo, null);
-        Debug.logInfo("CREATING CONTENTASSOC contentId:" + contentId, null);
+        Debug.logVerbose("CREATING CONTENTASSOC contentIdFrom(1):" + contentIdFrom, null);
+        Debug.logVerbose("CREATING CONTENTASSOC contentIdTo(1):" + contentIdTo, null);
+        Debug.logVerbose("CREATING CONTENTASSOC contentId:" + contentId, null);
         int contentIdCount = 0;
         if (UtilValidate.isNotEmpty(contentIdFrom))
             contentIdCount++;
@@ -290,8 +290,8 @@ public class ContentServices {
             if (UtilValidate.isEmpty(contentIdFrom))
                 contentIdFrom = contentId;
         }
-        Debug.logInfo("CREATING CONTENTASSOC contentIdFrom(2):" + contentIdFrom, null);
-        Debug.logInfo("CREATING CONTENTASSOC contentIdTo(2):" + contentIdTo, null);
+        Debug.logVerbose("CREATING CONTENTASSOC contentIdFrom(2):" + contentIdFrom, null);
+        Debug.logVerbose("CREATING CONTENTASSOC contentIdTo(2):" + contentIdTo, null);
 
         GenericValue contentAssoc = delegator.makeValue("ContentAssoc", new HashMap());
         contentAssoc.put("contentId", contentIdFrom);
@@ -351,7 +351,7 @@ public class ContentServices {
         permResults = dispatcher.runSync("checkAssocPermission", serviceInMap);
         permissionStatus = (String) permResults.get("permissionStatus");
 
-        //Debug.logInfo("CREATING CONTENTASSOC:" + contentAssoc, null);
+        //Debug.logVerbose("CREATING CONTENTASSOC:" + contentAssoc, null);
         if (permissionStatus != null && permissionStatus.equals("granted")) {
             contentAssoc.create();
         }
@@ -593,9 +593,9 @@ public class ContentServices {
         }
         Writer out = (Writer) context.get("outWriter");
 
-        //Debug.logInfo("in renderSubContent(svc), contentId:" + contentId, "");
-        //Debug.logInfo("in renderSubContent(svc), subContentId:" + subContentId, "");
-        //Debug.logInfo("in renderSubContent(svc), mapKey:" + mapKey, "");
+        //Debug.logVerbose("in renderSubContent(svc), contentId:" + contentId, "");
+        //Debug.logVerbose("in renderSubContent(svc), subContentId:" + subContentId, "");
+        //Debug.logVerbose("in renderSubContent(svc), mapKey:" + mapKey, "");
         if (templateContext == null) {
             templateContext = new HashMap();
         }

@@ -19,6 +19,7 @@ public class LoopWriter extends Writer implements TransformControl {
     }
 
     public void onError(Throwable t) throws Throwable {
+        throw t;
     }
 
     public void close() throws IOException {  

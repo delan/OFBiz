@@ -41,7 +41,7 @@ import org.ofbiz.content.content.ContentWorker;
  * ContentManagementServices Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      3.0
  *
  * 
@@ -70,9 +70,9 @@ public class ContentManagementServices {
         GenericValue content = null;
         GenericValue view = null;
 
-        //Debug.logInfo("in getSubContent(svc), contentId:" + contentId, "");
-        //Debug.logInfo("in getSubContent(svc), subContentId:" + subContentId, "");
-        //Debug.logInfo("in getSubContent(svc), mapKey:" + mapKey, "");
+        //Debug.logVerbose("in getSubContent(svc), contentId:" + contentId, "");
+        //Debug.logVerbose("in getSubContent(svc), subContentId:" + subContentId, "");
+        //Debug.logVerbose("in getSubContent(svc), mapKey:" + mapKey, "");
         try {
             view = ContentWorker.getSubContent( delegator, 
                           contentId, mapKey, subContentId, userLogin, assocTypes, fromDate);
@@ -101,7 +101,7 @@ public class ContentManagementServices {
         GenericDelegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         HttpServletRequest request = (HttpServletRequest)context.get("request");  
-    Debug.logInfo("in addMostRecentEntity(svc2), request:" +request, "");
+    Debug.logVerbose("in addMostRecentEntity(svc2), request:" +request, "");
         String suffix = (String) context.get("suffix"); 
         GenericValue val = (GenericValue)context.get("pk");
         GenericPK pk = val.getPrimaryKey();
@@ -123,7 +123,7 @@ public class ContentManagementServices {
      */
     public static Map persistContentAndAssoc(DispatchContext dctx, Map context) throws GenericServiceException{
 
-        //Debug.logInfo("CREATING CONTENTANDASSOC:" + context, null);
+        //Debug.logVerbose("CREATING CONTENTANDASSOC:" + context, null);
         HashMap result = new HashMap();
         Security security = dctx.getSecurity();
         GenericDelegator delegator = dctx.getDelegator();
@@ -178,7 +178,7 @@ public class ContentManagementServices {
             String permissionStatus = ContentWorker.callContentPermissionCheck(delegator,
                                      dispatcher, permContext);
 
-            Debug.logInfo("permissionStatus(update):" + permissionStatus, null);
+            Debug.logVerbose("permissionStatus(update):" + permissionStatus, null);
             if (permissionStatus == null || !permissionStatus.equals("granted") ) {
                 return ServiceUtil.returnError("Permission not granted");
             }
@@ -198,7 +198,7 @@ public class ContentManagementServices {
                         try {
                             thisResult = DataServices.createFileMethod(dctx, context);
                         } catch(GenericServiceException e) {
-                            Debug.logInfo("in persistContentAndAssoc. " + e.getMessage(),"");
+                            Debug.logVerbose("in persistContentAndAssoc. " + e.getMessage(),"");
                             return ServiceUtil.returnError(e.getMessage());
                         }
                     } else {
@@ -209,7 +209,7 @@ public class ContentManagementServices {
                             return ServiceUtil.returnError("'textData' empty when trying to create database text.");
                         }
                     }
-                //Debug.logInfo("dataResourceId(create):" + dataResourceId, null);
+                //Debug.logVerbose("dataResourceId(create):" + dataResourceId, null);
                 } else {
                     Map thisResult = DataServices.updateDataResourceMethod(dctx, context);
                     if (dataResourceTypeId.indexOf("_FILE") >=0) {
@@ -253,7 +253,7 @@ public class ContentManagementServices {
                 }
             }
 
-            Debug.logInfo("permissionStatus(update):" + permissionStatus, null);
+            Debug.logVerbose("permissionStatus(update):" + permissionStatus, null);
             if (permissionStatus == null || !permissionStatus.equals("granted") ) {
                 return ServiceUtil.returnError("Permission not granted");
             }
@@ -266,10 +266,10 @@ public class ContentManagementServices {
                 contentExists = false;
                 Map thisResult = ContentServices.createContentMethod(dctx, context);
                 contentId = (String)thisResult.get("contentId");
-            //Debug.logInfo("contentId(create):" + contentId, null);
+            //Debug.logVerbose("contentId(create):" + contentId, null);
             } else {
                 Map thisResult = ContentServices.updateContentMethod(dctx, context);
-            //Debug.logInfo("contentId(update):" + contentId, null);
+            //Debug.logVerbose("contentId(update):" + contentId, null);
             }
             result.put("contentId", contentId);
             context.put("contentId", contentId);
@@ -298,9 +298,9 @@ public class ContentManagementServices {
 
         // If parentContentIdTo or parentContentIdFrom exists, create association with newly created content
         String contentAssocTypeId = (String)context.get("contentAssocTypeId");
-            Debug.logInfo("CREATING contentASSOC contentAssocTypeId:" +  contentAssocTypeId, null);
+            Debug.logVerbose("CREATING contentASSOC contentAssocTypeId:" +  contentAssocTypeId, null);
         if (contentAssocTypeId != null && contentAssocTypeId.length() > 0 ) {
-            Debug.logInfo("CREATING contentASSOC context:" +  context, null);
+            Debug.logVerbose("CREATING contentASSOC context:" +  context, null);
             Map thisResult = null;
             try {
                 thisResult = ContentServices.createContentAssocMethod(dctx, context);
@@ -314,7 +314,7 @@ public class ContentManagementServices {
             result.put("contentAssocTypeId", thisResult.get("contentAssocTypeId"));
             result.put("fromDate", thisResult.get("fromDate"));
        }
-            //Debug.logInfo("return from CREATING CONTENTASSOC result:" +  result, null);
+            //Debug.logVerbose("return from CREATING CONTENTASSOC result:" +  result, null);
        context.remove("skipPermissionCheck");
        context.remove("contentId");
        context.remove("dataResourceId");
