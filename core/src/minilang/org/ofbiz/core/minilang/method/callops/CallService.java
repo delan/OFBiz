@@ -48,6 +48,7 @@ public class CallService extends MethodOperation {
     String serviceName;
     String inMapName;
     boolean includeUserLogin = true;
+    boolean breakOnError = true;
     String errorCode;
     String successCode;
 
@@ -75,6 +76,7 @@ public class CallService extends MethodOperation {
         serviceName = element.getAttribute("service-name");
         inMapName = element.getAttribute("in-map-name");
         includeUserLogin = !"false".equals(element.getAttribute("include-user-login"));
+        breakOnError = !"false".equals(element.getAttribute("break-on-error"));
         errorCode = element.getAttribute("error-code");
         if (errorCode == null || errorCode.length() == 0)
             errorCode = "error";
@@ -297,10 +299,10 @@ public class CallService extends MethodOperation {
             methodContext.putEnv(simpleMethod.getServiceResponseMessageName(), responseCode);
         }
 
-        if (successCode.equals(responseCode)) {
-            return true;
-        } else {
+        if (errorCode.equals(responseCode) && breakOnError) {
             return false;
+        } else {
+            return true;
         }
     }
 

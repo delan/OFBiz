@@ -118,6 +118,7 @@
     service-name CDATA #REQUIRED
     in-map-name CDATA #IMPLIED
     include-user-login ( true | false ) "true"
+    break-on-error ( true | false ) "true"
     error-code CDATA "error"
     success-code CDATA "success"
 >
