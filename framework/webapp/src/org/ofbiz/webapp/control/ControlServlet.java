@@ -207,10 +207,23 @@ public class ControlServlet extends HttpServlet {
             // use this request parameter to avoid infinite looping on errors in the error page...
             if (request.getAttribute("_ERROR_OCCURRED_") == null && rd != null) {
                 request.setAttribute("_ERROR_OCCURRED_", new Boolean(true));
+                Debug.logError("Including errorPage: " + errorPage, module);
                 rd.include(request, response);
-            } else {
-                String errorMessage = "ERROR in error page, (infinite loop or error page not found with name [" + errorPage + "]), but here is the text just in case it helps you: " + request.getAttribute("ERROR_MESSAGE_");
 
+                /* For some reason (with Tomcat only?) this isn't making it to the browser, and neither is the rd.include...
+                String errorMessage = "<html><body>ERROR in error page, (infinite loop or error page not found with name [" + errorPage + "]), but here is the text just in case it helps you: " + request.getAttribute("ERROR_MESSAGE_") + "</body></html>";
+                if (UtilJ2eeCompat.useOutputStreamNotWriter(getServletContext())) {
+                    response.getOutputStream().print(errorMessage);
+                } else {
+                    response.getWriter().print(errorMessage);
+                }
+                */
+            } else {
+                if (rd == null) {
+                    Debug.logError("Could not get RequestDispatcher for errorPage: " + errorPage, module);
+                }
+                
+                String errorMessage = "<html><body>ERROR in error page, (infinite loop or error page not found with name [" + errorPage + "]), but here is the text just in case it helps you: " + request.getAttribute("ERROR_MESSAGE_") + "</body></html>";
                 if (UtilJ2eeCompat.useOutputStreamNotWriter(getServletContext())) {
                     response.getOutputStream().print(errorMessage);
                 } else {
