@@ -242,6 +242,13 @@
         <iterate entry-name="inventoryItem" list-name="inventoryItems">
             <!-- only do something with this inventoryItem if there is more inventory to reserve -->
             <if-compare field-name="quantityNotReserved" map-name="parameters" type="Double" operator="greater" value="0.0">
+            	<get-related-one value-name="inventoryItem" relation-name="ProductFacility" to-value-name="productFacility"/>
+            	<field-to-env env-name="daysToShip" field-name="daysToShip" map-name="productFacility"/>
+            	<if-empty field-name="daysToShip">
+            		<calculate field-name="daysToShip" type="Long">
+            	    	<number value="30"/>
+            	    </calculate>           		
+            	</if-empty>
                 <if-compare value="SERIALIZED_INV_ITEM" operator="equals" field-name="inventoryItemTypeId" map-name="inventoryItem">
                     <if-compare value="INV_AVAILABLE" operator="equals" field-name="statusId" map-name="inventoryItem">
                         <!-- change status on inventoryItem -->
@@ -254,6 +261,7 @@
                         <field-to-field field-name="inventoryItemId" map-name="inventoryItem" to-map-name="reserveOiiMap"/>
                         <field-to-field field-name="reserveOrderEnumId" map-name="parameters" to-map-name="reserveOiiMap"/>
                         <field-to-field field-name="reservedDatetime" map-name="parameters" to-map-name="reserveOiiMap"/>
+                        <env-to-field env-name="daysToShip" field-name="promisedDays" map-name="reserveOiiMap"/>
                         <calculate field-name="quantity" map-name="reserveOiiMap"><number value="1"/></calculate>
                         <call-service service-name="reserveOrderItemInventory" in-map-name="reserveOiiMap"/>
                         <clear-field field-name="reserveOiiMap"/>
@@ -290,6 +298,7 @@
                             <field-to-field field-name="reserveOrderEnumId" map-name="parameters" to-map-name="reserveOiiMap"/>
                             <field-to-field field-name="reservedDatetime" map-name="parameters" to-map-name="reserveOiiMap"/>
                             <field-to-field field-name="deductAmount" map-name="parameters" to-field-name="quantity" to-map-name="reserveOiiMap"/>
+                            <env-to-field env-name="daysToShip" field-name="promisedDays" map-name="reserveOiiMap"/>
                             <call-service service-name="reserveOrderItemInventory" in-map-name="reserveOiiMap"/>
                             <clear-field field-name="reserveOiiMap"/>
 
@@ -325,6 +334,14 @@
                         </calcop>
                     </calculate>
                     <store-value value-name="lastNonSerInventoryItem"/>
+                    
+                    <get-related-one value-name="lastNonSerInventoryItem" relation-name="ProductFacility" to-value-name="productFacility"/>
+            	    <field-to-env env-name="daysToShip" field-name="daysToShip" map-name="productFacility"/>
+            	    <if-empty field-name="daysToShip">
+            		    <calculate field-name="daysToShip" type="Long">
+            	    		<number value="30"/>
+            	    	</calculate>
+            	    </if-empty>
 
                     <!-- create or update OrderItemInventoryRes record -->
                     <field-to-field field-name="orderId" map-name="parameters" to-map-name="reserveOiiMap"/>
@@ -333,6 +350,7 @@
                     <field-to-field field-name="reserveOrderEnumId" map-name="parameters" to-map-name="reserveOiiMap"/>
                     <field-to-field field-name="quantityNotReserved" map-name="parameters" to-field-name="quantity" to-map-name="reserveOiiMap"/>
                     <field-to-field field-name="reservedDatetime" map-name="parameters" to-map-name="reserveOiiMap"/>
+                    <env-to-field env-name="daysToShip" field-name="promisedDays" map-name="reserveOiiMap"/>
                     <call-service service-name="reserveOrderItemInventory" in-map-name="reserveOiiMap"/>
                     <clear-field field-name="reserveOiiMap"/>
                 <else>
@@ -350,7 +368,15 @@
                         <calcop operator="negative" field-name="quantityNotReserved" map-name="parameters"/>
                     </calculate>
                     <create-value value-name="newNonSerInventoryItem"/>
-
+                    
+                    <get-related-one value-name="newNonSerInventoryItem" relation-name="ProductFacility" to-value-name="productFacility"/>
+            	    <field-to-env env-name="daysToShip" field-name="daysToShip" map-name="productFacility"/>
+            	    <if-empty field-name="daysToShip">
+            	    	<calculate field-name="daysToShip" type="Long">
+            	    		<number value="30"/>
+            	    	</calculate>
+            	    </if-empty>
+                    
                     <!-- create OrderItemInventoryRes record -->
                     <field-to-field field-name="orderId" map-name="parameters" to-map-name="reserveOiiMap"/>
                     <field-to-field field-name="orderItemSeqId" map-name="parameters" to-map-name="reserveOiiMap"/>
@@ -358,6 +384,7 @@
                     <field-to-field field-name="reserveOrderEnumId" map-name="parameters" to-map-name="reserveOiiMap"/>
                     <field-to-field field-name="quantityNotReserved" map-name="parameters" to-field-name="quantity" to-map-name="reserveOiiMap"/>
                     <field-to-field field-name="reservedDatetime" map-name="parameters" to-map-name="reserveOiiMap"/>
+                    <env-to-field env-name="daysToShip" field-name="promisedDays" map-name="reserveOiiMap"/>
                     <call-service service-name="reserveOrderItemInventory" in-map-name="reserveOiiMap"/>
                     <clear-field field-name="reserveOiiMap"/>
                 </else>
