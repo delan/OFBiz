@@ -1,5 +1,5 @@
 /*
- * $Id: InventoryServices.java,v 1.4 2004/02/23 15:36:15 jonesde Exp $
+ * $Id: InventoryServices.java,v 1.5 2004/04/13 23:47:07 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -51,7 +51,7 @@ import org.ofbiz.service.ServiceUtil;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:tiz@sastau.it">Jacopo Cappellato</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.0
  */
 public class InventoryServices {
@@ -111,7 +111,7 @@ public class InventoryServices {
                 inventoryItem.set("quantityOnHand", new Double(qoh.doubleValue() - xferQty.doubleValue()));
             }
         } else if (inventoryType.equals("SERIALIZED_INV_ITEM")) {
-            if (!inventoryItem.getString("statusId").equals("INV_AVAILABLE")) {
+            if (!"INV_AVAILABLE".equals(inventoryItem.getString("statusId"))) {
                 return ServiceUtil.returnError("Serialized inventory is not available for transfer.");
             }
         }       
