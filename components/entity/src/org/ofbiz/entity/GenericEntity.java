@@ -1,5 +1,5 @@
 /*
- * $Id: GenericEntity.java,v 1.29 2004/06/17 00:10:50 jonesde Exp $
+ * $Id: GenericEntity.java,v 1.30 2004/06/20 10:44:17 jonesde Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -61,7 +61,7 @@ import org.w3c.dom.Element;
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- *@version    $Revision: 1.29 $
+ *@version    $Revision: 1.30 $
  *@since      2.0
  */
 public class GenericEntity extends Observable implements Map, LocalizedMap, Serializable, Comparable, Cloneable {
@@ -230,10 +230,17 @@ public class GenericEntity extends Observable implements Map, LocalizedMap, Seri
 
     /** Returns true if the entity contains all of the primary key fields, but NO others. */
     public boolean isPrimaryKey() {
+        return isPrimaryKey(false);
+    }
+    public boolean isPrimaryKey(boolean requireValue) {
         TreeSet fieldKeys = new TreeSet(this.fields.keySet());
         for (int i = 0; i < getModelEntity().getPksSize(); i++) {
             String fieldName = getModelEntity().getPk(i).getName();
-            if (this.fields.get(fieldName) == null) return false;
+            if (requireValue) {
+                if (this.fields.get(fieldName) == null) return false;
+            } else {
+                if (!this.fields.containsKey(fieldName)) return false;
+            }
             fieldKeys.remove(fieldName);
         }
         if (!fieldKeys.isEmpty()) return false;
@@ -242,10 +249,17 @@ public class GenericEntity extends Observable implements Map, LocalizedMap, Seri
 
     /** Returns true if the entity contains all of the primary key fields. */
     public boolean containsPrimaryKey() {
+        return containsPrimaryKey(false);
+    }
+    public boolean containsPrimaryKey(boolean requireValue) {
         TreeSet fieldKeys = new TreeSet(fields.keySet());
         for (int i = 0; i < getModelEntity().getPksSize(); i++) {
             String fieldName = getModelEntity().getPk(i).getName();
-            if (this.fields.get(fieldName) == null) return false;
+            if (requireValue) {
+                if (this.fields.get(fieldName) == null) return false;
+            } else {
+                if (!this.fields.containsKey(fieldName)) return false;
+            }
         }
         return true;
     }
