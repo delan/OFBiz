@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     Olivier Heintz (olivier.heintz@nereide.biz)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      2.2
 */
 
@@ -36,12 +36,13 @@ delegator = request.getAttribute("delegator");
 routing = new HashMap();
 //get the routing (workEffortId)
 workEffortId = request.getParameter("workEffortId");
-if (workEffortId != null  ){
-	routing = delegator.findByPrimaryKey("WorkEffort", UtilMisc.toMap("workEffortId", workEffortId));
-	context.put("routingId",workEffortId);
+if (workEffortId != null) {
+    routing = delegator.findByPrimaryKey("WorkEffort", UtilMisc.toMap("workEffortId", workEffortId));
+    context.put("routingId",workEffortId);
 }
-if  (request.getParameter("fromEdit") != "Y") context.put("routing", routing);
-
+if (request.getParameter("fromEdit") != "Y") {
+    context.put("routing", routing);
+}
 // get the lookup flag
 lookupFlag = request.getParameter("lookupFlag");
 
@@ -60,21 +61,24 @@ if (lookupFlag != null) {
     mainCond = null;
     
     // now do the filtering
-    if (lookupErrorMessage == null) {               
+    if (lookupErrorMessage == null) {
         workEffortId = request.getParameter("workEffortId");
         workEffortName = request.getParameter("workEffortName");
-        if (workEffortId != null) {
-           paramList = paramList + "&workEffortId=" + workEffortId;
-	       if (workEffortId.length() > 0) 
-		      andExprs.add(new EntityExpr("workEffortId", EntityOperator.EQUALS, workEffortId));
-	       else 
-		      andExprs.add(new EntityExpr("workEffortName", EntityOperator.GREATER_THAN_EQUAL_TO, workEffortName));
+        if ((workEffortId != null && workEffortId.length() > 0) || workEffortName != null) {
+            if (workEffortId != null) {
+                paramList = paramList + "&workEffortId=" + workEffortId;
+                if (workEffortId.length() > 0) {
+                    andExprs.add(new EntityExpr("workEffortId", EntityOperator.EQUALS, workEffortId));
+                } else {
+                    andExprs.add(new EntityExpr("workEffortName", EntityOperator.GREATER_THAN_EQUAL_TO, workEffortName));
+                }
+            }
+            if (!andExprs.isEmpty()) {
+                andExprs.add(new EntityExpr("workEffortTypeId", EntityOperator.EQUALS, "ROUTING"));
+                andExprs.add(new EntityExpr("currentStatusId", EntityOperator.EQUALS, "ROU_ACTIVE"));
+            }
+            mainCond = new EntityConditionList(andExprs, EntityOperator.AND);
         }
-        if (!andExprs.isEmpty()) {
-            andExprs.add(new EntityExpr("workEffortTypeId", EntityOperator.EQUALS, "ROUTING"));
-            andExprs.add(new EntityExpr("currentStatusId", EntityOperator.EQUALS, "ROU_ACTIVE"));
-        }
-        mainCond = new EntityConditionList(andExprs, EntityOperator.AND);        
     }
     
     if (lookupErrorMessage == null && mainCond != null) {
