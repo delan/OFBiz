@@ -240,6 +240,7 @@ public class ProductServices {
             // Gather the necessary data
             // -------------------------------
             GenericValue thisItem = (GenericValue) itemIterator.next();
+            Debug.logInfo("ThisItem: " + thisItem);
             Collection features = null;
             try {
                 Map fields = UtilMisc.toMap("productId", thisItem.get("productId"), "productFeatureTypeId", orderKey,
@@ -248,9 +249,9 @@ public class ProductServices {
 
                 // get the features and filter out expired dates
                 features = thisItem.getDelegator().findByAndCache("ProductFeatureAndAppl", fields, sort);
-                Debug.logInfo("Features: " + features);
+                Debug.logInfo("Features Before Filter: " + features);
                 features = EntityUtil.filterByDate(features);
-                Debug.logInfo("Features: " + features);
+                Debug.logInfo("Features Afer Filter: " + features);
             } catch (GenericEntityException e) {
                 throw new IllegalStateException("Problem reading relation: " + e.getMessage());
             }
