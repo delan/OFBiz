@@ -188,8 +188,8 @@ public class ContactMechServices {
         String contactMechTypeId = contactMech.getString("contactMechTypeId");
 
         // never change a contact mech, just create a new one with the changes
-        GenericValue newContactMech = new GenericValue(contactMech);
-        GenericValue newPartyContactMech = new GenericValue(partyContactMech);
+        GenericValue newContactMech = GenericValue.create(contactMech);
+        GenericValue newPartyContactMech = GenericValue.create(partyContactMech);
         GenericValue relatedEntityToSet = null;
 
         if ("POSTAL_ADDRESS".equals(contactMechTypeId)) {
@@ -223,7 +223,7 @@ public class ContactMechServices {
                 Iterator partyContactMechPurposes = UtilMisc.toIterator(partyContactMech.getRelated("PartyContactMechPurpose"));
 
                 while (partyContactMechPurposes != null && partyContactMechPurposes.hasNext()) {
-                    GenericValue tempVal = new GenericValue((GenericValue) partyContactMechPurposes.next());
+                    GenericValue tempVal = GenericValue.create((GenericValue) partyContactMechPurposes.next());
 
                     tempVal.set("contactMechId", newCmId.toString());
                     toBeStored.add(tempVal);
@@ -454,10 +454,10 @@ public class ContactMechServices {
         }
 
         // never change a contact mech, just create a new one with the changes
-        GenericValue newContactMech = new GenericValue(contactMech);
+        GenericValue newContactMech = GenericValue.create(contactMech);
         GenericValue newPartyContactMech = null;
         if (partyContactMech != null)
-            newPartyContactMech = new GenericValue(partyContactMech);
+            newPartyContactMech = GenericValue.create(partyContactMech);
         GenericValue relatedEntityToSet = null;
 
         if ("POSTAL_ADDRESS".equals(contactMech.getString("contactMechTypeId"))) {
@@ -469,7 +469,7 @@ public class ContactMechServices {
                 Debug.logWarning(e.toString(), module);
                 addr = null;
             }
-            relatedEntityToSet = new GenericValue(addr);
+            relatedEntityToSet = GenericValue.create(addr);
             relatedEntityToSet.set("toName", context.get("toName"));
             relatedEntityToSet.set("attnName", context.get("attnName"));
             relatedEntityToSet.set("address1", context.get("address1"));
@@ -516,7 +516,7 @@ public class ContactMechServices {
                     Iterator partyContactMechPurposes = UtilMisc.toIterator(partyContactMech.getRelated("PartyContactMechPurpose"));
 
                     while (partyContactMechPurposes != null && partyContactMechPurposes.hasNext()) {
-                        GenericValue tempVal = new GenericValue((GenericValue) partyContactMechPurposes.next());
+                        GenericValue tempVal = GenericValue.create((GenericValue) partyContactMechPurposes.next());
 
                         tempVal.set("contactMechId", newCmId.toString());
                         toBeStored.add(tempVal);
@@ -667,8 +667,8 @@ public class ContactMechServices {
         toBeStored.add(partyContactMech);
 
         // never change a contact mech, just create a new one with the changes
-        GenericValue newContactMech = new GenericValue(contactMech);
-        GenericValue newPartyContactMech = new GenericValue(partyContactMech);
+        GenericValue newContactMech = GenericValue.create(contactMech);
+        GenericValue newPartyContactMech = GenericValue.create(partyContactMech);
         GenericValue relatedEntityToSet = null;
 
         if ("TELECOM_NUMBER".equals(contactMech.getString("contactMechTypeId"))) {
@@ -680,7 +680,7 @@ public class ContactMechServices {
                 Debug.logWarning(e.toString(), module);
                 telNum = null;
             }
-            relatedEntityToSet = new GenericValue(telNum);
+            relatedEntityToSet = GenericValue.create(telNum);
             relatedEntityToSet.set("countryCode", context.get("countryCode"));
             relatedEntityToSet.set("areaCode", context.get("areaCode"));
             relatedEntityToSet.set("contactNumber", context.get("contactNumber"));
@@ -717,7 +717,7 @@ public class ContactMechServices {
                 Iterator partyContactMechPurposes = UtilMisc.toIterator(partyContactMech.getRelated("PartyContactMechPurpose"));
 
                 while (partyContactMechPurposes != null && partyContactMechPurposes.hasNext()) {
-                    GenericValue tempVal = new GenericValue((GenericValue) partyContactMechPurposes.next());
+                    GenericValue tempVal = GenericValue.create((GenericValue) partyContactMechPurposes.next());
 
                     tempVal.set("contactMechId", newCmId.toString());
                     toBeStored.add(tempVal);

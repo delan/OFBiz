@@ -133,7 +133,7 @@ public class LoginServices {
 
                     boolean doStore = true;
                     // we might change & store this userLogin, so we should clone it here to get a mutable copy
-                    userLogin = new GenericValue(userLogin);
+                    userLogin = GenericValue.create(userLogin);
 
                     // get the is system flag -- system accounts can only be used for service authentication
                     boolean isSystem = (isServiceAuth && userLogin.get("isSystem") != null) ?

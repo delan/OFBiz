@@ -342,9 +342,9 @@ public class PaymentServices {
             return ServiceUtil.returnError(messages);
         }        
 
-        newPm = new GenericValue(paymentMethod);
+        newPm = GenericValue.create(paymentMethod);
         toBeStored.add(newPm);
-        newCc = new GenericValue(creditCard);
+        newCc = GenericValue.create(creditCard);
         toBeStored.add(newCc);
 
         String newPmId = null;
@@ -571,9 +571,9 @@ public class PaymentServices {
         }
         context.put("cardNumber", cardNumber);
 
-        newPm = new GenericValue(paymentMethod);
+        newPm = GenericValue.create(paymentMethod);
         toBeStored.add(newPm);
-        newGc = new GenericValue(giftCard);
+        newGc = GenericValue.create(giftCard);
         toBeStored.add(newGc);
 
         String newPmId = null;
@@ -781,9 +781,9 @@ public class PaymentServices {
             return ServiceUtil.returnError("ERROR: Could not find EFT Account to update with id " + paymentMethodId);
         }
 
-        newPm = new GenericValue(paymentMethod);
+        newPm = GenericValue.create(paymentMethod);
         toBeStored.add(newPm);
-        newEa = new GenericValue(eftAccount);
+        newEa = GenericValue.create(eftAccount);
         toBeStored.add(newEa);
 
         String newPmId = null;

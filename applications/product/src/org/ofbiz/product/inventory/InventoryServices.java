@@ -107,7 +107,7 @@ public class InventoryServices {
                 // however, if atp < qoh && atp == xferQty, then we still need to split; oh, but no need to check atp == xferQty in the second part because if it isn't greater and isn't less, then it is equal
                 if (xferQty.doubleValue() < atp.doubleValue() || atp.doubleValue() < qoh.doubleValue()) {
                     Double negXferQty = new Double(-xferQty.doubleValue());
-                    newItem = new GenericValue(inventoryItem);
+                    newItem = GenericValue.create(inventoryItem);
                     String newSeqId = null;
                     try {
                         newSeqId = delegator.getNextSeqId("InventoryItem");

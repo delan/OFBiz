@@ -124,7 +124,7 @@ public class PersistedServiceJob extends GenericServiceJob {
             if (pJobId == null) {
                 pJobId = job.getString("jobId");
             }
-            GenericValue newJob = new GenericValue(job);
+            GenericValue newJob = GenericValue.create(job);
             newJob.set("jobId", newJobId);
             newJob.set("previousJobId", job.getString("jobId"));
             newJob.set("parentJobId", pJobId);

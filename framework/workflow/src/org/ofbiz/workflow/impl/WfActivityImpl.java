@@ -292,7 +292,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
 
     // check the performer: dynamic; defined partyId/roleTypeId
     private GenericValue checkPerformer(GenericValue performer) throws WfException {
-        GenericValue newPerformer = new GenericValue(performer);
+        GenericValue newPerformer = GenericValue.create(performer);
         Map context = processContext();
         
         String performerType = performer.getString("participantTypeId"); 

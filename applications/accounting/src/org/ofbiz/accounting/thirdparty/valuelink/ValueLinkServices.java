@@ -178,7 +178,7 @@ public class ValueLinkServices {
         if (response != null) {
             String responseCode = (String) response.get("responsecode");
             if (responseCode.equals("00")) {
-                GenericValue vlKeys = new GenericValue(vl.getGenericValue());
+                GenericValue vlKeys = GenericValue.create(vl.getGenericValue());
                 vlKeys.set("lastWorkingKey", vlKeys.get("workingKey"));
                 vlKeys.set("workingKey", StringUtil.toHexString(mwk));
                 vlKeys.set("workingKeyIndex", request.get("EncryptID"));

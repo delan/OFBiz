@@ -214,7 +214,7 @@ public class JobManager {
                         if (pJobId == null) {
                             pJobId = job.getString("jobId");
                         }
-                        GenericValue newJob = new GenericValue(job);
+                        GenericValue newJob = GenericValue.create(job);
                         newJob.set("statusId", "SERVICE_PENDING");
                         newJob.set("runTime", now);
                         newJob.set("jobId", newJobId);

@@ -58,7 +58,7 @@ public class CloneValue extends MethodOperation {
             return true;
         }
 
-        newValueAcsr.put(methodContext, new GenericValue(value));
+        newValueAcsr.put(methodContext, GenericValue.create(value));
         return true;
     }
 

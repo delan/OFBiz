@@ -131,7 +131,7 @@ public class LoginWorker {
 
     public static void setLoggedOut(GenericValue userLogin) {
         // set the logged out flag - need a mutable object first
-        userLogin = new GenericValue(userLogin);
+        userLogin = GenericValue.create(userLogin);
         userLogin.set("hasLoggedOut", "Y");
 
         Transaction parentTx = null;
