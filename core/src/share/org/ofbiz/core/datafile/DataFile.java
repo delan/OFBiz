@@ -89,6 +89,11 @@ public class DataFile {
         records.add(record);
     }
     
+    public Record makeRecord(String recordName) {
+        ModelRecord modelRecord = getModelDataFile().getModelRecord(recordName);
+        return new Record(modelRecord);
+    }
+    
     /** Loads (or reloads) the data file at the pre-specified location.
      * @param fileUrl The URL that the file will be loaded from
      * @throws DataFileException Exception thown for various errors, generally has a nested exception

@@ -81,6 +81,37 @@ public class Record implements Serializable {
         return fields.get(name);
     }
 
+    public String getString(String name) {
+        Object object = get(name);
+        if (object == null)
+            return null;
+        if (object instanceof java.lang.String)
+            return (String) object;
+        else
+            return object.toString();
+    }
+    public java.sql.Timestamp getTimestamp(String name) {
+        return (java.sql.Timestamp) get(name);
+    }
+    public java.sql.Time getTime(String name) {
+        return (java.sql.Time) get(name);
+    }
+    public java.sql.Date getDate(String name) {
+        return (java.sql.Date) get(name);
+    }
+    public Integer getInteger(String name) {
+        return (Integer) get(name);
+    }
+    public Long getLong(String name) {
+        return (Long) get(name);
+    }
+    public Float getFloat(String name) {
+        return (Float) get(name);
+    }
+    public Double getDouble(String name) {
+        return (Double) get(name);
+    }
+
     /** Sets the named field to the passed value, even if the value is null
      * @param name The field name to set
      * @param value The value to set
@@ -173,7 +204,7 @@ public class Record implements Serializable {
         }
     }
 
-    public String getString(String name) {
+    public String getFixedString(String name) {
         if (name == null)
             return null;
         ModelField field = getModelRecord().getModelField(name);
@@ -209,7 +240,7 @@ public class Record implements Serializable {
             double dnum = multiplier * ((Double) value).doubleValue();
             long number = Math.round(dnum);
             str = padFrontZeros(Long.toString(number), field.length);
-            //Debug.logInfo("[Record.getString] FixedPointDouble: multiplier=" + multiplier + ", value=" + value + ", dnum=" + dnum + ", number=" + number + ", str=" + str);
+            //Debug.logInfo("[Record.getFixedString] FixedPointDouble: multiplier=" + multiplier + ", value=" + value + ", dnum=" + dnum + ", number=" + number + ", str=" + str);
         }
         //standard types
         else if (fieldType.equals("java.lang.String") || fieldType.equals("String"))
@@ -252,7 +283,7 @@ public class Record implements Serializable {
         StringBuffer lineBuf = new StringBuffer();
         for (int f = 0; f < modelRecord.fields.size(); f++) {
             ModelField modelField = (ModelField) modelRecord.fields.get(f);
-            String data = this.getString(modelField.name);
+            String data = this.getFixedString(modelField.name);
 
             //Debug.logInfo("Got data \"" + data + "\" for field " + modelField.name + " in record " + modelRecord.name);
             if (modelField.length > 0 && data.length() != modelField.length)
@@ -274,7 +305,7 @@ public class Record implements Serializable {
 
         if (isFixedLength || isDelimited)
             lineBuf.append('\n');
-            
+
         return lineBuf.toString();
     }
 
@@ -300,7 +331,7 @@ public class Record implements Serializable {
     public void addChildRecord(Record record) {
         childRecords.add(record);
     }
-    
+
     /** Creates new Record
      * @param modelRecord
      * @throws DataFileException Exception thown for various errors, generally has a nested exception
@@ -339,12 +370,14 @@ public class Record implements Serializable {
             } catch (java.text.ParseException e) {
                 throw new DataFileException("Could not parse field " + modelField.name + ", format string \"" + modelField.format + "\" with value " + strVal +
                         " on line " + lineNum, e);
-            } catch (java.lang.NumberFormatException e) {
-                throw new DataFileException("Number not valid for field " + modelField.name + ", format string \"" + modelField.format + "\" with value " + strVal +
-                        " on line " + lineNum, e);
+            }
+            catch (java.lang.NumberFormatException e) {
+                throw new DataFileException("Number not valid for field " + modelField.name + ", format string \"" + modelField.format + "\" with value " +
+                        strVal + " on line " + lineNum, e);
             }
         }
         return record;
     }
 }
+
 
