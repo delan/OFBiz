@@ -183,7 +183,10 @@ public final class Debug {
         log(Debug.ALWAYS, t, null, noModuleModule);
     }
 
-    /** @deprecated */
+    /**
+     * Note this method WILL change to (Throwable t, String module) 
+     * @deprecated 
+     * */
     public static void log(Throwable t, String msg) {
         log(Debug.ALWAYS, t, msg, noModuleModule);
     }
@@ -210,7 +213,10 @@ public final class Debug {
         log(Debug.VERBOSE, t, null, noModuleModule);
     }
 
-    /** @deprecated */
+    /**
+     * Note this method WILL change to (Throwable t, String module) 
+     * @deprecated 
+     * */
     public static void logVerbose(Throwable t, String msg) {
         log(Debug.VERBOSE, t, msg, noModuleModule);
     }
@@ -237,7 +243,10 @@ public final class Debug {
         log(Debug.TIMING, t, null, noModuleModule);
     }
 
-    /** @deprecated */
+    /**
+     * Note this method WILL change to (Throwable t, String module) 
+     * @deprecated 
+     * */
     public static void logTiming(Throwable t, String msg) {
         log(Debug.TIMING, t, msg, noModuleModule);
     }
@@ -264,7 +273,10 @@ public final class Debug {
         log(Debug.INFO, t, null, noModuleModule);
     }
 
-    /** @deprecated */
+    /**
+     * Note this method WILL change to (Throwable t, String module) 
+     * @deprecated 
+     * */
     public static void logInfo(Throwable t, String msg) {
         log(Debug.INFO, t, msg, noModuleModule);
     }
@@ -291,7 +303,10 @@ public final class Debug {
         log(Debug.IMPORTANT, t, null, noModuleModule);
     }
 
-    /** @deprecated */
+    /**
+     * Note this method WILL change to (Throwable t, String module) 
+     * @deprecated 
+     * */
     public static void logImportant(Throwable t, String msg) {
         log(Debug.IMPORTANT, t, msg, noModuleModule);
     }
@@ -318,7 +333,10 @@ public final class Debug {
         log(Debug.WARNING, t, null, noModuleModule);
     }
 
-    /** @deprecated */
+    /**
+     * Note this method WILL change to (Throwable t, String module) 
+     * @deprecated 
+     * */
     public static void logWarning(Throwable t, String msg) {
         log(Debug.WARNING, t, msg, noModuleModule);
     }
@@ -345,7 +363,10 @@ public final class Debug {
         log(Debug.ERROR, t, null, noModuleModule);
     }
 
-    /** @deprecated */
+    /**
+     * Note this method WILL change to (Throwable t, String module) 
+     * @deprecated 
+     * */
     public static void logError(Throwable t, String msg) {
         log(Debug.ERROR, t, msg, noModuleModule);
     }
@@ -372,7 +393,10 @@ public final class Debug {
         log(Debug.FATAL, t, null, noModuleModule);
     }
 
-    /** @deprecated */
+    /**
+     * Note this method WILL change to (Throwable t, String module) 
+     * @deprecated 
+     * */
     public static void logFatal(Throwable t, String msg) {
         log(Debug.FATAL, t, msg, noModuleModule);
     }
