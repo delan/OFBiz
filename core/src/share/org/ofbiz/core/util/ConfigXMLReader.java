@@ -88,18 +88,14 @@ public class ConfigXMLReader {
     public static Element loadDocument(URL location) {
         Document document = null;
         try {
-            URL url = location;
-            InputSource input = new InputSource(url.openStream());
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            factory.setValidating(true);
-            DocumentBuilder parser = factory.newDocumentBuilder();
-            document = parser.parse(input);
+            document = UtilXml.readXmlDocument(location, true);
+            
             Element rootElement = document.getDocumentElement();
             //rootElement.normalize();
             //Debug.logInfo("Loaded XML Config - " + location);
             return rootElement;
         }
-        catch ( Exception e ) {
+        catch (Exception e) {
             e.printStackTrace();
             //Debug.logError(e,"ConfigXMLReader Error");
         }

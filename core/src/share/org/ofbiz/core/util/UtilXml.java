@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.7  2001/12/18 14:47:40  jonesde
+ * Added a couple of useful methods for creating XML
+ *
  * Revision 1.6  2001/12/09 09:29:49  jonesde
  * Small changes to make it easy to turn off validation, validation now off for deserialization since it is not so easy to maintain there
  *
@@ -35,6 +38,10 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
+import org.xml.sax.ErrorHandler;
+import org.xml.sax.EntityResolver;
+import org.xml.sax.InputSource;
+import org.xml.sax.helpers.DefaultHandler;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.DOMException;
@@ -142,7 +149,7 @@ public class UtilXml {
             return null;
         }
         ByteArrayInputStream bis = new ByteArrayInputStream(content.getBytes());
-        return readXmlDocument(bis, validate);
+        return readXmlDocument(bis, validate, "Internal Content");
     }
     
     public static Document readXmlDocument(URL url) throws SAXException, ParserConfigurationException, java.io.IOException {
@@ -154,14 +161,14 @@ public class UtilXml {
             Debug.logWarning("[UtilXml.readXmlDocument] URL was null, doing nothing");
             return null;
         }
-        return readXmlDocument(url.openStream(), validate);
+        return readXmlDocument(url.openStream(), validate, url.toString());
     }
     
     public static Document readXmlDocument(InputStream is) throws SAXException, ParserConfigurationException, java.io.IOException {
-        return readXmlDocument(is, true);
+        return readXmlDocument(is, true, null);
     }
     
-    public static Document readXmlDocument(InputStream is, boolean validate) throws SAXException, ParserConfigurationException, java.io.IOException {
+    public static Document readXmlDocument(InputStream is, boolean validate, String docDescription) throws SAXException, ParserConfigurationException, java.io.IOException {
         if(is == null) {
             Debug.logWarning("[UtilXml.readXmlDocument] InputStream was null, doing nothing");
             return null;
@@ -172,6 +179,14 @@ public class UtilXml {
         factory.setValidating(validate);
         //factory.setNamespaceAware(true);
         DocumentBuilder builder = factory.newDocumentBuilder();
+        
+        if (validate) {
+            LocalResolver lr = new LocalResolver(new DefaultHandler());
+            ErrorHandler eh = new LocalErrorHandler(docDescription, lr);
+            builder.setEntityResolver(lr);
+            builder.setErrorHandler(eh);
+        }
+        
         document = builder.parse(is);
         
         return document;
@@ -207,8 +222,8 @@ public class UtilXml {
         element.appendChild(newElement);
         return newElement;
     }
-
-    /** Creates a child element with the given name and appends it to the element child node list. 
+    
+    /** Creates a child element with the given name and appends it to the element child node list.
      *  Also creates a Text node with the given value and appends it to the new elements child node list.
      */
     public static Element addChildElementValue(Element element, String childElementName, String childElementValue, Document document) {
@@ -218,8 +233,8 @@ public class UtilXml {
         return newElement;
     }
     
-    /** Return a List of Element objects that have the given name and are 
-     * immediate children of the given element; if name is null, all child 
+    /** Return a List of Element objects that have the given name and are
+     * immediate children of the given element; if name is null, all child
      * elements will be included. */
     public static List childElementList(Element element, String childElementName) {
         if(element == null) return null;
@@ -261,7 +276,7 @@ public class UtilXml {
         Element childElement = firstChildElement(element, childElementName);
         return elementValue(childElement);
     }
-
+    
     /** Return the text (node value) of the first node under this, works best if normalized */
     public static String elementValue(Element element) {
         if(element == null) return null;
@@ -285,5 +300,125 @@ public class UtilXml {
         else if(string2 != null && string2.length() > 0) return string2;
         else if(string3 != null && string3.length() > 0) return string3;
         else return "";
+    }
+    
+    /**
+     * Local entity resolver to handle J2EE DTDs. With this a http connection
+     * to sun is not needed during deployment.
+     * Function boolean hadDTD() is here to avoid validation errors in
+     * descriptors that do not have a DOCTYPE declaration.
+     */
+    private static class LocalResolver implements EntityResolver {
+        private Map dtds = new HashMap();
+        private boolean hasDTD = false;
+        private EntityResolver defaultResolver;
+        
+        public LocalResolver(EntityResolver defaultResolver) {
+            initDtds();
+            this.defaultResolver = defaultResolver;
+        }
+
+        public void initDtds() {
+            registerDTD("-//Sun Microsystems, Inc.//DTD Enterprise JavaBeans 1.1//EN", "ejb-jar.dtd");
+            registerDTD("-//Sun Microsystems, Inc.//DTD Enterprise JavaBeans 2.0//EN", "ejb-jar_2_0.dtd");
+            registerDTD("-//Sun Microsystems, Inc.//DTD J2EE Application 1.2//EN", "application_1_2.dtd");
+            registerDTD("-//Sun Microsystems, Inc.//DTD Connector 1.0//EN", "connector_1_0.dtd");
+            registerDTD("-//OFBiz//DTD Data Files//EN", "datafiles.dtd");
+            registerDTD("-//OFBiz//DTD Entity Group//EN", "entitygroup.dtd");
+            registerDTD("-//OFBiz//DTD Entity Model//EN", "entitymodel.dtd");
+            registerDTD("-//OFBiz//DTD Field Type Model//EN", "fieldtypemodel.dtd");
+            registerDTD("-//OFBiz//DTD Services Config//EN", "services.dtd");
+            registerDTD("-//OFBiz//DTD Request Config//EN", "site-conf.dtd");
+        }
+        
+        /**
+         * Registers available DTDs
+         * @param String publicId    - Public ID of DTD
+         * @param String dtdFileName - the file name of DTD
+         */
+        public void registerDTD(String publicId, String dtdFileName) {
+            dtds.put(publicId, dtdFileName);
+        }
+        
+        /**
+         * Returns DTD inputSource. If DTD was found in the dtds Map and inputSource was created
+         * flag hasDTD is set to true.
+         * @param String publicId - Public ID of DTD
+         * @param String systemId - System ID of DTD
+         * @return InputSource of DTD
+         */
+        public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException {
+            hasDTD = false;
+            String dtd = (String) dtds.get(publicId);
+            
+            Debug.logInfo("[UtilXml.LocalResolver.resolveEntity] resolving DTD with publicId [" + publicId + "] and the dtd file is [" + dtd + "]");
+            if (dtd != null) {
+                try {
+                    InputStream dtdStream = getClass().getResourceAsStream(dtd);
+                    InputSource inputSource = new InputSource(dtdStream);
+                    hasDTD = true;
+                    Debug.logInfo("[UtilXml.LocalResolver.resolveEntity] got DTD input source with publicId [" + publicId + "] and the dtd file is [" + dtd + "]");
+                    return inputSource;
+                } catch(Exception e) {
+                    Debug.logWarning(e);
+                }
+            }
+            Debug.logInfo("[UtilXml.LocalResolver.resolveEntity] local resolve failed for DTD with publicId [" + publicId + "] and the dtd file is [" + dtd + "], trying defaultResolver");
+            return defaultResolver.resolveEntity(publicId, systemId);
+        }
+        
+        /**
+         * Returns the boolean value to inform id DTD was found in the XML file or not
+         * @return boolean - true if DTD was found in XML
+         */
+        public boolean hasDTD() {
+            return hasDTD;
+        }
+    }
+    
+    /** Local error handler for entity resolver to DocumentBuilder parser.
+     * Error is printed to output just if DTD was detected in the XML file.
+     */
+    private static class LocalErrorHandler implements ErrorHandler {
+        private String docDescription;
+        private LocalResolver localResolver;
+        public LocalErrorHandler(String docDescription, LocalResolver localResolver) {
+            this.docDescription = docDescription;
+            this.localResolver = localResolver;
+        }
+        
+        public void error(SAXParseException exception) {
+            if (localResolver.hasDTD()) {
+                Debug.logError("XmlFileLoader: File "
+                + docDescription
+                + " process error. Line: "
+                + String.valueOf(exception.getLineNumber())
+                + ". Error message: "
+                + exception.getMessage()
+                );
+            }
+        }
+        public void fatalError(SAXParseException exception) {
+            if (localResolver.hasDTD()) {
+                Debug.logError("XmlFileLoader: File "
+                + docDescription
+                + " process fatal error. Line: "
+                + String.valueOf(exception.getLineNumber())
+                + ". Error message: "
+                + exception.getMessage()
+                );
+            }
+        }
+        public void warning(SAXParseException exception) {
+            if (localResolver.hasDTD()) {
+                Debug.logError("XmlFileLoader: File "
+                + docDescription
+                + " process warning. Line: "
+                + String.valueOf(exception.getLineNumber())
+                + ". Error message: "
+                + exception.getMessage()
+                );
+            }
+        }
     }
 }
