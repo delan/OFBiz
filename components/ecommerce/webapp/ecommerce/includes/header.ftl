@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.7 $
+ *@version    $Revision: 1.8 $
  *@since      2.1
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
@@ -83,7 +83,7 @@
     <td width="100%">
       <table width="100%" border="0" cellspacing="0" cellpadding="0" class="headerboxbottom">
         <tr>
-          <#if userLogin?has_content>
+          <#if userLogin?has_content && userLogin.userLoginId != "anonymous">
               <td class="headerButtonLeft"><a href="<@ofbizUrl>/logout</@ofbizUrl>" class="headerbuttontext">${uiLabelMap.CommonLogout}</a></td>
           <#else>
               <td class="headerButtonLeft"><a href="<@ofbizUrl>${checkLoginUrl}</@ofbizUrl>" class="headerbuttontext">${uiLabelMap.CommonLogin}</a></td>
