@@ -319,6 +319,11 @@
   <Geo abbreviation="SK" geoCode="SK" geoId="SK" geoName="Sasakatchewan" geoTypeId="STATE"/>
   <Geo abbreviation="YT" geoCode="YT" geoId="YT" geoName="Yukon" geoTypeId="STATE"/>
 
+  <Geo abbreviation="USAF" geoCode="USAF" geoId="USAF" geoName="US Armed Forces" geoTypeId="GROUP"/>
+  <GeoAssoc geoId="AA" geoIdTo="USAF" geoAssocTypeId="GROUP_MEMBER"/>
+  <GeoAssoc geoId="AE" geoIdTo="USAF" geoAssocTypeId="GROUP_MEMBER"/>
+  <GeoAssoc geoId="AP" geoIdTo="USAF" geoAssocTypeId="GROUP_MEMBER"/>
+
   <Geo abbreviation="AKHI" geoCode="AKHI" geoId="AKHI" geoName="Alaska/Hawaii" geoTypeId="GROUP"/>
   <GeoAssoc geoId="AK" geoIdTo="AKHI" geoAssocTypeId="GROUP_MEMBER"/>
   <GeoAssoc geoId="HI" geoIdTo="AKHI" geoAssocTypeId="GROUP_MEMBER"/>
@@ -388,6 +393,11 @@
   <GeoAssoc geoId="WI" geoIdTo="USCN" geoAssocTypeId="GROUP_MEMBER"/>
   <GeoAssoc geoId="WV" geoIdTo="USCN" geoAssocTypeId="GROUP_MEMBER"/>
   <GeoAssoc geoId="WY" geoIdTo="USCN" geoAssocTypeId="GROUP_MEMBER"/>
+
+  <Geo abbreviation="USALL" geoCode="USALL" geoId="USALL" geoName="US All" geoTypeId="GROUP"/>
+  <GeoAssoc geoId="USCN" geoIdTo="USALL" geoAssocTypeId="GROUP_MEMBER"/>
+  <GeoAssoc geoId="USAF" geoIdTo="USALL" geoAssocTypeId="GROUP_MEMBER"/>
+  <GeoAssoc geoId="AHUST" geoIdTo="USALL" geoAssocTypeId="GROUP_MEMBER"/>
 
   <!-- Associations -->
   <GeoAssoc geoId="USA" geoIdTo="AK" geoAssocTypeId="REGIONS" />
