@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.6  2002/02/02 12:01:47  jonesde
+ * Changed method of getting dispatcher to get from request instead of ServletContext, more control to control servlet and works with Weblogic
+ *
  * Revision 1.5  2002/01/31 21:22:34  jonesde
  * Fixed NPE when password is null in the database
  *
@@ -81,7 +84,7 @@ public class LoginEvents {
                     }
                 }
             }
-            
+
             request.getSession().setAttribute(SiteDefs.PREVIOUS_REQUEST, request.getPathInfo());
             if (queryString != null)
                 request.getSession().setAttribute(SiteDefs.PREVIOUS_PARAMS, queryString);
@@ -146,6 +149,7 @@ public class LoginEvents {
             request.getSession().setAttribute(SiteDefs.ERROR_MESSAGE, errMsg);
             return "error";
         }
+        request.setAttribute(SiteDefs.LOGIN_PASSED, "TRUE");
         return "success";
     }
     
