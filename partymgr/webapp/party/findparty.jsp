@@ -10,12 +10,16 @@
 <%if(security.hasEntityPermission("PARTYMGR", "_VIEW", session)) {%>
 <%
     String searchString = "";
-    if (UtilValidate.isNotEmpty(request.getParameter("first_name")) || UtilValidate.isNotEmpty(request.getParameter("last_name"))) {
-        searchString = "first_name=" + request.getParameter("first_name") + "&last_name=" + request.getParameter("last_name");
-    } else if (UtilValidate.isNotEmpty(request.getParameter("email"))) {
-        searchString = "email=" + request.getParameter("email");
-    } else if (UtilValidate.isNotEmpty(request.getParameter("userlogin_id"))) {
-        searchString = "userlogin_id=" + request.getParameter("userlogin_id");
+    if (request.getParameter("first_name") != null || request.getParameter("last_name") != null) {
+        searchString += "first_name=" + request.getParameter("first_name") + "&last_name=" + request.getParameter("last_name");
+    }
+    if (request.getParameter("email") != null) {
+        if (searchString.length() > 0) searchString += "&";
+        searchString += "email=" + request.getParameter("email");
+    }
+    if (request.getParameter("userlogin_id") != null) {
+        if (searchString.length() > 0) searchString += "&";
+        searchString += "userlogin_id=" + request.getParameter("userlogin_id");
     }
 
     Collection parties = null;
@@ -275,8 +279,8 @@
                 </ofbiz:unless>
                 <td><div class="tabletext"><ofbiz:entityfield attribute="party" field="partyTypeId"/></div></td>
                 <td align="right">
-                  <a href='<ofbiz:url>/viewprofile?party_id=<ofbiz:entityfield attribute="party" field="partyId"/></ofbiz:url>' class="buttontext">[View Profile]</a>&nbsp;&nbsp;
-                  <a href='/ordermgr/control/orderlist?partyId=<ofbiz:entityfield attribute="party" field="partyId"/>' class="buttontext">[Orders]</a>&nbsp;&nbsp;
+                  <!-- this is all on one line so that no break will be inserted -->
+                  <a href='<ofbiz:url>/viewprofile?party_id=<ofbiz:entityfield attribute="party" field="partyId"/></ofbiz:url>' class="buttontext">[View&nbsp;Profile]</a>&nbsp;<a href='/ordermgr/control/orderlist?partyId=<ofbiz:entityfield attribute="party" field="partyId"/>' class="buttontext">[Orders]</a>&nbsp;
                 </td>
               </tr>
               <%pageContext.removeAttribute("person");%>

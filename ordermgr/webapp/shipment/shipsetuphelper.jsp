@@ -28,7 +28,7 @@ public static String getUOMList(GenericDelegator delegator, String uomTypeId) {
     try {
         List exprs = null;
         if (uomTypeId.equals("QUANTITY_MEASURE"))
-            exprs = UtilMisc.toList(new EntityExpr("uomTypeId", EntityOperator.NOT_EQUAL, "CURRENCY_MESAURE"));
+            exprs = UtilMisc.toList(new EntityExpr("uomTypeId", EntityOperator.NOT_EQUAL, "CURRENCY_MEASURE"));
         else
             exprs = UtilMisc.toList(new EntityExpr("uomTypeId", EntityOperator.EQUALS, uomTypeId));
         Collection c = delegator.findByAnd("Uom", exprs, UtilMisc.toList("abbreviation"));

@@ -1,7 +1,4 @@
-<%
-/**
- *  Title: Main Page
- *  Description: None
+<%--
  *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -26,8 +23,7 @@
  *@author     David E. Jones
  *@created    October 18, 2001
  *@version    1.0
- */
-%>
+--%>
 
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 <%@ page import="java.util.*" %>
@@ -170,16 +166,16 @@
             <table width='100%' border='0' cellspacing='0' cellpadding='2'>
               <form method="post" action="<ofbiz:url>/orderlist</ofbiz:url>" name="lookuporderd">
                 <tr>
-                  <td width="25%" align=right><div class="tabletext">Min Date Span</div></td>
+                  <td width="25%" align=right><div class="tabletext">Date&nbsp;Span:&nbsp;Min</div></td>
                   <td width="40%">
-                    <input type="text" name="minDate" size="30" style="font-size: small;" value='<%=UtilFormatOut.checkNull(request.getParameter("minDate"))%>'>
+                    <input type="text" name="minDate" size="22" style="font-size: small;" value='<%=UtilFormatOut.checkNull(request.getParameter("minDate"))%>'>
                   </td>
                   <td width="35%">&nbsp</td>
                 </tr>
                 <tr>
-                  <td width="25%" align=right><div class="tabletext">Max Date Span</div></td>
+                  <td width="25%" align=right><div class="tabletext">Date&nbsp;Span:&nbsp;Max</div></td>
                   <td width="40%">
-                    <input type="text" name="maxDate" size="30" style="font-size: small;" value='<%=UtilFormatOut.checkNull(request.getParameter("maxDate"))%>'>
+                    <input type="text" name="maxDate" size="22" style="font-size: small;" value='<%=UtilFormatOut.checkNull(request.getParameter("maxDate"))%>'>
                   </td>
                   <td width="35%"><a href="javascript:document.lookuporderd.submit()" class="buttontext">[Lookup Orders]</a></td>
                 </tr>

@@ -20,6 +20,17 @@
               <%EntityField.run("layoutSettings", "companySubtitle", "<br><span class='headerCompanySubtitle'>", "</span>", pageContext);%>
           </TD>
           <TD align=right width='1%' nowrap <%EntityField.run("layoutSettings", "headerRightBackgroundUrl", "background='", "'", pageContext);%>>
+              <ofbiz:if name="person">
+                <div class="insideHeaderText">Welcome<%EntityField.run("person", "firstName", "&nbsp;", "", pageContext);%><%EntityField.run("person", "lastName", "&nbsp;", "", pageContext);%>!</div>
+              </ofbiz:if>
+              <ofbiz:unless name="person">
+                <ofbiz:if name="partyGroup">
+                  <div class="insideHeaderText">Welcome<%EntityField.run("partyGroup", "groupName", "", "", pageContext);%>!</div>
+                </ofbiz:if>
+                <ofbiz:unless name="partyGroup">
+                  <div class="insideHeaderText">Welcome!</div>
+                </ofbiz:unless>
+              </ofbiz:unless>
             <div class="insideHeaderText">&nbsp;<%=UtilDateTime.nowTimestamp().toString()%></div>
           </td>
         </tr>
@@ -30,30 +41,21 @@
     <TD width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='headerboxbottom'>
         <tr>
-          <ofbiz:unless name="userLogin">
-            <td class="headerButtonLeft"><a href='<ofbiz:url><%=CommonWorkers.makeLoginUrl(pageContext)%></ofbiz:url>' class='buttontext'>Login</a></td>
-          </ofbiz:unless>
-          <ofbiz:if name="userLogin">
-            <td class="headerButtonLeft"><a href="<ofbiz:url>/logout/main</ofbiz:url>" class="buttontext">Logout</a></td>
-          </ofbiz:if>
           <td class="headerButtonLeft"><a href="<ofbiz:url>/main</ofbiz:url>" class="buttontext">Main</a></td>
 
-          <ofbiz:if name="person">
-            <TD width="90%" align=center class='headerCenter'>Welcome<%EntityField.run("person", "firstName", "&nbsp;", "", pageContext);%><%EntityField.run("person", "lastName", "&nbsp;", "", pageContext);%>!</TD>
-          </ofbiz:if>
-          <ofbiz:unless name="person">
-            <ofbiz:if name="partyGroup">
-              <TD width="90%" align=center class='headerCenter'>Welcome<%EntityField.run("partyGroup", "groupName", "", "", pageContext);%>!</TD>
-            </ofbiz:if>
-            <ofbiz:unless name="partyGroup">
-              <TD width="90%" align=center class='headerCenter'>Welcome!</TD>
-            </ofbiz:unless>
-          </ofbiz:unless>
-
-          <td class="headerButtonRight"><a href="<ofbiz:url>/orderlist</ofbiz:url>" class="buttontext">Order&nbsp;List</a></td>
+          <td class="headerButtonLeft"><a href="<ofbiz:url>/orderlist</ofbiz:url>" class="buttontext">Order&nbsp;List</a></td>
           <%if(security.hasEntityPermission("SHIPRATE", "_VIEW", session)) {%>
-          <td class="headerButtonRight"><a href="<ofbiz:url>/shipsetup</ofbiz:url>" class="buttontext">Ship&nbsp;Rates</a></td>
+          <td class="headerButtonLeft"><a href="<ofbiz:url>/shipsetup</ofbiz:url>" class="buttontext">Ship&nbsp;Rates</a></td>
           <%}%>
+
+          <td width="90%" align=center class='headerCenter'>&nbsp;</td>
+
+          <ofbiz:unless name="userLogin">
+            <td class="headerButtonRight"><a href='<ofbiz:url><%=CommonWorkers.makeLoginUrl(pageContext)%></ofbiz:url>' class='buttontext'>Login</a></td>
+          </ofbiz:unless>
+          <ofbiz:if name="userLogin">
+            <td class="headerButtonRight"><a href="<ofbiz:url>/logout/main</ofbiz:url>" class="buttontext">Logout</a></td>
+          </ofbiz:if>
         </TR>
       </TABLE>
     </TD>

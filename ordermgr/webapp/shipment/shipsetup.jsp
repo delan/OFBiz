@@ -186,7 +186,7 @@
             </tr>
             <tr class="viewManyTR1">
               <td><div class="tabletext"><input type="text" name="wmin" size="4"> - <input type="text" name="wmax" size="4"></div></td>
-              <td><div class="tabletext"><select name="wuom"><= getUomList(delegator, "WEIGHT_MEASURE") %></select></div></td>
+              <td><div class="tabletext"><select name="wuom"><%= getUOMList(delegator, "WEIGHT_MEASURE") %></select></div></td>
               <td><div class="tabletext"><input type="text" name="wprice" size="5"></div></td>
             </tr>
             <tr class="viewOneTR1">
@@ -196,7 +196,7 @@
             </tr>
             <tr class="viewManyTR2">
               <td><div class="tabletext"><input type="text" name="qmin" size="4"> - <input type="text" name="qmax" size="4"></div></td>
-              <td><div class="tabletext"><select name="quom"><= getUomList(delegator, "QUANTITY_MEASURE") %></select></div></td>
+              <td><div class="tabletext"><select name="quom"><%= getUOMList(delegator, "QUANTITY_MEASURE") %></select></div></td>
               <td><div class="tabletext"><input type="text" name="qprice" size="5"></div></td>
             </tr>
             <tr class="viewOneTR1">
