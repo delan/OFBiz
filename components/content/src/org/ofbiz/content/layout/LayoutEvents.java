@@ -42,7 +42,7 @@ import javax.servlet.http.HttpSession;
  * LayoutEvents Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      3.0
  *
  * 
@@ -72,7 +72,11 @@ public class LayoutEvents {
             //Debug.logInfo("in createLayoutImage(java), context:" + context, "");
 
             List errorMessages = new ArrayList();
-            Locale loc = null;
+            Locale loc = (Locale)request.getSession().getServletContext().getAttribute("locale");
+            if (loc == null)
+                loc = Locale.getDefault();
+            context.put("locale", loc);
+
             try {
                 SimpleMapProcessor.runSimpleMapProcessor(
                       "org/ofbiz/content/ContentManagementMapProcessors.xml", "contentIn",
@@ -87,6 +91,7 @@ public class LayoutEvents {
                 request.setAttribute("_ERROR_MESSAGE_", e.getMessage());
                 return "error";
             }
+
             context.put("dataResourceName", context.get("contentName"));
             context.put("userLogin", session.getAttribute("userLogin"));
             context.put("dataResourceTypeId", "IMAGE_OBJECT");
@@ -344,7 +349,9 @@ public class LayoutEvents {
         for (int i=0; i<entityList.size(); i++) {
             GenericValue view = (GenericValue)entityList.get(i);
             List errorMessages = new ArrayList();
-            Locale loc = null;
+            Locale loc = (Locale)request.getSession().getServletContext().getAttribute("locale");
+            if (loc == null)
+                loc = Locale.getDefault();
             try {
                 SimpleMapProcessor.runSimpleMapProcessor(
                       "org/ofbiz/content/ContentManagementMapProcessors.xml", "contentAssocIn",
@@ -385,4 +392,148 @@ public class LayoutEvents {
         ContentManagementWorker.setCurrentEntityMap(request, view); 
         return "success";
     }
+
+    public static String createLayoutSubContent(HttpServletRequest request, HttpServletResponse response) {
+
+       
+        try {
+            LocalDispatcher dispatcher = (LocalDispatcher)request.getAttribute("dispatcher");
+            HttpSession session = request.getSession();
+            Map paramMap = UtilHttp.getParameterMap(request);
+            String contentIdTo = (String)paramMap.get("contentIdTo");
+            String mapKey = (String)paramMap.get("mapKey");
+            Map context = new HashMap();
+            List errorMessages = null;
+            Locale loc = (Locale)request.getSession().getServletContext().getAttribute("locale");
+            if (loc == null) 
+                loc = Locale.getDefault();
+            GenericValue userLogin = (GenericValue)session.getAttribute("userLogin");
+            context.put("userLogin", userLogin);
+
+            String rootDir = request.getSession().getServletContext().getRealPath("/"); 
+            context.put("rootDir", rootDir);
+            try {
+                SimpleMapProcessor.runSimpleMapProcessor(
+                      "org/ofbiz/content/ContentManagementMapProcessors.xml", "contentIn",
+                      paramMap, context, errorMessages, loc);
+                SimpleMapProcessor.runSimpleMapProcessor(
+                      "org/ofbiz/content/ContentManagementMapProcessors.xml", "dataResourceIn",
+                      paramMap, context, errorMessages, loc);
+                SimpleMapProcessor.runSimpleMapProcessor(
+                      "org/ofbiz/content/ContentManagementMapProcessors.xml", "contentAssocIn",
+                      paramMap, context, errorMessages, loc);
+            } catch(MiniLangException e) {
+                request.setAttribute("_ERROR_MESSAGE_", e.getMessage());
+                return "error";
+            }
+
+            context.put("dataResourceName", context.get("contentName"));
+            String contentPurposeTypeId = (String)paramMap.get("contentPurposeTypeId");
+            if (UtilValidate.isNotEmpty(contentPurposeTypeId))
+                context.put("contentPurposeList", UtilMisc.toList(contentPurposeTypeId));
+            context.put("contentIdTo", paramMap.get("contentIdTo"));
+            context.put("textData", paramMap.get("textData"));
+            context.put("contentAssocTypeId", "SUB_CONTENT");
+            Map result = dispatcher.runSync("persistContentAndAssoc", context);
+            boolean isError = ModelService.RESPOND_ERROR.equals(result.get(ModelService.RESPONSE_MESSAGE));
+            if (isError) {
+                request.setAttribute("_ERROR_MESSAGE_", result.get(ModelService.ERROR_MESSAGE));
+                return "error";
+            }
+
+            Debug.logInfo("in createLayoutFile, result:" + result, module);
+            String contentId = (String)result.get("contentId");
+            String dataResourceId = (String)result.get("dataResourceId");
+            request.setAttribute("contentId", contentId);
+            request.setAttribute("drDataResourceId", dataResourceId);
+            request.setAttribute("currentEntityName", "SubContentDataResourceId");
+            Map context2 = new HashMap();
+            context2.put("activeContentId", contentId);
+            //context2.put("dataResourceId", dataResourceId);
+            context2.put("contentAssocTypeId", "SUB_CONTENT");
+            context2.put("fromDate", result.get("fromDate"));
+            context2.put("contentIdTo", contentIdTo);
+            context2.put("mapKey", mapKey);
+    
+            //Debug.logInfo("in replaceSubContent, context2:" + context2, module);
+            Map result2 = dispatcher.runSync("deactivateAssocs", context2);
+        } catch( GenericServiceException e) {
+            request.setAttribute("_ERROR_MESSAGE_", e.getMessage());
+            return "error";
+        }
+        return "success";
+    }
+
+
+    public static String updateLayoutSubContent(HttpServletRequest request, HttpServletResponse response) {
+
+       
+        try {
+            LocalDispatcher dispatcher = (LocalDispatcher)request.getAttribute("dispatcher");
+            HttpSession session = request.getSession();
+            Map paramMap = UtilHttp.getParameterMap(request);
+            String contentIdTo = (String)paramMap.get("contentIdTo");
+            String mapKey = (String)paramMap.get("mapKey");
+            Map context = new HashMap();
+            List errorMessages = null;
+            Locale loc = (Locale)request.getSession().getServletContext().getAttribute("locale");
+            if (loc == null) 
+                loc = Locale.getDefault();
+            context.put("locale", loc);
+            GenericValue userLogin = (GenericValue)session.getAttribute("userLogin");
+            context.put("userLogin", userLogin);
+
+            String rootDir = request.getSession().getServletContext().getRealPath("/"); 
+            context.put("rootDir", rootDir);
+            try {
+                SimpleMapProcessor.runSimpleMapProcessor(
+                      "org/ofbiz/content/ContentManagementMapProcessors.xml", "contentIn",
+                      paramMap, context, errorMessages, loc);
+                SimpleMapProcessor.runSimpleMapProcessor(
+                      "org/ofbiz/content/ContentManagementMapProcessors.xml", "dataResourceIn",
+                      paramMap, context, errorMessages, loc);
+                SimpleMapProcessor.runSimpleMapProcessor(
+                      "org/ofbiz/content/ContentManagementMapProcessors.xml", "contentAssocIn",
+                      paramMap, context, errorMessages, loc);
+            } catch(MiniLangException e) {
+                request.setAttribute("_ERROR_MESSAGE_", e.getMessage());
+                return "error";
+            }
+
+
+            context.put("dataResourceName", context.get("contentName"));
+            String contentPurposeTypeId = (String)paramMap.get("contentPurposeTypeId");
+            if (UtilValidate.isNotEmpty(contentPurposeTypeId))
+                context.put("contentPurposeList", UtilMisc.toList(contentPurposeTypeId));
+            context.put("contentIdTo", paramMap.get("contentIdTo"));
+            context.put("textData", paramMap.get("textData"));
+            context.put("contentAssocTypeId", "SUB_CONTENT");
+            Map result = dispatcher.runSync("persistContentAndAssoc", context);
+            boolean isError = ModelService.RESPOND_ERROR.equals(result.get(ModelService.RESPONSE_MESSAGE));
+            if (isError) {
+                request.setAttribute("_ERROR_MESSAGE_", result.get(ModelService.ERROR_MESSAGE));
+                return "error";
+            }
+            String contentId = (String)result.get("contentId");
+            String dataResourceId = (String)result.get("dataResourceId");
+            request.setAttribute("contentId", contentId);
+            request.setAttribute("drDataResourceId", dataResourceId);
+            request.setAttribute("currentEntityName", "SubContentDataResourceId");
+            Map context2 = new HashMap();
+            context2.put("activeContentId", contentId);
+            //context2.put("dataResourceId", dataResourceId);
+            context2.put("contentAssocTypeId", "SUB_CONTENT");
+            context2.put("fromDate", result.get("fromDate"));
+            context2.put("contentIdTo", contentIdTo);
+            context2.put("mapKey", mapKey);
+    
+            //Debug.logInfo("in replaceSubContent, context2:" + context2, module);
+            Map result2 = dispatcher.runSync("deactivateAssocs", context2);
+        } catch( GenericServiceException e) {
+            request.setAttribute("_ERROR_MESSAGE_", e.getMessage());
+            return "error";
+        }
+        return "success";
+    }
+
 }
