@@ -127,9 +127,16 @@ public class ModelViewEntity extends ModelEntity {
     }
 
     /** List of aliases with information in addition to what is in the standard field list */
-    public Vector getAliases() { return this.aliases; }
+    public ModelAlias getAlias(int index) { return (ModelAlias) this.aliases.get(index); }
+    public int getAliasesSize() { return this.aliases.size(); }
+    public Iterator getAliasesIterator() { return this.aliases.iterator(); }
+    public Vector getAliasesCopy() { return new Vector(this.aliases); }
+    
     /** List of view links to define how entities are connected (or "joined") */
-    public Vector getViewLinks() { return this.viewLinks; }
+    public ModelViewLink getViewLink(int index) { return (ModelViewLink) this.viewLinks.get(index); }
+    public int getViewLinksSize() { return this.viewLinks.size(); }
+    public Iterator getViewLinksIterator() { return this.viewLinks.iterator(); }
+    public Vector getViewLinksCopy() { return new Vector(this.viewLinks); }
     
     public void populateFields(Map entityCache) {
         if (this.memberModelEntities == null) {
@@ -215,7 +222,11 @@ public class ModelViewEntity extends ModelEntity {
 
         public String getEntityAlias() { return this.entityAlias; }
         public String getRelEntityAlias() { return this.relEntityAlias; }
-        public Vector getKeyMaps() { return this.keyMaps; }
+
+        public ModelKeyMap getKeyMap(int index) { return (ModelKeyMap) this.keyMaps.get(index); }
+        public int getKeyMapsSize() { return this.keyMaps.size(); }
+        public Iterator getKeyMapsIterator() { return this.keyMaps.iterator(); }
+        public Vector getKeyMapsCopy() { return new Vector(this.keyMaps); }
     }
 }
 

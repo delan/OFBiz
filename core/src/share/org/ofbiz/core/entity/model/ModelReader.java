@@ -257,6 +257,16 @@ public class ModelReader {
             fileEntityNames.add(entry.getKey());
         }
     }
+    
+    public Iterator getFileNameEntitiesKeyIterator() {
+        if (fileNameEntities == null) return null;
+        return fileNameEntities.keySet().iterator();
+    }
+
+    public Collection getFileNameEntities(String entityFileName) {
+        if (fileNameEntities == null) return null;
+        return (Collection) fileNameEntities.get(entityFileName);
+    }
 
     /** Gets an Entity object based on a definition from the specified XML Entity descriptor file.
      * @param entityName The entityName of the Entity definition to use.

@@ -1575,14 +1575,14 @@ public class GenericDAO {
         if (modelEntity instanceof ModelViewEntity) {
             ModelViewEntity modelViewEntity = (ModelViewEntity) modelEntity;
 
-            for (int i = 0; i < modelViewEntity.getViewLinks().size(); i++) {
-                ModelViewEntity.ModelViewLink viewLink = (ModelViewEntity.ModelViewLink) modelViewEntity.getViewLinks().get(i);
+            for (int i = 0; i < modelViewEntity.getViewLinksSize(); i++) {
+                ModelViewEntity.ModelViewLink viewLink = modelViewEntity.getViewLink(i);
 
                 ModelEntity linkEntity = (ModelEntity) modelViewEntity.getMemberModelEntity(viewLink.getEntityAlias());
                 ModelEntity relLinkEntity = (ModelEntity) modelViewEntity.getMemberModelEntity(viewLink.getRelEntityAlias());
 
-                for (int j = 0; j < viewLink.getKeyMaps().size(); j++) {
-                    ModelKeyMap keyMap = (ModelKeyMap) viewLink.getKeyMaps().get(j);
+                for (int j = 0; j < viewLink.getKeyMapsSize(); j++) {
+                    ModelKeyMap keyMap = viewLink.getKeyMap(j);
                     ModelField linkField = linkEntity.getField(keyMap.getFieldName());
                     ModelField relLinkField = relLinkEntity.getField(keyMap.getRelFieldName());
 
