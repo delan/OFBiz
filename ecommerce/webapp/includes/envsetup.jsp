@@ -1,5 +1,5 @@
 <%@ page import="java.util.*, java.net.*" %>
-<%@ page import="org.ofbiz.core.security.*, org.ofbiz.core.entity.*, org.ofbiz.core.util.*" %>
+<%@ page import="org.ofbiz.core.security.*, org.ofbiz.core.entity.*, org.ofbiz.core.util.*, org.ofbiz.core.pseudotag.*" %>
 <%@ page import="org.ofbiz.ecommerce.catalog.*" %>
 
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
@@ -7,6 +7,10 @@
 <jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="application" />
 <jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="application" />
 <%
+    //get the pseudotag instances going:
+    EntityField entityField = new EntityField(pageContext);
+    InputValue inputValue = new InputValue(pageContext);
+
     GenericValue userLogin = (GenericValue) session.getAttribute(SiteDefs.USER_LOGIN);
     if (userLogin != null)
         pageContext.setAttribute("userLogin", userLogin);
