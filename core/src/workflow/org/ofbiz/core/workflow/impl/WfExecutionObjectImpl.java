@@ -584,6 +584,16 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
         return ServiceDispatcher.getInstance(getServiceLoader(),getDelegator());        
     }
     
+    /** 
+     * Get an instance of the service dispatcher
+     * @param The service loader name
+     * @return ServiceDispatcher instance for use with this workflow
+     * @throws WfException
+     */
+    protected ServiceDispatcher getDispatcher(String loader) throws WfException {        
+        return ServiceDispatcher.getInstance(loader,getDelegator());        
+    }    
+    
     /**
      * Gets the name of this workflow's service loader
      * @return String name of the loader

@@ -82,7 +82,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
             createAssignments(performer);
         
         boolean limitAfterStart = valueObject.getBoolean("limitAfterStart").booleanValue();
-        if ( limitAfterStart && valueObject.get("limitService") != null )
+        if ( limitAfterStart && valueObject.get("limitService") != null && !valueObject.getString("limitService").equals("") )
             setLimitService();
     }
             
@@ -408,7 +408,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
             throw new CannotStart(tna.getMessage(),tna);
         }
         // check the limit service
-        if ( getDefinitionObject().get("limitService") != null )
+        if ( getDefinitionObject().get("limitService") != null && !getDefinitionObject().getString("limitService").equals("") )
             setLimitService();
         
         // get the type of this activity
@@ -514,7 +514,14 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
     
     // schedule the limit service to run
     private void setLimitService() throws WfException {
-        DispatchContext dctx = getDispatcher().getLocalContext(getServiceLoader());
+        String serviceLoader = null;
+        try {
+            serviceLoader = getServiceLoader();
+        }
+        catch ( WfException e ) { 
+            serviceLoader = container().getRuntimeObject().getString("serviceLoaderName");
+        }
+        DispatchContext dctx = getDispatcher(serviceLoader).getLocalContext(serviceLoader);
         String limitService = getDefinitionObject().getString("limitService");        
         ModelService service = null;
         try {
