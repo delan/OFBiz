@@ -1,5 +1,5 @@
 /*
- * $Id: OrderServices.java,v 1.9 2003/08/26 16:08:03 ajzeneski Exp $
+ * $Id: OrderServices.java,v 1.10 2003/08/26 21:48:11 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -71,7 +71,7 @@ import org.ofbiz.workflow.WfUtil;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
- * @version    $Revision: 1.9 $
+ * @version    $Revision: 1.10 $
  * @since      2.0
  */
 
@@ -150,6 +150,10 @@ public class OrderServices {
                     normalizedItemQuantities.put(currentProductId, new Double(currentQuantity.doubleValue() + orderItem.getDouble("quantity").doubleValue()));
                 }
             }
+        }
+        
+        if (!"PURCHASE_ORDER".equals(orderTypeId) && productStoreId == null) {
+            return ServiceUtil.returnError("ERROR: The productStoreId can only be null for purchase orders");
         }
 
         Iterator normalizedIter = normalizedItemQuantities.keySet().iterator();   

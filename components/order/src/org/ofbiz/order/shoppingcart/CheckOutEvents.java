@@ -1,5 +1,5 @@
 /*
- * $Id: CheckOutEvents.java,v 1.2 2003/08/26 18:02:01 jonesde Exp $
+ * $Id: CheckOutEvents.java,v 1.3 2003/08/26 21:48:11 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -51,7 +51,7 @@ import org.ofbiz.service.ServiceUtil;
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:tristana@twibble.org">Tristan Austin</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class CheckOutEvents {
@@ -378,7 +378,11 @@ public class CheckOutEvents {
                 }
             }
         }
-                        
-        return "success";
+        
+        if ("SALES_ORDER".equals(cart.getOrderType())) {       
+            return "sales";
+        } else {
+            return "po";
+        }
     }   
 }

@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      2.2
 -->
 
@@ -38,7 +38,7 @@ function setStore(disable) {
             defaultValue = selectBox.options[selectBox.selectedIndex].value;
         }
         selectBox.options[selectBox.selectedIndex].text = "Not Used For Purchase Orders";
-        selectBox.options[selectBox.selectedIndex].value = "";
+        selectBox.options[selectBox.selectedIndex].value = "";      
     } else {
         if (defaultText != "!") {
             selectBox.options[selectBox.selectedIndex].text = defaultText;
