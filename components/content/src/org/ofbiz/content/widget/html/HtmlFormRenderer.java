@@ -877,7 +877,14 @@ public class HtmlFormRenderer implements FormStringRenderer {
     }
 
     public void renderFormatHeaderRowFormCellOpen(StringBuffer buffer, Map context, ModelForm modelForm) {
-        buffer.append("<td align=\"center\">");
+        buffer.append("<td align=\"center\"");
+        String areaStyle = modelForm.getFormTitleAreaStyle();
+        if (UtilValidate.isNotEmpty(areaStyle)) {
+            buffer.append(" class=\"");
+            buffer.append(areaStyle);
+            buffer.append("\"");
+        }
+        buffer.append(">");
         this.appendWhitespace(buffer);
     }
 
@@ -955,7 +962,14 @@ public class HtmlFormRenderer implements FormStringRenderer {
      * @see org.ofbiz.content.widget.form.FormStringRenderer#renderFormatItemRowFormCellOpen(java.lang.StringBuffer, java.util.Map, org.ofbiz.content.widget.form.ModelForm)
      */
     public void renderFormatItemRowFormCellOpen(StringBuffer buffer, Map context, ModelForm modelForm) {
-        buffer.append("<td align=\"center\">");
+        buffer.append("<td align=\"center\"");
+        String areaStyle = modelForm.getFormWidgetAreaStyle();
+        if (UtilValidate.isNotEmpty(areaStyle)) {
+            buffer.append(" class=\"");
+            buffer.append(areaStyle);
+            buffer.append("\"");
+        }
+        buffer.append(">");
         this.appendWhitespace(buffer);
     }
 
@@ -1001,7 +1015,14 @@ public class HtmlFormRenderer implements FormStringRenderer {
      * @see org.ofbiz.content.widget.form.FormStringRenderer#renderFormatFieldRowTitleCellOpen(java.lang.StringBuffer, java.util.Map, org.ofbiz.content.widget.form.ModelFormField)
      */
     public void renderFormatFieldRowTitleCellOpen(StringBuffer buffer, Map context, ModelFormField modelFormField) {
-        buffer.append("<td width=\"20%\" align=\"right\">");
+        buffer.append("<td width=\"20%\" align=\"right\"");
+        String areaStyle = modelFormField.getTitleAreaStyle();
+        if (UtilValidate.isNotEmpty(areaStyle)) {
+            buffer.append(" class=\"");
+            buffer.append(areaStyle);
+            buffer.append("\"");
+        }
+        buffer.append(">");
         this.appendWhitespace(buffer);
     }
 
@@ -1038,6 +1059,12 @@ public class HtmlFormRenderer implements FormStringRenderer {
             // do a span of 1 for this column, plus 3 columns for each spanned 
             //position or each blank position that this will be filling in 
             buffer.append(1 + (positionSpan * 3));
+            buffer.append("\"");
+        }
+        String areaStyle = modelFormField.getWidgetAreaStyle();
+        if (UtilValidate.isNotEmpty(areaStyle)) {
+            buffer.append(" class=\"");
+            buffer.append(areaStyle);
             buffer.append("\"");
         }
         buffer.append(">");

@@ -81,6 +81,8 @@ public class ModelForm {
     protected FlexibleMapAccessor defaultMapName;
     protected String defaultEntityName;
     protected String defaultServiceName;
+    protected String formTitleAreaStyle;
+    protected String formWidgetAreaStyle;
     protected String defaultTitleAreaStyle;
     protected String defaultWidgetAreaStyle;
     protected String defaultTitleStyle;
@@ -208,6 +210,8 @@ public class ModelForm {
                 this.tooltip = parent.tooltip;
                 this.defaultEntityName = parent.defaultEntityName;
                 this.defaultServiceName = parent.defaultServiceName;
+                this.formTitleAreaStyle = parent.formTitleAreaStyle;
+                this.formWidgetAreaStyle = parent.formWidgetAreaStyle;
                 this.defaultTitleAreaStyle = parent.defaultTitleAreaStyle;
                 this.defaultWidgetAreaStyle = parent.defaultWidgetAreaStyle;
                 this.defaultTitleStyle = parent.defaultTitleStyle;
@@ -244,6 +248,11 @@ public class ModelForm {
             this.defaultServiceName = formElement.getAttribute("default-service-name");
         if (this.defaultEntityName == null || formElement.hasAttribute("default-entity-name"))
             this.defaultEntityName = formElement.getAttribute("default-entity-name");
+
+        if (this.formTitleAreaStyle == null || formElement.hasAttribute("form-title-area-style"))
+            this.formTitleAreaStyle = formElement.getAttribute("form-title-area-style");
+        if (this.formWidgetAreaStyle == null || formElement.hasAttribute("form-widget-area-style"))
+            this.formWidgetAreaStyle = formElement.getAttribute("form-widget-area-style");
 
         if (this.defaultTitleAreaStyle == null || formElement.hasAttribute("default-title-area-style"))
             this.defaultTitleAreaStyle = formElement.getAttribute("default-title-area-style");
@@ -392,7 +401,6 @@ public class ModelForm {
         if (actionsElement != null) {
             this.actions = ModelFormAction.readSubActions(this, actionsElement);
         }
-        
     }
 
     /**
@@ -1214,6 +1222,20 @@ public class ModelForm {
     /**
      * @return
      */
+    public String getFormTitleAreaStyle() {
+        return this.formTitleAreaStyle;
+    }
+
+    /**
+     * @return
+     */
+    public String getFormWidgetAreaStyle() {
+        return this.formWidgetAreaStyle;
+    }
+
+    /**
+     * @return
+     */
     public String getDefaultTitleAreaStyle() {
         return this.defaultTitleAreaStyle;
     }
@@ -1405,6 +1427,20 @@ public class ModelForm {
      */
     public void setDefaultServiceName(String string) {
         this.defaultServiceName = string;
+    }
+
+    /**
+     * @param string
+     */
+    public void setFormTitleAreaStyle(String string) {
+        this.formTitleAreaStyle = string;
+    }
+
+    /**
+     * @param string
+     */
+    public void setFormWidgetAreaStyle(String string) {
+        this.formWidgetAreaStyle = string;
     }
 
     /**
