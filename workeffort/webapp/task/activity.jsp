@@ -35,6 +35,13 @@
 <%@ page import="org.ofbiz.commonapp.workeffort.workeffort.*" %>
 <%WorkEffortWorker.getWorkEffort(pageContext, "workEffortId", "workEffort", "partyAssigns", "canView", "tryEntity", "currentStatusItem");%>
 <%WorkEffortWorker.getTaskStatusItems(pageContext, "taskStatusItems");%>
+<%
+    //if this was an update on a party assignment, set tryEntity to true
+    if (request.getParameter("partyId") != null || request.getParameter("roleTypeId") != null) {
+        pageContext.setAttribute("tryEntity", new Boolean(true));
+    }
+%>
+
 
 <%pageContext.setAttribute("PageName", "Activity Editor Page");%>
 
@@ -198,13 +205,25 @@
             <tr>
               <td>
                 <ofbiz:iterator name="workEffortPartyAssignment" property="partyAssigns">
+                  <%
+                    //if there was an error message and the current PK equals the parameter PK, set assignTryEntity to false
+                    pageContext.setAttribute("assignTryEntity", new Boolean(true));
+                    if ((request.getAttribute("ERROR_MESSAGE") != null || request.getAttribute(SiteDefs.ERROR_MESSAGE) != null) &&
+                        workEffortPartyAssignment.getString("workEffortId").equals(request.getParameter("workEffortId")) && 
+                        workEffortPartyAssignment.getString("partyId").equals(request.getParameter("partyId")) && 
+                        workEffortPartyAssignment.getString("roleTypeId").equals(request.getParameter("roleTypeId")) && 
+                        workEffortPartyAssignment.getTimestamp("fromDate").toString().equals(request.getParameter("fromDate"))) {
+                        pageContext.setAttribute("assignTryEntity", new Boolean(false));
+                    }
+                  %>
                   <form action="<ofbiz:url>/updateactivityassign</ofbiz:url>" method=POST style='margin: 0;'>
                   <table border='0' cellpadding='2' cellspacing='0'>
                     <input type='hidden' name='UPDATE_MODE' value='UPDATE'>
                     <input type='hidden' name='WORK_EFFORT_ID' value='<ofbiz:print attribute="workEffortId"/>'>
-                    <input type='hidden' name='PARTY_ID' value='<ofbiz:entityfield field="partyId" attribute="workEffortPartyAssignment"/>'>
-                    <input type='hidden' name='ROLE_TYPE_ID' value='<ofbiz:entityfield field="roleTypeId" attribute="workEffortPartyAssignment"/>'>
-                    <input type='hidden' name='FROM_DATE' value='<ofbiz:entityfield field="fromDate" attribute="workEffortPartyAssignment"/>'>
+                    <input type='hidden' name='workEffortId' value='<ofbiz:print attribute="workEffortId"/>'>
+                    <input type='hidden' name='partyId' value='<ofbiz:entityfield field="partyId" attribute="workEffortPartyAssignment"/>'>
+                    <input type='hidden' name='roleTypeId' value='<ofbiz:entityfield field="roleTypeId" attribute="workEffortPartyAssignment"/>'>
+                    <input type='hidden' name='fromDate' value='<ofbiz:inputvalue field="fromDate" param="fromDate" entityAttr="workEffortPartyAssignment" tryEntityAttr="assignTryEntity"/>'>
     
                     <tr>
                       <td width='26%' align=right><div class='tabletext'>Party ID</div></td>
@@ -224,7 +243,7 @@
                     <tr>
                       <td width='26%' align=right><div class='tabletext'>Thru Date</div></td>
                       <td>&nbsp;</td>
-                      <td width='74%'><input type='text' size='30' maxlength='30' name='thruDate' value='<ofbiz:inputvalue field="thruDate" param="thruDate" entityAttr="workEffortPartyAssignment" tryEntityAttr="tryEntity"/>'><span class='tabletext'>(YYYY-MM-DD hh:mm:ss)</span></td>
+                      <td width='74%'><input type='text' size='30' maxlength='30' name='thruDate' value='<ofbiz:inputvalue field="thruDate" param="thruDate" entityAttr="workEffortPartyAssignment" tryEntityAttr="assignTryEntity"/>'><span class='tabletext'>(YYYY-MM-DD hh:mm:ss)</span></td>
                     </tr>
                     <tr>
                       <td width='26%' align=right><div class='tabletext'>Party Assignment Status</div></td>
@@ -245,14 +264,14 @@
                     <tr>
                       <td width='26%' align=right><div class='tabletext'>Comments</div></td>
                       <td>&nbsp;</td>
-                      <td width='74%'><input type='text' size='60' maxlength='255' name='comments' value='<ofbiz:inputvalue field="comments" param="comments" entityAttr="workEffortPartyAssignment" tryEntityAttr="tryEntity"/>'></td>
+                      <td width='74%'><input type='text' size='60' maxlength='255' name='comments' value='<ofbiz:inputvalue field="comments" param="comments" entityAttr="workEffortPartyAssignment" tryEntityAttr="assignTryEntity"/>'></td>
                     </tr>
                     <tr>
                       <td width='26%' align=right><div class='tabletext'>Must RSVP?</div></td>
                       <td>&nbsp;</td>
                       <td width='74%'>
                         <SELECT name='mustRsvp'>
-                          <OPTION><ofbiz:inputvalue field="mustRsvp" param="mustRsvp" entityAttr="workEffortPartyAssignment" tryEntityAttr="tryEntity"/></OPTION>
+                          <OPTION><ofbiz:inputvalue field="mustRsvp" param="mustRsvp" entityAttr="workEffortPartyAssignment" tryEntityAttr="assignTryEntity"/></OPTION>
                           <OPTION value=''>--</OPTION>
                           <OPTION>Y</OPTION> <OPTION>N</OPTION>
                         </SELECT>
