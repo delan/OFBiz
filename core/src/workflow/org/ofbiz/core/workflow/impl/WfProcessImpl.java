@@ -359,9 +359,15 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
 
         // Iterate through the possible transitions
         boolean transitionOk = false;
+        GenericValue otherwise = null;
+
         Iterator fromIt = fromCol.iterator();
         while (fromIt.hasNext()) {
             GenericValue transition = (GenericValue) fromIt.next();
+            if (transition.getString("conditionTypeEnumId").equals("WTC_OTHERWISE")) {
+                otherwise = transition;
+                continue;
+            }
             // evaluate the condition expression
             transitionOk = evalCondition(transition.getString("conditionExpr"));
             if (transitionOk) {
@@ -370,6 +376,10 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
                     break;
             }
         }
+
+        // we only use otherwise transitions for XOR splits
+        if (split.equals("WST_XOR") && transList.size() == 0 && otherwise != null)
+            transList.add(otherwise);
 
         Debug.logVerbose("[WfProcess.getTransFrom] : Transitions: " + transList.size(), module);
         return transList;
