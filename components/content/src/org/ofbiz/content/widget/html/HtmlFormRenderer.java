@@ -123,8 +123,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
     public void renderDisplayField(StringBuffer buffer, Map context, DisplayField displayField) {
         ModelFormField modelFormField = displayField.getModelFormField();
 
-        if (tdOpen == false)    
-            buffer.append("<span");
+        if (tdOpen == false) buffer.append("<span");
 
         if (UtilValidate.isNotEmpty(modelFormField.getWidgetStyle())) {
             buffer.append(" class=\"");
@@ -140,8 +139,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
         buffer.append(">");
         buffer.append(displayField.getDescription(context));
 
-        if (tdOpen == false)            
-            buffer.append("</span>");
+        if (tdOpen == false) buffer.append("</span>");
 
         this.appendTooltip(buffer, context, modelFormField);
 
@@ -473,8 +471,9 @@ public class HtmlFormRenderer implements FormStringRenderer {
         ModelFormField modelFormField = checkField.getModelFormField();
         // never used: ModelForm modelForm = modelFormField.getModelForm();
         String currentValue = modelFormField.getEntry(context);
-if (tdOpen == false)
-        buffer.append("<span");
+        
+        if (tdOpen == false) buffer.append("<span");
+        
         String className = modelFormField.getWidgetStyle();
         if (UtilValidate.isNotEmpty(className)) {
             buffer.append(" class=\"");
@@ -496,8 +495,8 @@ if (tdOpen == false)
         buffer.append('"');
         buffer.append(" value=\"Y\"/>");
         // any description by it?
-if (tdOpen == false)        
-        buffer.append("</span>");
+
+        if (tdOpen == false) buffer.append("</span>");
 
         this.appendTooltip(buffer, context, modelFormField);
 
@@ -705,7 +704,7 @@ if (tdOpen == false)
      * @see org.ofbiz.content.widget.form.FormStringRenderer#renderFieldTitle(java.lang.StringBuffer, java.util.Map, org.ofbiz.content.widget.form.ModelFormField)
      */
     public void renderFieldTitle(StringBuffer buffer, Map context, ModelFormField modelFormField) {
-        if (tdOpen == false)        buffer.append("<span");
+        if (tdOpen == false) buffer.append("<span");
         if (UtilValidate.isNotEmpty(modelFormField.getTitleStyle())) {
             buffer.append(" class=\"");
             buffer.append(modelFormField.getTitleStyle());
@@ -713,7 +712,7 @@ if (tdOpen == false)
         }
         buffer.append(">");
         buffer.append(modelFormField.getTitle(context));
-        if (tdOpen == false)        buffer.append("</span>");
+        if (tdOpen == false) buffer.append("</span>");
 
         this.appendWhitespace(buffer);
     }
@@ -724,8 +723,8 @@ if (tdOpen == false)
     public void renderSingleFormFieldTitle(StringBuffer buffer, Map context, ModelFormField modelFormField) {
         boolean requiredField = modelFormField.getRequiredField();
         if (requiredField) {
+            if (tdOpen == false) buffer.append("<span");
             
-            if (tdOpen == false)            buffer.append("<span");
             String requiredStyle = modelFormField.getRequiredFieldStyle();
             if (UtilValidate.isEmpty(requiredStyle)) {
                 requiredStyle = modelFormField.getTitleStyle();
@@ -859,7 +858,8 @@ if (tdOpen == false)
      * @see org.ofbiz.content.widget.form.FormStringRenderer#renderFormatHeaderRowCellOpen(java.lang.StringBuffer, java.util.Map, org.ofbiz.content.widget.form.ModelForm, org.ofbiz.content.widget.form.ModelFormField)
      */
     public void renderFormatHeaderRowCellOpen(StringBuffer buffer, Map context, ModelForm modelForm, ModelFormField modelFormField) {
-        buffer.append("<td "); tdOpen = true;
+        buffer.append("<td ");
+        tdOpen = true;
         
         this.appendWhitespace(buffer);
     }
@@ -868,13 +868,15 @@ if (tdOpen == false)
      * @see org.ofbiz.content.widget.form.FormStringRenderer#renderFormatHeaderRowCellClose(java.lang.StringBuffer, java.util.Map, org.ofbiz.content.widget.form.ModelForm, org.ofbiz.content.widget.form.ModelFormField)
      */
     public void renderFormatHeaderRowCellClose(StringBuffer buffer, Map context, ModelForm modelForm, ModelFormField modelFormField) {
-        buffer.append("</td>"); tdOpen = false;
+        buffer.append("</td>");
+        tdOpen = false;
 
         this.appendWhitespace(buffer);
     }
 
     public void renderFormatHeaderRowFormCellOpen(StringBuffer buffer, Map context, ModelForm modelForm) {
-        buffer.append("<td align=\"center\" "); tdOpen=true;
+        buffer.append("<td align=\"center\" ");
+        tdOpen=true;
 
         this.appendWhitespace(buffer);
     }
@@ -883,7 +885,8 @@ if (tdOpen == false)
      * @see org.ofbiz.content.widget.form.FormStringRenderer#renderFormatHeaderRowFormCellClose(java.lang.StringBuffer, java.util.Map, org.ofbiz.content.widget.form.ModelForm)
      */
     public void renderFormatHeaderRowFormCellClose(StringBuffer buffer, Map context, ModelForm modelForm) {
-        buffer.append("</td>"); tdOpen = false;
+        buffer.append("</td>");
+        tdOpen = false;
 
         this.appendWhitespace(buffer);
     }
@@ -891,13 +894,9 @@ if (tdOpen == false)
     /* (non-Javadoc)
      * @see org.ofbiz.content.widget.form.FormStringRenderer#renderFormatHeaderRowFormCellTitleSeparator(java.lang.StringBuffer, java.util.Map, org.ofbiz.content.widget.form.ModelForm, boolean)
      */
-    public void renderFormatHeaderRowFormCellTitleSeparator(
-        StringBuffer buffer,
-        Map context,
-        ModelForm modelForm,
-        ModelFormField modelFormField,
-        boolean isLast) {
-        if (tdOpen == false)        buffer.append("<span");
+    public void renderFormatHeaderRowFormCellTitleSeparator(StringBuffer buffer, Map context, ModelForm modelForm, ModelFormField modelFormField, boolean isLast) {
+        if (tdOpen == false) buffer.append("<span");
+        
         if (UtilValidate.isNotEmpty(modelFormField.getTitleStyle())) {
             buffer.append(" class=\"");
             buffer.append(modelFormField.getTitleStyle());
@@ -934,7 +933,8 @@ if (tdOpen == false)
      * @see org.ofbiz.content.widget.form.FormStringRenderer#renderFormatItemRowCellOpen(java.lang.StringBuffer, java.util.Map, org.ofbiz.content.widget.form.ModelForm, org.ofbiz.content.widget.form.ModelFormField)
      */
     public void renderFormatItemRowCellOpen(StringBuffer buffer, Map context, ModelForm modelForm, ModelFormField modelFormField) {
-        buffer.append("<td "); tdOpen = true;
+        buffer.append("<td ");
+        tdOpen = true;
 
         this.appendWhitespace(buffer);
     }
@@ -943,7 +943,8 @@ if (tdOpen == false)
      * @see org.ofbiz.content.widget.form.FormStringRenderer#renderFormatItemRowCellClose(java.lang.StringBuffer, java.util.Map, org.ofbiz.content.widget.form.ModelForm, org.ofbiz.content.widget.form.ModelFormField)
      */
     public void renderFormatItemRowCellClose(StringBuffer buffer, Map context, ModelForm modelForm, ModelFormField modelFormField) {
-        buffer.append("</td>"); tdOpen = false;
+        buffer.append("</td>");
+        tdOpen = false;
 
         this.appendWhitespace(buffer);
     }
@@ -952,7 +953,8 @@ if (tdOpen == false)
      * @see org.ofbiz.content.widget.form.FormStringRenderer#renderFormatItemRowFormCellOpen(java.lang.StringBuffer, java.util.Map, org.ofbiz.content.widget.form.ModelForm)
      */
     public void renderFormatItemRowFormCellOpen(StringBuffer buffer, Map context, ModelForm modelForm) {
-        buffer.append("<td align=\"center\" " ); tdOpen = true;
+        buffer.append("<td align=\"center\" " );
+        tdOpen = true;
 
         this.appendWhitespace(buffer);
     }
@@ -961,7 +963,8 @@ if (tdOpen == false)
      * @see org.ofbiz.content.widget.form.FormStringRenderer#renderFormatItemRowFormCellClose(java.lang.StringBuffer, java.util.Map, org.ofbiz.content.widget.form.ModelForm)
      */
     public void renderFormatItemRowFormCellClose(StringBuffer buffer, Map context, ModelForm modelForm) {
-        buffer.append("</td>"); tdOpen = false;
+        buffer.append("</td>");
+        tdOpen = false;
 
         this.appendWhitespace(buffer);
     }
@@ -1000,7 +1003,8 @@ if (tdOpen == false)
      * @see org.ofbiz.content.widget.form.FormStringRenderer#renderFormatFieldRowTitleCellOpen(java.lang.StringBuffer, java.util.Map, org.ofbiz.content.widget.form.ModelFormField)
      */
     public void renderFormatFieldRowTitleCellOpen(StringBuffer buffer, Map context, ModelFormField modelFormField) {
-        buffer.append("<td width=\"20%\" align=\"right\"  "); tdOpen = true;
+        buffer.append("<td width=\"20%\" align=\"right\"  "); 
+        tdOpen = true;
 
         this.appendWhitespace(buffer);
     }
@@ -1009,7 +1013,8 @@ if (tdOpen == false)
      * @see org.ofbiz.content.widget.form.FormStringRenderer#renderFormatFieldRowTitleCellClose(java.lang.StringBuffer, java.util.Map, org.ofbiz.content.widget.form.ModelFormField)
      */
     public void renderFormatFieldRowTitleCellClose(StringBuffer buffer, Map context, ModelFormField modelFormField) {
-        buffer.append("</td>"); tdOpen=false;
+        buffer.append("</td>");
+        tdOpen=false;
 
         this.appendWhitespace(buffer);
     }
@@ -1026,13 +1031,7 @@ if (tdOpen == false)
     /* (non-Javadoc)
      * @see org.ofbiz.content.widget.form.FormStringRenderer#renderFormatFieldRowWidgetCellOpen(java.lang.StringBuffer, java.util.Map, org.ofbiz.content.widget.form.ModelFormField, int)
      */
-    public void renderFormatFieldRowWidgetCellOpen(
-        StringBuffer buffer,
-        Map context,
-        ModelFormField modelFormField,
-        int positions,
-        int positionSpan,
-        Integer nextPositionInRow) {
+    public void renderFormatFieldRowWidgetCellOpen(StringBuffer buffer, Map context, ModelFormField modelFormField, int positions, int positionSpan, Integer nextPositionInRow) {
         buffer.append("<td width=\"");
         if (nextPositionInRow != null || modelFormField.getPosition() > 1) {
             buffer.append("30");
@@ -1055,14 +1054,9 @@ if (tdOpen == false)
     /* (non-Javadoc)
      * @see org.ofbiz.content.widget.form.FormStringRenderer#renderFormatFieldRowWidgetCellClose(java.lang.StringBuffer, java.util.Map, org.ofbiz.content.widget.form.ModelFormField, int)
      */
-    public void renderFormatFieldRowWidgetCellClose(
-        StringBuffer buffer,
-        Map context,
-        ModelFormField modelFormField,
-        int positions,
-        int positionSpan,
-        Integer nextPositionInRow) {
-        buffer.append("</td>"); tdOpen=false;
+    public void renderFormatFieldRowWidgetCellClose(StringBuffer buffer, Map context, ModelFormField modelFormField, int positions, int positionSpan, Integer nextPositionInRow) {
+        buffer.append("</td>");
+        tdOpen=false;
 
         this.appendWhitespace(buffer);
     }
@@ -1804,84 +1798,81 @@ if (tdOpen == false)
         return retStr;
     }
     
-     public void renderFieldGroupOpen(StringBuffer buffer, Map context, ModelForm.FieldGroup fieldGroup) {
-         String style = fieldGroup.getStyle(); 
-         if (UtilValidate.isNotEmpty(style)) {
-                buffer.append("<div");
-                buffer.append(" class=\"");
-                buffer.append(style);
-                buffer.append("\">");
-         }
-     }
+    public void renderFieldGroupOpen(StringBuffer buffer, Map context, ModelForm.FieldGroup fieldGroup) {
+        String style = fieldGroup.getStyle(); 
+        if (UtilValidate.isNotEmpty(style)) {
+            buffer.append("<div");
+            buffer.append(" class=\"");
+            buffer.append(style);
+            buffer.append("\">");
+        }
+    }
      
-     public void renderFieldGroupClose(StringBuffer buffer, Map context, ModelForm.FieldGroup fieldGroup) {
-         String style = fieldGroup.getStyle(); 
-         if (UtilValidate.isNotEmpty(style)) {
-             buffer.append("</div>");
-         }
-     }
+    public void renderFieldGroupClose(StringBuffer buffer, Map context, ModelForm.FieldGroup fieldGroup) {
+        String style = fieldGroup.getStyle(); 
+        if (UtilValidate.isNotEmpty(style)) {
+            buffer.append("</div>");
+        }
+    }
      
-     public void renderBanner(StringBuffer buffer, Map context, ModelForm.Banner banner) {
-         buffer.append("<table width=\"100%\"><tr>");
-         String style = banner.getStyle(context);
-         String leftStyle = banner.getLeftTextStyle(context);
-         if (UtilValidate.isEmpty(leftStyle)) leftStyle = style;
-         String rightStyle = banner.getRightTextStyle(context);
-         if (UtilValidate.isEmpty(rightStyle)) rightStyle = style;
-         
-         String leftText = banner.getLeftText(context);
-         if (UtilValidate.isNotEmpty(leftText)) {
-             buffer.append("<td align=\"left\">");
-             if (UtilValidate.isNotEmpty(leftStyle)) {
-                buffer.append("<div");
-                buffer.append(" class=\"");
-                buffer.append(leftStyle);
-                buffer.append("\"");
-                buffer.append(">" );
-             }
-             buffer.append(leftText);
-             if (UtilValidate.isNotEmpty(leftStyle)) {
-                 buffer.append("</div>");
-             }
-             buffer.append("</td>");
-         }
-         
-         String text = banner.getText(context);
-         if (UtilValidate.isNotEmpty(text)) {
-             buffer.append("<td align=\"center\">");
-             if (UtilValidate.isNotEmpty(style)) {
-                buffer.append("<div");
-                buffer.append(" class=\"");
-                buffer.append(style);
-                buffer.append("\"");
-                buffer.append(">" );
-             }
-             buffer.append(text);
-             if (UtilValidate.isNotEmpty(style)) {
-                 buffer.append("</div>");
-             }
-             buffer.append("</td>");
-         }
-         
-         String rightText = banner.getRightText(context);
-         if (UtilValidate.isNotEmpty(rightText)) {
-             buffer.append("<td align=\"right\">");
-             if (UtilValidate.isNotEmpty(rightStyle)) {
-                buffer.append("<div");
-                buffer.append(" class=\"");
-                buffer.append(rightStyle);
-                buffer.append("\"");
-                buffer.append(">" );
-             }
-             buffer.append(rightText);
-             if (UtilValidate.isNotEmpty(rightStyle)) {
-                 buffer.append("</div>");
-             }
-             buffer.append("</td>");
-         }
-         
-         
-         buffer.append("</tr></table>");
-     }
- 
+    public void renderBanner(StringBuffer buffer, Map context, ModelForm.Banner banner) {
+        buffer.append("<table width=\"100%\"><tr>");
+        String style = banner.getStyle(context);
+        String leftStyle = banner.getLeftTextStyle(context);
+        if (UtilValidate.isEmpty(leftStyle)) leftStyle = style;
+        String rightStyle = banner.getRightTextStyle(context);
+        if (UtilValidate.isEmpty(rightStyle)) rightStyle = style;
+        
+        String leftText = banner.getLeftText(context);
+        if (UtilValidate.isNotEmpty(leftText)) {
+            buffer.append("<td align=\"left\">");
+            if (UtilValidate.isNotEmpty(leftStyle)) {
+               buffer.append("<div");
+               buffer.append(" class=\"");
+               buffer.append(leftStyle);
+               buffer.append("\"");
+               buffer.append(">" );
+            }
+            buffer.append(leftText);
+            if (UtilValidate.isNotEmpty(leftStyle)) {
+                buffer.append("</div>");
+            }
+            buffer.append("</td>");
+        }
+        
+        String text = banner.getText(context);
+        if (UtilValidate.isNotEmpty(text)) {
+            buffer.append("<td align=\"center\">");
+            if (UtilValidate.isNotEmpty(style)) {
+               buffer.append("<div");
+               buffer.append(" class=\"");
+               buffer.append(style);
+               buffer.append("\"");
+               buffer.append(">" );
+            }
+            buffer.append(text);
+            if (UtilValidate.isNotEmpty(style)) {
+                buffer.append("</div>");
+            }
+            buffer.append("</td>");
+        }
+        
+        String rightText = banner.getRightText(context);
+        if (UtilValidate.isNotEmpty(rightText)) {
+            buffer.append("<td align=\"right\">");
+            if (UtilValidate.isNotEmpty(rightStyle)) {
+               buffer.append("<div");
+               buffer.append(" class=\"");
+               buffer.append(rightStyle);
+               buffer.append("\"");
+               buffer.append(">" );
+            }
+            buffer.append(rightText);
+            if (UtilValidate.isNotEmpty(rightStyle)) {
+                buffer.append("</div>");
+            }
+            buffer.append("</td>");
+        }
+        buffer.append("</tr></table>");
+    }
 }
