@@ -21,6 +21,10 @@
 #  and value is a single-quote delimited value.
 # For example:
 #*.gif -k 'b'
+*.class -k 'b'
+*.CLASS -k 'b'
+*.exe -k 'b'
+*.EXE -k 'b'
 *.zip -k 'b'
 *.ZIP -k 'b'
 *.gif -k 'b'
@@ -29,3 +33,10 @@
 *.jar -k 'b'
 *.JAR -k 'b'
 *.xls -k 'b'
+*.tgz -k 'b'
+*.TGZ -k 'b'
+*.gz -k 'b'
+*.GZ -k 'b'
+*.bz -k 'b'
+*.BZ -k 'b'
+
