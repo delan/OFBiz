@@ -33,6 +33,7 @@ import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.content.webapp.control.LoginWorker;
 import org.ofbiz.entity.GenericDelegator;
+import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
@@ -103,17 +104,20 @@ public class XuiSession {
         }
     }
 
-    public void checkLogin(String username, String password) throws UserLoginFailure {
+    public void login(String username, String password) throws UserLoginFailure {
         // if already logged in; verify for lock
         if (this.userLogin != null) {
             if (!userLogin.getString("userLoginId").equals(username)) {
                 throw new UserLoginFailure("Username does not match already logged in user!");
             }
         }
+        this.userLogin = this.checkLogin(username, password);
+    }
 
+    public GenericValue checkLogin(String username, String password) throws UserLoginFailure {
         // check the required parameters and objects
         if (dispatcher == null) {
-            throw new UserLoginFailure("Unable to log in; POS not configured propertly");
+            throw new UserLoginFailure("Unable to log in; XUI not configured propertly");
         }
         if (UtilValidate.isEmpty(username)) {
             throw new UserLoginFailure("Username is missing");
@@ -134,11 +138,32 @@ public class XuiSession {
         if (ServiceUtil.isError(result)) {
             throw new UserLoginFailure(ServiceUtil.getErrorMessage(result));
         } else {
-            this.userLogin = (GenericValue) result.get("userLogin");
-            if (this.userLogin == null) {
+            GenericValue ul = (GenericValue) result.get("userLogin");
+            if (ul == null) {
                 throw new UserLoginFailure("UserLogin return was not valid (null)");
             }
+            return ul;
         }
+    }
+
+    public boolean hasRole(GenericValue userLogin, String roleTypeId) {
+        if (userLogin == null || roleTypeId == null) {
+            return false;
+        }
+        String partyId = userLogin.getString("partyId");
+        GenericValue partyRole = null;
+        try {
+            partyRole = delegator.findByPrimaryKey("PartyRole", UtilMisc.toMap("partyId", partyId, "roleTypeId", roleTypeId));
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+            return false;
+        }
+
+        if (partyRole == null) {
+            return false;
+        }
+
+        return true;
     }
 
     public class UserLoginFailure extends GeneralException {
