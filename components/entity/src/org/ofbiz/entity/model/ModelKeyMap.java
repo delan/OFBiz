@@ -1,5 +1,5 @@
 /*
- * $Id: ModelKeyMap.java,v 1.2 2003/10/14 22:34:46 jonesde Exp $
+ * $Id: ModelKeyMap.java,v 1.3 2003/10/17 11:08:05 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -33,7 +33,7 @@ import org.w3c.dom.Element;
  * Generic Entity - KeyMap model class
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class ModelKeyMap {
@@ -83,16 +83,16 @@ public class ModelKeyMap {
     }
     
     // ======= Some Convenience Oriented Factory Methods =======
-    public List makeKeyMapList(String fieldName1) {
+    public static List makeKeyMapList(String fieldName1) {
         return UtilMisc.toList(new ModelKeyMap(fieldName1, null));
     }
-    public List makeKeyMapList(String fieldName1, String relFieldName1) {
+    public static List makeKeyMapList(String fieldName1, String relFieldName1) {
         return UtilMisc.toList(new ModelKeyMap(fieldName1, relFieldName1));
     }
-    public List makeKeyMapList(String fieldName1, String relFieldName1, String fieldName2, String relFieldName2) {
+    public static List makeKeyMapList(String fieldName1, String relFieldName1, String fieldName2, String relFieldName2) {
         return UtilMisc.toList(new ModelKeyMap(fieldName1, relFieldName1), new ModelKeyMap(fieldName2, relFieldName2));
     }
-    public List makeKeyMapList(String fieldName1, String relFieldName1, String fieldName2, String relFieldName2, String fieldName3, String relFieldName3) {
+    public static List makeKeyMapList(String fieldName1, String relFieldName1, String fieldName2, String relFieldName2, String fieldName3, String relFieldName3) {
         return UtilMisc.toList(new ModelKeyMap(fieldName1, relFieldName1), new ModelKeyMap(fieldName2, relFieldName2), new ModelKeyMap(fieldName3, relFieldName3));
     }
 }
