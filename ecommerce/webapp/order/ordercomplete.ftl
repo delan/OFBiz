@@ -31,6 +31,16 @@
   <#include "/order/orderheader.ftl">
   <br>
   <#include "/order/orderitems.ftl">
+  <table border="0" cellpadding="1" width="100%">
+   <tr>
+      <td colspan="4" align="left">
+        <a href="<@ofbizUrl>/main</@ofbizUrl>" class="buttontextbig">[Continue&nbsp;Shopping]</a>
+      </td>
+      <td align="right">
+        <a href="<@ofbizUrl>/main</@ofbizUrl>" class="buttontextbig">[Continue&nbsp;Shopping]&nbsp;</a>
+      </td>
+    </tr>
+  </table>    
 <#else>
   <h3>The specified order was not found, please try again.</h3>
 </#if>
