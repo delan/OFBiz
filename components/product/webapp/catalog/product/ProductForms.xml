@@ -280,7 +280,7 @@
             default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
         <auto-fields-entity entity-name="ProductContent"/>
         <field name="productId" title="${uiLabelMap.ProductProductId}" map-name="product"><hidden/></field>
-         <field name="contentId" title="${uiLabelMap.ProductContentId}" ></field>
+        <field name="contentId" title="${uiLabelMap.ProductContentId}" ></field>
         <field name="productContentTypeId" title="${uiLabelMap.ProductProductContentTypeId}" widget-style="selectBox">
             <drop-down>
                 <entity-options entity-name="ProductContentType" description="${description}">
@@ -288,13 +288,20 @@
                 </entity-options>
             </drop-down>
         </field>
-         <field name="fromDate" title="${uiLabelMap.CommonFromDate}" ></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFromDate}" ></field>
         <field name="thruDate" title="${uiLabelMap.CommonThruDate}"></field>
         <field name="purchaseFromDate" title="${uiLabelMap.ProductPurchaseFromDate}"></field>
         <field name="purchaseThruDate" title="${uiLabelMap.ProductPurchaseThruDate}"></field>
         <field name="useCountLimit" title="${uiLabelMap.ProductUseCountLimit}"></field>
         <field name="useTime" title="Use Time"></field>
-        <field name="useTimeUomId" title="Use Time Uom"></field>
+        <field name="useTimeUomId" title="Use Time Uom" widget-style="selectBox">
+            <drop-down>
+                <entity-options entity-name="Uom" description="${description}">
+                    <entity-constraint name="uomTypeId" value="TIME_FREQ_MEASURE"/>
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
         <field name="useRoleTypeId" title="Use Role"></field>
         <field name="submitButton" title="${uiLabelMap.CommonAdd}" widget-style="standardSubmit"><submit button-type="button"/></field>
     </form>
