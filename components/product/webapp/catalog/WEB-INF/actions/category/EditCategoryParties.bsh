@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones
  *@author     Brad Steiner
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      2.2
  */
 
@@ -40,27 +40,22 @@ if(security.hasEntityPermission("CATALOG", "_VIEW", session)) {
 } else {
     context.put("hasPermission", Boolean.FALSE);
 }
-Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
+
+nowTimestamp = UtilDateTime.nowTimestamp();
+nowTimestampString = nowTimestamp.toString();
+
+productCategoryId = request.getParameter("productCategoryId");
+productCategory = delegator.findByPrimaryKey("ProductCategory", UtilMisc.toMap("productCategoryId", productCategoryId));
+
+productCategoryRoles = null;
+if (productCategory != null) {
+    productCategoryRoles = productCategory.getRelated("ProductCategoryRole", null, UtilMisc.toList("roleTypeId", "sequenceNum", "partyId"));
+}
+roleTypes = delegator.findAll("RoleType", UtilMisc.toList("description"));
+
 context.put("nowTimestamp", nowTimestamp);
-
-String nowTimestampString = nowTimestamp.toString();
 context.put("nowTimestampString", nowTimestampString);
-
-boolean tryEntity = true;
-if (request.getAttribute("_ERROR_MESSAGE_") != null) tryEntity = false;
-
-String productCategoryId = request.getParameter("productCategoryId");
-if (productCategoryId != null) context.put("productCategoryId", productCategoryId);
-
-GenericValue productCategory = delegator.findByPrimaryKey("ProductCategory", UtilMisc.toMap("productCategoryId", productCategoryId));
-if (productCategory != null) context.put("productCategory", productCategory);
-
-if (productCategory == null) tryEntity = false;
-Collection productCategoryRoles = productCategory.getRelated("ProductCategoryRole", null, UtilMisc.toList("roleTypeId", "sequenceNum", "partyId"));
-if (productCategoryRoles != null) context.put("productCategoryRoles", productCategoryRoles);
-
-Collection roleTypes = delegator.findAll("RoleType", UtilMisc.toList("description"));
-if (roleTypes != null) context.put("roleTypes", roleTypes);
-
-if ("true".equalsIgnoreCase((String)request.getParameter("tryEntity"))) tryEntity = true;
-context.put("tryEntity", tryEntity);
+context.put("productCategoryId", productCategoryId);
+context.put("productCategory", productCategory);
+context.put("productCategoryRoles", productCategoryRoles);
+context.put("roleTypes", roleTypes);

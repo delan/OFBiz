@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones
  *@author     Brad Steiner
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      2.2
  */
 
@@ -39,35 +39,19 @@ if(security.hasEntityPermission("CATALOG", "_VIEW", session)) {
     context.put("hasPermission", Boolean.FALSE);
 }
 
-tryEntity = true;
-if (request.getAttribute("_ERROR_MESSAGE_") != null) 
-    tryEntity = false;
-
 prodCatalogId = request.getParameter("prodCatalogId");
-context.put("prodCatalogId", prodCatalogId);
-
 prodCatalog = delegator.findByPrimaryKey("ProdCatalog", UtilMisc.toMap("prodCatalogId", prodCatalogId));
-context.put("prodCatalog", prodCatalog);
 
 prodCatalogCategories = null;
-    
-if (prodCatalog == null) {
-    tryEntity = false;
-} else {
+if (prodCatalog != null) {
     prodCatalogCategories = prodCatalog.getRelated("ProdCatalogCategory", null, UtilMisc.toList("prodCatalogCategoryTypeId", "sequenceNum", "productCategoryId"));
-    if (prodCatalogCategories != null) 
-        context.put("prodCatalogCategories", prodCatalogCategories);
 }
 
 productCategories = delegator.findAll("ProductCategory", UtilMisc.toList("description"));
-if (productCategories != null) 
-    context.put("productCategories", productCategories);
-
 prodCatalogCategoryTypes = delegator.findAll("ProdCatalogCategoryType", UtilMisc.toList("description"));
 
-if (prodCatalogCategoryTypes != null) 
-    context.put("prodCatalogCategoryTypes", prodCatalogCategoryTypes);
-
-if ("true".equalsIgnoreCase((String)request.getParameter("tryEntity"))) 
-    tryEntity = true;
-
+context.put("prodCatalogId", prodCatalogId);
+context.put("prodCatalog", prodCatalog);
+context.put("prodCatalogCategories", prodCatalogCategories);
+context.put("productCategories", productCategories);
+context.put("prodCatalogCategoryTypes", prodCatalogCategoryTypes);

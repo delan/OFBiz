@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones
  *@author     Brad Steiner
- *@version    $Revision: 1.4 $
+ *@version    $Revision: 1.5 $
  *@since      2.2
  */
 
@@ -42,33 +42,32 @@ if(security.hasEntityPermission("CATALOG", "_VIEW", session)) {
     context.put("hasPermission", Boolean.FALSE);
 }    
 
-String nowTimestampString = UtilDateTime.nowTimestamp().toString();
-context.put("nowTimestampString", nowTimestampString);
+nowTimestamp = UtilDateTime.nowTimestamp();
+nowTimestampString = nowTimestamp.toString();
 
 //default this to true, ie only show active
 boolean activeOnly = !"false".equals(request.getParameter("activeOnly"));
-context.put("activeOnly", activeOnly);
 
-boolean useValues = true;
-if (request.getAttribute("_ERROR_MESSAGE_") != null) useValues = false;
+productCategoryId = request.getParameter("productCategoryId");
+productCategory = delegator.findByPrimaryKey("ProductCategory", UtilMisc.toMap("productCategoryId", productCategoryId));
 
-String productCategoryId = request.getParameter("productCategoryId");
-context.put("productCategoryId", productCategoryId);
-
-GenericValue productCategory = delegator.findByPrimaryKey("ProductCategory", UtilMisc.toMap("productCategoryId", productCategoryId));
-if (productCategory == null) useValues = false; else context.put("productCategory", productCategory);
-
-List productCategoryMembers = productCategory.getRelated("ProductCategoryMember", null, UtilMisc.toList("sequenceNum", "productId"));
+productCategoryMembers = null;
+if (productCategory != null) {
+    productCategoryMembers = productCategory.getRelated("ProductCategoryMember", null, UtilMisc.toList("sequenceNum", "productId"));
+}
 if (activeOnly) {
     productCategoryMembers = EntityUtil.filterByDate(productCategoryMembers, true);
 }
-if (productCategoryMembers != null) context.put("productCategoryMembers", productCategoryMembers);
 
-List productCategories = delegator.findAll("ProductCategory", UtilMisc.toList("description"));
-if (productCategories != null) context.put("productCategories", productCategories);
+productCategories = delegator.findAll("ProductCategory", UtilMisc.toList("description"));
 
-if ("true".equalsIgnoreCase((String)request.getParameter("useValues"))) useValues = true;
-context.put("useValues", useValues);
+context.put("nowTimestamp", nowTimestamp);
+context.put("nowTimestampString", nowTimestampString);
+context.put("activeOnly", activeOnly);
+context.put("productCategoryId", productCategoryId);
+context.put("productCategory", productCategory);
+context.put("productCategoryMembers", productCategoryMembers);
+context.put("productCategories", productCategories);
 
 int viewIndex = 0;
 int viewSize = 20;
@@ -81,19 +80,16 @@ try {
 } catch (Exception e) {
     viewIndex = 0;
 }
-context.put("viewIndex", viewIndex);
 
 try {
     viewSize = Integer.valueOf((String) context.getRequest().getParameter("VIEW_SIZE")).intValue();
 } catch (Exception e) {
     viewSize = 20;
 }
-context.put("viewSize", viewSize);
 
 if (productCategoryMembers != null) {
     listSize = productCategoryMembers.size();
 }
-context.put("listSize", listSize);
 
 lowIndex = viewIndex * viewSize;
 highIndex = (viewIndex + 1) * viewSize;
@@ -104,5 +100,9 @@ if (listSize < highIndex) {
         highIndex = 0;
     }
 } 
+
+context.put("viewIndex", viewIndex);
+context.put("viewSize", viewSize);
+context.put("listSize", listSize);
 context.put("lowIndex", lowIndex);
 context.put("highIndex", highIndex);
