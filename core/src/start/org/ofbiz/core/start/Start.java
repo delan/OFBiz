@@ -68,7 +68,8 @@ public class Start implements Runnable {
     public void run() {        
         while(serverRunning) {
             try {            
-            Socket clientSocket = serverSocket.accept();            
+            Socket clientSocket = serverSocket.accept(); 
+            System.out.println("Received connection from - " + clientSocket.getInetAddress() + " : " + clientSocket.getPort());          
             processClientRequest(clientSocket);
             clientSocket.close();                      
             } catch (IOException e) {
