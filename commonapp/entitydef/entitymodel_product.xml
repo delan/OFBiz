@@ -1737,9 +1737,15 @@
       <relation type="one" fk-name="FACILITY_GP_TYPE" rel-entity-name="FacilityGroupType">
         <key-map field-name="facilityGroupTypeId"/>
       </relation>
-      <relation type="one" fk-name="FACILITY_GP_PGRP" rel-entity-name="FacilityGroup">
+      <relation type="one" fk-name="FACILITY_GP_PGRP" title="PrimaryParent" rel-entity-name="FacilityGroup">
         <key-map field-name="primaryParentGroupId" rel-field-name="facilityGroupId"/>
       </relation>
+      <relation type="many" title="Current" rel-entity-name="FacilityGroupRollup">
+        <key-map field-name="facilityGroupId"/>
+      </relation>
+      <relation type="many" title="Parent" rel-entity-name="FacilityGroupRollup">
+        <key-map field-name="facilityGroupId" rel-field-name="parentFacilityGroupId"/>
+      </relation>      
     </entity>
     <entity entity-name="FacilityGroupMember"
             package-name="org.ofbiz.commonapp.product.storage"
