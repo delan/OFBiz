@@ -528,7 +528,7 @@ public class SqlJdbcUtil {
                 // this is only an info level message because under normal operation for most JDBC 
                 // drivers this will be okay, but if not then the JDBC driver will throw an exception
                 // and when lower debug levels are on this should help give more info on what happened
-                if (Debug.infoOn()) Debug.logInfo("type of field " + entityName + "." + modelField.getName() +
+                if (Debug.verboseOn()) Debug.logVerbose("type of field " + entityName + "." + modelField.getName() +
                         " is " + fieldClassName + ", was expecting " + mft.getJavaType() + "; this may " +
                         "indicate an error in the configuration or in the class, and may result " +
                         "in an SQL-Java data conversion error. Will use the real field type: " +
