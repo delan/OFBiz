@@ -132,7 +132,11 @@ public class ShoppingCartItem implements java.io.Serializable {
     /** Returns the base price. */
     public double getBasePrice() {
         // todo calculate the price using price component.
-        return product.getDouble("defaultPrice").doubleValue();
+        Double defaultPrice = product.getDouble("defaultPrice");
+        if (defaultPrice != null)
+            return defaultPrice.doubleValue();
+        else
+            return 0.0;
     }
     
     /** Returns the discount dollar amount. */
