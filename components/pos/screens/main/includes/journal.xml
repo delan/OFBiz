@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<XPage class="org.ofbiz.pos.screen.Journal">
+    <Components>
+        <Panel name="infopan" x="0" y="0" w="412" h="55" border="1" style="panel">
+            <!--<Include file="main/posinfo"/>-->
+        </Panel>
+        <Panel name="tpan" x="0" y="55" w="412" h="637">
+            <Table name="jtable" x="2" y="2" w="410" h="625" style="journal"/>
+        </Panel>
+    </Components>    
+</XPage>
