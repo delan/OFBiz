@@ -49,6 +49,10 @@
 	    <response name="success" type="view" value="error"/>
 	</request-map>
 	
+	<request-map uri="yahoo">
+	    <response name="success" type="url" value="http://www.yahoo.com"/>
+	</request-map>
+	
     <request-map uri="view">
         <security https="false" auth="false"/>
         <response name="success" type="view" value="main"/>
