@@ -26,7 +26,6 @@
  *@since      2.1
 -->
 
-${pages.get("/includes/envsetup.ftl")}
 <#assign layoutSettings = requestAttributes.layoutSettings>
 <html>
 <head>
@@ -71,12 +70,12 @@ ${pages.get("/includes/appbar.ftl")}
     <div style='border: 0; margin: 0; padding: 0; width: 100%;'>
       <table style='border: 0; margin: 0; padding: 0; width: 100%;' cellpadding='0' cellspacing='0'>
         <tr>
-          <#--${pages.get("/includes/leftbar.ftl")}-->
+          <#if page.leftbar?exists>${pages.get(page.leftbar)}</#if>
           <td width='100%' valign='top' align='left'>
             ${pages.get("/includes/errormsg.ftl")}
             ${pages.get(page.path)}
           </td>
-          <#--${pages.get("/includes/leftbar.ftl")}-->
+          <#if page.rightbar?exists>${pages.get(page.rightbar)}</#if>
         </tr>
       </table>       
     </div>
