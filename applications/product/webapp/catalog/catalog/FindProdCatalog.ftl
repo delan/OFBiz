@@ -25,8 +25,6 @@
  *@since      2.1
 -->
 
-<#if hasPermission>
-
 <div class="head1">${uiLabelMap.ProductProductCatalogsList}</div>
 <div><a href="<@ofbizUrl>/EditProdCatalog</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductCreateNewProdCatalog}]</a></div>
 <br>
@@ -48,7 +46,3 @@
 </#list>
 </table>
 <br>
-
-<#else>
-  <h3>${uiLabelMap.ProductCatalogViewPermissionError}</h3>
-</#if>
