@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2001/08/16 01:24:19  azeneski
+ * Updated property tags to use the EntityValue by default.
+ *
  * Revision 1.1  2001/08/05 00:48:47  azeneski
  * Added new core JSP tag library. Non-application specific taglibs.
  *
@@ -51,7 +54,7 @@ public class ObjectTEI extends TagExtraInfo {
         if ( className == null )
             className = "org.ofbiz.core.entity.GenericValue";
         
-	VariableInfo info = new VariableInfo(name, className, true, VariableInfo.NESTED);
+	VariableInfo info = new VariableInfo(name, className, true, VariableInfo.AT_BEGIN);
 	VariableInfo[] result = { info };
 	return result;
     }
