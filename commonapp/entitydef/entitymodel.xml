@@ -24,7 +24,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author David E. Jones (jonesde@ofbiz.org)
- *@created    Wed Sep 12 14:36:36 MDT 2001
+ *@created    Thu Sep 13 10:33:04 MDT 2001
  *@version    1.0
  */
 -->
@@ -1071,6 +1071,21 @@
         <rel-table-name>ORDER_HEADER</rel-table-name>
         <key-map><col-name>BILLING_ACCOUNT_ID</col-name></key-map>
       </relation>
+      <relation>
+        <type>many</type>
+        <rel-table-name>BILLING_ACCOUNT_ROLE</rel-table-name>
+        <key-map><col-name>BILLING_ACCOUNT_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>many</type>
+        <rel-table-name>INVOICE</rel-table-name>
+        <key-map><col-name>BILLING_ACCOUNT_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>many</type>
+        <rel-table-name>PAYMENT_APPLICATION</rel-table-name>
+        <key-map><col-name>BILLING_ACCOUNT_ID</col-name></key-map>
+      </relation>
     </entity>	
     <entity>
       <title>Billing Account Role Entity</title>
@@ -1084,6 +1099,21 @@
       <prim-key-col>BILLING_ACCOUNT_ID</prim-key-col>	
       <prim-key-col>PARTY_ID</prim-key-col>	
       <prim-key-col>ROLE_TYPE_ID</prim-key-col>
+      <relation>
+        <type>one</type>
+        <rel-table-name>BILLING_ACCOUNT</rel-table-name>
+        <key-map><col-name>BILLING_ACCOUNT_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>one</type>
+        <rel-table-name>PARTY</rel-table-name>
+        <key-map><col-name>PARTY_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>one</type>
+        <rel-table-name>ROLE_TYPE</rel-table-name>
+        <key-map><col-name>ROLE_TYPE_ID</col-name></key-map>
+      </relation>
     </entity>	
     <entity>
       <title>Deduction Entity</title>
