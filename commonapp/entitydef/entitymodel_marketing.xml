@@ -192,6 +192,8 @@
       <field name="billableLifetime" type="numeric"></field>
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
+      <field name="groupId" type="id"></field>
+      <field name="subgroupId" type="id"></field>
       <field name="createdDate" type="date-time"></field>
       <field name="createdByUserLogin" type="id-vlong"></field>
       <field name="lastModifiedDate" type="date-time"></field>
@@ -204,24 +206,11 @@
         <key-map field-name="trackingCodeTypeId"/>
       </relation>
     </entity>
-    <entity entity-name="TrackingCodeApplType"
-            package-name="org.ofbiz.commonapp.marketing.tracking"
-            title="Tracking Code Application Type Entity">
-      <field name="trackingCodeApplTypeId" type="id-ne"></field>
-      <field name="description" type="description"></field>
-      <prim-key field="trackingCodeApplTypeId"/>
-      <relation type="many" rel-entity-name="TrackingCodeOrder">
-        <key-map field-name="trackingCodeApplTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="TrackingCodeVisit">
-        <key-map field-name="trackingCodeApplTypeId"/>
-      </relation>
-    </entity>
     <entity entity-name="TrackingCodeOrder"
             package-name="org.ofbiz.commonapp.marketing.tracking"
             title="Tracking Code Visit Entity">
       <field name="orderId" type="id-ne"></field>
-      <field name="trackingCodeApplTypeId" type="id-ne"></field>
+      <field name="trackingCodeTypeId" type="id-ne"></field>
       <field name="trackingCodeId" type="id-ne"></field>
       <prim-key field="orderId"/>
       <prim-key field="trackingCodeApplTypeId"/>
@@ -231,8 +220,8 @@
       <relation type="one" fk-name="TKNG_CODODR_TKCD" rel-entity-name="TrackingCode">
         <key-map field-name="trackingCodeId"/>
       </relation>
-      <relation type="one" fk-name="TKNG_CODODR_APTP" rel-entity-name="TrackingCodeApplType">
-        <key-map field-name="trackingCodeApplTypeId"/>
+      <relation type="one" fk-name="TKNG_CODODR_TYP" rel-entity-name="TrackingCodeType">
+        <key-map field-name="trackingCodeTypeId"/>
       </relation>
     </entity>
     <entity entity-name="TrackingCodeType"
@@ -251,7 +240,6 @@
       <field name="trackingCodeId" type="id-ne"></field>
       <field name="visitId" type="id-ne"></field>
       <field name="fromDate" type="date-time"></field>
-      <field name="trackingCodeApplTypeId" type="id-ne"></field>
       <prim-key field="trackingCodeId"/>
       <prim-key field="visitId"/>
       <prim-key field="fromDate"/>
@@ -260,9 +248,6 @@
       </relation>
       <relation type="one" fk-name="TKNG_CODVST_VST" rel-entity-name="Visit">
         <key-map field-name="visitId"/>
-      </relation>
-      <relation type="one" fk-name="TKNG_CODVST_APTP" rel-entity-name="TrackingCodeApplType">
-        <key-map field-name="trackingCodeApplTypeId"/>
       </relation>
     </entity>
 </entitymodel>

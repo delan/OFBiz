@@ -687,8 +687,8 @@
   <TermType description="Exclusive Relationship" hasTable="N" parentTypeId="" termTypeId="EXCLUSIVE_RELATIONSH"/>
   <TermType description="Other" hasTable="N" parentTypeId="" termTypeId="OTHER_TERM"/>
 
-  <TrackingCodeApplType trackingCodeApplTypeId="INTERNAL" description="Internal"/>
-  <TrackingCodeApplType trackingCodeApplTypeId="EXTERNAL" description="External"/>
+  <TrackingCodeType trackingCodeApplTypeId="INTERNAL" description="Internal"/>
+  <TrackingCodeType trackingCodeApplTypeId="EXTERNAL" description="External"/>
 
   <UomType description="Currency" hasTable="N" parentTypeId="" uomTypeId="CURRENCY_MEASURE"/>
   <UomType description="Time/Frequency" hasTable="N" parentTypeId="" uomTypeId="TIME_FREQ_MEASURE"/>

@@ -338,7 +338,6 @@
   <!-- ========================================================= -->
 	
     <entity-group group="org.ofbiz.commonapp" entity="TrackingCode" />	
-    <entity-group group="org.ofbiz.commonapp" entity="TrackingCodeApplType" />	
     <entity-group group="org.ofbiz.commonapp" entity="TrackingCodeOrder" />	
     <entity-group group="org.ofbiz.commonapp" entity="TrackingCodeType" />	
     <entity-group group="org.ofbiz.commonapp" entity="TrackingCodeVisit" />
