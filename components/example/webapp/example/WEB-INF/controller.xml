@@ -13,8 +13,8 @@
     <handler name="simple" type="request" class="org.ofbiz.content.webapp.event.SimpleEventHandler"/>
 
     <!-- view handlers -->
-    <handler name="jpublish" type="view" class="org.ofbiz.content.webapp.event.JPublishViewHandler"/>
-    <handler name="region" type="view" class="org.ofbiz.content.webapp.event.RegionViewHandler"/>    
+    <handler name="jpublish" type="view" class="org.ofbiz.content.webapp.view.JPublishViewHandler"/>
+    <handler name="region" type="view" class="org.ofbiz.content.webapp.view.RegionViewHandler"/>    
 
     <handler name="ftl" type="view" class="org.ofbiz.content.webapp.ftl.FreeMarkerViewHandler"/>
     <handler name="velocity" type="view" class="org.ofbiz.content.webapp.view.VelocityViewHandler"/>
