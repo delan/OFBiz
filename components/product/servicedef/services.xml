@@ -1315,12 +1315,14 @@
         <description>Create ProductStorePaymentSetting</description>
         <auto-attributes include="all" mode="IN" optional="false"/>
         <override name="paymentPropertiesPath" optional="true"/>
+        <override name="paymentService" optional="true"/>
     </service>
     <service name="updateProductStorePaymentSetting" default-entity-name="ProductStorePaymentSetting" engine="simple"
             location="org/ofbiz/product/store/ProductStoreServices.xml" invoke="updateProductStorePaymentSetting" auth="true">
         <description>Update ProductStorePaymentSetting</description>
         <auto-attributes include="all" mode="IN" optional="false"/>
         <override name="paymentPropertiesPath" optional="true"/>
+        <override name="paymentService" optional="true"/>
     </service>
     <service name="deleteProductStorePaymentSetting" default-entity-name="ProductStorePaymentSetting" engine="simple"
             location="org/ofbiz/product/store/ProductStoreServices.xml" invoke="deleteProductStorePaymentSetting" auth="true">
@@ -1479,6 +1481,19 @@
         <description>Delete a Product Store Keyword Override</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+
+    <!-- Product Store Survey Appl Services -->
+    <service name="createProductStoreSurveyAppl" default-entity-name="ProductStoreSurveyAppl" engine="simple"
+            location="org/ofbiz/product/store/ProductStoreServices.xml" invoke="createProductStoreSurveyAppl" auth="true">
+        <description>Create a Product Store Survey Appl</description>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="OUT" optional="false"/>
+    </service>
+    <service name="deleteProductStoreSurveyAppl" default-entity-name="ProductStoreSurveyAppl" engine="simple"
+            location="org/ofbiz/product/store/ProductStoreServices.xml" invoke="removeProductStoreSurveyAppl" auth="true">
+        <description>Delete a Product Store Survey Appl</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
 
     <!-- Product content services -->

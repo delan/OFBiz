@@ -23,7 +23,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      2.2
 -->
 
@@ -290,5 +290,40 @@
         <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
         <find-by-primary-key map-name="lookupPKMap" value-name="lookedUpValue"/>
         <remove-value value-name="lookedUpValue"/>
+    </simple-method>
+
+    <!-- Product Store Survey Appl Services -->
+    <simple-method method-name="createProductStoreSurveyAppl" short-description="Create ProductStoreSurveyAppl">
+        <check-permission permission="CATALOG" action="_CREATE"><fail-message message="Security Error: to run createProductStoreSurveyAppl you must have the CATALOG_CREATE or CATALOG_ADMIN permission"/></check-permission>
+        <check-errors/>
+
+        <make-value value-name="newEntity" entity-name="ProductStoreSurveyAppl"/>
+        <sequenced-id-to-env sequence-name="ProductStoreSurveyAppl" env-name="productStoreSurveyId"/>
+        <to-string field-name="productStoreSurveyId"/>
+        <env-to-field env-name="productStoreSurveyId" map-name="newEntity"/>
+        <field-to-result field-name="productStoreSurveyId" result-name="productStoreSurveyId"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+
+        <if-empty field-name="fromDate" map-name="newEntity">
+            <now-timestamp-to-env env-name="nowTimestamp"/>
+            <env-to-field env-name="nowTimestamp" field-name="fromDate" map-name="newEntity"/>
+        </if-empty>
+
+        <create-value value-name="newEntity"/>
+    </simple-method>
+    <simple-method method-name="removeProductStoreSurveyAppl" short-description="Remove ProductStoreSurveyAppl">
+        <check-permission permission="CATALOG" action="_DELETE"><fail-message message="Security Error: to run removeProductStoreSurveyAppl you must have the CATALOG_DELETE or CATALOG_ADMIN permission"/></check-permission>
+        <check-errors/>
+
+        <make-value value-name="lookupPKMap" entity-name="ProductStoreSurveyAppl"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
+        <find-by-primary-key map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
+
+        <if-empty field-name="thruDate" map-name="lookedUpValue">
+            <now-timestamp-to-env env-name="nowTimestamp"/>
+            <env-to-field env-name="nowTimestamp" field-name="thruDate" map-name="lookedUpValue"/>
+        </if-empty>
+        <store-value value-name="lookedUpValue"/>
     </simple-method>
 </simple-methods>

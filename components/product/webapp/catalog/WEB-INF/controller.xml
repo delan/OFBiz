@@ -1248,6 +1248,22 @@
         <response name="error" type="view" value="EditProductStoreShipSetup"/>
     </request-map>
 
+    <!-- ================ ProductStore Survey Requests ================= -->
+    <request-map uri="EditProductStoreSurveys">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditProductStoreSurveys"/>
+    </request-map>
+    <request-map uri="createProductStoreSurveyAppl">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createProductStoreSurveyAppl"/>
+        <response name="success" type="view" value="EditProductStoreSurveys"/>
+    </request-map>
+    <request-map uri="deleteProductStoreSurveyAppl">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteProductStoreSurveyAppl"/>
+        <response name="success" type="view" value="EditProductStoreSurveys"/>
+    </request-map>
+
     <!-- ================ ProductStore Promos Requests ================= -->
     <request-map uri="EditProductStorePromos">
         <security https="true" auth="true"/>
@@ -1433,6 +1449,7 @@
     <view-map name="EditProductStorePromos" type="jpublish" page="/store/EditProductStorePromos.ftl"/>
     <view-map name="EditProductStoreCatalogs" type="jpublish" page="/store/EditProductStoreCatalogs.ftl"/>
     <view-map name="EditProductStoreShipSetup" type="jpublish" page="/store/EditProductStoreShipSetup.ftl"/>
+    <view-map name="EditProductStoreSurveys" type="jpublish" page="/store/EditProductStoreSurveys.ftl"/>
     <view-map name="EditProductStoreTaxSetup" type="jpublish" page="/store/EditProductStoreTaxSetup.ftl"/>
     <view-map name="EditProductStorePaySetup" type="jpublish" page="/store/EditProductStorePaySetup.ftl"/>
     <view-map name="EditProductStoreWebSites" type="jpublish" page="/store/EditProductStoreWebSites.ftl"/>
