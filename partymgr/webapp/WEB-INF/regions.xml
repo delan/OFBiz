@@ -83,6 +83,11 @@
         <put section='content' content='/party/createnewlogin.jsp'/>
     </define>
 
+    <define id='createnewnote' region='MAIN_REGION'>
+        <put section='title'>Create Note</put>
+        <put section='content' content='/party/newnote.jsp'/>
+    </define>
+
     <define id='FindSecurityGroup' region='MAIN_REGION'>
         <put section='title'>Find SecurityGroup</put>
         <put section='content' content='/security/FindSecurityGroup.jsp'/>

@@ -53,7 +53,8 @@
 
 <%ContactMechWorker.getPartyPostalAddresses(pageContext, partyId, (String) pageContext.getAttribute("curContactMechId"), "postalAddressInfos");%>
 
-<%if (!security.hasEntityPermission("PAY_INFO", "_VIEW", session) && pageContext.getAttribute("creditCard") != null && pageContext.getAttribute("paymentMethod") != null && 
+<br>
+<%if (!security.hasEntityPermission("PAY_INFO", "_VIEW", session) && pageContext.getAttribute("creditCard") != null && pageContext.getAttribute("paymentMethod") != null &&
       !userLogin.getString("partyId").equals(((GenericValue) pageContext.getAttribute("paymentMethod")).getString("partyId"))) {%>
   <p><h3>The credit card specified does not belong to you, you may not view or edit it.</h3></p>
 &nbsp;<a href='<ofbiz:url>/authview/<ofbiz:print attribute="donePage"/></ofbiz:url>' class="buttontext">[Back]</a>

@@ -64,6 +64,7 @@
     pageContext.setAttribute("donePage", donePage);
 %>
 
+<br>
 <ofbiz:unless name="person">
   <p class="head1">Add New Personal Information</p>
     <FORM method=POST action='<ofbiz:url>/createPerson/<ofbiz:print attribute="donePage"/></ofbiz:url>' name="editpersonform">

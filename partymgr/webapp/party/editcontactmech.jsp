@@ -47,6 +47,7 @@
 <%ContactMechWorker.getContactMechAndRelated(pageContext, partyId, "contactMech", "contactMechId", "partyContactMech", "partyContactMechPurposes",
     "contactMechTypeId", "contactMechType", "purposeTypes", "postalAddress", "telecomNumber", "requestName", "donePage", "tryEntity", "contactMechTypes");%>
 
+<br>
 <%if (!security.hasEntityPermission("PARTYMGR", "_VIEW", session) && pageContext.getAttribute("partyContactMech") == null && pageContext.getAttribute("contactMech") != null){%>
   <p><h3>The contact information specified does not belong to you, you may not view or edit it.</h3></p>
   &nbsp;<a href="<ofbiz:url>/authview/"<ofbiz:print attribute="donePage"/></ofbiz:url>" class="buttontext">[Back]</a>

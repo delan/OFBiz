@@ -21,42 +21,25 @@
     if(donePage == null || donePage.length() <= 0) donePage="viewprofile";
 %>
   <br>
-  <p class="head1">Create UserLogin</p>
+  <p class="head1">Add Note</p>
 
     &nbsp;<a href="<ofbiz:url>/authview/<%=donePage%></ofbiz:url>" class="buttontext">[Go&nbsp;Back]</a>
-    &nbsp;<a href="javascript:document.changepasswordform.submit()" class="buttontext">[Save]</a>
+    &nbsp;<a href="javascript:document.createnoteform.submit()" class="buttontext">[Save]</a>
 
-  <form method="post" action="<ofbiz:url>/createuserlogin/<%=donePage%></ofbiz:url>" name="createloginform">
+  <form method="post" action="<ofbiz:url>/createpartynote/<%=donePage%></ofbiz:url>" name="createnoteform">
   <input type="hidden" name="partyId" value="<%=partyId%>">
   <table width="90%" border="0" cellpadding="2" cellspacing="0">
     <tr>
-      <td width="26%" align=right><div class="tabletext">UserLogin ID</div></td>
+      <td width="26%" align=right><div class="tabletext">Note</div></td>
       <td width="74%">
-        <input type="text" name="userLoginId" size="20">
+        <textarea name="note" rows="5" cols="70"></textarea>
       *</td>
-    <tr>
-      <td width="26%" align=right><div class="tabletext">New Password</div></td>
-      <td width="74%">
-        <input type="password" name="currentPassword" size="20" maxlength="20">
-      *</td>
-    </tr>
-    <tr>
-      <td width="26%" align=right><div class="tabletext">New Password Verify</div></td>
-      <td width="74%">
-        <input type="password" name="currentPasswordVerify" size="20" maxlength="20">
-      *</td>
-    </tr>
-    <tr>
-      <td width="26%" align=right><div class="tabletext">Password Hint</div></td>
-      <td width="74%">
-        <input type="text" size="40" maxlength="100" <ofbiz:inputvalue field="passwordHint" entityAttr="userLogin" tryEntityAttr="tryEntity" fullattrs="true"/>>
-      </td>
     </tr>
   </table>
   </form>
 
     &nbsp;<a href="<ofbiz:url>/authview/<%=donePage%></ofbiz:url>" class="buttontext">[Go&nbsp;Back]</a>
-    &nbsp;<a href="javascript:document.createloginform.submit()" class="buttontext">[Save]</a>
+    &nbsp;<a href="javascript:document.createnoteform.submit()" class="buttontext">[Save]</a>
 <%}else{%>
   <h3>You do not have permission to view this page. ("PARTYMGR_VIEW" or "PARTYMGR_ADMIN" needed)</h3>
 <%}%>

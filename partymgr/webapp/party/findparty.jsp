@@ -105,7 +105,8 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <tr>
           <td width="15%"><div class="head3">PartyID</div></td>
-          <td width="40%"><div class="head3">Name</div></td>
+          <td width="25%"><div class="head3">Last Name</div></td>
+          <td width="15%"><div class="head3">First Name</div></td>
           <td width="15%"><div class="head3">Type</div></td>
           <td width="30%">&nbsp;</td>
         </tr>
@@ -121,9 +122,11 @@
                 </ofbiz:service>
                 <ofbiz:unless name="person">
                   <td><div class="tabletext">&nbsp;</div></td>
+                  <td><div class="tabletext">&nbsp;</div></td>
                 </ofbiz:unless>
                 <ofbiz:if name="person">
-                  <td><div class="tabletext"><ofbiz:entityfield attribute="person" field="firstName"/> <ofbiz:entityfield attribute="person" field="lastName"/></div></td>
+                  <td><div class="tabletext"><ofbiz:entityfield attribute="person" field="lastName"/></div></td>
+                  <td><div class="tabletext"><ofbiz:entityfield attribute="person" field="firstName"/></div></td>
                 </ofbiz:if>
                 <td><div class="tabletext"><ofbiz:entityfield attribute="party" field="partyTypeId"/></div></td>
                 <td align="right">

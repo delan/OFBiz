@@ -1,8 +1,8 @@
 <%
 /**
- *  Title: Login Page
+ *  Title: View Profle Page
  *  Description: None
- *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -22,9 +22,10 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *@author     David E. Jones
- *@created    May 22 2001
- *@version    1.0
+ * @author     David E. Jones
+ * @author     Andy Zeneski
+ * @created    May 22 2001
+ * @version    1.0
  */
 %>
 
@@ -55,6 +56,9 @@
     Collection roles = delegator.findAll("RoleType", UtilMisc.toList("description", "roleTypeId"));
     if (roles != null) pageContext.setAttribute("roles", roles);
 
+    Collection notes = delegator.findByAnd("PartyNoteView", UtilMisc.toMap("targetPartyId", partyId), UtilMisc.toList("-noteDateTime"));
+    if (notes != null && notes.size() > 0) pageContext.setAttribute("notes", notes);
+
     PartyWorker.getPartyOtherValues(pageContext, partyId, "party", "person", "partyGroup");
     boolean showOld = "true".equals(request.getParameter("SHOW_OLD"));
     pageContext.setAttribute("showOld", new Boolean(showOld));
@@ -63,6 +67,7 @@
 %>
 <%EntityField entityField = new EntityField(pageContext);%>
 
+<br>
 <ofbiz:if name="party">
 <%-- Main Heading --%>
 <table width='100%' cellpadding='0' cellspacing='0' border='0'>
@@ -253,7 +258,7 @@
                   </div>
               <%}%>
               <div class="tabletext">(Updated:&nbsp;<%entityField.run("partyContactMech", "fromDate");%>)</div>
-              <%entityField.run("partyContactMech", "thruDate", "<div class='tabletext'><b>Delete:&nbsp;", "</b></div>");%>
+              <%entityField.run("partyContactMech", "thruDate", "<div class='tabletext'><b>Effective Thru:&nbsp;", "</b></div>");%>
             </td>
             <td align="center" valign="top" nowrap width="1%"><div class="tabletext"><b>(<%entityField.run("partyContactMech", "allowSolicitation");%>)</b></div></td>
             <td width="5">&nbsp;</td>
@@ -263,7 +268,7 @@
             </td>
             <td align="right" valign="top" width="1%">
               <div><a href='<ofbiz:url>/deleteContactMech/viewprofile?contactMechId=<%entityField.run("contactMech", "contactMechId");%>&partyId=<%=partyId%></ofbiz:url>' class="buttontext">
-              [Delete]</a>&nbsp;&nbsp;</div>
+              [Expire]</a>&nbsp;&nbsp;</div>
             </td>
           </tr>
       </ofbiz:iterator>
@@ -327,7 +332,7 @@
                                         <%}%>
                                       </b>
                                       (Updated:&nbsp;<%entityField.run("paymentMethod", "fromDate");%>)
-                                      <%entityField.run("paymentMethod", "thruDate", "<b>(Delete:&nbsp;", ")</b>");%>
+                                      <%entityField.run("paymentMethod", "thruDate", "<b>(Effective Thru:&nbsp;", ")</b>");%>
                                     </div>
                                   </td>
                                   <td width="5">&nbsp;</td>
@@ -344,7 +349,7 @@
                                         EFT Account: <%entityField.run("eftAccount", "nameOnAccount");%> - <%entityField.run("eftAccount", "bankName", "Bank: ", "");%> <%entityField.run("eftAccount", "accountNumber", "Account #: ", "");%>
                                       </b>
                                       (Updated:&nbsp;<%entityField.run("paymentMethod", "fromDate");%>)
-                                      <%entityField.run("paymentMethod", "thruDate", "<b>(Delete:&nbsp;", ")</b>");%>
+                                      <%entityField.run("paymentMethod", "thruDate", "<b>(Effective Thru:&nbsp;", ")</b>");%>
                                     </div>
                                   </td>
                                   <td width="5">&nbsp;</td>
@@ -358,7 +363,7 @@
                               <td align="right" valign="top" width='1%'>
                                 <%if (security.hasEntityPermission("PAY_INFO", "_DELETE", session)) {%>
                                     <div><a href='<ofbiz:url>/deletePaymentMethod/viewprofile?paymentMethodId=<%entityField.run("paymentMethod", "paymentMethodId");%></ofbiz:url>' class="buttontext">
-                                    [Delete]</a></div>
+                                    [Expire]</a></div>
                                 <%}%>
                               </td>
                             </tr>
@@ -414,7 +419,9 @@
                        try {
                            thisUL = (GenericValue) pageContext.findAttribute("userUserLogin");
                        } catch (Exception e) {}
-                       if (thisUL != null && thisUL.get("enabled") != null && thisUL.getString("enabled").equals("N")) enabled = "DISABLED";
+                       if (thisUL != null && thisUL.get("enabled") != null && thisUL.getString("enabled").equals("N")) {
+                           enabled = "DISABLED - " + thisUL.getString("disabledDateTime");
+                       }
                     %>
                     <%=enabled%>
                   </div>
@@ -471,7 +478,7 @@
                 <td width="5">&nbsp;</td>
                 <td align="left" valign="top" width="70%"><div class="tabletext"><ofbiz:entityfield attribute="userRole" field="description"/> [<ofbiz:entityfield attribute="userRole" field="roleTypeId"/>]</div></td>
                 <td align="right" valign="top" width="20%">
-                  <a href="<ofbiz:url>/deleterole?partyId=<%=partyId%>&roleTypeId=<ofbiz:entityfield attribute="userRole" field="roleTypeId"/></ofbiz:url>" class="buttontext">[Delete]</a>&nbsp;
+                  <a href="<ofbiz:url>/deleterole?partyId=<%=partyId%>&roleTypeId=<ofbiz:entityfield attribute="userRole" field="roleTypeId"/></ofbiz:url>" class="buttontext">[Remove]</a>&nbsp;
                 </td>
               </tr>
               </ofbiz:iterator>
@@ -483,6 +490,56 @@
   </TR>
 </TABLE>
 </ofbiz:if>
+
+<%-- Party Notes --%>
+<br>
+<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+  <TR>
+    <TD width='100%'>
+      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
+        <tr>
+          <td valign="middle" align="left">
+            <div class="boxhead">&nbsp;Notes</div>
+          </td>
+          <td valign="middle" align="right">&nbsp;
+            <a href="<ofbiz:url>/createnewnote</ofbiz:url>" class="lightbuttontext">[Create New]</a>&nbsp;&nbsp;
+          </td>
+        </tr>
+      </table>
+    </TD>
+  </TR>
+  <TR>
+    <TD width='100%'>
+      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
+        <tr>
+          <td>
+            <ofbiz:if name="notes">
+            <table width="100%" border="0" cellpadding="1">
+              <ofbiz:iterator name="noteRef" property="notes">
+                <tr>
+                  <td align="left" valign="top" width="35%">
+                    <div class="tabletext">&nbsp;<b>By: </b><ofbiz:entityfield attribute="noteRef" field="firstName"/>&nbsp;<ofbiz:entityfield attribute="noteRef" field="lastName"/></div>
+                    <div class="tabletext">&nbsp;<b>At: </b><ofbiz:entityfield attribute="noteRef" field="noteDateTime"/></div>
+                  </td>
+                  <td align="left" valign="top" width="65%">
+                    <div class="tabletext"><ofbiz:entityfield attribute="noteRef" field="noteInfo"/></div>
+                  </td>
+                </tr>
+                <ofbiz:iteratorHasNext>
+                  <tr><td colspan="2"><hr class="sepbar"></td></tr>
+                </ofbiz:iteratorHasNext>
+              </ofbiz:iterator>
+            </table>
+            </ofbiz:if>
+            <ofbiz:unless name="notes">
+              <div class="tabletext">&nbsp;No notes for this party.</div>
+            </ofbiz:unless>
+          </td>
+        </tr>
+      </table>
+    </TD>
+  </TR>
+</TABLE>
 
 </ofbiz:if>
 <ofbiz:unless name="party">
