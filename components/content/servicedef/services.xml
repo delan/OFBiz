@@ -184,6 +184,7 @@
         <attribute mode="IN" name="fromDate" optional="true" type="String"/>
         <attribute mode="IN" name="thruDate" optional="true" type="String"/>
         <attribute mode="IN" name="statusId" optional="true" type="String"/>
+        <attribute mode="IN" name="privilegeEnumId" optional="true" type="String"/>
         <attribute mode="IN" name="entityOperation" optional="true" type="String"/>
         <attribute mode="IN" name="contentAssocTypeId" optional="true" type="String"/>
         <attribute mode="OUT" name="permissionStatus" optional="true" type="String"/>
@@ -1108,6 +1109,7 @@
         <attribute mode="IN" name="thruDateStr" optional="true" type="String"/>
         <attribute mode="IN" name="fromDate" optional="true" type="Timestamp"/>
         <attribute mode="IN" name="thruDate" optional="true" type="Timestamp"/>
+        <attribute name="nullThruDatesOnly" type="Boolean" mode="IN" optional="true"/>
         <attribute mode="OUT" name="entityList" optional="true" type="List"/>
     </service>
 
@@ -1229,4 +1231,12 @@
         <attribute mode="IN" name="mimeTypeId" optional="true" type="String"/>
         <attribute mode="IN" name="subContentDataResourceView" optional="true" type="GenericValue"/>
     </service>
+    <service name="createTopic"
+        auth="true" engine="simple" invoke="createTopic"
+        location="org/ofbiz/content/content/ContentServices.xml" >
+        <description>Create a TOPIC type Content </description>
+        <attribute mode="IN" name="newTopicId" optional="false" type="String"/>
+        <attribute mode="IN" name="newTopicDescription" optional="true" type="String"/>
+    </service>
+
 </services>
