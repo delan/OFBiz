@@ -115,6 +115,8 @@ public class ModelFormField {
         this.attributeName = UtilXml.checkEmpty(fieldElement.getAttribute("attribute-name"), this.name);
         this.setTitle(fieldElement.getAttribute("title"));
         this.setTooltip(fieldElement.getAttribute("tooltip"));
+        this.titleAreaStyle = fieldElement.getAttribute("title-area-style");
+        this.widgetAreaStyle = fieldElement.getAttribute("widget-area-style");
         this.titleStyle = fieldElement.getAttribute("title-style");
         this.widgetStyle = fieldElement.getAttribute("widget-style");
         this.tooltipStyle = fieldElement.getAttribute("tooltip-style");
@@ -224,6 +226,11 @@ public class ModelFormField {
             this.title = overrideFormField.title;
         if (overrideFormField.tooltip != null && !overrideFormField.tooltip.isEmpty())
             this.tooltip = overrideFormField.tooltip;
+
+        if (UtilValidate.isNotEmpty(overrideFormField.titleAreaStyle))
+            this.titleAreaStyle = overrideFormField.titleAreaStyle;
+        if (UtilValidate.isNotEmpty(overrideFormField.widgetAreaStyle))
+            this.widgetAreaStyle = overrideFormField.widgetAreaStyle;
         if (UtilValidate.isNotEmpty(overrideFormField.titleStyle))
             this.titleStyle = overrideFormField.titleStyle;
         if (UtilValidate.isNotEmpty(overrideFormField.widgetStyle))
