@@ -1,5 +1,5 @@
 /*
- * $Id: XuiContainer.java,v 1.3 2004/07/10 19:55:06 ajzeneski Exp $
+ * $Id: XuiContainer.java,v 1.4 2004/07/13 16:36:28 ajzeneski Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -27,6 +27,8 @@ package org.ofbiz.content.xui;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.JFrame;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
 import net.xoetrope.swing.XApplet;
 
@@ -41,7 +43,7 @@ import org.ofbiz.entity.GenericDelegator;
 /**
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      3.1
  */
 public class XuiContainer implements Container {
@@ -79,6 +81,15 @@ public class XuiContainer implements Container {
         String xuiSessionId = ContainerConfig.getPropertyValue(cc, "xui-session-id", null);
         if (xuiSessionId == null) {
             throw new ContainerException("No xui-session-id value set in xui-container!");
+        }
+
+        String laf = ContainerConfig.getPropertyValue(cc, "look-and-feel", null);
+        if (laf != null) {
+            try {
+                UIManager.setLookAndFeel(laf);
+            } catch (Exception e) {
+                throw new ContainerException(e);
+            } 
         }
 
         // create and cache the session
