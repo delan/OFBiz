@@ -25,20 +25,24 @@
 -->
 
 <#if hasPermission>
-<table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<table border=0 width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
   <tr>
-    <td width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
+    <td width="100%">
+      <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
         <tr>
-          <td width="50%"><div class="boxhead">Delivery Schedule</div></td>
-          <td width="50%"><div class="boxhead" align=right></td>
+          <td width="50%"><div class="boxhead">Delivery Schedule Info</div></td>
+          <td width="50%"><div class="boxhead" align="right">
+            <#if orderId?exists>
+                <a href="<@ofbizUrl>/orderview?order_id=${orderId}</@ofbizUrl>" class="submenutext">[View&nbsp;Order]</a>
+            </#if>
+          </td>
         </tr>
       </table>
     </td>
   </tr>
   <tr>
     <td width="100%">
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
+      <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxbottom">
         <tr>
           <td>      
             <#if orderId?has_content>
@@ -55,5 +59,5 @@
 <br>
 
 <#else>
- <h3>You do not have permission to view this page. ("ORDERMGR_VIEW", "ORDERMGR_ADMIN" or an associated "SUPPLIER_AGENT" role needed)</h3>
+ <h3>You do not have permission to view this page. ("ORDERMGR_VIEW", "ORDERMGR_ADMIN" or associated in the "Supplier Agent" role needed)</h3>
 </#if>

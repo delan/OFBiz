@@ -115,7 +115,7 @@
                           <td align="right"><div class="tabletext">${orh.getOrderGrandTotal()?string.currency}</div></td>
                           <td width="1">&nbsp;&nbsp;</td>
                           <td align='right'>
-                            <a href="<@ofbizUrl>/schedulepo?order_id=${orderHeaderAndRole.orderId}</@ofbizUrl>" class='buttontext'>Schedule&nbsp;Delivery</a>
+                            <a href="<@ofbizUrl>/OrderDeliveryScheduleInfo?orderId=${orderHeaderAndRole.orderId}</@ofbizUrl>" class='buttontext'>Schedule&nbsp;Delivery</a>
                           </td>                       
                         </tr>
                       </#list>

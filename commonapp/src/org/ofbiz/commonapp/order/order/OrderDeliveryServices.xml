@@ -28,7 +28,7 @@
  * @since      2.2
  -->
 <simple-methods>
-    <simple-method method-name="createSchedule" short-description="Creates a new Purchase Order Schedule">
+    <simple-method method-name="createOrderDeliverySchedule" short-description="Creates a new Purchase Order Schedule">
         <!-- Verify the user is allowed to set the fields -->
         <string-to-field string="createSchedule" field-name="callingMethodName"/>
         <string-to-field string="CREATE" field-name="checkAction"/>
@@ -52,7 +52,7 @@
         
         <create-value value-name="schedule"/>
     </simple-method>
-    <simple-method method-name="updateSchedule" short-description="Updates an existing Purchase Order Schedule">
+    <simple-method method-name="updateOrderDeliverySchedule" short-description="Updates an existing Purchase Order Schedule">
         <!-- Verify the user is allowed to edit the fields -->
         <string-to-field string="updateSchedule" field-name="callingMethodName"/>
         <string-to-field string="UPDATE" field-name="checkAction"/>
@@ -77,41 +77,45 @@
         <!-- Update the actual schedule -->
         <store-value value-name="schedule"/>
     </simple-method>
+
+    <simple-method method-name="checkSupplierRelatedOrderPermissionService" short-description="Check Supplier Related Permission Service">
+        <field-to-env field-name="checkAction" map-name="parameters" env-name="checkAction"/>
+        <field-to-env field-name="callingMethodName" map-name="parameters" env-name="callingMethodName"/>
+        <call-simple-method method-name="checkSupplierRelatedPermission"/>
+        <field-to-result field-name="hasSupplierRelatedPermission"/>
+    </simple-method>
     
     <!-- Should be called in-line to use its out parameter indicating whether the user has permission or not. -->
-    <simple-method method-name="checkSupplierRelatedPermission" short-description="Check Order Related Permission">
+    <simple-method method-name="checkSupplierRelatedPermission" short-description="Check Supplier Related Permission">
     	<if-empty field-name="callingMethodName">
             <string-to-field string="this operation" field-name="callingMethodName"/>
     	</if-empty>
     	<if-empty field-name="checkAction">
             <string-to-field string="UPDATE" field-name="checkAction"/>
     	</if-empty>
+        <string-to-field field-name="hasSupplierRelatedPermission" string="false"/>
     	<if>
             <condition>
-                <not><if-has-permission permission="ORDERMGR" action="_${checkAction}"/></not>
+                <if-has-permission permission="ORDERMGR" action="_${checkAction}"/>
             </condition>
             <then>
+                <string-to-field field-name="hasSupplierRelatedPermission" string="true"/>
+            </then>
+            <else>
                 <env-to-field env-name="orderId" map-name="parameters" to-map-name="lookupOrderRoleMap"/>
                 <field-to-field field-name="partyId" map-name="userLogin" to-map-name="lookupOrderRoleMap"/>
                 <string-to-field string="SUPPLIER_AGENT" field-name="roleTypeId" map-name="lookupOrderRoleMap"/>
-                <find-by-primary-key entity-name="OrderRole" map-name="lookupOrderRoleMap" value-name="orderRole"/>
-            </then>
-            <else>
-                <string-to-field field-name="hasSupplierRelatedPermission" string="true"/>
+                <find-by-primary-key entity-name="OrderRole" map-name="lookupOrderRoleMap" value-name="permOrderRoles"/>
+                <if>
+                    <condition>
+                        <if-empty field-name="permOrderRoles"/>
+                    </condition>
+                    <then>
+                        <string-to-field field-name="hasSupplierRelatedPermission" string="false"/>
+                        <string-to-list list-name="error_list" string="ERROR: You do not have permission to ${checkAction} Delivery Schedule Information; you must be associated with this order as a Supplier Agent or have the ORDERMGR_${checkAction} permission."/>
+                    </then>
+                </if>
             </else>
-        </if>
-    	<if>
-            <condition>
-                <not>
-                    <or>
-                        <if-has-permission permission="ORDERMGR" action="_${checkAction}"/>
-                        <not><if-empty field-name="orderRole"/></not>
-                    </or>
-                </not>
-            </condition>
-            <then>
-                <string-to-list list-name="error_list" string="ERROR: You do not have permission to modify Delivery Schedule Information; you must be associated with this order as a Supplier Agent or have the ORDERMGR_${checkAction} permission."/>
-            </then>
         </if>
         <log level="info" message="hasSupplierRelatedPermission is: ${hasSupplierRelatedPermission}"/>
     </simple-method>

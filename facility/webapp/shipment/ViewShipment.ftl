@@ -139,8 +139,8 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
 	<#list itemIssuances as itemIssuance>
 		<tr>
 			<td><div class="tabletext">&nbsp;</div></td>
-			<td><div class="tabletext">OrderItem:<a href="/ordermgr/control/vieworder?order_id=${itemIssuance.orderId?if_exists}" class="buttontext">${itemIssuance.orderId?if_exists}</a>:${itemIssuance.orderItemSeqId?if_exists}</div></td>
-			<td><div class="tabletext"><a href="<@ofbizUrl>/EditInventoryItem?inventoryItemId=${itemIssuance.inventoryItemId?if_exists}</@ofbizUrl>" class="buttontext">${itemIssuance.inventoryItemId?if_exists}</a></div></td>
+			<td><div class="tabletext">OrderItem:<a href="/ordermgr/control/orderview?order_id=${itemIssuance.orderId?if_exists}&externalLoginKey=${requestAttributes.externalLoginKey}" class="buttontext">${itemIssuance.orderId?if_exists}</a>:${itemIssuance.orderItemSeqId?if_exists}</div></td>
+			<td><div class="tabletext">Inventory:<a href="<@ofbizUrl>/EditInventoryItem?inventoryItemId=${itemIssuance.inventoryItemId?if_exists}</@ofbizUrl>" class="buttontext">${itemIssuance.inventoryItemId?if_exists}</a></div></td>
 			<td><div class="tabletext">${itemIssuance.quantity?if_exists}</div></td>
 			<td><div class="tabletext">${itemIssuance.issuedDateTime?if_exists}</div></td>
 			<td><div class="tabletext">Future Party/Role List</div></td>

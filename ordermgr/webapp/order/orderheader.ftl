@@ -395,7 +395,6 @@
       <#-- end of contact box -->
       
       <#-- shipping info box -->
-      <#if shipmentPreference?has_content>
       <table border='0' width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
         <tr>
           <td width='100%'>
@@ -404,11 +403,6 @@
                 <td valign="middle" align="left">
                   <div class="boxhead">&nbsp;Shipment Information</div>
                 </td>
-                <#if maySplit?default("Y")?upper_case == "N">
-                <td valign="middle" align="right">
-                  <a href="<@ofbizUrl>/allowordersplit?orderId=${orderId}&${paramString}</@ofbizUrl>" class="submenutextright">Allow Split</a>
-                </td>
-                </#if>
               </tr>
             </table>
           </td>
@@ -419,6 +413,7 @@
               <tr>
                 <td>
                   <table width="100%" border="0" cellpadding="1" cellspacing='0'>
+                  <#if shipmentPreference?has_content>
                     <tr>
                       <td align="right" valign="top" width="15%">
                         <div class="tabletext">&nbsp;<b>Method</b></div>
@@ -442,7 +437,12 @@
                         <td width="5">&nbsp;</td>
                         <td align="left" valign="top" width="80%">
                           <div class="tabletext">                         
-                            <#if maySplit?upper_case == "N">Please wait until the entire order is ready before shipping.<#else>Please ship items I ordered as they become available (may incur additional shipping charges).</#if>
+                            <#if maySplit?upper_case == "N">
+                                Please wait until the entire order is ready before shipping.
+                                <a href="<@ofbizUrl>/allowordersplit?orderId=${orderId}&${paramString}</@ofbizUrl>" class="buttontext">[Allow&nbsp;Split]</a>
+                            <#else>
+                                Please ship items I ordered as they become available (may incur additional shipping charges).
+                            </#if>
                           </div>
                         </td>
                       </tr>
@@ -485,6 +485,23 @@
                         </td>
                       </tr>
                     </#if>
+                  </#if>     
+                  <#if allShipments?has_content>
+                      <tr><td colspan="7"><hr class='sepbar'></td></tr>
+                      <tr>
+                        <td align="right" valign="top" width="15%">
+                          <div class="tabletext">&nbsp;<b>Shipments</b></div>
+                        </td>
+                        <td width="5">&nbsp;</td>
+                        <td align="left" valign="top" width="80%">
+                            <div class="tabletext"><a href="<@ofbizUrl>/OrderDeliveryScheduleInfo?orderId=${orderId}</@ofbizUrl>" class="buttontext">View/Edit Delivery Schedule Info</a></div>
+                            <div class="tabletext"><a href="/facility/control/EditShipment?orderId=${orderId}&externalLoginKey=${requestAttributes.externalLoginKey}" class="buttontext">New Shipment</a></div>
+                            <#list allShipments as shipment>
+                                <div class="tabletext">Shipment: <a href="/facility/control/ViewShipment?shipmentId=${shipment.shipmentId}&externalLoginKey=${requestAttributes.externalLoginKey}" class="buttontext">${shipment.shipmentId}</a></div>
+                            </#list>
+                        </td>
+                      </tr>
+                  </#if>
                   </table>
                 </td>
               </tr>
@@ -492,7 +509,6 @@
           </td>
         </tr>
       </table> 
-      </#if>     
       <#-- end of shipping info box -->
     </td>
   </tr>

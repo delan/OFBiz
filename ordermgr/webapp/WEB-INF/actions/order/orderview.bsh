@@ -119,6 +119,30 @@ if (orderHeader != null) {
     
     billingAccount = orderHeader.getRelatedOne("BillingAccount");
     context.put("billingAccount", billingAccount);
+    
+    // get a list of all shipments, and a list of ItemIssuances per order item
+    allShipmentsMap = new HashMap();
+    itemIssuancesPerItem = new HashMap();
+    itemIssuances = orderHeader.getRelated("ItemIssuance", null, UtilMisc.toList("shipmentId", "shipmentItemSeqId"));
+    itemIssuanceIter = itemIssuances.iterator();
+    while (itemIssuanceIter.hasNext()) {
+        itemIssuance = itemIssuanceIter.next();
+        if (!allShipmentsMap.containsKey(itemIssuance.get("shipmentId"))) {
+            iiShipment = itemIssuance.getRelatedOne("Shipment");
+            if (iiShipment != null) {
+                allShipmentsMap.put(iiShipment.get("shipmentId"), iiShipment);
+            }
+        }
+        
+        perItemList = itemIssuancesPerItem.get(itemIssuance.get("orderItemSeqId"));
+        if (perItemList == null) {
+            perItemList = new LinkedList();
+            itemIssuancesPerItem.put(itemIssuance.get("orderItemSeqId"), perItemList);
+        }
+        perItemList.add(itemIssuance);
+    }
+    context.put("allShipments", allShipmentsMap.values());
+    context.put("itemIssuancesPerItem", itemIssuancesPerItem);
 
     orderPaymentPreferences = delegator.findByAnd("OrderPaymentPreference", UtilMisc.toList(new EntityExpr("orderId", EntityOperator.EQUALS, orderId), new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "PAYMENT_CANCELLED")));
     context.put("orderPaymentPreferences", orderPaymentPreferences);  

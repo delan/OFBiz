@@ -134,21 +134,21 @@
 	</request-map>  
 
     <!-- Purchase Order Manager Delivery Info Requests -->
-    <request-map uri="schedulepo">
+    <request-map uri="OrderDeliveryScheduleInfo">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="schedulepo"/>
+        <response name="success" type="view" value="OrderDeliveryScheduleInfo"/>
     </request-map>
-    <request-map uri="createSchedule">
+    <request-map uri="createOrderDeliverySchedule">
         <security https="true" auth="true"/>
-        <event type="service" path="" invoke="createSchedule"/>
-        <response name="success" type="view" value="ordertasklist"/>
-        <response name="error" type="view" value="ordertasklist"/>
+        <event type="service" path="" invoke="createOrderDeliverySchedule"/>
+        <response name="success" type="view" value="orderview"/>
+        <response name="error" type="view" value="orderview"/>
     </request-map>
-    <request-map uri="updateSchedule">
+    <request-map uri="updateOrderDeliverySchedule">
         <security https="true" auth="true"/>
-        <event type="service" path="" invoke="updateSchedule"/>
-        <response name="success" type="view" value="ordertasklist"/>
-        <response name="error" type="view" value="ordertasklist"/>
+        <event type="service" path="" invoke="updateOrderDeliverySchedule"/>
+        <response name="success" type="view" value="orderview"/>
+        <response name="error" type="view" value="orderview"/>
     </request-map>
 
 	<!-- Order Manager Edit Requests -->
@@ -491,7 +491,7 @@
 
     <view-map name="orderstats" type="jpublish" page="/order/orderstats.ftl"/>
     <view-map name="findorders" type="jpublish" page="/order/findOrders.ftl"/>
-    <view-map name="schedulepo" type="jpublish" page="/order/schedulepo.ftl"/>
+    <view-map name="OrderDeliveryScheduleInfo" type="jpublish" page="/order/OrderDeliveryScheduleInfo.ftl"/>
     <view-map name="orderview" type="jpublish" page="/order/orderview.ftl"/>     
     <view-map name="ordertasklist" type="jpublish" page="/task/ordertasklist.ftl"/>    
     <view-map name="createnewnote" type="jpublish" page="/order/newnote.ftl"/>

@@ -23,15 +23,16 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * @author     Tristan Austin (tristana@twibble.org)
+ * @author     David E. Jones (jonesde@ofbiz.org)
  * @version    $Revision$  
 -->
 
 <forms>
-    <form name="UpdatePODeliveryInformation" type="single" target="updateSchedule" title=""
+    <form name="UpdateDeliveryScheduleInformation" type="single" target="updateOrderDeliverySchedule" title=""
             default-title-style="tableheadtext" default-widget-style="inputBox" 
             default-tooltip-style="tabletext" default-map-name="schedule">
-        <alt-target use-when="schedule==null" target="createSchedule"/>
-        <auto-fields-service service-name="createSchedule"/>
+        <alt-target use-when="schedule==null" target="createOrderDeliverySchedule"/>
+        <auto-fields-service service-name="updateOrderDeliverySchedule"/>
         <field name="orderId"><hidden/></field>
         <field name="orderItemSeqId"><hidden/></field>
         <field name="totalWeightUomId" title="Weight Measurement" widget-style="selectBox">

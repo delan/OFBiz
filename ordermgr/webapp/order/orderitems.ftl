@@ -165,11 +165,32 @@
                         <td align="right" colspan="2">
                           <div class="tabletext" style='font-size: xx-small;'>
                             <b><i>Inventory</i>:</b>
-                              <a target='facility' href='/facility/control/EditInventoryItem?inventoryItemId=${orderItemInventoryRes.inventoryItemId}${requestAttributes.externalKeyParam}' class='buttontext' style='font-size: xx-small;'>${orderItemInventoryRes.inventoryItemId}</a>
+                              <a href='/facility/control/EditInventoryItem?inventoryItemId=${orderItemInventoryRes.inventoryItemId}&externalLoginKey=${requestAttributes.externalLoginKey}' class='buttontext' style='font-size: xx-small;'>${orderItemInventoryRes.inventoryItemId}</a>
                           </div>
                         </td>
                         <td align="center">
                           <div class="tabletext" style='font-size: xx-small;'>${orderItemInventoryRes.quantity?string.number}&nbsp;</div>
+                        </td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                      </tr>
+                    </#list>
+                  </#if>
+                  
+                  <#-- now show item issuances per line item -->
+                  <#assign itemIssuances = itemIssuancesPerItem.get(orderItem.get("orderItemSeqId"))?if_exists>
+                  <#if itemIssuances?has_content>
+                    <#list itemIssuances as itemIssuance>
+                      <tr>
+                        <td align="right" colspan="2">
+                          <div class="tabletext" style='font-size: xx-small;'>
+                            <b><i>Issued to Shipment Item</i>:</b>
+                              <a target='facility' href='/facility/control/ViewShipment?shipmentId=${itemIssuance.shipmentId}&externalLoginKey=${requestAttributes.externalLoginKey}' class='buttontext' style='font-size: xx-small;'>${itemIssuance.shipmentId}</a>:${itemIssuance.shipmentItemSeqId}
+                          </div>
+                        </td>
+                        <td align="center">
+                          <div class="tabletext" style='font-size: xx-small;'>${itemIssuance.quantity?string.number}&nbsp;</div>
                         </td>
                         <td>&nbsp;</td>
                         <td>&nbsp;</td>

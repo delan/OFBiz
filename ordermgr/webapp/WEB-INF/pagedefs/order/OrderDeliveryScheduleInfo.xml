@@ -2,6 +2,6 @@
 <page>
     <template>main</template>
     <property name="title">Purchase Order Schedule Information(s)</property>
-    <property name="headerItem">schedulepo</property>
-    <page-action name="/order/schedulepo.bsh"/> 
+    <property name="headerItem">OrderDeliveryScheduleInfo</property>
+    <page-action name="/order/OrderDeliveryScheduleInfo.bsh"/> 
 </page>

@@ -622,18 +622,27 @@
     </service>
 
     <!-- Order Delivery Services -->
-    <service name="createSchedule" engine="simple"
-            location="org/ofbiz/commonapp/order/order/OrderDeliveryServices.xml" invoke="createSchedule">
-        <description>Creates a delivery schedule for the specified purchase order</description>
-        <auto-attributes entity-name="OrderDeliverySchedule" include="pk" mode="IN" optional="false"/>
-        <auto-attributes entity-name="OrderDeliverySchedule" include="nonpk" mode="IN" optional="true"/>
+    <service name="createOrderDeliverySchedule" default-entity-name="OrderDeliverySchedule" engine="simple"
+            location="org/ofbiz/commonapp/order/order/OrderDeliveryServices.xml" invoke="createOrderDeliverySchedule">
+        <description>Creates a delivery schedule for the specified order</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
         <override name="orderItemSeqId" optional="true"/>
     </service>
-    <service name="updateSchedule" engine="simple"
-            location="org/ofbiz/commonapp/order/order/OrderDeliveryServices.xml" invoke="updateSchedule">
+    <service name="updateOrderDeliverySchedule" default-entity-name="OrderDeliverySchedule" engine="simple"
+            location="org/ofbiz/commonapp/order/order/OrderDeliveryServices.xml" invoke="updateOrderDeliverySchedule">
         <description>Update an existing delivery schedule for a specified purchase order</description>
-        <auto-attributes entity-name="OrderDeliverySchedule" include="pk" mode="IN" optional="false"/>
-        <auto-attributes entity-name="OrderDeliverySchedule" include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+
+    <service name="checkSupplierRelatedOrderPermission" engine="simple"
+            location="org/ofbiz/commonapp/order/order/OrderDeliveryServices.xml" invoke="checkSupplierRelatedOrderPermissionService">
+        <description>Check Supplier Related Order Permission</description>
+        <attribute name="orderId" type="String" mode="IN" optional="false"/>
+        <attribute name="checkAction" type="String" mode="IN" optional="true"/>
+        <attribute name="callingMethodName" type="String" mode="IN" optional="true"/>
+        <attribute name="hasSupplierRelatedPermission" type="String" mode="OUT" optional="false"/>
     </service>
 </services>
 
