@@ -103,7 +103,7 @@ if (!UtilValidate.isEmpty(productionRunId)) {
         productionRunData.put("productId", productionRun.getProductProduced().getString("productId"));
         productionRunData.put("productName",productionRun.getProductProduced().getString("internalName"));
 
-        if (maxQuantity > 0 && !"PHANTOM".equals(productionRun.getProductProduced().getString("productTypeId"))) {
+        if (maxQuantity > 0 && !"WIP".equals(productionRun.getProductProduced().getString("productTypeId"))) {
             productionRunData.put("quantity", new Double(maxQuantity));
             updateProductionRunWrapper.putInContext("showQuantity", "Y");
         } else {
