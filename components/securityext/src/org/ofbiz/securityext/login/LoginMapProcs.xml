@@ -30,20 +30,20 @@
  -->
 <simple-map-processors>
   <simple-map-processor name="updatePassword">
-    <process field="currentPassword"><copy/><not-empty><fail-message message="Current (old) Password is missing"/></not-empty></process>
-    <process field="newPassword"><copy/><not-empty><fail-message message="New Password is missing"/></not-empty></process>
+    <process field="currentPassword"><copy/><not-empty><fail-property resource="SecurityextUiLabels" property="loginmapprocs.old_password_missing"/></not-empty></process>
+    <process field="newPassword"><copy/><not-empty><fail-property resource="SecurityextUiLabels" property="loginmapprocs.new_password_missing"/></not-empty></process>
     <process field="newPasswordVerify">
-        <compare-field operator="equals" field="newPassword"><fail-message message="New Password does not equal Verfiy Password"/></compare-field>
-        <not-empty><fail-message message="New Password Verify is missing"/></not-empty>
+        <compare-field operator="equals" field="newPassword"><fail-property resource="SecurityextUiLabels" property="loginmapprocs.password_not_equal_verfiy_password"/></compare-field>
+        <not-empty><fail-property resource="SecurityextUiLabels" property="loginmapprocs.new_password_verify_missing"/></not-empty>
         <copy/></process>
     <process field="passwordHint"><copy/></process>
     <process field="userLoginId"><copy/></process>
   </simple-map-processor>
   <simple-map-processor name="adminUpdatePassword">
-    <process field="newPassword"><copy/><not-empty><fail-message message="New Password is missing"/></not-empty></process>
+    <process field="newPassword"><copy/><not-empty><fail-property resource="SecurityextUiLabels" property="loginmapprocs.new_password_missing"/></not-empty></process>
     <process field="newPasswordVerify">
-        <compare-field operator="equals" field="newPassword"><fail-message message="New Password does not equal Verify Password"/></compare-field>
-        <not-empty><fail-message message="New Password Verify is missing"/></not-empty>
+        <compare-field operator="equals" field="newPassword"><fail-property resource="SecurityextUiLabels" property="loginmapprocs.password_not_equal_verfiy_password"/></compare-field>
+        <not-empty><fail-property resource="SecurityextUiLabels" property="loginmapprocs.new_password_verify_missing"/></not-empty>
         <copy/></process>
     <process field="passwordHint"><copy/></process>
     <process field="userLoginId"><copy/></process>

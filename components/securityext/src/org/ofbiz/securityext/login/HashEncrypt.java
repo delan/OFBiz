@@ -1,5 +1,5 @@
 /*
- * $Id: HashEncrypt.java,v 1.1 2003/08/17 10:51:03 jonesde Exp $
+ * $Id: HashEncrypt.java,v 1.2 2004/04/07 07:07:37 jonesde Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -41,6 +41,7 @@ import org.ofbiz.base.util.UtilProperties;
 public class HashEncrypt {
     
     public static final String module = HashEncrypt.class.getName();
+    public static final String resource = "SecurityextUiLabels";
     
     private static char hexChars[] = {
             '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',

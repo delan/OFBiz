@@ -42,7 +42,7 @@
         </if-has-permission>
         <check-errors/>
         <call-service service-name="updatePassword" in-map-name="context">
-            <default-message>Password successfully updated.</default-message>
+            <default-message resource="SecurityextUiLabels" property="loginmapprocs.password_successfully_updated"/>
             <result-to-field result-name="updatedUserLogin" map-name="dummyServiceResultMap"/>
         </call-service>
         <field-to-env env-name="updatedUserLogin" map-name="dummyServiceResultMap"/>
