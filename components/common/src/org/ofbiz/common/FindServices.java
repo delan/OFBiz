@@ -1,5 +1,5 @@
 /*
- * $Id: FindServices.java,v 1.6 2004/02/17 17:51:39 jonesde Exp $
+ * $Id: FindServices.java,v 1.7 2004/03/15 14:47:14 byersa Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -32,6 +32,10 @@ import java.util.List;
 import java.util.Map;
 
 import org.ofbiz.base.util.UtilDateTime;
+import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.StringUtil;
+import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -50,7 +54,7 @@ import org.ofbiz.service.ServiceUtil;
  * FindServices Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.6 $
+ * @version    $Revision: 1.7 $
  * @since      2.2
  */
 public class FindServices {
@@ -86,6 +90,7 @@ public class FindServices {
     public static Map performFind(DispatchContext dctx, Map context) {
 
         String entityName = (String) context.get("entityName");
+        String orderBy = (String) context.get("orderBy");
 
         Map inputFields = (Map) context.get("inputFields"); // Input
         // parameters run thru UtilHttp.getParameterMap
@@ -124,13 +129,28 @@ public class FindServices {
         // Those extra fields will be ignored in the second half of this method.
         HashMap normalizedFields = new HashMap();
         Iterator ifIter = inputFields.keySet().iterator();
+        //StringBuffer queryStringBuf = new StringBuffer();
+        Map queryStringMap = new HashMap();
+        Map origValueMap = new HashMap();
         while (ifIter.hasNext()) {
             fieldNameRaw = (String) ifIter.next();
             fieldValue = (String) inputFields.get(fieldNameRaw);
             if (fieldValue == null || fieldValue.length() == 0)
                 continue;
 
+            //queryStringBuffer.append(fieldNameRaw + "=" + fieldValue);
+            queryStringMap.put(fieldNameRaw, fieldValue);
             iPos = fieldNameRaw.indexOf("_"); // Look for suffix
+
+            // This is a hack to skip fields from "multi" forms
+            // These would have the form "fieldName_o_1"
+            if (iPos >= 0) {
+                String suffix = fieldNameRaw.substring(iPos + 1);
+                iPos2 = suffix.indexOf("_");
+                if (iPos2 == 1) {
+                    continue;
+                }
+            }
 
             // If no suffix, assume no range (default to fld0) and operations of equals
             // If no field op is present, it will assume "equals".
@@ -180,6 +200,14 @@ public class FindServices {
                 subMap.put(fieldPair, subMap2);
             }
             subMap2.put(fieldMode, fieldValue);
+
+            List origList = (List) origValueMap.get(fieldNameRoot);
+            if (origList == null) {
+                origList = new ArrayList();
+                origValueMap.put(fieldNameRoot, origList);
+            }
+            String [] origValues = {fieldNameRaw, fieldValue};
+            origList.add(origValues);
         }
 
         // Now use only the values that correspond to entity fields to build
@@ -302,27 +330,39 @@ public class FindServices {
             // String rhs = fieldValue.toString();
             cond = new EntityExpr(fieldName, (EntityComparisonOperator) fieldOp, fieldValue);
             tmpList.add(cond);
+
+            // add to queryStringMap
+            List origList = (List)origValueMap.get(fieldName);
+            if (origList != null && origList.size() > 0) {
+                Iterator origIter = origList.iterator();
+                while (origIter.hasNext()) {
+                    String [] arr = (String [])origIter.next();
+                    queryStringMap.put(arr[0], arr[1]);
+                }
+            }
         }
         EntityConditionList exprList = new EntityConditionList(tmpList, (EntityJoinOperator) entOp);
         EntityListIterator listIt = null;
+        List orderByList = null;
+        if (UtilValidate.isNotEmpty(orderBy)) {
+            orderByList = StringUtil.split(orderBy,"|");
+        }
 
         if (count > 0) {
-            /* Retrieve entities  - an iterator over all the values*/
+            // Retrieve entities  - an iterator over all the values
             try {
                 listIt = delegator.findListIteratorByCondition(entityName, exprList,
-                        null, null, null, new EntityFindOptions(true, EntityFindOptions.TYPE_SCROLL_INSENSITIVE, EntityFindOptions.CONCUR_READ_ONLY, false));
+                        null, null, orderByList, new EntityFindOptions(true, EntityFindOptions.TYPE_SCROLL_INSENSITIVE, EntityFindOptions.CONCUR_READ_ONLY, true));
             } catch (GenericEntityException e) {
                 return ServiceUtil.returnError("Error finding iterator: " + e.getMessage());
             }
         } else {
             try {
-                /*
                 List pkList = delegator.getModelEntity(entityName).getPkFieldNames();
                 String pkName = (String)pkList.get(0);
                 EntityExpr pkExpr = new EntityExpr(pkName, EntityOperator.LIKE, "%");
-                */
                 listIt = delegator.findListIteratorByCondition(entityName, null,
-                        null, null, null, new EntityFindOptions(true, EntityFindOptions.TYPE_SCROLL_INSENSITIVE, EntityFindOptions.CONCUR_READ_ONLY, false));
+                        null, null, orderByList, new EntityFindOptions(true, EntityFindOptions.TYPE_SCROLL_INSENSITIVE, EntityFindOptions.CONCUR_READ_ONLY, true));
             } catch (GenericEntityException e) {
                 return ServiceUtil.returnError("Error finding all: " + e.getMessage());
             }
@@ -330,6 +370,9 @@ public class FindServices {
 
         Map results = ServiceUtil.returnSuccess();
         results.put("listIt", listIt);
+        String queryString = UtilHttp.urlEncodeArgs(queryStringMap);
+        results.put("queryString", queryString);
+        results.put("queryStringMap", queryStringMap);
         return results;
     }
 
