@@ -30,6 +30,7 @@
     <bodycontent>NONE</bodycontent>
     <info>Prints an attribute from the pageContext, prints nothing if null.</info>
     <attribute><name>attribute</name><required>true</required></attribute>
+    <attribute><name>default</name><required>false</required></attribute>
   </tag>
 
   <tag>
@@ -100,6 +101,7 @@
     <info>Displays a properly formatted internationalized string entity field.</info>
     <attribute><name>attribute</name><required>true</required></attribute>
     <attribute><name>field</name><required>true</required></attribute>
+    <attribute><name>default</name><required>false</required></attribute>
   </tag>
 
   <tag>
@@ -109,6 +111,7 @@
     <info>Displays a properly formatted internationalized string entity field.</info>
     <attribute><name>attribute</name><required>true</required></attribute>
     <attribute><name>type</name><required>true</required></attribute>
+    <attribute><name>default</name><required>false</required></attribute>
   </tag>
 
   <tag>
@@ -122,5 +125,6 @@
     <attribute><name>param</name><required>true</required></attribute>
     <attribute><name>entityAttr</name><required>true</required></attribute>
     <attribute><name>tryEntityAttr</name><required>false</required></attribute>
+    <attribute><name>default</name><required>false</required></attribute>
   </tag>
 </taglib>
