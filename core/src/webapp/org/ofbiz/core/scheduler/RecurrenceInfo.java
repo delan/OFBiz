@@ -98,6 +98,17 @@ public class RecurrenceInfo {
         return eDateList.iterator();
     }
 
+    /** Returns the first recurrence. */
+    public long first() throws RecurrenceRuleException {
+        return startDate.getTime();
+        // TODO: Get the recurrence of a special byXXX case.
+    }
+    
+    /** Returns the last recurrence. */
+    public long last() throws RecurrenceRuleException {
+        return 0;
+    }
+    
     /** Returns the next recurrence from now. */
     public long next() throws RecurrenceRuleException {
         return next(RecurrenceUtil.now());
