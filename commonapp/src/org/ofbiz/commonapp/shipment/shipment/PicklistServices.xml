@@ -74,6 +74,8 @@
     						</if-empty>
 							
 							<if-compare-field field-name="inventoryItem.facilityId" operator="equals" to-field-name="parameters.facilityId">
+								<field-to-list field-name="orderItemInventoryRes" list-name="perItemResListValid"/>
+								
 								<field-to-env field-name="${inventoryItemId}" map-name="inventoryItemOrderItems" env-name="inventoryItemOrderItemList"/>
 								<field-to-list field-name="orderItem" list-name="inventoryItemOrderItemList"/>
 								<env-to-field env-name="inventoryItemOrderItemList" field-name="${orderItemInventoryRes.inventoryItemId}" map-name="inventoryItemOrderItems"/>
@@ -101,11 +103,14 @@
 				    	</if-compare>
 					</iterate>
 					
-					<env-to-field env-name="orderItem" map-name="orderItemInfo"/>
-					<env-to-field env-name="perItemResList" field-name="orderItemInventoryResList" map-name="orderItemInfo"/>
-					<get-related-one value-name="orderItem" relation-name="Product" to-value-name="orderItemInfo.product"/>
-					<field-to-list field-name="orderItemInfo" list-name="orderItemInfoList"/>
-					<clear-field field-name="orderItemInfo"/>
+					<if-not-empty field-name="perItemResListValid">
+						<env-to-field env-name="orderItem" map-name="orderItemInfo"/>
+						<env-to-field env-name="perItemResListValid" field-name="orderItemInventoryResList" map-name="orderItemInfo"/>
+						<get-related-one value-name="orderItem" relation-name="Product" to-value-name="orderItemInfo.product"/>
+						<field-to-list field-name="orderItemInfo" list-name="orderItemInfoList"/>
+						<clear-field field-name="orderItemInfo"/>
+					</if-not-empty>
+					<clear-field field-name="perItemResListValid"/>
 				</if-compare>
 				
             	<!-- warn if not all inventory has been reserved, or too much is reserved -->
