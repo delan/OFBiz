@@ -463,6 +463,7 @@
             </select>
             &nbsp;&nbsp;
             <a href="javascript:document.addPartyRole.submit()" class="lightbuttontext">[Add]</a>&nbsp;&nbsp;
+            <a href="<ofbiz:url>/createnewrole</ofbiz:url>" class="lightbuttontext">[New]</a>&nbsp;&nbsp;
           </td>
         </tr>
       </table>

@@ -359,6 +359,17 @@
         <response name="success" type="view" value="viewprofile"/>
         <response name="error" type="view" value="createnewnote"/>
     </request-map>
+
+    <request-map uri="createnewrole">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="createnewrole"/>
+    </request-map>
+    <request-map uri="createroletype">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createRoleType"/>
+        <response name="success" type="view" value="viewprofile"/>
+        <response name="error" type="view" value="createnewrole"/>
+    </request-map>
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
@@ -376,6 +387,7 @@
     <view-map name="findparty" type="region"/>
     <view-map name="createnewlogin" type="region"/>
     <view-map name="createnewnote" type="region"/>
+    <view-map name="createnewrole" type="region"/>
 
     <view-map name="FindSecurityGroup" type="region"/>
     <view-map name="EditSecurityGroup" type="region"/>
