@@ -50,7 +50,7 @@
           <td>
             <table width="100%" border="0" cellpadding="1">
               <#if !messages?has_content>
-                <tr><td><div class="tabletext">No messages.</div></td></tr>
+                <div class="tabletext">You have no messages.</div>
               <#else>
                 <tr>
                   <#if !useSentTo?exists>

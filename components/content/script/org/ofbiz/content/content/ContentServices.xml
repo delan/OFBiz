@@ -170,9 +170,12 @@
         <store-value value-name="lookedUpValue"/>
     </simple-method>
     <simple-method method-name="deactivateAllContentRoles" short-description="Update Content Role">
-        <check-permission permission="CONTENTMGR" action="_UPDATE"><fail-message message="Security Error: to run updateContentRole you must have the CONTENTMGR_UPDATE or CONTENTMGR_ADMIN permission"/></check-permission>
-        <check-errors/>
-
+        <if-compare-field field-name="partyId" map-name="parameters" to-map-name="userLogin" operator="not-equals">
+            <check-permission permission="CONTENTMGR" action="_UPDATE">
+                <fail-message message="Security Error: to run updateContentRole you must have the CONTENTMGR_UPDATE or CONTENTMGR_ADMIN permission"/>
+            </check-permission>
+        </if-compare-field>
+                
         <now-timestamp-to-env env-name="nowStamp"/>
         <make-value entity-name="ContentRole" value-name="lookupKeyValue"/>
         <field-to-field field-name="contentId" map-name="parameters" to-map-name="lookupKeyValue"/>
