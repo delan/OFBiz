@@ -89,9 +89,13 @@ public class VisitHandler {
         if (UtilProperties.propertyValueEqualsIgnoreCase("serverstats", "stats.persist.visit", "true")) {
             GenericValue visit = (GenericValue) session.getAttribute("visit");
             if (visit == null) {
-                GenericDelegator delegator = (GenericDelegator) session.getAttribute("delegator");
+                GenericDelegator delegator = null;
+                String delegatorName = (String) session.getAttribute("delegatorName");
+                if (UtilValidate.isNotEmpty(delegatorName)) {
+                    delegator = GenericDelegator.getGenericDelegator(delegatorName);
+                }
                 if (delegator == null) {
-                    Debug.logError("Could not find delegator in session, not creating Visit entity", module);
+                    Debug.logError("Could not find delegator with delegatorName in session, not creating Visit entity", module);
                 } else {
                     visit = delegator.makeValue("Visit", null);
                     Long nextId = delegator.getNextSeqId("Visit");

@@ -87,7 +87,20 @@ public class ControlServlet extends HttpServlet {
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         long requestStartTime = System.currentTimeMillis();
+        HttpSession session = request.getSession();
+        GenericValue userLogin = (GenericValue) request.getSession().getAttribute(SiteDefs.USER_LOGIN);
         
+        // ==================
+        try {
+            FileOutputStream ostream = new FileOutputStream("outtest.ser");
+            ObjectOutputStream p = new ObjectOutputStream(ostream);
+            p.writeObject(session);
+            p.flush();
+            ostream.close();
+        } catch (Exception e) {
+            Debug.logError(e);
+        }
+        // ==================
         // workaraound if we are in the root webapp
         String webappName = UtilMisc.getApplicationName(request);
 		
@@ -123,26 +136,27 @@ public class ControlServlet extends HttpServlet {
         }
         Debug.logVerbose("--- End Request Parameters: ---", module);
         
-        GenericValue userLogin = (GenericValue) request.getSession().getAttribute(SiteDefs.USER_LOGIN);
-
-        HttpSession session = request.getSession();
-
         // Setup the CONTROL_PATH for JSP dispatching.
         request.setAttribute(SiteDefs.CONTROL_PATH, request.getContextPath() + request.getServletPath());
         // if (Debug.infoOn()) Debug.logInfo("Control Path: " + request.getAttribute(SiteDefs.CONTROL_PATH), module);
 
         // for convenience, and necessity with event handlers, make security and delegator available in the request:
         //  try to get it from the session first so that we can have a delegator/dispatcher/security for a certain user if desired
-        GenericDelegator delegator = (GenericDelegator) session.getAttribute("delegator");
+        GenericDelegator delegator = null;
+        String delegatorName = (String) session.getAttribute("delegatorName");
+        if (UtilValidate.isNotEmpty(delegatorName)) {
+            delegator = GenericDelegator.getGenericDelegator(delegatorName);
+        }
         if (delegator == null) {
             delegator = (GenericDelegator) getServletContext().getAttribute("delegator");
         }
         if (delegator == null) {
             Debug.logError("[ControlServlet] ERROR: delegator not found in ServletContext", module);
+        } else {
+            request.setAttribute("delegator", delegator);
+            //always put this in the session too so that session events can use the delegator
+            session.setAttribute("delegatorName", delegator.getDelegatorName());
         }
-        request.setAttribute("delegator", delegator);
-        //always put this in the session too so that session events can use the delegator
-        session.setAttribute("delegator", delegator);
         
         LocalDispatcher dispatcher = (LocalDispatcher) session.getAttribute("dispatcher");
         if (dispatcher == null) {
@@ -152,8 +166,6 @@ public class ControlServlet extends HttpServlet {
             Debug.logError("[ControlServlet] ERROR: dispatcher not found in ServletContext", module);
         }
         request.setAttribute("dispatcher", dispatcher);
-        //always put this in the session too so that session events can use the dispatcher
-        session.setAttribute("dispatcher", dispatcher);
 
         Security security = (Security) session.getAttribute("security");
         if (security == null) {

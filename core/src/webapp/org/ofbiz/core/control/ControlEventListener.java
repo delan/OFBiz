@@ -57,6 +57,8 @@ public class ControlEventListener implements HttpSessionListener, HttpSessionAct
         //NOTE: don't create the visit here, just let the control servlet do it; GenericValue visit = VisitHandler.getVisit(session);
         
         totalActiveSessions++;
+
+        Debug.logInfo("About to activate session: " + event.getSession().toString(), module);
     }
     
     public void sessionDestroyed(HttpSessionEvent event) {
@@ -72,6 +74,8 @@ public class ControlEventListener implements HttpSessionListener, HttpSessionAct
         }
         
         totalActiveSessions--;
+
+        Debug.logInfo("About to destroy session: " + event.getSession().toString(), module);
     }
     
     public void sessionWillPassivate(HttpSessionEvent event) {
