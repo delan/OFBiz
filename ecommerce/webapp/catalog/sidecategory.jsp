@@ -26,7 +26,7 @@
           <ul style='margin-left: 15;'>
       <ofbiz:iterator name="category" property="topLevelList">
         <%if(curCategoryId.equals(category.getString("productCategoryId"))) {%>
-          <li style='margin: 1;'><div class='tabletext'><b><%=category.getString("description")%></b></div></li>
+          <li style='margin: 1;'><div class='tabletext'><b><ofbiz:entityfield attribute="category" field="description"/></b></div></li>
         <%}else{%>
           <li style='margin: 1;'><a href="<ofbiz:url>/category?category_id=<%=category.getString("productCategoryId")%></ofbiz:url>" class='buttontext'><%=category.getString("description")%></a></li>
         <%}%>
