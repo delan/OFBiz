@@ -1,5 +1,5 @@
 <!--
- *  Copyright (c) 2001 The Open For Business Project and respected authors.
+ *  Copyright (c) 2001-2004 The Open For Business Project and respected authors.
  
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -33,11 +33,7 @@
 
 <% 
 if(security.hasPermission("ENTITY_MAINT", session)) {
-  initReservedWords();
-  //boolean checkWarnings = "true".equals(request.getParameter("CHECK_WARNINGS"));
-  boolean checkWarnings = true;
   boolean forstatic = "true".equals(request.getParameter("forstatic"));
-  if (forstatic) checkWarnings = false;
   String search = null;
   //GenericDelegator delegator = GenericHelperFactory.getDefaultHelper();
   ModelReader reader = delegator.getModelReader();
@@ -67,11 +63,6 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
   int numberOfEntities = ec.size();
   int numberShowed = 0;
   search = (String) request.getParameter("search");
-  //as we are iterating through, check a few things and put any warnings here inside <li></li> tags
-  List warningList = new LinkedList();
-
-  TreeSet fkNames = new TreeSet();
-  TreeSet indexNames = new TreeSet();
 %>
 
 <html>
@@ -95,15 +86,8 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
 <div align="center">
 
   <DIV class='toptext'>Entity Reference Chart<br>
-    <%= numberOfEntities %> Total Entities
+    <%=numberOfEntities%> Total Entities
     </DIV>
-<%if (!forstatic) {%>
-	<%if (checkWarnings) {%>
-	  <A href='#WARNINGS'>View Warnings</A>
-	<%} else {%>
-	  <A href='<%=response.encodeURL(controlPath + "/view/entityref_main?CHECK_WARNINGS=true")%>'>View With Warnings Check</A>  
-	<%}%>
-<%}%>
 <%
   Iterator piter = packageNames.iterator();
   while (piter.hasNext()) {
@@ -117,18 +101,6 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
       String groupName = delegator.getEntityGroupName(entityName);
       if (search == null || entityName.toLowerCase().indexOf(search.toLowerCase()) != -1) {
         ModelEntity entity = reader.getModelEntity(entityName);
-        if (checkWarnings) {
-          if (helperName == null) {
-            warningList.add("<span style=\"color: red;\">[HelperNotFound]</span> No Helper (DataSource) definition found for entity <A href=\"#" + entity.getEntityName() + "\">" + entity.getEntityName() + "</A>.");
-            //only show group name warning if helper name not found
-            if (groupName == null)
-              warningList.add("<span style=\"color: red;\">[GroupNotFound]</span> No Group Name found for entity <A href=\"#" + entity.getEntityName() + "\">" + entity.getEntityName() + "</A>.");
-          }
-          if (entity.getPlainTableName() != null && entity.getPlainTableName().length() > 30)
-            warningList.add("<span style=\"color: red;\">[TableNameGT30]</span> Table name <b>" + entity.getPlainTableName() + "</b> of entity <A href=\"#" + entity.getEntityName() + "\">" + entity.getEntityName() + "</A> is longer than 30 characters.");
-          if (entity.getPlainTableName() != null && reservedWords.contains(entity.getPlainTableName().toUpperCase()))
-            warningList.add("<span style=\"color: red;\">[TableNameRW]</span> Table name <b>" + entity.getPlainTableName() + "</b> of entity <A href=\"#" + entity.getEntityName() + "\">" + entity.getEntityName() + "</A> is a reserved word.");
-        }
 %>	
   <a name="<%= entityName %>"></a>
   <table width="95%" border="1" cellpadding='2' cellspacing='0'>
@@ -157,22 +129,6 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
     ModelFieldType type = delegator.getEntityFieldType(entity, field.getType());
     String javaName = null;
     javaName = field.getIsPk() ? "<span style=\"color: red;\">" + field.getName() + "</span>" : field.getName();
-
-    if(checkWarnings) {
-      if(ufields.contains(field.getName())) {
-        warningList.add("<span style=\"color: red;\">[FieldNotUnique]</span> Field <b>" + field.getName() + "</b> of entity <A href=\"#" + entity.getEntityName() + "\">" + entity.getEntityName() + "</A> is not unique for that entity.");
-      } else {
-        ufields.add(field.getName());
-      }
-      if(field.getColName().length() > 30 && !(entity instanceof ModelViewEntity)) {
-        warningList.add("<span style=\"color: red;\">[FieldNameGT30]</span> Column name <b>" + field.getColName() + "</b> of entity <A href=\"#" + entity.getEntityName() + "\">" + entity.getEntityName() + "</A> is longer than 30 characters.");
-      }
-      if(field.getColName().length() == 0) {
-        warningList.add("<span style=\"color: red;\">[FieldNameEQ0]</span> Column name for field name <b>\"" + field.getName() + "\"</b> of entity <A href=\"#" + entity.getEntityName() + "\">" + entity.getEntityName() + "</A> is empty (zero length).");
-      }
-      if(reservedWords.contains(field.getColName().toUpperCase()))
-        warningList.add("<span style=\"color: red;\">[FieldNameRW]</span> Column name <b>" + field.getColName() + "</b> of entity <A href=\"#" + entity.getEntityName() + "\">" + entity.getEntityName() + "</A> is a reserved word.");
-    }
 %>	
     <tr bgcolor="#EFFFFF">
       <td><div align="left" class='enametext'><%=javaName%></div></td>
@@ -184,17 +140,6 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
     <%}else{%>
       <td><div align="left" class='entitytext'>NOT FOUND</div></td>
       <td><div align="left" class='entitytext'>NOT FOUND</div></td>
-      <%
-        if(checkWarnings) {
-            StringBuffer warningMsg = new StringBuffer();
-            warningMsg.append("<span style=\"color: red;\">[FieldTypeNotFound]</span> Field type <b>" + field.getType() + "</b> of entity <A href=\"#" + entity.getEntityName() + "\">" + entity.getEntityName() + "</A> not found in field type definitions");
-            if (helperName == null) {
-                warningMsg.append(" (no helper definition found)");
-            }
-            warningMsg.append(".");
-            warningList.add(warningMsg.toString());
-        }
-      %>
     <%}%>
     </tr>
 <%	
@@ -210,110 +155,9 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
       
     </tr>
 <%
-  // TODO: not displaying indexes, but do some checks on them anyway
-  if (checkWarnings) {
-    Iterator indexIter = entity.getIndexesIterator();
-    while (indexIter.hasNext()) {
-      ModelIndex index = (ModelIndex) indexIter.next();
-      
-      if (indexNames.contains(index.getName())) {
-        warningList.add("<span style=\"color: red;\">[IndexDuplicateName]</span> Index on entity <A href=\"#" + entity.getEntityName() + "\">" + entity.getEntityName() + "</A> has a duplicate index-name \"" + index.getName() + "\".");
-      } else {
-        indexNames.add(index.getName());
-      }
-      
-      if (tableNames.contains(index.getName())) {
-        warningList.add("<span style=\"color: red;\">[IndexTableDupName]</span> Index on entity <A href=\"#" + entity.getEntityName() + "\">" + entity.getEntityName() + "</A> has an index-name \"" + index.getName() + "\" that is also being used as a table name.");
-      }
-
-      if (fkNames.contains(index.getName())) {
-        warningList.add("<span style=\"color: red;\">[IndexFKDupName]</span> Index on entity <A href=\"#" + entity.getEntityName() + "\">" + entity.getEntityName() + "</A> has an index-name \"" + index.getName() + "\" that is also being used as a Foreign Key name.");
-      }
-
-      // make sure all names are <= 18 characters
-      if (index.getName().length() > 18) {
-        warningList.add("<span style=\"color: red;\">[IndexNameGT18]</span> The index name " + index.getName() + " (length:" + index.getName().length() + ") was greater than 18 characters in length for entity <A href=\"#" + entity.getEntityName() + "\">" + entity.getEntityName() + "</A>.");
-      }
-    }
-  }
-
   TreeSet relations = new TreeSet();
   for (int r = 0; r < entity.getRelationsSize(); r++) {
     ModelRelation relation = entity.getRelation(r);
-    
-    if (checkWarnings) {
-      if (!entityNames.contains(relation.getRelEntityName())) {
-        warningList.add("<span style=\"color: red;\">[RelatedEntityNotFound]</span> Related entity <b>" + relation.getRelEntityName() + "</b> of entity <A href=\"#" + entity.getEntityName() + "\">" + entity.getEntityName() + "</A> not found.");
-      }
-      if (relations.contains(relation.getTitle() + relation.getRelEntityName())) {
-        warningList.add("<span style=\"color: red;\">[RelationNameNotUnique]</span> Relation <b>" + relation.getTitle() + relation.getRelEntityName() + "</b> of entity <A href=\"#" + entity.getEntityName() + "\">" + entity.getEntityName() + "</A> is not unique for that entity.");
-      } else {
-        relations.add(relation.getTitle() + relation.getRelEntityName());
-      }
-
-      if (relation.getFkName().length() > 0) {
-        if (fkNames.contains(relation.getFkName())) {
-          warningList.add("<span style=\"color: red;\">[RelationFkDuplicate]</span> Relation to <b>" + relation.getRelEntityName() + "</b> from entity <A href=\"#" + entity.getEntityName() + "\">" + entity.getEntityName() + "</A> has a duplicate fk-name \"" + relation.getFkName() + "\".");
-        } else {
-          fkNames.add(relation.getFkName());
-        }
-        if (tableNames.contains(relation.getFkName())) {
-          warningList.add("<span style=\"color: red;\">[RelationFkTableDup]</span> Relation to <b>" + relation.getRelEntityName() + "</b> from entity <A href=\"#" + entity.getEntityName() + "\">" + entity.getEntityName() + "</A> has an fk-name \"" + relation.getFkName() + "\" that is also being used as a table name.");
-        }
-        if (indexNames.contains(relation.getFkName())) {
-          warningList.add("<span style=\"color: red;\">[RelationFkTableDup]</span> Relation to <b>" + relation.getRelEntityName() + "</b> from entity <A href=\"#" + entity.getEntityName() + "\">" + entity.getEntityName() + "</A> has an fk-name \"" + relation.getFkName() + "\" that is also being used as an index name.");
-        }
-      }
-
-      // make sure all FK names are <= 18 characters
-      if (relation.getFkName().length() > 18) {
-        warningList.add("<span style=\"color: red;\">[RelFKNameGT18]</span> The foregn key name (length:" + relation.getFkName().length() + ") was greater than 18 characters in length for relation <b>" +  relation.getTitle() + relation.getRelEntityName() + "</b> of entity <A href=\"#" + entity.getEntityName() + "\">" + entity.getEntityName() + "</A>.");
-      }
-        
-      ModelEntity relatedEntity = null;
-      try {
-      	relatedEntity = reader.getModelEntity(relation.getRelEntityName());
-      } catch (GenericEntityException e) {
-      	Debug.log("Entity referred to in relation is not defined: " + relation.getRelEntityName());
-      }
-      if (relatedEntity != null) {
-        //if relation is of type one, make sure keyMaps match the PK of the relatedEntity
-        if ("one".equals(relation.getType()) || "one-nofk".equals(relation.getType())) {
-          if (relatedEntity.getPksSize() != relation.getKeyMapsSize())
-            warningList.add("<span style=\"color: red;\">[RelatedOneKeyMapsWrongSize]</span> The number of primary keys (" + relatedEntity.getPksSize() + ") of related entity <b>" + relation.getRelEntityName() + "</b> does not match the number of keymaps (" + relation.getKeyMapsSize() + ") for relation of type one \"" +  relation.getTitle() + relation.getRelEntityName() + "\" of entity <A href=\"#" + entity.getEntityName() + "\">" + entity.getEntityName() + "</A>.");
-          for (int repks = 0; repks < relatedEntity.getPksSize(); repks++) {
-            ModelField pk = relatedEntity.getPk(repks);
-            if(relation.findKeyMapByRelated(pk.getName()) == null) {
-              warningList.add("<span style=\"color: red;\">[RelationOneRelatedPrimaryKeyMissing]</span> The primary key \"<b>" + pk.getName() + "</b>\" of related entity <b>" + relation.getRelEntityName() + "</b> is missing in the keymaps for relation of type one <b>" +  relation.getTitle() + relation.getRelEntityName() + "</b> of entity <A href=\"#" + entity.getEntityName() + "\">" + entity.getEntityName() + "</A>.");
-            }
-          }
-        }
-      }
-
-      //make sure all keyMap 'fieldName's match fields of this entity
-      //make sure all keyMap 'relFieldName's match fields of the relatedEntity
-      for (int rkm=0; rkm < relation.getKeyMapsSize(); rkm++) {
-        ModelKeyMap keyMap = (ModelKeyMap)relation.getKeyMap(rkm);
-        
-        ModelField field = entity.getField(keyMap.getFieldName());
-        ModelField rfield = null;
-        if(relatedEntity != null) {
-          rfield = relatedEntity.getField(keyMap.getRelFieldName());
-        }
-        if(rfield == null) {
-          warningList.add("<span style=\"color: red;\">[RelationRelatedFieldNotFound]</span> The field \"<b>" + keyMap.getRelFieldName() + "</b>\" of related entity <b>" + relation.getRelEntityName() + "</b> was specified in the keymaps but is not found for relation <b>" +  relation.getTitle() + relation.getRelEntityName() + "</b> of entity <A href=\"#" + entity.getEntityName() + "\">" + entity.getEntityName() + "</A>.");
-        }
-        if(field == null) {
-          warningList.add("<span style=\"color: red;\">[RelationFieldNotFound]</span> The field <b>" + keyMap.getFieldName() + "</b> was specified in the keymaps but is not found for relation <b>" +  relation.getTitle() + relation.getRelEntityName() + "</b> of entity <A href=\"#" + entity.getEntityName() + "\">" + entity.getEntityName() + "</A>.");
-        }
-        if(field != null && rfield != null) {
-          //this was the old check, now more constrained to keep things cleaner: if(!field.getType().equals(rfield.getType()) && !field.getType().startsWith(rfield.getType()) && !rfield.getType().startsWith(field.getType())) {
-          if(!field.getType().equals(rfield.getType()) && !field.getType().equals(rfield.getType() + "-ne") && !rfield.getType().equals(field.getType() + "-ne")) {
-            warningList.add("<span style=\"color: red;\">[RelationFieldTypesDifferent]</span> The field type (" + field.getType() + ") of <b>" + field.getName() + "</b> of entity <A href=\"#" + entity.getEntityName() + "\">" + entity.getEntityName() + "</A> is not the same as field type (" + rfield.getType() + ") of <b>" + rfield.getName() + "</b> of entity <A href=\"#" + relation.getRelEntityName() + "\">" + relation.getRelEntityName() + "</A> for relation <b>" +  relation.getTitle() + relation.getRelEntityName() + "</b>.");
-          }
-        }
-      }
-    }
 %>
     <tr bgcolor="#FEEEEE"> 
       <td> 
@@ -350,16 +194,6 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
   <p align="center">Displayed: <%= numberShowed %></p>
 </div>
 
-<%if(checkWarnings) {%>
-  <A name='WARNINGS'>WARNINGS:</A>
-  <OL>
-    <%Iterator warningIter = warningList.iterator();%>
-    <%while (warningIter.hasNext()) {%>
-  	<li><%=warningIter.next()%></li>
-    <%}%>
-  </OL>
-<%}%>
-
 </body>
 </html>
 <%}else{%>
@@ -377,208 +211,3 @@ ERROR: You do not have permission to use this page (ENTITY_MAINT needed)
 </html>
 <%}%>
 
-<%!
-public TreeSet reservedWords = new TreeSet();
-public static final String[] rwArray = {
- "ABORT", "ABS", "ABSOLUTE", "ACCEPT", "ACCES", "ACS", "ACTION", "ACTIVATE",
- "ADD", "ADDFORM", "ADMIN", "AFTER", "AGGREGATE", "ALIAS", "ALL", "ALLOCATE",
- "ALTER", "ANALYZE", "AND", "ANDFILENAME", "ANY", "ANYFINISH", "APPEND",
- "ARCHIVE", "ARE", "ARRAY", "AS", "ASC", "ASCENDING", "ASCII", "ASSERT",
- "ASSERTION", "ASSIGN", "AT", "ATTRIBUTE", "ATTRIBUTES", "AUDIT", "AUTHID",
- "AUTHORIZATION", "AUTONEXT", "AUTO_INCREMENT", "AVERAGE", "AVG", "AVGU",
- "AVG_ROW_LENGTH", 
-
- "BACKOUT", "BACKUP", "BEFORE", "BEGIN", "BEGINLOAD", "BEGINMODIFY",
- "BEGINNING", "BEGWORK", "BETWEEN", "BETWEENBY", "BINARY", "BINARY_INTEGER",
- "BIT", "BIT_LENGTH", "BLOB", "BODY", "BOOLEAN", "BORDER", "BOTH", "BOTTOM",
- "BREADTH", "BREAK", "BREAKDISPLAY", "BROWSE", "BUFERED", "BUFFER", "BUFFERED",
- "BULK", "BY", "BYTE", 
-
- "CALL", "CANCEL", "CASCADE", "CASCADED", "CASE", "CAST", "CATALOG", "CHANGE",
- "CHAR", "CHAR_LENGTH", "CHAR_BASE", "CHARACTER", "CHARACTER_LENGTH",
- "CHAR_CONVERT", "CHECK", "CHECKPOINT", "CHECKSUM", "CHR2FL", "CHR2FLO",
- "CHR2FLOA", "CHR2FLOAT", "CHR2INT", "CLASS", "CLEAR", "CLEARROW", "CLIPPED",
- "CLOB", "CLOSE", "CLUSTER", "CLUSTERED", "CLUSTERING", "COALESCE", "COBOL",
- "COLD", "COLLATE", "COLLATION", "COLLECT", "COLUMN", "COLUMNS", "COMMAND",
- "COMMENT", "COMMIT", "COMMITTED", "COMPLETION", "COMPRESS", "COMPUTE",
- "CONCAT", "COND", "CONDITION", "CONFIG", "CONFIRM", "CONNECT", "CONNECTION",
- "CONSTANT", "CONSTRAINT", "CONSTRAINTS", "CONSTRUCT", "CONSTRUCTOR", "CONTAIN",
- "CONTAINS", "CONTAINSTABLE", "CONTINUE", "CONTROLROW", "CONVERT", "COPY",
- "CORRESPONDING", "COUNT", "COUNTU", "COUNTUCREATE", "CRASH", "CREATE", "CROSS",
- "CUBE", "CURRENT", "CURRENT_DATE", "CURRENT_PATH", "CURRENT_ROLE",
- "CURRENT_SESSION", "CURRENT_TIME", "CURRENT_TIMESTAMP", "CURRENT_USER",
- "CURSOR", "CURVAL", "CYCLE", 
-
- "DATA", "DATALINK", "DATABASE", "DATABASES", "DATAPAGES", "DATA_PGS", "DATE",
- "DATETIME", "DAY", "DAY_HOUR", "DAY_MINUTE", "DAY_SECOND", "DAYNUM",
- "DAYOFMONTH", "DAYOFWEEK", "DAYOFYEAR", "DBA", "DBCC", "DBE", "DBEFILE",
- "DBEFILEO", "DBEFILESET", "DBSPACE", "DBYTE", "DEALLOCATE", "DEC", "DECENDING",
- "DECIMAL", "DECLARE", "DEFAULT", "DEFAULTS", "DEFER", "DEFERRABLE", "DEFINE",
- "DEFINITION", "DELAY_KEY_WRITE", "DELAYED", "DELETE", "DELETEROW", "DENY",
- "DEPTH", "DEREF", "DESC", "DESCENDING", "DESCENDNG", "DESCRIBE", "DESCRIPTOR",
- "DESTPOS", "DESTROY", "DEVICE", "DEVSPACE", "DIAGNOSTICS", "DICTIONARY",
- "DIRECT", "DIRTY", "DISCONNECT", "DISK", "DISPLACE", "DISPLAY", "DISTINCT",
- "DISTINCTROW", "DISTRIBUTED", "DISTRIBUTION", "DIV", "DO", "DOES", "DOMAIN",
- "DOUBLE", "DOWN", "DROP", "DUAL", "DUMMY", "DUMP", "DUPLICATES", 
-
- "EACH", "EBCDIC", "EDITADD", "EDITUPDATE", "ED_STRING", "ELSE", "ELSEIF",
- "ELSIF", "ENCLOSED", "END", "ENDDATA", "ENDDISPLAY", "ENDFORMS", "ENDIF",
- "ENDING", "ENDLOAD", "ENDLOOP", "ENDMODIFY", "ENDPOS", "ENDRETRIEVE",
- "ENDSELECT", "ENDWHILE", "END_ERROR", "END_EXEC", "END_FETCH", "END_FOR",
- "END_GET", "END_MODIFY", "END_PLACE", "END_SEGMENT_S", "END_SEGMENT_STRING",
- "END_STORE", "END_STREAM", "ENUM", "EQ", "EQUALS", "ERASE", "ERROR", "ERRLVL",
- "ERROREXIT", "ESCAPE", "ESCAPED", "EVALUATE", "EVALUATING", "EVERY", "EXCEPT",
- "EXCEPTION", "EXCLUSIVE", "EXEC", "EXECUTE", "EXISTS", "EXIT", "EXPAND",
- "EXPANDING", "EXPLAIN", "EXPLICIT", "EXTEND", "EXTENDS", "EXTENT", "EXTERNAL",
- "EXTRACT", 
-
- "FALSE", "FETCH", "FIELD", "FIELDS", "FILE", "FILENAME", "FILLFACTOR",
- "FINALISE", "FINALIZE", "FINDSTR", "FINISH", "FIRST", "FIRSTPOS", "FIXED",
- "FL", "FLOAT", "FLOAT4", "FLOAT8", "FLUSH", "FOR", "FORALL", "FOREACH",
- "FOREIGN", "FORMAT", "FORMDATA", "FORMINIT", "FORMS", "FORTRAN", "FOUND",
- "FRANT", "FRAPHIC", "FREE", "FREETEXT", "FREETEXTTABLE", "FROM", "FRS",
- "FULL", "FUNCTION", 
-
- "GE", "GENERAL", "GET", "GETFORM", "GETOPER", "GETROW", "GLOBAL", "GLOBALS",
- "GO", "GOTO", "GRANT", "GRANTS", "GRAPHIC", "GROUP", "GROUPING", "GT", 
-
- "HANDLER", "HASH", "HAVING", "HEAP", "HEADER", "HELP", "HELPFILE", "HELP_FRS",
- "HIGH_PRIORITY", "HOLD", "HOLDLOCK", "HOSTS", "HOUR", "HOUR_MINUTE",
- "HOUR_SECOND", 
-
- "IDENTIFIED", "IDENTIFIELD", "IDENTITY", "IDENTITY_INSERT", "IF", "IFDEF",
- "IGNORE", "IMAGE", "IMMEDIATE", "IMMIDIATE", "IMPLICIT", "IN", "INCLUDE",
- "INCREMENT", "INDEX", "INDEXED", "INDEXNAME", "INDEXPAGES", "INDICATOR",
- "INFIELD", "INFILE", "INFO", "INGRES", "INIT", "INITIAL", "INITIALISE",
- "INITIALIZE", "INITIALLY", "INITTABLE", "INNER", "INOUT", "INPUT",
- "INQUIRE_EQUEL", "INQUIRE_FRS", "INQUIRE_INGRES", "INQUIR_FRS", "INSERT",
- "INSERT_ID", "INSERTROW", "INSTRUCTIONS", "INT", "INT1", "INT2CHR", "INT2",
- "INT3", "INT4", "INT8", "INTEGER", "INTEGRITY", "INTERESECT", "INTERFACE",
- "INTERRUPT", "INTERSECT", "INTERVAL", "INTO", "INTSCHR", "INVOKE", "IS",
- "ISAM", "ISOLATION", "ITERATE", 
-
- "JAVA", "JOIN", "JOURNALING", 
-
- "KEY", "KEYS", "KILL", 
-
- "LABEL", "LANGUAGE", "LARGE", "LAST", "LAST_INSERT_ID", "LASTPOS", "LATERAL",
- "LE", "LEADING", "LEAVE", "LEFT", "LENGTH", "LENSTR", "LESS", "LET", "LEVEL",
- "LIKE", "LIKEPROCEDURETP", "LIMIT", "LIMITED", "LINE", "LINENO", "LINES",
- "LINK", "LIST", "LISTEN", "LOAD", "LOADTABLE", "LOADTABLERESUME", "LOCAL",
- "LOCALTIME", "LOCALTIMESTAMP", "LOCATION", "LOCATOR", "LOCK", "LOCKING", "LOG",
- "LOGS", "LONG", "LONGBLOB", "LONGTEXT", "LOOP", "LOW_PRIORITY", "LOWER",
- "LPAD", "LT", 
-
- "MAIN", "MANUITEM", "MARGIN", "MATCH", "MATCHES", "MATCHING", "MAX",
- "MAX_ROWS", "MAXEXTENTS", "MAXPUBLICUNION", "MAXRECLEN", "MDY", "MEDIUMBLOB",
- "MEDIUMINT", "MEDIUMTEXT", "MEETS", "MENU", "MENUITEM", "MENUITEMSCREEN",
- "MESSAGE", "MESSAGERELOCATE", "MESSAGESCROLL", "MFETCH", "MIDDLEINT", "MIN",
- "MIN_ROWS", "MINRECLEN", "MINRETURNUNTIL", "MINUS", "MINUTE", "MINUTE_SECOND",
- "MIRROREXIT", "MISLABEL", "MISSING", "MIXED", "MOD", "MODE", "MODIFIES",
- "MODIFY", "MODIFYREVOKEUPDATE", "MODULE", "MONEY", "MONITOR", "MONTH",
- "MONTHNAME", "MOVE", "MULTI", "MYISAM", 
-
- "NAME", "NAMES", "NATIONAL", "NATURAL", "NATURALN", "NCHAR", "NCLOB", "NE",
- "NEED", "NEW", "NEWLOG", "NEXT", "NEXTSCROLLDOWN", "NEXTVAL", "NO", "NOAUDIT",
- "NOCHECK", "NOCOMPRESS", "NOCOPY", "NOCR", "NOJOURNALING", "NOLIST", "NOLOG",
- "NONCLUSTERED", "NONE", "NORMAL", "NORMALIZE", "NOSYSSORT", "NOT", "NOTFFOUND",
- "NOTFOUND", "NOTIFY", "NOTRANS", "NOTRIM", "NOTRIMSCROLLUP", "NOTROLLBACKUSER",
- "NOWAIT", "NULL", "NULLIF", "NULLIFY", "NULLSAVEUSING", "NULLVAL", "NUMBER",
- "NUMBER_BASE", "NUMERIC", "NXFIELD", 
-
- "OBJECT", "OCIROWID", "OCTET_LENGTH", "OF", "OFF", "OFFLINE", "OFFSET",
- "OFFSETS", "OFSAVEPOINTVALUES", "OLD", "ON", "ONCE", "ONLINE", "ONLY",
- "ONSELECTWHERE", "ONTO", "OPAQUE", "OPEN", "OPENDATASOURCE", "OPENQUERY",
- "OPENROWSET", "OPENXML", "OPENSETWHILE", "OPENSLEEP", "OPERATION", "OPERATOR",
- "OPTIMIZE", "OPTION", "OPTIONALLY", "OPTIONS", "OR", "ORDER", "ORDERSQLWORK",
- "ORDINALITY", "ORGANIZATION", "ORSOMEWITH", "ORSORT", "OTHERS", "OTHERWISE",
- "OUT", "OUTER", "OUTFILE", "OUTPUT", "OUTPUT_PAGE", "OUTSTOP", "OVER",
- "OVERLAPS", "OWNER", "OWNERSHIP", 
-
- "PACK_KEYS", "PACKAGE", "PAD", "PAGE", "PAGENO", "PAGES", "PARAM", "PARAMETER",
- "PARAMETERS", "PARTIAL", "PARTITION", "PASCAL", "PASSWORD", "PATH", "PATHNAME",
- "PATTERN", "PAUSE", "PCTFREE", "PERCENT", "PERIOD", "PERM", "PERMANENT",
- "PERMIT", "PERMITSUM", "PIPE", "PLACE", "PLAN", "PLI", "PLS_INTEGER", "POS",
- "POSITION", "POSITIVE", "POSITIVEN", "POSTFIX", "POWER", "PRAGMA", "PRECEDES",
- "PRECISION", "PREFIX", "PREORDER", "PREPARE", "PREPARETABLE", "PRESERVE",
- "PREV", "PREVIOUS", "PREVISION", "PRIMARY", "PRINT", "PRINTER", "PRINTSCREEN",
- "PRINTSCREENSCROLL", "PRINTSUBMENU", "PRINTSUMU", "PRIOR", "PRIV", "PRIVATE",
- "PRIVILAGES", "PRIVILAGESTHEN", "PRIVILEGES", "PROC", "PROCEDURE", "PROCESS",
- "PROCESSEXIT", "PROCESSLIST", "PROGRAM", "PROGUSAGE", "PROMPT",
- "PROMPTSCROLLDOWN", "PROMPTTABLEDATA", "PROTECT", "PSECT", "PUBLIC",
- "PUBLICREAD", "PUT", "PUTFORM", "PUTFORMSCROLLUP", "PUTFORMUNLOADTABLE",
- "PUTOPER", "PUTOPERSLEEP", "PUTROW", "PUTROWSUBMENU", "PUTROWUP", 
-
- "QUERY", "QUICK", "QUIT", 
-
- "RAISERROR", "RANGE", "RANGETO", "RAW", "RDB$DB_KEY", "RDB$LENGTH",
- "RDB$MISSING", "RDB$VALUE", "RDB4DB_KEY", "RDB4LENGTH", "RDB4MISSING",
- "RDB4VALUE", "READ", "READS", "READONLY", "READPASS", "READTEXT", "READWRITE",
- "READY", "READ_ONLY", "READ_WRITE", "REAL", "RECONFIGURE", "RECONNECT",
- "RECORD", "RECOVER", "RECURSIVE", "REDISPLAY", "REDISPLAYTABLEDATA",
- "REDISPLAYVALIDATE", "REDO", "REDUCED", "REF", "REFERENCES", "REFERENCING",
- "REGEXP", "REGISTER", "REGISTERUNLOADDATA", "REGISTERVALIDROW", "REJECT",
- "RELATIVE", "RELEASE", "RELOAD", "RELOCATE", "RELOCATEUNIQUE", "REMOVE",
- "REMOVEUPRELOCATEV", "REMOVEVALIDATE", "REMOVEWHENEVER", "RENAME", "REPEAT",
- "REPEATABLE", "REPEATED", "REPEATVALIDROW", "REPLACE", "REPLACEUNTIL",
- "REPLICATION", "REPLSTR", "REPORT", "REQUEST_HANDLE", "RESERVED_PGS",
- "RESERVING", "RESET", "RESIGNAL", "RESOURCE", "REST", "RESTART", "RESTORE",
- "RESTRICT", "RESULT", "RESUME", "RETRIEVE", "RETRIEVEUPDATE", "RETURN",
- "RETURNS", "RETURNING", "REVERSE", "REVOKE", "RIGHT", "RLIKE", "ROLE",
- "ROLLBACK", "ROLLFORWARD", "ROLLBACK", "ROLLUP", "ROUND", "ROUTINE", "ROW",
- "ROWCNT", "ROWCOUNT", "ROWGUID_COL", "ROWID", "ROWLABEL", "ROWNUM", "ROWS",
- "ROWTYPE", "RPAD", "RULE", "RUN", "RUNTIME", 
-
- "SAMPLSTDEV", "SAVE", "SAVEPOINT", "SAVEPOINTWHERE", "SAVEVIEW", "SCHEMA",
- "SCOPE", "SCREEN", "SCROLL", "SCROLLDOWN", "SCROLLUP", "SEARCH", "SECOND",
- "SECTION", "SEGMENT", "SEL", "SELE", "SELEC", "SELECT", "SELUPD", "SEPERATE",
- "SEQUENCE", "SERIAL", "SESSION", "SESSION_USER", "SET", "SETOF", "SETS",
- "SETWITH", "SET_EQUEL", "SET_FRS", "SET_INGRES", "SETUSER", "SHARE", "SHARED",
- "SHORT", "SHOW", "SHUTDOWN", "SIGNAL", "SIZE", "SKIP", "SLEEP", "SMALLFLOAT",
- "SMALLINT", "SOME", "SONAME", "SORT", "SORTERD", "SOUNDS", "SOURCEPOS",
- "SPACE", "SPACES", "SPECIFIC", "SPECIFICTYPE", "SQL", "SQL_BIG_RESULT",
- "SQL_BIG_SELECTS", "SQL_BIG_TABLES", "SQL_LOG_OFF", "SQL_LOG_UPDATE",
- "SQL_LOW_PRIORITY_UPDATES", "SQL_SELECT_LIMIT", "SQL_SMALL_RESULT",
- "SQL_WARNINGS", "SQLCODE", "SQLDA", "SQLERRM", "SQLERROR", "SQLEXCEPTION",
- "SQLEXEPTION", "SQLEXPLAIN", "SQLNOTFOUND", "SQLSTATE", "SQLWARNING", "SQRT",
- "STABILITY", "START", "STARTING", "STARTPOS", "START_SEGMENT",
- "START_SEGMENTED_?", "START_STREAM", "START_TRANSACTION", "STATE", "STATIC",
- "STATISTICS", "STATUS", "STDDEV", "STDEV", "STEP", "STOP", "STORE",
- "STRAIGHT_JOIN", "STRING", "STRUCTURE", "SUBMENU", "SUBSTR", "SUBSTRING",
- "SUBTYPE", "SUCCEEDS", "SUCCESFULL", "SUCCESSFULL", "SUM", "SUMU", "SUPERDBA",
- "SYB_TERMINATE", "SYNONYM", "SYSDATE", "SYSSORT", "SYSTEM_USER", 
-
- "TABLE", "TABLEDATA", "TABLES", "TEMP", "TEMPORARY", "TERMINATE", "TERMINATED",
- "TEXT", "TEXTSIZE", "THAN", "THEN", "THROUGH", "THRU", "TID", "TIME",
- "TIMESTAMP", "TIMEZONE_HOUR", "TIMEZONE_MINUTE", "TINYBLOB", "TINYINT",
- "TINYTEXT", "TO", "TODAY", "TOLOWER", "TOP", "TOTAL", "TOUPPER", "TP",
- "TRAILER", "TRAILING", "TRAN", "TRANS", "TRANSACTION", "TRANSACTION_HANDLE",
- "TRANSFER", "TRANSLATE", "TRANSLATION", "TREAT", "TRIGGER", "TRING", "TRUE",
- "TRUNC", "TRUNCATE", "TSEQUAL", "TYPE", 
-
- "UID", "UNBUFFERED", "UNDER", "UNDO", "UNION", "UNIQUE", "UNKNOWN", "UNLISTEN",
- "UNLOAD", "UNLOADDATA", "UNLOADTABLE", "UNLOCK", "UNTIL", "UP", "UPDATE",
- "UPDATETEXT", "UPPER", "USAGE", "USE", "USED_PGS", "USER", "USING", 
-
- "VACUUM", "VALIDATE", "VALIDROW", "VALUE", "VALUES", "VARBINARY", "VARC",
- "VARCH", "VARCHA", "VARCHAR", "VARGRAPHIC", "VARIABLE", "VARIABLES",
- "VARIANCE", "VARYING", "VERB_TIME", "VERBOSE", "VERIFY", "VERSION", "VIEW", 
-
- "WAIT", "WAITFOR", "WAITING", "WARNING", "WEEKDAY", "WHEN", "WHENEVER",
- "WHERE", "WHILE", "WINDOW", "WITH", "WITHOUT", "WORK", "WRAP", "WRITE",
- "WRITEPASS", "WRITETEXT", 
-
- "YEAR", 
-
- "ZEROFILL", "ZONE" };
-
-
-public void initReservedWords() {
-  //create extensive list of reserved words
-  int asize = rwArray.length;
-  Debug.log("[initReservedWords] array length=" + asize);
-  for(int i=0; i<asize; i++) {
-    reservedWords.add(rwArray[i]);
-  }
-}
-%>

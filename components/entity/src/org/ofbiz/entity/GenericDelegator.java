@@ -1,5 +1,5 @@
 /*
- * $Id: GenericDelegator.java,v 1.16 2004/04/23 05:18:10 doogie Exp $
+ * $Id: GenericDelegator.java,v 1.17 2004/06/20 07:09:18 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -51,6 +51,7 @@ import org.ofbiz.entity.datasource.GenericHelperFactory;
 import org.ofbiz.entity.eca.EntityEcaHandler;
 import org.ofbiz.entity.model.DynamicViewEntity;
 import org.ofbiz.entity.model.ModelEntity;
+import org.ofbiz.entity.model.ModelEntityChecker;
 import org.ofbiz.entity.model.ModelField;
 import org.ofbiz.entity.model.ModelFieldType;
 import org.ofbiz.entity.model.ModelFieldTypeReader;
@@ -78,7 +79,7 @@ import org.xml.sax.SAXException;
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:chris_maurer@altavista.com">Chris Maurer</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a
- * @version    $Revision: 1.16 $
+ * @version    $Revision: 1.17 $
  * @since      1.0
  */
 public class GenericDelegator implements DelegatorInterface {
@@ -150,9 +151,21 @@ public class GenericDelegator implements DelegatorInterface {
         allCache = new UtilCache("entity.FindAll." + delegatorName, 0, 0, true);
         andCache = new UtilCache("entity.FindByAnd." + delegatorName, 0, 0, true);
 
+        // do the entity model check
+        List warningList = new LinkedList();
+        Debug.logImportant("Doing entity definition check...", module);
+        ModelEntityChecker.checkEntities(this, warningList);
+        if (warningList.size() > 0) {
+            Debug.logWarning("=-=-=-=-= Found " + warningList.size() + " warnings when checking the entity definitions:", module);
+            Iterator warningIter = warningList.iterator();
+            while (warningIter.hasNext()) {
+                String warning = (String) warningIter.next();
+                Debug.logWarning(warning, module);
+            }
+        }
+        
         // initialize helpers by group
         Iterator groups = UtilMisc.toIterator(getModelGroupReader().getGroupNames());
-
         while (groups != null && groups.hasNext()) {
             String groupName = (String) groups.next();
             String helperName = this.getGroupHelperName(groupName);
@@ -160,7 +173,6 @@ public class GenericDelegator implements DelegatorInterface {
             if (Debug.infoOn()) Debug.logInfo("Delegator \"" + delegatorName + "\" initializing helper \"" +
                     helperName + "\" for entity group \"" + groupName + "\".", module);
             TreeSet helpersDone = new TreeSet();
-
             if (helperName != null && helperName.length() > 0) {
                 // make sure each helper is only loaded once
                 if (helpersDone.contains(helperName)) {
@@ -174,7 +186,6 @@ public class GenericDelegator implements DelegatorInterface {
                 GenericHelper helper = GenericHelperFactory.getHelper(helperName);
 
                 EntityConfigUtil.DatasourceInfo datasourceInfo = EntityConfigUtil.getDatasourceInfo(helperName);
-
                 if (datasourceInfo.checkOnStart) {
                     if (Debug.infoOn()) Debug.logInfo("Doing database check as requested in entityengine.xml with addMissing=" + datasourceInfo.addMissingOnStart, module);
                     try {

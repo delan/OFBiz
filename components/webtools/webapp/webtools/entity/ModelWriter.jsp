@@ -13,7 +13,7 @@ if (security.hasPermission("ENTITY_MAINT", session) || request.getParameter("ori
       if (resourceHandler.isFileResource()) {
           String filename = resourceHandler.getFullLocation();
 
-          java.net.URL url = new java.net.URL(serverRootUrl + controlPath + "/view/ModelWriter");
+          java.net.URL url = new java.net.URL(serverRootUrl + controlPath + "/ModelWriter");
           HashMap params = new HashMap();
           params.put("originalLoaderName", resourceHandler.getLoaderName());
           params.put("originalLocation", resourceHandler.getLocation());

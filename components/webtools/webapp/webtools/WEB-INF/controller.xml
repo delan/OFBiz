@@ -132,6 +132,15 @@
     	<response name="success" type="view" value="entityref"/>
     </request-map>
 
+    <request-map uri="ModelWriter">
+    	<security https="false" auth="true"/>
+    	<response name="success" type="view" value="ModelWriter"/>
+    </request-map>
+    <request-map uri="ModelGroupWriter">
+    	<security https="false" auth="true"/>
+    	<response name="success" type="view" value="ModelGroupWriter"/>
+    </request-map>
+
     <request-map uri="xmldsdump">
     	<security https="true" auth="true"/>
     	<response name="success" type="view" value="xmldsdump"/>

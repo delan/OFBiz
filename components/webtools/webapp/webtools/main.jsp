@@ -78,10 +78,12 @@
                   <li><a href="<ofbiz:url>/view/entityref</ofbiz:url>" class='buttontext' target='_blank'>Entity Reference &amp; Editing Tools</a>&nbsp;<a href="<ofbiz:url>/view/entityref?forstatic=true</ofbiz:url>" class="buttontext" target="_blank">[Static Version]</a>
                   <ul>
                     <li><a href="<ofbiz:url>/view/checkdb</ofbiz:url>" class='buttontext'>Check/Update Database</A>                    
-                    <li><a href="<ofbiz:url>/view/ModelWriter</ofbiz:url>" class='buttontext' target='_blank'>Generate Entity Model XML (all in one)</A>
-                    <li><a href="<ofbiz:url>/view/ModelWriter?savetofile=true</ofbiz:url>" target='_blank' class='buttontext'>Save Entity Model XML to Files</A><BR>
-                    <li><a href="<ofbiz:url>/view/ModelGroupWriter</ofbiz:url>" target='_blank' class='buttontext'>Generate Entity Group XML</A><BR>
-                    <li><a href="<ofbiz:url>/view/ModelGroupWriter?savetofile=true</ofbiz:url>" target='_blank' class='buttontext'>Save Entity Group XML to File</A><BR>
+                    <li><a href="<ofbiz:url>/ModelWriter</ofbiz:url>" class='buttontext' target='_blank'>Generate Entity Model XML (all in one)</A>
+                    <li><a href="<ofbiz:url>/ModelWriter?savetofile=true</ofbiz:url>" target='_blank' class='buttontext'>Save Entity Model XML to Files</A><BR>
+                    <!-- not working right now anyway
+                    <li><a href="<ofbiz:url>/ModelGroupWriter</ofbiz:url>" target='_blank' class='buttontext'>Generate Entity Group XML</A><BR>
+                    <li><a href="<ofbiz:url>/ModelGroupWriter?savetofile=true</ofbiz:url>" target='_blank' class='buttontext'>Save Entity Group XML to File</A><BR>
+                    -->
                     <li><a href="<ofbiz:url>/view/EditEntity</ofbiz:url>" class='buttontext' target='_blank'>Edit Entity Definitions</A>
                     <li><a href="<ofbiz:url>/view/ModelInduceFromDb</ofbiz:url>" target='_blank' class='buttontext'>Induce Model XML from Database</A><BR>
                   </ul>
