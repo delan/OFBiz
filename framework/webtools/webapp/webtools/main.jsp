@@ -117,12 +117,6 @@
                   <li><a href="<ofbiz:url>/readxpdl</ofbiz:url>" class="buttontext">Read XPDL File</a>
                 </ul>
               <%}%>
-              <%if(security.hasPermission("RULES_MAINT", session)){%>
-                <li><div class="tabletext">Rule Engine Tools</div>
-                <ul>
-                  <li><a href="<ofbiz:url>/logikus</ofbiz:url>" class="buttontext">Logikus - Run Rulesets</a>
-                </ul>
-              <%}%>
               <%if(security.hasPermission("DATAFILE_MAINT", session)){%>
                 <li><div class="tabletext">Data File Tools</div>
                 <ul>
