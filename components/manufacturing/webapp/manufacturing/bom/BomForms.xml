@@ -22,7 +22,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Jacopo Cappellato (tiz@sastau.it)
- *@version    $Revision: 1.5 $
+ *@version    $Revision: 1.6 $
  *@since      3.0
 -->
 
@@ -94,13 +94,14 @@
         default-map-name= "inputFields" default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="inputBox"
         target="LookupVirtualProduct" title="" type="single">
-        <auto-fields-entity entity-name="Product" default-field-type="find" />
+        <auto-fields-entity entity-name="Product" default-field-type="hidden" />
         <field name="isVirtual">
             <hidden value="Y"/>
         </field>
         <field name="isVirtual_op">
             <hidden value="equals"/>
         </field>
+        <field name="productId"><text-find value="equals"/></field>
         <field name="productTypeId">
             <drop-down>
                 <option key="" description=""/>
@@ -112,53 +113,8 @@
         <field name="productTypeId_op">
             <hidden value="equals"/>
         </field>
-        <field name="primaryProductCategoryId"><ignored/></field>
-        <field name="manufacturerPartyId"><ignored/></field>
-        <field name="introductionDate"><ignored/></field>
-        <field name="supportDiscontinuationDate"><ignored/></field>
-        <field name="salesDiscontinuationDate"><ignored/></field>
-        <field name="salesDiscWhenNotAvail"><ignored/></field>
-        <field name="internalName"><ignored/></field>
-        <field name="brandName"><ignored/></field>
-        <field name="comments"><ignored/></field>
-        <field name="description"><ignored/></field>
-        <field name="longDescription"><ignored/></field>
-        <field name="inventoryMessage"><ignored/></field>
-        <field name="requireInventory"><ignored/></field>
-        <field name="smallImageUrl"><ignored/></field>
-        <field name="mediumImageUrl"><ignored/></field>
-        <field name="largeImageUrl"><ignored/></field>
-        <field name="detailImageUrl"><ignored/></field>
-        <field name="detailTemplate"><ignored/></field>
-        <field name="quantityUomId"><ignored/></field>
-        <field name="quantityIncluded"><ignored/></field>
-        <field name="piecesIncluded"><ignored/></field>
-        <field name="weightUomId"><ignored/></field>
-        <field name="weight"><ignored/></field>
-        <field name="returnable"><ignored/></field>
-        <field name="taxable"><ignored/></field>
-        <field name="taxCategory"><ignored/></field>
-        <field name="taxVatCode"><ignored/></field>
-        <field name="taxDutyCode"><ignored/></field>
-        <field name="chargeShipping"><ignored/></field>
-        <field name="autoCreateKeywords"><ignored/></field>
-        <field name="isVariant"><ignored/></field>
-        <field name="totalQuantityOrdered"><ignored/></field>
-        <field name="createdDate"><ignored/></field>
-        <field name="createdByUserLogin"><ignored/></field>
-        <field name="lastModifiedDate"><ignored/></field>
-        <field name="lastModifiedByUserLogin"><ignored/></field>
-        <field name="depthUomId"><ignored/></field>
-        <field name="productDepth"><ignored/></field>
-        <field name="widthUomId"><ignored/></field>
-        <field name="productWidth"><ignored/></field>
-        <field name="heightUomId"><ignored/></field>
-        <field name="productHeight"><ignored/></field>
-        <field name="amountUomTypeId"><ignored/></field>
-        <field name="requireAmount"><ignored/></field>
-        <field name="facilityId"><ignored/></field>
-        <field name="includeInPromotions"><ignored/></field>
-        <field name="submitButton" title="Lookup" widget-style="standardSubmit">
+	<field name="productName"><text-find value="equals"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonLookUp}" widget-style="standardSubmit">
             <submit button-type="button"/>
         </field>
     </form>
