@@ -927,31 +927,16 @@
         <key-map field-name="partyId"/>
       </relation>
     </entity>
-    <entity entity-name="PartyAttribute"
-            package-name="org.ofbiz.commonapp.party.party"
-            title="Party Attribute Entity">
-      <field name="partyId" type="id-ne"></field>
-      <field name="attrName" type="id-long-ne"></field>
-      <field name="attrValue" type="value"></field>
-      <prim-key field="partyId"/>
-      <prim-key field="attrName"/>
-      <relation type="one" fk-name="PARTY_ATTR" rel-entity-name="Party">
-        <key-map field-name="partyId"/>
-      </relation>
-      <relation type="many" rel-entity-name="PartyTypeAttr">
-        <key-map field-name="attrName"/>
-      </relation>
-    </entity>
     <view-entity entity-name="PartyAndContactMech"
             package-name="org.ofbiz.commonapp.party.party"
             title="Party and Contact Mech View Entity">
+      <member-entity entity-alias="PCM" entity-name="PartyContactMech"/>
       <member-entity entity-alias="CM" entity-name="ContactMech"/>
       <member-entity entity-alias="PTY" entity-name="Party"/>
-      <member-entity entity-alias="PCM" entity-name="PartyContactMech"/>
       <alias entity-alias="CM" name="contactMechId" prim-key="true"/>
       <alias entity-alias="PTY" name="partyId" prim-key="true"/>
-      <alias entity-alias="PCM" name="fromDate" field="fromDate" prim-key="true"/>
-      <alias entity-alias="PCM" name="thruDate" field="thruDate"/>
+      <alias entity-alias="PCM" name="fromDate" prim-key="true"/>
+      <alias entity-alias="PCM" name="thruDate"/>
       <alias entity-alias="PTY" name="partyTypeId"/>
       <alias entity-alias="CM" name="contactMechTypeId"/>
       <alias entity-alias="CM" name="infoString"/>
@@ -981,8 +966,8 @@
     <view-entity entity-name="PartyAndUserLogin"
             package-name="org.ofbiz.commonapp.party.party"
             title="Party and Contact Mech View Entity">
-      <member-entity entity-alias="PTY" entity-name="Party"/>
       <member-entity entity-alias="ULN" entity-name="UserLogin"/>
+      <member-entity entity-alias="PTY" entity-name="Party"/>
       <alias entity-alias="PTY" name="partyId" prim-key="true"/>
       <alias entity-alias="PTY" name="partyTypeId"/>
       <alias entity-alias="ULN" name="userLoginId" prim-key="true"/>
@@ -1001,6 +986,21 @@
         <key-map field-name="userLoginId"/>
       </relation>
     </view-entity>
+    <entity entity-name="PartyAttribute"
+            package-name="org.ofbiz.commonapp.party.party"
+            title="Party Attribute Entity">
+      <field name="partyId" type="id-ne"></field>
+      <field name="attrName" type="id-long-ne"></field>
+      <field name="attrValue" type="value"></field>
+      <prim-key field="partyId"/>
+      <prim-key field="attrName"/>
+      <relation type="one" fk-name="PARTY_ATTR" rel-entity-name="Party">
+        <key-map field-name="partyId"/>
+      </relation>
+      <relation type="many" rel-entity-name="PartyTypeAttr">
+        <key-map field-name="attrName"/>
+      </relation>
+    </entity>
     <entity entity-name="PartyClassification"
             package-name="org.ofbiz.commonapp.party.party"
             title="Party Classification Entity">
@@ -1446,8 +1446,8 @@
     <view-entity entity-name="RoleTypeAndParty"
             package-name="org.ofbiz.commonapp.party.party"
             title="Party Role View Entity">
-      <member-entity entity-alias="PR" entity-name="PartyRole"/>
       <member-entity entity-alias="RT" entity-name="RoleType"/>
+      <member-entity entity-alias="PR" entity-name="PartyRole"/>
       <alias entity-alias="PR" name="partyId" prim-key="true"/>
       <alias entity-alias="RT" name="roleTypeId" prim-key="true"/>
       <alias entity-alias="RT" name="description"/>
