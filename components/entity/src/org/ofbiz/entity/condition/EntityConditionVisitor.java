@@ -1,5 +1,5 @@
 /*
- * $Id: EntityConditionVisitor.java,v 1.1 2004/07/14 03:56:31 doogie Exp $
+ * $Id: EntityConditionVisitor.java,v 1.2 2004/07/14 03:59:49 doogie Exp $
  *
  * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
@@ -37,14 +37,13 @@ import java.util.List;
  * These can be used in various combinations using the EntityConditionList and EntityExpr objects.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public interface EntityConditionVisitor {
     void visit(Object obj);
     void accept(Object obj);
     void acceptObject(Object obj);
-    void acceptFieldName(String fieldName);
     void acceptEntityCondition(EntityCondition condition);
     void acceptEntityJoinOperator(EntityJoinOperator op, List conditions);
     void acceptEntityOperator(EntityOperator op, Object lhs, Object rhs);
