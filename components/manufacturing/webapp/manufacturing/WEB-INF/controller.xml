@@ -9,8 +9,10 @@
     <!-- event handlers -->
     <handler name="java" type="request" class="org.ofbiz.content.webapp.event.JavaEventHandler"/>
     <handler name="soap" type="request" class="org.ofbiz.content.webapp.event.SOAPEventHandler"/>
-    <handler name="service" type="request" class="org.ofbiz.content.webapp.event.ServiceEventHandler"/>
     <handler name="simple" type="request" class="org.ofbiz.content.webapp.event.SimpleEventHandler"/>
+    <handler name="service" type="request" class="org.ofbiz.content.webapp.event.ServiceEventHandler"/>
+    <handler name="service-multi" type="request" class="org.ofbiz.content.webapp.event.ServiceMultiEventHandler"/>
+    <handler name="bsf" type="request" class="org.ofbiz.content.webapp.event.BsfEventHandler"/>
 
     <!-- view handlers -->
     <handler name="jpublish" type="view" class="org.ofbiz.content.webapp.view.JPublishViewHandler"/>
@@ -312,15 +314,7 @@
         <response name="success" type="view" value="EditRoutingProductLink"/>
         <response name="error" type="view" value="EditRoutingProductLink"/>
     </request-map>
-    <request-map uri="RemoveWorkEffortGoodStandard">
-        <security https="true" auth="true"/>
-        <event type="service" invoke="removeWorkEffortGoodStandard"/>
-        <response name="success" type="view" value="EditRoutingProductLink"/>
-        <response name="error" type="view" value="EditRoutingProductLink"/>
-    </request-map>
-
     <!-- BOM request mappings -->
-    
     <request-map uri="findBom">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="findBom"/>
@@ -408,6 +402,7 @@
         <response name="success" type="view" value="RunningMrp"/>
         <response name="error" type="view" value="RunningMrp"/>
     </request-map>
+    
      <!-- JobShop Management request mappings -->
     <request-map uri="CreateProductionRun">
         <security https="true" auth="true"/>
@@ -418,6 +413,13 @@
         <event type="simple" path="org/ofbiz/manufacturing/jobshopmgt/ProductionRunSimpleEvents.xml" invoke="checkFieldCreateProductionRun"/>
         <response name="success" type="view" value="CreateProductionRun"/>
         <response name="error" type="view" value="CreateProductionRun"/>
+    </request-map>
+    <request-map uri="ShowProductionRun">
+        <security https="true" auth="true"/>
+        <event type="bsf" path="/jobshopmgt/" invoke="ShowProductionRun.bsh"/>
+        <response name="docs_not_printed" type="view" value="EditProductionRun"/>
+        <response name="docs_printed" type="view" value="ProductionRunDeclaration"/>
+        <response name="error" type="view" value="FindProductionRun"/>
     </request-map>
     <request-map uri="FindProductionRun">
         <security https="true" auth="true"/>
@@ -432,14 +434,75 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="ProductionRunDeclaration"/>
     </request-map>
-
+    <request-map uri="RemoveWorkEffortGoodStandard">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="removeWorkEffortGoodStandard"/>
+        <response name="success" type="view" value="EditRoutingProductLink"/>
+        <response name="error" type="view" value="EditRoutingProductLink"/>
+    </request-map>
+    <request-map uri="deleteProductionRunRoutingTask">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteWorkEffort"/>
+        <response name="success" type="view" value="EditProductionRun"/>
+        <response name="error" type="view" value="EditProductionRun"/>
+    </request-map>
+    <request-map uri="deleteProductionRunComponent">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="removeWorkEffortGoodStandard"/>
+        <response name="success" type="view" value="EditProductionRun"/>
+        <response name="error" type="view" value="EditProductionRun"/>
+    </request-map>
+    <!-- Production Run Declaration -->
+    <request-map uri="changeProductionRunStatusToPrinted">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="changeProductionRunStatus"/>
+        <response name="success" type="view" value="ProductionRunDeclaration"/>
+        <response name="error" type="view" value="EditProductionRun"/>
+    </request-map>
+    <request-map uri="changeProductionRunStatusToClosed">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="changeProductionRunStatus"/>
+        <response name="success" type="view" value="ProductionRunDeclaration"/>
+        <response name="error" type="view" value="EditProductionRun"/>
+    </request-map>
+    <request-map uri="changeProductionRunTaskStatus">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="changeProductionRunTaskStatus"/>
+        <response name="success" type="view" value="ProductionRunDeclaration"/>
+        <response name="error" type="view" value="ProductionRunDeclaration"/>
+    </request-map>
+    <request-map uri="issueProductionRunRoutingTask">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="issueProductionRunTask"/>
+        <response name="success" type="view" value="ProductionRunDeclaration"/>
+        <response name="error" type="view" value="ProductionRunDeclaration"/>
+    </request-map>
+    <request-map uri="productionRunProduce">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="productionRunProduce"/>
+        <response name="success" type="view" value="ProductionRunDeclaration"/>
+        <response name="error" type="view" value="ProductionRunDeclaration"/>
+    </request-map>
+    <request-map uri="updateProductionRunTask">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateProductionRunTask"/>
+        <response name="success" type="view" value="ProductionRunDeclaration"/>
+        <response name="error" type="view" value="ProductionRunDeclaration"/>
+    </request-map>
+    <request-map uri="createProductionRunsFromRequirements">
+        <security https="true" auth="true"/>
+        <event type="service-multi" invoke="createProductionRunFromRequirement"/>
+        <response name="success" type="view" value="FindProposedOrder"/>
+        <response name="error" type="view" value="FindProposedOrder"/>
+    </request-map>
     
     <!-- end of request mappings -->
 
 
     <!-- View Mappings -->
     <view-map name="error" page="/error/error.jsp"/>
-    <view-map name="main" type="jpublish" page="/main.ftl"/>
+    <!-- <view-map name="main" type="jpublish" page="/main.ftl"/> -->
+    <view-map name="main" type="jpublish" page="/jobshopmgt/FindProductionRun.ftl"/>
     <view-map name="login" type="jpublish" page="/login.ftl"/>       
 
 
