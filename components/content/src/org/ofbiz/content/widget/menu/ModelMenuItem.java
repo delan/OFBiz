@@ -23,23 +23,23 @@
  */
 package org.ofbiz.content.widget.menu;
 
-import java.util.ArrayList;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
-import java.io.IOException;
-import org.xml.sax.SAXException;
+
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
-import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.content.content.EntityPermissionChecker;
 import org.w3c.dom.Element;
+import org.xml.sax.SAXException;
 
 /**
  * Widget Library - Form model class

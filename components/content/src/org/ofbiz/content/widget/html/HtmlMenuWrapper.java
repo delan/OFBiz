@@ -39,7 +39,6 @@ import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.content.widget.menu.MenuFactory;
 import org.ofbiz.content.widget.menu.MenuStringRenderer;
 import org.ofbiz.content.widget.menu.ModelMenu;
-import org.ofbiz.content.widget.menu.ModelMenuItem;
 import org.ofbiz.entity.GenericValue;
 import org.xml.sax.SAXException;
 
