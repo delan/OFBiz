@@ -73,7 +73,7 @@ public class FlexibleMapAccessor {
         }
     }
     
-    /** Based on name get from Map or from List in Map; should be no dots in name */
+    /** Given the name based information in this accessor, get the value from the passed in Map. */
     public Object get(Map base) {
         if (this.subMapAccessor != null) {
             base = this.subMapAccessor.getSubMap(base);
@@ -86,7 +86,7 @@ public class FlexibleMapAccessor {
         }
     }
     
-    /** Based on name put in Map or from List in Map; should be no dots in name;
+    /** Given the name based information in this accessor, put the value in the passed in Map. 
      * If the brackets for a list are empty the value will be appended to the list,
      * otherwise the value will be set in the position of the number in the brackets.
      * If a "+" (plus sign) is included inside the square brackets before the index 
@@ -113,7 +113,7 @@ public class FlexibleMapAccessor {
         }
     }
     
-    /** Based on name remove from Map or from List in Map; should be no dots in name */
+    /** Given the name based information in this accessor, remove the value from the passed in Map. */
     public Object remove(Map base) {
         if (this.subMapAccessor != null) {
             base = this.subMapAccessor.getSubMap(base);
@@ -125,7 +125,7 @@ public class FlexibleMapAccessor {
             return base.remove(extName);
         }
     }
-
+    
     public class SubMapAccessor {
         protected String extName;
         protected boolean isListReference = false;
