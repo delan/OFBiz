@@ -40,9 +40,12 @@ import org.ofbiz.core.entity.model.*;
  *@version    1.0
  */
 public class GenericDAO {
-    static Map genericDAOs = new Hashtable();
-    String helperName;
-    ModelFieldTypeReader modelFieldTypeReader = null;
+
+    public static final String module = GenericDAO.class.getName();
+
+    protected static Map genericDAOs = new Hashtable();
+    protected String helperName;
+    protected ModelFieldTypeReader modelFieldTypeReader = null;
 
     public static GenericDAO getGenericDAO(String helperName) {
         GenericDAO newGenericDAO = (GenericDAO) genericDAOs.get(helperName);
@@ -102,8 +105,8 @@ public class GenericDAO {
                         if (manualTX)
                             connection.rollback();
                     } catch (SQLException sqle2) {
-                        Debug.logWarning("[GenericDAO.insert]: SQL Exception while rolling back insert. Error was:");
-                        Debug.logWarning(sqle2);
+                        Debug.logWarning("[GenericDAO.insert]: SQL Exception while rolling back insert. Error was:", module);
+                        Debug.logWarning(sqle2, module);
                     }
                     throw new GenericDataSourceException("SQL Exception occured on commit of insert", sqle);
                 }
@@ -113,8 +116,8 @@ public class GenericDAO {
                 if (manualTX)
                     connection.rollback();
             } catch (SQLException sqle2) {
-                Debug.logWarning("[GenericDAO.insert]: SQL Exception while rolling back insert. Error was:");
-                Debug.logWarning(sqle2);
+                Debug.logWarning("[GenericDAO.insert]: SQL Exception while rolling back insert. Error was:", module);
+                Debug.logWarning(sqle2, module);
             }
             throw new GenericDataSourceException("Exception occured in insert", e);
         }
@@ -122,7 +125,7 @@ public class GenericDAO {
                   if (connection != null)
                           connection.close();
               } catch (SQLException sqle) {
-                      Debug.logWarning(sqle.getMessage());
+                      Debug.logWarning(sqle.getMessage(), module);
                   }
                 } }
 
@@ -157,7 +160,7 @@ public class GenericDAO {
                   if (ps != null)
                           ps.close();
               } catch (SQLException sqle) {
-                      Debug.logWarning(sqle.getMessage());
+                      Debug.logWarning(sqle.getMessage(), module);
                   }
                 } }
 
@@ -215,8 +218,8 @@ public class GenericDAO {
                         if (manualTX)
                             connection.rollback();
                     } catch (SQLException sqle2) {
-                        Debug.logWarning("[GenericDAO.customUpdate]: SQL Exception while rolling back update. Error was:");
-                        Debug.logWarning(sqle2);
+                        Debug.logWarning("[GenericDAO.customUpdate]: SQL Exception while rolling back update. Error was:", module);
+                        Debug.logWarning(sqle2, module);
                     }
                     throw new GenericDataSourceException("SQL Exception occured on commit of update", sqle);
                 }
@@ -226,8 +229,8 @@ public class GenericDAO {
                 if (manualTX)
                     connection.rollback();
             } catch (SQLException sqle2) {
-                Debug.logWarning("[GenericDAO.customUpdate]: SQL Exception while rolling back update. Error was:");
-                Debug.logWarning(sqle2);
+                Debug.logWarning("[GenericDAO.customUpdate]: SQL Exception while rolling back update. Error was:", module);
+                Debug.logWarning(sqle2, module);
             }
             throw new GenericDataSourceException("Exception occured in update", e);
         }
@@ -235,7 +238,7 @@ public class GenericDAO {
                   if (connection != null)
                           connection.close();
               } catch (SQLException sqle) {
-                      Debug.logWarning(sqle.getMessage());
+                      Debug.logWarning(sqle.getMessage(), module);
                   }
                 } }
 
@@ -292,7 +295,7 @@ public class GenericDAO {
                   if (ps != null)
                           ps.close();
               } catch (SQLException sqle) {
-                      Debug.logWarning(sqle.getMessage());
+                      Debug.logWarning(sqle.getMessage(), module);
                   }
                 } }
 
@@ -351,8 +354,8 @@ public class GenericDAO {
                         if (manualTX)
                             connection.rollback();
                     } catch (SQLException sqle2) {
-                        Debug.logWarning("[GenericDAO.storeAll]: SQL Exception while rolling back storeAll. Error was:");
-                        Debug.logWarning(sqle2);
+                        Debug.logWarning("[GenericDAO.storeAll]: SQL Exception while rolling back storeAll. Error was:", module);
+                        Debug.logWarning(sqle2, module);
                     }
                     throw new GenericDataSourceException("SQL Exception occured on commit of storeAllr", sqle);
                 }
@@ -362,8 +365,8 @@ public class GenericDAO {
                 if (manualTX)
                     connection.rollback();
             } catch (SQLException sqle2) {
-                Debug.logWarning("[GenericDAO.storeAll]: SQL Exception while rolling back store. Error was:");
-                Debug.logWarning(sqle2);
+                Debug.logWarning("[GenericDAO.storeAll]: SQL Exception while rolling back store. Error was:", module);
+                Debug.logWarning(sqle2, module);
             }
             throw new GenericDataSourceException("Exception occured in storeAll", e);
         }
@@ -371,7 +374,7 @@ public class GenericDAO {
                   if (connection != null)
                           connection.close();
               } catch (SQLException sqle) {
-                      Debug.logWarning(sqle.getMessage());
+                      Debug.logWarning(sqle.getMessage(), module);
                   }
                 } }
 
@@ -393,7 +396,7 @@ public class GenericDAO {
                   if (connection != null)
                           connection.close();
               } catch (SQLException sqle) {
-                      Debug.logWarning(sqle.getMessage());
+                      Debug.logWarning(sqle.getMessage(), module);
                   }
                 } }
 
@@ -458,13 +461,13 @@ public class GenericDAO {
                   if (rs != null)
                           rs.close();
               } catch (SQLException sqle) {
-                      Debug.logWarning(sqle.getMessage());
+                      Debug.logWarning(sqle.getMessage(), module);
                   }
               try {
                   if (ps != null)
                           ps.close();
               } catch (SQLException sqle) {
-                      Debug.logWarning(sqle.getMessage());
+                      Debug.logWarning(sqle.getMessage(), module);
                   }
                 } }
 
@@ -542,19 +545,19 @@ public class GenericDAO {
                   if (rs != null)
                           rs.close();
               } catch (SQLException sqle) {
-                      Debug.logWarning(sqle.getMessage());
+                      Debug.logWarning(sqle.getMessage(), module);
                   }
               try {
                   if (ps != null)
                           ps.close();
               } catch (SQLException sqle) {
-                      Debug.logWarning(sqle.getMessage());
+                      Debug.logWarning(sqle.getMessage(), module);
                   }
               try {
                   if (connection != null)
                           connection.close();
               } catch (SQLException sqle) {
-                      Debug.logWarning(sqle.getMessage());
+                      Debug.logWarning(sqle.getMessage(), module);
                   }
                 } }
 
@@ -646,19 +649,19 @@ public class GenericDAO {
                   if (rs != null)
                           rs.close();
               } catch (SQLException sqle) {
-                      Debug.logWarning(sqle.getMessage());
+                      Debug.logWarning(sqle.getMessage(), module);
                   }
               try {
                   if (ps != null)
                           ps.close();
               } catch (SQLException sqle) {
-                      Debug.logWarning(sqle.getMessage());
+                      Debug.logWarning(sqle.getMessage(), module);
                   }
               try {
                   if (connection != null)
                           connection.close();
               } catch (SQLException sqle) {
-                      Debug.logWarning(sqle.getMessage());
+                      Debug.logWarning(sqle.getMessage(), module);
                   }
                 } return collection;
     }
@@ -751,19 +754,19 @@ public class GenericDAO {
                   if (rs != null)
                           rs.close();
               } catch (SQLException sqle) {
-                      Debug.logWarning(sqle.getMessage());
+                      Debug.logWarning(sqle.getMessage(), module);
                   }
               try {
                   if (ps != null)
                           ps.close();
               } catch (SQLException sqle) {
-                      Debug.logWarning(sqle.getMessage());
+                      Debug.logWarning(sqle.getMessage(), module);
                   }
               try {
                   if (connection != null)
                           connection.close();
               } catch (SQLException sqle) {
-                      Debug.logWarning(sqle.getMessage());
+                      Debug.logWarning(sqle.getMessage(), module);
                   }
                 } return collection;
     }
@@ -873,19 +876,19 @@ public class GenericDAO {
                   if (rs != null)
                           rs.close();
               } catch (SQLException sqle) {
-                      Debug.logWarning(sqle.getMessage());
+                      Debug.logWarning(sqle.getMessage(), module);
                   }
               try {
                   if (ps != null)
                           ps.close();
               } catch (SQLException sqle) {
-                      Debug.logWarning(sqle.getMessage());
+                      Debug.logWarning(sqle.getMessage(), module);
                   }
               try {
                   if (connection != null)
                           connection.close();
               } catch (SQLException sqle) {
-                      Debug.logWarning(sqle.getMessage());
+                      Debug.logWarning(sqle.getMessage(), module);
                   }
                 } return collection;
     }
@@ -995,19 +998,19 @@ public class GenericDAO {
                   if (rs != null)
                           rs.close();
               } catch (SQLException sqle) {
-                      Debug.logWarning(sqle.getMessage());
+                      Debug.logWarning(sqle.getMessage(), module);
                   }
               try {
                   if (ps != null)
                           ps.close();
               } catch (SQLException sqle) {
-                      Debug.logWarning(sqle.getMessage());
+                      Debug.logWarning(sqle.getMessage(), module);
                   }
               try {
                   if (connection != null)
                           connection.close();
               } catch (SQLException sqle) {
-                      Debug.logWarning(sqle.getMessage());
+                      Debug.logWarning(sqle.getMessage(), module);
                   }
                 } return collection;
     }
@@ -1090,19 +1093,19 @@ public class GenericDAO {
                   if (rs != null)
                           rs.close();
               } catch (SQLException sqle) {
-                      Debug.logWarning(sqle.getMessage());
+                      Debug.logWarning(sqle.getMessage(), module);
                   }
               try {
                   if (ps != null)
                           ps.close();
               } catch (SQLException sqle) {
-                      Debug.logWarning(sqle.getMessage());
+                      Debug.logWarning(sqle.getMessage(), module);
                   }
               try {
                   if (connection != null)
                           connection.close();
               } catch (SQLException sqle) {
-                      Debug.logWarning(sqle.getMessage());
+                      Debug.logWarning(sqle.getMessage(), module);
                   }
                 } return collection;
     }
@@ -1239,19 +1242,19 @@ public class GenericDAO {
                   if (rs != null)
                           rs.close();
               } catch (SQLException sqle) {
-                      Debug.logWarning(sqle.getMessage());
+                      Debug.logWarning(sqle.getMessage(), module);
                   }
               try {
                   if (ps != null)
                           ps.close();
               } catch (SQLException sqle) {
-                      Debug.logWarning(sqle.getMessage());
+                      Debug.logWarning(sqle.getMessage(), module);
                   }
               try {
                   if (connection != null)
                           connection.close();
               } catch (SQLException sqle) {
-                      Debug.logWarning(sqle.getMessage());
+                      Debug.logWarning(sqle.getMessage(), module);
                   }
                 }
         return collection;
@@ -1275,7 +1278,7 @@ public class GenericDAO {
                   if (connection != null)
                           connection.close();
               } catch (SQLException sqle) {
-                      Debug.logWarning(sqle.getMessage());
+                      Debug.logWarning(sqle.getMessage(), module);
                   }
                 } }
 
@@ -1314,7 +1317,7 @@ public class GenericDAO {
                   if (ps != null)
                           ps.close();
               } catch (SQLException sqle) {
-                      Debug.logWarning(sqle.getMessage());
+                      Debug.logWarning(sqle.getMessage(), module);
                   }
                 } }
 
@@ -1333,7 +1336,7 @@ public class GenericDAO {
                   if (connection != null)
                           connection.close();
               } catch (SQLException sqle) {
-                      Debug.logWarning(sqle.getMessage());
+                      Debug.logWarning(sqle.getMessage(), module);
                   }
                 } }
 
@@ -1385,7 +1388,7 @@ public class GenericDAO {
                   if (ps != null)
                           ps.close();
               } catch (SQLException sqle) {
-                      Debug.logWarning(sqle.getMessage());
+                      Debug.logWarning(sqle.getMessage(), module);
                   }
                 } }
 
@@ -1431,8 +1434,8 @@ public class GenericDAO {
                 if (manualTX)
                     connection.rollback();
             } catch (SQLException sqle2) {
-                Debug.logWarning("[GenericDAO.deleteAll]: SQL Exception while rolling back delete. Error was:");
-                Debug.logWarning(sqle2);
+                Debug.logWarning("[GenericDAO.deleteAll]: SQL Exception while rolling back delete. Error was:", module);
+                Debug.logWarning(sqle2, module);
             }
             throw new GenericDataSourceException("SQL Exception occured in deleteAll", sqle);
         }
@@ -1441,8 +1444,8 @@ public class GenericDAO {
                 if (manualTX)
                     connection.rollback();
             } catch (SQLException sqle2) {
-                Debug.logWarning("[GenericDAO.deleteAll]: SQL Exception while rolling back delete. Error was:");
-                Debug.logWarning(sqle2);
+                Debug.logWarning("[GenericDAO.deleteAll]: SQL Exception while rolling back delete. Error was:", module);
+                Debug.logWarning(sqle2, module);
             }
             throw new GenericDataSourceException("SQL Exception occured in deleteAll", e);
         }
@@ -1450,7 +1453,7 @@ public class GenericDAO {
                   if (connection != null)
                           connection.close();
               } catch (SQLException sqle) {
-                      Debug.logWarning(sqle.getMessage());
+                      Debug.logWarning(sqle.getMessage(), module);
                   }
                 } }
 
@@ -1694,10 +1697,11 @@ public class GenericDAO {
             Class fieldClass = field.getClass();
             String fieldClassName = fieldClass.getName();
             if (!fieldClassName.equals(mft.javaType) && fieldClassName.indexOf(mft.javaType) < 0) {
-                Debug.logWarning("GenericDAO.setValue: type of field " + entity.getEntityName() + "." + curField.name + " is " + fieldClassName +
-                        ", was expecting " + mft.javaType +
-                        "; this may indicate an error in the configuration or in the class, and may result in an SQL-Java data conversion error. Will use the real field type: " +
-                        fieldClassName + ", not the definition.");
+                Debug.logWarning("GenericDAO.setValue: type of field " + entity.getEntityName() + "." + curField.name +
+                                 " is " + fieldClassName + ", was expecting " + mft.javaType + "; this may " +
+                                 "indicate an error in the configuration or in the class, and may result " +
+                                 "in an SQL-Java data conversion error. Will use the real field type: " +
+                                 fieldClassName + ", not the definition.", module);
                 fieldType = fieldClassName;
             }
         }
@@ -1759,7 +1763,7 @@ public class GenericDAO {
         if (entity == null)
             return false;
         if (entity instanceof ModelViewEntity) {
-            Debug.logError("[GenericDAO.createTable] ERROR: Cannot create table for a view entity");
+            Debug.logError("[GenericDAO.createTable] ERROR: Cannot create table for a view entity", module);
             return false;
         }
 
@@ -1768,12 +1772,12 @@ public class GenericDAO {
         try {
             connection = getConnection();
         } catch (SQLException sqle) {
-            Debug.logWarning("[GenericDAO.createTable]: Unable to esablish a connection with the database... Error was:");
-            Debug.logWarning(sqle.getMessage());
+            Debug.logWarning("[GenericDAO.createTable]: Unable to esablish a connection with the database... Error was:", module);
+            Debug.logWarning(sqle.getMessage(), module);
         }
         catch (GenericEntityException e) {
-            Debug.logWarning("[GenericDAO.createTable]: Unable to esablish a connection with the database... Error was:");
-            Debug.logWarning(e.getMessage());
+            Debug.logWarning("[GenericDAO.createTable]: Unable to esablish a connection with the database... Error was:", module);
+            Debug.logWarning(e.getMessage(), module);
         }
 
         String sql = "CREATE TABLE " + entity.tableName + " (";
@@ -1796,8 +1800,8 @@ public class GenericDAO {
             stmt = connection.createStatement();
             stmt.executeUpdate(sql);
         } catch (SQLException sqle) {
-            Debug.logWarning("[GenericDAO]: SQL Exception while executing the following:\n" + sql + "\nError was:");
-            Debug.logWarning(sqle.getMessage());
+            Debug.logWarning("[GenericDAO]: SQL Exception while executing the following:\n" + sql + "\nError was:", module);
+            Debug.logWarning(sqle.getMessage(), module);
             return false;
         }
         finally {
@@ -1826,7 +1830,7 @@ public class GenericDAO {
         if (entity == null || field == null)
             return false;
         if (entity instanceof ModelViewEntity) {
-            Debug.logError("[GenericDAO.addColumn] ERROR: Cannot add column for a view entity");
+            Debug.logError("[GenericDAO.addColumn] ERROR: Cannot add column for a view entity", module);
             return false;
         }
 
@@ -1835,12 +1839,12 @@ public class GenericDAO {
         try {
             connection = getConnection();
         } catch (SQLException sqle) {
-            Debug.logWarning("[GenericDAO.createTable]: Unable to esablish a connection with the database... Error was:");
-            Debug.logWarning(sqle.getMessage());
+            Debug.logWarning("[GenericDAO.createTable]: Unable to esablish a connection with the database... Error was:", module);
+            Debug.logWarning(sqle.getMessage(), module);
         }
         catch (GenericEntityException e) {
-            Debug.logWarning("[GenericDAO.createTable]: Unable to esablish a connection with the database... Error was:");
-            Debug.logWarning(e.getMessage());
+            Debug.logWarning("[GenericDAO.createTable]: Unable to esablish a connection with the database... Error was:", module);
+            Debug.logWarning(e.getMessage(), module);
         }
 
         ModelFieldType type = modelFieldTypeReader.getModelFieldType(field.type);
@@ -1851,8 +1855,8 @@ public class GenericDAO {
             stmt = connection.createStatement();
             stmt.executeUpdate(sql);
         } catch (SQLException sqle) {
-            Debug.logWarning("[GenericDAO]: SQL Exception while executing the following:\n" + sql + "\nError was:");
-            Debug.logWarning(sqle.getMessage());
+            Debug.logWarning("[GenericDAO]: SQL Exception while executing the following:\n" + sql + "\nError was:", module);
+            Debug.logWarning(sqle.getMessage(), module);
             return false;
         }
         finally {
@@ -1883,7 +1887,7 @@ public class GenericDAO {
             String message = "Could not get table name information from the database, aborting.";
             if (messages != null)
                 messages.add(message);
-            Debug.logError("[GenericDAO.checkDb] " + message);
+            Debug.logError("[GenericDAO.checkDb] " + message, module);
             return;
         }
         timer.timerString("[GenericDAO.checkDb] After Get All Table Names");
@@ -1894,7 +1898,7 @@ public class GenericDAO {
             String message = "Could not get column information from the database, aborting.";
             if (messages != null)
                 messages.add(message);
-            Debug.logError("[GenericDAO.checkDb] " + message);
+            Debug.logError("[GenericDAO.checkDb] " + message, module);
             return;
         }
         timer.timerString("[GenericDAO.checkDb] After Get All Column Info");
@@ -1920,15 +1924,15 @@ public class GenericDAO {
             //if this is a view entity, do not check it...
             if (entity instanceof ModelViewEntity) {
                 String entMessage = "(" + timer.timeSinceLast() + "ms) NOT Checking #" + curEnt + "/" + totalEnt + " View Entity " + entity.entityName;
-                Debug.logInfo("[GenericDAO.checkDb] " + entMessage);
+                Debug.logVerbose("[GenericDAO.checkDb] " + entMessage, module);
                 if (messages != null)
                     messages.add(entMessage);
                 continue;
             }
 
-            String entMessage =
-                    "(" + timer.timeSinceLast() + "ms) Checking #" + curEnt + "/" + totalEnt + " Entity " + entity.entityName + " with table " + entity.tableName;
-            Debug.logInfo("[GenericDAO.checkDb] " + entMessage);
+            String entMessage = "(" + timer.timeSinceLast() + "ms) Checking #" + curEnt + "/" + totalEnt +
+                    " Entity " + entity.entityName + " with table " + entity.tableName;
+            Debug.logVerbose("[GenericDAO.checkDb] " + entMessage, module);
             if (messages != null)
                 messages.add(entMessage);
 
@@ -1971,21 +1975,21 @@ public class GenericDAO {
                                         try {
                                             columnSize = Integer.parseInt(csStr);
                                         } catch (NumberFormatException e) {
-                                            Debug.logError(e);
+                                            Debug.logError(e, module);
                                         }
 
                                         String ddStr = fullTypeStr.substring(comma + 1, closeParen);
                                         try {
                                             decimalDigits = Integer.parseInt(ddStr);
                                         } catch (NumberFormatException e) {
-                                            Debug.logError(e);
+                                            Debug.logError(e, module);
                                         }
                                     } else {
                                         String csStr = fullTypeStr.substring(openParen + 1, closeParen);
                                         try {
                                             columnSize = Integer.parseInt(csStr);
                                         } catch (NumberFormatException e) {
-                                            Debug.logError(e);
+                                            Debug.logError(e, module);
                                         }
                                     }
                                 } else {
@@ -1996,7 +2000,7 @@ public class GenericDAO {
                                     String message = "WARNING: Column \"" + ccInfo.columnName + "\" of table \"" + entity.tableName + "\" of entity \"" +
                                             entity.entityName + "\" is of type \"" + ccInfo.typeName + "\" in the database, but is defined as type \"" +
                                             typeName + "\" in the entity definition.";
-                                    Debug.logError("[GenericDAO.checkDb] " + message);
+                                    Debug.logError("[GenericDAO.checkDb] " + message, module);
                                     if (messages != null)
                                         messages.add(message);
                                 }
@@ -2004,7 +2008,7 @@ public class GenericDAO {
                                     String message = "WARNING: Column \"" + ccInfo.columnName + "\" of table \"" + entity.tableName + "\" of entity \"" +
                                             entity.entityName + "\" has a column size of \"" + ccInfo.columnSize +
                                             "\" in the database, but is defined to have a column size of \"" + columnSize + "\" in the entity definition.";
-                                    Debug.logWarning("[GenericDAO.checkDb] " + message);
+                                    Debug.logWarning("[GenericDAO.checkDb] " + message, module);
                                     if (messages != null)
                                         messages.add(message);
                                 }
@@ -2012,20 +2016,20 @@ public class GenericDAO {
                                     String message = "WARNING: Column \"" + ccInfo.columnName + "\" of table \"" + entity.tableName + "\" of entity \"" +
                                             entity.entityName + "\" has a decimalDigits of \"" + ccInfo.decimalDigits +
                                             "\" in the database, but is defined to have a decimalDigits of \"" + decimalDigits + "\" in the entity definition.";
-                                    Debug.logWarning("[GenericDAO.checkDb] " + message);
+                                    Debug.logWarning("[GenericDAO.checkDb] " + message, module);
                                     if (messages != null)
                                         messages.add(message);
                                 }
                             } else {
                                 String message = "Column \"" + ccInfo.columnName + "\" of table \"" + entity.tableName + "\" of entity \"" + entity.entityName +
                                         "\" has a field type name of \"" + field.type + "\" which is not found in the field type definitions";
-                                Debug.logError("[GenericDAO.checkDb] " + message);
+                                Debug.logError("[GenericDAO.checkDb] " + message, module);
                                 if (messages != null)
                                     messages.add(message);
                             }
                         } else {
                             String message = "Column \"" + ccInfo.columnName + "\" of table \"" + entity.tableName + "\" of entity \"" + entity.entityName + "\" exists in the database but has no corresponding field";
-                            Debug.logWarning("[GenericDAO.checkDb] " + message);
+                            Debug.logWarning("[GenericDAO.checkDb] " + message, module);
                             if (messages != null)
                                 messages.add(message);
                         }
@@ -2035,7 +2039,7 @@ public class GenericDAO {
                     if (numCols != entity.fields.size()) {
                         String message = "Entity \"" + entity.entityName + "\" has " + entity.fields.size() + " fields but table \"" + entity.tableName + "\" has " +
                                 numCols + " columns.";
-                        Debug.logWarning("[GenericDAO.checkDb] " + message);
+                        Debug.logWarning("[GenericDAO.checkDb] " + message, module);
                         if (messages != null)
                             messages.add(message);
                     }
@@ -2047,7 +2051,7 @@ public class GenericDAO {
                         ModelField field = (ModelField) fieldColNames.get(colName);
                         String message =
                                 "Field \"" + field.name + "\" of entity \"" + entity.entityName + "\" is missing its corresponding column \"" + field.colName + "\"";
-                        Debug.logError("[GenericDAO.checkDb] " + message);
+                        Debug.logError("[GenericDAO.checkDb] " + message, module);
                         if (messages != null)
                             messages.add(message);
 
@@ -2057,7 +2061,7 @@ public class GenericDAO {
                                 message = "Added column \"" + field.colName + "\" to table \"" + entity.tableName + "\"";
                             else
                                 message = "Could not add column \"" + field.colName + "\" to table \"" + entity.tableName + "\"";
-                            Debug.logError("[GenericDAO.checkDb] " + message);
+                            Debug.logError("[GenericDAO.checkDb] " + message, module);
                             if (messages != null)
                                 messages.add(message);
                         }
@@ -2066,7 +2070,7 @@ public class GenericDAO {
             }
             else {
                 String message = "Entity \"" + entity.entityName + "\" with tableName \"" + entity.tableName + "\" has no corresponding table in the database";
-                Debug.logError("[GenericDAO.checkDb] " + message);
+                Debug.logError("[GenericDAO.checkDb] " + message, module);
                 if (messages != null)
                     messages.add(message);
 
@@ -2076,7 +2080,7 @@ public class GenericDAO {
                         message = "Created table \"" + entity.tableName + "\"";
                     else
                         message = "Could not create table \"" + entity.tableName + "\"";
-                    Debug.logError("[GenericDAO.checkDb] " + message);
+                    Debug.logError("[GenericDAO.checkDb] " + message, module);
                     if (messages != null)
                         messages.add(message);
                 }
@@ -2090,7 +2094,7 @@ public class GenericDAO {
         while (tableNamesIter != null && tableNamesIter.hasNext()) {
             String tableName = (String) tableNamesIter.next();
             String message = "Table named \"" + tableName + "\" exists in the database but has no corresponding entity";
-            Debug.logWarning("[GenericDAO.checkDb] " + message);
+            Debug.logWarning("[GenericDAO.checkDb] " + message, module);
             if (messages != null)
                 messages.add(message);
         }
@@ -2152,14 +2156,14 @@ public class GenericDAO {
             connection = getConnection();
         } catch (SQLException sqle) {
             String message = "Unable to esablish a connection with the database... Error was:" + sqle.toString();
-            Debug.logError("[GenericDAO.getTableNames] " + message);
+            Debug.logError("[GenericDAO.getTableNames] " + message, module);
             if (messages != null)
                 messages.add(message);
             return null;
         }
         catch (GenericEntityException e) {
             String message = "Unable to esablish a connection with the database... Error was:" + e.toString();
-            Debug.logError("[GenericDAO.getTableNames] " + message);
+            Debug.logError("[GenericDAO.getTableNames] " + message, module);
             if (messages != null)
                 messages.add(message);
             return null;
@@ -2170,23 +2174,23 @@ public class GenericDAO {
             dbData = connection.getMetaData();
         } catch (SQLException sqle) {
             String message = "Unable to get database meta data... Error was:" + sqle.toString();
-            Debug.logError("[GenericDAO.getTableNames] " + message);
+            Debug.logError("[GenericDAO.getTableNames] " + message, module);
             if (messages != null)
                 messages.add(message);
             return null;
         }
 
         try {
-            Debug.logInfo("[GenericDAO.getTableNames] Database Product Name is " + dbData.getDatabaseProductName());
-            Debug.logInfo("[GenericDAO.getTableNames] Database Product Version is " + dbData.getDatabaseProductVersion());
+            Debug.logInfo("[GenericDAO.getTableNames] Database Product Name is " + dbData.getDatabaseProductName(), module);
+            Debug.logInfo("[GenericDAO.getTableNames] Database Product Version is " + dbData.getDatabaseProductVersion(), module);
         } catch (SQLException sqle) {
-            Debug.logInfo("[GenericDAO.getTableNames] Unable to get Database name & version information");
+            Debug.logWarning("[GenericDAO.getTableNames] Unable to get Database name & version information", module);
         }
         try {
-            Debug.logInfo("[GenericDAO.getTableNames] Database Driver Name is " + dbData.getDriverName());
-            Debug.logInfo("[GenericDAO.getTableNames] Database Driver Version is " + dbData.getDriverVersion());
+            Debug.logInfo("[GenericDAO.getTableNames] Database Driver Name is " + dbData.getDriverName(), module);
+            Debug.logInfo("[GenericDAO.getTableNames] Database Driver Version is " + dbData.getDriverVersion(), module);
         } catch (SQLException sqle) {
-            Debug.logInfo("[GenericDAO.getTableNames] Unable to get Driver name & version information");
+            Debug.logWarning("[GenericDAO.getTableNames] Unable to get Driver name & version information", module);
         }
 
         //get ALL tables from this database
@@ -2196,7 +2200,7 @@ public class GenericDAO {
             tableSet = dbData.getTables(null, dbData.getUserName(), null, null);
         } catch (SQLException sqle) {
             String message = "Unable to get list of table information... Error was:" + sqle.toString();
-            Debug.logError("[GenericDAO.getTableNames] " + message);
+            Debug.logError("[GenericDAO.getTableNames] " + message, module);
             if (messages != null)
                 messages.add(message);
 
@@ -2204,7 +2208,7 @@ public class GenericDAO {
                 connection.close();
             } catch (SQLException sqle2) {
                 String message2 = "Unable to close database connection, continuing anyway... Error was:" + sqle2.toString();
-                Debug.logError("[GenericDAO.getTableNames] " + message2);
+                Debug.logError("[GenericDAO.getTableNames] " + message2, module);
                 if (messages != null)
                     messages.add(message2);
             }
@@ -2227,7 +2231,7 @@ public class GenericDAO {
                     //Debug.logInfo("[GenericDAO.checkDb] Found table named \"" + tableName + "\" of type \"" + tableType + "\" with remarks: " + remarks);
                 } catch (SQLException sqle) {
                     String message = "Error getting table information... Error was:" + sqle.toString();
-                    Debug.logError("[GenericDAO.getTableNames] " + message);
+                    Debug.logError("[GenericDAO.getTableNames] " + message, module);
                     if (messages != null)
                         messages.add(message);
                     continue;
@@ -2235,7 +2239,7 @@ public class GenericDAO {
             }
         } catch (SQLException sqle) {
             String message = "Error getting next table information... Error was:" + sqle.toString();
-            Debug.logError("[GenericDAO.getTableNames] " + message);
+            Debug.logError("[GenericDAO.getTableNames] " + message, module);
             if (messages != null)
                 messages.add(message);
             return tableNames;
@@ -2244,7 +2248,7 @@ public class GenericDAO {
                       tableSet.close();
               } catch (SQLException sqle) {
                       String message = "Unable to close ResultSet for table list, continuing anyway... Error was:" + sqle.toString();
-                      Debug.logError("[GenericDAO.getTableNames] " + message);
+                      Debug.logError("[GenericDAO.getTableNames] " + message, module);
                   if (messages != null)
                           messages.add(message);
                   }
@@ -2253,7 +2257,7 @@ public class GenericDAO {
                       connection.close();
               } catch (SQLException sqle) {
                       String message = "Unable to close database connection, continuing anyway... Error was:" + sqle.toString();
-                      Debug.logError("[GenericDAO.getTableNames] " + message);
+                      Debug.logError("[GenericDAO.getTableNames] " + message, module);
                   if (messages != null)
                           messages.add(message);
                   }
@@ -2267,14 +2271,14 @@ public class GenericDAO {
             connection = getConnection();
         } catch (SQLException sqle) {
             String message = "Unable to esablish a connection with the database... Error was:" + sqle.toString();
-            Debug.logError("[GenericDAO.getColumnInfo] " + message);
+            Debug.logError("[GenericDAO.getColumnInfo] " + message, module);
             if (messages != null)
                 messages.add(message);
             return null;
         }
         catch (GenericEntityException e) {
             String message = "Unable to esablish a connection with the database... Error was:" + e.toString();
-            Debug.logError("[GenericDAO.getTableNames] " + message);
+            Debug.logError("[GenericDAO.getTableNames] " + message, module);
             if (messages != null)
                 messages.add(message);
             return null;
@@ -2285,7 +2289,7 @@ public class GenericDAO {
             dbData = connection.getMetaData();
         } catch (SQLException sqle) {
             String message = "Unable to get database meta data... Error was:" + sqle.toString();
-            Debug.logError("[GenericDAO.getColumnInfo] " + message);
+            Debug.logError("[GenericDAO.getColumnInfo] " + message, module);
             if (messages != null)
                 messages.add(message);
 
@@ -2293,7 +2297,7 @@ public class GenericDAO {
                 connection.close();
             } catch (SQLException sqle2) {
                 String message2 = "Unable to close database connection, continuing anyway... Error was:" + sqle2.toString();
-                Debug.logError("[GenericDAO.getColumnInfo] " + message2);
+                Debug.logError("[GenericDAO.getColumnInfo] " + message2, module);
                 if (messages != null)
                     messages.add(message2);
             }
@@ -2301,16 +2305,16 @@ public class GenericDAO {
         }
 
         try {
-            Debug.logInfo("[GenericDAO.getColumnInfo] Database Product Name is " + dbData.getDatabaseProductName());
-            Debug.logInfo("[GenericDAO.getColumnInfo] Database Product Version is " + dbData.getDatabaseProductVersion());
+            Debug.logInfo("[GenericDAO.getColumnInfo] Database Product Name is " + dbData.getDatabaseProductName(), module);
+            Debug.logInfo("[GenericDAO.getColumnInfo] Database Product Version is " + dbData.getDatabaseProductVersion(), module);
         } catch (SQLException sqle) {
-            Debug.logInfo("[GenericDAO.getColumnInfo] Unable to get Database name & version information");
+            Debug.logWarning("[GenericDAO.getColumnInfo] Unable to get Database name & version information", module);
         }
         try {
-            Debug.logInfo("[GenericDAO.getColumnInfo] Database Driver Name is " + dbData.getDriverName());
-            Debug.logInfo("[GenericDAO.getColumnInfo] Database Driver Version is " + dbData.getDriverVersion());
+            Debug.logInfo("[GenericDAO.getColumnInfo] Database Driver Name is " + dbData.getDriverName(), module);
+            Debug.logInfo("[GenericDAO.getColumnInfo] Database Driver Version is " + dbData.getDriverVersion(), module);
         } catch (SQLException sqle) {
-            Debug.logInfo("[GenericDAO.getColumnInfo] Unable to get Driver name & version information");
+            Debug.logWarning("[GenericDAO.getColumnInfo] Unable to get Driver name & version information", module);
         }
 
         Map colInfo = new HashMap();
@@ -2344,7 +2348,7 @@ public class GenericDAO {
                     tableColInfo.add(ccInfo);
                 } catch (SQLException sqle) {
                     String message = "Error getting column info for column. Error was:" + sqle.toString();
-                    Debug.logError("[GenericDAO.getColumnInfo] " + message);
+                    Debug.logError("[GenericDAO.getColumnInfo] " + message, module);
                     if (messages != null)
                         messages.add(message);
                     continue;
@@ -2355,13 +2359,13 @@ public class GenericDAO {
                 rsCols.close();
             } catch (SQLException sqle) {
                 String message = "Unable to close ResultSet for column list, continuing anyway... Error was:" + sqle.toString();
-                Debug.logError("[GenericDAO.getColumnInfo] " + message);
+                Debug.logError("[GenericDAO.getColumnInfo] " + message, module);
                 if (messages != null)
                     messages.add(message);
             }
         } catch (SQLException sqle) {
             String message = "Error getting column meta data for Error was:" + sqle.toString() + ". Not checking columns.";
-            Debug.logError("[GenericDAO.getColumnInfo] " + message);
+            Debug.logError("[GenericDAO.getColumnInfo] " + message, module);
             if (messages != null)
                 messages.add(message);
             colInfo = null;
@@ -2371,7 +2375,7 @@ public class GenericDAO {
             connection.close();
         } catch (SQLException sqle) {
             String message = "Unable to close database connection, continuing anyway... Error was:" + sqle.toString();
-            Debug.logError("[GenericDAO.getColumnInfo] " + message);
+            Debug.logError("[GenericDAO.getColumnInfo] " + message, module);
             if (messages != null)
                 messages.add(message);
         }

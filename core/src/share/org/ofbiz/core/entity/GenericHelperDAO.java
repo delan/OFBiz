@@ -35,8 +35,11 @@ import org.ofbiz.core.entity.model.*;
  *@version    1.0
  */
 public class GenericHelperDAO implements GenericHelper {
-    GenericDAO genericDAO;
-    String helperName;
+
+    public static final String module = GenericHelperDAO.class.getName();
+
+    protected GenericDAO genericDAO;
+    protected String helperName;
     
     public GenericHelperDAO(String helperName) {
         this.helperName = helperName;
@@ -121,7 +124,7 @@ public class GenericHelperDAO implements GenericHelper {
      */
     public void removeByPrimaryKey(GenericPK primaryKey) throws GenericEntityException {
         if (primaryKey == null) return;
-        Debug.logInfo("Removing GenericPK: " + primaryKey.toString());
+        Debug.logInfo("Removing GenericPK: " + primaryKey.toString(), module);
         genericDAO.delete(primaryKey);
     }
     

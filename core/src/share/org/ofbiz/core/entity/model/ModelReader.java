@@ -55,6 +55,7 @@ import org.ofbiz.core.util.*;
 
 public class ModelReader {
 
+    public static final String module = ModelReader.class.getName();
     public static UtilCache readers = new UtilCache("ModelReader", 0, 0);
 
     public Map entityCache = null;
@@ -104,7 +105,8 @@ public class ModelReader {
             String tempFileName = fileNamesStr.substring(0, fileNamesStr.indexOf(';'));
             tempFileName.trim();
             if (entityFileNames.contains(tempFileName)) {
-                Debug.logWarning("WARNING: Entity filename " + tempFileName + " is listed more than once in the entity file list: " + wholeFileNamesStr);
+                Debug.logWarning("WARNING: Entity filename " + tempFileName + " is listed more than once in the " +
+                                 "entity file list: " + wholeFileNamesStr, module);
             }
             entityFileNames.add(tempFileName);
             fileNamesStr = fileNamesStr.substring(fileNamesStr.indexOf(';') + 1);
@@ -177,8 +179,12 @@ public class ModelReader {
 
                                     //check to see if entity with same name has already been read
                                     if (entityCache.containsKey(entityName)) {
-                                        Debug.logWarning("WARNING: Entity " + entityName + " is defined more than once, most recent will over-write previous definition(s)");
-                                        Debug.logWarning("WARNING: Entity " + entityName + " was found in file " + entityFileName + ", but was already defined in file " + (String) entityFile.get(entityName));
+                                        Debug.logWarning("WARNING: Entity " + entityName +
+                                                         " is defined more than once, most recent will over-write " +
+                                                         "previous definition(s)", module);
+                                        Debug.logWarning("WARNING: Entity " + entityName + " was found in file " +
+                                                         entityFileName + ", but was already defined in file " +
+                                                         (String) entityFile.get(entityName), module);
                                     }
 
                                     //add entityName, entityFileName pair to entityFile map
@@ -201,18 +207,19 @@ public class ModelReader {
                                         entityCache.put(entityName, entity);
                                         //utilTimer.timerString("  After entityCache.put -- " + i + " --");
                                         if (isEntity) {
-                                            Debug.logInfo("-- [Entity]: #" + i + ": " + entityName);
+                                            Debug.logVerbose("-- [Entity]: #" + i + ": " + entityName, module);
                                         } else {
-                                            Debug.logInfo("-- [ViewEntity]: #" + i + ": " + entityName);
+                                            Debug.logVerbose("-- [ViewEntity]: #" + i + ": " + entityName, module);
                                         }
                                     } else {
-                                        Debug.logWarning("-- -- ENTITYGEN ERROR:getModelEntity: Could not create entity for entityName: " + entityName);
+                                        Debug.logWarning("-- -- ENTITYGEN ERROR:getModelEntity: Could not create " +
+                                                         "entity for entityName: " + entityName, module);
                                     }
 
                                 }
                             } while ((curChild = curChild.getNextSibling()) != null);
                         } else {
-                            Debug.logWarning("No child nodes found.");
+                            Debug.logWarning("No child nodes found.", module);
                         }
                         utilTimer.timerString("Finished file " + entityFileName + " - Total Entities: " + i + " FINISHED");
                     }
@@ -224,7 +231,8 @@ public class ModelReader {
                         curViewEntity.populateFields(entityCache);
                     }
 
-                    Debug.log("FINISHED LOADING ENTITIES - ALL FILES; #Entities=" + numEntities + " #ViewEntities=" + numViewEntities + " #Fields=" + numFields + " #Relationships=" + numRelations);
+                    Debug.log("FINISHED LOADING ENTITIES - ALL FILES; #Entities=" + numEntities + " #ViewEntities=" +
+                              numViewEntities + " #Fields=" + numFields + " #Relationships=" + numRelations, module);
                 }
             }
         }
@@ -347,7 +355,8 @@ public class ModelReader {
                 entity.pks.add(field);
                 field.isPk = true;
             } else {
-                Debug.logError("[ModelReader.createModelEntity] ERROR: Could not find field \"" + ((Element) pkList.item(i)).getAttribute("field") + "\" specified in a prim-key");
+                Debug.logError("[ModelReader.createModelEntity] ERROR: Could not find field \"" +
+                               ((Element) pkList.item(i)).getAttribute("field") + "\" specified in a prim-key", module);
             }
         }
 
@@ -380,7 +389,8 @@ public class ModelReader {
             String alias = UtilXml.checkEmpty(membEnt.getAttribute("entity-alias"));
             String name = UtilXml.checkEmpty(membEnt.getAttribute("entity-name"));
             if (name.length() <= 0 || alias.length() <= 0) {
-                Debug.logWarning("[ModelReader.createModelViewEntity] Warning: entity-alias or entity-name missing on member-entity element");
+                Debug.logWarning("[ModelReader.createModelViewEntity] Warning: entity-alias or " +
+                                 "entity-name missing on member-entity element", module);
             } else {
                 entity.addMemberEntityName(alias, name);
             }

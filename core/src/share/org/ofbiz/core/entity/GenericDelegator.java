@@ -44,15 +44,19 @@ import org.w3c.dom.NodeList;
  * Generic Data Source Delegator Class
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- *@author     <a href='mailto:chris_maurer@altavista.com'>Chris Maurer</a>
+ *@author     <a href="mailto:chris_maurer@altavista.com">Chris Maurer</a>
+ *@author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
  *@created    Sep 17 2001
  *@version    1.0
  */
 public class GenericDelegator {
-    /** the delegatorCache will now be a HashMap, allowing reload of definitions, 
+
+    public static final String module = GenericDelegator.class.getName();
+
+    /** the delegatorCache will now be a HashMap, allowing reload of definitions,
      * but the delegator will always be the same object for the given name */
-    static Map delegatorCache = new HashMap();
-    String delegatorName;
+    protected static Map delegatorCache = new HashMap();
+    protected String delegatorName;
 
     /** set this to true for better performance; set to false to be able to reload definitions at runtime throught the cache manager */
     public static final boolean keepLocalReaders = true;
@@ -82,7 +86,8 @@ public class GenericDelegator {
     }
 
     public GenericDelegator(String delegatorName) {
-        Debug.logInfo("[GenericDelegator.GenericDelegator] Creating new Delegator with name \"" + delegatorName + "\".");
+        Debug.logInfo("[GenericDelegator.GenericDelegator] Creating new Delegator with name \"" +
+                      delegatorName + "\".", module);
 
         this.delegatorName = delegatorName;
         if (keepLocalReaders) {
@@ -99,13 +104,15 @@ public class GenericDelegator {
         while (groups != null && groups.hasNext()) {
             String groupName = (String) groups.next();
             String helperName = this.getGroupHelperName(groupName);
-            Debug.logInfo("[GenericDelegator.GenericDelegator] Delegator \"" + delegatorName + "\" initializing helper \"" + helperName +
-                          "\" for entity group \"" + groupName + "\".");
+            Debug.logInfo("[GenericDelegator.GenericDelegator] Delegator \"" + delegatorName +
+                          "\" initializing helper \"" + helperName + "\" for entity group \"" +
+                          groupName + "\".", module);
             TreeSet helpersDone = new TreeSet();
             if (helperName != null && helperName.length() > 0) {
                 //make sure each helper is only loaded once
                 if (helpersDone.contains(helperName)) {
-                    Debug.logInfo("[GenericDelegator.GenericDelegator] Helper \"" + helperName + "\" alread initialized, not re-initializing.");
+                    Debug.logInfo("[GenericDelegator.GenericDelegator] Helper \"" + helperName +
+                                  "\" alread initialized, not re-initializing.", module);
                     continue;
                 }
                 helpersDone.add(helperName);
@@ -114,12 +121,13 @@ public class GenericDelegator {
                 //get the helper and if configured, do the datasource check
                 GenericHelper helper = GenericHelperFactory.getHelper(helperName);
                 if (UtilProperties.propertyValueEqualsIgnoreCase("entityengine", helperName + ".datasource.check.on.start", "true")) {
-                    boolean addMissing = UtilProperties.propertyValueEqualsIgnoreCase("entityengine", helperName + ".datasource.add.missing.on.start", "true");
-                    Debug.logInfo("[GenericDelegator.GenericDelegator] Doing database check as requested in entityengine.properties with addMissing=" + addMissing);
+                    boolean addMissing = UtilProperties.propertyValueEqualsIgnoreCase("entityengine", helperName +                                                                                      ".datasource.add.missing.on.start", "true");
+                    Debug.logInfo("[GenericDelegator.GenericDelegator] Doing database check as requested " +
+                                  "in entityengine.properties with addMissing=" + addMissing, module);
                     try {
                         helper.checkDataSource(this.getModelEntityMapByGroup(groupName), null, addMissing);
                     } catch (GenericEntityException e) {
-                        Debug.logWarning(e.getMessage());
+                        Debug.logWarning(e.getMessage(), module);
                     }
                 }
             }
@@ -557,7 +565,7 @@ public class GenericDelegator {
     public Collection findByOr(String entityName, Map fields) throws GenericEntityException {
         return this.findByOr(entityName, fields, null);
     }
-    
+
     /** Finds Generic Entity records by all of the specified fields (ie: combined using AND)
      * @param entityName The Name of the Entity as defined in the entity XML file
      * @param fields The fields of the named entity to query by with their corresponging values
@@ -597,7 +605,7 @@ public class GenericDelegator {
         absorbCollection(collection);
         return collection;
     }
-    
+
     /** Finds Generic Entity records by all of the specified fields (ie: combined using AND), looking first in the cache; uses orderBy for lookup, but only keys results on the entityName and fields
      *@param entityName The Name of the Entity as defined in the entity XML file
      *@param fields The fields of the named entity to query by with their corresponging values
@@ -640,7 +648,7 @@ public class GenericDelegator {
     public Collection findByOr(String entityName, List expressions) throws GenericEntityException {
         return findByOr(entityName, expressions, null);
     }
-    
+
     /** Finds Generic Entity records by all of the specified expressions (ie: combined using AND)
      *@param entityName The Name of the Entity as defined in the entity XML file
      *@param expressions The expressions to use for the lookup, each consisting of at least a field name, an EntityOperator, and a value to compare to
@@ -672,7 +680,7 @@ public class GenericDelegator {
         absorbCollection(collection);
         return collection;
     }
-    
+
     public Collection findByLike(String entityName, Map fields) throws GenericEntityException {
         return findByLike(entityName, fields, null);
     }
@@ -805,7 +813,7 @@ public class GenericDelegator {
             ModelKeyMap keyMap = (ModelKeyMap) relation.keyMaps.get(i);
             fields.put(keyMap.relFieldName, value.get(keyMap.fieldName));
         }
-        
+
         GenericPK dummyPK = new GenericPK(relatedEntity, fields);
         dummyPK.setDelegator(this);
         return dummyPK;
@@ -973,8 +981,8 @@ public class GenericDelegator {
                 //only rollback the transaction if we started one...
                 TransactionUtil.rollback(beganTransaction);
             } catch (GenericEntityException e2) {
-                Debug.logError("[GenericDelegator.removeAll] Could not rollback transaction: ");
-                Debug.logError(e2);
+                Debug.logError("[GenericDelegator.removeAll] Could not rollback transaction: ", module);
+                Debug.logError(e2, module);
             }
             //after rolling back, rethrow the exception
             throw e;
@@ -1043,8 +1051,8 @@ public class GenericDelegator {
                 if (beganTransaction)
                     TransactionUtil.rollback();
             } catch (GenericEntityException e2) {
-                Debug.logError("[GenericDelegator.removeAll] Could not rollback transaction: ");
-                Debug.logError(e2);
+                Debug.logError("[GenericDelegator.removeAll] Could not rollback transaction: ", module);
+                Debug.logError(e2, module);
             }
             //after rolling back, rethrow the exception
             throw e;
@@ -1186,7 +1194,7 @@ public class GenericDelegator {
         if (docElement == null)
             return null;
         if (!"entity-engine-xml".equals(docElement.getTagName())) {
-            Debug.logError("[GenericDelegator.makeValues] Root node was not <entity-engine-xml>");
+            Debug.logError("[GenericDelegator.makeValues] Root node was not <entity-engine-xml>", module);
             throw new java.lang.IllegalArgumentException("Root node was not <entity-engine-xml>");
         }
         docElement.normalize();
@@ -1202,7 +1210,7 @@ public class GenericDelegator {
                 }
             } while ((curChild = curChild.getNextSibling()) != null);
         } else
-            Debug.logWarning("[GenericDelegator.makeValues] No child nodes found in document.");
+            Debug.logWarning("[GenericDelegator.makeValues] No child nodes found in document.", module);
 
         return values;
     }
