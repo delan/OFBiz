@@ -73,11 +73,12 @@
                     <div class="tabletext">&nbsp;<b>Name</b></div>
                   </td>
                   <td width="5">&nbsp;</td>
-                  <td align="left" valign="top" width="80%">
+                  <td NOWRAP align="left" valign="top" width="80%">
                     <div class="tabletext">
                     <%if(userPerson!=null){%>
                       <%=PartyHelper.getPersonName(userPerson)%>
                     <%}%>        
+                    &nbsp;<a href="/partymgr/control/viewprofile?party_id=<%=partyId%>" class="buttontext">[View]</a>
                     </div>
                   </td>
                 </tr>
