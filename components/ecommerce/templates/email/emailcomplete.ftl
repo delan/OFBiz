@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      2.2
 -->
 
@@ -374,7 +374,7 @@
                       </td>
                     </tr>
                     <#-- tracking number -->
-                    <#if trackingNumber?has_content>
+                    <#if trackingNumber?has_content || orderShipmentInfoSummaryList?has_content>
                       <tr><td colspan="7"><hr class='sepbar'></td></tr>
                       <tr>
                         <td align="right" valign="top" width="15%">
@@ -383,10 +383,22 @@
                         <td width="5">&nbsp;</td>
                         <td align="left" valign="top" width="80%">
                           <#-- TODO: add links to UPS/FEDEX/etc based on carrier partyId  -->
-                          <div class="tabletext">${trackingNumber}</div>
+                          <#if trackingNumber?has_content>
+                            <div class="tabletext">${trackingNumber}</div>
+                          </#if>
+                          <#if orderShipmentInfoSummaryList?has_content>
+                            <#list orderShipmentInfoSummaryList as orderShipmentInfoSummary>
+                              <div class="tabletext">
+                                <#if (orderShipmentInfoSummaryList?size > 1)>${orderShipmentInfoSummary.shipmentPackageSeqId}: </#if>
+                                Code ${orderShipmentInfoSummary.trackingCode?default("[Not Yet Known]")}
+                                <#if orderShipmentInfoSummary.boxNumber?has_content> Box #${orderShipmentInfoSummary.boxNumber}</#if>
+                                <#if orderShipmentInfoSummary.carrierPartyId?has_content>(Carrier: ${orderShipmentInfoSummary.carrierPartyId})</#if>
+                              </div>
+                            </#list>
+                          </#if>
                         </td>
                       </tr>
-                    </#if>
+                    </#if>                    
                     <tr><td colspan="7"><hr class='sepbar'></td></tr>
                     <#-- splitting preference -->
                     <tr>

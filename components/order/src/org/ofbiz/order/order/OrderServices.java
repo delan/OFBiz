@@ -1,5 +1,5 @@
 /*
- * $Id: OrderServices.java,v 1.31 2004/02/28 19:49:47 ajzeneski Exp $
+ * $Id: OrderServices.java,v 1.32 2004/03/01 21:16:42 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -37,8 +37,10 @@ import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityConditionList;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.entity.condition.EntityFieldMap;
 import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.entity.util.EntityUtil;
+import org.ofbiz.entity.util.EntityFindOptions;
 import org.ofbiz.order.shoppingcart.ShoppingCart;
 import org.ofbiz.order.shoppingcart.shipping.ShippingEvents;
 import org.ofbiz.party.contact.ContactHelper;
@@ -53,7 +55,7 @@ import org.ofbiz.workflow.WfUtil;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.31 $
+ * @version    $Revision: 1.32 $
  * @since      2.0
  */
 
@@ -1252,6 +1254,24 @@ public class OrderServices {
                 GenericValue orderItemPo = (GenericValue) orderItemPOIter.next();
                 result.put("customerPoNumber", orderItemPo.getString("correspondingPoId"));
             }
+
+            // get Shipment tracking info
+            EntityCondition osisCond = new EntityFieldMap(UtilMisc.toMap("orderId", orderId), EntityOperator.AND);
+            List osisOrder = UtilMisc.toList("shipmentId", "shipmentRouteSegmentId", "shipmentPackageSeqId");
+            List osisFields = UtilMisc.toList("shipmentId", "shipmentRouteSegmentId", "carrierPartyId", "shipmentMethodTypeId");
+            osisFields.add("shipmentPackageSeqId");
+            osisFields.add("trackingCode"); osisFields.add("boxNumber");
+
+            EntityFindOptions osisFindOptions = new EntityFindOptions();
+            osisFindOptions.setDistinct(true);
+
+            List orderShipmentInfoSummaryList = null;
+            EntityListIterator osisEli = delegator.findListIteratorByCondition("OrderShipmentInfoSummary", osisCond, null, osisFields, osisOrder, osisFindOptions);
+            if (osisEli != null) {
+                orderShipmentInfoSummaryList = osisEli.getCompleteList();
+                osisEli.close();
+            }
+            result.put("orderShipmentInfoSummaryList", orderShipmentInfoSummaryList);
 
         } catch (GenericEntityException e) {
             Debug.logError(e, "Entity read error", module);
