@@ -30,9 +30,9 @@ import org.ofbiz.core.util.*;
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * @author  Andy Zeneski (jaz@zsolv.com)
- * @version 1.0
- * Created on July 18, 2001, 2:24 PM
+ *@author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
+ *@created    November 15, 2001
+ *@version    1.0
  */
 
 public class JobInvoker implements Runnable {

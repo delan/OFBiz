@@ -30,7 +30,7 @@ import java.io.*;
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
- *@created    November 2, 2001
+ *@created    November 15, 2001
  *@version    1.0
  */
 public class JobSchedulerException extends org.ofbiz.core.util.GeneralException {

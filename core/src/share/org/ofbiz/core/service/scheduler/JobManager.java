@@ -4,8 +4,12 @@
 
 package org.ofbiz.core.service.scheduler;
 
+import java.io.*;
 import java.util.*;
+import javax.xml.parsers.*;
+import org.xml.sax.*;
 import org.ofbiz.core.entity.*;
+import org.ofbiz.core.serialize.*;
 import org.ofbiz.core.service.*;
 import org.ofbiz.core.util.*;
 
@@ -31,11 +35,10 @@ import org.ofbiz.core.util.*;
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * @author Andy Zeneski (jaz@zsolv.com)
- * @version 1.0
- * Created on July 17, 2001
+ *@author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
+ *@created    November 15, 2001
+ *@version    1.0
  */
-
 public class JobManager {
     
     protected JobScheduler js;
@@ -69,8 +72,32 @@ public class JobManager {
             while ( i.hasNext() ) {
                 // Add the job.
                 try {
-                    // Map context = getContextMethod()?
-                    Job thisJob = addJob((GenericValue)i.next(),null); // fix the context
+                    Map ctx = null;
+                    GenericValue jobObj = (GenericValue) i.next();
+                    GenericValue contextObj = jobObj.getRelatedOne("RuntimeData");
+                    if ( contextObj != null )
+                        ctx = (Map) XmlSerializer.deserialize(contextObj.getString("runtimeInfo"), delegator);                                            
+                    Job thisJob = addJob(jobObj,ctx); 
+                }
+                catch ( GenericEntityException e ) {
+                    Debug.logInfo("[JobManager.loadJobs] : " + e.getMessage());
+                    // e.printStackTrace();
+                }
+                catch ( SerializeException e ) {
+                    Debug.logInfo("[JobManager.loadJobs] : " + e.getMessage());
+                    // e.printStackTrace();
+                }
+                catch ( ParserConfigurationException e ) {
+                    Debug.logInfo("[JobManager.loadJobs] : " + e.getMessage());
+                    // e.printStackTrace();
+                }
+                catch ( SAXException e ) {
+                    Debug.logInfo("[JobManager.loadJobs] : " + e.getMessage());
+                    // e.printStackTrace();
+                }                    
+                catch ( IOException e ) {
+                    Debug.logInfo("[JobManager.loadJobs] : " + e.getMessage());
+                    // e.printStackTrace();
                 }
                 catch ( JobSchedulerException e ) {
                     Debug.logInfo("[JobManager.loadJobs] : " + e.getMessage());

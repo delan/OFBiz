@@ -58,6 +58,7 @@ public class WorkflowEngine implements GenericEngine {
      * @return Map of name, value pairs composing the result
      */
     public Map runSync(ModelService modelService, Map context) throws GenericServiceException {
+        GenericResultWaiter waiter = new GenericResultWaiter();
         runAsync(modelService,context,null);
         return new HashMap();
     }
@@ -90,9 +91,9 @@ public class WorkflowEngine implements GenericEngine {
         WfProcessMgr mgr = WfFactory.newWfProcessMgr();
         
         // Create the process
-        WfProcess proc = null;
+        WfProcess process = null;
         try {
-            proc = mgr.createProcess(req);
+            process = mgr.createProcess(req);
         }        
         catch ( NotEnabled ne ) {
             throw new GenericServiceException(ne.getMessage(),ne);
@@ -109,7 +110,7 @@ public class WorkflowEngine implements GenericEngine {
         
         // Register the process
         try {
-            req.registerProcess(proc,context,requester);
+            req.registerProcess(process,context,requester);
         }
         catch ( WfException wfe ) {
             throw new GenericServiceException(wfe.getMessage(),wfe);
