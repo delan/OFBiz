@@ -1,5 +1,5 @@
 /*
- * $Id: ModelScreenWidget.java,v 1.9 2004/08/12 18:05:14 byersa Exp $
+ * $Id: ModelScreenWidget.java,v 1.10 2004/08/14 07:35:13 jonesde Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -26,43 +26,36 @@ package org.ofbiz.content.widget.screen;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.GeneralException;
-import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.base.util.collections.MapStack;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
-import org.ofbiz.content.content.ContentWorker;
 import org.ofbiz.content.widget.form.FormFactory;
 import org.ofbiz.content.widget.form.FormStringRenderer;
 import org.ofbiz.content.widget.form.ModelForm;
 import org.ofbiz.content.widget.html.HtmlFormRenderer;
 import org.ofbiz.content.widget.html.HtmlMenuRenderer;
+import org.ofbiz.content.widget.html.HtmlTreeExpandCollapseRenderer;
+import org.ofbiz.content.widget.html.HtmlTreeRenderer;
 import org.ofbiz.content.widget.menu.MenuFactory;
 import org.ofbiz.content.widget.menu.MenuStringRenderer;
 import org.ofbiz.content.widget.menu.ModelMenu;
 import org.ofbiz.content.widget.screen.ModelScreen.ScreenRenderer;
 import org.ofbiz.content.widget.tree.ModelTree;
-import org.ofbiz.content.widget.tree.TreeStringRenderer;
 import org.ofbiz.content.widget.tree.TreeFactory;
-import org.ofbiz.content.widget.html.HtmlTreeRenderer;
-import org.ofbiz.content.widget.html.HtmlTreeExpandCollapseRenderer;
-import org.ofbiz.entity.GenericValue;
+import org.ofbiz.content.widget.tree.TreeStringRenderer;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
@@ -70,7 +63,7 @@ import org.xml.sax.SAXException;
  * Widget Library - Screen model class
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.9 $
+ * @version    $Revision: 1.10 $
  * @since      3.1
  */
 public abstract class ModelScreenWidget {

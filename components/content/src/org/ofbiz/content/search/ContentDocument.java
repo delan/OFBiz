@@ -1,5 +1,5 @@
 /*
- * $Id: ContentDocument.java,v 1.8 2004/08/12 18:05:13 byersa Exp $
+ * $Id: ContentDocument.java,v 1.9 2004/08/14 07:35:12 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -23,35 +23,32 @@
  */
 package org.ofbiz.content.search;
 
-import org.apache.lucene.document.*;
+import java.io.IOException;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
-
+import org.apache.lucene.document.Document;
+import org.apache.lucene.document.Field;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.GeneralException;
+import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
-import org.ofbiz.base.util.StringUtil;
+import org.ofbiz.content.content.ContentWorker;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
-import org.ofbiz.content.content.ContentWorker;
-import org.ofbiz.content.data.DataResourceWorker;
-import org.ofbiz.base.util.GeneralException;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
-import java.sql.Timestamp;
-import java.io.IOException;
-import java.io.StringWriter;
-import java.util.Locale;
-import java.util.Iterator;
 
 /**
  * ContentDocument Class
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  * @since 3.1
  * 
  *  

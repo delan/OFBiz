@@ -33,17 +33,14 @@ import org.ofbiz.minilang.SimpleMapProcessor;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
-import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.ServiceAuthException;
-import org.ofbiz.minilang.SimpleMapProcessor;
-import org.ofbiz.minilang.MiniLangException;
 
 
 /**
  * UploadContentAndImage Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.15 $
+ * @version    $Revision: 1.16 $
  * @since      2.2
  *
  * Services for granting operation permissions on Content entities in a data-driven manner.

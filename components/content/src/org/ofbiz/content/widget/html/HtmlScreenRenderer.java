@@ -1,5 +1,5 @@
 /*
- * $Id: HtmlScreenRenderer.java,v 1.5 2004/08/12 18:05:14 byersa Exp $
+ * $Id: HtmlScreenRenderer.java,v 1.6 2004/08/14 07:35:13 jonesde Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -25,41 +25,34 @@ package org.ofbiz.content.widget.html;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.util.Map;
-import java.util.Locale;
 import java.sql.Timestamp;
+import java.util.Locale;
+import java.util.Map;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
+import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.GeneralException;
+import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.string.FlexibleStringExpander;
+import org.ofbiz.content.content.ContentWorker;
 import org.ofbiz.content.webapp.control.RequestHandler;
 import org.ofbiz.content.webapp.taglib.ContentUrlTag;
 import org.ofbiz.content.widget.screen.ModelScreenWidget;
-import org.ofbiz.content.widget.screen.ModelScreenWidget.Link;
 import org.ofbiz.content.widget.screen.ScreenStringRenderer;
-import org.ofbiz.content.content.ContentWorker;
 import org.ofbiz.entity.GenericDelegator;
-import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.GenericEntityException;
-import org.ofbiz.base.util.GeneralException;
-import org.ofbiz.base.util.UtilDateTime;
-import org.ofbiz.base.util.Debug;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpSession;
-import org.ofbiz.content.webapp.taglib.ContentUrlTag;
-import org.ofbiz.content.webapp.control.RequestHandler;
-import org.ofbiz.base.util.string.FlexibleStringExpander;
+import org.ofbiz.entity.GenericValue;
 
 /**
  * Widget Library - HTML Form Renderer implementation
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      3.1
  */
 public class HtmlScreenRenderer implements ScreenStringRenderer {
