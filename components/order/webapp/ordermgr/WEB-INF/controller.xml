@@ -483,7 +483,7 @@
 
     <!-- View Mappings -->
     <view-map name="error" page="/error/error.jsp"/>
-    <view-map name="main" type="jpublish" page="/main.ftl"/>
+    <view-map name="main" type="jpublish" page="/order/findOrders.ftl"/>
     <view-map name="login" type="jpublish" page="/login.ftl"/>
 
     <view-map name="orderstats" type="jpublish" page="/order/orderstats.ftl"/>

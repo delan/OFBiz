@@ -1,5 +1,5 @@
 /*
- * $Id: OrderServices.java,v 1.27 2003/12/30 19:58:48 ajzeneski Exp $
+ * $Id: OrderServices.java,v 1.28 2004/01/15 06:34:29 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -52,7 +52,7 @@ import org.ofbiz.workflow.WfUtil;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.27 $
+ * @version    $Revision: 1.28 $
  * @since      2.0
  */
 
@@ -377,11 +377,13 @@ public class OrderServices {
 
         // store the orderProductPromoUseInfos
         List orderProductPromoUses = (List) context.get("orderProductPromoUses");
-        Iterator orderProductPromoUseIter = orderProductPromoUses.iterator();
-        while (orderProductPromoUseIter.hasNext()) {
-            GenericValue productPromoUse = (GenericValue) orderProductPromoUseIter.next();
-            productPromoUse.set("orderId", orderId);
-            toBeStored.add(productPromoUse);
+        if (orderProductPromoUses != null && orderProductPromoUses.size() > 0) {
+            Iterator orderProductPromoUseIter = orderProductPromoUses.iterator();
+            while (orderProductPromoUseIter.hasNext()) {
+                GenericValue productPromoUse = (GenericValue) orderProductPromoUseIter.next();
+                productPromoUse.set("orderId", orderId);
+                toBeStored.add(productPromoUse);
+            }
         }
 
         // define the roles for the order
