@@ -402,7 +402,7 @@
         <attribute name="productIdInSubst" form-label="${uiLabelMap.ProductProductIdInSubst}" type="String" mode="IN" optional="true"/>
         <attribute name="productFeature" form-label="${uiLabelMap.ProductProductFeature}" type="String" mode="IN" optional="true"/>
         <attribute name="quantity" form-label="${uiLabelMap.ManufacturingQuantity}" type="Double" mode="IN" optional="true"/>
-        <attribute name="ruleOperbator" form-label="${uiLabelMap.ManufacturingRuleOperator}" type="String" mode="IN" optional="true"/>
+        <attribute name="ruleOperator" form-label="${uiLabelMap.ManufacturingRuleOperator}" type="String" mode="IN" optional="true"/>
         <attribute name="fromDate" form-label="${uiLabelMap.CommonFromDate}" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="thruDate" form-label="${uiLabelMap.CommonThruDate}" type="Timestamp" mode="IN" optional="true"/>
     </service>
@@ -468,8 +468,22 @@
         <attribute mode="OUT" name="components" optional="true" type="java.util.List"/>
     </service>
 
+    <service name="getProductsInPackages" engine="java"
+            location="org.ofbiz.manufacturing.bom.BOMServices" invoke="getProductsInPackages">
+        <description>Returns the components (that needs to be packaged) of a given product (if necessary, running the configurator).</description>
+        <attribute mode="IN" name="productId" optional="false" type="String"/>
+        <attribute mode="IN" name="quantity" optional="true" type="Double"/>
+        <attribute mode="IN" name="fromDate" optional="true" type="String"/>
+        <attribute mode="OUT" name="productsInPackages" optional="false" type="java.util.List"/>
+    </service>
+    <service name="createShipmentPackages" engine="java" auth="true"
+            location="org.ofbiz.manufacturing.bom.BOMServices" invoke="createShipmentPackages">
+        <description>Runs the package configurator.</description>
+        <attribute mode="IN" name="shipmentId" optional="false" type="String"/>
+    </service>
+
     <service name="createProductionRunsForOrder" engine="java"
-            location="org.ofbiz.manufacturing.bom.BOMServices" invoke="createProductionRunsForOrder" auth="true">
+            location="org.ofbiz.manufacturing.jobshopmgt.ProductionRunServices" invoke="createProductionRunsForOrder" auth="true">
         <description>Explodes a product id and creates all the needed production runs; if an order id is also provided, it links the production runs to the sales order.</description>
         <attribute mode="IN" name="productId" optional="false" type="String"/>
         <attribute mode="IN" name="quantity" optional="true" type="Double"/>
