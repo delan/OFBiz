@@ -414,8 +414,8 @@
         <field name="submitButton" title="Add" widget-style="standardSubmit"><submit button-type="button"/></field>
     </form>
     <form name="ListContentMetaData" default-title-style="tableheadtext"
-        default-tooltip-style="tabletext" default-widget-style="inputBox"
-        target="updateContentMetaData" title="" type="list">
+            default-tooltip-style="tabletext" default-widget-style="inputBox"
+            target="updateContentMetaData" title="" type="list">
         <actions>
           <entity-and entity-name="ContentMetaData" use-cache="true">
             <field-map env-name="contentId" field-name="contentId" />
@@ -431,71 +431,19 @@
     </form>
     
     <!-- Person Lookup forms -->
-    <form name="lookupPerson" default-title-style="tableheadtext"
-        default-tooltip-style="tabletext" default-widget-style="inputBox"
-        target="LookupPerson" title="" type="single">
-        <auto-fields-entity entity-name="Person" default-field-type="find" />
-        <field name="submitButton" title="Lookup" widget-style="standardSubmit"><submit button-type="button"/></field>
-    </form>
-    <form name="listLookupPerson" default-title-style="tableheadtext"
-        default-tooltip-style="tabletext" default-widget-style="display"
-        list-iterator-name="listIt" target="" paginate-target="LookupPerson" title="" type="list">
-      	<actions>
-          <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
-            <field-map field-name="inputFields" env-name="requestParameters"/>
-            <field-map field-name="entityName" env-name="entityName"/>
-          </service>
-        </actions>
-        
-        <auto-fields-entity entity-name="Person" default-field-type="display"/>
+    <form name="mruLookupPerson"
+            default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="display"
+            list-name="mruList" target="" title="" type="list">
         <field name="partyId" title="&amp;nbsp;" widget-style="buttontext">
-                
-            <hyperlink also-hidden="false" target-type="plain" description="${partyId}" target="javascript:set_value('${partyId}')"/>
-        </field>
-    </form>
-    <form 
-        name="mruLookupPerson" 
-        default-title-style="tableheadtext"
-        default-tooltip-style="tabletext" default-widget-style="display"
-        list-name="mruList" 
-        target="" title="" type="list">
-        <field name="partyId" title="&amp;nbsp;" widget-style="buttontext">
-                
             <hyperlink also-hidden="false" target-type="plain" description="${partyId}" target="javascript:set_value('${partyId}')"/>
         </field>
         <field name="firstName" title="&amp;nbsp;" widget-style="buttontext"> <display/> </field>
         <field name="lastName" title="&amp;nbsp;" widget-style="buttontext"> <display/> </field>
     </form>
-    <form name="lookupPartyAndUserLoginAndPerson" default-title-style="tableheadtext"
-        default-tooltip-style="tabletext" default-widget-style="inputBox"
-        target="LookupPerson" title="" type="single">
-        <auto-fields-entity entity-name="PartyAndUserLoginAndPerson" default-field-type="find" />
-        <field name="submitButton" title="Lookup" widget-style="standardSubmit"><submit button-type="button"/></field>
-    </form>
-    <form name="listLookupPartyAndUserLoginAndPerson" default-title-style="tableheadtext"
-        default-tooltip-style="tabletext" default-widget-style="display"
-        list-iterator-name="listIt" target="" paginate-target="LookupPartyAndUserLoginAndPerson" title="" type="list">
-      	<actions>
-          <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
-            <field-map field-name="inputFields" env-name="requestParameters"/>
-            <field-map field-name="entityName" env-name="entityName"/>
-          </service>
-        </actions>
-        
-        <auto-fields-entity entity-name="PartyAndUserLoginAndPerson" default-field-type="display"/>
+    <form name="mruLookupPartyAndUserLoginAndPerson" 
+            default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="display"
+            list-name="mruList" target="" title="" type="list">
         <field name="partyId" title="&amp;nbsp;" widget-style="buttontext">
-                
-            <hyperlink also-hidden="false" target-type="plain" description="${partyId}" target="javascript:set_value('${partyId}', '${userLoginId}', '${parameters.webSitePublishPoint}')"/>
-        </field>
-    </form>
-    <form 
-        name="mruLookupPartyAndUserLoginAndPerson" 
-        default-title-style="tableheadtext"
-        default-tooltip-style="tabletext" default-widget-style="display"
-        list-name="mruList" 
-        target="" title="" type="list">
-        <field name="partyId" title="&amp;nbsp;" widget-style="buttontext">
-                
             <hyperlink also-hidden="false" target-type="plain" description="${partyId}" target="javascript:set_value('${partyId}', '${userLoginId}')"/>
         </field>
         <field name="firstName" title="&amp;nbsp;" widget-style="buttontext"> <display/> </field>
