@@ -41,9 +41,10 @@ public class DispatchContext {
     
     protected static final String GLOBAL_KEY = "global";
     protected static UtilCache modelService = new UtilCache("ModelServices",0,0);
+    protected static String globalRoot = UtilProperties.getPropertyValue("servicesengine","global.rootPath");
     
     protected String name;
-    protected String root;
+    protected String root;    
     protected Map attributes;
     protected Collection readers;
     protected ClassLoader loader;
@@ -105,6 +106,13 @@ public class DispatchContext {
      */
     public String getName() {
         return name;
+    }
+    
+    /** Gets the 'global root' property of this context (used as a path)
+     *@return String global root directory for this context (raw path)
+     */
+    public String getGlobalRootPath() {
+        return globalRoot;
     }
     
     /** Gets the 'root' property of this context (used as a path)

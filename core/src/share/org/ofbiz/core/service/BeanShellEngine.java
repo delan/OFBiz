@@ -73,7 +73,46 @@ public final class BeanShellEngine extends GenericAsyncEngine {
             cl = this.getClass().getClassLoader();
         else
             cl = dispatcher.getLocalContext(loader).getClassLoader();
-                      
+      
+        String rootPath = dispatcher.getLocalContext(loader).getRootPath();
+        String globalRootPath = dispatcher.getLocalContext(loader).getGlobalRootPath();
+        
+        if ( rootPath.charAt(rootPath.length() - 1 ) != '/' )
+            rootPath = rootPath + "/";
+        if ( globalRootPath.charAt(globalRootPath.length() - 1 ) != '/' )
+            globalRootPath = globalRootPath + "/";
+        
+        // locate the script
+        String scriptPath = null;
+        try {
+            File file = new File(modelService.location);            
+            if ( !file.exists() ) {
+                Debug.logInfo("[BeanShellEngine.invoke] : File not found: " + modelService.location);
+                file = new File(rootPath + modelService.location);
+                if ( !file.exists() ) {
+                    Debug.logInfo("[BeanShellEngine.invoke] : File not found: " + rootPath + modelService.location);
+                    file = new File(globalRootPath + modelService.location);
+                    if ( !file.exists() ) {
+                        Debug.logInfo("[BeanShellEngine.invoke] : File not found: " + globalRootPath + modelService.location);
+                        throw new GenericServiceException("Script location not valid or file not found"); 
+                    }
+                    else {
+                        scriptPath = globalRootPath + modelService.location;
+                    }
+                }
+                else {
+                    scriptPath = rootPath + modelService.location;
+                }
+            }
+            else {
+                scriptPath = modelService.location;
+            }
+        }
+        catch ( SecurityException e ) {
+            throw new GenericServiceException(e.getMessage(),e);                        
+        }
+                
+                
         Interpreter bsh = null;
         try {
             Class c = cl.loadClass("bsh.Interpreter");
@@ -92,10 +131,13 @@ public final class BeanShellEngine extends GenericAsyncEngine {
         Map result = null;
         try {
             bsh.set("dctx",dispatcher.getLocalContext(loader)); // set the dispatch context
-            bsh.set("context",context); // set the parameter context
-            bsh.set("result",new HashMap()); // define a new result map
-            bsh.source(modelService.location);
-            result = (Map) bsh.get("result");
+            bsh.set("context",context); // set the parameter context used for both IN and OUT            
+            bsh.source(scriptPath);
+            Map bshResult = (Map) bsh.get("result");
+            if ( bshResult != null ) 
+                context.putAll(bshResult);
+            result = modelService.makeValid(context,ModelService.OUT_PARAM);
+            
         }
         catch ( FileNotFoundException e ) {
             throw new GenericServiceException("Cannot locate the BeanShell script");

@@ -166,10 +166,25 @@ public class JobManager {
         return this.dispatcher;
     }
     
+    /** Schedule a job to run at a single specific time
+     *@param loader The name of the local dispatcher to use
+     *@param serviceName The name of the service to invoke
+     *@param context The context for the service
+     *@param startTime The time in milliseconds the service should run
+     */
     public synchronized void schedule(String loader, String serviceName, Map context, long startTime) throws JobSchedulerException {
         schedule(loader,serviceName,context,startTime,"DAILY",1,1);
     }
     
+    /** Schedule a job to start at a specific time with specific recurrence info
+     *@param loader The name of the local dispatcher to use
+     *@param serviceName The name of the service to invoke
+     *@param context The context for the service
+     *@param startTime The time in milliseconds the service should run
+     *@param frequency The frequency of the recurrence (HOURLY,DAILY,MONTHLY,etc)
+     *@param interval The interval of the frequency recurrence
+     *@param count The number of times to repeat
+     */
     public synchronized void schedule(String loader, String serviceName, Map context, long startTime, String frequency, int interval, int count) throws JobSchedulerException {
         String dataId = null;
         String infoId = null;
