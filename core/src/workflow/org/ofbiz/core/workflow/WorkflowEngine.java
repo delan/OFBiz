@@ -82,10 +82,6 @@ public class WorkflowEngine implements GenericEngine {
      * @param requester Object implementing GenericRequester interface which will receive the result
      */
     public void runAsync(ModelService modelService, Map context, GenericRequester requester) throws GenericServiceException {
-        // validate the context
-        if ( modelService.validate && !modelService.validate(context, ModelService.IN_PARAM) )
-            throw new GenericServiceException("Context does not match expected requirements");
-        
         // Build the requester
         WfRequester req = null;
         try {

@@ -37,7 +37,6 @@ import org.ofbiz.core.workflow.*;
  *@version    1.0
  */
 public class WfRequesterImpl implements WfRequester {
-    
     protected Map performers;    
     
     /** Create a new WfRequester */
@@ -62,8 +61,11 @@ public class WfRequesterImpl implements WfRequester {
         WfProcessMgr mgr = process.manager();
         
         // Validate the process context w/ what was passed.
-        if ( !ModelService.validate(mgr.contextSignature(), context, true) )
-            throw new WfException("Context passed does not validate against defined signature");
+        try {
+            ModelService.validate(mgr.contextSignature(), context, true);
+        } catch (GenericServiceException e) {
+            throw new WfException("Context passed does not validate against defined signature: ", e);
+        }
         
         // Set the context w/ the process
         process.setProcessContext(context);
@@ -71,11 +73,9 @@ public class WfRequesterImpl implements WfRequester {
         // Start the process
         try {
             process.start();
-        }
-        catch ( CannotStart cs ) {
+        } catch (CannotStart cs) {
             throw new WfException("Cannot start process",cs);
-        }
-        catch ( AlreadyRunning ar ) {
+        } catch (AlreadyRunning ar) {
             throw new WfException("Process already running",ar);
         }        
     }
@@ -130,11 +130,9 @@ public class WfRequesterImpl implements WfRequester {
         WfProcess process = null;
         try {
             process = (WfProcess) event.source();
-        }
-        catch ( SourceNotAvailable sna ) {
+        } catch (SourceNotAvailable sna) {
             throw new InvalidPerformer("Could not get the performer",sna);
-        }
-        catch ( ClassCastException cce ) {
+        } catch (ClassCastException cce) {
             throw new InvalidPerformer("Not a valid process object",cce);
         }
         if ( process == null )
@@ -148,5 +146,4 @@ public class WfRequesterImpl implements WfRequester {
         if ( req != null )
             req.receiveResult(process.result());                
     }
-        
 }
