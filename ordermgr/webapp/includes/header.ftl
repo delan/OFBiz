@@ -39,10 +39,10 @@
   <#--<div class="col"><a href="<@ofbiUrl>#</@ofbizUrl>" class="headerButtonLeft">Purchase&nbsp;Entry</a></div>-->
   </#if>
   <div class="col"><a href="<@ofbizUrl>/orderreportlist</@ofbizUrl>" class="headerButtonLeft">Order&nbsp;Reports</a></div>                 
-  <#if session.userLogin?has_content>
+  <#if requestAttributes.userLogin?has_content>
     <div class="col-right"><a href="<@ofbizUrl>/logout</@ofbizUrl>" class="headerButtonRight">Logout</a></div>
   <#else>
-    <div class="col-right"><a href='<@ofbizUrl>${checkLoginUrl}</@ofbizUrl>' class='headerButtonRight'>Login</a></div>
+    <div class="col-right"><a href='<@ofbizUrl>${requestAttributes.checkLoginUrl?if_exists}</@ofbizUrl>' class='headerButtonRight'>Login</a></div>
   </#if>
   <div class="col-right"><a href='<@ofbizUrl>/shipsetup</@ofbizUrl>' class="headerButtonRight">Setup</a></div>
   <div class="col-fill">&nbsp;</div>

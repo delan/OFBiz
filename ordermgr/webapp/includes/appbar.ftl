@@ -27,7 +27,7 @@
 <#assign security = requestAttributes.security>
 <#assign externalKeyParam = requestAttributes.externalKeyParam>
 
-<#if session.userLogin?has_content>
+<#if requestAttributes.userLogin?has_content>
 <table align="center" width="100%" border="0" cellspacing="0" cellpadding="0">
   <tr bgcolor="#FFFFFF">
     <td height="15">
