@@ -1,5 +1,5 @@
 /*
- * $Id: EntitySyncServices.java,v 1.5 2003/12/09 20:43:53 jonesde Exp $
+ * $Id: EntitySyncServices.java,v 1.6 2003/12/10 05:27:16 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -55,7 +55,7 @@ import org.ofbiz.service.ServiceUtil;
  * Entity Engine Sync Services
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      3.0
  */
 public class EntitySyncServices {
@@ -161,6 +161,7 @@ public class EntitySyncServices {
                 }
                 
                 // TODO: make sure tx times are indexed somehow
+                // TODO: keep track of how long these sync runs take and store that info on the history table
                 // TODO: save info about removed, all entities that don't have no-auto-stamp set, this will be done in the GenericDAO like the stamp sets
                 
                 // simulate two ordered lists and merge them on-the-fly for faster combined sorting
@@ -382,6 +383,8 @@ public class EntitySyncServices {
                 GenericValue valueToStore = (GenericValue) valueToStoreIter.next();
                 // to store check if exists (find by pk), if not insert; if exists check lastUpdatedStamp: if null or before the candidate value insert, otherwise don't insert
                 // NOTE: use the delegator from this DispatchContext rather than the one named in the GenericValue
+                
+                // TODO: implement some way of maintaining the original timestamps when doing storage of synced data, by default with will update the timestamps to now
                 GenericValue existingValue = delegator.findByPrimaryKey(valueToStore.getPrimaryKey());
                 if (existingValue == null) {
                     delegator.create(valueToStore);
