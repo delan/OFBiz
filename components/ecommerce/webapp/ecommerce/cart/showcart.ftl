@@ -109,7 +109,7 @@ function setAlternateGwp(field) {
 //-->
 </script>
 
-<table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
+<table border="0" cellspacing="0" cellpadding="0" class="boxoutside">
   <tr>
     <td width="100%">
       <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
@@ -153,7 +153,7 @@ function setAlternateGwp(field) {
 //-->
 </script>
 <br/>
-<table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
+<table border="0" cellspacing="0" cellpadding="0" class="boxoutside">
   <tr>
     <td width="100%">
       <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
@@ -418,7 +418,7 @@ function setAlternateGwp(field) {
 </table>
 
   <br/>
-  <table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
+  <table border="0" cellspacing="0" cellpadding="0" class="boxoutside">
     <tr>
       <td width="100%">
         <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
@@ -458,7 +458,7 @@ function setAlternateGwp(field) {
 
 <#if showPromoText?exists && showPromoText>
   <br/>
-  <table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
+  <table border="0" cellspacing="0" cellpadding="0" class="boxoutside">
     <tr>
       <td width="100%">
         <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
@@ -505,7 +505,7 @@ function setAlternateGwp(field) {
 
 <#if associatedProducts?has_content>
   <br/>
-  <table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
+  <table border="0" cellspacing="0" cellpadding="0" class="boxoutside">
     <tr>
       <td width="100%">
         <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
