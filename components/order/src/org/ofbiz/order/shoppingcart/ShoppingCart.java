@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCart.java,v 1.3 2003/09/03 16:29:38 ajzeneski Exp $
+ * $Id: ShoppingCart.java,v 1.4 2003/09/04 03:29:09 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -50,7 +50,7 @@ import org.ofbiz.service.LocalDispatcher;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.0
  */
 public class ShoppingCart implements java.io.Serializable {
@@ -80,10 +80,10 @@ public class ShoppingCart implements java.io.Serializable {
     private transient GenericDelegator delegator = null;
     private String delegatorName = null;
     private String productStoreId = null; 
-    private String webSiteId;
+    private String webSiteId = null;
     
-    private GenericValue userLogin;
-    private GenericValue autoUserLogin;
+    private GenericValue userLogin = null;
+    private GenericValue autoUserLogin = null;
 
     /** don't allow empty constructor */
     protected ShoppingCart() {}
@@ -92,8 +92,7 @@ public class ShoppingCart implements java.io.Serializable {
     public ShoppingCart(ShoppingCart cart) {
         this.delegator = cart.getDelegator();
         this.delegatorName = delegator.getDelegatorName();
-        this.productStoreId = cart.getProductStoreId();
-        this.webSiteId = cart.getWebSiteId();
+        this.productStoreId = cart.getProductStoreId();        
         this.paymentMethodIds = cart.getPaymentMethodIds();
         this.paymentMethodTypeIds = cart.getPaymentMethodTypeIds();
         this.poNumber = cart.getPoNumber();
