@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<site-conf>
+    <description>CommonApp Site Configuration File</description>
+    
+    <owner>unused</owner>
+    <datasource>unused</datasource>
+    <errorpage>/error/error.jsp</errorpage>
+
+    <!-- Security Mappings -->
+    <request-map>
+        <uri>checkLogin</uri><secure>false</secure><auth>false</auth>
+        <event-type>java</event-type><event-path>org.ofbiz.commonapp.security.WebEventSecurity</event-path><event-invoke>checkLogin</event-invoke>
+        <success>view:main</success><error>view:login</error>
+    </request-map>
+    <request-map>
+        <uri>login</uri><secure>true</secure><auth>false</auth>
+        <event-type>java</event-type><event-path>org.ofbiz.commonapp.security.WebEventSecurity</event-path><event-invoke>login</event-invoke>
+        <success>view:main</success><error>view:login</error>
+    </request-map>
+    <request-map>
+        <uri>logout</uri><secure>true</secure><auth>true</auth>
+        <event-type>java</event-type><event-path>org.ofbiz.commonapp.security.WebEventSecurity</event-path><event-invoke>logout</event-invoke>
+        <success>view:main</success><error>view:main</error>
+    </request-map>
+    <view-map><view>login</view><mapped-page>/login.jsp</mapped-page></view-map>
+    <!-- End of Security Mappings -->
+
+    <!-- Request Mappings -->
+    <request-map>
+        <uri>view</uri>
+        <secure>false</secure>
+        <auth>false</auth>
+        <success>view:main</success>
+        <error>view:error</error>
+    </request-map>
+    <request-map>
+        <uri>chain</uri>
+        <event-type>java</event-type>
+        <event-path>org.ofbiz.core.event.TestEvent</event-path>
+        <event-invoke>test</event-invoke>
+        <success>request:/view</success>
+        <error>view:error</error>
+    </request-map>
+
+    <request-map><uri>main</uri><secure>false</secure><auth>false</auth><success>view:main</success></request-map>
+    <request-map><uri>sitemap</uri><secure>false</secure><auth>false</auth><success>view:sitemap</success></request-map>
+    <request-map><uri>entitymaint</uri><secure>true</secure><auth>true</auth><success>view:entitymaint</success></request-map>
+
+    <request-map><uri>FindUtilCache</uri><secure>true</secure><auth>true</auth><success>view:FindUtilCache</success></request-map>
+    <request-map>
+        <uri>FindUtilCacheClear</uri><secure>true</secure><auth>true</auth>
+        <event-type>java</event-type><event-path>org.ofbiz.core.util.UtilCache</event-path><event-invoke>clearEvent</event-invoke>
+        <success>view:FindUtilCache</success><error>view:FindUtilCache</error>
+    </request-map>
+
+    <request-map><uri>EditUtilCache</uri><secure>true</secure><auth>true</auth><success>view:EditUtilCache</success></request-map>
+    <request-map>
+        <uri>EditUtilCacheUpdate</uri><secure>true</secure><auth>true</auth>
+        <event-type>java</event-type><event-path>org.ofbiz.core.util.UtilCache</event-path><event-invoke>updateEvent</event-invoke>
+        <success>view:EditUtilCache</success><error>view:EditUtilCache</error>
+    </request-map>
+    <request-map>
+        <uri>EditUtilCacheClear</uri><secure>true</secure><auth>true</auth>
+        <event-type>java</event-type><event-path>org.ofbiz.core.util.UtilCache</event-path><event-invoke>clearEvent</event-invoke>
+        <success>view:EditUtilCache</success><error>view:EditUtilCache</error>
+    </request-map>
+
+    <request-map><uri>FindUtilCacheElements</uri><secure>true</secure><auth>true</auth><success>view:FindUtilCacheElements</success><error>view:FindUtilCacheElements</error></request-map>
+    <request-map>
+        <uri>FindUtilCacheElementsRemoveElement</uri><secure>true</secure><auth>true</auth>
+        <event-type>java</event-type><event-path>org.ofbiz.core.util.UtilCache</event-path><event-invoke>removeElementEvent</event-invoke>
+        <success>view:FindUtilCacheElements</success><error>view:FindUtilCacheElements</error>
+    </request-map>
+    <!-- end of request mappings -->
+
+    <!-- View Mappings -->
+    <view-map><view>error</view><mapped-page>/error/error.jsp</mapped-page></view-map>
+    <view-map><view>main</view><mapped-page>/main.jsp</mapped-page></view-map>
+    <view-map><view>sitemap</view><mapped-page>/sitemap.jsp</mapped-page></view-map>
+    <view-map><view>entitymaint</view><mapped-page>/entitymaint.jsp</mapped-page></view-map>
+
+    <view-map><view>EditUtilCache</view><mapped-page>/common/EditUtilCache.jsp</mapped-page></view-map>
+    <view-map><view>FindUtilCache</view><mapped-page>/common/FindUtilCache.jsp</mapped-page></view-map>
+    <view-map><view>FindUtilCacheElements</view><mapped-page>/common/FindUtilCacheElements.jsp</mapped-page></view-map>
+    <!-- end of view mappings -->
+
+    <!-- Generated Request Mappings -->
+    <request-map><uri>FindParty</uri><secure>true</secure><auth>true</auth><success>view:FindParty</success></request-map>
+    <request-map><uri>ViewParty</uri><secure>true</secure><auth>true</auth><success>view:ViewParty</success></request-map>
+    <request-map>
+        <uri>UpdateParty</uri><secure>true</secure><auth>true</auth>
+        <event-type>java</event-type><event-path>org.ofbiz.commonapp.party.party.PartyWebEvent</event-path><event-invoke>updateParty</event-invoke>
+        <success>view:ViewParty</success><error>view:ViewParty</error>
+    </request-map>
+    <request-map><uri>FindPartyClassification</uri><secure>true</secure><auth>true</auth><success>view:FindPartyClassification</success></request-map>
+    <request-map><uri>ViewPartyClassification</uri><secure>true</secure><auth>true</auth><success>view:ViewPartyClassification</success></request-map>
+    <request-map>
+        <uri>UpdatePartyClassification</uri><secure>true</secure><auth>true</auth>
+        <event-type>java</event-type><event-path>org.ofbiz.commonapp.party.party.PartyClassificationWebEvent</event-path><event-invoke>updatePartyClassification</event-invoke>
+        <success>view:ViewPartyClassification</success><error>view:ViewPartyClassification</error>
+    </request-map>
+    <request-map><uri>FindPartyClassificationType</uri><secure>true</secure><auth>true</auth><success>view:FindPartyClassificationType</success></request-map>
+    <request-map><uri>ViewPartyClassificationType</uri><secure>true</secure><auth>true</auth><success>view:ViewPartyClassificationType</success></request-map>
+    <request-map>
+        <uri>UpdatePartyClassificationType</uri><secure>true</secure><auth>true</auth>
+        <event-type>java</event-type><event-path>org.ofbiz.commonapp.party.party.PartyClassificationTypeWebEvent</event-path><event-invoke>updatePartyClassificationType</event-invoke>
+        <success>view:ViewPartyClassificationType</success><error>view:ViewPartyClassificationType</error>
+    </request-map>
+    <request-map><uri>FindPartyType</uri><secure>true</secure><auth>true</auth><success>view:FindPartyType</success></request-map>
+    <request-map><uri>ViewPartyType</uri><secure>true</secure><auth>true</auth><success>view:ViewPartyType</success></request-map>
+    <request-map>
+        <uri>UpdatePartyType</uri><secure>true</secure><auth>true</auth>
+        <event-type>java</event-type><event-path>org.ofbiz.commonapp.party.party.PartyTypeWebEvent</event-path><event-invoke>updatePartyType</event-invoke>
+        <success>view:ViewPartyType</success><error>view:ViewPartyType</error>
+    </request-map>
+    <request-map><uri>FindPartyAttribute</uri><secure>true</secure><auth>true</auth><success>view:FindPartyAttribute</success></request-map>
+    <request-map><uri>ViewPartyAttribute</uri><secure>true</secure><auth>true</auth><success>view:ViewPartyAttribute</success></request-map>
+    <request-map>
+        <uri>UpdatePartyAttribute</uri><secure>true</secure><auth>true</auth>
+        <event-type>java</event-type><event-path>org.ofbiz.commonapp.party.party.PartyAttributeWebEvent</event-path><event-invoke>updatePartyAttribute</event-invoke>
+        <success>view:ViewPartyAttribute</success><error>view:ViewPartyAttribute</error>
+    </request-map>
+    <request-map><uri>FindPartyTypeAttr</uri><secure>true</secure><auth>true</auth><success>view:FindPartyTypeAttr</success></request-map>
+    <request-map><uri>ViewPartyTypeAttr</uri><secure>true</secure><auth>true</auth><success>view:ViewPartyTypeAttr</success></request-map>
+    <request-map>
+        <uri>UpdatePartyTypeAttr</uri><secure>true</secure><auth>true</auth>
+        <event-type>java</event-type><event-path>org.ofbiz.commonapp.party.party.PartyTypeAttrWebEvent</event-path><event-invoke>updatePartyTypeAttr</event-invoke>
+        <success>view:ViewPartyTypeAttr</success><error>view:ViewPartyTypeAttr</error>
+    </request-map>
+    <request-map><uri>FindUserLogin</uri><secure>true</secure><auth>true</auth><success>view:FindUserLogin</success></request-map>
+    <request-map><uri>ViewUserLogin</uri><secure>true</secure><auth>true</auth><success>view:ViewUserLogin</success></request-map>
+    <request-map>
+        <uri>UpdateUserLogin</uri><secure>true</secure><auth>true</auth>
+        <event-type>java</event-type><event-path>org.ofbiz.commonapp.security.login.UserLoginWebEvent</event-path><event-invoke>updateUserLogin</event-invoke>
+        <success>view:ViewUserLogin</success><error>view:ViewUserLogin</error>
+    </request-map>
+    <request-map><uri>FindLoginAccountHistory</uri><secure>true</secure><auth>true</auth><success>view:FindLoginAccountHistory</success></request-map>
+    <request-map><uri>ViewLoginAccountHistory</uri><secure>true</secure><auth>true</auth><success>view:ViewLoginAccountHistory</success></request-map>
+    <request-map>
+        <uri>UpdateLoginAccountHistory</uri><secure>true</secure><auth>true</auth>
+        <event-type>java</event-type><event-path>org.ofbiz.commonapp.security.login.LoginAccountHistoryWebEvent</event-path><event-invoke>updateLoginAccountHistory</event-invoke>
+        <success>view:ViewLoginAccountHistory</success><error>view:ViewLoginAccountHistory</error>
+    </request-map>
+    <request-map><uri>FindSecurityGroup</uri><secure>true</secure><auth>true</auth><success>view:FindSecurityGroup</success></request-map>
+    <request-map><uri>ViewSecurityGroup</uri><secure>true</secure><auth>true</auth><success>view:ViewSecurityGroup</success></request-map>
+    <request-map>
+        <uri>UpdateSecurityGroup</uri><secure>true</secure><auth>true</auth>
+        <event-type>java</event-type><event-path>org.ofbiz.commonapp.security.securitygroup.SecurityGroupWebEvent</event-path><event-invoke>updateSecurityGroup</event-invoke>
+        <success>view:ViewSecurityGroup</success><error>view:ViewSecurityGroup</error>
+    </request-map>
+    <request-map><uri>FindSecurityPermission</uri><secure>true</secure><auth>true</auth><success>view:FindSecurityPermission</success></request-map>
+    <request-map><uri>ViewSecurityPermission</uri><secure>true</secure><auth>true</auth><success>view:ViewSecurityPermission</success></request-map>
+    <request-map>
+        <uri>UpdateSecurityPermission</uri><secure>true</secure><auth>true</auth>
+        <event-type>java</event-type><event-path>org.ofbiz.commonapp.security.securitygroup.SecurityPermissionWebEvent</event-path><event-invoke>updateSecurityPermission</event-invoke>
+        <success>view:ViewSecurityPermission</success><error>view:ViewSecurityPermission</error>
+    </request-map>
+    <request-map><uri>FindSecurityGroupPermission</uri><secure>true</secure><auth>true</auth><success>view:FindSecurityGroupPermission</success></request-map>
+    <request-map><uri>ViewSecurityGroupPermission</uri><secure>true</secure><auth>true</auth><success>view:ViewSecurityGroupPermission</success></request-map>
+    <request-map>
+        <uri>UpdateSecurityGroupPermission</uri><secure>true</secure><auth>true</auth>
+        <event-type>java</event-type><event-path>org.ofbiz.commonapp.security.securitygroup.SecurityGroupPermissionWebEvent</event-path><event-invoke>updateSecurityGroupPermission</event-invoke>
+        <success>view:ViewSecurityGroupPermission</success><error>view:ViewSecurityGroupPermission</error>
+    </request-map>
+    <request-map><uri>FindUserLoginSecurityGroup</uri><secure>true</secure><auth>true</auth><success>view:FindUserLoginSecurityGroup</success></request-map>
+    <request-map><uri>ViewUserLoginSecurityGroup</uri><secure>true</secure><auth>true</auth><success>view:ViewUserLoginSecurityGroup</success></request-map>
+    <request-map>
+        <uri>UpdateUserLoginSecurityGroup</uri><secure>true</secure><auth>true</auth>
+        <event-type>java</event-type><event-path>org.ofbiz.commonapp.security.securitygroup.UserLoginSecurityGroupWebEvent</event-path><event-invoke>updateUserLoginSecurityGroup</event-invoke>
+        <success>view:ViewUserLoginSecurityGroup</success><error>view:ViewUserLoginSecurityGroup</error>
+    </request-map>
+    <!-- End of Generated Request Mappings -->
+
+    <!-- Generated View Mappings -->
+    <view-map><view>FindParty</view><mapped-page>/party/party/FindParty.jsp</mapped-page></view-map>
+    <view-map><view>ViewParty</view><mapped-page>/party/party/ViewParty.jsp</mapped-page></view-map>
+    <view-map><view>FindPartyClassification</view><mapped-page>/party/party/FindPartyClassification.jsp</mapped-page></view-map>
+    <view-map><view>ViewPartyClassification</view><mapped-page>/party/party/ViewPartyClassification.jsp</mapped-page></view-map>
+    <view-map><view>FindPartyClassificationType</view><mapped-page>/party/party/FindPartyClassificationType.jsp</mapped-page></view-map>
+    <view-map><view>ViewPartyClassificationType</view><mapped-page>/party/party/ViewPartyClassificationType.jsp</mapped-page></view-map>
+    <view-map><view>FindPartyType</view><mapped-page>/party/party/FindPartyType.jsp</mapped-page></view-map>
+    <view-map><view>ViewPartyType</view><mapped-page>/party/party/ViewPartyType.jsp</mapped-page></view-map>
+    <view-map><view>FindPartyAttribute</view><mapped-page>/party/party/FindPartyAttribute.jsp</mapped-page></view-map>
+    <view-map><view>ViewPartyAttribute</view><mapped-page>/party/party/ViewPartyAttribute.jsp</mapped-page></view-map>
+    <view-map><view>FindPartyTypeAttr</view><mapped-page>/party/party/FindPartyTypeAttr.jsp</mapped-page></view-map>
+    <view-map><view>ViewPartyTypeAttr</view><mapped-page>/party/party/ViewPartyTypeAttr.jsp</mapped-page></view-map>
+    <view-map><view>FindUserLogin</view><mapped-page>/security/login/FindUserLogin.jsp</mapped-page></view-map>
+    <view-map><view>ViewUserLogin</view><mapped-page>/security/login/ViewUserLogin.jsp</mapped-page></view-map>
+    <view-map><view>FindLoginAccountHistory</view><mapped-page>/security/login/FindLoginAccountHistory.jsp</mapped-page></view-map>
+    <view-map><view>ViewLoginAccountHistory</view><mapped-page>/security/login/ViewLoginAccountHistory.jsp</mapped-page></view-map>
+    <view-map><view>FindSecurityGroup</view><mapped-page>/security/securitygroup/FindSecurityGroup.jsp</mapped-page></view-map>
+    <view-map><view>ViewSecurityGroup</view><mapped-page>/security/securitygroup/ViewSecurityGroup.jsp</mapped-page></view-map>
+    <view-map><view>FindSecurityPermission</view><mapped-page>/security/securitygroup/FindSecurityPermission.jsp</mapped-page></view-map>
+    <view-map><view>ViewSecurityPermission</view><mapped-page>/security/securitygroup/ViewSecurityPermission.jsp</mapped-page></view-map>
+    <view-map><view>FindSecurityGroupPermission</view><mapped-page>/security/securitygroup/FindSecurityGroupPermission.jsp</mapped-page></view-map>
+    <view-map><view>ViewSecurityGroupPermission</view><mapped-page>/security/securitygroup/ViewSecurityGroupPermission.jsp</mapped-page></view-map>
+    <view-map><view>FindUserLoginSecurityGroup</view><mapped-page>/security/securitygroup/FindUserLoginSecurityGroup.jsp</mapped-page></view-map>
+    <view-map><view>ViewUserLoginSecurityGroup</view><mapped-page>/security/securitygroup/ViewUserLoginSecurityGroup.jsp</mapped-page></view-map>
+    <!-- End of Generated View Mappings -->
+</site-conf>

@@ -24,21 +24,18 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Mon Jul 09 23:23:49 MDT 2001
+ *@created    Tue Jul 17 02:16:49 MDT 2001
  *@version    1.0
  */
 %>
 
-<%@ page import="org.ofbiz.commonapp.party.party.*" %>
 <%@ page import="java.text.*" %>
 <%@ page import="java.util.*" %>
-<%@ page import="org.ofbiz.commonapp.common.*" %>
-<%@ page import="org.ofbiz.commonapp.webevent.*" %>
+<%@ page import="org.ofbiz.core.util.*" %>
 <%@ page import="org.ofbiz.commonapp.security.*" %>
+<%@ page import="org.ofbiz.commonapp.party.party.*" %>
 
-<%@ taglib uri="/WEB-INF/webevent.tld" prefix="webevent" %>
-<webevent:dispatch loginRequired="true" />
-
+<%String controlPath=(String)request.getAttribute(SiteDefs.CONTROL_PATH);%>
 <%pageContext.setAttribute("PageName", "FindPartyClassification"); %>
 
 <%@ include file="/includes/header.jsp" %>
@@ -125,7 +122,7 @@
 Note: you may use the '%' character as a wildcard, to replace any other letters.
 <table cellpadding="2" cellspacing="2" border="0">
   <%rowClassTop=(rowClassTop==rowClassTop1?rowClassTop2:rowClassTop1);%><tr class="<%=rowClassTop%>">
-    <form method="post" action="<%=response.encodeURL("FindPartyClassification.jsp")%>" style=margin:0;>
+    <form method="post" action="<%=response.encodeURL(controlPath + "/FindPartyClassification")%>" style=margin:0;>
       <td valign="top">Primary Key:</td>
       <td valign="top">
           <input type="hidden" name="SEARCH_TYPE" value="primaryKey">
@@ -142,7 +139,7 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
 
   <%rowClassTop=(rowClassTop==rowClassTop1?rowClassTop2:rowClassTop1);%><tr class="<%=rowClassTop%>">
     <td valign="top">PartyId: </td>
-    <form method="post" action="<%=response.encodeURL("FindPartyClassification.jsp")%>" style=margin:0;>
+    <form method="post" action="<%=response.encodeURL(controlPath + "/FindPartyClassification")%>" style=margin:0;>
       <td valign="top">
         <input type="hidden" name="SEARCH_TYPE" value="PartyId">
       
@@ -156,7 +153,7 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
 
   <%rowClassTop=(rowClassTop==rowClassTop1?rowClassTop2:rowClassTop1);%><tr class="<%=rowClassTop%>">
     <td valign="top">PartyTypeId: </td>
-    <form method="post" action="<%=response.encodeURL("FindPartyClassification.jsp")%>" style=margin:0;>
+    <form method="post" action="<%=response.encodeURL(controlPath + "/FindPartyClassification")%>" style=margin:0;>
       <td valign="top">
         <input type="hidden" name="SEARCH_TYPE" value="PartyTypeId">
       
@@ -170,7 +167,7 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
 
   <%rowClassTop=(rowClassTop==rowClassTop1?rowClassTop2:rowClassTop1);%><tr class="<%=rowClassTop%>">
     <td valign="top">PartyClassificationTypeId: </td>
-    <form method="post" action="<%=response.encodeURL("FindPartyClassification.jsp")%>" style=margin:0;>
+    <form method="post" action="<%=response.encodeURL(controlPath + "/FindPartyClassification")%>" style=margin:0;>
       <td valign="top">
         <input type="hidden" name="SEARCH_TYPE" value="PartyClassificationTypeId">
       
@@ -184,7 +181,7 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
 
   <%rowClassTop=(rowClassTop==rowClassTop1?rowClassTop2:rowClassTop1);%><tr class="<%=rowClassTop%>">
     <td valign="top">Display All: </td>
-    <form method="post" action="<%=response.encodeURL("FindPartyClassification.jsp")%>" style=margin:0;>
+    <form method="post" action="<%=response.encodeURL(controlPath + "/FindPartyClassification")%>" style=margin:0;>
       <td valign="top">
         <input type="hidden" name="SEARCH_TYPE" value="all">
       </td>
@@ -205,13 +202,13 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
       <td align="left">
         <b>
         <% if(viewIndex > 0) { %>
-          <a href="<%=response.encodeURL("FindPartyClassification.jsp?" + curFindString + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex-1))%>" class="buttontext">[Previous]</a> |
+          <a href="<%=response.encodeURL(controlPath + "/FindPartyClassification?" + curFindString + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex-1))%>" class="buttontext">[Previous]</a> |
         <% } %>
         <% if(arraySize > 0) { %>
           <%=lowIndex%> - <%=highIndex%> of <%=arraySize%>
         <% } %>
         <% if(arraySize>highIndex) { %>
-          | <a href="<%=response.encodeURL("FindPartyClassification.jsp?" + curFindString + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex+1))%>" class="buttontext">[Next]</a>
+          | <a href="<%=response.encodeURL(controlPath + "/FindPartyClassification?" + curFindString + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex+1))%>" class="buttontext">[Next]</a>
         <% } %>
         </b>
       </td>
@@ -299,11 +296,11 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
         &nbsp;</div>
       </td>
       <td>
-        <a href="<%=response.encodeURL("ViewPartyClassification.jsp?" + "PARTY_CLASSIFICATION_PARTY_ID=" + partyClassification.getPartyId() + "&" + "PARTY_CLASSIFICATION_PARTY_TYPE_ID=" + partyClassification.getPartyTypeId())%>" class="buttontext">[View]</a>
+        <a href="<%=response.encodeURL(controlPath + "/ViewPartyClassification?" + "PARTY_CLASSIFICATION_PARTY_ID=" + partyClassification.getPartyId() + "&" + "PARTY_CLASSIFICATION_PARTY_TYPE_ID=" + partyClassification.getPartyTypeId())%>" class="buttontext">[View]</a>
       </td>
       <%if(hasDeletePermission){%>
         <td>
-          <a href="<%=response.encodeURL("FindPartyClassification.jsp?WEBEVENT=UPDATE_PARTY_CLASSIFICATION&UPDATE_MODE=DELETE&" + "PARTY_CLASSIFICATION_PARTY_ID=" + partyClassification.getPartyId() + "&" + "PARTY_CLASSIFICATION_PARTY_TYPE_ID=" + partyClassification.getPartyTypeId() + "&" + curFindString)%>" class="buttontext">[Delete]</a>
+          <a href="<%=response.encodeURL(controlPath + "/UpdatePartyClassification?UPDATE_MODE=DELETE&" + "PARTY_CLASSIFICATION_PARTY_ID=" + partyClassification.getPartyId() + "&" + "PARTY_CLASSIFICATION_PARTY_TYPE_ID=" + partyClassification.getPartyTypeId() + "&" + curFindString)%>" class="buttontext">[Delete]</a>
         </td>
       <%}%>
     </tr>
@@ -328,13 +325,13 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
       <td align="left">
         <b>
         <% if(viewIndex > 0) { %>
-          <a href="<%=response.encodeURL("FindPartyClassification.jsp?" + curFindString + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex-1))%>" class="buttontext">[Previous]</a> |
+          <a href="<%=response.encodeURL(controlPath + "/FindPartyClassification?" + curFindString + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex-1))%>" class="buttontext">[Previous]</a> |
         <% } %>
         <% if(arraySize > 0) { %>
           <%=lowIndex%> - <%=highIndex%> of <%=arraySize%>
         <% } %>
         <% if(arraySize>highIndex) { %>
-          | <a href="<%=response.encodeURL("FindPartyClassification.jsp?" + curFindString + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex+1))%>" class="buttontext">[Next]</a>
+          | <a href="<%=response.encodeURL(controlPath + "/FindPartyClassification?" + curFindString + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex+1))%>" class="buttontext">[Next]</a>
         <% } %>
         </b>
       </td>
@@ -342,7 +339,7 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
 <% } %>
 </table>
 <%if(hasCreatePermission){%>
-  <a href="<%=response.encodeURL("ViewPartyClassification.jsp")%>" class="buttontext">[Create PartyClassification]</a>
+  <a href="<%=response.encodeURL(controlPath + "/ViewPartyClassification")%>" class="buttontext">[Create PartyClassification]</a>
 <%}%>
 <%}else{%>
   <h3>You do not have permission to view this page (PARTY_CLASSIFICATION_ADMIN, or PARTY_CLASSIFICATION_VIEW needed).</h3>

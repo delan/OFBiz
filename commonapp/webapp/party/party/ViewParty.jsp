@@ -24,22 +24,19 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Mon Jul 09 23:23:49 MDT 2001
+ *@created    Tue Jul 17 02:16:49 MDT 2001
  *@version    1.0
  */
 %>
 
 <%@ page import="java.util.*" %>
-<%@ page import="org.ofbiz.commonapp.common.*" %>
-<%@ page import="org.ofbiz.commonapp.webevent.*" %>
+<%@ page import="org.ofbiz.core.util.*" %>
 <%@ page import="org.ofbiz.commonapp.security.*" %>
 <%@ page import="org.ofbiz.commonapp.party.party.*" %>
 
 <%@ page import="org.ofbiz.commonapp.security.login.*" %>
 
-<%@ taglib uri="/WEB-INF/webevent.tld" prefix="webevent" %>
-<webevent:dispatch loginRequired="true" />
-
+<%String controlPath=(String)request.getAttribute(SiteDefs.CONTROL_PATH);%>
 <%pageContext.setAttribute("PageName", "ViewParty"); %>
 
 <%@ include file="/includes/header.jsp" %>
@@ -89,13 +86,13 @@ function ShowViewTab(lname)
   <b>View Entity: Party with (PARTY_ID: <%=partyId%>).</b>
 </div>
 
-<a href="<%=response.encodeURL("FindParty.jsp")%>" class="buttontext">[Find Party]</a>
+<a href="<%=response.encodeURL(controlPath + "/FindParty")%>" class="buttontext">[Find Party]</a>
 <%if(hasCreatePermission){%>
-  <a href="<%=response.encodeURL("ViewParty.jsp")%>" class="buttontext">[Create New Party]</a>
+  <a href="<%=response.encodeURL(controlPath + "/ViewParty")%>" class="buttontext">[Create New Party]</a>
 <%}%>
 <%if(party != null){%>
   <%if(hasDeletePermission){%>
-    <a href="<%=response.encodeURL("ViewParty.jsp?WEBEVENT=UPDATE_PARTY&UPDATE_MODE=DELETE&" + "PARTY_PARTY_ID=" + partyId)%>" class="buttontext">[Delete this Party]</a>
+    <a href="<%=response.encodeURL(controlPath + "/UpdateParty?UPDATE_MODE=DELETE&" + "PARTY_PARTY_ID=" + partyId)%>" class="buttontext">[Delete this Party]</a>
   <%}%>
 <%}%>
 
@@ -137,8 +134,7 @@ function ShowViewTab(lname)
     party = null;
   }
 %>
-<form action="<%=response.encodeURL("ViewParty.jsp")%>" method="POST" name="updateForm" style="margin:0;">
-  <input type="hidden" name="WEBEVENT" value="UPDATE_PARTY">
+<form action="<%=response.encodeURL(controlPath + "/UpdateParty")%>" method="POST" name="updateForm" style="margin:0;">
   <input type="hidden" name="ON_ERROR_PAGE" value="<%=request.getServletPath()%>">
 <table cellpadding="2" cellspacing="2" border="0">
 
@@ -246,11 +242,11 @@ function ShowTab(lname)
     %>
       
     <%if(relatedCreatePerm){%>
-      <a href="<%=response.encodeURL("/commonapp/party/party/ViewPartyClassification.jsp?" + "PARTY_CLASSIFICATION_PARTY_ID=" + party.getPartyId())%>" class="buttontext">[Create PartyClassification]</a>
+      <a href="<%=response.encodeURL(controlPath + "/ViewPartyClassification?" + "PARTY_CLASSIFICATION_PARTY_ID=" + party.getPartyId())%>" class="buttontext">[Create PartyClassification]</a>
     <%}%>    
     <%String curFindString = "SEARCH_TYPE=PartyId";%>
     <%curFindString = curFindString + "&SEARCH_PARAMETER1=" + party.getPartyId();%>
-    <a href="<%=response.encodeURL("/commonapp/party/party/FindParty.jsp?" + UtilFormatOut.encodeQuery(curFindString))%>" class="buttontext">[Find PartyClassification]</a>
+    <a href="<%=response.encodeURL(controlPath + "/FindParty?" + UtilFormatOut.encodeQuery(curFindString))%>" class="buttontext">[Find PartyClassification]</a>
   <div style='width:100%;height:250px;overflow:auto;border-style:inset;'>
   <table width="100%" cellpadding="2" cellspacing="2" border="0">
     <tr class="<%=rowClassResultHeader%>">
@@ -337,11 +333,11 @@ function ShowTab(lname)
       </td>
   
       <td>
-        <a href="<%=response.encodeURL("/commonapp/party/party/ViewPartyClassification.jsp?" + "PARTY_CLASSIFICATION_PARTY_ID=" + partyClassificationRelated.getPartyId() + "&" + "PARTY_CLASSIFICATION_PARTY_TYPE_ID=" + partyClassificationRelated.getPartyTypeId())%>" class="buttontext">[View]</a>
+        <a href="<%=response.encodeURL(controlPath + "/ViewPartyClassification?" + "PARTY_CLASSIFICATION_PARTY_ID=" + partyClassificationRelated.getPartyId() + "&" + "PARTY_CLASSIFICATION_PARTY_TYPE_ID=" + partyClassificationRelated.getPartyTypeId())%>" class="buttontext">[View]</a>
       </td>
       <%if(relatedDeletePerm){%>
         <td>
-          <a href="<%=response.encodeURL("ViewParty.jsp?" + "PARTY_CLASSIFICATION_PARTY_ID=" + partyClassificationRelated.getPartyId() + "&" + "PARTY_CLASSIFICATION_PARTY_TYPE_ID=" + partyClassificationRelated.getPartyTypeId() + "&" + "PARTY_PARTY_ID=" + partyId + "&WEBEVENT=UPDATE_PARTY_CLASSIFICATION&UPDATE_MODE=DELETE")%>" class="buttontext">[Delete]</a>
+          <a href="<%=response.encodeURL(controlPath + "/UpdatePartyClassification?" + "PARTY_CLASSIFICATION_PARTY_ID=" + partyClassificationRelated.getPartyId() + "&" + "PARTY_CLASSIFICATION_PARTY_TYPE_ID=" + partyClassificationRelated.getPartyTypeId() + "&" + "PARTY_PARTY_ID=" + partyId + "&UPDATE_MODE=DELETE")%>" class="buttontext">[Delete]</a>
         </td>
       <%}%>
     </tr>
@@ -382,11 +378,11 @@ Displaying <%=relatedLoopCount%> entities.
     %>
       
     <%if(relatedCreatePerm){%>
-      <a href="<%=response.encodeURL("/commonapp/party/party/ViewPartyAttribute.jsp?" + "PARTY_ATTRIBUTE_PARTY_ID=" + party.getPartyId())%>" class="buttontext">[Create PartyAttribute]</a>
+      <a href="<%=response.encodeURL(controlPath + "/ViewPartyAttribute?" + "PARTY_ATTRIBUTE_PARTY_ID=" + party.getPartyId())%>" class="buttontext">[Create PartyAttribute]</a>
     <%}%>    
     <%String curFindString = "SEARCH_TYPE=PartyId";%>
     <%curFindString = curFindString + "&SEARCH_PARAMETER1=" + party.getPartyId();%>
-    <a href="<%=response.encodeURL("/commonapp/party/party/FindParty.jsp?" + UtilFormatOut.encodeQuery(curFindString))%>" class="buttontext">[Find PartyAttribute]</a>
+    <a href="<%=response.encodeURL(controlPath + "/FindParty?" + UtilFormatOut.encodeQuery(curFindString))%>" class="buttontext">[Find PartyAttribute]</a>
   <div style='width:100%;height:250px;overflow:auto;border-style:inset;'>
   <table width="100%" cellpadding="2" cellspacing="2" border="0">
     <tr class="<%=rowClassResultHeader%>">
@@ -431,11 +427,11 @@ Displaying <%=relatedLoopCount%> entities.
       </td>
   
       <td>
-        <a href="<%=response.encodeURL("/commonapp/party/party/ViewPartyAttribute.jsp?" + "PARTY_ATTRIBUTE_PARTY_ID=" + partyAttributeRelated.getPartyId() + "&" + "PARTY_ATTRIBUTE_NAME=" + partyAttributeRelated.getName())%>" class="buttontext">[View]</a>
+        <a href="<%=response.encodeURL(controlPath + "/ViewPartyAttribute?" + "PARTY_ATTRIBUTE_PARTY_ID=" + partyAttributeRelated.getPartyId() + "&" + "PARTY_ATTRIBUTE_NAME=" + partyAttributeRelated.getName())%>" class="buttontext">[View]</a>
       </td>
       <%if(relatedDeletePerm){%>
         <td>
-          <a href="<%=response.encodeURL("ViewParty.jsp?" + "PARTY_ATTRIBUTE_PARTY_ID=" + partyAttributeRelated.getPartyId() + "&" + "PARTY_ATTRIBUTE_NAME=" + partyAttributeRelated.getName() + "&" + "PARTY_PARTY_ID=" + partyId + "&WEBEVENT=UPDATE_PARTY_ATTRIBUTE&UPDATE_MODE=DELETE")%>" class="buttontext">[Delete]</a>
+          <a href="<%=response.encodeURL(controlPath + "/UpdatePartyAttribute?" + "PARTY_ATTRIBUTE_PARTY_ID=" + partyAttributeRelated.getPartyId() + "&" + "PARTY_ATTRIBUTE_NAME=" + partyAttributeRelated.getName() + "&" + "PARTY_PARTY_ID=" + partyId + "&UPDATE_MODE=DELETE")%>" class="buttontext">[Delete]</a>
         </td>
       <%}%>
     </tr>
@@ -476,11 +472,11 @@ Displaying <%=relatedLoopCount%> entities.
     %>
       
     <%if(relatedCreatePerm){%>
-      <a href="<%=response.encodeURL("/commonapp/security/login/ViewUserLogin.jsp?" + "USER_LOGIN_PARTY_ID=" + party.getPartyId())%>" class="buttontext">[Create UserLogin]</a>
+      <a href="<%=response.encodeURL(controlPath + "/ViewUserLogin?" + "USER_LOGIN_PARTY_ID=" + party.getPartyId())%>" class="buttontext">[Create UserLogin]</a>
     <%}%>    
     <%String curFindString = "SEARCH_TYPE=PartyId";%>
     <%curFindString = curFindString + "&SEARCH_PARAMETER1=" + party.getPartyId();%>
-    <a href="<%=response.encodeURL("/commonapp/security/login/FindParty.jsp?" + UtilFormatOut.encodeQuery(curFindString))%>" class="buttontext">[Find UserLogin]</a>
+    <a href="<%=response.encodeURL(controlPath + "/FindParty?" + UtilFormatOut.encodeQuery(curFindString))%>" class="buttontext">[Find UserLogin]</a>
   <div style='width:100%;height:250px;overflow:auto;border-style:inset;'>
   <table width="100%" cellpadding="2" cellspacing="2" border="0">
     <tr class="<%=rowClassResultHeader%>">
@@ -539,11 +535,11 @@ Displaying <%=relatedLoopCount%> entities.
       </td>
   
       <td>
-        <a href="<%=response.encodeURL("/commonapp/security/login/ViewUserLogin.jsp?" + "USER_LOGIN_USER_LOGIN_ID=" + userLoginRelated.getUserLoginId())%>" class="buttontext">[View]</a>
+        <a href="<%=response.encodeURL(controlPath + "/ViewUserLogin?" + "USER_LOGIN_USER_LOGIN_ID=" + userLoginRelated.getUserLoginId())%>" class="buttontext">[View]</a>
       </td>
       <%if(relatedDeletePerm){%>
         <td>
-          <a href="<%=response.encodeURL("ViewParty.jsp?" + "USER_LOGIN_USER_LOGIN_ID=" + userLoginRelated.getUserLoginId() + "&" + "PARTY_PARTY_ID=" + partyId + "&WEBEVENT=UPDATE_USER_LOGIN&UPDATE_MODE=DELETE")%>" class="buttontext">[Delete]</a>
+          <a href="<%=response.encodeURL(controlPath + "/UpdateUserLogin?" + "USER_LOGIN_USER_LOGIN_ID=" + userLoginRelated.getUserLoginId() + "&" + "PARTY_PARTY_ID=" + partyId + "&UPDATE_MODE=DELETE")%>" class="buttontext">[Delete]</a>
         </td>
       <%}%>
     </tr>

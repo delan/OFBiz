@@ -6,7 +6,7 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import java.math.*;
 import org.ofbiz.commonapp.security.*;
-import org.ofbiz.commonapp.common.*;
+import org.ofbiz.core.util.*;
 
 /**
  * <p><b>Title:</b> Security Component - User Login Security Group Entity
@@ -32,7 +32,7 @@ import org.ofbiz.commonapp.common.*;
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Sun Jul 08 01:14:09 MDT 2001
+ *@created    Tue Jul 17 02:08:35 MDT 2001
  *@version    1.0
  */
 
@@ -48,11 +48,11 @@ public class UserLoginSecurityGroupWebEvent
    * @exception java.rmi.RemoteException Standard RMI Remote Exception
    * @exception java.io.IOException Standard IO Exception
    */
-  public static boolean updateUserLoginSecurityGroup(HttpServletRequest request, HttpServletResponse response) throws javax.servlet.ServletException, java.rmi.RemoteException, java.io.IOException
+  public static String updateUserLoginSecurityGroup(HttpServletRequest request, HttpServletResponse response) throws javax.servlet.ServletException, java.rmi.RemoteException, java.io.IOException
   {
     // a little check to reprocessing the web event in error cases - would cause infinate loop
-    if(request.getAttribute("ERROR_MESSAGE") != null) return true;
-    if(request.getSession().getAttribute("ERROR_MESSAGE") != null) return true;    
+    if(request.getAttribute("ERROR_MESSAGE") != null) return "success";
+    if(request.getSession().getAttribute("ERROR_MESSAGE") != null) return "success";    
     String errMsg = "";
     
     String updateMode = request.getParameter("UPDATE_MODE");
@@ -69,7 +69,7 @@ public class UserLoginSecurityGroupWebEvent
     if(!Security.hasEntityPermission("USER_LOGIN_SECURITY_GROUP", "_" + updateMode, request.getSession()))
     {
       request.getSession().setAttribute("ERROR_MESSAGE", "You do not have sufficient permissions to "+ updateMode + " UserLoginSecurityGroup (USER_LOGIN_SECURITY_GROUP_" + updateMode + " or USER_LOGIN_SECURITY_GROUP_ADMIN needed).");
-      return true;
+      return "success";
     }
 
     //get the primary key parameters...
@@ -85,7 +85,7 @@ public class UserLoginSecurityGroupWebEvent
       //Remove associated/dependent entries from other tables here
       //Delete actual UserLoginSecurityGroup last, just in case database is set up to do a cascading delete, caches won't get cleared
       UserLoginSecurityGroupHelper.removeByPrimaryKey(userLoginId, groupId);
-      return true;
+      return "success";
     }
 
     //get the non-primary key parameters
@@ -106,13 +106,7 @@ public class UserLoginSecurityGroupWebEvent
     {
       errMsg = "<br><b>The following error(s) occured:</b><ul>" + errMsg + "</ul>";
       request.setAttribute("ERROR_MESSAGE", errMsg);
-      //note that it is much easier to do a RequestDispatcher.forward here instead of a respones.sendRedirect because the sendRedirent will not automatically keep the Parameters...
-      RequestDispatcher rd;
-      String onErrorPage = request.getParameter("ON_ERROR_PAGE");
-      if(onErrorPage != null) rd = request.getRequestDispatcher(onErrorPage);
-      else rd = request.getRequestDispatcher("/commonapp/security/securitygroup/EditUserLoginSecurityGroup.jsp");
-      rd.forward(request, response);
-      return false;
+      return "error";
     }
 
     if(updateMode.equals("CREATE"))
@@ -121,7 +115,7 @@ public class UserLoginSecurityGroupWebEvent
       if(userLoginSecurityGroup == null)
       {
         request.getSession().setAttribute("ERROR_MESSAGE", "Creation of UserLoginSecurityGroup failed. USER_LOGIN_ID, GROUP_ID: " + userLoginId + ", " + groupId);
-        return true;
+        return "success";
       }
     }
     else if(updateMode.equals("UPDATE"))
@@ -130,7 +124,7 @@ public class UserLoginSecurityGroupWebEvent
       if(userLoginSecurityGroup == null)
       {
         request.getSession().setAttribute("ERROR_MESSAGE", "Update of UserLoginSecurityGroup failed. USER_LOGIN_ID, GROUP_ID: " + userLoginId + ", " + groupId);
-        return true;
+        return "success";
       }
     }
     else
@@ -142,6 +136,6 @@ public class UserLoginSecurityGroupWebEvent
       }
     }
 
-    return true;
+    return "success";
   }
 }

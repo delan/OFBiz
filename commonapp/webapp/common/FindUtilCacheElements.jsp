@@ -28,15 +28,13 @@
  */
 %> 
 
-<%@ page import="org.ofbiz.commonapp.common.*" %>
+<%@ page import="org.ofbiz.core.util.*" %>
 <%@ page import="org.ofbiz.commonapp.security.*" %>
 <%@ page import="java.util.*" %>
 
-<%@ taglib uri="/WEB-INF/webevent.tld" prefix="webevent" %> 
-<webevent:dispatch loginRequired="true" />
-
 <%boolean hasUtilCacheEdit=Security.hasPermission("UTIL_CACHE_EDIT", session);%>
 <%String cacheName=request.getParameter("UTIL_CACHE_NAME");%>
+<%String controlPath=(String)request.getAttribute(SiteDefs.CONTROL_PATH);%>
 
 <% pageContext.setAttribute("PageName", "FindUtilCacheElements"); %> 
 
@@ -50,7 +48,7 @@
    <%UtilCache utilCache = (UtilCache)UtilCache.utilCacheTable.get(cacheName);%>
    <%if(utilCache!=null){%>
     <H3>&nbsp;<%=cacheName%> (<%=(new Date()).toString()%>)</H3>
-    <a href="<%=response.encodeURL("FindUtilCache.jsp")%>" class='buttontext'>Back to Cache Maintenance</A>
+    <a href="<%=response.encodeURL(controlPath + "/FindUtilCache")%>" class='buttontext'>Back to Cache Maintenance</A>
     <TABLE border='0' cellpadding='2' cellspacing='2'>
     <%
       String rowColor1 = "99CCFF";
@@ -89,7 +87,7 @@
             </TD>
             <TD>
               <%if(hasUtilCacheEdit){%>
-                <a href="<%=response.encodeURL("FindUtilCacheElements.jsp?WEBEVENT=UTIL_CACHE_REMOVE_ELEMENT&UTIL_CACHE_NAME=" + cacheName + "&UTIL_CACHE_ELEMENT_NUMBER=" + utilCache.keyLRUList.indexOf(key))%>" class="buttontext">Remove</a>
+                <a href="<%=response.encodeURL(controlPath + "/FindUtilCacheElementsRemoveElement?UTIL_CACHE_NAME=" + cacheName + "&UTIL_CACHE_ELEMENT_NUMBER=" + utilCache.keyLRUList.indexOf(key))%>" class="buttontext">Remove</a>
               <%}%>
             </TD>
           </TR>
@@ -106,7 +104,7 @@
   <%}else{%>
     <H3>&nbsp;No Cache Name Specified</H3>
   <%}%>
-  <a href="<%=response.encodeURL("FindUtilCache.jsp")%>" class='buttontext'>Back to Cache Maintenance</A>
+  <a href="<%=response.encodeURL(controlPath + "/FindUtilCache")%>" class='buttontext'>Back to Cache Maintenance</A>
 <%}else{%>
   <h3>You do not have permission to view this page (UTIL_CACHE_VIEW needed).</h3>
 <%}%>

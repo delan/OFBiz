@@ -28,25 +28,24 @@
  */
 %> 
 
-<%@ page import="org.ofbiz.commonapp.common.*" %>
+<%@ page import="org.ofbiz.core.util.*" %>
 <%@ page import="org.ofbiz.commonapp.security.*" %>
-
-<%@ taglib uri="/WEB-INF/webevent.tld" prefix="webevent" %>
-<webevent:dispatch loginRequired="false" />
 
 <% pageContext.setAttribute("PageName", "sitemap"); %> 
 
 <%@ include file="/includes/header.jsp" %>
 <%@ include file="/includes/onecolumn.jsp" %> 
 
+<%String controlPath=(String)request.getAttribute(SiteDefs.CONTROL_PATH);%>
+
 <h2 style='margin:0;'>Site Map</h2>
 <ul>
-  <li><a href="<%=response.encodeURL("main.jsp")%>" class="buttontext">Main</a>
+  <li><a href="<%=response.encodeURL(controlPath + "/main")%>" class="buttontext">Main</a>
   <%if(Security.hasPermission("ENTITY_MAINT", session)){%>
-    <li><a href="<%=response.encodeURL("entitymaint.jsp")%>" class='buttontext'>Entity Maintenance</A>
+    <li><a href="<%=response.encodeURL(controlPath + "/entitymaint")%>" class='buttontext'>Entity Maintenance</A>
   <%}%>
   <%if(Security.hasPermission("UTIL_CACHE_VIEW", session)){%>
-    <li><a href="<%=response.encodeURL("common/FindUtilCache.jsp")%>" class='buttontext'>Cache Maintenance</A>
+    <li><a href="<%=response.encodeURL(controlPath + "/FindUtilCache")%>" class='buttontext'>Cache Maintenance</A>
   <%}%>
 </ul>
 <%@ include file="/includes/onecolumnclose.jsp" %>

@@ -4,7 +4,7 @@ package org.ofbiz.commonapp.security.login;
 import java.rmi.*;
 import javax.ejb.*;
 import java.util.*;
-import org.ofbiz.commonapp.common.*;
+import org.ofbiz.core.util.*;
 
 import org.ofbiz.commonapp.party.party.*;
 import org.ofbiz.commonapp.security.securitygroup.*;
@@ -33,7 +33,7 @@ import org.ofbiz.commonapp.security.securitygroup.*;
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Sun Jul 08 01:14:04 MDT 2001
+ *@created    Tue Jul 17 02:08:30 MDT 2001
  *@version    1.0
  */
 public class UserLoginValue implements UserLogin

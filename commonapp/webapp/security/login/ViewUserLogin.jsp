@@ -24,23 +24,20 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Mon Jul 09 23:23:52 MDT 2001
+ *@created    Tue Jul 17 02:16:52 MDT 2001
  *@version    1.0
  */
 %>
 
 <%@ page import="java.util.*" %>
-<%@ page import="org.ofbiz.commonapp.common.*" %>
-<%@ page import="org.ofbiz.commonapp.webevent.*" %>
+<%@ page import="org.ofbiz.core.util.*" %>
 <%@ page import="org.ofbiz.commonapp.security.*" %>
 <%@ page import="org.ofbiz.commonapp.security.login.*" %>
 
 <%@ page import="org.ofbiz.commonapp.party.party.*" %>
 <%@ page import="org.ofbiz.commonapp.security.securitygroup.*" %>
 
-<%@ taglib uri="/WEB-INF/webevent.tld" prefix="webevent" %>
-<webevent:dispatch loginRequired="true" />
-
+<%String controlPath=(String)request.getAttribute(SiteDefs.CONTROL_PATH);%>
 <%pageContext.setAttribute("PageName", "ViewUserLogin"); %>
 
 <%@ include file="/includes/header.jsp" %>
@@ -90,13 +87,13 @@ function ShowViewTab(lname)
   <b>View Entity: UserLogin with (USER_LOGIN_ID: <%=userLoginId%>).</b>
 </div>
 
-<a href="<%=response.encodeURL("FindUserLogin.jsp")%>" class="buttontext">[Find UserLogin]</a>
+<a href="<%=response.encodeURL(controlPath + "/FindUserLogin")%>" class="buttontext">[Find UserLogin]</a>
 <%if(hasCreatePermission){%>
-  <a href="<%=response.encodeURL("ViewUserLogin.jsp")%>" class="buttontext">[Create New UserLogin]</a>
+  <a href="<%=response.encodeURL(controlPath + "/ViewUserLogin")%>" class="buttontext">[Create New UserLogin]</a>
 <%}%>
 <%if(userLogin != null){%>
   <%if(hasDeletePermission){%>
-    <a href="<%=response.encodeURL("ViewUserLogin.jsp?WEBEVENT=UPDATE_USER_LOGIN&UPDATE_MODE=DELETE&" + "USER_LOGIN_USER_LOGIN_ID=" + userLoginId)%>" class="buttontext">[Delete this UserLogin]</a>
+    <a href="<%=response.encodeURL(controlPath + "/UpdateUserLogin?UPDATE_MODE=DELETE&" + "USER_LOGIN_USER_LOGIN_ID=" + userLoginId)%>" class="buttontext">[Delete this UserLogin]</a>
   <%}%>
 <%}%>
 
@@ -170,8 +167,7 @@ function ShowViewTab(lname)
     userLogin = null;
   }
 %>
-<form action="<%=response.encodeURL("ViewUserLogin.jsp")%>" method="POST" name="updateForm" style="margin:0;">
-  <input type="hidden" name="WEBEVENT" value="UPDATE_USER_LOGIN">
+<form action="<%=response.encodeURL(controlPath + "/UpdateUserLogin")%>" method="POST" name="updateForm" style="margin:0;">
   <input type="hidden" name="ON_ERROR_PAGE" value="<%=request.getServletPath()%>">
 <table cellpadding="2" cellspacing="2" border="0">
 
@@ -293,11 +289,10 @@ function ShowTab(lname)
      <b></b> Related Entity: <b>Party</b> with (PARTY_ID: <%=userLogin.getPartyId()%>)
     </div>
     <%if(userLogin.getPartyId() != null){%>
-      
-      <a href="<%=response.encodeURL("/commonapp/party/party/ViewParty.jsp?" + "PARTY_PARTY_ID=" + userLogin.getPartyId())%>" class="buttontext">[View Party]</a>      
+      <a href="<%=response.encodeURL(controlPath + "/ViewParty?" + "PARTY_PARTY_ID=" + userLogin.getPartyId())%>" class="buttontext">[View Party]</a>      
     <%if(partyRelated == null){%>
       <%if(Security.hasEntityPermission("PARTY", "_CREATE", session)){%>
-        <a href="<%=response.encodeURL("/commonapp/party/party/ViewParty.jsp?" + "PARTY_PARTY_ID=" + userLogin.getPartyId())%>" class="buttontext">[Create Party]</a>
+        <a href="<%=response.encodeURL(controlPath + "/ViewParty?" + "PARTY_PARTY_ID=" + userLogin.getPartyId())%>" class="buttontext">[Create Party]</a>
       <%}%>
     <%}%>
     <%}%>
@@ -343,11 +338,11 @@ function ShowTab(lname)
     %>
       
     <%if(relatedCreatePerm){%>
-      <a href="<%=response.encodeURL("/commonapp/security/securitygroup/ViewUserLoginSecurityGroup.jsp?" + "USER_LOGIN_SECURITY_GROUP_USER_LOGIN_ID=" + userLogin.getUserLoginId())%>" class="buttontext">[Create UserLoginSecurityGroup]</a>
+      <a href="<%=response.encodeURL(controlPath + "/ViewUserLoginSecurityGroup?" + "USER_LOGIN_SECURITY_GROUP_USER_LOGIN_ID=" + userLogin.getUserLoginId())%>" class="buttontext">[Create UserLoginSecurityGroup]</a>
     <%}%>    
     <%String curFindString = "SEARCH_TYPE=UserLoginId";%>
     <%curFindString = curFindString + "&SEARCH_PARAMETER1=" + userLogin.getUserLoginId();%>
-    <a href="<%=response.encodeURL("/commonapp/security/securitygroup/FindUserLogin.jsp?" + UtilFormatOut.encodeQuery(curFindString))%>" class="buttontext">[Find UserLoginSecurityGroup]</a>
+    <a href="<%=response.encodeURL(controlPath + "/FindUserLogin?" + UtilFormatOut.encodeQuery(curFindString))%>" class="buttontext">[Find UserLoginSecurityGroup]</a>
   <div style='width:100%;height:250px;overflow:auto;border-style:inset;'>
   <table width="100%" cellpadding="2" cellspacing="2" border="0">
     <tr class="<%=rowClassResultHeader%>">
@@ -385,11 +380,11 @@ function ShowTab(lname)
       </td>
   
       <td>
-        <a href="<%=response.encodeURL("/commonapp/security/securitygroup/ViewUserLoginSecurityGroup.jsp?" + "USER_LOGIN_SECURITY_GROUP_USER_LOGIN_ID=" + userLoginSecurityGroupRelated.getUserLoginId() + "&" + "USER_LOGIN_SECURITY_GROUP_GROUP_ID=" + userLoginSecurityGroupRelated.getGroupId())%>" class="buttontext">[View]</a>
+        <a href="<%=response.encodeURL(controlPath + "/ViewUserLoginSecurityGroup?" + "USER_LOGIN_SECURITY_GROUP_USER_LOGIN_ID=" + userLoginSecurityGroupRelated.getUserLoginId() + "&" + "USER_LOGIN_SECURITY_GROUP_GROUP_ID=" + userLoginSecurityGroupRelated.getGroupId())%>" class="buttontext">[View]</a>
       </td>
       <%if(relatedDeletePerm){%>
         <td>
-          <a href="<%=response.encodeURL("ViewUserLogin.jsp?" + "USER_LOGIN_SECURITY_GROUP_USER_LOGIN_ID=" + userLoginSecurityGroupRelated.getUserLoginId() + "&" + "USER_LOGIN_SECURITY_GROUP_GROUP_ID=" + userLoginSecurityGroupRelated.getGroupId() + "&" + "USER_LOGIN_USER_LOGIN_ID=" + userLoginId + "&WEBEVENT=UPDATE_USER_LOGIN_SECURITY_GROUP&UPDATE_MODE=DELETE")%>" class="buttontext">[Delete]</a>
+          <a href="<%=response.encodeURL(controlPath + "/UpdateUserLoginSecurityGroup?" + "USER_LOGIN_SECURITY_GROUP_USER_LOGIN_ID=" + userLoginSecurityGroupRelated.getUserLoginId() + "&" + "USER_LOGIN_SECURITY_GROUP_GROUP_ID=" + userLoginSecurityGroupRelated.getGroupId() + "&" + "USER_LOGIN_USER_LOGIN_ID=" + userLoginId + "&UPDATE_MODE=DELETE")%>" class="buttontext">[Delete]</a>
         </td>
       <%}%>
     </tr>
@@ -430,11 +425,11 @@ Displaying <%=relatedLoopCount%> entities.
     %>
       
     <%if(relatedCreatePerm){%>
-      <a href="<%=response.encodeURL("/commonapp/security/login/ViewLoginAccountHistory.jsp?" + "LOGIN_ACCOUNT_HISTORY_USER_LOGIN_ID=" + userLogin.getUserLoginId())%>" class="buttontext">[Create LoginAccountHistory]</a>
+      <a href="<%=response.encodeURL(controlPath + "/ViewLoginAccountHistory?" + "LOGIN_ACCOUNT_HISTORY_USER_LOGIN_ID=" + userLogin.getUserLoginId())%>" class="buttontext">[Create LoginAccountHistory]</a>
     <%}%>    
     <%String curFindString = "SEARCH_TYPE=UserLoginId";%>
     <%curFindString = curFindString + "&SEARCH_PARAMETER1=" + userLogin.getUserLoginId();%>
-    <a href="<%=response.encodeURL("/commonapp/security/login/FindUserLogin.jsp?" + UtilFormatOut.encodeQuery(curFindString))%>" class="buttontext">[Find LoginAccountHistory]</a>
+    <a href="<%=response.encodeURL(controlPath + "/FindUserLogin?" + UtilFormatOut.encodeQuery(curFindString))%>" class="buttontext">[Find LoginAccountHistory]</a>
   <div style='width:100%;height:250px;overflow:auto;border-style:inset;'>
   <table width="100%" cellpadding="2" cellspacing="2" border="0">
     <tr class="<%=rowClassResultHeader%>">
@@ -535,11 +530,11 @@ Displaying <%=relatedLoopCount%> entities.
       </td>
   
       <td>
-        <a href="<%=response.encodeURL("/commonapp/security/login/ViewLoginAccountHistory.jsp?" + "LOGIN_ACCOUNT_HISTORY_USER_LOGIN_ID=" + loginAccountHistoryRelated.getUserLoginId() + "&" + "LOGIN_ACCOUNT_HISTORY_USER_LOGIN_SEQ_ID=" + loginAccountHistoryRelated.getUserLoginSeqId())%>" class="buttontext">[View]</a>
+        <a href="<%=response.encodeURL(controlPath + "/ViewLoginAccountHistory?" + "LOGIN_ACCOUNT_HISTORY_USER_LOGIN_ID=" + loginAccountHistoryRelated.getUserLoginId() + "&" + "LOGIN_ACCOUNT_HISTORY_USER_LOGIN_SEQ_ID=" + loginAccountHistoryRelated.getUserLoginSeqId())%>" class="buttontext">[View]</a>
       </td>
       <%if(relatedDeletePerm){%>
         <td>
-          <a href="<%=response.encodeURL("ViewUserLogin.jsp?" + "LOGIN_ACCOUNT_HISTORY_USER_LOGIN_ID=" + loginAccountHistoryRelated.getUserLoginId() + "&" + "LOGIN_ACCOUNT_HISTORY_USER_LOGIN_SEQ_ID=" + loginAccountHistoryRelated.getUserLoginSeqId() + "&" + "USER_LOGIN_USER_LOGIN_ID=" + userLoginId + "&WEBEVENT=UPDATE_LOGIN_ACCOUNT_HISTORY&UPDATE_MODE=DELETE")%>" class="buttontext">[Delete]</a>
+          <a href="<%=response.encodeURL(controlPath + "/UpdateLoginAccountHistory?" + "LOGIN_ACCOUNT_HISTORY_USER_LOGIN_ID=" + loginAccountHistoryRelated.getUserLoginId() + "&" + "LOGIN_ACCOUNT_HISTORY_USER_LOGIN_SEQ_ID=" + loginAccountHistoryRelated.getUserLoginSeqId() + "&" + "USER_LOGIN_USER_LOGIN_ID=" + userLoginId + "&UPDATE_MODE=DELETE")%>" class="buttontext">[Delete]</a>
         </td>
       <%}%>
     </tr>

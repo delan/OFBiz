@@ -28,14 +28,12 @@
  */
 %> 
 
-<%@ page import="org.ofbiz.commonapp.common.*" %>
+<%@ page import="org.ofbiz.core.util.*" %>
 <%@ page import="org.ofbiz.commonapp.security.*" %>
 <%@ page import="java.util.*" %>
 
-<%@ taglib uri="/WEB-INF/webevent.tld" prefix="webevent" %> 
-<webevent:dispatch loginRequired="true" />
-
 <%String cacheName=request.getParameter("UTIL_CACHE_NAME");%>
+<%String controlPath=(String)request.getAttribute(SiteDefs.CONTROL_PATH);%>
 
 <% pageContext.setAttribute("PageName", "EditUtilCache"); %> 
 
@@ -49,9 +47,9 @@
    <%UtilCache utilCache = (UtilCache)UtilCache.utilCacheTable.get(cacheName);%>
    <%if(utilCache!=null){%>
     <H3>&nbsp;<%=cacheName%></H3>
-    <a href="<%=response.encodeURL("EditUtilCache.jsp?WEBEVENT=UTIL_CACHE_CLEAR&UTIL_CACHE_NAME=" + cacheName)%>" class="buttontext">Clear this Cache</a>
-    <br><a href="<%=response.encodeURL("FindUtilCache.jsp")%>" class='buttontext'>Back to Cache Maintenance</A>
-    <form method="POST" action="<%=response.encodeURL("EditUtilCache.jsp?WEBEVENT=UTIL_CACHE_UPDATE&UTIL_CACHE_NAME=" + cacheName)%>">
+    <a href="<%=response.encodeURL(controlPath + "/EditUtilCacheClear?UTIL_CACHE_NAME=" + cacheName)%>" class="buttontext">Clear this Cache</a>
+    <br><a href="<%=response.encodeURL(controlPath + "/FindUtilCache")%>" class='buttontext'>Back to Cache Maintenance</A>
+    <form method="POST" action="<%=response.encodeURL(controlPath + "/EditUtilCacheUpdate?UTIL_CACHE_NAME=" + cacheName)%>">
     <TABLE border='0' cellpadding='2' cellspacing='2'>
     <%
       String rowColor1 = "99CCFF";
@@ -99,11 +97,11 @@
    <%}else{%>
     <H3>&nbsp;<%=cacheName%> Not Found</H3>
    <%}%>
-   <a href="<%=response.encodeURL("EditUtilCache.jsp?WEBEVENT=UTIL_CACHE_CLEAR&UTIL_CACHE_NAME=" + cacheName)%>" class="buttontext">Clear this Cache</a>
+   <a href="<%=response.encodeURL(controlPath + "/EditUtilCacheClear?UTIL_CACHE_NAME=" + cacheName)%>" class="buttontext">Clear this Cache</a>
   <%}else{%>
     <H3>&nbsp;No Cache Name Specified</H3>
   <%}%>
-  <br><a href="<%=response.encodeURL("FindUtilCache.jsp")%>" class='buttontext'>Back to Cache Maintenance</A>
+  <br><a href="<%=response.encodeURL(controlPath + "/FindUtilCache")%>" class='buttontext'>Back to Cache Maintenance</A>
 
 <%}else{%>
   <h3>You do not have permission to view this page (UTIL_CACHE_EDIT needed).</h3>

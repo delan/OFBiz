@@ -32,7 +32,7 @@ import org.ofbiz.commonapp.security.login.*;
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Sun Jul 08 01:14:08 MDT 2001
+ *@created    Tue Jul 17 02:08:34 MDT 2001
  *@version    1.0
  */
 

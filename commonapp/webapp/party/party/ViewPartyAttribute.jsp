@@ -24,21 +24,18 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Mon Jul 09 23:23:51 MDT 2001
+ *@created    Tue Jul 17 02:16:51 MDT 2001
  *@version    1.0
  */
 %>
 
 <%@ page import="java.util.*" %>
-<%@ page import="org.ofbiz.commonapp.common.*" %>
-<%@ page import="org.ofbiz.commonapp.webevent.*" %>
+<%@ page import="org.ofbiz.core.util.*" %>
 <%@ page import="org.ofbiz.commonapp.security.*" %>
 <%@ page import="org.ofbiz.commonapp.party.party.*" %>
 
 
-<%@ taglib uri="/WEB-INF/webevent.tld" prefix="webevent" %>
-<webevent:dispatch loginRequired="true" />
-
+<%String controlPath=(String)request.getAttribute(SiteDefs.CONTROL_PATH);%>
 <%pageContext.setAttribute("PageName", "ViewPartyAttribute"); %>
 
 <%@ include file="/includes/header.jsp" %>
@@ -89,13 +86,13 @@ function ShowViewTab(lname)
   <b>View Entity: PartyAttribute with (PARTY_ID, NAME: <%=partyId%>, <%=name%>).</b>
 </div>
 
-<a href="<%=response.encodeURL("FindPartyAttribute.jsp")%>" class="buttontext">[Find PartyAttribute]</a>
+<a href="<%=response.encodeURL(controlPath + "/FindPartyAttribute")%>" class="buttontext">[Find PartyAttribute]</a>
 <%if(hasCreatePermission){%>
-  <a href="<%=response.encodeURL("ViewPartyAttribute.jsp")%>" class="buttontext">[Create New PartyAttribute]</a>
+  <a href="<%=response.encodeURL(controlPath + "/ViewPartyAttribute")%>" class="buttontext">[Create New PartyAttribute]</a>
 <%}%>
 <%if(partyAttribute != null){%>
   <%if(hasDeletePermission){%>
-    <a href="<%=response.encodeURL("ViewPartyAttribute.jsp?WEBEVENT=UPDATE_PARTY_ATTRIBUTE&UPDATE_MODE=DELETE&" + "PARTY_ATTRIBUTE_PARTY_ID=" + partyId + "&" + "PARTY_ATTRIBUTE_NAME=" + name)%>" class="buttontext">[Delete this PartyAttribute]</a>
+    <a href="<%=response.encodeURL(controlPath + "/UpdatePartyAttribute?UPDATE_MODE=DELETE&" + "PARTY_ATTRIBUTE_PARTY_ID=" + partyId + "&" + "PARTY_ATTRIBUTE_NAME=" + name)%>" class="buttontext">[Delete this PartyAttribute]</a>
   <%}%>
 <%}%>
 
@@ -153,8 +150,7 @@ function ShowViewTab(lname)
     partyAttribute = null;
   }
 %>
-<form action="<%=response.encodeURL("ViewPartyAttribute.jsp")%>" method="POST" name="updateForm" style="margin:0;">
-  <input type="hidden" name="WEBEVENT" value="UPDATE_PARTY_ATTRIBUTE">
+<form action="<%=response.encodeURL(controlPath + "/UpdatePartyAttribute")%>" method="POST" name="updateForm" style="margin:0;">
   <input type="hidden" name="ON_ERROR_PAGE" value="<%=request.getServletPath()%>">
 <table cellpadding="2" cellspacing="2" border="0">
 
@@ -266,11 +262,10 @@ function ShowTab(lname)
      <b></b> Related Entity: <b>Party</b> with (PARTY_ID: <%=partyAttribute.getPartyId()%>)
     </div>
     <%if(partyAttribute.getPartyId() != null){%>
-      
-      <a href="<%=response.encodeURL("/commonapp/party/party/ViewParty.jsp?" + "PARTY_PARTY_ID=" + partyAttribute.getPartyId())%>" class="buttontext">[View Party]</a>      
+      <a href="<%=response.encodeURL(controlPath + "/ViewParty?" + "PARTY_PARTY_ID=" + partyAttribute.getPartyId())%>" class="buttontext">[View Party]</a>      
     <%if(partyRelated == null){%>
       <%if(Security.hasEntityPermission("PARTY", "_CREATE", session)){%>
-        <a href="<%=response.encodeURL("/commonapp/party/party/ViewParty.jsp?" + "PARTY_PARTY_ID=" + partyAttribute.getPartyId())%>" class="buttontext">[Create Party]</a>
+        <a href="<%=response.encodeURL(controlPath + "/ViewParty?" + "PARTY_PARTY_ID=" + partyAttribute.getPartyId())%>" class="buttontext">[Create Party]</a>
       <%}%>
     <%}%>
     <%}%>
@@ -316,11 +311,11 @@ function ShowTab(lname)
     %>
       
     <%if(relatedCreatePerm){%>
-      <a href="<%=response.encodeURL("/commonapp/party/party/ViewPartyTypeAttr.jsp?" + "PARTY_TYPE_ATTR_NAME=" + partyAttribute.getName())%>" class="buttontext">[Create PartyTypeAttr]</a>
+      <a href="<%=response.encodeURL(controlPath + "/ViewPartyTypeAttr?" + "PARTY_TYPE_ATTR_NAME=" + partyAttribute.getName())%>" class="buttontext">[Create PartyTypeAttr]</a>
     <%}%>    
     <%String curFindString = "SEARCH_TYPE=Name";%>
     <%curFindString = curFindString + "&SEARCH_PARAMETER1=" + partyAttribute.getName();%>
-    <a href="<%=response.encodeURL("/commonapp/party/party/FindPartyAttribute.jsp?" + UtilFormatOut.encodeQuery(curFindString))%>" class="buttontext">[Find PartyTypeAttr]</a>
+    <a href="<%=response.encodeURL(controlPath + "/FindPartyAttribute?" + UtilFormatOut.encodeQuery(curFindString))%>" class="buttontext">[Find PartyTypeAttr]</a>
   <div style='width:100%;height:250px;overflow:auto;border-style:inset;'>
   <table width="100%" cellpadding="2" cellspacing="2" border="0">
     <tr class="<%=rowClassResultHeader%>">
@@ -358,11 +353,11 @@ function ShowTab(lname)
       </td>
   
       <td>
-        <a href="<%=response.encodeURL("/commonapp/party/party/ViewPartyTypeAttr.jsp?" + "PARTY_TYPE_ATTR_PARTY_TYPE_ID=" + partyTypeAttrRelated.getPartyTypeId() + "&" + "PARTY_TYPE_ATTR_NAME=" + partyTypeAttrRelated.getName())%>" class="buttontext">[View]</a>
+        <a href="<%=response.encodeURL(controlPath + "/ViewPartyTypeAttr?" + "PARTY_TYPE_ATTR_PARTY_TYPE_ID=" + partyTypeAttrRelated.getPartyTypeId() + "&" + "PARTY_TYPE_ATTR_NAME=" + partyTypeAttrRelated.getName())%>" class="buttontext">[View]</a>
       </td>
       <%if(relatedDeletePerm){%>
         <td>
-          <a href="<%=response.encodeURL("ViewPartyAttribute.jsp?" + "PARTY_TYPE_ATTR_PARTY_TYPE_ID=" + partyTypeAttrRelated.getPartyTypeId() + "&" + "PARTY_TYPE_ATTR_NAME=" + partyTypeAttrRelated.getName() + "&" + "PARTY_ATTRIBUTE_PARTY_ID=" + partyId + "&" + "PARTY_ATTRIBUTE_NAME=" + name + "&WEBEVENT=UPDATE_PARTY_TYPE_ATTR&UPDATE_MODE=DELETE")%>" class="buttontext">[Delete]</a>
+          <a href="<%=response.encodeURL(controlPath + "/UpdatePartyTypeAttr?" + "PARTY_TYPE_ATTR_PARTY_TYPE_ID=" + partyTypeAttrRelated.getPartyTypeId() + "&" + "PARTY_TYPE_ATTR_NAME=" + partyTypeAttrRelated.getName() + "&" + "PARTY_ATTRIBUTE_PARTY_ID=" + partyId + "&" + "PARTY_ATTRIBUTE_NAME=" + name + "&UPDATE_MODE=DELETE")%>" class="buttontext">[Delete]</a>
         </td>
       <%}%>
     </tr>

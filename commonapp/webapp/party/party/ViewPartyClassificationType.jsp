@@ -24,21 +24,18 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Mon Jul 09 23:23:50 MDT 2001
+ *@created    Tue Jul 17 02:16:50 MDT 2001
  *@version    1.0
  */
 %>
 
 <%@ page import="java.util.*" %>
-<%@ page import="org.ofbiz.commonapp.common.*" %>
-<%@ page import="org.ofbiz.commonapp.webevent.*" %>
+<%@ page import="org.ofbiz.core.util.*" %>
 <%@ page import="org.ofbiz.commonapp.security.*" %>
 <%@ page import="org.ofbiz.commonapp.party.party.*" %>
 
 
-<%@ taglib uri="/WEB-INF/webevent.tld" prefix="webevent" %>
-<webevent:dispatch loginRequired="true" />
-
+<%String controlPath=(String)request.getAttribute(SiteDefs.CONTROL_PATH);%>
 <%pageContext.setAttribute("PageName", "ViewPartyClassificationType"); %>
 
 <%@ include file="/includes/header.jsp" %>
@@ -88,13 +85,13 @@ function ShowViewTab(lname)
   <b>View Entity: PartyClassificationType with (PARTY_CLASSIFICATION_TYPE_ID: <%=partyClassificationTypeId%>).</b>
 </div>
 
-<a href="<%=response.encodeURL("FindPartyClassificationType.jsp")%>" class="buttontext">[Find PartyClassificationType]</a>
+<a href="<%=response.encodeURL(controlPath + "/FindPartyClassificationType")%>" class="buttontext">[Find PartyClassificationType]</a>
 <%if(hasCreatePermission){%>
-  <a href="<%=response.encodeURL("ViewPartyClassificationType.jsp")%>" class="buttontext">[Create New PartyClassificationType]</a>
+  <a href="<%=response.encodeURL(controlPath + "/ViewPartyClassificationType")%>" class="buttontext">[Create New PartyClassificationType]</a>
 <%}%>
 <%if(partyClassificationType != null){%>
   <%if(hasDeletePermission){%>
-    <a href="<%=response.encodeURL("ViewPartyClassificationType.jsp?WEBEVENT=UPDATE_PARTY_CLASSIFICATION_TYPE&UPDATE_MODE=DELETE&" + "PARTY_CLASSIFICATION_TYPE_PARTY_CLASSIFICATION_TYPE_ID=" + partyClassificationTypeId)%>" class="buttontext">[Delete this PartyClassificationType]</a>
+    <a href="<%=response.encodeURL(controlPath + "/UpdatePartyClassificationType?UPDATE_MODE=DELETE&" + "PARTY_CLASSIFICATION_TYPE_PARTY_CLASSIFICATION_TYPE_ID=" + partyClassificationTypeId)%>" class="buttontext">[Delete this PartyClassificationType]</a>
   <%}%>
 <%}%>
 
@@ -160,8 +157,7 @@ function ShowViewTab(lname)
     partyClassificationType = null;
   }
 %>
-<form action="<%=response.encodeURL("ViewPartyClassificationType.jsp")%>" method="POST" name="updateForm" style="margin:0;">
-  <input type="hidden" name="WEBEVENT" value="UPDATE_PARTY_CLASSIFICATION_TYPE">
+<form action="<%=response.encodeURL(controlPath + "/UpdatePartyClassificationType")%>" method="POST" name="updateForm" style="margin:0;">
   <input type="hidden" name="ON_ERROR_PAGE" value="<%=request.getServletPath()%>">
 <table cellpadding="2" cellspacing="2" border="0">
 
@@ -277,11 +273,10 @@ function ShowTab(lname)
      <b></b> Related Entity: <b>PartyClassificationType</b> with (PARTY_CLASSIFICATION_TYPE_ID: <%=partyClassificationType.getParentTypeId()%>)
     </div>
     <%if(partyClassificationType.getParentTypeId() != null){%>
-      
-      <a href="<%=response.encodeURL("/commonapp/party/party/ViewPartyClassificationType.jsp?" + "PARTY_CLASSIFICATION_TYPE_PARTY_CLASSIFICATION_TYPE_ID=" + partyClassificationType.getParentTypeId())%>" class="buttontext">[View PartyClassificationType]</a>      
+      <a href="<%=response.encodeURL(controlPath + "/ViewPartyClassificationType?" + "PARTY_CLASSIFICATION_TYPE_PARTY_CLASSIFICATION_TYPE_ID=" + partyClassificationType.getParentTypeId())%>" class="buttontext">[View PartyClassificationType]</a>      
     <%if(partyClassificationTypeRelated == null){%>
       <%if(Security.hasEntityPermission("PARTY_CLASSIFICATION_TYPE", "_CREATE", session)){%>
-        <a href="<%=response.encodeURL("/commonapp/party/party/ViewPartyClassificationType.jsp?" + "PARTY_CLASSIFICATION_TYPE_PARTY_CLASSIFICATION_TYPE_ID=" + partyClassificationType.getParentTypeId())%>" class="buttontext">[Create PartyClassificationType]</a>
+        <a href="<%=response.encodeURL(controlPath + "/ViewPartyClassificationType?" + "PARTY_CLASSIFICATION_TYPE_PARTY_CLASSIFICATION_TYPE_ID=" + partyClassificationType.getParentTypeId())%>" class="buttontext">[Create PartyClassificationType]</a>
       <%}%>
     <%}%>
     <%}%>
@@ -351,11 +346,11 @@ function ShowTab(lname)
     %>
       
     <%if(relatedCreatePerm){%>
-      <a href="<%=response.encodeURL("/commonapp/party/party/ViewPartyClassificationType.jsp?" + "PARTY_CLASSIFICATION_TYPE_PARENT_TYPE_ID=" + partyClassificationType.getPartyClassificationTypeId())%>" class="buttontext">[Create PartyClassificationType]</a>
+      <a href="<%=response.encodeURL(controlPath + "/ViewPartyClassificationType?" + "PARTY_CLASSIFICATION_TYPE_PARENT_TYPE_ID=" + partyClassificationType.getPartyClassificationTypeId())%>" class="buttontext">[Create PartyClassificationType]</a>
     <%}%>    
     <%String curFindString = "SEARCH_TYPE=ParentTypeId";%>
     <%curFindString = curFindString + "&SEARCH_PARAMETER1=" + partyClassificationType.getPartyClassificationTypeId();%>
-    <a href="<%=response.encodeURL("/commonapp/party/party/FindPartyClassificationType.jsp?" + UtilFormatOut.encodeQuery(curFindString))%>" class="buttontext">[Find PartyClassificationType]</a>
+    <a href="<%=response.encodeURL(controlPath + "/FindPartyClassificationType?" + UtilFormatOut.encodeQuery(curFindString))%>" class="buttontext">[Find PartyClassificationType]</a>
   <div style='width:100%;height:250px;overflow:auto;border-style:inset;'>
   <table width="100%" cellpadding="2" cellspacing="2" border="0">
     <tr class="<%=rowClassResultHeader%>">
@@ -407,11 +402,11 @@ function ShowTab(lname)
       </td>
   
       <td>
-        <a href="<%=response.encodeURL("/commonapp/party/party/ViewPartyClassificationType.jsp?" + "PARTY_CLASSIFICATION_TYPE_PARTY_CLASSIFICATION_TYPE_ID=" + partyClassificationTypeRelated.getPartyClassificationTypeId())%>" class="buttontext">[View]</a>
+        <a href="<%=response.encodeURL(controlPath + "/ViewPartyClassificationType?" + "PARTY_CLASSIFICATION_TYPE_PARTY_CLASSIFICATION_TYPE_ID=" + partyClassificationTypeRelated.getPartyClassificationTypeId())%>" class="buttontext">[View]</a>
       </td>
       <%if(relatedDeletePerm){%>
         <td>
-          <a href="<%=response.encodeURL("ViewPartyClassificationType.jsp?" + "PARTY_CLASSIFICATION_TYPE_PARTY_CLASSIFICATION_TYPE_ID=" + partyClassificationTypeRelated.getPartyClassificationTypeId() + "&" + "PARTY_CLASSIFICATION_TYPE_PARTY_CLASSIFICATION_TYPE_ID=" + partyClassificationTypeId + "&WEBEVENT=UPDATE_PARTY_CLASSIFICATION_TYPE&UPDATE_MODE=DELETE")%>" class="buttontext">[Delete]</a>
+          <a href="<%=response.encodeURL(controlPath + "/UpdatePartyClassificationType?" + "PARTY_CLASSIFICATION_TYPE_PARTY_CLASSIFICATION_TYPE_ID=" + partyClassificationTypeRelated.getPartyClassificationTypeId() + "&" + "PARTY_CLASSIFICATION_TYPE_PARTY_CLASSIFICATION_TYPE_ID=" + partyClassificationTypeId + "&UPDATE_MODE=DELETE")%>" class="buttontext">[Delete]</a>
         </td>
       <%}%>
     </tr>
@@ -452,11 +447,11 @@ Displaying <%=relatedLoopCount%> entities.
     %>
       
     <%if(relatedCreatePerm){%>
-      <a href="<%=response.encodeURL("/commonapp/party/party/ViewPartyClassification.jsp?" + "PARTY_CLASSIFICATION_PARTY_CLASSIFICATION_TYPE_ID=" + partyClassificationType.getPartyClassificationTypeId())%>" class="buttontext">[Create PartyClassification]</a>
+      <a href="<%=response.encodeURL(controlPath + "/ViewPartyClassification?" + "PARTY_CLASSIFICATION_PARTY_CLASSIFICATION_TYPE_ID=" + partyClassificationType.getPartyClassificationTypeId())%>" class="buttontext">[Create PartyClassification]</a>
     <%}%>    
     <%String curFindString = "SEARCH_TYPE=PartyClassificationTypeId";%>
     <%curFindString = curFindString + "&SEARCH_PARAMETER1=" + partyClassificationType.getPartyClassificationTypeId();%>
-    <a href="<%=response.encodeURL("/commonapp/party/party/FindPartyClassificationType.jsp?" + UtilFormatOut.encodeQuery(curFindString))%>" class="buttontext">[Find PartyClassification]</a>
+    <a href="<%=response.encodeURL(controlPath + "/FindPartyClassificationType?" + UtilFormatOut.encodeQuery(curFindString))%>" class="buttontext">[Find PartyClassification]</a>
   <div style='width:100%;height:250px;overflow:auto;border-style:inset;'>
   <table width="100%" cellpadding="2" cellspacing="2" border="0">
     <tr class="<%=rowClassResultHeader%>">
@@ -543,11 +538,11 @@ Displaying <%=relatedLoopCount%> entities.
       </td>
   
       <td>
-        <a href="<%=response.encodeURL("/commonapp/party/party/ViewPartyClassification.jsp?" + "PARTY_CLASSIFICATION_PARTY_ID=" + partyClassificationRelated.getPartyId() + "&" + "PARTY_CLASSIFICATION_PARTY_TYPE_ID=" + partyClassificationRelated.getPartyTypeId())%>" class="buttontext">[View]</a>
+        <a href="<%=response.encodeURL(controlPath + "/ViewPartyClassification?" + "PARTY_CLASSIFICATION_PARTY_ID=" + partyClassificationRelated.getPartyId() + "&" + "PARTY_CLASSIFICATION_PARTY_TYPE_ID=" + partyClassificationRelated.getPartyTypeId())%>" class="buttontext">[View]</a>
       </td>
       <%if(relatedDeletePerm){%>
         <td>
-          <a href="<%=response.encodeURL("ViewPartyClassificationType.jsp?" + "PARTY_CLASSIFICATION_PARTY_ID=" + partyClassificationRelated.getPartyId() + "&" + "PARTY_CLASSIFICATION_PARTY_TYPE_ID=" + partyClassificationRelated.getPartyTypeId() + "&" + "PARTY_CLASSIFICATION_TYPE_PARTY_CLASSIFICATION_TYPE_ID=" + partyClassificationTypeId + "&WEBEVENT=UPDATE_PARTY_CLASSIFICATION&UPDATE_MODE=DELETE")%>" class="buttontext">[Delete]</a>
+          <a href="<%=response.encodeURL(controlPath + "/UpdatePartyClassification?" + "PARTY_CLASSIFICATION_PARTY_ID=" + partyClassificationRelated.getPartyId() + "&" + "PARTY_CLASSIFICATION_PARTY_TYPE_ID=" + partyClassificationRelated.getPartyTypeId() + "&" + "PARTY_CLASSIFICATION_TYPE_PARTY_CLASSIFICATION_TYPE_ID=" + partyClassificationTypeId + "&UPDATE_MODE=DELETE")%>" class="buttontext">[Delete]</a>
         </td>
       <%}%>
     </tr>

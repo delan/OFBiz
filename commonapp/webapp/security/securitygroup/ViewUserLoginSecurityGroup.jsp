@@ -24,22 +24,19 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Mon Jul 09 23:23:54 MDT 2001
+ *@created    Tue Jul 17 02:16:54 MDT 2001
  *@version    1.0
  */
 %>
 
 <%@ page import="java.util.*" %>
-<%@ page import="org.ofbiz.commonapp.common.*" %>
-<%@ page import="org.ofbiz.commonapp.webevent.*" %>
+<%@ page import="org.ofbiz.core.util.*" %>
 <%@ page import="org.ofbiz.commonapp.security.*" %>
 <%@ page import="org.ofbiz.commonapp.security.securitygroup.*" %>
 
 <%@ page import="org.ofbiz.commonapp.security.login.*" %>
 
-<%@ taglib uri="/WEB-INF/webevent.tld" prefix="webevent" %>
-<webevent:dispatch loginRequired="true" />
-
+<%String controlPath=(String)request.getAttribute(SiteDefs.CONTROL_PATH);%>
 <%pageContext.setAttribute("PageName", "ViewUserLoginSecurityGroup"); %>
 
 <%@ include file="/includes/header.jsp" %>
@@ -90,13 +87,13 @@ function ShowViewTab(lname)
   <b>View Entity: UserLoginSecurityGroup with (USER_LOGIN_ID, GROUP_ID: <%=userLoginId%>, <%=groupId%>).</b>
 </div>
 
-<a href="<%=response.encodeURL("FindUserLoginSecurityGroup.jsp")%>" class="buttontext">[Find UserLoginSecurityGroup]</a>
+<a href="<%=response.encodeURL(controlPath + "/FindUserLoginSecurityGroup")%>" class="buttontext">[Find UserLoginSecurityGroup]</a>
 <%if(hasCreatePermission){%>
-  <a href="<%=response.encodeURL("ViewUserLoginSecurityGroup.jsp")%>" class="buttontext">[Create New UserLoginSecurityGroup]</a>
+  <a href="<%=response.encodeURL(controlPath + "/ViewUserLoginSecurityGroup")%>" class="buttontext">[Create New UserLoginSecurityGroup]</a>
 <%}%>
 <%if(userLoginSecurityGroup != null){%>
   <%if(hasDeletePermission){%>
-    <a href="<%=response.encodeURL("ViewUserLoginSecurityGroup.jsp?WEBEVENT=UPDATE_USER_LOGIN_SECURITY_GROUP&UPDATE_MODE=DELETE&" + "USER_LOGIN_SECURITY_GROUP_USER_LOGIN_ID=" + userLoginId + "&" + "USER_LOGIN_SECURITY_GROUP_GROUP_ID=" + groupId)%>" class="buttontext">[Delete this UserLoginSecurityGroup]</a>
+    <a href="<%=response.encodeURL(controlPath + "/UpdateUserLoginSecurityGroup?UPDATE_MODE=DELETE&" + "USER_LOGIN_SECURITY_GROUP_USER_LOGIN_ID=" + userLoginId + "&" + "USER_LOGIN_SECURITY_GROUP_GROUP_ID=" + groupId)%>" class="buttontext">[Delete this UserLoginSecurityGroup]</a>
   <%}%>
 <%}%>
 
@@ -146,8 +143,7 @@ function ShowViewTab(lname)
     userLoginSecurityGroup = null;
   }
 %>
-<form action="<%=response.encodeURL("ViewUserLoginSecurityGroup.jsp")%>" method="POST" name="updateForm" style="margin:0;">
-  <input type="hidden" name="WEBEVENT" value="UPDATE_USER_LOGIN_SECURITY_GROUP">
+<form action="<%=response.encodeURL(controlPath + "/UpdateUserLoginSecurityGroup")%>" method="POST" name="updateForm" style="margin:0;">
   <input type="hidden" name="ON_ERROR_PAGE" value="<%=request.getServletPath()%>">
 <table cellpadding="2" cellspacing="2" border="0">
 
@@ -258,11 +254,10 @@ function ShowTab(lname)
      <b></b> Related Entity: <b>UserLogin</b> with (USER_LOGIN_ID: <%=userLoginSecurityGroup.getUserLoginId()%>)
     </div>
     <%if(userLoginSecurityGroup.getUserLoginId() != null){%>
-      
-      <a href="<%=response.encodeURL("/commonapp/security/login/ViewUserLogin.jsp?" + "USER_LOGIN_USER_LOGIN_ID=" + userLoginSecurityGroup.getUserLoginId())%>" class="buttontext">[View UserLogin]</a>      
+      <a href="<%=response.encodeURL(controlPath + "/ViewUserLogin?" + "USER_LOGIN_USER_LOGIN_ID=" + userLoginSecurityGroup.getUserLoginId())%>" class="buttontext">[View UserLogin]</a>      
     <%if(userLoginRelated == null){%>
       <%if(Security.hasEntityPermission("USER_LOGIN", "_CREATE", session)){%>
-        <a href="<%=response.encodeURL("/commonapp/security/login/ViewUserLogin.jsp?" + "USER_LOGIN_USER_LOGIN_ID=" + userLoginSecurityGroup.getUserLoginId())%>" class="buttontext">[Create UserLogin]</a>
+        <a href="<%=response.encodeURL(controlPath + "/ViewUserLogin?" + "USER_LOGIN_USER_LOGIN_ID=" + userLoginSecurityGroup.getUserLoginId())%>" class="buttontext">[Create UserLogin]</a>
       <%}%>
     <%}%>
     <%}%>
@@ -330,11 +325,10 @@ function ShowTab(lname)
      <b></b> Related Entity: <b>SecurityGroup</b> with (GROUP_ID: <%=userLoginSecurityGroup.getGroupId()%>)
     </div>
     <%if(userLoginSecurityGroup.getGroupId() != null){%>
-      
-      <a href="<%=response.encodeURL("/commonapp/security/securitygroup/ViewSecurityGroup.jsp?" + "SECURITY_GROUP_GROUP_ID=" + userLoginSecurityGroup.getGroupId())%>" class="buttontext">[View SecurityGroup]</a>      
+      <a href="<%=response.encodeURL(controlPath + "/ViewSecurityGroup?" + "SECURITY_GROUP_GROUP_ID=" + userLoginSecurityGroup.getGroupId())%>" class="buttontext">[View SecurityGroup]</a>      
     <%if(securityGroupRelated == null){%>
       <%if(Security.hasEntityPermission("SECURITY_GROUP", "_CREATE", session)){%>
-        <a href="<%=response.encodeURL("/commonapp/security/securitygroup/ViewSecurityGroup.jsp?" + "SECURITY_GROUP_GROUP_ID=" + userLoginSecurityGroup.getGroupId())%>" class="buttontext">[Create SecurityGroup]</a>
+        <a href="<%=response.encodeURL(controlPath + "/ViewSecurityGroup?" + "SECURITY_GROUP_GROUP_ID=" + userLoginSecurityGroup.getGroupId())%>" class="buttontext">[Create SecurityGroup]</a>
       <%}%>
     <%}%>
     <%}%>
@@ -388,11 +382,11 @@ function ShowTab(lname)
     %>
       
     <%if(relatedCreatePerm){%>
-      <a href="<%=response.encodeURL("/commonapp/security/securitygroup/ViewSecurityGroupPermission.jsp?" + "SECURITY_GROUP_PERMISSION_GROUP_ID=" + userLoginSecurityGroup.getGroupId())%>" class="buttontext">[Create SecurityGroupPermission]</a>
+      <a href="<%=response.encodeURL(controlPath + "/ViewSecurityGroupPermission?" + "SECURITY_GROUP_PERMISSION_GROUP_ID=" + userLoginSecurityGroup.getGroupId())%>" class="buttontext">[Create SecurityGroupPermission]</a>
     <%}%>    
     <%String curFindString = "SEARCH_TYPE=GroupId";%>
     <%curFindString = curFindString + "&SEARCH_PARAMETER1=" + userLoginSecurityGroup.getGroupId();%>
-    <a href="<%=response.encodeURL("/commonapp/security/securitygroup/FindUserLoginSecurityGroup.jsp?" + UtilFormatOut.encodeQuery(curFindString))%>" class="buttontext">[Find SecurityGroupPermission]</a>
+    <a href="<%=response.encodeURL(controlPath + "/FindUserLoginSecurityGroup?" + UtilFormatOut.encodeQuery(curFindString))%>" class="buttontext">[Find SecurityGroupPermission]</a>
   <div style='width:100%;height:250px;overflow:auto;border-style:inset;'>
   <table width="100%" cellpadding="2" cellspacing="2" border="0">
     <tr class="<%=rowClassResultHeader%>">
@@ -430,11 +424,11 @@ function ShowTab(lname)
       </td>
   
       <td>
-        <a href="<%=response.encodeURL("/commonapp/security/securitygroup/ViewSecurityGroupPermission.jsp?" + "SECURITY_GROUP_PERMISSION_GROUP_ID=" + securityGroupPermissionRelated.getGroupId() + "&" + "SECURITY_GROUP_PERMISSION_PERMISSION_ID=" + securityGroupPermissionRelated.getPermissionId())%>" class="buttontext">[View]</a>
+        <a href="<%=response.encodeURL(controlPath + "/ViewSecurityGroupPermission?" + "SECURITY_GROUP_PERMISSION_GROUP_ID=" + securityGroupPermissionRelated.getGroupId() + "&" + "SECURITY_GROUP_PERMISSION_PERMISSION_ID=" + securityGroupPermissionRelated.getPermissionId())%>" class="buttontext">[View]</a>
       </td>
       <%if(relatedDeletePerm){%>
         <td>
-          <a href="<%=response.encodeURL("ViewUserLoginSecurityGroup.jsp?" + "SECURITY_GROUP_PERMISSION_GROUP_ID=" + securityGroupPermissionRelated.getGroupId() + "&" + "SECURITY_GROUP_PERMISSION_PERMISSION_ID=" + securityGroupPermissionRelated.getPermissionId() + "&" + "USER_LOGIN_SECURITY_GROUP_USER_LOGIN_ID=" + userLoginId + "&" + "USER_LOGIN_SECURITY_GROUP_GROUP_ID=" + groupId + "&WEBEVENT=UPDATE_SECURITY_GROUP_PERMISSION&UPDATE_MODE=DELETE")%>" class="buttontext">[Delete]</a>
+          <a href="<%=response.encodeURL(controlPath + "/UpdateSecurityGroupPermission?" + "SECURITY_GROUP_PERMISSION_GROUP_ID=" + securityGroupPermissionRelated.getGroupId() + "&" + "SECURITY_GROUP_PERMISSION_PERMISSION_ID=" + securityGroupPermissionRelated.getPermissionId() + "&" + "USER_LOGIN_SECURITY_GROUP_USER_LOGIN_ID=" + userLoginId + "&" + "USER_LOGIN_SECURITY_GROUP_GROUP_ID=" + groupId + "&UPDATE_MODE=DELETE")%>" class="buttontext">[Delete]</a>
         </td>
       <%}%>
     </tr>

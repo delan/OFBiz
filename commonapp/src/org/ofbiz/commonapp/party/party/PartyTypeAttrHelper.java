@@ -5,7 +5,7 @@ import java.util.*;
 import javax.naming.InitialContext;
 import javax.ejb.*;
 
-import org.ofbiz.commonapp.common.*;
+import org.ofbiz.core.util.*;
 
 /**
  * <p><b>Title:</b> Party Type Attribute Entity
@@ -33,7 +33,7 @@ import org.ofbiz.commonapp.common.*;
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Sun Jul 08 01:14:04 MDT 2001
+ *@created    Tue Jul 17 02:08:30 MDT 2001
  *@version    1.0
  */
 public class PartyTypeAttrHelper

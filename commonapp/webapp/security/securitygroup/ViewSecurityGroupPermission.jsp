@@ -24,21 +24,18 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Mon Jul 09 23:23:53 MDT 2001
+ *@created    Tue Jul 17 02:16:54 MDT 2001
  *@version    1.0
  */
 %>
 
 <%@ page import="java.util.*" %>
-<%@ page import="org.ofbiz.commonapp.common.*" %>
-<%@ page import="org.ofbiz.commonapp.webevent.*" %>
+<%@ page import="org.ofbiz.core.util.*" %>
 <%@ page import="org.ofbiz.commonapp.security.*" %>
 <%@ page import="org.ofbiz.commonapp.security.securitygroup.*" %>
 
 
-<%@ taglib uri="/WEB-INF/webevent.tld" prefix="webevent" %>
-<webevent:dispatch loginRequired="true" />
-
+<%String controlPath=(String)request.getAttribute(SiteDefs.CONTROL_PATH);%>
 <%pageContext.setAttribute("PageName", "ViewSecurityGroupPermission"); %>
 
 <%@ include file="/includes/header.jsp" %>
@@ -89,13 +86,13 @@ function ShowViewTab(lname)
   <b>View Entity: SecurityGroupPermission with (GROUP_ID, PERMISSION_ID: <%=groupId%>, <%=permissionId%>).</b>
 </div>
 
-<a href="<%=response.encodeURL("FindSecurityGroupPermission.jsp")%>" class="buttontext">[Find SecurityGroupPermission]</a>
+<a href="<%=response.encodeURL(controlPath + "/FindSecurityGroupPermission")%>" class="buttontext">[Find SecurityGroupPermission]</a>
 <%if(hasCreatePermission){%>
-  <a href="<%=response.encodeURL("ViewSecurityGroupPermission.jsp")%>" class="buttontext">[Create New SecurityGroupPermission]</a>
+  <a href="<%=response.encodeURL(controlPath + "/ViewSecurityGroupPermission")%>" class="buttontext">[Create New SecurityGroupPermission]</a>
 <%}%>
 <%if(securityGroupPermission != null){%>
   <%if(hasDeletePermission){%>
-    <a href="<%=response.encodeURL("ViewSecurityGroupPermission.jsp?WEBEVENT=UPDATE_SECURITY_GROUP_PERMISSION&UPDATE_MODE=DELETE&" + "SECURITY_GROUP_PERMISSION_GROUP_ID=" + groupId + "&" + "SECURITY_GROUP_PERMISSION_PERMISSION_ID=" + permissionId)%>" class="buttontext">[Delete this SecurityGroupPermission]</a>
+    <a href="<%=response.encodeURL(controlPath + "/UpdateSecurityGroupPermission?UPDATE_MODE=DELETE&" + "SECURITY_GROUP_PERMISSION_GROUP_ID=" + groupId + "&" + "SECURITY_GROUP_PERMISSION_PERMISSION_ID=" + permissionId)%>" class="buttontext">[Delete this SecurityGroupPermission]</a>
   <%}%>
 <%}%>
 
@@ -145,8 +142,7 @@ function ShowViewTab(lname)
     securityGroupPermission = null;
   }
 %>
-<form action="<%=response.encodeURL("ViewSecurityGroupPermission.jsp")%>" method="POST" name="updateForm" style="margin:0;">
-  <input type="hidden" name="WEBEVENT" value="UPDATE_SECURITY_GROUP_PERMISSION">
+<form action="<%=response.encodeURL(controlPath + "/UpdateSecurityGroupPermission")%>" method="POST" name="updateForm" style="margin:0;">
   <input type="hidden" name="ON_ERROR_PAGE" value="<%=request.getServletPath()%>">
 <table cellpadding="2" cellspacing="2" border="0">
 
@@ -252,11 +248,10 @@ function ShowTab(lname)
      <b></b> Related Entity: <b>SecurityGroup</b> with (GROUP_ID: <%=securityGroupPermission.getGroupId()%>)
     </div>
     <%if(securityGroupPermission.getGroupId() != null){%>
-      
-      <a href="<%=response.encodeURL("/commonapp/security/securitygroup/ViewSecurityGroup.jsp?" + "SECURITY_GROUP_GROUP_ID=" + securityGroupPermission.getGroupId())%>" class="buttontext">[View SecurityGroup]</a>      
+      <a href="<%=response.encodeURL(controlPath + "/ViewSecurityGroup?" + "SECURITY_GROUP_GROUP_ID=" + securityGroupPermission.getGroupId())%>" class="buttontext">[View SecurityGroup]</a>      
     <%if(securityGroupRelated == null){%>
       <%if(Security.hasEntityPermission("SECURITY_GROUP", "_CREATE", session)){%>
-        <a href="<%=response.encodeURL("/commonapp/security/securitygroup/ViewSecurityGroup.jsp?" + "SECURITY_GROUP_GROUP_ID=" + securityGroupPermission.getGroupId())%>" class="buttontext">[Create SecurityGroup]</a>
+        <a href="<%=response.encodeURL(controlPath + "/ViewSecurityGroup?" + "SECURITY_GROUP_GROUP_ID=" + securityGroupPermission.getGroupId())%>" class="buttontext">[Create SecurityGroup]</a>
       <%}%>
     <%}%>
     <%}%>
@@ -300,11 +295,10 @@ function ShowTab(lname)
      <b></b> Related Entity: <b>SecurityPermission</b> with (PERMISSION_ID: <%=securityGroupPermission.getPermissionId()%>)
     </div>
     <%if(securityGroupPermission.getPermissionId() != null){%>
-      
-      <a href="<%=response.encodeURL("/commonapp/security/securitygroup/ViewSecurityPermission.jsp?" + "SECURITY_PERMISSION_PERMISSION_ID=" + securityGroupPermission.getPermissionId())%>" class="buttontext">[View SecurityPermission]</a>      
+      <a href="<%=response.encodeURL(controlPath + "/ViewSecurityPermission?" + "SECURITY_PERMISSION_PERMISSION_ID=" + securityGroupPermission.getPermissionId())%>" class="buttontext">[View SecurityPermission]</a>      
     <%if(securityPermissionRelated == null){%>
       <%if(Security.hasEntityPermission("SECURITY_PERMISSION", "_CREATE", session)){%>
-        <a href="<%=response.encodeURL("/commonapp/security/securitygroup/ViewSecurityPermission.jsp?" + "SECURITY_PERMISSION_PERMISSION_ID=" + securityGroupPermission.getPermissionId())%>" class="buttontext">[Create SecurityPermission]</a>
+        <a href="<%=response.encodeURL(controlPath + "/ViewSecurityPermission?" + "SECURITY_PERMISSION_PERMISSION_ID=" + securityGroupPermission.getPermissionId())%>" class="buttontext">[Create SecurityPermission]</a>
       <%}%>
     <%}%>
     <%}%>

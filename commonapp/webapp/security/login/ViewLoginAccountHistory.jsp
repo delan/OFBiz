@@ -24,22 +24,19 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Mon Jul 09 23:23:52 MDT 2001
+ *@created    Tue Jul 17 02:16:53 MDT 2001
  *@version    1.0
  */
 %>
 
 <%@ page import="java.util.*" %>
-<%@ page import="org.ofbiz.commonapp.common.*" %>
-<%@ page import="org.ofbiz.commonapp.webevent.*" %>
+<%@ page import="org.ofbiz.core.util.*" %>
 <%@ page import="org.ofbiz.commonapp.security.*" %>
 <%@ page import="org.ofbiz.commonapp.security.login.*" %>
 
 <%@ page import="org.ofbiz.commonapp.party.party.*" %>
 
-<%@ taglib uri="/WEB-INF/webevent.tld" prefix="webevent" %>
-<webevent:dispatch loginRequired="true" />
-
+<%String controlPath=(String)request.getAttribute(SiteDefs.CONTROL_PATH);%>
 <%pageContext.setAttribute("PageName", "ViewLoginAccountHistory"); %>
 
 <%@ include file="/includes/header.jsp" %>
@@ -90,13 +87,13 @@ function ShowViewTab(lname)
   <b>View Entity: LoginAccountHistory with (USER_LOGIN_ID, USER_LOGIN_SEQ_ID: <%=userLoginId%>, <%=userLoginSeqId%>).</b>
 </div>
 
-<a href="<%=response.encodeURL("FindLoginAccountHistory.jsp")%>" class="buttontext">[Find LoginAccountHistory]</a>
+<a href="<%=response.encodeURL(controlPath + "/FindLoginAccountHistory")%>" class="buttontext">[Find LoginAccountHistory]</a>
 <%if(hasCreatePermission){%>
-  <a href="<%=response.encodeURL("ViewLoginAccountHistory.jsp")%>" class="buttontext">[Create New LoginAccountHistory]</a>
+  <a href="<%=response.encodeURL(controlPath + "/ViewLoginAccountHistory")%>" class="buttontext">[Create New LoginAccountHistory]</a>
 <%}%>
 <%if(loginAccountHistory != null){%>
   <%if(hasDeletePermission){%>
-    <a href="<%=response.encodeURL("ViewLoginAccountHistory.jsp?WEBEVENT=UPDATE_LOGIN_ACCOUNT_HISTORY&UPDATE_MODE=DELETE&" + "LOGIN_ACCOUNT_HISTORY_USER_LOGIN_ID=" + userLoginId + "&" + "LOGIN_ACCOUNT_HISTORY_USER_LOGIN_SEQ_ID=" + userLoginSeqId)%>" class="buttontext">[Delete this LoginAccountHistory]</a>
+    <a href="<%=response.encodeURL(controlPath + "/UpdateLoginAccountHistory?UPDATE_MODE=DELETE&" + "LOGIN_ACCOUNT_HISTORY_USER_LOGIN_ID=" + userLoginId + "&" + "LOGIN_ACCOUNT_HISTORY_USER_LOGIN_SEQ_ID=" + userLoginSeqId)%>" class="buttontext">[Delete this LoginAccountHistory]</a>
   <%}%>
 <%}%>
 
@@ -214,8 +211,7 @@ function ShowViewTab(lname)
     loginAccountHistory = null;
   }
 %>
-<form action="<%=response.encodeURL("ViewLoginAccountHistory.jsp")%>" method="POST" name="updateForm" style="margin:0;">
-  <input type="hidden" name="WEBEVENT" value="UPDATE_LOGIN_ACCOUNT_HISTORY">
+<form action="<%=response.encodeURL(controlPath + "/UpdateLoginAccountHistory")%>" method="POST" name="updateForm" style="margin:0;">
   <input type="hidden" name="ON_ERROR_PAGE" value="<%=request.getServletPath()%>">
 <table cellpadding="2" cellspacing="2" border="0">
 
@@ -393,11 +389,10 @@ function ShowTab(lname)
      <b></b> Related Entity: <b>UserLogin</b> with (USER_LOGIN_ID: <%=loginAccountHistory.getUserLoginId()%>)
     </div>
     <%if(loginAccountHistory.getUserLoginId() != null){%>
-      
-      <a href="<%=response.encodeURL("/commonapp/security/login/ViewUserLogin.jsp?" + "USER_LOGIN_USER_LOGIN_ID=" + loginAccountHistory.getUserLoginId())%>" class="buttontext">[View UserLogin]</a>      
+      <a href="<%=response.encodeURL(controlPath + "/ViewUserLogin?" + "USER_LOGIN_USER_LOGIN_ID=" + loginAccountHistory.getUserLoginId())%>" class="buttontext">[View UserLogin]</a>      
     <%if(userLoginRelated == null){%>
       <%if(Security.hasEntityPermission("USER_LOGIN", "_CREATE", session)){%>
-        <a href="<%=response.encodeURL("/commonapp/security/login/ViewUserLogin.jsp?" + "USER_LOGIN_USER_LOGIN_ID=" + loginAccountHistory.getUserLoginId())%>" class="buttontext">[Create UserLogin]</a>
+        <a href="<%=response.encodeURL(controlPath + "/ViewUserLogin?" + "USER_LOGIN_USER_LOGIN_ID=" + loginAccountHistory.getUserLoginId())%>" class="buttontext">[Create UserLogin]</a>
       <%}%>
     <%}%>
     <%}%>
@@ -465,11 +460,10 @@ function ShowTab(lname)
      <b></b> Related Entity: <b>Party</b> with (PARTY_ID: <%=loginAccountHistory.getPartyId()%>)
     </div>
     <%if(loginAccountHistory.getPartyId() != null){%>
-      
-      <a href="<%=response.encodeURL("/commonapp/party/party/ViewParty.jsp?" + "PARTY_PARTY_ID=" + loginAccountHistory.getPartyId())%>" class="buttontext">[View Party]</a>      
+      <a href="<%=response.encodeURL(controlPath + "/ViewParty?" + "PARTY_PARTY_ID=" + loginAccountHistory.getPartyId())%>" class="buttontext">[View Party]</a>      
     <%if(partyRelated == null){%>
       <%if(Security.hasEntityPermission("PARTY", "_CREATE", session)){%>
-        <a href="<%=response.encodeURL("/commonapp/party/party/ViewParty.jsp?" + "PARTY_PARTY_ID=" + loginAccountHistory.getPartyId())%>" class="buttontext">[Create Party]</a>
+        <a href="<%=response.encodeURL(controlPath + "/ViewParty?" + "PARTY_PARTY_ID=" + loginAccountHistory.getPartyId())%>" class="buttontext">[Create Party]</a>
       <%}%>
     <%}%>
     <%}%>

@@ -31,7 +31,7 @@ import java.util.*;
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Sun Jul 08 01:14:07 MDT 2001
+ *@created    Tue Jul 17 02:08:33 MDT 2001
  *@version    1.0
  */
 public class SecurityPermissionBean implements EntityBean

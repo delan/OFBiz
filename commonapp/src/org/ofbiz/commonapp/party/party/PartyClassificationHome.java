@@ -30,7 +30,7 @@ import java.math.*;
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Sun Jul 08 01:13:59 MDT 2001
+ *@created    Tue Jul 17 02:08:24 MDT 2001
  *@version    1.0
  */
 

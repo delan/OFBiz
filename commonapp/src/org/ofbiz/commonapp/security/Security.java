@@ -4,7 +4,7 @@ import java.util.*;
 import javax.servlet.http.*;
 import javax.servlet.*;
 
-import org.ofbiz.commonapp.common.*;
+import org.ofbiz.core.util.*;
 import org.ofbiz.commonapp.security.login.*;
 import org.ofbiz.commonapp.security.securitygroup.*;
 

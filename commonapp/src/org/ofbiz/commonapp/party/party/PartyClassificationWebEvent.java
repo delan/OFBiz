@@ -6,7 +6,7 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import java.math.*;
 import org.ofbiz.commonapp.security.*;
-import org.ofbiz.commonapp.common.*;
+import org.ofbiz.core.util.*;
 
 /**
  * <p><b>Title:</b> Party Classification Entity
@@ -32,7 +32,7 @@ import org.ofbiz.commonapp.common.*;
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Sun Jul 08 01:14:00 MDT 2001
+ *@created    Tue Jul 17 02:08:26 MDT 2001
  *@version    1.0
  */
 
@@ -48,11 +48,11 @@ public class PartyClassificationWebEvent
    * @exception java.rmi.RemoteException Standard RMI Remote Exception
    * @exception java.io.IOException Standard IO Exception
    */
-  public static boolean updatePartyClassification(HttpServletRequest request, HttpServletResponse response) throws javax.servlet.ServletException, java.rmi.RemoteException, java.io.IOException
+  public static String updatePartyClassification(HttpServletRequest request, HttpServletResponse response) throws javax.servlet.ServletException, java.rmi.RemoteException, java.io.IOException
   {
     // a little check to reprocessing the web event in error cases - would cause infinate loop
-    if(request.getAttribute("ERROR_MESSAGE") != null) return true;
-    if(request.getSession().getAttribute("ERROR_MESSAGE") != null) return true;    
+    if(request.getAttribute("ERROR_MESSAGE") != null) return "success";
+    if(request.getSession().getAttribute("ERROR_MESSAGE") != null) return "success";    
     String errMsg = "";
     
     String updateMode = request.getParameter("UPDATE_MODE");
@@ -69,7 +69,7 @@ public class PartyClassificationWebEvent
     if(!Security.hasEntityPermission("PARTY_CLASSIFICATION", "_" + updateMode, request.getSession()))
     {
       request.getSession().setAttribute("ERROR_MESSAGE", "You do not have sufficient permissions to "+ updateMode + " PartyClassification (PARTY_CLASSIFICATION_" + updateMode + " or PARTY_CLASSIFICATION_ADMIN needed).");
-      return true;
+      return "success";
     }
 
     //get the primary key parameters...
@@ -85,7 +85,7 @@ public class PartyClassificationWebEvent
       //Remove associated/dependent entries from other tables here
       //Delete actual PartyClassification last, just in case database is set up to do a cascading delete, caches won't get cleared
       PartyClassificationHelper.removeByPrimaryKey(partyId, partyTypeId);
-      return true;
+      return "success";
     }
 
     //get the non-primary key parameters
@@ -117,13 +117,7 @@ public class PartyClassificationWebEvent
     {
       errMsg = "<br><b>The following error(s) occured:</b><ul>" + errMsg + "</ul>";
       request.setAttribute("ERROR_MESSAGE", errMsg);
-      //note that it is much easier to do a RequestDispatcher.forward here instead of a respones.sendRedirect because the sendRedirent will not automatically keep the Parameters...
-      RequestDispatcher rd;
-      String onErrorPage = request.getParameter("ON_ERROR_PAGE");
-      if(onErrorPage != null) rd = request.getRequestDispatcher(onErrorPage);
-      else rd = request.getRequestDispatcher("/commonapp/party/party/EditPartyClassification.jsp");
-      rd.forward(request, response);
-      return false;
+      return "error";
     }
 
     if(updateMode.equals("CREATE"))
@@ -132,7 +126,7 @@ public class PartyClassificationWebEvent
       if(partyClassification == null)
       {
         request.getSession().setAttribute("ERROR_MESSAGE", "Creation of PartyClassification failed. PARTY_ID, PARTY_TYPE_ID: " + partyId + ", " + partyTypeId);
-        return true;
+        return "success";
       }
     }
     else if(updateMode.equals("UPDATE"))
@@ -141,7 +135,7 @@ public class PartyClassificationWebEvent
       if(partyClassification == null)
       {
         request.getSession().setAttribute("ERROR_MESSAGE", "Update of PartyClassification failed. PARTY_ID, PARTY_TYPE_ID: " + partyId + ", " + partyTypeId);
-        return true;
+        return "success";
       }
     }
     else
@@ -153,6 +147,6 @@ public class PartyClassificationWebEvent
       }
     }
 
-    return true;
+    return "success";
   }
 }

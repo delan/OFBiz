@@ -4,7 +4,7 @@ import java.rmi.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import java.util.*;
-import org.ofbiz.commonapp.common.*;
+import org.ofbiz.core.util.*;
 import org.ofbiz.commonapp.security.securitygroup.*;
 import org.ofbiz.commonapp.security.login.*;
 
@@ -45,7 +45,7 @@ public class WebEventSecurity
    * @throws ServletException
    * @return
    */  
-  public static boolean check(HttpServletRequest request, HttpServletResponse response) throws java.rmi.RemoteException, java.io.IOException, javax.servlet.ServletException 
+  public static String checkLogin(HttpServletRequest request, HttpServletResponse response) throws java.rmi.RemoteException, java.io.IOException, javax.servlet.ServletException 
   {
     UserLogin userLogin = (UserLogin) request.getSession().getAttribute("USER_LOGIN");
 
@@ -56,18 +56,21 @@ public class WebEventSecurity
       while(params != null && params.hasMoreElements()) 
       {
         String paramName = (String) params.nextElement();
-        if(paramName != null && paramName.compareTo("WEBPREEVENT") != 0)
+        if(paramName != null)
         {
           if (queryString == null) queryString = paramName + "=" + request.getParameter(paramName);
           else queryString = queryString + "&" + paramName + "=" + request.getParameter(paramName);
         }
       }
 
+      //String eventName = WebEventDispatch.getEventName(request.getPathInfo());
+      //String nextPage = WebEventDispatch.getNextPageUri(request.getPathInfo());
+      
       String requestURI = request.getRequestURI();
       String servletPath = request.getServletPath();
       String curPageURL = requestURI;
       if(queryString != null) curPageURL = curPageURL + "?" + queryString;
-      request.getSession().setAttribute("NEXT_PAGE_URL", curPageURL);
+      request.getSession().setAttribute(SiteDefs.PREVIOUS_REQUEST, curPageURL);
 
       if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.info", "true"))
       {
@@ -77,11 +80,9 @@ public class WebEventSecurity
         System.out.println("WebEventSecurity.check: curPageURL=" + curPageURL);
       }
 
-      RequestDispatcher rd = request.getRequestDispatcher("/login.jsp");
-      rd.forward(request, response);
-      return false;
+      return "error";
     }
-    else { return true; }
+    else { return "success"; }
   }
 
   /** An HTTP WebEvent handler that logs in a userLogin. This should run before the security check.
@@ -92,7 +93,7 @@ public class WebEventSecurity
    * @exception java.rmi.RemoteException Standard RMI Remote Exception
    * @exception java.io.IOException Standard IO Exception
    */  
-  public static boolean login(HttpServletRequest request, HttpServletResponse response) throws java.rmi.RemoteException, java.io.IOException, javax.servlet.ServletException 
+  public static String login(HttpServletRequest request, HttpServletResponse response) throws java.rmi.RemoteException, java.io.IOException, javax.servlet.ServletException 
   {
     String errMsg = "";
     String username = request.getParameter("USERNAME");
@@ -132,11 +133,9 @@ public class WebEventSecurity
     {
       errMsg = "<b>The following error occured:</b><br>" + errMsg;
       request.getSession().setAttribute("ERROR_MESSAGE", errMsg);
-      RequestDispatcher rd = request.getRequestDispatcher("/login.jsp");
-      rd.forward(request, response);
-      return false;
+      return "error";
     }
-    return true;
+    return "success";
   }
   
   /** An HTTP WebEvent handler that forces a login, even if it is not required for the requested page.
@@ -147,10 +146,10 @@ public class WebEventSecurity
    * @exception java.rmi.RemoteException Standard RMI Remote Exception
    * @exception java.io.IOException Standard IO Exception
    */  
-  public static boolean forceLogin(HttpServletRequest request, HttpServletResponse response) throws java.rmi.RemoteException, java.io.IOException, javax.servlet.ServletException 
-  {
-    return check(request, response);
-  }
+  //public static boolean forceLogin(HttpServletRequest request) throws java.rmi.RemoteException, java.io.IOException, javax.servlet.ServletException 
+  //{
+  //  return loggedIn(request);
+  //}
 
   /** An HTTP WebEvent handler that logs out a userLogin by clearing the session.
    * @param request The HTTP request object for the current JSP or Servlet request.
@@ -158,7 +157,7 @@ public class WebEventSecurity
    * @return Return a boolean which specifies whether or not the calling Servlet or JSP should generate its own content. This allows an event to override the default content.
    * @exception java.io.IOException Standard IO Exception
    */  
-  public static boolean logout(HttpServletRequest request, HttpServletResponse response) throws java.io.IOException 
+  public static String logout(HttpServletRequest request, HttpServletResponse response) throws java.io.IOException 
   {
     //invalidate the security group list cache
     UserLogin userLogin = (UserLogin) request.getSession().getAttribute("USER_LOGIN");
@@ -175,6 +174,6 @@ public class WebEventSecurity
       request.getSession().removeAttribute(attr);
     }
     
-    return true;
+    return "success";
   }
 }

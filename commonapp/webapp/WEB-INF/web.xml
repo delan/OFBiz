@@ -27,6 +27,26 @@
   <display-name>Open For Business - commonapp</display-name>
   <description>Common Application Components of the Open For Business Project</description>
 
+  <servlet>
+    <servlet-name>ControlServlet</servlet-name>
+    <display-name>ControlServlet</display-name>
+    <description>no description</description>
+    <servlet-class>org.ofbiz.core.control.ControlServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ControlServlet</servlet-name>
+    <url-pattern>/control/*</url-pattern>
+  </servlet-mapping>
+
+  <context-param>
+    <param-name>siteConfigurationFile</param-name>
+    <param-value>/WEB-INF/commonapp-config.xml</param-value>
+  </context-param>
+
+  <session-config>
+    <session-timeout>60</session-timeout>    <!-- in minutes -->
+  </session-config>
+
   <welcome-file-list>
     <welcome-file>/index.jsp</welcome-file>
     <welcome-file>/main.jsp</welcome-file>
@@ -73,10 +93,6 @@
 | "504"   ; Gateway Time-out
 | "505"   ; HTTP Version not supported
 -->
-
-  <session-config>
-    <session-timeout>60</session-timeout>    <!-- in minutes -->
-  </session-config>
 
 <!--
   <security-constraint>

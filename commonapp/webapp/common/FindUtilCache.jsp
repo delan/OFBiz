@@ -28,14 +28,12 @@
  */
 %> 
 
-<%@ page import="org.ofbiz.commonapp.common.*" %>
+<%@ page import="org.ofbiz.core.util.*" %>
 <%@ page import="org.ofbiz.commonapp.security.*" %>
 <%@ page import="java.util.*" %>
 
-<%@ taglib uri="/WEB-INF/webevent.tld" prefix="webevent" %> 
-<webevent:dispatch loginRequired="true" />
-
 <%boolean hasUtilCacheEdit=Security.hasPermission("UTIL_CACHE_EDIT", session);%>
+<%String controlPath=(String)request.getAttribute(SiteDefs.CONTROL_PATH);%>
 
 <% pageContext.setAttribute("PageName", "FindUtilCache"); %> 
 
@@ -74,16 +72,16 @@
         <TD><%=UtilFormatOut.formatQuantity(utilCache.getMaxSize())%></TD>
         <TD><%=UtilFormatOut.formatQuantity(utilCache.getExpireTime())%></TD>
         <TD>
-          <a href="<%=response.encodeURL("FindUtilCacheElements.jsp?UTIL_CACHE_NAME=" + UtilFormatOut.checkNull(utilCache.getName()))%>" class="buttontext">Elements</a>
+          <a href="<%=response.encodeURL(controlPath + "/FindUtilCacheElements?UTIL_CACHE_NAME=" + UtilFormatOut.checkNull(utilCache.getName()))%>" class="buttontext">Elements</a>
         </TD>
         <TD>
           <%if(hasUtilCacheEdit){%>
-            <a href="<%=response.encodeURL("EditUtilCache.jsp?UTIL_CACHE_NAME=" + UtilFormatOut.checkNull(utilCache.getName()))%>" class="buttontext">Edit</a>
+            <a href="<%=response.encodeURL(controlPath + "/EditUtilCache?UTIL_CACHE_NAME=" + UtilFormatOut.checkNull(utilCache.getName()))%>" class="buttontext">Edit</a>
           <%}%>
         </TD>
         <TD>
           <%if(hasUtilCacheEdit){%>
-            <a href="<%=response.encodeURL("FindUtilCache.jsp?WEBEVENT=UTIL_CACHE_CLEAR&UTIL_CACHE_NAME=" + UtilFormatOut.checkNull(utilCache.getName()))%>" class="buttontext">Clear</a>
+            <a href="<%=response.encodeURL(controlPath + "/FindUtilCacheClear?UTIL_CACHE_NAME=" + UtilFormatOut.checkNull(utilCache.getName()))%>" class="buttontext">Clear</a>
           <%}%>
         </TD>
       </TR>

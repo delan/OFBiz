@@ -28,10 +28,7 @@
  */
 %> 
 
-<%@ page import="org.ofbiz.commonapp.common.*" %>
-
-<%@ taglib uri="/WEB-INF/webevent.tld" prefix="webevent" %> 
-<webevent:dispatch loginRequired="false" />
+<%@ page import="org.ofbiz.core.util.*" %>
 
 <% pageContext.setAttribute("PageName", "main"); %> 
 
