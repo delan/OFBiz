@@ -14,7 +14,8 @@
         <put section='first' content='/catalog/choosecatalog.jsp'/>
         <put section='second' content='/catalog/keywordsearchbox.jsp'/>
         <put section='third' content='/catalog/sidedeepcategory.jsp'/>
-        <put section='fourth' content='/catalog/minireorderprods.jsp'/>
+        <!-- <put section='fourth' content='http://www.yahoo.com' type="http"/> -->
+        <put section='fourth' content='/catalog/minireorderprods.jsp' type="resource"/>
         <!-- <put section='fifth' content='/fifth.jsp'/> -->
     </define>
 
