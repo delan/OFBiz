@@ -1,8 +1,8 @@
 @echo off
 
 rem uncomment the following and set them properly. if you want...
-set OFBIZ_HOME=c:\work\ofbiz
-set JETTY_HOME=c:\work\jetty
+rem set OFBIZ_HOME=c:\work\ofbiz
+rem set JETTY_HOME=c:\work\jetty
 
 if "%OFBIZ_HOME%" == "" goto setofbizhome
 goto doneofbizhome
