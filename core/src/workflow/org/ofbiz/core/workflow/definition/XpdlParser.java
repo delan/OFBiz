@@ -3,6 +3,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2001/11/11 06:13:32  rbb36
+ * Now fully parses the first two entities
+ *
  * Revision 1.4  2001/11/11 02:09:32  rbb36
  * Further down the parsing trail
  *
@@ -87,40 +90,6 @@ public class XpdlParser {
     
     public static final
         String ELEM_NAME_PACKAGE = "Package";
-    public static final
-        String ELEM_NAME_PACKAGE_HEADER = "PackageHeader";
-    public static final
-        String ELEM_NAME_REDEFINABLE_HEADER = "RedefinableHeader";
-    public static final
-        String ELEM_NAME_CONFORMANCE_CLASS = "ConformanceClass";
-    public static final
-        String ELEM_NAME_EXTERNAL_PACKAGES = "ExternalPackages";
-    public static final
-        String ELEM_NAME_TYPE_DECLARATIONS = "TypeDeclarations";
-    public static final
-        String ELEM_NAME_PARTICIPANTS = "Participants";
-    public static final
-        String ELEM_NAME_APPLICATIONS = "Applications";
-    public static final
-        String ELEM_NAME_DATA_FIELDS = "DataFields";
-    public static final
-        String ELEM_NAME_WORKFLOW_PROCESSES = "WorkflowProcesses";
-    public static final
-        String ELEM_NAME_EXTENDED_ATTRIBUTES = "ExtendedAttributes";
-    
-    public static final String[] LEGAL_ELEM_NAMES = {
-        ELEM_NAME_PACKAGE,
-        ELEM_NAME_PACKAGE_HEADER,
-        ELEM_NAME_REDEFINABLE_HEADER,
-        ELEM_NAME_CONFORMANCE_CLASS,
-        ELEM_NAME_EXTERNAL_PACKAGES,
-        ELEM_NAME_TYPE_DECLARATIONS,
-        ELEM_NAME_PARTICIPANTS,
-        ELEM_NAME_APPLICATIONS,
-        ELEM_NAME_DATA_FIELDS,
-        ELEM_NAME_WORKFLOW_PROCESSES,
-        ELEM_NAME_EXTENDED_ATTRIBUTES,
-    };
     
     public static final
         String ELEM_NAME_XPDL_VERSION = "XPDLVersion";
@@ -146,6 +115,34 @@ public class XpdlParser {
         String ELEM_NAME_COUNTRYKEY = "Countrykey";
     public static final
         String ELEM_NAME_RESPONSIBLE = "Responsible";
+    public static final
+        String ELEM_NAME_PRIORITY = "Priority";
+    public static final
+        String ELEM_NAME_LIMIT = "Limit";
+    public static final
+        String ELEM_NAME_WAITING_TIME = "WaitingTime";
+    public static final
+        String ELEM_NAME_WORKING_TIME = "WorkingTime";
+    public static final
+        String ELEM_NAME_DURATION = "Duration";
+    public static final
+        String ELEM_NAME_VALID_FROM = "ValidFrom";
+    public static final
+        String ELEM_NAME_VALID_TO = "ValidTo";
+    public static final
+        String ELEM_NAME_INITIAL_VALUE = "InitialValue";
+    public static final
+        String ELEM_NAME_LENGTH = "Length";
+    public static final
+        String ELEM_NAME_ACTUAL_PARAMETER = "ActualParameter";
+    public static final
+        String ELEM_NAME_PERFORMER = "Performer";
+    public static final
+        String ELEM_NAME_ICON = "Icon";
+    public static final
+        String ELEM_NAME_BLOCK_NAME = "BlockName";
+    public static final
+        String ELEM_NAME_COST = "Cost";
     
     public static final String[] TEXT_ELEM_NAMES = {
         ELEM_NAME_XPDL_VERSION,
@@ -160,20 +157,111 @@ public class XpdlParser {
         ELEM_NAME_CODEPAGE,
         ELEM_NAME_COUNTRYKEY,
         ELEM_NAME_RESPONSIBLE,
+        ELEM_NAME_PRIORITY,
+        ELEM_NAME_LIMIT,
+        ELEM_NAME_WAITING_TIME,
+        ELEM_NAME_WORKING_TIME,
+        ELEM_NAME_DURATION,
+        ELEM_NAME_VALID_FROM,
+        ELEM_NAME_VALID_TO,
+        ELEM_NAME_INITIAL_VALUE,
+        ELEM_NAME_LENGTH,
+        ELEM_NAME_ACTUAL_PARAMETER,
+        ELEM_NAME_PERFORMER,
+        ELEM_NAME_ICON,
+        ELEM_NAME_BLOCK_NAME,
+        ELEM_NAME_COST,
     };
+    
+    public static final
+        String ELEM_NAME_EXTERNAL_PACKAGES = "ExternalPackages";
+    public static final
+        String ELEM_NAME_TYPE_DECLARATIONS = "TypeDeclarations";
+    public static final
+        String ELEM_NAME_PARTICIPANTS = "Participants";
+    public static final
+        String ELEM_NAME_APPLICATIONS = "Applications";
+    public static final
+        String ELEM_NAME_DATA_FIELDS = "DataFields";
+    public static final
+        String ELEM_NAME_WORKFLOW_PROCESSES = "WorkflowProcesses";
+    public static final
+        String ELEM_NAME_EXTENDED_ATTRIBUTES = "ExtendedAttributes";
+    public static final
+        String ELEM_NAME_RESPONSIBLES = "Responsibles";
+    public static final
+        String ELEM_NAME_FORMAL_PARAMETERS = "FormalParameters";
+    public static final
+        String ELEM_NAME_ACTIVITIES = "Activities";
+    public static final
+        String ELEM_NAME_TRANSITIONS = "Transitions";
+    public static final
+        String ELEM_NAME_TRANSITION_RESTRICTIONS = "TransitionRestrictions";
+    public static final
+        String ELEM_NAME_ACTUAL_PARAMETERS = "ActualParameters";
+    public static final
+        String ELEM_NAME_TRANSITION_REFS = "TransitionRefs";
+    
+    public static final String[] VECTOR_ELEM_NAMES = {
+        ELEM_NAME_EXTERNAL_PACKAGES,
+        ELEM_NAME_TYPE_DECLARATIONS,
+        ELEM_NAME_PARTICIPANTS,
+        ELEM_NAME_APPLICATIONS,
+        ELEM_NAME_DATA_FIELDS,
+        ELEM_NAME_WORKFLOW_PROCESSES,
+        ELEM_NAME_EXTENDED_ATTRIBUTES,
+        ELEM_NAME_RESPONSIBLES,
+        ELEM_NAME_FORMAL_PARAMETERS,
+        ELEM_NAME_ACTIVITIES,
+        ELEM_NAME_TRANSITIONS,
+        ELEM_NAME_TRANSITION_RESTRICTIONS,
+        ELEM_NAME_ACTUAL_PARAMETERS,
+        ELEM_NAME_TRANSITION_REFS,
+    };
+    
+    public static Method TEXT_ELEM_METHOD = null;
+    public static Method VECTOR_ELEM_METHOD = null;
+    
+    static {
+        initParseTextMethod();
+        initParseVectorMethod();
+    }
     
     public static final
         String ELEM_NAME_ = "";
     
-    public static final
-        Method TEXT_ELEM_METHOD = getParseTextElementMethod();
+    // -------------------------------------------------------------
+    // CONSTRUCTOR AND INITIALIZATION METHODS
+    // -------------------------------------------------------------
+    
+    protected static void initParseTextMethod() {
+        final String methodName = "parseTextElement";
+        final Class[] argClasses = new Class[]{ Element.class };
+        try {
+            TEXT_ELEM_METHOD =
+                XpdlParser.class.getMethod( methodName, argClasses );
+        } catch( Exception e ) {
+            cat.fatal( "Can't find parseTextElement method.", e );
+        }
+    }
+    
+    protected static void initParseVectorMethod() {
+        final String methodName = "parseVectorElement";
+        final Class[] argClasses = new Class[]{ Element.class };
+        try {
+            VECTOR_ELEM_METHOD =
+                XpdlParser.class.getMethod( methodName, argClasses );
+        } catch( Exception e ) {
+            cat.fatal( "Can't find parseVectorElement method.", e );
+        }
+    }
     
     // ---------------------------------------------------------
     // PUBLIC API
     // ---------------------------------------------------------
     
     public static Object parse( String fileName ) {
-        cat.info( "Beggining File Parse: " + fileName );
+        cat.info( "Beginning File Parse: " + fileName );
         final File file = new File( fileName );
         final DocumentBuilderFactory factory =
             DocumentBuilderFactory.newInstance();
@@ -216,22 +304,12 @@ public class XpdlParser {
     // INTERNAL API
     // -------------------------------------------------------
     
-    protected static Method getParseTextElementMethod() {
-        final String methodName = "parseTextElement";
-        final Class[] argClasses = new Class[]{ Element.class };
-        try {
-            return( XpdlParser.class.getMethod( methodName, argClasses ) );
-        } catch( Exception e ) {
-            cat.fatal( "Can't Find parseTextElementMethod."
-                       + " Null Pointer Coming Soon.", e );
-        }
-        return( null );
-    }
-    
     protected static Method getParseMethod( String elementName )
         throws NoSuchMethodException {
         if( isTextElement( elementName ) && TEXT_ELEM_METHOD != null ) {
             return( TEXT_ELEM_METHOD );
+        } else if( isVectorElement( elementName ) && VECTOR_ELEM_METHOD != null ) {
+            return( VECTOR_ELEM_METHOD );
         }
         final String methodName = "parse" + elementName;
         final Class[] argClasses = new Class[]{ Element.class };
@@ -247,9 +325,31 @@ public class XpdlParser {
         return( false );
     }
     
+    protected static boolean isVectorElement( String elementName ) {
+        for( int i = 0; i < VECTOR_ELEM_NAMES.length; i++ ) {
+            if( VECTOR_ELEM_NAMES[i].equals( elementName ) ) {
+                return( true );
+            }
+        }
+        return( false );
+    }
+    
     // -------------------------------------------------------
     // FACTORIES
     // -------------------------------------------------------
+    
+    /**
+     * Returns null if the given node is not an element
+     */
+    public static Object parseElement( Node child ) {
+        if( child.getNodeType() == Node.ELEMENT_NODE ) {
+            final String nodeName = child.getNodeName();
+            final Object o = parseElement( nodeName, (Element)child );
+            return( o );
+        } else {
+            return( null );
+        }
+    }
     
     /**
      * Dynamically invokes the parse method for the given
@@ -286,6 +386,17 @@ public class XpdlParser {
         return( string );
     }
     
+    public static Vector parseVectorElement( Element element ) {
+        final Vector elements = new Vector();
+        Node child = element.getFirstChild();
+        while( child != null ) {
+            final Object o = parseElement( child );
+            if( o != null ) { elements.add( o ); }
+            child = child.getNextSibling();
+        }
+        return( elements );
+    }
+    
     /**
      * Parses an XPDL Package element into an instance of a
      * Package object.
@@ -295,13 +406,9 @@ public class XpdlParser {
         pakkage.put( "Id", packageElement.getAttribute( "Id" ) );
         Node child = packageElement.getFirstChild();
         while( child != null ) {
-            if( child.getNodeType() == Node.ELEMENT_NODE ) {
-                final String nodeName = child.getNodeName();
-                final Object o = parseElement( nodeName, (Element)child );
-                if( o != null ) {
-                    pakkage.put( nodeName, o );
-                }
-            }
+            final String nodeName = child.getNodeName();
+            final Object o = parseElement( child );
+            if( o != null ) { pakkage.put( nodeName, o ); }
             child = child.getNextSibling();
         }
         cat.debug( "parsePackage has not been type implemented" );
@@ -312,13 +419,9 @@ public class XpdlParser {
         final HashMap packageHeader = new HashMap();
         Node child = packageHeaderElement.getFirstChild();
         while( child != null ) {
-            if( child.getNodeType() == Node.ELEMENT_NODE ) {
-                final String nodeName = child.getNodeName();
-                final Object o = parseElement( nodeName, (Element)child );
-                if( o != null ) {
-                    packageHeader.put( nodeName, o );
-                }
-            }
+            final String nodeName = child.getNodeName();
+            final Object o = parseElement( child );
+            if( o != null ) { packageHeader.put( nodeName, o ); }
             child = child.getNextSibling();
         }
         cat.debug( "parsePackageHeader has not been type implemented" );
@@ -333,34 +436,169 @@ public class XpdlParser {
         redefinableHeader.put( pubStatusName, pubStatusValue );
         Node child = element.getFirstChild();
         while( child != null ) {
-            if( child.getNodeType() == Node.ELEMENT_NODE ) {
-                final String nodeName = child.getNodeName();
-                final Object o = parseElement( nodeName, (Element)child );
-                if( o != null ) {
-                    redefinableHeader.put( nodeName, o );
-                }
-            }
+            final String nodeName = child.getNodeName();
+            final Object o = parseElement( child );
+            if( o != null ) { redefinableHeader.put( nodeName, o ); }
             child = child.getNextSibling();
         }
         cat.debug( "parseRedefinableHeader has not been type implemented" );
         return( redefinableHeader );
     }
     
-    public static Object parseResponsibles( Element element ) {
-        final Vector responsibles = new Vector();
+    public static Object parseConformanceClass( Element element ) {
+        final HashMap conformanceClass = new HashMap();
+        conformanceClass.put( "GraphConformance",
+                              element.getAttribute( "GraphConformance" ) );
+        cat.debug( "parseConformanceClass has not been type implemented" );
+        return( conformanceClass );
+    }
+    
+    public static Object parseExternalPackages( Element element ) {
+        final Vector externalPackages = new Vector();
         Node child = element.getFirstChild();
         while( child != null ) {
-            if( child.getNodeType() == Node.ELEMENT_NODE ) {
-                final String nodeName = child.getNodeName();
-                final Object o = parseElement( nodeName, (Element)child );
-                if( o != null ) {
-                    responsibles.add( o );
-                }
-            }
+            final Object o = parseElement( child );
+            if( o != null ) { externalPackages.add( o ); }
             child = child.getNextSibling();
         }
-        cat.debug( "parseResponsibles has not been type implemented" );
-        return( responsibles );
+        cat.debug( "parseExternalPackages has not been type implemented" );
+        return( externalPackages );
+    }
+    
+    public static Object parseExternalPackage( Element element ) {
+        final HashMap externalPackage = new HashMap();
+        externalPackage.put( "href", element.getAttribute( "href" ) );
+        Node child = element.getFirstChild();
+        while( child != null ) { 
+            final String nodeName = child.getNodeName();
+            final Object o = parseElement( child );
+            if( o != null ) { externalPackage.put( nodeName, o ); }
+            child = child.getNextSibling();
+        }
+        cat.debug( "parseExternalPackage has not been type implemented" );
+        return( externalPackage );
+    }
+    
+    public static Object parseExtendedAttribute( Element element ) {
+        final HashMap extendedAttribute = new HashMap();
+        extendedAttribute.put( "Name", element.getAttribute( "Name" ) );
+        extendedAttribute.put( "Value", element.getAttribute( "Value" ) );
+        Node child = element.getFirstChild();
+        cat.warn( "Since this element contains \"ANY\", this method could"
+                  + " overwrite the second instance of an entity if"
+                  + " a list is not wrappered by an array." );
+        while( child != null ) {
+            final String nodeName = child.getNodeName();
+            final Object o = parseElement( child );
+            if( o != null ) { extendedAttribute.put( nodeName, o ); }
+            child = child.getNextSibling();
+        }
+        cat.debug( "parseExtendedAttribute has not been type implemented" );
+        return( extendedAttribute );
+    }
+    
+    public static Object parseTypeDeclaration( Element element ) {
+        final HashMap typeDeclaration = new HashMap();
+        typeDeclaration.put( "Id", element.getAttribute( "Id" ) );
+        typeDeclaration.put( "Name", element.getAttribute( "Name" ) );
+        Node child = element.getFirstChild();
+        while( child != null ) {
+            final String nodeName = child.getNodeName();
+            final Object o = parseElement( child );
+            if( o != null ) { typeDeclaration.put( nodeName, o ); }
+            child = child.getNextSibling();
+        }
+        cat.debug( "parseTypeDeclaration has not been type implemented" );
+        return( typeDeclaration );
+    }
+    
+    public static Object parseBasicType( Element element ) {
+        final HashMap basicType = new HashMap();
+        basicType.put( "Type", element.getAttribute( "Type" ) );
+        cat.debug( "parseBasicType has not been type implemented" );
+        return( basicType );
+    }
+    
+    public static Object parseParticipant( Element element ) {
+        final HashMap participant = new HashMap();
+        participant.put( "Id", element.getAttribute( "Id" ) );
+        participant.put( "Name", element.getAttribute( "Name" ) );
+        Node child = element.getFirstChild();
+        while( child != null ) {
+            final String nodeName = child.getNodeName();
+            final Object o = parseElement( child );
+            if( o != null ) { participant.put( nodeName, o ); }
+            child = child.getNextSibling();
+        }
+        cat.debug( "parseParticipant has not been type implemented" );
+        return( participant );
+    }
+    
+    public static Object parseParticipantType( Element element ) {
+        final HashMap participantType = new HashMap();
+        participantType.put( "Type", element.getAttribute( "Type" ) );
+        cat.debug( "parseParticipantType has not been type implemented" );
+        return( participantType );
+    }
+    
+    public static Object parseApplication( Element element ) {
+        final HashMap application = new HashMap();
+        application.put( "Id", element.getAttribute( "Id" ) );
+        application.put( "Name", element.getAttribute( "Name" ) );
+        Node child = element.getFirstChild();
+        while( child != null ) {
+            final String nodeName = child.getNodeName();
+            final Object o = parseElement( child );
+            if( o != null ) { application.put( nodeName, o ); }
+            child = child.getNextSibling();
+        }
+        cat.debug( "parseApplication has not been type implemented" );
+        return( application );
+    }
+    
+    public static Object parseFormalParameter( Element element ) {
+        final HashMap formalParameter = new HashMap();
+        formalParameter.put( "Id", element.getAttribute( "Id" ) );
+        formalParameter.put( "Index", element.getAttribute( "Index" ) );
+        formalParameter.put( "Mode", element.getAttribute( "Mode" ) );
+        Node child = element.getFirstChild();
+        while( child != null ) {
+            final String nodeName = child.getNodeName();
+            final Object o = parseElement( child );
+            if( o != null ) { formalParameter.put( nodeName, o ); }
+            child = child.getNextSibling();
+        }
+        cat.debug( "parseFormalParameter has not been type implemented" );
+        return( formalParameter );
+    }
+    
+    public static Object parseDataType( Element element ) {
+        final HashMap dataType = new HashMap();
+        Node child = element.getFirstChild();
+        while( child != null ) {
+            final String nodeName = child.getNodeName();
+            final Object o = parseElement( child );
+            if( o != null ) { dataType.put( nodeName, o ); }
+            child = child.getNextSibling();
+        }
+        cat.debug( "parseDataType has not been type implemented" );
+        return( dataType );
+    }
+    
+    public static Object parseDataField( Element element ) {
+        final HashMap dataField = new HashMap();
+        dataField.put( "Id", element.getAttribute( "Id" ) );
+        dataField.put( "Name", element.getAttribute( "Name" ) );
+        dataField.put( "IsArray", element.getAttribute( "IsArray" ) );
+        Node child = element.getFirstChild();
+        while( child != null ) {
+            final String nodeName = child.getNodeName();
+            final Object o = parseElement( child );
+            if( o != null ) { dataField.put( nodeName, o ); }
+            child = child.getNextSibling();
+        }
+        cat.debug( "parseDataField has not been type implemented" );
+        return( dataField );
     }
     
     /** Parses an XPDL Join element into an instance of a Join object. */
