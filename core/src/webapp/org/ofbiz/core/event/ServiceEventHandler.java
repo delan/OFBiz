@@ -105,13 +105,23 @@ public class ServiceEventHandler implements EventHandler {
         Iterator ci = model.getInParamNames().iterator();
         while (ci.hasNext()) {
             String name = (String) ci.next();
-            Object value = request.getParameter(name);
-            if (value == null)
+            String paramStr = request.getParameter(name);
+            //interpreting empty fields as null values for each in back end handling...
+            if (paramStr != null && paramStr.length() == 0) {
+                paramStr = null;
+            }
+
+            Object value = paramStr;
+            if (value == null) {
                 value = request.getAttribute(name);
-            if (value == null)
+            }
+            if (value == null) {
                 value = request.getSession().getAttribute(name);
-            if ( value != null )
+            }
+            
+            if (value != null) {
                 serviceContext.put(name,value);
+            }
         }
 
         // get only the parameters for this service
