@@ -45,7 +45,6 @@
     <process field="companyNameOnCard"><copy/></process>
     <process field="cardType"><copy/><not-empty><fail-message message="Card Type is missing"/></not-empty></process>
     <process field="cardNumber"><copy/></process>
-    <process field="cardSecurityCode"><copy/></process>
     <process field="contactMechId"><copy/></process>
     <process field="expMonth"><not-empty><fail-message message="Expiration Month is missing"/></not-empty></process>
     <process field="expYear"><not-empty><fail-message message="Expiration Year is missing"/></not-empty></process>
