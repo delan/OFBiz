@@ -169,8 +169,10 @@
         </field>
         <field name="mimeTypeId">
             <drop-down allow-empty="true">
-                <entity-options description="${description}"
-                    entity-name="MimeType" key-field-name="mimeTypeId"/>
+                <entity-options description="${mimeTypeId} - ${description}"
+                        entity-name="MimeType" key-field-name="mimeTypeId">
+                    <entity-order-by field-name="mimeTypeId"/>
+                </entity-options>
             </drop-down>
         </field>
         <field name="characterSetId">

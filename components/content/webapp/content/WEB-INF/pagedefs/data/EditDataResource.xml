@@ -12,7 +12,7 @@
     <property name="priKeyName">dataResourceId</property>    
     <property name="defaultMapName">currentValue</property>    
     <page-action name="/includes/permprep.bsh"/>
-    <content-action name="/includes/currentvalprep.bsh"/>
+    <page-action name="/includes/currentvalprep.bsh"/>
     <content-action name="/includes/formprep.bsh"/>
     <content-action name="/data/datacategoryprep.bsh"/>
 </page>
