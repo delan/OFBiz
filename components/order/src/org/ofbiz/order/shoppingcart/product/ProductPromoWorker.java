@@ -1,5 +1,5 @@
 /*
- * $Id: ProductPromoWorker.java,v 1.32 2004/01/11 10:31:50 jonesde Exp $
+ * $Id: ProductPromoWorker.java,v 1.33 2004/01/12 10:19:22 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -54,7 +54,7 @@ import org.ofbiz.service.LocalDispatcher;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.32 $
+ * @version    $Revision: 1.33 $
  * @since      2.0
  */
 public class ProductPromoWorker {
@@ -1138,7 +1138,7 @@ public class ProductPromoWorker {
             }
         }
 
-        // take care of the productCategoryIds Set first
+        // now that the category Set and Map are setup, take care of the productCategoryIds Set first
         getAllProductIds(productCategoryIds, productIds, delegator, nowTimestamp, include);
         
         // now handle the productCategoryGroupSetListMap
@@ -1148,7 +1148,7 @@ public class ProductPromoWorker {
         while (pcgslmIter.hasNext()) {
             Map.Entry entry = (Map.Entry) pcgslmIter.next();
             List catIdSetList = (List) entry.getValue();
-            // TODO: get all productIds for this catIdSetList
+            // get all productIds for this catIdSetList
             List productIdSetList = new LinkedList();
             
             Iterator cidslIter = catIdSetList.iterator();
@@ -1160,9 +1160,16 @@ public class ProductPromoWorker {
                 productIdSetList.add(groupProductIdSet);
             }
             
-            // TODO: now go through all productId sets and only include IDs that are in all sets
+            // now go through all productId sets and only include IDs that are in all sets
             // by definition if each id must be in all categories, then it must be in the first, so go through the first and drop each one that is not in all others
             Set firstProductIdSet = (Set) productIdSetList.remove(0);
+            Iterator productIdSetIter = productIdSetList.iterator();
+            while (productIdSetIter.hasNext()) {
+                Set productIdSet = (Set) productIdSetIter.next();
+                firstProductIdSet.retainAll(productIdSet);
+            }
+            
+            /* the old way of doing it, not as efficient, recoded above using the retainAll operation, pretty handy
             Iterator firstProductIdIter = firstProductIdSet.iterator();
             while (firstProductIdIter.hasNext()) {
                 String curProductId = (String) firstProductIdIter.next();
@@ -1181,6 +1188,7 @@ public class ProductPromoWorker {
                     firstProductIdIter.remove();
                 }
             }
+             */
             
             if (firstProductIdSet.size() >= 0) {
                 if (include) {
