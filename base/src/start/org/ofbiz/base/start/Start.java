@@ -1,5 +1,5 @@
 /*
- * $Id: Start.java,v 1.16 2004/05/04 15:36:42 ajzeneski Exp $
+ * $Id: Start.java,v 1.17 2004/06/15 18:20:19 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -46,7 +46,7 @@ import java.util.Properties;
  * Start - OFBiz Container(s) Startup Class
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
-  *@version    $Revision: 1.16 $
+  *@version    $Revision: 1.17 $
  * @since      2.1
  */
 public class Start implements Runnable {
@@ -500,6 +500,22 @@ public class Start implements Runnable {
                     currentPosition++;
                 }
             }
+
+            // hack java.home
+            String javaHome = props.getProperty("java.home", null);
+            if (javaHome == null) {
+                String jreExt = System.getProperty("file.separator") + "jre";
+                javaHome = System.getProperty("java.home");
+                if (javaHome.toLowerCase().endsWith(jreExt)) {
+                    javaHome = javaHome.substring(0, javaHome.lastIndexOf(System.getProperty("file.separator")));
+                }
+                File jh = new File(javaHome);
+                if (!jh.exists() || !jh.isDirectory()) {
+                    throw new IOException("Cannot locate java.home [" + javaHome + "] not found!");
+                }
+            }
+            System.setProperty("java.home", javaHome);
+
             configLoaded = true;
         }
 
