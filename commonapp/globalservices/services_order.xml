@@ -211,7 +211,12 @@
             location="org.ofbiz.commonapp.order.order.OrderServices" invoke="processRefundReturn">
         <description>Process the refunds in a return</description>
         <attribute name="returnId" type="String" mode="IN" optional="false"/>
-    </service>        
+    </service>
+    <service name="updateReturnStatusFromReceipt" engine="simple"
+            location="org/ofbiz/commonapp/order/order/OrderReturnServices.xml" invoke="updateReturnStatusFromReceipt">      
+        <description>Update return/item status when items have been received</description>
+        <attribute name="returnId" type="String" mode="IN" optional="false"/>
+    </service>
     
     <!-- Tax Services -->
     <service name="calcTax" engine="java"

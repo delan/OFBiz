@@ -104,7 +104,7 @@
         <check-permission permission="ORDERMGR" action="_DELETE"><fail-message message="Security Error: to run removeReturnItem you must have the ORDERMGR_DELETE or ORDERMGR_ADMIN permission"/></check-permission>
         <check-errors/>
         
-        <field-tofield field-name="returnId" map-name="parameters" to-map-name="headerPKMap"/>
+        <field-to-field field-name="returnId" map-name="parameters" to-map-name="headerPKMap"/>
         <find-by-primary-key entity-name="ReturnHeader" map-name="headerPKMap" value-name="returnHeader"/>
         <if-compare field-name="statusId" map-name="returnHeader" operator="not-equals" type="String" value="RETURN_REQUESTED">
             <add-error><fail-message message="Cannot remove items once return is approved"/></add-error>
@@ -116,5 +116,36 @@
         <find-by-primary-key entity-name="ReturnItem" map-name="lookupPKMap" value-name="returnItem"/>
                 
         <remove-value value-name="returnItem"/>       	
+    </simple-method>
+    
+    <simple-method method-name="updateReturnStatusFromReceipt" short-description="Update Return Status From ShipmentReceipt">
+        <check-permission permission="ORDERMGR" action="_UPDATE"><fail-message message="Security Error: to run updateReturnHeader you must have the ORDERMGR_UPDATE or ORDERMGR_ADMIN permission"/></check-permission>
+        <check-errors/>
+        
+        <field-to-field field-name="returnId" map-name="parameters" to-map-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="ReturnHeader" map-name="lookupPKMap" value-name="returnHeader"/>        
+        <find-by-and entity-name="ShipmentReceipt" map-name="lookupPKMap" list-name="shipmentReceipts"/>
+        <iterate list-name="shipmentReceipts" entry-name="receipt">
+          <if-empty field-name="${receipt.returnItemSeqId}" map-name="totalsMap">
+          	<calculate field-name="${receipt.returnItemSeqId}" map-name="totalsMap">
+          	  <number value="0"/>
+          	</calculate>
+          </if-empty>
+          <calculate field-name="${receipt.returnItemSeqId}" map-name="totalsMap" type="Double">
+            <calcop field-name="${receipt.returnItemSeqId}" map-name="totalsMap" operator="add">
+              <calcop field-name="quantityAccepted" map-name="receipt" operator="get"/>
+              <calcop field-name="quantityRejected" map-name="receipt" operator="get"/>
+            </calcop>
+          </calculate>
+          <field-to-field field-name="returnId" map-name="receipt" to-map-name="newLookupMap"/>
+          <field-to-field field-name="returnItemSeqId" map-name="receipt" to-map-name="newLookupMap"/>          
+          <find-by-primary-key entity-name="ReturnItem" map-name="newLookupMap" value-name="returnItem"/>
+          <if-compare-field field-name="returnQuantity" map-name="returnItem" operator="greater-equals" to-field-name="${receipt.returnItemSeqId}" to-map-name="totalsMap" type="Double">
+            <!-- update the status for the item -->
+            <string-to-field field-name="statusId" map-name="returnItem" string="RETURN_RECEIVED"/>
+            <store-value value-name="returnItem"/>
+            <!-- create status change history -->
+          </if-compare-field>          
+        </iterate>                
     </simple-method>
 </simple-methods>
