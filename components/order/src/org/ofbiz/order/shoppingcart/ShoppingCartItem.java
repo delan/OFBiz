@@ -451,7 +451,6 @@ public class ShoppingCartItem implements java.io.Serializable {
         this.quantityUsedPerPromoFailed = new HashMap(item.quantityUsedPerPromoFailed);
         this.quantityUsedPerPromoActual = new HashMap(item.quantityUsedPerPromoActual);
         this.orderItemSeqId = item.getOrderItemSeqId();
-        //this.orderShipmentPreference = new GenericValue(item.getOrderShipmentPreference());
         this.additionalProductFeatureAndAppls = item.getAdditionalProductFeatureAndAppls() == null ?
                 null : new HashMap(item.getAdditionalProductFeatureAndAppls());
         this.attributes = item.getAttributes() == null ? null : new HashMap(item.getAttributes());
@@ -483,7 +482,6 @@ public class ShoppingCartItem implements java.io.Serializable {
         this.attributes = attributes;
         this.delegator = _product.getDelegator();
         this.delegatorName = _product.getDelegator().getDelegatorName();
-        //this.orderShipmentPreference = delegator.makeValue("OrderShipmentPreference", null);
         this.addAllProductFeatureAndAppls(additionalProductFeatureAndAppls);
         this.locale = locale;
         this.configWrapper = configWrapper;
