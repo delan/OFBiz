@@ -831,7 +831,7 @@
         <attribute name="orderId" type="String" mode="IN" optional="false"/>
     </service>
     <service name="cancelOrderItemInventoryRes" engine="simple"
-                location="org/ofbiz/commonapp/product/inventory/InventoryServices.xml" invoke="cancelOrderInventoryReservation" auth="true">
+                location="org/ofbiz/commonapp/product/inventory/InventoryServices.xml" invoke="cancelOrderItemInventoryRes" auth="true">
         <description>Cancels an inventory reservation</description>
         <auto-attributes entity-name="OrderItemInventoryRes" include="pk" mode="IN" optional="false"/>
     </service>
