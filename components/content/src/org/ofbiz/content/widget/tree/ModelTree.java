@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTree.java,v 1.6 2004/08/12 18:05:15 byersa Exp $
+ * $Id: ModelTree.java,v 1.7 2004/08/14 07:35:13 jonesde Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -44,7 +44,6 @@ import org.ofbiz.content.widget.screen.ModelScreen;
 import org.ofbiz.content.widget.screen.ScreenFactory;
 import org.ofbiz.content.widget.screen.ScreenStringRenderer;
 import org.ofbiz.entity.GenericDelegator;
-import org.ofbiz.entity.GenericPK;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.service.LocalDispatcher;
 import org.w3c.dom.Element;
@@ -56,7 +55,7 @@ import org.xml.sax.SAXException;
  * Widget Library - Tree model class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.6 $
+ * @version    $Revision: 1.7 $
  * @since      3.1
  */
 public class ModelTree {

@@ -1,11 +1,10 @@
 package org.ofbiz.content;
 
-import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Iterator;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -14,7 +13,6 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
-import org.ofbiz.minilang.MiniLangException;
 import org.ofbiz.content.content.ContentServices;
 import org.ofbiz.content.content.ContentWorker;
 import org.ofbiz.content.data.DataServices;
@@ -22,8 +20,8 @@ import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericPK;
 import org.ofbiz.entity.GenericValue;
-import org.ofbiz.entity.util.ByteWrapper;
 import org.ofbiz.entity.model.ModelUtil;
+import org.ofbiz.entity.util.ByteWrapper;
 import org.ofbiz.security.Security;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
@@ -35,7 +33,7 @@ import org.ofbiz.service.ServiceUtil;
  * ContentManagementServices Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.21 $
+ * @version    $Revision: 1.22 $
  * @since      3.0
  *
  * 

@@ -1,5 +1,5 @@
 /*
- * $Id: HtmlTreeRenderer.java,v 1.5 2004/08/12 18:05:14 byersa Exp $
+ * $Id: HtmlTreeRenderer.java,v 1.6 2004/08/14 07:35:13 jonesde Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -27,15 +27,6 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.Map;
 
-import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.UtilValidate;
-import org.ofbiz.content.widget.tree.ModelTree;
-import org.ofbiz.content.widget.tree.TreeStringRenderer;
-import org.ofbiz.content.widget.screen.ScreenStringRenderer;
-import org.ofbiz.content.widget.screen.ModelScreen;
-import org.ofbiz.content.widget.screen.ModelScreen.ScreenRenderer;
-import org.ofbiz.content.widget.html.HtmlScreenRenderer;
-
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -53,7 +44,7 @@ import org.ofbiz.content.widget.tree.TreeStringRenderer;
  * Widget Library - HTML Form Renderer implementation
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      3.1
  */
 public class HtmlTreeRenderer implements TreeStringRenderer {
