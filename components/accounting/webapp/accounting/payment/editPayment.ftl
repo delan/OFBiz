@@ -1,33 +1,34 @@
 <#--
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
- *  Permission is hereby granted, free of charge, to any person obtaining a 
- *  copy of this software and associated documentation files (the "Software"), 
- *  to deal in the Software without restriction, including without limitation 
- *  the rights to use, copy, modify, merge, publish, distribute, sublicense, 
- *  and/or sell copies of the Software, and to permit persons to whom the 
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
  *  Software is furnished to do so, subject to the following conditions:
  *
- *  The above copyright notice and this permission notice shall be included 
+ *  The above copyright notice and this permission notice shall be included
  *  in all copies or substantial portions of the Software.
  *
- *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
- *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
- *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
- *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     Eric.Barbier@nereide.biz (migration to uiLabelMap)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      3.0
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
 
 <div class="head1">${uiLabelMap.AccountingEditPayment}</div>
-<a href="<@ofbizUrl>/editPayment</@ofbizUrl>" class="buttontext">[${uiLabelMap.AccountingCreatePayment}]</a>
+<a href="<@ofbizUrl>/view/manualCcPay</@ofbizUrl>" class="buttontext">[Credit Card Payment]</a>
+<a href="<@ofbizUrl>/editPayment</@ofbizUrl>" class="buttontext">[Generic Payment]</a>
 <br>
 
 <#if payment?has_content>
@@ -37,7 +38,7 @@
   <form name="editpayment" method="post" action="<@ofbizUrl>/createPayment</@ofbizUrl>">
 </#if>
 
-  <table border='0' cellpadding='2' cellspacing='0'>  
+  <table border='0' cellpadding='2' cellspacing='0'>
     <#if payment?exists>
       <tr>
         <td width='14%'>&nbsp;</td>
@@ -45,7 +46,7 @@
         <td width='6%'>&nbsp;</td>
         <td width='74%'>
           <b>${payment.paymentId}</b>
-        </td>                
+        </td>
       </tr>
     </#if>
     <tr>
@@ -64,7 +65,7 @@
             <option value="${type.paymentTypeId}">${type.description}</option>
           </#list>
         </select>
-      </td>                
+      </td>
     </tr>
     <tr>
       <td width='14%'>&nbsp;</td>
@@ -82,8 +83,8 @@
             <option value="${method.paymentMethodTypeId}">${method.description}</option>
           </#list>
         </select>
-      </td>                
-    </tr>  
+      </td>
+    </tr>
     <tr>
       <td width='14%'>&nbsp;</td>
       <td width='6%' align='right' nowrap><div class="tabletext">${uiLabelMap.AccountingStatus}:</div></td>
@@ -100,7 +101,7 @@
             <option value="${status.statusId}">${status.description}</option>
           </#list>
         </select>
-      </td>                
+      </td>
     </tr>
     <tr>
       <td width='14%'>&nbsp;</td>
@@ -108,7 +109,7 @@
       <td width='6%'>&nbsp;</td>
       <td width='74%'>
         <input type='text' class='inputBox' name='paymentPreferenceId' value='${(payment.paymentPreferenceId)?if_exists}'>
-      </td>                
+      </td>
     </tr>
     <tr>
       <td width='14%'>&nbsp;</td>
@@ -116,15 +117,15 @@
       <td width='6%'>&nbsp;</td>
       <td width='74%'>
         <input type='text' class='inputBox' name='paymentMethodId' value='${(payment.paymentMethodId)?if_exists}'>
-      </td>                
-    </tr>        
+      </td>
+    </tr>
     <tr>
       <td width='14%'>&nbsp;</td>
       <td width='6%' align='right' nowrap><div class="tabletext">${uiLabelMap.AccountingFromPartyId}:</div></td>
       <td width='6%'>&nbsp;</td>
       <td width='74%'>
         <input type='text' class='inputBox' name='partyIdTo' value='${(payment.partyIdTo)?if_exists}'>
-      </td>                
+      </td>
     </tr>
     <tr>
       <td width='14%'>&nbsp;</td>
@@ -132,7 +133,7 @@
       <td width='6%'>&nbsp;</td>
       <td width='74%'>
         <input type='text' class='inputBox' name='partyIdFrom' value='${(payment.partyIdFrom)?if_exists}'>
-      </td>                
+      </td>
     </tr>
     <tr>
       <td width='14%'>&nbsp;</td>
@@ -140,8 +141,8 @@
       <td width='6%'>&nbsp;</td>
       <td width='74%'>
         <input type='text' class='inputBox' name='paymentRefNum' value='${(payment.paymentRefNum)?if_exists}'>
-      </td>                
-    </tr>  
+      </td>
+    </tr>
     <tr>
       <td width='14%'>&nbsp;</td>
       <td width='6%' align='right' nowrap><div class="tabletext">${uiLabelMap.AccountingAmount}:</div></td>
@@ -149,7 +150,7 @@
       <td width='74%'>
         <#assign amount = (payment.amount?string("##0.00"))?if_exists>
         <input type='text' class='inputBox' name='amount' value='${amount?if_exists}'>
-      </td>                
+      </td>
     </tr>
     <tr>
       <td width='14%'>&nbsp;</td>
@@ -161,7 +162,7 @@
         </#if>
         <input type='text' class='inputBox' size='25' name='effectiveDate' value='${effectiveDate?if_exists}'>
         <a href="javascript:call_cal(document.editpayment.effectiveDate, '');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>
-      </td>                
+      </td>
     </tr>
     <tr>
       <td width='14%'>&nbsp;</td>
@@ -169,26 +170,26 @@
       <td width='6%'>&nbsp;</td>
       <td width='74%'>
         <input type='text' size='60' class='inputBox' name='comments' value='${(payment.comments)?if_exists}'>
-      </td>                
+      </td>
     </tr>
     <#if payment?has_content>
       <tr>
         <td width='14%'>&nbsp;</td>
         <td width='6%'>&nbsp;</td>
-        <td width='6%'>&nbsp;</td>   
+        <td width='6%'>&nbsp;</td>
         <td width='74%'>
-          <input type="submit" class="smallSubmit" value="${uiLabelMap.CommonUpdate}">      
+          <input type="submit" class="smallSubmit" value="${uiLabelMap.CommonUpdate}">
         </td>
-      </tr>     
-  <#else>  
+      </tr>
+  <#else>
     <tr>
       <td width='14%'>&nbsp;</td>
       <td width='6%'>&nbsp;</td>
-      <td width='6%'>&nbsp;</td>   
+      <td width='6%'>&nbsp;</td>
       <td width='74%'>
-        <input type="submit" class="smallSubmit" value="${uiLabelMap.CommonCreateNew}">      
+        <input type="submit" class="smallSubmit" value="${uiLabelMap.CommonCreateNew}">
       </td>
-    </tr>     
-  </#if>                 
+    </tr>
+  </#if>
   </table>
 </form>
