@@ -35,6 +35,7 @@
     <global-services loader="mainfile" location="services.xml"/>
     <global-services loader="mainfile" location="services_accounting.xml"/>
     <global-services loader="mainfile" location="services_content.xml"/>
+    <global-services loader="mainfile" location="services_marketing.xml"/>
     <global-services loader="mainfile" location="services_order.xml"/>
     <global-services loader="mainfile" location="services_party.xml"/>
     <global-services loader="mainfile" location="services_product.xml"/>
