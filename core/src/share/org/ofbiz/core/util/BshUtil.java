@@ -60,12 +60,14 @@ public final class BshUtil {
             Debug.logVerbose("Using Context -- " + context, module);
         try {
             // Set the context for the condition
-            Set keySet = context.keySet();
-            Iterator i = keySet.iterator();
-            while (i.hasNext()) {
-                Object key = i.next();
-                Object value = context.get(key);
-                bsh.set((String) key, value);
+            if (context != null) {
+                Set keySet = context.keySet();
+                Iterator i = keySet.iterator();
+                while (i.hasNext()) {
+                    Object key = i.next();
+                    Object value = context.get(key);
+                    bsh.set((String) key, value);
+                }
             }
             // evaluate the expression
             o = bsh.eval(expression);
