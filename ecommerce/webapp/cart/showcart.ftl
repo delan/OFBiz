@@ -160,6 +160,7 @@ function addToList() {
         </TR>
 
         <#assign itemsFromList = false>
+        <#assign promoItems = false>
         <#list shoppingCart.items() as cartLine>
           <#assign cartLineIndex = shoppingCart.getItemIndex(cartLine)>
           <tr><td colspan="7"><hr class='sepbar'></td></tr>
