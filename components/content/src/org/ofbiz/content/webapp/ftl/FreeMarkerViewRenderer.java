@@ -1,5 +1,5 @@
 /*
- * $Id: FreeMarkerViewRenderer.java,v 1.7 2004/04/20 21:01:20 byersa Exp $
+ * $Id: FreeMarkerViewRenderer.java,v 1.8 2004/06/23 15:17:46 jonesde Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -39,6 +39,7 @@ import org.jpublish.SiteContext;
 import org.jpublish.page.PageInstance;
 import org.jpublish.view.ViewRenderException;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilProperties;
 
 import freemarker.ext.beans.BeansWrapper;
 import freemarker.template.SimpleHash;
@@ -50,7 +51,7 @@ import freemarker.template.WrappingTemplateModel;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.7 $
+ * @version    $Revision: 1.8 $
  * @since      2.1
  */
 public class FreeMarkerViewRenderer extends org.jpublish.view.freemarker.FreeMarkerViewRenderer {
@@ -94,14 +95,25 @@ public class FreeMarkerViewRenderer extends org.jpublish.view.freemarker.FreeMar
          return root;         
     }
 
-    public void render(JPublishContext context, String path, Reader in, Writer out) throws IOException, ViewRenderException{
+    public void render(JPublishContext context, String path, Reader in, Writer out) throws IOException, ViewRenderException {
         try {
             Page page = (Page)context.get(JPublishContext.JPUBLISH_PAGE);
             Object viewContext = createViewContext(context, path);
 
             Template template = fmConfig.getTemplate(path, page.getLocale());
             template.setObjectWrapper(BeansWrapper.getDefaultInstance());
+
+            boolean showTemplateId = UtilProperties.propertyValueEquals("content.properties", "freemarker.showTemplateId", "Y");
+            String templateIdPrefix = UtilProperties.getPropertyValue("content.properties", "freemarker.templateIdPrefix", "[system]");
+            if (showTemplateId) {
+                out.write("\n<!-- " + templateIdPrefix + " begin: " + template.getName() + " -->\n");
+            }
+
             template.process(viewContext, out);
+
+            if (showTemplateId) {
+                out.write("\n<!-- " + templateIdPrefix + " end: " + template.getName() + " -->\n");
+            }
         } catch(IOException e) {
             throw e;
         } catch(Exception e) {
