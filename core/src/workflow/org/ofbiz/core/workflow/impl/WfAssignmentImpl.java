@@ -69,7 +69,8 @@ public class WfAssignmentImpl implements WfAssignment {
             fields.put("workEffortId",activity.runtimeKey());
             fields.put("partyId",party);
             fields.put("roleTypeId",role);
-            fields.put("fromDate",new java.sql.Timestamp((new Date()).getTime()));
+            fields.put("statusId","CAL_SENT");
+            fields.put("fromDate",new java.sql.Timestamp((new Date()).getTime()));          
             GenericValue v = activity.getDelegator().makeValue("WorkEffortPartyAssignment",fields);
             value = activity.getDelegator().create(v);
             
@@ -80,6 +81,22 @@ public class WfAssignmentImpl implements WfAssignment {
         if ( value == null )
             throw new WfException("Could not create the assignement!");
         return value;
+    }
+    
+    /** Mark this assignment as complete
+     * @throws CannotComplete
+     * @throws WfException
+     */
+    public void complete() throws WfException, CannotComplete {
+        if ( !activity.state().equals("closed.completed") )
+            throw new CannotComplete("Cannot complete assignment before activity completes");
+        try {
+            valueObject.set("statusId","CAL_COMPLETE");
+            valueObject.store();
+        }
+        catch ( GenericEntityException e ) {
+            throw new WfException(e.getMessage(),e);
+        }
     }
     
     /** Gets the activity object of this assignment.

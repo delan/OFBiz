@@ -33,24 +33,31 @@ package org.ofbiz.core.workflow;
  */
 
 public interface WfAssignment {
-  
-  /**
-   * @throws WfException
-   * @return
-   */
-  public WfActivity activity() throws WfException;
-  
-  /**
-   * @throws WfException
-   * @return
-   */
-  public WfResource assignee() throws WfException;
-  
-  /**
-   * @param newValue
-   * @throws WfException
-   * @throws InvalidResource
-   */
-  public void setAssignee(WfResource newValue) throws WfException, InvalidResource;
-  
+    
+    /** Gets the activity object of this assignment.
+     * @return WfActivity The activity object of this assignment
+     * @throws WfException
+     */
+    public WfActivity activity() throws WfException;
+    
+    /** Gets the assignee (resource) of this assignment
+     * @return WfResource The assignee of this assignment
+     * @throws WfException
+     */
+    public WfResource assignee() throws WfException;
+    
+    /** Sets the assignee of this assignment
+     * @param newValue
+     * @throws WfException
+     * @throws InvalidResource
+     */
+    public void setAssignee(WfResource newValue) throws WfException, InvalidResource;
+    
+    
+    /** Mark this assignment as complete
+     * @throws CannotComplete
+     * @throws WfException
+     */
+    public void complete() throws WfException, CannotComplete;
+    
 } // interface WfAssignmentOperations

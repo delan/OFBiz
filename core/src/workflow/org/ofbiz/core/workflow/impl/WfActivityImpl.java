@@ -126,6 +126,11 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
         catch ( TransitionNotAllowed tna ) {
             throw new CannotComplete(tna.getMessage(),tna);
         }
+        
+        Iterator i = getIteratorAssignment();
+        while ( i.hasNext() )
+            ((WfAssignment)i.next()).complete();
+        
         container().activityComplete(this);
     }
     
