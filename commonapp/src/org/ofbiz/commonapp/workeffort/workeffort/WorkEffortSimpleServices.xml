@@ -54,13 +54,17 @@
     </simple-method>
     <simple-method method-name="updateWorkEffort" short-description="Update Work Effort">
         <!-- check permissions before moving on: if update or delete logged in user must be associated OR have the corresponding UPDATE or DELETE permissions -->
-        <field-to-field field-name="workEffortId" map-name="parameters" to-map-name="findWepaMap"/>
+        
+        <!-- temporarily commented out, because users assigned to a project or phase should
+              have the capability to modify status on sub-tasks, right? Hmmmm.... -->
+              
+<!--        <field-to-field field-name="workEffortId" map-name="parameters" to-map-name="findWepaMap"/>
         <field-to-field field-name="partyId" map-name="userLogin" to-map-name="findWepaMap"/>
         <find-by-and entity-name="WorkEffortPartyAssignment" map-name="findWepaMap" list-name="wepaList"/>
         <if-empty field-name="wepaList">
             <check-permission permission="WORKEFFORTMGR" action="_UPDATE"><fail-message message="Security Error: to run updateWorkEffort you must have the WORKEFFORTMGR_UPDATE or WORKEFFORTMGR_ADMIN permission"/></check-permission>
             <check-errors/>
-        </if-empty>
+        </if-empty>-->
         
         <make-value value-name="lookupPKMap" entity-name="WorkEffort"/>
         <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
