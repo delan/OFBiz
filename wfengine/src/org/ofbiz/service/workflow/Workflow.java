@@ -28,6 +28,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2001/08/10 11:07:36  owieland
+ * Change comments DE -> US
+ *
  * Revision 1.1.1.1  2001/08/10 10:33:41  owieland
  * Initial import
  *
@@ -38,6 +41,7 @@
 package org.ofbiz.service.workflow;
 
 
+import javax.ejb.EJBObject;
 import java.util.Collection;
 import java.util.Date;
 
@@ -45,6 +49,7 @@ import java.util.Date;
 
 import java.util.Collection;
 import java.io.Serializable;
+import java.rmi.RemoteException;
 
 /**
  * Interface (facade) for the workflow engine. Currently it is not j2ee aware.
@@ -52,7 +57,7 @@ import java.io.Serializable;
  * @version 1.0
  */
  
-public interface Workflow  extends Serializable  {
+public interface Workflow  extends EJBObject  {
 	
 
 	/**	 
@@ -60,13 +65,13 @@ public interface Workflow  extends Serializable  {
 	 * @param pId Value for  Id
 	 * @param pReason Value for  Reason
 	 */
-	public void abortProcess(WFProcessID pId, String pReason)  throws WFException;
+	public void abortProcess(WFProcessID pId, String pReason)  throws RemoteException,WFException;
 
 	/**	 
 	 * Adds a listener
 	 * @param pListener Value for  Listener
 	 */
-	public void addListener(WFListener pListener) ;
+	public void addListener(WFListener pListener) throws WFException;
 
 	/**	 
 	 * Creates a new workflow process. The invoker must have the right to do that.
@@ -74,28 +79,28 @@ public interface Workflow  extends Serializable  {
 	 * @param pName Value for  Name
 	 * @return WFProcessID
 	 */
-	public WFProcessID createProcess(WFPrincipal pInitiator, String pName)  throws WFException;
+	public WFProcessID createProcess(WFPrincipal pInitiator, String pName)  throws RemoteException,WFException;
 
 	/**	 
 	 * Method getActiveProcesses
 	 * @param pUser Value for  User
 	 * @return Collection
 	 */
-	public Collection getActiveProcesses(WFPrincipal pUser) ;
+	public Collection getActiveProcesses(WFPrincipal pUser) throws WFException;
 
 	/**	 
 	 * Method getProcesses
 	 * @param pUser Value for  User
 	 * @return Collection
 	 */
-	public Collection getProcesses(WFPrincipal pUser) ;
+	public Collection getProcesses(WFPrincipal pUser)  throws WFException;
 
 	/**	 
 	 * Returns the worklist of the user
 	 * @param pUser Value for  User
 	 * @return Collection
 	 */
-	public Collection getWorklist(WFPrincipal pUser) ;
+	public Collection getWorklist(WFPrincipal pUser)  throws WFException;
 
 	/**	 
 	 * Returns the worklist of the user
@@ -103,7 +108,7 @@ public interface Workflow  extends Serializable  {
 	 * @param pFilter Value for  Filter
 	 * @return Collection
 	 */
-	public Collection getWorklist(WFPrincipal pUser, WFActivityFilter pFilter) ;
+	public Collection getWorklist(WFPrincipal pUser, WFActivityFilter pFilter)  throws WFException;
 
 	/**	 
 	 * Logs in a user and returns a user session object
@@ -111,27 +116,27 @@ public interface Workflow  extends Serializable  {
 	 * @param pPassword Value for  Password
 	 * @return WFPrincipal
 	 */
-	public WFPrincipal login(String pUser, String pPassword) ;
+	public WFPrincipal login(String pUser, String pPassword)  throws WFException;
 
 	/**	 
 	 * Removes an existing listener
 	 * @param pListener Value for  Listener
 	 */
-	public void removeListener(WFListener pListener) ;
+	public void removeListener(WFListener pListener)  throws WFException;
 
 	/**	 
 	 * Resumes a previous suspended process. If worng state, an exception is thrown
 	 * @param pUser User session object
 	 * @param pId Id of suspended activity
 	 */
-	public void resumeProcess(WFPrincipal pUser, String pId)  throws WFException;
+	public void resumeProcess(WFPrincipal pUser, String pId)   throws WFException;
 
 	/**	 
 	 * Suspends a process.
 	 * @param pActivity Aktivität (bzw. Prozess), der suspendiert werden soll
 	 * @param pResumeDate Date, when the engine should resume the activity. If null, the activity must be manually resumed
 	 */
-	public void suspendProcess(WFActivity pActivity, Date pResumeDate)  throws WFException;
+	public void suspendProcess(WFActivity pActivity, Date pResumeDate)   throws WFException;
 
 	/**	 
 	 * Marks the given activity as 'completed' and returns the next activity, if unique and the same user can perform this activity. Otherwise null
@@ -139,7 +144,7 @@ public interface Workflow  extends Serializable  {
 	 * @param pContext Value for  Context
 	 * @return WFActivity
 	 */
-	public WFActivity updateProcess(WFProcessID pId, WFContext pContext)  throws WFException;
+	public WFActivity updateProcess(WFProcessID pId, WFContext pContext)   throws WFException;
 
 	/**	 
 	 * Markiert die aktuelle Aktivität als beendet und liefert die nächste Aktivität. Wenn es keine weiteren Aktivitäten mehr gibt oder der Prozess sich aufteilt, wird null zurückgegeben.
@@ -150,14 +155,14 @@ Zusätzlich kann hier die Aktivität vorgegeben werden (notwendig bei Verzweigunge
 	 * @param pActivity Value for  Activity
 	 * @return WFActivity
 	 */
-	public WFActivity updateProcess(WFProcessID pId, WFContext pContext, WFActivity pActivity) ;
+	public WFActivity updateProcess(WFProcessID pId, WFContext pContext, WFActivity pActivity)  throws WFException;
 
 	/**	 
 	 * Method getRealName
 	 * @param pUser Value for  User
 	 * @return String
 	 */
-	public String getRealName(WFPrincipal pUser) ;
+	public String getRealName(WFPrincipal pUser)  throws WFException;
 
 	/**	 
 	 * Method getHistory
@@ -165,14 +170,14 @@ Zusätzlich kann hier die Aktivität vorgegeben werden (notwendig bei Verzweigunge
 	 * @param pActivity Value for  Activity
 	 * @return Collection
 	 */
-	public Collection getHistory(WFPrincipal pUser, WFActivity pActivity) ;
+	public Collection getHistory(WFPrincipal pUser, WFActivity pActivity)  throws WFException;
 
 	/**	 
 	 * Method getGroupName
 	 * @param pUser Value for  User
 	 * @return String
 	 */
-	public String getGroupName(WFPrincipal pUser) ;
+	public String getGroupName(WFPrincipal pUser)  throws WFException;
 
 
 }

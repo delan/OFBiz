@@ -28,6 +28,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2001/08/10 11:16:41  owieland
+ * Change comments DE -> US
+ *
  * Revision 1.1.1.1  2001/08/10 10:33:40  owieland
  * Initial import
  *
@@ -37,9 +40,7 @@
  */
 package org.ofbiz.service.workflow;
 
-
-
-
+import java.rmi.RemoteException;
 
 
 /**
@@ -48,7 +49,7 @@ package org.ofbiz.service.workflow;
  * @version 1.0
  */
 
-public class WFException extends Exception  {
+public class WFException extends RemoteException  {
 
 	/**
 	 * Constructor with error message

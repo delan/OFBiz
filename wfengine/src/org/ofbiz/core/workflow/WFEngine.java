@@ -28,6 +28,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2001/08/10 11:16:41  owieland
+ * Change comments DE -> US
+ *
  * Revision 1.1  2001/08/10 10:43:15  owieland
  * Add missing files from import
  *
@@ -43,6 +46,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Properties;
+import java.rmi.RemoteException;
+
 import org.ofbiz.service.workflow.WFActivity;
 import org.ofbiz.service.workflow.WFActivityFilter;
 import org.ofbiz.service.workflow.WFContext;
@@ -53,6 +58,10 @@ import org.ofbiz.service.workflow.WFPrincipal;
 import org.ofbiz.service.workflow.WFProcessID;
 import org.ofbiz.service.workflow.Workflow;
 
+import javax.ejb.SessionBean;
+import javax.ejb.EJBException;
+import javax.ejb.SessionContext;
+
 
 
 /**
@@ -61,21 +70,22 @@ import org.ofbiz.service.workflow.Workflow;
  * @version 1.0
  */
 
-public class WFEngine implements Workflow {
+public class WFEngine implements SessionBean {
 
 	
 	// Attribute instance 'properties'
 	private Properties properties;
-	
 	// Attribute instance 'processDescriptions'
 	private HashMap processDescriptions;
-	
-	
-		
+    // SessionContext
+    private SessionContext context;
+
+
+
 	/**
 	 * Empty constructor
 	 */
-	WFEngine() {
+	public WFEngine() {
 	}
 
 	/**
@@ -1126,7 +1136,30 @@ Zusätzlich kann hier die Aktivität vorgegeben werden (notwendig bei Verzweigunge
 	public void unlinkSuspendedProcesses(WFProcess pSuspendedProcesses) {
 		if (suspendedProcesses == null) return;suspendedProcesses.remove(pSuspendedProcesses);
 		notifyRemoveSuspendedProcesses( pSuspendedProcesses ); // notify ourselves
-	}	
+	}
+
+    /*
+     * EJB methods
+     */
+    public void ejbActivate() throws EJBException, RemoteException {
+        WFLogger.logDebug(this, "ejbActivate");
+    }
+
+    public void ejbPassivate() throws EJBException, RemoteException {
+        WFLogger.logDebug(this, "ejbPassivate");
+    }
+
+    public void ejbRemove() throws EJBException, RemoteException {
+        WFLogger.logDebug(this, "ejbRemove");
+    }
+
+    public void setSessionContext(SessionContext context) throws EJBException, RemoteException {
+         this.context = context;
+    }
+
+    public void ejbCreate() {
+        WFLogger.logDebug(this, "ejbCreate");
+    }
 
 	/**
 	 * String representation of WFEngine
@@ -1135,6 +1168,8 @@ Zusätzlich kann hier die Aktivität vorgegeben werden (notwendig bei Verzweigunge
 		StringBuffer lRet = new StringBuffer("WFEngine");	
 		return lRet.toString();
 	}
+
+
 }
 
 

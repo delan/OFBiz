@@ -28,6 +28,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2001/08/10 11:16:41  owieland
+ * Change comments DE -> US
+ *
  * Revision 1.1  2001/08/10 10:43:15  owieland
  * Add missing files from import
  *
@@ -54,7 +57,7 @@ public class WFLogger implements Serializable  {
 
 	
 	// Attribute instance 'level'
-	private WFMessageType level;
+	private static WFMessageType level;
 	
 	
 		
@@ -88,7 +91,7 @@ public class WFLogger implements Serializable  {
 	 * Threshold for output messages. With 
 	 * @param pLevel new value for attribute level
 	 */
-	public void setLevel(WFMessageType pLevel)  {
+	public static void setLevel(WFMessageType pLevel)  {
 		if (level == pLevel) return;		
 		if ( !notifyAttributeChangeLevel( pLevel ) ) return;
 		level = pLevel;
@@ -100,7 +103,7 @@ public class WFLogger implements Serializable  {
 	 * @param pLevel New Value for attribute 'Level'
 	 * @return true, if change accepted, otherwise false. Default is true
 	 */
-	private boolean notifyAttributeChangeLevel(WFMessageType pLevel) {		
+	private static boolean notifyAttributeChangeLevel(WFMessageType pLevel) {
 		return true;
 	}
 	
@@ -110,7 +113,7 @@ public class WFLogger implements Serializable  {
 	 * @param pType Severity level
 	 * @param pObject Object that emitted this message
 	 */
-	public void log(String pMessage, WFMessageType pType, Object pObject) {				
+	public static void log(String pMessage, WFMessageType pType, Object pObject) {
 		// !!NO_CODE!!
 		/* NULL */;
 	}
@@ -120,7 +123,7 @@ public class WFLogger implements Serializable  {
 	 * @param pSender Value for parameter Sender
 	 * @param pMessage Value for parameter Message
 	 */
-	public void logDebug(Object pSender, String pMessage) {				
+	public static void logDebug(Object pSender, String pMessage) {
 		// !!NO_CODE!!
 		/* NULL */;
 	}
@@ -130,7 +133,7 @@ public class WFLogger implements Serializable  {
 	 * @param pSender Value for parameter Sender
 	 * @param pMessage Value for parameter Message
 	 */
-	public void logInfo(Object pSender, String pMessage) {				
+	public static void logInfo(Object pSender, String pMessage) {
 		// !!NO_CODE!!
 		/* NULL */;
 	}
@@ -140,7 +143,7 @@ public class WFLogger implements Serializable  {
 	 * @param pSender Value for parameter Sender
 	 * @param pMessage Value for parameter Message
 	 */
-	public void logWarning(Object pSender, String pMessage) {				
+	public static void logWarning(Object pSender, String pMessage) {
 		// !!NO_CODE!!
 		/* NULL */;
 	}
@@ -150,7 +153,7 @@ public class WFLogger implements Serializable  {
 	 * @param pSender Value for parameter Sender
 	 * @param pMessage Value for parameter Message
 	 */
-	public void logError(Object pSender, String pMessage) {				
+	public static void logError(Object pSender, String pMessage) {
 		// !!NO_CODE!!
 		/* NULL */;
 	}
@@ -160,7 +163,7 @@ public class WFLogger implements Serializable  {
 	 * @param pSender Value for parameter Sender
 	 * @param pMessage Value for parameter Message
 	 */
-	public void logFatal(Object pSender, String pMessage) {				
+	public static void logFatal(Object pSender, String pMessage) {
 		// !!NO_CODE!!
 		/* NULL */;
 	}
@@ -169,19 +172,11 @@ public class WFLogger implements Serializable  {
 	 * Logs an exception with stacktrace
 	 * @param pException Exception to log
 	 */
-	public void logException(Throwable pException) {				
+	public static void logException(Throwable pException) {
 		// !!NO_CODE!!
 		/* NULL */;
 	}
-	
 
-	/**
-	 * String representation of WFLogger
-	 */
-	public String toString() {
-		StringBuffer lRet = new StringBuffer("WFLogger");	
-		return lRet.toString();
-	}
 }
 
 
