@@ -639,6 +639,7 @@
       <field name="authCode" type="short-varchar"></field>
       <field name="authFlag" type="short-varchar"></field>
       <field name="authMessage" type="long-varchar"></field>
+      <field name="authDate" type="date-time"></field>
       <field name="statusId" type="id"></field>
       <prim-key field="orderPaymentPreferenceId"/>
       <relation type="one" fk-name="ORDER_PMPRF_OHDR" rel-entity-name="OrderHeader">
