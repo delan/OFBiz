@@ -1,5 +1,5 @@
 /*
- * $Id: SqlJdbcUtil.java,v 1.24 2004/07/17 07:05:07 doogie Exp $
+ * $Id: SqlJdbcUtil.java,v 1.25 2004/07/21 06:37:22 doogie Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -50,7 +50,7 @@ import org.ofbiz.entity.GenericModelException;
 import org.ofbiz.entity.GenericNotImplementedException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityConditionParam;
-import org.ofbiz.entity.condition.OrderByItem;
+import org.ofbiz.entity.condition.OrderByList;
 import org.ofbiz.entity.config.DatasourceInfo;
 import org.ofbiz.entity.datasource.GenericDAO;
 import org.ofbiz.entity.model.ModelEntity;
@@ -68,7 +68,7 @@ import org.ofbiz.entity.model.ModelViewEntity;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jdonnerstag@eds.de">Juergen Donnerstag</a>
  * @author     <a href="mailto:peterm@miraculum.com">Peter Moon</a>
- * @version    $Revision: 1.24 $
+ * @version    $Revision: 1.25 $
  * @since      2.0
  */
 public class SqlJdbcUtil {
@@ -363,46 +363,19 @@ public class SqlJdbcUtil {
         return "";
     }
 
-    public static String makeOrderByClause(ModelEntity modelEntity, List orderBy, DatasourceInfo datasourceInfo) {
+    public static String makeOrderByClause(ModelEntity modelEntity, List orderBy, DatasourceInfo datasourceInfo) throws GenericModelException {
         return makeOrderByClause(modelEntity, orderBy, false, datasourceInfo);
     }
 
-    public static String makeOrderByClause(ModelEntity modelEntity, List orderBy, boolean includeTablenamePrefix, DatasourceInfo datasourceInfo) {
+    public static String makeOrderByClause(ModelEntity modelEntity, List orderBy, boolean includeTablenamePrefix, DatasourceInfo datasourceInfo) throws GenericModelException {
         StringBuffer sql = new StringBuffer("");
         String fieldPrefix = includeTablenamePrefix ? (modelEntity.getTableName(datasourceInfo) + ".") : "";
 
         if (orderBy != null && orderBy.size() > 0) {
             if (Debug.verboseOn()) Debug.logVerbose("Order by list contains: " + orderBy.size() + " entries.", module);
-            List orderByStrings = new LinkedList();
-
-            for (int oi = 0; oi < orderBy.size(); oi++) {
-                OrderByItem orderByItem = new OrderByItem((String) orderBy.get(oi));
-                String keyName = orderByItem.field;
-
-                for (int fi = 0; fi < modelEntity.getFieldsSize(); fi++) {
-                    ModelField curField = modelEntity.getField(fi);
-                    String fieldName = curField.getName();
-
-                    if (fieldName.equals(keyName)) {
-                        orderByItem.field = curField.getColName();
-                        orderByStrings.add(orderByItem.toString(fieldPrefix));
-                    }
-                }
-            }
-
-            if (orderByStrings.size() > 0) {
-                sql.append(" ORDER BY ");
-
-                Iterator iter = orderByStrings.iterator();
-
-                while (iter.hasNext()) {
-                    String curString = (String) iter.next();
-
-                    sql.append(curString);
-                    if (iter.hasNext())
-                        sql.append(", ");
-                }
-            }
+            OrderByList orderByList = new OrderByList(orderBy);
+            orderByList.checkOrderBy(modelEntity);
+            orderByList.makeOrderByString(sql, modelEntity, includeTablenamePrefix, datasourceInfo);
         }
         if (Debug.verboseOn()) Debug.logVerbose("makeOrderByClause: " + sql.toString(), module);
         return sql.toString();
