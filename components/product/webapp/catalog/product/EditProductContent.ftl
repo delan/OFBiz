@@ -145,7 +145,7 @@ ${pages.get("/product/ProductTabBar.ftl")}
             </td>
             <td>&nbsp;</td>
             <td width="80%" colspan="4" valign=top>
-            <input type="text" class="inputBox" name="smallImageUrl" value="${(product.smallImageUrl)?default(imageNameSmall + '.jpg')}" size="60" maxlength="255">
+            <input type="text" class="inputBox" name="smallImageUrl" value="${(product.smallImageUrl)?default('')}" size="60" maxlength="255">
             <#if productId?has_content>
                 <div>
                 <span class="tabletext">${uiLabelMap.ProductInsertDefaultImageUrl}: </span>
@@ -165,7 +165,7 @@ ${pages.get("/product/ProductTabBar.ftl")}
             </td>
             <td>&nbsp;</td>
             <td width="80%" colspan="4" valign=top>
-            <input type="text" class="inputBox" name="mediumImageUrl" value="${(product.mediumImageUrl)?default(imageNameMedium + '.jpg')}" size="60" maxlength="255">
+            <input type="text" class="inputBox" name="mediumImageUrl" value="${(product.mediumImageUrl)?default('')}" size="60" maxlength="255">
             <#if productId?has_content>
                 <div>
                 <span class="tabletext">${uiLabelMap.ProductInsertDefaultImageUrl}: </span>
@@ -185,7 +185,7 @@ ${pages.get("/product/ProductTabBar.ftl")}
             </td>
             <td>&nbsp;</td>
             <td width="80%" colspan="4" valign=top>
-            <input type="text" class="inputBox" name="largeImageUrl" value="${(product.largeImageUrl)?default(imageNameLarge + '.jpg')}" size="60" maxlength="255">
+            <input type="text" class="inputBox" name="largeImageUrl" value="${(product.largeImageUrl)?default('')}" size="60" maxlength="255">
             <#if productId?has_content>
                 <div>
                 <span class="tabletext">${uiLabelMap.ProductInsertDefaultImageUrl}: </span>
@@ -205,7 +205,7 @@ ${pages.get("/product/ProductTabBar.ftl")}
             </td>
             <td>&nbsp;</td>
             <td width="80%" colspan="4" valign=top>
-            <input type="text" class="inputBox" name="detailImageUrl" value="${(product.detailImageUrl)?default(imageNameDetail + '.jpg')}" size="60" maxlength="255">
+            <input type="text" class="inputBox" name="detailImageUrl" value="${(product.detailImageUrl)?default('')}" size="60" maxlength="255">
             <#if productId?has_content>
                 <div>
                 <span class="tabletext">${uiLabelMap.ProductInsertDefaultImageUrl}: </span>
