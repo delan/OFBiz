@@ -151,6 +151,7 @@
                     <TD NOWRAP align=right><div class='tabletext'><b>Quantity Purchased</b></div></TD>                    
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
+                    <td>&nbsp;</td>
                   </TR>
 
                   <#list shoppingListItems as listItem>  
@@ -159,7 +160,7 @@
                       <input type="hidden" name="shoppingListId" value="${listItem.shoppingListId}">
                       <input type="hidden" name="shoppingListItemSeqId" value="${listItem.shoppingListItemSeqId}">
                       
-                      <tr><td colspan="7"><hr class='sepbar'></td></tr>
+                      <tr><td colspan="6"><hr class='sepbar'></td></tr>
                       <tr>
                         <td>
                           <div class='tabletext'>                    
@@ -177,6 +178,7 @@
                         </td>                      
                         <td nowrap align="center"><div class='tabletext'><a href="javascript:document.listform_${listItem.shoppingListItemSeqId}.submit();" class="buttontext">[Update]</a></div></td>
                         <td nowrap align="center"><div class='tabletext'><a href="<@ofbizUrl>/removeFromShoppingList?shoppingListId=${listItem.shoppingListId}&shoppingListItemSeqId=${listItem.shoppingListItemSeqId}</@ofbizUrl>" class="buttontext">[Remove]</a></div></td>
+                        <td nowrap align="center"><div class='tabletext'><a href="<@ofbizUrl>/additem<#if requestAttributes._CURRENT_VIEW_?exists>/${requestAttributes._CURRENT_VIEW_}</#if>?shoppingListId=${listItem.shoppingListId}&quantity=1&add_product_id=${listItem.productId}</@ofbizUrl>" class="buttontext">[Add 1 To Cart]</a></div></td>
                       </tr>
                     </form>
                   </#list>
