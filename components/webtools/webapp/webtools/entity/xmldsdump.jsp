@@ -164,7 +164,7 @@
       <h3>Results:</h3>
     
     
-      <%if(filename != null && filename.length() > 0 && entityName != null && entityName.length > 0) {%>
+      <%if(filename != null && filename.length() > 0 && numberOfEntities > 0) {%>
         <div>Wrote XML for all data in <%=numberOfEntities%> entities.</div>
         <div>Wrote <%=numberWritten%> records to XML file <%=filename%></div>
       <%} else {%>
