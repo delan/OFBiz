@@ -36,7 +36,6 @@ productCategoryId = request.getAttribute("productCategoryId");
 if (productCategoryId == null) 
     productCategoryId = requestParameters.get("category_id");
 
-Debug.logInfo("productCategoryId: " + productCategoryId);
 category = delegator.findByPrimaryKeyCache("ProductCategory", UtilMisc.toMap("productCategoryId", productCategoryId));
 if (category != null) {
     if (category.get("detailTemplate") != null) 
