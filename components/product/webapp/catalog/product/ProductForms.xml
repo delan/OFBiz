@@ -210,10 +210,6 @@
             target="addContentToProduct" title="Add ProductContent (select Content Id, enter From Date):"
             default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
         <auto-fields-entity entity-name="ProductContent"/>
-        <field name="useDaysLimit"><hidden/></field>
-        <field name="useCountLimit"><hidden/></field>
-        <field name="purchaseThruDate"><hidden/></field>
-        <field name="purchaseFromDate"><hidden/></field>
         <field name="productId" map-name="product"><hidden/></field>
         <field name="productContentTypeId" widget-style="selectBox">
             <drop-down>
@@ -222,8 +218,29 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="description"><text size="40"/></field>
-        <field name="submitButton" title="Prepare create" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="Add" widget-style="standardSubmit"><submit button-type="button"/></field>
+    </form>
+    <form name="PrepareAddProductContentAssoc" type="single"
+            target="prepareAddContentToProduct" title="Add ProductContent (select Content Id, enter From Date):"
+            default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        <auto-fields-entity entity-name="ProductContent"/>
+        <field name="contentId"><ignored/></field>
+        <field name="useDaysLimit"><ignored/></field>
+        <field name="useCountLimit"><ignored/></field>
+        <field name="purchaseThruDate"><ignored/></field>
+        <field name="purchaseFromDate"><ignored/></field>
+        <field name="fromDate"><ignored/></field>
+        <field name="thruDate"><ignored/></field>
+        <field name="productId" map-name="product"><hidden/></field>
+        <field name="productContentTypeId" widget-style="selectBox">
+            <drop-down>
+                <entity-options entity-name="ProductContentType" description="${description}">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <!-- <field name="description"><text size="40"/></field> -->
+        <field name="submitButton" title="Prepare Create" widget-style="standardSubmit"><submit button-type="button"/></field>
     </form>
     <form name="UpdateProductContentAssoc" type="list"
             target="updateContentToProduct" title="" list-name="productContentDatas"
@@ -303,7 +320,7 @@
         <auto-fields-entity entity-name="ProductContent" map-name="productContentData"/>
         <field name="description" map-name="content"><text size="40"/></field>
         <field name="localeString" map-name="content"><text size="40"/></field>
-        <field use-when="contentId == null" name="contentId" tooltip="Optional"><text maxlength="20"/></field>
+        <field use-when="contentId == null" name="contentId"><ignored/></field>
         <field use-when="contentId != null" name="contentId" tooltip="This cannot be changed without re-creating the product content association." map-name="productContentData" ><display/></field>
         <field name="text" map-name="textData" widget-style="textAreaBox" ><textarea cols="60" rows="7"/></field>
         <field name="textDataResourceId" map-name="textData"><hidden/></field>

@@ -22,7 +22,7 @@
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Brad Steiner (bsteiner@thehungersite.com)
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Revision: 1.5 $
+ *@version    $Revision: 1.6 $
  *@since      2.2
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -64,23 +64,28 @@ ${pages.get("/product/ProductTabBar.ftl")}
         <h3>${uiLabelMap.ProductCouldNotFindProduct} "${productId}".</h3>
     <#else>
         <table border="1" cellpadding="2" cellspacing="0" width="100%">
-        <tr class="tableheadtext"><td>Content ID</td><td>Type</td><td>From</td><td>Thru</td><td>Purchase From</td><td>Purchase Thru</td><td>Use Count</td><td>Use Days</td><td>&nbsp;</td></tr>
+        <tr class="tableheadtext"><td>Content</td><td>Type</td><td>From</td><td>Thru</td><td>Purchase From</td><td>Purchase Thru</td><td>Use Count</td><td>Use Days</td><td>&nbsp;</td></tr>
         <#list productContentList as entry>
             <#assign productContent=entry.productContent/>
+            <#assign productContentType=productContent.getRelatedOneCache("ProductContentType")/>
             <tr class="tabletext">
                 <td><a href="<@ofbizUrl>/EditProductContentContent?productId=${productContent.productId}&amp;contentId=${productContent.contentId}&amp;productContentTypeId=${productContent.productContentTypeId}&amp;fromDate=${productContent.fromDate}</@ofbizUrl>" class="buttontext">${entry.content.description?default("[No description]")} [${entry.content.contentId}]</td>
-                <td>${entry.productContent.productContentTypeId}</td>
-                <td>${entry.productContent.fromDate?default("N/A")}</td>
-                <td>${entry.productContent.thruDate?default("N/A")}</td>
-                <td>${entry.productContent.purchaseFromDate?default("N/A")}</td>
-                <td>${entry.productContent.purchaseThruDate?default("N/A")}</td>
-                <td>${entry.productContent.useCountLimit?default("N/A")}</td>
-                <td>${entry.productContent.useDaysLimit?default("N/A")}</td>
+                <td>${productContentType.description?default(productContent.productContentTypeId)}</td>
+                <td>${productContent.fromDate?default("N/A")}</td>
+                <td>${productContent.thruDate?default("N/A")}</td>
+                <td>${productContent.purchaseFromDate?default("N/A")}</td>
+                <td>${productContent.purchaseThruDate?default("N/A")}</td>
+                <td>${productContent.useCountLimit?default("N/A")}</td>
+                <td>${productContent.useDaysLimit?default("N/A")}</td>
                 <td><a href="<@ofbizUrl>/removeContentFromProduct?productId=${productContent.productId}&amp;contentId=${productContent.contentId}&amp;productContentTypeId=${productContent.productContentTypeId}&amp;fromDate=${productContent.fromDate}</@ofbizUrl>" class="buttontext">[Delete]</a></td>
              </tr>
         </#list>
         </table>
-        <div class="head2">Create/Add Product Content</div>
+        <div class="head2">Create New Product Content</div>
+        <#if productId?has_content && product?has_content>
+            ${prepareAddProductContentWrapper.renderFormString()}
+        </#if>
+        <div class="head2">Add Content to Product</div>
         <#if productId?has_content && product?has_content>
             ${addProductContentWrapper.renderFormString()}
         </#if>

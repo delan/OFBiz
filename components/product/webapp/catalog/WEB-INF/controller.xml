@@ -375,9 +375,15 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditProductContentContent"/>
     </request-map>
-    <request-map uri="addContentToProduct">
+    <request-map uri="prepareAddContentToProduct">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditProductContentContent"/>
+    </request-map>
+    <request-map uri="addContentToProduct">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createProductContent"/>
+        <response name="success" type="view" value="EditProductContent"/>
+        <response name="error" type="view" value="EditProductContent"/>
     </request-map>
     <request-map uri="updateContentToProduct">
         <security https="true" auth="true"/>
