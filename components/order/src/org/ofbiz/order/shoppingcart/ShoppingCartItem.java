@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCartItem.java,v 1.18 2003/11/26 10:07:22 jonesde Exp $
+ * $Id: ShoppingCartItem.java,v 1.19 2003/11/27 17:46:12 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -47,7 +47,7 @@ import org.ofbiz.service.ModelService;
  *
  * @author     <a href="mailto:jaz@ofbiz.org.com">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.18 $
+ * @version    $Revision: 1.19 $
  * @since      2.0
  */
 public class ShoppingCartItem implements java.io.Serializable {
@@ -91,7 +91,6 @@ public class ShoppingCartItem implements java.io.Serializable {
      * NOTE: This method will get the product entity and check to make sure it can be purchased.
      *
      * @param cartLocation The location to place this item; null will place at the end
-     * @param delegator GenericDelegator used to lookup the product
      * @param productId The primary key of the product being added
      * @param quantity The quantity to add
      * @param additionalProductFeatureAndAppls Product feature/appls map
@@ -212,7 +211,6 @@ public class ShoppingCartItem implements java.io.Serializable {
      * NOTE: This is only for non-product items; items without a product entity (work items, bulk items, etc)
      *
      * @param cartLocation The location to place this item; null will place at the end
-     * @param delegator Delegator used for this item
      * @param itemType The OrderItemTypeId for the item being added
      * @param itemDescription The optional description of the item
      * @param productCategoryId The optional category the product *will* go in
@@ -661,7 +659,7 @@ public class ShoppingCartItem implements java.io.Serializable {
         }
     }
 
-    /** Returns the item's size (height + width + depth) */
+    /** Returns the item's size (height * width * depth) */
     public double getSize() {
         if (_product != null) {
             Double height = getProduct().getDouble("productHeight");
@@ -682,7 +680,7 @@ public class ShoppingCartItem implements java.io.Serializable {
             if (width == null) width = new Double(0);
             if (depth == null) depth = new Double(0);
 
-            double size = height.doubleValue() + width.doubleValue() + depth.doubleValue();
+            double size = height.doubleValue() * width.doubleValue() * depth.doubleValue();
             return size;
         } else {
             // non-product items have 0 size
