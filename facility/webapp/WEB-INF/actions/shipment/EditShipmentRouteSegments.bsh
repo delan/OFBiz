@@ -52,6 +52,10 @@ if (shipment != null) {
             shipmentRouteSegmentData.put("carrierPerson", shipmentRouteSegment.getRelatedOne("CarrierPerson"));
             shipmentRouteSegmentData.put("carrierPartyGroup", shipmentRouteSegment.getRelatedOne("CarrierPartyGroup"));
             shipmentRouteSegmentData.put("shipmentPackageRouteSegs", shipmentRouteSegment.getRelated("ShipmentPackageRouteSeg"));
+            shipmentRouteSegmentData.put("carrierServiceStatusItem", shipmentRouteSegment.getRelatedOne("CarrierServiceStatusItem"));
+            shipmentRouteSegmentData.put("currencyUom", shipmentRouteSegment.getRelatedOne("CurrencyUom"));
+            shipmentRouteSegmentData.put("billingWeightUom", shipmentRouteSegment.getRelatedOne("BillingWeightUom"));
+            shipmentRouteSegmentData.put("carrierServiceStatusValidChangeToDetails", delegator.findByAnd("StatusValidChangeToDetail", UtilMisc.toMap("statusId", shipmentRouteSegment.get("carrierServiceStatusId")), UtilMisc.toList("sequenceId")));
             shipmentRouteSegmentDatas.add(shipmentRouteSegmentData);
         }
     }
@@ -59,6 +63,8 @@ if (shipment != null) {
     shipmentPackages = shipment.getRelated("ShipmentPackage", null, UtilMisc.toList("shipmentPackageSeqId"));
     facilities = delegator.findAll("Facility", UtilMisc.toList("facilityName"));
     shipmentMethodTypes = delegator.findAll("ShipmentMethodType", UtilMisc.toList("description"));
+    weightUoms = delegator.findByAnd("Uom", UtilMisc.toMap("uomTypeId", "WEIGHT_MEASURE"));
+    currencyUoms = delegator.findByAnd("Uom", UtilMisc.toMap("uomTypeId", "CURRENCY_MEASURE"));
     
     carrierPartyRoles = delegator.findByAnd("PartyRole", UtilMisc.toMap("roleTypeId", "CARRIER"));
     carrierPartyDatas = new LinkedList();
@@ -78,6 +84,8 @@ if (shipment != null) {
     context.put("shipmentPackages", shipmentPackages);
     context.put("facilities", facilities);
     context.put("shipmentMethodTypes", shipmentMethodTypes);
+    context.put("weightUoms", weightUoms);
+    context.put("currencyUoms", currencyUoms);
     context.put("carrierPartyDatas", carrierPartyDatas);
 }
 
