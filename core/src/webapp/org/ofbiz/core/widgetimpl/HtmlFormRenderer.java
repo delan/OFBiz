@@ -500,17 +500,21 @@ public class HtmlFormRenderer implements FormStringRenderer {
      */
     public void renderHiddenField(StringBuffer buffer, Map context, HiddenField hiddenField) {
         ModelFormField modelFormField = hiddenField.getModelFormField();
-        this.renderHiddenField(buffer, context, modelFormField);
+        String value = hiddenField.getValue(context);
+        this.renderHiddenField(buffer, context, modelFormField, value);
     }
     
     public void renderHiddenField(StringBuffer buffer, Map context, ModelFormField modelFormField) {
+        String value = modelFormField.getEntry(context);
+        this.renderHiddenField(buffer, context, modelFormField, value);
+    }
+    public void renderHiddenField(StringBuffer buffer, Map context, ModelFormField modelFormField, String value) {
         buffer.append("<input type=\"hidden\"");
         
         buffer.append(" name=\"");
         buffer.append(modelFormField.getParameterName());
         buffer.append('"');
         
-        String value = modelFormField.getEntry(context);
         if (UtilValidate.isNotEmpty(value)) {
             buffer.append(" value=\"");
             buffer.append(value);

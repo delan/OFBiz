@@ -105,6 +105,15 @@ public class HtmlFormWrapper {
         this.context.put("isError", new Boolean(isError));
     }
     
+    public boolean getIsError() {
+        Boolean isErrorBoolean = (Boolean) this.context.get("isError");
+        if (isErrorBoolean == null) {
+            return false;
+        } else {
+            return isErrorBoolean.booleanValue();
+        }
+    }
+    
     public void setFormOverrideName(String formName) {
         this.context.put("formName", formName);
     }

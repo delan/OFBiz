@@ -1371,6 +1371,8 @@ public class ModelFormField {
     }
 
     public static class HiddenField extends FieldInfo {
+        protected FlexibleStringExpander value;
+
         protected HiddenField() { super(); }
 
         public HiddenField(ModelFormField modelFormField) {
@@ -1379,10 +1381,23 @@ public class ModelFormField {
 
         public HiddenField(Element element, ModelFormField modelFormField) {
             super(element, modelFormField);
+            this.setValue(element.getAttribute("value"));
         }
 
         public void renderFieldString(StringBuffer buffer, Map context, FormStringRenderer formStringRenderer) {
             formStringRenderer.renderHiddenField(buffer, context, this);
+        }
+
+        public String getValue(Map context) {
+            if (!this.value.isEmpty()) {
+                return this.value.expandString(context);
+            } else {
+                return modelFormField.getEntry(context);
+            }
+        }
+
+        public void setValue(String string) {
+            this.value = new FlexibleStringExpander(string);
         }
     }
 

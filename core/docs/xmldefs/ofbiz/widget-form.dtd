@@ -226,5 +226,8 @@
 <!ELEMENT reset EMPTY>
 
 <!ELEMENT hidden EMPTY>
+<!ATTLIST hidden
+    value CDATA #IMPLIED
+>
 <!ELEMENT ignored EMPTY>
 
