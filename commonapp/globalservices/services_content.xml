@@ -25,6 +25,12 @@
     </service>
 
 	<!-- WebSiteRole services -->
+	<service name="webSiteRoleInterface" engine="interface" location="" invoke="">
+	    <description>WebSite Role Interface</description>
+	    <auto-attributes entity-name="WebSiteRole" include="all" mode="IN" optional="false"/>
+	    <override name="thruDate" optional="true"/>
+	    <override name="sequenceNum" optional="true"/>
+	</service>	
     <service name="addWebSiteRole" engine="simple"
                 location="org/ofbiz/commonapp/content/website/WebSiteServices.xml" invoke="addWebSiteRole" auth="true">
         <description>Add WebSite Role</description>
@@ -38,20 +44,20 @@
     <service name="updateWebSiteRole" engine="simple"
                 location="org/ofbiz/commonapp/content/website/WebSiteServices.xml" invoke="updateWebSiteRole" auth="true">
         <description>Add WebSite Role</description>
+        <implements service="webSiteRoleInterface"/>
+        <!--
         <attribute name="partyId" type="String" mode="IN" optional="false"/>
         <attribute name="roleTypeId" type="String" mode="IN" optional="false"/>
         <attribute name="webSiteId" type="String" mode="IN" optional="false"/>
         <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
         <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="sequenceNum" type="Long" mode="IN" optional="true"/>
+        -->
     </service>
     <service name="removeWebSiteRole" engine="simple"
                 location="org/ofbiz/commonapp/content/website/WebSiteServices.xml" invoke="removeWebSiteRole" auth="true">
         <description>Remove WebSite Role</description>
-        <attribute name="partyId" type="String" mode="IN" optional="false"/>
-        <attribute name="roleTypeId" type="String" mode="IN" optional="false"/>
-        <attribute name="webSiteId" type="String" mode="IN" optional="false"/>
-        <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
+        <auto-attributes entity-name="WebSiteRole" include="pk" mode="IN" optional="false"/>     
     </service>
     
     <!-- WebSite Payment Setting Services -->
