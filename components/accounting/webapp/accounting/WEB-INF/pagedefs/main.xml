@@ -2,5 +2,6 @@
 <page>
     <template>main</template> 
     <property name="title">Main Page</property>
+    <property name="title.property">PageTitleMain</property>
     <property name="headerItem">main</property>
 </page>

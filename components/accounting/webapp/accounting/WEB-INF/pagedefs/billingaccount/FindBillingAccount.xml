@@ -2,6 +2,7 @@
 <page>
     <template>main</template>
     <property name="title">Find Billing Account(s)</property>
+    <property name="title.property">PageTitleFindBillingAccount</property>
     <property name="headerItem">billingaccount</property>   
     <page-action name="/billingaccount/FindBillingAccount.bsh"/> 
 </page>

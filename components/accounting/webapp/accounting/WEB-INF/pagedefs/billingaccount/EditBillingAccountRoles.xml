@@ -2,6 +2,8 @@
 <page>
     <template>main</template>
     <property name="title">Edit Billing Account Roles</property>
-    <property name="headerItem">billingaccount</property>    
-    <page-action name="/billingaccount/EditBillingAccountRoles.bsh"/> 
+    <property name="title.property">PageTitleEditBillingAccountRoles</property>
+    <property name="headerItem">billingaccount</property>
+    <property name="tabButtonItem">EditBillingAccountRoles</property>
+    <page-action name="/billingaccount/EditBillingAccountRoles.bsh"/>
 </page>

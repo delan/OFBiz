@@ -20,7 +20,9 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@author     David E. Jones (jonesde@ofbiz.org)
+ *@author     Olivier Heintz (olivier.heintz@nereide.biz)
+ *@version    $Revision: 1.2 $
  *@since      2.1
 -->
 
@@ -28,32 +30,32 @@
 <#if previousParams?has_content>
   <#assign previousParams = "?" + previousParams>
 </#if>
-
-<table width='300' border='0' cellpadding='0' cellspacing='0' align='center'>
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
+<table width="300" border="0" cellpadding="0" cellspacing="0" align="center">
   <tr>    
-    <td width='100%' valign='top'>
-      <table border='0' width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+    <td width="100%" valign="top">
+      <table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
         <tr>
-          <td width='100%'>
-            <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
+          <td width="100%">
+            <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
               <tr>
-                <td valign='middle' align='center'>
-                  <div class="boxhead">Registered&nbsp;User&nbsp;Login</div>
+                <td valign="middle" align="center">
+                  <div class="boxhead">${uiLabelMap.CommonRegistred}</div>
                 </td>
               </tr>
             </table>
           </td>
         </tr>
         <tr>
-          <td width='100%'>
-            <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
+          <td width="100%">
+            <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxbottom">
               <tr>
-                <td align="center" valign="middle" width='100%'>
-                  <form method="POST" action="<@ofbizUrl>/login${previousParams?if_exists}</@ofbizUrl>" name="loginform" style='margin: 0;'>
-                    <table width='100%' border='0' cellpadding='0' cellspacing='2'>
+                <td align="center" valign="middle" width="100%">
+                  <form method="POST" action="<@ofbizUrl>/login${previousParams?if_exists}</@ofbizUrl>" name="loginform" style="margin: 0;">
+                    <table width="100%" border="0" cellpadding="0" cellspacing="2">
                       <tr>
                         <td align="right">
-                          <span class="tabletext">Username:&nbsp;</span>
+                          <span class="tabletext">${uiLabelMap.CommonUsername}&nbsp;</span>
                         </td>
                         <td>
                           <input type="text" class="inputBox" name="USERNAME" value="${requestParameters.USERNAME?if_exists}" size="20">
@@ -61,7 +63,7 @@
                       </tr>
                       <tr>
                         <td align="right">
-                          <span class="tabletext">Password:&nbsp;</span>
+                          <span class="tabletext">${uiLabelMap.CommonPassword}&nbsp;</span>
                         </td>
                         <td align="left">
                           <input type="password" class="inputBox" name="PASSWORD" value="" size="20">
@@ -70,7 +72,7 @@
                       <tr>
                         <td colspan="2" align="center">
                           <!--<a href="javascript:document.loginform.submit()" class="buttontext">[Login]</a>-->
-                          <input type="submit" value="Login" class="loginButton">
+                          <input type="submit" value="${uiLabelMap.CommonLogin}" class="loginButton">
                         </td>
                       </tr>
                     </table>

@@ -20,32 +20,29 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@author     David E. Jones (jonesde@ofbiz.org)
+ *@author     Olivier Heintz (olivier.heintz@nereide.biz)
+ *@version    $Revision: 1.2 $
  *@since      2.1
 -->
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 
-<div class='tabContainer'>
-  <a href="<@ofbizUrl>/editBillingAccount?billingAccountId=${billingAccount.billingAccountId}</@ofbizUrl>" class="tabButton">Account</a>
-  <a href="<@ofbizUrl>/editBillingAccountRoles?billingAccountId=${billingAccount.billingAccountId}</@ofbizUrl>" class="tabButton">Roles</a>
-  <a href="<@ofbizUrl>/editBillingAccountTerms?billingAccountId=${billingAccount.billingAccountId}</@ofbizUrl>" class="tabButtonSelected">Terms</a>
-  <a href="<@ofbizUrl>/viewBillingAccountInvoices?billingAccountId=${billingAccount.billingAccountId}</@ofbizUrl>" class="tabButton">Invoices</a>
-  <a href="<@ofbizUrl>/viewBillingAccountPayments?billingAccountId=${billingAccount.billingAccountId}</@ofbizUrl>" class="tabButton">Payments</a>
-</div>
+${pages.get("/billingaccount/BillingAccountTabBar.ftl")}
 
-<div class="head1">Billing Account Terms</div>
+<div class="head1">${uiLabelMap.PageTitleEditBillingAccountTerms} - ${uiLabelMap.AccountingAccId}: ${billingAccount.billingAccountId}</div>
 
 <br>
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
   <tr>
-    <td><div class='tableheadtext'>Term</div></td>
-    <td><div class='tableheadtext'>Value</div></td>
-    <td><div class='tableheadtext'>UOM</div></td>
+    <td><div class="tableheadtext">${uiLabelMap.PartyTerm}</div></td>
+    <td><div class="tableheadtext">${uiLabelMap.CommonValue}</div></td>
+    <td><div class="tableheadtext">${uiLabelMap.CommonUom}</div></td>
     <td>&nbsp;</td>
   </tr>
-  <tr><td colspan='5'><hr class='sepbar'></td></tr>
+  <tr><td colspan="5"><hr class="sepbar"></td></tr>
   <#if !billingAccountTerms?exists || billingAccountTerms?size == 0>
     <tr>
-      <td colspan='5'><div class='tabletext'>No billing account terms exist.</div></td>
+      <td colspan="5"><div class="tabletext">${uiLabelMap.AccountingNoBillAccTerm}</div></td>
     </tr>
   <#else>
     <#list billingAccountTerms as term>
@@ -54,12 +51,12 @@
       <#assign uom = term.getRelatedOne("Uom")>
     </#if>
     <tr>
-      <td><div class='tabletext'>${termType.description?if_exists}</div></td>
-      <td><div class='tabletext'>${term.termValue?if_exists}</div></td>
-      <td><div class='tabletext'><#if uom?has_content>${uom.description?if_exists}<#else>&nbsp;</#if></div></td>
-      <td align='right'>  
-        <a href="<@ofbizUrl>/editBillingAccountTerms?billingAccountId=${term.billingAccountId}&billingAccountTermId=${term.billingAccountTermId}</@ofbizUrl>" class='buttontext'>[Edit]</a>&nbsp;
-        <a href="<@ofbizUrl>/removeBillingAccountTerm?billingAccountId=${term.billingAccountId}&billingAccountTermId=${term.billingAccountTermId}</@ofbizUrl>" class='buttontext'>[Remove]</a> 
+      <td><div class="tabletext">${termType.description?if_exists}</div></td>
+      <td><div class="tabletext">${term.termValue?if_exists}</div></td>
+      <td><div class="tabletext"><#if uom?has_content>${uom.description?if_exists}<#else>&nbsp;</#if></div></td>
+      <td align="right">  
+        <a href="<@ofbizUrl>/editBillingAccountTerms?billingAccountId=${term.billingAccountId}&billingAccountTermId=${term.billingAccountTermId}</@ofbizUrl>" class="buttontext">[Edit]</a>&nbsp;
+        <a href="<@ofbizUrl>/removeBillingAccountTerm?billingAccountId=${term.billingAccountId}&billingAccountTermId=${term.billingAccountTermId}</@ofbizUrl>" class="buttontext">[Remove]</a> 
       </td>
     </tr>
     </#list>
@@ -68,57 +65,54 @@
 
 <br>
 <#if billingAccountTerm?has_content>
-<div class="head1">Update Billing Account Term</div>
-<br>
-<form name="billingform" method="post" action="<@ofbizUrl>/updateBillingAccountTerm</@ofbizUrl>">
-  <input type="hidden" name="billingAccountTermId" value="${billingAccountTerm.billingAccountTermId}">
+    <div class="head1">${uiLabelMap.PageTitleEditBillingAccountTerms}</div>
+    <br>
+    <form name="billingform" method="post" action="<@ofbizUrl>/updateBillingAccountTerm</@ofbizUrl>">
+      <input type="hidden" name="billingAccountTermId" value="${billingAccountTerm.billingAccountTermId}">
 <#else>
-<div class="head1">Create Billing Account Term</div>
-<br>
-<form name="billingform" method="post" action="<@ofbizUrl>/createBillingAccountTerm</@ofbizUrl>">
+    <div class="head1">${uiLabelMap.AccountingCreatBillAccTerm}</div>
+    <br>
+    <form name="billingform" method="post" action="<@ofbizUrl>/createBillingAccountTerm</@ofbizUrl>">
 </#if>
-  <input type='hidden' name='billingAccountId' value='${billingAccount.billingAccountId}'>
+  <input type="hidden" name="billingAccountId" value="${billingAccount.billingAccountId}">
   <table width="90%" border="0" cellpadding="2" cellspacing="0"> 
     <tr>
-      <td width='26%' align='right' valign='top'><div class="tabletext">Term Type</div></td>
-      <td width='5'>&nbsp;</td>
-      <td width='74%'>
-        <select class='selectBox' name='termTypeId'>
+      <td width="26%" align="right" valign="top"><div class="tabletext">${uiLabelMap.PartyTermTyp}</div></td>
+      <td width="5">&nbsp;</td>
+      <td width="74%">
+        <select class="selectBox" name="termTypeId">
           <#list termTypes as termType>
-          <option value='${termType.termTypeId}' <#if termData?has_content && termData.termTypeId?default("") == termType.termTypeId>SELECTED</#if>>${termType.description?if_exists}</option>
+          <option value="${termType.termTypeId}" <#if termData?has_content && termData.termTypeId?default("") == termType.termTypeId>SELECTED</#if>>${termType.description?if_exists}</option>
           </#list>
         </select>
       *</td>
     </tr>  
     <tr>
-      <td width='26%' align='right' valign='top'><div class="tabletext">UOM</div></td>
-      <td width='5'>&nbsp;</td>
-      <td width='74%'>
-        <select class='selectBox' name='uomId'>
+      <td width="26%" align="right" valign="top"><div class="tabletext">${uiLabelMap.CommonUom}</div></td>
+      <td width="5">&nbsp;</td>
+      <td width="74%">
+        <select class="selectBox" name="uomId">
           <option></option>
           <#list uoms as uom>
-          <option value='${uom.uomId}' <#if termData?has_content && termData.uomId?default("") == uom.uomId>SELECTED</#if>>${uom.description?if_exists}</option>
+          <option value="${uom.uomId}" <#if termData?has_content && termData.uomId?default("") == uom.uomId>SELECTED</#if>>${uom.description?if_exists}</option>
           </#list>
         </select>
       </td>
     </tr>
     <tr>
-      <td width='26%' align='right' valign='top'><div class="tabletext">Term Value</div></td>
-      <td width='5'>&nbsp;</td>
-      <td width='74%'>
+      <td width="26%" align="right" valign="top"><div class="tabletext">${uiLabelMap.PartyTermValue}</div></td>
+      <td width="5">&nbsp;</td>
+      <td width="74%">
         <input type="text" class="inputBox" size="10" name="termValue" value="${termData.termValue?if_exists}">
       *</td>
     </tr>         
     <tr>
-      <td width='26%' align='right' valign='top'>
-        <input type='submit' value='Save' class='smallSubmit'>
-      <td width='5'>&nbsp;</td>
-      <td width='74%'>&nbsp;</td>
-    </tr>    
+      <td width="26%" align="right" valign="top">
+        <input type="submit" value="${uiLabelMap.CommonSave}" class="smallSubmit">
+      </td>
+      <td width="5">&nbsp;</td>
+      <td width="74%">&nbsp;</td>
+    </tr>
   </table>
 </form>
 
-
-
-
-    

@@ -20,23 +20,21 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@author     David E. Jones (jonesde@ofbiz.org)
+ *@author     Olivier Heintz (olivier.heintz@nereide.biz)
+ *@version    $Revision: 1.2 $
  *@since      2.1
 -->
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
+
+${pages.get("/billingaccount/BillingAccountTabBar.ftl")}
 
 <#if billingAccount?has_content>
-  <div class='tabContainer'>
-    <a href="<@ofbizUrl>/editBillingAccount?billingAccountId=${billingAccount.billingAccountId}</@ofbizUrl>" class="tabButtonSelected">Account</a>
-    <a href="<@ofbizUrl>/editBillingAccountRoles?billingAccountId=${billingAccount.billingAccountId}</@ofbizUrl>" class="tabButton">Roles</a>
-    <a href="<@ofbizUrl>/editBillingAccountTerms?billingAccountId=${billingAccount.billingAccountId}</@ofbizUrl>" class="tabButton">Terms</a>
-    <a href="<@ofbizUrl>/viewBillingAccountInvoices?billingAccountId=${billingAccount.billingAccountId}</@ofbizUrl>" class="tabButton">Invoices</a>
-    <a href="<@ofbizUrl>/viewBillingAccountPayments?billingAccountId=${billingAccount.billingAccountId}</@ofbizUrl>" class="tabButton">Payments</a>
-  </div>
-  <div class="head1">Update Billing Account</div>
+  <div class="head1">${uiLabelMap.AccountingUpdtBillAcc}</div>
   <form name="billingform" method="post" action="<@ofbizUrl>/updateBillingAccount</@ofbizUrl>">
     <input type="hidden" name="billingAccountId" value="${billingAccount.billingAccountId}">
 <#else>
-  <div class="head1">Create Billing Account</div>
+  <div class="head1">${uiLabelMap.AccountingCreatBillAcc}</div>
   <form name="billingform" method="post" action="<@ofbizUrl>/createBillingAccount</@ofbizUrl>">
 </#if>
 
@@ -44,33 +42,33 @@
   <table width="90%" border="0" cellpadding="2" cellspacing="0">
     <#if billingAccount?has_content>
     <tr>
-      <td width='26%' align='right' valign='top'><div class="tabletext">Billing Account ID</div></td>
-      <td width='5'>&nbsp;</td>
-      <td width='74%' valign='top'><div class="tabletext"><b>${billingAccount.billingAccountId?if_exists}</b> (cannot change without re-creating)</td>
+      <td width='26%' align='right' valign='top'><div class="tabletext">${uiLabelMap.AccountingAccId}</div></td>
+      <td width="5">&nbsp;</td>
+      <td width="74%" valign="top"><div class="tabletext"><b>${billingAccount.billingAccountId?if_exists}</b> (cannot change without re-creating)</td>
     </tr>  
     </#if>      
     <tr>
-      <td width='26%' align='right' valign='top'><div class="tabletext">Description</div></td>
-      <td width='5'>&nbsp;</td>
-      <td width='74%'><input type="text" class="inputBox" size="40" name="description" value="${billingAccountData.description?if_exists}"></td>
+      <td width='26%' align='right' valign='top'><div class="tabletext">${uiLabelMap.AccountingDescription}</div></td>
+      <td width="5">&nbsp;</td>
+      <td width="74%"><input type="text" class="inputBox" size="40" name="description" value="${billingAccountData.description?if_exists}"></td>
     </tr>
     <tr>
-      <td width='26%' align='right' valign='top'><div class="tabletext">Billing Contact Mech</div></td>
-      <td width='5'>&nbsp;</td>
-      <td width='74%'><input type="text" class="inputBox" size="20" name="contactMechId" value="${billingAccountData.contactMechId?if_exists}"></td>
+      <td width='26%' align='right' valign='top'><div class="tabletext">${uiLabelMap.AccountingBillingContactMechId}</div></td>
+      <td width="5">&nbsp;</td>
+      <td width="74%"><input type="text" class="inputBox" size="20" name="contactMechId" value="${billingAccountData.contactMechId?if_exists}"></td>
     </tr>         
     <tr>
-      <td width='26%' align='right' valign='top'><div class="tabletext">Account Limit</div></td>
-      <td width='5'>&nbsp;</td>
-      <td width='74%'>
+      <td width='26%' align='right' valign='top'><div class="tabletext">${uiLabelMap.AccountingAccLimit}</div></td>
+      <td width="5">&nbsp;</td>
+      <td width="74%">
         <input type="text" class="inputBox" size="10" name="accountLimit" value="${billingAccountData.accountLimit?default(0)?string("##0.00")}">
       *</td>
     </tr> 
     <tr>
-      <td width='26%' align='right' valign='top'>
-        <input type='submit' value='Save' class='smallSubmit'>
-      <td width='5'>&nbsp;</td>
-      <td width='74%'>&nbsp;</td>
+      <td width="26%" align="right" valign="top">
+        <input type="submit" value="${uiLabelMap.CommonSave}" class="smallSubmit">
+      <td width="5">&nbsp;</td>
+      <td width="74%">&nbsp;</td>
     </tr>    
   </table>
 </form>

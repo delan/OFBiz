@@ -2,6 +2,8 @@
 <page>
     <template>main</template>
     <property name="title">Edit Billing Account</property>
-    <property name="headerItem">billingaccount</property>   
-    <page-action name="/billingaccount/EditBillingAccount.bsh"/> 
+    <property name="title.property">PageTitleEditBillingAccount</property>
+    <property name="headerItem">billingaccount</property>
+    <property name="tabButtonItem">EditBillingAccount</property>
+    <page-action name="/billingaccount/EditBillingAccount.bsh"/>
 </page>
