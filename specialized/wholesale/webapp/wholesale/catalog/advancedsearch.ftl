@@ -23,7 +23,7 @@
  *@version    $Revision$
  *@since      2.1
 -->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
+<#if (requestAttributes.uiLabelMap)?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 <div class="head1">${uiLabelMap.ProductAdvancedSearchinCategory}</div>
 <br>
 <form name="advtokeywordsearchform" method="POST" action="<@ofbizUrl>/keywordsearch</@ofbizUrl>" style="margin: 0;">

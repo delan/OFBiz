@@ -31,7 +31,7 @@ ${pages.get("/includes/header.ftl")}
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
  <tr>
   ${pages.get("/templates/leftbar.ftl")}
-  <td width='100%' valign='top' align='left'>
+  <td valign='top' align='left'>
     ${pages.get("/includes/errormsg.ftl")}
     ${pages.get(page.path)}
   </td>

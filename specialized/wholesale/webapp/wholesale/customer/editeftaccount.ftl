@@ -24,7 +24,7 @@
  *@since      2.1
 -->
 
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
+<#if (requestAttributes.uiLabelMap)?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 <#if canNotView>
   <p><h3>${uiLabelMap.AccountingEftNotBelongToYou}.</h3></p>
 &nbsp;<a href='<@ofbizUrl>/authview/${donePage}</@ofbizUrl>' class="buttontext">[${uiLabelMap.CommonBack}]</a>

@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -19,9 +19,11 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *@author     Si Chen (sichen@sinfoniasolutions.com)
+ *@author     Andy Zeneski (jaz@ofbiz.org)
+ *@version    $Revision$
+ *@since      2.1
 -->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
+<#if (requestAttributes.uiLabelMap)?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 <#if miniProduct?exists>
     <td>
       <a href="<@ofbizUrl>/product/~product_id=${miniProduct.productId}</@ofbizUrl>" class="buttontext"><img src="<@ofbizContentUrl>${requestAttributes.contentPathPrefix?if_exists}${miniProduct.smallImageUrl?default("/images/defaultImage.jpg")}</@ofbizContentUrl>" align="left" height="50" class="imageborder" border="0"></a>

@@ -63,7 +63,7 @@
 </#if>
 
 <#if productCategoryMembers?exists && 0 < productCategoryMembers.size()>
-<table border="0" width="100%" cellpadding="2">
+<table border="0" cellpadding="2">
   <tr>
     <td align=right>
       <b>
@@ -82,7 +82,7 @@
 </table>
 
 <center>
-  <table width='100%' border='0' cellpadding='0' cellspacing='0'>    
+  <table border='0' cellpadding='0' cellspacing='0'>    
     <#assign startIndex = viewSize * viewIndex>
     <#if highIndex < listSize>
       <#assign endIndex = highIndex - 1>
@@ -90,7 +90,7 @@
       <#assign endIndex = listSize - 1>
     </#if>
     <tr><td>
-      <table width='100%' border='0' cellpadding='0' cellspacing='0'> 
+      <table border='0' cellpadding='0' cellspacing='0'> 
         <tr>
           <td width="15%">
             <div class="tabletext"><b>${requestAttributes.uiLabelMap.CommonPicture}</b></div>
@@ -120,7 +120,8 @@
           ${setRequestAttribute("optProductId", productCategoryMember.productId)} 
           ${setRequestAttribute("productCategoryMember", productCategoryMember)} 
           ${setRequestAttribute("listIndex", productCategoryMember_index)}         
-          ${pages.get("/catalog/productsummary.ftl")}
+          <#if pages?exists>${pages.get("/catalog/productsummary.ftl")}</#if>
+		  <#if screens?exists>${screens.render("component://wholesale/widget/CatalogScreens.xml#productsummary")}</#if>
         </td>
       </tr>
     </#list>
@@ -128,7 +129,7 @@
   </table>
 </center>
 
-<table border="0" width="100%" cellpadding="2">
+<table border="0" cellpadding="2">
   <tr>
     <td align=right>
       <b>
@@ -147,7 +148,7 @@
 </table>
 
 <#else>
-<table border="0" width="100%" cellpadding="2">
+<table border="0" cellpadding="2">
   <tr>
     <td colspan="2"><hr class='sepbar'></td>
   </tr>

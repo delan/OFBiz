@@ -24,7 +24,7 @@
  *@since      2.1
 -->
 
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
+<#if (requestAttributes.uiLabelMap)?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 <#assign delegator = requestAttributes.delegator>
 <#if productCategory?has_content>
   <table border='0' width="100%" cellpadding='3' cellspacing='0'>
@@ -72,12 +72,13 @@
     <div class="tabletext" align="right">
       <a href="javascript:document.bulkaddform.submit()" class="buttontext"><nobr>[${uiLabelMap.EcommerceAddAlltoCart}]</nobr></a>
     </div>     
-    <table border='1' width='100%' cellpadding='2' cellspacing='0'>      
+    <table border='1' cellpadding='2' cellspacing='0'>      
       <#list productCategoryMembers as productCategoryMember>
         <#assign product = productCategoryMember.getRelatedOneCache("Product")>
         <tr>
             ${setRequestAttribute("optProductId", productCategoryMember.productId)} 
-            ${pages.get("/catalog/quickaddsummary.ftl")}
+            <#if pages?exists>${pages.get("/catalog/quickaddsummary.ftl")}</#if>
+			<#if screens?exists>${screens.render("component://wholesale/widget/CatalogScreens.xml#quickaddsummary")}</#if>
         </tr>        
       </#list> 
     </table>

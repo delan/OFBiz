@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE site-conf PUBLIC "-//OFBiz//DTD Request Config//EN" "http://www.ofbiz.org/dtds/site-conf.dtd">
+
 
 <site-conf>
-    <description>OFBiz: wholesale Controller Configuration File</description>
-    <owner>The Open For Business Project Copyright (c) 2001-2005</owner>
+    <description>OFBiz: eCommerce Controller Configuration File</description>
+    <owner>The Open For Business Project Copyright (c) 2001-2003</owner>
     <errorpage>/error/error.jsp</errorpage>
 
-    <handler name="java" type="request" class="org.ofbiz.webapp.event.JavaEventHandler"/>
-    <handler name="bsf" type="request" class="org.ofbiz.webapp.event.BsfEventHandler"/>
-    <handler name="soap" type="request" class="org.ofbiz.webapp.event.SOAPEventHandler"/>
-    <handler name="service" type="request" class="org.ofbiz.webapp.event.ServiceEventHandler"/>
-    <handler name="service-multi" type="request" class="org.ofbiz.webapp.event.ServiceMultiEventHandler"/>
-    <handler name="simple" type="request" class="org.ofbiz.webapp.event.SimpleEventHandler"/>
+    <handler name="java" type="request" class="org.ofbiz.content.webapp.event.JavaEventHandler"/>
+    <handler name="bsf" type="request" class="org.ofbiz.content.webapp.event.BsfEventHandler"/>
+    <handler name="soap" type="request" class="org.ofbiz.content.webapp.event.SOAPEventHandler"/>
+    <handler name="service" type="request" class="org.ofbiz.content.webapp.event.ServiceEventHandler"/>
+    <handler name="service-multi" type="request" class="org.ofbiz.content.webapp.event.ServiceMultiEventHandler"/>
+    <handler name="simple" type="request" class="org.ofbiz.content.webapp.event.SimpleEventHandler"/>
 
-    <handler name="fop" type="view" class="org.ofbiz.webapp.view.FopPdfViewHandler"/>
-    <handler name="jsp" type="view" class="org.ofbiz.webapp.view.JspViewHandler"/>
-    <handler name="region" type="view" class="org.ofbiz.webapp.view.RegionViewHandler"/>
-    <handler name="ftl" type="view" class="org.ofbiz.webapp.ftl.FreeMarkerViewHandler"/>
-    <handler name="velocity" type="view" class="org.ofbiz.webapp.view.VelocityViewHandler"/>
-    <handler name="http" type="view" class="org.ofbiz.webapp.view.HttpViewHandler"/>
-    <handler name="jpublish" type="view" class="org.ofbiz.webapp.view.JPublishViewHandler"/>
+    <handler name="fop" type="view" class="org.ofbiz.content.webapp.view.FopPdfViewHandler"/>
+    <handler name="jsp" type="view" class="org.ofbiz.content.webapp.view.JspViewHandler"/>
+    <handler name="ftl" type="view" class="org.ofbiz.content.webapp.ftl.FreeMarkerViewHandler"/>
+    <handler name="http" type="view" class="org.ofbiz.content.webapp.view.HttpViewHandler"/>
+    <handler name="jpublish" type="view" class="org.ofbiz.content.webapp.view.JPublishViewHandler"/>
+    <handler name="screen" type="view" class="org.ofbiz.content.webapp.view.ScreenWidgetViewHandler"/>
+
 
     <!-- Events run from here for the first hit in a visit -->
     <firstvisit>
@@ -40,7 +40,7 @@
     <!-- Events to run on every request after all other processing (chains exempt) -->
     <!--
     <postprocessor>
-        <event type="java" path="org.ofbiz.webapp.event.TestEvent" invoke="test"/>
+        <event type="java" path="org.ofbiz.content.webapp.event.TestEvent" invoke="test"/>
     </postprocessor>
     -->
 
@@ -791,7 +791,7 @@
     </request-map>
 
     <request-map uri="changeDelegator">
-        <event type="java" path="org.ofbiz.webapp.event.CoreEvents" invoke="changeDelegator"/>
+        <event type="java" path="org.ofbiz.content.webapp.event.CoreEvents" invoke="changeDelegator"/>
         <response name="success" type="view" value="main"/>
         <response name="error" type="view" value="error"/>
     </request-map>
@@ -836,59 +836,59 @@
 
     <!-- View Mappings -->
     <view-map name="error" page="/error/error.jsp"/>
-    <view-map name="main" type="jpublish" page="/main.ftl"/>
-    <view-map name="login" type="jpublish" page="/login.ftl"/>
-    <view-map name="survey" type="jpublish" page="/survey.ftl"/>
+    <view-map name="main" type="screen" page="component://wholesale/widget/CommonScreens.xml#main"/>
+    <view-map name="login" type="screen" page="component://wholesale/widget/CommonScreens.xml#login"/>
+    <view-map name="survey" type="screen" page="component://wholesale/widget/CustomerScreens.xml#survey"/>
     <view-map name="passwordemail" page="/customer/passwordemail.jsp"/>
 
-    <view-map name="editShoppingList" type="jpublish" page="/shoppinglist/editShoppingList.ftl"/>
-    <view-map name="showcart" type="jpublish" page="/cart/showcart.ftl"/>
-    <view-map name="showAllPromotions" type="jpublish" page="/cart/showAllPromotions.ftl"/>
-    <view-map name="showPromotionDetails" type="jpublish" page="/cart/showPromotionDetails.ftl"/>
+    <view-map name="editShoppingList" type="screen" page="component://wholesale/widget/ShoppingListScreens.xml#editShoppingList"/>
+    <view-map name="showcart" type="screen" page="component://wholesale/widget/CartScreens.xml#showcart"/>
+    <view-map name="showAllPromotions" type="screen" page="component://wholesale/widget/CartScreens.xml#showAllPromotions"/>
+    <view-map name="showPromotionDetails" type="screen" page="component://wholesale/widget/CartScreens.xml#showPromotionDetails"/>
 
-    <view-map name="quickadd" type="jpublish" page="/catalog/quickadd.ftl"/>
-    <view-map name="category" type="jpublish" page="/catalog/category.ftl"/>
-    <view-map name="product" type="jpublish" page="/catalog/product.ftl"/>
+    <view-map name="quickadd" type="screen" page="component://wholesale/widget/CatalogScreens.xml#quickadd"/>
+    <view-map name="category"  type="screen" page="component://wholesale/widget/CatalogScreens.xml#category"/>
+    <view-map name="product" type="screen" page="component://wholesale/widget/CatalogScreens.xml#product"/>
     <view-map name="productdetail.pdf" type="fop" page="/catalog/productdetail.fo.ftl"/>
-    <view-map name="lastviewedproducts" type="jpublish" page="/catalog/lastviewedproducts.ftl"/>
-    <view-map name="productReview" type="jpublish" page="/catalog/productreview.ftl"/>
+    <view-map name="lastviewedproducts" type="screen" page="component://wholesale/widget/CatalogScreens.xml#lastviewedproducts"/>
+    <view-map name="productReview" type="screen" page="component://wholesale/widget/CatalogScreens.xml#productreview"/>
 
-    <view-map name="keywordsearch" type="jpublish" page="/catalog/keywordsearch.ftl"/>
-    <view-map name="advancedsearch" type="jpublish" page="/catalog/advancedsearch.ftl"/>
-    <view-map name="tellafriend" type="jpublish" page="/catalog/tellafriend.ftl"/>
+    <view-map name="keywordsearch" type="screen" page="component://wholesale/widget/CatalogScreens.xml#keywordsearch"/>
+    <view-map name="advancedsearch" type="screen" page="component://wholesale/widget/CatalogScreens.xml#advancedsearch"/>
+    <view-map name="tellafriend" type="screen" page="component://wholesale/widget/CatalogScreens.xml#tellafriend"/>
 
-    <view-map name="custsetting" type="jpublish" page="/order/custsettings.ftl"/>
-    <view-map name="shipsetting" type="jpublish" page="/order/shipsettings.ftl"/>
-    <view-map name="billsetting" type="jpublish" page="/order/billsettings.ftl"/>
-    <view-map name="optionsetting" type="jpublish" page="/order/optionsettings.ftl"/>
-    <view-map name="confirm" type="jpublish" page="/order/confirmorder.ftl"/>
+    <view-map name="custsetting" type="screen" page="component://wholesale/widget/OrderScreens.xml#custsettings"/>
+    <view-map name="shipsetting" type="screen" page="component://wholesale/widget/OrderScreens.xml#shipsettings"/>
+    <view-map name="billsetting" type="screen" page="component://wholesale/widget/OrderScreens.xml#billsettings"/>
+    <view-map name="optionsetting" type="screen" page="component://wholesale/widget/OrderScreens.xml#optionsettings"/>
+    <view-map name="confirm" type="screen" page="component://wholesale/widget/OrderScreens.xml#confirmorder"/>
 
-    <view-map name="quickcheckout" type="jpublish" page="/order/checkoutoptions.ftl"/>
-    <view-map name="checkoutoptions" type="jpublish" page="/order/checkoutshippingaddress.ftl"/>
-    <view-map name="checkoutshippingaddress" type="jpublish" page="/order/checkoutshippingaddress.ftl"/>
-    <view-map name="checkoutshippingoptions" type="jpublish" page="/order/checkoutshippingoptions.ftl"/>
-    <view-map name="checkoutpayment" type="jpublish" page="/order/checkoutpayment.ftl"/>
+    <view-map name="quickcheckout" type="screen" page="component://wholesale/widget/OrderScreens.xml#checkoutoptions"/>
+    <view-map name="checkoutoptions" type="screen" page="component://wholesale/widget/OrderScreens.xml#checkoutshippingaddress"/>
+    <view-map name="checkoutshippingaddress" type="screen" page="component://wholesale/widget/OrderScreens.xml#checkoutshippingaddress"/>
+    <view-map name="checkoutshippingoptions" type="screen" page="component://wholesale/widget/OrderScreens.xml#checkoutshippingoptions"/>
+    <view-map name="checkoutpayment" type="screen" page="component://wholesale/widget/OrderScreens.xml#checkoutpayment"/>
 
-    <view-map name="checkout" type="jpublish" page="/order/checkoutreview.ftl"/>
-    <view-map name="ordercomplete" type="jpublish" page="/order/ordercomplete.ftl"/>
-    <view-map name="confirmorder" page="/order/confirmorder.jsp"/>
-    <view-map name="orderhistory" type="jpublish" page="/order/orderhistory.ftl"/>
-    <view-map name="orderstatus" type="jpublish" page="/order/orderstatus.ftl"/>
-    <view-map name="requestreturn" type="jpublish" page="/order/requestreturn.ftl"/>
+    <view-map name="checkout" type="screen" page="component://wholesale/widget/OrderScreens.xml#custsettings"/>
+    <view-map name="ordercomplete" type="screen" page="component://wholesale/widget/OrderScreens.xml#custsettings"/>
+    <view-map name="confirmorder" type="screen" page="component://wholesale/widget/OrderScreens.xml#custsettings"/>
+    <view-map name="orderhistory" type="screen" page="component://wholesale/widget/OrderScreens.xml#custsettings"/>
+    <view-map name="orderstatus" type="screen" page="component://wholesale/widget/OrderScreens.xml#custsettings"/>
+    <view-map name="requestreturn" type="screen" page="component://wholesale/widget/OrderScreens.xml#custsettings"/>
 
-    <view-map name="viewprofile" type="jpublish" page="/customer/viewprofile.ftl"/>
-    <view-map name="newcustomer" type="jpublish" page="/customer/newcustomer.ftl"/>
-    <view-map name="editcontactmech" type="jpublish" page="/customer/editcontactmech.ftl"/>
-    <view-map name="editcreditcard" type="jpublish" page="/customer/editcreditcard.ftl"/>
-    <view-map name="editeftaccount" type="jpublish" page="/customer/editeftaccount.ftl"/>
-    <view-map name="editgiftcard" type="jpublish" page="/customer/editgiftcard.ftl"/>
-    <view-map name="changepassword" type="jpublish" page="/customer/changepassword.ftl"/>
-    <view-map name="editperson" type="jpublish" page="/customer/editperson.ftl"/>
-    <view-map name="giftcardbalance" type="jpublish" page="/customer/giftcardbalance.ftl"/>
-    <view-map name="profilesurvey" type="jpublish" page="/customer/customersurvey.ftl"/>
+    <view-map name="viewprofile" type="screen" page="component://wholesale/widget/CustomerScreens.xml#viewprofile"/>
+    <view-map name="newcustomer" type="screen" page="component://wholesale/widget/CustomerScreens.xml#newcustomer"/>
+    <view-map name="editcontactmech" type="screen" page="component://wholesale/widget/CustomerScreens.xml#editcontactmech"/>
+    <view-map name="editcreditcard" type="screen" page="component://wholesale/widget/CustomerScreens.xml#editcreditcard"/>
+    <view-map name="editeftaccount" type="screen" page="component://wholesale/widget/CustomerScreens.xml#editeftaccount"/>
+    <view-map name="editgiftcard" type="screen" page="component://wholesale/widget/CustomerScreens.xml#editgiftcard"/>
+    <view-map name="changepassword" type="screen" page="component://wholesale/widget/CustomerScreens.xml#changepassword"/>
+    <view-map name="editperson" type="screen" page="component://wholesale/widget/CustomerScreens.xml#editperson"/>
+    <view-map name="giftcardbalance" type="screen" page="component://wholesale/widget/CustomerScreens.xml#giftcardbalance"/>
+    <view-map name="profilesurvey" type="screen" page="component://wholesale/widget/CustomerScreens.xml#customersurvey"/>
 
-    <view-map name="viewleads" type="jpublish" page="/customer/viewleads.ftl"></view-map>
-    <view-map name="productfaq" type="jpublish" page="/catalog/productfaq.ftl"></view-map>
+    <view-map name="viewleads" type="screen" page="component://wholesale/widget/CustomerScreens.xml#"/>
+    <view-map name="productfaq" type="screen" page="component://wholesale/widget/CatalogScreens.xml#productfaq"/>
 
     <!-- End of View Mappings -->
 </site-conf>

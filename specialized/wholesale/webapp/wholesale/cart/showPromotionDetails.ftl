@@ -2,7 +2,6 @@
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
- *  copy of this software and associated documentation files (the "Software"),
  *  to deal in the Software without restriction, including without limitation
  *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
  *  and/or sell copies of the Software, and to permit persons to whom the
@@ -23,13 +22,13 @@
  *@version    $Revision$
  *@since      3.0
 -->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
+<#if (requestAttributes.uiLabelMap)?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 
 <#if productPromo?has_content>
-  <table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
+  <table border="0" cellspacing="0" cellpadding="0" class="boxoutside">
     <tr>
       <td width="100%">
-        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
+        <table width='100%'"border="0" cellspacing="0" cellpadding="0" class="boxtop">
           <tr>
             <td valign="middle" align="left">
               <div class="boxhead">&nbsp;${uiLabelMap.EcommercePromotionDetails}:</div>
@@ -40,7 +39,7 @@
     </tr>
     <tr>
       <td width="100%">
-        <table width="100%" border="0" cellspacing="0" cellpadding="4" class="boxbottom">
+        <table border="0" cellspacing="0" cellpadding="4" class="boxbottom">
           <tr>
             <td>
                 <div class="tabletext">${productPromo.promoText}</div>
@@ -55,10 +54,10 @@
   <br/>
 
 <#if productIds?has_content>
-  <table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
+  <table border="0" cellspacing="0" cellpadding="0" class="boxoutside">
     <tr>
       <td width="100%">
-        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
+        <table border="0" cellspacing="0" cellpadding="0" class="boxtop">
           <tr>
             <td valign="middle" align="left">
               <div class="boxhead">&nbsp;${uiLabelMap.EcommerceProductsForPromotion}:</div>
@@ -69,7 +68,7 @@
     </tr>
     <tr>
       <td width="100%">
-        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxbottom">
+        <table border="0" cellspacing="0" cellpadding="0" class="boxbottom">
           <tr>
             <td><div class="tableheadtext">${uiLabelMap.CommonQualifier}</div></td>
             <td><div class="tableheadtext">${uiLabelMap.CommonBenefit}</div></td>
@@ -82,7 +81,8 @@
                 <td>
                   ${setRequestAttribute("optProductId", productId)}
                   ${setRequestAttribute("listIndex", productId_index)}
-                  ${pages.get("/catalog/productsummary.ftl")}
+                  <#if pages?exists>${pages.get("/catalog/productsummary.ftl")}</#if>
+				  <#if screens?exists>${screens.render("component://wholesale/widget/CatalogScreens.xml#productsummary")}</#if>
                 </td>
               </tr>
           </#list>

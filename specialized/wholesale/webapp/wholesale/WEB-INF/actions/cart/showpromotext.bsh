@@ -28,11 +28,12 @@ import org.ofbiz.order.shoppingcart.product.ProductPromoWorker;
 
 delegator = request.getAttribute("delegator");
 userLogin = session.getAttribute("userLogin");
+dispatcher = session.getAttribute("dispatcher");
 
 promoShowLimit = 3;
 
 //Get Promo Text Data
-productPromosAll = ProductPromoWorker.getStoreProductPromos(delegator, request);
+productPromosAll = ProductPromoWorker.getStoreProductPromos(delegator, dispatcher, request);
 //Make sure that at least one promo has non-empty promoText
 showPromoText = false;
 promoToShow = 0;

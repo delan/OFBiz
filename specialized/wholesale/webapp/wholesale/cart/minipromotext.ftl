@@ -24,7 +24,7 @@
  *@since      2.1
 -->
 
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
+<#if (requestAttributes.uiLabelMap)?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 
 <#if showPromoText>
   <table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">

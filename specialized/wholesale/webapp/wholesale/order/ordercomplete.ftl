@@ -23,7 +23,7 @@
  *@version    $Revision$
  *@since      2.1
 -->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
+<#if (requestAttributes.uiLabelMap)?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 <p class="head1">${uiLabelMap.OrderConfirmation}</p>
 <p>${uiLabelMap.OrderDemoFrontNote}.</p>
 

@@ -23,7 +23,7 @@
  *@version    $Revision$
  *@since      2.1
 -->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
+<#if (requestAttributes.uiLabelMap)?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 <#assign shoppingCart = sessionAttributes.shoppingCart?if_exists>
 <#if shoppingCart?has_content>
     <#assign shoppingCartSize = shoppingCart.size()>

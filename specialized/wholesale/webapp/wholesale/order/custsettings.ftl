@@ -24,19 +24,20 @@
  *@since      3.0
 -->
 
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
+<#if (requestAttributes.uiLabelMap)?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 
-<table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<table border=0 cellspacing='0' cellpadding='0' class='boxoutside'>
   <tr>
     <td width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
+      <table border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <td align='left'>
             <div class='boxhead'>&nbsp;${uiLabelMap.PartyBasicInformation}</div>
           </td>
           <td nowrap align="right">
             <div class="tabletext">
-              ${pages.get("/order/anonymoustrail.ftl")}
+			  <#if pages?exists>${pages.get("/order/anonymoustrail.ftl")}</#if>
+			  <#if screens?exists>${screens.render("component://wholesale/widget/OrderScreens.xml#anonymoustrail")}</#if>
             </div>
           </td>
         </tr>
@@ -45,7 +46,7 @@
   </tr>
   <tr>
     <td width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
+      <table border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <form name="custsetupform" method="post" action="<@ofbizUrl>/setBasicInfo</@ofbizUrl>">
         <input type="hidden" name="finalizeMode" value="cust">
         <tr>

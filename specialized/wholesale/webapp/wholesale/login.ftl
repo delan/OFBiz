@@ -24,7 +24,7 @@
  *@version    $Revision$
  *@since      2.1
 -->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
+<#if (requestAttributes.uiLabelMap)?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 <#assign shoppingCart = sessionAttributes.shoppingCart?if_exists>
 <#if shoppingCart?has_content>
     <#assign shoppingCartSize = shoppingCart.size()>
@@ -35,13 +35,13 @@
 <div class="head1">${uiLabelMap.CommonLogin}</div>
 <br>
 
-<table width='100%' border='0' cellpadding='0' cellspacing='0'>
+<table border='0' cellpadding='0' cellspacing='0'>
   <tr>
     <td width='50%' valign='top'>
-      <table border='0' width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+      <table border='0' cellspacing='0' cellpadding='0' class='boxoutside'>
         <tr>
           <td width='100%'>
-            <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
+            <table border='0' cellspacing='0' cellpadding='0' class='boxtop'>
               <tr>
                 <td valign='middle' align='center'>
                   <div class="boxhead">${uiLabelMap.CommonRegistred}</div>
@@ -52,11 +52,11 @@
         </tr>
         <tr>
           <td width='100%'>
-            <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
+            <table border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
               <tr>
                 <td>
                   <form method="POST" action="<@ofbizUrl>/login${previousParams}</@ofbizUrl>" name="loginform" style='margin: 0;'>
-                    <table width='100%' border='0' cellpadding='0' cellspacing='2'>
+                    <table border='0' cellpadding='0' cellspacing='2'>
                       <tr align="center">
                         <td align='right'><span class="tabletext">${uiLabelMap.CommonUsername}:&nbsp;</span></td>
                         <#-- another possible way...
@@ -101,10 +101,10 @@
         </tr>
       </table>
       <br>
-      <table border='0' width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+      <table border='0' cellspacing='0' cellpadding='0' class='boxoutside'>
         <tr>
           <td width='100%'>
-            <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
+            <table border='0' cellspacing='0' cellpadding='0' class='boxtop'>
               <tr>
                 <td valign='middle' align='center'>
                   <div class="boxhead">${uiLabelMap.CommonForgotYourPassword}?</div>
@@ -115,7 +115,7 @@
         </tr>
         <tr>
           <td width='100%'>
-            <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
+            <table border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
               <tr>
                 <td valign='middle' align='center'>
                   <form method="POST" action="<@ofbizUrl>/forgotpassword${previousParams}</@ofbizUrl>" name="forgotpassword" style='margin: 0;'>
@@ -131,10 +131,10 @@
     </td>
     <td>&nbsp;&nbsp;&nbsp;</td>
     <td width='50%' valign=top>
-      <table border='0' width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+      <table border='0' cellspacing='0' cellpadding='0' class='boxoutside'>
         <tr>
           <td width='100%'>
-            <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
+            <table border='0' cellspacing='0' cellpadding='0' class='boxtop'>
               <tr>
                 <td valign='middle' align='center'>
                   <div class="boxhead">${uiLabelMap.CommonNewUser}</div>
@@ -145,7 +145,7 @@
         </tr>
         <tr>
           <td width='100%'>
-            <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
+            <table border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
               <tr>
                 <td>
                   <form method="POST" action="<@ofbizUrl>/newcustomer${previousParams}</@ofbizUrl>" style='margin: 0;'>
@@ -160,10 +160,10 @@
       </table>
       <#if (shoppingCartSize > 0)>
       <br>
-      <table border='0' width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+      <table border='0' cellspacing='0' cellpadding='0' class='boxoutside'>
         <tr>
           <td width='100%'>
-            <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
+            <table border='0' cellspacing='0' cellpadding='0' class='boxtop'>
               <tr>
                 <td valign='middle' align='center'>
                   <div class="boxhead">${uiLabelMap.CommonCheckoutAnonymous}</div>
@@ -174,7 +174,7 @@
         </tr>
         <tr>
           <td width='100%'>
-            <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
+            <table border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
               <tr>
                 <td>
                   <form method="POST" action="<@ofbizUrl>/finalizeOrder</@ofbizUrl>" style='margin: 0;'>

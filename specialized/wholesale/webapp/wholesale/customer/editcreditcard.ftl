@@ -24,7 +24,7 @@
  *@since      2.1
 -->
 
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
+<#if (requestAttributes.uiLabelMap)?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 <#if canNotView>
   <p><h3>${uiLabelMap.AccountingCardInfoNotBelongToYou}.</h3></p>
 &nbsp;<a href='<@ofbizUrl>/authview/${donePage}</@ofbizUrl>' class="buttontext">[${uiLabelMap.CommonBack}]</a>
@@ -65,7 +65,8 @@
         <select name="cardType" class='selectBox'>
           <option>${creditCardData.cardType?if_exists}</option>
           <option></option>
-          ${pages.get("/includes/cctypes.ftl")}
+          <#if pages?exists>${pages.get("/includes/cctypes.ftl")}</#if>
+		  <#if screens?exists>${screens.render("component://wholesale/widget/CommonScreens.xml#cctypes")}</#if>
         </select>
       *</td>
     </tr>
@@ -109,11 +110,13 @@
         </#if>
         <select name="expMonth" class='selectBox'>
           <option><#if tryEntity>${expMonth?if_exists}<#else>${requestParameters.expMonth?if_exists}</#if></option>
-          ${pages.get("/includes/ccmonths.ftl")}
+          <#if pages?exists>${pages.get("/includes/ccmonths.ftl")}</#if>
+		  <#if screens?exists>${screens.render("component://wholesale/widget/CommonScreens.xml#ccmonths")}</#if>
         </select>
         <select name="expYear" class='selectBox'>
           <option><#if tryEntity>${expYear?if_exists}<#else>${requestParameters.expYear?if_exists}</#if></option>
-          ${pages.get("/includes/ccyears.ftl")}
+          <#if pages?exists>${pages.get("/includes/ccyears.ftl")}</#if>
+		  <#if screens?exists>${screens.render("component://wholesale/widget/CommonScreens.xml#ccyears")}</#if>
         </select>
       *</td>
     </tr>

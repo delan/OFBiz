@@ -24,7 +24,7 @@
  *@since      2.1
 -->
 
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
+<#if (requestAttributes.uiLabelMap)?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 <#if requestAttributes.product?exists>
   <#assign product = requestAttributes.product>
   <#assign price = requestAttributes.priceMap>     

@@ -23,7 +23,7 @@
  *@version    $Revision$
  *@since      2.1
 -->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
+<#if (requestAttributes.uiLabelMap)?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 <#-- variable setup and worker calls -->
 <#assign topLevelList = requestAttributes.topLevelList?if_exists>
 <#assign curCategoryId = requestAttributes.curCategoryId?if_exists>
@@ -55,7 +55,7 @@
   </#if>
 </#macro>
 
-<table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<table width='100%' border=0 cellspacing='0' cellpadding='0' class='boxoutside'>
   <tr>
     <td width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
@@ -69,7 +69,7 @@
   </tr>
   <tr>
     <td width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
+      <table border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <tr>
           <td>
             <div style='margin-left: 10px;'>

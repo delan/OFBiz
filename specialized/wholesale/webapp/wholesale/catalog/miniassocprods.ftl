@@ -24,11 +24,11 @@
  *@version    $Revision$
  *@since      2.1
 -->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
+<#if (requestAttributes.uiLabelMap)?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 <#assign associatedProducts = Static["org.ofbiz.order.shoppingcart.product.ProductDisplayWorker"].getRandomCartProductAssoc(request, true)?if_exists>
 
 <#if associatedProducts?has_content>
-  <table border='0' width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+  <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxoutside'>
     <tr>
       <td width='100%'>
         <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
@@ -53,7 +53,8 @@
                       ${setRequestAttribute("miniProdQuantity", 1)}
                       ${setRequestAttribute("miniProdFormName", "theminiassocprod" + miniProduct_index + "form")}
                       ${setRequestAttribute("optProductId", miniProduct.productId)}
-                      ${pages.get("/catalog/miniproductsummary.ftl")}
+                      <#if pages?exists>${pages.get("/catalog/miniproductsummary.ftl")}</#if>
+					  <#if screens?exists>${screens.render("component://wholesale/widget/CatalogScreens.xml#miniproductsummary")}</#if>
                     </td>
                   </tr>
                   <#if miniProduct_has_next>

@@ -23,7 +23,7 @@
  *@version    $Revision$
  *@since      2.2
 -->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
+<#if (requestAttributes.uiLabelMap)?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 <table border="0" width="100%" cellpadding="3">
   <tr>
     <td colspan="2">
@@ -37,14 +37,15 @@
 <#if sessionAttributes.lastViewedProducts?exists && sessionAttributes.lastViewedProducts?has_content>
 <br>
 <center>
-  <table width='100%' border='0' cellpadding='0' cellspacing='0'>        
+  <table border='0' cellpadding='0' cellspacing='0'>        
     <#list sessionAttributes.lastViewedProducts as productId>              
       <tr><td><hr class='sepbar'></td></tr>
       <tr>
         <td>
           ${setRequestAttribute("optProductId", productId)}
           ${setRequestAttribute("listIndex", productId_index)}
-          ${pages.get("/catalog/productsummary.ftl")}
+          <#if pages?exists>${pages.get("/catalog/productsummary.ftl")}</#if>
+		  <#if screens?exists>${screens.render("component://wholesale/widget/CatalogScreens.xml#productsummary")}</#if>
         </td>
       </tr>
     </#list>

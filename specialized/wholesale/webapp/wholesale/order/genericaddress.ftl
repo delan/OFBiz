@@ -24,7 +24,7 @@
  *@since      3.0
 -->
 
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
+<#if (requestAttributes.uiLabelMap)?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 <#-- generic address information -->
 <#assign toName = (postalFields.toName)?if_exists>
 <#if !toName?has_content && person?exists && person?has_content>
@@ -82,7 +82,8 @@
       <#else>
         <option value="">${uiLabelMap.PartyNoState}</option>
       </#if>
-      ${pages.get("/includes/states.ftl")}
+	  <#if pages?exists>${pages.get("/includes/states.ftl")}</#if>
+	  <#if screens?exists>${screens.render("component://wholesale/widget/CommonScreens.xml#states")}</#if>
     </select>
   </td>
 </tr>

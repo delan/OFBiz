@@ -23,7 +23,7 @@
  *@version    $Revision$
  *@since      2.1
 -->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
+<#if (requestAttributes.uiLabelMap)?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 <#if orderHeader?has_content>
   <#assign maySelectItems = true>
   <form name="addCommonToCartForm" action="<@ofbizUrl>/addordertocart/orderstatus?order_id=${orderHeader.orderId}</@ofbizUrl>" method="GET">

@@ -23,12 +23,12 @@
  *@version    $Revision$
  *@since      2.2
 -->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
+<#if (requestAttributes.uiLabelMap)?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 <#if sessionAttributes.lastViewedProducts?exists && sessionAttributes.lastViewedProducts?has_content>
-  <table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+  <table border=0 cellspacing='0' cellpadding='0' class='boxoutside'>
     <tr>
       <td width='100%'>
-        <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
+        <table border='0' cellspacing='0' cellpadding='0' class='boxtop'>
           <tr>
             <td valign="middle" align="center">
               <div class="boxhead">${uiLabelMap.EcommerceLastViewed}...</div>
@@ -44,10 +44,10 @@
     </tr>
     <tr>
       <td width='100%'>
-        <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
+        <table border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
           <tr>
             <td>
-              <table width='100%' cellspacing="0" cellpadding="0" border="0">
+              <table cellspacing="0" cellpadding="0" border="0">
                 <#assign count = 0>
                 <#list sessionAttributes.lastViewedProducts as productId>
                   <#if count < 4>
@@ -56,7 +56,8 @@
                         ${setRequestAttribute("miniProdQuantity", "1")}
                         ${setRequestAttribute("optProductId", productId)}
                         ${setRequestAttribute("miniProdFormName", "lastviewed" + productId_index + "form")}
-                        ${pages.get("/catalog/miniproductsummary.ftl")}
+			          	<#if pages?exists>${pages.get("/catalog/miniproductsummary.ftl")}</#if>
+		  				<#if screens?exists>${screens.render("component://wholesale/widget/CatalogScreens.xml#miniproductsummary")}</#if>
                       </td>
                     </tr>
                     <#if productId_has_next && count < 3>

@@ -23,9 +23,10 @@
  *@version    $Revision$
  *@since      2.1
 -->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
+<#if (requestAttributes.uiLabelMap)?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 <#if productCategory?has_content>
-  ${pages.get(detailTemplate)}
+  <#if pages?exists>${pages.get("${detailScreen}")}</#if>
+  <#if screens?exists>${screens.render("${detailScreen}")}</#if>
 <#else>  
   <center><div class='head2'>${uiLabelMap.ProductCategoryNotFoundforCategoryID} ${requestParameters.category_id?if_exists}!</div></center>
 </#if>

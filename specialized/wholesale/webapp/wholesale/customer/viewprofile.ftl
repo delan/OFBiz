@@ -23,10 +23,10 @@
  *@version    $Revision$
  *@since      2.1
 -->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
+<#if (requestAttributes.uiLabelMap)?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 <#if party?exists>
 <#-- Main Heading -->
-<table width='100%' cellpadding='0' cellspacing='0' border='0'>
+<table cellpadding='0' cellspacing='0' border='0'>
   <tr>
     <td align=left>
       <div class="head1">${uiLabelMap.PartyTheProfileOf}
@@ -53,10 +53,10 @@
 </table>
 <br>
 
-<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<TABLE border=0 cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
+      <table border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <td valign="middle" align="left">
             <div class="boxhead">&nbsp;${uiLabelMap.PartyPersonalInformation}</div>
@@ -71,7 +71,7 @@
   </TR>
   <TR>
     <TD width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
+      <table border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <tr>
           <td>
 <#if person?exists>
@@ -113,10 +113,10 @@
 </TABLE>
 <#-- ============================================================= -->
 <br>
-<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<TABLE border=0 cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
+      <table border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <td valign="middle" align="left">
             <div class="boxhead">&nbsp;${uiLabelMap.PartyContactInformation}</div>
@@ -130,7 +130,7 @@
   </TR>
   <TR>
     <TD width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
+      <table border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <tr>
           <td>
   <#if partyContactMechValueMaps?has_content>
@@ -243,10 +243,10 @@
 </TABLE>
 <#-- ============================================================= -->
 <br>
-<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<TABLE border=0 cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
+      <table border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <td valign="middle" align="left">
             <div class="boxhead">&nbsp;${uiLabelMap.AccountingPaymentMethodInformation}</div>
@@ -260,7 +260,7 @@
   </TR>
   <TR>
     <TD width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
+      <table border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <tr>
           <td>
               <table width="100%" border="0" cellpadding="1">
@@ -353,10 +353,10 @@
 </TABLE>
 
 <br>
-<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<TABLE border=0 cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
+      <table border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <td valign="middle" align="left">
             <div class="boxhead">&nbsp;${uiLabelMap.CommonUsername} & ${uiLabelMap.CommonPassword}</div>
@@ -370,7 +370,7 @@
   </TR>
   <TR>
     <TD width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
+      <table border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <tr>
           <td>
             <table width="100%" border="0" cellpadding="1">
@@ -389,10 +389,10 @@
 
 <#if surveys?has_content>
   <br>
-  <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+  <TABLE border=0 cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
+      <table border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <td valign="middle" align="left">
             <div class="boxhead">&nbsp;Surveys</div>
@@ -403,7 +403,7 @@
   </TR>
   <TR>
     <TD width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
+      <table border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <tr>
           <td>
             <table width="100%" border="0" cellpadding="1">
@@ -415,7 +415,7 @@
                   <td width="5">&nbsp;</td>
                   <td align="left" valign="top" width="80%">
                     <#assign responses = Static["org.ofbiz.product.store.ProductStoreWorker"].checkSurveyResponse(request, survey.surveyId)?default(0)>
-                    <div class="tabletext"><#if (responses < 1)><font color="red"><b>Not Completed</b><#else>Completed - Thank-you!</if></div>
+                    <div class="tabletext"><#if (responses < 1)><font color="red"><b>Not Completed</b><#else>Completed - Thank-you!</#if></div>
                   </td>
                   <#if (responses == 0 || survey.allowMultiple?default("N") == "Y")>
                     <#assign surveyLabel = "[Take Survey]">

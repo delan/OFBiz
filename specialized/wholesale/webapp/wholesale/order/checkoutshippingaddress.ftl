@@ -76,7 +76,7 @@ function toggleBillingAccount(box) {
 
 // -->
 </script>
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
+<#if (requestAttributes.uiLabelMap)?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 <#assign cart = context.shoppingCart?if_exists>
 
 <form method="post" name="checkoutInfoForm" style='margin:0;'>
@@ -84,10 +84,10 @@ function toggleBillingAccount(box) {
   <table width="100%" border="0" cellpadding='0' cellspacing='0'>
     <tr valign="top" align="left">
       <td height='100%'>
-        <table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside' style='height: 100%;'>
+        <table border=0 cellspacing='0' cellpadding='0' class='boxoutside' style='height: 100%;'>
           <tr>
             <td width='100%'>
-              <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
+              <table border='0' cellspacing='0' cellpadding='0' class='boxtop'>
                 <tr>
                   <td valign=middle align=left>
                     <div class="boxhead">1)&nbsp;${uiLabelMap.OrderWhereShallWeShipIt}?</div>
@@ -97,8 +97,8 @@ function toggleBillingAccount(box) {
             </td>
           </tr>
           <tr style='height: 100%;'>
-            <td width='100%' valign=top height='100%'>
-              <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom' style='height: 100%;'>
+            <td valign=top height='100%'>
+              <table border='0' cellspacing='0' cellpadding='0' class='boxbottom' style='height: 100%;'>
                 <tr>
                   <td valign='top'>
                     <table width="100%" border="0" cellpadding="1" cellspacing="0">
