@@ -152,13 +152,13 @@
     <td align="center">
         <%boolean hasExpired = false;%>
         <%if (facilityGroupMember.getTimestamp("thruDate") != null && UtilDateTime.nowTimestamp().after(facilityGroupMember.getTimestamp("thruDate"))) { hasExpired = true; }%>
-        <FORM method=POST action='<ofbiz:url>/updateCategoryProductMember?VIEW_SIZE=<%=viewSize%>&VIEW_INDEX=<%=viewIndex%></ofbiz:url>' name='lineForm<%=line%>'>
+        <FORM method=POST action='<ofbiz:url>/updateGroupToFacility?VIEW_SIZE=<%=viewSize%>&VIEW_INDEX=<%=viewIndex%></ofbiz:url>' name='lineForm<%=line%>'>
             <input type=hidden name='activeOnly' value='<%=new Boolean(activeOnly).toString()%>'>
             <input type=hidden <ofbiz:inputvalue entityAttr="facilityGroupMember" field="facilityId" fullattrs="true"/>>
             <input type=hidden <ofbiz:inputvalue entityAttr="facilityGroupMember" field="facilityGroupId" fullattrs="true"/>>
             <input type=hidden <ofbiz:inputvalue entityAttr="facilityGroupMember" field="fromDate" fullattrs="true"/>>
             <input type=text size='25' <ofbiz:inputvalue entityAttr="facilityGroupMember" field="thruDate" fullattrs="true"/> class="inputBox" style='<%if (hasExpired) {%>color: red;<%}%>'>
-            <a href="javascript:call_cal(document.lineForm<%=line%>.thruDate, '<%=nowTimestampString%>');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>
+            <a href="javascript:call_cal(document.lineForm<%=line%>.thruDate, '<ofbiz:inputvalue entityAttr="facilityGroupMember" field="thruDate" default="<%=nowTimestampString%>"/>');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>
             <input type=text size='5' <ofbiz:inputvalue entityAttr="facilityGroupMember" field="sequenceNum" fullattrs="true"/> class="inputBox">           
             <INPUT type=submit value='Update' style='font-size: x-small;'>
         </FORM>

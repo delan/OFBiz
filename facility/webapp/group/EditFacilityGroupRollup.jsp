@@ -92,12 +92,12 @@
       <td><div class='tabletext' <%=(facilityGroupRollup.getTimestamp("fromDate") != null && UtilDateTime.nowTimestamp().before(facilityGroupRollup.getTimestamp("fromDate")))?"style='color: red;'":""%>><ofbiz:inputvalue entityAttr="facilityGroupRollup" field="fromDate"/></div></td>
       <td align="center">
         <FORM method=POST action='<ofbiz:url>/updateFacilityGroupToGroup</ofbiz:url>' name='lineParentForm<%=lineParent%>'>
-            <input type=hidden name='showFacilityGroupId' value='<ofbiz:inputvalue entityAttr="facilityGroupRollup" field="facilityGroupId"/>'>
+            <input type=hidden name='showFacilityGroupId' value='<%=facilityGroupId%>'>
             <input type=hidden <ofbiz:inputvalue entityAttr="facilityGroupRollup" field="facilityGroupId" fullattrs="true"/>>
             <input type=hidden <ofbiz:inputvalue entityAttr="facilityGroupRollup" field="parentFacilityGroupId" fullattrs="true"/>>
             <input type=hidden <ofbiz:inputvalue entityAttr="facilityGroupRollup" field="fromDate" fullattrs="true"/>>
             <input type=text size='25' <ofbiz:inputvalue entityAttr="facilityGroupRollup" field="thruDate" fullattrs="true"/> class="inputBox" style='<%=(facilityGroupRollup.getTimestamp("thruDate") != null && UtilDateTime.nowTimestamp().after(facilityGroupRollup.getTimestamp("thruDate")))?" color: red;":""%>'>
-            <a href="javascript:call_cal(document.lineParentForm<%=lineParent%>.thruDate, '<%=nowTimestampString%>');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>
+            <a href="javascript:call_cal(document.lineParentForm<%=lineParent%>.thruDate, '<ofbiz:inputvalue entityAttr="facilityGroupRollup" field="thruDate" default="<%=nowTimestampString%>"/>');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>
             <input type=text size='5' <ofbiz:inputvalue entityAttr="facilityGroupRollup" field="sequenceNum" fullattrs="true"/> class="inputBox">
             <INPUT type=submit value='Update' style='font-size: x-small;'>
         </FORM>
@@ -156,7 +156,7 @@
       <td><div class='tabletext' <%=(facilityGroupRollup.getTimestamp("fromDate") != null && UtilDateTime.nowTimestamp().before(facilityGroupRollup.getTimestamp("fromDate")))?"style='color: red;'":""%>><ofbiz:inputvalue entityAttr="facilityGroupRollup" field="fromDate"/></div></td>
       <td align="center">
         <FORM method=POST action='<ofbiz:url>/updateFacilityGroupToGroup</ofbiz:url>' name='lineChildForm<%=lineChild%>'>
-            <input type=hidden name='showFacilityGroupId' value='<ofbiz:inputvalue entityAttr="facilityGroupRollup" field="facilityGroupId"/>'>
+            <input type=hidden name='showFacilityGroupId' value='<%=facilityGroupId%>'>
             <input type=hidden <ofbiz:inputvalue entityAttr="facilityGroupRollup" field="facilityGroupId" fullattrs="true"/>>
             <input type=hidden <ofbiz:inputvalue entityAttr="facilityGroupRollup" field="parentFacilityGroupId" fullattrs="true"/>>
             <input type=hidden <ofbiz:inputvalue entityAttr="facilityGroupRollup" field="fromDate" fullattrs="true"/>>
