@@ -177,7 +177,13 @@ public abstract class ResourceLoader {
         StringBuffer buf = new StringBuffer();
 
         if (envName != null && envName.length() > 0) {
-            buf.append(System.getProperty(envName));
+            String propValue = System.getProperty(envName);
+            if (propValue == null) {
+                String errMsg = "The Java environment (-Dxxx=yyy) variable with name " + envName + " is not set, cannot load resource.";
+                Debug.logError(errMsg);
+                throw new IllegalArgumentException(errMsg);
+            }
+            buf.append(propValue);
         }
         if (prefix != null && prefix.length() > 0) {
             buf.append(prefix);
