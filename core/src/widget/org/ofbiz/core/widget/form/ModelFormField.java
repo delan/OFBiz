@@ -191,14 +191,14 @@ public class ModelFormField {
     }
     
     public boolean induceFieldInfoFromServiceParam() {
-        if (UtilValidate.isEmpty(this.serviceName) || UtilValidate.isEmpty(this.attributeName)) {
+        if (UtilValidate.isEmpty(this.getServiceName()) || UtilValidate.isEmpty(this.getAttributeName())) {
             return false;
         }
         LocalDispatcher dispatcher = this.getModelForm().getDispacher();
         try {
-            ModelService modelService = dispatcher.getDispatchContext().getModelService(this.serviceName);
+            ModelService modelService = dispatcher.getDispatchContext().getModelService(this.getServiceName());
             if (modelService != null) {
-                ModelParam modelParam = modelService.getParam(this.attributeName);
+                ModelParam modelParam = modelService.getParam(this.getAttributeName());
                 if (modelParam != null) {
                     if (UtilValidate.isNotEmpty(modelParam.entityName) && UtilValidate.isNotEmpty(modelParam.fieldName)) {
                         this.entityName = modelParam.entityName;
@@ -213,7 +213,7 @@ public class ModelFormField {
                 }
             }
         } catch (GenericServiceException e) {
-            Debug.logError(e, "error getting service parameter definition for auto-field with serviceName: " + this.serviceName + ", and attributeName: " + this.attributeName);
+            Debug.logError(e, "error getting service parameter definition for auto-field with serviceName: " + this.getServiceName() + ", and attributeName: " + this.getAttributeName());
         }
         return false;
     }
@@ -251,13 +251,13 @@ public class ModelFormField {
     }
 
     public boolean induceFieldInfoFromEntityField() {
-        if (UtilValidate.isEmpty(this.entityName) || UtilValidate.isEmpty(this.fieldName)) {
+        if (UtilValidate.isEmpty(this.getEntityName()) || UtilValidate.isEmpty(this.getFieldName())) {
             return false;
         }
         GenericDelegator delegator = this.getModelForm().getDelegator();
-        ModelEntity modelEntity = delegator.getModelEntity(this.entityName);
+        ModelEntity modelEntity = delegator.getModelEntity(this.getEntityName());
         if (modelEntity != null) {
-            ModelField modelField = modelEntity.getField(this.fieldName);
+            ModelField modelField = modelEntity.getField(this.getFieldName());
             if (modelField != null) {
                 // okay, populate using the entity field info...
                 this.induceFieldInfoFromEntityField(modelEntity, modelField);
