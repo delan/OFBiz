@@ -28,7 +28,6 @@
 <%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.pseudotag.*, org.ofbiz.commonapp.common.*" %>
 <%String previousParams = (String) session.getAttribute(SiteDefs.PREVIOUS_PARAMS);%>
 
-<br>
 <div class="head1">Log&nbsp;In</div>
 <br>
 <table width='100%' border='0' cellpadding='0' cellspacing='0'>
