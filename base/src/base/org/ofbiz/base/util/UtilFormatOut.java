@@ -1,5 +1,5 @@
 /*
- * $Id: UtilFormatOut.java,v 1.6 2004/02/07 09:42:52 jonesde Exp $
+ * $Id: UtilFormatOut.java,v 1.7 2004/08/16 16:52:03 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -26,6 +26,7 @@ package org.ofbiz.base.util;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.Locale;
 import java.util.Currency;
 
@@ -34,7 +35,7 @@ import java.util.Currency;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.6 $
+ * @version    $Revision: 1.7 $
  * @since      2.0
  */
 public class UtilFormatOut {
@@ -67,6 +68,15 @@ public class UtilFormatOut {
      */
     public static String formatPrice(double price) {
         return priceDecimalFormat.format(price);
+    }
+
+    public static Double formatPriceNumber(double price) {
+        try {
+            return (Double) priceDecimalFormat.parse(formatPrice(price));
+        } catch (ParseException e) {
+            Debug.logError(e, module);
+            return null;
+        }
     }
 
     /** Formats a double into a properly formatted currency string based on isoCode and Locale
