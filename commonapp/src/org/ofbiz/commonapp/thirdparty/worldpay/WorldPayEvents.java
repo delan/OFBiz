@@ -54,8 +54,8 @@ public class WorldPayEvents {
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
         GenericValue userLogin = (GenericValue) request.getSession().getAttribute(SiteDefs.USER_LOGIN);
         
-        // we need the website for the correct properties file
-        GenericValue webSite = CatalogWorker.getWebSite(request);
+        // we need the websiteId for the correct properties file
+        String webSiteId = CatalogWorker.getWebSiteId(request);
         
         // get the orderId from the request, stored by previous event(s)
         String orderId = (String) request.getAttribute("order_id");
@@ -144,7 +144,13 @@ public class WorldPayEvents {
         }
         
         // get the properties file
-        String configString = webSite.getString("paymentConfiguration");
+        String configString = null;
+        try {
+            GenericValue webSitePayment = delegator.findByPrimaryKey("", UtilMisc.toMap("webSiteId", webSiteId, "paymentMethodTypeId", "EXT_WORLDPAY"));
+            configString = webSitePayment.getString("paymentConfiguration");
+        } catch (GenericEntityException e) {
+            Debug.logWarning(e, "Cannot find webSitePayment Settings", module);
+        }
         if (configString == null)
         configString = "payment.properties";
             
