@@ -156,7 +156,6 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='2' class='boxbottom'>
         <tr>
           <td>
-
             <table width='100%' border='0' cellspacing='0' cellpadding='2'>
               <form method="post" action="<ofbiz:url>/orderview</ofbiz:url>" name="lookupordero">
                 <tr>
@@ -166,8 +165,8 @@
                   </td>
                   <td width="35%"><a href="javascript:document.lookupordero.submit()" class="buttontext">[Lookup Order]</a></td>
                 </tr>
-              </form>
-
+              </form>  
+                            
               <form method="post" action="<ofbiz:url>/orderlist</ofbiz:url>" name="lookuporderp">
                 <tr>
                   <td width="25%" align=right><div class="tabletext">Party ID</div></td>
@@ -176,7 +175,26 @@
                   </td>
                   <td width="35%"><a href="javascript:document.lookuporderp.submit()" class="buttontext">[Lookup Orders]</a></td>
                 </tr>
-              </form>
+              </form>  
+                
+              <form method="post" action="/partymgr/control/findparty" name="findnameform">
+                <input type="hidden" name="USERNAME" value="<%EntityField.run("userLogin", "userLoginId", pageContext);%>">
+                <input type="hidden" name="PASSWORD" value="<%EntityField.run("userLogin", "currentPassword", pageContext);%>">
+                <tr>
+                  <td width="25%" align=right><div class="tabletext">First Name</div></td>
+                  <td width="40%">
+                    <input type="text" name="first_name" size="30" style="font-size: small;" value='<%=UtilFormatOut.checkNull(request.getParameter("first_name"))%>'>
+                  </td>
+                  <td width="35%">&nbsp;</td>
+                </tr>
+                <tr>
+                  <td width="25%" align=right><div class="tabletext">Last Name</div></td>
+                  <td width="40%">
+                    <input type="text" name="last_name" size="30" style="font-size: small;" value='<%=UtilFormatOut.checkNull(request.getParameter("last_name"))%>'>
+                  </td>
+                  <td width="35%"><a href="javascript:document.findnameform.submit()" class="buttontext">[Lookup Party]</a></td>
+                </tr>
+              </form>         
             </table>
           </td>
           <td>
@@ -197,7 +215,7 @@
                   <td width="35%"><a href="javascript:document.lookuporderd.submit()" class="buttontext">[Lookup Orders]</a></td>
                 </tr>
               </form>
-
+              
               <form method="post" action="<ofbiz:url>/orderlist</ofbiz:url>" name="findorderstatus">
                 <tr>
                   <td width="25%" align=right><div class="tabletext">Current Status</div></td>
@@ -212,37 +230,8 @@
                   </td>
                   <td width="35%"><a href="javascript:document.findorderstatus.submit()" class="buttontext">[Lookup Orders]</a></td>
                 </tr>
-              </form>
-
-            </table>
-          </td>
-        </tr>
-        <tr>
-          <td>
-
-            <table width='100%' border='0' cellspacing='0' cellpadding='2'>
-              <form method="post" action="/partymgr/control/findparty" name="findnameform">
-                <input type="hidden" name="USERNAME" value="<%EntityField.run("userLogin", "userLoginId", pageContext);%>">
-                <input type="hidden" name="PASSWORD" value="<%EntityField.run("userLogin", "currentPassword", pageContext);%>">
-                <tr>
-                  <td width="25%" align=right><div class="tabletext">First Name</div></td>
-                  <td width="40%">
-                    <input type="text" name="first_name" size="30" style="font-size: small;" value='<%=UtilFormatOut.checkNull(request.getParameter("first_name"))%>'>
-                  </td>
-                  <td width="35%">&nbsp;</td>
-                </tr>
-                <tr>
-                  <td width="25%" align=right><div class="tabletext">Last Name</div></td>
-                  <td width="40%">
-                    <input type="text" name="last_name" size="30" style="font-size: small;" value='<%=UtilFormatOut.checkNull(request.getParameter("last_name"))%>'>
-                  </td>
-                  <td width="35%"><a href="javascript:document.findnameform.submit()" class="buttontext">[Lookup Party]</a></td>
-                </tr>
-              </form>
-            </table>
-          </td>
-          <td>
-            <table width='100%' border='0' cellspacing='0' cellpadding='2'>
+              </form>   
+                         
               <form method="post" action="/partymgr/control/findparty" name="findemailform">
                 <input type="hidden" name="USERNAME" value="<%EntityField.run("userLogin", "userLoginId", pageContext);%>">
                 <input type="hidden" name="PASSWORD" value="<%EntityField.run("userLogin", "currentPassword", pageContext);%>">
@@ -265,9 +254,9 @@
                   </td>
                   <td width="35%"><a href="javascript:document.findloginform.submit()" class="buttontext">[Lookup Party]</a></td>
                 </tr>
-              </form>
-            </table>
-          </td>
+              </form>              
+            </table            
+          </td>                      
         </tr>
       </table>
     </TD>
