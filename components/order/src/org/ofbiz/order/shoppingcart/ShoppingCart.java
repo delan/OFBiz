@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCart.java,v 1.47 2004/06/30 21:24:53 jonesde Exp $
+ * $Id: ShoppingCart.java,v 1.48 2004/07/04 06:06:02 ajzeneski Exp $
  *
  *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -61,7 +61,7 @@ import org.ofbiz.service.LocalDispatcher;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.47 $
+ * @version    $Revision: 1.48 $
  * @since      2.0
  */
 public class ShoppingCart implements Serializable {
@@ -1715,7 +1715,7 @@ public class ShoppingCart implements Serializable {
         return result;
     }
 
-    static class BasePriceOrderComparator implements Comparator {
+    static class BasePriceOrderComparator implements Comparator, Serializable {
 
         private boolean ascending = false;
 
