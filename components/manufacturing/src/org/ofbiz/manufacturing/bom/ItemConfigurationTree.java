@@ -230,8 +230,12 @@ public class ItemConfigurationTree {
      * @param initialDepth The depth of the root node.
      */    
     public void print(ArrayList arr, int initialDepth) {
+        print(arr, initialDepth, true);
+    }
+    
+    public void print(ArrayList arr, int initialDepth, boolean excludePhantoms) {
         if (root != null) {
-            root.print(arr, getRootQuantity(), initialDepth);
+            root.print(arr, getRootQuantity(), initialDepth, excludePhantoms);
         }
     }
     
@@ -242,6 +246,10 @@ public class ItemConfigurationTree {
      */    
     public void print(ArrayList arr) {
         print(arr, 0);
+    }
+
+    public void print(ArrayList arr, boolean excludePhantoms) {
+        print(arr, 0, excludePhantoms);
     }
 
     /** It visits the in-memory tree that represents a bill of materials
@@ -279,7 +287,16 @@ public class ItemConfigurationTree {
      */    
     public void createManufacturingOrders(String orderId, String orderItemSeqId, String shipmentId, Date date, GenericDelegator delegator, LocalDispatcher dispatcher, GenericValue userLogin)  throws GenericEntityException {
         if (root != null) {
-            root.createManufacturingOrder(orderId, orderItemSeqId, shipmentId, date, true, delegator, dispatcher, userLogin);
+            String facilityId = null;
+            if (orderId != null) {
+                GenericValue order = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
+                facilityId = order.getString("originFacilityId");
+            }
+            if (facilityId == null && shipmentId != null) {
+                GenericValue shipment = delegator.findByPrimaryKey("Shipment", UtilMisc.toMap("shipmentId", shipmentId));
+                facilityId = shipment.getString("originFacilityId");
+            }
+            root.createManufacturingOrder(null, orderId, orderItemSeqId, shipmentId, facilityId, date, true, delegator, dispatcher, userLogin);
         }
     }
 
