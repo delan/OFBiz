@@ -3144,6 +3144,9 @@
       <relation type="one" fk-name="SUPPL_PROD_SRTPE" rel-entity-name="SupplierRatingType">
         <key-map field-name="supplierRatingTypeId"/>
       </relation>
+      <relation type="one" fk-name="SUPPL_PROD_CUOM" title="Currency" rel-entity-name="Uom">
+        <key-map field-name="currencyUomId" rel-field-name="uomId"/>
+      </relation>
     </entity>
     <entity entity-name="SupplierRatingType"
             package-name="org.ofbiz.product.supplier"
