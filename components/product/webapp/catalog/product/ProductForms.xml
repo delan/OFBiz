@@ -130,7 +130,11 @@
         <field position="1" name="quantityIncluded"><text size="10" maxlength="20"/></field>
         <field position="2" name="quantityUomId"><text size="10" maxlength="20"/></field>
         <field position="1" name="piecesIncluded"><text size="10" maxlength="20"/></field>
-        <field position="2" name="returnable" widget-style="selectBox">
+
+        <field position="1" name="returnable" widget-style="selectBox">
+            <drop-down allow-empty="true"><option key="Y"/><option key="N"/></drop-down>
+        </field>
+        <field position="2" name="includeInPromotions" widget-style="selectBox">
             <drop-down allow-empty="true"><option key="Y"/><option key="N"/></drop-down>
         </field>
 
