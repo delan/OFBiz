@@ -1,5 +1,5 @@
 /*
- * $Id: DataResourceWorker.java,v 1.6 2003/12/05 21:07:13 byersa Exp $
+ * $Id: DataResourceWorker.java,v 1.7 2003/12/08 08:39:57 byersa Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -74,7 +74,7 @@ import freemarker.template.Template;
  * DataResourceWorker Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.6 $
+ * @version    $Revision: 1.7 $
  * @since      3.0
  *
  * 
@@ -505,9 +505,16 @@ Debug.logInfo("in uploadAndStoreImage, idFieldValue:" + idFieldValue, "");
             String requestName = UtilProperties.getMessage("content", "img.request", locale);
             String requestParamName = UtilProperties.getMessage("content", "img.request.param.name", locale);
             String url = requestName + "?" + requestParamName + "=" + dataResourceId;
-            String prefix = buildRequestPrefix(delegator);
-            //Debug.logInfo("in renderDAtaResourceAsHtml(work), prefix:" + prefix, "");
-            String s = prefix + url;
+            if (UtilValidate.isEmpty(url)) {
+                throw new IOException("Image url object is null.");
+            }
+            String prefix = buildRequestPrefix(delegator, locale);
+            String sep = "";
+            String s = "";
+            if ( url.indexOf("/") != 0 && prefix.lastIndexOf("/") != (prefix.length() -1)) {
+                sep = "/";
+            }
+            s = prefix + sep + url;
             outString = "<img src=\"" + s + "\"/>";
         } else if (dataResourceTypeId.equals("URL_RESOURCE")) {
             String href = (String)dataResource.get("objectInfo"); 
@@ -564,12 +571,16 @@ Debug.logInfo("in uploadAndStoreImage, idFieldValue:" + idFieldValue, "");
         return s;
     }
 
-    public static String buildRequestPrefix(GenericDelegator delegator) {
-        String prefix = null;
-        Map prefixValues = new HashMap();
-        String webSiteId = null;
-        NotificationServices.setBaseUrl(delegator, webSiteId, prefixValues);
-        prefix = (String)prefixValues.get("baseUrl");
+    public static String buildRequestPrefix(GenericDelegator delegator, Locale locale) {
+        String prefix = UtilProperties.getMessage("content", "baseUrl", locale);
+        Debug.logInfo("in buildRequestPrefix, prefix(baseUrl):" + prefix, "");
+        if (UtilValidate.isEmpty(prefix)) {
+             Map prefixValues = new HashMap();
+             String webSiteId = null;
+             NotificationServices.setBaseUrl(delegator, webSiteId, prefixValues);
+             prefix = (String)prefixValues.get("baseUrl");
+        }
+        Debug.logInfo("in buildRequestPrefix, prefix:" + prefix, "");
 
         return prefix;
     }
