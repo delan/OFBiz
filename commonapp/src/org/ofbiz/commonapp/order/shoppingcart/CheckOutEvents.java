@@ -342,7 +342,7 @@ public class CheckOutEvents {
 
     public static String emailOrder(HttpServletRequest request, HttpServletResponse response) {
         String contextRoot = (String) request.getAttribute(SiteDefs.CONTEXT_ROOT);
-        // getServletContext appears to be new on the session object for Servlet 2.3
+        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
         ServletContext application = ((ServletContext) request.getAttribute("servletContext"));
         URL ecommercePropertiesUrl = null;
         URL orderPropertiesUrl = null;
@@ -368,38 +368,41 @@ public class CheckOutEvents {
             GenericValue userLogin = (GenericValue) request.getSession().getAttribute(SiteDefs.USER_LOGIN);
             String orderAdditionalEmails = (String) request.getAttribute("orderAdditionalEmails");
             StringBuffer emails = new StringBuffer();
-
-            if (orderAdditionalEmails != null) {
-                emails.append(orderAdditionalEmails);
-            }
-            GenericValue party = null;
-
+            
+            String orderId = (String) request.getAttribute("order_id");
+            
+            // get the email addresses from the order contact mech(s)
+            List orderContactMechs = null;
             try {
-                party = userLogin.getRelatedOne("Party");
+                Map ocFields = UtilMisc.toMap("orderId", orderId, "contactMechPurposeTypeId", "ORDER_EMAIL");
+                orderContactMechs = delegator.findByAnd("OrderContactMech", ocFields);
             } catch (GenericEntityException e) {
-                Debug.logWarning(e.getMessage(), module);
-                party = null;
+                Debug.logWarning(e, "Problems getting order contact mechs", module);
             }
-            if (party != null) {
-                Iterator emailIter = UtilMisc.toIterator(ContactHelper.getContactMechByType(party, "EMAIL_ADDRESS", false));
-
-                while (emailIter != null && emailIter.hasNext()) {
-                    GenericValue email = (GenericValue) emailIter.next();
-
-                    emails.append(emails.length() > 0 ? "," : "").append(email.getString("infoString"));
+            
+            if (orderContactMechs != null) {
+                Iterator oci = orderContactMechs.iterator();
+                while (oci.hasNext()) {
+                    try {
+                        GenericValue orderContactMech = (GenericValue) oci.next();
+                        GenericValue contactMech = orderContactMech.getRelatedOne("ContactMech");
+                        emails.append(emails.length() > 0 ? "," : "").append(contactMech.getString("infoString"));
+                    } catch (GenericEntityException e) {
+                        Debug.logWarning(e, "Problems getting contact mech from order contact mech", module);
+                    }                        
                 }
             }
 
             String content = (String) request.getAttribute("confirmorder");
 
+            MimeMessage mail = null;
             try {
                 // JavaMail contribution from Chris Nelson 11/21/2001
                 Properties props = new Properties();
-
                 props.put("mail.smtp.host", SMTP_SERVER);
+                
                 Session session = Session.getDefaultInstance(props);
-
-                MimeMessage mail = new MimeMessage(session);
+                mail = new MimeMessage(session);
 
                 mail.setFrom(new InternetAddress(ORDER_SENDER_EMAIL));
                 mail.addRecipients(Message.RecipientType.TO, emails.toString());
@@ -410,28 +413,26 @@ public class CheckOutEvents {
                 if (UtilValidate.isNotEmpty(ORDER_BCC)) {
                     mail.addRecipients(Message.RecipientType.BCC, ORDER_BCC);
                 }
-
-                String orderId = (String) request.getAttribute("order_id");
-
+                
                 mail.setSubject(UtilProperties.getPropertyValue(ecommercePropertiesUrl, "company.name", "") + " Order" + UtilFormatOut.ifNotEmpty(orderId, " #", "") + " Confirmation");
                 // mail.addHeaderLine("MIME-Version: 1.0\nContent-type: text/html; charset=us-ascii\n");
                 mail.setContent(content, "text/html");
                 Transport.send(mail);
-            } catch (Exception e) {
-                Debug.logError(e, module);
+            } catch (Exception e) {               
+                Debug.logError(e, "Problems customer sending mail message", module);
                 request.setAttribute(SiteDefs.ERROR_MESSAGE, "Error e-mailing order confirmation, but it was created and will be processed.");
                 return "success"; // "error";
             }
 
+            mail = null;
             try {
                 // send off the notification email if defined.
                 if (UtilValidate.isNotEmpty(NOTIFY_FROM) && UtilValidate.isNotEmpty(NOTIFY_TO)) {
                     Properties props = new Properties();
-
                     props.put("mail.smtp.host", SMTP_SERVER);
+                    
                     Session session = Session.getDefaultInstance(props);
-
-                    MimeMessage mail = new MimeMessage(session);
+                    mail = new MimeMessage(session);
 
                     mail.setFrom(new InternetAddress(NOTIFY_FROM));
                     mail.addRecipients(Message.RecipientType.TO, NOTIFY_TO);
@@ -442,15 +443,13 @@ public class CheckOutEvents {
                     if (UtilValidate.isNotEmpty(NOTIFY_BCC)) {
                         mail.addRecipients(Message.RecipientType.BCC, NOTIFY_BCC);
                     }
-
-                    String orderId = (String) request.getAttribute("order_id");
-
+                    
                     mail.setSubject(UtilProperties.getPropertyValue(ecommercePropertiesUrl, "company.name", "") + " Order" + UtilFormatOut.ifNotEmpty(orderId, " #", "") + " Notification");
-                    mail.setContent(content, "text/html");
+                    mail.setContent(content, "text/html");                    
                     Transport.send(mail);
                 }
-            } catch (Exception e) {
-                Debug.logError(e, module);
+            } catch (Exception e) {               
+                Debug.logError(e, "Problems sending merchant mail message", module);
             }
 
         } catch (RuntimeException re) {
