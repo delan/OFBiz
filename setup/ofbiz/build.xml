@@ -716,15 +716,31 @@
 
     <target name="distro-docs" depends="">
         <!-- This is meant to be copied to the website and release as a documentation set -->
-        <antcall target="deploy" />
-        <antcall target="docs" />
-        
         <property name="docstemp.dir" value="../docstemp" />
         <property name="docsdest.dir" value="${docstemp.dir}/ofbiz/site" />
-        <delete dir="${docstemp.dir}" />
         
+        <antcall target="build-docs-site" />
+        
+        <!-- make the archive -->
+        <delete file="../ofbiz-docs.zip" />
+        <zip destfile="../ofbiz-docs.zip" basedir="${docstemp.dir}" />
+        <delete dir="${docstemp.dir}" />        
+    </target>
+    
+    <target name="build-site" depends="">
+        <!-- build just a website -->
+        <property name="docsdest.dir" value="./site" />
+        <antcall target="build-docs-site" />
+    </target>
+    
+    <target name="build-docs-site" depends="">
+        <!-- meant to be called from another target which sets ${docsdest.dir} -->
+        <antcall target="deploy" />
+        <antcall target="docs" />
+            
+        <delete dir="${docstemp.dir}" />        
         <mkdir dir="${docsdest.dir}" />
-
+        
         <copy toDir="${docsdest.dir}"><fileset dir="website"/></copy>
 
         <mkdir dir="${docsdest.dir}/setup" />
@@ -758,11 +774,6 @@
         <mkdir dir="${docsdest.dir}/dtds" />
         <copy toDir="${docsdest.dir}/dtds"><fileset dir="core/docs/xmldefs/ofbiz"/></copy>
         <copy toDir="${docsdest.dir}/dtds"><fileset dir="core/docs/xmldefs/wfmc"/></copy>
-
-        <!-- make the archive -->
-        <delete file="../ofbiz-docs.zip" />
-        <zip destfile="../ofbiz-docs.zip" basedir="${docstemp.dir}" />
-        <delete dir="${docstemp.dir}" />
     </target>
 
     <target name="cleanextras" depends="">
