@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Catherine Heintz (catherine.heintz@nereide.biz)
- *@version    $Revision: 1.7 $
+ *@version    $Revision: 1.8 $
  *@since      2.1
 -->
 
@@ -30,7 +30,7 @@
 
 ${pages.get("/category/CategoryTabBar.ftl")}
 
-<div class="head1">${uiLabelMap.ProductRollup} <span class="head2"><#if productCategory?has_content>${productCategory.description} </#if>[${uiLabelMap.CommonId}:${productCategoryId?if_exists}]</span></div>
+<div class="head1">${uiLabelMap.ProductRollup} <span class="head2"><#if productCategory?has_content>${productCategory.description?default("No Description")} </#if>[${uiLabelMap.CommonId}:${productCategoryId?if_exists}]</span></div>
   
 <a href="<@ofbizUrl>/EditCategory</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewCategory}]</a>
 <#if productCategoryId?has_content> 

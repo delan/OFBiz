@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -82,7 +82,7 @@
             <div style='margin-left: 10px;'>
             <#if currentTopCategory?exists>
               <#if curCategoryId?exists && curCategoryId == currentTopCategory.productCategoryId>
-                <div class='tabletext' style='text-indent: -10px;'><b>-&nbsp;${currentTopCategory.description} [${currentTopCategory.productCategoryId}]</b></div>
+                <div class='tabletext' style='text-indent: -10px;'><b>-&nbsp;${currentTopCategory.description?default("No Description")} [${currentTopCategory.productCategoryId}]</b></div>
               <#else>
                 <div class='browsecategorytext'>-&nbsp;<a href="<@ofbizUrl>/EditCategory?productCategoryId=${currentTopCategory.productCategoryId}</@ofbizUrl>" class='browsecategorybutton'>${currentTopCategory.description?if_exists} [${currentTopCategory.productCategoryId}]</a></div>
               </#if>
