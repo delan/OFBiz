@@ -108,6 +108,7 @@ public class PosTransaction {
         this.transactionId = session.getDelegator().getNextSeqId("PosTransaction");
         this.ch = new CheckOutHelper(session.getDispatcher(), session.getDelegator(), cart);
         cart.setFacilityId(facilityId);
+        cart.setTerminalId(terminalId);
         currentTx = this;
         trace("transaction created");
     }

@@ -241,6 +241,7 @@ public class ShoppingCart implements Serializable {
     protected String productStoreId = null;
     protected String facilityId = null;
     protected String webSiteId = null;
+    protected String terminalId = null;
     protected String orderPartyId = null;
 
     protected GenericValue userLogin = null;
@@ -333,6 +334,14 @@ public class ShoppingCart implements Serializable {
         this.productStoreId = productStoreId;
     }
 
+    public String getTerminalId() {
+        return this.terminalId;
+    }
+
+    public void setTerminalId(String terminalId) {
+        this.terminalId = terminalId;
+    }
+    
     public String getFacilityId() {
         return this.facilityId;
     }

@@ -435,6 +435,7 @@ public class CheckOutHelper {
         // need the partyId; don't use userLogin in case of an order via order mgr
         String partyId = this.cart.getPartyId();
         String facilityId = this.cart.getFacilityId();
+        String terminalId = this.cart.getTerminalId();
         String productStoreId = cart.getProductStoreId();
 
         context.put("grandTotal", grandTotal);
@@ -442,7 +443,8 @@ public class CheckOutHelper {
         context.put("partyId", partyId);
         context.put("productStoreId", productStoreId);
         context.put("originFacilityId", facilityId);
-        context.put("visitId", visitId);        
+        context.put("visitId", visitId);
+        context.put("terminalId", terminalId);
         context.put("webSiteId", webSiteId);
 
         // store the order - invoke the service
