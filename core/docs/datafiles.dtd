@@ -31,7 +31,7 @@
     receiver CDATA #IMPLIED
     delimiter CDATA #IMPLIED
     record-length CDATA #IMPLIED
-    separator-style ( fixed-length | delimited ) #REQUIRED
+    separator-style ( fixed-length | fixed-record | delimited ) #REQUIRED
     description CDATA #IMPLIED >
 
   <!ELEMENT record ( field+ )>

@@ -32,6 +32,7 @@ import java.util.*;
 
 public class ModelDataFile {
   public static final String SEP_FIXED_LENGTH = "fixed-length";
+  public static final String SEP_FIXED_RECORD = "fixed-record";
   public static final String SEP_DELIMITED = "delimited";
   
   /** The name of the File */

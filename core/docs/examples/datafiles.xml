@@ -10,7 +10,7 @@
     receiver CDATA #IMPLIED
     delimiter CDATA #IMPLIED
     record-length CDATA #IMPLIED
-    separator-style ( fixed-length | delimited ) #REQUIRED
+    separator-style ( fixed-length| fixed-record | delimited ) #REQUIRED
     description CDATA #IMPLIED >
 
   <!ELEMENT record ( field+ )>
@@ -36,7 +36,7 @@
 ]>
 
 <data-files>
-  <data-file name="" type-code="" sender="" receiver="" record-length="" delimiter="" separator-style="fixed-length" description="">
+  <data-file name="" type-code="" sender="" receiver="" record-length="" delimiter="" separator-style="fixed-record" description="">
     <record name="" type-code="" tc-position="" tc-length="" description="" parent-name="" limit="many">
       <field name="" position="" length="" type="" format="" valid-exp="" description="" prim-key="false"/>
     </record>

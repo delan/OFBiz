@@ -4,6 +4,8 @@ import java.util.*;
 import java.net.*;
 import java.io.*;
 
+import org.ofbiz.core.util.*;
+
 /**
  * <p><b>Title:</b> 
  * <p><b>Description:</b> None
@@ -62,66 +64,103 @@ public class DataFile {
     catch(IOException e) { throw new DataFileException("Error open URL: " + fileUrl.toString(), e); }
     Stack parentStack = new Stack();
 
-    if(ModelDataFile.SEP_FIXED_LENGTH.equals(modelDataFile.separatorStyle)) {
-      BufferedReader br = new BufferedReader(new InputStreamReader(urlStream));
-      
-      int lineNum = 1;
-      String line = null;
-      try { line = br.readLine(); }
-      catch(IOException e) { throw new DataFileException("Error reading line #" + lineNum + " from URL: " + fileUrl.toString(), e); }
+    try {
+      if(ModelDataFile.SEP_FIXED_RECORD.equals(modelDataFile.separatorStyle) || ModelDataFile.SEP_FIXED_LENGTH.equals(modelDataFile.separatorStyle)) {
+        BufferedReader br = new BufferedReader(new InputStreamReader(urlStream));
+        boolean isFixedRecord = ModelDataFile.SEP_FIXED_RECORD.equals(modelDataFile.separatorStyle);
 
-      while(line != null) {
-        //first check to see if the file type has a line size, and if so if this line complies
-        if(modelDataFile.recordLength > 0 && line.length() != modelDataFile.recordLength) {
-          throw new DataFileException("Line number " + lineNum + " was not the expected length; expected: " + modelDataFile.recordLength + ", got: " + line.length());
-        }
-        
-        //find out which type of record it is - will throw an exception if not found
-        ModelRecord modelRecord = findModelForLine(line, lineNum, modelDataFile);
-        
-        Record record = createRecord(line, lineNum, modelRecord);
+        int lineNum = 1;
+        String line = null;
+        if(isFixedRecord) {
+          if(modelDataFile.recordLength <= 0) throw new DataFileException("Cannot read a fixed record length file if no record length is specified");
 
-        //if no parent pop all and put in dataFile records list
-        if(modelRecord.parentRecord == null) {
-          parentStack.clear();
-          records.add(record);
-        }
-        //if parent equals top parent on stack, add to that parents child list, otherwise pop off parent and try again
-        else {
-          Record parentRecord = null;
-          while(parentStack.size() > 0) {
-            parentRecord = (Record)parentStack.peek();
-            if(parentRecord.recordName.equals(modelRecord.parentName)) {
-              break;
+          try {
+            char[] charData = new char[modelDataFile.recordLength];
+            if(br.read(charData, (lineNum-1)*modelDataFile.recordLength, modelDataFile.recordLength) == -1) {
+              line = null;
             }
             else {
-              parentStack.pop();
-              parentRecord = null;
+              line = new String(charData);
             }
           }
-          
-          if(parentRecord == null) {
-            throw new DataFileException("Expected Parent Record not found for line " + lineNum + "; record name of expected parent is " + modelRecord.parentName);
-          }
-          
-          parentRecord.addChildRecord(record);
+          catch(IOException e) { throw new DataFileException("Error reading line #" + lineNum + " (index " + (lineNum-1)*modelDataFile.recordLength + " length " + modelDataFile.recordLength + ") from URL: " + fileUrl.toString(), e); }
         }
-        
-        //if this record has children, put it on the parentStack
-        if(modelRecord.childRecords.size() > 0) {
-          parentStack.push(record);
+        else {
+          try { line = br.readLine(); }
+          catch(IOException e) { throw new DataFileException("Error reading line #" + lineNum + " from URL: " + fileUrl.toString(), e); }
         }
 
-        lineNum++;
-        try { line = br.readLine(); }
-        catch(IOException e) { throw new DataFileException("Error reading line #" + lineNum + " from URL: " + fileUrl.toString(), e); }
+        while(line != null) {
+          //first check to see if the file type has a line size, and if so if this line complies
+          if(modelDataFile.recordLength > 0 && line.length() != modelDataFile.recordLength) {
+            throw new DataFileException("Line number " + lineNum + " was not the expected length; expected: " + modelDataFile.recordLength + ", got: " + line.length());
+          }
+
+          //find out which type of record it is - will throw an exception if not found
+          ModelRecord modelRecord = findModelForLine(line, lineNum, modelDataFile);
+
+          Record record = createRecord(line, lineNum, modelRecord);
+
+          //if no parent pop all and put in dataFile records list
+          if(modelRecord.parentRecord == null) {
+            parentStack.clear();
+            records.add(record);
+          }
+          //if parent equals top parent on stack, add to that parents child list, otherwise pop off parent and try again
+          else {
+            Record parentRecord = null;
+            while(parentStack.size() > 0) {
+              parentRecord = (Record)parentStack.peek();
+              if(parentRecord.recordName.equals(modelRecord.parentName)) {
+                break;
+              }
+              else {
+                parentStack.pop();
+                parentRecord = null;
+              }
+            }
+
+            if(parentRecord == null) {
+              throw new DataFileException("Expected Parent Record not found for line " + lineNum + "; record name of expected parent is " + modelRecord.parentName);
+            }
+
+            parentRecord.addChildRecord(record);
+          }
+
+          //if this record has children, put it on the parentStack
+          if(modelRecord.childRecords.size() > 0) {
+            parentStack.push(record);
+          }
+
+          lineNum++;
+          if(isFixedRecord) {
+            try {
+              char[] charData = new char[modelDataFile.recordLength];
+              if(br.read(charData, (lineNum-1)*modelDataFile.recordLength, modelDataFile.recordLength) == -1) {
+                line = null;
+              }
+              else {
+                line = new String(charData);
+              }
+            }
+            catch(IOException e) { throw new DataFileException("Error reading line #" + lineNum + " (index " + (lineNum-1)*modelDataFile.recordLength + " length " + modelDataFile.recordLength + ") from URL: " + fileUrl.toString(), e); }
+          }
+          else {
+            try { line = br.readLine(); }
+            catch(IOException e) { throw new DataFileException("Error reading line #" + lineNum + " from URL: " + fileUrl.toString(), e); }
+          }
+        }
+      }
+      else if(ModelDataFile.SEP_DELIMITED.equals(modelDataFile.separatorStyle)) {
+        throw new DataFileException("Delimited files not yet supported");
+      }
+      else {
+        throw new DataFileException("Separator style " + modelDataFile.separatorStyle + " not recognized.");
       }
     }
-    else if(ModelDataFile.SEP_DELIMITED.equals(modelDataFile.separatorStyle)) {
-      throw new DataFileException("Delimited files not yet supported");
-    }
-    else {
-      throw new DataFileException("Separator style " + modelDataFile.separatorStyle + " not recognized.");
+    finally {
+      try { urlStream.close(); }
+      catch(IOException e) { Debug.logWarning(e); }
     }
   }
   
