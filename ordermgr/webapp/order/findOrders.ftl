@@ -252,7 +252,7 @@ function lookupOrders() {
                 </#if>
               </td>
               <td align='right'>
-                <a href="<@ofbizUrl>/orderview?order_id=${orderHeader.orderId}</@ofbizUrl>" class='buttontext'>[View]</a>
+                <a href="<@ofbizUrl>/orderview?order_id=${orderHeader.orderId}</@ofbizUrl>" class='buttontext'>View</a>
               </td>              
           </#list>          
           <#-- toggle the row color -->
