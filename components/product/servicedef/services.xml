@@ -954,28 +954,43 @@
     </service>
 
     <!-- ProductFeatureCategoryAppl Services -->
-    <service name="createProductFeatureCategoryAppl" engine="simple"
+    <service name="createProductFeatureCategoryAppl" default-entity-name="ProductFeatureCategoryAppl" engine="simple"
                 location="org/ofbiz/product/feature/ProductFeatureServices.xml" invoke="createProductFeatureCategoryAppl" auth="true">
         <description>Create a ProductFeatureCategory to ProductCategory Application</description>
-        <attribute name="productCategoryId" type="String" mode="IN" optional="false"/>
-        <attribute name="productFeatureCategoryId" type="String" mode="IN" optional="false"/>
-        <attribute name="fromDate" type="java.sql.Timestamp" mode="IN" optional="true"/>
-        <attribute name="thruDate" type="java.sql.Timestamp" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <override name="fromDate" optional="true"/>
     </service>
-    <service name="updateProductFeatureCategoryAppl" engine="simple"
+    <service name="updateProductFeatureCategoryAppl" default-entity-name="ProductFeatureCategoryAppl" engine="simple"
                 location="org/ofbiz/product/feature/ProductFeatureServices.xml" invoke="updateProductFeatureCategoryAppl" auth="true">
         <description>Update a ProductFeatureCategory to ProductCategory Application</description>
-        <attribute name="productCategoryId" type="String" mode="IN" optional="false"/>
-        <attribute name="productFeatureCategoryId" type="String" mode="IN" optional="false"/>
-        <attribute name="fromDate" type="java.sql.Timestamp" mode="IN" optional="false"/>
-        <attribute name="thruDate" type="java.sql.Timestamp" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
-    <service name="removeProductFeatureCategoryAppl" engine="simple"
+    <service name="removeProductFeatureCategoryAppl" default-entity-name="ProductFeatureCategoryAppl" engine="simple"
                 location="org/ofbiz/product/feature/ProductFeatureServices.xml" invoke="removeProductFeatureCategoryAppl" auth="true">
         <description>Remove a ProductFeatureCategory to ProductCategory Application</description>
-        <attribute name="productCategoryId" type="String" mode="IN" optional="false"/>
-        <attribute name="productFeatureCategoryId" type="String" mode="IN" optional="false"/>
-        <attribute name="fromDate" type="java.sql.Timestamp" mode="IN" optional="false"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+
+    <!-- ProductFeatureCatGrpAppl Services -->
+    <service name="createProductFeatureCatGrpAppl" default-entity-name="ProductFeatureCatGrpAppl" engine="simple"
+                location="org/ofbiz/product/feature/ProductFeatureServices.xml" invoke="createProductFeatureCatGrpAppl" auth="true">
+        <description>Create a ProductFeatureGroup to ProductCategory Application</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <override name="fromDate" optional="true"/>
+    </service>
+    <service name="updateProductFeatureCatGrpAppl" default-entity-name="ProductFeatureCatGrpAppl" engine="simple"
+                location="org/ofbiz/product/feature/ProductFeatureServices.xml" invoke="updateProductFeatureCatGrpAppl" auth="true">
+        <description>Update a ProductFeatureGroup to ProductCategory Application</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="removeProductFeatureCatGrpAppl" default-entity-name="ProductFeatureCatGrpAppl" engine="simple"
+                location="org/ofbiz/product/feature/ProductFeatureServices.xml" invoke="removeProductFeatureCatGrpAppl" auth="true">
+        <description>Remove a ProductFeatureGroup to ProductCategory Application</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
 
     <!-- ProductFeatureGroup Services -->

@@ -24,7 +24,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.0
 -->
 
@@ -243,7 +243,7 @@
 
         <make-value value-name="lookupKeyValue" entity-name="ProductFeatureCategoryAppl"/>
         <set-pk-fields map-name="parameters" value-name="lookupKeyValue"/>
-        <find-by-primary-key entity-name="ProductFeatureCategoryAppl" map-name="lookupKeyValue" value-name="lookedUpValue"/>
+        <find-by-primary-key map-name="lookupKeyValue" value-name="lookedUpValue"/>
         <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
         <store-value value-name="lookedUpValue"/>
     </simple-method>
@@ -253,7 +253,43 @@
 
         <make-value value-name="lookupKeyValue" entity-name="ProductFeatureCategoryAppl"/>
         <set-pk-fields map-name="parameters" value-name="lookupKeyValue"/>
-        <find-by-primary-key entity-name="ProductFeatureCategoryAppl" map-name="lookupKeyValue" value-name="lookedUpValue"/>
+        <find-by-primary-key map-name="lookupKeyValue" value-name="lookedUpValue"/>
+        <remove-value value-name="lookedUpValue"/>
+    </simple-method>
+
+    <!-- Methods for ProductFeatureCatGrpAppl -->
+    <simple-method method-name="createProductFeatureCatGrpAppl" short-description="Create a ProductFeatureGroup to ProductCategory Application">
+        <check-permission permission="CATALOG" action="_CREATE"><fail-message message="Security Error: to run createProductFeatureCatGrpAppl you must have the CATALOG_CREATE or CATALOG_ADMIN permission"/></check-permission>
+        <check-errors/>
+
+        <make-value value-name="newEntity" entity-name="ProductFeatureCatGrpAppl"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+        <set-pk-fields map-name="parameters" value-name="newEntity"/>
+        
+        <if-empty field-name="fromDate" map-name="newEntity">
+            <now-timestamp-to-env env-name="nowTimestamp"/>
+            <env-to-field env-name="nowTimestamp" field-name="fromDate" map-name="newEntity"/>
+        </if-empty>
+        
+        <create-value value-name="newEntity"/>
+    </simple-method>
+    <simple-method method-name="updateProductFeatureCatGrpAppl" short-description="Update a ProductFeatureGroup to ProductCategory Application">
+        <check-permission permission="CATALOG" action="_UPDATE"><fail-message message="Security Error: to run updateProductFeatureCatGrpAppl you must have the CATALOG_UPDATE or CATALOG_ADMIN permission"/></check-permission>
+        <check-errors/>
+
+        <make-value value-name="lookupKeyValue" entity-name="ProductFeatureCatGrpAppl"/>
+        <set-pk-fields map-name="parameters" value-name="lookupKeyValue"/>
+        <find-by-primary-key map-name="lookupKeyValue" value-name="lookedUpValue"/>
+        <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
+        <store-value value-name="lookedUpValue"/>
+    </simple-method>
+    <simple-method method-name="removeProductFeatureCatGrpAppl" short-description="Remove a ProductFeatureGroup to ProductCategory Application">
+        <check-permission permission="CATALOG" action="_DELETE"><fail-message message="Security Error: to run removeProductFeatureCatGrpAppl you must have the CATALOG_DELETE or CATALOG_ADMIN permission"/></check-permission>
+        <check-errors/>
+
+        <make-value value-name="lookupKeyValue" entity-name="ProductFeatureCatGrpAppl"/>
+        <set-pk-fields map-name="parameters" value-name="lookupKeyValue"/>
+        <find-by-primary-key map-name="lookupKeyValue" value-name="lookedUpValue"/>
         <remove-value value-name="lookedUpValue"/>
     </simple-method>
 
