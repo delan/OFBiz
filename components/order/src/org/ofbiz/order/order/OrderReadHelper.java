@@ -1,5 +1,5 @@
 /*
- * $Id: OrderReadHelper.java,v 1.13 2003/11/26 07:25:07 ajzeneski Exp $
+ * $Id: OrderReadHelper.java,v 1.14 2003/11/27 17:46:12 ajzeneski Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -51,7 +51,7 @@ import org.ofbiz.security.Security;
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     Eric Pabst
  * @author     <a href="mailto:ray.barlow@whatsthe-point.com">Ray Barlow</a>
- * @version    $Revision: 1.13 $
+ * @version    $Revision: 1.14 $
  * @since      2.0
  */
 public class OrderReadHelper {
@@ -609,7 +609,7 @@ public class OrderReadHelper {
                         if (height == null) height = new Double(0);
                         if (width == null) width = new Double(0);
                         if (depth == null) depth = new Double(0);
-                        shippableSizes.add(new Double(height.doubleValue() + width.doubleValue() + depth.doubleValue()));
+                        shippableSizes.add(new Double(height.doubleValue() * width.doubleValue() * depth.doubleValue()));
                     }
                 }
             }

@@ -1,5 +1,5 @@
 /*
- * $Id: ProductStoreWorker.java,v 1.12 2003/11/21 02:35:39 ajzeneski Exp $
+ * $Id: ProductStoreWorker.java,v 1.13 2003/11/27 17:46:12 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -47,7 +47,7 @@ import org.ofbiz.party.contact.ContactMechWorker;
  * ProductStoreWorker - Worker class for store related functionality
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.12 $
+ * @version    $Revision: 1.13 $
  * @since      2.0
  */
 public class ProductStoreWorker {
@@ -82,6 +82,22 @@ public class ProductStoreWorker {
             }
         }
         return null;
+    }
+
+    public static String getProductStorePaymentProperties(ServletRequest request, String paymentMethodTypeId, String paymentServiceTypeEnumId, boolean anyServiceType) {
+        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
+        String productStoreId = ProductStoreWorker.getProductStoreId(request);
+        return ProductStoreWorker.getProductStorePaymentProperties(delegator, productStoreId, paymentMethodTypeId, paymentServiceTypeEnumId, anyServiceType);
+    }
+
+    public static String getProductStorePaymentProperties(GenericDelegator delegator, String productStoreId, String paymentMethodTypeId, String paymentServiceTypeEnumId, boolean anyServiceType) {
+        GenericValue setting = ProductStoreWorker.getProductStorePaymentSetting(delegator, productStoreId, paymentMethodTypeId, paymentServiceTypeEnumId, anyServiceType);
+
+        String payProps = "payment.properties";
+        if (setting != null && setting.get("paymentPropertiesPath") != null) {
+            payProps =  setting.getString("paymentPropertiesPath");
+        }
+        return payProps;
     }
 
     public static GenericValue getProductStorePaymentSetting(GenericDelegator delegator, String productStoreId, String paymentMethodTypeId, String paymentServiceTypeEnumId, boolean anyServiceType) {
