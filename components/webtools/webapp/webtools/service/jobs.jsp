@@ -21,7 +21,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski 
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      2.0
 --%>
 
@@ -47,15 +47,17 @@
   <tr>
     <td><div class="tableheadtext">Job</div></td>
     <td><div class="tableheadtext">Pool</div></td>
-	<td><div class="tableheadtext">Start Date/Time</div></td>
+    <td><div class="tableheadtext">Run Time</div></td>
+	<td><div class="tableheadtext">Start Time</div></td>
     <td><div class="tableheadtext">Service</div></td>
-    <td><div class="tableheadtext">Finish Date/Time</div></td>
+    <td><div class="tableheadtext">Finish Time</div></td>
     <td>&nbsp;</td>
   </tr>
   <ofbiz:iterator name="job" property="jobs">
   <tr>
     <td><a href="#" class="buttontext"><%=UtilFormatOut.checkNull(job.getString("jobName"),"&nbsp;")%></a></td>
     <td><div class="tabletext"><%=UtilFormatOut.checkNull(job.getString("poolId"), "&nbsp;")%></div></td>
+    <td><div class="tabletext"><%=UtilFormatOut.checkNull(job.getString("runTime"),"&nbsp;")%></div></td>
     <td><div class="tabletext"><%=UtilFormatOut.checkNull(job.getString("startDateTime"),"&nbsp;")%></div></td>
     <td><div class="tabletext"><%=UtilFormatOut.checkNull(job.getString("serviceName"),"&nbsp;")%></div></td>
     <td><div class="tabletext"><%=UtilFormatOut.checkNull(job.getString("finishDateTime"),"&nbsp;")%></div></td>
