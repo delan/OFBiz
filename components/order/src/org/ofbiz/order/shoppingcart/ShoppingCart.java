@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCart.java,v 1.18 2003/11/16 09:02:02 jonesde Exp $
+ * $Id: ShoppingCart.java,v 1.19 2003/11/17 01:38:31 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -42,7 +42,7 @@ import org.ofbiz.service.LocalDispatcher;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.18 $
+ * @version    $Revision: 1.19 $
  * @since      2.0
  */
 public class ShoppingCart implements java.io.Serializable {
@@ -877,6 +877,17 @@ public class ShoppingCart implements java.io.Serializable {
             weight += (item.getWeight() * item.getQuantity());
         }
         return weight;
+    }
+
+    /** Returns a Set of all features applied to products in the cart. */
+    public Set getFeatureIdSet() {
+        Set featureSet = new HashSet();
+        Iterator i = iterator();
+        while (i.hasNext()) {
+            ShoppingCartItem item = (ShoppingCartItem) i.next();
+            featureSet.addAll(item.getFeatureIdSet());
+        }
+        return featureSet;
     }
 
     /** Returns true if the user wishes to view the cart everytime an item is added. */

@@ -1,5 +1,5 @@
 /*
- * $Id: ShipmentServices.java,v 1.1 2003/08/18 17:59:54 jonesde Exp $
+ * $Id: ShipmentServices.java,v 1.2 2003/11/17 01:38:32 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -42,7 +42,7 @@ import org.ofbiz.service.ServiceUtil;
  * ShipmentServices
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class ShipmentServices {
@@ -72,6 +72,9 @@ public class ShipmentServices {
         estimate.set("orderPricePercent", context.get("flatPercent"));
         estimate.set("orderFlatPrice", context.get("flatPrice"));
         estimate.set("orderItemFlatPrice", context.get("flatItemPrice"));
+        estimate.set("productFeatureGroupId", context.get("productFeatureGroupId"));
+        estimate.set("featurePercent", context.get("featurePercent"));
+        estimate.set("featurePrice", context.get("featurePrice"));
         storeAll.add(estimate);
 
         if (!applyQuantityBreak(context, result, storeAll, delegator, estimate, "w", "weight", "Weight")) {

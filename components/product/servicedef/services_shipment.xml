@@ -343,6 +343,9 @@
         <attribute name="flatPercent" type="Double" mode="IN" optional="false"/>
         <attribute name="flatPrice" type="Double" mode="IN" optional="true"/>
         <attribute name="flatItemPrice" type="Double" mode="IN" optional="true"/>
+        <attribute name="productFeatureGroupId" type="String" mode="IN" optional="true"/>
+        <attribute name="featurePercent" type="Double" mode="IN" optional="true"/>
+        <attribute name="featurePrice" type="Double" mode="IN" optional="true"/>
         <attribute name="wmin" type="Double" mode="IN" optional="true"/>
         <attribute name="wmax" type="Double" mode="IN" optional="true"/>
         <attribute name="wprice" type="Double" mode="IN" optional="true"/>

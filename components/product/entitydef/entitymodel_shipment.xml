@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.6 $
+ * @version    $Revision: 1.7 $
  */
 -->
 
@@ -550,6 +550,9 @@
       <field name="orderFlatPrice" type="currency-amount"></field>
       <field name="orderPricePercent" type="floating-point"></field>
       <field name="orderItemFlatPrice" type="currency-amount"></field>
+      <field name="productFeatureGroupId" type="id"></field>
+      <field name="featurePercent" type="floating-point"></field>
+      <field name="featurePrice" type="currency-amount"></field>
       <prim-key field="shipmentCostEstimateId"/>
       <relation type="one" fk-name="SHPMNT_CE_CSHMTH" rel-entity-name="CarrierShipmentMethod">
         <key-map field-name="shipmentMethodTypeId"/>

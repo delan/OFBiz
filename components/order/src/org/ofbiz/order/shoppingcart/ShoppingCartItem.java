@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCartItem.java,v 1.4 2003/11/12 07:46:20 jonesde Exp $
+ * $Id: ShoppingCartItem.java,v 1.5 2003/11/17 01:38:31 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -23,12 +23,7 @@
  */
 package org.ofbiz.order.shoppingcart;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.ofbiz.base.util.*;
 import org.ofbiz.entity.GenericDelegator;
@@ -49,7 +44,7 @@ import org.ofbiz.service.ModelService;
  *
  * @author     <a href="mailto:jaz@ofbiz.org.com">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.0
  */
 public class ShoppingCartItem implements java.io.Serializable {
@@ -626,6 +621,34 @@ public class ShoppingCartItem implements java.io.Serializable {
 
     public Map getAdditionalProductFeatureAndAppls() {
         return this.additionalProductFeatureAndAppls;
+    }
+
+    public Set getFeatureIdSet() {
+        Set featureIdList = new HashSet();
+        GenericValue product = this.getProduct();
+        if (product != null) {
+            List featureAppls = null;
+            try {
+                featureAppls = product.getRelated("ProductFeatureAppl");
+            } catch (GenericEntityException e) {
+                Debug.logError(e, "Unable to get features from product : " + product.get("productId"), module);
+            }
+            if (featureAppls != null) {
+                Iterator fai = featureAppls.iterator();
+                while (fai.hasNext()) {
+                    GenericValue appl = (GenericValue) fai.next();
+                    featureIdList.add(appl.getString("productFeatureId"));
+                }
+            }
+        }
+        if (this.additionalProductFeatureAndAppls != null) {
+            Iterator aapi = this.additionalProductFeatureAndAppls.values().iterator();
+            while (aapi.hasNext()) {
+                GenericValue appl = (GenericValue) aapi.next();
+                featureIdList.add(appl.getString("productFeatureId"));
+            }
+        }
+        return featureIdList;
     }
 
     /** Removes an item attribute. */
