@@ -362,7 +362,7 @@
 
 <br><div class="commentary">Fields marked with (*) are required.</div>
 
-<a href="<ofbiz:url>/checkLogin/main</ofbiz:url>" class="buttontext">&nbsp;&nbsp;[Back]</a>
-<a href="javascript:document.newuserform.submit()" class="buttontext">&nbsp;&nbsp;[Save]</a>
+&nbsp;&nbsp;<a href="<ofbiz:url>/checkLogin/main</ofbiz:url>" class="buttontext">[Back]</a>
+&nbsp;&nbsp;<a href="javascript:document.newuserform.submit()" class="buttontext">[Save]</a>
 <br>
 <br>
