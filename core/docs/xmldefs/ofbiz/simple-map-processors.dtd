@@ -56,7 +56,7 @@
 <!-- 
     Field Process & Operations 
 -->
-<!ELEMENT process ( ( validate-method | compare | compare-field | regexp | not-empty | equals | copy | convert )* )>
+<!ELEMENT process ( ( validate-method | compare | compare-field | regexp | not-empty | copy | convert )* )>
 <!ATTLIST process
     field CDATA #REQUIRED
 >
