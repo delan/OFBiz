@@ -113,6 +113,50 @@ public class EntityUtil {
     }
 
     /**
+     *returns the values that match the exprs in list
+     *
+     *@param values collection of GenericValues
+     *@param exprs the expressions that must validate to true
+     *@return Collection of GenericValue's that match the values in fields
+     */
+    public static Collection filterByAnd(Collection values, List exprs) {
+        if (values == null) return null;
+        if (exprs == null || exprs.size() == 0) {
+            //no constraints... oh well
+            return values;
+        }
+
+        Collection result = new ArrayList();
+        Iterator iter = values.iterator();
+        while (iter.hasNext()) {
+            GenericValue value = (GenericValue) iter.next();
+            Iterator exprIter = exprs.iterator();
+            boolean include = true;
+            while (exprIter.hasNext()) {
+                EntityExpr expr = (EntityExpr) exprIter.next();
+                if (EntityOperator.EQUALS.equals(expr.getOperator())) {
+                    //if the field named by lhs is not equal to rhs value, constraint fails
+                    if (!value.get((String) expr.getLhs()).equals(expr.getRhs())) {
+                        include = false;
+                        break;
+                    }
+                } else if (EntityOperator.NOT_EQUAL.equals(expr.getOperator())) {
+                    if (value.get((String) expr.getLhs()).equals(expr.getRhs())) {
+                        include = false;
+                        break;
+                    }
+                } else {
+                    throw new IllegalArgumentException("Operation " + expr.getOperator().getName() + " is not yet supported by filterByAnd");
+                }
+            }
+            if (include) {
+                result.add(value);
+            }
+        }
+        return result;
+    }
+
+    /**
      *returns the values in the order specified
      *
      *@param values collection of GenericValues
