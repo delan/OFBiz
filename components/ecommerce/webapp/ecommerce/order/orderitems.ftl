@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.10 $
+ *@version    $Revision: 1.11 $
  *@since      2.1
 -->
 
@@ -98,14 +98,8 @@
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
                     </#if>
-                    <td align="center" valign="top" nowrap>
-                      <div class="tabletext" nowrap>
-                        <#if orderItem.cancelQuantity?has_content>
-                          (${orderItem.quantity?string.number})&nbsp;
-                        </#if>
-                        <#assign displayQuantity = (orderItem.quantity?default(0) - orderItem.cancelQuantity?default(0))>
-                        ${displayQuantity?string.number}
-                      &nbsp;</div>
+                    <td align="right" valign="top">
+                      <div class="tabletext">${orderItem.quantity?string.number}</div>                        
                     </td>
                     <#if maySelectItems?default(false)>
                     <td align="right" valign="top">

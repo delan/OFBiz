@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.10 $
+ *@version    $Revision: 1.11 $
  *@since      2.1
 -->
 
@@ -384,7 +384,7 @@
                             <#list orderShipmentInfoSummaryList as orderShipmentInfoSummary>
                               <div class="tabletext">
                                 <#if (orderShipmentInfoSummaryList?size > 1)>${orderShipmentInfoSummary.shipmentPackageSeqId}: </#if>
-                                Code ${orderShipmentInfoSummary.trackingCode?default("[Not Yet Known]")}
+                                Code: ${orderShipmentInfoSummary.trackingCode?default("[Not Yet Known]")}
                                 <#if orderShipmentInfoSummary.boxNumber?has_content> Box #${orderShipmentInfoSummary.boxNumber}</#if> 
                                 <#if orderShipmentInfoSummary.carrierPartyId?has_content>(Carrier: ${orderShipmentInfoSummary.carrierPartyId})</#if>
                               </div>
