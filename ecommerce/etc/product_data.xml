@@ -23,6 +23,7 @@
   <ProductStoreEmailSetting productStoreId="9000" emailType="PRDS_ODR_BACKORDER" templatePath="/commonapp/src/org/ofbiz/commonapp/order/order/emailbackorder.ftl" subject="OFBiz Demo - Backorder Notification #${orderId}" fromAddress="ofbiztest@yahoo.com"/>
   <ProductStoreEmailSetting productStoreId="9000" emailType="PRDS_ODR_CHANGE" templatePath="/commonapp/src/org/ofbiz/commonapp/order/order/emailorderchange.ftl" subject="OFBiz Demo - Order Change Notification #${orderId}" fromAddress="ofbiztest@yahoo.com"/>
   <ProductStoreEmailSetting productStoreId="9000" emailType="PRDS_PWD_RETRIEVE" templatePath="/commonapp/src/org/ofbiz/commonapp/security/login/passwordemail.ftl" subject="OFBiz Demo - Password Reminder (${userLoginId})" fromAddress="ofbiztest@yahoo.com"/>
+  <ProductStoreFacility productStoreId="9000" facilityId="WebStoreWarehouse" fromDate="2001-01-01 12:00:00.0"/>
   
   <WebSite webSiteId="WebStore" siteName="eCommerce Web Site" productStoreId="9000"/>
   <WebSite webSiteId="OrderEntry" siteName="Order Entry Web Site" productStoreId="9000"/>
