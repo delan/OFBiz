@@ -487,14 +487,14 @@
         <description>Create an ProductPromo</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
-		<override name="productPromoActionTypeId" optional="false"/>
+        <override name="productPromoActionTypeId" optional="false"/>
     </service>
     <service name="updateProductPromoAction" default-entity-name="ProductPromoAction" engine="simple"
                 location="org/ofbiz/product/promo/PromoServices.xml" invoke="updateProductPromoAction" auth="true">
         <description>Update an ProductPromo</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
-		<override name="productPromoActionTypeId" optional="false"/>
+        <override name="productPromoActionTypeId" optional="false"/>
     </service>
     <service name="deleteProductPromoAction" default-entity-name="ProductPromoAction" engine="simple"
                 location="org/ofbiz/product/promo/PromoServices.xml" invoke="deleteProductPromoAction" auth="true">
@@ -507,7 +507,7 @@
         <description>Create ProductStorePromoAppl</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
-		<override name="fromDate" optional="true"/>
+        <override name="fromDate" optional="true"/>
     </service>
     <service name="updateProductStorePromoAppl" default-entity-name="ProductStorePromoAppl" engine="simple"
                 location="org/ofbiz/product/promo/PromoServices.xml" invoke="updateProductStorePromoAppl" auth="true">
@@ -527,8 +527,8 @@
         <description>Create an InventoryItem</description>
         <auto-attributes include="pk" mode="OUT" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
-		<override name="inventoryItemTypeId" optional="false"/>
-		<override name="productId" optional="false"/>
+        <override name="inventoryItemTypeId" optional="false"/>
+        <override name="productId" optional="false"/>
     </service>
     <service name="updateInventoryItem" default-entity-name="InventoryItem" engine="simple"
                 location="org/ofbiz/product/inventory/InventoryServices.xml" invoke="updateInventoryItem" auth="true">

@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.8 $
+ * @version    $Revision: 1.9 $
  */
 -->
 
@@ -952,6 +952,31 @@
       <view-link entity-alias="OIIR" rel-entity-alias="II">
       	<key-map field-name="inventoryItemId"/>
       </view-link>
+    </view-entity>          
+    <view-entity entity-name="OrderItemInventoryResAndItemLocation"
+            package-name="org.ofbiz.order.order"
+            never-cache="true"
+            title="Order Item Inventory Reservation and Inventory Item View Entity">
+      <member-entity entity-alias="OIIR" entity-name="OrderItemInventoryRes"/>
+      <member-entity entity-alias="II" entity-name="InventoryItem"/>
+      <member-entity entity-alias="FL" entity-name="FacilityLocation"/>
+      <alias-all entity-alias="OIIR"/>
+      <alias-all entity-alias="II"/>
+      <alias-all entity-alias="FL"/>
+      <view-link entity-alias="OIIR" rel-entity-alias="II">
+      	<key-map field-name="inventoryItemId"/>
+      </view-link>
+      <view-link entity-alias="II" rel-entity-alias="FL">
+      	<key-map field-name="facilityId"/>
+      	<key-map field-name="locationSeqId"/>
+      </view-link>
+      <relation type="one-nofk" rel-entity-name="Product">
+        <key-map field-name="productId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="FacilityLocation">
+        <key-map field-name="facilityId"/>
+        <key-map field-name="locationSeqId"/>
+      </relation>
     </view-entity>          
     <entity entity-name="OrderItemPriceInfo"
             package-name="org.ofbiz.order.order"

@@ -26,7 +26,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.6 $
+ *@version    $Revision: 1.7 $
  */
 -->
 
@@ -86,6 +86,7 @@
   <!-- ========================================================= -->
 
     <entity-group group="org.ofbiz" entity="InventoryItem" />
+    <entity-group group="org.ofbiz" entity="InventoryItemAndLocation" />
     <entity-group group="org.ofbiz" entity="InventoryItemAttribute" />
     <entity-group group="org.ofbiz" entity="InventoryItemStatus" />
     <entity-group group="org.ofbiz" entity="InventoryItemTempRes" />
@@ -98,6 +99,7 @@
     <entity-group group="org.ofbiz" entity="PhysicalInventoryAndVariance" />
     <entity-group group="org.ofbiz" entity="ProductFacility" />
     <entity-group group="org.ofbiz" entity="ProductFacilityLocation" />
+    <entity-group group="org.ofbiz" entity="ProductFacilityLocationView" />
     <entity-group group="org.ofbiz" entity="VarianceReason" />
 
   <!-- ========================================================= -->

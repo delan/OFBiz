@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <page>
     <template>main</template>
-    <property name="title">Picking: View Started Picks</property>
+    <property name="title">Picking: Move Stock</property>
     <property name="headerItem">facility</property>
     <property name="tabButtonItem">PicklistOptions</property>
-    <page-action name="/facility/PickStarted.bsh"/>
+    <page-action name="/facility/PickMoveStock.bsh"/>
 </page>
