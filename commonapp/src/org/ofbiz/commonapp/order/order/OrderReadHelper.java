@@ -206,6 +206,20 @@ public class OrderReadHelper {
         return null;
     }
 
+    public String getCurrentStatusString() {
+        GenericValue statusItem = null;
+        try {
+            statusItem = orderHeader.getRelatedOneCache("StatusItem");
+        } catch (GenericEntityException e) {
+            Debug.logError(e);
+        }
+        if (statusItem != null) {
+            return statusItem.getString("description");
+        } else {
+            return orderHeader.getString("statusId");
+        }
+    }
+    
     public String getStatusString() {
         List orderStatusList = this.getOrderHeaderStatuses();
 
@@ -217,7 +231,7 @@ public class OrderReadHelper {
         while (orderStatusIter.hasNext()) {
             try {
                 GenericValue orderStatus = (GenericValue) orderStatusIter.next();
-                GenericValue statusItem = (GenericValue) orderStatus.getRelatedOneCache("StatusItem");
+                GenericValue statusItem = orderStatus.getRelatedOneCache("StatusItem");
 
                 if (statusItem != null) {
                     orderStatusIdSet.add(statusItem.getString("description"));
@@ -362,6 +376,7 @@ public class OrderReadHelper {
         newOrderStatuses.addAll(EntityUtil.filterByAnd(orderStatuses, contraints1));
         newOrderStatuses.addAll(EntityUtil.filterByAnd(orderStatuses, contraints2));
         newOrderStatuses.addAll(EntityUtil.filterByAnd(orderStatuses, contraints3));
+        newOrderStatuses = EntityUtil.orderBy(newOrderStatuses, UtilMisc.toList("statusDatetime"));
         return newOrderStatuses;
     }
 
