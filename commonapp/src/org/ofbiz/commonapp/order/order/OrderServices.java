@@ -186,8 +186,17 @@ public class OrderServices {
         	
         if (userLogin != null && userLogin.get("userLoginId") != null)
             order.set("createdBy", userLogin.getString("userLoginId"));
-            
-        toBeStored.add(order);
+        
+        // first try to create the OrderHeader; if this does not fail, continue.
+        try {
+            delegator.create(order);   
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Cannot create OrderHeader entity; problems with insert", module);
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, "Order creation failed; please notify customer service.");
+        }
+        // Don't do this; if the sequence table fails we don't want to clobber old orders
+        // toBeStored.add(order);        
 
         // set the orderId on all adjustments; this list will include order and item adjustments...
         List orderAdjustments = (List) context.get("orderAdjustments");
