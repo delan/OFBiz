@@ -39,6 +39,8 @@ import org.ofbiz.core.util.*;
  */
 public final class StandardJavaEngine extends GenericAsyncEngine {
 
+    public static final String module = StandardJavaEngine.class.getName();
+
     /** Creates new StandardJavaEngine */
     public StandardJavaEngine(ServiceDispatcher dispatcher) {
         super(dispatcher);
@@ -72,6 +74,13 @@ public final class StandardJavaEngine extends GenericAsyncEngine {
     private Object serviceInvoker(ModelService modelService, Map context) throws GenericServiceException {
         // static java service methods should be: public Map methodName(DispatchContext dctx, Map context)
         DispatchContext dctx = dispatcher.getLocalContext(loader);
+        if (modelService == null)
+            Debug.logError("ERROR: Null Model Service.", module);
+        if (dctx == null)
+            Debug.logError("ERROR: Null DispatchContext.", module);
+        if (context == null)
+            Debug.logError("ERROR: Null Service Context.", module);
+
         Class[] paramTypes = new Class[]{DispatchContext.class, Map.class};
         Object[] params = new Object[]{dctx, context};
         Object result = null;
@@ -89,8 +98,11 @@ public final class StandardJavaEngine extends GenericAsyncEngine {
 
         try {
             Class c = cl.loadClass(modelService.location);
+            Debug.logVerbose("Loaded class: " + c, module);
             Method m = c.getMethod(modelService.invoke, paramTypes);
+            Debug.logVerbose("Created Method: " + m, module);
             result = m.invoke(null, params);
+            Debug.logVerbose("Invoked Method -- Result: " + result, module);
         } catch (ClassNotFoundException cnfe) {
             throw new GenericServiceException("Cannot find service location", cnfe);
         } catch (NoSuchMethodException nsme) {
