@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.Map;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.HashMap;
 
 import org.ofbiz.base.util.UtilMisc;
@@ -172,4 +173,13 @@ public class ItemConfigurationTree {
         }
     }
     
+    public ArrayList getAllProductsId() {
+        ArrayList nodeArr = new ArrayList();
+        ArrayList productsId = new ArrayList();
+        print(nodeArr);
+        for (int i = 0; i < nodeArr.size(); i++) {
+            productsId.add(((ItemConfigurationNode)nodeArr.get(i)).getPart().getString("productId"));
+        }
+        return productsId;
+    }
 }
