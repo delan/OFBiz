@@ -64,11 +64,11 @@ public class TransactionUtil implements javax.transaction.Status {
                 Debug.logVerbose("[TransactionUtil.begin] transaction begun", module);
                 return true;
             } catch (NotSupportedException e) {
-                Throwable t = e.getCause() == null ? e : e.getCause();
-                throw new GenericTransactionException("Not Supported error, could not begin transaction (probably a nesting problem)", t);
+                //This is Java 1.4 only, but useful for certain debuggins: Throwable t = e.getCause() == null ? e : e.getCause();
+                throw new GenericTransactionException("Not Supported error, could not begin transaction (probably a nesting problem)", e);
             } catch (SystemException e) {
-                Throwable t = e.getCause() == null ? e : e.getCause();
-                throw new GenericTransactionException("System error, could not begin transaction", t);
+                //This is Java 1.4 only, but useful for certain debuggins: Throwable t = e.getCause() == null ? e : e.getCause();
+                throw new GenericTransactionException("System error, could not begin transaction", e);
             }
         } else {
             Debug.logInfo("[TransactionUtil.begin] no user transaction, so no transaction begun", module);
@@ -115,17 +115,17 @@ public class TransactionUtil implements javax.transaction.Status {
                     Debug.logInfo("[TransactionUtil.commit] Not committing transaction, status is STATUS_NO_TRANSACTION", module);
                 }
             } catch (RollbackException e) {
-                Throwable t = e.getCause() == null ? e : e.getCause();
-                throw new GenericTransactionException("Roll back error, could not commit transaction, was rolled back instead", t);
+                //This is Java 1.4 only, but useful for certain debuggins: Throwable t = e.getCause() == null ? e : e.getCause();
+                throw new GenericTransactionException("Roll back error, could not commit transaction, was rolled back instead", e);
             } catch (HeuristicMixedException e) {
-                Throwable t = e.getCause() == null ? e : e.getCause();
-                throw new GenericTransactionException("Could not commit transaction, HeuristicMixed exception", t);
+                //This is Java 1.4 only, but useful for certain debuggins: Throwable t = e.getCause() == null ? e : e.getCause();
+                throw new GenericTransactionException("Could not commit transaction, HeuristicMixed exception", e);
             } catch (HeuristicRollbackException e) {
-                Throwable t = e.getCause() == null ? e : e.getCause();
-                throw new GenericTransactionException("Could not commit transaction, HeuristicRollback exception", t);
+                //This is Java 1.4 only, but useful for certain debuggins: Throwable t = e.getCause() == null ? e : e.getCause();
+                throw new GenericTransactionException("Could not commit transaction, HeuristicRollback exception", e);
             } catch (SystemException e) {
-                Throwable t = e.getCause() == null ? e : e.getCause();
-                throw new GenericTransactionException("System error, could not commit transaction", t);
+                //This is Java 1.4 only, but useful for certain debuggins: Throwable t = e.getCause() == null ? e : e.getCause();
+                throw new GenericTransactionException("System error, could not commit transaction", e);
             }
         } else {
             Debug.logInfo("[TransactionUtil.commit] UserTransaction is null, not commiting", module);
@@ -159,8 +159,8 @@ public class TransactionUtil implements javax.transaction.Status {
                     Debug.logInfo("[TransactionUtil.rollback] transaction not rolled back, status is STATUS_NO_TRANSACTION", module);
                 }
             } catch (SystemException e) {
-                Throwable t = e.getCause() == null ? e : e.getCause();
-                throw new GenericTransactionException("System error, could not roll back transaction", t);
+                //This is Java 1.4 only, but useful for certain debuggins: Throwable t = e.getCause() == null ? e : e.getCause();
+                throw new GenericTransactionException("System error, could not roll back transaction", e);
             }
         } else {
             Debug.logInfo("[TransactionUtil.rollback] No UserTransaction, transaction not rolled back", module);
@@ -182,8 +182,8 @@ public class TransactionUtil implements javax.transaction.Status {
                     Debug.logInfo("[TransactionUtil.setRollbackOnly] transaction roll back only set, status is STATUS_NO_TRANSACTION", module);
                 }
             } catch (SystemException e) {
-                Throwable t = e.getCause() == null ? e : e.getCause();
-                throw new GenericTransactionException("System error, could not set roll back only on transaction", t);
+                //This is Java 1.4 only, but useful for certain debuggins: Throwable t = e.getCause() == null ? e : e.getCause();
+                throw new GenericTransactionException("System error, could not set roll back only on transaction", e);
             }
         } else {
             Debug.logInfo("[TransactionUtil.setRollbackOnly] No UserTransaction, transaction roll back only not set", module);
@@ -231,11 +231,11 @@ public class TransactionUtil implements javax.transaction.Status {
                     tx.enlistResource(resource);
             }
         } catch (RollbackException e) {
-            Throwable t = e.getCause() == null ? e : e.getCause();
-            throw new GenericTransactionException("Roll Back error, could not enlist connection in transaction even though transactions are available, current transaction rolled back", t);
+            //This is Java 1.4 only, but useful for certain debuggins: Throwable t = e.getCause() == null ? e : e.getCause();
+            throw new GenericTransactionException("Roll Back error, could not enlist connection in transaction even though transactions are available, current transaction rolled back", e);
         } catch (SystemException e) {
-            Throwable t = e.getCause() == null ? e : e.getCause();
-            throw new GenericTransactionException("System error, could not enlist connection in transaction even though transactions are available", t);
+            //This is Java 1.4 only, but useful for certain debuggins: Throwable t = e.getCause() == null ? e : e.getCause();
+            throw new GenericTransactionException("System error, could not enlist connection in transaction even though transactions are available", e);
         }
     }
 }
