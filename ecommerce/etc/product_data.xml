@@ -21,11 +21,11 @@
   <WebSitePaymentSetting webSiteId="OrderEntry" paymentMethodTypeId="CREDIT_CARD" paymentAuthService="alwaysApproveCCProcessor"/> 
   <WebSitePaymentSetting webSiteId="OrderEntry" paymentMethodTypeId="EFT_ACCOUNT" paymentAuthService="alwaysApproveEFTProcessor"/>
   
-  <WebSiteEmailSetting webSiteId="WebStore" emailType="WES_ODR_CONFIRM" templatePath="/commonapp/src/org/ofbiz/commonapp/order/order/emailconfirmation.ftl" subject="Order Confirmation" bccAddress="ofbiztest@yahoo.com" fromAddress="ofbiztest@yahoo.com"/>
-  <WebSiteEmailSetting webSiteId="WebStore" emailType="WES_ODR_CHANGE" templatePath="/commonapp/src/org/ofbiz/commonapp/order/order/emailstatuschange.ftl" subject="Order Change Notification" fromAddress="ofbiztest@yahoo.com"/>
-  <WebSiteEmailSetting webSiteId="WebStore" emailType="WES_PWD_RETRIEVE" templatePath="/commonapp/src/org/ofbiz/commonapp/security/login/passwordemail.ftl" subject="Password Reminder" fromAddress="ofbiztest@yahoo.com"/>
-  <WebSiteEmailSetting webSiteId="OrderEntry" emailType="WES_ODR_CONFIRM" templatePath="/commonapp/src/org/ofbiz/commonapp/order/order/emailconfirmation.ftl" subject="Order Confirmation" bccAddress="ofbiztest@yahoo.com" fromAddress="ofbiztest@yahoo.com"/>
-  <WebSiteEmailSetting webSiteId="OrderEntry" emailType="WES_ODR_CHANGE" templatePath="/commonapp/src/org/ofbiz/commonapp/order/order/emailstatuschange.ftl" subject="Order Change Notification" fromAddress="ofbiztest@yahoo.com"/>
+  <WebSiteEmailSetting webSiteId="WebStore" emailType="WES_ODR_CONFIRM" templatePath="/commonapp/src/org/ofbiz/commonapp/order/order/emailconfirmation.ftl" subject="OFBiz Demo Order Confirmation #${orderId}" bccAddress="ofbiztest@yahoo.com" fromAddress="ofbiztest@yahoo.com"/>
+  <WebSiteEmailSetting webSiteId="WebStore" emailType="WES_ODR_CHANGE" templatePath="/commonapp/src/org/ofbiz/commonapp/order/order/emailstatuschange.ftl" subject="OFBiz Demo Order Change Notification #${orderId}" fromAddress="ofbiztest@yahoo.com"/>
+  <WebSiteEmailSetting webSiteId="WebStore" emailType="WES_PWD_RETRIEVE" templatePath="/commonapp/src/org/ofbiz/commonapp/security/login/passwordemail.ftl" subject="OFBiz Demo Password Reminder (${userLoginId})" fromAddress="ofbiztest@yahoo.com"/>
+  <WebSiteEmailSetting webSiteId="OrderEntry" emailType="WES_ODR_CONFIRM" templatePath="/commonapp/src/org/ofbiz/commonapp/order/order/emailconfirmation.ftl" subject="OFBiz Demo Order Confirmation #${orderId}" bccAddress="ofbiztest@yahoo.com" fromAddress="ofbiztest@yahoo.com"/>
+  <WebSiteEmailSetting webSiteId="OrderEntry" emailType="WES_ODR_CHANGE" templatePath="/commonapp/src/org/ofbiz/commonapp/order/order/emailstatuschange.ftl" subject="OFBiz Demo Order Change Notification #${orderId}" fromAddress="ofbiztest@yahoo.com"/>
    
   <ProductCategory description="Demo Browse Root"
     longDescription="Demo Catalog Primary Browse Root Category" productCategoryId="CATALOG1" productCategoryTypeId="CATALOG_CATEGORY"/>
