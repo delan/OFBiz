@@ -1,28 +1,28 @@
 <%--
  *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
- *  Permission is hereby granted, free of charge, to any person obtaining a 
- *  copy of this software and associated documentation files (the "Software"), 
- *  to deal in the Software without restriction, including without limitation 
- *  the rights to use, copy, modify, merge, publish, distribute, sublicense, 
- *  and/or sell copies of the Software, and to permit persons to whom the 
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
  *  Software is furnished to do so, subject to the following conditions:
  *
- *  The above copyright notice and this permission notice shall be included 
+ *  The above copyright notice and this permission notice shall be included
  *  in all copies or substantial portions of the Software.
  *
- *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
- *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
- *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
- *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Eric Pabst
  *@author     David E. Jones
  *@author     Andy Zeneski
- *@created    May 22 2001 
+ *@created    May 22 2001
  *@version    1.0
 --%>
 <%@ page import="java.util.*, java.text.*" %>
@@ -48,7 +48,7 @@
 
     if(orderId != null && orderId.length() > 0) {
         orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
-        Collection orderRoles = delegator.findByAnd("OrderRole",UtilMisc.toMap("orderId", orderId, "roleTypeId", "PLACING_CUSTOMER"));
+        List orderRoles = delegator.findByAnd("OrderRole",UtilMisc.toMap("orderId", orderId, "roleTypeId", "PLACING_CUSTOMER"));
         orderRole = EntityUtil.getFirst(orderRoles);
     }
 
@@ -59,14 +59,14 @@
         List orderAdjustments = orderReadHelper.getAdjustments();
         List orderHeaderAdjustments = orderReadHelper.getOrderHeaderAdjustments();
         double orderSubTotal = orderReadHelper.getOrderItemsSubTotal();
-        
-        Collection orderItemList = orderReadHelper.getOrderItems();
+
+        List orderItemList = orderReadHelper.getOrderItems();
 
         GenericValue shippingAddress = orderReadHelper.getShippingAddress();
-        GenericValue billingAddress = orderReadHelper.getBillingAddress(); 
+        GenericValue billingAddress = orderReadHelper.getBillingAddress();
         GenericValue billingAccount = orderHeader.getRelatedOne("BillingAccount");
 
-        Collection orderPaymentPreferences = orderHeader.getRelated("OrderPaymentPreference");
+        List orderPaymentPreferences = orderHeader.getRelated("OrderPaymentPreference");
         if(orderPaymentPreferences != null) {
             pageContext.setAttribute("orderPaymentPreferences", orderPaymentPreferences);
         }
@@ -98,10 +98,10 @@
             customerPoNumber = ((GenericValue)orderItemPOIter.next()).getString("correspondingPoId");
         }
 
-        Collection statusChange = delegator.findByAnd("StatusValidChange",UtilMisc.toMap("statusId",orderHeader.getString("statusId")));
+        List statusChange = delegator.findByAnd("StatusValidChange",UtilMisc.toMap("statusId",orderHeader.getString("statusId")));
         if (statusChange != null) pageContext.setAttribute("statusChange", statusChange);
 
-        Collection notes = delegator.findByAnd("OrderHeaderNoteView", UtilMisc.toMap("orderId", orderId), UtilMisc.toList("-noteDateTime"));
+        List notes = delegator.findByAnd("OrderHeaderNoteView", UtilMisc.toMap("orderId", orderId), UtilMisc.toList("-noteDateTime"));
         if (notes != null && notes.size() > 0) pageContext.setAttribute("notes", notes);
 
         ContactMechWorker.getOrderContactMechValueMaps(pageContext, orderId, "orderContactMechValueMaps");
