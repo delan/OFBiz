@@ -7,7 +7,7 @@
 <br>
 <h3>Table of Contents</h3>
 <ul>
-  <li><a href="#Release 2001.09.22">Release 2001.09.22</a>
+  <li><a href="#Release 2001.09.27">Release 2001.09.27</a>
   <li><a href="#Release 2001.07.20">Release 2001.07.20</a>
   <li><a href="#Release 2001.06.30">Release 2001.06.30</a>
   <li><a href="#Release 2001.06.22">Release 2001.06.22</a>
@@ -17,23 +17,50 @@
 </ul>
 
 <hr>
-<h3><a name="Release 2001.09.22">Release 2001.09.22</a></h3>
+<h3><a name="Release 2001.09.27">Release 2001.09.27</a></h3>
 <hr>
 <h4>First Major Release</h4>
 <p>This release is the first major release of the Open For Business Project. The
 last two months have been very busy for those involved with development. The
 current software is now being used in commercial projects and will soon have a
-number of deployed sites.&nbsp;</p>
+number of deployed sites. Because of the many changed in this release, I am
+going to keep these release notes on a higher level and not put too much detail
+in about specific features.</p>
 <p>The first real user facing application (eCommerce) is essentially stable and
 now available for use. The catalog management tool is in place with very basic
-features with more to come soon. After running into some major design
+features and more to come soon. After running into some major design
 inconveniences and doing some refactoring, the data handling layer is not
 looking very good. There are also a number of tools available for management of
 data and data definitions.</p>
+<h4>New Lighter Weight Default Deployment</h4>
+<p>This release of Open For Business can run entirely on Tomcat and the default
+platform is Tomcat 4.0, or Catalina. With the new Entity Engine CMP Entity Beans
+are no longer necessary for persistence, so JBoss is not required for simple
+deployments. For larger scaled deployments JBoss or any other EJB container can
+be used by the Entity Engine as a persistence server to take the persistence
+related transaction load off the JSP/Servlet servers. This can be done through
+some simple configuration changes.</p>
 <h4>eCommerce Application Added</h4>
-<p>Foo</p>
+<p>The first release of the eCommerce Application is included in this release of
+Open For Business. It has been tested a fair amount and is running very nicely.
+There are three integrated modules in the current eCommerce application:
+catalog, user profile, and order. The catalog module provides all of the product
+and product category browsing and finding products through a keyword search that
+supports wildcards, and a separate web application is included for editing
+catalog information. The user profile module has general contact information
+functionality in addition to personal information, credit card information, and
+user login or login account information. The order module allows customers to
+place orders using a shopping cart, view their order history and status, and
+even reuse old orders by adding them to the cart.</p>
 <h4>Entity Engine Added</h4>
-<p>Foo</p>
+<p>The old Entity Code Generator has been deprecated in favor of the new dynamic
+Entity Engine. The OFBiz Entity Engine is the first of the major Common Tool
+Components of the Open For Business Architecture. The Entity Engine is dynamic
+in that none of the code in the engine is entity definition specific. It is all
+generic code that supports the persistence of any entity defined in its XML
+files. These defined entities can be communicated over any interface and to or
+from any data source the has an implementation of the GenericHelper interface.
+Documentation for the Entity Engine is located in ofbiz/core/docs/entity.html.</p>
 <hr>
 <h3><a name="Release 2001.07.20">Release 2001.07.20</a></h3>
 <hr>
