@@ -20,13 +20,13 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Al Byers
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.2
 -->
 
 <br>
 <br>
-<#if contentAssoc?exists>
+<#if contentAssocValue?exists>
 <div class="head1">Edit</div>
 ${editWrapper.renderFormString()}
 <br>

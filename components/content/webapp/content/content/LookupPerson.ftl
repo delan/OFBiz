@@ -20,13 +20,13 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Al Byers
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      3.0
 -->
 
 <div class="head1">Find ${page.getProperty("entityName")}</div>
 <br>
-${lruWrapper.renderFormString()}
+${mruWrapper.renderFormString()}
 <br>
 ${queryWrapper.renderFormString()}
 <br>
