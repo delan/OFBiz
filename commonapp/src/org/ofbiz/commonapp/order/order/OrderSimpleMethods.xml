@@ -28,8 +28,8 @@
 -->
 
 <simple-methods>
-	<simple-method method-name="createOrderAdjustment" short-description="Create a ShipmentReceipt">
-		<check-permission permission="ORDERMGR" action="_CREATE"><fail-message message="Security Error: to run createOrderAdjustment you must have the ORDERMGR_CREATE or ORDERMGR_ADMIN permission"/></check-permission>
+    <simple-method method-name="createOrderAdjustment" short-description="Create a ShipmentReceipt">
+        <check-permission permission="ORDERMGR" action="_CREATE"><fail-message message="Security Error: to run createOrderAdjustment you must have the ORDERMGR_CREATE or ORDERMGR_ADMIN permission"/></check-permission>
         <check-errors/>
 
         <make-value value-name="newEntity" entity-name="OrderAdjustment"/>
@@ -40,6 +40,13 @@
         <env-to-field env-name="orderAdjustmentId" map-name="newEntity"/>
         <field-to-result field-name="orderAdjustmentId" result-name="orderAdjustmentId"/>
         
+        <create-value value-name="newEntity"/>
+    </simple-method>
+    
+    <simple-method method-name="createOrderItemBilling" short-description="Create an OrderItemBilling">
+        <make-value entity-name="OrderItemBilling" value-name="newEntity"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+        <set-pk-fields map-name="parameters" value-name="newEntity"/>
         <create-value value-name="newEntity"/>
     </simple-method>
 </simple-methods>
