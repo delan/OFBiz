@@ -1,5 +1,5 @@
 /*
- * $Id: Region.java,v 1.5 2004/05/23 08:25:11 jonesde Exp $
+ * $Id: Region.java,v 1.6 2004/07/07 21:49:00 jonesde Exp $
  *
  * Copyright (c) 2001-2003 Sun Microsystems Inc., published in "Advanced Java Server Pages" by Prentice Hall PTR
  * Copyright (c) 2001-2002 The Open For Business Project - www.ofbiz.org
@@ -39,15 +39,13 @@ import javax.servlet.jsp.PageContext;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilJ2eeCompat;
 
-import com.sun.rsasign.r;
-
 /**
  * A region is content that contains a set of sections that can render in a PageContext
  * <br>Implements abstract render(PageContext) from Content
  *
  * @author     David M. Geary in the book "Advanced Java Server Pages"
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      2.0
  */
 public class Region extends Content {
