@@ -1,5 +1,5 @@
 /*
- * $Id: ProductSearch.java,v 1.7 2003/10/18 06:24:51 jonesde Exp $
+ * $Id: ProductSearch.java,v 1.8 2003/10/18 21:13:29 jonesde Exp $
  *
  *  Copyright (c) 2001 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -53,13 +53,15 @@ import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.model.DynamicViewEntity;
 import org.ofbiz.entity.model.ModelKeyMap;
+import org.ofbiz.entity.model.ModelViewEntity.ComplexAlias;
+import org.ofbiz.entity.model.ModelViewEntity.ComplexAliasField;
 import org.ofbiz.product.product.KeywordSearch;
 
 /**
  *  Utilities for product search based on various constraints including categories, features and keywords.
  *
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.7 $
+ * @version    $Revision: 1.8 $
  * @since      3.0
  */
 public class ProductSearch {
@@ -164,7 +166,9 @@ public class ProductSearch {
         
         if (keywordList.size() > 0) {
             if (isAnd) {
-                // TODO: find a way to add up the relevancyWeight fields from all keyword member entities for a total to sort by, or do it on the server? nah...
+                // add up the relevancyWeight fields from all keyword member entities for a total to sort by
+                ComplexAlias complexAlias = new ComplexAlias("+");
+                
                 Iterator keywordIter = keywordList.iterator();
                 while (keywordIter.hasNext()) {
                     String keyword = (String) keywordIter.next();
@@ -175,11 +179,16 @@ public class ProductSearch {
                     index++;
                     
                     dynamicViewEntity.addMemberEntity(entityAlias, "ProductKeyword");
-                    dynamicViewEntity.addAlias(entityAlias, prefix + "RelevancyWeight", "relevancyWeight", null, null, null, null);
                     dynamicViewEntity.addAlias(entityAlias, prefix + "Keyword", "keyword", null, null, null, null);
                     dynamicViewEntity.addViewLink("PROD", entityAlias, Boolean.FALSE, ModelKeyMap.makeKeyMapList("productId"));
                     entityConditionList.add(new EntityExpr(prefix + "Keyword", EntityOperator.LIKE, keyword));
+                    
+                    //don't add an alias for this, will be part of a complex alias: dynamicViewEntity.addAlias(entityAlias, prefix + "RelevancyWeight", "relevancyWeight", null, null, null, null);
+                    complexAlias.addComplexAliasMember(new ComplexAliasField(entityAlias, "relevancyWeight"));
                 }
+                dynamicViewEntity.addAlias(null, "totalRelevancy", null, null, null, null, null, complexAlias);
+                orderByList.add("-totalRelevancy");
+                fieldsToSelect.add("totalRelevancy");
             } else {
                 // make index based values and increment
                 String entityAlias = "PK" + index;
@@ -464,6 +473,7 @@ public class ProductSearch {
 
         public void setSortOrder(ProductSearchContext productSearchContext, GenericDelegator delegator) {
             // TODO: implement SortMostOrdered
+            // NOTE: use the Product.totalQuantityOrdered field for this
         }
     }
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: DynamicViewEntity.java,v 1.1 2003/10/14 22:34:46 jonesde Exp $
+ * $Id: DynamicViewEntity.java,v 1.2 2003/10/18 21:13:29 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -33,14 +33,14 @@ import org.ofbiz.entity.model.ModelViewEntity.ModelMemberEntity;
 import org.ofbiz.entity.model.ModelViewEntity.ModelAlias;
 import org.ofbiz.entity.model.ModelViewEntity.ModelAliasAll;
 import org.ofbiz.entity.model.ModelViewEntity.ModelViewLink;
-
+import org.ofbiz.entity.model.ModelViewEntity.ComplexAliasMember;
 /**
  * This class is used for declaring Dynamic View Entities, to be used and thrown away.
  * A special method exists on the GenericDelegator to accept a DynamicViewEntity instead
  * of an entity-name.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.0
  */
 public class DynamicViewEntity {
@@ -179,14 +179,21 @@ public class DynamicViewEntity {
 
     /** Add an alias, full detail. All parameters can be null except entityAlias and name. */
     public void addAlias(String entityAlias, String name, String field, String colAlias, Boolean primKey, Boolean groupBy, String function) {
-        if (entityAlias == null) {
-            throw new IllegalArgumentException("entityAlias cannot be null in call to DynamicViewEntity.addAlias");
+        addAlias(entityAlias, name, field, colAlias, primKey, groupBy, function, null);
+    }
+    
+    public void addAlias(String entityAlias, String name, String field, String colAlias, Boolean primKey, Boolean groupBy, String function, ComplexAliasMember complexAliasMember) {
+        if (entityAlias == null && complexAliasMember == null) {
+            throw new IllegalArgumentException("entityAlias cannot be null if this is not a complex alias in call to DynamicViewEntity.addAlias");
         }
         if (name == null) {
             throw new IllegalArgumentException("name cannot be null in call to DynamicViewEntity.addAlias");
         }
         
         ModelAlias alias = new ModelAlias(entityAlias, name, field, colAlias, primKey, groupBy, function);
+        if (complexAliasMember != null) {
+            alias.setComplexAliasMember(complexAliasMember);
+        }
         this.aliases.add(alias);
     }
     
