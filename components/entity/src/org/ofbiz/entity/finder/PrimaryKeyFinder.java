@@ -95,6 +95,7 @@ public class PrimaryKeyFinder {
             entityContext.putAll(tempVal);
         }
         EntityFinderUtil.expandFieldMapToContext(this.fieldMap, context, entityContext);
+        //Debug.logInfo("PrimaryKeyFinder: entityContext=" + entityContext, module);
         // then convert the types...
         modelEntity.convertFieldMapInPlace(entityContext, delegator);
         
@@ -107,15 +108,19 @@ public class PrimaryKeyFinder {
         }
         
         try {
+            GenericValue valueOut = null;
             if (useCacheBool) {
-                this.valueNameAcsr.put(context, delegator.findByPrimaryKeyCache(entityName, entityContext));
+                valueOut = delegator.findByPrimaryKeyCache(entityName, entityContext);
             } else {
                 if (fieldsToSelect != null) {
-                    this.valueNameAcsr.put(context, delegator.findByPrimaryKeyPartial(delegator.makePK(entityName, entityContext), fieldsToSelect));
+                    valueOut = delegator.findByPrimaryKeyPartial(delegator.makePK(entityName, entityContext), fieldsToSelect);
                 } else {
-                    this.valueNameAcsr.put(context, delegator.findByPrimaryKey(entityName, entityContext));
+                    valueOut = delegator.findByPrimaryKey(entityName, entityContext);
                 }
             }
+            //Debug.logInfo("PrimaryKeyFinder: valueOut=" + valueOut, module);
+            //Debug.logInfo("PrimaryKeyFinder: going into=" + this.valueNameAcsr.getOriginalName(), module);
+            this.valueNameAcsr.put(context, valueOut);
         } catch (GenericEntityException e) {
             String errMsg = "Error finding entity value by primary key with entity-one: " + e.toString();
             Debug.logError(e, errMsg, module);
