@@ -21,7 +21,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski 
- *@version    $Revision: 1.5 $
+ *@version    $Revision: 1.6 $
  *@since      2.0
 --%>
 
@@ -84,18 +84,18 @@
             <option value="<%=RecurrenceRule.HOURLY%>">Hourly</option>
             <option value="<%=RecurrenceRule.MINUTELY%>">Minutely</option>
             <option value="<%=RecurrenceRule.SECONDLY%>">Secondly</option>
-            
+
         </td>
-      </tr>           
+      </tr>
       <tr>
         <td align="right"><div class="tabletext">Interval:</div></td>
         <td><input type="text" class="inputBox" size="6" name="SERVICE_INTERVAL">&nbsp;<span class='tabletext'>(for use with frequency)</span></td>
-      </tr>           
+      </tr>
       <tr>
         <td align="right"><div class="tabletext">Count:</div></td>
-        <td><input type="text" class="inputBox" size="6" name="SERVICE_COUNT" value="-1"></td>
-      </tr>     
-   
+        <td><input type="text" class="inputBox" size="6" name="SERVICE_COUNT" value="1">&nbsp;<span class="tabletext">(number of time the job will run; use -1 for no limit i.e. forever)</span></td>
+      </tr>
+
       <tr>
         <td colspan="2">&nbsp;</td>
       </tr>
