@@ -231,7 +231,9 @@
             </tr>
           </ofbiz:iterator>
           <ofbiz:unless name="postalAddressInfos" size="0">
-            <p>No contact information on file.</p><br>
+              <ofbiz:unless name="curContactMech">
+                  <tr><td colspan='2'><div class="tabletext">No contact information on file.</div></td></tr>
+              </ofbiz:unless>
           </ofbiz:unless>
         </table>
       </td>
