@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.11  2002/01/02 04:15:22  jonesde
+ * Finished getting the StringProcessor stuff working with the WorkEffort event
+ *
  * Revision 1.10  2001/12/30 04:21:00  jonesde
  * Finished WorkEffortPartyAssignment services, cleaned up WorkEffort services
  *
@@ -126,13 +129,6 @@ public class WorkEffortEvents {
             messages.add("Error running StringProcessor: " + e.toString());
         }
         
-        if (context.get("estimatedStartDate") != null && context.get("estimatedCompletionDate") != null) {
-            Timestamp estimatedStartDate = (Timestamp) context.get("estimatedStartDate");
-            Timestamp estimatedCompletionDate = (Timestamp) context.get("estimatedCompletionDate");
-            if (estimatedStartDate.after(estimatedCompletionDate)) {
-                messages.add("Start date/time cannot be after end date/time.");
-            }
-        }
         if (messages.size() > 0) {
             String errMsg = "<b>The following errors occured:</b><br><ul>" + ServiceUtil.makeHtmlMessageList(messages) + "</ul>";
             request.setAttribute(SiteDefs.ERROR_MESSAGE, errMsg);
@@ -191,7 +187,7 @@ public class WorkEffortEvents {
 
         GenericValue userLogin = (GenericValue) request.getSession().getAttribute(SiteDefs.USER_LOGIN);
         if (userLogin == null) {
-            request.setAttribute(SiteDefs.ERROR_MESSAGE, "You must be logged in to update a Work Effort.");
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "You must be logged in to update a Work Effort Party Assignment.");
             return "error";
         }
 

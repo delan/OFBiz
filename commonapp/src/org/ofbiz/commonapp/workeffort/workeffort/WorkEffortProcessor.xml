@@ -38,12 +38,14 @@
     <string-process field="workEffortName"><copy/><not-empty><fail-message message="Name is missing."/></not-empty></string-process>
     <string-process field="description"><copy/></string-process>
     <string-process field="locationDesc"><copy/></string-process>
-    <string-process field="estimatedStartDate"><convert type="Timestamp">
-        <fail-message message="Estimated Start Date is not a valid Date-Time."/></convert></string-process>
+    <string-process field="estimatedStartDate">
+        <compare-field field="estimatedCompletionDate" operator="greater-equals" type="Timestamp"><fail-message message="Estimated End date/time cannot be BEFORE Start date/time."/></compare-field>
+        <convert type="Timestamp"><fail-message message="Estimated Start Date is not a valid Date-Time."/></convert></string-process>
     <string-process field="estimatedCompletionDate"><convert type="Timestamp">
         <fail-message message="Estimated Completion Date is not a valid Date-Time."/></convert></string-process>
-    <string-process field="actualStartDate"><convert type="Timestamp">
-        <fail-message message="Actual Start Date is not a valid Date-Time."/></convert></string-process>
+    <string-process field="actualStartDate">
+        <compare-field field="actualCompletionDate" operator="greater-equals" type="Timestamp"><fail-message message="Actual End date/time cannot be BEFORE Start date/time."/></compare-field>
+        <convert type="Timestamp"><fail-message message="Actual Start Date is not a valid Date-Time."/></convert></string-process>
     <string-process field="actualCompletionDate"><convert type="Timestamp">
         <fail-message message="Actual Completion Date is not a valid Date-Time."/></convert></string-process>
     <string-process field="estimatedMilliSeconds"><convert type="Double">
