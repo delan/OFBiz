@@ -43,6 +43,25 @@ if (updateParty != null) {
     context.put("updateParty", updateParty);
 }
 
+productStores = delegator.findAllCache("ProductStore", UtilMisc.toList("storeName"));
+context.put("productStores", productStores);
+
+// check the selected product store
+productStoreId = request.getParameter("productStoreId");
+if (productStoreId != null) {
+    // check security on the store
+    storeReps = delegator.findByAnd("ProductStoreRole", UtilMisc.toMap("productStoreId", productStoreId, "partyId", userLogin.getString("partyId"), "roleTypeId", "SALES_REP"));
+    storeReps = EntityUtil.filterByDate(storeReps);
+    if (storeReps != null && storeReps.size() > 0) {
+        shoppingCart.setProductStoreId(productStoreId);    
+    } else {
+        request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>You do not have permission to take orders for this store.");
+        shoppingCart.clear();
+        session.removeAttribute("orderMode");
+        return;
+    }    
+}
+
 // Get the order mode
 mode = request.getParameter("orderMode");
 if (mode != null) {
@@ -52,6 +71,10 @@ if (mode != null) {
 mode = shoppingCart.getOrderType();
 if (mode != null && mode.equals("SALES_ORDER")) context.put("modeStr", "Sales");
 if (mode != null && mode.equals("PURCHASE_ORDER")) context.put("modeStr", "Purchase");
+
+if (session.getAttribute("orderMode") != null && updateParty == null) {
+    page.setProperty("leftbar", "/includes/entry_left.ftl");    
+}     
 
 if (session.getAttribute("orderMode") == null && request.getParameter("finalizeMode") != null) {
     request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>Please select either sale or purchase order.");
@@ -131,5 +154,4 @@ if (partyId != null) {
         }
     }
 }
-
 

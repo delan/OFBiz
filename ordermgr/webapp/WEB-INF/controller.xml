@@ -471,7 +471,7 @@
     <view-map name="createnewnote" type="jpublish" page="/order/newnote.ftl"/>
     <view-map name="receivepayment" type="jpublish" page="/order/receivepayment.ftl"/>
     
-    <view-map name="orderentry" type="jpublish" page="/entry/showcart.ftl"/>
+    <view-map name="orderentry" type="jpublish" page="/entry/orderentry.ftl"/>   
     <view-map name="keywordsearch" type="jpublish" page="/entry/catalog/keywordsearch.ftl"/>
     <view-map name="advancedsearch" type="jpublish" page="/entry/catalog/advancedsearch.ftl"/>
     <view-map name="category" type="jpublish" page="/entry/catalog/category.ftl"/>

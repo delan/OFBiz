@@ -72,70 +72,6 @@ function addToList() {
 //-->
 </script>
 
-<#if !sessionAttributes.orderMode?exists || updateParty?exists>
-<table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
-  <tr>
-    <td width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
-        <tr>
-          <td valign="middle" align="left">
-            <div class="boxhead">&nbsp;Order Entry</div>
-          </td>
-          <td valign="middle" align="right"> 
-            <a href="/partymgr/control/findparty?externalLoginKey=${requestAttributes.externalLoginKey}" class="submenutext">Find Party</a><a href="javascript:document.entryform.submit();" class="submenutextright">Continue</a>
-          </td>
-        </tr>
-      </table>
-    </td>
-  </tr>
-  <tr>
-    <td width='100%'>
-      <form method="post" name="entryform" action="<@ofbizUrl>/orderentry</@ofbizUrl>">
-      <input type='hidden' name='finalizeMode' value='type'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
-        <tr>
-          <td width='14%'>&nbsp;</td>
-          <td wdith='6%' align='right' valign='middle' nowrap><div class='tableheadtext'>Order Type:</div></td>
-          <td width='6%'>&nbsp;</td>
-          <td width='74%' valign='middle'>
-            <div class='tabletext' valign='top'>
-              <input type='radio' name='orderMode' value='SALES_ORDER'<#if sessionAttributes.orderMode?default("") == "SALES_ORDER"> checked</#if><#if sessionAttributes.orderMode?exists> disabled</#if>>&nbsp;Sales Order&nbsp;<input type='radio' name='orderMode' value='PURCHASE_ORDER'<#if sessionAttributes.orderMode?default("") == "PURCHASE_ORDER"> checked</#if><#if sessionAttributes.orderMode?exists> disabled</#if>>&nbsp;Purchase Order&nbsp;
-              <#if !sessionAttributes.orderMode?exists>*<font color='red'>required</font><#else>(cannot be changed without clearing order.)</#if>
-            </div>
-          </td>
-        </tr>
-        <tr><td colspan="4">&nbsp;</td></tr>
-        <tr>
-          <td width='14%'>&nbsp;</td>
-          <td wdith='6%' align='right' valign='middle' nowrap><div class='tableheadtext'>UserLogin ID:</div></td>
-          <td width='6%'>&nbsp;</td>
-          <td width='74%' valign='middle'>
-            <div class='tabletext' valign='top'>
-              <input type='text' class='inputBox' name='userLoginId' value='${requestParameters.userLoginId?if_exists}'>
-            </div>
-          </td>
-        </tr>                 
-        <tr>
-          <td width='14%'>&nbsp;</td>
-          <td wdith='6%' align='right' valign='middle' nowrap><div class='tableheadtext'>Party ID:</div></td>
-          <td width='6%'>&nbsp;</td>
-          <td width='74%' valign='middle'>
-            <div class='tabletext' valign='top'>
-              <#if partyId?exists>
-                <#assign thisPartyId = partyId>
-              <#else>
-                <#assign thisPartyId = requestParameters.partyId?if_exists>
-              </#if>              
-              <input type='text' class='inputBox' name='partyId' value='${thisPartyId?if_exists}'>
-            </div>
-          </td>
-        </tr>         
-      </table>
-      </form>
-    </td>
-  </tr>
-</table>
-<#else>           
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
@@ -459,5 +395,4 @@ function addToList() {
       </TD>
     </TR>
   </TABLE>
-</#if>
 </#if>
