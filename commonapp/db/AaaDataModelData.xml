@@ -91,9 +91,12 @@
   <CostComponentType costComponentTypeId="ESTIMATED_MATERIALS_" description="" hasTable="N" parentTypeId=""/>
   <CostComponentType costComponentTypeId="ESTIMATED_OTHER_COST" description="" hasTable="N" parentTypeId=""/>
 
+  <CustRequestType custRequestTypeId="RFB" description="Request For Bug Fix" hasTable="N" parentTypeId=""/>
+  <CustRequestType custRequestTypeId="RFF" description="Request For Feature" hasTable="N" parentTypeId=""/>
   <CustRequestType custRequestTypeId="RFI" description="Request For Information" hasTable="N" parentTypeId=""/>
   <CustRequestType custRequestTypeId="RFP" description="Request For Proposal" hasTable="N" parentTypeId=""/>
   <CustRequestType custRequestTypeId="RFQ" description="Request For Quote" hasTable="N" parentTypeId=""/>
+  <CustRequestType custRequestTypeId="RFS" description="Request For Support" hasTable="N" parentTypeId=""/>
 
   <DataObjectType dataObjectTypeId="ELECTRONIC_TEXT" description="" hasTable="Y" parentTypeId=""/>
   <DataObjectType dataObjectTypeId="IMAGE_OBJECT" description="" hasTable="Y" parentTypeId=""/>
@@ -705,4 +708,10 @@
   <WorkEffortTypeAttr attrName="QUANTITY_TO_PRODUCE" workEffortTypeId="PRODUCTION_RUN"/>
 
   <WorkflowSpecification specificationId="XPDL" currentVersion="0.03"/>
+
+  <WorkReqFulfType description="Implements" workReqFulfTypeId="WRF_IMPLEMENTS"/>
+  <WorkReqFulfType description="Fixes" workReqFulfTypeId="WRF_FIXES"/>
+  <WorkReqFulfType description="Deploys" workReqFulfTypeId="WRF_DEPLOYS"/>
+  <WorkReqFulfType description="Tests" workReqFulfTypeId="WRF_TESTS"/>
+  <WorkReqFulfType description="Delivers" workReqFulfTypeId="WRF_DELIVERS"/>
 </entity-engine-xml>
