@@ -528,7 +528,7 @@ public class SQLProcessor {
         if (field != null)
             _ps.setBoolean(_ind, field.booleanValue());
         else
-            _ps.setNull(_ind, Types.BOOLEAN);
+            _ps.setNull(_ind, Types.NULL);
         
         _ind ++;
     }
