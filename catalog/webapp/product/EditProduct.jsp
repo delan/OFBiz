@@ -294,53 +294,6 @@ function insertImageName(size,ext) {
     <td width="74%" colspan='5'><input type="text" <ofbiz:inputvalue entityAttr='product' field='comments' tryEntityAttr="tryEntity" fullattrs="true"/> size="60" maxlength="255"></td>
   </tr>
 
-  <tr>
-    <td width="26%" align=right><div class="tabletext"><b>List Price</b></div></td>
-    <td>&nbsp;</td>
-    <td width="24%"><input type="text" <ofbiz:inputvalue entityAttr='product' field='listPrice' tryEntityAttr="tryEntity" fullattrs="true"/> size="10" maxlength="20"></td>
-    
-    <td width="26%" align=right><div class="tabletext"><b>List Price Uom Id</b></div></td>
-    <td>&nbsp;</td>
-    <td width="24%"><input type="text" <ofbiz:inputvalue entityAttr='product' field='listPriceUomId' tryEntityAttr="tryEntity" fullattrs="true"/> size="10" maxlength="20"></td>
-  </tr>
-  <tr>
-    <td width="26%" align=right><div class="tabletext"><b>Default Price</b></div></td>
-    <td>&nbsp;</td>
-    <td width="24%"><input type="text" <ofbiz:inputvalue entityAttr='product' field='defaultPrice' tryEntityAttr="tryEntity" fullattrs="true"/> size="10" maxlength="20"></td>
-    
-    <td width="26%" align=right><div class="tabletext"><b>Default Price Uom Id</b></div></td>
-    <td>&nbsp;</td>
-    <td width="24%"><input type="text" <ofbiz:inputvalue entityAttr='product' field='defaultPriceUomId' tryEntityAttr="tryEntity" fullattrs="true"/> size="10" maxlength="20"></td>
-  </tr>
-  <tr>
-    <td width="26%" align=right><div class="tabletext"><b>Average Cost Price</b></div></td>
-    <td>&nbsp;</td>
-    <td width="24%"><input type="text" <ofbiz:inputvalue entityAttr='product' field='averageCostPrice' tryEntityAttr="tryEntity" fullattrs="true"/> size="10" maxlength="20"></td>
-
-    <td width="26%" align=right><div class="tabletext"><b>Average Cost Price Uom Id</b></div></td>
-    <td>&nbsp;</td>
-    <td width="24%"><input type="text" <ofbiz:inputvalue entityAttr='product' field='averageCostPriceUomId' tryEntityAttr="tryEntity" fullattrs="true"/> size="10" maxlength="20"></td>
-  </tr>
-  <tr><td colspan="6">&nbsp;</td></tr>
-  <tr>
-    <td width="26%" align=right><div class="tabletext"><b>Minimum Sell Price</b></div></td>
-    <td>&nbsp;</td>
-    <td width="24%"><input type="text" <ofbiz:inputvalue entityAttr='product' field='minSellPrice' tryEntityAttr="tryEntity" fullattrs="true"/> size="10" maxlength="20"></td>
-
-    <td width="26%" align=right><div class="tabletext"><b>Minimum Sell Price Uom Id</b></div></td>
-    <td>&nbsp;</td>
-    <td width="24%"><input type="text" <ofbiz:inputvalue entityAttr='product' field='minSellPriceUomId' tryEntityAttr="tryEntity" fullattrs="true"/> size="10" maxlength="20"></td>
-  </tr>
-  <tr>
-    <td width="26%" align=right><div class="tabletext"><b>Maximum Sell Price</b></div></td>
-    <td>&nbsp;</td>
-    <td width="24%"><input type="text" <ofbiz:inputvalue entityAttr='product' field='maxSellPrice' tryEntityAttr="tryEntity" fullattrs="true"/> size="10" maxlength="20"></td>
-
-    <td width="26%" align=right><div class="tabletext"><b>Maximum Sell Price Uom Id</b></div></td>
-    <td>&nbsp;</td>
-    <td width="24%"><input type="text" <ofbiz:inputvalue entityAttr='product' field='maxSellPriceUomId' tryEntityAttr="tryEntity" fullattrs="true"/> size="10" maxlength="20"></td>
-  </tr>
-
   <tr><td colspan="6">&nbsp;</td></tr>
 
   <tr>
@@ -452,10 +405,6 @@ function insertImageName(size,ext) {
                 <INPUT type=hidden <ofbiz:inputvalue entityAttr='product' field='mediumImageUrl' fullattrs="true"/>>
                 <INPUT type=hidden <ofbiz:inputvalue entityAttr='product' field='largeImageUrl' fullattrs="true"/>>
                 <INPUT type=hidden <ofbiz:inputvalue entityAttr='product' field='detailImageUrl' fullattrs="true"/>>
-                <INPUT type=hidden <ofbiz:inputvalue entityAttr='product' field='listPrice' fullattrs="true"/>>
-                <INPUT type=hidden <ofbiz:inputvalue entityAttr='product' field='listPriceUomId' fullattrs="true"/>>
-                <INPUT type=hidden <ofbiz:inputvalue entityAttr='product' field='defaultPrice' fullattrs="true"/>>
-                <INPUT type=hidden <ofbiz:inputvalue entityAttr='product' field='defaultPriceUomId' fullattrs="true"/>>
                 <INPUT type=hidden <ofbiz:inputvalue entityAttr='product' field='quantityUomId' fullattrs="true"/>>
                 <INPUT type=hidden <ofbiz:inputvalue entityAttr='product' field='quantityIncluded' fullattrs="true"/>>
                 <INPUT type=hidden <ofbiz:inputvalue entityAttr='product' field='piecesIncluded' fullattrs="true"/>>
