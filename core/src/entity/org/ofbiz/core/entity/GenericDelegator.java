@@ -731,8 +731,10 @@ public class GenericDelegator implements DelegatorInterface {
                 this.evalEcaRules(EntityEcaHandler.EV_CACHE_PUT, EntityEcaHandler.OP_FIND, dummyValue, ecaEventMap, (ecaEventMap == null), false);
                 this.putInAllCache(entityName, lst);
             }
+            return lst;
+        } else {
+            return EntityUtil.orderBy(lst, orderBy);
         }
-        return lst;
     }
 
     /** Finds Generic Entity records by all of the specified fields (ie: combined using AND)
