@@ -44,6 +44,8 @@
   <GeoType description="Sales Territory" geoTypeId="SALES_TERRITORY" hasTable="N" parentTypeId="TERRITORY"/>
   <GeoType description="Service Territory" geoTypeId="SERVICE_TERRITORY" hasTable="N" parentTypeId="TERRITORY"/>
 
+  <GeoAssocType geoAssocTypeId="REGIONS" description="Relation for a Country and its regions i.e. states, counties, provinces..." /> 
+
   <!-- sync status -->
   <StatusType description="Synchronize" hasTable="N" parentTypeId="" statusTypeId="SYNCHRONIZE_STATUS"/>
   <StatusItem description="Not-Synchronized" sequenceId="01" statusCode="NOT_SYNCHRONIZED" statusId="NOT_SYNCHRONIZED" statusTypeId="SYNCHRONIZE_STATUS"/>
