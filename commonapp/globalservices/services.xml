@@ -93,7 +93,7 @@
     </service>
     
     <!-- Entity Engine Services -->
-    <service name="distributedClearCacheLineByValue" engine="jms" location="entityCacheMessenger" invoke="clearCacheLineByValue">
+    <service name="distributedClearCacheLineByValue" engine="jms" location="serviceMessenger" invoke="clearCacheLineByValue">
         <description>Clear Cache Line by value for all Servers listening to the topic</description>
         <attribute name="value" type="GenericValue" mode="IN" optional="false"/>
     </service>
@@ -103,7 +103,7 @@
         <attribute name="value" type="GenericValue" mode="IN" optional="false"/>
     </service>
 
-    <service name="distributedClearCacheLineByDummyPK" engine="jms" location="entityCacheMessenger" invoke="clearCacheLineByDummyPK">
+    <service name="distributedClearCacheLineByDummyPK" engine="jms" location="serviceMessenger" invoke="clearCacheLineByDummyPK">
         <description>Clear Cache Line by dummyPK for all Servers listening to the topic</description>
         <attribute name="dummyPK" type="GenericEntity" mode="IN" optional="false"/>
     </service>
@@ -113,7 +113,7 @@
         <attribute name="dummyPK" type="GenericEntity" mode="IN" optional="false"/>
     </service>
     
-    <service name="distributedClearCacheLineByPrimaryKey" engine="jms" location="entityCacheMessenger" invoke="clearCacheLineByPrimaryKey">
+    <service name="distributedClearCacheLineByPrimaryKey" engine="jms" location="serviceMessenger" invoke="clearCacheLineByPrimaryKey">
         <description>Clear Cache Line by primaryKey for all Servers listening to the topic</description>
         <attribute name="primaryKey" type="GenericPK" mode="IN" optional="false"/>
     </service>
