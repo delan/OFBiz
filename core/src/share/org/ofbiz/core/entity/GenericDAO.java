@@ -454,7 +454,9 @@ public class GenericDAO {
                 if(keys.contains(curField.name)) whereFields.add(curField);
                 else selectFields.add(curField);
             }
-        } else { selectFields = modelEntity.fields; }
+        } else {
+            selectFields = modelEntity.fields;
+        }
         
         GenericValue dummyValue;
         if(fields != null && fields.size() > 0) dummyValue = new GenericValue(modelEntity, fields);
@@ -500,9 +502,21 @@ public class GenericDAO {
             //sqle.printStackTrace();
             throw new GenericDataSourceException("SQL Exception while executing the following:" + sql, sqle);
         } finally {
-            try { if (rs != null) rs.close(); } catch (SQLException sqle) { Debug.logWarning(sqle.getMessage()); }
-            try { if (ps != null) ps.close(); } catch (SQLException sqle) { Debug.logWarning(sqle.getMessage()); }
-            try { if (connection != null) connection.close(); } catch (SQLException sqle) { Debug.logWarning(sqle.getMessage()); }
+            try {
+                if (rs != null) rs.close();
+            } catch (SQLException sqle) {
+                Debug.logWarning(sqle.getMessage());
+            }
+            try {
+                if (ps != null) ps.close();
+            } catch (SQLException sqle) {
+                Debug.logWarning(sqle.getMessage());
+            }
+            try {
+                if (connection != null) connection.close();
+            } catch (SQLException sqle) {
+                Debug.logWarning(sqle.getMessage());
+            }
         }
         return collection;
     }
@@ -1059,15 +1073,16 @@ public class GenericDAO {
     
     protected String makeOrderByClause(ModelEntity modelEntity, List orderBy) {
         StringBuffer sql = new StringBuffer("");
-        if(orderBy != null && orderBy.size() > 0) {
-            Vector orderByStrings = new Vector();
-            for(int fi=0; fi<modelEntity.fields.size(); fi++) {
-                ModelField curField=(ModelField)modelEntity.fields.get(fi);
+        if (orderBy != null && orderBy.size() > 0) {
+            List orderByStrings = new LinkedList();
                 
-                for(int oi=0; oi<orderBy.size(); oi++) {
-                    String keyName = (String)orderBy.get(oi);
-                    int spaceIdx = keyName.indexOf(' ');
-                    if(spaceIdx > 0) keyName = keyName.substring(0, spaceIdx);
+            for (int oi=0; oi<orderBy.size(); oi++) {
+                String keyName = (String)orderBy.get(oi);
+                int spaceIdx = keyName.indexOf(' ');
+                if(spaceIdx > 0) keyName = keyName.substring(0, spaceIdx);
+
+                for (int fi=0; fi<modelEntity.fields.size(); fi++) {
+                    ModelField curField=(ModelField)modelEntity.fields.get(fi);
                     if(curField.name.equals(keyName)) {
                         if(spaceIdx > 0) orderByStrings.add(curField.colName + keyName.substring(spaceIdx));
                         else orderByStrings.add(curField.colName);
@@ -1075,14 +1090,14 @@ public class GenericDAO {
                 }
             }
             
-            if(orderByStrings.size() > 0) {
+            if (orderByStrings.size() > 0) {
                 sql.append(" ORDER BY ");
                 
                 Iterator iter = orderByStrings.iterator();
-                while(iter.hasNext()) {
+                while (iter.hasNext()) {
                     String curString = (String)iter.next();
                     sql.append(curString);
-                    if(iter.hasNext()) sql.append(", ");
+                    if (iter.hasNext()) sql.append(", ");
                 }
             }
         }
