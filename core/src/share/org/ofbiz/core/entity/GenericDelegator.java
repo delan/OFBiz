@@ -822,28 +822,15 @@ public class GenericDelegator {
   
 
 // ======= XML Related Methods ========  
-  public Collection readXmlDocument(URL url) {
+  public Collection readXmlDocument(URL url) throws SAXException, ParserConfigurationException, java.io.IOException {
     if(url == null) return null;
     
     Document document = null;
     DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
     factory.setValidating(true);
     //factory.setNamespaceAware(true);
-    try {
-      DocumentBuilder builder = factory.newDocumentBuilder();
-      document = builder.parse(url.openStream());
-    }
-    catch (SAXException sxe) {
-      // Error generated during parsing)
-      Exception  x = sxe;
-      if(sxe.getException() != null) x = sxe.getException();
-      Debug.logError(x);
-    }
-    catch(ParserConfigurationException pce) {
-      // Parser with specified options can't be built
-      Debug.logError(pce);
-    }
-    catch(java.io.IOException ioe) { Debug.logError(ioe); }
+    DocumentBuilder builder = factory.newDocumentBuilder();
+    document = builder.parse(url.openStream());
     
     return this.makeValues(document);
   }

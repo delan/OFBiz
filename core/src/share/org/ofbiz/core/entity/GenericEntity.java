@@ -287,34 +287,27 @@ public class GenericEntity implements Serializable {
     return true;
   }
 
-  public static void writeXmlDocument(String filename, Document document) {
+  public static void writeXmlDocument(String filename, Document document) throws java.io.FileNotFoundException, java.io.IOException {
     if(document == null) return;
 
     File outFile = new File(filename);
     FileOutputStream fos = null;
-    try { 
-      fos = new FileOutputStream(outFile);
-    
-      if(document instanceof XmlDocument) {
-        //Crimson writer
-        XmlDocument xdoc = (XmlDocument) document;
-        xdoc.write(fos);
-      }
-      else {
-        //Xerces writer
-        OutputFormat format = new OutputFormat(document);
-        format.setIndent(2);
-        XMLSerializer serializer = new XMLSerializer(fos, format);
-        serializer.asDOMSerializer();
-        serializer.serialize(document.getDocumentElement());
-      }
+    fos = new FileOutputStream(outFile);
+
+    if(document instanceof XmlDocument) {
+      //Crimson writer
+      XmlDocument xdoc = (XmlDocument) document;
+      xdoc.write(fos);
     }
-    catch(java.io.FileNotFoundException e) { Debug.logError(e); }
-    catch(java.io.IOException e) { Debug.logError(e); }
-    finally {
-      try { if(fos != null) fos.close(); }
-      catch(java.io.IOException e) { Debug.logError(e); }
+    else {
+      //Xerces writer
+      OutputFormat format = new OutputFormat(document);
+      format.setIndent(2);
+      XMLSerializer serializer = new XMLSerializer(fos, format);
+      serializer.asDOMSerializer();
+      serializer.serialize(document.getDocumentElement());
     }
+    if(fos != null) fos.close();
   }
   
   public static Document makeXmlDocument(Collection values) {
