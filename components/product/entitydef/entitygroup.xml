@@ -133,6 +133,7 @@
   <!-- ========================================================= -->
 
     <entity-group group="org.ofbiz" entity="GoodIdentification" />
+    <entity-group group="org.ofbiz" entity="GoodIdentificationAndProduct" />
     <entity-group group="org.ofbiz" entity="GoodIdentificationType" />
     <entity-group group="org.ofbiz" entity="Product" />
     <entity-group group="org.ofbiz" entity="ProductAssoc" />
