@@ -219,32 +219,44 @@ public class ProductEvents {
             return "error";
         }
 
-        Iterator iterator = null;
+		EntityListIterator entityListIterator = null;
 
-        try {
-            iterator = UtilMisc.toIterator(delegator.findAll("Product", null));
-        } catch (GenericEntityException e) {
-            Debug.logWarning(e.getMessage());
-            iterator = null;
-        }
+		try {
+			entityListIterator = delegator.findListIteratorByCondition("Product", null, null, null);
+		} catch (GenericEntityException gee) {
+			Debug.logWarning(gee.getMessage());
+			entityListIterator = null;
+		}
 
         int numProds = 0;
 
-        while (iterator != null && iterator.hasNext()) {
-            GenericValue product = (GenericValue) iterator.next();
-
-            if (product != null && !"n".equalsIgnoreCase(product.getString("autoCreateKeywords"))) {
+        GenericValue product = null;
+        while ((product = (GenericValue) entityListIterator.next()) != null) {
+            if (!"N".equalsIgnoreCase(product.getString("autoCreateKeywords"))) {
                 try {
                     KeywordSearch.induceKeywords(product);
                 } catch (GenericEntityException e) {
                     request.setAttribute(SiteDefs.ERROR_MESSAGE, "Could not create keywords (write error).");
                     Debug.logWarning("[ProductEvents.updateAllKeywords] Could not create product-keyword (write error); message: " + e.getMessage());
+                    try {
+                    	entityListIterator.close();
+                    } catch (GenericEntityException gee) {
+                        Debug.logError(gee, "Error closing EntityListIterator when indexing product keywords.");
+                    }
                     return "error";
                 }
             }
             numProds++;
         }
 
+		if (entityListIterator != null) {
+			try {
+				entityListIterator.close();
+			} catch (GenericEntityException gee) {
+                Debug.logError(gee, "Error closing EntityListIterator when indexing product keywords.");
+			}
+        }
+        
         request.setAttribute(SiteDefs.EVENT_MESSAGE, "Keyword creation complete for " + numProds + " products.");
         return "success";
     }
