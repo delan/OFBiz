@@ -26,15 +26,18 @@
 -->
 
 <%@ page import="java.util.*" %>
+<%@ page import="org.ofbiz.core.util.*" %>
 <%@ page import="org.ofbiz.core.entity.*" %>
 <%@ page import="org.ofbiz.core.entity.model.*" %>
 
 <jsp:useBean id="helper" type="org.ofbiz.core.entity.GenericHelper" scope="application" />
+<%String controlPath=(String)request.getAttribute(SiteDefs.CONTROL_PATH);%>
 
 <%
   String entityName = request.getParameter("entityName");
   ModelReader reader = helper.getModelReader();
   ModelEntity entity = reader.getModelEntity(entityName);
+  TreeSet entSet = new TreeSet(reader.getEntityNames());
   Collection typesCol = reader.getFieldTypeNames();
   TreeSet types = new TreeSet(typesCol);
   String errorMsg = "";
@@ -157,15 +160,26 @@ The following errors occurred:
 <ul><%=errorMsg%></ul>
 <%}%>
 
-<FORM method=POST action='EditEntity.jsp' style='margin: 0;'>
+<FORM method=POST action='<%=response.encodeURL(controlPath + "/view/EditEntity")%>' style='margin: 0;'>
   <INPUT type=TEXT size='30' name='entityName'>
+  <INPUT type=SUBMIT value='Edit Specified Entity'>
+</FORM>
+<FORM method=POST action='<%=response.encodeURL(controlPath + "/view/EditEntity")%>' style='margin: 0;'>
+  <SELECT name='entityName'>
+    <OPTION selected>&nbsp;</OPTION>
+    <%Iterator entIter1 = entSet.iterator();%>
+    <%while(entIter1.hasNext()){%>
+      <OPTION><%=(String)entIter1.next()%></OPTION>
+    <%}%>
+  </SELECT>
   <INPUT type=SUBMIT value='Edit Specified Entity'>
 </FORM>
 
 <%if(entity == null){%>
   <H4>Entity not found with name "<%=entityName%>"</H4>
 <%}else{%>
-<A href='EditEntity.jsp?entityName=<%=entityName%>'>Reload Current Entity: <%=entityName%></A><BR>
+
+<A href='<%=response.encodeURL(controlPath + "/view/EditEntity?entityName=" + entityName)%>'>Reload Current Entity: <%=entityName%></A><BR>
 <BR>
 Entity Name: <%=entityName%><br>
 Column Name: <%=entity.tableName%><br>
@@ -178,7 +192,7 @@ Column Name: <%=entity.tableName%><br>
         <TD><%=field.isPk?"<B>":""%><%=field.name%><%=field.isPk?"</B>":""%></TD>
         <TD><%=field.colName%> (<%=field.colName.length()%>)</TD><TD><%=field.type%></TD>
         <TD>
-          <FORM method=POST action='EditEntity.jsp?entityName=<%=entityName%>&fieldName=<%=field.name%>&event=updateField' style='margin: 0;'>
+          <FORM method=POST action='<%=response.encodeURL(controlPath + "/view/EditEntity?entityName=" + entityName + "&fieldName=" + field.name + "&event=updateField")%>' style='margin: 0;'>
             <INPUT type=CHECKBOX name='primaryKey'<%=field.isPk?" checked":""%>>
             <SELECT name='fieldType'>
               <OPTION selected><%=field.type%></OPTION>
@@ -190,12 +204,12 @@ Column Name: <%=entity.tableName%><br>
             <INPUT type=submit value='Set'>
           </FORM>
         </TD>
-        <TD><A href='EditEntity.jsp?entityName=<%=entityName%>&fieldName=<%=field.name%>&event=removeField'>Remove</A></TD>
+        <TD><A href='<%=response.encodeURL(controlPath + "/view/EditEntity?entityName=" + entityName + "&fieldName=" + field.name + "&event=removeField")%>'>Remove</A></TD>
       </TR>
     <%}%>
   </TABLE>
 
-<FORM method=POST action='EditEntity.jsp?entityName=<%=entityName%>&event=addField'>
+<FORM method=POST action='<%=response.encodeURL(controlPath + "/view/EditEntity?entityName=" + entityName + "&event=addField")%>'>
   Add new field with <u>Column Name</u> and field type.<BR>
   <INPUT type=text size='40' maxlength='30' name='colName'>
   <SELECT name='fieldType'>
@@ -213,7 +227,7 @@ Column Name: <%=entity.tableName%><br>
     <%ModelRelation relation = (ModelRelation)entity.relations.elementAt(r);%>
     <%ModelEntity relEntity = reader.getModelEntity(relation.relEntityName);%>
     <tr bgcolor='#CCCCFF'>
-      <FORM method=POST action='EditEntity.jsp?entityName=<%=entityName%>&event=updateRelation&relNum=<%=r%>'>
+      <FORM method=POST action='<%=response.encodeURL(controlPath + "/view/EditEntity?entityName=" + entityName + "&event=updateRelation&relNum=" + r)%>'>
         <td align="left"><%=relation.title%><b><%=relation.relEntityName%></b></td>
         <td align="left"><b><%=relation.relTableName%></b></td>
         <td>
@@ -226,13 +240,13 @@ Column Name: <%=entity.tableName%><br>
         <td>
           <INPUT type=SUBMIT value='Set'>
         </td>
-        <TD><A href='EditEntity.jsp?entityName=<%=entityName%>&relNum=<%=r%>&event=removeRelation'>Remove</A></TD>
-        <TD><A href='EditEntity.jsp?entityName=<%=entityName%>&relNum=<%=r%>&event=addKeyMap'>Add&nbsp;KeyMap</A></TD>
+        <TD><A href='<%=response.encodeURL(controlPath + "/view/EditEntity?entityName=" + entityName + "&relNum=" + r + "&event=removeRelation")%>'>Remove</A></TD>
+        <TD><A href='<%=response.encodeURL(controlPath + "/view/EditEntity?entityName=" + entityName + "&relNum=" + r + "&event=addKeyMap")%>'>Add&nbsp;KeyMap</A></TD>
       </FORM>
     </tr>
     <%for(int km=0; km<relation.keyMaps.size(); km++){ ModelKeyMap keyMap = (ModelKeyMap)relation.keyMaps.get(km);%>
       <tr>
-        <FORM method=POST action='EditEntity.jsp?entityName=<%=entityName%>&event=updateKeyMap&relNum=<%=r%>&kmNum=<%=km%>'>
+        <FORM method=POST action='<%=response.encodeURL(controlPath + "/view/EditEntity?entityName=" + entityName + "&event=updateKeyMap&relNum=" + r + "&kmNum=" + km)%>'>
           <td></td>
           <td colspan='2'>
             Main:
@@ -255,20 +269,19 @@ Column Name: <%=entity.tableName%><br>
           <td>
             <INPUT type=SUBMIT value='Set'>
           </td>          
-          <TD><A href='EditEntity.jsp?entityName=<%=entityName%>&relNum=<%=r%>&kmNum=<%=km%>&event=removeKeyMap'>Remove</A></TD>
+          <TD><A href='<%=response.encodeURL(controlPath + "/view/EditEntity?entityName=" + entityName + "&relNum=" + r + "&kmNum=" + km + "&event=removeKeyMap")%>'>Remove</A></TD>
         </FORM>
       </tr>
     <%}%>			
   <%}%>
   </TABLE>
 
-<FORM method=POST action='EditEntity.jsp?entityName=<%=entityName%>&event=addRelation'>
+<FORM method=POST action='<%=response.encodeURL(controlPath + "/view/EditEntity?entityName=" + entityName + "&event=addRelation")%>'>
   Add new relation with <u>Title</u>, <u>Related Entity Name</u> and relation type.<BR>
   <INPUT type=text size='40' maxlength='30' name='title'>
   <%-- <INPUT type=text size='40' maxlength='30' name='relEntityName'> --%>
   <SELECT name='relEntityName'>
     <OPTION selected>&nbsp;</OPTION>
-    <%TreeSet entSet = new TreeSet(reader.getEntityNames());%>
     <%Iterator entIter = entSet.iterator();%>
     <%while(entIter.hasNext()){%>
       <OPTION><%=(String)entIter.next()%></OPTION>

@@ -40,7 +40,7 @@
 		main = main + "?search=" + search;
 	}
 %>
-<FRAMESET cols="20%,70%">
+<FRAMESET cols="30%,70%">
 <FRAME src="<%= list %>" name="entityListFrame">
 <FRAME src="<%= main %>" name="entityFrame">
 </FRAMESET>

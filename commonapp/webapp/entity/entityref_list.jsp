@@ -24,10 +24,12 @@
 -->
 
 <%@ page import="java.util.*" %>
+<%@ page import="org.ofbiz.core.util.*" %>
 <%@ page import="org.ofbiz.core.entity.*" %>
 <%@ page import="org.ofbiz.core.entity.model.*" %>
 
 <jsp:useBean id="helper" type="org.ofbiz.core.entity.GenericHelper" scope="application" />
+<%String controlPath=(String)request.getAttribute(SiteDefs.CONTROL_PATH);%>
 
 <% 
   String search = null;
@@ -63,6 +65,10 @@
 <body bgcolor="#FFFFFF">
 <div align="left">
 
+<%-- <a href="<%=response.encodeURL(controlPath + "/sitemap")%>" class='listtext'>Go to Site Map</A><BR> --%>
+<a href="<%=response.encodeURL(controlPath + "/view/ModelWriter")%>" target="entityFrame" class='listtext'>Generate Entity Model XML</A>
+<HR>
+
 <%
   Iterator piter = packageNames.iterator();
   while(piter.hasNext())
@@ -82,7 +88,9 @@
 		if ( search == null || entityName.toLowerCase().indexOf(search.toLowerCase()) != -1 ) {						
 			String url = search == null ? "entityref_main#"+entityName : "entityref_main#"+entityName+"?search="+search;
 %>	
-<a href="<%= url %>" target="entityFrame" class='listtext'><%= entityName %></a><br>
+<a href="<%=response.encodeURL(controlPath + "/view/EditEntity?entityName=" + entityName)%>" target="entityFrame" class='listtext'>[EditDef]</a>
+<a href="<%=response.encodeURL(url)%>" target="entityFrame" class='listtext'><%= entityName %></a>
+<br>
 <%
 		}	
 	}

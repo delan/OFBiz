@@ -49,6 +49,7 @@
       <li><a href="<%=response.encodeURL(controlPath + "/view/tablesMySql")%>" class='buttontext'>MySQL Table Creation SQL</A>
       <li><a href="<%=response.encodeURL(controlPath + "/view/dataMySql")%>" class='buttontext'>MySQL Auto Data SQL</A>
       <li><a href="<%=response.encodeURL(controlPath + "/view/ModelWriter")%>" class='buttontext'>Generate Entity Model XML</A>
+      <li><a href="<%=response.encodeURL(controlPath + "/view/EditEntity")%>" class='buttontext'>Edit Entity Definitions</A> (also see the Entity Reference for this)
     </ul>
   <%}%>
   <%if(security.hasPermission("UTIL_CACHE_VIEW", session)){%>
