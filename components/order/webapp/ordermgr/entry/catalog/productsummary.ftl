@@ -20,19 +20,22 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.4 $
+ *@version    $Revision: 1.5 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#if requestAttributes.product?exists>
 <#-- variable setup -->
 <#assign product = requestAttributes.product>
+<#assign productContentWrapper = requestAttributes.productContentWrapper>
 <#assign price = requestAttributes.priceMap>
 <#assign targetRequestName = "product">
 <#if requestAttributes.targetRequestName?has_content>
     <#assign targetRequestName = requestAttributes.targetRequestName>
 </#if>
-<#assign smallImageUrl = product.smallImageUrl?if_exists>
+<#assign productContentWrapper = requestAttributes.productContentWrapper>
+<#assign smallImageUrl = productContentWrapper.get("SMALL_IMAGE_URL")?if_exists>
+<#if !smallImageUrl?has_content><#assign smallImageUrl = "/images/defaultImage.jpg"></#if>
 <#-- end variable setup -->
 
   <table border="0" width="100%" cellpadding="0" cellspacing="0">
@@ -44,9 +47,9 @@
       </td>
       <td align="left" valign="top" width="100%">
           <div class="tabletext">
-            <a href="<@ofbizUrl>/${targetRequestName}/<#if requestAttributes.categoryId?exists>~category_id=${requestAttributes.categoryId}/</#if>~product_id=${product.productId}</@ofbizUrl>" class="buttontext">${product.productName?if_exists}</a>
+            <a href="<@ofbizUrl>/${targetRequestName}/<#if requestAttributes.categoryId?exists>~category_id=${requestAttributes.categoryId}/</#if>~product_id=${product.productId}</@ofbizUrl>" class="buttontext">${productContentWrapper.get("PRODUCT_NAME")?if_exists}</a>
           </div>
-          <div class="tabletext">${product.description?if_exists}<#if daysToShip?exists>&nbsp;-&nbsp;${uiLabelMap.ProductUsuallyShipsIn} <b>${daysToShip}</b> ${uiLabelMap.CommonDays}!</#if></div>
+          <div class="tabletext">${productContentWrapper.get("DESCRIPTION")?if_exists}<#if daysToShip?exists>&nbsp;-&nbsp;${uiLabelMap.ProductUsuallyShipsIn} <b>${daysToShip}</b> ${uiLabelMap.CommonDays}!</#if></div>
           <div class="tabletext">
             <nobr>
               <b>${product.productId?if_exists}</b>,

@@ -20,13 +20,14 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.4 $
+ *@version    $Revision: 1.5 $
  *@since      2.1
  */
 
 import org.ofbiz.base.util.*;
 import org.ofbiz.entity.*;
 import org.ofbiz.service.*;
+import org.ofbiz.product.product.ProductContentWrapper;
 import org.ofbiz.product.catalog.*;
 import org.ofbiz.product.store.*;
 
@@ -61,5 +62,9 @@ if (miniProduct != null && productStoreId != null && prodCatalogId != null) {
 
     context.put("miniProdFormName", request.getAttribute("miniProdFormName"));
     context.put("miniProdQuantity", request.getAttribute("miniProdQuantity"));
+
+    // make the miniProductContentWrapper
+    ProductContentWrapper miniProductContentWrapper = new ProductContentWrapper(miniProduct, request);
+    context.put("miniProductContentWrapper", miniProductContentWrapper);
 }
 

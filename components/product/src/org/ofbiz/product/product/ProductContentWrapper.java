@@ -1,5 +1,5 @@
 /*
- * $Id: ProductContentWrapper.java,v 1.1 2003/12/19 11:08:35 jonesde Exp $
+ * $Id: ProductContentWrapper.java,v 1.2 2003/12/20 01:17:22 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -47,7 +47,7 @@ import org.ofbiz.entity.util.EntityUtil;
  * Product Content Worker: gets product content to display
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.0
  */
 public class ProductContentWrapper {
@@ -80,6 +80,10 @@ public class ProductContentWrapper {
             Debug.logError(e, "Error rendering ProductContent, inserting empty String", module);
             return "";
         }
+    }
+    
+    public static String getProductContentAsText(GenericValue product, String productContentTypeId, HttpServletRequest request) throws GenericEntityException, IOException {
+        return getProductContentAsText(product, productContentTypeId, UtilHttp.getLocale(request), "text/html", product.getDelegator());
     }
 
     public static String getProductContentAsText(GenericValue product, String productContentTypeId, Locale locale, String mimeTypeId, GenericDelegator delegator) throws GenericEntityException, IOException {

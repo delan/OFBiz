@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.17 $
+ *@version    $Revision: 1.18 $
  *@since      2.1
 -->
 <#-- variable setup -->
@@ -222,10 +222,10 @@ ${requestAttributes.virtualJavaScript?if_exists}
             <#assign indexer = 0>
             <#list imageKeys as key>
               <#assign swatchProduct = imageMap.get(key)>
-              <#assign imageUrl = swatchProduct.smallImageUrl?if_exists>
-              <#if swatchProduct?exists && swatchProduct.smallImageUrl?exists>
+              <#assign imageUrl = Static["org.ofbiz.product.product.ProductContentWrapper"].getProductContentAsText(swatchProduct, "SMALL_IMAGE_URL", request)?if_exists>
+              <#if swatchProduct?exists && imageUrl?exists>
                 <td align="center" valign="bottom">
-                  <a href="#"><img src="<@ofbizContentUrl>${requestAttributes.contentPathPrefix?if_exists}${swatchProduct.smallImageUrl}</@ofbizContentUrl>" border="0" width="60" height="60" onclick="javascript:getList('${requestAttributes.featureOrderFirst}','${indexer}',1);"></a>
+                  <a href="#"><img src="<@ofbizContentUrl>${requestAttributes.contentPathPrefix?if_exists}${imageUrl}</@ofbizContentUrl>" border="0" width="60" height="60" onclick="javascript:getList('${requestAttributes.featureOrderFirst}','${indexer}',1);"></a>
                   <br>
                   <a href="#" class="buttontext" onclick="javascript:getList('${requestAttributes.featureOrderFirst}','${indexer}',1);">${key}</a>
                 </td>
