@@ -61,7 +61,6 @@
     service CDATA #REQUIRED
     mode ( sync | async ) #REQUIRED
     result-to-value ( true | false ) "true"
-    abort-on-error ( true | false ) "false"
     rollback-on-error ( true | false ) "false"
     persist ( true | false ) "false"
     value-attr CDATA #IMPLIED

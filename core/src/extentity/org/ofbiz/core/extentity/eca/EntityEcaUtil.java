@@ -106,7 +106,6 @@ public class EntityEcaUtil {
                 eventMap = new HashMap();
                 rules = new LinkedList();
                 ecaCache.put(entityName, eventMap);
-                eventMap.put(eventName, rules);
             } else {
                 rules = (List) eventMap.get(eventName);
                 if (rules == null) {

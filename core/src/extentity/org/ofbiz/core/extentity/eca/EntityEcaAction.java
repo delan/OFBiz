@@ -40,12 +40,10 @@ import org.ofbiz.core.util.*;
  * @since      2.1
  */
 public class EntityEcaAction {
-    public static final String module = EntityEcaAction.class.getName();
-    
     protected String serviceName;
     protected String serviceMode;
     protected boolean resultToValue;
-    protected boolean abortOnError;
+    //protected boolean abortOnError;
     protected boolean rollbackOnError;
     protected boolean persist;
     protected String valueAttr;
@@ -58,7 +56,7 @@ public class EntityEcaAction {
         // default is true, so anything but false is true
         this.resultToValue = !"false".equals(action.getAttribute("result-to-value"));
         // default is false, so anything but true is false
-        this.abortOnError = "true".equals(action.getAttribute("abort-on-error"));
+        //this.abortOnError = "true".equals(action.getAttribute("abort-on-error"));
         this.rollbackOnError = "true".equals(action.getAttribute("rollback-on-error"));
         this.persist = "true".equals(action.getAttribute("persist"));
         this.valueAttr = action.getAttribute("value-attr");
@@ -74,21 +72,15 @@ public class EntityEcaAction {
             if (valueAttr != null && valueAttr.length() > 0) {
                 actionContext.put(valueAttr, value);
             }
-            
-            //Debug.logInfo("Running Entity ECA action service " + this.serviceName + "; value=" + value + "; actionContext=" + actionContext);
         
             LocalDispatcher dispatcher = dctx.getDispatcher();
-            if ("sync".equals(this.serviceMode)) {
+            if (serviceMode.equals("sync")) {
                 actionResult = dispatcher.runSync(this.serviceName, actionContext);
-            } else if ("async".equals(this.serviceMode)) {
+            } else if (serviceMode.equals("async")) {
                 dispatcher.runAsync(serviceName, actionContext, persist);
             }
         } catch (GenericServiceException e) {
-            if (this.abortOnError) {
-                throw new EntityEcaException("Error running Entity ECA action service", e);
-            } else {
-                Debug.logError(e, "Error running Entity ECA action service", module);
-            }
+            throw new EntityEcaException("Error running Entity ECA action service", e);
         }
 
         // use the result to update the context fields.
