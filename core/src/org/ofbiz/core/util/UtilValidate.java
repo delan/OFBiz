@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.5  2001/09/02 09:28:38  jonesde
+ * Small message updates.
+ *
  * Revision 1.4  2001/08/31 17:44:04  epabst
  * added shopping cart code
  *
@@ -153,7 +156,7 @@ public class UtilValidate
 
   /** An array of ints representing the number of days in each month of the year.
    *  Note: February valies depending on the year */
-  public static final int[] daysInMonth = {31,29,31,30,31,30,31,31,30,31,30,31}; 
+  public static final int[] daysInMonth = {31,29,31,30,31,30,31,31,30,31,30,31};
 
   /** Delimiter for USStateCodes String */
   public static final String USStateCodeDelimiter = "|";
@@ -701,7 +704,7 @@ public class UtilValidate
     int intMonth = Integer.parseInt(month);
     int intDay = Integer.parseInt(day);
     // catch invalid days, except for February
-    if(intDay > daysInMonth[intMonth]) return false; 
+    if(intDay > daysInMonth[intMonth-1]) return false;
     if((intMonth == 2) && (intDay > daysInFebruary(intYear))) return false;
     return true;
   }
