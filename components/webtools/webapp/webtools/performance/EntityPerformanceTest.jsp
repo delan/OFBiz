@@ -40,6 +40,7 @@ local vs. remote deployment configurations, and hardware (app server hardware, d
 server hardware, network connections).</div>
 
 <br>
+<%if(security.hasPermission("ENTITY_MAINT", session)) {%>
 
 <%double startTime, totalTime, callsPerSecond;%>
 <%int calls;%>
@@ -238,3 +239,8 @@ server hardware, network connections).</div>
   </tr>
 </table>
 
+<%}else{%>
+
+ERROR: You do not have permission to use this page (ENTITY_MAINT needed)
+
+<%}%>
