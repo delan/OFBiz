@@ -41,6 +41,7 @@ import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.crypto.HashCrypt;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -58,7 +59,7 @@ import org.ofbiz.service.ServiceUtil;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class LoginServices {
@@ -93,7 +94,7 @@ public class LoginServices {
         } else if (password == null || password.length() <= 0) {
             errMsg = UtilProperties.getMessage(resource,"loginservices.password_missing", locale);
         } else {
-            String realPassword = useEncryption ? HashEncrypt.getHash(password) : password;
+            String realPassword = useEncryption ? LoginServices.getPasswordHash(password) : password;
 
             boolean repeat = true;
             // starts at zero but it incremented at the beggining so in the first pass passNumber will be 1
@@ -404,7 +405,7 @@ public class LoginServices {
         GenericValue userLoginToCreate = delegator.makeValue("UserLogin", UtilMisc.toMap("userLoginId", userLoginId));
         userLoginToCreate.set("passwordHint", passwordHint);
         userLoginToCreate.set("partyId", partyId);
-        userLoginToCreate.set("currentPassword", useEncryption ? HashEncrypt.getHash(currentPassword) : currentPassword);
+        userLoginToCreate.set("currentPassword", useEncryption ? getPasswordHash(currentPassword) : currentPassword);
 
         try {
             if (delegator.findByPrimaryKey(userLoginToCreate.getPrimaryKey()) != null) {
@@ -507,7 +508,7 @@ public class LoginServices {
             return ServiceUtil.returnError(errorMessageList);
         }
 
-        userLoginToUpdate.set("currentPassword", useEncryption ? HashEncrypt.getHash(newPassword) : newPassword, false);
+        userLoginToUpdate.set("currentPassword", useEncryption ? getPasswordHash(newPassword) : newPassword, false);
         userLoginToUpdate.set("passwordHint", passwordHint, false);
 
         try {
@@ -676,9 +677,7 @@ public class LoginServices {
             errMsg = UtilProperties.getMessage(resource,"loginservices.could_not_change_password_userlogin_with_id_not_exist", messageMap, locale);
             return ServiceUtil.returnError(errMsg);
         }
-
-        // TODO: Ab hier weitere �bersetzungen einf�gen
-
+        
         boolean wasEnabled = !"N".equals(userLoginToUpdate.get("enabled"));
 
         if (context.containsKey("enabled")) {
@@ -722,7 +721,7 @@ public class LoginServices {
             String realPassword = currentPassword;
 
             if (useEncryption && currentPassword != null) {
-                realPassword = HashEncrypt.getHash(currentPassword);
+                realPassword = LoginServices.getPasswordHash(currentPassword);
             }
             // if the password.accept.encrypted.and.plain property in security is set to true allow plain or encrypted passwords
             boolean passwordMatches = currentPassword != null && (realPassword.equals(userLogin.getString("currentPassword")) ||
@@ -765,5 +764,16 @@ public class LoginServices {
                 errorMessageList.add(errMsg);
             }
         }
+    }
+
+    public static String getPasswordHash(String str) {
+        String hashType = UtilProperties.getPropertyValue("security.properties", "password.encrypt.hash.type");
+
+        if (hashType == null || hashType.length() == 0) {
+            Debug.logWarning("Password encrypt hash type is not specified in security.properties, use SHA", module);
+            hashType = "SHA";
+        }
+
+        return HashCrypt.getDigestHash(str, hashType);
     }
 }
