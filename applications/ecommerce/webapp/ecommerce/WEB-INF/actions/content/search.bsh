@@ -73,6 +73,7 @@ try {
     searcher = new IndexSearcher(indexPath);
     analyzer = new StandardAnalyzer();
 } catch(java.io.FileNotFoundException e) {
+    Debug.logError(e, "search.bsh");
     request.setAttribute("errorMsgReq", "No index file exists.");
 }
 if (UtilValidate.isEmpty(siteId)) {
@@ -83,7 +84,7 @@ combQuery.add(termQuery, true, false);
 //Debug.logInfo("in search, termQuery:" + termQuery.toString(), "");
 
 //Debug.logInfo("in search, combQuery(1):" + combQuery, "");
-if (UtilValidate.isNotEmpty(queryLine)) {
+if (UtilValidate.isNotEmpty(queryLine) && analyzer != null) {
     Query query = null;
     if (UtilValidate.isNotEmpty(queryLine)) {
        query = QueryParser.parse(queryLine, "content", analyzer);
@@ -112,18 +113,20 @@ if (!featureIdByType.isEmpty()) {
     combQuery.add(featureQuery, featuresRequired, false);
 }
 
-//Debug.logInfo("in search searchFeature3, combQuery:" + combQuery.toString(), "");
-Hits hits = searcher.search(combQuery);
-//Debug.logInfo("in search, hits:" + hits.length(), "");
-List contentList = new ArrayList();
-HashSet hitSet = new HashSet();
-for (int start = 0; start < hits.length(); start++) {
-    doc = hits.doc(start);
-    contentId = doc.get("contentId");
-    content = delegator.findByPrimaryKeyCache("Content", UtilMisc.toMap("contentId", contentId));
-    if (!hitSet.contains(contentId)) {
-        contentList.add(content);
-        hitSet.add(contentId);
+if (searcher != null) {
+    Debug.logInfo("in search searchFeature3, combQuery:" + combQuery.toString(), "");
+    Hits hits = searcher.search(combQuery);
+    Debug.logInfo("in search, hits:" + hits.length(), "");
+    List contentList = new ArrayList();
+    HashSet hitSet = new HashSet();
+    for (int start = 0; start < hits.length(); start++) {
+        doc = hits.doc(start);
+        contentId = doc.get("contentId");
+        content = delegator.findByPrimaryKeyCache("Content", UtilMisc.toMap("contentId", contentId));
+        if (!hitSet.contains(contentId)) {
+            contentList.add(content);
+            hitSet.add(contentId);
+        }
     }
+    listWrapper.putInContext("queryResults", contentList);
 }
-listWrapper.putInContext("queryResults", contentList);
