@@ -193,9 +193,6 @@
     	<response name="success" type="view" value="EditProduct"/>
     	<response name="error" type="view" value="EditProduct"/>
     </request-map>
-    <request-map uri="UploadImage"><security https="true" auth="true"/>
-    	<response name="success" type="view" value="UploadImage"/>
-    </request-map>
 
     <!-- ================ Product Prices Requests ================= -->
     <request-map uri="EditProductPrices"><security https="true" auth="true"/>
@@ -217,6 +214,19 @@
         <response name="error" type="view" value="EditProductPrices"/>
     </request-map>
 
+    <!-- ================ Product Content Requests ================= -->
+    <request-map uri="EditProductContent"><security https="true" auth="true"/>
+    	<response name="success" type="view" value="EditProductContent"/>
+    </request-map>
+    <request-map uri="updateProductContent"><security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateProduct"/>
+        <response name="success" type="view" value="EditProductContent"/>
+        <response name="error" type="view" value="EditProductContent"/>
+    </request-map>
+    <request-map uri="UploadProductImage"><security https="true" auth="true"/>
+    	<response name="success" type="view" value="EditProductContent"/>
+    </request-map>
+    
     <!-- ================ Product Categories Requests ================= -->
     <request-map uri="EditProductCategories"><security https="true" auth="true"/>
     	<response name="success" type="view" value="EditProductCategories"/>
@@ -656,6 +666,7 @@
 
     <view-map name="EditProduct" type="region"/>
     <view-map name="EditProductPrices" type="region"/>
+    <view-map name="EditProductContent" type="region"/>
     <view-map name="EditProductCategories" type="region"/>
     <view-map name="EditProductKeyword" type="region"/>
     <view-map name="EditProductAssoc" type="region"/>

@@ -61,6 +61,7 @@ try {
   <div class='tabContainer'>
   <a href="<ofbiz:url>/EditProduct?productId=<%=productId%></ofbiz:url>" class="tabButton">Product</a>
   <a href="<ofbiz:url>/EditProductPrices?productId=<%=productId%></ofbiz:url>" class="tabButton">Prices</a>
+  <a href="<ofbiz:url>/EditProductContent?productId=<%=productId%></ofbiz:url>" class="tabButton">Content</a>
   <a href="<ofbiz:url>/EditProductCategories?productId=<%=productId%></ofbiz:url>" class="tabButton">Categories</a>
   <a href="<ofbiz:url>/EditProductKeyword?PRODUCT_ID=<%=productId%></ofbiz:url>" class="tabButton">Keywords</a>
   <a href="<ofbiz:url>/EditProductAssoc?PRODUCT_ID=<%=productId%></ofbiz:url>" class="tabButtonSelected">Associations</a>
@@ -236,7 +237,7 @@ try {
 <br>
 <%if(productId != null && product != null){%>
 <%java.util.Date nowDate = new java.util.Date();%>
-<hr>
+<hr class='sepbar'>
 <p class="head2">Associations FROM this Product to...</p>
 
   <table border="1" cellpadding='2' cellspacing='0'>
@@ -276,7 +277,7 @@ try {
     <%}%>
   </table>
 
-<hr>
+<hr class='sepbar'>
 <p class="head2">Associations TO this Product from...</p>
 
   <table border="1" cellpadding='2' cellspacing='0'>

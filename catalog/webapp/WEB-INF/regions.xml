@@ -47,107 +47,111 @@
     </define>
 
     <define id='FastLoadCache' region='LEFT_ONLY_REGION'>
-        <put section='title'>Fast Load Cache Page</put>
+        <put section='title'>Fast Load Cache</put>
         <put section='content' content='/FastLoadCache.jsp'/>
     </define>
 
     <define id='keywordsearch' region='LEFT_ONLY_REGION'>
-        <put section='title'>Keyword Search Page</put>
+        <put section='title'>Keyword Search</put>
         <put section='content' content='/find/keywordsearch.jsp'/>
     </define>
 
     <define id='ChooseTopCategory' region='LEFT_ONLY_REGION'>
-        <put section='title'>Choose Top Category Page</put>
+        <put section='title'>Choose Top Category</put>
         <put section='content' content='/ChooseTopCategory.jsp'/>
     </define>
 
     <define id='EditProduct' region='LEFT_ONLY_REGION'>
-        <put section='title'>Edit Product Page</put>
+        <put section='title'>Edit Product</put>
         <put section='content' content='/product/EditProduct.jsp'/>
     </define>
     <define id='EditProductPrices' region='LEFT_ONLY_REGION'>
-        <put section='title'>Edit Product Prices Page</put>
+        <put section='title'>Edit Product Prices</put>
         <put section='content' content='/product/EditProductPrices.jsp'/>
     </define>
+    <define id='EditProductContent' region='LEFT_ONLY_REGION'>
+        <put section='title'>Edit Product Content</put>
+        <put section='content' content='/product/EditProductContent.jsp'/>
+    </define>
     <define id='EditProductCategories' region='LEFT_ONLY_REGION'>
-        <put section='title'>Edit Product Categories Page</put>
+        <put section='title'>Edit Product Categories</put>
         <put section='content' content='/product/EditProductCategories.jsp'/>
     </define>
     <define id='EditProductKeyword' region='LEFT_ONLY_REGION'>
-        <put section='title'>Edit Product Keyword Page</put>
+        <put section='title'>Edit Product Keyword</put>
         <put section='content' content='/product/EditProductKeyword.jsp'/>
     </define>
     <define id='EditProductAssoc' region='LEFT_ONLY_REGION'>
-        <put section='title'>Edit Product Associations Page</put>
+        <put section='title'>Edit Product Associations</put>
         <put section='content' content='/product/EditProductAssoc.jsp'/>
     </define>
     <define id='EditProductAttributes' region='LEFT_ONLY_REGION'>
-        <put section='title'>Edit Product Associations Page</put>
+        <put section='title'>Edit Product Associations</put>
         <put section='content' content='/product/EditProductAttributes.jsp'/>
     </define>
     <define id='EditProductFeatures' region='LEFT_ONLY_REGION'>
-        <put section='title'>Edit Product Features Page</put>
+        <put section='title'>Edit Product Features</put>
         <put section='content' content='/product/EditProductFeatures.jsp'/>
     </define>
     <define id='EditProductInventoryItems' region='LEFT_ONLY_REGION'>
-        <put section='title'>Edit Product Inventory Items Page</put>
+        <put section='title'>Edit Product Inventory Items</put>
         <put section='content' content='/product/EditProductInventoryItems.jsp'/>
     </define>
     <define id='UploadImage' region='MAIN_REGION'>
-        <put section='title'>Upload Product Image Page</put>
+        <put section='title'>Upload Product Image</put>
         <put section='content' content='/product/UploadImage.jsp'/>
     </define>
 
     <define id='QuickAddVariants' region='LEFT_ONLY_REGION'>
-        <put section='title'>Quick-Add Variants Page</put>
+        <put section='title'>Quick-Add Variants</put>
         <put section='content' content='/product/QuickAddVariants.jsp'/>
     </define>
 
     <define id='EditInventoryItem' region='LEFT_ONLY_REGION'>
-        <put section='title'>Edit Inventory Item Page</put>
+        <put section='title'>Edit Inventory Item</put>
         <put section='content' content='/inventory/EditInventoryItem.jsp'/>
     </define>
 
     <define id='EditFeatureCategories' region='LEFT_ONLY_REGION'>
-        <put section='title'>Edit Product Feature Categories Page</put>
+        <put section='title'>Edit Product Feature Categories</put>
         <put section='content' content='/feature/EditFeatureCategories.jsp'/>
     </define>
     <define id='EditFeatureCategoryFeatures' region='MAIN_REGION'>
-        <put section='title'>Edit Product Feature Category Features Page</put>
+        <put section='title'>Edit Product Feature Category Features</put>
         <put section='content' content='/feature/EditFeatureCategoryFeatures.jsp'/>
     </define>
 
     <define id='EditCategory' region='LEFT_ONLY_REGION'>
-        <put section='title'>Edit Category Page</put>
+        <put section='title'>Edit Category</put>
         <put section='content' content='/category/EditCategory.jsp'/>
     </define>
     <define id='EditCategoryRollup' region='LEFT_ONLY_REGION'>
-        <put section='title'>Edit Category Rollups Page</put>
+        <put section='title'>Edit Category Rollups</put>
         <put section='content' content='/category/EditCategoryRollup.jsp'/>
     </define>
     <define id='EditCategoryProducts' region='LEFT_ONLY_REGION'>
-        <put section='title'>Edit Category Products Page</put>
+        <put section='title'>Edit Category Products</put>
         <put section='content' content='/category/EditCategoryProducts.jsp'/>
     </define>
     <define id='EditCategoryProdCatalogs' region='LEFT_ONLY_REGION'>
-        <put section='title'>Edit Category Product Catalogs Page</put>
+        <put section='title'>Edit Category Product Catalogs</put>
         <put section='content' content='/category/EditCategoryProdCatalogs.jsp'/>
     </define>
     <define id='UploadCategoryImage' region='MAIN_REGION'>
-        <put section='title'>Upload Category Image Page</put>
+        <put section='title'>Upload Category Image</put>
         <put section='content' content='/category/UploadCategoryImage.jsp'/>
     </define>
 
     <define id='FindFacility' region='MAIN_REGION'>
-        <put section='title'>Edit Facility Page</put>
+        <put section='title'>Edit Facility</put>
         <put section='content' content='/storage/FindFacility.jsp'/>
     </define>
     <define id='EditFacility' region='MAIN_REGION'>
-        <put section='title'>Edit Facility Page</put>
+        <put section='title'>Edit Facility</put>
         <put section='content' content='/storage/EditFacility.jsp'/>
     </define>
     <define id='EditFacilityInventoryItems' region='MAIN_REGION'>
-        <put section='title'>Edit Facility InventoryItems Page</put>
+        <put section='title'>Edit Facility InventoryItems</put>
         <put section='content' content='/storage/EditFacilityInventoryItems.jsp'/>
     </define>
 
