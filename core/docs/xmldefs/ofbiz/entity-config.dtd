@@ -109,6 +109,9 @@
     check-on-start ( true | false ) "true"
     add-missing-on-start ( true | false ) "false"
     use-foreign-keys ( true | false ) "true"
+    check-fks-on-start ( true | false ) "false"
+    use-pk-constraint-names ( true | false ) "true"
+    constraint-name-clip-length CDATA "30"
 >
     <!ELEMENT sql-load-path EMPTY>
     <!ATTLIST sql-load-path
