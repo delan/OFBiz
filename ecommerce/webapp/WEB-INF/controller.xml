@@ -524,7 +524,7 @@
     <view-map name="quickadd" type="region"/>
     <view-map name="category" type="region"/>
     <!-- Uncomment this for WSP: <view-map name="category" type="wsp" page="/catalog/category.jsp"/> -->
-    <view-map name="product" type="region"/>
+    <view-map name="product" type="wsp" page="/catalog/product.ftl"/>
     <view-map name="keywordsearch" type="region"/>
 
     <view-map name="checkoutoptions" type="region"/>
@@ -543,6 +543,6 @@
     <view-map name="editperson" type="region"/>
 
     <view-map name="newAffiliate" type="region"/>
-    <view-map name="ftlTest" type="wsp" page="/freemarker_test.ftl"/>
+    <view-map name="ftlTest" type="ftl" page="/freemarker_test.ftl"/>
     <!-- End of View Mappings -->
 </site-conf>

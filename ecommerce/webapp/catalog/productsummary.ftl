@@ -34,13 +34,13 @@
   <table border="0" width='100%' cellpadding='0' cellspacing='0'>
     <tr>
       <td valign="top">    
-          <a href='<#transform ofbizUrl>/product?<#if requestAttributes.categoryId?exists>category_id=${requestAttributes.categoryId}&</#if>product_id=${product.productId}</#transform>'>
-            <img src='<#transform ofbizContentUrl>${requestAttributes.contentPathPrefix?if_exists}${product.smallImageUrl?default("/images/defaultImage.jpg")}</#transform>' align="left" height="50" class='imageborder' border='0'> 
+          <a href='<@ofbizUrl>/product?<#if requestAttributes.categoryId?exists>category_id=${requestAttributes.categoryId}&</#if>product_id=${product.productId}</@ofbizUrl>'>
+            <img src='<@ofbizContentUrl>${requestAttributes.contentPathPrefix?if_exists}${product.smallImageUrl?default("/images/defaultImage.jpg")}</@ofbizContentUrl>' align="left" height="50" class='imageborder' border='0'> 
           </a>
       </td>
       <td align="left" valign="top" width="100%">
           <div class="tabletext">
-            <a href='<#transform ofbizUrl>/product?<#if requestAttributes.categoryId?exists>category_id=${requestAttributes.categoryId}&</#if>product_id=${product.productId?if_exists}</#transform>' class='buttontext'>${product.productName?if_exists}</a>
+            <a href='<@ofbizUrl>/product?<#if requestAttributes.categoryId?exists>category_id=${requestAttributes.categoryId}&</#if>product_id=${product.productId?if_exists}</@ofbizUrl>' class='buttontext'>${product.productName?if_exists}</a>
           </div>
           <div class="tabletext">${product.description?if_exists}</div>
           <div class="tabletext">
@@ -67,9 +67,9 @@
             <div class='tabletext' style='color: red;'>No Longer Available</div>          
           <#-- check to see if the product is a virtual product -->
           <#elseif product.isVirtual?exists && product.isVirtual == "Y">
-            <a href='<#transform ofbizUrl>/product?<#if requestAttributes.categoryId?exists>category_id=${requestAttributes.categoryId}&</#if>product_id=${product.productId}</#transform>' class="buttontext"><nobr>[Choose Variation...]</nobr></a>                                                          
+            <a href='<@ofbizUrl>/product?<#if requestAttributes.categoryId?exists>category_id=${requestAttributes.categoryId}&</#if>product_id=${product.productId}</@ofbizUrl>' class="buttontext"><nobr>[Choose Variation...]</nobr></a>                                                          
           <#else>
-            <form method="POST" action="<#transform ofbizUrl>/additem<#if requestAttributes._CURRENT_VIEW_?exists>/${requestAttributes._CURRENT_VIEW_}</#if></#transform>" name="the${requestAttributes.listIndex?if_exists}form" style='margin: 0;'>
+            <form method="POST" action="<@ofbizUrl>/additem<#if requestAttributes._CURRENT_VIEW_?exists>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="the${requestAttributes.listIndex?if_exists}form" style='margin: 0;'>
               <input type='hidden' name='add_product_id' value='${product.productId}'>
               <input type="text" class='inputBox' size="5" name="quantity" value="1">              
               <#if requestParameters.product_id?exists><input type='hidden' name='product_id' value='${requestParameters.product_id}'></#if>
@@ -83,7 +83,7 @@
             <#if requestAttributes.productCategoryMemeber?exists>
 			  <#assign prodCatMem = requestAttributes.productCategoryMember>
 			  <#if prodCatMem?exists && prodCatMem != null && prodCatMem.quantity?exists && 0.00 < prodCatMem.quantity?double>
-                <form method="POST" action="<#transform ofbizUrl>/additem<#if requestAttributes._CURRENT_VIEW_?exists>/${requestAttributes._CURRENT_VIEW_}</#if></#transform>" name="the${requestAttributes.listIndex?if_exists}defaultform" style='margin: 0;'>
+                <form method="POST" action="<@ofbizUrl>/additem<#if requestAttributes._CURRENT_VIEW_?exists>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="the${requestAttributes.listIndex?if_exists}defaultform" style='margin: 0;'>
                   <input type='hidden' name='add_product_id' value='${prodCatMem.productId?if_exists}'>
                   <input type='hidden' name="quantity" value='${prodCatMem.quantity?if_exists}'>                  
                   <#if requestParameters.product_id?exists><input type='hidden' name='product_id' value='${requestParameters.product_id}'></#if>

@@ -36,8 +36,8 @@
       <div class="head1">
         ${productCategory.description?if_exists}
         <#if requestAttributes.hasQuantities?exists>
-          <form method="POST" action="<ofbiz:url>/addCategoryDefaults<%=UtilFormatOut.ifNotEmpty((String)request.getAttribute(SiteDefs.CURRENT_VIEW), "/", "")%></ofbiz:url>" name="thecategoryform" style='margin: 0;'>
-            <input type='hidden' name='add_category_id' value='<%EntityField.run("productCategory", "productCategoryId", pageContext);%>'>            
+          <form method="POST" action="<@ofbizUrl>/addCategoryDefaults<#if requestAttributes._CURRENT_VIEW_?exists>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="thecategoryform" style='margin: 0;'>
+            <input type='hidden' name='add_category_id' value='${productCategory.productCategoryId}'>            
             <#if requestParameters.product_id?exists><input type='hidden' name='product_id' value='${requestParameters.product_id}'></#if>
             <#if requestParameters.category_id?exists><input type='hidden' name='category_id' value='${requestParameters.category_id}'></#if>
             <#if requestParameters.VIEW_INDEX?exists><input type='hidden' name='VIEW_INDEX' value='${requestParameters.VIEW_INDEX}'></#if>
@@ -54,7 +54,7 @@
     <td align="left" valign="top" width="0">
       <div class="tabletext">
         <#if productCategory.categoryImageUrl?exists>
-          <img src='<#transform ofbizContentUrl>${productCategory.categoryImageUrl}</#transform>' vspace='5' hspace='5' border='1' height='100' align='left'>
+          <img src='<@ofbizContentUrl>${productCategory.categoryImageUrl}</@ofbizContentUrl>' vspace='5' hspace='5' border='1' height='100' align='left'>
         </#if>
         <#if productCategory.longDescription?exists>
           ${productCategory.longDescription}
@@ -72,13 +72,13 @@
     <td align=right>
       <b>
         <#if 0 < requestAttributes.viewIndex?int>
-          <a href="<#transform ofbizUrl>/category?category_id=${requestAttributes.productCategoryId}&VIEW_SIZE=${requestAttributes.viewSize}&VIEW_INDEX=${requestAttributes.viewIndex?int - 1}</#transform>" class="buttontext">[Previous]</a> |
+          <a href="<@ofbizUrl>/category?category_id=${requestAttributes.productCategoryId}&VIEW_SIZE=${requestAttributes.viewSize}&VIEW_INDEX=${requestAttributes.viewIndex?int - 1}</@ofbizUrl>" class="buttontext">[Previous]</a> |
         </#if>
         <#if 0 < requestAttributes.listSize?int>
           <span class="tabletext">${requestAttributes.lowIndex} - ${requestAttributes.highIndex} of ${requestAttributes.listSize}</span>
         </#if>
         <#if requestAttributes.highIndex?int < requestAttributes.listSize?int>
-          | <a href="<#transform ofbizUrl>/category?category_id=${requestAttributes.productCategoryId}&VIEW_SIZE=${requestAttributes.viewSize}&VIEW_INDEX=${requestAttributes.viewIndex?int + 1}</#transform>" class="buttontext">[Next]</a> |
+          | <a href="<@ofbizUrl>/category?category_id=${requestAttributes.productCategoryId}&VIEW_SIZE=${requestAttributes.viewSize}&VIEW_INDEX=${requestAttributes.viewIndex?int + 1}</@ofbizUrl>" class="buttontext">[Next]</a> |
         </#if>
       </b>
     </td>
@@ -109,13 +109,13 @@
     <td align=right>
       <b>
         <#if 0 < requestAttributes.viewIndex?int>
-          <a href="<#transform ofbizUrl>/category?category_id=${requestAttributes.productCategoryId}&VIEW_SIZE=${requestAttributes.viewSize}&VIEW_INDEX=${requestAttributes.viewIndex?int - 1}</#transform>" class="buttontext">[Previous]</a> |
+          <a href="<@ofbizUrl>/category?category_id=${requestAttributes.productCategoryId}&VIEW_SIZE=${requestAttributes.viewSize}&VIEW_INDEX=${requestAttributes.viewIndex?int - 1}</@ofbizUrl>" class="buttontext">[Previous]</a> |
         </#if>
         <#if 0 < requestAttributes.listSize?int>
           <span class="tabletext">${requestAttributes.lowIndex} - ${requestAttributes.highIndex} of ${requestAttributes.listSize}</span>
         </#if>
         <#if requestAttributes.highIndex?int < requestAttributes.listSize?int>
-          | <a href="<#transform ofbizUrl>/category?category_id=${requestAttributes.productCategoryId}&VIEW_SIZE=${requestAttributes.viewSize}&VIEW_INDEX=${requestAttributes.viewIndex?int + 1}</#transform>" class="buttontext">[Next]</a> |
+          | <a href="<@ofbizUrl>/category?category_id=${requestAttributes.productCategoryId}&VIEW_SIZE=${requestAttributes.viewSize}&VIEW_INDEX=${requestAttributes.viewIndex?int + 1}</@ofbizUrl>" class="buttontext">[Next]</a> |
         </#if>
       </b>
     </td>

@@ -29,17 +29,32 @@
 <#assign price = requestAttributes.priceMap>
 <#-- end variable setup -->
 
+<#-- virtual product javascript -->
+${requestAttributes.virtualJavaScript?if_exists}
+<script language="JavaScript">
+ <!--
+     function addItem() {
+         if (document.addform.add_product_id.value == 'NULL') {
+             alert("Please enter all the required information.");
+             return;
+         } else {
+             document.addform.submit();
+         }
+     }
+ //-->
+ </script>
+
 <table border="0" width="100%" cellpadding="2" cellspacing='0'>
   <#-- Category next/previous -->
   <#if requestAttributes.category?exists>
     <tr>
       <td colspan="2" align="right">
         <#if requestAttributes.previousProductId?exists>
-          <a href='<#transform ofbizUrl>/product?category_id=<%=categoryId%>&product_id=<ofbiz:print attribute="previousProductId"/></#transform>' class="buttontext">[Previous]</a>&nbsp;|&nbsp;
+          <a href='<@ofbizUrl>/product?category_id=${requestAttributes.categoryId?if_exists}&product_id=${requestAttributes.previousProductId?if_exists}</@ofbizUrl>' class="buttontext">[Previous]</a>&nbsp;|&nbsp;
         </#if>
-        <a href="<ofbiz:url>/category?category_id=<%=categoryId%></ofbiz:url>" class="buttontext"><%EntityField.run("category", "description", pageContext);%></a>
+        <a href="<@ofbizUrl>/category?category_id=${requestAttributes.categoryId?if_exists}</@ofbizUrl>" class="buttontext">${requestAttributes.category.description?if_exists}</a>
         <#if requestAttributes.nextProductId?exists>
-          &nbsp;|&nbsp;<a href='<ofbiz:url>/product?category_id=<%=categoryId%>&product_id=<ofbiz:print attribute="nextProductId"/></ofbiz:url>' class="buttontext">[Next]</a>
+          &nbsp;|&nbsp;<a href='<@ofbizUrl>/product?category_id=${requestAttributes.categoryId?if_exists}&product_id=${requestAttributes.nextProductId?if_exists}</@ofbizUrl>' class="buttontext">[Next]</a>
         </#if>
       </td>
     </tr>
@@ -50,8 +65,8 @@
   <#-- Product image/name/price -->
   <tr>
     <td align="left" valign="top" width="0">
-      <#if product.largeImageUrl?exists && product.largeImageUrl != null>
-        <img src='<ofbiz:contenturl><%=contentPathPrefix%><%=product.getString("largeImageUrl")%></ofbiz:contenturl>' name='mainImage' vspace='5' hspace='5' border='1' width='200' align=left>
+      <#if product.largeImageUrl?exists>
+        <img src='<@ofbizContentUrl>${requestAttributes.contentPathPrefix?if_exists}${product.largeImageUrl?if_exists}</@ofbizContentUrl>' name='mainImage' vspace='5' hspace='5' border='1' width='200' align='left'>
       </#if>
     </td>
     <td align="right" valign="top">
@@ -71,7 +86,7 @@
       </#if>     
       <div class="tabletext">
         <b>
-          <#if price.isSale?upper_case == "TRUE">
+          <#if price.isSale>
             <span class='salePrice'>On Sale!</span>
             <#assign priceStyle = "salePrice">
           <#else>
@@ -93,14 +108,13 @@
           ${product.piecesIncluded}
         </div>
       </#if>
-      
-      <p>&nbsp;</p>
-      
-      <form method="POST" action="<ofbiz:url>/additem<%=UtilFormatOut.ifNotEmpty((String)request.getAttribute(SiteDefs.CURRENT_VIEW), "/", "")%></ofbiz:url>" name="addform" style='margin: 0;'>
+                
+      <form method="POST" action="<@ofbizUrl>/additem<#if requestAttributes._CURRENT_VIEW_?exists>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="addform" style='margin: 0;'>
         <#assign inStock = true>     
         <#-- Variant Selection -->
         <#if product.isVirtual?exists && product.isVirtual?upper_case == "Y">
-          <#if requestAttributes.variantTree?exists && 0 < requestAttributes.variantTree?size>
+          <#if requestAttributes.variantTree?exists && 0 < requestAttributes.variantTree.size()>
+            <p>&nbsp;</p>
             <#list requestAttributes.featureSet as currentType>
               <div class="tabletext">
                 <select name="${currentType}" onChange="getList(this.name, this.options[this.selectedIndex].value)">
@@ -119,7 +133,7 @@
         <#else>          
           <input type='hidden' name="product_id" value='${product.productId}'>
           <input type='hidden' name="add_product_id" value='${product.productId}'>
-          <#if !Static["org.ofbiz.commonapp.product.catalog.CatalogWorker"].isCatalogInventoryAvailable(request, productId, 1.0)>
+          <#if !Static["org.ofbiz.commonapp.product.catalog.CatalogWorker"].isCatalogInventoryAvailable(request, product.productId?string, 1.0?double)>
             <#if Static["org.ofbiz.commonapp.product.catalog.CatalogWorker"].isCatalogInventoryRequired(request, product)> 
               <div class='tabletext'><b>This item is out of stock.</b></div>
               <#assign inStock = false>
@@ -131,12 +145,14 @@
 
         <p>&nbsp;</p>
         
-        <#-- Check the product's availablity -->
-        <#if requestAttributes.introduced?upper_case != "Y">
+        <#-- check to see if introductionDate hasn't passed yet -->
+        <#if product.introductionDate?exists && Static["org.ofbiz.core.util.UtilDateTime"].nowTimestamp().before(product.introductionDate)>
           <div class='tabletext' style='color: red;'>This product has not yet been made available for sale.</div>
-        <#elseif requestAttributes.discontinued?upper_case == "Y">
+        <#-- check to see if salesDiscontinuationDate has passed -->
+        <#elseif product.salesDiscontinuationDate?exists && Static["org.ofbiz.core.util.UtilDateTime"].nowTimestamp().before(product.salesDiscontinuationDate)>
           <div class='tabletext' style='color: red;'>This product is no longer available for sale.</div>
-        <#else>
+        <#-- check to see if the product requires inventory check and has inventory -->
+        <#else>        
           <#if inStock>
             <a href="javascript:addItem()" class="buttontext"><nobr>[Add to Cart]</nobr></a>&nbsp;
             <input type="text" size="5" name="quantity" value="1">
@@ -148,34 +164,32 @@
       </form>
        
       <#-- Prefill first select box (virtual products only) -->
-      <#if requestAttributes.variantTree?exists && 0 < requestAttributes.variantTree?size>
+      <#if requestAttributes.variantTree?exists && 0 < requestAttributes.variantTree.size()>
         <script language="JavaScript">eval("list" + "${requestAttributes.featureOrderFirst}" + "()");</script>
       </#if>
                 
       <#-- Swatches (virtual products only) -->
-      <#if requestAttributes.variantSample?exists && 0 < requestAttributes.variantSample?size>
-        <#assign imageKeys = requestAttributes.variantSample?keys>
+      <#if requestAttributes.variantSample?exists && 0 < requestAttributes.variantSample.size()>
+        <#assign imageKeys = requestAttributes.variantSample.keySet()>
         <#assign imageMap = requestAttributes.variantSample>
         <p>&nbsp;</p>
         <table cellspacing="0" cellpadding="0">
           <tr>
-            <td>
-              <%int ii=0; Iterator imIt=imageSet.iterator();%>
-              <#assign indexer = 0>
-              <#list imageKeys as key>
-                <#assign imageUrl = imageMap[key].getString("smallImageUrl")?if_exists>       
-                <#if imageUrl?exists && imageUrl != null>
-                  <table cellspacing="0" cellpadding="0">
-                    <tr><td><a href="#"><img src="<#transform ofbizContentUrl>${requestAttributes.contentPathPrefix?if_exists}${imageUrl}</#transform>" border="0" width="60" height="60" onclick="javascript:getList('${requestAttributes.featureOrderFirst}','${indexer}',1);"></a></td></tr>
-                    <tr><td align="center" valign="top"><span class="tabletext">${key}</span></td></tr>
-                  </table>
-                </#if>
-                <#assign indexer = indexer + 1>                
-              </#list>
-            </td>
+            <#assign indexer = 0>              
+            <#list imageKeys as key>
+              <#assign product = imageMap.get(key)>
+              <#assign imageUrl = product.smallImageUrl?if_exists>       
+              <#if product?exists && product.smallImageUrl?exists>                  
+                <td align="center" valign="bottom">
+                  <a href="#"><img src="<@ofbizContentUrl>${requestAttributes.contentPathPrefix?if_exists}${product.smallImageUrl}</@ofbizContentUrl>" border="0" width="60" height="60" onclick="javascript:getList('${requestAttributes.featureOrderFirst}','${indexer}',1);"></a>
+                  <br>
+                  <a href="#" class="buttontext" onclick="javascript:getList('${requestAttributes.featureOrderFirst}','${indexer}',1);">${key}</a>
+                </td>
+                <#assign indexer = indexer + 1>
+              </#if>
+            </#list>
           </tr>
-        </table>
-        <%}%>
+        </table>        
       </#if>    
     </td>
   </tr>
@@ -198,7 +212,7 @@
 <#macro associated(assocProducts, beforeName, showName, afterName)>
   <#if assocProducts?exists && 0 < assocProducts?size>
     <tr><td>&nbsp;</td></tr> 
-    <tr><td colspan="2"><div class="head2">${beforeName?if_exists}<#if nameb4note == "Y">${productValue.productName}</#if>${afterName?if_exists}</div></td></tr>
+    <tr><td colspan="2"><div class="head2">${beforeName?if_exists}<#if showName == "Y">${productValue.productName}</#if>${afterName?if_exists}</div></td></tr>
     <tr><td><hr class='sepbar'></td></tr>    
     <#list assocProducts as productAssoc>
       <tr><td>
@@ -210,11 +224,11 @@
         </div>
       </td></tr>
       <#assign asscProduct = productAssoc.getRelatedOneCache("AssocProduct")>
-      ${setRequestAttribute("product", asscProduct)}
+      ${setRequestAttribute("productId", asscProduct.productId)}
       ${setRequestAttribute("listIndex", listIndex)}
       <tr>
         <td>
-          ${pages.get("/catalog/productsummary.jsp")}
+          ${pages.get("/catalog/productsummary.ftl")}
         </td>
       </tr>
       <#assign listIndex = listIndex + 1>
@@ -229,12 +243,12 @@ ${setRequestAttribute("productValue", productValue)}
 
 <table width='100%'>
   <#-- obsolete -->
-  <#call associated(productAttributes.obsoleteProducts, "", "Y", " is made obsolete by these products:")>
+  <#call associated(requestAttributes.obsoleteProducts, "", "Y", " is made obsolete by these products:")>
   <#-- cross sell -->
-  <#call associated(productAttributes.crossSellProducts, "", "N", "You might be interested in these as well:")>
+  <#call associated(requestAttributes.crossSellProducts, "", "N", "You might be interested in these as well:")>
   <#-- up sell -->
-  <#call associated(productAttributes.upSellProducts, "Try these instead of ", "Y", ":")>
+  <#call associated(requestAttributes.upSellProducts, "Try these instead of ", "Y", ":")>
   <#-- obsolescence -->
-  <#call associated(productAttributes.obsolenscenseProducts, "", "Y", " makes these products obsolete:")>
+  <#call associated(requestAttributes.obsolenscenseProducts, "", "Y", " makes these products obsolete:")>
 </table>
 
