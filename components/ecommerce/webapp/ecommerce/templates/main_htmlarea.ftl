@@ -23,7 +23,7 @@
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     Al Byers (byersa@automationgroups.com)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      3.1
 -->
     <#assign contextPath=request.getContextPath()/>
@@ -67,7 +67,7 @@
 </#if>
 
 
-${pages.get("/includes/header.ftl")}
+${pages.get("/includes/header_htmlarea.ftl")}
 
 <table width='100%' border='0' cellpadding='0' cellspacing='0'>
  <tr>

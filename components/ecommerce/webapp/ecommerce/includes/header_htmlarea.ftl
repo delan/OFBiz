@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.14 $
+ *@version    $Revision: 1.1 $
  *@since      2.1
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
@@ -51,7 +51,7 @@
     </#if>
 </head>
 
-<body class="ecbody" >
+<body class="ecbody" onLoad="init_all()">
 
 <table border="0" width="100%" cellspacing="0" cellpadding="0" class="headerboxoutside">
   <tr>
