@@ -1,0 +1,15 @@
+<!--
+ - JXCreateTPUsersConfig.xml
+ -
+ - author:  Phil Thunborg
+ - Created: 1/8/2002
+ - Copyright © 2001-2002, In2M Corporation, All Rights Reserved.
+ -->
+<jxuConfig>
+    <tpUsers>
+        <tpUser>
+            <userName>philTest-2</userName>
+            <password>password</password>
+        </tpUser>
+    </tpUsers>
+</jxuConfig>

@@ -1,0 +1,7 @@
+<jxu>
+  <loop count="100" reportLabel="TestSequence" >
+		<!-- ofbentity delegator="default" action="create" input="mvelopes.xml" / -->
+		<!-- ofbservice delegator="default" dispatcher="default" input="reports.xml"/ -->
+		<bsh script="testSequence.bsh"/>
+	</loop>
+</jxu>
