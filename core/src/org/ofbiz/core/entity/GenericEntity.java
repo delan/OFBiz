@@ -60,13 +60,19 @@ public class GenericEntity implements Serializable
   public String getEntityName() { return entityName; }
   public ModelEntity getModelEntity() { return modelEntity; }
 
-  public Object get(String name) { return fields.get(name); }
-  //would be nice to add valid field name checking for the given entityName
+  public Object get(String name) 
+  { 
+    if(modelEntity.getField(name) == null)
+    {
+      Debug.logWarning("[GenericEntity.get] \"" + name + "\" is not a field of " + entityName + ", but getting anyway...");
+    }
+    return fields.get(name); 
+  }
   public synchronized void set(String name, Object value) 
   { 
     if(modelEntity.getField(name) == null)
     {
-      Debug.logWarning("[GenericEntity.set] Specified fieldName \"" + name + "\" is not a field of this entity (" + entityName + "). This may be what you want, so setting anyway...");
+      Debug.logWarning("[GenericEntity.set] \"" + name + "\" is not a field of " + entityName + ", but setting anyway...");
     }
     fields.put(name, value); modified = true;
   }
