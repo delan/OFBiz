@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -45,6 +46,8 @@ import org.ofbiz.content.widget.screen.ScreenFactory;
 import org.ofbiz.content.widget.screen.ScreenStringRenderer;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.GenericEntityException;
+import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.service.LocalDispatcher;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
@@ -190,17 +193,17 @@ public class ModelTree {
     
             Element actionElement = UtilXml.firstChildElement(nodeElement, "entity-one");
             if (actionElement != null) {
-               actions.add(new ModelTreeAction.EntityOne(modelTree, actionElement));
+               actions.add(new ModelTreeAction.EntityOne(this, actionElement));
             }
             
             actionElement = UtilXml.firstChildElement(nodeElement, "service");
             if (actionElement != null) {
-                actions.add(new ModelTreeAction.Service(modelTree, actionElement));
+                actions.add(new ModelTreeAction.Service(this, actionElement));
             }
             
             actionElement = UtilXml.firstChildElement(nodeElement, "script");
             if (actionElement != null) {
-                actions.add(new ModelTreeAction.Script(modelTree, actionElement));
+                actions.add(new ModelTreeAction.Script(this, actionElement));
             }
         
             Element screenElement = UtilXml.firstChildElement(nodeElement, "include-screen");
@@ -314,13 +317,20 @@ public class ModelTree {
                  if (Debug.infoOn()) Debug.logInfo(" context.currentValue:" + context.get("currentValue"), module);
                  ModelTreeAction.runSubActions(subNodeActions, context);
                  List dataFound = (List)context.get("dataFound");
-                 Iterator dataIter =  dataFound.iterator();
+                 ListIterator dataIter =  subNode.getListIterator();
                  while (dataIter != null && dataIter.hasNext()) {
                      GenericValue val = (GenericValue)dataIter.next();
-                 if (Debug.infoOn()) Debug.logInfo(" hasChildren, val:" + val.getPrimaryKey(), module);
+                     if (Debug.infoOn()) Debug.logInfo(" hasChildren, val:" + val.getPrimaryKey(), module);
                      Object [] arr = {node,val};
                      subNodeValues.add(arr);
                      hasChildren = true;
+                 }
+                 if (dataIter instanceof EntityListIterator) {
+                 	try {
+                 	((EntityListIterator)dataIter).close();
+                    } catch(GenericEntityException e) {
+                    	throw new RuntimeException(e.getMessage());
+                    }
                  }
                  
              }
@@ -347,14 +357,17 @@ public class ModelTree {
             return val;
         }
     
-    
+        public ModelTree getModelTree() {
+        	return this.modelTree;
+        }
+        
         public static class ModelSubNode {
     
             protected ModelNode rootNode;
-            protected ModelNode subNode;
             protected FlexibleStringExpander nodeNameExdr;
             protected List actions = new ArrayList();
             protected List outFieldMaps;
+            protected ListIterator listIterator;
     
             public ModelSubNode() {}
     
@@ -365,24 +378,28 @@ public class ModelTree {
         
                 Element actionElement = UtilXml.firstChildElement(nodeElement, "entity-and");
                 if (actionElement != null) {
-                   actions.add(new ModelTreeAction.EntityAnd(modelNode.modelTree, actionElement));
+                   actions.add(new ModelTreeAction.EntityAnd(this, actionElement));
                 }
                 
                 actionElement = UtilXml.firstChildElement(nodeElement, "service");
                 if (actionElement != null) {
-                    actions.add(new ModelTreeAction.Service(modelNode.modelTree, actionElement));
+                    actions.add(new ModelTreeAction.Service(this, actionElement));
                 }
                 
                 actionElement = UtilXml.firstChildElement(nodeElement, "entity-condition");
                 if (actionElement != null) {
-                    actions.add(new ModelTreeAction.EntityCondition(modelNode.modelTree, actionElement));
+                    actions.add(new ModelTreeAction.EntityCondition(this, actionElement));
                 }
                 
                 actionElement = UtilXml.firstChildElement(nodeElement, "script");
                 if (actionElement != null) {
-                    actions.add(new ModelTreeAction.Script(modelNode.modelTree, actionElement));
+                    actions.add(new ModelTreeAction.Script(modelNode, actionElement));
                 }
         
+            }
+            
+            public ModelTree.ModelNode getNode() {
+            	return this.rootNode;
             }
         
             public String getNodeName(Map context) {
@@ -392,6 +409,15 @@ public class ModelTree {
             public List getActions() {
                 return actions;
             }
+            
+            public void setListIterator(ListIterator iter) {
+        	    listIterator = iter;
+            }
+        
+            public ListIterator getListIterator() {
+        	    return listIterator;
+            }
+    
     
         }
     
@@ -444,7 +470,7 @@ public class ModelTree {
             protected FlexibleStringExpander targetWindowExdr;
             protected FlexibleStringExpander prefixExdr;
             protected Image image;
-            protected String urlMode = "ofbiz";
+            protected String urlMode = "intra-app";
             protected boolean fullPath = false;
             protected boolean secure = false;
             protected boolean encode = false;
@@ -555,9 +581,7 @@ public class ModelTree {
                 this.prefixExdr = new FlexibleStringExpander(val);
             }
             public void setUrlMode( String val ) {
-                if (UtilValidate.isEmpty(val))
-                    this.urlMode = "ofbiz";
-                else
+                if (UtilValidate.isNotEmpty(val))
                     this.urlMode = val;
             }
             public void setFullPath( String val ) {
