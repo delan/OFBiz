@@ -1,5 +1,5 @@
 /*
- * $Id: ProductPromoWorker.java,v 1.24 2003/11/28 12:25:59 jonesde Exp $
+ * $Id: ProductPromoWorker.java,v 1.25 2003/11/29 14:08:14 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -54,7 +54,7 @@ import org.ofbiz.service.LocalDispatcher;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.24 $
+ * @version    $Revision: 1.25 $
  * @since      2.0
  */
 public class ProductPromoWorker {
@@ -125,10 +125,11 @@ public class ProductPromoWorker {
 
     public static void doPromotions(ShoppingCart cart, LocalDispatcher dispatcher) {
         // this is called when a user logs in so that per customer limits are honored, called by cart when new userlogin is set
-        // TODO: add code to store ProductPromoUse information when an order is placed
+        // there is code to store ProductPromoUse information when an order is placed
         // TODO: add code to remove ProductPromoUse if an order is cancelled
         // TODO: add code to check ProductPromoUse limits per promo (customer, promo), and per code (customer, code) to avoid use of promos or codes getting through due to multiple carts getting promos applied at the same time, possibly on totally different servers
         // TODO: add code to limit sub total for promos to not use gift cards (products with a don't use in promo indicator), also should exclude gift cards from all other promotion considerations
+        
         GenericDelegator delegator = cart.getDelegator();
         String partyId = cart.getPartyId();
         Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
@@ -681,6 +682,7 @@ public class ProductPromoWorker {
 
             Set productIds = ProductPromoWorker.getPromoRuleActionProductIds(productPromoAction, delegator, nowTimestamp);
 
+            List cartItemsUsed = new LinkedList();
             List lineOrderedByBasePriceList = cart.getLineListOrderedByBasePrice(false);
             Iterator lineOrderedByBasePriceIter = lineOrderedByBasePriceList.iterator();
             while (quantityDesired > 0 && lineOrderedByBasePriceIter.hasNext()) {
@@ -693,6 +695,7 @@ public class ProductPromoWorker {
                     if (quantityUsed > 0) {
                         quantityDesired -= quantityUsed;
                         totalAmount += quantityUsed * cartItem.getBasePrice();
+                        cartItemsUsed.add(cartItem);
                     }
                 }
             }
@@ -700,8 +703,29 @@ public class ProductPromoWorker {
             ranAction = false;
             if (totalAmount > desiredAmount && quantityDesired == 0) {
                 ranAction = true;
-                double discountAmount = -(totalAmount - desiredAmount);
-                doOrderPromoAction(productPromoAction, cart, discountAmount, "amount", delegator);
+                double discountAmountTotal = -(totalAmount - desiredAmount);
+                double discountAmount = discountAmountTotal;
+                // distribute the discount evenly weighted according to price over the order items that the individual quantities came from; avoids a number of issues with tax/shipping calc, inclusion in the sub-total for other promotions, etc
+                Iterator cartItemsUsedIter = cartItemsUsed.iterator();
+                while (cartItemsUsedIter.hasNext()) {
+                    ShoppingCartItem cartItem = (ShoppingCartItem) cartItemsUsedIter.next();
+                    // to minimize rounding issues use the remaining total for the last one, otherwise use a calculated value
+                    if (cartItemsUsedIter.hasNext()) {
+                        double quantityUsed = cartItem.getPromoQuantityCandidateUse(productPromoAction);
+                        double ratioOfTotal = (quantityUsed * cartItem.getBasePrice()) / totalAmount;
+                        double weightedAmount = ratioOfTotal * discountAmountTotal;
+                        // round the weightedAmount to 2 decimal places, ie a whole number of cents or 2 decimal place monetary units
+                        weightedAmount = weightedAmount * 100.0;
+                        long roundedAmount = Math.round(weightedAmount);
+                        weightedAmount = ((double) roundedAmount) / 100.0;
+                        discountAmount -= weightedAmount;
+                        doOrderItemPromoAction(productPromoAction, cartItem, weightedAmount, "amount", delegator);
+                    } else {
+                        // last one, just use discountAmount
+                        doOrderItemPromoAction(productPromoAction, cartItem, discountAmount, "amount", delegator);
+                    }
+                }
+                // this is the old way that causes problems: doOrderPromoAction(productPromoAction, cart, discountAmount, "amount", delegator);
             } else {
                 // clear out any action uses for this so they don't become part of anything else
                 cart.resetPromoRuleUse(productPromoAction.getString("productPromoId"), productPromoAction.getString("productPromoRuleId"));
