@@ -51,17 +51,17 @@
 <%if(!security.hasPermission("USER_ADMIN", session) && creditCard != null && 
      !userLogin.getString("partyId").equals(creditCard.getString("partyId"))){%>
   <p><h3>The credit card specified does not belong to you, you may not view or edit it.</h3></p>
-+ donePage%></ofbiz:url>" class="buttontext">[Back]</a>
+&nbsp;<a href="<ofbiz:url>/authview/<%=donePage%></ofbiz:url>" class="buttontext">[Back]</a>
 <%}else{%>
     <%if(creditCard == null){%>
       <%useValues = false;%>
       <p class="head1">Add New Credit Card</p>
-+ donePage%></ofbiz:url>" name="editcreditcardform">
+      <form method="post" action="<ofbiz:url>/updatecreditcard/<%=donePage%></ofbiz:url>" name="editcreditcardform">
       <table width="90%" border="0" cellpadding="2" cellspacing="0">
         <input type=hidden name="UPDATE_MODE" value="CREATE">
     <%}else{%>
       <p class="head1">Edit Credit Card</p>
-+ donePage%></ofbiz:url>" name="editcreditcardform">
+      <form method="post" action="<ofbiz:url>/updatecreditcard/<%=donePage%></ofbiz:url>" name="editcreditcardform">
       <table width="90%" border="0" cellpadding="2" cellspacing="0">
         <input type=hidden name="CREDIT_CARD_ID" value="<%=creditCardId%>">
         <input type=hidden name="UPDATE_MODE" value="UPDATE">
@@ -265,9 +265,9 @@
   </table>
   </form>
 
-+ donePage%></ofbiz:url>" class="buttontext">[Done]</a>
+  &nbsp;<a href="<ofbiz:url>/authview/<%=donePage%></ofbiz:url>" class="buttontext">[Done]</a>
   &nbsp;<a href="javascript:document.editcreditcardform.submit()" class="buttontext">[Save]</a>
-  <%--  <input type="image" value="[Save]" border="0" src="/commerce/images/btn_save.gif"> --%>
+  <%--  <input type="image" value="[Save]" border="0" src="/images/btn_save.gif"> --%>
 <%}%>
 
 
