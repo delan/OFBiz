@@ -28,23 +28,26 @@ import org.ofbiz.core.util.*;
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.service.*;
 import org.ofbiz.commonapp.product.catalog.*;
+import org.ofbiz.commonapp.product.store.*;
 
 delegator = request.getAttribute("delegator");
 miniProduct = request.getAttribute("miniProduct");
 optProductId = request.getAttribute("optProductId");
+webSiteId = CatalogWorker.getWebSiteId(request);
+prodCatalogId = CatalogWorker.getCurrentCatalogId(request);
+productStoreId = ProductStoreWorker.getProductStoreId(request);
 
 if (optProductId != null) {    
     miniProduct = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", optProductId));
 }
     
-if (miniProduct != null) {
+if (miniProduct != null && productStoreId != null && prodCatalogId != null) {
     userLogin = session.getAttribute("userLogin");
     dispatcher = request.getAttribute("dispatcher");
     
     // calculate the "your" price
     priceParams = UtilMisc.toMap("product", miniProduct, 
-        "prodCatalogId", CatalogWorker.getCurrentCatalogId(request),
-        "webSiteId", CatalogWorker.getWebSiteId(request),
+        "prodCatalogId", prodCatalogId, "webSiteId", webSiteId,
         "autoUserLogin", session.getAttribute("autoUserLogin"));
     if (userLogin != null) priceParams.put("partyId", userLogin.get("partyId"));
     priceResult = dispatcher.runSync("calculateProductPrice", priceParams);
