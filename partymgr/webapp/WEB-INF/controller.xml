@@ -183,19 +183,33 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="editeftaccount"/>
     </request-map>
-
     <request-map uri="createEftAccount">
         <security https="true" auth="true"/>
         <event type="simple" path="org/ofbiz/commonapp/accounting/payment/PaymentSimpleMethods.xml" invoke="createEftAccount"/>
         <response name="success" type="view" value="editeftaccount"/>
         <response name="error" type="view" value="editeftaccount"/>
     </request-map>
-
     <request-map uri="updateEftAccount">
         <security https="true" auth="true"/>
         <event type="simple" path="org/ofbiz/commonapp/accounting/payment/PaymentSimpleMethods.xml" invoke="updateEftAccount"/>
         <response name="success" type="view" value="editeftaccount"/>
         <response name="error" type="view" value="editeftaccount"/>
+    </request-map>
+    <request-map uri="editAvsOverride">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="editavsoverride"/>
+    </request-map>
+    <request-map uri="updateAvsOverride">
+        <security https="true" auth="true"/>
+        <event type="simple" path="org/ofbiz/commonapp/party/party/PartySimpleMethods.xml" invoke="updateAVSOverride"/>
+        <response name="success" type="view" value="editavsoverride"/>
+        <response name="error" type="view" value="editavsoverride"/>
+    </request-map>
+    <request-map uri="resetAvsOverride">
+        <security https="true" auth="true"/>
+        <event type="simple" path="org/ofbiz/commonapp/party/party/PartySimpleMethods.xml" invoke="deleteAVSOverride"/>
+        <response name="success" type="view" value="viewprofile"/>
+        <response name="error" type="view" value="viewprofile"/>
     </request-map>
 
     <request-map uri="deletePaymentMethod">
@@ -422,6 +436,7 @@
     <view-map name="editcontactmech" type="region"/>
     <view-map name="editcreditcard" type="region"/>
     <view-map name="editeftaccount" type="region"/>
+    <view-map name="editavsoverride" type="region"/>
     <view-map name="editlogin" type="region"/>
     <view-map name="EditUserLoginSecurityGroups" type="region"/>
     <view-map name="editperson" type="region"/>

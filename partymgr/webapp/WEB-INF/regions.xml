@@ -73,6 +73,11 @@
         <put section='content' content='/party/editeftaccount.jsp'/>
     </define>
 
+    <define id='editavsoverride' region='MAIN_REGION'>
+        <put section='title'>Edit AVC Override String</put>
+        <put section='content' content='/party/editAvsString.jsp'/>
+    </define>
+
     <define id='editlogin' region='MAIN_REGION'>
         <put section='title'>Edit User Login Info</put>
         <put section='content' content='/party/editlogin.jsp'/>

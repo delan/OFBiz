@@ -36,6 +36,7 @@
 <%@ page import="org.ofbiz.core.entity.*" %>
 <%@ page import="org.ofbiz.commonapp.party.contact.*, org.ofbiz.commonapp.party.party.*" %>
 <%@ page import="org.ofbiz.commonapp.accounting.payment.*" %>
+
 <jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" />
 <jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="request" />
 
@@ -47,20 +48,23 @@
     if (partyId == null) partyId = (String) request.getSession().getAttribute("partyId");
     else request.getSession().setAttribute("partyId", partyId);
 
-    Collection userLogins = delegator.findByAnd("UserLogin", UtilMisc.toMap("partyId", partyId));
+    List userLogins = delegator.findByAnd("UserLogin", UtilMisc.toMap("partyId", partyId));
     if (userLogins != null && userLogins.size() > 0) pageContext.setAttribute("userLogins", userLogins);
 
-    Collection partyRoles = delegator.findByAnd("RoleTypeAndParty", UtilMisc.toMap("partyId", partyId));
+    List partyRoles = delegator.findByAnd("RoleTypeAndParty", UtilMisc.toMap("partyId", partyId));
     if (partyRoles != null && partyRoles.size() > 0) pageContext.setAttribute("partyRoles", partyRoles);
 
-    Collection roles = delegator.findAll("RoleType", UtilMisc.toList("description", "roleTypeId"));
+    List roles = delegator.findAll("RoleType", UtilMisc.toList("description", "roleTypeId"));
     if (roles != null) pageContext.setAttribute("roles", roles);
 
-    Collection relateTypes = delegator.findAll("PartyRelationshipType", UtilMisc.toList("description", "partyRelationshipTypeId"));
+    List relateTypes = delegator.findAll("PartyRelationshipType", UtilMisc.toList("description", "partyRelationshipTypeId"));
     if (relateTypes != null) pageContext.setAttribute("relateTypes", relateTypes);
 
-    Collection notes = delegator.findByAnd("PartyNoteView", UtilMisc.toMap("targetPartyId", partyId), UtilMisc.toList("-noteDateTime"));
+    List notes = delegator.findByAnd("PartyNoteView", UtilMisc.toMap("targetPartyId", partyId), UtilMisc.toList("-noteDateTime"));
     if (notes != null && notes.size() > 0) pageContext.setAttribute("notes", notes);
+
+    GenericValue avsOverride = delegator.findByPrimaryKey("PartyICSAVSOverride", UtilMisc.toMap("partyId", partyId));
+    if (avsOverride != null) pageContext.setAttribute("avsOverride", avsOverride);
 
     PartyWorker.getPartyOtherValues(pageContext, partyId, "party", "lookupPerson", "lookupGroup");
     boolean showOld = "true".equals(request.getParameter("SHOW_OLD"));
@@ -407,6 +411,45 @@
                 <div class="tabletext">No payment method information on file.</div>
               </ofbiz:unless>
           </td>
+        </tr>
+      </table>
+    </TD>
+  </TR>
+</TABLE>
+
+<br>
+<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+  <TR>
+    <TD width='100%'>
+      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
+        <tr>
+          <td valign="middle" align="left">
+            <div class="boxhead">&nbsp;Cybersource AVS Override</div>
+          </td>
+        </tr>
+      </table>
+    </TD>
+  </TR>
+  <TR>
+    <TD width='100%'>
+      <table width='100%' border='0' cellspacing='0' cellpadding='2' class='boxbottom'>
+        <tr>
+          <td>
+              <ofbiz:if name="avsOverride">
+                <div class="tabletext"><b>AVS String:</b>&nbsp;<%=avsOverride.getString("avsDeclineString")%></div>
+              </ofbiz:if>
+              <ofbiz:unless name="avsOverride">
+                <div class="tabletext"><b>AVS String:</b>&nbsp;Global</div>
+              </ofbiz:unless>
+          </td>
+          <td align="right" valign="top" width="1%">
+            <a href="<ofbiz:url>/editAvsOverride</ofbiz:url>" class="buttontext">[Edit]</a>
+          </td>
+          <ofbiz:if name="avsOverride">
+            <td align="right" valign="top" width="1%">
+              <a href="<ofbiz:url>/resetAvsOverride?partyId=<%=avsOverride.getString("partyId")%></ofbiz:url>" class="buttontext">[Reset]</a>
+            </td>
+          </ofbiz:if>
         </tr>
       </table>
     </TD>
