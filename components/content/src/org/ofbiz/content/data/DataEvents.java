@@ -5,6 +5,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStreamWriter;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
+import java.io.File;
+import java.io.FileNotFoundException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -27,7 +31,7 @@ import org.ofbiz.base.util.GeneralException;
  * DataEvents Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.8 $
+ * @version    $Revision: 1.9 $
  * @since      3.0
  *
  * 
@@ -86,10 +90,29 @@ public class DataEvents {
             if (Debug.infoOn()) Debug.logInfo("in serveImage, rootDir:" + rootDir, module);
             try {
                 ByteArrayOutputStream os = new ByteArrayOutputStream();
-                OutputStreamWriter outWriter = new OutputStreamWriter(os);
-                DataResourceWorker.renderFile(dataResourceTypeId, fileName, rootDir, outWriter);
+                OutputStreamWriter outWriter = new OutputStreamWriter(os, "ISO8859_1");
+                //DataResourceWorker.renderFile(dataResourceTypeId, fileName, rootDir, outWriter);
+                File contentFile = DataResourceWorker.getContentFile(dataResourceTypeId, fileName, rootDir);
+                FileInputStream fis = new FileInputStream(contentFile);
+                InputStreamReader isr = new InputStreamReader(fis, "ISO8859_1");
+                String enc = isr.getEncoding();
+                if (Debug.infoOn()) Debug.logInfo("in serveImage, encoding:" + enc, module);
+                int c;
+                int count=0;
+                while ((c = isr.read()) != -1) {
+                    outWriter.write(c);
+                    count++;
+                }
                 outWriter.flush();
+                if (Debug.infoOn()) Debug.logInfo("in serveImage, count:" + count, module);
                 b = os.toByteArray();
+
+            } catch (FileNotFoundException e4) {
+                String errorMsg = "Error getting image record from db: " + e4.toString();
+                Debug.logError(e4, errorMsg, module);
+                request.setAttribute("_ERROR_MESSAGE_", errorMsg);
+                return "error";
+
             } catch (IOException e2) {
                 String errorMsg = "Error getting image record from db: " + e2.toString();
                 Debug.logError(e2, errorMsg, module);
@@ -110,6 +133,7 @@ public class DataEvents {
                 return "error";
         } else {
             try {
+                if (Debug.infoOn()) Debug.logInfo("in serveImage, byteArray.length:" + b.length, module);
                 UtilHttp.streamContentToBrowser(response, b, imageType);
                 response.flushBuffer();
             } catch (IOException e) {
