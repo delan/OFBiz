@@ -902,9 +902,9 @@
             location="org/ofbiz/content/survey/SurveyServices.xml" invoke="createSurveyResponse">
         <description>Create a Survey Response w/ Response Answers</description>
         <auto-attributes mode="IN" entity-name="SurveyResponse" include="nonpk" optional="true"/>
-        <override name="surveyId" optional="false"/>
         <attribute name="answers" type="Map" mode="IN" optional="false" string-map-prefix="answers_"/>
         <attribute name="surveyResponseId" type="String" mode="OUT" optional="false"/>
+        <override name="surveyId" optional="false"/>
     </service>
 
     <!-- Util -->
