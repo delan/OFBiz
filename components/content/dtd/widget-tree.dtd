@@ -34,11 +34,12 @@
 <!ATTLIST tree
     name CDATA #REQUIRED
     root-node-name CDATA #REQUIRED
-    render-style (simple | expand-collapse) "simple"
+    render-style (simple | follow-trail | show-peers | expand-collapse) "simple"
     default-wrap-style CDATA #REQUIRED
     expand-collapse-request CDATA #IMPLIED
     trail-name CDATA #IMPLIED
     open-depth CDATA "0"
+    post-trail-open-depth CDATA "0"
     entity-name CDATA "Content"
 >
 
