@@ -206,6 +206,13 @@
         <response name="error" type="view" value="FindUtilCache"/>
     </request-map>
 
+    <request-map uri="ForceGarbageCollection">
+    	<security https="true" auth="true"/>
+        <event type="service" invoke="clearEvent"/>
+        <response name="success" type="view" value="forceGarbageCollection"/>
+        <response name="error" type="view" value="FindUtilCache"/>
+    </request-map>
+    
     <request-map uri="EditUtilCache">
     	<security https="true" auth="true"/>
     	<response name="success" type="view" value="EditUtilCache"/>

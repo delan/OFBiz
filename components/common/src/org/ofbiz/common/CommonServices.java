@@ -215,6 +215,11 @@ public class CommonServices {
         return ServiceUtil.returnSuccess();
     }
 
+    public static Map forceGc(DispatchContext dctx, Map context) {
+        System.gc();        
+        return ServiceUtil.returnSuccess();
+    }
+
     /**
      * Echo service; returns exactly what was sent.
      * This service does not have required parameters and does not validate
