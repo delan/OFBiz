@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org) 
- *@version    $Revision: 1.9 $
+ *@version    $Revision: 1.10 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -414,7 +414,7 @@
                   <td width="5">&nbsp;</td>
                   <td align="left" valign="top" width="80%">
                     <#assign responses = Static["org.ofbiz.product.store.ProductStoreWorker"].checkSurveyResponse(request, survey.surveyId)?default(0)>
-                    <div class="tabletext"><#if (responses < 1)><font color="red"><b>Not Completed</b><#else>Completed - Thank-you!</if></div>
+                    <div class="tabletext"><#if (responses < 1)><font color="red"><b>Not Completed</b><#else>Completed - Thank-you!</#if></div>
                   </td>
                   <#if (responses == 0 || survey.allowMultiple?default("N") == "Y")>
                     <#assign surveyLabel = "[Take Survey]">
