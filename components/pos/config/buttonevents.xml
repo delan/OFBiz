@@ -49,7 +49,7 @@ $Id$
     <event button-name="charZ" class-name="org.ofbiz.pos.event.CharacterEvents" method-name="triggerZ" disable-lock="false"/>
 
     <!-- base menu events -->
-    <event button-name="menuClear" key-code="501" class-name="org.ofbiz.pos.event.MenuEvents" method-name="triggerClear" disable-lock="true"/>
+    <event button-name="menuClear" class-name="org.ofbiz.pos.event.MenuEvents" method-name="triggerClear" disable-lock="true"/>
     <event button-name="menuQty" class-name="org.ofbiz.pos.event.MenuEvents" method-name="triggerQty" disable-lock="false"/>
     <event button-name="menuEnter" key-code="500" class-name="org.ofbiz.pos.event.MenuEvents" method-name="triggerEnter" disable-lock="true"/>
 
@@ -77,7 +77,7 @@ $Id$
     <event button-name="menuLock" class-name="org.ofbiz.pos.event.SecurityEvents" method-name="lock" disable-lock="false"/>
     <event button-name="menuLogout" class-name="org.ofbiz.pos.event.SecurityEvents" method-name="logout" disable-lock="false"/>
     <event button-name="menuMgr" class-name="org.ofbiz.pos.event.SecurityEvents" method-name="mgrLogin" disable-lock="false"/>
-    <event button-name="menuMain" class-name="org.ofbiz.pos.event.NavagationEvents" method-name="showPosScreen" disable-lock="false"/>    
+    <event button-name="menuMain" key-code="501" class-name="org.ofbiz.pos.event.NavagationEvents" method-name="showPosScreen" disable-lock="false"/>    
     <event button-name="menuPay" class-name="org.ofbiz.pos.event.NavagationEvents" method-name="showPayScreen" disable-lock="false"/>
     <event button-name="menuPromo" class-name="org.ofbiz.pos.event.NavagationEvents" method-name="showPromoScreen" disable-lock="false"/>
 
