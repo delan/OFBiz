@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.11 $
+ *@version    $Revision: 1.12 $
  *@since      3.0
 -->
 
@@ -338,7 +338,10 @@ function refreshInfo() {
               </#list>
             <#else>
               <tr>
-                <td colspan='5'><div class='head3'>No party(s) found.</div></td>
+                <td colspan='5'>
+                  <span class='head3'>No party(s) found.</span>
+                  &nbsp;&nbsp;<a href="<@ofbizUrl>/createnew</@ofbizUrl>" class="buttontext">[Create New]</a>
+                </td>
               </tr>
             </#if>
             <#if lookupErrorMessage?exists>
