@@ -794,7 +794,11 @@ public class DataResourceWorker {
             writeText( dataResourceId, dataResourceMimeTypeId, "text/html", outWriter);
         } else if (dataResourceTypeId.indexOf("_FILE") >= 0) {
             String rootDir = (String) context.get("rootDir");
-            renderFile(dataResourceTypeId, dataResource.getString("objectInfo"), rootDir, outWriter);
+            dataResourceMimeTypeId = dataResource.getString("mimeTypeId");
+            if (dataResourceMimeTypeId == null || dataResourceMimeTypeId.startsWith("text"))
+            	renderFile(dataResourceTypeId, dataResource.getString("objectInfo"), rootDir, outWriter);
+            else
+                writeText( dataResourceId, dataResourceMimeTypeId, "text/html", outWriter);
         } else {
             throw new GeneralException("The dataResourceTypeId [" + dataResourceTypeId + "] is not supported in renderDataResourceAsText");
         }
