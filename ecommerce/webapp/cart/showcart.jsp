@@ -98,10 +98,10 @@
         <ofbiz:iterator name="item" property="cartIter" type="org.ofbiz.ecommerce.shoppingcart.ShoppingCartItem">
           <tr><td colspan="7" height="1" bgcolor="#899ABC"></td></tr>
           <TR>
-            <TD><div class='tabletext'><%-- <b><%= cart.getItemIndex(item)%></b> - --%><%= item.getProductId()%> - <%= item.getName()%> : <%= item.getDescription()%></div></TD>
-            <TD NOWRAP ALIGN="center"><div class='tabletext'><input size="5" type="text" name="update_<%= cart.getItemIndex(item) %>" value="<ofbiz:format><%= item.getQuantity() %></ofbiz:format>"></div></TD>
-            <TD NOWRAP ALIGN="right"><div class='tabletext'><ofbiz:format type="c"><%= item.getBasePrice() %></ofbiz:format></div></TD>
-            <TD NOWRAP ALIGN="right"><div class='tabletext'><ofbiz:format type="c"><%= item.getTotalPrice() %></ofbiz:format></div></TD>
+            <TD><div class='tabletext'><%-- <b><%= cart.getItemIndex(item)%></b> - --%><a href='<ofbiz:url>/product?product_id=<%=item.getProductId()%></ofbiz:url>' class='buttontext'><%= item.getProductId()%> - <%= item.getName()%></a> : <%= item.getDescription()%></div></TD>
+            <TD NOWRAP ALIGN="center"><div class='tabletext'><input size="5" type="text" name="update_<%=cart.getItemIndex(item) %>" value="<ofbiz:format><%= item.getQuantity() %></ofbiz:format>"></div></TD>
+            <TD NOWRAP ALIGN="right"><div class='tabletext'><ofbiz:format type="c"><%=item.getBasePrice()%></ofbiz:format></div></TD>
+            <TD NOWRAP ALIGN="right"><div class='tabletext'><ofbiz:format type="c"><%=item.getTotalPrice()%></ofbiz:format></div></TD>
             <%-- <TD NOWRAP ALIGN="center"><div class='tabletext'><input type="checkbox" name="delete_<%= cart.getItemIndex(item) %>" value="0"></div></TD> --%>
           </TR>
         </ofbiz:iterator>

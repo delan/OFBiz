@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.18  2001/09/19 08:42:08  jonesde
+ * Initial checkin of refactored entity engine.
+ *
  * Revision 1.17  2001/09/12 18:49:45  jonesde
  * Fixed subsequent keyword search error.
  *
@@ -123,9 +126,9 @@ public class CatalogHelper {
     if(parentId == null && requestId.equals("")) return;
     if(parentId == null) parentId = requestId;
     
-    Debug.logInfo("ParentID: " + parentId);
-    Debug.logInfo("RequestID: " + requestId);
-    if(parentId.equals(requestId))  setTrail(pageContext,parentId);
+    Debug.logInfo("[CatalogHelper.getRelatedCategories] ParentID: " + parentId);
+    Debug.logInfo("[CatalogHelper.getRelatedCategories] RequestID: " + requestId);
+    if(parentId.equals(requestId)) setTrail(pageContext,parentId);
     
     GenericDelegator delegator = (GenericDelegator)pageContext.getServletContext().getAttribute("delegator");
     Collection rollups = null;
@@ -318,58 +321,75 @@ public class CatalogHelper {
   }
   
   public static void setTrail(PageContext pageContext, String currentCategory) {
-    ServletRequest request = pageContext.getRequest();
-    HttpSession session = pageContext.getSession();
-    String previousCategory = request.getParameter("pcategory");
-    ArrayList crumb = null;
+    String previousCategory = pageContext.getRequest().getParameter("pcategory");
+    Debug.logInfo("[CatalogHelper.setTrail] Start: previousCategory=" + previousCategory + " currentCategory=" + currentCategory);
+
+    if(currentCategory == null || currentCategory.length() <= 0) return;
     
-    Debug.logInfo("SetTrail Called.");
-    
-    if ( previousCategory != null )
-      crumb = (ArrayList) session.getAttribute("_BREAD_CRUMB_TRAIL_");
-    else
-      previousCategory = "TOP";
-    
-    if ( crumb == null )
-      crumb = new ArrayList();
-    
-    if ( !crumb.contains(previousCategory) ) {
-      crumb = new ArrayList();
-      crumb.add(previousCategory);
-      Debug.logInfo("Added previousCategory.");
-    }
-    
-    if ( crumb.contains(currentCategory) ) {
-      Debug.logInfo("Category already set. Aborting.");
-      return;
-    }
-    
-    int index = crumb.indexOf(previousCategory);
-    if ( index < (crumb.size() - 1) ) {
-      for ( int i = crumb.size() -1; i > index; i-- ) {
-        crumb.remove(i);
-        Debug.logInfo("Removed Index: " + i);
+    //always get the last crumb list
+    ArrayList crumb = getTrail(pageContext);
+    if(crumb == null) crumb = new ArrayList();
+        
+    //if no previous category was specified, check to see if currentCategory is in the list
+    if(previousCategory == null || previousCategory.length() <= 0) {
+      if(crumb.contains(currentCategory)) {
+        //if cur category is in crumb, remove everything after it and return
+        int cindex = crumb.lastIndexOf(currentCategory);
+        if(cindex < (crumb.size() - 1)) {
+          for(int i = crumb.size() -1; i>cindex; i--) {
+            String deadCat = (String)crumb.remove(i);
+            Debug.logInfo("[CatalogHelper.setTrail] Removed after current category index: " + i + " catname: " + deadCat);
+          }
+        }
+        return;
+      }
+      else {
+        //current category is not in the list, and no previous category was specified, go back to the beginning
+        previousCategory = "TOP";
+        crumb.clear();
+        crumb.add(previousCategory);
+        Debug.logInfo("[CatalogHelper.setTrail] Starting new list, added previousCategory: " + previousCategory);
       }
     }
     
+    if(!crumb.contains(previousCategory)) {
+      //previous category was NOT in the list, ERROR, start over
+      Debug.logInfo("[CatalogHelper.setTrail] ERROR: previousCategory (" + previousCategory + ") was not in the crumb list, position is lost, starting over with TOP");
+      previousCategory = "TOP";
+      crumb.clear();
+      crumb.add(previousCategory);
+    }
+    else {    
+      //remove all categories after the previous category, preparing for adding the current category
+      int index = crumb.indexOf(previousCategory);
+      if(index < (crumb.size() - 1)) {
+        for(int i = crumb.size() -1; i>index; i--) {
+          String deadCat = (String)crumb.remove(i);
+          Debug.logInfo("[CatalogHelper.setTrail] Removed after previous category index: " + i + " catname: " + deadCat);
+        }
+      }
+    }
+    
+    //add the current category to the end of the list
     crumb.add(currentCategory);
-    session.setAttribute("_BREAD_CRUMB_TRAIL_",crumb);
+    Debug.logInfo("[CatalogHelper.setTrail] Continuing list: Added currentCategory: " + currentCategory);
+    setTrail(pageContext, crumb);
   }
   
-  public static Collection getTrail(PageContext pageContext) {
+  public static ArrayList getTrail(PageContext pageContext) {
     HttpSession session = pageContext.getSession();
-    ArrayList crumb = (ArrayList) session.getAttribute("_BREAD_CRUMB_TRAIL_");
-    if ( crumb == null )
-      return null;
-    
+    ArrayList crumb = (ArrayList)session.getAttribute("_BREAD_CRUMB_TRAIL_");
     return crumb;
   }
   
+  public static void setTrail(PageContext pageContext, ArrayList crumb) {
+    HttpSession session = pageContext.getSession();
+    session.setAttribute("_BREAD_CRUMB_TRAIL_", crumb);
+  }
+  
   public static boolean checkTrailItem(PageContext pageContext,String category) {
-    Collection crumb = getTrail(pageContext);
-    if(crumb != null && crumb.contains(category))
-      return true;
-    else
-      return false;
+    ArrayList crumb = getTrail(pageContext);
+    if(crumb != null && crumb.contains(category)) return true;
+    else return false;
   }
 }

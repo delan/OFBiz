@@ -107,17 +107,6 @@
   <DIV class='tabletext'>There are no products in this category.</DIV>
 </ofbiz:unless>
 
-<!--
-<%
-java.util.Collection co = org.ofbiz.ecommerce.catalog.CatalogHelper.getTrail(pageContext); 
-java.util.Iterator it = co.iterator();
-while ( it.hasNext() ) {
-	String s = (String) it.next();
-%>
-<p><%= s %><br></p>
-
-<% } %>
--->
 <%@ include file="/includes/rightcolumn.jsp" %>
 <%@ include file="/includes/footer.jsp" %>
 
