@@ -1,5 +1,5 @@
 /*
- * $Id: CatalinaContainer.java,v 1.6 2004/05/26 00:22:20 ajzeneski Exp $
+ * $Id: CatalinaContainer.java,v 1.7 2004/05/26 03:38:21 ajzeneski Exp $
  *
  */
 package org.ofbiz.catalina.container;
@@ -27,21 +27,19 @@ import org.ofbiz.base.component.ComponentConfig;
 
 import org.apache.catalina.startup.Embedded;
 import org.apache.catalina.logger.LoggerBase;
-import org.apache.catalina.logger.SystemOutLogger;
 import org.apache.catalina.Engine;
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.Host;
 import org.apache.catalina.Context;
 import org.apache.catalina.Connector;
-import org.apache.catalina.Loader;
 import org.apache.catalina.Cluster;
-import org.apache.catalina.Valve;
 import org.apache.catalina.cluster.tcp.SimpleTcpCluster;
 import org.apache.catalina.cluster.tcp.ReplicationValve;
 import org.apache.catalina.cluster.tcp.ReplicationListener;
 import org.apache.catalina.cluster.tcp.ReplicationTransmitter;
 import org.apache.catalina.cluster.mcast.McastService;
 import org.apache.catalina.valves.AccessLogValve;
+import org.apache.catalina.valves.RequestDumperValve;
 
 import org.apache.catalina.core.StandardContext;
 import org.apache.catalina.core.StandardWrapper;
@@ -101,16 +99,19 @@ import org.xml.sax.SAXException;
  *
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.6 $
+ * @version    $Revision: 1.7 $
  * @since      May 21, 2004
  */
 public class CatalinaContainer implements Container {
 
     public static final String CATALINA_HOSTS_HOME = System.getProperty("ofbiz.home") + "/components/catalina/hosts";
+    public static final String J2EE_SERVER = "OFBiz Container 3.1";
+    public static final String J2EE_APP = "OFBiz";
     public static final String module = CatalinaContainer.class.getName();
     protected static Map mimeTypes = new HashMap();
 
     protected Embedded embedded = null;
+    protected Map clusterConfig = new HashMap();
     protected Map engines = new HashMap();
     protected Map hosts = new HashMap();
     protected boolean crossContext = false;
@@ -139,7 +140,7 @@ public class CatalinaContainer implements Container {
         embedded = new Embedded();
         embedded.setDebug(debug);
         embedded.setUseNaming(useNaming);
-        embedded.setLogger(new SystemOutLogger()); // TODO Make this configurable
+        embedded.setLogger(new DebugLogger());
 
         // create the engines
         List engineProps = cc.getPropertiesWithValue("engine");
@@ -207,14 +208,32 @@ public class CatalinaContainer implements Container {
         Host host = createHost(engine, hostName);
         hosts.put(engineName + "._DEFAULT", host);
 
+        // configure clustering
+        List clusterProps = engineConfig.getPropertiesWithValue("cluster");
+        if (clusterProps != null && clusterProps.size() > 1) {
+            throw new ContainerException("Only one cluster configuration allowed per engine");
+        }
+
+        if (clusterProps != null && clusterProps.size() > 0) {
+            ContainerConfig.Container.Property clusterProp = (ContainerConfig.Container.Property) clusterProps.get(0);
+            createCluster(clusterProp, host);
+            clusterConfig.put(engineName, clusterProp);
+        }
+
+        // request dumper valve
+        boolean enableRequestDump = getPropertyValue(engineConfig, "enable-request-dump", false);
+        if (enableRequestDump) {
+            RequestDumperValve rdv = new RequestDumperValve();
+            engine.addValve(rdv);
+        }
+
         // configure the access log valve
-        ContainerConfig.Container.Property alp1 = engineConfig.getProperty("access-log-dir");
+        String logDir = getPropertyValue(engineConfig, "access-log-dir", null);
         AccessLogValve al = null;
-        if (alp1 != null) {
+        if (logDir != null) {
             al = new AccessLogValve();
-            String logDir = alp1.value;
             if (!logDir.startsWith("/")) {
-                logDir = System.getProperty("ofbiz.home") + "/" + alp1.value;
+                logDir = System.getProperty("ofbiz.home") + "/" + logDir;
             }
             File logFile = new File(logDir);
             if (!logFile.isDirectory()) {
@@ -222,31 +241,30 @@ public class CatalinaContainer implements Container {
             }
             al.setDirectory(logFile.getAbsolutePath());
         }
-        ContainerConfig.Container.Property alp2 = engineConfig.getProperty("access-log-pattern");
-        if (al != null && alp2 != null) {
-            al.setPattern(alp2.value);
+
+        String alp2 = getPropertyValue(engineConfig, "access-log-pattern", null);
+        if (al != null && !UtilValidate.isEmpty(alp2)) {
+            al.setPattern(alp2);
         }
-        ContainerConfig.Container.Property alp3 = engineConfig.getProperty("access-log-prefix");
-        if (al != null && alp3 != null) {
-            al.setPrefix(alp3.value);
+
+        String alp3 = getPropertyValue(engineConfig, "access-log-prefix", null);
+        if (al != null && !UtilValidate.isEmpty(alp3)) {
+            al.setPrefix(alp3);
         }
-        ContainerConfig.Container.Property alp4 = engineConfig.getProperty("access-log-resolve");
-        if (al != null && alp4 != null) {
-            al.setResolveHosts("true".equalsIgnoreCase(alp4.value));
+
+
+        boolean alp4 = getPropertyValue(engineConfig, "access-log-resolve", true);
+        if (al != null) {
+            al.setResolveHosts(alp4);
         }
-        ContainerConfig.Container.Property alp5 = engineConfig.getProperty("access-log-rotate");
-        if (al != null && alp5 != null) {
-            al.setRotatable("true".equalsIgnoreCase(alp5.value));
+
+        boolean alp5 = getPropertyValue(engineConfig, "access-log-rotate", false);
+        if (al != null) {
+            al.setRotatable(alp5);
         }
 
         if (al != null) {
             engine.addValve(al);
-        }
-
-        // configure clustering
-        ContainerConfig.Container.Property clusterProps = engineConfig.getProperty("cluster");
-        if (clusterProps != null) {
-            createCluster(clusterProps, engine);
         }
 
         embedded.addEngine(engine);
@@ -259,13 +277,15 @@ public class CatalinaContainer implements Container {
         }
 
         Host host = embedded.createHost(hostName, CATALINA_HOSTS_HOME);
+        host.setDeployOnStartup(true);
+        host.setAutoDeploy(true);
         engine.addChild(host);
         hosts.put(engine.getName() + hostName, host);
 
         return host;
     }
 
-    protected Cluster createCluster(ContainerConfig.Container.Property clusterProps, Engine engine) throws ContainerException {
+    protected Cluster createCluster(ContainerConfig.Container.Property clusterProps, Host host) throws ContainerException {
         String defaultValveFilter = ".*.gif;.*.js;.*.jpg;.*.htm;.*.html;.*.txt;";
 
         ReplicationValve clusterValve = new ReplicationValve();
@@ -328,7 +348,10 @@ public class CatalinaContainer implements Container {
         cluster.setMembershipService(mcast);
         cluster.addValve(clusterValve);
         cluster.setPrintToScreen(true);
-        engine.setCluster(cluster);
+
+        // set the cluster to the host
+        host.setCluster(cluster);
+        Debug.logInfo("Catalina Cluster [" + cluster.getClusterName() + "] configured for host - " + host.getName(), module);
 
         return cluster;
     }
@@ -439,6 +462,100 @@ public class CatalinaContainer implements Container {
         connector.setFactory(sf);
     }
 
+    protected Context createContext(ComponentConfig.WebappInfo appInfo) throws ContainerException {
+        // webapp settings
+        Map initParameters = appInfo.getInitParameters();
+        List virtualHosts = appInfo.getVirtualHosts();
+        Engine engine = (Engine) engines.get(appInfo.server);
+        if (engine == null) {
+            Debug.logWarning("Server with name [" + appInfo.server + "] not found; not mounting [" + appInfo.name + "]", module);
+            return null;
+        }
+
+        // set the root location (make sure we set the paths correctly)
+        String location = appInfo.componentConfig.getRootLocation() + appInfo.location;
+        location = location.replace('\\', '/');
+        if (location.endsWith("/")) {
+            location = location.substring(0, location.length() - 1);
+        }
+
+        // get the mount point
+        String mount = appInfo.mountPoint;
+        if (mount.endsWith("/*")) {
+            mount = mount.substring(0, mount.length() - 2);
+        }
+
+        // create the web application context
+        StandardContext context = (StandardContext) embedded.createContext(mount, location);
+        context.setJ2EEApplication(J2EE_APP);
+        context.setJ2EEServer(J2EE_SERVER);
+        context.setLoader(embedded.createLoader(ClassLoaderContainer.getClassLoader()));
+
+        context.setDisplayName(appInfo.name);
+        context.setDocBase(location);
+
+        context.setDistributable(distribute);
+        context.setCrossContext(crossContext);
+        context.getServletContext().setAttribute("_serverId", appInfo.server);
+
+        // create the Default Servlet instance to mount
+        StandardWrapper defaultServlet = new StandardWrapper();
+        defaultServlet.setServletClass("org.apache.catalina.servlets.DefaultServlet");
+        defaultServlet.setServletName("default");
+        defaultServlet.setLoadOnStartup(1);
+        defaultServlet.addInitParameter("debug", "0");
+        defaultServlet.addInitParameter("listing", "true");
+        defaultServlet.addMapping("/");
+        context.addChild(defaultServlet);
+        context.addServletMapping("/", "default");
+
+        // create the Jasper Servlet instance to mount
+        StandardWrapper jspServlet = new StandardWrapper();
+        jspServlet.setServletClass("org.apache.jasper.servlet.JspServlet");
+        jspServlet.setServletName("jsp");
+        jspServlet.setLoadOnStartup(1);
+        jspServlet.addInitParameter("fork", "false");
+        jspServlet.addInitParameter("xpoweredBy", "false");
+        jspServlet.addMapping("*.jsp");
+        jspServlet.addMapping("*.jspx");
+        context.addChild(jspServlet);
+        context.addServletMapping("*.jsp", "jsp");
+
+        // default mime-type mappings
+        configureMimeTypes(context);
+
+        // set the init parameters
+        Iterator ip = initParameters.keySet().iterator();
+        while (ip.hasNext()) {
+            String paramName = (String) ip.next();
+            context.addParameter(paramName, (String) initParameters.get(paramName));
+        }
+
+        if (virtualHosts == null || virtualHosts.size() == 0) {
+            Host host = (Host) hosts.get(engine.getName() + "._DEFAULT");
+            host.addChild(context);
+            context.getMapper().setDefaultHostName(host.getName());
+        } else {
+            Iterator vhi = virtualHosts.iterator();
+            boolean isFirst = true;
+            while (vhi.hasNext()) {
+                String hostName = (String) vhi.next();
+                Host host = (Host) hosts.get(engine.getName() + "." + hostName);
+                if (host == null) {
+                    host = createHost(engine, hostName);
+                    host.addChild(context);
+                    if (isFirst) {
+                        context.getMapper().setDefaultHostName(host.getName());
+                        isFirst = false;
+                    }
+                    hosts.put(engine.getName() + "." + hostName, host);
+                }
+            }
+        }
+
+        return context;
+    }
+
     protected void loadComponents() throws ContainerException {
         if (embedded == null) {
             throw new ContainerException("Cannot load web applications without Embedded instance!");
@@ -453,84 +570,7 @@ public class CatalinaContainer implements Container {
                 Iterator appInfos = component.getWebappInfos().iterator();
                 while (appInfos.hasNext()) {
                     ComponentConfig.WebappInfo appInfo = (ComponentConfig.WebappInfo) appInfos.next();
-                    List virtualHosts = appInfo.getVirtualHosts();
-                    Map initParameters = appInfo.getInitParameters();
-                    Host host = (Host) hosts.get(appInfo.server + "._DEFAULT");
-                    if (host == null) {
-                        Debug.logWarning("Server with name [" + appInfo.server + "] not found; not mounting [" + appInfo.name + "]", module);
-                    } else {
-                        try {
-                            // set the root location (make sure we set the paths correctly)
-                            String location = component.getRootLocation() + appInfo.location;
-                            location = location.replace('\\', '/');
-                            if (location.endsWith("/")) {
-                                location = location.substring(0, location.length()-1);
-                            }
-
-                            // get the mount point
-                            String mount = appInfo.mountPoint;
-                            if (mount.endsWith("/*")) {
-                                mount = mount.substring(0, mount.length()-2);
-                            }
-
-                            // create the web application context
-                            Context context = embedded.createContext(mount, location);
-                            context.setLoader(embedded.createLoader(ClassLoaderContainer.getClassLoader()));
-
-                            context.setDisplayName(appInfo.name);
-                            context.setDocBase(location);
-
-                            context.setDistributable(distribute);
-                            context.setCrossContext(crossContext);
-                            context.getServletContext().setAttribute("_serverId", appInfo.server);
-
-                            // create the Default Servlet instance to mount
-                            StandardWrapper defaultServlet = new StandardWrapper();
-                            defaultServlet.setServletClass("org.apache.catalina.servlets.DefaultServlet");
-                            defaultServlet.setServletName("default");
-                            defaultServlet.setLoadOnStartup(1);
-                            defaultServlet.addInitParameter("debug", "0");
-                            defaultServlet.addInitParameter("listing", "true");
-                            defaultServlet.addMapping("/");
-                            context.addChild(defaultServlet);
-                            context.addServletMapping("/", "default");
-
-                            // create the Jasper Servlet instance to mount
-                            StandardWrapper jspServlet = new StandardWrapper();
-                            jspServlet.setServletClass("org.apache.jasper.servlet.JspServlet");
-                            jspServlet.setServletName("jsp");
-                            jspServlet.setLoadOnStartup(1);
-                            jspServlet.addInitParameter("fork", "false");
-                            jspServlet.addInitParameter("xpoweredBy", "false");
-                            jspServlet.addMapping("*.jsp");
-                            jspServlet.addMapping("*.jspx");
-                            context.addChild(jspServlet);
-                            context.addServletMapping("*.jsp", "jsp");
-
-                            // default mime-type mappings
-                            configureMimeTypes(context);
-
-                            /* Not implemented yet for tomcat
-                            // set the virtual hosts
-                            Iterator vh = virtualHosts.iterator();
-                            while (vh.hasNext()) {
-                                ctx.addVirtualHost((String)vh.next());
-                            }
-                            */
-
-                            // set the init parameters
-                            Iterator ip = initParameters.keySet().iterator();
-                            while (ip.hasNext()) {
-                                String paramName = (String) ip.next();
-                                context.addParameter(paramName, (String) initParameters.get(paramName));
-                            }
-
-                            host.addChild(context);
-                            context.getMapper().setDefaultHostName(host.getName());
-                        } catch (Exception e) {
-                            Debug.logError(e, "Problem mounting application [" + appInfo.name + " / " + appInfo.location + "]", module);
-                        }
-                    }
+                    createContext(appInfo);
                 }
             }
         }
@@ -660,6 +700,13 @@ public class CatalinaContainer implements Container {
             return defaultValue;
         } else {
             return "true".equalsIgnoreCase(prop.value);
+        }
+    }
+
+    class DebugLogger extends LoggerBase {
+
+        public void log(String message) {
+            Debug.log(message, module);
         }
     }
 }
