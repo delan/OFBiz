@@ -97,6 +97,9 @@ public class PayPalEvents {
         // get the redirect url
         String redirectUrl = UtilProperties.getPropertyValue(configString, "payment.paypal.redirect");
         
+        // get the notify url
+        String notifyUrl = UtilProperties.getPropertyValue(configString, "payment.paypal.notify");
+        
         // get the return urls
         String returnUrl = UtilProperties.getPropertyValue(configString, "payment.paypal.return");
         String cancelReturnUrl = UtilProperties.getPropertyValue(configString, "payment.paypal.cancelReturn");
@@ -115,9 +118,10 @@ public class PayPalEvents {
         parameters.put("item_number", itemNumber);
         parameters.put("invoice", orderId);
         parameters.put("custom", userLogin.getString("userLoginId"));
-        parameters.put("amount", orderTotal);
+        parameters.put("amount", orderTotal);        
         parameters.put("return", returnUrl);
         parameters.put("cancel_return", cancelReturnUrl);
+        parameters.put("notify_url", notifyUrl);
         parameters.put("image_url", imageUrl);
         parameters.put("no_note", "1");        // no notes allowed in paypal (not passed back)
         parameters.put("no_shipping", "1");    // no shipping address required (local shipping used)
