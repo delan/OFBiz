@@ -403,6 +403,10 @@
     <GeoAssoc geoId="USCN" geoIdTo="US50" geoAssocTypeId="GROUP_MEMBER"/>
     <GeoAssoc geoId="AHUST" geoIdTo="US50" geoAssocTypeId="GROUP_MEMBER"/>
 
+    <Geo abbreviation="USCAN" geoCode="USCAN" geoId="USCAN" geoName="US/Canada" geoTypeId="GROUP"/>
+    <GeoAssoc geoId="USA" geoIdTo="USCAN" geoAssocTypeId="GROUP_MEMBER"/>
+    <GeoAssoc geoId="CAN" geoIdTo="USCAN" geoAssocTypeId="GROUP_MEMBER"/>
+
     <!-- Associations -->
     <GeoAssoc geoId="USA" geoIdTo="AK" geoAssocTypeId="REGIONS"/>
     <GeoAssoc geoId="USA" geoIdTo="AL" geoAssocTypeId="REGIONS"/>
