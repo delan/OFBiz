@@ -41,7 +41,7 @@ import org.ofbiz.content.content.ContentWorker;
  * ContentManagementServices Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.8 $
+ * @version    $Revision: 1.9 $
  * @since      3.0
  *
  * 
@@ -191,6 +191,7 @@ public class ContentManagementServices {
                         } else {
                             return ServiceUtil.returnError("'byteWrapper' empty when trying to create database image.");
                         }
+                    } else if (dataResourceTypeId.equals("SHORT_TEXT")) {
                     } else {
                         if (UtilValidate.isNotEmpty(textData)) {
                             context.put("dataResourceId", dataResourceId);
@@ -212,6 +213,7 @@ public class ContentManagementServices {
                         }
                     } else if (dataResourceTypeId.equals("IMAGE_OBJECT")) {
                         thisResult = DataServices.updateImageMethod(dctx, context);
+                    } else if (dataResourceTypeId.equals("SHORT_TEXT")) {
                     } else {
                         thisResult = DataServices.updateElectronicTextMethod(dctx, context);
                     }
