@@ -34,7 +34,6 @@ import org.jpublish.JPublishContext;
 import org.jpublish.Page;
 import org.jpublish.SiteContext;
 import org.jpublish.view.ViewRenderException;
-import org.jpublish.view.ViewRenderer;
 
 import freemarker.ext.beans.BeanModel;
 import freemarker.ext.beans.BeansWrapper;
@@ -52,82 +51,31 @@ import org.ofbiz.core.util.*;
  * @version    $Revision$
  * @since      2.1
  */
-public class FreeMarkerViewRenderer implements ViewRenderer {
+public class FreeMarkerViewRenderer extends org.jpublish.view.freemarker.FreeMarkerViewRenderer {
         
     public static final String module = FreeMarkerViewRenderer.class.getName();        
         
-    private SiteContext siteContext = null;
-    protected freemarker.template.Configuration config = null;
-
-    /**
-     * @see org.jpublish.view.ViewRenderer#setSiteContext(org.jpublish.SiteContext)
-     */
-    public void setSiteContext(SiteContext siteContext) {
-        this.siteContext = siteContext;                
-    }
-
-    /**
-     * @see org.jpublish.view.ViewRenderer#init()
-     */
-    public void init() throws Exception {                       
-    }
-
-    /**
-     * @see org.jpublish.view.ViewRenderer#render(org.jpublish.JPublishContext, java.io.Reader, java.io.Writer)
-     */
-    public void render(JPublishContext context, String path, Reader reader, Writer writer) throws IOException, ViewRenderException {
+    protected Object createViewContext(JPublishContext context, String path) throws ViewRenderException {
         HttpServletRequest request = context.getRequest();
         HttpServletResponse response = context.getResponse();
-        ServletContext servletContext = context.getApplication();
-        Page page = context.getPage();
         
         BeansWrapper wrapper = BeansWrapper.getDefaultInstance();
-        WrappingTemplateModel.setDefaultObjectWrapper(wrapper);        
-        if (config == null) {
-            synchronized(this) {
-                if (config == null) {
-                    config = freemarker.template.Configuration.getDefaultConfiguration();
-                    config.setDirectoryForTemplateLoading(siteContext.getContextRoot());
-                    config.setObjectWrapper(wrapper);
-                    //Debug.logInfo("Set directory for template (includes) loading: " + siteContext.getContextRoot(), module);
-                }
-            }        
-        }
-        
+        WrappingTemplateModel.setDefaultObjectWrapper(wrapper);                    
         Map contextMap = new HashMap();
         SimpleHash root = new SimpleHash(wrapper);          
         try {              
-            Object[] keys = context.getKeys(); 
-            for (int i = 0; i < keys.length; i++) {
-                String key = (String) keys[i];
-                contextMap.put(key, context.get(key));
-                root.put(key, wrapper.wrap(context.get(key)));
-                //Debug.logInfo("Key: " + key + " Value: " + context.get(key), module);
-            }
-            root.put("context", wrapper.wrap(contextMap));
-            FreeMarkerViewHandler.prepOfbizRoot(root, request, response);
-            Template template = new Template(path, reader, config);
-            template.setLocale(page.getLocale());
-            template.process(root, writer, wrapper);
-        } catch (IOException ie) {
-            throw ie;
-        } catch (Exception e) {
-            throw new ViewRenderException(e);            
-        }                                       
+             Object[] keys = context.getKeys(); 
+             for (int i = 0; i < keys.length; i++) {
+                 String key = (String) keys[i];
+                 contextMap.put(key, context.get(key));
+                 root.put(key, wrapper.wrap(context.get(key)));
+                 //Debug.logInfo("Key: " + key + " Value: " + context.get(key), module);
+             }
+             root.put("context", wrapper.wrap(contextMap));                          
+             FreeMarkerViewHandler.prepOfbizRoot(root, request, response);                     
+         } catch (Exception e) {
+             throw new ViewRenderException(e);            
+         }          
+         return root;         
     }
-
-    /**
-     * @see org.jpublish.view.ViewRenderer#render(org.jpublish.JPublishContext, java.io.InputStream, java.io.OutputStream)
-     */
-    public void render(JPublishContext context, String path, InputStream in, OutputStream out) throws IOException, ViewRenderException {
-        render(context, path, new InputStreamReader(in), new OutputStreamWriter(out));              
-    }
-
-    /**
-     * @see org.jpublish.view.ViewRenderer#loadConfiguration(com.anthonyeden.lib.config.Configuration)
-     */
-    public void loadConfiguration(Configuration config) throws ConfigurationException {               
-    }        
-
-
 }

@@ -77,10 +77,10 @@ public class FreeMarkerViewHandler implements ViewHandler {
         if (page == null || page.length() == 0) 
             throw new ViewHandlerException("Invalid template source");
         
-        // make the root context (data model) for freemarker            
-        SimpleHash root = new SimpleHash(BeansWrapper.getDefaultInstance());
+        // make the root context (data model) for freemarker
+        SimpleHash root = new SimpleHash(BeansWrapper.getDefaultInstance());                         
         prepOfbizRoot(root, request, response);
-        
+                       
         // get the template
         Template template = null;
         try {
