@@ -24,55 +24,6 @@
 
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-screen.xsd">
-    <screen name="LookupProduct">
-        <section>
-            <condition>
-                <or>
-                    <if-has-permission permission="MANUFACTURING" action="VIEW"/>
-                </or>
-            </condition>
-            <actions>
-                <set field="title" value="Lookup Product"/>
-                <set field="entityName" value="Product"/>
-                <set field="queryString" from-field="result.queryString"/>
-                <set field="viewIndex" from-field="requestParameters.VIEW_INDEX" type="Integer"/>
-                <set field="viewSize" from-field="requestParameters.VIEW_SIZE" type="Integer" default-value="20"/>
-            </actions>
-            <widgets>
-                <decorator-screen name="lookup" location="component://content/widget/CommonScreens.xml">
-                    <decorator-section name="body">
-                        <include-form name="lookupProduct" location="component://manufacturing/webapp/manufacturing/lookup/FieldLookupForms.xml" />
-                        <include-form name="listLookupProduct" location="component://manufacturing/webapp/manufacturing/lookup/FieldLookupForms.xml" />
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
-    <screen name="LookupVirtualProduct">
-        <section>
-            <condition>
-                <or>
-                    <if-has-permission permission="MANUFACTURING" action="VIEW"/>
-                </or>
-            </condition>
-            <actions>
-                <set field="title" value="Lookup Virtual Product"/>
-                <set field="entityName" value="Product"/>
-                <set field="requestParameters.isVirtual" to-scope="screen" default-value="Y"/>
-                <set field="queryString" from-field="result.queryString"/>
-                <set field="viewIndex" from-field="requestParameters.VIEW_INDEX" type="Integer"/>
-                <set field="viewSize" from-field="requestParameters.VIEW_SIZE" type="Integer" default-value="20"/>
-            </actions>
-            <widgets>
-                <decorator-screen name="lookup" location="component://content/widget/CommonScreens.xml">
-                    <decorator-section name="body">
-                        <include-form name="lookupVirtualProduct" location="component://manufacturing/webapp/manufacturing/lookup/FieldLookupForms.xml" />
-                        <include-form name="listLookupVirtualProduct" location="component://manufacturing/webapp/manufacturing/lookup/FieldLookupForms.xml" />
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
     <screen name="LookupRouting">
         <section>
             <condition>
