@@ -53,7 +53,7 @@
               <#if (shoppingCartSize > 0)>
                 <tr>
                   <td colspan="3">
-                    <a href="<@ofbizUrl>/view/showcart</@ofbizUrl>" class="buttontext">[View&nbsp;Cart]&nbsp;</a><a href="<@ofbizUrl>/checkoutoptions</@ofbizUrl>" class="buttontext">[Checkout]</a>
+                    <a href="<@ofbizUrl>/view/showcart</@ofbizUrl>" class="buttontext">[View&nbsp;Cart]</a>&nbsp;<a href="<@ofbizUrl>/checkoutoptions</@ofbizUrl>" class="buttontext">[Checkout]</a>
                   </td>
                 </tr>
                 <tr>

@@ -207,14 +207,14 @@ function addToList() {
         <#if shoppingCart.getAdjustments()?has_content>
             <tr><td colspan="7"><hr class='sepbar'></td></tr>
               <tr>
-                <td colspan="4" nowrap align="right"><div class='tabletext'>Sub&nbsp;Total:</div></td>
+                <td colspan="5" nowrap align="right"><div class='tabletext'>Sub&nbsp;Total:</div></td>
                 <td nowrap align="right"><div class='tabletext'>${shoppingCart.getSubTotal()?string.currency}</div></td>
                 <td>&nbsp;</td>
               </tr>
             <#list shoppingCart.getAdjustments() as cartAdjustment>
               <#assign adjustmentType = cartAdjustment.getRelatedOneCache("OrderAdjustmentType")>
               <tr>
-                <td colspan="4" nowrap align="right"><div class='tabletext'><i>Adjustment</i> - ${adjustmentType.description?if_exists}:</div></td>
+                <td colspan="5" nowrap align="right"><div class='tabletext'><i>Adjustment</i> - ${adjustmentType.description?if_exists}:</div></td>
                 <td nowrap align="right"><div class='tabletext'>${Static["org.ofbiz.commonapp.order.order.OrderReadHelper"].calcOrderAdjustment(cartAdjustment, shoppingCart.getSubTotal())?string.currency}</div></td>
                 <td>&nbsp;</td>
               </tr>
@@ -222,7 +222,7 @@ function addToList() {
         </#if>
         
         <tr> 
-          <td colspan="4" align="right" valign=bottom>             
+          <td colspan="5" align="right" valign=bottom>             
             <div class='tabletext'><b>Cart&nbsp;Total:</b></div>
           </td>
           <td align="right" valign=bottom>
