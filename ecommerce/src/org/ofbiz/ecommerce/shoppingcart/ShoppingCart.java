@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.14  2001/10/14 09:59:42  jonesde
+ * Updated field names for round of resolving reserved word collisions
+ *
  * Revision 1.13  2001/10/10 14:02:14  azeneski
  * Pass two on shipping calc. Requires updated commonapp datamodel.
  *
@@ -120,15 +123,15 @@ public class ShoppingCart {
     public int addOrIncreaseItem(org.ofbiz.core.entity.GenericValue product, double quantity, HashMap attributes) {
         // create a new shopping cart item.
         ShoppingCartItem newItem = new ShoppingCartItem(product,quantity,attributes);
-        Debug.log("New item created: " + newItem.getProductId());
+        Debug.logInfo("New item created: " + newItem.getProductId());
         
         // Check for existing cart item.
-        Debug.log("Cart size: " + this.size());
+        Debug.logInfo("Cart size: " + this.size());
         for (int i = 0; i < this.cartLines.size(); i++) {
             ShoppingCartItem sci = (ShoppingCartItem) cartLines.get(i);
-            Debug.log("Comparing to item: " + sci.getProductId());
+            Debug.logInfo("Comparing to item: " + sci.getProductId());
             if ( sci.equals(newItem) ) {
-                Debug.log("Found a match, updating quantity.");
+                Debug.logInfo("Found a match, updating quantity.");
                 sci.setQuantity(sci.getQuantity() + quantity);
                 return i;
             }

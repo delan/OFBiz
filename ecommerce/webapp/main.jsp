@@ -6,7 +6,7 @@
 <%@ page import="org.ofbiz.commonapp.product.category.*" %>
 
 <%-- Get a list of all available products in the promotions category for the current catalog. --%>
-<%CategoryWorker.getRelatedProducts(pageContext,"",CatalogWorker.getCatalogPromotionsCategoryId(pageContext, CatalogWorker.getCurrentCatalogId(pageContext)));%>
+<%CategoryWorker.getRelatedProducts(pageContext,"",CatalogWorker.getCatalogPromotionsCategoryId(pageContext, CatalogWorker.getCurrentCatalogId(pageContext)),true);%>
 
 <%-- Main Heading --%>
 <br>

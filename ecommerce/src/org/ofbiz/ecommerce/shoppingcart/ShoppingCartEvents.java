@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.11  2001/10/03 01:32:51  jonesde
+ * Change Integer.parseInt to NumberFormat parser to handle commas, dots, etc
+ *
  * Revision 1.10  2001/09/28 21:57:53  jonesde
  * Big update for fromDate PK use, organization stuff
  *
@@ -148,8 +151,8 @@ public class ShoppingCartEvents {
     String orderId = request.getParameter("order_id");
     String[] itemIds = request.getParameterValues("item_id");
     
-    if (orderId == null) {
-      request.setAttribute(SiteDefs.ERROR_MESSAGE, "No order found.");
+    if(orderId == null || orderId.length() <= 0) {
+      request.setAttribute(SiteDefs.ERROR_MESSAGE, "No order specified to add from.");
       return "error";
     }
     
@@ -218,6 +221,60 @@ public class ShoppingCartEvents {
     
     if(noItems) {
       request.setAttribute(SiteDefs.ERROR_MESSAGE, "No items found to add.");
+      return "error";
+    }
+    
+    return "success";
+  }
+  
+  /** Adds all products in a category according to quantity request parameter
+   * for each; if no parameter for a certain product in the category, or if
+   * quantity is 0, do not add
+   */
+  public static String addToCartBulk(HttpServletRequest request, HttpServletResponse response) {
+    String categoryId = request.getParameter("category_id");
+    
+    if(categoryId == null || categoryId.length() <= 0) {
+      request.setAttribute(SiteDefs.ERROR_MESSAGE, "No category specified to add from.");
+      return "error";
+    }
+    
+    ShoppingCart cart = getCartObject(request);
+    GenericDelegator delegator = (GenericDelegator)request.getAttribute("delegator");
+
+    Collection prodCatMemberCol = null;
+    try { prodCatMemberCol = delegator.findByAndCache("ProductCategoryMember",UtilMisc.toMap("productCategoryId",categoryId)); }
+    catch(GenericEntityException e) { Debug.logWarning(e.getMessage()); prodCatMemberCol = null; }
+
+    if(prodCatMemberCol == null) {
+      request.setAttribute(SiteDefs.ERROR_MESSAGE, "Could not get products in category " + categoryId + " to add to cart (read error).");
+      return "error";
+    }
+
+    String errMsg = "";
+    Iterator pcmIter = prodCatMemberCol.iterator();
+    while(pcmIter.hasNext()) {
+      GenericValue productCategoryMember = (GenericValue)pcmIter.next();
+      String quantStr = request.getParameter("quantity_" + productCategoryMember.getString("productId"));
+      if(quantStr != null && quantStr.length() > 0) {
+        double quantity = 0;
+        try { quantity = Double.parseDouble(quantStr); }
+        catch(NumberFormatException nfe) { quantity = 0; }
+        if(quantity > 0.0) {
+          GenericValue product = null;
+          try { product = productCategoryMember.getRelatedOneCache("Product"); }
+          catch(GenericEntityException e) { Debug.logWarning(e.getMessage()); product = null; }
+          if(product == null) {
+            errMsg += "<li>Cannot add product with id \"" + productCategoryMember.getString("productId") + "\" because it cannot be found.";
+          }
+          else {
+            cart.addOrIncreaseItem(product, quantity, null);
+          }
+        }
+      }
+    }
+    if(errMsg.length() > 0) {
+      request.setAttribute(SiteDefs.ERROR_MESSAGE, "<ul>" + errMsg + "</ul>");
       return "error";
     }
     

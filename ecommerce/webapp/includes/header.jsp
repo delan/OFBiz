@@ -49,7 +49,7 @@ function mClk(src){
             <%}%>
           </TD>
           <TD align=right>
-<%@ include file="/cart/microcart.jsp"%>
+            <%@ include file="/cart/microcart.jsp"%>
           </td>
         </tr>
       </table>
@@ -86,6 +86,9 @@ function mClk(src){
             <TD bgcolor="<%=headerBoxBottomColor%>" width="90%" align=center class='headerCenter'>Welcome!</TD>
           <%}else{%>
             <TD bgcolor="<%=headerBoxBottomColor%>" width="90%" align=center class='headerCenter'>Welcome<%=UtilFormatOut.ifNotEmpty(person.getString("firstName"),"&nbsp;","")%><%=UtilFormatOut.ifNotEmpty(person.getString("lastName"),"&nbsp;","")%>!</TD>
+          <%}%>
+          <%if(CatalogWorker.getCatalogQuickaddUse(pageContext)) {%>
+            <td bgcolor="<%=headerBoxBottomColor%>" onmouseover='mOvr(this,"<%=headerBoxBottomColorAlt%>");' onmouseout='mOut(this,"<%=headerBoxBottomColor%>");' onclick="mClk(this);" class="headerButtonRight"><a href="<ofbiz:url>/quickadd</ofbiz:url>" class="buttontext">Quick&nbsp;Add</a></td>
           <%}%>
           <td bgcolor="<%=headerBoxBottomColor%>" onmouseover='mOvr(this,"<%=headerBoxBottomColorAlt%>");' onmouseout='mOut(this,"<%=headerBoxBottomColor%>");' onclick="mClk(this);" class="headerButtonRight"><a href="<ofbiz:url>/orderhistory</ofbiz:url>" class="buttontext">Order&nbsp;History</a></td>
           <td bgcolor="<%=headerBoxBottomColor%>" onmouseover='mOvr(this,"<%=headerBoxBottomColorAlt%>");' onmouseout='mOut(this,"<%=headerBoxBottomColor%>");' onclick="mClk(this);" class="headerButtonRight"><a href="<ofbiz:url>/viewprofile</ofbiz:url>" class="buttontext">Profile</a></td>

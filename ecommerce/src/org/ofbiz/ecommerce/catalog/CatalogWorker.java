@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2001/10/20 00:26:40  jonesde
+ * Finished first pass at multi catalog stuff setup through ecommerce.properties
+ *
  * Revision 1.1  2001/10/05 02:29:27  jonesde
  * Refactored CatalogHelper: split into CatalogWorker and in commonapp CategoryWorker and ProductWorker
  *
@@ -186,9 +189,17 @@ public class CatalogWorker {
     return categoryIds;
   }
   
+  public static String getCatalogName(PageContext pageContext) {
+    return getCatalogName(pageContext, getCurrentCatalogId(pageContext));
+  }
+  
   public static String getCatalogName(PageContext pageContext, String catalogId) {
     if(catalogId == null || catalogId.length() <= 0) return null;
     return getEcommercePropertiesValue(pageContext, catalogId + ".name");
+  }
+  
+  public static String getCatalogTopCategoryId(PageContext pageContext) {
+    return getCatalogTopCategoryId(pageContext, getCurrentCatalogId(pageContext));
   }
   
   public static String getCatalogTopCategoryId(PageContext pageContext, String catalogId) {
@@ -196,14 +207,44 @@ public class CatalogWorker {
     return getEcommercePropertiesValue(pageContext, catalogId + ".top.category");
   }
   
+  public static String getCatalogSearchCategoryId(PageContext pageContext) {
+    return getCatalogSearchCategoryId(pageContext, getCurrentCatalogId(pageContext));
+  }
+  
   public static String getCatalogSearchCategoryId(PageContext pageContext, String catalogId) {
     if(catalogId == null || catalogId.length() <= 0) return null;
     return getEcommercePropertiesValue(pageContext, catalogId + ".search.category");
   }
   
+  public static String getCatalogPromotionsCategoryId(PageContext pageContext) {
+    return getCatalogPromotionsCategoryId(pageContext, getCurrentCatalogId(pageContext));
+  }
+  
   public static String getCatalogPromotionsCategoryId(PageContext pageContext, String catalogId) {
     if(catalogId == null || catalogId.length() <= 0) return null;
     return getEcommercePropertiesValue(pageContext, catalogId + ".promotions.category");
+  }
+  
+  public static boolean getCatalogQuickaddUse(PageContext pageContext) {
+    return getCatalogQuickaddUse(pageContext, getCurrentCatalogId(pageContext));
+  }
+  
+  public static boolean getCatalogQuickaddUse(PageContext pageContext, String catalogId) {
+    if(catalogId == null || catalogId.length() <= 0) return false;
+    return "true".equals(getEcommercePropertiesValue(pageContext, catalogId + ".quickadd.use"));
+  }
+  
+  public static String getCatalogQuickaddCategoryPrimary(PageContext pageContext) {
+    return getCatalogQuickaddCategoryPrimary(pageContext, getCurrentCatalogId(pageContext));
+  }
+  
+  public static String getCatalogQuickaddCategoryPrimary(PageContext pageContext, String catalogId) {
+    if(catalogId == null || catalogId.length() <= 0) return null;
+    return getEcommercePropertiesValue(pageContext, catalogId + ".quickadd.category.primary");
+  }
+  
+  public static Collection getCatalogQuickaddCategories(PageContext pageContext) {
+    return getCatalogQuickaddCategories(pageContext, getCurrentCatalogId(pageContext));
   }
   
   public static Collection getCatalogQuickaddCategories(PageContext pageContext, String catalogId) {

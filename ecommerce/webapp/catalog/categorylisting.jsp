@@ -84,9 +84,7 @@
       </td>
     </tr>
 </table>
-</ofbiz:if>
 
-<ofbiz:if name="productList" size="0">
 <center>
   <table width='100%'>
     <%int listIndex = lowIndex.intValue();%>
@@ -99,13 +97,11 @@
       </tr>
       <%listIndex++;%>
     </ofbiz:iterator>
+    <tr><td colspan="2"><hr class='sepbar'></td></tr>
   </table>
 </center>
-</ofbiz:if>
 
-<ofbiz:if name="productList" size="0">
 <table border="0" width="100%" cellpadding="2">
-    <tr><td colspan="2"><hr class='sepbar'></td></tr>
     <tr>
       <td align=right>
         <b>

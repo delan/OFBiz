@@ -75,6 +75,12 @@
       <response name="error" type="view" value="orderstatus"/>
     </request-map>
 
+    <request-map uri="addtocartbulk">
+      <event type="java" path="org.ofbiz.ecommerce.shoppingcart.ShoppingCartEvents" invoke="addToCartBulk"/>
+      <response name="success" type="view" value="quickadd"/>
+      <response name="error" type="view" value="quickadd"/>
+    </request-map>
+
     <request-map uri="addseperator">
       <event type="java" path="org.ofbiz.ecommerce.shoppingcart.ShoppingCartEvents" invoke="addSeparator"/>
       <response name="success" type="view" value="showcart"/>
@@ -146,6 +152,10 @@
 
     <request-map uri="catalog">
       <response name="success" type="view" value="catalog"/>
+    </request-map>
+
+    <request-map uri="quickadd">
+      <response name="success" type="view" value="quickadd"/>
     </request-map>
 
     <request-map uri="category">
@@ -265,6 +275,7 @@
     <view-map name="main" page="/main.jsp"/>
     <view-map name="showcart" page="/cart/showcart.jsp"/>
     <view-map name="catalog" page="/catalog/catalog.jsp"/>
+    <view-map name="quickadd" page="/catalog/quickadd.jsp"/>
     <view-map name="category" page="/catalog/category.jsp"/>
     <view-map name="product" page="/catalog/product.jsp"/>
     <view-map name="keywordsearch" page="/catalog/keywordsearch.jsp"/>
