@@ -351,27 +351,24 @@ public class RequestHandler implements Serializable {
     }
 
     public static String getRequestUri(String path) {
-        if (path == null)
-            return path;
-        if (path.indexOf('?') > -1)
-            path = path.substring(0, path.indexOf('?'));
-        if (path.indexOf('/') == -1)
-            return path;
-        if (path.lastIndexOf('/') == 0)
-            return path.substring(1);
-        int nextIndex = path.indexOf('/', 1);
-
-        return path.substring(1, nextIndex);
+        List pathInfo = StringUtil.split(path, "/");
+        return (String) pathInfo.get(0);
     }
 
     public static String getNextPageUri(String path) {
-        if (path == null)
-            return null;
-        if (path.indexOf('/') == -1 || path.lastIndexOf('/') == 0)
-            return null;
-        int nextIndex = path.indexOf('/', 1);
-
-        return path.substring(nextIndex + 1);
+        List pathInfo = StringUtil.split(path, "/");
+        String nextPage = null;
+        for (int i = 1; i < pathInfo.size(); i++) {
+            String element = (String) pathInfo.get(i);
+            if (element.indexOf('~') != 0) {
+                if (i == 1) {                
+                    nextPage = element;
+                } else {
+                    nextPage = nextPage + "/" + element;
+                }
+            }                                                 
+        }
+        return nextPage;
     }
 
     private void callRedirect(String url, HttpServletRequest req, HttpServletResponse resp)
