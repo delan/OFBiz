@@ -69,6 +69,8 @@
   <RoleType description="Family Member" hasTable="N" parentTypeId="PERSON_ROLE" roleTypeId="FAMILY_MEMBER"/>
   <RoleType description="Affiliate" hasTable="N" parentTypeId="SALES_REP" roleTypeId="AFFILIATE"/>
   <RoleType description="Manager" hasTable="N" parentTypeId="EMPLOYEE" roleTypeId="MANAGER"/>
+  <RoleType description="Cashier" hasTable="N" parentTypeId="EMPLOYEE" roleTypeId="CASHIER"/>
+  <RoleType description="Stocker" hasTable="N" parentTypeId="EMPLOYEE" roleTypeId="STOCKER"/>
   <RoleType description="Worker" hasTable="N" parentTypeId="EMPLOYEE" roleTypeId="WORKER"/>
   <RoleType description="Customer" hasTable="N" parentTypeId="" roleTypeId="CUSTOMER"/>
   <RoleType description="End-User Customer" hasTable="N" parentTypeId="CUSTOMER" roleTypeId="END_USER_CUSTOMER"/>
