@@ -364,6 +364,9 @@ public class ModelServiceReader {
             Map modelParamMap = new OrderedMap();
             try {            
                 ModelEntity entity = delegator.getModelEntity(entityName);
+                if (entity == null) {
+                    throw new IllegalArgumentException("Could not find entity with name [" + entityName + "]");
+                }
                 Iterator fieldsIter = entity.getFieldsIterator();
                 if (fieldsIter != null) {            
                     while (fieldsIter.hasNext()) {
