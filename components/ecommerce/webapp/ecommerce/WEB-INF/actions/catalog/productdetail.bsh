@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski
- *@version    $Revision: 1.4 $
+ *@version    $Revision: 1.5 $
  *@since      2.1
 */
 
@@ -150,12 +150,17 @@ if (product != null) {
             variantTreeMap = dispatcher.runSync("getProductVariantTree", UtilMisc.toMap("productId", productId, "featureOrder", featureSet, "productStoreId", productStoreId));
             variantTree = variantTreeMap.get("variantTree");
             imageMap = variantTreeMap.get("variantSample");
-            request.setAttribute("variantTree", variantTree);
-            request.setAttribute("varientTreeSize", new Integer(variantTree.size()));
-            request.setAttribute("variantSample", imageMap);
-            request.setAttribute("variantSampleKeys", imageMap.keySet());
-            request.setAttribute("variantSampleSize", new Integer(imageMap.size()));
+            if (variantTree != null) {
+                request.setAttribute("variantTree", variantTree);
+                request.setAttribute("varientTreeSize", new Integer(variantTree.size()));
+            }
+            if (imageMap != null) {
+                request.setAttribute("variantSample", imageMap);
+                request.setAttribute("variantSampleKeys", imageMap.keySet());
+                request.setAttribute("variantSampleSize", new Integer(imageMap.size()));
+            }
             request.setAttribute("featureSet", featureSet);
+            
             if (variantTree != null && variantTree.size() > 0) {
                 featureOrder = new LinkedList(featureSet);
                 foi = featureOrder.iterator();
@@ -168,67 +173,71 @@ if (product != null) {
             }
             request.setAttribute("featureTypes", featureTypes);
             request.setAttribute("featureOrder", featureOrder);
-            request.setAttribute("featureOrderFirst", featureOrder.get(0));
-         
-            jsBuf = new StringBuffer();
-            jsBuf.append("<script language=\"JavaScript\">");
-            jsBuf.append("var IMG = new Array(" + variantTree.size() + ");");
-            jsBuf.append("var OPT = new Array(" + featureOrder.size() + ");");
-            for (li = 0; li < featureOrder.size(); li++) {
-                jsBuf.append("OPT[" + li + "] = \"" + featureOrder.get(li) + "\";");                  
+            if (featureOrder.size() > 0) {
+                request.setAttribute("featureOrderFirst", featureOrder.get(0));
             }
             
-            // build the top level             
-            topLevelName = featureOrder.get(0);
-            jsBuf.append("function list" + topLevelName + "() {");
-            jsBuf.append("document.forms[\"addform\"].elements[\"" + topLevelName + "\"].options.length = 1;");
-            jsBuf.append("document.forms[\"addform\"].elements[\"" + topLevelName + "\"].options[0] = new Option(\"" + featureTypes.get(topLevelName) + "\",\"\",true,true);");                               
-            if (variantTree != null) {
-                vTreeKeySet = variantTree.keySet();
-                vti = vTreeKeySet.iterator();
-                counter = 0;
-                while (vti.hasNext()) {
-                    key = vti.next();
-                    value = variantTree.get(key);
-                    opt = null;
-                    if (featureOrder.size() == 1)
-                        opt = value.iterator().next();
-                    else
-                        opt = "" + counter;                 
-                    jsBuf.append("document.forms[\"addform\"].elements[\"" + topLevelName + "\"].options[" + (counter+1) + "] = new Option(\"" + key + "\",\"" + opt + "\");");
-                    jsBuf.append("IMG[" + counter + "] = \"" + imageMap.get(key).getString("largeImageUrl") +"\";");                
-                    counter++;
-                }
-            }                    
-            jsBuf.append("}");                        
-   
-            // build dynamic lists             
-            if (variantTree != null) {
-                topLevelKeys = variantTree.keySet();
-                tli = topLevelKeys.iterator();
-                topLevelKeysCt = 0;
-                while (tli.hasNext()) {
-                    cnt = "" + topLevelKeysCt; 
-                    varTree = variantTree.get(tli.next());
-                    if (varTree instanceof Map) {
-                        jsBuf.append(buildNext(varTree, featureOrder, featureOrder.get(1), cnt, featureTypes));             
-                    }
-                    topLevelKeysCt++;
-                }
-            }
-            jsBuf.append("function findIndex(name) { for (i=0; i<OPT.length; i++) { if (OPT[i] == name) return i; } return -1; }");    
-            jsBuf.append("function getList(name, value, src) { var value2 = 'NULL'; currentOrderIndex = findIndex(name);");                    
-            jsBuf.append("if (src == 1 && OPT.length == 1) { value2 = document.forms[\"addform\"].elements[name].options[(value*1)+1].value;");                        
-            jsBuf.append("} if (currentOrderIndex < 0 || value == \"\") return; if (currentOrderIndex < (OPT.length - 1) || OPT.length == 1) {");                        
-            jsBuf.append("if (IMG[value] != null) { if (document.images['mainImage'] != null) document.images['mainImage'].src = IMG[value];");
-            jsBuf.append("document.addform." + topLevelName + ".selectedIndex = (value*1)+1;");
-            jsBuf.append("} if (OPT.length != 1) { eval(\"list\" + OPT[currentOrderIndex+1] + value + \"()\");");                        
-            jsBuf.append("document.addform.add_product_id.value = 'NULL'; } else { if (value2 == 'NULL')");
-            jsBuf.append("value2 = value; document.addform.add_product_id.value = value2;");
-            jsBuf.append("} } else { document.addform.add_product_id.value = value; } }");
-            jsBuf.append("</script>");  
-            
-            request.setAttribute("virtualJavaScript", jsBuf.toString());          
+            if (variantTree != null && imageMap != null) {
+	            jsBuf = new StringBuffer();
+	            jsBuf.append("<script language=\"JavaScript\">");
+	            jsBuf.append("var IMG = new Array(" + variantTree.size() + ");");
+	            jsBuf.append("var OPT = new Array(" + featureOrder.size() + ");");
+	            for (li = 0; li < featureOrder.size(); li++) {
+	                jsBuf.append("OPT[" + li + "] = \"" + featureOrder.get(li) + "\";");                  
+	            }
+	            
+	            // build the top level             
+	            topLevelName = featureOrder.get(0);
+	            jsBuf.append("function list" + topLevelName + "() {");
+	            jsBuf.append("document.forms[\"addform\"].elements[\"" + topLevelName + "\"].options.length = 1;");
+	            jsBuf.append("document.forms[\"addform\"].elements[\"" + topLevelName + "\"].options[0] = new Option(\"" + featureTypes.get(topLevelName) + "\",\"\",true,true);");                               
+	            if (variantTree != null) {
+	                vTreeKeySet = variantTree.keySet();
+	                vti = vTreeKeySet.iterator();
+	                counter = 0;
+	                while (vti.hasNext()) {
+	                    key = vti.next();
+	                    value = variantTree.get(key);
+	                    opt = null;
+	                    if (featureOrder.size() == 1)
+	                        opt = value.iterator().next();
+	                    else
+	                        opt = "" + counter;                 
+	                    jsBuf.append("document.forms[\"addform\"].elements[\"" + topLevelName + "\"].options[" + (counter+1) + "] = new Option(\"" + key + "\",\"" + opt + "\");");
+	                    jsBuf.append("IMG[" + counter + "] = \"" + imageMap.get(key).getString("largeImageUrl") +"\";");                
+	                    counter++;
+	                }
+	            }                    
+	            jsBuf.append("}");                        
+	   
+	            // build dynamic lists             
+	            if (variantTree != null) {
+	                topLevelKeys = variantTree.keySet();
+	                tli = topLevelKeys.iterator();
+	                topLevelKeysCt = 0;
+	                while (tli.hasNext()) {
+	                    cnt = "" + topLevelKeysCt; 
+	                    varTree = variantTree.get(tli.next());
+	                    if (varTree instanceof Map) {
+	                        jsBuf.append(buildNext(varTree, featureOrder, featureOrder.get(1), cnt, featureTypes));             
+	                    }
+	                    topLevelKeysCt++;
+	                }
+	            }
+	            jsBuf.append("function findIndex(name) { for (i=0; i<OPT.length; i++) { if (OPT[i] == name) return i; } return -1; }");    
+	            jsBuf.append("function getList(name, value, src) { var value2 = 'NULL'; currentOrderIndex = findIndex(name);");                    
+	            jsBuf.append("if (src == 1 && OPT.length == 1) { value2 = document.forms[\"addform\"].elements[name].options[(value*1)+1].value;");                        
+	            jsBuf.append("} if (currentOrderIndex < 0 || value == \"\") return; if (currentOrderIndex < (OPT.length - 1) || OPT.length == 1) {");                        
+	            jsBuf.append("if (IMG[value] != null) { if (document.images['mainImage'] != null) document.images['mainImage'].src = IMG[value];");
+	            jsBuf.append("document.addform." + topLevelName + ".selectedIndex = (value*1)+1;");
+	            jsBuf.append("} if (OPT.length != 1) { eval(\"list\" + OPT[currentOrderIndex+1] + value + \"()\");");                        
+	            jsBuf.append("document.addform.add_product_id.value = 'NULL'; } else { if (value2 == 'NULL')");
+	            jsBuf.append("value2 = value; document.addform.add_product_id.value = value2;");
+	            jsBuf.append("} } else { document.addform.add_product_id.value = value; } }");
+	            jsBuf.append("</script>");  
+	            
+	            request.setAttribute("virtualJavaScript", jsBuf.toString());
+	        }
         }
     } 
 
