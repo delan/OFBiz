@@ -1,4 +1,4 @@
-<#--
+/*
  *  Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -19,10 +19,26 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *@author     Andy Zeneski
- *@version    $Revision: 1.2 $
+ *@author     Andy Zeneski (jaz@ofbiz.org)
+ *@version    $Revision: 1.1 $
  *@since      3.1
--->
+ */
 
-<#assign submitRequest = "/contactsubmit">
-<#include "/includes/newmsg.ftl">
+import org.ofbiz.base.util.*;
+import org.ofbiz.entity.*;
+import org.ofbiz.entity.util.*;
+import org.ofbiz.entity.condition.*;
+
+delegator = request.getAttribute("delegator");
+userLogin = session.getAttribute("userLogin");
+if (userLogin != null) {
+    partyId = userLogin.getString("partyId");
+    orderBy = UtilMisc.toList("-entryDate");
+    condition = new EntityExpr("partyIdFrom", EntityOperator.EQUALS, partyId);
+
+    eli = delegator.findListIteratorByCondition("CommunicationEvent", condition, null, null, orderBy, null);
+    messages = eli.getCompleteList();
+
+    context.put("messages", messages);
+    eli.close();
+}

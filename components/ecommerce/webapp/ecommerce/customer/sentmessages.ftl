@@ -19,10 +19,10 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *@author     Andy Zeneski
- *@version    $Revision: 1.2 $
+ *@author     Andy Zeneski (jaz@ofbiz.org)
+ *@version    $Revision: 1.1 $
  *@since      3.1
 -->
 
-<#assign submitRequest = "/contactsubmit">
-<#include "/includes/newmsg.ftl">
+<#assign useSentTo = "true">
+<#include "/customer/messagelist.ftl">

@@ -20,13 +20,15 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      3.1
 -->
 
 <#assign delegator = requestAttributes.delegator>
-<#assign partyId = message.partyIdFrom>
-<#assign fromName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyId, true)>
+<#assign partyIdFrom = message.partyIdFrom>
+<#assign partyIdTo = message.partyIdTo>
+<#assign fromName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyIdFrom, true)>
+<#assign toName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyIdTo, true)>
 
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
@@ -37,6 +39,10 @@
             <div class="boxhead">&nbsp;${(message.subject)?default("[No subject]")}</div>
           </td>
           <td valign="middle" align="right">
+            <#if (useSentTo)?default("false")?lower_case == "false">
+              <a href="<@ofbizUrl>/newmessage?messageId=${message.communicationEventId}</@ofbizUrl>" class="submenutext">Reply</a>
+            </#if>
+            <a href="<@ofbizUrl>/sentmessages</@ofbizUrl>" class="submenutext">View Sent</a>
             <a href="<@ofbizUrl>/messagelist</@ofbizUrl>" class="submenutextright">View List</a>
           </td>
         </tr>
@@ -53,6 +59,10 @@
               <tr>
                 <td align="right"><div class="tableheadtext">From:</div></td>
                 <td><div class="tabletext">${fromName}</div></td>
+              </tr>
+              <tr>
+                <td align="right"><div class="tableheadtext">To:</div></td>
+                <td><div class="tabletext">${toName}</div></td>
               </tr>
               <tr>
                 <td align="right"><div class="tableheadtext">Date:</div></td>

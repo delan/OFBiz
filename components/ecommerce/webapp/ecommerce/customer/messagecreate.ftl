@@ -20,9 +20,9 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.1 $
  *@since      3.1
 -->
 
-<#assign submitRequest = "/contactsubmit">
+<#assign submitRequest = "/sendmessage">
 <#include "/includes/newmsg.ftl">
