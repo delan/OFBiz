@@ -188,6 +188,7 @@ public class ContactMechServices {
                 return ServiceUtil.returnError("ERROR: Could not change contact info (write failure): " + e.getMessage());
             }
         } else {
+            result.put("newContactMechId", contactMechId);
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
             result.put(ModelService.SUCCESS_MESSAGE, "No changes made, not updating contact mechanism");
             return result;
@@ -418,6 +419,7 @@ public class ContactMechServices {
                 return ServiceUtil.returnError("ERROR: Could not change contact info (write failure): " + e.getMessage());
             }
         } else {
+            result.put("newContactMechId", contactMechId);
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
             result.put(ModelService.SUCCESS_MESSAGE, "No changes made, not updating contact mechanism");
             return result;
@@ -586,6 +588,7 @@ public class ContactMechServices {
                 return ServiceUtil.returnError("ERROR: Could not change contact info (write failure): " + e.getMessage());
             }
         } else {
+            result.put("newContactMechId", contactMechId);
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
             result.put(ModelService.SUCCESS_MESSAGE, "No changes made, not updating contact mechanism");
             return result;

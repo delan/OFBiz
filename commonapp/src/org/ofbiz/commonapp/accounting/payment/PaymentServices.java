@@ -297,7 +297,11 @@ public class PaymentServices {
                 return ServiceUtil.returnError("ERROR: Could not update credit card (write failure): " + e.getMessage());
             }
         } else {
-            return ServiceUtil.returnSuccess("No changes made, not updating credit card");
+            result.put("newPaymentMethodId", paymentMethodId);
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
+            result.put(ModelService.SUCCESS_MESSAGE, "No changes made, not updating credit card");
+            
+            return result;
         }
 
         result.put("newPaymentMethodId", newCc.getString("paymentMethodId"));
@@ -490,7 +494,11 @@ public class PaymentServices {
                 return ServiceUtil.returnError("ERROR: Could not update EFT Account (write failure): " + e.getMessage());
             }
         } else {
-            return ServiceUtil.returnSuccess("No changes made, not updating EFT Account");
+            result.put("newPaymentMethodId", paymentMethodId);
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
+            result.put(ModelService.SUCCESS_MESSAGE, "No changes made, not updating EFT Account");
+            
+            return result;
         }
 
         result.put("newPaymentMethodId", newEa.getString("paymentMethodId"));
