@@ -20,10 +20,11 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Johan Isacsson (conversion of JSP created by David E. Jones)
+ *@author     Eric.Barbier@nereide.biz (migration to uiLabelMap)
  *@created    May 14 2003
- *@version    1.0
+ *@version    1.2
 -->
-
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 
 <table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <tr>
@@ -31,10 +32,10 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <td align=left width='40%' >
-            <div class='boxhead'>&nbsp;Task Detail</div>
+            <div class='boxhead'>${uiLabelMap.WorkEffortTaskDetail}</div>
           </td>
           <td align=right width='60%'>
-            <a href='<@ofbizUrl>/mytasks</@ofbizUrl>' class='submenutext'>Task List</a><a href='<@ofbizUrl>/task</@ofbizUrl>' class='submenutextright'>New Task</a>
+            <a href='<@ofbizUrl>/mytasks</@ofbizUrl>' class='submenutext'>${uiLabelMap.WorkEffortTaskList}</a><a href='<@ofbizUrl>/task</@ofbizUrl>' class='submenutextright'>${uiLabelMap.WorkEffortNewTask}</a>
           </td>
         </tr>
       </table>
@@ -56,7 +57,7 @@
                 <table border='0' cellpadding='2' cellspacing='0'>
                   <input type='hidden' name='workEffortTypeId' value='TASK'>
                   <#if workEffortId?has_content>
-                    <div class='tabletext'>ERROR: Could not find Task with ID "${workEffortId}"</div>
+                    <div class='tabletext'>${uiLabelMap.WorkEffortErrorNotFindTaskId} "${workEffortId}"</div>
                   </#if>
               </#if>
               <#if requestParameters.communicationEventId?exists>
@@ -64,12 +65,12 @@
               </#if>
 
                 <tr>
-                  <td width='26%' align=right><div class='tabletext'>Task Name</div></td>
+                  <td width='26%' align=right><div class='tabletext'>${uiLabelMap.WorkEffortTaskName}</div></td>
                   <td>&nbsp;</td>
                   <td width='74%'><input type='text' class='inputBox' size='30' maxlength='30' name='workEffortName' value='${(workEffort.workEffortName)?if_exists}'></td>
                 </tr>
                 <tr>
-                  <td width='26%' align=right><div class='tabletext'>Priority</div></td>
+                  <td width='26%' align=right><div class='tabletext'>${uiLabelMap.WorkEffortPriority}</div></td>
                   <td>&nbsp;</td>
                   <td width='74%'>
                     <select name='priority' class='selectBox'>
@@ -82,7 +83,7 @@
                   </td>
                 </tr>
                 <tr>
-                  <td width='26%' align=right><div class='tabletext'>Task Status</div></td>
+                  <td width='26%' align=right><div class='tabletext'>${uiLabelMap.WorkEffortTaskStatus}</div></td>
                   <td>&nbsp;</td>
                   <td width='74%'>
                     <select name='currentStatusId' class='selectBox'>
@@ -93,24 +94,24 @@
                       </#list>
                     </select>
                     <#if workEffort?has_content>
-                      <span class='tabletext'>Last Updated ${(workEffort.lastStatusUpdate.toString())?if_exists}</span>
+                      <span class='tabletext'>${uiLabelMap.CommonLastUpdated} ${(workEffort.lastStatusUpdate.toString())?if_exists}</span>
                     </#if>
                   </td>
                 </tr>
 
                 <tr>
-                  <td width='26%' align=right><div class='tabletext'>Location</div></td>
+                  <td width='26%' align=right><div class='tabletext'>${uiLabelMap.WorkEffortLocation}</div></td>
                   <td>&nbsp;</td>
                   <td width='74%'><input type='text' class='inputBox' size='60' maxlength='255' name='locationDesc' value='${(workEffort.locationDesc)?if_exists}'></td>
                 </tr>
                 <tr>
-                  <td width='26%' align=right><div class='tabletext'>Description</div></td>
+                  <td width='26%' align=right><div class='tabletext'>${uiLabelMap.WorkEffortDescription}</div></td>
                   <td>&nbsp;</td>
                   <td width='74%'><textarea name='description' class='textAreaBox' cols='50' rows='4'>${(workEffort.description)?if_exists}</TEXTAREA>
                 </tr>
 
                 <tr>
-                  <td width='26%' align=right><div class='tabletext'>Start Date/Time</div></td>
+                  <td width='26%' align=right><div class='tabletext'>${uiLabelMap.CommonStartDateTime}</div></td>
                   <td>&nbsp;</td>
                   <td width='74%'>
                     <input type='text' class='inputBox' size='30' maxlength='30' name='estimatedStartDate' value='${(workEffort.estimatedStartDate)?if_exists}'>
@@ -118,7 +119,7 @@
                   </td>
                 </tr>
                 <tr>
-                  <td width='26%' align=right><div class='tabletext'>End Date/Time</div></td>
+                  <td width='26%' align=right><div class='tabletext'>${uiLabelMap.CommonEndDateTime}</div></td>
                   <td>&nbsp;</td>
                   <td width='74%'>
                     <input type='text' class='inputBox' size='30' maxlength='30' name='estimatedCompletionDate' value='${(workEffort.estimatedCompletionDate)?if_exists}'>
@@ -128,24 +129,24 @@
 
                 <#if workEffort?has_content>
                   <tr>
-                    <td width='26%' align=right><div class='tabletext'>Revision #</div></td>
+                    <td width='26%' align=right><div class='tabletext'>${uiLabelMap.WorkEffortRevision} </div></td>
                     <td>&nbsp;</td>
                     <td width='74%'><div class='tabletext'>${workEffort.revisionNumber}</div></td>
                   </tr>
                   <tr>
-                    <td width='26%' align=right><div class='tabletext'>Created</div></td>
+                    <td width='26%' align=right><div class='tabletext'>${uiLabelMap.WorkEffortCreated}</div></td>
                     <td>&nbsp;</td>
                     <td width='74%'><div class='tabletext'>
                       ${workEffort.createdDate.toString()}
-                      by ${workEffort.createdByUserLogin}
+                      ${uiLabelMap.CommonBy} ${workEffort.createdByUserLogin}
                     </div></td>
                   </tr>
                   <tr>
-                    <td width='26%' align=right><div class='tabletext'>Last Modified</div></td>
+                    <td width='26%' align=right><div class='tabletext'>${uiLabelMap.WorkEffortLastModified}</div></td>
                     <td>&nbsp;</td>
                     <td width='74%'><div class='tabletext'>
                       ${workEffort.lastModifiedDate.toString()}
-                      by ${workEffort.lastModifiedByUserLogin}
+                       ${uiLabelMap.CommonBy} ${workEffort.lastModifiedByUserLogin}
                     </div></td>
                   </tr>
                 </#if>
@@ -153,9 +154,9 @@
                 <tr>
                   <td width='26%' align=right>
                     <#if workEffort?exists>
-                    <input type="submit" name="Update" value="Update">
+                    <input type="submit" name="Update" value=" ${uiLabelMap.CommonUpdate}">
                     <#else>
-                    <input type="submit" name="Create" value="Create">
+                    <input type="submit" name="Create" value=" ${uiLabelMap.CommonCreate}">
                     </#if>
                   </td>
                   <td>&nbsp;</td>
@@ -164,7 +165,7 @@
               </table>
               </form>
             <#else>
-              <div class='tabletext'>ERROR: You do not have permission to view this Event. This event must belong to you, or you must be an administrator.</div>
+              <div class='tabletext'>${uiLabelMap.WorkEffortErrorPermissionViewEvent}.</div>
             </#if>
           </td>
         </tr>

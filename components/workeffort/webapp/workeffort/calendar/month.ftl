@@ -61,7 +61,7 @@
   <#assign indexMod7 = period_index % 7>
   <#if indexMod7 = 0>
   <tr class="bg">
-    <td valign="top" height="60" nowrap class="monthweekheader"><a href='<@ofbizUrl>/week?start=${period.start.time?string("#")}</@ofbizUrl>' class="monthweeknumber">Week ${period.start?date?string("w")}</a></td>
+    <td valign="top" height="60" nowrap class="monthweekheader"><a href='<@ofbizUrl>/week?start=${period.start.time?string("#")}</@ofbizUrl>' class="monthweeknumber">${uiLabelMap.CommonWeek} ${period.start?date?string("w")}</a></td>
   </#if>			  
     <td valign="top">
       <table width="100%" cellspacing="0" cellpadding="0" border="0">			
@@ -75,11 +75,11 @@
         <tr width="100%">
           <td class='monthcalendarentry' width="100%" valign='top'>
 		    <#if (calEntry.workEffort.estimatedStartDate.compareTo(period.start)  <= 0 && calEntry.workEffort.estimatedCompletionDate.compareTo(period.end) >= 0)>
-		    All day
+		    ${uiLabelMap.CommonAllDay}
 		    <#elseif calEntry.workEffort.estimatedStartDate.before(period.start)>
-		    Until ${calEntry.workEffort.estimatedCompletionDate?time?string.short}
+		    ${uiLabelMap.CommonUntil} ${calEntry.workEffort.estimatedCompletionDate?time?string.short}
 			<#elseif calEntry.workEffort.estimatedCompletionDate.after(period.end)>
-		    From ${calEntry.workEffort.estimatedStartDate?time?string.short}
+		     ${uiLabelMap.CommonFrom} ${calEntry.workEffort.estimatedStartDate?time?string.short}
 		    <#else>
 		    ${calEntry.workEffort.estimatedStartDate?time?string.short}-${calEntry.workEffort.estimatedCompletionDate?time?string.short}
 		    </#if>
@@ -105,7 +105,7 @@
 			<div class="tabletext">
 				<form action="<@ofbizUrl>/month</@ofbizUrl>" method="POST">
 					<input type="hidden" name="start" value="${start.time?string("#")}"/>
-					By Party ID: <input type="text" name="partyId" value="${requestParameters.partyId?if_exists}" class="inputbox"/>
+					 ${uiLabelMap.WorkEffortByPartyId}: <input type="text" name="partyId" value="${requestParameters.partyId?if_exists}" class="inputbox"/>
 					<input type="submit" value="${uiLabelMap.CommonView}" class="smallSubmit"/>
 				</form>
 			</div>
@@ -114,13 +114,13 @@
 			<div class="tabletext">
 				<form action="<@ofbizUrl>/month</@ofbizUrl>" method="POST">
 					<input type="hidden" name="start" value="${start.time?string("#")}"/>
-					By Facility: 
+					${uiLabelMap.WorkEffortByFacility}: 
 						<select name="facilityId" class="selectbox">
 							<#list allFacilities as facility>
 								<option value="${facility.facilityId}"<#if requestParameters.facilityId?has_content && requestParameters.facilityId == facility.facilityId>${uiLabelMap.WorkEffortSelected}</#if>>${facility.facilityName}</option>
 							</#list>
 						</select>
-					<input type="submit" value="View" class="smallSubmit"/>
+					<input type="submit" value="${uiLabelMap.CommonView}" class="smallSubmit"/>
 				</form>
 			</div>
 		</td>
@@ -128,5 +128,5 @@
 </table>
 
 <#else> 
-<p>${uiLabelMap.WorkEffortFailedToGetCalendarEntries}!</p>
+<p>${uiLabelMap.WorkEffortFailedCalendarEntries}!</p>
 </#if>

@@ -22,7 +22,7 @@
  *
  *@author     Johan Isacsson (conversion of jsp created by Andy Zeneski)
  *@author     Eric.Barbier@nereide.biz (migration to uiLabelMap) 
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -35,7 +35,7 @@
   <a href="<@ofbizUrl>/requestitem?custRequestId=${custRequestId}&custRequestItemSeqId=${custRequestItemSeqId}</@ofbizUrl>" class="tabButton">${uiLabelMap.WorkEffortItem}</a>
   <a href="<@ofbizUrl>/requestitemnotes?custRequestId=${custRequestId}&custRequestItemSeqId=${custRequestItemSeqId}</@ofbizUrl>" class="tabButtonSelected">${uiLabelMap.WorkEffortNotes}</a>
   <a href="<@ofbizUrl>/requestitemrequirements?custRequestId=${custRequestId}&custRequestItemSeqId=${custRequestItemSeqId}</@ofbizUrl>" class="tabButton">${uiLabelMap.WorkEffortRequirements}</a>    
-  <a href="#" class="tabButton">Tasks</a>    
+  <a href="#" class="tabButton">${uiLabelMap.WorkEffortTasks}</a>    
 </div>
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
@@ -66,10 +66,10 @@
               <#list notes as noteRef>
                 <tr>
                   <td align="left" valign="top" width="35%">
-                    <div class="tabletext">&nbsp;<b>By: </b>${noteRef.firstName}&nbsp;${noteRef.lastName}</div>
-                    <div class="tabletext">&nbsp;<b>At: </b>${noteRef.noteDateTime}</div>
+                    <div class="tabletext">&nbsp;<b>${uiLabelMap.CommonBy} : </b>${noteRef.firstName}&nbsp;${noteRef.lastName}</div>
+                    <div class="tabletext">&nbsp;<b>${uiLabelMap.CommonAt} : </b>${noteRef.noteDateTime}</div>
                     <#if showAll = "true">
-                    <div class="tabletext">&nbsp;<b>Item: </b>${noteRef.custRequestItemSeqId}</div>
+                    <div class="tabletext">&nbsp;<b>${uiLabelMap.WorkEffortItem}: </b>${noteRef.custRequestItemSeqId}</div>
                     </#if>
                   </td>
                   <td align="left" valign="top" width="65%">
@@ -104,7 +104,7 @@
                 </tr>
                 <tr>
                   <td align="right"> 
-                    <input type="submit" style="font-size: small;" value="Create">  
+                    <input type="submit" style="font-size: small;" value="${uiLabelMap.CommonCreate}">  
                   </td>
                   <td>&nbsp;</td>
                 </tr>                  

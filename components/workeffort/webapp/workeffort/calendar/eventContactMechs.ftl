@@ -22,7 +22,7 @@
  *
  *@author     Johan Isacsson (conversion of jsp created by Andy Zeneski) 
  *@author     Eric.Barbier@nereide.biz (migration to uiLabelMap)
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -52,7 +52,7 @@
                       <div class='tabContainer'>
                           <a href="<@ofbizUrl>/event?workEffortId=${workEffortId}</@ofbizUrl>" class="tabButton">${uiLabelMap.WorkEffortEvent}</a>
                           <a href="<@ofbizUrl>/eventPartyAssignments?workEffortId=${workEffortId}</@ofbizUrl>" class="tabButton">Parties</a>
-                          <a href="<@ofbizUrl>/eventContactMechs?workEffortId=${workEffortId}</@ofbizUrl>" class="tabButtonSelected">${uiLabelMap.WorkEffortContactinformation}</a>
+                          <a href="<@ofbizUrl>/eventContactMechs?workEffortId=${workEffortId}</@ofbizUrl>" class="tabButtonSelected">${uiLabelMap.PartyContactInformation}</a>
                       </div>
                     </#if>
 <#-- ============================================================= -->
@@ -137,8 +137,8 @@
             <#if security.hasEntityPermission("WORKEFFORTMGR", "_DELETE", session)>
             <td align="right" valign="top" width="1%" nowrap>
               <div><a href='<@ofbizUrl>/editContactMech?contactMechId=${contactMech.contactMechId}&workEffortId=${workEffortId}</@ofbizUrl>' class="buttontext">
-              Edit</a>&nbsp;|&nbsp;<a href='<@ofbizUrl>/deleteContactMech/eventContactMechs?contactMechId=${contactMech.contactMechId}&workEffortId=${workEffortId}</@ofbizUrl>' class="buttontext">
-              Remove</a>&nbsp;&nbsp;</div>
+              ${uiLabelMap.CommonEdit}</a>&nbsp;|&nbsp;<a href='<@ofbizUrl>/deleteContactMech/eventContactMechs?contactMechId=${contactMech.contactMechId}&workEffortId=${workEffortId}</@ofbizUrl>' class="buttontext">
+              ${uiLabelMap.CommonRemove}</a>&nbsp;&nbsp;</div>
             </td>
             <#else>
             <td width="5">&nbsp;</td>
@@ -187,7 +187,7 @@
                           </#list>
                           </select>
                           </td>
-						  <td width="100%"><input type="submit" style="font-size: small;" value="Add"></td>
+						  <td width="100%"><input type="submit" style="font-size: small;" value="${uiLabelMap.CommonAdd}"></td>
                         </tr>
                       </table>
                     </form>

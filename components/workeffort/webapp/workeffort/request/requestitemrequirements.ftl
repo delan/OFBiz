@@ -22,7 +22,7 @@
  *
  *@author     Johan Isacsson (conversion of jsp created by Andy Zeneski) 
  *@author     Eric.Barbier@nereide.biz (migration to uiLabelMap) 
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -34,7 +34,7 @@
   <a href="<@ofbizUrl>/requestitem?custRequestId=${custRequestId}&custRequestItemSeqId=${custRequestItemSeqId}</@ofbizUrl>" class="tabButton">${uiLabelMap.WorkEffortItem}</a>
   <a href="<@ofbizUrl>/requestitemnotes?custRequestId=${custRequestId}&custRequestItemSeqId=${custRequestItemSeqId}</@ofbizUrl>" class="tabButton">${uiLabelMap.WorkEffortNotes}</a>
   <a href="<@ofbizUrl>/requestitemrequirements?custRequestId=${custRequestId}&custRequestItemSeqId=${custRequestItemSeqId}</@ofbizUrl>" class="tabButtonSelected">${uiLabelMap.WorkEffortRequirements}</a>    
-  <a href="#" class="tabButton">Tasks</a>  
+  <a href="#" class="tabButton">${uiLabelMap.WorkEffortTasks}</a>  
 </div>
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
@@ -62,9 +62,9 @@
                   <TD>
                     <table width="100%" cellpadding="2" cellspacing="0" border="0">
                       <tr>
-                        <td><div class="tableheadtext">${uiLabelMap.WorkEffortRequirementID}</div></td>
+                        <td><div class="tableheadtext">${uiLabelMap.WorkEffortRequirementId}</div></td>
                         <td><div class="tableheadtext">${uiLabelMap.CommonDescription}</div></td>
-                        <td><div class="tableheadtext">${uiLabelMap.WorkEffortProductID}</div></td>
+                        <td><div class="tableheadtext">${uiLabelMap.WorkEffortProductId}</div></td>
                         <td align='right'><div class="tableheadtext">${uiLabelMap.WorkEffortQuantity}</div></td>
                         <td>&nbsp;&nbsp;</td>
                         <td align='right'><div class="tableheadtext">${uiLabelMap.WorkEffortEstBudget}</div></td>

@@ -22,7 +22,7 @@
  *
  *@author     Johan Isacsson (conversion of jsp created by Andy Zeneski)
  *@author     Eric.Barbier@nereide.biz (migration to uiLabelMap)  
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -85,7 +85,7 @@
                   </TR>
                 <#else>
                   <TR>
-                    <TD><div class="tabletext">${uiLabelMap.WorkEffortNoRolesAssociatedWithThisCustomerRequest}.</div></TD>
+                    <TD><div class="tabletext">${uiLabelMap.WorkEffortNoRolesAssociatedRequest}.</div></TD>
                   </TR>
                 </#if>
                 <#if custRequest?exists>
@@ -112,7 +112,7 @@
                               <option value="REQ_MANAGER">${uiLabelMap.WorkEffortRequestManager}</option>
                             </select>
                           </td>
-                          <td align="center"><input type="submit" style="font-size: small;" value="Add"></td>
+                          <td align="center"><input type="submit" style="font-size: small;" value="${uiLabelMap.CommonAdd}"></td>
                           <td colspan="2">&nbsp;&nbsp;&nbsp;</td>
                         </tr>
                       </table>

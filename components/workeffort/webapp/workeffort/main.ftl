@@ -20,11 +20,12 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Johan Isacsson (conversion of jsp created by David E. Jones)
+ *@author     Eric.Barbier@nereide.biz (migration to uiLabelMap)
  *@created    May 13 2003
- *@version    1.0
+ *@version    1.2
  */
 -->
-
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
@@ -32,7 +33,7 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <TD align=left width='90%' >
-            <div class='boxhead'>&nbsp;Work Effort Manager Main Page</div>
+            <div class='boxhead'>${uiLabelMap.WorkEffortWorkEffortManagerMainPage}</div>
           </TD>
           <TD align=right width='10%'>&nbsp;</TD>
         </tr>
@@ -45,10 +46,10 @@
         <tr>
           <td>
             <#if !userLogin?has_content>
-              <DIV class='tabletext'>For something interesting make sure you are logged in, try username:admin, password:ofbiz.</DIV>
+              <DIV class='tabletext'>${uiLabelMap.WorkEffortInterestingSure}.</DIV>
               <BR>
             </#if>
-            <DIV class='tabletext'>This application is meant for those who maintain and use calendar events, tasks and workflow activities.</DIV>
+            <DIV class='tabletext'>${uiLabelMap.WorkEffortApplicationEventsTasksWorkflowActivities}.</DIV>
           </td>
         </tr>
       </table>

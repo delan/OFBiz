@@ -23,10 +23,11 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     Olivier.Heintz@nereide.biz
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      2.1
 -->
 
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#assign layoutSettings = requestAttributes.layoutSettings>
 <html>
 <head>
@@ -65,7 +66,7 @@
                         <option value="${availableLocale.toString()}">${availableLocale.getDisplayName()}</option>
                     </#list>
                 </select>
-                <input type="submit" value="Set" class="smallSubmit"/>
+                <input type="submit" value="${uiLabelMap.CommonSet}" class="smallSubmit"/>
                 </form>
             </div>
           </td>

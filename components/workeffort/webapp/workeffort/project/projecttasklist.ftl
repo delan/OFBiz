@@ -120,7 +120,7 @@
                         <#assign currentStatusItem = delegator.findByPrimaryKeyCache("StatusItem", Static["org.ofbiz.base.util.UtilMisc"].toMap("statusId", workEffortTask.currentStatusId))>
                         <TD valign=top><DIV class='tabletext'>${(currentStatusItem.description)?if_exists}</DIV></TD>
                         <TD  valign=top align=right width='1%'><A class='buttontext' href='<@ofbizUrl>/editphasetask?workEffortId=${workEffortTask.workEffortId}&phaseWorkEffortId=${phase.workEffort.workEffortId}</@ofbizUrl>'>
-                            [Edit]</a></DIV></TD>
+                            [${uiLabelMap.CommonEdit}]</a></DIV></TD>
                       </TR>
                     </#list>
                   <TR><TD colspan='7'><HR class='sepbar'></TD></TR>

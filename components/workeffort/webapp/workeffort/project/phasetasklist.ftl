@@ -50,7 +50,7 @@
                       <td valign=top>${(projectWorkEffortStatus.description)?if_exists}</td>
                     </tr>
                     <tr>
-                      <td align=right valign=top><div class='tabletext'><nobr>Description:</nobr></div></td>
+                      <td align=right valign=top><div class='tabletext'><nobr>${uiLabelMap.CommonDescription}:</nobr></div></td>
                       <td>&nbsp;</td>
                       <td valign=top>${(projectWorkEffort.description)?if_exists}
                     </tr>
