@@ -3,7 +3,7 @@
     <br>
     ${pages.get("/catalog/keywordsearchbox.ftl")}
     <br>
-    <#--${pages.get("/catalog/sidedeepcategory.ftl")}-->
+    ${pages.get("/catalog/sidedeepcategory.ftl")}
     <br>
     <#--${pages.get("/catalog/minireorderprods.ftl")}-->
   </td>
