@@ -321,6 +321,26 @@
   <!-- org.ofbiz.commonapp.workeffort.workeffort -->
   <!-- ========================================================= -->
 
+    <entity entity-name="ApplicationSandbox"
+            package-name="org.ofbiz.commonapp.workeffort.workeffort"
+            title="WorkEffort Application Sandbox Entity">
+      <field name="applicationId" type="id-ne"></field>
+      <field name="workEffortId" type="id-ne"></field>
+      <field name="partyId" type="id-ne"></field>
+      <field name="roleTypeId" type="id-ne"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="runtimeDataId" type="id"></field>
+      <prim-key field="applicationId"/>
+      <relation type="one" rel-entity-name="WorkEffortPartyAssignment">
+	      <key-map field-name="workEffortId"/>
+	      <key-map field-name="partyId" />
+	      <key-map field-name="roleTypeId" />
+	      <key-map field-name="fromDate" />
+      </relation>
+      <relation type="one" fk-name="APP_SNDBX_RNTMDTA" rel-entity-name="RuntimeData">
+        <key-map field-name="runtimeDataId"/>
+      </relation>
+    </entity>
     <entity entity-name="CommunicationEventWorkEff"
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
             title="Communication Event Work Effort Entity">
