@@ -21,7 +21,7 @@
     viewIndex=viewIdx
     viewSize=viewSz
     contentAssocTypeId="PUBLISH_LINK"
-    pickWhen="purposes.contains(\"ARTICLE\") && content.get(\"statusId\").equals(\"BLOG_PUBLISHED\")"
+    pickWhen="purposes.contains(\"ARTICLE\") && \"BLOG_PUBLISHED\".equals(content.get(\"statusId\"))"
     returnAfterPickWhen="purposes.contains(\"ARTICLE\")"
     followWhen="contentAssocTypeId != null && contentAssocTypeId.equals(\"never follow\")"
 >

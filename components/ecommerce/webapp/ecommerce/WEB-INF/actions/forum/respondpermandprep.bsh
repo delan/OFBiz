@@ -1,5 +1,5 @@
 /*
- * $Id: respondpermandprep.bsh,v 1.1 2004/06/06 08:02:53 jonesde Exp $
+ * $Id: respondpermandprep.bsh,v 1.2 2004/06/11 00:26:18 byersa Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -25,7 +25,7 @@
 /**
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.0
 
  * Does either a "simple" (does entity perm check) or complex
@@ -68,6 +68,7 @@ if (UtilValidate.isEmpty(contentIdTo)) {
     request.setAttribute("errorMsgReq", "contentIdTo is empty");
     return;
 }
+/*
 pubPt = paramMap.get("pubPt");
 if (UtilValidate.isEmpty(pubPt)) {
     pubPt = context.get("pubPt");
@@ -76,6 +77,7 @@ if (UtilValidate.isEmpty(pubPt)) {
         return;
     }
 }
+*/
 
 contentToValue = delegator.findByPrimaryKey("Content", UtilMisc.toMap("contentId", contentIdTo));
 
@@ -94,7 +96,7 @@ if (contentToPurposeList.contains("RESPONSE")) {
 mapIn = new HashMap();
 userLogin = session.getAttribute("userLogin");
 mapIn.put("userLogin", userLogin);
-List targetOperationList = UtilMisc.toList("CONTENT_RESPOND");
+List targetOperationList = StringUtil.split(page.getProperty("targetOperation"), "|");
 mapIn.put("targetOperationList", targetOperationList );
 
 if (currentValue != null) {
@@ -103,10 +105,10 @@ if (currentValue != null) {
 mapIn.put("entityOperation", "_CREATE");
 mapIn.put("contentPurposeList", UtilMisc.toList("RESPONSE"));
 
-//org.ofbiz.base.util.Debug.logInfo("in permprep, mapIn:" + mapIn, null);
+org.ofbiz.base.util.Debug.logInfo("in permprep, mapIn:" + mapIn, null);
 result = dispatcher.runSync("checkContentPermission", mapIn);
 permissionStatus = result.get("permissionStatus");
-//org.ofbiz.base.util.Debug.logInfo("permissionStatus:" + permissionStatus, null);
+org.ofbiz.base.util.Debug.logInfo("permissionStatus:" + permissionStatus, null);
 if (UtilValidate.isEmpty(permissionStatus) || !permissionStatus.equals("granted")) {
     request.setAttribute("errorMsgReq", "Permission to add response is denied (1)");
     String errorMessage = "Permission to add response is denied (2)";
@@ -130,6 +132,7 @@ if (UtilValidate.isEmpty(permissionStatus) || !permissionStatus.equals("granted"
 }
 
 
+/*
 pubContentValue = delegator.findByPrimaryKey("Content", UtilMisc.toMap("contentId", pubPt));
 if (pubContentValue != null) {
     mapIn.put("currentContent", pubContentValue);
@@ -161,11 +164,13 @@ if (UtilValidate.isEmpty(permissionStatus) || !permissionStatus.equals("granted"
         request.setAttribute("hasPermission", Boolean.TRUE);
         request.setAttribute("permissionStatus", "granted");
 }
+*/
 
 request.setAttribute("currentValue", currentValue);
 singleWrapper = context.get("singleWrapper");
 singleWrapper.putInContext("contentPurposeTypeId", page.getProperty("contentPurposeTypeId"));
 singleWrapper.putInContext("targetOperation", page.getProperty("targetOperation"));
+singleWrapper.putInContext("targetOperationString", page.getProperty("targetOperation"));
 singleWrapper.putInContext("currentValue", currentValue);
 
 trailList = context.get("trailList");

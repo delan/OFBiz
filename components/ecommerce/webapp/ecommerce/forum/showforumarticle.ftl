@@ -14,8 +14,8 @@
 <@wrapSubContentCache subContentId=subContentId wrapTemplateId="WRAP_VIEW" >
 </@wrapSubContentCache >
 -->
-<@checkPermission subContentId=subContentId targetOperation="CONTENT_CREATE|CONTENT_RESPOND" contentPurposeList="RESPONSE" >
-<a class="tabButton" href="<@ofbizUrl>/createforumresponse?contentIdTo=${requestParameters.contentId}&amp;nodeTrailCsv=${context.nodeTrailCsv?if_exists}</@ofbizUrl>" >Respond</a>
+<@checkPermission mode="equals" entityOperation="_CREATE" targetOperation="HAS_USER_ROLE" >
+    <a class="tabButton" href="<@ofbizUrl>/createforumresponse?contentIdTo=${requestParameters.contentId}&amp;nodeTrailCsv=${nodeTrailCsv?if_exists}</@ofbizUrl>" >Respond</a>
 </@checkPermission>
 <br/>
 
@@ -25,31 +25,31 @@
 <hr/>
 <#--
 <@checkPermission mode="not-equals" subContentId=subContentId targetOperation="CONTENT_CREATE|CONTENT_RESPOND" contentPurposeList="RESPONSE" >
-            ${context.permissionErrorMsg?if_exists}
+            ${permissionErrorMsg?if_exists}
 </@checkPermission>
 -->
 
         <div class="head1">Responses:</div><br/>
 <table border="0" width="100%" class="tableheadtext">
 <@loopSubContentCache  contentAssocTypeId="RESPONSE" subContentId=subContentId mapKey=""
-                pickWhen="contentAssocTypeId != null && contentAssocTypeId.equals(\"RESPONSE\") && mapKey == null"
-                followWhen="contentAssocTypeId != null && contentAssocTypeId.equals(\"_never_\")"
+                pickWhen="contentAssocTypeId != null && \"RESPONSE\".equals(contentAssocTypeId) && mapKey == null"
+                followWhen="contentAssocTypeId != null && \"_never_\".equals(contentAssocTypeId)"
 >
   <tr>
-    <#assign indentStr=context.indent?default("0")/>
+    <#assign indentStr=indent?default("0")/>
     <#assign indent=indentStr?number/>
     <#if 1 < indent >
   <td class="tabletext">
         <#assign thisContentId = ""/>
-        <#if context.nodeTrailCsv?exists>
-            <#assign idList = context.nodeTrailCsv?split(",")/>
+        <#if nodeTrailCsv?exists>
+            <#assign idList = nodeTrailCsv?split(",")/>
             <#if 0 < idList?size >
                 <#assign thisContentId = idList?last>
             </#if>
         </#if>
-        <#if context.content?exists>
-        <a class="tabButton" href="<@ofbizUrl>/showforumresponse?contentId=${thisContentId}&amp;nodeTrailCsv=${context.nodeTrailCsv?if_exists}</@ofbizUrl>" >View</a>
-[${thisContentId}]-${context.content.description?if_exists}
+        <#if content?exists>
+        <a class="tabButton" href="<@ofbizUrl>/showforumresponse?contentId=${thisContentId}&amp;nodeTrailCsv=${nodeTrailCsv?if_exists}</@ofbizUrl>" >View</a>
+[${thisContentId}]-${content.description?if_exists}
         </#if>
 
     </#if>
