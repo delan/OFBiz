@@ -74,10 +74,10 @@
 
 <!--
 <ofbiz-component name="core">
-    <resource-loader name="maincomponent" class="org.ofbiz.core.config.ComponentFileLoader"/>
-    <resource-loader name="mainfile" class="org.ofbiz.core.config.FileLoader" prepend-env="ofbiz.home" prefix=""/>
-    <resource-loader name="maincp" class="org.ofbiz.core.config.ClasspathLoader"/>
-    <resource-loader name="mainurl" class="org.ofbiz.core.config.UrlLoader"/>
+    <resource-loader name="maincomponent" class="component"/>
+    <resource-loader name="mainfile" class="file" prepend-env="ofbiz.home" prefix=""/>
+    <resource-loader name="maincp" class="classpath"/>
+    <resource-loader name="mainurl" class="url"/>
 
     <classpath type="jar" loader="maincomponent" location="lib/product.jar"/>
     <classpath type="dir" loader="maincomponent" location="classes"/>
