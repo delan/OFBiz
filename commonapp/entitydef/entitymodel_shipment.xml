@@ -927,6 +927,9 @@
       <relation type="one-nofk" title="Carrier" rel-entity-name="PartyGroup">
         <key-map field-name="carrierPartyId" rel-field-name="partyId"/>
       </relation>
+      <relation type="one" fk-name="SHPMT_RTSEG_SHMT" rel-entity-name="ShipmentMethodType">
+        <key-map field-name="shipmentMethodTypeId"/>
+      </relation>
       <relation type="one" fk-name="SHPMT_RTSEG_OFAC" title="Origin" rel-entity-name="Facility">
         <key-map field-name="originFacilityId" rel-field-name="facilityId"/>
       </relation>
@@ -950,9 +953,6 @@
       </relation>
       <relation type="one" fk-name="SHPMT_RTSEG_DTCN" title="Dest" rel-entity-name="TelecomNumber">
         <key-map field-name="destTelecomNumberId" rel-field-name="contactMechId"/>
-      </relation>
-      <relation type="one" fk-name="SHPMT_RTSEG_SHMT" rel-entity-name="ShipmentMethodType">
-        <key-map field-name="shipmentMethodTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="ShipmentPackageRouteSeg">
         <key-map field-name="shipmentId"/>
