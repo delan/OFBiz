@@ -32,7 +32,7 @@
   <simple-map-processor name="deletePaymentMethod">
     <process field="paymentMethodId"><copy/><not-empty><fail-message message="Payment Method ID is missing"/></not-empty></process>
   </simple-map-processor>
-  
+
   <!-- CreditCard map procs -->
   <simple-map-processor name="createCreditCard">
     <make-in-string field="expireDate">
@@ -40,6 +40,7 @@
       <constant>/</constant>
       <in-field field="expYear"/>
     </make-in-string>
+    <process field="partyId"><copy/></process>
     <process field="nameOnCard"><copy/><not-empty><fail-message message="Name on Card is missing"/></not-empty></process>
     <process field="companyNameOnCard"><copy/></process>
     <process field="cardType"><copy/><not-empty><fail-message message="Card Type is missing"/></not-empty></process>
@@ -62,6 +63,7 @@
 
   <!-- EftAccount map procs -->
   <simple-map-processor name="createEftAccount">
+    <process field="partyId"><copy/></process>
     <process field="bankName"><copy/><not-empty><fail-message message="Bank Name is missing"/></not-empty></process>
     <process field="routingNumber"><copy/><not-empty><fail-message message="Routing Number is missing"/></not-empty></process>
     <process field="accountType"><copy/><not-empty><fail-message message="Account Type is missing"/></not-empty></process>
