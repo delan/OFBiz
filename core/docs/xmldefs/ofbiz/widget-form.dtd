@@ -58,6 +58,8 @@
     default-widget-style CDATA #IMPLIED
     default-tooltip-style CDATA #IMPLIED
     item-index-separator CDATA "_o_"
+    extends CDATA #IMPLIED
+    extends-resource CDATA #IMPLIED
 >
 
 <!ELEMENT alt-target EMPTY>

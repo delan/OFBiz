@@ -109,20 +109,69 @@ public class ModelForm {
         this.delegator = delegator;
         this.dispatcher = dispatcher;
         
+        // check if there is a parent form to inherit from 
+        String parentResource = formElement.getAttribute("extends-resource");
+        String parentForm = formElement.getAttribute("extends");
+        //TODO: Modify this to allow for extending a form with the same name but different resource
+        if(parentForm.length() > 0 && !parentForm.equals(formElement.getAttribute("name"))) {
+            ModelForm parent = null;
+            // check if we have a resource name (part of the string before the ?)
+            if(parentResource.length() > 0) {
+                try {                    
+			        parent = FormFactory.getFormFromClass(parentResource, parentForm, delegator, dispatcher);                    
+                } catch (Exception e) {
+                    Debug.logError(e, "Failed to load parent form definition '"+parentForm+"' at resource '"+parentResource+"'");
+                } 
+            } else {
+                // try to find a form definition in the same file
+                Element rootElement = formElement.getOwnerDocument().getDocumentElement();
+                List formElements = UtilXml.childElementList(rootElement, "form");
+                //Uncomment below to add support for abstract forms
+                //formElements.addAll(UtilXml.childElementList(rootElement, "abstract-form"));
+                Iterator formElementIter = formElements.iterator();
+                while (formElementIter.hasNext()) {
+                    Element formElementEntry = (Element) formElementIter.next();
+                    if(formElementEntry.getAttribute("name").equals(parentForm)) {                      
+                        parent = new ModelForm(formElementEntry, delegator, dispatcher);
+                        break;
+                    }
+                }
+                if(parent == null) Debug.logError("Failed to find parent form defenition '"+parentForm+"' in same document.");                    
+            }
+            
+            if(parent != null) {                    
+                this.type = parent.type;
+                this.target = parent.target;
+                this.title = parent.title;
+                this.tooltip = parent.tooltip;
+                this.listName = parent.listName;
+                this.listEntryName = parent.listEntryName;
+                this.tooltip = parent.tooltip;
+                this.defaultEntityName = parent.defaultEntityName;
+                this.defaultServiceName = parent.defaultServiceName;
+                this.defaultTitleStyle = parent.defaultTitleStyle;
+                this.defaultWidgetStyle = parent.defaultWidgetStyle;
+                this.defaultTooltipStyle = parent.defaultTooltipStyle;
+                this.itemIndexSeparator = parent.itemIndexSeparator;  
+                this.fieldList = parent.fieldList;
+                this.fieldMap = parent.fieldMap;   
+            }           
+        }
+        
         this.name = formElement.getAttribute("name");
-        this.type = formElement.getAttribute("type");
-        this.target = formElement.getAttribute("target");
-        this.title = formElement.getAttribute("title");
-        this.tooltip = formElement.getAttribute("tooltip");
-        this.listName = formElement.getAttribute("list-name");
-        this.listEntryName = formElement.getAttribute("list-entry-name");
-        this.setDefaultMapName(formElement.getAttribute("default-map-name"));
-        this.defaultEntityName = formElement.getAttribute("default-entity-name");
-        this.defaultServiceName = formElement.getAttribute("default-service-name");
-        this.defaultTitleStyle = formElement.getAttribute("default-title-style");
-        this.defaultWidgetStyle = formElement.getAttribute("default-widget-style");
-        this.defaultTooltipStyle = formElement.getAttribute("default-tooltip-style");
-        this.itemIndexSeparator = formElement.getAttribute("item-index-separator");
+        if(this.type == null || formElement.hasAttribute("type")) this.type = formElement.getAttribute("type");
+        if(this.target == null || formElement.hasAttribute("target")) this.target = formElement.getAttribute("target");
+        if(this.title == null || formElement.hasAttribute("title")) this.title = formElement.getAttribute("title");
+        if(this.tooltip == null || formElement.hasAttribute("tooltip")) this.tooltip = formElement.getAttribute("tooltip");
+        if(this.listName == null || formElement.hasAttribute("listName"))this.listName = formElement.getAttribute("list-name");
+        if(this.listEntryName == null || formElement.hasAttribute("listEntryName"))this.listEntryName = formElement.getAttribute("list-entry-name");
+        if(this.defaultMapName == null || formElement.hasAttribute("default-map-name"))this.setDefaultMapName(formElement.getAttribute("default-map-name"));
+        if(this.defaultEntityName == null || formElement.hasAttribute("defaultEntityName"))this.defaultEntityName = formElement.getAttribute("default-entity-name");
+        if(this.defaultServiceName == null || formElement.hasAttribute("defaultServiceName"))this.defaultServiceName = formElement.getAttribute("default-service-name");
+        if(this.defaultTitleStyle == null || formElement.hasAttribute("defaultTitleStyle"))this.defaultTitleStyle = formElement.getAttribute("default-title-style");
+        if(this.defaultWidgetStyle == null || formElement.hasAttribute("defaultWidgetStyle"))this.defaultWidgetStyle = formElement.getAttribute("default-widget-style");
+        if(this.defaultTooltipStyle == null || formElement.hasAttribute("defaultTooltipStyle"))this.defaultTooltipStyle = formElement.getAttribute("default-tooltip-style");
+        if(this.itemIndexSeparator == null || formElement.hasAttribute("itemIndexSeparator"))this.itemIndexSeparator = formElement.getAttribute("item-index-separator");
         
         // alt-target
         List altTargetElements = UtilXml.childElementList(formElement, "alt-target");
