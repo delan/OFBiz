@@ -23,15 +23,26 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
  *  OFBiz Containers
- *  $Id: ofbiz-containers.xml,v 1.5 2003/12/01 20:48:47 ajzeneski Exp $
+ *  $Id: ofbiz-containers.xml,v 1.6 2003/12/02 06:40:07 ajzeneski Exp $
 -->
 
 <ofbiz-containers>
-	<!-- load the ofbiz components -->
+	<!-- load the ofbiz components (always first) -->
 	<container name="component-container" class="org.ofbiz.base.container.ComponentContainer"/>
+
+    <!-- load the cached classloader container (always second) -->
+    <container name="classloader-container" class="org.ofbiz.base.container.ClassLoaderContainer"/>
 
     <!-- load JNDI/JOTM -->
     <container name="jotm-container" class="org.ofbiz.entity.transaction.JotmContainer"/>
+
+    <!-- RMI Service Dispatcher -->
+    <container name="rmi-dispatcher" class="org.ofbiz.service.rmi.RmiServiceContainer">
+        <property name="lookup-name" value="RMIDispatcher"/>
+        <property name="delegator-name" value="default"/>
+        <property name="client-factory" value="org.ofbiz.service.rmi.socket.CompressionClientSocketFactory"/>
+        <property name="server-factory" value="org.ofbiz.service.rmi.socket.CompressionServerSocketFactory"/>
+    </container>
 
 	<!-- load jetty and all web applications -->
 	<container name="jetty-container" class="org.ofbiz.base.container.JettyContainer">

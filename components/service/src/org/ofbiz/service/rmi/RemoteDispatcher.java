@@ -1,7 +1,7 @@
 /*
- * $Id: LocalDispatcher.java,v 1.2 2003/12/02 06:39:32 ajzeneski Exp $
+ * $Id: RemoteDispatcher.java,v 1.1 2003/12/02 06:39:32 ajzeneski Exp $
  *
- * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -22,23 +22,24 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-package org.ofbiz.service;
+package org.ofbiz.service.rmi;
 
 import java.util.Map;
+import java.rmi.Remote;
+import java.rmi.RemoteException;
 
-import org.ofbiz.entity.GenericDelegator;
-import org.ofbiz.security.Security;
-import org.ofbiz.service.jms.JmsListenerFactory;
-import org.ofbiz.service.job.JobManager;
+import org.ofbiz.service.GenericRequester;
+import org.ofbiz.service.GenericResultWaiter;
+import org.ofbiz.service.GenericServiceException;
 
 /**
- * Generic Services Local Dispatcher
+ * Generic Services Remote Dispatcher
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
- * @version    $Revision: 1.2 $
- * @since      2.0
+ * @version    $Revision: 1.1 $
+ * @since      3.0
  */
-public interface LocalDispatcher {
+public interface RemoteDispatcher extends Remote {
     
     /**
      * Run the service synchronously and return the result.
@@ -46,16 +47,18 @@ public interface LocalDispatcher {
      * @param context Map of name, value pairs composing the context.
      * @return Map of name, value pairs composing the result.
      * @throws GenericServiceException
+     * @throws RemoteException
      */
-    public Map runSync(String serviceName, Map context) throws GenericServiceException;        
+    public Map runSync(String serviceName, Map context) throws GenericServiceException, RemoteException;
 
     /**
      * Run the service synchronously and IGNORE the result.
      * @param serviceName Name of the service to run.
      * @param context Map of name, value pairs composing the context.
      * @throws GenericServiceException
+     * @throws RemoteException
      */
-    public void runSyncIgnore(String serviceName, Map context) throws GenericServiceException;
+    public void runSyncIgnore(String serviceName, Map context) throws GenericServiceException, RemoteException;
 
     /**
      * Run the service asynchronously, passing an instance of GenericRequester that will receive the result.
@@ -64,8 +67,9 @@ public interface LocalDispatcher {
      * @param requester Object implementing GenericRequester interface which will receive the result.
      * @param persist True for store/run; False for run.
      * @throws GenericServiceException
+     * @throws RemoteException
      */
-    public void runAsync(String serviceName, Map context, GenericRequester requester, boolean persist) throws GenericServiceException;
+    public void runAsync(String serviceName, Map context, GenericRequester requester, boolean persist) throws GenericServiceException, RemoteException;
 
     /**
      * Run the service asynchronously, passing an instance of GenericRequester that will receive the result.
@@ -74,8 +78,9 @@ public interface LocalDispatcher {
      * @param context Map of name, value pairs composing the context.
      * @param requester Object implementing GenericRequester interface which will receive the result.
      * @throws GenericServiceException
+     * @throws RemoteException
      */
-    public void runAsync(String serviceName, Map context, GenericRequester requester) throws GenericServiceException;
+    public void runAsync(String serviceName, Map context, GenericRequester requester) throws GenericServiceException, RemoteException;
 
     /**
      * Run the service asynchronously and IGNORE the result.
@@ -83,16 +88,18 @@ public interface LocalDispatcher {
      * @param context Map of name, value pairs composing the context.
      * @param persist True for store/run; False for run.
      * @throws GenericServiceException
+     * @throws RemoteException
      */
-    public void runAsync(String serviceName, Map context, boolean persist) throws GenericServiceException;
+    public void runAsync(String serviceName, Map context, boolean persist) throws GenericServiceException, RemoteException;
 
     /**
      * Run the service asynchronously and IGNORE the result. This method WILL persist the job.
      * @param serviceName Name of the service to run.
      * @param context Map of name, value pairs composing the context.
      * @throws GenericServiceException
+     * @throws RemoteException
      */
-    public void runAsync(String serviceName, Map context) throws GenericServiceException;
+    public void runAsync(String serviceName, Map context) throws GenericServiceException, RemoteException;
 
     /**
      * Run the service asynchronously.
@@ -101,8 +108,9 @@ public interface LocalDispatcher {
      * @param persist True for store/run; False for run.
      * @return A new GenericRequester object.
      * @throws GenericServiceException
+     * @throws RemoteException
      */
-    public GenericResultWaiter runAsyncWait(String serviceName, Map context, boolean persist) throws GenericServiceException;
+    public GenericResultWaiter runAsyncWait(String serviceName, Map context, boolean persist) throws GenericServiceException, RemoteException;
 
     /**
      * Run the service asynchronously. This method WILL persist the job.
@@ -110,8 +118,9 @@ public interface LocalDispatcher {
      * @param context Map of name, value pairs composing the context.
      * @return A new GenericRequester object.
      * @throws GenericServiceException
+     * @throws RemoteException
      */
-    public GenericResultWaiter runAsyncWait(String serviceName, Map context) throws GenericServiceException;
+    public GenericResultWaiter runAsyncWait(String serviceName, Map context) throws GenericServiceException, RemoteException;
 
     /**
      * Schedule a service to run asynchronously at a specific start time.
@@ -123,8 +132,9 @@ public interface LocalDispatcher {
      * @param count The number of times to repeat.
      * @param endTime The time in milliseconds the service should expire
      * @throws GenericServiceException
+     * @throws RemoteException
      */
-    public void schedule(String serviceName, Map context, long startTime, int frequency, int interval, int count, long endTime) throws GenericServiceException;
+    public void schedule(String serviceName, Map context, long startTime, int frequency, int interval, int count, long endTime) throws GenericServiceException, RemoteException;
                 
     /**
      * Schedule a service to run asynchronously at a specific start time.
@@ -135,8 +145,9 @@ public interface LocalDispatcher {
      * @param interval The interval of the frequency recurrence.
      * @param count The number of times to repeat.
      * @throws GenericServiceException
+     * @throws RemoteException
      */
-    public void schedule(String serviceName, Map context, long startTime, int frequency, int interval, int count) throws GenericServiceException;
+    public void schedule(String serviceName, Map context, long startTime, int frequency, int interval, int count) throws GenericServiceException, RemoteException;
    
     /**
      * Schedule a service to run asynchronously at a specific start time.
@@ -147,8 +158,9 @@ public interface LocalDispatcher {
      * @param interval The interval of the frequency recurrence.
      * @param endTime The time in milliseconds the service should expire
      * @throws GenericServiceException
+     * @throws RemoteException
      */
-    public void schedule(String serviceName, Map context, long startTime, int frequency, int interval, long endTime) throws GenericServiceException;
+    public void schedule(String serviceName, Map context, long startTime, int frequency, int interval, long endTime) throws GenericServiceException, RemoteException;
              
     /**
      * Schedule a service to run asynchronously at a specific start time.
@@ -156,48 +168,9 @@ public interface LocalDispatcher {
      * @param context The name/value pairs composing the context.
      * @param startTime The time to run this service.
      * @throws GenericServiceException
+     * @throws RemoteException
      */
-    public void schedule(String serviceName, Map context, long startTime) throws GenericServiceException;
+    public void schedule(String serviceName, Map context, long startTime) throws GenericServiceException, RemoteException;
 
-    /**
-     * Gets the JobManager associated with this dispatcher
-     * @return JobManager that is associated with this dispatcher
-     */
-    public JobManager getJobManager();        
-
-    /**
-     * Gets the JmsListenerFactory which holds the message listeners.
-     * @return JmsListenerFactory
-     */
-    public JmsListenerFactory getJMSListeneFactory();            
-
-    /**
-     * Gets the GenericEntityDelegator associated with this dispatcher
-     * @return GenericEntityDelegator associated with this dispatcher
-     */
-    public GenericDelegator getDelegator();
-
-    /**
-     * Gets the Security object associated with this dispatcher
-     * @return Security object associated with this dispatcher
-     */
-    public Security getSecurity();
-
-    /**
-     * Returns the Name of this local dispatcher
-     * @return String representing the name of this local dispatcher
-     */
-    public String getName();            
-
-    /**
-     * Returns the DispatchContext created by this dispatcher
-     * @return DispatchContext created by this dispatcher
-     */
-    public DispatchContext getDispatchContext();  
-    
-    /**
-     * De-Registers this LocalDispatcher with the ServiceDispatcher
-     */
-    public void deregister();
 }
 
