@@ -1,5 +1,5 @@
 /*
- * $Id: UtilXml.java,v 1.9 2004/08/12 02:07:34 ajzeneski Exp $
+ * $Id: UtilXml.java,v 1.10 2004/08/12 02:14:59 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -55,7 +55,7 @@ import org.xml.sax.helpers.DefaultHandler;
  * Utilities methods to simplify dealing with JAXP & DOM XML parsing
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.9 $
+ * @version    $Revision: 1.10 $
  * @since      2.0
  */
 public class UtilXml {
@@ -538,8 +538,8 @@ public class UtilXml {
 
                     inputSource.setPublicId(publicId);
                     hasDTD = true;
-                    Debug.logInfo("[UtilXml.LocalResolver.resolveEntity] got LOCAL DTD input source with publicId [" +
-                            publicId + "] and the dtd file is [" + dtd + "]", module);
+                    //Debug.logInfo("[UtilXml.LocalResolver.resolveEntity] got LOCAL DTD input source with publicId [" +
+                    //        publicId + "] and the dtd file is [" + dtd + "]", module);
                     return inputSource;
                 } catch (Exception e) {
                     Debug.logWarning(e, module);
@@ -562,12 +562,12 @@ public class UtilXml {
                     inputSource.setPublicId(publicId);
                 }
                 hasDTD = true;
-                Debug.logInfo("[UtilXml.LocalResolver.resolveEntity] got LOCAL DTD/Schema input source with publicId [" +
-                        publicId + "] and the file/resource is [" + filename + "]", module);
+                //Debug.logInfo("[UtilXml.LocalResolver.resolveEntity] got LOCAL DTD/Schema input source with publicId [" +
+                //        publicId + "] and the file/resource is [" + filename + "]", module);
                 return inputSource;
             }
-            Debug.logInfo("[UtilXml.LocalResolver.resolveEntity] local resolve failed for DTD with publicId [" +
-                    publicId + "] and the dtd file is [" + dtd + "], trying defaultResolver", module);
+            //Debug.logInfo("[UtilXml.LocalResolver.resolveEntity] local resolve failed for DTD with publicId [" +
+            //        publicId + "] and the dtd file is [" + dtd + "], trying defaultResolver", module);
             return defaultResolver.resolveEntity(publicId, systemId);
         }
 
