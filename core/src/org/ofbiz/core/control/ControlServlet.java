@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2001/07/16 22:31:06  azeneski
+ * Moved multi-site support to be handled by the webapp.
+ *
  * Revision 1.1  2001/07/16 14:45:48  azeneski
  * Added the missing 'core' directory into the module.
  *
@@ -69,7 +72,7 @@ public class ControlServlet extends HttpServlet {
         String nextPage  = null;
 
         /** Setup the CONTROL_PATH for JSP dispatching. */
-        request.setAttribute(SiteDefs.CONTROL_PATH, request.getContextPath() + "/" + request.getServletPath());
+        request.setAttribute(SiteDefs.CONTROL_PATH, request.getContextPath() + request.getServletPath());
         Debug.log("Control Path: " + request.getAttribute(SiteDefs.CONTROL_PATH));
         
         try {
