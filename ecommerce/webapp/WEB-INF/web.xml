@@ -49,9 +49,13 @@
     </context-param>
 
     <filter>
-        <filter-name>ContextSecurityFilter</filter-name>
-        <display-name>ContextSecurityFilter</display-name>
-        <filter-class>org.ofbiz.core.control.ContextSecurityFilter</filter-class>
+        <filter-name>ContextFilter</filter-name>
+        <display-name>ContextFilter</display-name>
+        <filter-class>org.ofbiz.core.control.ContextFilter</filter-class>
+        <init-param>
+            <param-name>disableContextSecurity</param-name>
+            <param-value>N</param-value>
+        </init-param>
         <init-param>
             <param-name>allowedPaths</param-name>
             <param-value>/control:/select:/index.html:/index.jsp:/default.html:/default.jsp:/images:/includes/maincss.css</param-value>
@@ -66,7 +70,7 @@
         </init-param>        
     </filter>
     <filter-mapping>
-        <filter-name>ContextSecurityFilter</filter-name>
+        <filter-name>ContextFilter</filter-name>
             <url-pattern>/*</url-pattern>
     </filter-mapping> 
     

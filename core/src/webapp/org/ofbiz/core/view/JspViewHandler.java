@@ -24,12 +24,17 @@
  */
 package org.ofbiz.core.view;
 
-import java.io.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import javax.servlet.jsp.*;
+import java.io.IOException;
 
-import org.ofbiz.core.util.*;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.jsp.JspException;
+
+import org.ofbiz.core.control.ContextFilter;
+import org.ofbiz.core.util.Debug;
 
 /**
  * ViewHandlerException - View Handler Exception
@@ -59,7 +64,8 @@ public class JspViewHandler implements ViewHandler {
             throw new ViewHandlerException("Null or empty source");
         }
 
-        request.setAttribute(SiteDefs.FORWARDED_FROM_CONTROL_SERVLET, new Boolean(true));
+        // tell the ContextFilter we are forwarding
+        request.setAttribute(ContextFilter.FORWARDED_FROM_SERVLET, new Boolean(true));
         RequestDispatcher rd = request.getRequestDispatcher(page);
         
         if (rd == null)

@@ -24,14 +24,21 @@
  */
 package org.ofbiz.core.view;
 
-import java.io.*;
-import java.net.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import javax.servlet.jsp.*;
+import java.io.IOException;
+import java.net.URL;
 
-import org.ofbiz.core.util.*;
-import org.ofbiz.core.region.*;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.jsp.JspException;
+
+import org.ofbiz.core.control.ContextFilter;
+import org.ofbiz.core.region.Region;
+import org.ofbiz.core.region.RegionManager;
+import org.ofbiz.core.region.RegionStack;
+import org.ofbiz.core.util.Debug;
+import org.ofbiz.core.util.SiteDefs;
 
 /**
  * Handles Region type view rendering
@@ -77,10 +84,10 @@ public class RegionViewHandler implements ViewHandler {
             throw new ViewHandlerException("Page name was null or empty, but must be specified");
         }
 
-        request.setAttribute(SiteDefs.FORWARDED_FROM_CONTROL_SERVLET, new Boolean(true));
+        // tell the ContextFilter we are forwarding
+        request.setAttribute(ContextFilter.FORWARDED_FROM_SERVLET, new Boolean(true));
 
         Region region = regionManager.getRegion(page);
-
         if (region == null) {
             throw new ViewHandlerException("Error: could not find region with name " + page);
         }

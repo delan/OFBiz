@@ -38,9 +38,6 @@ public final class SiteDefs {
     public static final String LOGIN_REQUEST_URI = "login";
     public static final String LOGOUT_REQUEST_URI = "logout";
 
-    /** The name of the flag in the request attributes to denote that the control servlet was passed through */
-    public static final String FORWARDED_FROM_CONTROL_SERVLET = "_FORWARDED_FROM_CONTROL_SERVLET_";
-
     /** Required context init parameter to specify the entity delegator name as defined in entityengine.xml */
     public static final String ENTITY_DELEGATOR_NAME = "entityDelegatorName";
 

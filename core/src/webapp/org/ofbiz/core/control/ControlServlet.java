@@ -72,9 +72,7 @@ import com.ibm.bsf.BSFManager;
 public class ControlServlet extends HttpServlet {
     
     public static final String module = ControlServlet.class.getName();
-
-    protected ClassLoader localCachedClassLoader = null;
-       
+          
     public ControlServlet() {
         super();
     }
@@ -87,20 +85,9 @@ public class ControlServlet extends HttpServlet {
         if (Debug.infoOn()) {
             Debug.logInfo("[ControlServlet.init] Loading Control Servlet mounted on path " + config.getServletContext().getRealPath("/"), module);
         }
-                
-        // initialize the cached class loader for this application
-        ClassLoader loader = Thread.currentThread().getContextClassLoader();
-        localCachedClassLoader = new CachedClassLoader(loader, getWebSiteId());
-
+                        
         // configure custom BSF engines
         configureBsf();
-
-        // initialize the delegator
-        getDelegator();
-        // initialize security
-        getSecurity();
-        // initialize the services dispatcher
-        getDispatcher();
         // initialize the request handler
         getRequestHandler();
         // initialize the JPublish wrapper
@@ -117,10 +104,7 @@ public class ControlServlet extends HttpServlet {
     /**
      * @see javax.servlet.http.HttpServlet#doGet(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
      */
-    public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // first thing's first: set the cached class loader for more speedy running in this thread
-        Thread.currentThread().setContextClassLoader(localCachedClassLoader);
-        
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {                
         // setup DEFAULT chararcter encoding and content type, this will be overridden in the RequestHandler for view rendering
         String charset = getServletContext().getInitParameter("charset");
         if (charset == null || charset.length() == 0) charset = request.getCharacterEncoding();
@@ -138,8 +122,7 @@ public class ControlServlet extends HttpServlet {
         }
 
         long requestStartTime = System.currentTimeMillis();
-        HttpSession session = request.getSession();
-        session.setAttribute("webSiteId", getWebSiteId());
+        HttpSession session = request.getSession();        
         
         GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
 
@@ -202,17 +185,6 @@ public class ControlServlet extends HttpServlet {
         }
         request.setAttribute("security", security);
 
-        // for use in Events the filesystem path of context root.
-        request.setAttribute(SiteDefs.CONTEXT_ROOT, getServletContext().getRealPath("/"));
-
-        // Because certain app servers are lame and don't support the HttpSession.getServletContext method,
-        // we put it in the request here
-        ServletContext servletContext = getServletContext();
-        request.setAttribute("servletContext", servletContext);
-
-        StringBuffer serverRootUrl = UtilHttp.getServerRootUrl(request);
-        request.setAttribute(SiteDefs.SERVER_ROOT_URL, serverRootUrl.toString());
-        
         // display details on the servlet objects
         if (Debug.verboseOn()) {
             logRequestInfo(request);
@@ -242,7 +214,7 @@ public class ControlServlet extends HttpServlet {
 
         if (errorPage != null) {
             // some containers call filters on EVERY request, even forwarded ones, so let it know that it came from the control servlet
-            request.setAttribute(SiteDefs.FORWARDED_FROM_CONTROL_SERVLET, new Boolean(true));
+            request.setAttribute(ContextFilter.FORWARDED_FROM_SERVLET, new Boolean(true));
             RequestDispatcher rd = request.getRequestDispatcher(errorPage);
 
             // use this request parameter to avoid infinite looping on errors in the error page...
@@ -268,8 +240,7 @@ public class ControlServlet extends HttpServlet {
      * @see javax.servlet.Servlet#destroy()
      */
     public void destroy() {
-        super.destroy();
-        getDispatcher().deregister();        
+        super.destroy();                
     }    
     
     protected RequestHandler getRequestHandler() {
@@ -289,91 +260,6 @@ public class ControlServlet extends HttpServlet {
             getServletContext().setAttribute("jpublishWrapper", jp);
         }
         return jp;
-    }    
-
-    protected LocalDispatcher getDispatcher() {
-        LocalDispatcher dispatcher = (LocalDispatcher) getServletContext().getAttribute("dispatcher");
-        if (dispatcher == null) {
-            GenericDelegator delegator = getDelegator();
-
-            if (delegator == null) {
-                Debug.logError("[ControlServlet.init] ERROR: delegator not defined.", module);
-                return null;
-            }
-            Collection readers = null;
-            String readerFiles = getServletContext().getInitParameter("serviceReaderUrls");
-
-            if (readerFiles != null) {
-                readers = new ArrayList();
-                List readerList = StringUtil.split(readerFiles, ";");
-                Iterator i = readerList.iterator();
-
-                while (i.hasNext()) {
-                    try {
-                        String name = (String) i.next();
-                        URL readerURL = getServletContext().getResource(name);
-
-                        if (readerURL != null)
-                            readers.add(readerURL);
-                    } catch (NullPointerException npe) {
-                        Debug.logInfo(npe, "[ControlServlet.init] ERROR: Null pointer exception thrown.", module);
-                    } catch (MalformedURLException e) {
-                        Debug.logError(e, "[ControlServlet.init] ERROR: cannot get URL from String.", module);
-                    }
-                }
-            }
-            // get the unique name of this dispatcher
-            String dispatcherName = getServletContext().getInitParameter("localDispatcherName");
-
-            if (dispatcherName == null)
-                Debug.logError("No localDispatcherName specified in the web.xml file", module);
-            dispatcher = new WebAppDispatcher(dispatcherName, delegator, readers);
-            getServletContext().setAttribute("dispatcher", dispatcher);
-            if (dispatcher == null)
-                Debug.logError("[ControlServlet.init] ERROR: dispatcher could not be initialized.", module);
-        }
-        return dispatcher;
-    }
-
-    protected GenericDelegator getDelegator() {
-        GenericDelegator delegator = (GenericDelegator) getServletContext().getAttribute("delegator");
-        if (delegator == null) {
-            String delegatorName = getServletContext().getInitParameter(SiteDefs.ENTITY_DELEGATOR_NAME);
-
-            if (delegatorName == null || delegatorName.length() <= 0)
-                delegatorName = "default";
-            if (Debug.infoOn()) Debug.logInfo("[ControlServlet.init] Getting Entity Engine Delegator with delegator name " +
-                    delegatorName, module);
-            delegator = GenericDelegator.getGenericDelegator(delegatorName);
-            getServletContext().setAttribute("delegator", delegator);
-            if (delegator == null)
-                Debug.logError("[ControlServlet.init] ERROR: delegator factory returned null for delegatorName \"" +
-                    delegatorName + "\"", module);
-        }
-        return delegator;
-    }
-
-    protected Security getSecurity() {
-        Security security = (Security) getServletContext().getAttribute("security");
-        if (security == null) {
-            GenericDelegator delegator = (GenericDelegator) getServletContext().getAttribute("delegator");
-
-            if (delegator != null) {
-                try {
-                    security = SecurityFactory.getInstance(delegator);
-                } catch (SecurityConfigurationException e) {
-                    Debug.logError(e, "[ServiceDispatcher.init] : No instance of security imeplemtation found.", module);
-                }
-            }
-            getServletContext().setAttribute("security", security);
-            if (security == null)
-                Debug.logError("[ControlServlet.init] ERROR: security create failed.", module);
-        }
-        return security;
-    }
-    
-    protected String getWebSiteId() {
-        return getServletContext().getInitParameter("webSiteId");
     }    
         
     protected void configureBsf() {

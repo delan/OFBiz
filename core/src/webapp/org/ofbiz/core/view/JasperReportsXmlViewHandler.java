@@ -24,15 +24,27 @@
  */
 package org.ofbiz.core.view;
 
-import java.io.*;
-import java.util.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
+import java.util.Map;
 
-import org.ofbiz.core.entity.*;
-import org.ofbiz.core.util.*;
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
-import dori.jasper.engine.*;
+import org.ofbiz.core.control.ContextFilter;
+import org.ofbiz.core.entity.ConnectionFactory;
+import org.ofbiz.core.entity.GenericDelegator;
+import org.ofbiz.core.util.Debug;
+import org.ofbiz.core.util.UtilHttp;
+
+import dori.jasper.engine.JREmptyDataSource;
+import dori.jasper.engine.JasperCompileManager;
+import dori.jasper.engine.JasperFillManager;
+import dori.jasper.engine.JasperPrintManager;
+import dori.jasper.engine.JasperReport;
 
 /**
  * Handles JasperReports PDF view rendering
@@ -65,7 +77,8 @@ public class JasperReportsXmlViewHandler implements ViewHandler {
             Debug.logWarning("View info string was null or empty, but must be used to specify an Entity that is mapped to the Entity Engine datasource that the report will use.", module);
         }
 
-        request.setAttribute(SiteDefs.FORWARDED_FROM_CONTROL_SERVLET, new Boolean(true));
+        // tell the ContextFilter we are forwarding
+        request.setAttribute(ContextFilter.FORWARDED_FROM_SERVLET, new Boolean(true));
 
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
 
