@@ -33,16 +33,10 @@
 <div class="apptitle">&nbsp;Party Manager Application&nbsp;</div>
 <div class="row">
   <div class="col"><a href="<@ofbizUrl>/main</@ofbizUrl>" class="${selectedLeftClassMap.main?default(unselectedLeftClassName)}">Main</a></div>   
-  <div class="col"><a href="<@ofbizUrl>/findparty</@ofbizUrl>" class="${selectedLeftClassMap.find?default(unselectedLeftClassName)}">Find&nbsp;Party</a></div>
+  <div class="col"><a href="<@ofbizUrl>/findparty</@ofbizUrl>" class="${selectedLeftClassMap.find?default(unselectedLeftClassName)}">Find</a></div>
   <#if security.hasEntityPermission("PARTYMGR", "_CREATE", session)>
-  <div class="col"><a href="<@ofbizUrl>/editpartygroup?create_new=Y</@ofbizUrl>" class="${selectedLeftClassMap.newGroup?default(unselectedLeftClassName)}">New&nbsp;Group</a></div>
-  </#if>
-  <#if security.hasEntityPermission("PARTYMGR", "_CREATE", session)>
-  <div class="col"><a href="<@ofbizUrl>/editperson?create_new=Y</@ofbizUrl>" class="${selectedLeftClassMap.newPerson?default(unselectedLeftClassName)}">New&nbsp;Person</a></div>
-  </#if>
-  <#if security.hasEntityPermission("PARTYMGR", "_CREATE", session)>
-  <div class="col"><a href="<@ofbizUrl>/newcustomer</@ofbizUrl>" class="${selectedLeftClassMap.newCustomer?default(unselectedLeftClassName)}">New&nbsp;Customer</a></div>
-  </#if>
+  <div class="col"><a href="<@ofbizUrl>/createnew</@ofbizUrl>" class="${selectedLeftClassMap.create?default(unselectedLeftClassName)}">Create</a></div>
+  </#if>  
   <div class="col"><a href="<@ofbizUrl>/showvisits</@ofbizUrl>" class="${selectedLeftClassMap.visits?default(unselectedLeftClassName)}">Visits</a></div>
   <#if security.hasEntityPermission("SECURITY", "_VIEW", session)>
   <div class="col"><a href="<@ofbizUrl>/FindSecurityGroup</@ofbizUrl>" class="${selectedLeftClassMap.security?default(unselectedLeftClassName)}">Security</a></div>

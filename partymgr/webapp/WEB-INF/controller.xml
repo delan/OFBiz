@@ -237,6 +237,11 @@
         <response name="error" type="view" value="viewprofile"/>
     </request-map>
 
+    <request-map uri="createnew">
+        <security https="true" auth="false"/>
+        <response name="success" type="view" value="createNew"/>
+    </request-map>
+    
     <request-map uri="newcustomer">
         <security https="true" auth="false"/>
         <response name="success" type="view" value="newcustomer"/>
@@ -553,6 +558,7 @@
     <view-map name="error" page="/error/error.jsp"/>
     <view-map name="main" type="jpublish" page="/party/findparty.ftl"/>
     <view-map name="login" type="jpublish" page="/login.ftl"/>
+    <view-map name="createNew" type="jpublish" page="/party/createnew.ftl"/>
 
     <view-map name="viewprofile" type="jpublish" page="/party/viewprofile.ftl"/>
     <view-map name="viewvendor" type="jpublish" page="/party/viewvendor.ftl"/>
