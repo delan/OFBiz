@@ -142,11 +142,11 @@ public class ContainerConfig {
         
         public static class Component {
             public String name;
-            public String config;
+            public String location;
             
             public Component(Element element) {
                 this.name = element.getAttribute("name");
-                this.config = element.getAttribute("config");                
+                this.location = element.getAttribute("location");                
             }
         }
     }

@@ -86,7 +86,7 @@ public class JettyContainer implements Container {
             ContainerConfig.ComponentContainer.Component comp = (ContainerConfig.ComponentContainer.Component) components.next();
             ComponentConfig component = null;
             try {
-                component = ComponentConfig.getComponentConfig(comp.name, comp.config);
+                component = ComponentConfig.getComponentConfig(comp.name, comp.location);
             } catch (ComponentException e) {
                 throw new ContainerException(e);                
             }
