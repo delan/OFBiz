@@ -6,25 +6,25 @@
  *  Description: None
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
- *  Permission is hereby granted, free of charge, to any person obtaining a 
- *  copy of this software and associated documentation files (the "Software"), 
- *  to deal in the Software without restriction, including without limitation 
- *  the rights to use, copy, modify, merge, publish, distribute, sublicense, 
- *  and/or sell copies of the Software, and to permit persons to whom the 
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
  *  Software is furnished to do so, subject to the following conditions:
  *
- *  The above copyright notice and this permission notice shall be included 
+ *  The above copyright notice and this permission notice shall be included
  *  in all copies or substantial portions of the Software.
  *
- *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
- *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
- *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
- *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *@author David E. Jones (jonesde@ofbiz.org) 
+ *@author David E. Jones (jonesde@ofbiz.org)
  *@author Andy Zeneski (jaz@zsolv.com)
  *@version    1.0
  */
@@ -374,7 +374,9 @@
       <field name="workEffortTypeId" type="id"></field>
       <field name="workEffortParentId" type="id"></field>
       <field name="workflowPackageId" type="id-long"></field>
+      <field name="workflowPackageVersion" type="very-short"></field>
       <field name="workflowProcessId" type="id-long"></field>
+      <field name="workflowProcessVersion" type="very-short"></field>
       <field name="workflowActivityId" type="id-long"></field>
       <field name="currentStatusId" type="id"></field>
       <field name="lastStatusUpdate" type="date-time"></field>
@@ -464,14 +466,19 @@
       </relation>
       <relation type="one" fk-name="WK_EFFRT_WFLW_PKG" rel-entity-name="WorkflowPackage">
         <key-map field-name="workflowPackageId" rel-field-name="packageId"/>
+        <key-map field-name="workflowPackageVersion" rel-field-name="packageVersion"/>
       </relation>
       <relation type="one" fk-name="WK_EFFRT_WFLW_PRC" rel-entity-name="WorkflowProcess">
         <key-map field-name="workflowPackageId" rel-field-name="packageId"/>
+        <key-map field-name="workflowPackageVersion" rel-field-name="packageVersion"/>
         <key-map field-name="workflowProcessId" rel-field-name="processId"/>
+        <key-map field-name="workflowProcessVersion" rel-field-name="processVersion"/>
       </relation>
       <relation type="one" fk-name="WK_EFFRT_WFLW_ACT" rel-entity-name="WorkflowActivity">
         <key-map field-name="workflowPackageId" rel-field-name="packageId"/>
+        <key-map field-name="workflowPackageVersion" rel-field-name="packageVersion"/>
         <key-map field-name="workflowProcessId" rel-field-name="processId"/>
+        <key-map field-name="workflowProcessVersion" rel-field-name="processVersion"/>
         <key-map field-name="workflowActivityId" rel-field-name="activityId"/>
       </relation>
       <relation type="many" rel-entity-name="QuoteItem">
