@@ -39,20 +39,6 @@
     boolean activeOnly = "true".equals(request.getParameter("activeOnly"));
 
     boolean useValues = true;
-    int viewIndex = 0;
-    try {
-        viewIndex = Integer.valueOf((String) pageContext.getRequest().getParameter("VIEW_INDEX")).intValue();
-    } catch (Exception e) {
-        viewIndex = 0;
-    }
-
-    int viewSize = 20;
-    try {
-        viewSize = Integer.valueOf((String) pageContext.getRequest().getParameter("VIEW_SIZE")).intValue();
-    } catch (Exception e) {
-        viewSize = 20;
-    }
-
     if (request.getAttribute(SiteDefs.ERROR_MESSAGE) != null) useValues = false;
 
     String productCategoryId = request.getParameter("productCategoryId");
@@ -72,13 +58,25 @@
 
     if ("true".equalsIgnoreCase((String)request.getParameter("useValues"))) useValues = true;
 
+    int viewIndex = 0;
+    int viewSize = 20;
     int highIndex = 0;
     int lowIndex = 0;
     int listSize = 0;
+
+    try {
+        viewIndex = Integer.valueOf((String) pageContext.getRequest().getParameter("VIEW_INDEX")).intValue();
+    } catch (Exception e) {
+        viewIndex = 0;
+    }
+    try {
+        viewSize = Integer.valueOf((String) pageContext.getRequest().getParameter("VIEW_SIZE")).intValue();
+    } catch (Exception e) {
+        viewSize = 20;
+    }
     if (productCategoryMembers != null) {
         listSize = productCategoryMembers.size();
     }
-
     lowIndex = viewIndex * viewSize;
     highIndex = (viewIndex + 1) * viewSize;
     if (listSize < highIndex) {
@@ -122,13 +120,13 @@
     <tr>
       <td align=right>
         <b>
-        <%if(viewIndex > 0){%>
+        <%if (viewIndex > 0) {%>
           <a href="<ofbiz:url><%="/EditCategoryProducts?productCategoryId=" + productCategoryId + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex-1)%>&activeOnly=<%=new Boolean(activeOnly).toString()%></ofbiz:url>" class="buttontext">[Previous]</a> |
         <%}%>
-        <%if(listSize > 0){%>
+        <%if (listSize > 0) {%>
           <%=lowIndex+1%> - <%=highIndex%> of <%=listSize%>
         <%}%>
-        <%if(listSize > highIndex){%>
+        <%if (listSize > highIndex) {%>
           | <a href="<ofbiz:url><%="/EditCategoryProducts?productCategoryId=" + productCategoryId + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex+1)%>&activeOnly=<%=new Boolean(activeOnly).toString()%></ofbiz:url>" class="buttontext">[Next]</a>
         <%}%>
         </b>
@@ -175,13 +173,13 @@
     <tr>
       <td align=right>
         <b>
-        <%if(viewIndex > 0){%>
+        <%if (viewIndex > 0) {%>
           <a href="<ofbiz:url><%="/EditCategoryProducts?productCategoryId=" + productCategoryId + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex-1)%>&activeOnly=<%=new Boolean(activeOnly).toString()%></ofbiz:url>" class="buttontext">[Previous]</a> |
         <%}%>
-        <%if(listSize > 0){%>
+        <%if (listSize > 0) {%>
           <%=lowIndex+1%> - <%=highIndex%> of <%=listSize%>
         <%}%>
-        <%if(listSize > highIndex){%>
+        <%if (listSize > highIndex) {%>
           | <a href="<ofbiz:url><%="/EditCategoryProducts?productCategoryId=" + productCategoryId + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex+1)%>&activeOnly=<%=new Boolean(activeOnly).toString()%></ofbiz:url>" class="buttontext">[Next]</a>
         <%}%>
         </b>
