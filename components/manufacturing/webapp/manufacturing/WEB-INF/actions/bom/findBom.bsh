@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     Jacopo Cappellato (tiz@sastau.it)
- *@version    $Revision: 1.6 $
+ *@version    $Revision: 1.7 $
  *@since      2.2
 */
 
@@ -85,7 +85,20 @@ if (lookupFlag != null) {
         partBomTypeId = request.getParameter("partBomTypeId");
         fromDate = request.getParameter("fromDate");
         rootQuantity = request.getParameter("rootQuantity");
-        explosion = currentTreeType.equals("EXPLOSION");
+        type = 0;
+        if (currentTreeType.equals("EXPLOSION")) {
+            type = 0; 
+        }
+        if (currentTreeType.equals("EXPLOSION_SINGLE_LEVEL")) {
+            type = 1; 
+        }
+        if (currentTreeType.equals("EXPLOSION_MANUFACTURING")) {
+            type = 2; 
+        }
+        if (currentTreeType.equals("IMPLOSION")) {
+            type = 3; 
+        }
+
         paramList = paramList + "&treeType=" + currentTreeType;
 
         if (fromDate != null && fromDate.length() > 8) {            
@@ -116,7 +129,7 @@ if (lookupFlag != null) {
                 Map context = UtilMisc.toMap("productId",productId,
                                              "bomType", partBomTypeId,
                                              "fromDate", "" + new Date(),
-                                             "explosion", new Boolean(explosion));
+                                             "type", new Integer(type));
                 Map result = null;
                 result = dispatcher.runSync("getItemConfigurationTree",context);
                 if (result != null)
