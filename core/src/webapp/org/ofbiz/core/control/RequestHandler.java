@@ -342,6 +342,8 @@ public class RequestHandler implements Serializable {
     }
 
     public static String getRequestUri(String path) {
+        if (path == null)
+            return path;
         if (path.indexOf('?') > -1)
             path = path.substring(0, path.indexOf('?'));
         if (path.indexOf('/') == -1)
@@ -354,6 +356,8 @@ public class RequestHandler implements Serializable {
     }
 
     public static String getNextPageUri(String path) {
+        if (path == null)
+            return null;
         if (path.indexOf('/') == -1 || path.lastIndexOf('/') == 0)
             return null;
         int nextIndex = path.indexOf('/', 1);

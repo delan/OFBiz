@@ -100,7 +100,10 @@ public class ControlServlet extends HttpServlet {
         // workaraound if we are in the root webapp
         String webappName = UtilMisc.getApplicationName(request);
 
-        String rname = request.getPathInfo().substring(1);
+        String rname = "";
+        if (request.getPathInfo() != null) {
+            rname = request.getPathInfo().substring(1);
+        }
 
         if (rname.indexOf('/') > 0) {
             rname = rname.substring(0, rname.indexOf('/'));
