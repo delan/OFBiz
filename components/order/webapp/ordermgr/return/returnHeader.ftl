@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.4 $
+ *@version    $Revision: 1.5 $
  *@since      2.2
 -->
 
@@ -108,23 +108,27 @@
         <input type='text' class='inputBox' size='20' name='billingAccountId'>
       </#if>
     </td>                
-  </tr>     
-  <tr>
-    <td width='14%'>&nbsp;</td>
-    <td width='6%' align='right' nowrap><div class="tabletext">Return Status:</div></td>
-    <td width='6%'>&nbsp;</td>
-    <td width='74%'>
-      <select name="statusId" class="selectBox">
-        <#if currentStatus?exists>
-        <option value="${currentStatus.statusId}">${currentStatus.description}</option>
-        <option value="${currentStatus.statusId}">---</option>
-        </#if>
-        <#list returnStatus as status>
-          <option value="${status.statusId}">${status.description}</option>
-        </#list>
-      </select>
-    </td>                
-  </tr>   
+  </tr>
+  <#if returnHeader?has_content>
+    <tr>
+      <td width='14%'>&nbsp;</td>
+      <td width='6%' align='right' nowrap><div class="tabletext">Return Status:</div></td>
+      <td width='6%'>&nbsp;</td>
+      <td width='74%'>
+        <select name="statusId" class="selectBox">
+          <#if currentStatus?exists>
+            <option value="${currentStatus.statusId}">${currentStatus.description}</option>
+            <option value="${currentStatus.statusId}">---</option>
+          </#if>
+          <#list returnStatus as status>
+            <option value="${status.statusId}">${status.description}</option>
+          </#list>
+        </select>
+      </td>
+    </tr>
+  <#else>
+    <input type="hidden" name="statusId" value="RETURN_REQUESTED">
+  </#if>
   <#if returnHeader?has_content>    
     <tr>
       <td width='14%'>&nbsp;</td>
