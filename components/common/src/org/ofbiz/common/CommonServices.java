@@ -1,5 +1,5 @@
 /*
- * $Id: CommonServices.java,v 1.5 2003/12/03 18:51:40 ajzeneski Exp $
+ * $Id: CommonServices.java,v 1.6 2003/12/09 16:54:46 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -46,7 +46,7 @@ import org.ofbiz.service.ServiceXaWrapper;
  * Common Services
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      2.0
  */
 public class CommonServices {
@@ -218,6 +218,31 @@ public class CommonServices {
      */
     public static Map returnErrorService(DispatchContext dctx, Map context) {
         return ServiceUtil.returnError("Return Error Service : Returning Error");
+    }
+
+    /** Cause a Referential Integrity Error */
+    public static Map entityFailTest(DispatchContext dctx, Map context) {
+        GenericDelegator delegator = dctx.getDelegator();
+
+        // attempt to create a DataSource entity w/ an invalid dataSourceTypeId
+        GenericValue newEntity = delegator.makeValue("DataSource", null);
+        newEntity.set("dataSourceId", "ENTITY_FAIL_TEST");
+        newEntity.set("dataSourceTypeId", "ENTITY_FAIL_TEST");
+        newEntity.set("description", "Entity Fail Test - Delete me if I am here");
+        try {
+            delegator.create(newEntity);
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+            return ServiceUtil.returnError("Unable to create test entity");
+        }
+
+        try {
+            newEntity.remove();
+        } catch(GenericEntityException e) {
+            Debug.logError(e, module);
+        }
+
+        return ServiceUtil.returnSuccess();
     }
 }
 
