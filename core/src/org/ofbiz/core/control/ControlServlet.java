@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.1  2001/07/16 14:45:48  azeneski
+ * Added the missing 'core' directory into the module.
+ *
  * Revision 1.2  2001/07/15 23:27:36  azeneski
  * Removed old commented out references to SessionController from ControlServlet
  *
@@ -64,22 +67,17 @@ public class ControlServlet extends HttpServlet {
         HttpSession session = request.getSession(true);
         
         String nextPage  = null;
-        String siteId = null;
+
+        /** Setup the CONTROL_PATH for JSP dispatching. */
+        request.setAttribute(SiteDefs.CONTROL_PATH, request.getContextPath() + "/" + request.getServletPath());
+        Debug.log("Control Path: " + request.getAttribute(SiteDefs.CONTROL_PATH));
         
-        siteId = request.getParameter(SiteDefs.SITE_PARAM);
-        if ( siteId == null ) {
-            request.setAttribute(SiteDefs.ERROR_MESSAGE,"No Site Parameter Specified.");
+        try {
+            nextPage = getRequestHandler().doRequest(request,response);
+        } catch( Exception e ) {
+            e.printStackTrace();
+            request.setAttribute(SiteDefs.ERROR_MESSAGE,e.getMessage());
             nextPage = getRequestHandler().getDefaultErrorPage(request);
-            Debug.log("Request Error: No Site Parameter Specified.");
-        }
-        else {
-            try {
-                nextPage = getRequestHandler().doRequest(request,response);
-            } catch( Exception e ) {
-                e.printStackTrace();
-                request.setAttribute(SiteDefs.ERROR_MESSAGE,e.getMessage());
-                nextPage = getRequestHandler().getDefaultErrorPage(request);
-            }
         }
         
         // Forward to the JSP

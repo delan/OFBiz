@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.1  2001/07/16 14:45:48  azeneski
+ * Added the missing 'core' directory into the module.
+ *
  * Revision 1.1  2001/07/15 16:36:18  azeneski
  * Initial Import
  *
@@ -42,11 +45,14 @@ public final class SiteDefs {
     public static final String ERROR_PAGE = "/jsp/default/error.jsp";
     public static final String SECURITY_CLASS = "org.ofbiz.commonapp.security.Security.class";
  
-    /** Required parameter to locate site specific configuration */
-    public static final String SITE_PARAM = "site_id";
+    /** Required context init paramater to locate site specific configuration */
+    public static final String SITE_CONFIG = "siteConfigurationFile";
     
     /** Used in session object to determine if a previous request is waiting */
     public static final String PREVIOUS_REQUEST = "_PREVIOUS_REQUEST_";
+    
+    /** Used in request object to pass around the web path */
+    public static final String CONTROL_PATH = "_CONTROL_PATH_";
     
     /** Used in request/session object to denote error messages */
     public static final String ERROR_MESSAGE = "_ERROR_MESSAGE_";

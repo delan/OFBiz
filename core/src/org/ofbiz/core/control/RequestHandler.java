@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.1  2001/07/16 14:45:48  azeneski
+ * Added the missing 'core' directory into the module.
+ *
  * Revision 1.1  2001/07/15 16:36:42  azeneski
  * Initial Import
  *
@@ -58,8 +61,7 @@ public class RequestHandler implements Serializable {
         rm = new RequestManager(context);
     }
     
-    public String doRequest( HttpServletRequest request, HttpServletResponse response, String chain ) throws RequestHandlerException {
-        String siteId = null;
+    public String doRequest( HttpServletRequest request, HttpServletResponse response, String chain ) throws RequestHandlerException {        
         String requestUri = null;
         String eventType = null;
         String eventPath = null;
@@ -68,8 +70,7 @@ public class RequestHandler implements Serializable {
         String nextPage = null;
         boolean chainRequest = false;
         
-        /** Grab data from request object to process. */
-        siteId = (String) request.getParameter(SiteDefs.SITE_PARAM);
+        /** Grab data from request object to process. */        
         requestUri = getRequestUri(request.getPathInfo());
         nextView = getNextPageUri(request.getPathInfo());
         
@@ -82,12 +83,12 @@ public class RequestHandler implements Serializable {
         Debug.log("***Request: " + requestUri);
         
         /** Get event info. */
-        eventType = rm.getEventType(siteId,requestUri);
-        eventPath = rm.getEventPath(siteId,requestUri);
-        eventMethod = rm.getEventMethod(siteId,requestUri);
+        eventType = rm.getEventType(requestUri);
+        eventPath = rm.getEventPath(requestUri);
+        eventMethod = rm.getEventMethod(requestUri);
         
         if ( nextView == null )
-            nextView = rm.getViewName(siteId,requestUri);
+            nextView = rm.getViewName(requestUri);
         
         /** Perform security check. */
         // Invoke the security handler
@@ -125,7 +126,7 @@ public class RequestHandler implements Serializable {
         }
         
         /** Process the eventReturn. */        
-        String eventReturn = rm.getRequestAttribute(siteId,requestUri,eventReturnString);
+        String eventReturn = rm.getRequestAttribute(requestUri,eventReturnString);
         Debug.log("Event Qualified: " + eventReturn);
         
         if ( eventReturn != null ) 
@@ -142,7 +143,7 @@ public class RequestHandler implements Serializable {
         /** Get the next view. */
         if ( !chainRequest ) {
             Debug.log("Getting View Map: " + nextView);
-            nextPage = rm.getViewPage(siteId,nextView) != null ? rm.getViewPage(siteId,nextView) : nextView;
+            nextPage = rm.getViewPage(nextView) != null ? rm.getViewPage(nextView) : nextView;
             Debug.log("Mapped To: " + nextPage);
         }
         
@@ -168,10 +169,9 @@ public class RequestHandler implements Serializable {
         return doRequest(request,response,previousRequest);
     }
     
-    public String getDefaultErrorPage( HttpServletRequest request ) {
-        String siteId = (String) request.getParameter(SiteDefs.SITE_PARAM);
+    public String getDefaultErrorPage( HttpServletRequest request ) {        
         String requestUri = getRequestUri(request.getPathInfo());
-        return rm.getErrorPage(siteId,requestUri);
+        return rm.getErrorPage(requestUri);
     }
     
     /** Gets the mapped request URI from path_info */
