@@ -22,9 +22,7 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-
 package org.ofbiz.core.service;
-
 
 import java.util.*;
 
@@ -35,13 +33,12 @@ import org.ofbiz.core.service.jms.*;
 import org.ofbiz.core.service.job.*;
 import org.ofbiz.core.util.*;
 
-
 /**
  * Generic Services Local Dispatcher
  *
- *@author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
- *@created    November 8, 2001
- *@version    1.0
+ * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a> 
+ * @version    $Revision$
+ * @since      2.0
  */
 public class LocalDispatcher {
 
@@ -99,7 +96,6 @@ public class LocalDispatcher {
      */
     public Map runSync(String serviceName, Map context) throws GenericServiceException {
         ModelService service = ctx.getModelService(serviceName);
-
         return dispatcher.runSync(this.name, service, context);
     }
 
@@ -111,7 +107,6 @@ public class LocalDispatcher {
      */
     public void runSyncIgnore(String serviceName, Map context) throws GenericServiceException {
         ModelService service = ctx.getModelService(serviceName);
-
         dispatcher.runSyncIgnore(this.name, service, context);
     }
 
@@ -125,7 +120,6 @@ public class LocalDispatcher {
      */
     public void runAsync(String serviceName, Map context, GenericRequester requester, boolean persist) throws GenericServiceException {
         ModelService service = ctx.getModelService(serviceName);
-
         dispatcher.runAsync(this.name, service, context, requester, persist);
     }
 
@@ -150,7 +144,6 @@ public class LocalDispatcher {
      */
     public void runAsync(String serviceName, Map context, boolean persist) throws GenericServiceException {
         ModelService service = ctx.getModelService(serviceName);
-
         dispatcher.runAsync(this.name, service, context, persist);
     }
 
@@ -174,7 +167,6 @@ public class LocalDispatcher {
      */
     public GenericResultWaiter runAsyncWait(String serviceName, Map context, boolean persist) throws GenericServiceException {
         GenericResultWaiter waiter = new GenericResultWaiter();
-
         this.runAsync(serviceName, context, waiter, persist);
         return waiter;
     }

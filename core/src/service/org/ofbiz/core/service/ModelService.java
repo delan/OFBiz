@@ -54,9 +54,7 @@ public class ModelService {
     public static final String ERROR_MESSAGE_MAP = "errorMessageMap";
     public static final String SUCCESS_MESSAGE = "successMessage";
     public static final String SUCCESS_MESSAGE_LIST = "successMessageList";
-    
-    private ModelServiceReader reader;
-
+       
     /** The name of this service */
     public String name;
 
@@ -98,12 +96,32 @@ public class ModelService {
     
     /** Flag to say if we have pulled in our addition parameters from our implemented service(s) */
     protected boolean inheritedParameters = false;
-
-    public ModelService() {
-        this.reader = null;
+    
+    public ModelService() {}
+    
+    public ModelService(ModelService model) {
+        this.name = model.name;
+        this.description = model.description;
+        this.engineName = model.engineName;
+        this.nameSpace = model.nameSpace;
+        this.location = model.location;
+        this.invoke = model.invoke;
+        this.auth = model.auth;
+        this.export = model.export;
+        this.validate = model.validate;
+        this.useTransaction = model.useTransaction || true;
+        this.implServices = model.implServices;
+        List modelParamList = model.getModelParamList();
+        Iterator i = modelParamList.iterator();
+        while (i.hasNext()) 
+            this.addParam((ModelParam) i.next());        
+        this.inheritedParameters = model.inheritedParameters();
     }
-    public ModelService(ModelServiceReader reader) {
-        this.reader = reader;
+
+    /**
+     * Test if we have already inherited our interface parameters     * @return boolean     */
+    public boolean inheritedParameters() {
+        return this.inheritedParameters;
     }
     
     /** 
@@ -111,8 +129,7 @@ public class ModelService {
      * @param name The name of the parameter to get
      * @return ModelParam object with the specified name
      */
-    public ModelParam getParam(String name) {
-        this.interfaceCheck();
+    public ModelParam getParam(String name) {        
         return (ModelParam) contextInfo.get(name);
     }
 
@@ -125,8 +142,7 @@ public class ModelService {
         contextParamList.add(param);        
     }
 
-    public List getAllParamNames() {
-        this.interfaceCheck();
+    public List getAllParamNames() {        
         List nameList = new LinkedList();
         Iterator i = this.contextParamList.iterator();
 
@@ -138,8 +154,7 @@ public class ModelService {
         return nameList;
     }
 
-    public List getInParamNames() {
-        this.interfaceCheck();
+    public List getInParamNames() {        
         List nameList = new LinkedList();        
         Iterator i = this.contextParamList.iterator();
 
@@ -159,8 +174,7 @@ public class ModelService {
      * @param mode Test either mode IN or mode OUT
      * @return true if the validation is successful
      */
-    public void validate(Map test, String mode) throws ServiceValidationException {
-        this.interfaceCheck();
+    public void validate(Map test, String mode) throws ServiceValidationException {        
         Map requiredInfo = new HashMap();
         Map optionalInfo = new HashMap();
         boolean verboseOn = Debug.verboseOn();
@@ -176,7 +190,6 @@ public class ModelService {
 
         // get the info values
         Collection values = contextInfo.values();
-
         Iterator i = values.iterator();
 
         while (i.hasNext()) {
@@ -305,8 +318,7 @@ public class ModelService {
      * @param optional True if to include optional parameters
      * @return List of parameter names
      */
-    public List getParameterNames(String mode, boolean optional) {
-        this.interfaceCheck();
+    public List getParameterNames(String mode, boolean optional) {        
         List names = new ArrayList();
 
         if (!"IN".equals(mode) && !"OUT".equals(mode) && !"INOUT".equals(mode)) {
@@ -336,8 +348,7 @@ public class ModelService {
      * @param mode The mode which to build the new map
      * @returns Map a new Map of only valid parameters
      */
-    public Map makeValid(Map source, String mode) {
-        this.interfaceCheck();
+    public Map makeValid(Map source, String mode) {        
         Map target = new HashMap();
 
         if (source == null) {
@@ -379,7 +390,6 @@ public class ModelService {
      * @return A list of required IN parameters in the order which they were defined.
      */
     public List getInParameterSequence(Map source) {
-        this.interfaceCheck();
         List target = new LinkedList();
 
         if (source == null) {
@@ -409,7 +419,6 @@ public class ModelService {
      * the service was created.
      */
     public List getModelParamList() {
-        this.interfaceCheck();
         return new LinkedList(this.contextParamList);
     }
 
@@ -417,7 +426,6 @@ public class ModelService {
      * the service was created.
      */
     public List getInModelParamList() {
-        this.interfaceCheck();
         List inList = new LinkedList();
         Iterator i = this.contextParamList.iterator();
 
@@ -431,7 +439,22 @@ public class ModelService {
         return inList;
     }
     
-    private void interfaceCheck() {             
+    /**
+     * Check if we need to clone and implement interfaces
+     * @return boolean
+     */
+    public boolean interfaceCheck() {
+        if (engineName.equals("group") || implServices.size() > 0)
+            return true;
+        return false;
+    }
+    
+    /**
+     * Run the interface update and inherit all interface parameters
+     * @param dctx The DispatchContext to use for service lookups
+     * @return ModelService object with inherited parameters
+     */
+    public void interfaceUpdate(DispatchContext dctx) throws GenericServiceException {                       
         if (!inheritedParameters) {
             // services w/ engine 'group' auto-implement the grouped services
             if (this.engineName.equals("group") && implServices.size() == 0) {
@@ -446,28 +469,30 @@ public class ModelService {
                     }
                 }                
             }
-            if (implServices.size() > 0 && reader != null) {
+            if (implServices.size() > 0 && dctx != null) {                
                 Map newInfo = new HashMap();
-                List newParams = new LinkedList();
+                List newParams = new LinkedList();               
                 Iterator implIter = implServices.iterator();
                 while (implIter.hasNext()) {
                     String serviceName = (String) implIter.next();
-                    ModelService model = reader.getModelService(serviceName);
-                    if (model != null) {
-                        Debug.logVerbose("Adding contextInfo from: [" + model.name + "] to: [" + this.name + "]", module);
+                    ModelService model = dctx.getModelService(serviceName);
+                    if (model != null) {                        
+                        Debug.logVerbose("Adding contextInfo from [" + model.name + "] to [" + this.name + "]", module);
                         newInfo.putAll(model.contextInfo);
-                        newParams.addAll(model.contextParamList);
+                        newParams.addAll(model.contextParamList);                        
+                    } else {
+                        Debug.logWarning("Inherited model [" + serviceName + "] not found for [" + this.name + "]", module);
                     }
                 }
+                                            
                 // add in the added parameters
                 newInfo.putAll(this.contextInfo);
                 newParams.addAll(this.contextParamList);
-                
+                                  
                 // overwrite the variables
                 this.contextInfo = new HashMap(newInfo);
-                this.contextParamList = new LinkedList(newParams);
+                this.contextParamList = new LinkedList(newParams);            
             }
         }
-    }
-            
+    }            
 }

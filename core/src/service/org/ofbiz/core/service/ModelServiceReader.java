@@ -1,7 +1,7 @@
 /* 
  * $Id$
  *
- * Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -22,9 +22,7 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-
 package org.ofbiz.core.service;
-
 
 import java.io.*;
 import java.util.*;
@@ -35,7 +33,6 @@ import org.xml.sax.*;
 import org.w3c.dom.*;
 import org.ofbiz.core.config.*;
 import org.ofbiz.core.util.*;
-
 
 /**
  * Generic Service - Service Definition Reader
@@ -256,7 +253,7 @@ public class ModelServiceReader {
     }
 
     protected ModelService createModelService(Element serviceElement) {
-        ModelService service = new ModelService(this);
+        ModelService service = new ModelService();
 
         service.name = UtilXml.checkEmpty(serviceElement.getAttribute("name"));
         service.engineName = UtilXml.checkEmpty(serviceElement.getAttribute("engine"));

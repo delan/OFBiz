@@ -67,13 +67,13 @@ public class DispatchContext implements Serializable {
         this.loader = loader;
         this.dispatcher = dispatcher;
         this.attributes = new HashMap();
+        
         Map localService = addReaders(readers);
-
         if (localService != null) {
             modelService.put(name, localService);
         }
+        
         Map globalService = addGlobal();
-
         if (globalService != null) {
             modelService.put(GLOBAL_KEY, globalService);
         }
@@ -124,13 +124,12 @@ public class DispatchContext implements Serializable {
     }
 
     /** 
-     * Gets the GenericServiceModel instance that corresponds to given the name
+     * Gets the ModelService instance that corresponds to given the name
      *@param serviceName Name of the service
      *@return GenericServiceModel that corresponds to the serviceName
      */
     public ModelService getModelService(String serviceName) throws GenericServiceException {
         Map serviceMap = (Map) modelService.get(name);
-
         if (serviceMap == null) {
             synchronized (this) {
                 serviceMap = (Map) modelService.get(name);
@@ -143,17 +142,22 @@ public class DispatchContext implements Serializable {
         }
 
         ModelService retVal = null;
-
         if (serviceMap != null)
             retVal = (ModelService) serviceMap.get(serviceName);
         if (retVal == null)
             retVal = getGlobalModelService(serviceName);
-        return retVal;
+        if (retVal != null) {
+            if (retVal.interfaceCheck()) {
+                ModelService newModel = new ModelService(retVal);
+                newModel.interfaceUpdate(this);
+                return newModel;
+            }
+        }      
+        return retVal;                
     }
 
     private ModelService getGlobalModelService(String serviceName) throws GenericServiceException {
         Map serviceMap = (Map) modelService.get(GLOBAL_KEY);
-
         if (serviceMap == null) {
             synchronized (this) {
                 serviceMap = (Map) modelService.get(GLOBAL_KEY);
