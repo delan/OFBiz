@@ -321,6 +321,7 @@
         <response name="error" type="view" value="EditProductAssoc"/>
     </request-map>
 
+    <!-- ================ Product Attributes Requests ================= -->
     <request-map uri="EditProductAttributes"><security https="true" auth="true"/>
     	<response name="success" type="view" value="EditProductAttributes"/>
     </request-map>
@@ -328,6 +329,26 @@
         <event type="java" path="org.ofbiz.catalog.ProductEvents" invoke="updateAttribute"/>
     	<response name="success" type="view" value="EditProductAttributes"/>
         <response name="error" type="view" value="EditProductAttributes"/>
+    </request-map>
+
+    <!-- ================ Product Facilities Requests ================= -->
+    <request-map uri="EditProductFacilities"><security https="true" auth="true"/>
+    	<response name="success" type="view" value="EditProductFacilities"/>
+    </request-map>
+    <request-map uri="createProductFacility"><security https="true" auth="true"/>
+        <event type="service" path="" invoke="createProductFacility"/>
+    	<response name="success" type="view" value="EditProductFacilities"/>
+        <response name="error" type="view" value="EditProductFacilities"/>
+    </request-map>
+    <request-map uri="updateProductFacility"><security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateProductFacility"/>
+    	<response name="success" type="view" value="EditProductFacilities"/>
+        <response name="error" type="view" value="EditProductFacilities"/>
+    </request-map>
+    <request-map uri="deleteProductFacility"><security https="true" auth="true"/>
+        <event type="service" path="" invoke="deleteProductFacility"/>
+    	<response name="success" type="view" value="EditProductFacilities"/>
+        <response name="error" type="view" value="EditProductFacilities"/>
     </request-map>
 
     <!-- ================ Inventory Requests ================= -->
@@ -338,6 +359,26 @@
         <event type="service" path="" invoke="deleteInventoryItem"/>
     	<response name="success" type="view" value="EditProductInventoryItems"/>
     	<response name="error" type="view" value="EditProductInventoryItems"/>
+    </request-map>
+
+    <!-- ================ Product GlAccounts Requests ================= -->
+    <request-map uri="EditProductGlAccounts"><security https="true" auth="true"/>
+    	<response name="success" type="view" value="EditProductGlAccounts"/>
+    </request-map>
+    <request-map uri="createProductGlAccount"><security https="true" auth="true"/>
+        <event type="service" path="" invoke="createProductGlAccount"/>
+    	<response name="success" type="view" value="EditProductGlAccounts"/>
+        <response name="error" type="view" value="EditProductGlAccounts"/>
+    </request-map>
+    <request-map uri="updateProductGlAccount"><security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateProductGlAccount"/>
+    	<response name="success" type="view" value="EditProductGlAccounts"/>
+        <response name="error" type="view" value="EditProductGlAccounts"/>
+    </request-map>
+    <request-map uri="deleteProductGlAccount"><security https="true" auth="true"/>
+        <event type="service" path="" invoke="deleteProductGlAccount"/>
+    	<response name="success" type="view" value="EditProductGlAccounts"/>
+        <response name="error" type="view" value="EditProductGlAccounts"/>
     </request-map>
 
     <!-- ================ Feature Requests ================= -->
@@ -676,7 +717,9 @@
     <view-map name="EditProductAssoc" type="region"/>
     <view-map name="EditProductAttributes" type="region"/>
     <view-map name="EditProductFeatures" type="region"/>
+    <view-map name="EditProductFacilities" type="region"/>
     <view-map name="EditProductInventoryItems" type="region"/>
+    <view-map name="EditProductGlAccounts" type="region"/>
     <view-map name="UploadImage" type="region"/>
 
     <view-map name="QuickAddVariants" type="region"/>

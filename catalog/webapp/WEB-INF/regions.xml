@@ -101,9 +101,17 @@
         <put section='title'>Edit Product Features</put>
         <put section='content' content='/product/EditProductFeatures.jsp'/>
     </define>
+    <define id='EditProductFacilities' region='LEFT_ONLY_REGION'>
+        <put section='title'>Edit Product Facilities</put>
+        <put section='content' content='/product/EditProductFacilities.jsp'/>
+    </define>
     <define id='EditProductInventoryItems' region='LEFT_ONLY_REGION'>
         <put section='title'>Edit Product Inventory Items</put>
         <put section='content' content='/product/EditProductInventoryItems.jsp'/>
+    </define>
+    <define id='EditProductGlAccounts' region='LEFT_ONLY_REGION'>
+        <put section='title'>Edit Product GL Accounts</put>
+        <put section='content' content='/product/EditProductGlAccounts.jsp'/>
     </define>
     <define id='UploadImage' region='MAIN_REGION'>
         <put section='title'>Upload Product Image</put>

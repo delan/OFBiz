@@ -38,11 +38,11 @@
     String productId = request.getParameter("productId");
     GenericValue product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
     if (product == null) useValues = false;
-    Collection goodIdentifications = product.getRelated("GoodIdentification", null, UtilMisc.toList("goodIdentificationTypeId", "idValue"));
-    if (goodIdentifications != null) pageContext.setAttribute("goodIdentifications", goodIdentifications);
+    Collection productFacilities = product.getRelated("ProductFacility", null, UtilMisc.toList("facilityId"));
+    if (productFacilities != null) pageContext.setAttribute("productFacilities", productFacilities);
 
-    Collection goodIdentificationTypes = delegator.findAllCache("GoodIdentificationType", UtilMisc.toList("description"));
-    if (goodIdentificationTypes != null) pageContext.setAttribute("goodIdentificationTypes", goodIdentificationTypes);
+    Collection facilities = delegator.findAllCache("Facility", UtilMisc.toList("facilityName"));
+    if (facilities != null) pageContext.setAttribute("facilities", facilities);
 
     if ("true".equalsIgnoreCase((String)request.getParameter("useValues"))) useValues = true;
 %>
@@ -53,13 +53,13 @@
   <a href="<ofbiz:url>/EditProduct?productId=<%=productId%></ofbiz:url>" class="tabButton">Product</a>
   <a href="<ofbiz:url>/EditProductPrices?productId=<%=productId%></ofbiz:url>" class="tabButton">Prices</a>
   <a href="<ofbiz:url>/EditProductContent?productId=<%=productId%></ofbiz:url>" class="tabButton">Content</a>
-  <a href="<ofbiz:url>/EditProductGoodIdentifications?productId=<%=productId%></ofbiz:url>" class="tabButtonSelected">IDs</a>
+  <a href="<ofbiz:url>/EditProductGoodIdentifications?productId=<%=productId%></ofbiz:url>" class="tabButton">IDs</a>
   <a href="<ofbiz:url>/EditProductCategories?productId=<%=productId%></ofbiz:url>" class="tabButton">Categories</a>
   <a href="<ofbiz:url>/EditProductKeyword?PRODUCT_ID=<%=productId%></ofbiz:url>" class="tabButton">Keywords</a>
   <a href="<ofbiz:url>/EditProductAssoc?PRODUCT_ID=<%=productId%></ofbiz:url>" class="tabButton">Associations</a>
   <a href="<ofbiz:url>/EditProductAttributes?PRODUCT_ID=<%=productId%></ofbiz:url>" class="tabButton">Attributes</a>
   <a href="<ofbiz:url>/EditProductFeatures?productId=<%=productId%></ofbiz:url>" class="tabButton">Features</a>
-  <a href="<ofbiz:url>/EditProductFacilities?productId=<%=productId%></ofbiz:url>" class="tabButton">Facilities</a>
+  <a href="<ofbiz:url>/EditProductFacilities?productId=<%=productId%></ofbiz:url>" class="tabButtonSelected">Facilities</a>
   <a href="<ofbiz:url>/EditProductInventoryItems?productId=<%=productId%></ofbiz:url>" class="tabButton">Inventory</a>
   <a href="<ofbiz:url>/EditProductGlAccounts?productId=<%=productId%></ofbiz:url>" class="tabButton">Accounts</a>
   <%if (product != null && "Y".equals(product.getString("isVirtual"))) {%>
@@ -68,7 +68,7 @@
   </div>
 <%}%>
 
-<div class="head1">IDs <span class='head2'>for <%=UtilFormatOut.ifNotEmpty(product==null?null:product.getString("productName"),"\"","\"")%> [ID:<%=UtilFormatOut.checkNull(productId)%>]</span></div>
+<div class="head1">Facilities <span class='head2'>for <%=UtilFormatOut.ifNotEmpty(product==null?null:product.getString("productName"),"\"","\"")%> [ID:<%=UtilFormatOut.checkNull(productId)%>]</span></div>
 
 <a href="<ofbiz:url>/EditProduct</ofbiz:url>" class="buttontext">[New Product]</a>
 <%if(productId != null && productId.length() > 0){%>
@@ -80,45 +80,48 @@
 <%if(productId!=null && product!=null){%>
 <table border="1" width="100%" cellpadding='2' cellspacing='0'>
   <tr>
-    <td><div class="tabletext"><b>ID&nbsp;Type</b></div></td>
-    <td align="center"><div class="tabletext"><b>ID&nbsp;Value</b></div></td>
+    <td><div class="tabletext"><b>Facility</b></div></td>
+    <td align="center"><div class="tabletext"><b>Minimum&nbsp;Stock&nbsp;&amp;&nbsp;Reorder&nbsp;Quantity</b></div></td>
     <td><div class="tabletext"><b>&nbsp;</b></div></td>
   </tr>
 <%int line = 0;%>
-<ofbiz:iterator name="goodIdentification" property="goodIdentifications">
+<ofbiz:iterator name="productFacility" property="productFacilities">
   <%line++;%>
-  <%GenericValue goodIdentificationType = goodIdentification.getRelatedOneCache("GoodIdentificationType");%>
+  <%GenericValue facility = productFacility.getRelatedOneCache("Facility");%>
   <tr valign="middle">
-    <td><div class='tabletext'><%if (goodIdentificationType != null) {%><%=goodIdentificationType.getString("description")%><%} else {%>[<ofbiz:inputvalue entityAttr="goodIdentification" field="goodIdentificationTypeId"/>]<%}%></div></td>
+    <td><div class='tabletext'><%if (facility != null) {%><%=facility.getString("facilityName")%><%} else {%>[<ofbiz:inputvalue entityAttr="productFacility" field="facilityId"/>]<%}%></div></td>
     <td align="center">
-        <FORM method=POST action='<ofbiz:url>/updateGoodIdentification</ofbiz:url>' name='lineForm<%=line%>'>
-            <input type=hidden <ofbiz:inputvalue entityAttr="goodIdentification" field="productId" fullattrs="true"/>>
-            <input type=hidden <ofbiz:inputvalue entityAttr="goodIdentification" field="goodIdentificationTypeId" fullattrs="true"/>>
-            <input type=text size='20' <ofbiz:inputvalue entityAttr="goodIdentification" field="idValue" fullattrs="true"/> style='font-size: x-small;'>
+        <FORM method=POST action='<ofbiz:url>/updateProductFacility</ofbiz:url>' name='lineForm<%=line%>'>
+            <input type=hidden <ofbiz:inputvalue entityAttr="productFacility" field="productId" fullattrs="true"/>>
+            <input type=hidden <ofbiz:inputvalue entityAttr="productFacility" field="facilityId" fullattrs="true"/>>
+            <input type=text size='10' <ofbiz:inputvalue entityAttr="productFacility" field="minimumStock" fullattrs="true"/> style='font-size: x-small;'>
+            <input type=text size='10' <ofbiz:inputvalue entityAttr="productFacility" field="reorderQuantity" fullattrs="true"/> style='font-size: x-small;'>
             <INPUT type=submit value='Update' style='font-size: x-small;'>
         </FORM>
     </td>
     <td align="center">
-      <a href='<ofbiz:url>/deleteGoodIdentification?productId=<ofbiz:entityfield attribute="goodIdentification" field="productId"/>&goodIdentificationTypeId=<ofbiz:entityfield attribute="goodIdentification" field="goodIdentificationTypeId"/></ofbiz:url>' class="buttontext">
+      <a href='<ofbiz:url>/deleteProductFacility?productId=<ofbiz:entityfield attribute="productFacility" field="productId"/>&facilityId=<ofbiz:entityfield attribute="productFacility" field="facilityId"/></ofbiz:url>' class="buttontext">
       [Delete]</a>
     </td>
   </tr>
 </ofbiz:iterator>
 </table>
 <br>
-<form method="POST" action="<ofbiz:url>/createGoodIdentification</ofbiz:url>" style='margin: 0;' name='createGoodIdentificationForm'>
+<form method="POST" action="<ofbiz:url>/createProductFacility</ofbiz:url>" style='margin: 0;' name='createProductFacilityForm'>
     <input type="hidden" name="productId" value="<%=productId%>">
     <input type="hidden" name="useValues" value="true">
 
-    <div class='head2'>Add ID:</div>
+    <div class='head2'>Add Facility:</div>
     <div class='tabletext'>
-        ID Type:
-        <select name="goodIdentificationTypeId" style='font-size: x-small;'>
-            <ofbiz:iterator name="goodIdentificationType" property="goodIdentificationTypes">
-                <option value='<ofbiz:entityfield attribute="goodIdentificationType" field="goodIdentificationTypeId"/>'><ofbiz:entityfield attribute="goodIdentificationType" field="description"/><%--[<ofbiz:entityfield attribute="goodIdentificationType" field="goodIdentificationTypeId"/>]--%></option>
+        Facility:
+        <select name="facilityId" style='font-size: x-small;'>
+            <ofbiz:iterator name="facility" property="facilities">
+                <option value='<ofbiz:entityfield attribute="facility" field="facilityId"/>'><ofbiz:entityfield attribute="facility" field="facilityName"/><%--[<ofbiz:entityfield attribute="facility" field="facilityId"/>]--%></option>
             </ofbiz:iterator>
         </select>
-        ID Value: <input type=text size='20' name='idValue' style='font-size: x-small;'>&nbsp;<input type="submit" value="Add" style='font-size: x-small;'>
+        Minimum&nbsp;Stock:&nbsp;<input type=text size='10' name='minimumStock' style='font-size: x-small;'>
+        Reorder&nbsp;Quantity:&nbsp;<input type=text size='10' name='reorderQuantity' style='font-size: x-small;'>
+        <input type="submit" value="Add" style='font-size: x-small;'>
     </div>
 
 </form>
