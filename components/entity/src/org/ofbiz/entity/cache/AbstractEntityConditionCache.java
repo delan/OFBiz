@@ -210,6 +210,8 @@ public abstract class AbstractEntityConditionCache extends AbstractCache {
                                 shouldRemove |= isNull(newValue) || condition.mapMatches(getDelegator(), newValue);
                                 //Debug.logInfo("In storeHook, for entityName [" + entityName + "] shouldRemove is now " + shouldRemove, module);
                             }
+                        } else {
+                            shouldRemove = true;
                         }
                     }
                 }
