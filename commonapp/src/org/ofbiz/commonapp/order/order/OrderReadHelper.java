@@ -218,7 +218,11 @@ public class OrderReadHelper {
         return totalPrice.doubleValue();
     }
 
-    public double getOrderAdjustments() {
+    public Iterator getAdjustmentIterator() {
+        return getOrderAdjustmentCollection().iterator();
+    }
+    
+    public List getOrderAdjustmentCollection() {
         List contraints1 = UtilMisc.toList(new EntityExpr("orderItemSeqId", EntityOperator.EQUALS, null));
         List contraints2 = UtilMisc.toList(new EntityExpr("orderItemSeqId", EntityOperator.EQUALS, "_NA_"));
         List contraints3 = UtilMisc.toList(new EntityExpr("orderItemSeqId", EntityOperator.EQUALS, ""));
@@ -226,7 +230,11 @@ public class OrderReadHelper {
         adj.addAll(EntityUtil.filterByAnd(getAdjustments(), contraints1));
         adj.addAll(EntityUtil.filterByAnd(getAdjustments(), contraints2));
         adj.addAll(EntityUtil.filterByAnd(getAdjustments(), contraints3));
-        return calcOrderAdjustments(adj, getOrderItemsTotal());
+        return adj;
+    }
+    
+    public double getOrderAdjustments() {
+        return calcOrderAdjustments(getOrderAdjustmentCollection(), getOrderItemsTotal());
     }
 
     public double getOrderItemsTotal() {
