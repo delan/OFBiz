@@ -45,28 +45,34 @@
     <!-- End of Security Mappings -->
 
     <!-- Request Mappings -->
-	<request-map uri="SOAPService">
-	    <event type="soap"/>
-	    <response name="error" type="none"/>
-	    <response name="success" type="none"/>
-	</request-map>
-	
-	<request-map uri="TestService">
-	    <event type="service" invoke="testScv" />
-	    <response name="error" type="view" value="error"/>
-	    <response name="success" type="view" value="error"/>
-	</request-map>
-	
-	<request-map uri="yahoo">
-	    <response name="success" type="url" value="http://www.yahoo.com"/>
-	</request-map>
+    <request-map uri="SOAPService">
+        <event type="soap"/>
+        <response name="error" type="none"/>
+        <response name="success" type="none"/>
+    </request-map>
 
-	<request-map uri="changeDelegator">
-		<event type="java" path="org.ofbiz.core.event.CoreEvents" invoke="changeDelegator"/>
-		<response name="success" type="view" value="main"/>
-		<response name="error" type="view" value="error"/>
-	</request-map>
-	
+    <request-map uri="TestService">
+        <event type="service" invoke="testScv" />
+        <response name="error" type="view" value="error"/>
+        <response name="success" type="view" value="error"/>
+    </request-map>
+
+    <request-map uri="yahoo">
+        <response name="success" type="url" value="http://www.yahoo.com"/>
+    </request-map>
+
+    <request-map uri="changeDelegator">
+        <event type="java" path="org.ofbiz.core.event.CoreEvents" invoke="changeDelegator"/>
+        <response name="success" type="view" value="main"/>
+        <response name="error" type="view" value="main"/>
+    </request-map>
+
+    <request-map uri="runService">
+        <event type="java" path="org.ofbiz.core.event.CoreEvents" invoke="runService"/>
+        <response name="success" type="view" value="main"/>
+        <response name="error" type="view" value="main"/>
+    </request-map>
+
     <request-map uri="view">
         <security https="true" auth="false"/>
         <response name="success" type="view" value="main"/>
