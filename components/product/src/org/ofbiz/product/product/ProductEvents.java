@@ -1,5 +1,5 @@
 /*
- * $Id: ProductEvents.java,v 1.6 2004/01/22 00:23:00 jonesde Exp $
+ * $Id: ProductEvents.java,v 1.7 2004/01/22 00:41:20 jonesde Exp $
  * 
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  * 
@@ -26,12 +26,17 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.FlexibleStringExpander;
+import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.condition.EntityConditionList;
+import org.ofbiz.entity.condition.EntityExpr;
+import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.product.store.ProductStoreWorker;
 import org.ofbiz.security.Security;
@@ -42,7 +47,7 @@ import org.ofbiz.service.LocalDispatcher;
  * Product Information Related Events
  * 
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  * @since 2.0
  */
 public class ProductEvents {
@@ -233,11 +238,14 @@ public class ProductEvents {
      * @return String specifying the exit status of this event
      */
     public static String updateAllKeywords(HttpServletRequest request, HttpServletResponse response) {
-        String errMsg = "";
+        //String errMsg = "";
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
         Security security = (Security) request.getAttribute("security");
+        Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
 
         String updateMode = "CREATE";
+        
+        String doAll = request.getParameter("doAll");
 
         // check permissions before moving on...
         if (!security.hasEntityPermission("CATALOG", "_" + updateMode, request.getSession())) {
@@ -245,13 +253,24 @@ public class ProductEvents {
             return "error";
         }
 
+        EntityCondition condition = null;
+        if (!"Y".equals(doAll)) {
+            condition = new EntityConditionList(UtilMisc.toList(
+                    new EntityExpr("isVariant", EntityOperator.NOT_EQUAL, "Y"),
+                    new EntityExpr("autoCreateKeywords", EntityOperator.NOT_EQUAL, "N"),
+                    new EntityExpr(new EntityExpr("salesDiscontinuationDate", EntityOperator.EQUALS, null), EntityOperator.OR, new EntityExpr("salesDiscontinuationDate", EntityOperator.GREATER_THAN_EQUAL_TO, nowTimestamp))
+                    ), EntityOperator.AND);
+        } else {
+            condition = new EntityExpr("autoCreateKeywords", EntityOperator.NOT_EQUAL, "N");
+        }
+        
         EntityListIterator entityListIterator = null;
-
         try {
-            entityListIterator = delegator.findListIteratorByCondition("Product", null, null, null);
+            entityListIterator = delegator.findListIteratorByCondition("Product", condition, null, null);
         } catch (GenericEntityException gee) {
-            Debug.logWarning(gee.getMessage(), module);
-            entityListIterator = null;
+            Debug.logWarning(gee, gee.getMessage(), module);
+            request.setAttribute("_ERROR_MESSAGE_", "Error getting the product list to index: " + gee.toString());
+            return "error";
         }
 
         int numProds = 0;
@@ -259,21 +278,22 @@ public class ProductEvents {
 
         GenericValue product = null;
         while ((product = (GenericValue) entityListIterator.next()) != null) {
-            if (!"N".equalsIgnoreCase(product.getString("autoCreateKeywords"))) {
+            try {
+                KeywordSearch.induceKeywords(product);
+            } catch (GenericEntityException e) {
+                request.setAttribute("_ERROR_MESSAGE_", "Could not create keywords (write error).");
+                Debug.logWarning("[ProductEvents.updateAllKeywords] Could not create product-keyword (write error); message: " + e.getMessage(), module);
                 try {
-                    KeywordSearch.induceKeywords(product);
-                } catch (GenericEntityException e) {
-                    request.setAttribute("_ERROR_MESSAGE_", "Could not create keywords (write error).");
-                    Debug.logWarning("[ProductEvents.updateAllKeywords] Could not create product-keyword (write error); message: " + e.getMessage(), module);
-                    try {
-                        entityListIterator.close();
-                    } catch (GenericEntityException gee) {
-                        Debug.logError(gee, "Error closing EntityListIterator when indexing product keywords.", module);
-                    }
-                    errProds++;
+                    entityListIterator.close();
+                } catch (GenericEntityException gee) {
+                    Debug.logError(gee, "Error closing EntityListIterator when indexing product keywords.", module);
                 }
+                errProds++;
             }
             numProds++;
+            if (numProds % 500 == 0) {
+                Debug.logInfo("Keywords indexed for " + numProds + " so far", module);
+            }
         }
 
         if (entityListIterator != null) {
