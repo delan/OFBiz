@@ -63,6 +63,7 @@
     <td>maxSize</td>
     <td>expireTime</td>
     <td>useSoftRef?</td>
+    <td>useFileStore?</td>
     <td colspan="3">Administration</td>
   </tr>
 
@@ -82,6 +83,8 @@
         <td><%=UtilFormatOut.formatQuantity(utilCache.getMaxSize())%></td>
         <td><%=UtilFormatOut.formatQuantity(utilCache.getExpireTime())%></td>
         <td><%=(new Boolean(utilCache.getUseSoftReference())).toString()%></td>
+        <td><%=(new Boolean(utilCache.getUseFileSystemStore())).toString()%></td>
+        
         <td align=center valign=middle>
           <a href='<ofbiz:url>/FindUtilCacheElements?UTIL_CACHE_NAME=<%=UtilFormatOut.checkNull(utilCache.getName())%></ofbiz:url>' class="buttontext">Elements</a>
         </td>
