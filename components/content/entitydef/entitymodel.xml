@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.34 $
+ * @version    $Revision: 1.35 $
  */
 -->
 
@@ -1692,5 +1692,56 @@
         <key-map field-name="webSiteId"/>
       </relation>
     </entity>
+
+    <entity entity-name="WebSitePublishPoint"
+            package-name="org.ofbiz.blog"
+            title="Web Site Publish Point">
+      <field name="contentId" type="id-ne"></field>
+      <field name="templateTitle" type="long-varchar"></field>
+      <field name="styleSheetFile" type="long-varchar"></field>
+      <field name="logo" type="long-varchar"></field>
+      <field name="medallionLogo" type="long-varchar"></field>
+      <field name="lineLogo" type="long-varchar"></field>
+      <field name="leftBarId" type="id"></field>
+      <field name="rightBarId" type="id"></field>
+      <field name="contentDept" type="id"></field>
+      <field name="aboutContentId" type="id"></field>
+      <prim-key field="contentId"/>
+      <relation type="one" rel-entity-name="Content">
+          <key-map field-name="contentId" />
+      </relation>
+    </entity>
+
+    <view-entity entity-name="PartyAndUserLoginAndPerson"
+            package-name="org.ofbiz.party.party"
+            title="Parts of Party and UserLogin and Person">
+      <member-entity entity-alias="PTY" entity-name="Party"/>
+      <member-entity entity-alias="ULN" entity-name="UserLogin"/>
+      <member-entity entity-alias="PER" entity-name="Person"/>
+      <alias entity-alias="PTY" name="partyId"/>
+      <alias entity-alias="PTY" name="partyTypeId"/>
+      <alias entity-alias="PTY" name="createdDate"/>
+      <alias entity-alias="ULN" name="userLoginId"/>
+      <alias entity-alias="ULN" name="currentPassword"/>
+      <alias entity-alias="ULN" name="passwordHint"/>
+      <alias entity-alias="ULN" name="enabled"/>
+      <alias entity-alias="ULN" name="disabledDateTime"/>
+      <alias entity-alias="ULN" name="successiveFailedLogins"/>
+      <alias entity-alias="PER" name="lastName"/>
+      <alias entity-alias="PER" name="firstName"/>
+      <view-link entity-alias="PTY" rel-entity-alias="ULN">
+        <key-map field-name="partyId"/>
+      </view-link>
+      <view-link entity-alias="PTY" rel-entity-alias="PER">
+        <key-map field-name="partyId"/>
+      </view-link>
+      <relation type="one-nofk" rel-entity-name="Party">
+        <key-map field-name="partyId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="UserLogin">
+        <key-map field-name="userLoginId"/>
+      </relation>
+    </view-entity>
+
 </entitymodel>
 
