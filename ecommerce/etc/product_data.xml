@@ -98,7 +98,7 @@
     productFeatureApplTypeId="STANDARD_FEATURE" fromDate="2001-01-01 12:00:00.0" sequenceNum="2"/>
   <ProductFeatureAppl productId="WG-9943-S3" productFeatureId="10001"
     productFeatureApplTypeId="STANDARD_FEATURE" fromDate="2001-01-01 12:00:00.0" sequenceNum="1"/>
-  <ProductFeatureAppl productId="WG-9943-S3" productFeatureId="10003"
+  <ProductFeatureAppl productId="WG-9943-S3" productFeatureId="10002"
     productFeatureApplTypeId="STANDARD_FEATURE" fromDate="2001-01-01 12:00:00.0" sequenceNum="2"/>
   <ProductFeatureAppl productId="WG-9943-S4" productFeatureId="10001"
     productFeatureApplTypeId="STANDARD_FEATURE" fromDate="2001-01-01 12:00:00.0" sequenceNum="1"/>
