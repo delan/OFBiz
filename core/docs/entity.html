@@ -26,6 +26,7 @@ $Id$ <br>
 	<li><a href="#Related Documents">Related Documents</a>
 	<li><a href="#Introduction">Introduction</a>
 	<li><a href="#Entity Modeling">Entity Modeling</a>
+	<li><a href="#View Entity Modeling">View Entity Modeling</a>
 	<li><a href="#The Generic Entity">The Generic Entity</a>
 	<li><a href="#CommonApp Tools">CommonApp Tools</a>
 </ul>
@@ -253,6 +254,51 @@ of the related entity.</p>
 key map specified a field name (field-name) and a related field name (rel-field-name).
 If the two column names are the same, the rel-field-name does not have to be
 specified.</p>
+
+<hr>
+<h3><a name="View Entity Modeling">View Entity Modeling</a></h3>
+<hr>
+
+<p>In addition to entities that map directly to a single relational table you can create "virtual" or "view" entities that map to a set of other entities.
+The idea of a View Entity is the same as the idea of a view in Oracle, Access, or other popular database management systems. View Entities allow
+you to combine, or join, entities to make a new entity. The new entity's fields will be aliases of the fields on the original entities. The member entities of the
+view will be linked together by creating a set of view-links which contain key-maps, just like relationships do as described above.</p>
+
+<p>The meta data for a view entity is nearly the same as for a normal entity. It has a name, package, description, copyright, author, version, and so forth.
+It does not have a table name, since it does not map to a single relational table in the data source. A view entity must also be assigned to a group in the
+entity group XML file, just like any normal entity.</p>
+
+<pre>    &lt;view-entity title=&quot;Sample View Entity&quot;
+            copyright=&quot;Copyright (c) 2001 John Doe Enterprises&quot;
+            author=&quot;John Doe&quot; version=&quot;1.0&quot;
+            package-name=&quot;org.ofbiz.commonapp.sample&quot;
+            entity-name=&quot;SampleViewEntity&quot;&gt;
+      &lt;field name=&quot;primaryKeyFieldOne&quot; col-name=&quot;PRIMARY_KEY_FIELD_ONE&quot; type=&quot;id-ne&quot;&gt;&lt;/field&gt;
+      &lt;field name=&quot;primaryKeyFieldTwo&quot; type=&quot;id-ne&quot;&gt;&lt;/field&gt;
+      &lt;field name=&quot;fieldOne&quot; type=&quot;long-varchar&quot;&gt;&lt;/field&gt;
+      &lt;field name=&quot;fieldTwo&quot; type=&quot;long-varchar&quot;&gt;&lt;/field&gt;
+      &lt;field name=&quot;foreignKeyOne&quot; type=&quot;id&quot;&gt;&lt;/field&gt;
+      &lt;prim-key field=&quot;primaryKeyFieldOne&quot; /&gt;
+      &lt;prim-key field=&quot;primaryKeyFieldTwo&quot; /&gt;
+      &lt;relation type=&quot;one&quot; rel-entity-name=&quot;otherSampleEntity&quot;&gt;
+        &lt;key-map field-name=&quot;foreignKeyOne&quot; rel-field-name=&quot;primaryKeyOne&quot; /&gt;
+      &lt;/relation&gt;
+      &lt;relation type=&quot;one&quot; title=&quot;Self&quot; rel-entity-name=&quot;SampleEntity&quot;&gt;
+        &lt;key-map field-name=&quot;primaryKeyFieldOne&quot; /&gt;
+        &lt;key-map field-name=&quot;primaryKeyFieldTwo&quot; /&gt;
+      &lt;/relation&gt;
+      &lt;relation type=&quot;many&quot; title=&quot;AllOne&quot; rel-entity-name=&quot;SampleEntity&quot;&gt;
+        &lt;key-map field-name=&quot;primaryKeyFieldOne&quot; /&gt;
+      &lt;/relation&gt;
+    &lt;/entity&gt;</pre>
+
+<p>Note that view entities have primary keys just like normal entities. The primary key for a view entity should include all primary key fields of each
+member entity of the view. This means that all of the primary key fields must be aliased, but fields that are used to link the entities need only be aliased
+once. For example, if an OrderHeader entity has an orderId primary key and an OrderLine entity has an orderId primary key and an orderLineSeqId
+primary key, and the orderId was the mapped key that links the two entities, then the view entity would have two primary keys: orderId and
+orderLineSeqId. In this case orderId would only be aliased once since by definition the orderIds from each entity will always be the same since
+that is how the entities are linked (or joined).</p>
+
 
 <hr>
 <h3><a name="The Generic Entity">The Generic Entity</a></h3>
