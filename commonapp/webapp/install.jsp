@@ -1,6 +1,7 @@
 
 <%@ page import="java.io.*"%>
 <%@ page import="java.sql.*"%>
+<%@ page import="org.ofbiz.core.entity.model.*"%>
 
 <% pageContext.setAttribute("PageName", "Install"); %> 
 <%@ include file="/includes/header.jsp" %>
@@ -61,7 +62,9 @@
     <%}else{%>
       <LI><DIV class='tabletext'>No SQL Files found.</DIV>
     <%}%>
-    <LI><DIV class='tabletext'>Entity granularity security settings (auto generated, not in a file)</DIV>
+    <%int genRowsChanged = generateData(helper);%>
+     <%totalRowsChanged += genRowsChanged;%>
+    <LI><DIV class='tabletext'>Loaded <%=genRowsChanged%> rows for generated entity granularity security settings (<%=totalRowsChanged%> total rows so far)</DIV>
   </UL>
   <DIV class='head2'>Finished loading all data; <%=totalRowsChanged%> total rows updated.</DIV>
 
@@ -143,6 +146,32 @@
     {
       try { if (stmt != null) stmt.close(); } catch (SQLException sqle) { }
       try { if (connection != null) connection.close(); } catch (SQLException sqle) { }
+    }
+
+    return rowsChanged;
+  }
+
+  int generateData(GenericHelper helper)
+  {
+    int rowsChanged = 0;
+    ModelReader reader = helper.getModelReader();
+    Collection entityCol = reader.getEntityNames();
+    Iterator classNamesIterator = entityCol.iterator();
+    while(classNamesIterator != null && classNamesIterator.hasNext()) { 
+      ModelEntity entity = reader.getModelEntity((String)classNamesIterator.next());
+      if(helper.create("SecurityPermission", UtilMisc.toMap("permissionId", entity.tableName + "_ADMIN", "description", "Permission to Administer a " + entity.entityName + " entity.")) != null) rowsChanged++;
+      else { String errorMsg = "[install.generateData]: Generated Data Load error for entity \"" + entity.tableName + "\" creating ADMIN SecurityPermission"; errorMessages.add(errorMsg); }
+      //if(helper.create("SecurityPermission", UtilMisc.toMap("permissionId", entity.tableName + "_VIEW", "description", "Permission to View a " + entity.entityName + " entity.")) != null) rowsChanged++;
+      //if(helper.create("SecurityPermission", UtilMisc.toMap("permissionId", entity.tableName + "_CREATE", "description", "Permission to Create a " + entity.entityName + " entity.")) != null) rowsChanged++;
+      //if(helper.create("SecurityPermission", UtilMisc.toMap("permissionId", entity.tableName + "_UPDATE", "description", "Permission to Update a " + entity.entityName + " entity.")) != null) rowsChanged++;
+      //if(helper.create("SecurityPermission", UtilMisc.toMap("permissionId", entity.tableName + "_DELETE", "description", "Permission to Delete a " + entity.entityName + " entity.")) != null) rowsChanged++;
+
+      if(helper.create("SecurityGroupPermission", UtilMisc.toMap("groupId", "FULLADMIN", "permissionId", entity.tableName + "_ADMIN")) != null) rowsChanged++;
+      else { String errorMsg = "[install.generateData]: Generated Data Load error for entity \"" + entity.tableName + "\" creating FULLADMIN SecurityGroupPermission"; errorMessages.add(errorMsg); }
+      //if(helper.create("SecurityGroupPermission", UtilMisc.toMap("groupId", "FLEXADMIN", "permissionId", entity.tableName + "_VIEW")) != null) rowsChanged++;
+      //if(helper.create("SecurityGroupPermission", UtilMisc.toMap("groupId", "FLEXADMIN", "permissionId", entity.tableName + "_CREATE")) != null) rowsChanged++;
+      //if(helper.create("SecurityGroupPermission", UtilMisc.toMap("groupId", "FLEXADMIN", "permissionId", entity.tableName + "_UPDATE")) != null) rowsChanged++;
+      //if(helper.create("SecurityGroupPermission", UtilMisc.toMap("groupId", "FLEXADMIN", "permissionId", entity.tableName + "_DELETE")) != null) rowsChanged++;
     }
 
     return rowsChanged;
