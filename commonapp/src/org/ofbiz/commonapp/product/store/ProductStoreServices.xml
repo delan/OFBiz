@@ -40,7 +40,15 @@
 		<env-to-field env-name="productStoreId" map-name="newEntity"/>
 		
 		<field-to-result field-name="productStoreId" result-name="productStoreId"/>
-		<create-value value-name="newEntity"/>		
+		<create-value value-name="newEntity"/>
+		
+		<!-- create the ProductStoreFacility record -->
+		<now-timestamp-to-env env-name="nowTimestamp"/>
+		<make-value value-name="storeFacility" entity-name="ProductStoreFacility"/>
+		<field-to-field field-name="inventoryFacilityId" map-name="newEntity" to-field-name="facilityId" to-map-name="storeFacility"/>
+		<field-to-field field-name="productStoreId" map-name="newEntity" to-map-name="storeFacility"/>
+	    <env-to-field env-name="nowTimestamp" field-name="fromDate" map-name="storeFacility"/>
+	    <create-value value-name="storeFacility"/>
 	</simple-method>
 	<simple-method method-name="updateProductStore" short-description="Update a Product Store">
 		<check-permission permission="CATALOG" action="_UPDATE"><fail-message message="Security Error: to run updateProductStore you must have the CATALOG_UPDATE or CATALOG_ADMIN permission"/></check-permission>
@@ -48,8 +56,30 @@
 		
 		<field-to-field field-name="productStoreId" map-name="parameters" to-map-name="lookupPKMap"/>
 		<find-by-primary-key entity-name="ProductStore" map-name="lookupPKMap" value-name="store"/>
+		<field-to-env env-name="oldFacilityId" field-name="inventoryFacilityId" map-name="store"/>
 		<set-nonpk-fields map-name="parameters" value-name="store"/>
-		<store-value value-name="store"/>		
+		<store-value value-name="store"/>
+		
+		<!-- update the ProductStoreFacility record -->
+		<now-timestamp-to-env env-name="nowTimestamp"/>
+		<if-compare-field field-name="inventoryFacilityId" map-name="store" operator="not-equals" to-field-name="oldFacilityId">
+			<if-compare field-name="oneInventoryFacility" map-name="store" operator="equals" value="Y">
+				<!-- expire all the facilities -->
+				<field-to-field field-name="productStoreId" map-name="store" to-map-name="lookupPFMap"/>
+				<find-by-and entity-name="ProductStoreFacility" map-name="lookupPFMap" list-name="storeFacilities"/>
+				<filter-list-by-date list-name="storeFacilities"/>
+				<iterate list-name="storeFacilities" entry-name="facility">
+					<env-to-field env-name="nowTimestamp" field-name="thruDate" map-name="facility"/>
+					<store-value value-name="facility"/>
+				</iterate>
+			</if-compare>
+			<!-- create the new entry -->
+			<make-value value-name="storeFacility" entity-name="ProductStoreFacility"/>
+			<field-to-field field-name="inventoryFacilityId" map-name="store" to-field-name="facilityId" to-map-name="storeFacility"/>
+			<field-to-field field-name="productStoreId" map-name="store" to-map-name="storeFacility"/>
+			<env-to-field env-name="nowTimestamp" field-name="fromDate" map-name="storeFacility"/>
+			<create-value value-name="storeFacility"/>			
+		</if-compare-field>		
 	</simple-method>
 
     <!-- ProductStore and ProdCatalog services -->
