@@ -533,20 +533,7 @@
       	<key-map field-name="processId"/>
       	<key-map field-name="processVersion"/>
         <key-map field-name="participantId"/>
-      </relation>
-      <relation type="one-nofk" rel-entity-name="Party">
-        <key-map field-name="partyId"/>
-      </relation>
-      <relation type="one-nofk" rel-entity-name="Person">
-        <key-map field-name="partyId"/>
-      </relation>
-      <relation type="one-nofk" rel-entity-name="PartyRole">
-        <key-map field-name="partyId"/>
-        <key-map field-name="roleTypeId"/>
-      </relation>
-      <relation type="one-nofk" rel-entity-name="RoleType">
-        <key-map field-name="roleTypeId"/>
-      </relation>
+      </relation>      
     </entity>
     <entity entity-name="WorkflowParticipantList"
             package-name="org.ofbiz.commonapp.workeffort.definition"
