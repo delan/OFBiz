@@ -1,5 +1,5 @@
 /*
- * $Id: ComponentLoaderConfig.java,v 1.5 2003/08/27 18:12:56 jonesde Exp $
+ * $Id: ComponentLoaderConfig.java,v 1.6 2004/04/30 00:24:03 jonesde Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -44,7 +44,7 @@ import org.xml.sax.SAXException;
  * ComponentLoaderConfig - Component Loader configuration
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      3.0
  */
 public class ComponentLoaderConfig {
@@ -79,7 +79,7 @@ public class ComponentLoaderConfig {
                     }
         
                     Element root = document.getDocumentElement();
-                    List toLoad = UtilXml.childElementList(root, null);
+                    List toLoad = UtilXml.childElementList(root);
                     if (toLoad != null && toLoad.size() > 0) {
                         Iterator i = toLoad.iterator();
                         while (i.hasNext()) {

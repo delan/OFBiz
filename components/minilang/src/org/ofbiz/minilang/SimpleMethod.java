@@ -1,5 +1,5 @@
 /*
- * $Id: SimpleMethod.java,v 1.5 2003/11/23 11:57:09 jonesde Exp $
+ * $Id: SimpleMethod.java,v 1.6 2004/04/30 00:24:06 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -52,7 +52,7 @@ import org.w3c.dom.Element;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      2.0
  */
 public class SimpleMethod {
@@ -647,7 +647,7 @@ public class SimpleMethod {
     }
 
     public static void readOperations(Element simpleMethodElement, List methodOperations, SimpleMethod simpleMethod) {
-        List operationElements = UtilXml.childElementList(simpleMethodElement, null);
+        List operationElements = UtilXml.childElementList(simpleMethodElement);
 
         if (operationElements != null && operationElements.size() > 0) {
             Iterator operElemIter = operationElements.iterator();

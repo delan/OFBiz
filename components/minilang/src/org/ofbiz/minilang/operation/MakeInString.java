@@ -1,5 +1,5 @@
 /*
- * $Id: MakeInString.java,v 1.1 2003/08/17 06:06:11 ajzeneski Exp $
+ * $Id: MakeInString.java,v 1.2 2004/04/30 00:24:12 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -32,7 +32,7 @@ import org.ofbiz.base.util.*;
  * The container of MakeInString operations to make a new input String
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class MakeInString {
@@ -45,7 +45,7 @@ public class MakeInString {
     public MakeInString(Element makeInStringElement) {
         fieldName = makeInStringElement.getAttribute("field");
 
-        List operationElements = UtilXml.childElementList(makeInStringElement, null);
+        List operationElements = UtilXml.childElementList(makeInStringElement);
 
         if (operationElements != null && operationElements.size() > 0) {
             Iterator operElemIter = operationElements.iterator();

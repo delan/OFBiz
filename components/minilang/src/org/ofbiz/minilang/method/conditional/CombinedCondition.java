@@ -1,5 +1,5 @@
 /*
- * $Id: CombinedCondition.java,v 1.1 2003/08/17 06:06:12 ajzeneski Exp $
+ * $Id: CombinedCondition.java,v 1.2 2004/04/30 00:24:09 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -33,7 +33,7 @@ import org.ofbiz.minilang.method.*;
  * Implements generic combining conditions such as or, and, etc.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.1
  */
 public class CombinedCondition implements Conditional {
@@ -50,7 +50,7 @@ public class CombinedCondition implements Conditional {
     public CombinedCondition(Element element, int conditionType, SimpleMethod simpleMethod) {
         this.simpleMethod = simpleMethod;
         this.conditionType = conditionType;
-        List subElements = UtilXml.childElementList(element, null);
+        List subElements = UtilXml.childElementList(element);
         Iterator subElIter = subElements.iterator();
         while (subElIter.hasNext()) {
             Element subElement = (Element) subElIter.next();

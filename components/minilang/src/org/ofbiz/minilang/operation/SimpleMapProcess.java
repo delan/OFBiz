@@ -1,5 +1,5 @@
 /*
- * $Id: SimpleMapProcess.java,v 1.1 2003/08/17 06:06:11 ajzeneski Exp $
+ * $Id: SimpleMapProcess.java,v 1.2 2004/04/30 00:24:12 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -32,7 +32,7 @@ import org.ofbiz.base.util.*;
  * A complete string process for a given field; contains multiple string operations
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class SimpleMapProcess {
@@ -62,7 +62,7 @@ public class SimpleMapProcess {
     }
 
     void readOperations(Element simpleMapProcessElement) {
-        List operationElements = UtilXml.childElementList(simpleMapProcessElement, null);
+        List operationElements = UtilXml.childElementList(simpleMapProcessElement);
 
         if (operationElements != null && operationElements.size() > 0) {
             Iterator operElemIter = operationElements.iterator();
