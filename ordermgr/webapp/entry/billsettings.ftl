@@ -338,31 +338,33 @@ function makeExpDate() {
                           <#assign expYear = expDate.substring(expDate.indexOf("/")+1)>
                         </#if>
                       </#if>
-                      <select name="expMonth" class='selectBox' onChange="javascript:makeExpDate();">                        
-                        <option><#if creditCard?has_content && expMonth?has_content>${expMonth?if_exists}<#else>${requestParameters.expMonth?if_exists}</#if></option>
+                      <select name="expMonth" class='selectBox' onChange="javascript:makeExpDate();">
+                        <#if creditCard?has_content && expMonth?has_content><#assign ccExprMonth = expMonth><#else><#assign ccExprMonth = requestParameters.expMonth?if_exists></#if>                        
+                        <option value="${ccExprMonth?if_exists}">${ccExprMonth?if_exists}</option>
                         <option></option>
-                        <option>01</option>
-                        <option>02</option>
-                        <option>03</option>
-                        <option>04</option>
-                        <option>05</option>
-                        <option>06</option>
-                        <option>07</option>
-                        <option>08</option>
-                        <option>09</option>
-                        <option>10</option>
-                        <option>11</option>
-                        <option>12</option>
+                        <option value="01">01</option>
+                        <option value="02">02</option>
+                        <option value="03">03</option>
+                        <option value="04">04</option>
+                        <option value="05">05</option>
+                        <option value="06">06</option>
+                        <option value="07">07</option>
+                        <option value="08">08</option>
+                        <option value="09">09</option>
+                        <option value="10">10</option>
+                        <option value="11">11</option>
+                        <option value="12">12</option>
                       </select>
                       <select name="expYear" class='selectBox' onChange="javascript:makeExpDate();">
-                        <option><#if creditCard?has_content && expYear?has_content>${expYear?if_exists}<#else>${requestParameters.expYear?if_exists}</#if></option>
+                        <#if creditCard?has_content && expYear?has_content><#assign ccExprYear = expYear><#else><#assign ccExprYear = requestParameters.expYear?if_exists></#if> 
+                        <option value="${ccExprYear?if_exists}">${ccExprYear?if_exists}</option>
                         <option></option>          
-                        <option>2003</option>
-                        <option>2004</option>
-                        <option>2005</option>
-                        <option>2006</option>
-                        <option>2007</option>
-                        <option>2008</option>
+                        <option value="2003">2003</option>
+                        <option value="2004">2004</option>
+                        <option value="2005">2005</option>
+                        <option value="2006">2006</option>
+                        <option value="2007">2007</option>
+                        <option value="2008">2008</option>
                       </select>
                     *</td>                                                       
                   </tr>
