@@ -39,6 +39,7 @@ fi
 # ----- Set JAVA_OPTIONS and Start Catalina -----------------------------------------
 
 export JAVA_OPTIONS="$JAVA_OPTIONS -Dofbiz.home=$OFBIZ_HOME"
+#export JAVA_OPTIONS="$JAVA_OPTIONS -Dofbiz.home=$OFBIZ_HOME -Xrunhprof:cpu=times,thread=y,depth=16,cutoff=0,format=a"
 
 CP=`find $OFBIZ_HOME/core/lib -name *.jar | paste -s -d":" -`
 CP=$CP:`find $OFBIZ_HOME/lib/share -name *.jar | paste -s -d":" -`

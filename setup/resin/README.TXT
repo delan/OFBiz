@@ -1,5 +1,5 @@
 # $Id$
-# Andy Zeneski (jaz@zsolv.com)
+# Andy Zeneski (jaz@ofbiz.org)
 
 The Resin setup is different then the Tomcat setup.
 The OFBiz JAR files are used in place for ease during development.
