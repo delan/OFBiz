@@ -43,11 +43,11 @@ import org.ofbiz.core.entity.*;
 public class CategoryWorker {
 
     public static void getRelatedProducts(PageContext pageContext, String attributePrefix) {
-        getRelatedProducts(pageContext, attributePrefix, null, true);
+        getRelatedProducts(pageContext, attributePrefix, null, true, 10);
     }
 
     public static void getRelatedProducts(PageContext pageContext, String attributePrefix, String parentId) {
-        getRelatedProducts(pageContext, attributePrefix, parentId, true);
+        getRelatedProducts(pageContext, attributePrefix, parentId, true, 10);
     }
 
     /**
@@ -60,12 +60,12 @@ public class CategoryWorker {
      *@param parentId The ID of the parent category
      */
     public static void getRelatedProducts(PageContext pageContext, String attributePrefix,
-                                          String parentId, boolean limitView) {
+                                          String parentId, boolean limitView, int defaultViewSize) {
         GenericDelegator delegator = (GenericDelegator) pageContext.getRequest().getAttribute("delegator");
         if (attributePrefix == null)
             attributePrefix = "";
         
-        getRelatedProductCategoryMembers(pageContext, attributePrefix, parentId, limitView);
+        getRelatedProductCategoryMembers(pageContext, attributePrefix, parentId, limitView, defaultViewSize);
         
         Integer lowIndex = (Integer) pageContext.getAttribute(attributePrefix + "lowIndex");
         Integer highIndex = (Integer) pageContext.getAttribute(attributePrefix + "highIndex");
@@ -104,7 +104,7 @@ public class CategoryWorker {
      *@param parentId The ID of the parent category
      */
     public static void getRelatedProductCategoryMembers(PageContext pageContext, String attributePrefix,
-                                                        String parentId, boolean limitView) {
+                                                        String parentId, boolean limitView, int defaultViewSize) {
         ServletRequest request = pageContext.getRequest();
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
         if (attributePrefix == null)
@@ -117,11 +117,11 @@ public class CategoryWorker {
             viewIndex = 0;
         }
 
-        int viewSize = 10;
+        int viewSize = defaultViewSize;
         try {
             viewSize = Integer.valueOf((String) pageContext.getRequest().getParameter("VIEW_SIZE")).intValue();
         } catch (Exception e) {
-            viewSize = 10;
+            viewSize = defaultViewSize;
         }
 
         if (parentId == null)
