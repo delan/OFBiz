@@ -1,29 +1,28 @@
 /*
  * $Id$
  *
- * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
- * <p>Permission is hereby granted, free of charge, to any person obtaining a
- *  copy of this software and associated documentation files (the "Software"),
- *  to deal in the Software without restriction, including without limitation
- *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
- *  and/or sell copies of the Software, and to permit persons to whom the
- *  Software is furnished to do so, subject to the following conditions:
+ * Permission is hereby granted, free of charge, to any person obtaining a
+ * copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following conditions:
  *
- * <p>The above copyright notice and this permission notice shall be included
- *  in all copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included
+ * in all copies or substantial portions of the Software.
  *
- * <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
- *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
- *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
- *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
- *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ * CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ * OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
  */
-
 package org.ofbiz.core.entity;
-
 
 import java.util.*;
 import java.sql.*;
@@ -36,13 +35,13 @@ import org.ofbiz.core.entity.transaction.*;
 import org.ofbiz.core.config.*;
 import org.ofbiz.core.util.*;
 
-
 /**
  * ConnectionFactory - central source for JDBC connections
  *
- * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version 1.0
- * Created on July 1, 2001, 5:03 PM
+ * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
+ * @version    $Revision$
+ * @since      2.0
  */
 public class ConnectionFactory {
     // Debug module name
@@ -153,6 +152,19 @@ public class ConnectionFactory {
 
             break;
 
+        case EntityConfigUtil.DatasourceInfo.TYPE_JOTM_JDBC:
+            Element jotmJdbcElement = datasourceInfo.datasourceTypeElement;
+           
+            // Use JOTM (enhydra-jdbc.jar) connection pooling
+            try {
+                Connection con = JotmConnectionFactory.getConnection(helperName, jotmJdbcElement);
+                if (con != null) return con;
+            } catch (Exception ex) {
+                Debug.logError(ex, "There was an error loading JOTM, this IS a serious problem. If you are not attempting to use JOTM, comment out the jotm-jdbc element from the datasource definition in entityengine.xml.");
+            }
+            
+            break;
+            
         case EntityConfigUtil.DatasourceInfo.TYPE_TYREX_DATA_SOURCE:
             Element tyrexDataSourceElement = datasourceInfo.datasourceTypeElement;
             String dataSourceName = tyrexDataSourceElement.getAttribute("dataSource-name");
@@ -232,7 +244,7 @@ public class ConnectionFactory {
             break;
             
         case EntityConfigUtil.DatasourceInfo.TYPE_OTHER:
-            Debug.logError("Cannot find JDBC definition, no know element found for helperName \"" + helperName + "\"", module);
+            Debug.logError("Cannot find JDBC definition, no known element found for helperName \"" + helperName + "\"", module);
             break;
         }
         Debug.logError("******* ERROR: No database connection found for helperName \"" + helperName + "\"", module);

@@ -35,6 +35,7 @@ import org.ofbiz.core.entity.*;
  * Misc. utility method for dealing with the entityengine.xml file
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
+ * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
  * @version    $Revision$
  * @since      2.0
  */
@@ -312,12 +313,14 @@ public class EntityConfigUtil {
         public String fieldTypeName;
         public List sqlLoadPaths = new LinkedList();
         public Element datasourceElement;
-
-        public static final int TYPE_JNDI_JDBC = 1;
+        
+        public static final int TYPE_JNDI_JDBC = 1;        
         public static final int TYPE_INLINE_JDBC = 2;
         public static final int TYPE_TYREX_DATA_SOURCE = 3;
         public static final int TYPE_OTHER = 4;
         public static final int TYPE_DBCP_JDBC = 5;
+        public static final int TYPE_JOTM_JDBC = 6;
+                
         public int datasourceType;
         public Element datasourceTypeElement;
 
@@ -385,19 +388,23 @@ public class EntityConfigUtil {
             Element tyrexDataSourceElement = UtilXml.firstChildElement(datasourceElement, "tyrex-dataSource");
             Element inlineJdbcElement = UtilXml.firstChildElement(datasourceElement, "inline-jdbc");
             Element dbcpJdbcElement = UtilXml.firstChildElement(datasourceElement, "dbcp-jdbc");
+            Element jotmJdbcElement = UtilXml.firstChildElement(datasourceElement, "jotm-jdbc");
 
             if (jndiJdbcElement != null) {
                 datasourceType = DatasourceInfo.TYPE_JNDI_JDBC;
                 datasourceTypeElement = jndiJdbcElement;
+            } else if (jotmJdbcElement != null) {
+                datasourceType = DatasourceInfo.TYPE_JOTM_JDBC;
+                datasourceTypeElement = jotmJdbcElement;                
             } else if (tyrexDataSourceElement != null) {
                 datasourceType = DatasourceInfo.TYPE_TYREX_DATA_SOURCE;
-                datasourceTypeElement = tyrexDataSourceElement;
+                datasourceTypeElement = tyrexDataSourceElement;                
             } else if (inlineJdbcElement != null) {
                 datasourceType = DatasourceInfo.TYPE_INLINE_JDBC;
                 datasourceTypeElement = inlineJdbcElement;
             } else if (dbcpJdbcElement != null) {
                 datasourceType = DatasourceInfo.TYPE_DBCP_JDBC;
-                datasourceTypeElement = dbcpJdbcElement;
+                datasourceTypeElement = dbcpJdbcElement;            
             } else {
                 datasourceType = DatasourceInfo.TYPE_OTHER;
                 datasourceTypeElement = null;
