@@ -6,6 +6,7 @@ import java.util.*;
 import javax.servlet.http.*;
 
 import org.w3c.dom.*;
+import org.ofbiz.core.entity.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.service.*;
 
@@ -146,7 +147,15 @@ public class SimpleEvent {
     public String exec(HttpServletRequest request, ClassLoader loader) {
         Map env = new HashMap();
         env.put(requestName, request);
-        
+
+        if (loginRequired) {
+            GenericValue userLogin = (GenericValue) request.getSession().getAttribute(SiteDefs.USER_LOGIN);
+            if (userLogin == null) {
+                request.setAttribute(SiteDefs.ERROR_MESSAGE, "You must be logged in to complete the " + shortDescription + " process.");
+                return "error";
+            }
+        }
+
         Iterator eventOpsIter = eventOperations.iterator();
         while (eventOpsIter.hasNext()) {
             EventOperation eventOperation = (EventOperation) eventOpsIter.next();
@@ -330,6 +339,9 @@ public class SimpleEvent {
         FlexibleMessage messageSuffix;
         FlexibleMessage defaultMessage;
         
+        Map resultToRequest = new HashMap();
+        Map resultToSession = new HashMap();
+        
         public Service(Element element, SimpleEvent simpleEvent) {
             super(element, simpleEvent);
             serviceName = element.getAttribute("service-name");
@@ -350,6 +362,31 @@ public class SimpleEvent {
             messagePrefix = new FlexibleMessage(UtilXml.firstChildElement(element, "message-prefix"));
             messageSuffix = new FlexibleMessage(UtilXml.firstChildElement(element, "message-suffix"));
             defaultMessage = new FlexibleMessage(UtilXml.firstChildElement(element, "default-message"));
+            
+            //get result-to-request and result-to-session sub-ops
+            List resultToRequestElements = UtilXml.childElementList(element, "result-to-request");
+            if (resultToRequestElements != null && resultToRequestElements.size() > 0) {
+                Iterator iter = resultToRequestElements.iterator();
+                while (iter.hasNext()) {
+                    Element resultToRequestElement = (Element) iter.next();
+                    String reqName = resultToRequestElement.getAttribute("request-name");
+                    if (reqName == null || reqName.length() == 0) 
+                        reqName = resultToRequestElement.getAttribute("result-name");
+                    resultToRequest.put(reqName, resultToRequestElement.getAttribute("result-name"));
+                }
+            }
+            
+            List resultToSessionElements = UtilXml.childElementList(element, "result-to-session");
+            if (resultToSessionElements != null && resultToSessionElements.size() > 0) {
+                Iterator iter = resultToSessionElements.iterator();
+                while (iter.hasNext()) {
+                    Element resultToSessionElement = (Element) iter.next();
+                    String sesName = resultToSessionElement.getAttribute("session-name");
+                    if (sesName == null || sesName.length() == 0) 
+                        sesName = resultToSessionElement.getAttribute("result-name");
+                    resultToSession.put(sesName, resultToSessionElement.getAttribute("result-name"));
+                }
+            }
         }
         
         public boolean exec(Map env, HttpServletRequest request, ClassLoader loader) {
@@ -363,6 +400,11 @@ public class SimpleEvent {
             
             // invoke the service
             Map result = null;
+            if (includeUserLogin) {
+                GenericValue userLogin = (GenericValue) request.getSession().getAttribute(SiteDefs.USER_LOGIN);
+                if (userLogin != null)
+                    inMap.put("userLogin", userLogin);
+            }
             try {
                 result = dispatcher.runSync(serviceName, inMap);
             } catch (GenericServiceException e) {
@@ -372,6 +414,22 @@ public class SimpleEvent {
                 return false;
             }
 
+            if (resultToRequest.size() > 0) {
+                Iterator iter = resultToRequest.entrySet().iterator();
+                while (iter.hasNext()) {
+                    Map.Entry entry = (Map.Entry) iter.next();
+                    request.setAttribute((String) entry.getKey(), result.get(entry.getValue()));
+                }
+            }
+            
+            if (resultToSession.size() > 0) {
+                Iterator iter = resultToSession.entrySet().iterator();
+                while (iter.hasNext()) {
+                    Map.Entry entry = (Map.Entry) iter.next();
+                    request.getSession().setAttribute((String) entry.getKey(), result.get(entry.getValue()));
+                }
+            }
+            
             String errorPrefixStr = errorPrefix.getMessage(loader);
             String errorSuffixStr = errorSuffix.getMessage(loader);
             String successPrefixStr = successPrefix.getMessage(loader);
@@ -412,30 +470,34 @@ public class SimpleEvent {
         boolean isProperty = false;
 
         public FlexibleMessage(Element element) {
-            if (element.getAttribute("resource") != null) {
-                propertyResource = element.getAttribute("resource");
-                message = element.getAttribute("property");
+            String resAttr = element.getAttribute("resource");
+            String propAttr = element.getAttribute("property");
+            String elVal = UtilXml.elementValue(element);
+            if (resAttr != null && resAttr.length() > 0) {
+                propertyResource = resAttr;
+                message = propAttr;
                 isProperty = true;
-            } else if (UtilXml.elementValue(element) != null) {
-                message = UtilXml.elementValue(element);
+            } else if (elVal != null && elVal.length() > 0) {
+                message = elVal;
                 isProperty = false;
             }
         }
 
         public String getMessage(ClassLoader loader) {
+            Debug.logInfo("[FlexibleMessage.getMessage] isProperty: " + isProperty + ", message: " + message + ", propertyResource: " + propertyResource);
             if (!isProperty && message != null) {
+                Debug.logInfo("[FlexibleMessage.getMessage] Adding message: " + message);
                 return message;
-                //Debug.logInfo("[FlexibleMessage.getMessage] Adding message: " + message);
             } else if (isProperty && propertyResource != null && message != null) {
                 String propMsg = UtilProperties.getPropertyValue(UtilURL.fromResource(propertyResource, loader), message);
+                Debug.logInfo("[FlexibleMessage.getMessage] Adding property message: " + propMsg);
                 if (propMsg == null || propMsg.length() == 0)
                     return "Simple Map Processing error occurred, but no message was found, sorry.";
                 else
                     return propMsg;
-                //Debug.logInfo("[FlexibleMessage.getMessage] Adding property message: " + propMsg);
             } else {
-                return "Simple Map Processing error occurred, but no message was found, sorry.";
-                //Debug.logInfo("[FlexibleMessage.getMessage] ERROR: No message found");
+                return "";
+                //Debug.logInfo("[FlexibleMessage.getMessage] No message found, returning empty string");
             }
         }
     }

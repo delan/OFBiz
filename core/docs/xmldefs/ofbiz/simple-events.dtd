@@ -58,7 +58,7 @@
     error-list-name CDATA "_error_list_"
 >
 
-<!ELEMENT service ( error-prefix?, error-suffix?, success-prefix?, success-suffix?, message-prefix?, message-suffix?, default-message? )>
+<!ELEMENT service ( error-prefix?, error-suffix?, success-prefix?, success-suffix?, message-prefix?, message-suffix?, default-message?, result-to-request*, result-to-session* )>
 <!ATTLIST service
     service-name CDATA #REQUIRED
     in-map-name CDATA #REQUIRED
@@ -101,4 +101,15 @@
 <!ATTLIST default-message
     resource CDATA #IMPLIED
     property CDATA #IMPLIED
+>
+
+<!ELEMENT result-to-request EMPTY>
+<!ATTLIST result-to-request
+    result-name CDATA #REQUIRED
+    request-name CDATA #IMPLIED
+>
+<!ELEMENT result-to-session EMPTY>
+<!ATTLIST result-to-session
+    result-name CDATA #REQUIRED
+    session-name CDATA #IMPLIED
 >
