@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.6 $
+ * @version    $Revision: 1.7 $
  */
 -->
 
@@ -1014,6 +1014,7 @@
             package-name="org.ofbiz.party.party"
             title="Party Entity">
       <field name="partyId" type="id-ne"></field>
+      <field name="externalId" type="id"></field>
       <field name="partyTypeId" type="id-ne"></field>
       <field name="createdDate" type="date-time"></field>
       <field name="createdByUserLogin" type="id-vlong"></field>
@@ -1871,6 +1872,7 @@
       <field name="personalTitle" type="name"></field>
       <field name="suffix" type="name"></field>
       <field name="nickname" type="name"></field>
+      <field name="memberId" type="id"></field>
       <field name="gender" type="indicator"></field>
       <field name="birthDate" type="date"></field>
       <field name="height" type="floating-point"></field>
