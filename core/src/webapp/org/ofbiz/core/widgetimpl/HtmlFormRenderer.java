@@ -376,7 +376,12 @@ public class HtmlFormRenderer implements FormStringRenderer {
             buffer.append(" value=\"");
             buffer.append(currentValue);
             buffer.append("\">");
-            buffer.append(ModelFormField.FieldInfoWithOptions.getDescriptionForOptionKey(currentValue, allOptionValues));
+            String explicitDescription = dropDownField.getCurrentDescription(context);
+            if (UtilValidate.isNotEmpty(explicitDescription)) {
+                buffer.append(explicitDescription);
+            } else {
+                buffer.append(ModelFormField.FieldInfoWithOptions.getDescriptionForOptionKey(currentValue, allOptionValues));
+            }
             buffer.append("</option>");
             
             // add a "separator" option

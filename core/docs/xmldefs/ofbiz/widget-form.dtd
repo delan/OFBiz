@@ -244,6 +244,7 @@
     allow-empty ( true | false ) "false"
     current ( first-in-list | selected ) "first-in-list"
     no-current-selected-key CDATA #IMPLIED
+    current-description CDATA #IMPLIED
 >
 
 <!ELEMENT radio ( (entity-options | list-options | option)* )>

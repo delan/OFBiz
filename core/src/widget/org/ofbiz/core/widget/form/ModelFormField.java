@@ -1174,7 +1174,7 @@ public class ModelFormField {
                 Iterator constraintElementIter = constraintElements.iterator();
                 while (constraintElementIter.hasNext()) {
                     Element constraintElement = (Element) constraintElementIter.next();
-                    constraintMap.put(constraintElement.getAttribute("name"), constraintElement.getAttribute("value"));
+                    constraintMap.put(constraintElement.getAttribute("name"), new FlexibleStringExpander(constraintElement.getAttribute("value")));
                 }
             }
 
@@ -1201,17 +1201,28 @@ public class ModelFormField {
         }
         
         public void addOptionValues(List optionValues, Map context, GenericDelegator delegator) {
-            // add key and description with string expansion, ie expanding ${} stuff
+            // first expand any conditions that need expanding based on the current context
+            Map expandedConstraintMap = null;
+            if (this.constraintMap != null) {
+                expandedConstraintMap = new HashMap();
+                Iterator constraintMapIter = this.constraintMap.entrySet().iterator();
+                while (constraintMapIter.hasNext()) {
+                    Map.Entry entry = (Map.Entry) constraintMapIter.next();
+                    expandedConstraintMap.put(entry.getKey(), ((FlexibleStringExpander) entry.getValue()).expandString(context));
+                }
+            }
+            
             try {
                 List values = null;
                 if (this.cache) {
-                    values = delegator.findByAndCache(this.entityName, this.constraintMap, this.orderByList);
+                    values = delegator.findByAndCache(this.entityName, expandedConstraintMap, this.orderByList);
                 } else {
-                    values = delegator.findByAnd(this.entityName, this.constraintMap, this.orderByList);
+                    values = delegator.findByAnd(this.entityName, expandedConstraintMap, this.orderByList);
                 }
                 Iterator valueIter = values.iterator();
                 while (valueIter.hasNext()) {
                     GenericValue value = (GenericValue) valueIter.next();
+                    // add key and description with string expansion, ie expanding ${} stuff
                     optionValues.add(new OptionValue(value.get(this.getKeyFieldName()).toString(), this.description.expandString(value)));
                 }
             } catch (GenericEntityException e) {
@@ -1558,6 +1569,7 @@ public class ModelFormField {
     public static class DropDownField extends FieldInfoWithOptions {
         protected boolean allowEmpty = false;
         protected String current;
+        protected FlexibleStringExpander currentDescription;
         
         protected DropDownField() { super(); }
 
@@ -1574,22 +1586,17 @@ public class ModelFormField {
             
             this.current = element.getAttribute("current");
             this.allowEmpty = "true".equals(element.getAttribute("allow-empty"));
+            this.currentDescription = new FlexibleStringExpander(element.getAttribute("current-description"));
         }
 
         public void renderFieldString(StringBuffer buffer, Map context, FormStringRenderer formStringRenderer) {
             formStringRenderer.renderDropDownField(buffer, context, this);
         }
         
-        /**
-         * @return
-         */
         public boolean isAllowEmpty() {
-            return allowEmpty;
+            return this.allowEmpty;
         }
 
-        /**
-         * @return
-         */
         public String getCurrent() {
             if (UtilValidate.isEmpty(this.current)) {
                 return "first-in-list";
@@ -1598,18 +1605,20 @@ public class ModelFormField {
             }
         }
 
-        /**
-         * @param b
-         */
-        public void setAllowEmpty(boolean b) {
-            allowEmpty = b;
+        public String getCurrentDescription(Map context) {
+            return this.currentDescription.expandString(context);
         }
 
-        /**
-         * @param string
-         */
+        public void setAllowEmpty(boolean b) {
+            this.allowEmpty = b;
+        }
+
         public void setCurrent(String string) {
-            current = string;
+            this.current = string;
+        }
+
+        public void setCurrentDescription(String string) {
+            this.currentDescription = new FlexibleStringExpander(string);
         }
     }
 
