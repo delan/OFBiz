@@ -916,6 +916,9 @@
       <relation type="many" rel-entity-name="InvoiceItem">
         <key-map field-name="inventoryItemId"/>
       </relation>
+      <relation type="many" rel-entity-name="OrderItemInventoryRes">
+      	<key-map field-name="inventoryItemId"/>
+      </relation>
       <relation type="many" rel-entity-name="WorkEffortInventoryProduced">
         <key-map field-name="inventoryItemId"/>
       </relation>
