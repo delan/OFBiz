@@ -305,7 +305,7 @@
         <%="EXT_WORLDPAY".equals(checkOutPaymentId) ? "CHECKED" : ""%>>
     </td>
     <td width="50%" nowrap>
-      <span class="tabletext">WorldPay&nbspPayment</span>
+      <span class="tabletext">WorldPay&nbsp;Payment</span>
     </td>
   </tr>  
   <tr><td colspan="2"><hr class='sepbar'></td></tr>

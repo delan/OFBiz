@@ -246,7 +246,7 @@
     
     <request-map uri="callWorldPay">
     	<security https="true" auth="true"/>
-    	<event type="java" path="org.ofbiz.commonapp.thirdparty.worldpay.WorldPayEvents" invoke="WorldPayEvents"/>
+    	<event type="java" path="org.ofbiz.commonapp.thirdparty.worldpay.WorldPayEvents" invoke="worldPayRequest"/>
     	<response name="success" type="none"/>
     	<response name="error" type="view" value="checkout"/>
     </request-map>
