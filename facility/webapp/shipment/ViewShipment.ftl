@@ -42,29 +42,9 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
         <td width="80%" align="left"><span class="tabletext">${(statusItem.description)?default(shipment.statusId?if_exists)}</span></td>
     </tr>
     <tr>
-        <td width="20%" align="right"><span class="tableheadtext">Facilities</span></td>
-        <td><span class="tabletext">&nbsp;</span></td>
-        <td width="80%" align="left">
-            <span class="tabletext">
-                <span class="tableheadtext">Origin:&nbsp;</span>${(originFacility.facilityName)?if_exists}&nbsp;[${(shipment.originFacilityId?if_exists)}]
-                <span class="tableheadtext">Destination:&nbsp;</span>${(destinationFacility.facilityName)?if_exists}&nbsp;[${(shipment.destinationFacilityId?if_exists)}]
-            </span>
-        </td>
-    </tr>
-    <tr>
         <td width="20%" align="right"><span class="tableheadtext">Primary Order Id</span></td>
         <td><span class="tabletext">&nbsp;</span></td>
         <td width="80%" align="left"><span class="tabletext">${shipment.primaryOrderId?if_exists}</span></td>
-    </tr>
-    <tr>
-        <td width="20%" align="right"><span class="tableheadtext">Parties</span></td>
-        <td><span class="tabletext">&nbsp;</span></td>
-        <td width="80%" align="left">
-            <span class="tabletext">
-                <span class="tableheadtext">To:&nbsp;</span>${(toPerson.firstName)?if_exists} ${(toPerson.middleName)?if_exists} ${(toPerson.lastName)?if_exists} ${(toPartyGroup.groupName)?if_exists} [${shipment.partyIdTo?if_exists}]
-                <span class="tableheadtext">From:&nbsp;</span>${(fromPerson.firstName)?if_exists} ${(fromPerson.middleName)?if_exists} ${(fromPerson.lastName)?if_exists} ${(fromPartyGroup.groupName)?if_exists} [${shipment.partyIdFrom?if_exists}]
-            </span>
-        </td>
     </tr>
     <tr>
         <td width="20%" align="right"><span class="tableheadtext">Estimated Dates</span></td>
@@ -91,6 +71,46 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
         <td width="20%" align="right"><span class="tableheadtext">Handling Instructions</span></td>
         <td><span class="tabletext">&nbsp;</span></td>
         <td width="80%" align="left"><span class="tabletext">${shipment.handlingInstructions?if_exists}</span></td>
+    </tr>
+    <tr>
+        <td width="20%" align="right"><span class="tableheadtext">Facilities</span></td>
+        <td><span class="tabletext">&nbsp;</span></td>
+        <td width="80%" align="left">
+            <div class="tabletext"><span class="tableheadtext">Origin:&nbsp;</span>${(originFacility.facilityName)?if_exists}&nbsp;[${(shipment.originFacilityId?if_exists)}]</div>
+            <div class="tabletext"><span class="tableheadtext">Destination:&nbsp;</span>${(destinationFacility.facilityName)?if_exists}&nbsp;[${(shipment.destinationFacilityId?if_exists)}]</div>
+        </td>
+    </tr>
+    <tr>
+        <td width="20%" align="right"><span class="tableheadtext">Parties</span></td>
+        <td><span class="tabletext">&nbsp;</span></td>
+        <td width="80%" align="left">
+            <span class="tabletext">
+                <span class="tableheadtext">To:&nbsp;</span>${(toPerson.firstName)?if_exists} ${(toPerson.middleName)?if_exists} ${(toPerson.lastName)?if_exists} ${(toPartyGroup.groupName)?if_exists} [${shipment.partyIdTo?if_exists}]
+                <span class="tableheadtext">From:&nbsp;</span>${(fromPerson.firstName)?if_exists} ${(fromPerson.middleName)?if_exists} ${(fromPerson.lastName)?if_exists} ${(fromPartyGroup.groupName)?if_exists} [${shipment.partyIdFrom?if_exists}]
+            </span>
+        </td>
+    </tr>
+    <tr>
+        <td width="20%" align="right"><span class="tableheadtext">Addresses</span></td>
+        <td><span class="tabletext">&nbsp;</span></td>
+        <td width="80%" align="left">
+            <div class="tabletext"><span class="tableheadtext">Origin:&nbsp;</span>${shipment.originContactMechId?if_exists}&nbsp;<#if originPostalAddress?has_content>[To: ${originPostalAddress.toName?if_exists}, Attn: ${originPostalAddress.attnName?if_exists}, ${originPostalAddress.address1?if_exists}, ${originPostalAddress.address2?if_exists}, ${originPostalAddress.city?if_exists}, ${originPostalAddress.stateProvinceGeoId?if_exists}, ${originPostalAddress.postalCode?if_exists}, ${originPostalAddress.countryGeoId?if_exists}]</#if></div>
+            <div class="tabletext"><span class="tableheadtext">Destination:&nbsp;</span>${shipment.destinationContactMechId?if_exists}&nbsp;<#if destinationPostalAddress?has_content>[To: ${destinationPostalAddress.toName?if_exists}, Attn: ${destinationPostalAddress.attnName?if_exists}, ${destinationPostalAddress.address1?if_exists}, ${destinationPostalAddress.address2?if_exists}, ${destinationPostalAddress.city?if_exists}, ${destinationPostalAddress.stateProvinceGeoId?if_exists}, ${destinationPostalAddress.postalCode?if_exists}, ${destinationPostalAddress.countryGeoId?if_exists}]</#if></div>
+        </td>
+    </tr>
+    <tr>
+        <td width="20%" align="right"><span class="tableheadtext">Created</span></td>
+        <td><span class="tabletext">&nbsp;</span></td>
+        <td width="80%" align="left">
+            <div class="tabletext">by [${shipment.createdByUserLogin?if_exists}] on ${(shipment.createdDate.toString())?if_exists}</div>
+        </td>
+    </tr>
+    <tr>
+        <td width="20%" align="right"><span class="tableheadtext">Last Updated</span></td>
+        <td><span class="tabletext">&nbsp;</span></td>
+        <td width="80%" align="left">
+            <div class="tabletext">by [${shipment.lastModifiedByUserLogin?if_exists}] on ${(shipment.lastModifiedDate.toString())?if_exists}</div>
+        </td>
     </tr>
 </table>
 
@@ -183,7 +203,8 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
         <td><div class="tableheadtext">Segment#</div></td>
         <td>
             <div class="tableheadtext">Carrier-ShipmentMethod</div>
-            <div class="tableheadtext">Origin-Destination</div>
+            <div class="tableheadtext">Origin-Destination Facility</div>
+            <div class="tableheadtext">Origin-Destination Address ID</div>
         </td>
         <td>
             <div class="tableheadtext">Estimated (Start-Arrive)</div>
@@ -199,14 +220,25 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
     <#assign shipmentMethodType = shipmentRouteSegmentData.shipmentMethodType?if_exists>
     <#assign carrierPerson = shipmentRouteSegmentData.carrierPerson?if_exists>
     <#assign carrierPartyGroup = shipmentRouteSegmentData.carrierPartyGroup?if_exists>
+    <#assign originPostalAddress = shipmentRouteSegmentData.originPostalAddress?if_exists>
+    <#assign destPostalAddress = shipmentRouteSegmentData.destPostalAddress?if_exists>
     <tr>
         <td><div class="tabletext">${shipmentRouteSegment.shipmentRouteSegmentId}</div></td>
         <td>
             <span class="tabletext">${(carrierPerson.firstName)?if_exists} ${(carrierPerson.middleName)?if_exists} ${(carrierPerson.lastName)?if_exists} ${(carrierPartyGroup.groupName)?if_exists} [${shipmentRouteSegment.carrierPartyId?if_exists}]</span>
             <span class="tabletext">${shipmentMethodType.description?default(shipmentRouteSegment.shipmentMethodTypeId?if_exists)}</span>
             <br/>
-            <span class="tabletext">${(originFacility.facilityName)?if_exists} [${originFacility.facilityId?if_exists}]</span>
-            <span class="tabletext">${(destFacility.facilityName)?if_exists} [${destFacility.facilityId?if_exists}]</span>
+            <span class="tabletext">Origin: ${(originFacility.facilityName)?if_exists} [${originFacility.facilityId?if_exists}]</span>
+            <span class="tabletext">Dest: ${(destFacility.facilityName)?if_exists} [${destFacility.facilityId?if_exists}]</span>
+            <br/>
+            <div class="tabletext">
+                Origin: <b>${shipmentRouteSegment.originContactMechId?if_exists}</b>
+                <#if originPostalAddress?has_content>[To: ${originPostalAddress.toName?if_exists}, Attn: ${originPostalAddress.attnName?if_exists}, ${originPostalAddress.address1?if_exists}, ${originPostalAddress.address2?if_exists}, ${originPostalAddress.city?if_exists}, ${originPostalAddress.stateProvinceGeoId?if_exists}, ${originPostalAddress.postalCode?if_exists}, ${originPostalAddress.countryGeoId?if_exists}]</#if>
+            </div>
+            <div class="tabletext">
+                Dest: <b>${shipmentRouteSegment.destContactMechId?if_exists}</b>
+                <#if destPostalAddress?has_content>[To: ${destPostalAddress.toName?if_exists}, Attn: ${destPostalAddress.attnName?if_exists}, ${destPostalAddress.address1?if_exists}, ${destPostalAddress.address2?if_exists}, ${destPostalAddress.city?if_exists}, ${destPostalAddress.stateProvinceGeoId?if_exists}, ${destPostalAddress.postalCode?if_exists}, ${destPostalAddress.countryGeoId?if_exists}]</#if>
+            </div>
         </td>
         <td>
             <div class="tabletext">[${(shipmentRouteSegment.estimatedStartDate.toString())?if_exists} - ${(shipmentRouteSegment.estimatedArrivalDate.toString())?if_exists}]</span>

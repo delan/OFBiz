@@ -37,8 +37,6 @@ context.put("shipmentId", shipmentId);
 context.put("shipment", shipment);
 
 if (shipment != null) {
-    context.put("originFacility", shipment.getRelatedOne("OriginFacility"));
-    context.put("destinationFacility", shipment.getRelatedOne("DestinationFacility"));
     context.put("shipmentType", shipment.getRelatedOne("ShipmentType"));
     context.put("statusItem", shipment.getRelatedOne("StatusItem"));
     context.put("primaryOrderHeader", shipment.getRelatedOne("PrimaryOrderHeader"));
@@ -46,4 +44,8 @@ if (shipment != null) {
     context.put("toPartyGroup", shipment.getRelatedOne("ToPartyGroup"));
     context.put("fromPerson", shipment.getRelatedOne("FromPerson"));
     context.put("fromPartyGroup", shipment.getRelatedOne("FromPartyGroup"));
+    context.put("originFacility", shipment.getRelatedOne("OriginFacility"));
+    context.put("destinationFacility", shipment.getRelatedOne("DestinationFacility"));
+    context.put("originPostalAddress", shipment.getRelatedOne("OriginPostalAddress"));
+    context.put("destinationPostalAddress", shipment.getRelatedOne("DestinationPostalAddress"));
 }
