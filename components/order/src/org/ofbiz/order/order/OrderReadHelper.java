@@ -1,5 +1,5 @@
 /*
- * $Id: OrderReadHelper.java,v 1.11 2003/11/21 00:06:43 ajzeneski Exp $
+ * $Id: OrderReadHelper.java,v 1.12 2003/11/21 19:08:10 ajzeneski Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -51,7 +51,7 @@ import org.ofbiz.security.Security;
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     Eric Pabst
  * @author     <a href="mailto:ray.barlow@whatsthe-point.com">Ray Barlow</a>
- * @version    $Revision: 1.11 $
+ * @version    $Revision: 1.12 $
  * @since      2.0
  */
 public class OrderReadHelper {
@@ -583,9 +583,9 @@ public class OrderReadHelper {
                 }
                 if (product != null) {
                     if (ProductWorker.shippingApplies(product)) {
-                        Double height = product.getDouble("height");
-                        Double width = product.getDouble("width");
-                        Double depth = product.getDouble("depth");
+                        Double height = product.getDouble("productHeight");
+                        Double width = product.getDouble("productWidth");
+                        Double depth = product.getDouble("productDepth");
                         String isVariant = product.getString("isVariant");
                         if (height == null && width == null && depth == null && isVariant != null && "Y".equals(isVariant)) {
                             // get the virtual product and check its values
@@ -600,9 +600,9 @@ public class OrderReadHelper {
                                 Debug.logError(e, "Problem getting virtual product");
                             }
                             if (virtual != null) {
-                                height = virtual.getDouble("height");
-                                width = virtual.getDouble("width");
-                                depth = virtual.getDouble("depth");
+                                height = virtual.getDouble("productHeight");
+                                width = virtual.getDouble("productWidth");
+                                depth = virtual.getDouble("productDepth");
                             }
                         }
 
