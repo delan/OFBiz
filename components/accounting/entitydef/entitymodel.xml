@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.7 $
+ * @version    $Revision: 1.8 $
  */
 -->
 
@@ -2105,6 +2105,7 @@
       <field name="paymentMethodId" type="id"></field>
       <field name="amount" type="currency-amount"></field>
       <field name="referenceNum" type="short-varchar"></field>
+      <field name="subReference" type="short-varchar"></field>
       <field name="gatewayCode" type="short-varchar"></field>
       <field name="gatewayFlag" type="short-varchar"></field>
       <field name="gatewayAvsResult" type="short-varchar"></field>
