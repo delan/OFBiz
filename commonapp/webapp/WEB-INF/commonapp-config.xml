@@ -53,33 +53,35 @@
     </request-map>
 
     <request-map uri="main">
-    	<security https="false" auth="false"/>
-    	<response name="success" type="view" value="main"/>
+    	<security https="false" auth="false"/><response name="success" type="view" value="main"/>
     </request-map>
     
     <request-map uri="sitemap">
-    	<security https="false" auth="false"/>
-    	<response name="success" type="view" value="sitemap"/>
+    	<security https="false" auth="false"/><response name="success" type="view" value="sitemap"/>
     </request-map>
     
     <request-map uri="install">
-    	<security https="false" auth="false"/>
-    	<response name="success" type="view" value="install"/>
+    	<security https="false" auth="false"/><response name="success" type="view" value="install"/>
     </request-map>
     
     <request-map uri="entitymaint">
-    	<security https="true" auth="true"/>
-    	<response name="success" type="view" value="entitymaint"/>
+    	<security https="true" auth="true"/><response name="success" type="view" value="entitymaint"/>
+    </request-map>
+
+    <request-map uri="entityref">
+    	<security https="true" auth="true"/><response name="success" type="view" value="entityref"/>
+    </request-map>
+
+    <request-map uri="xmldsdump">
+    	<security https="true" auth="true"/><response name="success" type="view" value="xmldsdump"/>
     </request-map>
 
     <request-map uri="FindGeneric">
-    	<security https="true" auth="true"/>
-    	<response name="success" type="view" value="FindGeneric"/>
+    	<security https="true" auth="true"/><response name="success" type="view" value="FindGeneric"/>
     </request-map>
     
     <request-map uri="ViewGeneric">
-    	<security https="true" auth="true"/>
-    	<response name="success" type="view" value="ViewGeneric"/>
+    	<security https="true" auth="true"/><response name="success" type="view" value="ViewGeneric"/>
     </request-map>
     
     <request-map uri="UpdateGeneric">
@@ -152,6 +154,7 @@
     <view-map name="ModelWriter" page="/entity/ModelWriter.jsp"/>
     <view-map name="EditEntity" page="/entity/EditEntity.jsp"/>
     <view-map name="checkdb" page="/entity/checkdb.jsp"/>
+    <view-map name="xmldsdump" page="/entity/xmldsdump.jsp"/>
 
     <view-map name="EditUtilCache" page="/cache/EditUtilCache.jsp"/>
     <view-map name="FindUtilCache" page="/cache/FindUtilCache.jsp"/>
@@ -159,4 +162,3 @@
     <!-- end of view mappings -->
     
 </site-conf>
-

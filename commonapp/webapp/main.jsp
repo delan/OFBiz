@@ -80,6 +80,7 @@ definitions, checking them with the current database, and generating text based 
       <li><a href="<%=response.encodeURL(controlPath + "/view/ModelWriter")%>" class='buttontext' target='_blank'>Generate Entity Model XML (all in one)</A>
       <li><a href="<%=response.encodeURL(controlPath + "/view/ModelWriter?savetofile=true")%>" target='_blank' class='buttontext'>Save Entity Model XML to Files</A><BR>
       <li><a href="<%=response.encodeURL(controlPath + "/view/EditEntity")%>" class='buttontext' target='_blank'>Edit Entity Definitions</A> (also see the Entity Reference for this)
+      <li><a href="<%=response.encodeURL(controlPath + "/view/xmldsdump")%>" class='buttontext'>XML Data Import/Export</A>
     </ul>
   <%}%>
   <%if(security.hasPermission("UTIL_CACHE_VIEW", session)){%>
