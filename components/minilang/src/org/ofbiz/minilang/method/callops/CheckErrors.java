@@ -1,5 +1,5 @@
 /*
- * $Id: CheckErrors.java,v 1.1 2003/08/17 06:06:13 ajzeneski Exp $
+ * $Id: CheckErrors.java,v 1.2 2004/05/14 23:37:40 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -30,14 +30,13 @@ import org.ofbiz.minilang.SimpleMethod;
 import org.ofbiz.minilang.method.ContextAccessor;
 import org.ofbiz.minilang.method.MethodContext;
 import org.ofbiz.minilang.method.MethodOperation;
-import org.ofbiz.service.ServiceUtil;
 import org.w3c.dom.Element;
 
 /**
  * An event operation that checks a message list and may introduce a return code and stop the event
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class CheckErrors extends MethodOperation {
@@ -70,13 +69,14 @@ public class CheckErrors extends MethodOperation {
             String errorCode = methodContext.expandString(this.errorCode);
             
             if (methodContext.getMethodType() == MethodContext.EVENT) {
+                /* The OLD way, now puts formatting control in the template...
                 String errMsg = errorPrefix.getMessage(methodContext.getLoader(), methodContext) +
                     ServiceUtil.makeMessageList(messages, messagePrefix.getMessage(methodContext.getLoader(), methodContext), 
                             messageSuffix.getMessage(methodContext.getLoader(), methodContext)) +
                             errorSuffix.getMessage(methodContext.getLoader(), methodContext);
-
                 methodContext.putEnv(simpleMethod.getEventErrorMessageName(), errMsg);
-
+                 */
+                methodContext.putEnv(simpleMethod.getEventErrorMessageListName(), messages);
                 methodContext.putEnv(simpleMethod.getEventResponseCodeName(), errorCode);
                 return false;
             } else if (methodContext.getMethodType() == MethodContext.SERVICE) {
