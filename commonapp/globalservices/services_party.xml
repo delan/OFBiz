@@ -35,14 +35,14 @@
     <service name="createPerson" engine="java"
             location="org.ofbiz.commonapp.party.party.PartyServices" invoke="createPerson" auth="false">
         <description>Create a Person</description>
-        <attribute name="partyId" type="String" mode="INOUT" optional="true"/>
         <implements service="interfacePerson"/>
+        <attribute name="partyId" type="String" mode="INOUT" optional="true"/>
     </service>
     <service name="updatePerson" engine="java"
             location="org.ofbiz.commonapp.party.party.PartyServices" invoke="updatePerson" auth="true">
         <description>Update a Person</description>
-        <attribute name="partyId" type="String" mode="IN" optional="true"/>
         <implements service="interfacePerson"/>
+        <attribute name="partyId" type="String" mode="IN" optional="true"/>
     </service>
 
     <service name="createPartyGroup" engine="java"
