@@ -1,5 +1,5 @@
 /*
- * $Id: ProductWorker.java,v 1.9 2003/11/25 06:05:36 jonesde Exp $
+ * $Id: ProductWorker.java,v 1.10 2003/12/05 18:55:18 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -26,6 +26,7 @@ package org.ofbiz.product.product;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.jsp.PageContext;
@@ -33,6 +34,7 @@ import javax.servlet.jsp.PageContext;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.OrderedMap;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -43,7 +45,7 @@ import org.ofbiz.entity.util.EntityUtil;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.9 $
+ * @version    $Revision: 1.10 $
  * @since      2.0
  */
 public class ProductWorker {
@@ -297,7 +299,34 @@ public class ProductWorker {
             Debug.logWarning(e, module);
         }
     }
-    
+
+    public static Map getOptionalProductFeatures(GenericDelegator delegator, String productId) {
+        Map featureMap = new OrderedMap();
+
+        List productFeatureAppls = null;
+        try {
+            productFeatureAppls = delegator.findByAnd("ProductFeatureAndAppl", UtilMisc.toMap("productId", productId, "productFeatureApplTypeId", "OPTIONAL_FEATURE"), UtilMisc.toList("productFeatureTypeId", "sequenceNum"));
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+        }
+
+        if (productFeatureAppls != null) {
+            Iterator i = productFeatureAppls.iterator();
+            while (i.hasNext()) {
+                GenericValue appl = (GenericValue) i.next();
+                String featureType = appl.getString("productFeatureTypeId");
+                List features = (List) featureMap.get(featureType);
+                if (features == null) {
+                    features = new LinkedList();
+                }
+                features.add(appl);
+                featureMap.put(featureType, features);
+            }
+        }
+
+        return featureMap;
+    }
+
     // product calc methods
     
     public static double calcOrderAdjustments(List orderHeaderAdjustments, double subTotal, boolean includeOther, boolean includeTax, boolean includeShipping) {

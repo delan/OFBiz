@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.21 $
+ *@version    $Revision: 1.22 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -142,6 +142,7 @@ function addToList() {
         <tr>
           <td NOWRAP>&nbsp;</td>
           <td NOWRAP><div class="tabletext"><b>${uiLabelMap.EcommerceProduct}</b></div></td>
+          <td NOWRAP>&nbsp;</td>
           <td NOWRAP align="center"><div class="tabletext"><b>${uiLabelMap.CommonQuantity}</b></div></td>
           <td NOWRAP align="right"><div class="tabletext"><b>${uiLabelMap.EcommerceUnitPrice}</b></div></td>
           <td NOWRAP align="right"><div class="tabletext"><b>${uiLabelMap.EcommerceAdjustments}</b></div></td>
@@ -153,11 +154,12 @@ function addToList() {
         <#assign promoItems = false>
         <#list shoppingCart.items() as cartLine>
           <#assign cartLineIndex = shoppingCart.getItemIndex(cartLine)>
+          <#assign lineOptionalFeatures = cartLine.getOptionalProductFeatures()>
           <#-- show adjustment info -->
           <#list cartLine.getAdjustments() as cartLineAdjustment>
             <!-- cart line ${cartLineIndex} adjustment: ${cartLineAdjustment} -->
           </#list>
-          <tr><td colspan="7"><hr class="sepbar"></td></tr>
+          <tr><td>&nbsp;</td><td colspan="6"><hr class="sepbar"></td></tr>
           <tr>
             <td>
                 <#if cartLine.getShoppingListId()?exists>
@@ -192,6 +194,29 @@ function addToList() {
                   </#if>
                 </div>
             </td>
+
+            <#-- gift wrap option -->
+            <#assign showNoGiftWrapOptions = false>
+            <td nowrap align="right">
+              <#assign giftWrapOption = lineOptionalFeatures.GIFT_WRAP?if_exists>
+              <#assign selectedOption = cartLine.getAdditionalProductFeatureAndAppl("GIFT_WRAP")?if_exists>
+              <#if giftWrapOption?has_content>
+                <select class="selectBox" name="option^GIFT_WRAP_${cartLineIndex}">
+                  <option value="">No Gift Wrap</option>
+                  <#list giftWrapOption as option>
+                    <option value="${option.productFeatureId}" <#if ((selectedOption.productFeatureId)?exists && selectedOption.productFeatureId == option.productFeatureId)>SELECTED</#if>>${option.description} : ${option.amount?string.currency}</option>
+                  </#list>
+                </select>
+              <#elseif showNoGiftWrapOptions>
+                <select class="selectBox" name="option^GIFT_WRAP_${cartLineIndex}">
+                  <option value="">No Gift Wrap</option>
+                </select>
+              <#else>
+                &nbsp;
+              </#if>
+            </td>
+            <#-- end gift wrap option -->
+
             <td nowrap align="center">
               <div class="tabletext">
                 <#if cartLine.getIsPromo() || cartLine.getShoppingListId()?exists>
@@ -209,7 +234,7 @@ function addToList() {
         </#list>
 
         <#if shoppingCart.getAdjustments()?has_content>
-            <tr><td colspan="7"><hr class="sepbar"></td></tr>
+            <tr><td>&nbsp;</td><td colspan="6"><hr class="sepbar"></td></tr>
               <tr>
                 <td colspan="5" nowrap align="right"><div class="tabletext">${uiLabelMap.CommonSubTotal}:</div></td>
                 <td nowrap align="right"><div class="tabletext"><@ofbizCurrency amount=shoppingCart.getSubTotal() isoCode=shoppingCart.getCurrency()/></div></td>
@@ -256,9 +281,7 @@ function addToList() {
           <td colspan="7">&nbsp;</td>
         </tr>
         </#if>
-        <tr>
-          <td colspan="7"><hr class="sepbar"/></td>
-        </tr>
+        <tr><td>&nbsp;</td><td colspan="6"><hr class="sepbar"></td></tr>
         <tr>
           <td colspan="7" align="right" valign="bottom">
             <div class="tabletext">
@@ -281,9 +304,7 @@ function addToList() {
             </div>
           </td>
         </tr>
-        <tr>
-          <td colspan="7"><hr class="sepbar"></td>
-        </tr>
+        <tr><td>&nbsp;</td><td colspan="6"><hr class="sepbar"></td></tr>
         <tr>
           <td colspan="7" align="center" valign="bottom">
             <div class="tabletext"><input type="checkbox" onClick="javascript:document.cartform.submit()" name="alwaysShowcart" <#if shoppingCart.viewCartOnAdd()>checked</#if>>&nbsp;${uiLabelMap.EcommerceAlwaysViewCartAfterAddingAnItem}.</div>

@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.57 $
+ * @version    $Revision: 1.58 $
  */
 -->
 
@@ -623,6 +623,7 @@
       <alias entity-alias="PF" name="description"/>
       <alias entity-alias="PF" name="uomId"/>
       <alias entity-alias="PF" name="numberSpecified"/>
+      <alias entity-alias="PF" name="defaultAmount"/>
       <alias entity-alias="PF" name="defaultSequenceNum"/>
       <alias entity-alias="PF" name="abbrev"/>
       <alias entity-alias="PF" name="idCode"/>

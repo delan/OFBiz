@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCartItem.java,v 1.23 2003/11/30 18:06:40 jonesde Exp $
+ * $Id: ShoppingCartItem.java,v 1.24 2003/12/05 18:55:19 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -47,7 +47,7 @@ import org.ofbiz.service.ModelService;
  *
  * @author     <a href="mailto:jaz@ofbiz.org.com">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.23 $
+ * @version    $Revision: 1.24 $
  * @since      2.0
  */
 public class ShoppingCartItem implements java.io.Serializable {
@@ -71,7 +71,6 @@ public class ShoppingCartItem implements java.io.Serializable {
     private double basePrice = 0.0;
     private double listPrice = 0.0;
     private double selectedAmount = 0.0;
-    private Map additionalProductFeatureAndAppls = null;
     private Map attributes = null;
     private String orderItemSeqId = null;
     private GenericValue orderShipmentPreference = null;
@@ -84,6 +83,7 @@ public class ShoppingCartItem implements java.io.Serializable {
     private Map quantityUsedPerPromoCandidate = new HashMap();
     private Map quantityUsedPerPromoFailed = new HashMap();
     private Map quantityUsedPerPromoActual = new HashMap();
+    private Map additionalProductFeatureAndAppls = new HashMap();
 
 
     /**
@@ -786,16 +786,16 @@ public class ShoppingCartItem implements java.io.Serializable {
     }
 
     public void putAdditionalProductFeatureAndAppl(GenericValue additionalProductFeatureAndAppl) {
-        if (this.additionalProductFeatureAndAppls == null) this.additionalProductFeatureAndAppls = new HashMap();
         if (additionalProductFeatureAndAppl == null) return;
 
         // if one already exists with the given type, remove it with the corresponding adjustment
         removeAdditionalProductFeatureAndAppl(additionalProductFeatureAndAppl.getString("productFeatureTypeId"));
 
         // adds to additional map and creates an adjustment with given price
-        this.additionalProductFeatureAndAppls.put(additionalProductFeatureAndAppl.get("productFeatureTypeId"), additionalProductFeatureAndAppl);
-        GenericValue orderAdjustment = this.getDelegator().makeValue("OrderAdjustment", null);
+        String featureType = additionalProductFeatureAndAppl.getString("productFeatureTypeId");
+        this.additionalProductFeatureAndAppls.put(featureType, additionalProductFeatureAndAppl);
 
+        GenericValue orderAdjustment = this.getDelegator().makeValue("OrderAdjustment", null);
         orderAdjustment.set("orderAdjustmentTypeId", "ADDITIONAL_FEATURE");
         orderAdjustment.set("description", additionalProductFeatureAndAppl.get("description"));
         orderAdjustment.set("productFeatureId", additionalProductFeatureAndAppl.get("productFeatureId"));
@@ -819,7 +819,7 @@ public class ShoppingCartItem implements java.io.Serializable {
             removeFeatureAdjustment(oldAdditionalProductFeatureAndAppl.getString("productFeatureId"));
         }
 
-        if (this.additionalProductFeatureAndAppls.size() == 0) this.additionalProductFeatureAndAppls = null;
+        //if (this.additionalProductFeatureAndAppls.size() == 0) this.additionalProductFeatureAndAppls = null;
 
         return oldAdditionalProductFeatureAndAppl;
     }
@@ -1048,15 +1048,20 @@ public class ShoppingCartItem implements java.io.Serializable {
             return false;
         }
 
-        boolean featuresEqual = this.additionalProductFeatureAndAppls == null ?
-            additionalProductFeatureAndAppls == null :
-            this.additionalProductFeatureAndAppls.equals(additionalProductFeatureAndAppls);
+        if (!(this.additionalProductFeatureAndAppls == null && additionalProductFeatureAndAppls == null) &&
+                !(this.additionalProductFeatureAndAppls != null && additionalProductFeatureAndAppls != null) &&
+                !(this.additionalProductFeatureAndAppls.size() == 0 && additionalProductFeatureAndAppls.size() == 0) &&
+                !(this.additionalProductFeatureAndAppls.equals(additionalProductFeatureAndAppls))) {
+            return false;
+        }
 
-        if (!featuresEqual) return false;
+        if (!(this.attributes == null && attributes == null) &&
+                !(this.attributes != null && attributes != null) &&
+                !(this.attributes.size() == 0 && attributes.size() == 0) &&
+                !(this.attributes.equals(attributes))) {
+            return false;
+        }
 
-        boolean attributesEqual = this.attributes == null ? attributes == null : this.attributes.equals(attributes);
-
-        if (!attributesEqual) return false;
         return true;
     }
 
@@ -1109,6 +1114,15 @@ public class ShoppingCartItem implements java.io.Serializable {
             return parentProduct.getString("productId");
         } else {
             return null;
+        }
+    }
+
+    public Map getOptionalProductFeatures() {
+        if (_product != null) {
+            return ProductWorker.getOptionalProductFeatures(getDelegator(), this.productId);
+        } else {
+            // non-product items do not have features
+            return new HashMap();
         }
     }
 

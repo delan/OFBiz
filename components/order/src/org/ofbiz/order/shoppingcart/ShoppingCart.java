@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCart.java,v 1.35 2003/12/03 15:28:59 jonesde Exp $
+ * $Id: ShoppingCart.java,v 1.36 2003/12/05 18:55:19 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -44,7 +44,7 @@ import org.ofbiz.product.store.ProductStoreWorker;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.35 $
+ * @version    $Revision: 1.36 $
  * @since      2.0
  */
 public class ShoppingCart implements java.io.Serializable {
@@ -77,12 +77,14 @@ public class ShoppingCart implements java.io.Serializable {
         public String productPromoCodeId;
         public double totalDiscountAmount = 0;
         public double quantityLeftInActions = 0;
+
         public ProductPromoUseInfo(String productPromoId, String productPromoCodeId, double totalDiscountAmount, double quantityLeftInActions) {
             this.productPromoId = productPromoId;
             this.productPromoCodeId = productPromoCodeId;
             this.totalDiscountAmount = totalDiscountAmount;
             this.quantityLeftInActions = quantityLeftInActions;
         }
+
         public String getProductPromoId() { return this.productPromoId; }
         public String getProductPromoCodeId() { return this.productPromoCodeId; }
         public double getTotalDiscountAmount() { return this.totalDiscountAmount; }
