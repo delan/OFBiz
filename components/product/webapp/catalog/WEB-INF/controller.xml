@@ -409,6 +409,48 @@
         <response name="error" type="view" value="EditProduct"/>
     </request-map>
 
+    <!-- ================ Product Asset Usage (rental) Requests ================= -->
+    <request-map uri="EditProductAssetUsage">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditProductAssetUsage"/>
+    </request-map>
+	
+	<request-map uri="updateProductAssetUsage">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateProduct"/>
+        <response name="success" type="view" value="EditProductAssetUsage"/>
+        <response name="error" type="view" value="EditProductAssetUsage"/>
+    </request-map>
+   <!-- ================ Fixed Asset to Product Requests ================= -->
+    <request-map uri="showFixedAssetProduct">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="showFixedAssetProduct"/>
+    </request-map>
+
+    <request-map uri="newFixedAssetProduct">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="newFixedAssetProduct"/>
+    </request-map>
+
+    <request-map uri="addFixedAssetProduct">
+        <security https="true" auth="true"/>
+        <event type="service" path="org.ofbiz.accounting.fixedasset.FixedAssetServices.xml" invoke="addFixedAssetProduct"/>
+        <response name="success" type="view" value="showProductAssetUsage"/>
+        <response name="error" type="view" value="newFixedAssetProduct"/>
+    </request-map>
+    <request-map uri="updFixedAssetProduct">
+        <security https="true" auth="true"/>
+        <event type="service" path="org.ofbiz.accounting.fixedasset.FixedAssetServices.xml" invoke="updateFixedAssetProduct"/>
+        <response name="success" type="view" value="showFixedAssetProduct"/>
+        <response name="error" type="view" value="updFixedAssetProduct"/>
+    </request-map>
+    <request-map uri="removeFixedAssetProduct">
+        <security https="true" auth="true"/>
+        <event type="service" path="org.ofbiz.accounting.fixedasset.FixedAssetServices.xml" invoke="removeFixedAssetProduct"/>
+        <response name="success" type="view" value="EditProductAssetUsage"/>
+        <response name="error" type="view" value="EditProductAssetUsage"/>
+    </request-map>
+
     <!-- ================ Product Prices Requests ================= -->
     <request-map uri="EditProductPrices">
         <security https="true" auth="true"/>
@@ -1837,6 +1879,16 @@
         <response name="error" type="view" value="EditProductConfigItemContentContent"/>
     </request-map>
 
+   <!-- ================ Lookup Requests ================= -->
+    <request-map uri="GenericLookup">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="GenericLookup"/>
+    	</request-map> 
+   <request-map uri="LookupFixedAsset">
+        <security auth="true" https="true"/>
+        <event type="java" path="org.ofbiz.accounting.AccLookupParams" invoke="lookupFixedAsset"/>
+        <response name="success" type="view" value="GenericLookup"/>
+    	</request-map>
     
     <!-- end of request mappings -->
 
@@ -1868,6 +1920,9 @@
     <!-- This is a work in progress; but seems to be pretty stable at this point -->
     <view-map name="EditProduct" type="screen" page="component://product/widget/catalog/ProductScreens.xml#EditProduct"/>
     <view-map name="EditProductPrices" type="screen" page="component://product/widget/catalog/ProductScreens.xml#EditProductPrices"/>
+    <view-map name="EditProductAssetUsage" type="screen" page="component://product/widget/catalog/ProductScreens.xml#EditProductAssetUsage"/>
+    <view-map name="showFixedAssetProduct" type="screen" page="component://product/widget/catalog/ProductScreens.xml#showFixedAssetProduct"/>
+    <view-map name="newFixedAssetProduct" type="screen" page="component://product/widget/catalog/ProductScreens.xml#newFixedAssetProduct"/>
 
     <view-map name="EditProductContent" type="jpublish" page="/product/EditProductContent.ftl"/>
     <view-map name="EditProductGoodIdentifications" type="jpublish" page="/product/EditProductGoodIdentifications.ftl"/>
@@ -1936,6 +1991,9 @@
     <view-map name="EditProductConfigOptions" page="/config/EditProductConfigOptions.ftl" type="jpublish"/>
     <view-map name="EditProductConfigItemContent" type="jpublish" page="/config/EditProductConfigItemContent.ftl"/>
     <view-map name="EditProductConfigItemContentContent" type="jpublish" page="/config/EditProductConfigItemContentContent.ftl"/>
+
+    <!-- Lookup request mappings -->
+    <view-map name="GenericLookup" page="/lookup/GenericLookup.ftl" type="jpublish"/>
 
     <!-- end of view mappings -->
 </site-conf>

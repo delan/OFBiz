@@ -51,5 +51,8 @@
         <#if product?exists && product.productTypeId?if_exists == "AGGREGATED">
             <a href="<@ofbizUrl>/EditProductConfigs?productId=${productId}</@ofbizUrl>" class="${selectedClassMap.EditProductConfigs?default(unselectedClassName)}">${uiLabelMap.ProductConfigs}</a>
         </#if>
+        <#if product?exists && product.productTypeId?if_exists == "ASSET_USAGE">
+            <a href="<@ofbizUrl>/EditProductAssetUsage?productId=${productId}</@ofbizUrl>" class="${selectedClassMap.EditProductAssetUsage?default(unselectedClassName)}">${uiLabelMap.ProductAssetUsage}</a>
+        </#if>
     </div>
 </#if>

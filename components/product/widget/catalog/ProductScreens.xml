@@ -49,7 +49,7 @@
                                 </platform-specific>
             
                                 <container>
-                                    <label style="head1">${uiLabelMap.${labelTitleProperty}} ${product.internalName} [${uiLabelMap.CommonId}:${productId}]</label>
+                                    <label style="head1">${uiLabelMap.${labelTitleProperty}} ${product.internalName} [${uiLabelMap.CommonId}:${productId}]  ${${extraFunctionName}}</label>
                                 </container>
                                 
                                 <!-- add Create Product and View Product (in ecommerce) links -->
@@ -152,5 +152,78 @@
             </widgets>
         </section>
     </screen>
+	
+    <screen name="EditProductAssetUsage"><!-- screen for rental parameters -->
+        <section>
+            <actions>
+                <set field="title" value="Edit Product for Asset Usage attributes"/>
+                <set field="titleProperty" value="PageTitleEditProductAssetUsage"/>
+                <set field="tabButtonItem" value="EditProductAssetUsage"/>
+                <set field="labelTitleProperty" value="ProductAssetUsage"/>
+    
+				<set field="productId" from-field="parameters.productId"/>
+                <entity-one entity-name="Product" value-name="product"/>
+                <entity-condition entity-name="FixedAssetProduct" list-name="fixedAssetProducts">
+					<condition-expr field-name="productId" operator="equals" value="${productId}"/>
+					</entity-condition>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonProductDecorator">
+                    <decorator-section name="body">
+                        <include-form name="EditProductAssetUsage" location="component://product/webapp/catalog/product/ProductForms.xml"/>
+						<container>
+							<label/>
+                        	<label style="head1">${uiLabelMap.AccountingFixedAssets}</label>
+                         	</container>	
+                                <container>
+                                    <link target="newFixedAssetProduct?productId=${productId}" text="[${uiLabelMap.AccountingFixedAssetNew}]" style="buttontext"/>
+                                </container>
+                        <include-form name="ListProductFixedAssets" location="component://product/webapp/catalog/product/ProductForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="showFixedAssetProduct"><!-- add a fixed asset -->
+        <section>
+            <actions>
+                <set field="title" value="Edit Product for Asset Usage attributes"/>
+                <set field="titleProperty" value="PageTitleEditProductAssetUsage"/>
+                <set field="tabButtonItem" value="EditProductAssetUsage"/>
+                <set field="labelTitleProperty" value="ProductAssetUsage"/>
+				<set field="extraFunctionName"  value="uiLabelMap.AccountingFixedAssetProductUpd"/>
+                <entity-one entity-name="FixedAssetProduct" value-name="fixedAssetProduct"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonProductDecorator">
+                    <decorator-section name="body">
+                        <include-form name="showFixedAssetProduct" location="component://product/webapp/catalog/product/ProductForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="newFixedAssetProduct"><!-- add a fixed asset -->
+        <section>
+            <actions>
+                <set field="title" value="Edit Product for Asset Usage attributes"/>
+                <set field="titleProperty" value="PageTitleEditProductAssetUsage"/>
+                <set field="tabButtonItem" value="EditProductAssetUsage"/>
+                <set field="labelTitleProperty" value="ProductAssetUsage"/>
+				<set field="extraFunctionName"  value="uiLabelMap.AccountingFixedAssetProductAdd"/>
+				<set field="productId" from-field="parameters.productId"/>
+	            </actions>
+            <widgets>
+                <decorator-screen name="CommonProductDecorator">
+                    <decorator-section name="body">
+                        <include-form name="addFixedAssetProduct" location="component://product/webapp/catalog/product/ProductForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+	
 </screens>
 
