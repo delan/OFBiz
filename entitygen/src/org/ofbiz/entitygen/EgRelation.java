@@ -30,7 +30,7 @@ import java.util.*;
  *@version    1.0
  */
 
-public class Relation
+public class EgRelation
 {
   /** the relation-title, gives a name/description to the relation */
   public String relationTitle = "";
@@ -45,38 +45,38 @@ public class Relation
   /** relations nested under this relation */
   public Vector relations = new Vector();
   /** the parent relation of this relation */
-  public Relation parent = null;
+  public EgRelation parent = null;
   /** the main entity of this relation */
-  public Entity mainEntity = null;
+  public EgEntity mainEntity = null;
   
   /** Default Constructor */  
-  public Relation()
+  public EgRelation()
   {
   }
 
-  /** Alternate Constructor which sets the parent Relation */  
-  public Relation(Relation parent)
+  /** Alternate Constructor which sets the parent EgRelation */  
+  public EgRelation(EgRelation parent)
   {
     this.parent = parent;
   }
   
   /** Find a KeyMap with the specified fieldName */  
-  public KeyMap findKeyMap(String fieldName)
+  public EgKeyMap findKeyMap(String fieldName)
   {
     for(int i=0; i<keyMaps.size(); i++)
     {
-      KeyMap keyMap = (KeyMap)keyMaps.elementAt(i);
+      EgKeyMap keyMap = (EgKeyMap)keyMaps.elementAt(i);
       if(keyMap.fieldName.equals(fieldName)) return keyMap;
     }
     return null;
   }
 
   /** Find a KeyMap with the specified relatedFieldName */  
-  public KeyMap findKeyMapByRelated(String relatedFieldName)
+  public EgKeyMap findKeyMapByRelated(String relatedFieldName)
   {
     for(int i=0; i<keyMaps.size(); i++)
     {
-      KeyMap keyMap = (KeyMap)keyMaps.elementAt(i);
+      EgKeyMap keyMap = (EgKeyMap)keyMaps.elementAt(i);
       if(keyMap.relatedFieldName.equals(relatedFieldName)) return keyMap;
     }
     return null;
@@ -90,9 +90,9 @@ public class Relation
     int i = 0;
     for(; i < keyMaps.size() - 1; i++)
     {
-      returnString = returnString + ((KeyMap)keyMaps.elementAt(i)).fieldName + separator;
+      returnString = returnString + ((EgKeyMap)keyMaps.elementAt(i)).fieldName + separator;
     }
-    returnString = returnString + ((KeyMap)keyMaps.elementAt(i)).fieldName + afterLast;
+    returnString = returnString + ((EgKeyMap)keyMaps.elementAt(i)).fieldName + afterLast;
     return returnString;
   }
 
@@ -104,9 +104,9 @@ public class Relation
     int i = 0;
     for(; i < keyMaps.size() - 1; i++)
     {
-      returnString = returnString + GenUtil.upperFirstChar(((KeyMap)keyMaps.elementAt(i)).fieldName) + separator;
+      returnString = returnString + GenUtil.upperFirstChar(((EgKeyMap)keyMaps.elementAt(i)).fieldName) + separator;
     }
-    returnString = returnString + GenUtil.upperFirstChar(((KeyMap)keyMaps.elementAt(i)).fieldName) + afterLast;
+    returnString = returnString + GenUtil.upperFirstChar(((EgKeyMap)keyMaps.elementAt(i)).fieldName) + afterLast;
     return returnString;
   }
 
@@ -118,9 +118,9 @@ public class Relation
     int i = 0;
     for(; i < keyMaps.size() - 1; i++)
     {
-      returnString = returnString + GenUtil.upperFirstChar(((KeyMap)keyMaps.elementAt(i)).relatedFieldName) + separator;
+      returnString = returnString + GenUtil.upperFirstChar(((EgKeyMap)keyMaps.elementAt(i)).relatedFieldName) + separator;
     }
-    returnString = returnString + GenUtil.upperFirstChar(((KeyMap)keyMaps.elementAt(i)).relatedFieldName) + afterLast;
+    returnString = returnString + GenUtil.upperFirstChar(((EgKeyMap)keyMaps.elementAt(i)).relatedFieldName) + afterLast;
     return returnString;
   }
 
@@ -132,9 +132,9 @@ public class Relation
     int i = 0;
     for(; i < keyMaps.size() - 1; i++)
     {
-      returnString = returnString + ((KeyMap)keyMaps.elementAt(i)).columnName + separator;
+      returnString = returnString + ((EgKeyMap)keyMaps.elementAt(i)).columnName + separator;
     }
-    returnString = returnString + ((KeyMap)keyMaps.elementAt(i)).columnName + afterLast;
+    returnString = returnString + ((EgKeyMap)keyMaps.elementAt(i)).columnName + afterLast;
     return returnString;
   }
 
@@ -146,9 +146,9 @@ public class Relation
     int i = 0;
     for(; i < keyMaps.size() - 1; i++)
     {
-      returnString = returnString + ((KeyMap)keyMaps.elementAt(i)).relatedColumnName + separator;
+      returnString = returnString + ((EgKeyMap)keyMaps.elementAt(i)).relatedColumnName + separator;
     }
-    returnString = returnString + ((KeyMap)keyMaps.elementAt(i)).relatedColumnName + afterLast;
+    returnString = returnString + ((EgKeyMap)keyMaps.elementAt(i)).relatedColumnName + afterLast;
     return returnString;
   }
 }

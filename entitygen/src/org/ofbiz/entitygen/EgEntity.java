@@ -31,7 +31,7 @@ import org.ofbiz.core.util.*;
  *@version    1.0
  */
 
-public class Entity
+public class EgEntity
 {
   /** The ejb-name of the Entity */    
   public String ejbName = "";
@@ -62,13 +62,15 @@ public class Entity
   public Vector fields = new Vector();
   /** A Vector of the Field objects for the Entity, one for each Primary Key */  
   public Vector pks = new Vector();
-  /** A Vector of the Finder objects for the Entity */  
+  /** A Vector of the Field objects for the Entity, one for each NON Primary Key */  
+  public Vector nopks = new Vector();
+  /** A Vector of the EgFinder objects for the Entity */  
   public Vector finders = new Vector();
   /** relations defining relationships between this entity and other entities */  
   public Vector relations = new Vector();
 
   /** Default Constructor */  
-  public Entity()
+  public EgEntity()
   {
   }
 
@@ -76,7 +78,7 @@ public class Entity
   {
     for(int i = 0; i < fields.size(); i++)
     {
-      if(((Field)fields.elementAt(i)).isPk)
+      if(((EgField)fields.elementAt(i)).isPk)
       {
         pks.add(fields.elementAt(i));
       }
@@ -92,9 +94,9 @@ public class Entity
     int i = 0;
     for(; i < flds.size() - 1; i++)
     {
-      returnString = returnString + ((Field)flds.elementAt(i)).fieldName + separator;
+      returnString = returnString + ((EgField)flds.elementAt(i)).fieldName + separator;
     }
-    returnString = returnString + ((Field)flds.elementAt(i)).fieldName + afterLast;
+    returnString = returnString + ((EgField)flds.elementAt(i)).fieldName + afterLast;
     return returnString;
   }
 
@@ -106,9 +108,9 @@ public class Entity
     int i = 0;
     for(; i < flds.size() - 1; i++)
     {
-      returnString = returnString + ((Field)flds.elementAt(i)).javaType + " " + ((Field)flds.elementAt(i)).fieldName + ", ";
+      returnString = returnString + ((EgField)flds.elementAt(i)).javaType + " " + ((EgField)flds.elementAt(i)).fieldName + ", ";
     }
-    returnString = returnString + ((Field)flds.elementAt(i)).javaType + " " + ((Field)flds.elementAt(i)).fieldName;
+    returnString = returnString + ((EgField)flds.elementAt(i)).javaType + " " + ((EgField)flds.elementAt(i)).fieldName;
     return returnString;
   }
 
@@ -143,7 +145,7 @@ public class Entity
     int i = 0;
     for(; i < flds.size(); i++)
     {
-      if(onlyNonPK && ((Field)flds.elementAt(i)).isPk) continue;
+      if(onlyNonPK && ((EgField)flds.elementAt(i)).isPk) continue;
       returnString = returnString + eachString;
       if(appendIndex) returnString = returnString + (i+1);
       if(i < flds.size() - 1) returnString = returnString + separator;
@@ -160,9 +162,9 @@ public class Entity
     int i = 0;
     for(; i < flds.size() - 1; i++)
     {
-      returnString = returnString + ((Field)flds.elementAt(i)).columnName + separator;
+      returnString = returnString + ((EgField)flds.elementAt(i)).columnName + separator;
     }
-    returnString = returnString + ((Field)flds.elementAt(i)).columnName + afterLast;
+    returnString = returnString + ((EgField)flds.elementAt(i)).columnName + afterLast;
     return returnString;
   }
 
@@ -175,9 +177,9 @@ public class Entity
     int i = 0;
     for(; i < flds.size() - 1; i++)
     {
-      returnString = returnString + GenUtil.upperFirstChar(((Field)flds.elementAt(i)).fieldName) + separator;
+      returnString = returnString + GenUtil.upperFirstChar(((EgField)flds.elementAt(i)).fieldName) + separator;
     }
-    returnString = returnString + GenUtil.upperFirstChar(((Field)flds.elementAt(i)).fieldName) + afterLast;
+    returnString = returnString + GenUtil.upperFirstChar(((EgField)flds.elementAt(i)).fieldName) + afterLast;
     return returnString;
   }
 
@@ -188,9 +190,9 @@ public class Entity
     int i = 0;
     for(; i < flds.size() - 1; i++)
     {
-      returnString = returnString + ((Field)flds.elementAt(i)).columnName + " like {" + i + "} AND ";
+      returnString = returnString + ((EgField)flds.elementAt(i)).columnName + " like {" + i + "} AND ";
     }
-    returnString = returnString + ((Field)flds.elementAt(i)).columnName + " like {" + i + "}";
+    returnString = returnString + ((EgField)flds.elementAt(i)).columnName + " like {" + i + "}";
     return returnString;
   }
   
@@ -201,9 +203,9 @@ public class Entity
     int i = 0;
     for(; i < flds.size() - 1; i++)
     {
-      returnString = returnString + "\"" + tableName + "_" + ((Field)flds.elementAt(i)).columnName + "=\" + " + ((Field)flds.elementAt(i)).fieldName + " + \"&\" + ";
+      returnString = returnString + "\"" + tableName + "_" + ((EgField)flds.elementAt(i)).columnName + "=\" + " + ((EgField)flds.elementAt(i)).fieldName + " + \"&\" + ";
     }
-    returnString = returnString + "\"" + tableName + "_" + ((Field)flds.elementAt(i)).columnName + "=\" + " + ((Field)flds.elementAt(i)).fieldName;
+    returnString = returnString + "\"" + tableName + "_" + ((EgField)flds.elementAt(i)).columnName + "=\" + " + ((EgField)flds.elementAt(i)).fieldName;
     return returnString;
   }
 
@@ -215,9 +217,9 @@ public class Entity
     int i = 0;
     for(; i < flds.size() - 1; i++)
     {
-      returnString = returnString + "\"" + tableName + "_" + ((Field)flds.elementAt(i)).columnName + "=\" + " + GenUtil.lowerFirstChar(ejbName) + ".get" + GenUtil.upperFirstChar(((Field)flds.elementAt(i)).fieldName) + "() + \"&\" + ";
+      returnString = returnString + "\"" + tableName + "_" + ((EgField)flds.elementAt(i)).columnName + "=\" + " + GenUtil.lowerFirstChar(ejbName) + ".get" + GenUtil.upperFirstChar(((EgField)flds.elementAt(i)).fieldName) + "() + \"&\" + ";
     }
-    returnString = returnString + "\"" + tableName + "_" + ((Field)flds.elementAt(i)).columnName + "=\" + " + GenUtil.lowerFirstChar(ejbName) + ".get" + GenUtil.upperFirstChar(((Field)flds.elementAt(i)).fieldName) + "()";
+    returnString = returnString + "\"" + tableName + "_" + ((EgField)flds.elementAt(i)).columnName + "=\" + " + GenUtil.lowerFirstChar(ejbName) + ".get" + GenUtil.upperFirstChar(((EgField)flds.elementAt(i)).fieldName) + "()";
     return returnString;
   }
 
@@ -229,13 +231,13 @@ public class Entity
     int i = 0;
     for(; i < flds.size() - 1; i++)
     {
-      returnString = returnString + "\"" + tableName + "_" + ((Field)flds.elementAt(i)).columnName + "=\" + " + GenUtil.lowerFirstChar(ejbName) + ejbNameSuffix + ".get" + GenUtil.upperFirstChar(((Field)flds.elementAt(i)).fieldName) + "() + \"&\" + ";
+      returnString = returnString + "\"" + tableName + "_" + ((EgField)flds.elementAt(i)).columnName + "=\" + " + GenUtil.lowerFirstChar(ejbName) + ejbNameSuffix + ".get" + GenUtil.upperFirstChar(((EgField)flds.elementAt(i)).fieldName) + "() + \"&\" + ";
     }
-    returnString = returnString + "\"" + tableName + "_" + ((Field)flds.elementAt(i)).columnName + "=\" + " + GenUtil.lowerFirstChar(ejbName) + ejbNameSuffix + ".get" + GenUtil.upperFirstChar(((Field)flds.elementAt(i)).fieldName) + "()";
+    returnString = returnString + "\"" + tableName + "_" + ((EgField)flds.elementAt(i)).columnName + "=\" + " + GenUtil.lowerFirstChar(ejbName) + ejbNameSuffix + ".get" + GenUtil.upperFirstChar(((EgField)flds.elementAt(i)).fieldName) + "()";
     return returnString;
   }
 
-  public String httpRelationArgList(Vector flds, Relation relation)
+  public String httpRelationArgList(Vector flds, EgRelation relation)
   {
     String returnString = "";
     if(flds.size() < 1) { return ""; }
@@ -243,17 +245,17 @@ public class Entity
     int i = 0;
     for(; i < flds.size() - 1; i++)
     {
-      KeyMap keyMap = relation.findKeyMapByRelated(((Field)flds.elementAt(i)).fieldName);
-      if(keyMap != null) returnString = returnString + "\"" + tableName + "_" + ((Field)flds.elementAt(i)).columnName + "=\" + " + GenUtil.lowerFirstChar(relation.mainEntity.ejbName) + ".get" + GenUtil.upperFirstChar(keyMap.fieldName) + "() + \"&\" + ";
-      else Debug.logWarning("-- -- ENTITYGEN ERROR:httpRelationArgList: Related Key in Key Map not found for fieldName: " + ((Field)flds.elementAt(i)).fieldName + " related entity: " + relation.relatedEjbName + " main entity: " + relation.mainEntity.ejbName + " type: " + relation.relationType);
+      EgKeyMap keyMap = relation.findKeyMapByRelated(((EgField)flds.elementAt(i)).fieldName);
+      if(keyMap != null) returnString = returnString + "\"" + tableName + "_" + ((EgField)flds.elementAt(i)).columnName + "=\" + " + GenUtil.lowerFirstChar(relation.mainEntity.ejbName) + ".get" + GenUtil.upperFirstChar(keyMap.fieldName) + "() + \"&\" + ";
+      else Debug.logWarning("-- -- ENTITYGEN ERROR:httpRelationArgList: Related Key in Key Map not found for fieldName: " + ((EgField)flds.elementAt(i)).fieldName + " related entity: " + relation.relatedEjbName + " main entity: " + relation.mainEntity.ejbName + " type: " + relation.relationType);
     }
-    KeyMap keyMap = relation.findKeyMapByRelated(((Field)flds.elementAt(i)).fieldName);
-    if(keyMap != null) returnString = returnString + "\"" + tableName + "_" + ((Field)flds.elementAt(i)).columnName + "=\" + " + GenUtil.lowerFirstChar(relation.mainEntity.ejbName) + ".get" + GenUtil.upperFirstChar(keyMap.fieldName) + "()";
-    else Debug.logWarning("-- -- ENTITYGEN ERROR:httpRelationArgList: Related Key in Key Map not found for fieldName: " + ((Field)flds.elementAt(i)).fieldName + " related entity: " + relation.relatedEjbName + " main entity: " + relation.mainEntity.ejbName + " type: " + relation.relationType);
+    EgKeyMap keyMap = relation.findKeyMapByRelated(((EgField)flds.elementAt(i)).fieldName);
+    if(keyMap != null) returnString = returnString + "\"" + tableName + "_" + ((EgField)flds.elementAt(i)).columnName + "=\" + " + GenUtil.lowerFirstChar(relation.mainEntity.ejbName) + ".get" + GenUtil.upperFirstChar(keyMap.fieldName) + "()";
+    else Debug.logWarning("-- -- ENTITYGEN ERROR:httpRelationArgList: Related Key in Key Map not found for fieldName: " + ((EgField)flds.elementAt(i)).fieldName + " related entity: " + relation.relatedEjbName + " main entity: " + relation.mainEntity.ejbName + " type: " + relation.relationType);
     return returnString;
   }
 
-  public String httpRelationArgList(Relation relation)
+  public String httpRelationArgList(EgRelation relation)
   {
     String returnString = "";
     if(relation.keyMaps.size() < 1) { return ""; }
@@ -261,36 +263,36 @@ public class Entity
     int i = 0;
     for(; i < relation.keyMaps.size() - 1; i++)
     {
-      KeyMap keyMap = (KeyMap)relation.keyMaps.elementAt(i);
+      EgKeyMap keyMap = (EgKeyMap)relation.keyMaps.elementAt(i);
       if(keyMap != null)
         returnString = returnString + "\"" + tableName + "_" + keyMap.relatedColumnName + "=\" + " + GenUtil.lowerFirstChar(relation.mainEntity.ejbName) + ".get" + GenUtil.upperFirstChar(keyMap.fieldName) + "() + \"&\" + ";
     }
-    KeyMap keyMap = (KeyMap)relation.keyMaps.elementAt(i);
+    EgKeyMap keyMap = (EgKeyMap)relation.keyMaps.elementAt(i);
     returnString = returnString + "\"" + tableName + "_" + keyMap.relatedColumnName + "=\" + " + GenUtil.lowerFirstChar(relation.mainEntity.ejbName) + ".get" + GenUtil.upperFirstChar(keyMap.fieldName) + "()";
     return returnString;
   }
 
-  public String typeNameStringRelatedNoMapped(Vector flds, Relation relation)
+  public String typeNameStringRelatedNoMapped(Vector flds, EgRelation relation)
   {
     String returnString = "";
     if(flds.size() < 1) { return ""; }
 
     int i = 0;
-    if(relation.findKeyMapByRelated(((Field)flds.elementAt(i)).fieldName) == null)
-      returnString = returnString + ((Field)flds.elementAt(i)).javaType + " " + ((Field)flds.elementAt(i)).fieldName;
+    if(relation.findKeyMapByRelated(((EgField)flds.elementAt(i)).fieldName) == null)
+      returnString = returnString + ((EgField)flds.elementAt(i)).javaType + " " + ((EgField)flds.elementAt(i)).fieldName;
     i++;
     for(; i < flds.size(); i++)
     {
-      if(relation.findKeyMapByRelated(((Field)flds.elementAt(i)).fieldName) == null)
+      if(relation.findKeyMapByRelated(((EgField)flds.elementAt(i)).fieldName) == null)
       {
         if(returnString.length() > 0) returnString = returnString + ", ";
-        returnString = returnString + ((Field)flds.elementAt(i)).javaType + " " + ((Field)flds.elementAt(i)).fieldName;
+        returnString = returnString + ((EgField)flds.elementAt(i)).javaType + " " + ((EgField)flds.elementAt(i)).fieldName;
       }
     }
     return returnString;
   }
 
-  public String typeNameStringRelatedAndMain(Vector flds, Relation relation)
+  public String typeNameStringRelatedAndMain(Vector flds, EgRelation relation)
   {
     String returnString = "";
     if(flds.size() < 1) { return ""; }
@@ -298,17 +300,17 @@ public class Entity
     int i = 0;
     for(; i < flds.size() - 1; i++)
     {
-      KeyMap keyMap = relation.findKeyMapByRelated(((Field)flds.elementAt(i)).fieldName);
+      EgKeyMap keyMap = relation.findKeyMapByRelated(((EgField)flds.elementAt(i)).fieldName);
       if(keyMap != null)
         returnString = returnString + keyMap.fieldName + ", ";
       else
-        returnString = returnString + ((Field)flds.elementAt(i)).fieldName + ", ";
+        returnString = returnString + ((EgField)flds.elementAt(i)).fieldName + ", ";
     }
-    KeyMap keyMap = relation.findKeyMapByRelated(((Field)flds.elementAt(i)).fieldName);
+    EgKeyMap keyMap = relation.findKeyMapByRelated(((EgField)flds.elementAt(i)).fieldName);
     if(keyMap != null)
       returnString = returnString + keyMap.fieldName;
     else
-      returnString = returnString + ((Field)flds.elementAt(i)).fieldName;
+      returnString = returnString + ((EgField)flds.elementAt(i)).fieldName;
     return returnString;
   }
 }

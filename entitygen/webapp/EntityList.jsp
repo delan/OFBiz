@@ -6,7 +6,7 @@
 <%Iterator classNamesIterator = null;
   if(ejbName != null && ejbName.length() > 0) { Vector cnVec = new Vector(); cnVec.add(ejbName); classNamesIterator = cnVec.iterator(); }
   else if(defFileName != null) classNamesIterator = DefReader.getEjbNamesIterator(defFileName);
-  while(classNamesIterator != null && classNamesIterator.hasNext()) { Entity entity=DefReader.getEntity(defFileName,(String)classNamesIterator.next());
+  while(classNamesIterator != null && classNamesIterator.hasNext()) { EgEntity entity=DefReader.getEgEntity(defFileName,(String)classNamesIterator.next());
 %><%if(packName == null){%><%packName = entity.packageName; packName = packName.substring(packName.indexOf(".")+1); packName = packName.substring(packName.indexOf(".")+1);  packName = packName.substring(packName.indexOf(".")+1);%><%firstPack=packName.substring(0,(packName.indexOf(".")>=0?packName.indexOf("."):packName.length()));%>
 <ul>
   <li><a href="#<%=GenUtil.upperFirstChar(firstPack)%>"><b><%=GenUtil.upperFirstChar(firstPack)%></b></a>
@@ -25,7 +25,7 @@
 <%
   if(ejbName != null && ejbName.length() > 0) { Vector cnVec = new Vector(); cnVec.add(ejbName); classNamesIterator = cnVec.iterator(); }
   else if(defFileName != null) classNamesIterator = DefReader.getEjbNamesIterator(defFileName);
-  while(classNamesIterator != null && classNamesIterator.hasNext()) { Entity entity=DefReader.getEntity(defFileName,(String)classNamesIterator.next());
+  while(classNamesIterator != null && classNamesIterator.hasNext()) { EgEntity entity=DefReader.getEgEntity(defFileName,(String)classNamesIterator.next());
 %><%if(packName == null){%><%packName = entity.packageName; packName = packName.substring(packName.indexOf(".")+1); packName = packName.substring(packName.indexOf(".")+1);  packName = packName.substring(packName.indexOf(".")+1);%><%firstPack=packName.substring(0,(packName.indexOf(".")>=0?packName.indexOf("."):packName.length()));%>
 <hr>
 <H3><a name="<%=GenUtil.upperFirstChar(firstPack)%>"><%=GenUtil.upperFirstChar(firstPack)%></a></H3>

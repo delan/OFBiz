@@ -33,28 +33,28 @@ import java.sql.*;
  */
 public class <%=entity.ejbName%> implements java.io.Serializable
 {<%for(i=0;i<entity.fields.size();i++){%>
-  public <%=((Field)entity.fields.elementAt(i)).javaType%> <%=((Field)entity.fields.elementAt(i)).fieldName%>;<%}%>
+  public <%=((EgField)entity.fields.elementAt(i)).javaType%> <%=((EgField)entity.fields.elementAt(i)).fieldName%>;<%}%>
   
   public boolean modified = false;
 
   public <%=entity.ejbName%>() { }
 <%if(entity.fields.size() != entity.pks.size()){%>
   public <%=entity.ejbName%>(<%=entity.primKeyClassNameString()%>)
-  {<%for(i=0;i<entity.fields.size();i++){%><%if(((Field)entity.fields.elementAt(i)).isPk){%>
-    this.<%=((Field)entity.fields.elementAt(i)).fieldName%> = <%=((Field)entity.fields.elementAt(i)).fieldName%>;<%}%><%}%>
+  {<%for(i=0;i<entity.fields.size();i++){%><%if(((EgField)entity.fields.elementAt(i)).isPk){%>
+    this.<%=((EgField)entity.fields.elementAt(i)).fieldName%> = <%=((EgField)entity.fields.elementAt(i)).fieldName%>;<%}%><%}%>
   }<%}%>
 
   public <%=entity.ejbName%>(<%=entity.fieldTypeNameString()%>)
   {<%for(i=0;i<entity.fields.size();i++){%>
-    this.<%=((Field)entity.fields.elementAt(i)).fieldName%> = <%=((Field)entity.fields.elementAt(i)).fieldName%>;<%}%>
+    this.<%=((EgField)entity.fields.elementAt(i)).fieldName%> = <%=((EgField)entity.fields.elementAt(i)).fieldName%>;<%}%>
   }
 
   public <%=entity.ejbName%>(<%=entity.ejbName%> valueObject) { setValueObject(valueObject); }
 <%if(entity.pks.size() > 1){%>
   public <%=entity.ejbName%>PK getPrimaryKey() { return new <%=entity.ejbName%>PK(<%=entity.pkNameString()%>); }<%}%>
 <%for(i=0;i<entity.fields.size();i++){%>
-  public <%=((Field)entity.fields.elementAt(i)).javaType%> get<%=GenUtil.upperFirstChar(((Field)entity.fields.elementAt(i)).fieldName)%>() { return <%=((Field)entity.fields.elementAt(i)).fieldName%>; }
-  public void set<%=GenUtil.upperFirstChar(((Field)entity.fields.elementAt(i)).fieldName)%>(<%=((Field)entity.fields.elementAt(i)).javaType%> <%=((Field)entity.fields.elementAt(i)).fieldName%>) { this.<%=((Field)entity.fields.elementAt(i)).fieldName%> = <%=((Field)entity.fields.elementAt(i)).fieldName%>; modified = true; }<%}%>
+  public <%=((EgField)entity.fields.elementAt(i)).javaType%> get<%=GenUtil.upperFirstChar(((EgField)entity.fields.elementAt(i)).fieldName)%>() { return <%=((EgField)entity.fields.elementAt(i)).fieldName%>; }
+  public void set<%=GenUtil.upperFirstChar(((EgField)entity.fields.elementAt(i)).fieldName)%>(<%=((EgField)entity.fields.elementAt(i)).javaType%> <%=((EgField)entity.fields.elementAt(i)).fieldName%>) { this.<%=((EgField)entity.fields.elementAt(i)).fieldName%> = <%=((EgField)entity.fields.elementAt(i)).fieldName%>; modified = true; }<%}%>
 
   /** Get the value object of the <%=entity.ejbName%> class. */
   public <%=entity.ejbName%> getValueObject() { return this; }
@@ -62,15 +62,16 @@ public class <%=entity.ejbName%> implements java.io.Serializable
   public void setValueObject(<%=entity.ejbName%> valueObject)
   {
     if(valueObject == null) return;
-  <%for(i=0;i<entity.fields.size();i++){%>
-    <%=((Field)entity.fields.elementAt(i)).fieldName%> = valueObject.get<%=GenUtil.upperFirstChar(((Field)entity.fields.elementAt(i)).fieldName)%>();<%}%>
+  <%for(i=0;i<entity.pks.size();i++){%>
+    <%=((EgField)entity.pks.elementAt(i)).fieldName%> = valueObject.get<%=GenUtil.upperFirstChar(((EgField)entity.pks.elementAt(i)).fieldName)%>();<%}%>
+    mergeValueObject(valueObject);
   }
   /** Merge the value object of the <%=entity.ejbName%> class, setting only non primary key fields. */
   public void mergeValueObject(<%=entity.ejbName%> valueObject)
   {
     if(valueObject == null) return;
-<%for(i=0;i<entity.fields.size();i++){%><%if(((Field)entity.fields.elementAt(i)).isPk){%><%}else{%>
-    <%=((Field)entity.fields.elementAt(i)).fieldName%> = valueObject.get<%=GenUtil.upperFirstChar(((Field)entity.fields.elementAt(i)).fieldName)%>();<%}%><%}%>
+<%for(i=0;i<entity.fields.size();i++){%><%if(((EgField)entity.fields.elementAt(i)).isPk){%><%}else{%>
+    <%=((EgField)entity.fields.elementAt(i)).fieldName%> = valueObject.get<%=GenUtil.upperFirstChar(((EgField)entity.fields.elementAt(i)).fieldName)%>();<%}%><%}%>
   }
 
   public boolean isModified() { return modified; }

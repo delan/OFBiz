@@ -7,7 +7,7 @@
   else if(defFileName != null) classNamesIterator = DefReader.getEjbNamesIterator(defFileName);
   while(classNamesIterator != null && classNamesIterator.hasNext()) 
   { 
-    Entity entity=DefReader.getEntity(defFileName,(String)classNamesIterator.next());
+    EgEntity entity=DefReader.getEgEntity(defFileName,(String)classNamesIterator.next());
 %>
   [ltp]if(Security.hasEntityPermission("<%=entity.tableName%>", "_VIEW", session)){%>
     [ltp]rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr bgcolor="[ltp]=rowColor%>">

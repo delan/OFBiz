@@ -5,7 +5,7 @@ import java.rmi.*;
 import javax.ejb.*;
 import java.math.*;
 import java.util.*;
-<%@ page import="java.util.*" %><%Hashtable importNames = new Hashtable(); importNames.put(entity.packageName,"");%><%for(int relIndex=0;relIndex<entity.relations.size();relIndex++){%><%Relation relation = (Relation)entity.relations.elementAt(relIndex);%><%Entity relatedEntity = DefReader.getEntity(defFileName,relation.relatedEjbName);%><%if(!importNames.containsKey(relatedEntity.packageName)){ importNames.put(relatedEntity.packageName,"");%>
+<%@ page import="java.util.*" %><%Hashtable importNames = new Hashtable(); importNames.put(entity.packageName,"");%><%for(int relIndex=0;relIndex<entity.relations.size();relIndex++){%><%EgRelation relation = (EgRelation)entity.relations.elementAt(relIndex);%><%EgEntity relatedEntity = DefReader.getEgEntity(defFileName,relation.relatedEjbName);%><%if(!importNames.containsKey(relatedEntity.packageName)){ importNames.put(relatedEntity.packageName,"");%>
 import <%=relatedEntity.packageName%>.*;<%}%><%}%>
 
 /**
@@ -37,14 +37,14 @@ import <%=relatedEntity.packageName%>.*;<%}%><%}%>
  */
 
 public interface <%=entity.ejbName%> extends EJBObject
-{<%for(i=0;i<entity.fields.size();i++){%><%if(((Field)entity.fields.elementAt(i)).isPk){%>
-  /** Get the primary key of the <%=((Field)entity.fields.elementAt(i)).columnName%> column of the <%=entity.tableName%> table. */
-  public <%=((Field)entity.fields.elementAt(i)).javaType%> get<%=GenUtil.upperFirstChar(((Field)entity.fields.elementAt(i)).fieldName)%>() throws RemoteException;
+{<%for(i=0;i<entity.fields.size();i++){%><%if(((EgField)entity.fields.elementAt(i)).isPk){%>
+  /** Get the primary key of the <%=((EgField)entity.fields.elementAt(i)).columnName%> column of the <%=entity.tableName%> table. */
+  public <%=((EgField)entity.fields.elementAt(i)).javaType%> get<%=GenUtil.upperFirstChar(((EgField)entity.fields.elementAt(i)).fieldName)%>() throws RemoteException;
   <%}else{%>
-  /** Get the value of the <%=((Field)entity.fields.elementAt(i)).columnName%> column of the <%=entity.tableName%> table. */
-  public <%=((Field)entity.fields.elementAt(i)).javaType%> get<%=GenUtil.upperFirstChar(((Field)entity.fields.elementAt(i)).fieldName)%>() throws RemoteException;
-  /** Set the value of the <%=((Field)entity.fields.elementAt(i)).columnName%> column of the <%=entity.tableName%> table. */
-  public void set<%=GenUtil.upperFirstChar(((Field)entity.fields.elementAt(i)).fieldName)%>(<%=((Field)entity.fields.elementAt(i)).javaType%> <%=((Field)entity.fields.elementAt(i)).fieldName%>) throws RemoteException;
+  /** Get the value of the <%=((EgField)entity.fields.elementAt(i)).columnName%> column of the <%=entity.tableName%> table. */
+  public <%=((EgField)entity.fields.elementAt(i)).javaType%> get<%=GenUtil.upperFirstChar(((EgField)entity.fields.elementAt(i)).fieldName)%>() throws RemoteException;
+  /** Set the value of the <%=((EgField)entity.fields.elementAt(i)).columnName%> column of the <%=entity.tableName%> table. */
+  public void set<%=GenUtil.upperFirstChar(((EgField)entity.fields.elementAt(i)).fieldName)%>(<%=((EgField)entity.fields.elementAt(i)).javaType%> <%=((EgField)entity.fields.elementAt(i)).fieldName%>) throws RemoteException;
   <%}%><%}%>
 
   /** Get the value object of this <%=entity.ejbName%> class. */
@@ -52,7 +52,7 @@ public interface <%=entity.ejbName%> extends EJBObject
   /** Set the values in the value object of this <%=entity.ejbName%> class. */
   public void setValueObject(<%=entity.ejbName%> <%=GenUtil.lowerFirstChar(entity.ejbName)%>Value) throws RemoteException;
 
-<%for(int relIndex=0;relIndex<entity.relations.size();relIndex++){%><%Relation relation = (Relation)entity.relations.elementAt(relIndex);%><%Entity relatedEntity = DefReader.getEntity(defFileName,relation.relatedEjbName);%><%if(relation.relationType.equalsIgnoreCase("one")){%>
+<%for(int relIndex=0;relIndex<entity.relations.size();relIndex++){%><%EgRelation relation = (EgRelation)entity.relations.elementAt(relIndex);%><%EgEntity relatedEntity = DefReader.getEgEntity(defFileName,relation.relatedEjbName);%><%if(relation.relationType.equalsIgnoreCase("one")){%>
   /** Get the <%=relation.relationTitle%> <%=relatedEntity.ejbName%> entity corresponding to this entity. */
   public <%=relatedEntity.ejbName%> get<%=relation.relationTitle%><%=relatedEntity.ejbName%>() throws RemoteException;
   /** Remove the <%=relation.relationTitle%> <%=relatedEntity.ejbName%> entity corresponding to this entity. */

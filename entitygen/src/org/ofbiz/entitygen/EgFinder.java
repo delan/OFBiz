@@ -30,7 +30,7 @@ import java.util.*;
  *@version    1.0
  */
 
-public class Finder
+public class EgFinder
 {
   /** A Vector of Field objects which define a Finder. The finder does a find by all fields combined using AND. */    
   public Vector fields = new Vector();

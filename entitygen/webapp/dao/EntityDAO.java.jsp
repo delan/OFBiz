@@ -51,7 +51,7 @@ public class <%=entity.ejbName%>DAO
     String sql = "INSERT INTO <%=entity.tableName%> (<%=entity.colNameString(entity.fields)%>) VALUES (<%=entity.fieldsStringList(entity.fields, "?", ", ")%>)";
     try {
       ps = connection.prepareStatement(sql);
-    <%for(i=0;i<entity.fields.size();i++){Field curField=(Field)entity.fields.elementAt(i);%><%if(curField.javaType.compareTo("java.lang.String") == 0 || curField.javaType.compareTo("String") == 0){%>
+    <%for(i=0;i<entity.fields.size();i++){EgField curField=(EgField)entity.fields.elementAt(i);%><%if(curField.javaType.compareTo("java.lang.String") == 0 || curField.javaType.compareTo("String") == 0){%>
       ps.setString(<%=i+1%>, value.<%=curField.fieldName%>);<%}else if(curField.javaType.indexOf("Timestamp") >= 0){%>
       ps.setTimestamp(<%=i+1%>, value.<%=curField.fieldName%>);<%}else if(curField.javaType.equals("java.sql.Time") || curField.javaType.equals("Time")){%>
       ps.setTime(<%=i+1%>, value.<%=curField.fieldName%>);<%}else if(curField.javaType.equals("java.sql.Date") || curField.javaType.equals("Date")){%>
@@ -90,7 +90,7 @@ public class <%=entity.ejbName%>DAO
     try {
       ps = connection.prepareStatement(sql);
 
-    <%for(i=0;i<nopks.size();i++){Field curField=(Field)nopks.elementAt(i);%><%if(curField.javaType.compareTo("java.lang.String") == 0 || curField.javaType.compareTo("String") == 0){%>
+    <%for(i=0;i<nopks.size();i++){EgField curField=(EgField)nopks.elementAt(i);%><%if(curField.javaType.compareTo("java.lang.String") == 0 || curField.javaType.compareTo("String") == 0){%>
       ps.setString(<%=i+1%>, value.<%=curField.fieldName%>);<%}else if(curField.javaType.indexOf("Timestamp") >= 0){%>
       ps.setTimestamp(<%=i+1%>, value.<%=curField.fieldName%>);<%}else if(curField.javaType.equals("java.sql.Time") || curField.javaType.equals("Time")){%>
       ps.setTime(<%=i+1%>, value.<%=curField.fieldName%>);<%}else if(curField.javaType.equals("java.sql.Date") || curField.javaType.equals("Date")){%>
@@ -99,7 +99,7 @@ public class <%=entity.ejbName%>DAO
       if(value.<%=curField.fieldName%> != null) ps.setLong(<%=i+1%>, value.<%=curField.fieldName%>.longValue()); else ps.setNull(<%=i+1%>, Types.NULL);<%}else if(curField.javaType.equals("java.lang.Float") || curField.javaType.equals("Float")){%>
       if(value.<%=curField.fieldName%> != null) ps.setFloat(<%=i+1%>, value.<%=curField.fieldName%>.floatValue()); else ps.setNull(<%=i+1%>, Types.NULL);<%}else if(curField.javaType.equals("java.lang.Double") || curField.javaType.equals("Double")){%>
       if(value.<%=curField.fieldName%> != null) ps.setDouble(<%=i+1%>, value.<%=curField.fieldName%>.doubleValue()); else ps.setNull(<%=i+1%>, Types.NULL);<%}%><%}%>
-    <%for(i=0;i<entity.pks.size();i++){Field curField=(Field)entity.pks.elementAt(i);%><%if(curField.javaType.compareTo("java.lang.String") == 0 || curField.javaType.compareTo("String") == 0){%>
+    <%for(i=0;i<entity.pks.size();i++){EgField curField=(EgField)entity.pks.elementAt(i);%><%if(curField.javaType.compareTo("java.lang.String") == 0 || curField.javaType.compareTo("String") == 0){%>
       ps.setString(<%=i+1+nopks.size()%>, value.<%=curField.fieldName%>);<%}else if(curField.javaType.indexOf("Timestamp") >= 0){%>
       ps.setTimestamp(<%=i+1+nopks.size()%>, value.<%=curField.fieldName%>);<%}else if(curField.javaType.equals("java.sql.Time") || curField.javaType.equals("Time")){%>
       ps.setTime(<%=i+1+nopks.size()%>, value.<%=curField.fieldName%>);<%}else if(curField.javaType.equals("java.sql.Date") || curField.javaType.equals("Date")){%>
@@ -138,7 +138,7 @@ public class <%=entity.ejbName%>DAO
     String sql = "SELECT <%=entity.colNameString(nopks, ", ", "")%> FROM <%=entity.tableName%> WHERE <%=entity.colNameString(entity.pks, "=? AND ", "=?")%>";
     try {
       ps = connection.prepareStatement(sql);
-    <%for(i=0;i<entity.pks.size();i++){Field curField=(Field)entity.pks.elementAt(i);%><%if(curField.javaType.compareTo("java.lang.String") == 0 || curField.javaType.compareTo("String") == 0){%>
+    <%for(i=0;i<entity.pks.size();i++){EgField curField=(EgField)entity.pks.elementAt(i);%><%if(curField.javaType.compareTo("java.lang.String") == 0 || curField.javaType.compareTo("String") == 0){%>
       ps.setString(<%=i+1%>, value.<%=curField.fieldName%>);<%}else if(curField.javaType.indexOf("Timestamp") >= 0){%>
       ps.setTimestamp(<%=i+1%>, value.<%=curField.fieldName%>);<%}else if(curField.javaType.equals("java.sql.Time") || curField.javaType.equals("Time")){%>
       ps.setTime(<%=i+1%>, value.<%=curField.fieldName%>);<%}else if(curField.javaType.equals("java.sql.Date") || curField.javaType.equals("Date")){%>
@@ -152,7 +152,7 @@ public class <%=entity.ejbName%>DAO
       
       if(rs.next())
       {
-      <%for(i=0;i<nopks.size();i++){Field curField=(Field)nopks.elementAt(i);%><%if(curField.javaType.compareTo("java.lang.String") == 0 || curField.javaType.compareTo("String") == 0){%>
+      <%for(i=0;i<nopks.size();i++){EgField curField=(EgField)nopks.elementAt(i);%><%if(curField.javaType.compareTo("java.lang.String") == 0 || curField.javaType.compareTo("String") == 0){%>
         value.<%=curField.fieldName%> = rs.getString("<%=curField.columnName%>");<%}else if(curField.javaType.indexOf("Timestamp") >= 0){%>
         value.<%=curField.fieldName%> = rs.getTimestamp("<%=curField.columnName%>");<%}else if(curField.javaType.equals("java.sql.Time") || curField.javaType.equals("Time")){%>
         value.<%=curField.fieldName%> = rs.getTime("<%=curField.columnName%>");<%}else if(curField.javaType.equals("java.sql.Date") || curField.javaType.equals("Date")){%>
@@ -193,7 +193,7 @@ public class <%=entity.ejbName%>DAO
     String sql = "DELETE FROM <%=entity.tableName%> WHERE <%=entity.colNameString(entity.pks, "=? AND ", "=?")%>";
     try {
       ps = connection.prepareStatement(sql);
-    <%for(i=0;i<entity.pks.size();i++){Field curField=(Field)entity.pks.elementAt(i);%><%if(curField.javaType.compareTo("java.lang.String") == 0 || curField.javaType.compareTo("String") == 0){%>
+    <%for(i=0;i<entity.pks.size();i++){EgField curField=(EgField)entity.pks.elementAt(i);%><%if(curField.javaType.compareTo("java.lang.String") == 0 || curField.javaType.compareTo("String") == 0){%>
       ps.setString(<%=i+1%>, value.<%=curField.fieldName%>);<%}else if(curField.javaType.indexOf("Timestamp") >= 0){%>
       ps.setTimestamp(<%=i+1%>, value.<%=curField.fieldName%>);<%}else if(curField.javaType.equals("java.sql.Time") || curField.javaType.equals("Time")){%>
       ps.setTime(<%=i+1%>, value.<%=curField.fieldName%>);<%}else if(curField.javaType.equals("java.sql.Date") || curField.javaType.equals("Date")){%>
@@ -247,9 +247,56 @@ public class <%=entity.ejbName%>DAO
     else return null;    
   }
 
-<%for(int fi=0;fi<entity.finders.size();fi++){%><%Finder finderDesc = (Finder)entity.finders.elementAt(fi);%><%Vector nofindby = new Vector(entity.fields); for(int nfind=0;nfind<finderDesc.fields.size();nfind++){ nofindby.removeElement(finderDesc.fields.elementAt(nfind)); }%>
+
+  /** Finds All <%=entity.ejbName%>s
+   *@return      Collection containing the found <%=entity.ejbName%>s
+   */
+  public static Collection findAll()
+  {
+    Collection collection = new LinkedList();
+    
+    Connection connection = null;
+    PreparedStatement ps = null;
+    ResultSet rs = null;
+    try { connection = getConnection(); } 
+    catch (SQLException sqle) { Debug.logWarning("ERROR [<%=entity.ejbName%>DAO.findAll]: Unable to esablish a connection with the database... Error was:\n" + sqle.toString() ); }
+    
+    String sql = "SELECT <%=entity.colNameString(entity.fields, ", ", "")%> FROM <%=entity.tableName%>";
+    try {
+      ps = connection.prepareStatement(sql);
+      rs = ps.executeQuery();
+      
+      while(rs.next())
+      {        
+        <%=entity.ejbName%> value = new <%=entity.ejbName%>();
+      <%for(i=0;i<entity.fields.size();i++){EgField curField=(EgField)entity.fields.elementAt(i);%><%if(curField.javaType.compareTo("java.lang.String") == 0 || curField.javaType.compareTo("String") == 0){%>
+        value.<%=curField.fieldName%> = rs.getString("<%=curField.columnName%>");<%}else if(curField.javaType.indexOf("Timestamp") >= 0){%>
+        value.<%=curField.fieldName%> = rs.getTimestamp("<%=curField.columnName%>");<%}else if(curField.javaType.equals("java.sql.Time") || curField.javaType.equals("Time")){%>
+        value.<%=curField.fieldName%> = rs.getTime("<%=curField.columnName%>");<%}else if(curField.javaType.equals("java.sql.Date") || curField.javaType.equals("Date")){%>
+        value.<%=curField.fieldName%> = rs.getDate("<%=curField.columnName%>");<%}else if(curField.javaType.equals("java.lang.Integer") || curField.javaType.equals("Integer")){%>
+        if(rs.getObject("<%=curField.columnName%>") == null) value.<%=curField.fieldName%> = null; else value.<%=curField.fieldName%> = new Integer(rs.getInt("<%=curField.columnName%>"));<%}else if(curField.javaType.equals("java.lang.Long") || curField.javaType.equals("Long")){%>
+        if(rs.getObject("<%=curField.columnName%>") == null) value.<%=curField.fieldName%> = null; else value.<%=curField.fieldName%> = new Long(rs.getLong("<%=curField.columnName%>"));<%}else if(curField.javaType.equals("java.lang.Float") || curField.javaType.equals("Float")){%>
+        if(rs.getObject("<%=curField.columnName%>") == null) value.<%=curField.fieldName%> = null; else value.<%=curField.fieldName%> = new Float(rs.getFloat("<%=curField.columnName%>"));<%}else if(curField.javaType.equals("java.lang.Double") || curField.javaType.equals("Double")){%>
+        if(rs.getObject("<%=curField.columnName%>") == null) value.<%=curField.fieldName%> = null; else value.<%=curField.fieldName%> = new Double(rs.getDouble("<%=curField.columnName%>"));<%}%><%}%>
+
+        value.modified = false;
+        collection.add(value);
+      }
+    } catch (SQLException sqle) {
+      Debug.logWarning("ERROR [<%=entity.ejbName%>DAO.findAll]: SQL Exception while executing the following:\n" + sql + "\nError was:\n");
+      sqle.printStackTrace();
+      return null;
+    } finally {
+      try { if (rs != null) rs.close(); } catch (SQLException sqle) { }
+      try { if (ps != null) ps.close(); } catch (SQLException sqle) { }
+      try { if (connection != null) connection.close(); } catch (SQLException sqle) { }
+    }
+    return collection;
+  }
+
+<%for(int fi=0;fi<entity.finders.size();fi++){%><%EgFinder finderDesc = (EgFinder)entity.finders.elementAt(fi);%><%Vector nofindby = new Vector(entity.fields); for(int nfind=0;nfind<finderDesc.fields.size();nfind++){ nofindby.removeElement(finderDesc.fields.elementAt(nfind)); }%>
   /** Finds <%=entity.ejbName%>s by the following fields:<%for(int j=0;j<finderDesc.fields.size();j++){%>
-   *@param  <%=((Field)finderDesc.fields.elementAt(j)).fieldName%>                  Field for the <%=((Field)finderDesc.fields.elementAt(j)).columnName%> column.<%}%>
+   *@param  <%=((EgField)finderDesc.fields.elementAt(j)).fieldName%>                  EgField for the <%=((EgField)finderDesc.fields.elementAt(j)).columnName%> column.<%}%>
    *@return      Collection containing the found <%=entity.ejbName%>s
    */
   public static Collection findBy<%=entity.classNameString(finderDesc.fields,"And","")%>(<%=entity.typeNameString(finderDesc.fields)%>)
@@ -266,10 +313,10 @@ public class <%=entity.ejbName%>DAO
     try { connection = getConnection(); } 
     catch (SQLException sqle) { Debug.logWarning("ERROR [<%=entity.ejbName%>DAO.findBy<%=entity.classNameString(finderDesc.fields,"And","")%>]: Unable to esablish a connection with the database... Error was:\n" + sqle.toString() ); }
     
-    String sql = "SELECT <%=entity.colNameString(nofindby, ", ", "")%> FROM <%=entity.tableName%> WHERE <%=entity.colNameString(finderDesc.fields, "=? AND ", "=?")%>";
+    String sql = "SELECT <%=entity.colNameString(nofindby, ", ", "")%> FROM <%=entity.tableName%> WHERE <%=entity.colNameString(finderDesc.fields, " like ? AND ", " like ?")%>";
     try {
       ps = connection.prepareStatement(sql);
-    <%for(i=0;i<finderDesc.fields.size();i++){Field curField=(Field)finderDesc.fields.elementAt(i);%><%if(curField.javaType.compareTo("java.lang.String") == 0 || curField.javaType.compareTo("String") == 0){%>
+    <%for(i=0;i<finderDesc.fields.size();i++){EgField curField=(EgField)finderDesc.fields.elementAt(i);%><%if(curField.javaType.compareTo("java.lang.String") == 0 || curField.javaType.compareTo("String") == 0){%>
       ps.setString(<%=i+1%>, <%=curField.fieldName%>);<%}else if(curField.javaType.indexOf("Timestamp") >= 0){%>
       ps.setTimestamp(<%=i+1%>, <%=curField.fieldName%>);<%}else if(curField.javaType.equals("java.sql.Time") || curField.javaType.equals("Time")){%>
       ps.setTime(<%=i+1%>, <%=curField.fieldName%>);<%}else if(curField.javaType.equals("java.sql.Date") || curField.javaType.equals("Date")){%>
@@ -283,9 +330,9 @@ public class <%=entity.ejbName%>DAO
       while(rs.next())
       {        
         <%=entity.ejbName%> value = new <%=entity.ejbName%>();
-      <%for(i=0;i<finderDesc.fields.size();i++){Field curField=(Field)finderDesc.fields.elementAt(i);%>
+      <%for(i=0;i<finderDesc.fields.size();i++){EgField curField=(EgField)finderDesc.fields.elementAt(i);%>
         value.<%=curField.fieldName%> = <%=curField.fieldName%>;<%}%>
-      <%for(i=0;i<nofindby.size();i++){Field curField=(Field)nofindby.elementAt(i);%><%if(curField.javaType.compareTo("java.lang.String") == 0 || curField.javaType.compareTo("String") == 0){%>
+      <%for(i=0;i<nofindby.size();i++){EgField curField=(EgField)nofindby.elementAt(i);%><%if(curField.javaType.compareTo("java.lang.String") == 0 || curField.javaType.compareTo("String") == 0){%>
         value.<%=curField.fieldName%> = rs.getString("<%=curField.columnName%>");<%}else if(curField.javaType.indexOf("Timestamp") >= 0){%>
         value.<%=curField.fieldName%> = rs.getTimestamp("<%=curField.columnName%>");<%}else if(curField.javaType.equals("java.sql.Time") || curField.javaType.equals("Time")){%>
         value.<%=curField.fieldName%> = rs.getTime("<%=curField.columnName%>");<%}else if(curField.javaType.equals("java.sql.Date") || curField.javaType.equals("Date")){%>

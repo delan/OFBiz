@@ -5,7 +5,7 @@ import java.rmi.*;
 import javax.ejb.*;
 import java.util.*;
 import org.ofbiz.core.util.*;
-<%@ page import="java.util.*" %><%Hashtable importNames = new Hashtable(); importNames.put(entity.packageName,"");%><%for(int relIndex=0;relIndex<entity.relations.size();relIndex++){%><%Relation relation = (Relation)entity.relations.elementAt(relIndex);%><%Entity relatedEntity = DefReader.getEntity(defFileName,relation.relatedEjbName);%><%if(!importNames.containsKey(relatedEntity.packageName)){ importNames.put(relatedEntity.packageName,"");%>
+<%@ page import="java.util.*" %><%Hashtable importNames = new Hashtable(); importNames.put(entity.packageName,"");%><%for(int relIndex=0;relIndex<entity.relations.size();relIndex++){%><%EgRelation relation = (EgRelation)entity.relations.elementAt(relIndex);%><%EgEntity relatedEntity = DefReader.getEgEntity(defFileName,relation.relatedEjbName);%><%if(!importNames.containsKey(relatedEntity.packageName)){ importNames.put(relatedEntity.packageName,"");%>
 import <%=relatedEntity.packageName%>.*;<%}%><%}%>
 
 /**
@@ -37,14 +37,14 @@ import <%=relatedEntity.packageName%>.*;<%}%><%}%>
  */
 public class <%=entity.ejbName%>Value implements <%=entity.ejbName%>
 {<%for(i=0;i<entity.fields.size();i++){%>
-  /** The variable of the <%=((Field)entity.fields.elementAt(i)).columnName%> column of the <%=entity.tableName%> table. */
-  private <%=((Field)entity.fields.elementAt(i)).javaType%> <%=((Field)entity.fields.elementAt(i)).fieldName%>;<%}%>
+  /** The variable of the <%=((EgField)entity.fields.elementAt(i)).columnName%> column of the <%=entity.tableName%> table. */
+  private <%=((EgField)entity.fields.elementAt(i)).javaType%> <%=((EgField)entity.fields.elementAt(i)).fieldName%>;<%}%>
 
   private <%=entity.ejbName%> <%=GenUtil.lowerFirstChar(entity.ejbName)%>;
 
   public <%=entity.ejbName%>Value()
   {<%for(i=0;i<entity.fields.size();i++){%>
-    this.<%=((Field)entity.fields.elementAt(i)).fieldName%> = null;<%}%>
+    this.<%=((EgField)entity.fields.elementAt(i)).fieldName%> = null;<%}%>
 
     this.<%=GenUtil.lowerFirstChar(entity.ejbName)%> = null;
   }
@@ -53,7 +53,7 @@ public class <%=entity.ejbName%>Value implements <%=entity.ejbName%>
   {
     if(<%=GenUtil.lowerFirstChar(entity.ejbName)%> == null) return;
   <%for(i=0;i<entity.fields.size();i++){%>
-    this.<%=((Field)entity.fields.elementAt(i)).fieldName%> = <%=GenUtil.lowerFirstChar(entity.ejbName)%>.get<%=GenUtil.upperFirstChar(((Field)entity.fields.elementAt(i)).fieldName)%>();<%}%>
+    this.<%=((EgField)entity.fields.elementAt(i)).fieldName%> = <%=GenUtil.lowerFirstChar(entity.ejbName)%>.get<%=GenUtil.upperFirstChar(((EgField)entity.fields.elementAt(i)).fieldName)%>();<%}%>
 
     this.<%=GenUtil.lowerFirstChar(entity.ejbName)%> = <%=GenUtil.lowerFirstChar(entity.ejbName)%>;
   }
@@ -62,22 +62,22 @@ public class <%=entity.ejbName%>Value implements <%=entity.ejbName%>
   {
     if(<%=GenUtil.lowerFirstChar(entity.ejbName)%> == null) return;
   <%for(i=0;i<entity.fields.size();i++){%>
-    this.<%=((Field)entity.fields.elementAt(i)).fieldName%> = <%=((Field)entity.fields.elementAt(i)).fieldName%>;<%}%>
+    this.<%=((EgField)entity.fields.elementAt(i)).fieldName%> = <%=((EgField)entity.fields.elementAt(i)).fieldName%>;<%}%>
 
     this.<%=GenUtil.lowerFirstChar(entity.ejbName)%> = <%=GenUtil.lowerFirstChar(entity.ejbName)%>;
   }
 
-<%for(i=0;i<entity.fields.size();i++){%><%if(((Field)entity.fields.elementAt(i)).isPk){%>
-  /** Get the primary key of the <%=((Field)entity.fields.elementAt(i)).columnName%> column of the <%=entity.tableName%> table. */
-  public <%=((Field)entity.fields.elementAt(i)).javaType%> get<%=GenUtil.upperFirstChar(((Field)entity.fields.elementAt(i)).fieldName)%>()  throws RemoteException { return <%=((Field)entity.fields.elementAt(i)).fieldName%>; }
+<%for(i=0;i<entity.fields.size();i++){%><%if(((EgField)entity.fields.elementAt(i)).isPk){%>
+  /** Get the primary key of the <%=((EgField)entity.fields.elementAt(i)).columnName%> column of the <%=entity.tableName%> table. */
+  public <%=((EgField)entity.fields.elementAt(i)).javaType%> get<%=GenUtil.upperFirstChar(((EgField)entity.fields.elementAt(i)).fieldName)%>()  throws RemoteException { return <%=((EgField)entity.fields.elementAt(i)).fieldName%>; }
 <%}else{%>
-  /** Get the value of the <%=((Field)entity.fields.elementAt(i)).columnName%> column of the <%=entity.tableName%> table. */
-  public <%=((Field)entity.fields.elementAt(i)).javaType%> get<%=GenUtil.upperFirstChar(((Field)entity.fields.elementAt(i)).fieldName)%>() throws RemoteException { return <%=((Field)entity.fields.elementAt(i)).fieldName%>; }
-  /** Set the value of the <%=((Field)entity.fields.elementAt(i)).columnName%> column of the <%=entity.tableName%> table. */
-  public void set<%=GenUtil.upperFirstChar(((Field)entity.fields.elementAt(i)).fieldName)%>(<%=((Field)entity.fields.elementAt(i)).javaType%> <%=((Field)entity.fields.elementAt(i)).fieldName%>) throws RemoteException
+  /** Get the value of the <%=((EgField)entity.fields.elementAt(i)).columnName%> column of the <%=entity.tableName%> table. */
+  public <%=((EgField)entity.fields.elementAt(i)).javaType%> get<%=GenUtil.upperFirstChar(((EgField)entity.fields.elementAt(i)).fieldName)%>() throws RemoteException { return <%=((EgField)entity.fields.elementAt(i)).fieldName%>; }
+  /** Set the value of the <%=((EgField)entity.fields.elementAt(i)).columnName%> column of the <%=entity.tableName%> table. */
+  public void set<%=GenUtil.upperFirstChar(((EgField)entity.fields.elementAt(i)).fieldName)%>(<%=((EgField)entity.fields.elementAt(i)).javaType%> <%=((EgField)entity.fields.elementAt(i)).fieldName%>) throws RemoteException
   {
-    this.<%=((Field)entity.fields.elementAt(i)).fieldName%> = <%=((Field)entity.fields.elementAt(i)).fieldName%>;
-    if(<%=GenUtil.lowerFirstChar(entity.ejbName)%>!=null) <%=GenUtil.lowerFirstChar(entity.ejbName)%>.set<%=GenUtil.upperFirstChar(((Field)entity.fields.elementAt(i)).fieldName)%>(<%=((Field)entity.fields.elementAt(i)).fieldName%>);
+    this.<%=((EgField)entity.fields.elementAt(i)).fieldName%> = <%=((EgField)entity.fields.elementAt(i)).fieldName%>;
+    if(<%=GenUtil.lowerFirstChar(entity.ejbName)%>!=null) <%=GenUtil.lowerFirstChar(entity.ejbName)%>.set<%=GenUtil.upperFirstChar(((EgField)entity.fields.elementAt(i)).fieldName)%>(<%=((EgField)entity.fields.elementAt(i)).fieldName%>);
   }
 <%}%><%}%>
   /** Get the value object of the <%=entity.ejbName%> class. */
@@ -88,12 +88,12 @@ public class <%=entity.ejbName%>Value implements <%=entity.ejbName%>
     if(valueObject == null) return;
 
     if(<%=GenUtil.lowerFirstChar(entity.ejbName)%>!=null) <%=GenUtil.lowerFirstChar(entity.ejbName)%>.setValueObject(valueObject);
-<%for(i=0;i<entity.fields.size();i++){%><%if(((Field)entity.fields.elementAt(i)).isPk){%>
-    if(<%=((Field)entity.fields.elementAt(i)).fieldName%> == null) <%=((Field)entity.fields.elementAt(i)).fieldName%> = valueObject.get<%=GenUtil.upperFirstChar(((Field)entity.fields.elementAt(i)).fieldName)%>();<%}else{%>
-    <%=((Field)entity.fields.elementAt(i)).fieldName%> = valueObject.get<%=GenUtil.upperFirstChar(((Field)entity.fields.elementAt(i)).fieldName)%>();<%}%><%}%>
+<%for(i=0;i<entity.fields.size();i++){%><%if(((EgField)entity.fields.elementAt(i)).isPk){%>
+    if(<%=((EgField)entity.fields.elementAt(i)).fieldName%> == null) <%=((EgField)entity.fields.elementAt(i)).fieldName%> = valueObject.get<%=GenUtil.upperFirstChar(((EgField)entity.fields.elementAt(i)).fieldName)%>();<%}else{%>
+    <%=((EgField)entity.fields.elementAt(i)).fieldName%> = valueObject.get<%=GenUtil.upperFirstChar(((EgField)entity.fields.elementAt(i)).fieldName)%>();<%}%><%}%>
   }
 
-<%for(int relIndex=0;relIndex<entity.relations.size();relIndex++){%><%Relation relation = (Relation)entity.relations.elementAt(relIndex);%><%Entity relatedEntity = DefReader.getEntity(defFileName,relation.relatedEjbName);%><%if(relation.relationType.equalsIgnoreCase("one")){%>
+<%for(int relIndex=0;relIndex<entity.relations.size();relIndex++){%><%EgRelation relation = (EgRelation)entity.relations.elementAt(relIndex);%><%EgEntity relatedEntity = DefReader.getEgEntity(defFileName,relation.relatedEjbName);%><%if(relation.relationType.equalsIgnoreCase("one")){%>
   /** Get the <%=relation.relationTitle%> <%=relatedEntity.ejbName%> entity corresponding to this entity. */
   public <%=relatedEntity.ejbName%> get<%=relation.relationTitle%><%=relatedEntity.ejbName%>() { return <%=relatedEntity.ejbName%>Helper.findByPrimaryKey(<%=relation.keyMapString(", ", "")%>); }
   /** Remove the <%=relation.relationTitle%> <%=relatedEntity.ejbName%> entity corresponding to this entity. */

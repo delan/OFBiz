@@ -33,7 +33,7 @@
 [ltp]@ page import="org.ofbiz.core.util.*" %>
 [ltp]@ page import="org.ofbiz.commonapp.security.*" %>
 [ltp]@ page import="<%=entity.packageName%>.*" %>
-<%@ page import="java.util.*" %><%Hashtable importNames = new Hashtable(); importNames.put("org.ofbiz.commonapp.security","");importNames.put(entity.packageName,"");%><%for(int relIndex=0;relIndex<entity.relations.size();relIndex++){%><%Relation relation = (Relation)entity.relations.elementAt(relIndex);%><%Entity relatedEntity = DefReader.getEntity(defFileName,relation.relatedEjbName);%><%if(!importNames.containsKey(relatedEntity.packageName)){ importNames.put(relatedEntity.packageName,"");%>
+<%@ page import="java.util.*" %><%Hashtable importNames = new Hashtable(); importNames.put("org.ofbiz.commonapp.security","");importNames.put(entity.packageName,"");%><%for(int relIndex=0;relIndex<entity.relations.size();relIndex++){%><%EgRelation relation = (EgRelation)entity.relations.elementAt(relIndex);%><%EgEntity relatedEntity = DefReader.getEgEntity(defFileName,relation.relatedEjbName);%><%if(!importNames.containsKey(relatedEntity.packageName)){ importNames.put(relatedEntity.packageName,"");%>
 [ltp]@ page import="<%=relatedEntity.packageName%>.*" %><%}%><%}%>
 
 [ltp]String controlPath=(String)request.getAttribute(SiteDefs.CONTROL_PATH);%>
@@ -52,18 +52,18 @@
   String rowClass1 = "viewOneTR1";
   String rowClass2 = "viewOneTR2";
   String rowClass = "";
-<%for(i=0;i<entity.pks.size();i++){Field curField=(Field)entity.pks.elementAt(i);%><%if(curField.javaType.compareTo("java.lang.String") == 0 || curField.javaType.compareTo("String") == 0){%>
+<%for(i=0;i<entity.pks.size();i++){EgField curField=(EgField)entity.pks.elementAt(i);%><%if(curField.javaType.compareTo("java.lang.String") == 0 || curField.javaType.compareTo("String") == 0){%>
   String <%=curField.fieldName%> = request.getParameter("<%=entity.tableName%>_<%=curField.columnName%>");  <%}else if(curField.javaType.indexOf("Timestamp") >= 0){%>
   String <%=curField.fieldName%>Date = request.getParameter("<%=entity.tableName%>_<%=curField.columnName%>_DATE");
   String <%=curField.fieldName%>Time = request.getParameter("<%=entity.tableName%>_<%=curField.columnName%>_TIME");  <%}else{%>
   String <%=curField.fieldName%>String = request.getParameter("<%=entity.tableName%>_<%=curField.columnName%>");  <%}%><%}%>
-<%for(i=0;i<entity.pks.size();i++){%><%if(((Field)entity.pks.elementAt(i)).javaType.compareTo("java.lang.String") != 0 && ((Field)entity.pks.elementAt(i)).javaType.compareTo("String") != 0){%>
-    <%=((Field)entity.pks.elementAt(i)).javaType%> <%=((Field)entity.pks.elementAt(i)).fieldName%> = null;
+<%for(i=0;i<entity.pks.size();i++){%><%if(((EgField)entity.pks.elementAt(i)).javaType.compareTo("java.lang.String") != 0 && ((EgField)entity.pks.elementAt(i)).javaType.compareTo("String") != 0){%>
+    <%=((EgField)entity.pks.elementAt(i)).javaType%> <%=((EgField)entity.pks.elementAt(i)).fieldName%> = null;
     try
     {
-      if(<%=((Field)entity.pks.elementAt(i)).fieldName%>String != null)
+      if(<%=((EgField)entity.pks.elementAt(i)).fieldName%>String != null)
       {
-        <%=((Field)entity.pks.elementAt(i)).fieldName%> = <%=((Field)entity.pks.elementAt(i)).javaType%>.valueOf(<%=((Field)entity.pks.elementAt(i)).fieldName%>String);
+        <%=((EgField)entity.pks.elementAt(i)).fieldName%> = <%=((EgField)entity.pks.elementAt(i)).javaType%>.valueOf(<%=((EgField)entity.pks.elementAt(i)).fieldName%>String);
       }
     }
     catch(Exception e)
@@ -97,7 +97,7 @@ function ShowViewTab(lname)
   [ltp]}%>
 </table>
 <div style='color: white; width: 100%; background-color: black; padding:3;'>
-  <b>View Entity: <%=entity.ejbName%> with (<%=entity.colNameString(entity.pks)%>: [ltp]=<%=entity.pkNameString("%" + ">, [ltp]=", "%" + ">")%>).</b>
+  <b>View EgEntity: <%=entity.ejbName%> with (<%=entity.colNameString(entity.pks)%>: [ltp]=<%=entity.pkNameString("%" + ">, [ltp]=", "%" + ">")%>).</b>
 </div>
 
 <a href="[ltp]=response.encodeURL(controlPath + "/Find<%=entity.ejbName%>")%>" class="buttontext">[Find <%=entity.ejbName%>]</a>
@@ -123,14 +123,14 @@ function ShowViewTab(lname)
 <%for(i=0;i<entity.fields.size();i++){%>
   [ltp]rowClass=(rowClass==rowClass1?rowClass2:rowClass1);%>
   <tr class="[ltp]=rowClass%>">
-    <td><b><%=((Field)entity.fields.elementAt(i)).columnName%></b></td>
-    <td><%if(((Field)entity.fields.elementAt(i)).javaType.equals("Timestamp") || ((Field)entity.fields.elementAt(i)).javaType.equals("java.sql.Timestamp")){%>
+    <td><b><%=((EgField)entity.fields.elementAt(i)).columnName%></b></td>
+    <td><%if(((EgField)entity.fields.elementAt(i)).javaType.equals("Timestamp") || ((EgField)entity.fields.elementAt(i)).javaType.equals("java.sql.Timestamp")){%>
       [ltp]{
         String dateString = null;
         String timeString = null;
         if(<%=GenUtil.lowerFirstChar(entity.ejbName)%> != null)
         {
-          java.sql.Timestamp timeStamp = <%=GenUtil.lowerFirstChar(entity.ejbName)%>.get<%=GenUtil.upperFirstChar(((Field)entity.fields.elementAt(i)).fieldName)%>();
+          java.sql.Timestamp timeStamp = <%=GenUtil.lowerFirstChar(entity.ejbName)%>.get<%=GenUtil.upperFirstChar(((EgField)entity.fields.elementAt(i)).fieldName)%>();
           if(timeStamp  != null)
           {
             dateString = UtilDateTime.toDateString(timeStamp);
@@ -139,13 +139,13 @@ function ShowViewTab(lname)
         }
       %>
       [ltp]=UtilFormatOut.checkNull(dateString)%>&nbsp;[ltp]=UtilFormatOut.checkNull(timeString)%>
-      [ltp]}%><%} else if(((Field)entity.fields.elementAt(i)).javaType.equals("Date") || ((Field)entity.fields.elementAt(i)).javaType.equals("java.util.Date")){%>
+      [ltp]}%><%} else if(((EgField)entity.fields.elementAt(i)).javaType.equals("Date") || ((EgField)entity.fields.elementAt(i)).javaType.equals("java.util.Date")){%>
       [ltp]{
         String dateString = null;
         String timeString = null;
         if(<%=GenUtil.lowerFirstChar(entity.ejbName)%> != null)
         {
-          java.util.Date date = <%=GenUtil.lowerFirstChar(entity.ejbName)%>.get<%=GenUtil.upperFirstChar(((Field)entity.fields.elementAt(i)).fieldName)%>();
+          java.util.Date date = <%=GenUtil.lowerFirstChar(entity.ejbName)%>.get<%=GenUtil.upperFirstChar(((EgField)entity.fields.elementAt(i)).fieldName)%>();
           if(date  != null)
           {
             dateString = UtilDateTime.toDateString(date);
@@ -154,9 +154,9 @@ function ShowViewTab(lname)
         }
       %>
       [ltp]=UtilFormatOut.checkNull(dateString)%>&nbsp;[ltp]=UtilFormatOut.checkNull(timeString)%>
-      [ltp]}%><%}else if(((Field)entity.fields.elementAt(i)).javaType.indexOf("Integer") >= 0 || ((Field)entity.fields.elementAt(i)).javaType.indexOf("Long") >= 0 || ((Field)entity.fields.elementAt(i)).javaType.indexOf("Double") >= 0 || ((Field)entity.fields.elementAt(i)).javaType.indexOf("Float") >= 0){%>
-      [ltp]=UtilFormatOut.formatQuantity(<%=GenUtil.lowerFirstChar(entity.ejbName)%>.get<%=GenUtil.upperFirstChar(((Field)entity.fields.elementAt(i)).fieldName)%>())%><%}else{%>
-      [ltp]=UtilFormatOut.checkNull(<%=GenUtil.lowerFirstChar(entity.ejbName)%>.get<%=GenUtil.upperFirstChar(((Field)entity.fields.elementAt(i)).fieldName)%>())%><%}%>
+      [ltp]}%><%}else if(((EgField)entity.fields.elementAt(i)).javaType.indexOf("Integer") >= 0 || ((EgField)entity.fields.elementAt(i)).javaType.indexOf("Long") >= 0 || ((EgField)entity.fields.elementAt(i)).javaType.indexOf("Double") >= 0 || ((EgField)entity.fields.elementAt(i)).javaType.indexOf("Float") >= 0){%>
+      [ltp]=UtilFormatOut.formatQuantity(<%=GenUtil.lowerFirstChar(entity.ejbName)%>.get<%=GenUtil.upperFirstChar(((EgField)entity.fields.elementAt(i)).fieldName)%>())%><%}else{%>
+      [ltp]=UtilFormatOut.checkNull(<%=GenUtil.lowerFirstChar(entity.ejbName)%>.get<%=GenUtil.upperFirstChar(((EgField)entity.fields.elementAt(i)).fieldName)%>())%><%}%>
     </td>
   </tr>
 <%}%>
@@ -189,48 +189,48 @@ function ShowViewTab(lname)
     <input type="hidden" name="UPDATE_MODE" value="CREATE">
   <%for(i=0;i<entity.pks.size();i++){%>
     [ltp]rowClass=(rowClass==rowClass1?rowClass2:rowClass1);%><tr class="[ltp]=rowClass%>">
-      <td><%=((Field)entity.pks.elementAt(i)).columnName%></td>
-      <td><%if(((Field)entity.pks.elementAt(i)).javaType.equals("Timestamp") || ((Field)entity.pks.elementAt(i)).javaType.equals("java.sql.Timestamp")){%>
+      <td><%=((EgField)entity.pks.elementAt(i)).columnName%></td>
+      <td><%if(((EgField)entity.pks.elementAt(i)).javaType.equals("Timestamp") || ((EgField)entity.pks.elementAt(i)).javaType.equals("java.sql.Timestamp")){%>
         [ltp]{
           String dateString = null;
           String timeString = null;
-          if(<%=((Field)entity.pks.elementAt(i)).fieldName%> != null)
+          if(<%=((EgField)entity.pks.elementAt(i)).fieldName%> != null)
           {
-            dateString = UtilDateTime.toDateString(<%=((Field)entity.pks.elementAt(i)).fieldName%>);
-            timeString = UtilDateTime.toTimeString(<%=((Field)entity.pks.elementAt(i)).fieldName%>);
+            dateString = UtilDateTime.toDateString(<%=((EgField)entity.pks.elementAt(i)).fieldName%>);
+            timeString = UtilDateTime.toTimeString(<%=((EgField)entity.pks.elementAt(i)).fieldName%>);
           }
           else
           {
-            dateString = request.getParameter("<%=entity.tableName%>_<%=((Field)entity.pks.elementAt(i)).columnName%>_DATE");
-            timeString = request.getParameter("<%=entity.tableName%>_<%=((Field)entity.pks.elementAt(i)).columnName%>_TIME");
+            dateString = request.getParameter("<%=entity.tableName%>_<%=((EgField)entity.pks.elementAt(i)).columnName%>_DATE");
+            timeString = request.getParameter("<%=entity.tableName%>_<%=((EgField)entity.pks.elementAt(i)).columnName%>_TIME");
           }
         %>
-        Date(MM/DD/YYYY):<input class='editInputBox' type="text" name="<%=entity.tableName%>_<%=((Field)entity.pks.elementAt(i)).columnName%>_DATE" size="11" value="[ltp]=UtilFormatOut.checkNull(dateString)%>">
-        <a href="javascript:show_calendar('updateForm.<%=entity.tableName%>_<%=((Field)entity.pks.elementAt(i)).columnName%>_DATE');" onmouseover="window.status='Date Picker';return true;" onmouseout="window.status='';return true;"><img src="/images/show-calendar.gif" border=0 width="24" height="22"></a>
-        Time(HH:MM):<input class='editInputBox' type="text" size="6" maxlength="10" name="<%=entity.tableName%>_<%=((Field)entity.pks.elementAt(i)).columnName%>_TIME" value="[ltp]=UtilFormatOut.checkNull(timeString)%>">
-        [ltp]}%><%}else if(((Field)entity.pks.elementAt(i)).javaType.equals("Date") || ((Field)entity.pks.elementAt(i)).javaType.equals("java.util.Date")){%>
+        Date(MM/DD/YYYY):<input class='editInputBox' type="text" name="<%=entity.tableName%>_<%=((EgField)entity.pks.elementAt(i)).columnName%>_DATE" size="11" value="[ltp]=UtilFormatOut.checkNull(dateString)%>">
+        <a href="javascript:show_calendar('updateForm.<%=entity.tableName%>_<%=((EgField)entity.pks.elementAt(i)).columnName%>_DATE');" onmouseover="window.status='Date Picker';return true;" onmouseout="window.status='';return true;"><img src="/images/show-calendar.gif" border=0 width="24" height="22"></a>
+        Time(HH:MM):<input class='editInputBox' type="text" size="6" maxlength="10" name="<%=entity.tableName%>_<%=((EgField)entity.pks.elementAt(i)).columnName%>_TIME" value="[ltp]=UtilFormatOut.checkNull(timeString)%>">
+        [ltp]}%><%}else if(((EgField)entity.pks.elementAt(i)).javaType.equals("Date") || ((EgField)entity.pks.elementAt(i)).javaType.equals("java.util.Date")){%>
         [ltp]{
           String dateString = null;
           String timeString = null;
-          if(<%=((Field)entity.pks.elementAt(i)).fieldName%> != null)
+          if(<%=((EgField)entity.pks.elementAt(i)).fieldName%> != null)
           {
-            dateString = UtilDateTime.toDateString(<%=((Field)entity.pks.elementAt(i)).fieldName%>);
-            timeString = UtilDateTime.toTimeString(<%=((Field)entity.pks.elementAt(i)).fieldName%>);
+            dateString = UtilDateTime.toDateString(<%=((EgField)entity.pks.elementAt(i)).fieldName%>);
+            timeString = UtilDateTime.toTimeString(<%=((EgField)entity.pks.elementAt(i)).fieldName%>);
           }
           else
           {
-            dateString = request.getParameter("<%=entity.tableName%>_<%=((Field)entity.pks.elementAt(i)).columnName%>_DATE");
-            timeString = request.getParameter("<%=entity.tableName%>_<%=((Field)entity.pks.elementAt(i)).columnName%>_TIME");
+            dateString = request.getParameter("<%=entity.tableName%>_<%=((EgField)entity.pks.elementAt(i)).columnName%>_DATE");
+            timeString = request.getParameter("<%=entity.tableName%>_<%=((EgField)entity.pks.elementAt(i)).columnName%>_TIME");
           }
         %>
-        Date(MM/DD/YYYY):<input class='editInputBox' type="text" name="<%=entity.tableName%>_<%=((Field)entity.pks.elementAt(i)).columnName%>_DATE" size="11" value="[ltp]=UtilFormatOut.checkNull(dateString)%>">
-        <a href="javascript:show_calendar('updateForm.<%=entity.tableName%>_<%=((Field)entity.pks.elementAt(i)).columnName%>_DATE');" onmouseover="window.status='Date Picker';return true;" onmouseout="window.status='';return true;"><img src="/images/show-calendar.gif" border=0 width="24" height="22"></a>
-        Time(HH:MM):<input class='editInputBox' type="text" size="6" maxlength="10" name="<%=entity.tableName%>_<%=((Field)entity.pks.elementAt(i)).columnName%>_TIME" value="[ltp]=UtilFormatOut.checkNull(timeString)%>">
-        [ltp]}%><%} else if(((Field)entity.pks.elementAt(i)).javaType.indexOf("Integer") >= 0 || ((Field)entity.pks.elementAt(i)).javaType.indexOf("Long") >= 0 || ((Field)entity.pks.elementAt(i)).javaType.indexOf("Double") >= 0 || ((Field)entity.pks.elementAt(i)).javaType.indexOf("Float") >= 0){%>
-        <input class='editInputBox' type="text" size="<%=((Field)entity.pks.elementAt(i)).stringLength()%>" maxlength="<%=((Field)entity.pks.elementAt(i)).stringLength()%>" name="<%=entity.tableName%>_<%=((Field)entity.pks.elementAt(i)).columnName%>" value="[ltp]=UtilFormatOut.formatQuantity(<%=((Field)entity.pks.elementAt(i)).fieldName%>)%>"> <%} else if(((Field)entity.pks.elementAt(i)).stringLength() <= 80){%>
-        <input class='editInputBox' type="text" size="<%=((Field)entity.pks.elementAt(i)).stringLength()%>" maxlength="<%=((Field)entity.pks.elementAt(i)).stringLength()%>" name="<%=entity.tableName%>_<%=((Field)entity.pks.elementAt(i)).columnName%>" value="[ltp]=UtilFormatOut.checkNull(<%=((Field)entity.pks.elementAt(i)).fieldName%>)%>"><%} else if(((Field)entity.pks.elementAt(i)).stringLength() <= 255){%>
-        <input class='editInputBox' type="text" size="80" maxlength="<%=((Field)entity.pks.elementAt(i)).stringLength()%>" name="<%=entity.tableName%>_<%=((Field)entity.pks.elementAt(i)).columnName%>" value="[ltp]=UtilFormatOut.checkNull(<%=((Field)entity.pks.elementAt(i)).fieldName%>)%>"><%} else {%>
-        <textarea cols="60" rows="3" maxlength="<%=((Field)entity.pks.elementAt(i)).stringLength()%>" name="<%=entity.tableName%>_<%=((Field)entity.pks.elementAt(i)).columnName%>">[ltp]=UtilFormatOut.checkNull(<%=((Field)entity.pks.elementAt(i)).fieldName%>)%></textarea><%}%>
+        Date(MM/DD/YYYY):<input class='editInputBox' type="text" name="<%=entity.tableName%>_<%=((EgField)entity.pks.elementAt(i)).columnName%>_DATE" size="11" value="[ltp]=UtilFormatOut.checkNull(dateString)%>">
+        <a href="javascript:show_calendar('updateForm.<%=entity.tableName%>_<%=((EgField)entity.pks.elementAt(i)).columnName%>_DATE');" onmouseover="window.status='Date Picker';return true;" onmouseout="window.status='';return true;"><img src="/images/show-calendar.gif" border=0 width="24" height="22"></a>
+        Time(HH:MM):<input class='editInputBox' type="text" size="6" maxlength="10" name="<%=entity.tableName%>_<%=((EgField)entity.pks.elementAt(i)).columnName%>_TIME" value="[ltp]=UtilFormatOut.checkNull(timeString)%>">
+        [ltp]}%><%} else if(((EgField)entity.pks.elementAt(i)).javaType.indexOf("Integer") >= 0 || ((EgField)entity.pks.elementAt(i)).javaType.indexOf("Long") >= 0 || ((EgField)entity.pks.elementAt(i)).javaType.indexOf("Double") >= 0 || ((EgField)entity.pks.elementAt(i)).javaType.indexOf("Float") >= 0){%>
+        <input class='editInputBox' type="text" size="<%=((EgField)entity.pks.elementAt(i)).stringLength()%>" maxlength="<%=((EgField)entity.pks.elementAt(i)).stringLength()%>" name="<%=entity.tableName%>_<%=((EgField)entity.pks.elementAt(i)).columnName%>" value="[ltp]=UtilFormatOut.formatQuantity(<%=((EgField)entity.pks.elementAt(i)).fieldName%>)%>"> <%} else if(((EgField)entity.pks.elementAt(i)).stringLength() <= 80){%>
+        <input class='editInputBox' type="text" size="<%=((EgField)entity.pks.elementAt(i)).stringLength()%>" maxlength="<%=((EgField)entity.pks.elementAt(i)).stringLength()%>" name="<%=entity.tableName%>_<%=((EgField)entity.pks.elementAt(i)).columnName%>" value="[ltp]=UtilFormatOut.checkNull(<%=((EgField)entity.pks.elementAt(i)).fieldName%>)%>"><%} else if(((EgField)entity.pks.elementAt(i)).stringLength() <= 255){%>
+        <input class='editInputBox' type="text" size="80" maxlength="<%=((EgField)entity.pks.elementAt(i)).stringLength()%>" name="<%=entity.tableName%>_<%=((EgField)entity.pks.elementAt(i)).columnName%>" value="[ltp]=UtilFormatOut.checkNull(<%=((EgField)entity.pks.elementAt(i)).fieldName%>)%>"><%} else {%>
+        <textarea cols="60" rows="3" maxlength="<%=((EgField)entity.pks.elementAt(i)).stringLength()%>" name="<%=entity.tableName%>_<%=((EgField)entity.pks.elementAt(i)).columnName%>">[ltp]=UtilFormatOut.checkNull(<%=((EgField)entity.pks.elementAt(i)).fieldName%>)%></textarea><%}%>
       </td>
     </tr><%}%>
   [ltp]}else{%>
@@ -240,14 +240,14 @@ function ShowViewTab(lname)
 [ltp]}else{%>
   [ltp]if(hasUpdatePermission){%>
     <input type="hidden" name="UPDATE_MODE" value="UPDATE">
-  <%for(i=0;i<entity.pks.size();i++){%><%if(((Field)entity.pks.elementAt(i)).javaType.indexOf("Timestamp") >= 0 || ((Field)entity.pks.elementAt(i)).javaType.equals("java.util.Date") || ((Field)entity.pks.elementAt(i)).javaType.equals("Date")){%>
-      <input type="hidden" name="<%=entity.tableName%>_<%=((Field)entity.pks.elementAt(i)).columnName%>_DATE" value="[ltp]=<%=((Field)entity.pks.elementAt(i)).fieldName%>Date%>">
-      <input type="hidden" name="<%=entity.tableName%>_<%=((Field)entity.pks.elementAt(i)).columnName%>_TIME" value="[ltp]=<%=((Field)entity.pks.elementAt(i)).fieldName%>Time%>"><%}else{%>
-      <input type="hidden" name="<%=entity.tableName%>_<%=((Field)entity.pks.elementAt(i)).columnName%>" value="[ltp]=<%=((Field)entity.pks.elementAt(i)).fieldName%>%>"><%}%>
+  <%for(i=0;i<entity.pks.size();i++){%><%if(((EgField)entity.pks.elementAt(i)).javaType.indexOf("Timestamp") >= 0 || ((EgField)entity.pks.elementAt(i)).javaType.equals("java.util.Date") || ((EgField)entity.pks.elementAt(i)).javaType.equals("Date")){%>
+      <input type="hidden" name="<%=entity.tableName%>_<%=((EgField)entity.pks.elementAt(i)).columnName%>_DATE" value="[ltp]=<%=((EgField)entity.pks.elementAt(i)).fieldName%>Date%>">
+      <input type="hidden" name="<%=entity.tableName%>_<%=((EgField)entity.pks.elementAt(i)).columnName%>_TIME" value="[ltp]=<%=((EgField)entity.pks.elementAt(i)).fieldName%>Time%>"><%}else{%>
+      <input type="hidden" name="<%=entity.tableName%>_<%=((EgField)entity.pks.elementAt(i)).columnName%>" value="[ltp]=<%=((EgField)entity.pks.elementAt(i)).fieldName%>%>"><%}%>
     [ltp]rowClass=(rowClass==rowClass1?rowClass2:rowClass1);%><tr class="[ltp]=rowClass%>">
-      <td><%=((Field)entity.pks.elementAt(i)).columnName%></td>
+      <td><%=((EgField)entity.pks.elementAt(i)).columnName%></td>
       <td>
-        <b>[ltp]=<%=((Field)entity.pks.elementAt(i)).fieldName%>%></b> (This cannot be changed without re-creating the <%=GenUtil.lowerFirstChar(entity.ejbName)%>.)
+        <b>[ltp]=<%=((EgField)entity.pks.elementAt(i)).fieldName%>%></b> (This cannot be changed without re-creating the <%=GenUtil.lowerFirstChar(entity.ejbName)%>.)
       </td>
     </tr><%}%>
   [ltp]}else{%>
@@ -257,16 +257,16 @@ function ShowViewTab(lname)
 [ltp]} //end if <%=GenUtil.lowerFirstChar(entity.ejbName)%> == null %>
 
 [ltp]if(showFields){%>
-<%for(i=0;i<entity.fields.size();i++){%><%if(!((Field)entity.fields.elementAt(i)).isPk){%>
+<%for(i=0;i<entity.fields.size();i++){%><%if(!((EgField)entity.fields.elementAt(i)).isPk){%>
   [ltp]rowClass=(rowClass==rowClass1?rowClass2:rowClass1);%><tr class="[ltp]=rowClass%>">
-    <td><%=((Field)entity.fields.elementAt(i)).columnName%></td>
-    <td><%if(((Field)entity.fields.elementAt(i)).javaType.equals("Timestamp") || ((Field)entity.fields.elementAt(i)).javaType.equals("java.sql.Timestamp")){%>
+    <td><%=((EgField)entity.fields.elementAt(i)).columnName%></td>
+    <td><%if(((EgField)entity.fields.elementAt(i)).javaType.equals("Timestamp") || ((EgField)entity.fields.elementAt(i)).javaType.equals("java.sql.Timestamp")){%>
       [ltp]{
         String dateString = null;
         String timeString = null;
         if(<%=GenUtil.lowerFirstChar(entity.ejbName)%> != null)
         {
-          java.sql.Timestamp timeStamp = <%=GenUtil.lowerFirstChar(entity.ejbName)%>.get<%=GenUtil.upperFirstChar(((Field)entity.fields.elementAt(i)).fieldName)%>();
+          java.sql.Timestamp timeStamp = <%=GenUtil.lowerFirstChar(entity.ejbName)%>.get<%=GenUtil.upperFirstChar(((EgField)entity.fields.elementAt(i)).fieldName)%>();
           if(timeStamp  != null)
           {
             dateString = UtilDateTime.toDateString(timeStamp);
@@ -275,20 +275,20 @@ function ShowViewTab(lname)
         }
         else
         {
-          dateString = request.getParameter("<%=entity.tableName%>_<%=((Field)entity.fields.elementAt(i)).columnName%>_DATE");
-          timeString = request.getParameter("<%=entity.tableName%>_<%=((Field)entity.fields.elementAt(i)).columnName%>_TIME");
+          dateString = request.getParameter("<%=entity.tableName%>_<%=((EgField)entity.fields.elementAt(i)).columnName%>_DATE");
+          timeString = request.getParameter("<%=entity.tableName%>_<%=((EgField)entity.fields.elementAt(i)).columnName%>_TIME");
         }
       %>
-      Date(MM/DD/YYYY):<input class='editInputBox' type="text" name="<%=entity.tableName%>_<%=((Field)entity.fields.elementAt(i)).columnName%>_DATE" size="11" value="[ltp]=UtilFormatOut.checkNull(dateString)%>">
-      <a href="javascript:show_calendar('updateForm.<%=entity.tableName%>_<%=((Field)entity.fields.elementAt(i)).columnName%>_DATE');" onmouseover="window.status='Date Picker';return true;" onmouseout="window.status='';return true;"><img src="/images/show-calendar.gif" border=0 width="24" height="22"></a>
-      Time(HH:MM):<input class='editInputBox' type="text" size="6" maxlength="10" name="<%=entity.tableName%>_<%=((Field)entity.fields.elementAt(i)).columnName%>_TIME" value="[ltp]=UtilFormatOut.checkNull(timeString)%>">
-      [ltp]}%><%}else if(((Field)entity.fields.elementAt(i)).javaType.equals("Date") || ((Field)entity.fields.elementAt(i)).javaType.equals("java.util.Date")){%>
+      Date(MM/DD/YYYY):<input class='editInputBox' type="text" name="<%=entity.tableName%>_<%=((EgField)entity.fields.elementAt(i)).columnName%>_DATE" size="11" value="[ltp]=UtilFormatOut.checkNull(dateString)%>">
+      <a href="javascript:show_calendar('updateForm.<%=entity.tableName%>_<%=((EgField)entity.fields.elementAt(i)).columnName%>_DATE');" onmouseover="window.status='Date Picker';return true;" onmouseout="window.status='';return true;"><img src="/images/show-calendar.gif" border=0 width="24" height="22"></a>
+      Time(HH:MM):<input class='editInputBox' type="text" size="6" maxlength="10" name="<%=entity.tableName%>_<%=((EgField)entity.fields.elementAt(i)).columnName%>_TIME" value="[ltp]=UtilFormatOut.checkNull(timeString)%>">
+      [ltp]}%><%}else if(((EgField)entity.fields.elementAt(i)).javaType.equals("Date") || ((EgField)entity.fields.elementAt(i)).javaType.equals("java.util.Date")){%>
       [ltp]{
         String dateString = null;
         String timeString = null;
         if(<%=GenUtil.lowerFirstChar(entity.ejbName)%> != null)
         {
-          java.util.Date date = <%=GenUtil.lowerFirstChar(entity.ejbName)%>.get<%=GenUtil.upperFirstChar(((Field)entity.fields.elementAt(i)).fieldName)%>();
+          java.util.Date date = <%=GenUtil.lowerFirstChar(entity.ejbName)%>.get<%=GenUtil.upperFirstChar(((EgField)entity.fields.elementAt(i)).fieldName)%>();
           if(date  != null)
           {
             dateString = UtilDateTime.toDateString(date);
@@ -297,18 +297,18 @@ function ShowViewTab(lname)
         }
         else
         {
-          dateString = request.getParameter("<%=entity.tableName%>_<%=((Field)entity.fields.elementAt(i)).columnName%>_DATE");
-          timeString = request.getParameter("<%=entity.tableName%>_<%=((Field)entity.fields.elementAt(i)).columnName%>_TIME");
+          dateString = request.getParameter("<%=entity.tableName%>_<%=((EgField)entity.fields.elementAt(i)).columnName%>_DATE");
+          timeString = request.getParameter("<%=entity.tableName%>_<%=((EgField)entity.fields.elementAt(i)).columnName%>_TIME");
         }
       %>
-      Date(MM/DD/YYYY):<input class='editInputBox' type="text" name="<%=entity.tableName%>_<%=((Field)entity.fields.elementAt(i)).columnName%>_DATE" size="11" value="[ltp]=UtilFormatOut.checkNull(dateString)%>">
-      <a href="javascript:show_calendar('updateForm.<%=entity.tableName%>_<%=((Field)entity.fields.elementAt(i)).columnName%>_DATE');" onmouseover="window.status='Date Picker';return true;" onmouseout="window.status='';return true;"><img src="/images/show-calendar.gif" border=0 width="24" height="22"></a>
-      Time(HH:MM):<input class='editInputBox' type="text" size="6" maxlength="10" name="<%=entity.tableName%>_<%=((Field)entity.fields.elementAt(i)).columnName%>_TIME" value="[ltp]=UtilFormatOut.checkNull(timeString)%>">
-      [ltp]}%><%} else if(((Field)entity.fields.elementAt(i)).javaType.indexOf("Integer") >= 0 || ((Field)entity.fields.elementAt(i)).javaType.indexOf("Long") >= 0 || ((Field)entity.fields.elementAt(i)).javaType.indexOf("Double") >= 0 || ((Field)entity.fields.elementAt(i)).javaType.indexOf("Float") >= 0){%>
-      <input class='editInputBox' type="text" size="<%=((Field)entity.fields.elementAt(i)).stringLength()%>" maxlength="<%=((Field)entity.fields.elementAt(i)).stringLength()%>" name="<%=entity.tableName%>_<%=((Field)entity.fields.elementAt(i)).columnName%>" value="[ltp]if(<%=GenUtil.lowerFirstChar(entity.ejbName)%>!=null){%>[ltp]=UtilFormatOut.formatQuantity(<%=GenUtil.lowerFirstChar(entity.ejbName)%>.get<%=GenUtil.upperFirstChar(((Field)entity.fields.elementAt(i)).fieldName)%>())%>[ltp]}else{%>[ltp]=UtilFormatOut.checkNull(request.getParameter("<%=entity.tableName%>_<%=((Field)entity.fields.elementAt(i)).columnName%>"))%>[ltp]}%>"><%} else if(((Field)entity.fields.elementAt(i)).stringLength() <= 80){%>
-      <input class='editInputBox' type="text" size="<%=((Field)entity.fields.elementAt(i)).stringLength()%>" maxlength="<%=((Field)entity.fields.elementAt(i)).stringLength()%>" name="<%=entity.tableName%>_<%=((Field)entity.fields.elementAt(i)).columnName%>" value="[ltp]if(<%=GenUtil.lowerFirstChar(entity.ejbName)%>!=null){%>[ltp]=UtilFormatOut.checkNull(<%=GenUtil.lowerFirstChar(entity.ejbName)%>.get<%=GenUtil.upperFirstChar(((Field)entity.fields.elementAt(i)).fieldName)%>())%>[ltp]}else{%>[ltp]=UtilFormatOut.checkNull(request.getParameter("<%=entity.tableName%>_<%=((Field)entity.fields.elementAt(i)).columnName%>"))%>[ltp]}%>"><%} else if(((Field)entity.fields.elementAt(i)).stringLength() <= 255){%>
-      <input class='editInputBox' type="text" size="80" maxlength="<%=((Field)entity.fields.elementAt(i)).stringLength()%>" name="<%=entity.tableName%>_<%=((Field)entity.fields.elementAt(i)).columnName%>" value="[ltp]if(<%=GenUtil.lowerFirstChar(entity.ejbName)%>!=null){%>[ltp]=UtilFormatOut.checkNull(<%=GenUtil.lowerFirstChar(entity.ejbName)%>.get<%=GenUtil.upperFirstChar(((Field)entity.fields.elementAt(i)).fieldName)%>())%>[ltp]}else{%>[ltp]=UtilFormatOut.checkNull(request.getParameter("<%=entity.tableName%>_<%=((Field)entity.fields.elementAt(i)).columnName%>"))%>[ltp]}%>"><%} else {%>
-      <textarea cols="60" rows="3" maxlength="<%=((Field)entity.fields.elementAt(i)).stringLength()%>" name="<%=entity.tableName%>_<%=((Field)entity.fields.elementAt(i)).columnName%>">[ltp]if(<%=GenUtil.lowerFirstChar(entity.ejbName)%>!=null){%>[ltp]=UtilFormatOut.checkNull(<%=GenUtil.lowerFirstChar(entity.ejbName)%>.get<%=GenUtil.upperFirstChar(((Field)entity.fields.elementAt(i)).fieldName)%>())%>[ltp]}else{%>[ltp]=UtilFormatOut.checkNull(request.getParameter("<%=entity.tableName%>_<%=((Field)entity.fields.elementAt(i)).columnName%>"))%>[ltp]}%></textarea><%}%>
+      Date(MM/DD/YYYY):<input class='editInputBox' type="text" name="<%=entity.tableName%>_<%=((EgField)entity.fields.elementAt(i)).columnName%>_DATE" size="11" value="[ltp]=UtilFormatOut.checkNull(dateString)%>">
+      <a href="javascript:show_calendar('updateForm.<%=entity.tableName%>_<%=((EgField)entity.fields.elementAt(i)).columnName%>_DATE');" onmouseover="window.status='Date Picker';return true;" onmouseout="window.status='';return true;"><img src="/images/show-calendar.gif" border=0 width="24" height="22"></a>
+      Time(HH:MM):<input class='editInputBox' type="text" size="6" maxlength="10" name="<%=entity.tableName%>_<%=((EgField)entity.fields.elementAt(i)).columnName%>_TIME" value="[ltp]=UtilFormatOut.checkNull(timeString)%>">
+      [ltp]}%><%} else if(((EgField)entity.fields.elementAt(i)).javaType.indexOf("Integer") >= 0 || ((EgField)entity.fields.elementAt(i)).javaType.indexOf("Long") >= 0 || ((EgField)entity.fields.elementAt(i)).javaType.indexOf("Double") >= 0 || ((EgField)entity.fields.elementAt(i)).javaType.indexOf("Float") >= 0){%>
+      <input class='editInputBox' type="text" size="<%=((EgField)entity.fields.elementAt(i)).stringLength()%>" maxlength="<%=((EgField)entity.fields.elementAt(i)).stringLength()%>" name="<%=entity.tableName%>_<%=((EgField)entity.fields.elementAt(i)).columnName%>" value="[ltp]if(<%=GenUtil.lowerFirstChar(entity.ejbName)%>!=null){%>[ltp]=UtilFormatOut.formatQuantity(<%=GenUtil.lowerFirstChar(entity.ejbName)%>.get<%=GenUtil.upperFirstChar(((EgField)entity.fields.elementAt(i)).fieldName)%>())%>[ltp]}else{%>[ltp]=UtilFormatOut.checkNull(request.getParameter("<%=entity.tableName%>_<%=((EgField)entity.fields.elementAt(i)).columnName%>"))%>[ltp]}%>"><%} else if(((EgField)entity.fields.elementAt(i)).stringLength() <= 80){%>
+      <input class='editInputBox' type="text" size="<%=((EgField)entity.fields.elementAt(i)).stringLength()%>" maxlength="<%=((EgField)entity.fields.elementAt(i)).stringLength()%>" name="<%=entity.tableName%>_<%=((EgField)entity.fields.elementAt(i)).columnName%>" value="[ltp]if(<%=GenUtil.lowerFirstChar(entity.ejbName)%>!=null){%>[ltp]=UtilFormatOut.checkNull(<%=GenUtil.lowerFirstChar(entity.ejbName)%>.get<%=GenUtil.upperFirstChar(((EgField)entity.fields.elementAt(i)).fieldName)%>())%>[ltp]}else{%>[ltp]=UtilFormatOut.checkNull(request.getParameter("<%=entity.tableName%>_<%=((EgField)entity.fields.elementAt(i)).columnName%>"))%>[ltp]}%>"><%} else if(((EgField)entity.fields.elementAt(i)).stringLength() <= 255){%>
+      <input class='editInputBox' type="text" size="80" maxlength="<%=((EgField)entity.fields.elementAt(i)).stringLength()%>" name="<%=entity.tableName%>_<%=((EgField)entity.fields.elementAt(i)).columnName%>" value="[ltp]if(<%=GenUtil.lowerFirstChar(entity.ejbName)%>!=null){%>[ltp]=UtilFormatOut.checkNull(<%=GenUtil.lowerFirstChar(entity.ejbName)%>.get<%=GenUtil.upperFirstChar(((EgField)entity.fields.elementAt(i)).fieldName)%>())%>[ltp]}else{%>[ltp]=UtilFormatOut.checkNull(request.getParameter("<%=entity.tableName%>_<%=((EgField)entity.fields.elementAt(i)).columnName%>"))%>[ltp]}%>"><%} else {%>
+      <textarea cols="60" rows="3" maxlength="<%=((EgField)entity.fields.elementAt(i)).stringLength()%>" name="<%=entity.tableName%>_<%=((EgField)entity.fields.elementAt(i)).columnName%>">[ltp]if(<%=GenUtil.lowerFirstChar(entity.ejbName)%>!=null){%>[ltp]=UtilFormatOut.checkNull(<%=GenUtil.lowerFirstChar(entity.ejbName)%>.get<%=GenUtil.upperFirstChar(((EgField)entity.fields.elementAt(i)).fieldName)%>())%>[ltp]}else{%>[ltp]=UtilFormatOut.checkNull(request.getParameter("<%=entity.tableName%>_<%=((EgField)entity.fields.elementAt(i)).columnName%>"))%>[ltp]}%></textarea><%}%>
     </td>
   </tr><%}%><%}%>
   [ltp]rowClass=(rowClass==rowClass1?rowClass2:rowClass1);%><tr class="[ltp]=rowClass%>">
@@ -342,7 +342,7 @@ function ShowTab(lname)
 }
 </SCRIPT>
 [ltp]if(<%=GenUtil.lowerFirstChar(entity.ejbName)%> != null){%>
-<table cellpadding='0' cellspacing='0'><tr><%for(int tabIndex=0;tabIndex<entity.relations.size();tabIndex++){%><%Relation relation = (Relation)entity.relations.elementAt(tabIndex);%>
+<table cellpadding='0' cellspacing='0'><tr><%for(int tabIndex=0;tabIndex<entity.relations.size();tabIndex++){%><%EgRelation relation = (EgRelation)entity.relations.elementAt(tabIndex);%>
     [ltp]if(Security.hasEntityPermission("<%=relation.relatedTableName%>", "_VIEW", session)){%>
       <td id=tab<%=tabIndex+1%> class=<%=(tabIndex==0?"ontab":"offtab")%>>
         <a href='javascript:ShowTab("tab<%=tabIndex+1%>")' id=lnk<%=tabIndex+1%> class=<%=(tabIndex==0?"onlnk":"offlnk")%>><%=relation.relationTitle%> <%=relation.relatedEjbName%></a>
@@ -351,8 +351,8 @@ function ShowTab(lname)
 </tr></table>
 [ltp]}%>
   
-<%for(int relIndex=0;relIndex<entity.relations.size();relIndex++){%><%Relation relation = (Relation)entity.relations.elementAt(relIndex);%><%Entity relatedEntity = DefReader.getEntity(defFileName,relation.relatedEjbName);%><%if(relation.relationType.equalsIgnoreCase("one")){%>
-[ltp]-- Start Relation for <%=relation.relatedEjbName%>, type: one --%>
+<%for(int relIndex=0;relIndex<entity.relations.size();relIndex++){%><%EgRelation relation = (EgRelation)entity.relations.elementAt(relIndex);%><%EgEntity relatedEntity = DefReader.getEgEntity(defFileName,relation.relatedEjbName);%><%if(relation.relationType.equalsIgnoreCase("one")){%>
+[ltp]-- Start EgRelation for <%=relation.relatedEjbName%>, type: one --%>
 [ltp]if(<%=GenUtil.lowerFirstChar(entity.ejbName)%> != null){%>
   [ltp]if(Security.hasEntityPermission("<%=relatedEntity.tableName%>", "_VIEW", session)){%>
     [ltp]-- <%=relatedEntity.ejbName%> <%=GenUtil.lowerFirstChar(relatedEntity.ejbName)%>Related = <%=relatedEntity.ejbName%>Helper.findByPrimaryKey(<%=GenUtil.lowerFirstChar(entity.ejbName)%>.get<%=relation.keyMapUpperString("(), " + GenUtil.lowerFirstChar(entity.ejbName) + ".get", "()")%>); --%>
@@ -377,14 +377,14 @@ function ShowTab(lname)
 <%for(i=0;i<relatedEntity.fields.size();i++){%>
   [ltp]rowClass=(rowClass==rowClass1?rowClass2:rowClass1);%>
   <tr class="[ltp]=rowClass%>">
-    <td><b><%=((Field)relatedEntity.fields.elementAt(i)).columnName%></b></td>
-    <td><%if(((Field)relatedEntity.fields.elementAt(i)).javaType.equals("Timestamp") || ((Field)relatedEntity.fields.elementAt(i)).javaType.equals("java.sql.Timestamp")){%>
+    <td><b><%=((EgField)relatedEntity.fields.elementAt(i)).columnName%></b></td>
+    <td><%if(((EgField)relatedEntity.fields.elementAt(i)).javaType.equals("Timestamp") || ((EgField)relatedEntity.fields.elementAt(i)).javaType.equals("java.sql.Timestamp")){%>
       [ltp]{
         String dateString = null;
         String timeString = null;
         if(<%=GenUtil.lowerFirstChar(relatedEntity.ejbName)%>Related != null)
         {
-          java.sql.Timestamp timeStamp = <%=GenUtil.lowerFirstChar(relatedEntity.ejbName)%>Related.get<%=GenUtil.upperFirstChar(((Field)relatedEntity.fields.elementAt(i)).fieldName)%>();
+          java.sql.Timestamp timeStamp = <%=GenUtil.lowerFirstChar(relatedEntity.ejbName)%>Related.get<%=GenUtil.upperFirstChar(((EgField)relatedEntity.fields.elementAt(i)).fieldName)%>();
           if(timeStamp  != null)
           {
             dateString = UtilDateTime.toDateString(timeStamp);
@@ -393,13 +393,13 @@ function ShowTab(lname)
         }
       %>
       [ltp]=UtilFormatOut.checkNull(dateString)%>&nbsp;[ltp]=UtilFormatOut.checkNull(timeString)%>
-      [ltp]}%><%} else if(((Field)relatedEntity.fields.elementAt(i)).javaType.equals("Date") || ((Field)relatedEntity.fields.elementAt(i)).javaType.equals("java.util.Date")){%>
+      [ltp]}%><%} else if(((EgField)relatedEntity.fields.elementAt(i)).javaType.equals("Date") || ((EgField)relatedEntity.fields.elementAt(i)).javaType.equals("java.util.Date")){%>
       [ltp]{
         String dateString = null;
         String timeString = null;
         if(<%=GenUtil.lowerFirstChar(relatedEntity.ejbName)%>Related != null)
         {
-          java.util.Date date = <%=GenUtil.lowerFirstChar(relatedEntity.ejbName)%>Related.get<%=GenUtil.upperFirstChar(((Field)relatedEntity.fields.elementAt(i)).fieldName)%>();
+          java.util.Date date = <%=GenUtil.lowerFirstChar(relatedEntity.ejbName)%>Related.get<%=GenUtil.upperFirstChar(((EgField)relatedEntity.fields.elementAt(i)).fieldName)%>();
           if(date  != null)
           {
             dateString = UtilDateTime.toDateString(date);
@@ -408,9 +408,9 @@ function ShowTab(lname)
         }
       %>
       [ltp]=UtilFormatOut.checkNull(dateString)%>&nbsp;[ltp]=UtilFormatOut.checkNull(timeString)%>
-      [ltp]}%><%}else if(((Field)relatedEntity.fields.elementAt(i)).javaType.indexOf("Integer") >= 0 || ((Field)relatedEntity.fields.elementAt(i)).javaType.indexOf("Long") >= 0 || ((Field)relatedEntity.fields.elementAt(i)).javaType.indexOf("Double") >= 0 || ((Field)relatedEntity.fields.elementAt(i)).javaType.indexOf("Float") >= 0){%>
-      [ltp]=UtilFormatOut.formatQuantity(<%=GenUtil.lowerFirstChar(relatedEntity.ejbName)%>Related.get<%=GenUtil.upperFirstChar(((Field)relatedEntity.fields.elementAt(i)).fieldName)%>())%><%}else{%>
-      [ltp]=UtilFormatOut.checkNull(<%=GenUtil.lowerFirstChar(relatedEntity.ejbName)%>Related.get<%=GenUtil.upperFirstChar(((Field)relatedEntity.fields.elementAt(i)).fieldName)%>())%><%}%>
+      [ltp]}%><%}else if(((EgField)relatedEntity.fields.elementAt(i)).javaType.indexOf("Integer") >= 0 || ((EgField)relatedEntity.fields.elementAt(i)).javaType.indexOf("Long") >= 0 || ((EgField)relatedEntity.fields.elementAt(i)).javaType.indexOf("Double") >= 0 || ((EgField)relatedEntity.fields.elementAt(i)).javaType.indexOf("Float") >= 0){%>
+      [ltp]=UtilFormatOut.formatQuantity(<%=GenUtil.lowerFirstChar(relatedEntity.ejbName)%>Related.get<%=GenUtil.upperFirstChar(((EgField)relatedEntity.fields.elementAt(i)).fieldName)%>())%><%}else{%>
+      [ltp]=UtilFormatOut.checkNull(<%=GenUtil.lowerFirstChar(relatedEntity.ejbName)%>Related.get<%=GenUtil.upperFirstChar(((EgField)relatedEntity.fields.elementAt(i)).fieldName)%>())%><%}%>
     </td>
   </tr>
 <%}%>
@@ -420,9 +420,9 @@ function ShowTab(lname)
   </div>
   [ltp]}%>
 [ltp]}%>
-[ltp]-- End Relation for <%=relation.relatedEjbName%>, type: one --%>
+[ltp]-- End EgRelation for <%=relation.relatedEjbName%>, type: one --%>
   <%}else if(relation.relationType.equalsIgnoreCase("many")){%>
-[ltp]-- Start Relation for <%=relation.relatedEjbName%>, type: many --%>
+[ltp]-- Start EgRelation for <%=relation.relatedEjbName%>, type: many --%>
 [ltp]if(<%=GenUtil.lowerFirstChar(entity.ejbName)%> != null){%>
   [ltp]if(Security.hasEntityPermission("<%=relatedEntity.tableName%>", "_VIEW", session)){%>    
     [ltp]-- Iterator relatedIterator = UtilMisc.toIterator(<%=relatedEntity.ejbName%>Helper.findBy<%=relation.keyMapRelatedUpperString("And","")%>(<%=GenUtil.lowerFirstChar(entity.ejbName)%>.get<%=relation.keyMapUpperString("(), " + GenUtil.lowerFirstChar(entity.ejbName) + ".get", "()")%>)); --%>
@@ -445,13 +445,13 @@ function ShowTab(lname)
       <a href="[ltp]=response.encodeURL(controlPath + "/View<%=relatedEntity.ejbName%>?" + <%=relatedEntity.httpRelationArgList(relation)%>)%>" class="buttontext">[Create <%=relatedEntity.ejbName%>]</a>
     [ltp]}%>    
     [ltp]String curFindString = "SEARCH_TYPE=<%=relation.keyMapRelatedUpperString("And","")%>";%>
-    <%for(int j=0;j<relation.keyMaps.size();j++){%>[ltp]curFindString = curFindString + "&SEARCH_PARAMETER<%=j+1%>=" + <%=GenUtil.lowerFirstChar(entity.ejbName)%>.get<%=GenUtil.upperFirstChar(((KeyMap)relation.keyMaps.elementAt(j)).fieldName)%><%}%>();%>
+    <%for(int j=0;j<relation.keyMaps.size();j++){%>[ltp]curFindString = curFindString + "&SEARCH_PARAMETER<%=j+1%>=" + <%=GenUtil.lowerFirstChar(entity.ejbName)%>.get<%=GenUtil.upperFirstChar(((EgKeyMap)relation.keyMaps.elementAt(j)).fieldName)%><%}%>();%>
     <a href="[ltp]=response.encodeURL(controlPath + "/Find<%=entity.ejbName%>?" + UtilFormatOut.encodeQuery(curFindString))%>" class="buttontext">[Find <%=relatedEntity.ejbName%>]</a>
   <div style='width:100%;height:250px;overflow:auto;border-style:inset;'>
   <table width="100%" cellpadding="2" cellspacing="2" border="0">
     <tr class="[ltp]=rowClassResultHeader%>">
   <%for(i=0;i<relatedEntity.fields.size();i++){%>
-      <td><div class="tabletext"><b><nobr><%=((Field)relatedEntity.fields.elementAt(i)).columnName%></nobr></b></div></td><%}%>
+      <td><div class="tabletext"><b><nobr><%=((EgField)relatedEntity.fields.elementAt(i)).columnName%></nobr></b></div></td><%}%>
       <td>&nbsp;</td>
       [ltp]if(relatedDeletePerm){%>
         <td>&nbsp;</td>
@@ -471,13 +471,13 @@ function ShowTab(lname)
     [ltp]rowClassResult=(rowClassResult==rowClassResult1?rowClassResult2:rowClassResult1);%><tr class="[ltp]=rowClassResult%>">
   <%for(i=0;i<relatedEntity.fields.size();i++){%>
       <td>
-        <div class="tabletext"><%if(((Field)relatedEntity.fields.elementAt(i)).javaType.equals("Timestamp") || ((Field)relatedEntity.fields.elementAt(i)).javaType.equals("java.sql.Timestamp")){%>
+        <div class="tabletext"><%if(((EgField)relatedEntity.fields.elementAt(i)).javaType.equals("Timestamp") || ((EgField)relatedEntity.fields.elementAt(i)).javaType.equals("java.sql.Timestamp")){%>
       [ltp]{
         String dateString = null;
         String timeString = null;
         if(<%=GenUtil.lowerFirstChar(relatedEntity.ejbName)%>Related != null)
         {
-          java.sql.Timestamp timeStamp = <%=GenUtil.lowerFirstChar(relatedEntity.ejbName)%>Related.get<%=GenUtil.upperFirstChar(((Field)relatedEntity.fields.elementAt(i)).fieldName)%>();
+          java.sql.Timestamp timeStamp = <%=GenUtil.lowerFirstChar(relatedEntity.ejbName)%>Related.get<%=GenUtil.upperFirstChar(((EgField)relatedEntity.fields.elementAt(i)).fieldName)%>();
           if(timeStamp  != null)
           {
             dateString = UtilDateTime.toDateString(timeStamp);
@@ -486,13 +486,13 @@ function ShowTab(lname)
         }
       %>
       [ltp]=UtilFormatOut.checkNull(dateString)%>&nbsp;[ltp]=UtilFormatOut.checkNull(timeString)%>
-      [ltp]}%><%} else if(((Field)relatedEntity.fields.elementAt(i)).javaType.equals("Date") || ((Field)relatedEntity.fields.elementAt(i)).javaType.equals("java.util.Date")){%>
+      [ltp]}%><%} else if(((EgField)relatedEntity.fields.elementAt(i)).javaType.equals("Date") || ((EgField)relatedEntity.fields.elementAt(i)).javaType.equals("java.util.Date")){%>
       [ltp]{
         String dateString = null;
         String timeString = null;
         if(<%=GenUtil.lowerFirstChar(relatedEntity.ejbName)%>Related != null)
         {
-          java.util.Date date = <%=GenUtil.lowerFirstChar(relatedEntity.ejbName)%>Related.get<%=GenUtil.upperFirstChar(((Field)relatedEntity.fields.elementAt(i)).fieldName)%>();
+          java.util.Date date = <%=GenUtil.lowerFirstChar(relatedEntity.ejbName)%>Related.get<%=GenUtil.upperFirstChar(((EgField)relatedEntity.fields.elementAt(i)).fieldName)%>();
           if(date  != null)
           {
             dateString = UtilDateTime.toDateString(date);
@@ -501,9 +501,9 @@ function ShowTab(lname)
         }
       %>
       [ltp]=UtilFormatOut.checkNull(dateString)%>&nbsp;[ltp]=UtilFormatOut.checkNull(timeString)%>
-      [ltp]}%><%}else if(((Field)relatedEntity.fields.elementAt(i)).javaType.indexOf("Integer") >= 0 || ((Field)relatedEntity.fields.elementAt(i)).javaType.indexOf("Long") >= 0 || ((Field)relatedEntity.fields.elementAt(i)).javaType.indexOf("Double") >= 0 || ((Field)relatedEntity.fields.elementAt(i)).javaType.indexOf("Float") >= 0){%>
-      [ltp]=UtilFormatOut.formatQuantity(<%=GenUtil.lowerFirstChar(relatedEntity.ejbName)%>Related.get<%=GenUtil.upperFirstChar(((Field)relatedEntity.fields.elementAt(i)).fieldName)%>())%><%}else{%>
-      [ltp]=UtilFormatOut.checkNull(<%=GenUtil.lowerFirstChar(relatedEntity.ejbName)%>Related.get<%=GenUtil.upperFirstChar(((Field)relatedEntity.fields.elementAt(i)).fieldName)%>())%><%}%>
+      [ltp]}%><%}else if(((EgField)relatedEntity.fields.elementAt(i)).javaType.indexOf("Integer") >= 0 || ((EgField)relatedEntity.fields.elementAt(i)).javaType.indexOf("Long") >= 0 || ((EgField)relatedEntity.fields.elementAt(i)).javaType.indexOf("Double") >= 0 || ((EgField)relatedEntity.fields.elementAt(i)).javaType.indexOf("Float") >= 0){%>
+      [ltp]=UtilFormatOut.formatQuantity(<%=GenUtil.lowerFirstChar(relatedEntity.ejbName)%>Related.get<%=GenUtil.upperFirstChar(((EgField)relatedEntity.fields.elementAt(i)).fieldName)%>())%><%}else{%>
+      [ltp]=UtilFormatOut.checkNull(<%=GenUtil.lowerFirstChar(relatedEntity.ejbName)%>Related.get<%=GenUtil.upperFirstChar(((EgField)relatedEntity.fields.elementAt(i)).fieldName)%>())%><%}%>
         &nbsp;</div>
       </td>
   <%}%>
@@ -531,7 +531,7 @@ Displaying [ltp]=relatedLoopCount%> entities.
   </div>
   [ltp]}%>
 [ltp]}%>
-[ltp]-- End Relation for <%=relation.relatedEjbName%>, type: many --%>
+[ltp]-- End EgRelation for <%=relation.relatedEjbName%>, type: many --%>
   <%}%>
 <%}%>
 

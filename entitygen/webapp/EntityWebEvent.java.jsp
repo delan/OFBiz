@@ -69,13 +69,13 @@ public class <%=entity.ejbName%>WebEvent
     }
 
     //get the primary key parameters...
-  <%for(i=0;i<entity.pks.size();i++){Field curField=(Field)entity.pks.elementAt(i);%><%if(curField.javaType.compareTo("java.lang.String") == 0 || curField.javaType.compareTo("String") == 0){%>
+  <%for(i=0;i<entity.pks.size();i++){EgField curField=(EgField)entity.pks.elementAt(i);%><%if(curField.javaType.compareTo("java.lang.String") == 0 || curField.javaType.compareTo("String") == 0){%>
     String <%=curField.fieldName%> = request.getParameter("<%=entity.tableName%>_<%=curField.columnName%>");  <%}else if(curField.javaType.indexOf("Timestamp") >= 0 || curField.javaType.equals("java.util.Date") || curField.javaType.equals("Date")){%>
     String <%=curField.fieldName%>Date = request.getParameter("<%=entity.tableName%>_<%=curField.columnName%>_DATE");
     String <%=curField.fieldName%>Time = request.getParameter("<%=entity.tableName%>_<%=curField.columnName%>_TIME");  <%}else{%>
     String <%=curField.fieldName%>String = request.getParameter("<%=entity.tableName%>_<%=curField.columnName%>");  <%}%><%}%>
 
-  <%for(i=0;i<entity.pks.size();i++){Field curField=(Field)entity.pks.elementAt(i);%><%if(!curField.javaType.equals("java.lang.String") && !curField.javaType.equals("String")){%><%if(curField.javaType.indexOf("Timestamp") >= 0){%>
+  <%for(i=0;i<entity.pks.size();i++){EgField curField=(EgField)entity.pks.elementAt(i);%><%if(!curField.javaType.equals("java.lang.String") && !curField.javaType.equals("String")){%><%if(curField.javaType.indexOf("Timestamp") >= 0){%>
     java.sql.Timestamp <%=curField.fieldName%> = UtilDateTime.toTimestamp(<%=curField.fieldName%>Date, <%=curField.fieldName%>Time);
     if(!UtilValidate.isDate(<%=curField.fieldName%>Date)) errMsg = errMsg + "<li><%=curField.columnName%> isDate failed: " + UtilValidate.isDateMsg;
     if(!UtilValidate.isTime(<%=curField.fieldName%>Time)) errMsg = errMsg + "<li><%=curField.columnName%> isTime failed: " + UtilValidate.isTimeMsg;<%}else if(curField.javaType.equals("java.util.Date") || curField.javaType.equals("Date")){%>
@@ -105,13 +105,13 @@ public class <%=entity.ejbName%>WebEvent
     }
 
     //get the non-primary key parameters
-  <%for(i=0;i<entity.fields.size();i++){Field curField=(Field)entity.fields.elementAt(i);%><%if(!curField.isPk){%><%if(curField.javaType.equals("java.lang.String") || curField.javaType.equals("String")){%>
+  <%for(i=0;i<entity.fields.size();i++){EgField curField=(EgField)entity.fields.elementAt(i);%><%if(!curField.isPk){%><%if(curField.javaType.equals("java.lang.String") || curField.javaType.equals("String")){%>
     String <%=curField.fieldName%> = request.getParameter("<%=entity.tableName%>_<%=curField.columnName%>");  <%}else if(curField.javaType.indexOf("Timestamp") >= 0 || curField.javaType.equals("java.util.Date") || curField.javaType.equals("Date")){%>
     String <%=curField.fieldName%>Date = request.getParameter("<%=entity.tableName%>_<%=curField.columnName%>_DATE");
     String <%=curField.fieldName%>Time = request.getParameter("<%=entity.tableName%>_<%=curField.columnName%>_TIME");  <%}else{%>
     String <%=curField.fieldName%>String = request.getParameter("<%=entity.tableName%>_<%=curField.columnName%>");  <%}%><%}%><%}%>
 
-  <%for(i=0;i<entity.fields.size();i++){Field curField=(Field)entity.fields.elementAt(i);%><%if(!curField.isPk){%><%if(!curField.javaType.equals("java.lang.String") && !curField.javaType.equals("String")){%><%if(curField.javaType.indexOf("Timestamp") >= 0){%>
+  <%for(i=0;i<entity.fields.size();i++){EgField curField=(EgField)entity.fields.elementAt(i);%><%if(!curField.isPk){%><%if(!curField.javaType.equals("java.lang.String") && !curField.javaType.equals("String")){%><%if(curField.javaType.indexOf("Timestamp") >= 0){%>
     java.sql.Timestamp <%=curField.fieldName%> = UtilDateTime.toTimestamp(<%=curField.fieldName%>Date, <%=curField.fieldName%>Time);
     if(!UtilValidate.isDate(<%=curField.fieldName%>Date)) errMsg = errMsg + "<li><%=curField.columnName%> isDate failed: " + UtilValidate.isDateMsg;
     if(!UtilValidate.isTime(<%=curField.fieldName%>Time)) errMsg = errMsg + "<li><%=curField.columnName%> isTime failed: " + UtilValidate.isTimeMsg;<%}else if(curField.javaType.equals("java.util.Date") || curField.javaType.equals("Date")){%>
@@ -137,7 +137,7 @@ public class <%=entity.ejbName%>WebEvent
       if(<%=entity.ejbName%>Helper.findByPrimaryKey(<%=entity.pkNameString()%>) != null) errMsg = errMsg + "<li><%=entity.ejbName%> already exists with <%=entity.colNameString(entity.pks)%>:" + <%=entity.pkNameString(" + \", \" + ", "")%> + "; please change.";
 
     //Validate parameters...
-  <%for(i=0;i<entity.fields.size();i++){Field curField=(Field)entity.fields.elementAt(i);%><%for(int j=0;j<curField.validators.size();j++){String curValidate=(String)curField.validators.elementAt(j);%><%if(!curField.javaType.equals("java.lang.String") && !curField.javaType.equals("String")){%>
+  <%for(i=0;i<entity.fields.size();i++){EgField curField=(EgField)entity.fields.elementAt(i);%><%for(int j=0;j<curField.validators.size();j++){String curValidate=(String)curField.validators.elementAt(j);%><%if(!curField.javaType.equals("java.lang.String") && !curField.javaType.equals("String")){%>
     if(!UtilValidate.<%=curValidate%>(<%=curField.fieldName%>String)) errMsg = errMsg + "<li><%=curField.columnName%> <%=curValidate%> failed: " + UtilValidate.<%=curValidate%>Msg;<%}else{%>
     if(!UtilValidate.<%=curValidate%>(<%=curField.fieldName%>)) errMsg = errMsg + "<li><%=curField.columnName%> <%=curValidate%> failed: " + UtilValidate.<%=curValidate%>Msg;<%}%><%}%><%}%>
 

@@ -32,17 +32,17 @@ import java.io.*;
  */
 public class <%=entity.ejbName%>PK implements Serializable
 {<%for(i=0;i<entity.pks.size();i++){%>
-  public <%=((Field)entity.pks.elementAt(i)).javaType%> <%=((Field)entity.pks.elementAt(i)).fieldName%>;<%}%>
+  public <%=((EgField)entity.pks.elementAt(i)).javaType%> <%=((EgField)entity.pks.elementAt(i)).fieldName%>;<%}%>
 
   /** Constructor for the <%=entity.ejbName%>PK object */
   public <%=entity.ejbName%>PK() { }
 
   /** Constructor for the <%=entity.ejbName%>PK object<%for(i=0;i<entity.pks.size();i++){%>
-   *@param  <%=((Field)entity.pks.elementAt(i)).fieldName%>                  Field of the <%=((Field)entity.pks.elementAt(i)).columnName%> column.<%}%>
+   *@param  <%=((EgField)entity.pks.elementAt(i)).fieldName%>                  EgField of the <%=((EgField)entity.pks.elementAt(i)).columnName%> column.<%}%>
    */
   public <%=entity.ejbName%>PK(<%=entity.primKeyClassNameString()%>)
   {<%for(i=0;i<entity.pks.size();i++){%>
-    this.<%=((Field)entity.pks.elementAt(i)).fieldName%> = <%=((Field)entity.pks.elementAt(i)).fieldName%>;<%}%>
+    this.<%=((EgField)entity.pks.elementAt(i)).fieldName%> = <%=((EgField)entity.pks.elementAt(i)).fieldName%>;<%}%>
   }
 
   /** Determines the equality of two <%=entity.ejbName%>PK objects, overrides the default equals
@@ -55,7 +55,7 @@ public class <%=entity.ejbName%>PK implements Serializable
     {
       <%=entity.ejbName%>PK that = (<%=entity.ejbName%>PK)obj;
       return<%for(i=0;i<entity.pks.size();i++){%>
-            this.<%=((Field)entity.pks.elementAt(i)).fieldName%>.equals(that.<%=((Field)entity.pks.elementAt(i)).fieldName%>) &&<%}%>
+            this.<%=((EgField)entity.pks.elementAt(i)).fieldName%>.equals(that.<%=((EgField)entity.pks.elementAt(i)).fieldName%>) &&<%}%>
             true; //This "true" is a dummy thing to take care of the last &&, just for laziness sake.
     }
     return false;

@@ -58,12 +58,12 @@ public class DefReader
    * @param ejbName The ejbName of the Entity definition to use.
    * @return An Entity object describing the specified entity of the specified descriptor file.
    */    
-  public static Entity getEntity(String defFileName, String ejbName)
+  public static EgEntity getEgEntity(String defFileName, String ejbName)
   {
-    Entity entity = null;
+    EgEntity entity = null;
     if(entityCache.containsKey(ejbName + "::" + defFileName))
     {
-      entity = (Entity)entityCache.get(ejbName + "::" + defFileName);
+      entity = (EgEntity)entityCache.get(ejbName + "::" + defFileName);
     }
     else
     {
@@ -84,9 +84,9 @@ public class DefReader
       if(docElement == null) return null;
       docElement.normalize();
 
-      entity = createEntity(findEntity(docElement, ejbName), docElement, null, docElementValues);
+      entity = createEgEntity(findEgEntity(docElement, ejbName), docElement, null, docElementValues);
       if(entity != null) entityCache.put(ejbName + "::" + defFileName, entity);
-      else Debug.logWarning("-- -- ENTITYGEN ERROR:getEntity: Could not create entity for ejbName: " + ejbName);
+      else Debug.logWarning("-- -- ENTITYGEN ERROR:getEgEntity: Could not create entity for ejbName: " + ejbName);
     }
     return entity;
   }
@@ -172,22 +172,22 @@ public class DefReader
       String ejbName = entityEjbName(curEntity);
       //utilTimer.timerString("  After entityEjbName -- " + i + " --");
       ejbNames.add(ejbName);      
-      //Entity entity = createEntity(curEntity, docElement, utilTimer, docElementValues);
-      Entity entity = createEntity(curEntity, docElement, null, docElementValues);
-      utilTimer.timerString("  After createEntity -- " + i + " --");
+      //EgEntity entity = createEgEntity(curEntity, docElement, utilTimer, docElementValues);
+      EgEntity entity = createEgEntity(curEntity, docElement, null, docElementValues);
+      utilTimer.timerString("  After createEgEntity -- " + i + " --");
       if(entity != null) 
       {
         entityCache.put(ejbName + "::" + defFileName, entity);
         //utilTimer.timerString("  After entityCache.put -- " + i + " --");
-        Debug.logInfo("-- getEntity: Created entity for ejbName: " + ejbName);
+        Debug.logInfo("-- getEgEntity: Created entity for ejbName: " + ejbName);
       }
-      else Debug.logWarning("-- -- ENTITYGEN ERROR:getEntity: Could not create entity for ejbName: " + ejbName);
+      else Debug.logWarning("-- -- ENTITYGEN ERROR:getEgEntity: Could not create entity for ejbName: " + ejbName);
     }
     utilTimer.timerString("FINISHED - Total Entities: " + i + " FINISHED");
     return ejbNames;    
   }
   
-  static Element findEntity(Element docElement, String ejbName)
+  static Element findEgEntity(Element docElement, String ejbName)
   {
     if(docElement == null || ejbName == null) return null;
     NodeList entityList = docElement.getElementsByTagName("entity");
@@ -199,19 +199,19 @@ public class DefReader
     return null;
   }
   
-  static Entity createEntity(Element entityElement, Element docElement, UtilTimer utilTimer, Hashtable docElementValues)
+  static EgEntity createEgEntity(Element entityElement, Element docElement, UtilTimer utilTimer, Hashtable docElementValues)
   {
     if(entityElement == null) return null;
-    org.ofbiz.entitygen.Entity entity = new Entity();
+    EgEntity entity = new EgEntity();
     
-    if(utilTimer != null) utilTimer.timerString("  createEntity: before general");
+    if(utilTimer != null) utilTimer.timerString("  createEgEntity: before general");
     entity.ejbName = checkNull(entityEjbName(entityElement));
     entity.tableName = checkNull(childElementValue(entityElement, "table-name"));
     entity.packageName = checkNull(childElementValue(entityElement, "package-name"));
     entity.useCache = ("true".compareToIgnoreCase(checkNull(childElementValue(entityElement, "use-cache"))) == 0);
     entity.allOrderBy = checkNull(childElementValue(entityElement, "all-order-by"));
 
-    if(utilTimer != null) utilTimer.timerString("  createEntity: before comments");
+    if(utilTimer != null) utilTimer.timerString("  createEgEntity: before comments");
     if(docElementValues == null)
     {
       entity.title = checkNull(childElementValue(entityElement, "title"),childElementValue(docElement, "title"),"None");
@@ -234,19 +234,19 @@ public class DefReader
       entity.version = checkNull(childElementValue(entityElement, "version"),(String)docElementValues.get("version"),"1.0");
     }
 
-    if(utilTimer != null) utilTimer.timerString("  createEntity: before cmp-fields");
+    if(utilTimer != null) utilTimer.timerString("  createEgEntity: before cmp-fields");
     NodeList fieldList = entityElement.getElementsByTagName("cmp-field");
     for(int i=0; i<fieldList.getLength(); i++)
     {
-      org.ofbiz.entitygen.Field field = createField((Element)fieldList.item(i), docElement, docElementValues);
+      EgField field = createEgField((Element)fieldList.item(i), docElement, docElementValues);
       if(field != null) entity.fields.add(field);
     }
     
-    if(utilTimer != null) utilTimer.timerString("  createEntity: before prim-key-columns");
+    if(utilTimer != null) utilTimer.timerString("  createEgEntity: before prim-key-columns");
     NodeList pkList = entityElement.getElementsByTagName("prim-key-column");
     for(int i=0; i<pkList.getLength(); i++)
     {
-      org.ofbiz.entitygen.Field field = findField(entity, elementValue((Element)pkList.item(i)));
+      EgField field = findEgField(entity, elementValue((Element)pkList.item(i)));
       if(field != null) 
       {
         entity.pks.add(field);
@@ -254,13 +254,18 @@ public class DefReader
       }
     }
     
+    //now that we have the pks and the fields, make the nopks vector
+    entity.nopks = new Vector(entity.fields);
+    for(int ind=0;ind<entity.pks.size();ind++)
+      entity.nopks.removeElement(entity.pks.elementAt(ind)); 
+    
     entity.primKeyClass = childElementValue(entityElement, "prim-key-class");
     if(entity.primKeyClass == null)
     {
       //figure out the primary key class if it isn't specified
       if(entity.pks.size() == 1)
       {
-        Field pkField = (Field)entity.pks.elementAt(0);
+        EgField pkField = (EgField)entity.pks.elementAt(0);
         entity.primKeyClass = pkField.javaType;
         if(entity.primKeyClass.indexOf(".") < 0)
         {
@@ -274,22 +279,22 @@ public class DefReader
       }
     }
 
-    if(utilTimer != null) utilTimer.timerString("  createEntity: before finders");
+    if(utilTimer != null) utilTimer.timerString("  createEgEntity: before finders");
     NodeList finderList = entityElement.getElementsByTagName("finder");
     for(int i=0; i<finderList.getLength(); i++)
     {
-      Finder finder = createFinder(entity, (Element)finderList.item(i));
+      EgFinder finder = createFinder(entity, (Element)finderList.item(i));
       if(finder != null) entity.finders.add(finder);
     }
 
-    if(utilTimer != null) utilTimer.timerString("  createEntity: before relations");
+    if(utilTimer != null) utilTimer.timerString("  createEgEntity: before relations");
     NodeList relationList = entityElement.getElementsByTagName("relation");
     for(int i=0; i<relationList.getLength(); i++)
     {
       Element relationElement = (Element)relationList.item(i);
       if(relationElement.getParentNode() == entityElement)
       {
-        Relation relation = createRelation(entity, relationElement, null);
+        EgRelation relation = createRelation(entity, relationElement, null);
         if(relation != null) entity.relations.add(relation);
       }
     }
@@ -297,9 +302,9 @@ public class DefReader
     return entity;
   }
   
-  static Relation createRelation(Entity entity, Element relationElement, Relation parent)
+  static EgRelation createRelation(EgEntity entity, Element relationElement, EgRelation parent)
   {
-    Relation relation = new Relation(parent);
+    EgRelation relation = new EgRelation(parent);
     relation.mainEntity = entity;
 
     relation.relationTitle = checkNull(childElementValue(relationElement, "relation-title"));
@@ -313,7 +318,7 @@ public class DefReader
       Element keyMapElement = (Element)keyMapList.item(i);
       if(keyMapElement.getParentNode() == relationElement)
       {
-        KeyMap keyMap = createKeyMap(keyMapElement);
+        EgKeyMap keyMap = createKeyMap(keyMapElement);
         if(keyMap != null) relation.keyMaps.add(keyMap);
       }
     }
@@ -325,16 +330,16 @@ public class DefReader
       Element relationSubElement = (Element)relationList.item(i);
       if(relationSubElement.getParentNode() == relationElement)
       {
-        Relation relationNested = createRelation(entity, relationSubElement, relation);
+        EgRelation relationNested = createRelation(entity, relationSubElement, relation);
         if(relationNested != null) relation.relations.add(relationNested);
       }
     }
     return relation;
   }
 
-  static KeyMap createKeyMap(Element keyMapElement)
+  static EgKeyMap createKeyMap(Element keyMapElement)
   {
-    KeyMap keyMap = new KeyMap();
+    EgKeyMap keyMap = new EgKeyMap();
 
     keyMap.columnName = checkNull(childElementValue(keyMapElement, "column-name"));
     keyMap.fieldName = checkNull(childElementValue(keyMapElement, "field-name"),GenUtil.dbNameToVarName(checkNull(keyMap.columnName)));
@@ -345,36 +350,36 @@ public class DefReader
     return keyMap;
   }
 
-  static Finder createFinder(org.ofbiz.entitygen.Entity entity, Element finderElement)
+  static EgFinder createFinder(EgEntity entity, Element finderElement)
   {
-    Finder finder = new Finder();
+    EgFinder finder = new EgFinder();
 
     finder.orderBy = checkNull(childElementValue(finderElement, "order-by"));
 
     NodeList columnNameString = finderElement.getElementsByTagName("column-name");
     for(int i=0; i<columnNameString.getLength(); i++)
     {
-      org.ofbiz.entitygen.Field field = findField(entity, elementValue((Element)columnNameString.item(i)));
+      EgField field = findEgField(entity, elementValue((Element)columnNameString.item(i)));
       if(field != null) finder.fields.add(field);
     }
     return finder;
   }
 
-  static org.ofbiz.entitygen.Field findField(org.ofbiz.entitygen.Entity entity, String columnName)
+  static EgField findEgField(EgEntity entity, String columnName)
   {
     for(int i=0; i<entity.fields.size(); i++)
     {
-      org.ofbiz.entitygen.Field field = (org.ofbiz.entitygen.Field)entity.fields.elementAt(i);
+      EgField field = (EgField)entity.fields.elementAt(i);
       if(field.columnName.compareTo(columnName) == 0) return field;
     }
     return null;
   }
   
-  static org.ofbiz.entitygen.Field createField(Element fieldElement, Element docElement, Hashtable docElementValues)
+  static EgField createEgField(Element fieldElement, Element docElement, Hashtable docElementValues)
   {
     if(fieldElement == null) return null;
     
-    org.ofbiz.entitygen.Field field = new org.ofbiz.entitygen.Field();
+    EgField field = new EgField();
     
     // first check to see if a field-type was specified, and if so load
     //  the sql-type, java-type, and validator elements from the field-type-def
@@ -395,7 +400,7 @@ public class DefReader
         else
         {
           fieldTypeDef = findFieldTypeDef(fieldType, docElement);
-          if(fieldTypeDef == null) Debug.logWarning("-- -- ENTITYGEN ERROR:createField: Could not find field type: " + fieldType);
+          if(fieldTypeDef == null) Debug.logWarning("-- -- ENTITYGEN ERROR:createEgField: Could not find field type: " + fieldType);
           else docElementValues.put("field-type:" + fieldType, fieldTypeDef);
         }
       }

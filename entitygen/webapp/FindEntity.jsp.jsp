@@ -89,7 +89,7 @@
     Debug.logInfo("-=-=-=-=- curFindString:" + curFindString + " <%=GenUtil.lowerFirstChar(entity.ejbName)%>ArrayName:" + <%=GenUtil.lowerFirstChar(entity.ejbName)%>ArrayName);
 
     if(searchType.compareTo("all") == 0) <%=GenUtil.lowerFirstChar(entity.ejbName)%>Collection = <%=entity.ejbName%>Helper.findAll();
-<%for(i=0;i<entity.finders.size();i++){%><%Finder finderDesc = (Finder)entity.finders.elementAt(i);%>
+<%for(i=0;i<entity.finders.size();i++){%><%EgFinder finderDesc = (EgFinder)entity.finders.elementAt(i);%>
     else if(searchType.compareTo("<%=entity.classNameString(finderDesc.fields,"And","")%>") == 0) <%=GenUtil.lowerFirstChar(entity.ejbName)%>Collection = <%=entity.ejbName%>Helper.findBy<%=entity.classNameString(finderDesc.fields,"And","")%>(<%=entity.fieldsStringList(finderDesc.fields,"searchParam",", ",true)%>);
 <%}%>
     else if(searchType.compareTo("primaryKey") == 0)
@@ -131,7 +131,7 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
       </td>
     </form>
   </tr>
-<%for(i=0;i<entity.finders.size();i++){%><%Finder finderDesc = (Finder)entity.finders.elementAt(i);%>
+<%for(i=0;i<entity.finders.size();i++){%><%EgFinder finderDesc = (EgFinder)entity.finders.elementAt(i);%>
   [ltp]rowClassTop=(rowClassTop==rowClassTop1?rowClassTop2:rowClassTop1);%><tr class="[ltp]=rowClassTop%>">
     <td valign="top"><%=entity.classNameString(finderDesc.fields," and ","")%>: </td>
     <form method="post" action="[ltp]=response.encodeURL(controlPath + "/Find<%=entity.ejbName%>")%>" style=margin:0;>
@@ -186,7 +186,7 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
   <table width="100%" cellpadding="2" cellspacing="2" border="0">
     <tr class="[ltp]=rowClassResultHeader%>">
   <%for(i=0;i<entity.fields.size();i++){%>
-      <td><div class="tabletext"><b><nobr><%=((Field)entity.fields.elementAt(i)).columnName%></nobr></b></div></td><%}%>
+      <td><div class="tabletext"><b><nobr><%=((EgField)entity.fields.elementAt(i)).columnName%></nobr></b></div></td><%}%>
       <td>&nbsp;</td>
       [ltp]if(hasDeletePermission){%>
         <td>&nbsp;</td>
@@ -206,13 +206,13 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
     [ltp]rowClassResult=(rowClassResult==rowClassResult1?rowClassResult2:rowClassResult1);%><tr class="[ltp]=rowClassResult%>">
   <%for(i=0;i<entity.fields.size();i++){%>
       <td>
-        <div class="tabletext"><%if(((Field)entity.fields.elementAt(i)).javaType.equals("Timestamp") || ((Field)entity.fields.elementAt(i)).javaType.equals("java.sql.Timestamp")){%>
+        <div class="tabletext"><%if(((EgField)entity.fields.elementAt(i)).javaType.equals("Timestamp") || ((EgField)entity.fields.elementAt(i)).javaType.equals("java.sql.Timestamp")){%>
       [ltp]{
         String dateString = null;
         String timeString = null;
         if(<%=GenUtil.lowerFirstChar(entity.ejbName)%> != null)
         {
-          java.sql.Timestamp timeStamp = <%=GenUtil.lowerFirstChar(entity.ejbName)%>.get<%=GenUtil.upperFirstChar(((Field)entity.fields.elementAt(i)).fieldName)%>();
+          java.sql.Timestamp timeStamp = <%=GenUtil.lowerFirstChar(entity.ejbName)%>.get<%=GenUtil.upperFirstChar(((EgField)entity.fields.elementAt(i)).fieldName)%>();
           if(timeStamp  != null)
           {
             dateString = UtilDateTime.toDateString(timeStamp);
@@ -221,13 +221,13 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
         }
       %>
       [ltp]=UtilFormatOut.checkNull(dateString)%>&nbsp;[ltp]=UtilFormatOut.checkNull(timeString)%>
-      [ltp]}%><%} else if(((Field)entity.fields.elementAt(i)).javaType.equals("Date") || ((Field)entity.fields.elementAt(i)).javaType.equals("java.util.Date")){%>
+      [ltp]}%><%} else if(((EgField)entity.fields.elementAt(i)).javaType.equals("Date") || ((EgField)entity.fields.elementAt(i)).javaType.equals("java.util.Date")){%>
       [ltp]{
         String dateString = null;
         String timeString = null;
         if(<%=GenUtil.lowerFirstChar(entity.ejbName)%> != null)
         {
-          java.util.Date date = <%=GenUtil.lowerFirstChar(entity.ejbName)%>.get<%=GenUtil.upperFirstChar(((Field)entity.fields.elementAt(i)).fieldName)%>();
+          java.util.Date date = <%=GenUtil.lowerFirstChar(entity.ejbName)%>.get<%=GenUtil.upperFirstChar(((EgField)entity.fields.elementAt(i)).fieldName)%>();
           if(date  != null)
           {
             dateString = UtilDateTime.toDateString(date);
@@ -236,9 +236,9 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
         }
       %>
       [ltp]=UtilFormatOut.checkNull(dateString)%>&nbsp;[ltp]=UtilFormatOut.checkNull(timeString)%>
-      [ltp]}%><%}else if(((Field)entity.fields.elementAt(i)).javaType.indexOf("Integer") >= 0 || ((Field)entity.fields.elementAt(i)).javaType.indexOf("Long") >= 0 || ((Field)entity.fields.elementAt(i)).javaType.indexOf("Double") >= 0 || ((Field)entity.fields.elementAt(i)).javaType.indexOf("Float") >= 0){%>
-      [ltp]=UtilFormatOut.formatQuantity(<%=GenUtil.lowerFirstChar(entity.ejbName)%>.get<%=GenUtil.upperFirstChar(((Field)entity.fields.elementAt(i)).fieldName)%>())%><%}else{%>
-      [ltp]=UtilFormatOut.checkNull(<%=GenUtil.lowerFirstChar(entity.ejbName)%>.get<%=GenUtil.upperFirstChar(((Field)entity.fields.elementAt(i)).fieldName)%>())%><%}%>
+      [ltp]}%><%}else if(((EgField)entity.fields.elementAt(i)).javaType.indexOf("Integer") >= 0 || ((EgField)entity.fields.elementAt(i)).javaType.indexOf("Long") >= 0 || ((EgField)entity.fields.elementAt(i)).javaType.indexOf("Double") >= 0 || ((EgField)entity.fields.elementAt(i)).javaType.indexOf("Float") >= 0){%>
+      [ltp]=UtilFormatOut.formatQuantity(<%=GenUtil.lowerFirstChar(entity.ejbName)%>.get<%=GenUtil.upperFirstChar(((EgField)entity.fields.elementAt(i)).fieldName)%>())%><%}else{%>
+      [ltp]=UtilFormatOut.checkNull(<%=GenUtil.lowerFirstChar(entity.ejbName)%>.get<%=GenUtil.upperFirstChar(((EgField)entity.fields.elementAt(i)).fieldName)%>())%><%}%>
         &nbsp;</div>
       </td><%}%>
       <td>

@@ -4,6 +4,6 @@
 <%Iterator classNamesIterator = null;
   if(ejbName != null && ejbName.length() > 0) { Vector cnVec = new Vector(); cnVec.add(ejbName); classNamesIterator = cnVec.iterator(); }
   else if(defFileName != null) classNamesIterator = DefReader.getEjbNamesIterator(defFileName);
-  while(classNamesIterator != null && classNamesIterator.hasNext()) { Entity entity=DefReader.getEntity(defFileName,(String)classNamesIterator.next());
+  while(classNamesIterator != null && classNamesIterator.hasNext()) { EgEntity entity=DefReader.getEgEntity(defFileName,(String)classNamesIterator.next());
 %>
 UPDATE_<%=entity.tableName%>=java:<%=entity.packageName%>.<%=entity.ejbName%>WebEvent.update<%=entity.ejbName%><%}%>

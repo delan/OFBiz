@@ -4,7 +4,7 @@
 <%Iterator classNamesIterator = null;
   if(ejbName != null && ejbName.length() > 0) { Vector cnVec = new Vector(); cnVec.add(ejbName); classNamesIterator = cnVec.iterator(); }
   else if(defFileName != null) classNamesIterator = DefReader.getEjbNamesIterator(defFileName);
-  while(classNamesIterator != null && classNamesIterator.hasNext()) { Entity entity=DefReader.getEntity(defFileName,(String)classNamesIterator.next());
+  while(classNamesIterator != null && classNamesIterator.hasNext()) { EgEntity entity=DefReader.getEgEntity(defFileName,(String)classNamesIterator.next());
 %>
     <entity>
       <ejb-name><%=entity.ejbName%></ejb-name>
@@ -16,10 +16,10 @@
       <reentrant>False</reentrant>
 <%for(i=0;i<entity.fields.size();i++){%>
       <cmp-field>
-        <field-name><%=((Field)entity.fields.elementAt(i)).fieldName%></field-name>
+        <field-name><%=((EgField)entity.fields.elementAt(i)).fieldName%></field-name>
       </cmp-field><%}%>
 <%if(entity.pks.size()==1){%>
-      <primkey-field><%=((Field)entity.pks.elementAt(0)).fieldName%></primkey-field><%}%>
+      <primkey-field><%=((EgField)entity.pks.elementAt(0)).fieldName%></primkey-field><%}%>
       <resource-ref>
         <res-ref-name>jdbc/MainDataSource</res-ref-name>
         <res-type>javax.sql.DataSource</res-type>

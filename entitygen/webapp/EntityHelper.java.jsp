@@ -74,7 +74,7 @@ public class <%=entity.ejbName%>Helper
 
 <%if(entity.pks.size()>1){%>
   /** Remove the <%=entity.ejbName%> corresponding to the primaryKey specified by fields<%for(i=0;i<entity.pks.size();i++){%>
-   *@param  <%=((Field)entity.pks.elementAt(i)).fieldName%>                  Field of the <%=((Field)entity.pks.elementAt(i)).columnName%> column.<%}%>
+   *@param  <%=((EgField)entity.pks.elementAt(i)).fieldName%>                  EgField of the <%=((EgField)entity.pks.elementAt(i)).columnName%> column.<%}%>
    */
   public static void removeByPrimaryKey(<%=entity.primKeyClassNameString()%>)
   {
@@ -106,7 +106,7 @@ public class <%=entity.ejbName%>Helper
   }
 <%if(entity.pks.size()>1){%>
   /** Find a <%=entity.ejbName%> by its Primary Key, specified by individual fields<%for(i=0;i<entity.pks.size();i++){%>
-   *@param  <%=((Field)entity.pks.elementAt(i)).fieldName%>                  Field of the <%=((Field)entity.pks.elementAt(i)).columnName%> column.<%}%>
+   *@param  <%=((EgField)entity.pks.elementAt(i)).fieldName%>                  EgField of the <%=((EgField)entity.pks.elementAt(i)).columnName%> column.<%}%>
    *@return       The <%=entity.ejbName%> corresponding to the primaryKey
    */
   public static <%=entity.ejbName%> findByPrimaryKey(<%=entity.primKeyClassNameString()%>)
@@ -123,7 +123,7 @@ public class <%=entity.ejbName%>Helper
   public static <%=entity.ejbName%> findByPrimaryKey(<%=entity.primKeyClass%> primaryKey)
   {
     <%=entity.ejbName%> <%=GenUtil.lowerFirstChar(entity.ejbName)%> = null;
-    Debug.logInfo("<%=entity.ejbName%>Helper.findByPrimaryKey: Field is:" + primaryKey);
+    Debug.logInfo("<%=entity.ejbName%>Helper.findByPrimaryKey: EgField is:" + primaryKey);
 
     if(primaryKey == null) { return null; }
 <%if(entity.useCache){%>
@@ -160,7 +160,7 @@ public class <%=entity.ejbName%>Helper
   }
 
   /** Creates a <%=entity.ejbName%><%for(i=0;i<entity.fields.size();i++){%>
-   *@param  <%=((Field)entity.fields.elementAt(i)).fieldName%>                  Field of the <%=((Field)entity.fields.elementAt(i)).columnName%> column.<%}%>
+   *@param  <%=((EgField)entity.fields.elementAt(i)).fieldName%>                  EgField of the <%=((EgField)entity.fields.elementAt(i)).columnName%> column.<%}%>
    *@return                Description of the Returned Value
    */
   public static <%=entity.ejbName%> create(<%=entity.fieldTypeNameString()%>)
@@ -181,7 +181,7 @@ public class <%=entity.ejbName%>Helper
   }
 
   /** Updates the corresponding <%=entity.ejbName%><%for(i=0;i<entity.fields.size();i++){%>
-   *@param  <%=((Field)entity.fields.elementAt(i)).fieldName%>                  Field of the <%=((Field)entity.fields.elementAt(i)).columnName%> column.<%}%>
+   *@param  <%=((EgField)entity.fields.elementAt(i)).fieldName%>                  EgField of the <%=((EgField)entity.fields.elementAt(i)).columnName%> column.<%}%>
    *@return                Description of the Returned Value
    */
   public static <%=entity.ejbName%> update(<%=entity.fieldTypeNameString()%>) throws java.rmi.RemoteException
@@ -190,15 +190,15 @@ public class <%=entity.ejbName%>Helper
     <%=entity.ejbName%> <%=GenUtil.lowerFirstChar(entity.ejbName)%> = findByPrimaryKey(<%=entity.pkNameString()%>);
     //Do not pass the value object to set on creation, we only want to populate it not attach it to the passed object
     <%=entity.ejbName%> <%=GenUtil.lowerFirstChar(entity.ejbName)%>Value = new <%=entity.ejbName%>Value();
-<%for(i=0;i<entity.fields.size();i++){%><%if(!((Field)entity.fields.elementAt(i)).isPk){%>
-    if(<%=((Field)entity.fields.elementAt(i)).fieldName%> != null) { <%=GenUtil.lowerFirstChar(entity.ejbName)%>Value.set<%=GenUtil.upperFirstChar(((Field)entity.fields.elementAt(i)).fieldName)%>(<%=((Field)entity.fields.elementAt(i)).fieldName%>); }<%}%><%}%>
+<%for(i=0;i<entity.fields.size();i++){%><%if(!((EgField)entity.fields.elementAt(i)).isPk){%>
+    if(<%=((EgField)entity.fields.elementAt(i)).fieldName%> != null) { <%=GenUtil.lowerFirstChar(entity.ejbName)%>Value.set<%=GenUtil.upperFirstChar(((EgField)entity.fields.elementAt(i)).fieldName)%>(<%=((EgField)entity.fields.elementAt(i)).fieldName%>); }<%}%><%}%>
 
     <%=GenUtil.lowerFirstChar(entity.ejbName)%>.setValueObject(<%=GenUtil.lowerFirstChar(entity.ejbName)%>Value);
     return <%=GenUtil.lowerFirstChar(entity.ejbName)%>;
   }
-<%for(i=0;i<entity.finders.size();i++){%><%Finder finderDesc = (Finder)entity.finders.elementAt(i);%>
+<%for(i=0;i<entity.finders.size();i++){%><%EgFinder finderDesc = (EgFinder)entity.finders.elementAt(i);%>
   /** Removes/deletes the specified  <%=entity.ejbName%><%for(int j=0;j<finderDesc.fields.size();j++){%>
-   *@param  <%=((Field)finderDesc.fields.elementAt(j)).fieldName%>                  Field of the <%=((Field)finderDesc.fields.elementAt(j)).columnName%> column.<%}%>
+   *@param  <%=((EgField)finderDesc.fields.elementAt(j)).fieldName%>                  EgField of the <%=((EgField)finderDesc.fields.elementAt(j)).columnName%> column.<%}%>
    */
   public static void removeBy<%=entity.classNameString(finderDesc.fields,"And","")%>(<%=entity.typeNameString(finderDesc.fields)%>)
   {
@@ -218,7 +218,7 @@ public class <%=entity.ejbName%>Helper
   }
 
   /** Finds <%=entity.ejbName%> records by the following parameters:<%for(int j=0;j<finderDesc.fields.size();j++){%>
-   *@param  <%=((Field)finderDesc.fields.elementAt(j)).fieldName%>                  Field of the <%=((Field)finderDesc.fields.elementAt(j)).columnName%> column.<%}%>
+   *@param  <%=((EgField)finderDesc.fields.elementAt(j)).fieldName%>                  EgField of the <%=((EgField)finderDesc.fields.elementAt(j)).columnName%> column.<%}%>
    *@return      Description of the Returned Value
    */
   public static Collection findBy<%=entity.classNameString(finderDesc.fields,"And","")%>(<%=entity.typeNameString(finderDesc.fields)%>)

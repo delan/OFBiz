@@ -15,7 +15,7 @@
   while(classNamesIterator != null && classNamesIterator.hasNext())
   //if(classNamesIterator != null && classNamesIterator.hasNext())
   { 
-    Entity entity = DefReader.getEntity(defFileName,(String)classNamesIterator.next());
+    EgEntity entity = DefReader.getEgEntity(defFileName,(String)classNamesIterator.next());
     HashMap params = new HashMap();
     params.put("defFileName", defFileName);
     params.put("ejbName", entity.ejbName);

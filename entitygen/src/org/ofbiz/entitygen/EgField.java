@@ -30,7 +30,7 @@ import java.util.*;
  *@version    1.0
  */
 
-public class Field
+public class EgField
 {
   /** The field-name of the Field */    
   public String fieldName = null;
@@ -46,7 +46,7 @@ public class Field
   public Vector validators = new Vector();
 
   /** Default Constructor */  
-  public Field()
+  public EgField()
   {
   }
 

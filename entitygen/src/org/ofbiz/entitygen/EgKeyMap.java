@@ -28,7 +28,7 @@ package org.ofbiz.entitygen;
  *@version    1.0
  */
 
-public class KeyMap 
+public class EgKeyMap 
 {
   /** name of the column in this table */  
   public String columnName = "";
@@ -40,5 +40,5 @@ public class KeyMap
   public String relatedFieldName = "";
 
   /** Default Constructor */
-  public KeyMap() {}
+  public EgKeyMap() {}
 }

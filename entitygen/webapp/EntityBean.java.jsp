@@ -5,7 +5,7 @@ import java.rmi.*;
 import javax.ejb.*;
 import java.math.*;
 import java.util.*;
-<%@ page import="java.util.*" %><%Hashtable importNames = new Hashtable(); importNames.put(entity.packageName,"");%><%for(int relIndex=0;relIndex<entity.relations.size();relIndex++){%><%Relation relation = (Relation)entity.relations.elementAt(relIndex);%><%Entity relatedEntity = DefReader.getEntity(defFileName,relation.relatedEjbName);%><%if(!importNames.containsKey(relatedEntity.packageName)){ importNames.put(relatedEntity.packageName,"");%>
+<%@ page import="java.util.*" %><%Hashtable importNames = new Hashtable(); importNames.put(entity.packageName,"");%><%for(int relIndex=0;relIndex<entity.relations.size();relIndex++){%><%EgRelation relation = (EgRelation)entity.relations.elementAt(relIndex);%><%EgEntity relatedEntity = DefReader.getEgEntity(defFileName,relation.relatedEjbName);%><%if(!importNames.containsKey(relatedEntity.packageName)){ importNames.put(relatedEntity.packageName,"");%>
 import <%=relatedEntity.packageName%>.*;<%}%><%}%>
 
 /**
@@ -37,8 +37,8 @@ import <%=relatedEntity.packageName%>.*;<%}%><%}%>
  */
 public class <%=entity.ejbName%>Bean implements EntityBean
 {<%for(i=0;i<entity.fields.size();i++){%>
-  /** The variable for the <%=((Field)entity.fields.elementAt(i)).columnName%> column of the <%=entity.tableName%> table. */
-  public <%=((Field)entity.fields.elementAt(i)).javaType%> <%=((Field)entity.fields.elementAt(i)).fieldName%>;<%}%>
+  /** The variable for the <%=((EgField)entity.fields.elementAt(i)).columnName%> column of the <%=entity.tableName%> table. */
+  public <%=((EgField)entity.fields.elementAt(i)).javaType%> <%=((EgField)entity.fields.elementAt(i)).fieldName%>;<%}%>
 
   EntityContext entityContext;
   boolean ejbIsModified = false;
@@ -47,16 +47,16 @@ public class <%=entity.ejbName%>Bean implements EntityBean
    *@param  entityContext  The new EntityContext value
    */
   public void setEntityContext(EntityContext entityContext) { this.entityContext = entityContext; }
-<%for(i=0;i<entity.fields.size();i++){%><%if(((Field)entity.fields.elementAt(i)).isPk){%>
-  /** Get the primary key <%=((Field)entity.fields.elementAt(i)).columnName%> column of the <%=entity.tableName%> table. */
-  public <%=((Field)entity.fields.elementAt(i)).javaType%> get<%=GenUtil.upperFirstChar(((Field)entity.fields.elementAt(i)).fieldName)%>() { return <%=((Field)entity.fields.elementAt(i)).fieldName%>; }
+<%for(i=0;i<entity.fields.size();i++){%><%if(((EgField)entity.fields.elementAt(i)).isPk){%>
+  /** Get the primary key <%=((EgField)entity.fields.elementAt(i)).columnName%> column of the <%=entity.tableName%> table. */
+  public <%=((EgField)entity.fields.elementAt(i)).javaType%> get<%=GenUtil.upperFirstChar(((EgField)entity.fields.elementAt(i)).fieldName)%>() { return <%=((EgField)entity.fields.elementAt(i)).fieldName%>; }
 <%}else{%>
-  /** Get the value of the <%=((Field)entity.fields.elementAt(i)).columnName%> column of the <%=entity.tableName%> table. */
-  public <%=((Field)entity.fields.elementAt(i)).javaType%> get<%=GenUtil.upperFirstChar(((Field)entity.fields.elementAt(i)).fieldName)%>() { return <%=((Field)entity.fields.elementAt(i)).fieldName%>; }
-  /** Set the value of the <%=((Field)entity.fields.elementAt(i)).columnName%> column of the <%=entity.tableName%> table. */
-  public void set<%=GenUtil.upperFirstChar(((Field)entity.fields.elementAt(i)).fieldName)%>(<%=((Field)entity.fields.elementAt(i)).javaType%> <%=((Field)entity.fields.elementAt(i)).fieldName%>)
+  /** Get the value of the <%=((EgField)entity.fields.elementAt(i)).columnName%> column of the <%=entity.tableName%> table. */
+  public <%=((EgField)entity.fields.elementAt(i)).javaType%> get<%=GenUtil.upperFirstChar(((EgField)entity.fields.elementAt(i)).fieldName)%>() { return <%=((EgField)entity.fields.elementAt(i)).fieldName%>; }
+  /** Set the value of the <%=((EgField)entity.fields.elementAt(i)).columnName%> column of the <%=entity.tableName%> table. */
+  public void set<%=GenUtil.upperFirstChar(((EgField)entity.fields.elementAt(i)).fieldName)%>(<%=((EgField)entity.fields.elementAt(i)).javaType%> <%=((EgField)entity.fields.elementAt(i)).fieldName%>)
   {
-    this.<%=((Field)entity.fields.elementAt(i)).fieldName%> = <%=((Field)entity.fields.elementAt(i)).fieldName%>;
+    this.<%=((EgField)entity.fields.elementAt(i)).fieldName%> = <%=((EgField)entity.fields.elementAt(i)).fieldName%>;
     ejbIsModified = true;
   }
 <%}%><%}%>
@@ -68,10 +68,10 @@ public class <%=entity.ejbName%>Bean implements EntityBean
     try
     {
       //check for null and if null do not set; this is the method for not setting certain fields while setting the rest quickly
-      // to set a field to null, use the individual setters<%for(i=0;i<entity.fields.size();i++){%><%if(!((Field)entity.fields.elementAt(i)).isPk){%>
-      if(valueObject.get<%=GenUtil.upperFirstChar(((Field)entity.fields.elementAt(i)).fieldName)%>() != null)
+      // to set a field to null, use the individual setters<%for(i=0;i<entity.fields.size();i++){%><%if(!((EgField)entity.fields.elementAt(i)).isPk){%>
+      if(valueObject.get<%=GenUtil.upperFirstChar(((EgField)entity.fields.elementAt(i)).fieldName)%>() != null)
       {
-        this.<%=((Field)entity.fields.elementAt(i)).fieldName%> = valueObject.get<%=GenUtil.upperFirstChar(((Field)entity.fields.elementAt(i)).fieldName)%>();
+        this.<%=((EgField)entity.fields.elementAt(i)).fieldName%> = valueObject.get<%=GenUtil.upperFirstChar(((EgField)entity.fields.elementAt(i)).fieldName)%>();
         ejbIsModified = true;
       }<%}%><%}%>
     }
@@ -94,7 +94,7 @@ public class <%=entity.ejbName%>Bean implements EntityBean
     else { return null; }
   }
 
-<%for(int relIndex=0;relIndex<entity.relations.size();relIndex++){%><%Relation relation = (Relation)entity.relations.elementAt(relIndex);%><%Entity relatedEntity = DefReader.getEntity(defFileName,relation.relatedEjbName);%><%if(relation.relationType.equalsIgnoreCase("one")){%>
+<%for(int relIndex=0;relIndex<entity.relations.size();relIndex++){%><%EgRelation relation = (EgRelation)entity.relations.elementAt(relIndex);%><%EgEntity relatedEntity = DefReader.getEgEntity(defFileName,relation.relatedEjbName);%><%if(relation.relationType.equalsIgnoreCase("one")){%>
   /** Get the <%=relation.relationTitle%> <%=relatedEntity.ejbName%> entity corresponding to this entity. */
   public <%=relatedEntity.ejbName%> get<%=relation.relationTitle%><%=relatedEntity.ejbName%>() { return <%=relatedEntity.ejbName%>Helper.findByPrimaryKey(<%=relation.keyMapString(", ", "")%>); }
   /** Remove the <%=relation.relationTitle%> <%=relatedEntity.ejbName%> entity corresponding to this entity. */
@@ -111,18 +111,18 @@ public class <%=entity.ejbName%>Bean implements EntityBean
 <%}%><%}%>
 
   /** Description of the Method<%for(i=0;i<entity.fields.size();i++){%>
-   *@param  <%=((Field)entity.fields.elementAt(i)).fieldName%>                  Field of the <%=((Field)entity.fields.elementAt(i)).columnName%> column.<%}%>
+   *@param  <%=((EgField)entity.fields.elementAt(i)).fieldName%>                  EgField of the <%=((EgField)entity.fields.elementAt(i)).columnName%> column.<%}%>
    *@return                      Description of the Returned Value
    *@exception  CreateException  Description of Exception
    */
   public <%=entity.primKeyClass%> ejbCreate(<%=entity.fieldTypeNameString()%>) throws CreateException
   {<%for(i=0;i<entity.fields.size();i++){%>
-    this.<%=((Field)entity.fields.elementAt(i)).fieldName%> = <%=((Field)entity.fields.elementAt(i)).fieldName%>;<%}%>
+    this.<%=((EgField)entity.fields.elementAt(i)).fieldName%> = <%=((EgField)entity.fields.elementAt(i)).fieldName%>;<%}%>
     return null;
   }
 <%if(entity.fields.size() != entity.pks.size()){%>
   /** Description of the Method<%for(i=0;i<entity.pks.size();i++){%>
-   *@param  <%=((Field)entity.pks.elementAt(i)).fieldName%>                  Field of the <%=((Field)entity.pks.elementAt(i)).columnName%> column.<%}%>
+   *@param  <%=((EgField)entity.pks.elementAt(i)).fieldName%>                  EgField of the <%=((EgField)entity.pks.elementAt(i)).columnName%> column.<%}%>
    *@return                      Description of the Returned Value
    *@exception  CreateException  Description of Exception
    */
@@ -132,13 +132,13 @@ public class <%=entity.ejbName%>Bean implements EntityBean
   }
 <%}%>
   /** Description of the Method<%for(i=0;i<entity.fields.size();i++){%>
-   *@param  <%=((Field)entity.fields.elementAt(i)).fieldName%>                  Field of the <%=((Field)entity.fields.elementAt(i)).columnName%> column.<%}%>
+   *@param  <%=((EgField)entity.fields.elementAt(i)).fieldName%>                  EgField of the <%=((EgField)entity.fields.elementAt(i)).columnName%> column.<%}%>
    *@exception  CreateException  Description of Exception
    */
   public void ejbPostCreate(<%=entity.fieldTypeNameString()%>) throws CreateException {}
 <%if(entity.fields.size() != entity.pks.size()){%>
   /** Description of the Method<%for(i=0;i<entity.pks.size();i++){%>
-   *@param  <%=((Field)entity.pks.elementAt(i)).fieldName%>                  Field of the <%=((Field)entity.pks.elementAt(i)).columnName%> column.<%}%>
+   *@param  <%=((EgField)entity.pks.elementAt(i)).fieldName%>                  EgField of the <%=((EgField)entity.pks.elementAt(i)).columnName%> column.<%}%>
    *@exception  CreateException  Description of Exception
    */
   public void ejbPostCreate(<%=entity.primKeyClassNameString()%>) throws CreateException
