@@ -80,7 +80,7 @@
 
     <target name="clean" depends="clean-lib">
       <delete dir="${build.dir}" />
-      <delete dir="${doc.dir}" />
+      <delete dir="${doc.dir}/api" />
     </target>
 
     <target name="clean-lib" depends="init">

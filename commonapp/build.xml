@@ -77,7 +77,7 @@
     <!-- ================================================================== -->
 
     <target name="clean" depends="clean-lib">
-      <delete dir="${doc.dir}" />
+      <delete dir="${doc.dir}/api" />
       <delete dir="${build.dir}" />
     </target>
 
