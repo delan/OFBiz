@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2004 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -19,6 +19,7 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
+ *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@version    $Rev$
  *@since      2.1
@@ -58,7 +59,6 @@
 
 <#if productIds?has_content>
 <script language="JavaScript">
-<!--
     function checkProductToBagTextArea(field, idValue) {
         fullValue = idValue + "\n";
         tempStr = document.forms["quickCreateVirtualWithVariants"].elements["variantProductIdsBag"].value;
@@ -76,7 +76,6 @@
             }
         }
     }
-//-->
 </script>
 <center>
   <table width="100%" cellpadding="0" cellspacing="0">
@@ -113,6 +112,8 @@
     </tr>
 </table>
 
+<hr class="sepbar"/>
+<div class="tabletext"><b>NOTE:</b> The check boxes above are used only to add to and remove from the text box below, they will not limit the other actions for the forms below!</div>
 <hr class="sepbar"/>
 
 <#include "/product/CreateVirtualWithVariantsForm.ftl"/>
@@ -183,7 +184,7 @@
 <div class="tabletext">
 <form method="POST" action="<@ofbizUrl>/searchAddFeature</@ofbizUrl>" name="searchAddFeature">
   <b>Add Feature to Results:</b><br>
-  Feature ID<input type="text" size="5" name="productFeatureId" value="" class="inputBox">
+  Feature ID<input type="text" size="10" name="productFeatureId" value="" class="inputBox">
   From<input type="tex"t size="25" name="fromDate" class="inputBox"><a href="javascript:call_cal(document.searchAddFeature.fromDate, null);"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"></a> 
   Thru<input type="text" size="25" name="thruDate" class="inputBox"><a href="javascript:call_cal(document.searchAddFeature.thruDate, null);"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"></a>
   <br>
@@ -202,6 +203,17 @@
   </select>
   <input type="hidden" name="clearSearch" value="N">
   <input type="submit" value="Add Feature" class="smallSubmit"><br>
+</form>
+</div>
+
+<hr class="sepbar"/>
+
+<div class="tabletext">
+<form method="POST" action="<@ofbizUrl>/searchRemoveFeature</@ofbizUrl>" name="searchRemoveFeature">
+  <b>Remove Feature from Results:</b><br>
+  Feature ID<input type="text" size="10" name="productFeatureId" value="" class="inputBox">
+  <input type="hidden" name="clearSearch" value="N">
+  <input type="submit" value="Remove Feature" class="smallSubmit"><br>
 </form>
 </div>
 
