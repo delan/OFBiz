@@ -38,6 +38,8 @@
     <field-type-def><type>comment</type><sql-type>VARCHAR</sql-type><java-type>String</java-type></field-type-def>
     <field-type-def><type>currency-amount</type><sql-type>DOUBLE</sql-type><java-type>Double</java-type><validate>isSignedDouble</validate></field-type-def>
     <field-type-def><type>date-time</type><sql-type>TIMESTAMP</sql-type><java-type>java.sql.Timestamp</java-type></field-type-def>
+    <field-type-def><type>date</type><sql-type>DATE</sql-type><java-type>java.sql.Date</java-type></field-type-def>
+    <field-type-def><type>time</type><sql-type>TIME</sql-type><java-type>java.sql.Time</java-type></field-type-def>
     <field-type-def><type>description</type><sql-type>VARCHAR</sql-type><java-type>String</java-type></field-type-def>
     <field-type-def><type>floating-point</type><sql-type>DOUBLE</sql-type><java-type>Double</java-type><validate>isSignedDouble</validate></field-type-def>
     <field-type-def><type>id</type><sql-type>VARCHAR</sql-type><java-type>String</java-type></field-type-def>
