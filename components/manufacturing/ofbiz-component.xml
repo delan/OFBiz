@@ -21,7 +21,7 @@
  *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *  $Id: ofbiz-component.xml,v 1.9 2004/05/09 21:29:12 holivier Exp $
+ *  $Id: ofbiz-component.xml,v 1.10 2004/07/04 00:07:22 ajzeneski Exp $
  *  *  2003/10/21  Olivier Heintz  *
  *  *  2003/10/27  Jacopo Cappellato  *
 -->
@@ -30,7 +30,7 @@
     <resource-loader name="main" type="component"/>
     
     <!-- load single or multiple external libraries -->
-    <classpath type="jar" location="lib/*"/>
+    <!-- <classpath type="jar" location="lib/*"/> -->
     <classpath type="jar" location="build/lib/*"/>
     
     <!-- place the config directory on the classpath to access configuration files -->
