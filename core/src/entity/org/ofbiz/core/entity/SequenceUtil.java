@@ -27,6 +27,7 @@ package org.ofbiz.core.entity;
 
 import java.sql.*;
 import java.util.*;
+import javax.transaction.*;
 
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.entity.model.*;
@@ -134,6 +135,29 @@ public class SequenceUtil {
             long val1 = 0;
             long val2 = 0;
 
+            // NOTE: the fancy ethernet type stuff is for the case where transactions not available
+            boolean manualTX = true;
+            Transaction suspendedTransaction = null;
+            TransactionManager transactionManager = null;
+
+            try {
+                if (TransactionUtil.getStatus() == TransactionUtil.STATUS_ACTIVE) {
+                    manualTX = false;
+                    try {
+                        //if we can suspend the transaction, we'll try to do this in a local manual transaction
+                        transactionManager = TransactionFactory.getTransactionManager();
+                        suspendedTransaction = transactionManager.suspend();
+                        manualTX = true;
+                    } catch (SystemException e) {
+                        Debug.logError(e, "System Error suspending transaction in sequence util");
+                    }
+                }
+            } catch (GenericTransactionException e) {
+                // nevermind, don't worry about it, but print the exc anyway
+                Debug.logWarning("[SequenceUtil.SequenceBank.fillBank] Exception was thrown trying to check " +
+                    "transaction status: " + e.toString(), module);
+            }
+
             Connection connection = null;
             Statement stmt = null;
             ResultSet rs = null;
@@ -151,23 +175,10 @@ public class SequenceUtil {
             String sql = null;
 
             try {
-                // NOTE: the fancy ethernet type stuff is for the case where transactions not available
-                boolean manualTX = true;
-
                 try {
                     connection.setAutoCommit(false);
                 } catch (SQLException sqle) {
                     manualTX = false;
-                }
-
-                try {
-                    if (TransactionUtil.getStatus() == TransactionUtil.STATUS_ACTIVE) {
-                        manualTX = false;
-                    }
-                } catch (GenericTransactionException e) {
-                    // nevermind, don't worry about it, but print the exc anyway
-                    Debug.logWarning("[SequenceUtil.SequenceBank.fillBank] Exception was thrown trying to check " +
-                        "transaction status: " + e.toString(), module);
                 }
 
                 stmt = connection.createStatement();
@@ -185,14 +196,18 @@ public class SequenceUtil {
                             "row, result set was empty for sequence: " + seqName, module);
                         try {
                             if (rs != null) rs.close();
-                        } catch (SQLException sqle) {}
+                        } catch (SQLException sqle) {
+                            Debug.logWarning(sqle, "Error closing result set in sequence util");
+                        }
                         sql = "INSERT INTO " + parentUtil.tableName + " (" + parentUtil.nameColName + ", " + parentUtil.idColName + ") VALUES ('" + this.seqName + "', " + startSeqId + ")";
                         if (stmt.executeUpdate(sql) <= 0) return;
                         continue;
                     }
                     try {
                         if (rs != null) rs.close();
-                    } catch (SQLException sqle) {}
+                    } catch (SQLException sqle) {
+                        Debug.logWarning(sqle, "Error closing result set in sequence util");
+                    }
 
                     sql = "UPDATE " + parentUtil.tableName + " SET " + parentUtil.idColName + "=" + parentUtil.idColName + "+" + this.bankSize + " WHERE " + parentUtil.nameColName + "='" + this.seqName + "'";
                     if (stmt.executeUpdate(sql) <= 0) {
@@ -213,12 +228,16 @@ public class SequenceUtil {
                             "set was empty for sequence: " + seqName, module);
                         try {
                             if (rs != null) rs.close();
-                        } catch (SQLException sqle) {}
+                        } catch (SQLException sqle) {
+                            Debug.logWarning(sqle, "Error closing result set in sequence util");
+                        }
                         return;
                     }
                     try {
                         if (rs != null) rs.close();
-                    } catch (SQLException sqle) {}
+                    } catch (SQLException sqle) {
+                        Debug.logWarning(sqle, "Error closing result set in sequence util");
+                    }
 
                     if (val1 + bankSize != val2) {
                         if (numTries >= maxTries) {
@@ -230,7 +249,9 @@ public class SequenceUtil {
 
                         try {
                             this.wait(0, waitTime);
-                        } catch (Exception e) {}
+                        } catch (Exception e) {
+                            Debug.logWarning(e, "Error waiting in sequence util");
+                        }
                     }
 
                     numTries++;
@@ -248,10 +269,29 @@ public class SequenceUtil {
             } finally {
                 try {
                     if (stmt != null) stmt.close();
-                } catch (SQLException sqle) {}
+                } catch (SQLException sqle) {
+                    Debug.logWarning(sqle, "Error closing statement in sequence util");
+                }
                 try {
                     if (connection != null) connection.close();
-                } catch (SQLException sqle) {}
+                } catch (SQLException sqle) {
+                    Debug.logWarning(sqle, "Error closing connection in sequence util");
+                }
+            }
+            
+            if (suspendedTransaction != null) {
+                try {
+                    if (transactionManager == null) {
+                        transactionManager = TransactionFactory.getTransactionManager();
+                    }
+                    transactionManager.resume(suspendedTransaction);
+                } catch (InvalidTransactionException e) {
+                    Debug.logError(e, "InvalidTransaction Error resuming suspended transaction in sequence util");
+                } catch (IllegalStateException e) {
+                    Debug.logError(e, "IllegalState Error resuming suspended transaction in sequence util");
+                } catch (SystemException e) {
+                    Debug.logError(e, "System Error resuming suspended transaction in sequence util");
+                }
             }
         }
     }
