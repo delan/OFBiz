@@ -85,42 +85,59 @@
         <check-errors/>
 
         <entity-one entity-name="ReturnHeader" value-name="returnHeader">
-            <field-map field-name="returnId" env-name="${parameters.returnId}"/>
+            <field-map field-name="returnId" env-name="parameters.returnId"/>
         </entity-one>
 
         <if-compare field-name="needsInventoryReceive" map-name="returnHeader" operator="equals" value="Y">
-            <entity-condition entity-name="ReturnItem" list-name="returnItems">
-                <condition-expr field-name="returnId" operator="equals" env-name="${returnHeader.returnId}"/>
-            </entity-condition>
+            <!-- before receiving inventory, check to see if there is inventory information in this database -->
+            <entity-count entity-name="InventoryItem" count-name="iiCount">
+                <condition-expr field-name="facilityId" operator="equals" env-name="returnHeader.destinationFacilityId"/>
+            </entity-count>
 
-            <if-empty field-name="inventoryItemTypeId" map-name="parameters">
-                <string-to-field string="SERIALIZED_INV_ITEM" field-name="inventoryItemTypeId" map-name="parameters"/>
-            </if-empty>
+            <if-compare field-name="iiCount" operator="greater" value="0" type="Double">
+                <entity-condition entity-name="ReturnItem" list-name="returnItems">
+                    <condition-expr field-name="returnId" operator="equals" env-name="returnHeader.returnId"/>
+                </entity-condition>
 
-            <if-empty field-name="statusId" map-name="parameters">
-                <string-to-field string="INV_RETURNED" field-name="statusId" map-name="parameters"/>
-            </if-empty>
+                <if-empty field-name="inventoryItemTypeId" map-name="parameters">
+                    <string-to-field string="SERIALIZED_INV_ITEM" field-name="inventoryItemTypeId" map-name="parameters"/>
+                </if-empty>
 
-            <now-timestamp-to-env env-name="nowTimestamp"/>
-            <iterate entry-name="returnItem" list-name="returnItems">
-                <get-related-one value-name="returnItem" relation-name="OrderItem" to-value-name="orderItem"/>
-                <if-not-empty field-name="productId" map-name="orderItem">
-                    <field-to-field field-name="inventoryItemTypeId" map-name="parameters" to-map-name="receiveCtx"/>
-                    <field-to-field field-name="statusId" map-name="parameters" to-map-name="receiveCtx"/>
-                    <field-to-field field-name="productId" map-name="orderItem" to-map-name="receiveCtx"/>
-                    <field-to-field field-name="returnItemSeqId" map-name="returnItem" to-map-name="receiveCtx"/>
-                    <field-to-field field-name="returnId" map-name="returnItem" to-map-name="receiveCtx"/>
-                    <field-to-field field-name="returnQuantity" map-name="returnItem" to-field-name="quantityAccepted" to-map-name="receiveCtx"/>
-                    <field-to-field field-name="destinationFacilityId" map-name="returnHeader" to-field-name="facilityId" to-map-name="receiveCtx"/>
-                    <string-to-field string="Returned Item RA# ${returnItem.returnId}" field-name="comments" map-name="receiveCtx"/>
-                    <string-to-field string="0" field-name="quantityRejected" map-name="receiveCtx"/>
-                    <env-to-field env-name="nowTimestamp" field-name="datetimeReceived" map-name="receiveCtx"/>
-                    <call-service service-name="receiveInventoryProduct" in-map-name="receiveCtx"/>
-                </if-not-empty>
-            </iterate>
+                <if-empty field-name="statusId" map-name="parameters">
+                    <string-to-field string="INV_RETURNED" field-name="statusId" map-name="parameters"/>
+                </if-empty>
+
+                <now-timestamp-to-env env-name="nowTimestamp"/>
+                <iterate entry-name="returnItem" list-name="returnItems">
+                    <get-related-one value-name="returnItem" relation-name="OrderItem" to-value-name="orderItem"/>
+                    <if-not-empty field-name="productId" map-name="orderItem">
+                        <field-to-field field-name="inventoryItemTypeId" map-name="parameters" to-map-name="receiveCtx"/>
+                        <field-to-field field-name="statusId" map-name="parameters" to-map-name="receiveCtx"/>
+                        <field-to-field field-name="productId" map-name="orderItem" to-map-name="receiveCtx"/>
+                        <field-to-field field-name="returnItemSeqId" map-name="returnItem" to-map-name="receiveCtx"/>
+                        <field-to-field field-name="returnId" map-name="returnItem" to-map-name="receiveCtx"/>
+                        <field-to-field field-name="returnQuantity" map-name="returnItem" to-field-name="quantityAccepted" to-map-name="receiveCtx"/>
+                        <field-to-field field-name="destinationFacilityId" map-name="returnHeader" to-field-name="facilityId" to-map-name="receiveCtx"/>
+                        <string-to-field string="Returned Item RA# ${returnItem.returnId}" field-name="comments" map-name="receiveCtx"/>
+                        <env-to-field env-name="nowTimestamp" field-name="datetimeReceived" map-name="receiveCtx"/>
+
+                        <calculate field-name="quantityRejected" map-name="receiveCtx" type="Double">
+                            <number value="0"/>
+                        </calculate>
+
+                        <call-service service-name="receiveInventoryProduct" in-map-name="receiveCtx"/>
+                    </if-not-empty>
+                </iterate>
+
+                <!-- now that the receive is done; set the need flag to N -->
+                <refresh-value value-name="returnHeader"/>
+                <string-to-field string="N" field-name="needsInventoryReceive" map-name="returnHeader"/>
+                <store-value value-name="returnHeader"/>
+            <else>
+                <log level="info" message="Not receiving inventory for returnId ${returnHeader.returnId}, no inventory information available."/>
+            </else>
+            </if-compare>
         </if-compare>
-        <string-to-field string="N" field-name="needsInventoryReceive" map-name="returnHeader"/>
-        <store-value value-name="returnHeader"/>
     </simple-method>
 
 </simple-methods>

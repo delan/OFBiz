@@ -102,6 +102,38 @@
                     <tr><td colspan="7"><hr class="sepbar"></td></tr>
                     <tr>
                       <td align="right" valign="top" width="15%">
+                        <div class="tabletext">&nbsp;<b>Product Store</b></div>
+                      </td>
+                      <td width="5">&nbsp;</td>
+                      <td align="left" valign="top" width="80%">
+                        <div class="tabletext">
+                          <#if orderHeader.productStoreId?has_content>
+                            <a href="/catalog/control/EditProductStore?productStoreId=${orderHeader.productStoreId}${requestAttributes.externalKeyParam}" target="catalogmgr" class="buttontext">${orderHeader.productStoreId}</a>
+                          <#else>
+                            N/A
+                          </#if>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr><td colspan="7"><hr class="sepbar"></td></tr>
+                    <tr>
+                      <td align="right" valign="top" width="15%">
+                        <div class="tabletext">&nbsp;<b>Origin Facility</b></div>
+                      </td>
+                      <td width="5">&nbsp;</td>
+                      <td align="left" valign="top" width="80%">
+                        <div class="tabletext">
+                          <#if orderHeader.originFacilityId?has_content>
+                            <a href="/facility/control/EditFacility?facilityId=${orderHeader.originFacilityId}${requestAttributes.externalKeyParam}" target="facilitymgr" class="buttontext">${orderHeader.originFacilityId}</a>
+                          <#else>
+                            N/A
+                          </#if>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr><td colspan="7"><hr class="sepbar"></td></tr>
+                    <tr>
+                      <td align="right" valign="top" width="15%">
                         <div class="tabletext">&nbsp;<b>Created By</b></div>
                       </td>
                       <td width="5">&nbsp;</td>
@@ -110,7 +142,7 @@
                           <#if orderHeader.createdBy?has_content>
                             <a href="/partymgr/control/viewprofile?userlogin_id=${orderHeader.createdBy}${requestAttributes.externalKeyParam}" target="partymgr" class="buttontext">${orderHeader.createdBy}</a>
                           <#else>
-                            ???
+                            [Not Set]
                           </#if>
                         </div>
                       </td>
