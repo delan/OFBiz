@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -37,7 +37,7 @@
           </td>
           <td valign="middle">
             <div class="tabletext">
-              <b>"${(searchCategory.description)?if_exists}"</b> Include sub-categories?
+              <b>"${(searchCategory.description)?if_exists}" [${(searchCategory.productCategoryId)?if_exists}]</b> Include sub-categories?
               Yes<input type="RADIO" name="SEARCH_SUB_CATEGORIES" value="Y" checked>
               No<input type="RADIO" name="SEARCH_SUB_CATEGORIES" value="N">
             </div>
@@ -53,11 +53,11 @@
                 <select class="selectBox" name="SEARCH_CATEGORY_ID">
                     <option value="">- Any Category -</option>
                     <#list productCategories as productCategory>
-                        <#assign displayDesc = productCategory.description>
+                        <#assign displayDesc = productCategory.description?default("No Description")>
                         <#if 18 < displayDesc?length>
                             <#assign displayDesc = displayDesc[0..15] + "...">
                         </#if>
-                        <option value="${productCategory.productCategoryId}">${displayDesc}</option>
+                        <option value="${productCategory.productCategoryId}">${displayDesc} [${productCategory.productCategoryId}]</option>
                     </#list>
                 </select>
               Include sub-categories?
@@ -92,7 +92,7 @@
             <select class="selectBox" name="pft_${productFeatureTypeId}">
               <option value="">- ${uiLabelMap.CommonAny} -</option>
               <#list productFeatures as productFeature>
-              <option value="${productFeature.productFeatureId}">${productFeature.description?default(productFeature.productFeatureId)}</option>
+              <option value="${productFeature.productFeatureId}">${productFeature.description?default("No Description")} [${productFeature.productFeatureId}]</option>
               </#list>
             </select>
           </div>
