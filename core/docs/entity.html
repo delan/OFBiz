@@ -45,6 +45,21 @@ definition comes from the standard Entity-Relation modeling concepts of
 Relational Database Management Systems. The goal of the entity engine is to
 simplify the enterprise wide use of entity data. This includes definition,
 maintenance, quality assurance, and development of entity related functionality.&nbsp;</p>
+<p>The entity engine uses a number of Business Tier and Integration Tier
+patterns that will be recognized by most enterprise software programmers. Many
+Presentation Tier patterns are also used in the Open For Busienss project, but
+only in the servlet controller, not in the entity engine. The patterns used in
+the Entity Engine include: Business Delegate, Value Object, Composite Entity
+(variation), Service Locator, and Data Access Object. Descriptions of these
+patterns are all available in the book &quot;Core J2EE Patterns&quot; by Alur,
+Crupi, and Malks, published by Sun. In addition there are a number of patterns
+used from the upcoming book &quot;<font face="Verdana, Arial, Helvetica, sans-serif" size="2">EJB
+Design Patterns&quot;</font> by <font face="Verdana, Arial, Helvetica, sans-serif" size="2"><a class="undecorated" href="mailto:floyd@middleware-company.com">Floyd
+Marinescu</a> of TheServerSide.com. These include Data Transfer HashMap and
+Generic Attribute Access. For unique primary key generation we use an original
+pattern we like to call the &quot;Ethernet Key Generation&quot; pattern because
+is uses collision mechanism to insure that multiple servers can use a single
+database to get banks of unique keys in a database independent way.</font></p>
 <p>The primary goal of the entity engine is to eliminate the need for entity
 specific persistence code in as many areas of a transactional application as
 possible. Granted that this sort of abstraction is a different issue for
@@ -56,6 +71,25 @@ accounting to inventory and warehouse management to human resources and so on.
 These tools can be useful for reporting and analytical systems, but really
 aren't meant to allow for the wide variety of custom queries that often take
 place in such tools.</p>
+<p>In order to achieve having as little entity specific code as possible, all
+value objects are generic, using a map to store the fields values of the entity
+instance by name. The get and set methods for the fields take a String with the
+fieldName in it which is used to verify that the field is part of the entity,
+and then either get or set a value as desired. The danger of this flexibility is
+curtailed using a contract betweent he entity engine and the application, this
+is contained in a special XML file.</p>
+<p>Instead of writing entity specific code, entity definitions are read from an
+XML file and used by the entity engine to enforce a set of rules between the
+application and the datasource, be it a database or whatever. These XML entity
+definitions specify the names of all of the entities and their fields along with
+which database tables and columns they correspond to. They are also used to
+specify a type for each field which is then looked up in the fieldtypes file for
+the given datasource to find the Java and SQL data types. Relations between
+entities are also defined in this XML file. A relation is defined by specifying
+the related table, the type of relation (one or many) and the keymaps for the
+relation. A title can also be given to the relation which becomes part of its
+name to distinguish it from other relations to that specific related
+entity.&nbsp;</p>
 <p>Using the Entity Engine as an abstraction layer, entity specific code can be
 easily created and modified. Code that uses the Entity Engine APIs to interact
 with entities can be deployed in various ways so that entity persistence can be
