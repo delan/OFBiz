@@ -418,8 +418,9 @@ public class PayPalEvents {
             Debug.logError(e, "Cannot parse date string: " + paymentDate, module);
             authDate = UtilDateTime.nowTimestamp();
         }
-        
-        if (paymentStatus.equals("Completed")) {           
+
+        paymentPreference.set("maxAmount", new Double(paymentAmount));
+        if (paymentStatus.equals("Completed")) {
             paymentPreference.set("statusId", "PAYMENT_RECEIVED");
         } else {
             paymentPreference.set("statusId", "PAYMENT_CANCELLED");
