@@ -40,7 +40,6 @@
         <property name="lib.dir"        value="lib" />
         <property name="doc.dir"        value="docs" />
         <property name="build.dir"      value="build" />
-        <property name="build.compiler" value="classic" /> 
         <property name="pkg-dist.name"  value="${name}-pkg" />
         <property name="tccored.dir"    value="${env.TOMCAT_HOME}/lib" />
 		

@@ -43,7 +43,6 @@
         <property name="waclasses.dir"  value="${webapp.dir}/WEB-INF/classes" />
         <property name="doc.dir"        value="docs" />
         <property name="build.dir"      value="build" />
-        <property name="build.compiler" value="classic" /> 
         <property name="pkg-dist.name"  value="${name}-pkg" />
 		
 	<!-- Classpath setting -->
