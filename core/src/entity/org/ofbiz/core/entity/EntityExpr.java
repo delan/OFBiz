@@ -134,7 +134,7 @@ public class EntityExpr extends EntityCondition {
                     whereStringBuffer.append(' ');
 
                     // treat the IN operator as a special case, especially with a Collection rhs
-                    if (EntityOperator.IN.equals(this.getOperator())) {
+                    if (EntityOperator.IN.equals(this.getOperator()) || EntityOperator.NOT_IN.equals(this.getOperator())) {
                         whereStringBuffer.append('(');
 
                         if (rhs instanceof Collection) {
