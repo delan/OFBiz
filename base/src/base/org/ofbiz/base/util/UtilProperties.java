@@ -440,11 +440,12 @@ public class UtilProperties implements java.io.Serializable {
      * @return The ResourceBundle
      */
     public static ResourceBundle getResourceBundle(String resource, Locale locale) {
-        Map bundleMap = getResourceBundleMap(resource, locale);
+        ResourceBundleMapWrapper.InternalRbmWrapper bundleMap = getInternalRbmWrapper(resource, locale);
         if (bundleMap == null) {
             return null;
         }
-        return ((ResourceBundleMapWrapper.InternalRbmWrapper) bundleMap).getResourceBundle();
+        ResourceBundle theBundle = bundleMap.getResourceBundle();
+        return theBundle;
     }
     
     /** Returns the specified resource/properties file as a Map with the original ResourceBundle in the Map under the key _RESOURCE_BUNDLE_
