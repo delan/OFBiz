@@ -80,12 +80,14 @@
       <td width="74%">
         <#if creditCardData?has_content>
           <#assign cardNumberDisplay = "">
-          <#assign cardNumber = creditCardData.cardNumber>
-          <#assign size = cardNumber?length - 4>
-          <#list 0 .. size-1 as foo>
-            <#assign cardNumberDisplay = cardNumberDisplay + "*">
-          </#list>
-          <#assign cardNumberDisplay = cardNumberDisplay + cardNumber[size .. size + 3]>
+          <#assign cardNumber = creditCardData.cardNumber?if_exists>
+          <#if cardNumber?has_content>
+            <#assign size = cardNumber?length - 4>
+            <#list 0 .. size-1 as foo>
+              <#assign cardNumberDisplay = cardNumberDisplay + "*">
+            </#list>
+            <#assign cardNumberDisplay = cardNumberDisplay + cardNumber[size .. size + 3]>
+          </#if>
         </#if>
         <input type="text" class='inputBox' size="20" maxlength="30" name="cardNumber" onfocus="javascript:this.value = '';" value="${cardNumberDisplay?if_exists}">
       *</td>
