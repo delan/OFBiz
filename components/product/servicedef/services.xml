@@ -1431,7 +1431,29 @@
         <attribute name="highIndex" type="Integer" mode="OUT" optional="false"/>
         <attribute name="listSize" type="Integer" mode="OUT" optional="false"/>
     </service>
-
+    
+    <!-- Product Store Keyword Override services -->
+    <service name="createProductStoreKeywordOvrd" default-entity-name="ProductStoreKeywordOvrd" engine="simple"
+                location="org/ofbiz/product/store/ProductStoreServices.xml" invoke="createProductStoreKeywordOvrd" auth="true">
+        <description>Create a Product Store Keyword Override</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <override name="target" optional="false" />
+        <override name="targetTypeEnumId" optional="false" />
+    </service>
+    <service name="deleteProductStoreKeywordOvrd" default-entity-name="ProductStoreKeywordOvrd" engine="simple"
+                location="org/ofbiz/product/store/ProductStoreServices.xml" invoke="deleteProductStoreKeywordOvrd" auth="true">
+        <description>Delete a Product Store Keyword Override</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateProductStoreKeywordOvrd" default-entity-name="ProductStoreKeywordOvrd" engine="simple"
+                location="org/ofbiz/product/store/ProductStoreServices.xml" invoke="deleteProductStoreKeywordOvrd" auth="true">
+        <description>Update a Product Store Keyword Override</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    
     <!-- Product content services -->
     <service name="createProductContent" default-entity-name="ProductContent" engine="simple"
                 location="org/ofbiz/product/content/ContentServices.xml" invoke="createProductContent" auth="true">
@@ -1510,4 +1532,5 @@
         <attribute name="textDataResourceId" type="String" mode="IN" optional="true"/>
         <attribute name="text" type="String" mode="IN" optional="true"/>
     </service>
+
 </services>
