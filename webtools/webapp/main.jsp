@@ -123,6 +123,22 @@ content and knowledge management, data analysis, and so forth.</DIV>
     </TD>
   </TR>
 </TABLE>
-
+<%-- Dummy TX testing code:
+<BR>==================================
+<BR>
+<%
+    GenericValue val = delegator.makeValue("Product", UtilMisc.toMap("productId", "foo", "productName", "prod name 1"));
+    val.store();
+    %><BR><%=val%><%
+    TransactionUtil.begin();
+    val.set("productName", "prod name 2");
+    val.store();
+    %><BR><%=val%><%
+    TransactionUtil.commit();
+    val = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", "foo"));
+    %><BR><%=val%><%
+%>
+<BR>==================================
+--%>
 <%@ include file="/includes/onecolumnclose.jsp" %>
 <%@ include file="/includes/footer.jsp" %>
