@@ -45,6 +45,14 @@ context.put("editShipmentWrapper", editShipmentWrapper);
 
 if (shipment != null) {
     currentStatus = shipment.getRelatedOne("StatusItem");
+    originPostalAddress = shipment.getRelatedOne("OriginPostalAddress");
+    destinationPostalAddress = shipment.getRelatedOne("DestinationPostalAddress");
+    
     editShipmentWrapper.putInContext("currentStatus", currentStatus);
+    editShipmentWrapper.putInContext("originPostalAddress", originPostalAddress);
+    editShipmentWrapper.putInContext("destinationPostalAddress", destinationPostalAddress);
+    
     context.put("currentStatus", currentStatus);
+    context.put("originPostalAddress", originPostalAddress);
+    context.put("destinationPostalAddress", destinationPostalAddress);
 }

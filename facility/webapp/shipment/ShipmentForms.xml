@@ -71,7 +71,19 @@
 				</entity-options>
 			</drop-down>
 		</field>
+
+		<field name="originContactMechId" title="Origin Postal Address Id" 
+                tooltip="To: ${originPostalAddress.toName}, Attn: ${originPostalAddress.attnName}, ${originPostalAddress.address1}, ${originPostalAddress.address2}, ${originPostalAddress.city}, ${originPostalAddress.stateProvinceGeoId}, ${originPostalAddress.postalCode}, ${originPostalAddress.countryGeoId}" tooltip-style="tabletext">
+        </field>
+		<field name="destinationContactMechId" title="Destination Postal Address Id" 
+                tooltip="To: ${destinationPostalAddress.toName}, Attn: ${destinationPostalAddress.attnName}, ${destinationPostalAddress.address1}, ${destinationPostalAddress.address2}, ${destinationPostalAddress.city}, ${destinationPostalAddress.stateProvinceGeoId}, ${destinationPostalAddress.postalCode}, ${destinationPostalAddress.countryGeoId}" tooltip-style="tabletext">
+        </field>
 		
+		<field use-when="shipment!=null" name="createdDate" widget-style="tabletext"><display description="${shipment.createdDate}"/></field>
+		<field use-when="shipment!=null" name="createdByUserLogin" widget-style="tabletext"><display description="${shipment.createdByUserLogin}"/></field>
+		<field use-when="shipment!=null" name="lastModifiedDate" widget-style="tabletext"><display description="${shipment.lastModifiedDate}"/></field>
+		<field use-when="shipment!=null" name="lastModifiedByUserLogin" widget-style="tabletext"><display description="${shipment.lastModifiedByUserLogin}"/></field>
+        
 		<field name="submitButton" title="Update" widget-style="standardSubmit"><submit button-type="button"/></field>
 	</form>
 </forms>

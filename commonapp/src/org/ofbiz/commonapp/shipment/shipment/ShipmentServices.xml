@@ -43,6 +43,11 @@
         <env-to-field env-name="sequencedId" field-name="shipmentId" map-name="newEntity"/>
         <field-to-result field-name="sequencedId" result-name="shipmentId"/>
         
+        <now-timestamp-to-env env-name="newEntity.createdDate"/>
+        <field-to-field field-name="userLoginId" map-name="userLogin" to-map-name="createdByUserLogin"/>
+        <now-timestamp-to-env env-name="newEntity.lastModifiedDate"/>
+        <field-to-field field-name="userLoginId" map-name="userLogin" to-map-name="lastModifiedByUserLogin"/>
+        
         <create-value value-name="newEntity"/>
         
         <if-not-empty field-name="statusId" map-name="newEntity">
@@ -74,6 +79,9 @@
         </if-not-empty>
         
         <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
+        <now-timestamp-to-env env-name="newEntity.lastModifiedDate"/>
+        <field-to-field field-name="userLoginId" map-name="userLogin" to-map-name="lastModifiedByUserLogin"/>
+
         <store-value value-name="lookedUpValue"/>
     </simple-method>
     <simple-method method-name="deleteShipment" short-description="Delete Shipment">
