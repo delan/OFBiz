@@ -127,6 +127,13 @@
     <entity-group group="org.ofbiz.commonapp" entity="PaymentTypeAttr" />
 
   <!-- ========================================================= -->
+  <!-- org.ofbiz.commonapp.common.datasource -->
+  <!-- ========================================================= -->
+	
+    <entity-group group="org.ofbiz.commonapp" entity="DataSource" />	
+    <entity-group group="org.ofbiz.commonapp" entity="DataSourceType" />
+
+  <!-- ========================================================= -->
   <!-- org.ofbiz.commonapp.common.enum -->
   <!-- ========================================================= -->
 	
@@ -319,6 +326,24 @@
     <entity-group group="org.ofbiz.commonapp" entity="MarketingCampaignPromo" />
 
   <!-- ========================================================= -->
+  <!-- org.ofbiz.commonapp.marketing.contact -->
+  <!-- ========================================================= -->
+	
+    <entity-group group="org.ofbiz.commonapp" entity="ContactList" />	
+    <entity-group group="org.ofbiz.commonapp" entity="ContactListParty" />	
+    <entity-group group="org.ofbiz.commonapp" entity="ContactListType" />	
+
+  <!-- ========================================================= -->
+  <!-- org.ofbiz.commonapp.marketing.tracking -->
+  <!-- ========================================================= -->
+	
+    <entity-group group="org.ofbiz.commonapp" entity="TrackingCode" />	
+    <entity-group group="org.ofbiz.commonapp" entity="TrackingCodeApplType" />	
+    <entity-group group="org.ofbiz.commonapp" entity="TrackingCodeOrder" />	
+    <entity-group group="org.ofbiz.commonapp" entity="TrackingCodeType" />	
+    <entity-group group="org.ofbiz.commonapp" entity="TrackingCodeVisit" />
+
+  <!-- ========================================================= -->
   <!-- org.ofbiz.commonapp.order.order -->
   <!-- ========================================================= -->
 	
@@ -482,6 +507,7 @@
     <entity-group group="org.ofbiz.commonapp" entity="PartyClassificationType" />	
     <entity-group group="org.ofbiz.commonapp" entity="PartyContactWithPurpose" />	
     <entity-group group="org.ofbiz.commonapp" entity="PartyDataObject" />	
+    <entity-group group="org.ofbiz.commonapp" entity="PartyDataSource" />	
     <entity-group group="org.ofbiz.commonapp" entity="PartyGroup" />	
     <entity-group group="org.ofbiz.commonapp" entity="PartyNote" />	
     <entity-group group="org.ofbiz.commonapp" entity="PartyNoteView" />	
@@ -731,35 +757,35 @@
   <!-- ========================================================= -->
   <!-- org.ofbiz.commonapp.workeffort.workeffort -->
   <!-- ========================================================= -->
-
-    <entity-group group="org.ofbiz.commonapp" entity="CommunicationEventWorkEff" />
-    <entity-group group="org.ofbiz.commonapp" entity="Deliverable" />
-    <entity-group group="org.ofbiz.commonapp" entity="DeliverableType" />
-    <entity-group group="org.ofbiz.commonapp" entity="WorkEffort" />
-    <entity-group group="org.ofbiz.commonapp" entity="WorkEffortAndFulfillment" />
-    <entity-group group="org.ofbiz.commonapp" entity="WorkEffortAndPartyAssign" />
-    <entity-group group="org.ofbiz.commonapp" entity="WorkEffortAssoc" />
-    <entity-group group="org.ofbiz.commonapp" entity="WorkEffortAssocAttribute" />
-    <entity-group group="org.ofbiz.commonapp" entity="WorkEffortAssocType" />
-    <entity-group group="org.ofbiz.commonapp" entity="WorkEffortAssocTypeAttr" />
-    <entity-group group="org.ofbiz.commonapp" entity="WorkEffortAttribute" />
-    <entity-group group="org.ofbiz.commonapp" entity="WorkEffortBilling" />
-    <entity-group group="org.ofbiz.commonapp" entity="WorkEffortDeliverableProd" />
-    <entity-group group="org.ofbiz.commonapp" entity="WorkEffortFixedAssetAssign" />
-    <entity-group group="org.ofbiz.commonapp" entity="WorkEffortFixedAssetStd" />
-    <entity-group group="org.ofbiz.commonapp" entity="WorkEffortGoodStandard" />
-    <entity-group group="org.ofbiz.commonapp" entity="WorkEffortInventoryAssign" />
-    <entity-group group="org.ofbiz.commonapp" entity="WorkEffortInventoryProduced" />
-    <entity-group group="org.ofbiz.commonapp" entity="WorkEffortNote" />
-    <entity-group group="org.ofbiz.commonapp" entity="WorkEffortNoteAndData" />
-    <entity-group group="org.ofbiz.commonapp" entity="WorkEffortPartyAssignByGroup" />
-    <entity-group group="org.ofbiz.commonapp" entity="WorkEffortPartyAssignByRole" />
-    <entity-group group="org.ofbiz.commonapp" entity="WorkEffortPartyAssignment" />
-    <entity-group group="org.ofbiz.commonapp" entity="WorkEffortPurposeType" />
-    <entity-group group="org.ofbiz.commonapp" entity="WorkEffortSkillStandard" />
-    <entity-group group="org.ofbiz.commonapp" entity="WorkEffortStatus" />
-    <entity-group group="org.ofbiz.commonapp" entity="WorkEffortTransBox" />
-    <entity-group group="org.ofbiz.commonapp" entity="WorkEffortType" />
-    <entity-group group="org.ofbiz.commonapp" entity="WorkEffortTypeAttr" />
+	
+    <entity-group group="org.ofbiz.commonapp" entity="CommunicationEventWorkEff" />	
+    <entity-group group="org.ofbiz.commonapp" entity="Deliverable" />	
+    <entity-group group="org.ofbiz.commonapp" entity="DeliverableType" />	
+    <entity-group group="org.ofbiz.commonapp" entity="WorkEffort" />	
+    <entity-group group="org.ofbiz.commonapp" entity="WorkEffortAndFulfillment" />	
+    <entity-group group="org.ofbiz.commonapp" entity="WorkEffortAndPartyAssign" />	
+    <entity-group group="org.ofbiz.commonapp" entity="WorkEffortAssoc" />	
+    <entity-group group="org.ofbiz.commonapp" entity="WorkEffortAssocAttribute" />	
+    <entity-group group="org.ofbiz.commonapp" entity="WorkEffortAssocType" />	
+    <entity-group group="org.ofbiz.commonapp" entity="WorkEffortAssocTypeAttr" />	
+    <entity-group group="org.ofbiz.commonapp" entity="WorkEffortAttribute" />	
+    <entity-group group="org.ofbiz.commonapp" entity="WorkEffortBilling" />	
+    <entity-group group="org.ofbiz.commonapp" entity="WorkEffortDeliverableProd" />	
+    <entity-group group="org.ofbiz.commonapp" entity="WorkEffortFixedAssetAssign" />	
+    <entity-group group="org.ofbiz.commonapp" entity="WorkEffortFixedAssetStd" />	
+    <entity-group group="org.ofbiz.commonapp" entity="WorkEffortGoodStandard" />	
+    <entity-group group="org.ofbiz.commonapp" entity="WorkEffortInventoryAssign" />	
+    <entity-group group="org.ofbiz.commonapp" entity="WorkEffortInventoryProduced" />	
+    <entity-group group="org.ofbiz.commonapp" entity="WorkEffortNote" />	
+    <entity-group group="org.ofbiz.commonapp" entity="WorkEffortNoteAndData" />	
+    <entity-group group="org.ofbiz.commonapp" entity="WorkEffortPartyAssignByGroup" />	
+    <entity-group group="org.ofbiz.commonapp" entity="WorkEffortPartyAssignByRole" />	
+    <entity-group group="org.ofbiz.commonapp" entity="WorkEffortPartyAssignment" />	
+    <entity-group group="org.ofbiz.commonapp" entity="WorkEffortPurposeType" />	
+    <entity-group group="org.ofbiz.commonapp" entity="WorkEffortSkillStandard" />	
+    <entity-group group="org.ofbiz.commonapp" entity="WorkEffortStatus" />	
+    <entity-group group="org.ofbiz.commonapp" entity="WorkEffortTransBox" />	
+    <entity-group group="org.ofbiz.commonapp" entity="WorkEffortType" />	
+    <entity-group group="org.ofbiz.commonapp" entity="WorkEffortTypeAttr" />  
 </entitygroup>
 

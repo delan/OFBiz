@@ -43,6 +43,7 @@
   <!-- ========================================================= -->
   <!-- ======================== Data Model ===================== -->
   <!-- The modules in this file are as follows:                  -->
+  <!--  - org.ofbiz.commonapp.common.datasource -->
   <!--  - org.ofbiz.commonapp.common.enum -->
   <!--  - org.ofbiz.commonapp.common.geo -->
   <!--  - org.ofbiz.commonapp.common.note -->
@@ -61,6 +62,38 @@
   <!--  - org.ofbiz.commonapp.security.securitygroup -->
   <!-- ========================================================= -->
 
+
+  <!-- ========================================================= -->
+  <!-- org.ofbiz.commonapp.common.datasource -->
+  <!-- ========================================================= -->
+
+    <entity entity-name="DataSource"
+            package-name="org.ofbiz.commonapp.common.datasource"
+            title="Data Source Entity">
+      <field name="dataSourceId" type="id-ne"></field>
+      <field name="dataSourceTypeId" type="id"></field>
+      <field name="description" type="description"></field>
+      <prim-key field="dataSourceId"/>
+      <relation type="one" fk-name="DATA_SRC_TYP" rel-entity-name="DataSourceType">
+        <key-map field-name="dataSourceTypeId"/>
+      </relation>
+      <relation type="many" rel-entity-name="Party">
+        <key-map field-name="dataSourceId" rel-field-name="originalDataSourceId"/>
+      </relation>
+      <relation type="many" rel-entity-name="PartyDataSource">
+        <key-map field-name="dataSourceId"/>
+      </relation>
+    </entity>
+    <entity entity-name="DataSourceType"
+            package-name="org.ofbiz.commonapp.common.datasource"
+            title="Data Source Type Entity">
+      <field name="dataSourceTypeId" type="id"></field>
+      <field name="description" type="description"></field>
+      <prim-key field="dataSourceTypeId"/>
+      <relation type="many" rel-entity-name="DataSource">
+        <key-map field-name="dataSourceTypeId"/>
+      </relation>
+    </entity>
 
   <!-- ========================================================= -->
   <!-- org.ofbiz.commonapp.common.enum -->
@@ -377,8 +410,8 @@
     <view-entity entity-name="StatusValidChangeToDetail"
             package-name="org.ofbiz.commonapp.common.status"
             title="Status Valid Change To Detail View Entity">
-      <member-entity entity-alias="SVC" entity-name="StatusValidChange"/>
       <member-entity entity-alias="SI" entity-name="StatusItem"/>
+      <member-entity entity-alias="SVC" entity-name="StatusValidChange"/>
       <alias entity-alias="SVC" name="statusId"/>
       <alias entity-alias="SVC" name="statusIdTo"/>
       <alias entity-alias="SVC" name="conditionExpression"/>

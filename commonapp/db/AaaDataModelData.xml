@@ -98,9 +98,20 @@
   <CustRequestType custRequestTypeId="RFQ" description="Request For Quote" hasTable="N" parentTypeId=""/>
   <CustRequestType custRequestTypeId="RFS" description="Request For Support" hasTable="N" parentTypeId=""/>
 
-  <DataObjectType dataObjectTypeId="ELECTRONIC_TEXT" description="" hasTable="Y" parentTypeId=""/>
-  <DataObjectType dataObjectTypeId="IMAGE_OBJECT" description="" hasTable="Y" parentTypeId=""/>
-  <DataObjectType dataObjectTypeId="OTHER_OBJECT" description="" hasTable="Y" parentTypeId=""/>
+  <DataObjectType dataObjectTypeId="ELECTRONIC_TEXT" description="Text" hasTable="Y" parentTypeId=""/>
+  <DataObjectType dataObjectTypeId="IMAGE_OBJECT" description="Image" hasTable="Y" parentTypeId=""/>
+  <DataObjectType dataObjectTypeId="OTHER_OBJECT" description="Other" hasTable="Y" parentTypeId=""/>
+
+  <DataSourceType dataSourceTypeId="PURCHASED_DATA" description="Purchased Data"/>
+  <DataSourceType dataSourceTypeId="WEBSITE_ENTRY" description="Website Data Entry"/>
+  <DataSourceType dataSourceTypeId="MAILING_LIST_SIGNUP" description="Mailing List Signup"/>
+  <DataSourceType dataSourceTypeId="CONTEST_SIGNUP" description="Contest Signup"/>
+  <DataSourceType dataSourceTypeId="ADMIN_ENTRY" description="Administrative Data Entry"/>
+
+  <DataSource dataSourceId="ECOMMERCE_SITE" dataSourceTypeId="WEBSITE_ENTRY" description="eCommerce Site Profile Maintenance"/>
+  <DataSource dataSourceId="GENERAL_MAILING" dataSourceTypeId="MAILING_LIST_SIGNUP" description="General Interest Mailing List Signup"/>
+  <DataSource dataSourceId="CSR_ENTRY" dataSourceTypeId="ADMIN_ENTRY" description="Customer Service Rep Data Entry"/>
+  <DataSource dataSourceId="GEN_ADMIN" dataSourceTypeId="ADMIN_ENTRY" description="General Administrative Data Entry"/>
 
   <DocumentType description="Shipping" documentTypeId="SHIPPING_DOCUMENT" hasTable="Y" parentTypeId=""/>
   <DocumentType description="Bill Of Lading" documentTypeId="BILL_OF_LADING" hasTable="N" parentTypeId="SHIPPING_DOCUMENT"/>
@@ -675,6 +686,9 @@
   <TermType description="Non-Compete" hasTable="N" parentTypeId="" termTypeId="NON_COMPETE"/>
   <TermType description="Exclusive Relationship" hasTable="N" parentTypeId="" termTypeId="EXCLUSIVE_RELATIONSH"/>
   <TermType description="Other" hasTable="N" parentTypeId="" termTypeId="OTHER_TERM"/>
+
+  <TrackingCodeApplType trackingCodeApplTypeId="INTERNAL" description="Internal"/>
+  <TrackingCodeApplType trackingCodeApplTypeId="EXTERNAL" description="External"/>
 
   <UomType description="Currency" hasTable="N" parentTypeId="" uomTypeId="CURRENCY_MEASURE"/>
   <UomType description="Time/Frequency" hasTable="N" parentTypeId="" uomTypeId="TIME_FREQ_MEASURE"/>

@@ -44,6 +44,8 @@
   <!-- ======================== Data Model ===================== -->
   <!-- The modules in this file are as follows:                  -->
   <!--  - org.ofbiz.commonapp.marketing.campaign -->
+  <!--  - org.ofbiz.commonapp.marketing.contact -->
+  <!--  - org.ofbiz.commonapp.marketing.tracking -->
   <!-- ========================================================= -->
 
 
@@ -55,9 +57,16 @@
             package-name="org.ofbiz.commonapp.marketing.campaign"
             title="Marketing Campaign Entity">
       <field name="marketingCampaignId" type="id-ne"></field>
-      <field name="campaignName" type="id"></field>
+      <field name="parentCampaignId" type="id"></field>
+      <field name="campaignName" type="name"></field>
       <field name="campaignSummary" type="very-long"></field>
       <prim-key field="marketingCampaignId"/>
+      <relation type="one" fk-name="MKTGCPN_PRNT" title="Parent" rel-entity-name="MarketingCampaign">
+        <key-map field-name="parentCampaignId" rel-field-name="marketingCampaignId"/>
+      </relation>
+      <relation type="many" title="Child" rel-entity-name="MarketingCampaign">
+        <key-map field-name="marketingCampaignId" rel-field-name="parentCampaignId"/>
+      </relation>
       <relation type="many" rel-entity-name="MarketingCampaignNote">
         <key-map field-name="marketingCampaignId"/>
       </relation>
@@ -65,6 +74,9 @@
         <key-map field-name="marketingCampaignId"/>
       </relation>
       <relation type="many" rel-entity-name="MarketingCampaignPromo">
+        <key-map field-name="marketingCampaignId"/>
+      </relation>
+      <relation type="many" rel-entity-name="TrackingCode">
         <key-map field-name="marketingCampaignId"/>
       </relation>
     </entity>
@@ -108,6 +120,149 @@
       </relation>
       <relation type="one" fk-name="MKTGCPN_PROMO_PP" rel-entity-name="ProductPromo">
         <key-map field-name="productPromoId"/>
+      </relation>
+    </entity>
+
+  <!-- ========================================================= -->
+  <!-- org.ofbiz.commonapp.marketing.contact -->
+  <!-- ========================================================= -->
+
+    <entity entity-name="ContactList"
+            package-name="org.ofbiz.commonapp.marketing.contact"
+            title="Contact List Entity">
+      <field name="contactListId" type="id-ne"></field>
+      <field name="contactListTypeId" type="id-ne"></field>
+      <field name="marketingCampaignId" type="id"></field>
+      <field name="comments" type="comment"></field>
+      <field name="description" type="description"></field>
+      <field name="createdDate" type="date-time"></field>
+      <field name="createdByUserLogin" type="id-vlong"></field>
+      <field name="lastModifiedDate" type="date-time"></field>
+      <field name="lastModifiedByUserLogin" type="id-vlong"></field>
+      <prim-key field="contactListId"/>
+      <relation type="one" fk-name="CNCT_LST_MKCMPN" rel-entity-name="MarketingCampaign">
+        <key-map field-name="marketingCampaignId"/>
+      </relation>
+      <relation type="one" fk-name="CNCT_LST_TYP" rel-entity-name="ContactListType">
+        <key-map field-name="contactListTypeId"/>
+      </relation>
+    </entity>
+    <entity entity-name="ContactListParty"
+            package-name="org.ofbiz.commonapp.marketing.contact"
+            title="Contact List Party Entity">
+      <field name="contactListId" type="id-ne"></field>
+      <field name="partyId" type="id-ne"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>
+      <prim-key field="contactListId"/>
+      <prim-key field="partyId"/>
+      <prim-key field="fromDate"/>
+      <relation type="one" fk-name="CNCT_LSTPTY_CLST" rel-entity-name="ContactList">
+        <key-map field-name="contactListId"/>
+      </relation>
+      <relation type="one" fk-name="CNCT_LSTPTY_PTY" rel-entity-name="Party">
+        <key-map field-name="partyId"/>
+      </relation>
+    </entity>
+    <entity entity-name="ContactListType"
+            package-name="org.ofbiz.commonapp.marketing.contact"
+            title="Contact List Type Entity">
+      <field name="contactListTypeId" type="id-ne"></field>
+      <field name="description" type="description"></field>
+      <prim-key field="contactListTypeId"/>
+      <relation type="many" rel-entity-name="ContactList">
+        <key-map field-name="contactListTypeId"/>
+      </relation>
+    </entity>
+
+  <!-- ========================================================= -->
+  <!-- org.ofbiz.commonapp.marketing.tracking -->
+  <!-- ========================================================= -->
+
+    <entity entity-name="TrackingCode"
+            package-name="org.ofbiz.commonapp.marketing.tracking"
+            title="Tracking Code Entity">
+      <field name="trackingCodeId" type="id-ne"></field>
+      <field name="trackingCodeTypeId" type="id-ne"></field>
+      <field name="marketingCampaignId" type="id"></field>
+      <field name="redirectUrl" type="url"></field>
+      <field name="comments" type="comment"></field>
+      <field name="description" type="description"></field>
+      <field name="cookieLifetime" type="numeric"></field>
+      <field name="billableLifetime" type="numeric"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>
+      <field name="createdDate" type="date-time"></field>
+      <field name="createdByUserLogin" type="id-vlong"></field>
+      <field name="lastModifiedDate" type="date-time"></field>
+      <field name="lastModifiedByUserLogin" type="id-vlong"></field>
+      <prim-key field="trackingCodeId"/>
+      <relation type="one" fk-name="TKNG_COD_MKCMPN" rel-entity-name="MarketingCampaign">
+        <key-map field-name="marketingCampaignId"/>
+      </relation>
+      <relation type="one" fk-name="TKNG_COD_TYP" rel-entity-name="TrackingCodeType">
+        <key-map field-name="trackingCodeTypeId"/>
+      </relation>
+    </entity>
+    <entity entity-name="TrackingCodeApplType"
+            package-name="org.ofbiz.commonapp.marketing.tracking"
+            title="Tracking Code Application Type Entity">
+      <field name="trackingCodeApplTypeId" type="id-ne"></field>
+      <field name="description" type="description"></field>
+      <prim-key field="trackingCodeApplTypeId"/>
+      <relation type="many" rel-entity-name="TrackingCodeOrder">
+        <key-map field-name="trackingCodeApplTypeId"/>
+      </relation>
+      <relation type="many" rel-entity-name="TrackingCodeVisit">
+        <key-map field-name="trackingCodeApplTypeId"/>
+      </relation>
+    </entity>
+    <entity entity-name="TrackingCodeOrder"
+            package-name="org.ofbiz.commonapp.marketing.tracking"
+            title="Tracking Code Visit Entity">
+      <field name="orderId" type="id-ne"></field>
+      <field name="trackingCodeApplTypeId" type="id-ne"></field>
+      <field name="trackingCodeId" type="id-ne"></field>
+      <prim-key field="orderId"/>
+      <prim-key field="trackingCodeApplTypeId"/>
+      <relation type="one" fk-name="TKNG_CODODR_ODR" rel-entity-name="OrderHeader">
+        <key-map field-name="orderId"/>
+      </relation>
+      <relation type="one" fk-name="TKNG_CODODR_TKCD" rel-entity-name="TrackingCode">
+        <key-map field-name="trackingCodeId"/>
+      </relation>
+      <relation type="one" fk-name="TKNG_CODODR_APTP" rel-entity-name="TrackingCodeApplType">
+        <key-map field-name="trackingCodeApplTypeId"/>
+      </relation>
+    </entity>
+    <entity entity-name="TrackingCodeType"
+            package-name="org.ofbiz.commonapp.marketing.tracking"
+            title="Tracking Code Type Entity">
+      <field name="trackingCodeTypeId" type="id-ne"></field>
+      <field name="description" type="description"></field>
+      <prim-key field="trackingCodeTypeId"/>
+      <relation type="many" rel-entity-name="TrackingCode">
+        <key-map field-name="trackingCodeTypeId"/>
+      </relation>
+    </entity>
+    <entity entity-name="TrackingCodeVisit"
+            package-name="org.ofbiz.commonapp.marketing.tracking"
+            title="Tracking Code Visit Entity">
+      <field name="trackingCodeId" type="id-ne"></field>
+      <field name="visitId" type="id-ne"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="trackingCodeApplTypeId" type="id-ne"></field>
+      <prim-key field="trackingCodeId"/>
+      <prim-key field="visitId"/>
+      <prim-key field="fromDate"/>
+      <relation type="one" fk-name="TKNG_CODVST_TKCD" rel-entity-name="TrackingCode">
+        <key-map field-name="trackingCodeId"/>
+      </relation>
+      <relation type="one" fk-name="TKNG_CODVST_VST" rel-entity-name="Visit">
+        <key-map field-name="visitId"/>
+      </relation>
+      <relation type="one" fk-name="TKNG_CODVST_APTP" rel-entity-name="TrackingCodeApplType">
+        <key-map field-name="trackingCodeApplTypeId"/>
       </relation>
     </entity>
 </entitymodel>
