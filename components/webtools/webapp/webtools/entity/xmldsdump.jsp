@@ -182,6 +182,10 @@
                     while ((value = (GenericValue) values.next()) != null) {
                         value.writeXmlText(writer, "");
                         numberWritten++;
+                        if (numberWritten % 500 == 0 || numberWritten == 1) {
+                           Debug.log("Records Stored [" + curEntityName + "]: " + numberWritten);
+                        }
+
                     }
                     writer.println("</entity-engine-xml>");
                     writer.close();
