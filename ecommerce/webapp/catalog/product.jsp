@@ -24,10 +24,9 @@
       <td align="left" valign="top" width="0">
         <%String largeImageUrl = product.getString("largeImageUrl");%>
         <% if(largeImageUrl != null && largeImageUrl.length() > 0) { %>
-          <img src="<%=largeImageUrl%>" hspace="5" border="1">
+          <img src="<%=largeImageUrl%>" vspace="5" hspace="5" border="1" width='200' align=left>
         <% } %>
       </td>
-
       <td align="right" valign="top">
         <form method="POST" action="<ofbiz:url>/additem<%=UtilFormatOut.ifNotEmpty((String)request.getAttribute(SiteDefs.CURRENT_VIEW), "/", "")%></ofbiz:url>" name="addform" style='margin: 0;'>
           <input type='hidden' name="product_id" value="<%=product.getString("productId")%>">
@@ -45,7 +44,9 @@
     </tr>
     <tr><td colspan="2" height="1" bgcolor="#999999"></td></tr>
     <tr>
-      <td colspan="2"><div class="tabletext"><%=product.getString("longDescription")%></div></td>
+      <td colspan="2">
+        <div class="tabletext"><%=product.getString("longDescription")%></div>
+      </td>
     </tr>
     <tr><td colspan="2" height="1" bgcolor="#999999"></td></tr>
   </table>
