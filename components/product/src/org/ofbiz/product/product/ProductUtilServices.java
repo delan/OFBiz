@@ -1,5 +1,5 @@
 /*
- * $Id: ProductUtilServices.java,v 1.6 2004/01/27 08:26:51 jonesde Exp $
+ * $Id: ProductUtilServices.java,v 1.7 2004/01/27 08:55:15 jonesde Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -58,7 +58,7 @@ import org.ofbiz.service.ServiceUtil;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.6 $
+ * @version    $Revision: 1.7 $
  * @since      2.0
  */
 public class ProductUtilServices {
@@ -323,6 +323,8 @@ public class ProductUtilServices {
         Iterator relatedIter = relatedList.iterator();
         while (relatedIter.hasNext()) {
             GenericValue relatedValue = (GenericValue) relatedIter.next();
+            GenericValue newRelatedValue = (GenericValue) relatedValue.clone();
+            newRelatedValue.set("productId", variantProductId);
             
             // create a new one? see if one already exists with different from/thru dates
             ModelEntity modelEntity = relatedValue.getModelEntity();
@@ -333,10 +335,9 @@ public class ProductUtilServices {
                 if (existingValueList.size() > 0) {
                     continue;
                 }
+                newRelatedValue.set("fromDate", nowTimestamp);
             }
             
-            GenericValue newRelatedValue = (GenericValue) relatedValue.clone();
-            newRelatedValue.set("productId", variantProductId);
             newRelatedValue.create();
         }
         if (removeOld) {
