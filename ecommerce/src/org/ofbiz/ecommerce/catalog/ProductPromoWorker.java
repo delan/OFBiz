@@ -54,7 +54,7 @@ public class ProductPromoWorker {
         
         //if quantity increased, then apply, otherwise unapply
         boolean apply = oldQuantity < cartItem.getQuantity();
-        Debug.logInfo("Doing Promotions; apply=" + apply + ", oldQuantity=" + oldQuantity + ", newQuantity=" + cartItem.getQuantity() + ", productId=" + cartItem.getProductId()); 
+        Debug.logVerbose("Doing Promotions; apply=" + apply + ", oldQuantity=" + oldQuantity + ", newQuantity=" + cartItem.getQuantity() + ", productId=" + cartItem.getProductId()); 
         
         GenericValue prodCatalog = null;
         try {
@@ -102,7 +102,7 @@ public class ProductPromoWorker {
                     
                     if (performActions) {
                         //perform all actions, either apply or unapply
-                        Debug.logInfo("Rule Conditions all true, performing actions for rule " + productPromoRule);
+                        Debug.logVerbose("Rule Conditions all true, performing actions for rule " + productPromoRule);
                         
                         Iterator productPromoActions = UtilMisc.toIterator(productPromoRule.getRelatedCache("ProductPromoAction", null, UtilMisc.toList("productPromoActionSeqId")));
                         while (productPromoActions != null && productPromoActions.hasNext()) {
@@ -124,13 +124,13 @@ public class ProductPromoWorker {
     }
     
     public static boolean checkCondition(GenericValue productPromoCond, ShoppingCart cart, ShoppingCartItem cartItem, double oldQuantity) {
-        Debug.logInfo("Checking promotion condition: " + productPromoCond);
+        Debug.logVerbose("Checking promotion condition: " + productPromoCond);
         int compare = 0;
         if ("PPIP_PRODUCT_ID".equals(productPromoCond.getString("inputParamEnumId"))) {
             compare = cartItem.getProductId().compareTo(productPromoCond.getString("condValue"));
         } else if ("PPIP_ORDER_TOTAL".equals(productPromoCond.getString("inputParamEnumId"))) {
             Double orderSubTotal = new Double(cart.getSubTotal());
-            Debug.logInfo("Doing order total compare: orderSubTotal=" + orderSubTotal);
+            Debug.logVerbose("Doing order total compare: orderSubTotal=" + orderSubTotal);
             compare = orderSubTotal.compareTo(Double.valueOf(productPromoCond.getString("condValue")));
         } else if ("PPIP_QUANTITY_ADDED".equals(productPromoCond.getString("inputParamEnumId"))) {
             Double quantityAdded = new Double(cartItem.getQuantity() - oldQuantity);
@@ -142,7 +142,7 @@ public class ProductPromoWorker {
             return false;
         }
         
-        Debug.logInfo("Condition compare done, compare=" + compare);
+        Debug.logVerbose("Condition compare done, compare=" + compare);
 
         if ("PPC_EQ".equals(productPromoCond.getString("operatorEnumId"))) {
             if (compare == 0) return true;
@@ -166,6 +166,12 @@ public class ProductPromoWorker {
     public static void performAction(boolean apply, GenericValue productPromoAction, ShoppingCart cart, ShoppingCartItem cartItem, double oldQuantity, String prodCatalogId, GenericDelegator delegator, LocalDispatcher dispatcher) throws GenericEntityException, CartItemModifyException {
         if ("PROMO_GWP".equals(productPromoAction.getString("productPromoActionTypeId"))) {
             if (apply) {
+                Integer itemLoc = findPromoItem(productPromoAction, cart);
+                if (itemLoc != null) {
+                    Debug.logInfo("Not adding promo item, already there; action: " + productPromoAction);
+                    return;
+                }
+
                 GenericValue product = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", productPromoAction.get("productId")));
                 double quantity = productPromoAction.get("quantity") == null ? 0.0 : productPromoAction.getDouble("quantity").doubleValue();
                 double discountAmount = 0.0;
@@ -188,30 +194,15 @@ public class ProductPromoWorker {
                 //set promo after create; note that to setQuantity we must clear this flag, setQuantity, then re-set the flag
                 gwpItem.setIsPromo(true);
                 gwpItem.addAdjustment(orderAdjustment);
+                
+                Debug.logInfo("qwpItem adjustments: " + gwpItem.getAdjustments());
             } else {
                 //how to remove this? find item that isPromo with the product id and has adjustment with the same promo/rule id, then remove it
-                List cartItems = cart.items();
-                for (int i = 0; i < cartItems.size(); i++) {
-                    ShoppingCartItem checkItem = (ShoppingCartItem) cartItems.get(i);
-                    boolean removeItem = false;
-                    
-                    if (checkItem.getIsPromo() && cartItem.getProductId().equals(productPromoAction.get("productId"))) {
-                        //found a promo item with the productId, see if it has a matching adjustment on it
-                        Iterator checkOrderAdjustments = UtilMisc.toIterator(checkItem.getAdjustments());
-                        while (checkOrderAdjustments != null && checkOrderAdjustments.hasNext()) {
-                            GenericValue checkOrderAdjustment = (GenericValue) checkOrderAdjustments.next();
-                            
-                            if (productPromoAction.getString("productPromoId").equals(checkOrderAdjustment.get("productPromoId")) &&
-                                    productPromoAction.getString("productPromoRuleId").equals(checkOrderAdjustment.get("productPromoRuleId"))) {
-                                //gwp was setup by this promo/rule, so go ahead and clear it
-                                removeItem = true;
-                            }
-                        }
-                    }
-                    
-                    if (removeItem) {
-                        cart.removeCartItem(i, dispatcher);
-                    }
+
+                Integer itemLoc = findPromoItem(productPromoAction, cart);
+                if (itemLoc != null) {
+                    //gwp was setup by this promo/rule, so go ahead and clear it
+                    cart.removeCartItem(itemLoc.intValue(), dispatcher);
                 }
             }
         } else if ("PROMO_FREE_SHIPPING".equals(productPromoAction.getString("productPromoActionTypeId"))) {
@@ -258,5 +249,26 @@ public class ProductPromoWorker {
         } else {
             Debug.logError("An un-supported productPromoActionType was used: " + productPromoAction.getString("productPromoActionTypeId") + ", not performing any action");
         }
+    }
+
+    public static Integer findPromoItem(GenericValue productPromoAction, ShoppingCart cart) {
+        List cartItems = cart.items();
+        for (int i = 0; i < cartItems.size(); i++) {
+            ShoppingCartItem checkItem = (ShoppingCartItem) cartItems.get(i);
+
+            if (checkItem.getIsPromo() && checkItem.getProductId().equals(productPromoAction.get("productId"))) {
+                //found a promo item with the productId, see if it has a matching adjustment on it
+                Iterator checkOrderAdjustments = UtilMisc.toIterator(checkItem.getAdjustments());
+                while (checkOrderAdjustments != null && checkOrderAdjustments.hasNext()) {
+                    GenericValue checkOrderAdjustment = (GenericValue) checkOrderAdjustments.next();
+
+                    if (productPromoAction.getString("productPromoId").equals(checkOrderAdjustment.get("productPromoId")) &&
+                            productPromoAction.getString("productPromoRuleId").equals(checkOrderAdjustment.get("productPromoRuleId"))) {
+                        return new Integer(i);
+                    }
+                }
+            }
+        }
+        return null;
     }
 }

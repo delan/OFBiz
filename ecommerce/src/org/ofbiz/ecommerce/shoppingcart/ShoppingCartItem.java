@@ -294,6 +294,9 @@ public class ShoppingCartItem implements java.io.Serializable {
     public void removeAdjustment(GenericValue adjustment) {
         itemAdjustments.remove(adjustment);
     }
+    public void removeAdjustment(int index) {
+        itemAdjustments.remove(index);
+    }
     public Collection getAdjustments() {
         return itemAdjustments;
     }
@@ -375,5 +378,4 @@ public class ShoppingCartItem implements java.io.Serializable {
         }
         return delegator;
     }
-
 }
