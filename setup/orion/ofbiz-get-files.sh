@@ -4,9 +4,7 @@
 # copy files from $OFBIZ_HOME to the orion directory to get them onto the classpath
 
 if [ -z "$OFBIZ_HOME" ] ; then
-  echo You must set OFBIZ_HOME to point at your Open For Business installation
-  exit 1
-  # export OFBIZ_HOME="../ofbiz"
+  export OFBIZ_HOME="../ofbiz"
 fi
 if [ -z "$ORION_HOME" ] ; then
   export ORION_HOME="."

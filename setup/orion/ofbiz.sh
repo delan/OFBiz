@@ -20,9 +20,7 @@ ulimit -s 2048
 # ----- Verify and Set Required Environment Variables -------------------------
 
 if [ -z "$OFBIZ_HOME" ] ; then
-  echo You must set OFBIZ_HOME to point at your Open For Business installation
-  exit 1
-  # export OFBIZ_HOME="../ofbiz"
+  export OFBIZ_HOME="../ofbiz"
 fi
 
 if [ -z "$JAVA_HOME" ] ; then
