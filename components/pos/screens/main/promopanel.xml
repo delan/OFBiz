@@ -8,10 +8,10 @@
             <Panel name="journalPanel" x="0" y="48" w="412" h="700" style="menu">
                 <Include file="main/includes/journal"/>
             </Panel>
-            <Panel name="menuPanel" x="412" y="48" w="612" h="410" style="menu">
+            <Panel name="menuPanel" x="412" y="48" w="612" h="407" style="menu">
                 <Include file="main/menu/promomain"/>
             </Panel>
-            <Panel name="numericPanel" x="412" y="458" w="612" h="290" style="menu">
+            <Panel name="numericPanel" x="412" y="455" w="612" h="290" style="menu">
                 <Include file="main/includes/numeric"/>
             </Panel>
         </Panel>
