@@ -41,6 +41,7 @@ import org.ofbiz.pos.component.Output;
 import org.ofbiz.pos.component.PosButton;
 import org.ofbiz.pos.device.DeviceLoader;
 import org.ofbiz.pos.PosTransaction;
+import org.ofbiz.pos.adaptor.KeyboardAdaptor;
 
 /**
  * 
@@ -105,6 +106,9 @@ public class PosScreen extends NavigationHelper implements Runnable, DialogCallb
 
         // buttons are different per screen
         this.buttons = new PosButton(this);
+
+        // make sure all components have the keyboard set
+        KeyboardAdaptor.attachComponents(this.getComponents());
     }
 
     public void pageActivated() {

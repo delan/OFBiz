@@ -35,9 +35,13 @@ import org.ofbiz.pos.screen.PosScreen;
  * @version    $Rev$
  * @since      3.2
  */
-public class CashDrawer extends GenericDevice {
+public class CashDrawer extends GenericDevice implements Runnable {
 
     public static final String module = CashDrawer.class.getName();
+
+    protected boolean waiting = false;
+    protected Thread waiter = null;
+    protected long startTime = -1;
 
     public CashDrawer(String deviceName, int timeout) {
         super(deviceName, timeout);
@@ -45,11 +49,13 @@ public class CashDrawer extends GenericDevice {
     }
 
     protected void initialize() throws JposException {
+        Debug.logInfo("CashDrawer [" + control.getPhysicalDeviceName() + "] Claimed : " + control.getClaimed(), module);
     }
 
     public void openDrawer() {
         try {
             ((jpos.CashDrawer) control).openDrawer();
+            this.startWaiter();
         } catch (JposException e) {
             Debug.logError(e, module);
             PosScreen.currentScreen.showDialog("main/dialog/error/drawererror");
@@ -64,6 +70,39 @@ public class CashDrawer extends GenericDevice {
             PosScreen.currentScreen.showDialog("main/dialog/error/drawererror");
         }
         return false;
+    }
+
+    private void startWaiter() {
+        this.waiter = new Thread(this);
+        this.waiter.setDaemon(false);
+        this.waiter.setName(this.getClass().getName());
+        this.waiting = true;
+        this.waiter.start();
+    }
+
+    public void run() {
+        Debug.log("Starting Waiter Thread", module);
+        this.startTime = System.currentTimeMillis();
+        while (waiting) {
+            boolean isOpen = true;
+            try {
+                isOpen = ((jpos.CashDrawer) control).getDrawerOpened();
+            } catch (JposException e) {
+                Debug.logError(e, module);
+                this.waiting = false;
+                PosScreen.currentScreen.showDialog("main/dialog/error/drawererror");
+            }
+            if (isOpen) {
+                long now = (System.currentTimeMillis() - startTime);
+                if ((now > 4499) && (now % 500 == 0)) {
+                    java.awt.Toolkit.getDefaultToolkit().beep();
+                }
+            } else {
+                this.waiting = false;
+            }
+        }
+        this.startTime = -1;
+        Debug.log("Waiter finished", module);
     }
 }
 

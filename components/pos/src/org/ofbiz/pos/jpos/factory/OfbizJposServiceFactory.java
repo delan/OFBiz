@@ -34,7 +34,7 @@ import jpos.loader.JposServiceInstance;
 import jpos.loader.JposServiceInstanceFactory;
 
 import org.ofbiz.base.util.ObjectType;
-import org.ofbiz.pos.jpos.service.BaseKybService;
+import org.ofbiz.pos.jpos.service.BaseService;
 
 /**
  * 
@@ -54,7 +54,7 @@ public class OfbizJposServiceFactory extends Object implements JposServiceInstan
         }
 
         String className = (String) entry.getPropertyValue(JposEntry.SERVICE_CLASS_PROP_NAME);
-        BaseKybService service = (BaseKybService) serviceMap.get(className);
+        BaseService service = (BaseService) serviceMap.get(className);
 
         if (service != null) {
             service.setEntry(entry);
@@ -67,10 +67,10 @@ public class OfbizJposServiceFactory extends Object implements JposServiceInstan
 
                 if (!(obj instanceof JposServiceInstance)) {
                     throw new JposException(JposConst.JPOS_E_NOSERVICE, "serviceClass is not an instance of JposServiceInstance");
-                } else if (!(obj instanceof BaseKybService)) {
+                } else if (!(obj instanceof BaseService)) {
                     throw new JposException(JposConst.JPOS_E_NOSERVICE, "serviceClass is not an instance of BaseKybService");
                 } else {
-                    service = (BaseKybService) obj;
+                    service = (BaseService) obj;
                     service.setEntry(entry);
                     serviceMap.put(className, service);
                 }

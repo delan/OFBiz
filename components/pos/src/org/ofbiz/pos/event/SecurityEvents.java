@@ -67,6 +67,7 @@ public class SecurityEvents {
                 if (passed) {
                     pos.setLock(false);
                     pos.refresh();
+                    input.clear();
                     return;
                 }
             }

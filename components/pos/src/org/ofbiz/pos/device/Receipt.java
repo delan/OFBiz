@@ -65,6 +65,7 @@ public class Receipt extends GenericDevice implements DialogCallback {
     }
 
     protected void initialize() throws JposException {
+        Debug.logInfo("Receipt [" + control.getPhysicalDeviceName() + "] Claimed : " + control.getClaimed(), module);
         // set map mode to metric - all dimensions specified in 1/100mm units
         // unit = 1/100 mm - i.e. 1 cm = 10 mm = 10 * 100 units
         ((jpos.POSPrinter) control).setMapMode(POSPrinterConst.PTR_MM_METRIC);

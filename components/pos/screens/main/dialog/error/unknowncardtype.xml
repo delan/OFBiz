@@ -3,7 +3,7 @@
     <Components>
         <!-- when used as a PosDialog the x/y will be set to center of screen -->
         <Panel name="errorPanel" x="0" y="0" w="400" h="200" style="errorpanel" border="1">
-            <Label x="0" y="0" w="400" h="50" name="testLabel" style="error" content="UNKNOWN CARD TYPE" alignment="Center"/>
+            <Label x="0" y="0" w="400" h="150" name="testLabel" style="error" content="UNKNOWN CARD TYPE" alignment="Center"/>
             <Button name="closeBtn" x="0" y="70" w="400" h="60" style="error" content="OK" alignment="Center"/>
         </Panel>
     </Components>

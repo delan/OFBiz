@@ -65,10 +65,6 @@ public class KeyboardAdaptor {
     protected KeyboardListener listener = null;
 
     public static KeyboardAdaptor getInstance(KeyboardReceiver receiver, int dataType) {
-        return getInstance(receiver, dataType, null);
-    }
-
-    public static KeyboardAdaptor getInstance(KeyboardReceiver receiver, int dataType, Component[] coms) {
         if (adaptor == null) {
             synchronized(KeyboardAdaptor.class) {
                 if (adaptor == null) {
@@ -77,7 +73,6 @@ public class KeyboardAdaptor {
             }
         }
 
-        KeyboardAdaptor.attachComponents(coms);
         receivers.put(receiver, new Integer(dataType));
         return adaptor;
     }
@@ -117,34 +112,43 @@ public class KeyboardAdaptor {
             this.reader = new KeyReader(this);
         }
 
-        private void receiveKey(int keycode, char keychar) {
-            lastKey = System.currentTimeMillis();
-            keyCharData.add(new Character(keychar));
-            keyCodeData.add(new Integer(keycode));
-        }
-
-        private int checkDataType(char[] chars) {            
-            // test for scanner data
-            if (((int) chars[0]) == 2 && ((int) chars[chars.length - 1]) == 10) {
+        private int checkDataType(char[] chars) {
+            if (chars.length == 0) {
+                // non-character data from keyboard interface (i.e. FN keys, enter, esc, etc)
+                return KEYBOARD_DATA;
+            } else if (((int) chars[0]) == 2 && ((int) chars[chars.length - 1]) == 10) {
+                // test for scanner data
                 return SCANNER_DATA;
-            // test for MSR data
             } else if (((int) chars[0]) == 37 && ((int) chars[chars.length - 1]) == 10) {
+                // test for MSR data
                 return MSR_DATA;
             } else {
-            // otherwise it's keyboard data
+                // otherwise it's keyboard data
                 return KEYBOARD_DATA;
             }
         }
 
+        protected synchronized void receiveCode(int keycode) {
+            keyCodeData.add(new Integer(keycode));
+        }
+
+        protected synchronized void receiveChar(char keychar) {
+            keyCharData.add(new Character(keychar));
+        }
+
         protected synchronized void sendData() {
             if (KeyboardAdaptor.receivers.size() > 0) {
-                if (keyCharData.size() > 0) {
+                if (keyCharData.size() > 0 || keyCodeData.size() > 0) {
                     char[] chars = new char[keyCharData.size()];
                     int[] codes = new int[keyCodeData.size()];
-                    for (int i = 0; i < keyCodeData.size(); i++) {
-                        Character ch = (Character) keyCharData.get(i);
+
+                    for (int i = 0; i < codes.length; i++) {
                         Integer itg = (Integer) keyCodeData.get(i);
                         codes[i] = itg.intValue();
+                    }
+
+                    for (int i = 0; i < chars.length; i++) {
+                        Character ch = (Character) keyCharData.get(i);
                         chars[i] = ch.charValue();
                     }
 
@@ -171,33 +175,31 @@ public class KeyboardAdaptor {
             lastKey = System.currentTimeMillis();
             if (KeyboardAdaptor.receivers.size() > 0) {
                 Iterator ri = KeyboardAdaptor.receivers.keySet().iterator();
-                KeyboardReceiver receiver = (KeyboardReceiver) ri.next();
-                if (receiver instanceof KeyListener) {
-                    Debug.log(receiver.getClass().getName() + " is a KeyListener, sending event!", module);
-                    switch (eventType) {
-                        case 1:
-                            ((KeyListener) receiver).keyPressed(event);
-                            break;
-                        case 2:
-                            ((KeyListener) receiver).keyTyped(event);
-                            break;
-                        case 3:
-                            ((KeyListener) receiver).keyReleased(event);
-                            break;
-                        default:
-                            break;
+                while (ri.hasNext()) {
+                    KeyboardReceiver receiver = (KeyboardReceiver) ri.next();
+                    if (receiver instanceof KeyListener) {
+                        switch (eventType) {
+                            case 1:
+                                ((KeyListener) receiver).keyPressed(event);
+                                break;
+                            case 2:
+                                ((KeyListener) receiver).keyTyped(event);
+                                break;
+                            case 3:
+                                ((KeyListener) receiver).keyReleased(event);
+                                break;
+                            default:
+                                break;
+                        }
                     }
-                } else {
-                    Debug.log(receiver.getClass().getName() + " is NOT a KeyListener!", module);
                 }
-
             }
         }
 
         public void run() {
             while (running) {
                 long now = System.currentTimeMillis();
-                if ((now - lastKey) >= MAX_WAIT) {
+                if ((lastKey > -1) && (now - lastKey) >= MAX_WAIT) {
                     this.sendData();
                 }
 
@@ -234,13 +236,12 @@ public class KeyboardAdaptor {
         }
 
         public void keyTyped(KeyEvent e) {
-            char keyChar = e.getKeyChar();
-            int keyCode = e.getKeyCode();
-            k.receiveKey(keyCode, keyChar);
+            k.receiveChar(e.getKeyChar());
             k.sendEvent(EVENT_TYPED, e);
         }
 
-        public void keyPressed(KeyEvent e) {            
+        public void keyPressed(KeyEvent e) {
+            k.receiveCode(e.getKeyCode());
             k.sendEvent(EVENT_PRESSED, e);
         }
 

@@ -13,40 +13,8 @@ $Id$
         <product description="Generic Keyboard Device" name="Keyboard" url="www.ofbiz.org"/>
 
         <!--Other non JavaPOS required property (mostly vendor properties and bus specific properties i.e. RS232 )-->
-        <prop name="key.VK_ESCAPE" type="String" value="51"/>
-        <prop name="key.VK_ENTER" type="String" value="50"/>
-        <prop name="key.VK_9" type="String" value="109"/>
-        <prop name="key.VK_8" type="String" value="108"/>
-        <prop name="key.VK_7" type="String" value="107"/>
-        <prop name="key.VK_6" type="String" value="106"/>
-        <prop name="key.VK_5" type="String" value="105"/>
-        <prop name="key.VK_4" type="String" value="104"/>
-        <prop name="key.VK_3" type="String" value="103"/>
-        <prop name="key.VK_2" type="String" value="102"/>
-        <prop name="key.VK_1" type="String" value="101"/>
-        <prop name="key.VK_0" type="String" value="100"/>
-        <prop name="key.VK_MULTIPLY" type="String" value="301"/>
-        <prop name="key.VK_NUMPAD9" type="String" value="109"/>
-        <prop name="key.VK_NUMPAD8" type="String" value="108"/>
-        <prop name="key.VK_NUMPAD7" type="String" value="107"/>
-        <prop name="key.VK_NUMPAD6" type="String" value="106"/>
-        <prop name="key.VK_NUMPAD5" type="String" value="105"/>
-        <prop name="key.VK_NUMPAD4" type="String" value="104"/>
-        <prop name="key.VK_NUMPAD3" type="String" value="103"/>
-        <prop name="key.VK_NUMPAD2" type="String" value="102"/>
-        <prop name="key.VK_NUMPAD1" type="String" value="101"/>
-        <prop name="key.VK_NUMPAD0" type="String" value="100"/>
-        <prop name="key.VK_DECIMAL" type="String" value="111"/>
-        <prop name="key.VK_BACK_SPACE" type="String" value="112"/>
-        <prop name="key.VK_ADD" type="String" value="400"/>
-        <prop name="key.VK_DIVIDE" type="String" value="300"/>
-        <prop name="key.VK_SUBTRACT" type="String" value="501"/>
-        <prop name="key.VK_DELETE" type="String" value="502"/>
-        <prop name="key.VK_UP" type="String" value="801"/>
-        <prop name="key.VK_DOWN" type="String" value="802"/>
-        <prop name="key.VK_PAGE_UP" type="String" value="803"/>
-        <prop name="key.VK_PAGE_DOWN" type="String" value="804"/>
-
+        <prop name="key.VK_ESCAPE" type="String" value="501"/>
+        <prop name="key.VK_ENTER" type="String" value="500"/>
         <prop name="key.VK_F1" type="String" value="201"/>
         <prop name="key.VK_F2" type="String" value="202"/>
         <prop name="key.VK_F2+CTRL" type="String" value="203"/>
@@ -99,8 +67,28 @@ $Id$
         <vendor name="The Open For Business Project" url="http://www.ofbiz.org"/>
         <jpos category="MSR" version="1.7"/>
         <product description="Generic Keyboard Wedge Msr" name="KybMsr" url="www.ofbiz.org"/>
-        <!--Other non JavaPOS required property (mostly vendor properties and bus specific properties i.e. RS232 )-->
 
+        <!--Other non JavaPOS required property (mostly vendor properties and bus specific properties i.e. RS232 )-->
+    </JposEntry>
+
+    <!-- Null POSPrinter (included w/ OFBiz) -->
+    <JposEntry logicalName="NullReceipt">
+        <creation factoryClass="org.ofbiz.pos.jpos.factory.OfbizJposServiceFactory" serviceClass="org.ofbiz.pos.jpos.service.NullPosPrinter"/>
+        <vendor name="The Open For Business Project" url="http://www.ofbiz.org"/>
+        <jpos category="Scanner" version="1.2"/>
+        <product description="Null POSPrinter " name="NullPOSPrinter" url="www.ofbiz.org"/>
+
+        <!--Other non JavaPOS required property (mostly vendor properties and bus specific properties i.e. RS232 )-->
+    </JposEntry>
+
+    <!-- Null CashDrawer (included w/ OFBiz) -->
+    <JposEntry logicalName="NullCashDrawer">
+        <creation factoryClass="org.ofbiz.pos.jpos.factory.OfbizJposServiceFactory" serviceClass="org.ofbiz.pos.jpos.service.NullCashDrawer"/>
+        <vendor name="The Open For Business Project" url="http://www.ofbiz.org"/>
+        <jpos category="Scanner" version="1.2"/>
+        <product description="Null CashDrawer " name="NullPOSPrinter" url="www.ofbiz.org"/>
+
+        <!--Other non JavaPOS required property (mostly vendor properties and bus specific properties i.e. RS232 )-->
     </JposEntry>
 
     <!-- Star TSP600 POSPrinter (requires starjavapos.jar) -->

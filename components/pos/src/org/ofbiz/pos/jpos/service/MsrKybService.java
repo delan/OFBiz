@@ -39,7 +39,7 @@ import org.ofbiz.pos.adaptor.KeyboardReceiver;
  * @version    $Rev$
  * @since      3.2
  */
-public class MsrKybService extends BaseKybService implements jpos.services.MSRService17, KeyboardReceiver {
+public class MsrKybService extends BaseService implements jpos.services.MSRService17, KeyboardReceiver {
 
     public static final String module = MsrKybService.class.getName();
     public static final int JPOS_MSR_ACCT_ERR = 100;
@@ -236,7 +236,8 @@ public class MsrKybService extends BaseKybService implements jpos.services.MSRSe
         this.sendSentinels = b;
     }
 
-    public void receiveData(int[] codes, char[] chars) {
+    // KeyboardReceiver
+    public synchronized void receiveData(int[] codes, char[] chars) {
         String data = new String(chars);
         this.parseMsrString(data);
 
