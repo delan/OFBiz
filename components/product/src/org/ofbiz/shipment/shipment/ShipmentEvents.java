@@ -1,5 +1,5 @@
 /*
- * $Id: ShipmentEvents.java,v 1.2 2003/09/12 20:44:48 ajzeneski Exp $
+ * $Id: ShipmentEvents.java,v 1.3 2004/04/10 13:55:27 ajzeneski Exp $
  *
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -40,7 +40,7 @@ import org.ofbiz.entity.util.ByteWrapper;
  * ShippingEvents - Events used for processing shipping fees
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.2
  */
 public class ShipmentEvents {
@@ -71,7 +71,7 @@ public class ShipmentEvents {
         }
         
         ByteWrapper byteWrapper = (ByteWrapper) shipmentPackageRouteSeg.get("labelImage");
-        if (byteWrapper == null) {
+        if (byteWrapper == null || byteWrapper.getBytes().length == 0) {
             request.setAttribute("_ERROR_MESSAGE_", "The ShipmentPackageRouteSeg was found where shipmentId=[" + shipmentId + "], shipmentRouteSegmentId=[" + shipmentRouteSegmentId + "], shipmentPackageSeqId=[" + shipmentPackageSeqId + "], but there was no labelImage on the value.");
             return "error";
         }

@@ -31,7 +31,7 @@ import org.ofbiz.base.util.GeneralException;
  * DataEvents Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.11 $
+ * @version    $Revision: 1.12 $
  * @since      3.0
  *
  * 
@@ -76,8 +76,8 @@ public class DataEvents {
         if (dataResourceTypeId != null && dataResourceTypeId.equals("IMAGE_OBJECT")) {
             try {
                 b = DataResourceWorker.acquireImage(delegator, dataResource);
-                if (imageType == null || b == null) {
-                        String errorMsg = "image(" + b + ") or type(" + imageType + ") is null.";
+                if (imageType == null || b == null || b.length == 0) {
+                        String errorMsg = "image(" + b + ") or type(" + imageType + ") is null or empty.";
                         Debug.logVerbose(errorMsg, module);
                         request.setAttribute("_ERROR_MESSAGE_", errorMsg);
                         return "error";
