@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity-engine-xml>
-    <ContentRole contentId="WebStore_FORUM" partyId="BLOG_EDITOR" roleTypeId="BLOG_EDITOR" fromDate="2004-04-01 12:00:00.000"/>
-    <ContentRole contentId="WebStore_FORUM" partyId="BLOG_ADMIN" roleTypeId="BLOG_PUBLISHER" fromDate="2004-04-01 12:00:00.000"/>
-    <ContentRole contentId="WebStore_FORUM" partyId="BLOG_ADMIN" roleTypeId="BLOG_EDITOR" fromDate="2004-04-01 12:00:00.000"/>
-    <ContentRole contentId="WebStore_FORUM" partyId="BLOG_ADMIN" roleTypeId="BLOG_AUTHOR" fromDate="2004-04-01 12:00:00.000"/>
-    <ContentRole contentId="WebStore_FORUM" partyId="BLOG_ADMIN" roleTypeId="BLOG_ADMIN" fromDate="2004-04-01 12:00:00.000"/>
+    <ContentRole contentId="WebStoreFORUM" partyId="BLOG_EDITOR" roleTypeId="BLOG_EDITOR" fromDate="2004-04-01 12:00:00.000"/>
+    <ContentRole contentId="WebStoreFORUM" partyId="BLOG_ADMIN" roleTypeId="BLOG_PUBLISHER" fromDate="2004-04-01 12:00:00.000"/>
+    <ContentRole contentId="WebStoreFORUM" partyId="BLOG_ADMIN" roleTypeId="BLOG_EDITOR" fromDate="2004-04-01 12:00:00.000"/>
+    <ContentRole contentId="WebStoreFORUM" partyId="BLOG_ADMIN" roleTypeId="BLOG_AUTHOR" fromDate="2004-04-01 12:00:00.000"/>
+    <ContentRole contentId="WebStoreFORUM" partyId="BLOG_ADMIN" roleTypeId="BLOG_ADMIN" fromDate="2004-04-01 12:00:00.000"/>
 </entity-engine-xml>

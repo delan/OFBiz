@@ -20,10 +20,10 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Al Byers (byersa@automationgroups.com)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      3.1
 -->
-<#assign forumRootId = "WebStore_CONTENT" />
+<#assign forumRootId = "WebStoreCONTENT" />
 
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#-- variable setup and worker calls -->

@@ -15,7 +15,7 @@
     <#assign firstPart=internalNameParts[0] />
     <#assign nowStamp=Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp()/>
     <#if firstPart == "WIDGETS">
-        <ContentAssoc contentId="${contentId}" contentIdTo="CNT_WIDGETS" contentAssocTypeId="SUBSITE" fromDate="${nowStamp?string("yyyy-MM-dd HH:mm:ss")}"/>
+        <ContentAssoc contentId="${contentId}" contentIdTo="CNTWIDGETS" contentAssocTypeId="SUBSITE" fromDate="${nowStamp?string("yyyy-MM-dd HH:mm:ss")}"/>
     </#if>
 </#macro>
 
