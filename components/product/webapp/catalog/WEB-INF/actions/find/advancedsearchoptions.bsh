@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.1
 */
 
@@ -39,10 +39,11 @@ if (searchCategoryId == null || searchCategoryId.length() == 0) {
 searchCategory = delegator.findByPrimaryKey("ProductCategory", UtilMisc.toMap("productCategoryId", searchCategoryId));
 
 if (UtilValidate.isNotEmpty(searchCategoryId)) {
-    productFeaturesByTypeMap = ParametricSearch.makeCategoryFeatureLists(searchCategoryId, delegator);
+    productFeaturesByTypeMap = ParametricSearch.makeCategoryFeatureLists(searchCategoryId, delegator, 1500);
 } else {
-    productFeaturesByTypeMap = ParametricSearch.getAllFeaturesByType(delegator);
+    productFeaturesByTypeMap = ParametricSearch.getAllFeaturesByType(delegator, 1500);
 }
+productFeatureTypeIdsOrdered = new ArrayList(new TreeSet(productFeaturesByTypeMap.keySet()));
 
 searchOperator = request.getParameter("SEARCH_OPERATOR");
 if (!"AND".equals(searchOperator) && !"OR".equals(searchOperator)) {
@@ -55,6 +56,7 @@ searchSortOrderString = ProductSearchSession.searchGetSortOrderString(false, ses
 context.put("searchCategoryId", searchCategoryId);
 context.put("searchCategory", searchCategory);
 context.put("productFeaturesByTypeMap", productFeaturesByTypeMap);
+context.put("productFeatureTypeIdsOrdered", productFeatureTypeIdsOrdered);
 context.put("searchOperator", searchOperator);
 context.put("searchConstraintStrings", searchConstraintStrings);
 context.put("searchSortOrderString", searchSortOrderString);

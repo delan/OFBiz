@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.10 $
+ *@version    $Revision: 1.11 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -56,7 +56,7 @@
         </div>
       </td>
     </tr>
-    <#list productFeaturesByTypeMap.keySet() as productFeatureTypeId>
+    <#list productFeatureTypeIdsOrdered as productFeatureTypeId>
       <#assign findPftMap = Static["org.ofbiz.base.util.UtilMisc"].toMap("productFeatureTypeId", productFeatureTypeId)>
       <#assign productFeatureType = delegator.findByPrimaryKeyCache("ProductFeatureType", findPftMap)>
       <#assign productFeatures = productFeaturesByTypeMap[productFeatureTypeId]>

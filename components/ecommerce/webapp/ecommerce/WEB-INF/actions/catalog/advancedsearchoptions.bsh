@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.5 $
+ *@version    $Revision: 1.6 $
  *@since      2.1
 */
 
@@ -39,6 +39,7 @@ if (searchCategoryId == null || searchCategoryId.length() == 0) {
 searchCategory = delegator.findByPrimaryKey("ProductCategory", UtilMisc.toMap("productCategoryId", searchCategoryId));
 
 productFeaturesByTypeMap = ParametricSearch.makeCategoryFeatureLists(searchCategoryId, delegator);
+productFeatureTypeIdsOrdered = new ArrayList(new TreeSet(productFeaturesByTypeMap.keySet()));
 
 searchOperator = request.getParameter("SEARCH_OPERATOR");
 if (!"AND".equals(searchOperator) && !"OR".equals(searchOperator)) {
@@ -51,6 +52,7 @@ searchSortOrderString = ProductSearchSession.searchGetSortOrderString(false, ses
 context.put("searchCategoryId", searchCategoryId);
 context.put("searchCategory", searchCategory);
 context.put("productFeaturesByTypeMap", productFeaturesByTypeMap);
+context.put("productFeatureTypeIdsOrdered", productFeatureTypeIdsOrdered);
 context.put("searchOperator", searchOperator);
 context.put("searchConstraintStrings", searchConstraintStrings);
 context.put("searchSortOrderString", searchSortOrderString);
