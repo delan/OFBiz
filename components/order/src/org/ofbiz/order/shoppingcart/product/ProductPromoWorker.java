@@ -1,5 +1,5 @@
 /*
- * $Id: ProductPromoWorker.java,v 1.39 2004/01/18 08:42:18 jonesde Exp $
+ * $Id: ProductPromoWorker.java,v 1.40 2004/01/21 04:04:13 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -54,7 +54,7 @@ import org.ofbiz.service.LocalDispatcher;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.39 $
+ * @version    $Revision: 1.40 $
  * @since      2.0
  */
 public class ProductPromoWorker {
@@ -459,6 +459,151 @@ public class ProductPromoWorker {
         }
     }
 
+    public static String createShortDescription(GenericValue productPromo, GenericDelegator delegator) throws GenericEntityException {
+        StringBuffer promoDescBuf = new StringBuffer();
+        List productPromoRules = productPromo.getRelatedCache("ProductPromoRule", null, null);
+        Iterator promoRulesIter = productPromoRules.iterator();
+        while (promoRulesIter != null && promoRulesIter.hasNext()) {
+            GenericValue productPromoRule = (GenericValue) promoRulesIter.next();
+
+            List productPromoConds = delegator.findByAndCache("ProductPromoCond", UtilMisc.toMap("productPromoId", productPromo.get("productPromoId")), UtilMisc.toList("productPromoCondSeqId"));
+            productPromoConds = EntityUtil.filterByAnd(productPromoConds, UtilMisc.toMap("productPromoRuleId", productPromoRule.get("productPromoRuleId")));
+            // using the other method to consolodate cache entries because the same cache is used elsewhere: List productPromoConds = productPromoRule.getRelatedCache("ProductPromoCond", null, UtilMisc.toList("productPromoCondSeqId"));
+            Iterator productPromoCondIter = UtilMisc.toIterator(productPromoConds);
+            while (productPromoCondIter != null && productPromoCondIter.hasNext()) {
+                GenericValue productPromoCond = (GenericValue) productPromoCondIter.next();
+
+                String compStr = "invalid";
+                String quantCompStr = "invalid";
+                if (productPromoCond.getString("operatorEnumId") != null) {
+                    if ("PPC_EQ".equals(productPromoCond.getString("operatorEnumId"))) {
+                        compStr = "is";
+                    } else if ("PPC_NEQ".equals(productPromoCond.getString("operatorEnumId"))) {
+                        compStr = "is not";
+                    } else if ("PPC_LT".equals(productPromoCond.getString("operatorEnumId"))) {
+                        quantCompStr = "less than";
+                    } else if ("PPC_LTE".equals(productPromoCond.getString("operatorEnumId"))) {
+                        quantCompStr = "exactly or less than";
+                    } else if ("PPC_GT".equals(productPromoCond.getString("operatorEnumId"))) {
+                        quantCompStr = "more than";
+                    } else if ("PPC_GTE".equals(productPromoCond.getString("operatorEnumId"))) {
+                        quantCompStr = "exactly or more than";
+                    }
+                }
+                
+                String valueStr = "invalid";
+                if (UtilValidate.isNotEmpty(productPromoCond.getString("condValue"))) {
+                    valueStr = productPromoCond.getString("condValue");
+                }
+                
+                if ("PPIP_ORDER_TOTAL".equals(productPromoCond.getString("inputParamEnumId"))) {
+                    promoDescBuf.append("spend ");
+                    promoDescBuf.append(quantCompStr);
+                    promoDescBuf.append(" ");
+                    promoDescBuf.append(valueStr);
+                    promoDescBuf.append(" ");
+                } else if ("PPIP_PRODUCT_TOTAL".equals(productPromoCond.getString("inputParamEnumId"))) {
+                    promoDescBuf.append("buy ");
+                    promoDescBuf.append(quantCompStr);
+                    promoDescBuf.append(" ");
+                    promoDescBuf.append(valueStr);
+                    promoDescBuf.append(" of qualifying products ");
+                } else if ("PPIP_PRODUCT_AMOUNT".equals(productPromoCond.getString("inputParamEnumId"))) {
+                    promoDescBuf.append("for each $");
+                    promoDescBuf.append(valueStr);
+                    promoDescBuf.append(" or more of qualifying products ");
+                } else if ("PPIP_PRODUCT_QUANT".equals(productPromoCond.getString("inputParamEnumId"))) {
+                    promoDescBuf.append("buy ");
+                    promoDescBuf.append(valueStr);
+                    promoDescBuf.append(" of qualifying products ");
+                } else if ("PPIP_NEW_ACCT".equals(productPromoCond.getString("inputParamEnumId"))) {
+                    promoDescBuf.append("if your account is ");
+                    promoDescBuf.append(quantCompStr);
+                    promoDescBuf.append(" ");
+                    promoDescBuf.append(valueStr);
+                    promoDescBuf.append(" days old ");
+                } else if ("PPIP_PARTY_ID".equals(productPromoCond.getString("inputParamEnumId"))) {
+                    // should we really show this?
+                    promoDescBuf.append("if your account ID ");
+                    promoDescBuf.append(compStr);
+                    promoDescBuf.append(valueStr);
+                    promoDescBuf.append(" ");
+                } else if ("PPIP_PARTY_GRP_MEM".equals(productPromoCond.getString("inputParamEnumId"))) {
+                    promoDescBuf.append("if your account ");
+                    promoDescBuf.append(compStr);
+                    promoDescBuf.append(" part of the ");
+                    promoDescBuf.append(valueStr);
+                    promoDescBuf.append(" group ");
+                } else if ("PPIP_PARTY_CLASS".equals(productPromoCond.getString("inputParamEnumId"))) {
+                    promoDescBuf.append("if your account ");
+                    promoDescBuf.append(compStr);
+                    promoDescBuf.append(" in the ");
+                    promoDescBuf.append(valueStr);
+                    promoDescBuf.append(" classification ");
+                } else if ("PPIP_ROLE_TYPE".equals(productPromoCond.getString("inputParamEnumId"))) {
+                    promoDescBuf.append("if your account ");
+                    promoDescBuf.append(compStr);
+                    promoDescBuf.append(" in the ");
+                    promoDescBuf.append(valueStr);
+                    promoDescBuf.append(" role ");
+                }
+            }
+
+            List productPromoActions = productPromoRule.getRelatedCache("ProductPromoAction", null, UtilMisc.toList("productPromoActionSeqId"));
+            Iterator productPromoActionIter = UtilMisc.toIterator(productPromoActions);
+            while (productPromoActionIter != null && productPromoActionIter.hasNext()) {
+                GenericValue productPromoAction = (GenericValue) productPromoActionIter.next();
+
+                if ("PROMO_FREE_SHIPPING".equals(productPromoAction.getString("productPromoActionEnumId"))) {
+                } else if ("PROMO_PROD_DISC".equals(productPromoAction.getString("productPromoActionEnumId"))) {
+                } else if ("PROMO_PROD_AMDISC".equals(productPromoAction.getString("productPromoActionEnumId"))) {
+                } else if ("PROMO_PROD_PRICE".equals(productPromoAction.getString("productPromoActionEnumId"))) {
+                } else if ("PROMO_ORDER_PERCENT".equals(productPromoAction.getString("productPromoActionEnumId"))) {
+                } else if ("PROMO_ORDER_AMOUNT".equals(productPromoAction.getString("productPromoActionEnumId"))) {
+                }
+            }
+            /*
+      <field name="productPromoActionEnumId" type="id-ne"></field>
+      <field name="orderAdjustmentTypeId" type="id"></field>
+      <field name="quantity" type="floating-point"></field>
+      <field name="amount" type="floating-point"></field>
+      <field name="productId" type="id"></field>
+      <field name="partyId" type="id"></field>
+
+  
+  <Enumeration description="Gift With Purchase" enumCode="GWP" enumId="PROMO_GWP" sequenceId="01" enumTypeId="PROD_PROMO_ACTION"/>
+  <Enumeration description="Free Shipping" enumCode="FREE_SHIPPING" enumId="PROMO_FREE_SHIPPING" sequenceId="02" enumTypeId="PROD_PROMO_ACTION"/>
+  <Enumeration description="X Product for Y% Discount" enumCode="PROD_DISC" enumId="PROMO_PROD_DISC" sequenceId="03" enumTypeId="PROD_PROMO_ACTION"/>
+  <Enumeration description="X Product for Y Discount" enumCode="PROD_AMDISC" enumId="PROMO_PROD_AMDISC" sequenceId="04" enumTypeId="PROD_PROMO_ACTION"/>
+  <Enumeration description="X Product for Y Price" enumCode="PROD_PRICE" enumId="PROMO_PROD_PRICE" sequenceId="05" enumTypeId="PROD_PROMO_ACTION"/>
+  <Enumeration description="Order Percent Discount" enumCode="ORDER_PERCENT" enumId="PROMO_ORDER_PERCENT" sequenceId="06" enumTypeId="PROD_PROMO_ACTION"/>
+  <Enumeration description="Order Amount Flat" enumCode="ORDER_AMOUNT" enumId="PROMO_ORDER_AMOUNT" sequenceId="07" enumTypeId="PROD_PROMO_ACTION"/>
+             * 
+             */
+        }
+        
+        if ("Y".equals(productPromo.getString("requireCode"))) {
+            promoDescBuf.append("Requires code to use. ");
+        }
+        if (productPromo.getLong("useLimitPerOrder") != null) {
+            promoDescBuf.append("Limit ");
+            promoDescBuf.append(productPromo.getLong("useLimitPerOrder"));
+            promoDescBuf.append(" per order. ");
+        }
+        if (productPromo.getLong("useLimitPerCustomer") != null) {
+            promoDescBuf.append("Limit ");
+            promoDescBuf.append(productPromo.getLong("useLimitPerCustomer"));
+            promoDescBuf.append(" per customer. ");
+        }
+        if (productPromo.getLong("useLimitPerPromotion") != null) {
+            promoDescBuf.append("Limit ");
+            promoDescBuf.append(productPromo.getLong("useLimitPerPromotion"));
+            promoDescBuf.append(" per promotion. ");
+        }
+        
+        return promoDescBuf.toString();
+    }
+    
     protected static boolean runProductPromoRules(ShoppingCart cart, boolean cartChanged, Long useLimit, boolean requireCode, String productPromoCodeId, Long codeUseLimit, long maxUseLimit,
             GenericValue productPromo, List productPromoRules, LocalDispatcher dispatcher, GenericDelegator delegator, Timestamp nowTimestamp) throws GenericEntityException, UseLimitException {
         String productPromoId = productPromo.getString("productPromoId");
@@ -479,7 +624,7 @@ public class ProductPromoWorker {
                 // loop through conditions for rule, if any false, set allConditionsTrue to false
                 List productPromoConds = delegator.findByAndCache("ProductPromoCond", UtilMisc.toMap("productPromoId", productPromo.get("productPromoId")), UtilMisc.toList("productPromoCondSeqId"));
                 productPromoConds = EntityUtil.filterByAnd(productPromoConds, UtilMisc.toMap("productPromoRuleId", productPromoRule.get("productPromoRuleId")));
-                // using the other method to consolodate cache entries: List productPromoConds = productPromoRule.getRelatedCache("ProductPromoCond", null, UtilMisc.toList("productPromoCondSeqId"));
+                // using the other method to consolodate cache entries because the same cache is used elsewhere: List productPromoConds = productPromoRule.getRelatedCache("ProductPromoCond", null, UtilMisc.toList("productPromoCondSeqId"));
                 if (Debug.verboseOn()) Debug.logVerbose("Checking " + productPromoConds.size() + " conditions for rule " + productPromoRule, module);
 
                 Iterator productPromoCondIter = UtilMisc.toIterator(productPromoConds);
