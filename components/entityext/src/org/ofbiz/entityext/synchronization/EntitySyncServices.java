@@ -1,5 +1,5 @@
 /*
- * $Id: EntitySyncServices.java,v 1.12 2003/12/13 07:12:27 jonesde Exp $
+ * $Id: EntitySyncServices.java,v 1.13 2003/12/13 13:06:57 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -64,7 +64,7 @@ import org.xml.sax.SAXException;
  * Entity Engine Sync Services
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
- * @version    $Revision: 1.12 $
+ * @version    $Revision: 1.13 $
  * @since      3.0
  */
 public class EntitySyncServices {
@@ -84,8 +84,11 @@ public class EntitySyncServices {
         GenericDelegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
         
         String entitySyncId = (String) context.get("entitySyncId");
+        Debug.logInfo("Running runEntitySync with entitySyncId=" + entitySyncId, module);
+        
         // this is the other part of the history PK, leave null until we create the history object
         Timestamp startDate = null;
         
@@ -107,7 +110,7 @@ public class EntitySyncServices {
             
             // not running, get started NOW
             // set running status on entity sync, run in its own tx
-            Map startEntitySyncRes = dispatcher.runSync("updateEntitySyncRunning", UtilMisc.toMap("entitySyncId", entitySyncId, "runStatusId", "ESR_RUNNING"));
+            Map startEntitySyncRes = dispatcher.runSync("updateEntitySyncRunning", UtilMisc.toMap("entitySyncId", entitySyncId, "runStatusId", "ESR_RUNNING", "userLogin", userLogin));
             if (ModelService.RESPOND_ERROR.equals(startEntitySyncRes.get(ModelService.RESPONSE_MESSAGE))) {
                 return ServiceUtil.returnError("Could not start Entity Sync service, could not mark as running", null, null, startEntitySyncRes);
             }
@@ -145,11 +148,11 @@ public class EntitySyncServices {
             }
             
             // create history record, should run in own tx
-            Map initialHistoryRes = dispatcher.runSync("createEntitySyncHistory", UtilMisc.toMap("entitySyncId", entitySyncId, "runStatusId", "ESR_RUNNING", "beginningSynchTime", currentRunStartTime));
+            Map initialHistoryRes = dispatcher.runSync("createEntitySyncHistory", UtilMisc.toMap("entitySyncId", entitySyncId, "runStatusId", "ESR_RUNNING", "beginningSynchTime", currentRunStartTime, "userLogin", userLogin));
             if (ServiceUtil.isError(initialHistoryRes)) {
                 String errorMsg = "Not running EntitySync [" + entitySyncId + "], could not create EntitySyncHistory";
                 List errorList = new LinkedList();
-                saveSyncErrorInfo(entitySyncId, startDate, "ESR_DATA_ERROR", errorList, dispatcher);
+                saveSyncErrorInfo(entitySyncId, startDate, "ESR_DATA_ERROR", errorList, dispatcher, userLogin);
                 return ServiceUtil.returnError(errorMsg, errorList, null, initialHistoryRes);
             }
             startDate = (Timestamp) initialHistoryRes.get("startDate");
@@ -220,11 +223,11 @@ public class EntitySyncServices {
                 totalRowsToRemove += totalRowsToRemoveCur;
                 
                 // call service named on EntitySync
-                Map remoteStoreResult = dispatcher.runSync(targetServiceName, UtilMisc.toMap("entitySyncId", entitySyncId, "valuesToStore", valuesToStore, "keysToRemove", keysToRemove));
+                Map remoteStoreResult = dispatcher.runSync(targetServiceName, UtilMisc.toMap("entitySyncId", entitySyncId, "valuesToStore", valuesToStore, "keysToRemove", keysToRemove, "userLogin", userLogin));
                 if (ServiceUtil.isError(remoteStoreResult)) {
                     String errorMsg = "Error running EntitySync [" + entitySyncId + "], call to store service [" + targetServiceName + "] failed.";
                     List errorList = new LinkedList();
-                    saveSyncErrorInfo(entitySyncId, startDate, "ESR_OTHER_ERROR", errorList, dispatcher);
+                    saveSyncErrorInfo(entitySyncId, startDate, "ESR_OTHER_ERROR", errorList, dispatcher, userLogin);
                     return ServiceUtil.returnError(errorMsg, errorList, null, remoteStoreResult);
                 }
                 
@@ -241,7 +244,7 @@ public class EntitySyncServices {
                 numAlreadyRemoved += numAlreadyRemovedCur;
                 
                 // store latest result on EntitySync, ie update lastSuccessfulSynchTime, should run in own tx
-                Map updateEsRunResult = dispatcher.runSync("updateEntitySyncRunning", UtilMisc.toMap("entitySyncId", entitySyncId, "lastSuccessfulSynchTime", currentRunEndTime));
+                Map updateEsRunResult = dispatcher.runSync("updateEntitySyncRunning", UtilMisc.toMap("entitySyncId", entitySyncId, "lastSuccessfulSynchTime", currentRunEndTime, "userLogin", userLogin));
 
                 // store result of service call on history with results so far, should run in own tx
                 Map updateHistoryMap = UtilMisc.toMap("entitySyncId", entitySyncId, "startDate", startDate, "lastSuccessfulSynchTime", currentRunEndTime);
@@ -251,19 +254,20 @@ public class EntitySyncServices {
                 updateHistoryMap.put("numRemoved", new Long(numRemoved));
                 updateHistoryMap.put("numAlreadyRemoved", new Long(numAlreadyRemoved));
                 updateHistoryMap.put("runningTimeMillis", new Long(System.currentTimeMillis() - startingTimeMillis));
+                updateHistoryMap.put("userLogin", userLogin);
                 Map updateEsHistRunResult = dispatcher.runSync("updateEntitySyncHistory", updateHistoryMap);
                 
                 // now we have updated EntitySync and EntitySyncHistory, check both ops for errors...
                 if (ServiceUtil.isError(updateEsRunResult)) {
                     String errorMsg = "Error running EntitySync [" + entitySyncId + "], update of EntitySync record with lastSuccessfulSynchTime failed.";
                     List errorList = new LinkedList();
-                    saveSyncErrorInfo(entitySyncId, startDate, "ESR_DATA_ERROR", errorList, dispatcher);
+                    saveSyncErrorInfo(entitySyncId, startDate, "ESR_DATA_ERROR", errorList, dispatcher, userLogin);
                     return ServiceUtil.returnError(errorMsg, errorList, null, updateEsRunResult);
                 }
                 if (ServiceUtil.isError(updateEsHistRunResult)) {
                     String errorMsg = "Error running EntitySync [" + entitySyncId + "], update of EntitySyncHistory (startDate:[" + startDate + "]) record with lastSuccessfulSynchTime and result stats failed.";
                     List errorList = new LinkedList();
-                    saveSyncErrorInfo(entitySyncId, startDate, "ESR_DATA_ERROR", errorList, dispatcher);
+                    saveSyncErrorInfo(entitySyncId, startDate, "ESR_DATA_ERROR", errorList, dispatcher, userLogin);
                     return ServiceUtil.returnError(errorMsg, errorList, null, updateEsHistRunResult);
                 }
                 
@@ -272,32 +276,38 @@ public class EntitySyncServices {
             }
 
             // the lastSuccessfulSynchTime on EntitySync will already be set, so just set status as completed 
-            Map completeEntitySyncRes = dispatcher.runSync("updateEntitySyncRunning", UtilMisc.toMap("entitySyncId", entitySyncId, "runStatusId", "ESR_COMPLETE"));
+            Map completeEntitySyncRes = dispatcher.runSync("updateEntitySyncRunning", UtilMisc.toMap("entitySyncId", entitySyncId, "runStatusId", "ESR_COMPLETE", "userLogin", userLogin));
             if (ModelService.RESPOND_ERROR.equals(completeEntitySyncRes.get(ModelService.RESPONSE_MESSAGE))) {
                 // what to do here? try again?
                 return ServiceUtil.returnError("Could not mark Entity Sync as complete, but all synchronization was successful", null, null, completeEntitySyncRes);
+            }
+            // the lastSuccessfulSynchTime on EntitySync will already be set, so just set status as completed 
+            Map completeEntitySyncHistRes = dispatcher.runSync("updateEntitySyncHistory", UtilMisc.toMap("entitySyncId", entitySyncId, "startDate", startDate, "runStatusId", "ESR_COMPLETE", "userLogin", userLogin));
+            if (ModelService.RESPOND_ERROR.equals(completeEntitySyncHistRes.get(ModelService.RESPONSE_MESSAGE))) {
+                // what to do here? try again?
+                return ServiceUtil.returnError("Could not mark Entity Sync History as complete, but all synchronization was successful", null, null, completeEntitySyncHistRes);
             }
         } catch (GenericEntityException e) {
             String errorMessage = "Error running EntitySync [" + entitySyncId + "], data access error: " + e.toString();
             Debug.logError(e, errorMessage, module);
             List errorList = new LinkedList();
-            saveSyncErrorInfo(entitySyncId, startDate, "ESR_DATA_ERROR", errorList, dispatcher);
+            saveSyncErrorInfo(entitySyncId, startDate, "ESR_DATA_ERROR", errorList, dispatcher, userLogin);
             return ServiceUtil.returnError(errorMessage, errorList, null, null);
         } catch (GenericServiceException e) {
             String errorMessage = "Error running EntitySync [" + entitySyncId + "], service call error: " + e.toString();
             Debug.logError(e, errorMessage, module);
             List errorList = new LinkedList();
-            saveSyncErrorInfo(entitySyncId, startDate, "ESR_SERVICE_ERROR", errorList, dispatcher);
+            saveSyncErrorInfo(entitySyncId, startDate, "ESR_SERVICE_ERROR", errorList, dispatcher, userLogin);
             return ServiceUtil.returnError(errorMessage, errorList, null, null);
         }
         
         return ServiceUtil.returnSuccess();
     }
     
-    protected static void saveSyncErrorInfo(String entitySyncId, Timestamp startDate, String runStatusId, List errorMessages, LocalDispatcher dispatcher) {
+    protected static void saveSyncErrorInfo(String entitySyncId, Timestamp startDate, String runStatusId, List errorMessages, LocalDispatcher dispatcher, GenericValue userLogin) {
         // set error statuses on the EntitySync and EntitySyncHistory entities
         try {
-            Map errorEntitySyncRes = dispatcher.runSync("updateEntitySyncRunning", UtilMisc.toMap("entitySyncId", entitySyncId, "runStatusId", runStatusId));
+            Map errorEntitySyncRes = dispatcher.runSync("updateEntitySyncRunning", UtilMisc.toMap("entitySyncId", entitySyncId, "runStatusId", runStatusId, "userLogin", userLogin));
             if (ModelService.RESPOND_ERROR.equals(errorEntitySyncRes.get(ModelService.RESPONSE_MESSAGE))) {
                 errorMessages.add("Could not save error run status [" + runStatusId + "] on EntitySync with ID [" + entitySyncId + "]: " + errorEntitySyncRes.get(ModelService.ERROR_MESSAGE));
             }
@@ -306,7 +316,7 @@ public class EntitySyncServices {
         }
         if (startDate != null) {
             try {
-                Map errorEntitySyncHistoryRes = dispatcher.runSync("updateEntitySyncHistory", UtilMisc.toMap("entitySyncId", entitySyncId, "startDate", startDate, "runStatusId", runStatusId));
+                Map errorEntitySyncHistoryRes = dispatcher.runSync("updateEntitySyncHistory", UtilMisc.toMap("entitySyncId", entitySyncId, "startDate", startDate, "runStatusId", runStatusId, "userLogin", userLogin));
                 if (ModelService.RESPOND_ERROR.equals(errorEntitySyncHistoryRes.get(ModelService.RESPONSE_MESSAGE))) {
                     errorMessages.add("Could not save error run status [" + runStatusId + "] on EntitySyncHistory with ID [" + entitySyncId + "]: " + errorEntitySyncHistoryRes.get(ModelService.ERROR_MESSAGE));
                 }
@@ -482,6 +492,7 @@ public class EntitySyncServices {
      *@return Map with the result of the service, the output parameters
      */
     public static Map cleanSyncRemoveInfo(DispatchContext dctx, Map context) {
+        Debug.logInfo("Running cleanSyncRemoveInfo", module);
         GenericDelegator delegator = dctx.getDelegator();
         
         try {

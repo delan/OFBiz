@@ -23,7 +23,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
  *  OFBiz Components
- *  $Id: component-load.xml,v 1.9 2003/12/05 01:32:08 jonesde Exp $
+ *  $Id: component-load.xml,v 1.10 2003/12/13 13:06:56 jonesde Exp $
 -->
 
 <component-loader>
@@ -37,10 +37,10 @@
     <load-component component-location="${ofbiz.home}/components/rules"/>
     <load-component component-location="${ofbiz.home}/components/minilang"/>
     <load-component component-location="${ofbiz.home}/components/common"/>
-    <load-component component-location="${ofbiz.home}/components/entityext"/>
     <load-component component-location="${ofbiz.home}/components/content"/>
     <load-component component-location="${ofbiz.home}/components/party"/>
     <load-component component-location="${ofbiz.home}/components/securityext"/>
+    <load-component component-location="${ofbiz.home}/components/entityext"/>
     <load-component component-location="${ofbiz.home}/components/workeffort"/>
     <load-component component-location="${ofbiz.home}/components/workflow"/>
     <load-component component-location="${ofbiz.home}/components/humanres"/>
