@@ -79,7 +79,7 @@ public class ProductServices {
     /**
      * Builds a variant feature tree.
      */
-    private static Map prodMakeFeatureTree(DispatchContext dctx, Map context) {
+    public static Map prodMakeFeatureTree(DispatchContext dctx, Map context) {
         // * String productId      -- Parent (virtual) product ID
         // * List featureOrder     -- Order of features
         Map result = new HashMap();
