@@ -210,9 +210,9 @@
 
         <!-- now that everything is validated & setup, check to see if there are errors, then call the services -->
         <check-errors/>
-        <call-service service-name="createUserLogin" in-map-name="userLoginContext"/>
         <set-current-user-login value-name="newUserLogin"/>
         <call-service service-name="createPerson" in-map-name="personContext"/>
+        <call-service service-name="createUserLogin" in-map-name="userLoginContext"/>
         <call-service service-name="createPartyRole" in-map-name="partyRoleContext"/>
 
         <!-- shipping address -->
