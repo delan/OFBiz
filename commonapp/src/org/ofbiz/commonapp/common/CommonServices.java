@@ -24,15 +24,32 @@
  */
 package org.ofbiz.commonapp.common;
 
-import java.net.*;
-import java.util.*;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.sql.Timestamp;
-import javax.mail.*;
-import javax.mail.internet.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Properties;
 
-import org.ofbiz.core.entity.*;
-import org.ofbiz.core.service.*;
-import org.ofbiz.core.util.*;
+import javax.mail.Message;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+
+import org.ofbiz.core.entity.GenericDelegator;
+import org.ofbiz.core.entity.GenericEntityException;
+import org.ofbiz.core.entity.GenericValue;
+import org.ofbiz.core.service.DispatchContext;
+import org.ofbiz.core.service.ServiceUtil;
+import org.ofbiz.core.util.Debug;
+import org.ofbiz.core.util.HttpClient;
+import org.ofbiz.core.util.HttpClientException;
+import org.ofbiz.core.util.UtilDateTime;
+import org.ofbiz.core.util.UtilMisc;
+import org.ofbiz.core.util.UtilProperties;
+import org.ofbiz.core.util.UtilValidate;
 
 /**
  * Common Services
@@ -42,6 +59,8 @@ import org.ofbiz.core.util.*;
  * @since      2.0
  */
 public class CommonServices {
+    
+    public final static String module = CommonServices.class.getName();
 
     /**
      * Generic Test Service
@@ -132,28 +151,44 @@ public class CommonServices {
         String body = (String) context.get("body");
         String sendType = (String) context.get("sendType");
         String sendVia = (String) context.get("sendVia");
+        String authUser = (String) context.get("authUser");
+        String authPass = (String) context.get("authPass");
         String contentType = (String) context.get("contentType");
+        boolean useSmtpAuth = false;      
           
         // define some default       
-        if (sendType == null) {
+        if (sendType == null || sendType.equals("mail.smtp.host")) {
             sendType = "mail.smtp.host";
-            if (sendVia == null)
+            if (sendVia == null || sendVia.length() == 0) {            
                 sendVia = UtilProperties.getPropertyValue("general.properties", "mail.smtp.relay.host", "localhost");
+            }
+            if (authUser == null || authUser.length() == 0) {
+                authUser = UtilProperties.getPropertyValue("general.properties", "mail.smtp.auth.user");
+            }
+            if (authPass == null || authPass.length() == 0) {
+                authPass = UtilProperties.getPropertyValue("general.properties", "mail.smtp.auth.password");
+            }
+            if (authUser != null && authUser.length() > 0) {
+                useSmtpAuth = true;
+            }
         } else if (sendVia == null) {
             return ServiceUtil.returnError("Parameter sendVia is required when sendType is not mail.smtp.host");
         }
-        
+                       
         if (contentType == null) {
             contentType = "text/html";
         }
                      
         try {
-            Properties props = new Properties();
+            Properties props = System.getProperties();
             props.put(sendType, sendVia);
-            Session session = Session.getDefaultInstance(props);
+            if (useSmtpAuth) {
+                props.put("mail.smtp.auth", "true");
+            }
+            
+            Session session = Session.getInstance(props);
 
             MimeMessage mail = new MimeMessage(session);
-
             mail.setFrom(new InternetAddress(sendFrom));
             mail.setSubject(subject);
             mail.addRecipients(Message.RecipientType.TO, sendTo);
@@ -166,11 +201,19 @@ public class CommonServices {
             }
 
             mail.setContent(body, contentType);
+            mail.saveChanges();
 
-            Transport.send(mail);
+            Transport trans = session.getTransport("smtp");
+            if (!useSmtpAuth) {
+                trans.connect();
+            } else {
+                trans.connect(sendVia, authUser, authPass);
+            }
+            trans.sendMessage(mail, mail.getAllRecipients()); 
+            trans.close();                  
         } catch (Exception e) {
-            e.printStackTrace();
-            return ServiceUtil.returnError("Cannot send mail: " + e.getMessage());
+            Debug.logError(e, "Cannot send mail message", module);
+            return ServiceUtil.returnError("Cannot send mail; see logs");
         }
         return ServiceUtil.returnSuccess();
     }

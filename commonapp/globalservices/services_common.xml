@@ -12,7 +12,9 @@
         <attribute name="sendCc" type="String" mode="IN" optional="true"/>
         <attribute name="sendBcc" type="String" mode="IN" optional="true"/>
         <attribute name="sendFrom" type="String" mode="IN" optional="false"/>
-        <attribute name="subject" type="String" mode="IN" optional="false"/>        
+        <attribute name="subject" type="String" mode="IN" optional="false"/>
+        <attribute name="authUser" type="String" mode="IN" optional="true"/>
+        <attribute name="authPass" type="String" mode="IN" optional="true"/>        
         <attribute name="sendVia" type="String" mode="IN" optional="true"/>
         <attribute name="sendType" type="String" mode="IN" optional="true"/>
         <attribute name="contentType" type="String" mode="IN" optional="true"/>    	
@@ -32,6 +34,7 @@
         <attribute name="body" type="String" mode="INOUT" optional="true"/>        
     	<attribute name="baseUrl" type="String" mode="IN" optional="true"/>
         <attribute name="templateName" type="String" mode="IN" optional="false"/>
+        <attribute name="templateData" type="Map" mode="IN" optional="true"/>
         <attribute name="webSiteId" type="String" mode="IN" optional="true"/>
     </service>
     
@@ -41,6 +44,8 @@
         <implements service="prepareNotificationInterface"/>
         <attribute name="body" type="String" mode="IN" optional="true"/>
         <attribute name="templateName" type="String" mode="IN" optional="false"/>
+        <attribute name="templateData" type="Map" mode="IN" optional="true"/>
+        <attribute name="webSiteId" type="String" mode="IN" optional="true"/>
     </service>
     
     <service name="sendMailFromUrl" engine="java"
