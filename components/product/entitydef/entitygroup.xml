@@ -26,7 +26,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.9 $
+ *@version    $Revision: 1.10 $
  */
 -->
 
@@ -185,6 +185,7 @@
     <entity-group group="org.ofbiz" entity="ProductStoreGroupRole" />
     <entity-group group="org.ofbiz" entity="ProductStoreGroupRollup" />
     <entity-group group="org.ofbiz" entity="ProductStoreGroupType" />
+    <entity-group group="org.ofbiz" entity="ProductStoreKeywordOvrd" />
     <entity-group group="org.ofbiz" entity="ProductStorePaymentSetting" />
     <entity-group group="org.ofbiz" entity="ProductStorePromoAppl" />
     <entity-group group="org.ofbiz" entity="ProductStoreRole" />    
