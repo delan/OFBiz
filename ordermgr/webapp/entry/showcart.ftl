@@ -25,6 +25,9 @@
  *@since      2.1
 -->
 
+<#assign security = requestAttributes.security>
+<#assign externalKeyParam = requestAttributes.externalKeyParam>
+
 <script language="JavaScript">
 <!--
 function toggle(e) {
@@ -82,7 +85,11 @@ function addToList() {
               <#if (shoppingCartSize > 0)>
                 <a href="javascript:document.cartform.submit()" class="lightbuttontext">[Recalculate&nbsp;Order]</a>
                 <a href="<@ofbizUrl>/emptycart</@ofbizUrl>" class="lightbuttontext">[Clear&nbsp;Order]</a>
+                <#if shoppingCart.getOrderType() == "PURCHASE_ORDER">
+                <a href="<@ofbizUrl>/finalizeOrder?finalizeReqShipInfo=false&finalizeReqOptions=false&finalizeReqPayInfo=false</@ofbizUrl>" class="lightbuttontext">[Finalize Order]</a>
+                <#else>
                 <a href="<@ofbizUrl>/finalizeOrder</@ofbizUrl>" class="lightbuttontext">[Finalize Order]</a>
+                </#if>
               <#else>
                 [Recalculate&nbsp;Order] [Clear&nbsp;Order] [Finalize Order]
               </#if>
@@ -98,6 +105,15 @@ function addToList() {
         <tr>
           <td>           
             <form method="POST" action="<@ofbizUrl>/additem</@ofbizUrl>" name="quickaddform" style='margin: 0;'>
+              <#if security.hasEntityPermission("CATALOG", "_CREATE", session)>
+              <table width="100%" border="0" cellspacing='0' cellpadding='2'>
+                <tr>
+                  <td align="right" valign="middle">
+                    <a href="${response.encodeURL("/catalog/control/EditProduct" + externalKeyParam)}" target="catalog" class="buttontext">[Create New Product]</a>
+                  </td>
+                </tr>
+              </#if>
+              </table>            
               <table border='0' cellspacing='0' cellpadding='2'>
                 <tr>
                   <td><div class="tableheadtext">Product ID</div></td>
@@ -172,10 +188,15 @@ function addToList() {
     <TD width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <tr>
-          <td>
+          <td>          
   <#if (shoppingCartSize > 0)>
     <FORM METHOD="POST" ACTION="<@ofbizUrl>/modifycart</@ofbizUrl>" name='cartform' style='margin: 0;'>
       <input type="hidden" name="removeSelected" value="false">
+      <#if shoppingCart.getOrderType() == "PURCHASE_ORDER">
+        <input type="hidden" name="finalizeReqShipInfo" value="false">
+        <input type="hidden" name="finalizeReqOptions" value="false">
+        <input type="hidden" name="finalizeReqPayInfo" value="false">
+      </#if>
       <table width='100%' cellspacing="0" cellpadding="1" border="0">
         <TR> 
           <TD NOWRAP>&nbsp;</TD>
@@ -199,7 +220,7 @@ function addToList() {
                     <a href='<@ofbizUrl>/product?product_id=${cartLine.getProductId()}</@ofbizUrl>' class='buttontext'>${cartLine.getProductId()} - 
                     ${cartLine.getName()?if_exists}</a> : ${cartLine.getDescription()?if_exists}
                     
-                    <#if shoppingCart.getOrderType() == "SALES_ORDER">
+                    <#if !shoppingCart.getOrderType() == "PURCHASE_ORDER">
                       <#-- only applies to sales orders, not purchase orders
                       <#-- if inventory is not required check to see if it is out of stock and needs to have a message shown about that... -->
                       <#assign itemProduct = cartLine.getProduct()>
@@ -207,7 +228,7 @@ function addToList() {
                       <#assign isCatalogInventoryAvailable = Static["org.ofbiz.commonapp.product.catalog.CatalogWorker"].isCatalogInventoryAvailable(request, cartLine.getProductId(), cartLine.getQuantity())>
                       <#if !isCatalogInventoryRequired && !isCatalogInventoryAvailable && itemProduct.inventoryMessage?has_content>
                           <b>(${itemProduct.inventoryMessage})</b>
-                      </#if>
+                      </#if>                                          
                     </#if>   
                                      
                   <#else>

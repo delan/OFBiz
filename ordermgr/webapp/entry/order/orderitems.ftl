@@ -58,15 +58,20 @@
               <#list orderItems as orderItem>
                 <tr><td colspan="7"><hr class='sepbar'></td></tr>
                 <tr>     
-                  <#if orderItem.productId == "_?_">           
+                  <#if orderItem.productId?exists && orderItem.productId == "_?_">           
                     <td colspan="1" valign="top">    
                       <b><div class="tabletext"> &gt;&gt; ${orderItem.itemDescription}</div></b>
                     </td>
                   <#else>                  
-                    <td valign="top">
-                      <div class="tabletext">                        
-                        <a href="<@ofbizUrl>/product?product_id=${orderItem.productId}</@ofbizUrl>" class="buttontext">${orderItem.productId} - ${orderItem.itemDescription}</a>
+                    <td valign="top">                      
+                      <div class="tabletext"> 
+                        <#if orderItem.productId?exists>                       
+                          <a href="<@ofbizUrl>/product?product_id=${orderItem.productId}</@ofbizUrl>" class="buttontext">${orderItem.productId} - ${orderItem.itemDescription}</a>
+                        <#else>                                                    
+                          ${orderItem.itemDescription?if_exists}
+                        </#if>
                       </div>
+                      
                     </td>
                     <td align="right" valign="top">
                       <div class="tabletext" nowrap>${orderItem.quantity?string.number}</div>
