@@ -25,22 +25,32 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
- *  $Id: widget-tree.dtd,v 1.3 2004/06/28 23:30:17 jonesde Exp $
+ *  $Id: widget-tree.dtd,v 1.4 2004/07/24 23:02:31 byersa Exp $
 -->
 
 <!ELEMENT trees ( tree+ )>
 
-<!ELEMENT tree ( node+ )>
+<!ELEMENT tree ( expand-contract?, node+ )>
 <!ATTLIST tree
     name CDATA #REQUIRED
     root-node-name CDATA #REQUIRED
+    render-class CDATA #IMPLIED
+    indent-string CDATA "&nbsp;&nbsp;"
 >
 
-<!ELEMENT node ( (entity-one | service), (screen | label), sub-node* )>
+<!ELEMENT node ( (entity-one | service ), (screen | label | link), sub-node* )>
 <!ATTLIST node
     name CDATA #REQUIRED
 >
 
+    <!ELEMENT expand-contract EMPTY>
+    <!ATTLIST screen
+        expand-image CDATA #IMPLIED
+        contract-image CDATA #IMPLIED
+        expand-char CDATA #IMPLIED
+        contract-char CDATA #IMPLIED
+        style CDATA #IMPLIED
+    >
     <!ELEMENT screen EMPTY>
     <!ATTLIST screen
         screen-name CDATA #REQUIRED
@@ -54,7 +64,21 @@
         style CDATA #IMPLIED
     >
 
-<!ELEMENT sub-node ( (entity-and | service), out-field-map*)>
+    <!ELEMENT link EMPTY>
+    <!ATTLIST link
+        text CDATA #IMPLIED
+        id CDATA #IMPLIED
+        style CDATA #IMPLIED
+        target CDATA #IMPLIED
+        target-window CDATA #IMPLIED
+        prefix CDATA #IMPLIED
+        url-mode ( ofbiz | content | raw ) "ofbiz"
+        full-path ( true | false ) "false"
+        secure ( true | false ) "false"
+        encode ( true | false ) "false"
+    >
+
+<!ELEMENT sub-node ( (entity-and |  service ), out-field-map*)>
 <!ATTLIST sub-node
     node-name CDATA #REQUIRED
 >
@@ -62,28 +86,45 @@
     <!ELEMENT service ( field-map* )>
     <!ATTLIST service
         service-name CDATA #REQUIRED
-        out-field-name CDATA "dataFound"
+        result-map-name CDATA #IMPLIED
         auto-field-map ( true | false ) "true"
     >
     
-    <!ELEMENT entity-one ( field-map* )>
+    <!ELEMENT entity-one ( field-map*, select-field* )>
     <!ATTLIST entity-one
         entity-name CDATA #REQUIRED
-        cache ( true | false ) "true"
+        value-name CDATA #REQUIRED
+        use-cache ( true | false ) "false"
         auto-field-map ( true | false ) "true"
     >
     
-    <!ELEMENT entity-and ( field-map+, order-by* )>
+    <!ELEMENT entity-and ( field-map+, select-field*, order-by*  )>
     <!ATTLIST entity-and
         entity-name CDATA #REQUIRED
-        cache ( true | false ) "true"
-        filter-by-date ( true | false | by-name ) "by-name"
+        use-cache ( true | false ) "false"
+        filter-by-date ( true | false | by-name ) "false"
+        list-name CDATA #REQUIRED
     >
 
     <!ELEMENT order-by EMPTY>
     <!ATTLIST order-by
         field-name CDATA #REQUIRED
     >
+		<!ELEMENT select-field EMPTY>
+		<!ATTLIST select-field
+			field-name CDATA #REQUIRED
+		>
+		<!ELEMENT limit-range EMPTY>
+		<!ATTLIST limit-range
+			start CDATA #REQUIRED
+			size CDATA #REQUIRED
+		>
+		<!ELEMENT limit-view EMPTY>
+		<!ATTLIST limit-view
+			view-index CDATA #REQUIRED
+			view-size CDATA #REQUIRED
+		>
+		<!ELEMENT use-iterator EMPTY>
     
     <!ELEMENT field-map EMPTY>
     <!ATTLIST field-map
@@ -96,6 +137,21 @@
         field-name CDATA #REQUIRED
         to-field-name CDATA #IMPLIED
     >
+
+<!--
+    <!ELEMENT assoc EMPTY>
+    <!ATTLIST assoc
+        entity-name CDATA "Content"
+        content-id-to CDATA #IMPLIED
+        content-assoc-type-id CDATA #IMPLIED
+        map-key CDATA #IMPLIED
+        from-date CDATA #IMPLIED
+        content-purpose CDATA #IMPLIED
+        status-id CDATA #IMPLIED
+        privilege-enum-id CDATA #IMPLIED
+        filter-by-date ( true | false | by-name ) "by-name"
+    >
+-->
 
 <!-- examples
 <trees>
