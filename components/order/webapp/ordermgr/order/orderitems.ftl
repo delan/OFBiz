@@ -144,17 +144,69 @@
                       </td>
                     </#if>
                   </tr>
-                <#-- show info from workeffort if it was a rental item -->
-                <#if orderItem.orderItemTypeId == "RENTAL_ORDER_ITEM">
-                    <#assign WorkOrderItemFulfillments = orderItem.getRelatedCache("WorkOrderItemFulfillment")?if_exists>
-                    <#if WorkOrderItemFulfillments?has_content>
-                        <#list WorkOrderItemFulfillments as WorkOrderItemFulfillment>
-                            <#assign workEffort = WorkOrderItemFulfillment.getRelatedOneCache("WorkEffort")>
-                              <tr><td>&nbsp;</td><td>&nbsp;</td><td colspan="8"><div class="tabletext">From: ${workEffort.estimatedStartDate?string("yyyy-MM-dd")} to: ${workEffort.estimatedCompletionDate?string("yyyy-MM-dd")} Number of persons: ${workEffort.reservPersons}</div></td></tr>
-                            <#break><#-- need only the first one -->
-                        </#list>
-                    </#if>
-                </#if>
+                  <#-- show info from workeffort -->
+                  <#assign workOrderItemFulfillments = orderItem.getRelatedCache("WorkOrderItemFulfillment")?if_exists>
+                  <#if workOrderItemFulfillments?has_content>
+                      <#list workOrderItemFulfillments as workOrderItemFulfillment>
+                          <#assign workEffort = workOrderItemFulfillment.getRelatedOneCache("WorkEffort")>
+                          <tr>
+                            <td>&nbsp;</td>
+                            <td colspan="9">
+                              <div class="tabletext">
+                                <#if orderItem.orderItemTypeId != "RENTAL_ORDER_ITEM">
+                                  <b><i>Production Run</i>:</b>
+                                  <a href="/manufacturing/control/ShowProductionRun?productionRunId=${workEffort.workEffortId}&externalLoginKey=${requestAttributes.externalLoginKey}" class="buttontext" style="font-size: xx-small;">${workEffort.workEffortId}</a>&nbsp;
+                                </#if>
+                                From: ${workEffort.estimatedStartDate?string("yyyy-MM-dd")} to: ${workEffort.estimatedCompletionDate?string("yyyy-MM-dd")} Number of persons: ${workEffort.reservPersons?default("")}
+                              </div>
+                            </td>
+                          </tr>
+                          <#break><#-- need only the first one -->
+                      </#list>
+                  </#if>
+                  <#-- show linked order lines -->
+                  <#if orderHeader?has_content && orderHeader.orderTypeId = "SALES_ORDER">
+                    <#assign linkedOrderItems = orderItem.getRelatedCache("SalesOrderItemAssociation")?if_exists>
+                  <#else>
+                    <#assign linkedOrderItems = orderItem.getRelatedCache("PurchaseOrderItemAssociation")?if_exists>
+                  </#if>
+                  
+                  <#if linkedOrderItems?has_content>
+                    <#list linkedOrderItems as linkedOrderItem>
+                      <#if orderHeader?has_content && orderHeader.orderTypeId = "SALES_ORDER">
+                        <#assign linkedOrderId = linkedOrderItem.purchaseOrderId>
+                        <#assign linkedOrderItemSeqId = linkedOrderItem.poItemSeqId>
+                      <#else>
+                        <#assign linkedOrderId = linkedOrderItem.salesOrderId>
+                        <#assign linkedOrderItemSeqId = linkedOrderItem.soItemSeqId>
+                      </#if>
+                      <tr>
+                        <td>&nbsp;</td>
+                        <td colspan="9">
+                          <div class="tabletext">
+                            <b><i>Linked to order item</i>:</b>
+                            <a href="/ordermgr/control/orderview?orderId=${linkedOrderId}" class="buttontext" style="font-size: xx-small;">${linkedOrderId}/${linkedOrderItemSeqId}</a>&nbsp;
+                          </div>
+                        </td>
+                      </tr>
+                    </#list>
+                  </#if>
+                  <#-- show linked requirements -->
+                  <#assign linkedRequirements = orderItem.getRelatedCache("OrderRequirementCommitment")?if_exists>
+                  
+                  <#if linkedRequirements?has_content>
+                    <#list linkedRequirements as linkedRequirement>
+                      <tr>
+                        <td>&nbsp;</td>
+                        <td colspan="9">
+                          <div class="tabletext">
+                            <b><i>Linked to requirement</i>:</b>
+                            <a href="/manufacturing/control/EditRequirement?requirementId=${linkedRequirement.requirementId}&externalLoginKey=${requestAttributes.externalLoginKey}" class="buttontext" style="font-size: xx-small;">${linkedRequirement.requirementId}</a>&nbsp;
+                          </div>
+                        </td>
+                      </tr>
+                    </#list>
+                  </#if>
 
                   <#-- now show adjustment details per line item -->
                   <#assign orderItemAdjustments = Static["org.ofbiz.order.order.OrderReadHelper"].getOrderItemAdjustmentList(orderItem, orderAdjustments)>
@@ -307,24 +359,6 @@
                         <td align="center">
                           <div class="tabletext" style="font-size: xx-small;">${itemIssuance.quantity?string.number}&nbsp;</div>
                         </td>
-                        <td>&nbsp;</td>
-                        <td>&nbsp;</td>
-                        <td>&nbsp;</td>
-                      </tr>
-                    </#list>
-                  </#if>
-                  <#-- now show linked work effort -->
-                  <#assign workEfforts = orderItem.getRelated("WorkOrderItemFulfillment")>
-                  <#if workEfforts?has_content>
-                    <#list workEfforts as workEffort>
-                      <tr>
-                        <td align="right" colspan="2">
-                          <div class="tabletext" style="font-size: xx-small;">
-                            <b><i>Production Run</i>:</b>
-                            <a target="manufacturing" href="/manufacturing/control/ShowProductionRun?productionRunId=${workEffort.workEffortId}&externalLoginKey=${requestAttributes.externalLoginKey}" class="buttontext" style="font-size: xx-small;">${workEffort.workEffortId}</a>
-                          </div>
-                        </td>
-                        <td>&nbsp;</td>
                         <td>&nbsp;</td>
                         <td>&nbsp;</td>
                         <td>&nbsp;</td>
