@@ -1,5 +1,5 @@
 /*
- * $Id: ModelViewEntity.java,v 1.15 2004/06/29 20:13:05 jonesde Exp $
+ * $Id: ModelViewEntity.java,v 1.16 2004/07/06 21:49:06 doogie Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -35,7 +35,7 @@ import org.ofbiz.entity.jdbc.*;
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:peterm@miraculum.com">Peter Moon</a>    
- * @version    $Revision: 1.15 $
+ * @version    $Revision: 1.16 $
  * @since      2.0
  */
 public class ModelViewEntity extends ModelEntity {
@@ -74,11 +74,11 @@ public class ModelViewEntity extends ModelEntity {
     /** A List of the Field objects for the View Entity, one for each GROUP BY field */
     protected List groupBys = new ArrayList();
 
-    public ModelViewEntity(ModelReader reader, Element entityElement, Element docElement, UtilTimer utilTimer, Hashtable docElementValues) {
-        this.modelReader = reader;
+    public ModelViewEntity(ModelReader reader, Element entityElement, UtilTimer utilTimer, ModelInfo def) {
+        super(reader, entityElement, def);
 
         if (utilTimer != null) utilTimer.timerString("  createModelViewEntity: before general/basic info");
-        this.populateBasicInfo(entityElement, docElement, docElementValues);
+        this.populateBasicInfo(entityElement);
 
         if (utilTimer != null) utilTimer.timerString("  createModelViewEntity: before \"member-entity\"s");
         List memberEntityList = UtilXml.childElementList(entityElement, "member-entity");
