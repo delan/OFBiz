@@ -1,0 +1,41 @@
+/* 
+Demonstrates the necessary indirection for transitive rules, like in done through within.
+
+Try the query:
+    leaf(L)
+which should produce the result:
+    L = englewood
+    L = fortCollins
+    L = westbrook
+    L = yarmouth
+    L = austin
+    L = menzingen
+    L = lexington
+    L = richmond
+    no more results
+
+Try the query:
+    within(X, "switzerland")
+which should produce the result:
+    X = zug
+    X = menzingen
+    no more results
+*/
+in("englewood", "colorado");  
+in("fortCollins", "colorado");
+in("westbrook", "maine");
+in("yarmouth", "maine");
+in("austin", "texas");
+in("menzingen", "zug");
+in("lexington", "kentucky");
+in("richmond", "virginia");
+in("colorado", "us");
+in("maine", "us");
+in("texas", "us");
+in("zug", "switzerland"); 
+in("kentucky", "us");
+in("virginia", "us"); 
+
+within(X, Y) :- in(X, Y);
+within(X, Y) :- in(X, Z), within(Z, Y);
+leaf(X) :- in(X, _), not in(_, X);

@@ -1,0 +1,58 @@
+/*
+Try the query:
+    customer(name, cNum), order(cNum, type, pounds)
+which should produce the result:
+    name = Jim Johnson, cNum = 2024.0, type = Simple Best, pounds = 1.0
+    name = Jane Jerrod, cNum = 2077.0, type = Launch Mi, pounds = 3.0
+    name = Jane Jerrod, cNum = 2077.0, type = Smackin, pounds = 3.0
+    name = Jasmine Jones, cNum = 2093.0, type = Brimful, pounds = 2.0
+    no more results
+or the query:
+    q("Jane Jerrod", type)
+which should produce the result:
+    type = Launch Mi
+    type = Smackin
+    no more results
+or the query:
+    q(name, "Simple Best")
+which should produce the result:
+    name = Jim Johnson
+    no more results
+or the query:
+    q(name, "Revit")
+which should produce the result:
+    no more results
+or the query:
+    coffee(name, roast, country, price), >(price, 6), order(cNum, name, pounds)
+which should produce the result:
+    name = Launch Mi, roast = french, country = kenya, price = 6.95, cNum = 2077.0, pounds = 3.0
+    name = Brimful, roast = regular, country = kenya, price = 6.95, cNum = 2093.0, pounds = 2.0
+    name = Smackin, roast = french, country = columbia, price = 7.95, cNum = 2077.0, pounds = 3.0
+    no more results
+or try this query to demonstrate anonymous variables:
+    coffee(name, _, _, price)
+which should produce the result:
+    name = Launch Mi, price = 6.95
+    name = Simple Best, price = 5.95
+    name = Revit, price = 7.95
+    name = Brimful, price = 6.95
+    name = Smackin, price = 7.95
+    no more results
+*/
+coffee("Launch Mi", "french", "kenya", 6.95);
+coffee("Simple Best", "regular", "columbia", 5.95);
+coffee("Revit", "italian", "guatemala", 7.95);
+coffee("Brimful", "regular", "kenya", 6.95);
+coffee("Smackin", "french", "columbia", 7.95);
+
+customer("Jim Johnson", 2024);
+customer("Jane Jerrod", 2077);
+customer("Jasmine Jones", 2093);
+
+order(2024, "Simple Best", 1);
+order(2077, "Launch Mi", 3);
+order(2077, "Smackin", 3);
+order(2093, "Brimful", 2);
+
+q (Name, Type) :- customer(Name, CustomerNum),
+    order(CustomerNum, Type, Pounds);

@@ -1,0 +1,76 @@
+/*
+This is a very simple example of a fact query.
+Try the following query:
+    starred("James Cagney", Title, Year)
+or for something a little more fun:
+    starred("James Cagney", Title, Year), >(Year, 1950)
+*/
+
+starred("James Cagney", "13 Rule Madeleine", 1956);
+starred("James Cagney", "Angels With Dirty Faces", 1938);
+starred("James Cagney", "Arizona Bushwhackers", 1968);
+starred("James Cagney", "Blonde Crazy", 1931);
+starred("James Cagney", "Blood on the Sun", 1945);
+starred("James Cagney", "Boy Meets Girl", 1938);
+starred("James Cagney", "The Bride Came C.O.D.", 1941);
+starred("James Cagney", "Captains of the Clouds", 1942);
+starred("James Cagney", "Ceiling Zero", 1935);
+starred("James Cagney", "City for Conquest", 1940);
+starred("James Cagney", "Come Fill the Cup", 1951);
+starred("James Cagney", "The Crowd Roars", 1932);
+starred("James Cagney", "Devil Dogs of the Air", 1935);
+starred("James Cagney", "Doorway to Hell", 1930);
+starred("James Cagney", "Each Dawn I Die", 1939);
+starred("James Cagney", "The Fighting 69th", 1940);
+starred("James Cagney", "Footlight Parade", 1933);
+starred("James Cagney", "Frisco Kid", 1935);
+starred("James Cagney", "G Men", 1935);
+starred("James Cagney", "The Gallant Hours", 1960);
+starred("James Cagney", "Great Guy", 1936);
+starred("James Cagney", "Hard to Handle", 1933);
+starred("James Cagney", "He Was Her Man", 1934);
+starred("James Cagney", "Here Comes the Navy", 1934);
+starred("James Cagney", "The Irish in Us", 1935);
+starred("James Cagney", "It's Showtime", 1976);
+starred("James Cagney", "Jimmy the Gent", 1934);
+starred("James Cagney", "Johnny Come Lately", 1943);
+starred("James Cagney", "Kiss Tomorrow Goodbye", 1950);
+starred("James Cagney", "Lady Killer", 1933);
+starred("James Cagney", "A Lion Is in the Streets", 1953);
+starred("James Cagney", "Love Me or Leave Me", 1955);
+starred("James Cagney", "Man of a Thousand Faces", 1957);
+starred("James Cagney", "The Mayor of Hell", 1933);
+starred("James Cagney", "Midsummer Night's Dream", 1935);
+starred("James Cagney", "The Millionaire", 1931);
+starred("James Cagney", "Mister Roberts", 1955);
+starred("James Cagney", "Mutiny on the Bounty", 1935);
+starred("James Cagney", "Never Steal Anything Small", 1959);
+starred("James Cagney", "The Oklahoma Kid", 1939);
+starred("James Cagney", "One Touch of Venus", 1948);
+starred("James Cagney", "One, Two, Three", 1961);
+starred("James Cagney", "Other Men's Women", 1931);
+starred("James Cagney", "Picture Snatcher", 1933);
+starred("James Cagney", "The Public Enemy", 1931);
+starred("James Cagney", "Ragtime", 1981);
+starred("James Cagney", "The Roaring Twenties", 1939);
+starred("James Cagney", "Run for Cover", 1955);
+starred("James Cagney", "The Seven Little Foys", 1955);
+starred("James Cagney", "Shake Hands with the Devil", 1959);
+starred("James Cagney", "Short Cut to Hell", 1957);
+starred("James Cagney", "Sinner's Holiday", 1930);
+starred("James Cagney", "Smart Money", 1931);
+starred("James Cagney", "Something to Sing About", 1937);
+starred("James Cagney", "St. Louis Kid", 1934);
+starred("James Cagney", "Starlift", 1951);
+starred("James Cagney", "The Strawberry Blonde", 1941);
+starred("James Cagney", "Taxi!", 1932);
+starred("James Cagney", "Terrible Joe Moran", 1984);
+starred("James Cagney", "These Wilder Years", 1956);
+starred("James Cagney", "The Time of Your Life", 1948);
+starred("James Cagney", "Torrid Zone", 1940);
+starred("James Cagney", "Tribute to a Bad Man", 1956);
+starred("James Cagney", "West Point Story", 1950);
+starred("James Cagney", "What Price Glory?", 1952);
+starred("James Cagney", "White Heat", 1949);
+starred("James Cagney", "Winner Take All", 1932);
+starred("James Cagney", "Yankee Doodle Dandy", 1942);

@@ -1,0 +1,22 @@
+/*
+Demonstration of creating permutations.
+Usage: permutation(InList, OutList)
+OutList is a permutation of InList.
+
+Try the query:
+    permutation(["get kids", "mail package", "buy milk"], toDo)
+which should produce the result:
+    toDo = [get kids, mail package, buy milk]
+    toDo = [get kids, buy milk, mail package]
+    toDo = [mail package, get kids, buy milk]
+    toDo = [mail package, buy milk, get kids]
+    toDo = [buy milk, get kids, mail package]
+    toDo = [buy milk, mail package, get kids]
+    no more results
+*/
+select(X, [X | Rest], Rest);
+select(X, [Y | Rest1], [Y | Rest2]) :- select(X, Rest1, Rest2);
+permutation(InList, [H | OutRest]) :- 
+    select(H, InList, InOther), 
+    permutation(InOther, OutRest);
+permutation([], []);
