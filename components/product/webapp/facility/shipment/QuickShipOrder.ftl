@@ -20,14 +20,15 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      3.0
 -->
 
 <script language="JavaScript">
 <!-- //
+// function called from ShipmentScaleApplet when a weight is read
 function setWeight(weight) {
-  document.weightForm.weight = weight;
+  document.weightForm.weight.value = weight;
 }
 // -->
 </script>
@@ -44,14 +45,87 @@ function setWeight(weight) {
       <#-- multiple packages -->
       <div class="tabletext"><font color="red">More then one package found for this shipment. You must ship this manually.</font></div>
     <#else>
-      <#-- single package -->      
-      <form name="weightForm" method="post" action="<@ofbizUrl>/setQuickPackageWeight</@ofbizUrl>" style='margin: 0;'>
-        <#assign shipmentPackage = (Static["org.ofbiz.entity.util.EntityUtil"].getFirst(shipmentPackages))?if_exists>
-        <#if shipmentPackage?has_content>
-          <#assign weight = (shipmentPackage.weight)?if_exists>
-          <#if weight?exists>
-            <#-- todo call UPS/USPS -->
+      <#-- single package -->            
+      <#assign shipmentPackage = (Static["org.ofbiz.entity.util.EntityUtil"].getFirst(shipmentPackages))?if_exists>
+      <#if shipmentPackage?has_content>
+        <#assign weight = (shipmentPackage.weight)?if_exists>
+        <#if weight?exists && !requestParameters.reweigh?exists>
+          <#if 1 < shipmentRoutes.size()>
+            <#-- multiple routes -->
+            <div class="tabletext"><font color="red">More then one route segment found. You must ship this manually.</font></div>
           <#else>
+            <form name="routeForm" method="post" action="<@ofbizUrl>/quickShipOrder</@ofbizUrl>" style='margin: 0;'>
+              <#assign shipmentRoute = (Static["org.ofbiz.entity.util.EntityUtil"].getFirst(shipmentRoutes))?if_exists>
+              <#assign carrierPerson = (shipmentRoute.getRelatedOne("CarrierPerson"))?if_exists>
+              <#assign carrierPartyGroup = (shipmentRoute.getRelatedOne("CarrierPartyGroup"))?if_exists>
+              <#assign shipmentMethodType = (shipmentRoute.getRelatedOne("ShipmentMethodType"))?if_exists>
+              <input type="hidden" name="facilityId" value="${facilityId?if_exists}">
+              <input type="hidden" name="shipmentId" value="${shipmentRoute.shipmentId}">
+              <input type="hidden" name="shipmentRouteSegmentId" value="${shipmentRoute.shipmentRouteSegmentId}"/>
+              <table border="0" cellpadding="2" cellspacing="0">
+                <tr>
+                  <td width="20%" align="right"><span class="tableheadtext">Carrier</span></td>
+                  <td><span class="tabletext">&nbsp;</span></td>
+                  <td width="1%" align="left" nowrap>
+                    <select name="carrierPartyId" class="selectBox">
+                      <#if shipmentRoute.carrierPartyId?has_content>
+                        <option value="${shipmentRoute.carrierPartyId}">${(carrierPerson.firstName)?if_exists} ${(carrierPerson.middleName)?if_exists} ${(carrierPerson.lastName)?if_exists} ${(carrierPartyGroup.groupName)?if_exists} [${shipmentRoute.carrierPartyId}]</option>
+                        <option value="${shipmentRoute.carrierPartyId}">---</option>
+                      <#else>
+                        <option value="">&nbsp;</option>
+                      </#if>
+                      <#list carrierPartyDatas as carrierPartyData>
+                        <option value="${carrierPartyData.party.partyId}">${(carrierPartyData.person.firstName)?if_exists} ${(carrierPartyData.person.middleName)?if_exists} ${(carrierPartyData.person.lastName)?if_exists} ${(carrierPartyData.partyGroup.groupName)?if_exists} [${carrierPartyData.party.partyId}]</option>
+                      </#list>
+                    </select>                    
+                  </td>
+                  <td><span class="tabletext">&nbsp;</span></td>
+                  <td width="80%">                                       
+                    <a href="javascript:document.routeForm.submit();" class="buttontext">Confirm Shipment with UPS</a>
+                  </td>
+                </tr>              
+                <tr>
+                  <td width="20%" align="right"><span class="tableheadtext">Ship Method</span></td>
+                  <td><span class="tabletext">&nbsp;</span></td>
+                  <td width="1%" align="left" nowrap>
+                    <select name="shipmentMethodTypeId" class="selectBox">
+                      <#if shipmentMethodType?has_content>
+                        <option value="${shipmentMethodType.shipmentMethodTypeId}">${shipmentMethodType.description}</option>
+                        <option value="${shipmentMethodType.shipmentMethodTypeId}">---</option>
+                      <#else>
+                        <option value="">&nbsp;</option>
+                      </#if>
+                      <#list shipmentMethodTypes as shipmentMethodTypeOption>
+                        <option value="${shipmentMethodTypeOption.shipmentMethodTypeId}">${shipmentMethodTypeOption.description}</option>
+                      </#list>
+                    </select>              
+                  </td>
+                  <td><span class="tabletext">&nbsp;</span></td>
+                  <td width="80%">
+                    <a href="<@ofbizUrl>/quickShipOrder?facilityId=${facilityId}&shipmentId=${shipmentId}&reweigh=Y</@ofbizUrl>" class="buttontext">Re-Weigh Package</a>                  
+                  </td>
+                </tr>
+                <tr>
+                  <td width="20%" align="right"><span class="tableheadtext">&nbsp;</span></td>
+                  <td><span class="tabletext">&nbsp;</span></td>
+                  <td width="1%" align="left" nowrap>
+                    &nbsp;
+                  </td>
+                  <td><span class="tabletext">&nbsp;</span></td>
+                  <td width="80%">
+                    <input type="image" src="/images/spacer.gif" onClick="javascript:document.routeForm.submit();">  
+                  </td>
+                </tr>                
+              </table>              
+            </form>
+            <script language="javascript">
+            <!-- //
+              document.routeForm.carrierPartyId.focus();
+            // -->
+            </script>              
+          </#if>
+        <#else>
+          <form name="weightForm" method="post" action="<@ofbizUrl>/setQuickPackageWeight</@ofbizUrl>" style='margin: 0;'>
             <#assign weightUom = shipmentPackage.getRelatedOne("WeightUom")?if_exists>
             <input type="hidden" name="facilityId" value="${facilityId?if_exists}">
             <input type="hidden" name="shipmentId" value="${shipmentPackage.shipmentId}">
@@ -61,7 +135,7 @@ function setWeight(weight) {
                 <td width="20%" align="right"><span class="tableheadtext">Package #${shipmentPackage.shipmentPackageSeqId} Weight</span></td>
                 <td><span class="tabletext">&nbsp;</span></td>
                 <td width="80%" align="left">
-                  <input type="text" class="inputBox" name="weight" value="${(shipmentPackage.weight)?if_exists}" onfocus="javascript:document.weightForm.weight.value=''">&nbsp;
+                  <input type="text" class="inputBox" name="weight">&nbsp;
                   <select name="weightUomId" class="selectBox">
                     <#if weightUom?has_content>
                       <option value="${weightUom.uomId}">${weightUom.description}</option>
@@ -81,17 +155,21 @@ function setWeight(weight) {
                 </td>
               </tr>
             </table>
-            <script language="javascript">
-            <!-- // 
-              document.weightForm.weight.focus();
-            // -->
-            </script>           
-            <#-- todo embed the applet -->
-          </#if>
-        <#else>
-          <div class="tabletext"><font color="red">ERROR: No packages found for this shipment!</font></div>
+          </form>
+          <script language="javascript">
+          <!-- // 
+            document.weightForm.weight.focus();
+          // -->
+          </script>           
+          <#-- todo embed the applet -->
+          <applet code="ShipmentScaleApplet.class" codebase="/images/" name="Package Weight Reader" width="0" height="0" MAYSCRIPT>
+            <param name="serialPort" value="com1">
+            <param name="fakeWeight" value="22">
+          </applet>
         </#if>
-      </form>
+      <#else>
+        <div class="tabletext"><font color="red">ERROR: No packages found for this shipment!</font></div>
+      </#if>      
       <hr class="sepbar">
       ${pages.get("/shipment/ViewShipmentInfo.ftl")}         
       <br>${pages.get("/shipment/ViewShipmentItemInfo.ftl")}

@@ -1,5 +1,5 @@
 /*
- * $Id: UtilHttp.java,v 1.4 2003/09/06 20:26:43 ajzeneski Exp $
+ * $Id: UtilHttp.java,v 1.5 2003/09/11 03:10:07 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -48,7 +48,7 @@ import javax.servlet.http.HttpSession;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.1
  */
 public class UtilHttp {
@@ -201,33 +201,34 @@ public class UtilHttp {
     
     /** URL Encodes a Map of arguements */
     public static String urlEncodeArgs(Map args) {
-        if (args == null) return "";
         StringBuffer buf = new StringBuffer();
-        Iterator i = args.entrySet().iterator();
-        while (i.hasNext()) {
-            Map.Entry entry = (Map.Entry) i.next();
-            String name = (String) entry.getKey();
-            Object value = entry.getValue();
-            String valueStr = null;
-            if (name != null && value != null) {
-                if (value instanceof String) {
-                    valueStr = (String) value;
-                } else {
-                    valueStr = value.toString();
-                }
-                
-                if (valueStr != null && valueStr.length() > 0) {
-                    if (buf.length() > 0) buf.append('&');
-                    try {
-                        buf.append(URLEncoder.encode(name, "UTF-8"));
-                    } catch (UnsupportedEncodingException e) {
-                        Debug.logError(e, module);                        
+        if (args == null) {        
+            Iterator i = args.entrySet().iterator();
+            while (i.hasNext()) {
+                Map.Entry entry = (Map.Entry) i.next();
+                String name = (String) entry.getKey();
+                Object value = entry.getValue();
+                String valueStr = null;
+                if (name != null && value != null) {
+                    if (value instanceof String) {
+                        valueStr = (String) value;
+                    } else {
+                        valueStr = value.toString();
                     }
-                    buf.append('=');
-                    try {
-                        buf.append(URLEncoder.encode(valueStr, "UTF-8"));
-                    } catch (UnsupportedEncodingException e) {
-                        Debug.logError(e, module);                        
+                    
+                    if (valueStr != null && valueStr.length() > 0) {
+                        if (buf.length() > 0) buf.append('&');
+                        try {
+                            buf.append(URLEncoder.encode(name, "UTF-8"));
+                        } catch (UnsupportedEncodingException e) {
+                            Debug.logError(e, module);                        
+                        }
+                        buf.append('=');
+                        try {
+                            buf.append(URLEncoder.encode(valueStr, "UTF-8"));
+                        } catch (UnsupportedEncodingException e) {
+                            Debug.logError(e, module);                        
+                        }
                     }
                 }
             }
