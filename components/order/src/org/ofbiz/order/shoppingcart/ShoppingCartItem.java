@@ -754,7 +754,7 @@ public class ShoppingCartItem implements java.io.Serializable {
             return null;
         }
     }
-
+   
     /** Returns the item's unit weight */
     public double getWeight() {
         GenericValue product = getProduct();
@@ -775,6 +775,29 @@ public class ShoppingCartItem implements java.io.Serializable {
         } else {
             // non-product items have 0 weight
             return 0;
+        }
+    }
+
+    /** Returns the item's pieces included */
+    public long getPiecesIncluded() {
+        GenericValue product = getProduct();
+        if (product != null) {
+            Long pieces = product.getLong("piecesIncluded");
+
+            // if the piecesIncluded is null, see if there is an associated virtual product and get the piecesIncluded of that product
+            if (pieces == null) {
+                GenericValue parentProduct = this.getParentProduct();
+                if (parentProduct != null) pieces = parentProduct.getLong("piecesIncluded");
+            }
+
+            if (pieces == null) {
+                return 1;
+            } else {
+                return pieces.longValue();
+            }
+        } else {
+            // non-product item assumed 1 piece
+            return 1;
         }
     }
 
@@ -846,6 +869,7 @@ public class ShoppingCartItem implements java.io.Serializable {
         itemInfo.put("quantity", new Double(this.getQuantity()));
         itemInfo.put("weight", new Double(this.getWeight()));
         itemInfo.put("size",  new Double(this.getSize()));
+        itemInfo.put("piecesIncluded", new Long(this.getPiecesIncluded()));
         itemInfo.put("featureSet", this.getFeatureSet());
         return itemInfo;
     }
