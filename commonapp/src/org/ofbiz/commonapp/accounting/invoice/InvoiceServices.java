@@ -31,11 +31,11 @@ import org.ofbiz.core.service.*;
 import org.ofbiz.core.util.*;
 
 /**
- * InventoryServices - Services for creating invoices
+ * InvoiceServices - Services for creating invoices
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
  * @version    $Revision$
- * @since      2.0
+ * @since      2.1
  */
 public class InvoiceServices {
 
@@ -70,13 +70,64 @@ public class InvoiceServices {
         OrderReadHelper orh = new OrderReadHelper(orderHeader);
 
         // create the invoice record        
-        String invoiceId = delegator.getNextSeqId("Invoice").toString();
-        String billingAccountId = orderHeader.getString("billingAccountId");
-        GenericValue invoice = delegator.makeValue("Invoice", UtilMisc.toMap("invoiceId", invoiceId));
+        String invoiceId = delegator.getNextSeqId("Invoice").toString();               
+        GenericValue invoice = delegator.makeValue("Invoice", UtilMisc.toMap("invoiceId", invoiceId));        
+        invoice.set("invoiceDate", UtilDateTime.nowTimestamp());
         invoice.set("invoiceTypeId", invoiceType);
-        if (billingAccountId != null)
-            invoice.set("billingAccountId", billingAccountId);
+        invoice.set("statusId", "INVOICE_IN_PROCESS");
         
+        GenericValue billingAccount = null;
+        List billingAccountTerms = null;
+        try {
+            billingAccount = orderHeader.getRelatedOne("BillingAccount");            
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Trouble getting BillingAccount entity from OrderHeader", module);
+            ServiceUtil.returnError("Trouble getting BillingAccount entity from OrderHeader");
+        }
+        if (billingAccount != null) {                      
+            // set the billing account        
+            invoice.set("billingAccountId", billingAccount.getString("billingAccountId"));           
+           
+            // get the billing account terms
+            try {
+                billingAccountTerms = billingAccount.getRelated("BillingAccountTerm");                
+            } catch (GenericEntityException e) {
+                Debug.logError(e, "Trouble getting BillingAccountTerm entity list", module);
+                ServiceUtil.returnError("Trouble getting BillingAccountTerm entity list");
+            }
+            
+            // set the invoice terms as defined for the billing account
+            if (billingAccountTerms != null) {
+                Iterator billingAcctTermsIter = billingAccountTerms.iterator();
+                while (billingAcctTermsIter.hasNext()) {
+                    GenericValue term = (GenericValue) billingAcctTermsIter.next();
+                    GenericValue invoiceTerm = delegator.makeValue("InvoiceTerm", 
+                        UtilMisc.toMap("invoiceId", invoiceId, "invoiceItemSeqId", "_NA_"));
+                    invoiceTerm.set("termType", term.get("termType"));
+                    invoiceTerm.set("termValue", term.get("termValue"));
+                    invoiceTerm.set("uomId", term.get("uomId"));
+                    toStore.add(invoiceTerm);                                        
+                }
+            }
+            
+            // set the invoice bill_to_customer from the billing account
+            List billToRoles = null;
+            try {
+                billToRoles = billingAccount.getRelated("BillingAccountRole", UtilMisc.toMap("roleTypeId", "BILL_TO_CUSTOMER"), null);
+            } catch (GenericEntityException e) {
+                Debug.logError(e, "Trouble getting BillingAccountRole entity list", module);
+                ServiceUtil.returnError("Trouble getting BillingAccountRole entity list");
+            }
+            Iterator billToIter = billToRoles.iterator();
+            while (billToIter.hasNext()) {
+                GenericValue billToRole = (GenericValue) billToIter.next();
+                GenericValue invoiceRole = delegator.makeValue("InvoiceRole", UtilMisc.toMap("invoiceId", invoiceId));
+                invoiceRole.set("partyId", billToRole.get("partyId"));
+                invoiceRole.set("roleTypeId", "BILL_TO_CUSTOMER");
+                toStore.add(invoiceRole);
+            }                       
+        }
+                    
         // store the invoice first
         try {
             delegator.create(invoice);
@@ -226,6 +277,11 @@ public class InvoiceServices {
                 itemSeqId++;
             }
         }
+        
+        // invoice status object
+        GenericValue invStatus = delegator.makeValue("InvoiceStatus", 
+            UtilMisc.toMap("invoiceId", invoiceId, "statusId", "INVOICE_IN_PROCESS", "statusDate", UtilDateTime.nowTimestamp()));
+        toStore.add(invStatus);
                        
         // store value objects
         try {

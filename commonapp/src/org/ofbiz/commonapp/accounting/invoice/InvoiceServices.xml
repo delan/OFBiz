@@ -63,7 +63,22 @@
         <create-value value-name="newEntity"/>
     </simple-method>
     
-    <simple-method method-name="createInvoiceStatus" short-description="Create a Invoice Status">
+    <simple-method method-name="setInvoiceStatus" short-description="Set The Invoice Status">
+    	<field-to-field field-name="invoiceId" map-name="parameters" to-map-name="lookupPKMap"/>
+    	<find-by-primary-key entity-name="Invoice" map-name="lookupPKMap" value-name="invoice"/>
+    	
+    	<field-to-field field-name="statusId" map-name="invoice" to-map-name="changeLookup" to-field-name="statusId"/>
+    	<field-to-field field-name="statusId" map-name="parameters" to-map-name="changeLookup" to-field-name="statusIdTo"/>
+    	<find-by-primary-key entity-name="Invoice" map-name="changeLookup" value-name="statusChange"/>
+    	
+    	<if-empty map-name="statusChange">
+            <add-error><fail-message message="Status is not a valid change"/></add-error>
+            <check-errors/>
+        </if-empty>
+        
+        <field-to-field field-name="statusId" map-name="parameters" to-field-name="statusId" to-map-name="invoice"/>
+        <store-value value-name="invoice"/>
+    	
         <make-value value-name="newEntity" entity-name="InvoiceStatus"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
         <set-pk-fields map-name="parameters" value-name="newEntity"/>

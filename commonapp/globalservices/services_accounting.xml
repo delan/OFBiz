@@ -44,8 +44,8 @@
         <attribute name="datetimePerformed" type="Timestamp" mode="IN" optional="true"/> 
         <attribute name="percentage" type="Double" mode="IN" optional="true"/>
     </service>
-    <service name="createInvoiceStatus" engine="simple" 
-            location="org/ofbiz/commonapp/accounting/invoice/InvoiceServices.xml" invoke="createInvoiceStatus">
+    <service name="setInvoiceStatus" engine="simple" 
+            location="org/ofbiz/commonapp/accounting/invoice/InvoiceServices.xml" invoke="setInvoiceStatus">
         <description>Create Invoice (Item) Term Record</description>
         <attribute name="statusId" type="String" mode="IN" optional="false"/>
         <attribute name="invoiceId" type="String" mode="IN" optional="false"/>
