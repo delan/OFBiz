@@ -71,6 +71,10 @@ public class HtmlTreeRenderer implements TreeStringRenderer {
     public void renderNodeBegin(Writer writer, Map context, ModelTree.ModelNode node, int depth, boolean isLast, List subNodeValues) throws IOException {
 
         String pathString = buildPathString(node.getModelTree(), depth);
+        String currentNodeTrailPiped = null;
+        List currentNodeTrail = node.getModelTree().getCurrentNodeTrail();
+        String staticNodeTrailPiped = StringUtil.join(currentNodeTrail, "|");
+        context.put("staticNodeTrailPiped", staticNodeTrailPiped);
         context.put("nodePathString", pathString);
         //int idx = node.getModelTree().getNodeIndexAtDepth(depth);
         context.put("depth", Integer.toString(depth));
@@ -119,10 +123,6 @@ public class HtmlTreeRenderer implements TreeStringRenderer {
             expandCollapseLink.setStyle(expandCollapseStyle);
             expandCollapseLink.setImage(expandCollapseImage);
             //String currentNodeTrailCsv = (String)context.get("currentNodeTrailCsv");
-            String currentNodeTrailPiped = null;
-            List currentNodeTrail = node.getModelTree().getCurrentNodeTrail();
-            String staticNodeTrailPiped = StringUtil.join(currentNodeTrail, "|");
-            context.put("staticNodeTrailPiped", staticNodeTrailPiped);
     
             int openDepth = node.getModelTree().getOpenDepth();
             if (targetEntityId == null || !targetEntityId.equals(entityId)) {
