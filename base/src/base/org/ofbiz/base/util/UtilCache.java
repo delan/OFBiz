@@ -1,5 +1,5 @@
 /*
- * $Id: UtilCache.java,v 1.6 2004/05/01 12:16:07 jonesde Exp $
+ * $Id: UtilCache.java,v 1.7 2004/05/01 13:14:37 jonesde Exp $
  *
  *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -31,6 +31,7 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Set;
+import java.util.WeakHashMap;
 
 /**
  * Generalized caching utility. Provides a number of caching features:
@@ -43,13 +44,13 @@ import java.util.Set;
  * </ul>
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.6 $
+ * @version    $Revision: 1.7 $
  * @since      2.0
  */
 public class UtilCache {
 
     /** A static Map to keep track of all of the UtilCache instances. */
-    public static Map utilCacheTable = new HashMap();
+    public static Map utilCacheTable = new WeakHashMap();
 
     /** An index number appended to utilCacheTable names when there are conflicts. */
     protected static Map defaultIndices = new HashMap();
