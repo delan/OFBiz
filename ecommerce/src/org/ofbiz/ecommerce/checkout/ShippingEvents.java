@@ -48,8 +48,12 @@ public class ShippingEvents {
         //getServletContext appears to be new on the session object for Servlet 2.3
         ServletContext application = request.getSession().getServletContext();
         URL ecommercePropertiesUrl = null;
-        try { ecommercePropertiesUrl = application.getResource("/WEB-INF/ecommerce.properties"); }
-        catch(java.net.MalformedURLException e) { Debug.logWarning(e); }
+        try { 
+            ecommercePropertiesUrl = application.getResource("/WEB-INF/ecommerce.properties"); 
+        }
+        catch( java.net.MalformedURLException e ) { 
+            Debug.logWarning(e); 
+        }
         
         String shippingMethod = request.getParameter("shipping_method");
         String shippingContactMechId = request.getParameter("shipping_contact_mech_id");
@@ -107,7 +111,7 @@ public class ShippingEvents {
             GenericValue thisEstimate = (GenericValue) i.next();
             String toGeo = thisEstimate.getString("geoIdTo");
             // Make sure we have a valid GEOID.
-            if ( toGeo.equals("") || toGeo.equals(shipAddress.getString("countryGeoId")) || toGeo.equals(shipAddress.getString("stateProvinceGeoId")) || toGeo.equals(shipAddress.getString("postalCodeGeoId")) ) {
+            if ( toGeo == null || toGeo.equals("") || toGeo.equals(shipAddress.getString("countryGeoId")) || toGeo.equals(shipAddress.getString("stateProvinceGeoId")) || toGeo.equals(shipAddress.getString("postalCodeGeoId")) ) {
                 GenericValue wv = null;
                 GenericValue qv = null;
                 GenericValue pv = null;
