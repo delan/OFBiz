@@ -1,5 +1,5 @@
 /*
- * $Id: ProductWorker.java,v 1.11 2003/12/19 06:45:54 jonesde Exp $
+ * $Id: ProductWorker.java,v 1.12 2004/02/24 02:24:24 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -23,6 +23,7 @@
  */
 package org.ofbiz.product.product;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -32,20 +33,23 @@ import javax.servlet.ServletRequest;
 import javax.servlet.jsp.PageContext;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.OrderedMap;
 import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.base.util.UtilMisc;
-import org.ofbiz.base.util.OrderedMap;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityUtil;
+import org.ofbiz.service.GenericServiceException;
+import org.ofbiz.service.LocalDispatcher;
+import org.ofbiz.service.ModelService;
 
 /**
  * Product Worker class to reduce code in JSPs.
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.11 $
+ * @version    $Revision: 1.12 $
  * @since      2.0
  */
 public class ProductWorker {
@@ -130,6 +134,80 @@ public class ProductWorker {
         return null;
     }
 
+    /** invokes the getInventoryAvailableByFacility service, returns true if specified quantity is available, else false **/
+    public static boolean isProductInventoryAvailableByFacility(String productId, String inventoryFacilityId, double quantity, LocalDispatcher dispatcher) throws GenericServiceException {
+        Double availableToPromise = null;
+
+        try {
+            Map result = dispatcher.runSync("getInventoryAvailableByFacility",
+                                            UtilMisc.toMap("productId", productId, "facilityId", inventoryFacilityId));
+
+            availableToPromise = (Double) result.get("availableToPromise");
+
+            if (availableToPromise == null) {
+                Debug.logWarning("The getInventoryAvailableByFacility service returned a null availableToPromise, the error message was:\n" + result.get(ModelService.ERROR_MESSAGE), module);
+                return false;
+            }
+        } catch (GenericServiceException e) {
+            Debug.logWarning(e, "Error invoking getInventoryAvailableByFacility service in isCatalogInventoryAvailable", module);
+            return false;
+        }
+
+        // check to see if we got enough back...
+        if (availableToPromise.doubleValue() >= quantity) {
+            if (Debug.infoOn()) Debug.logInfo("Inventory IS available in facility with id " + inventoryFacilityId + " for product id " + productId + "; desired quantity is " + quantity + ", available quantity is " + availableToPromise, module);
+            return true;
+        } else {
+            if (Debug.infoOn()) Debug.logInfo("Returning false because there is insufficient inventory available in facility with id " + inventoryFacilityId + " for product id " + productId + "; desired quantity is " + quantity + ", available quantity is " + availableToPromise, module);
+            return false;
+        }
+    }
+
+    /** invokes the reserveProductInventoryByFacility service, returns quantity not reserved, 0 on error, null on success **/
+    public static Double reserveProductInventoryByFacility(String productId, Double quantity, String inventoryFacilityId,  String orderId, String reserveOrderEnumId, String orderItemSeqId, boolean requireInventory, GenericValue userLogin, LocalDispatcher dispatcher) throws GenericServiceException {
+
+        Double quantityNotReserved = null;
+
+        try {
+            Map serviceContext = new HashMap();
+
+            serviceContext.put("productId", productId);
+            serviceContext.put("facilityId", inventoryFacilityId);
+            serviceContext.put("orderId", orderId);
+            serviceContext.put("orderItemSeqId", orderItemSeqId);
+            serviceContext.put("quantity", quantity);
+
+            if (requireInventory) {
+                serviceContext.put("requireInventory", "Y");
+            } else {
+                serviceContext.put("requireInventory", "N");
+            }
+            serviceContext.put("reserveOrderEnumId", reserveOrderEnumId);
+            serviceContext.put("userLogin", userLogin);
+
+            Map result = dispatcher.runSync("reserveProductInventoryByFacility", serviceContext);
+
+            quantityNotReserved = (Double) result.get("quantityNotReserved");
+
+            if (quantityNotReserved == null) {
+                Debug.logWarning("The reserveProductInventoryByFacility service returned a null quantityNotReserved, the error message was:\n" + result.get(ModelService.ERROR_MESSAGE), module);
+                return !requireInventory? null: new Double(0.0);
+            }
+        } catch (GenericServiceException e) {
+            Debug.logWarning(e, "Error invoking reserveProductInventoryByFacility service", module);
+            return !requireInventory? null: new Double(0.0);
+        }
+
+        // whew, finally here: now check to see if we were able to reserve...
+        if (quantityNotReserved.doubleValue() == 0) {
+            if (Debug.infoOn()) Debug.logInfo("Inventory IS reserved in facility with id " + inventoryFacilityId + " for product id " + productId + "; desired quantity was " + quantity, module);
+            return null;
+        } else {
+            if (Debug.infoOn()) Debug.logInfo("There is insufficient inventory available in facility with id " + inventoryFacilityId + " for product id " + productId + "; desired quantity is " + quantity + ", amount could not reserve is " + quantityNotReserved, module);
+            return quantityNotReserved;
+        }
+    }
+    
     public static void getAssociatedProducts(PageContext pageContext, String productAttributeName, String assocPrefix) {
         GenericDelegator delegator = (GenericDelegator) pageContext.getRequest().getAttribute("delegator");
         GenericValue product = (GenericValue) pageContext.getAttribute(productAttributeName);
