@@ -24,17 +24,19 @@
  */
 package org.ofbiz.core.entity.transaction;
 
+import java.sql.Connection;
+import java.sql.SQLException;
+
 import javax.naming.NamingException;
 import javax.transaction.TransactionManager;
 import javax.transaction.UserTransaction;
-import java.sql.*;
-
-import org.ofbiz.core.entity.*;
-import org.ofbiz.core.entity.config.*;
-import org.ofbiz.core.util.*;
 
 import org.objectweb.jotm.Jotm;
 import org.objectweb.transaction.jta.TMService;
+import org.ofbiz.core.entity.ConnectionFactory;
+import org.ofbiz.core.entity.GenericEntityException;
+import org.ofbiz.core.entity.config.EntityConfigUtil;
+import org.ofbiz.core.util.Debug;
 
 /**
  * JotmFactory - Central source for JOTM JTA objects
@@ -89,7 +91,7 @@ public class JotmFactory implements TransactionFactoryInterface {
         EntityConfigUtil.DatasourceInfo datasourceInfo = EntityConfigUtil.getDatasourceInfo(helperName);
 
         if (datasourceInfo.inlineJdbcElement != null) {
-            // Use JOTM (enhydra-jdbc.jar) connection pooling
+            // Use JOTM (xapool.jar) connection pooling
             try {
                 Connection con = JotmConnectionFactory.getConnection(helperName, datasourceInfo.inlineJdbcElement);
                 if (con != null) return con;

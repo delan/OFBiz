@@ -52,17 +52,13 @@ public class JotmConnectionFactory {
     public static Connection getConnection(String helperName, Element jotmJdbcElement) throws SQLException, GenericEntityException {                               
         StandardXAPoolDataSource pds = (StandardXAPoolDataSource) dsCache.get(helperName);        
         if (pds != null) {                      
-            if (Debug.verboseOn()) Debug.logVerbose(helperName + " pool size: " + pds.pool.getCount(), module);
-            //return TransactionUtil.enlistConnection(ds.getXAConnection());
-            //return ds.getXAConnection().getConnection();
+            if (Debug.verboseOn()) Debug.logVerbose(helperName + " pool size: " + pds.pool.getCount(), module);           
             return pds.getConnection();
         }
         
         synchronized (JotmConnectionFactory.class) {            
             pds = (StandardXAPoolDataSource) dsCache.get(helperName);
-            if (pds != null) {              
-                //return TransactionUtil.enlistConnection(ds.getXAConnection());
-                //return ds.getXAConnection().getConnection();
+            if (pds != null) {                           
                 return pds.getConnection();
             }
               
@@ -71,14 +67,16 @@ public class JotmConnectionFactory {
                 ds =  new StandardXADataSource();
                 pds = new StandardXAPoolDataSource();
             } catch (NoClassDefFoundError e) {                
-                throw new GenericEntityException("Cannot find enhydra-jdbc.jar");                       
+                throw new GenericEntityException("Cannot find xapool.jar");                       
             }
+            
             ds.setDriverName(jotmJdbcElement.getAttribute("jdbc-driver"));
             ds.setUrl(jotmJdbcElement.getAttribute("jdbc-uri"));
             ds.setUser(jotmJdbcElement.getAttribute("jdbc-username"));
             ds.setPassword(jotmJdbcElement.getAttribute("jdbc-password"));
             ds.setDescription(helperName);  
             ds.setTransactionManager(TransactionFactory.getTransactionManager()); 
+            
             String transIso = jotmJdbcElement.getAttribute("isolation-level");
             if (transIso != null && transIso.length() > 0) {
                 if ("Serializable".equals(transIso)) {
@@ -93,13 +91,16 @@ public class JotmConnectionFactory {
                     ((StandardXADataSource) ds).setTransactionIsolation(Connection.TRANSACTION_NONE);
                 }                                            
             }
+            
             // set the datasource in the pool
             pds.setDataSource(ds);
             pds.setDescription(ds.getDescription());
             pds.setUser(ds.getUser());
             pds.setPassword(ds.getPassword());
+            
             // set the transaction manager in the pool
             pds.setTransactionManager(TransactionFactory.getTransactionManager());
+            
             // configure the pool settings           
             try {            
                 pds.setMaxSize(new Integer(jotmJdbcElement.getAttribute("pool-maxsize")).intValue());
@@ -113,13 +114,13 @@ public class JotmConnectionFactory {
             } catch (Exception e) {
                 Debug.logError(e, "Problems with pool settings", module);
             }
+            
             // TODO: set the test statement to test connections
             //pds.setJdbcTestStmt("select sysdate from dual");
+            
             // cache the pool
             dsCache.put(helperName, pds);        
-                                            
-            //return TransactionUtil.enlistConnection(ds.getXAConnection());
-            //return ds.getXAConnection().getConnection();
+                                                      
             return pds.getConnection();
         }                
     }                                                                     
