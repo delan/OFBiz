@@ -1,5 +1,5 @@
 /*
- * $Id: PriceServices.java,v 1.2 2003/08/26 21:06:19 jonesde Exp $
+ * $Id: PriceServices.java,v 1.3 2003/09/02 18:15:03 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -50,7 +50,7 @@ import org.ofbiz.service.ServiceUtil;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class PriceServices {
@@ -63,7 +63,7 @@ public class PriceServices {
      *   <li>partyId
      *   <li>prodCatalogId
      *   <li>webSiteId
-     *   <li>facilityGroupId
+     *   <li>productStoreGroupId
      *   <li>quantity
      * </ul>
      */
@@ -86,8 +86,8 @@ public class PriceServices {
         String prodCatalogId = (String) context.get("prodCatalogId");
         String webSiteId = (String) context.get("webSiteId");
         
-        String facilityGroupId = (String) context.get("facilityGroupId");
-        if (UtilValidate.isEmpty(facilityGroupId)) facilityGroupId = "_NA_";
+        String productStoreGroupId = (String) context.get("productStoreGroupId");
+        if (UtilValidate.isEmpty(productStoreGroupId)) productStoreGroupId = "_NA_";
 
         // if currency uom is null get from properties file, if still null assume USD (USD: American Dollar) for now
         String currencyUomId = (String) context.get("currencyUomId");
@@ -110,7 +110,7 @@ public class PriceServices {
         List virtualProductPrices = null;
         if (virtualProductId != null) {
             try {
-                virtualProductPrices = delegator.findByAndCache("ProductPrice", UtilMisc.toMap("productId", virtualProductId, "currencyUomId", currencyUomId, "facilityGroupId", facilityGroupId), UtilMisc.toList("-fromDate"));
+                virtualProductPrices = delegator.findByAndCache("ProductPrice", UtilMisc.toMap("productId", virtualProductId, "currencyUomId", currencyUomId, "productStoreGroupId", productStoreGroupId), UtilMisc.toList("-fromDate"));
             } catch (GenericEntityException e) {
                 Debug.logError(e, "An error occurred while getting the product prices", module);
             }
@@ -142,7 +142,7 @@ public class PriceServices {
         List productPrices = null;
 
         try {
-            productPrices = delegator.findByAndCache("ProductPrice", UtilMisc.toMap("productId", productId, "currencyUomId", currencyUomId, "facilityGroupId", facilityGroupId), UtilMisc.toList("-fromDate"));
+            productPrices = delegator.findByAndCache("ProductPrice", UtilMisc.toMap("productId", productId, "currencyUomId", currencyUomId, "productStoreGroupId", productStoreGroupId), UtilMisc.toList("-fromDate"));
         } catch (GenericEntityException e) {
             Debug.logError(e, "An error occurred while getting the product prices", module);
         }

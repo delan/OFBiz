@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Brad Steiner (bsteiner@thehungersite.com)
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      2.2
 -->
 
@@ -43,7 +43,7 @@ ${pages.get("/product/ProductTabBar.ftl")}
         <tr>
             <td><div class="tabletext"><b>Price&nbsp;Type</b></div></td>
             <td><div class="tabletext"><b>Currency</b></div></td>
-            <td><div class="tabletext"><b>Facility Group</b></div></td>
+            <td><div class="tabletext"><b>Product Store Group</b></div></td>
             <td><div class="tabletext"><b>From&nbsp;Date&nbsp;&amp;&nbsp;Time</b></div></td>
             <td align="center"><div class="tabletext"><b>Thru&nbsp;Date&nbsp;&amp;&nbsp;Time,&nbsp;Price</b></div></td>
             <td><div class="tabletext"><b>Last Modified By</b></div></td>
@@ -54,11 +54,11 @@ ${pages.get("/product/ProductTabBar.ftl")}
         <#assign line = line + 1>
         <#assign currencyUom = productPrice.getRelatedOneCache("CurrencyUom")?if_exists>
         <#assign productPriceType = productPrice.getRelatedOneCache("ProductPriceType")?if_exists>
-        <#assign facilityGroup = productPrice.getRelatedOneCache("FacilityGroup")?if_exists>
+        <#assign productStoreGroup = productPrice.getRelatedOneCache("ProductStoreGroup")?if_exists>
         <tr valign="middle">
             <td><div class='tabletext'><#if productPriceType?has_content>${(productPriceType.description)?if_exists}<#else>[${productPrice.productPriceTypeId}]</#if></div></td>
             <td><div class='tabletext'><#if currencyUom?has_content>${currencyUom.description?if_exists} [${productPrice.currencyUomId}]</#if></div></td>
-            <td><div class='tabletext'><#if (facilityGroup.facilityGroupId)?has_content>${facilityGroup.facilityGroupName?if_exists}<#else>[${productPrice.facilityGroupId}]</#if></div></td>
+            <td><div class='tabletext'><#if (productStoreGroup.productStoreGroupId)?has_content>${productStoreGroup.productStoreGroupName?if_exists}<#else>[${productPrice.productStoreGroupId}]</#if></div></td>
             <td>
                 <#assign hasntStarted = false>
                 <#if productPrice.fromDate?exists && Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().before(productPrice.fromDate)><#assign hasntStarted = true></#if>
@@ -73,7 +73,7 @@ ${pages.get("/product/ProductTabBar.ftl")}
                     <input type=hidden name='productId' value='${productPrice.productId}'>
                     <input type=hidden name='productPriceTypeId' value='${productPrice.productPriceTypeId}'>
                     <input type=hidden name='currencyUomId' value='${productPrice.currencyUomId?default(defaultCurrencyUomId)}'>
-                    <input type=hidden name='facilityGroupId' value='${productPrice.facilityGroupId}'>
+                    <input type=hidden name='productStoreGroupId' value='${productPrice.productStoreGroupId}'>
                     <input type=hidden name='fromDate' value='${productPrice.fromDate}'>
                     <input type='text' class='inputBox' size='25' name='thruDate' value='<#if productPrice.thruDate?has_content>${(productPrice.thruDate.toString())?if_exists}</#if>' <#if hasExpired> style='color: red;'</#if>>
                     <a href="javascript:call_cal(document.lineForm${line}.thruDate, '${(productPrice.thruDate.toString())?default(nowTimestampString)}');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>
@@ -83,7 +83,7 @@ ${pages.get("/product/ProductTabBar.ftl")}
             </td>
             <td><div class='tabletext'>[${productPrice.lastModifiedByUserLogin?if_exists}] on ${productPrice.lastModifiedDate?if_exists}</div></td>
             <td align="center">
-            <a href='<@ofbizUrl>/deleteProductPrice?productId=${productPrice.productId}&productPriceTypeId=${productPrice.productPriceTypeId}&currencyUomId=${productPrice.currencyUomId}&facilityGroupId=${productPrice.facilityGroupId}&fromDate=${Static["org.ofbiz.base.util.UtilFormatOut"].encodeQueryValue(productPrice.getTimestamp("fromDate").toString())}</@ofbizUrl>' class="buttontext">
+            <a href='<@ofbizUrl>/deleteProductPrice?productId=${productPrice.productId}&productPriceTypeId=${productPrice.productPriceTypeId}&currencyUomId=${productPrice.currencyUomId}&productStoreGroupId=${productPrice.productStoreGroupId}&fromDate=${Static["org.ofbiz.base.util.UtilFormatOut"].encodeQueryValue(productPrice.getTimestamp("fromDate").toString())}</@ofbizUrl>' class="buttontext">
             [Delete]</a>
             </td>
         </tr>
@@ -109,11 +109,11 @@ ${pages.get("/product/ProductTabBar.ftl")}
                         <option value='${currencyUom.uomId}' <#if isDefault>selected</#if>> ${currencyUom.description} [${currencyUom.uomId}]</option>
                     </#list>
                 </select>
-                Facility Group:
-                <select name="facilityGroupId" class='selectBox'>
-                    <#list facilityGroups as facilityGroup>
-                        <#assign isDefault = facilityGroup.facilityGroupId.equals("_NA_")>
-                        <option value='${facilityGroup.facilityGroupId}' <#if isDefault>selected</#if>>${facilityGroup.facilityGroupName}</option>
+                Product Store Group:
+                <select name="productStoreGroupId" class='selectBox'>
+                    <#list productStoreGroups as productStoreGroup>
+                        <#assign isDefault = productStoreGroup.productStoreGroupId.equals("_NA_")>
+                        <option value='${productStoreGroup.productStoreGroupId}' <#if isDefault>selected</#if>>${productStoreGroup.productStoreGroupName}</option>
                     </#list>
                 </select>
             </div>
