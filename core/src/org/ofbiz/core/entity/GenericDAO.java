@@ -69,7 +69,7 @@ public class GenericDAO
     boolean useTX = true;
     Connection connection = null;
     try { connection = getConnection(); } 
-    catch (SQLException sqle) { Debug.logWarning("ERROR [GenericDAO.insert]: Unable to esablish a connection with the database... Error was:\n"); Debug.logWarning(sqle); }
+    catch (SQLException sqle) { Debug.logWarning("ERROR [GenericDAO.insert]: Unable to esablish a connection with the database... Error was:"); Debug.logWarning(sqle); }
     
     
     try { connection.setAutoCommit(false); } 
@@ -83,11 +83,11 @@ public class GenericDAO
     } 
     catch (SQLException sqle) 
     {
-      Debug.logWarning("ERROR [GenericDAO.insert]: SQL Exception while executing insert. Error was:\n");
-      Debug.logWarning(sqle);
+      Debug.logWarning("ERROR [GenericDAO.insert]: SQL Exception while executing insert. Error was:");
+      Debug.logWarning(sqle.getMessage());
       
       try { if(useTX) connection.rollback(); }
-      catch(SQLException sqle2) { Debug.logWarning("ERROR [GenericDAO.insert]: SQL Exception while rolling back insert. Error was:\n"); Debug.logWarning(sqle2); }
+      catch(SQLException sqle2) { Debug.logWarning("ERROR [GenericDAO.insert]: SQL Exception while rolling back insert. Error was:"); Debug.logWarning(sqle2); }
       
       return false;
     } finally {
@@ -156,7 +156,7 @@ public class GenericDAO
     boolean useTX = true;
     Connection connection = null;
     try { connection = getConnection(); } 
-    catch (SQLException sqle) { Debug.logWarning("ERROR [GenericDAO.update]: Unable to esablish a connection with the database... Error was:\n"); Debug.logWarning(sqle); }
+    catch (SQLException sqle) { Debug.logWarning("ERROR [GenericDAO.update]: Unable to esablish a connection with the database... Error was:"); Debug.logWarning(sqle); }
 
     try { connection.setAutoCommit(false); } 
     catch(SQLException sqle) { useTX = false; }
@@ -169,11 +169,11 @@ public class GenericDAO
     } 
     catch (SQLException sqle) 
     {
-      Debug.logWarning("ERROR [GenericDAO.update]: SQL Exception while executing update. Error was:\n");
-      Debug.logWarning(sqle);
+      Debug.logWarning("ERROR [GenericDAO.update]: SQL Exception while executing update. Error was:");
+      Debug.logWarning(sqle.getMessage());
 
       try { if(useTX) connection.rollback(); }
-      catch(SQLException sqle2) { Debug.logWarning("ERROR [GenericDAO.insert]: SQL Exception while rolling back insert. Error was:\n"); Debug.logWarning(sqle2); }
+      catch(SQLException sqle2) { Debug.logWarning("ERROR [GenericDAO.insert]: SQL Exception while rolling back insert. Error was:"); Debug.logWarning(sqle2); }
 
       return false;
     } finally {
@@ -260,7 +260,7 @@ public class GenericDAO
     PreparedStatement ps = null; 
     ResultSet rs = null;
     try { connection = getConnection(); } 
-    catch (SQLException sqle) { Debug.logWarning("ERROR [GenericDAO.select]: Unable to esablish a connection with the database... Error was:\n"); Debug.logWarning(sqle); }
+    catch (SQLException sqle) { Debug.logWarning("ERROR [GenericDAO.select]: Unable to esablish a connection with the database... Error was:"); Debug.logWarning(sqle.getMessage()); }
     
     String sql = "SELECT " + modelEntity.colNameString(modelEntity.nopks, ", ", "") + " FROM " + modelEntity.tableName + " WHERE " + modelEntity.colNameString(modelEntity.pks, "=? AND ", "=?") + "";
     try {
@@ -288,8 +288,8 @@ public class GenericDAO
         return false;
       }
     } catch (SQLException sqle) {
-      Debug.logWarning("ERROR [GenericDAO]: SQL Exception while executing the following:\n" + sql + "\nError was:\n");
-      Debug.logWarning(sqle);
+      Debug.logWarning("ERROR [GenericDAO]: SQL Exception while executing the following:\n" + sql + "\nError was:");
+      Debug.logWarning(sqle.getMessage());
       return false;
     } finally {
       try { if (rs != null) rs.close(); } catch (SQLException sqle) { }
@@ -317,7 +317,7 @@ public class GenericDAO
     PreparedStatement ps = null; 
     ResultSet rs = null;
     try { connection = getConnection(); } 
-    catch (SQLException sqle) { Debug.logWarning("ERROR [GenericDAO.select]: Unable to esablish a connection with the database... Error was:\n"); Debug.logWarning(sqle); }
+    catch (SQLException sqle) { Debug.logWarning("ERROR [GenericDAO.select]: Unable to esablish a connection with the database... Error was:"); Debug.logWarning(sqle.getMessage()); }
     
     //we don't want to select ALL fields, just the nonpk fields that are in the passed GenericEntity
     Vector partialFields = new Vector();
@@ -353,8 +353,8 @@ public class GenericDAO
         return false;
       }
     } catch (SQLException sqle) {
-      Debug.logWarning("ERROR [GenericDAO]: SQL Exception while executing the following:\n" + sql + "\nError was:\n");
-      Debug.logWarning(sqle);
+      Debug.logWarning("ERROR [GenericDAO]: SQL Exception while executing the following:\n" + sql + "\nError was:");
+      Debug.logWarning(sqle.getMessage());
       return false;
     } finally {
       try { if (rs != null) rs.close(); } catch (SQLException sqle) { }
@@ -379,7 +379,7 @@ public class GenericDAO
     PreparedStatement ps = null;
     ResultSet rs = null;
     try { connection = getConnection(); } 
-    catch (SQLException sqle) { Debug.logWarning("ERROR [GenericDAO.selectByAnd]: Unable to esablish a connection with the database... Error was:\n" + sqle.toString() ); }
+    catch (SQLException sqle) { Debug.logWarning("ERROR [GenericDAO.selectByAnd]: Unable to esablish a connection with the database... Error was:" + sqle.toString() ); }
     
     //make two Vectors of fields, one for fields to select and the other for where clause fields (to find by)
     Vector whereFields = new Vector();
@@ -460,7 +460,7 @@ public class GenericDAO
         collection.add(value);
       }
     } catch (SQLException sqle) {
-      Debug.logWarning("ERROR [GenericDAO.selectByAnd]: SQL Exception while executing the following:\n" + sql + "\nError was:\n");
+      Debug.logWarning("ERROR [GenericDAO.selectByAnd]: SQL Exception while executing the following:\n" + sql + "\nError was:");
       sqle.printStackTrace();
       return null;
     } finally {
@@ -507,7 +507,7 @@ public class GenericDAO
     Connection connection = null;
     PreparedStatement ps = null;
     try { connection = getConnection(); } 
-    catch (SQLException sqle) { Debug.logWarning("ERROR [GenericDAO.delete]: Unable to esablish a connection with the database... Error was:\n"); Debug.logWarning(sqle); }
+    catch (SQLException sqle) { Debug.logWarning("ERROR [GenericDAO.delete]: Unable to esablish a connection with the database... Error was:"); Debug.logWarning(sqle.getMessage()); }
     
     String sql = "DELETE FROM " + modelEntity.tableName + " WHERE " + modelEntity.colNameString(modelEntity.pks, "=? AND ", "=?");
     try {
@@ -522,8 +522,8 @@ public class GenericDAO
       ps.executeUpdate();
       entity.modified = true;
     } catch (SQLException sqle) {
-      Debug.logWarning("ERROR [GenericDAO.delete]: SQL Exception while executing the following:\n" + sql + "\nError was:\n");
-      Debug.logWarning(sqle);
+      Debug.logWarning("ERROR [GenericDAO.delete]: SQL Exception while executing the following:\n" + sql + "\nError was:");
+      Debug.logWarning(sqle.getMessage());
       return false;
     } finally {
       try { if (ps != null) ps.close(); } catch (SQLException sqle) { }
@@ -545,7 +545,7 @@ public class GenericDAO
     Connection connection = null;
     PreparedStatement ps = null;
     try { connection = getConnection(); } 
-    catch (SQLException sqle) { Debug.logWarning("ERROR [GenericDAO.selectByAnd]: Unable to esablish a connection with the database... Error was:\n" + sqle.toString() ); }
+    catch (SQLException sqle) { Debug.logWarning("ERROR [GenericDAO.selectByAnd]: Unable to esablish a connection with the database... Error was:" + sqle.toString() ); }
     
     //make two Vectors of fields, one for fields to select and the other for where clause fields (to find by)
     Vector whereFields = new Vector();
@@ -576,7 +576,7 @@ public class GenericDAO
       }
       ps.executeUpdate();      
     } catch (SQLException sqle) {
-      Debug.logWarning("ERROR [GenericDAO.selectByAnd]: SQL Exception while executing the following:\n" + sql + "\nError was:\n");
+      Debug.logWarning("ERROR [GenericDAO.selectByAnd]: SQL Exception while executing the following:\n" + sql + "\nError was:");
       sqle.printStackTrace();
       return false;
     } finally {

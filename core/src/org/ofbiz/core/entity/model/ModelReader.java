@@ -57,6 +57,10 @@ public class ModelReader
   public static String fieldTypeFileName = UtilProperties.getPropertyValue("servers", "xml.field.type");
   public static String entityFileName = UtilProperties.getPropertyValue("servers", "xml.entity");
   
+  public static int numEntities = 0;
+  public static int numFields = 0;
+  public static int numRelations = 0;
+  
   public static UtilCache getFieldTypeCache()
   {
     if(fieldTypeCache == null) //don't want to block here
@@ -84,21 +88,21 @@ public class ModelReader
           int i;
           for(i=0; i<fieldTypeList.getLength(); i++)
           {
-            utilTimer.timerString("Start loop -- " + i + " --");
+            //utilTimer.timerString("Start loop -- " + i + " --");
             Element curFieldType = (Element)fieldTypeList.item(i);
             String fieldTypeName = checkNull(childElementValue(curFieldType, "type"), "[No type name]");
             //utilTimer.timerString("  After fieldTypeName -- " + i + " --");
             ModelFieldType fieldType = createModelFieldType(curFieldType, docElement, null);
-            utilTimer.timerString("  After createModelFieldType -- " + i + " --");
+            //utilTimer.timerString("  After createModelFieldType -- " + i + " --");
             if(fieldType != null) 
             {
               fieldTypeCache.put(fieldTypeName, fieldType);
               //utilTimer.timerString("  After fieldTypeCache.put -- " + i + " --");
-              Debug.logInfo("-- getModelFieldType: Created fieldType for fieldTypeName: " + fieldTypeName);
+              Debug.logInfo("-- getModelFieldType: #" + i + " Created fieldType: " + fieldTypeName);
             }
-            else Debug.logWarning("-- -- ENTITYGEN ERROR:getModelFieldType: Could not create fieldType for fieldTypeName: " + fieldTypeName);
+            else { Debug.logWarning("-- -- ENTITYGEN ERROR:getModelFieldType: Could not create fieldType for fieldTypeName: " + fieldTypeName); }
           }
-          utilTimer.timerString("FINISHED - Total Entities: " + i + " FINISHED");
+          utilTimer.timerString("FINISHED - Total Field Types: " + i + " FINISHED");
         }
       }
     }
@@ -114,6 +118,10 @@ public class ModelReader
         //must check if null again as one of the blocked threads can still enter 
         if(entityCache == null) //now it's safe
         {
+          numEntities = 0;
+          numFields = 0;
+          numRelations = 0;
+          
           entityCache = new UtilCache("GenericEntityCache", 0, 0);
 
           UtilTimer utilTimer = new UtilTimer();
@@ -131,26 +139,27 @@ public class ModelReader
           utilTimer.timerString("Before getElementsByTagName(entity)");
           NodeList entityList = docElement.getElementsByTagName("entity");
 
-          utilTimer.timerString("Before start of loop");
+          utilTimer.timerString("Before start of loop: " + entityList.getLength() + " entities");
           int i;
           for(i=0; i<entityList.getLength(); i++)
           {
-            utilTimer.timerString("Start loop -- " + i + " --");
+            //utilTimer.timerString("Start loop -- " + i + " --");
             Element curEntity = (Element)entityList.item(i);
             String entityName = entityEntityName(curEntity);
             //utilTimer.timerString("  After entityEntityName -- " + i + " --");
             //ModelEntity entity = createModelEntity(curEntity, docElement, utilTimer, docElementValues);
             ModelEntity entity = createModelEntity(curEntity, docElement, null, docElementValues);
-            utilTimer.timerString("  After createModelEntity -- " + i + " --");
+            //utilTimer.timerString("  After createModelEntity -- " + i + " --");
             if(entity != null) 
             {
               entityCache.put(entityName, entity);
               //utilTimer.timerString("  After entityCache.put -- " + i + " --");
-              Debug.logInfo("-- getModelEntity: Created entity for entityName: " + entityName);
+              Debug.logInfo("-- getModelEntity: #" + i + " Created entity: " + entityName);
             }
             else Debug.logWarning("-- -- ENTITYGEN ERROR:getModelEntity: Could not create entity for entityName: " + entityName);
           }
           utilTimer.timerString("FINISHED - Total Entities: " + i + " FINISHED");
+          Debug.logInfo("FINISHED LOADING ENTITIES; #entites=" + numEntities + " #fields=" + numFields + " #relations=" + numRelations);
         }
       }
     }
@@ -220,6 +229,7 @@ public class ModelReader
   static ModelEntity createModelEntity(Element entityElement, Element docElement, UtilTimer utilTimer, Hashtable docElementValues)
   {
     if(entityElement == null) return null;
+    numEntities++;
     ModelEntity entity = new ModelEntity();
     
     if(utilTimer != null) utilTimer.timerString("  createModelEntity: before general");
@@ -295,6 +305,7 @@ public class ModelReader
   
   static ModelRelation createRelation(ModelEntity entity, Element relationElement)
   {
+    numRelations++;
     ModelRelation relation = new ModelRelation();
     relation.mainEntity = entity;
 
@@ -344,6 +355,7 @@ public class ModelReader
   {
     if(fieldElement == null) return null;
     
+    numFields++;
     ModelField field = new ModelField();
     
     field.type = checkNull(childElementValue(fieldElement, "type"));
