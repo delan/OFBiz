@@ -50,6 +50,7 @@
     <ContentOperation contentOperationId="HAS_ADMIN_ROLE" description="Has Admin Role"/>
     <ContentOperation contentOperationId="HAS_PUBLISHER_ROLE" description="Has Publisher Role"/>
     <ContentOperation contentOperationId="CONTENT_CREATE_SUB" description="Create SubContent"/>
+    <ContentOperation contentOperationId="CONTENT_VIEW_SHORT" description="View Short Desc"/>
 
     <!-- These ContentTypes are primarily for structuring documents or content -->
     <ContentPurposeType contentPurposeTypeId="ARTICLE" description="Article"/>

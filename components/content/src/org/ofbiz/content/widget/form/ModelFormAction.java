@@ -361,11 +361,12 @@ public abstract class ModelFormAction {
                 } else {
                     context.putAll(result);
                 }
-                String listIteratorName = resultMapListIteratorNameExdr.expandString(context);
-                Object obj = result.get(listIteratorName);
+                String serviceListIteratorName = resultMapListIteratorNameExdr.expandString(context);
+                Object obj = result.get(serviceListIteratorName);
+                String formListIteratorName = modelForm.getListIteratorName();
                 if (obj != null && obj instanceof EntityListIterator) {
-                	context.put("listIteratorName", listIteratorName);
-                    context.put(listIteratorName, obj);
+                	context.put("listIteratorName", formListIteratorName);
+                    context.put(formListIteratorName, obj);
                 }
                 String listName = resultMapListNameExdr.expandString(context);
                 List lst = (List)result.get(listName);
