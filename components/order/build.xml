@@ -21,7 +21,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *  This is the Open for Business Order Build Script.
- *  $Id: build.xml,v 1.4 2003/08/22 18:21:07 ajzeneski Exp $
+ *  $Id: build.xml,v 1.5 2003/12/03 01:23:14 ajzeneski Exp $
 -->
 
 <project name="OFBiz - Order Component" default="jar" basedir=".">
@@ -47,6 +47,7 @@
             <fileset dir="../../base/build/lib" includes="*.jar"/>
             <fileset dir="../entity/lib" includes="*.jar"/>
             <fileset dir="../entity/build/lib" includes="*.jar"/>
+            <fileset dir="../datafile/build/lib" includes="*.jar"/>
             <fileset dir="../security/build/lib" includes="*.jar"/>
             <fileset dir="../service/lib" includes="*.jar"/>
             <fileset dir="../service/build/lib" includes="*.jar"/>
