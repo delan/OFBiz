@@ -11,6 +11,7 @@
   <!-- Test service -->
   <service name="testScv" engine="java" export="true"
     location="ServiceTest" invoke="testOne">
+      <description>Test service</description>
       <attribute name="message" type="String" mode="IN" optional="true"/>	  
       <attribute name="resp" type="String" mode="OUT"/>
   </service>
@@ -22,8 +23,6 @@
       <attribute name="workEffortId" type="String" mode="IN"/>
       <attribute name="partyId" type="String" mode="IN"/>
       <attribute name="roleTypeId" type="String" mode="IN" optional="true"/>
-      <attribute name="newPartyId" type="String" mode="IN"/>
-      <attribute name="newRoleTypeId" type="String" mode="IN" optional="true"/>
       <attribute name="removeOldAssignments" type="String" mode="IN" optional="true"/>
       <attribute name="errorMessage" type="String" mode="OUT" optional="true"/>
       <attribute name="responseMessage" type="String" mode="OUT" optional="true"/>
@@ -61,7 +60,6 @@
       <attribute name="workEffortId" type="String" mode="IN"/>
       <attribute name="partyId" type="String" mode="IN"/>
       <attribute name="roleTypeId" type="String" mode="IN" optional="true"/>
-      <attribute name="newPartyId" type="Sting" mode="IN" optional="true"/>
       <attribute name="errorMessage" type="String" mode="OUT" optional="true"/>
       <attribute name="responseMessage" type="String" mode="OUT" optional="true"/>
   </service>
