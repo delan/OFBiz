@@ -910,7 +910,8 @@ public class ContentWorker implements org.ofbiz.widget.ContentWorkerInterface {
         //GenericValue content = null;
         GenericValue view = null;
         if (contentId == null) {
-            throw new GenericEntityException("contentId and subContentId are null.");
+            Debug.logError("ContentId is null", module);
+        	return view;
         }
         Map results = null;
         List contentTypes = null;
