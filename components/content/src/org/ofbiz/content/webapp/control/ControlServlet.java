@@ -1,5 +1,5 @@
 /*
- * $Id: ControlServlet.java,v 1.4 2003/09/18 16:01:22 jonesde Exp $
+ * $Id: ControlServlet.java,v 1.5 2004/01/24 16:08:23 ajzeneski Exp $
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -54,7 +54,7 @@ import com.ibm.bsf.BSFManager;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.0
  */
 public class ControlServlet extends HttpServlet {
@@ -110,9 +110,10 @@ public class ControlServlet extends HttpServlet {
         }
 
         long requestStartTime = System.currentTimeMillis();
-        HttpSession session = request.getSession();        
-        
+        HttpSession session = request.getSession();
+
         GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
+        //Debug.log("Cert Chain: " + request.getAttribute("javax.servlet.request.X509Certificate"), module);
 
         // workaraound if we are in the root webapp
         String webappName = UtilHttp.getApplicationName(request);
