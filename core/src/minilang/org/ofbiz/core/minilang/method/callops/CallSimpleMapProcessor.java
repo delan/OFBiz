@@ -22,7 +22,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.ofbiz.core.minilang.operation;
+package org.ofbiz.core.minilang.method.callops;
 
 import java.net.*;
 import java.text.*;
@@ -32,6 +32,8 @@ import javax.servlet.http.*;
 import org.w3c.dom.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.minilang.*;
+import org.ofbiz.core.minilang.method.*;
+import org.ofbiz.core.minilang.operation.*;
 
 /**
  * An event operation that calls a simple map processor inlined or from a separate file

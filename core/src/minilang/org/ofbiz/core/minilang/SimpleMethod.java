@@ -34,6 +34,7 @@ import org.ofbiz.core.util.*;
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.service.*;
 
+import org.ofbiz.core.minilang.method.*;
 import org.ofbiz.core.minilang.operation.*;
 
 /**
@@ -421,37 +422,37 @@ public class SimpleMethod {
                 String nodeName = curOperElem.getNodeName();
 
                 if ("call-map-processor".equals(nodeName)) {
-                    methodOperations.add(new CallSimpleMapProcessor(curOperElem, simpleMethod));
+                    methodOperations.add(new org.ofbiz.core.minilang.method.callops.CallSimpleMapProcessor(curOperElem, simpleMethod));
                 } else if ("check-errors".equals(nodeName)) {
-                    methodOperations.add(new CheckErrors(curOperElem, simpleMethod));
+                    methodOperations.add(new org.ofbiz.core.minilang.method.callops.CheckErrors(curOperElem, simpleMethod));
                 } else if ("call-service".equals(nodeName)) {
-                    methodOperations.add(new CallService(curOperElem, simpleMethod));
+                    methodOperations.add(new org.ofbiz.core.minilang.method.callops.CallService(curOperElem, simpleMethod));
                 } else if ("call-bsh".equals(nodeName)) {
-                    methodOperations.add(new CallBsh(curOperElem, simpleMethod));
+                    methodOperations.add(new org.ofbiz.core.minilang.method.callops.CallBsh(curOperElem, simpleMethod));
                 } else if ("field-to-request".equals(nodeName)) {
-                    methodOperations.add(new FieldToRequest(curOperElem, simpleMethod));
+                    methodOperations.add(new org.ofbiz.core.minilang.method.eventops.FieldToRequest(curOperElem, simpleMethod));
                 } else if ("field-to-session".equals(nodeName)) {
-                    methodOperations.add(new FieldToSession(curOperElem, simpleMethod));
+                    methodOperations.add(new org.ofbiz.core.minilang.method.eventops.FieldToSession(curOperElem, simpleMethod));
                 } else if ("request-to-field".equals(nodeName)) {
-                    methodOperations.add(new RequestToField(curOperElem, simpleMethod));
+                    methodOperations.add(new org.ofbiz.core.minilang.method.eventops.RequestToField(curOperElem, simpleMethod));
                 } else if ("session-to-field".equals(nodeName)) {
-                    methodOperations.add(new SessionToField(curOperElem, simpleMethod));
+                    methodOperations.add(new org.ofbiz.core.minilang.method.eventops.SessionToField(curOperElem, simpleMethod));
                 } else if ("field-to-result".equals(nodeName)) {
-                    methodOperations.add(new FieldToResult(curOperElem, simpleMethod));
+                    methodOperations.add(new org.ofbiz.core.minilang.method.serviceops.FieldToResult(curOperElem, simpleMethod));
                 } else if ("field-to-field".equals(nodeName)) {
-                    methodOperations.add(new FieldToField(curOperElem, simpleMethod));
+                    methodOperations.add(new org.ofbiz.core.minilang.method.envops.FieldToField(curOperElem, simpleMethod));
                 } else if ("if-validate-method".equals(nodeName)) {
-                    methodOperations.add(new IfValidateMethod(curOperElem, simpleMethod));
+                    methodOperations.add(new org.ofbiz.core.minilang.method.ifops.IfValidateMethod(curOperElem, simpleMethod));
                 } else if ("if-compare".equals(nodeName)) {
-                    methodOperations.add(new IfCompare(curOperElem, simpleMethod));
+                    methodOperations.add(new org.ofbiz.core.minilang.method.ifops.IfCompare(curOperElem, simpleMethod));
                 } else if ("if-compare-field".equals(nodeName)) {
-                    methodOperations.add(new IfCompareField(curOperElem, simpleMethod));
+                    methodOperations.add(new org.ofbiz.core.minilang.method.ifops.IfCompareField(curOperElem, simpleMethod));
                 } else if ("if-regexp".equals(nodeName)) {
-                    methodOperations.add(new IfRegexp(curOperElem, simpleMethod));
+                    methodOperations.add(new org.ofbiz.core.minilang.method.ifops.IfRegexp(curOperElem, simpleMethod));
                 } else if ("if-empty".equals(nodeName)) {
-                    methodOperations.add(new IfEmpty(curOperElem, simpleMethod));
+                    methodOperations.add(new org.ofbiz.core.minilang.method.ifops.IfEmpty(curOperElem, simpleMethod));
                 } else if ("if-not-empty".equals(nodeName)) {
-                    methodOperations.add(new IfNotEmpty(curOperElem, simpleMethod));
+                    methodOperations.add(new org.ofbiz.core.minilang.method.ifops.IfNotEmpty(curOperElem, simpleMethod));
                 } else {
                     Debug.logWarning("Operation element \"" + nodeName + "\" no recognized");
                 }

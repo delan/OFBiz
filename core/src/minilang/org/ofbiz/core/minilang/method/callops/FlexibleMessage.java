@@ -22,7 +22,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.ofbiz.core.minilang.operation;
+package org.ofbiz.core.minilang.method.callops;
 
 import java.net.*;
 import java.text.*;

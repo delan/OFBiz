@@ -22,7 +22,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.ofbiz.core.minilang.operation;
+package org.ofbiz.core.minilang.method;
 
 import java.net.*;
 import java.text.*;
@@ -31,48 +31,23 @@ import javax.servlet.http.*;
 
 import org.w3c.dom.*;
 import org.ofbiz.core.util.*;
+
 import org.ofbiz.core.minilang.*;
 
 /**
- * Copies a Servlet request attribute to a map field
+ * A single operation, does the specified operation on the given field
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- *@created    February 20, 2002
+ *@created    December 29, 2001
  *@version    1.0
  */
-public class RequestToField extends MethodOperation {
-    String mapName;
-    String fieldName;
-    String requestName;
+public abstract class MethodOperation {
+    protected SimpleMethod simpleMethod;
 
-    public RequestToField(Element element, SimpleMethod simpleMethod) {
-        super(element, simpleMethod);
-        mapName = element.getAttribute("map-name");
-        fieldName = element.getAttribute("field-name");
-        requestName = element.getAttribute("request-name");
-
-        if (requestName == null || requestName.length() == 0) {
-            requestName = fieldName;
-        }
+    public MethodOperation(Element element, SimpleMethod simpleMethod) {
+        this.simpleMethod = simpleMethod;
     }
 
-    public boolean exec(MethodContext methodContext) {
-        //only run this if it is in an EVENT context
-        if (methodContext.getMethodType() == MethodContext.EVENT) {
-            Map fromMap = (Map) methodContext.getEnv(mapName);
-            if (fromMap == null) {
-                Debug.logWarning("Map not found with name " + mapName);
-                return true;
-            }
-
-            Object fieldVal = methodContext.getRequest().getAttribute(requestName);
-            if (fieldVal == null) {
-                Debug.logWarning("Field value not found with name " + fieldName + " in Map with name " + mapName);
-                return true;
-            }
-
-            fromMap.put(fieldName, fieldVal);
-        }
-        return true;
-    }
+    /** Execute the operation; if false is returned then no further operations will be executed */
+    public abstract boolean exec(MethodContext methodContext);
 }

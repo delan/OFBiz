@@ -22,7 +22,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.ofbiz.core.minilang.operation;
+package org.ofbiz.core.minilang.method.ifops;
 
 import java.net.*;
 import java.text.*;
@@ -32,35 +32,26 @@ import javax.servlet.http.*;
 import org.w3c.dom.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.minilang.*;
+import org.ofbiz.core.minilang.method.*;
 
 /**
- * Iff the comparison between the constant and the specified field is true process sub-operations
+ * Iff the specified field is not empty process sub-operations
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@created    February 19, 2002
  *@version    1.0
  */
-public class IfCompare extends MethodOperation {
+public class IfEmpty extends MethodOperation {
     
     List subOps = new LinkedList();
     
     String mapName;
     String fieldName;
-    String value;
 
-    String operator;
-    String type;
-    String format;
-    
-    public IfCompare(Element element, SimpleMethod simpleMethod) {
+    public IfEmpty(Element element, SimpleMethod simpleMethod) {
         super(element, simpleMethod);
         this.mapName = element.getAttribute("map-name");
         this.fieldName = element.getAttribute("field-name");
-        this.value = element.getAttribute("value");
-
-        this.operator = element.getAttribute("operator");
-        this.type = element.getAttribute("type");
-        this.format = element.getAttribute("format");
         
         SimpleMethod.readOperations(element, subOps, simpleMethod);
     }
@@ -68,30 +59,31 @@ public class IfCompare extends MethodOperation {
     public boolean exec(MethodContext methodContext) {
         //if conditions fails, always return true; if a sub-op returns false 
         // return false and stop, otherwise return true
+        //return true;
+        
+        //only run subOps if element is empty/null
+        boolean runSubOps = false;
 
-        Object fieldVal = null;
         Map fromMap = (Map) methodContext.getEnv(mapName);
         if (fromMap == null) {
-            Debug.logInfo("Map not found with name " + mapName + ", using empty string for comparison");
+            Debug.logInfo("Map not found with name " + mapName + ", running operations");
+            runSubOps = true;
         } else {
-            fieldVal = fromMap.get(fieldName);
-        }
-        
-        //always use an empty string by default
-        if (fieldVal == null)
-            fieldVal = "";
-        
-        List messages = new LinkedList();
-        Boolean resultBool = BaseCompare.doRealCompare(fieldVal, value, this.operator, this.type, this.format, messages, null, methodContext.getLoader());
+            Object fieldVal = fromMap.get(fieldName);
 
-        if (messages.size() > 0) {
-            Iterator miter = messages.iterator();
-            while (miter.hasNext()) {
-                Debug.logWarning("Error with comparison: " + miter.next());
+            if (fieldVal == null) {
+                runSubOps = true;
+            } else {
+                if (fieldVal instanceof String) {
+                    String fieldStr = (String) fieldVal;
+                    if (fieldStr.length() == 0) {
+                        runSubOps = true;
+                    }
+                }
             }
         }
         
-        if (resultBool != null && resultBool.booleanValue()) {
+        if (runSubOps) {
             return SimpleMethod.runSubOps(subOps, methodContext);
         } else {
             return true;

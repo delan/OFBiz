@@ -22,7 +22,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.ofbiz.core.minilang.operation;
+package org.ofbiz.core.minilang.method.callops;
 
 import java.io.*;
 import java.net.*;
@@ -33,6 +33,7 @@ import javax.servlet.http.*;
 import org.w3c.dom.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.minilang.*;
+import org.ofbiz.core.minilang.method.*;
 
 import bsh.*;
 

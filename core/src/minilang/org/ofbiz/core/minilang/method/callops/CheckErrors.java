@@ -22,7 +22,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.ofbiz.core.minilang.operation;
+package org.ofbiz.core.minilang.method.callops;
 
 import java.net.*;
 import java.text.*;
@@ -33,6 +33,7 @@ import org.w3c.dom.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.service.*;
 import org.ofbiz.core.minilang.*;
+import org.ofbiz.core.minilang.method.*;
 
 /**
  * An event operation that checks a message list and may introduce a return code and stop the event

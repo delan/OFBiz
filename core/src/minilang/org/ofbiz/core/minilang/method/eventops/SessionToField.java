@@ -22,7 +22,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.ofbiz.core.minilang.operation;
+package org.ofbiz.core.minilang.method.eventops;
 
 import java.net.*;
 import java.text.*;
@@ -32,27 +32,28 @@ import javax.servlet.http.*;
 import org.w3c.dom.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.minilang.*;
+import org.ofbiz.core.minilang.method.*;
 
 /**
- * Copies a map field to a Servlet request attribute
+ * Copies a Servlet session attribute to a map field
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- *@created    December 29, 2001
+ *@created    February 20, 2002
  *@version    1.0
  */
-public class FieldToRequest extends MethodOperation {
+public class SessionToField extends MethodOperation {
     String mapName;
     String fieldName;
-    String requestName;
+    String sessionName;
 
-    public FieldToRequest(Element element, SimpleMethod simpleMethod) {
+    public SessionToField(Element element, SimpleMethod simpleMethod) {
         super(element, simpleMethod);
         mapName = element.getAttribute("map-name");
         fieldName = element.getAttribute("field-name");
-        requestName = element.getAttribute("request-name");
+        sessionName = element.getAttribute("session-name");
 
-        if (requestName == null || requestName.length() == 0) {
-            requestName = fieldName;
+        if (sessionName == null || sessionName.length() == 0) {
+            sessionName = fieldName;
         }
     }
 
@@ -65,13 +66,14 @@ public class FieldToRequest extends MethodOperation {
                 return true;
             }
 
-            Object fieldVal = fromMap.get(fieldName);
+
+            Object fieldVal = methodContext.getRequest().getSession().getAttribute(sessionName);
             if (fieldVal == null) {
                 Debug.logWarning("Field value not found with name " + fieldName + " in Map with name " + mapName);
                 return true;
             }
-
-            methodContext.getRequest().setAttribute(requestName, fieldVal);
+            
+            fromMap.put(fieldName, fieldVal);
         }
         return true;
     }

@@ -22,7 +22,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.ofbiz.core.minilang.operation;
+package org.ofbiz.core.minilang.method.eventops;
 
 import java.net.*;
 import java.text.*;
@@ -32,46 +32,47 @@ import javax.servlet.http.*;
 import org.w3c.dom.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.minilang.*;
+import org.ofbiz.core.minilang.method.*;
 
 /**
- * Copies a map field to a Service result entry
+ * Copies a Servlet request attribute to a map field
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- *@created    February 15, 2002
+ *@created    February 20, 2002
  *@version    1.0
  */
-public class FieldToResult extends MethodOperation {
+public class RequestToField extends MethodOperation {
     String mapName;
     String fieldName;
-    String resultName;
+    String requestName;
 
-    public FieldToResult(Element element, SimpleMethod simpleMethod) {
+    public RequestToField(Element element, SimpleMethod simpleMethod) {
         super(element, simpleMethod);
         mapName = element.getAttribute("map-name");
         fieldName = element.getAttribute("field-name");
-        resultName = element.getAttribute("result-name");
+        requestName = element.getAttribute("request-name");
 
-        if (resultName == null || resultName.length() == 0) {
-            resultName = fieldName;
+        if (requestName == null || requestName.length() == 0) {
+            requestName = fieldName;
         }
     }
 
     public boolean exec(MethodContext methodContext) {
-        //only run this if it is in an SERVICE context
-        if (methodContext.getMethodType() == MethodContext.SERVICE) {
+        //only run this if it is in an EVENT context
+        if (methodContext.getMethodType() == MethodContext.EVENT) {
             Map fromMap = (Map) methodContext.getEnv(mapName);
             if (fromMap == null) {
                 Debug.logWarning("Map not found with name " + mapName);
                 return true;
             }
 
-            Object fieldVal = fromMap.get(fieldName);
+            Object fieldVal = methodContext.getRequest().getAttribute(requestName);
             if (fieldVal == null) {
                 Debug.logWarning("Field value not found with name " + fieldName + " in Map with name " + mapName);
                 return true;
             }
 
-            methodContext.putResult(resultName, fieldVal);
+            fromMap.put(fieldName, fieldVal);
         }
         return true;
     }

@@ -22,7 +22,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.ofbiz.core.minilang.operation;
+package org.ofbiz.core.minilang.method.eventops;
 
 import java.net.*;
 import java.text.*;
@@ -31,23 +31,49 @@ import javax.servlet.http.*;
 
 import org.w3c.dom.*;
 import org.ofbiz.core.util.*;
-
 import org.ofbiz.core.minilang.*;
+import org.ofbiz.core.minilang.method.*;
 
 /**
- * A single operation, does the specified operation on the given field
+ * Copies a map field to a Servlet request attribute
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@created    December 29, 2001
  *@version    1.0
  */
-public abstract class MethodOperation {
-    SimpleMethod simpleMethod;
+public class FieldToRequest extends MethodOperation {
+    String mapName;
+    String fieldName;
+    String requestName;
 
-    public MethodOperation(Element element, SimpleMethod simpleMethod) {
-        this.simpleMethod = simpleMethod;
+    public FieldToRequest(Element element, SimpleMethod simpleMethod) {
+        super(element, simpleMethod);
+        mapName = element.getAttribute("map-name");
+        fieldName = element.getAttribute("field-name");
+        requestName = element.getAttribute("request-name");
+
+        if (requestName == null || requestName.length() == 0) {
+            requestName = fieldName;
+        }
     }
 
-    /** Execute the operation; if false is returned then no further operations will be executed */
-    public abstract boolean exec(MethodContext methodContext);
+    public boolean exec(MethodContext methodContext) {
+        //only run this if it is in an EVENT context
+        if (methodContext.getMethodType() == MethodContext.EVENT) {
+            Map fromMap = (Map) methodContext.getEnv(mapName);
+            if (fromMap == null) {
+                Debug.logWarning("Map not found with name " + mapName);
+                return true;
+            }
+
+            Object fieldVal = fromMap.get(fieldName);
+            if (fieldVal == null) {
+                Debug.logWarning("Field value not found with name " + fieldName + " in Map with name " + mapName);
+                return true;
+            }
+
+            methodContext.getRequest().setAttribute(requestName, fieldVal);
+        }
+        return true;
+    }
 }

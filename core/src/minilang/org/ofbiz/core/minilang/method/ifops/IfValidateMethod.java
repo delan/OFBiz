@@ -22,51 +22,42 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.ofbiz.core.minilang.operation;
+package org.ofbiz.core.minilang.method.ifops;
 
 import java.net.*;
 import java.text.*;
 import java.util.*;
 import javax.servlet.http.*;
-
-import org.apache.oro.text.regex.*;
+import java.lang.reflect.*;
 
 import org.w3c.dom.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.minilang.*;
+import org.ofbiz.core.minilang.method.*;
 
 /**
- * Iff the specified field complies with the pattern specified by the regular expression, process sub-operations
+ * Iff the validate method returns true with the specified field process sub-operations
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@created    February 19, 2002
  *@version    1.0
  */
-public class IfRegexp extends MethodOperation {
+public class IfValidateMethod extends MethodOperation {
     
-    static PatternMatcher matcher = new Perl5Matcher();
-    static PatternCompiler compiler = new Perl5Compiler();
-
     List subOps = new LinkedList();
     
     String mapName;
     String fieldName;
+    String methodName;
+    String className;
 
-    Pattern pattern = null;
-    String expr;
-
-    public IfRegexp(Element element, SimpleMethod simpleMethod) {
+    public IfValidateMethod(Element element, SimpleMethod simpleMethod) {
         super(element, simpleMethod);
         this.mapName = element.getAttribute("map-name");
         this.fieldName = element.getAttribute("field-name");
+        this.methodName = element.getAttribute("method");
+        this.className = element.getAttribute("class");
         
-        this.expr = element.getAttribute("expr");
-        try {
-            pattern = compiler.compile(expr);
-        } catch (MalformedPatternException e) {
-            Debug.logError(e);
-        }
-
         SimpleMethod.readOperations(element, subOps, simpleMethod);
     }
 
@@ -95,8 +86,33 @@ public class IfRegexp extends MethodOperation {
         if (fieldString == null)
             fieldString = "";
         
+        Class[] paramTypes = new Class[]{String.class};
+        Object[] params = new Object[]{fieldString};
 
-        if (matcher.matches(fieldString, pattern)) {
+        Class valClass;
+        try {
+            valClass = methodContext.getLoader().loadClass(className);
+        } catch (ClassNotFoundException cnfe) {
+            Debug.logError("Could not find validation class: " + className);
+            return false;
+        }
+
+        Method valMethod;
+        try {
+            valMethod = valClass.getMethod(methodName, paramTypes);
+        } catch (NoSuchMethodException cnfe) {
+            Debug.logError("Could not find validation method: " + methodName + " of class " + className);
+            return false;
+        }
+
+        Boolean resultBool = Boolean.FALSE;
+        try {
+            resultBool = (Boolean) valMethod.invoke(null, params);
+        } catch (Exception e) {
+            Debug.logError(e, "Error in IfValidationMethod " + methodName + " of class " + className + ", not processing sub-ops ");
+        }
+
+        if (resultBool.booleanValue()) {
             return SimpleMethod.runSubOps(subOps, methodContext);
         } else {
             return true;

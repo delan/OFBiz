@@ -22,7 +22,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.ofbiz.core.minilang.operation;
+package org.ofbiz.core.minilang.method.eventops;
 
 import java.net.*;
 import java.text.*;
@@ -32,56 +32,48 @@ import javax.servlet.http.*;
 import org.w3c.dom.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.minilang.*;
+import org.ofbiz.core.minilang.method.*;
 
 /**
- * Copies a map field to a map field
+ * Copies a map field to a Servlet session attribute
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- *@created    February 19, 2002
+ *@created    December 29, 2001
  *@version    1.0
  */
-public class FieldToField extends MethodOperation {
+public class FieldToSession extends MethodOperation {
     String mapName;
     String fieldName;
-    String toMapName;
-    String toFieldName;
+    String sessionName;
 
-    public FieldToField(Element element, SimpleMethod simpleMethod) {
+    public FieldToSession(Element element, SimpleMethod simpleMethod) {
         super(element, simpleMethod);
         mapName = element.getAttribute("map-name");
         fieldName = element.getAttribute("field-name");
-        toMapName = element.getAttribute("to-map-name");
-        toFieldName = element.getAttribute("to-field-name");
+        sessionName = element.getAttribute("session-name");
 
-        //set toMapName and toFieldName to their defualt values of mapName and fieldName if empty
-        if (toMapName == null || toMapName.length() == 0) {
-            toMapName = mapName;
-        }
-        if (toFieldName == null || toFieldName.length() == 0) {
-            toFieldName = fieldName;
+        if (sessionName == null || sessionName.length() == 0) {
+            sessionName = fieldName;
         }
     }
 
     public boolean exec(MethodContext methodContext) {
-        Map fromMap = (Map) methodContext.getEnv(mapName);
-        if (fromMap == null) {
-            Debug.logWarning("Map not found with name " + mapName + ", not copying field");
-            return true;
-        }
-        Map toMap = (Map) methodContext.getEnv(toMapName);
-        if (toMap == null) {
-            Debug.logInfo("Map not found with name " + toMapName + ", creating new map");
-            toMap = new HashMap();
-            methodContext.putEnv(toMapName, toMap);
-        }
+        //only run this if it is in an EVENT context
+        if (methodContext.getMethodType() == MethodContext.EVENT) {
+            Map fromMap = (Map) methodContext.getEnv(mapName);
+            if (fromMap == null) {
+                Debug.logWarning("Map not found with name " + mapName);
+                return true;
+            }
 
-        Object fieldVal = fromMap.get(fieldName);
-        if (fieldVal == null) {
-            Debug.logInfo("Field value not found with name " + fieldName + " in Map with name " + mapName + ", not copying field");
-            return true;
-        }
+            Object fieldVal = fromMap.get(fieldName);
+            if (fieldVal == null) {
+                Debug.logWarning("Field value not found with name " + fieldName + " in Map with name " + mapName);
+                return true;
+            }
 
-        toMap.put(toFieldName, fieldVal);
+            methodContext.getRequest().getSession().setAttribute(sessionName, fieldVal);
+        }
         return true;
     }
 }

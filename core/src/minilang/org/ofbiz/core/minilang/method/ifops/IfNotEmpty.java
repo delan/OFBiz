@@ -22,7 +22,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.ofbiz.core.minilang.operation;
+package org.ofbiz.core.minilang.method.ifops;
 
 import java.net.*;
 import java.text.*;
@@ -32,37 +32,26 @@ import javax.servlet.http.*;
 import org.w3c.dom.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.minilang.*;
+import org.ofbiz.core.minilang.method.*;
 
 /**
- * Iff the comparison between the specified field and the other field is true process sub-operations
+ * Iff the specified field is not empty process sub-operations
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@created    February 19, 2002
  *@version    1.0
  */
-public class IfCompareField extends MethodOperation {
+public class IfNotEmpty extends MethodOperation {
     
     List subOps = new LinkedList();
     
     String mapName;
     String fieldName;
-    String toMapName;
-    String toFieldName;
 
-    String operator;
-    String type;
-    String format;
-    
-    public IfCompareField(Element element, SimpleMethod simpleMethod) {
+    public IfNotEmpty(Element element, SimpleMethod simpleMethod) {
         super(element, simpleMethod);
         this.mapName = element.getAttribute("map-name");
         this.fieldName = element.getAttribute("field-name");
-        this.toMapName = element.getAttribute("to-map-name");
-        this.toFieldName = element.getAttribute("to-field-name");
-
-        this.operator = element.getAttribute("operator");
-        this.type = element.getAttribute("type");
-        this.format = element.getAttribute("format");
         
         SimpleMethod.readOperations(element, subOps, simpleMethod);
     }
@@ -70,36 +59,34 @@ public class IfCompareField extends MethodOperation {
     public boolean exec(MethodContext methodContext) {
         //if conditions fails, always return true; if a sub-op returns false 
         // return false and stop, otherwise return true
-
-        Object fieldVal1 = null;
-        Object fieldVal2 = null;
+        //return true;
         
         Map fromMap = (Map) methodContext.getEnv(mapName);
         if (fromMap == null) {
-            Debug.logInfo("From Map not found with name " + mapName + ", using null for comparison");
-        } else {
-            fieldVal1 = fromMap.get(fieldName);
+            Debug.logWarning("Map not found with name " + mapName + ", not running operations");
+            return true;
         }
-        
-        Map toMap = (Map) methodContext.getEnv(toMapName);
-        if (toMap == null) {
-            Debug.logInfo("To Map not found with name " + toMapName + ", using null for comparison");
-        } else {
-            fieldVal2 = toMap.get(toFieldName);
-        }
-        
-        
-        List messages = new LinkedList();
-        Boolean resultBool = BaseCompare.doRealCompare(fieldVal1, fieldVal2, this.operator, this.type, this.format, messages, null, methodContext.getLoader());
 
-        if (messages.size() > 0) {
-            Iterator miter = messages.iterator();
-            while (miter.hasNext()) {
-                Debug.logWarning("Error with comparison: " + miter.next());
+        Object fieldVal = fromMap.get(fieldName);
+        if (fieldVal == null) {
+            Debug.logWarning("Field value not found with name " + fieldName + " in Map with name " + mapName + ", not running operations");
+            return true;
+        }
+        
+        //only run subOps if element is not empty/null
+        boolean runSubOps = false;
+        if (fieldVal != null) {
+            if (fieldVal instanceof String) {
+                String fieldStr = (String) fieldVal;
+                if (fieldStr.length() > 0) {
+                    runSubOps = true;
+                }
+            } else {
+                runSubOps = true;
             }
         }
         
-        if (resultBool != null && resultBool.booleanValue()) {
+        if (runSubOps) {
             return SimpleMethod.runSubOps(subOps, methodContext);
         } else {
             return true;

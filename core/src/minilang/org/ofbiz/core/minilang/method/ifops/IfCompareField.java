@@ -22,40 +22,50 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.ofbiz.core.minilang.operation;
+package org.ofbiz.core.minilang.method.ifops;
 
 import java.net.*;
 import java.text.*;
 import java.util.*;
 import javax.servlet.http.*;
-import java.lang.reflect.*;
 
 import org.w3c.dom.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.minilang.*;
+import org.ofbiz.core.minilang.method.*;
+
+import org.ofbiz.core.minilang.operation.*;
 
 /**
- * Iff the validate method returns true with the specified field process sub-operations
+ * Iff the comparison between the specified field and the other field is true process sub-operations
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@created    February 19, 2002
  *@version    1.0
  */
-public class IfValidateMethod extends MethodOperation {
+public class IfCompareField extends MethodOperation {
     
     List subOps = new LinkedList();
     
     String mapName;
     String fieldName;
-    String methodName;
-    String className;
+    String toMapName;
+    String toFieldName;
 
-    public IfValidateMethod(Element element, SimpleMethod simpleMethod) {
+    String operator;
+    String type;
+    String format;
+    
+    public IfCompareField(Element element, SimpleMethod simpleMethod) {
         super(element, simpleMethod);
         this.mapName = element.getAttribute("map-name");
         this.fieldName = element.getAttribute("field-name");
-        this.methodName = element.getAttribute("method");
-        this.className = element.getAttribute("class");
+        this.toMapName = element.getAttribute("to-map-name");
+        this.toFieldName = element.getAttribute("to-field-name");
+
+        this.operator = element.getAttribute("operator");
+        this.type = element.getAttribute("type");
+        this.format = element.getAttribute("format");
         
         SimpleMethod.readOperations(element, subOps, simpleMethod);
     }
@@ -64,54 +74,35 @@ public class IfValidateMethod extends MethodOperation {
         //if conditions fails, always return true; if a sub-op returns false 
         // return false and stop, otherwise return true
 
-        String fieldString = null;
+        Object fieldVal1 = null;
+        Object fieldVal2 = null;
+        
         Map fromMap = (Map) methodContext.getEnv(mapName);
         if (fromMap == null) {
-            Debug.logInfo("Map not found with name " + mapName + ", using empty string for comparison");
+            Debug.logInfo("From Map not found with name " + mapName + ", using null for comparison");
         } else {
-            Object fieldVal = fromMap.get(fieldName);
+            fieldVal1 = fromMap.get(fieldName);
+        }
+        
+        Map toMap = (Map) methodContext.getEnv(toMapName);
+        if (toMap == null) {
+            Debug.logInfo("To Map not found with name " + toMapName + ", using null for comparison");
+        } else {
+            fieldVal2 = toMap.get(toFieldName);
+        }
+        
+        
+        List messages = new LinkedList();
+        Boolean resultBool = BaseCompare.doRealCompare(fieldVal1, fieldVal2, this.operator, this.type, this.format, messages, null, methodContext.getLoader());
 
-            if (fieldVal != null) {
-                try {
-                    fieldString = (String) ObjectType.simpleTypeConvert(fieldVal, "String", null, null);
-                } catch (GeneralException e) {
-                    Debug.logError(e, "Could not convert object to String, using empty String");
-                }
-
+        if (messages.size() > 0) {
+            Iterator miter = messages.iterator();
+            while (miter.hasNext()) {
+                Debug.logWarning("Error with comparison: " + miter.next());
             }
         }
         
-        //always use an empty string by default
-        if (fieldString == null)
-            fieldString = "";
-        
-        Class[] paramTypes = new Class[]{String.class};
-        Object[] params = new Object[]{fieldString};
-
-        Class valClass;
-        try {
-            valClass = methodContext.getLoader().loadClass(className);
-        } catch (ClassNotFoundException cnfe) {
-            Debug.logError("Could not find validation class: " + className);
-            return false;
-        }
-
-        Method valMethod;
-        try {
-            valMethod = valClass.getMethod(methodName, paramTypes);
-        } catch (NoSuchMethodException cnfe) {
-            Debug.logError("Could not find validation method: " + methodName + " of class " + className);
-            return false;
-        }
-
-        Boolean resultBool = Boolean.FALSE;
-        try {
-            resultBool = (Boolean) valMethod.invoke(null, params);
-        } catch (Exception e) {
-            Debug.logError(e, "Error in IfValidationMethod " + methodName + " of class " + className + ", not processing sub-ops ");
-        }
-
-        if (resultBool.booleanValue()) {
+        if (resultBool != null && resultBool.booleanValue()) {
             return SimpleMethod.runSubOps(subOps, methodContext);
         } else {
             return true;
