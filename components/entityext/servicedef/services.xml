@@ -144,8 +144,8 @@
         <description>Run Entity Sync</description>
         <attribute name="entitySyncId" type="String" mode="IN" optional="false"/>
     </service>
-    <service name="storeEntitySyncData" engine="java"
-            location="org.ofbiz.entityext.synchronization.EntitySyncServices" invoke="storeEntitySyncData" auth="true" require-new-transaction="true" transaction-timout="300">
+    <service name="storeEntitySyncData" engine="java" location="org.ofbiz.entityext.synchronization.EntitySyncServices" invoke="storeEntitySyncData" 
+    	    export="true" auth="true" require-new-transaction="true" transaction-timout="300">
         <description>Run Entity Sync</description>
         <attribute name="entitySyncId" type="String" mode="IN" optional="false"/>
         <attribute name="valuesToStore" type="List" mode="IN" optional="false"/>
