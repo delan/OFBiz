@@ -180,15 +180,9 @@ public class CoreEvents {
      * @return Response code string
      */
     public static String scheduleService(HttpServletRequest request, HttpServletResponse response) {
-        // first do a security check
         Security security = (Security) request.getAttribute("security");
-
-        if (!security.hasPermission("ENTITY_MAINT", request.getSession())) {
-            request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>You are not authorized to use this function.");
-            return "error";
-        }
-
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+        
         Map params = UtilMisc.getParameterMap(request);
         // get the schedule parameters
         String serviceName = (String) params.remove("SERVICE_NAME");
@@ -220,9 +214,31 @@ public class CoreEvents {
 
         // make sure we passed a service
         if (serviceName == null) {
-            errorBuf.append("<li>No service name was specified");
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>You must specify a 'SERVICE_NAME' (other parameters include: SERVICE_TIME, SERVICE_FREQUENCY, SERVICE_INTERVAL, SERVICE_COUNT).");
+            return "error";
         }
 
+        // now do a security check
+        
+        //lookup the service definition to see if this service is externally available, if not require the SERVICE_INVOKE_ANY permission
+        ModelService modelService = null;
+        try {
+            modelService = dispatcher.getDispatchContext().getModelService(serviceName);
+        } catch (GenericServiceException e) {
+            Debug.logError(e, "Error looking up ModelService for serviceName [" + serviceName + "]");
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>Error looking up ModelService for serviceName [" + serviceName + "]: " + e.toString());
+            return "error";
+        }
+        if (modelService == null) {
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>Could not find a service with the serviceName [" + serviceName + "]");
+            return "error";
+        }
+
+        if (!modelService.export && !security.hasPermission("SERVICE_INVOKE_ANY", request.getSession())) {
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>You are not authorized to call this non-exported service, you must be logged in and have the SERVICE_INVOKE_ANY permission.");
+            return "error";
+        }
+        
         // some conversions
         if (serviceTime != null) {
             try {
@@ -297,14 +313,6 @@ public class CoreEvents {
      * @return Response code string
      */
     public static String runService(HttpServletRequest request, HttpServletResponse response) {
-        // first do a security check
-        Security security = (Security) request.getAttribute("security");
-
-        if (!security.hasPermission("SERVICE_INVOKE_ANY", request.getSession())) {
-            request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>You are not authorized to use this function, you must have the SERVICE_INVOKE_ANY permission.");
-            return "error";
-        }
-
         // get the mode and service name 
         String serviceName = request.getParameter("serviceName");
         String mode = request.getParameter("mode");
@@ -318,6 +326,30 @@ public class CoreEvents {
             mode = "sync";
         }
 
+        
+        // now do a security check
+        Security security = (Security) request.getAttribute("security");
+        LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+        
+        //lookup the service definition to see if this service is externally available, if not require the SERVICE_INVOKE_ANY permission
+        ModelService modelService = null;
+        try {
+            modelService = dispatcher.getDispatchContext().getModelService(serviceName);
+        } catch (GenericServiceException e) {
+            Debug.logError(e, "Error looking up ModelService for serviceName [" + serviceName + "]");
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>Error looking up ModelService for serviceName [" + serviceName + "]: " + e.toString());
+            return "error";
+        }
+        if (modelService == null) {
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>Could not find a service with the serviceName [" + serviceName + "]");
+            return "error";
+        }
+
+        if (!modelService.export && !security.hasPermission("SERVICE_INVOKE_ANY", request.getSession())) {
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>You are not authorized to call this non-exported service, you must be logged in and have the SERVICE_INVOKE_ANY permission.");
+            return "error";
+        }
+        
         // call the service via the ServiceEventHandler which 
         // adapts an event to a service.
         try {
