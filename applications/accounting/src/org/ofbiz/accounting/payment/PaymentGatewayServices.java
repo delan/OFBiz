@@ -991,6 +991,9 @@ public class PaymentGatewayServices {
                 // returning null to cancel the capture process.
                 return null;
             }
+
+            // get the new auth transaction
+            authTrans = getAuthTransaction(paymentPref);
         }
 
         // prepare the context for the capture service (must follow the ccCaptureInterface
