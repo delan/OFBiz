@@ -45,9 +45,7 @@ public class RequestHandler implements Serializable {
     
     private ServletContext context;
     private RequestManager rm;
-    
-    public RequestHandler() {}
-    
+            
     public void init( ServletContext context ) {
         this.context = context;
         Debug.logInfo("Loading RequestManager...");
@@ -182,7 +180,7 @@ public class RequestHandler implements Serializable {
             request.setAttribute(SiteDefs.CURRENT_VIEW, tempView);
             
             tempView = rm.getViewPage(tempView);
-            nextPage = tempView != null ? tempView : nextView;
+            nextPage = tempView != null ? tempView : "/"+nextView;
             Debug.logInfo("Mapped To: " + nextPage);
         }
         
