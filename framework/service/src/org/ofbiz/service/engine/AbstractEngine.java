@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2004-2005 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -25,9 +25,10 @@
 package org.ofbiz.service.engine;
 
 import java.util.Map;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Iterator;
+
+import javolution.util.FastMap;
 
 import org.ofbiz.service.ServiceDispatcher;
 import org.ofbiz.service.ModelService;
@@ -62,7 +63,7 @@ public abstract class AbstractEngine implements GenericEngine {
     // creates the location alias map
     protected synchronized void initLocations() {
         if (locationMap == null) {
-            locationMap = new HashMap();
+            locationMap = FastMap.newInstance();
 
             Element root = null;
             try {

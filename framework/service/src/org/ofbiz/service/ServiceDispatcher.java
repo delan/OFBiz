@@ -24,14 +24,15 @@
  */
 package org.ofbiz.service;
 
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
 import javax.transaction.Transaction;
+
+import javolution.util.FastList;
+import javolution.util.FastMap;
 
 import org.apache.commons.collections.map.LRUMap;
 import org.ofbiz.base.config.GenericConfigException;
@@ -71,7 +72,7 @@ public class ServiceDispatcher {
     public static final int lruLogSize = 200;
 
     protected static Map runLog = new LRUMap(lruLogSize);
-    protected static Map dispatchers = new HashMap();
+    protected static Map dispatchers = FastMap.newInstance();
     protected static boolean enableJM = true;
     protected static boolean enableJMS = true;
     protected static boolean enableSvcs = true;
@@ -91,8 +92,8 @@ public class ServiceDispatcher {
         ServiceEcaUtil.readConfig();
 
         this.delegator = delegator;
-        this.localContext = new HashMap();
-        this.callbacks = new HashMap();
+        this.localContext = FastMap.newInstance();
+        this.callbacks = FastMap.newInstance();
 
         if (delegator != null) {
             try {
@@ -187,7 +188,7 @@ public class ServiceDispatcher {
     public synchronized void registerCallback(String serviceName, GenericServiceCallback cb) {
         List callBackList = (List) callbacks.get(serviceName);
         if (callBackList == null) {
-            callBackList = new LinkedList();
+            callBackList = FastList.newInstance();
         }
         callBackList.add(cb);
         callbacks.put(serviceName, callBackList);
@@ -248,7 +249,7 @@ public class ServiceDispatcher {
         }
 
         // setup the result map
-        Map result = new HashMap();
+        Map result = FastMap.newInstance();
         boolean isFailure = false;
         boolean isError = false;
 
@@ -348,7 +349,8 @@ public class ServiceDispatcher {
                 isError = ModelService.RESPOND_ERROR.equals(result.get(ModelService.RESPONSE_MESSAGE));            
 
                 // create a new context with the results to pass to ECA services; necessary because caller may reuse this context
-                ecaContext = new HashMap(context);
+                ecaContext = FastMap.newInstance();
+                ecaContext.putAll(context);
 
                 // copy all results: don't worry parameters that aren't allowed won't be passed to the ECA services
                 ecaContext.putAll(result);
@@ -466,7 +468,7 @@ public class ServiceDispatcher {
         }
 
         // setup the result map
-        Map result = new HashMap();
+        Map result = FastMap.newInstance();
         boolean isFailure = false;
         boolean isError = false;
 

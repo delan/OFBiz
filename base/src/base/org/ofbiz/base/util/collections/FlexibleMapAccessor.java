@@ -23,11 +23,11 @@
  */
 package org.ofbiz.base.util.collections;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import javolution.util.FastList;
 import javolution.util.FastMap;
 
 import org.ofbiz.base.util.UtilMisc;
@@ -205,7 +205,7 @@ public class FlexibleMapAccessor {
         if (this.isListReference) {
             List lst = (List) base.get(this.extName);
             if (lst == null) {
-                lst = new LinkedList();
+                lst = FastList.newInstance();
                 base.put(this.extName, lst);
             }
             //if brackets are empty, append to list
@@ -294,7 +294,7 @@ public class FlexibleMapAccessor {
             if (this.isListReference && (namedObj == null || namedObj instanceof List)) {
                 List lst = (List) base.get(this.extName);
                 if (lst == null) {
-                    lst = new LinkedList();
+                    lst = FastList.newInstance();
                     base.put(this.extName, lst);
                 }
                 

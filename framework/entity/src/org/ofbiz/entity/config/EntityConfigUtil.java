@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -24,10 +24,11 @@
  */
 package org.ofbiz.entity.config;
 
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import javolution.util.FastMap;
 
 import org.ofbiz.base.config.GenericConfigException;
 import org.ofbiz.base.config.ResourceLoader;
@@ -58,14 +59,14 @@ public class EntityConfigUtil {
     protected static String txFactoryTxMgrJndiName;
     protected static String txFactoryTxMgrJndiServerName;
 
-    protected static Map resourceLoaderInfos = new HashMap();
-    protected static Map delegatorInfos = new HashMap();
-    protected static Map entityModelReaderInfos = new HashMap();
-    protected static Map entityGroupReaderInfos = new HashMap();
-    protected static Map entityEcaReaderInfos = new HashMap();
-    protected static Map entityDataReaderInfos = new HashMap();
-    protected static Map fieldTypeInfos = new HashMap();
-    protected static Map datasourceInfos = new HashMap();
+    protected static Map resourceLoaderInfos = FastMap.newInstance();
+    protected static Map delegatorInfos = FastMap.newInstance();
+    protected static Map entityModelReaderInfos = FastMap.newInstance();
+    protected static Map entityGroupReaderInfos = FastMap.newInstance();
+    protected static Map entityEcaReaderInfos = FastMap.newInstance();
+    protected static Map entityDataReaderInfos = FastMap.newInstance();
+    protected static Map fieldTypeInfos = FastMap.newInstance();
+    protected static Map datasourceInfos = FastMap.newInstance();
 
     protected static Element getXmlRootElement() throws GenericEntityConfException {
         try {

@@ -26,11 +26,12 @@ package org.ofbiz.webapp.control;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javolution.util.FastList;
 import javolution.util.FastMap;
 
 import org.ofbiz.base.util.Debug;
@@ -46,6 +47,7 @@ import org.w3c.dom.NodeList;
  * ConfigXMLReader.java - Reads and parses the XML site config files.
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
+ * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @version    $Rev$
  * @since      2.0
  */
@@ -53,10 +55,43 @@ public class ConfigXMLReader {
 
     public static final String module = ConfigXMLReader.class.getName();
 
-    public static UtilCache requestCache = new UtilCache("webapp.ConfigXMLReader.Request");
-    public static UtilCache viewCache = new UtilCache("webapp.ConfigXMLReader.View");
-    public static UtilCache headCache = new UtilCache("webapp.ConfigXMLReader.Config");
-    public static UtilCache handlerCache = new UtilCache("webapp.ConfigXMLReader.Handler");
+    public static ControllerConfig getControllerConfig(URL url) {
+        ControllerConfig controllerConfig = (ControllerConfig) controllerCache.get(url);
+        if (controllerConfig == null) { // don't want to block here
+            synchronized (ConfigXMLReader.class) {
+                // must check if null again as one of the blocked threads can still enter
+                controllerConfig = (ControllerConfig) controllerCache.get(url);
+                if (controllerConfig == null) {
+                    controllerConfig = new ControllerConfig(url);
+                    controllerCache.put(url, controllerConfig);
+                }
+            }
+        }
+        return controllerConfig;
+    }
+    
+    public static UtilCache controllerCache = new UtilCache("webapp.ControllerConfig");
+    
+    public static class ControllerConfig {
+        public URL url;
+        
+        public Map configMap = FastMap.newInstance();
+        public Map handlerMap = FastMap.newInstance();
+        public Map requestMap = FastMap.newInstance();
+        public Map viewMap = FastMap.newInstance();
+
+        public ControllerConfig(URL url) {
+            this.url = url;
+            
+            Element rootElement = loadDocument(url);
+            if (rootElement != null) {
+                this.configMap = loadConfigMap(rootElement, url);
+                this.handlerMap = loadHandlerMap(rootElement, url);
+                this.requestMap = loadRequestMap(rootElement, url);
+                this.viewMap = loadViewMap(rootElement, url);
+            }
+        }
+    }
 
     /** Site Config Variables */
     public static final String DEFAULT_ERROR_PAGE = "errorpage";
@@ -114,47 +149,31 @@ public class ConfigXMLReader {
     /** Loads the XML file and returns the root element */
     public static Element loadDocument(URL location) {
         Document document = null;
-
         try {
             document = UtilXml.readXmlDocument(location, true);
-
             Element rootElement = document.getDocumentElement();
-
             // rootElement.normalize();
             if (Debug.verboseOn()) Debug.logVerbose("Loaded XML Config - " + location, module);
             return rootElement;
         } catch (Exception e) {
             Debug.logError(e, module);
         }
-
         return null;
     }
 
     /** Gets a Map of request mappings. */
-    public static FastMap getRequestMap(URL xml) {
-        FastMap requestMap = (FastMap) requestCache.get(xml);
-
-        if (requestMap == null) // don't want to block here
-        {
-            synchronized (ConfigXMLReader.class) {
-                // must check if null again as one of the blocked threads can still enter
-                requestMap = (FastMap) requestCache.get(xml);
-                if (requestMap == null) {
-                    requestMap = loadRequestMap(xml);
-                    requestCache.put(xml, requestMap);
-                }
-            }
-        }
-        // never return null, just an empty map...
-        if (requestMap == null) requestMap = FastMap.newInstance();
-        return requestMap;
+    public static Map getRequestMap(URL xml) {
+        ControllerConfig controllerConfig = getControllerConfig(xml);
+        return controllerConfig != null ? controllerConfig.requestMap : null;
     }
 
     /** Gets a FastMap of request mappings. */
-    public static FastMap loadRequestMap(URL xml) {
+    public static Map loadRequestMap(Element root, URL xml) {
         long startTime = System.currentTimeMillis();
         FastMap map = FastMap.newInstance();
-        Element root = loadDocument(xml);
+        if (root == null) {
+            root = loadDocument(xml);
+        }
 
         if (root == null) return map;
 
@@ -174,7 +193,7 @@ public class ConfigXMLReader {
                     File newFile = new java.io.File("" + oldFile.getParent() + java.io.File.separator + includeFile);
 
                     try {
-                        FastMap subMap = loadRequestMap(newFile.toURL());
+                        Map subMap = loadRequestMap(null, newFile.toURL());
 
                         map.putAll(subMap);
                     } catch (MalformedURLException mue) {
@@ -186,8 +205,7 @@ public class ConfigXMLReader {
 
                 if ((includeURL != null) && (includeURL.length() > 0)) {
                     try {
-                        FastMap subMap = loadRequestMap(new URL(includeURL));
-
+                        Map subMap = loadRequestMap(null, new URL(includeURL));
                         map.putAll(subMap);
                     } catch (MalformedURLException mue) {
                         mue.printStackTrace();
@@ -303,32 +321,32 @@ public class ConfigXMLReader {
         }
 
         /* Debugging */
-        if (Debug.verboseOn()) Debug.logVerbose("-------- Request Mappings --------", module);
-        FastMap debugMap = map;
-        Set debugSet = debugMap.keySet();
-        Iterator i = debugSet.iterator();
+        if (Debug.verboseOn()) {
+            Debug.logVerbose("-------- Request Mappings --------", module);
+            FastMap debugMap = map;
+            Set debugSet = debugMap.keySet();
+            Iterator i = debugSet.iterator();
 
-        while (i.hasNext()) {
-            Object o = i.next();
-            String request = (String) o;
-            FastMap thisURI = (FastMap) debugMap.get(o);
+            while (i.hasNext()) {
+                Object o = i.next();
+                String request = (String) o;
+                FastMap thisURI = (FastMap) debugMap.get(o);
 
 
-            StringBuffer verboseMessageBuffer = null;
-            if (Debug.verboseOn()) verboseMessageBuffer = new StringBuffer();
+                StringBuffer verboseMessageBuffer = verboseMessageBuffer = new StringBuffer();
 
-            Iterator debugIter = ((Set) thisURI.keySet()).iterator();
-            while (debugIter.hasNext()) {
-                Object lo = debugIter.next();
-                String name = (String) lo;
-                String value = (String) thisURI.get(lo);
+                Iterator debugIter = ((Set) thisURI.keySet()).iterator();
+                while (debugIter.hasNext()) {
+                    Object lo = debugIter.next();
+                    String name = (String) lo;
+                    String value = (String) thisURI.get(lo);
 
-                if (Debug.verboseOn()) verboseMessageBuffer.append("[" + name + "=>" + value + "]");
+                    verboseMessageBuffer.append("[" + name + "=>" + value + "]");
+                }
+                Debug.logVerbose(request + " :: " + verboseMessageBuffer.toString(), module);
             }
-            if (Debug.verboseOn()) Debug.logVerbose(request + " :: " + verboseMessageBuffer.toString(), module);
+            Debug.logVerbose("------ End Request Mappings ------", module);
         }
-        if (Debug.verboseOn()) Debug.logVerbose("------ End Request Mappings ------", module);
-
         /* End Debugging */
 
         double totalSeconds = (System.currentTimeMillis() - startTime)/1000.0;
@@ -338,32 +356,21 @@ public class ConfigXMLReader {
 
     /** Gets a FastMap of view mappings. */
     public static Map getViewMap(URL xml) {
-        Map viewMap = (Map) viewCache.get(xml);
-
-        if (viewMap == null) // don't want to block here
-        {
-            synchronized (ConfigXMLReader.class) {
-                // must check if null again as one of the blocked threads can still enter
-                viewMap = (FastMap) viewCache.get(xml);
-                if (viewMap == null) {
-                    viewMap = loadViewMap(xml);
-                    viewCache.put(xml, viewMap);
-                }
-            }
-        }
-        // never return null, just an empty map...
-        if (viewMap == null) viewMap = FastMap.newInstance();
-        return viewMap;
+        ControllerConfig controllerConfig = getControllerConfig(xml);
+        return controllerConfig != null ? controllerConfig.viewMap : null;
     }
 
     /** Gets a FastMap of view mappings. */
-    public static Map loadViewMap(URL xml) {
+    public static Map loadViewMap(Element root, URL xml) {
         long startTime = System.currentTimeMillis();
         FastMap map = FastMap.newInstance();
-        Element root = loadDocument(xml);
+        if (root == null) {
+            root = loadDocument(xml);
+        }
 
-        if (root == null)
+        if (root == null) {
             return map;
+        }
 
         NodeList list = root.getElementsByTagName(INCLUDE);
 
@@ -381,8 +388,7 @@ public class ConfigXMLReader {
                     File newFile = new java.io.File("" + oldFile.getParent() + java.io.File.separator + includeFile);
 
                     try {
-                        Map subMap = loadViewMap(newFile.toURL());
-
+                        Map subMap = loadViewMap(null, newFile.toURL());
                         map.putAll(subMap);
                     } catch (MalformedURLException mue) {
                         mue.printStackTrace();
@@ -393,8 +399,7 @@ public class ConfigXMLReader {
 
                 if ((includeURL != null) && (includeURL.length() > 0)) {
                     try {
-                        Map subMap = loadViewMap(new URL(includeURL));
-
+                        Map subMap = loadViewMap(null, new URL(includeURL));
                         map.putAll(subMap);
                     } catch (MalformedURLException mue) {
                         mue.printStackTrace();
@@ -494,29 +499,18 @@ public class ConfigXMLReader {
 
     /** Gets a FastMap of site configuration variables. */
     public static Map getConfigMap(URL xml) {
-        Map configMap = (Map) headCache.get(xml);
-
-        if (configMap == null) // don't want to block here
-        {
-            synchronized (ConfigXMLReader.class) {
-                // must check if null again as one of the blocked threads can still enter
-                configMap = (FastMap) headCache.get(xml);
-                if (configMap == null) {
-                    configMap = loadConfigMap(xml);
-                    headCache.put(xml, configMap);
-                }
-            }
-        }
-        // never return null, just an empty map...
-        if (configMap == null) configMap = FastMap.newInstance();
-        return configMap;
+        ControllerConfig controllerConfig = getControllerConfig(xml);
+        return controllerConfig != null ? controllerConfig.configMap : null;
     }
 
     /** Gets a FastMap of site configuration variables. */
-    public static Map loadConfigMap(URL xml) {
+    public static Map loadConfigMap(Element root, URL xml) {
         long startTime = System.currentTimeMillis();
         FastMap map = FastMap.newInstance();
-        Element root = loadDocument(xml);
+        if (root == null) {
+            root = loadDocument(xml);
+        }
+
         NodeList list = null;
 
         if (root != null) {
@@ -556,9 +550,8 @@ public class ConfigXMLReader {
             // first visit events
             list = root.getElementsByTagName(FIRSTVISIT);
             if (list.getLength() > 0) {
-                ArrayList eventList = new ArrayList();
+                List eventList = FastList.newInstance();
                 Node node = list.item(0);
-
                 if (node instanceof Element) {
                     Element nodeElement = (Element) node;
                     NodeList procEvents = nodeElement.getElementsByTagName(EVENT);
@@ -587,9 +580,8 @@ public class ConfigXMLReader {
             // preprocessor events
             list = root.getElementsByTagName(PREPROCESSOR);
             if (list.getLength() > 0) {
-                ArrayList eventList = new ArrayList();
+                List eventList = FastList.newInstance();
                 Node node = list.item(0);
-
                 if (node instanceof Element) {
                     Element nodeElement = (Element) node;
                     NodeList procEvents = nodeElement.getElementsByTagName(EVENT);
@@ -618,7 +610,7 @@ public class ConfigXMLReader {
             // postprocessor events
             list = root.getElementsByTagName(POSTPROCESSOR);
             if (list.getLength() > 0) {
-                ArrayList eventList = new ArrayList();
+                List eventList = FastList.newInstance();
                 Node node = list.item(0);
 
                 if (node instanceof Element) {
@@ -649,7 +641,6 @@ public class ConfigXMLReader {
         }
 
         /* Debugging */
-
         /*
          Debug.logVerbose("-------- Config Mappings --------", module);
          FastMap debugMap = map;
@@ -670,7 +661,6 @@ public class ConfigXMLReader {
          }
          Debug.logVerbose("------ End Config Mappings ------", module);
          */
-
         /* End Debugging */
 
         double totalSeconds = (System.currentTimeMillis() - startTime)/1000.0;
@@ -680,28 +670,16 @@ public class ConfigXMLReader {
 
     /** Gets a FastMap of handler mappings. */
     public static Map getHandlerMap(URL xml) {
-        Map handlerMap = (Map) handlerCache.get(xml);
-
-        if (handlerMap == null) // don't want to block here
-        {
-            synchronized (ConfigXMLReader.class) {
-                // must check if null again as one of the blocked threads can still enter
-                handlerMap = (FastMap) handlerCache.get(xml);
-                if (handlerMap == null) {
-                    handlerMap = loadHandlerMap(xml);
-                    handlerCache.put(xml, handlerMap);
-                }
-            }
-        }
-        // never return null, just an empty map...
-        if (handlerMap == null) handlerMap = FastMap.newInstance();
-        return handlerMap;
+        ControllerConfig controllerConfig = getControllerConfig(xml);
+        return controllerConfig != null ? controllerConfig.handlerMap : null;
     }
 
-    public static Map loadHandlerMap(URL xml) {
+    public static Map loadHandlerMap(Element root, URL xml) {
         long startTime = System.currentTimeMillis();
         FastMap map = FastMap.newInstance();
-        Element root = loadDocument(xml);
+        if (root == null) {
+            root = loadDocument(xml);
+        }
         NodeList list = null;
 
         if (root != null) {
@@ -715,49 +693,46 @@ public class ConfigXMLReader {
                 String hClass = checkEmpty(handler.getAttribute(HANDLER_CLASS));
                 String hType = checkEmpty(handler.getAttribute(HANDLER_TYPE));
 
-                if (hType.equals("view"))
+                if (hType.equals("view")) {
                     vMap.put(hName, hClass);
-                else
+                } else {
                     rMap.put(hName, hClass);
+                }
             }
             map.put("view", vMap);
             map.put("event", rMap);
         }
 
         /* Debugging */
-        Debug.logVerbose("-------- Handler Mappings --------", module);
-        Map debugMap = (Map) map.get("event");
+        if (Debug.verboseOn()) {
+            Debug.logVerbose("-------- Handler Mappings --------", module);
+            Map debugMap = (Map) map.get("event");
 
-        if (debugMap != null && debugMap.size() > 0) {
-            Debug.logVerbose("-------------- EVENT -------------", module);
-            Set debugSet = debugMap.keySet();
-            Iterator i = debugSet.iterator();
-
-            while (i.hasNext()) {
-                Object o = i.next();
-                String handlerName = (String) o;
-                String className = (String) debugMap.get(o);
-
-                if (Debug.verboseOn()) Debug.logVerbose("[EH] : " + handlerName + " => " + className, module);
+            if (debugMap != null && debugMap.size() > 0) {
+                Debug.logVerbose("-------------- EVENT -------------", module);
+                Set debugSet = debugMap.keySet();
+                Iterator i = debugSet.iterator();
+                while (i.hasNext()) {
+                    Object o = i.next();
+                    String handlerName = (String) o;
+                    String className = (String) debugMap.get(o);
+                    Debug.logVerbose("[EH] : " + handlerName + " => " + className, module);
+                }
             }
-        }
-        debugMap = (Map) map.get("view");
-        if (debugMap != null && debugMap.size() > 0) {
-            Debug.logVerbose("-------------- VIEW --------------", module);
-            Set debugSet = debugMap.keySet();
-            Iterator i = debugSet.iterator();
-
-            while (i.hasNext()) {
-                Object o = i.next();
-                String handlerName = (String) o;
-                String className = (String) debugMap.get(o);
-
-                if (Debug.verboseOn()) Debug.logVerbose("[VH] : " + handlerName + " => " + className, module);
+            debugMap = (Map) map.get("view");
+            if (debugMap != null && debugMap.size() > 0) {
+                Debug.logVerbose("-------------- VIEW --------------", module);
+                Set debugSet = debugMap.keySet();
+                Iterator i = debugSet.iterator();
+                while (i.hasNext()) {
+                    Object o = i.next();
+                    String handlerName = (String) o;
+                    String className = (String) debugMap.get(o);
+                    Debug.logVerbose("[VH] : " + handlerName + " => " + className, module);
+                }
             }
+            Debug.logVerbose("------ End Handler Mappings ------", module);
         }
-        Debug.logVerbose("------ End Handler Mappings ------", module);
-
-        /* End Debugging */
 
         double totalSeconds = (System.currentTimeMillis() - startTime)/1000.0;
         if (Debug.infoOn()) Debug.logInfo("HandlerMap Created: (" + map.size() + ") records in " + totalSeconds + "s", module);
@@ -793,7 +768,6 @@ public class ConfigXMLReader {
     }
 
     public static void main(String args[]) throws Exception {
-
         /** Debugging */
         if (args[0] == null) {
             System.out.println("Please give a path to the config file you wish to test.");
@@ -802,31 +776,26 @@ public class ConfigXMLReader {
         System.out.println("----------------------------------");
         System.out.println("Request Mappings:");
         System.out.println("----------------------------------");
-        FastMap debugMap = getRequestMap(new URL(args[0]));
-        java.util.Set debugSet = debugMap.keySet();
-        java.util.Iterator i = debugSet.iterator();
-
+        Map debugMap = getRequestMap(new URL(args[0]));
+        Set debugSet = debugMap.keySet();
+        Iterator i = debugSet.iterator();
         while (i.hasNext()) {
             Object o = i.next();
             String request = (String) o;
             FastMap thisURI = (FastMap) debugMap.get(o);
 
             System.out.println(request);
-            java.util.Iterator list = ((java.util.Set) thisURI.keySet()).iterator();
-
+            Iterator list = ((java.util.Set) thisURI.keySet()).iterator();
             while (list.hasNext()) {
                 Object lo = list.next();
                 String name = (String) lo;
                 String value = (String) thisURI.get(lo);
-
                 System.out.println("\t" + name + " -> " + value);
             }
         }
         System.out.println("----------------------------------");
         System.out.println("End Request Mappings.");
         System.out.println("----------------------------------");
-
         /** End Debugging */
     }
-
 }

@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2002-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -24,11 +24,12 @@
 package org.ofbiz.entity.condition;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javolution.util.FastList;
+import javolution.util.FastMap;
 
 import org.ofbiz.entity.config.DatasourceInfo;
 import org.ofbiz.entity.jdbc.SqlJdbcUtil;
@@ -51,8 +52,8 @@ import org.ofbiz.entity.model.ModelField;
  */
 public abstract class EntityConditionBase implements Serializable {
 
-    public static final List emptyList = Collections.unmodifiableList(new ArrayList());
-    public static final Map emptyMap = Collections.unmodifiableMap(new HashMap());
+    public static final List emptyList = Collections.unmodifiableList(FastList.newInstance());
+    public static final Map emptyMap = Collections.unmodifiableMap(FastMap.newInstance());
 
     protected ModelField getField(ModelEntity modelEntity, String fieldName) {
         ModelField modelField = null;
