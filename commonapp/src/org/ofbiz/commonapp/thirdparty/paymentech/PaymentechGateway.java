@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -21,9 +21,7 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
 package org.ofbiz.commonapp.thirdparty.paymentech;
-
 
 import java.text.*;
 import java.util.*;
@@ -40,13 +38,12 @@ import com.paymentech.eis.tools.Debug;
 import com.paymentech.gw.tp.*;
 import com.paymentech.gw.sdk.request.AVS;
 
-
 /**
  * PaymentechGateway.java
  *
  * @author     cnelson
- * @version    1.0
- * @created    August 23, 2002
+ * @version    $Revision$
+ * @since      2.0
  */
 public class PaymentechGateway extends AbstractPaymentGateway {
     private String merchantId;
@@ -132,18 +129,18 @@ public class PaymentechGateway extends AbstractPaymentGateway {
 
         if (data.getValue(ResponseTransaction.OUTCOME).equals(ResponseTransaction.OUTCOME_APPROVED)) {
             paymentPreference.setString("statusId", successStatus);
-            paymentPreference.setString("authCode", data.getValue(data.AUTH_CODE));
-            paymentPreference.setString("authMessage", data.getValue(data.MISC_MESSAGE));
-            paymentPreference.setString("authRefNum", data.getValue(data.REF_CODE));
+            paymentPreference.setString("authCode", data.getValue(ResponseTransaction.AUTH_CODE));
+            paymentPreference.setString("authMessage", data.getValue(ResponseTransaction.MISC_MESSAGE));
+            paymentPreference.setString("authRefNum", data.getValue(ResponseTransaction.REF_CODE));
             approved = true;
-        } else if (data.getValue(data.OUTCOME).equals(data.OUTCOME_DECLINED)) {
+        } else if (data.getValue(ResponseTransaction.OUTCOME).equals(ResponseTransaction.OUTCOME_DECLINED)) {
             paymentPreference.setString("statusId", PaymentGateway.PAYMENT_DECLINED);
-            paymentPreference.setString("authCode", data.getValue(data.DECLINE_CODE));
-            paymentPreference.setString("authMessage", data.getValue(data.DECLINE_TEXT));
-        } else if (data.getValue(data.OUTCOME).equals(data.OUTCOME_ERROR)) {
+            paymentPreference.setString("authCode", data.getValue(ResponseTransaction.DECLINE_CODE));
+            paymentPreference.setString("authMessage", data.getValue(ResponseTransaction.DECLINE_TEXT));
+        } else if (data.getValue(ResponseTransaction.OUTCOME).equals(ResponseTransaction.OUTCOME_ERROR)) {
             paymentPreference.setString("statusId", PaymentGateway.PAYMENT_ERROR);
-            paymentPreference.setString("authCode", data.getValue(data.ERROR_CODE));
-            paymentPreference.setString("authMessage", data.getValue(data.ERROR_TEXT));
+            paymentPreference.setString("authCode", data.getValue(ResponseTransaction.ERROR_CODE));
+            paymentPreference.setString("authMessage", data.getValue(ResponseTransaction.ERROR_TEXT));
         }
         try {
             paymentPreference.store();

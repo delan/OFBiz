@@ -25,14 +25,11 @@
 package org.ofbiz.commonapp.thirdparty.cybersource;
 
 import java.text.*;
-import java.net.*;
 import java.util.*;
 
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.service.*;
 import org.ofbiz.core.util.*;
-import org.ofbiz.commonapp.order.order.*;
-import org.ofbiz.commonapp.party.contact.*;
 
 import com.cybersource.ics.base.message.*;
 import com.cybersource.ics.base.exception.*;

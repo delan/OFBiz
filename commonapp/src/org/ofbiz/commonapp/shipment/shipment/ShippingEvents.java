@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- *  Copyright (c) 2002 The Open For Business Project and repected authors.
+ *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -21,9 +21,7 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
 package org.ofbiz.commonapp.shipment.shipment;
-
 
 import java.net.*;
 import java.util.*;
@@ -32,18 +30,15 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 
 import org.ofbiz.core.entity.*;
-import org.ofbiz.core.entity.model.*;
 import org.ofbiz.core.util.*;
-
 import org.ofbiz.commonapp.order.shoppingcart.*;
-
 
 /**
  * ShippingEvents - Events used for processing shipping fees
  *
  * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
- * @version    1.0
- * @created    Oct 8, 2001
+ * @version    $Revision$
+ * @since      2.0
  */
 public class ShippingEvents {
 

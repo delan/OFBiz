@@ -1,7 +1,8 @@
 /*
  * $Id$
- * 
- *  Copyright (c) 2001 The Open For Business Project and repected authors.
+ *
+ *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
+ *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
  *  to deal in the Software without restriction, including without limitation
@@ -24,8 +25,6 @@ package org.ofbiz.commonapp.accounting.payment;
 
 import java.util.*;
 import java.sql.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
 
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.entity.*;

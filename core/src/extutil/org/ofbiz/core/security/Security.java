@@ -26,7 +26,6 @@ package org.ofbiz.core.security;
 
 import java.util.*;
 import javax.servlet.http.*;
-import javax.servlet.*;
 
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.entity.*;

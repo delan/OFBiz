@@ -1,7 +1,8 @@
 /*
  * $Id$
  *
- *  Copyright (c) 2001 The Open For Business Project (www.ofbiz.org)
+ *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
+ *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
  *  to deal in the Software without restriction, including without limitation
@@ -20,27 +21,23 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
 package org.ofbiz.commonapp.product.product;
 
-
 import java.util.*;
-import javax.servlet.jsp.PageContext;
-import javax.servlet.http.HttpSession;
-import javax.servlet.ServletRequest;
+import javax.servlet.jsp.*;
+import javax.servlet.*;
 
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.stats.*;
 
-
 /**
  * Product Worker class to reduce code in JSPs.
  *
- * @author <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
- * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version 1.0
- * Created on August 23, 2001, 7:58 PM
+ * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
+ * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ * @version    $Revision$
+ * @since      2.0
  */
 public class ProductWorker {
 

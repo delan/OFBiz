@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -24,24 +24,19 @@
 
 package org.ofbiz.commonapp.order.shoppingcart;
 
-
-import java.net.*;
-import java.sql.*;
 import java.util.*;
 import javax.servlet.http.*;
 
 import org.ofbiz.core.entity.*;
-import org.ofbiz.core.security.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.stats.*;
-
 
 /**
  * HttpSessionListener that saves information about abandoned carts
  *
- *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- *@created    2 October 2002
- *@version    1.0
+ * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ * @version    $Revision$
+ * @since      2.0
  */
 public class CartEventListener implements HttpSessionListener {
     // Debug module name

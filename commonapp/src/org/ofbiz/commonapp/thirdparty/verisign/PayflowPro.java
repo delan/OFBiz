@@ -26,12 +26,10 @@ package org.ofbiz.commonapp.thirdparty.verisign;
 
 import java.util.*;
 import java.text.*;
-import javax.servlet.http.*;
 
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.service.*;
 import org.ofbiz.core.util.*;
-import org.ofbiz.commonapp.order.order.OrderReadHelper;
 
 import com.Verisign.payment.PFProAPI;
 

@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -21,9 +21,7 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
 package org.ofbiz.commonapp.accounting.payment;
-
 
 import java.util.*;
 
@@ -32,13 +30,12 @@ import org.ofbiz.core.entity.*;
 import org.ofbiz.commonapp.order.order.*;
 import org.ofbiz.commonapp.party.contact.*;
 
-
 /**
  * PaymentInfo.java
  *
  * @author     cnelson
- * @version    1.0
- * @created    August 23, 2002
+ * @version    $Revision$
+ * @since      2.0
  */
 public class PaymentInfo {
 
@@ -70,7 +67,7 @@ public class PaymentInfo {
         String emailAddress, GenericValue orderHeader, GenericValue paymentPreference) {
         this.address = address;
         this.billToPerson = billToPerson;
-        this.currency = currency;
+        //this.currency = currency;
         this.amount = amount;
         this.emailAddress = emailAddress;
         this.orderHeader = orderHeader;

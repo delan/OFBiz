@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -23,22 +23,22 @@
  */
 package org.ofbiz.commonapp.security.login;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
 import java.util.*;
 import java.net.*;
+import javax.servlet.*;
+import javax.servlet.http.*;
+
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.service.*;
 import org.ofbiz.core.security.*;
 import org.ofbiz.core.stats.*;
-import org.ofbiz.commonapp.party.contact.ContactHelper;
-
+import org.ofbiz.commonapp.party.contact.*;
 
 /**
  * LoginEvents - Events for UserLogin and Security handling.
  *
- * @author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
+ * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     Dustin Caldwell
  * @author     <a href="mailto:therrick@yahoo.com">Tom Herrick</a>
@@ -232,7 +232,7 @@ public class LoginEvents {
         Security security = (Security) request.getAttribute("security");
 
         if (security != null && userLogin != null) {
-            security.userLoginSecurityGroupByUserLoginId.remove(userLogin.getString("userLoginId"));
+            Security.userLoginSecurityGroupByUserLoginId.remove(userLogin.getString("userLoginId"));
         }
 
         HttpSession session = request.getSession();
