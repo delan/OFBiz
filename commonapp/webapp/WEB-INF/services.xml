@@ -1,0 +1,13 @@
+
+<services>
+	<description>Common Application Shared Services</description>
+	<vendor>OFBiz</vendor>
+	<version>1.0</version>
+	
+	<service name="testSvc" engine="staticJava" location="org.ofbiz.core.service.ServiceTest" invoke="testOne">
+	  <attribute name="message" type="String" mode="IN"/>	  
+	  <attribute name="resp" type="String" mode="OUT"/>
+	</service>
+
+</services>
+

@@ -38,9 +38,9 @@
     <description>Request/View Mapping And Site Configuration File</description>
   </context-param>
   <context-param>
-    <param-name>schedulerConfigurationFile</param-name>
-    <param-value>/WEB-INF/scheduler-config.xml</param-value>
-    <description>Configuration File For The Job Scheduler</description>
+    <param-name>serviceReaderUrls</param-name>
+    <param-value>/WEB-INF/services.xml</param-value>
+    <description>Configuration File(s) For The Service Dispatcher</description>
   </context-param>
   
   <filter>
