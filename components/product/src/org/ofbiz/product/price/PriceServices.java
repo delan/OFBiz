@@ -1,5 +1,5 @@
 /*
- * $Id: PriceServices.java,v 1.13 2004/07/16 18:35:31 ajzeneski Exp $
+ * $Id$
  *
  *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -50,7 +50,7 @@ import org.ofbiz.service.ServiceUtil;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.13 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class PriceServices {

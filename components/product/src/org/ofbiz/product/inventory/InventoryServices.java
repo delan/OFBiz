@@ -1,5 +1,5 @@
 /*
- * $Id: InventoryServices.java,v 1.7 2004/07/03 19:54:24 jonesde Exp $
+ * $Id$
  *
  *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -51,7 +51,7 @@ import org.ofbiz.service.ServiceUtil;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:tiz@sastau.it">Jacopo Cappellato</a>
- * @version    $Revision: 1.7 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class InventoryServices {

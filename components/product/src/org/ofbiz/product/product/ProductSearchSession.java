@@ -1,5 +1,5 @@
 /*
- * $Id: ProductSearchSession.java,v 1.15 2004/06/29 20:45:35 jonesde Exp $
+ * $Id$
  *
  *  Copyright (c) 2001 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -63,7 +63,7 @@ import org.ofbiz.product.store.ProductStoreWorker;
  *  Utility class with methods to prepare and perform ProductSearch operations in the content of an HttpSession
  *
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.15 $
+ * @version    $Rev:$
  * @since      3.0
  */
 public class ProductSearchSession {

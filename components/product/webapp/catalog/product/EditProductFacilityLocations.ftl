@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Brad Steiner (bsteiner@thehungersite.com)
- *@version    $Revision: 1.6 $
+ *@version    $Rev:$
  *@since      2.2
 -->
 

@@ -1,5 +1,5 @@
 /*
- * $Id: CategoryContentWrapper.java,v 1.1 2004/06/25 16:09:33 jonesde Exp $
+ * $Id$
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -50,7 +50,7 @@ import org.ofbiz.entity.util.EntityUtil;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:arukala@gmx.de">Arukala</a>
- * @version    $Revision: 1.1 $
+ * @version    $Rev:$
  * @since      3.0
  */
 public class CategoryContentWrapper {

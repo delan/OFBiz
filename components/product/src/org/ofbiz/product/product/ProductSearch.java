@@ -1,5 +1,5 @@
 /*
- * $Id: ProductSearch.java,v 1.38 2004/07/03 19:54:24 jonesde Exp $
+ * $Id$
  *
  *  Copyright (c) 2003-2004 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -61,7 +61,7 @@ import org.ofbiz.party.party.PartyHelper;
  *  Utilities for product search based on various constraints including categories, features and keywords.
  *
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.38 $
+ * @version    $Rev:$
  * @since      3.0
  */
 public class ProductSearch {

@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Johan Isacsson (johan@oddjob.se)
- *@version    $Revision: 1.4 $
+ *@version    $Rev:$
  *@since      3.0
 -->
 

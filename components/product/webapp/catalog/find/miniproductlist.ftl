@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Revision: 1.7 $
+ *@version    $Rev:$
  *@since      2.1
 -->
 <#if (requestAttributes.uiLabelMap)?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>

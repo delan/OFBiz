@@ -1,5 +1,5 @@
 /*
- * $Id: CategoryServices.java,v 1.1 2003/08/17 18:04:21 ajzeneski Exp $
+ * $Id$
  *
  *  Copyright (c) 2002 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -43,7 +43,7 @@ import org.ofbiz.service.ModelService;
  * CategoryServices - Category Services
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class CategoryServices {

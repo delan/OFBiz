@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Catherine Heintz (catherine.heintz@nereide.biz)
- *@version    $Revision: 1.8 $
+ *@version    $Rev:$
  *@since      2.2
 -->
 

@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author	  Arukala  (arukala@gmx.de)
- *@version    $Revision: 1.1 $
+ *@version    $Rev:$
  *@since      3.0
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>

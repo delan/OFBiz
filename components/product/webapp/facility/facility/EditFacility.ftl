@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones
  *@author	  thierry.grauss@etu.univ-tours.fr (migration to uiLabelMap)
- *@version    $Revision: 1.2 $
+ *@version    $Rev:$
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>

@@ -1,5 +1,5 @@
 /*
- * $Id: ProductUtilServices.java,v 1.36 2004/07/01 08:37:54 jonesde Exp $
+ * $Id$
  *
  *  Copyright (c) 2002 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -61,7 +61,7 @@ import org.ofbiz.service.ServiceUtil;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.36 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class ProductUtilServices {
