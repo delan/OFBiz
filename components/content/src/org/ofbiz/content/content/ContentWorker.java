@@ -614,9 +614,9 @@ public class ContentWorker {
             exprList.add(thruExprList);
         }
         EntityConditionList assocExprList = new EntityConditionList(exprList, EntityOperator.AND);
-        if (Debug.infoOn()) Debug.logInfo(" assocExprList:" + assocExprList , "");
+        //if (Debug.infoOn()) Debug.logInfo(" assocExprList:" + assocExprList , "");
         List relatedAssocs = delegator.findByCondition("ContentAssoc", assocExprList, new ArrayList(), UtilMisc.toList("-fromDate"));
-        if (Debug.infoOn()) Debug.logInfo(" relatedAssoc:" + relatedAssocs.size() , "");
+        //if (Debug.infoOn()) Debug.logInfo(" relatedAssoc:" + relatedAssocs.size() , "");
         //for (int i = 0; i < relatedAssocs.size(); i++) {
             //GenericValue a = (GenericValue) relatedAssocs.get(i);
         //}
