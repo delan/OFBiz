@@ -8,7 +8,7 @@
 
   <!-- WorkEffort services -->
     <service name="createWorkEffort" engine="simple"
-            location="org/ofbiz/commonapp/workeffort/workeffort/WorkEffortSimpleServices" invoke="createWorkEffort">
+            location="org/ofbiz/commonapp/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="createWorkEffort">
         <description>Create a WorkEffort Entity</description>
         <attribute name="workEffortTypeId" type="String" mode="IN" optional="false"/>
         <attribute name="currentStatusId" type="String" mode="IN" optional="false"/>
@@ -33,7 +33,7 @@
         <attribute name="workEffortId" type="String" mode="OUT" optional="false"/>
     </service>
     <service name="updateWorkEffort" engine="simple"
-            location="org/ofbiz/commonapp/workeffort/workeffort/WorkEffortSimpleServices" invoke="updateWorkEffort">
+            location="org/ofbiz/commonapp/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="updateWorkEffort">
         <description>Update a WorkEffort Entity</description>
         <attribute name="workEffortId" type="String" mode="IN" optional="false"/>
         <attribute name="workEffortTypeId" type="String" mode="IN" optional="true"/>
@@ -58,7 +58,7 @@
         <attribute name="infoUrl" type="String" mode="IN" optional="true"/>
     </service>
     <service name="deleteWorkEffort" engine="simple"
-            location="org/ofbiz/commonapp/workeffort/workeffort/WorkEffortSimpleServices" invoke="deleteWorkEffort">
+            location="org/ofbiz/commonapp/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="deleteWorkEffort">
         <description>Delete a WorkEffort Entity</description>
         <attribute name="workEffortId" type="String" mode="IN"/>
     </service>

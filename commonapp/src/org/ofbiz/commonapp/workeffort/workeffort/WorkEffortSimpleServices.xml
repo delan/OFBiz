@@ -36,9 +36,15 @@
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
         
         <now-timestamp-to-env env-name="nowTimestamp"/>
+        <env-to-field env-name="nowTimestamp" field-name="lastStatusUpdate" map-name="newEntity"/>
+        <env-to-field env-name="nowTimestamp" field-name="lastModifiedDate" map-name="newEntity"/>
+        <env-to-field env-name="nowTimestamp" field-name="createdDate" map-name="newEntity"/>
+        <calculate field-name="revisionNumber" map-name="newEntity" type="Long"><number value="1"/></calculate>
+        <field-to-field field-name="partyId" map-name="userLogin" to-field-name="lastModifiedByPartyId" to-map-name="newEntity"/>
+        <field-to-field field-name="partyId" map-name="userLogin" to-field-name="createdByPartyId" to-map-name="newEntity"/>
+        <create-value value-name="newEntity"/>
         
         <!-- create new status entry, and set lastStatusUpdate date -->
-        <env-to-field env-name="nowTimestamp" field-name="lastStatusUpdate" map-name="newEntity"/>
         <make-value value-name="newWorkEffortStatus" entity-name="WorkEffortStatus"/>
         <field-to-field field-name="workEffortId" map-name="newEntity" to-map-name="newWorkEffortStatus"/>
         <field-to-field field-name="currentStatusId" map-name="newEntity" to-field-name="statusId" to-map-name="newWorkEffortStatus"/>
@@ -46,13 +52,7 @@
         <field-to-field field-name="partyId" map-name="userLogin" to-field-name="setByPartyId" to-map-name="newWorkEffortStatus"/>
         <create-value value-name="newWorkEffortStatus"/>
 
-        <env-to-field env-name="nowTimestamp" field-name="lastModifiedDate" map-name="newEntity"/>
-
-        <env-to-field env-name="nowTimestamp" field-name="createdDate" map-name="newEntity"/>
-        <calculate field-name="revisionNumber" map-name="newEntity"><number value="1"/></calculate>
         <if-not-empty field-name="partyId" map-name="userLogin">
-            <field-to-field field-name="partyId" map-name="userLogin" to-field-name="lastModifiedByPartyId" to-map-name="newEntity"/>
-            <field-to-field field-name="partyId" map-name="userLogin" to-field-name="createdByPartyId" to-map-name="newEntity"/>
             <!-- add a party assignment for the creator of the event, use the list method and let the EE do the update or create... -->
             <make-value value-name="newPartyRole" entity-name="PartyRole"/>
             <field-to-field field-name="partyId" map-name="userLogin" to-map-name="newPartyRole"/>
@@ -68,8 +68,6 @@
             <env-to-field env-name="nowTimestamp" field-name="fromDate" map-name="newWorkEffortPartyAssignment"/>
             <create-value value-name="newWorkEffortPartyAssignment"/>
         </if-not-empty>
-                
-        <create-value value-name="newEntity"/>
     </simple-method>
     <simple-method method-name="updateWorkEffort" short-description="Update Work Effort">
         <!-- check permissions before moving on: if update or delete logged in user must be associated OR have the corresponding UPDATE or DELETE permissions -->
@@ -90,34 +88,32 @@
         
         <!-- if necessary create new status entry, and set lastStatusUpdate date -->
         <if-compare-field field-name="currentStatusId" map-name="parameters" operator="not-equals" to-field-name="currentStatusId" to-map-name="lookedUpValue">
-            <env-to-field env-name="nowTimestamp" field-name="lastStatusUpdate" map-name="newEntity"/>
+            <env-to-field env-name="nowTimestamp" field-name="lastStatusUpdate" map-name="lookedUpValue"/>
             <make-value value-name="newWorkEffortStatus" entity-name="WorkEffortStatus"/>
-            <field-to-field field-name="workEffortId" map-name="newEntity" to-map-name="newWorkEffortStatus"/>
-            <field-to-field field-name="currentStatusId" map-name="newEntity" to-field-name="statusId" to-map-name="newWorkEffortStatus"/>
+            <field-to-field field-name="workEffortId" map-name="lookedUpValue" to-map-name="newWorkEffortStatus"/>
+            <field-to-field field-name="currentStatusId" map-name="lookedUpValue" to-field-name="statusId" to-map-name="newWorkEffortStatus"/>
             <env-to-field env-name="nowTimestamp" field-name="statusDatetime" map-name="newWorkEffortStatus"/>
             <field-to-field field-name="partyId" map-name="userLogin" to-field-name="setByPartyId" to-map-name="newWorkEffortStatus"/>
             <create-value value-name="newWorkEffortStatus"/>
-            
-            <env-to-field env-name="nowTimestamp" field-name="lastStatusUpdate" map-name="lookedUpValue"/>
         </if-compare-field>
 
         <!-- after checking status change, set all parameters -->        
         <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
 
         <!-- only save if something has changed -->
-        <if-compare-field field-name="lookedUpValue" operator="not-equals" to-field-name="savedValue">
+        <if-compare-field field-name="lookedUpValue" operator="not-equals" to-field-name="savedValue" type="Object">
             <!-- only set lastModifiedDate after comparing new & old to see if anything has changed -->
             <env-to-field env-name="nowTimestamp" field-name="lastModifiedDate" map-name="lookedUpValue"/>
             <field-to-field field-name="partyId" map-name="userLogin" to-field-name="lastModifiedByPartyId" to-map-name="lookedUpValue"/>
             <if-not-empty field-name="revisionNumber" map-name="lookedUpValue">
-                <calculate field-name="revisionNumber" map-name="lookedUpValue">
+                <calculate field-name="revisionNumber" map-name="lookedUpValue" type="Long">
                     <calcop operator="get" field-name="revisionNumber" map-name="lookedUpValue"/>
                     <number value="1"/>
                 </calculate>
                 <else>
-                    <calculate field-name="revisionNumber" map-name="lookedUpValue"><number value="1"/></calculate>
+                    <calculate field-name="revisionNumber" map-name="lookedUpValue" type="Long"><number value="1"/></calculate>
                 </else>
-            </if-empty>
+            </if-not-empty>
             <store-value value-name="lookedUpValue"/>
         </if-compare-field>
     </simple-method>

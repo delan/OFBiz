@@ -79,12 +79,12 @@
         <response name="error" type="view" value="task"/>
     </request-map>
     <request-map uri="updatetask"><security https="true" auth="true"/>
-        <event type="simple" invoke="updateWorkEffort"/>
+        <event type="service" invoke="updateWorkEffort"/>
     	<response name="success" type="view" value="task"/>
         <response name="error" type="view" value="task"/>
     </request-map>
     <request-map uri="deletetask"><security https="true" auth="true"/>
-        <event type="simple" invoke="deleteWorkEffort"/>
+        <event type="service" invoke="deleteWorkEffort"/>
     	<response name="success" type="view" value="task"/>
         <response name="error" type="view" value="task"/>
     </request-map>
@@ -93,17 +93,17 @@
     	<response name="success" type="view" value="activity"/>
     </request-map>
     <request-map uri="createactivity"><security https="true" auth="true"/>
-        <event type="simple" invoke="createWorkEffort"/>
+        <event type="service" invoke="createWorkEffort"/>
     	<response name="success" type="view" value="activity"/>
         <response name="error" type="view" value="activity"/>
     </request-map>
     <request-map uri="updateactivity"><security https="true" auth="true"/>
-        <event type="simple" invoke="updateWorkEffort"/>
+        <event type="service" invoke="updateWorkEffort"/>
     	<response name="success" type="view" value="activity"/>
         <response name="error" type="view" value="activity"/>
     </request-map>
     <request-map uri="deleteactivity"><security https="true" auth="true"/>
-        <event type="simple" invoke="deleteWorkEffort"/>
+        <event type="service" invoke="deleteWorkEffort"/>
     	<response name="success" type="view" value="activity"/>
         <response name="error" type="view" value="activity"/>
     </request-map>
@@ -131,17 +131,17 @@
     	<response name="success" type="view" value="event"/>
     </request-map>
     <request-map uri="createevent"><security https="true" auth="true"/>
-        <event type="simple" invoke="createWorkEffort"/>
+        <event type="service" invoke="createWorkEffort"/>
     	<response name="success" type="view" value="event"/>
         <response name="error" type="view" value="event"/>
     </request-map>
     <request-map uri="updateevent"><security https="true" auth="true"/>
-        <event type="simple" invoke="updateWorkEffort"/>
+        <event type="service" invoke="updateWorkEffort"/>
     	<response name="success" type="view" value="event"/>
         <response name="error" type="view" value="event"/>
     </request-map>
     <request-map uri="deleteevent"><security https="true" auth="true"/>
-        <event type="simple" invoke="deleteWorkEffort"/>
+        <event type="service" invoke="deleteWorkEffort"/>
     	<response name="success" type="view" value="event"/>
         <response name="error" type="view" value="event"/>
     </request-map>
