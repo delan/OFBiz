@@ -62,6 +62,18 @@ implements WfProcess {
         steps = new ArrayList();
         result = new HashMap();
         changeState("open.not_running.not_started");
+        
+        // Build up the activities (steps)
+        Collection activityEntities = null;
+        try {
+            activityEntities = valueObject.getRelatedCache("WorkflowActivity");  // this relation does not exist yet.
+        }
+        catch ( GenericEntityException e ) {
+            throw new WfException(e.getMessage(),e);
+        }
+        Iterator i = activityEntities.iterator();
+        while ( i.hasNext() )
+            steps.add(WfFactory.newWfActivity((GenericValue)i.next(),this));
     }
 
     /**
