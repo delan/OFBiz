@@ -7,6 +7,7 @@
     <ofbiz:param name='productCategoryId' value='<%=UtilFormatOut.checkNull(request.getParameter("productCategoryId"))%>'/>
     <ofbiz:param name='defaultViewSize' value='<%=new Integer(30)%>'/>
     <ofbiz:param name='limitView' value='<%=new Boolean(true)%>'/>
+    <ofbiz:param name='useCacheForMembers' value='<%=new Boolean(false)%>'/>
     <%-- Returns: viewIndex, viewSize, lowIndex, highIndex, listSize, productCategory, productCategoryMembers --%>
 </ofbiz:service>
 <ofbiz:object name='viewIndex' type='java.lang.Integer'/>
@@ -32,6 +33,7 @@
         <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
           <tr>
             <td>
+              <ofbiz:if name="productCategory">
                 <ofbiz:if name="productCategoryMembers" size="0">
                   <table width='100%' cellspacing="0" cellpadding="1" border="0">
                     <ofbiz:iterator name="productCategoryMember" property="productCategoryMembers" offset="<%=0%>" limit="<%=viewSize.intValue()%>">
@@ -60,8 +62,12 @@
                   </table>
                 </ofbiz:if>
                 <ofbiz:unless name="productCategoryMembers" size="0">
-                  <div class='tabletext'>No products found.</div>
+                  <div class='tabletext'>No products in category.</div>
                 </ofbiz:unless>
+              </ofbiz:if>
+              <ofbiz:unless name="productCategory">
+                  <div class='tabletext'>No category specified.</div>
+              </ofbiz:unless>
             </td>
           </tr>
         </table>
