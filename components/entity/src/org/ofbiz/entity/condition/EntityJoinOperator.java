@@ -1,5 +1,5 @@
 /*
- * $Id: EntityJoinOperator.java,v 1.4 2004/07/07 05:48:23 doogie Exp $
+ * $Id: EntityJoinOperator.java,v 1.5 2004/07/07 17:37:40 ajzeneski Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -39,9 +39,9 @@ import org.ofbiz.entity.model.ModelEntity;
  *
  *@author     <a href='mailto:chris_maurer@altavista.com'>Chris Maurer</a>
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- *@author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
- *@created    Nov 5, 2001
- *@version    1.0
+ *@author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
+ *@since      1.0
+ *@version    $Revision: 1.5 $
  */
 public class EntityJoinOperator extends EntityOperator {
 

@@ -1,5 +1,5 @@
 /*
- * $Id: EntityExpr.java,v 1.10 2004/07/07 05:48:23 doogie Exp $
+ * $Id: EntityExpr.java,v 1.11 2004/07/07 17:37:40 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -39,7 +39,7 @@ import org.ofbiz.entity.model.ModelField;
  * Encapsulates simple expressions used for specifying queries
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.10 $
+ * @version    $Revision: 1.11 $
  * @since      2.0
  */
 public class EntityExpr extends EntityCondition {
@@ -165,7 +165,7 @@ public class EntityExpr extends EntityCondition {
     }
 
 	protected void addValue(StringBuffer buffer, ModelField field, Object value, List params) {
-		if (this.isRUpper()) {
+		if (rhs instanceof EntityFunction.UPPER) {
 			if (value instanceof String) {
 				value = ((String) value).toUpperCase();
 			}

@@ -1,5 +1,5 @@
 /*
- * $Id: EntityConditionValue.java,v 1.2 2004/07/07 05:48:23 doogie Exp $
+ * $Id: EntityConditionValue.java,v 1.3 2004/07/07 17:37:40 ajzeneski Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -21,7 +21,6 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
 package org.ofbiz.entity.condition;
 
 import java.util.ArrayList;
@@ -39,22 +38,30 @@ import org.ofbiz.entity.model.ModelField;
  *
  *@author     <a href='mailto:chris_maurer@altavista.com'>Chris Maurer</a>
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- *@author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
- *@created    Nov 5, 2001
- *@version    1.0
+ *@author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
+ *@since      1.0
+ *@version    $Revision: 1.3 $
  */
 public abstract class EntityConditionValue extends EntityConditionBase {
+
     public abstract ModelField getModelField(ModelEntity modelEntity);
-    public void addSqlValue(StringBuffer sql, ModelEntity modelEntity, List entityConditionParams, boolean includeTableNamePrefix, EntityConfigUtil.DatasourceInfo datasourceinfo) {
+
+    public void addSqlValue(StringBuffer sql, ModelEntity modelEntity, List entityConditionParams, boolean includeTableNamePrefix,
+            EntityConfigUtil.DatasourceInfo datasourceinfo) {
         addSqlValue(sql, emptyMap, modelEntity, entityConditionParams, includeTableNamePrefix, datasourceinfo);
     }
-    public abstract void addSqlValue(StringBuffer sql, Map tableAliases, ModelEntity modelEntity, List entityConditionParams, boolean includeTableNamePrefix, EntityConfigUtil.DatasourceInfo datasourceinfo);
+
+    public abstract void addSqlValue(StringBuffer sql, Map tableAliases, ModelEntity modelEntity, List entityConditionParams,
+            boolean includeTableNamePrefix, EntityConfigUtil.DatasourceInfo datasourceinfo);
+
     public abstract void validateSql(ModelEntity modelEntity) throws GenericModelException;
+
     public Object getValue(GenericEntity entity) {
         return getValue((Map) entity);
     }
 
     public abstract Object getValue(Map map);
+
     public abstract EntityConditionValue freeze();
 
     public String toString() {
