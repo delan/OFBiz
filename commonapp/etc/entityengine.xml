@@ -99,7 +99,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
         <sql-load-path path="commonapp/db" prepend-env="ofbiz.home"/>
         <sql-load-path path="ecommerce/etc" prepend-env="ofbiz.home"/>
         <inline-jdbc
-                jdbc-driver="org.hsqldb.jdbcDriver"
+                jdbc-driver="com.p6spy.engine.spy.P6SpyDriver"
                 jdbc-uri="jdbc:hsqldb:data/ofbiz"
                 jdbc-username="sa"
                 jdbc-password=""
