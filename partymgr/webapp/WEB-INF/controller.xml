@@ -269,7 +269,7 @@
 
     <!-- View Mappings -->
     <view-map name="error" page="/error/error.jsp"/>
-    <view-map name="main" type="region"/>
+    <view-map name="main" page="findparty" type="region"/>
     <view-map name="login" type="region"/>
 
     <view-map name="viewprofile" type="region"/>
