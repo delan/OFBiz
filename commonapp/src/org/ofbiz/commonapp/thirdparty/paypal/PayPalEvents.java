@@ -183,17 +183,37 @@ public class PayPalEvents {
         String confirmResp = null;
         try {
             confirmResp = hclient.post();
+            Debug.logError("PayPal Verification Response: " + confirmResp, module);
         } catch (HttpClientException e) {
             Debug.logError(e, "Problems connection to PayPal confirm URL", module);
             return "error";
         }
         
+        // second verify, without using HttpClient -- testing
+        try {                
+            String str = hclient.encodeArgs(parametersMap);
+            URL u = new URL("http://www.paypal.com/cgi-bin/webscr");
+            URLConnection uc = u.openConnection();
+            uc.setDoOutput(true);
+            uc.setRequestProperty("Content-Type","application/x-www-form-urlencoded");
+            PrintWriter pw = new PrintWriter(uc.getOutputStream());
+            pw.println(str);
+            pw.close();
+            
+            BufferedReader in = new BufferedReader(
+            new InputStreamReader(uc.getInputStream()));
+            confirmResp = in.readLine();
+            in.close();                 
+            Debug.logError("PayPal Verification Response: " + confirmResp, module); 
+        } catch (IOException e) {
+            Debug.logError(e, "Problems sending verification message", module);
+        }
+          
         if (confirmResp.trim().equals("VERIFIED")) {
             // we passed verification
             Debug.logInfo("Got verification from PayPal, processing..", module);
         } else {
-            Debug.logError("###### PayPal did not verify this request, need investigation!", module);
-            Debug.logError(" --- " + confirmResp, module);
+            Debug.logError("###### PayPal did not verify this request, need investigation!", module);            
             Set keySet = parametersMap.keySet();
             Iterator i = keySet.iterator();
             while (i.hasNext()) {
