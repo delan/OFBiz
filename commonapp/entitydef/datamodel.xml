@@ -125,6 +125,11 @@
       </relation>
       <relation>
         <relation-type>many</relation-type>
+        <related-table-name>GEO_BOUNDARY_TYPE</related-table-name>
+        <key-map><column-name>GEO_BOUNDARY_TYPE_ID</column-name><related-column-name>PARENT_TYPE_ID</related-column-name></key-map>
+      </relation>
+      <relation>
+        <relation-type>many</relation-type>
         <related-table-name>GEO_BOUNDARY</related-table-name>
         <key-map><column-name>GEO_BOUNDARY_TYPE_ID</column-name></key-map>
       </relation>
@@ -199,6 +204,11 @@
       </relation>
       <relation>
         <relation-type>many</relation-type>
+        <related-table-name>STATUS_TYPE_TYPE</related-table-name>
+        <key-map><column-name>STATUS_TYPE_TYPE_ID</column-name><related-column-name>PARENT_TYPE_ID</related-column-name></key-map>
+      </relation>
+      <relation>
+        <relation-type>many</relation-type>
         <related-table-name>STATUS_TYPE</related-table-name>
         <key-map><column-name>STATUS_TYPE_TYPE_ID</column-name></key-map>
       </relation>
@@ -237,6 +247,11 @@
         <relation-type>one</relation-type>
         <related-table-name>UNIT_OF_MEASURE_TYPE</related-table-name>
         <key-map><column-name>PARENT_TYPE_ID</column-name><related-column-name>UNIT_OF_MEASURE_TYPE_ID</related-column-name></key-map>
+      </relation>
+      <relation>
+        <relation-type>many</relation-type>
+        <related-table-name>UNIT_OF_MEASURE_TYPE</related-table-name>
+        <key-map><column-name>UNIT_OF_MEASURE_TYPE_ID</column-name><related-column-name>PARENT_TYPE_ID</related-column-name></key-map>
       </relation>
       <relation>
         <relation-type>many</relation-type>
@@ -330,6 +345,11 @@
         <relation-type>one</relation-type>
         <related-table-name>DATA_OBJECT_TYPE</related-table-name>
         <key-map><column-name>PARENT_TYPE_ID</column-name><related-column-name>DATA_OBJECT_TYPE_ID</related-column-name></key-map>
+      </relation>
+      <relation>
+        <relation-type>many</relation-type>
+        <related-table-name>DATA_OBJECT_TYPE</related-table-name>
+        <key-map><column-name>DATA_OBJECT_TYPE_ID</column-name><related-column-name>PARENT_TYPE_ID</related-column-name></key-map>
       </relation>
       <relation>
         <relation-type>many</relation-type>
@@ -564,6 +584,11 @@
       </relation>
       <relation>
         <relation-type>many</relation-type>
+        <related-table-name>CONTENT_TYPE</related-table-name>
+        <key-map><column-name>CONTENT_TYPE_ID</column-name><related-column-name>PARENT_TYPE_ID</related-column-name></key-map>
+      </relation>
+      <relation>
+        <relation-type>many</relation-type>
         <related-table-name>CONTENT_TYPE_ATTR</related-table-name>
         <key-map><column-name>CONTENT_TYPE_ID</column-name></key-map>
       </relation>
@@ -764,6 +789,11 @@
         <relation-type>one</relation-type>
         <related-table-name>DOCUMENT_TYPE</related-table-name>
         <key-map><column-name>PARENT_TYPE_ID</column-name><related-column-name>DOCUMENT_TYPE_ID</related-column-name></key-map>
+      </relation>
+      <relation>
+        <relation-type>many</relation-type>
+        <related-table-name>DOCUMENT_TYPE</related-table-name>
+        <key-map><column-name>DOCUMENT_TYPE_ID</column-name><related-column-name>PARENT_TYPE_ID</related-column-name></key-map>
       </relation>
       <relation>
         <relation-type>many</relation-type>
@@ -1009,6 +1039,11 @@
         <relation-type>one</relation-type>
         <related-table-name>SUBSCRIPTION_TYPE</related-table-name>
         <key-map><column-name>PARENT_TYPE_ID</column-name><related-column-name>SUBSCRIPTION_TYPE_ID</related-column-name></key-map>
+      </relation>
+      <relation>
+        <relation-type>many</relation-type>
+        <related-table-name>SUBSCRIPTION_TYPE</related-table-name>
+        <key-map><column-name>SUBSCRIPTION_TYPE_ID</column-name><related-column-name>PARENT_TYPE_ID</related-column-name></key-map>
       </relation>
       <relation>
         <relation-type>many</relation-type>
@@ -1492,6 +1527,11 @@
       </relation>
       <relation>
         <relation-type>many</relation-type>
+        <related-table-name>AGREEMENT_TYPE</related-table-name>
+        <key-map><column-name>AGREEMENT_TYPE_ID</column-name><related-column-name>PARENT_TYPE_ID</related-column-name></key-map>
+      </relation>
+      <relation>
+        <relation-type>many</relation-type>
         <related-table-name>AGREEMENT_TYPE_ATTR</related-table-name>
         <key-map><column-name>AGREEMENT_TYPE_ID</column-name></key-map>
       </relation>
@@ -1601,6 +1641,11 @@
         <relation-type>one</relation-type>
         <related-table-name>AGREEMENT_ITEM_TYPE</related-table-name>
         <key-map><column-name>PARENT_TYPE_ID</column-name><related-column-name>AGREEMENT_ITEM_TYPE_ID</related-column-name></key-map>
+      </relation>
+      <relation>
+        <relation-type>many</relation-type>
+        <related-table-name>AGREEMENT_ITEM_TYPE</related-table-name>
+        <key-map><column-name>AGREEMENT_ITEM_TYPE_ID</column-name><related-column-name>PARENT_TYPE_ID</related-column-name></key-map>
       </relation>
       <relation>
         <relation-type>many</relation-type>
@@ -1787,6 +1832,11 @@
       </relation>
       <relation>
         <relation-type>many</relation-type>
+        <related-table-name>TERM_TYPE</related-table-name>
+        <key-map><column-name>TERM_TYPE_ID</column-name><related-column-name>PARENT_TYPE_ID</related-column-name></key-map>
+      </relation>
+      <relation>
+        <relation-type>many</relation-type>
         <related-table-name>TERM_TYPE_ATTR</related-table-name>
         <key-map><column-name>TERM_TYPE_ID</column-name></key-map>
       </relation>
@@ -1957,6 +2007,11 @@
       </relation>
       <relation>
         <relation-type>many</relation-type>
+        <related-table-name>COMMUNICATION_EVENT_TYPE</related-table-name>
+        <key-map><column-name>COMMUNICATION_EVENT_TYPE_ID</column-name><related-column-name>PARENT_TYPE_ID</related-column-name></key-map>
+      </relation>
+      <relation>
+        <relation-type>many</relation-type>
         <related-table-name>COMMUNICATION_EVENT</related-table-name>
         <key-map><column-name>COMMUNICATION_EVENT_TYPE_ID</column-name></key-map>
       </relation>
@@ -2000,6 +2055,11 @@
         <relation-type>one</relation-type>
         <related-table-name>COMMUNICATION_EVENT_PRP_TYP</related-table-name>
         <key-map><column-name>PARENT_TYPE_ID</column-name><related-column-name>COMMUNICATION_EVENT_PRP_TYP_ID</related-column-name></key-map>
+      </relation>
+      <relation>
+        <relation-type>many</relation-type>
+        <related-table-name>COMMUNICATION_EVENT_PRP_TYP</related-table-name>
+        <key-map><column-name>COMMUNICATION_EVENT_PRP_TYP_ID</column-name><related-column-name>PARENT_TYPE_ID</related-column-name></key-map>
       </relation>
       <relation>
         <relation-type>many</relation-type>
@@ -2065,6 +2125,11 @@
         <relation-type>one</relation-type>
         <related-table-name>CONTACT_MECHANISM_TYPE</related-table-name>
         <key-map><column-name>PARENT_TYPE_ID</column-name><related-column-name>CONTACT_MECHANISM_TYPE_ID</related-column-name></key-map>
+      </relation>
+      <relation>
+        <relation-type>many</relation-type>
+        <related-table-name>CONTACT_MECHANISM_TYPE</related-table-name>
+        <key-map><column-name>CONTACT_MECHANISM_TYPE_ID</column-name><related-column-name>PARENT_TYPE_ID</related-column-name></key-map>
       </relation>
       <relation>
         <relation-type>many</relation-type>
@@ -2311,6 +2376,11 @@
         <related-table-name>PARTY_ATTRIBUTE</related-table-name>
         <key-map><column-name>PARTY_ID</column-name></key-map>
       </relation>
+      <relation>
+        <relation-type>many</relation-type>
+        <related-table-name>USER_LOGIN</related-table-name>
+        <key-map><column-name>PARTY_ID</column-name></key-map>
+      </relation>
     </entity>
     <!-- ========================================================= -->    
     <entity>
@@ -2324,9 +2394,9 @@
       <cmp-field><column-name>THRU_DATE</column-name><field-type>date-time</field-type></cmp-field>
       <prim-key-column>PARTY_ID</prim-key-column>
       <prim-key-column>PARTY_TYPE_ID</prim-key-column>
-      <finder><column-name>PARTY_ID</column-name></finder>
-      <finder><column-name>PARTY_TYPE_ID</column-name></finder>
-      <finder><column-name>PARTY_CLASSIFICATION_TYPE_ID</column-name></finder>
+      <finder><column-name>PARTY_ID</column-name><order-by>PARTY_TYPE_ID</order-by></finder>
+      <finder><column-name>PARTY_TYPE_ID</column-name><order-by>PARTY_ID</order-by></finder>
+      <finder><column-name>PARTY_CLASSIFICATION_TYPE_ID</column-name><order-by>PARTY_ID</order-by></finder>
       <relation>
         <relation-type>one</relation-type>
         <related-table-name>PARTY</related-table-name>
@@ -2363,12 +2433,17 @@
       <cmp-field><column-name>HAS_TABLE</column-name><field-type>indicator</field-type></cmp-field>
       <cmp-field><column-name>DESCRIPTION</column-name><field-type>description</field-type></cmp-field>
       <prim-key-column>PARTY_CLASSIFICATION_TYPE_ID</prim-key-column>
-      <finder><column-name>PARENT_TYPE_ID</column-name></finder>
+      <finder><column-name>PARENT_TYPE_ID</column-name><order-by>PARTY_CLASSIFICATION_TYPE_ID</order-by></finder>
       <finder><column-name>HAS_TABLE</column-name></finder>
       <relation>
         <relation-type>one</relation-type>
         <related-table-name>PARTY_CLASSIFICATION_TYPE</related-table-name>
         <key-map><column-name>PARENT_TYPE_ID</column-name><related-column-name>PARTY_CLASSIFICATION_TYPE_ID</related-column-name></key-map>
+      </relation>
+      <relation>
+        <relation-type>many</relation-type>
+        <related-table-name>PARTY_CLASSIFICATION_TYPE</related-table-name>
+        <key-map><column-name>PARTY_CLASSIFICATION_TYPE_ID</column-name><related-column-name>PARENT_TYPE_ID</related-column-name></key-map>
       </relation>
       <relation>
         <relation-type>many</relation-type>
@@ -2386,12 +2461,25 @@
       <cmp-field><column-name>HAS_TABLE</column-name><field-type>indicator</field-type></cmp-field>
       <cmp-field><column-name>DESCRIPTION</column-name><field-type>description</field-type></cmp-field>
       <prim-key-column>PARTY_TYPE_ID</prim-key-column>
-      <finder><column-name>PARENT_TYPE_ID</column-name></finder>
+      <finder><column-name>PARENT_TYPE_ID</column-name><order-by>PARTY_TYPE_ID</order-by></finder>
       <finder><column-name>HAS_TABLE</column-name></finder>
       <relation>
+        <relation-title>Parent</relation-title>
         <relation-type>one</relation-type>
         <related-table-name>PARTY_TYPE</related-table-name>
         <key-map><column-name>PARENT_TYPE_ID</column-name><related-column-name>PARTY_TYPE_ID</related-column-name></key-map>
+      </relation>
+      <relation>
+        <relation-title>Children</relation-title>
+        <relation-type>many</relation-type>
+        <related-table-name>PARTY_TYPE</related-table-name>
+        <key-map><column-name>PARTY_TYPE_ID</column-name><related-column-name>PARENT_TYPE_ID</related-column-name></key-map>
+      </relation>
+      <relation>
+        <relation-title>Sibling</relation-title>
+        <relation-type>many</relation-type>
+        <related-table-name>PARTY_TYPE</related-table-name>
+        <key-map><column-name>PARENT_TYPE_ID</column-name></key-map>
       </relation>
       <relation>
         <relation-type>many</relation-type>
@@ -2414,8 +2502,8 @@
       <cmp-field><column-name>VALUE</column-name><field-type>value</field-type></cmp-field>
       <prim-key-column>PARTY_ID</prim-key-column>
       <prim-key-column>NAME</prim-key-column>
-      <finder><column-name>PARTY_ID</column-name></finder>
-      <finder><column-name>NAME</column-name></finder>
+      <finder><column-name>PARTY_ID</column-name><order-by>NAME</order-by></finder>
+      <finder><column-name>NAME</column-name><order-by>PARTY_ID</order-by></finder>
       <relation>
         <relation-type>one</relation-type>
         <related-table-name>PARTY</related-table-name>
@@ -2436,8 +2524,8 @@
       <cmp-field><column-name>NAME</column-name><field-type>id-long-ne</field-type></cmp-field>
       <prim-key-column>PARTY_TYPE_ID</prim-key-column>
       <prim-key-column>NAME</prim-key-column>
-      <finder><column-name>PARTY_TYPE_ID</column-name></finder>
-      <finder><column-name>NAME</column-name></finder>
+      <finder><column-name>PARTY_TYPE_ID</column-name><order-by>NAME</order-by></finder>
+      <finder><column-name>NAME</column-name><order-by>PARTY_TYPE_ID</order-by></finder>
       <relation>
         <relation-type>one</relation-type>
         <related-table-name>PARTY_TYPE</related-table-name>
@@ -2504,6 +2592,11 @@
         <relation-type>one</relation-type>
         <related-table-name>ROLE_TYPE</related-table-name>
         <key-map><column-name>PARENT_TYPE_ID</column-name><related-column-name>ROLE_TYPE_ID</related-column-name></key-map>
+      </relation>
+      <relation>
+        <relation-type>many</relation-type>
+        <related-table-name>ROLE_TYPE</related-table-name>
+        <key-map><column-name>ROLE_TYPE_ID</column-name><related-column-name>PARENT_TYPE_ID</related-column-name></key-map>
       </relation>
       <relation>
         <relation-type>many</relation-type>
@@ -2757,6 +2850,11 @@
       </relation>
       <relation>
         <relation-type>many</relation-type>
+        <related-table-name>PRODUCT_CATEGORY_TYPE</related-table-name>
+        <key-map><column-name>PRODUCT_CATEGORY_TYPE_ID</column-name><related-column-name>PARENT_TYPE_ID</related-column-name></key-map>
+      </relation>
+      <relation>
+        <relation-type>many</relation-type>
         <related-table-name>PRODUCT_CATEGORY_TYPE_ATTR</related-table-name>
         <key-map><column-name>PRODUCT_CATEGORY_TYPE_ID</column-name></key-map>
       </relation>
@@ -2928,6 +3026,11 @@
       </relation>
       <relation>
         <relation-type>many</relation-type>
+        <related-table-name>PRODUCT_FEATURE_TYPE</related-table-name>
+        <key-map><column-name>PRODUCT_FEATURE_TYPE_ID</column-name><related-column-name>PARENT_TYPE_ID</related-column-name></key-map>
+      </relation>
+      <relation>
+        <relation-type>many</relation-type>
         <related-table-name>PRODUCT_FEATURE_TYPE_ATTR</related-table-name>
         <key-map><column-name>PRODUCT_FEATURE_TYPE_ID</column-name></key-map>
       </relation>
@@ -3051,6 +3154,11 @@
       </relation>
       <relation>
         <relation-type>many</relation-type>
+        <related-table-name>PRODUCT_FEATURE_APPL_TYPE</related-table-name>
+        <key-map><column-name>PRODUCT_FEATURE_APPL_TYPE_ID</column-name><related-column-name>PARENT_TYPE_ID</related-column-name></key-map>
+      </relation>
+      <relation>
+        <relation-type>many</relation-type>
         <related-table-name>PRODUCT_FEATURE_APPLICABILITY</related-table-name>
         <key-map><column-name>PRODUCT_FEATURE_APPL_TYPE_ID</column-name></key-map>
       </relation>
@@ -3090,6 +3198,11 @@
         <relation-type>one</relation-type>
         <related-table-name>PRODUCT_FEATURE_IACTN_TYPE</related-table-name>
         <key-map><column-name>PARENT_TYPE_ID</column-name><related-column-name>PRODUCT_FEATURE_IACTN_TYPE_ID</related-column-name></key-map>
+      </relation>
+      <relation>
+        <relation-type>many</relation-type>
+        <related-table-name>PRODUCT_FEATURE_IACTN_TYPE</related-table-name>
+        <key-map><column-name>PRODUCT_FEATURE_IACTN_TYPE_ID</column-name><related-column-name>PARENT_TYPE_ID</related-column-name></key-map>
       </relation>
       <relation>
         <relation-type>many</relation-type>
@@ -3194,6 +3307,11 @@
         <relation-type>one</relation-type>
         <related-table-name>PRICE_COMPONENT_TYPE</related-table-name>
         <key-map><column-name>PARENT_TYPE_ID</column-name><related-column-name>PRICE_COMPONENT_TYPE_ID</related-column-name></key-map>
+      </relation>
+      <relation>
+        <relation-type>many</relation-type>
+        <related-table-name>PRICE_COMPONENT_TYPE</related-table-name>
+        <key-map><column-name>PRICE_COMPONENT_TYPE_ID</column-name><related-column-name>PARENT_TYPE_ID</related-column-name></key-map>
       </relation>
       <relation>
         <relation-type>many</relation-type>
@@ -3311,6 +3429,11 @@
         <relation-type>one</relation-type>
         <related-table-name>COST_COMPONENT_TYPE</related-table-name>
         <key-map><column-name>PARENT_TYPE_ID</column-name><related-column-name>COST_COMPONENT_TYPE_ID</related-column-name></key-map>
+      </relation>
+      <relation>
+        <relation-type>many</relation-type>
+        <related-table-name>COST_COMPONENT_TYPE</related-table-name>
+        <key-map><column-name>COST_COMPONENT_TYPE_ID</column-name><related-column-name>PARENT_TYPE_ID</related-column-name></key-map>
       </relation>
       <relation>
         <relation-type>many</relation-type>
@@ -3485,6 +3608,11 @@
       </relation>
       <relation>
         <relation-type>many</relation-type>
+        <related-table-name>FACILITY_TYPE</related-table-name>
+        <key-map><column-name>FACILITY_TYPE_ID</column-name><related-column-name>PARENT_TYPE_ID</related-column-name></key-map>
+      </relation>
+      <relation>
+        <relation-type>many</relation-type>
         <related-table-name>FACILITY_TYPE_ATTR</related-table-name>
         <key-map><column-name>FACILITY_TYPE_ID</column-name></key-map>
       </relation>
@@ -3625,6 +3753,11 @@
         <relation-type>one</relation-type>
         <related-table-name>INVENTORY_ITEM_TYPE</related-table-name>
         <key-map><column-name>PARENT_TYPE_ID</column-name><related-column-name>INVENTORY_ITEM_TYPE_ID</related-column-name></key-map>
+      </relation>
+      <relation>
+        <relation-type>many</relation-type>
+        <related-table-name>INVENTORY_ITEM_TYPE</related-table-name>
+        <key-map><column-name>INVENTORY_ITEM_TYPE_ID</column-name><related-column-name>PARENT_TYPE_ID</related-column-name></key-map>
       </relation>
       <relation>
         <relation-type>many</relation-type>
@@ -3893,6 +4026,11 @@
       </relation>
       <relation>
         <relation-type>many</relation-type>
+        <related-table-name>PRODUCT_TYPE</related-table-name>
+        <key-map><column-name>PRODUCT_TYPE_ID</column-name><related-column-name>PARENT_TYPE_ID</related-column-name></key-map>
+      </relation>
+      <relation>
+        <relation-type>many</relation-type>
         <related-table-name>PRODUCT_TYPE_ATTR</related-table-name>
         <key-map><column-name>PRODUCT_TYPE_ID</column-name></key-map>
       </relation>
@@ -4012,6 +4150,11 @@
       </relation>
       <relation>
         <relation-type>many</relation-type>
+        <related-table-name>GOOD_IDENTIFICATION_TYPE</related-table-name>
+        <key-map><column-name>GOOD_IDENTIFICATION_TYPE_ID</column-name><related-column-name>PARENT_TYPE_ID</related-column-name></key-map>
+      </relation>
+      <relation>
+        <relation-type>many</relation-type>
         <related-table-name>GOOD_IDENTIFICATION</related-table-name>
         <key-map><column-name>GOOD_IDENTIFICATION_TYPE_ID</column-name></key-map>
       </relation>
@@ -4086,6 +4229,11 @@
         <relation-type>one</relation-type>
         <related-table-name>PART_TYPE</related-table-name>
         <key-map><column-name>PARENT_TYPE_ID</column-name><related-column-name>PART_TYPE_ID</related-column-name></key-map>
+      </relation>
+      <relation>
+        <relation-type>many</relation-type>
+        <related-table-name>PART_TYPE</related-table-name>
+        <key-map><column-name>PART_TYPE_ID</column-name><related-column-name>PARENT_TYPE_ID</related-column-name></key-map>
       </relation>
       <relation>
         <relation-type>many</relation-type>
@@ -4332,6 +4480,11 @@
       </relation>
       <relation>
         <relation-type>many</relation-type>
+        <related-table-name>ORDER_TYPE</related-table-name>
+        <key-map><column-name>ORDER_TYPE_ID</column-name><related-column-name>PARENT_TYPE_ID</related-column-name></key-map>
+      </relation>
+      <relation>
+        <relation-type>many</relation-type>
         <related-table-name>ORDER_TYPE_ATTR</related-table-name>
         <key-map><column-name>ORDER_TYPE_ID</column-name></key-map>
       </relation>
@@ -4438,6 +4591,11 @@
         <relation-type>one</relation-type>
         <related-table-name>ORDER_ADJUSTMENT_TYPE</related-table-name>
         <key-map><column-name>PARENT_TYPE_ID</column-name><related-column-name>ORDER_ADJUSTMENT_TYPE_ID</related-column-name></key-map>
+      </relation>
+      <relation>
+        <relation-type>many</relation-type>
+        <related-table-name>ORDER_ADJUSTMENT_TYPE</related-table-name>
+        <key-map><column-name>ORDER_ADJUSTMENT_TYPE_ID</column-name><related-column-name>PARENT_TYPE_ID</related-column-name></key-map>
       </relation>
       <relation>
         <relation-type>many</relation-type>
@@ -4583,6 +4741,11 @@
         <relation-type>one</relation-type>
         <related-table-name>ORDER_ITEM_TYPE</related-table-name>
         <key-map><column-name>PARENT_TYPE_ID</column-name><related-column-name>ORDER_ITEM_TYPE_ID</related-column-name></key-map>
+      </relation>
+      <relation>
+        <relation-type>many</relation-type>
+        <related-table-name>ORDER_ITEM_TYPE</related-table-name>
+        <key-map><column-name>ORDER_ITEM_TYPE_ID</column-name><related-column-name>PARENT_TYPE_ID</related-column-name></key-map>
       </relation>
       <relation>
         <relation-type>many</relation-type>
@@ -4960,6 +5123,11 @@
       </relation>
       <relation>
         <relation-type>many</relation-type>
+        <related-table-name>QUOTE_TYPE</related-table-name>
+        <key-map><column-name>QUOTE_TYPE_ID</column-name><related-column-name>PARENT_TYPE_ID</related-column-name></key-map>
+      </relation>
+      <relation>
+        <relation-type>many</relation-type>
         <related-table-name>QUOTE_TYPE_ATTR</related-table-name>
         <key-map><column-name>QUOTE_TYPE_ID</column-name></key-map>
       </relation>
@@ -5184,6 +5352,11 @@
       </relation>
       <relation>
         <relation-type>many</relation-type>
+        <related-table-name>CUST_REQUEST_TYPE</related-table-name>
+        <key-map><column-name>CUST_REQUEST_TYPE_ID</column-name><related-column-name>PARENT_TYPE_ID</related-column-name></key-map>
+      </relation>
+      <relation>
+        <relation-type>many</relation-type>
         <related-table-name>CUST_REQUEST_TYPE_ATTR</related-table-name>
         <key-map><column-name>CUST_REQUEST_TYPE_ID</column-name></key-map>
       </relation>
@@ -5325,6 +5498,11 @@
         <relation-type>one</relation-type>
         <related-table-name>REQUIREMENT_TYPE</related-table-name>
         <key-map><column-name>PARENT_TYPE_ID</column-name><related-column-name>REQUIREMENT_TYPE_ID</related-column-name></key-map>
+      </relation>
+      <relation>
+        <relation-type>many</relation-type>
+        <related-table-name>REQUIREMENT_TYPE</related-table-name>
+        <key-map><column-name>REQUIREMENT_TYPE_ID</column-name><related-column-name>PARENT_TYPE_ID</related-column-name></key-map>
       </relation>
       <relation>
         <relation-type>many</relation-type>
@@ -5707,6 +5885,11 @@
       </relation>
       <relation>
         <relation-type>many</relation-type>
+        <related-table-name>SHIPMENT_TYPE</related-table-name>
+        <key-map><column-name>SHIPMENT_TYPE_ID</column-name><related-column-name>PARENT_TYPE_ID</related-column-name></key-map>
+      </relation>
+      <relation>
+        <relation-type>many</relation-type>
         <related-table-name>SHIPMENT_TYPE_ATTR</related-table-name>
         <key-map><column-name>SHIPMENT_TYPE_ID</column-name></key-map>
       </relation>
@@ -6044,6 +6227,11 @@
       </relation>
       <relation>
         <relation-type>many</relation-type>
+        <related-table-name>WORK_EFFORT_TYPE</related-table-name>
+        <key-map><column-name>WORK_EFFORT_TYPE_ID</column-name><related-column-name>PARENT_TYPE_ID</related-column-name></key-map>
+      </relation>
+      <relation>
+        <relation-type>many</relation-type>
         <related-table-name>WORK_EFFORT_TYPE_ATTR</related-table-name>
         <key-map><column-name>WORK_EFFORT_TYPE_ID</column-name></key-map>
       </relation>
@@ -6164,6 +6352,11 @@
         <relation-type>one</relation-type>
         <related-table-name>WORK_EFFORT_ASSOC_TYPE</related-table-name>
         <key-map><column-name>PARENT_TYPE_ID</column-name><related-column-name>WORK_EFFORT_ASSOC_TYPE_ID</related-column-name></key-map>
+      </relation>
+      <relation>
+        <relation-type>many</relation-type>
+        <related-table-name>WORK_EFFORT_ASSOC_TYPE</related-table-name>
+        <key-map><column-name>WORK_EFFORT_ASSOC_TYPE_ID</column-name><related-column-name>PARENT_TYPE_ID</related-column-name></key-map>
       </relation>
       <relation>
         <relation-type>many</relation-type>
@@ -6593,6 +6786,11 @@
       </relation>
       <relation>
         <relation-type>many</relation-type>
+        <related-table-name>BUDGET_TYPE</related-table-name>
+        <key-map><column-name>BUDGET_TYPE_ID</column-name><related-column-name>PARENT_TYPE_ID</related-column-name></key-map>
+      </relation>
+      <relation>
+        <relation-type>many</relation-type>
         <related-table-name>BUDGET_TYPE_ATTR</related-table-name>
         <key-map><column-name>BUDGET_TYPE_ID</column-name></key-map>
       </relation>
@@ -6700,6 +6898,11 @@
         <relation-type>one</relation-type>
         <related-table-name>BUDGET_ITEM_TYPE</related-table-name>
         <key-map><column-name>PARENT_TYPE_ID</column-name><related-column-name>BUDGET_ITEM_TYPE_ID</related-column-name></key-map>
+      </relation>
+      <relation>
+        <relation-type>many</relation-type>
+        <related-table-name>BUDGET_ITEM_TYPE</related-table-name>
+        <key-map><column-name>BUDGET_ITEM_TYPE_ID</column-name><related-column-name>PARENT_TYPE_ID</related-column-name></key-map>
       </relation>
       <relation>
         <relation-type>many</relation-type>
@@ -6955,6 +7158,11 @@
       </relation>
       <relation>
         <relation-type>many</relation-type>
+        <related-table-name>FIXED_ASSET_TYPE</related-table-name>
+        <key-map><column-name>FIXED_ASSET_TYPE_ID</column-name><related-column-name>PARENT_TYPE_ID</related-column-name></key-map>
+      </relation>
+      <relation>
+        <relation-type>many</relation-type>
         <related-table-name>FIXED_ASSET_TYPE_ATTR</related-table-name>
         <key-map><column-name>FIXED_ASSET_TYPE_ID</column-name></key-map>
       </relation>
@@ -7115,6 +7323,11 @@
         <relation-type>one</relation-type>
         <related-table-name>ACCTG_TRANS_TYPE</related-table-name>
         <key-map><column-name>PARENT_TYPE_ID</column-name><related-column-name>ACCTG_TRANS_TYPE_ID</related-column-name></key-map>
+      </relation>
+      <relation>
+        <relation-type>many</relation-type>
+        <related-table-name>ACCTG_TRANS_TYPE</related-table-name>
+        <key-map><column-name>ACCTG_TRANS_TYPE_ID</column-name><related-column-name>PARENT_TYPE_ID</related-column-name></key-map>
       </relation>
       <relation>
         <relation-type>many</relation-type>
@@ -7383,6 +7596,11 @@
       </relation>
       <relation>
         <relation-type>many</relation-type>
+        <related-table-name>INVOICE_TYPE</related-table-name>
+        <key-map><column-name>INVOICE_TYPE_ID</column-name><related-column-name>PARENT_TYPE_ID</related-column-name></key-map>
+      </relation>
+      <relation>
+        <relation-type>many</relation-type>
         <related-table-name>INVOICE_TYPE_ATTR</related-table-name>
         <key-map><column-name>INVOICE_TYPE_ID</column-name></key-map>
       </relation>
@@ -7500,6 +7718,11 @@
         <relation-type>one</relation-type>
         <related-table-name>INVOICE_ITEM_TYPE</related-table-name>
         <key-map><column-name>PARENT_TYPE_ID</column-name><related-column-name>INVOICE_ITEM_TYPE_ID</related-column-name></key-map>
+      </relation>
+      <relation>
+        <relation-type>many</relation-type>
+        <related-table-name>INVOICE_ITEM_TYPE</related-table-name>
+        <key-map><column-name>INVOICE_ITEM_TYPE_ID</column-name><related-column-name>PARENT_TYPE_ID</related-column-name></key-map>
       </relation>
       <relation>
         <relation-type>many</relation-type>
@@ -7738,6 +7961,11 @@
       </relation>
       <relation>
         <relation-type>many</relation-type>
+        <related-table-name>FINANCIAL_ACCOUNT_TYPE</related-table-name>
+        <key-map><column-name>FINANCIAL_ACCOUNT_TYPE_ID</column-name><related-column-name>PARENT_TYPE_ID</related-column-name></key-map>
+      </relation>
+      <relation>
+        <relation-type>many</relation-type>
         <related-table-name>FINANCIAL_ACCOUNT_TYPE_ATTR</related-table-name>
         <key-map><column-name>FINANCIAL_ACCOUNT_TYPE_ID</column-name></key-map>
       </relation>
@@ -7873,6 +8101,11 @@
       </relation>
       <relation>
         <relation-type>many</relation-type>
+        <related-table-name>FINANCIAL_ACCOUNT_TRANS_TYPE</related-table-name>
+        <key-map><column-name>FINANCIAL_ACCOUNT_TRANS_TYPE_ID</column-name><related-column-name>PARENT_TYPE_ID</related-column-name></key-map>
+      </relation>
+      <relation>
+        <relation-type>many</relation-type>
         <related-table-name>FINANCIAL_ACCOUNT_TRANS_TYPE_ATTR</related-table-name>
         <key-map><column-name>FINANCIAL_ACCOUNT_TRANS_TYPE_ID</column-name></key-map>
       </relation>
@@ -7997,6 +8230,11 @@
         <relation-type>one</relation-type>
         <related-table-name>PAYMENT_TYPE</related-table-name>
         <key-map><column-name>PARENT_TYPE_ID</column-name><related-column-name>PAYMENT_TYPE_ID</related-column-name></key-map>
+      </relation>
+      <relation>
+        <relation-type>many</relation-type>
+        <related-table-name>PAYMENT_TYPE</related-table-name>
+        <key-map><column-name>PAYMENT_TYPE_ID</column-name><related-column-name>PARENT_TYPE_ID</related-column-name></key-map>
       </relation>
       <relation>
         <relation-type>many</relation-type>
@@ -8228,6 +8466,11 @@
         <relation-type>one</relation-type>
         <related-table-name>PARTY_QUAL_TYPE</related-table-name>
         <key-map><column-name>PARENT_TYPE_ID</column-name><related-column-name>PARTY_QUAL_TYPE_ID</related-column-name></key-map>
+      </relation>
+      <relation>
+        <relation-type>many</relation-type>
+        <related-table-name>PARTY_QUAL_TYPE</related-table-name>
+        <key-map><column-name>PARTY_QUAL_TYPE_ID</column-name><related-column-name>PARENT_TYPE_ID</related-column-name></key-map>
       </relation>
       <relation>
         <relation-type>many</relation-type>
