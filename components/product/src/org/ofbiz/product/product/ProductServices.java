@@ -22,9 +22,12 @@
  */
 package org.ofbiz.product.product;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -54,7 +57,7 @@ import org.ofbiz.service.ServiceUtil;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class ProductServices {
@@ -764,4 +767,126 @@ public class ProductServices {
         return result;
     }
 
+    /** 
+     * This will create a virtual product and return its ID, and associate all of the variants with it.
+     * It will not put the selectable features on the virtual or standard features on the variant. 
+     */
+    public static Map quickCreateVirtualWithVariants(DispatchContext dctx, Map context) {
+        GenericDelegator delegator = dctx.getDelegator();
+        Locale locale = (Locale) context.get("locale");
+        Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
+        
+        // get the various IN attributes
+        String variantProductIdsBag = (String) context.get("variantProductIdsBag");
+        String productFeatureIdOne = (String) context.get("productFeatureIdOne");
+        String productFeatureIdTwo = (String) context.get("productFeatureIdTwo");
+        String productFeatureIdThree = (String) context.get("productFeatureIdThree");
+
+        Map successResult = ServiceUtil.returnSuccess();
+        
+        // Generate new virtual productId, prefix with "VP", put in successResult
+        String productId = "VP" + delegator.getNextSeqId("VirtualProduct");
+        successResult.put("productId", productId);
+        
+        // separate variantProductIdsBag into a Set of variantProductIds
+        //note: can be comma, tab, or white-space delimited
+        Set prelimVariantProductIds = new HashSet();
+        String[] splitIds = variantProductIdsBag.split("[,\\P{Space}]");
+        prelimVariantProductIds.addAll(Arrays.asList(splitIds));
+        //note: should support both direct productIds and GoodIdentification entries (what to do if more than one GoodID? Add all?
+        try {
+            Map variantProductsById = new HashMap();
+            Iterator variantProductIdIter = prelimVariantProductIds.iterator();
+            while (variantProductIdIter.hasNext()) {
+                String variantProductId = (String) variantProductIdIter.next();
+                // is a Product.productId?
+                GenericValue variantProduct = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", variantProductId));
+                if (variantProduct != null) {
+                    variantProductsById.put(variantProductId, variantProduct);
+                } else {
+                    // is a GoodIdentification.idValue?
+                    List goodIdentificationList = delegator.findByAnd("GoodIdentification", UtilMisc.toMap("idValue", variantProductId));
+                    if (goodIdentificationList == null || goodIdentificationList.size() == 0) {
+                        // whoops, nothing found... return error
+                        return ServiceUtil.returnError("Error creating a virtual from variants: the ID [" + variantProductId + "] is not a valid Product.productId or a GoodIdentification.idValue");
+                    }
+                    
+                    if (goodIdentificationList.size() > 1) {
+                        // what to do here? for now just log a warning and add all of them as variants; they can always be dissociated later
+                        Debug.logWarning("Warning creating a virtual from variants: the ID [" + variantProductId + "] was not a productId and resulted in [" + goodIdentificationList.size() + "] GoodIdentification records: " + goodIdentificationList, module);
+                    }
+                    
+                    Iterator goodIdentificationIter = goodIdentificationList.iterator();
+                    while (goodIdentificationIter.hasNext()) {
+                        GenericValue goodIdentification = (GenericValue) goodIdentificationIter.next();
+                        GenericValue giProduct = goodIdentification.getRelatedOne("Product");
+                        if (giProduct != null) {
+                            variantProductsById.put(variantProductId, giProduct);
+                        }
+                    }
+                }
+            }
+
+            // Create new virtual product...
+            GenericValue product = delegator.makeValue("Product", null);
+            product.set("productId", productId);
+            // set: isVirtual=Y, isVariant=N, productTypeId=FINISHED_GOOD, introductionDate=now
+            product.set("isVirtual", "Y");
+            product.set("isVariant", "N");
+            product.set("productTypeId", "FINISHED_GOOD");
+            product.set("introductionDate", nowTimestamp);
+            // set all to Y: returnable, taxable, chargeShipping, autoCreateKeywords, includeInPromotions
+            product.set("returnable", "Y");
+            product.set("taxable", "Y");
+            product.set("chargeShipping", "Y");
+            product.set("autoCreateKeywords", "Y");
+            product.set("includeInPromotions", "Y");
+            // in it goes!
+            product.create();
+            
+            // Attach productFeatureIdOne, Two, Three to the new virtual and all variant products as a standard feature
+            Set featureProductIds = new HashSet();
+            featureProductIds.add(productId);
+            featureProductIds.addAll(variantProductsById.keySet());
+            Set productFeatureIds = new HashSet();
+            productFeatureIds.add(productFeatureIdOne);
+            productFeatureIds.add(productFeatureIdTwo);
+            productFeatureIds.add(productFeatureIdThree);
+            
+            Iterator featureProductIdIter = featureProductIds.iterator();
+            while (featureProductIdIter.hasNext()) {
+                Iterator productFeatureIdIter = productFeatureIds.iterator();
+                String featureProductId = (String) featureProductIdIter.next();
+                while (productFeatureIdIter.hasNext()) {
+                    String productFeatureId = (String) productFeatureIdIter.next();
+                    GenericValue productFeatureAppl = delegator.makeValue("ProductFeatureAppl", 
+                            UtilMisc.toMap("productId", featureProductId, "productFeatureId", productFeatureId,
+                                    "productFeatureApplTypeId", "STANDARD_FEATURE", "fromDate", nowTimestamp));
+                    productFeatureAppl.create();
+                }
+            }
+            
+            Iterator variantProductIter = variantProductsById.values().iterator();
+            while (variantProductIter.hasNext()) {
+                // for each variant product set: isVirtual=N, isVariant=Y, introductionDate=now
+                GenericValue variantProduct = (GenericValue) variantProductIter.next();
+                variantProduct.set("isVirtual", "N");
+                variantProduct.set("isVariant", "Y");
+                variantProduct.set("introductionDate", nowTimestamp);
+                variantProduct.store();
+
+                // for each variant product create associate with the new virtual as a PRODUCT_VARIANT
+                GenericValue productAssoc = delegator.makeValue("ProductAssoc", 
+                        UtilMisc.toMap("productId", productId, "productIdTo", variantProduct.get("productId"),
+                                "productAssocTypeId", "PRODUCT_VARIANT", "fromDate", nowTimestamp));
+                productAssoc.create();
+            }
+        } catch (GenericEntityException e) {
+            String errMsg = "Error creating new virtual product from variant products: " + e.toString();
+            Debug.logError(e, errMsg, module);
+            return ServiceUtil.returnError(errMsg);
+        }        
+        return successResult;
+    }
 }
+
