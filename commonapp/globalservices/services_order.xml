@@ -22,6 +22,7 @@
         <attribute name="orderAdjustments" type="List" mode="OUT" optional="false"/>
         <attribute name="orderHeaderAdjustments" type="List" mode="OUT" optional="false"/>
         <attribute name="orderSubTotal" type="Double" mode="OUT" optional="false"/>
+        <attribute name="statusString" type="String" mode="OUT" optional="false"/>
         <attribute name="headerAdjustmentsToShow" type="List" mode="OUT" optional="false"/>
         <attribute name="orderShippingTotal" type="Double" mode="OUT" optional="false"/>
         <attribute name="orderTaxTotal" type="Double" mode="OUT" optional="false"/>
