@@ -68,7 +68,8 @@
     <a href="<ofbiz:url>/EditFacilityGroups?facilityId=<%=facilityId%></ofbiz:url>" class="tabButton">Groups</a>
     <a href="<ofbiz:url>/FindFacilityLocations?facilityId=<%=facilityId%></ofbiz:url>" class="tabButtonSelected">Locations</a>
     <a href="<ofbiz:url>/EditFacilityRoles?facilityId=<%=facilityId%></ofbiz:url>" class="tabButton">Roles</a>
-    <a href="<ofbiz:url>/EditFacilityInventoryItems?facilityId=<%=facilityId%></ofbiz:url>" class="tabButton">InventoryItems</a>
+    <a href="<ofbiz:url>/EditFacilityInventoryItems?facilityId=<%=facilityId%></ofbiz:url>" class="tabButton">Inventory&nbsp;Items</a>
+    <a href="<ofbiz:url>/FindFacilityTransfers?facilityId=<%=facilityId%></ofbiz:url>" class="tabButton">Inventory&nbsp;Xfers</a>
   </div>
 <%}%>
 
@@ -140,6 +141,10 @@
         <td><div class="tabletext"><b>Level</b></div></td>
         <td><div class="tabletext"><b>Position</b></div></td>
         <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <% if (itemId != null) {%>
+        <td>&nbsp;</td>
+        <%}%>
       </tr>
       <ofbiz:iterator name="location" property="foundLocations">
       <tr>
@@ -149,16 +154,18 @@
         <td><div class="tabletext">&nbsp;<ofbiz:inputvalue entityAttr="location" field="aisleId"/></div></td>
         <td><div class="tabletext">&nbsp;<ofbiz:inputvalue entityAttr="location" field="sectionId"/></div></td>
         <td><div class="tabletext">&nbsp;<ofbiz:inputvalue entityAttr="location" field="levelId"/></div></td>
-        <td><div class="tabletext">&nbsp;<ofbiz:inputvalue entityAttr="location" field="positionId"/></div></td>
+        <td><div class="tabletext">&nbsp;<ofbiz:inputvalue entityAttr="location" field="positionId"/></div></td>       
         <td>
-          <div class="tabletext">
-            <a href='<ofbiz:url>/EditFacilityLocation?facilityId=<ofbiz:inputvalue entityAttr="location" field="facilityId"/>&locationSeqId=<ofbiz:inputvalue entityAttr="location" field="locationSeqId"/></ofbiz:url>' class='buttontext'>[Edit]</a>
-            <a href='<ofbiz:url>/EditInventoryItem?facilityId=<ofbiz:inputvalue entityAttr="location" field="facilityId"/>&locationSeqId=<ofbiz:inputvalue entityAttr="location" field="locationSeqId"/></ofbiz:url>' class='buttontext'>[New Inventory Item]</a>
-            <% if (itemId != null) {%>
-            <a href='<ofbiz:url>/UpdateInventoryItem?inventoryItemId=<%=itemId%>&facilityId=<%=facilityId%>&locationSeqId=<ofbiz:inputvalue entityAttr="location" field="locationSeqId"/></ofbiz:url>' class='buttontext'>[Set Item #<%=itemId%>]</a>
-            <%}%>
-          </div>
+          <a href='<ofbiz:url>/EditInventoryItem?facilityId=<ofbiz:inputvalue entityAttr="location" field="facilityId"/>&locationSeqId=<ofbiz:inputvalue entityAttr="location" field="locationSeqId"/></ofbiz:url>' class='buttontext'>[New Inventory Item]</a>
         </td>
+        <% if (itemId != null) {%>
+        <td>
+          <a href='<ofbiz:url>/UpdateInventoryItem?inventoryItemId=<%=itemId%>&facilityId=<%=facilityId%>&locationSeqId=<ofbiz:inputvalue entityAttr="location" field="locationSeqId"/></ofbiz:url>' class='buttontext'>[Set Item #<%=itemId%>]</a>
+        </td>
+        <%}%>   
+        <td>          
+          <a href='<ofbiz:url>/EditFacilityLocation?facilityId=<ofbiz:inputvalue entityAttr="location" field="facilityId"/>&locationSeqId=<ofbiz:inputvalue entityAttr="location" field="locationSeqId"/></ofbiz:url>' class='buttontext'>[Edit]</a>
+        </td>     
       </tr>
       </ofbiz:iterator>
     </table>

@@ -104,12 +104,16 @@
     <a href="<ofbiz:url>/EditFacilityGroups?facilityId=<%=facilityId%></ofbiz:url>" class="tabButton">Groups</a>
     <a href="<ofbiz:url>/FindFacilityLocations?facilityId=<%=facilityId%></ofbiz:url>" class="tabButton">Locations</a>
     <a href="<ofbiz:url>/EditFacilityRoles?facilityId=<%=facilityId%></ofbiz:url>" class="tabButton">Roles</a>
-    <a href="<ofbiz:url>/EditFacilityInventoryItems?facilityId=<%=facilityId%></ofbiz:url>" class="tabButtonSelected">InventoryItems</a>
+    <a href="<ofbiz:url>/EditFacilityInventoryItems?facilityId=<%=facilityId%></ofbiz:url>" class="tabButtonSelected">Inventory&nbsp;Items</a>
+    <a href="<ofbiz:url>/FindFacilityTransfers?facilityId=<%=facilityId%></ofbiz:url>" class="tabButton">Inventory&nbsp;Xfers</a>
   </div>
 <%}%>
 
 <div class="head1">Edit InventoryItem with ID "<%=UtilFormatOut.checkNull(inventoryItemId)%>"</div>
-<a href="<ofbiz:url>/EditInventoryItem</ofbiz:url>" class="buttontext">[New InventoryItem]</a>
+<a href="<ofbiz:url>/EditInventoryItem<%=facilityId==null ? "" : "?facilityId=" + facilityId%></ofbiz:url>" class="buttontext">[New InventoryItem]</a>
+<% if (inventoryItemId != null) {%>
+<a href='<ofbiz:url>/TransferInventoryItem?inventoryItemId=<%=inventoryItemId%><%=facilityId==null ? "" : "&facilityId=" + facilityId%></ofbiz:url>' class="buttontext">[Transfer Item]</a>
+<%}%>
 
 
 <%if(inventoryItem == null){%>
@@ -166,16 +170,16 @@
         <td align=right><div class="tabletext">Status</div></td>
         <td>&nbsp;</td>
         <td>
-           <select name="statusId" style='font-size: x-small;'>
-             <%GenericValue curStatusItem = inventoryItem == null ? null : inventoryItem.getRelatedOneCache("StatusItem");%>
-             <option value='<ofbiz:inputvalue entityAttr="inventoryItem" field="statusId"/>'><%if (curStatusItem != null) {%><%=curStatusItem.getString("description")%><%} else {%><ofbiz:entityfield attribute="inventoryItem" field="statusId" prefix="[" suffix="]"/><%}%></option>
-             <option value='<ofbiz:inputvalue entityAttr="inventoryItem" field="statusId"/>'>----</option>
-             <ofbiz:iterator name="statusItem" property="statusItems">
-               <option value='<ofbiz:inputvalue entityAttr="statusItem" field="statusId"/>'><ofbiz:inputvalue entityAttr="statusItem" field="description"/></option>
-             </ofbiz:iterator>
-           </select>
-         </td>
-       </tr>
+          <select name="statusId" style='font-size: x-small;'>
+            <%GenericValue curStatusItem = inventoryItem == null ? null : inventoryItem.getRelatedOneCache("StatusItem");%>
+            <option value='<ofbiz:inputvalue entityAttr="inventoryItem" field="statusId"/>'><%if (curStatusItem != null) {%><%=curStatusItem.getString("description")%><%} else {%><ofbiz:entityfield attribute="inventoryItem" field="statusId" prefix="[" suffix="]"/><%}%></option>
+            <option value='<ofbiz:inputvalue entityAttr="inventoryItem" field="statusId"/>'>----</option>
+            <ofbiz:iterator name="statusItem" property="statusItems">
+              <option value='<ofbiz:inputvalue entityAttr="statusItem" field="statusId"/>'><ofbiz:inputvalue entityAttr="statusItem" field="description"/></option>
+            </ofbiz:iterator>
+          </select>
+        </td>
+      </tr>
       <tr>
         <td align=right><div class="tabletext">Date Received</div></td>
         <td>&nbsp;</td>
@@ -231,6 +235,7 @@
             <input type="text" size="20" maxsize="20" name="locationSeqId" value="<%=locationSeqId%>" style='font-size: x-small;'>
           </ofbiz:unless>          
         </td>
+      </tr>
       <tr>
         <td align=right><div class="tabletext">Lot Id</div></td>
         <td>&nbsp;</td>
