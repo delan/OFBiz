@@ -115,9 +115,10 @@ function list<%=topLevelName%>() {
     int topLevelKeysCt=0;
     while (tli.hasNext()) {
         String cnt = "" + topLevelKeysCt;
-%>
-<%=buildNext((Map)variantTree.get(tli.next()), featureOrder, (String)featureOrder.get(1), cnt)%>
-<%
+        Object varTreeEntry = variantTree.get(tli.next());
+        if (varTreeEntry instanceof Map) {%>
+<%=buildNext((Map)varTreeEntry, featureOrder, (String)featureOrder.get(1), cnt)%><%
+        }
         topLevelKeysCt++;
     }
   }
@@ -245,16 +246,17 @@ function addItem() {
           <tr>
             <%int ii=0; Iterator imIt=imageSet.iterator();%>
             <%while(imIt.hasNext()){%>
-            <%String featureDescription = (String) imIt.next();%>
-            <%String imageUrl = ((GenericValue)imageMap.get(featureDescription)).getString("smallImageUrl");%>
-            <%if (imageUrl != null && imageUrl.length() > 0){%>
-              <td>
-                <table cellspacing="0" cellpadding="0">
-                  <tr><td><a href="#"><img src="<%=imageUrl%>" border="0" width="60" height="60" onclick="javascript:getList('<%=featureOrderZero%>','<%=ii%>');"></a></td></tr>
-                  <tr><td align="center" valign="top"><span class="tabletext"><%=featureDescription%></span></td></tr>
-                </table>
-              </td>
-            <%}ii++;}%>
+                <%String featureDescription = (String) imIt.next();%>
+                <%String imageUrl = ((GenericValue)imageMap.get(featureDescription)).getString("smallImageUrl");%>
+                <%if (imageUrl != null && imageUrl.length() > 0){%>
+                  <td>
+                    <table cellspacing="0" cellpadding="0">
+                      <tr><td><a href="#"><img src="<%=imageUrl%>" border="0" width="60" height="60" onclick="javascript:getList('<%=featureOrderZero%>','<%=ii%>');"></a></td></tr>
+                      <tr><td align="center" valign="top"><span class="tabletext"><%=featureDescription%></span></td></tr>
+                    </table>
+                  </td>
+                <%}ii++;%>
+            <%}%>
           </tr>
         </table>
         <%-- ====================== --%>
