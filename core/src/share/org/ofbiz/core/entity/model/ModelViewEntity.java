@@ -1,13 +1,6 @@
-
-package org.ofbiz.core.entity.model;
-
-import java.util.*;
-
-import org.ofbiz.core.util.*;
-
-/**
- * <p><b>Title:</b> Generic Entity - View Entity model class
- * <p><b>Description:</b> This class extends ModelEntity and provides adition information appropriate to view entities
+/*
+ * $Id$
+ *
  * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
  * <p>Permission is hereby granted, free of charge, to any person obtaining a
@@ -27,6 +20,15 @@ import org.ofbiz.core.util.*;
  *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
+package org.ofbiz.core.entity.model;
+
+import java.util.*;
+import org.ofbiz.core.util.*;
+
+/**
+ * This class extends ModelEntity and provides adition information appropriate to view entities
  *
  *@author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@created    November 9, 2001
@@ -34,17 +36,33 @@ import org.ofbiz.core.util.*;
  */
 public class ModelViewEntity extends ModelEntity {
 
-    /** Contains member-entity definitions: key is alias, value is entity-name */
-    public Map memberEntities = new HashMap();
+    /** Contains member-entity alias name definitions: key is alias, value is entity-name */
+    protected Map memberEntityNames = new HashMap();
     /** Contains member-entity ModelEntities: key is alias, value is ModelEntity; populated with fields */
-    public Map memberModelEntities = new HashMap();
+    protected Map memberModelEntities = null;
     /** List of aliases with information in addition to what is in the standard field list */
     public Vector aliases = new Vector();
     /** List of view links to define how entities are connected (or "joined") */
     public Vector viewLinks = new Vector();
+    
+    public Map getMemberEntityNames() {
+        return this.memberEntityNames;
+    }
+    
+    public ModelEntity getMemberModelEntity(String alias) {
+        if (this.memberModelEntities == null) {
+            this.memberModelEntities = new HashMap();
+            populateFields(this.getModelReader().entityCache);
+        }
+        return (ModelEntity) this.memberModelEntities.get(alias);
+    }
 
+    public void addMemberEntityName(String alias, String aliasedEntityName) {
+        this.memberEntityNames.put(alias, aliasedEntityName);
+    }
+    
     public void populateFields(Map entityCache) {
-        Iterator meIter = memberEntities.entrySet().iterator();
+        Iterator meIter = memberEntityNames.entrySet().iterator();
         while (meIter.hasNext()) {
             Map.Entry entry = (Map.Entry) meIter.next();
 
@@ -60,7 +78,7 @@ public class ModelViewEntity extends ModelEntity {
         for (int i = 0; i < aliases.size(); i++) {
             ModelAlias alias = (ModelAlias) aliases.get(i);
 
-            String aliasedEntityName = (String) memberEntities.get(alias.entityAlias);
+            String aliasedEntityName = (String) memberEntityNames.get(alias.entityAlias);
             ModelEntity aliasedEntity = (ModelEntity) entityCache.get(aliasedEntityName);
             if (aliasedEntity == null) {
                 Debug.logError("[ModelViewEntity.populateFields] ERROR: could not find ModelEntity for entity name: " + aliasedEntityName);

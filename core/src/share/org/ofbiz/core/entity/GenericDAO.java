@@ -1,14 +1,6 @@
-package org.ofbiz.core.entity;
-
-import java.lang.reflect.*;
-import java.sql.*;
-import java.util.*;
-import org.ofbiz.core.util.*;
-import org.ofbiz.core.entity.model.*;
-
-/**
- * <p><b>Title:</b> Generic Entity Data Access Object
- * <p><b>Description:</b> Handles persisntence for any defined entity.
+/*
+ * $Id$
+ *
  * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
  * <p>Permission is hereby granted, free of charge, to any person obtaining a
@@ -28,6 +20,18 @@ import org.ofbiz.core.entity.model.*;
  *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
+package org.ofbiz.core.entity;
+
+import java.lang.reflect.*;
+import java.sql.*;
+import java.util.*;
+import org.ofbiz.core.util.*;
+import org.ofbiz.core.entity.model.*;
+
+/**
+ * Generic Entity Data Access Object - Handles persisntence for any defined entity.
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@author     <a href='mailto:chris_maurer@altavista.com'>Chris Maurer</a>
@@ -1440,10 +1444,10 @@ public class GenericDAO {
         if (modelEntity instanceof ModelViewEntity) {
             ModelViewEntity modelViewEntity = (ModelViewEntity) modelEntity;
             sql.append(" FROM ");
-            Iterator meIter = modelViewEntity.memberEntities.entrySet().iterator();
+            Iterator meIter = modelViewEntity.getMemberEntityNames().entrySet().iterator();
             while (meIter.hasNext()) {
                 Map.Entry entry = (Map.Entry) meIter.next();
-                ModelEntity fromEntity = (ModelEntity) modelViewEntity.memberModelEntities.get(entry.getKey());
+                ModelEntity fromEntity = modelViewEntity.getMemberModelEntity((String) entry.getKey());
                 sql.append(fromEntity.tableName);
                 sql.append(" ");
                 sql.append((String) entry.getKey());
@@ -1552,8 +1556,8 @@ public class GenericDAO {
             for (int i = 0; i < modelViewEntity.viewLinks.size(); i++) {
                 ModelViewEntity.ModelViewLink viewLink = (ModelViewEntity.ModelViewLink) modelViewEntity.viewLinks.get(i);
 
-                ModelEntity linkEntity = (ModelEntity) modelViewEntity.memberModelEntities.get(viewLink.entityAlias);
-                ModelEntity relLinkEntity = (ModelEntity) modelViewEntity.memberModelEntities.get(viewLink.relEntityAlias);
+                ModelEntity linkEntity = (ModelEntity) modelViewEntity.getMemberModelEntity(viewLink.entityAlias);
+                ModelEntity relLinkEntity = (ModelEntity) modelViewEntity.getMemberModelEntity(viewLink.relEntityAlias);
 
                 for (int j = 0; j < viewLink.keyMaps.size(); j++) {
                     ModelKeyMap keyMap = (ModelKeyMap) viewLink.keyMaps.get(j);
