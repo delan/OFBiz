@@ -121,7 +121,7 @@ public class FreeMarkerWorker {
         }
         
         Configuration config = makeDefaultOfbizConfig();
-        Template template = new Template(location, locationReader, config);            
+        Template template = new Template(locationUrl.toExternalForm(), locationReader, config);            
         // add the OFBiz transforms/methods
         addAllOfbizTransforms(context);
         
