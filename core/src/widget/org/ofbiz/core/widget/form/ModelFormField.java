@@ -153,8 +153,8 @@ public class ModelFormField {
         if (overrideFormField.fieldInfo != null) this.fieldInfo = overrideFormField.fieldInfo;        
     }
 
-    public void renderFieldString(StringBuffer buffer, Map context, FormStringRenderer formStringRenderer, GenericDelegator delegator, LocalDispatcher dispatcher) {
-        this.fieldInfo.renderFieldString(buffer, context, formStringRenderer, delegator, dispatcher);
+    public void renderFieldString(StringBuffer buffer, Map context, FormStringRenderer formStringRenderer) {
+        this.fieldInfo.renderFieldString(buffer, context, formStringRenderer);
     }
 
     /**
@@ -456,7 +456,7 @@ public class ModelFormField {
             fieldTypeName = string;
         }
 
-        public abstract void renderFieldString(StringBuffer buffer, Map context, FormStringRenderer formStringRenderer, GenericDelegator delegator, LocalDispatcher dispatcher);
+        public abstract void renderFieldString(StringBuffer buffer, Map context, FormStringRenderer formStringRenderer);
     }
     
     public static abstract class FieldInfoWithOptions extends FieldInfo {
@@ -607,8 +607,8 @@ public class ModelFormField {
             this.alsoHidden = !"false".equals(element.getAttribute("also-hidden"));
         }
 
-        public void renderFieldString(StringBuffer buffer, Map context, FormStringRenderer formStringRenderer, GenericDelegator delegator, LocalDispatcher dispatcher) {
-            formStringRenderer.renderDisplayField(buffer, context, this, delegator, dispatcher);
+        public void renderFieldString(StringBuffer buffer, Map context, FormStringRenderer formStringRenderer) {
+            formStringRenderer.renderDisplayField(buffer, context, this);
         }
         
         /**
@@ -670,8 +670,8 @@ public class ModelFormField {
             }
         }
 
-        public void renderFieldString(StringBuffer buffer, Map context, FormStringRenderer formStringRenderer, GenericDelegator delegator, LocalDispatcher dispatcher) {
-            formStringRenderer.renderHyperlinkField(buffer, context, this, delegator, dispatcher);
+        public void renderFieldString(StringBuffer buffer, Map context, FormStringRenderer formStringRenderer) {
+            formStringRenderer.renderHyperlinkField(buffer, context, this);
         }
         
         /**
@@ -750,8 +750,8 @@ public class ModelFormField {
             }
         }
 
-        public void renderFieldString(StringBuffer buffer, Map context, FormStringRenderer formStringRenderer, GenericDelegator delegator, LocalDispatcher dispatcher) {
-            formStringRenderer.renderTextField(buffer, context, this, delegator, dispatcher);
+        public void renderFieldString(StringBuffer buffer, Map context, FormStringRenderer formStringRenderer) {
+            formStringRenderer.renderTextField(buffer, context, this);
         }
         
         /**
@@ -815,8 +815,8 @@ public class ModelFormField {
             }
         }
 
-        public void renderFieldString(StringBuffer buffer, Map context, FormStringRenderer formStringRenderer, GenericDelegator delegator, LocalDispatcher dispatcher) {
-            formStringRenderer.renderTextareaField(buffer, context, this, delegator, dispatcher);
+        public void renderFieldString(StringBuffer buffer, Map context, FormStringRenderer formStringRenderer) {
+            formStringRenderer.renderTextareaField(buffer, context, this);
         }
         
         /**
@@ -862,8 +862,8 @@ public class ModelFormField {
             type = element.getAttribute("type");
         }
 
-        public void renderFieldString(StringBuffer buffer, Map context, FormStringRenderer formStringRenderer, GenericDelegator delegator, LocalDispatcher dispatcher) {
-            formStringRenderer.renderDateTimeField(buffer, context, this, delegator, dispatcher);
+        public void renderFieldString(StringBuffer buffer, Map context, FormStringRenderer formStringRenderer) {
+            formStringRenderer.renderDateTimeField(buffer, context, this);
         }
         
         /**
@@ -905,8 +905,8 @@ public class ModelFormField {
             }
         }
 
-        public void renderFieldString(StringBuffer buffer, Map context, FormStringRenderer formStringRenderer, GenericDelegator delegator, LocalDispatcher dispatcher) {
-            formStringRenderer.renderDropDownField(buffer, context, this, delegator, dispatcher);
+        public void renderFieldString(StringBuffer buffer, Map context, FormStringRenderer formStringRenderer) {
+            formStringRenderer.renderDropDownField(buffer, context, this);
         }
         
         /**
@@ -949,8 +949,8 @@ public class ModelFormField {
             super(element, modelFormField);
         }
 
-        public void renderFieldString(StringBuffer buffer, Map context, FormStringRenderer formStringRenderer, GenericDelegator delegator, LocalDispatcher dispatcher) {
-            formStringRenderer.renderCheckField(buffer, context, this, delegator, dispatcher);
+        public void renderFieldString(StringBuffer buffer, Map context, FormStringRenderer formStringRenderer) {
+            formStringRenderer.renderCheckField(buffer, context, this);
         }
     }
 
@@ -965,8 +965,8 @@ public class ModelFormField {
             super(element, modelFormField);
         }
 
-        public void renderFieldString(StringBuffer buffer, Map context, FormStringRenderer formStringRenderer, GenericDelegator delegator, LocalDispatcher dispatcher) {
-            formStringRenderer.renderRadioField(buffer, context, this, delegator, dispatcher);
+        public void renderFieldString(StringBuffer buffer, Map context, FormStringRenderer formStringRenderer) {
+            formStringRenderer.renderRadioField(buffer, context, this);
         }
     }
 
@@ -986,8 +986,8 @@ public class ModelFormField {
             this.imageLocation = element.getAttribute("image-location");
         }
 
-        public void renderFieldString(StringBuffer buffer, Map context, FormStringRenderer formStringRenderer, GenericDelegator delegator, LocalDispatcher dispatcher) {
-            formStringRenderer.renderSubmitField(buffer, context, this, delegator, dispatcher);
+        public void renderFieldString(StringBuffer buffer, Map context, FormStringRenderer formStringRenderer) {
+            formStringRenderer.renderSubmitField(buffer, context, this);
         }
         
         /**
@@ -1030,8 +1030,8 @@ public class ModelFormField {
             super(element, modelFormField);
         }
 
-        public void renderFieldString(StringBuffer buffer, Map context, FormStringRenderer formStringRenderer, GenericDelegator delegator, LocalDispatcher dispatcher) {
-            formStringRenderer.renderResetField(buffer, context, this, delegator, dispatcher);
+        public void renderFieldString(StringBuffer buffer, Map context, FormStringRenderer formStringRenderer) {
+            formStringRenderer.renderResetField(buffer, context, this);
         }
     }
 
@@ -1046,8 +1046,8 @@ public class ModelFormField {
             super(element, modelFormField);
         }
 
-        public void renderFieldString(StringBuffer buffer, Map context, FormStringRenderer formStringRenderer, GenericDelegator delegator, LocalDispatcher dispatcher) {
-            formStringRenderer.renderHiddenField(buffer, context, this, delegator, dispatcher);
+        public void renderFieldString(StringBuffer buffer, Map context, FormStringRenderer formStringRenderer) {
+            formStringRenderer.renderHiddenField(buffer, context, this);
         }
     }
 
@@ -1062,8 +1062,8 @@ public class ModelFormField {
             super(element, modelFormField);
         }
 
-        public void renderFieldString(StringBuffer buffer, Map context, FormStringRenderer formStringRenderer, GenericDelegator delegator, LocalDispatcher dispatcher) {
-            formStringRenderer.renderIgnoredField(buffer, context, this, delegator, dispatcher);
+        public void renderFieldString(StringBuffer buffer, Map context, FormStringRenderer formStringRenderer) {
+            formStringRenderer.renderIgnoredField(buffer, context, this);
         }
     }
 }

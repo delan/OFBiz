@@ -51,9 +51,9 @@ import org.ofbiz.core.widget.form.ModelFormField.TextareaField;
 public class HtmlFormRenderer implements FormStringRenderer {
 
     /* (non-Javadoc)
-     * @see org.ofbiz.core.widget.form.FormStringRenderer#renderDisplayField(java.lang.StringBuffer, java.util.Map, org.ofbiz.core.widget.form.ModelFormField.DisplayField, org.ofbiz.core.entity.GenericDelegator, org.ofbiz.core.service.LocalDispatcher)
+     * @see org.ofbiz.core.widget.form.FormStringRenderer#renderDisplayField(java.lang.StringBuffer, java.util.Map, org.ofbiz.core.widget.form.ModelFormField.DisplayField)
      */
-    public void renderDisplayField(StringBuffer buffer, Map context, DisplayField displayField, GenericDelegator delegator, LocalDispatcher dispatcher) {
+    public void renderDisplayField(StringBuffer buffer, Map context, DisplayField displayField) {
         ModelFormField modelFormField = displayField.getModelFormField();
         buffer.append("<span");
         if (UtilValidate.isNotEmpty(modelFormField.getWidgetStyle())) {
@@ -67,96 +67,96 @@ public class HtmlFormRenderer implements FormStringRenderer {
     }
 
     /* (non-Javadoc)
-     * @see org.ofbiz.core.widget.form.FormStringRenderer#renderHyperlinkField(java.lang.StringBuffer, java.util.Map, org.ofbiz.core.widget.form.ModelFormField.HyperlinkField, org.ofbiz.core.entity.GenericDelegator, org.ofbiz.core.service.LocalDispatcher)
+     * @see org.ofbiz.core.widget.form.FormStringRenderer#renderHyperlinkField(java.lang.StringBuffer, java.util.Map, org.ofbiz.core.widget.form.ModelFormField.HyperlinkField)
      */
-    public void renderHyperlinkField(StringBuffer buffer, Map context, HyperlinkField hyperlinkField, GenericDelegator delegator, LocalDispatcher dispatcher) {
+    public void renderHyperlinkField(StringBuffer buffer, Map context, HyperlinkField hyperlinkField) {
         // TODO Auto-generated method stub
 
     }
 
     /* (non-Javadoc)
-     * @see org.ofbiz.core.widget.form.FormStringRenderer#renderTextField(java.lang.StringBuffer, java.util.Map, org.ofbiz.core.widget.form.ModelFormField.TextField, org.ofbiz.core.entity.GenericDelegator, org.ofbiz.core.service.LocalDispatcher)
+     * @see org.ofbiz.core.widget.form.FormStringRenderer#renderTextField(java.lang.StringBuffer, java.util.Map, org.ofbiz.core.widget.form.ModelFormField.TextField)
      */
-    public void renderTextField(StringBuffer buffer, Map context, TextField textField, GenericDelegator delegator, LocalDispatcher dispatcher) {
+    public void renderTextField(StringBuffer buffer, Map context, TextField textField) {
         // TODO Auto-generated method stub
 
     }
 
     /* (non-Javadoc)
-     * @see org.ofbiz.core.widget.form.FormStringRenderer#renderTextareaField(java.lang.StringBuffer, java.util.Map, org.ofbiz.core.widget.form.ModelFormField.TextareaField, org.ofbiz.core.entity.GenericDelegator, org.ofbiz.core.service.LocalDispatcher)
+     * @see org.ofbiz.core.widget.form.FormStringRenderer#renderTextareaField(java.lang.StringBuffer, java.util.Map, org.ofbiz.core.widget.form.ModelFormField.TextareaField)
      */
-    public void renderTextareaField(StringBuffer buffer, Map context, TextareaField textareaField, GenericDelegator delegator, LocalDispatcher dispatcher) {
+    public void renderTextareaField(StringBuffer buffer, Map context, TextareaField textareaField) {
         // TODO Auto-generated method stub
 
     }
 
     /* (non-Javadoc)
-     * @see org.ofbiz.core.widget.form.FormStringRenderer#renderDateTimeField(java.lang.StringBuffer, java.util.Map, org.ofbiz.core.widget.form.ModelFormField.DateTimeField, org.ofbiz.core.entity.GenericDelegator, org.ofbiz.core.service.LocalDispatcher)
+     * @see org.ofbiz.core.widget.form.FormStringRenderer#renderDateTimeField(java.lang.StringBuffer, java.util.Map, org.ofbiz.core.widget.form.ModelFormField.DateTimeField)
      */
-    public void renderDateTimeField(StringBuffer buffer, Map context, DateTimeField dateTimeField, GenericDelegator delegator, LocalDispatcher dispatcher) {
+    public void renderDateTimeField(StringBuffer buffer, Map context, DateTimeField dateTimeField) {
         // TODO Auto-generated method stub
 
     }
 
     /* (non-Javadoc)
-     * @see org.ofbiz.core.widget.form.FormStringRenderer#renderDropDownField(java.lang.StringBuffer, java.util.Map, org.ofbiz.core.widget.form.ModelFormField.DropDownField, org.ofbiz.core.entity.GenericDelegator, org.ofbiz.core.service.LocalDispatcher)
+     * @see org.ofbiz.core.widget.form.FormStringRenderer#renderDropDownField(java.lang.StringBuffer, java.util.Map, org.ofbiz.core.widget.form.ModelFormField.DropDownField)
      */
-    public void renderDropDownField(StringBuffer buffer, Map context, DropDownField dropDownField, GenericDelegator delegator, LocalDispatcher dispatcher) {
+    public void renderDropDownField(StringBuffer buffer, Map context, DropDownField dropDownField) {
         // TODO Auto-generated method stub
 
     }
 
     /* (non-Javadoc)
-     * @see org.ofbiz.core.widget.form.FormStringRenderer#renderCheckField(java.lang.StringBuffer, java.util.Map, org.ofbiz.core.widget.form.ModelFormField.CheckField, org.ofbiz.core.entity.GenericDelegator, org.ofbiz.core.service.LocalDispatcher)
+     * @see org.ofbiz.core.widget.form.FormStringRenderer#renderCheckField(java.lang.StringBuffer, java.util.Map, org.ofbiz.core.widget.form.ModelFormField.CheckField)
      */
-    public void renderCheckField(StringBuffer buffer, Map context, CheckField checkField, GenericDelegator delegator, LocalDispatcher dispatcher) {
+    public void renderCheckField(StringBuffer buffer, Map context, CheckField checkField) {
         // TODO Auto-generated method stub
 
     }
 
     /* (non-Javadoc)
-     * @see org.ofbiz.core.widget.form.FormStringRenderer#renderRadioField(java.lang.StringBuffer, java.util.Map, org.ofbiz.core.widget.form.ModelFormField.RadioField, org.ofbiz.core.entity.GenericDelegator, org.ofbiz.core.service.LocalDispatcher)
+     * @see org.ofbiz.core.widget.form.FormStringRenderer#renderRadioField(java.lang.StringBuffer, java.util.Map, org.ofbiz.core.widget.form.ModelFormField.RadioField)
      */
-    public void renderRadioField(StringBuffer buffer, Map context, RadioField radioField, GenericDelegator delegator, LocalDispatcher dispatcher) {
+    public void renderRadioField(StringBuffer buffer, Map context, RadioField radioField) {
         // TODO Auto-generated method stub
 
     }
 
     /* (non-Javadoc)
-     * @see org.ofbiz.core.widget.form.FormStringRenderer#renderSubmitField(java.lang.StringBuffer, java.util.Map, org.ofbiz.core.widget.form.ModelFormField.SubmitField, org.ofbiz.core.entity.GenericDelegator, org.ofbiz.core.service.LocalDispatcher)
+     * @see org.ofbiz.core.widget.form.FormStringRenderer#renderSubmitField(java.lang.StringBuffer, java.util.Map, org.ofbiz.core.widget.form.ModelFormField.SubmitField)
      */
-    public void renderSubmitField(StringBuffer buffer, Map context, SubmitField submitField, GenericDelegator delegator, LocalDispatcher dispatcher) {
+    public void renderSubmitField(StringBuffer buffer, Map context, SubmitField submitField) {
         // TODO Auto-generated method stub
 
     }
 
     /* (non-Javadoc)
-     * @see org.ofbiz.core.widget.form.FormStringRenderer#renderResetField(java.lang.StringBuffer, java.util.Map, org.ofbiz.core.widget.form.ModelFormField.ResetField, org.ofbiz.core.entity.GenericDelegator, org.ofbiz.core.service.LocalDispatcher)
+     * @see org.ofbiz.core.widget.form.FormStringRenderer#renderResetField(java.lang.StringBuffer, java.util.Map, org.ofbiz.core.widget.form.ModelFormField.ResetField)
      */
-    public void renderResetField(StringBuffer buffer, Map context, ResetField resetField, GenericDelegator delegator, LocalDispatcher dispatcher) {
+    public void renderResetField(StringBuffer buffer, Map context, ResetField resetField) {
         // TODO Auto-generated method stub
 
     }
 
     /* (non-Javadoc)
-     * @see org.ofbiz.core.widget.form.FormStringRenderer#renderHiddenField(java.lang.StringBuffer, java.util.Map, org.ofbiz.core.widget.form.ModelFormField.HiddenField, org.ofbiz.core.entity.GenericDelegator, org.ofbiz.core.service.LocalDispatcher)
+     * @see org.ofbiz.core.widget.form.FormStringRenderer#renderHiddenField(java.lang.StringBuffer, java.util.Map, org.ofbiz.core.widget.form.ModelFormField.HiddenField)
      */
-    public void renderHiddenField(StringBuffer buffer, Map context, HiddenField hiddenField, GenericDelegator delegator, LocalDispatcher dispatcher) {
+    public void renderHiddenField(StringBuffer buffer, Map context, HiddenField hiddenField) {
         // TODO Auto-generated method stub
 
     }
 
     /* (non-Javadoc)
-     * @see org.ofbiz.core.widget.form.FormStringRenderer#renderIgnoredField(java.lang.StringBuffer, java.util.Map, org.ofbiz.core.widget.form.ModelFormField.IgnoredField, org.ofbiz.core.entity.GenericDelegator, org.ofbiz.core.service.LocalDispatcher)
+     * @see org.ofbiz.core.widget.form.FormStringRenderer#renderIgnoredField(java.lang.StringBuffer, java.util.Map, org.ofbiz.core.widget.form.ModelFormField.IgnoredField)
      */
-    public void renderIgnoredField(StringBuffer buffer, Map context, IgnoredField ignoredField, GenericDelegator delegator, LocalDispatcher dispatcher) {
+    public void renderIgnoredField(StringBuffer buffer, Map context, IgnoredField ignoredField) {
         // do nothing, it's an ignored field; could add a comment or something if we wanted to
     }
 
     /* (non-Javadoc)
-     * @see org.ofbiz.core.widget.form.FormStringRenderer#renderFieldTitle(java.lang.StringBuffer, java.util.Map, org.ofbiz.core.widget.form.ModelFormField, org.ofbiz.core.entity.GenericDelegator, org.ofbiz.core.service.LocalDispatcher)
+     * @see org.ofbiz.core.widget.form.FormStringRenderer#renderFieldTitle(java.lang.StringBuffer, java.util.Map, org.ofbiz.core.widget.form.ModelFormField)
      */
-    public void renderFieldTitle(StringBuffer buffer, Map context, ModelFormField modelFormField, GenericDelegator delegator, LocalDispatcher dispatcher) {
+    public void renderFieldTitle(StringBuffer buffer, Map context, ModelFormField modelFormField) {
         buffer.append("<span");
         if (UtilValidate.isNotEmpty(modelFormField.getTitleStyle())) {
             buffer.append(" class=\"");

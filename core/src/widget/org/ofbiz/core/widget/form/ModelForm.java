@@ -29,6 +29,9 @@ import org.ofbiz.core.entity.GenericDelegator;
 import org.ofbiz.core.service.LocalDispatcher;
 import org.ofbiz.core.util.*;
 
+import bsh.EvalError;
+import bsh.Interpreter;
+
 /**
  * Widget Library - Form model class
  *
@@ -39,6 +42,9 @@ import org.ofbiz.core.util.*;
 public class ModelForm {
     
     public static final String module = ModelForm.class.getName();
+    
+    protected GenericDelegator delegator;
+    protected LocalDispatcher dispatcher;
 
     protected String name;
     protected String type;
@@ -79,7 +85,10 @@ public class ModelForm {
     public ModelForm() {}
 
     /** XML Constructor */
-    public ModelForm(Element formElement) {
+    public ModelForm(Element formElement, GenericDelegator delegator, LocalDispatcher dispatcher) {
+        this.delegator = delegator;
+        this.dispatcher = dispatcher;
+        
         this.name = formElement.getAttribute("name");
         this.type = formElement.getAttribute("type");
         this.target = formElement.getAttribute("target");
@@ -174,6 +183,14 @@ public class ModelForm {
         // TODO: read entity def and auto-create fields
     }
     
+    public LocalDispatcher getDispacher() {
+        return this.dispatcher;
+    }
+    
+    public GenericDelegator getDelegator() {
+        return this.delegator;
+    }
+    
     /**
      * @return
      */
@@ -227,11 +244,36 @@ public class ModelForm {
         return name;
     }
 
-    /**
-     * @return
+    /** iterate through altTargets list to see if any should be used, if not return original target
+     * @return The target for this Form
      */
     public String getTarget(Map context) {
-        // TODO: iterate through altConditions list to see if any should be used, if not return original target
+        try {
+            // use the same Interpreter (ie with the same context setup) for all evals
+            Interpreter bsh = BshUtil.makeInterpreter(context);
+            Iterator altTargetIter = this.altTargets.iterator();
+            while (altTargetIter.hasNext()) {
+                AltTarget altTarget = (AltTarget) altTargetIter.next();
+                Object retVal = bsh.eval(altTarget.useWhen);
+                boolean condTrue = false;
+                // retVal should be a Boolean, if not something weird is up...
+                if (retVal instanceof Boolean) {
+                    Boolean boolVal = (Boolean) retVal;
+                    condTrue = boolVal.booleanValue();
+                } else {
+                    // what to do? fo now nothing...
+                    Debug.logWarning("Return value from target condition eval was not a Boolean: " + retVal.getClass().getName() + " [" + retVal + "]");
+                    condTrue = false;
+                }
+                
+                if (condTrue) {
+                    return altTarget.target;
+                }
+            }
+        } catch (EvalError e) {
+            Debug.logError(e, "Error evaluating BeanShell target conditions");
+        }
+        
         return target;
     }
 
