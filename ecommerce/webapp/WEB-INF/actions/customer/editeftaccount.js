@@ -33,17 +33,30 @@ if (userLogin != null) {
     person = userLogin.getRelatedOne("Person");
 }
 
-var tryEntity = true;
-var errorMessage = request.getAttribute(SiteDefs.ERROR_MESSAGE);
-if (errorMessage != null && errorMessage.length() > 0) {
-    tryEntity = false;    
-}
+<%PaymentWorker.getPaymentMethodAndRelated(pageContext, userLogin.getString("partyId"), 
+    "paymentMethod", "creditCard", "eftAccount", "paymentMethodId", "curContactMechId", "donePage", "tryEntity");%>
+
+<%
+    GenericValue efta = (GenericValue) pageContext.getAttribute("eftAccount");
+    System.out.println("EFT Account: " + efta);
+    System.out.println("Try Entity: " + pageContext.getAttribute("tryEntity"));
+%>
+
+<%ContactMechWorker.getCurrentPostalAddress(pageContext, userLogin.getString("partyId"), 
+    (String) pageContext.getAttribute("curContactMechId"), "curPartyContactMech", "curContactMech", 
+    "curPostalAddress", "curPartyContactMechPurposes");%>
+
+<%ContactMechWorker.getPartyPostalAddresses(pageContext, userLogin.getString("partyId"), (String) pageContext.getAttribute("curContactMechId"), "postalAddressInfos");%>
+
 var personData = person;
 if (!tryEntity) personData = UtilHttp.getParameterMap(request);
 if (personData == null) personData = new HashMap();
 
-var donePage = request.getParameter("DONE_PAGE");
-if (donePage == null || donePage.length() == 0) donePage = "viewprofile";
+if (!security.hasEntityPermission("PARTYMGR", "_VIEW", session) && context.get("eftAccount") != null && context.get("paymentMethod") != null && !userLogin.get("partyId").equals((context.get("paymentMethod")).get("partyId"))) {
+    context.put("canNotView", true);
+} else {
+    context.put("canNotView", false);
+}
 
 context.put("person", person);
 context.put("personData", personData);

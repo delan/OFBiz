@@ -16,7 +16,7 @@
     <handler name="ftl" type="view" class="org.ofbiz.core.ftl.FreeMarkerViewHandler"/>
     <handler name="velocity" type="view" class="org.ofbiz.core.view.VelocityViewHandler"/>
     <handler name="http" type="view" class="org.ofbiz.core.view.HttpViewHandler"/>
-    <handler name="wsp" type="view" class="org.ofbiz.core.view.JPublishViewHandler"/>
+    <handler name="jpublish" type="view" class="org.ofbiz.core.view.JPublishViewHandler"/>
     <!--<handler name="wsp" type="view" class="org.ofbiz.core.view.WspViewHandler"/>-->
 
     <!-- Events run from here for the first hit in a visit -->
@@ -516,32 +516,32 @@
 
     <!-- View Mappings -->
     <view-map name="error" page="/error/error.jsp"/>
-    <view-map name="main" type="wsp" page="/main.ftl"/>
-    <view-map name="login" type="wsp" page="/login.ftl"/>
+    <view-map name="main" type="jpublish" page="/main.ftl"/>
+    <view-map name="login" type="jpublish" page="/login.ftl"/>
     <view-map name="passwordemail" page="/customer/passwordemail.jsp"/>
 
-    <view-map name="showcart" type="wsp" page="/cart/showcart.ftl"/>  
+    <view-map name="showcart" type="jpublish" page="/cart/showcart.ftl"/>  
 
     <view-map name="quickadd" type="region"/>
-    <view-map name="category" type="wsp" page="/catalog/category.ftl"/>  
-    <view-map name="product" type="wsp" page="/catalog/product.ftl"/>
-    <view-map name="keywordsearch" type="wsp" page="/catalog/keywordsearch.ftl"/>
+    <view-map name="category" type="jpublish" page="/catalog/category.ftl"/>  
+    <view-map name="product" type="jpublish" page="/catalog/product.ftl"/>
+    <view-map name="keywordsearch" type="jpublish" page="/catalog/keywordsearch.ftl"/>
 
-    <view-map name="checkoutoptions" type="wsp" page="/order/checkoutoptions.ftl"/>
-    <view-map name="checkout" type="wsp" page="/order/checkoutreview.ftl"/>
-    <view-map name="ordercomplete" type="wsp" page="/order/ordercomplete.ftl"/>
+    <view-map name="checkoutoptions" type="jpublish" page="/order/checkoutoptions.ftl"/>
+    <view-map name="checkout" type="jpublish" page="/order/checkoutreview.ftl"/>
+    <view-map name="ordercomplete" type="jpublish" page="/order/ordercomplete.ftl"/>
     <view-map name="confirmorder" page="/order/confirmorder.jsp"/>
     <view-map name="showconfirmorder" type="region"/>
-    <view-map name="orderhistory" type="wsp" page="/order/orderhistory.ftl"/>
-    <view-map name="orderstatus" type="wsp" page="/order/orderstatus.ftl"/> 
+    <view-map name="orderhistory" type="jpublish" page="/order/orderhistory.ftl"/>
+    <view-map name="orderstatus" type="jpublish" page="/order/orderstatus.ftl"/> 
 
-    <view-map name="viewprofile" type="wsp" page="/customer/viewprofile.ftl"/>
-    <view-map name="newcustomer" type="wsp" page="/customer/newcustomer.ftl"/>
-    <view-map name="editcontactmech" type="wsp" page="/customer/editcontactmech.ftl"/>
+    <view-map name="viewprofile" type="jpublish" page="/customer/viewprofile.ftl"/>
+    <view-map name="newcustomer" type="jpublish" page="/customer/newcustomer.ftl"/>
+    <view-map name="editcontactmech" type="jpublish" page="/customer/editcontactmech.ftl"/>
     <view-map name="editcreditcard" type="region"/>
     <view-map name="editeftaccount" type="region"/>
-    <view-map name="changepassword" type="region"/>
-    <view-map name="editperson" type="wsp" page="/customer/editperson.ftl"/>
+    <view-map name="changepassword" type="jpublish" page="/customer/changepassword.ftl"/>
+    <view-map name="editperson" type="jpublish" page="/customer/editperson.ftl"/>
 
     <view-map name="newAffiliate" type="region"/>  
     <!-- End of View Mappings -->

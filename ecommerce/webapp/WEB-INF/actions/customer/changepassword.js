@@ -28,24 +28,20 @@ importClass(Packages.org.ofbiz.core.util.SiteDefs);
 importClass(Packages.org.ofbiz.core.util.UtilHttp);
 
 var userLogin = session.getAttribute("userLogin");
-var person = null;
-if (userLogin != null) {
-    person = userLogin.getRelatedOne("Person");
-}
 
 var tryEntity = true;
 var errorMessage = request.getAttribute(SiteDefs.ERROR_MESSAGE);
 if (errorMessage != null && errorMessage.length() > 0) {
     tryEntity = false;    
 }
-var personData = person;
-if (!tryEntity) personData = UtilHttp.getParameterMap(request);
-if (personData == null) personData = new HashMap();
 
 var donePage = request.getParameter("DONE_PAGE");
 if (donePage == null || donePage.length() == 0) donePage = "viewprofile";
 
-context.put("person", person);
-context.put("personData", personData);
+var userLoginData = userLogin;
+if (!tryEntity) userLoginData = UtilHttp.getParameterMap(request);
+if (userLoginData == null) userLoginData = new HashMap();
+
 context.put("donePage", donePage);
+context.put("userLoginData", userLoginData);
 
