@@ -1,5 +1,5 @@
 /*
- * $Id: SqlJdbcUtil.java,v 1.21 2004/04/29 23:31:24 doogie Exp $
+ * $Id: SqlJdbcUtil.java,v 1.22 2004/07/07 05:03:40 doogie Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -31,6 +31,7 @@ import java.io.Reader;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -66,7 +67,7 @@ import org.ofbiz.entity.model.ModelViewEntity;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jdonnerstag@eds.de">Juergen Donnerstag</a>
  * @author     <a href="mailto:peterm@miraculum.com">Peter Moon</a>
- * @version    $Revision: 1.21 $
+ * @version    $Revision: 1.22 $
  * @since      2.0
  */
 public class SqlJdbcUtil {
@@ -787,6 +788,10 @@ public class SqlJdbcUtil {
             case 13:
                 sqlP.setValue(new java.sql.Date(((java.util.Date) fieldValue).getTime()));
                 break;
+
+            case 14:
+                sqlP.setValue((java.util.Collection) fieldValue);
+                break;
             }
         } catch (SQLException sqle) {
             throw new GenericDataSourceException("SQL Exception while setting value (" + modelField.getName() + "): ", sqle);
@@ -820,6 +825,10 @@ public class SqlJdbcUtil {
         fieldTypeMap.put("java.sql.Clob", new Integer(12));
         fieldTypeMap.put("Clob", new Integer(12));
         fieldTypeMap.put("java.util.Date", new Integer(13));
+        fieldTypeMap.put("java.util.ArrayList", new Integer(14));
+        fieldTypeMap.put("java.util.HashSet", new Integer(14));
+        fieldTypeMap.put("java.util.LinkedHashSet", new Integer(14));
+        fieldTypeMap.put("java.util.LinkedList", new Integer(14));
     }
 
     public static int getType(String fieldType) throws GenericNotImplementedException {
@@ -831,12 +840,27 @@ public class SqlJdbcUtil {
         return val.intValue();
     }
 
-    public static void addValue(StringBuffer buffer, ModelField field, Object value, List params) {
+    public static void addValueSingle(StringBuffer buffer, ModelField field, Object value, List params) {
         if (field != null) {
             buffer.append('?');
         } else {
             buffer.append('\'').append(value).append('\'');
         }
         if (field != null && params != null) params.add(new EntityConditionParam(field, value));
+    }
+
+    public static void addValue(StringBuffer buffer, ModelField field, Object value, List params) {
+        if (value instanceof Collection) {
+            buffer.append("( ");
+            Iterator it = ((Collection) value).iterator();
+            while (it.hasNext()) {
+                Object thisValue = it.next();
+                addValueSingle(buffer, field, thisValue, params);
+                if (it.hasNext()) buffer.append(", ");
+            }
+            buffer.append(" )");
+        } else {
+            addValueSingle(buffer, field, value, params);
+        }
     }
 }
