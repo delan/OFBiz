@@ -53,8 +53,8 @@
         <tr>
           <td>
               <form method="POST" action="<ofbiz:url>/login<%=UtilFormatOut.ifNotEmpty(previousParams, "?", "")%></ofbiz:url>" name="loginform" style='margin: 0;'>
-                <div align=center>Username:&nbsp;<input type="text" name="USERNAME" value="<%=UtilFormatOut.checkNull(request.getParameter("USERNAME"))%>" size="20"></div>
-                <div align=center>Password:&nbsp;<input type="password" name="PASSWORD" value="" size="20"></div>
+                <div class="tabletext" align=center>Username:&nbsp;<input type="text" name="USERNAME" value="<%=UtilFormatOut.checkNull(request.getParameter("USERNAME"))%>" size="20"></div>
+                <div class="tabletext" align=center>Password:&nbsp;<input type="password" name="PASSWORD" value="" size="20"></div>
                 <div align=center><input type="submit" value="Login"></div>
               </form>
           </td>
@@ -82,7 +82,7 @@
         <tr>
           <td>
       <form method="POST" action="<ofbiz:url>/forgotpassword<%=UtilFormatOut.ifNotEmpty(previousParams, "?", "")%></ofbiz:url>" name="forgotpassword" style='margin: 0;'>
-        <div align=center>Username:&nbsp;<input type="text" name="USERNAME" value="<%=UtilFormatOut.checkNull(request.getParameter("USERNAME"))%>" size="20"></div>
+        <div class="tabletext" align=center>Username:&nbsp;<input type="text" name="USERNAME" value="<%=UtilFormatOut.checkNull(request.getParameter("USERNAME"))%>" size="20"></div>
         <div align=center><input type="submit" value="Get Password Hint" name="GET_PASSWORD_HINT">&nbsp;<input type="submit" value="Email Password" name="EMAIL_PASSWORD"></div>
       </form>
           </td>
@@ -114,7 +114,7 @@
         <tr>
           <td>
           <form method="POST" action="<ofbiz:url>/newcustomer<%=UtilFormatOut.ifNotEmpty(previousParams, "?", "")%></ofbiz:url>" style='margin: 0;'>
-            <div align=center>You may create a new account here:</div>
+            <div class="tabletext" align=center>You may create a new account here:</div>
             <div align=center><input type="submit" value="Create"></div>
           </form>
         </tr>
