@@ -31,7 +31,7 @@
 <jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" />
 <jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="request" />
 
-<%if(security.hasEntityPermission("FACILITY", "_VIEW", session)) {%>
+<%if(security.hasEntityPermission("FACILITY", "_CREATE", session)) {%>
 
 <%
 	String inventoryTransferId = request.getParameter("inventoryTransferId");
@@ -332,5 +332,5 @@
 
 <br>
 <%}else{%>
-  <h3>You do not have permission to view this page. ("FACILITY_VIEW" or "FACILITY_ADMIN" needed)</h3>
+  <h3>You do not have permission to view this page. ("FACILITY_CREATE" or "FACILITY_ADMIN" needed)</h3>
 <%}%>
