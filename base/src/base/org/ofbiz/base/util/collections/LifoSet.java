@@ -1,5 +1,5 @@
 /*
- * $Id: LifoSet.java,v 1.1 2004/07/11 03:09:34 jonesde Exp $
+ * $Id: LifoSet.java,v 1.2 2004/07/14 03:13:31 ajzeneski Exp $
  *
  *  Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -24,17 +24,16 @@
 package org.ofbiz.base.util.collections;
 
 import java.util.AbstractSet;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.List;
-import java.util.Arrays;
+import java.util.EmptyStackException;
 
 /**
  * LifoSet - Set interface wrapper around a LinkedList
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.1 $
+ * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
+ * @version    $Revision: 1.2 $
  * @since      3.1
  */
 public class LifoSet extends AbstractSet {
@@ -55,11 +54,18 @@ public class LifoSet extends AbstractSet {
      * collection, in the order they are returned by the collection's
      * iterator.
      *
-     * @param c the collection whose elements are to be placed into this set.
+     * @param capacity the collection whose elements are to be placed into this set.
      */
-
     public LifoSet(int capacity) {
         maxCapacity = capacity;
+    }
+
+    /**
+     * Sets the max capacity for this LifoSet
+     * @param capacity Max Size (as integer)
+     */
+    public void setCapactity(int capacity) {
+        this.maxCapacity = capacity;
     }
 
     /**
@@ -92,5 +98,61 @@ public class LifoSet extends AbstractSet {
     public Iterator iterator() {
         return backedList.iterator();
     }
+
+    // Stack Implementation (implements all Stack methods as per the java.util.Stack object
+
+    /**
+     * @see java.util.Stack#empty()
+     * @return true if and only if this stack contains no items; false otherwise
+     */
+    public boolean empty() {
+        if (this.size() == 0) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * @see java.util.Stack#push(java.lang.Object)
+     * @param item The item to be pushed onto this stack
+     */
+    public void push(Object item) {
+        this.add(item);
+    }
+
+    /**
+     * @see java.util.Stack#pop()
+     * @return The object at the top of this stack
+     * @throws EmptyStackException If this stack is empty
+     */
+    public Object pop() throws EmptyStackException {
+        if (this.size() > 0) {
+            return backedList.removeFirst();
+        }
+        throw new EmptyStackException();
+    }
+
+    /**
+     * @see java.util.Stack#peek()
+     * @return The object at the top of this stack
+     * @throws EmptyStackException If this stack is empty
+     */
+    public Object peek() throws EmptyStackException {
+        if (this.size() > 0) {
+            return backedList.getFirst();
+        }
+        throw new EmptyStackException();
+    }
+
+    /**
+     * @see java.util.Stack#search(java.lang.Object)
+     * @param item The desired object
+     * @return The 1-based position from the top of the stack where the object is located;
+     * the return value -1  indicates that the object is not on the stack
+     */
+    public int search(Object item) {
+        return backedList.indexOf(item);
+    }
+
 }
 
