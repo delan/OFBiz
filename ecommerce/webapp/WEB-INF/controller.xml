@@ -310,7 +310,7 @@
 
     <request-map uri="emailorder">
         <security https="true" direct-request="false"/>
-        <event type="java" path="org.ofbiz.commonapp.order.shoppingcart.CheckOutEvents" invoke="emailOrderConfirm"/>
+        <event type="service" path="async" invoke="sendOrderConfirmation"/>
         <response name="success" type="view" value="ordercomplete"/>
         <response name="error" type="view" value="ordercomplete"/>
     </request-map>
