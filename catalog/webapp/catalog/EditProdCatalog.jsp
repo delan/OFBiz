@@ -201,8 +201,8 @@
         </td>
       </tr>
   <tr>
-    <td colspan='1' align=right><input type="submit" name="Update" value="Update"></td>
     <td colspan='2'>&nbsp;</td>
+    <td colspan='1' align=left><input type="submit" name="Update" value="Update"></td>
   </tr>
 </table>
 </form>

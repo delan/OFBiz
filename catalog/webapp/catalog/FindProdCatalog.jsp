@@ -62,8 +62,8 @@
     <%if (facility != null) pageContext.setAttribute("facility", facility);%>
     <%GenericValue reserveOrderEnum = prodCatalog.getRelatedOne("ReserveOrderEnumeration");%>
     <%if (reserveOrderEnum != null) pageContext.setAttribute("reserveOrderEnum", reserveOrderEnum);%>
-    <td><div class='tabletext'>&nbsp;<ofbiz:inputvalue entityAttr="prodCatalog" field="prodCatalogId"/></div></td>
-    <td><div class='tabletext'>&nbsp;<ofbiz:inputvalue entityAttr="prodCatalog" field="catalogName"/></div></td>
+    <td><div class='tabletext'>&nbsp;<a href='<ofbiz:url>/EditProdCatalog?prodCatalogId=<ofbiz:inputvalue entityAttr="prodCatalog" field="prodCatalogId"/></ofbiz:url>' class="buttontext"><ofbiz:inputvalue entityAttr="prodCatalog" field="prodCatalogId"/></a></div></td>
+    <td><div class='tabletext'>&nbsp;<a href='<ofbiz:url>/EditProdCatalog?prodCatalogId=<ofbiz:inputvalue entityAttr="prodCatalog" field="prodCatalogId"/></ofbiz:url>' class="buttontext"><ofbiz:inputvalue entityAttr="prodCatalog" field="catalogName"/></a></div></td>
     <td><div class='tabletext'>&nbsp;<ofbiz:inputvalue entityAttr="prodCatalog" field="title"/></div></td>
     <td><a href='<ofbiz:url>/EditFacility?facilityId=<ofbiz:inputvalue entityAttr="prodCatalog" field="inventoryFacilityId"/></ofbiz:url>' class='buttontext'>&nbsp;
         <ofbiz:inputvalue entityAttr="facility" field="facilityName"/> <ofbiz:entityfield attribute="prodCatalog" field="inventoryFacilityId" prefix="[" suffix="]"/></a></td>

@@ -43,7 +43,7 @@
 <br>
 <table border="1" cellpadding='2' cellspacing='0'>
   <tr>
-    <td><div class="tabletext"><b>ProductPromo&nbsp;ID</b></div></td>
+    <td><div class="tabletext"><b>Promo&nbsp;ID</b></div></td>
     <td><div class="tabletext"><b>Promo&nbsp;Name</b></div></td>
     <td><div class="tabletext"><b>Single&nbsp;Use?</b></div></td>
     <td><div class="tabletext"><b>Promo&nbsp;Text</b></div></td>
@@ -51,8 +51,8 @@
   </tr>
 <ofbiz:iterator name="productPromo" property="productPromos">
   <tr valign="middle">
-    <td><div class='tabletext'>&nbsp;<ofbiz:inputvalue entityAttr="productPromo" field="productPromoId"/></div></td>
-    <td><div class='tabletext'>&nbsp;<ofbiz:inputvalue entityAttr="productPromo" field="promoName"/></div></td>
+    <td><div class='tabletext'>&nbsp;<a href='<ofbiz:url>/EditProductPromo?productPromoId=<ofbiz:inputvalue entityAttr="productPromo" field="productPromoId"/></ofbiz:url>' class="buttontext"><ofbiz:inputvalue entityAttr="productPromo" field="productPromoId"/></a></div></td>
+    <td><div class='tabletext'>&nbsp;<a href='<ofbiz:url>/EditProductPromo?productPromoId=<ofbiz:inputvalue entityAttr="productPromo" field="productPromoId"/></ofbiz:url>' class="buttontext"><ofbiz:inputvalue entityAttr="productPromo" field="promoName"/></a></div></td>
     <td><div class='tabletext'>&nbsp;<ofbiz:inputvalue entityAttr="productPromo" field="singleUse"/></div></td>
     <td><div class='tabletext'>&nbsp;<ofbiz:inputvalue entityAttr="productPromo" field="promoText"/></div></td>
     <td>
