@@ -38,7 +38,7 @@ import javax.servlet.http.HttpServletResponse;
  * DataEvents Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.0
  *
  * 
@@ -55,37 +55,13 @@ public class DataEvents {
 
     public static String serveImage(HttpServletRequest request, HttpServletResponse response) {
 
-        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
-        String dataResourceId = request.getParameter("imgId");
-Debug.logInfo("imgId:" + dataResourceId, "");
-        GenericValue dataResource = null;
-        GenericValue imageDataResource = null;
-        try {
-            dataResource = delegator.findByPrimaryKey("DataResource",
-                             UtilMisc.toMap("dataResourceId", dataResourceId)); 
-            imageDataResource = delegator.findByPrimaryKey("ImageDataResource",
-                             UtilMisc.toMap("dataResourceId", dataResourceId)); 
-        } catch (GenericEntityException e) {
-            String errorMsg = "Error getting image record from db: " + e.toString();
-            Debug.logError(e, errorMsg, module);
-            request.setAttribute("_ERROR_MESSAGE_", errorMsg);
-            return "error";
-        }
+        byte[] b = DataResourceWorker.acquireImage(request, "imgId");
+        if (b == null) return "error";
 
-        Object o = imageDataResource.get("imageData");
-Debug.logInfo("object:" + o, "");
-Debug.logInfo("object class:" + o.getClass(), "");
-        ByteWrapper byteWrapper = (ByteWrapper) imageDataResource.get("imageData");
-Debug.logInfo("byteWrapper:" + byteWrapper, "");
-        if (byteWrapper == null) {
-            request.setAttribute("_ERROR_MESSAGE_", "There was no image data available.");
-            return "error";
-        }
-
-        String imageType = (String)dataResource.get("mimeType");
-Debug.logInfo("imageType:" + imageType, "");
+        String imageType = DataResourceWorker.getImageType(request, "imgId");
+        if (imageType == null || imageType.equals("error")) return "error";
         try {
-            UtilHttp.streamContentToBrowser(response, byteWrapper.getBytes(), imageType);
+            UtilHttp.streamContentToBrowser(response, b, imageType);
         } catch (IOException e) {
             String errorMsg = "Error writing image to OutputStream: " + e.toString();
             Debug.logError(e, errorMsg, module);

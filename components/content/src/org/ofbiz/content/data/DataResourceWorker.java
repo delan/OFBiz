@@ -1,5 +1,5 @@
 /*
- * $Id: DataResourceWorker.java,v 1.1 2003/10/28 00:06:31 byersa Exp $
+ * $Id: DataResourceWorker.java,v 1.2 2003/10/28 17:17:28 byersa Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -35,6 +35,7 @@ import java.util.Map;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.BshUtil;
 import org.ofbiz.base.util.FlexibleStringExpander;
 import org.ofbiz.entity.GenericDelegator;
@@ -62,7 +63,7 @@ import javax.servlet.http.HttpServletRequest;
  * DataResourceWorker Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.2
  *
  * 
@@ -272,4 +273,52 @@ public class DataResourceWorker {
         }
         return permissionStatus;
     }
+
+    public static byte[] acquireImage(HttpServletRequest request, String imgFieldName) {
+
+        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
+        String dataResourceId = request.getParameter(imgFieldName);
+        GenericValue dataResource = null;
+        GenericValue imageDataResource = null;
+        try {
+            imageDataResource = delegator.findByPrimaryKey("ImageDataResource",
+                             UtilMisc.toMap("dataResourceId", dataResourceId)); 
+        } catch (GenericEntityException e) {
+            String errorMsg = "Error getting image record from db: " + e.toString();
+            Debug.logError(e, errorMsg, module);
+            request.setAttribute("_ERROR_MESSAGE_", errorMsg);
+            return null;
+        }
+
+        byte[] b = (byte[])imageDataResource.get("imageData");
+        if (b == null || b.length == 0) {
+            request.setAttribute("_ERROR_MESSAGE_", "There was no image data available.");
+            return null;
+        }
+
+        return b;
+
+    }
+
+    public static String getImageType(HttpServletRequest request, String imgFieldName) {
+
+        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
+        String dataResourceId = request.getParameter(imgFieldName);
+        GenericValue dataResource = null;
+        GenericValue imageDataResource = null;
+        try {
+            dataResource = delegator.findByPrimaryKey("DataResource",
+                             UtilMisc.toMap("dataResourceId", dataResourceId)); 
+        } catch (GenericEntityException e) {
+            String errorMsg = "Error getting image record from db: " + e.toString();
+            Debug.logError(e, errorMsg, module);
+            request.setAttribute("_ERROR_MESSAGE_", errorMsg);
+            return "error";
+        }
+
+
+        String imageType = (String)dataResource.get("mimeTypeId");
+        return imageType;
+    }
+
 }
