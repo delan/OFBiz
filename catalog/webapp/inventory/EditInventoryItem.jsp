@@ -48,6 +48,7 @@
     }
     GenericValue inventoryItem = delegator.findByPrimaryKey("InventoryItem", UtilMisc.toMap("inventoryItemId", inventoryItemId));
     GenericValue inventoryItemType = null;
+    GenericValue facility = null;
     if(inventoryItem == null) {
         tryEntity = false;
     } else {
@@ -55,6 +56,9 @@
 
         inventoryItemType = inventoryItem.getRelatedOne("InventoryItemType");
         if (inventoryItemType != null) pageContext.setAttribute("inventoryItemType", inventoryItemType);
+
+        facility = inventoryItem.getRelatedOne("Facility");
+        if (facility != null) pageContext.setAttribute("facility", facility);
 
         //statuses
         if ("NON_SERIAL_INV_ITEM".equals(inventoryItem.getString("inventoryItemTypeId"))) {
@@ -139,7 +143,7 @@
         <td width="74%">
             <input type="text" <ofbiz:inputvalue entityAttr="inventoryItem" field="productId" fullattrs="true"/> size="20" maxlength="20">
             <%if (inventoryItem != null && UtilValidate.isNotEmpty(inventoryItem.getString("productId"))) {%>
-                <a href='/catalog/control/EditProduct?PRODUCT_ID=<ofbiz:inputvalue entityAttr="inventoryItem" field="productId"/>' class='buttontext'>[Edit&nbsp;Product&nbsp;<ofbiz:inputvalue entityAttr="inventoryItem" field="productId"/>]</a>
+                <a href='<ofbiz:url>/EditProduct?PRODUCT_ID=<ofbiz:inputvalue entityAttr="inventoryItem" field="productId"/></ofbiz:url>' class='buttontext'>[Edit&nbsp;Product&nbsp;<ofbiz:inputvalue entityAttr="inventoryItem" field="productId"/>]</a>
             <%}%>
         </td>
       </tr>
@@ -165,16 +169,20 @@
         <td width="26%" align=right><div class="tabletext">Facility/Container</div></td>
         <td>&nbsp;</td>
         <td width="74%">
-           Select a Facility:
-           <select name="facilityId">
-             <option value='<ofbiz:inputvalue entityAttr="inventoryItem" field="facilityId"/>'><ofbiz:entityfield attribute="inventoryItem" field="facilityId" prefix="[" suffix="]"/></option>
-             <option value='<ofbiz:inputvalue entityAttr="inventoryItem" field="facilityId"/>'>----</option>
-             <ofbiz:iterator name="facility" property="facilities">
-               <option value='<ofbiz:inputvalue entityAttr="facility" field="facilityId"/>'><ofbiz:inputvalue entityAttr="facility" field="facilityName"/> [<ofbiz:inputvalue entityAttr="facility" field="facilityId"/>]</option>
-             </ofbiz:iterator>
-           </select>
-           <br>OR enter a Container ID:
-           <input type="text" <ofbiz:inputvalue entityAttr="inventoryItem" field="containerId" fullattrs="true"/> size="20" maxlength="20">
+            Select a Facility:
+            <select name="facilityId">
+              <option value='<ofbiz:inputvalue entityAttr="inventoryItem" field="facilityId"/>'><ofbiz:inputvalue entityAttr="facility" field="facilityName"/> [<ofbiz:inputvalue entityAttr="inventoryItem" field="facilityId"/>]</option>
+              <option value='<ofbiz:inputvalue entityAttr="inventoryItem" field="facilityId"/>'>----</option>
+              <ofbiz:iterator name="nextFacility" property="facilities">
+                <option value='<ofbiz:inputvalue entityAttr="nextFacility" field="facilityId"/>'><ofbiz:inputvalue entityAttr="nextFacility" field="facilityName"/> [<ofbiz:inputvalue entityAttr="nextFacility" field="facilityId"/>]</option>
+              </ofbiz:iterator>
+            </select>
+            <%if (inventoryItem != null && UtilValidate.isNotEmpty(inventoryItem.getString("facilityId"))) {%>
+                <a href='<ofbiz:url>/EditFacility?facilityId=<ofbiz:inputvalue entityAttr="inventoryItem" field="facilityId"/></ofbiz:url>' class='buttontext'>[Edit&nbsp;Facility&nbsp;<ofbiz:inputvalue entityAttr="inventoryItem" field="facilityId"/>]</a>
+            <%}%>
+            <br>
+            OR enter a Container ID:
+            <input type="text" <ofbiz:inputvalue entityAttr="inventoryItem" field="containerId" fullattrs="true"/> size="20" maxlength="20">
          </td>
        </tr>
       <tr>

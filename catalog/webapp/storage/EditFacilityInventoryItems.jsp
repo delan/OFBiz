@@ -61,7 +61,7 @@
     <td><div class="tabletext"><b>Item&nbsp;ID</b></div></td>
     <td><div class="tabletext"><b>Item&nbsp;Type</b></div></td>
     <td><div class="tabletext"><b>Status</b></div></td>
-    <td><div class="tabletext"><b>Facility or Container ID</b></div></td>
+    <td><div class="tabletext"><b>Product ID</b></div></td>
     <td><div class="tabletext"><b>Lot&nbsp;ID</b></div></td>
     <td><div class="tabletext"><b>ATP/QOH or Serial#</b></div></td>
     <td><div class="tabletext">&nbsp;</div></td>
@@ -75,18 +75,8 @@
     <td><div class='tabletext'>&nbsp;<ofbiz:inputvalue entityAttr="inventoryItem" field="inventoryItemId"/></div></td>
     <td><div class='tabletext'>&nbsp;<ofbiz:inputvalue entityAttr="curInventoryItemType" field="description"/></div></td>
     <td><div class='tabletext'>&nbsp;<ofbiz:inputvalue entityAttr="inventoryItem" field="statusId"/></div></td>
-    <%if (UtilValidate.isNotEmpty(inventoryItem.getString("facilityId")) && UtilValidate.isNotEmpty(inventoryItem.getString("containerId"))) {%>
-        <td><div class='tabletext' style='color: red;'>Error: facility (<ofbiz:entityfield attribute="inventoryItem" field="facilityId"/>) 
-            AND container (<ofbiz:entityfield attribute="inventoryItem" field="containerId"/>) specified</div></td>
-    <%} else if(UtilValidate.isNotEmpty(inventoryItem.getString("facilityId"))) {%>
-        <td><span class='tabletext'>F:&nbsp;</span><a href='<ofbiz:url>/EditFacility?facilityId=<ofbiz:entityfield attribute="inventoryItem" field="facilityId"/></ofbiz:url>' class='buttontext'>
-            <ofbiz:entityfield attribute="inventoryItem" field="facilityId"/></a></td>
-    <%} else if(UtilValidate.isNotEmpty(inventoryItem.getString("containerId"))) {%>
-        <td><span class='tabletext'>C:&nbsp;</span><a href='<ofbiz:url>/EditContainer?containerId=<ofbiz:entityfield attribute="inventoryItem" field="containerId"/></ofbiz:url>' class='buttontext'>
-            <ofbiz:entityfield attribute="inventoryItem" field="containerId"/></a></td>
-    <%} else {%>
-        <td>&nbsp;</td>
-    <%}%>
+    <td><a href='<ofbiz:url>/EditProduct?PRODUCT_ID=<ofbiz:entityfield attribute="inventoryItem" field="productId"/></ofbiz:url>' class='buttontext'>
+        <ofbiz:entityfield attribute="inventoryItem" field="productId"/></a></td>
     <td><div class='tabletext'>&nbsp;<ofbiz:inputvalue entityAttr="inventoryItem" field="lotId"/></div></td>
     <%if ("NON_SERIAL_INV_ITEM".equals(inventoryItem.getString("inventoryItemTypeId"))) {%>
         <td>
