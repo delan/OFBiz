@@ -1,5 +1,5 @@
 /*
- * $Id: EntityCondition.java,v 1.3 2003/11/05 12:08:00 jonesde Exp $
+ * $Id: EntityCondition.java,v 1.4 2003/11/07 00:33:56 jonesde Exp $
  *
  * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
@@ -47,7 +47,7 @@ import org.ofbiz.entity.model.ModelField;
  * These can be used in various combinations using the EntityConditionList and EntityExpr objects.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.0
  */
 public abstract class EntityCondition implements Serializable {
@@ -70,9 +70,7 @@ public abstract class EntityCondition implements Serializable {
     }
 
     protected void addValue(StringBuffer buffer, ModelField field, Object value, List params) {
-        //SqlJdbcUtil.addValue(buffer, params == null ? null : field, value, params);
-        buffer.append(" ? ");
-        params.add(new EntityConditionParam(field, value));
+        SqlJdbcUtil.addValue(buffer, params == null ? null : field, value, params);
     }
 
     public String toString() {

@@ -1,5 +1,5 @@
 /*
- * $Id: EntityWhereString.java,v 1.3 2003/11/05 12:08:00 jonesde Exp $
+ * $Id: EntityWhereString.java,v 1.4 2003/11/07 00:33:56 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -31,17 +31,17 @@ import org.ofbiz.entity.GenericEntity;
 import org.ofbiz.entity.model.ModelEntity;
 
 /**
- * <p>Encapsulates SQL expressions used for where clause snippets. 
+ * <p>Encapsulates SQL expressions used for where clause snippets.
  *  NOTE: This is UNSAFE and BREAKS the idea behind the Entity Engine where
  *  you avoid directly specifying SQL. So, KEEP IT MINIMAL and preferrably replace
  *  it when the feature you are getting at is implemented in a more automatic way for you.</p>
  *
  * <p>By minimal I mean use this in conjunction with other EntityConditions like the
- *  EntityExpr, EntityConditionList and EntityFieldMap objects which more cleanly 
+ *  EntityExpr, EntityConditionList and EntityFieldMap objects which more cleanly
  *  encapsulate where conditions and don't require you to directly write SQL.</p>
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.0
  */
 public class EntityWhereString extends EntityCondition {
@@ -62,10 +62,6 @@ public class EntityWhereString extends EntityCondition {
     }
 
 	public boolean entityMatches(GenericEntity entity) {
-		throw new UnsupportedOperationException(sqlString);
+		throw new UnsupportedOperationException("Cannot do entityMatches on a WhereString, ie no SQL evaluation in EE; Where String is: " + sqlString);
 	}
-
-    public String toString() {
-        return "[WhereString::" + this.sqlString + "]";
-    }
 }
