@@ -1,5 +1,5 @@
 /*
- * $Id: ShippingEvents.java,v 1.10 2004/01/24 14:51:40 ajzeneski Exp $
+ * $Id: ShippingEvents.java,v 1.11 2004/07/28 22:04:45 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -45,7 +45,7 @@ import org.ofbiz.common.geo.GeoWorker;
  * ShippingEvents - Events used for processing shipping fees
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.10 $
+ * @version    $Revision: 1.11 $
  * @since      2.0
  */
 public class ShippingEvents {
@@ -56,7 +56,7 @@ public class ShippingEvents {
         ShoppingCart cart = (ShoppingCart) request.getSession().getAttribute("shoppingCart");
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
         Map result = getShipEstimate(delegator, cart, null);
-        ServiceUtil.getMessages(request, result, null, "<li>", "</li>", "<ul>", "</ul>", null, null);
+        ServiceUtil.getMessages(request, result, null, "", "", "", "", null, null);
         if (result.get(ModelService.RESPONSE_MESSAGE).equals(ModelService.RESPOND_ERROR)) {
             return "error";
         }
