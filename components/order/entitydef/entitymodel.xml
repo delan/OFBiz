@@ -949,6 +949,7 @@
       <field name="securityCode" type="very-short"></field>
       <field name="maxAmount" type="currency-amount"></field>
       <field name="processAttempt" type="numeric"></field>
+      <field name="manualRefNum" type="short-varchar"></field>
       <field name="statusId" type="id"></field>
       <prim-key field="orderPaymentPreferenceId"/>
       <relation type="one" fk-name="ORDER_PMPRF_OHDR" rel-entity-name="OrderHeader">
