@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.10 $
+ *@version    $Revision: 1.11 $
  *@since      3.0
 -->
 
@@ -305,8 +305,9 @@ function refreshInfo() {
                           (No Name Found)
                         </#if>
                       <#else>
-                        (Not Selected)
+                        ${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(partyRow, true)}
                       </#if>
+                    </div>
                   </td>
                   <#if extInfo?default("") == "P">
                     <td><div class="tabletext">${partyRow.postalCode?if_exists}</div></td>

@@ -1,5 +1,5 @@
 /*
- * $Id: PartyHelper.java,v 1.6 2004/06/29 20:42:21 jonesde Exp $
+ * $Id: PartyHelper.java,v 1.7 2004/07/01 20:58:11 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -35,7 +35,7 @@ import org.ofbiz.entity.model.ModelEntity;
  * PartyHelper
  *
  * @author     <a href="mailto:epabst@bigfoot.com">Eric Pabst</a>
- * @version    $Revision: 1.6 $
+ * @version    $Revision: 1.7 $
  * @since      2.0
  */
 public class PartyHelper {
@@ -104,7 +104,7 @@ public class PartyHelper {
                 result.append(UtilFormatOut.checkNull(partyValue.getString("lastName")));
             }
         }
-        if (modelEntity.isField("groupName")) {
+        if (modelEntity.isField("groupName") && partyValue.get("groupName") != null) {
             result.append(partyValue.getString("groupName"));
         }
         return result.toString();
