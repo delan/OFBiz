@@ -69,7 +69,7 @@
     </TD>
   </TR>
 </TABLE>
-<br>
+<br/>
 
 <#if shoppingList?has_content>
     <#if canView>
@@ -163,8 +163,8 @@
   </TR>
 </TABLE>
 
-<#if childShoppingLists?has_content>
-<br>
+<#if childShoppingListDatas?has_content>
+<br/>
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
@@ -174,7 +174,7 @@
             <div class="boxhead">&nbsp;Child Shopping Lists - ${shoppingList.listName}</div>
           </td>  
           <td valign="middle" align="right">
-              <a href="<@ofbizUrl>/addListToCart?shoppingListId=${shoppingList.shoppingListId}&includeChild=yes</@ofbizUrl>" class="lightbuttontext">[Add Parent And Child List(s) To Cart]</a>
+              <a href="<@ofbizUrl>/addListToCart?shoppingListId=${shoppingList.shoppingListId}&includeChild=yes</@ofbizUrl>" class="lightbuttontext">[Add This List And Child List(s) To Cart]</a>
           </td>
         </tr>
       </table>
@@ -188,24 +188,35 @@
 			<table width='100%' cellspacing="0" cellpadding="1" border="0">
 			  <TR> 
 				<TD NOWRAP><div class='tabletext'><b>List Name</b></div></TD>
-				<TD NOWRAP align=center><div class='tabletext'><b>Total Price</b></div></TD>
+				<TD NOWRAP align="right"><div class='tabletext'><b>Total Price</b></div></TD>
+				<td>&nbsp;</td>
 				<td>&nbsp;</td>
 			  </TR>
-			  <#list childShoppingLists as childShoppingList>  
+			  <#list childShoppingListDatas as childShoppingListData>
+			      <#assign childShoppingList = childShoppingListData.childShoppingList>
+			      <#assign totalPrice = childShoppingListData.totalPrice>
 				  <tr>
 					<td nowrap align="left">
                       <a href="<@ofbizUrl>/editShoppingList?shoppingListId=${childShoppingList.shoppingListId}</@ofbizUrl>" class="buttontext">${childShoppingList.listName?default(childShoppingList.shoppingListId)}</a>
 					</td>                      
 					<td nowrap align="right">
-					  <div class="tabltext"></div>
+					  <div class="tabletext">${totalPrice?string.currency}</div>
 					</td>                      
-					<td nowrap align="right">
-                      <a href="<@ofbizUrl>/editShoppingList?shoppingListId=${childShoppingList.shoppingListId}</@ofbizUrl>" class="buttontext">[Go To List]</a>&nbsp;
-                      <a href="<@ofbizUrl>/addListToCart?shoppingListId=${childShoppingList.shoppingListId}</@ofbizUrl>" class="buttontext">[Add List To Cart]</a>
+					<td align="right">
+                      <a href="<@ofbizUrl>/editShoppingList?shoppingListId=${childShoppingList.shoppingListId}</@ofbizUrl>" class="buttontext">[Go&nbsp;To&nbsp;List]</a>
+                      <a href="<@ofbizUrl>/addListToCart?shoppingListId=${childShoppingList.shoppingListId}</@ofbizUrl>" class="buttontext">[Add&nbsp;List&nbsp;To&nbsp;Cart]</a>
 					</td>                      
 				  </tr>
 				</form>
 			  </#list>
+			  <tr><td colspan="6"><hr class='sepbar'></td></tr>
+			  <tr>
+				<td><div class="tabletext">&nbsp;</div></td>
+				<td nowrap align="right">
+				  <div class="tableheadtext">${shoppingListChildTotal?string.currency}</div>
+				</td>                      
+				<td><div class="tabletext">&nbsp;</div></td>
+			  </tr>
 			</table>
           </td>
         </tr>
@@ -215,7 +226,7 @@
 </TABLE>
 </#if>
 
-<br>
+<br/>
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
@@ -225,7 +236,7 @@
             <div class="boxhead">&nbsp;Shopping List Items - ${shoppingList.listName}</div>
           </td>
           <td valign="middle" align="right">
-            <a href="<@ofbizUrl>/addListToCart?shoppingListId=${shoppingList.shoppingListId}</@ofbizUrl>" class="lightbuttontext">[Add List To Cart]</a>            
+            <a href="<@ofbizUrl>/addListToCart?shoppingListId=${shoppingList.shoppingListId}</@ofbizUrl>" class="lightbuttontext">[Add This List To Cart]</a>
           </td>
         </tr>
       </table>
@@ -236,50 +247,122 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <tr>
           <td>
-            <#if shoppingListItems?has_content>             
+            <#if shoppingListItemDatas?has_content>
                 <table width='100%' cellspacing="0" cellpadding="1" border="0">
-                  <TR> 
+                  <TR>
                     <TD NOWRAP><div class='tabletext'><b>Product</b></div></TD>
-                    <TD NOWRAP align=center><div class='tabletext'><b>Quantity Requested</b></div></TD>
-                    <TD NOWRAP align=right><div class='tabletext'><b>Quantity Purchased</b></div></TD>                    
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
+                    <TD NOWRAP align="center"><div class='tabletext'><b>Quantity</b></div></TD>
+                    <TD NOWRAP align="center"><div class='tabletext'><b>Purchased</b></div></TD>
+                    <TD NOWRAP align="right"><div class='tabletext'><b>Price</b></div></TD>
+                    <TD NOWRAP align="right"><div class='tabletext'><b>Total</b></div></TD>
                     <td>&nbsp;</td>
                   </TR>
 
-                  <#list shoppingListItems as listItem>  
-                    <#assign product = listItem.getRelatedOneCache("Product")>      
-                    <form method="POST" action="<@ofbizUrl>/updateShoppingListItem</@ofbizUrl>" name='listform_${listItem.shoppingListItemSeqId}' style='margin: 0;'>
-                      <input type="hidden" name="shoppingListId" value="${listItem.shoppingListId}">
-                      <input type="hidden" name="shoppingListItemSeqId" value="${listItem.shoppingListItemSeqId}">
+                  <#list shoppingListItemDatas as shoppingListItemData>
+                    <#assign shoppingListItem = shoppingListItemData.shoppingListItem>
+                    <#assign product = shoppingListItemData.product>
+                    <#assign unitPrice = shoppingListItemData.unitPrice>
+                    <#assign totalPrice = shoppingListItemData.totalPrice>
+                    <#assign productVariantAssocs = shoppingListItemData.productVariantAssocs?if_exists>
+                    <form method="POST" action="<@ofbizUrl>/updateShoppingListItem</@ofbizUrl>" name='listform_${shoppingListItem.shoppingListItemSeqId}' style='margin: 0;'>
+                      <input type="hidden" name="shoppingListId" value="${shoppingListItem.shoppingListId}">
+                      <input type="hidden" name="shoppingListItemSeqId" value="${shoppingListItem.shoppingListItemSeqId}">
                       
-                      <tr><td colspan="6"><hr class='sepbar'></td></tr>
                       <tr>
                         <td>
-                          <div class='tabletext'>                    
-                             <a href="<@ofbizUrl>/product?product_id=${listItem.productId}</@ofbizUrl>" class='buttontext'>${listItem.productId} - 
+                          <div class='tabletext'>
+                             <a href="<@ofbizUrl>/product?product_id=${shoppingListItem.productId}</@ofbizUrl>" class='buttontext'>${shoppingListItem.productId} - 
                              ${product.productName?if_exists}</a> : ${product.description?if_exists}
                           </div>
                         </td>
                         <td nowrap align="center">
-                          <div class='tabletext'>                         
-                            <input size="6" class='inputBox' type="text" name="quantity" value="${listItem.quantity?string.number}">
+                          <div class='tabletext'>
+                            <input size="6" class='inputBox' type="text" name="quantity" value="${shoppingListItem.quantity?string.number}">
                           </div>
-                        </td> 
+                        </td>
                         <td nowrap align="center">
-                          <div class="tabltext">${listItem.quantityPurchased?default(0)?string.number}</div>
-                        </td>                      
-                        <td nowrap align="center"><div class='tabletext'><a href="javascript:document.listform_${listItem.shoppingListItemSeqId}.submit();" class="buttontext">[Update]</a></div></td>
-                        <td nowrap align="center"><div class='tabletext'><a href="<@ofbizUrl>/removeFromShoppingList?shoppingListId=${listItem.shoppingListId}&shoppingListItemSeqId=${listItem.shoppingListItemSeqId}</@ofbizUrl>" class="buttontext">[Remove]</a></div></td>
-                        <td nowrap align="center"><div class='tabletext'><a href="<@ofbizUrl>/additem<#if requestAttributes._CURRENT_VIEW_?exists>/${requestAttributes._CURRENT_VIEW_}</#if>?shoppingListId=${listItem.shoppingListId}&shoppingListItemSeqId=${listItem.shoppingListItemSeqId}&quantity=${listItem.quantity}&add_product_id=${listItem.productId}</@ofbizUrl>" class="buttontext">[Add ${listItem.quantity?string} To Cart]</a></div></td>
+                          <div class="tabletext">${shoppingListItem.quantityPurchased?default(0)?string.number}</div>
+                        </td>
+                        <td nowrap align="right">
+                          <div class="tabletext">${unitPrice?string.currency}</div>
+                        </td>
+                        <td nowrap align="right">
+                          <div class="tabletext">${totalPrice?string.currency}</div>
+                        </td>
+                        <td align="right">
+                        	<a href="javascript:document.listform_${shoppingListItem.shoppingListItemSeqId}.submit();" class="buttontext">[Update]</a>
+                        	<a href="<@ofbizUrl>/removeFromShoppingList?shoppingListId=${shoppingListItem.shoppingListId}&shoppingListItemSeqId=${shoppingListItem.shoppingListItemSeqId}</@ofbizUrl>" class="buttontext">[Remove]</a>
+                            <a href="<@ofbizUrl>/additem<#if requestAttributes._CURRENT_VIEW_?exists>/${requestAttributes._CURRENT_VIEW_}</#if>?shoppingListId=${shoppingListItem.shoppingListId}&shoppingListItemSeqId=${shoppingListItem.shoppingListItemSeqId}&quantity=${shoppingListItem.quantity}&add_product_id=${shoppingListItem.productId}</@ofbizUrl>" class="buttontext">[Add&nbsp;${shoppingListItem.quantity?string}&nbsp;To&nbsp;Cart]</a>
+                        </td>
                       </tr>
                     </form>
                   </#list>
+                  <tr><td colspan="6"><hr class='sepbar'></td></tr>
+				  <tr>
+					<td><div class="tabletext">&nbsp;</div></td>
+					<td><div class="tabletext">&nbsp;</div></td>
+					<td><div class="tabletext">&nbsp;</div></td>
+					<td><div class="tabletext">&nbsp;</div></td>
+					<td nowrap align="right">
+					  <div class="tableheadtext">${shoppingListItemTotal?string.currency}</div>
+					</td>                      
+					<td><div class="tabletext">&nbsp;</div></td>
+				  </tr>
                 </table>
             <#else>
                 <div class='head2'>Your shopping list is empty.</div>
             </#if>
           </td>
+        </tr>
+      </table>
+    </TD>
+  </TR>
+</TABLE>
+
+<br/>
+<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+  <TR>
+    <TD width='100%'>
+      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
+        <tr>
+          <td valign="middle" align="left">
+            <div class="boxhead">&nbsp;Shopping List Price Totals - ${shoppingList.listName}</div>
+          </td>  
+          <td valign="middle" align="right">
+          </td>
+        </tr>
+      </table>
+    </TD>
+  </TR>
+  <TR>
+    <TD width='100%'>
+      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
+        <tr>
+          <td align="left" width="5%">
+          	<div class="tabletext">Child Lists Total Price</div>
+          </td>
+          <td align="right" width="5%">
+          	<div class="tabletext">${shoppingListChildTotal?string.currency}</div>
+          </td>
+          <td width="90%"><div class="tabletext">&nbsp;</div></td>
+        </tr>
+        <tr>
+          <td align="left">
+          	<div class="tabletext">This&nbsp;List&nbsp;Items&nbsp;Total&nbsp;Price&nbsp;&nbsp;</div>
+          </td>
+          <td align="right">
+          	<div class="tabletext">${shoppingListItemTotal?string.currency}</div>
+          </td>
+          <td><div class="tabletext">&nbsp;</div></td>
+        </tr>
+        <tr>
+          <td align="left">
+          	<div class="tableheadtext">Grand Total</div>
+          </td>
+          <td align="right">
+          	<div class="tableheadtext">${shoppingListTotalPrice?string.currency}</div>
+          </td>
+          <td><div class="tabletext">&nbsp;</div></td>
         </tr>
       </table>
     </TD>
