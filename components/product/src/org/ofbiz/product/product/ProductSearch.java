@@ -1,5 +1,5 @@
 /*
- * $Id: ProductSearch.java,v 1.35 2004/05/12 16:40:38 jonesde Exp $
+ * $Id: ProductSearch.java,v 1.36 2004/05/22 20:25:49 ajzeneski Exp $
  *
  *  Copyright (c) 2001 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -60,7 +60,7 @@ import org.ofbiz.entity.util.EntityUtil;
  *  Utilities for product search based on various constraints including categories, features and keywords.
  *
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.35 $
+ * @version    $Revision: 1.36 $
  * @since      3.0
  */
 public class ProductSearch {
@@ -501,7 +501,7 @@ public class ProductSearch {
     // Search Constraint Classes
     // ======================================================================
 
-    public static abstract class ProductSearchConstraint {
+    public static abstract class ProductSearchConstraint implements java.io.Serializable {
         public ProductSearchConstraint() { }
 
         public abstract void addConstraint(ProductSearchContext productSearchContext);
@@ -963,7 +963,7 @@ public class ProductSearch {
     // Result Sort Classes
     // ======================================================================
 
-    public static abstract class ResultSortOrder {
+    public static abstract class ResultSortOrder implements java.io.Serializable {
         public ResultSortOrder() {
         }
 

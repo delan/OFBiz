@@ -1,5 +1,5 @@
 /*
- * $Id: WebShoppingCart.java,v 1.5 2003/11/08 20:54:17 ajzeneski Exp $
+ * $Id: WebShoppingCart.java,v 1.6 2004/05/22 20:25:49 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -44,44 +44,33 @@ import org.ofbiz.base.util.UtilHttp;
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:tristana@twibble.org">Tristan Austin</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      2.0
  */
 public class WebShoppingCart extends ShoppingCart {
-    private HttpSession session = null;
-
-    /** Creates a new cloned ShoppingCart Object. */
-    public WebShoppingCart(ShoppingCart cart, HttpSession session) {
-        super(cart);
-        this.session = session;
-    }    
 
     /** Creates new empty ShoppingCart object. */
     public WebShoppingCart(HttpServletRequest request) {
-        super((GenericDelegator)request.getAttribute("delegator"), ProductStoreWorker.getProductStoreId(request), CatalogWorker.getWebSiteId(request), UtilHttp.getCurrencyUom(request));
-        super.setLocale(UtilHttp.getLocale(request));
-        this.session = request.getSession();
+        super((GenericDelegator)request.getAttribute("delegator"), ProductStoreWorker.getProductStoreId(request),
+                CatalogWorker.getWebSiteId(request), UtilHttp.getCurrencyUom(request));
+        this.locale = UtilHttp.getLocale(request);
+
+        HttpSession session = request.getSession(true);
+        if (session != null) {
+            this.webSiteId = (String) session.getAttribute("webSiteId");
+            this.userLogin = (GenericValue) session.getAttribute("userLogin");
+            this.autoUserLogin = (GenericValue) session.getAttribute("autoUserLogin");
+
+            if (session.getAttribute("orderPartyId") != null) {
+                this.orderPartyId = (String) session.getAttribute("orderPartyId");
+            }
+        } else {
+            throw new RuntimeException("Session was null and not created!");
+        }
     }
 
-    /** Gets the userLogin from the session; may be null */
-    public GenericValue getUserLogin() {
-        return (GenericValue) this.session.getAttribute("userLogin");
-    }
-
-    public GenericValue getAutoUserLogin() {
-        return (GenericValue) this.session.getAttribute("autoUserLogin");
-    }
-    
-    public String getWebSiteId() {
-        return (String) session.getAttribute("webSiteId");
-    }
-    
-    public String getPartyId() {
-        String partyId = (String) session.getAttribute("orderPartyId");
-        if (partyId == null && getUserLogin() != null)
-            partyId = getUserLogin().getString("partyId");
-        if (partyId == null && getAutoUserLogin() != null)
-            partyId = getAutoUserLogin().getString("partyId");
-        return partyId;
+    /** Creates a new cloned ShoppingCart Object. */
+    public WebShoppingCart(ShoppingCart cart) {
+        super(cart);
     }
 }
