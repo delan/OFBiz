@@ -299,8 +299,8 @@
         <description>Add Product to Product Association</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
-        <override name="fromDate" optional="true" />
         <attribute name="errorMessage" type="String" optional="true" mode="OUT"/>
+        <override name="fromDate" optional="true"/>
     </service>
     <service name="updateBOMAssoc" default-entity-name="ProductAssoc" engine="simple"
                 location="org/ofbiz/manufacturing/bom/BomSimpleMethods.xml" invoke="updateBOMAssoc" auth="true">
@@ -319,9 +319,9 @@
                 location="org/ofbiz/manufacturing/bom/BomSimpleMethods.xml" invoke="copyBOMAssocs" auth="true">
         <description>Copy BOM associations from one product to another</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
-        <override name="fromDate" optional="true" />
-        <override name="productIdTo" optional="true" />
         <attribute name="copyToProductId" type="String" optional="false" mode="IN"/>
+        <override name="fromDate" optional="true"/>
+        <override name="productIdTo" optional="true"/>
     </service>
 
     <service name="updateProductManufacturingRule" engine="simple"
