@@ -41,6 +41,7 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
+import org.ofbiz.base.util.UtilTimer;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.transaction.DebugXaResource;
@@ -239,6 +240,9 @@ public class ServiceDispatcher {
      * @throws GenericServiceException
      */
     public Map runSync(String localName, ModelService modelService, Map context, boolean validateOut) throws ServiceAuthException, ServiceValidationException, GenericServiceException {
+        if (Debug.timingOn()) {
+            UtilTimer.timerLog(localName + " / " + modelService.name, "Sync service started...", module);
+        }
         boolean debugging = checkDebug(modelService, 1, true);
         if (Debug.verboseOn()) {
             Debug.logVerbose("[ServiceDispatcher.runSync] : invoking service " + modelService.name + " [" + modelService.location +
@@ -425,8 +429,14 @@ public class ServiceDispatcher {
 
             checkDebug(modelService, 0, debugging);
             rs.setEndStamp();
+            if (Debug.timingOn()) {
+                UtilTimer.closeTimer(localName + " / " + modelService.name, "Sync service finished...", module);
+            }
             return result;
         } catch (Throwable t) {
+            if (Debug.timingOn()) {
+                UtilTimer.closeTimer(localName + " / " + modelService.name, "Sync service failed...", module);
+            }
             Debug.logError(t, "Service [" + modelService.name + "] threw an unexpected exception/error", module);
             engine.sendCallbacks(modelService, context, t, GenericEngine.SYNC_MODE);
             try {
@@ -460,6 +470,9 @@ public class ServiceDispatcher {
      * @throws GenericServiceException
      */
     public void runAsync(String localName, ModelService service, Map context, GenericRequester requester, boolean persist) throws ServiceAuthException, ServiceValidationException, GenericServiceException {
+        if (Debug.timingOn()) {
+            UtilTimer.timerLog(localName + " / " + service.name, "ASync service started...", module);
+        }
         boolean debugging = checkDebug(service, 1, true);
         if (Debug.verboseOn()) {
             Debug.logVerbose("[ServiceDispatcher.runAsync] : prepareing service " + service.name + " [" + service.location + "/" + service.invoke +
@@ -585,8 +598,14 @@ public class ServiceDispatcher {
                 }
             }
 
+            if (Debug.timingOn()) {
+                UtilTimer.closeTimer(localName + " / " + service.name, "ASync service finished...", module);
+            }
             checkDebug(service, 0, debugging);
         } catch (Throwable t) {
+            if (Debug.timingOn()) {
+                UtilTimer.closeTimer(localName + " / " + service.name, "ASync service failed...", module);
+            }
             Debug.logError(t, "Service [" + service.name + "] threw an unexpected exception/error", module);
             engine.sendCallbacks(service, context, t, GenericEngine.ASYNC_MODE);
             try {

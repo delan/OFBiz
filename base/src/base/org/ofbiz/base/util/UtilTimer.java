@@ -23,6 +23,9 @@
  */
 package org.ofbiz.base.util;
 
+import java.util.Map;
+import java.util.HashMap;
+
 /**
  * Timer  handling utility
  * Utility class for simple reporting of the progress of a process. 
@@ -30,24 +33,48 @@ package org.ofbiz.base.util;
  * and the time since the start are reported in each call to timerString.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class UtilTimer {
     
     public static final String module = UtilTimer.class.getName();
+    protected static Map staticTimers = new HashMap();
 
-    long realStartTime;
-    long startTime;
-    long lastMessageTime;
-    String lastMessage = null;
-    boolean log = false;
+    protected String timerName = null;
+    protected String lastMessage = null;
+
+    protected long realStartTime;
+    protected long startTime;
+    protected long lastMessageTime;
+    protected boolean running = false;
+    protected boolean log = false;
 
     /** Default constructor. Starts the timer.
      */
     public UtilTimer() {
-        lastMessageTime = realStartTime = startTime = System.currentTimeMillis();
-        lastMessage = "Begin";
+        this("", true);
+    }
+
+    public UtilTimer(String timerName, boolean start) {
+        this.timerName = timerName;
+        if (start) {
+            this.startTimer();
+        }
+    }
+
+    public void startTimer() {
+        this.lastMessageTime = realStartTime = startTime = System.currentTimeMillis();
+        this.lastMessage = "Begin";
+        this.running = true;
+    }
+
+    public String getName() {
+        return this.timerName;
+    }
+
+    public boolean isRunning() {
+        return this.running;
     }
 
     /** Creates a string with information including the passed message, the last passed message and the time since the last call, and the time since the beginning
@@ -70,6 +97,11 @@ public class UtilTimer {
         String retString = "[[" + message + "- total:" + secondsSinceStart() +
             ",since last(" + ((lastMessage.length() > 20) ? (lastMessage.substring(0, 17) + "...") : lastMessage) + "):" +
             secondsSinceLast() + "]]";
+
+        // append the timer name
+        if (UtilValidate.isNotEmpty(timerName)) {
+            retString = retString + " - '" + timerName + "'";
+        }
 
         lastMessage = message;
         if (log) Debug.log(Debug.TIMING, null, retString, module, "org.ofbiz.base.util.UtilTimer");
@@ -176,4 +208,53 @@ public class UtilTimer {
         return retString;
     }
 
+    // static logging timer - be sure to close the timer when finished!
+
+    public static UtilTimer getTimer(String timerName) {
+        return getTimer(timerName, true);
+    }
+
+    public static UtilTimer getTimer(String timerName, boolean log) {
+        UtilTimer timer = (UtilTimer) staticTimers.get(timerName);
+        if (timer == null) {
+            synchronized(UtilTimer.class) {
+                timer = (UtilTimer) staticTimers.get(timerName);
+                if (timer == null) {
+                    timer = new UtilTimer(timerName, false);
+                    timer.setLog(log);
+                    staticTimers.put(timerName, timer);
+                }
+            }
+        }
+        return timer;
+    }
+
+    public static void timerLog(String timerName, String message, String module) {
+        UtilTimer timer = UtilTimer.getTimer(timerName);
+        if (!timer.isRunning()) {
+            timer.startTimer();
+        }
+
+        if (timer.getLog()) {
+            if (module == null) {
+                module = timer.getClass().getName();
+            }
+            timer.timerString(message, module);
+        }
+    }
+
+    public static void closeTimer(String timerName) {
+        UtilTimer.closeTimer(timerName, null, null);
+    }
+
+    public static void closeTimer(String timerName, String message) {
+        UtilTimer.closeTimer(timerName, message, null);
+    }
+
+    public static void closeTimer(String timerName, String message, String module) {
+        if (message != null) {
+            UtilTimer.timerLog(timerName, message, module);
+        }
+        staticTimers.remove(timerName);
+    }
 }
