@@ -612,7 +612,7 @@ public class GenericDAO {
         sql += makeWhereClauseAnd(modelEntity, whereFields, dummyValue);
         sql += makeOrderByClause(modelEntity, orderBy);
 
-        //Debug.logInfo("[GenericDAO.selectByAnd] sql=" + sql);
+        Debug.logVerbose("[GenericDAO.selectByAnd] sql=" + sql, module);
         try {
             ps = connection.prepareStatement(sql);
 
@@ -625,7 +625,7 @@ public class GenericDAO {
                     }
                 }
             }
-            //Debug.logInfo("[GenericDAO.selectByAnd] ps=" + ps.toString());
+            Debug.logVerbose("[GenericDAO.selectByAnd] ps=" + ps.toString(), module);
             rs = ps.executeQuery();
 
             while (rs.next()) {
@@ -717,7 +717,7 @@ public class GenericDAO {
         sql += makeWhereClauseOr(modelEntity, whereFields, dummyValue);
         sql += makeOrderByClause(modelEntity, orderBy);
 
-        //Debug.logInfo("[GenericDAO.selectByOr] sql=" + sql);
+        Debug.logVerbose("[GenericDAO.selectByOr] sql=" + sql, module);
         try {
             ps = connection.prepareStatement(sql);
 
@@ -730,7 +730,7 @@ public class GenericDAO {
                     }
                 }
             }
-            //Debug.logInfo("[GenericDAO.selectByOr] ps=" + ps.toString());
+            Debug.logVerbose("[GenericDAO.selectByOr] ps=" + ps.toString(), module);
             rs = ps.executeQuery();
 
             while (rs.next()) {
@@ -841,7 +841,7 @@ public class GenericDAO {
 
         sqlBuffer.append(makeOrderByClause(modelEntity, orderBy));
         String sql = sqlBuffer.toString();
-        //Debug.logInfo("[GenericDAO.selectByAnd] sql=" + sql);
+        Debug.logVerbose("[GenericDAO.selectByAnd] sql=" + sql, module);
 
         try {
             ps = connection.prepareStatement(sql);
@@ -854,6 +854,7 @@ public class GenericDAO {
                     setValue(ps, i + 1, field, dummyValue);
                 }
             }
+            Debug.logVerbose("[GenericDAO.selectByAnd] ps=" + ps.toString(), module);
             rs = ps.executeQuery();
 
             while (rs.next()) {
@@ -963,7 +964,7 @@ public class GenericDAO {
 
         sqlBuffer.append(makeOrderByClause(modelEntity, orderBy));
         String sql = sqlBuffer.toString();
-        //Debug.logInfo("[GenericDAO.selectByOr] sql=" + sql);
+        Debug.logVerbose("[GenericDAO.selectByOr] sql=" + sql, module);
 
         try {
             ps = connection.prepareStatement(sql);
@@ -976,6 +977,7 @@ public class GenericDAO {
                     setValue(ps, i + 1, field, dummyValue);
                 }
             }
+            Debug.logVerbose("[GenericDAO.selectByOr] ps=" + ps.toString(), module);
             rs = ps.executeQuery();
 
             while (rs.next()) {
@@ -1060,6 +1062,7 @@ public class GenericDAO {
             sql = sql + " WHERE " + modelEntity.colNameString(whereFields, " LIKE ? AND ", " LIKE ?");
 
         sql += makeOrderByClause(modelEntity, orderBy);
+        Debug.logVerbose("[GenericDAO.selectByLike] sql=" + sql, module);
 
         try {
             ps = connection.prepareStatement(sql);
@@ -1073,6 +1076,7 @@ public class GenericDAO {
                 }
             } else
                 dummyValue = new GenericValue(modelEntity);
+            Debug.logVerbose("[GenericDAO.selectByLike] ps=" + ps.toString(), module);
             rs = ps.executeQuery();
 
             while (rs.next()) {
@@ -1604,19 +1608,30 @@ public class GenericDAO {
     protected String makeOrderByClause(ModelEntity modelEntity, List orderBy) {
         StringBuffer sql = new StringBuffer("");
         if (orderBy != null && orderBy.size() > 0) {
+            Debug.logVerbose("[GenericDAO.makeOrderByClause] : Order by list contains: " + orderBy.size() + " entries.");
             List orderByStrings = new LinkedList();
 
             for (int oi = 0; oi < orderBy.size(); oi++) {
                 String keyName = (String) orderBy.get(oi);
-                int spaceIdx = keyName.indexOf(' ');
-                if (spaceIdx > 0)
+                String ext = null;
+
+                // check for ASC/DESC
+                int spaceIdx = keyName.indexOf(" ");
+                if (spaceIdx > 0) {
+                    ext = keyName.substring(spaceIdx);
                     keyName = keyName.substring(0, spaceIdx);
+                }
+                // optional way -/+
+                if (keyName.startsWith("-") || keyName.startsWith("+")) {
+                    ext = keyName.startsWith("-") ? " DESC" : " ASC";
+                    keyName = keyName.substring(1);
+                }
 
                 for (int fi = 0; fi < modelEntity.getFieldsSize(); fi++) {
                     ModelField curField = modelEntity.getField(fi);
                     if (curField.getName().equals(keyName)) {
-                        if (spaceIdx > 0)
-                            orderByStrings.add(curField.getColName() + keyName.substring(spaceIdx));
+                        if (ext != null)
+                            orderByStrings.add(curField.getColName() + ext);
                         else
                             orderByStrings.add(curField.getColName());
                     }
@@ -1635,6 +1650,7 @@ public class GenericDAO {
                 }
             }
         }
+        Debug.logVerbose("[GenericDAO.makeOrderByClause] : " + sql.toString(), module);
         return sql.toString();
     }
 
