@@ -139,7 +139,7 @@ public class ContentPermissionServices {
             passedPurposes.addAll(purposesFromString);
         }
         
-        StdAuxiliaryValueGetter auxGetter = new StdAuxiliaryValueGetter( "Content",  "contentPurposeTypeId", "contentId");
+        StdAuxiliaryValueGetter auxGetter = new StdAuxiliaryValueGetter( "ContentPurpose",  "contentPurposeTypeId", "contentId");
         auxGetter.setList(passedPurposes);
         //Debug.logInfo("passedPurposes(b):" + passedPurposes, "");
         List targetOperations = (List) context.get("targetOperationList"); 
