@@ -1970,6 +1970,10 @@
         <security auth="true" https="true"/>
         <response name="success" type="view" value="LookupProduct"/>
     </request-map>
+    <request-map uri="LookupVariantProduct">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="LookupVariantProduct"/>
+    </request-map>
     <request-map uri="LookupVirtualProduct">
         <security auth="true" https="true"/>
         <response name="success" type="view" value="LookupVirtualProduct"/>
@@ -2093,6 +2097,7 @@
     <!-- Lookup request mappings -->
     <view-map name="LookupFixedAsset" page="component://accounting/widget/LookupScreens.xml#LookupFixedAsset" type="screen"/>
     <view-map name="LookupProduct" page="component://product/widget/catalog/LookupScreens.xml#LookupProduct" type="screen"/>
+    <view-map name="LookupVariantProduct" page="component://product/widget/catalog/LookupScreens.xml#LookupVariantProduct" type="screen"/>
     <view-map name="LookupVirtualProduct" page="component://product/widget/catalog/LookupScreens.xml#LookupVirtualProduct" type="screen"/>
     <view-map name="LookupProductFeature" page="component://product/widget/catalog/LookupScreens.xml#LookupProductFeature" type="screen"/>
     <view-map name="LookupPartyName" page="component://party/widget/partymgr/LookupScreens.xml#LookupPartyName" type="screen"/>

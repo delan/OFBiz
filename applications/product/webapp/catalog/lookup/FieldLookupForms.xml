@@ -65,6 +65,9 @@
         </field>
         <field name="internalName"><display/></field>
         <field name="productTypeId"><display/></field>
+        <field name="searchVariants" title="&amp;nbsp;" widget-style="buttontext" use-when="isVirtual!=null&amp;&amp;&quot;${isVirtual}&quot;.equals(&quot;Y&quot;)">
+            <hyperlink also-hidden="false" target-type="plain" description="Variants" target="LookupVariantProduct?productId=${productId}"/>
+        </field>
     </form>
     <form name="lookupVirtualProduct" extends="lookupProduct"
         default-map-name= "inputFields" default-title-style="tableheadtext"
