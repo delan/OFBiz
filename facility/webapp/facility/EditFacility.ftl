@@ -27,33 +27,36 @@
 
 <#if security.hasEntityPermission("FACILITY", "_VIEW", session)>
 
-<#if facility?exists && facility.facilityId?exists && facility.facilityId != "">
+<#if facility?exists && facilityId?has_content>
   <div class='tabContainer'>
-    <a href="<@ofbizUrl>/EditFacility?facilityId=${facility.facilityId}</@ofbizUrl>" class="tabButtonSelected">Facility</a>
-    <a href="<@ofbizUrl>/EditFacilityGroups?facilityId=${facility.facilityId}</@ofbizUrl>" class="tabButton">Groups</a>
-    <a href="<@ofbizUrl>/FindFacilityLocations?facilityId=${facility.facilityId}</@ofbizUrl>" class="tabButton">Locations</a>
-    <a href="<@ofbizUrl>/EditFacilityRoles?facilityId=${facility.facilityId}</@ofbizUrl>" class="tabButton">Roles</a>
-    <a href="<@ofbizUrl>/EditFacilityInventoryItems?facilityId=${facility.facilityId}</@ofbizUrl>" class="tabButton">Inventory&nbsp;Items</a>
-    <a href="<@ofbizUrl>/ReceiveInventory?facilityId=${facility.facilityId}</@ofbizUrl>" class="tabButton">Inventory&nbsp;Receive</a>
-    <a href="<@ofbizUrl>/FindFacilityTransfers?facilityId=${facility.facilityId}</@ofbizUrl>" class="tabButton">Inventory&nbsp;Xfers</a>
-    <a href="<@ofbizUrl>/ReceiveReturn?facilityId=${facility.facilityId}</@ofbizUrl>" class="tabButton">Receive Return</a>
-    <a href="<@ofbizUrl>/PicklistOptions?facilityId=${facility.facilityId}</@ofbizUrl>" class="tabButton">Picklist</a>
-    <a href="<@ofbizUrl>/FindShipment?facilityId=${facility.facilityId}</@ofbizUrl>" class="tabButton">Shipments</a>
+    <a href="<@ofbizUrl>/EditFacility?facilityId=${facilityId}</@ofbizUrl>" class="tabButtonSelected">Facility</a>
+    <a href="<@ofbizUrl>/EditFacilityGroups?facilityId=${facilityId}</@ofbizUrl>" class="tabButton">Groups</a>
+    <a href="<@ofbizUrl>/FindFacilityLocations?facilityId=${facilityId}</@ofbizUrl>" class="tabButton">Locations</a>
+    <a href="<@ofbizUrl>/EditFacilityRoles?facilityId=${facilityId}</@ofbizUrl>" class="tabButton">Roles</a>
+    <a href="<@ofbizUrl>/EditFacilityInventoryItems?facilityId=${facilityId}</@ofbizUrl>" class="tabButton">Inventory&nbsp;Items</a>
+    <a href="<@ofbizUrl>/ReceiveInventory?facilityId=${facilityId}</@ofbizUrl>" class="tabButton">Inventory&nbsp;Receive</a>
+    <a href="<@ofbizUrl>/FindFacilityTransfers?facilityId=${facilityId}</@ofbizUrl>" class="tabButton">Inventory&nbsp;Xfers</a>
+    <a href="<@ofbizUrl>/ReceiveReturn?facilityId=${facilityId}</@ofbizUrl>" class="tabButton">Receive Return</a>
+    <a href="<@ofbizUrl>/PicklistOptions?facilityId=${facilityId}</@ofbizUrl>" class="tabButton">Picklist</a>
+    <a href="<@ofbizUrl>/FindShipment?facilityId=${facilityId}</@ofbizUrl>" class="tabButton">Shipments</a>
   </div>
 </#if>
 
-<div class="head1">Facility <span class='head2'>${facility.facilityName?if_exists} [ID:${facility.facilityId?if_exists}]</span></div>
+<div class="head1">Facility <span class='head2'>${facility.facilityName?if_exists} [ID:${facilityId?if_exists}]</span></div>
 <a href="<@ofbizUrl>/EditFacility</@ofbizUrl>" class="buttontext">[New Facility]</a>
+<#if facilityId?has_content>
+	<a href="/workeffort/control/month?facilityId=${facilityId}&externalLoginKey=${requestAttributes.externalLoginKey?if_exists}" class="buttontext">[View Calendar]</a>
+</#if>
 
-<#if facility?exists && facility.facilityId?exists && facility.facilityId != "">
+<#if facility?exists && facilityId?has_content>
   <form action="<@ofbizUrl>/UpdateFacility</@ofbizUrl>" method=POST style='margin: 0;'>
   <table border='0' cellpadding='2' cellspacing='0'>
-  <input type=hidden name="facilityId" value="${facility.facilityId?if_exists}">
+  <input type=hidden name="facilityId" value="${facilityId?if_exists}">
   <tr>
     <td align=right><div class="tabletext">Facility ID</div></td>
     <td>&nbsp;</td>
     <td>
-      <b>${facility.facilityId?if_exists}</b> (This cannot be changed without re-creating the facility.)
+      <b>${facilityId?if_exists}</b> (This cannot be changed without re-creating the facility.)
     </td>
   </tr>
 <#else>
