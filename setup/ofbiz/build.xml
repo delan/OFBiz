@@ -29,6 +29,58 @@
 
 
     <!-- ================================================================== -->
+    <!-- Initialization of all property settings                            -->
+    <!-- ================================================================== -->
+
+    <target name="ofbiz-init">
+        <!-- Allow any user specific values to override the defaults -->
+        <property file="${user.home}/build.properties"/>
+        <!-- Allow module-level defaults for this build -->
+        <property file="build.properties"/>
+
+        <property name="sub.project.target" value="war"/>
+        <property name="ofbiz.version" value=""/>
+        <property name="ofbcore-webapp.jar" value="core/lib/ofbcore-webapp${ofbiz.version}.jar" />
+
+        <property environment="env" />
+        <property name="home.dir" value="${env.OFBIZ_HOME}" />
+    </target>
+
+    <target name="catalina-init">
+        <!-- Allow any user specific values to override the defaults -->
+        <property file="${user.home}/build.properties"/>
+        <!-- Allow module-level defaults for this build -->
+        <property file="build.properties"/>
+
+        <property name="ofbiz.version" value=""/>
+
+        <property environment="env" />
+        <property name="catalina.dir" value="${env.CATALINA_HOME}" />
+        <property name="home.dir" value="${env.OFBIZ_HOME}" />
+
+        <property name="classes.dir" value="${catalina.dir}/classes" />
+        <property name="lib.dir" value="${catalina.dir}/lib" />
+        <property name="j2eedeploy.dir" value="${catalina.dir}/webapps" />
+    </target>
+
+    <target name="catalina41-init">
+        <!-- Allow any user specific values to override the defaults -->
+        <property file="${user.home}/build.properties"/>
+        <!-- Allow module-level defaults for this build -->
+        <property file="build.properties"/>
+
+        <property name="ofbiz.version" value=""/>
+
+        <property environment="env" />
+        <property name="catalina.dir" value="${env.CATALINA_HOME}" />
+        <property name="home.dir" value="${env.OFBIZ_HOME}" />
+
+        <property name="classes.dir" value="${catalina.dir}/shared/classes" />
+        <property name="lib.dir" value="${catalina.dir}/shared/lib" />
+        <property name="j2eedeploy.dir" value="${catalina.dir}/webapps" />
+    </target>
+    
+    <!-- ================================================================== -->
     <!-- Install OFBIZ Components in JBoss & Tomcat                         -->
     <!-- ================================================================== -->
 
@@ -146,57 +198,6 @@
     </target>
     
     <!-- ================================================================== -->
-    <!-- Initialization of all property settings                            -->
-    <!-- ================================================================== -->
-
-    <target name="ofbiz-init">
-        <!-- Allow any user specific values to override the defaults -->
-        <property file="${user.home}/build.properties"/>
-        <!-- Allow module-level defaults for this build -->
-        <property file="build.properties"/>
-
-        <property name="ofbiz.version" value=""/>
-        <property name="ofbcore-webapp.jar" value="core/lib/ofbcore-webapp${ofbiz.version}.jar" />
-
-        <property environment="env" />
-        <property name="home.dir" value="${env.OFBIZ_HOME}" />
-    </target>
-
-    <target name="catalina-init">
-        <!-- Allow any user specific values to override the defaults -->
-        <property file="${user.home}/build.properties"/>
-        <!-- Allow module-level defaults for this build -->
-        <property file="build.properties"/>
-
-        <property name="ofbiz.version" value=""/>
-
-        <property environment="env" />
-        <property name="catalina.dir" value="${env.CATALINA_HOME}" />
-        <property name="home.dir" value="${env.OFBIZ_HOME}" />
-
-        <property name="classes.dir" value="${catalina.dir}/classes" />
-        <property name="lib.dir" value="${catalina.dir}/lib" />
-        <property name="j2eedeploy.dir" value="${catalina.dir}/webapps" />
-    </target>
-
-    <target name="catalina41-init">
-        <!-- Allow any user specific values to override the defaults -->
-        <property file="${user.home}/build.properties"/>
-        <!-- Allow module-level defaults for this build -->
-        <property file="build.properties"/>
-
-        <property name="ofbiz.version" value=""/>
-
-        <property environment="env" />
-        <property name="catalina.dir" value="${env.CATALINA_HOME}" />
-        <property name="home.dir" value="${env.OFBIZ_HOME}" />
-
-        <property name="classes.dir" value="${catalina.dir}/shared/classes" />
-        <property name="lib.dir" value="${catalina.dir}/shared/lib" />
-        <property name="j2eedeploy.dir" value="${catalina.dir}/webapps" />
-    </target>
-    
-    <!-- ================================================================== -->
     <!-- Removes all created files and directories                          -->
     <!-- ================================================================== -->
 
@@ -293,67 +294,67 @@
         <echo message="[build] ========================================" />
         <echo message="[build] ========== Building commonapp ==========" />
         <echo message="[build] ========================================" />
-        <ant dir="commonapp" inheritAll="false" />
+        <ant dir="commonapp" target="${sub.project.target}" inheritAll="false" />
         
         <echo message="[build]" />
         <echo message="[build] ========================================" />
         <echo message="[build] ========== Building ecommerce ==========" />
         <echo message="[build] ========================================" />
-        <ant dir="ecommerce" inheritAll="false" />
+        <ant dir="ecommerce" target="${sub.project.target}" inheritAll="false" />
         
         <echo message="[build]" />
         <echo message="[build] ======================================" />
         <echo message="[build] ========== Building catalog ==========" />
         <echo message="[build] ======================================" />
-        <ant dir="catalog" inheritAll="false" />
+        <ant dir="catalog" target="${sub.project.target}" inheritAll="false" />
         
         <echo message="[build]" />
         <echo message="[build] =======================================" />
         <echo message="[build] ========== Building partymgr ==========" />
         <echo message="[build] =======================================" />
-        <ant dir="partymgr" inheritAll="false" />
+        <ant dir="partymgr" target="${sub.project.target}" inheritAll="false" />
         
         <echo message="[build]" />
         <echo message="[build] =======================================" />
         <echo message="[build] ========== Building ordermgr ==========" />
         <echo message="[build] =======================================" />
-        <ant dir="ordermgr" inheritAll="false" />
+        <ant dir="ordermgr" target="${sub.project.target}" inheritAll="false" />
         
         <echo message="[build]" />
         <echo message="[build] =======================================" />
         <echo message="[build] ========== Building webtools ==========" />
         <echo message="[build] =======================================" />
-        <ant dir="webtools" inheritAll="false" />
+        <ant dir="webtools" target="${sub.project.target}" inheritAll="false" />
         
         <echo message="[build]" />
         <echo message="[build] =========================================" />
         <echo message="[build] ========== Building workeffort ==========" />
         <echo message="[build] =========================================" />
-        <ant dir="workeffort" inheritAll="false" />
+        <ant dir="workeffort" target="${sub.project.target}" inheritAll="false" />
         
         <echo message="[build]" />
         <echo message="[build] =========================================" />
         <echo message="[build] ========== Building accounting ==========" />
         <echo message="[build] =========================================" />
-        <ant dir="accounting" inheritAll="false" />
+        <ant dir="accounting" target="${sub.project.target}" inheritAll="false" />
         
         <echo message="[build]" />
         <echo message="[build] =======================================" />
         <echo message="[build] ========== Building facility ==========" />
         <echo message="[build] =======================================" />
-        <ant dir="facility" inheritAll="false" />
+        <ant dir="facility" target="${sub.project.target}" inheritAll="false" />
         
         <echo message="[build]" />
         <echo message="[build] ========================================" />
         <echo message="[build] ========== Building marketing ==========" />
         <echo message="[build] ========================================" />
-        <ant dir="marketing" inheritAll="false" />
+        <ant dir="marketing" target="${sub.project.target}" inheritAll="false" />
 
         <echo message="[build]" />
         <echo message="[build] =======================================" />
         <echo message="[build] ========== Building content ==========" />
         <echo message="[build] =======================================" />
-        <ant dir="content" inheritAll="false" />
+        <ant dir="content" target="${sub.project.target}" inheritAll="false" />
         
         <echo message="[build] ===== Done Building (Compile) =====" />
     </target>
