@@ -50,6 +50,14 @@ public class CommonServices {
      */
     public static Map testService(DispatchContext dctx, Map context) {
         Map response = new HashMap();
+        if (context.size() > 0) {
+            Iterator i = context.keySet().iterator();
+            while (i.hasNext()) {
+                Object cKey = i.next();
+                Object value = context.get(cKey);
+                System.out.println("---- SVC-CONTEXT: " + cKey + " => " + value);
+            }
+        }
         if (!context.containsKey("message")) {
             response.put("resp", "no message found");
         } else {
@@ -136,7 +144,7 @@ public class CommonServices {
         }
 
         Map fields = UtilMisc.toMap("noteId", noteId, "noteName", noteName, "noteInfo", note,
-                                    "noteParty", partyId, "noteDateTime", now);
+                "noteParty", partyId, "noteDateTime", now);
         try {
             GenericValue newValue = delegator.makeValue("NoteData", fields);
             delegator.create(newValue);
