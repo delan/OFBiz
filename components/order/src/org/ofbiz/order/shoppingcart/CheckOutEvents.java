@@ -233,74 +233,16 @@ public class CheckOutEvents {
         return "success";
     }
 
-    public static String checkPaymentMethods(HttpServletRequest request, HttpServletResponse response) {
+    public static String checkPaymentMethods(HttpServletRequest request, HttpServletResponse response) {                
         ShoppingCart cart = (ShoppingCart) request.getSession().getAttribute("shoppingCart");
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
-        Locale locale = UtilHttp.getLocale(request);
-
-        String errMsg = null;
-
         CheckOutHelper checkOutHelper = new CheckOutHelper(dispatcher, delegator, cart);
-        String billingAccountId = cart.getBillingAccountId();
-        double billingAccountAmt = cart.getBillingAccountAmount();
-        double availableAmount = checkOutHelper.availableAccountBalance(billingAccountId);
-        if (billingAccountAmt > availableAmount) {
-            Map messageMap = UtilMisc.toMap("billingAccountId", billingAccountId);
-            errMsg = UtilProperties.getMessage(resource, "checkevents.not_enough_available_on_account", messageMap, (cart != null ? cart.getLocale() : Locale.getDefault()));
-            request.setAttribute("_ERROR_MESSAGE_", errMsg);
+        Map resp = checkOutHelper.validatePaymentMethods();
+        if (ServiceUtil.isError(resp)) {
+            request.setAttribute("_ERROR_MESSAGE_", ServiceUtil.getErrorMessage(resp));
             return "error";
         }
-
-        // payment by billing account only requires more checking
-        List paymentMethods = cart.getPaymentMethodIds();
-        List paymentTypes = cart.getPaymentMethodTypeIds();
-        if (paymentTypes.contains("EXT_BILLACT") && paymentTypes.size() == 1 && paymentMethods.size() == 0) {
-            if (cart.getGrandTotal() > availableAmount) {
-                errMsg = UtilProperties.getMessage(resource, "checkevents.insufficient_credit_available_on_account", (cart != null ? cart.getLocale() : Locale.getDefault()));
-                request.setAttribute("_ERROR_MESSAGE_", errMsg);
-                return "error";
-            }
-        }
-
-        // validate any gift card balances
-        CheckOutEvents.validateGiftCardAmounts(request);
-
-        // update the selected payment methods amount with valid numbers
-        if (paymentMethods != null) {
-            List nullPaymentIds = new ArrayList();
-            Iterator i = paymentMethods.iterator();
-            while (i.hasNext()) {
-                String paymentMethodId = (String) i.next();
-                Double paymentAmount = cart.getPaymentAmount(paymentMethodId);
-                if (paymentAmount == null || paymentAmount.doubleValue() == 0) {
-                    Debug.log("Found null paymentMethodId - " + paymentMethodId, module);
-                    nullPaymentIds.add(paymentMethodId);
-                }
-            }
-            Iterator npi = nullPaymentIds.iterator();
-            while (npi.hasNext()) {
-                String paymentMethodId = (String) npi.next();
-                double selectedPaymentTotal = cart.getPaymentTotal();
-                double requiredAmount = cart.getGrandTotal() - cart.getBillingAccountAmount();
-                double nullAmount = requiredAmount - selectedPaymentTotal;
-                if (nullAmount > 0) {
-                    Debug.log("Reset null paymentMethodId - " + paymentMethodId + " / " + nullAmount, module);
-                    cart.addPaymentAmount(paymentMethodId, nullAmount);
-                }
-            }
-        }
-
-        // verify the selected payment method amounts will cover the total        
-        double selectedPaymentTotal = cart.getPaymentTotal();
-        double requiredAmount = cart.getGrandTotal() - cart.getBillingAccountAmount();
-        if (paymentMethods != null && paymentMethods.size() > 0 && requiredAmount > selectedPaymentTotal) {
-            Debug.logError("Required Amount : " + requiredAmount + " / Selected Amount : " + selectedPaymentTotal, module);
-            errMsg = UtilProperties.getMessage(resource, "checkevents.payment_not_cover_this_order", (cart != null ? cart.getLocale() : Locale.getDefault()));
-            request.setAttribute("_ERROR_MESSAGE_", errMsg);
-            return "error";
-        }
-
         return "success";
     }
 
@@ -332,52 +274,6 @@ public class CheckOutEvents {
         }
         Debug.logInfo("Selected Payment Methods : " + selectedPaymentMethods, module);
         return selectedPaymentMethods;
-    }
-
-    private static void validateGiftCardAmounts(HttpServletRequest request) {
-        ShoppingCart cart = (ShoppingCart) request.getSession().getAttribute("shoppingCart");
-        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
-        LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
-
-        // get the product store
-        GenericValue productStore = ProductStoreWorker.getProductStore(cart.getProductStoreId(), delegator);
-        if (productStore != null && !"Y".equalsIgnoreCase(productStore.getString("checkGcBalance"))) {
-            return;
-        }
-
-        // get the payment config
-        String paymentConfig = ProductStoreWorker.getProductStorePaymentProperties(delegator, cart.getProductStoreId(), "GIFT_CARD", null, true);
-
-        // get the gift card objects to check
-        Iterator i = cart.getGiftCards().iterator();
-        while (i.hasNext()) {
-            GenericValue gc = (GenericValue) i.next();
-            Map gcBalanceMap = null;
-            double gcBalance = 0.00;
-            try {
-                Map ctx = UtilMisc.toMap("paymentConfig", paymentConfig);
-                ctx.put("currency", cart.getCurrency());
-                ctx.put("cardNumber", gc.getString("cardNumber"));
-                ctx.put("pin", gc.getString("pinNumber"));
-                gcBalanceMap = dispatcher.runSync("balanceInquireGiftCard", ctx);
-            } catch (GenericServiceException e) {
-                Debug.logError(e, module);
-            }
-            if (gcBalanceMap != null) {
-                Double bal = (Double) gcBalanceMap.get("balance");
-                if (bal != null) {
-                    gcBalance = bal.doubleValue();
-                }
-            }
-
-            // get the bill-up to amount
-            Double billUpTo = cart.getPaymentAmount(gc.getString("paymentMethodId"));
-
-            // null bill-up to means use the full balance || update the bill-up to with the balance
-            if (billUpTo == null || billUpTo.doubleValue() == 0 || gcBalance < billUpTo.doubleValue()) {
-                cart.addPaymentAmount(gc.getString("paymentMethodId"), new Double(gcBalance));
-            }
-        }
     }
 
     public static String setCheckOutOptions(HttpServletRequest request, HttpServletResponse response) {
