@@ -5,6 +5,7 @@
 package org.ofbiz.core.workflow;
 
 import java.util.*;
+import java.sql.Timestamp;
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.service.*;
 import org.ofbiz.core.util.*;
@@ -46,32 +47,15 @@ public class WorkflowClient {
     public static Map completeActivity(DispatchContext ctx, Map context) {
         Map result = new HashMap();
         GenericDelegator delegator = ctx.getDelegator();
-        
         String workEffortId = (String) context.get("workEffortId");
-        String partyId = (String) context.get("partyId");
-        String roleType = (String) context.get("roleTypeId");
-        
-        if ( !isMemberOfActivity(delegator,workEffortId,partyId,roleType) ) {
-            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-            result.put(ModelService.ERROR_MESSAGE,"You are not an active member of this activity");
-            return result;
-        }
-        
         try {
-            WfActivity activity = getActivity(delegator,workEffortId);
-            try {
-                activity.complete();
-            }
-            catch ( WfException e) {
-                result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-                result.put(ModelService.ERROR_MESSAGE,e.getMessage());
-            }
+            WfActivity activity = WfFactory.getWfActivity(delegator, workEffortId);
+            activity.complete();
         }
-        catch ( RuntimeException e ) {
+        catch ( WfException e ) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
             result.put(ModelService.ERROR_MESSAGE,e.getMessage());
         }
-        
         return result;
     }
     
@@ -79,34 +63,16 @@ public class WorkflowClient {
     public static Map changeActivityState(DispatchContext ctx, Map context) {
         Map result = new HashMap();
         GenericDelegator delegator = ctx.getDelegator();
-        
         String workEffortId = (String) context.get("workEffortId");
-        String partyId = (String) context.get("partyId");
-        String roleType = (String) context.get("roleTypeId");
-        
-        if ( !isMemberOfActivity(delegator,workEffortId,partyId,roleType) ) {
-            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-            result.put(ModelService.ERROR_MESSAGE,"You are not an active member of this activity");
-            return result;
-        }
-        
+        String newState = (String) context.get("newStatus");
         try {
-            WfActivity activity = getActivity(delegator,workEffortId);
-            String newState = (String) context.get("newStatus");
-            try {
-                activity.changeState(newState);
-            }
-            catch ( WfException e ) {
-                result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-                result.put(ModelService.ERROR_MESSAGE,e.getMessage());
-            }
+            WfActivity activity = WfFactory.getWfActivity(delegator,workEffortId);
+            activity.changeState(newState);
         }
-        catch ( RuntimeException e ) {
+        catch ( WfException e ) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
             result.put(ModelService.ERROR_MESSAGE,e.getMessage());
         }
-        
-        
         return result;
     }
     
@@ -114,33 +80,15 @@ public class WorkflowClient {
     public static Map activateActivity(DispatchContext ctx, Map context) {
         Map result = new HashMap();
         GenericDelegator delegator = ctx.getDelegator();
-        
         String workEffortId = (String) context.get("workEffortId");
-        String partyId = (String) context.get("partyId");
-        String roleType = (String) context.get("roleTypeId");
-        
-        if ( !isMemberOfActivity(delegator,workEffortId,partyId,roleType) ) {
-            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-            result.put(ModelService.ERROR_MESSAGE,"You are not an active member of this activity");
-            return result;
-        }
-        
         try {
-            WfActivity activity = getActivity(delegator,workEffortId);
-            try {
-                activity.activate();
-            }
-            catch ( WfException e ) {
-                result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-                result.put(ModelService.ERROR_MESSAGE,e.getMessage());
-            }
+            WfActivity activity = WfFactory.getWfActivity(delegator,workEffortId);
+            activity.activate();
         }
-        catch ( RuntimeException e ) {
+        catch ( WfException e ) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
             result.put(ModelService.ERROR_MESSAGE,e.getMessage());
         }
-        
-        
         return result;
     }
     
@@ -148,30 +96,22 @@ public class WorkflowClient {
     public static Map assignActivity(DispatchContext ctx, Map context) {
         Map result = new HashMap();
         GenericDelegator delegator = ctx.getDelegator();
-                        
         String workEffortId = (String) context.get("workEffortId");
         String partyId = (String) context.get("partyId");
-        String roleType = (String) context.get("roleTypeId");       
+        String roleType = (String) context.get("roleTypeId");
         boolean removeOldAssign = false;
-        if ( context.containsKey("removeOldAssignments") )
+        if ( context.containsKey("removeOldAssignments") ) {
             removeOldAssign = ((String)context.get("removeOldAssignments")).equals("true") ? true : false;
-                         
+        }        
         try {
-            WfActivity activity = getActivity(delegator,workEffortId);            
-            try {
-                WfResource resource = WfFactory.getWfResource(delegator,null,null,partyId,roleType);                
-                activity.assign(resource,removeOldAssign ? false : true);                
-            }
-            catch ( WfException e ) {
-                result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-                result.put(ModelService.ERROR_MESSAGE,e.getMessage());
-            }
+            WfActivity activity = WfFactory.getWfActivity(delegator,workEffortId);
+            WfResource resource = WfFactory.getWfResource(delegator,null,null,partyId,roleType);
+            activity.assign(resource,removeOldAssign ? false : true);
         }
-        catch ( RuntimeException e ) {
+        catch ( WfException e ) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
             result.put(ModelService.ERROR_MESSAGE,e.getMessage());
         }
-        
         return result;
     }
     
@@ -183,27 +123,17 @@ public class WorkflowClient {
         
         String workEffortId = (String) context.get("workEffortId");
         String partyId = (String) context.get("partyId");
-        String roleType = (String) context.get("roleTypeId");        
-        
-        if ( !isMemberOfActivity(delegator,workEffortId,partyId,roleType) ) {
-            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-            result.put(ModelService.ERROR_MESSAGE,"You are not an active member of this activity");
-            return result;
-        }        
-                
+        String roleType = (String) context.get("roleTypeId");
+        Timestamp fromDate = (Timestamp) context.get("fromDate");
+               
         try {
-            WfAssignment assign = getAssignment(delegator,workEffortId,partyId,roleType);
+            WfAssignment assign = WfFactory.getWfAssignment(delegator,workEffortId,partyId,roleType,fromDate);
             assign.accept();
         }
         catch ( WfException we ) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
             result.put(ModelService.ERROR_MESSAGE,we.getMessage());
         }
-        catch ( RuntimeException re ) {
-            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-            result.put(ModelService.ERROR_MESSAGE,re.getMessage());
-        }
-        
         return result;
         
     }
@@ -216,26 +146,16 @@ public class WorkflowClient {
         String workEffortId = (String) context.get("workEffortId");
         String partyId = (String) context.get("partyId");
         String roleType = (String) context.get("roleTypeId");
-        
-        if ( !isMemberOfActivity(delegator,workEffortId,partyId,roleType) ) {
-            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-            result.put(ModelService.ERROR_MESSAGE,"You are not an active member of this activity");
-            return result;
-        }        
+        Timestamp fromDate = (Timestamp) context.get("fromDate");
         
         try {
-            WfAssignment assign = getAssignment(delegator,workEffortId,partyId,roleType);
+            WfAssignment assign = WfFactory.getWfAssignment(delegator,workEffortId,partyId,roleType,fromDate);
             assign.complete();
         }
         catch ( WfException we ) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
             result.put(ModelService.ERROR_MESSAGE,we.getMessage());
-        }
-        catch ( RuntimeException re ) {
-            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-            result.put(ModelService.ERROR_MESSAGE,re.getMessage());
-        }
-        
+        }        
         return result;
     }
     
@@ -243,223 +163,6 @@ public class WorkflowClient {
     // -------------------------------------------------------------------
     // Client 'Worker' Methods
     // -------------------------------------------------------------------
-    
-    /**
-     * Gets the GenericValue object for a workeffort id
-     *@param delegator GenericDelegator used to look up this entity
-     *@param workEffortId The ID of the record to find
-     *@return GenericValue object of this entity
-     */
-    public static GenericValue getWorkEffort(GenericDelegator delegator, String workEffortId) {
-        GenericValue value = null;
-        try {
-            Map fields = UtilMisc.toMap("workEffortId",workEffortId);
-            Collection c = delegator.findByAnd("WorkEffort", fields);
-            ArrayList l = new ArrayList(c);
-            value = (GenericValue) l.get(0);
-        }
-        catch ( GenericEntityException e ) {
-            throw new RuntimeException(e.getMessage());
-        }
-        
-        if ( value == null )
-            throw new RuntimeException("WorkEffort entity returned null");
-        return value;
-    }
-    
-    /**
-     * Gets a WfProcessMgr object from using the package and process id's
-     *@param delegator GenericDelegator used to find this process
-     *@param pkg The PackageID
-     *@param pid The ProcessID
-     *@return WfProcessMgr associated with this package and process
-     */
-    public static WfProcessMgr getProcessManager(GenericDelegator delegator, String pkg, String pid) {
-        WfProcessMgr pm = null;
-        try {
-            pm = WfFactory.getWfProcessMgr(delegator,pkg,pid);
-        }
-        catch ( WfException e ) {
-            throw new RuntimeException(e.getMessage());
-        }
-        
-        if ( pm == null )
-            throw new RuntimeException("WfProcessMgr returned null");
-        return pm;
-    }
-    
-    /**
-     * Gets a WfProcess object from the specified WfProcessMgr
-     *@param mgr The WfProcessMgr containing this process
-     *@param workEffortId The workeffort (runtime) id of this process
-     *@return WfProcess associated with the workeffort id
-     */
-    public static WfProcess getProcess(WfProcessMgr mgr, String workEffortId) {
-        WfProcess process = null;
-        try {
-            Iterator i = mgr.getIteratorProcess();
-            while ( i.hasNext() && process == null ) {
-                WfProcess p = (WfProcess) i.next();
-                if ( p.runtimeKey().equals(workEffortId) )
-                    process = p;
-            }
-        }
-        catch ( WfException e ) {
-            throw new RuntimeException(e.getMessage());
-        }
-        if ( process == null )
-            throw new RuntimeException("Cannot get the WfProcess from the manager");
-        return process;
-    }
-    
-    /**
-     * Gets a WfProcess object from a specific process workeffort id
-     *@param delegator The GenericDelegator to use to locate this activity
-     *@param workEffortId The workeffort id associated with this process
-     *@return WfProcess associated with the defined workeffort id
-     */
-    public static WfProcess getProcess(GenericDelegator delegator, String workEffortId) {
-        GenericValue workEffort = getWorkEffort(delegator,workEffortId);
-        String packageId = workEffort.getString("workflowPackageId");
-        String processId = workEffort.getString("workflowProcessId");
-        
-        WfProcessMgr mgr = getProcessManager(delegator,packageId,processId);
-        WfProcess process = getProcess(mgr,workEffortId);
-        return process;
-    }
-    
-    /**
-     * Gets a WfActivity object from a WfProcess
-     *@param process The WfProcess containing the activity
-     *@param workEffortId The workeffort (runtime) id of the activity
-     *@return WfActivity associated with the defined workeffort id
-     */
-    public static WfActivity getActivity(WfProcess process, String workEffortId) {
-        WfActivity activity = null;
-        try {
-            Iterator i = process.getIteratorStep();
-            while ( i.hasNext() && activity == null ) {
-                WfActivity a = (WfActivity) i.next();
-                if ( a.runtimeKey().equals(workEffortId) )
-                    activity = a;
-            }
-        }
-        catch ( WfException e ) {
-            throw new RuntimeException(e.getMessage());
-        }
-        if ( activity == null )
-            throw new RuntimeException("Cannot get the WfActivity from the process");
-        return activity;
-    }
-    
-    /**
-     * Gets a WfActivity object from a specific activity workeffort id
-     *@param delegator The GenericDelegator to use to locate this activity
-     *@param workEffortId The workeffort id associated with this activity
-     *@return WfActivity associated with the defined workeffort id
-     */
-    public static WfActivity getActivity(GenericDelegator delegator, String workEffortId) {
-        GenericValue workEffort = getWorkEffort(delegator,workEffortId);
-        String processWorkEffortId = workEffort.getString("workEffortParentId");
-        String packageId = workEffort.getString("workflowPackageId");
-        String processId = workEffort.getString("workflowProcessId");
-        
-        WfProcessMgr mgr = getProcessManager(delegator,packageId,processId);
-        WfProcess process = getProcess(mgr,processWorkEffortId);
-        WfActivity activity = getActivity(process,workEffortId);
-        return activity;
-    }
-    
-    /**
-     * Determine if this party/role type is an active member of this activity
-     *@param delegator The GenericDelegator to use to locate this resource
-     *@param workEffortId The workeffort id of the activity to check
-     *@param partyId The partyId of the user to validate
-     *@return true if this party is associated with the activity
-     */
-    public static boolean isMemberOfActivity(GenericDelegator delegator, String workEffortId, String partyId, String roleType) {
-        if ( partyId == null )
-            partyId = "_NA_";
-        if ( roleType == null )
-            roleType = "_NA_";
-        
-        Collection c = null;
-        try {
-            Map fields = UtilMisc.toMap("workEffortId",workEffortId,"partyId",partyId,"roleTypeId",roleType);
-            c = delegator.findByAnd("WorkEffortPartyAssignment",fields);
-        }
-        catch ( GenericEntityException e ) {
-            throw new RuntimeException("Entity error - " + e.getMessage());
-        }
-        
-        if ( c == null )
-            return false;
-        
-        boolean foundOk = false;
-        Iterator i = c.iterator();
-        while ( i.hasNext() && !foundOk ) {
-            GenericValue v = (GenericValue) i.next();
-            GenericValue w = null;
-            if ( v.get("thruDate") != null ) {
-                java.sql.Timestamp ts = v.getTimestamp("thruDate");
-                java.sql.Timestamp n = new java.sql.Timestamp(new Date().getTime());
-                if ( n.getTime() > ts.getTime() )
-                    continue;
-            }
-            String s = v.getString("statusId");
-            if ( !s.equals("CAL_SENT") && !s.equals("CAL_DELEGATED") && !s.equals("CAL_ACCEPTED") )
-                continue;
-            try {
-                w = v.getRelatedOne("WorkEffort");
-            }
-            catch ( GenericEntityException e ) {
-                throw new RuntimeException("Entity error - " + e.getMessage());
-            }
-            String cs = w.getString("currentStatusId");
-            if ( cs.equals("WF_COMPLETED") || cs.equals("WF_ABORTED") || cs.equals("WF_TERMINATED") )
-                continue;
-            else
-                foundOk = true;
-        }
-        
-        return foundOk;
-    }
-    
-    /**
-     * Gets a WfAssignment object from the activity pool
-     * @param delegator The GenericDelegator used to locate this assignment
-     * @param workEffortId The WorkEffort id associated with the activity
-     * @param partyId The partyId of the user or group
-     * @param roleTypeId The role type id for the user or group
-     */
-    public static WfAssignment getAssignment(GenericDelegator delegator, String workEffortId, String partyId, String roleTypeId) {
-        if ( partyId == null )
-            partyId = "_NA_";
-        if ( roleTypeId == null )
-            roleTypeId = "_NA_";
-        
-        WfActivity activity = getActivity(delegator, workEffortId);
-        WfAssignment assign = null;
-        try {
-            Iterator i = activity.getIteratorAssignment();
-            while ( i.hasNext() ) {
-                WfAssignment a = (WfAssignment) i.next();
-                WfResource r = a.assignee();
-                if ( r.resourcePartyId().equals(partyId) && r.resourceRoleId().equals(roleTypeId) ) {
-                    assign = a;
-                    Debug.logInfo("[WorkflowClient.getAssignment] : Found the assignment");
-                    break;
-                }
-            }
-        }
-        catch ( WfException e ) {
-            throw new RuntimeException(e.getMessage());
-        }
-        
-        if ( assign == null )
-            Debug.logInfo("[WorkflowClient.getAssignment] : Assignment is null");
-        return assign;
-    }
     
 }
 
