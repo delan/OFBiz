@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.18  2001/09/06 23:12:49  jonesde
+ * Credit Cards and Contact Mechs no longer update if no info has changed, some other things cleaned up too.
+ *
  * Revision 1.17  2001/09/05 21:52:34  jonesde
  * Added manual add of a partyconactmechpurpose on creation of a contactmech.
  *
@@ -744,12 +747,12 @@ public class CustomerEvents {
       if(UtilValidate.isNotEmpty(birthDateStr))
       {
         try { birthDate = UtilDateTime.toSqlDate(birthDateStr); }
-        catch(Exception e) { errMsg += "<li>Height is not a valid number."; }
+        catch(Exception e) { errMsg += "<li>Birth Date is not a valid Date."; }
       }
       if(UtilValidate.isNotEmpty(passportExpireDateStr))
       {
         try { passportExpireDate = UtilDateTime.toSqlDate(passportExpireDateStr); }
-        catch(Exception e) { errMsg += "<li>Height is not a valid number."; }
+        catch(Exception e) { errMsg += "<li>Passport Expire Date is not a valid Date."; }
       }
 
       if(UtilValidate.isNotEmpty(heightStr))

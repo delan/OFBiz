@@ -1,5 +1,6 @@
 
 <%@ page import="org.ofbiz.ecommerce.catalog.*" %>
+<%@ page import="org.ofbiz.commonapp.product.product.*" %>
 <%@ page import="org.ofbiz.core.entity.*" %>
 <%@ page import="org.ofbiz.core.util.*" %>
 <%@ page import="java.util.*" %>

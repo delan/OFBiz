@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.14  2001/09/06 16:23:19  jonesde
+ * Fixed null pointer problem in the crumb/trail stuff
+ *
  * Revision 1.13  2001/09/06 03:48:29  azeneski
  * Catalog trail partially working. Need to add in recursion.
  *
@@ -66,6 +69,8 @@ import org.ofbiz.core.entity.GenericEntity;
 import org.ofbiz.core.entity.GenericValue;
 import org.ofbiz.core.entity.GenericHelper;
 import org.ofbiz.core.entity.GenericHelperFactory;
+
+import org.ofbiz.commonapp.product.product.KeywordSearch;
 
 /**
  * <p><b>Title:</b> CatalogHelper.java
