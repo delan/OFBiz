@@ -221,6 +221,7 @@
         <attribute mode="IN" name="entityOperation" optional="true" type="String"/>
         <attribute mode="IN" name="contentAssocTypeId" optional="true" type="String"/>
         <attribute mode="IN" name="contentAssocPredicateId" optional="true" type="String"/>
+        <attribute mode="IN" name="displayFailCond" optional="true" type="Boolean"/>
         <attribute mode="OUT" name="permissionStatus" optional="true" type="String"/>
         <attribute mode="OUT" name="permissionRecorderTo" optional="true" type="org.ofbiz.content.content.PermissionRecorder"/>
         <attribute mode="OUT" name="permissionRecorder" optional="true" type="org.ofbiz.content.content.PermissionRecorder"/>
@@ -255,6 +256,7 @@
         <attribute mode="IN" name="contentPurposeString" optional="true" type="String"/>
         <attribute mode="IN" name="deactivateExisting" optional="true" type="String"/>
         <attribute mode="IN" name="skipPermissionCheck" optional="true" type="String"/>
+        <attribute mode="IN" name="displayFailCond" optional="true" type="Boolean"/>
         <attribute mode="INOUT" name="roleTypeList" optional="true" type="List"/>
         <attribute mode="INOUT" entity-name="ContentAssoc" name="contentIdFrom" optional="true" type="String"/>
     </service>
