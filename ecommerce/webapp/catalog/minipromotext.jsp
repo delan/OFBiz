@@ -2,6 +2,7 @@
 <%@ page import="java.util.*, org.ofbiz.commonapp.product.catalog.*,
                  org.ofbiz.commonapp.product.promo.ProductPromoWorker" %>
 <%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.pseudotag.*, org.ofbiz.core.entity.*" %>
+
 <jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" />
 
 <%-- get these for the promoText --%>
@@ -21,10 +22,9 @@
       <TD width='100%'>
         <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
           <tr>
-            <td valign="middle" align="left">
+            <td valign="middle" align="center">
               <div class="boxhead">&nbsp;Special&nbsp;Offers</div>
             </td>
-            <td valign="middle" align="right">&nbsp;</td>
           </tr>
         </table>
       </TD>
