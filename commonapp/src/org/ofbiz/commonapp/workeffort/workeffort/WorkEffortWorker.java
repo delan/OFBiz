@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2001/11/09 01:28:07  jonesde
+ * More progress on event and workers, upcoming events worker mostly there
+ *
  * Revision 1.1  2001/11/08 03:03:46  jonesde
  * Initial WorkEffort event and worker files, very little functionality in place so far
  *
@@ -76,47 +79,65 @@ public class WorkEffortWorker {
     GenericDelegator delegator = (GenericDelegator)pageContext.getServletContext().getAttribute("delegator");
     GenericValue userLogin = (GenericValue)pageContext.getSession().getAttribute(SiteDefs.USER_LOGIN);
 
-    Collection workEffortPartyAssignments = null;
-    if(userLogin != null && userLogin.get("partyId") != null) {
-      try { workEffortPartyAssignments = delegator.findByAnd("WorkEffortPartyAssignment", UtilMisc.toMap("partyId", userLogin.get("partyId"))); }
-      catch(GenericEntityException e) { Debug.logWarning(e); }
-    }
-    
     //get a timestamp (date) for the beginning of today and for beginning of numDays+1 days from now
     Calendar tempCal = Calendar.getInstance();
     tempCal.set(tempCal.get(Calendar.YEAR), tempCal.get(Calendar.MONTH), tempCal.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
-    java.util.Date startStamp = tempCal.getTime();
+    java.sql.Timestamp startStamp = new Timestamp(tempCal.getTime().getTime());
     tempCal.add(Calendar.DAY_OF_WEEK, numDays + 1);
-    java.util.Date endStamp = tempCal.getTime();
+    java.sql.Timestamp endStamp = new Timestamp(tempCal.getTime().getTime());
 
-    //filter the work effort - this should really be done in a join/view entity
-    List validWorkEfforts = new Vector();
-    Iterator iter = UtilMisc.toIterator(workEffortPartyAssignments);
-    while(iter != null && iter.hasNext()) {
-      GenericValue workEffortPartyAssignment = (GenericValue)iter.next();
-      GenericValue workEffort = null;
-      try { workEffort = workEffortPartyAssignment.getRelatedOne("WorkEffort"); }
-      catch(GenericEntityException e) { Debug.logWarning(e); }
-      if(workEffort == null) continue;
-      
-      Timestamp estimatedStartDate = workEffort.getTimestamp("estimatedStartDate");
-      
-      if(estimatedStartDate == null) continue;
-      if(estimatedStartDate.before(startStamp)) continue;
-      if(estimatedStartDate.after(endStamp)) continue;
-      if(!"EVENT".equals(workEffort.getString("workEffortTypeId"))) continue;
+    //Get the WorkEfforts
+    List validWorkEfforts = null;
+    if(false) {
+      //The NON view entity approach:
+      Collection workEffortPartyAssignments = null;
+      if(userLogin != null && userLogin.get("partyId") != null) {
+        try { workEffortPartyAssignments = delegator.findByAnd("WorkEffortPartyAssignment", UtilMisc.toMap("partyId", userLogin.get("partyId"))); }
+        catch(GenericEntityException e) { Debug.logWarning(e); }
+      }
+      //filter the work effort - this should really be done in a join/view entity
+      validWorkEfforts = new Vector();
+      Iterator iter = UtilMisc.toIterator(workEffortPartyAssignments);
+      while(iter != null && iter.hasNext()) {
+        GenericValue workEffortPartyAssignment = (GenericValue)iter.next();
+        GenericValue workEffort = null;
+        try { workEffort = workEffortPartyAssignment.getRelatedOne("WorkEffort"); }
+        catch(GenericEntityException e) { Debug.logWarning(e); }
+        if(workEffort == null) continue;
 
-      validWorkEfforts.add(workEffort);
+        Timestamp estimatedStartDate = workEffort.getTimestamp("estimatedStartDate");
+
+        if(estimatedStartDate == null) continue;
+        if(estimatedStartDate.before(startStamp)) continue;
+        if(estimatedStartDate.after(endStamp)) continue;
+        if(!"EVENT".equals(workEffort.getString("workEffortTypeId"))) continue;
+
+        validWorkEfforts.add(workEffort);
+      }
+
+      //order the filtered list by the start date
+      validWorkEfforts = EntityUtil.orderBy(validWorkEfforts, UtilMisc.toList("estimatedStartDate"));
+    }
+    else {
+      //Use the View Entity
+      if(userLogin != null && userLogin.get("partyId") != null) {
+        try { validWorkEfforts = new Vector(delegator.findByAnd("WorkEffortAndPartyAssign", 
+                UtilMisc.toList("partyId", "estimatedStartDate", "estimatedStartDate", "workEffortTypeId"),
+                UtilMisc.toList(EntityOperator.EQUALS, EntityOperator.GREATER_THAN_EQUAL_TO, EntityOperator.LESS_THAN, EntityOperator.EQUALS),
+                UtilMisc.toList(userLogin.get("partyId"), startStamp, endStamp, "EVENT"),
+                UtilMisc.toList("estimatedStartDate")));
+        }
+        catch(GenericEntityException e) { Debug.logWarning(e); }
+      }
     }
     
-    //order the filtered list by the start date
-    validWorkEfforts = EntityUtil.orderBy(validWorkEfforts, UtilMisc.toList("estimatedStartDate"));
-    
+    //Split the WorkEffort list into a list for each day
     List days = new Vector();
     List curWorkEfforts = null;
     int lastYear = -1;
     int lastDay = -1;
-    Iterator wfiter = UtilMisc.toIterator(validWorkEfforts);
+    Iterator wfiter = null;
+    if(validWorkEfforts != null) wfiter = validWorkEfforts.iterator();
     while(wfiter != null && wfiter.hasNext()) {
       GenericValue workEffort = (GenericValue)wfiter.next();
       Timestamp estimatedStartDate = workEffort.getTimestamp("estimatedStartDate");
