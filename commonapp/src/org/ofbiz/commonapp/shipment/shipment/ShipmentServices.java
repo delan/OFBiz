@@ -125,9 +125,7 @@ public class ShipmentServices {
                     estimate.set("priceUnitPrice",Double.valueOf((String)context.get("pprice")));
                     storeAll.add(priceBreak);
                 }
-                catch ( Exception e ) {
-                    Debug.logWarning(e);
-                }
+                catch ( Exception e ) { }
             }
             else {
                 result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);

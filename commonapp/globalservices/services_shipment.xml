@@ -33,9 +33,9 @@
         <attribute name="shipmentCostEstimateId" type="String" mode="OUT"/>
     </service>
 
-    <service name="createShipmentEstimate" engine="java"
-                location="org.ofbiz.commonapp.shipment.shipment.ShipmentServices" invoke="createShipmentEstimate" auth="true">
+    <service name="removeShipmentEstimate" engine="java"
+                location="org.ofbiz.commonapp.shipment.shipment.ShipmentServices" invoke="removeShipmentEstimate" auth="true">
         <description>Remove Shipment Estimate</description>
-        <attribute name="shipMethod" type="String" mode="IN" optional="false"/>
+        <attribute name="shipmentCostEstimateId" type="String" mode="IN" optional="false"/>
     </service>
 </services>
