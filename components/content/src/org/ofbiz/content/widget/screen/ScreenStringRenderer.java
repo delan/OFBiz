@@ -1,5 +1,5 @@
 /*
- * $Id: ScreenStringRenderer.java,v 1.6 2004/07/18 10:09:35 jonesde Exp $
+ * $Id: ScreenStringRenderer.java,v 1.7 2004/07/27 20:29:40 byersa Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -32,7 +32,7 @@ import java.util.Map;
  * Widget Library - Screen String Renderer interface
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.6 $
+ * @version    $Revision: 1.7 $
  * @since      3.1
  */
 public interface ScreenStringRenderer {
@@ -42,5 +42,7 @@ public interface ScreenStringRenderer {
     public void renderContainerEnd(Writer writer, Map context, ModelScreenWidget.Container container) throws IOException;
 
     public void renderLabel(Writer writer, Map context, ModelScreenWidget.Label label) throws IOException;
+    public void renderLink(Writer writer, Map context, ModelScreenWidget.Link link) throws IOException;
+    public void renderImage(Writer writer, Map context, ModelScreenWidget.Image image) throws IOException;
 }
 
