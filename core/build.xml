@@ -54,51 +54,24 @@
         <!-- Classpath setting -->
         <property name="extlib.dir"        value="../lib" />
 
-        <property name="j2ee.jar"      value="${extlib.dir}/compile/jboss-j2ee.jar" />
-        <property name="jdbc.jar"      value="${extlib.dir}/compile/jdbc2_0-stdext.jar" />
-        <property name="mail.jar"      value="${extlib.dir}/compile/mail.jar" />
-        <property name="servlet.jar"   value="${extlib.dir}/compile/servlet.jar" />
-        <property name="xerces.jar"    value="${extlib.dir}/compile/xerces.jar" />
-        
-        <property name="castor.jar"    value="${extlib.dir}/common/castor-0.9.3.9.jar" />
-        <property name="tyrex.jar"     value="${extlib.dir}/common/tyrex-1.0.jar" />
-        <property name="log4j.jar"     value="${extlib.dir}/common/log4j.jar"/>
-
-        <property name="commons-dbcp.jar" value="${extlib.dir}/common/commons-dbcp.jar"/>
-        <property name="commons-pool.jar" value="${extlib.dir}/common/commons-pool.jar"/>
-        <property name="commons-logging.jar" value="${extlib.dir}/common/commons-logging.jar"/>
-        <property name="commons-httpclient.jar" value="${extlib.dir}/common/commons-httpclient.jar"/>
-
-        <property name="bsh.jar"       value="${extlib.dir}/share/bsh-1.2b7.jar"/>
-        <property name="axis.jar"      value="${extlib.dir}/share/axis.jar"/>
-        <property name="clutil.jar"    value="${extlib.dir}/share/clutil.jar" />
-        <property name="wsdl4j.jar"    value="${extlib.dir}/share/wsdl4j.jar" />
-        <property name="oro.jar"       value="${extlib.dir}/share/jakarta-oro-2.0.6.jar" />
-        <property name="velocity.jar"  value="${extlib.dir}/share/velocity-1.3.jar" />
-
-        <property name="datavision.jar"    value="${extlib.dir}/datavision/DataVision.jar" />
-        <property name="jasperreports.jar" value="${extlib.dir}/jasperreports/jasperreports.jar" />
-        <property name="weka.jar"          value="${extlib.dir}/weka/weka.jar" />
-        
-        <property name="api-jars1"     value="${j2ee.jar}:${jdbc.jar}:${mail.jar}:${servlet.jar}:${xerces.jar}" />
-        <property name="api-jars2"     value="${log4j.jar}:${tyrex.jar}:${castor.jar}:${velocity.jar}" />
-        <property name="api-jars3"     value="${bsh.jar}:${axis.jar}:${clutil.jar}:${wsdl4j.jar}:${oro.jar}" />
-        <property name="api-jars4"     value="${datavision.jar}:${jasperreports.jar}:${weka.jar}" />
-        <property name="api-jars5"     value="${commons-dbcp.jar}:${commons-pool.jar}:${commons-logging.jar}:${commons-httpclient.jar}" />
-        <property name="api-jars"      value="${api-jars1}:${api-jars2}:${api-jars3}:${api-jars4}:${api-jars5}" />
-        
-        <property name="classpath"     value="${api-jars}:${env.CLASSPATH}" />
-        <echo message="classpath: ${classpath}" />
+        <path id="local.class.path">
+            <fileset dir="${extlib.dir}/compile" includes="*.jar"/>
+            <fileset dir="${extlib.dir}/common" includes="*.jar"/>
+            <fileset dir="${extlib.dir}/share" includes="*.jar"/>
+            <fileset dir="${extlib.dir}/scripting" includes="*.jar"/>
+            <fileset dir="${extlib.dir}/datavision" includes="*.jar"/>
+            <fileset dir="${extlib.dir}/jasperreports" includes="*.jar"/>
+            <fileset dir="${extlib.dir}/weka" includes="*.jar"/>
+            <fileset dir="${extlib.dir}/wspublisher" includes="*.jar"/>
+        </path>
     </target>
 
     <target name="ejbinit">
         <!-- Classpath setting -->
-        <property name="ejb1.jar"    value="${env.JBOSS_HOME}/lib/ext/jboss-j2ee.jar" />
-        <property name="ejb2.jar"    value="${env.JBOSS_HOME}/lib/ext/ejb.jar" />
-        <property name="ejb.jar"     value="${ejb1.jar}:${ejb2.jar}" />
-
-        <property name="ejbclasspath"   value="${classpath}:${ejb.jar}" />
-        <echo message="ejbclasspath: ${ejbclasspath}" />
+        <path id="ejb.class.path">
+            <path refid="local.class.path"/>
+            <fileset dir="${env.JBOSS_HOME}/lib/ext" includes="jboss-j2ee.jar,ejb.jar"/>
+        </path>
     </target>
 
 
@@ -107,12 +80,12 @@
     <!-- ================================================================== -->
 
     <target name="clean" depends="clean-lib">
-      <delete dir="${build.dir}" />        
-      <delete dir="${doc.dir}/api" />
+        <delete dir="${build.dir}" />        
+        <delete dir="${doc.dir}/api" />
     </target>
 
     <target name="clean-lib" depends="init">
-      <delete dir="${lib.dir}" />
+        <delete dir="${lib.dir}" />
     </target>
 
 
@@ -121,22 +94,22 @@
     <!-- ================================================================== -->
 
     <target name="prepare" depends="clean-lib">
-      <mkdir dir="${build.dir}" />
-      <mkdir dir="${build.dir}/share/META-INF" />
-      <mkdir dir="${build.dir}/entity/META-INF" />
-      <mkdir dir="${build.dir}/extentity/META-INF" />
-      <mkdir dir="${build.dir}/service/META-INF" />
-      <mkdir dir="${build.dir}/extutil/META-INF" />
-      <mkdir dir="${build.dir}/webapp/META-INF" />
+        <mkdir dir="${build.dir}" />
+        <mkdir dir="${build.dir}/share/META-INF" />
+        <mkdir dir="${build.dir}/entity/META-INF" />
+        <mkdir dir="${build.dir}/extentity/META-INF" />
+        <mkdir dir="${build.dir}/service/META-INF" />
+        <mkdir dir="${build.dir}/extutil/META-INF" />
+        <mkdir dir="${build.dir}/webapp/META-INF" />
 
-      <mkdir dir="${build.dir}/ejb/META-INF" />
-      <mkdir dir="${build.dir}/crypto/META-INF" />
+        <mkdir dir="${build.dir}/ejb/META-INF" />
+        <mkdir dir="${build.dir}/crypto/META-INF" />
 
-      <mkdir dir="${build.dir}/workflow/META-INF" />
-      <mkdir dir="${build.dir}/rules/META-INF" />
-      <mkdir dir="${build.dir}/datafile/META-INF" />
-      <mkdir dir="${build.dir}/minilang/META-INF" />
-      <mkdir dir="${lib.dir}" />
+        <mkdir dir="${build.dir}/workflow/META-INF" />
+        <mkdir dir="${build.dir}/rules/META-INF" />
+        <mkdir dir="${build.dir}/datafile/META-INF" />
+        <mkdir dir="${build.dir}/minilang/META-INF" />
+        <mkdir dir="${lib.dir}" />
     </target>
 	
     <target name="prepare-docs" depends="init">
@@ -153,8 +126,9 @@
     </target>
 
     <target name="classes" depends="tld">
-    	<javac debug="on" deprecation="on" destdir="${build.dir}/share" classpath="${classpath}">
-    		<src path="${src.dir}/share" /></javac>
+    	<javac debug="on" deprecation="on" destdir="${build.dir}/share" classpathref="local.class.path">
+            <src path="${src.dir}/share"/>
+        </javac>
         <!-- also put the DTDs in this jar file... -->
         <copy todir="${build.dir}/share">
             <fileset dir="${doc.dir}/xmldefs/ofbiz" includes="*.dtd" />
@@ -162,48 +136,114 @@
             <fileset dir="${src.dir}/share" includes="**/*.properties,**/*.xml,**/*.bsh,**/*.logic" />
         </copy>
 		
-    	<javac debug="on" destdir="${build.dir}/entity" classpath="${classpath}:${build.dir}/share">
-    		<src path="${src.dir}/entity" /></javac>
+    	<javac debug="on" destdir="${build.dir}/entity">
+            <classpath>
+                <path refid="local.class.path"/>
+                <pathelement path="${build.dir}/share"/>
+            </classpath>
+            <src path="${src.dir}/entity" />
+        </javac>
         <copy todir="${build.dir}/entity"><fileset dir="${src.dir}/entity" includes="**/*.properties,**/*.xml,**/*.bsh,**/*.logic" /></copy>
 
-    	<javac debug="on" destdir="${build.dir}/extutil" classpath="${classpath}:${build.dir}/share:${build.dir}/entity">
-    		<src path="${src.dir}/extutil" /></javac>
+    	<javac debug="on" destdir="${build.dir}/extutil">
+            <classpath>
+                <path refid="local.class.path"/>
+                <pathelement path="${build.dir}/share"/>
+                <pathelement path="${build.dir}/entity"/>
+            </classpath>
+            <src path="${src.dir}/extutil" />
+        </javac>
         <copy todir="${build.dir}/extutil"><fileset dir="${src.dir}/extutil" includes="**/*.properties,**/*.xml,**/*.bsh,**/*.logic" /></copy>
 
-    	<javac debug="on" destdir="${build.dir}/service" classpath="${classpath}:${build.dir}/share:${build.dir}/entity:${build.dir}/extutil">
-    		<src path="${src.dir}/service" /></javac>
+    	<javac debug="on" destdir="${build.dir}/service">
+            <classpath>
+                <path refid="local.class.path"/>
+                <pathelement path="${build.dir}/share"/>
+                <pathelement path="${build.dir}/entity"/>
+                <pathelement path="${build.dir}/extutil"/>
+            </classpath>
+            <src path="${src.dir}/service" />
+        </javac>
         <copy todir="${build.dir}/service"><fileset dir="${src.dir}/service" includes="**/*.properties,**/*.xml,**/*.bsh,**/*.logic" /></copy>
 
-    	<javac debug="on" destdir="${build.dir}/extentity" classpath="${classpath}:${build.dir}/share:${build.dir}/entity:${build.dir}/extutil:${build.dir}/service">
-    		<src path="${src.dir}/extentity" /></javac>
+    	<javac debug="on" destdir="${build.dir}/extentity">
+            <classpath>
+                <path refid="local.class.path"/>
+                <pathelement path="${build.dir}/share"/>
+                <pathelement path="${build.dir}/entity"/>
+                <pathelement path="${build.dir}/extutil"/>
+                <pathelement path="${build.dir}/service"/>
+            </classpath>
+            <src path="${src.dir}/extentity" />
+        </javac>
         <copy todir="${build.dir}/extentity"><fileset dir="${src.dir}/extentity" includes="**/*.properties,**/*.xml,**/*.bsh,**/*.logic" /></copy>
 
-    	<javac debug="on" destdir="${build.dir}/minilang" classpath="${classpath}:${build.dir}/share:${build.dir}/entity:${build.dir}/extutil:${build.dir}/service">
-            <src path="${src.dir}/minilang" /></javac>
+    	<javac debug="on" destdir="${build.dir}/minilang">
+            <classpath>
+                <path refid="local.class.path"/>
+                <pathelement path="${build.dir}/share"/>
+                <pathelement path="${build.dir}/entity"/>
+                <pathelement path="${build.dir}/extutil"/>
+                <pathelement path="${build.dir}/service"/>
+            </classpath>
+            <src path="${src.dir}/minilang" />
+        </javac>
         <copy todir="${build.dir}/minilang"><fileset dir="${src.dir}/minilang" includes="**/*.properties,**/*.xml,**/*.bsh,**/*.logic" /></copy>
 
-    	<javac debug="on" destdir="${build.dir}/webapp" classpath="${classpath}:${build.dir}/share:${build.dir}/entity:${build.dir}/service:${build.dir}/extutil:${build.dir}/minilang">
-    		<src path="${src.dir}/webapp" /></javac>
+    	<javac debug="on" destdir="${build.dir}/webapp">
+            <classpath>
+                <path refid="local.class.path"/>
+                <pathelement path="${build.dir}/share"/>
+                <pathelement path="${build.dir}/entity"/>
+                <pathelement path="${build.dir}/extutil"/>
+                <pathelement path="${build.dir}/service"/>
+                <pathelement path="${build.dir}/minilang"/>
+            </classpath>
+            <src path="${src.dir}/webapp" />
+        </javac>
         <copy todir="${build.dir}/webapp"><fileset dir="${src.dir}/webapp" includes="**/*.properties,**/*.xml,**/*.bsh,**/*.logic" /></copy>
     	
-    	<javac debug="on" destdir="${build.dir}/workflow" classpath="${classpath}:${build.dir}/share:${build.dir}/entity:${build.dir}/service:${build.dir}/extutil">
-            <src path="${src.dir}/workflow" /></javac>
+    	<javac debug="on" destdir="${build.dir}/workflow">
+            <classpath>
+                <path refid="local.class.path"/>
+                <pathelement path="${build.dir}/share"/>
+                <pathelement path="${build.dir}/entity"/>
+                <pathelement path="${build.dir}/extutil"/>
+                <pathelement path="${build.dir}/service"/>
+            </classpath>
+            <src path="${src.dir}/workflow" />
+        </javac>
         <copy todir="${build.dir}/workflow"><fileset dir="${src.dir}/workflow" includes="**/*.properties,**/*.xml,**/*.bsh,**/*.logic" /></copy>
 
-    	<javac debug="on" destdir="${build.dir}/rules" classpath="${classpath}:${build.dir}/share:${build.dir}/entity">
-            <src path="${src.dir}/rules" /></javac>
+    	<javac debug="on" destdir="${build.dir}/rules">
+            <classpath>
+                <path refid="local.class.path"/>
+                <pathelement path="${build.dir}/share"/>
+                <pathelement path="${build.dir}/entity"/>
+            </classpath>
+            <src path="${src.dir}/rules" />
+        </javac>
         <copy todir="${build.dir}/rules"><fileset dir="${src.dir}/rules" includes="**/*.properties,**/*.xml,**/*.bsh,**/*.logic" /></copy>
 
-    	<javac debug="on" destdir="${build.dir}/datafile" classpath="${classpath}:${build.dir}/share">
-            <src path="${src.dir}/datafile" /></javac>
+    	<javac debug="on" destdir="${build.dir}/datafile">
+            <classpath>
+                <path refid="local.class.path"/>
+                <pathelement path="${build.dir}/share"/>
+            </classpath>
+            <src path="${src.dir}/datafile" />
+        </javac>
         <copy todir="${build.dir}/datafile"><fileset dir="${src.dir}/datafile" includes="**/*.properties,**/*.xml,**/*.bsh,**/*.logic" /></copy>
 
-<!--
-  	<javac destdir="${build.dir}/crypto" classpath="${classpath}:${build.dir}/share">
-    		<src path="${src.dir}/crypto" />
-        </javac>
--->
-
+        <!--
+        <javac debug="on" destdir="${build.dir}/crypto">
+            <classpath>
+                <path refid="local.class.path"/>
+                <pathelement path="${build.dir}/share"/>
+            </classpath>
+            <src path="${src.dir}/crypto" />
+        </javac> 
+        <copy todir="${build.dir}/crypto"><fileset dir="${src.dir}/crypto" includes="**/*.properties,**/*.xml,**/*.bsh,**/*.logic" /></copy>
+        -->
     </target>
 
     <target name="jar" depends="classes">
@@ -217,10 +257,7 @@
         <jar jarfile="${lib.dir}/${name}-rules${ofbiz.version}.jar" basedir="${build.dir}/rules" />
         <jar jarfile="${lib.dir}/${name}-datafile${ofbiz.version}.jar" basedir="${build.dir}/datafile" />
         <jar jarfile="${lib.dir}/${name}-minilang${ofbiz.version}.jar" basedir="${build.dir}/minilang" />
-
-<!--
-        <jar jarfile="${lib.dir}/${name}-crypto.jar" basedir="${build.dir}/crypto" />
--->
+        <!-- <jar jarfile="${lib.dir}/${name}-crypto${ofbiz.version}.jar" basedir="${build.dir}/crypto" /> -->
     </target>
 
     <!-- ================================================================== -->
@@ -228,10 +265,8 @@
     <!-- ================================================================== -->
 
     <target name="ejbxml" depends="prepare,ejbinit">
-        <copy file="${etc.dir}/ejb-jar.xml"
-            tofile="${build.dir}/ejb/META-INF/ejb-jar.xml" />
-        <copy file="${etc.dir}/jboss.xml"
-            tofile="${build.dir}/ejb/META-INF/jboss.xml" />
+        <copy file="${etc.dir}/ejb-jar.xml" tofile="${build.dir}/ejb/META-INF/ejb-jar.xml" />
+        <copy file="${etc.dir}/jboss.xml" tofile="${build.dir}/ejb/META-INF/jboss.xml" />
     </target>
 	
     <target name="ejbclasses" depends="ejbxml,jar">
@@ -241,8 +276,7 @@
     </target>
 
     <target name="ejbjar" depends="ejbclasses">
-        <jar jarfile="${lib.dir}/${name}-ejb.jar"
-            basedir="${build.dir}/ejb" />
+        <jar jarfile="${lib.dir}/${name}-ejb.jar" basedir="${build.dir}/ejb" />
     </target>
 	
 	
@@ -252,9 +286,9 @@
 
     <target name="docs" depends="prepare-docs">
         <javadoc packagenames="org.ofbiz.*" 
-                 classpath="${classpath}"
-                 destdir="${doc.dir}/api" 
-                 Windowtitle="Open for Business - Core API">
+                classpathref="local.class.path"
+                destdir="${doc.dir}/api" 
+                Windowtitle="Open for Business - Core API">
             <sourcepath path="${src.dir}/share" />
             <sourcepath path="${src.dir}/entity" />
             <sourcepath path="${src.dir}/service" />
@@ -265,10 +299,10 @@
             <sourcepath path="${src.dir}/rules" />
             <sourcepath path="${src.dir}/datafile" />
             <sourcepath path="${src.dir}/minilang" />
-            <!--<sourcepath path="${src.dir}/ejb" />-->
+            <!-- <sourcepath path="${src.dir}/ejb" /> -->
             <sourcepath path="${src.dir}/crypto" />
         </javadoc>
-    </target> 
+    </target>
 
 
     <!-- ================================================================== -->
@@ -276,7 +310,6 @@
     <!-- ================================================================== -->
 
     <target name="pkg-dist" depends="prepare">
-
         <mkdir dir="${lib.dir}/${name}" />
 
         <copy todir="${lib.dir}/${name}">
@@ -290,17 +323,13 @@
 
         <gzip src="${lib.dir}/${pkg-dist.name}.tar"
               zipfile="${lib.dir}/${pkg-dist.name}.tar.gz" />
-
         <delete file="${lib.dir}/${pkg-dist.name}.tar" />
 
         <zip zipfile="${lib.dir}/${pkg-dist.name}.zip"
              basedir="${lib.dir}"
              includes="${name}/**" />
-
         <delete dir="${lib.dir}/${name}" />
-
     </target>
 
     <target name="all" depends="jar,pkg-dist" />
-
 </project>
