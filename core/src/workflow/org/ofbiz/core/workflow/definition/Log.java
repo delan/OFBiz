@@ -3,6 +3,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2001/11/11 02:27:12  rbb36
+ * Added CVS headers and copyright notice
+ *
  */
 
 package org.ofbiz.core.workflow.definition;
@@ -21,6 +24,7 @@ import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Category;
 import org.apache.log4j.Priority;
 import org.apache.log4j.PropertyConfigurator;
+import org.apache.log4j.net.SocketAppender;
 import org.apache.log4j.spi.LoggingEvent;
 
 /** 
@@ -185,6 +189,35 @@ public abstract class Log {
             } else {
                 fallbackInit();
             }
+        } finally {
+            // Restore System.err
+            try { System.setErr( err ); }
+            catch( Exception e ) {}
+        }
+    }
+    
+    /**
+     * <b>WARNING:</b> This will flush all state and send all
+     * log events to the specified host and port.
+     * <br><br>
+     * Be a good scout, please call Log.forceInit() when
+     * you are through (or remind the user to do so).
+     */
+    public static synchronized void logRemotely( String host, int port ) {
+        setInitialized( false );
+        final PrintStream err = System.err;
+        try { System.setErr( new PrintStream( new PipedOutputStream() ) ); }
+        catch( Exception e ) {}
+        
+        // Initialize
+        try {
+            final SocketAppender appender =
+                new SocketAppender( host, port );
+            BasicConfigurator.resetConfiguration();
+            Category.getRoot().setPriority( null );
+            Category.getRoot().addAppender( appender );
+        } catch( Exception e ) {
+            forceInit();
         } finally {
             // Restore System.err
             try { System.setErr( err ); }
