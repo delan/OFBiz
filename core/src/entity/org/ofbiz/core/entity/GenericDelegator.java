@@ -913,7 +913,7 @@ public class GenericDelegator {
         ModelRelation relation = value.getModelEntity().getRelation(relationName);
         if (relation == null)
             throw new GenericModelException("[GenericDelegator.getRelatedOne] could not find relation for relationName: " + relationName + " for value " + value);
-        if (!"one".equals(relation.getType()))
+        if (!"one".equals(relation.getType()) && !"one-nofk".equals(relation.getType()))
             throw new IllegalArgumentException("Relation is not a 'one' relation: " + relationName + " of entity " + value.getEntityName());
         ModelEntity relatedEntity = getModelReader().getModelEntity(relation.getRelEntityName());
 
@@ -934,7 +934,7 @@ public class GenericDelegator {
         ModelRelation relation = modelEntity.getRelation(relationName);
         if (relation == null)
             throw new GenericModelException("[GenericDelegator.getRelatedOne] could not find relation for relationName: " + relationName + " for value " + value);
-        if (!"one".equals(relation.getType()))
+        if (!"one".equals(relation.getType()) && !"one-nofk".equals(relation.getType()))
             throw new IllegalArgumentException("Relation is not a 'one' relation: " + relationName + " of entity " + value.getEntityName());
         ModelEntity relatedEntity = getModelReader().getModelEntity(relation.getRelEntityName());
 
