@@ -113,9 +113,9 @@
     <attribute name="Properties"></attribute>
     <attribute name="URL">jdbc:mysql://localhost/ofbiz</attribute>
     <attribute name="GCMinIdleTime">1200000</attribute>
-    <attribute name="JDBCUser">mysqldb</attribute>
+    <attribute name="JDBCUser">icentris</attribute>
     <attribute name="MaxSize">0</attribute>
-    <attribute name="Password">mysqldb</attribute>
+    <attribute name="Password">icentris</attribute>
     <attribute name="GCEnabled">false</attribute>
     <attribute name="InvalidateOnError">false</attribute>
     <attribute name="TimestampUsed">false</attribute>
@@ -167,7 +167,7 @@
 
   <mbean code="org.jboss.ejb.AutoDeployer" name="EJB:service=AutoDeployer">
     <attribute name="Deployer">J2EE:service=J2eeDeployer</attribute>
-    <attribute name="URLs">../../ofbiz/jbossdeploy</attribute>
+    <attribute name="URLs">../deploy</attribute>
   </mbean>
 
   <!-- J2EE connector architecture -->

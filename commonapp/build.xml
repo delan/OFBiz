@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<project name="Open For Business CommonApp Component" default="deploy" basedir=".">
+<project name="Open For Business CommonApp Component" default="war" basedir=".">
 
 
     <!-- ================================================================== -->
@@ -20,7 +20,7 @@
         <property name="build.dir"      value="build"               />
         <property name="build.compiler" value="classic"             /> 
         <property name="pkg-dist.name"  value="${name}-pkg"         />
-        <property name="deploy.dir"     value="../jbossdeploy"      /> 
+        <property name="deploy.dir"     value="${env.JBOSS_HOME}/deploy"      /> 
 		
 	<!-- Classpath setting -->
 	<property name="core.jar"       value="../core/build/core.jar"             />		
