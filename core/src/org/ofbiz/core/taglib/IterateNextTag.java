@@ -1,14 +1,19 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.1  2001/08/05 00:48:47  azeneski
+ * Added new core JSP tag library. Non-application specific taglibs.
+ *
  */
 
 package org.ofbiz.core.taglib;
 
 import java.util.Iterator;
 import java.io.IOException;
-import javax.servlet.jsp.*;
-import javax.servlet.jsp.tagext.*;
+import javax.servlet.jsp.tagext.BodyTagSupport;
+import javax.servlet.jsp.tagext.BodyContent;
+import javax.servlet.jsp.JspWriter;
+import javax.servlet.jsp.JspTagException;
 
 /**
  * <p><b>Title:</b> IterateNextTag.java

@@ -1,27 +1,22 @@
 /*
- * $id$
+ * $Id$
  * $Log$
- * Revision 1.1  2001/08/05 00:48:47  azeneski
- * Added new core JSP tag library. Non-application specific taglibs.
- *
  */
 
 package org.ofbiz.core.taglib;
 
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.jsp.PageContext;
+import java.text.NumberFormat;
+import java.text.DateFormat;
+import java.util.Date;
+
 import javax.servlet.jsp.tagext.BodyTagSupport;
 import javax.servlet.jsp.tagext.BodyContent;
 import javax.servlet.jsp.JspException;
 import java.io.IOException;
 
-import org.ofbiz.core.util.SiteDefs;
-import org.ofbiz.core.util.Debug;
-
 /**
- * <p><b>Title:</b> UrlTag.java
- * <p><b>Description:</b> Custom JSP Tag to EncodeURL and add CONTROL_PATH to a URL.
+ * <p><b>Title:</b> FormatTag.java
+ * <p><b>Description:</b> Custom JSP Tag to format numbers and dates.
  * <p>Copyright (c) 2001 The Open For Business Project and repected authors.
  * <p>Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -45,31 +40,51 @@ import org.ofbiz.core.util.Debug;
  * @version 1.0
  * Created on August 4, 2001, 8:21 PM
  */
-public class UrlTag extends BodyTagSupport {
+public class FormatTag extends BodyTagSupport {
+     
+    private String type = "N";
+           
+    public void setType(String type) {
+        this.type = type;
+    }
     
-    public int doAfterBody() throws JspException {
-        HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
-        HttpServletResponse response = (HttpServletResponse) pageContext.getResponse();
+    public String getType() {
+        return type;
+    }
+    
+    public int doAfterBody() throws JspException {       
+        NumberFormat nf = null;
+        DateFormat df = null;
         BodyContent body = getBodyContent();
+        String value = body.getString();
+                
+        if ( type.substring(0,1).equalsIgnoreCase("C") )       
+            nf = NumberFormat.getCurrencyInstance();                            
+        if ( type.substring(0,1).equalsIgnoreCase("N") )
+            nf = NumberFormat.getNumberInstance();
+        if ( type.substring(0,1).equalsIgnoreCase("D") )
+            df = DateFormat.getDateInstance();
         
-        String controlPath = (String) request.getAttribute(SiteDefs.CONTROL_PATH);                
-        String baseURL = body.getString();
-        StringBuffer buffer = new StringBuffer(controlPath);
-        buffer.append(baseURL);
-        String newURL = buffer.toString();
-        
-        body.clearBody();
-        
-        try {            
-            String encodedURL = response.encodeURL(newURL);
-            getPreviousOut().print(encodedURL);
+        try {
+            if ( nf != null ) {
+                // do the number formatting
+                getPreviousOut().print(nf.format(Double.parseDouble(value)));
+            }
+            else if ( df != null ) {
+                // do the date formatting
+                getPreviousOut().print(df.format(df.parse(value)));
+            }
+            else {
+                // just return the value
+                getPreviousOut().print(value);
+            }
         }
-        catch (IOException e) {
+        catch ( Exception e ) {
             throw new JspException(e.getMessage());
         }
-        return SKIP_BODY;
+        
+        return SKIP_BODY;                
     }
+    
 }
-
-
-
+       

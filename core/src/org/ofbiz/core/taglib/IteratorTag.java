@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.1  2001/08/05 00:48:47  azeneski
+ * Added new core JSP tag library. Non-application specific taglibs.
+ *
  */
 
 package org.ofbiz.core.taglib;
@@ -8,9 +11,12 @@ package org.ofbiz.core.taglib;
 import java.util.Collection;
 import java.util.Iterator;
 import java.io.IOException;
+import java.lang.reflect.*;
 
-import javax.servlet.jsp.*;
-import javax.servlet.jsp.tagext.*;
+import javax.servlet.jsp.tagext.BodyTagSupport;
+import javax.servlet.jsp.tagext.BodyContent;
+import javax.servlet.jsp.JspWriter;
+import javax.servlet.jsp.JspTagException;
 
 import org.ofbiz.core.util.Debug;
 
@@ -131,7 +137,22 @@ public class IteratorTag extends BodyTagSupport {
             if ( objectTag == null )
                 return false;
             if ( objectTag.getType().equals("java.util.Collection") )
-                thisCollection = (Collection) objectTag.getObject();                        
+                thisCollection = (Collection) objectTag.getObject();    
+            else {
+                try {
+                    Method[] m = Class.forName(objectTag.getType()).getDeclaredMethods();
+                    for ( int i = 0; i <m.length; i++ ) {
+                        if ( m[i].getName().equals("iterator") ) {
+                            Debug.log("Found iterator method. Using it.");
+                            iterator = (Iterator) m[i].invoke(objectTag.getObject(),null);
+                            return true;
+                        }
+                    }
+                }
+                catch ( Exception e ) {
+                    return false;
+                }
+            }
         }
         
         if ( thisCollection == null || thisCollection.size() < 1 )

@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.1  2001/08/05 00:48:47  azeneski
+ * Added new core JSP tag library. Non-application specific taglibs.
+ *
  */
 
 package org.ofbiz.core.taglib;
@@ -77,6 +80,9 @@ public  class ObjectTag extends TagSupport {
         if ( element != null ) {
             Debug.log("Got element from property: " + property);
             pageContext.setAttribute(name,element);
+        }
+        else {
+            Debug.log("Did not find element in property. ("+property+")");
         }
         return EVAL_BODY_INCLUDE;
     }
