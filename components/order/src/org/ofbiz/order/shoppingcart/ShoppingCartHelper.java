@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCartHelper.java,v 1.10 2004/02/22 00:32:39 jonesde Exp $
+ * $Id: ShoppingCartHelper.java,v 1.11 2004/03/02 20:02:17 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -48,7 +48,7 @@ import org.ofbiz.service.ServiceUtil;
  *
  * @author     <a href="mailto:tristana@twibble.org">Tristan Austin</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.10 $
+ * @version    $Revision: 1.11 $
  * @since      2.0
  */
 public class ShoppingCartHelper {
@@ -447,9 +447,18 @@ public class ShoppingCartHelper {
                     ShoppingCartItem item = this.cart.findCartItem(index);
 
                     if (o.toUpperCase().startsWith("OPTION")) {
-                        GenericValue featureAppl = this.getFeatureAppl(item.getProductId(), o, quantString);
-                        if (featureAppl != null) {
-                            item.putAdditionalProductFeatureAndAppl(featureAppl);
+                        if (quantString.toUpperCase().startsWith("NO^")) {
+                            if (quantString.length() > 2) { // the length of the prefix
+                                String featureTypeId = this.getRemoveFeatureTypeId(o);
+                                if (featureTypeId != null) {
+                                    item.removeAdditionalProductFeatureAndAppl(featureTypeId);
+                                }
+                            }
+                        } else {
+                            GenericValue featureAppl = this.getFeatureAppl(item.getProductId(), o, quantString);
+                            if (featureAppl != null) {
+                                item.putAdditionalProductFeatureAndAppl(featureAppl);
+                            }
                         }
                     } else {
                         quantity = NumberFormat.getNumberInstance().parse(quantString).doubleValue();
@@ -583,5 +592,16 @@ public class ShoppingCartHelper {
         }
 
         return productFeatureAppl;
+    }
+
+    public String getRemoveFeatureTypeId(String optionField) {
+        if (optionField != null) {
+            int featureTypeStartIndex = optionField.indexOf('^') + 1;
+            int featureTypeEndIndex = optionField.lastIndexOf('_');
+            if (featureTypeStartIndex > 0 && featureTypeEndIndex > 0) {
+                return optionField.substring(featureTypeStartIndex, featureTypeEndIndex);
+            }
+        }
+        return null;
     }
 }
