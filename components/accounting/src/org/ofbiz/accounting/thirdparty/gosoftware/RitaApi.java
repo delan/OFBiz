@@ -25,20 +25,13 @@
 package org.ofbiz.accounting.thirdparty.gosoftware;
 
 import java.io.IOException;
-import java.io.PrintStream;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.Socket;
 import java.util.Map;
-
-import javax.net.ssl.SSLSocketFactory;
-import javax.net.SocketFactory;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
-import org.ofbiz.base.util.ObjectType;
 import org.ofbiz.base.util.HttpClient;
 import org.ofbiz.base.util.HttpClientException;
+import org.ofbiz.base.util.ObjectType;
 
 import org.apache.commons.collections.MapIterator;
 import org.apache.commons.collections.map.LinkedMap;
@@ -104,7 +97,7 @@ public class RitaApi {
     protected static final String[] validIn = { FUNCTION_TYPE, PAYMENT_TYPE, USER_ID, USER_PW, COMMAND, CLIENT_ID,
                                                 ACCT_NUM, EXP_MONTH, EXP_YEAR, TRANS_AMOUNT, CARDHOLDER, TRACK_DATA,
                                                 INVOICE, PRESENT_FLAG, CUSTOMER_STREET, CUSTOMER_ZIP, CVV2, TAX_AMOUNT,
-                                                PURCHASE_ID, FORCE_FLAG, ORIG_TRANS_AMOUNT };
+                                                PURCHASE_ID, FORCE_FLAG, ORIG_TRANS_AMOUNT, ORIG_SEQ_NUM };
 
     // mode definition
     protected static final int MODE_OUT = 20;
@@ -257,7 +250,7 @@ public class RitaApi {
             for (int i = 0; i < lines.length; i++) {
                 Debug.log(lines[i], module);
                 if (!lines[i].trim().equals(".")) {
-                    String[] lineSplit = lines[i].trim().split(" ");
+                    String[] lineSplit = lines[i].trim().split(" ", 2);
                     if (lineSplit != null && lineSplit.length == 2) {
                         docMap.put(lineSplit[0], lineSplit[1]);
                     } else {

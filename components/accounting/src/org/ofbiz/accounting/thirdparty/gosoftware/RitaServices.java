@@ -150,11 +150,11 @@ public class RitaServices {
             return ServiceUtil.returnError("No authorization transaction found for the OrderPaymentPreference; cannot capture");
         }
 
-        // setup the PCCharge Interface
+        // setup the RiTA Interface
         Properties props = buildPccProperties(context);
         RitaApi api = getApi(props, "CREDIT");
         if (api == null) {
-            return ServiceUtil.returnError("PCCharge is not configured properly");
+            return ServiceUtil.returnError("RiTA is not configured properly");
         }
 
         api.set(RitaApi.ORIG_SEQ_NUM, authTransaction.getString("referenceNum"));
@@ -206,19 +206,19 @@ public class RitaServices {
             return ServiceUtil.returnError("No authorization transaction found for the OrderPaymentPreference; cannot release");
         }
 
-        // setup the PCCharge Interface
+        // setup the RiTA Interface
         Properties props = buildPccProperties(context);
         RitaApi api = getApi(props, "CREDIT");
         if (api == null) {
-            return ServiceUtil.returnError("PCCharge is not configured properly");
+            return ServiceUtil.returnError("RiTA is not configured properly");
         }
 
         api.set(RitaApi.ORIG_SEQ_NUM, authTransaction.getString("referenceNum"));
         api.set(RitaApi.COMMAND, "VOID");
 
         // check to make sure we are configured for SALE mode
-        if (!"true".equalsIgnoreCase(props.getProperty("autoBill"))) {
-            return ServiceUtil.returnError("PCCharge does not support releasing pre-auths.");
+        if (!"1".equals(props.getProperty("autoBill"))) {
+            return ServiceUtil.returnError("RiTA does not support releasing pre-auths.");
         }
 
         // send the transaction
@@ -267,14 +267,14 @@ public class RitaServices {
             return ServiceUtil.returnError("No authorization transaction found for the OrderPaymentPreference; cannot refund");
         }
 
-        // setup the PCCharge Interface
+        // setup the RiTA Interface
         Properties props = buildPccProperties(context);
         RitaApi api = getApi(props, "CREDIT");
         if (api == null) {
-            return ServiceUtil.returnError("PCCharge is not configured properly");
+            return ServiceUtil.returnError("RiTA is not configured properly");
         }
 
-        api.set(RitaApi.INTRN_SEQ_NUM, authTransaction.getString("referenceNum"));
+        api.set(RitaApi.ORIG_SEQ_NUM, authTransaction.getString("referenceNum"));
         api.set(RitaApi.COMMAND, "CREDIT");
 
         // send the transaction
@@ -297,7 +297,7 @@ public class RitaServices {
             } else {
                 result.put("refundResult", new Boolean(false));
             }
-            result.put("refundAmount", context.get("releaseAmount"));
+            result.put("refundAmount", context.get("refundAmount"));
             result.put("refundRefNum", out.get(RitaApi.INTRN_SEQ_NUM) != null ? out.get(RitaApi.INTRN_SEQ_NUM) : "");
             result.put("refundCode", out.get(RitaApi.AUTH_CODE));
             result.put("refundFlag", out.get(RitaApi.REFERENCE));
