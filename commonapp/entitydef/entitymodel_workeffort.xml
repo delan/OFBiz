@@ -1024,10 +1024,10 @@
         <key-map field-name="workEffortId"/>
       </relation>
       <relation type="one-nofk" rel-entity-name="Party">
-        <key-map field-name="noteParty"/>
+        <key-map field-name="noteParty" rel-field-name="partyId"/>
       </relation>
       <relation type="one-nofk" rel-entity-name="Person">
-        <key-map field-name="noteParty"/>
+        <key-map field-name="noteParty" rel-field-name="partyId"/>
       </relation>
     </view-entity>
     <view-entity entity-name="WorkEffortPartyAssignByGroup"
