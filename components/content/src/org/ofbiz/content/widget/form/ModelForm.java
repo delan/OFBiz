@@ -341,7 +341,7 @@ public class ModelForm {
             if (thisType.equals("multi") && fieldInfo instanceof ModelFormField.SubmitField) {
                multiSubmitField = modelFormField; 
             } else {
-            	modelFormField = this.addUpdateField(modelFormField);
+                modelFormField = this.addUpdateField(modelFormField);
             }
             //Debug.logInfo("Added field " + modelFormField.getName() + " from def, mapName=" + modelFormField.getMapName(), module);
         }
@@ -850,12 +850,19 @@ public class ModelForm {
 
         // do the first part of display and hyperlink fields
         Iterator displayHyperlinkFieldIter = this.fieldList.iterator();
+        ModelFormField previousModelFormField = null;
         while (displayHyperlinkFieldIter.hasNext()) {
             ModelFormField modelFormField = (ModelFormField) displayHyperlinkFieldIter.next();
             ModelFormField.FieldInfo fieldInfo = modelFormField.getFieldInfo();
 
             // don't do any header for hidden or ignored fields
             if (fieldInfo.getFieldType() == ModelFormField.FieldInfo.HIDDEN || fieldInfo.getFieldType() == ModelFormField.FieldInfo.IGNORED) {
+                continue;
+            }
+
+            //Modification Nicolas to support Two or more field with the same name and they are used with condition
+            if (previousModelFormField != null && previousModelFormField.getTitle(context).equals(modelFormField.getTitle(context)) && 
+                    !(previousModelFormField.isUseWhenEmpty() && modelFormField.isUseWhenEmpty())) {
                 continue;
             }
 
@@ -871,6 +878,9 @@ public class ModelForm {
             formStringRenderer.renderFieldTitle(buffer, context, modelFormField);
 
             formStringRenderer.renderFormatHeaderRowCellClose(buffer, context, this, modelFormField);
+       
+            //Modification Nicolas
+            previousModelFormField = modelFormField;
         }
 
         List headerFormFields = new LinkedList();
@@ -1134,9 +1144,9 @@ public class ModelForm {
             
             if (iter instanceof EntityListIterator) {
                 try {
-                	((EntityListIterator)iter).close();
+                    ((EntityListIterator)iter).close();
                 } catch(GenericEntityException e) {
-                	throw new RuntimeException(e.getMessage());
+                    throw new RuntimeException(e.getMessage());
                 }
             }
 //            if (listSize < actualPageSize) {
@@ -1702,19 +1712,19 @@ public class ModelForm {
     }
     
     public String getPassedRowCount(Map context) {
-    	return rowCountExdr.expandString(context);
+        return rowCountExdr.expandString(context);
     }
     
     public int getRowCount() {
-    	return this.rowCount;
+        return this.rowCount;
     }
 
     public boolean getUseRowSubmit() {
-    	return this.useRowSubmit;
+        return this.useRowSubmit;
     }
 
     public ModelFormField getMultiSubmitField() {
-    	return this.multiSubmitField;
+        return this.multiSubmitField;
     }
 
     public List getInbetweenList(FieldGroup startFieldGroup, FieldGroup endFieldGroup) {
