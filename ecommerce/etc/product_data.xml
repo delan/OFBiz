@@ -40,26 +40,83 @@
 
   <Product defaultPrice="47.99" description="Round Gizmo w/ Lights"
     longDescription="A small round gizmo with multi-colored lights. Works great in the dark. Small and compact."
-    primaryProductCategoryId="101" productId="GZ-2644"
+    primaryProductCategoryId="101" productId="GZ-2644" productTypeId="FINISHED_GOOD"
     productName="Round Gizmo" quantityIncluded="100.0" weight="7.0"/>
   <Product defaultPrice="269.99" description="Big Gizmo w/ Legs"
     longDescription="A large gizmo with legs. Walks on its own. Does not require a power supply."
-    primaryProductCategoryId="102" productId="GZ-8544"
+    primaryProductCategoryId="102" productId="GZ-8544" productTypeId="FINISHED_GOOD"
     productName="Big Gizmo" quantityIncluded="100.0" weight="12.0"/>
-  <Product defaultPrice="59.99"
-    description="Micro Widget - Chrome Colored"
+  <Product defaultPrice="59.99" description="Micro Widget - Chrome Colored"
     longDescription="This micro chrome widget makes a perfect gift. This one is so small that it floats in air."
-    primaryProductCategoryId="20111" productId="WG-1111"
+    primaryProductCategoryId="20111" productId="WG-1111" productTypeId="FINISHED_GOOD"
     productName="Micro Chrome Widget" quantityIncluded="50.0" weight="2.0"/>
   <Product defaultPrice="59.99" description="Tiny Chrome Widget"
     longDescription="This tiny chrome widget makes a perfect gift. The shine will last forever. No pollishing required."
-    primaryProductCategoryId="201" productId="WG-5569"
+    primaryProductCategoryId="201" productId="WG-5569" productTypeId="FINISHED_GOOD"
     productName="Tiny Chrome Widget" quantityIncluded="50.0" weight="4.0"/>
   <Product defaultPrice="549.99" description="Giant Widget With Wheels"
     longDescription="This giant widget is mobile. It will seat one person safely. The wheels will never rust or break. Quite a unique item."
-    primaryProductCategoryId="202" productId="WG-9943"
+    primaryProductCategoryId="202" productId="WG-9943" productTypeId="VIRTUAL_PRODUCT"
+    productName="Giant Widget" quantityIncluded="10.0" weight="22.0"/>
+  <Product defaultPrice="549.99" description="Giant Widget With Wheels"
+    longDescription="This giant widget is mobile. It will seat one person safely. The wheels will never rust or break. Quite a unique item."
+    primaryProductCategoryId="202" productId="WG-9943-B3" productTypeId="FINISHED_GOOD"
+    productName="Giant Widget" quantityIncluded="10.0" weight="22.0"/>
+  <Product defaultPrice="549.99" description="Giant Widget With Wheels"
+    longDescription="This giant widget is mobile. It will seat one person safely. The wheels will never rust or break. Quite a unique item."
+    primaryProductCategoryId="202" productId="WG-9943-B4" productTypeId="FINISHED_GOOD"
+    productName="Giant Widget" quantityIncluded="10.0" weight="22.0"/>
+  <Product defaultPrice="549.99" description="Giant Widget With Wheels"
+    longDescription="This giant widget is mobile. It will seat one person safely. The wheels will never rust or break. Quite a unique item."
+    primaryProductCategoryId="202" productId="WG-9943-S3" productTypeId="FINISHED_GOOD"
+    productName="Giant Widget" quantityIncluded="10.0" weight="22.0"/>
+  <Product defaultPrice="549.99" description="Giant Widget With Wheels"
+    longDescription="This giant widget is mobile. It will seat one person safely. The wheels will never rust or break. Quite a unique item."
+    primaryProductCategoryId="202" productId="WG-9943-S4" productTypeId="FINISHED_GOOD"
     productName="Giant Widget" quantityIncluded="10.0" weight="22.0"/>
 
+  <ProductFeature productFeatureId="10000" productFeatureTypeId="COLOR" description="Black"/>
+  <ProductFeature productFeatureId="10001" productFeatureTypeId="COLOR" description="Silver"/>
+  <ProductFeature productFeatureId="10002" productFeatureTypeId="SIZE" description="3-Wheel"/>
+  <ProductFeature productFeatureId="10003" productFeatureTypeId="SIZE" description="4-Wheel"/>
+
+  <ProductFeatureAppl productId="WG-9943" productFeatureId="10000"
+    productFeatureApplTypeId="SELECTABLE_FEATURE" fromDate="2001-01-01 12:00:00.0" sequenceNum="1"/>
+  <ProductFeatureAppl productId="WG-9943" productFeatureId="10001"
+    productFeatureApplTypeId="SELECTABLE_FEATURE" fromDate="2001-01-01 12:00:00.0" sequenceNum="2"/>
+  <ProductFeatureAppl productId="WG-9943" productFeatureId="10002"
+    productFeatureApplTypeId="SELECTABLE_FEATURE" fromDate="2001-01-01 12:00:00.0" sequenceNum="3"/>
+  <ProductFeatureAppl productId="WG-9943" productFeatureId="10003"
+    productFeatureApplTypeId="SELECTABLE_FEATURE" fromDate="2001-01-01 12:00:00.0" sequenceNum="4"/>
+  <ProductFeatureAppl productId="WG-9943-B3" productFeatureId="10000"
+    productFeatureApplTypeId="STANDARD_FEATURE" fromDate="2001-01-01 12:00:00.0" sequenceNum="1"/>
+  <ProductFeatureAppl productId="WG-9943-B3" productFeatureId="10002"
+    productFeatureApplTypeId="STANDARD_FEATURE" fromDate="2001-01-01 12:00:00.0" sequenceNum="2"/>
+  <ProductFeatureAppl productId="WG-9943-B4" productFeatureId="10000"
+    productFeatureApplTypeId="STANDARD_FEATURE" fromDate="2001-01-01 12:00:00.0" sequenceNum="1"/>
+  <ProductFeatureAppl productId="WG-9943-B4" productFeatureId="10003"
+    productFeatureApplTypeId="STANDARD_FEATURE" fromDate="2001-01-01 12:00:00.0" sequenceNum="2"/>
+  <ProductFeatureAppl productId="WG-9943-S3" productFeatureId="10001"
+    productFeatureApplTypeId="STANDARD_FEATURE" fromDate="2001-01-01 12:00:00.0" sequenceNum="1"/>
+  <ProductFeatureAppl productId="WG-9943-S3" productFeatureId="10003"
+    productFeatureApplTypeId="STANDARD_FEATURE" fromDate="2001-01-01 12:00:00.0" sequenceNum="2"/>
+  <ProductFeatureAppl productId="WG-9943-S4" productFeatureId="10001"
+    productFeatureApplTypeId="STANDARD_FEATURE" fromDate="2001-01-01 12:00:00.0" sequenceNum="1"/>
+  <ProductFeatureAppl productId="WG-9943-S4" productFeatureId="10003"
+    productFeatureApplTypeId="STANDARD_FEATURE" fromDate="2001-01-01 12:00:00.0" sequenceNum="2"/>
+
+  <ProductAssoc fromDate="2001-01-01 12:00:00.0"
+    productAssocTypeId="PRODUCT_VARIANT" productId="WG-9943-B3"
+    productIdTo="WG-9943" quantity="1.0" reason=""/>
+  <ProductAssoc fromDate="2001-01-01 12:00:00.0"
+    productAssocTypeId="PRODUCT_VARIANT" productId="WG-9943-B4"
+    productIdTo="WG-9943" quantity="1.0" reason=""/>
+  <ProductAssoc fromDate="2001-01-01 12:00:00.0"
+    productAssocTypeId="PRODUCT_VARIANT" productId="WG-9943-S3"
+    productIdTo="WG-9943" quantity="1.0" reason=""/>
+  <ProductAssoc fromDate="2001-01-01 12:00:00.0"
+    productAssocTypeId="PRODUCT_VARIANT" productId="WG-9943-S4"
+    productIdTo="WG-9943" quantity="1.0" reason=""/>
   <ProductAssoc fromDate="2001-01-01 12:00:00.0"
     productAssocTypeId="PRODUCT_UPGRADE" productId="WG-5569"
     productIdTo="WG-9943" quantity="1.0" reason="A little bit more expensive, but worth every penny!"/>
