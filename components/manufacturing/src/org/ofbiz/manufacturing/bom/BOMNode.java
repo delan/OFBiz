@@ -466,13 +466,13 @@ public class BOMNode {
             } catch (GenericServiceException e) {
                 //Debug.logError(e, "Problem calling the getManufacturingComponents service", module);
             }
-            System.out.println("Production run #" + productionRunId + " created for " + getProduct().getString("productId"));
+            //System.out.println("Production run #" + productionRunId + " created for " + getProduct().getString("productId"));
             try {
                 if (productionRunId != null && orderId != null && orderItemSeqId != null) {
                     delegator.create("WorkOrderItemFulfillment", UtilMisc.toMap("workEffortId", productionRunId, "orderId", orderId, "orderItemSeqId", orderItemSeqId));
                 }
                 if (productionRunId != null && workEffortId != null) {
-                    delegator.create("WorkEffortAssoc", UtilMisc.toMap("workEffortIdFrom", productionRunId, "workEffortIdTo", workEffortId, "workEffortAssocTypeId", "WORK_EFF_PRECEDENCY"));
+                    delegator.create("WorkEffortAssoc", UtilMisc.toMap("workEffortIdFrom", productionRunId, "workEffortIdTo", workEffortId, "workEffortAssocTypeId", "WORK_EFF_PRECEDENCY", "fromDate", startDate));
                 }
             } catch (GenericEntityException e) {
                 //Debug.logError(e, "Problem calling the getManufacturingComponents service", module);
