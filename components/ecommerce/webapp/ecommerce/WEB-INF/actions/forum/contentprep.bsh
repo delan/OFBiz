@@ -1,5 +1,5 @@
 /*
- * $Id: contentprep.bsh,v 1.1 2004/06/06 08:02:49 jonesde Exp $
+ * $Id: contentprep.bsh,v 1.2 2004/07/24 20:33:06 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -26,7 +26,7 @@
 /**
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.0
 
  */
@@ -76,7 +76,7 @@ if (UtilValidate.isEmpty(contentId))
 if (UtilValidate.isEmpty(contentId)) 
     contentId = (String)ContentManagementWorker.getFromSomewhere("contentId", paramMap, request, context);
 
-Debug.logInfo("in contentprep, contentId(1):" + contentId, "");
+//Debug.logInfo("in contentprep, contentId(1):" + contentId, "");
 if (currentValue == null) {
     currentValue = (GenericValue)request.getAttribute("currentValue");
 //Debug.logInfo("in contentprep, currentValue(0):" + currentValue, "");
@@ -87,10 +87,9 @@ if (UtilValidate.isEmpty(contentId) && currentValue != null) {
 if (UtilValidate.isNotEmpty(contentId) && currentValue == null) {
     currentValue = delegator.findByPrimaryKeyCache("Content", UtilMisc.toMap("contentId", contentId));
 }
-Debug.logInfo("in contentprep, currentValue(1):" + currentValue, "");
-Debug.logInfo("in contentprep, contentId(4):" + contentId, "");
+//Debug.logInfo("in contentprep, currentValue(1):" + currentValue, "");
+//Debug.logInfo("in contentprep, contentId(4):" + contentId, "");
 Locale locale = Locale.getDefault();
- 
 
 if (currentValue != null) {
     dataResourceId = (String)currentValue.get("dataResourceId");
@@ -99,60 +98,60 @@ if (currentValue != null) {
     context.put("description", currentValue.get("description"));
     context.put("statusId", currentValue.get("statusId"));
 
-        mimeTypeId =  (String)currentValue.get("mimeTypeId");
-        rootDir = request.getSession().getServletContext().getRealPath("/");
-        wrapper = BeansWrapper.getDefaultInstance();
-        WrappingTemplateModel.setDefaultObjectWrapper(wrapper);
-        //templateRoot = new SimpleHash(wrapper);
-        templateRoot = new HashMap();
-        FreeMarkerViewHandler.prepOfbizRoot(templateRoot, request, response);
-        ctx = new HashMap();
-        ctx.put("rootDir", rootDir);
-        // webSiteId and https need to go here, too
-        templateRoot.put("context", ctx);
-        fromDate = UtilDateTime.nowTimestamp();
-        assocTypes = null;
-        //assocTypes = UtilMisc.toList("SUB_CONTENT");
-        subContentDataResourceView = ContentWorker.getSubContent(delegator, contentId, "ARTICLE", null, userLogin, assocTypes, fromDate);
-        if ( subContentDataResourceView != null) {
-            out = new StringWriter();
-            ContentWorker.renderContentAsText(delegator, null, out, templateRoot, subContentDataResourceView, locale, mimeTypeId);
-            textData = out.toString();
-            context.put("txtContentId", subContentDataResourceView.get("contentId"));
-            context.put("txtDataResourceId", subContentDataResourceView.get("dataResourceId"));
-            context.put("textData", textData);
-            //Debug.logInfo("textId:" + txtContentId, "");
-            //Debug.logInfo("textData:" + textData, "");
-            if (singleWrapper != null) {
-               Debug.logInfo("textData:" + textData, "");
-               singleWrapper.putInContext("textData", textData);
-            }
-        }
+    mimeTypeId =  (String)currentValue.get("mimeTypeId");
+    rootDir = request.getSession().getServletContext().getRealPath("/");
+    wrapper = BeansWrapper.getDefaultInstance();
+    WrappingTemplateModel.setDefaultObjectWrapper(wrapper);
+    //templateRoot = new SimpleHash(wrapper);
+    templateRoot = new HashMap();
+    FreeMarkerViewHandler.prepOfbizRoot(templateRoot, request, response);
 
-        subContentDataResourceView = ContentWorker.getSubContent(delegator, contentId, "SUMMARY", null, userLogin, assocTypes, fromDate);
-        if ( subContentDataResourceView != null) {
-            out = new StringWriter();
-            ContentWorker.renderContentAsText(delegator, null, out, templateRoot, subContentDataResourceView, locale, mimeTypeId);
-            summaryData = out.toString();
-            context.put("sumContentId", subContentDataResourceView.get("contentId"));
-            context.put("sumDataResourceId", subContentDataResourceView.get("dataResourceId"));
-            context.put("summaryData", summaryData);
-            //Debug.logInfo("sumId:" + sumContentId, "");
+    ctx = new HashMap();
+    ctx.put("rootDir", rootDir);
+    // webSiteId and https need to go here, too
+    templateRoot.put("context", ctx);
+    fromDate = UtilDateTime.nowTimestamp();
+    assocTypes = null;
+    //assocTypes = UtilMisc.toList("SUB_CONTENT");
+    subContentDataResourceView = ContentWorker.getSubContent(delegator, contentId, "ARTICLE", null, userLogin, assocTypes, fromDate);
+    if (subContentDataResourceView != null) {
+        out = new StringWriter();
+        ContentWorker.renderContentAsText(delegator, null, out, templateRoot, subContentDataResourceView, locale, mimeTypeId);
+        textData = out.toString();
+        context.put("txtContentId", subContentDataResourceView.get("contentId"));
+        context.put("txtDataResourceId", subContentDataResourceView.get("dataResourceId"));
+        context.put("textData", textData);
+        //Debug.logInfo("textId:" + txtContentId, "");
+        //Debug.logInfo("textData:" + textData, "");
+        if (singleWrapper != null) {
+           //Debug.logInfo("textData:" + textData, "");
+           singleWrapper.putInContext("textData", textData);
+        }
+    }
+
+    subContentDataResourceView = ContentWorker.getSubContent(delegator, contentId, "SUMMARY", null, userLogin, assocTypes, fromDate);
+    if (subContentDataResourceView != null) {
+        out = new StringWriter();
+        ContentWorker.renderContentAsText(delegator, null, out, templateRoot, subContentDataResourceView, locale, mimeTypeId);
+        summaryData = out.toString();
+        context.put("sumContentId", subContentDataResourceView.get("contentId"));
+        context.put("sumDataResourceId", subContentDataResourceView.get("dataResourceId"));
+        context.put("summaryData", summaryData);
+        //Debug.logInfo("sumId:" + sumContentId, "");
+        //Debug.logInfo("summaryData:" + summaryData, "");
+        if (singleWrapper != null) {
             //Debug.logInfo("summaryData:" + summaryData, "");
-            if (singleWrapper != null) {
-                Debug.logInfo("summaryData:" + summaryData, "");
-                singleWrapper.putInContext("summaryData", summaryData);
-            }
+            singleWrapper.putInContext("summaryData", summaryData);
         }
+    }
 
-        subContentDataResourceView = ContentWorker.getSubContent(delegator, contentId, "IMAGE", null, userLogin, assocTypes, fromDate);
-        if ( subContentDataResourceView != null) {
-            out = new StringWriter();
-            ContentWorker.renderContentAsText(delegator, null, out, templateRoot, subContentDataResourceView, locale, mimeTypeId);
-            imageData = out.toString();
-            context.put("imgContentId", subContentDataResourceView.get("contentId"));
-            context.put("imgDataResourceId", subContentDataResourceView.get("dataResourceId"));
-            context.put("imageData", imageData);
-        }
+    subContentDataResourceView = ContentWorker.getSubContent(delegator, contentId, "IMAGE", null, userLogin, assocTypes, fromDate);
+    if (subContentDataResourceView != null) {
+        out = new StringWriter();
+        ContentWorker.renderContentAsText(delegator, null, out, templateRoot, subContentDataResourceView, locale, mimeTypeId);
+        imageData = out.toString();
+        context.put("imgContentId", subContentDataResourceView.get("contentId"));
+        context.put("imgDataResourceId", subContentDataResourceView.get("dataResourceId"));
+        context.put("imageData", imageData);
+    }
 }
-

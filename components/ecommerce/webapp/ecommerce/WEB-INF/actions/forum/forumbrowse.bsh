@@ -19,9 +19,9 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *@author     Al Byers
- *@version    $Revision: 1.1 $
- *@since      3.1
+ * @author     Al Byers
+ * @version    $Revision: 1.2 $
+ * @since      3.1
 */
 
 import org.ofbiz.base.util.*;
@@ -30,7 +30,6 @@ import org.ofbiz.content.ContentManagementWorker;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
-
 paramMap = UtilHttp.getParameterMap(request);
 servletContext = session.getServletContext();
 forumRootId = ContentManagementWorker.getFromSomewhere("forumRootId", paramMap, request, context);
@@ -38,7 +37,7 @@ if (UtilValidate.isEmpty(forumRootId)) {
     val = (String) servletContext.getAttribute("webSiteId");
     appendStr = page.getProperty("contentSuffix");
     forumRootId = val + "_" + appendStr;
-    Debug.logInfo("forumRootId(1)" + forumRootId, "");
+    //Debug.logInfo("forumRootId(1)" + forumRootId, "");
 }
 
 context.put("forumRootId", forumRootId);
