@@ -248,6 +248,9 @@
         <attribute name="directions" type="String" mode="IN" optional="true"/> <!-- ?? -->
         <attribute name="newContactMechId" type="String" mode="OUT" optional="false"/>
         <attribute name="partyId" type="String" mode="IN" optional="true"/>
+        <override name="address1" optional="false"/>
+        <override name="city" optional="false"/>
+        <override name="postalCode" optional="false"/>
     </service>
     <service name="updatePartyPostalAddress" engine="simple"
             location="org/ofbiz/party/contact/PartyContactMechServices.xml" invoke="updatePartyPostalAddress" auth="true">
@@ -256,6 +259,9 @@
         <auto-attributes entity-name="PostalAddress" include="nonpk" mode="IN" optional="true"/>
         <attribute name="contactMechId" type="String" mode="INOUT" optional="false"/>
         <attribute name="directions" type="String" mode="IN" optional="true"/> <!-- ?? -->
+        <override name="address1" optional="false"/>
+        <override name="city" optional="false"/>
+        <override name="postalCode" optional="false"/>
     </service>
     <service name="createTelecomNumber" engine="simple"
             location="org/ofbiz/party/contact/ContactMechServices.xml" invoke="createTelecomNumber" auth="true">
