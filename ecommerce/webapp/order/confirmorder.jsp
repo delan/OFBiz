@@ -42,14 +42,15 @@
   <head>
       <base href="<%=serverRoot%>">
       <title>Confirmation Page</title>
-      <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+      <%@page contentType='text/html; charset=UTF-8'%>
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
       <link rel="stylesheet" href="<%=serverRoot + request.getContextPath()%>/includes/maincss.css" type="text/css">
   </head>
   <body bgcolor="white">
   <a name="top"></a>
 
-<% 
+<%
    final String ORDER_SECURITY_CODE = UtilProperties.getPropertyValue(application.getResource("/WEB-INF/order.properties"), "order.confirmation.securityCode");
    String securityCode = request.getParameter("security_code");
    if (UtilValidate.isNotEmpty(ORDER_SECURITY_CODE)) {
