@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.26 $
+ *@version    $Revision: 1.27 $
  *@since      2.1
 -->
 <#-- variable setup -->
@@ -173,7 +173,7 @@ ${requestAttributes.virtualJavaScript?if_exists}
           <#else>
             <#assign priceStyle = "regularPrice">
           </#if>
-            ${uiLabelMap.EcommerceYourPrice}: <span class='${priceStyle}'><@ofbizCurrency amount=price.price isoCode=price.currencyUsed/></span>
+            ${uiLabelMap.EcommerceYourPrice}: <#if "Y" = product.isVirtual?if_exists> from </#if><span class='${priceStyle}'><@ofbizCurrency amount=price.price isoCode=price.currencyUsed/></span>
         </b>
       </div>
 
