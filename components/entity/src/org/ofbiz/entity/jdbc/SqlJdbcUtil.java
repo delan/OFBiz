@@ -1,5 +1,5 @@
 /*
- * $Id: SqlJdbcUtil.java,v 1.5 2003/11/05 12:08:00 jonesde Exp $
+ * $Id: SqlJdbcUtil.java,v 1.6 2003/11/07 00:33:56 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -64,7 +64,7 @@ import org.ofbiz.entity.model.ModelViewEntity;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jdonnerstag@eds.de">Juergen Donnerstag</a>
  * @author     <a href="mailto:peterm@miraculum.com">Peter Moon</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      2.0
  */
 public class SqlJdbcUtil {
@@ -240,10 +240,8 @@ public class SqlJdbcUtil {
             Object fieldValue = fields.get(modelField.getName());
 
             if (fieldValue != null) {
-                returnString.append("=?");
-                if (entityConditionParams != null) {
-                    entityConditionParams.add(new EntityConditionParam(modelField, fieldValue));
-                }
+                returnString.append('=');
+                addValue(returnString, modelField, fieldValue, entityConditionParams);
             } else {
                 returnString.append(" IS NULL");
             }
@@ -779,5 +777,14 @@ public class SqlJdbcUtil {
             throw new GenericNotImplementedException("Java type " + fieldType + " not currently supported. Sorry.");
         }
         return val.intValue();
+    }
+
+    public static void addValue(StringBuffer buffer, ModelField field, Object value, List params) {
+        if (field != null) {
+            buffer.append('?');
+        } else {
+            buffer.append('\'').append(value).append('\'');
+        }
+        if (field != null && params != null) params.add(new EntityConditionParam(field, value));
     }
 }
