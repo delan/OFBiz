@@ -274,13 +274,18 @@ public class GenericDAO
     try { connection = getConnection(); } 
     catch (SQLException sqle) { Debug.logWarning("ERROR [GenericDAO.select]: Unable to esablish a connection with the database... Error was:"); Debug.logWarning(sqle.getMessage()); }
     
-    String sql = "SELECT " + modelEntity.colNameString(modelEntity.nopks, ", ", "") + " FROM " + modelEntity.tableName + " WHERE " + modelEntity.colNameString(modelEntity.pks, "=? AND ", "=?") + "";
+    String sql = "SELECT ";
+    if(modelEntity.nopks.size() > 0) sql = sql + modelEntity.colNameString(modelEntity.nopks, ", ", "");
+    else sql = sql + "*";
+    sql = sql + " FROM " + modelEntity.tableName + " WHERE " + modelEntity.colNameString(modelEntity.pks, "=? AND ", "=?") + "";
+    //Debug.logInfo(" select: sql=" + sql);
     try {
       ps = connection.prepareStatement(sql);
       
       for(int i=0;i<modelEntity.pks.size();i++)
       {
         ModelField curField=(ModelField)modelEntity.pks.elementAt(i);
+        //Debug.logInfo(" setting field " + curField.name + " to " + (i+1) + " entity: " + entity.toString()); 
         setValue(ps, i+1, curField, entity);
       }
 
@@ -296,7 +301,7 @@ public class GenericDAO
 
         entity.modified = false;
       } else {
-        Debug.logWarning("ERROR [GenericDAO.select]: select failed, result set was empty.");
+        Debug.logWarning("ERROR [GenericDAO.select]: select failed, result set was empty for entity: " + entity.toString());
         return false;
       }
     } catch (SQLException sqle) {

@@ -86,7 +86,7 @@ public class Security
    */  
   public boolean securityGroupPermissionExists(String groupId, String permission)
   {
-    GenericPK securityGroupPermissionPK = helper.makePK("SecurityGroupPermission", UtilMisc.toMap("groupId", groupId, "permission", permission));
+    GenericPK securityGroupPermissionPK = helper.makePK("SecurityGroupPermission", UtilMisc.toMap("groupId", groupId, "permissionId", permission));
     Boolean exists = (Boolean)securityGroupPermissionCache.get(securityGroupPermissionPK);
     if(exists == null)
     {

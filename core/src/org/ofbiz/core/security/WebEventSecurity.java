@@ -107,7 +107,7 @@ public class WebEventSecurity
     }
     else
     {
-      GenericValue userLogin = helper.findByPrimaryKey("UserLogin", UtilMisc.toMap("username", username));
+      GenericValue userLogin = helper.findByPrimaryKey("UserLogin", UtilMisc.toMap("userLoginId", username));
       if(userLogin != null)
       {
         if(password.compareTo(userLogin.getString("currentPassword")) == 0)
