@@ -24,6 +24,7 @@
  */
 package org.ofbiz.core.service.eca;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -46,6 +47,7 @@ public class ServiceEcaAction {
 
     protected String serviceName;
     protected String serviceMode;
+    protected String resultMapName;
     protected boolean resultToContext;
     protected boolean ignoreError;
     protected boolean persist;
@@ -55,6 +57,7 @@ public class ServiceEcaAction {
     public ServiceEcaAction(Element action) {
         this.serviceName = action.getAttribute("service");
         this.serviceMode = action.getAttribute("mode");
+        this.resultMapName = action.getAttribute("result-map-name");
         // default is true, so anything but false is true
         this.resultToContext = !"false".equals(action.getAttribute("result-to-context"));
         this.ignoreError = !"false".equals(action.getAttribute("ignore-error"));
@@ -77,6 +80,16 @@ public class ServiceEcaAction {
             dispatcher.runAsync(serviceName, actionContext, persist);
         }
 
+        // put the results in to the defined map
+        if (resultMapName != null && resultMapName.length() > 0) {
+            Map resultMap = (Map) context.get(resultMapName);
+            if (resultMap == null) {
+                resultMap = new HashMap();
+            }
+            resultMap.putAll(dctx.getModelService(this.serviceName).makeValid(actionResult, ModelService.OUT_PARAM));
+            context.put(resultMapName, resultMap);
+        }
+        
         // use the result to update the context fields.
         if (resultToContext) {
             context.putAll(dctx.getModelService(this.serviceName).makeValid(actionResult, ModelService.OUT_PARAM));
