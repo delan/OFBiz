@@ -134,7 +134,7 @@
         <div class="tabletext">
           <b>Name on Card:</b> <%=creditCardInfo.getString("nameOnCard")%><br>
         </div>
-        <div class="tabletext"><b><%=creditCardInfo.getString("cardType")%>: <%=creditCardInfo.getString("cardNumber").substring(creditCardInfo.getString("cardNumber").length()-4)%> <%=creditCardInfo.getString("expireDate")%></b></div>
+        <div class="tabletext"><b><%=ContactHelper.formatCreditCard(creditCardInfo)%></b></div>
 </ofbiz:if>
 <ofbiz:if name="billingAddress">
         <div class="tabletext"><b>Purchase Order Number: <%=UtilFormatOut.checkNull(customerPoNumber)%></b></div>

@@ -30,6 +30,7 @@
 
 <%@ page import="java.util.*" %>
 <%@ page import="org.ofbiz.core.entity.*" %>
+<%@ page import="org.ofbiz.commonapp.party.contact.ContactHelper" %>
 
 <% pageContext.setAttribute("PageName", "viewprofile"); %>
 <%@ include file="/includes/header.jsp" %>
@@ -264,11 +265,7 @@
                         <td width="90%">
                           <div class="tabletext">
                             <b>
-                              <%=creditCardInfo.getString("nameOnCard")%> - <%=creditCardInfo.getString("cardType")%>
-                              <%if(creditCardInfo.getString("cardNumber") != null && creditCardInfo.getString("cardNumber").length() > 4) {%>
-                                <%=creditCardInfo.getString("cardNumber").substring(creditCardInfo.getString("cardNumber").length()-4)%>
-                              <%}%>
-                              - <%=creditCardInfo.getString("expireDate")%>
+                              <%=creditCardInfo.getString("nameOnCard")%> - <%=ContactHelper.formatCreditCard(creditCardInfo)%>
                             </b>
                             (Updated:&nbsp;<%=UtilDateTime.toDateTimeString(creditCardInfo.getTimestamp("fromDate"))%>)
                             <%=UtilFormatOut.ifNotEmpty(UtilDateTime.toDateTimeString(creditCardInfo.getTimestamp("thruDate")), "(Delete:&nbsp;", ")")%>

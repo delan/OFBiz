@@ -1,6 +1,10 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.7  2001/09/13 15:12:25  epabst
+ * cleaned up a little
+ * separated shippingMethod into carrierPartyId and shipmentMethodTypeId
+ *
  * Revision 1.6  2001/09/12 17:18:40  epabst
  * added SMTP sender
  *
@@ -75,36 +79,51 @@ public class CheckOutEvents {
         if (cart != null && cart.size() > 0) {
             String shippingMethod = request.getParameter("shipping_method");
             String shippingContactMechId = request.getParameter("shipping_contact_mech_id");
-            String paymentCode = UtilFormatOut.checkNull(request.getParameter("payment_code"));
+            String creditCardId = request.getParameter("credit_card_id");
+            String billingAccountId = request.getParameter("billing_account_id");
             String correspondingPoId = request.getParameter("corresponding_po_id");
             String shippingInstructions = request.getParameter("shipping_instructions");
             String orderAdditionalEmails = request.getParameter("order_additional_emails");
             String maySplit = request.getParameter("may_split");
 
-            int delimiterPos = shippingMethod.indexOf('@');
-            String shipmentMethodTypeId = null;
-            String carrierPartyId = null;
-            if(delimiterPos > 0) {
-              shipmentMethodTypeId = shippingMethod.substring(0, delimiterPos);
-              carrierPartyId = shippingMethod.substring(delimiterPos+1);
+            if (UtilValidate.isNotEmpty(shippingMethod)) {
+                int delimiterPos = shippingMethod.indexOf('@');
+                String shipmentMethodTypeId = null;
+                String carrierPartyId = null;
+                if(delimiterPos > 0) {
+                  shipmentMethodTypeId = shippingMethod.substring(0, delimiterPos);
+                  carrierPartyId = shippingMethod.substring(delimiterPos+1);
+                }
+
+                cart.setShipmentMethodTypeId(shipmentMethodTypeId);
+                cart.setCarrierPartyId(carrierPartyId);
+            } else {
+                errorMessage.append("<li>Please Select a Shipping Method");
             }
-            
-            cart.setShipmentMethodTypeId(shipmentMethodTypeId);
-            cart.setCarrierPartyId(carrierPartyId);
             cart.setShippingInstructions(shippingInstructions);
-            cart.setMaySplit(maySplit == null ? null : Boolean.valueOf(maySplit));
+            if (UtilValidate.isNotEmpty(maySplit)) {
+                cart.setMaySplit(Boolean.valueOf(maySplit));
+            } else {
+                errorMessage.append("<li>Please Select a Splitting Preference");
+            }
             cart.setOrderAdditionalEmails(orderAdditionalEmails);
 
-            cart.setShippingContactMechId(shippingContactMechId);
-            if(paymentCode.startsWith("ccard:")) {
-                cart.setCreditCardId(paymentCode.substring(6));
-            } else if (paymentCode.startsWith("billing:")) {
-                cart.setBillingAccountId(paymentCode.substring(8));
+            if (UtilValidate.isNotEmpty(shippingContactMechId)) {
+                cart.setShippingContactMechId(shippingContactMechId);
+            } else {
+                errorMessage.append("<li>Please Select a Shipping Destination");
+            }
+            
+            if(UtilValidate.isNotEmpty(creditCardId)) {
+                cart.setCreditCardId(creditCardId);
+            } 
+            if (UtilValidate.isNotEmpty(billingAccountId)) {
+                cart.setBillingAccountId(billingAccountId);
                 cart.setPoNumber(correspondingPoId);
                 if (UtilValidate.isEmpty(cart.getPoNumber())) {      
                     cart.setPoNumber("(none)");
                 }//else ok
-            } else {
+            } else if (UtilValidate.isEmpty(creditCardId)) {
                 errorMessage.append("<li>Please Select a Method of Billing");
             }
         } else {
@@ -213,8 +232,11 @@ public class CheckOutEvents {
 
     public static String emailOrder(HttpServletRequest request, HttpServletResponse response) {        
         try {
-            final String SMTP_SERVER = UtilProperties.getPropertyValue("servers", "smtp.server");
-            final String ORDER_SENDER_EMAIL = UtilProperties.getPropertyValue("servers", "smtp.sender.confirmorder");
+            final String SMTP_SERVER = UtilProperties.getPropertyValue("ecommerce", "smtp.relay.host");
+            final String LOCAL_MACHINE = UtilProperties.getPropertyValue("ecommerce", "smtp.local.machine");
+            final String ORDER_SENDER_EMAIL = UtilProperties.getPropertyValue("ecommerce", "order.confirmation.email");
+            final String ORDER_BCC = UtilProperties.getPropertyValue("ecommerce", "order.confirmation.email.bcc");
+            final String ORDER_CC = UtilProperties.getPropertyValue("ecommerce", "order.confirmation.email.cc");
             GenericValue userLogin = (GenericValue)request.getSession().getAttribute(SiteDefs.USER_LOGIN);
             StringBuffer emails = new StringBuffer((String) request.getAttribute("orderAdditionalEmails"));
             Iterator emailIter = ContactHelper.getContactMech(userLogin.getRelatedOne("Party"), "EMAIL_ADDRESS", false).iterator();
@@ -226,6 +248,13 @@ public class CheckOutEvents {
             String content = (String) request.getAttribute("confirmorder");
             try {
                 SendMailSMTP mail = new SendMailSMTP(SMTP_SERVER, ORDER_SENDER_EMAIL, emails.toString(), content);
+                mail.setLocalMachine(LOCAL_MACHINE);
+                if (UtilValidate.isNotEmpty(ORDER_CC)) {
+                    mail.setRecipientCC(ORDER_CC);
+                }
+                if (UtilValidate.isNotEmpty(ORDER_BCC)) {
+                    mail.setRecipientBCC(ORDER_BCC);
+                }
                 mail.send();
                 return "success";
             } catch (Exception e) {

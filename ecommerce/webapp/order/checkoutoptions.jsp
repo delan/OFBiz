@@ -197,8 +197,8 @@
           <%=UtilFormatOut.ifNotEmpty(shippingLocation.getString("city"), "", "<br>")%>
           <%=UtilFormatOut.ifNotEmpty(shippingLocation.getString("stateProvinceGeoId"), "", "&nbsp;")%> <%=UtilFormatOut.checkNull(shippingLocation.getString("postalCode"))%><br>
           <%=UtilFormatOut.ifNotEmpty(shippingLocation.getString("countryGeoId"), "", "<br>")%>
-  <%--          <a href="<ofbiz:url>/profileeditaddress?DONE_PAGE=checkoutoptions.jsp&<%=HttpRequestConstants.ADDRESS_KEY%>=<%=shippingLocation.getAddressId()%></ofbiz:url>" class="buttontext">[Update]</a>
-            <a href="<ofbiz:url>/checkoutoptions?<%="event"%>=<%=EventConstants.DELETE_SHIPPING_LOCATION%>&<%=HttpRequestConstants.ADDRESS_KEY%>=<%=shippingLocation.getAddressId()%></ofbiz:url>" class="buttontext">[Delete]</a>--%>
+<%--          <a href="<ofbiz:url>/profileeditaddress?DONE_PAGE=checkoutoptions.jsp&<%=HttpRequestConstants.ADDRESS_KEY%>=<%=billingLocation.getAddressId()%></ofbiz:url>" class="buttontext">[Update]</a>
+          <a href="<ofbiz:url>/checkoutoptions?<%="event"%>=<%=EventConstants.DELETE_SHIPPING_LOCATION%>&<%=HttpRequestConstants.ADDRESS_KEY%>=<%=billingLocation.getAddressId()%></ofbiz:url>" class="buttontext">[Delete]</a> --%>
           </div>
         </td>
       </tr>
@@ -241,10 +241,7 @@
         </td>
         <td width="50%" nowrap>
           <span class="tabletext">
-            <%=creditCardInfo.getString("cardType")%>
-            <%String cardNumber = creditCardInfo.getString("cardNumber");%>
-            <%if(cardNumber != null && cardNumber.length() > 4) {%> <%=cardNumber.substring(cardNumber.length()-4)%>  <% } %>
-            <%=creditCardInfo.getString("expireDate")%>
+            <%=ContactHelper.formatCreditCard(creditCardInfo)%>
           </span>
             <a href="<ofbiz:url>/editcreditcard?DONE_PAGE=checkoutoptions&CREDIT_CARD_ID=<%=creditCardInfo.getString("creditCardId")%></ofbiz:url>" class="buttontext">[Update]</a>
         </td>
@@ -259,54 +256,54 @@
 <ofbiz:unless name="creditCardInfoList" size="0">
    <h3>There are no credit cards on file.</h3>
 </ofbiz:unless>
-<%--
-    <div class="tabletext">To pay with store credit, enter your Purchase Order (PO) number here and select the billing address:</div>
-    <input type="text" name="corresponding_po_id" size="20" value="<ofbiz:if name="cart"><%=UtilFormatOut.checkNull(cart.getPoNumber())%></ofbiz:if>>
-<--    <nobr><input CHECKED type="radio" name="credit_card_id" value="store_credit_purchase_order">
-    Pay with Store Credit<nobr>-->
+
+<% pageContext.setAttribute("billingAccountRoleList", helper.findByAnd("BillingAccountRole", UtilMisc.toMap(
+        "partyId", userLogin.getString("partyId"),
+        "roleTypeId", "BILL_TO_CUSTOMER"), null)); %>  
+
+ <ofbiz:if name="billingAccountRoleList" size="0">
+    <div class="tabletext">To pay with store credit, enter your Purchase Order (PO) number here and select the billing account:</div>
+    <input type="text" name="corresponding_po_id" size="20" value="<ofbiz:if name="cart"><%=UtilFormatOut.checkNull(cart.getPoNumber())%></ofbiz:if>">
     <br>
 
-<% pageContext.setAttribute("billingPartyContactPurposeList", helper.findByAnd("PartyContactMechPurpose", UtilMisc.toMap(
-        "partyId", userLogin.getString("partyId"),
-        "contactMechPurposeTypeId", "BILLING_LOCATION"), null)); %>  
-
- <ofbiz:if name="billingPartyContactPurposeList" size="0">
   <table width="90%" border="0" cellpadding="0" cellspacing="0">
     <tr>
       <td width="100%" colspan="2" height="1" bgcolor="888888"></td>
     </tr>
-    <ofbiz:iterator name="billingPartyContactPurpose" property="billingPartyContactPurposeList">
-    <%GenericValue billingLocation = billingPartyContactPurpose.getRelatedOne("PartyContactMech")
-            .getRelatedOne("ContactMech").getRelatedOne("PostalAddress");
-      pageContext.setAttribute("billingLocation", billingLocation);%>
-    <ofbiz:if name="billingLocation">
+    <ofbiz:iterator name="billingAccountRole" property="billingAccountRoleList">
+    <%GenericValue billingAccount = billingAccountRole.getRelatedOne("BillingAccount");%>
     <tr>
       <td align="left" valign="top" width="1%" nowrap>
-          <input type="radio" name="payment_code" value="billing:<%=billingLocation.get("contactMechId")%>">
+          <input type="radio" name="billing_account_id" value="<%=billingAccount.getString("billingAccountId")%>">
       </td>
       <td align="left" valign="top" width="99%" nowrap>
         <div class="tabletext">
+        Billing Account #<b><%=UtilFormatOut.checkNull(billingAccount.getString("billingAccountId"))%></b><br>
+        <%=UtilFormatOut.checkNull(billingAccount.getString("description"))%>
+  <%--          <a href="<ofbiz:url>/profileeditaddress?DONE_PAGE=checkoutoptions?billing_account_id=<%=billingAccount.get("billingAccountId")%></ofbiz:url>" class="buttontext">[Update]</a>
+            <a href="<ofbiz:url>/checkoutoptions?event=DELETE_SHIPPING_LOCATION&billing_account_id=<%=billingAccount.get("billingAccountId")%></ofbiz:url>" class="buttontext">[Delete]</a>--%>
+
+<%--    <%GenericValue billingLocation = billingAccountRole.getRelatedOne("BillingAccount").getRelatedOne("PostalAddress");
+      pageContext.setAttribute("billingLocation", billingLocation);%>
+    <ofbiz:if name="billingLocation">
         <%=UtilFormatOut.ifNotEmpty(billingLocation.getString("toName"), "<b>To:</b> ", "<br>")%>
         <%=UtilFormatOut.ifNotEmpty(billingLocation.getString("attnName"), "<b>Attn:</b> ", "<br>")%>
         <%=UtilFormatOut.ifNotEmpty(billingLocation.getString("address1"), "", "<br>")%>
         <%=UtilFormatOut.ifNotEmpty(billingLocation.getString("address2"), "", "<br>")%>
         <%=UtilFormatOut.ifNotEmpty(billingLocation.getString("city"), "", "<br>")%>
         <%=UtilFormatOut.ifNotEmpty(billingLocation.getString("stateProvinceGeoId"), "", "&nbsp;")%> <%=UtilFormatOut.checkNull(billingLocation.getString("postalCode"))%><br>
-        <%=UtilFormatOut.ifNotEmpty(billingLocation.getString("countryGeoId"), "", "<br>")%>
-<!--          <a href="<ofbiz:url>/profileeditaddress?DONE_PAGE=checkoutoptions.jsp&<%=HttpRequestConstants.ADDRESS_KEY%>=<%=billingLocation.getAddressId()%></ofbiz:url>" class="buttontext">[Update]</a>
-          <a href="<ofbiz:url>/checkoutoptions?<%="event"%>=<%=EventConstants.DELETE_SHIPPING_LOCATION%>&<%=HttpRequestConstants.ADDRESS_KEY%>=<%=billingLocation.getAddressId()%></ofbiz:url>" class="buttontext">[Delete]</a>-->
+        <%=UtilFormatOut.ifNotEmpty(billingLocation.getString("countryGeoId"), "", "<br>")%> 
+    </ofbiz:if> --%>
         </div>
       </td>
     </tr>
     <tr>
       <td width="100%" colspan="2" height="1" bgcolor="888888"></td>
     </tr>
-    </ofbiz:if>
   </ofbiz:iterator>
   </table>
  </ofbiz:if>
-  <a href="<ofbiz:url>/editcontactmech?CONTACT_MECH_TYPE_ID=POSTAL_ADDRESS&CM_NEW_PURPOSE_TYPE_ID=BILLING_LOCATION&DONE_PAGE=checkoutoptions</ofbiz:url>" class="buttontext">[Add New Address]</a>
---%>
+<%--XXX  <a href="<ofbiz:url>/requestbillingaccount?DONE_PAGE=checkoutoptions</ofbiz:url>" class="buttontext">[Request Billing Account]</a> --%>
 
 </td>
 </tr>

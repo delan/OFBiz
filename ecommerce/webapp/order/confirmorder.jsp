@@ -187,11 +187,8 @@
         <b>Will be billed to:</b> <%=paymentPreference.getRelatedOne("PaymentMethodType").getString("description")%><br>
         <%if ("CREDIT_CARD".equals(paymentPreference.getString("paymentMethodTypeId"))) {%>
             <%GenericValue creditCardInfo = paymentPreference.getRelatedOne("CreditCardInfo");%>
-            <%=PartyHelper.getPersonName(creditCardInfo.getRelatedOne("Party").getRelatedOne("Person"))%><br>
-            <%=creditCardInfo.getString("cardType")%>
-            <%String cardNumber = creditCardInfo.getString("cardNumber");
-              if(cardNumber != null && cardNumber.length() > 4) {%> <%=cardNumber.substring(cardNumber.length()-4)%>  <% } %>
-            <%=creditCardInfo.getString("expireDate")%>
+            <%=creditCardInfo.getString("nameOnCard")%><br>
+            <%=ContactHelper.formatCreditCard(creditCardInfo)%>
         <%} else {%>
             <%--FIXME: other payment types--%>
             <%=UtilFormatOut.checkNull(paymentPreference.getString("paymentInfoId"))%>
