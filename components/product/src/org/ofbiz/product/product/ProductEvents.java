@@ -1186,7 +1186,7 @@ public class ProductEvents {
             fromDate = UtilDateTime.nowTimestamp().toString();
         }
         String[] productFeatureIdArray = request.getParameterValues("productFeatureId");
-        if (productFeatureIdArray.length > 0) {
+        if (productFeatureIdArray != null && productFeatureIdArray.length > 0) {
             try {
                 for (int i = 0; i < productFeatureIdArray.length; i++) {
                     if (!productFeatureIdArray[i].equals("~~any~~")) {
