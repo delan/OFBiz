@@ -319,6 +319,7 @@ public class EntityConfigUtil {
         public static final int TYPE_INLINE_JDBC = 2;
         public static final int TYPE_TYREX_DATA_SOURCE = 3;
         public static final int TYPE_OTHER = 4;
+        public static final int TYPE_DBCP_JDBC = 5;
         public int datasourceType;
         public Element datasourceTypeElement;
 
@@ -385,6 +386,7 @@ public class EntityConfigUtil {
             Element jndiJdbcElement = UtilXml.firstChildElement(datasourceElement, "jndi-jdbc");
             Element tyrexDataSourceElement = UtilXml.firstChildElement(datasourceElement, "tyrex-dataSource");
             Element inlineJdbcElement = UtilXml.firstChildElement(datasourceElement, "inline-jdbc");
+            Element dbcpJdbcElement = UtilXml.firstChildElement(datasourceElement, "dbcp-jdbc");
 
             if (jndiJdbcElement != null) {
                 datasourceType = this.TYPE_JNDI_JDBC;
@@ -395,6 +397,9 @@ public class EntityConfigUtil {
             } else if (inlineJdbcElement != null) {
                 datasourceType = this.TYPE_INLINE_JDBC;
                 datasourceTypeElement = inlineJdbcElement;
+            } else if (dbcpJdbcElement != null) {
+                datasourceType = this.TYPE_DBCP_JDBC;
+                datasourceTypeElement = dbcpJdbcElement;
             } else {
                 datasourceType = this.TYPE_OTHER;
                 datasourceTypeElement = null;

@@ -197,8 +197,7 @@ public class ConnectionFactory {
             try {
                 Connection con = TyrexConnectionFactory.getConnection(helperName, inlineJdbcElement);
 
-                if (con != null)
-                    return con;
+                if (con != null) return con;
             } catch (Exception ex) {
                 Debug.logWarning(ex, "There was an error loading Tyrex, this may not be a serious problem, but you probably want to know anyway. Will continue with probably very slow manual JDBC load.");
             }
@@ -220,6 +219,18 @@ public class ConnectionFactory {
 
             break;
 
+        case EntityConfigUtil.DatasourceInfo.TYPE_DBCP_JDBC:
+            Element dbcpJdbcElement = datasourceInfo.datasourceTypeElement;
+            //If JNDI sources are not specified, or found, try Tyrex
+            try {
+                Connection con = DBCPConnectionFactory.getConnection(helperName, dbcpJdbcElement);
+                if (con != null) return con;
+            } catch (Exception ex) {
+                Debug.logError(ex, "There was an error getting a DBCP datasource.");
+            }
+
+            break;
+            
         case EntityConfigUtil.DatasourceInfo.TYPE_OTHER:
             Debug.logError("Cannot find JDBC definition, no know element found for helperName \"" + helperName + "\"", module);
             break;
