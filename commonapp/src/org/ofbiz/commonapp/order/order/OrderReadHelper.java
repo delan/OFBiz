@@ -205,6 +205,25 @@ public class OrderReadHelper {
         return null;
     }
 
+    public GenericValue getPlacingParty() {
+        GenericDelegator delegator = orderHeader.getDelegator();
+        try {
+            GenericValue placingRole = EntityUtil.getFirst(orderHeader.getRelatedByAnd("OrderRole", UtilMisc.toMap("roleTypeId", "PLACING_CUSTOMER")));
+            if (placingRole != null) {
+                GenericValue person = delegator.findByPrimaryKey("Person", UtilMisc.toMap("partyId", placingRole.getString("partyId")));
+                if (person != null)
+                    return person;
+                else
+                    return delegator.findByPrimaryKey("PartyGroup", UtilMisc.toMap("partyId", placingRole.getString("partyId")));
+            } else {
+                return null;
+            }
+        } catch (GenericEntityException e) {
+            Debug.logError(e);
+        }
+        return null;
+    }
+
     public String getDistributorId() {
         GenericDelegator delegator = orderHeader.getDelegator();
         try {
@@ -232,6 +251,16 @@ public class OrderReadHelper {
             totalPrice = new Double(getTotalPrice(getOrderItems(), getAdjustments()));
         }//else already set
         return totalPrice.doubleValue();
+    }
+
+    public double getTotalItems() {
+        List orderItems = getOrderItems();
+        double totalItems = 0;
+        for (int i=0; i<orderItems.size();i++) {
+            GenericValue oi = (GenericValue) orderItems.get(i);
+            totalItems += oi.getDouble("quantity").doubleValue();
+        }
+        return totalItems;
     }
 
     public static double getTotalPrice(List orderItems, List adjustments) {
