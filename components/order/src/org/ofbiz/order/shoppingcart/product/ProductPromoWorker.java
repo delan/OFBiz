@@ -1,5 +1,5 @@
 /*
- * $Id: ProductPromoWorker.java,v 1.38 2004/01/18 08:27:45 jonesde Exp $
+ * $Id: ProductPromoWorker.java,v 1.39 2004/01/18 08:42:18 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -54,7 +54,7 @@ import org.ofbiz.service.LocalDispatcher;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.38 $
+ * @version    $Revision: 1.39 $
  * @since      2.0
  */
 public class ProductPromoWorker {
@@ -795,9 +795,11 @@ public class ProductPromoWorker {
         String productPromoActionEnumId = productPromoAction.getString("productPromoActionEnumId");
 
         if ("PROMO_GWP".equals(productPromoActionEnumId)) {
+            // the code was in there for this, so even though I don't think we want to restrict this, just adding this flag to make it easy to change; could make option dynamic, but now implied by the use limit
+            boolean allowMultipleGwp = true;
+            
             Integer itemLoc = findPromoItem(productPromoAction, cart);
-
-            if (itemLoc != null) {
+            if (!allowMultipleGwp && itemLoc != null) {
                 if (Debug.verboseOn()) Debug.logVerbose("Not adding promo item, already there; action: " + productPromoAction, module);
                 actionResultInfo.ranAction = false;
             } else {
