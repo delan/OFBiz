@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -22,9 +22,7 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-
 package org.ofbiz.core.service;
-
 
 import java.io.*;
 import java.net.*;
@@ -37,14 +35,13 @@ import org.ofbiz.core.entity.*;
 import org.ofbiz.core.security.*;
 import org.ofbiz.core.service.config.*;
 
-
 /**
  * Dispatcher Context
  *
  *@author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@created    November 8, 2001
- *@version    1.0
+ *@version    $Revision$
  */
 public class DispatchContext implements Serializable {
 
@@ -59,7 +56,8 @@ public class DispatchContext implements Serializable {
     protected Map attributes;
     protected String name;
 
-    /** Creates new DispatchContext
+    /** 
+     * Creates new DispatchContext
      *@param readers a collection of reader URLs
      *@param loader the classloader to use for dispatched services
      */
@@ -81,7 +79,8 @@ public class DispatchContext implements Serializable {
         }
     }
 
-    /** Returns the service attribute for the given name, or null if there is no attribute by that name.
+    /** 
+     * Returns the service attribute for the given name, or null if there is no attribute by that name.
      *@param name a String specifying the name of the attribute
      *@return an Object conatining the value of the attribute, or null if there is no attribute by that name.
      */
@@ -91,7 +90,8 @@ public class DispatchContext implements Serializable {
         return null;
     }
 
-    /** Binds an object to a given attribute name in this context.
+    /** 
+     * Binds an object to a given attribute name in this context.
      *@param name a String specifying the name of the attribute
      *@param object an Object representing the attribute to be bound.
      */
@@ -99,28 +99,32 @@ public class DispatchContext implements Serializable {
         attributes.put(name, object);
     }
 
-    /** Gets the classloader of this context
+    /** 
+     * Gets the classloader of this context
      *@return ClassLoader of the context
      */
     public ClassLoader getClassLoader() {
         return this.loader;
     }
 
-    /** Gets the collection of readers associated with this context
+    /** 
+     * Gets the collection of readers associated with this context
      *@return Collection of reader URLs
      */
     public Collection getReaders() {
         return readers;
     }
 
-    /** Gets the name of the local dispatcher
+    /** 
+     * Gets the name of the local dispatcher
      *@return String name of the LocalDispatcher object
      */
     public String getName() {
         return name;
     }
 
-    /** Gets the GenericServiceModel instance that corresponds to given the name
+    /** 
+     * Gets the GenericServiceModel instance that corresponds to given the name
      *@param serviceName Name of the service
      *@return GenericServiceModel that corresponds to the serviceName
      */
@@ -168,28 +172,32 @@ public class DispatchContext implements Serializable {
         return retVal;
     }
 
-    /** Gets the LocalDispatcher used with this context
+    /** 
+     * Gets the LocalDispatcher used with this context
      *@return LocalDispatcher that was used to create this context
      */
     public LocalDispatcher getDispatcher() {
         return this.dispatcher;
     }
 
-    /** Sets the LocalDispatcher used with this context
+    /** 
+     * Sets the LocalDispatcher used with this context
      *@param dispatcher The LocalDispatcher to re-assign to this context
      */
     public void setDispatcher(LocalDispatcher dispatcher) {
         this.dispatcher = dispatcher;
     }
 
-    /** Gets the GenericDelegator associated with this context/dispatcher
+    /** 
+     * Gets the GenericDelegator associated with this context/dispatcher
      *@return GenericDelegator associated with this context
      */
     public GenericDelegator getDelegator() {
         return dispatcher.getDelegator();
     }
 
-    /** Gets the Security object associated with this dispatcher
+    /** 
+     * Gets the Security object associated with this dispatcher
      *@return Security object associated with this dispatcher
      */
     public Security getSecurity() {

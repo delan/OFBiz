@@ -42,9 +42,9 @@ import org.w3c.dom.NodeList;
 /**
  * Global Service Dispatcher
  *
- *@author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
- *@created    November 7, 2001
- *@version    $Revision$
+ * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
+ * @version    $Revision$
+ * @since      2.0
  */
 public class ServiceDispatcher {
 
@@ -136,9 +136,11 @@ public class ServiceDispatcher {
      * @throws GenericServiceException
      */
     public Map runSync(String localName, ModelService service, Map context) throws GenericServiceException {
+        // check the locale
+        this.checkLocale(context);
+        
         // start the transaction
         boolean beganTrans = false;
-
         if (service.useTransaction) {
             try {
                 beganTrans = TransactionUtil.begin();
@@ -239,9 +241,11 @@ public class ServiceDispatcher {
      * @throws GenericServiceException
      */
     public void runSyncIgnore(String localName, ModelService service, Map context) throws GenericServiceException {
+        // check the locale
+        this.checkLocale(context);
+        
         // start the transaction
         boolean beganTrans = false;
-
         if (service.useTransaction) {
             try {
                 beganTrans = TransactionUtil.begin();
@@ -322,6 +326,9 @@ public class ServiceDispatcher {
      * @throws GenericServiceException
      */
     public void runAsync(String localName, ModelService service, Map context, GenericRequester requester, boolean persist) throws GenericServiceException {
+        // check the locale
+        this.checkLocale(context);
+        
         // get eventMap once for all calls for speed, don't do event calls if it is null
         Map eventMap = ECAUtil.getServiceEventMap(service.name);
 
@@ -367,6 +374,9 @@ public class ServiceDispatcher {
      * @throws GenericServiceException
      */
     public void runAsync(String localName, ModelService service, Map context, boolean persist) throws GenericServiceException {
+        // check the locale
+        this.checkLocale(context);
+        
         // get eventMap once for all calls for speed, don't do event calls if it is null
         Map eventMap = ECAUtil.getServiceEventMap(service.name);
 
@@ -524,4 +534,28 @@ public class ServiceDispatcher {
         
         return value;
     }
+    
+    // checks the locale object in the context
+    private void checkLocale(Map context) {
+        Object locale = context.get("locale");
+        Locale newLocale = null;
+               
+        if (locale != null) {
+            if (locale instanceof Locale) {
+                return;
+            } else if (locale instanceof String) {
+                // en_US = lang_COUNTRY
+                List localeSplit = StringUtil.split((String) locale, "_");
+                if (localeSplit.size() == 2) {
+                    String language = (String) localeSplit.get(0);
+                    String country = (String) localeSplit.get(1);
+                    newLocale = new Locale(language, country);                    
+                }
+            } 
+        }
+        
+        if (newLocale == null)
+            newLocale = Locale.getDefault();
+        context.put("locale", newLocale);
+    }        
 }

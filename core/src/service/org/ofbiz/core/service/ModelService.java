@@ -37,6 +37,7 @@ import org.ofbiz.core.util.*;
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@created    October 20, 2001
  *@version    $Revision$
+ *@since      2.0
  */
 public class ModelService {
 

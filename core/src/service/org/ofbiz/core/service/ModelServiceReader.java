@@ -44,6 +44,7 @@ import org.ofbiz.core.util.*;
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@created    October 20, 2001
  *@version    $Revision$
+ *@since      2.0
  */
 
 public class ModelServiceReader {
@@ -363,6 +364,13 @@ public class ModelServiceReader {
         def = new ModelParam();
         def.name = "userLogin";
         def.type = "org.ofbiz.core.entity.GenericValue";
+        def.mode = "INOUT";
+        def.optional = true;
+        service.addParam(def);
+        // Locale
+        def = new ModelParam();
+        def.name = "locale";
+        def.type = "java.util.Locale";
         def.mode = "INOUT";
         def.optional = true;
         service.addParam(def);
