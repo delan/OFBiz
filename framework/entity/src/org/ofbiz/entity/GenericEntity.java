@@ -633,7 +633,7 @@ public class GenericEntity extends Observable implements Map, LocalizedMap, Seri
             ModelField curField = (ModelField) iter.next();
             pkNames.add(curField.getName());
         }
-        GenericPK newPK = new GenericPK(getModelEntity(), this.getFields(pkNames));
+        GenericPK newPK = GenericPK.create(getModelEntity(), this.getFields(pkNames));
         newPK.setDelegator(this.getDelegator());
         return newPK;
     }
