@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -48,12 +48,12 @@
         <td><div class="tabletext">${taxItem.countryGeoId}</div></td>
         <td><div class="tabletext">${taxItem.stateProvinceGeoId}</div></td>
         <td><div class="tabletext">${taxItem.taxCategory}</div></td>
-        <td><div class="tabletext">${taxItem.minItemPrice?default(0)?string("##0.00")}</div></td>
-        <td><div class="tabletext">${taxItem.minPurchase?default(0)?string("##0.00")}</div></td>
+        <td><div class="tabletext">${taxItem.minItemPrice?string("##0.00")}</div></td>
+        <td><div class="tabletext">${taxItem.minPurchase?string("##0.00")}</div></td>
         <td><div class="tabletext">${taxItem.salesTaxPercentage?if_exists}</div></td>
         <td><div class="tabletext">${taxItem.fromDate?string}</div></td>
         <#if security.hasEntityPermission("TAXRATE", "_DELETE", session)>
-          <td align="center"><div class="tabletext"><a href="<@ofbizUrl>/storeRemoveTaxRate?productStoreId=${productStoreId}&countryGeoId=${taxItem.countryGeoId}&stateProvinceGeoId=${taxItem.stateProvinceGeoId}&taxCategory=${taxItem.taxCategory}&minPurchase=${taxItem.minPurchase?string.number}&fromDate=${taxItem.get("fromDate").toString()}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonDelete}]</a></div></td>
+          <td align="center"><div class="tabletext"><a href="<@ofbizUrl>/storeRemoveTaxRate?productStoreId=${productStoreId}&countryGeoId=${taxItem.countryGeoId}&stateProvinceGeoId=${taxItem.stateProvinceGeoId}&taxCategory=${taxItem.taxCategory}&minItemPrice=${taxItem.minItemPrice?string.number}&minPurchase=${taxItem.minPurchase?string.number}&fromDate=${taxItem.fromDate}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonDelete}]</a></div></td>
         <#else>
           <td>&nbsp;</td>
         </#if>
