@@ -1649,5 +1649,25 @@
         <key-map field-name="workEffortTypeId" />
       </relation>
     </entity>  
+    <entity entity-name="WorkEffortTransBox"
+            package-name="org.ofbiz.commonapp.workeffort.workeffort"
+            title="Work Effort Transition Box Entity">
+      <field name="packageId" type="id-ne"></field>
+      <field name="processId" type="id-ne"></field>
+      <field name="transitionId" type="id-ne"></field>
+      <field name="workEffortId" type="id-ne"></field>
+      <prim-key field="packageId" />
+      <prim-key field="processId" />
+      <prim-key field="transitionId" />
+      <prim-key field="workEffortId" />
+      <relation type="one" rel-entity-name="WorkflowTransition">
+        <key-map field-name="packageId" />
+        <key-map field-name="processId" />
+        <key-map field-name="transitionId" />
+      </relation>
+      <relation type="one" rel-entity-name="WorkEffort">
+        <key-map field-name="workEffortId" />
+      </relation>      
+    </entity>
 </entitymodel>
 

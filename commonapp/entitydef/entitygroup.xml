@@ -715,5 +715,6 @@
     <entity-group group="org.ofbiz.commonapp" entity="WorkEffortStatus" />	
     <entity-group group="org.ofbiz.commonapp" entity="WorkEffortType" />	
     <entity-group group="org.ofbiz.commonapp" entity="WorkEffortTypeAttr" />  
+	<entity-group group="org.ofbiz.commonapp" entity="WorkEffortTransBox" />
 </entitygroup>
 
