@@ -1191,6 +1191,7 @@ public class ContentPermissionServices {
         public void setOperationList(List opList);
         public List getOperationList();
         public String dumpAsText();
+        public void clearList();
     }
     
     public static class StdPermissionConditionGetter implements PermissionConditionGetter {
@@ -1298,6 +1299,10 @@ public class ContentPermissionServices {
             return this.operationList;
         }
         
+    	public void clearList() {
+            this.entityList = new ArrayList();
+        }
+        
         public void init( GenericDelegator delegator) throws GenericEntityException {
             EntityCondition opCond = new EntityExpr(operationFieldName, EntityOperator.IN, this.operationList);
             this.entityList = delegator.findByConditionCache(this.entityName, opCond, null, null);
@@ -1392,6 +1397,7 @@ public class ContentPermissionServices {
     public interface AuxiliaryValueGetter {
         public void init(GenericDelegator delegator, String entityId) throws GenericEntityException;
         public List getList();
+        public void clearList();
         public String dumpAsText();
     }
     
@@ -1425,6 +1431,10 @@ public class ContentPermissionServices {
         
     	public List getList() {
             return entityList;
+        }
+        
+    	public void clearList() {
+            this.entityList = new ArrayList();
         }
         
     	public void setList(List lst) {
@@ -1465,6 +1475,7 @@ public class ContentPermissionServices {
         public void init(GenericDelegator delegator, String entityId, String partyId, GenericValue entity) throws GenericEntityException;
         public void initWithAncestors(GenericDelegator delegator, GenericValue entity, String partyId) throws GenericEntityException;
         public List getList();
+        public void clearList();
         public void setList(List lst);
         public String dumpAsText();
         public boolean isOwner(GenericValue entity, String targetPartyId);
@@ -1512,6 +1523,10 @@ public class ContentPermissionServices {
         
     	public List getList() {
             return this.roleIdList;
+        }
+        
+    	public void clearList() {
+            this.roleIdList = new ArrayList();
         }
         
     	public void setList(List lst) {
