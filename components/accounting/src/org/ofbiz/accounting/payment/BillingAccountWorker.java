@@ -1,5 +1,5 @@
 /*
- * $Id: BillingAccountWorker.java,v 1.1 2003/08/18 17:31:37 ajzeneski Exp $
+ * $Id: BillingAccountWorker.java,v 1.2 2003/09/04 03:25:55 ajzeneski Exp $
  *
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -26,21 +26,25 @@ package org.ofbiz.accounting.payment;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import org.ofbiz.accounting.invoice.InvoiceWorker;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.order.order.OrderReadHelper;
+import org.ofbiz.service.DispatchContext;
+import org.ofbiz.service.ServiceUtil;
 
 /**
  * Worker methods for BillingAccounts
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.1
  */
 public class BillingAccountWorker {
@@ -122,5 +126,25 @@ public class BillingAccountWorker {
         return balance;
     }   
     
+    public static Map calcBillingAccountBalance(DispatchContext dctx, Map context) {
+        GenericDelegator delegator = dctx.getDelegator();
+        String billingAccountId = (String) context.get("billingAccountId");
+        GenericValue billingAccount = null;
+        try {
+            billingAccount = delegator.findByPrimaryKey("BillingAccount", UtilMisc.toMap("billingAccountId", billingAccountId));
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+            return ServiceUtil.returnError("Unable to locate billing account #" + billingAccountId);
+        }
+        
+        if (billingAccount == null) {
+            return ServiceUtil.returnError("Unable to locate billing account #" + billingAccountId);
+        }
+        
+        Map result = ServiceUtil.returnSuccess();
+        result.put("accountBalance", new Double(getBillingAccountBalance(delegator, billingAccountId)));
+        result.put("billingAccount", billingAccount);
+        return result;  
+    }
  
 }
