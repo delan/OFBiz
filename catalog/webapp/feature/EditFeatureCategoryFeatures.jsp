@@ -96,8 +96,8 @@
     <FORM method=POST action='<ofbiz:url>/UpdateProductFeature</ofbiz:url>'>
         <%if (productId != null && productId.length() > 0) {%><input type="hidden" name="productId" value="<%=productId%>"><%}%>
         <input type=hidden <ofbiz:inputvalue entityAttr="productFeature" field="productFeatureId" fullattrs="true"/>>
-      <td><input type=text size='15' <ofbiz:inputvalue entityAttr="productFeature" field="description" fullattrs="true"/>></td>
-      <td><select name='productFeatureTypeId' size=1 style='font-size: x-small;'>
+      <td><input type=text class='inputBox' size='15' <ofbiz:inputvalue entityAttr="productFeature" field="description" fullattrs="true"/>></td>
+      <td><select name='productFeatureTypeId' size=1 class='selectBox'>
         <%if (productFeature.get("productFeatureTypeId") != null) {%>
           <option value='<%=productFeature.getString("productFeatureTypeId")%>'><%if (curProductFeatureType != null) {%><%=UtilFormatOut.checkNull(curProductFeatureType.getString("description"))%><%} else {%> [<%=productFeature.getString("productFeatureTypeId")%>]<%}%></option>
           <option value='<%=productFeature.getString("productFeatureTypeId")%>'>---</option>
@@ -106,7 +106,7 @@
           <option value='<%=productFeatureType.getString("productFeatureTypeId")%>'><%=productFeatureType.getString("description")%> <%--[<%=productFeatureType.getString("productFeatureTypeId")%>]--%></option>
         </ofbiz:iterator>
       </select></td>
-      <td><select name='productFeatureCategoryId' size=1 style='font-size: x-small;'>
+      <td><select name='productFeatureCategoryId' size=1 class='selectBox'>
         <%if (productFeature.get("productFeatureCategoryId") != null) {%>
           <%GenericValue curProdFeatCat = productFeature.getRelatedOne("ProductFeatureCategory");%>
           <option value='<%=productFeature.getString("productFeatureCategoryId")%>'><%=curProdFeatCat!=null?curProdFeatCat.getString("description"):""%> [<%=productFeature.getString("productFeatureCategoryId")%>]</option>
@@ -116,11 +116,11 @@
           <option value='<%=productFeatureCategory.getString("productFeatureCategoryId")%>'><%=productFeatureCategory.getString("description")%> [<%=productFeatureCategory.getString("productFeatureCategoryId")%>]</option>
         </ofbiz:iterator>
       </select></td>
-      <td><input type=text size='10' <ofbiz:inputvalue entityAttr="productFeature" field="uomId" fullattrs="true"/>></td>
-      <td><input type=text size='5' <ofbiz:inputvalue entityAttr="productFeature" field="numberSpecified" fullattrs="true"/>></td>
-      <td><input type=text size='5' <ofbiz:inputvalue entityAttr="productFeature" field="defaultSequenceNum" fullattrs="true"/>></td>
-      <td><input type=text size='5' <ofbiz:inputvalue entityAttr="productFeature" field="idCode" fullattrs="true"/>></td>
-      <td><input type=text size='5' <ofbiz:inputvalue entityAttr="productFeature" field="abbrev" fullattrs="true"/>></td>
+      <td><input type=text class='inputBox' size='10' <ofbiz:inputvalue entityAttr="productFeature" field="uomId" fullattrs="true"/>></td>
+      <td><input type=text class='inputBox' size='5' <ofbiz:inputvalue entityAttr="productFeature" field="numberSpecified" fullattrs="true"/>></td>
+      <td><input type=text class='inputBox' size='5' <ofbiz:inputvalue entityAttr="productFeature" field="defaultSequenceNum" fullattrs="true"/>></td>
+      <td><input type=text class='inputBox' size='5' <ofbiz:inputvalue entityAttr="productFeature" field="idCode" fullattrs="true"/>></td>
+      <td><input type=text class='inputBox' size='5' <ofbiz:inputvalue entityAttr="productFeature" field="abbrev" fullattrs="true"/>></td>
       <td><INPUT type=submit value='Update'></td>
     </FORM>
     <%if (productId != null && productId.length() > 0) {%>
@@ -131,16 +131,16 @@
         <input type=hidden <ofbiz:inputvalue entityAttr="productFeature" field="productFeatureId" fullattrs="true"/>>
         <td><div class="tabletext">&nbsp;</div></td>
         <td>
-          <select name='productFeatureApplTypeId' size=1 style='font-size: x-small;'>
+          <select name='productFeatureApplTypeId' size=1 class='selectBox'>
             <ofbiz:iterator name="productFeatureApplType" property="productFeatureApplTypes">
               <option value='<%=productFeatureApplType.getString("productFeatureApplTypeId")%>'><%=productFeatureApplType.getString("description")%> <%--[<%=productFeatureApplType.getString("productFeatureApplTypeId")%>]--%></option>
             </ofbiz:iterator>
           </select>
         </td>
-        <td><input type=text size='18' name='fromDate' style='font-size: x-small;'></td>
-        <td><input type=text size='18' name='thruDate' style='font-size: x-small;'></td>
-        <td><input type=text size='6' name='amount' style='font-size: x-small;'></td>
-        <td><input type=text size='5' name='sequenceNum' value='<ofbiz:inputvalue entityAttr="productFeature" field="defaultSequenceNum"/>'></td>
+        <td><input type=text size='18' name='fromDate' class='inputBox'></td>
+        <td><input type=text size='18' name='thruDate' class='inputBox'></td>
+        <td><input type=text size='6' name='amount' class='inputBox'></td>
+        <td><input type=text size='5' name='sequenceNum' class='inputBox' value='<ofbiz:inputvalue entityAttr="productFeature" field="defaultSequenceNum"/>'></td>
       <td colspan='3' align=left><INPUT type=submit value='Apply'></td>
       </FORM>
     <%}%>
@@ -157,7 +157,7 @@
     <tr>
       <td><div class='tabletext'>Feature Type:</div></td>
       <td>
-        <select name='productFeatureTypeId' size=1>
+        <select name='productFeatureTypeId' size=1 class='selectBox'>
         <ofbiz:iterator name="productFeatureType" property="productFeatureTypes">
           <option value='<%=productFeatureType.getString("productFeatureTypeId")%>'><%=productFeatureType.getString("description")%> <%--[<%=productFeatureType.getString("productFeatureTypeId")%>]--%></option>
         </ofbiz:iterator>
@@ -167,7 +167,7 @@
 <%-- This will always be the same, ie we will use the productFeatureCategoryId for this page
     <tr>
       <td><div class='tabletext'>Feature Category:</div></td>
-      <td><select name='productFeatureCategoryId' size=1>
+      <td><select name='productFeatureCategoryId' size=1 class='selectBox'>
         <ofbiz:iterator name="productFeatureCategory" property="productFeatureCategories">
           <option value='<%=productFeatureCategory.getString("productFeatureCategoryId")%>'><%=productFeatureCategory.getString("description")%> [<%=productFeatureCategory.getString("productFeatureCategoryId")%>]</option>
         </ofbiz:iterator>
@@ -176,27 +176,27 @@
 --%>
     <tr>
       <td><div class='tabletext'>Description:</div></td>
-      <td><input type=text size='30' name='description' value=''></td>
+      <td><input type=text size='30' name='description' class='inputBox' value=''></td>
     </tr>
     <tr>
       <td><div class='tabletext'>Unit of Measure ID:</div></td>
-      <td><input type=text size='10' name='uomId' value=''></td>
+      <td><input type=text size='10' name='uomId' class='inputBox' value=''></td>
     </tr>
     <tr>
       <td><div class='tabletext'>Number/Quantity:</div></td>
-      <td><input type=text size='10' name='numberSpecified' value=''></td>
+      <td><input type=text size='10' name='numberSpecified' class='inputBox' value=''></td>
     </tr>
     <tr>
       <td><div class='tabletext'>Default Sequence Number:</div></td>
-      <td><input type=text size='10' name='defaultSequenceNum' value=''></td>
+      <td><input type=text size='10' name='defaultSequenceNum' class='inputBox' value=''></td>
     </tr>
     <tr>
       <td><div class='tabletext'>ID Code:</div></td>
-      <td><input type=text size='10' name='idCode' value=''></td>
+      <td><input type=text size='10' name='idCode' class='inputBox' value=''></td>
     </tr>
     <tr>
       <td><div class='tabletext'>Abbreviation:</div></td>
-      <td><input type=text size='10' name='abbrev' value=''></td>
+      <td><input type=text size='10' name='abbrev' class='inputBox' value=''></td>
     </tr>
     <tr>
       <td colspan='2'><input type="submit" value="Create"></td>

@@ -63,7 +63,7 @@
       <td>&nbsp;</td>
       <td>
         <h3>Could not find productPromo with ID "<%=productPromoId%>".</h3><br>
-        <input type=text size='20' maxlength='20' name="productPromoId" value="<%=UtilFormatOut.checkNull(productPromoId)%>">
+        <input type=text size='20' maxlength='20' class='inputBox' name="productPromoId" value="<%=UtilFormatOut.checkNull(productPromoId)%>">
       </td>
     </tr>
   <%} else {%>
@@ -73,7 +73,7 @@
       <td align=right><div class="tabletext">Product Promo ID</div></td>
       <td>&nbsp;</td>
       <td>
-        <input type=text size='20' maxlength='20' name="productPromoId" value="<%=UtilFormatOut.checkNull(productPromoId)%>">
+        <input type=text size='20' maxlength='20' class='inputBox' name="productPromoId" value="<%=UtilFormatOut.checkNull(productPromoId)%>">
       </td>
     </tr>
   <%}%>
@@ -92,19 +92,19 @@
       <tr>
         <td width="26%" align=right><div class="tabletext">Promo Name</div></td>
         <td>&nbsp;</td>
-        <td width="74%"><input type="text" <ofbiz:inputvalue entityAttr="productPromo" field="promoName" fullattrs="true"/> size="30" maxlength="60"></td>
+        <td width="74%"><input type="text" class='inputBox' <ofbiz:inputvalue entityAttr="productPromo" field="promoName" fullattrs="true"/> size="30" maxlength="60"></td>
       </tr>
       <tr>
         <td width="26%" align=right><div class="tabletext">Promo Text</div></td>
         <td>&nbsp;</td>
-        <td width="74%"><textarea name='promoText' cols='70' rows='5'><ofbiz:inputvalue entityAttr="productPromo" field="promoText"/></textarea></td>
+        <td width="74%"><textarea name='promoText' class='textAreaBox' cols='70' rows='5'><ofbiz:inputvalue entityAttr="productPromo" field="promoText"/></textarea></td>
       </tr>
 
       <tr>
         <td width="26%" align=right><div class="tabletext">Single Use?</div></td>
         <td>&nbsp;</td>
         <td width="74%">
-          <SELECT name='singleUse'>
+          <SELECT name='singleUse' class='selectBox'>
             <OPTION><ofbiz:inputvalue entityAttr='productPromo' field='singleUse' default="N"/></OPTION>
             <OPTION>&nbsp;</OPTION><OPTION>Y</OPTION><OPTION>N</OPTION>
           </SELECT>

@@ -160,7 +160,7 @@
                 <FORM method=POST action='<ofbiz:url>/createProductPriceCond</ofbiz:url>'>
                     <input type=hidden <ofbiz:inputvalue entityAttr="productPriceRule" field="productPriceRuleId" fullattrs="true"/>>
                     <span class='tabletext'><b>New:</b>&nbsp;</span>
-                    <input type=text size='5' name='productPriceCondSeqId' value='<%=maxCondSeqId%>'>
+                    <input type=text size='5' name='productPriceCondSeqId' class='inputBox' value='<%=maxCondSeqId%>'>
                     <select name='inputParamEnumId' size=1 class='selectBox'>
                         <ofbiz:iterator name="inputParamEnum" property="inputParamEnums">
                           <option value='<%=inputParamEnum.getString("enumId")%>'><%=inputParamEnum.getString("description")%><%--[<%=inputParamEnum.getString("enumId")%>]--%></option>
@@ -262,8 +262,8 @@
 <form method="POST" action="<ofbiz:url>/createProductPriceRule</ofbiz:url>" style='margin: 0;'>
   <div class='head2'>Add Price Rule:</div>
   <br>
-  ID: <input type=text size='20' name='productPriceRuleId'>
-  Name: <input type=text size='30' name='ruleName'>
+  ID: <input type=text size='20' class='inputBox' name='productPriceRuleId'>
+  Name: <input type=text size='30' class='inputBox' name='ruleName'>
   <input type="submit" value="Add">
 </form>
 

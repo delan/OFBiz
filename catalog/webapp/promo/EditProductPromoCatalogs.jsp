@@ -89,8 +89,8 @@
             <input type=hidden <ofbiz:inputvalue entityAttr="prodCatalogPromoAppl" field="prodCatalogId" fullattrs="true"/>>
             <input type=hidden <ofbiz:inputvalue entityAttr="prodCatalogPromoAppl" field="productPromoId" fullattrs="true"/>>
             <input type=hidden <ofbiz:inputvalue entityAttr="prodCatalogPromoAppl" field="fromDate" fullattrs="true"/>>
-            <input type=text size='20' <ofbiz:inputvalue entityAttr="prodCatalogPromoAppl" field="thruDate" fullattrs="true"/> style='font-size: x-small; <%if (hasExpired) {%>color: red;<%}%>'>
-            <input type=text size='5' <ofbiz:inputvalue entityAttr="prodCatalogPromoAppl" field="sequenceNum" fullattrs="true"/> style='font-size: x-small;'>
+            <input type=text size='20' <ofbiz:inputvalue entityAttr="prodCatalogPromoAppl" field="thruDate" fullattrs="true"/> class='inputBox' style='<%if (hasExpired) {%>color: red;<%}%>'>
+            <input type=text size='5' <ofbiz:inputvalue entityAttr="prodCatalogPromoAppl" field="sequenceNum" fullattrs="true"/> class='inputBox'>
             <INPUT type=submit value='Update' style='font-size: x-small;'>
         </FORM>
     </td>
@@ -108,12 +108,12 @@
 
   <div class='head2'>Add Catalog Promo (select Catalog, enter optional From Date):</div>
   <br>
-  <select name="prodCatalogId">
+  <select name="prodCatalogId" class='selectBox'>
   <ofbiz:iterator name="prodCatalog" property="prodCatalogs">
     <option value='<ofbiz:entityfield attribute="prodCatalog" field="prodCatalogId"/>'><ofbiz:entityfield attribute="prodCatalog" field="catalogName"/> [<ofbiz:entityfield attribute="prodCatalog" field="prodCatalogId"/>]</option>
   </ofbiz:iterator>
   </select>
-  <input type=text size='20' name='fromDate'>
+  <input type=text size='20' name='fromDate' class='inputBox'>
   <input type="submit" value="Add">
 </form>
 <%}%>
