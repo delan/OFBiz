@@ -83,6 +83,7 @@ public class FreeMarkerGenerator extends AbstractGenerator {
         ServletContext servletContext = (ServletContext) inContext.get("application");
         Page page = (Page) inContext.get("page");
         SiteContext site = (SiteContext) inContext.get("site");
+        BeansWrapper wrapper = BeansWrapper.getDefaultInstance();
 
         Debug.logVerbose("=========== Running generate ===========", module);
 
@@ -93,8 +94,8 @@ public class FreeMarkerGenerator extends AbstractGenerator {
                     //nice thought, but doesn't do auto reloading with this: config.setServletContextForTemplateLoading(servletContext, "/");
                     config.setDirectoryForTemplateLoading(site.getRealPageRoot());
                     Debug.logInfo("Site page root: " + site.getRealPageRoot().getAbsolutePath());
-                    config.setObjectWrapper(BeansWrapper.getDefaultInstance());
-                    WrappingTemplateModel.setDefaultObjectWrapper(BeansWrapper.getDefaultInstance());
+                    config.setObjectWrapper(wrapper);
+                    WrappingTemplateModel.setDefaultObjectWrapper(wrapper);
                 }
             }
         }
@@ -119,19 +120,19 @@ public class FreeMarkerGenerator extends AbstractGenerator {
             } catch (IOException e) {
                 throw new WSPException(e);
             }
-            parsedTemplate.setObjectWrapper(BeansWrapper.getDefaultInstance());
+            parsedTemplate.setObjectWrapper(wrapper);
             
             Writer writer = new OutputStreamWriter(inOutput ,"UTF-8");
             
             try {
-                SimpleHash root = new SimpleHash(BeansWrapper.getDefaultInstance());                
-                Map map = new JPublishContextMap(inContext);
-                root.put("context", new BeanModel(map, BeansWrapper.getDefaultInstance()));
-                for (Iterator iter = map.entrySet().iterator(); iter.hasNext();) {
+                SimpleHash root = new SimpleHash(wrapper);                
+                Map contextMap = new JPublishContextMap(inContext);
+                root.put("context", wrapper.wrap(contextMap));
+                for (Iterator iter = contextMap.entrySet().iterator(); iter.hasNext();) {
                     Map.Entry entry = (Map.Entry) iter.next();
                     String key = (String) entry.getKey();
                     Object value = entry.getValue();
-                    root.put(key, BeansWrapper.getDefaultInstance().wrap(value));
+                    root.put(key, wrapper.wrap(value));
                     //if (Debug.verboseOn()) Debug.logVerbose("==== Adding to the freemarker root " + key + ":" + value, module);
                 }
                 
@@ -145,7 +146,7 @@ public class FreeMarkerGenerator extends AbstractGenerator {
                 TemplateModel document = new DOMNodeModel(doc);
                 root.put("document", document);
                  */
-                parsedTemplate.process(root, writer, BeansWrapper.getDefaultInstance());
+                parsedTemplate.process(root, writer, wrapper);
                 writer.flush();
             } finally {
                 writer.close();

@@ -105,52 +105,43 @@ public class FreeMarkerViewHandler implements ViewHandler {
         ServletContext servletContext = (ServletContext) request.getAttribute("servletContext");
         HttpSession session = request.getSession();
         
-        root.put("Static", BeansWrapper.getDefaultInstance().getStaticModels());
+        BeansWrapper wrapper = BeansWrapper.getDefaultInstance();
+        
+        root.put("Static", wrapper.getStaticModels());
 
-        // add in the OFBiz objects
-        BeanModel delegatorModel = new BeanModel(request.getAttribute("delegator"), BeansWrapper.getDefaultInstance());
-        root.put("delegator", delegatorModel);
-        
-        BeanModel dispatcherModel = new BeanModel(request.getAttribute("dispatcher"), BeansWrapper.getDefaultInstance());
-        root.put("dispatcher", dispatcherModel);
-        
-        BeanModel securityModel = new BeanModel(request.getAttribute("security"), BeansWrapper.getDefaultInstance());
-        root.put("security", securityModel);
-        
-        BeanModel userLoginModel = new BeanModel(request.getAttribute("userLogin"), BeansWrapper.getDefaultInstance());
-        root.put("userLogin", userLoginModel);
-        
-        // add the session object (for transforms) to the context as a BeanModel
-        BeanModel sessionBModel = new BeanModel(session, BeansWrapper.getDefaultInstance());
-        root.put("session", sessionBModel);
+        try {
+            // add in the OFBiz objects
+            root.put("delegator", wrapper.wrap(request.getAttribute("delegator")));
+            root.put("dispatcher", wrapper.wrap(request.getAttribute("dispatcher")));
+            root.put("security", wrapper.wrap(request.getAttribute("security")));
+            root.put("userLogin", wrapper.wrap(session.getAttribute("userLogin")));
 
-        // add the session
-        HttpSessionHashModel sessionModel = new HttpSessionHashModel(session, BeansWrapper.getDefaultInstance());
-        root.put("sessionAttributes", sessionModel);
+            // add the session object (for transforms) to the context as a BeanModel
+            root.put("session", wrapper.wrap(session));
 
-        // add the request object (for transforms) to the context as a BeanModel
-        BeanModel requestBModel = new BeanModel(request, BeansWrapper.getDefaultInstance());
-        root.put("request", requestBModel);
+            // add the session
+            root.put("sessionAttributes", new HttpSessionHashModel(session, wrapper));
 
-        // add the request
-        HttpRequestHashModel requestModel = new HttpRequestHashModel(request, BeansWrapper.getDefaultInstance());
-        root.put("requestAttributes", requestModel);
+            // add the request object (for transforms) to the context as a BeanModel
+            root.put("request", wrapper.wrap(request));
 
-        // add the request parameters
-        HttpRequestParametersHashModel requestParametersModel = new HttpRequestParametersHashModel(request);
-        root.put("requestParameters", requestParametersModel);
-        
-        // add the application object (for transforms) to the context as a BeanModel
-        BeanModel applicationBModel = new BeanModel(servletContext, BeansWrapper.getDefaultInstance());
-        root.put("application", applicationBModel);
-        
-        // add the servlet context -- this has been deprecated, and now requires servlet, do we really need it?
-        //ServletContextHashModel servletContextModel = new ServletContextHashModel(servletContext, BeansWrapper.getDefaultInstance());
-        //root.put("applicationAttributes", servletContextModel);
-        
-        // add the response object (for transforms) to the context as a BeanModel
-        BeanModel responseBModel = new BeanModel(response, BeansWrapper.getDefaultInstance());
-        root.put("response", responseBModel);
+            // add the request
+            root.put("requestAttributes", new HttpRequestHashModel(request, wrapper));
+
+            // add the request parameters
+            root.put("requestParameters", new HttpRequestParametersHashModel(request));
+
+            // add the application object (for transforms) to the context as a BeanModel
+            root.put("application", wrapper.wrap(servletContext));
+
+            // add the servlet context -- this has been deprecated, and now requires servlet, do we really need it?
+            //root.put("applicationAttributes", new ServletContextHashModel(servletContext, BeansWrapper.getDefaultInstance()));
+
+            // add the response object (for transforms) to the context as a BeanModel
+            root.put("response", wrapper.wrap(response));
+        } catch (freemarker.template.TemplateModelException e) {
+            Debug.logError(e, "Error creating template model in OFBiz FreeMarker preparation");
+        }
         
         // add the OFBiz transforms/methods
         root.put("ofbizUrl", new OfbizUrlTransform());
