@@ -22,7 +22,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Al Byers (byersa@automationgroups.com)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      3.0
 -->
 
@@ -111,7 +111,7 @@
             </#if>
                 str += '${separator}';
                 str += value;
-            var requestStr = '"<@ofbizUrl>"' + escape(str)</@ofbizUrl> + '"';
+            var requestStr = '"<@ofbizUrl>"' + escape(str) + '</@ofbizUrl>' + '"'; 
 
             window.opener.replace(requestStr);
         }
