@@ -107,6 +107,15 @@ public class GenericHelperEJB implements GenericHelper {
     return genericValue;
   }
   
+  /** Find a Generic Entity by its Primary Key and only returns the values requested by the passed keys (names)
+   *@param primaryKey The primary key to find by.
+   *@param keys The keys, or names, of the values to retrieve; only these values will be retrieved
+   *@return The GenericValue corresponding to the primaryKey
+   */
+  public GenericValue findByPrimaryKeyPartial(GenericPK primaryKey, Set keys) throws GenericEntityException {
+    throw new GenericNotImplementedException("Check Data Source not yet implemented for EJB data source.");
+  }
+  
   /** Remove a Generic Entity corresponding to the primaryKey
    *@param  primaryKey  The primary key of the entity to remove.
    */

@@ -281,9 +281,9 @@ public class GenericDAO {
     }
     
     String sql = "SELECT ";
-    if(modelEntity.nopks.size() > 0) sql = sql + modelEntity.colNameString(modelEntity.nopks, ", ", "");
-    else sql = sql + "*";
-    sql = sql + " FROM " + modelEntity.tableName + " WHERE " + modelEntity.colNameString(modelEntity.pks, "=? AND ", "=?") + "";
+    if(modelEntity.nopks.size() > 0) sql += modelEntity.colNameString(modelEntity.nopks, ", ", "");
+    else sql += "*";
+    sql += " FROM " + modelEntity.tableName + " WHERE " + modelEntity.colNameString(modelEntity.pks, "=? AND ", "=?") + "";
     //Debug.logInfo(" select: sql=" + sql);
     try {
       ps = connection.prepareStatement(sql);
@@ -347,9 +347,9 @@ public class GenericDAO {
     }
     
     String sql = "SELECT ";
-    if(partialFields.size() > 0) sql = sql + modelEntity.colNameString(partialFields, ", ", "");
-    else sql = sql + "*";
-    sql = sql + " FROM " + modelEntity.tableName + " WHERE " + modelEntity.colNameString(modelEntity.pks, "=? AND ", "=?") + "";
+    if(partialFields.size() > 0) sql += modelEntity.colNameString(partialFields, ", ", "");
+    else sql += "*";
+    sql += " FROM " + modelEntity.tableName + " WHERE " + modelEntity.colNameString(modelEntity.pks, "=? AND ", "=?") + "";
     
     try {
       ps = connection.prepareStatement(sql);
