@@ -245,9 +245,12 @@
             title="Product Category Rollup Entity">
       <field name="productCategoryId" type="id-ne"></field>
       <field name="parentProductCategoryId" type="id-ne"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>
       <field name="sequenceNum" type="numeric"></field>
       <prim-key field="productCategoryId"/>
       <prim-key field="parentProductCategoryId"/>
+      <prim-key field="fromDate"/>
       <relation type="one" title="Current" rel-entity-name="ProductCategory">
         <key-map field-name="productCategoryId"/>
       </relation>
@@ -1020,14 +1023,15 @@
       <field name="productTypeId" type="id"></field>
       <field name="primaryProductCategoryId" type="id"></field>
       <field name="manufacturerPartyId" type="id"></field>
-      <field name="introductionDate" type="date"></field>
-      <field name="salesDiscontinuationDate" type="date"></field>
-      <field name="supportDiscontinuationDate" type="date"></field>
+      <field name="introductionDate" type="date-time"></field>
+      <field name="salesDiscontinuationDate" type="date-time"></field>
+      <field name="supportDiscontinuationDate" type="date-time"></field>
       <field name="productName" type="name"></field>
       <field name="comments" type="comment"></field>
       <field name="description" type="description"></field>
       <field name="longDescription" type="very-long"></field>
       <field name="smallImageUrl" type="url"></field>
+      <field name="mediumImageUrl" type="url"></field>
       <field name="largeImageUrl" type="url"></field>
       <field name="listPrice" type="currency-amount"></field>
       <field name="listPriceUomId" type="id"></field>
@@ -1044,6 +1048,10 @@
       <field name="taxDutyCode" type="short-varchar"></field>
       <field name="chargeShipping" type="indicator"></field>
       <field name="autoCreateKeywords" type="indicator"></field>
+      <field name="createdDate" type="date-time"></field>
+      <field name="createdByUserLogin" type="id"></field>
+      <field name="lastModifiedDate" type="date-time"></field>
+      <field name="lastModifiedByUserLogin" type="id"></field>
       <prim-key field="productId"/>
       <relation type="many" rel-entity-name="ProductAttribute">
         <key-map field-name="productId"/>
@@ -1104,6 +1112,12 @@
       </relation>
       <relation type="many" rel-entity-name="ShoppingListItem">
         <key-map field-name="productId"/>
+      </relation>
+      <relation type="one" title="CreatedBy" rel-entity-name="UserLogin">
+        <key-map field-name="createdByUserLogin" rel-field-name="userLoginId"/>
+      </relation>
+      <relation type="one" title="LastModifiedBy" rel-entity-name="UserLogin">
+        <key-map field-name="lastModifiedByUserLogin" rel-field-name="userLoginId"/>
       </relation>
     </entity>
     <entity entity-name="ProductAssoc"
