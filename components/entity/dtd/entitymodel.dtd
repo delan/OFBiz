@@ -51,6 +51,7 @@
     enable-lock ( true | false ) "false"
     no-auto-stamp ( true | false ) "false"
     never-cache ( true | false ) "false"
+    auto-clear-cache ( true | false ) "true"
     title CDATA #IMPLIED
     copyright CDATA #IMPLIED
     author CDATA #IMPLIED
@@ -99,6 +100,7 @@
     dependent-on CDATA #IMPLIED
     default-resource-name CDATA #IMPLIED
     never-cache ( true | false ) "false"
+    auto-clear-cache ( true | false )"true"
     title CDATA #IMPLIED
     copyright CDATA #IMPLIED
     author CDATA #IMPLIED

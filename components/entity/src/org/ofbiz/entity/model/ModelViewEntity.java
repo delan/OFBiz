@@ -1,5 +1,5 @@
 /*
- * $Id: ModelViewEntity.java,v 1.17 2004/07/06 21:54:41 doogie Exp $
+ * $Id: ModelViewEntity.java,v 1.18 2004/07/07 09:10:59 doogie Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -28,6 +28,10 @@ import org.w3c.dom.*;
 
 import org.ofbiz.base.util.*;
 import org.ofbiz.entity.jdbc.*;
+import org.ofbiz.entity.GenericEntityException;
+import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.entity.util.EntityUtil;
 
 /**
  * This class extends ModelEntity and provides additional information appropriate to view entities
@@ -35,7 +39,7 @@ import org.ofbiz.entity.jdbc.*;
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:peterm@miraculum.com">Peter Moon</a>    
- * @version    $Revision: 1.17 $
+ * @version    $Revision: 1.18 $
  * @since      2.0
  */
 public class ModelViewEntity extends ModelEntity {
@@ -73,6 +77,8 @@ public class ModelViewEntity extends ModelEntity {
 
     /** A List of the Field objects for the View Entity, one for each GROUP BY field */
     protected List groupBys = new ArrayList();
+
+    protected Map conversions = new HashMap();
 
     public ModelViewEntity(ModelReader reader, Element entityElement, UtilTimer utilTimer, ModelInfo def) {
         super(reader, entityElement, def);
@@ -280,6 +286,12 @@ public class ModelViewEntity extends ModelEntity {
         return returnString.toString();
     }
 
+    protected ModelEntity aliasedModelEntity = new ModelEntity();
+
+    public ModelEntity getAliasedModelEntity() {
+        return this.aliasedModelEntity;
+    }
+
     public ModelEntity getAliasedEntity(String entityAlias, ModelReader modelReader) {
         ModelMemberEntity modelMemberEntity = (ModelMemberEntity) this.memberModelMemberEntities.get(entityAlias);
         if (modelMemberEntity == null) {
@@ -322,6 +334,19 @@ public class ModelViewEntity extends ModelEntity {
                 continue;
             }
             memberModelEntities.put(entry.getKey(), aliasedEntity);
+            Iterator aliasedFieldIterator = aliasedEntity.getFieldsIterator();
+            while (aliasedFieldIterator.hasNext()) {
+                ModelField aliasedModelField = (ModelField) aliasedFieldIterator.next();
+                ModelField newModelField = new ModelField();
+                for (int i = 0; i < aliasedModelField.getValidatorsSize(); i++) {
+                    newModelField.addValidator(aliasedModelField.getValidator(i));
+                }
+                newModelField.setColName(modelMemberEntity.getEntityAlias() + "." + aliasedModelField.getColName());
+                newModelField.setName(modelMemberEntity.getEntityAlias() + "." + aliasedModelField.getName());
+                newModelField.setType(aliasedModelField.getType());
+                newModelField.setIsPk(false);
+                aliasedModelEntity.addField(newModelField);
+            }
         }
 
         expandAllAliasAlls(modelReader);
@@ -391,8 +416,111 @@ public class ModelViewEntity extends ModelEntity {
                 }
             }
         }
+        populateReverseLinks();
     }
     
+    protected ModelConversion getOrCreateModelConversion(String aliasName) {
+        ModelEntity member = getMemberModelEntity(aliasName);
+        Map aliasConversions = (HashMap) conversions.get(member.getEntityName());
+        if (aliasConversions == null) {
+            aliasConversions = new HashMap();
+            conversions.put(member.getEntityName(), aliasConversions);
+        }
+        ModelConversion conversion = (ModelConversion) aliasConversions.get(aliasName);
+        if (conversion == null) {
+            conversion = new ModelConversion(aliasName, member);
+            aliasConversions.put(aliasName, conversion);
+        }
+        return conversion;
+    }
+
+    public void populateReverseLinks() {
+        Map containedModelFields = new HashMap();
+        Iterator it = getAliasesIterator();
+        while (it.hasNext()) {
+            ModelViewEntity.ModelAlias alias = (ModelViewEntity.ModelAlias) it.next();
+            ModelEntity member = getMemberModelEntity(alias.getEntityAlias());
+            ModelConversion conversion = getOrCreateModelConversion(alias.getEntityAlias());
+            conversion.addConversion(alias.getField(), alias.getName());
+            ModelField field = (ModelField) member.getField(alias.getField());
+
+            List aliases = (List)containedModelFields.get(alias.getField());
+            if (aliases == null) {
+                aliases = new ArrayList();
+                containedModelFields.put(alias.getField(), aliases);
+            }
+            aliases.add(alias.getName());
+        }
+
+        it = getViewLinksIterator();
+        while (it.hasNext()) {
+            ModelViewEntity.ModelViewLink link = (ModelViewEntity.ModelViewLink) it.next();
+
+            String leftAlias = link.getEntityAlias();
+            String rightAlias = link.getRelEntityAlias();
+            ModelConversion leftConversion = getOrCreateModelConversion(leftAlias);
+            ModelConversion rightConversion = getOrCreateModelConversion(rightAlias);
+            Iterator it2 = link.getKeyMapsIterator();
+            Debug.logVerbose(leftAlias + "<->" + rightAlias, module);
+            while (it2.hasNext()) {
+                ModelKeyMap mkm = (ModelKeyMap) it2.next();
+                String leftFieldName = mkm.getFieldName();
+                String rightFieldName = mkm.getRelFieldName();
+                rightConversion.addAllAliasConversions((List) containedModelFields.get(leftFieldName), rightFieldName);
+                leftConversion.addAllAliasConversions((List) containedModelFields.get(rightFieldName), leftFieldName);
+            }
+        }
+        it = conversions.entrySet().iterator();
+        int[] currentIndex = new int[conversions.size()];
+        int[] maxIndex = new int[conversions.size()];
+        ModelConversion[][] allConversions = new ModelConversion[conversions.size()][];
+        int i = 0;
+        while (it.hasNext()) {
+            Map.Entry entry = (Map.Entry) it.next();
+            Map aliasConversions = (Map) entry.getValue();
+            currentIndex[i] = 0;
+            maxIndex[i] = aliasConversions.size();
+            allConversions[i] = new ModelConversion[aliasConversions.size()];
+            Iterator it2 = aliasConversions.values().iterator();
+            for (int j = 0; it2.hasNext() && j < aliasConversions.size(); j++) {
+                allConversions[i][j] = (ModelConversion) it2.next();
+            }
+            i++;
+        }
+        int ptr = 0;
+        ModelConversion[] currentConversions = new ModelConversion[conversions.size()];
+        for (int j = 0, k; j < currentIndex.length; j++) {
+            for (int l = 0; l < maxIndex[ j ]; l++ ) {
+                while (true) {
+                    for (i = 0, k = 0; i < currentIndex.length; i++) {
+                        if (i == j && currentIndex[i] == l) continue;
+                        currentConversions[k++] = allConversions[i][currentIndex[i]];
+                    }
+                    Debug.logVerbose(j + "," + l + ":" + Arrays.asList(currentConversions), module);
+                    while (ptr < currentIndex.length && ++currentIndex[ptr] == maxIndex[ptr]) {
+                        currentIndex[ptr] = 0;
+                        ptr++;
+                    }
+                    if (ptr == currentIndex.length) break;
+                    ptr = 0;
+                }
+            }
+        }
+        Debug.logVerbose(this + ":" + conversions, module);
+    }
+
+    public List convert(String fromEntityName, Map data) {
+        Map foo = (Map) conversions.get(fromEntityName);
+        if (foo == null) return null;
+        Iterator it = foo.values().iterator();
+        List values = new ArrayList(foo.size());
+        while (it.hasNext()) {
+            ModelConversion conversion = (ModelConversion) it.next();
+            values.add(conversion.convert(data));
+        }
+        return values;
+    }
+
     /**
      * Go through all aliasAlls and create an alias for each field of each member entity
      */
@@ -815,6 +943,66 @@ public class ModelViewEntity extends ModelEntity {
 
         public List getKeyMapsCopy() {
             return new ArrayList(this.keyMaps);
+        }
+    }
+
+    public class ModelConversion {
+        protected String aliasName;
+        protected ModelEntity fromModelEntity;
+        protected Map fieldMap = new HashMap();
+        protected Set wildcards = new HashSet();
+
+        public ModelConversion(String aliasName, ModelEntity fromModelEntity) {
+            this.aliasName = aliasName;
+            this.fromModelEntity = fromModelEntity;
+            Iterator it = getFieldsIterator();
+            while (it.hasNext()) {
+                ModelField field = (ModelField) it.next();
+                wildcards.add(field.getName());
+            }
+        }
+
+        public int hashCode() {
+            return fromModelEntity.hashCode();
+        }
+
+        public boolean equals(Object obj) {
+            if (!(obj instanceof ModelConversion)) return false;
+            ModelConversion other = (ModelConversion) obj;
+            return fromModelEntity.equals(other.fromModelEntity);
+        }
+
+        public void addConversion(String fromFieldName, String toFieldName) {
+            wildcards.remove(toFieldName);
+            fieldMap.put(fromFieldName, toFieldName);
+        }
+
+        public String toString() {
+            //return fromModelEntity.getEntityName() + ":" + fieldMap + ":" + wildcards;
+            return aliasName + "(" + fromModelEntity.getEntityName() + ")";
+        }
+
+        public Map convert(Map values) {
+            Map newValues = new HashMap(fieldMap.size() + wildcards.size());
+            Iterator it = fieldMap.entrySet().iterator();
+            while (it.hasNext()) {
+                Map.Entry entry = (Map.Entry) it.next();
+                newValues.put(entry.getValue(), values.get((String) entry.getKey()));
+            }
+            it = wildcards.iterator();
+            while (it.hasNext()) {
+                newValues.put((String) it.next(), EntityOperator.WILDCARD);
+            }
+            return newValues;
+        }
+
+        public void addAllAliasConversions(List aliases, String fieldName) {
+            if (aliases != null) {
+                Iterator it3 = aliases.iterator();
+                while (it3.hasNext()) {
+                    addConversion(fieldName, (String) it3.next());
+                }
+            }
         }
     }
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: ModelReader.java,v 1.11 2004/07/06 21:49:06 doogie Exp $
+ * $Id: ModelReader.java,v 1.12 2004/07/07 09:10:58 doogie Exp $
  *
  *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -55,7 +55,7 @@ import org.w3c.dom.Node;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.11 $
+ * @version    $Revision: 1.12 $
  * @since      2.0
  */
 public class ModelReader {
@@ -263,6 +263,7 @@ public class ModelReader {
                             ModelViewEntity.ModelMemberEntity mve = (ModelViewEntity.ModelMemberEntity) memberEntities.get(j);
                             ModelEntity me = (ModelEntity) entityCache.get(mve.getEntityName());
                             if (me == null) throw new GenericEntityConfException("View " + curViewEntity.getEntityName() + " references non-existant entity: " + mve.getEntityName());
+                            me.addViewEntity(curViewEntity);
                         }
                     }
                     

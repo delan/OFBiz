@@ -1,5 +1,5 @@
 /*
- * $Id: ModelEntity.java,v 1.16 2004/07/07 05:17:16 doogie Exp $
+ * $Id: ModelEntity.java,v 1.17 2004/07/07 09:10:58 doogie Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -33,8 +33,12 @@ import java.util.Map;
 import java.util.Set;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilTimer;
 import org.ofbiz.base.util.UtilXml;
+import org.ofbiz.entity.GenericEntity;
+import org.ofbiz.entity.GenericPK;
+import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.config.EntityConfigUtil;
 import org.ofbiz.entity.jdbc.DatabaseUtil;
 import org.w3c.dom.Element;
@@ -45,7 +49,7 @@ import org.w3c.dom.NodeList;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.16 $
+ * @version    $Revision: 1.17 $
  * @since      2.0
  */
 public class ModelEntity extends ModelInfo implements Comparable {
@@ -92,6 +96,9 @@ public class ModelEntity extends ModelInfo implements Comparable {
     /** indexes on fields/columns in this entity */
     protected List indexes = new ArrayList();
 
+    /** map of ModelViewEntities that references this model */
+    protected Map viewEntities = new HashMap();
+
     /** An indicator to specify if this entity requires locking for updates */
     protected boolean doLock = false;
 
@@ -103,6 +110,8 @@ public class ModelEntity extends ModelInfo implements Comparable {
      * from cache on read showing a warning messages to that effect 
      */
     protected boolean neverCache = false;
+
+    protected boolean autoClearCache = true;
 
     // ===== CONSTRUCTORS =====
     /** Default Constructor */
@@ -226,6 +235,7 @@ public class ModelEntity extends ModelInfo implements Comparable {
         this.doLock = UtilXml.checkBoolean(entityElement.getAttribute("enable-lock"), false);
         this.noAutoStamp = UtilXml.checkBoolean(entityElement.getAttribute("no-auto-stamp"), false);
         this.neverCache = UtilXml.checkBoolean(entityElement.getAttribute("never-cache"), false);
+        this.autoClearCache = UtilXml.checkBoolean(entityElement.getAttribute("auto-clear-cache"), true);
     }
 
     protected void populateRelated(ModelReader reader, Element entityElement) {
@@ -340,6 +350,14 @@ public class ModelEntity extends ModelInfo implements Comparable {
 
     public void setNeverCache(boolean neverCache) {
         this.neverCache = neverCache;
+    }
+
+    public boolean getAutoClearCache() {
+        return this.autoClearCache;
+    }
+
+    public void setAutoClearCache(boolean autoClearCache) {
+        this.autoClearCache = autoClearCache;
     }
 
     /** An indicator to specify if this entity requires locking for updates */
@@ -601,6 +619,36 @@ public class ModelEntity extends ModelInfo implements Comparable {
 
     public ModelIndex removeIndex(int index) {
         return (ModelIndex) this.indexes.remove(index);
+    }
+
+    public int getViewEntitiesSize() {
+        return this.viewEntities.size();
+    }
+
+    public ModelViewEntity getViewEntity(String viewEntityName) {
+        return (ModelViewEntity) this.viewEntities.get(viewEntityName);
+    }
+
+    public Iterator getViewConvertorsIterator() {
+        return this.viewEntities.entrySet().iterator();
+    }
+
+    public void addViewEntity(ModelViewEntity view) {
+        this.viewEntities.put(view.getEntityName(), view);
+    }
+
+    public List convertToViewValues(String viewEntityName, GenericEntity entity) {
+        if (entity == null || entity == GenericEntity.NULL_ENTITY || entity == GenericValue.NULL_VALUE) return UtilMisc.toList(entity);
+        ModelViewEntity view = (ModelViewEntity) this.viewEntities.get(viewEntityName);
+        return view.convert(getEntityName(), entity);
+    }
+
+    public ModelViewEntity removeViewEntity(String viewEntityName) {
+        return (ModelViewEntity) this.viewEntities.remove(viewEntityName);
+    }
+
+    public ModelViewEntity removeViewEntity(ModelViewEntity viewEntity) {
+       return removeViewEntity(viewEntity.getEntityName());
     }
 
     public String nameString(List flds) {
