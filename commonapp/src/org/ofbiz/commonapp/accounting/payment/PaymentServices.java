@@ -95,7 +95,8 @@ public class PaymentServices {
     private static PaymentGateway getDefaultPaymentGateway()
         throws InstantiationException, IllegalAccessException, ClassNotFoundException {
         String gatewayClassName = UtilProperties.getPropertyValue("payment.properties", "defaultGatewayClass");
-        Class gatewayClass = Class.forName(gatewayClassName);
+        ClassLoader loader = Thread.currentThread().getContextClassLoader();
+        Class gatewayClass = loader.loadClass(gatewayClassName);
 
         return (PaymentGateway) gatewayClass.newInstance();
     }
