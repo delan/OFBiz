@@ -1,5 +1,5 @@
 /*
- * $Id: Start.java,v 1.9 2003/09/28 16:46:01 ajzeneski Exp $
+ * $Id: Start.java,v 1.10 2003/09/28 18:32:34 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -33,6 +33,7 @@ import java.io.PrintWriter;
 import java.lang.reflect.Method;
 import java.net.InetAddress;
 import java.net.ServerSocket;
+import java.net.ConnectException;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -43,31 +44,40 @@ import java.util.Properties;
  * Start - OFBiz Container(s) Startup Class
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
-  *@version    $Revision: 1.9 $
+  *@version    $Revision: 1.10 $
  * @since      2.1
  */
 public class Start implements Runnable {
 
     public static final String CONFIG_FILE = "org/ofbiz/base/start/start.properties";
     public static final String SHUTDOWN_COMMAND = "SHUTDOWN";
-    public static final String STATUS_COMMAND = "STATUS";
-    private static final Config config = new Config();
+    public static final String STATUS_COMMAND = "STATUS";    
                         
     private Classpath classPath = new Classpath(System.getProperty("java.class.path"));     
     private ServerSocket serverSocket = null;
     private Thread serverThread = null;
     private boolean serverRunning = true;    
     private List loaders = null;
+    private Config config = null;
     
-    public Start() throws IOException {        
-        this.serverSocket = new ServerSocket(config.adminPort, 1, config.adminAddress);
-        this.serverThread = new Thread(this, this.toString());
-        this.serverThread.setDaemon(false);        
+    public Start(String configFile) throws IOException {
+        if (configFile == null) {
+            configFile = CONFIG_FILE;
+        }
+                
+        this.config = new Config(configFile);              
         this.loaders = new ArrayList();          
     }
+    
+    public void startListenerThread() throws IOException {
+        this.serverSocket = new ServerSocket(config.adminPort, 1, config.adminAddress);
+        this.serverThread = new Thread(this, this.toString());
+        this.serverThread.setDaemon(false);
+        this.serverThread.start();
+    }       
          
-    public void run() {        
-        while(serverRunning) {
+    public void run() {       
+        while (serverRunning) {
             try {            
             Socket clientSocket = serverSocket.accept(); 
             System.out.println("Received connection from - " + clientSocket.getInetAddress() + " : " + clientSocket.getPort());          
@@ -76,7 +86,9 @@ public class Start implements Runnable {
             } catch (IOException e) {
                 e.printStackTrace();                              
             }
-        }                                      
+        }
+        shutdownServer();
+        System.exit(0);                                      
     }
     
     private void processClientRequest(Socket client) throws IOException {         
@@ -100,7 +112,7 @@ public class Start implements Runnable {
             } else {
                 if (command.equals(Start.SHUTDOWN_COMMAND)) {                                                 
                     System.out.println("Shutdown initiated from: " + client.getInetAddress().getHostAddress() + ":" + client.getPort());
-                    shutdownServer();        
+                    serverRunning = false;        
                 } else if (command.equals(Start.STATUS_COMMAND)) {
                     return serverRunning ? "Running" : "Stopped";
                 }
@@ -126,7 +138,7 @@ public class Start implements Runnable {
         }
     }
     
-    private void startServer(String args[]) throws Exception {
+    private void startServer() throws Exception {
         // load the lib directory
         loadLibs(config.baseLib);        
         
@@ -145,7 +157,7 @@ public class Start implements Runnable {
         setShutdownHook();
         
         // start the listener thread
-        serverThread.start();
+        startListenerThread();
         
         // stat the log directory
         boolean createdDir = false;
@@ -205,24 +217,31 @@ public class Start implements Runnable {
                 }
             }
         }
-        serverRunning = false;               
+        serverRunning = false;             
     }
     
 
-    public static void start(String[] args) throws Exception {
-        Start start = new Start();        
-        start.startServer(args);
+    public void start() throws Exception {                
+        startServer();
     }
     
-    public static String status() throws Exception {
-        return sendSocketCommand(Start.STATUS_COMMAND);        
+    public String status() throws Exception {
+        String status = null;
+        try {
+            status = sendSocketCommand(Start.STATUS_COMMAND);            
+        } catch (ConnectException e) {
+            return "Not Running";
+        } catch (IOException e) {
+            throw e;
+        }
+        return status;                
     }
         
-    public static String shutdown() throws Exception {
+    public String shutdown() throws Exception {
         return sendSocketCommand(Start.SHUTDOWN_COMMAND);        
     }
     
-    private static String sendSocketCommand(String command) throws IOException {
+    private String sendSocketCommand(String command) throws IOException, ConnectException {
         Socket socket = new Socket(config.adminAddress, config.adminPort);        
                                                 
         // send the command
@@ -247,21 +266,23 @@ public class Start implements Runnable {
     }
     
     public static void main(String[] args) throws Exception {
-        String firstArg = args.length > 0 ? args[0] : "";
-        
-        if (firstArg.equals("-help") || firstArg.equals("-?")) {
+        Start start = new Start(args.length == 2 ? args[1] : null);
+        String firstArg = args.length > 0 ? args[0] : "";        
+        if (firstArg.equals("-help") || firstArg.equals("-?") || args.length > 2) {
             System.out.println("");
-            System.out.println("Usage: java -jar ofbiz.jar [options]");
-            System.out.println("-help, -? ---> This screen");
-            System.out.println("-status -----> Status of the server");
-            System.out.println("-shutdown ---> Shutdown the server");
-            System.out.println("[no option] -> Start the server");        
+            System.out.println("Usage: java -jar ofbiz.jar [command] [config]");
+            System.out.println("-help, -? ----> This screen");
+            System.out.println("-start -------> Start the server");
+            System.out.println("-status ------> Status of the server");
+            System.out.println("-shutdown ----> Shutdown the server");            
+            System.out.println("[no config] --> Use default config");
+            System.out.println("[no command] -> Start the server w/ default config");       
         } else if (firstArg.equals("-status")) {
-            System.out.println("Current Status : " + Start.status());                               
+            System.out.println("Current Status : " + start.status());                               
         } else if (firstArg.equals("-shutdown")) {
-            System.out.println("Shutting down server : " + Start.shutdown());
+            System.out.println("Shutting down server : " + start.shutdown());
         } else {
-            Start.start(args);
+            start.start();
         }                
     }
     
@@ -278,16 +299,19 @@ public class Start implements Runnable {
         public List loaders;
         public String awtHeadless;
         
-        public Config() {
+        public Config(String config) {
             try {
-                init();
+                init(config);
             } catch (IOException e) {                
                 e.printStackTrace();
                 System.exit(-1);
             }
         }
-        public void init() throws IOException {
-            InputStream propsStream = getClass().getClassLoader().getResourceAsStream(Start.CONFIG_FILE);
+        public void init(String config) throws IOException {
+            InputStream propsStream = getClass().getClassLoader().getResourceAsStream(config);
+            if (propsStream == null) {
+                throw new IOException("Cannot load configuration properties : " + config);
+            }
             Properties props = new Properties();
             props.load(propsStream);
             
