@@ -1304,7 +1304,7 @@
             title="Return Item Entity">
       <field name="returnId" type="id-ne"></field>
       <field name="returnItemSeqId" type="id-ne"></field>
-      <field name="returnReason" type="comment"></field>
+      <field name="returnReasonId" type="id"></field>
       <field name="orderId" type="id-ne"></field>
       <field name="orderItemSeqId" type="id-ne"></field>
       <field name="statusId" type="id"></field>
@@ -1315,10 +1315,23 @@
       <relation type="one" fk-name="RTN_ITEM_RTN" rel-entity-name="ReturnHeader">
         <key-map field-name="returnId"/>
       </relation>
+      <relation type="one" fk-name="RTN_ITEM_REASON" rel-entity-name="ReturnReason">
+        <key-map field-name="returnReasonId"/>
+      </relation>
       <relation type="many" rel-entity-name="ReturnStatus">
         <key-map field-name="returnId"/>
         <key-map field-name="returnItemSeqId"/>
       </relation>      
+    </entity>
+    <entity entity-name="ReturnReason"
+            package-name="org.ofbiz.commonapp.order.order"
+            title="Return Reason Entity">
+      <field name="returnReasonId" type="id-ne"></field>
+      <field name="description" type="description"></field>
+      <prim-key field="returnReasonId"/>
+      <relation type="many" rel-entity-name="ReturnItem">
+        <key-map field-name="returnReasonId"/>
+      </relation>
     </entity>
     <entity entity-name="ReturnStatus"
             package-name="org.ofbiz.commonapp.order.order"

@@ -149,6 +149,11 @@
   <StatusValidChange condition="" statusId="CRQ_REVIEWED" statusIdTo="CRQ_COMPLETED" transitionName="Complete Request"/>
   <StatusValidChange condition="" statusId="CRQ_REVIEWED" statusIdTo="CRQ_CANCELLED" transitionName="Cancel Request"/>
   
+  <!-- Return Reasons -->
+  <ReturnReason returnReasonId="RTN_DEFECTIVE_ITEM" description="Defective Item"/>
+  <ReturnReason returnReasonId="RTN_MISSHIP_ITEM" description="Mis-Shipped Item"/>
+  <ReturnReason returnReasonId="RTN_NOT_WANT" description="Did Not Want Item"/>
+  
   <WorkReqFulfType description="Implements" workReqFulfTypeId="WRF_IMPLEMENTS"/>
   <WorkReqFulfType description="Fixes" workReqFulfTypeId="WRF_FIXES"/>
   <WorkReqFulfType description="Deploys" workReqFulfTypeId="WRF_DEPLOYS"/>
