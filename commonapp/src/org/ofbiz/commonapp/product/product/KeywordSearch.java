@@ -93,6 +93,7 @@ public class KeywordSearch {
         }
         if (useCategory) {
             params.add(categoryId);
+            params.add(UtilDateTime.nowTimestamp());
         }
 
         Connection connection = null;
@@ -104,7 +105,15 @@ public class KeywordSearch {
             statement = connection.prepareStatement(sql);
 
             for (int i = 0; i < params.size(); i++) {
-                statement.setString(i + 1, (String) params.get(i));
+                Object param = params.get(i);
+                if (param instanceof String) {
+                    statement.setString(i + 1, (String) param);
+                } else if (param instanceof Timestamp) {
+                    statement.setTimestamp(i + 1, (Timestamp) param);
+                } else {
+                    //in this class we only put Strings and Timestamps in there, but warn anyway...
+                    Debug.logWarning("Found a keyword search query parameter with an unknown type: " + param.getClass().getName());
+                }
                 if (Debug.verboseOn()) Debug.logVerbose("[KeywordSearch] Params: " + (String) params.get(i));
             }
             resultSet = statement.executeQuery();
@@ -253,7 +262,7 @@ public class KeywordSearch {
         // WHERE P1.PRODUCT_ID=P2.PRODUCT_ID AND P1.PRODUCT_ID=P3.PRODUCT_ID AND P1.KEYWORD LIKE 'TI%' AND P2.KEYWORD LIKE 'HOUS%' AND P3.KEYWORD = '1003027' ORDER BY TOTAL_WEIGHT DESC
         // AND EXAMPLE WITH CATEGORY CONSTRAINT:
         // SELECT DISTINCT P1.PRODUCT_ID, PCM.SEQUENCE_NUM AS CAT_SEQ_NUM, TOTAL_WEIGHT = P1.RELEVANCY_WEIGHT + P2.RELEVANCY_WEIGHT + P3.RELEVANCY_WEIGHT FROM PRODUCT_KEYWORD P1, PRODUCT_KEYWORD P2, PRODUCT_KEYWORD P3, PRODUCT_CATEGORY_MEMBER PCM
-        // WHERE P1.PRODUCT_ID=P2.PRODUCT_ID AND P1.PRODUCT_ID=P3.PRODUCT_ID AND P1.KEYWORD LIKE 'TI%' AND P2.KEYWORD LIKE 'HOUS%' AND P3.KEYWORD = '1003027' AND P1.PRODUCT_ID=PCM.PRODUCT_ID AND PCM.PRODUCT_CATEGORY_ID='foo' ORDER BY CAT_SEQ_NUM, TOTAL_WEIGHT DESC
+        // WHERE P1.PRODUCT_ID=P2.PRODUCT_ID AND P1.PRODUCT_ID=P3.PRODUCT_ID AND P1.KEYWORD LIKE 'TI%' AND P2.KEYWORD LIKE 'HOUS%' AND P3.KEYWORD = '1003027' AND P1.PRODUCT_ID=PCM.PRODUCT_ID AND PCM.PRODUCT_CATEGORY_ID='foo' AND (PCM.THRU_DATE IS NULL OR PCM.THRU_DATE > ?) ORDER BY CAT_SEQ_NUM, TOTAL_WEIGHT DESC
 
         // ORs are a little more complicated, so get individual results group them by PRODUCT_ID and sum the RELEVANCY_WEIGHT
         // OR EXAMPLE:
@@ -261,7 +270,7 @@ public class KeywordSearch {
         // WHERE (P1.KEYWORD LIKE 'TI%' OR P1.KEYWORD LIKE 'HOUS%' OR P1.KEYWORD = '1003027') GROUP BY P1.PRODUCT_ID ORDER BY TOTAL_WEIGHT DESC
         // OR EXAMPLE WITH CATEGORY CONSTRAINT:
         // SELECT DISTINCT P1.PRODUCT_ID, MIN(PCM.SEQUENCE_NUM) AS CAT_SEQ_NUM, TOTAL_WEIGHT = SUM(P1.RELEVANCY_WEIGHT) FROM PRODUCT_KEYWORD P1, PRODUCT_CATEGORY_MEMBER PCM
-        // WHERE (P1.KEYWORD LIKE 'TI%' OR P1.KEYWORD LIKE 'HOUS%' OR P1.KEYWORD = '1003027') AND P1.PRODUCT_ID=PCM.PRODUCT_ID AND PCM.PRODUCT_CATEGORY_ID='foo' GROUP BY P1.PRODUCT_ID ORDER BY CAT_SEQ_NUM, TOTAL_WEIGHT DESC
+        // WHERE (P1.KEYWORD LIKE 'TI%' OR P1.KEYWORD LIKE 'HOUS%' OR P1.KEYWORD = '1003027') AND P1.PRODUCT_ID=PCM.PRODUCT_ID AND PCM.PRODUCT_CATEGORY_ID='foo' AND (PCM.THRU_DATE IS NULL OR PCM.THRU_DATE > ?) GROUP BY P1.PRODUCT_ID ORDER BY CAT_SEQ_NUM, TOTAL_WEIGHT DESC
 
         StringBuffer from = new StringBuffer(" FROM ");
         StringBuffer join = new StringBuffer(" WHERE ");
@@ -345,7 +354,7 @@ public class KeywordSearch {
 
         if (useCategory) {
             from.append(", PRODUCT_CATEGORY_MEMBER PCM");
-            where.append(" AND P1.PRODUCT_ID=PCM.PRODUCT_ID AND PCM.PRODUCT_CATEGORY_ID=?");
+            where.append(" AND P1.PRODUCT_ID=PCM.PRODUCT_ID AND PCM.PRODUCT_CATEGORY_ID=? AND (PCM.THRU_DATE IS NULL OR PCM.THRU_DATE > ?)");
         }
 
         StringBuffer select = null;
