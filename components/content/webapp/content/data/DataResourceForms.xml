@@ -154,6 +154,12 @@
                     entity-name="DataResourceType" key-field-name="dataResourceTypeId"/>
             </drop-down>
         </field>
+        <field name="dataTemplateTypeId">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}"
+                    entity-name="DataTemplateType" key-field-name="dataTemplateTypeId"/>
+            </drop-down>
+        </field>
         <field name="dataCategoryId">
             <drop-down allow-empty="true">
                 <list-options list-name="dataCategoryList" 
