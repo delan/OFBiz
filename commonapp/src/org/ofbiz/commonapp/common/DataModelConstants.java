@@ -1,9 +1,12 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.1  2001/09/07 17:33:24  epabst
+ * Added constants
+ *
  */
 
-package org.ofbiz.core.util;
+package org.ofbiz.commonapp.common;
 
 /**
  * <p><b>Title:</b> DataModelConstants.java
