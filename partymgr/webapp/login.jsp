@@ -97,7 +97,7 @@
   </tr>
 </table>
 
-<script language="JavaScript">
+<script language="JavaScript" type="text/javascript">
 <!--
   document.loginform.USERNAME.focus();
 //-->
