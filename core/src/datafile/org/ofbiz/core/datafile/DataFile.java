@@ -38,7 +38,7 @@ import org.ofbiz.core.util.*;
 public class DataFile {
 
     /** List of record in the file, contains Record objects */
-    protected List records = null;
+    protected List records = new ArrayList();
     /** Contains the definition for the file */
     protected ModelDataFile modelDataFile;
 
@@ -78,6 +78,8 @@ public class DataFile {
     public DataFile(ModelDataFile modelDataFile) {
         this.modelDataFile = modelDataFile;
     }
+
+    protected DataFile() {}
 
     public ModelDataFile getModelDataFile() {
         return modelDataFile;
@@ -144,7 +146,6 @@ public class DataFile {
         if (locationInfo == null)
             locationInfo = "unknown";
 
-        records = new ArrayList();
         Stack parentStack = new Stack();
 
         if (ModelDataFile.SEP_FIXED_RECORD.equals(modelDataFile.separatorStyle) || ModelDataFile.SEP_FIXED_LENGTH.equals(modelDataFile.separatorStyle)) {
