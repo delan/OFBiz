@@ -62,8 +62,8 @@ public class LocalDispatcher {
         init(name, delegator, dc);
     }
 
-    public LocalDispatcher(String name, GenericDelegator delegator, DispatchContext ctx) {
-        init(name, delegator, ctx);
+    public LocalDispatcher(DispatchContext ctx, GenericDelegator delegator) {
+        init(ctx.getName(), delegator, ctx);
     }
 
     private void init(String name, GenericDelegator delegator, DispatchContext ctx) {
