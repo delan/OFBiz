@@ -38,6 +38,7 @@ set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\lib\common\commons-httpclient.jar
 set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\lib\common\commons-logging.jar
 set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\lib\common\commons-pool.jar
 set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\lib\common\commons-vfs.jar
+set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\lib\common\commons-vfs-providers.jar
 set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\lib\common\hsqldb.jar
 set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\lib\common\jms_1.0.2a.jar
 set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\lib\common\jta_1.0.1.jar
