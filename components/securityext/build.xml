@@ -21,7 +21,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *  This is the Open for Business Security Extensions Build Script.
- *  $Id: build.xml,v 1.7 2003/09/03 03:25:20 ajzeneski Exp $
+ *  $Id: build.xml,v 1.8 2003/10/26 21:13:46 ajzeneski Exp $
 -->
 
 <project name="OFBiz - Security Extensions" default="jar" basedir=".">
@@ -30,33 +30,34 @@
     <!-- Initialization of all property settings                            -->
     <!-- ================================================================== -->
 
-    <target name="init">                
+    <target name="init">
         <property environment="env"/>
         <property name="desc" value="Security Extensions Component"/>
         <property name="name" value="ofbiz-securityext"/>
         <property name="src.dir" value="src"/>
         <property name="dtd.dir" value="dtd"/>
-        <property name="lib.dir" value="lib"/>        
-        <property name="build.dir" value="build"/>        
-    </target>        
-    
-    <target name="classpath">		        
+        <property name="lib.dir" value="lib"/>
+        <property name="build.dir" value="build"/>
+    </target>
+
+    <target name="classpath">
         <path id="local.class.path">
             <!--<fileset dir="${lib.dir}" includes="*.jar"/>-->
             <fileset dir="../../base/lib" includes="*.jar"/>
             <fileset dir="../../base/build/lib" includes="*.jar"/>
-            <fileset dir="../../components/entity/lib" includes="*.jar"/>
-            <fileset dir="../../components/entity/build/lib" includes="*.jar"/>
-            <fileset dir="../../components/security/build/lib" includes="*.jar"/>
-            <fileset dir="../../components/service/lib" includes="*.jar"/>
-            <fileset dir="../../components/service/build/lib" includes="*.jar"/>
-            <fileset dir="../../components/content/build/lib" includes="*.jar"/>
-            <fileset dir="../../components/party/build/lib" includes="*.jar"/>
-            <fileset dir="../../components/product/build/lib" includes="*.jar"/>
-            <fileset dir="../../components/order/build/lib" includes="*.jar"/>
+            <fileset dir="../minerva/lib" includes="*.jar"/>
+            <fileset dir="../entity/lib" includes="*.jar"/>
+            <fileset dir="../entity/build/lib" includes="*.jar"/>
+            <fileset dir="../security/build/lib" includes="*.jar"/>
+            <fileset dir="../service/lib" includes="*.jar"/>
+            <fileset dir="../service/build/lib" includes="*.jar"/>
+            <fileset dir="../content/build/lib" includes="*.jar"/>
+            <fileset dir="../party/build/lib" includes="*.jar"/>
+            <fileset dir="../product/build/lib" includes="*.jar"/>
+            <fileset dir="../order/build/lib" includes="*.jar"/>
         </path>
     </target>
-    
+
     <!-- ================================================================== -->
     <!-- Removes all created files and directories                          -->
     <!-- ================================================================== -->
@@ -66,30 +67,30 @@
     </target>
 
     <target name="clean-lib" depends="init">
-        <delete dir="${build.dir}/lib"/>        
+        <delete dir="${build.dir}/lib"/>
     </target>
-    
+
     <!-- ================================================================== -->
     <!-- Makes sure the needed directory structure is in place              -->
     <!-- ================================================================== -->
 
     <target name="prepare" depends="clean-lib">
-        <mkdir dir="${build.dir}/classes"/>         
+        <mkdir dir="${build.dir}/classes"/>
         <mkdir dir="${build.dir}/lib"/>
     </target>
-    
+
     <target name="prepare-docs" depends="init">
-        <mkdir dir="${build.dir}/javadocs"/>        
+        <mkdir dir="${build.dir}/javadocs"/>
     </target>
-    
+
     <!-- ================================================================== -->
     <!-- Compilation of the source files                                                                                                                         -->
-    <!-- ================================================================== -->               
+    <!-- ================================================================== -->
 
     <target name="classes" depends="prepare,classpath">
-    	<javac debug="on" deprecation="on" destdir="${build.dir}/classes">
+        <javac debug="on" deprecation="on" destdir="${build.dir}/classes">
             <classpath>
-                <path refid="local.class.path"/>                
+                <path refid="local.class.path"/>
             </classpath>
             <src path="${src.dir}"/>
         </javac>
@@ -99,23 +100,23 @@
             <fileset dir="${src.dir}" includes="**/*.properties,**/*.xml,**/*.bsh,**/*.logic,**/*.js,**/*.jacl,**/*.py"/>
         </copy>
     </target>
-    
+
     <target name="jar" depends="classes">
-        <jar jarfile="${build.dir}/lib/${name}.jar" basedir="${build.dir}/classes"/>         
-    </target>    
-    
+        <jar jarfile="${build.dir}/lib/${name}.jar" basedir="${build.dir}/classes"/>
+    </target>
+
     <!-- ================================================================== -->
     <!-- Build JavaDoc                                                      -->
     <!-- ================================================================== -->
 
     <target name="docs" depends="prepare-docs,classpath">
-        <javadoc packagenames="org.ofbiz.securityext.*" 
+        <javadoc packagenames="org.ofbiz.securityext.*"
                  classpathref="local.class.path"
-                 destdir="${build.dir}/javadocs" 
+                 destdir="${build.dir}/javadocs"
                  Windowtitle="Open for Business - ${desc}">
-            <sourcepath path="${src.dir}"/>            
+            <sourcepath path="${src.dir}"/>
         </javadoc>
     </target>
-    
-    <target name="all" depends="jar,docs"/>   
+
+    <target name="all" depends="jar,docs"/>
 </project>
