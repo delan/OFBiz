@@ -41,13 +41,13 @@ import org.ofbiz.core.util.*;
  */
 public class EntityConditionList extends EntityCondition {
 
-    protected List condList;
+    protected List conditionList;
     protected EntityOperator operator;
 
     protected EntityConditionList() {}
 
-    public EntityConditionList(List condList, EntityOperator operator) {
-        this.condList = condList;
+    public EntityConditionList(List conditionList, EntityOperator operator) {
+        this.conditionList = conditionList;
         this.operator = operator;
     }
 
@@ -55,12 +55,12 @@ public class EntityConditionList extends EntityCondition {
         // if (Debug.verboseOn()) Debug.logVerbose("makeWhereString for entity " + modelEntity.getEntityName());
         StringBuffer whereStringBuffer = new StringBuffer();
 
-        if (condList != null && condList.size() > 0) {
-            for (int i = 0; i < condList.size(); i++) {
-                EntityCondition condition = (EntityCondition) condList.get(i);
+        if (conditionList != null && conditionList.size() > 0) {
+            for (int i = 0; i < conditionList.size(); i++) {
+                EntityCondition condition = (EntityCondition) conditionList.get(i);
 
                 whereStringBuffer.append(condition.makeWhereString(modelEntity, entityConditionParams));
-                if (i < condList.size() - 1) {
+                if (i < conditionList.size() - 1) {
                     whereStringBuffer.append(' ');
                     whereStringBuffer.append(operator.getCode());
                     whereStringBuffer.append(' ');
@@ -72,7 +72,7 @@ public class EntityConditionList extends EntityCondition {
 
     public void checkCondition(ModelEntity modelEntity) throws GenericModelException {
         // if (Debug.verboseOn()) Debug.logVerbose("checkCondition for entity " + modelEntity.getEntityName());
-        Iterator exprIter = condList.iterator();
+        Iterator exprIter = conditionList.iterator();
 
         while (exprIter.hasNext()) {
             EntityCondition entityCondition = (EntityCondition) exprIter.next();
@@ -85,9 +85,9 @@ public class EntityConditionList extends EntityCondition {
         StringBuffer toStringBuffer = new StringBuffer();
 
         toStringBuffer.append("[conditionList::");
-        if (condList != null && condList.size() > 0) {
-            for (int i = 0; i < condList.size(); i++) {
-                EntityCondition condition = (EntityCondition) condList.get(i);
+        if (conditionList != null && conditionList.size() > 0) {
+            for (int i = 0; i < conditionList.size(); i++) {
+                EntityCondition condition = (EntityCondition) conditionList.get(i);
 
                 toStringBuffer.append(condition.toString());
                 if (i > 0) toStringBuffer.append("::");
