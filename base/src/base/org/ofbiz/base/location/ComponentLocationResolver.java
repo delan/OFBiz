@@ -1,5 +1,5 @@
 /*
- * $Id: ComponentLocationResolver.java,v 1.1 2004/06/30 21:25:57 jonesde Exp $
+ * $Id: ComponentLocationResolver.java,v 1.2 2004/07/18 09:35:06 jonesde Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -36,7 +36,7 @@ import org.ofbiz.base.util.UtilURL;
  * A special location resolver that uses Strings like URLs, but with more options 
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      3.1
  */
 
@@ -49,9 +49,9 @@ public class ComponentLocationResolver implements LocationResolver {
         
         // componentName is between the first slash and the second
         int firstSlash = baseLocation.indexOf("/");
-        int secondSlash = baseLocation.indexOf("/", firstSlash);
-        if (firstSlash != 1 || secondSlash == -1) {
-            throw new MalformedURLException("Bad component location [" + location + "]; should be like: component://{component-name}/relative/path");
+        int secondSlash = baseLocation.indexOf("/", firstSlash + 1);
+        if (firstSlash != 0 || secondSlash == -1) {
+            throw new MalformedURLException("Bad component location [" + location + "]: base location missing slashes [" + baseLocation + "], first=" + firstSlash + ", second=" + secondSlash + "; should be like: component://{component-name}/relative/path");
         }
         String componentName = baseLocation.substring(firstSlash + 1, secondSlash);
         
@@ -68,13 +68,19 @@ public class ComponentLocationResolver implements LocationResolver {
         }
 
         // if there is not a forward slash between the two, add it
-        if (baseLocation.charAt(0) != '/' && rootLocation.charAt(rootLocation.length()) != '/') {
+        if (baseLocation.charAt(0) != '/' && rootLocation.charAt(rootLocation.length() - 1) != '/') {
             baseLocation.insert(0, '/');
         }
 
         // insert the root location and we're done
         baseLocation.insert(0, rootLocation);
+
+        URL fileUrl = UtilURL.fromFilename(baseLocation.toString());
         
-        return UtilURL.fromFilename(baseLocation.toString());
+        if (fileUrl == null) {
+            Debug.logWarning("Unable to get file URL for component location; expanded location was [" + baseLocation + "], original location was [" + location + "]", module);
+        }
+        
+        return fileUrl;
     }
 }

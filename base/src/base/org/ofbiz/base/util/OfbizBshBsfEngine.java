@@ -1,7 +1,7 @@
 /*
- * $Id: OfbizBshBsfEngine.java,v 1.5 2004/07/11 09:30:01 jonesde Exp $
+ * $Id: OfbizBshBsfEngine.java,v 1.6 2004/07/18 09:35:06 jonesde Exp $
  *
- * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -24,6 +24,7 @@
 package org.ofbiz.base.util;
 
 /*
+ * Based on code that started with this header/license:
         This file is associated with the BeanShell Java Scripting language
         distribution (http://www.beanshell.org/).
  
@@ -33,15 +34,11 @@ package org.ofbiz.base.util;
  */
 
 import java.io.StringReader;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Vector;
 
-import bsh.BshClassManager;
 import bsh.EvalError;
 import bsh.Interpreter;
 import bsh.InterpreterError;
-import bsh.NameSpace;
 import bsh.TargetError;
 
 import com.ibm.bsf.BSFDeclaredBean;

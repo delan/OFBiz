@@ -1,7 +1,7 @@
 /*
- * $Id: BshUtil.java,v 1.2 2004/07/11 09:30:01 jonesde Exp $
+ * $Id: BshUtil.java,v 1.3 2004/07/18 09:35:06 jonesde Exp $
  *
- * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -47,9 +47,10 @@ import bsh.ParseException;
  * BshUtil - BeanShell Utilities
  *
  *@author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
+ *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@author     Oswin Ondarza and Manuel Soto
  *@created    Oct 22, 2002
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  */
 public final class BshUtil {
 
@@ -98,7 +99,7 @@ public final class BshUtil {
     }
     
     public static Interpreter makeInterpreter(Map context) throws EvalError {
-        Interpreter bsh = new Interpreter();
+        Interpreter bsh = getMasterInterpreter(null);
         // Set the context for the condition
         if (context != null) {
             Set keySet = context.keySet();
@@ -108,6 +109,9 @@ public final class BshUtil {
                 Object value = context.get(key);
                 bsh.set((String) key, value);
             }
+            
+            // include the context itself in for easier access in the scripts
+            bsh.set("context", context);
         }
         
         return bsh;
@@ -143,9 +147,9 @@ public final class BshUtil {
     }
     
     public static Object runBshAtLocation(String location, Map context) throws GeneralException {
-        Interpreter interpreter = getMasterInterpreter(null);
-        
         try {
+            Interpreter interpreter = makeInterpreter(context);
+            
             Interpreter.ParsedScript script = null;
             script = (Interpreter.ParsedScript) parsedScripts.get(location);
             if (script == null) {

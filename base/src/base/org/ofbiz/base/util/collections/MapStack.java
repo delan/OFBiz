@@ -1,5 +1,5 @@
 /*
- * $Id: MapStack.java,v 1.4 2004/07/15 22:24:59 jonesde Exp $
+ * $Id: MapStack.java,v 1.5 2004/07/18 09:35:06 jonesde Exp $
  *
  *  Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -38,7 +38,7 @@ import java.util.Set;
  * Map Stack
  * 
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      3.1
  */
 public class MapStack implements Map {
@@ -79,6 +79,17 @@ public class MapStack implements Map {
         }
     }
     
+    /** 
+     * Creates a MapStack object that has the same Map objects on its stack; 
+     * meant to be used to enable a 
+     * situation where a parent and child context are operating simultaneously 
+     * using two different MapStack objects, but sharing the Maps in common  
+     */
+    public MapStack standAloneStack() {
+        MapStack standAlone = new MapStack(this);
+        return standAlone;
+    }
+
     /** 
      * Creates a MapStack object that has the same Map objects on its stack, 
      * but with a new Map pushed on the top; meant to be used to enable a 
