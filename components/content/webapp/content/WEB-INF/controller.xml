@@ -1363,7 +1363,7 @@
     <view-map name="LookupDataResource" page="component://content/widget/data/DataScreens.xml#LookupDataResource" type="screen"/>
     <view-map name="ClipBoardContent" page="/content/ClipBoardContent.ftl" type="jpublish"/>
     <view-map name="ClipBoardDataResource" page="/data/ClipBoardDataResource.ftl" type="jpublish"/>
-    <view-map name="LookupPerson" page="component://content/widget/content/ContentScreens.xml#LookupPerson" type="screen"/>
+    <view-map name="LookupPerson" page="component://party/widget/partymgr/LookupScreens.xml#LookupPerson" type="screen"/>
     <view-map name="EditContentAttribute" page="component://content/widget/content/ContentScreens.xml#EditContentAttribute" type="screen"/>
     <view-map name="EditContentMetaData" page="component://content/widget/content/ContentScreens.xml#EditContentMetaData" type="screen"/>
     <view-map name="EditContentType" page="component://content/widget/contentsetup/ContentSetupScreens.xml#EditContentType" type="screen"/>
@@ -1389,7 +1389,7 @@
     <view-map name="EditDataResourceAttribute" page="/data/EditDataResourceAttribute.ftl" type="jpublish"/>
     <view-map name="EditDataResourceRole" page="/data/EditDataResourceRole.ftl" type="jpublish"/>
     <view-map name="EditDataResourceProductFeatures" page="/data/EditDataResourceProductFeatures.ftl" type="jpublish"/>
-    <view-map name="LookupProductFeature" page="/data/LookupProductFeature.ftl" type="jpublish"/>
+    <view-map name="LookupProductFeature" page="component://product/widget/catalog/LookupScreens.xml#LookupProductFeature" type="screen"/>
     <view-map name="EditDataResourceType" page="/datasetup/EditDataResourceType.ftl" type="jpublish"/>
     <view-map name="EditDataResourceTypeAttr" page="/datasetup/EditDataResourceTypeAttr.ftl" type="jpublish"/>
     <view-map name="EditDataCategory" page="/datasetup/EditDataCategory.ftl" type="jpublish"/>
@@ -1421,7 +1421,7 @@
     <view-map name="FindSurvey" page="/survey/FindSurvey.ftl" type="jpublish"/>
     <view-map name="EditSurvey" page="/survey/EditSurvey.ftl" type="jpublish"/>
     <view-map name="EditSurveyQuestions" page="/survey/EditSurveyQuestions.ftl" type="jpublish"/>
-    <view-map name="LookupPartyAndUserLoginAndPerson" page="component://content/widget/content/ContentScreens.xml#LookupPartyAndUserLoginAndPerson" type="screen"/>
+    <view-map name="LookupPartyAndUserLoginAndPerson" page="component://party/widget/partymgr/LookupScreens.xml#LookupPartyAndUserLoginAndPerson" type="screen"/>
     <view-map name="SurveyResponse" page="/survey/SurveyResponse.ftl" type="jpublish"/>
     <view-map name="ViewSurveyResponse" page="/survey/ViewResponse.ftl" type="jpublish"/>
 
