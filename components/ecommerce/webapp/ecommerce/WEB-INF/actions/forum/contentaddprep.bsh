@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -54,10 +54,9 @@ import freemarker.template.SimpleSequence;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
-delegator = (GenericDelegator) request.getAttribute("delegator");
 singleWrapper = context.get("singleWrapper");
-singleWrapper.putInContext("contentPurposeTypeId", page.getProperty("contentPurposeTypeId"));
-singleWrapper.putInContext("contentAssocTypeId", page.getProperty("contentAssocTypeId"));
+singleWrapper.putInContext("contentPurposeTypeId", page.get("contentPurposeTypeId"));
+singleWrapper.putInContext("contentAssocTypeId", page.get("contentAssocTypeId"));
 servletContext = session.getServletContext();
 String rootPubPt = (String) servletContext.getAttribute("webSiteId");
 paramMap = UtilHttp.getParameterMap(request);
@@ -76,16 +75,16 @@ if (attrList.size() > 0) {
 singleWrapper.putInContext("publishOperation", publishOperation);
 singleWrapper.putInContext("contentIdTo", contentIdTo);
 //singleWrapper.putInContext("ownerContentId", contentIdTo);
-summaryDataResourceTypeId = page.getProperty("summaryDataResourceTypeId");
+summaryDataResourceTypeId = page.get("summaryDataResourceTypeId");
 singleWrapper.putInContext("summaryDataResourceTypeId", summaryDataResourceTypeId);
-targetOperation = page.getProperty("targetOperation");
+targetOperation = page.get("targetOperation");
 if (UtilValidate.isEmpty(targetOperation)) {
     targetOperation = "CONTENT_CREATE";
 }
 
 singleWrapper.putInContext("targetOperation", targetOperation);
 singleWrapper.putInContext("contentTypeId", "DOCUMENT");
-contentPurpose = page.getProperty("contentPurpose");
+contentPurpose = page.get("contentPurpose");
 if (UtilValidate.isEmpty(contentPurpose)) {
     contentPurpose = "ARTICLE";
 }
@@ -98,7 +97,7 @@ statusId = "BLOG_PUBLISHED";
 if (forumContent != null) {
     statusId = forumContent.getString("statusId");
     if (UtilValidate.isEmpty(statusId)) {
-        statusId = page.getProperty("statusId");
+        statusId = page.get("statusId");
     }
     if (UtilValidate.isEmpty(statusId)) {
         statusId = "BLOG_PUBLISHED";
