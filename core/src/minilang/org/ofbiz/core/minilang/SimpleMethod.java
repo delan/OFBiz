@@ -239,7 +239,7 @@ public class SimpleMethod {
         loginRequired = !"false".equals(simpleMethodElement.getAttribute("login-required"));
         useTransaction = !"false".equals(simpleMethodElement.getAttribute("use-transaction"));
 
-        readOperations(simpleMethodElement);
+        readOperations(simpleMethodElement, this.methodOperations, this);
     }
 
     public String getMethodName() { return this.methodName; }
@@ -313,15 +313,7 @@ public class SimpleMethod {
             }
         }
 
-        boolean finished = true;
-        Iterator methodOpsIter = methodOperations.iterator();
-        while (methodOpsIter.hasNext()) {
-            MethodOperation methodOperation = (MethodOperation) methodOpsIter.next();
-            if (!methodOperation.exec(methodContext)) {
-                finished = false;
-                break;
-            }
-        }
+        boolean finished = runSubOps(methodOperations, methodContext);
 
         //declare errorMsg here just in case transaction ops fail
         String errorMsg = "";
@@ -402,7 +394,7 @@ public class SimpleMethod {
         }
     }
 
-    void readOperations(Element simpleMethodElement) {
+    public static void readOperations(Element simpleMethodElement, List methodOperations, SimpleMethod simpleMethod) {
         List operationElements = UtilXml.childElementList(simpleMethodElement, null);
         if (operationElements != null && operationElements.size() > 0) {
             Iterator operElemIter = operationElements.iterator();
@@ -411,23 +403,42 @@ public class SimpleMethod {
                 String nodeName = curOperElem.getNodeName();
 
                 if ("call-map-processor".equals(nodeName)) {
-                    methodOperations.add(new CallSimpleMapProcessor(curOperElem, this));
+                    methodOperations.add(new CallSimpleMapProcessor(curOperElem, simpleMethod));
                 } else if ("check-errors".equals(nodeName)) {
-                    methodOperations.add(new CheckErrors(curOperElem, this));
+                    methodOperations.add(new CheckErrors(curOperElem, simpleMethod));
                 } else if ("call-service".equals(nodeName)) {
-                    methodOperations.add(new CallService(curOperElem, this));
+                    methodOperations.add(new CallService(curOperElem, simpleMethod));
                 } else if ("call-bsh".equals(nodeName)) {
-                    methodOperations.add(new CallBsh(curOperElem, this));
+                    methodOperations.add(new CallBsh(curOperElem, simpleMethod));
                 } else if ("field-to-request".equals(nodeName)) {
-                    methodOperations.add(new FieldToRequest(curOperElem, this));
+                    methodOperations.add(new FieldToRequest(curOperElem, simpleMethod));
                 } else if ("field-to-session".equals(nodeName)) {
-                    methodOperations.add(new FieldToSession(curOperElem, this));
+                    methodOperations.add(new FieldToSession(curOperElem, simpleMethod));
                 } else if ("field-to-field".equals(nodeName)) {
-                    methodOperations.add(new FieldToField(curOperElem, this));
+                    methodOperations.add(new FieldToField(curOperElem, simpleMethod));
+                } else if ("if-empty".equals(nodeName)) {
+                    methodOperations.add(new IfEmpty(curOperElem, simpleMethod));
+                } else if ("if-not-empty".equals(nodeName)) {
+                    methodOperations.add(new IfNotEmpty(curOperElem, simpleMethod));
                 } else {
                     Debug.logWarning("Operation element \"" + nodeName + "\" no recognized");
                 }
             }
         }
+    }
+    
+    /** Execs the given operations returning true if all return true, or returning 
+     *  false and stopping if any return false.
+     */
+    public static boolean runSubOps(List methodOperations, MethodContext methodContext) {
+        Iterator methodOpsIter = methodOperations.iterator();
+        while (methodOpsIter.hasNext()) {
+            MethodOperation methodOperation = (MethodOperation) methodOpsIter.next();
+            if (!methodOperation.exec(methodContext)) {
+                return false;
+            }
+        }
+        
+        return true;
     }
 }
