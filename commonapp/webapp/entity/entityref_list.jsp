@@ -77,7 +77,7 @@
   while(piter.hasNext())
   {
     String pName = (String)piter.next();
-%><a href="entityref_main#<%=pName%>" target="entityFrame" class='listtext'><%=pName%></a><br><%
+%><a href="<%=response.encodeURL(controlPath + "/view/entityref_main#" + pName)%>" target="entityFrame" class='listtext'><%=pName%></a><br><%
   }
 %>
 
@@ -92,7 +92,7 @@
 			String url = search == null ? "entityref_main#"+entityName : "entityref_main#"+entityName+"?search="+search;
 %>	
 <a href="<%=response.encodeURL(controlPath + "/view/EditEntity?entityName=" + entityName)%>" target="entityFrame" class='listtext'>[EditDef]</a>
-<a href="<%=response.encodeURL(url)%>" target="entityFrame" class='listtext'><%= entityName %></a>
+<a href="<%=response.encodeURL(controlPath + "/view/" + url)%>" target="entityFrame" class='listtext'><%= entityName %></a>
 <br>
 <%
 		}	
