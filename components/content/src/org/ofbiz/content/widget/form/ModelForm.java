@@ -789,11 +789,7 @@ public class ModelForm {
     public void renderItemRows(StringBuffer buffer, Map context, FormStringRenderer formStringRenderer, boolean formPerItem) {
         
         // if list is empty, do not render rows
-        String listIteratorName = (String)context.get("listIteratorName");
-        ListIterator iter = null;
-        if (UtilValidate.isNotEmpty(listIteratorName)) {
-        	iter = (ListIterator)context.get(listIteratorName);
-        }
+        ListIterator iter = getListIterator(context);
         List items = (List) context.get(this.getListName());
         if (iter != null) {
             setPaginate(true);
@@ -801,6 +797,7 @@ public class ModelForm {
             iter = items.listIterator();
             setPaginate(false);
         } 
+        //setListIterator(iter);
         // set low and high index
         getListLimits(context);
         
@@ -1088,11 +1085,13 @@ public class ModelForm {
     }
 
     public ListIterator getListIterator(Map context) {
-        if (this.listIteratorName != null)
-            return (ListIterator) this.listIteratorName.get(context);
-        else
-            return null;
-    }
+        String name = (String)context.get("listIteratorName");
+        ListIterator iter = null;
+        if (UtilValidate.isNotEmpty(name)) {
+            iter = (ListIterator)context.get(name);
+        }
+        return iter;
+     }
     /**
      * @return
      */
@@ -1363,7 +1362,25 @@ public class ModelForm {
     
     public void getListLimits(Map context) {
         
-        if (paginate) {
+        
+        try {
+            listSize = ((Integer) context.get("listSize")).intValue();
+        } catch (Exception e) {
+            ListIterator listIt = getListIterator(context);
+            if (listIt != null && listIt instanceof EntityListIterator) {
+                try {
+                    ((EntityListIterator)listIt).last();
+                    listSize = ((EntityListIterator)listIt).currentIndex();
+                    ((EntityListIterator)listIt).first();
+                } catch(GenericEntityException e2) {
+                    listSize = -1;
+                }
+                
+            }
+           
+        }
+        
+       if (paginate) {
             try {
                 viewIndex = ((Integer) context.get("viewIndex")).intValue();
             } catch (Exception e) {
@@ -1375,21 +1392,9 @@ public class ModelForm {
             } catch (Exception e) {
                 //viewSize = DEFAULT_PAGE_SIZE;
             }
-            
             lowIndex = viewIndex * viewSize;
             highIndex = (viewIndex + 1) * viewSize;
             
-            ListIterator listIt = getListIterator(context);
-            if (listIt != null && listIt instanceof EntityListIterator) {
-                try {
-                    ((EntityListIterator)listIt).last();
-                    listSize = ((EntityListIterator)listIt).currentIndex();
-                    ((EntityListIterator)listIt).first();
-                } catch(GenericEntityException e) {
-                    listSize = -1;
-                }
-                
-            }
     
             /*
             try {
