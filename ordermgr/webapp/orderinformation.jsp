@@ -33,12 +33,20 @@
  <tr>
   <td width='50%' valign=top align=left>
 
-  <%GenericValue localOrderHeader = null;%>
-  <%OrderReadHelper localOrder = null;%>
-  <ofbiz:if name="orderHeader">
+<%GenericValue localOrderHeader = null;%>
+<%OrderReadHelper localOrder = null;%>
+<ofbiz:if name="orderHeader">
     <%localOrderHeader = (GenericValue) pageContext.getAttribute("orderHeader");%>
     <%localOrder = new OrderReadHelper(localOrderHeader);%>
-  </ofbiz:if>
+</ofbiz:if>
+<%String partyId = orderRole.getString("partyId");%>
+<%GenericValue userPerson = delegator.findByPrimaryKey("Person",UtilMisc.toMap("partyId",orderRole.getString("partyId")));%>    
+<%String distributorId = localOrder != null ? localOrder.getDistributorId() : null;%>
+<%if (distributorId != null) pageContext.setAttribute("distributorId", distributorId);%>
+<%if (paymentMethod != null) pageContext.setAttribute("paymentMethod", paymentMethod);%>
+<%if (billingAccount != null) pageContext.setAttribute("billingAccount", billingAccount);%>
+<%--if (billingAddress != null) pageContext.setAttribute("billingAddress", billingAddress);--%>
+<%if (shippingAddress != null) pageContext.setAttribute("shippingAddress", shippingAddress);%>
 
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
@@ -68,8 +76,6 @@
                   <td width="5">&nbsp;</td>
                   <td align="left" valign="top" width="80%">
                     <div class="tabletext">
-                    <%String partyId = orderRole.getString("partyId");%>
-                    <%GenericValue userPerson = delegator.findByPrimaryKey("Person",UtilMisc.toMap("partyId",orderRole.getString("partyId")));%>    
                     <%if(userPerson!=null){%>
                       <%=PartyHelper.getPersonName(userPerson)%>
                     <%}%>        
@@ -114,8 +120,6 @@
                   </td>
                 </tr>
               </ofbiz:if>
-              <%String distributorId = localOrder != null ? localOrder.getDistributorId() : null;%>
-              <%if (distributorId != null) pageContext.setAttribute("distributorId", distributorId);%>
               <ofbiz:if name="distributorId">
                 <tr><td colspan="7"><hr class='sepbar'></td></tr>
                 <tr>
@@ -159,23 +163,43 @@
         <tr>
           <td>
               <table width="100%" border="0" cellpadding="1">
-              <%if (creditCardInfo != null) pageContext.setAttribute("creditCardInfo", creditCardInfo);%>
-              <%if (billingAccount != null) pageContext.setAttribute("billingAccount", billingAccount);%>
-              <%--if (billingAddress != null) pageContext.setAttribute("billingAddress", billingAddress);--%>
-              <ofbiz:if name="creditCardInfo"> 
+              <ofbiz:if name="paymentMethod"> 
                 <%pageContext.setAttribute("outputted", "true");%>
-                <tr>
-                  <td align="right" valign="top" width="15%">
-                    <div class="tabletext">&nbsp;<b>Credit Card</b></div>
-                  </td>
-                  <td width="5">&nbsp;</td>
-                  <td align="left" valign="top" width="80%">
-                      <div class="tabletext">
-                        <%=creditCardInfo.getString("nameOnCard")%><br>
-                        <%=ContactHelper.formatCreditCard(creditCardInfo)%>
-                      </div>
-                  </td>
-                </tr>
+                <%if ("CREDIT_CARD".equals(paymentMethod.getString("paymentMethodTypeId"))) {%>
+                    <%GenericValue creditCard = paymentMethod.getRelatedOne("CreditCard");%>
+                    <%pageContext.setAttribute("creditCard", creditCard);%>
+                    <tr>
+                      <td align="right" valign="top" width="15%">
+                        <div class="tabletext">&nbsp;<b>Credit Card</b></div>
+                      </td>
+                      <td width="5">&nbsp;</td>
+                      <td align="left" valign="top" width="80%">
+                          <div class="tabletext">
+                            <%EntityField.run("creditCard", "nameOnCard", pageContext);%><br>
+                            <%EntityField.run("creditCard", "companyNameOnCard", "", "<br>", pageContext);%>
+                            <%=ContactHelper.formatCreditCard(creditCard)%>
+                          </div>
+                      </td>
+                    </tr>
+                <%} else if ("EFT_ACCOUNT".equals(paymentMethod.getString("paymentMethodTypeId"))) {%>
+                    <%GenericValue eftAccount = paymentMethod.getRelatedOne("EftAccount");%>
+                    <%pageContext.setAttribute("eftAccount", eftAccount);%>
+                    <tr>
+                      <td align="right" valign="top" width="15%">
+                        <div class="tabletext">&nbsp;<b>EFT Account</b></div>
+                      </td>
+                      <td width="5">&nbsp;</td>
+                      <td align="left" valign="top" width="80%">
+                          <div class="tabletext">
+                            <%EntityField.run("eftAccount", "nameOnAccount", pageContext);%> 
+                            <%EntityField.run("eftAccount", "companyNameOnAccount", "<br>", "", pageContext);%> 
+                            <%EntityField.run("eftAccount", "bankName", "<br>Bank: ", "", pageContext);%>
+                            <%EntityField.run("eftAccount", "routingNumber", ", ", "", pageContext);%>
+                            <%EntityField.run("eftAccount", "accountNumber", "<br>Account #: ", "", pageContext);%>
+                          </div>
+                      </td>
+                    </tr>
+                <%}%>
               </ofbiz:if>
               <ofbiz:if name="billingAccount">
                 <ofbiz:if name="outputted">
@@ -260,7 +284,6 @@
         <tr>
           <td>
               <table width="100%" border="0" cellpadding="1">
-                <%if (shippingAddress != null) pageContext.setAttribute("shippingAddress", shippingAddress);%>
                 <ofbiz:if name="shippingAddress">
                 <tr>
                   <td align="right" valign="top" width="15%">

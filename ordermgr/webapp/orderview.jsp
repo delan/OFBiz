@@ -33,6 +33,7 @@
 <%@ page import="java.util.*, java.text.*" %>
 
 <%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.security.*, org.ofbiz.core.entity.*" %>
+<%@ page import="org.ofbiz.core.pseudotag.*" %>
 <%@ page import="org.ofbiz.commonapp.order.order.*, org.ofbiz.commonapp.party.party.*, org.ofbiz.commonapp.party.contact.*" %>
 
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
@@ -62,11 +63,11 @@
   GenericValue billingAddress = order.getBillingAddress(); 
   GenericValue billingAccount = orderHeader.getRelatedOne("BillingAccount");
 
-  GenericValue creditCardInfo = null;
+  GenericValue paymentMethod = null;
   Iterator orderPaymentPreferences = UtilMisc.toIterator(orderHeader.getRelated("OrderPaymentPreference"));
   if(orderPaymentPreferences != null && orderPaymentPreferences.hasNext()) {
     GenericValue orderPaymentPreference = (GenericValue)orderPaymentPreferences.next();
-    creditCardInfo = orderPaymentPreference.getRelatedOne("CreditCardInfo");
+    paymentMethod = orderPaymentPreference.getRelatedOne("PaymentMethod");
   }
 
   GenericValue shipmentPreference = null;
