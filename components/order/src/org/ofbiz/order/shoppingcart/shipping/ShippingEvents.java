@@ -1,5 +1,5 @@
 /*
- * $Id: ShippingEvents.java,v 1.5 2003/11/17 03:17:12 ajzeneski Exp $
+ * $Id: ShippingEvents.java,v 1.6 2003/11/20 04:01:00 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -39,12 +39,13 @@ import org.ofbiz.order.order.OrderReadHelper;
 import org.ofbiz.order.shoppingcart.ShoppingCart;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
+import org.ofbiz.common.geo.GeoWorker;
 
 /**
  * ShippingEvents - Events used for processing shipping fees
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      2.0
  */
 public class ShippingEvents {
@@ -176,11 +177,20 @@ public class ShippingEvents {
         while (i.hasNext()) {
             GenericValue thisEstimate = (GenericValue) i.next();
             String toGeo = thisEstimate.getString("geoIdTo");
+            List toGeoList = GeoWorker.expandGeoGroup(toGeo, delegator);
 
             // Make sure we have a valid GEOID.
-            if (toGeo == null || toGeo.equals("") || toGeo.equals(shipAddress.getString("countryGeoId")) ||
-                    toGeo.equals(shipAddress.getString("stateProvinceGeoId")) ||
-                    toGeo.equals(shipAddress.getString("postalCodeGeoId"))) {
+            if (toGeoList == null || toGeoList.size() == 0 ||
+                    GeoWorker.containsGeo(toGeoList, shipAddress.getString("countryGeoId"), delegator) ||
+                    GeoWorker.containsGeo(toGeoList, shipAddress.getString("stateProvinceGeoId"), delegator) ||
+                    GeoWorker.containsGeo(toGeoList, shipAddress.getString("postalCodeGeoId"), delegator)) {
+
+                /*
+                if (toGeo == null || toGeo.equals("") || toGeo.equals(shipAddress.getString("countryGeoId")) ||
+                toGeo.equals(shipAddress.getString("stateProvinceGeoId")) ||
+                toGeo.equals(shipAddress.getString("postalCodeGeoId"))) {
+                 */
+
                 GenericValue wv = null;
                 GenericValue qv = null;
                 GenericValue pv = null;
@@ -252,7 +262,7 @@ public class ShippingEvents {
 
         if (estimateList.size() < 1) {
             Debug.logInfo("[ShippingEvents.getShipEstimate] No shipping estimate found.", module);
-            return ServiceUtil.returnSuccess(standardMessage);           
+            return ServiceUtil.returnSuccess(standardMessage);
         }
 
         // Calculate priority based on available data.
@@ -266,32 +276,39 @@ public class ShippingEvents {
         int estimateIndex = 0;
 
         if (estimateList.size() > 1) {
-            int estimatePriority[] = new int[estimateList.size()];
+            TreeMap estimatePriority = new TreeMap();
+            //int estimatePriority[] = new int[estimateList.size()];
 
             for (int x = 0; x < estimateList.size(); x++) {
                 GenericValue currentEstimate = (GenericValue) estimateList.get(x);
 
+                int prioritySum = 0;
                 if (UtilValidate.isNotEmpty(currentEstimate.getString("partyId")))
-                    estimatePriority[x] += PRIORITY_PARTY;
+                    prioritySum += PRIORITY_PARTY;
                 if (UtilValidate.isNotEmpty(currentEstimate.getString("roleTypeId")))
-                    estimatePriority[x] += PRIORITY_ROLE;
+                    prioritySum += PRIORITY_ROLE;
                 if (UtilValidate.isNotEmpty(currentEstimate.getString("geoIdTo")))
-                    estimatePriority[x] += PRIORITY_GEO;
+                    prioritySum += PRIORITY_GEO;
                 if (UtilValidate.isNotEmpty(currentEstimate.getString("weightBreakId")))
-                    estimatePriority[x] += PRIORITY_WEIGHT;
+                    prioritySum += PRIORITY_WEIGHT;
                 if (UtilValidate.isNotEmpty(currentEstimate.getString("quantityBreakId")))
-                    estimatePriority[x] += PRIORITY_QTY;
+                    prioritySum += PRIORITY_QTY;
                 if (UtilValidate.isNotEmpty(currentEstimate.getString("priceBreakId")))
-                    estimatePriority[x] += PRIORITY_PRICE;
+                    prioritySum += PRIORITY_PRICE;
+
+                // there will be only one of each priority; latest will replace
+                estimatePriority.put(new Integer(prioritySum), currentEstimate);
             }
-            Arrays.sort(estimatePriority);
-            estimateIndex = estimatePriority.length - 1;
+
+            // locate the highest priority estimate; or the latest entered
+            Object[] estimateArray = estimatePriority.values().toArray();
+            estimateIndex = estimateList.indexOf(estimateArray[estimateArray.length - 1]);
         }
 
         // Grab the estimate and work with it.
         GenericValue estimate = (GenericValue) estimateList.get(estimateIndex);
 
-        if (Debug.verboseOn()) Debug.logVerbose("[ShippingEvents.getShipEstimate] Working with estimate: " + estimateIndex, module);
+        Debug.log("[ShippingEvents.getShipEstimate] Working with estimate [" + estimateIndex + "]: " + estimate, module);
 
         double orderFlat = 0.00;
 
@@ -361,7 +378,7 @@ public class ShippingEvents {
         double shippingTotal = weightAmount + quantityAmount + priceAmount + orderFlat + itemFlatAmount + orderPercentage + featureSurcharge;
 
         if (Debug.verboseOn()) Debug.logVerbose("[ShippingEvents.getShipEstimate] Setting shipping amount : " + shippingTotal, module);
-        
+
         Map responseResult = ServiceUtil.returnSuccess();
         responseResult.put("shippingTotal", new Double(shippingTotal));
         return responseResult;
@@ -375,7 +392,7 @@ public class ShippingEvents {
      HashMap arguments = new HashMap();
      double totalWeight = 0.00000;
      double upsRate = 0.00;
-     
+
      HashMap services = new HashMap();
      services.put("1DA","Next Day Air");
      services.put("1DM","Next Day Air Early");
@@ -389,10 +406,10 @@ public class ShippingEvents {
      services.put("XPR","Worldwide Express");
      services.put("XDM","Worldwide Express Plus");
      services.put("XPD","Worldwide Expedited");
-     
+
      if ( !services.containsKey(upsMethod) )
      return 0.00;
-     
+
      // Get the total weight from the cart.
      Iterator cartItemIterator = cart.iterator();
      while ( cartItemIterator.hasNext() ) {
@@ -401,24 +418,24 @@ public class ShippingEvents {
      }
      String weightString = new Double(totalWeight).toString();
      if (Debug.infoOn()) Debug.logInfo("[ShippingEvents.getUPSRate] Total Weight: " + weightString, module);
-     
+
      // Set up the UPS arguments.
      arguments.put("AppVersion","1.2");
      arguments.put("ResponseType","application/x-ups-rss");
      arguments.put("AcceptUPSLicenseAgreement","yes");
-     
+
      arguments.put("RateChart","Regular Daily Pickup");              // ?
      arguments.put("PackagingType","00");                                  // Using own container
      arguments.put("ResidentialInd","1");                                     // Assume residential
-     
+
      arguments.put("ShipperPostalCode",fromZip);                      // Ship From ZipCode
      arguments.put("ConsigneeCountry","US");                            // 2 char country ISO
      arguments.put("ConsigneePostalCode","27703");                 // Ship TO ZipCode
      arguments.put("PackageActualWeight",weightString);          // Total shipment weight
-     
+
      arguments.put("ActionCode","3");                                         // Specify the shipping type. (4) to get all
      arguments.put("ServiceLevelCode",upsMethod);                   // User's shipping choice (or 1DA for ActionCode 4)
-     
+
      String upsResponse = null;
      try {
      req.setUrl(UPS_RATES_URL);
@@ -430,7 +447,7 @@ public class ShippingEvents {
      Debug.logError("[ShippingEvents.getUPSRate] Problems getting UPS Rate Infomation.", module);
      return -1;
      }
-     
+
      if ( upsResponse.indexOf("application/x-ups-error") != -1 ) {
      // get the error message
      }
@@ -445,14 +462,14 @@ public class ShippingEvents {
      if ( upsResponse.indexOf("%") == -1 )
      respList.add(upsResponse);
      }
-     
+
      // Debug:
      Iterator i = respList.iterator();
      while ( i.hasNext() ) {
      String value = (String) i.next();
      if (Debug.infoOn()) Debug.logInfo("[ShippingEvents.getUPSRate] Resp List: " + value, module);
      }
-     
+
      // Shipping method is index 5
      // Shipping rate is index 12
      if ( !respList.get(5).equals(upsMethod) )
@@ -464,7 +481,7 @@ public class ShippingEvents {
      Debug.logError("[ShippingEvents.getUPSRate] Problems parsing rate value.", module);
      }
      }
-     
+
      return upsRate;
      }
      */
