@@ -58,7 +58,7 @@ public class EmptyCondition implements Conditional {
         if (!mapAcsr.isEmpty()) {
             Map fromMap = (Map) mapAcsr.get(methodContext);
             if (fromMap == null) {
-                if (Debug.infoOn()) Debug.logInfo("Map not found with name " + mapAcsr + ", running operations");
+                if (Debug.infoOn()) Debug.logInfo("Map not found with name " + mapAcsr + ", running operations", module);
             } else {
                 fieldVal = fieldAcsr.get(fromMap, methodContext);
             }

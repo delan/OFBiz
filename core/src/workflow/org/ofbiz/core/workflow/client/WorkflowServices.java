@@ -466,7 +466,7 @@ public class WorkflowServices {
 
             try {
                 c = userLogin.getDelegator().findByAnd("WorkEffortAndPartyAssign", expr);
-                //Debug.logInfo("Found " + c.size() + " records.");
+                //Debug.logInfo("Found " + c.size() + " records.", module);
             } catch (GenericEntityException e) {
                 Debug.logWarning(e, module);
                 return false;
@@ -482,7 +482,7 @@ public class WorkflowServices {
                 expr.add(new EntityExpr("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.nowTimestamp()));
                 try {
                     c = userLogin.getDelegator().findByAnd("WorkEffortAndPartyAssign", expr);
-                    //Debug.logInfo("Found " + c.size() + " records.");
+                    //Debug.logInfo("Found " + c.size() + " records.", module);
                 } catch (GenericEntityException e) {
                     Debug.logWarning(e, module);
                     return false;

@@ -78,13 +78,13 @@ public class DataVisionViewHandler implements ViewHandler {
 
             /* NOTE: this is the old code that is no londer needed because of the new setDatabaseConnection method
             report.setDatabasePassword(""); // password can be bogus because we are using an OFBiz connection...
-            Debug.logInfo("before creating database");
+            Debug.logInfo("before creating database", module);
             DataVisionDatabase dvDb = new DataVisionDatabase(datasourceName, report);
 
             report.setDatabase(dvDb);
             */
 
-            Debug.logInfo("before reading file");
+            Debug.logInfo("before reading file", module);
             report.readFile(context.getRealPath(page)); // Must be after password
 
             /* NO support for param file yet... need to pull in page params or something
@@ -93,11 +93,11 @@ public class DataVisionViewHandler implements ViewHandler {
              report.setParameterXMLFile(param_xml_file_name);
              } */
 
-            Debug.logInfo("before set layout engine");
+            Debug.logInfo("before set layout engine", module);
             report.setLayoutEngine(new jimm.datavision.layout.HTMLLE(response.getWriter()));
-            Debug.logInfo("before run report");
+            Debug.logInfo("before run report", module);
             report.runReport();   // Run the report in this thread
-            Debug.logInfo("after run report, end");
+            Debug.logInfo("after run report, end", module);
         } catch (UserCancellationException e) {
             throw new ViewHandlerException("User cancelled report", e);
         } catch (FileNotFoundException e) {

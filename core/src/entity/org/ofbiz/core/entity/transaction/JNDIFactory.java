@@ -230,7 +230,7 @@ public class JNDIFactory implements TransactionFactoryInterface {
                      }
                      */
 
-                    // if (con != null) if (Debug.infoOn()) Debug.logInfo("[ConnectionFactory.getConnection] Got JNDI connection with catalog: " + con.getCatalog());
+                    // if (con != null) if (Debug.infoOn()) Debug.logInfo("[ConnectionFactory.getConnection] Got JNDI connection with catalog: " + con.getCatalog(), module);
                     return con;
                 } else {
                     Debug.logError("Datasource returned was NULL.", module);

@@ -62,7 +62,7 @@ public class FieldToEnv extends MethodOperation {
             Map fromMap = (Map) mapAcsr.get(methodContext);
 
             if (fromMap == null) {
-                Debug.logWarning("Map not found with name " + mapAcsr + ", not copying field");
+                Debug.logWarning("Map not found with name " + mapAcsr + ", not copying field", module);
                 return true;
             }
 
@@ -73,7 +73,7 @@ public class FieldToEnv extends MethodOperation {
         }
 
         if (fieldVal == null) {
-            if (Debug.verboseOn()) Debug.logVerbose("Field value not found with name " + fieldAcsr + " in Map with name " + mapAcsr + ", not copying field");
+            if (Debug.verboseOn()) Debug.logVerbose("Field value not found with name " + fieldAcsr + " in Map with name " + mapAcsr + ", not copying field", module);
             return true;
         }
 

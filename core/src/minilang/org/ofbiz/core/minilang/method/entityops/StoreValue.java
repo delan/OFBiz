@@ -55,7 +55,7 @@ public class StoreValue extends MethodOperation {
         if (value == null) {
             String errMsg = "In store-value a value was not found with the specified valueAcsr: " + valueAcsr + ", not storing";
 
-            Debug.logWarning(errMsg);
+            Debug.logWarning(errMsg, module);
             if (methodContext.getMethodType() == MethodContext.EVENT) {
                 methodContext.putEnv(simpleMethod.getEventErrorMessageName(), errMsg);
                 methodContext.putEnv(simpleMethod.getEventResponseCodeName(), simpleMethod.getDefaultErrorCode());
@@ -69,7 +69,7 @@ public class StoreValue extends MethodOperation {
         try {
             methodContext.getDelegator().store(value, doCacheClear);
         } catch (GenericEntityException e) {
-            Debug.logError(e);
+            Debug.logError(e, module);
             String errMsg = "ERROR: Could not complete the " + simpleMethod.getShortDescription() + " process [problem storing the " + valueAcsr + " value: " + e.getMessage() + "]";
 
             if (methodContext.getMethodType() == MethodContext.EVENT) {

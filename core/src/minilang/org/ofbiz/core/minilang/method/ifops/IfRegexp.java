@@ -62,7 +62,7 @@ public class IfRegexp extends MethodOperation {
         try {
             pattern = compiler.compile(expr);
         } catch (MalformedPatternException e) {
-            Debug.logError(e);
+            Debug.logError(e, module);
         }
 
         SimpleMethod.readOperations(element, subOps, simpleMethod);
@@ -85,7 +85,7 @@ public class IfRegexp extends MethodOperation {
         if (!mapAcsr.isEmpty()) {
             Map fromMap = (Map) mapAcsr.get(methodContext);
             if (fromMap == null) {
-                if (Debug.infoOn()) Debug.logInfo("Map not found with name " + mapAcsr + ", using empty string for comparison");
+                if (Debug.infoOn()) Debug.logInfo("Map not found with name " + mapAcsr + ", using empty string for comparison", module);
             } else {
                 fieldVal = fieldAcsr.get(fromMap, methodContext);
             }
@@ -98,7 +98,7 @@ public class IfRegexp extends MethodOperation {
             try {
                 fieldString = (String) ObjectType.simpleTypeConvert(fieldVal, "String", null, null);
             } catch (GeneralException e) {
-                Debug.logError(e, "Could not convert object to String, using empty String");
+                Debug.logError(e, "Could not convert object to String, using empty String", module);
             }
         }
         // always use an empty string by default

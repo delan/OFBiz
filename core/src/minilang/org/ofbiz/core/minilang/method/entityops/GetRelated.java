@@ -74,7 +74,7 @@ public class GetRelated extends MethodOperation {
 
         GenericValue value = (GenericValue) valueAcsr.get(methodContext);
         if (value == null) {
-            Debug.logWarning("Value not found with name: " + valueAcsr + ", not getting related...");
+            Debug.logWarning("Value not found with name: " + valueAcsr + ", not getting related...", module);
             return true;
         }
         try {
@@ -85,7 +85,7 @@ public class GetRelated extends MethodOperation {
             }
         } catch (GenericEntityException e) {
             String errMsg = "ERROR: Could not complete the " + simpleMethod.getShortDescription() + " process [problem getting related from entity with name " + value.getEntityName() + " for the relation-name: " + relationName + ": " + e.getMessage() + "]";
-            Debug.logError(e, errMsg);
+            Debug.logError(e, errMsg, module);
             methodContext.setErrorReturn(errMsg, simpleMethod);
             return false;
         }

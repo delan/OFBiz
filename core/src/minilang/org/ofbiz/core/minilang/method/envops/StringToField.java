@@ -68,7 +68,7 @@ public class StringToField extends MethodOperation {
             Map toMap = (Map) mapAcsr.get(methodContext);
 
             if (toMap == null) {
-                if (Debug.verboseOn()) Debug.logVerbose("Map not found with name " + mapAcsr + ", creating new map");
+                if (Debug.verboseOn()) Debug.logVerbose("Map not found with name " + mapAcsr + ", creating new map", module);
                 toMap = new HashMap();
                 mapAcsr.put(methodContext, toMap);
             }

@@ -52,7 +52,7 @@ public class FieldString extends MethodString {
         if (!mapAcsr.isEmpty()) {
             Map fromMap = (Map) mapAcsr.get(methodContext);
             if (fromMap == null) {
-                Debug.logWarning("Map not found with name " + mapAcsr + ", not getting string value");
+                Debug.logWarning("Map not found with name " + mapAcsr + ", not getting string value", module);
                 return "";
             }
             fieldVal = fieldAcsr.get(fromMap, methodContext);
@@ -62,7 +62,7 @@ public class FieldString extends MethodString {
         }
 
         if (fieldVal == null) {
-            if (Debug.infoOn()) Debug.logInfo("Field value not found with name " + fieldAcsr + " in Map with name " + mapAcsr + ", not getting string value");
+            if (Debug.infoOn()) Debug.logInfo("Field value not found with name " + fieldAcsr + " in Map with name " + mapAcsr + ", not getting string value", module);
             return "";
         }
         

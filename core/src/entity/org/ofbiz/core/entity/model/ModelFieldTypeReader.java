@@ -105,7 +105,7 @@ public class ModelFieldTypeReader {
                     try {
                         document = fieldTypeResourceHandler.getDocument();
                     } catch (GenericConfigException e) {
-                        Debug.logError(e, "Error loading field type file");
+                        Debug.logError(e, "Error loading field type file", module);
                     }
                     if (document == null) {
                         fieldTypeCache = null;

@@ -81,7 +81,7 @@ public class Section extends Content {
             }
             render((HttpServletRequest) pageContext.getRequest(), (HttpServletResponse) pageContext.getResponse());
         } catch (java.io.IOException e) {
-            Debug.logError(e, "Error rendering section: ");
+            Debug.logError(e, "Error rendering section: ", module);
             if (UtilJ2eeCompat.useNestedJspException(pageContext.getServletContext()))
                 throw new JspException(e);
             else
@@ -89,7 +89,7 @@ public class Section extends Content {
         } catch (ServletException e) {
             Throwable throwable = e.getRootCause() != null ? e.getRootCause() : e;
 
-            Debug.logError(throwable, "Error rendering section: ");
+            Debug.logError(throwable, "Error rendering section: ", module);
             if (UtilJ2eeCompat.useNestedJspException(pageContext.getServletContext()))
                 throw new JspException(throwable);
             else
@@ -101,7 +101,7 @@ public class Section extends Content {
         ServletContext context = (ServletContext) request.getAttribute("servletContext");
         boolean verboseOn = Debug.verboseOn();
 
-        if (verboseOn) Debug.logVerbose("Rendering " + this.toString());
+        if (verboseOn) Debug.logVerbose("Rendering " + this.toString(), module);
 
         // long viewStartTime = System.currentTimeMillis();
         if (content != null) {
@@ -160,7 +160,7 @@ public class Section extends Content {
                 viewHandlerRender(type, request, response);
             }
         }
-        if (verboseOn) Debug.logVerbose("DONE Rendering " + this.toString());
+        if (verboseOn) Debug.logVerbose("DONE Rendering " + this.toString(), module);
     }
 
     protected void viewHandlerRender(String typeToUse, HttpServletRequest request, HttpServletResponse response) throws ServletException {
@@ -169,7 +169,7 @@ public class Section extends Content {
 
         // see if the type is defined in the controller.xml file
         try {
-            if (Debug.verboseOn()) Debug.logVerbose("Rendering view [" + content + "] of type [" + typeToUse + "]");
+            if (Debug.verboseOn()) Debug.logVerbose("Rendering view [" + content + "] of type [" + typeToUse + "]", module);
             ViewHandler vh = requestHandler.getViewFactory().getViewHandler(typeToUse);
             // use the default content-type and encoding for the ViewHandler -- may want to change this.
             vh.render(name, content, info, null, null, request, response);

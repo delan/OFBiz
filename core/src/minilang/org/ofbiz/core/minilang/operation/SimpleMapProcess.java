@@ -84,7 +84,7 @@ public class SimpleMapProcess {
                 } else if ("convert".equals(nodeName)) {
                     simpleMapOperations.add(new Convert(curOperElem, this));
                 } else {
-                    Debug.logWarning("[SimpleMapProcessor.SimpleMapProcess.readOperations] Operation element \"" + nodeName + "\" not recognized");
+                    Debug.logWarning("[SimpleMapProcessor.SimpleMapProcess.readOperations] Operation element \"" + nodeName + "\" not recognized", module);
                 }
             }
         }

@@ -69,7 +69,7 @@ public class EntityFieldMap extends EntityCondition {
     }
     
     public String makeWhereString(ModelEntity modelEntity, List entityConditionParams) {
-        // if (Debug.verboseOn()) Debug.logVerbose("makeWhereString for entity " + modelEntity.getEntityName());
+        // if (Debug.verboseOn()) Debug.logVerbose("makeWhereString for entity " + modelEntity.getEntityName(), module);
         List whereFields = new ArrayList();
 
         if (fieldMap != null && fieldMap.size() > 0) {
@@ -85,7 +85,7 @@ public class EntityFieldMap extends EntityCondition {
     }
 
     public void checkCondition(ModelEntity modelEntity) throws GenericModelException {
-        // if (Debug.verboseOn()) Debug.logVerbose("checkCondition for entity " + modelEntity.getEntityName());
+        // if (Debug.verboseOn()) Debug.logVerbose("checkCondition for entity " + modelEntity.getEntityName(), module);
         // make sure that all fields in the Map are valid
         if (fieldMap != null && !modelEntity.areFields(fieldMap.keySet())) {
             throw new GenericModelException("At least one of the passed fields is not valid: " + fieldMap.keySet().toString());

@@ -146,7 +146,7 @@ public class MemoryHelper implements GenericHelper {
                         return true;
                     }
                 } catch (Exception e) {
-                    Debug.logError(e);
+                    Debug.logError(e, module);
                 }
             }
         }

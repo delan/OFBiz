@@ -79,7 +79,7 @@ public class FindByPrimaryKey extends MethodOperation {
                 valueAcsr.put(methodContext, delegator.findByPrimaryKey(entityName, inMap));
             }
         } catch (GenericEntityException e) {
-            Debug.logError(e);
+            Debug.logError(e, module);
             String errMsg = "ERROR: Could not complete the " + simpleMethod.getShortDescription() + " process [problem finding the " + entityName + " entity: " + e.getMessage() + "]";
             methodContext.setErrorReturn(errMsg, simpleMethod);
             return false;

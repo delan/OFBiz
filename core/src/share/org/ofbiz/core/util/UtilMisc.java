@@ -149,7 +149,7 @@ public class UtilMisc {
             MapComparator mc = new MapComparator(sortKeys);
             Collections.sort(toSort, mc);
         } catch (Exception e) {
-            Debug.logError(e, "Problems sorting list of maps; returning null.");
+            Debug.logError(e, "Problems sorting list of maps; returning null.", module);
             return null;
         }
         return toSort;

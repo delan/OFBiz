@@ -74,7 +74,7 @@ public class EntityEcaCondition {
             throw new GenericEntityException("Cannot have null Value or DispatchContext!");
         }
 
-        if (Debug.verboseOn()) Debug.logVerbose(this.toString());
+        if (Debug.verboseOn()) Debug.logVerbose(this.toString(), module);
 
         Object lhsValue = value.get(lhsValueName);
 
@@ -85,7 +85,7 @@ public class EntityEcaCondition {
             rhsValue = value.get(rhsValueName);
         }
 
-        if (Debug.verboseOn()) Debug.logVerbose("Comparing : " + lhsValue + " " + operator + " " + rhsValue);
+        if (Debug.verboseOn()) Debug.logVerbose("Comparing : " + lhsValue + " " + operator + " " + rhsValue, module);
 
         // evaluate the condition & invoke the action(s)
         List messages = new LinkedList();
@@ -95,7 +95,7 @@ public class EntityEcaCondition {
         if (messages.size() > 0) {
             Iterator m = messages.iterator();
             while (m.hasNext()) {
-                Debug.logWarning((String) m.next());
+                Debug.logWarning((String) m.next(), module);
             }
         }
         if (cond != null) {

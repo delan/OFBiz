@@ -59,7 +59,7 @@ public class ModelDataFileReader {
                 // must check if null again as one of the blocked threads can still enter
                 reader = (ModelDataFileReader) readers.get(readerURL);
                 if (reader == null) {
-                    if (Debug.infoOn()) Debug.logInfo("[ModelDataFileReader.getModelDataFileReader] : creating reader.");
+                    if (Debug.infoOn()) Debug.logInfo("[ModelDataFileReader.getModelDataFileReader] : creating reader.", module);
                     reader = new ModelDataFileReader(readerURL);
                     readers.put(readerURL, reader);
                 }
@@ -69,7 +69,7 @@ public class ModelDataFileReader {
             readers.remove(readerURL);
             return null;
         }
-        if (Debug.infoOn()) Debug.logInfo("[ModelDataFileReader.getModelDataFileReader] : returning reader.");
+        if (Debug.infoOn()) Debug.logInfo("[ModelDataFileReader.getModelDataFileReader] : returning reader.", module);
         return reader;
     }
 
@@ -130,14 +130,14 @@ public class ModelDataFileReader {
                                 if (dataFile != null) {
                                     modelDataFiles.put(dataFileName, dataFile);
                                     // utilTimer.timerString("  After modelDataFiles.put -- " + i + " --");
-                                    if (Debug.infoOn()) Debug.logInfo("-- getModelDataFile: #" + i + " Loaded dataFile: " + dataFileName);
+                                    if (Debug.infoOn()) Debug.logInfo("-- getModelDataFile: #" + i + " Loaded dataFile: " + dataFileName, module);
                                 } else
-                                    Debug.logWarning("-- -- SERVICE ERROR:getModelDataFile: Could not create dataFile for dataFileName: " + dataFileName);
+                                    Debug.logWarning("-- -- SERVICE ERROR:getModelDataFile: Could not create dataFile for dataFileName: " + dataFileName, module);
 
                             }
                         } while ((curChild = curChild.getNextSibling()) != null);
                     } else
-                        Debug.logWarning("No child nodes found.");
+                        Debug.logWarning("No child nodes found.", module);
                     utilTimer.timerString("Finished file " + readerURL + " - Total Flat File Defs: " + i + " FINISHED");
                 }
             }
@@ -207,7 +207,7 @@ public class ModelDataFileReader {
             if (modelRecord != null)
                 dataFile.records.add(modelRecord);
             else
-                Debug.logWarning("[ModelDataFileReader.createModelDataFile] Weird, modelRecord was null");
+                Debug.logWarning("[ModelDataFileReader.createModelDataFile] Weird, modelRecord was null", module);
         }
 
         for (int i = 0; i < dataFile.records.size(); i++) {
@@ -220,7 +220,7 @@ public class ModelDataFileReader {
                     parentRecord.childRecords.add(modelRecord);
                     modelRecord.parentRecord = parentRecord;
                 } else {
-                    Debug.logError("[ModelDataFileReader.createModelDataFile] ERROR: Could not find parentRecord with name " + modelRecord.parentName);
+                    Debug.logError("[ModelDataFileReader.createModelDataFile] ERROR: Could not find parentRecord with name " + modelRecord.parentName, module);
                 }
             }
         }
@@ -271,7 +271,7 @@ public class ModelDataFileReader {
             if (modelField != null)
                 record.fields.add(modelField);
             else
-                Debug.logWarning("[ModelDataFileReader.createModelRecord] Weird, modelField was null");
+                Debug.logWarning("[ModelDataFileReader.createModelRecord] Weird, modelField was null", module);
         }
 
         return record;

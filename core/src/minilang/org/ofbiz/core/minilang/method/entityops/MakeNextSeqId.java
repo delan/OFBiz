@@ -68,14 +68,14 @@ public class MakeNextSeqId extends MethodOperation {
                 numericPadding = Integer.parseInt(numericPaddingStr);
             }
         } catch (Exception e) {
-            Debug.logError(e, "numeric-padding format invalid for [" + numericPaddingStr + "]");
+            Debug.logError(e, "numeric-padding format invalid for [" + numericPaddingStr + "]", module);
         }
         try {
             if (UtilValidate.isNotEmpty(incrementByStr)) {
                 incrementBy = Integer.parseInt(incrementByStr);
             }
         } catch (Exception e) {
-            Debug.logError(e, "increment-by format invalid for [" + incrementByStr + "]");
+            Debug.logError(e, "increment-by format invalid for [" + incrementByStr + "]", module);
         }
 
         GenericValue value = (GenericValue) valueAcsr.get(methodContext);
@@ -86,7 +86,7 @@ public class MakeNextSeqId extends MethodOperation {
             try {
                 // get values in reverse order
                 List allValues = methodContext.getDelegator().findByAnd(value.getEntityName(), lookupValue, UtilMisc.toList("-" + seqFieldName));
-                //Debug.logInfo("Get existing values from entity " + value.getEntityName() + " with lookupValue: " + lookupValue + ", and the seqFieldName: " + seqFieldName + ", and the results are: " + allValues);
+                //Debug.logInfo("Get existing values from entity " + value.getEntityName() + " with lookupValue: " + lookupValue + ", and the seqFieldName: " + seqFieldName + ", and the results are: " + allValues, module);
                 GenericValue first = EntityUtil.getFirst(allValues);
                 String newSeqId = null;
                 if (first != null) {
@@ -105,7 +105,7 @@ public class MakeNextSeqId extends MethodOperation {
                     
                 value.set(seqFieldName, newSeqId);
             } catch (Exception e) {
-                Debug.logError(e, "Error making next seqId");
+                Debug.logError(e, "Error making next seqId", module);
                 return true;
            }
         }

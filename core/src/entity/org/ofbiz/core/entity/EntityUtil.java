@@ -495,7 +495,7 @@ public class EntityUtil {
             if (value2 == null) return value == null ? 0 : -1;
             int result = ((Comparable) value).compareTo(value2);
 
-            // if (Debug.infoOn()) Debug.logInfo("[OrderByComparator.compareAsc] Result is " + result + " for [" + value + "] and [" + value2 + "]");
+            // if (Debug.infoOn()) Debug.logInfo("[OrderByComparator.compareAsc] Result is " + result + " for [" + value + "] and [" + value2 + "]", module);
             return result;
         }
 

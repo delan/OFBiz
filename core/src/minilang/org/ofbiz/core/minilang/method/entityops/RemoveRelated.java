@@ -58,7 +58,7 @@ public class RemoveRelated extends MethodOperation {
         if (value == null) {
             String errMsg = "In remove-related a value was not found with the specified valueAcsr: " + valueAcsr + ", not removing related";
 
-            Debug.logWarning(errMsg);
+            Debug.logWarning(errMsg, module);
             if (methodContext.getMethodType() == MethodContext.EVENT) {
                 methodContext.putEnv(simpleMethod.getEventErrorMessageName(), errMsg);
                 methodContext.putEnv(simpleMethod.getEventResponseCodeName(), simpleMethod.getDefaultErrorCode());
@@ -72,7 +72,7 @@ public class RemoveRelated extends MethodOperation {
         try {
             methodContext.getDelegator().removeRelated(relationName, value, doCacheClear);
         } catch (GenericEntityException e) {
-            Debug.logError(e);
+            Debug.logError(e, module);
             String errMsg = "ERROR: Could not complete the " + simpleMethod.getShortDescription() + " process [problem removing the relation " + relationName + " of the value " + valueAcsr + " value: " + e.getMessage() + "]";
 
             if (methodContext.getMethodType() == MethodContext.EVENT) {

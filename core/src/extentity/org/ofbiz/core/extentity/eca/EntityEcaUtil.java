@@ -63,7 +63,7 @@ public class EntityEcaUtil {
     public static String getEntityEcaReaderName(String delegatorName) {
         EntityConfigUtil.DelegatorInfo delegatorInfo = EntityConfigUtil.getDelegatorInfo(delegatorName);
         if (delegatorInfo == null) {
-            Debug.logError("BAD ERROR: Could not find delegator config with name: " + delegatorName);
+            Debug.logError("BAD ERROR: Could not find delegator config with name: " + delegatorName, module);
             return null;
         }
         return delegatorInfo.entityEcaReader;
@@ -72,7 +72,7 @@ public class EntityEcaUtil {
     protected static void readConfig(String entityEcaReaderName, Map ecaCache) {
         EntityConfigUtil.EntityEcaReaderInfo entityEcaReaderInfo = EntityConfigUtil.getEntityEcaReaderInfo(entityEcaReaderName);
         if (entityEcaReaderInfo == null) {
-            Debug.logError("BAD ERROR: Could not find entity-eca-reader config with name: " + entityEcaReaderName);
+            Debug.logError("BAD ERROR: Could not find entity-eca-reader config with name: " + entityEcaReaderName, module);
             return;
         }
         
@@ -89,7 +89,7 @@ public class EntityEcaUtil {
         try {
             rootElement = handler.getDocument().getDocumentElement();
         } catch (GenericConfigException e) {
-            Debug.logError(e);
+            Debug.logError(e, module);
             return;
         }
 

@@ -57,7 +57,7 @@ public class RemoveList extends MethodOperation {
         if (values == null) {
             String errMsg = "In remove-list a value list was not found with the specified listAcsr: " + listAcsr + ", not removing";
 
-            Debug.logWarning(errMsg);
+            Debug.logWarning(errMsg, module);
             if (methodContext.getMethodType() == MethodContext.EVENT) {
                 methodContext.putEnv(simpleMethod.getEventErrorMessageName(), errMsg);
                 methodContext.putEnv(simpleMethod.getEventResponseCodeName(), simpleMethod.getDefaultErrorCode());
@@ -71,7 +71,7 @@ public class RemoveList extends MethodOperation {
         try {
             methodContext.getDelegator().removeAll(values, doCacheClear);
         } catch (GenericEntityException e) {
-            Debug.logError(e);
+            Debug.logError(e, module);
             String errMsg = "ERROR: Could not complete the " + simpleMethod.getShortDescription() + " process [problem removing the " + listAcsr + " value list: " + e.getMessage() + "]";
 
             if (methodContext.getMethodType() == MethodContext.EVENT) {

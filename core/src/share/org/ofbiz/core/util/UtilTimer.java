@@ -168,8 +168,8 @@ public class UtilTimer {
 
         String retString = retStringBuf.toString();
 
-        // if(!quiet) Debug.logInfo(retString);
-        if (Debug.infoOn()) Debug.logInfo(retString);
+        // if(!quiet) Debug.logInfo(retString, module);
+        if (Debug.infoOn()) Debug.logInfo(retString, module);
         return retString;
     }
 

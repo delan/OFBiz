@@ -109,7 +109,7 @@ public class EntityExpr extends EntityCondition {
     }
 
     public String makeWhereString(ModelEntity modelEntity, List entityConditionParams) {
-        // if (Debug.verboseOn()) Debug.logVerbose("makeWhereString for entity " + modelEntity.getEntityName());
+        // if (Debug.verboseOn()) Debug.logVerbose("makeWhereString for entity " + modelEntity.getEntityName(), module);
         StringBuffer whereStringBuffer = new StringBuffer();
 
         if (lhs instanceof String) {
@@ -195,7 +195,7 @@ public class EntityExpr extends EntityCondition {
     }
 
     public void checkCondition(ModelEntity modelEntity) throws GenericModelException {
-        // if (Debug.verboseOn()) Debug.logVerbose("checkCondition for entity " + modelEntity.getEntityName());
+        // if (Debug.verboseOn()) Debug.logVerbose("checkCondition for entity " + modelEntity.getEntityName(), module);
         if (lhs instanceof String) {
             if (modelEntity.getField((String) lhs) == null) {
                 throw new GenericModelException("Field with name " + lhs + " not found in the " + modelEntity.getEntityName() + " Entity");

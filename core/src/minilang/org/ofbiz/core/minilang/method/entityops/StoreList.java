@@ -56,13 +56,13 @@ public class StoreList extends MethodOperation {
         List values = (List) listAcsr.get(methodContext);
         if (values == null) {
             String errMsg = "In store-list a value list was not found with the specified listAcsr: " + listAcsr + ", not storing";
-            Debug.logInfo(errMsg);
+            Debug.logInfo(errMsg, module);
         }
 
         try {
             methodContext.getDelegator().storeAll(values, doCacheClear);
         } catch (GenericEntityException e) {
-            Debug.logError(e);
+            Debug.logError(e, module);
             String errMsg = "ERROR: Could not complete the " + simpleMethod.getShortDescription() + " process [problem storing the " + listAcsr + " value list: " + e.getMessage() + "]";
 
             if (methodContext.getMethodType() == MethodContext.EVENT) {

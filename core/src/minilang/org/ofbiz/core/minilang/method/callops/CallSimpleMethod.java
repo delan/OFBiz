@@ -63,7 +63,7 @@ public class CallSimpleMethod extends MethodOperation {
                 try {
                     simpleMethods = SimpleMethod.getSimpleMethods(xmlResource, methodName, methodContext.getLoader());
                 } catch (MiniLangException e) {
-                    Debug.logError(e);
+                    Debug.logError(e, module);
                     String errMsg = "ERROR: Could not complete the " + simpleMethod.getShortDescription() + " process [error getting methods from resource: " + e.getMessage() + "]";
 
                     if (methodContext.getMethodType() == MethodContext.EVENT) {
@@ -104,7 +104,7 @@ public class CallSimpleMethod extends MethodOperation {
             }
         } else {
             String errMsg = "ERROR in call-simple-method: methodName was missing; not running simpleMethod";
-            Debug.logError(errMsg);
+            Debug.logError(errMsg, module);
 
             if (methodContext.getMethodType() == MethodContext.EVENT) {
                 methodContext.putEnv(simpleMethod.getEventErrorMessageName(), errMsg);

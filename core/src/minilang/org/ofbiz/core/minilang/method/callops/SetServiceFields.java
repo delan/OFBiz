@@ -60,7 +60,7 @@ public class SetServiceFields extends MethodOperation {
 
         Map fromMap = (Map) mapAcsr.get(methodContext);
         if (fromMap == null) {
-            Debug.logWarning("The from map in set-service-field was not found with name: " + mapAcsr);
+            Debug.logWarning("The from map in set-service-field was not found with name: " + mapAcsr, module);
             return true;
         }
 
@@ -76,7 +76,7 @@ public class SetServiceFields extends MethodOperation {
             modelService = dispatcher.getDispatchContext().getModelService(serviceName);
         } catch (GenericServiceException e) {
             String errMsg = "In set-service-fields could not get service definition for service name [" + serviceName + "]: " + e.toString();
-            Debug.logError(e, errMsg);
+            Debug.logError(e, errMsg, module);
             methodContext.setErrorReturn(errMsg, simpleMethod);
             return false;
         }

@@ -60,7 +60,7 @@ public class JasperReportsXmlViewHandler implements ViewHandler {
             throw new ViewHandlerException("View page was null or empty, but must be specified");
         }
         if (info == null || info.length() == 0) {
-            Debug.logWarning("View info string was null or empty, but must be used to specify an Entity that is mapped to the Entity Engine datasource that the report will use.");
+            Debug.logWarning("View info string was null or empty, but must be used to specify an Entity that is mapped to the Entity Engine datasource that the report will use.", module);
         }
 
         request.setAttribute(SiteDefs.FORWARDED_FROM_CONTROL_SERVLET, new Boolean(true));

@@ -59,7 +59,7 @@ public class ConditionalFactory {
         } else if ("if-has-permission".equals(tagName)) {
             return new HasPermissionCondition(element, simpleMethod);
         } else {
-            Debug.logWarning("Found an unknown if condition: ", tagName);
+            Debug.logWarning("Found an unknown if condition: ", tagName, module);
             return null;
         }
     }

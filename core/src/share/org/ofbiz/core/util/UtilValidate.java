@@ -870,7 +870,7 @@ public class UtilValidate {
             try {
                 tproduct = Integer.parseInt(digit, 10) * mul;
             } catch (Exception e) {
-                Debug.logWarning(e.getMessage());
+                Debug.logWarning(e.getMessage(), module);
                 return false;
             }
             if (tproduct >= 10)

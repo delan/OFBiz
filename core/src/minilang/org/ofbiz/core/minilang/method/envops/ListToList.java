@@ -55,12 +55,12 @@ public class ListToList extends MethodOperation {
         List toList = (List) toListAcsr.get(methodContext);
 
         if (fromList == null) {
-            if (Debug.infoOn()) Debug.logInfo("List not found with name " + listAcsr + ", not copying list");
+            if (Debug.infoOn()) Debug.logInfo("List not found with name " + listAcsr + ", not copying list", module);
             return true;
         }
 
         if (toList == null) {
-            if (Debug.verboseOn()) Debug.logVerbose("List not found with name " + toListAcsr + ", creating new list");
+            if (Debug.verboseOn()) Debug.logVerbose("List not found with name " + toListAcsr + ", creating new list", module);
             toList = new LinkedList();
             toListAcsr.put(methodContext, toList);
         }

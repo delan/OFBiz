@@ -120,7 +120,7 @@ public class EntityField {
 
                         fieldObjectType = fieldModel.getType();
                     } else {
-                        // Debug.logWarning("[EntityFieldTag] : Null ValueObject passed.");
+                        // Debug.logWarning("[EntityFieldTag] : Null ValueObject passed.", module);
                         fieldObject = defaultStr;
                         fieldObjectType = "comment"; // Default for NULL objects.
                     }
@@ -141,7 +141,7 @@ public class EntityField {
             // javaType = type;
             // Set a default for NULL objects.
             if (fieldObject == null) {
-                // Debug.logWarning("[EntityFieldTag] : Null Object passed.");
+                // Debug.logWarning("[EntityFieldTag] : Null Object passed.", module);
                 fieldObject = defaultStr;
                 // javaType = "java.lang.String";
             }

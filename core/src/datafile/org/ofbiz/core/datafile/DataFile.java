@@ -127,7 +127,7 @@ public class DataFile {
             try {
                 urlStream.close();
             } catch (IOException e) {
-                Debug.logWarning(e);
+                Debug.logWarning(e, module);
             }
         }
     }
@@ -161,7 +161,7 @@ public class DataFile {
         if (ModelDataFile.SEP_FIXED_RECORD.equals(modelDataFile.separatorStyle) || ModelDataFile.SEP_FIXED_LENGTH.equals(modelDataFile.separatorStyle)) {
             BufferedReader br = new BufferedReader(new InputStreamReader(dataFileStream));
             boolean isFixedRecord = ModelDataFile.SEP_FIXED_RECORD.equals(modelDataFile.separatorStyle);
-            // if (Debug.infoOn()) Debug.logInfo("[DataFile.readDataFile] separatorStyle is " + modelDataFile.separatorStyle + ", isFixedRecord: " + isFixedRecord);
+            // if (Debug.infoOn()) Debug.logInfo("[DataFile.readDataFile] separatorStyle is " + modelDataFile.separatorStyle + ", isFixedRecord: " + isFixedRecord, module);
 
             int lineNum = 1;
             String line = null;
@@ -173,13 +173,13 @@ public class DataFile {
                 try {
                     char[] charData = new char[modelDataFile.recordLength + 1];
 
-                    // if (Debug.infoOn()) Debug.logInfo("[DataFile.readDataFile] reading line " + lineNum + " from position " + (lineNum-1)*modelDataFile.recordLength + ", length is " + modelDataFile.recordLength);
+                    // if (Debug.infoOn()) Debug.logInfo("[DataFile.readDataFile] reading line " + lineNum + " from position " + (lineNum-1)*modelDataFile.recordLength + ", length is " + modelDataFile.recordLength, module);
                     if (br.read(charData, 0, modelDataFile.recordLength) == -1) {
                         line = null;
-                        // Debug.logInfo("[DataFile.readDataFile] found end of file, got -1");
+                        // Debug.logInfo("[DataFile.readDataFile] found end of file, got -1", module);
                     } else {
                         line = new String(charData);
-                        // if (Debug.infoOn()) Debug.logInfo("[DataFile.readDataFile] read line " + lineNum + " line is: \"" + line + "\"");
+                        // if (Debug.infoOn()) Debug.logInfo("[DataFile.readDataFile] read line " + lineNum + " line is: \"" + line + "\"", module);
                     }
                 } catch (IOException e) {
                     throw new DataFileException("Error reading line #" + lineNum + " (index " + (lineNum - 1) * modelDataFile.recordLength + " length " +
@@ -241,13 +241,13 @@ public class DataFile {
                     try {
                         char[] charData = new char[modelDataFile.recordLength];
 
-                        // if (Debug.infoOn()) Debug.logInfo("[DataFile.readDataFile] reading line " + lineNum + " from position " + (lineNum-1)*modelDataFile.recordLength + ", length is " + modelDataFile.recordLength);
+                        // if (Debug.infoOn()) Debug.logInfo("[DataFile.readDataFile] reading line " + lineNum + " from position " + (lineNum-1)*modelDataFile.recordLength + ", length is " + modelDataFile.recordLength, module);
                         if (br.read(charData, 0, modelDataFile.recordLength) == -1) {
                             line = null;
-                            // if (Debug.infoOn()) Debug.logInfo("[DataFile.readDataFile] found end of file, got -1");
+                            // if (Debug.infoOn()) Debug.logInfo("[DataFile.readDataFile] found end of file, got -1", module);
                         } else {
                             line = new String(charData);
-                            // if (Debug.infoOn()) Debug.logInfo("[DataFile.readDataFile] read line " + lineNum + " line is: \"" + line + "\"");
+                            // if (Debug.infoOn()) Debug.logInfo("[DataFile.readDataFile] read line " + lineNum + " line is: \"" + line + "\"", module);
                         }
                     } catch (IOException e) {
                         throw new DataFileException("Error reading line #" + lineNum + " (index " + (lineNum - 1) * modelDataFile.recordLength + " length " +
@@ -308,7 +308,7 @@ public class DataFile {
             if (bos != null)
                 bos.close();
         } catch (IOException e) {
-            Debug.logWarning(e);
+            Debug.logWarning(e, module);
         }
         return outString;
     }
@@ -346,7 +346,7 @@ public class DataFile {
      * @return
      */
     protected ModelRecord findModelForLine(String line, int lineNum, ModelDataFile modelDataFile) throws DataFileException {
-        // if (Debug.infoOn()) Debug.logInfo("[DataFile.findModelForLine] line: " + line);
+        // if (Debug.infoOn()) Debug.logInfo("[DataFile.findModelForLine] line: " + line, module);
         ModelRecord modelRecord = null;
 
         for (int i = 0; i < modelDataFile.records.size(); i++) {
@@ -361,7 +361,7 @@ public class DataFile {
 
             // try to match with a single typecode
             if (curModelRecord.typeCode.length() > 0) {
-                // if (Debug.infoOn()) Debug.logInfo("[DataFile.findModelForLine] Doing plain typecode match - code=" + curModelRecord.typeCode + ", filelinecode=" + typeCode);
+                // if (Debug.infoOn()) Debug.logInfo("[DataFile.findModelForLine] Doing plain typecode match - code=" + curModelRecord.typeCode + ", filelinecode=" + typeCode, module);
                 if (typeCode != null && typeCode.equals(curModelRecord.typeCode)) {
                     modelRecord = curModelRecord;
                     break;
@@ -369,7 +369,7 @@ public class DataFile {
             } // try to match a ranged typecode (tcMin <= typeCode <= tcMax)
             else if (curModelRecord.tcMin.length() > 0 || curModelRecord.tcMax.length() > 0) {
                 if (curModelRecord.tcIsNum) {
-                    // if (Debug.infoOn()) Debug.logInfo("[DataFile.findModelForLine] Doing ranged number typecode match - minNum=" + curModelRecord.tcMinNum + ", maxNum=" + curModelRecord.tcMaxNum + ", filelinecode=" + typeCode);
+                    // if (Debug.infoOn()) Debug.logInfo("[DataFile.findModelForLine] Doing ranged number typecode match - minNum=" + curModelRecord.tcMinNum + ", maxNum=" + curModelRecord.tcMaxNum + ", filelinecode=" + typeCode, module);
                     long typeCodeNum = Long.parseLong(typeCode);
 
                     if ((curModelRecord.tcMinNum < 0 || typeCodeNum >= curModelRecord.tcMinNum) &&
@@ -378,7 +378,7 @@ public class DataFile {
                         break;
                     }
                 } else {
-                    // if (Debug.infoOn()) Debug.logInfo("[DataFile.findModelForLine] Doing ranged String typecode match - min=" + curModelRecord.tcMin + ", max=" + curModelRecord.tcMax + ", filelinecode=" + typeCode);
+                    // if (Debug.infoOn()) Debug.logInfo("[DataFile.findModelForLine] Doing ranged String typecode match - min=" + curModelRecord.tcMin + ", max=" + curModelRecord.tcMax + ", filelinecode=" + typeCode, module);
                     if ((typeCode.compareTo(curModelRecord.tcMin) >= 0) &&
                         (typeCode.compareTo(curModelRecord.tcMax) <= 0)) {
                         modelRecord = curModelRecord;
@@ -390,7 +390,7 @@ public class DataFile {
         if (modelRecord == null)
             throw new DataFileException("Could not find record definition for line " + lineNum + "; first bytes: " +
                     line.substring(0, (line.length() > 5) ? 5 : line.length()));
-        // if (Debug.infoOn()) Debug.logInfo("[DataFile.findModelForLine] Got record model named " + modelRecord.name);
+        // if (Debug.infoOn()) Debug.logInfo("[DataFile.findModelForLine] Got record model named " + modelRecord.name, module);
         return modelRecord;
     }
 }

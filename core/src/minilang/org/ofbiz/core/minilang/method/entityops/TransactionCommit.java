@@ -57,7 +57,7 @@ public class TransactionCommit extends MethodOperation {
         try {
             TransactionUtil.commit(beganTransaction);
         } catch (GenericTransactionException e) {
-            Debug.logError(e, "Could not commit transaction in simple-method, returning error.");
+            Debug.logError(e, "Could not commit transaction in simple-method, returning error.", module);
             
             String errMsg = "ERROR: Could not complete the " + simpleMethod.getShortDescription() + " process [error committing a transaction: " + e.getMessage() + "]";
             methodContext.setErrorReturn(errMsg, simpleMethod);

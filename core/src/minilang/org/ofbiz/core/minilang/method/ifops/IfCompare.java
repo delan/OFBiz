@@ -83,7 +83,7 @@ public class IfCompare extends MethodOperation {
         if (!mapAcsr.isEmpty()) {
             Map fromMap = (Map) mapAcsr.get(methodContext);
             if (fromMap == null) {
-                if (Debug.infoOn()) Debug.logInfo("Map not found with name " + mapAcsr + ", using empty string for comparison");
+                if (Debug.infoOn()) Debug.logInfo("Map not found with name " + mapAcsr + ", using empty string for comparison", module);
             } else {
                 fieldVal = fieldAcsr.get(fromMap, methodContext);
             }
@@ -108,7 +108,7 @@ public class IfCompare extends MethodOperation {
                 while (miter.hasNext()) {
                     fullString.append((String) miter.next());
                 }
-                Debug.logWarning(fullString.toString());
+                Debug.logWarning(fullString.toString(), module);
 
                 methodContext.putEnv(simpleMethod.getEventErrorMessageName(), fullString.toString());
                 methodContext.putEnv(simpleMethod.getEventResponseCodeName(), simpleMethod.getDefaultErrorCode());

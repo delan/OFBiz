@@ -76,7 +76,7 @@ public class OFBizSecurity extends Security {
             try {
                 collection = delegator.findByAnd("UserLoginSecurityGroup", UtilMisc.toMap("userLoginId", userLoginId), null);
             } catch (GenericEntityException e) {
-                Debug.logWarning(e);
+                Debug.logWarning(e, module);
             }
             // make an empty collection to speed up the case where a userLogin belongs to no security groups
             if (collection == null) collection = new LinkedList();
@@ -103,7 +103,7 @@ public class OFBizSecurity extends Security {
                     exists = Boolean.FALSE;
             } catch (GenericEntityException e) {
                 exists = Boolean.FALSE;
-                Debug.logWarning(e);
+                Debug.logWarning(e, module);
             }
             securityGroupPermissionCache.put(securityGroupPermissionValue, exists);
         }
@@ -154,14 +154,14 @@ public class OFBizSecurity extends Security {
     public boolean hasEntityPermission(String entity, String action, GenericValue userLogin) {
         if (userLogin == null) return false;
 
-        // if (Debug.infoOn()) Debug.logInfo("hasEntityPermission: entity=" + entity + ", action=" + action);
+        // if (Debug.infoOn()) Debug.logInfo("hasEntityPermission: entity=" + entity + ", action=" + action, module);
         Iterator iterator = findUserLoginSecurityGroupByUserLoginId(userLogin.getString("userLoginId"));
         GenericValue userLoginSecurityGroup = null;
 
         while (iterator.hasNext()) {
             userLoginSecurityGroup = (GenericValue) iterator.next();
 
-            // if (Debug.infoOn()) Debug.logInfo("hasEntityPermission: userLoginSecurityGroup=" + userLoginSecurityGroup.toString());
+            // if (Debug.infoOn()) Debug.logInfo("hasEntityPermission: userLoginSecurityGroup=" + userLoginSecurityGroup.toString(), module);
 
             // always try _ADMIN first so that it will cache first, keeping the cache smaller
             if (securityGroupPermissionExists(userLoginSecurityGroup.getString("groupId"), entity + "_ADMIN"))

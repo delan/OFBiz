@@ -65,7 +65,7 @@ public class StringToList extends MethodOperation {
         List toList = (List) listAcsr.get(methodContext);
 
         if (toList == null) {
-            if (Debug.verboseOn()) Debug.logVerbose("List not found with name " + listAcsr + ", creating new List");
+            if (Debug.verboseOn()) Debug.logVerbose("List not found with name " + listAcsr + ", creating new List", module);
             toList = new LinkedList();
             listAcsr.put(methodContext, toList);
         }

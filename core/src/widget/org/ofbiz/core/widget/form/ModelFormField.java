@@ -113,14 +113,14 @@ public class ModelFormField {
                 position = Integer.valueOf(positionStr);
             }
         } catch (Exception e) {
-            Debug.logError(e, "Could not convert position attribute of the field element to an integer: [" + positionStr + "], using the default of the form renderer");
+            Debug.logError(e, "Could not convert position attribute of the field element to an integer: [" + positionStr + "], using the default of the form renderer", module);
         }
         
         // get sub-element and set fieldInfo
         Element subElement = UtilXml.firstChildElement(fieldElement, null);
         if (subElement != null) {
             String subElementName = subElement.getTagName();
-            if (Debug.verboseOn()) Debug.logVerbose("Processing field " + this.name + " with type info tag " + subElementName);
+            if (Debug.verboseOn()) Debug.logVerbose("Processing field " + this.name + " with type info tag " + subElementName, module);
             
             if (UtilValidate.isEmpty(subElementName)) {
                 	this.fieldInfo = null;
@@ -168,7 +168,7 @@ public class ModelFormField {
         // incorporate updates for values that are not empty in the overrideFormField
         if (UtilValidate.isNotEmpty(overrideFormField.name)) this.name = overrideFormField.name;
         if (overrideFormField.mapAcsr != null && !overrideFormField.mapAcsr.isEmpty()) {
-            //Debug.logInfo("overriding mapAcsr, old=" + (this.mapAcsr==null?"null":this.mapAcsr.getOriginalName()) + ", new=" + overrideFormField.mapAcsr.getOriginalName());
+            //Debug.logInfo("overriding mapAcsr, old=" + (this.mapAcsr==null?"null":this.mapAcsr.getOriginalName()) + ", new=" + overrideFormField.mapAcsr.getOriginalName(), module);
             this.mapAcsr = overrideFormField.mapAcsr;
         } 
         if (UtilValidate.isNotEmpty(overrideFormField.entityName)) this.entityName = overrideFormField.entityName;
@@ -222,7 +222,7 @@ public class ModelFormField {
                 }
             }
         } catch (GenericServiceException e) {
-            Debug.logError(e, "error getting service parameter definition for auto-field with serviceName: " + this.getServiceName() + ", and attributeName: " + this.getAttributeName());
+            Debug.logError(e, "error getting service parameter definition for auto-field with serviceName: " + this.getServiceName() + ", and attributeName: " + this.getAttributeName(), module);
         }
         return false;
     }
@@ -528,7 +528,7 @@ public class ModelFormField {
         // if useRequestParameters is TRUE then parameters will always be used, if FALSE then parameters will never be used
         // if isError is TRUE and useRequestParameters is not FALSE (ie is null or TRUE) then parameters will be used
         if ((Boolean.TRUE.equals(isError) && !Boolean.FALSE.equals(useRequestParameters)) || (Boolean.TRUE.equals(useRequestParameters))) {
-            //Debug.logInfo("Getting entry, isError true so getting from parameters for field " + this.getName() + " of form " + this.modelForm.getName());
+            //Debug.logInfo("Getting entry, isError true so getting from parameters for field " + this.getName() + " of form " + this.modelForm.getName(), module);
             Map parameters = (Map) context.get("parameters");
             if (parameters != null && parameters.get(this.getParameterName(context)) != null) {
                 return (String) parameters.get(this.getParameterName(context));
@@ -536,18 +536,18 @@ public class ModelFormField {
                 return defaultValue;
             }
         } else {
-            //Debug.logInfo("Getting entry, isError false so getting from Map in context for field " + this.getName() + " of form " + this.modelForm.getName());
+            //Debug.logInfo("Getting entry, isError false so getting from Map in context for field " + this.getName() + " of form " + this.modelForm.getName(), module);
             Map dataMap = this.getMap(context);
             if (dataMap == null) {
-                //Debug.logInfo("Getting entry, no Map found with name " + this.getMapName() + ", using context for field " + this.getName() + " of form " + this.modelForm.getName());
+                //Debug.logInfo("Getting entry, no Map found with name " + this.getMapName() + ", using context for field " + this.getName() + " of form " + this.modelForm.getName(), module);
                 dataMap = context;
             }
             Object retVal = null;
             if (this.entryAcsr != null && !this.entryAcsr.isEmpty()) {
-                //Debug.logInfo("Getting entry, using entryAcsr for field " + this.getName() + " of form " + this.modelForm.getName());
+                //Debug.logInfo("Getting entry, using entryAcsr for field " + this.getName() + " of form " + this.modelForm.getName(), module);
                 retVal = this.entryAcsr.get(dataMap);
             } else {
-                //Debug.logInfo("Getting entry, no entryAcsr so using field name " + this.name + " for field " + this.getName() + " of form " + this.modelForm.getName());
+                //Debug.logInfo("Getting entry, no entryAcsr so using field name " + this.name + " for field " + this.getName() + " of form " + this.modelForm.getName(), module);
                 // if no entry name was specified, use the field's name
                 retVal = dataMap.get(this.name);
             }
@@ -562,10 +562,10 @@ public class ModelFormField {
     
     public Map getMap(Map context) {
         if (this.mapAcsr == null || this.mapAcsr.isEmpty()) {
-            //Debug.logInfo("Getting Map from default of the form because of no mapAcsr for field " + this.getName());
+            //Debug.logInfo("Getting Map from default of the form because of no mapAcsr for field " + this.getName(), module);
             return this.modelForm.getDefaultMap(context);
         } else {
-            //Debug.logInfo("Getting Map from mapAcsr for field " + this.getName());
+            //Debug.logInfo("Getting Map from mapAcsr for field " + this.getName(), module);
             return (Map) mapAcsr.get(context);
         }
     }
@@ -854,7 +854,7 @@ public class ModelFormField {
                 return condTrue;
             } catch (EvalError e) {
                 String errMsg = "Error evaluating BeanShell use-when condition [" + this.useWhen + "] on the field " + this.name + " of form " + this.modelForm.name + ": " + e.toString();
-                Debug.logError(e, errMsg);
+                Debug.logError(e, errMsg, module);
                 throw new IllegalArgumentException(errMsg);
             }
         }
@@ -1336,7 +1336,7 @@ public class ModelFormField {
                     optionValues.add(new OptionValue(value.get(this.getKeyFieldName()).toString(), this.description.expandString(value)));
                 }
             } catch (GenericEntityException e) {
-                Debug.logError(e, "Error getting entity options in form");
+                Debug.logError(e, "Error getting entity options in form", module);
             }
         }
     }
@@ -1515,7 +1515,7 @@ public class ModelFormField {
                 size = Integer.parseInt(sizeStr);
             } catch (Exception e) {
                 if (sizeStr != null && sizeStr.length() > 0) {
-                    Debug.logError("Could not parse the size value of the text element: [" + sizeStr + "], setting to the default of " + size);
+                    Debug.logError("Could not parse the size value of the text element: [" + sizeStr + "], setting to the default of " + size, module);
                 }
             }
             
@@ -1525,7 +1525,7 @@ public class ModelFormField {
             } catch (Exception e) {
                 maxlength = null;
                 if (maxlengthStr != null && maxlengthStr.length() > 0) {
-                    Debug.logError("Could not parse the size value of the text element: [" + sizeStr + "], setting to null; default of no maxlength will be used");
+                    Debug.logError("Could not parse the size value of the text element: [" + sizeStr + "], setting to null; default of no maxlength will be used", module);
                 }
             }
         }
@@ -1585,7 +1585,7 @@ public class ModelFormField {
                 cols = Integer.parseInt(colsStr);
             } catch (Exception e) {
                 if (colsStr != null && colsStr.length() > 0) {
-                    Debug.logError("Could not parse the size value of the text element: [" + colsStr + "], setting to default of " + cols);
+                    Debug.logError("Could not parse the size value of the text element: [" + colsStr + "], setting to default of " + cols, module);
                 }
             }
             
@@ -1594,7 +1594,7 @@ public class ModelFormField {
                 rows = Integer.parseInt(rowsStr);
             } catch (Exception e) {
                 if (rowsStr != null && rowsStr.length() > 0) {
-                    Debug.logError("Could not parse the size value of the text element: [" + rowsStr + "], setting to default of " + rows);
+                    Debug.logError("Could not parse the size value of the text element: [" + rowsStr + "], setting to default of " + rows, module);
                 }
             }
         }

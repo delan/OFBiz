@@ -99,7 +99,7 @@ public class DBCPConnectionFactory {
             }
         } catch (Exception e) {
             String errorMsg = "Error getting datasource via DBCP.";
-            Debug.logError(e, errorMsg);
+            Debug.logError(e, errorMsg, module);
         }
 
         return null;

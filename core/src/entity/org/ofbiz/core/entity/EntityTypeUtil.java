@@ -79,7 +79,7 @@ public class EntityTypeUtil {
         try {
             return typeValue.getRelatedOneCache("Parent" + typeValue.getEntityName());
         } catch (GenericEntityException e) {
-            Debug.logWarning(e);
+            Debug.logWarning(e, module);
             return null;
         }
     }
@@ -93,7 +93,7 @@ public class EntityTypeUtil {
         try {
             childrenTypes = typeValue.getRelatedCache("Child" + typeValue.getEntityName());
         } catch (GenericEntityException e) {
-            Debug.logWarning(e);
+            Debug.logWarning(e, module);
             return null;
         }
         if (childrenTypes == null)

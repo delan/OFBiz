@@ -64,7 +64,7 @@ public class EntityConditionList extends EntityCondition {
     }
     
     public String makeWhereString(ModelEntity modelEntity, List entityConditionParams) {
-        // if (Debug.verboseOn()) Debug.logVerbose("makeWhereString for entity " + modelEntity.getEntityName());
+        // if (Debug.verboseOn()) Debug.logVerbose("makeWhereString for entity " + modelEntity.getEntityName(), module);
         StringBuffer whereStringBuffer = new StringBuffer();
 
         if (conditionList != null && conditionList.size() > 0) {
@@ -85,7 +85,7 @@ public class EntityConditionList extends EntityCondition {
     }
 
     public void checkCondition(ModelEntity modelEntity) throws GenericModelException {
-        // if (Debug.verboseOn()) Debug.logVerbose("checkCondition for entity " + modelEntity.getEntityName());
+        // if (Debug.verboseOn()) Debug.logVerbose("checkCondition for entity " + modelEntity.getEntityName(), module);
         if (conditionList == null || conditionList.size() == 0) return;
 
         Iterator exprIter = conditionList.iterator();

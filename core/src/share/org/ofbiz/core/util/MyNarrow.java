@@ -55,7 +55,7 @@ public final class MyNarrow {
      * @return the Object
      */
     public static Object lookup(InitialContext ic, String jndiName) throws Exception {
-        if (Debug.infoOn()) Debug.logInfo("Looking up initial context " + ic + " with JNDI name " + jndiName);
+        if (Debug.infoOn()) Debug.logInfo("Looking up initial context " + ic + " with JNDI name " + jndiName, module);
         return ic.lookup(jndiName);
     }
 
@@ -63,7 +63,7 @@ public final class MyNarrow {
      * narrow stuff
      */
     public static Object narrow(Object obj, Class c) throws Exception {
-        // if (Debug.infoOn()) Debug.logInfo("Narrowing object "+ obj +" of class " + c);
+        // if (Debug.infoOn()) Debug.logInfo("Narrowing object "+ obj +" of class " + c, module);
         return obj;
     }
 }

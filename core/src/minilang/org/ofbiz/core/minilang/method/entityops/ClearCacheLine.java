@@ -57,7 +57,7 @@ public class ClearCacheLine extends MethodOperation {
         } else {
             Map theMap = (Map) mapAcsr.get(methodContext);
             if (theMap == null) {
-                Debug.logWarning("In clear-cache-line could not find map with name " + mapAcsr + ", not clearing any cache lines");
+                Debug.logWarning("In clear-cache-line could not find map with name " + mapAcsr + ", not clearing any cache lines", module);
             } else {
                 methodContext.getDelegator().clearCacheLine(entityName, theMap);
             }

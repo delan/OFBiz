@@ -150,8 +150,8 @@ public class IteratorTag extends BodyTagSupport {
                 out.print(bodyString);
             }
         } catch (IOException e) {
-            Debug.logInfo("IteratorTag IO Error");
-            Debug.logInfo(e);
+            Debug.logInfo("IteratorTag IO Error", module);
+            Debug.logInfo(e, module);
         }
         return EVAL_PAGE;
     }
@@ -172,7 +172,7 @@ public class IteratorTag extends BodyTagSupport {
                 thisCollection = (Collection) propertyObject;
             }
         } else {
-            // Debug.logInfo("No property, check for Object Tag.");
+            // Debug.logInfo("No property, check for Object Tag.", module);
             ObjectTag objectTag =
                 (ObjectTag) findAncestorWithClass(this, ObjectTag.class);
 

@@ -850,7 +850,7 @@ public class ModelEntity implements Comparable {
                 returnString.append(ModelUtil.upperFirstChar(keyMap.fieldName));
                 returnString.append("() + \"&\" + ");
             } else {
-                Debug.logWarning("-- -- ENTITYGEN ERROR:httpRelationArgList: Related Key in Key Map not found for name: " + ((ModelField) flds.get(i)).name + " related entity: " + relation.relEntityName + " main entity: " + relation.mainEntity.entityName + " type: " + relation.type);
+                Debug.logWarning("-- -- ENTITYGEN ERROR:httpRelationArgList: Related Key in Key Map not found for name: " + ((ModelField) flds.get(i)).name + " related entity: " + relation.relEntityName + " main entity: " + relation.mainEntity.entityName + " type: " + relation.type, module);
             }
         }
         ModelKeyMap keyMap = relation.findKeyMapByRelated(((ModelField) flds.get(i)).name);
@@ -866,7 +866,7 @@ public class ModelEntity implements Comparable {
             returnString.append(ModelUtil.upperFirstChar(keyMap.fieldName));
             returnString.append("()");
         } else {
-            Debug.logWarning("-- -- ENTITYGEN ERROR:httpRelationArgList: Related Key in Key Map not found for name: " + ((ModelField) flds.get(i)).name + " related entity: " + relation.relEntityName + " main entity: " + relation.mainEntity.entityName + " type: " + relation.type);
+            Debug.logWarning("-- -- ENTITYGEN ERROR:httpRelationArgList: Related Key in Key Map not found for name: " + ((ModelField) flds.get(i)).name + " related entity: " + relation.relEntityName + " main entity: " + relation.mainEntity.entityName + " type: " + relation.type, module);
         }
         return returnString.toString();
     }

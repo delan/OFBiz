@@ -156,7 +156,7 @@ public class VisitHandler {
                 }
             }
             if (visit == null) {
-                Debug.logWarning("Could not find or create the visit...");
+                Debug.logWarning("Could not find or create the visit...", module);
             }
             return visit;
         } else {

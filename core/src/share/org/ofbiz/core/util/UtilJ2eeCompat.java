@@ -71,25 +71,25 @@ public class UtilJ2eeCompat {
             // if context is null use an empty string here which will cause the defaults to be used
             String serverInfo = context == null ? "" : context.getServerInfo();
 
-            Debug.logInfo("serverInfo: " + serverInfo);
+            Debug.logInfo("serverInfo: " + serverInfo, module);
 
             if (serverInfo.indexOf(RESIN) >= 0) {
-                Debug.logImportant("Resin detected, disabling the flush on the region render from PageContext for better performance");
+                Debug.logImportant("Resin detected, disabling the flush on the region render from PageContext for better performance", module);
                 doflush = false;
             } else if (serverInfo.indexOf(REX_IP) >= 0) {
-                Debug.logImportant("Trade City RexIP detected, using response.getWriter to write text out instead of response.getOutputStream");
+                Debug.logImportant("Trade City RexIP detected, using response.getWriter to write text out instead of response.getOutputStream", module);
                 usestream = false;
             } else if (serverInfo.indexOf(TOMCAT) >= 0) {
-                Debug.logImportant("Apache Tomcat detected, using response.getWriter to write text out instead of response.getOutputStream");
+                Debug.logImportant("Apache Tomcat detected, using response.getWriter to write text out instead of response.getOutputStream", module);
                 usestream = false;
             } else if (serverInfo.indexOf(JRUN) >= 0) {
-                Debug.logImportant("JRun detected, using response.getWriter to write text out instead of response.getOutputStream");
+                Debug.logImportant("JRun detected, using response.getWriter to write text out instead of response.getOutputStream", module);
                 usestream = false;
             } else if (serverInfo.indexOf(JETTY) >= 0) {
-                Debug.logImportant("Jetty detected, using response.getWriter to write text out instead of response.getOutputStream");
+                Debug.logImportant("Jetty detected, using response.getWriter to write text out instead of response.getOutputStream", module);
                 usestream = false;
             } else if (serverInfo.indexOf(ORION) >= 0) {
-                Debug.logImportant("Orion detected, using non-nested JspException");
+                Debug.logImportant("Orion detected, using non-nested JspException", module);
                 nestjspexception = false;
             }
 

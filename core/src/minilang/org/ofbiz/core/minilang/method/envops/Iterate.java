@@ -57,7 +57,7 @@ public class Iterate extends MethodOperation {
         Object fieldVal = null;
 
         if (listAcsr.isEmpty()) {
-            Debug.logWarning("No list-name specified in iterate tag, doing nothing");
+            Debug.logWarning("No list-name specified in iterate tag, doing nothing", module);
             return true;
         }
 
@@ -80,7 +80,7 @@ public class Iterate extends MethodOperation {
             try {
                 eli.close();
             } catch (GenericEntityException e) {
-                Debug.logError(e);
+                Debug.logError(e, module);
                 String errMsg = "ERROR: Error closing entityListIterator in " + simpleMethod.getShortDescription() + " [" + e.getMessage() + "]";
 
                 if (methodContext.getMethodType() == MethodContext.EVENT) {
@@ -96,11 +96,11 @@ public class Iterate extends MethodOperation {
             Collection theList = (Collection) objList;
 
             if (theList == null) {
-                if (Debug.infoOn()) Debug.logInfo("List not found with name " + listAcsr + ", doing nothing");
+                if (Debug.infoOn()) Debug.logInfo("List not found with name " + listAcsr + ", doing nothing", module);
                 return true;
             }
             if (theList.size() == 0) {
-                if (Debug.verboseOn()) Debug.logVerbose("List with name " + listAcsr + " has zero entries, doing nothing");
+                if (Debug.verboseOn()) Debug.logVerbose("List with name " + listAcsr + " has zero entries, doing nothing", module);
                 return true;
             }
 

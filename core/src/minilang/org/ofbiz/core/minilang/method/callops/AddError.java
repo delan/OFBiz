@@ -80,7 +80,7 @@ public class AddError extends MethodOperation {
         
         if (!isProperty && message != null) {
             messages.add(message);
-            // if (Debug.infoOn()) Debug.logInfo("[SimpleMapOperation.addMessage] Adding message: " + message);
+            // if (Debug.infoOn()) Debug.logInfo("[SimpleMapOperation.addMessage] Adding message: " + message, module);
         } else if (isProperty && propertyResource != null && message != null) {
             String propMsg = UtilProperties.getPropertyValue(UtilURL.fromResource(propertyResource, loader), message);
 
@@ -89,10 +89,10 @@ public class AddError extends MethodOperation {
             } else {
                 messages.add(methodContext.expandString(propMsg));
             }
-            // if (Debug.infoOn()) Debug.logInfo("[SimpleMapOperation.addMessage] Adding property message: " + propMsg);
+            // if (Debug.infoOn()) Debug.logInfo("[SimpleMapOperation.addMessage] Adding property message: " + propMsg, module);
         } else {
             messages.add("Simple Method error occurred, but no message was found, sorry.");
-            // if (Debug.infoOn()) Debug.logInfo("[SimpleMapOperation.addMessage] ERROR: No message found");
+            // if (Debug.infoOn()) Debug.logInfo("[SimpleMapOperation.addMessage] ERROR: No message found", module);
         }
     }
 }

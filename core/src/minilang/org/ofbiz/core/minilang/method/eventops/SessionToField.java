@@ -60,7 +60,7 @@ public class SessionToField extends MethodOperation {
         if (methodContext.getMethodType() == MethodContext.EVENT) {
             fieldVal = sessionAcsr.get(methodContext.getRequest().getSession(), methodContext.getEnvMap());
             if (fieldVal == null) {
-                Debug.logWarning("Session attribute value not found with name " + sessionAcsr);
+                Debug.logWarning("Session attribute value not found with name " + sessionAcsr, module);
             }
         }
 
@@ -79,7 +79,7 @@ public class SessionToField extends MethodOperation {
             Map fromMap = (Map) mapAcsr.get(methodContext);
 
             if (fromMap == null) {
-                Debug.logWarning("Map not found with name " + mapAcsr + " creating a new map");
+                Debug.logWarning("Map not found with name " + mapAcsr + " creating a new map", module);
                 fromMap = new HashMap();
                 mapAcsr.put(methodContext, fromMap);
             }

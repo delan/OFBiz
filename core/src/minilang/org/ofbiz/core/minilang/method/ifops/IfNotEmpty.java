@@ -70,7 +70,7 @@ public class IfNotEmpty extends MethodOperation {
         if (!mapAcsr.isEmpty()) {
             Map fromMap = (Map) mapAcsr.get(methodContext);
             if (fromMap == null) {
-                if (Debug.verboseOn()) Debug.logVerbose("Map not found with name " + mapAcsr + ", not running operations");
+                if (Debug.verboseOn()) Debug.logVerbose("Map not found with name " + mapAcsr + ", not running operations", module);
             } else {
                 fieldVal = fieldAcsr.get(fromMap, methodContext);
             }
@@ -80,7 +80,7 @@ public class IfNotEmpty extends MethodOperation {
         }
 
         if (fieldVal == null) {
-            if (Debug.verboseOn()) Debug.logVerbose("Field value not found with name " + fieldAcsr + " in Map with name " + mapAcsr + ", not running operations");
+            if (Debug.verboseOn()) Debug.logVerbose("Field value not found with name " + fieldAcsr + " in Map with name " + mapAcsr + ", not running operations", module);
         }
 
         // only run subOps if element is not empty/null
@@ -110,14 +110,14 @@ public class IfNotEmpty extends MethodOperation {
         }
 
         if (runSubOps) {
-            // if (Debug.verboseOn()) Debug.logVerbose("IfNotEmpty: Running if operations mapAcsr=" + mapAcsr + " fieldAcsr=" + fieldAcsr);
+            // if (Debug.verboseOn()) Debug.logVerbose("IfNotEmpty: Running if operations mapAcsr=" + mapAcsr + " fieldAcsr=" + fieldAcsr, module);
             return SimpleMethod.runSubOps(subOps, methodContext);
         } else {
             if (elseSubOps != null) {
-                // if (Debug.verboseOn()) Debug.logVerbose("IfNotEmpty: Running else operations mapAcsr=" + mapAcsr + " fieldAcsr=" + fieldAcsr);
+                // if (Debug.verboseOn()) Debug.logVerbose("IfNotEmpty: Running else operations mapAcsr=" + mapAcsr + " fieldAcsr=" + fieldAcsr, module);
                 return SimpleMethod.runSubOps(elseSubOps, methodContext);
             } else {
-                // if (Debug.verboseOn()) Debug.logVerbose("IfNotEmpty: Not Running any operations mapAcsr=" + mapAcsr + " fieldAcsr=" + fieldAcsr);
+                // if (Debug.verboseOn()) Debug.logVerbose("IfNotEmpty: Not Running any operations mapAcsr=" + mapAcsr + " fieldAcsr=" + fieldAcsr, module);
                 return true;
             }
         }

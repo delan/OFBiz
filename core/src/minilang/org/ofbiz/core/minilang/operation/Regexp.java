@@ -50,7 +50,7 @@ public class Regexp extends SimpleMapOperation {
         try {
             pattern = compiler.compile(expr);
         } catch (MalformedPatternException e) {
-            Debug.logError(e);
+            Debug.logError(e, module);
         }
     }
 

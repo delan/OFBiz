@@ -693,7 +693,7 @@ public class SQLProcessor {
         try {
             this.close();
         } catch (Exception e) {
-            Debug.logError(e, "Error closing the result, connection, etc in finalize EntityListIterator");
+            Debug.logError(e, "Error closing the result, connection, etc in finalize EntityListIterator", module);
         }
         super.finalize();
     }

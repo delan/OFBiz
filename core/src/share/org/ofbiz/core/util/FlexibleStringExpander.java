@@ -105,7 +105,7 @@ public class FlexibleStringExpander {
         } else {
             if (original.indexOf("}", start) == -1) {
                 //no ending for the start, so we also have a stop condition
-                Debug.logWarning("Found a ${ without a closing } (curly-brace) in the String: " + original);
+                Debug.logWarning("Found a ${ without a closing } (curly-brace) in the String: " + original, module);
                 return original;  
             }
         }
@@ -133,7 +133,7 @@ public class FlexibleStringExpander {
         while (start != -1) {
             end = original.indexOf("}", start);
             if (end == -1) {
-                Debug.logWarning("Found a ${ without a closing } (curly-brace) in the String: " + original);
+                Debug.logWarning("Found a ${ without a closing } (curly-brace) in the String: " + original, module);
                 break;
             } 
             
@@ -246,7 +246,7 @@ public class FlexibleStringExpander {
             if (envVal != null) {
                 targetBuffer.append(envVal.toString());
             } else {
-                Debug.logWarning("Could not find value in environment for the name [" + envName + "], inserting nothing.");
+                Debug.logWarning("Could not find value in environment for the name [" + envName + "], inserting nothing.", module);
             }
         }
     }

@@ -57,7 +57,7 @@ public class TransactionRollback extends MethodOperation {
         try {
             TransactionUtil.rollback(beganTransaction);
         } catch (GenericTransactionException e) {
-            Debug.logError(e, "Could not rollback transaction in simple-method, returning error.");
+            Debug.logError(e, "Could not rollback transaction in simple-method, returning error.", module);
             
             String errMsg = "ERROR: Could not complete the " + simpleMethod.getShortDescription() + " process [error rolling back a transaction: " + e.getMessage() + "]";
             methodContext.setErrorReturn(errMsg, simpleMethod);

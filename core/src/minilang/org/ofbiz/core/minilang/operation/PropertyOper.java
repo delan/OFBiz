@@ -50,7 +50,7 @@ public class PropertyOper extends MakeInStringOperation {
         String propStr = UtilProperties.getPropertyValue(UtilURL.fromResource(resource, loader), property);
 
         if (propStr == null || propStr.length() == 0) {
-            Debug.logWarning("[SimpleMapProcessor.PropertyOper.exec] Property " + property + " in resource " + resource + " not found, not appending anything");
+            Debug.logWarning("[SimpleMapProcessor.PropertyOper.exec] Property " + property + " in resource " + resource + " not found, not appending anything", module);
             return null;
         } else {
             return propStr;

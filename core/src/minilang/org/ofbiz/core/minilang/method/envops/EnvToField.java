@@ -59,7 +59,7 @@ public class EnvToField extends MethodOperation {
         Object envVar = envAcsr.get(methodContext);
 
         if (envVar == null) {
-            Debug.logWarning("Environment field not found with name " + envAcsr + ", not copying env field");
+            Debug.logWarning("Environment field not found with name " + envAcsr + ", not copying env field", module);
             return true;
         }
 
@@ -67,7 +67,7 @@ public class EnvToField extends MethodOperation {
             Map toMap = (Map) mapAcsr.get(methodContext);
 
             if (toMap == null) {
-                if (Debug.verboseOn()) Debug.logVerbose("Map not found with name " + mapAcsr + ", creating new map");
+                if (Debug.verboseOn()) Debug.logVerbose("Map not found with name " + mapAcsr + ", creating new map", module);
                 toMap = new HashMap();
                 mapAcsr.put(methodContext, toMap);
             }

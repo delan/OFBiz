@@ -59,7 +59,7 @@ public class RemoveByAnd extends MethodOperation {
         try {
             methodContext.getDelegator().removeByAnd(entityName, (Map) mapAcsr.get(methodContext), doCacheClear);
         } catch (GenericEntityException e) {
-            Debug.logError(e);
+            Debug.logError(e, module);
             String errMsg = "ERROR: Could not complete the " + simpleMethod.getShortDescription() + " process [problem removing the " + entityName + " entity by and: " + e.getMessage() + "]";
 
             if (methodContext.getMethodType() == MethodContext.EVENT) {

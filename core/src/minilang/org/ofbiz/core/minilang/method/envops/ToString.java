@@ -56,7 +56,7 @@ public class ToString extends MethodOperation {
             try {
                 this.numericPadding = Integer.valueOf(npStr);
             } catch (Exception e) {
-                Debug.logError(e, "Error parsing numeric-padding attribute value on the to-string element");
+                Debug.logError(e, "Error parsing numeric-padding attribute value on the to-string element", module);
             }
         }
     }
@@ -68,7 +68,7 @@ public class ToString extends MethodOperation {
             if (toMap == null) {
                 // it seems silly to create a new map, but necessary since whenever
                 // an env field like a Map or List is referenced it should be created, even if empty
-                if (Debug.verboseOn()) Debug.logVerbose("Map not found with name " + mapAcsr + ", creating new map");
+                if (Debug.verboseOn()) Debug.logVerbose("Map not found with name " + mapAcsr + ", creating new map", module);
                 toMap = new HashMap();
                 mapAcsr.put(methodContext, toMap);
             }
@@ -96,7 +96,7 @@ public class ToString extends MethodOperation {
                 outStr = obj.toString();
             }
         } catch (GeneralException e) {
-            Debug.logError(e, "");
+            Debug.logError(e, "", module);
             outStr = obj.toString();
         }
         

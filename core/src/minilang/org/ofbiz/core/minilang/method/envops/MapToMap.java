@@ -54,7 +54,7 @@ public class MapToMap extends MethodOperation {
             fromMap = (Map) mapAcsr.get(methodContext);
 
             if (fromMap == null) {
-                if (Debug.infoOn()) Debug.logInfo("Map not found with name " + mapAcsr + ", not copying from this map");
+                if (Debug.infoOn()) Debug.logInfo("Map not found with name " + mapAcsr + ", not copying from this map", module);
                 fromMap = new HashMap();
                 mapAcsr.put(methodContext, fromMap);
             }
@@ -63,7 +63,7 @@ public class MapToMap extends MethodOperation {
         if (!toMapAcsr.isEmpty()) {
             Map toMap = (Map) toMapAcsr.get(methodContext);
             if (toMap == null) {
-                if (Debug.verboseOn()) Debug.logVerbose("Map not found with name " + toMapAcsr + ", creating new map");
+                if (Debug.verboseOn()) Debug.logVerbose("Map not found with name " + toMapAcsr + ", creating new map", module);
                 toMap = new HashMap();
                 toMapAcsr.put(methodContext, toMap);
             }

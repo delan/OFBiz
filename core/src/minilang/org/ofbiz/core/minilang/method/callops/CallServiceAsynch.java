@@ -89,7 +89,7 @@ public class CallServiceAsynch extends MethodOperation {
         try {
             methodContext.getDispatcher().runAsync(serviceName, inMap);
         } catch (GenericServiceException e) {
-            Debug.logError(e);
+            Debug.logError(e, module);
             String errMsg = "ERROR: Could not complete the " + simpleMethod.getShortDescription() + " process [problem invoking the " + serviceName + " service: " + e.getMessage() + "]";
 
             if (methodContext.getMethodType() == MethodContext.EVENT) {

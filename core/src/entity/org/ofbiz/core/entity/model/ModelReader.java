@@ -139,7 +139,7 @@ public class ModelReader {
                             throw new GenericEntityConfException("Error getting document from resource handler", e);
                         }
                         if (document == null) {
-                            Debug.logError("Could not get document for " + entityResourceHandler.toString());
+                            Debug.logError("Could not get document for " + entityResourceHandler.toString(), module);
                             entityCache = null;
                             return null;
                         }

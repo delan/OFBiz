@@ -78,7 +78,7 @@ public class EntityConfigUtil {
         try {
             initialize(getXmlRootElement());
         } catch (Exception e) {
-            Debug.logError(e, "Error loading entity config XML file " + ENTITY_ENGINE_XML_FILENAME);
+            Debug.logError(e, "Error loading entity config XML file " + ENTITY_ENGINE_XML_FILENAME, module);
         }
     }
 
@@ -368,20 +368,20 @@ public class EntityConfigUtil {
             datasourceElement = element;
 
             if (datasourceElement == null) {
-                Debug.logWarning("datasource def not found with name " + this.name + ", using default for schema-name (none)");
-                Debug.logWarning("datasource def not found with name " + this.name + ", using default for check-on-start (true)");
-                Debug.logWarning("datasource def not found with name " + this.name + ", using default for add-missing-on-start (false)");
-                Debug.logWarning("datasource def not found with name " + this.name + ", using default for use-foreign-keys (true)");
-                Debug.logWarning("datasource def not found with name " + this.name + ", using default use-foreign-key-indices (true)");
-                Debug.logWarning("datasource def not found with name " + this.name + ", using default for check-fks-on-start (false)");
-                Debug.logWarning("datasource def not found with name " + this.name + ", using default for check-fk-indices-on-start (false)");
-                Debug.logWarning("datasource def not found with name " + this.name + ", using default for use-pk-constraint-names (true)");
-                Debug.logWarning("datasource def not found with name " + this.name + ", using default for constraint-name-clip-length (30)");
-                Debug.logWarning("datasource def not found with name " + this.name + ", using default for fk-style (name_constraint)");
-                Debug.logWarning("datasource def not found with name " + this.name + ", using default for use-fk-initially-deferred (true)");
-                Debug.logWarning("datasource def not found with name " + this.name + ", using default for use-indices (true)");
-                Debug.logWarning("datasource def not found with name " + this.name + ", using default for check-indices-on-start (false)");
-                Debug.logWarning("datasource def not found with name " + this.name + ", using default for join-style (ansi)");
+                Debug.logWarning("datasource def not found with name " + this.name + ", using default for schema-name (none)", module);
+                Debug.logWarning("datasource def not found with name " + this.name + ", using default for check-on-start (true)", module);
+                Debug.logWarning("datasource def not found with name " + this.name + ", using default for add-missing-on-start (false)", module);
+                Debug.logWarning("datasource def not found with name " + this.name + ", using default for use-foreign-keys (true)", module);
+                Debug.logWarning("datasource def not found with name " + this.name + ", using default use-foreign-key-indices (true)", module);
+                Debug.logWarning("datasource def not found with name " + this.name + ", using default for check-fks-on-start (false)", module);
+                Debug.logWarning("datasource def not found with name " + this.name + ", using default for check-fk-indices-on-start (false)", module);
+                Debug.logWarning("datasource def not found with name " + this.name + ", using default for use-pk-constraint-names (true)", module);
+                Debug.logWarning("datasource def not found with name " + this.name + ", using default for constraint-name-clip-length (30)", module);
+                Debug.logWarning("datasource def not found with name " + this.name + ", using default for fk-style (name_constraint)", module);
+                Debug.logWarning("datasource def not found with name " + this.name + ", using default for use-fk-initially-deferred (true)", module);
+                Debug.logWarning("datasource def not found with name " + this.name + ", using default for use-indices (true)", module);
+                Debug.logWarning("datasource def not found with name " + this.name + ", using default for check-indices-on-start (false)", module);
+                Debug.logWarning("datasource def not found with name " + this.name + ", using default for join-style (ansi)", module);
             } else {
                 schemaName = datasourceElement.getAttribute("schema-name");
                 // anything but false is true
@@ -401,7 +401,7 @@ public class EntityConfigUtil {
                 try {
                     constraintNameClipLength = Integer.parseInt(datasourceElement.getAttribute("constraint-name-clip-length"));
                 } catch (Exception e) {
-                    Debug.logError("Could not parse constraint-name-clip-length value for datasource with name " + this.name + ", using default value of 30");
+                    Debug.logError("Could not parse constraint-name-clip-length value for datasource with name " + this.name + ", using default value of 30", module);
                 }
                 fkStyle = datasourceElement.getAttribute("fk-style");
                 // anything but true is false

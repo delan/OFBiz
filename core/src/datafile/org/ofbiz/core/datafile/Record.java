@@ -81,7 +81,7 @@ public class Record implements Serializable {
     public Object get(String name) {
         if (getModelRecord().getModelField(name) == null) {
             throw new IllegalArgumentException("[Record.get] \"" + name + "\" is not a field of " + recordName);
-            // Debug.logWarning("[GenericRecord.get] \"" + name + "\" is not a field of " + recordName + ", but getting anyway...");
+            // Debug.logWarning("[GenericRecord.get] \"" + name + "\" is not a field of " + recordName + ", but getting anyway...", module);
         }
         return fields.get(name);
     }
@@ -142,7 +142,7 @@ public class Record implements Serializable {
     public synchronized void set(String name, Object value, boolean setIfNull) {
         if (getModelRecord().getModelField(name) == null) {
             throw new IllegalArgumentException("[Record.set] \"" + name + "\" is not a field of " + recordName);
-            // Debug.logWarning("[GenericRecord.set] \"" + name + "\" is not a field of " + recordName + ", but setting anyway...");
+            // Debug.logWarning("[GenericRecord.set] \"" + name + "\" is not a field of " + recordName + ", but setting anyway...", module);
         }
         if (value != null || setIfNull) {
             if (value instanceof Boolean) {
@@ -176,7 +176,7 @@ public class Record implements Serializable {
         if (!nonSpace)
             return;
 
-        // if (Debug.verboseOn()) Debug.logVerbose("Value: " + value);
+        // if (Debug.verboseOn()) Debug.logVerbose("Value: " + value, module);
 
         String fieldType = field.type;
 
@@ -285,7 +285,7 @@ public class Record implements Serializable {
             long number = Math.round(dnum);
 
             str = padFrontZeros(Long.toString(number), field.length);
-            // if (Debug.infoOn()) Debug.logInfo("[Record.getFixedString] FixedPointDouble: multiplier=" + multiplier + ", value=" + value + ", dnum=" + dnum + ", number=" + number + ", str=" + str);
+            // if (Debug.infoOn()) Debug.logInfo("[Record.getFixedString] FixedPointDouble: multiplier=" + multiplier + ", value=" + value + ", dnum=" + dnum + ", number=" + number + ", str=" + str, module);
         } // standard types
         else if (fieldType.equals("java.lang.String") || fieldType.equals("String"))
             str = value.toString();
@@ -347,9 +347,9 @@ public class Record implements Serializable {
                 while (modelField.position > lineBuf.length())
                     lineBuf.append(" ");
             }
-            // if (Debug.infoOn()) Debug.logInfo("Field: " + modelField.name + " Position: " + modelField.position + " BufLen: " + lineBuf.length());
+            // if (Debug.infoOn()) Debug.logInfo("Field: " + modelField.name + " Position: " + modelField.position + " BufLen: " + lineBuf.length(), module);
 
-            // if (Debug.infoOn()) Debug.logInfo("Got data \"" + data + "\" for field " + modelField.name + " in record " + modelRecord.name);
+            // if (Debug.infoOn()) Debug.logInfo("Got data \"" + data + "\" for field " + modelField.name + " in record " + modelRecord.name, module);
             if (modelField.length > 0 && data.length() != modelField.length)
                 throw new DataFileException("Got field length " + data.length() + " but expected field length is " + modelField.length + " for field \"" +
                         modelField.name + "\" of record \"" + modelRecord.name + "\" data is: \"" + data + "\"");

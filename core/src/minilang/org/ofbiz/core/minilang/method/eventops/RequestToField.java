@@ -60,7 +60,7 @@ public class RequestToField extends MethodOperation {
         if (methodContext.getMethodType() == MethodContext.EVENT) {
             fieldVal = requestAcsr.get(methodContext.getRequest(), methodContext.getEnvMap());
             if (fieldVal == null) {
-                Debug.logWarning("Request attribute value not found with name " + requestAcsr);
+                Debug.logWarning("Request attribute value not found with name " + requestAcsr, module);
             }
         }
 
@@ -79,7 +79,7 @@ public class RequestToField extends MethodOperation {
             Map fromMap = (Map) mapAcsr.get(methodContext);
 
             if (fromMap == null) {
-                Debug.logWarning("Map not found with name " + mapAcsr + " creating a new map");
+                Debug.logWarning("Map not found with name " + mapAcsr + " creating a new map", module);
                 fromMap = new HashMap();
                 mapAcsr.put(methodContext, fromMap);
             }

@@ -75,7 +75,7 @@ public class ValidateMethod extends SimpleMapOperation {
             String msg = "Could not find validation class: " + className;
 
             messages.add(msg);
-            Debug.logError("[ValidateMethod.exec] " + msg);
+            Debug.logError("[ValidateMethod.exec] " + msg, module);
             return;
         }
 
@@ -87,7 +87,7 @@ public class ValidateMethod extends SimpleMapOperation {
             String msg = "Could not find validation method: " + methodName + " of class " + className;
 
             messages.add(msg);
-            Debug.logError("[ValidateMethod.exec] " + msg);
+            Debug.logError("[ValidateMethod.exec] " + msg, module);
             return;
         }
 
@@ -99,7 +99,7 @@ public class ValidateMethod extends SimpleMapOperation {
             String msg = "Error in validation method " + methodName + " of class " + className + ": " + e.getMessage();
 
             messages.add(msg);
-            Debug.logError("[ValidateMethod.exec] " + msg);
+            Debug.logError("[ValidateMethod.exec] " + msg, module);
             return;
         }
 

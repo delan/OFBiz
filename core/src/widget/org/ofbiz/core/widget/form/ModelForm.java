@@ -122,7 +122,7 @@ public class ModelForm {
                 try {                    
 			        parent = FormFactory.getFormFromClass(parentResource, parentForm, delegator, dispatcher);                    
                 } catch (Exception e) {
-                    Debug.logError(e, "Failed to load parent form definition '"+parentForm+"' at resource '"+parentResource+"'");
+                    Debug.logError(e, "Failed to load parent form definition '"+parentForm+"' at resource '"+parentResource+"'", module);
                 } 
             } else {
                 // try to find a form definition in the same file
@@ -138,7 +138,7 @@ public class ModelForm {
                         break;
                     }
                 }
-                if(parent == null) Debug.logError("Failed to find parent form defenition '"+parentForm+"' in same document.");                    
+                if(parent == null) Debug.logError("Failed to find parent form defenition '"+parentForm+"' in same document.", module);                    
             }
             
             if(parent != null) {                    
@@ -210,7 +210,7 @@ public class ModelForm {
             Element fieldElement = (Element) fieldElementIter.next();
             ModelFormField modelFormField = new ModelFormField(fieldElement, this);
             modelFormField = this.addUpdateField(modelFormField);
-            //Debug.logInfo("Added field " + modelFormField.getName() + " from def, mapName=" + modelFormField.getMapName());
+            //Debug.logInfo("Added field " + modelFormField.getName() + " from def, mapName=" + modelFormField.getMapName(), module);
         }
 
         // get the sort-order
@@ -304,7 +304,7 @@ public class ModelForm {
             modelService = dispatcher.getDispatchContext().getModelService(autoFieldsService.serviceName);
         } catch (GenericServiceException e) {
             String errmsg = "Error finding Service with name " + autoFieldsService.serviceName + " for auto-fields-service in a form widget";
-            Debug.logError(e, errmsg);
+            Debug.logError(e, errmsg, module);
             throw new IllegalArgumentException(errmsg);
         }
         
@@ -483,7 +483,7 @@ public class ModelForm {
             if (alreadyRendered.contains(currentFormField.getName())) {
                 continue;
             }
-            //Debug.logInfo("In single form evaluating use-when for field " + currentFormField.getName() + ": " + currentFormField.getUseWhen());
+            //Debug.logInfo("In single form evaluating use-when for field " + currentFormField.getName() + ": " + currentFormField.getUseWhen(), module);
             if (!currentFormField.shouldUse(context)) {
                 continue;
             }
@@ -999,7 +999,7 @@ public class ModelForm {
             }
         } catch (EvalError e) {
             String errmsg = "Error evaluating BeanShell target conditions on form " + this.name;
-            Debug.logError(e, errmsg);
+            Debug.logError(e, errmsg, module);
             throw new IllegalArgumentException(errmsg);
         }
         

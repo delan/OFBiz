@@ -71,7 +71,7 @@ public class JREntityListIteratorDataSource implements JRDataSource {
             try {
                 this.entityListIterator.close();
             } catch (GenericEntityException e) {
-                Debug.logError(e, "Error closing EntityListIterator in Jasper Reports DataSource");
+                Debug.logError(e, "Error closing EntityListIterator in Jasper Reports DataSource", module);
                 throw new JRException(e);
             }
             this.entityListIterator = null;

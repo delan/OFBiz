@@ -124,7 +124,7 @@ public class EntitySaxReader implements org.xml.sax.ContentHandler, ErrorHandler
 
             reader = parser.getXMLReader();
         } catch (javax.xml.parsers.ParserConfigurationException e) {
-            Debug.logError(e, "Failed to get a SAX XML parser");
+            Debug.logError(e, "Failed to get a SAX XML parser", module);
             throw new IllegalStateException("Failed to get a SAX XML parser");
         }
 
@@ -136,7 +136,7 @@ public class EntitySaxReader implements org.xml.sax.ContentHandler, ErrorHandler
         numberRead = 0;
         try {
             boolean beganTransaction = TransactionUtil.begin(transactionTimeout);            
-            Debug.logImportant("Transaction Timeout set to " + transactionTimeout / 3600 + " hours (" + transactionTimeout + " seconds)");
+            Debug.logImportant("Transaction Timeout set to " + transactionTimeout / 3600 + " hours (" + transactionTimeout + " seconds)", module);
             try {
                 reader.parse(new InputSource(is));
                 // make sure all of the values to write got written...
@@ -146,14 +146,14 @@ public class EntitySaxReader implements org.xml.sax.ContentHandler, ErrorHandler
                 }
                 TransactionUtil.commit(beganTransaction);
             } catch (Exception e) {
-                Debug.logError(e, "An error occurred saving the data, rolling back transaction");
+                Debug.logError(e, "An error occurred saving the data, rolling back transaction", module);
                 TransactionUtil.rollback(beganTransaction);
                 throw new SAXException("A transaction error occurred reading data", e);
             }
         } catch (GenericTransactionException e) {
             throw new SAXException("A transaction error occurred reading data", e);
         }
-        Debug.logImportant("Finished writing " + numberRead + " values to the database from " + docDescription);
+        Debug.logImportant("Finished writing " + numberRead + " values to the database from " + docDescription, module);
         return numberRead;
     }
 
@@ -161,7 +161,7 @@ public class EntitySaxReader implements org.xml.sax.ContentHandler, ErrorHandler
         if (currentValue != null && currentFieldName != null) {
             String value = new String(values, offset, count);
 
-            // Debug.logInfo("characters: value=" + value);
+            // Debug.logInfo("characters: value=" + value, module);
             if (currentFieldValue == null) {
                 currentFieldValue = value;
             } else {
@@ -173,7 +173,7 @@ public class EntitySaxReader implements org.xml.sax.ContentHandler, ErrorHandler
     public void endDocument() throws org.xml.sax.SAXException {}
 
     public void endElement(String namespaceURI, String localName, String fullName) throws org.xml.sax.SAXException {
-        // Debug.logInfo("endElement: localName=" + localName + ", fullName=" + fullName + ", numberRead=" + numberRead);
+        // Debug.logInfo("endElement: localName=" + localName + ", fullName=" + fullName + ", numberRead=" + numberRead, module);
         if ("entity-engine-xml".equals(fullName)) {
             return;
         }
@@ -193,7 +193,7 @@ public class EntitySaxReader implements org.xml.sax.ContentHandler, ErrorHandler
                     }
                     numberRead++;
                     if ((numberRead % valuesPerMessage) == 0) {
-                        Debug.logImportant("Another " + valuesPerMessage + " values imported: now up to " + numberRead);
+                        Debug.logImportant("Another " + valuesPerMessage + " values imported: now up to " + numberRead, module);
                     }
                     currentValue = null;
                 } catch (GenericEntityException e) {
@@ -207,7 +207,7 @@ public class EntitySaxReader implements org.xml.sax.ContentHandler, ErrorHandler
 
     public void ignorableWhitespace(char[] values, int offset, int count) throws org.xml.sax.SAXException {
         // String value = new String(values, offset, count);
-        // Debug.logInfo("ignorableWhitespace: value=" + value);
+        // Debug.logInfo("ignorableWhitespace: value=" + value, module);
     }
 
     public void processingInstruction(String target, String instruction) throws org.xml.sax.SAXException {}
@@ -221,7 +221,7 @@ public class EntitySaxReader implements org.xml.sax.ContentHandler, ErrorHandler
     public void startDocument() throws org.xml.sax.SAXException {}
 
     public void startElement(String namepsaceURI, String localName, String fullName, org.xml.sax.Attributes attributes) throws org.xml.sax.SAXException {
-        // Debug.logInfo("startElement: localName=" + localName + ", fullName=" + fullName + ", attributes=" + attributes);
+        // Debug.logInfo("startElement: localName=" + localName + ", fullName=" + fullName + ", attributes=" + attributes, module);
         if ("entity-engine-xml".equals(fullName)) {
             return;
         }
@@ -242,7 +242,7 @@ public class EntitySaxReader implements org.xml.sax.ContentHandler, ErrorHandler
             try {
                 currentValue = delegator.makeValue(entityName, null);
             } catch (Exception e) {
-                Debug.logError(e);
+                Debug.logError(e, module);
             }
 
             if (currentValue != null) {
@@ -261,7 +261,7 @@ public class EntitySaxReader implements org.xml.sax.ContentHandler, ErrorHandler
                             currentValue.setString(name, value);
                         }
                     } catch (Exception e) {
-                        Debug.logWarning(e, "Could not set field " + name + " to the value " + value);
+                        Debug.logWarning(e, "Could not set field " + name + " to the value " + value, module);
                     }
                 }
             }

@@ -68,7 +68,7 @@ public class CreateObject extends MethodOperation {
                     methodObject = new FieldObject(parameterElement, simpleMethod);
                 } else {
                     //whoops, invalid tag here, print warning
-                    Debug.logWarning("Found an unsupported tag under the call-object-method tag: " + parameterElement.getNodeName() + "; ignoring");
+                    Debug.logWarning("Found an unsupported tag under the call-object-method tag: " + parameterElement.getNodeName() + "; ignoring", module);
                 }
                 if (methodObject != null) {
                     parameters.add(methodObject);
@@ -84,7 +84,7 @@ public class CreateObject extends MethodOperation {
         try {
             methodClass = ObjectType.loadClass(className, methodContext.getLoader());
         } catch (ClassNotFoundException e) {
-            Debug.logError(e, "Class to create not found with name " + className + " in create-object operation");
+            Debug.logError(e, "Class to create not found with name " + className + " in create-object operation", module);
 
             String errMsg = "ERROR: Could not complete the " + simpleMethod.getShortDescription() + " process [Class to create not found with name " + className + ": " + e.toString() + "]";
             methodContext.setErrorReturn(errMsg, simpleMethod);
@@ -106,7 +106,7 @@ public class CreateObject extends MethodOperation {
                 Class typeClass = methodObjectDef.getTypeClass(methodContext.getLoader());
                 if (typeClass == null) {
                     String errMsg = "ERROR: Could not complete the " + simpleMethod.getShortDescription() + " process [Parameter type not found with name " + methodObjectDef.getTypeName() + "]";
-                    Debug.logError(errMsg);
+                    Debug.logError(errMsg, module);
                     methodContext.setErrorReturn(errMsg, simpleMethod);
                     return false;
                 }
@@ -137,38 +137,38 @@ public class CreateObject extends MethodOperation {
                     }
                 }
             } catch (InstantiationException e) {
-                Debug.logError(e, "Could not instantiate object in create-object operation");
+                Debug.logError(e, "Could not instantiate object in create-object operation", module);
 
                 String errMsg = "ERROR: Could not complete the " + simpleMethod.getShortDescription() + " process [Could not instantiate object: " + e.toString() + "]";
                 methodContext.setErrorReturn(errMsg, simpleMethod);
                 return false;
             } catch (IllegalAccessException e) {
-                Debug.logError(e, "Illegal access constructing object in create-object operation");
+                Debug.logError(e, "Illegal access constructing object in create-object operation", module);
 
                 String errMsg = "ERROR: Could not complete the " + simpleMethod.getShortDescription() + " process [Illegal access constructing object: " + e.toString() + "]";
                 methodContext.setErrorReturn(errMsg, simpleMethod);
                 return false;
             } catch (IllegalArgumentException e) {
-                Debug.logError(e, "Illegal argument calling method in create-object operation");
+                Debug.logError(e, "Illegal argument calling method in create-object operation", module);
 
                 String errMsg = "ERROR: Could not complete the " + simpleMethod.getShortDescription() + " process [Illegal argument calling constructor: " + e.toString() + "]";
                 methodContext.setErrorReturn(errMsg, simpleMethod);
                 return false;
             } catch (InvocationTargetException e) {
-                Debug.logError(e.getTargetException(), "Constructor in create-object operation threw an exception");
+                Debug.logError(e.getTargetException(), "Constructor in create-object operation threw an exception", module);
 
                 String errMsg = "ERROR: Could not complete the " + simpleMethod.getShortDescription() + " process [Constructor in create-object threw an exception: " + e.getTargetException() + "]";
                 methodContext.setErrorReturn(errMsg, simpleMethod);
                 return false;
             }
         } catch (NoSuchMethodException e) {
-            Debug.logError(e, "Could not find constructor to execute in simple-method create-object operation");
+            Debug.logError(e, "Could not find constructor to execute in simple-method create-object operation", module);
             
             String errMsg = "ERROR: Could not complete the " + simpleMethod.getShortDescription() + " process [Could not find constructor to execute: " + e.toString() + "]";
             methodContext.setErrorReturn(errMsg, simpleMethod);
             return false;
         } catch (SecurityException e) {
-            Debug.logError(e, "Security exception finding constructor to execute in simple-method create-object operation");
+            Debug.logError(e, "Security exception finding constructor to execute in simple-method create-object operation", module);
             
             String errMsg = "ERROR: Could not complete the " + simpleMethod.getShortDescription() + " process [Security exception finding constructor to execute: " + e.toString() + "]";
             methodContext.setErrorReturn(errMsg, simpleMethod);

@@ -52,18 +52,18 @@ public class FirstFromList extends MethodOperation {
         Object fieldVal = null;
 
         if (listAcsr.isEmpty()) {
-            Debug.logWarning("No list-name specified in iterate tag, doing nothing");
+            Debug.logWarning("No list-name specified in iterate tag, doing nothing", module);
             return true;
         }
 
         List theList = (List) listAcsr.get(methodContext);
 
         if (theList == null) {
-            if (Debug.infoOn()) Debug.logInfo("List not found with name " + listAcsr + ", doing nothing");
+            if (Debug.infoOn()) Debug.logInfo("List not found with name " + listAcsr + ", doing nothing", module);
             return true;
         }
         if (theList.size() == 0) {
-            if (Debug.verboseOn()) Debug.logVerbose("List with name " + listAcsr + " has zero entries, doing nothing");
+            if (Debug.verboseOn()) Debug.logVerbose("List with name " + listAcsr + " has zero entries, doing nothing", module);
             return true;
         }
 

@@ -77,7 +77,7 @@ public class I18nBundleTag extends TagSupport {
             if (UtilJ2eeCompat.useNestedJspException(pageContext.getServletContext())) {
                 throw new JspException(e.getMessage(), e);
             } else {
-                Debug.logError(e, "Server does not support nested exceptions, here is the exception");
+                Debug.logError(e, "Server does not support nested exceptions, here is the exception", module);
                 throw new JspException(e.toString());
             }
         }

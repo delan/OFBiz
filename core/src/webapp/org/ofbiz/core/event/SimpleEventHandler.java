@@ -68,7 +68,7 @@ public class SimpleEventHandler implements EventHandler {
             if (Debug.verboseOn()) Debug.logVerbose("[Event Return]: " + eventReturn, module);
             return eventReturn;
         } catch (MiniLangException e) {
-            Debug.logError(e);
+            Debug.logError(e, module);
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "Could not complete event: " + e.getMessage());
             return "error";
         }

@@ -59,7 +59,7 @@ public class MakeInString {
                 } else if ("constant".equals(nodeName)) {
                     operations.add(new ConstantOper(curOperElem));
                 } else {
-                    Debug.logWarning("[SimpleMapProcessor.MakeInString.MakeInString] Operation element \"" + nodeName + "\" not recognized");
+                    Debug.logWarning("[SimpleMapProcessor.MakeInString.MakeInString] Operation element \"" + nodeName + "\" not recognized", module);
                 }
             }
         }

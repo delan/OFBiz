@@ -79,7 +79,7 @@ public class VelocityViewHandler implements ViewHandler {
 
             if (propsURL != null) {
                 props = new FlexibleProperties(propsURL);
-                Debug.logWarning("[VelocityViewHandler.init] : Loaded /WEB-INF/velocity.properties");
+                Debug.logWarning("[VelocityViewHandler.init] : Loaded /WEB-INF/velocity.properties", module);
             } else {
                 props = new Properties();
                 Debug.logWarning("[VelocityViewHandler.init] : Cannot load /WEB-INF/velocity.properties. " +
@@ -89,7 +89,7 @@ public class VelocityViewHandler implements ViewHandler {
             // set the file loader path -- used to mount the webapp
             if (context.getRealPath("/") != null) {
                 props.setProperty("file.resource.loader.path", context.getRealPath("/"));
-                Debug.logInfo("[VelocityViewHandler.init] : Got true webapp path, mounting as template path.");
+                Debug.logInfo("[VelocityViewHandler.init] : Got true webapp path, mounting as template path.", module);
             }
 
             ve.init(props);
@@ -140,7 +140,7 @@ public class VelocityViewHandler implements ViewHandler {
                 vw.recycle(new OutputStreamWriter(out, encoding));
 
             if (vw == null)
-                Debug.logWarning("[VelocityViewHandler.eval] : VelocityWriter is NULL");
+                Debug.logWarning("[VelocityViewHandler.eval] : VelocityWriter is NULL", module);
 
             template.merge(context, vw);
         } catch (Exception e) {

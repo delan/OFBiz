@@ -68,7 +68,7 @@ public class EntityEcaRule {
             conditions.add(new EntityEcaCondition((Element) cfi.next(), false));
         }
 
-        if (Debug.verboseOn()) Debug.logVerbose("Conditions: " + conditions);
+        if (Debug.verboseOn()) Debug.logVerbose("Conditions: " + conditions, module);
 
         List actList = UtilXml.childElementList(eca, "action");
         Iterator ai = actList.iterator();
@@ -76,11 +76,11 @@ public class EntityEcaRule {
             actions.add(new EntityEcaAction((Element) ai.next()));
         }
 
-        if (Debug.verboseOn()) Debug.logVerbose("Actions: " + actions);
+        if (Debug.verboseOn()) Debug.logVerbose("Actions: " + actions, module);
     }
 
     public void eval(String currentOperation, DispatchContext dctx, GenericEntity value, boolean isError, Set actionsRun) throws GenericEntityException {
-        //Debug.logInfo("eval eeca rule: operation=" + currentOperation + ", in event=" + this.eventName + ", on entity=" + this.entityName + ", for value=" + value);
+        //Debug.logInfo("eval eeca rule: operation=" + currentOperation + ", in event=" + this.eventName + ", on entity=" + this.entityName + ", for value=" + value, module);
         
         if (isError && !this.runOnError) {
             return;

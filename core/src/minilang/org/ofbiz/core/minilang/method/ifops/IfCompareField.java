@@ -92,7 +92,7 @@ public class IfCompareField extends MethodOperation {
         if (!mapAcsr.isEmpty()) {
             Map fromMap = (Map) mapAcsr.get(methodContext);
             if (fromMap == null) {
-                if (Debug.infoOn()) Debug.logInfo("Map not found with name " + mapAcsr + ", using null for comparison");
+                if (Debug.infoOn()) Debug.logInfo("Map not found with name " + mapAcsr + ", using null for comparison", module);
             } else {
                 fieldVal1 = fieldAcsr.get(fromMap, methodContext);
             }
@@ -104,7 +104,7 @@ public class IfCompareField extends MethodOperation {
         if (!toMapAcsr.isEmpty()) {
             Map toMap = (Map) toMapAcsr.get(methodContext);
             if (toMap == null) {
-                if (Debug.infoOn()) Debug.logInfo("To Map not found with name " + toMapAcsr + ", using null for comparison");
+                if (Debug.infoOn()) Debug.logInfo("To Map not found with name " + toMapAcsr + ", using null for comparison", module);
             } else {
                 fieldVal2 = toFieldAcsr.get(toMap, methodContext);
             }
@@ -126,7 +126,7 @@ public class IfCompareField extends MethodOperation {
                 while (miter.hasNext()) {
                     fullString.append((String) miter.next());
                 }
-                Debug.logWarning(fullString.toString());
+                Debug.logWarning(fullString.toString(), module);
 
                 methodContext.putEnv(simpleMethod.getEventErrorMessageName(), fullString.toString());
                 methodContext.putEnv(simpleMethod.getEventResponseCodeName(), simpleMethod.getDefaultErrorCode());

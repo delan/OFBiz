@@ -71,15 +71,15 @@ public class WebappPropertyToField extends MethodOperation {
             try {
                 propsUrl = servletContext.getResource(resource);
             } catch (java.net.MalformedURLException e) {
-                Debug.logWarning(e, "Error finding webapp resource (properties file) not found with name " + resource);
+                Debug.logWarning(e, "Error finding webapp resource (properties file) not found with name " + resource, module);
             }
 
             if (propsUrl == null) {
-                Debug.logWarning("Webapp resource (properties file) not found with name " + resource);
+                Debug.logWarning("Webapp resource (properties file) not found with name " + resource, module);
             } else {
                 fieldVal = UtilProperties.getPropertyValue(propsUrl, property);
                 if (fieldVal == null || fieldVal.length() == 0) {
-                    Debug.logWarning("Webapp resource property value not found with name " + property + " in resource " + resource);
+                    Debug.logWarning("Webapp resource property value not found with name " + property + " in resource " + resource, module);
                 }
             }
         }
@@ -99,7 +99,7 @@ public class WebappPropertyToField extends MethodOperation {
             Map fromMap = (Map) mapAcsr.get(methodContext);
 
             if (fromMap == null) {
-                Debug.logWarning("Map not found with name " + mapAcsr + " creating a new map");
+                Debug.logWarning("Map not found with name " + mapAcsr + " creating a new map", module);
                 fromMap = new HashMap();
                 mapAcsr.put(methodContext, fromMap);
             }

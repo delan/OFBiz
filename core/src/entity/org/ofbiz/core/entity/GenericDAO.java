@@ -177,7 +177,7 @@ public class GenericDAO {
 
         // no non-primaryKey fields, update doesn't make sense, so don't do it
         if (fieldsToSave.size() <= 0) {
-            if (Debug.verboseOn()) Debug.logVerbose("Trying to do an update on an entity with no non-PK fields, returning having done nothing; entity=" + entity);
+            if (Debug.verboseOn()) Debug.logVerbose("Trying to do an update on an entity with no non-PK fields, returning having done nothing; entity=" + entity, module);
             // returning one because it was effectively updated, ie the same thing, so don't trigger any errors elsewhere
             return 1;
         }
@@ -237,7 +237,7 @@ public class GenericDAO {
             // must use same connection for select or it won't be in the same transaction...
             select(tempPK, connection);
         } catch (GenericEntityNotFoundException e) {
-            // Debug.logInfo(e);
+            // Debug.logInfo(e, module);
             // select failed, does not exist, insert
             return singleInsert(entity, modelEntity, modelEntity.getFieldsCopy(), connection);
         }
@@ -325,7 +325,7 @@ public class GenericDAO {
             String meName = modelMemberEntity.getEntityName();
             String meAlias = modelMemberEntity.getEntityAlias();
 
-	        if (Debug.verboseOn()) Debug.logVerbose("[singleUpdateView]: Processing MemberEntity " + meName + " with Alias " + meAlias);
+	        if (Debug.verboseOn()) Debug.logVerbose("[singleUpdateView]: Processing MemberEntity " + meName + " with Alias " + meAlias, module);
             try {
                 memberModelEntity = delegator.getModelReader().getModelEntity(meName);
             } catch (GenericEntityException e) {
@@ -355,15 +355,15 @@ public class GenericDAO {
                             fieldName = keyMap.getRelFieldName();
                         }
 
-                        if (Debug.verboseOn()) Debug.logVerbose("[singleUpdateView]: --- Found field to set: " + meAlias + "." + fieldName);
+                        if (Debug.verboseOn()) Debug.logVerbose("[singleUpdateView]: --- Found field to set: " + meAlias + "." + fieldName, module);
                         Object value = null;
 
                         if (modelViewEntity.isField(keyMap.getFieldName())) {
                             value = entity.get(keyMap.getFieldName());
-                            if (Debug.verboseOn()) Debug.logVerbose("[singleUpdateView]: --- Found map value: " + value.toString());
+                            if (Debug.verboseOn()) Debug.logVerbose("[singleUpdateView]: --- Found map value: " + value.toString(), module);
                         } else if (modelViewEntity.isField(keyMap.getRelFieldName())) {
                             value = entity.get(keyMap.getRelFieldName());
-                            if (Debug.verboseOn()) Debug.logVerbose("[singleUpdateView]: --- Found map value: " + value.toString());
+                            if (Debug.verboseOn()) Debug.logVerbose("[singleUpdateView]: --- Found map value: " + value.toString(), module);
                         } else {
                             throw new GenericNotImplementedException("Update on view entities: no direct link found, unable to update");
                         }
@@ -381,7 +381,7 @@ public class GenericDAO {
             } catch (GenericEntityException e) {
                 throw new GenericEntityException("Error while retrieving partial results for entity member: " + meName, e);
             }
-            if (Debug.verboseOn()) Debug.logVerbose("[singleUpdateView]: --- Found " + meResult.size() + " results for entity member " + meName);
+            if (Debug.verboseOn()) Debug.logVerbose("[singleUpdateView]: --- Found " + meResult.size() + " results for entity member " + meName, module);
 
             // Got results 0 -> INSERT, 1 -> UPDATE, >1 -> View is nor updatable
             GenericValue meGenericValue = null;
@@ -414,7 +414,7 @@ public class GenericDAO {
                     if (meModelField != null) {
                         meGenericValue.set(meModelField.getName(), entity.get(modelField.getName()));
                         meFieldsToSave.add(meModelField);
-                        if (Debug.verboseOn()) Debug.logVerbose("[singleUpdateView]: --- Added field to save: " + meModelField.getName() + " with value " + meGenericValue.get(meModelField.getName()));
+                        if (Debug.verboseOn()) Debug.logVerbose("[singleUpdateView]: --- Added field to save: " + meModelField.getName() + " with value " + meGenericValue.get(meModelField.getName()), module);
                     } else {
                         throw new GenericEntityException("Could not get field " + modelField.getName() + " from model entity " + memberModelEntity.getEntityName());
                     }
@@ -435,7 +435,7 @@ public class GenericDAO {
                 if (meFieldsToSave.size() > 0) {
                     retVal += singleUpdate(meGenericValue, memberModelEntity, meFieldsToSave, connection);
                 } else {
-                    if (Debug.verboseOn()) Debug.logVerbose("[singleUpdateView]: No update on member entity " + memberModelEntity.getEntityName() + " needed");
+                    if (Debug.verboseOn()) Debug.logVerbose("[singleUpdateView]: No update on member entity " + memberModelEntity.getEntityName() + " needed", module);
                 }
             }
         }
@@ -498,7 +498,7 @@ public class GenericDAO {
                     ((GenericValue) entity).copyOriginalDbValues();
                 }
             } else {
-                // Debug.logWarning("[GenericDAO.select]: select failed, result set was empty for entity: " + entity.toString());
+                // Debug.logWarning("[GenericDAO.select]: select failed, result set was empty for entity: " + entity.toString(), module);
                 throw new GenericEntityNotFoundException("Result set was empty for entity: " + entity.toString());
             }
         } finally {
@@ -519,7 +519,7 @@ public class GenericDAO {
 
         /*
          if(entity == null || entity.<%=modelEntity.pkNameString(" == null || entity."," == null")%>) {
-         Debug.logWarning("[GenericDAO.select]: Cannot select GenericEntity: required primary key field(s) missing.");
+         Debug.logWarning("[GenericDAO.select]: Cannot select GenericEntity: required primary key field(s) missing.", module);
          return false;
          }
          */
@@ -570,7 +570,7 @@ public class GenericDAO {
                     ((GenericValue) entity).copyOriginalDbValues();
                 }
             } else {
-                // Debug.logWarning("[GenericDAO.select]: select failed, result set was empty.");
+                // Debug.logWarning("[GenericDAO.select]: select failed, result set was empty.", module);
                 throw new GenericEntityNotFoundException("Result set was empty for entity: " + entity.toString());
             }
         } finally {
@@ -634,7 +634,7 @@ public class GenericDAO {
 
         boolean verboseOn = Debug.verboseOn();
 
-        if (verboseOn) Debug.logVerbose("[selectByClause] Start");
+        if (verboseOn) Debug.logVerbose("[selectByClause] Start", module);
         if (entityClauses == null)
             return null;
 
@@ -645,7 +645,7 @@ public class GenericDAO {
         ModelField firstModelField = null;
         ModelField secondModelField = null;
 
-        if (verboseOn) Debug.logVerbose("[selectByClause] Starting to build select statement.");
+        if (verboseOn) Debug.logVerbose("[selectByClause] Starting to build select statement.", module);
         StringBuffer select = new StringBuffer(" SELECT DISTINCT ");
         StringBuffer from = new StringBuffer(" FROM ");
         StringBuffer where = new StringBuffer("");
@@ -660,16 +660,16 @@ public class GenericDAO {
         // Add the main table to the FROM clause in case there are no WHERE clause entries.
         whereTables.add(modelEntity.getTableName(datasourceInfo));
 
-        if (verboseOn) Debug.logVerbose("[selectByClause] Starting to iterate through entity clauses.");
+        if (verboseOn) Debug.logVerbose("[selectByClause] Starting to iterate through entity clauses.", module);
         ModelReader entityModelReader = modelEntity.getModelReader();
         boolean paren = false;
 
         // Each iteration defines one relationship for the query.
         for (int i = 0; i < entityClauses.size(); i++) {
-            if (verboseOn) Debug.logVerbose("[selectByClause] Processing entity clause " + String.valueOf(i));
+            if (verboseOn) Debug.logVerbose("[selectByClause] Processing entity clause " + String.valueOf(i), module);
             EntityClause entityClause = (EntityClause) entityClauses.get(i);
 
-            if (verboseOn) Debug.logVerbose("[selectByClause] Entity clause: " + entityClause.toString());
+            if (verboseOn) Debug.logVerbose("[selectByClause] Entity clause: " + entityClause.toString(), module);
             EntityClause nextEntityClause = null;
             // get the next interFieldOperation.  This is used to determine if
             // we need to insert a parenthesis.
@@ -682,22 +682,22 @@ public class GenericDAO {
             }
 
             if (nextEntityClause != null) {
-                if (verboseOn) Debug.logVerbose("[selectByClause] Next entity clause: " + nextEntityClause.toString());
+                if (verboseOn) Debug.logVerbose("[selectByClause] Next entity clause: " + nextEntityClause.toString(), module);
                 nextInterFieldOperation = nextEntityClause.getInterFieldOperation().getCode();
             }
             String interFieldOperation = entityClause.getInterFieldOperation().toString();
             String intraFieldOperation = entityClause.getIntraFieldOperation().toString();
 
-            if (verboseOn) Debug.logVerbose("[selectByClause] Got operations");
+            if (verboseOn) Debug.logVerbose("[selectByClause] Got operations", module);
             firstModelEntity = entityClause.getFirstModelEntity();
             if (!whereTables.contains(firstModelEntity.getTableName(datasourceInfo))) {
                 whereTables.add(firstModelEntity.getTableName(datasourceInfo));
             }
-            if (verboseOn) Debug.logVerbose("[selectByClause] Got first model entity.");
+            if (verboseOn) Debug.logVerbose("[selectByClause] Got first model entity.", module);
 
             if (entityClause.getSecondEntity().trim().length() > 0) {
                 secondModelEntity = entityClause.getSecondModelEntity();
-                if (verboseOn) Debug.logVerbose("[selectByClause] Got second model entity.");
+                if (verboseOn) Debug.logVerbose("[selectByClause] Got second model entity.", module);
                 if (!whereTables.contains(secondModelEntity.getTableName(datasourceInfo))) {
                     whereTables.add(secondModelEntity.getTableName(datasourceInfo));
                 }
@@ -718,16 +718,16 @@ public class GenericDAO {
                 paren = true;
             }
 
-            if (verboseOn) Debug.logVerbose("[selectByClause] About to append entity clause info onto select statement.");
+            if (verboseOn) Debug.logVerbose("[selectByClause] About to append entity clause info onto select statement.", module);
             if (entityClause.getSecondEntity().trim().length() > 0) {
                 // Entity clause has a second entity and field instead of a constant value.
                 where.append(firstModelEntity.getTableName(datasourceInfo));
                 if (verboseOn) Debug.logVerbose("[selectByClause] Method 2 - Appended first table name: " +
                         firstModelEntity.getTableName(datasourceInfo));
                 where.append(".");
-                if (verboseOn) Debug.logVerbose("[selectByClause] Method 2 - Appended \".\"");
+                if (verboseOn) Debug.logVerbose("[selectByClause] Method 2 - Appended \".\"", module);
                 if (firstModelField == null || firstModelField.getColName() == null) {
-                    if (verboseOn) Debug.logVerbose("[selectByClause] Method 2 - error 1");
+                    if (verboseOn) Debug.logVerbose("[selectByClause] Method 2 - error 1", module);
                     throw new GenericEntityException(entityClause.getFirstField() +
                             " is not a field of " + entityClause.getFirstEntity());
                 }
@@ -744,7 +744,7 @@ public class GenericDAO {
                         secondModelEntity.getTableName(datasourceInfo));
                 where.append(".");
                 if (secondModelField == null || secondModelField.getColName() == null) {
-                    if (verboseOn) Debug.logVerbose("[selectByClause] Method 2 - error 2");
+                    if (verboseOn) Debug.logVerbose("[selectByClause] Method 2 - error 2", module);
                     throw new GenericEntityException(entityClause.getSecondField() +
                             " is not a field of " + entityClause.getSecondEntity());
                 }
@@ -758,7 +758,7 @@ public class GenericDAO {
                         firstModelEntity.getTableName(datasourceInfo));
                 where.append(".");
                 if (firstModelField == null || firstModelField.getColName() == null) {
-                    if (verboseOn) Debug.logVerbose("[selectByClause] Method 1 - error 1");
+                    if (verboseOn) Debug.logVerbose("[selectByClause] Method 1 - error 1", module);
                     throw new GenericEntityException(entityClause.getFirstField() +
                             " is not a field of " + entityClause.getFirstEntity());
                 }
@@ -770,14 +770,14 @@ public class GenericDAO {
                 if (verboseOn) Debug.logVerbose("[selectByClause] Method 2 - Appended intra field operation: " +
                         intraFieldOperation);
                 if (intraFieldOperation.equals("IN")) {
-                    if (verboseOn) Debug.logVerbose("[selectByClause] Intrafield operation is IN");
+                    if (verboseOn) Debug.logVerbose("[selectByClause] Intrafield operation is IN", module);
                     where.append(" (");
                 } else {
-                    if (verboseOn) Debug.logVerbose("[selectByClause] Intrafield operation is not IN");
+                    if (verboseOn) Debug.logVerbose("[selectByClause] Intrafield operation is not IN", module);
                     where.append(" '");
                 }
                 where.append(entityClause.getValue());
-                if (verboseOn) Debug.logVerbose("[selectByClause] Method 2 - Appended value: " + entityClause.getValue());
+                if (verboseOn) Debug.logVerbose("[selectByClause] Method 2 - Appended value: " + entityClause.getValue(), module);
                 if (intraFieldOperation.equals("IN")) {
                     where.append(")");
                 } else {
@@ -804,7 +804,7 @@ public class GenericDAO {
         for (int fi = 0; fi < modelEntity.getFieldsSize(); fi++) {
             ModelField curField = modelEntity.getField(fi);
 
-            if (verboseOn) Debug.logVerbose("[selectByClause] Adding field " + curField.getName() + " to selectFields");
+            if (verboseOn) Debug.logVerbose("[selectByClause] Adding field " + curField.getName() + " to selectFields", module);
             selectFields.add(curField);
 
             // Add all filter fields to the where field list.
@@ -923,7 +923,7 @@ public class GenericDAO {
 
         if (verboseOn) {
             // put this inside an if statement so that we don't have to generate the string when not used...
-            Debug.logVerbose("Doing selectListIteratorByCondition with whereEntityCondition: " + whereEntityCondition);
+            Debug.logVerbose("Doing selectListIteratorByCondition with whereEntityCondition: " + whereEntityCondition, module);
         }
 
         // make two ArrayLists of fields, one for fields to select and the other for where clause fields (to find by)
@@ -1023,7 +1023,7 @@ public class GenericDAO {
         sqlP.prepareStatement(sql, findOptions.getSpecifyTypeAndConcur(), findOptions.getResultSetType(), findOptions.getResultSetConcurrency());
         if (verboseOn) {
             // put this inside an if statement so that we don't have to generate the string when not used...
-            Debug.logVerbose("Setting the whereEntityConditionParams: " + whereEntityConditionParams);
+            Debug.logVerbose("Setting the whereEntityConditionParams: " + whereEntityConditionParams, module);
         }
         // set all of the values from the Where EntityCondition
         Iterator whereEntityConditionParamsIter = whereEntityConditionParams.iterator();
@@ -1035,7 +1035,7 @@ public class GenericDAO {
         }
         if (verboseOn) {
             // put this inside an if statement so that we don't have to generate the string when not used...
-            Debug.logVerbose("Setting the havingEntityConditionParams: " + havingEntityConditionParams);
+            Debug.logVerbose("Setting the havingEntityConditionParams: " + havingEntityConditionParams, module);
         }
         // set all of the values from the Having EntityCondition
         Iterator havingEntityConditionParamsIter = havingEntityConditionParams.iterator();

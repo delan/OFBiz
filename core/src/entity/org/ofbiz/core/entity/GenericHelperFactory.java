@@ -64,7 +64,7 @@ public class GenericHelperFactory {
                                 ClassLoader loader = Thread.currentThread().getContextClassLoader();
                                 helperClass = loader.loadClass(helperClassName);
                             } catch (ClassNotFoundException e) {
-                                Debug.logWarning(e);
+                                Debug.logWarning(e, module);
                                 throw new IllegalStateException("Error loading GenericHelper class \"" + helperClassName + "\": " + e.getMessage());
                             }
                         }
@@ -78,27 +78,27 @@ public class GenericHelperFactory {
                             try {
                                 helperConstructor = helperClass.getConstructor(paramTypes);
                             } catch (NoSuchMethodException e) {
-                                Debug.logWarning(e);
+                                Debug.logWarning(e, module);
                                 throw new IllegalStateException("Error loading GenericHelper class \"" + helperClassName + "\": " + e.getMessage());
                             }
                         }
                         try {
                             helper = (GenericHelper) helperConstructor.newInstance(params);
                         } catch (IllegalAccessException e) {
-                            Debug.logWarning(e);
+                            Debug.logWarning(e, module);
                             throw new IllegalStateException("Error loading GenericHelper class \"" + helperClassName + "\": " + e.getMessage());
                         } catch (InstantiationException e) {
-                            Debug.logWarning(e);
+                            Debug.logWarning(e, module);
                             throw new IllegalStateException("Error loading GenericHelper class \"" + helperClassName + "\": " + e.getMessage());
                         } catch (java.lang.reflect.InvocationTargetException e) {
-                            Debug.logWarning(e);
+                            Debug.logWarning(e, module);
                             throw new IllegalStateException("Error loading GenericHelper class \"" + helperClassName + "\": " + e.getMessage());
                         }
 
                         if (helper != null)
                             helperCache.put(helperName, helper);
                     } catch (SecurityException e) {
-                        Debug.logError(e);
+                        Debug.logError(e, module);
                         throw new IllegalStateException("Error loading GenericHelper class: " + e.toString());
                     }
                 }

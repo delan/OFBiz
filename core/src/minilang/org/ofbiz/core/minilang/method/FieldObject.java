@@ -61,7 +61,7 @@ public class FieldObject extends MethodObject {
         try {
             return ObjectType.loadClass(type, loader);
         } catch (ClassNotFoundException e) {
-            Debug.logError(e, "Could not find class for type: " + type);
+            Debug.logError(e, "Could not find class for type: " + type, module);
             return null;
         }
     }
@@ -72,7 +72,7 @@ public class FieldObject extends MethodObject {
         if (!mapAcsr.isEmpty()) {
             Map fromMap = (Map) mapAcsr.get(methodContext);
            if (fromMap == null) {
-                Debug.logWarning("Map not found with name " + mapAcsr + ", not getting Object value, returning null.");
+                Debug.logWarning("Map not found with name " + mapAcsr + ", not getting Object value, returning null.", module);
                 return null;
             }
             fieldVal = fieldAcsr.get(fromMap, methodContext);
@@ -82,7 +82,7 @@ public class FieldObject extends MethodObject {
         }
 
         if (fieldVal == null) {
-            if (Debug.infoOn()) Debug.logInfo("Field value not found with name " + fieldAcsr + " in Map with name " + mapAcsr + ", not getting Object value, returning null.");
+            if (Debug.infoOn()) Debug.logInfo("Field value not found with name " + fieldAcsr + " in Map with name " + mapAcsr + ", not getting Object value, returning null.", module);
             return null;
         }
         

@@ -248,7 +248,7 @@ public class ModelViewEntity extends ModelEntity {
             ModelMemberEntity modelMemberEntity = (ModelMemberEntity) memberModelMemberEntities.get(alias.entityAlias);
 
             if (modelMemberEntity == null) {
-                Debug.logError("No member entity with alias " + alias.entityAlias + " found in view-entity " + this.getEntityName() + "; this view-entity will NOT be usable...");
+                Debug.logError("No member entity with alias " + alias.entityAlias + " found in view-entity " + this.getEntityName() + "; this view-entity will NOT be usable...", module);
             }
             String aliasedEntityName = modelMemberEntity.getEntityName();
             ModelEntity aliasedEntity = (ModelEntity) entityCache.get(aliasedEntityName);
@@ -290,7 +290,7 @@ public class ModelViewEntity extends ModelEntity {
 
             // show a warning if function is specified and groupBy is true
             if (UtilValidate.isNotEmpty(alias.function) && alias.groupBy) {
-                Debug.logWarning("The view-entity alias with name=" + alias.name + " has a function value and is specified as a group-by field; this may be an error, but is not necessarily.");
+                Debug.logWarning("The view-entity alias with name=" + alias.name + " has a function value and is specified as a group-by field; this may be an error, but is not necessarily.", module);
             }
 
             if ("count".equals(alias.function) || "count-distinct".equals(alias.function)) {
@@ -318,7 +318,7 @@ public class ModelViewEntity extends ModelEntity {
                 } else if ("lower".equals(alias.function)) {
                     field.colName = "LOWER(" + alias.entityAlias + "." + SqlJdbcUtil.filterColName(aliasedField.colName) + ")";
                 } else {
-                    Debug.logWarning("Specified alias function [" + alias.function + "] not valid; must be: min, max, sum, avg, count or count-distinct; using a column name with no function function");
+                    Debug.logWarning("Specified alias function [" + alias.function + "] not valid; must be: min, max, sum, avg, count or count-distinct; using a column name with no function function", module);
                     field.colName = alias.entityAlias + "." + SqlJdbcUtil.filterColName(aliasedField.colName);
                 }
             } else {

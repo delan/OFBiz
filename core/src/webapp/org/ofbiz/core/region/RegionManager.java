@@ -68,7 +68,7 @@ public class RegionManager {
             synchronized (this) {
                 regions = (Map) regionCache.get(regionFile);
                 if (regions == null) {
-                    if (Debug.verboseOn()) Debug.logVerbose("Regions not loaded for " + regionFile + ", loading now");
+                    if (Debug.verboseOn()) Debug.logVerbose("Regions not loaded for " + regionFile + ", loading now", module);
                     regions = readRegionXml(regionFile);
                     regionCache.put(regionFile, regions);
                 }
@@ -94,11 +94,11 @@ public class RegionManager {
         try {
             document = UtilXml.readXmlDocument(regionFile, true);
         } catch (java.io.IOException e) {
-            Debug.logError(e);
+            Debug.logError(e, module);
         } catch (org.xml.sax.SAXException e) {
-            Debug.logError(e);
+            Debug.logError(e, module);
         } catch (javax.xml.parsers.ParserConfigurationException e) {
-            Debug.logError(e);
+            Debug.logError(e, module);
         }
 
         if (document == null) return regions;

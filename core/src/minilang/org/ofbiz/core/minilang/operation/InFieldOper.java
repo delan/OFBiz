@@ -48,13 +48,13 @@ public class InFieldOper extends MakeInStringOperation {
         Object obj = inMap.get(fieldName);
 
         if (obj == null) {
-            Debug.logWarning("[SimpleMapProcessor.InFieldOper.exec] In field " + fieldName + " not found, not appending anything");
+            Debug.logWarning("[SimpleMapProcessor.InFieldOper.exec] In field " + fieldName + " not found, not appending anything", module);
             return null;
         }
         try {
             return (String) ObjectType.simpleTypeConvert(obj, "String", null, locale);
         } catch (GeneralException e) {
-            Debug.logWarning(e);
+            Debug.logWarning(e, module);
             messages.add("Error converting incoming field \"" + fieldName + "\" in map processor: " + e.getMessage());
             return null;
         }

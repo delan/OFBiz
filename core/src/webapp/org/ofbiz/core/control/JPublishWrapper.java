@@ -207,7 +207,7 @@ public class JPublishWrapper {
         HttpSession session = request.getSession();
         ActionManager actionManager = siteContext.getActionManager();
         //String path = servletContext.getRealPath(pagePath);
-        //Debug.logError("Path:" + path);
+        //Debug.logError("Path:" + path, module);
 
         // get the character encoding map
         CharacterEncodingMap characterEncodingMap = siteContext.getCharacterEncodingManager().getMap(path);

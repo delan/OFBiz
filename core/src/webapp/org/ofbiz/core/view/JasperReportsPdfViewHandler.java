@@ -61,7 +61,7 @@ public class JasperReportsPdfViewHandler implements ViewHandler {
             throw new ViewHandlerException("View page was null or empty, but must be specified");
         }
         if (info == null || info.length() == 0) {
-            Debug.logInfo("View info string was null or empty, (optionally used to specify an Entity that is mapped to the Entity Engine datasource that the report will use).");
+            Debug.logInfo("View info string was null or empty, (optionally used to specify an Entity that is mapped to the Entity Engine datasource that the report will use).", module);
         }
 
         request.setAttribute(SiteDefs.FORWARDED_FROM_CONTROL_SERVLET, new Boolean(true));
@@ -95,21 +95,21 @@ public class JasperReportsPdfViewHandler implements ViewHandler {
             if (jrDataSource == null) {
                 String datasourceName = delegator.getEntityHelperName(info);
                 if (datasourceName != null && datasourceName.length() > 0) {
-                    Debug.logInfo("Filling report with connection from datasource: " + datasourceName);
+                    Debug.logInfo("Filling report with connection from datasource: " + datasourceName, module);
                     jp = JasperManager.fillReport(report, parameters, ConnectionFactory.getConnection(datasourceName));
                 } else {
-                    Debug.logInfo("Filling report with an empty JR datasource");
+                    Debug.logInfo("Filling report with an empty JR datasource", module);
                     jp = JasperManager.fillReport(report, parameters, new JREmptyDataSource());
                 }
             } else {
-                Debug.logInfo("Filling report with a passed in jrDataSource");
+                Debug.logInfo("Filling report with a passed in jrDataSource", module);
                 jp = JasperManager.fillReport(report, parameters, jrDataSource);
             }
 
             if (jp.getPages().size() < 1) {
                 throw new ViewHandlerException("Report is Empty (no results?)");
             } else {
-                Debug.logInfo("Got report, there are " + jp.getPages().size() + " pages.");
+                Debug.logInfo("Got report, there are " + jp.getPages().size() + " pages.", module);
             }
             JasperManager.printReportToPdfStream(jp, response.getOutputStream());
         } catch (IOException ie) {

@@ -199,7 +199,7 @@ public class Calculate extends MethodOperation {
                 } else {
                     Debug.logError("Error: calculate operation unknown with type " + nodeName, module);
                 }
-                // Debug.logInfo("Added operation type " + nodeName + " in position " + i);
+                // Debug.logInfo("Added operation type " + nodeName + " in position " + i, module);
                 i++;
             }
         }
@@ -281,9 +281,9 @@ public class Calculate extends MethodOperation {
                         break;
                     }
                 }
-                // Debug.logInfo("sub total so far: " + resultValue);
+                // Debug.logInfo("sub total so far: " + resultValue, module);
             }
-            // Debug.logInfo("calcValue calcop: " + resultValue + "(field=" + fieldAcsr + ", map=" + mapAcsr + ")");
+            // Debug.logInfo("calcValue calcop: " + resultValue + "(field=" + fieldAcsr + ", map=" + mapAcsr + ")", module);
             return resultValue;
         }
     }

@@ -222,17 +222,17 @@ public class UtilCache {
 
         if (hasExpired(line)) {
             // note that print.info in debug.properties cannot be checked through UtilProperties here, it would cause infinite recursion...
-            // if (Debug.infoOn()) Debug.logInfo("Element has expired with key " + key);
+            // if (Debug.infoOn()) Debug.logInfo("Element has expired with key " + key, module);
             remove(key);
             line = null;
         }
 
         if (line == null) {
-            // if (Debug.infoOn()) Debug.logInfo("Element not found with key " + key);
+            // if (Debug.infoOn()) Debug.logInfo("Element not found with key " + key, module);
             missCount++;
             return null;
         }
-        // if (Debug.infoOn()) Debug.logInfo("Element found with key " + key);
+        // if (Debug.infoOn()) Debug.logInfo("Element found with key " + key, module);
         hitCount++;
 
         if (maxSize > 0) {

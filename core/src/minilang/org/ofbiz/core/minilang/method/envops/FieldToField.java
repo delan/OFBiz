@@ -67,7 +67,7 @@ public class FieldToField extends MethodOperation {
             Map fromMap = (Map) mapAcsr.get(methodContext);
 
             if (fromMap == null) {
-                if (Debug.infoOn()) Debug.logInfo("Map not found with name " + mapAcsr + ", not copying from this map");
+                if (Debug.infoOn()) Debug.logInfo("Map not found with name " + mapAcsr + ", not copying from this map", module);
                 return true;
             }
 
@@ -78,7 +78,7 @@ public class FieldToField extends MethodOperation {
         }
 
         if (fieldVal == null) {
-            if (Debug.verboseOn()) Debug.logVerbose("Field value not found with name " + fieldAcsr + " in Map with name " + mapAcsr + ", not copying field");
+            if (Debug.verboseOn()) Debug.logVerbose("Field value not found with name " + fieldAcsr + " in Map with name " + mapAcsr + ", not copying field", module);
             return true;
         }
 
@@ -90,7 +90,7 @@ public class FieldToField extends MethodOperation {
         if (!toMapAcsr.isEmpty()) {
             toMap = (Map) toMapAcsr.get(methodContext);
             if (toMap == null) {
-                if (Debug.verboseOn()) Debug.logVerbose("Map not found with name " + toMapAcsr + ", creating new map");
+                if (Debug.verboseOn()) Debug.logVerbose("Map not found with name " + toMapAcsr + ", creating new map", module);
                 toMap = new HashMap();
                 toMapAcsr.put(methodContext, toMap);
             }

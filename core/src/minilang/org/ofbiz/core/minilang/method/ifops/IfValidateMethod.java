@@ -77,7 +77,7 @@ public class IfValidateMethod extends MethodOperation {
         if (!mapAcsr.isEmpty()) {
             Map fromMap = (Map) mapAcsr.get(methodContext);
             if (fromMap == null) {
-                if (Debug.infoOn()) Debug.logInfo("Map not found with name " + mapAcsr + ", using empty string for comparison");
+                if (Debug.infoOn()) Debug.logInfo("Map not found with name " + mapAcsr + ", using empty string for comparison", module);
             } else {
                 fieldVal = fieldAcsr.get(fromMap, methodContext);
             }
@@ -90,7 +90,7 @@ public class IfValidateMethod extends MethodOperation {
             try {
                 fieldString = (String) ObjectType.simpleTypeConvert(fieldVal, "String", null, null);
             } catch (GeneralException e) {
-                Debug.logError(e, "Could not convert object to String, using empty String");
+                Debug.logError(e, "Could not convert object to String, using empty String", module);
             }
         }
 
@@ -104,7 +104,7 @@ public class IfValidateMethod extends MethodOperation {
         try {
             valClass = methodContext.getLoader().loadClass(className);
         } catch (ClassNotFoundException cnfe) {
-            Debug.logError("Could not find validation class: " + className);
+            Debug.logError("Could not find validation class: " + className, module);
             return false;
         }
 
@@ -112,7 +112,7 @@ public class IfValidateMethod extends MethodOperation {
         try {
             valMethod = valClass.getMethod(methodName, paramTypes);
         } catch (NoSuchMethodException cnfe) {
-            Debug.logError("Could not find validation method: " + methodName + " of class " + className);
+            Debug.logError("Could not find validation method: " + methodName + " of class " + className, module);
             return false;
         }
 
@@ -120,7 +120,7 @@ public class IfValidateMethod extends MethodOperation {
         try {
             resultBool = (Boolean) valMethod.invoke(null, params);
         } catch (Exception e) {
-            Debug.logError(e, "Error in IfValidationMethod " + methodName + " of class " + className + ", not processing sub-ops ");
+            Debug.logError(e, "Error in IfValidationMethod " + methodName + " of class " + className + ", not processing sub-ops ", module);
         }
 
         if (resultBool.booleanValue()) {

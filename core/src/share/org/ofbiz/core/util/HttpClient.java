@@ -280,7 +280,7 @@ public class HttpClient {
                 }
                 
                 if (charset != null) charset = charset.trim();
-                if (Debug.infoOn()) Debug.logInfo("Getting text from HttpClient with charset: " + charset);
+                if (Debug.infoOn()) Debug.logInfo("Getting text from HttpClient with charset: " + charset, module);
             }
             
             BufferedReader post = new BufferedReader(charset == null ? new InputStreamReader(in) : new InputStreamReader(in, charset));

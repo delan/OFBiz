@@ -99,7 +99,7 @@ public class SimpleMethodBsfEngine extends BSFEngineImpl {
         if (smNames.size() == 0) throw new BSFException("Did not find any simple-methods in the file");
 
         String methodName = (String) smNames.iterator().next();
-        if (smNames.size() > 1) Debug.logWarning("Found more than one simple-method in the file, running the [" + methodName + "] method, you should remove all but one method from this file");
+        if (smNames.size() > 1) Debug.logWarning("Found more than one simple-method in the file, running the [" + methodName + "] method, you should remove all but one method from this file", module);
 
         SimpleMethod simpleMethod = (SimpleMethod) simpleMethods.get(methodName);
         MethodContext methodContext = new MethodContext(context, null, MethodContext.EVENT);

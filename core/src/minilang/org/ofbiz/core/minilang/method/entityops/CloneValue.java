@@ -51,7 +51,7 @@ public class CloneValue extends MethodOperation {
     public boolean exec(MethodContext methodContext) {
         GenericValue value = (GenericValue) valueAcsr.get(methodContext);
         if (value == null) {
-            Debug.logWarning("In clone-value a value was not found with the specified valueAcsr: " + valueAcsr + ", not copying");
+            Debug.logWarning("In clone-value a value was not found with the specified valueAcsr: " + valueAcsr + ", not copying", module);
             return true;
         }
 

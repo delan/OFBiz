@@ -71,21 +71,21 @@ public class FlexibleMessage {
         String message = methodContext.expandString(this.message);
         String propertyResource = methodContext.expandString(this.propertyResource);
         
-        // if (Debug.infoOn()) Debug.logInfo("[FlexibleMessage.getMessage] isProperty: " + isProperty + ", message: " + message + ", propertyResource: " + propertyResource);
+        // if (Debug.infoOn()) Debug.logInfo("[FlexibleMessage.getMessage] isProperty: " + isProperty + ", message: " + message + ", propertyResource: " + propertyResource, module);
         if (!isProperty && message != null) {
-            // if (Debug.infoOn()) Debug.logInfo("[FlexibleMessage.getMessage] Adding message: " + message);
+            // if (Debug.infoOn()) Debug.logInfo("[FlexibleMessage.getMessage] Adding message: " + message, module);
             return message;
         } else if (isProperty && propertyResource != null && message != null) {
             // URL propertyURL = UtilURL.fromResource(propertyResource, loader);
             String propMsg = UtilProperties.getPropertyValue(propertyResource, message);
 
-            // if (Debug.infoOn()) Debug.logInfo("[FlexibleMessage.getMessage] Got property message: " + propMsg);
+            // if (Debug.infoOn()) Debug.logInfo("[FlexibleMessage.getMessage] Got property message: " + propMsg, module);
             if (propMsg == null || propMsg.length() == 0)
                 return "In Simple Map Processing property message could not be found in resource [" + propertyResource + "] with name [" + message + "]. ";
             else
                 return propMsg;
         } else {
-            Debug.logInfo("[FlexibleMessage.getMessage] No message found, returning empty string");
+            Debug.logInfo("[FlexibleMessage.getMessage] No message found, returning empty string", module);
             return "";
         }
     }

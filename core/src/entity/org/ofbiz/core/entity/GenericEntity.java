@@ -196,7 +196,7 @@ public class GenericEntity extends Observable implements Map, Serializable, Comp
 
         if (modelField == null) {
             throw new IllegalArgumentException("[GenericEntity.set] \"" + name + "\" is not a field of " + entityName);
-            // Debug.logWarning("[GenericEntity.set] \"" + name + "\" is not a field of " + entityName + ", but setting anyway...");
+            // Debug.logWarning("[GenericEntity.set] \"" + name + "\" is not a field of " + entityName + ", but setting anyway...", module);
         }
         if (value != null || setIfNull) {
             if (value instanceof Boolean) {
@@ -206,7 +206,7 @@ public class GenericEntity extends Observable implements Map, Serializable, Comp
                 try {
                     type = getDelegator().getEntityFieldType(getModelEntity(), modelField.getType());
                 } catch (GenericEntityException e) {
-                    Debug.logWarning(e);
+                    Debug.logWarning(e, module);
                 }
                 if (type == null) throw new IllegalArgumentException("Type " + modelField.getType() + " not found");
 
@@ -255,7 +255,7 @@ public class GenericEntity extends Observable implements Map, Serializable, Comp
         try {
             type = getDelegator().getEntityFieldType(getModelEntity(), field.getType());
         } catch (GenericEntityException e) {
-            Debug.logWarning(e);
+            Debug.logWarning(e, module);
         }
         if (type == null) throw new IllegalArgumentException("Type " + field.getType() + " not found");
         String fieldType = type.getJavaType();
@@ -450,7 +450,7 @@ public class GenericEntity extends Observable implements Map, Serializable, Comp
             if (fields.containsKey(curField.getName())) {
                 Object field = fields.get(curField.getName());
 
-                // if (Debug.verboseOn()) Debug.logVerbose("Setting field " + curField.getName() + ": " + field + ", setIfEmpty = " + setIfEmpty);
+                // if (Debug.verboseOn()) Debug.logVerbose("Setting field " + curField.getName() + ": " + field + ", setIfEmpty = " + setIfEmpty, module);
                 if (setIfEmpty) {
                     // if empty string, set to null
                     if (field != null && field instanceof String && ((String) field).length() == 0) {
@@ -836,7 +836,7 @@ public class GenericEntity extends Observable implements Map, Serializable, Comp
         try {
             return this.get((String) key);
         } catch (IllegalArgumentException e) {
-            Debug.logWarning(e, "The field name (or key) [" + key + "] is not valid, printing IllegalArgumentException instead of throwing it because Map interface specification does not allow throwing that exception.");
+            Debug.logWarning(e, "The field name (or key) [" + key + "] is not valid, printing IllegalArgumentException instead of throwing it because Map interface specification does not allow throwing that exception.", module);
             return null;
         }
     }

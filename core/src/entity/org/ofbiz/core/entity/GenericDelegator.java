@@ -167,13 +167,13 @@ public class GenericDelegator implements DelegatorInterface {
                 this.distributedCacheClear = (DistributedCacheClear) dccClass.newInstance();
                 this.distributedCacheClear.setDelegator(this, getDelegatorInfo().distributedCacheClearUserLoginId);
             } catch (ClassNotFoundException e) {
-                Debug.logWarning(e, "DistributedCacheClear class with name " + distributedCacheClearClassName + " was not found, distributed cache clearing will be disabled");
+                Debug.logWarning(e, "DistributedCacheClear class with name " + distributedCacheClearClassName + " was not found, distributed cache clearing will be disabled", module);
             } catch (InstantiationException e) {
-                Debug.logWarning(e, "DistributedCacheClear class with name " + distributedCacheClearClassName + " could not be instantiated, distributed cache clearing will be disabled");
+                Debug.logWarning(e, "DistributedCacheClear class with name " + distributedCacheClearClassName + " could not be instantiated, distributed cache clearing will be disabled", module);
             } catch (IllegalAccessException e) {
-                Debug.logWarning(e, "DistributedCacheClear class with name " + distributedCacheClearClassName + " could not be accessed (illegal), distributed cache clearing will be disabled");
+                Debug.logWarning(e, "DistributedCacheClear class with name " + distributedCacheClearClassName + " could not be accessed (illegal), distributed cache clearing will be disabled", module);
             } catch (ClassCastException e) {
-                Debug.logWarning(e, "DistributedCacheClear class with name " + distributedCacheClearClassName + " does not implement the DistributedCacheClear interface, distributed cache clearing will be disabled");
+                Debug.logWarning(e, "DistributedCacheClear class with name " + distributedCacheClearClassName + " does not implement the DistributedCacheClear interface, distributed cache clearing will be disabled", module);
             }
         }
         
@@ -183,13 +183,13 @@ public class GenericDelegator implements DelegatorInterface {
             this.entityEcaHandler = (EntityEcaHandler) eecahClass.newInstance();
             this.entityEcaHandler.setDelegator(this);
         } catch (ClassNotFoundException e) {
-            Debug.logWarning(e, "EntityEcaHandler class with name " + ECA_HANDLER_CLASS_NAME + " was not found, Entity ECA Rules will be disabled");
+            Debug.logWarning(e, "EntityEcaHandler class with name " + ECA_HANDLER_CLASS_NAME + " was not found, Entity ECA Rules will be disabled", module);
         } catch (InstantiationException e) {
-            Debug.logWarning(e, "EntityEcaHandler class with name " + ECA_HANDLER_CLASS_NAME + " could not be instantiated, Entity ECA Rules will be disabled");
+            Debug.logWarning(e, "EntityEcaHandler class with name " + ECA_HANDLER_CLASS_NAME + " could not be instantiated, Entity ECA Rules will be disabled", module);
         } catch (IllegalAccessException e) {
-            Debug.logWarning(e, "EntityEcaHandler class with name " + ECA_HANDLER_CLASS_NAME + " could not be accessed (illegal), Entity ECA Rules will be disabled");
+            Debug.logWarning(e, "EntityEcaHandler class with name " + ECA_HANDLER_CLASS_NAME + " could not be accessed (illegal), Entity ECA Rules will be disabled", module);
         } catch (ClassCastException e) {
-            Debug.logWarning(e, "EntityEcaHandler class with name " + ECA_HANDLER_CLASS_NAME + " does not implement the EntityEcaHandler interface, Entity ECA Rules will be disabled");
+            Debug.logWarning(e, "EntityEcaHandler class with name " + ECA_HANDLER_CLASS_NAME + " does not implement the EntityEcaHandler interface, Entity ECA Rules will be disabled", module);
         }
     }
 
@@ -306,12 +306,12 @@ public class GenericDelegator implements DelegatorInterface {
                 }
             } catch (GenericEntityException ex) {
                 errorCount++;
-                Debug.logError("Entity " + ename + " named in Entity Group with name " + groupName + " are not defined in any Entity Definition file");
+                Debug.logError("Entity " + ename + " named in Entity Group with name " + groupName + " are not defined in any Entity Definition file", module);
             }
         }
 
         if (errorCount > 0) {
-            Debug.logError(errorCount + " entities were named in ModelGroup but not defined in any EntityModel");
+            Debug.logError(errorCount + " entities were named in ModelGroup but not defined in any EntityModel", module);
         }
 
         return entities;
@@ -1720,7 +1720,7 @@ public class GenericDelegator implements DelegatorInterface {
         // on create don't clear by primary cache (and won't clear original values because there won't be any)
         // on remove don't clear by and for new values, but do for original values
 
-        // Debug.logInfo("running clearCacheLine for value: " + value + ", distribute: " + distribute);
+        // Debug.logInfo("running clearCacheLine for value: " + value + ", distribute: " + distribute, module);
         if (value == null) return;
 
         //if never cached, then don't bother clearing
@@ -1872,7 +1872,7 @@ public class GenericDelegator implements DelegatorInterface {
         if (primaryKey == null || value == null) return;
         
         if (value.getModelEntity().getNeverCache()) {
-            Debug.logWarning("Tried to put a value of the " + value.getEntityName() + " entity in the BY PRIMARY KEY cache but this entity has never-cache set to true, not caching.");
+            Debug.logWarning("Tried to put a value of the " + value.getEntityName() + " entity in the BY PRIMARY KEY cache but this entity has never-cache set to true, not caching.", module);
             return;
         }
         
@@ -1900,7 +1900,7 @@ public class GenericDelegator implements DelegatorInterface {
         if (entity == null || values == null) return;
         
         if (entity.getNeverCache()) {
-            Debug.logWarning("Tried to put values of the " + entity.getEntityName() + " entity in the ALL cache but this entity has never-cache set to true, not caching.");
+            Debug.logWarning("Tried to put values of the " + entity.getEntityName() + " entity in the ALL cache but this entity has never-cache set to true, not caching.", module);
             return;
         }
         
@@ -1919,7 +1919,7 @@ public class GenericDelegator implements DelegatorInterface {
         if (entity == null || fields == null || values == null) return;
         
         if (entity.getNeverCache()) {
-            Debug.logWarning("Tried to put values of the " + entity.getEntityName() + " entity in the BY AND cache but this entity has never-cache set to true, not caching.");
+            Debug.logWarning("Tried to put values of the " + entity.getEntityName() + " entity in the BY AND cache but this entity has never-cache set to true, not caching.", module);
             return;
         }
         
@@ -2035,7 +2035,7 @@ public class GenericDelegator implements DelegatorInterface {
     protected Map getEcaEntityEventMap(String entityName) {
         if (this.entityEcaHandler == null) return null;
         Map ecaEventMap = this.entityEcaHandler.getEntityEventMap(entityName);
-        //Debug.logWarning("for entityName " + entityName + " got ecaEventMap: " + ecaEventMap);
+        //Debug.logWarning("for entityName " + entityName + " got ecaEventMap: " + ecaEventMap, module);
         return ecaEventMap;
     }
 
@@ -2043,7 +2043,7 @@ public class GenericDelegator implements DelegatorInterface {
         // if this is true then it means that the caller had looked for an event map but found none for this entity
         if (noEventMapFound) return;
         if (this.entityEcaHandler == null) return;
-        //if (!"find".equals(currentOperation)) Debug.logWarning("evalRules for entity " + value.getEntityName() + ", currentOperation " + currentOperation + ", event " + event);
+        //if (!"find".equals(currentOperation)) Debug.logWarning("evalRules for entity " + value.getEntityName() + ", currentOperation " + currentOperation + ", event " + event, module);
         this.entityEcaHandler.evalRules(currentOperation, eventMap, event, value, isError);
     }
     

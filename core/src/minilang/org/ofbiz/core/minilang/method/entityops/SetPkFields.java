@@ -60,7 +60,7 @@ public class SetPkFields extends MethodOperation {
         if (value == null) {
             String errMsg = "In set-pk-fields a value was not found with the specified valueAcsr: " + valueAcsr + ", not setting fields";
 
-            Debug.logWarning(errMsg);
+            Debug.logWarning(errMsg, module);
             if (methodContext.getMethodType() == MethodContext.EVENT) {
                 methodContext.putEnv(simpleMethod.getEventErrorMessageName(), errMsg);
                 methodContext.putEnv(simpleMethod.getEventResponseCodeName(), simpleMethod.getDefaultErrorCode());
@@ -73,7 +73,7 @@ public class SetPkFields extends MethodOperation {
 
         Map theMap = (Map) mapAcsr.get(methodContext);
         if (theMap == null) {
-            Debug.logWarning("In set-pk-fields could not find map with name " + mapAcsr + ", not setting any fields");
+            Debug.logWarning("In set-pk-fields could not find map with name " + mapAcsr + ", not setting any fields", module);
         } else {
             value.setPKFields(theMap, setIfNull);
         }

@@ -54,7 +54,7 @@ public class CreateValue extends MethodOperation {
         GenericValue value = (GenericValue) valueAcsr.get(methodContext);
         if (value == null) {
             String errMsg = "In create-value a value was not found with the specified valueAcsr: " + valueAcsr + ", not creating";
-            Debug.logWarning(errMsg);
+            Debug.logWarning(errMsg, module);
             if (methodContext.getMethodType() == MethodContext.EVENT) {
                 methodContext.putEnv(simpleMethod.getEventErrorMessageName(), errMsg);
                 methodContext.putEnv(simpleMethod.getEventResponseCodeName(), simpleMethod.getDefaultErrorCode());
@@ -68,7 +68,7 @@ public class CreateValue extends MethodOperation {
         try {
             methodContext.getDelegator().create(value, doCacheClear);
         } catch (GenericEntityException e) {
-            Debug.logError(e);
+            Debug.logError(e, module);
             String errMsg = "ERROR: Could not complete the " + simpleMethod.getShortDescription() + " process [problem creating the " + valueAcsr + " value: " + e.getMessage() + "]";
             if (methodContext.getMethodType() == MethodContext.EVENT) {
                 methodContext.putEnv(simpleMethod.getEventErrorMessageName(), errMsg);

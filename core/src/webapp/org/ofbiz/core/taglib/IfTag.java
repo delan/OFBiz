@@ -96,7 +96,7 @@ public class IfTag extends BodyTagSupport {
                 return SKIP_BODY;
             }
         } catch (RuntimeException e) {
-            Debug.logError(e);
+            Debug.logError(e, module);
             return SKIP_BODY;
         }
 
@@ -121,12 +121,12 @@ public class IfTag extends BodyTagSupport {
                         if (objectSize > localSize)
                             return EVAL_BODY_AGAIN;
                     } catch (Exception e) {
-                        Debug.logError(e);
+                        Debug.logError(e, module);
                         return SKIP_BODY;
                     }
                 }
             } catch (RuntimeException e) {
-                Debug.logError(e);
+                Debug.logError(e, module);
                 return SKIP_BODY;
             }
         } else if (object instanceof Boolean || "Boolean".equalsIgnoreCase(type)) {
@@ -144,7 +144,7 @@ public class IfTag extends BodyTagSupport {
                         return EVAL_BODY_AGAIN;
                 }
             } catch (RuntimeException e) {
-                Debug.logError(e);
+                Debug.logError(e, module);
                 return SKIP_BODY;
             }
         } else if (value != null) {
@@ -156,7 +156,7 @@ public class IfTag extends BodyTagSupport {
                     if (s.equals(value))
                         return EVAL_BODY_AGAIN;
                 } catch (RuntimeException e) {
-                    Debug.logError(e);
+                    Debug.logError(e, module);
                     return SKIP_BODY;
                 }
             } else if (object instanceof Integer || "Integer".equalsIgnoreCase(type)) {
@@ -168,7 +168,7 @@ public class IfTag extends BodyTagSupport {
                     if (i.equals(v))
                         return EVAL_BODY_AGAIN;
                 } catch (RuntimeException e) {
-                    Debug.logError(e);
+                    Debug.logError(e, module);
                     return SKIP_BODY;
                 }
             } else if (object instanceof Long || "Long".equalsIgnoreCase(type)) {
@@ -180,7 +180,7 @@ public class IfTag extends BodyTagSupport {
                     if (i.equals(v))
                         return EVAL_BODY_AGAIN;
                 } catch (RuntimeException e) {
-                    Debug.logError(e);
+                    Debug.logError(e, module);
                     return SKIP_BODY;
                 }
             } else if (object instanceof Float || "Float".equalsIgnoreCase(type)) {
@@ -192,7 +192,7 @@ public class IfTag extends BodyTagSupport {
                     if (d.equals(v))
                         return EVAL_BODY_AGAIN;
                 } catch (RuntimeException e) {
-                    Debug.logError(e);
+                    Debug.logError(e, module);
                     return SKIP_BODY;
                 }
             } else if (object instanceof Double || "Double".equalsIgnoreCase(type)) {
@@ -204,7 +204,7 @@ public class IfTag extends BodyTagSupport {
                     if (d.equals(v))
                         return EVAL_BODY_AGAIN;
                 } catch (RuntimeException e) {
-                    Debug.logError(e);
+                    Debug.logError(e, module);
                     return SKIP_BODY;
                 }
             } else {
@@ -216,7 +216,7 @@ public class IfTag extends BodyTagSupport {
                     if (valueObject != null && valueObject.equals(object))
                         return EVAL_BODY_AGAIN;
                 } catch (RuntimeException e) {
-                    Debug.logError(e);
+                    Debug.logError(e, module);
                     return SKIP_BODY;
                 }
             }
@@ -242,11 +242,11 @@ public class IfTag extends BodyTagSupport {
                 JspWriter out = body.getEnclosingWriter();
                 String bodyString = body.getString();
                 body.clearBody();
-                //Debug.logInfo("printing string: " + bodyString);
+                //Debug.logInfo("printing string: " + bodyString, module);
                 out.print(bodyString);
             }
         } catch (IOException e) {
-            Debug.logError(e, "IfTag Error.");
+            Debug.logError(e, "IfTag Error.", module);
         }
         return EVAL_PAGE;
     }

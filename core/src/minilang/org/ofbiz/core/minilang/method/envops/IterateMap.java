@@ -63,7 +63,7 @@ public class IterateMap extends MethodOperation {
         Object fieldVal = null;
 
         if (mapAcsr.isEmpty()) {
-            Debug.logWarning("No map-name specified in iterate tag, doing nothing");
+            Debug.logWarning("No map-name specified in iterate tag, doing nothing", module);
             return true;
         }
 
@@ -72,11 +72,11 @@ public class IterateMap extends MethodOperation {
         Map theMap = (Map) mapAcsr.get(methodContext);
 
         if (theMap == null) {
-            if (Debug.infoOn()) Debug.logInfo("Map not found with name " + mapAcsr + ", doing nothing");
+            if (Debug.infoOn()) Debug.logInfo("Map not found with name " + mapAcsr + ", doing nothing", module);
             return true;
         }
         if (theMap.size() == 0) {
-            if (Debug.verboseOn()) Debug.logVerbose("Map with name " + mapAcsr + " has zero entries, doing nothing");
+            if (Debug.verboseOn()) Debug.logVerbose("Map with name " + mapAcsr + " has zero entries, doing nothing", module);
             return true;
         }
 

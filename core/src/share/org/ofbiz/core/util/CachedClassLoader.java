@@ -105,7 +105,7 @@ public class CachedClassLoader extends URLClassLoader {
             globalClassNameClassMap.put("GenericEntity", loader.loadClass("org.ofbiz.core.entity.GenericEntity"));
             globalClassNameClassMap.put("org.ofbiz.core.entity.GenericEntity", loader.loadClass("org.ofbiz.core.entity.GenericEntity"));
         } catch (ClassNotFoundException e) {
-            Debug.logError(e, "Could not pre-initialize dynamically loaded class: ");
+            Debug.logError(e, "Could not pre-initialize dynamically loaded class: ", module);
         }
     }
     
@@ -132,13 +132,13 @@ public class CachedClassLoader extends URLClassLoader {
         //make sure it is not a known bad class name
         if (theClass == null) {
             if (localBadClassNameSet.contains(name) || globalBadClassNameSet.contains(name)) {
-                if (Debug.verboseOn()) Debug.logVerbose("Cached loader got a known bad class name: [" + name + "]");
+                if (Debug.verboseOn()) Debug.logVerbose("Cached loader got a known bad class name: [" + name + "]", module);
                 throw new ClassNotFoundException("Cached loader got a known bad class name: " + name);
             }
         }
         
         if (theClass == null) {
-            if (Debug.verboseOn()) Debug.logVerbose("Cached loader cache miss for class name: [" + name + "]");
+            if (Debug.verboseOn()) Debug.logVerbose("Cached loader cache miss for class name: [" + name + "]", module);
             
             synchronized (this) {
                 theClass = (Class) localClassNameClassMap.get(name);
@@ -151,8 +151,8 @@ public class CachedClassLoader extends URLClassLoader {
                             localClassNameClassMap.put(name, theClass);
                         }
                     } catch (ClassNotFoundException e) {
-                        //Debug.logInfo(e);
-                        if (Debug.verboseOn()) Debug.logVerbose("Remembering invalid class name: [" + name + "]");
+                        //Debug.logInfo(e, module);
+                        if (Debug.verboseOn()) Debug.logVerbose("Remembering invalid class name: [" + name + "]", module);
                         if (isGlobalPath(name)) {
                             globalBadClassNameSet.add(name);
                         } else {
@@ -176,22 +176,22 @@ public class CachedClassLoader extends URLClassLoader {
         //make sure it is not a known bad resource name
         if (theResource == null) {
             if (localBadResourceNameSet.contains(name) || globalBadResourceNameSet.contains(name)) {
-                if (Debug.verboseOn()) Debug.logVerbose("Cached loader got a known bad resource name: [" + name + "]");
+                if (Debug.verboseOn()) Debug.logVerbose("Cached loader got a known bad resource name: [" + name + "]", module);
                 return null;
             }
         }
         
         if (theResource == null) {
-            //if (Debug.verboseOn()) Debug.logVerbose("Cached loader cache miss for resource name: [" + name + "]");
-            Debug.logInfo("Cached loader cache miss for resource name: [" + name + "]");
+            //if (Debug.verboseOn()) Debug.logVerbose("Cached loader cache miss for resource name: [" + name + "]", module);
+            Debug.logInfo("Cached loader cache miss for resource name: [" + name + "]", module);
             
             synchronized (this) {
                 theResource = (URL) localResourceMap.get(name);
                 if (theResource == null) {
                     theResource = super.getResource(name);
                     if (theResource == null) {
-                        //if (Debug.verboseOn()) Debug.logVerbose("Remembering invalid resource name: [" + name + "]");
-                        Debug.logInfo("Remembering invalid resource name: [" + name + "]");
+                        //if (Debug.verboseOn()) Debug.logVerbose("Remembering invalid resource name: [" + name + "]", module);
+                        Debug.logInfo("Remembering invalid resource name: [" + name + "]", module);
                         if (isGlobalPath(name)) {
                             globalBadResourceNameSet.add(name);
                         } else {

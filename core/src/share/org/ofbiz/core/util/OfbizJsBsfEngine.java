@@ -92,7 +92,7 @@ public class OfbizJsBsfEngine extends BSFEngineImpl {
      * some expression.
      */
     public Object eval(String source, int lineNo, int columnNo, Object oscript) throws BSFException {
-        if (Debug.verboseOn()) Debug.logVerbose("Running javascript script " + source + " through OFBiz BSH engine");
+        if (Debug.verboseOn()) Debug.logVerbose("Running javascript script " + source + " through OFBiz BSH engine", module);
         String script = oscript.toString();
         Object retval = null;
         try {

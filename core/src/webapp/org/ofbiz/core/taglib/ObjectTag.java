@@ -84,7 +84,7 @@ public class ObjectTag extends TagSupport {
         if (element != null) {
             pageContext.setAttribute(name, element);
         } else {
-            Debug.logWarning("Did not find element in property. (" + property + ")");
+            Debug.logWarning("Did not find element in property. (" + property + ")", module);
         }
         return EVAL_BODY_INCLUDE;
     }

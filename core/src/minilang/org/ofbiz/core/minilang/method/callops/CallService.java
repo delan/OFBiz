@@ -206,7 +206,7 @@ public class CallService extends MethodOperation {
         try {
             result = methodContext.getDispatcher().runSync(serviceName, inMap);
         } catch (GenericServiceException e) {
-            Debug.logError(e);
+            Debug.logError(e, module);
             String errMsg = "ERROR: Could not complete the " + simpleMethod.getShortDescription() + " process [problem invoking the " + serviceName + " service: " + e.getMessage() + "]";
             if (methodContext.getMethodType() == MethodContext.EVENT) {
                 methodContext.putEnv(simpleMethod.getEventErrorMessageName(), errMsg);

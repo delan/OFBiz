@@ -148,7 +148,7 @@ public class SequenceUtil {
                             manualTX = true;
                         }
                     } catch (SystemException e) {
-                        Debug.logError(e, "System Error suspending transaction in sequence util");
+                        Debug.logError(e, "System Error suspending transaction in sequence util", module);
                     }
                 }
             } catch (GenericTransactionException e) {
@@ -196,7 +196,7 @@ public class SequenceUtil {
                         try {
                             if (rs != null) rs.close();
                         } catch (SQLException sqle) {
-                            Debug.logWarning(sqle, "Error closing result set in sequence util");
+                            Debug.logWarning(sqle, "Error closing result set in sequence util", module);
                         }
                         sql = "INSERT INTO " + parentUtil.tableName + " (" + parentUtil.nameColName + ", " + parentUtil.idColName + ") VALUES ('" + this.seqName + "', " + startSeqId + ")";
                         if (stmt.executeUpdate(sql) <= 0) return;
@@ -205,7 +205,7 @@ public class SequenceUtil {
                     try {
                         if (rs != null) rs.close();
                     } catch (SQLException sqle) {
-                        Debug.logWarning(sqle, "Error closing result set in sequence util");
+                        Debug.logWarning(sqle, "Error closing result set in sequence util", module);
                     }
 
                     sql = "UPDATE " + parentUtil.tableName + " SET " + parentUtil.idColName + "=" + parentUtil.idColName + "+" + SequenceBank.bankSize + " WHERE " + parentUtil.nameColName + "='" + this.seqName + "'";
@@ -228,14 +228,14 @@ public class SequenceUtil {
                         try {
                             if (rs != null) rs.close();
                         } catch (SQLException sqle) {
-                            Debug.logWarning(sqle, "Error closing result set in sequence util");
+                            Debug.logWarning(sqle, "Error closing result set in sequence util", module);
                         }
                         return;
                     }
                     try {
                         if (rs != null) rs.close();
                     } catch (SQLException sqle) {
-                        Debug.logWarning(sqle, "Error closing result set in sequence util");
+                        Debug.logWarning(sqle, "Error closing result set in sequence util", module);
                     }
 
                     if (val1 + bankSize != val2) {
@@ -249,7 +249,7 @@ public class SequenceUtil {
                         try {
                             this.wait(0, waitTime);
                         } catch (Exception e) {
-                            Debug.logWarning(e, "Error waiting in sequence util");
+                            Debug.logWarning(e, "Error waiting in sequence util", module);
                         }
                     }
 
@@ -269,12 +269,12 @@ public class SequenceUtil {
                 try {
                     if (stmt != null) stmt.close();
                 } catch (SQLException sqle) {
-                    Debug.logWarning(sqle, "Error closing statement in sequence util");
+                    Debug.logWarning(sqle, "Error closing statement in sequence util", module);
                 }
                 try {
                     if (connection != null) connection.close();
                 } catch (SQLException sqle) {
-                    Debug.logWarning(sqle, "Error closing connection in sequence util");
+                    Debug.logWarning(sqle, "Error closing connection in sequence util", module);
                 }
             }
             
@@ -287,11 +287,11 @@ public class SequenceUtil {
                         transactionManager.resume(suspendedTransaction);
                     }
                 } catch (InvalidTransactionException e) {
-                    Debug.logError(e, "InvalidTransaction Error resuming suspended transaction in sequence util");
+                    Debug.logError(e, "InvalidTransaction Error resuming suspended transaction in sequence util", module);
                 } catch (IllegalStateException e) {
-                    Debug.logError(e, "IllegalState Error resuming suspended transaction in sequence util");
+                    Debug.logError(e, "IllegalState Error resuming suspended transaction in sequence util", module);
                 } catch (SystemException e) {
-                    Debug.logError(e, "System Error resuming suspended transaction in sequence util");
+                    Debug.logError(e, "System Error resuming suspended transaction in sequence util", module);
                 }
             }
         }

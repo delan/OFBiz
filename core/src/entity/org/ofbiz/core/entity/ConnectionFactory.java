@@ -58,7 +58,7 @@ public class ConnectionFactory {
             Connection con = DBCPConnectionFactory.getConnection(helperName, inlineJdbcElement);
             if (con != null) return con;
         } catch (Exception ex) {
-            Debug.logError(ex, "There was an error getting a DBCP datasource.");
+            Debug.logError(ex, "There was an error getting a DBCP datasource.", module);
         }
         
         // Default to plain JDBC.
@@ -69,8 +69,8 @@ public class ConnectionFactory {
                 ClassLoader loader = Thread.currentThread().getContextClassLoader();
                 loader.loadClass(driverClassName);
             } catch (ClassNotFoundException cnfe) {
-                Debug.logWarning("Could not find JDBC driver class named " + driverClassName + ".\n");
-                Debug.logWarning(cnfe);
+                Debug.logWarning("Could not find JDBC driver class named " + driverClassName + ".\n", module);
+                Debug.logWarning(cnfe, module);
                 return null;
             }
             return DriverManager.getConnection(inlineJdbcElement.getAttribute("jdbc-uri"),

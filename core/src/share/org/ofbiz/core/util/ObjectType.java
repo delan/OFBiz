@@ -671,7 +671,7 @@ public class ObjectType {
         List messages, Locale locale, ClassLoader loader) {
         boolean verboseOn = Debug.verboseOn();
 
-        if (verboseOn) Debug.logVerbose("Comparing value1: \"" + value1 + "\" " + operator + " value2:\"" + value2 + "\"");
+        if (verboseOn) Debug.logVerbose("Comparing value1: \"" + value1 + "\" " + operator + " value2:\"" + value2 + "\"", module);
 
         int result = 0;
 
@@ -833,7 +833,7 @@ public class ObjectType {
             return null;
         }
 
-        if (verboseOn) Debug.logVerbose("Got Compare result: " + result + ", operator: " + operator);
+        if (verboseOn) Debug.logVerbose("Got Compare result: " + result + ", operator: " + operator, module);
         if ("less".equals(operator)) {
             if (result >= 0)
                 return Boolean.FALSE;
@@ -857,7 +857,7 @@ public class ObjectType {
             return null;
         }
 
-        if (verboseOn) Debug.logVerbose("Returning true");
+        if (verboseOn) Debug.logVerbose("Returning true", module);
         return Boolean.TRUE;
     }
 }

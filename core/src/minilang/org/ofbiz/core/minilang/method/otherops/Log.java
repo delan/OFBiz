@@ -63,7 +63,7 @@ public class Log extends MethodOperation {
                     methodStrings.add(new FieldString(methodStringElement, simpleMethod)); 
                 } else {
                     //whoops, invalid tag here, print warning
-                    Debug.logWarning("Found an unsupported tag under the log tag: " + methodStringElement.getNodeName() + "; ignoring");
+                    Debug.logWarning("Found an unsupported tag under the log tag: " + methodStringElement.getNodeName() + "; ignoring", module);
                 }
             }
         }
@@ -76,7 +76,7 @@ public class Log extends MethodOperation {
         int level;
         Integer levelInt = Debug.getLevelFromString(levelStr);
         if (levelInt == null) {
-            Debug.logWarning("Specified level [" + levelStr + "] was not valid, using INFO");
+            Debug.logWarning("Specified level [" + levelStr + "] was not valid, using INFO", module);
             level = Debug.INFO;
         } else {
             level = levelInt.intValue();

@@ -49,7 +49,7 @@ public class SetCurrentUserLogin extends MethodOperation {
     public boolean exec(MethodContext methodContext) {
         GenericValue userLogin = (GenericValue) valueAcsr.get(methodContext);
         if (userLogin == null) {
-            Debug.logWarning("In SetCurrentUserLogin a value was not found with the specified valueName: " + valueAcsr + ", not setting");
+            Debug.logWarning("In SetCurrentUserLogin a value was not found with the specified valueName: " + valueAcsr + ", not setting", module);
             return true;
         }
 

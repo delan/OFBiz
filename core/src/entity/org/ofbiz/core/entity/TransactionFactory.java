@@ -59,7 +59,7 @@ public class TransactionFactory {
                                 ClassLoader loader = Thread.currentThread().getContextClassLoader();
                                 tfClass = loader.loadClass(className);
                             } catch (ClassNotFoundException e) {
-                                Debug.logWarning(e);
+                                Debug.logWarning(e, module);
                                 throw new IllegalStateException("Error loading TransactionFactory class \"" + className + "\": " + e.getMessage());
                             }
                         }
@@ -67,14 +67,14 @@ public class TransactionFactory {
                         try {
                             transactionFactory = (TransactionFactoryInterface) tfClass.newInstance();
                         } catch (IllegalAccessException e) {
-                            Debug.logWarning(e);
+                            Debug.logWarning(e, module);
                             throw new IllegalStateException("Error loading TransactionFactory class \"" + className + "\": " + e.getMessage());
                         } catch (InstantiationException e) {
-                            Debug.logWarning(e);
+                            Debug.logWarning(e, module);
                             throw new IllegalStateException("Error loading TransactionFactory class \"" + className + "\": " + e.getMessage());
                         }
                     } catch (SecurityException e) {
-                        Debug.logError(e);
+                        Debug.logError(e, module);
                         throw new IllegalStateException("Error loading TransactionFactory class: " + e.getMessage());
                     }
                 }

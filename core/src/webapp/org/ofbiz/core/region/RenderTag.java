@@ -108,7 +108,7 @@ public class RenderTag extends RegionTag {
                 regionEnd.render(pageContext);
                 RegionStack.pop(pageContext.getRequest());
             } catch (Exception ex) {
-                Debug.logError(ex, "Error rendering region [" + regionEnd.getId() + "]: ");
+                Debug.logError(ex, "Error rendering region [" + regionEnd.getId() + "]: ", module);
                 // IOException or ServletException
                 throw new JspException("Error rendering region [" + regionEnd.getId() + "]: " + ex.getMessage());
             }

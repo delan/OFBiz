@@ -57,7 +57,7 @@ public class FieldToRequest extends MethodOperation {
             if (!mapAcsr.isEmpty()) {
                 Map fromMap = (Map) mapAcsr.get(methodContext);
                 if (fromMap == null) {
-                    Debug.logWarning("Map not found with name " + mapAcsr);
+                    Debug.logWarning("Map not found with name " + mapAcsr, module);
                     return true;
                 }
                 fieldVal = fieldAcsr.get(fromMap, methodContext);
@@ -67,7 +67,7 @@ public class FieldToRequest extends MethodOperation {
             }
 
             if (fieldVal == null) {
-                Debug.logWarning("Field value not found with name " + fieldAcsr + " in Map with name " + mapAcsr);
+                Debug.logWarning("Field value not found with name " + fieldAcsr + " in Map with name " + mapAcsr, module);
                 return true;
             }
 

@@ -102,7 +102,7 @@ public class ModelGroupReader {
                     try {
                         document = entityGroupResourceHandler.getDocument();
                     } catch (GenericConfigException e) {
-                        Debug.logError(e, "Error loading entity group model");
+                        Debug.logError(e, "Error loading entity group model", module);
                     }
                     if (document == null) {
                         groupCache = null;
@@ -141,7 +141,7 @@ public class ModelGroupReader {
                             }
                         } while ((curChild = curChild.getNextSibling()) != null);
                     } else
-                        Debug.logWarning("[ModelGroupReader.getGroupCache] No child nodes found.");
+                        Debug.logWarning("[ModelGroupReader.getGroupCache] No child nodes found.", module);
                     utilTimer.timerString("[ModelGroupReader.getGroupCache] FINISHED - Total Entity-Groups: " + i + " FINISHED");
                 }
             }

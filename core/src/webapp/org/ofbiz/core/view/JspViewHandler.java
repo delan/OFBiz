@@ -74,7 +74,7 @@ public class JspViewHandler implements ViewHandler {
 
                 throwable = jspe.getRootCause() != null ? jspe.getRootCause() : jspe;
             }
-            Debug.logError(throwable, "ServletException rendering JSP view");
+            Debug.logError(throwable, "ServletException rendering JSP view", module);
             throw new ViewHandlerException(e.getMessage(), throwable);
         }
     }

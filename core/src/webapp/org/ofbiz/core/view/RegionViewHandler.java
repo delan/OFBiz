@@ -57,9 +57,9 @@ public class RegionViewHandler implements ViewHandler {
         }
 
         if (regionFile == null) {
-            Debug.logWarning("No " + SiteDefs.REGIONS_CONFIG_LOCATION + " file found in this webapp");
+            Debug.logWarning("No " + SiteDefs.REGIONS_CONFIG_LOCATION + " file found in this webapp", module);
         } else {
-            Debug.logVerbose("Loading regions from XML file in: " + regionFile);
+            Debug.logVerbose("Loading regions from XML file in: " + regionFile, module);
             regionManager = new RegionManager(regionFile);
         }
     }
@@ -98,7 +98,7 @@ public class RegionViewHandler implements ViewHandler {
 
                 throwable = jspe.getRootCause() != null ? jspe.getRootCause() : jspe;
             }
-            Debug.logError(throwable, "ServletException rendering JSP view");
+            Debug.logError(throwable, "ServletException rendering JSP view", module);
             throw new ViewHandlerException(e.getMessage(), throwable);
         }
         RegionStack.pop(request);

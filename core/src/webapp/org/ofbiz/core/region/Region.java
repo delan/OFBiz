@@ -79,12 +79,12 @@ public class Region extends Content {
     }
 
     public void render(PageContext pageContext) throws JspException {
-        if (Debug.verboseOn()) Debug.logVerbose("Rendering " + this.toString());
+        if (Debug.verboseOn()) Debug.logVerbose("Rendering " + this.toString(), module);
 
         try {
             this.render((HttpServletRequest) pageContext.getRequest(), (HttpServletResponse) pageContext.getResponse());
         } catch (java.io.IOException e) {
-            Debug.logError(e, "Error rendering region: ");
+            Debug.logError(e, "Error rendering region: ", module);
             if (UtilJ2eeCompat.useNestedJspException(pageContext.getServletContext()))
                 throw new JspException(e);
             else
@@ -92,7 +92,7 @@ public class Region extends Content {
         } catch (ServletException e) {
             Throwable throwable = e.getRootCause() != null ? e.getRootCause() : e;
 
-            Debug.logError(throwable, "Error rendering region: ");
+            Debug.logError(throwable, "Error rendering region: ", module);
             if (UtilJ2eeCompat.useNestedJspException(pageContext.getServletContext()))
                 throw new JspException(throwable);
             else
@@ -101,7 +101,7 @@ public class Region extends Content {
     }
 
     public void render(HttpServletRequest request, HttpServletResponse response) throws java.io.IOException, ServletException {
-        if (Debug.verboseOn()) Debug.logVerbose("Rendering " + this.toString());
+        if (Debug.verboseOn()) Debug.logVerbose("Rendering " + this.toString(), module);
 
         RequestDispatcher rd = request.getRequestDispatcher(content);
 

@@ -75,7 +75,7 @@ public class EntityEcaAction {
                 actionContext.put(valueAttr, value);
             }
             
-            //Debug.logInfo("Running Entity ECA action service " + this.serviceName + "; value=" + value + "; actionContext=" + actionContext);
+            //Debug.logInfo("Running Entity ECA action service " + this.serviceName + "; value=" + value + "; actionContext=" + actionContext, module);
         
             LocalDispatcher dispatcher = dctx.getDispatcher();
             if ("sync".equals(this.serviceMode)) {
@@ -98,7 +98,7 @@ public class EntityEcaAction {
 
         // check abortOnError and rollbackOnError
         if (rollbackOnError) {
-            Debug.logError("Entity ECA action service failed and rollback-on-error is true, so setting rollback only.");
+            Debug.logError("Entity ECA action service failed and rollback-on-error is true, so setting rollback only.", module);
             TransactionUtil.setRollbackOnly();
         }
     }

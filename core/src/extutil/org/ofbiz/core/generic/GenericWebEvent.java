@@ -56,7 +56,7 @@ public class GenericWebEvent {
 
         if (entityName == null || entityName.length() <= 0) {
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "The entityName was not specified, but is required.");
-            Debug.logWarning("[GenericWebEvent.updateGeneric] The entityName was not specified, but is required.");
+            Debug.logWarning("[GenericWebEvent.updateGeneric] The entityName was not specified, but is required.", module);
             return "error";
         }
 
@@ -65,12 +65,12 @@ public class GenericWebEvent {
 
         if (security == null) {
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "The security object was not found in the request, please check the control servlet init.");
-            Debug.logWarning("[updateGeneric] The security object was not found in the request, please check the control servlet init.");
+            Debug.logWarning("[updateGeneric] The security object was not found in the request, please check the control servlet init.", module);
             return "error";
         }
         if (delegator == null) {
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "The delegator object was not found in the request, please check the control servlet init.");
-            Debug.logWarning("[updateGeneric] The delegator object was not found in the request, please check the control servlet init.");
+            Debug.logWarning("[updateGeneric] The delegator object was not found in the request, please check the control servlet init.", module);
             return "error";
         }
 
@@ -80,14 +80,14 @@ public class GenericWebEvent {
         try {
             entity = reader.getModelEntity(entityName);
         } catch (GenericEntityException e) {
-            Debug.logError(e);
+            Debug.logError(e, module);
         }
 
         String updateMode = request.getParameter("UPDATE_MODE");
 
         if (updateMode == null || updateMode.length() <= 0) {
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "Update Mode was not specified, but is required.");
-            Debug.logWarning("[updateGeneric] Update Mode was not specified, but is required; entityName: " + entityName);
+            Debug.logWarning("[updateGeneric] Update Mode was not specified, but is required; entityName: " + entityName, module);
             return "error";
         }
 
@@ -109,7 +109,7 @@ public class GenericWebEvent {
             try {
                 type = delegator.getEntityFieldType(entity, field.getType());
             } catch (GenericEntityException e) {
-                Debug.logWarning(e);
+                Debug.logWarning(e, module);
                 errMsg += "<li> Fatal error: field type \"" + field.getType() + "\" not found";
             }
             if (type.getJavaType().equals("Timestamp") || type.getJavaType().equals("java.sql.Timestamp")) {
@@ -121,7 +121,7 @@ public class GenericWebEvent {
                         findByEntity.setString(field.getName(), fvalDate + " " + fvalTime);
                     } catch (Exception e) {
                         errMsg = errMsg + "<li>" + field.getColName() + " conversion failed: \"" + fvalDate + " " + fvalTime + "\" is not a valid " + type.getJavaType();
-                        Debug.logWarning("[updateGeneric] " + field.getColName() + " conversion failed: \"" + fvalDate + " " + fvalTime + "\" is not a valid " + type.getJavaType() + "; entityName: " + entityName);
+                        Debug.logWarning("[updateGeneric] " + field.getColName() + " conversion failed: \"" + fvalDate + " " + fvalTime + "\" is not a valid " + type.getJavaType() + "; entityName: " + entityName, module);
                     }
                 }
             } else {
@@ -132,7 +132,7 @@ public class GenericWebEvent {
                         findByEntity.setString(field.getName(), fval);
                     } catch (Exception e) {
                         errMsg = errMsg + "<li>" + field.getColName() + " conversion failed: \"" + fval + "\" is not a valid " + type.getJavaType();
-                        Debug.logWarning("[updateGeneric] " + field.getColName() + " conversion failed: \"" + fval + "\" is not a valid " + type.getJavaType() + "; entityName: " + entityName);
+                        Debug.logWarning("[updateGeneric] " + field.getColName() + " conversion failed: \"" + fval + "\" is not a valid " + type.getJavaType() + "; entityName: " + entityName, module);
                     }
                 }
             }
@@ -145,7 +145,7 @@ public class GenericWebEvent {
             try {
                 delegator.removeByPrimaryKey(findByEntity.getPrimaryKey());
             } catch (GenericEntityException e) {
-                Debug.logWarning(e);
+                Debug.logWarning(e, module);
                 request.setAttribute(SiteDefs.ERROR_MESSAGE, "Delete failed (write error)");
                 return "error";
             }
@@ -161,7 +161,7 @@ public class GenericWebEvent {
             try {
                 type = delegator.getEntityFieldType(entity, field.getType());
             } catch (GenericEntityException e) {
-                Debug.logWarning(e);
+                Debug.logWarning(e, module);
                 errMsg += "<li> Fatal error: field type \"" + field.getType() + "\" not found";
             }
             if (type.getJavaType().equals("Timestamp") || type.getJavaType().equals("java.sql.Timestamp")) {
@@ -173,7 +173,7 @@ public class GenericWebEvent {
                         findByEntity.setString(field.getName(), fvalDate + " " + fvalTime);
                     } catch (Exception e) {
                         errMsg = errMsg + "<li>" + field.getColName() + " conversion failed: \"" + fvalDate + " " + fvalTime + "\" is not a valid " + type.getJavaType();
-                        Debug.logWarning("[updateGeneric] " + field.getColName() + " conversion failed: \"" + fvalDate + " " + fvalTime + "\" is not a valid " + type.getJavaType() + "; entityName: " + entityName);
+                        Debug.logWarning("[updateGeneric] " + field.getColName() + " conversion failed: \"" + fvalDate + " " + fvalTime + "\" is not a valid " + type.getJavaType() + "; entityName: " + entityName, module);
                     }
                 }
             } else {
@@ -184,7 +184,7 @@ public class GenericWebEvent {
                         findByEntity.setString(field.getName(), fval);
                     } catch (Exception e) {
                         errMsg = errMsg + "<li>" + field.getColName() + " conversion failed: \"" + fval + "\" is not a valid " + type.getJavaType();
-                        Debug.logWarning("[updateGeneric] " + field.getColName() + " conversion failed: \"" + fval + "\" is not a valid " + type.getJavaType() + "; entityName: " + entityName);
+                        Debug.logWarning("[updateGeneric] " + field.getColName() + " conversion failed: \"" + fval + "\" is not a valid " + type.getJavaType() + "; entityName: " + entityName, module);
                     }
                 }
             }
@@ -197,13 +197,13 @@ public class GenericWebEvent {
             try {
                 tempEntity = delegator.findByPrimaryKey(findByEntity.getPrimaryKey());
             } catch (GenericEntityException e) {
-                Debug.logWarning(e);
+                Debug.logWarning(e, module);
                 request.setAttribute(SiteDefs.ERROR_MESSAGE, "Create failed while checking if exists (read error)");
                 return "error";
             }
             if (tempEntity != null) {
                 errMsg = errMsg + "<li>" + entity.getEntityName() + " already exists with primary key: " + findByEntity.getPrimaryKey().toString() + "; please change.";
-                Debug.logWarning("[updateGeneric] " + entity.getEntityName() + " already exists with primary key: " + findByEntity.getPrimaryKey().toString() + "; please change.");
+                Debug.logWarning("[updateGeneric] " + entity.getEntityName() + " already exists with primary key: " + findByEntity.getPrimaryKey().toString() + "; please change.", module);
             }
         }
 
@@ -229,7 +229,7 @@ public class GenericWebEvent {
                     ClassLoader loader = Thread.currentThread().getContextClassLoader();
                     valClass = loader.loadClass(className);
                 } catch (ClassNotFoundException cnfe) {
-                    Debug.logError("[updateGeneric] Could not find validation class: " + className + "; ignoring.");
+                    Debug.logError("[updateGeneric] Could not find validation class: " + className + "; ignoring.", module);
                     continue;
                 }
                 Method valMethod;
@@ -237,7 +237,7 @@ public class GenericWebEvent {
                 try {
                     valMethod = valClass.getMethod(methodName, paramTypes);
                 } catch (NoSuchMethodException cnfe) {
-                    Debug.logError("[updateGeneric] Could not find validation method: " + methodName + " of class " + className + "; ignoring.");
+                    Debug.logError("[updateGeneric] Could not find validation method: " + methodName + " of class " + className + "; ignoring.", module);
                     continue;
                 }
 
@@ -246,7 +246,7 @@ public class GenericWebEvent {
                 try {
                     resultBool = (Boolean) valMethod.invoke(null, params);
                 } catch (Exception e) {
-                    Debug.logError("[updateGeneric] Could not access validation method: " + methodName + " of class " + className + "; returning true.");
+                    Debug.logError("[updateGeneric] Could not access validation method: " + methodName + " of class " + className + "; returning true.", module);
                     resultBool = Boolean.TRUE;
                 }
 
@@ -258,11 +258,11 @@ public class GenericWebEvent {
                         msgField = valClass.getField(curValidate + "Msg");
                         message = (String) msgField.get(null);
                     } catch (Exception e) {
-                        Debug.logError("[updateGeneric] Could not find validation message field: " + curValidate + "Msg of class " + className + "; returning generic validation failure message.");
+                        Debug.logError("[updateGeneric] Could not find validation message field: " + curValidate + "Msg of class " + className + "; returning generic validation failure message.", module);
                         message = "validation failed.";
                     }
                     errMsg = errMsg + "<li>" + field.getColName() + " " + curValidate + " failed: " + message;
-                    Debug.logWarning("[updateGeneric] " + field.getColName() + " " + curValidate + " failed: " + message);
+                    Debug.logWarning("[updateGeneric] " + field.getColName() + " " + curValidate + " failed: " + message, module);
                 }
             }
         }
@@ -279,7 +279,7 @@ public class GenericWebEvent {
             try {
                 value = delegator.create(findByEntity.getEntityName(), findByEntity.getAllFields());
             } catch (GenericEntityException e) {
-                Debug.logWarning(e);
+                Debug.logWarning(e, module);
                 value = null;
             }
             if (value == null) {
@@ -292,13 +292,13 @@ public class GenericWebEvent {
             try {
                 value.store();
             } catch (GenericEntityException e) {
-                Debug.logWarning(e);
+                Debug.logWarning(e, module);
                 request.setAttribute(SiteDefs.ERROR_MESSAGE, "Update of " + entity.getEntityName() + " failed for value: " + value.toString());
                 return "error";
             }
         } else {
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "Update Mode specified (" + updateMode + ") was not valid.");
-            Debug.logWarning("updateGeneric: Update Mode specified (" + updateMode + ") was not valid for entity: " + findByEntity.toString());
+            Debug.logWarning("updateGeneric: Update Mode specified (" + updateMode + ") was not valid for entity: " + findByEntity.toString(), module);
             return "error";
         }
 
