@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCartEvents.java,v 1.3 2003/11/19 21:50:11 ajzeneski Exp $
+ * $Id: ShoppingCartEvents.java,v 1.4 2003/11/20 03:58:12 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -49,7 +49,7 @@ import org.ofbiz.service.ModelService;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:tristana@twibble.org">Tristan Austin</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.0
  */
 public class ShoppingCartEvents {
@@ -167,7 +167,7 @@ public class ShoppingCartEvents {
         if (productId != null) {
             String productStoreId = ProductStoreWorker.getProductStoreId(request);
             List productSurvey = ProductStoreWorker.getProductSurveys(delegator, productStoreId, productId, "CART_ADD");
-            if (productSurvey != null) {
+            if (productSurvey != null && productSurvey.size() > 0) {
                 // TODO: implement multiple survey per product
                 GenericValue survey = EntityUtil.getFirst(productSurvey);
                 String surveyResponseId = (String) request.getAttribute("surveyResponseId");
