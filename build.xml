@@ -22,7 +22,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *  This is the Open for Business Main build script.
- *  $Id: build.xml,v 1.10 2003/08/18 17:03:09 ajzeneski Exp $
+ *  $Id: build.xml,v 1.11 2003/08/18 17:31:37 ajzeneski Exp $
 -->
 
 <project name="OFBiz Main Build" default="build" basedir=".">
@@ -137,6 +137,12 @@
         <echo message="[clean] ========== Cleaning order component =========="/>
         <echo message="[clean] ==========-==================================="/>                
         <ant dir="components/order" target="clean" inheritAll="false"/>
+        
+        <echo message="[clean]"/>
+        <echo message="[clean] ==================================================="/>
+        <echo message="[clean] ========== Cleaning accounting component =========="/>
+        <echo message="[clean] ==========-========================================"/>                
+        <ant dir="components/accounting" target="clean" inheritAll="false"/>        
                         
         <delete file="ofbiz.jar"/>
         <echo message="[clean] ========== Done Cleaning =========="/>
@@ -245,7 +251,13 @@
         <echo message="[build] =============================================="/>
         <echo message="[build] ========== Building order component =========="/>
         <echo message="[build] =============================================="/>
-        <ant dir="components/order" inheritAll="false" />                      
+        <ant dir="components/order" inheritAll="false" />
+        
+        <echo message="[build]" />
+        <echo message="[build] ==================================================="/>
+        <echo message="[build] ========== Building accounting component =========="/>
+        <echo message="[build] ==================================================="/>
+        <ant dir="components/accounting" inheritAll="false" />        
                                          
         <echo message="[build] ========== Done Building (Compile) ==========" />
     </target>
@@ -345,7 +357,13 @@
         <echo message="[docs] ==============================================="/>
         <echo message="[docs] ========== Building order component =========="/>
         <echo message="[docs] ==============================================="/>
-        <ant dir="components/order" target="docs" inheritAll="false"/>                                      
+        <ant dir="components/order" target="docs" inheritAll="false"/>
+        
+        <echo message="[docs]"/>
+        <echo message="[docs] ==================================================="/>
+        <echo message="[docs] ========== Building accounting component =========="/>
+        <echo message="[docs] ==================================================="/>
+        <ant dir="components/accounting" target="docs" inheritAll="false"/>                                             
         
         <echo message="[docs] ========== Done Building (JavaDocs) ==========" />              
     </target>
