@@ -105,13 +105,13 @@ public class EntityField {
         if (type == null) {
             Object attrObject = pageContext.findAttribute(attribute);
             
-            if (attrObject instanceof GenericValue) {
-                // Get the ValueObject from PageContext.
-                GenericValue valueObject = (GenericValue) attrObject;
-                if (valueObject == null) {
-                    fieldObject = defaultStr;
-                    fieldObjectType = "comment"; // Default for NULL objects.
-                } else {
+            if (attrObject == null) {
+                fieldObject = defaultStr;
+                fieldObjectType = "comment"; // Default for NULL objects.
+            } else {
+                if (attrObject instanceof GenericValue) {
+                    // Get the ValueObject from PageContext.
+                    GenericValue valueObject = (GenericValue) attrObject;
                     ModelEntity entityModel = valueObject.getModelEntity();
                     fieldObject = valueObject.get(field);
 
@@ -124,11 +124,15 @@ public class EntityField {
                         fieldObject = defaultStr;
                         fieldObjectType = "comment"; // Default for NULL objects.
                     }
+                } else if (attrObject instanceof Map) {
+                    Map valueMap = (Map) attrObject;
+                    fieldObject = valueMap.get(field);
+                    fieldObjectType = "comment"; // Default for NULL objects.
+                } else {
+                    //kind of weird, but try to do something that will always work:
+                    fieldObject = attrObject.toString();
+                    fieldObjectType = "comment"; // Default for Strings.
                 }
-            } else {
-                //kind of weird, but try to do something that will always work:
-                fieldObject = attrObject.toString();
-                fieldObjectType = "comment"; // Default for Strings.
             }
         } else {
             // We should be either a 'currency' or a java type.
