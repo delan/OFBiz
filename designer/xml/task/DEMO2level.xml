@@ -1,0 +1,290 @@
+<?xml version="1.0"?>
+<!DOCTYPE NetworkDesign SYSTEM "file:///c:/workflow/newdesigner/dtd/networkdesign.dtd">
+
+<!-- 
+     DEMO2level
+     Revision: 2
+-->
+<NetworkDesign>
+  <Task securitydomainurl="/DefaultDomain.xml#Secret" name="DEMO2level" id="DEMO2level" y="10" x="10">
+    <Realization>
+      <NetworkTaskRealization realizationtype="NonTransactionalNetwork" lasttask="FinalReview" firsttask="Prepare">
+        <Domain url="/DefaultDomain.xml#Secret" tasks="Prepare TargetAnalysis Plan1 AltTargetAnalysis ReviewPlan FinalReview" y="18" id="Domain0.987324732984732" height="203" width="654" x="21">
+        </Domain>
+        <Domain url="/DefaultDomain.xml#Unclassified" tasks="Logisitics" y="251" id="Domain0.19519006739627265" height="165" width="155" x="151">
+        </Domain>
+        <InputMappingList>
+        </InputMappingList>
+        <OutputMappingList>
+        </OutputMappingList>
+      </NetworkTaskRealization>
+    </Realization>
+    <Output datatypeurl="TargetInfo" variablename="param1" id="DEMO2level0.5350791331301421"/>
+  </Task>
+  <Task securitydomainurl="/DefaultDomain.xml#Secret" name="Prepare" id="Prepare" outarcs="Arc0.7586883868179546 Arc0.0040056766778728825" y="112" x="56">
+    <Realization>
+      <SimpleRealization>
+        <HumanRealization/>
+      </SimpleRealization>
+    </Realization>
+    <Output datatypeurl="TargetInfo" variablename="param1" id="Prepare0.031561098225732054"/>
+    <Output datatypeurl="Plan" variablename="param0" id="Prepare0.13007033358307007"/>
+    <OutputOperator>
+      <Operator id="Operator0.5289111009600872" type="and">
+        <Field id="Field0.9170205698223339" task="Plan1">
+        </Field>
+        <Field id="Field0.6673813955352087" task="TargetAnalysis">
+        </Field>
+      </Operator>
+    </OutputOperator>
+  </Task>
+  <Task securitydomainurl="/DefaultDomain.xml#Secret" name="TargetAnalysis" id="TargetAnalysis" outarcs="Arc0.7128329794502548 Arc0.47423354525455863" inarcs="Arc0.0040056766778728825" y="8" x="158">
+    <Realization>
+      <SimpleRealization>
+        <NonTransactionalTaskRealization>
+          <CorbaInvocation objectmarker="haha" classname="TargetTester" serverhost="turnip" returnvalue="string result" methodname="estimateRisk" servername="name">
+            <Parameter datatypeurl="long" variablename="param0" id="Parameter0.09770054348909285"/>
+            <Parameter datatypeurl="double" variablename="param1" id="Parameter0.6941245076115543"/>
+            <Parameter datatypeurl="long" variablename="param2" id="Parameter0.5279308889648375"/>
+            <Parameter datatypeurl="double" variablename="param3" id="Parameter0.723074866907177"/>
+            <ForwardMappingList>
+              <CorbaMapping secondElement="double param3" firstElement="long radius"/>
+              <CorbaMapping secondElement="long param2" firstElement="long x"/>
+              <CorbaMapping secondElement="long param2" firstElement="string name"/>
+            </ForwardMappingList>
+            <ReverseMappingList>
+              <CorbaMapping secondElement="string result" firstElement="long radius"/>
+            </ReverseMappingList>
+          </CorbaInvocation>
+        </NonTransactionalTaskRealization>
+      </SimpleRealization>
+    </Realization>
+    <Invocation>
+      <Parameter datatypeurl="TargetInfo" variablename="param0" id="TargetAnalysis0.8980216838699179"/>
+    </Invocation>
+    <Output datatypeurl="TargetInfo" variablename="param0" id="TargetAnalysis0.762895710643698"/>
+    <DataSecurityMask dataname="TargetAnalysis0.8980216838699179">
+      <FieldMask accesstype="NoAccess" fieldname="name"/>
+      <FieldMask accesstype="FullControl" fieldname="description"/>
+      <FieldMask accesstype="FullControl" fieldname="x"/>
+      <FieldMask accesstype="FullControl" fieldname="y"/>
+      <FieldMask accesstype="FullControl" fieldname="radius"/>
+    </DataSecurityMask>
+    <OutputOperator>
+      <Operator id="Operator0.8459443454265623" type="and">
+      </Operator>
+    </OutputOperator>
+  </Task>
+  <Task securitydomainurl="/DefaultDomain.xml#Secret" name="Plan1" id="Plan1" outarcs="Arc0.7198375624970662" inarcs="Arc0.7586883868179546" y="105" x="214">
+    <Realization>
+      <NetworkTaskRealization realizationtype="NonTransactionalNetwork" lasttask="GeneratePlan" firsttask="PrePlan">
+        <Domain url="/DefaultDomain.xml#Secret" tasks=" GeneratePlan AltCheckPlan CheckPlan PrePlan" y="21" id="Domain0.30108118667740325" height="354" width="511" x="33">
+        </Domain>
+        <Domain url="/DefaultDomain.xml#Unclassified" tasks=" Transactional0" y="101" id="Domain0" height="100" width="100" x="618">
+        </Domain>
+        <InputMappingList>
+          <Mapping secondElement="PrePlan0.9283783543488525" firstElement="Plan10.9576779467838438"/>
+        </InputMappingList>
+        <OutputMappingList>
+          <Mapping secondElement="Plan10.07271481613089126" firstElement="GeneratePlan0.12096323590034463"/>
+        </OutputMappingList>
+      </NetworkTaskRealization>
+    </Realization>
+    <Invocation>
+      <Parameter datatypeurl="Plan" variablename="param0" id="Plan10.9576779467838438"/>
+    </Invocation>
+    <Output datatypeurl="Plan" variablename="param0" id="Plan10.07271481613089126"/>
+  </Task>
+  <Task securitydomainurl="/DefaultDomain.xml#Secret" name="AltTargetAnalysis" id="AltTargetAnalysis" outarcs="Arc0.8119244819884924" inarcs="Arc0.47423354525455863" y="9" x="326">
+    <Realization>
+      <SimpleRealization>
+        <HumanRealization/>
+      </SimpleRealization>
+    </Realization>
+    <Invocation>
+      <Parameter datatypeurl="TargetInfo" variablename="param0" id="AltTargetAnalysis0.16350009245003805"/>
+    </Invocation>
+    <Output datatypeurl="TargetInfo" variablename="param0" id="AltTargetAnalysis0.35990310849578333"/>
+    <DataSecurityMask dataname="AltTargetAnalysis0.16350009245003805">
+      <FieldMask accesstype="FullControl" fieldname="name"/>
+      <FieldMask accesstype="FullControl" fieldname="description"/>
+      <FieldMask accesstype="FullControl" fieldname="x"/>
+      <FieldMask accesstype="FullControl" fieldname="y"/>
+      <FieldMask accesstype="FullControl" fieldname="radius"/>
+    </DataSecurityMask>
+  </Task>
+  <Task securitydomainurl="/DefaultDomain.xml#Secret" name="ReviewPlan" id="ReviewPlan" outarcs="Arc0.8849045722455382" inarcs="Arc0.7198375624970662 Arc0.7128329794502548 Arc0.8119244819884924" y="104" x="350">
+    <Realization>
+      <SimpleRealization>
+        <HumanRealization/>
+      </SimpleRealization>
+    </Realization>
+    <Invocation>
+      <Parameter datatypeurl="TargetInfo" variablename="param0" id="ReviewPlan0.462772643493361"/>
+      <Parameter datatypeurl="Plan" variablename="param1" id="ReviewPlan0.7089572819611238"/>
+    </Invocation>
+    <Output datatypeurl="Logistics" variablename="param2" id="ReviewPlan_param0"/>
+    <DataSecurityMask dataname="ReviewPlan0.7089572819611238">
+      <FieldMask accesstype="FullControl" fieldname="Author"/>
+      <FieldMask accesstype="FullControl" fieldname="Description"/>
+      <FieldMask accesstype="FullControl" fieldname="Approved"/>
+    </DataSecurityMask>
+    <DataSecurityMask dataname="ReviewPlan0.462772643493361">
+      <FieldMask accesstype="NoAccess" fieldname="name"/>
+      <FieldMask accesstype="FullControl" fieldname="description"/>
+      <FieldMask accesstype="FullControl" fieldname="x"/>
+      <FieldMask accesstype="FullControl" fieldname="y"/>
+      <FieldMask accesstype="FullControl" fieldname="radius"/>
+    </DataSecurityMask>
+    <InputOperator>
+      <Operator id="Operator0.1450775051260179" type="or">
+        <Field id="Field0.7584920926101751">
+          <Operator id="Operator0.4039108168990252" type="and">
+            <Field id="Field0.7529303413465863" task="Plan1">
+            </Field>
+            <Field id="Field0.7674772240334872" task="TargetAnalysis">
+            </Field>
+          </Operator>
+        </Field>
+        <Field id="Field0.41338242545897075">
+          <Operator id="Operator0.33439629765109824" type="and">
+            <Field id="Field0.6919678127957951" task="Plan1">
+            </Field>
+            <Field id="Field0.4324532847677729" task="AltTargetAnalysis">
+            </Field>
+          </Operator>
+        </Field>
+      </Operator>
+    </InputOperator>
+  </Task>
+  <Task securitydomainurl="/DefaultDomain.xml#Secret" name="FinalReview" id="FinalReview" inarcs="Arc0.9619727916979472" y="94" x="512">
+    <Realization>
+      <SimpleRealization>
+        <HumanRealization/>
+      </SimpleRealization>
+    </Realization>
+    <Invocation>
+      <Parameter datatypeurl="Logistics" variablename="param0" id="FinalReview0.3879959533418895"/>
+    </Invocation>
+    <Output datatypeurl="Logistics" variablename="param0" id="FinalReview0.026495032061586765"/>
+  </Task>
+  <Task securitydomainurl="/DefaultDomain.xml#Unclassified" name="Logisitics" id="Logisitics" outarcs="Arc0.9619727916979472" inarcs="Arc0.8849045722455382" y="63" x="56">
+    <Realization>
+      <SimpleRealization>
+        <TransactionalTaskRealization url="jdbc:odbc:Logistics" username="sa" query="select  Approved from Logistics where item='$input1' and quantity='$input2'" database="DEFAULT_DATABASE">
+          <TransactionalInput>input1 Logistics item</TransactionalInput>
+          <TransactionalInput>input2 Logistics quantity</TransactionalInput>
+          <TransactionalOutput>output1 Logistics Approved</TransactionalOutput>
+        </TransactionalTaskRealization>
+      </SimpleRealization>
+    </Realization>
+    <Invocation>
+      <Parameter datatypeurl="Logistics" variablename="param0" id="Logisitics0.8355841822489447"/>
+    </Invocation>
+    <Output datatypeurl="Logistics" variablename="param0" id="Logisitics0.26925215968438454"/>
+  </Task>
+  <Task securitydomainurl="/DefaultDomain.xml#Secret" name="PrePlan" id="PrePlan" outarcs="Arc0.6989801255073714" y="108" x="109">
+    <Realization>
+      <SimpleRealization>
+        <HumanRealization/>
+      </SimpleRealization>
+    </Realization>
+    <Invocation>
+      <Parameter datatypeurl="Plan" variablename="param0" id="PrePlan0.9283783543488525"/>
+    </Invocation>
+    <Output datatypeurl="Plan" variablename="param0" id="PrePlan0.19380803893402765"/>
+  </Task>
+  <Task securitydomainurl="/DefaultDomain.xml#Secret" name="CheckPlan" id="CheckPlan" outarcs="Arc0.3954618207498136 Arc0.03002123870124962" inarcs="Arc0.6989801255073714" y="252" x="200">
+    <Realization>
+      <SimpleRealization>
+        <NonTransactionalTaskRealization>
+          <CorbaInvocation objectmarker="null" classname="null" serverhost="null" returnvalue="null" methodname="null" servername="null">
+            <ForwardMappingList>
+            </ForwardMappingList>
+            <ReverseMappingList>
+            </ReverseMappingList>
+          </CorbaInvocation>
+        </NonTransactionalTaskRealization>
+      </SimpleRealization>
+    </Realization>
+    <Invocation>
+      <Parameter datatypeurl="Plan" variablename="param0" id="CheckPlan0.44187580201343524"/>
+    </Invocation>
+    <Output datatypeurl="Plan" variablename="param0" id="CheckPlan0.7717664098701946"/>
+  </Task>
+  <Task securitydomainurl="/DefaultDomain.xml#Secret" name="AltCheckPlan" id="AltCheckPlan" inarcs="Arc0.03002123870124962" y="126" x="295">
+    <Realization>
+      <SimpleRealization>
+        <HumanRealization/>
+      </SimpleRealization>
+    </Realization>
+    <Invocation>
+      <Parameter datatypeurl="Plan" variablename="param0" id="AltCheckPlan0.339141956432259"/>
+    </Invocation>
+    <Output datatypeurl="Plan" variablename="param0" id="AltCheckPlan0.7671709812762113"/>
+    <InputOperator>
+      <Operator id="Operator0" type="and">
+      </Operator>
+    </InputOperator>
+  </Task>
+  <Task securitydomainurl="/DefaultDomain.xml#Secret" name="GeneratePlan" id="GeneratePlan" inarcs="Arc0.3954618207498136" y="239" x="387">
+    <Realization>
+      <SimpleRealization>
+        <HumanRealization/>
+      </SimpleRealization>
+    </Realization>
+    <Invocation>
+      <Parameter datatypeurl="Plan" variablename="param0" id="GeneratePlan0.5188057638119515"/>
+    </Invocation>
+    <Output datatypeurl="Plan" variablename="param0" id="GeneratePlan0.12096323590034463"/>
+    <InputOperator>
+      <Operator id="Operator0.4206082936822295" type="or">
+        <Field id="Field0.4953552753963202" task="CheckPlan">
+        </Field>
+        <Field id="Field0.7883464824315802" task="AltCheckPlan">
+        </Field>
+      </Operator>
+    </InputOperator>
+  </Task>
+  <Task securitydomainurl="/DefaultDomain.xml#Secret" name="Transactional0" id="Transactional0" y="21" x="30">
+    <Realization>
+      <SimpleRealization>
+        <TransactionalTaskRealization>
+        </TransactionalTaskRealization>
+      </SimpleRealization>
+    </Realization>
+  </Task>
+  <Arc arctype="Success" destination="Plan1" id="Arc0.7586883868179546" source="Prepare">
+    <Mapping secondElement="Plan10.9576779467838438" firstElement="Prepare0.13007033358307007"/>
+  </Arc>
+  <Arc arctype="Success" destination="ReviewPlan" id="Arc0.7198375624970662" source="Plan1">
+    <Mapping secondElement="ReviewPlan0.7089572819611238" firstElement="Plan10.07271481613089126"/>
+  </Arc>
+  <Arc arctype="Success" destination="Logisitics" id="Arc0.8849045722455382" source="ReviewPlan">
+    <Mapping secondElement="Logisitics0.8355841822489447" firstElement="ReviewPlan_param0"/>
+  </Arc>
+  <Arc arctype="Success" destination="FinalReview" id="Arc0.9619727916979472" source="Logisitics">
+    <Mapping secondElement="FinalReview0.3879959533418895" firstElement="Logisitics0.26925215968438454"/>
+  </Arc>
+  <Arc arctype="Success" destination="TargetAnalysis" id="Arc0.0040056766778728825" source="Prepare">
+    <Mapping secondElement="TargetAnalysis0.8980216838699179" firstElement="Prepare0.031561098225732054"/>
+  </Arc>
+  <Arc arctype="Success" destination="ReviewPlan" id="Arc0.7128329794502548" source="TargetAnalysis">
+    <Mapping secondElement="ReviewPlan0.462772643493361" firstElement="TargetAnalysis0.762895710643698"/>
+  </Arc>
+  <Arc arctype="Fail" destination="AltTargetAnalysis" id="Arc0.47423354525455863" exception="Meteor\OrbWork\OWTaskException" source="TargetAnalysis">
+    <Mapping secondElement="AltTargetAnalysis0.16350009245003805" firstElement="TargetAnalysis0.762895710643698"/>
+  </Arc>
+  <Arc arctype="Success" destination="ReviewPlan" id="Arc0.8119244819884924" source="AltTargetAnalysis">
+    <Mapping secondElement="ReviewPlan0.462772643493361" firstElement="AltTargetAnalysis0.35990310849578333"/>
+  </Arc>
+  <Arc arctype="Success" destination="CheckPlan" id="Arc0.6989801255073714" source="PrePlan">
+    <Mapping secondElement="CheckPlan0.44187580201343524" firstElement="PrePlan0.19380803893402765"/>
+  </Arc>
+  <Arc arctype="Success" destination="GeneratePlan" id="Arc0.3954618207498136" source="CheckPlan">
+    <Mapping secondElement="GeneratePlan0.5188057638119515" firstElement="CheckPlan0.7717664098701946"/>
+  </Arc>
+  <Arc arctype="Fail" destination="AltCheckPlan" id="Arc0.03002123870124962" exception="Meteor\OrbWork\OWTaskException" source="CheckPlan">
+    <Mapping secondElement="AltCheckPlan0.339141956432259" firstElement="CheckPlan0.7717664098701946"/>
+  </Arc>
+</NetworkDesign>

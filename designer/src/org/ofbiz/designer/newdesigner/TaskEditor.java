@@ -25,7 +25,6 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-
 public class TaskEditor extends TaskEditorView {
     private XmlWrapper taskXml;
     private ITaskWrapper taskWrapper;
@@ -62,7 +61,14 @@ public class TaskEditor extends TaskEditorView {
         String fileName = args[0];
         String taskName = args[1];
 
-        XmlWrapper taskXml = XmlWrapper.openDocument(new File(fileName));
+        // david
+        URL url = fileName.getClass().getResource("/" + fileName);
+        if (url == null) {
+         System.out.println("Cannot finde file" + fileName);
+         return;
+        }                   
+        
+        XmlWrapper taskXml = XmlWrapper.openDocument(new File(url.getFile()));
         ConsoleSpacer.init();
         launchTaskEditor(taskXml, taskName);
     }
@@ -86,7 +92,7 @@ public class TaskEditor extends TaskEditorView {
         int poundIndex = href.indexOf("#"); 
         href = href.substring(0, poundIndex);
         XmlWrapper securitydomainXml = null;
-        href = XmlWrapper.XMLDIR + "\\org.ofbiz.designer.domainenv\\" + href;
+        href = XmlWrapper.XMLDIR + "\\domainenv\\" + href;
         href = XmlWrapper.fixURL(href);
 
         try {
@@ -199,7 +205,7 @@ public class TaskEditor extends TaskEditorView {
 
         new ListTranslator((IListWrapper)bag.constraintsFieldModel, taskWrapper, "getConstraintNames", "removeConstraint", "addConstraint", BaseTranslator.UPDATE_MODEL);       
         new ComboBoxTranslator((IComboBoxWrapper)bag.taskTypeFieldModel, taskWrapper, "getTaskTypes", "", "TaskType", BaseTranslator.UPDATE_MODEL);     
-        new SecurityDomainTranslator((IComboBoxWrapper)bag.securityDomainFieldModel, taskWrapper, allSecurityDomains, BaseTranslator.UPDATE_MODEL);
+        //new SecurityDomainTranslator((IComboBoxWrapper)bag.securityDomainFieldModel, taskWrapper, allSecurityDomains, BaseTranslator.UPDATE_MODEL);
 
         new RoledomainTranslator((IComboBoxWrapper)bag.roleDomainFieldModel, taskWrapper, BaseTranslator.UPDATE_MODEL);
 

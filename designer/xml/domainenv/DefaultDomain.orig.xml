@@ -1,7 +1,5 @@
 <?xml version="1.0"?>
-<!--
 <!DOCTYPE NetworkDesign SYSTEM "file:///c:/workflow/newdesigner/dtd/domainEnv.dtd">
--->
 
 <!-- 
      DefaultDomain
@@ -13,39 +11,39 @@
   <DomainInfo id="Unclassified">
     <Name>Unclassified</Name>
     <Color>
-      <Number1>0</Number1>
-      <Number2>135</Number2>
-      <Number3>200</Number3>
+      <Number>0</Number>
+      <Number>135</Number>
+      <Number>200</Number>
     </Color>
     <Position>
-      <Number1>126</Number1>
-      <Number2>347</Number2>
+      <Number>126</Number>
+      <Number>347</Number>
     </Position>
     <Description>This is the Unclassified Domain</Description>
   </DomainInfo>
   <DomainInfo id="Secret">
     <Name>Secret</Name>
     <Color>
-      <Number1>12</Number1>
-      <Number2>244</Number2>
-      <Number3>128</Number3>
+      <Number>12</Number>
+      <Number>244</Number>
+      <Number>128</Number>
     </Color>
     <Position>
-      <Number1>134</Number1>
-      <Number2>209</Number2>
+      <Number>134</Number>
+      <Number>209</Number>
     </Position>
     <Description>This is the Secret Domain</Description>
   </DomainInfo>
   <DomainInfo id="TopSecret">
     <Name>TopSecret</Name>
     <Color>
-      <Number1>255</Number1>
-      <Number2>75</Number2>
-      <Number3>75</Number3>
+      <Number>255</Number>
+      <Number>75</Number>
+      <Number>75</Number>
     </Color>
     <Position>
-      <Number1>132</Number1>
-      <Number2>67</Number2>
+      <Number>132</Number>
+      <Number>67</Number>
     </Position>
     <Description>This is the TopSecret Domain</Description>
   </DomainInfo>

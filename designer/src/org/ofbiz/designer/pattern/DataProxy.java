@@ -88,21 +88,33 @@ public class DataProxy implements InvocationHandler {
             if(proxies.containsKey(dtdobj))
                 return proxies.get(dtdobj);
             String dtdClass = dtdobj.getClass().getName();
-            String wrapperClassName = "I" + dtdClass +"Wrapper";
+            int pos = dtdClass.lastIndexOf(".");
+            String path = "";
+            if (pos != -1) {
+                path = dtdClass.substring( 0, pos );
+                dtdClass = dtdClass.substring( pos + 1);
+            }
+            String wrapperClassName = "org.ofbiz.designer."
+            + xmlWrapper.getRootElementName().toLowerCase() + ".I" + dtdClass +"Wrapper";
+            String supportClassName = "org.ofbiz.designer."
+            +  xmlWrapper.getRootElementName().toLowerCase() + "." + dtdClass +"SupportClass";
             IDataSupportClass dtdSupportObj = null;
             try {
-                dtdSupportObj = (IDataSupportClass)Class.forName(dtdClass + "SupportClass").newInstance();
+            	System.out.println("Trying to find file: " + supportClassName);
+                dtdSupportObj = (IDataSupportClass)Class.forName(supportClassName).newInstance();
             } catch(ClassNotFoundException e) {
-                //WARNING.println("Could not find support class " + e.getMessage());
+                WARNING.println("Could not find support class " + e.getMessage());
                 return dtdobj;
             }
             dtdSupportObj.setDtdObject(dtdobj);
             dtdSupportObj.setXml(xmlWrapper);
-            if(dtdClass.indexOf(".") != -1) {
-                int dotPosition = dtdClass.lastIndexOf(".");
-                wrapperClassName = dtdClass.substring(0, dotPosition+1) + "I" + 
-                                   dtdClass.substring(dotPosition+1, dtdClass.length()) +"Wrapper";
-            }
+            /***
+            * if(dtdClass.indexOf(".") != -1) {
+            *    int dotPosition = dtdClass.lastIndexOf(".");
+            *    wrapperClassName = dtdClass.substring(0, dotPosition+1) + "org.ofbiz.designer.dataclass.I" + 
+            *                       dtdClass.substring(dotPosition+1, dtdClass.length()) +"Wrapper";
+            * }
+            ****/
             Registrar registrar = new Registrar();
             Object newproxy = Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), 
                                                      new Class[] {Class.forName(wrapperClassName)}, 

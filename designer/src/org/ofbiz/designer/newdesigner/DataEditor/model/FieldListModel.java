@@ -22,7 +22,8 @@ public class FieldListModel extends SmartAddRowTableModel implements IFieldListM
         IFieldListModel newModel = new FieldListModel();
         IFieldListModelWrapper proxy = null;
         try {
-            proxy = (IFieldListModelWrapper)GuiModelProxy.newProxyInstance(newModel,"dataeditor.model.IFieldListModelWrapper");
+            proxy = (IFieldListModelWrapper)GuiModelProxy.newProxyInstance(newModel,
+            "org.ofbiz.designer.newdesigner.DataEditor.model.IFieldListModelWrapper");
         } catch(Exception e) {
             e.printStackTrace();
         }
