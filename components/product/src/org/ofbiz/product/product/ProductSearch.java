@@ -1,5 +1,5 @@
 /*
- * $Id: ProductSearch.java,v 1.24 2004/01/19 12:53:04 jonesde Exp $
+ * $Id: ProductSearch.java,v 1.25 2004/02/05 09:45:26 jonesde Exp $
  *
  *  Copyright (c) 2001 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -30,6 +30,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
@@ -58,7 +59,7 @@ import org.ofbiz.entity.util.EntityUtil;
  *  Utilities for product search based on various constraints including categories, features and keywords.
  *
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.24 $
+ * @version    $Revision: 1.25 $
  * @since      3.0
  */
 public class ProductSearch {
@@ -652,23 +653,23 @@ public class ProductSearch {
             }
         }
 
-        public List makeFullKeywordList(GenericDelegator delegator) {
-            List keywordList = KeywordSearch.makeKeywordList(this.keywordsString);
-            List fullKeywordList = new ArrayList(keywordList.size()*2);
+        public Set makeFullKeywordSet(GenericDelegator delegator) {
+            Set keywordSet = KeywordSearch.makeKeywordSet(this.keywordsString, null, true);
+            Set fullKeywordSet = new TreeSet();
 
             // expand the keyword list according to the thesaurus and create a new set of keywords
-            Iterator keywordIter = keywordList.iterator();
+            Iterator keywordIter = keywordSet.iterator();
             while (keywordIter.hasNext()) {
                 String keyword = (String) keywordIter.next();
-                List expandedList = new LinkedList();
-                boolean replaceEntered = KeywordSearch.expandKeyword(keyword, expandedList, delegator);
-                fullKeywordList.addAll(expandedList);
+                Set expandedSet = new TreeSet();
+                boolean replaceEntered = KeywordSearch.expandKeywordForSearch(keyword, expandedSet, delegator);
+                fullKeywordSet.addAll(expandedSet);
                 if (!replaceEntered) {
-                    fullKeywordList.add(keyword);
+                    fullKeywordSet.add(keyword);
                 }
             }
 
-            return fullKeywordList;
+            return fullKeywordSet;
         }
 
         public void addConstraint(ProductSearchContext productSearchContext) {
@@ -677,30 +678,30 @@ public class ProductSearch {
                 // when isAnd is true we need to make a list of keyword sets where each set corresponds to one
                 //incoming/entered keyword and contains all of the expanded keywords plus the entered keyword if none of
                 //the expanded keywords are flagged as replacements; now the tricky part: each set should be or'ed together,
-                //but then the sets should be and'ed to produce the overall expression; how to create the SQL for this
-                //needs some work as the curret method only support a list of and'ed words and a list of or'ed words, not
+                //but then the sets should be and'ed to produce the overall expression; create the SQL for this
+                //needs some work as the current method only support a list of and'ed words and a list of or'ed words, not
                 //a list of or'ed sets to be and'ed together
-                List keywordList = KeywordSearch.makeKeywordList(this.keywordsString);
+                Set keywordSet = KeywordSearch.makeKeywordSet(this.keywordsString, null, true);
 
                 // expand the keyword list according to the thesaurus and create a new set of keywords
-                Iterator keywordIter = keywordList.iterator();
+                Iterator keywordIter = keywordSet.iterator();
                 while (keywordIter.hasNext()) {
                     String keyword = (String) keywordIter.next();
-                    List expandedList = new LinkedList();
-                    boolean replaceEntered = KeywordSearch.expandKeyword(keyword, expandedList, productSearchContext.getDelegator());
+                    Set expandedSet = new TreeSet();
+                    boolean replaceEntered = KeywordSearch.expandKeywordForSearch(keyword, expandedSet, productSearchContext.getDelegator());
                     if (!replaceEntered) {
-                        expandedList.add(keyword);
+                        expandedSet.add(keyword);
                     }
-                    List fixedList = KeywordSearch.fixKeywords(expandedList, anyPrefix, anySuffix, removeStems, isAnd);
+                    Set fixedSet = KeywordSearch.fixKeywordsForSearch(expandedSet, anyPrefix, anySuffix, removeStems, isAnd);
                     Set fixedKeywordSet = new HashSet();
-                    fixedKeywordSet.addAll(fixedList);
+                    fixedKeywordSet.addAll(fixedSet);
                     productSearchContext.keywordFixedOrSetAndList.add(fixedKeywordSet);
                 }
             } else {
                 // when isAnd is false, just add all of the new entries to the big list
-                List keywordFirstPass = makeFullKeywordList(productSearchContext.getDelegator());
-                List keywordList = KeywordSearch.fixKeywords(keywordFirstPass, anyPrefix, anySuffix, removeStems, isAnd);
-                productSearchContext.orKeywordFixedSet.addAll(keywordList);
+                Set keywordFirstPass = makeFullKeywordSet(productSearchContext.getDelegator()); // includes keyword expansion, etc
+                Set keywordSet = KeywordSearch.fixKeywordsForSearch(keywordFirstPass, anyPrefix, anySuffix, removeStems, isAnd);
+                productSearchContext.orKeywordFixedSet.addAll(keywordSet);
             }
 
             // add in productSearchConstraint, don't worry about the productSearchResultId or constraintSeqId, those will be fill in later

@@ -1,5 +1,5 @@
 /*
- * $Id: KeywordSearch.java,v 1.12 2004/01/27 01:00:59 jonesde Exp $
+ * $Id: KeywordSearch.java,v 1.13 2004/02/05 09:45:26 jonesde Exp $
  *
  *  Copyright (c) 2001 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -22,12 +22,14 @@
  */
 package org.ofbiz.product.product;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
+import java.util.TreeSet;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
@@ -42,7 +44,7 @@ import org.ofbiz.entity.GenericValue;
  *  <br>Special thanks to Glen Thorne and the Weblogic Commerce Server for ideas.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.12 $
+ * @version    $Revision: 1.13 $
  * @since      2.1
  */
 public class KeywordSearch {
@@ -64,21 +66,158 @@ public class KeywordSearch {
         thesaurusRelsForReplace.add("KWTR_CS");
     }
 
-    public static List makeKeywordList(String keywordsString) {
-        StringTokenizer tokenizer = new StringTokenizer(keywordsString);
+    public static String getSeparators() {
+        // String separators = ";: ,.!?\t\"\'\r\n\\/()[]{}*%<>-+_";
+        String seps = UtilProperties.getPropertyValue("prodsearch", "index.keyword.separators", ";: ,.!?\t\"\'\r\n\\/()[]{}*%<>-+_");
+        return seps;
+    }
+    
+    public static String getStopWordBagOr() {
+        return UtilProperties.getPropertyValue("prodsearch", "stop.word.bag.or");
+    }
+    public static String getStopWordBagAnd() {
+        return UtilProperties.getPropertyValue("prodsearch", "stop.word.bag.and");
+    }
+    
+    public static boolean getRemoveStems() {
+        String removeStemsStr = UtilProperties.getPropertyValue("prodsearch", "remove.stems");
+        return "true".equals(removeStemsStr);
+    }
+    public static Set getStemSet() {
+        String stemBag = UtilProperties.getPropertyValue("prodsearch", "stem.bag");
+        Set stemSet = new TreeSet();
+        if (UtilValidate.isNotEmpty(stemBag)) {
+            String curToken;
+            StringTokenizer tokenizer = new StringTokenizer(stemBag, ": ");
+            while (tokenizer.hasMoreTokens()) {
+                curToken = tokenizer.nextToken();
+                stemSet.add(curToken);
+            }
+        }
+        return stemSet;
+    }
+    
+    public static void processForKeywords(String str, Map keywords, boolean forSearch, boolean anyPrefix, boolean anySuffix, boolean isAnd) {
+        String separators = getSeparators();
+        String stopWordBagOr = getStopWordBagOr();
+        String stopWordBagAnd = getStopWordBagAnd();
 
-        List keywords = new ArrayList(10);
-        String curToken;
+        boolean removeStems = getRemoveStems();
+        Set stemSet = getStemSet();
+        
+        processForKeywords(str, keywords, separators, stopWordBagAnd, stopWordBagOr, removeStems, stemSet, forSearch, anyPrefix, anySuffix, isAnd);
+    }
+    
+    public static void processKeywordsForIndex(String str, Map keywords, String separators, String stopWordBagAnd, String stopWordBagOr, boolean removeStems, Set stemSet) {
+        processForKeywords(str, keywords, separators, stopWordBagAnd, stopWordBagOr, removeStems, stemSet, false, false, false, false);
+    }
 
-        while (tokenizer.hasMoreTokens()) {
-            curToken = tokenizer.nextToken();
-            curToken = curToken.toLowerCase();
-            keywords.add(curToken);
+    public static void processForKeywords(String str, Map keywords, String separators, String stopWordBagAnd, String stopWordBagOr, boolean removeStems, Set stemSet, boolean forSearch, boolean anyPrefix, boolean anySuffix, boolean isAnd) {
+        Set keywordSet = makeKeywordSet(str, separators, forSearch);
+        fixupKeywordSet(keywordSet, keywords, stopWordBagAnd, stopWordBagOr, removeStems, stemSet, forSearch, anyPrefix, anySuffix, isAnd);
+    }
+    
+    public static void fixupKeywordSet(Set keywordSet, Map keywords, String stopWordBagAnd, String stopWordBagOr, boolean removeStems, Set stemSet, boolean forSearch, boolean anyPrefix, boolean anySuffix, boolean isAnd) {
+        if (keywordSet == null) {
+            return;
+        }
+        
+        Iterator keywordIter = keywordSet.iterator();
+        while (keywordIter.hasNext()) {
+            String token = (String) keywordIter.next();
+            
+            // when cleaning up the tokens the ordering is inportant: check stop words, remove stems, then get rid of 1 character tokens (1 digit okay)
+            
+            // check stop words
+            String colonToken = ":" + token + ":";
+            if (forSearch) {
+                if ((isAnd && stopWordBagAnd.indexOf(colonToken) >= 0) || (!isAnd && stopWordBagOr.indexOf(colonToken) >= 0)) {
+                    continue;
+                }
+            } else {
+                if (stopWordBagOr.indexOf(colonToken) >= 0 && stopWordBagAnd.indexOf(colonToken) >= 0) {
+                    continue;
+                }
+            }
+            
+            // remove stems
+            if (removeStems) {
+                Iterator stemIter = stemSet.iterator();
+                while (stemIter.hasNext()) {
+                    String stem = (String) stemIter.next();
+                    if (token.endsWith(stem)) {
+                        token = token.substring(0, token.length() - stem.length());
+                    }
+                }
+            }
+            
+            // get rid of all length 0 tokens now
+            if (token.length() == 0) {
+                continue;
+            }
+            
+            // get rid of all length 1 character only tokens, pretty much useless
+            if (token.length() == 1 && Character.isLetter(token.charAt(0))) {
+                continue;
+            }
+
+            if (forSearch) {
+                StringBuffer strSb = new StringBuffer();
+                if (anyPrefix) strSb.append('%');
+                strSb.append(token);
+                if (anySuffix) strSb.append('%');
+                token = strSb.toString();
+            }
+            
+            // group by word, add up weight
+            Long curWeight = (Long) keywords.get(token);
+            if (curWeight == null) {
+                keywords.put(token, new Long(1));
+            } else {
+                keywords.put(token, new Long(curWeight.longValue() + 1));
+            }
+        }
+    }
+
+    public static Set makeKeywordSet(String str, String separators, boolean forSearch) {
+        if (separators == null) separators = getSeparators();
+        
+        Set keywords = new TreeSet();
+        if (str.length() > 0) {
+            if (forSearch) {
+                // remove %_*? from separators if is for a search
+                StringBuffer sb = new StringBuffer(separators);
+                if (sb.indexOf("%") >= 0) sb.deleteCharAt(sb.indexOf("%"));
+                if (sb.indexOf("_") >= 0) sb.deleteCharAt(sb.indexOf("_"));
+                if (sb.indexOf("*") >= 0) sb.deleteCharAt(sb.indexOf("*"));
+                if (sb.indexOf("?") >= 0) sb.deleteCharAt(sb.indexOf("?"));
+                separators = sb.toString();
+            }
+            
+            StringTokenizer tokener = new StringTokenizer(str, separators, false);
+            while (tokener.hasMoreTokens()) {
+                // make sure it is lower case before doing anything else
+                String token = tokener.nextToken().toLowerCase();
+
+                if (forSearch) {
+                    // these characters will only be present if it is for a search, ie not for indexing
+                    token = token.replace('*', '%');
+                    token = token.replace('?', '_');
+                }
+                
+                keywords.add(token);
+            }
         }
         return keywords;
     }
+    
+    public static Set fixKeywordsForSearch(Set keywordSet, boolean anyPrefix, boolean anySuffix, boolean removeStems, boolean isAnd) {
+        Map keywords = new HashMap();
+        fixupKeywordSet(keywordSet, keywords, getStopWordBagAnd(), getStopWordBagOr(), removeStems, getStemSet(), true, anyPrefix, anySuffix, isAnd);
+        return keywords.keySet();
+    }
 
-    public static boolean expandKeyword(String enteredKeyword, List addToList, GenericDelegator delegator) {
+    public static boolean expandKeywordForSearch(String enteredKeyword, Set addToSet, GenericDelegator delegator) {
         boolean replaceEnteredKeyword = false;
 
         try {
@@ -88,7 +227,7 @@ public class KeywordSearch {
                 GenericValue keywordThesaurus = (GenericValue) thesaurusIter.next();
                 String relationshipEnumId = (String) keywordThesaurus.get("relationshipEnumId");
                 if (thesaurusRelsToInclude.contains(relationshipEnumId)) {
-                    addToList.addAll(makeKeywordList(keywordThesaurus.getString("alternateKeyword")));
+                    addToSet.addAll(makeKeywordSet(keywordThesaurus.getString("alternateKeyword"), null, true));
                     if (thesaurusRelsForReplace.contains(relationshipEnumId)) {
                         replaceEnteredKeyword = true;
                     }
@@ -98,71 +237,8 @@ public class KeywordSearch {
             Debug.logError(e, "Error expanding entered keyword", module);
         }
 
-        Debug.logInfo("Expanded keyword [" + enteredKeyword + "], got list: " + addToList, module);
+        Debug.logInfo("Expanded keyword [" + enteredKeyword + "], got set: " + addToSet, module);
         return replaceEnteredKeyword;
-    }
-
-    public static List fixKeywords(List keywords, boolean anyPrefix, boolean anySuffix, boolean removeStems, boolean isAnd) {
-        if (keywords == null) {
-            return null;
-        }
-
-        String stopWordBag = null;
-
-        if (isAnd) {
-            stopWordBag = UtilProperties.getPropertyValue("prodsearch", "stop.word.bag.and");
-        } else {
-            stopWordBag = UtilProperties.getPropertyValue("prodsearch", "stop.word.bag.or");
-        }
-
-        String stemBag = UtilProperties.getPropertyValue("prodsearch", "stem.bag");
-        List stemList = new ArrayList(10);
-        if (UtilValidate.isNotEmpty(stemBag)) {
-            String curToken;
-            StringTokenizer tokenizer = new StringTokenizer(stemBag, ": ");
-            while (tokenizer.hasMoreTokens()) {
-                curToken = tokenizer.nextToken();
-                stemList.add(curToken);
-            }
-        }
-
-        List fixedKeywords = new ArrayList(keywords.size());
-        String str = null;
-        Iterator kwiter = keywords.iterator();
-
-        while (kwiter.hasNext()) {
-            str = (String) kwiter.next();
-
-            // do some cleanup, and replace wildcards
-            str = str.replace('*', '%');
-            str = str.replace('?', '_');
-            str = str.toLowerCase();
-            if (stopWordBag.indexOf(":" + str + ":") >= 0) continue;
-
-            // if enabled, remove stems in stem.bag
-            if (removeStems) {
-                Iterator stemIter = stemList.iterator();
-                while (stemIter.hasNext()) {
-                    String stem = (String) stemIter.next();
-                    if (str.endsWith(stem)) {
-                        str = str.substring(0, str.length() - stem.length());
-                    }
-                }
-            }
-
-            StringBuffer strSb = new StringBuffer();
-
-            if (anyPrefix) strSb.append('%');
-            strSb.append(str);
-            if (anySuffix) strSb.append('%');
-            str = strSb.toString();
-
-            if (!fixedKeywords.contains(str)) {
-                fixedKeywords.add(str);
-            }
-        }
-
-        return fixedKeywords;
     }
 
     /* Does a product search by keyword using the PRODUCT_KEYWORD table.
