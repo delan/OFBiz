@@ -1,5 +1,5 @@
 /*
- * $Id: StringUtil.java,v 1.3 2003/10/28 06:22:42 ajzeneski Exp $
+ * $Id: StringUtil.java,v 1.4 2003/11/13 04:19:31 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -38,7 +38,7 @@ import java.util.StringTokenizer;
  * Misc String Utility Functions
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.0
  */
 public class StringUtil {
@@ -145,9 +145,10 @@ public class StringUtil {
     /**
      * Creates a Map from an encoded name/value pair string
      * @param str The string to decode and format
+     * @param trim Trim whitespace off fields
      * @return a Map of name/value pairs
      */
-    public static Map strToMap(String str) {
+    public static Map strToMap(String str, boolean trim) {
         if (str == null) return null;
         Map decodedMap = new HashMap();
         List elements = split(str, "|");
@@ -157,10 +158,19 @@ public class StringUtil {
             String s = (String) i.next();
             List e = split(s, "=");
 
-            if (e.size() != 2)
+            if (e.size() != 2) {
                 continue;
+            }
             String name = (String) e.get(0);
             String value = (String) e.get(1);
+            if (trim) {
+                if (name != null) {
+                    name = name.trim();
+                }
+                if (value != null) {
+                    value = value.trim();
+                }
+            }
 
             try {
                 decodedMap.put(URLDecoder.decode(name, "UTF-8"), URLDecoder.decode(value, "UTF-8"));
@@ -169,6 +179,15 @@ public class StringUtil {
             }
         }
         return decodedMap;
+    }
+
+    /**
+     * Creates a Map from an encoded name/value pair string
+     * @param str The string to decode and format
+     * @return a Map of name/value pairs
+     */
+    public static Map strToMap(String str) {
+        return strToMap(str, false);
     }
 
     /**
