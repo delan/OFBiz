@@ -1,5 +1,5 @@
 /*
- * $Id: ZipSalesServices.java,v 1.14 2004/02/12 15:53:58 ajzeneski Exp $
+ * $Id: ZipSalesServices.java,v 1.15 2004/02/12 20:42:54 ajzeneski Exp $
  *
  *  Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -51,7 +51,7 @@ import java.io.File;
  * Zip-Sales Database Services
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.14 $
+ * @version    $Revision: 1.15 $
  * @since      3.0
  */
 public class ZipSalesServices {
@@ -316,14 +316,6 @@ public class ZipSalesServices {
         } else {
             // zero or 1 zip code found; use it
             taxLookup = zipLookup;
-        }
-
-        // if we have more then one taxLookup; filer by date
-        if (taxLookup != null && taxLookup.size() > 1) {
-            List dateFiltered = EntityUtil.filterByDate(taxLookup);
-            if (dateFiltered != null && dateFiltered.size() > 0) {
-                taxLookup = dateFiltered;
-            }
         }
 
         // get the first one
