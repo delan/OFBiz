@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.10  2001/12/21 04:23:10  jonesde
+ * A few more changes to get XA with tyrex working
+ *
  * Revision 1.9  2001/10/19 17:11:45  jonesde
  * Added search in a category
  *
@@ -88,60 +91,71 @@ public class KeywordSearch {
      *@return Collection of productId Strings
      */
     public static Collection productsByKeywords(String keywordsString, GenericDelegator delegator, String categoryId) {
-        if(delegator == null) return null;
+        if (delegator == null)
+            return null;
         String helperName = null;
         helperName = delegator.getEntityHelperName("ProductKeyword");
-        boolean useCategory = (categoryId != null && categoryId.length() > 0)?true:false;
-        
+        boolean useCategory = (categoryId != null && categoryId.length() > 0) ? true : false;
+
         Collection pbkCollection = new LinkedList();
-        
+
         String keywords[] = makeKeywordList(keywordsString);
         List keywordList = fixKeywords(keywords);
         List params = new LinkedList();
         String sql = getSearchSQL(keywordList, params, useCategory);
-        if(sql == null) return null;
-        if(useCategory) params.add(categoryId);
-        
+        if (sql == null)
+            return null;
+        if (useCategory)
+            params.add(categoryId);
+
         Connection connection = null;
         PreparedStatement statement = null;
         ResultSet resultSet = null;
         try {
             connection = ConnectionFactory.getConnection(helperName);
             statement = connection.prepareStatement(sql);
-            
-            for(int i=0; i<params.size(); i++) {
-                statement.setString(i+1,(String)params.get(i));
-                Debug.logInfo("[KeywordSearch] Params: " + (String)params.get(i));
+
+            for (int i = 0; i < params.size(); i++) {
+                statement.setString(i + 1, (String) params.get(i));
+                Debug.logInfo("[KeywordSearch] Params: " + (String) params.get(i));
             }
             resultSet = statement.executeQuery();
-            
-            if(resultSet.next()) {
+
+            if (resultSet.next()) {
                 do {
                     pbkCollection.add(resultSet.getString("PRODUCT_ID"));
-                } while (resultSet.next());
+                } while (resultSet.next())
+                    ;
                 return pbkCollection;
-            }
-            else {
+            } else {
                 Debug.logInfo("[KeywordSearch] no results found for search string:" + keywordsString);
                 return null;
             }
         } catch (java.sql.SQLException sqle) {
             Debug.logError(sqle);
-        } catch (GenericEntityException e) {
+        }
+        catch (GenericEntityException e) {
             Debug.logError(e);
         }
-        finally {
-            try { if (resultSet != null) resultSet.close(); } catch (SQLException sqle) { }
-            try { if (statement != null) statement.close(); } catch (SQLException sqle) { }
-            try { if (connection != null) connection.close(); } catch (SQLException sqle) { }
-        }
-        
+        finally { try {
+                  if (resultSet != null)
+                          resultSet.close();
+              } catch (SQLException sqle) { }
+              try {
+                  if (statement != null)
+                          statement.close();
+              } catch (SQLException sqle) { }
+              try {
+                  if (connection != null)
+                          connection.close();
+              } catch (SQLException sqle) { }
+                }
         return null;
     }
-    
+
     protected static String[] makeKeywordList(String keywordsString) {
         StringTokenizer tokenizer = new StringTokenizer(keywordsString);
-        
+
         LinkedList list = new LinkedList();
         String curToken;
         while (tokenizer.hasMoreTokens()) {
@@ -151,97 +165,107 @@ public class KeywordSearch {
             list.add(curToken);
         }
         String[] keywords = new String[list.size()];
-        keywords = (String[])list.toArray(keywords);
+        keywords = (String[]) list.toArray(keywords);
         return keywords;
     }
-    
+
     protected static List fixKeywords(String keywords[]) {
-        if(keywords == null)
+        if (keywords == null)
             return null;
         List list = new LinkedList();
         String str = null;
-        for(int i = 0; i < keywords.length; i++)
-            if((str = keywords[i]) != null && !list.contains(str))
+        for (int i = 0; i < keywords.length; i++)
+            if ((str = keywords[i]) != null && !list.contains(str))
                 list.add(str);
-        
+
         return list;
     }
-    
+
     protected static String getSearchSQL(List keywords, List params, boolean useCategory) {
-        if(keywords == null || keywords.size() <= 0) return null;
+        if (keywords == null || keywords.size() <= 0)
+            return null;
         String sql = "";
         Iterator keywordIter = keywords.iterator();
-        
+
         //EXAMPLE:
         //  SELECT DISTINCT P1.PRODUCT_ID FROM PRODUCT_KEYWORD P1, PRODUCT_KEYWORD P2, PRODUCT_KEYWORD P3
         //  WHERE (P1.PRODUCT_ID=P2.PRODUCT_ID AND P1.PRODUCT_ID=P3.PRODUCT_ID AND P1.KEYWORD LIKE 'TI%' AND P2.KEYWORD LIKE 'HOUS%' AND P3.KEYWORD LIKE '1003027%')
         //EXAMPLE WITH CATEGORY CONSTRAINT:
         //  SELECT DISTINCT P1.PRODUCT_ID FROM PRODUCT_KEYWORD P1, PRODUCT_KEYWORD P2, PRODUCT_KEYWORD P3, PRODUCT_CATEGORY_MEMBER PCM
         //  WHERE (P1.PRODUCT_ID=P2.PRODUCT_ID AND P1.PRODUCT_ID=P3.PRODUCT_ID AND P1.KEYWORD LIKE 'TI%' AND P2.KEYWORD LIKE 'HOUS%' AND P3.KEYWORD LIKE '1003027%' AND P1.PRODUCT_ID=PCM.PRODUCT_ID AND PCM.PRODUCT_CATEGORY_ID='foo')
-        
+
         String select = "SELECT DISTINCT P1.PRODUCT_ID FROM ";
         String join = " WHERE (";
         String where = " ";
-        
+
         int i = 1;
-        while(keywordIter.hasNext()) {
-            String keyword = (String)keywordIter.next();
+        while (keywordIter.hasNext()) {
+            String keyword = (String) keywordIter.next();
             String comparator = "=";
-            if(keyword.indexOf('%') >= 0 || keyword.indexOf('_') >= 0) comparator = " LIKE ";
+            if (keyword.indexOf('%') >= 0 || keyword.indexOf('_') >= 0)
+                comparator = " LIKE ";
             params.add(keyword);
-            if(i == 1) {
+            if (i == 1) {
                 select += ("PRODUCT_KEYWORD P" + i);
                 where += (" P" + i + ".KEYWORD" + comparator + "? ");
             } else {
                 select += (", PRODUCT_KEYWORD P" + i + " ");
-                join += ("P" + (i-1) + ".PRODUCT_ID=P" + i + ".PRODUCT_ID AND ");
+                join += ("P" + (i - 1) + ".PRODUCT_ID=P" + i + ".PRODUCT_ID AND ");
                 where += ("AND P" + i + ".KEYWORD" + comparator + "? ");
             }
             i++;
         }
-        if(useCategory) {
+        if (useCategory) {
             select += ", PRODUCT_CATEGORY_MEMBER PCM";
             where += " AND P1.PRODUCT_ID=PCM.PRODUCT_ID AND PCM.PRODUCT_CATEGORY_ID=?";
         }
         sql = select + join + where + ")";
-        
+
         Debug.logInfo("[KeywordSearch] sql=" + sql);
         return sql;
     }
-    
+
     public static String tokens = ";: ,.!?\t\"\'\r\n()[]{}*%<>";
     public static void induceKeywords(GenericValue product) throws GenericEntityException {
-        if(product == null) return;
+        if (product == null)
+            return;
         GenericDelegator delegator = product.getDelegator();
-        if(delegator == null) return;
-        
+        if (delegator == null)
+            return;
+
         Collection keywords = new TreeSet();
         keywords.add(product.getString("productId").toLowerCase());
-        
+
         Collection strings = new ArrayList();
-        if(product.getString("productName") != null) strings.add(product.getString("productName"));
-        if(product.getString("comments") != null) strings.add(product.getString("comments"));
-        if(product.getString("description") != null) strings.add(product.getString("description"));
-        if(product.getString("longDescription") != null) strings.add(product.getString("longDescription"));
-        
+        if (product.getString("productName") != null)
+            strings.add(product.getString("productName"));
+        if (product.getString("comments") != null)
+            strings.add(product.getString("comments"));
+        if (product.getString("description") != null)
+            strings.add(product.getString("description"));
+        if (product.getString("longDescription") != null)
+            strings.add(product.getString("longDescription"));
+
         Iterator strIter = strings.iterator();
-        while(strIter.hasNext()) {
-            String str = (String)strIter.next();
-            if(str.length() > 0) {
+        while (strIter.hasNext()) {
+            String str = (String) strIter.next();
+            if (str.length() > 0) {
                 StringTokenizer tokener = new StringTokenizer(str, tokens, false);
-                
-                while(tokener.hasMoreTokens()) {
+
+                while (tokener.hasMoreTokens()) {
                     keywords.add(tokener.nextToken().toLowerCase());
                 }
             }
         }
-        
+
         Iterator kiter = keywords.iterator();
-        while(kiter.hasNext()) {
-            String keyword = (String)kiter.next();
+        while (kiter.hasNext()) {
+            String keyword = (String) kiter.next();
             GenericValue productKeyword = delegator.makeValue("ProductKeyword", UtilMisc.toMap("productId", product.getString("productId"), "keyword", keyword));
-            if(delegator.findByPrimaryKey(productKeyword.getPrimaryKey()) != null) continue;
+            if (delegator.findByPrimaryKey(productKeyword.getPrimaryKey()) != null)
+                continue;
             productKeyword.create();
         }
     }
 }
+
