@@ -24,7 +24,7 @@
   <p class="head1">Create UserLogin</p>
 
     &nbsp;<a href="<ofbiz:url>/authview/<%=donePage%></ofbiz:url>" class="buttontext">[Go&nbsp;Back]</a>
-    &nbsp;<a href="javascript:document.changepasswordform.submit()" class="buttontext">[Save]</a>
+    &nbsp;<a href="javascript:document.createloginform.submit()" class="buttontext">[Save]</a>
 
   <form method="post" action="<ofbiz:url>/createuserlogin/<%=donePage%></ofbiz:url>" name="createloginform">
   <input type="hidden" name="partyId" value="<%=partyId%>">

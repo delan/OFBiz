@@ -82,10 +82,10 @@
     </td>
     <td align='right'>
 	  <div class='tabContainer'>
-      <a href="<ofbiz:url>/viewprofile?party_id=<%=partyId%></ofbiz:url>" class="tabButton">Profile</a>
-      <a href="<ofbiz:url>/viewvendor?party_id=<%=partyId%></ofbiz:url>" class="tabButton">Vendor</a>
-      <a href="<ofbiz:url>/viewroles?party_id=<%=partyId%></ofbiz:url>" class="tabButton">Roles</a>
-      <a href="<ofbiz:url>/viewrelationships?party_id=<%=partyId%></ofbiz:url>" class="tabButtonSelected">Relationships</a>
+      <a href="<ofbiz:url>/viewprofile?partyId=<%=partyId%></ofbiz:url>" class="tabButton">Profile</a>
+      <a href="<ofbiz:url>/viewvendor?partyId=<%=partyId%></ofbiz:url>" class="tabButton">Vendor</a>
+      <a href="<ofbiz:url>/viewroles?partyId=<%=partyId%></ofbiz:url>" class="tabButton">Roles</a>
+      <a href="<ofbiz:url>/viewrelationships?partyId=<%=partyId%></ofbiz:url>" class="tabButtonSelected">Relationships</a>
       </div>
     </td>
   </tr>
@@ -142,7 +142,7 @@
 	                <td><div class="tabletext">&nbsp;<%inputValue.run("fromDate", "partyRelationship");%></div></td>
 	                <%if(security.hasEntityPermission("PARTYMGR", "_DELETE", session)) {%>
 	                <td align="right">	                 
-  	                  <a href='<ofbiz:url>/deletePartyRelationship?partyIdTo=<%inputValue.run("partyIdTo", "partyRelationship");%>&roleTypeIdTo=<%inputValue.run("roleTypeIdTo", "partyRelationship");%>&roleTypeIdFrom=<%inputValue.run("roleTypeIdFrom", "partyRelationship");%>&partyIdFrom=<%inputValue.run("partyIdFrom", "partyRelationship");%>&fromDate=<%=UtilFormatOut.encodeQueryValue(partyRelationship.getTimestamp("fromDate").toString())%></ofbiz:url>' class="buttontext">[Remove]</a>&nbsp;
+  	                  <a href='<ofbiz:url>/deletePartyRelationship?partyIdTo=<%inputValue.run("partyIdTo", "partyRelationship");%>&roleTypeIdTo=<%inputValue.run("roleTypeIdTo", "partyRelationship");%>&roleTypeIdFrom=<%inputValue.run("roleTypeIdFrom", "partyRelationship");%>&partyIdFrom=<%inputValue.run("partyIdFrom", "partyRelationship");%>&fromDate=<%=UtilFormatOut.encodeQueryValue(partyRelationship.getTimestamp("fromDate").toString())%><%if (partyId != null) {%>&partyId=<%=partyId%><%}%></ofbiz:url>' class="buttontext">[Remove]</a>&nbsp;
 	                </td>
 	                <%}%>
 	              </tr>
@@ -182,6 +182,7 @@
     <TD width="100%" >
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <form name="addPartyRelationshipTo" method="post" action="<ofbiz:url>/createPartyRelationship</ofbiz:url>">
+        <input type="hidden" name="partyId" value="<%=partyId%>">
         <input type="hidden" name="partyIdFrom" value="<%=partyId%>">
         <tr>
           <td>
@@ -225,6 +226,7 @@
     <TD width="100%" >
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <form name="addPartyRelationshipFrom" method="post" action="<ofbiz:url>/createPartyRelationship</ofbiz:url>">
+        <input type="hidden" name="partyId" value="<%=partyId%>">
         <input type="hidden" name="partyIdTo" value="<%=partyId%>">
         <tr>
           <td>
@@ -287,6 +289,7 @@
     <TD width='100%'>
       <table width='100%' border='0' cellspacing='1' cellpadding='1' class='boxbottom'>
         <form method="post" action="<ofbiz:url>/addrelationshiptype/viewrelationships</ofbiz:url>" name="createrelatetypeform">
+        <input type="hidden" name="partyId" value="<%=partyId%>">
         <tr>
           <td width="16%"><div class="tabletext">Relationship Type ID</div></td>
           <td width="84%">

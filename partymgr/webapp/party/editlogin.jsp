@@ -1,32 +1,27 @@
-<%
-    /**
-     *  Title: Change Password Page
-     *  Description: None
-     *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
-     *
-     *  Permission is hereby granted, free of charge, to any person obtaining a
-     *  copy of this software and associated documentation files (the "Software"),
-     *  to deal in the Software without restriction, including without limitation
-     *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
-     *  and/or sell copies of the Software, and to permit persons to whom the
-     *  Software is furnished to do so, subject to the following conditions:
-     *
-     *  The above copyright notice and this permission notice shall be included
-     *  in all copies or substantial portions of the Software.
-     *
-     *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-     *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-     *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-     *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
-     *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
-     *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
-     *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-     *
-     *@author     Andy Zeneski
-     *@created    May 15, 2002
-     *@version    1.0
-     */
-%>
+<%--
+ *  Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ *@author     Andy Zeneski
+ *@version    1.0
+--%>
 
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 
@@ -61,6 +56,7 @@
   <p class="head1">Change UserLogin Password</p>
 
   <form method="post" action="<ofbiz:url>/updatePassword</ofbiz:url>" name="changepasswordform">
+  <input type="hidden" name="partyId" value="<%=partyId%>">
   <input type="hidden" name="userLoginId" value="<%=userLoginId%>">
   <table width="90%" border="0" cellpadding="2" cellspacing="0">
     <tr>
@@ -88,6 +84,7 @@
 <br>
   <p class="head1">Update UserLogin Security Settings</p>
   <form method="post" action="<ofbiz:url>/updateUserLoginSecurity</ofbiz:url>" name="updatesecurityform">
+  <input type="hidden" name="partyId" value="<%=partyId%>">
   <input type="hidden" name="userLoginId" value="<%=userLoginId%>">
   <table width="90%" border="0" cellpadding="2" cellspacing="0">
     <tr>

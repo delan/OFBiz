@@ -34,6 +34,11 @@
 <%if (security.hasEntityPermission("SECURITY", "_VIEW", session)) {%>
 <%
     String userLoginId = request.getParameter("userLoginId");
+    GenericValue userLogin = delegator.findByPrimaryKey("UserLogin", UtilMisc.toMap("userLoginId", userLoginId));
+
+	String partyId = null;
+    if (userLogin != null) partyId = userLogin.getString("partyId");
+
     Collection userLoginSecurityGroups = delegator.findByAnd("UserLoginSecurityGroup", 
             UtilMisc.toMap("userLoginId", userLoginId), 
             UtilMisc.toList("groupId"));
@@ -68,7 +73,7 @@
     }
 %>
 
-<a href="<ofbiz:url>/viewprofile</ofbiz:url>" class="buttontext">[Back To Profile]</a>
+<a href="<ofbiz:url>/viewprofile<%if (partyId != null) {%>?partyId=<%=partyId%><%}%></ofbiz:url>" class="buttontext">[Back To Profile]</a>
 
 <div class="head1">SecurityGroups for UserLogin with ID "<%=UtilFormatOut.checkNull(userLoginId)%>"</div>
 
