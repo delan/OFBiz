@@ -185,33 +185,16 @@ public class OrderChangeHelper {
         // find the workEffortId for this order
         GenericValue workEffort = null;
         try {
-            List workEfforts = delegator.findByAnd("WorkEffort", UtilMisc.toMap("sourceReferenceId", orderId, "currentStatusId", "WF_SUSPENDED"));
-            if (workEfforts != null && workEfforts.size() > 0) {
-                Debug.logWarning("More then order suspended activity with order ref number: " + orderId, module);                
+            List workEfforts = delegator.findByAnd("WorkEffort", UtilMisc.toMap("workEffortTypeId", "WORK_FLOW", "sourceReferenceId", orderId));
+            if (workEfforts != null && workEfforts.size() > 1) {
+                Debug.logWarning("More then one workflow found for defined order: " + orderId, module);                
             }
             workEffort = EntityUtil.getFirst(workEfforts);
         } catch (GenericEntityException e) {
             Debug.logError(e, "Problems getting WorkEffort with order ref number: " + orderId, module);
             return false;
         }        
-         
-        boolean justSet = false;
-               
-        if (workEffort == null) {
-            // may not have happened yet; so we'll just set the new status in the context
-            justSet = true;            
-            try {
-                List workEfforts = delegator.findByAnd("WorkEffort", UtilMisc.toMap("sourceReferenceId", orderId));                
-                workEffort = EntityUtil.getFirst(workEfforts);
-                if (workEffort.get("workEffortParentId") != null) {
-                    workEffort = workEffort.getRelatedOne("ParentWorkEffort");
-                }
-            } catch (GenericEntityException e) {
-                Debug.logError(e, "Problems getting WorkEffort with order ref number: " + orderId, module);
-                return false;
-            }                     
-        }
-        
+                         
         if (workEffort != null) {
             // get the order header
             String currentStatusId = null;
@@ -236,7 +219,7 @@ public class OrderChangeHelper {
                 // first send the new order status to the workflow
                 client.appendContext(workEffortId, UtilMisc.toMap("statusId", currentStatusId));
                 // next resume the activity
-                if (!justSet) {                
+                if (workEffort.getString("currentStatusId").equals("WF_SUSPENDED")) {                
                     client.resume(workEffortId);
                 }                 
             } catch (WfException e) {
@@ -246,5 +229,39 @@ public class OrderChangeHelper {
             return true;
         } 
         return false;               
-    }                   
+    }
+    
+    public static boolean abortOrderProcessing(LocalDispatcher dispatcher, String orderId) {
+        Debug.logInfo("Aborting workflow for order " + orderId, module);
+        GenericDelegator delegator = dispatcher.getDelegator();
+        
+        // find the workEffortId for this order
+        GenericValue workEffort = null;
+        try {
+            List workEfforts = delegator.findByAnd("WorkEffort", UtilMisc.toMap("workEffortTypeId", "WORK_FLOW", "sourceReferenceId", orderId));
+            if (workEfforts != null && workEfforts.size() > 1) {
+                Debug.logWarning("More then one workflow found for defined order: " + orderId, module);                
+            }
+            workEffort = EntityUtil.getFirst(workEfforts);
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Problems getting WorkEffort with order ref number: " + orderId, module);
+            return false;
+        }  
+        
+        if (workEffort != null) {
+            String workEffortId = workEffort.getString("workEffortId");            
+            if (workEffort.getString("currentStatusId").equals("WF_RUNNING")) {
+                Debug.logInfo("WF is running; trying to abort");
+                WorkflowClient client = new WorkflowClient(dispatcher.getDispatchContext());
+                try {
+                    client.abortProcess(workEffortId);
+                } catch (WfException e) {
+                    Debug.logError(e, "Problem aborting workflow", module);
+                    return false;
+                }
+                return true;               
+            }             
+        }                              
+        return false;
+    }                          
 }

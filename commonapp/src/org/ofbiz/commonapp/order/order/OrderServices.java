@@ -788,8 +788,9 @@ public class OrderServices {
         }
         
         // cancel any order processing if we are cancelled
-        if ("ORDER_CANCELLED".equals("statusId")) {
+        if ("ORDER_CANCELLED".equals(statusId)) {
             OrderChangeHelper.releaseInitialOrderHold(ctx.getDispatcher(), orderId);
+            OrderChangeHelper.abortOrderProcessing(ctx.getDispatcher(), orderId);
         }
         
         result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
