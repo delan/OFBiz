@@ -51,10 +51,12 @@
 %>
 
 <br>
+<a href="<ofbiz:url>/FindSecurityGroup</ofbiz:url>" class="buttontext">[All SecurityGroups]</a>
 <a href="<ofbiz:url>/EditSecurityGroup</ofbiz:url>" class="buttontext">[New SecurityGroup]</a>
 <%if(groupId != null && groupId.length() > 0){%>
   <a href="<ofbiz:url>/EditSecurityGroup?groupId=<%=groupId%></ofbiz:url>" class="buttontextdisabled">[SecurityGroup]</a>
   <a href="<ofbiz:url>/EditSecurityGroupPermissions?groupId=<%=groupId%></ofbiz:url>" class="buttontext">[Permissions]</a>
+  <a href="<ofbiz:url>/EditSecurityGroupUserLogins?groupId=<%=groupId%></ofbiz:url>" class="buttontext">[UserLogins]</a>
 <%}%>
 
 <div class="head1">Edit SecurityGroup with ID "<%=UtilFormatOut.checkNull(groupId)%>"</div>

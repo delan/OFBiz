@@ -36,6 +36,31 @@
     //securityGroups
     Collection securityGroups = delegator.findAll("SecurityGroup");
     if (securityGroups != null) pageContext.setAttribute("securityGroups", securityGroups);
+
+    int viewIndex = 0;
+    int viewSize = 20;
+    int highIndex = 0;
+    int lowIndex = 0;
+    int listSize = 0;
+
+    try {
+        viewIndex = Integer.valueOf((String) pageContext.getRequest().getParameter("VIEW_INDEX")).intValue();
+    } catch (Exception e) {
+        viewIndex = 0;
+    }
+    try {
+        viewSize = Integer.valueOf((String) pageContext.getRequest().getParameter("VIEW_SIZE")).intValue();
+    } catch (Exception e) {
+        viewSize = 20;
+    }
+    if (securityGroups != null) {
+        listSize = securityGroups.size();
+    }
+    lowIndex = viewIndex * viewSize;
+    highIndex = (viewIndex + 1) * viewSize;
+    if (listSize < highIndex) {
+        highIndex = listSize;
+    }
 %>
 <br>
 
@@ -43,24 +68,61 @@
 
 <br>
 <div><a href='<ofbiz:url>/EditSecurityGroup</ofbiz:url>' class="buttontext">[Create New SecurityGroup]</a></div>
-<br>
-<table border="1" cellpadding='2' cellspacing='0'>
-  <tr>
-    <td><div class="tabletext"><b>SecurityGroup&nbsp;ID</b></div></td>
-    <td><div class="tabletext"><b>Description</b></div></td>
-    <td><div class="tabletext">&nbsp;</div></td>
-  </tr>
-<ofbiz:iterator name="securityGroup" property="securityGroups">
-  <tr valign="middle">
-    <td><div class='tabletext'>&nbsp;<ofbiz:inputvalue entityAttr="securityGroup" field="groupId"/></div></td>
-    <td><div class='tabletext'>&nbsp;<ofbiz:inputvalue entityAttr="securityGroup" field="description"/></div></td>
-    <td>
-      <a href='<ofbiz:url>/EditSecurityGroup?groupId=<ofbiz:inputvalue entityAttr="securityGroup" field="groupId"/></ofbiz:url>' class="buttontext">
-      [Edit]</a>
-    </td>
-  </tr>
-</ofbiz:iterator>
+<ofbiz:if name="securityGroups" size="0">
+  <table border="0" width="100%" cellpadding="2">
+    <tr>
+      <td align=right>
+        <b>
+        <%if (viewIndex > 0) {%>
+          <a href="<ofbiz:url><%="/FindSecurityGroup?VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex-1)%></ofbiz:url>" class="buttontext">[Previous]</a> |
+        <%}%>
+        <%if (listSize > 0) {%>
+          <%=lowIndex+1%> - <%=highIndex%> of <%=listSize%>
+        <%}%>
+        <%if (listSize > highIndex) {%>
+          | <a href="<ofbiz:url><%="/FindSecurityGroup?VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex+1)%></ofbiz:url>" class="buttontext">[Next]</a>
+        <%}%>
+        </b>
+      </td>
+    </tr>
+  </table>
+</ofbiz:if>
+<table border="1" cellpadding='2' cellspacing='0' width='100%'>
+    <tr>
+        <td><div class="tabletext"><b>SecurityGroup&nbsp;ID</b></div></td>
+        <td><div class="tabletext"><b>Description</b></div></td>
+        <td><div class="tabletext">&nbsp;</div></td>
+    </tr>
+    <ofbiz:iterator name="securityGroup" property="securityGroups" offset="<%=lowIndex%>" limit="<%=viewSize%>">
+      <tr valign="middle">
+        <td><div class='tabletext'>&nbsp;<ofbiz:inputvalue entityAttr="securityGroup" field="groupId"/></div></td>
+        <td><div class='tabletext'>&nbsp;<ofbiz:inputvalue entityAttr="securityGroup" field="description"/></div></td>
+        <td>
+          <a href='<ofbiz:url>/EditSecurityGroup?groupId=<ofbiz:inputvalue entityAttr="securityGroup" field="groupId"/></ofbiz:url>' class="buttontext">
+          [Edit]</a>
+        </td>
+      </tr>
+    </ofbiz:iterator>
 </table>
+<ofbiz:if name="securityGroups" size="0">
+  <table border="0" width="100%" cellpadding="2">
+    <tr>
+      <td align=right>
+        <b>
+        <%if (viewIndex > 0) {%>
+          <a href="<ofbiz:url><%="/FindSecurityGroup?VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex-1)%></ofbiz:url>" class="buttontext">[Previous]</a> |
+        <%}%>
+        <%if (listSize > 0) {%>
+          <%=lowIndex+1%> - <%=highIndex%> of <%=listSize%>
+        <%}%>
+        <%if (listSize > highIndex) {%>
+          | <a href="<ofbiz:url><%="/FindSecurityGroup?VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex+1)%></ofbiz:url>" class="buttontext">[Next]</a>
+        <%}%>
+        </b>
+      </td>
+    </tr>
+  </table>
+</ofbiz:if>
 <br>
 
 <%}else{%>
