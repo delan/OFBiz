@@ -47,7 +47,7 @@ import org.w3c.dom.Node;
  * @version    $Revision$
  * @since      1.0
  */
-public class GenericDelegator implements DelegatorInterface {
+public class GenericDelegator {
 
     public static final String module = GenericDelegator.class.getName();
 
