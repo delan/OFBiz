@@ -28,7 +28,7 @@
  *  $Id$
 -->
 
-<!ENTITY % AllWidgets "section | container | include-screen | decorator-screen | decorator-section-include | label | form | menu | tree | content | sub-content | platform-specific | link | image">
+<!ENTITY % AllWidgets "section | container | include-screen | decorator-screen | decorator-section-include | label | include-form | include-menu | include-tree | content | sub-content | platform-specific | link | image">
 
 <!ENTITY % AllConditionals "and | xor | or | not | if-has-permission | if-validate-method | if-compare | if-compare-field | if-regexp | if-empty | if-entity-permission">
 
@@ -254,20 +254,20 @@
         style CDATA #IMPLIED
     >
     
-    <!ELEMENT form EMPTY>
-    <!ATTLIST form
+    <!ELEMENT include-form EMPTY>
+    <!ATTLIST include-form
         name CDATA #REQUIRED
         location CDATA #REQUIRED
     >
     
-    <!ELEMENT menu EMPTY>
-    <!ATTLIST menu
+    <!ELEMENT include-menu EMPTY>
+    <!ATTLIST include-menu
         name CDATA #REQUIRED
         location CDATA #REQUIRED
     >
     
-    <!ELEMENT tree EMPTY>
-    <!ATTLIST tree
+    <!ELEMENT include-tree EMPTY>
+    <!ATTLIST include-tree
         name CDATA #REQUIRED
         location CDATA #REQUIRED
     >
