@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.11 $
+ *@version    $Revision: 1.12 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -294,37 +294,7 @@ function addToList() {
       </table>
     </td>
   </tr>
-<#-- Un-comment this to include a link bar at the bottom too
-  <tr>
-    <td width="100%">
-      <table width="100%" border="0" cellpadding="<%=boxTopPadding%>" cellspacing="0" bgcolor="<%=boxTopColor%>">
-        <tr>
-          <td>
-      <table width="100%" border="0" cellpadding="0" cellspacing="0">
-        <tr>
-          <td valign="middle" align="left">
-            &nbsp;
-          </td>
-          <td valign="middle" align="right">
-            <div class="lightbuttontextdisabled">
-              <a href="<@ofbizUrl>/main</@ofbizUrl>" class="lightbuttontext">[Continue&nbsp;Shopping]</a>
-              <#if (shoppingCartSize > 0)>
-                <a href="javascript:document.cartform.submit()" class="lightbuttontext">[Recalculate&nbsp;Cart]</a>
-                <a href="<@ofbizUrl>/emptycart</@ofbizUrl>" class="lightbuttontext">[Empty&nbsp;Cart]</a>
-                <a href="<@ofbizUrl>/quickcheckout</@ofbizUrl>" class="lightbuttontext">[Checkout]</a>
-              <#else>
-                [Recalculate&nbsp;Cart] [Empty&nbsp;Cart] [Checkout]
-              </#if>
-            </div>
-          </td>
-        </tr>
-      </table>
-          </td>
-        </tr>
-      </table>
-    </td>
-  </tr>
--->
+<#-- Copy link bar to bottom to include a link bar at the bottom too -->
 </table>
 
 <#if showPromoText>
@@ -405,6 +375,56 @@ function addToList() {
         </#if>
       </#list>
     </table>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</#if>
+
+<#if (shoppingCartSize > 0)>
+  <br/>
+  <table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
+    <tr>
+      <td width="100%">
+        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
+          <tr>
+            <td valign="middle" align="left">
+              <div class="boxhead">&nbsp;Promotion Information:</div>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <td width="100%">
+        <table width="100%" border="0" cellspacing="0" cellpadding="4" class="boxbottom">
+          <tr>
+            <td width="50%" valign="top">
+                <div class="tableheadtext">Promotions Applied:</div>
+                <#list shoppingCart.getProductPromoUseInfoIter() as productPromoUseInfo>
+                    <#-- TODO: when promo pretty print is done show promo short description here -->
+                    <div class="tabletext">Promotion [${productPromoUseInfo.productPromoId?default("No Code")}]<#if productPromoUseInfo.productPromoCodeId?has_content> - with Code [${productPromoUseInfo.productPromoCodeId}]</#if></div>
+                </#list>
+            </td>
+            <td width="50%" valign="top" style="border-left: 1px solid grey">
+                <div class="tableheadtext">Products Used in Promotions:</div>
+                <#list shoppingCart.items() as cartLine>
+                    <#assign cartLineIndex = shoppingCart.getItemIndex(cartLine)>
+                    <#list cartLine.getQuantityUsedPerPromoCondIter() as quantityUsedPerPromoCondEntry>
+                        <#assign prodcutPromoCondPK = quantityUsedPerPromoCondEntry.getKey()>
+                        <#assign condQuantityUsed = quantityUsedPerPromoCondEntry.getValue()>
+                        <div class="tabletext">Line ${cartLineIndex} - Quantity ${condQuantityUsed} - Promotion [${prodcutPromoCondPK.productPromoId}]</div>
+                        <!-- productPromoRuleId ${prodcutPromoCondPK.productPromoRuleId}, productPromoActionSeqId ${prodcutPromoCondPK.productPromoActionSeqId} -->
+                    </#list>
+                    <#list cartLine.getQuantityUsedPerPromoActionIter() as quantityUsedPerPromoActionEntry>
+                        <#assign prodcutPromoActionPK = quantityUsedPerPromoActionEntry.getKey()>
+                        <#assign actionQuantityUsed = quantityUsedPerPromoActionEntry.getValue()>
+                        <div class="tabletext">Line ${cartLineIndex} - Quantity ${actionQuantityUsed} - Promotion [${prodcutPromoActionPK.productPromoId}]</div>
+                        <!-- productPromoRuleId ${prodcutPromoActionPK.productPromoRuleId}, productPromoActionSeqId ${prodcutPromoActionPK.productPromoActionSeqId} -->
+                    </#list>
+                </#list>
             </td>
           </tr>
         </table>
