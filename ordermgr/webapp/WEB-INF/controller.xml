@@ -250,9 +250,23 @@
     	<response name="shipping" type="view" value="shipsetting"/>
     	<response name="options" type="view" value="optionsetting"/>
     	<response name="payment" type="view" value="billsetting"/>
-    	<response name="success" type="view" value="confirm"/>
+    	<response name="success" type="request" value="calcShipping"/>
     	<response name="error" type="view" value="orderentry"/>    	
     </request-map>
+    
+    <request-map uri="calcShipping">
+        <security direct-request="false"/>
+        <event type="java" path="org.ofbiz.commonapp.shipment.shipment.ShippingEvents" invoke="getShipEstimate"/>
+        <response name="success" type="request" value="calcTax"/>
+        <response name="error" type="view" value="orderentry"/>
+    </request-map>
+    <request-map uri="calcTax">
+        <security direct-request="false"/>
+        <event type="java" path="org.ofbiz.commonapp.order.shoppingcart.CheckOutEvents" invoke="calcTax"/>
+        <response name="success" type="view" value="confirm"/>
+        <response name="error" type="view" value="orderentry"/>
+    </request-map>
+        
     <request-map uri="setCustomer">
     	<security https="true" auth="true"/>
     	<response name="success" type="view" value="custsetting"/>
