@@ -1,5 +1,5 @@
 /*
- * $Id: ProductSearchEvents.java,v 1.3 2004/01/24 18:23:46 jonesde Exp $
+ * $Id: ProductSearchEvents.java,v 1.4 2004/01/24 18:30:51 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -48,7 +48,7 @@ import org.ofbiz.product.product.ProductSearch.ResultSortOrder;
  * Product Search Related Events
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      3.0
  */
 public class ProductSearchEvents {
@@ -208,7 +208,7 @@ public class ProductSearchEvents {
                    numAdded++;
                }
               
-               request.setAttribute("_EVENT_MESSAGE_", "added "+numAdded+" number of items.");
+               request.setAttribute("_EVENT_MESSAGE_", "Added " + numAdded + " product category members.");
                eli.close();
                TransactionUtil.commit(beganTransaction);
            } catch (GenericEntityException e) {
