@@ -1,5 +1,5 @@
 /*
- * $Id: ProductPromoWorker.java,v 1.25 2003/11/29 14:08:14 jonesde Exp $
+ * $Id: ProductPromoWorker.java,v 1.26 2003/11/29 19:45:33 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -54,7 +54,7 @@ import org.ofbiz.service.LocalDispatcher;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.25 $
+ * @version    $Revision: 1.26 $
  * @since      2.0
  */
 public class ProductPromoWorker {
@@ -127,7 +127,7 @@ public class ProductPromoWorker {
         // this is called when a user logs in so that per customer limits are honored, called by cart when new userlogin is set
         // there is code to store ProductPromoUse information when an order is placed
         // TODO: add code to remove ProductPromoUse if an order is cancelled
-        // TODO: add code to check ProductPromoUse limits per promo (customer, promo), and per code (customer, code) to avoid use of promos or codes getting through due to multiple carts getting promos applied at the same time, possibly on totally different servers
+        // TODO: (really should do?) add code to check ProductPromoUse limits per promo (customer, promo), and per code (customer, code) to avoid use of promos or codes getting through due to multiple carts getting promos applied at the same time, possibly on totally different servers
         // TODO: add code to limit sub total for promos to not use gift cards (products with a don't use in promo indicator), also should exclude gift cards from all other promotion considerations
         
         GenericDelegator delegator = cart.getDelegator();
@@ -236,7 +236,12 @@ public class ProductPromoWorker {
         Long useLimitPerCustomer = productPromo.getLong("useLimitPerCustomer");
         if (useLimitPerCustomer != null && UtilValidate.isNotEmpty(partyId)) {
             // check to see how many times this has been used for other orders for this customer, the remainder is the limit for this order
-            long productPromoCustomerUseSize = delegator.findCountByAnd("ProductPromoUse", UtilMisc.toMap("productPromoId", productPromoId, "partyId", partyId));
+            EntityCondition checkCondition = new EntityConditionList(UtilMisc.toList(
+                    new EntityExpr("productPromoId", EntityOperator.EQUALS, productPromoId),
+                    new EntityExpr("partyId", EntityOperator.EQUALS, partyId),
+                    new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "ORDER_REJECTED"),
+                    new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "ORDER_CANCELLED")), EntityOperator.AND);
+            long productPromoCustomerUseSize = delegator.findCountByCondition("ProductPromoUseCheck", checkCondition, null);
             long perCustomerThisOrder = useLimitPerCustomer.longValue() - productPromoCustomerUseSize;
             if (candidateUseLimit == null || candidateUseLimit.longValue() > perCustomerThisOrder) {
                 candidateUseLimit = new Long(perCustomerThisOrder);
@@ -246,7 +251,11 @@ public class ProductPromoWorker {
         Long useLimitPerPromotion = productPromo.getLong("useLimitPerPromotion");
         if (useLimitPerPromotion != null) {
             // check to see how many times this has been used for other orders for this customer, the remainder is the limit for this order
-            long productPromoUseSize = delegator.findCountByAnd("ProductPromoUse", UtilMisc.toMap("productPromoId", productPromoId));
+            EntityCondition checkCondition = new EntityConditionList(UtilMisc.toList(
+                    new EntityExpr("productPromoId", EntityOperator.EQUALS, productPromoId),
+                    new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "ORDER_REJECTED"),
+                    new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "ORDER_CANCELLED")), EntityOperator.AND);
+            long productPromoUseSize = delegator.findCountByCondition("ProductPromoUseCheck", checkCondition, null);
             long perPromotionThisOrder = useLimitPerPromotion.longValue() - productPromoUseSize;
             if (candidateUseLimit == null || candidateUseLimit.longValue() > perPromotionThisOrder) {
                 candidateUseLimit = new Long(perPromotionThisOrder);
@@ -264,7 +273,12 @@ public class ProductPromoWorker {
         Long codeUseLimitPerCustomer = productPromoCode.getLong("useLimitPerCustomer");
         if (codeUseLimitPerCustomer != null && UtilValidate.isNotEmpty(partyId)) {
             // check to see how many times this has been used for other orders for this customer, the remainder is the limit for this order
-            long productPromoCustomerUseSize = delegator.findCountByAnd("ProductPromoUse", UtilMisc.toMap("productPromoCodeId", productPromoCodeId, "partyId", partyId));
+            EntityCondition checkCondition = new EntityConditionList(UtilMisc.toList(
+                    new EntityExpr("productPromoCodeId", EntityOperator.EQUALS, productPromoCodeId),
+                    new EntityExpr("partyId", EntityOperator.EQUALS, partyId),
+                    new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "ORDER_REJECTED"),
+                    new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "ORDER_CANCELLED")), EntityOperator.AND);
+            long productPromoCustomerUseSize = delegator.findCountByCondition("ProductPromoUseCheck", checkCondition, null);
             long perCustomerThisOrder = codeUseLimitPerCustomer.longValue() - productPromoCustomerUseSize;
             if (codeUseLimit == null || codeUseLimit.longValue() > perCustomerThisOrder) {
                 codeUseLimit = new Long(perCustomerThisOrder);
@@ -274,7 +288,11 @@ public class ProductPromoWorker {
         Long codeUseLimitPerCode = productPromoCode.getLong("useLimitPerCode");
         if (codeUseLimitPerCode != null) {
             // check to see how many times this has been used for other orders for this customer, the remainder is the limit for this order
-            long productPromoCodeUseSize = delegator.findCountByAnd("ProductPromoUse", UtilMisc.toMap("productPromoCodeId", productPromoCodeId));
+            EntityCondition checkCondition = new EntityConditionList(UtilMisc.toList(
+                    new EntityExpr("productPromoCodeId", EntityOperator.EQUALS, productPromoCodeId),
+                    new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "ORDER_REJECTED"),
+                    new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "ORDER_CANCELLED")), EntityOperator.AND);
+            long productPromoCodeUseSize = delegator.findCountByCondition("ProductPromoUseCheck", checkCondition, null);
             long perCodeThisOrder = codeUseLimitPerCode.longValue() - productPromoCodeUseSize;
             if (codeUseLimit == null || codeUseLimit.longValue() > perCodeThisOrder) {
                 codeUseLimit = new Long(perCodeThisOrder);
@@ -516,7 +534,7 @@ public class ProductPromoWorker {
                 compare = 1;
             }
 
-            /* These aren't supported yet, ie TODO
+            /* These aren't supported yet, ie TODO (low priority)
              } else if ("PRIP_PARTY_GRP_MEM".equals(inputParamEnumId)) {
              } else if ("PRIP_PARTY_CLASS".equals(inputParamEnumId)) {
              */
@@ -584,7 +602,7 @@ public class ProductPromoWorker {
                 // pass null for cartLocation to add to end of cart, pass false for doPromotions to avoid infinite recursion
                 ShoppingCartItem gwpItem = null;
                 try {
-                    // TODO: where should we REALLY get the prodCatalogId?
+                    // just leave the prodCatalogId null, this line won't be associated with a catalog
                     String prodCatalogId = null;
                     gwpItem = ShoppingCartItem.makeItem(null, product, quantity, null, null, prodCatalogId, dispatcher, cart, false);
                 } catch (CartItemModifyException e) {

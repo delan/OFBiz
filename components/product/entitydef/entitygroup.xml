@@ -26,7 +26,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.17 $
+ *@version    $Revision: 1.18 $
  */
 -->
 
@@ -160,6 +160,7 @@
     <entity-group group="org.ofbiz" entity="ProductPromoProduct" />
     <entity-group group="org.ofbiz" entity="ProductPromoRule" />
     <entity-group group="org.ofbiz" entity="ProductPromoUse" />
+    <entity-group group="org.ofbiz" entity="ProductPromoUseCheck" />
 
   <!-- ========================================================= -->
   <!-- org.ofbiz.product.storage -->
