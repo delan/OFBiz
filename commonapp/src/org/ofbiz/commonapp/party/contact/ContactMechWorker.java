@@ -1,6 +1,6 @@
 /*
  * $Id$
- * 
+ *
  *  Copyright (c) 2001 The Open For Business Project and repected authors.
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -41,7 +41,7 @@ public class ContactMechWorker {
     public static void getPartyContactMechValueMaps(PageContext pageContext, String partyId, boolean showOld, String partyContactMechValueMapsAttr) {
         GenericDelegator delegator = (GenericDelegator) pageContext.getRequest().getAttribute("delegator");
         Collection partyContactMechValueMaps = new LinkedList();
-        
+
         Iterator allPartyContactMechs = null;
         try {
             Collection tempCol = delegator.findByAnd("PartyContactMech", UtilMisc.toMap("partyId", partyId));
@@ -90,7 +90,7 @@ public class ContactMechWorker {
                 }
             }
         }
-        
+
         if (partyContactMechValueMaps.size() > 0) {
             pageContext.setAttribute(partyContactMechValueMapsAttr, partyContactMechValueMaps);
         }
@@ -129,8 +129,8 @@ public class ContactMechWorker {
                 }
 
                 try {
-                    Collection partyContactMechPurposes = orderContactMech.getRelated("PartyContactMechPurpose");
-                    orderContactMechValueMap.put("partyContactMechPurposes", partyContactMechPurposes);
+                    Collection orderContactMechPurposes = orderContactMech.getRelated("OrderContactMechPurpose");
+                    orderContactMechValueMap.put("orderContactMechPurposes", orderContactMechPurposes);
                 } catch (GenericEntityException e) {
                     Debug.logWarning(e);
                 }
@@ -158,7 +158,7 @@ public class ContactMechWorker {
 
         ServletRequest request = pageContext.getRequest();
         GenericDelegator delegator = (GenericDelegator) pageContext.getRequest().getAttribute("delegator");
-        
+
         boolean tryEntity = true;
         if (request.getAttribute(SiteDefs.ERROR_MESSAGE) != null) tryEntity = false;
         if ("true".equals(request.getParameter("tryEntity"))) tryEntity = true;
@@ -172,7 +172,7 @@ public class ContactMechWorker {
             contactMechTypeId = request.getParameter("preContactMechTypeId");
             tryEntity = false;
         }
-        
+
         String contactMechId = request.getParameter("contactMechId");
         if (request.getAttribute("contactMechId") != null)
             contactMechId = (String) request.getAttribute("contactMechId");
@@ -214,10 +214,10 @@ public class ContactMechWorker {
                 contactMechTypeId = contactMech.getString("contactMechTypeId");
             }
         }
-        
+
         if (contactMechTypeId != null) {
             pageContext.setAttribute(contactMechTypeIdAttr, contactMechTypeId);
-    
+
             try {
                 GenericValue contactMechType = delegator.findByPrimaryKey("ContactMechType", UtilMisc.toMap("contactMechTypeId", contactMechTypeId));
                 if (contactMechType != null)
@@ -309,11 +309,11 @@ public class ContactMechWorker {
             Debug.logWarning(e);
         }
     }
-    
+
     public static void getPartyPostalAddresses(PageContext pageContext, String partyId, String curContactMechId, String postalAddressInfosAttr) {
         GenericDelegator delegator = (GenericDelegator) pageContext.getRequest().getAttribute("delegator");
         Collection postalAddressInfos = new LinkedList();
-        
+
         Iterator allPartyContactMechs = null;
         try {
             allPartyContactMechs = UtilMisc.toIterator(EntityUtil.filterByDate(delegator.findByAnd("PartyContactMech", UtilMisc.toMap("partyId", partyId))));
@@ -349,15 +349,15 @@ public class ContactMechWorker {
                 }
             }
         }
-        
+
         if (postalAddressInfos.size() > 0) {
             pageContext.setAttribute(postalAddressInfosAttr, postalAddressInfos);
         }
     }
-    
-    public static void getCurrentPostalAddress(PageContext pageContext, String partyId, 
+
+    public static void getCurrentPostalAddress(PageContext pageContext, String partyId,
             String curContactMechId,
-            String curPartyContactMechAttr, String curContactMechAttr, String curPostalAddressAttr, 
+            String curPartyContactMechAttr, String curContactMechAttr, String curPostalAddressAttr,
             String curPartyContactMechPurposesAttr) {
 
         ServletRequest request = pageContext.getRequest();
