@@ -36,14 +36,14 @@
             <td class="headerButtonLeft"><a href='<ofbiz:url><%=CommonWorkers.makeLoginUrl(pageContext, "checkLogin")%></ofbiz:url>' class='headerbuttontext'>Login</a></td>
           </ofbiz:unless>
           <ofbiz:if name="userLogin">
-            <td class="headerButtonLeft"><a href="<ofbiz:url>/logout/main</ofbiz:url>" class="headerbuttontext">Logout</a></td>
+            <td class="headerButtonLeft"><a href="<ofbiz:url>/logout</ofbiz:url>" class="headerbuttontext">Logout</a></td>
           </ofbiz:if>
           <td class="headerButtonLeft"><a href="<ofbiz:url>/main</ofbiz:url>" class="headerbuttontext">Main</a></td>
 
           <ofbiz:if name="autoName">
             <TD width="90%" align="center" class="headerCenter">
                 Welcome&nbsp;<ofbiz:print attribute="autoName"/>!
-                (Not&nbsp;You?&nbsp;<a href="<ofbiz:url><%=CommonWorkers.makeLoginUrl(pageContext, "autoLogout")%></ofbiz:url>" class="buttontext">click&nbsp;here</a>)
+                (Not&nbsp;You?&nbsp;<a href="<ofbiz:url>/autoLogout</ofbiz:url>" class="buttontext">click&nbsp;here</a>)
             </TD>
           </ofbiz:if>
           <ofbiz:unless name="autoName">
