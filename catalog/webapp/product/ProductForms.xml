@@ -51,7 +51,7 @@
 		</field>
 		<field name="primaryProductCategoryId" title="Product Category" widget-style="selectBox">
 			<drop-down allow-empty="true">
-				<entity-options entity-name="ProductCategory" description-format="${description} [${productCategoryId}]"/>
+				<entity-options entity-name="ProductCategory" key-field-name="productCategoryId" description="${description} [${productCategoryId}]"/>
 			</drop-down>
 		</field>
 
