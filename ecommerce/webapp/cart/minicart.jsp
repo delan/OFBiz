@@ -33,7 +33,7 @@
         </td>
         <td valign="top">
           <div><a href="<%=response.encodeURL(controlPath + "/product?product_id=" + miniShoppingCartItem.getProductId())%>" class="buttontext">
-          <%=miniShoppingCartItem.getDescription()%></a></div>
+          <%=miniShoppingCartItem.getName()%></a></div>
         </td>
         <td align="right" valign="top"><div class="tabletext" nowrap>
           <%=UtilFormatOut.formatPrice(miniShoppingCartItem.getTotalPrice())%></div>

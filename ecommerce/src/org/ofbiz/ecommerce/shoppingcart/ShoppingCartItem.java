@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.4  2001/08/29 13:08:49  azeneski
+ * Update the cart line item object.
+ *
  * Revision 1.3  2001/08/28 02:24:34  azeneski
  * Updated shopping cart to use store a reference to the product entity, rather then individual attributes.
  * Worked on the equals() method in ShoppingCartItem.java. Might be fixed now.
@@ -116,6 +119,11 @@ public class ShoppingCartItem implements Serializable {
     /** Returns the item's productId. */
     public String getProductId() {
         return productId;
+    }
+    
+    /** Returns the item's description. */
+    public String getName() {
+        return product.getString("name");
     }
     
     /** Returns the item's description. */
