@@ -105,7 +105,6 @@
   <!-- ========================================================= -->
   <!-- ======================== Data Model ===================== -->
   <!-- The modules in this file are as follows:                  -->
-  <!--  -  -->
   <!--  - org.ofbiz.commonapp.workeffort.definition -->
   <!--  - org.ofbiz.commonapp.workeffort.scheduler -->
   <!--  - org.ofbiz.commonapp.workeffort.timesheet -->
@@ -490,17 +489,17 @@
       <field name="count" type="numeric"></field>
       <field name="interval" type="numeric"></field>
       <field name="frequency" type="short-varchar"></field>
-      <field name="bySecond" type="long-varchar"></field>
-      <field name="byMinute" type="long-varchar"></field>
-      <field name="byHour" type="long-varchar"></field>
-      <field name="byDay" type="long-varchar"></field>
-      <field name="byMonthDay" type="long-varchar"></field>
-      <field name="byYearDay" type="long-varchar"></field>
-      <field name="byWeekNo" type="long-varchar"></field>
-      <field name="byMonth" type="long-varchar"></field>
-      <field name="bySetPos" type="long-varchar"></field>
+      <field name="bySecond" type="very-long"></field>
+      <field name="byMinute" type="very-long"></field>
+      <field name="byHour" type="very-long"></field>
+      <field name="byDay" type="very-long"></field>
+      <field name="byMonthDay" type="very-long"></field>
+      <field name="byYearDay" type="very-long"></field>
+      <field name="byWeekNo" type="very-long"></field>
+      <field name="byMonth" type="very-long"></field>
+      <field name="bySetPos" type="very-long"></field>
       <field name="weekStart" type="short-varchar"></field>
-      <field name="xName" type="comment"></field>	
+      <field name="xName" type="very-long"></field>	
       <prim-key field="recurrenceRuleId" />
     </entity>	
     <entity entity-name="RuntimeData" 
