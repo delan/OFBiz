@@ -52,8 +52,7 @@
 	}
 	List partyTasks = delegator.findByAnd("OrderTaskList", UtilMisc.toMap("statusId", "CAL_ACCEPTED", "orderRoleTypeId", "PLACING_CUSTOMER", "wepaPartyId", userLogin.getString("partyId")), sortOrder);
 	if (partyTasks != null) partyTasks = EntityUtil.filterByDate(partyTasks);
-	if (partyTasks != null) pageContext.setAttribute("partyTasks", partyTasks);
-	Debug.logError("PartyTasks: " + partyTasks);
+	if (partyTasks != null) pageContext.setAttribute("partyTasks", partyTasks);	
 
 	// get this user's roles
 	List partyRoles = delegator.findByAnd("PartyRole", UtilMisc.toMap("partyId", userLogin.getString("partyId")));	
