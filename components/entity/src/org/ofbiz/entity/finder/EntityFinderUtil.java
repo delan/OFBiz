@@ -1,5 +1,5 @@
 /*
- * $Id: ByConditionFinder.java,v 1.4 2004/07/10 17:08:48 jonesde Exp $
+ * $Id: EntityFinderUtil.java,v 1.1 2004/07/15 22:17:34 jonesde Exp $
  *
  *  Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -21,15 +21,18 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package org.ofbiz.entity.util;
+package org.ofbiz.entity.finder;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.GeneralException;
+import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.base.util.collections.FlexibleMapAccessor;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
@@ -42,59 +45,51 @@ import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityJoinOperator;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.model.ModelEntity;
+import org.ofbiz.entity.util.EntityListIterator;
 import org.w3c.dom.Element;
 
 /**
  * Uses the delegator to find entity values by a condition
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.1 $
  * @since      3.1
  */
-public class ByConditionFinder {
+public class EntityFinderUtil {
     
-    public static final String module = ByConditionFinder.class.getName();         
-    FlexibleStringExpander entityNameExdr;
-    FlexibleStringExpander useCacheStrExdr;
-    FlexibleStringExpander filterByDateStrExdr;
-    FlexibleStringExpander distinctStrExdr;
-    FlexibleStringExpander delegatorNameExdr;
-    FlexibleMapAccessor listAcsr;
+    public static final String module = EntityFinderUtil.class.getName();         
     
-    Condition whereCondition;
-    Condition havingCondition;
-    List selectFieldExpanderList;
-    List orderByExpanderList;
-    OutputHandler outputHandler;
-    
+    public static Map makeFieldMap(Element element) {
+        Map fieldMap = null;
+        List fieldMapElementList = UtilXml.childElementList(element, "field-map");
+        if (fieldMapElementList.size() > 0) {
+            fieldMap = new HashMap();
+            Iterator fieldMapElementIter = fieldMapElementList.iterator();
+            while (fieldMapElementIter.hasNext()) {
+                Element fieldMapElement = (Element) fieldMapElementIter.next();
+                // set the env-name for each field-name, noting that if no field-name is specified it defaults to the env-name
+                fieldMap.put(
+                        new FlexibleMapAccessor(UtilFormatOut.checkEmpty(fieldMapElement.getAttribute("field-name"), fieldMapElement.getAttribute("env-name"))), 
+                        new FlexibleMapAccessor(fieldMapElement.getAttribute("env-name")));
+            }
+        }
+        return fieldMap;
+    }
 
-    public ByConditionFinder(Element element) {
-        this.entityNameExdr = new FlexibleStringExpander(element.getAttribute("entity-name"));
-        this.useCacheStrExdr = new FlexibleStringExpander(element.getAttribute("use-cache"));
-        this.filterByDateStrExdr = new FlexibleStringExpander(element.getAttribute("filter-by-date"));
-        this.distinctStrExdr = new FlexibleStringExpander(element.getAttribute("distinct"));
-        this.delegatorNameExdr = new FlexibleStringExpander(element.getAttribute("delegator-name"));
-        this.listAcsr = new FlexibleMapAccessor(element.getAttribute("list-name"));
-        
-        // process condition-expr | condition-list
-        Element conditionExprElement = UtilXml.firstChildElement(element, "condition-expr");
-        Element conditionListElement = UtilXml.firstChildElement(element, "condition-list");
-        if (conditionExprElement != null && conditionListElement != null) {
-            throw new IllegalArgumentException("In entity find by condition element, cannot have condition-expr and condition-list sub-elements");
+    public static void expandFieldMapToContext(Map fieldMap, Map context, Map outContext) {
+        if (fieldMap != null) {
+            Iterator fieldMapEntryIter = fieldMap.entrySet().iterator();
+            while (fieldMapEntryIter.hasNext()) {
+                Map.Entry entry = (Map.Entry) fieldMapEntryIter.next();
+                FlexibleMapAccessor serviceContextFieldAcsr = (FlexibleMapAccessor) entry.getKey();
+                FlexibleMapAccessor contextEnvAcsr = (FlexibleMapAccessor) entry.getValue();
+                serviceContextFieldAcsr.put(outContext, contextEnvAcsr.get(context));
+            }
         }
-        if (conditionExprElement != null) {
-            this.whereCondition = new ConditionExpr(conditionExprElement);
-        } else if (conditionListElement != null) {
-            this.whereCondition = new ConditionList(conditionListElement);
-        }
-        
-        // process having-condition-list
-        Element havingConditionListElement = UtilXml.firstChildElement(element, "having-condition-list");
-        if (havingConditionListElement != null) {
-            this.havingCondition = new ConditionList(havingConditionListElement);
-        }
-
-        // process select-field
+    }
+    
+    public static List makeSelectFieldExpanderList(Element element) {
+        List selectFieldExpanderList = null;
         List selectFieldElementList = UtilXml.childElementList(element, "select-field");
         if (selectFieldElementList.size() > 0) {
             selectFieldExpanderList = new LinkedList();
@@ -104,83 +99,25 @@ public class ByConditionFinder {
                 selectFieldExpanderList.add(new FlexibleStringExpander(selectFieldElement.getAttribute("field-name")));
             }
         }
-        
-        // process order-by
-        List orderByElementList = UtilXml.childElementList(element, "order-by");
-        if (orderByElementList.size() > 0) {
-            orderByExpanderList = new LinkedList();
-            Iterator orderByElementIter = orderByElementList.iterator();
-            while (orderByElementIter.hasNext()) {
-                Element orderByElement = (Element) orderByElementIter.next();
-                orderByExpanderList.add(new FlexibleStringExpander(orderByElement.getAttribute("field-name")));
-            }
-        }
-
-        // process limit-range | limit-view | use-iterator
-        Element limitRangeElement = UtilXml.firstChildElement(element, "limit-range");
-        Element limitViewElement = UtilXml.firstChildElement(element, "limit-view");
-        Element useIteratorElement = UtilXml.firstChildElement(element, "use-iterator");
-        if ((limitRangeElement != null && limitViewElement != null) || (limitRangeElement != null && useIteratorElement != null) || (limitViewElement != null && useIteratorElement != null)) {
-            throw new IllegalArgumentException("In entity find by condition element, cannot have more than one of the following: limit-range, limit-view, and use-iterator");
-        }
-        if (limitRangeElement != null) {
-            outputHandler = new LimitRange(limitRangeElement);
-        } else if (limitViewElement != null) {
-            outputHandler = new LimitView(limitViewElement);
-        } else if (useIteratorElement != null) {
-            outputHandler = new UseIterator(useIteratorElement);
-        }
+        return selectFieldExpanderList;
     }
-
-    public void runFind(Map context, GenericDelegator delegator) throws GeneralException {
-        String entityName = this.entityNameExdr.expandString(context);
-        String useCacheStr = this.useCacheStrExdr.expandString(context);
-        String filterByDateStr = this.filterByDateStrExdr.expandString(context);
-        String distinctStr = this.distinctStrExdr.expandString(context);
-        String delegatorName = this.delegatorNameExdr.expandString(context);
-        
-        boolean useCache = "true".equals(useCacheStr);
-        boolean filterByDate = "true".equals(filterByDateStr);
-        boolean distinct = "true".equals(distinctStr);
-        
-        if (delegatorName != null && delegatorName.length() > 0) {
-            delegator = GenericDelegator.getGenericDelegator(delegatorName);
-        }
-
-        // create whereEntityCondition from whereCondition
-        EntityCondition whereEntityCondition = this.whereCondition.createCondition(context, entityName, delegator);
-
-        // create havingEntityCondition from havingCondition
-        EntityCondition havingEntityCondition = this.havingCondition.createCondition(context, entityName, delegator);
-
-        if (useCache == true) {
-            // if useCache == true && outputHandler instanceof UseIterator, throw exception; not a valid combination
-            if (outputHandler instanceof UseIterator) {
-                throw new IllegalArgumentException("In find entity by condition cannot have use-cache set to true and select use-iterator for the output type.");
-            }
-            if (distinct) {
-                throw new IllegalArgumentException("In find entity by condition cannot have use-cache set to true and set distinct to true.");
-            }
-            if (havingEntityCondition != null) {
-                throw new IllegalArgumentException("In find entity by condition cannot have use-cache set to true and specify a having-condition-list (can only use a where condition with condition-expr or condition-list).");
-            }
-        }
-        
-        // get the list of fieldsToSelect from selectFieldExpanderList
-        List fieldsToSelect = null;
-        if (this.selectFieldExpanderList != null && this.selectFieldExpanderList.size() > 0) {
-            fieldsToSelect = new LinkedList();
+    
+    public static Set makeFieldsToSelect(List selectFieldExpanderList, Map context) {
+        Set fieldsToSelect = null;
+        if (selectFieldExpanderList != null && selectFieldExpanderList.size() > 0) {
+            fieldsToSelect = new HashSet();
             Iterator selectFieldExpanderIter = selectFieldExpanderList.iterator();
             while (selectFieldExpanderIter.hasNext()) {
                 FlexibleStringExpander selectFieldExpander = (FlexibleStringExpander) selectFieldExpanderIter.next();
                 fieldsToSelect.add(selectFieldExpander.expandString(context));
             }
         }
-        
-        
-        // get the list of orderByFields from orderByExpanderList
+        return fieldsToSelect;
+    }
+    
+    public static List makeOrderByFieldList(List orderByExpanderList, Map context) {
         List orderByFields = null;
-        if (this.orderByExpanderList != null && this.orderByExpanderList.size() > 0) {
+        if (orderByExpanderList != null && orderByExpanderList.size() > 0) {
             orderByFields = new LinkedList();
             Iterator orderByExpanderIter = orderByExpanderList.iterator();
             while (orderByExpanderIter.hasNext()) {
@@ -188,27 +125,7 @@ public class ByConditionFinder {
                 orderByFields.add(orderByExpander.expandString(context));
             }
         }
-        
-        try {
-            // TODO: if filterByDate, do a date filter on the results based on the now-timestamp
-            if (filterByDate) {
-                throw new IllegalArgumentException("The filer-by-date feature is not yet implemented");
-            }
-            
-            if (useCache) {
-                List results = delegator.findByConditionCache(entityName, whereEntityCondition, fieldsToSelect, orderByFields);
-                this.outputHandler.handleOutput(results, context, listAcsr);
-            } else {
-                EntityFindOptions options = new EntityFindOptions();
-                options.setDistinct(distinct);
-                EntityListIterator eli = delegator.findListIteratorByCondition(entityName, whereEntityCondition, havingEntityCondition, fieldsToSelect, orderByFields, options);
-                this.outputHandler.handleOutput(eli, context, listAcsr);
-            }
-        } catch (GenericEntityException e) {
-            String errMsg = "Error doing find by condition: " + e.toString();
-            Debug.logError(e, module);
-            throw new GeneralException(errMsg, e);
-        }
+        return orderByFields;
     }
     
     public static interface Condition {
