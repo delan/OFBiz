@@ -12,26 +12,13 @@
 <td width="1"><img height=72 src="openforbusiness2.jpg"></td>
 </tr></table>
 
-<SCRIPT language='JavaScript'>  
-var numTabs=5;
-function ShowTab(lname) 
-{
-  for(inc=1; inc <= numTabs; inc++)
-  {
-    document.all['tab' + inc].className = (lname == 'tab' + inc) ? 'ontab' : 'offtab';
-    document.all['lnk' + inc].className = (lname == 'tab' + inc) ? 'onlnk' : 'offlnk';
-    document.all['area' + inc].style.visibility = (lname == 'tab' + inc) ? 'visible' : 'hidden';
-  }
-}
-</SCRIPT>
-
 <table cellpadding='0' cellspacing='0'><tr>
-  <td id=tab1 class=ontab>
-    <a href='index.html' id=lnk1 class=onlnk>Resources</a>
+  <td id=tab1 class=offtab>
+    <a href='index.html' id=lnk1 class=offlnk>Resources</a>
   </td>    
 
-  <td id=tab2 class=offtab>
-    <a href='introduction.html' id=lnk2 class=offlnk>Introduction</a>
+  <td id=tab2 class=ontab>
+    <a href='introduction.html' id=lnk2 class=onlnk>Introduction</a>
   </td>    
 
   <td id=tab3 class=offtab>
@@ -47,17 +34,20 @@ function ShowTab(lname)
   </td>
 </tr></table>
 
-<div class=areaheader><b>Resources for The Open For Business Project</b></div>
+<div class=areaheader><b>Introduction to The Open For Business Project</b></div>
+
 <br>Project on Source Forge: <a href="http://sourceforge.net/projects/ofbiz/">The Open For Business Project (ofbiz)</a>
 <br><A href="http://sf.net/projects/ofbiz"> <IMG src="http://sourceforge.net/sflogo.php?group_id=27173" width="88" height="31" border="0" alt="SourceForge Logo"></A>
-<br>Site Mirror on Source Forge: <a href="http://ofbiz.sourceforge.net/">The Open For Business Site (ofbiz.sourceforge.net)</a>
-<br>
 
-<p><b><u>Downloads</u></b></p>
- <ul>
-  <li><a href="releasenotes.html">Release Notes</a></li>
-  <li><a href="http://sourceforge.net/project/showfiles.php?group_id=27173">Download Files</a></li>
- </ul>
+<p>The Open For Business Project is an open source project that provides tools
+for businesses based on Sun's J2EE standard.  The project is intended to be open
+and used by a large group of people.  Because of that it is licensed using the
+<a href="ofbizmitlicense.html">MIT Open Source License.</a></p>
+<p>You may be asking yourself why is this project open source, and how the
+contributors to the project are going to make any money?  The answer is here in the
+<a href="whyopensource.html">Why Open Source?</a> document.</p>
+
+
  </BODY>
 
 </HTML>
