@@ -160,6 +160,7 @@
         <attribute name="organizationPartyId" type="String" mode="IN" optional="true"/>
         <attribute name="periodTypeId" type="String" mode="IN" optional="false"/>
         <attribute name="periodNum" type="Long" mode="IN" optional="true"/>
+        <attribute name="periodName" type="String" mode="IN" optional="true"/>
         <attribute name="fromDate" type="java.sql.Date" mode="IN" optional="true"/>
         <attribute name="thruDate" type="java.sql.Date" mode="IN" optional="true"/>
     </service>

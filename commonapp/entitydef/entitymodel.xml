@@ -281,6 +281,7 @@
       <field name="organizationPartyId" type="id"></field>
       <field name="periodTypeId" type="id"></field>
       <field name="periodNum" type="numeric"></field>
+      <field name="periodName" type="name"></field>
       <field name="fromDate" type="date"></field>
       <field name="thruDate" type="date"></field>
       <prim-key field="customTimePeriodId"/>

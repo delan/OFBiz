@@ -93,7 +93,8 @@
     <TD><div class='tabletext'>Parent&nbsp;ID</div></TD>
     <TD><div class='tabletext'>Org&nbsp;Party&nbsp;ID</div></TD>
     <TD><div class='tabletext'>Period&nbsp;Type</div></TD>
-    <TD><div class='tabletext'>Period&nbsp;Number</div></TD>
+    <TD><div class='tabletext'>#</div></TD>
+    <TD><div class='tabletext'>Name</div></TD>
     <TD><div class='tabletext'>From&nbsp;Date</div></TD>
     <TD><div class='tabletext'>Thru&nbsp;Date</div></TD>
     <TD><div class='tabletext'>&nbsp;</div></TD>
@@ -103,7 +104,7 @@
     <FORM method=POST action='<ofbiz:url>/updateCustomTimePeriod</ofbiz:url>' name='updateCustomTimePeriodForm'>
       <input type="hidden" name="findOrganizationPartyId" value="<%=UtilFormatOut.checkNull(findOrganizationPartyId)%>">
       <input type="hidden" name="currentCustomTimePeriodId" value="<%=UtilFormatOut.checkNull(currentCustomTimePeriodId)%>">
-    <td><div class='tabletext'><ofbiz:inputvalue entityAttr="customTimePeriod" field="customTimePeriodId"/></div></td>
+    <td><div class='tabletext'><ofbiz:inputvalue entityAttr="currentCustomTimePeriod" field="customTimePeriodId"/></div></td>
     <td>
         <select name="parentPeriodId" style='font-size: x-small;'>
             <option value=''>&nbsp;</option>
@@ -128,6 +129,7 @@
         </select>
     </td>
     <td><input type=text size='4' <ofbiz:inputvalue entityAttr="currentCustomTimePeriod" field="periodNum" fullattrs="true"/> style='font-size: x-small;'></td>
+    <td><input type=text size='10' <ofbiz:inputvalue entityAttr="currentCustomTimePeriod" field="periodName" fullattrs="true"/> style='font-size: x-small;'></td>
     <td>
         <%boolean hasntStarted = false;%>
         <%if (currentCustomTimePeriod.getDate("fromDate") != null && UtilDateTime.nowDate().before(currentCustomTimePeriod.getDate("fromDate"))) { hasntStarted = true; }%>
@@ -158,7 +160,8 @@
     <TD><div class='tabletext'>Parent&nbsp;ID</div></TD>
     <TD><div class='tabletext'>Org&nbsp;Party&nbsp;ID</div></TD>
     <TD><div class='tabletext'>Period&nbsp;Type</div></TD>
-    <TD><div class='tabletext'>PNum</div></TD>
+    <TD><div class='tabletext'>#</div></TD>
+    <TD><div class='tabletext'>Name</div></TD>
     <TD><div class='tabletext'>From&nbsp;Date</div></TD>
     <TD><div class='tabletext'>Thru&nbsp;Date</div></TD>
     <TD><div class='tabletext'>&nbsp;</div></TD>
@@ -196,6 +199,7 @@
         </select>
     </td>
     <td><input type=text size='4' <ofbiz:inputvalue entityAttr="customTimePeriod" field="periodNum" fullattrs="true"/> style='font-size: x-small;'></td>
+    <td><input type=text size='10' <ofbiz:inputvalue entityAttr="customTimePeriod" field="periodName" fullattrs="true"/> style='font-size: x-small;'></td>
     <td>
         <%boolean hasntStarted = false;%>
         <%if (customTimePeriod.getDate("fromDate") != null && UtilDateTime.nowDate().before(customTimePeriod.getDate("fromDate"))) { hasntStarted = true; }%>
@@ -247,6 +251,7 @@
             </ofbiz:iterator>
         </select>
         Period&nbsp;Number:&nbsp;<input type=text size='4' name='periodNum' style='font-size: x-small;'>
+        Period&nbsp;Name:&nbsp;<input type=text size='10' name='periodName' style='font-size: x-small;'>
     </div>
     <div class='tabletext'>
         From&nbsp;Date:&nbsp;<input type=text size='14' name='fromDate' style='font-size: x-small;'>
