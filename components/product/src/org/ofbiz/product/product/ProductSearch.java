@@ -1,5 +1,5 @@
 /*
- * $Id: ProductSearch.java,v 1.26 2004/02/07 09:39:14 jonesde Exp $
+ * $Id: ProductSearch.java,v 1.27 2004/02/10 03:41:08 jonesde Exp $
  *
  *  Copyright (c) 2001 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -59,7 +59,7 @@ import org.ofbiz.entity.util.EntityUtil;
  *  Utilities for product search based on various constraints including categories, features and keywords.
  *
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.26 $
+ * @version    $Revision: 1.27 $
  * @since      3.0
  */
 public class ProductSearch {
@@ -264,7 +264,7 @@ public class ProductSearch {
                     relevancyComplexAlias.addComplexAliasMember(new ComplexAliasField(entityAlias, "relevancyWeight"));
                 }
 
-                productIdGroupBy = true;
+                //TODO: find out why Oracle and other dbs don't like the query resulting from this and fix: productIdGroupBy = true;
 
                 if (!doingBothAndOr) {
                     dynamicViewEntity.addAlias(null, "totalRelevancy", null, null, null, null, null, relevancyComplexAlias);
@@ -332,6 +332,10 @@ public class ProductSearch {
 
         public ArrayList makeProductIdList(EntityListIterator eli) {
             ArrayList productIds = new ArrayList(maxResults == null ? 100 : maxResults.intValue());
+            if (eli == null) {
+                Debug.logWarning("The eli is null, returning zero results", module);
+                return productIds;
+            }
 
             try {
                 boolean hasResults = false;
