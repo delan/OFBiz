@@ -25,7 +25,7 @@
  * @author     Johan Isacsson
  * @author     David E. Jones
  * @author     Olivier.Heintz@nereide.biz 
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.2
 -->
 
@@ -176,9 +176,8 @@
             </check-permission>
         </if-compare-field>
         <check-errors/>
-            	
+
     	<make-value entity-name="PartyContactMech" value-name="newPartyContactMech"/>
-        <log level="info" message="Creating postal address"/>
         <call-map-processor xml-resource="org/ofbiz/party/contact/ContactMechMapProcs.xml"
                 processor-name="postalAddress" in-map-name="parameters" out-map-name="context"/>
         <check-errors/>
@@ -186,12 +185,12 @@
             <default-message>Postal Address successfully created</default-message>
             <result-to-field result-name="contactMechId" map-name="newPartyContactMech"/>
         </call-service>
-        <log level="info" message="ContactMech for postal address was ${newPartyContactMech.contactMechId}, now creating party contact mech"/>
+
         <call-map-processor xml-resource="org/ofbiz/party/contact/PartyContactMechMapProcs.xml"
                 processor-name="partyContactMech" in-map-name="parameters" out-map-name="context2"/>
         <check-errors/>
         <field-to-field field-name="contactMechId" map-name="newPartyContactMech" to-map-name="context2"/>
-        <log level="info" message="Copied id to context2: ${context2.contactMechId}"/>
+        
         <call-service in-map-name="context2" break-on-error="true" service-name="createPartyContactMech">
             <default-message>Party Contact Mechanism successfully created</default-message>
         </call-service>
