@@ -14,7 +14,7 @@ Next copy the files from the
 ofbiz/setup/jboss directories into their respective directories in the jboss
 directory.
 
-Make sure the entityengine.properties file in catalina/classes is configured
+Make sure the entityengine.xml file in catalina/classes is configured
 as you want it, that is where this configuration will look for it. Make sure
 it is getting the JTA UserTransaction object and the JDBC connection from JNDI.
 
