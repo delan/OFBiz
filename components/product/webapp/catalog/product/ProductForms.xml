@@ -462,6 +462,7 @@
             <hyperlink target="/partymgr/control/viewprofile?partyId=${partyId}" target-type="inter-app" description="${partyId}" also-hidden="false"/>
         </field>
         <field name="supplierProductId" service-name="updateSupplierProduct"><display/></field>
+        <field name="currencyUomId" service-name="updateSupplierProduct"><display/></field>
         <field name="lastPrice" service-name="updateSupplierProduct"><display/></field>
 
         <field name="updateLink" title="&amp;nbsp;" widget-style="buttontext">
