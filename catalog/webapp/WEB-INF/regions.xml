@@ -111,6 +111,10 @@
         <put section='title'>Edit Category Page</put>
         <put section='content' content='/category/EditCategory.jsp'/>
     </define>
+    <define id='EditCategoryRollup' region='LEFT_ONLY_REGION'>
+        <put section='title'>Edit Category Rollups Page</put>
+        <put section='content' content='/category/EditCategoryRollup.jsp'/>
+    </define>
     <define id='EditCategoryProducts' region='LEFT_ONLY_REGION'>
         <put section='title'>Edit Category Products Page</put>
         <put section='content' content='/category/EditCategoryProducts.jsp'/>

@@ -55,7 +55,7 @@
 
         if (request.getAttribute(SiteDefs.ERROR_MESSAGE) != null) useValues = false;
 
-        String productCategoryId = request.getParameter("PRODUCT_CATEGORY_ID");
+        String productCategoryId = request.getParameter("productCategoryId");
         GenericValue productCategory = delegator.findByPrimaryKey("ProductCategory", UtilMisc.toMap("productCategoryId", productCategoryId));
         if (productCategory == null) useValues = false;
 
@@ -83,9 +83,10 @@
 
 <a href="<ofbiz:url>/EditCategory</ofbiz:url>" class="buttontext">[New Category]</a>
 <%if(productCategoryId != null && productCategoryId.length() > 0) {%>
-  <a href="/ecommerce/control/category?category_id=<%=productCategoryId%>" class="buttontext" target='_blank'>[View Category Page]</a>
-  <a href="<ofbiz:url>/EditCategory?PRODUCT_CATEGORY_ID=<%=productCategoryId%></ofbiz:url>" class="buttontext">[Category]</a>
-  <a href="<ofbiz:url>/EditCategoryProducts?PRODUCT_CATEGORY_ID=<%=productCategoryId%></ofbiz:url>" class="buttontextdisabled">[Category Products]</a>
+  <a href="/ecommerce/control/category?category_id=<%=productCategoryId%>" class="buttontext" target='_blank'>[Category Page]</a>
+  <a href="<ofbiz:url>/EditCategory?productCategoryId=<%=productCategoryId%></ofbiz:url>" class="buttontext">[Category]</a>
+  <a href="<ofbiz:url>/EditCategoryRollup?showProductCategoryId=<%=productCategoryId%></ofbiz:url>" class="buttontext">[Rollup]</a>
+  <a href="<ofbiz:url>/EditCategoryProducts?productCategoryId=<%=productCategoryId%></ofbiz:url>" class="buttontextdisabled">[Products]</a>
 <%}%>
 
 <div class="head1">Edit Category Members for Category
@@ -104,13 +105,13 @@
       <td align=right>
         <b>
         <%if(viewIndex > 0){%>
-          <a href="<ofbiz:url><%="/EditCategoryProducts?PRODUCT_CATEGORY_ID=" + productCategoryId + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex-1)%></ofbiz:url>" class="buttontext">[Previous]</a> |
+          <a href="<ofbiz:url><%="/EditCategoryProducts?productCategoryId=" + productCategoryId + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex-1)%></ofbiz:url>" class="buttontext">[Previous]</a> |
         <%}%>
         <%if(listSize > 0){%>
           <%=lowIndex+1%> - <%=highIndex%> of <%=listSize%>
         <%}%>
         <%if(listSize > highIndex){%>
-          | <a href="<ofbiz:url><%="/EditCategoryProducts?PRODUCT_CATEGORY_ID=" + productCategoryId + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex+1)%></ofbiz:url>" class="buttontext">[Next]</a>
+          | <a href="<ofbiz:url><%="/EditCategoryProducts?productCategoryId=" + productCategoryId + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex+1)%></ofbiz:url>" class="buttontext">[Next]</a>
         <%}%>
         </b>
       </td>
@@ -129,22 +130,22 @@
 <ofbiz:iterator name="productCategoryMember" property="productCategoryMembers" offset="<%=lowIndex%>" limit="<%=viewSize%>">
   <%GenericValue product = productCategoryMember.getRelatedOne("Product");%>
   <tr valign="middle">
-    <td><a href='<ofbiz:url>/EditProduct?PRODUCT_ID=<ofbiz:entityfield attribute="productCategoryMember" field="productId"/></ofbiz:url>' class="buttontext"><ofbiz:entityfield attribute="productCategoryMember" field="productId"/></a></td>
-    <td><%if (product!=null) {%><a href='<ofbiz:url>/EditProduct?PRODUCT_ID=<ofbiz:entityfield attribute="productCategoryMember" field="productId"/></ofbiz:url>' class="buttontext"><%=product.getString("productName")%></a><%}%>&nbsp;</td>
-    <td><div class='tabletext'><ofbiz:entityfield attribute="productCategoryMember" field="fromDate"/></div></td>
+    <td><a href='<ofbiz:url>/EditProduct?PRODUCT_ID=<ofbiz:inputvalue entityAttr="productCategoryMember" field="productId"/></ofbiz:url>' class="buttontext"><ofbiz:inputvalue entityAttr="productCategoryMember" field="productId"/></a></td>
+    <td><%if (product!=null) {%><a href='<ofbiz:url>/EditProduct?PRODUCT_ID=<ofbiz:inputvalue entityAttr="productCategoryMember" field="productId"/></ofbiz:url>' class="buttontext"><%=product.getString("productName")%></a><%}%>&nbsp;</td>
+    <td><div class='tabletext'><ofbiz:inputvalue entityAttr="productCategoryMember" field="fromDate"/></div></td>
     <td align="center">
-        <FORM method=POST action='<ofbiz:url>/UpdateCategoryProductMember?UPDATE_MODE=UPDATE&VIEW_SIZE=<%=viewSize%>&VIEW_INDEX=<%=viewIndex%></ofbiz:url>'>
-            <input type=hidden name='PRODUCT_ID' value='<ofbiz:entityfield attribute="productCategoryMember" field="productId"/>'>
-            <input type=hidden name='PRODUCT_CATEGORY_ID' value='<ofbiz:entityfield attribute="productCategoryMember" field="productCategoryId"/>'>
-            <input type=hidden name='FROM_DATE' value='<ofbiz:inputvalue entityAttr="productCategoryMember" field="fromDate"/>'>
-            <input type=text size='20' name='THRU_DATE' value='<ofbiz:inputvalue entityAttr="productCategoryMember" field="thruDate"/>'>
-            <input type=text size='5' name='SEQUENCE_NUM' value='<ofbiz:inputvalue entityAttr="productCategoryMember" field="sequenceNum"/>'>
-            <input type=text size='5' name='QUANTITY' value='<ofbiz:inputvalue entityAttr="productCategoryMember" field="quantity"/>'>
+        <FORM method=POST action='<ofbiz:url>/updateCategoryProductMember?VIEW_SIZE=<%=viewSize%>&VIEW_INDEX=<%=viewIndex%></ofbiz:url>'>
+            <input type=hidden <ofbiz:inputvalue entityAttr="productCategoryMember" field="productId" fullattrs="true"/>>
+            <input type=hidden <ofbiz:inputvalue entityAttr="productCategoryMember" field="productCategoryId" fullattrs="true"/>>
+            <input type=hidden <ofbiz:inputvalue entityAttr="productCategoryMember" field="fromDate" fullattrs="true"/>>
+            <input type=text size='20' <ofbiz:inputvalue entityAttr="productCategoryMember" field="thruDate" fullattrs="true"/>>
+            <input type=text size='5' <ofbiz:inputvalue entityAttr="productCategoryMember" field="sequenceNum" fullattrs="true"/>>
+            <input type=text size='5' <ofbiz:inputvalue entityAttr="productCategoryMember" field="quantity" fullattrs="true"/>>
             <INPUT type=submit value='Update'>
         </FORM>
     </td>
     <td align="center">
-      <a href='<ofbiz:url>/UpdateCategoryProductMember?VIEW_SIZE=<%=viewSize%>&VIEW_INDEX=<%=viewIndex%>&UPDATE_MODE=DELETE&PRODUCT_ID=<ofbiz:entityfield attribute="productCategoryMember" field="productId"/>&PRODUCT_CATEGORY_ID=<ofbiz:entityfield attribute="productCategoryMember" field="productCategoryId"/>&FROM_DATE=<%=UtilFormatOut.encodeQueryValue(productCategoryMember.getTimestamp("fromDate").toString())%></ofbiz:url>' class="buttontext">
+      <a href='<ofbiz:url>/removeCategoryProductMember?VIEW_SIZE=<%=viewSize%>&VIEW_INDEX=<%=viewIndex%>&productId=<ofbiz:entityfield attribute="productCategoryMember" field="productId"/>&productCategoryId=<ofbiz:entityfield attribute="productCategoryMember" field="productCategoryId"/>&fromDate=<%=UtilFormatOut.encodeQueryValue(productCategoryMember.getTimestamp("fromDate").toString())%></ofbiz:url>' class="buttontext">
       [Delete]</a>
     </td>
   </tr>
@@ -157,13 +158,13 @@
       <td align=right>
         <b>
         <%if(viewIndex > 0){%>
-          <a href="<ofbiz:url><%="/EditCategoryProducts?PRODUCT_CATEGORY_ID=" + productCategoryId + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex-1)%></ofbiz:url>" class="buttontext">[Previous]</a> |
+          <a href="<ofbiz:url><%="/EditCategoryProducts?productCategoryId=" + productCategoryId + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex-1)%></ofbiz:url>" class="buttontext">[Previous]</a> |
         <%}%>
         <%if(listSize > 0){%>
           <%=lowIndex+1%> - <%=highIndex%> of <%=listSize%>
         <%}%>
         <%if(listSize > highIndex){%>
-          | <a href="<ofbiz:url><%="/EditCategoryProducts?PRODUCT_CATEGORY_ID=" + productCategoryId + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex+1)%></ofbiz:url>" class="buttontext">[Next]</a>
+          | <a href="<ofbiz:url><%="/EditCategoryProducts?productCategoryId=" + productCategoryId + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex+1)%></ofbiz:url>" class="buttontext">[Next]</a>
         <%}%>
         </b>
       </td>

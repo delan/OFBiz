@@ -11,7 +11,7 @@
 <%String currentTopCategoryId = CategoryWorker.getCatalogTopCategory(pageContext, defaultTopCategoryId);%>
 <%CategoryWorker.getRelatedCategories(pageContext, "topLevelList", currentTopCategoryId, false);%>
 <%GenericValue currentTopCategory = delegator.findByPrimaryKeyCache("ProductCategory", UtilMisc.toMap("productCategoryId", currentTopCategoryId));%>
-<%String curCategoryId = UtilFormatOut.checkNull(request.getParameter("PRODUCT_CATEGORY_ID"));%>
+<%String curCategoryId = UtilFormatOut.checkNull(request.getParameter("productCategoryId"));%>
 <%CategoryWorker.setTrail(pageContext, curCategoryId);%>
 <BR>
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
@@ -37,7 +37,7 @@
               <%if(curCategoryId != null && curCategoryId.equals(currentTopCategory.getString("productCategoryId"))) {%>
                 <div class='tabletext' style='text-indent: -10px;'><b>-&nbsp;<%=currentTopCategory.getString("description")%> [<%=currentTopCategory.getString("productCategoryId")%>]</b></div>
               <%}else{%>
-                <div style='text-indent: -10px;'><a href="<ofbiz:url>/EditCategory?PRODUCT_CATEGORY_ID=<%=currentTopCategory.getString("productCategoryId")%></ofbiz:url>" class='buttontext'>-&nbsp;<%=currentTopCategory.getString("description")%>  [<%=currentTopCategory.getString("productCategoryId")%>]</a></div>
+                <div style='text-indent: -10px;'><a href="<ofbiz:url>/EditCategory?productCategoryId=<%=currentTopCategory.getString("productCategoryId")%></ofbiz:url>" class='buttontext'>-&nbsp;<%=currentTopCategory.getString("description")%>  [<%=currentTopCategory.getString("productCategoryId")%>]</a></div>
               <%}%>
             <%}%>
               <div style='margin-left: 10px;'>
@@ -70,7 +70,7 @@ public static void printSubCategories(GenericValue pcategory, GenericValue categ
         if (pcategory != null) pstr = "&pcategory=" + pcategory.getString("productCategoryId");
         out.print("<div style='text-indent: -10px;'><a href='");
         HttpServletResponse response = (HttpServletResponse) pageContext.getResponse();
-        out.print(response.encodeURL(controlPath + "/EditCategory?PRODUCT_CATEGORY_ID=" + category.getString("productCategoryId") + pstr));
+        out.print(response.encodeURL(controlPath + "/EditCategory?productCategoryId=" + category.getString("productCategoryId") + pstr));
         out.print("' class='buttontext'>-&nbsp;");
         out.print(category.getString("description"));
         out.print(" [");

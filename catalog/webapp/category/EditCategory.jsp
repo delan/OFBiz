@@ -38,56 +38,70 @@
 <table cellpadding=0 cellspacing=0 border=0 width="100%"><tr><td>&nbsp;&nbsp;</td><td>
 <%if(security.hasEntityPermission("CATALOG", "_VIEW", request.getSession())) {%>
 <%
-  boolean useValues = true;
-  if(request.getAttribute(SiteDefs.ERROR_MESSAGE) != null) useValues = false;
+    boolean useValues = true;
+    if(request.getAttribute(SiteDefs.ERROR_MESSAGE) != null) useValues = false;
 
-  String productCategoryId = request.getParameter("PRODUCT_CATEGORY_ID");
-  GenericValue category = delegator.findByPrimaryKey("ProductCategory", UtilMisc.toMap("productCategoryId", productCategoryId));
-  if(category == null) useValues = false;
+    String productCategoryId = request.getParameter("productCategoryId");
+    GenericValue productCategory = delegator.findByPrimaryKey("ProductCategory", UtilMisc.toMap("productCategoryId", productCategoryId));
+    GenericValue productCategoryType = null;
+    if(productCategory == null) {
+        useValues = false;
+    } else {
+        pageContext.setAttribute("productCategory", productCategory);
+        productCategoryType = productCategory.getRelatedOne("ProductCategoryType");
+        if (productCategoryType != null) pageContext.setAttribute("productCategoryType", productCategoryType);
+    }
 
-  Collection categoryCol = delegator.findAll("ProductCategory", null);
+    Collection categoryCol = delegator.findAll("ProductCategory", null);
 
-  GenericValue primaryParentCategory = null;
-  String primParentCatIdParam = request.getParameter("PRIMARY_PARENT_CATEGORY_ID");
-  if(category != null && useValues) 
-    primaryParentCategory = category.getRelatedOne("PrimaryParentProductCategory");
-  else if(primParentCatIdParam != null && primParentCatIdParam.length() > 0)
-    primaryParentCategory = delegator.findByPrimaryKey("ProductCategory", UtilMisc.toMap("productCategoryId", primParentCatIdParam));
+    GenericValue primaryParentCategory = null;
+    String primParentCatIdParam = request.getParameter("primaryParentProductCategoryId");
+    if(productCategory != null && useValues)  {
+        primaryParentCategory = productCategory.getRelatedOne("PrimaryParentProductCategory");
+    } else if(primParentCatIdParam != null && primParentCatIdParam.length() > 0) {
+        primaryParentCategory = delegator.findByPrimaryKey("ProductCategory", UtilMisc.toMap("productCategoryId", primParentCatIdParam));
+    }
+
+    //ProductCategoryTypes
+    Collection productCategoryTypes = delegator.findAll("ProductCategoryType");
+    if (productCategoryTypes != null) pageContext.setAttribute("productCategoryTypes", productCategoryTypes);
 %>
 <br>
 <a href="<ofbiz:url>/EditCategory</ofbiz:url>" class="buttontext">[New Category]</a>
 <%if(productCategoryId != null && productCategoryId.length() > 0) {%>
-  <a href="/ecommerce/control/category?category_id=<%=productCategoryId%>" class="buttontext" target='_blank'>[View Category Page]</a>
-  <a href="<ofbiz:url>/EditCategory?PRODUCT_CATEGORY_ID=<%=productCategoryId%></ofbiz:url>" class="buttontextdisabled">[Category]</a>
-  <a href="<ofbiz:url>/EditCategoryProducts?PRODUCT_CATEGORY_ID=<%=productCategoryId%></ofbiz:url>" class="buttontext">[Category Products]</a>
+  <a href="/ecommerce/control/category?category_id=<%=productCategoryId%>" class="buttontext" target='_blank'>[Category Page]</a>
+  <a href="<ofbiz:url>/EditCategory?productCategoryId=<%=productCategoryId%></ofbiz:url>" class="buttontextdisabled">[Category]</a>
+  <a href="<ofbiz:url>/EditCategoryRollup?showProductCategoryId=<%=productCategoryId%></ofbiz:url>" class="buttontext">[Rollup]</a>
+  <a href="<ofbiz:url>/EditCategoryProducts?productCategoryId=<%=productCategoryId%></ofbiz:url>" class="buttontext">[Products]</a>
 <%}%>
 <div class="head1">Edit Product Category with ID "<%=UtilFormatOut.checkNull(productCategoryId)%>"</div>
-<form action="<ofbiz:url>/UpdateCategory</ofbiz:url>" method=POST style='margin: 0;'>
-<table border='0' cellpadding='2' cellspacing='0'>
-<%if(category == null){%>
+<%if(productCategory == null){%>
   <%if(productCategoryId != null){%>
     <h3>Could not find Product Category with ID "<%=UtilFormatOut.checkNull(productCategoryId)%>".</h3>
-    <input type=hidden name="UPDATE_MODE" value="CREATE">
+    <form action="<ofbiz:url>/createProductCategory</ofbiz:url>" method=POST style='margin: 0;'>
+    <table border='0' cellpadding='2' cellspacing='0'>
     <tr>
       <td align=right><div class="tabletext">Product Category ID</div></td>
       <td>&nbsp;</td>
       <td>
-        <input type="text" name="PRODUCT_CATEGORY_ID" size="20" maxlength="40" value="<%=productCategoryId%>">
+        <input type="text" name="productCategoryId" size="20" maxlength="40" value="<%=productCategoryId%>">
       </td>
     </tr>
   <%}else{%>
-    <input type=hidden name="UPDATE_MODE" value="CREATE">
+    <form action="<ofbiz:url>/createProductCategory</ofbiz:url>" method=POST style='margin: 0;'>
+    <table border='0' cellpadding='2' cellspacing='0'>
     <tr>
       <td align=right><div class="tabletext">Product Category ID</div></td>
       <td>&nbsp;</td>
       <td>
-        <input type="text" name="PRODUCT_CATEGORY_ID" size="20" maxlength="40" value="">
+        <input type="text" name="productCategoryId" size="20" maxlength="40" value="">
       </td>
     </tr>
   <%}%>
 <%}else{%>
-  <input type=hidden name="UPDATE_MODE" value="UPDATE">
-  <input type=hidden name="PRODUCT_CATEGORY_ID" value="<%=productCategoryId%>">
+  <form action="<ofbiz:url>/updateProductCategory</ofbiz:url>" method=POST style='margin: 0;'>
+  <table border='0' cellpadding='2' cellspacing='0'>
+  <input type=hidden name="productCategoryId" value="<%=productCategoryId%>">
   <tr>
     <td align=right><div class="tabletext">Product Category ID</div></td>
     <td>&nbsp;</td>
@@ -97,26 +111,40 @@
   </tr>
 <%}%>
 
+      <tr>
+        <td width="26%" align=right><div class="tabletext">ProductCategory Type</div></td>
+        <td>&nbsp;</td>
+        <td width="74%">
+          <select name="productCategoryTypeId" size=1>
+            <option selected value='<ofbiz:inputvalue entityAttr="productCategory" field="productCategoryTypeId"/>'><ofbiz:inputvalue entityAttr="productCategoryType" field="description"/> <ofbiz:entityfield attribute="productCategory" field="productCategoryTypeId" prefix="[" suffix="]"/></option>
+            <option value='<ofbiz:inputvalue entityAttr="productCategory" field="productCategoryTypeId"/>'>----</option>
+            <ofbiz:iterator name="nextProductCategoryType" property="productCategoryTypes">
+              <option value='<ofbiz:inputvalue entityAttr="nextProductCategoryType" field="productCategoryTypeId"/>'><ofbiz:inputvalue entityAttr="nextProductCategoryType" field="description"/> <ofbiz:entityfield attribute="nextProductCategoryType" field="productCategoryTypeId" prefix="[" suffix="]"/></option>
+            </ofbiz:iterator>
+          </select>
+        </td>
+      </tr>
+
   <%String fieldName; String paramName;%>
   <tr>
-    <%fieldName = "description";%><%paramName = "DESCRIPTION";%>    
+    <%fieldName = "description";%><%paramName = "description";%>    
     <td width="26%" align=right><div class="tabletext">Description</div></td>
     <td>&nbsp;</td>
-    <td width="74%"><input type="text" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(useValues?category.getString(fieldName):request.getParameter(paramName))%>" size="60" maxlength="60"></td>
+    <td width="74%"><input type="text" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(useValues?productCategory.getString(fieldName):request.getParameter(paramName))%>" size="60" maxlength="60"></td>
   </tr>
   <tr>
-    <%fieldName = "longDescription";%><%paramName = "LONG_DESCRIPTION";%>    
+    <%fieldName = "longDescription";%><%paramName = "longDescription";%>    
     <td width="26%" align=right valign=top><div class="tabletext">Long Description</div></td>
     <td>&nbsp;</td>
-    <td width="74%"><textarea cols="60" rows="3" name="<%=paramName%>" maxlength="2000"><%=UtilFormatOut.checkNull(useValues?category.getString(fieldName):request.getParameter(paramName))%></textarea></td>
+    <td width="74%"><textarea cols="60" rows="3" name="<%=paramName%>" maxlength="2000"><%=UtilFormatOut.checkNull(useValues?productCategory.getString(fieldName):request.getParameter(paramName))%></textarea></td>
   </tr>
   <tr>
-    <%fieldName = "categoryImageUrl";%><%paramName = "CATEGORY_IMAGE_URL";%>    
+    <%fieldName = "categoryImageUrl";%><%paramName = "categoryImageUrl";%>    
     <td width="26%" align=right><div class="tabletext">Category Image URL</div></td>
     <td>&nbsp;</td>
     <td width="74%">
-      <input type="text" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(useValues?category.getString(fieldName):request.getParameter(paramName))%>" size="80" maxlength="255">
-      <%if(productCategoryId != null && productCategoryId.length() > 0) {%><p><a href="<ofbiz:url>/UploadCategoryImage?PRODUCT_CATEGORY_ID=<%=productCategoryId%></ofbiz:url>" class="buttontext">[Upload Image]</a><%}%>
+      <input type="text" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(useValues?productCategory.getString(fieldName):request.getParameter(paramName))%>" size="80" maxlength="255">
+      <%if(productCategoryId != null && productCategoryId.length() > 0) {%><p><a href="<ofbiz:url>/UploadCategoryImage?productCategoryId=<%=productCategoryId%></ofbiz:url>" class="buttontext">[Upload Image]</a><%}%>
     </td>
   </tr>
 
@@ -124,7 +152,7 @@
     <td align=right><div class="tabletext">Primary Parent Category ID</div></td>
     <td>&nbsp;</td>
     <td>
-      <select name="PRIMARY_PARENT_CATEGORY_ID" size=1>
+      <select name="primaryParentProductCategoryId" size=1>
         <%if(primaryParentCategory != null) {%>
           <option selected value='<%=primaryParentCategory.getString("productCategoryId")%>'><%=primaryParentCategory.getString("description")%> [<%=primaryParentCategory.getString("productCategoryId")%>]</option>
         <%}%>
@@ -149,103 +177,6 @@
 </table>
 </form>
 <br>
-
-<%-- Edit 'ProductCategoryRollup's --%>
-<%if(category!=null){%>
-<hr>
-<p class="head2">Category Rollup: Parent Categories</p>
-
-<table border="1" cellpadding='2' cellspacing='0'>
-  <tr>
-    <td><div class="tabletext"><b>Parent Category ID</b></div></td>
-    <td><div class="tabletext"><b>Description</b></div></td>
-    <td><div class="tabletext"><b>&nbsp;</b></div></td>
-  </tr>
-<%Iterator ppcIterator = UtilMisc.toIterator(category.getRelated("CurrentProductCategoryRollup"));%>
-<%if(ppcIterator != null && ppcIterator.hasNext()) {%>
-  <%while(ppcIterator.hasNext()) {%>
-    <%GenericValue productCategoryRollup = (GenericValue)ppcIterator.next();%>
-    <%GenericValue curCategory = productCategoryRollup.getRelatedOne("ParentProductCategory");%>
-    <tr valign="middle">
-      <td><%if(curCategory!=null){%><a href="<ofbiz:url>/EditCategory?PRODUCT_CATEGORY_ID=<%=curCategory.getString("productCategoryId")%></ofbiz:url>" class="buttontext"><%=curCategory.getString("productCategoryId")%></a><%}%></td>
-      <td><%if(curCategory!=null){%><a href="<ofbiz:url>/EditCategory?PRODUCT_CATEGORY_ID=<%=curCategory.getString("productCategoryId")%></ofbiz:url>" class="buttontext"><%=curCategory.getString("description")%></a><%}%>&nbsp;</td>
-      <td>
-        <a href="<ofbiz:url>/UpdateProductCategoryRollup?UPDATE_MODE=DELETE&PRODUCT_CATEGORY_ID=<%=productCategoryId%>&UPDATE_PRODUCT_CATEGORY_ID=<%=productCategoryRollup.getString("productCategoryId")%>&UPDATE_PARENT_PRODUCT_CATEGORY_ID=<%=productCategoryRollup.getString("parentProductCategoryId")%></ofbiz:url>" class="buttontext">
-        [Delete]</a>
-      </td>
-    </tr>
-  <%}%>
-<%}else{%>
-  <tr valign="middle">
-    <td colspan='3'><DIV class='tabletext'>No Parent Categories found.</DIV></td>
-  </tr>
-<%}%>
-</table>
-
-<form method="POST" action="<ofbiz:url>/UpdateProductCategoryRollup</ofbiz:url>" style='margin: 0;'>
-  <input type="hidden" name="UPDATE_PRODUCT_CATEGORY_ID" value="<%=productCategoryId%>">
-  <input type="hidden" name="PRODUCT_CATEGORY_ID" value="<%=productCategoryId%>">
-  <input type="hidden" name="UPDATE_MODE" value="CREATE">
-  Add Parent Category (enter Category ID):
-    <select name="UPDATE_PARENT_PRODUCT_CATEGORY_ID">
-    <%Iterator pit = UtilMisc.toIterator(categoryCol);%>
-    <%while(pit != null && pit.hasNext()) {%>
-      <%GenericValue curCategory = (GenericValue)pit.next();%>
-        <%if(!productCategoryId.equals(curCategory.getString("productCategoryId"))){%>
-      <option value="<%=curCategory.getString("productCategoryId")%>"><%=curCategory.getString("description")%> [<%=curCategory.getString("productCategoryId")%>]</option>
-        <%}%>
-    <%}%>
-    </select>
-  <input type="submit" value="Add">
-</form>
-
-<hr>
-<p class="head2">Category Rollup: Child Categories</p>
-
-<table border="1" cellpadding='2' cellspacing='0'>
-  <tr>
-    <td><div class="tabletext"><b>Child Category ID</b></div></td>
-    <td><div class="tabletext"><b>Description</b></div></td>
-    <td><div class="tabletext"><b>&nbsp;</b></div></td>
-  </tr>
-<%Iterator cpcIterator = UtilMisc.toIterator(category.getRelated("ParentProductCategoryRollup"));%>
-<%if(cpcIterator != null && cpcIterator.hasNext()) {%>
-  <%while(cpcIterator.hasNext()) {%>
-    <%GenericValue productCategoryRollup = (GenericValue)cpcIterator.next();%>
-    <%GenericValue curCategory = productCategoryRollup.getRelatedOne("CurrentProductCategory");%>
-    <tr valign="middle">
-      <td><a href="<ofbiz:url>/EditCategory?PRODUCT_CATEGORY_ID=<%=curCategory.getString("productCategoryId")%></ofbiz:url>" class="buttontext"><%=curCategory.getString("productCategoryId")%></a></td>
-      <td><%if(curCategory!=null){%><a href="<ofbiz:url>/EditCategory?PRODUCT_CATEGORY_ID=<%=curCategory.getString("productCategoryId")%></ofbiz:url>" class="buttontext"><%=curCategory.getString("description")%></a><%}%>&nbsp;</td>
-      <td>
-        <a href="<ofbiz:url>/UpdateProductCategoryRollup?UPDATE_MODE=DELETE&PRODUCT_CATEGORY_ID=<%=productCategoryId%>&UPDATE_PRODUCT_CATEGORY_ID=<%=productCategoryRollup.getString("productCategoryId")%>&UPDATE_PARENT_PRODUCT_CATEGORY_ID=<%=productCategoryRollup.getString("parentProductCategoryId")%></ofbiz:url>" class="buttontext">
-        [Delete]</a>
-      </td>
-    </tr>
-  <%}%>
-<%}else{%>
-  <tr valign="middle">
-    <td colspan='3'><DIV class='tabletext'>No Child Categories found.</DIV></td>
-  </tr>
-<%}%>
-</table>
-
-<form method="POST" action="<ofbiz:url>/UpdateProductCategoryRollup</ofbiz:url>" style='margin: 0;'>
-  <input type="hidden" name="UPDATE_PARENT_PRODUCT_CATEGORY_ID" value="<%=productCategoryId%>">
-  <input type="hidden" name="PRODUCT_CATEGORY_ID" value="<%=productCategoryId%>">
-  <input type="hidden" name="UPDATE_MODE" value="CREATE">
-  Add Child Category (enter Category ID):
-    <select name="UPDATE_PRODUCT_CATEGORY_ID">
-    <%Iterator cit = UtilMisc.toIterator(categoryCol);%>
-    <%while(cit != null && cit.hasNext()) {%>
-      <%GenericValue curCategory = (GenericValue)cit.next();%>
-      <%if(!productCategoryId.equals(curCategory.getString("productCategoryId"))){%>
-        <option value="<%=curCategory.getString("productCategoryId")%>"><%=curCategory.getString("description")%> [<%=curCategory.getString("productCategoryId")%>]</option>
-      <%}%>
-    <%}%>
-    </select>
-  <input type="submit" value="Add">
-</form>
-<%}%>
 
 <%}else{%>
   <h3>You do not have permission to view this page.  ("CATALOG_VIEW" or "CATALOG_ADMIN" needed)</h3>

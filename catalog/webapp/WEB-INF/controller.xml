@@ -89,18 +89,55 @@
     	<response name="success" type="view" value="EditCategory"/>
     </request-map>
 
-    <request-map uri="UpdateCategory">
-    	<security https="true" auth="true"/>
-    	<event type="java" path="org.ofbiz.catalog.CategoryEvents" invoke="updateCategory"/>
+    <request-map uri="createProductCategory"><security https="true" auth="true"/>
+    	<event type="service" path="" invoke="createProductCategory"/>
+        <response name="success" type="view" value="EditCategory"/>
+        <response name="error" type="view" value="EditCategory"/>
+    </request-map>
+    <request-map uri="updateProductCategory"><security https="true" auth="true"/>
+    	<event type="service" path="" invoke="updateProductCategory"/>
         <response name="success" type="view" value="EditCategory"/>
         <response name="error" type="view" value="EditCategory"/>
     </request-map>
 
-    <request-map uri="UpdateProductCategoryRollup">
+    <request-map uri="EditCategoryRollup">
     	<security https="true" auth="true"/>
-        <event type="java" path="org.ofbiz.catalog.CategoryEvents" invoke="updateProductCategoryRollup"/>
-        <response name="success" type="view" value="EditCategory"/>
-        <response name="error" type="view" value="EditCategory"/>
+    	<response name="success" type="view" value="EditCategoryRollup"/>
+    </request-map>
+    <request-map uri="addProductCategoryToCategory"><security https="true" auth="true"/>
+        <event type="service" path="" invoke="addProductCategoryToCategory"/>
+        <response name="success" type="view" value="EditCategoryRollup"/>
+        <response name="error" type="view" value="EditCategoryRollup"/>
+    </request-map>
+    <request-map uri="updateProductCategoryToCategory"><security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateProductCategoryToCategory"/>
+        <response name="success" type="view" value="EditCategoryRollup"/>
+        <response name="error" type="view" value="EditCategoryRollup"/>
+    </request-map>
+    <request-map uri="removeProductCategoryFromCategory"><security https="true" auth="true"/>
+        <event type="service" path="" invoke="removeProductCategoryFromCategory"/>
+        <response name="success" type="view" value="EditCategoryRollup"/>
+        <response name="error" type="view" value="EditCategoryRollup"/>
+    </request-map>
+
+    <request-map uri="EditCategoryProducts">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="EditCategoryProducts"/>
+    </request-map>
+    <request-map uri="addCategoryProductMember"><security https="true" auth="true"/>
+        <event type="service" path="" invoke="addProductToCategory"/>
+        <response name="success" type="view" value="EditCategoryProducts"/>
+        <response name="error" type="view" value="EditCategoryProducts"/>
+    </request-map>
+    <request-map uri="updateCategoryProductMember"><security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateProductToCategory"/>
+        <response name="success" type="view" value="EditCategoryProducts"/>
+        <response name="error" type="view" value="EditCategoryProducts"/>
+    </request-map>
+    <request-map uri="removeCategoryProductMember"><security https="true" auth="true"/>
+        <event type="service" path="" invoke="removeProductFromCategory"/>
+        <response name="success" type="view" value="EditCategoryProducts"/>
+        <response name="error" type="view" value="EditCategoryProducts"/>
     </request-map>
 
     <request-map uri="EditProduct">
@@ -123,23 +160,22 @@
     	<security https="true" auth="true"/>
     	<response name="success" type="view" value="EditProductCategories"/>
     </request-map>
-
-    <request-map uri="EditCategoryProducts">
-    	<security https="true" auth="true"/>
-    	<response name="success" type="view" value="EditCategoryProducts"/>
+    <request-map uri="addProductToCategory"><security https="true" auth="true"/>
+        <event type="service" path="" invoke="addProductToCategory"/>
+        <response name="success" type="view" value="EditProductCategories"/>
+        <response name="error" type="view" value="EditProductCategories"/>
     </request-map>
-
-    <request-map uri="UpdateProductCategoryMember"><security https="true" auth="true"/>
-        <event type="java" path="org.ofbiz.catalog.CategoryEvents" invoke="updateProductCategoryMember"/>
+    <request-map uri="updateProductToCategory"><security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateProductToCategory"/>
+        <response name="success" type="view" value="EditProductCategories"/>
+        <response name="error" type="view" value="EditProductCategories"/>
+    </request-map>
+    <request-map uri="removeProductFromCategory"><security https="true" auth="true"/>
+        <event type="service" path="" invoke="removeProductFromCategory"/>
         <response name="success" type="view" value="EditProductCategories"/>
         <response name="error" type="view" value="EditProductCategories"/>
     </request-map>
 
-    <request-map uri="UpdateCategoryProductMember"><security https="true" auth="true"/>
-        <event type="java" path="org.ofbiz.catalog.CategoryEvents" invoke="updateProductCategoryMember"/>
-        <response name="success" type="view" value="EditCategoryProducts"/>
-        <response name="error" type="view" value="EditCategoryProducts"/>
-    </request-map>
 
     <request-map uri="EditProductKeyword"><security https="true" auth="true"/>
     	<response name="success" type="view" value="EditProductKeyword"/>
@@ -322,6 +358,7 @@
     <view-map name="ChooseTopCategory" type="region"/>
 
     <view-map name="EditCategory" type="region"/>
+    <view-map name="EditCategoryRollup" type="region"/>
     <view-map name="EditCategoryProducts" type="region"/>
     <view-map name="UploadCategoryImage" type="region"/>
 

@@ -40,7 +40,7 @@
     boolean useValues = true;
     if (request.getAttribute(SiteDefs.ERROR_MESSAGE) != null) useValues = false;
 
-    String productId = request.getParameter("PRODUCT_ID");
+    String productId = request.getParameter("productId");
     GenericValue product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
     if (product == null) useValues = false;
     Collection productCategoryMembers = product.getRelated("ProductCategoryMember", null, UtilMisc.toList("sequenceNum", "productCategoryId"));
@@ -57,9 +57,9 @@
 
 <a href="<ofbiz:url>/EditProduct</ofbiz:url>" class="buttontext">[New Product]</a>
 <%if(productId != null && productId.length() > 0){%>
-  <a href="/ecommerce/control/product?product_id=<%=productId%>" class='buttontext' target='_blank'>[View Product Page]</a>
+  <a href="/ecommerce/control/product?product_id=<%=productId%>" class='buttontext' target='_blank'>[Product Page]</a>
   <a href="<ofbiz:url>/EditProduct?PRODUCT_ID=<%=productId%></ofbiz:url>" class="buttontext">[Product]</a>
-  <a href="<ofbiz:url>/EditProductCategories?PRODUCT_ID=<%=productId%></ofbiz:url>" class="buttontextdisabled">[Category Members]</a>
+  <a href="<ofbiz:url>/EditProductCategories?productId=<%=productId%></ofbiz:url>" class="buttontextdisabled">[Categories]</a>
   <a href="<ofbiz:url>/EditProductKeyword?PRODUCT_ID=<%=productId%></ofbiz:url>" class="buttontext">[Keywords]</a>
   <a href="<ofbiz:url>/EditProductAssoc?PRODUCT_ID=<%=productId%></ofbiz:url>" class="buttontext">[Associations]</a>
   <a href="<ofbiz:url>/EditProductAttributes?PRODUCT_ID=<%=productId%></ofbiz:url>" class="buttontext">[Attributes]</a>
@@ -88,40 +88,40 @@
 <ofbiz:iterator name="productCategoryMember" property="productCategoryMembers">
   <%GenericValue category = productCategoryMember.getRelatedOne("ProductCategory");%>
   <tr valign="middle">
-    <td><a href='<ofbiz:url>/EditCategory?PRODUCT_CATEGORY_ID=<ofbiz:entityfield attribute="productCategoryMember" field="productCategoryId"/></ofbiz:url>' class="buttontext"><ofbiz:entityfield attribute="productCategoryMember" field="productCategoryId"/></a></td>
-    <td><%if (category!=null) {%><a href='<ofbiz:url>/EditCategory?PRODUCT_CATEGORY_ID=<ofbiz:entityfield attribute="productCategoryMember" field="productCategoryId"/></ofbiz:url>' class="buttontext"><%=category.getString("description")%></a><%}%>&nbsp;</td>
-    <td><div class='tabletext'><ofbiz:entityfield attribute="productCategoryMember" field="fromDate"/></div></td>
+    <td><a href='<ofbiz:url>/EditCategory?PRODUCT_CATEGORY_ID=<ofbiz:inputvalue entityAttr="productCategoryMember" field="productCategoryId"/></ofbiz:url>' class="buttontext"><ofbiz:inputvalue entityAttr="productCategoryMember" field="productCategoryId"/></a></td>
+    <td><%if (category!=null) {%><a href='<ofbiz:url>/EditCategory?PRODUCT_CATEGORY_ID=<ofbiz:inputvalue entityAttr="productCategoryMember" field="productCategoryId"/></ofbiz:url>' class="buttontext"><%=category.getString("description")%></a><%}%>&nbsp;</td>
+    <td><div class='tabletext'><ofbiz:inputvalue entityAttr="productCategoryMember" field="fromDate"/></div></td>
     <td align="center">
-        <FORM method=POST action='<ofbiz:url>/UpdateProductCategoryMember?UPDATE_MODE=UPDATE</ofbiz:url>'>
-            <input type=hidden name='PRODUCT_ID' value='<ofbiz:entityfield attribute="productCategoryMember" field="productId"/>'>
-            <input type=hidden name='PRODUCT_CATEGORY_ID' value='<ofbiz:entityfield attribute="productCategoryMember" field="productCategoryId"/>'>
-            <input type=hidden name='FROM_DATE' value='<ofbiz:inputvalue entityAttr="productCategoryMember" field="fromDate"/>'>
-            <input type=text size='20' name='THRU_DATE' value='<ofbiz:inputvalue entityAttr="productCategoryMember" field="thruDate"/>'>
-            <input type=text size='5' name='SEQUENCE_NUM' value='<ofbiz:inputvalue entityAttr="productCategoryMember" field="sequenceNum"/>'>
-            <input type=text size='5' name='QUANTITY' value='<ofbiz:inputvalue entityAttr="productCategoryMember" field="quantity"/>'>
+        <FORM method=POST action='<ofbiz:url>/updateProductToCategory</ofbiz:url>'>
+            <input type=hidden <ofbiz:inputvalue entityAttr="productCategoryMember" field="productId" fullattrs="true"/>>
+            <input type=hidden <ofbiz:inputvalue entityAttr="productCategoryMember" field="productCategoryId" fullattrs="true"/>>
+            <input type=hidden <ofbiz:inputvalue entityAttr="productCategoryMember" field="fromDate" fullattrs="true"/>>
+            <input type=text size='20' <ofbiz:inputvalue entityAttr="productCategoryMember" field="thruDate" fullattrs="true"/>>
+            <input type=text size='5' <ofbiz:inputvalue entityAttr="productCategoryMember" field="sequenceNum" fullattrs="true"/>>
+            <input type=text size='5' <ofbiz:inputvalue entityAttr="productCategoryMember" field="quantity" fullattrs="true"/>>
             <INPUT type=submit value='Update'>
         </FORM>
     </td>
     <td align="center">
-      <a href='<ofbiz:url>/UpdateProductCategoryMember?UPDATE_MODE=DELETE&PRODUCT_ID=<ofbiz:entityfield attribute="productCategoryMember" field="productId"/>&PRODUCT_CATEGORY_ID=<ofbiz:entityfield attribute="productCategoryMember" field="productCategoryId"/>&FROM_DATE=<%=UtilFormatOut.encodeQueryValue(productCategoryMember.getTimestamp("fromDate").toString())%></ofbiz:url>' class="buttontext">
+      <a href='<ofbiz:url>/removeProductFromCategory?productId=<ofbiz:entityfield attribute="productCategoryMember" field="productId"/>&productCategoryId=<ofbiz:entityfield attribute="productCategoryMember" field="productCategoryId"/>&fromDate=<%=UtilFormatOut.encodeQueryValue(productCategoryMember.getTimestamp("fromDate").toString())%></ofbiz:url>' class="buttontext">
       [Delete]</a>
     </td>
   </tr>
 </ofbiz:iterator>
 </table>
 <br>
-<form method="POST" action="<ofbiz:url>/UpdateProductCategoryMember</ofbiz:url>" style='margin: 0;'>
-  <input type="hidden" name="PRODUCT_ID" value="<%=productId%>">
-  <input type="hidden" name="UPDATE_MODE" value="CREATE">
+<form method="POST" action="<ofbiz:url>/addProductToCategory</ofbiz:url>" style='margin: 0;'>
+  <input type="hidden" name="productId" value="<%=productId%>">
   <input type="hidden" name="useValues" value="true">
 
   <div class='head2'>Add ProductCategoryMember (enter Category ID):</div>
   <br>
-  <select name="PRODUCT_CATEGORY_ID">
+  <select name="productCategoryId">
   <ofbiz:iterator name="category" property="categoryCol">
     <option value='<ofbiz:entityfield attribute="category" field="productCategoryId"/>'><ofbiz:entityfield attribute="category" field="description"/> [<ofbiz:entityfield attribute="category" field="productCategoryId"/>]</option>
   </ofbiz:iterator>
   </select>
+  <input type=text size='20' name='fromDate'>
   <input type="submit" value="Add">
 </form>
 <%}%>
