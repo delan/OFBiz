@@ -90,7 +90,11 @@ public class ToString extends MethodOperation {
     public String doToString(Object obj) {
         String outStr = null;
         try {
-            outStr = (String) ObjectType.simpleTypeConvert(obj, "java.lang.String", format, null);
+            if (UtilValidate.isNotEmpty(format)) {
+                outStr = (String) ObjectType.simpleTypeConvert(obj, "java.lang.String", format, null);
+            } else {
+                outStr = obj.toString();
+            }
         } catch (GeneralException e) {
             Debug.logError(e, "");
             outStr = obj.toString();
