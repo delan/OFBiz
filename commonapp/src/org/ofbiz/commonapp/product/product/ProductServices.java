@@ -20,26 +20,39 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
 package org.ofbiz.commonapp.product.product;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-import java.util.*;
-
-import org.ofbiz.core.entity.*;
-import org.ofbiz.core.service.*;
-import org.ofbiz.core.util.*;
-
-import org.ofbiz.commonapp.product.catalog.*;
-import org.ofbiz.commonapp.product.category.*;
+import org.ofbiz.commonapp.product.catalog.CatalogWorker;
+import org.ofbiz.commonapp.product.category.CategoryWorker;
+import org.ofbiz.core.entity.EntityUtil;
+import org.ofbiz.core.entity.GenericDelegator;
+import org.ofbiz.core.entity.GenericEntityException;
+import org.ofbiz.core.entity.GenericValue;
+import org.ofbiz.core.service.DispatchContext;
+import org.ofbiz.core.service.LocalDispatcher;
+import org.ofbiz.core.service.ModelService;
+import org.ofbiz.core.util.Debug;
+import org.ofbiz.core.util.OrderedMap;
+import org.ofbiz.core.util.OrderedSet;
+import org.ofbiz.core.util.UtilDateTime;
+import org.ofbiz.core.util.UtilMisc;
 
 /**
  * Product Services
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    1.0
- * @created    April 1, 2002
+ * @version    $Revision$
+ * @since      2.0
  */
 public class ProductServices {
     
