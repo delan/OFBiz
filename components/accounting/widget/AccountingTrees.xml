@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE trees PUBLIC "-//OFBiz//DTD OFBiz Tree Widget//EN" "http://www.ofbiz.org/dtds/widget-tree.dtd">
-
 <!--
  *  Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -25,7 +23,8 @@
  *  $Id: AccountingScreens.xml,v 1.4 2004/07/31 12:17:42 jonesde Exp $
 -->
 
-<trees>
+<trees xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-tree.xsd">
 <!--	<tree name="GlAccountTree">  -->
 <!-- 	<tree> -->
 
