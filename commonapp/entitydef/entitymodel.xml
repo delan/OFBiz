@@ -1134,7 +1134,7 @@
       <relation type="one" rel-entity-name="UserLogin">
         <key-map field-name="userLoginId"/>
       </relation>
-      <relation type="one" rel-entity-name="Content">
+      <relation type="one-nofk" rel-entity-name="Content">
         <key-map field-name="contentId"/>
       </relation>
     </entity>
