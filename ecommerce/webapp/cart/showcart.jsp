@@ -5,7 +5,7 @@
 
 <jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" />
 
-<% ShoppingCart cart = ShoppingCartEvents.getCartObject(request); %>
+<%ShoppingCart cart = (ShoppingCart)session.getAttribute(SiteDefs.SHOPPING_CART);%>
 <%if(cart != null && cart.size() > 0) {%>
   <%pageContext.setAttribute("cartIter", cart.iterator());%>
   <%pageContext.setAttribute("cartAdjustments", cart.getAdjustments());%>

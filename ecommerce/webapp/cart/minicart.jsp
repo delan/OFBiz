@@ -3,7 +3,7 @@
 <%@ page import="org.ofbiz.commonapp.order.shoppingcart.*" %>
 <%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.pseudotag.*" %>
 
-<%ShoppingCart miniShoppingCart = ShoppingCartEvents.getCartObject(request);%>
+<%ShoppingCart miniShoppingCart = (ShoppingCart)session.getAttribute(SiteDefs.SHOPPING_CART);%>
 <BR>
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>

@@ -45,7 +45,7 @@
 <p class="head1">Final Checkout Review</p>
 <p>NOTE: This is a DEMO store-front.  Orders placed here will NOT be billed, and will NOT be fulfilled.</p>
 
-<%ShoppingCart cart = (ShoppingCart)session.getAttribute(SiteDefs.SHOPPING_CART); %>
+<%ShoppingCart cart = (ShoppingCart)session.getAttribute(SiteDefs.SHOPPING_CART);%>
 <%pageContext.setAttribute("cart", cart);%>
 <ofbiz:if name="cart" size="0">
 <%
