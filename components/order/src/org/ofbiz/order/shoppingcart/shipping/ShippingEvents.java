@@ -1,5 +1,5 @@
 /*
- * $Id: ShippingEvents.java,v 1.3 2003/08/26 14:06:30 ajzeneski Exp $
+ * $Id: ShippingEvents.java,v 1.4 2003/10/26 05:44:02 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -48,7 +48,7 @@ import org.ofbiz.service.ServiceUtil;
  * ShippingEvents - Events used for processing shipping fees
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.0
  */
 public class ShippingEvents {
@@ -69,9 +69,12 @@ public class ShippingEvents {
         cart.removeAdjustmentByType("SHIPPING_CHARGES");
 
         // creat the new adjustment and add it to the cart
-        GenericValue orderAdjustment = delegator.makeValue("OrderAdjustment", UtilMisc.toMap("orderAdjustmentTypeId", "SHIPPING_CHARGES", "amount", shippingTotal));
-        cart.addAdjustment(orderAdjustment);        
-        
+        if (shippingTotal.doubleValue() > 0) {
+            GenericValue orderAdjustment = delegator.makeValue("OrderAdjustment",
+                    UtilMisc.toMap("orderAdjustmentTypeId", "SHIPPING_CHARGES", "amount", shippingTotal));
+            cart.addAdjustment(orderAdjustment);
+        }
+
         // all done
         return "success";
     }
@@ -132,7 +135,14 @@ public class ShippingEvents {
             Debug.logVerbose("Shippable Qty : " + shippableQuantity, module);
             Debug.logVerbose("Shippable Total : " + shippableTotal, module);
         }
-        
+
+        // no shippable items; we won't change any shipping at all
+        if (shippableQuantity == 0) {
+            Map result = ServiceUtil.returnSuccess();
+            result.put("shippingTotal", new Double(0));
+            return result;
+        }
+
         // Get the ShipmentCostEstimate(s)
         Collection estimates = null;
 

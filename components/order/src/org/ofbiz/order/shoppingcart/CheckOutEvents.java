@@ -1,5 +1,5 @@
 /*
- * $Id: CheckOutEvents.java,v 1.12 2003/10/22 23:03:40 ajzeneski Exp $
+ * $Id: CheckOutEvents.java,v 1.13 2003/10/26 05:44:02 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -60,7 +60,7 @@ import org.ofbiz.service.ServiceUtil;
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:tristana@twibble.org">Tristan Austin</a>
- * @version    $Revision: 1.12 $
+ * @version    $Revision: 1.13 $
  * @since      2.0
  */
 public class CheckOutEvents {
@@ -243,6 +243,7 @@ public class CheckOutEvents {
         double requiredAmount = cart.getGrandTotal() - cart.getBillingAccountAmount();
         double selectedPaymentTotal = cart.getSelectedPaymentMethodsTotal();
         if (requiredAmount > selectedPaymentTotal) {
+            Debug.logError("Required Amount : " + requiredAmount + " / Selected Amount : " + selectedPaymentTotal, module);
             request.setAttribute("_ERROR_MESSAGE_", "<li>Selected payment methods will not cover this order.");
             return "error";
         }

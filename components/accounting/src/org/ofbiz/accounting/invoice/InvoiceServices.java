@@ -1,5 +1,5 @@
 /*
- * $Id: InvoiceServices.java,v 1.4 2003/09/02 02:17:15 ajzeneski Exp $
+ * $Id: InvoiceServices.java,v 1.5 2003/10/26 05:44:02 ajzeneski Exp $
  *
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -48,7 +48,7 @@ import org.ofbiz.service.ServiceUtil;
  * InvoiceServices - Services for creating invoices
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.2
  */
 public class InvoiceServices {
@@ -128,8 +128,9 @@ public class InvoiceServices {
         // get some price totals
         double totalOrderAmt = orh.getOrderItemsTotal();
         double totalInvoiceAmt = 0.00;
-                
-        // create the invoice record        
+        double invoiceShipProRateAmount = 0.00;
+
+        // create the invoice record
         String invoiceId = delegator.getNextSeqId("Invoice").toString();               
         GenericValue invoice = delegator.makeValue("Invoice", UtilMisc.toMap("invoiceId", invoiceId));        
         invoice.set("invoiceDate", UtilDateTime.nowTimestamp());
@@ -312,9 +313,15 @@ public class InvoiceServices {
                 toStore.add(invoiceItem);
                 
                 // add to the total invoice amount
-                totalInvoiceAmt += invoiceItem.getDouble("amount").doubleValue() * invoiceItem.getDouble("quantity").doubleValue();
+                double thisAmount = invoiceItem.getDouble("amount").doubleValue() * invoiceItem.getDouble("quantity").doubleValue();
+                totalInvoiceAmt += thisAmount;
                 totalItemsToBill += billingQuantity.doubleValue();
-                        
+
+                String productType = product.getString("productTypeId");
+                if (!"SERVICE".equals(productType) && !"DIGITAL_GOOD".equals(productType)) {
+                    invoiceShipProRateAmount += thisAmount;
+                }
+
                 // create the OrderItemBilling record
                 GenericValue orderItemBill = delegator.makeValue("OrderItemBilling", UtilMisc.toMap("invoiceId", invoiceId, "invoiceItemSeqId", new Integer(itemSeqId).toString()));
                 orderItemBill.set("orderId", orderItem.get("orderId"));
@@ -347,8 +354,14 @@ public class InvoiceServices {
                         toStore.add(adjInvItem);
                         
                         // add to the total invoice amount
-                        totalInvoiceAmt += adjInvItem.getDouble("amount").doubleValue() * adjInvItem.getDouble("quantity").doubleValue();
-                        
+                        double thisAdjAmount = adjInvItem.getDouble("amount").doubleValue() * adjInvItem.getDouble("quantity").doubleValue();
+                        totalInvoiceAmt += thisAdjAmount;
+
+                        // add to the ship amount if we are not SERVICE or DIGITAL_GOOD
+                        if (!"SERVICE".equals(productType) && !"DIGITAL_GOOD".equals(productType)) {
+                            invoiceShipProRateAmount += thisAdjAmount;
+                        }
+
                         // increment the counter
                         itemSeqId++;
                     }
@@ -373,8 +386,14 @@ public class InvoiceServices {
                         toStore.add(adjInvItem);
                         
                         // add to the total invoice amount
-                        totalInvoiceAmt += adjInvItem.getDouble("amount").doubleValue() * adjInvItem.getDouble("quantity").doubleValue();
-                        
+                        double thisAdjAmount = adjInvItem.getDouble("amount").doubleValue() * adjInvItem.getDouble("quantity").doubleValue();
+                        totalInvoiceAmt += thisAdjAmount;
+
+                        // add to the ship amount if we are not SERVICE or DIGITAL_GOOD
+                        if (!"SERVICE".equals(productType) && !"DIGITAL_GOOD".equals(productType)) {
+                            invoiceShipProRateAmount += thisAdjAmount;
+                        }
+
                         // increment the counter
                         itemSeqId++;
                     }
@@ -417,20 +436,22 @@ public class InvoiceServices {
             }
             if (adj.get("amount") != null) {
                 // pro-rate the amount
-                double amount = ((adj.getDouble("amount").doubleValue() / totalOrderAmt) * totalInvoiceAmt);                
-                GenericValue invoiceItem = delegator.makeValue("InvoiceItem", UtilMisc.toMap("invoiceId", invoiceId, "invoiceItemSeqId", new Integer(itemSeqId).toString()));                
-                invoiceItem.set("invoiceItemTypeId", getInvoiceItemType(delegator, adj.getString("orderAdjustmentTypeId"), "INVOICE_ADJ"));
-                //invoiceItem.set("productId", orderItem.get("productId"));
-                //invoiceItem.set("productFeatureId", orderItem.get("productFeatureId"));
-                //invoiceItem.set("uomId", "");
-                //invoiceItem.set("taxableFlag", product.get("taxable"));
-                invoiceItem.set("quantity", new Double(1));
-                invoiceItem.set("amount", new Double(amount));
-                invoiceItem.set("description", adj.get("description"));
-                toStore.add(invoiceItem);
-                
-                // increment the counter
-                itemSeqId++;
+                double amount = ((adj.getDouble("amount").doubleValue() / totalOrderAmt) * invoiceShipProRateAmount);
+                if (amount > 0) {
+                    GenericValue invoiceItem = delegator.makeValue("InvoiceItem", UtilMisc.toMap("invoiceId", invoiceId, "invoiceItemSeqId", new Integer(itemSeqId).toString()));
+                    invoiceItem.set("invoiceItemTypeId", getInvoiceItemType(delegator, adj.getString("orderAdjustmentTypeId"), "INVOICE_ADJ"));
+                    //invoiceItem.set("productId", orderItem.get("productId"));
+                    //invoiceItem.set("productFeatureId", orderItem.get("productFeatureId"));
+                    //invoiceItem.set("uomId", "");
+                    //invoiceItem.set("taxableFlag", product.get("taxable"));
+                    invoiceItem.set("quantity", new Double(1));
+                    invoiceItem.set("amount", new Double(amount));
+                    invoiceItem.set("description", adj.get("description"));
+                    toStore.add(invoiceItem);
+
+                    // increment the counter
+                    itemSeqId++;
+                }
             }
         }
         
@@ -550,7 +571,8 @@ public class InvoiceServices {
             if (itemsByOrder == null) {
                 itemsByOrder = new ArrayList();
             }
-            // check and make sure we haven't already billed for this item
+
+            // check and make sure we haven't already billed for this issuance
             Map billFields = UtilMisc.toMap("orderId", orderId, "orderItemSeqId", orderItemSeqId, "itemIssuanceId", itemIssuanceId);
             List itemBillings = null;
             try {                
@@ -565,17 +587,85 @@ public class InvoiceServices {
                 itemsByOrder.add(itemIssuance);
             }
 
-            // update the map with modified listh            
+            // update the map with modified list
             shippedOrderItems.put(orderId, itemsByOrder);
         }
-        
-        // call the createInvoiceForOrder service for each order
+
+        // make sure we aren't billing items already invoiced i.e. items billed as digital (FINDIG)
         Set orders = shippedOrderItems.keySet();
         Iterator ordersIter = orders.iterator();
         while (ordersIter.hasNext()) {
             String orderId = (String) ordersIter.next();
+
+            // we'll only use this list to figure out which ones to send
             List billItems = (List) shippedOrderItems.get(orderId);
-            Map serviceContext = UtilMisc.toMap("orderId", orderId, "billItems", billItems, "userLogin", context.get("userLogin"));
+
+            // a new list to be used to pass to the create invoice service
+            List toBillItems = new ArrayList();
+
+            // map of available quantities so we only have to calc once
+            Map itemQtyAvail = new HashMap();
+
+            // now we will check each issuance and make sure it hasn't already been billed
+            Iterator billIt = billItems.iterator();
+            while (billIt.hasNext()) {
+                GenericValue issue = (GenericValue) billIt.next();
+                Double issueQty = issue.getDouble("quantity");
+                Double billAvail = (Double) itemQtyAvail.get(issue.getString("orderItemSeqId"));
+                if (billAvail == null) {
+                    Map lookup = UtilMisc.toMap("orderId", orderId, "orderItemSeqId", issue.get("orderItemSeqId"));
+                    GenericValue orderItem = null;
+                    List billed = null;
+                    try {
+                        orderItem = issue.getRelatedOne("OrderItem");
+                        billed = delegator.findByAnd("OrderItemBilling", lookup);
+                    } catch (GenericEntityException e) {
+                        Debug.logError(e, "Problem looking up OrderItem/OrderItemBilling records for : " + lookup, module);
+                        return ServiceUtil.returnError("Problem getting OrderItem/OrderItemBilling records");
+                    }
+
+                    // total ordered
+                    double orderedQty = orderItem.getDouble("quantity").doubleValue();
+
+                    // add up the already billed total
+                    if (billed != null && billed.size() > 0) {
+                        double billedQuantity = 0.00;
+                        Iterator bi = billed.iterator();
+                        while (bi.hasNext()) {
+                            GenericValue oib = (GenericValue) bi.next();
+                            Double qty = oib.getDouble("quantity");
+                            if (qty != null) {
+                                billedQuantity += qty.doubleValue();
+                            }
+                        }
+                        double leftToBill = orderedQty - billedQuantity;
+                        billAvail = new Double(leftToBill);
+                    } else {
+                        billAvail = new Double(orderedQty);
+                    }
+                }
+
+                // no available means we cannot bill anymore
+                if (billAvail != null && billAvail.doubleValue() > 0) {
+                    if (issueQty != null && issueQty.doubleValue() > billAvail.doubleValue()) {
+                        // can only bill some of the issuance; others have been billed already
+                        issue.set("quantity", billAvail);
+                        billAvail = new Double(0);
+                    } else {
+                        // now have been billed
+                        billAvail = new Double(billAvail.doubleValue() - issueQty.doubleValue());
+                    }
+
+                    // okay to bill these items; but none else
+                    toBillItems.add(issue);
+                }
+
+                // update the available to bill quantity for the next pass
+                itemQtyAvail.put(issue.getString("orderItemSeqId"), billAvail);
+            }
+
+            // call the createInvoiceForOrder service for each order
+            Map serviceContext = UtilMisc.toMap("orderId", orderId, "billItems", toBillItems, "userLogin", context.get("userLogin"));
             try {
                 Map result = dispatcher.runSync("createInvoiceForOrder", serviceContext);
                 invoicesCreated.add(result.get("invoiceId"));
