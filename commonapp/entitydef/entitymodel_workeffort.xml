@@ -170,10 +170,14 @@
         <key-map field-name="performerParticipantId" rel-field-name="participantId" />
       </relation>
       <relation type="many" title="From" rel-entity-name="WorkflowTransition">
-        <key-map field-name="executionObjectId" rel-field-name="fromActivityId" />
+        <key-map field-name="packageId" />
+        <key-map field-name="processId" />
+        <key-map field-name="activityId" rel-field-name="fromActivityId" />
       </relation>
       <relation type="many" title="To" rel-entity-name="WorkflowTransition">
-        <key-map field-name="executionObjectId" rel-field-name="toActivityId" />
+        <key-map field-name="packageId" />
+        <key-map field-name="processId" />
+        <key-map field-name="activityId" rel-field-name="toActivityId" />
       </relation>
       <relation type="one" rel-entity-name="RuntimeData">
         <key-map field-name="runtimeDataId" />
@@ -182,6 +186,7 @@
         <key-map field-name="performerParticipantId" rel-field-name="participantId" />
       </relation>
       <relation type="one" rel-entity-name="WorkflowProcess">
+        <key-map field-name="packageId" />
         <key-map field-name="processId" />
       </relation>
     </entity>
@@ -315,8 +320,8 @@
     <view-entity entity-name="WorkflowDataFieldsView" 
             package-name="org.ofbiz.commonapp.workeffort.definition"
             title="Workflow Data Fields View Entity">	
-      <member-entity entity-alias="WDF" entity-name="WorkflowDataField" />	
-      <member-entity entity-alias="WDFL" entity-name="WorkflowDataFieldList" />
+      <member-entity entity-alias="WDFL" entity-name="WorkflowDataFieldList" />	
+      <member-entity entity-alias="WDF" entity-name="WorkflowDataField" />
       <alias entity-alias="WDF" name="dataFieldId" prim-key="true" />
       <alias entity-alias="WDF" name="dataFieldName" />
       <alias entity-alias="WDF" name="description" />
@@ -535,6 +540,7 @@
             title="Workflow Participant Entity">
       <field name="participantId" type="id-ne"></field>
       <field name="participantName" type="name"></field>
+      <field name="partyId" type="id"></field>
       <field name="description" type="description"></field>
       <field name="participantTypeId" type="id"></field>	
       <prim-key field="participantId" />
@@ -552,6 +558,12 @@
       </relation>
       <relation type="many" title="Responsible" rel-entity-name="WorkflowProcess">
         <key-map field-name="participantId" rel-field-name="responsibleParticipantId" />
+      </relation>
+      <relation type="one" rel-entity-name="Party">
+        <key-map field-name="partyId" />
+      </relation>
+      <relation type="one" rel-entity-name="Person">
+        <key-map field-name="partyId" />
       </relation>
     </entity>
     <entity entity-name="WorkflowParticipantList" 
@@ -594,6 +606,7 @@
       <member-entity entity-alias="WP" entity-name="WorkflowParticipant" />	
       <member-entity entity-alias="WPL" entity-name="WorkflowParticipantList" />
       <alias entity-alias="WP" name="participantId" prim-key="true" />
+      <alias entity-alias="WP" name="partyId" />
       <alias entity-alias="WP" name="participantName" />
       <alias entity-alias="WP" name="description" />
       <alias entity-alias="WP" name="participantTypeId" />
@@ -626,6 +639,12 @@
       </relation>
       <relation type="many" rel-entity-name="WorkflowPackage">
         <key-map field-name="participantListId" />
+      </relation>
+      <relation type="one" rel-entity-name="Party">
+        <key-map field-name="partyId" />
+      </relation>
+      <relation type="one" rel-entity-name="Person">
+        <key-map field-name="partyId" />
       </relation>
     </view-entity>
     <entity entity-name="WorkflowProcess" 
@@ -664,10 +683,12 @@
         <key-map field-name="packageId" />
       </relation>
       <relation type="many" rel-entity-name="WorkflowActivity">
+        <key-map field-name="packageId" />
         <key-map field-name="processId" />
       </relation>
       <relation type="many" rel-entity-name="WorkflowTransition">
-        <key-map field-name="executionObjectId" rel-field-name="processId" />
+        <key-map field-name="packageId" />
+        <key-map field-name="processId" />
       </relation>
       <relation type="one" title="Country" rel-entity-name="Geo">
         <key-map field-name="countryGeoId" rel-field-name="geoId" />
@@ -733,22 +754,30 @@
     <entity entity-name="WorkflowTransition" 
             package-name="org.ofbiz.commonapp.workeffort.definition"
             title="Workflow Transition Entity">
+      <field name="packageId" type="id-ne"></field>
+      <field name="processId" type="id-ne"></field>
       <field name="transitionId" type="id-ne"></field>
-      <field name="processId" type="id"></field>
       <field name="transitionName" type="name"></field>
       <field name="description" type="description"></field>
       <field name="conditionExpr" type="long-varchar"></field>
       <field name="fromActivityId" type="id"></field>
       <field name="toActivityId" type="id"></field>	
+      <prim-key field="packageId" />	
+      <prim-key field="processId" />	
       <prim-key field="transitionId" />
       <relation type="one" rel-entity-name="WorkflowProcess">
-        <key-map field-name="processId" rel-field-name="executionObjectId" />
+        <key-map field-name="packageId" />
+        <key-map field-name="processId" />
       </relation>
       <relation type="one" title="From" rel-entity-name="WorkflowActivity">
-        <key-map field-name="fromActivityId" rel-field-name="executionObjectId" />
+        <key-map field-name="packageId" />
+        <key-map field-name="processId" />
+        <key-map field-name="fromActivityId" rel-field-name="activityId" />
       </relation>
       <relation type="one" title="To" rel-entity-name="WorkflowActivity">
-        <key-map field-name="toActivityId" rel-field-name="executionObjectId" />
+        <key-map field-name="packageId" />
+        <key-map field-name="processId" />
+        <key-map field-name="toActivityId" rel-field-name="activityId" />
       </relation>
     </entity>
 
