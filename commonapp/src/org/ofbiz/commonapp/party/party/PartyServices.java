@@ -208,7 +208,6 @@ public class PartyServices {
         Security security = ctx.getSecurity();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         Timestamp now = UtilDateTime.nowTimestamp();
-        List toBeStored = new LinkedList();
 
         String partyId = (String) context.get("partyId");
 
@@ -229,48 +228,50 @@ public class PartyServices {
             }
         }
 
-        // check to see if party object exists, if so make sure it is PARTY_GROUP type party
-        GenericValue party = null;
-
         try {
-            party = delegator.findByPrimaryKey("Party", UtilMisc.toMap("partyId", partyId));
-        } catch (GenericEntityException e) {
-            Debug.logWarning(e.getMessage());
-        }
+            // check to see if party object exists, if so make sure it is PARTY_GROUP type party
+            GenericValue party = delegator.findByPrimaryKey("Party", UtilMisc.toMap("partyId", partyId));
+            GenericValue partyGroupPartyType = delegator.findByPrimaryKeyCache("PartyType", UtilMisc.toMap("partyTypeId", "PARTY_GROUP"));
 
-        if (party != null) {
-            if (!"PARTY_GROUP".equals(party.getString("partyTypeId"))) {
-                return ServiceUtil.returnError("Cannot create party group, a party with the specified party ID " +
-                        "already exists and is not a PARTY_GROUP type party");
+            if (partyGroupPartyType == null) {
+                return ServiceUtil.returnError("The party type with ID PARTY_GROUP was not found in the database, cannot create new party group");
             }
-        } else {
-            // create a party if one doesn't already exist
-            party = delegator.makeValue("Party", UtilMisc.toMap("partyId", partyId, "partyTypeId", "PARTY_GROUP"));
-            toBeStored.add(party);
-        }
 
-        GenericValue partyGroup = null;
+            if (party != null) {
+                GenericValue partyType = party.getRelatedOneCache("PartyType");
+                
+                if (!EntityTypeUtil.isType(partyType, partyGroupPartyType)) {
+                    return ServiceUtil.returnError("Cannot create party group, a party with the specified party ID " +
+                            "already exists and is not a PARTY_GROUP type party, or a child of the PARTY_GROUP type");
+                }
+            } else {
+                // create a party if one doesn't already exist
+                String partyTypeId = "PARTY_GROUP";
+                
+                if (UtilValidate.isNotEmpty(((String) context.get("partyTypeId")))) {
+                    GenericValue desiredPartyType = delegator.findByPrimaryKeyCache("PartyType", UtilMisc.toMap("partyTypeId", context.get("partyTypeId")));
+                    if (desiredPartyType != null && EntityTypeUtil.isType(desiredPartyType, partyGroupPartyType)) {
+                        partyTypeId = desiredPartyType.getString("partyTypeId");
+                    } else {
+                        return ServiceUtil.returnError("The specified partyTypeId [" + context.get("partyTypeId") + "] could not be found or is not a sub-type of PARTY_GROUP");
+                    }
+                }
+                
+                party = delegator.makeValue("Party", UtilMisc.toMap("partyId", partyId, "partyTypeId", partyTypeId));
+                party.create();
+            }
 
-        try {
-            partyGroup = delegator.findByPrimaryKey("PartyGroup", UtilMisc.toMap("partyId", partyId));
+            GenericValue partyGroup = delegator.findByPrimaryKey("PartyGroup", UtilMisc.toMap("partyId", partyId));
+            if (partyGroup != null) {
+                return ServiceUtil.returnError("Cannot create party group, a party group with the specified party ID already exists");
+            }
+
+            partyGroup = delegator.makeValue("PartyGroup", UtilMisc.toMap("partyId", partyId));
+            partyGroup.setNonPKFields(context);
+            partyGroup.create();
         } catch (GenericEntityException e) {
-            Debug.logWarning(e.getMessage());
-        }
-
-        if (partyGroup != null) {
-            return ServiceUtil.returnError("Cannot create party group, a party group with the specified " +
-                    "party ID already exists");
-        }
-
-        partyGroup = delegator.makeValue("PartyGroup", UtilMisc.toMap("partyId", partyId));
-        toBeStored.add(partyGroup);
-        partyGroup.setNonPKFields(context);
-
-        try {
-            delegator.storeAll(toBeStored);
-        } catch (GenericEntityException e) {
-            Debug.logWarning(e.getMessage());
-            return ServiceUtil.returnError("Could not add party group (write failure): " + e.getMessage());
+            Debug.logWarning(e);
+            return ServiceUtil.returnError("Data source error occurred while adding party group: " + e.getMessage());
         }
 
         result.put("partyId", partyId);

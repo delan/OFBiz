@@ -49,6 +49,7 @@
             location="org.ofbiz.commonapp.party.party.PartyServices" invoke="createPartyGroup" auth="false">
         <description>Create a PartyGroup</description>
         <attribute name="partyId" type="String" mode="INOUT" optional="true"/>
+        <attribute name="partyTypeId" type="String" mode="IN" optional="true"/>
         <attribute name="groupName" type="String" mode="IN" optional="false"/>
         <attribute name="federalTaxId" type="String" mode="IN" optional="true"/>
         <attribute name="comments" type="String" mode="IN" optional="true"/>
