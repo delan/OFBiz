@@ -202,13 +202,14 @@ advanced flow control.</p>
 
 <p class='contenttext'>View data preparation logic should always be associated
 with the view template it is meant to prepare data for. This should be done
-through JPublish in the page definition XML file by specifying an action. When 
-a page is split up into multiple templates the data preparation action should be
-associated only with the individual small template that it prepares data for. 
+through the OFBiz Screen Widget in the screen definition XML file by specifying a script action. When 
+a screen is split up into multiple templates or screens the data preparation action should be
+associated only with the individual small screen that it prepares data for. 
 This makes it easier to move templates and content pieces around and reuse them
-in many pages.</p>
+in many places.</p>
 
-<p class='contenttext'>View data preparation logic should be implemented in a 
+<p class='contenttext'>View data preparation logic should be specified as actions
+in the XML screen definition or if necessary implemented in a 
 dynamic scripting language such as JavaScript, BeanShell, Jython or Jacl to make 
 it easy to modify the user interface on the fly. Generic data retreival should
 be implemented as services which should be called from these dynamic action 
@@ -232,24 +233,31 @@ most of the work and to keep as much logic as possible out of the page.</p>
 HTML and other text generation is FreeMarker. 
 It is like Velocity from Jakarta, but much more flexible and fits in
 nicely with other OFBiz Core Framework tools. Rather than running FreeMarker
-templates directly we strongly recommend using JPublish so that actions can be
-associated with pages and templates and pages can be decorated with common 
+templates directly we strongly recommend using the OFBiz Screen Widget so that actions can be
+associated with screens and they can be decorated with common 
 templates. We'll describe how to best use this below.</p>
 
 <p class='contenttext'>The view presenation templates should always be kept as 
 simple as possible and common content such as headers, footers, sidebars, and so
 on should be added at run-time using the decoration pattern. The template file
-that should be used to decorate each page is specified in the JPublish page 
+that should be used to decorate each page is specified in the screen
 definition XML file.</p>
 
 <p class='contenttext'>Always use the view generation tool that most closely
 matches your needs. FreeMarker is the recommended tool for generating text 
 output, but there are many situations where other tools are more appropriate.
-When you want to display report like views we recommend using Jasper Reports
-or DataVision and mounting those reports through a view-map in the 
-controller.xml file. If you want to use other text generation tools such
-as Velocity or XSLT we recommend you do so through JPublish, especially if
+If you want to use other text generation tools such
+as Velocity or XSLT we recommend you do so through the Screen Widget, especially if
 you want it to be decorated and have actions run to prepare for the templates.</p>
+
+<p class='contenttext'>When you want to display report like views we recommend using 
+the Screen Widget along with FreeMarker to generate an XSL:FO XML file, and use the
+Screen Widget FOP view handler in the Control Servlet configuration to transform
+it into a PDF to send to the client. This approach allows you to use the same tools
+for these reports as with other views in your applications and offers essentially
+unlimited flexibility. As an alternative you can use other more traditional reporting tools such as
+Jasper Reports or DataVision and mounting those reports through a view-map in the 
+Control Servlet configuration file (controller.xml).</p>
 
 <p class='contenttext'>If you have UI patterns that are repeated frequently
 such as forms, query data displays, tab or menu bars, expanding tree views, and
@@ -272,7 +280,7 @@ templates because you cannot run it through JPublish. This is thanks to
 limitations in the JSP specification. Even through you cannot use the decorator
 patter, you can use the composite view pattern with the OFBiz Regions 
 framework. Regions are specified in the regions.xml file. Note that these are
-not as easy to use as JPublish composite views, and they do not support
+not as easy to use as Screen Widget composite views, and they do not support
 actions. But the Regions framework does offer a lot of flexibility and is 
 very useful in many cases.</p>
 
