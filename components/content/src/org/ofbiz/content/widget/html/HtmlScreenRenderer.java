@@ -276,7 +276,6 @@ public class HtmlScreenRenderer implements ScreenStringRenderer {
             Locale locale = Locale.getDefault();
             Boolean nullThruDatesOnly = new Boolean(false);
             String mimeTypeId = "text/html";
-            Map map = null;
             String expandedContentId = content.getContentId(context);
             String renderedContent = null;
             GenericDelegator delegator = (GenericDelegator) context.get("delegator");
@@ -288,7 +287,7 @@ public class HtmlScreenRenderer implements ScreenStringRenderer {
                 if (UtilValidate.isEmpty(renderedContent)) {
                     String editRequest = (String)context.get("directEditRequest");
                     if (UtilValidate.isNotEmpty(editRequest)) {
-                        ContentWorker.renderContentAsTextCache(delegator, "NOCONTENTFOUND", writer, map, null, locale, mimeTypeId);
+                        ContentWorker.renderContentAsTextCache(delegator, "NOCONTENTFOUND", writer, context, null, locale, mimeTypeId);
                     }
                 } else {
                     writer.write(renderedContent);
@@ -355,7 +354,6 @@ public class HtmlScreenRenderer implements ScreenStringRenderer {
             Locale locale = Locale.getDefault();
             Boolean nullThruDatesOnly = new Boolean(false);
             String mimeTypeId = "text/html";
-            Map map = null;
             String expandedContentId = content.getContentId(context);
             String expandedAssocName = content.getAssocName(context);
             String renderedContent = null;
@@ -369,11 +367,11 @@ public class HtmlScreenRenderer implements ScreenStringRenderer {
             }
                 Debug.logInfo("expandedContentId:" + expandedContentId, module);
             try {
-                renderedContent = ContentWorker.renderSubContentAsTextCache(delegator, expandedContentId, expandedAssocName, null, map, locale, mimeTypeId, userLogin, fromDate);
+                renderedContent = ContentWorker.renderSubContentAsTextCache(delegator, expandedContentId, expandedAssocName, null, context, locale, mimeTypeId, userLogin, fromDate);
                 if (UtilValidate.isEmpty(renderedContent)) {
                     String editRequest = (String)context.get("indirectEditRequest");
                     if (UtilValidate.isNotEmpty(editRequest)) {
-                        ContentWorker.renderContentAsTextCache(delegator, "NOCONTENTFOUND", writer, map, null, locale, mimeTypeId);
+                        ContentWorker.renderContentAsTextCache(delegator, "NOCONTENTFOUND", writer, context, null, locale, mimeTypeId);
                     }
                 } else {
                     writer.write(renderedContent);
