@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectType.java,v 1.7 2004/05/04 15:36:41 ajzeneski Exp $
+ * $Id: ObjectType.java,v 1.8 2004/05/04 16:09:04 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -42,7 +42,7 @@ import java.lang.reflect.InvocationTargetException;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
  * @author     <a href="mailto:gielen@aixcept.de">Rene Gielen</a> 
- * @version    $Revision: 1.7 $
+ * @version    $Revision: 1.8 $
  * @since      2.0
  */
 public class ObjectType {
@@ -450,7 +450,7 @@ public class ObjectType {
         if ("PlainString".equals(type)) {
             return obj.toString();
         }
-        if ("Object".equals(type)) {
+        if ("Object".equals(type) || "java.lang.Object".equals(type)) {
             return obj;
         }        
 
