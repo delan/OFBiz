@@ -1,5 +1,5 @@
 /*
- * $Id: RecordIterator.java,v 1.1 2003/12/03 05:12:10 jonesde Exp $
+ * $Id: RecordIterator.java,v 1.2 2003/12/03 06:09:00 jonesde Exp $
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -37,7 +37,7 @@ import java.util.Stack;
  *  Record Iterator for reading large files
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.0
  */
 
@@ -120,8 +120,8 @@ public class RecordIterator {
         
         if (nextLine != null) {
             nextLineNum++;
-            ModelRecord modelRecord = findModelForLine(curLine, nextLineNum, modelDataFile);
-            this.nextRecord = Record.createRecord(curLine, nextLineNum, modelRecord);
+            ModelRecord modelRecord = findModelForLine(nextLine, nextLineNum, modelDataFile);
+            this.nextRecord = Record.createRecord(nextLine, nextLineNum, modelRecord);
             return true;
         } else {
             this.close();
