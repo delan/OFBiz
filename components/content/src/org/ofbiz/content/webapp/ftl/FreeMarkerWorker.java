@@ -1,5 +1,5 @@
 /*
- * $Id: FreeMarkerWorker.java,v 1.22 2004/04/30 23:08:25 ajzeneski Exp $
+ * $Id: FreeMarkerWorker.java,v 1.23 2004/05/11 14:45:49 byersa Exp $
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -69,7 +69,7 @@ import freemarker.template.TemplateModelException;
  * FreemarkerViewHandler - Freemarker Template Engine Util
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.22 $
+ * @version    $Revision: 1.23 $
  * @since      3.0
  */
 public class FreeMarkerWorker {
@@ -720,12 +720,6 @@ public class FreeMarkerWorker {
         //if (Debug.infoOn()) Debug.logInfo("getCurrentContent, contentId:" + contentId, "");
         //if (Debug.infoOn()) Debug.logInfo("getCurrentContent, subContentId:" + subContentId, "");
         //if (Debug.infoOn()) Debug.logInfo("getCurrentContent, viewContentId:" + viewContentId, "");
-/*
-        if (UtilValidate.isNotEmpty(subContentId) && UtilValidate.isNotEmpty(contentId) && contentId.equals(subContentId)) {
-            Debug.logError("subContentId and contentId cannot be equal. Setting subContentId to null", module);
-            subContentId = null;
-        }
-*/
         if (UtilValidate.isNotEmpty(subContentId)) {
             ctx.put("subContentId", subContentId);
             ctx.put("contentId", null);

@@ -1,5 +1,5 @@
 /*
- * $Id: CheckPermissionTransform.java,v 1.12 2004/04/30 23:08:25 ajzeneski Exp $
+ * $Id: CheckPermissionTransform.java,v 1.13 2004/05/11 14:45:49 byersa Exp $
  * 
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  * 
@@ -45,7 +45,7 @@ import freemarker.template.TransformControl;
  * CheckPermissionTransform - Freemarker Transform for URLs (links)
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  * @since 3.0
  */
 public class CheckPermissionTransform implements TemplateTransformModel {
@@ -82,6 +82,7 @@ public class CheckPermissionTransform implements TemplateTransformModel {
         FreeMarkerWorker.getSiteParameters(request, templateCtx);
         FreeMarkerWorker.overrideWithArgs(templateCtx, args);
         final String mode = (String)templateCtx.get("mode");
+        final String quickCheckContentId = (String)templateCtx.get("quickCheckContentId");
         final Map savedValues = new HashMap();
                     //Debug.logInfo("in CheckPermission, contentId(1):" + templateCtx.get("contentId"),"");
                     //Debug.logInfo("in CheckPermission, subContentId(1):" + templateCtx.get("subContentId"),"");
@@ -155,7 +156,7 @@ public class CheckPermissionTransform implements TemplateTransformModel {
                 List roleList = new ArrayList();
         
                 String privilegeEnumId = (String)currentContent.get("privilegeEnumId");
-                Map results = ContentPermissionServices.checkPermission(currentContent, statusList, userLogin, purposeList, targetOperationList, roleList, delegator, security, entityOperation, privilegeEnumId); 
+                Map results = ContentPermissionServices.checkPermission(currentContent, statusList, userLogin, purposeList, targetOperationList, roleList, delegator, security, entityOperation, privilegeEnumId, quickCheckContentId); 
 
                 boolean isError = ModelService.RESPOND_ERROR.equals(results.get(ModelService.RESPONSE_MESSAGE));
                 if (isError) {
