@@ -265,7 +265,7 @@ Column Name: <%=(modelViewEntity == null)?entity.tableName:"What column name? Th
   <BR>
   <INPUT type=text size='60' name='title' value='<%=entity.title%>'> (Title)
   <BR>
-  <INPUT type=text size='60' name='description' value='<%=entity.description%>'> (Description)
+  <TEXTAREA cols='60' rows='5' name='description'><%=entity.description%></TEXTAREA> (Description)
   <BR>
   <INPUT type=text size='60' name='copyright' value='<%=entity.copyright%>'> (Copyright)
   <BR>
