@@ -1,5 +1,5 @@
 /*
- * $Id: ModelService.java,v 1.1 2003/08/17 05:12:41 ajzeneski Exp $
+ * $Id: ModelService.java,v 1.2 2003/08/25 19:32:33 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -47,7 +47,7 @@ import org.ofbiz.base.util.OrderedSet;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class ModelService {
@@ -355,8 +355,8 @@ public class ModelService {
         }
 
         try {
-            validate(requiredInfo, requiredTest, true);
-            validate(optionalInfo, optionalTest, false);
+            validate(requiredInfo, requiredTest, true, this.name);
+            validate(optionalInfo, optionalTest, false, this.name);
         } catch (ServiceValidationException e) {
             Debug.logError("[ModelService.validate] : {" + name + "} : (" + mode + ") Required test error: " + e.toString(), module);
             throw e;
@@ -370,9 +370,14 @@ public class ModelService {
      * @param reverse Test the maps in reverse.
      * @returns true if validation is successful
      */
-    public static void validate(Map info, Map test, boolean reverse) throws ServiceValidationException {
+    public static void validate(Map info, Map test, boolean reverse, String serviceName) throws ServiceValidationException {
         if (info == null || test == null) {
             throw new ServiceValidationException("Cannot validate NULL maps");
+        }
+        
+        String serviceNameMessage = "";
+        if (serviceName != null) {
+            serviceNameMessage = "For service [" + serviceName + "] ";
         }
 
         // * Validate keys first
@@ -396,7 +401,7 @@ public class ModelService {
                 }
             }
 
-            throw new ServiceValidationException("The following required parameters are missing: " + missingStr);
+            throw new ServiceValidationException(serviceNameMessage + "the following required parameters are missing: " + missingStr);
         }
         // This is to see if the info set contains all from the test set
         if (!keySet.containsAll(testSet)) {
@@ -412,7 +417,7 @@ public class ModelService {
                     extraStr += ", ";
                 }
             }
-            throw new ServiceValidationException("Unknown parameters found: " + extraStr);
+            throw new ServiceValidationException(serviceNameMessage + "unknown parameters found: " + extraStr);
         }
 
         // * Validate types next
@@ -425,7 +430,7 @@ public class ModelService {
 
             if (!ObjectType.instanceOf(testObject, infoType, null)) {
                 String testType = testObject == null ? "null" : testObject.getClass().getName();
-                throw new ServiceValidationException("Type check failed for field " + key + "; expected type is " +
+                throw new ServiceValidationException(serviceNameMessage + "type check failed for field " + key + "; expected type is " +
                         infoType + "; actual type is: " + testType);
             }
         }
