@@ -98,10 +98,8 @@ public class CallService extends MethodOperation {
         defaultMessage = new FlexibleMessage(UtilXml.firstChildElement(element, "default-message"), "service.default.message");
 
         List resultsToMapElements = UtilXml.childElementList(element, "results-to-map");
-
         if (resultsToMapElements != null && resultsToMapElements.size() > 0) {
             Iterator iter = resultsToMapElements.iterator();
-
             while (iter.hasNext()) {
                 Element resultsToMapElement = (Element) iter.next();
 
@@ -110,10 +108,8 @@ public class CallService extends MethodOperation {
         }
 
         List resultToFieldElements = UtilXml.childElementList(element, "result-to-field");
-
         if (resultToFieldElements != null && resultToFieldElements.size() > 0) {
             Iterator iter = resultToFieldElements.iterator();
-
             while (iter.hasNext()) {
                 Element resultToFieldElement = (Element) iter.next();
                 ResultToFieldDef rtfDef = new ResultToFieldDef();
@@ -131,10 +127,8 @@ public class CallService extends MethodOperation {
 
         // get result-to-request and result-to-session sub-ops
         List resultToRequestElements = UtilXml.childElementList(element, "result-to-request");
-
         if (resultToRequestElements != null && resultToRequestElements.size() > 0) {
             Iterator iter = resultToRequestElements.iterator();
-
             while (iter.hasNext()) {
                 Element resultToRequestElement = (Element) iter.next();
                 String reqName = resultToRequestElement.getAttribute("request-name");
@@ -146,10 +140,8 @@ public class CallService extends MethodOperation {
         }
 
         List resultToSessionElements = UtilXml.childElementList(element, "result-to-session");
-
         if (resultToSessionElements != null && resultToSessionElements.size() > 0) {
             Iterator iter = resultToSessionElements.iterator();
-
             while (iter.hasNext()) {
                 Element resultToSessionElement = (Element) iter.next();
                 String sesName = resultToSessionElement.getAttribute("session-name");
@@ -161,17 +153,15 @@ public class CallService extends MethodOperation {
         }
 
         List resultToResultElements = UtilXml.childElementList(element, "result-to-result");
-
         if (resultToResultElements != null && resultToResultElements.size() > 0) {
             Iterator iter = resultToResultElements.iterator();
-
             while (iter.hasNext()) {
                 Element resultToResultElement = (Element) iter.next();
                 String serResName = resultToResultElement.getAttribute("service-result-name");
 
                 if (serResName == null || serResName.length() == 0)
                     serResName = resultToResultElement.getAttribute("result-name");
-                resultToSession.put(serResName, resultToResultElement.getAttribute("result-name"));
+                resultToResult.put(serResName, resultToResultElement.getAttribute("result-name"));
             }
         }
     }
