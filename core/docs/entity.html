@@ -1,13 +1,11 @@
 <html>
 <head>
-<title>Open For Business Entity Engine</title>
-      <title>Postal Address Entity</title>
-      <package-name>
+<title>Open For Business Entity Engine Guide</title>
 </head>
 
 <body>
 
-<h2 align="center">The Open For Business Project: Entity Engine</h2>
+<h2 align="center">The Open For Business Project: Entity Engine Guide</h2>
 
 <br>Written By: David E. Jones
 <br>Email: <a href="mailto:jonesde@ofbiz.org">jonesde@ofbiz.org</a>
@@ -16,24 +14,24 @@
 <A href="http://sf.net/projects/ofbiz"> <IMG src="http://sourceforge.net/sflogo.php?group_id=27173" border="0" alt="SourceForge Logo"></A> 
 <br>
 Founders and Lead Architects: David E. Jones &amp; Andy Zeneski <br>
-Last Updated: September 15, 2001<br>
+Last Updated: November 19, 2001<br>
 $Id$ <br>
 <hr>
 <br>
 <h3>Table of Contents</h3>
 
 <ul>
-	<li><a href="#Related Documents">Related Documents</a>
-	<li><a href="#Introduction">Introduction</a>
-	<li><a href="#Entity Modeling">Entity Modeling</a>
-	<li><a href="#View Entity Modeling">View Entity Modeling</a>
-	<li><a href="#The Generic Entity">The Generic Entity</a>
-	<li><a href="#CommonApp Tools">CommonApp Tools</a>
+  <li><a href="#Related_Documents">Related Documents</a>
+  <li><a href="#Introduction">Introduction</a>
+  <li><a href="#Entity_Modeling">Entity Modeling</a>
+  <li><a href="#View_Entity_Modeling">View Entity Modeling</a>
+  <li><a href="#The_Entity_Engine_API">The Entity Engine API</a>
+  <li><a href="#CommonApp_Tools">CommonApp Tools</a>
 </ul>
 
 <hr>
 
-<h3><a name="Related Documents">Related Documents:</a></h3>
+<h3><a name="Related_Documents">Related Documents:</a></h3>
 <hr>
 <ul>
   <li><a href="api/index.html">Core JavaDoc (including Entity Engine)</a></li>
@@ -153,7 +151,7 @@ specified in the <b>entityengine.properties</b> file. The default entity group X
 file for the OFBiz entity model can be found in <b>ofbiz/commonapp/entitydef/entitygroup.xml</b>.</p>
 
 <hr>
-<h3><a name="Entity Modeling">Entity Modeling</a></h3>
+<h3><a name="Entity_Modeling">Entity Modeling</a></h3>
 <hr>
 <p>The first thing to do when starting work with a new entity is to define or
 model that entity. In the OFBiz Entity Engine this is done through two XML
@@ -164,21 +162,30 @@ that field type definitions can be database specific. In other words, for a
 given entity model definition various field type definitions may exist for
 different databases. When a persistence server is defined the field type model
 XML file to be used for that server is specified.</p>
-<p>The main entity model XML file for Open For Business can be found in <b>ofbiz/commonapp/entitydef/entitymodel.xml</b>.
-The MySQL field type model XML file for Open For Business can be found in <b>ofbiz/commonapp/entitydef/fieldtypemysql.xml</b>.
-From these two files the SQL code used to define tables and populate security
-settings for the entities can be automatically generated through the tools in
-commonapp. In addition to these generated SQL scripts there are two others that
-must be run for commonapp. The first is <b>ofbiz/commonapp/db/commonapp-data-mysql.sql</b>
-and it contains sample data and administration accounts for commonapp, and can
-be used to get other applications started as well. The second is <b>ofbiz/commonapp/db/datamodel-data.sql</b>
-which has all of the entity type definitions which correspond to the entities
-definted in <b>entitymodel.xml</b>. When I say entity type definitions, I am referring
-to the entity types used in the entity extensibility pattern defined in the
-Entity Overview document on the OFBiz website.</p>
+<p>The main entity model XML files for Open For Business can be found in <b>ofbiz/commonapp/entitydef/</b>.
+Originally all of the entities were in the <b>entitymodel.xml</b> file, but now they are separated into various files
+in addition to the <b>entitymodel.xml</b> file. They are all named after the following pattern: <b>entitymodel_*.xml</b></p>
+
+<p>The MySQL field type model XML file for Open For Business can be found in <b>ofbiz/commonapp/entitydef/fieldtypemysql.xml</b>.
+There are other database specific field type files for Postgres, Hypersonic, Oracle, et cetera.
+From the entity model files and the field type files database tables can be created automatically through
+the checkDataSource routine on the GenericHelper inteface. This can be done automatically on startup or through the tools in CommonApp.</p>
+
+<p>While tables can be created automatically, data must be loaded from data files. These
+files can be either SQL scripts or XML Entity Engine files. All of the type information and other
+pre-loaded information such as statuses, enumerations, geo data, etc., are located in
+XML Entity Engine files in <b>ofbiz/commonapp/db/</b>. These files can be located and loaded automatically
+by the <b>install.jsp</b> page in CommonApp. This page looks in the directories specified in
+the <b>entityengine.properties</b> file for a given entity group name and finds all .xml and .sql
+files. These are listed and confirmation is requested by the page. Clicking on the Yes, Load Now link
+will cause these files to attempt to be loaded. Error messages will appear in the page as
+well as on the console or in log files. Data files can also be loaded one at a time by specifying the
+full path of the .sql or .xml file in the load a single file form. While on the topic, XML Entity Engine files
+can also be imported and exported through the import & export pages in CommonApp.</p>
+
 <p>As mentioned above an entity consists of a set of fields and a set of
-relations to other entities. In the XML entity definitions each of these things
-is specified in addition to attributes of the entity itself such as the entity
+relationships to other entities. In the XML entity definitions each of these are
+specified in addition to attributes of the entity itself such as the entity
 name, the corresponding table name, the package name for the entity, and meta
 data about the entity such as the author, a copyright notice, a description, and
 so forth. Here is an example of an XML entity definition:</p>
@@ -196,7 +203,7 @@ so forth. Here is an example of an XML entity definition:</p>
       &lt;field name=&quot;foreignKeyOne&quot; type=&quot;id&quot;&gt;&lt;/field&gt;
       &lt;prim-key field=&quot;primaryKeyFieldOne&quot; /&gt;
       &lt;prim-key field=&quot;primaryKeyFieldTwo&quot; /&gt;
-      &lt;relation type=&quot;one&quot; rel-entity-name=&quot;otherSampleEntity&quot;&gt;
+      &lt;relation type=&quot;one&quot; rel-entity-name=&quot;OtherSampleEntity&quot;&gt;
         &lt;key-map field-name=&quot;foreignKeyOne&quot; rel-field-name=&quot;primaryKeyOne&quot; /&gt;
       &lt;/relation&gt;
       &lt;relation type=&quot;one&quot; title=&quot;Self&quot; rel-entity-name=&quot;SampleEntity&quot;&gt;
@@ -256,7 +263,7 @@ If the two column names are the same, the rel-field-name does not have to be
 specified.</p>
 
 <hr>
-<h3><a name="View Entity Modeling">View Entity Modeling</a></h3>
+<h3><a name="View_Entity_Modeling">View Entity Modeling</a></h3>
 <hr>
 
 <p>In addition to entities that map directly to a single relational table you can create "virtual" or "view" entities that map to a set of other entities.
@@ -273,54 +280,67 @@ entity group XML file, just like any normal entity.</p>
             author=&quot;John Doe&quot; version=&quot;1.0&quot;
             package-name=&quot;org.ofbiz.commonapp.sample&quot;
             entity-name=&quot;SampleViewEntity&quot;&gt;
-      &lt;field name=&quot;primaryKeyFieldOne&quot; col-name=&quot;PRIMARY_KEY_FIELD_ONE&quot; type=&quot;id-ne&quot;&gt;&lt;/field&gt;
-      &lt;field name=&quot;primaryKeyFieldTwo&quot; type=&quot;id-ne&quot;&gt;&lt;/field&gt;
-      &lt;field name=&quot;fieldOne&quot; type=&quot;long-varchar&quot;&gt;&lt;/field&gt;
-      &lt;field name=&quot;fieldTwo&quot; type=&quot;long-varchar&quot;&gt;&lt;/field&gt;
-      &lt;field name=&quot;foreignKeyOne&quot; type=&quot;id&quot;&gt;&lt;/field&gt;
-      &lt;prim-key field=&quot;primaryKeyFieldOne&quot; /&gt;
-      &lt;prim-key field=&quot;primaryKeyFieldTwo&quot; /&gt;
-      &lt;relation type=&quot;one&quot; rel-entity-name=&quot;otherSampleEntity&quot;&gt;
+      &lt;member-entity entity-alias=&quot;SE&quot; entity-name=&quot;SampleEntity&quot; /&gt;
+      &lt;member-entity entity-alias=&quot;OSE&quot; entity-name=&quot;OtherSampleEntity&quot; /&gt;
+      &lt;alias entity-alias=&quot;SE&quot; name=&quot;primaryKeyFieldOne&quot; prim-key=&quot;true&quot; /&gt;
+      &lt;alias entity-alias=&quot;SE&quot; name=&quot;primaryKeyFieldTwo&quot; prim-key=&quot;true&quot; /&gt;
+      &lt;alias entity-alias=&quot;SE&quot; name=&quot;fieldOne&quot; /&gt;
+      &lt;alias entity-alias=&quot;SE&quot; name=&quot;fieldTwo&quot; /&gt;
+      &lt;alias entity-alias=&quot;OSE&quot; name=&quot;primaryKeyOne&quot; prim-key=&quot;true&quot; /&gt;
+      &lt;alias entity-alias=&quot;OSE&quot; name=&quot;otherFieldOne&quot; field=&quot;fieldOne&quot; /&gt;
+      &lt;view-link entity-alias=&quot;SE&quot; rel-entity-alias=&quot;OSE&quot;&gt;
         &lt;key-map field-name=&quot;foreignKeyOne&quot; rel-field-name=&quot;primaryKeyOne&quot; /&gt;
-      &lt;/relation&gt;
-      &lt;relation type=&quot;one&quot; title=&quot;Self&quot; rel-entity-name=&quot;SampleEntity&quot;&gt;
-        &lt;key-map field-name=&quot;primaryKeyFieldOne&quot; /&gt;
-        &lt;key-map field-name=&quot;primaryKeyFieldTwo&quot; /&gt;
+      &lt;/view-link&gt;
+      &lt;relation type=&quot;one&quot; rel-entity-name=&quot;OtherSampleEntity&quot;&gt;
+        &lt;key-map field-name=&quot;primaryKeyOne&quot; /&gt;
       &lt;/relation&gt;
       &lt;relation type=&quot;many&quot; title=&quot;AllOne&quot; rel-entity-name=&quot;SampleEntity&quot;&gt;
         &lt;key-map field-name=&quot;primaryKeyFieldOne&quot; /&gt;
       &lt;/relation&gt;
-    &lt;/entity&gt;</pre>
+    &lt;/view-entity&gt;</pre>
 
-<p>Note that view entities have primary keys just like normal entities. The primary key for a view entity should include all primary key fields of each
+<p>Normal entities that will become part of the view entity are referred to as member entities. Each member entity is given an alias and 
+is referred to by that alias for the rest of the definition. This allows a single entity to be linked in multiple times.</p>
+
+<p>Rather than specifying fields with a view entity you specify aliases. Each alias is effectively a field in usage and is defined
+by being mapped to a field on an aliases member entity. If the field name is that same as the alias name, there is no need to specify it. In
+other words if no field name is specified the alias name will be used as the field name to map to on the member entity with the specified
+entity-alias.</p>
+
+<p>View links are used to specify the links between the member-entities of the view. They link one entity-alias to another and use
+key-maps just like relations. Here the field-name specifies the name of the field on the aliased entity and the rel-field-name the field on
+the related aliased entity. As with many other things, the rel-field-name is optional if it is the same as the field-name.</p>
+
+<p>View Entities have primary keys just like normal entities. Specifying that an alias is a primary key is done by using the prim-key attribute.</p>
+<p>The primary key for a view entity should include all primary key fields of each
 member entity of the view. This means that all of the primary key fields must be aliased, but fields that are used to link the entities need only be aliased
 once. For example, if an OrderHeader entity has an orderId primary key and an OrderLine entity has an orderId primary key and an orderLineSeqId
 primary key, and the orderId was the mapped key that links the two entities, then the view entity would have two primary keys: orderId and
 orderLineSeqId. In this case orderId would only be aliased once since by definition the orderIds from each entity will always be the same since
 that is how the entities are linked (or joined).</p>
 
+<p>Relationships are specified the same way with view entities as they are with normal entities. That key-map attributes are still called
+field-name and rel-field-name but in the case of view entities the field name is actually the alias name that will be looked up.</p>
 
 <hr>
-<h3><a name="The Generic Entity">The Generic Entity</a></h3>
+<h3><a name="The_Entity_Engine_API">The Entity Engine API</a></h3>
 <hr>
-<p>The Generic Entity classes in the package <b> org.ofbiz.core.entity</b> define the
+<p>The Entity Engine classes in the package <b> org.ofbiz.core.entity</b> define the
 API used to interact with Entity Engine entity data. From a users point of view
 only three classes really need to be understood. They are <b>GenericDelegator</b>,
-<b>
-GenericValue</b> and <b>GenericPK</b>. The <b>GenericDelegator</b> class, usually used with the
+<b>GenericValue</b> and <b>GenericPK</b>. The <b>GenericDelegator</b> class, usually used with the
 instance name '<b>delegator</b>', is used to do create, find, store and other operations on a
-<b>
-GenericValue</b> object. Once a <b> GenericValue</b> object is created it will contain a
+<b>GenericValue</b> object. Once a <b> GenericValue</b> object is created it will contain a
 reference to the delegator that created it and through this reference it knows how
-to store, remove and do other operations without invoking methods on the delegator
+to store, remove and do other operations without requiring a program to invoke methods on the delegator
 itself.</p>
 
 <p>I've been trying to think of how best to present information about this API,
 but short of writing a number of documents about the specific usage of each
 piece, there is not much that is useful that I could write here. I recommend
 reading through the JavaDocs for the core module, specifically the <b>
-org.ofbiz.core.entity</b> package, and browsing through the eCommerce application
-which makes heavy use of this API.</p>
+org.ofbiz.core.entity</b> package, and browsing through the eCommerce and other applications
+which make heavy use of this API.</p>
 
 <p>A few quick notes to help you get started might be in order. Rather than
 trying to construct a GenericValue or a GenericPK yourself, you should use the <b>makeValue</b>
@@ -330,7 +350,15 @@ using their own <b>create</b> method, or calling the <b>create</b> method on the
 <b>delegator</b> object.</p>
 
 <p>Value instances can be retrieved from the database with the <b>findByPrimaryKey</b>
-method, or a collection can be retrieved using the <b>findByAnd</b> method.</p>
+methods, or a collection can be retrieved using the <b>findAll</b> or <b>findByAnd</b> methods.</p>
+
+<p>There are two main types of findByAnd methods. Each type has a number of variations
+that may include the use of a cache, and may accept an orderBy field list. The two
+main types accept different field lists. One accepts a Map of fields and finds entities
+by anding together expressions where each named field must equal the corresponding value
+in the map. The other type of findByAnd accepts a list of <b>EntityExpr</b> objects which
+are used to specify small expressions that will be anded together. Each EntityExpr specifies
+a field name, an operation, and a value for the field.</p>
 
 <p>For storing multiple entities the <b>GenericValue</b> class has methods
 called <b>preStoreOther</b> and <b>preStoreOthers</b> which take one and many
@@ -341,22 +369,28 @@ update, if not it does an insert. This may be optimized in the future for speed
 by allowing you to specify whether it should be inserted or updated based on
 prior knowledge of the existence if that entity.</p>
 
-<p>Removal of entities is done through the <b>remove </b>method on either the <b>delegator</b>,
+<p>You can also store multiple entities in a single call, and transaction, through the
+delegator.storeAll method, which acts nearly the same as the preStore methods, but does
+not use a single value object to attach the others to.<p>
+
+<p>Removal of entities is done through the <b>remove</b> method on either the <b>delegator</b>,
 or the <b>GenericValue</b>.</p>
 
 <hr>
-<h3><a name="CommonApp Tools">CommonApp Tools</a></h3>
+<h3><a name="CommonApp_Tools">CommonApp Tools</a></h3>
 <hr>
 
 <p>The CommonApp web application contains a number of useful tools for working
 with the entity engine. These include a cross linked reference to the entity
 definitions, a tool for editing entity and relation definitions, and a JSP which
-acts as an XML template saving the XML entity definitions. </p>
+acts as an XML template and also saves the XML entity definitions to their corresponding files. </p>
+
 <p>There is also a JSP that acts as a front end to the routines which checks the
 current state of the database table definitions and reports any differences.
 Where possible tables or columns which are missing can be added to the database.
 This is the same routine which optionally runs when the server loads and
-optionally creates missing tables and fields.</p>
+optionally creates missing tables and columns.</p>
+
 <p>The entity code generator has been removed from the project, or deprecated if
 you will, because of the next generation entity tool which is the entity engine
 described herein. There are still some occasions where the use of templates to
@@ -367,6 +401,7 @@ entity definitions have changed. Other uses for templates include manually
 generating database specific table creation SQL and quick start JSPs and event
 handlers which allow for finding, viewing and editing entity specific data.
 These can be used as starting points for task specific applications.</p>
+
 <p>Where entity data editing is not task specific, but instead is entity
 specific, the Entity Data Maintenance pages in CommonApp can be used. They are
 dynamic pages that rely on the in memory entity definitions to create forms for
@@ -377,6 +412,14 @@ given entity instance. For instance, when viewing the OrderHeader entity all of
 the relations to that entity can be viewed as well, including links to edit and
 view them. These related entities would include OrderType (one relation),
 OrderLine (many relation), and many others.</p>
+
+<p>Data in the database can be imported from and exported to Entity Engine XML files
+in the import and export pages. Importing data causes corresponding entity instances
+to either be created or updated, depending on whether or not they already exist. The
+Export page allows you to specify which entities you want to export the data for by
+using a big list of check boxes, one for each entity. For more granular control over
+exported data, the Entity Data Maintenance pages mentioned above would be the place
+to look (not yet finished though...).</p>
 
 </body>
 
