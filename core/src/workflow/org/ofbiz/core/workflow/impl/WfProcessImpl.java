@@ -364,7 +364,8 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
         Iterator fromIt = fromCol.iterator();
         while (fromIt.hasNext()) {
             GenericValue transition = (GenericValue) fromIt.next();
-            if (transition.getString("conditionTypeEnumId").equals("WTC_OTHERWISE")) {
+            if (transition.get("conditionTypeEnumId") != null &&
+                    transition.getString("conditionTypeEnumId").equals("WTC_OTHERWISE")) {
                 otherwise = transition;
                 continue;
             }
