@@ -6,24 +6,22 @@
 
 package org.ofbiz.manufacturing.bom;
 
-import java.util.Map;
-import java.util.List;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Date;
-import java.sql.Timestamp;
+import java.util.List;
+import java.util.Map;
 
-import org.ofbiz.entity.util.EntityUtil;
-import org.ofbiz.entity.GenericDelegator;
-import org.ofbiz.entity.GenericValue;
-import org.ofbiz.entity.GenericEntityException;
-import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilDateTime;
+import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.entity.GenericDelegator;
+import org.ofbiz.entity.GenericEntityException;
+import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
-import org.ofbiz.service.ModelService;
-import org.ofbiz.service.ServiceUtil;
 
 /** An ItemCoinfigurationNode represents a component in a bill of materials.
  * @author <a href="mailto:tiz@sastau.it">Jacopo Cappellato</a>
