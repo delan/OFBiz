@@ -20,10 +20,13 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Olivier.Heintz@nereide.biz
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      3.0
  */
 
+// The page can be used in two different ways:
+// - if the "workEffortId" (routing id) parameter exists: all the products linked to the routing are shown
+// - if the "byProduct" (product id) parameter exists: all the routings linked to the product are shown
 
 import java.sql.Timestamp;
 import java.util.*;
@@ -33,6 +36,7 @@ import org.ofbiz.entity.model.DynamicViewEntity;
 import org.ofbiz.entity.model.ModelKeyMap;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.condition.EntityExpr;
+import org.ofbiz.entity.condition.EntityConditionList;
 import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.content.widget.html.*;
 
@@ -44,19 +48,28 @@ if(security.hasEntityPermission("MANUFACTURING", "_VIEW", session)) {
 } else {
     context.put("hasPermission", Boolean.FALSE);
 }
-String byProduct = request.getParameter("byProduct");
-String routingTemplate = request.getParameter("routingTemplate");
-String productId = request.getParameter("productId");
+
+// 
 String workEffortId  = request.getParameter("workEffortId");
+// 
+String byProduct = request.getParameter("byProduct");
+if (byProduct == null) {
+    byProduct = "null";
+} else {
+    context.put("byProduct", byProduct);
+}
+
+String productId = request.getParameter("productId");
+
 context.put("routingId",workEffortId);
+
 String workEffortName = null;
-String statusId = null;
+String productName = null;
 List allRoutingProductLinks = null;
-if ("Y".equals(routingTemplate)) statusId = "ROU_PROD_TEMPLATE";
 
 DynamicViewEntity dynamicViewEntity = new DynamicViewEntity();
 dynamicViewEntity.addMemberEntity("WEGS", "WorkEffortGoodStandard");
-dynamicViewEntity.addAliasAll("WEGS",null);
+dynamicViewEntity.addAliasAll("WEGS", null);
 dynamicViewEntity.addMemberEntity("WE", "WorkEffort");
 dynamicViewEntity.addViewLink("WEGS", "WE", Boolean.FALSE, ModelKeyMap.makeKeyMapList("workEffortId"));
 dynamicViewEntity.addAlias("WE", "workEffortName", "workEffortName", null, null, null, null);
@@ -64,58 +77,66 @@ dynamicViewEntity.addMemberEntity("PRD", "Product");
 dynamicViewEntity.addViewLink("WEGS", "PRD", Boolean.FALSE, ModelKeyMap.makeKeyMapList("productId"));
 dynamicViewEntity.addAlias("PRD", "internalName", "internalName", null, null, null, null);
 
-if ("Y".equals(byProduct)) {
-		 EntityListIterator eli = delegator.findListIteratorByCondition(dynamicViewEntity, EntityExpr("productId", EntityOperator.EQUALS, productId), null, null, null, null);
-		 allRoutingProductLinks = eli.getCompleteList();
+EntityExpr expStatus = new EntityExpr("statusId", EntityOperator.EQUALS, "ROU_PROD_TEMPLATE");
+if (!byProduct.equals("null")) {
+    EntityExpr expProduct = new EntityExpr("productId", EntityOperator.EQUALS, byProduct);
+    EntityConditionList ecl = new EntityConditionList(UtilMisc.toList(expStatus, expProduct), EntityOperator.AND);
+    EntityListIterator eli = delegator.findListIteratorByCondition(dynamicViewEntity, ecl, null, null, null, null);
+    allRoutingProductLinks = eli.getCompleteList();
+    productName = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", byProduct)).getString("productName");
+} else {
+    EntityExpr expRouting = new EntityExpr("workEffortId", EntityOperator.EQUALS, workEffortId);
+    EntityConditionList ecl = new EntityConditionList(UtilMisc.toList(expStatus, expRouting), EntityOperator.AND);
+    EntityListIterator eli = delegator.findListIteratorByCondition(dynamicViewEntity, ecl, null, null, null, null);
+    allRoutingProductLinks = eli.getCompleteList();
+    workEffortName = delegator.findByPrimaryKey("WorkEffort", UtilMisc.toMap("workEffortId", workEffortId)).getString("workEffortName");
 }
-else { 
-		 EntityListIterator eli = delegator.findListIteratorByCondition(dynamicViewEntity,new EntityExpr("workEffortId", EntityOperator.EQUALS, workEffortId), null, null, null, null);
-		 allRoutingProductLinks = eli.getCompleteList();
-		 workEffortName=delegator.findByPrimaryKey("WorkEffort", UtilMisc.toMap("workEffortId", workEffortId)).getString("workEffortName");
-}
-		
 
 HtmlFormWrapper listRoutingProductLinkWrapper = new HtmlFormWrapper("/routing/RoutingTaskForms.xml", "ListRoutingProductLink", request, response);
-listRoutingProductLinkWrapper.putInContext("allRoutingProductLinks", allRoutingProductLinks);
+if (allRoutingProductLinks != null) {
+    listRoutingProductLinkWrapper.putInContext("allRoutingProductLinks", allRoutingProductLinks);
+}
 listRoutingProductLinkWrapper.putInContext("uiLabelMap", request.getAttribute("uiLabelMap"));
 listRoutingProductLinkWrapper.putInContext("byProduct", byProduct);
-listRoutingProductLinkWrapper.putInContext("routingTemplate", routingTemplate);
 context.put("listRoutingProductLinkWrapper",listRoutingProductLinkWrapper);
 context.put("allRoutingProductLinks",allRoutingProductLinks);
 
 GenericValue routingProductLink = null;
 String fromDateString = request.getParameter("fromDate");
 if (productId != null && workEffortId != null && fromDateString != null) {  
-	Timestamp fromDate = null;
-	try {fromDate = Timestamp.valueOf(fromDateString);}
-	catch (IllegalArgumentException e){ fromDate=null; }
-	routingProductLink = delegator.findByPrimaryKey("WorkEffortGoodStandard", UtilMisc.toMap("productId", productId,"workEffortId", workEffortId,"fromDate",fromDate));
-	if (routingProductLink != null) { 
-		HtmlFormWrapper updateRoutingProductLinkWrapper = new HtmlFormWrapper("/routing/RoutingTaskForms.xml", "UpdateRoutingProductLink", request, response);
-		updateRoutingProductLinkWrapper.putInContext("routingProductLink", routingProductLink);
-		updateRoutingProductLinkWrapper.putInContext("uiLabelMap", request.getAttribute("uiLabelMap"));
-		updateRoutingProductLinkWrapper.putInContext("byProduct", byProduct);
-		updateRoutingProductLinkWrapper.putInContext("routingTemplate", routingTemplate);
+    Timestamp fromDate = null;
+    try {
+        fromDate = Timestamp.valueOf(fromDateString);
+    } catch (IllegalArgumentException e){
+        fromDate = null;
+    }
+    routingProductLink = delegator.findByPrimaryKey("WorkEffortGoodStandard", UtilMisc.toMap("productId", productId,"workEffortId", workEffortId,"fromDate",fromDate));
+    if (routingProductLink != null) { 
+        HtmlFormWrapper updateRoutingProductLinkWrapper = new HtmlFormWrapper("/routing/RoutingTaskForms.xml", "UpdateRoutingProductLink", request, response);
+        updateRoutingProductLinkWrapper.putInContext("routingProductLink", routingProductLink);
+        updateRoutingProductLinkWrapper.putInContext("uiLabelMap", request.getAttribute("uiLabelMap"));
+        updateRoutingProductLinkWrapper.putInContext("byProduct", byProduct);
         updateRoutingProductLinkWrapper.putInContext("workEffortName", workEffortName);
         updateRoutingProductLinkWrapper.putInContext("internalName", routingProductLink.getRelatedOne("Product").getString("internalName"));
-		context.put("routingProductLink", routingProductLink);
-		context.put("updateRoutingProductLinkWrapper", updateRoutingProductLinkWrapper);
-	}
+        context.put("routingProductLink", routingProductLink);
+        context.put("updateRoutingProductLinkWrapper", updateRoutingProductLinkWrapper);
+    }
 }
 
 HtmlFormWrapper addRoutingProductLinkWrapper = new HtmlFormWrapper("/routing/RoutingTaskForms.xml", "AddRoutingProductLink", request, response);
 addRoutingProductLinkWrapper.putInContext("uiLabelMap", request.getAttribute("uiLabelMap"));
 addRoutingProductLinkWrapper.putInContext("byProduct", byProduct);
-addRoutingProductLinkWrapper.putInContext("routingTemplate", routingTemplate);
-addRoutingProductLinkWrapper.putInContext("statusId", statusId);
-if ("Y".equals(byProduct)) { 
-			addRoutingProductLinkWrapper.putInContext("productId", productId);
-			addRoutingProductLinkWrapper.putInContext("workEffortId", null);
-			}
-else    {addRoutingProductLinkWrapper.putInContext("workEffortId", workEffortId);
-			addRoutingProductLinkWrapper.putInContext("workEffortName", workEffortName);
-			addRoutingProductLinkWrapper.putInContext("productId", null);
-			}
+addRoutingProductLinkWrapper.putInContext("statusId", "ROU_PROD_TEMPLATE");
+
+if (!byProduct.equals("null")) { 
+    addRoutingProductLinkWrapper.putInContext("productId", productId);
+    addRoutingProductLinkWrapper.putInContext("productName", productName);
+    addRoutingProductLinkWrapper.putInContext("workEffortId", null);
+} else {
+    addRoutingProductLinkWrapper.putInContext("workEffortId", workEffortId);
+    addRoutingProductLinkWrapper.putInContext("workEffortName", workEffortName);
+    addRoutingProductLinkWrapper.putInContext("productId", null);
+}
 context.put("addRoutingProductLinkWrapper", addRoutingProductLinkWrapper);
 
 
