@@ -27,7 +27,7 @@
  -->
 <simple-methods>
     <!-- ProductPromo methods -->
-    <simple-method method-name="createProductPromo" short-description="Create an ProductPromo">
+    <simple-method method-name="createProductPromo" short-description="Create a ProductPromo">
         <check-permission permission="CATALOG" action="_CREATE"><fail-message message="Security Error: to run createProductPromo you must have the CATALOG_CREATE or CATALOG_ADMIN permission"/></check-permission>
         <check-permission permission="CATALOG_PRICE_MAINT"><fail-property resource="ProductUiLabels" property="ProductPriceMaintPermissionError"/></check-permission>
         <check-errors/>
@@ -36,10 +36,13 @@
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
         <sequenced-id-to-env sequence-name="ProductPromo" env-name="newEntity.productPromoId" to-string="true"/>
         <field-to-result field-name="productPromoId" map-name="newEntity"/>
+        <if-empty field-name="newEntity.userEntered">
+            <string-to-field string="Y" field-name="newEntity.userEntered"/>
+        </if-empty>
 
         <create-value value-name="newEntity"/>
     </simple-method>
-    <simple-method method-name="updateProductPromo" short-description="Update an ProductPromo">
+    <simple-method method-name="updateProductPromo" short-description="Update a ProductPromo">
         <check-permission permission="CATALOG" action="_UPDATE"><fail-message message="Security Error: to run updateProductPromo you must have the CATALOG_UPDATE or CATALOG_ADMIN permission"/></check-permission>
         <check-permission permission="CATALOG_PRICE_MAINT"><fail-property resource="ProductUiLabels" property="ProductPriceMaintPermissionError"/></check-permission>
         <check-errors/>
@@ -47,7 +50,22 @@
         <field-to-field field-name="productPromoId" map-name="parameters" to-map-name="lookupPKMap"/>
         <find-by-primary-key entity-name="ProductPromo" map-name="lookupPKMap" value-name="lookedUpValue"/>
         <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
+        <if-empty field-name="newEntity.userEntered">
+            <string-to-field string="Y" field-name="newEntity.userEntered"/>
+        </if-empty>
+
         <store-value value-name="lookedUpValue"/>
+    </simple-method>
+    <simple-method method-name="deleteProductPromo" short-description="Delete a ProductPromo">
+        <check-permission permission="CATALOG" action="_UPDATE"><fail-message message="Security Error: to run updateProductPromo you must have the CATALOG_UPDATE or CATALOG_ADMIN permission"/></check-permission>
+        <check-permission permission="CATALOG_PRICE_MAINT"><fail-property resource="ProductUiLabels" property="ProductPriceMaintPermissionError"/></check-permission>
+        <check-errors/>
+
+        <!-- TODO: if a force remove flag is passed, remove related info first, maybe just rules, store assocs, etc -->
+
+        <field-to-field field-name="productPromoId" map-name="parameters" to-map-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="ProductPromo" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <remove-value value-name="lookedUpValue"/>
     </simple-method>
 
     <!-- ProductPromoAction methods -->

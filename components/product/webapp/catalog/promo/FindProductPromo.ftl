@@ -22,15 +22,22 @@
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Brad Steiner (bsteiner@thehungersite.com)
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      2.2
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#if hasPermission>
     <div class="head1">${uiLabelMap.ProductProductPromotionsList}</div>
-    <div><a href='<@ofbizUrl>/EditProductPromo</@ofbizUrl>' class="buttontext">[${uiLabelMap.ProductCreateNewProductPromo}]</a></div>
+    <div>
+        <a href="<@ofbizUrl>/EditProductPromo</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductCreateNewProductPromo}]</a>
+        <#if manualOnly?if_exists == "Y">
+            <a href="<@ofbizUrl>/FindProductPromo?manualOnly=N</@ofbizUrl>" class="buttontext">[View Manual and Imported]</a>
+        <#else>
+            <a href="<@ofbizUrl>/FindProductPromo?manualOnly=Y</@ofbizUrl>" class="buttontext">[View Manual Only]</a>
+        </#if>
+    </div>
     <br>
-    <table border="1" cellpadding='2' cellspacing='0'>
+    <table border="1" cellpadding="2" cellspacing="0">
         <tr>
             <td><div class="tabletext"><b>${uiLabelMap.ProductPromoNameId}</b></div></td>
             <td><div class="tabletext"><b>${uiLabelMap.ProductPromoText}</b></div></td>
@@ -38,7 +45,7 @@
         </tr>
         <#list productPromos as productPromo>
             <tr valign="middle">
-                <td><div class='tabletext'>&nbsp;<a href='<@ofbizUrl>/EditProductPromo?productPromoId=${(productPromo.productPromoId)?if_exists}</@ofbizUrl>' class="buttontext">${(productPromo.promoName)?if_exists} [${(productPromo.productPromoId)?if_exists}]</a></div></td>
+                <td><div class='tabletext'>&nbsp;<a href="<@ofbizUrl>/EditProductPromo?productPromoId=${(productPromo.productPromoId)?if_exists}</@ofbizUrl>" class="buttontext">${(productPromo.promoName)?if_exists} [${(productPromo.productPromoId)?if_exists}]</a></div></td>
                 <td><div class='tabletext'>&nbsp;${(productPromo.promoText)?if_exists}</div></td>
                 <td>
                     <a href='<@ofbizUrl>/EditProductPromo?productPromoId=${(productPromo.productPromoId)?if_exists}</@ofbizUrl>' class="buttontext">[${uiLabelMap.CommonEdit}]</a>
