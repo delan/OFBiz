@@ -37,45 +37,53 @@ import org.ofbiz.core.util.*;
  * @version 1.0
  * Created on Sep 21, 2001
  */
-public final class JNDIContextFactory {
-    static Map contexts = new Hashtable();
+public class JNDIContextFactory {
+    static UtilCache contexts = new UtilCache("JNDIContexts", 0, 0);
 
-    /** Return the initial context according to the entityengine.properties parameters that correspond to the given helper name
+    /** Return the initial context according to the entityengine.properties parameters that correspond to the given prefix
      * @return the JNDI initial context
      */
     public static InitialContext getInitialContext(String prefix) {
         InitialContext ic = (InitialContext) contexts.get(prefix);
-
+        
         if (ic == null) {
-            String providerUrl;
-            String contextFactory;
-            String pkgPrefix;
+            synchronized (JNDIContextFactory.class) {
+                ic = (InitialContext) contexts.get(prefix);
 
-            providerUrl = UtilProperties.getPropertyValue("entityengine", prefix + ".context.provider.url", "127.0.0.1:1099");
-            contextFactory = UtilProperties.getPropertyValue("entityengine", prefix + ".initial.context.factory", "com.sun.jndi.rmi.registry.RegistryContextFactory");
-            pkgPrefix = UtilProperties.getPropertyValue("entityengine", prefix + ".url.pkg.prefixes");
+                if (ic == null) {
+                    String providerUrl = UtilProperties.getPropertyValue("entityengine", prefix + ".context.provider.url");
+                    String contextFactory = UtilProperties.getPropertyValue("entityengine", prefix + ".initial.context.factory");
+                    String pkgPrefix = UtilProperties.getPropertyValue("entityengine", prefix + ".url.pkg.prefixes");
 
-            String secPrincipal = UtilProperties.getPropertyValue("entityengine", prefix + ".security.principal");
-            String secCred = UtilProperties.getPropertyValue("entityengine", prefix + ".security.credentials");
+                    String secPrincipal = UtilProperties.getPropertyValue("entityengine", prefix + ".security.principal");
+                    String secCred = UtilProperties.getPropertyValue("entityengine", prefix + ".security.credentials");
 
-            try {
-                Hashtable h = new Hashtable();
-                h.put(Context.INITIAL_CONTEXT_FACTORY, contextFactory);
-                h.put(Context.PROVIDER_URL, providerUrl);
-                if (pkgPrefix != null && pkgPrefix.length() > 0)
-                    h.put(Context.URL_PKG_PREFIXES, pkgPrefix);
+                    try {
+                        if (providerUrl == null || providerUrl.length() == 0) {
+                            ic = new InitialContext();
+                        } else {
+                            Hashtable h = new Hashtable();
+                            h.put(Context.INITIAL_CONTEXT_FACTORY, contextFactory);
+                            h.put(Context.PROVIDER_URL, providerUrl);
+                            if (pkgPrefix != null && pkgPrefix.length() > 0)
+                                h.put(Context.URL_PKG_PREFIXES, pkgPrefix);
 
-                if (secPrincipal != null && secPrincipal.length() > 0)
-                    h.put(Context.SECURITY_PRINCIPAL, secPrincipal);
-                if (secCred != null && secCred.length() > 0)
-                    h.put(Context.SECURITY_CREDENTIALS, secCred);
+                            if (secPrincipal != null && secPrincipal.length() > 0)
+                                h.put(Context.SECURITY_PRINCIPAL, secPrincipal);
+                            if (secCred != null && secCred.length() > 0)
+                                h.put(Context.SECURITY_CREDENTIALS, secCred);
 
-                ic = new InitialContext(h);
-            } catch (Exception e) {
-                Debug.logWarning(e);
+                            ic = new InitialContext(h);
+                        }
+                    } catch (Exception e) {
+                        Debug.logError(e);
+                    }
+
+                    if (ic != null) {
+                        contexts.put(prefix, ic);
+                    }
+                }
             }
-            if (ic != null)
-                contexts.put(prefix, ic);
         }
 
         return ic;
