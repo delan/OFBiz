@@ -34,7 +34,7 @@ import org.ofbiz.security.Security;
  * ContentManagementWorker Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.9 $
+ * @version    $Revision: 1.10 $
  * @since      3.0
  *
  * 
@@ -349,14 +349,19 @@ public class ContentManagementWorker {
         return permittedPublishPointList;
     }
 
-    public static List getAllPublishPoints(GenericDelegator delegator, String rootPubPt) throws GeneralException {
+    /**
+     Returns a list of WebSitePublishPoint entities that are children of parentPubPt
+
+     @param parentPubPt The parent publish point.
+     */
+    public static List getAllPublishPoints(GenericDelegator delegator, String parentPubPt) throws GeneralException {
 
         GenericValue rootContent = null;
         List relatedPubPts = null;
         try {
-            rootContent = delegator.findByPrimaryKeyCache("Content", UtilMisc.toMap("contentId", rootPubPt));
-            //relatedPubPts = delegator.findByAndCache("ContentAssoc", UtilMisc.toMap("contentIdTo", rootPubPt));
-            relatedPubPts = delegator.findByAndCache("ContentAssoc", UtilMisc.toMap("contentIdTo", rootPubPt, "contentAssocTypeId", "SUBSITE"));
+            rootContent = delegator.findByPrimaryKeyCache("Content", UtilMisc.toMap("contentId", parentPubPt));
+            //relatedPubPts = delegator.findByAndCache("ContentAssoc", UtilMisc.toMap("contentIdTo", parentPubPt));
+            relatedPubPts = delegator.findByAndCache("ContentAssoc", UtilMisc.toMap("contentIdTo", parentPubPt, "contentAssocTypeId", "SUBSITE"));
 
         } catch(GenericEntityException e) {
             throw new GeneralException(e.getMessage());
@@ -588,7 +593,7 @@ public class ContentManagementWorker {
 /* */
         List assocValueList = null;
         try {
-            List rawAssocValueList = delegator.findByAndCache("ContentAssoc", UtilMisc.toMap("contentId", targContentId, "contentAssocTypeId", "SUB_CONTENT"));
+            List rawAssocValueList = delegator.findByAndCache("ContentAssoc", UtilMisc.toMap("contentId", targContentId, "contentAssocTypeId", "PUBLISH_LINK"));
             assocValueList = EntityUtil.filterByDate(rawAssocValueList);
         } catch(GenericEntityException e) {
             throw new GeneralException(e.getMessage());
@@ -688,14 +693,20 @@ public class ContentManagementWorker {
         return permittedDepartmentPointList;
     }
 
-    public static List getAllDepartmentContent(GenericDelegator delegator, String rootPubPt) throws GeneralException {
+    /**
+     Returns a list of "department" (having ContentAssoc of type "DEPARTMENT") 
+     Content entities that are children of parentPubPt
+
+     @param parentPubPt The parent publish point.
+     */
+    public static List getAllDepartmentContent(GenericDelegator delegator, String parentPubPt) throws GeneralException {
 
         GenericValue rootContent = null;
         List relatedPubPts = null;
         try {
-            rootContent = delegator.findByPrimaryKeyCache("Content", UtilMisc.toMap("contentId", rootPubPt));
-            //relatedPubPts = delegator.findByAndCache("ContentAssoc", UtilMisc.toMap("contentIdTo", rootPubPt));
-            relatedPubPts = delegator.findByAndCache("ContentAssoc", UtilMisc.toMap("contentIdTo", rootPubPt, "contentAssocTypeId", "DEPARTMENT"));
+            rootContent = delegator.findByPrimaryKeyCache("Content", UtilMisc.toMap("contentId", parentPubPt));
+            //relatedPubPts = delegator.findByAndCache("ContentAssoc", UtilMisc.toMap("contentIdTo", parentPubPt));
+            relatedPubPts = delegator.findByAndCache("ContentAssoc", UtilMisc.toMap("contentIdTo", parentPubPt, "contentAssocTypeId", "DEPARTMENT"));
 
         } catch(GenericEntityException e) {
             throw new GeneralException(e.getMessage());

@@ -1,5 +1,5 @@
 /*
- * $Id: FreeMarkerWorker.java,v 1.15 2004/04/14 05:34:42 byersa Exp $
+ * $Id: FreeMarkerWorker.java,v 1.16 2004/04/17 08:00:15 byersa Exp $
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -69,7 +69,7 @@ import freemarker.template.TemplateModelException;
  * FreemarkerViewHandler - Freemarker Template Engine Util
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.15 $
+ * @version    $Revision: 1.16 $
  * @since      3.0
  */
 public class FreeMarkerWorker {
@@ -143,6 +143,24 @@ public class FreeMarkerWorker {
             try {
                 if (templateContext != null) {
                     returnVal = (String) templateContext.get(key);
+                }
+            } catch (ClassCastException e2) {
+                //return null;
+            }
+        }
+        return returnVal;
+    }
+
+    public static Object getArgObject(Map args, String key, Map templateContext) {
+        //SimpleScalar s = null;
+        Object o = null;
+        Object returnVal = null;
+        o = args.get(key);
+        returnVal = unwrap(o);
+        if (returnVal == null) {
+            try {
+                if (templateContext != null) {
+                    returnVal = templateContext.get(key);
                 }
             } catch (ClassCastException e2) {
                 //return null;
@@ -659,6 +677,28 @@ public class FreeMarkerWorker {
             outList.add(values);    
         }
         return outList;
+    }
+
+    public static List csvToTrail(String csv, GenericDelegator delegator) {
+
+        List trail = new ArrayList();
+        ArrayList outList = new ArrayList();
+        List contentIdList = StringUtil.split(csv, ",");
+        GenericValue content = null;
+        String contentId = null;
+        Iterator it = contentIdList.iterator();
+        while (it.hasNext()) {
+            contentId = (String)it.next();
+            try {
+                content = delegator.findByPrimaryKeyCache("Content", UtilMisc.toMap("contentId", contentId));
+            } catch(GenericEntityException e) {
+                Debug.logError(e.getMessage(), module);
+                return new ArrayList();
+            }
+            Map node = makeNode(content);
+            trail.add(node);
+        }
+        return trail;
     }
 
     public static GenericValue getCurrentContent( GenericDelegator delegator, List trail,  GenericValue userLogin, Map ctx, Boolean nullThruDatesOnly, String contentAssocPredicateId)  throws GeneralException {

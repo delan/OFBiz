@@ -1,5 +1,5 @@
 /*
- * $Id: CheckPermissionTransform.java,v 1.7 2004/04/11 08:28:14 jonesde Exp $
+ * $Id: CheckPermissionTransform.java,v 1.8 2004/04/17 08:00:14 byersa Exp $
  * 
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  * 
@@ -45,7 +45,7 @@ import freemarker.template.TransformControl;
  * CheckPermissionTransform - Freemarker Transform for URLs (links)
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  * @since 3.0
  */
 public class CheckPermissionTransform implements TemplateTransformModel {
@@ -101,7 +101,7 @@ public class CheckPermissionTransform implements TemplateTransformModel {
             public int onStart() throws TemplateModelException, IOException {
                 List trail = (List)templateCtx.get("globalNodeTrail");
                 String trailCsv = FreeMarkerWorker.nodeTrailToCsv(trail);
-                    //Debug.logInfo("in CheckPermission, trailCsv(2):" + trailCsv,"");
+                    Debug.logInfo("in CheckPermission, trailCsv(2):" + trailCsv,"");
                     //Debug.logInfo("in CheckPermission, contentId(2):" + templateCtx.get("contentId"),"");
                     //Debug.logInfo("in CheckPermission, subContentId(2):" + templateCtx.get("subContentId"),"");
              

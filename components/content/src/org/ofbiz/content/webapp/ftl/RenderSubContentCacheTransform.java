@@ -1,5 +1,5 @@
 /*
- * $Id: RenderSubContentCacheTransform.java,v 1.9 2004/04/13 04:56:14 byersa Exp $
+ * $Id: RenderSubContentCacheTransform.java,v 1.10 2004/04/17 08:00:15 byersa Exp $
  * 
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  * 
@@ -44,7 +44,7 @@ import freemarker.template.TemplateTransformModel;
  * RenderSubContentCacheTransform - Freemarker Transform for Content rendering
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  * @since 3.0
  * 
  * This transform cannot be called recursively (at this time).
@@ -85,6 +85,7 @@ public class RenderSubContentCacheTransform implements TemplateTransformModel {
         final GenericValue userLogin = (GenericValue) FreeMarkerWorker.getWrappedObject("userLogin", env);
         List trail = (List)templateCtx.get("globalNodeTrail");
         //if (Debug.infoOn()) Debug.logInfo("in Render(0), globalNodeTrail ." + trail , module);
+        if (Debug.verboseOn()) Debug.logVerbose("Render, globalNodeTrail csv(0):" + FreeMarkerWorker.nodeTrailToCsv((List)trail), "");
         String contentAssocPredicateId = (String)templateCtx.get("contentAssocPredicateId");
         String strNullThruDatesOnly = (String)templateCtx.get("nullThruDatesOnly");
         Boolean nullThruDatesOnly = (strNullThruDatesOnly != null && strNullThruDatesOnly.equalsIgnoreCase("true")) ? new Boolean(true) :new Boolean(false);
@@ -140,7 +141,8 @@ public class RenderSubContentCacheTransform implements TemplateTransformModel {
             }
 
             public void close() throws IOException {
-                 //if (Debug.infoOn()) Debug.logInfo("in Render(1), globalNodeTrail ." + templateCtx.get("globalNodeTrail") , module);
+                List globalNodeTrail = (List)templateCtx.get("globalNodeTrail");
+                if (Debug.infoOn()) Debug.logInfo("Render close, globalNodeTrail(2a):" + FreeMarkerWorker.nodeTrailToCsv(globalNodeTrail), "");
                 try {
                     if (Debug.verboseOn()) Debug.logVerbose("in RenderSubContent, close:", module);
                     renderSubContent();
