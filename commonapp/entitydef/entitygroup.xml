@@ -612,7 +612,9 @@
     <entity-group group="org.ofbiz.commonapp" entity="ProductKeyword" />	
     <entity-group group="org.ofbiz.commonapp" entity="ProductKeywordResult" />	
     <entity-group group="org.ofbiz.commonapp" entity="ProductType" />	
-    <entity-group group="org.ofbiz.commonapp" entity="ProductTypeAttr" />
+    <entity-group group="org.ofbiz.commonapp" entity="ProductTypeAttr" />	
+    <entity-group group="org.ofbiz.commonapp" entity="ProductVirtualAndAssocPrices" />	
+    <entity-group group="org.ofbiz.commonapp" entity="ProductVirtualAndVariantInfo" />
 
   <!-- ========================================================= -->
   <!-- org.ofbiz.commonapp.product.promo -->

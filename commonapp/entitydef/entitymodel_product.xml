@@ -6,8 +6,8 @@
  *  Description: None
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
- *  Permission is hereby granted, free of charge, to any person obtaining a
- *  copy of this software and associated documentation files (the "Software"),
+ *  Permission is hereby granted, free of charge, to any person obtaining a 
+ *  copy of this software and associated documentation files (the "Software"), 
  *  to deal in the Software without restriction, including without limitation
  *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
  *  and/or sell copies of the Software, and to permit persons to whom the
@@ -1359,6 +1359,78 @@
         <key-map field-name="productTypeId"/>
       </relation>
     </entity>
+    <view-entity entity-name="ProductVirtualAndAssocPrices"
+            package-name="org.ofbiz.commonapp.product.product"
+            title="Virtual and Associated Product Prices View Entity">
+      <member-entity entity-alias="PVIRT" entity-name="Product"/>
+      <member-entity entity-alias="PA" entity-name="ProductAssoc"/>
+      <member-entity entity-alias="PASC" entity-name="Product"/>
+      <member-entity entity-alias="PASCPRC" entity-name="ProductPrice"/>
+      <alias entity-alias="PVIRT" name="productId"/>
+      <alias entity-alias="PVIRT" name="productName"/>
+      <alias entity-alias="PA" name="productAssocTypeId"/>
+      <alias entity-alias="PA" name="fromDate"/>
+      <alias entity-alias="PA" name="thruDate"/>
+      <alias entity-alias="PASC" name="variantProductId" field="productId" group-by="true"/>
+      <alias entity-alias="PASCPRC" name="variantPriceTypeId" field="productPriceTypeId"/>
+      <alias entity-alias="PASCPRC" name="variantCurrencyUomId" field="currencyUomId"/>
+      <alias entity-alias="PASCPRC" name="variantPriceFromDate" field="fromDate"/>
+      <alias entity-alias="PASCPRC" name="variantPriceThruDate" field="thruDate"/>
+      <alias entity-alias="PASCPRC" name="variantMinPrice" field="price" function="min"/>
+      <alias entity-alias="PASCPRC" name="variantMaxPrice" field="price" function="max"/>
+      <view-link entity-alias="PVIRT" rel-entity-alias="PA">
+        <key-map field-name="productId"/>
+      </view-link>
+      <view-link entity-alias="PA" rel-entity-alias="PASC">
+        <key-map field-name="productIdTo" rel-field-name="productId"/>
+      </view-link>
+      <view-link entity-alias="PASC" rel-entity-alias="PASCPRC">
+        <key-map field-name="productId"/>
+      </view-link>
+    </view-entity>
+    <view-entity entity-name="ProductVirtualAndVariantInfo"
+            package-name="org.ofbiz.commonapp.product.product"
+            title="Virtual and Variant Product View Entity">
+      <member-entity entity-alias="PVIRT" entity-name="Product"/>
+      <member-entity entity-alias="PVA" entity-name="ProductAssoc"/>
+      <member-entity entity-alias="PVAR" entity-name="Product"/>
+      <member-entity entity-alias="PVARFA" entity-name="ProductFeatureAppl"/>
+      <member-entity entity-alias="PVARF" entity-name="ProductFeature"/>
+      <member-entity entity-alias="PVARPRC" entity-name="ProductPrice"/>
+      <alias entity-alias="PVIRT" name="productId"/>
+      <alias entity-alias="PVIRT" name="productName"/>
+      <alias entity-alias="PVA" name="productAssocTypeId"/>
+      <alias entity-alias="PVA" name="fromDate"/>
+      <alias entity-alias="PVA" name="thruDate"/>
+      <alias entity-alias="PVAR" name="variantProductId" field="productId"/>
+      <alias entity-alias="PVARFA" name="productFeatureApplTypeId"/>
+      <alias entity-alias="PVARFA" name="variantFeatureApplFromDate" field="fromDate"/>
+      <alias entity-alias="PVARFA" name="variantFeatureApplThruDate" field="thruDate"/>
+      <alias entity-alias="PVARF" name="productFeatureId"/>
+      <alias entity-alias="PVARF" name="productFeatureTypeId"/>
+      <alias entity-alias="PVARF" name="productFeatureCategoryId"/>
+      <alias entity-alias="PVARF" name="description"/>
+      <alias entity-alias="PVARPRC" name="variantPriceTypeId" field="productPriceTypeId"/>
+      <alias entity-alias="PVARPRC" name="variantCurrencyUomId" field="currencyUomId"/>
+      <alias entity-alias="PVARPRC" name="variantPriceFromDate" field="fromDate"/>
+      <alias entity-alias="PVARPRC" name="variantPriceThruDate" field="thruDate"/>
+      <alias entity-alias="PVARPRC" name="variantPrice" field="price"/>
+      <view-link entity-alias="PVIRT" rel-entity-alias="PVA">
+        <key-map field-name="productId"/>
+      </view-link>
+      <view-link entity-alias="PVA" rel-entity-alias="PVAR">
+        <key-map field-name="productIdTo" rel-field-name="productId"/>
+      </view-link>
+      <view-link entity-alias="PVAR" rel-entity-alias="PVARFA">
+        <key-map field-name="productId"/>
+      </view-link>
+      <view-link entity-alias="PVARFA" rel-entity-alias="PVARF">
+        <key-map field-name="productFeatureId"/>
+      </view-link>
+      <view-link entity-alias="PVAR" rel-entity-alias="PVARPRC">
+        <key-map field-name="productId"/>
+      </view-link>
+    </view-entity>
 
   <!-- ========================================================= -->
   <!-- org.ofbiz.commonapp.product.promo -->
