@@ -332,6 +332,7 @@
             <env-to-field env-name="nowTimestamp" field-name="responseDate" map-name="surveyResponse"/>
         </if-empty>
         <create-value value-name="surveyResponse"/>
+        <field-to-result field-name="surveyResponse" result-name="surveyResponse"/>
 
         <!-- create the response answers -->
         <iterate entry-name="question" list-name="questions">

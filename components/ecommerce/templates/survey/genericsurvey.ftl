@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      3.0
 -->
 
@@ -28,6 +28,11 @@
   <#assign formName = survey.surveyId + "_form">
 </#if>
 <form method="post" action="${formAction}" name="${survey.surveyId}_form" style="margin: 0;">
+  <#if additionalFields?has_content>
+    <#list additionalFields.keySet() as field>
+      <input type="hidden" name="${field}" value="${additionalFields.get(field)}">
+    </#list>
+  </#if>
   <div class="head2">${survey.description?if_exists}</div>
   <br>
 
@@ -42,9 +47,9 @@
               <option>Y</option>
               <option>N</option>
             </select>
-          <#else if question.surveyQuestionTypeId == "TEXT">
+          <#elseif question.surveyQuestionTypeId == "TEXT">
             <input type="text" class="textBox" name="answer_${question.surveyQuestionId}">
-          <#else if question.surveyQuestionTypeId == "OPTION">
+          <#elseif question.surveyQuestionTypeId == "OPTION">
             <div class="tabletext">Question type OPTION is not yet supported</div>
           <#else>
             <div class="tabletext">Unsupported question type : ${question.surveyQuestionTypeId}</div>
@@ -52,5 +57,10 @@
         </td>
       </tr>
     </#list>
+    <tr>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+      <td><input type="submit" value="Submit"></td>
+    </tr>
   </table>
 </form>
