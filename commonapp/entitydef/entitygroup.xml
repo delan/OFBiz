@@ -645,15 +645,9 @@
     <entity-group group="org.ofbiz.commonapp" entity="WorkflowActivitySubFlow" />	
     <entity-group group="org.ofbiz.commonapp" entity="WorkflowActivityTool" />	
     <entity-group group="org.ofbiz.commonapp" entity="WorkflowApplication" />	
-    <entity-group group="org.ofbiz.commonapp" entity="WorkflowApplicationList" />	
-    <entity-group group="org.ofbiz.commonapp" entity="WorkflowApplicationsView" />	
     <entity-group group="org.ofbiz.commonapp" entity="WorkflowArrayTypeMembers" />	
     <entity-group group="org.ofbiz.commonapp" entity="WorkflowDataField" />	
-    <entity-group group="org.ofbiz.commonapp" entity="WorkflowDataFieldList" />	
-    <entity-group group="org.ofbiz.commonapp" entity="WorkflowDataFieldsView" />	
     <entity-group group="org.ofbiz.commonapp" entity="WorkflowFormalParam" />	
-    <entity-group group="org.ofbiz.commonapp" entity="WorkflowFormalParamList" />	
-    <entity-group group="org.ofbiz.commonapp" entity="WorkflowFormalParamsView" />	
     <entity-group group="org.ofbiz.commonapp" entity="WorkflowPackage" />	
     <entity-group group="org.ofbiz.commonapp" entity="WorkflowPackageExternal" />	
     <entity-group group="org.ofbiz.commonapp" entity="WorkflowParticipant" />	
@@ -713,8 +707,8 @@
     <entity-group group="org.ofbiz.commonapp" entity="WorkEffortPartyAssignment" />	
     <entity-group group="org.ofbiz.commonapp" entity="WorkEffortSkillStandard" />	
     <entity-group group="org.ofbiz.commonapp" entity="WorkEffortStatus" />	
+    <entity-group group="org.ofbiz.commonapp" entity="WorkEffortTransBox" />	
     <entity-group group="org.ofbiz.commonapp" entity="WorkEffortType" />	
     <entity-group group="org.ofbiz.commonapp" entity="WorkEffortTypeAttr" />  
-	<entity-group group="org.ofbiz.commonapp" entity="WorkEffortTransBox" />
 </entitygroup>
 
