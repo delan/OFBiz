@@ -53,8 +53,9 @@ public class EventAction {
     }
 
     public void runAction(String selfService, DispatchContext dctx, Map context) throws GenericServiceException {
-        if (this.serviceName.equals(selfService))
+        if (this.serviceName.equals(selfService)) {
             throw new GenericServiceException("Cannot invoke self on ECA.");
+        }
 
         Map newContext = new HashMap(context);
 
@@ -70,7 +71,8 @@ public class EventAction {
         }
 
         // use the result to update the context fields.
-        if (updateContext.equalsIgnoreCase("true"))
+        if (updateContext.equalsIgnoreCase("true")) {
             context.putAll(dctx.getModelService(selfService).makeValid(result, ModelService.IN_PARAM));
+        }
     }
 }

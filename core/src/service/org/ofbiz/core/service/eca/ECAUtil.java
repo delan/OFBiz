@@ -74,14 +74,21 @@ public class ECAUtil {
         }
     }
 
-    public static void evalConditions(String serviceName, String event, DispatchContext dctx, Map context) throws GenericServiceException {
-        Map eventMap = (Map) ECAMap.get(serviceName);
-        if (eventMap == null || eventMap.size() == 0)
+    public static Map getServiceEventMap(String serviceName) {
+        return (Map) ECAMap.get(serviceName);
+    }
+    
+    public static void evalConditions(String serviceName, Map eventMap, String event, DispatchContext dctx, Map context) throws GenericServiceException {
+        //if the eventMap is passed we save a HashMap lookup, but if not that's okay we'll just look it up now
+        if (eventMap == null) eventMap = getServiceEventMap(serviceName);
+        if (eventMap == null || eventMap.size() == 0) {
             return;
+        }
 
         List conditions = (List) eventMap.get(event);
-        if (conditions == null || conditions.size() == 0)
+        if (conditions == null || conditions.size() == 0) {
             return;
+        }
 
         Iterator i = conditions.iterator();
         if (i.hasNext() && Debug.verboseOn()) Debug.logVerbose("Running ECA (" + event + ").");

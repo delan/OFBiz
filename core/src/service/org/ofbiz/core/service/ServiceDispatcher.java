@@ -137,8 +137,10 @@ public class ServiceDispatcher {
             throw new GenericServiceException("Cannot start the transaction.", te.getNested());
         }
 
+        //get eventMap once for all calls for speed, don't do event calls if it is null
+        Map eventMap = ECAUtil.getServiceEventMap(service.name);
         // pre-auth ECA
-        ECAUtil.evalConditions(service.name, "auth", (DispatchContext) localContext.get(localName), context);
+        if (eventMap != null) ECAUtil.evalConditions(service.name, eventMap, "auth", (DispatchContext) localContext.get(localName), context);
 
         context = checkAuth(localName, context, service);
         Object userLogin = context.get("userLogin");
@@ -156,7 +158,7 @@ public class ServiceDispatcher {
         engine.setLoader(localName);
 
         // pre-validate ECA
-        ECAUtil.evalConditions(service.name, "in-validate", (DispatchContext) localContext.get(localName), context);
+        if (eventMap != null) ECAUtil.evalConditions(service.name, eventMap, "in-validate", (DispatchContext) localContext.get(localName), context);
 
         // validate the context
         if (service.validate) {
@@ -173,11 +175,12 @@ public class ServiceDispatcher {
         }
 
         // pre-invoke ECA
-        ECAUtil.evalConditions(service.name, "invoke", (DispatchContext) localContext.get(localName), context);
+        if (eventMap != null) ECAUtil.evalConditions(service.name, eventMap, "invoke", (DispatchContext) localContext.get(localName), context);
 
-        if (Debug.verboseOn())
+        if (Debug.verboseOn()) {
             Debug.logVerbose("[ServiceDispatcher.runSync] : invoking service [" + service.location +
                     "/" + service.invoke + "] (" + service.engineName + ")", module);
+        }
 
         // invoke the service
         Map result = engine.runSync(service, context);
@@ -185,7 +188,7 @@ public class ServiceDispatcher {
 
         // validate the result
         if (service.validate) {
-            ECAUtil.evalConditions(service.name, "out-validate", (DispatchContext) localContext.get(localName), context);
+            if (eventMap != null) ECAUtil.evalConditions(service.name, eventMap, "out-validate", (DispatchContext) localContext.get(localName), context);
             try {
                 service.validate(result, ModelService.OUT_PARAM);
             } catch (ServiceValidationException e) {
@@ -199,7 +202,7 @@ public class ServiceDispatcher {
         }
 
         // pre-commit ECA
-        ECAUtil.evalConditions(service.name, "commit", (DispatchContext) localContext.get(localName), context);
+        if (eventMap != null) ECAUtil.evalConditions(service.name, eventMap, "commit", (DispatchContext) localContext.get(localName), context);
 
         // commit the transaction
         try {
@@ -209,7 +212,7 @@ public class ServiceDispatcher {
         }
 
         // pre-return ECA
-        ECAUtil.evalConditions(service.name, "return", (DispatchContext) localContext.get(localName), context);
+        if (eventMap != null) ECAUtil.evalConditions(service.name, eventMap, "return", (DispatchContext) localContext.get(localName), context);
         return result;
     }
 
@@ -231,8 +234,10 @@ public class ServiceDispatcher {
             throw new GenericServiceException("Cannot start the transaction.", te.getNested());
         }
 
+        //get eventMap once for all calls for speed, don't do event calls if it is null
+        Map eventMap = ECAUtil.getServiceEventMap(service.name);
         // pre-auth ECA
-        ECAUtil.evalConditions(service.name, "auth", (DispatchContext) localContext.get(localName), context);
+        if (eventMap != null) ECAUtil.evalConditions(service.name, eventMap, "auth", (DispatchContext) localContext.get(localName), context);
 
         context = checkAuth(localName, context, service);
         Object userLogin = context.get("userLogin");
@@ -250,7 +255,7 @@ public class ServiceDispatcher {
         engine.setLoader(localName);
 
         // pre-validate ECA
-        ECAUtil.evalConditions(service.name, "in-validate", (DispatchContext) localContext.get(localName), context);
+        if (eventMap != null) ECAUtil.evalConditions(service.name, eventMap, "in-validate", (DispatchContext) localContext.get(localName), context);
 
         // validate the context
         if (service.validate) {
@@ -267,7 +272,7 @@ public class ServiceDispatcher {
         }
 
         // pre-invoke ECA
-        ECAUtil.evalConditions(service.name, "invoke", (DispatchContext) localContext.get(localName), context);
+        if (eventMap != null) ECAUtil.evalConditions(service.name, eventMap, "invoke", (DispatchContext) localContext.get(localName), context);
 
         if (Debug.verboseOn())
             Debug.logVerbose("[ServiceDispatcher.runSyncIgnore] : invoking service [" + service.location + "/" + service.invoke +
@@ -276,7 +281,7 @@ public class ServiceDispatcher {
         engine.runSyncIgnore(service, context);
 
         // pre-commit ECA
-        ECAUtil.evalConditions(service.name, "commit", (DispatchContext) localContext.get(localName), context);
+        if (eventMap != null) ECAUtil.evalConditions(service.name, eventMap, "commit", (DispatchContext) localContext.get(localName), context);
 
         // commit the transaction
         try {
@@ -286,7 +291,7 @@ public class ServiceDispatcher {
         }
 
         // pre-return ECA
-        ECAUtil.evalConditions(service.name, "return", (DispatchContext) localContext.get(localName), context);
+        if (eventMap != null) ECAUtil.evalConditions(service.name, eventMap, "return", (DispatchContext) localContext.get(localName), context);
     }
 
     /**
@@ -309,8 +314,10 @@ public class ServiceDispatcher {
             throw new GenericServiceException("Cannot start the transaction.", te.getNested());
         }
 
+        //get eventMap once for all calls for speed, don't do event calls if it is null
+        Map eventMap = ECAUtil.getServiceEventMap(service.name);
         // pre-auth ECA
-        ECAUtil.evalConditions(service.name, "auth", (DispatchContext) localContext.get(localName), context);
+        if (eventMap != null) ECAUtil.evalConditions(service.name, eventMap, "auth", (DispatchContext) localContext.get(localName), context);
 
         context = checkAuth(localName, context, service);
         Object userLogin = context.get("userLogin");
@@ -328,7 +335,7 @@ public class ServiceDispatcher {
         engine.setLoader(localName);
 
         // pre-validate ECA
-        ECAUtil.evalConditions(service.name, "in-validate", (DispatchContext) localContext.get(localName), context);
+        if (eventMap != null) ECAUtil.evalConditions(service.name, eventMap, "in-validate", (DispatchContext) localContext.get(localName), context);
 
         // validate the context
         if (service.validate) {
@@ -345,16 +352,17 @@ public class ServiceDispatcher {
         }
 
         // pre-invoke ECA
-        ECAUtil.evalConditions(service.name, "invoke", (DispatchContext) localContext.get(localName), context);
+        if (eventMap != null) ECAUtil.evalConditions(service.name, eventMap, "invoke", (DispatchContext) localContext.get(localName), context);
 
-        if (Debug.verboseOn())
+        if (Debug.verboseOn()) {
             Debug.logVerbose("[ServiceDispatcher.runAsync] : invoking service [" + service.location + "/" + service.invoke +
                     "] (" + service.engineName + ")", module);
+        }
 
         engine.runAsync(service, context, requester, persist);
 
         // pre-commit ECA
-        ECAUtil.evalConditions(service.name, "commit", (DispatchContext) localContext.get(localName), context);
+        if (eventMap != null) ECAUtil.evalConditions(service.name, eventMap, "commit", (DispatchContext) localContext.get(localName), context);
 
         // commit the transaction
         try {
@@ -364,7 +372,7 @@ public class ServiceDispatcher {
         }
 
         // pre-return ECA
-        ECAUtil.evalConditions(service.name, "return", (DispatchContext) localContext.get(localName), context);
+        if (eventMap != null) ECAUtil.evalConditions(service.name, eventMap, "return", (DispatchContext) localContext.get(localName), context);
     }
 
     /**
@@ -386,8 +394,10 @@ public class ServiceDispatcher {
             throw new GenericServiceException("Cannot start the transaction.", te.getNested());
         }
 
+        //get eventMap once for all calls for speed, don't do event calls if it is null
+        Map eventMap = ECAUtil.getServiceEventMap(service.name);
         // pre-auth ECA
-        ECAUtil.evalConditions(service.name, "auth", (DispatchContext) localContext.get(localName), context);
+        if (eventMap != null) ECAUtil.evalConditions(service.name, eventMap, "auth", (DispatchContext) localContext.get(localName), context);
 
         context = checkAuth(localName, context, service);
         Object userLogin = context.get("userLogin");
@@ -405,7 +415,7 @@ public class ServiceDispatcher {
         engine.setLoader(localName);
 
         // pre-validate ECA
-        ECAUtil.evalConditions(service.name, "in-validate", (DispatchContext) localContext.get(localName), context);
+        if (eventMap != null) ECAUtil.evalConditions(service.name, eventMap, "in-validate", (DispatchContext) localContext.get(localName), context);
 
         // validate the context
         if (service.validate) {
@@ -422,7 +432,7 @@ public class ServiceDispatcher {
         }
 
         // pre-invoke ECA
-        ECAUtil.evalConditions(service.name, "invoke", (DispatchContext) localContext.get(localName), context);
+        if (eventMap != null) ECAUtil.evalConditions(service.name, eventMap, "invoke", (DispatchContext) localContext.get(localName), context);
 
         if (Debug.verboseOn())
             Debug.logVerbose("[ServiceDispatcher.runAsync] : invoking service [" + service.location + "/" + service.invoke +
@@ -431,7 +441,7 @@ public class ServiceDispatcher {
         engine.runAsync(service, context, persist);
 
         // pre-commit ECA
-        ECAUtil.evalConditions(service.name, "commit", (DispatchContext) localContext.get(localName), context);
+        if (eventMap != null) ECAUtil.evalConditions(service.name, eventMap, "commit", (DispatchContext) localContext.get(localName), context);
 
         // commit the transaction
         try {
@@ -441,7 +451,7 @@ public class ServiceDispatcher {
         }
 
         // pre-return ECA
-        ECAUtil.evalConditions(service.name, "return", (DispatchContext) localContext.get(localName), context);
+        if (eventMap != null) ECAUtil.evalConditions(service.name, eventMap, "return", (DispatchContext) localContext.get(localName), context);
     }
 
     /**
@@ -557,5 +567,4 @@ public class ServiceDispatcher {
         GenericValue value = (GenericValue) result.get("userLogin");
         return value;
     }
-
 }
