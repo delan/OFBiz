@@ -269,4 +269,5 @@
 <%}%>
 
 
+<%@ include file="/includes/onecolumnclose.jsp" %>
 <%@ include file="/includes/footer.jsp" %>
