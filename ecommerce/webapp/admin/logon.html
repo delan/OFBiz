@@ -1,16 +1,21 @@
 <center>
 <P><BR /><BR /></P>
-#if ( $user )
-<P>You are already logged in.</P>
+#if ( $user )<b>
+<p> Some actions require you to log in as an administrator.</P>
+<P>You are currently logged in as $!user.UserName. </p>
+</b>
 #end
 $!request.getAttribute( "wsp-exception")
-<FORM name="login" action="/admin/dologon.html" method="POST">
+<script language="JavaScript" >
+	document.body.onload = function() { document.getElementById("accountname" ).focus(); };
+</script>
+<FORM name="login" action="/admin/logon.html" method="POST">
 <TABLE border="0">
 <TBODY>
 <TR>
-<TD align="left">Account Name:<BR /><INPUT name="accountname" /> </TD></TR>
+<TD align="left"><b>Account Name:</b><BR /><INPUT id="accountname" name="accountname" /> </TD></TR>
 <TR>
-<TD align="left">Password:<BR /><INPUT name="password" type="password" /> </TD></TR>
+<TD align="left"><b>Password:</b><BR /><INPUT name="password" type="password" /> </TD></TR>
 <TR>
 <TD align="left" colspan="2"><INPUT name="submit" type="submit" value="Login" /> </TD></TR>
 </TBODY>

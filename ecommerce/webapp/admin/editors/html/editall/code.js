@@ -16,6 +16,45 @@ var gotmousedown = false;
 var firsttime = true;
 var togglebuttons = new Array();
 
+var blockElementNames = new Array(
+	"ADDRESS",
+	"BLOCKQUOTE",
+	//"BODY",
+	"CAPTION",
+	"CENTER",
+	"DD",
+	"DIV",
+	"DL",
+	"FIELDSET",
+	"FORM",
+	"H1",
+	"H2",
+	"H3",
+	"H4",
+	"H5",
+	"H6",
+	"HR",
+	"ISINDEX",
+	"LI",
+	"NOSCRIPT",
+	"OL",
+	"P",
+	"PRE",
+	"TBODY",
+	"TD",
+	"TFOOT",
+	"TH",
+	"THEAD",
+	"TR",
+	"UL" );
+var blockElementNameSet = new Array();
+for ( var i = 0; i < blockElementNames.length; i++ )
+{
+	blockElementNameSet[blockElementNames[i]] = "";
+}
+
+var paragraphStyles = new Array();
+var characterStyles = new Array();
 
 var gecko = false;
 if (navigator.product == 'Gecko')
@@ -163,9 +202,148 @@ function setButtons()
    }
    }
    */
+
+	// Change the class dropdown if we can.
+	
+	if ( !gecko )
+	{
+		var nearestClassElem = findAncestorFromSelection( null, "class" );
+		if ( nearestClassElem )
+		{
+			// In IE 5.5, Element.getAttribute( attrName ) does not work.
+			
+			// FIXME: Put the new style in the right place in the list, and put
+			//        the text as nearestClass, not "p " + nearestClass.
+			
+			var nearestClass = nearestClassElem.attributes["class"].nodeValue;
+			if ( isBlockElement( nearestClassElem ) )
+			{
+				selectComboBoxValue( "classname", "  " + nearestClass, "p " + nearestClass, "Paragraph Styles" );
+			}
+			else
+			{
+				selectComboBoxValue( "classname", "  " + nearestClass, "c " + nearestClass, "Character Styles" );
+			}
+		}
+		else
+		{
+			selectComboBoxValue( "classname", "(none)", "(none)", "Style" );
+		}
+	}
 }
 
-function UpdateTimer() {
+function isBlockElement( element )
+{
+	return ( blockElementNameSet[element.nodeName] != null );
+}
+
+function populateClassDropdown()
+{
+	var classCombo = document.getElementById( "classname" );
+	classCombo.length = 0;
+	classCombo.options[classCombo.options.length] = new Option( "Style", "" );
+	classCombo.options[classCombo.options.length] = new Option( "(none)", "(none)" );
+	
+	classCombo.options[classCombo.options.length] = new Option( "Paragraph Styles", "" );
+	if ( paragraphStyles )
+	{
+		for ( var i = 0; i < paragraphStyles.length; i++ )
+		{
+			classCombo.options[classCombo.options.length] =
+				new Option( "  " + paragraphStyles[i], "p " + paragraphStyles[i] );
+		}
+	}
+	
+	classCombo.options[classCombo.options.length] = new Option( "Character Styles", "" );
+	if ( characterStyles )
+	{
+		for ( var i = 0; i < characterStyles.length; i++ )
+		{
+			classCombo.options[classCombo.options.length] =
+				new Option( "  " + characterStyles[i], "c " + characterStyles[i] );
+		}
+	}
+}
+
+function selectComboBoxValue( comboBoxName, text, value, sectionText )
+{
+	var comboBox = document.getElementById( comboBoxName );
+	var numoptions = comboBox.length;
+	
+	// sectionTitleIndex is the option index of the section title.
+	var sectionTitleIndex = -1;
+	
+	// lastItemInSection is the option index of the last item in the section
+	// whose title is sectionText.  Sections are denoted by leading " "
+	// characters.
+	var lastItemInSection = -1;
+	
+	// foundItem is true if the item was found in the combo box
+	var foundItem = false;
+	
+	for ( var i = 0; i < numoptions; i++ )
+	{
+		if ( sectionTitleIndex >= 0 )
+		{
+			if ( comboBox.options[i].value == value )
+			{
+				comboBox.selectedIndex = i;
+				foundItem = true;
+				break;
+			}
+			if ( comboBox.options[i].text.substring( 0, 1 ) != ' ' )
+			{
+				lastItemInSection = i - 1;
+				break;
+			}
+		}
+		else
+		{
+			if ( comboBox.options[i].text == sectionText )
+			{
+				sectionTitleIndex = i;
+			}
+		}
+	}
+	
+	if ( !foundItem )
+	{
+		if ( lastItemInSection < 0 )
+		{
+			lastItemInSection = numoptions - 1;
+		}
+		
+		if ( sectionTitleIndex >= 0 )
+		{
+			comboBox.options.splice( lastItemInSection + 1, 1, new Option( text, value ) );
+		}
+		else
+		{
+			// Do nothing for now...
+			//alert( "Could not find section with title '" + sectionText + "'" );
+		}
+	}
+	
+	/*
+	var i = 0;
+	for ( ; i < numoptions; i++ )
+	{
+		if ( ( comboBox.options[i].value ) == value )
+		{
+			comboBox.selectedIndex = i;
+			break;
+		}
+	}
+	if ( addValue && i == numoptions )
+	{
+		comboBox.options[numoptions] = new Option( text, value );
+		comboBox.selectedIndex = i;
+	}
+	*/
+}
+
+function UpdateTimer()
+{
  	setButtons();
     setTimeout("UpdateTimer()", 200);
 }
@@ -331,6 +509,42 @@ function selectColor( color )
 }
 
 /**
+ * Find the nearest block ancestor of the current selection.
+ */
+function findNearestBlockAncestorFromSelection()
+{
+	var selection = checkRange();
+	if ( gecko )
+	{
+		return findNearestBlockAncestor( selection.commonAncestorContainer );
+	}
+	else
+	{
+		return findNearestBlockAncestor( selection.parentElement() );
+	}
+}
+
+/**
+ * Find the nearest ancestor element of the given element that is a block-level
+ * element.  If the given element is itself a block element, it will be
+ * returned.
+ *
+ * @param element  The element node at which to start searching
+ *
+ * @return  The nearest ancestor of the given element, or <code>null</code> if
+ *          no such ancestor could be found
+ */
+function findNearestBlockAncestor( element )
+{
+	var curElement = element;
+	while ( curElement != null && !isBlockElement( curElement ) )
+	{
+		curElement = curElement.parentNode;
+	}
+	return curElement;
+}
+
+/**
  * Find the closest ancestor of anything in the current selection with the
  * given element name and/or attribute name.
  *
@@ -340,7 +554,83 @@ function selectColor( color )
 function findAncestorFromSelection( elementName, attributeName )
 {
 	var selection = checkRange();
-	return findAncestor( elementName, attributeName, selection.commonAncestorContainer );
+	if ( gecko )
+	{
+		return findAncestor(
+			selection.commonAncestorContainer, // findNearestElementAncestor( selection.commonAncestorContainer ),
+			elementName, attributeName );
+	}
+	else
+	{
+		return findAncestor( selection.parentElement(), elementName,
+			attributeName );
+	}
+}
+
+/**
+ * Find the closest ancestor of the given element that has the given element
+ * name and/or attribute name.  The element itself will be returned if it
+ * matches the criteria.
+ *
+ * @param element        The element whose ancestors to traverse
+ * @param elementName    The name of the element to look for (may be null)
+ * @param attributeName  The name of the attribute to look for (may be null)
+ */
+function findAncestor( element, elementName, attributeName )
+{
+	//alert( "Finding ancestors of <" + element.nodeName + ">" );
+	var found = true;
+	if ( found && elementName && element.nodeName != elementName )
+	{
+		found = false;
+	}
+	// In IE 5.5, Element.getAttribute( attrName ) does not work.
+	
+	if ( found && attributeName &&
+		( !element.attributes[attributeName] ||
+			!element.attributes[attributeName].nodeValue ) )
+	{
+		found = false;
+	}
+	/*
+	if ( found && attributeName && ( !element.getAttribute( attributeName ) ) )
+	{
+		found = false;
+	}
+	*/
+
+	if ( found )
+	{
+		return element;
+	}
+	else
+	{
+		if ( element.parentNode && element.parentNode.nodeType == 1 ) // element
+		{
+			return findAncestor( element.parentNode, elementName, attributeName );
+		}
+		else
+		{
+			return null;
+		}
+	}
+}
+
+/**
+ * Find the nearest ancestor of the given node that is an element.  If the
+ * given node is an element, it will be returned.
+ *
+ * @return  The nearest element ancestor, or <code>null</code> if there is none
+ */
+function findNearestElementAncestor( node )
+{
+	var parent = node;
+	while ( parent != null && !( parent instanceof Element ) )
+	{
+		parent = parent.parentNode;
+	}
+	alert( "parent = " + parent );
+	return parent;
 }
 
 /**
@@ -392,15 +682,25 @@ function findDescendantsOfNode( node, elementName, attributeName, nodeList )
  */
 function findDescendantsOfElement( element, elementName, attributeName, nodeList )
 {
+	//alert( "Finding descendants of <" + element.nodeName + ">" );
 	var found = true;
-	if ( found && elementName && element.name == elementName )
+	if ( found && elementName && element.nodeName != elementName )
 	{
 		found = false;
 	}
-	if ( found && attributeName && element.getAttribute( attributeName ) != null )
+	// In IE 5.5, Element.getAttribute( attrName ) does not work.
+	if ( found && attributeName &&
+		( !element.attributes[attributeName] ||
+			!element.attributes[attributeName].nodeValue ) )
 	{
 		found = false;
 	}
+	/*
+	if ( found && attributeName && ( !element.getAttribute( attributeName ) ) )
+	{
+		found = false;
+	}
+	*/
 	
 	if ( found )
 	{
@@ -412,52 +712,13 @@ function findDescendantsOfElement( element, elementName, attributeName, nodeList
 	}
 }
 
-/**
- * Find the closest ancestor of the given element that has the given element
- * name and/or attribute name.  The element itself will be returned if it
- * matches the criteria.
- *
- * @param element        The element whose ancestors to traverse
- * @param elementName    The name of the element to look for (may be null)
- * @param attributeName  The name of the attribute to look for (may be null)
- */
-function findAncestor( element, elementName, attributeName )
-{
-	var found = true;
-	if ( found && elementName && element.name != elementName )
-	{
-		found = false;
-	}
-	if ( found && attributeName && element.getAttribute( attributeName ) == null )
-	{
-		found = false;
-	}
-	
-	if ( found )
-	{
-		return element;
-	}
-	else
-	{
-		if ( element.parentNode )
-		{
-			return findAncestor( element.parentNode, elementName, attributeName );
-		}
-		else
-		{
-			return null;
-		}
-	}
-}
-
 function checkRange()
 {
-	
-    if (getEditDocument().selection) 
+    if (getEditDocument().selection)
    	{
    		if (getEditDocument().selection.type == "None") {
      		getEditDocument().selection.createRange();
-   		}   		
+   		}
    		var r = getEditDocument().selection.createRange();
    		return r;
    	}
@@ -532,20 +793,43 @@ function tbclick()
    	saveAndClose();
   } else if (this.id == "createlink") {
   	
+	getEditWindow().focus();
 	var oSel = checkRange();
-	dumpProps( oSel );
+	//dumpProps( oSel );
 	var link ="";
 	if ( !gecko )
 	{
 		// This doesn't work in Gecko; it uses all sorts of IE-specific
 		// methods like duplicate(), parentElement(), etc.
 		
-		var itemcopy = oSel.duplicate();
+		var itemcopy = oSel;
+		var itemcopy = oSel.duplicate();  //this does not work?
 		itemcopy.collapse(); //to limit the selection to where the actual cursor is
 
 	    if ( itemcopy.parentElement() != null && itemcopy.parentElement().tagName == "A" ) //this if may not be needed
 	    {
 	    	link = itemcopy.parentElement().href;
+	    }
+	    else
+	    {
+	    	//look up the chain for a link
+	    	var node = itemcopy.parentElement();
+	    	var parent = findAncestor( node, "A", "href" );
+	    	//alert( parent );
+	    	if ( parent != null && parent.href != window.location )
+	    	{
+	    		//alert( parent.href + " does not equal" + parent.toXML() );
+	    		link = parent.href;
+	    	}
+	    	//if we still dont have a link check the children for the first link
+	    	var children = new Array();
+	    	findDescendantsOfNode( node, "A", "href", children );
+	    	if ( children.length > 0 )
+	    	{
+	    		//alert("children");
+	    		link = children[0].href;
+	    	}
+	    	
 	    }
 	    if ( link == null )
 	    {
@@ -553,14 +837,13 @@ function tbclick()
 	    }
 	}
 	var szURL = prompt("Enter a URL for " + GetSelectionText(oSel), link);
-	getEditWindow().focus();
 	getEditDocument().execCommand("CreateLink",false,szURL)	
   	
   } else if ( this.id == "showImagePicker" )  {
   		window.open( '/admin/editors/html/mozilla/imagepicker.html', 'picker','alwaysRaised=yes,menubar=no,scrollbars=yes,width=600,height=550,resizable=yes');
 
   } else if (this.id == "createtable") {
-    e = document.getElementById("edit");
+    e = document.getElementById("editbox");
     rowstext = prompt("enter rows");
     colstext = prompt("enter cols");
     rows = parseInt(rowstext);
@@ -592,16 +875,151 @@ function tbclick()
     getEditDocument().execCommand(this.id, false, null);
   }
 }
+
 function Select(selectname)
 {
-  var cursel = document.getElementById(selectname).selectedIndex;
-  /* First one is always a label */
-  if (cursel != 0) {
-    var selected = document.getElementById(selectname).options[cursel].value;
-    getEditDocument().execCommand(selectname, false, selected);
-    document.getElementById(selectname).selectedIndex = 0;
-  }
-//  getEditWindow().focus();
+	var cursel = document.getElementById(selectname).selectedIndex;
+	/* First one is always a label */
+	if (cursel != 0)
+	{
+		var selected = document.getElementById(selectname).options[cursel].value;
+		if ( selectname == "classname" )
+		{
+			if ( selected == "(none)" )
+			{
+				clearClassesFromSelection();
+			}
+			else if ( selected != "" )
+			{
+				if ( selected.substring( 0, 2 ) == "p " )
+				{
+					applyParagraphClassToSelection( selected.substring( 2 ) );
+				}
+				else if ( selected.substring( 0, 2 ) == "c " )
+				{
+					applyCharacterClassToSelection( selected.substring( 2 ) );
+				}
+				else
+				{
+					applyCharacterClassToSelection( selected );
+				}
+			}
+		}
+		else
+		{
+			getEditDocument().execCommand(selectname, false, selected);
+			document.getElementById(selectname).selectedIndex = 0;
+		}
+		getEditWindow().focus();
+	}
+}
+
+/**
+ * Clear all CSS classes from the current selection.
+ */
+function clearClassesFromSelection()
+{
+	// FIXME: This is really bad.  IE doesn't support all the nice programmatic
+	//        DOM Level 2 Range methods, so we can't get the element objects
+	//        and so forth inside the selection (i.e. we can't
+	//        extractContents(), remove all the class attributes off the
+	//        Element objects, then insertContents()).  So instead, we get the
+	//        parent element and remove all the classes from there on down.
+	
+	var selection = checkRange();
+	var parent = null;
+	if ( gecko )
+	{
+		parent = selection.commonAncestorContainer;
+	}
+	else
+	{
+		parent = selection.parentElement();
+	}
+	
+	clearClasses( parent );
+}
+
+/**
+ * Clear any class attributes off the given element and all its descendants.
+ */
+function clearClasses( element )
+{
+	// FIXME: Remove empty <span> elements.
+	
+	if ( element.className )
+	{
+		// This works in IE 5.5 and IE 6
+		element.className = "";
+		
+		// This only works in IE 6.
+		element.removeAttribute( "class" );
+	}
+	
+	for ( var i = 0; i < element.childNodes.length; i++ )
+	{
+		var child = element.childNodes[i];
+		if ( child.nodeType == 1 ) // element
+		{
+			clearClasses( child );
+		}
+	}
+}
+
+/**
+ * Apply the given paragraph type CSS class to the current selection.
+ *
+ * @param className  The CSS class to apply
+ */
+function applyParagraphClassToSelection( className )
+{
+	var container = findNearestBlockAncestorFromSelection();
+	if ( container == null )
+	{
+		alert( "Warning: The paragraph style could not be applied because no block element containing the entire selection could be found." );
+	}
+	else
+	{
+		//alert( "Found <" + container.nodeName + ">" );
+		container.className = className; // I hope this works in both browsers...
+	}
+}
+
+/**
+ * Apply the given character type CSS class to the current selection.
+ *
+ * @param className  The CSS class to apply
+ */
+function applyCharacterClassToSelection( className )
+{
+	// FIXME: Should find out if the selection is at the boundaries of some
+	//        other element, and if so, apply the class to that element instead
+	//        of always creating a new <span>.
+	
+	var selection = checkRange();
+	
+	// Well, there's a surprise.  IE doesn't support the standard DOM Level
+	// 2 Range methods.
+	
+	if ( gecko )
+	{
+		var spanElem = getEditDocument().createElement( "span" );
+		spanElem.className = className;
+		
+		// Now, we basically do a "surroundContents" except that we allow the
+		// start and end points to be in different containers.
+	
+		var fragment = selection.extractContents();
+		spanElem.appendChild( fragment );
+		selection.insertNode( spanElem );
+	}
+	else
+	{
+		// With IE we have to do this rather dodgy HTML string manipulation....
+		
+		selection.pasteHTML( "<span class=\"" + className + "\">" +
+			selection.htmlText + "</span>" );
+	}
 }
 
 function dismisscolorpalette()
@@ -625,19 +1043,19 @@ function addEvent(obj, evType, fn, useCapture){
 function getEditDocument() {
 
   if (gecko) // gecko
-    return document.getElementById("edit").contentDocument;
+    return document.getElementById("editbox").contentDocument;
   else
-    return frames.edit.document;  
+    return frames.editbox.document;  
 }
 function getEditWindow() {
 
   if (gecko) // gecko
   {
-    return document.getElementById('edit').contentWindow;
+    return document.getElementById('editbox').contentWindow;
   }
   else
   {  	
-    return document.edit;  
+    return document.editbox;  
   }
 }
 
