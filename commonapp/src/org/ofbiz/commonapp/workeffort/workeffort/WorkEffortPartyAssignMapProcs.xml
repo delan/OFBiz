@@ -56,9 +56,6 @@
     <process field="comments"><copy/></process>
     <process field="mustRsvp"><copy/></process>
     <process field="expectationEnumId"><copy/></process>
-    <process field="actualStartDate">
-        <compare-field operator="less" field="actualCompletionDate" type="Timestamp"><fail-message message="Actual Start date/time must be BEFORE End date/time."/></compare-field>
-        <convert type="Timestamp"><fail-message message="Actual Start Date is not a valid Date-Time."/></convert></process>
   </simple-map-processor>
   <simple-map-processor name="delete">
     <process field="workEffortId"><copy/><not-empty><fail-message message="Work Effort ID is missing."/></not-empty></process>
