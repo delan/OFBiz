@@ -85,6 +85,7 @@
   <SecurityPermission description="Limited Delete operations in the Order Manager." permissionId="ORDERMGR_ROLE_DELETE"/>
   <SecurityPermission description="Create notes in the Order Manager." permissionId="ORDERMGR_NOTE"/>
   <SecurityPermission description="Sales Order Entry in the Order Manager." permissionId="ORDERMGR_SALES_ENTRY"/>
+  <SecurityPermission description="Price change permission for sales orders." permission="ORDERMGR_SALES_PRICEMOD"/>
   <SecurityPermission description="Purchase Order Entry in the Order Manager." permissionId="ORDERMGR_PURCHASE_ENTRY"/>
 
   <SecurityPermission description="View operations in the Shipping Rate Editor." permissionId="SHIPRATE_VIEW"/>
