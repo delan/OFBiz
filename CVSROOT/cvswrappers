@@ -35,6 +35,7 @@
 *.jar -k 'b'
 *.war -k 'b'
 *.ear -k 'b'
+*.jar -k 'b'
 *.JAR -k 'b'
 *.xls -k 'b'
 *.tgz -k 'b'

@@ -25,7 +25,7 @@
 # can be useful for creating a module that consists of many directories
 # spread out over the entire source repository.
 
-all -a core commonapp webtools setup lib ecommerce catalog ordermgr partymgr workeffort accounting facility marketing website
+all -a core commonapp webtools setup lib ecommerce catalog ordermgr partymgr workeffort accounting facility marketing content website
 
 base -a core commonapp webtools setup lib
-apps -a ecommerce catalog ordermgr partymgr workeffort accounting facility marketing
+apps -a ecommerce catalog ordermgr partymgr workeffort accounting facility marketing content
