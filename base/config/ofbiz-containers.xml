@@ -23,7 +23,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
  *  OFBiz Containers
- *  $Id: ofbiz-containers.xml,v 1.20 2004/05/26 00:22:20 ajzeneski Exp $
+ *  $Id: ofbiz-containers.xml,v 1.21 2004/05/26 03:38:20 ajzeneski Exp $
 -->
 
 <ofbiz-containers>
@@ -72,6 +72,8 @@
             <property name="access-log-rotate" value="true"/>
             <property name="access-log-prefix" value="access_log."/>
             <property name="access-log-dir" value="logs"/>
+            <property name="enable-request-dump" value="false"/>
+            <!-- uncomment for cluster support
             <property name="default-server-cluster" value="cluster">
                 <property name="rep-valve-filter">
                     <property-value>.*\.gif;.*\.js;.*\.jpg;.*\.htm;.*\.html;.*\.txt;</property-value>
@@ -81,16 +83,17 @@
                 <property name="expire-session" value="false"/>
                 <property name="use-dirty" value="true"/>
                 <property name="replication-mode=" value="pooled"/>
-                <property name="tcp-listen-host" value="0.0.0.0"/>
+                <property name="tcp-listen-host" value="auto"/>
                 <property name="tcp-listen-port" value="4001"/>
                 <property name="tcp-sector-timeout" value="100"/>
                 <property name="tcp-thread-count" value="6"/>
-                <property name="mcast-bind-addr" value="0.0.0.0"/>
-                <property name="mcast-addr" value="10.0.0.0"/>
+                <property name="mcast-bind-addr" value="10.1.1.10"/>
+                <property name="mcast-addr" value="10.1.1.10"/>
                 <property name="mcast-port" value="45564"/>
                 <property name="mcast-freq" value="500"/>
                 <property name="mcast-drop-time" value="3000"/>
             </property>
+            -->
         </property>
         <property name="ajp-connector" value="connector">
             <property name="type" value="ajp"/>
