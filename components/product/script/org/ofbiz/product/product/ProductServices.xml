@@ -511,7 +511,7 @@
         <field-to-field field-name="productStoreId" map-name="parameters" to-map-name="storeLookup"/>
         <find-by-primary-key entity-name="ProductStore" map-name="storeLookup" value-name="productStore"/>
         <if-not-empty field-name="productStore">
-            <if-compare field-name="autoApproveReviews" operator="equals" value="Y">
+            <if-compare field-name="productStore.autoApproveReviews" operator="equals" value="Y">
                 <string-to-field string="PRR_APPROVED" field-name="newEntity.statusId"/>
             </if-compare>
         </if-not-empty>
