@@ -1,5 +1,5 @@
 /*
- * $Id: EmailServices.java,v 1.1 2003/11/26 11:52:44 jonesde Exp $
+ * $Id: EmailServices.java,v 1.2 2004/02/06 01:11:00 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -47,7 +47,7 @@ import org.ofbiz.service.ServiceUtil;
  * Email Services
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class EmailServices {
@@ -108,8 +108,19 @@ public class EmailServices {
         String sendTo = (String) context.get("sendTo");
         String sendCc = (String) context.get("sendCc");
         String sendBcc = (String) context.get("sendBcc");
-        String sendFrom = (String) context.get("sendFrom");
         String subject = (String) context.get("subject");
+        
+        // check to see if we should redirect all mail for testing
+        String redirectAddress = UtilProperties.getPropertyValue("general.properties", "mail.notifications.redirectTo");
+        if (UtilValidate.isNotEmpty(redirectAddress)) {
+            String originalRecipients = " [To: " + sendTo + ", Cc: " + sendCc + ", Bcc: " + sendBcc + "]";
+            subject = subject + originalRecipients;
+            sendTo = redirectAddress;
+            sendCc = null;
+            sendBcc = null;
+        }
+        
+        String sendFrom = (String) context.get("sendFrom");
         String body = (String) context.get("body");
         String sendType = (String) context.get("sendType");
         String sendVia = (String) context.get("sendVia");
