@@ -24,23 +24,22 @@
  *@since      3.0
  */
 
+import java.util.Iterator;
+import java.util.List;
 
-import java.util.*;
-import org.ofbiz.base.util.*;
-import org.ofbiz.entity.*;
-import org.ofbiz.content.widget.html.*;
+import org.ofbiz.base.util.UtilMisc;
+
+import org.ofbiz.entity.GenericValue;
+import org.ofbiz.content.widget.html.HtmlFormWrapper;
 
 security = request.getAttribute("security");
-delegator = request.getAttribute("delegator");
-
 if(security.hasEntityPermission("MANUFACTURING", "_VIEW", session)) {
     context.put("hasPermission", Boolean.TRUE);
 } else {
     context.put("hasPermission", Boolean.FALSE);
 }
-GenericValue techDataMachine = null;
 
-/* List allMachines = delegator.findAll("TechDataMachine"); */
+delegator = request.getAttribute("delegator");
 List allMachines = delegator.findByAnd("FixedAsset",UtilMisc.toMap("fixedAssetTypeId", "PRODUCTION_EQUIPMENT"));
 List allMachineGroups = delegator.findByAnd("FixedAsset",UtilMisc.toMap("fixedAssetTypeId", "GROUP_EQUIPMENT"));
 List machinesDatas = new LinkedList();
@@ -58,10 +57,14 @@ listMachineWrapper.putInContext("uiLabelMap", request.getAttribute("uiLabelMap")
 context.put("listMachineWrapper",listMachineWrapper);
 context.put("allMachines",allMachines);
 
+HtmlFormWrapper addMachineWrapper = new HtmlFormWrapper("/routing/MachineForms.xml", "AddMachine", request, response);
+addMachineWrapper.putInContext("uiLabelMap", request.getAttribute("uiLabelMap"));
+addMachineWrapper.putInContext("allMachineGroups", allMachineGroups);
+context.put("addMachineWrapper", addMachineWrapper);
+
 String fixedAssetId = request.getParameter("fixedAssetId");
-if (fixedAssetId == null)  fixedAssetId = request.getAttribute("fixedAssetId");
 if (fixedAssetId != null) {
-	techDataMachine = delegator.findByPrimaryKey("FixedAsset", UtilMisc.toMap("fixedAssetId", fixedAssetId));
+	GenericValue techDataMachine = delegator.findByPrimaryKey("FixedAsset", UtilMisc.toMap("fixedAssetId", fixedAssetId));
 	if (techDataMachine != null) { 
 		machineGroup = techDataMachine.getRelatedOne("ParentFixedAsset");
 		HtmlFormWrapper updateMachineWrapper = new HtmlFormWrapper("/routing/MachineForms.xml", "UpdateMachine", request, response);
@@ -72,11 +75,5 @@ if (fixedAssetId != null) {
 		context.put("updateMachineWrapper", updateMachineWrapper);
 	}
 }
-
-HtmlFormWrapper addMachineWrapper = new HtmlFormWrapper("/routing/MachineForms.xml", "AddMachine", request, response);
-addMachineWrapper.putInContext("uiLabelMap", request.getAttribute("uiLabelMap"));
-addMachineWrapper.putInContext("allMachineGroups", allMachineGroups);
-context.put("addMachineWrapper", addMachineWrapper);
-
 
 
