@@ -1,5 +1,5 @@
 /*
- * $Id: ProductPromoWorker.java,v 1.18 2003/11/23 09:16:06 jonesde Exp $
+ * $Id: ProductPromoWorker.java,v 1.19 2003/11/23 11:40:53 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -53,7 +53,7 @@ import org.ofbiz.service.LocalDispatcher;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.18 $
+ * @version    $Revision: 1.19 $
  * @since      2.0
  */
 public class ProductPromoWorker {
@@ -783,7 +783,7 @@ public class ProductPromoWorker {
         return null;
     }
 
-    protected static Set getPromoRuleCondProductIds(GenericValue productPromoCond, GenericDelegator delegator, Timestamp nowTimestamp) throws GenericEntityException {
+    public static Set getPromoRuleCondProductIds(GenericValue productPromoCond, GenericDelegator delegator, Timestamp nowTimestamp) throws GenericEntityException {
         // get a cached list for the whole promo and filter it as needed, this for better efficiency in caching
         List productPromoCategoriesAll = delegator.findByAndCache("ProductPromoCategory", UtilMisc.toMap("productPromoId", productPromoCond.get("productPromoId")));
         List productPromoCategories = EntityUtil.filterByAnd(productPromoCategoriesAll, UtilMisc.toMap("productPromoRuleId", "_NA_", "productPromoCondSeqId", "_NA_"));
@@ -793,10 +793,12 @@ public class ProductPromoWorker {
         List productPromoProducts = EntityUtil.filterByAnd(productPromoProductsAll, UtilMisc.toMap("productPromoRuleId", "_NA_", "productPromoCondSeqId", "_NA_"));
         productPromoProducts.addAll(EntityUtil.filterByAnd(productPromoProductsAll, UtilMisc.toMap("productPromoRuleId", productPromoCond.get("productPromoRuleId"), "productPromoCondSeqId", productPromoCond.get("productPromoCondSeqId"))));
 
-        return makeProductPromoIdSet(productPromoCategories, productPromoProducts, delegator, nowTimestamp);
+        Set productIds = new HashSet();
+        makeProductPromoIdSet(productIds, productPromoCategories, productPromoProducts, delegator, nowTimestamp);
+        return productIds;
     }
 
-    protected static Set getPromoRuleActionProductIds(GenericValue productPromoAction, GenericDelegator delegator, Timestamp nowTimestamp) throws GenericEntityException {
+    public static Set getPromoRuleActionProductIds(GenericValue productPromoAction, GenericDelegator delegator, Timestamp nowTimestamp) throws GenericEntityException {
         // get a cached list for the whole promo and filter it as needed, this for better efficiency in caching
         List productPromoCategoriesAll = delegator.findByAndCache("ProductPromoCategory", UtilMisc.toMap("productPromoId", productPromoAction.get("productPromoId")));
         List productPromoCategories = EntityUtil.filterByAnd(productPromoCategoriesAll, UtilMisc.toMap("productPromoRuleId", "_NA_", "productPromoActionSeqId", "_NA_"));
@@ -806,12 +808,12 @@ public class ProductPromoWorker {
         List productPromoProducts = EntityUtil.filterByAnd(productPromoProductsAll, UtilMisc.toMap("productPromoRuleId", "_NA_", "productPromoActionSeqId", "_NA_"));
         productPromoProducts.addAll(EntityUtil.filterByAnd(productPromoProductsAll, UtilMisc.toMap("productPromoRuleId", productPromoAction.get("productPromoRuleId"), "productPromoActionSeqId", productPromoAction.get("productPromoActionSeqId"))));
 
-        return makeProductPromoIdSet(productPromoCategories, productPromoProducts, delegator, nowTimestamp);
+        Set productIds = new HashSet();
+        makeProductPromoIdSet(productIds, productPromoCategories, productPromoProducts, delegator, nowTimestamp);
+        return productIds;
     }
 
-    protected static Set makeProductPromoIdSet(List productPromoCategories, List productPromoProducts, GenericDelegator delegator, Timestamp nowTimestamp) throws GenericEntityException {
-        Set productIds = new HashSet();
-
+    public static void makeProductPromoIdSet(Set productIds, List productPromoCategories, List productPromoProducts, GenericDelegator delegator, Timestamp nowTimestamp) throws GenericEntityException {
         // do the includes
         handleProductPromoCategories(productIds, productPromoCategories, "PPPA_INCLUDE", delegator, nowTimestamp);
         handleProductPromoProducts(productIds, productPromoProducts, "PPPA_INCLUDE");
@@ -823,8 +825,45 @@ public class ProductPromoWorker {
         // do the always includes
         handleProductPromoCategories(productIds, productPromoCategories, "PPPA_ALWAYS", delegator, nowTimestamp);
         handleProductPromoProducts(productIds, productPromoProducts, "PPPA_ALWAYS");
+    }
 
-        return productIds;
+    public static void makeProductPromoCondActionIdSets(String productPromoId, Set productIdsCond, Set productIdsAction, GenericDelegator delegator, Timestamp nowTimestamp) throws GenericEntityException {
+        if (nowTimestamp == null) {
+            nowTimestamp = UtilDateTime.nowTimestamp();
+        }
+
+        List productPromoCategoriesAll = delegator.findByAndCache("ProductPromoCategory", UtilMisc.toMap("productPromoId", productPromoId));
+        List productPromoProductsAll = delegator.findByAndCache("ProductPromoProduct", UtilMisc.toMap("productPromoId", productPromoId));
+
+        List productPromoProductsCond = new LinkedList();
+        List productPromoCategoriesCond = new LinkedList();
+        List productPromoProductsAction = new LinkedList();
+        List productPromoCategoriesAction = new LinkedList();
+
+        Iterator productPromoProductsAllIter = productPromoProductsAll.iterator();
+        while (productPromoProductsAllIter.hasNext()) {
+            GenericValue productPromoProduct = (GenericValue) productPromoProductsAllIter.next();
+            // if the rule id is null then this is a global promo one, so always include
+            if (!"_NA_".equals(productPromoProduct.getString("productPromoCondSeqId")) || "_NA_".equals(productPromoProduct.getString("productPromoRuleId"))) {
+                productPromoProductsCond.add(productPromoProduct);
+            }
+            if (!"_NA_".equals(productPromoProduct.getString("productPromoActionSeqId")) || "_NA_".equals(productPromoProduct.getString("productPromoRuleId"))) {
+                productPromoProductsAction.add(productPromoProduct);
+            }
+        }
+        Iterator productPromoCategoriesAllIter = productPromoCategoriesAll.iterator();
+        while (productPromoCategoriesAllIter.hasNext()) {
+            GenericValue productPromoCategory = (GenericValue) productPromoCategoriesAllIter.next();
+            if (!"_NA_".equals(productPromoCategory.getString("productPromoCondSeqId")) || "_NA_".equals(productPromoCategory.getString("productPromoRuleId"))) {
+                productPromoCategoriesCond.add(productPromoCategory);
+            }
+            if (!"_NA_".equals(productPromoCategory.getString("productPromoActionSeqId")) || "_NA_".equals(productPromoCategory.getString("productPromoRuleId"))) {
+                productPromoCategoriesAction.add(productPromoCategory);
+            }
+        }
+
+        makeProductPromoIdSet(productIdsCond, productPromoCategoriesCond, productPromoProductsCond, delegator, nowTimestamp);
+        makeProductPromoIdSet(productIdsAction, productPromoCategoriesAction, productPromoProductsAction, delegator, nowTimestamp);
     }
 
     protected static void handleProductPromoCategories(Set productIds, List productPromoCategories, String productPromoApplEnumId, GenericDelegator delegator, Timestamp nowTimestamp) throws GenericEntityException {

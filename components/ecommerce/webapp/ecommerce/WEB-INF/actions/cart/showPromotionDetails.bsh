@@ -23,7 +23,7 @@
  *@version    1.0
  */
 
-import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.*;
 import org.ofbiz.order.shoppingcart.product.ProductPromoWorker;
 
 delegator = request.getAttribute("delegator");
@@ -32,4 +32,16 @@ userLogin = session.getAttribute("userLogin");
 productPromoId = request.getParameter("productPromoId");
 productPromo = delegator.findByPrimaryKey("ProductPromo", UtilMisc.toMap("productPromoId", productPromoId));
 
+Set productIdsCond = new HashSet();
+Set productIdsAction = new HashSet();
+ProductPromoWorker.makeProductPromoCondActionIdSets(productPromoId, productIdsCond, productIdsAction, delegator, null);
+Debug.logInfo("productIdsCond=" + productIdsCond.toString(), "showProductPromoDetails.bsh");
+Debug.logInfo("productIdsAction=" + productIdsAction.toString(), "showProductPromoDetails.bsh");
+
+Set productIds = new HashSet(productIdsCond);
+productIds.addAll(productIdsAction);
+
 context.put("productPromo", productPromo);
+context.put("productIdsCond", productIdsCond);
+context.put("productIdsAction", productIdsAction);
+context.put("productIds", productIds);

@@ -20,11 +20,12 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      3.0
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
 
+<#if productPromo?has_content>
   <table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
     <tr>
       <td width="100%">
@@ -67,13 +68,27 @@
     </tr>
     <tr>
       <td width="100%">
-        <table width="100%" border="0" cellspacing="0" cellpadding="4" class="boxbottom">
+        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxbottom">
           <tr>
-            <td>
-                <div class="tabletext">TODO: list product promo set here</div>
-            </td>
+            <td><div class="tableheadtext">Qualifier</div></td>
+            <td><div class="tableheadtext">Benefit</div></td>
+            <td><div class="tableheadtext">&nbsp;</div></td>
           </tr>
+          <#list productIds as productId>
+              <tr>
+                <td><div class="tabletext">[<#if productIdsCond.contains(productId)>x<#else>&nbsp;</#if>]</div></td>
+                <td><div class="tabletext">[<#if productIdsAction.contains(productId)>x<#else>&nbsp;</#if>]</div></td>
+                <td>
+                  ${setRequestAttribute("optProductId", productId)}
+                  ${setRequestAttribute("listIndex", productId_index)}
+                  ${pages.get("/catalog/productsummary.ftl")}
+                </td>
+              </tr>
+          </#list>
         </table>
       </td>
     </tr>
   </table>
+<#else>
+    <div class="head2">ERROR: No promotion found with ID [${productPromoId?if_exists}]</div>
+</#if>
