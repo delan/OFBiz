@@ -46,6 +46,7 @@
 </script>
 
 <#if security.hasRolePermission("ORDERMGR", "_VIEW", "", "", session) || security.hasRolePermission("ORDERMGR_ROLE", "_VIEW", "", "", session)>
+<#assign tasksFound = false>
 <table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <tr>
     <td width='100%'>
@@ -64,6 +65,7 @@
         <tr>        
           <td width='100%'>  
             <#if poList?has_content>
+              <#assign tasksFound = true>
               <table width='100%' border='0' cellpadding='0' cellspacing='0' class='boxbottom'>
                 <tr>
                   <td>
@@ -126,6 +128,7 @@
             </#if>
                               
             <#if partyTasks?has_content>
+              <#assign tasksFound = true>
               <table width='100%' border='0' cellpadding='0' cellspacing='0' class='boxbottom'>
                 <tr>
                   <td>
@@ -183,6 +186,7 @@
             </#if> 
             
             <#if roleTasks?has_content>
+              <#assign tasksFound = true>
               <table width='100%' border='0' cellpadding='0' cellspacing='0' class='boxbottom'>
                 <tr>
                   <td>
@@ -273,7 +277,10 @@
                   </td>
                 </tr>
               </table>  
-            </#if>                                                         
+            </#if>
+            <#if !tasksFound>
+              <div class="tabletext">No tasks currently require your attention.</div>
+            </#if>                                                                       
           </td>
         </tr>
       </table>
