@@ -1,5 +1,5 @@
 /*
- * $Id: SQLProcessor.java,v 1.4 2003/09/25 18:26:24 ajzeneski Exp $
+ * $Id: SQLProcessor.java,v 1.5 2003/12/04 02:49:59 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -48,7 +48,7 @@ import org.ofbiz.entity.transaction.TransactionUtil;
  * SQLProcessor - provides utitlity functions to ease database access
  * 
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.0
  */
 public class SQLProcessor {
@@ -348,7 +348,6 @@ public class SQLProcessor {
     /**
      * Execute a query based on the prepared statement
      *
-     * @param fkt
      * @return The result set of the query
      * @throws GenericDataSourceException
      */
