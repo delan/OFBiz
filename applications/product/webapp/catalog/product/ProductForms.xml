@@ -54,8 +54,8 @@
         </field>
         <field name="primaryProductCategoryId" title="${uiLabelMap.ProductPrimaryCategory}" widget-style="selectBox">
             <drop-down allow-empty="true">
-                <entity-options entity-name="ProductCategory" key-field-name="productCategoryId" description="${description} [${productCategoryId}]">
-                    <entity-constraint name="showInSelect"  value="N" operator="not-equals"/>
+                <entity-options entity-name="ProductCategoryAndMember" key-field-name="productCategoryId" description="${description} [${productCategoryId}]">
+                    <entity-constraint name="productId" env-name="product.productId"/>
                     <entity-order-by field-name="description"/>
                 </entity-options>
             </drop-down>
@@ -204,7 +204,7 @@
             default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
         <auto-fields-service service-name="createProductPrice" map-name=""/>
         <field name="productId"><hidden value="${productId}"/></field>
-        <field name="productPriceTypeId">
+        <field name="productPriceTypeId" title="${uiLabelMap.ProductPriceType}" widget-style="smallSelect">
             <drop-down allow-empty="false">
                 <entity-options entity-name="ProductPriceType" description="${description}">
                     <entity-order-by field-name="description"/>
