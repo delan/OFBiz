@@ -60,7 +60,7 @@ public class LoginServices {
         } else if(password == null || password.length() <= 0) {
             errMsg = "Password missing";
         } else {
-            String realPassword = useEncryption ? ShaEncrypt.getShaHash(password) : password;
+            String realPassword = useEncryption ? HashEncrypt.getHash(password) : password;
             
             GenericValue userLogin = null;
             try {
@@ -238,7 +238,7 @@ public class LoginServices {
         GenericValue userLoginToCreate = delegator.makeValue("UserLogin", UtilMisc.toMap("userLoginId", userLoginId));
         userLoginToCreate.set("passwordHint", passwordHint);
         userLoginToCreate.set("partyId", partyId);
-        userLoginToCreate.set("currentPassword", useEncryption ? ShaEncrypt.getShaHash(currentPassword) : currentPassword);
+        userLoginToCreate.set("currentPassword", useEncryption ? HashEncrypt.getHash(currentPassword) : currentPassword);
 
         try {
             if (delegator.findByPrimaryKey(userLoginToCreate.getPrimaryKey()) != null) {
@@ -320,7 +320,7 @@ public class LoginServices {
             return ServiceUtil.returnError(errorMessageList);
         }
 
-        userLoginToUpdate.set("currentPassword", useEncryption ? ShaEncrypt.getShaHash(newPassword) : newPassword, false);
+        userLoginToUpdate.set("currentPassword", useEncryption ? HashEncrypt.getHash(newPassword) : newPassword, false);
         userLoginToUpdate.set("passwordHint", passwordHint, false);
 
         try {
@@ -391,7 +391,7 @@ public class LoginServices {
         if (!ignoreCurrentPassword) {
             String realPassword = currentPassword;
             if (useEncryption && currentPassword != null) {
-                realPassword = ShaEncrypt.getShaHash(currentPassword);
+                realPassword = HashEncrypt.getHash(currentPassword);
             }
             //if the password.accept.encrypted.and.plain property in security is set to true allow plain or encrypted passwords
             boolean passwordMatches = currentPassword != null && (realPassword.equals(userLogin.getString("currentPassword")) ||

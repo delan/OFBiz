@@ -34,16 +34,26 @@ import org.ofbiz.core.util.*;
  *@created    10 Mar 2002
  *@version    1.0
  */
-public class ShaEncrypt {
+public class HashEncrypt {
     private static char hexChars[] = {
         '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
         'a', 'b', 'c', 'd', 'e', 'f'
     };
     
-    public static String getShaHash(String str) {
+    public static String getHash(String str) {
+        String hashType = UtilProperties.getPropertyValue("security", "password.encrypt.hash.type");
+        if (hashType == null || hashType.length() == 0) {
+            Debug.logWarning("Password encrypt hash type is not specified in security.properties, use SHA");
+            hashType = "SHA";
+        }
+        
+        return getDigestHash(str, hashType);
+    }
+    
+    public static String getDigestHash(String str, String hashType) {
         if (str == null) return null;
         try {
-            MessageDigest messagedigest = MessageDigest.getInstance("SHA");
+            MessageDigest messagedigest = MessageDigest.getInstance(hashType);
             int i = str.length();
             byte strBytes[] = str.getBytes();
             
@@ -61,18 +71,18 @@ public class ShaEncrypt {
             
             return new String(digestChars, 0, digestChars.length);
         } catch (Exception e) {
-            Debug.logError(e, "Could not compute SHA hash");
+            Debug.logError(e, "Error while computing hash of type " + hashType);
         }
         return str;
     }
 
-    public static String getShaHash(String str, String code) {
+    public static String getDigestHash(String str, String code, String hashType) {
         if (str == null) return null;
         try {
             byte codeBytes[] = null;
             if (code == null) codeBytes = str.getBytes();
             else codeBytes = str.getBytes(code);
-            MessageDigest messagedigest = MessageDigest.getInstance("SHA");
+            MessageDigest messagedigest = MessageDigest.getInstance(hashType);
             messagedigest.update(codeBytes);
             byte digestBytes[] = messagedigest.digest();
             int i = 0;
@@ -88,7 +98,7 @@ public class ShaEncrypt {
             
             return new String(digestChars, 0, digestChars.length);
         } catch (Exception e) {
-            Debug.logError(e, "Could not compute SHA hash");
+            Debug.logError(e, "Error while computing hash of type " + hashType);
         }
         return str;
     }

@@ -297,7 +297,7 @@ public class LoginEvents {
                 double randNum = Math.random();
                 //multiply by 100,000 to usually make a 5 digit number
                 passwordToSend = "auto" + ((long)(randNum * 100000));
-                supposedUserLogin.set("currentPassword", passwordToSend);
+                supposedUserLogin.set("currentPassword", HashEncrypt.getHash(passwordToSend));
                 supposedUserLogin.set("passwordHint", "Auto-Generated Password");
                 supposedUserLogin.store();
             } else {
