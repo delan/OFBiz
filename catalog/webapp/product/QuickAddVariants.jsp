@@ -42,7 +42,7 @@
     pageContext.setAttribute("featureTypeValues", featureTypeValues);
 
     //just get the selectable features
-    Collection productFeatureAndAppls = EntityUtil.filterByDate(delegator.findByAnd("ProductFeatureAndAppl", 
+    List productFeatureAndAppls = EntityUtil.filterByDate(delegator.findByAnd("ProductFeatureAndAppl", 
             UtilMisc.toMap("productId", productId, "productFeatureApplTypeId", "SELECTABLE_FEATURE"), 
             UtilMisc.toList("sequenceNum", "productFeatureApplTypeId", "productFeatureTypeId", "description")), true);
     if (productFeatureAndAppls != null) {
