@@ -1,5 +1,5 @@
 /*
- * $Id: ProductEvents.java,v 1.9 2004/01/22 05:19:24 jonesde Exp $
+ * $Id: ProductEvents.java,v 1.10 2004/01/27 01:00:59 jonesde Exp $
  * 
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  * 
@@ -47,7 +47,7 @@ import org.ofbiz.service.LocalDispatcher;
  * Product Information Related Events
  * 
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  * @since 2.0
  */
 public class ProductEvents {
@@ -207,7 +207,7 @@ public class ProductEvents {
 
         if (updateMode.equals("CREATE")) {
             try {
-                KeywordSearch.induceKeywords(product);
+                KeywordSearch.induceKeywords(product, true);
             } catch (GenericEntityException e) {
                 request.setAttribute("_ERROR_MESSAGE_", "Could not create keywords (write error).");
                 return "error";
@@ -284,7 +284,7 @@ public class ProductEvents {
         GenericValue product = null;
         while ((product = (GenericValue) entityListIterator.next()) != null) {
             try {
-                KeywordSearch.induceKeywords(product);
+                KeywordSearch.induceKeywords(product, "Y".equals(doAll));
             } catch (GenericEntityException e) {
                 request.setAttribute("_ERROR_MESSAGE_", "Could not create keywords (write error).");
                 Debug.logWarning("[ProductEvents.updateAllKeywords] Could not create product-keyword (write error); message: " + e.getMessage(), module);

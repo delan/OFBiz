@@ -1,5 +1,5 @@
 /*
- * $Id: ProductUtilServices.java,v 1.2 2004/01/26 22:13:25 jonesde Exp $
+ * $Id: ProductUtilServices.java,v 1.3 2004/01/27 01:00:59 jonesde Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -47,6 +47,7 @@ import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.model.DynamicViewEntity;
 import org.ofbiz.entity.model.ModelKeyMap;
 import org.ofbiz.entity.util.EntityListIterator;
+import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.ServiceUtil;
 
@@ -55,7 +56,7 @@ import org.ofbiz.service.ServiceUtil;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class ProductUtilServices {
@@ -68,19 +69,70 @@ public class ProductUtilServices {
         Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
         
         try {
-            EntityCondition condition = new EntityConditionList(UtilMisc.toList(
+            EntityCondition conditionOne = new EntityConditionList(UtilMisc.toList(
                     new EntityExpr("isVariant", EntityOperator.EQUALS, "Y"),
                     new EntityExpr("salesDiscontinuationDate", EntityOperator.NOT_EQUAL, null),
                     new EntityExpr("salesDiscontinuationDate", EntityOperator.LESS_THAN_EQUAL_TO, nowTimestamp)
                     ), EntityOperator.AND);
+            EntityListIterator eliOne = delegator.findListIteratorByCondition("Product", conditionOne, null, null);
+            GenericValue productOne = null;
+            int numSoFarOne = 0;
+            while ((productOne = (GenericValue) eliOne.next()) != null) {
+                String virtualProductId = ProductWorker.getVariantVirtualId(productOne);
+                GenericValue virtualProduct = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", virtualProductId));
+                if (virtualProduct == null) {
+                    continue;
+                }
+                List passocList = delegator.findByAnd("ProductAssoc", UtilMisc.toMap("productId", virtualProductId, "productIdTo", productOne.get("productId"), "productAssocTypeId", "PRODUCT_VARIANT"));
+                passocList = EntityUtil.filterByDate(passocList, nowTimestamp);
+                if (passocList.size() > 0) {
+                    Iterator passocIter = passocList.iterator();
+                    while (passocIter.hasNext()) {
+                        GenericValue passoc = (GenericValue) passocIter.next();
+                        passoc.set("thruDate", nowTimestamp);
+                        passoc.store();
+                    }
+                    
+                    numSoFarOne++;
+                    if (numSoFarOne % 500 == 0) {
+                        Debug.logInfo("Expired variant ProductAssocs for " + numSoFarOne + " sales discontinued variant products.", module);
+                    }
+                }
+            }
+
+            // TODO: get all non-discontinued virtuals, see if all variant ProductAssocs are expired, if discontinue
+            /*
+            EntityCondition condition = new EntityConditionList(UtilMisc.toList(
+                    new EntityExpr("isVariant", EntityOperator.EQUALS, "Y"),
+                    new EntityExpr("salesDiscontinuationDate", EntityOperator.NOT_EQUAL, null),
+                    new EntityExpr("salesDiscontinuationDate", EntityOperator.LESS_THAN_EQUAL_TO, nowTimestamp)
+            ), EntityOperator.AND);
             EntityListIterator eli = delegator.findListIteratorByCondition("Product", condition, null, null);
             GenericValue product = null;
+            int numSoFar = 0;
             while ((product = (GenericValue) eli.next()) != null) {
                 String virtualProductId = ProductWorker.getVariantVirtualId(product);
                 GenericValue virtualProduct = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", virtualProductId));
-                virtualProduct.set("salesDiscontinuationDate", nowTimestamp);
-                virtualProduct.store();
+                if (virtualProduct == null) {
+                    continue;
+                }
+                List passocList = delegator.findByAnd("ProductAssoc", UtilMisc.toMap("productId", virtualProductId, "productIdTo", product.get("productId"), "productAssocTypeId", "PRODUCT_VARIANT"));
+                passocList = EntityUtil.filterByDate(passocList, nowTimestamp);
+                if (passocList.size() > 0) {
+                    Iterator passocIter = passocList.iterator();
+                    while (passocIter.hasNext()) {
+                        GenericValue passoc = (GenericValue) passocIter.next();
+                        passoc.set("thruDate", nowTimestamp);
+                        passoc.store();
+                    }
+                    
+                    numSoFar++;
+                    if (numSoFar % 500 == 0) {
+                        Debug.logInfo("Expired variant ProductAssocs for " + numSoFar + " sales discontinued variant products.", module);
+                    }
+                }
             }
+            */
         } catch (GenericEntityException e) {
             String errMsg = "Entity error running salesDiscontinuationDate: " + e.toString();
             Debug.logError(e, errMsg, module);
@@ -102,16 +154,24 @@ public class ProductUtilServices {
                     ), EntityOperator.AND);
             EntityListIterator eli = delegator.findListIteratorByCondition("Product", condition, null, null);
             GenericValue product = null;
+            int numSoFar = 0;
             while ((product = (GenericValue) eli.next()) != null) {
                 String productId = product.getString("productId");
                 List productCategoryMemberList = delegator.findByAnd("ProductCategoryMember", UtilMisc.toMap("productId", productId));
-                Iterator productCategoryMemberIter = productCategoryMemberList.iterator();
-                while (productCategoryMemberIter.hasNext()) {
-                    GenericValue productCategoryMember = (GenericValue) productCategoryMemberIter.next();
-                    // coded this way rather than a removeByAnd so it can be easily changed...
-                    productCategoryMember.remove();
+                if (productCategoryMemberList.size() > 0) {
+                    Iterator productCategoryMemberIter = productCategoryMemberList.iterator();
+                    while (productCategoryMemberIter.hasNext()) {
+                        GenericValue productCategoryMember = (GenericValue) productCategoryMemberIter.next();
+                        // coded this way rather than a removeByAnd so it can be easily changed...
+                        productCategoryMember.remove();
+                    }
+                    numSoFar++;
+                    if (numSoFar % 500 == 0) {
+                        Debug.logInfo("Removed category members for " + numSoFar + " sales discontinued products.", module);
+                    }
                 }
             }
+            Debug.logInfo("Completed - Removed category members for " + numSoFar + " sales discontinued products.", module);
         } catch (GenericEntityException e) {
             String errMsg = "Entity error running salesDiscontinuationDate: " + e.toString();
             Debug.logError(e, errMsg, module);
@@ -155,6 +215,9 @@ public class ProductUtilServices {
                 // for all virtuals with one variant move all info from virtual to variant and remove virtual, make variant as not a variant
 
                 numWithOneValid++;
+                if (numWithOneValid % 100 == 0) {
+                    Debug.logInfo("Made " + numWithOneValid + " virtual products with one valid variant stand-along products.", module);
+                }
             }
 
             EntityCondition condition = new EntityConditionList(UtilMisc.toList(
@@ -170,6 +233,9 @@ public class ProductUtilServices {
                 // for all virtuals with one valid variant move info from virtual to variant, put variant in categories from virtual, remove virtual from all categories but leave "family" otherwise intact, mark variant as not a variant
                 
                 numWithOneOnly++;
+                if (numWithOneOnly % 100 == 0) {
+                    Debug.logInfo("Made " + numWithOneOnly + " virtual products with only one valid variant stand-along products.", module);
+                }
             }
             
             Debug.logInfo("Found virtual products with one valid variant: " + numWithOneValid + ", with one variant only: " + numWithOneOnly, module);
@@ -193,6 +259,7 @@ public class ProductUtilServices {
         try {
             EntityListIterator eli = delegator.findListIteratorByCondition("Product", null, null, null);
             GenericValue product = null;
+            int numSoFar = 0;
             while ((product = (GenericValue) eli.next()) != null) {
                 String productId = (String) product.get("productId");
                 Map smallMap = UtilMisc.toMap("sizeStr", "small", "productId", productId);
@@ -206,7 +273,12 @@ public class ProductUtilServices {
                 product.set("detailImageUrl", FlexibleStringExpander.expandString(pattern, detailMap));
                 
                 product.store();
+                numSoFar++;
+                if (numSoFar % 500 == 0) {
+                    Debug.logInfo("Image URLs set for " + numSoFar + " products.", module);
+                }
             }
+            Debug.logInfo("Completed - Image URLs set for " + numSoFar + " products.", module);
         } catch (GenericEntityException e) {
             String errMsg = "Entity error running salesDiscontinuationDate: " + e.toString();
             Debug.logError(e, errMsg, module);

@@ -1,5 +1,5 @@
 /*
- * $Id: KeywordIndex.java,v 1.9 2004/01/25 04:37:51 jonesde Exp $
+ * $Id: KeywordIndex.java,v 1.10 2004/01/27 01:00:59 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -25,6 +25,7 @@
 package org.ofbiz.product.product;
 
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -50,17 +51,31 @@ import org.ofbiz.entity.util.EntityUtil;
  *  Does indexing in preparation for a keyword search.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.9 $
+ * @version    $Revision: 1.10 $
  * @since      2.0
  */
 public class KeywordIndex {
     
     public static final String module = KeywordIndex.class.getName();
 
-    public static void indexKeywords(GenericValue product) throws GenericEntityException {
+    public static void indexKeywords(GenericValue product, boolean doAll) throws GenericEntityException {
         if (product == null) return;
+        Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
+        
+        if (!doAll) {
+            if ("Y".equals(product.getString("isVariant"))) {
+                return;
+            }
+            if ("N".equals(product.getString("autoCreateKeywords"))) {
+                return;
+            }
+            Timestamp salesDiscontinuationDate = product.getTimestamp("salesDiscontinuationDate");
+            if (salesDiscontinuationDate != null && salesDiscontinuationDate.before(nowTimestamp)) {
+                return;
+            }
+        }
+        
         GenericDelegator delegator = product.getDelegator();
-
         if (delegator == null) return;
         String productId = product.getString("productId");
 
