@@ -533,7 +533,7 @@
         <attribute name="sequenceNum" type="Long" mode="IN" optional="true"/>
     </service>
     <service name="updateProductPromoToProdCatalog" engine="simple"
-                location="org/ofbiz/commonapp/product/promo/PromoServices.xml" invoke="addProductPromoToProdCatalog" auth="true">
+                location="org/ofbiz/commonapp/product/promo/PromoServices.xml" invoke="updateProductPromoToProdCatalog" auth="true">
         <description>Add ProductPromo To ProdCatalog</description>
         <attribute name="prodCatalogId" type="String" mode="IN" optional="false"/>
         <attribute name="productPromoId" type="String" mode="IN" optional="false"/>
