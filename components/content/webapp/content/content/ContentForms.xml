@@ -49,6 +49,18 @@
                     entity-name="StatusItem" key-field-name="statusId"/>
             </drop-down>
         </field>
+        <field name="createdByUserLogin">
+             <lookup target-form-name="LookupPerson" />
+        </field>
+        <field name="createdDate">
+            <date-find/>
+        </field>
+        <field name="lastModifiedByUserLogin">
+             <lookup target-form-name="LookupParty" />
+        </field>
+        <field name="lastModifiedDate">
+            <date-find/>
+        </field>
         <field name="submitButton" title="Find" widget-style="standardSubmit">
             <submit button-type="button"/>
         </field>
@@ -103,6 +115,18 @@
                 <entity-options description="${description}"
                     entity-name="StatusItem" key-field-name="statusId"/>
             </drop-down>
+        </field>
+        <field name="createdByUserLogin" position="1">
+            <display/>
+        </field>
+        <field name="createdDate" position="2">
+            <display/>
+        </field>
+        <field name="lastModifiedByUserLogin" position="1">
+            <display/>
+        </field>
+        <field name="lastModifiedDate" position="2">
+            <display/>
         </field>
         <field name="submitButton" title="Update" widget-style="standardSubmit">
             <submit button-type="button"/>
@@ -169,6 +193,18 @@
                 <entity-options description="${description}"
                     entity-name="StatusItem" key-field-name="statusId"/>
             </drop-down>
+        </field>
+        <field name="createdByUserLogin" position="1">
+            <display/>
+        </field>
+        <field name="createdDate" position="2">
+            <display/>
+        </field>
+        <field name="lastModifiedByUserLogin" position="1">
+            <display/>
+        </field>
+        <field name="lastModifiedDate" position="2">
+            <display/>
         </field>
         <field name="findContent" title="&amp;nbsp;" widget-style="buttontext">
             <hyperlink also-hidden="false" description="Find"  target="FindContent"/>
