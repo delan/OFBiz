@@ -289,11 +289,12 @@ public class UtilCache {
     }
 
     public List values() {
-        if (keyLRUList == null) {
+        if (cacheLineTable == null) {
             return null;
         }
+        
         List valuesList = new LinkedList();
-        Iterator i = keyLRUList.iterator();
+        Iterator i = cacheLineTable.keySet().iterator();
         while (i.hasNext()) {
             Object key = i.next();
             valuesList.add(this.get(key));
