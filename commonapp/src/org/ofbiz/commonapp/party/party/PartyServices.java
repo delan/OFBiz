@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2002/01/28 00:47:39  azeneski
+ * fixed bad mappings in LoginServices and added createAffiliate service to PartyServices
+ *
  * Revision 1.2  2002/01/26 20:34:05  jonesde
  * Added some comments about the party delete operation, not sure if it's a good idea
  *
@@ -99,7 +102,7 @@ public class PartyServices {
         //partyId might be empty, so check it and get next seq party id if empty
         if (partyId == null || partyId.length() == 0) {
             Long newId = delegator.getNextSeqId("Party");
-            if(newId == null) {
+            if (newId == null) {
                 return ServiceUtil.returnError("ERROR: Could not create person (id generation failure)");
             } else {
                 partyId = newId.toString();
@@ -159,7 +162,7 @@ public class PartyServices {
         
         try {
             delegator.storeAll(toBeStored);
-        } catch(GenericEntityException e) {
+        } catch (GenericEntityException e) {
             Debug.logWarning(e.getMessage());
             return ServiceUtil.returnError("Could not add person info (write failure): " + e.getMessage());
         }
@@ -188,12 +191,12 @@ public class PartyServices {
         GenericValue person = null;
         try {
             person = delegator.findByPrimaryKey("Person", UtilMisc.toMap("partyId", partyId));
-        } catch(GenericEntityException e) {
+        } catch (GenericEntityException e) {
             Debug.logWarning(e);
             return ServiceUtil.returnError("Could not update person information (read failure): " + e.getMessage());
         }
         
-        if(person == null) {
+        if (person == null) {
             return ServiceUtil.returnError("Could not update person information (person not found)");
         }
         
@@ -218,7 +221,7 @@ public class PartyServices {
         
         try {
             person.store();
-        } catch(GenericEntityException e) {
+        } catch (GenericEntityException e) {
             Debug.logWarning(e.getMessage());
             return ServiceUtil.returnError("Could update personal information (write failure): " + e.getMessage());
         }
@@ -254,7 +257,7 @@ public class PartyServices {
         //partyId might be empty, so check it and get next seq party id if empty
         if (partyId == null || partyId.length() == 0) {
             Long newId = delegator.getNextSeqId("Party");
-            if(newId == null) {
+            if (newId == null) {
                 return ServiceUtil.returnError("ERROR: Could not create party group (id generation failure)");
             } else {
                 partyId = newId.toString();
@@ -298,7 +301,7 @@ public class PartyServices {
         
         try {
             delegator.storeAll(toBeStored);
-        } catch(GenericEntityException e) {
+        } catch (GenericEntityException e) {
             Debug.logWarning(e.getMessage());
             return ServiceUtil.returnError("Could not add party group (write failure): " + e.getMessage());
         }
@@ -326,12 +329,12 @@ public class PartyServices {
         GenericValue partyGroup = null;
         try {
             partyGroup = delegator.findByPrimaryKey("PartyGroup", UtilMisc.toMap("partyId", partyId));
-        } catch(GenericEntityException e) {
+        } catch (GenericEntityException e) {
             Debug.logWarning(e);
             return ServiceUtil.returnError("Could not update party group information (read failure): " + e.getMessage());
         }
         
-        if(partyGroup == null) {
+        if (partyGroup == null) {
             return ServiceUtil.returnError("Could not update party group information (partyGroup not found)");
         }
         
@@ -340,7 +343,7 @@ public class PartyServices {
         
         try {
             partyGroup.store();
-        } catch(GenericEntityException e) {
+        } catch (GenericEntityException e) {
             Debug.logWarning(e.getMessage());
             return ServiceUtil.returnError("Could update party group information (write failure): " + e.getMessage());
         }
@@ -362,21 +365,21 @@ public class PartyServices {
         Timestamp now = UtilDateTime.nowTimestamp();
         
         String partyId = (String) context.get("partyId");
-        if ( partyId == null || partyId.length() == 0 ) {
+        if (partyId == null || partyId.length() == 0) {
             partyId = userLogin.getString("partyId");
         }
         
         //if specified partyId starts with a number, return an error
-        if ( Character.isDigit(partyId.charAt(0)) )
+        if (Character.isDigit(partyId.charAt(0))) {
             return ServiceUtil.returnError("Cannot create affiliate, specified party ID cannot start with a digit, numeric IDs are reserved for auto-generated IDs");
+        }
         
         //partyId might be empty, so check it and get next seq party id if empty
-        if ( partyId == null || partyId.length() == 0 ) {
+        if (partyId == null || partyId.length() == 0) {
             Long newId = delegator.getNextSeqId("Party");
-            if ( newId == null ) {
+            if (newId == null) {
                 return ServiceUtil.returnError("ERROR: Could not create affiliate (id generation failure)");
-            }
-            else {
+            } else {
                 partyId = newId.toString();
             }
         }
@@ -385,24 +388,22 @@ public class PartyServices {
         GenericValue party = null;
         try {
             party = delegator.findByPrimaryKey("Party", UtilMisc.toMap("partyId", partyId));
-        }
-        catch ( GenericEntityException e ) {
+        } catch (GenericEntityException e) {
             Debug.logWarning(e.getMessage());
         }
         
-        if ( party == null ) {
+        if (party == null) {
             return ServiceUtil.returnError("Cannot create affiliate; no party entity found.");
         }
         
         GenericValue affiliate = null;
         try {
             affiliate = delegator.findByPrimaryKey("Affiliate", UtilMisc.toMap("partyId", partyId));
-        }
-        catch ( GenericEntityException e ) {
+        } catch (GenericEntityException e) {
             Debug.logWarning(e.getMessage());
         }
         
-        if ( affiliate != null ) {
+        if (affiliate != null) {
             return ServiceUtil.returnError("Cannot create, an affiliate with the specified party ID already exists");
         }
         
@@ -418,8 +419,7 @@ public class PartyServices {
         
         try {
             delegator.create(affiliate);
-        }
-        catch ( GenericEntityException e ) {
+        } catch (GenericEntityException e) {
             Debug.logWarning(e.getMessage());
             return ServiceUtil.returnError("Could not add affiliate info (write failure): " + e.getMessage());
         }
@@ -442,19 +442,18 @@ public class PartyServices {
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         
         String partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PARTYMGR", "_UPDATE");
-        if ( result.size() > 0 )
+        if (result.size() > 0)
             return result;
         
         GenericValue affiliate = null;
         try {
             affiliate = delegator.findByPrimaryKey("Affiliate", UtilMisc.toMap("partyId", partyId));
-        }
-        catch ( GenericEntityException e ) {
+        } catch (GenericEntityException e) {
             Debug.logWarning(e);
             return ServiceUtil.returnError("Could not update affiliate information (read failure): " + e.getMessage());
         }
         
-        if ( affiliate == null ) {
+        if (affiliate == null) {
             return ServiceUtil.returnError("Could not update affiliate information (affiliate not found)");
         }
         
@@ -467,8 +466,7 @@ public class PartyServices {
         
         try {
             affiliate.store();
-        }
-        catch ( GenericEntityException e ) {
+        } catch (GenericEntityException e) {
             Debug.logWarning(e.getMessage());
             return ServiceUtil.returnError("Could update affiliate information (write failure): " + e.getMessage());
         }
@@ -476,5 +474,4 @@ public class PartyServices {
         result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         return result;
     }
-    
 }
