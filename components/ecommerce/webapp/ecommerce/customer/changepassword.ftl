@@ -20,10 +20,9 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org) 
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      2.1
 -->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
   <p class="head1">${uiLabelMap.PartyChangePassword}</p>
 
     &nbsp;<a href="<@ofbizUrl>/authview/${donePage}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonGoBack}]</a>

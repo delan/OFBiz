@@ -24,7 +24,6 @@
  *@since      3.1
 -->
 
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
 <TABLE border="0" cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>

@@ -20,10 +20,9 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org) 
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      2.1
 -->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#if canNotView>
   <p><h3>${uiLabelMap.PartyContactInfoNotBelongToYou}.</h3></p>
   &nbsp;<a href="<@ofbizUrl>/authview/${donePage}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonBack}]</a>
@@ -158,7 +157,7 @@
         <select name="stateProvinceGeoId" class='selectBox'>
           <#if postalAddressData.stateProvinceGeoId?exists><option value='${postalAddressData.stateProvinceGeoId}'>${selectedStateName?default(postalAddressData.stateProvinceGeoId)}</option></#if>
           <option value="">${uiLabelMap.PartyNoState}</option>          
-          <#include "../includes/states.ftl">          
+          ${screens.render("component://common/widget/CommonScreens.xml#states")}
         </select>
       *</td>
     </tr>
@@ -175,7 +174,7 @@
       <td width="74%">
         <select name="countryGeoId" class='selectBox'>
           <#if postalAddressData.countryGeoId?exists><option value='${postalAddressData.countryGeoId}'>${selectedCountryName?default(postalAddressData.countryGeoId)}</option></#if>
-          <#include "../includes/countries.ftl">
+          ${screens.render("component://common/widget/CommonScreens.xml#countries")}
         </select>
       *</td>
     </tr>

@@ -24,9 +24,7 @@
  *@since      3.0
 -->
 
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
-
-<table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<table border="0" cellspacing='0' cellpadding='0' class='boxoutside'>
   <tr>
     <td width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
@@ -36,7 +34,7 @@
           </td>
           <td nowrap align="right">
             <div class="tabletext">
-              ${pages.get("/order/anonymoustrail.ftl")}
+              ${screens.render("component://ecommerce/widget/OrderScreens.xml#anonymoustrail")}
             </div>
           </td>
         </tr>

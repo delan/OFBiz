@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2004 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -20,10 +20,9 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org) 
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      2.1
 -->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#if person?exists>
   <p class="head1">${uiLabelMap.PartyEditPersonalInformation}</p>
     <form method=POST action="<@ofbizUrl>/updatePerson/${donePage}</@ofbizUrl>" name="editpersonform">

@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2004 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -20,11 +20,10 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      3.0
 -->
 
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#if canNotView>
   <p><h3>${uiLabelMap.AccountingCardInfoNotBelongToYou}.</h3></p>
 &nbsp;<a href='<@ofbizUrl>/authview/${donePage}</@ofbizUrl>' class="buttontext">[${uiLabelMap.CommonBack}]</a>
@@ -95,7 +94,7 @@
           <#if ccExprMonth?has_content>
             <option value="${ccExprMonth?if_exists}">${ccExprMonth?if_exists}</option>
           </#if>
-          ${pages.get("/includes/ccmonths.ftl")}
+          ${screens.render("component://common/widget/CommonScreens.xml#ccmonths")}
         </select>
         <select name="expYear" class='selectBox' onChange="javascript:makeExpDate();">
           <#if giftCard?has_content && expYear?has_content>
@@ -106,7 +105,7 @@
           <#if ccExprYear?has_content>
             <option value="${ccExprYear?if_exists}">${ccExprYear?if_exists}</option>
           </#if>
-          ${pages.get("/includes/ccyears.ftl")}
+          ${screens.render("component://common/widget/CommonScreens.xml#ccyears")}
         </select>
       </td>
     </tr>

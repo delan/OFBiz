@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2004 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -23,7 +23,6 @@
  *@version    1.0
  *@since      2.1
 -->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
 
 <#if getUsername>
 <script language="JavaScript">
@@ -168,8 +167,8 @@
       <@fieldErrors fieldName="CUSTOMER_STATE"/>
       <select name="CUSTOMER_STATE" class='selectBox'>
           <#if requestParameters.CUSTOMER_STATE?exists><option value='${requestParameters.CUSTOMER_STATE}'>${selectedStateName?default(requestParameters.CUSTOMER_STATE)}</option></#if>
-          <option value="">${uiLabelMap.PartyNoState}</option>          
-          <#include "../includes/states.ftl">
+          <option value="">${uiLabelMap.PartyNoState}</option>
+          ${screens.render("component://common/widget/CommonScreens.xml#states")}
       </select>
     * </td>
   </tr>
@@ -186,7 +185,7 @@
       <@fieldErrors fieldName="CUSTOMER_COUNTRY"/>
           <select name="CUSTOMER_COUNTRY" class='selectBox'>
             <#if requestParameters.CUSTOMER_COUNTRY?exists><option value='${requestParameters.CUSTOMER_COUNTRY}'>${selectedCountryName?default(requestParameters.CUSTOMER_COUNTRY)}</option></#if>
-            <#include "../includes/countries.ftl">
+            ${screens.render("component://common/widget/CommonScreens.xml#countries")}
           </select>
       * </td>
   </tr>

@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2004 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -20,12 +20,11 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      3.0
 -->
 
 <script language="javascript">
-<!-- //
 function shipBillAddr() {
     <#if requestParameters.singleUsePayment?default("N") == "Y">
       <#assign singleUse = "&singleUsePayment=Y">
@@ -40,7 +39,7 @@ function shipBillAddr() {
 }
 </script>
 
-<table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<table border="0" cellspacing='0' cellpadding='0' class='boxoutside'>
   <tr>
     <td width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
@@ -51,7 +50,7 @@ function shipBillAddr() {
           <td nowrap align="right">
             <#if requestParameters.singleUsePayment?default("N") != "Y">
               <div class="tabletext">
-                ${pages.get("/order/anonymoustrail.ftl")}
+                ${screens.render("component://ecommerce/widget/OrderScreens.xml#anonymoustrail")}
               </div>
             </#if>
           </td>
@@ -127,7 +126,7 @@ function shipBillAddr() {
                     <td width="5">&nbsp;</td>
                     <td width="74%">&nbsp;</td>
                   </tr>
-                  ${pages.get("/order/genericaddress.ftl")}
+                  ${screens.render("component://ecommerce/widget/OrderScreens.xml#genericaddress")}
                 </#if>
 
                 <#-- credit card fields -->
@@ -211,7 +210,7 @@ function shipBillAddr() {
                           <option>${creditCard.cardType}</option>
                           <option value="${creditCard.cardType}">---</option>
                         </#if>
-                        ${pages.get("/includes/cctypes.ftl")}
+                        ${screens.render("component://common/widget/CommonScreens.xml#cctypes")}
                       </select>
                     *</td>
                   </tr>
@@ -251,7 +250,7 @@ function shipBillAddr() {
                         <#if ccExprMonth?has_content>
                           <option value="${ccExprMonth?if_exists}">${ccExprMonth?if_exists}</option>
                         </#if>
-                        ${pages.get("/includes/ccmonths.ftl")}
+                        ${screens.render("component://common/widget/CommonScreens.xml#ccmonths")}
                       </select>
                       <select name="expYear" class='selectBox'>
                         <#if creditCard?has_content && expYear?has_content>
@@ -262,7 +261,7 @@ function shipBillAddr() {
                         <#if ccExprYear?has_content>
                           <option value="${ccExprYear?if_exists}">${ccExprYear?if_exists}</option>
                         </#if>
-                        ${pages.get("/includes/ccyears.ftl")}
+                        ${screens.render("component://common/widget/CommonScreens.xml#ccyears")}
                       </select>
                     *</td>
                   </tr>
