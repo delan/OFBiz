@@ -226,10 +226,12 @@ function insertImageName(size,ext) {
         <SELECT name='requireInventory'>
             <%
                 String reqInvLabel = "Use Catalog Default";
-                if ("Y".equals(product.getString("requireInventory"))) {
-                    reqInvLabel = "Yes";
-                } else if ("N".equals(product.getString("requireInventory"))) {
-                    reqInvLabel = "No";
+                if (product != null) {
+                    if ("Y".equals(product.getString("requireInventory"))) {
+                        reqInvLabel = "Yes";
+                    } else if ("N".equals(product.getString("requireInventory"))) {
+                        reqInvLabel = "No";
+                    }
                 }
             %>
             <OPTION value='<ofbiz:inputvalue entityAttr="product" field="requireInventory" tryEntityAttr="tryEntity"/>'><%=reqInvLabel%></OPTION>
