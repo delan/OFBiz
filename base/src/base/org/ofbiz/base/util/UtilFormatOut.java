@@ -1,5 +1,5 @@
 /*
- * $Id: UtilFormatOut.java,v 1.4 2003/11/28 18:48:46 jonesde Exp $
+ * $Id: UtilFormatOut.java,v 1.5 2003/12/28 09:01:43 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -34,7 +34,7 @@ import java.util.Currency;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.0
  */
 public class UtilFormatOut {
@@ -193,6 +193,15 @@ public class UtilFormatOut {
             outStrBfr.insert(0, '0');
         }
         return outStrBfr.toString();
+    }
+    
+    public static String formatPaddingRemove(String original) {
+        if (original == null) return null;
+        StringBuffer orgBuf = new StringBuffer(original);
+        while (orgBuf.length() > 0 && orgBuf.charAt(0) == '0') {
+            orgBuf.deleteCharAt(0);
+        }
+        return orgBuf.toString();
     }
     
     
