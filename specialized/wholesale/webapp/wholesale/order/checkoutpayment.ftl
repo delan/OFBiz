@@ -192,7 +192,7 @@ function toggleBillingAccount(box) {
                             </#if>
 
                             <#assign giftCardNumber = pcardNumberDisplay?if_exists>
-                            <if (!giftCardNumber?has_content)>
+                            <#if (!giftCardNumber?has_content)>
                               <#assign giftCardNumber = vcardNumberDisplay?if_exists>
                             <#elseif vcardNumberDisplay?has_content>
                               <#assign giftCardNumber = giftCardNumber + " / " + vcardNumberDisplay>
