@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE fieldtypemodel PUBLIC "-//OFBiz//DTD Field Type Model//EN" "http://www.ofbiz.org/dtds/fieldtypemodel.dtd">
-
 <!--
-/**
  *  $Id$
+ *
  *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
@@ -23,15 +21,10 @@
  *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *
- *@author     Britton Wesley LaRoche
- *@author     David E. Jones
- *@created    October 23, 2001
- *@version    1.0
- */
 -->
 
-<fieldtypemodel>
+<fieldtypemodel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/fieldtypemodel.xsd">
   <!-- ===================== field-type-def ==================== -->
    <!-- General Types --> 
     <field-type-def type="blob" sql-type="LONG BYTE" sql-type-alias="LONG BYTE" java-type="java.lang.Object"></field-type-def>

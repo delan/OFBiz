@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE data-files PUBLIC "-//OFBiz//DTD Data Files//EN" "http://www.ofbiz.org/dtds/datafiles.dtd">
-
 <!--
- *  Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -27,7 +25,8 @@
  * @since      2.2
 -->
 
-<data-files>
+<data-files xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/datafiles.xsd">
     <data-file name="FlatTaxTable" type-code="001" record-length="182" separator-style="fixed-length">
         <record name="taxEntry">
             <field name="zipCode" position="0" length="5" type="String"/>
