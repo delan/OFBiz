@@ -61,13 +61,20 @@ public class IfNotEmpty extends MethodOperation {
         // return false and stop, otherwise return true
         //return true;
         
-        Map fromMap = (Map) methodContext.getEnv(mapName);
-        if (fromMap == null) {
-            Debug.logWarning("Map not found with name " + mapName + ", not running operations");
-            return true;
+        Object fieldVal = null;
+        if (mapName != null && mapName.length() > 0) {
+            Map fromMap = (Map) methodContext.getEnv(mapName);
+            if (fromMap == null) {
+                Debug.logWarning("Map not found with name " + mapName + ", not running operations");
+                return true;
+            }
+
+            fieldVal = fromMap.get(fieldName);
+        } else {
+            //no map name, try the env
+            fieldVal = methodContext.getEnv(fieldName);
         }
 
-        Object fieldVal = fromMap.get(fieldName);
         if (fieldVal == null) {
             Debug.logWarning("Field value not found with name " + fieldName + " in Map with name " + mapName + ", not running operations");
             return true;

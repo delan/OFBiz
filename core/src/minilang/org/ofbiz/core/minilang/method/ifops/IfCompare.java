@@ -73,11 +73,16 @@ public class IfCompare extends MethodOperation {
         // return false and stop, otherwise return true
 
         Object fieldVal = null;
-        Map fromMap = (Map) methodContext.getEnv(mapName);
-        if (fromMap == null) {
-            Debug.logInfo("Map not found with name " + mapName + ", using empty string for comparison");
+        if (mapName != null && mapName.length() > 0) {
+            Map fromMap = (Map) methodContext.getEnv(mapName);
+            if (fromMap == null) {
+                Debug.logInfo("Map not found with name " + mapName + ", using empty string for comparison");
+            } else {
+                fieldVal = fromMap.get(fieldName);
+            }
         } else {
-            fieldVal = fromMap.get(fieldName);
+            //no map name, try the env
+            fieldVal = methodContext.getEnv(fieldName);
         }
         
         //always use an empty string by default

@@ -456,8 +456,6 @@ public class SimpleMethod {
 
                 } else if ("field-to-result".equals(nodeName)) {
                     methodOperations.add(new org.ofbiz.core.minilang.method.serviceops.FieldToResult(curOperElem, simpleMethod));
-                } else if ("env-to-result".equals(nodeName)) {
-                    methodOperations.add(new org.ofbiz.core.minilang.method.serviceops.EnvToResult(curOperElem, simpleMethod));
 
                 } else if ("field-to-field".equals(nodeName)) {
                     methodOperations.add(new org.ofbiz.core.minilang.method.envops.FieldToField(curOperElem, simpleMethod));

@@ -43,18 +43,17 @@
 <!ENTITY % CallOperations "call-map-processor | call-service | call-service-asynch | call-bsh | check-errors">
 <!ENTITY % EventOperations "field-to-request | field-to-session | request-to-field | session-to-field">
 <!ENTITY % EventEnvOperations "env-to-request | env-to-session | request-to-env | session-to-env">
-<!ENTITY % ServiceOperations "field-to-result | env-to-result">
+<!ENTITY % ServiceOperations "field-to-result">
 <!ENTITY % EnvOperations "field-to-field | env-to-list | env-to-field | field-to-env">
 <!ENTITY % EntityMiscOperations "now-timestamp-to-env | now-date-to-env | sequenced-id-to-env">
 <!ENTITY % EntityFindOperations "find-by-primary-key | find-by-and">
 <!ENTITY % EntityValueOperations "make-value | clone-value | create-value | store-value | remove-value | remove-by-and">
 <!ENTITY % EntityListOperations "store-list | remove-list">
 <!ENTITY % IfOperations "if-validate-method | if-compare | if-compare-field | if-regexp | if-empty | if-not-empty">
-<!ENTITY % IfEnvOperations "if-env-validate-method | if-env-compare | if-env-compare-env | if-env-regexp | if-env-empty | if-env-not-empty">
 
 <!ENTITY % SimpleMethodOperations "%CallOperations; | %EventOperations; | %EventEnvOperations; | 
         %ServiceOperations; | %EnvOperations; | %EntityMiscOperations; | %EntityFindOperations; |
-        %EntityValueOperations; | %EntityListOperations; | %IfOperations; | %IfEnvOperations;">
+        %EntityValueOperations; | %EntityListOperations; | %IfOperations;">
 
 <!ELEMENT simple-methods ( simple-method+ )>
 
@@ -273,13 +272,8 @@ Error messages go on the error list and are handled with the check-errors tag.
 <!-- Service specific operations -->    
 <!ELEMENT field-to-result EMPTY>
 <!ATTLIST field-to-result
-    map-name CDATA #REQUIRED
+    map-name CDATA #IMPLIED
     field-name CDATA #REQUIRED
-    result-name CDATA #IMPLIED
->
-<!ELEMENT env-to-result EMPTY>
-<!ATTLIST env-to-result
-    env-name CDATA #REQUIRED
     result-name CDATA #IMPLIED
 >
 
@@ -391,7 +385,7 @@ simple-map-processor process operations that validate incoming data
 <!-- if-validate-method calls a static Java method that takes a String and returns a boolean -->
 <!ELEMENT if-validate-method ( (%SimpleMethodOperations;)* )>
 <!ATTLIST if-validate-method
-    map-name CDATA #REQUIRED
+    map-name CDATA #IMPLIED
     field-name CDATA #REQUIRED
     method CDATA #REQUIRED
     class CDATA "org.ofbiz.core.util.UtilValidate"
@@ -399,7 +393,7 @@ simple-map-processor process operations that validate incoming data
 
 <!ELEMENT if-compare ( (%SimpleMethodOperations;)* )>
 <!ATTLIST if-compare
-    map-name CDATA #REQUIRED
+    map-name CDATA #IMPLIED
     field-name CDATA #REQUIRED
     operator ( less | greater | less-equals | greater-equals | equals | not-equals | contains ) #REQUIRED
     value CDATA #REQUIRED
@@ -409,7 +403,7 @@ simple-map-processor process operations that validate incoming data
 
 <!ELEMENT if-compare-field ( (%SimpleMethodOperations;)* )>
 <!ATTLIST if-compare-field
-    map-name CDATA #REQUIRED
+    map-name CDATA #IMPLIED
     field-name CDATA #REQUIRED
     operator ( less | greater | less-equals | greater-equals | equals | not-equals | contains ) #REQUIRED
     to-map-name CDATA #IMPLIED
@@ -420,61 +414,20 @@ simple-map-processor process operations that validate incoming data
 
 <!ELEMENT if-regexp ( (%SimpleMethodOperations;)* )>
 <!ATTLIST if-regexp
-    map-name CDATA #REQUIRED
+    map-name CDATA #IMPLIED
     field-name CDATA #REQUIRED
     expr CDATA #REQUIRED
 >
 
 <!ELEMENT if-empty ( (%SimpleMethodOperations;)* )>
 <!ATTLIST if-empty
-    map-name CDATA #REQUIRED
+    map-name CDATA #IMPLIED
     field-name CDATA #REQUIRED
 >
 <!ELEMENT if-not-empty ( (%SimpleMethodOperations;)* )>
 <!ATTLIST if-not-empty
-    map-name CDATA #REQUIRED
+    map-name CDATA #IMPLIED
     field-name CDATA #REQUIRED
->
-
-<!-- if-validate-method calls a static Java method that takes a String and returns a boolean -->
-<!ELEMENT if-env-validate-method ( (%SimpleMethodOperations;)* )>
-<!ATTLIST if-env-validate-method
-    env-name CDATA #REQUIRED
-    method CDATA #REQUIRED
-    class CDATA "org.ofbiz.core.util.UtilValidate"
->
-
-<!ELEMENT if-env-compare ( (%SimpleMethodOperations;)* )>
-<!ATTLIST if-env-compare
-    env-name CDATA #REQUIRED
-    operator ( less | greater | less-equals | greater-equals | equals | not-equals | contains ) #REQUIRED
-    value CDATA #REQUIRED
-    type ( String | Double | Float | Long | Integer | Date | Time | Timestamp ) "String"
-    format CDATA #IMPLIED
->
-
-<!ELEMENT if-env-compare-env ( (%SimpleMethodOperations;)* )>
-<!ATTLIST if-env-compare-env
-    env-name CDATA #REQUIRED
-    operator ( less | greater | less-equals | greater-equals | equals | not-equals | contains ) #REQUIRED
-    to-env-name CDATA #REQUIRED
-    type ( String | Double | Float | Long | Integer | Date | Time | Timestamp ) "String"
-    format CDATA #IMPLIED
->
-
-<!ELEMENT if-env-regexp ( (%SimpleMethodOperations;)* )>
-<!ATTLIST if-env-regexp
-    env-name CDATA #REQUIRED
-    expr CDATA #REQUIRED
->
-
-<!ELEMENT if-env-empty ( (%SimpleMethodOperations;)* )>
-<!ATTLIST if-env-empty
-    env-name CDATA #REQUIRED
->
-<!ELEMENT if-env-not-empty ( (%SimpleMethodOperations;)* )>
-<!ATTLIST if-env-not-empty
-    env-name CDATA #REQUIRED
 >
 
 

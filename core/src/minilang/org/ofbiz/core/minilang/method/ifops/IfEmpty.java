@@ -63,26 +63,31 @@ public class IfEmpty extends MethodOperation {
         
         //only run subOps if element is empty/null
         boolean runSubOps = false;
-
-        Map fromMap = (Map) methodContext.getEnv(mapName);
-        if (fromMap == null) {
-            Debug.logInfo("Map not found with name " + mapName + ", running operations");
+        Object fieldVal = null;
+        
+        if (mapName != null && mapName.length() > 0) {
+            Map fromMap = (Map) methodContext.getEnv(mapName);
+            if (fromMap == null) {
+                Debug.logInfo("Map not found with name " + mapName + ", running operations");
+            } else {
+                fieldVal = fromMap.get(fieldName);
+            }
+        } else {
+            //no map name, try the env
+            fieldVal = methodContext.getEnv(fieldName);
+        }
+        
+        if (fieldVal == null) {
             runSubOps = true;
         } else {
-            Object fieldVal = fromMap.get(fieldName);
-
-            if (fieldVal == null) {
-                runSubOps = true;
-            } else {
-                if (fieldVal instanceof String) {
-                    String fieldStr = (String) fieldVal;
-                    if (fieldStr.length() == 0) {
-                        runSubOps = true;
-                    }
+            if (fieldVal instanceof String) {
+                String fieldStr = (String) fieldVal;
+                if (fieldStr.length() == 0) {
+                    runSubOps = true;
                 }
             }
         }
-        
+
         if (runSubOps) {
             return SimpleMethod.runSubOps(subOps, methodContext);
         } else {

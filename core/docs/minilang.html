@@ -805,8 +805,9 @@ the method environment.</p>
     <td><b>Description</b></td>
 </tr>
 <tr>
-    <td>map-name</td><td>Y</td>
-    <td>The name of the map in the method environment.</td>
+    <td>map-name</td><td>N</td>
+    <td>The name of the map in the method environment. If not specified the 
+    field-name will be used to get the field from the method environment.</td>
 </tr>
 <tr>
     <td>field-name</td><td>Y</td>
@@ -819,27 +820,6 @@ the method environment.</p>
 </table>
 <p>The field-to-result tag copies a field from a map to the specified service 
 result field.</p>
-
-<p>The tag is only used when the simple-method is called as a service, it is ignored otherwise.</p>
-
-<p><b><u>env-to-result</u></b></p>
-<table cellpadding='2' cellspacing='0' border='1'>
-<tr>
-    <td><b>Attribute&nbsp;Name</b></td>
-    <td><b>Required?</b></td>
-    <td><b>Description</b></td>
-</tr>
-<tr>
-    <td>env-name</td><td>Y</td>
-    <td>The name of the field in the method environment.</td>
-</tr>
-<tr>
-    <td>result-name</td><td>N</td>
-    <td>The name of the result field to use. Defaults to the env-name.</td>
-</tr>
-</table>
-<p>The env-to-result tag copies a field from the method environment to the 
-specified service result field.</p>
 
 <p>The tag is only used when the simple-method is called as a service, it is ignored otherwise.</p>
 
@@ -1223,8 +1203,10 @@ removed from the datasource that match the constraint of the field map.</p>
     <td><b>Description</b></td>
 </tr>
 <tr>
-    <td>map-name</td><td>Y</td>
-    <td>The name of the method environment field that contains the map that the field to be validated will come from.</td>
+    <td>map-name</td><td>N</td>
+    <td>The name of the method environment field that contains the map that the 
+    field to be validated will come from. If not specified the field-name will
+    be treated as a method environment field name (an env-name).</td>
 </tr>
 <tr>
     <td>field-name</td><td>Y</td>
@@ -1253,8 +1235,10 @@ operations, including the conditional/if operations.</p>
     <td><b>Description</b></td>
 </tr>
 <tr>
-    <td>map-name</td><td>Y</td>
-    <td>The name of the method environment field that contains the map that the field to be compared will come from.</td>
+    <td>map-name</td><td>N</td>
+    <td>The name of the method environment field that contains the map that the 
+    field to be validated will come from. If not specified the field-name will
+    be treated as a method environment field name (an env-name).</td>
 </tr>
 <tr>
     <td>field-name</td><td>Y</td>
@@ -1294,8 +1278,10 @@ operations, including the conditional/if operations.</p>
     <td><b>Description</b></td>
 </tr>
 <tr>
-    <td>map-name</td><td>Y</td>
-    <td>The name of the method environment field that contains the map that the field to be compared will come from.</td>u
+    <td>map-name</td><td>N</td>
+    <td>The name of the method environment field that contains the map that the 
+    field to be validated will come from. If not specified the field-name will
+    be treated as a method environment field name (an env-name).</td>
 </tr>
 <tr>
     <td>field-name</td><td>Y</td>
@@ -1309,7 +1295,8 @@ operations, including the conditional/if operations.</p>
 <tr>
     <td>to-map-name</td><td>N</td>
     <td>The name of the method environment field that contains the map that the 
-    field to be compared will come from. If left empty will default to the map-name.</td>
+    field to be compared will come from. If left empty will default to the map-name, 
+    or the method environment if map-name is also unspecified.</td>
 </tr>
 <tr>
     <td>to-field-name</td><td>N</td>
@@ -1340,8 +1327,10 @@ operations, including the conditional/if operations.</p>
     <td><b>Description</b></td>
 </tr>
 <tr>
-    <td>map-name</td><td>Y</td>
-    <td>The name of the method environment field that contains the map that the field to be compared will come from.</td>
+    <td>map-name</td><td>N</td>
+    <td>The name of the method environment field that contains the map that the 
+    field to be validated will come from. If not specified the field-name will
+    be treated as a method environment field name (an env-name).</td>
 </tr>
 <tr>
     <td>field-name</td><td>Y</td>
@@ -1364,8 +1353,10 @@ operations, including the conditional/if operations.</p>
     <td><b>Description</b></td>
 </tr>
 <tr>
-    <td>map-name</td><td>Y</td>
-    <td>The name of the method environment field that contains the map that the field to be compared will come from.</td>
+    <td>map-name</td><td>N</td>
+    <td>The name of the method environment field that contains the map that the 
+    field to be validated will come from. If not specified the field-name will
+    be treated as a method environment field name (an env-name).</td>
 </tr>
 <tr>
     <td>field-name</td><td>Y</td>
@@ -1384,8 +1375,10 @@ operations, including the conditional/if operations.</p>
     <td><b>Description</b></td>
 </tr>
 <tr>
-    <td>map-name</td><td>Y</td>
-    <td>The name of the method environment field that contains the map that the field to be compared will come from.</td>
+    <td>map-name</td><td>N</td>
+    <td>The name of the method environment field that contains the map that the 
+    field to be validated will come from. If not specified the field-name will
+    be treated as a method environment field name (an env-name).</td>
 </tr>
 <tr>
     <td>field-name</td><td>Y</td>

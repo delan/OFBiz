@@ -77,21 +77,30 @@ public class IfCompareField extends MethodOperation {
         Object fieldVal1 = null;
         Object fieldVal2 = null;
         
-        Map fromMap = (Map) methodContext.getEnv(mapName);
-        if (fromMap == null) {
-            Debug.logInfo("From Map not found with name " + mapName + ", using null for comparison");
+        if (mapName != null && mapName.length() > 0) {
+            Map fromMap = (Map) methodContext.getEnv(mapName);
+            if (fromMap == null) {
+                Debug.logInfo("Map not found with name " + mapName + ", using null for comparison");
+            } else {
+                fieldVal1 = fromMap.get(fieldName);
+            }
         } else {
-            fieldVal1 = fromMap.get(fieldName);
+            //no map name, try the env
+            fieldVal1 = methodContext.getEnv(fieldName);
         }
         
-        Map toMap = (Map) methodContext.getEnv(toMapName);
-        if (toMap == null) {
-            Debug.logInfo("To Map not found with name " + toMapName + ", using null for comparison");
+        if (toMapName != null && toMapName.length() > 0) {
+            Map toMap = (Map) methodContext.getEnv(toMapName);
+            if (toMap == null) {
+                Debug.logInfo("To Map not found with name " + toMapName + ", using null for comparison");
+            } else {
+                fieldVal2 = toMap.get(toFieldName);
+            }
         } else {
-            fieldVal2 = toMap.get(toFieldName);
+            //no map name, try the env
+            fieldVal2 = methodContext.getEnv(toFieldName);
         }
-        
-        
+                
         List messages = new LinkedList();
         Boolean resultBool = BaseCompare.doRealCompare(fieldVal1, fieldVal2, this.operator, this.type, this.format, messages, null, methodContext.getLoader());
 

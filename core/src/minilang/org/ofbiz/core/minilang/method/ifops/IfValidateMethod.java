@@ -66,22 +66,27 @@ public class IfValidateMethod extends MethodOperation {
         // return false and stop, otherwise return true
 
         String fieldString = null;
-        Map fromMap = (Map) methodContext.getEnv(mapName);
-        if (fromMap == null) {
-            Debug.logInfo("Map not found with name " + mapName + ", using empty string for comparison");
-        } else {
-            Object fieldVal = fromMap.get(fieldName);
-
-            if (fieldVal != null) {
-                try {
-                    fieldString = (String) ObjectType.simpleTypeConvert(fieldVal, "String", null, null);
-                } catch (GeneralException e) {
-                    Debug.logError(e, "Could not convert object to String, using empty String");
-                }
-
+        Object fieldVal = null;
+        if (mapName != null && mapName.length() > 0) {
+            Map fromMap = (Map) methodContext.getEnv(mapName);
+            if (fromMap == null) {
+                Debug.logInfo("Map not found with name " + mapName + ", using empty string for comparison");
+            } else {
+                fieldVal = fromMap.get(fieldName);
             }
+        } else {
+            //no map name, try the env
+            fieldVal = methodContext.getEnv(fieldName);
         }
         
+        if (fieldVal != null) {
+            try {
+                fieldString = (String) ObjectType.simpleTypeConvert(fieldVal, "String", null, null);
+            } catch (GeneralException e) {
+                Debug.logError(e, "Could not convert object to String, using empty String");
+            }
+        }
+
         //always use an empty string by default
         if (fieldString == null)
             fieldString = "";
