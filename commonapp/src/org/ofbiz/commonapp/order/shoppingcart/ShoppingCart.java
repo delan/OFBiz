@@ -849,6 +849,10 @@ public class ShoppingCart implements java.io.Serializable {
                 seqId++;
                 item.setOrderItemSeqId(orderItemSeqId);
 
+                String initialStatus = "ITEM_ORDERED";
+                if (this.getOrderType().equals("PURCHASE_ORDER")) {
+                    initialStatus = "ITEM_CREATED";
+                }
                 GenericValue orderItem = getDelegator().makeValue("OrderItem", null);
 
                 orderItem.set("orderItemSeqId", orderItemSeqId);
@@ -864,7 +868,7 @@ public class ShoppingCart implements java.io.Serializable {
                 orderItem.set("itemDescription", item.getName());
                 orderItem.set("comments", item.getItemComment());
                 orderItem.set("correspondingPoId", this.getPoNumber());
-                orderItem.set("statusId", "ITEM_ORDERED");
+                orderItem.set("statusId", initialStatus);
                 result.add(orderItem);
                 // don't do anything with adjustments here, those will be added below in makeAllAdjustments
             }
