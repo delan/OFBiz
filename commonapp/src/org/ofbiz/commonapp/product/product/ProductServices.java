@@ -300,7 +300,7 @@ public class ProductServices {
             // Gather the necessary data
             // -------------------------------
             String thisItem = (String) itemIterator.next();
-            Debug.logInfo("ThisItem: " + thisItem);
+            Debug.logVerbose("ThisItem: " + thisItem);
             Collection features = null;
             try {
                 Map fields = UtilMisc.toMap("productId", thisItem, "productFeatureTypeId", orderKey,
@@ -329,7 +329,7 @@ public class ProductServices {
             }
         }
 
-        Debug.logInfo("Group: " + group);
+        Debug.logVerbose("Group: " + group);
 
         // no groups; no tree
         if (group.size() == 0)
