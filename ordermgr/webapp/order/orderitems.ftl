@@ -57,7 +57,7 @@
                   <tr><td colspan="7"><hr class='sepbar'></td></tr>
                   <tr>
                     <#assign orderItemType = orderItem.getRelatedOne("OrderItemType")>
-                    <#assign productId = orderItem.productId>
+                    <#assign productId = orderItem.productId?if_exists>
                     <#if productId?exists && productId == "shoppingcart.CommentLine">
                       <td colspan="1" valign="top">    
                         <b><div class="tabletext"> &gt;&gt; ${orderItem.itemDescription}</div></b>
@@ -66,7 +66,7 @@
                       <td valign="top">
                         <div class="tabletext">
                           <#if productId?exists>
-                            ${orderItem.productId} - ${orderItem.itemDescription?if_exists}
+                            ${orderItem.productId?default("N/A")} - ${orderItem.itemDescription?if_exists}
                           <#else>
                             ${orderItemType.description} - ${orderItem.itemDescription?if_exists}
                           </#if>
