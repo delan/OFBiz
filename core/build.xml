@@ -118,6 +118,7 @@
       <mkdir dir="${build.dir}" />
       <mkdir dir="${build.dir}/share/META-INF" />
       <mkdir dir="${build.dir}/entity/META-INF" />
+      <mkdir dir="${build.dir}/extentity/META-INF" />
       <mkdir dir="${build.dir}/service/META-INF" />
       <mkdir dir="${build.dir}/extutil/META-INF" />
       <mkdir dir="${build.dir}/webapp/META-INF" />
@@ -167,6 +168,10 @@
     		<src path="${src.dir}/service" /></javac>
         <copy todir="${build.dir}/service"><fileset dir="${src.dir}/service" includes="**/*.properties,**/*.xml,**/*.bsh,**/*.logic" /></copy>
 
+    	<javac debug="on" destdir="${build.dir}/extentity" classpath="${classpath}:${build.dir}/share:${build.dir}/entity:${build.dir}/extutil:${build.dir}/service">
+    		<src path="${src.dir}/extentity" /></javac>
+        <copy todir="${build.dir}/extentity"><fileset dir="${src.dir}/extentity" includes="**/*.properties,**/*.xml,**/*.bsh,**/*.logic" /></copy>
+
     	<javac debug="on" destdir="${build.dir}/minilang" classpath="${classpath}:${build.dir}/share:${build.dir}/entity:${build.dir}/extutil:${build.dir}/service">
             <src path="${src.dir}/minilang" /></javac>
         <copy todir="${build.dir}/minilang"><fileset dir="${src.dir}/minilang" includes="**/*.properties,**/*.xml,**/*.bsh,**/*.logic" /></copy>
@@ -200,6 +205,7 @@
         <jar jarfile="${lib.dir}/${name}-entity${ofbiz.version}.jar" basedir="${build.dir}/entity" />
         <jar jarfile="${lib.dir}/${name}-service${ofbiz.version}.jar" basedir="${build.dir}/service" />
         <jar jarfile="${lib.dir}/${name}-extutil${ofbiz.version}.jar" basedir="${build.dir}/extutil" />
+        <jar jarfile="${lib.dir}/${name}-extentity${ofbiz.version}.jar" basedir="${build.dir}/extentity" />
         <jar jarfile="${lib.dir}/${name}-webapp${ofbiz.version}.jar" basedir="${build.dir}/webapp" />
         <jar jarfile="${lib.dir}/${name}-workflow${ofbiz.version}.jar" basedir="${build.dir}/workflow" />
         <jar jarfile="${lib.dir}/${name}-rules${ofbiz.version}.jar" basedir="${build.dir}/rules" />
@@ -247,6 +253,7 @@
             <sourcepath path="${src.dir}/entity" />
             <sourcepath path="${src.dir}/service" />
             <sourcepath path="${src.dir}/extutil" />
+            <sourcepath path="${src.dir}/extentity" />
             <sourcepath path="${src.dir}/webapp" />
             <sourcepath path="${src.dir}/workflow" />
             <sourcepath path="${src.dir}/rules" />
