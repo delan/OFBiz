@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.34 $
+ * @version    $Revision: 1.35 $
  */
 -->
 
@@ -2079,12 +2079,18 @@
       <relation type="one" fk-name="PROD_PRCOD_PROMO" rel-entity-name="ProductPromo">
         <key-map field-name="productPromoId"/>
       </relation>
+      <relation type="many" rel-entity-name="ProductPromoCodeEmail">
+        <key-map field-name="productPromoCodeId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ProductPromoCodeParty">
+        <key-map field-name="productPromoCodeId"/>
+      </relation>
     </entity>
     <entity entity-name="ProductPromoCodeEmail"
             package-name="org.ofbiz.product.promo"
             title="Product Promotion Email Entity">
       <field name="productPromoCodeId" type="id-ne"></field>
-      <field name="emailAddress" type="id-ne"></field>
+      <field name="emailAddress" type="email"></field>
       <prim-key field="productPromoCodeId"/>
       <prim-key field="emailAddress"/>
       <relation type="one" fk-name="PROD_PRCDE_PCD" rel-entity-name="ProductPromoCode">

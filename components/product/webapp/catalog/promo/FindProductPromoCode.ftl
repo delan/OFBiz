@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      3.0
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -34,20 +34,6 @@ ${pages.get("/promo/PromoTabBar.ftl")}
         <#else>
             <a href="<@ofbizUrl>/FindProductPromoCode?manualOnly=Y&productPromoId=${productPromoId?if_exists}</@ofbizUrl>" class="buttontext">[View Manual Only]</a>
         </#if>
-    </div>
-    <br/>
-    <div class="head3">Add Set of Promotion Codes:</div>
-    <div class="tabletext">
-        <form method="POST" action="<@ofbizUrl>/createProductPromoCodeSet</@ofbizUrl>" style="margin: 0;">
-            <input type="hidden" name="userEntered" value="N"/>
-            <input type="hidden" name="requireEmailOrParty" value="N"/>
-            <input type="hidden" name="productPromoId" value="${productPromoId?if_exists}"/>
-            Quantity: <input type="text" size="5" name="quantity" class="inputBox">
-            Use Limits:
-            Per Code<input type="text" size="5" name="useLimitPerCode" class="inputBox">
-            Per Customer<input type="text" size="5" name="useLimitPerCustomer" class="inputBox">
-            <input type="submit" value="${uiLabelMap.CommonAdd}">
-        </form>
     </div>
     <br/>
     <table border="1" cellpadding="2" cellspacing="0">
@@ -74,6 +60,20 @@ ${pages.get("/promo/PromoTabBar.ftl")}
             </tr>
         </#list>
     </table>
+    <br/>
+    <div class="head3">Add Set of Promotion Codes:</div>
+    <div class="tabletext">
+        <form method="POST" action="<@ofbizUrl>/createProductPromoCodeSet</@ofbizUrl>" style="margin: 0;">
+            <input type="hidden" name="userEntered" value="N"/>
+            <input type="hidden" name="requireEmailOrParty" value="N"/>
+            <input type="hidden" name="productPromoId" value="${productPromoId?if_exists}"/>
+            Quantity: <input type="text" size="5" name="quantity" class="inputBox">
+            Use Limits:
+            Per Code<input type="text" size="5" name="useLimitPerCode" class="inputBox">
+            Per Customer<input type="text" size="5" name="useLimitPerCustomer" class="inputBox">
+            <input type="submit" value="${uiLabelMap.CommonAdd}">
+        </form>
+    </div>
 <#else>
   <h3>${uiLabelMap.ProductViewPermissionError}</h3>
 </#if>

@@ -886,11 +886,6 @@
         <response name="success" type="view" value="EditProductPromoCode"/>
         <response name="error" type="view" value="EditProductPromoCode"/>
     </request-map>
-    <request-map uri="updateProductPromoCodeEmail"><security https="true" auth="true"/>
-        <event type="service" path="" invoke="updateProductPromoCodeEmail"/>
-        <response name="success" type="view" value="EditProductPromoCode"/>
-        <response name="error" type="view" value="EditProductPromoCode"/>
-    </request-map>
     <request-map uri="deleteProductPromoCodeEmail"><security https="true" auth="true"/>
         <event type="service" path="" invoke="deleteProductPromoCodeEmail"/>
         <response name="success" type="view" value="EditProductPromoCode"/>
@@ -899,11 +894,6 @@
 
     <request-map uri="createProductPromoCodeParty"><security https="true" auth="true"/>
         <event type="service" path="" invoke="createProductPromoCodeParty"/>
-        <response name="success" type="view" value="EditProductPromoCode"/>
-        <response name="error" type="view" value="EditProductPromoCode"/>
-    </request-map>
-    <request-map uri="updateProductPromoCodeParty"><security https="true" auth="true"/>
-        <event type="service" path="" invoke="updateProductPromoCodeParty"/>
         <response name="success" type="view" value="EditProductPromoCode"/>
         <response name="error" type="view" value="EditProductPromoCode"/>
     </request-map>
@@ -1133,30 +1123,30 @@
         <event type="service" path="" invoke="removeProductStoreEmailSetting"/>
         <response name="success" type="view" value="EditProductStoreEmails"/>
         <response name="error" type="view" value="EditProductStoreEmails"/>
-    </request-map>     
-    
+    </request-map>
+
     <!-- ================ Keyword Thesaurus Requests ================= -->
     <request-map uri="editKeywordThesaurus">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditKeywordThesaurus"/>
-    </request-map>  
+    </request-map>
     <request-map uri="createKeywordThesaurus">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="createKeywordThesaurus"/>
         <response name="success" type="view" value="EditKeywordThesaurus"/>
         <response name="error" type="view" value="EditKeywordThesaurus"/>
-    </request-map>  
+    </request-map>
     <request-map uri="deleteKeywordThesaurus">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="deleteKeywordThesaurus"/>
         <response name="success" type="view" value="EditKeywordThesaurus"/>
         <response name="error" type="view" value="EditKeywordThesaurus"/>
-    </request-map> 
-    
-    <!-- ================ Product Store Keyword Override ============= --> 
+    </request-map>
+
+    <!-- ================ Product Store Keyword Override ============= -->
     <request-map uri="editProductStoreKeywordOvrd">
     	<security https="true" auth="true"/>
-    	<response name="success" type="view" value="EditProductStoreKeywordOvrd" />	
+    	<response name="success" type="view" value="EditProductStoreKeywordOvrd" />
     </request-map>
     <request-map uri="createProductStoreKeywordOvrd">
     	<security https="true" auth="true"/>
@@ -1169,13 +1159,13 @@
         <event type="service" path="" invoke="deleteProductStoreKeywordOvrd"/>
         <response name="success" type="view" value="EditProductStoreKeywordOvrd"/>
         <response name="error" type="view" value="EditProductStoreKeywordOvrd"/>
-    </request-map> 
+    </request-map>
     <request-map uri="updateProductStoreKeywordOvrd">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="updateProductStoreKeywordOvrd"/>
         <response name="success" type="view" value="EditProductStoreKeywordOvrd"/>
         <response name="error" type="view" value="EditProductStoreKeywordOvrd"/>
-    </request-map> 
+    </request-map>
 
     <!-- end of request mappings -->
 
@@ -1250,7 +1240,7 @@
     <view-map name="EditProductStorePaySetup" type="jpublish" page="/store/EditProductStorePaySetup.ftl"/>
     <view-map name="EditProductStoreWebSites" type="jpublish" page="/store/EditProductStoreWebSites.ftl"/>
     <view-map name="EditProductStoreKeywordOvrd" type="jpublish" page="/store/EditProductStoreKeywordOvrd.ftl"/>
-    
+
     <view-map name="EditKeywordThesaurus" type="jpublish" page="/thesaurus/EditKeywordThesaurus.ftl"/>
     <!-- end of view mappings -->
 </site-conf>
