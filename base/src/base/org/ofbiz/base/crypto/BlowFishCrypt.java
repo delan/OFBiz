@@ -40,7 +40,7 @@ import javax.crypto.spec.SecretKeySpec;
  * Blowfish (Two-Way) Byte/String encryption
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class BlowFishCrypt {
@@ -67,7 +67,7 @@ public class BlowFishCrypt {
 
     /**
      * Creates a new BlowFishCrypt object.
-     * @param file A file object containing the secret key as a String object.
+     * @param keyFile A file object containing the secret key as a String object.
      */
     public BlowFishCrypt(File keyFile) {
         try {
