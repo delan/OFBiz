@@ -5,7 +5,7 @@
     <description>OFBIZ Test Services</description>
     <vendor>OFBiz</vendor>
     <version>1.0</version>
-    
+
     <service name="testScv" engine="java" export="true" validate="false" require-new-transaction="true"
             location="org.ofbiz.common.CommonServices" invoke="testService">
         <description>Test service</description>
@@ -22,11 +22,11 @@
     </service>
 
     <service name="testWorkflow" engine="workflow" location="TEST-PKG" invoke="TestWorkflow">
-        <attribute name="orderId" type="String" mode="IN"/>        
+        <attribute name="orderId" type="String" mode="IN"/>
         <attribute name="partyId" type="String" mode="IN"/>
         <attribute name="orderStatusId" type="String" mode="OUT"/>
     </service>
-    <service name="testWorkflowCondition" engine="java" 
+    <service name="testWorkflowCondition" engine="java"
             location="org.ofbiz.common.CommonServices" invoke="testWorkflowCondition">
         <attribute name="serviceName" type="String" mode="IN" optional="true"/>
         <attribute name="evaluationResult" type="Boolean" mode="OUT"/>
@@ -46,13 +46,13 @@
 
     <service name="groupTest" engine="group" location="testGroup" invoke=""/>
 
-    <service name="testHttp" engine="http" 
+    <service name="testHttp" engine="http"
             location="http://localhost:8080/webtools/control/httpService" invoke="testScv">
         <description>HTTP service wrapper around the test service</description>
         <attribute name="message" type="String" mode="IN" optional="true"/>
         <attribute name="resp" type="String" mode="OUT"/>
     </service>
-	
+
     <service name="testSoap" engine="soap" export="true"
             location="http://nagoya.apache.org:5049/axis/servlet/AxisServlet" invoke="echoString">
         <description>Test SOAP service; calls echoString service on Axis server</description>
@@ -79,15 +79,20 @@
         <description>Test JMS Topic service</description>
         <attribute name="message" type="String" mode="IN"/>
     </service>
-    
+
     <service name="testRoute" engine="route" location="" invoke="" auth="true">
     	<description>Test the Route engine</description>
     </service>
-    
+
     <service name="testJavsScript" engine="javascript" auth="false"
 			location="org/ofbiz/common/JavaScriptTest.js" invoke="">
     	<description>Test JavaScript Service</description>
     	<attribute name="message" type="String" mode="IN" optional="true"/>
     	<attribute name="result" type="String" mode="OUT" optional="true"/>
+    </service>
+
+    <service name="testEntityFailure" engine="java" auth="false" validate="false"
+            location="org.ofbiz.common.CommonServices" invoke="entityFailTest">
+        <description>Cause a Referential Integrity Error</description>
     </service>
 </services>
