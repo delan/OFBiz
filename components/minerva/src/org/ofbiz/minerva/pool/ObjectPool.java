@@ -101,7 +101,7 @@ public class ObjectPool implements PoolEventListener {
     /**
      * Creates a new pool with the specified parameters.  It cannot be used
      * until you initialize it.
-     * @param javeBeanClass The Class of a Java Bean.  New instances for the
+     * @param javaBeanClass The Class of a Java Bean.  New instances for the
      *    pool will be created with the no-argument constructor, and no
      *    particular initialization or cleanup will be performed on the
      *    instances.  Use a PoolObjectFactory if you want more control over
@@ -694,7 +694,7 @@ public class ObjectPool implements PoolEventListener {
      * the object may be given out again by the time this is called!  Also, you
      * still need to actually return the object to the pool by calling
      * releaseObject, if you aren't calling this during that process already.
-     * @param Object The object to invalidate, which must be the exact object
+     * @param object The object to invalidate, which must be the exact object
      *               returned by getObject
      */
     public void markObjectAsInvalid(Object object) {
@@ -922,7 +922,7 @@ public class ObjectPool implements PoolEventListener {
     */
     /**
      * Creates a new Object.
-     * @param forImmediateUse If <b>true</b>, then the object is locked and
+     * @param parameters If <b>true</b>, then the object is locked and
      *          translated by the factory, and the resulting object
      *          returned.  If <b>false</b>, then the object is left in the
      *          pool unlocked.
