@@ -159,8 +159,7 @@ public class MrpServices {
         iteratorResult = null;
         parameters = UtilMisc.toMap("orderTypeId", "SALES_ORDER", "itemStatusId", "ITEM_APPROVED");
         try {
-            // FIXME: usare la vista corretta!!!
-            resultList = delegator.findByAnd("OrderHeaderAndItems2", parameters);
+            resultList = delegator.findByAnd("OrderHeaderAndItems", parameters);
         } catch(GenericEntityException e) {
             Debug.logError(e, "Error : delegator.findByAnd(\"OrderItem\", parameters\")", module);
             Debug.logError(e, "Error : parameters = "+parameters,module);
@@ -190,8 +189,7 @@ public class MrpServices {
         iteratorResult = null;
         parameters = UtilMisc.toMap("orderTypeId", "PURCHASE_ORDER", "itemStatusId", "ITEM_APPROVED");
         try {
-            // FIXME: usare la vista corretta!!!
-            resultList = delegator.findByAnd("OrderHeaderAndItems2", parameters);
+            resultList = delegator.findByAnd("OrderHeaderAndItems", parameters);
         } catch(GenericEntityException e) {
             Debug.logError(e, "Error : delegator.findByAnd(\"OrderItem\", parameters\")", module);
             Debug.logError(e, "Error : parameters = "+parameters,module);
