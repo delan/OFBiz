@@ -263,9 +263,13 @@ public class EntityListIterator implements ListIterator {
      */
     public List getPartialList(int start, int number) throws GenericEntityException {
         try {
-            resultSet.absolute(start);
+            if (number == 0) return new ArrayList();
             List list = new ArrayList(number);
-            if (number == 0) return list;
+            
+            //if can't reposition to desired index, throw exception
+            if (!resultSet.absolute(start)) {
+                throw new GenericEntityException("Could not move to the start position of " + start + ", there are probably not that many results for this find.");
+            }
             
             //get the first as the current one
             list.add(this.currentGenericValue());
