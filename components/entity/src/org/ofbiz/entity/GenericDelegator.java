@@ -115,10 +115,7 @@ public class GenericDelegator implements DelegatorInterface {
     protected Map andCacheFieldSets = new HashMap();
 
     protected DistributedCacheClear distributedCacheClear = null;
-
     protected EntityEcaHandler entityEcaHandler = null;
-    public static final String ECA_HANDLER_CLASS_NAME = "org.ofbiz.entityext.eca.DelegatorEcaHandler";
-
     protected SequenceUtil sequencer = null;
     protected EntityCrypto crypto = null;
 
@@ -240,21 +237,30 @@ public class GenericDelegator implements DelegatorInterface {
             } catch (ClassCastException e) {
                 Debug.logWarning(e, "DistributedCacheClear class with name " + distributedCacheClearClassName + " does not implement the DistributedCacheClear interface, distributed cache clearing will be disabled", module);
             }
+        } else {
+            Debug.logInfo("Distributed Cache Clear System disabled for delegator [" + delegatorName + "]", module);
         }
 
         // setup the Entity ECA Handler
-        try {
-            Class eecahClass = loader.loadClass(ECA_HANDLER_CLASS_NAME);
-            this.entityEcaHandler = (EntityEcaHandler) eecahClass.newInstance();
-            this.entityEcaHandler.setDelegator(this);
-        } catch (ClassNotFoundException e) {
-            Debug.logWarning(e, "EntityEcaHandler class with name " + ECA_HANDLER_CLASS_NAME + " was not found, Entity ECA Rules will be disabled", module);
-        } catch (InstantiationException e) {
-            Debug.logWarning(e, "EntityEcaHandler class with name " + ECA_HANDLER_CLASS_NAME + " could not be instantiated, Entity ECA Rules will be disabled", module);
-        } catch (IllegalAccessException e) {
-            Debug.logWarning(e, "EntityEcaHandler class with name " + ECA_HANDLER_CLASS_NAME + " could not be accessed (illegal), Entity ECA Rules will be disabled", module);
-        } catch (ClassCastException e) {
-            Debug.logWarning(e, "EntityEcaHandler class with name " + ECA_HANDLER_CLASS_NAME + " does not implement the EntityEcaHandler interface, Entity ECA Rules will be disabled", module);
+        if (getDelegatorInfo().useEntityEca) {
+            // initialize the entity eca handler
+            String entityEcaHandlerClassName = getDelegatorInfo().entityEcaHandlerClassName;
+
+            try {
+                Class eecahClass = loader.loadClass(entityEcaHandlerClassName);
+                this.entityEcaHandler = (EntityEcaHandler) eecahClass.newInstance();
+                this.entityEcaHandler.setDelegator(this);
+            } catch (ClassNotFoundException e) {
+                Debug.logWarning(e, "EntityEcaHandler class with name " + entityEcaHandlerClassName + " was not found, Entity ECA Rules will be disabled", module);
+            } catch (InstantiationException e) {
+                Debug.logWarning(e, "EntityEcaHandler class with name " + entityEcaHandlerClassName + " could not be instantiated, Entity ECA Rules will be disabled", module);
+            } catch (IllegalAccessException e) {
+                Debug.logWarning(e, "EntityEcaHandler class with name " + entityEcaHandlerClassName + " could not be accessed (illegal), Entity ECA Rules will be disabled", module);
+            } catch (ClassCastException e) {
+                Debug.logWarning(e, "EntityEcaHandler class with name " + entityEcaHandlerClassName + " does not implement the EntityEcaHandler interface, Entity ECA Rules will be disabled", module);
+            }
+        } else {
+            Debug.logInfo("Entity ECA Handler disabled for delegator [" + delegatorName + "]", module);
         }
     }
 

@@ -42,9 +42,12 @@ import org.w3c.dom.Element;
  * @since      2.0
  */
 public class DelegatorInfo extends NamedInfo {
+
     public String entityModelReader;
     public String entityGroupReader;
     public String entityEcaReader;
+    public boolean useEntityEca;
+    public String entityEcaHandlerClassName;
     public boolean useDistributedCacheClear;
     public String distributedCacheClearClassName;
     public String distributedCacheClearUserLoginId;
@@ -56,8 +59,13 @@ public class DelegatorInfo extends NamedInfo {
         this.entityModelReader = element.getAttribute("entity-model-reader");
         this.entityGroupReader = element.getAttribute("entity-group-reader");
         this.entityEcaReader = element.getAttribute("entity-eca-reader");
+
+        // this defaults to true, ie anything but false is true
+        this.useEntityEca = !"false".equalsIgnoreCase(element.getAttribute("entity-eca-enabled"));
+        this.entityEcaHandlerClassName = element.getAttribute("entity-eca-handler-class-name");
+
         // this defaults to false, ie anything but true is false
-        this.useDistributedCacheClear = "true".equals(element.getAttribute("distributed-cache-clear-enabled"));
+        this.useDistributedCacheClear = "true".equalsIgnoreCase(element.getAttribute("distributed-cache-clear-enabled"));
         this.distributedCacheClearClassName = element.getAttribute("distributed-cache-clear-class-name");
         if (UtilValidate.isEmpty(this.distributedCacheClearClassName)) this.distributedCacheClearClassName = "org.ofbiz.entityext.cache.EntityCacheServices";
         
@@ -71,7 +79,6 @@ public class DelegatorInfo extends NamedInfo {
 
         while (groupMapIter.hasNext()) {
             Element groupMapElement = (Element) groupMapIter.next();
-
             groupMap.put(groupMapElement.getAttribute("group-name"), groupMapElement.getAttribute("datasource-name"));
         }
     }

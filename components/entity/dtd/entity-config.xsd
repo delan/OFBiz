@@ -94,6 +94,15 @@
         <xs:attribute type="xs:string" name="entity-model-reader" use="required"/>
         <xs:attribute type="xs:string" name="entity-group-reader" use="required"/>
         <xs:attribute type="xs:string" name="entity-eca-reader"/>
+        <xs:attribute name="entity-eca-enabled" default="true">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                    <xs:enumeration value="false"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute type="xs:string" name="entity-eca-handler-class-name" default="org.ofbiz.entityext.eca.DelegatorEcaHandler"/>
         <xs:attribute name="distributed-cache-clear-enabled" default="false">
             <xs:simpleType>
                 <xs:restriction base="xs:token">
