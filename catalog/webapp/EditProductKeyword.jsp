@@ -40,7 +40,9 @@
   GenericValue product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
 %>
 <br>
-<div class="head1">Edit Keywords for Product with ID "<%=productId%>"</div>
+<div class="head1">Edit Keywords for Product 
+  <%=UtilFormatOut.ifNotEmpty(product==null?null:product.getString("productName"),"\"","\"")%> 
+  with ID "<%=productId%>"</div>
 
 <a href="<ofbiz:url>EditProduct</ofbiz:url>" class="buttontext">[Create New Product]</a>
 <%if(productId != null && productId.length() > 0){%>
