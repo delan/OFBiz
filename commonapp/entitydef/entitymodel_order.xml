@@ -545,6 +545,9 @@
       <relation type="one" rel-entity-name="PaymentMethodType">
         <key-map field-name="paymentMethodTypeId" />
       </relation>
+      <relation type="one" rel-entity-name="PaymentMethod">
+        <key-map field-name="paymentMethodId" />
+      </relation>
       <relation type="one" rel-entity-name="CreditCard">
         <key-map field-name="paymentMethodId" />
       </relation>
