@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.7 $
+ *@version    $Revision: 1.8 $
  *@since      3.0
 -->
 
@@ -29,7 +29,8 @@
 <!-- //
 function lookupParty(click) {
     partyIdValue = document.lookupparty.partyId.value;
-    if (partyIdValue.length > 1) {
+    userLoginIdValue = document.lookupparty.userLoginId.value;
+    if (partyIdValue.length > 1 || userLoginIdValue.length > 1) {
         document.lookupparty.action = "<@ofbizUrl>/viewprofile</@ofbizUrl>";
     } else {
         document.lookupparty.action = "<@ofbizUrl>/findparty</@ofbizUrl>";
@@ -269,15 +270,41 @@ function refreshInfo() {
                 <#assign partyType = partyRow.getRelatedOne("PartyType")?if_exists>
                 <tr class='${rowClass}'>
                   <td><a href="<@ofbizUrl>/viewprofile?partyId=${partyRow.partyId}</@ofbizUrl>" class="buttontext">${partyRow.partyId}</a></td>
-                  <td><div class="tabletext">${partyRow.userLoginId?default("N/A")}</div></td>
                   <td>
                     <div class="tabletext">
-                      <#if partyRow.lastName?has_content>
-                        ${partyRow.lastName}<#if partyRow.firstName?has_content>, ${partyRow.firstName}</#if>
-                      <#elseif partyRow.groupName?has_content>
-                        ${partyRow.groupName}
+                      <#if partyRow.containsKey("userLoginId")>
+                        ${partyRow.userLoginId?default("N/A")}
                       <#else>
-                        (No Name Found)
+                        <#assign userLogins = partyRow.getRelated("UserLogin")>
+                        <#if (userLogins.size() > 0)>
+                          <#if (userLogins.size() > 1)>
+                            (Many)
+                          <#else>
+                            <#assign userLogin = userLogins.get(0)>
+                            ${userLogin.userLoginId}
+                          </#if>
+                        <#else>
+                          (None)
+                        </#if>
+                      </#if>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="tabletext">
+                      <#if partyRow.containsKey("lastName")>
+                        <#if partyRow.lastName?has_content>
+                          ${partyRow.lastName}<#if partyRow.firstName?has_content>, ${partyRow.firstName}</#if>
+                        <#else>
+                          (No Name Found)
+                        </#if>
+                      <#elseif partyRow.containsKey("groupName")>
+                        <#if partyRow.groupName?has_content>
+                          ${partyRow.groupName}
+                        <#else>
+                          (No Name Found)
+                        </#if>
+                      <#else>
+                        (Not Selected)
                       </#if>
                   </td>
                   <#if extInfo?default("") == "P">

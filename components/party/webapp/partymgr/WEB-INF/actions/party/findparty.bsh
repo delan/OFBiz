@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.11 $
+ *@version    $Revision: 1.12 $
  *@since      3.0
  */
 
@@ -92,8 +92,7 @@ if (lookupFlag != null && lookupFlag.equalsIgnoreCase("Y")) {
     extInfo = request.getParameter("extInfo");
     paramList = paramList + "&lookupFlag=" + lookupFlag + "&showAll=" + showAll + "&extInfo=" + extInfo;
 
-    // the lookup entity name
-    entityName = "PartySearchView";
+    // error message holder
     lookupErrorMessage = null;
 
     // create the dynamic view entity
@@ -101,12 +100,10 @@ if (lookupFlag != null && lookupFlag.equalsIgnoreCase("Y")) {
 
     // default view settings
     dynamicView.addMemberEntity("PT", "Party");
-    dynamicView.addMemberEntity("UL", "UserLogin");
     dynamicView.addAlias("PT", "partyId");
     dynamicView.addAlias("PT", "partyTypeId");
-    dynamicView.addAlias("UL", "userLoginId");
-    dynamicView.addViewLink("PT", "UL", Boolean.TRUE, ModelKeyMap.makeKeyMapList("partyId"));
     dynamicView.addRelation("one-nofk", "", "PartyType", ModelKeyMap.makeKeyMapList("partyTypeId"));
+    dynamicView.addRelation("many", "", "UserLogin", ModelKeyMap.makeKeyMapList("partyId"));
 
     // define the main condition & expression list
     andExprs = new ArrayList();
@@ -127,6 +124,13 @@ if (lookupFlag != null && lookupFlag.equalsIgnoreCase("Y")) {
     userLoginId = request.getParameter("userLoginId");
     if (userLoginId != null && userLoginId.length() > 0) {
         paramList = paramList + "&userLoginId=" + userLoginId;
+
+        // modify the dynamic view
+        dynamicView.addMemberEntity("UL", "UserLogin");
+        dynamicView.addAlias("UL", "userLoginId");
+        dynamicView.addViewLink("PT", "UL", Boolean.FALSE, ModelKeyMap.makeKeyMapList("partyId"));
+
+        // add the expr
         andExprs.add(new EntityExpr("userLoginId", true, EntityOperator.LIKE, "%"+userLoginId+"%", true));
     }
 
@@ -229,7 +233,7 @@ if (lookupFlag != null && lookupFlag.equalsIgnoreCase("Y")) {
         city = request.getParameter("city");
         if (city != null && city.length() > 0) {
             paramList = paramList + "&city=" + city;
-            andExprs.add(new EntityExpr("city", true, EntityOperator.LIKE, "%"+city+"%", true));
+            andExprs.add(new EntityExpr("city", true, EntityOperator.EQUALS, city, true));
         }
 
         // filter on state geo
@@ -243,7 +247,7 @@ if (lookupFlag != null && lookupFlag.equalsIgnoreCase("Y")) {
         postalCode = request.getParameter("postalCode");
         if (postalCode != null && postalCode.length() > 0) {
             paramList = paramList + "&postalCode=" + postalCode;
-            andExprs.add(new EntityExpr("postalCode", true, EntityOperator.LIKE, "%"+postalCode+"%", true));
+            andExprs.add(new EntityExpr("postalCode", true, EntityOperator.EQUALS, postalCode, true));
         }
     }
 
@@ -315,7 +319,11 @@ if (lookupFlag != null && lookupFlag.equalsIgnoreCase("Y")) {
         List orderBy = new ArrayList();
         fieldsToSelect.add("partyId");
         fieldsToSelect.add("partyTypeId");
-        fieldsToSelect.add("userLoginId");
+
+        // UserLogin
+        if (userLoginId != null && userLoginId.length() > 0) {
+            fieldsToSelect.add("userLoginId");
+        }
 
         // Person
         if ((firstName != null && firstName.length() > 0) || (lastName != null && lastName.length() > 0)) {
