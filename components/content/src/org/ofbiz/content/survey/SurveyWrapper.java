@@ -1,5 +1,5 @@
 /*
- * $Id: SurveyWrapper.java,v 1.5 2003/12/05 22:56:27 ajzeneski Exp $
+ * $Id: SurveyWrapper.java,v 1.6 2003/12/06 00:04:50 ajzeneski Exp $
  *
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -51,7 +51,7 @@ import freemarker.ext.beans.BeansWrapper;
  * Survey Wrapper - Class to render survey forms
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      3.0
  */
 public class SurveyWrapper {
@@ -214,6 +214,28 @@ public class SurveyWrapper {
                 while (i.hasNext()) {
                     GenericValue answer = (GenericValue) i.next();
                     answerMap.put(answer.get("surveyQuestionId"), answer);
+                }
+            }
+        }
+
+        // get the pass-thru (posted form data)
+        if (passThru != null && passThru.size() > 0) {
+            Iterator i = passThru.keySet().iterator();
+            while (i.hasNext()) {
+                String key = (String) i.next();
+                if (key.toUpperCase().startsWith("ANSWERS_")) {
+                    int splitIndex = key.indexOf('_');
+                    String questionId = key.substring(splitIndex+1);
+                    Map thisAnswer = new HashMap();
+                    String answer = (String) passThru.remove(key);
+                    thisAnswer.put("booleanResponse", answer);
+                    thisAnswer.put("currencyResponse", answer);
+                    thisAnswer.put("floatResponse", answer);
+                    thisAnswer.put("numericResponse", answer);
+                    thisAnswer.put("textResponse", answer);
+                    thisAnswer.put("surveyOptionSeqId", answer);
+                    // this is okay since only one will be looked at
+                    answerMap.put(questionId, thisAnswer);
                 }
             }
         }

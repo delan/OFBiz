@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org) 
- *@version    $Revision: 1.7 $
+ *@version    $Revision: 1.8 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -409,13 +409,22 @@
               <#list surveys as surveyAppl>
                 <#assign survey = surveyAppl.getRelatedOne("Survey")>
                 <tr>
-                  <td align="right" valign="top" width="10%" nowrap><div class="tabletext"><b>${survey.surveyName?if_exists}</b>&nbsp;-&nbsp;${survey.description?if_exists}</div></td>
+                  <td>&nbsp;</td>
+                  <td align="left" valign="top" width="10%" nowrap><div class="tabletext"><b>${survey.surveyName?if_exists}</b>&nbsp;-&nbsp;${survey.description?if_exists}</div></td>
                   <td width="5">&nbsp;</td>
                   <td align="left" valign="top" width="80%">
                     <#assign responses = Static["org.ofbiz.product.store.ProductStoreWorker"].checkSurveyResponse(request, survey.surveyId)?default(0)>
-                    <div class="tabletext"><#if (responses < 1)>Not Completed<#else>Completed</if></div>
+                    <div class="tabletext"><#if (responses < 1)><font color="red"><b>Not Completed</b><#else>Completed - Thank-you!</if></div>
                   </td>
-                  <td align="right" width="10%"><a href="<@ofbizUrl>/takesurvey?productStoreSurveyId=${surveyAppl.productStoreSurveyId}</@ofbizUrl>" class="buttontext">[Take Survey]</a></td>
+                  <#if (responses == 0 || survey.allowMultiple?default("N") == "Y")>
+                    <#assign surveyLabel = "[Take Survey]">
+                    <#if (responses > 0 && survey.allowUpdate?default("N") == "Y")>
+                      <#assign surveyLabel = "[Update Survey]">
+                    </#if>
+                    <td align="right" width="10%" nowrap><a href="<@ofbizUrl>/takesurvey?productStoreSurveyId=${surveyAppl.productStoreSurveyId}</@ofbizUrl>" class="buttontext">${surveyLabel}</a></td>
+                  <#else>
+                    &nbsp;
+                  </#if>
                 </tr>
               </#list>
             </table>
