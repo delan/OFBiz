@@ -1,5 +1,5 @@
 /*
- * $Id: LocalDispatcher.java,v 1.5 2004/02/19 18:52:35 ajzeneski Exp $
+ * $Id: LocalDispatcher.java,v 1.6 2004/06/17 00:52:12 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -35,7 +35,7 @@ import org.ofbiz.service.job.JobManager;
  * Generic Services Local Dispatcher
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      2.0
  */
 public interface LocalDispatcher {
@@ -85,8 +85,7 @@ public interface LocalDispatcher {
      * @throws GenericServiceException
      */
     public void runSyncIgnore(String serviceName, Map context, int transactionTimeout, boolean requireNewTransaction) throws ServiceAuthException, ServiceValidationException, GenericServiceException;
-
-
+    
     /**
      * Run the service asynchronously, passing an instance of GenericRequester that will receive the result.
      * @param serviceName Name of the service to run.
@@ -179,11 +178,12 @@ public interface LocalDispatcher {
      * @param interval The interval of the frequency recurrence.
      * @param count The number of times to repeat.
      * @param endTime The time in milliseconds the service should expire
+     * @param maxRetry The number of times we should retry on failure
      * @throws ServiceAuthException
      * @throws ServiceValidationException
      * @throws GenericServiceException
      */
-    public void schedule(String poolName, String serviceName, Map context, long startTime, int frequency, int interval, int count, long endTime) throws GenericServiceException;
+    public void schedule(String poolName, String serviceName, Map context, long startTime, int frequency, int interval, int count, long endTime, int maxRetry) throws GenericServiceException;
 
 
     /**

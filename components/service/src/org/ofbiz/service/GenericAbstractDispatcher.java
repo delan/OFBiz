@@ -1,5 +1,5 @@
 /*
- * $Id: GenericAbstractDispatcher.java,v 1.4 2003/12/06 23:10:14 ajzeneski Exp $
+ * $Id: GenericAbstractDispatcher.java,v 1.5 2004/06/17 00:52:12 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -39,7 +39,7 @@ import org.ofbiz.base.util.Debug;
  * Generic Services Local Dispatcher
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.0
  */
 public abstract class GenericAbstractDispatcher implements LocalDispatcher {
@@ -53,19 +53,20 @@ public abstract class GenericAbstractDispatcher implements LocalDispatcher {
     public GenericAbstractDispatcher() {}
 
     /**
-     * @see org.ofbiz.service.LocalDispatcher#schedule(java.lang.String, java.lang.String, java.util.Map, long, int, int, int, long)
+     * @see org.ofbiz.service.LocalDispatcher#schedule(java.lang.String, java.lang.String, java.util.Map, long, int, int, int, long, int)
      */
-    public void schedule(String poolName, String serviceName, Map context, long startTime, int frequency, int interval, int count, long endTime) throws GenericServiceException {
+    public void schedule(String poolName, String serviceName, Map context, long startTime, int frequency, int interval, int count, long endTime, int maxRetry) throws GenericServiceException {
         try {
-            getJobManager().schedule(poolName, serviceName, context, startTime, frequency, interval, count, endTime);
+            getJobManager().schedule(poolName, serviceName, context, startTime, frequency, interval, count, endTime, maxRetry);
                 
             if (Debug.verboseOn()) {
-                Debug.logVerbose("[LocalDispatcher.schedule] : Current time: " + (new Date()).getTime(), module);
-                Debug.logVerbose("[LocalDispatcher.schedule] : Runtime: " + startTime, module);
-                Debug.logVerbose("[LocalDispatcher.schedule] : Frequency: " + frequency, module);
-                Debug.logVerbose("[LocalDispatcher.schedule] : Interval: " + interval, module);
-                Debug.logVerbose("[LocalDispatcher.schedule] : Count: " + count, module);
-                Debug.logVerbose("[LocalDispatcher.schedule] : EndTime: " + endTime, module);
+                Debug.logVerbose("[LocalDispatcher.schedule] : Current time : " + (new Date()).getTime(), module);
+                Debug.logVerbose("[LocalDispatcher.schedule] : Runtime      : " + startTime, module);
+                Debug.logVerbose("[LocalDispatcher.schedule] : Frequency    : " + frequency, module);
+                Debug.logVerbose("[LocalDispatcher.schedule] : Interval     : " + interval, module);
+                Debug.logVerbose("[LocalDispatcher.schedule] : Count        : " + count, module);
+                Debug.logVerbose("[LocalDispatcher.schedule] : EndTime      : " + endTime, module);
+                Debug.logVerbose("[LocalDispatcher.schedule] : MazRetry     : " + maxRetry, module);
             }
             
         } catch (JobManagerException e) {
@@ -77,7 +78,8 @@ public abstract class GenericAbstractDispatcher implements LocalDispatcher {
      * @see org.ofbiz.service.LocalDispatcher#schedule(java.lang.String, java.util.Map, long, int, int, int, long)
      */
     public void schedule(String serviceName, Map context, long startTime, int frequency, int interval, int count, long endTime) throws GenericServiceException {
-        schedule(null, serviceName, context, startTime, frequency, interval, count, endTime);
+        ModelService model = ctx.getModelService(serviceName);
+        schedule(null, serviceName, context, startTime, frequency, interval, count, endTime, model.maxRetry);
     }
 
     /**

@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractJob.java,v 1.2 2003/11/05 22:41:55 ajzeneski Exp $
+ * $Id: AbstractJob.java,v 1.3 2004/06/17 00:52:14 ajzeneski Exp $
  *
  * Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -28,7 +28,7 @@ package org.ofbiz.service.job;
  * Abstract Service Job - Invokes a service
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public abstract class AbstractJob implements Job {
@@ -37,9 +37,11 @@ public abstract class AbstractJob implements Job {
 
     protected long runtime = -1;
     protected long sequence = 0;
+    private String jobId;
     private String jobName;
 
-    protected AbstractJob(String jobName) {
+    protected AbstractJob(String jobId, String jobName) {
+        this.jobId = jobId;
         this.jobName = jobName;
     }
 
@@ -57,6 +59,13 @@ public abstract class AbstractJob implements Job {
         if (runtime > 0)
             return true;
         return false;
+    }
+
+    /**
+     * Returns the ID of this Job.
+     */
+    public String getJobId() {
+        return this.jobId;
     }
 
     /**

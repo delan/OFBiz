@@ -1,5 +1,5 @@
 /*
- * $Id: WorkflowEngine.java,v 1.3 2003/08/28 19:06:14 ajzeneski Exp $
+ * $Id: WorkflowEngine.java,v 1.4 2004/06/17 00:52:16 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -57,7 +57,7 @@ import org.ofbiz.service.job.JobManagerException;
  * WorkflowEngine - Workflow Service Engine
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.0
  */
 public class WorkflowEngine implements GenericEngine {
@@ -312,7 +312,7 @@ class WorkflowRunner extends AbstractJob {
     String startActivityId;
 
     WorkflowRunner(WfProcess process, GenericRequester requester, String startActivityId) {
-        super(process.toString());
+        super(process.toString() + "." + System.currentTimeMillis(), process.toString());
         this.process = process;
         this.requester = requester;
         this.startActivityId = startActivityId;

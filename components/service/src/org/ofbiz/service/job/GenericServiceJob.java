@@ -1,5 +1,5 @@
 /*
- * $Id: GenericServiceJob.java,v 1.3 2003/11/25 23:56:07 ajzeneski Exp $
+ * $Id: GenericServiceJob.java,v 1.4 2004/06/17 00:52:15 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -37,7 +37,7 @@ import org.ofbiz.service.ModelService;
  * Generic Service Job - A generic async-service Job.
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> *
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.0
  */
 public class GenericServiceJob extends AbstractJob {
@@ -50,8 +50,8 @@ public class GenericServiceJob extends AbstractJob {
     private String service = null;
     private Map context = null;
 
-    public GenericServiceJob(DispatchContext dctx, String jobName, String service, Map context, GenericRequester req) {
-        super(jobName);
+    public GenericServiceJob(DispatchContext dctx, String jobId, String jobName, String service, Map context, GenericRequester req) {
+        super(jobId, jobName);
         this.dctx = dctx;
         this.service = service;
         this.context = context;
@@ -59,8 +59,8 @@ public class GenericServiceJob extends AbstractJob {
         runtime = new Date().getTime();
     }
 
-    protected GenericServiceJob(String jobName) {
-        super(jobName);
+    protected GenericServiceJob(String jobId, String jobName) {
+        super(jobId, jobName);
         this.dctx = null;
         this.requester = null;
         this.service = null;

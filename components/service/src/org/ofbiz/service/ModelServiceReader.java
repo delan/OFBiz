@@ -1,5 +1,5 @@
 /* 
- * $Id: ModelServiceReader.java,v 1.8 2004/02/11 16:49:36 ajzeneski Exp $
+ * $Id: ModelServiceReader.java,v 1.9 2004/06/17 00:52:13 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -45,6 +45,8 @@ import org.ofbiz.base.util.OrderedMap;
 import org.ofbiz.base.util.UtilCache;
 import org.ofbiz.base.util.UtilTimer;
 import org.ofbiz.base.util.UtilXml;
+import org.ofbiz.base.util.UtilValidate;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -56,7 +58,7 @@ import org.xml.sax.SAXException;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.8 $
+ * @version    $Revision: 1.9 $
  * @since      2.0
  */
 
@@ -300,18 +302,30 @@ public class ModelServiceReader {
         service.validate = !"false".equalsIgnoreCase(serviceElement.getAttribute("validate"));
         service.useTransaction = !"false".equalsIgnoreCase(serviceElement.getAttribute("use-transaction"));
         service.requireNewTransaction = !"false".equalsIgnoreCase(serviceElement.getAttribute("require-new-transaction"));
-        
-        // get the timeout and convert to int       
-        String timeoutStr = UtilXml.checkEmpty(serviceElement.getAttribute("transaction-timout"));
-        if (timeoutStr == null || timeoutStr.length() == 0) {
-            timeoutStr = "0";
+
+        // set the max retry field
+        String maxRetryStr = UtilXml.checkEmpty(serviceElement.getAttribute("max-retry"));
+        int maxRetry = -1;
+        if (!UtilValidate.isEmpty(maxRetryStr)) {
+            try {
+                maxRetry = Integer.parseInt(maxRetryStr);
+            } catch (NumberFormatException e) {
+                Debug.logWarning(e, "Setting maxRetry to -1 (default)", module);
+                maxRetry = -1;
+            }
         }
+        service.maxRetry = maxRetry;
+        
+        // get the timeout and convert to int
+        String timeoutStr = UtilXml.checkEmpty(serviceElement.getAttribute("transaction-timout"));
         int timeout = 0;
-        try {
-            timeout = Integer.parseInt(timeoutStr);
-        } catch (NumberFormatException e) {
-            Debug.logWarning(e, "Setting timeout to 0 (default)", module);
-            timeout = 0;            
+        if (!UtilValidate.isEmpty(timeoutStr)) {
+            try {
+                timeout = Integer.parseInt(timeoutStr);
+            } catch (NumberFormatException e) {
+                Debug.logWarning(e, "Setting timeout to 0 (default)", module);
+                timeout = 0;
+            }
         }
         service.transactionTimeout = timeout;
                        

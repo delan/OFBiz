@@ -1,5 +1,5 @@
 /*
- * $Id: JobInvoker.java,v 1.5 2004/01/24 22:02:16 ajzeneski Exp $
+ * $Id: JobInvoker.java,v 1.6 2004/06/17 00:52:15 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -34,7 +34,7 @@ import org.ofbiz.base.util.UtilDateTime;
  * JobInvoker
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      2.0
  */
 public class JobInvoker implements Runnable {
@@ -133,6 +133,22 @@ public class JobInvoker implements Runnable {
             return now - this.jobStart;
         } else {
             return 0;
+        }
+    }
+
+    /**
+     * Get the current running job's ID.
+     * @return String ID of the current running job.
+     */
+    public String getJobId() {
+        if (this.statusCode == 1) {
+            if (this.currentJob != null) {
+                return this.currentJob.getJobId();
+            } else {
+                return "WARNING: Invalid Job!";
+            }
+        } else {
+            return null;
         }
     }
 
