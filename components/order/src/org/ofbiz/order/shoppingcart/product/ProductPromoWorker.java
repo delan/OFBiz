@@ -659,6 +659,9 @@ public class ProductPromoWorker {
 
         String partyId = cart.getPartyId();
         GenericValue userLogin = cart.getUserLogin();
+        if (userLogin == null) {
+            userLogin = cart.getAutoUserLogin();
+        }
 
         if (Debug.verboseOn()) Debug.logVerbose("Checking promotion condition: " + productPromoCond, module);
         int compare = 0;
@@ -872,7 +875,7 @@ public class ProductPromoWorker {
             compare = orderSubTotal.compareTo(Double.valueOf(condValue));
         } else if ("PPIP_ORST_HIST".equals(inputParamEnumId)) {
             // description="Order sub-total X in last Y Months"
-            if (partyId != null) {
+            if (partyId != null && userLogin != null) {
                 // call the getOrderedSummaryInformation service to get the sub-total
                 int monthsToInclude = 12;
                 if (otherValue != null) {
