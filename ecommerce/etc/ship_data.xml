@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-engine-xml>
+  <CarrierShipmentMethod partyId="UPS" roleTypeId="CARRIER" shipmentMethodTypeId="GROUND"/>
+  <CarrierShipmentMethod partyId="UPS" roleTypeId="CARRIER" shipmentMethodTypeId="AIR"/>
+  <CarrierShipmentMethod partyId="UPS" roleTypeId="CARRIER" shipmentMethodTypeId="NEXT_DAY"/>
+  <CarrierShipmentMethod partyId="Company" roleTypeId="CARRIER" shipmentMethodTypeId="LOCAL_DELIVERY"/>
+  <Party partyId="UPS"/>
+  <QuantityBreak fromQuantity="0.0" quantityBreakId="10000"
+    quantityBreakTypeId="SHIP_WEIGHT" thruQuantity="0.0"/>
+  <QuantityBreak fromQuantity="0.0" quantityBreakId="10003"
+    quantityBreakTypeId="SHIP_WEIGHT" thruQuantity="0.0"/>
+  <QuantityBreak fromQuantity="0.0" quantityBreakId="10009"
+    quantityBreakTypeId="SHIP_WEIGHT" thruQuantity="0.0"/>
+  <QuantityBreakType description="Price Component Quantity Break" quantityBreakTypeId="QUANTITY"/>
+  <QuantityBreakType description="Price Component Order Value Break" quantityBreakTypeId="ORDER_VALUE"/>
+  <QuantityBreakType description="Shipping Weight Break" quantityBreakTypeId="SHIP_WEIGHT"/>
+  <QuantityBreakType description="Shipping Quantity Break" quantityBreakTypeId="SHIP_QUANTITY"/>
+  <QuantityBreakType description="Shipping Price Break" quantityBreakTypeId="SHIP_PRICE"/>
+  <ShipmentCostEstimate orderFlatPrice="5.0" orderItemFlatPrice="0.0"
+    orderPricePercent="0.0" shipmentCostEstimateId="10000"
+    shipmentMethodTypeId="AIR" weightBreakId="10000" weightUnitPrice="0.2"/>
+  <ShipmentCostEstimate orderFlatPrice="3.0" orderItemFlatPrice="0.0"
+    orderPricePercent="0.0" shipmentCostEstimateId="10001"
+    shipmentMethodTypeId="GROUND" weightBreakId="10003" weightUnitPrice="0.1"/>
+  <ShipmentCostEstimate orderFlatPrice="5.0" orderItemFlatPrice="0.0"
+    orderPricePercent="0.0" shipmentCostEstimateId="10002" shipmentMethodTypeId="LOCAL_DELIVERY"/>
+  <ShipmentCostEstimate orderFlatPrice="10.0" orderItemFlatPrice="0.0"
+    orderPricePercent="0.0" shipmentCostEstimateId="10003"
+    shipmentMethodTypeId="NEXT_DAY" weightBreakId="10009" weightUnitPrice="0.35"/>
+</entity-engine-xml>
+
+
