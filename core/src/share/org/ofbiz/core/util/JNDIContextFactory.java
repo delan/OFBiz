@@ -45,7 +45,8 @@ import org.ofbiz.core.util.*;
 public class JNDIContextFactory {
     static UtilCache contexts = new UtilCache("entity.JNDIContexts", 0, 0);
 
-    /** Return the initial context according to the entityengine.xml parameters that correspond to the given prefix
+    /** 
+     * Return the initial context according to the entityengine.xml parameters that correspond to the given prefix
      * @return the JNDI initial context
      */
     public static InitialContext getInitialContext(String jndiServerName) throws GenericConfigException {
@@ -96,4 +97,14 @@ public class JNDIContextFactory {
 
         return ic;
     }
+    /**
+     * Removes an entry from the JNDI cache.
+     * @param jndiServerName
+     */
+    public static void clearInitialContext(String jndiServerName) {
+        InitialContext ic = (InitialContext) contexts.get(jndiServerName);
+        if (ic != null) 
+            contexts.remove(jndiServerName);
+    }
+
 }
