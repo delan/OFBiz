@@ -271,7 +271,7 @@
                       <td width="5">&nbsp;</td>
                       <td align="left" valign="top" width="80%">
                         <div class="tabletext">
-                          ${carrierPartyId?if_exists}
+                          <#if carrierPartyId?exists && carrierPartyId != "_NA_">${carrierPartyId?if_exists}</#if>
                           ${shipMethDescription?if_exists}
                           <#if shippingAccount?exists><br>Use Account: ${shippingAccount}</#if>
                         </div>
