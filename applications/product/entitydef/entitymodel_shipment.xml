@@ -212,9 +212,9 @@
             title="Picklist Status History Entity">
       <field name="picklistId" type="id-ne"></field>
       <field name="changeDate" type="date-time"></field>
+      <field name="changeUserLoginId" type="id-vlong"></field>
       <field name="statusId" type="id-ne"></field>
       <field name="statusIdTo" type="id-ne"></field>
-      <field name="partyId" type="id-ne"></field>
       <prim-key field="picklistId"/>
       <prim-key field="changeDate"/>
       <relation type="one" fk-name="PCKLST_STHST_PKLT" rel-entity-name="Picklist">
