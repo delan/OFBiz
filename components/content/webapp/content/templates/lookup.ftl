@@ -22,7 +22,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Al Byers (byersa@automationgroups.com)
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      3.0
 -->
 
@@ -60,6 +60,8 @@
         var num_id = (re_id.exec(String(window.location))
                 ? new Number(RegExp.$1) : 0);
         var obj_caller = (window.opener ? window.opener.lookups[num_id] : null);
+        if (obj_caller == null) 
+            obj_caller = window.opener;
         
         
         // function passing selected value to calling window

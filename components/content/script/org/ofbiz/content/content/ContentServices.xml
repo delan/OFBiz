@@ -144,11 +144,12 @@
             <make-value entity-name="PartyRole" map-name="partyRolePK" value-name="partyRole"/>
             <create-value value-name="partyRole"/>
         </if-empty>
-        <log level="always" message="createContentRole(4), partyRole:${partyRole}/${partyRolePK}"/>
         <check-errors/>
+        <log level="always" message="createContentRole(4), partyRole:${partyRole}/${partyRolePK}"/>
 
         <make-value entity-name="ContentRole" value-name="newEntity"/>
         <set-pk-fields map-name="parameters" value-name="newEntity"/>
+        <log level="always" message="createContentRole(6), newEntity:${newEntity}"/>
         <find-by-primary-key entity-name="ContentRole" map-name="newEntity" value-name="contentRole"/>
         <if-empty field-name="contentRole">
             <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
@@ -723,5 +724,6 @@
 
         <create-value value-name="content"/>
     </simple-method>
+
 
 </simple-methods>

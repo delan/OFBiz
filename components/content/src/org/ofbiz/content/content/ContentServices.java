@@ -1,5 +1,5 @@
 /*
- * $Id: ContentServices.java,v 1.22 2004/04/20 21:01:17 byersa Exp $
+ * $Id: ContentServices.java,v 1.23 2004/06/06 07:43:02 byersa Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -53,7 +53,7 @@ import org.ofbiz.service.ServiceUtil;
  * ContentServices Class
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.22 $
+ * @version $Revision: 1.23 $
  * @since 2.2
  * 
  *  
@@ -576,15 +576,18 @@ public class ContentServices {
         String activeContentId = (String) context.get("activeContentId");
         Timestamp fromDate = (Timestamp) context.get("fromDate");
         Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
+        String sequenceNum = null;
         Map results = new HashMap();
         try {
-            GenericValue activeAssoc =
-                delegator.findByPrimaryKey("ContentAssoc", UtilMisc.toMap("contentId", activeContentId, "contentIdTo", contentIdTo, "fromDate", fromDate, "contentAssocTypeId", contentAssocTypeId));
-            if (activeAssoc == null) {
-                return ServiceUtil.returnError("No association found for contentId=" + activeContentId + " and contentIdTo=" + contentIdTo
+            GenericValue activeAssoc = null;
+            if (fromDate != null) {
+                activeAssoc = delegator.findByPrimaryKey("ContentAssoc", UtilMisc.toMap("contentId", activeContentId, "contentIdTo", contentIdTo, "fromDate", fromDate, "contentAssocTypeId", contentAssocTypeId));
+                if (activeAssoc == null) {
+                    return ServiceUtil.returnError("No association found for contentId=" + activeContentId + " and contentIdTo=" + contentIdTo
                         + " and contentAssocTypeId=" + contentAssocTypeId + " and fromDate=" + fromDate);
+                }
+                sequenceNum = (String) activeAssoc.get("sequenceNum");
             }
-            String sequenceNum = (String) activeAssoc.get("sequenceNum");
             List exprList = new ArrayList();
             exprList.add(new EntityExpr("mapKey", EntityOperator.EQUALS, mapKey));
             if (sequenceNum != null) {
@@ -701,6 +704,66 @@ public class ContentServices {
         } catch (IOException e) {
             Debug.logError(e, "Error rendering sub-content text", module);
             return ServiceUtil.returnError(e.toString());
+        }
+        return results;
+    }
+
+    public static Map linkContentToPubPt(DispatchContext dctx, Map context) {
+        Map results = new HashMap();
+        GenericDelegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        String contentId = (String)context.get("contentId");
+        String contentIdTo = (String)context.get("contentIdTo");
+        String contentAssocTypeId = (String)context.get("contentAssocTypeId");
+        if (Debug.infoOn()) Debug.logInfo("in publishContent, contentId:" + contentId + " contentIdTo:" + contentIdTo + " contentAssocTypeId:" + contentAssocTypeId, module);
+        Map mapIn = new HashMap();
+        mapIn.put("activeContentId", contentId);
+        mapIn.put("contentIdTo", contentIdTo);
+        mapIn.put("contentAssocTypeId", contentAssocTypeId);
+        String publish = (String)context.get("publish");
+        try {
+            if (UtilValidate.isNotEmpty(publish) && publish.equalsIgnoreCase("Y")) {
+                GenericValue content = delegator.findByPrimaryKey("Content", UtilMisc.toMap("contentId", contentId));
+                String statusId = (String)context.get("statusId");
+                String contentStatusId = (String)content.get("statusId");
+                String privilegeEnumId = (String)context.get("privilegeEnumId");
+                String contentPrivilegeEnumId = (String)content.get("privilegeEnumId");
+             
+                // Don't do anything if link was already there
+                if (( UtilValidate.isNotEmpty(statusId) && !statusId.equals(contentStatusId) )
+                   || (UtilValidate.isNotEmpty(privilegeEnumId) && !statusId.equals(contentPrivilegeEnumId) )) {
+                    Map thisResults = dispatcher.runSync("deactivateAssocs", mapIn);
+                    String errorMsg = ServiceUtil.getErrorMessage(thisResults);
+                    if (UtilValidate.isNotEmpty(errorMsg) ) {
+                        Debug.logError( "Problem running deactivateAssocs. " + errorMsg, "ContentServices");
+                        return ServiceUtil.returnError(errorMsg);
+                    }
+                    content.put("privilegeEnumId", privilegeEnumId);
+                    content.put("statusId", statusId);
+                    content.store();
+                    mapIn = new HashMap();
+                    mapIn.put("contentId", contentId);
+                    mapIn.put("contentIdTo", contentIdTo);
+                    mapIn.put("contentAssocTypeId", contentAssocTypeId);
+                    mapIn.put("mapKey", context.get("mapKey"));
+                    mapIn.put("fromDate", UtilDateTime.nowTimestamp());
+                    GenericValue contentAssoc = delegator.create("ContentAssoc", mapIn);
+                }
+            } else {
+                    // Could be that the link was never there, but it won't hurt to call deactivateAssocs
+                    Map thisResults = dispatcher.runSync("deactivateAssocs", mapIn);
+                    String errorMsg = ServiceUtil.getErrorMessage(thisResults);
+                    if (UtilValidate.isNotEmpty(errorMsg) ) {
+                        Debug.logError( "Problem running deactivateAssocs. " + errorMsg, "ContentServices");
+                        return ServiceUtil.returnError(errorMsg);
+                    }
+            }
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Problem getting existing content", "ContentServices");
+            return ServiceUtil.returnError(e.getMessage());
+        } catch (GenericServiceException e) {
+            Debug.logError(e, "Problem running deactivateAssocs", "ContentServices");
+            return ServiceUtil.returnError(e.getMessage());
         }
         return results;
     }

@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      2.1
 -->
 
@@ -43,6 +43,7 @@
   <div class="col"><a href="<@ofbizUrl>/DataSetupMenu</@ofbizUrl>" class="${selectedLeftClassMap.DataResourceSetupMenu?default(unselectedLeftClassName)}">DataResource Setup</a></div>
 
   <div class="col"><a href="<@ofbizUrl>/LayoutMenu</@ofbizUrl>" class="${selectedLeftClassMap.Layout?default(unselectedLeftClassName)}">Template</a></div>
+  <div class="col"><a href="<@ofbizUrl>/CMSMenu</@ofbizUrl>" class="${selectedLeftClassMap.Layout?default(unselectedLeftClassName)}">CMS</a></div>
 
   <#if requestAttributes.userLogin?has_content>
     <div class="col-right"><a href="<@ofbizUrl>/logout</@ofbizUrl>" class="${selectedRightClassMap.login?default(unselectedRightClassName)}">Logout</a></div>

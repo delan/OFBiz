@@ -1242,8 +1242,8 @@
         <attribute mode="IN" name="contentIdTo" optional="false" type="String"/>
         <attribute mode="IN" name="mapKey" optional="true" type="String"/>
         <attribute mode="IN" name="activeContentId" optional="false" type="String"/>
-        <attribute mode="IN" name="contentAssocTypeId" optional="true" type="String"/>
-        <attribute mode="IN" name="fromDate" optional="false" type="Timestamp"/>
+        <attribute mode="IN" name="contentAssocTypeId" optional="false" type="String"/>
+        <attribute mode="IN" name="fromDate" optional="true" type="Timestamp"/>
         <attribute mode="OUT" name="deactivatedList" optional="false" type="List"/>
     </service>
 
@@ -1307,4 +1307,24 @@
     <attribute mode="IN" name="blogAdminFromDate" optional="true" type="Timestamp"/>
     <attribute mode="IN" name="blogPublisherFromDate" optional="true" type="Timestamp"/>
   </service>
+
+  <service engine="java" name="linkContentToPubPt"
+    location="org.ofbiz.content.content.ContentServices" invoke="linkContentToPubPt" auth="true" >
+    <description>Attach content to publish point</description>
+    <attribute mode="IN" name="contentId" optional="false" type="String"/>
+    <attribute mode="IN" name="contentIdTo" optional="false" type="String"/>
+    <attribute mode="IN" name="publish" optional="true" type="String"/>
+    <attribute mode="IN" name="statusId" optional="true" type="String"/>
+    <attribute mode="IN" name="privilegeEnumId" optional="true" type="String"/>
+    <attribute mode="IN" name="contentAssocTypeId" optional="true" type="String"/>
+    <attribute mode="IN" name="mapKey" optional="true" type="String"/>
+  </service>
+
+  <service auth="true" engine="java" name="updateSiteRolesDyn" validate="false"
+    location="org.ofbiz.content.ContentManagementServices" invoke="updateSiteRolesDyn">
+    <description>Update site roles</description>
+    <attribute mode="IN" name="partyId" optional="true" type="String"/>
+    <attribute mode="IN" name="contentId" optional="true" type="String"/>
+  </service>
+
 </services>

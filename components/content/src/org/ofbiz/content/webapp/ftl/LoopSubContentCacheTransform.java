@@ -1,5 +1,5 @@
 /*
- * $Id: LoopSubContentCacheTransform.java,v 1.20 2004/06/06 05:26:53 jonesde Exp $
+ * $Id: LoopSubContentCacheTransform.java,v 1.21 2004/06/06 07:43:03 byersa Exp $
  * 
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  * 
@@ -49,7 +49,7 @@ import freemarker.template.TransformControl;
  * LoopSubContentCacheTransform - Freemarker Transform for URLs (links)
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.20 $
+ * @version $Revision: 1.21 $
  * @since 3.0
  */
 public class LoopSubContentCacheTransform implements TemplateTransformModel {
@@ -115,7 +115,7 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
         Boolean isReturnAfterObj = (Boolean)trailNode.get("isReturnAfter");
         Boolean isPickObj = (Boolean)trailNode.get("isPick");
         Boolean isFollowObj = (Boolean)trailNode.get("isFollow");
-        if (Debug.infoOn()) Debug.logInfo("in LoopSubContentCache, isReturnBeforeObj" + isReturnBeforeObj + " isPickObj:" + isPickObj + " isFollowObj:" + isFollowObj + " isReturnAfterObj:" + isReturnAfterObj, module);
+        //if (Debug.infoOn()) Debug.logInfo("in LoopSubContentCache, isReturnBeforeObj" + isReturnBeforeObj + " isPickObj:" + isPickObj + " isFollowObj:" + isFollowObj + " isReturnAfterObj:" + isReturnAfterObj, module);
         if ( (isReturnBeforeObj == null || !isReturnBeforeObj.booleanValue())
            && ( (isPickObj != null && isPickObj.booleanValue())
               ||  (isFollowObj != null && isFollowObj.booleanValue()))
@@ -279,11 +279,11 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
             int highIndex = (viewIndex + 1) * viewSize;
             if (highIndex > listSize)
                 highIndex = listSize;
-            if (Debug.infoOn()) Debug.logInfo("viewIndexStr(0):" + viewIndexStr + " viewIndex:" + viewIndex, "");
-            if (Debug.infoOn()) Debug.logInfo("viewSizeStr(0):" + viewSizeStr + " viewSize:" + viewSize, "");
-            if (Debug.infoOn()) Debug.logInfo("listSize(0):" + listSize , "");
-            if (Debug.infoOn()) Debug.logInfo("highIndex(0):" + highIndex , "");
-            if (Debug.infoOn()) Debug.logInfo("lowIndex(0):" + lowIndex , "");
+            //if (Debug.infoOn()) Debug.logInfo("viewIndexStr(0):" + viewIndexStr + " viewIndex:" + viewIndex, "");
+            //if (Debug.infoOn()) Debug.logInfo("viewSizeStr(0):" + viewSizeStr + " viewSize:" + viewSize, "");
+            //if (Debug.infoOn()) Debug.logInfo("listSize(0):" + listSize , "");
+            //if (Debug.infoOn()) Debug.logInfo("highIndex(0):" + highIndex , "");
+            //if (Debug.infoOn()) Debug.logInfo("lowIndex(0):" + lowIndex , "");
             Iterator it = longList.iterator();
             //List entityList = longList.subList(lowIndex, highIndex);
             List entityList = longList;
@@ -324,11 +324,11 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
                 if (highIndex > listSize)
                     highIndex = listSize;
                 int outputIndex = 0;
-        if (Debug.infoOn()) Debug.logInfo( " viewIndex:" + viewIndex, "");
-        if (Debug.infoOn()) Debug.logInfo( " viewSize:" + viewSize, "");
-        if (Debug.infoOn()) Debug.logInfo("listSize(1):" + listSize , "");
-        if (Debug.infoOn()) Debug.logInfo("highIndex(1):" + highIndex , "");
-        if (Debug.infoOn()) Debug.logInfo("lowIndex(1):" + lowIndex , "");
+        //if (Debug.infoOn()) Debug.logInfo( " viewIndex:" + viewIndex, "");
+        //if (Debug.infoOn()) Debug.logInfo( " viewSize:" + viewSize, "");
+        //if (Debug.infoOn()) Debug.logInfo("listSize(1):" + listSize , "");
+        //if (Debug.infoOn()) Debug.logInfo("highIndex(1):" + highIndex , "");
+        //if (Debug.infoOn()) Debug.logInfo("lowIndex(1):" + lowIndex , "");
                 templateCtx.put("lowIndex", new Integer(lowIndex));
                 templateCtx.put("highIndex", new Integer(highIndex));
                 templateCtx.put("outputIndex", new Integer(outputIndex));
@@ -372,9 +372,9 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
                 }
                 FreeMarkerWorker.reloadValues(templateCtx, savedValuesUp);
                 int outputIndex = ((Integer)templateCtx.get("outputIndex")).intValue(); 
-                if (Debug.infoOn()) Debug.logInfo("outputIndex(2):" + outputIndex , "");
+                //if (Debug.infoOn()) Debug.logInfo("outputIndex(2):" + outputIndex , "");
                 int highIndex = ((Integer)templateCtx.get("highIndex")).intValue(); 
-                if (Debug.infoOn()) Debug.logInfo("highIndex(2):" + highIndex , "");
+                //if (Debug.infoOn()) Debug.logInfo("highIndex(2):" + highIndex , "");
                 if (outputIndex < highIndex) {
                     templateCtx.put("highIndex", new Integer(outputIndex));
                     templateCtx.put("listSize", new Integer(outputIndex));
