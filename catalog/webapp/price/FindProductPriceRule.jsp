@@ -56,13 +56,15 @@
     </tr>
     <ofbiz:iterator name="rule" property="productPriceRules">
     <tr>
-      <td><div class="tabletext"><ofbiz:entityfield attribute="rule" field="productPriceRuleId"/></div></td>
-      <td><div class="tabletext"><ofbiz:entityfield attribute="rule" field="ruleName"/></div></td>
-      <td><div class="tabletext"><ofbiz:entityfield attribute="rule" field="isSale"/></div></td>
-      <td><div class="tabletext"><ofbiz:entityfield attribute="rule" field="fromDate"/></div></td>
-      <td><div class="tabletext"><ofbiz:entityfield attribute="rule" field="thruDate"/></div></td>
+      <td><div class="tabletext">&nbsp;<ofbiz:entityfield attribute="rule" field="productPriceRuleId"/></div></td>
+      <td><div class="tabletext">&nbsp;<ofbiz:entityfield attribute="rule" field="ruleName"/></div></td>
+      <td><div class="tabletext">&nbsp;<ofbiz:entityfield attribute="rule" field="isSale"/></div></td>
+      <td><div class="tabletext">&nbsp;<ofbiz:entityfield attribute="rule" field="fromDate"/></div></td>
+      <td><div class="tabletext">&nbsp;<ofbiz:entityfield attribute="rule" field="thruDate"/></div></td>
       <td>
+        &nbsp;
         <a href="<ofbiz:url>/EditProductPriceRules?productPriceRuleId=<ofbiz:entityfield attribute="rule" field="productPriceRuleId"/></ofbiz:url>" class="buttontext">[Edit]</a>
+        &nbsp;
         <a href='<ofbiz:url>/deleteProductPriceRule?productPriceRuleId=<ofbiz:entityfield attribute="rule" field="productPriceRuleId"/></ofbiz:url>' class="buttontext">[Delete]</a>
       </td>
     </tr>
