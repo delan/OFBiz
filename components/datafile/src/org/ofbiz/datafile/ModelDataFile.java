@@ -1,5 +1,5 @@
 /*
- * $Id: ModelDataFile.java,v 1.1 2003/08/19 00:27:10 jonesde Exp $
+ * $Id: ModelDataFile.java,v 1.2 2004/04/05 18:52:18 jonesde Exp $
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -32,7 +32,7 @@ import java.util.*;
  *  ModelDataFile
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 
@@ -69,7 +69,7 @@ public class ModelDataFile {
     /** List of record definitions for the file */
     public List records = new ArrayList();
 
-    ModelRecord getModelRecord(String recordName) {
+    public ModelRecord getModelRecord(String recordName) {
         for (int i = 0; i < records.size(); i++) {
             ModelRecord curRecord = (ModelRecord) records.get(i);
 
