@@ -1,7 +1,7 @@
 /*
- * $Id: OrderServices.java,v 1.41 2004/07/01 08:37:53 jonesde Exp $
+ * $Id: OrderServices.java,v 1.42 2004/07/03 19:54:23 jonesde Exp $
  *
- *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -76,7 +76,7 @@ import org.ofbiz.workflow.WfUtil;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.41 $
+ * @version    $Revision: 1.42 $
  * @since      2.0
  */
 
@@ -303,14 +303,11 @@ public class OrderServices {
 
             while (iter.hasNext()) {
                 GenericValue orderAdjustment = (GenericValue) iter.next();
-                Long adjSeqId = delegator.getNextSeqId("OrderAdjustment");
-
-                if (adjSeqId == null) {
-                    result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-                    result.put(ModelService.ERROR_MESSAGE, "ERROR: Could not get next sequence id for OrderAdjustment, cannot create order.");
-                    return result;
+                try {
+                    orderAdjustment.set("orderAdjustmentId", delegator.getNextSeqId("OrderAdjustment"));
+                } catch (IllegalArgumentException e) {
+                    return ServiceUtil.returnError("ERROR: Could not get next sequence id for OrderAdjustment, cannot create order.");
                 }
-                orderAdjustment.set("orderAdjustmentId", adjSeqId.toString());
                 orderAdjustment.set("orderId", orderId);
 
                 if (orderAdjustment.get("orderItemSeqId") == null || orderAdjustment.getString("orderItemSeqId").length() == 0) {
@@ -396,14 +393,12 @@ public class OrderServices {
 
             while (oipii.hasNext()) {
                 GenericValue oipi = (GenericValue) oipii.next();
-                Long oipiSeqId = delegator.getNextSeqId("OrderItemPriceInfo");
-
-                if (oipiSeqId == null) {
-                    result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-                    result.put(ModelService.ERROR_MESSAGE, "ERROR: Could not get next sequence id for OrderItemPriceInfo, cannot create order.");
-                    return result;
+                try {
+                    oipi.set("orderItemPriceInfoId", delegator.getNextSeqId("OrderItemPriceInfo"));
+                } catch (IllegalArgumentException e) {
+                    return ServiceUtil.returnError("ERROR: Could not get next sequence id for OrderItemPriceInfo, cannot create order.");
                 }
-                oipi.set("orderItemPriceInfoId", oipiSeqId.toString());
+
                 oipi.set("orderId", orderId);
                 toBeStored.add(oipi);
             }
@@ -539,7 +534,6 @@ public class OrderServices {
                         if (inventoryNotReserved != null) {
                             // if inventoryNotReserved is not 0.0 then that is the amount that it couldn't reserve
                             GenericValue product = null;
-
                             try {
                                 product = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", orderItem.getString("productId")));
                             } catch (GenericEntityException e) {
@@ -762,9 +756,7 @@ public class OrderServices {
                 Iterator oai = orderAdj.iterator();
                 while (oai.hasNext()) {
                     GenericValue oa = (GenericValue) oai.next();
-
-                    Long adjSeqId = delegator.getNextSeqId("OrderAdjustment");
-                    oa.set("orderAdjustmentId", adjSeqId.toString());
+                    oa.set("orderAdjustmentId", delegator.getNextSeqId("OrderAdjustment"));
                     oa.set("orderId", orderId);
                     toStore.add(oa);
                 }
@@ -778,9 +770,7 @@ public class OrderServices {
                     Iterator ida = itemAdjustments.iterator();
                     while (ida.hasNext()) {
                         GenericValue ia = (GenericValue) ida.next();
-
-                        Long adjSeqId = delegator.getNextSeqId("OrderAdjustment");
-                        ia.set("orderAdjustmentId", adjSeqId.toString());
+                        ia.set("orderAdjustmentId", delegator.getNextSeqId("OrderAdjustment"));
                         ia.set("orderId", orderId);
                         ia.set("orderItemSeqId", orderItem.getString("orderItemSeqId"));
                         toStore.add(ia);
@@ -903,8 +893,9 @@ public class OrderServices {
             } catch (GenericEntityException e) {
                 return ServiceUtil.returnError("ERROR: Cannot get OrderRole entity: " + e.getMessage());
             }
-            if (placingCustomer == null)
+            if (placingCustomer == null) {
                 return ServiceUtil.returnError("You do not have permission to change this order's status.");
+            }
         }
 
         // get the order header
@@ -1646,12 +1637,11 @@ public class OrderServices {
         Double maxAmount = (Double) context.get("maxAmount");
 
         String prefId = null;
-        Long newId = delegator.getNextSeqId("OrderPaymentPreference");
-
-        if (newId == null) {
+        
+        try {
+            prefId = delegator.getNextSeqId("OrderPaymentPreference");
+        } catch (IllegalArgumentException e) {
             return ServiceUtil.returnError("ERROR: Could not create OrderPaymentPreference (id generation failure)");
-        } else {
-            prefId = newId.toString();
         }
 
         Map fields = UtilMisc.toMap("orderPaymentPreferenceId", prefId, "orderId", orderId, "paymentMethodTypeId",

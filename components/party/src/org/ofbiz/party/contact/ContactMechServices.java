@@ -1,5 +1,5 @@
 /*
- * $Id: ContactMechServices.java,v 1.2 2004/02/26 09:10:47 jonesde Exp $
+ * $Id: ContactMechServices.java,v 1.3 2004/07/03 19:54:23 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -48,7 +48,7 @@ import org.ofbiz.service.ServiceUtil;
  * Services for Contact Mechanism maintenance
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class ContactMechServices {
@@ -81,15 +81,15 @@ public class ContactMechServices {
 
         String contactMechTypeId = (String) context.get("contactMechTypeId");
 
-        Long newCmId = delegator.getNextSeqId("ContactMech");
-
-        if (newCmId == null) {
+        String newCmId = null;
+        try {
+            newCmId = delegator.getNextSeqId("ContactMech");
+        } catch (IllegalArgumentException e) {
             errMsg = UtilProperties.getMessage(resource,"contactmechservices.could_not_create_contact_info_id_generation_failure", locale);
             return ServiceUtil.returnError(errMsg);
         }
 
         GenericValue tempContactMech = delegator.makeValue("ContactMech", UtilMisc.toMap("contactMechId", newCmId.toString(), "contactMechTypeId", contactMechTypeId));
-
         toBeStored.add(tempContactMech);
 
         if (!partyId.equals("_NA_")) {
@@ -144,9 +144,10 @@ public class ContactMechServices {
         if (result.size() > 0)
             return result;
 
-        Long newCmId = delegator.getNextSeqId("ContactMech");
-
-        if (newCmId == null) {
+        String newCmId = null;
+        try {
+            newCmId = delegator.getNextSeqId("ContactMech");
+        } catch (IllegalArgumentException e) {
             errMsg = UtilProperties.getMessage(resource,"contactmechservices.could_not_change_contact_info_id_generation_failure", locale);
             return ServiceUtil.returnError(errMsg);
         }
@@ -337,15 +338,15 @@ public class ContactMechServices {
 
         String contactMechTypeId = "POSTAL_ADDRESS";
 
-        Long newCmId = delegator.getNextSeqId("ContactMech");
-
-        if (newCmId == null) {
+        String newCmId = null;
+        try {
+            newCmId = delegator.getNextSeqId("ContactMech");
+        } catch (IllegalArgumentException e) {
             errMsg = UtilProperties.getMessage(resource,"contactmechservices.could_not_create_contact_info_id_generation_failure", locale);
             return ServiceUtil.returnError(errMsg);
         }
 
         GenericValue tempContactMech = delegator.makeValue("ContactMech", UtilMisc.toMap("contactMechId", newCmId.toString(), "contactMechTypeId", contactMechTypeId));
-
         toBeStored.add(tempContactMech);
 
         // don't create a PartyContactMech if there is no party; we define no party as sending _NA_ as partyId
@@ -406,12 +407,14 @@ public class ContactMechServices {
         Locale locale = (Locale) context.get("locale");
 
 
-        if (result.size() > 0)
+        if (result.size() > 0) {
             return result;
+        }
 
-        Long newCmId = delegator.getNextSeqId("ContactMech");
-
-        if (newCmId == null) {
+        String newCmId = null;
+        try {
+            newCmId = delegator.getNextSeqId("ContactMech");
+        } catch (IllegalArgumentException e) {
             errMsg = UtilProperties.getMessage(resource,"contactmechservices.could_not_change_contact_info_id_generation_failure", locale);
             return ServiceUtil.returnError(errMsg);
         }
@@ -573,15 +576,15 @@ public class ContactMechServices {
 
         String contactMechTypeId = "TELECOM_NUMBER";
 
-        Long newCmId = delegator.getNextSeqId("ContactMech");
-
-        if (newCmId == null) {
+        String newCmId = null;
+        try {
+            newCmId = delegator.getNextSeqId("ContactMech");
+        } catch (IllegalArgumentException e) {
             errMsg = UtilProperties.getMessage(resource,"contactmechservices.could_not_create_contact_info_id_generation_failure", locale);
             return ServiceUtil.returnError(errMsg);
         }
 
         GenericValue tempContactMech = delegator.makeValue("ContactMech", UtilMisc.toMap("contactMechId", newCmId.toString(), "contactMechTypeId", contactMechTypeId));
-
         toBeStored.add(tempContactMech);
 
         toBeStored.add(delegator.makeValue("PartyContactMech", UtilMisc.toMap("partyId", partyId, "contactMechId", newCmId.toString(),
@@ -627,9 +630,10 @@ public class ContactMechServices {
         if (result.size() > 0)
             return result;
 
-        Long newCmId = delegator.getNextSeqId("ContactMech");
-
-        if (newCmId == null) {
+        String newCmId = null;
+        try {
+            newCmId = delegator.getNextSeqId("ContactMech");
+        } catch (IllegalArgumentException e) {
             errMsg = UtilProperties.getMessage(resource,"contactmechservices.could_not_change_contact_info_id_generation_failure", locale);
             return ServiceUtil.returnError(errMsg);
         }

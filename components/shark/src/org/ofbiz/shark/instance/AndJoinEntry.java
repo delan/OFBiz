@@ -1,5 +1,5 @@
 /*
- * $Id: AndJoinEntry.java,v 1.1 2004/04/22 15:41:00 ajzeneski Exp $
+ * $Id: AndJoinEntry.java,v 1.2 2004/07/03 19:54:25 jonesde Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -37,7 +37,7 @@ import org.enhydra.shark.api.internal.instancepersistence.*;
  * Persistance Object
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.1
  */
 public class AndJoinEntry implements AndJoinEntryInterface {
@@ -72,8 +72,7 @@ public class AndJoinEntry implements AndJoinEntryInterface {
         this.newValue = true;
         this.delegator = delegator;
 
-        Long joinId = delegator.getNextSeqId("WfAndJoin");
-        this.andJoin = delegator.makeValue("WfAndJoin", UtilMisc.toMap("andJoinId", joinId.toString()));
+        this.andJoin = delegator.makeValue("WfAndJoin", UtilMisc.toMap("andJoinId", delegator.getNextSeqId("WfAndJoin")));
     }
 
     public static AndJoinEntry getInstance(GenericValue andJoin) throws PersistenceException {

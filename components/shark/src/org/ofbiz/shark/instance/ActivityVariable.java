@@ -1,5 +1,5 @@
 /*
- * $Id: ActivityVariable.java,v 1.1 2004/04/22 15:41:00 ajzeneski Exp $
+ * $Id: ActivityVariable.java,v 1.2 2004/07/03 19:54:25 jonesde Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -39,7 +39,7 @@ import org.enhydra.shark.api.internal.instancepersistence.*;
  * Persistance Object
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.1
  */
 public class ActivityVariable extends AbstractVariable implements ActivityVariablePersistenceInterface {
@@ -74,8 +74,7 @@ public class ActivityVariable extends AbstractVariable implements ActivityVariab
         this.newValue = true;
         this.delegator = delegator;
 
-        Long variableId = delegator.getNextSeqId("WfActivityVariable");
-        this.activityVariable = delegator.makeValue("WfActivityVariable", UtilMisc.toMap("activityVariableId", variableId.toString()));
+        this.activityVariable = delegator.makeValue("WfActivityVariable", UtilMisc.toMap("activityVariableId", delegator.getNextSeqId("WfActivityVariable")));
         Debug.log("******* New activity variable created", module);
     }
 

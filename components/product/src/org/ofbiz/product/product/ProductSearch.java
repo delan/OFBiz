@@ -1,5 +1,5 @@
 /*
- * $Id: ProductSearch.java,v 1.37 2004/06/29 17:43:07 jonesde Exp $
+ * $Id: ProductSearch.java,v 1.38 2004/07/03 19:54:24 jonesde Exp $
  *
  *  Copyright (c) 2003-2004 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -61,7 +61,7 @@ import org.ofbiz.party.party.PartyHelper;
  *  Utilities for product search based on various constraints including categories, features and keywords.
  *
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.37 $
+ * @version    $Revision: 1.38 $
  * @since      3.0
  */
 public class ProductSearch {
@@ -463,8 +463,7 @@ public class ProductSearch {
                 try {
 
                     GenericValue productSearchResult = delegator.makeValue("ProductSearchResult", null);
-                    Long nextPkrSeqId = delegator.getNextSeqId("ProductSearchResult");
-                    String productSearchResultId = nextPkrSeqId.toString();
+                    String productSearchResultId = delegator.getNextSeqId("ProductSearchResult");
 
                     productSearchResult.set("productSearchResultId", productSearchResultId);
                     productSearchResult.set("visitId", this.visitId);

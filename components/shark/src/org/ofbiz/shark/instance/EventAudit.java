@@ -1,5 +1,5 @@
 /*
- * $Id: EventAudit.java,v 1.1 2004/04/22 15:41:02 ajzeneski Exp $
+ * $Id: EventAudit.java,v 1.2 2004/07/03 19:54:25 jonesde Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -36,7 +36,7 @@ import org.enhydra.shark.api.internal.instancepersistence.*;
  * Persistance Object
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.1
  */
 public class EventAudit implements EventAuditPersistenceInterface {
@@ -68,8 +68,7 @@ public class EventAudit implements EventAuditPersistenceInterface {
         this.newValue = true;
         this.delegator = delegator;
 
-        Long seqId = delegator.getNextSeqId("WfEventAudit");
-        this.eventAuditId = seqId.toString();
+        this.eventAuditId = delegator.getNextSeqId("WfEventAudit");
         this.eventAudit = delegator.makeValue("WfEventAudit", UtilMisc.toMap("eventAuditId", eventAuditId));
     }
 

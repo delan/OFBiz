@@ -1,5 +1,5 @@
 /*
- * $Id: ServerHitBin.java,v 1.2 2003/09/14 05:36:47 jonesde Exp $
+ * $Id: ServerHitBin.java,v 1.3 2004/07/03 19:54:19 jonesde Exp $
  *
  *  Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -47,7 +47,7 @@ import org.ofbiz.entity.GenericValue;
  *  stats according to settings in the serverstats.properties file.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class ServerHitBin {
@@ -558,38 +558,32 @@ public class ServerHitBin {
                 // persist each bin when time ends if option turned on
                 if (UtilProperties.propertyValueEqualsIgnoreCase("serverstats", "stats.persist." + ServerHitBin.typeIds[type] + ".bin", "true")) {
                     GenericValue serverHitBin = delegator.makeValue("ServerHitBin", null);
-                    Long nextId = getDelegator().getNextSeqId("ServerHitBin");
+                    serverHitBin.set("serverHitBinId", getDelegator().getNextSeqId("ServerHitBin"));
+                    serverHitBin.set("contentId", this.id);
+                    serverHitBin.set("hitTypeId", ServerHitBin.typeIds[this.type]);
+                    serverHitBin.set("binStartDateTime", new java.sql.Timestamp(this.startTime));
+                    serverHitBin.set("binEndDateTime", new java.sql.Timestamp(this.endTime));
+                    serverHitBin.set("numberHits", new Long(this.numberHits));
+                    serverHitBin.set("totalTimeMillis", new Long(this.totalRunningTime));
+                    serverHitBin.set("minTimeMillis", new Long(this.minTime));
+                    serverHitBin.set("maxTimeMillis", new Long(this.maxTime));
+                    // get localhost ip address and hostname to store
+                    try {
+                        InetAddress address = InetAddress.getLocalHost();
 
-                    if (nextId == null) {
-                        Debug.logError("Not persisting ServerHitBin, could not get next seq id", module);
-                    } else {
-                        serverHitBin.set("serverHitBinId", nextId.toString());
-                        serverHitBin.set("contentId", this.id);
-                        serverHitBin.set("hitTypeId", ServerHitBin.typeIds[this.type]);
-                        serverHitBin.set("binStartDateTime", new java.sql.Timestamp(this.startTime));
-                        serverHitBin.set("binEndDateTime", new java.sql.Timestamp(this.endTime));
-                        serverHitBin.set("numberHits", new Long(this.numberHits));
-                        serverHitBin.set("totalTimeMillis", new Long(this.totalRunningTime));
-                        serverHitBin.set("minTimeMillis", new Long(this.minTime));
-                        serverHitBin.set("maxTimeMillis", new Long(this.maxTime));
-                        // get localhost ip address and hostname to store
-                        try {
-                            InetAddress address = InetAddress.getLocalHost();
-
-                            if (address != null) {
-                                serverHitBin.set("serverIpAddress", address.getHostAddress());
-                                serverHitBin.set("serverHostName", address.getHostName());
-                            } else {
-                                Debug.logError("Unable to get localhost internet address, was null", module);
-                            }
-                        } catch (java.net.UnknownHostException e) {
-                            Debug.logError("Unable to get localhost internet address: " + e.toString(), module);
+                        if (address != null) {
+                            serverHitBin.set("serverIpAddress", address.getHostAddress());
+                            serverHitBin.set("serverHostName", address.getHostName());
+                        } else {
+                            Debug.logError("Unable to get localhost internet address, was null", module);
                         }
-                        try {
-                            serverHitBin.create();
-                        } catch (GenericEntityException e) {
-                            Debug.logError(e, "Could not save ServerHitBin:", module);
-                        }
+                    } catch (java.net.UnknownHostException e) {
+                        Debug.logError("Unable to get localhost internet address: " + e.toString(), module);
+                    }
+                    try {
+                        serverHitBin.create();
+                    } catch (GenericEntityException e) {
+                        Debug.logError(e, "Could not save ServerHitBin:", module);
                     }
                 }
             }

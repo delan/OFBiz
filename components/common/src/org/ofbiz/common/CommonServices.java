@@ -1,7 +1,7 @@
 /*
- * $Id: CommonServices.java,v 1.12 2004/06/02 15:02:58 ajzeneski Exp $
+ * $Id: CommonServices.java,v 1.13 2004/07/03 19:54:19 jonesde Exp $
  *
- * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -46,7 +46,7 @@ import org.ofbiz.service.ServiceXaWrapper;
  * Common Services
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.12 $
+ * @version    $Revision: 1.13 $
  * @since      2.0
  */
 public class CommonServices {
@@ -133,16 +133,7 @@ public class CommonServices {
         String partyId = (String) context.get("partyId");
         String noteName = (String) context.get("noteName");
         String note = (String) context.get("note");
-        String noteId = null;
-
-        // create the note id
-        Long newId = delegator.getNextSeqId("NoteData");
-
-        if (newId == null) {
-            return ServiceUtil.returnError("ERROR: Could not create note data (id generation failure)");
-        } else {
-            noteId = newId.toString();
-        }
+        String noteId = delegator.getNextSeqId("NoteData");
 
         // check for a party id
         if (partyId == null) {

@@ -1,5 +1,5 @@
 /*
- * $Id: ProcessVariable.java,v 1.1 2004/04/22 15:41:02 ajzeneski Exp $
+ * $Id: ProcessVariable.java,v 1.2 2004/07/03 19:54:26 jonesde Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -39,7 +39,7 @@ import org.enhydra.shark.api.internal.instancepersistence.*;
  * Persistance Object
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.1
  */
 public class ProcessVariable extends AbstractVariable implements ProcessVariablePersistenceInterface {
@@ -74,8 +74,7 @@ public class ProcessVariable extends AbstractVariable implements ProcessVariable
         this.newValue = true;
         this.delegator = delegator;
 
-        Long variableId = delegator.getNextSeqId("WfProcessVariable");
-        this.processVariable = delegator.makeValue("WfProcessVariable", UtilMisc.toMap("processVariableId", variableId.toString()));
+        this.processVariable = delegator.makeValue("WfProcessVariable", UtilMisc.toMap("processVariableId", delegator.getNextSeqId("WfProcessVariable")));
         Debug.log("******* New process variable created", module);
     }
 

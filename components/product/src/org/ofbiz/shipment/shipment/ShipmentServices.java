@@ -1,7 +1,7 @@
 /*
- * $Id: ShipmentServices.java,v 1.3 2003/11/20 21:13:26 ajzeneski Exp $
+ * $Id: ShipmentServices.java,v 1.4 2004/07/03 19:54:25 jonesde Exp $
  *
- *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -42,7 +42,7 @@ import org.ofbiz.service.ServiceUtil;
  * ShipmentServices
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.0
  */
 public class ShipmentServices {
@@ -134,13 +134,13 @@ public class ShipmentServices {
             if (min != null && max != null) {
                 if (min.doubleValue() <= max.doubleValue() || max.doubleValue() == 0) {
                     try {
-                        Long sequence = delegator.getNextSeqId("QuantityBreak");
+                        String newSeqId = delegator.getNextSeqId("QuantityBreak");
                         GenericValue weightBreak = delegator.makeValue("QuantityBreak", null);
-                        weightBreak.set("quantityBreakId", sequence.toString());
+                        weightBreak.set("quantityBreakId", newSeqId);
                         weightBreak.set("quantityBreakTypeId", "SHIP_" + breakType.toUpperCase());
                         weightBreak.set("fromQuantity", min);
                         weightBreak.set("thruQuantity", max);
-                        estimate.set(breakType + "BreakId", sequence.toString());
+                        estimate.set(breakType + "BreakId", newSeqId);
                         estimate.set(breakType + "UnitPrice", (Double) context.get(prefix + "price"));
                         if (context.containsKey(prefix + "uom")) {
                             estimate.set(breakType + "UomId", (String) context.get(prefix + "uom"));

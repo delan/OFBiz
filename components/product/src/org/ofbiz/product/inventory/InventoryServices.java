@@ -1,7 +1,7 @@
 /*
- * $Id: InventoryServices.java,v 1.6 2004/05/23 07:57:28 jonesde Exp $
+ * $Id: InventoryServices.java,v 1.7 2004/07/03 19:54:24 jonesde Exp $
  *
- *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -51,7 +51,7 @@ import org.ofbiz.service.ServiceUtil;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:tiz@sastau.it">Jacopo Cappellato</a>
- * @version    $Revision: 1.6 $
+ * @version    $Revision: 1.7 $
  * @since      2.0
  */
 public class InventoryServices {
@@ -138,13 +138,15 @@ public class InventoryServices {
         	Map results = ServiceUtil.returnSuccess();
         	
             inventoryItem.store();
-            if (newItem != null) {          
-                Long newSeqId = delegator.getNextSeqId("InventoryItem");
-                if (newSeqId == null) {  
+            if (newItem != null) {
+                String newSeqId = null;
+                try {
+                    newSeqId = delegator.getNextSeqId("InventoryItem");
+                } catch (IllegalArgumentException e) {
                     return ServiceUtil.returnError("ERROR: Could not get next sequence id for InventoryItem, cannot create item.");
                 }
                 
-                newItem.set("inventoryItemId", newSeqId.toString());
+                newItem.set("inventoryItemId", newSeqId);
                 newItem.create();
 
                 results.put("inventoryItemId", newItem.get("inventoryItemId"));
