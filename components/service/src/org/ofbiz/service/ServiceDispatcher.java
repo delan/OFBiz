@@ -1,5 +1,5 @@
 /*
- * $Id: ServiceDispatcher.java,v 1.18 2004/06/16 20:48:41 ajzeneski Exp $
+ * $Id: ServiceDispatcher.java,v 1.19 2004/06/25 21:52:42 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -70,7 +70,7 @@ import org.xml.sax.SAXException;
  * Global Service Dispatcher
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.18 $
+ * @version    $Revision: 1.19 $
  * @since      2.0
  */
 public class ServiceDispatcher {
@@ -78,6 +78,10 @@ public class ServiceDispatcher {
     public static final String module = ServiceDispatcher.class.getName();
 
     protected static Map dispatchers = new HashMap();
+    protected static boolean enableJM = true;
+    protected static boolean enableJMS = true;
+    protected static boolean enableSvcs = true;
+
     protected GenericDelegator delegator = null;
     protected GenericEngineFactory factory = null;
     protected Security security = null;
@@ -100,9 +104,19 @@ public class ServiceDispatcher {
                 Debug.logError(e, "[ServiceDispatcher.init] : No instance of security imeplemtation found.", module);
             }
         }
-        this.jm = new JobManager(this.delegator);
-        this.jlf = new JmsListenerFactory(this);
-        this.runStartupServices();
+
+        // make sure we haven't disabled these features from running
+        if (enableJM) {
+            this.jm = new JobManager(this.delegator);
+        }
+
+        if (enableJMS) {
+            this.jlf = new JmsListenerFactory(this);
+        }
+
+        if (enableSvcs) {
+            this.runStartupServices();
+        }
     }
 
     /**
@@ -786,4 +800,32 @@ public class ServiceDispatcher {
 
         return servicesScheduled;
     }
+
+    /**
+     * Enabled/Disables the Job Manager/Scheduler globally
+     * (this will not effect any dispatchers already running)
+     * @param enable
+     */
+    public static void enableJM(boolean enable) {
+        ServiceDispatcher.enableJM = enable;
+    }
+
+    /**
+     * Enabled/Disables the JMS listeners globally
+     * (this will not effect any dispatchers already running)
+     * @param enable
+     */
+    public static void enableJMS(boolean enable) {
+        ServiceDispatcher.enableJMS = enable;
+    }
+
+    /**
+     * Enabled/Disables the startup services globally
+     * (this will not effect any dispatchers already running)
+     * @param enable
+     */
+    public static void enableSvcs(boolean enable) {
+        ServiceDispatcher.enableSvcs = enable;
+    }
+
 }

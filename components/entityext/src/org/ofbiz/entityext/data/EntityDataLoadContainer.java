@@ -1,5 +1,5 @@
 /*
- * $Id: EntityDataLoadContainer.java,v 1.1 2004/06/24 02:16:30 jonesde Exp $
+ * $Id: EntityDataLoadContainer.java,v 1.1 2004/06/25 21:52:43 ajzeneski Exp $
  *
  * Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -22,7 +22,7 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-package org.ofbiz.entity.util;
+package org.ofbiz.entityext.data;
 
 import java.net.URL;
 import java.text.NumberFormat;
@@ -36,12 +36,15 @@ import org.ofbiz.base.container.ContainerException;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
+import org.ofbiz.entity.util.EntityDataLoader;
+import org.ofbiz.service.ServiceDispatcher;
 
 
 /**
  * Some utility routines for loading seed data.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @version    $Revision: 1.1 $
  * @since      3.1
  */
@@ -53,13 +56,17 @@ public class EntityDataLoadContainer implements Container {
         super();
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.ofbiz.base.container.Container#init(java.lang.String[])
      */
     public void init(String[] args) throws ContainerException {
+        // disable job scheduler, JMS listener and startup services
+        ServiceDispatcher.enableJM(false);
+        ServiceDispatcher.enableJMS(false);
+        ServiceDispatcher.enableSvcs(false);
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.ofbiz.base.container.Container#start(java.lang.String)
      */
     public boolean start(String configFileLocation) throws ContainerException {
@@ -140,7 +147,7 @@ public class EntityDataLoadContainer implements Container {
         return true;
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.ofbiz.base.container.Container#stop()
      */
     public void stop() throws ContainerException {
