@@ -626,6 +626,69 @@
   </TR>
 </TABLE>
 
+<#-- Current Cart -->
+<#if isCustomer?exists>
+<br>
+<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+  <TR>
+    <TD width='100%'>
+      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
+        <tr>
+          <td valign="middle" align="left">
+            <div class="boxhead">&nbsp;${uiLabelMap.PartyCurrentShoppingCart}</div>
+          </td>
+          <#if security.hasEntityPermission("PARTYMGR", "_UPDATE", session)>
+              <#if savedCartListId?has_content>
+                <#assign listParam = "&shoppingListId=" + savedCartListId>
+              <#else>
+                <#assign listParam = "">
+              </#if>
+              <td valign="middle" align="right">
+              <a href="<@ofbizUrl>/editShoppingList?partyId=${partyId}${listParam}</@ofbizUrl>" class="submenutextright">${uiLabelMap.CommonEdit}</a>
+              </td>
+          </#if>
+        </tr>
+      </table>
+    </TD>
+  </TR>
+  <TR>
+    <TD width='100%'>
+      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
+        <tr>
+          <td>
+            <#if savedCartItems?has_content>
+              <table width="100%" border="0" cellpadding="2" cellspacing="0">
+                <tr>
+                  <td><div class="tableheadtext">${uiLabelMap.PartySequenceId}</div></td>
+                  <td><div class="tableheadtext">${uiLabelMap.PartyProductId}</div></td>
+                  <td><div class="tableheadtext">${uiLabelMap.PartyQuantity}</div></td>
+                  <td><div class="tableheadtext">${uiLabelMap.PartyQuantityPurchased}</div></td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                </tr>
+                <tr>
+                  <td colspan="7"><hr class="sepbar"></td>
+                </tr>
+                <#list savedCartItems as savedCartItem>
+                  <tr>
+                    <td><div class="tabletext">${savedCartItem.shoppingListItemSeqId?if_exists}</div></td>
+                    <td><a href="/catalog/control/EditProduct?productId=${savedCartItem.productId}&externalLoginKey=${requestAttributes.externalLoginKey}" class="buttontext">${savedCartItem.productId?if_exists}</a</td>
+                    <td><div class="tabletext">${savedCartItem.quantity?if_exists}</div></td>
+                    <td><div class="tabletext">${savedCartItem.quantityPurchased?if_exists}</div></td>
+                  </tr>
+                </#list>
+              </table>
+            <#else>
+              <div class="tabletext">${uiLabelMap.PartyNoShoppingCartSavedForParty}</div>
+            </#if>
+          </td>
+        </tr>
+      </table>
+    </TD>
+  </TR>
+</TABLE>
+</#if>
+
 <#-- Party Notes -->
 <br>
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
