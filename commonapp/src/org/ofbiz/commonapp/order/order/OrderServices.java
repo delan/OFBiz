@@ -145,11 +145,16 @@ public class OrderServices {
                 UtilMisc.toMap("orderStatusId", delegator.getNextSeqId("OrderStatus").toString(),
                         "statusId", "ORDERED", "orderId", orderId, "statusDatetime", UtilDateTime.nowTimestamp())));
 
+        // TODO fix payment method type
         String paymentMethodId = (String) context.get("paymentMethodId");
         if (paymentMethodId != null && !paymentMethodId.equals("_OFFLINE_")) {
             toBeStored.add(delegator.makeValue("OrderPaymentPreference",
                     UtilMisc.toMap("orderPaymentPreferenceId", delegator.getNextSeqId("OrderPaymentPreference").toString(),
                             "orderId", orderId, "paymentMethodTypeId", "CREDIT_CARD", "paymentMethodId", paymentMethodId)));
+            toBeStored.add(delegator.makeValue("OrderStatus",
+                   UtilMisc.toMap("orderStatusId", delegator.getNextSeqId("OrderStatus").toString(),
+                           "statusId", "PAID", "orderId", orderId, "statusDatetime", UtilDateTime.nowTimestamp())));
+            order.set("statusId", "PAID");
         }
         if (paymentMethodId != null && paymentMethodId.equals("_OFFLINE_")) {
             toBeStored.add(delegator.makeValue("OrderPaymentPreference",
