@@ -13,6 +13,7 @@
         <attribute name="partyId" type="String" mode="IN" optional="true"/>
         <attribute name="contactMechTypeId" type="String" mode="IN" optional="false"/>
         <attribute name="infoString" type="String" mode="IN" optional="false"/>
+        <attribute name="allowSolicitation" type="String" mode="IN" optional="true"/>
         <attribute name="contactMechId" type="String" mode="OUT" optional="true"/>
     </service>
     <service name="updateContactMech" engine="java"
@@ -22,6 +23,7 @@
         <attribute name="contactMechId" type="String" mode="IN" optional="false"/>
         <attribute name="contactMechTypeId" type="String" mode="IN" optional="false"/>
         <attribute name="infoString" type="String" mode="IN" optional="false"/>
+        <attribute name="allowSolicitation" type="String" mode="IN" optional="true"/>
         <attribute name="newContactMechId" type="String" mode="OUT" optional="true"/>
     </service>
     <service name="deleteContactMech" engine="java"
@@ -45,6 +47,7 @@
         <attribute name="postalCode" type="String" mode="IN" optional="true"/>
         <attribute name="countryGeoId" type="String" mode="IN" optional="true"/>
         <attribute name="postalCodeGeoId" type="String" mode="IN" optional="true"/>
+        <attribute name="allowSolicitation" type="String" mode="IN" optional="true"/>
         <attribute name="contactMechId" type="String" mode="OUT" optional="true"/>
     </service>
     <service name="updatePostalAddress" engine="java"
@@ -62,6 +65,7 @@
         <attribute name="postalCode" type="String" mode="IN" optional="true"/>
         <attribute name="countryGeoId" type="String" mode="IN" optional="true"/>
         <attribute name="postalCodeGeoId" type="String" mode="IN" optional="true"/>
+        <attribute name="allowSolicitation" type="String" mode="IN" optional="true"/>
         <attribute name="newContactMechId" type="String" mode="OUT" optional="true"/>
     </service>
     
@@ -73,6 +77,7 @@
         <attribute name="areaCode" type="String" mode="IN" optional="true"/>
         <attribute name="contactNumber" type="String" mode="IN" optional="false"/>
         <attribute name="extension" type="String" mode="IN" optional="true"/>
+        <attribute name="allowSolicitation" type="String" mode="IN" optional="true"/>
         <attribute name="contactMechId" type="String" mode="OUT" optional="true"/>
     </service>
     <service name="updateTelecomNumber" engine="java"
@@ -84,6 +89,7 @@
         <attribute name="areaCode" type="String" mode="IN" optional="true"/>
         <attribute name="contactNumber" type="String" mode="IN" optional="false"/>
         <attribute name="extension" type="String" mode="IN" optional="true"/>
+        <attribute name="allowSolicitation" type="String" mode="IN" optional="true"/>
         <attribute name="newContactMechId" type="String" mode="OUT" optional="true"/>
     </service>
     
@@ -92,6 +98,7 @@
         <description>Create an Email Address</description>
         <attribute name="partyId" type="String" mode="IN" optional="true"/>
         <attribute name="emailAddress" type="String" mode="IN" optional="false"/>
+        <attribute name="allowSolicitation" type="String" mode="IN" optional="true"/>
         <attribute name="contactMechId" type="String" mode="OUT" optional="true"/>
     </service>
     <service name="updateEmailAddress" engine="java"
@@ -100,6 +107,7 @@
         <attribute name="partyId" type="String" mode="IN" optional="true"/>
         <attribute name="contactMechId" type="String" mode="IN" optional="false"/>
         <attribute name="emailAddress" type="String" mode="IN" optional="false"/>
+        <attribute name="allowSolicitation" type="String" mode="IN" optional="true"/>
         <attribute name="newContactMechId" type="String" mode="OUT" optional="true"/>
     </service>
     
