@@ -67,7 +67,7 @@ public class InputValueTag extends TagSupport {
   public void setTryEntityAttr(String tryEntityAttr) { this.tryEntityAttr = tryEntityAttr; }
   
   public int doStartTag() throws JspTagException {
-    String inputValue;
+    String inputValue = null;
     GenericValue entity = null;
     String paramValue = null;
     boolean tryEntity = true;
@@ -76,7 +76,8 @@ public class InputValueTag extends TagSupport {
     if(tempBool != null) tryEntity = tempBool.booleanValue();
     if(tryEntity) entity = (GenericValue)pageContext.getAttribute(entityAttr);
     if(entity != null) {
-      inputValue = entity.get(field).toString();
+      Object fieldVal = entity.get(field);
+      if(fieldVal != null) inputValue = entity.get(field).toString();
     }
     else {
       inputValue = pageContext.getRequest().getParameter(param);
