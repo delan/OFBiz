@@ -92,7 +92,7 @@
         <sequenced-id-to-env sequence-name="FacilityGroup" env-name="facilityGroupId"/>
         <to-string field-name="facilityGroupId"/>
         <env-to-field env-name="facilityGroupId" map-name="newEntity"/>
-        <field-to-result field-name="facilityGroupId" result-name="facilitygroupId"/>
+        <field-to-result field-name="facilityGroupId" result-name="facilityGroupId"/>
         
         <create-value value-name="newEntity"/>
     </simple-method>
