@@ -68,27 +68,57 @@ public class OrderServices {
             return result;
         }
 
-        // check inventory for each item
+        // check inventory and other things for each item
         String prodCatalogId = (String) context.get("prodCatalogId");
         List errorMessages = new LinkedList();
         Iterator itemIter = orderItems.iterator();
+        java.sql.Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
         while (itemIter.hasNext()) {
             //if the item is out of stock, return an error to that effect
             GenericValue orderItem = (GenericValue) itemIter.next();
             
+            GenericValue product = null;
+            try {
+                product = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", orderItem.get("productId")));
+            } catch (GenericEntityException e) {
+                String errMsg = "Could not find the product with ID [" + orderItem.get("productId") + "], cannot be purchased.";
+                Debug.logError(e, errMsg);
+                errorMessages.add(errMsg);
+                continue;
+            }
+
+            if (product == null) {
+                String errMsg = "Could not find the product with ID [" + orderItem.get("productId") + "], cannot be purchased.";
+                Debug.logError(errMsg);
+                errorMessages.add(errMsg);
+                continue;
+            }
+            
+            //check to see if introductionDate hasn't passed yet
+            if (product.get("introductionDate") != null && nowTimestamp.before(product.getTimestamp("introductionDate"))) {
+                String excMsg = "Tried to order the Product " + product.getString("productName") + 
+                        " (productId: " + product.getString("productId") + ") to the cart. This product has not yet been made available for sale.";
+                Debug.logWarning(excMsg);
+                errorMessages.add(excMsg);
+                continue;
+            }
+
+            //check to see if salesDiscontinuationDate has passed
+            if (product.get("salesDiscontinuationDate") != null && nowTimestamp.after(product.getTimestamp("salesDiscontinuationDate"))) {
+                String excMsg = "Tried to order the Product " + product.getString("productName") + 
+                        " (productId: " + product.getString("productId") + ") to the cart. This product is no longer available for sale.";
+                Debug.logWarning(excMsg);
+                errorMessages.add(excMsg);
+                continue;
+            }
+
             if (!CatalogWorker.isCatalogInventoryAvailable(prodCatalogId, orderItem.getString("productId"), orderItem.getDouble("quantity").doubleValue(), delegator, dispatcher)) {
-                GenericValue product = null;
-                try {
-                    product = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", orderItem.get("productId")));
-                } catch (GenericEntityException e) {
-                    Debug.logError(e, "Error when looking up product in createOrder service, product failed inventory check");
-                }
                 String invErrMsg = "The product ";
-                if (product != null) {
-                    invErrMsg += product.getString("productName");
-                }
+                invErrMsg += product.getString("productName");
                 invErrMsg += " with ID " + orderItem.getString("productId") + " is no longer in stock. Please try reducing the quantity or removing the product from this order.";
+                Debug.logWarning(invErrMsg);
                 errorMessages.add(invErrMsg);
+                continue;
             }
         }
         
