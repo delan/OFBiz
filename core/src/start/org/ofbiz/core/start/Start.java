@@ -92,16 +92,20 @@ public class Start implements Runnable {
     }
     
     private String processRequest(String request, Socket client) {
-        String key = request.substring(0, request.indexOf(':'));
-        String command = request.substring(request.indexOf(':')+1);       
-        if (!key.equals(conf.adminKey)) {        
-            return "FAIL";
-        } else {
-            if (command.equals("SHUTDOWN")) {                             
-                serverRunning = false;
-                System.out.println("Shutdown initiated from: " + client.getInetAddress().getHostAddress() + ":" + client.getPort());        
+        if (request != null) {        
+            String key = request.substring(0, request.indexOf(':'));
+            String command = request.substring(request.indexOf(':')+1);       
+            if (!key.equals(conf.adminKey)) {        
+                return "FAIL";
+            } else {
+                if (command.equals("SHUTDOWN")) {                             
+                    serverRunning = false;
+                    System.out.println("Shutdown initiated from: " + client.getInetAddress().getHostAddress() + ":" + client.getPort());        
+                }
+                return "OK";
             }
-            return "OK";
+        } else {
+            return "FAIL";
         }
     }
          
