@@ -1,5 +1,5 @@
 /*
- * $Id: OFBizSecurity.java,v 1.5 2004/01/15 09:12:32 jonesde Exp $
+ * $Id: OFBizSecurity.java,v 1.6 2004/07/07 15:57:55 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -51,7 +51,7 @@ import org.ofbiz.entity.util.EntityUtil;
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:hermanns@aixcept.de">Rainer Hermanns</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      2.0
  */
 public class OFBizSecurity extends org.ofbiz.security.Security {
@@ -259,7 +259,7 @@ public class OFBizSecurity extends org.ofbiz.security.Security {
      * @param application The name of the application corresponding to the desired permission.
      * @param action The action on the application corresponding to the desired permission.
      * @param entityName The name of the role entity to use for validation.
-     * @param fields Map of primary key fields to lookup in entityName.
+     * @param condition EntityCondition used to query the entityName.
      * @param userLogin The userLogin object for user to check against.
      * @return Returns true if the currently logged in userLogin has the specified permission, otherwise returns false.
      */
