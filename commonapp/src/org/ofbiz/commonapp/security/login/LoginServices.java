@@ -195,15 +195,28 @@ public class LoginServices {
         String newPassword = (String) context.get("newPassword");
         String newPasswordVerify = (String) context.get("newPasswordVerify");
         String passwordHint = (String) context.get("passwordHint");
+        Boolean enabled = (Boolean) context.get("enabled");
 
         List errorMessageList = new LinkedList();
-        checkNewPassword(userLoginToUpdate, currentPassword, newPassword, newPasswordVerify, passwordHint, errorMessageList, adminUser);
+
+        if (newPassword != null && newPassword.length() > 0) {
+        checkNewPassword(userLoginToUpdate, currentPassword, newPassword, newPasswordVerify,
+                passwordHint, errorMessageList, adminUser);
+        }
+
         if (errorMessageList.size() > 0) {
             return ServiceUtil.returnError(errorMessageList);
         }
 
-        userLoginToUpdate.set("currentPassword", newPassword);
-        userLoginToUpdate.set("passwordHint", passwordHint);
+        if (newPassword != null)
+            userLoginToUpdate.set("currentPassword", newPassword);
+        if (passwordHint != null)
+            userLoginToUpdate.set("passwordHint", passwordHint);
+        if (enabled != null) {
+            userLoginToUpdate.set("enabled", enabled);
+            if (!enabled.booleanValue() && userLoginToUpdate.getBoolean("enabled").booleanValue())
+                userLoginToUpdate.set("disabledDateTime", UtilDateTime.nowTimestamp());
+        }
 
         try {
             userLoginToUpdate.store();
