@@ -1,5 +1,5 @@
 /*
- * $Id: ProductPromoWorker.java,v 1.27 2003/11/30 00:42:11 jonesde Exp $
+ * $Id: ProductPromoWorker.java,v 1.28 2003/11/30 01:31:41 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -54,7 +54,7 @@ import org.ofbiz.service.LocalDispatcher;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.27 $
+ * @version    $Revision: 1.28 $
  * @since      2.0
  */
 public class ProductPromoWorker {
@@ -444,8 +444,11 @@ public class ProductPromoWorker {
             while (quantityNeeded > 0 && lineOrderedByBasePriceIter.hasNext()) {
                 ShoppingCartItem cartItem = (ShoppingCartItem) lineOrderedByBasePriceIter.next();
                 // only include if it is in the productId Set for this check and if it is not a Promo (GWP) item
+                GenericValue product = cartItem.getProduct();
                 String parentProductId = cartItem.getParentProductId();
-                if (!cartItem.getIsPromo() && (productIds.contains(cartItem.getProductId()) || (parentProductId != null && productIds.contains(parentProductId)))) {
+                if (!cartItem.getIsPromo() && 
+                        (productIds.contains(cartItem.getProductId()) || (parentProductId != null && productIds.contains(parentProductId))) && 
+                        (product == null || !"N".equals(product.getString("includeInPromotions")))) {
                     // reduce quantity still needed to qualify for promo (quantityNeeded)
                     quantityNeeded -= cartItem.addPromoQuantityCandidateUse(quantityNeeded, productPromoCond);
                 }
@@ -554,7 +557,7 @@ public class ProductPromoWorker {
                 compare = 1;
             }
         } else if ("PPIP_ORDER_TOTAL".equals(inputParamEnumId)) {
-            Double orderSubTotal = new Double(cart.getSubTotal());
+            Double orderSubTotal = new Double(cart.getSubTotalForPromotions());
             if (Debug.verboseOn()) Debug.logVerbose("Doing order total compare: orderSubTotal=" + orderSubTotal, module);
             compare = orderSubTotal.compareTo(Double.valueOf(condValue));
         } else {
@@ -597,28 +600,30 @@ public class ProductPromoWorker {
                 ranAction = false;
             } else {
                 GenericValue product = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", productPromoAction.get("productId")));
-                double quantity = productPromoAction.get("quantity") == null ? 0.0 : productPromoAction.getDouble("quantity").doubleValue();
+                if (!"N".equals(product.getString("includeInPromotions"))) {
+                    double quantity = productPromoAction.get("quantity") == null ? 0.0 : productPromoAction.getDouble("quantity").doubleValue();
+                    
+                    // pass null for cartLocation to add to end of cart, pass false for doPromotions to avoid infinite recursion
+                    ShoppingCartItem gwpItem = null;
+                    try {
+                        // just leave the prodCatalogId null, this line won't be associated with a catalog
+                        String prodCatalogId = null;
+                        gwpItem = ShoppingCartItem.makeItem(null, product, quantity, null, null, prodCatalogId, dispatcher, cart, false);
+                    } catch (CartItemModifyException e) {
+                        int gwpItemIndex = cart.getItemIndex(gwpItem);
+                        cart.removeCartItem(gwpItemIndex, dispatcher);
+                        throw e;
+                    }
 
-                // pass null for cartLocation to add to end of cart, pass false for doPromotions to avoid infinite recursion
-                ShoppingCartItem gwpItem = null;
-                try {
-                    // just leave the prodCatalogId null, this line won't be associated with a catalog
-                    String prodCatalogId = null;
-                    gwpItem = ShoppingCartItem.makeItem(null, product, quantity, null, null, prodCatalogId, dispatcher, cart, false);
-                } catch (CartItemModifyException e) {
-                    int gwpItemIndex = cart.getItemIndex(gwpItem);
-                    cart.removeCartItem(gwpItemIndex, dispatcher);
-                    throw e;
+                    double discountAmount = -(quantity * gwpItem.getBasePrice());
+                    doOrderItemPromoAction(productPromoAction, gwpItem, discountAmount, "amount", delegator);
+
+                    // set promo after create; note that to setQuantity we must clear this flag, setQuantity, then re-set the flag
+                    gwpItem.setIsPromo(true);
+                    if (Debug.verboseOn()) Debug.logVerbose("gwpItem adjustments: " + gwpItem.getAdjustments(), module);
+
+                    ranAction = true;
                 }
-
-                double discountAmount = -(quantity * gwpItem.getBasePrice());
-                doOrderItemPromoAction(productPromoAction, gwpItem, discountAmount, "amount", delegator);
-
-                // set promo after create; note that to setQuantity we must clear this flag, setQuantity, then re-set the flag
-                gwpItem.setIsPromo(true);
-                if (Debug.verboseOn()) Debug.logVerbose("gwpItem adjustments: " + gwpItem.getAdjustments(), module);
-
-                ranAction = true;
             }
         } else if ("PROMO_FREE_SHIPPING".equals(productPromoActionEnumId)) {
             // this may look a bit funny: on each pass all rules that do free shipping will set their own rule id for it,
@@ -639,8 +644,11 @@ public class ProductPromoWorker {
             while (quantityDesired > 0 && lineOrderedByBasePriceIter.hasNext()) {
                 ShoppingCartItem cartItem = (ShoppingCartItem) lineOrderedByBasePriceIter.next();
                 // only include if it is in the productId Set for this check and if it is not a Promo (GWP) item
+                GenericValue product = cartItem.getProduct();
                 String parentProductId = cartItem.getParentProductId();
-                if (!cartItem.getIsPromo() && (productIds.contains(cartItem.getProductId()) || (parentProductId != null && productIds.contains(parentProductId)))) {
+                if (!cartItem.getIsPromo() && 
+                        (productIds.contains(cartItem.getProductId()) || (parentProductId != null && productIds.contains(parentProductId))) &&
+                        (product == null || !"N".equals(product.getString("includeInPromotions")))) {
                     // reduce quantity still needed to qualify for promo (quantityNeeded)
                     double quantityUsed = cartItem.addPromoQuantityCandidateUse(quantityDesired, productPromoAction);
                     if (quantityUsed > 0) {
@@ -678,7 +686,10 @@ public class ProductPromoWorker {
                 ShoppingCartItem cartItem = (ShoppingCartItem) lineOrderedByBasePriceIter.next();
                 // only include if it is in the productId Set for this check and if it is not a Promo (GWP) item
                 String parentProductId = cartItem.getParentProductId();
-                if (!cartItem.getIsPromo() && (productIds.contains(cartItem.getProductId()) || (parentProductId != null && productIds.contains(parentProductId)))) {
+                GenericValue product = cartItem.getProduct();
+                if (!cartItem.getIsPromo() && 
+                        (productIds.contains(cartItem.getProductId()) || (parentProductId != null && productIds.contains(parentProductId))) &&
+                        (product == null || !"N".equals(product.getString("includeInPromotions")))) {
                     // reduce quantity still needed to qualify for promo (quantityNeeded)
                     double quantityUsed = cartItem.addPromoQuantityCandidateUse(quantityDesired, productPromoAction);
                     quantityDesired -= quantityUsed;
@@ -719,7 +730,9 @@ public class ProductPromoWorker {
                 ShoppingCartItem cartItem = (ShoppingCartItem) lineOrderedByBasePriceIter.next();
                 // only include if it is in the productId Set for this check and if it is not a Promo (GWP) item
                 String parentProductId = cartItem.getParentProductId();
-                if (!cartItem.getIsPromo() && (productIds.contains(cartItem.getProductId()) || (parentProductId != null && productIds.contains(parentProductId)))) {
+                GenericValue product = cartItem.getProduct();
+                if (!cartItem.getIsPromo() && (productIds.contains(cartItem.getProductId()) || (parentProductId != null && productIds.contains(parentProductId))) &&
+                        (product == null || !"N".equals(product.getString("includeInPromotions")))) {
                     // reduce quantity still needed to qualify for promo (quantityNeeded)
                     double quantityUsed = cartItem.addPromoQuantityCandidateUse(quantityDesired, productPromoAction);
                     if (quantityUsed > 0) {
@@ -741,11 +754,17 @@ public class ProductPromoWorker {
             }
         } else if ("PROMO_ORDER_PERCENT".equals(productPromoActionEnumId)) {
             ranAction = true;
-            double amount = -(productPromoAction.get("amount") == null ? 0.0 : (productPromoAction.getDouble("amount").doubleValue() / 100.0));
-            doOrderPromoAction(productPromoAction, cart, amount, "percentage", delegator);
+            double percentage = -(productPromoAction.get("amount") == null ? 0.0 : (productPromoAction.getDouble("amount").doubleValue() / 100.0));
+            double amount = cart.getSubTotalForPromotions() * percentage;
+            doOrderPromoAction(productPromoAction, cart, amount, "amount", delegator);
         } else if ("PROMO_ORDER_AMOUNT".equals(productPromoActionEnumId)) {
             ranAction = true;
             double amount = -(productPromoAction.get("amount") == null ? 0.0 : productPromoAction.getDouble("amount").doubleValue());
+            // if amount is greater than the order sub total, set equal to order sub total, this normally wouldn't happen because there should be a condition that the order total be above a certain amount, but just in case...
+            double subTotal = cart.getSubTotalForPromotions();
+            if (-amount > subTotal) {
+                amount = -subTotal;
+            }
             doOrderPromoAction(productPromoAction, cart, amount, "amount", delegator);
         } else {
             Debug.logError("An un-supported productPromoActionType was used: " + productPromoActionEnumId + ", not performing any action", module);

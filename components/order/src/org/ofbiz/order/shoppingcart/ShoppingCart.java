@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCart.java,v 1.31 2003/11/28 18:48:46 jonesde Exp $
+ * $Id: ShoppingCart.java,v 1.32 2003/11/30 01:31:41 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -44,7 +44,7 @@ import org.ofbiz.product.store.ProductStoreWorker;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.31 $
+ * @version    $Revision: 1.32 $
  * @since      2.0
  */
 public class ShoppingCart implements java.io.Serializable {
@@ -765,13 +765,30 @@ public class ShoppingCart implements java.io.Serializable {
 
     /** Returns the sub-total in the cart (item-total - discount). */
     public double getSubTotal() {
-        double itemTotal = 0.00;
+        double itemsTotal = 0.00;
         Iterator i = iterator();
 
         while (i.hasNext()) {
-            itemTotal += ((ShoppingCartItem) i.next()).getItemSubTotal();
+            itemsTotal += ((ShoppingCartItem) i.next()).getItemSubTotal();
         }
-        return itemTotal;
+        return itemsTotal;
+    }
+
+    /** Returns the sub-total in the cart (item-total - discount). */
+    public double getSubTotalForPromotions() {
+        double itemsTotal = 0.00;
+        Iterator i = iterator();
+
+        while (i.hasNext()) {
+            ShoppingCartItem cartItem = (ShoppingCartItem) i.next();
+            GenericValue product = cartItem.getProduct();
+            if (product != null && "N".equals(product.getString("includeInPromotions"))) {
+                // don't include in total if this is the case...
+                continue;
+            }
+            itemsTotal += cartItem.getItemSubTotal();
+        }
+        return itemsTotal;
     }
 
     /** Add a contact mech to this purpose; the contactMechPurposeTypeId is required */
