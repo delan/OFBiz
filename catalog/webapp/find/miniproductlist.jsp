@@ -31,10 +31,7 @@
                             <ofbiz:entityfield attribute="miniProduct" field="productName"/>
                           </a>
                           <div class='tabletext'>
-                            <b>
-                              <ofbiz:entityfield attribute="miniProduct" field="productId"/>,
-                              <font color="#006633"><ofbiz:entityfield attribute="miniProduct" field="defaultPrice"/></font>
-                            </b>
+                            <b><ofbiz:entityfield attribute="miniProduct" field="productId"/></b>
                           </div>
                         </td>
                       </tr>
