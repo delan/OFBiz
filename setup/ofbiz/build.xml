@@ -53,6 +53,10 @@
 
         <copy file="lib/common/ots-jts_1.0.jar" toDir="${catalina.dir}/common/lib"/>
         <copy file="lib/common/tyrex-1.0.jar" toDir="${catalina.dir}/common/lib"/>
+        
+        <copy file="lib/common/commons-beanutils.jar" toDir="${catalina.dir}/common/lib"/>
+        <copy file="lib/common/commons-collections.jar" toDir="${catalina.dir}/common/lib"/>
+        <copy file="lib/common/commons-digester.jar" toDir="${catalina.dir}/common/lib"/>
 
         <copy file="lib/share/axis.jar" toDir="${catalina.dir}/lib"/>
         <copy file="lib/share/bsh-1.2b6.jar" toDir="${catalina.dir}/lib"/>
@@ -60,6 +64,15 @@
         <copy file="lib/share/wsdl4j.jar" toDir="${catalina.dir}/lib"/>
         <copy file="lib/share/jakarta-oro-2.0.4.jar" toDir="${catalina.dir}/lib"/>
 
+        <copy file="lib/datavision/DataVision.jar" toDir="${catalina.dir}/lib"/>
+        <copy file="lib/datavision/MinML.jar" toDir="${catalina.dir}/lib"/>
+        <copy file="lib/datavision/jcalendar.jar" toDir="${catalina.dir}/lib"/>
+        
+        <copy file="lib/jasperreports/jasperreports.jar" toDir="${catalina.dir}/lib"/>
+        <copy file="lib/jasperreports/itext-0.81.jar" toDir="${catalina.dir}/lib"/>
+        
+        <copy file="lib/weka/weka.jar" toDir="${catalina.dir}/lib"/>
+        
         <delete file="${catalina.dir}/common/lib/tyrex-0.9.7.0.jar"/>
     </target>
 
