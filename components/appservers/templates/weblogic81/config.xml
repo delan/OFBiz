@@ -6,23 +6,6 @@
         <SSL Enabled="true" IdentityAndTrustLocations="KeyStores"
             ListenPort="7002" Name="examplesServer"/>
     </Server>
-    
-    <JTA AbandonTimeoutSeconds="86400"
-        BeforeCompletionIterationLimit="100" ForgetHeuristics="false"
-        MaxTransactions="10000" MaxUniqueNameStatistics="1000"
-        Name="examples" TimeoutSeconds="100"/>
-        
-    <Security Name="examples"
-        PasswordPolicy="wl_default_password_policy"
-        Realm="wl_default_realm" RealmSetup="true"/>
-    <EmbeddedLDAP
-        Credential="{3DES}GRR8WNEewgLkiUuYq3U8O9D1CBZ+KHfTIsDc1KH8OUo=" Name="examples"/>
-    <SecurityConfiguration
-        Credential="{3DES}8awKNTzSHpKbfdq0pSsIIUi8zgNWEWZ2FPqhpZYybeuOt5mVd3zYkiHeVLIYINH8RroM0oiREkhtKX+YbjTsv5Wim4ytFOP2"
-        Name="examples" RealmBootStrapVersion="1"/>
-    <Realm FileRealm="wl_default_file_realm" Name="wl_default_realm"/>
-    <FileRealm Name="wl_default_file_realm"/>
-    <PasswordPolicy Name="wl_default_password_policy"/>
 
     <Application Deployed="true" Name="mainWebApp"
         Path="C:\bea\weblogic81\samples\server\examples\build" TwoPhase="true">
@@ -99,6 +82,21 @@
         JNDIName="examples-dataSource-demoXAPool"
         Name="examples-dataSource-demoXAPool" PoolName="demoXAPool" Targets="examplesServer"/>
 
+    <JTA AbandonTimeoutSeconds="86400"
+        BeforeCompletionIterationLimit="100" ForgetHeuristics="false"
+        MaxTransactions="10000" MaxUniqueNameStatistics="1000"
+        Name="examples" TimeoutSeconds="100"/>
+    <Security Name="examples"
+        PasswordPolicy="wl_default_password_policy"
+        Realm="wl_default_realm" RealmSetup="true"/>
+    <EmbeddedLDAP
+        Credential="{3DES}GRR8WNEewgLkiUuYq3U8O9D1CBZ+KHfTIsDc1KH8OUo=" Name="examples"/>
+    <SecurityConfiguration
+        Credential="{3DES}8awKNTzSHpKbfdq0pSsIIUi8zgNWEWZ2FPqhpZYybeuOt5mVd3zYkiHeVLIYINH8RroM0oiREkhtKX+YbjTsv5Wim4ytFOP2"
+        Name="examples" RealmBootStrapVersion="1"/>
+    <Realm FileRealm="wl_default_file_realm" Name="wl_default_realm"/>
+    <FileRealm Name="wl_default_file_realm"/>
+    <PasswordPolicy Name="wl_default_password_policy"/>
 
     <Application Name="_appsdir_ejb20_basic_statelessSession_ear"
         Path="C:\bea\weblogic81\samples\domains\examples\applications\ejb20_basic_statelessSession.ear"
