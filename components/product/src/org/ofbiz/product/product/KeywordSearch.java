@@ -1,5 +1,5 @@
 /*
- * $Id: KeywordSearch.java,v 1.10 2003/11/25 06:05:36 jonesde Exp $
+ * $Id: KeywordSearch.java,v 1.11 2004/01/22 12:53:28 jonesde Exp $
  *
  *  Copyright (c) 2001 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -42,7 +42,7 @@ import org.ofbiz.entity.GenericValue;
  *  <br>Special thanks to Glen Thorne and the Weblogic Commerce Server for ideas.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.10 $
+ * @version    $Revision: 1.11 $
  * @since      2.1
  */
 public class KeywordSearch {
@@ -117,11 +117,9 @@ public class KeywordSearch {
 
         String stemBag = UtilProperties.getPropertyValue("prodsearch", "stem.bag");
         List stemList = new ArrayList(10);
-
         if (UtilValidate.isNotEmpty(stemBag)) {
             String curToken;
             StringTokenizer tokenizer = new StringTokenizer(stemBag, ": ");
-
             while (tokenizer.hasMoreTokens()) {
                 curToken = tokenizer.nextToken();
                 stemList.add(curToken);
@@ -142,12 +140,10 @@ public class KeywordSearch {
             if (stopWordBag.indexOf(":" + str + ":") >= 0) continue;
 
             // if enabled, remove stems in stem.bag
-            if (anySuffix && removeStems) {
+            if (removeStems) {
                 Iterator stemIter = stemList.iterator();
-
                 while (stemIter.hasNext()) {
                     String stem = (String) stemIter.next();
-
                     if (str.endsWith(stem)) {
                         str = str.substring(0, str.length() - stem.length());
                     }
