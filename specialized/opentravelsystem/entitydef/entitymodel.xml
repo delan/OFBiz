@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ *  Title: Entity Generator Definitions for the General Data Model
+ *  Description: None
+ *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * @author     David E. Jones (jonesde@ofbiz.org)
+ * @author     Andy Zeneski (jaz@ofbiz.org)
+ * @version    $Rev: 3873 $
+ */
+-->
+
+<entitymodel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/entitymodel.xsd">
+  <!-- ========================================================= -->
+  <!-- ======================== Defaults ======================= -->
+  <!-- ========================================================= -->
+    <title>Entity of the Open Travel System</title>
+    <description>View entities used in the OpenTravel System</description>
+    <copyright>Copyright (c) 2001-2005 The Open Travel System - www.opentravelsystem.org</copyright>
+    <author>Hans BakkerNone</author>
+    <version>1.0</version>
+
+
+  <!-- ========================================================= -->
+  <!-- ======================== View Entities ======================= -->
+  <!-- ========================================================= -->
+
+     <view-entity entity-name="CustomerSummary"
+            package-name="org.ofbiz.opentravelsystem"
+            never-cache="true"
+            title="Customer summary for a certain product store">
+      <member-entity entity-alias="ORLE" entity-name="OrderRole"/>
+      <member-entity entity-alias="OH" entity-name="OrderHeader"/>
+      <alias entity-alias="ORLE" name="partyId" group-by="true"/>
+      <alias entity-alias="OH" name="productStoreId" group-by="true"></alias>
+      <alias entity-alias="OH" name="totalGrandAmount" field="grandTotal" function="sum"/>
+      <alias entity-alias="OH" name="totalOrders" field="orderId" function="count"/>
+      <view-link entity-alias="ORLE" rel-entity-alias="OH">
+        <key-map field-name="orderId"/>
+      </view-link>
+    </view-entity>
+
+</entitymodel>
+

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <template>main</template> 
+    <property name="title">Login</property>
+    <property name="title-property">PageTitleLogin</property>
+    <property name="headerItem">login</property>
+    <content-action name="login.bsh"/>
+</page>
+

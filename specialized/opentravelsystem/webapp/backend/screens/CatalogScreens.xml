@@ -1,0 +1,692 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ *  Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ *  $Id: ProductScreens.xml 4001 2004-12-01 07:24:36Z HansBak $
+-->
+<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-screen.xsd">
+   <screen name="CommonCatalogDecorator">
+        <section>
+            <actions>
+                <property-map resource="opentravelsystemUiLabels" map-name="uiLabelMap" global="true"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="common-decorator" location="component://opentravelsystem/webapp/backend/screens/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <section>
+                            <!-- do check for ACCOUNTING, CATALOG _VIEW permission -->
+                            <widgets>
+                                <platform-specific>
+                                    <html><html-template location="component://opentravelsystem/webapp/backend/includes/appheaderCatalog.ftl"/></html>
+                                </platform-specific>
+                                <container style="contentarea">
+                                 <platform-specific>
+                                    <html><html-template location="component://common/webcommon/includes/messages.ftl"/></html>
+                                </platform-specific>
+                                <decorator-section-include name="body"/>
+                                </container>
+                            </widgets>
+                            <!--fail-widgets>
+                                <label style="head3">${uiLabelMap.AcccountingViewPermissionError}</label>
+                            </fail-widgets-->
+                        </section>                    
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+ 
+    <screen name="main">
+        <section>
+            <actions>
+                <property-map resource="opentravelsystemUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="productStoreId" from-scope="application" from-field="productStoreId"/>
+                <set field="page.appTabButtonItem" value="Product"/>
+                <set field="page.headerItem" value="main"/>
+                <!--set field="leftbarScreenName" value="leftbar"/-->
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonCatalogDecorator">
+                    <decorator-section name="body">
+                                <container>
+                                <platform-specific>
+                                    <html>
+                                        <html-template location="component://opentravelsystem/webapp/backend/catalog/main.ftl"/>
+                                    </html>
+                                </platform-specific>
+                                </container>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="EditProdCatalogCategories">
+        <section>
+            <condition>
+                <if-has-permission permission="CATALOG" action="_VIEW"/>
+            </condition>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="page.appTabButtonItem" value="Product"/>
+                <set field="page.headerItem" value="categories"/>
+                <set field="prodCatalogId" from-scope="application" from-field="prodCatalogId"/>
+                <set field="productStoreId" from-scope="application" from-field="productStoreId"/>
+                <!--set field="leftbarScreenName" value="leftbar"/-->
+                <entity-one entity-name="ProdCatalog"  value-name="prodCatalog" use-cache="true"/>
+                <entity-condition entity-name="ProdCatalogCategory" list-name="prodCatalogCategories">
+                    <condition-expr field-name="prodCatalogId" operator="equals"  value="${prodCatalogId}"/>
+                    <order-by field-name="productCategoryId"/>
+                    <order-by field-name="prodCatalogCategoryTypeId"/>
+                    <order-by field-name="fromDate"/>
+                </entity-condition>
+                <entity-condition entity-name="ProductCategory" list-name="productCategories">
+                    <condition-expr field-name="primaryParentCategoryId" operator="equals" value="${productStoreId}"/>
+                    <order-by field-name="productCategoryId"/>
+                </entity-condition>
+                <entity-condition entity-name="ProdCatalogCategoryType" list-name="prodCatalogCategoryTypes">
+                    <order-by field-name="prodCatalogCategoryTypeId"/>
+                </entity-condition>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonCatalogDecorator">
+                    <decorator-section name="body">
+                        <container>
+                        <container>
+                            <label style="head1">Active Categories</label>
+                        </container>
+                            <platform-specific>
+                                <html>
+                                    <html-template location="component://opentravelsystem/webapp/backend/catalog/EditProdCatalogCategories.ftl"/>
+                                </html>
+                            </platform-specific>
+                            <link target="EditCategory" text="[Create new Category]" style="buttontext"/>
+                        </container>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="EditCategory">
+        <section>
+            <condition>
+                <if-has-permission permission="CATALOG" action="_VIEW"/>
+            </condition>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="page.appTabButtonItem" value="Product"/>
+                <set field="page.headerItem" value="categories"/>
+                <set field="page.tabButtonItem" value="EditCategory"/>
+                <set field="productStoreId" from-scope="application" from-field="productStoreId"/>
+                <set field="prodCatalogId" from-scope="application" from-field="prodCatalogId"/>
+                <set field="productCategoryId" from-field="parameters.productCategoryId"/>
+                <!--set field="leftbarScreenName" value="leftbar"/-->
+                <entity-one entity-name="ProductCategory" value-name="productCategory"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonCatalogDecorator">
+                    <decorator-section name="body">
+	                       <platform-specific>
+	                           <html><html-template location="component://opentravelsystem/webapp/backend/catalog/CategoryTabBar.ftl"/></html>
+	                       </platform-specific>
+                            <label style="head1">Add/Update Category</label>
+                            <link target="EditCategory" text="[New Category]" style="buttontext"/>
+                            <include-form name="editProdCatalogCategory" location="component://opentravelsystem/webapp/backend/screens/CatalogForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="EditCategoryProducts">
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="productStoreId" from-scope="application" from-field="productStoreId"/>
+                <set field="page.appTabButtonItem" value="Product"/>
+                <set field="page.headerItem" value="categories"/>
+                <set field="page.tabButtonItem" value="EditCategoryProducts"/>
+                <set field="productCategoryId" from-field="parameters.productCategoryId"/>
+                <entity-one entity-name="ProductCategory" value-name="productCategory"></entity-one>
+                <entity-condition entity-name="ProductCategoryMember" list-name="productCategoryMembers">
+                    <condition-list>
+                    <condition-expr field-name="productCategoryId" operator="equals"  value="${productCategoryId}"/>
+                    </condition-list>
+                    <order-by field-name="productId"/>
+                    <order-by field-name="fromDate"/>
+                </entity-condition>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonCatalogDecorator">
+                    <decorator-section name="body">
+                        <container>
+	                       <platform-specific>
+	                           <html><html-template location="component://opentravelsystem/webapp/backend/catalog/CategoryTabBar.ftl"/></html>
+	                       </platform-specific>
+                            <label style="head1">${uiLabelMap.PageTitleEditCategoryProducts} for Category "${productCategory.description}" [${productCategoryId}]</label>
+                        </container>
+                        <container>
+                            <link target="EditProduct"
+                                text="[${uiLabelMap.ProductNewProduct}]" style="buttontext"/>
+                        </container>
+                        <container>
+                            <include-form name="EditCategoryProducts" location="component://opentravelsystem/webapp/backend/screens/CatalogForms.xml"/>
+                        <container>
+                            <label style="head1">&lt;br&gt;${uiLabelMap.ProductAddProductCategoryMember}</label>
+                        </container>
+                            <include-form name="addProductToCategory" location="component://opentravelsystem/webapp/backend/screens/CatalogForms.xml"/>
+                        </container>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="EditProducts">
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="productStoreId" from-scope="application" from-field="productStoreId"/>
+                <set field="page.appTabButtonItem" value="Product"/>
+                <set field="page.headerItem" value="products"/>
+                <!--set field="leftbarScreenName" value="leftbar"/-->
+                <entity-condition entity-name="Product" list-name="products">
+                    <condition-expr field-name="primaryProductCategoryId" operator="equals" value="${productStoreId}"/>
+                    <order-by field-name="productId"/>
+                </entity-condition>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonCatalogDecorator">
+                    <decorator-section name="body">
+                        <container>
+                            <label style="head1">${uiLabelMap.ProductProducts}</label>
+                        </container>
+                        <container>
+                            <link target="EditProduct"
+                                text="[${uiLabelMap.ProductNewProduct}]" style="buttontext"/>
+                        </container>
+                        <container>
+                            <include-form name="EditProducts" location="component://opentravelsystem/webapp/backend/screens/CatalogForms.xml"/>
+                        </container>
+                        <container>
+                            <link target="EditProduct"
+                                text="[${uiLabelMap.ProductNewProduct}]" style="buttontext"/>
+                        </container>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="EditFixedAssets">
+        <section>
+            <actions>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="productStoreId" from-scope="application" from-field="productStoreId"/>
+                <set field="page.appTabButtonItem" value="Product"/>
+                <set field="page.headerItem" value="fixedassets"/>
+                <!--set field="leftbarScreenName" value="leftbar"/-->
+                <entity-condition entity-name="FixedAsset" list-name="fixedAssets">
+                    <condition-expr field-name="parentFixedAssetId" operator="equals" value="${productStoreId}"/>
+                    <order-by field-name="fixedAssetId"/>
+                </entity-condition>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonCatalogDecorator">
+                    <decorator-section name="body">
+                        <container>
+                            <label style="head1">${uiLabelMap.AccountingFixedAssets}</label>
+                        </container>
+                        <container>
+                            <link target="EditFixedAsset"
+                                text="[${uiLabelMap.AccountingNewFixedAsset}]" style="buttontext"/>
+                        </container>
+                        <include-form name="ListFixedAssets" location="component://accounting/webapp/accounting/fixedasset/FixedAssetForms.xml"/>
+                        <container>
+                            <link target="EditFixedAsset"
+                                text="[${uiLabelMap.AccountingNewFixedAsset}]" style="buttontext"/>
+                        </container>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="leftbar">
+        <section>
+            <widgets>
+                <container style="column-left">
+                    <!--              <include-screen name="keywordsearchbox"/>
+                    <include-screen name="sidecatalogs"/>
+ -->
+                    <include-screen name="sidedeepcategory"/>
+                    <include-screen name="miniproductlist"/>
+                </container>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="keywordsearchbox">
+        <section>
+            <actions>
+                <script location="component://product/webapp/catalog/WEB-INF/actions/find/keywordsearchbox.bsh"/>
+            </actions>
+            <widgets>
+                <platform-specific>
+                    <html>
+                        <html-template location="component://product/webapp/catalog/find/keywordsearchbox.ftl"/>
+                    </html>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="sidecatalogs">
+        <section>
+            <actions>
+                <script location="component://product/webapp/catalog/WEB-INF/actions/find/sidecatalogs.bsh"/>
+            </actions>
+            <widgets>
+                <platform-specific>
+                    <html>
+                        <html-template location="component://product/webapp/catalog/find/sidecatalogs.ftl"/>
+                    </html>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="sidedeepcategory">
+        <section>
+            <actions>
+                <script location="component://product/webapp/catalog/WEB-INF/actions/find/sidedeepcategory.bsh"/>
+            </actions>
+            <widgets>
+                <platform-specific>
+                    <html>
+                        <html-template location="component://product/webapp/catalog/find/sidedeepcategory.ftl"/>
+                    </html>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="miniproductlist">
+        <section>
+            <actions>
+                <script location="component://product/webapp/catalog/WEB-INF/actions/find/miniproductlist.bsh"/>
+            </actions>
+            <widgets>
+                <platform-specific>
+                    <html>
+                        <html-template location="component://product/webapp/catalog/find/miniproductlist.ftl"/>
+                    </html>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="EditProduct">
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="page.appTabButtonItem" value="Product"/>
+                <set field="page.headerItem" value="products"/>
+                <set field="page.tabButtonItem" value="EditProduct"/>
+                <set field="title" value="Edit Product"/>
+                <set field="titleProperty" value="PageTitleEditProduct"/>
+                <set field="labelTitleProperty" value="ProductProduct"/>
+                <set field="productId" from-field="parameters.productId"/>
+                <entity-one entity-name="Product" value-name="product"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonCatalogDecorator">
+                <decorator-section name="body">
+                    <container>
+                       <platform-specific>
+                           <html><html-template location="component://opentravelsystem/webapp/backend/catalog/ProductTabBar.ftl"/></html>
+                       </platform-specific>
+                            <label style="head1">${uiLabelMap.ProductEditProduct}: ${product.internalName} [${uiLabelMap.CommonId}:${productId}]</label>
+                     </container>
+                     <include-form name="EditProduct" location="component://opentravelsystem/webapp/backend/screens/CatalogForms.xml"/>
+                     <!-- include the duplicate product form template -->
+                     <!--platform-specific>
+                            <html>
+                                <html-template location="component://product/webapp/catalog/product/EditProductDupForm.ftl"/>
+                            </html>
+                     </platform-specific-->
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="EditProductCategories">
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="page.appTabButtonItem" value="Product"/>
+                <set field="page.headerItem" value="products"/>
+                <set field="page.tabButtonItem" value="EditProductCategories"/>
+                <set field="title" value="Edit Product Categories"/>
+                <set field="titleProperty" value="PageTitleEditProductCategories"/>
+                <set field="labelTitleProperty" value="ProductCategories"/>
+                <set field="productId" from-field="parameters.productId"/>
+                <entity-one entity-name="Product" value-name="product"/>
+                <entity-condition entity-name="ProductCategoryMember" list-name="productCategoryMembers">
+                     <condition-expr field-name="productId" operator="equals" value="${productId}"/>
+                    <order-by field-name="productCategoryId"/>
+                    <order-by field-name="fromDate"/>
+                </entity-condition>
+                <property-to-field field="defaultCurrencyUomId"
+                    resource="general" property="currency.uom.id.default" default="USD"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonCatalogDecorator">
+                    <decorator-section name="body">
+                    <container>
+                       <platform-specific>
+                           <html><html-template location="component://opentravelsystem/webapp/backend/catalog/ProductTabBar.ftl"/></html>
+                       </platform-specific>
+                            <label style="head1">${uiLabelMap.PageTitleEditProductCategories}: ${product.productName} [${uiLabelMap.CommonId}:${productId}]</label>
+                     </container>
+                        <include-form name="ListProductCategoryMembers" location="component://opentravelsystem/webapp/backend/screens/CatalogForms.xml"/>
+                         <label style="head1">&lt;br/&gt;${uiLabelMap.ProductAddCategory}</label>
+                        <include-form name="AddProductCategoryMember" location="component://product/webapp/catalog/product/ProductForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="EditProductPrices">
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="page.appTabButtonItem" value="Product"/>
+                <set field="page.headerItem" value="products"/>
+                <set field="page.tabButtonItem" value="EditProductPrices"/>
+                <set field="title" value="Edit Product Prices"/>
+                <set field="titleProperty" value="PageTitleEditProductPrices"/>
+                <set field="labelTitleProperty" value="ProductPrices"/>
+                <set field="productId" from-field="parameters.productId"/>
+                <entity-one entity-name="Product" value-name="product"/>
+                <entity-and entity-name="ProductPrice" list-name="productPrices">
+                    <field-map env-name="productId"/>
+                    <order-by field-name="productStoreGroupId"/>
+                    <order-by field-name="productPriceTypeId"/>
+                    <order-by field-name="currencyUomId"/>
+                    <order-by field-name="fromDate"/>
+                </entity-and>
+                <property-to-field field="defaultCurrencyUomId"
+                    resource="general" property="currency.uom.id.default" default="USD"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonCatalogDecorator">
+                    <decorator-section name="body">
+                    <container>
+                       <platform-specific>
+                           <html><html-template location="component://opentravelsystem/webapp/backend/catalog/ProductTabBar.ftl"/></html>
+                       </platform-specific>
+                            <label style="head1">${uiLabelMap.PageTitleEditProductPrices}: ${product.productName} [${uiLabelMap.CommonId}:${productId}]</label>
+                     </container>
+                        <include-form name="UpdateProductPrice" location="component://product/webapp/catalog/product/ProductForms.xml"/>
+                         <label style="head1">&lt;br/&gt;${uiLabelMap.ProductAddPrice}</label>
+                        <include-form name="AddProductPrice" location="component://product/webapp/catalog/product/ProductForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="EditProductAssetUsage">
+        <!-- screen for rental parameters -->
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="page.appTabButtonItem" value="Product"/>
+                <set field="title" value="Edit Product for Asset Usage attributes"/>
+                <set field="titleProperty" value="PageTitleEditProductAssetUsage"/>
+                <set field="tabButtonItem" value="EditProductAssetUsage"/>
+                <set field="labelTitleProperty" value="ProductAssetUsage"/>
+                <set field="productId" from-field="parameters.productId"/>
+                <entity-one entity-name="Product" value-name="product"/>
+                <entity-condition entity-name="FixedAssetProduct" list-name="fixedAssetProducts">
+                    <condition-expr field-name="productId" operator="equals" value="${productId}"/>
+                </entity-condition>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonCatalogDecorator">
+                    <decorator-section name="body">
+                    <container>
+                       <platform-specific>
+                           <html><html-template location="component://opentravelsystem/webapp/backend/catalog/ProductTabBar.ftl"/></html>
+                       </platform-specific>
+                            <label style="head1">${uiLabelMap.ProductEditProduct}: ${product.productName} [${uiLabelMap.CommonId}:${productId}]</label>
+                     </container>
+                        <include-form name="EditProductAssetUsage" location="component://product/webapp/catalog/product/ProductForms.xml"/>
+                        <container>
+                            <label/>
+                            <label style="head1">${uiLabelMap.AccountingFixedAssets}</label>
+                        </container>
+                        <container>
+                            <link target="newFixedAssetProduct?productId=${productId}" text="[${uiLabelMap.AccountingFixedAssetNew}]" style="buttontext"/>
+                        </container>
+                        <include-form name="ListProductFixedAssets" location="component://product/webapp/catalog/product/ProductForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="showFixedAssetProduct">
+        <!-- add a fixed asset -->
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="page.appTabButtonItem" value="Product"/>
+                <set field="title" value="Edit Product for Asset Usage attributes"/>
+                <set field="titleProperty" value="PageTitleEditProductAssetUsage"/>
+                <set field="tabButtonItem" value="EditProductAssetUsage"/>
+                <set field="labelTitleProperty" value="ProductAssetUsage"/>
+                <set field="extraFunctionName" value="uiLabelMap.AccountingFixedAssetProductUpd"/>
+                <entity-one entity-name="FixedAssetProduct" value-name="fixedAssetProduct"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonCatalogDecorator">
+                    <decorator-section name="body">
+                        <include-form name="showFixedAssetProduct" location="component://product/webapp/catalog/product/ProductForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="newFixedAssetProduct">
+        <!-- add a fixed asset to a product -->
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="page.appTabButtonItem" value="Product"/>
+                <set field="title" value="Edit Product for Asset Usage attributes"/>
+                <set field="titleProperty" value="PageTitleEditProductAssetUsage"/>
+                <set field="tabButtonItem" value="EditProductAssetUsage"/>
+                <set field="labelTitleProperty" value="ProductAssetUsage"/>
+                <set field="extraFunctionName" value="uiLabelMap.AccountingFixedAssetProductAdd"/>
+                <set field="productId" from-field="parameters.productId"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonCatalogDecorator">
+                    <decorator-section name="body">
+                       <platform-specific><!-- TODO: tabbar does not want to display -->
+                           <html><html-template location="component://opentravelsystem/webapp/backend/catalog/ProductTabBar.ftl"/></html>
+                       </platform-specific>
+                         <label style="head1">${uiLabelMap.AccountingFixedAssetNew}: ${product.productName} [${uiLabelMap.CommonId}:${productId}]</label>
+                        <include-form name="addFixedAssetProduct" location="component://product/webapp/catalog/product/ProductForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+  <!-- list all assets in a tabular format -->
+    <screen name="ListFixedAssets">
+        <section>
+            <actions>
+                <set field="title" value="List Fixed Assets"/>
+                <set field="page.headerItem" value="ListFixedAssets"/>
+                <set field="page.appTabButtonItem" value="Assets"/>
+                <entity-condition entity-name="FixedAsset" list-name="fixedAssets" >
+                                    <condition-list>
+                    <condition-expr field-name="fixedAssetId" operator="greater" value=" " />
+                                        <condition-expr field-name="fixedAssetTypeId" operator="not-equals" value="GROUP_EQUIPMENT"/>
+                                    </condition-list>
+                </entity-condition>
+            </actions>
+                    <widgets>
+                <decorator-screen name="CommonCatalogDecorator">
+                    <decorator-section name="body">
+                        <container>
+                            <label style="head1">${uiLabelMap.AccountingFixedAssets}</label>
+                             </container>
+                                <container>
+                                    <link target="EditFixedAsset" text="[${uiLabelMap.AccountingNewFixedAsset}]" style="buttontext"/>
+                                </container>
+                        <include-form name="ListFixedAssets" location="component://accounting/webapp/accounting/fixedasset/FixedAssetForms.xml"/>
+                                <container>
+                                    <link target="EditFixedAsset" text="[${uiLabelMap.AccountingNewFixedAsset}]" style="buttontext"/>
+                                </container>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+         </section>
+    </screen>
+        
+    <!-- create and/or update a fixed asset -->
+    <screen name="EditFixedAsset">
+        <section>
+            <actions>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="page.appTabButtonItem" value="Product"/>
+                <set field="page.headerItem" value="fixedassets"/>
+                <set field="page.tabButtonItem" value="EditFixedAsset"/>
+                <set field="title" value="Edit Fixed Asset"/>
+                <set field="fixedAssetId" from-field="parameters.fixedAssetId"/>
+                <entity-one entity-name="FixedAsset" value-name="fixedAsset"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonCatalogDecorator">
+                    <decorator-section name="body">
+                        <container>
+                                 <platform-specific>
+                                    <html><html-template location="component://accounting/webapp/accounting/fixedasset/FixedAssetTabBar.ftl"/></html>
+                                </platform-specific>
+                            <label style="head1">${uiLabelMap.AccountingFixedAssetEdit}</label>
+                        </container>
+                         <container>
+                            <link target="EditFixedAsset" text="[${uiLabelMap.AccountingNewFixedAsset}]" style="buttontext"/>
+                         </container>
+                        <include-form name="EditFixedAsset" location="component://accounting/webapp/accounting/fixedasset/FixedAssetForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <!-- provide a list and allow additions -->
+    <screen name="ListFixedAssetProducts">
+        <section>
+            <actions>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="page.appTabButtonItem" value="Product"/>
+                <set field="page.headerItem" value="fixedassets"/>
+                <set field="page.tabButtonItem" value="ListFixedAssetProducts"/>
+                <set field="title" value="Edit Fixed Asset related Products"/>
+                <set field="titleProperty" value="PageTitleListFixedAssetProducts"/>
+                <set field="labelTitleProperty" value="Products"/>
+
+                <set field="fixedAssetId" from-field="parameters.fixedAssetId"/>
+                <entity-one entity-name="FixedAsset" value-name="fixedAsset">
+                    <select-field field-name="fixedAssetName"/>
+                    </entity-one>
+                <entity-condition entity-name="FixedAssetProduct" list-name="fixedAssetProducts" >
+                    <condition-expr field-name="fixedAssetId" operator="equals" value="${fixedAssetId}" />
+                    <order-by field-name="productId"/>
+                    <order-by field-name="fixedAssetProductTypeId"/>
+                    <order-by field-name="fromDate"/>
+                </entity-condition>
+                
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonCatalogDecorator">
+                    <decorator-section name="body">
+                      <container>
+                       <platform-specific>
+                           <html><html-template location="component://accounting/webapp/accounting/fixedasset/FixedAssetTabBar.ftl"/></html>
+                       </platform-specific>
+                            <label style="head1">${uiLabelMap.AccountingFixedAsset}: ${fixedAsset.fixedAssetName} [${uiLabelMap.CommonId}:${fixedAssetId}]</label>
+                             </container>
+                        <include-form name="ListFixedAssetProducts" location="component://accounting/webapp/accounting/fixedasset/FixedAssetForms.xml"/>
+                        <container>
+                            <label style="head1">${uiLabelMap.AccountingFixedAssetProductNew}</label>
+                             </container>
+                        <include-form name="AddFixedAssetProduct" location="component://accounting/webapp/accounting/fixedasset/FixedAssetForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+ 
+    <!-- provide a calendar to show occupation-->
+    <screen name="ListFixedAssetCalendar">
+        <section>
+            <actions>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="layoutSettings.extraHead" value="&lt;link rel='stylesheet' href='/images/calendarTable.css' type='text/css'&gt;"/>
+                <set field="title" value="Edit Fixed Asset Calendar"/>
+                <set field="titleProperty" value="PageTitleListFixedAssetCalendar"/>
+                <set field="page.appTabButtonItem" value="Product"/>
+                <set field="page.headerItem" value="fixedassets"/>
+                <set field="page.tabButtonItem" value="ListFixedAssetCalendar"/>
+                <set field="labelTitleProperty" value="Calendar"/>
+                <set field="nowTimestamp" value="UtilDateTime.nowTimestamp()"/>
+                <set field="fixedAssetId" from-field="parameters.fixedAssetId"/>
+                <entity-one entity-name="FixedAsset" value-name="fixedAsset"/>
+                <script location="component://accounting/webapp/accounting/fixedasset/month.bsh"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonCatalogDecorator">
+                    <decorator-section name="body">
+                                <container>
+                                 <platform-specific>
+                                    <html><html-template location="component://accounting/webapp/accounting/fixedasset/FixedAssetTabBar.ftl"/></html>
+                                </platform-specific>
+                                   <label style="head1">${uiLabelMap.AccountingFixedAsset}: ${fixedAsset.fixedAssetName} [${uiLabelMap.CommonId}:${fixedAssetId}]</label>
+                                </container>
+                                <container>
+                                    <link target="ListFixedAssetCalendar?fixedAssetId=${fixedAssetId}&amp;month=-3" text="[${uiLabelMap.CommonPrevious} ${uiLabelMap.CommonQuarter}]" style="buttontext"/>
+                                    <link target="ListFixedAssetCalendar?fixedAssetId=${fixedAssetId}&amp;month=-1" text="[${uiLabelMap.CommonPrevious} ${uiLabelMap.CommonMonth}]" style="buttontext"/>
+                                    <link target="ListFixedAssetCalendar?fixedAssetId=${fixedAssetId}" text="[${uiLabelMap.CommonThis} ${uiLabelMap.CommonMonth}]" style="buttontext"/>
+                                    <link target="ListFixedAssetCalendar?fixedAssetId=${fixedAssetId}&amp;month=1" text="[${uiLabelMap.CommonNext} ${uiLabelMap.CommonMonth}]" style="buttontext"/>
+                                    <link target="ListFixedAssetCalendar?fixedAssetId=${fixedAssetId}&amp;month=3" text="[${uiLabelMap.CommonNext} ${uiLabelMap.CommonQuarter}]" style="buttontext"/>
+                                    <include-form name="listFixedAssetCalendar" location="component://accounting/webapp/accounting/fixedasset/FixedAssetForms.xml"/>
+                                    <label style="tabletext" text="*) empty, but maximum from fixed Asset capacity shown"></label>
+                                </container>
+<!--                                 <container>
+                                    <label style="tabletext" text="&amp;nbsp;"></label>
+                                </container>
+                                <container>
+                                   <label style="head1">${uiLabelMap.AccountingUpdateAvailability}</label>
+                                   <include-form name="updateFixedAssetCalendar" location="component://accounting/webapp/accounting/fixedasset/FixedAssetForms.xml"/>
+                                </container>
+ -->                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+</screens>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <template>main_lr</template>
+    <property name="title">Category Page</property>
+    <property name="title-property">PageTitleCategoryPage</property>
+    <page-action name="/catalog/category.bsh"/>
+</page>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <template>main</template>
+    <property name="title">New Message</property>
+    <property name="pageHeader">New Message</property>
+    <property name="showMessageLinks">true</property>
+    <page-action name="/customer/messagecreate.bsh"/>
+</page>

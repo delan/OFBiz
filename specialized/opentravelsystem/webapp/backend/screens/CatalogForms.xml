@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-form.xsd">
+
+    <!-- Edit the list of active categories (connected to the catalog) and allow to add categories 
+                        where the primary category is the same as the productStoreId -->
+    <form name="editProdCatalogCategory" type="single" default-map-name="productCategory"
+         default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext" target="updateProductCategory">
+
+        <alt-target use-when="productCategoryId==null" target="CreateProductCategoryLinkToProdCatalog"/>
+        
+        <!--auto-fields-service service-name="CreateProductCategoryLinkToProdCatalog"/-->
+        
+	    <field name="prodCatalogId"><hidden value="${prodCatalogId}"/></field>
+        <field name="productCategoryTypeId"><hidden value="CATALOG_CATEGORY"/></field>
+        <field use-when="productCategoryId!=null" name="productCategoryId" title="${uiLabelMap.ProductProductCategoryId}"  
+            tooltip="${uiLabelMap.CommonNotModifRecreat}"><display/></field>
+        <field use-when="productCategoryId==null&amp;&amp;productCategoryId==null" name="productCategoryId" 
+            title="${uiLabelMap.ProductProductCategoryId}"><text size="20" maxlength="20"/></field>
+        <field use-when="productCategoryId==null&amp;&amp;productCategoryId!=null" name="productCategoryId" 
+            title="${uiLabelMap.ProductProductCategoryId}" tooltip="${uiLabelMap.CommonCannotBeFound}:[${productCategoryId}]">
+            <text size="20" maxlength="20"/></field>
+        <field name="primaryParentCategoryId"><hidden value="${productStoreId}"/></field>
+        <field name="prodCatalogCategoryTypeId" title="Category Usage type" widget-style="selectBox" use-when="productCategoryId==null">
+            <drop-down>
+                <entity-options entity-name="ProdCatalogCategoryType" description="${description}">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="description"><text/></field>
+        <field name="fromDate" use-when="productCategoryId==null" ><date-time/></field>
+        <field name="Add" use-when="productCategoryId==null" widget-style="standardSubmit"><submit button-type="button"/></field>    
+	    <field name="Update" use-when="productCategoryId!=null" widget-style="standardSubmit"><submit button-type="button"/></field>    
+       
+    </form>
+    
+    <!-- edit the list of products selected by the primary category being the product STore Id. -->
+    <form name="EditProducts" type="list" list-name="products" 
+         default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        <actions>
+            <property-map resource="AccountingUiLabels" map-name="uiLabelMap"/>
+        </actions>
+       
+        <field name="productId" widget-style="buttontext"><hyperlink target="EditProduct?productId=${productId}" description="${productId}"/></field>
+        <field name="description"><display/></field>
+        <field name="reservMaxPersons"><display/></field>
+        <field name="reserv2ndPPPerc"><display/></field>
+        <field name="reservNthPPPerc"><display/></field>
+        <field name="lastModifiedDate"><display/></field>
+    </form>
+    
+    <form name="EditCategoryProducts" type="list" list-name="productCategoryMembers" 
+         default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext" target="updateCategoryProductMember">
+        
+        <actions>
+            <property-map resource="ProductUiLabels" map-name="uiLabelMap"/>
+        </actions>
+       
+        <field name="productCategoryId"><hidden/></field>
+        <field name="p" title="${uiLabelMap.ProductId}" widget-style="buttontext"><hyperlink target="EditProduct?productId=${productId}" description="${productId}"/></field>
+        <field name="productId" title="${uiLabelMap.ProductName}" widget-style="tabletext"><display-entity entity-name="Product"  key-field-name="productId" description="${productName}"/></field>
+        <field name="fromDate"><display/></field>
+        <field name="sequenceNum" widget-style="inputBox" title="Seq Number"><text size="2" maxlength="2"/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThruDate}" widget-style="inputBox"> <date-time/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
+            <hyperlink target="removeCategoryProductMember" description="[Remove Product from Category]" also-hidden="false"/>
+        </field>
+    </form>
+    
+    <form name="addProductToCategory" type="single" 
+         default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext" target="addCategoryProductMember">
+    <field name="productId"><lookup target-form-name="lookUpProduct"></lookup></field>        
+    <field name="fromDate"><date-time/></field>
+    <field name="submitButton" widget-style="standardSubmit"><submit button-type="button"/></field>    
+    </form>  
+    <!-- Edit/Create a product --> 
+    <form name="EditProduct" type="single"
+            target="updateProduct" title="" default-map-name="product"
+            default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+<actions>
+                <set field="productStoreId" value="${productStoreId}"/>
+</actions>
+        <alt-target use-when="product==null" target="createProduct"/>
+
+        <field use-when="product==null" name="isCreate"><hidden value="true"/></field>
+
+        <field use-when="product!=null" name="productId" title="${uiLabelMap.ProductProductId}" tooltip="${uiLabelMap.ProductNotModificationRecreatingProduct}"><display/></field>
+        <field use-when="product==null&amp;&amp;productId==null" name="productId" title="${uiLabelMap.ProductProductId}"><text size="20" maxlength="20"/></field>
+        <field use-when="product==null&amp;&amp;productId!=null" name="productId" title="${uiLabelMap.ProductProductId}" tooltip="${uiLabelMap.ProductNotFindProductId} [${productId}]"><text size="20" maxlength="20"/></field>
+
+        <!--field position="1" name="isVirtual" title="${uiLabelMap.ProductVirtualProduct}" widget-style="selectBox">
+            <drop-down allow-empty="true"><option key="Y" description="${uiLabelMap.CommonY}" /><option key="N" description="${uiLabelMap.CommonN}"/></drop-down>
+        </field>
+        <field position="2" name="isVariant" title="${uiLabelMap.ProductVariantProduct}" widget-style="selectBox">
+            <drop-down allow-empty="true"><option key="Y" description="${uiLabelMap.CommonY}"/><option key="N" description="${uiLabelMap.CommonN}"/></drop-down>
+        </field-->
+        <field name="productTypeId" title="${uiLabelMap.ProductProductType}" widget-style="selectBox">
+            <drop-down>
+                <entity-options entity-name="ProductType" description="${description}"> <!-- [${productTypeId}] -->
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <!--field name="primaryProductCategoryId" title="${uiLabelMap.ProductPrimaryCategory}" widget-style="selectBox">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="ProductCategory" key-field-name="productCategoryId" description="${description} [${productCategoryId}]">
+                    <entity-constraint name="showInSelect"  value="N" operator="not-equals"/>
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field-->
+        <field name="primaryProductCategoryId" ><hidden value="${productStoreId}"/></field><!-- fix to this value -->
+
+        <field name="internalName" title="${uiLabelMap.ProductInternalName}"><text size="30" maxlength="60"/></field>
+        <!--field name="brandName" title="${uiLabelMap.ProductBrandName}" ><text size="30" maxlength="60"/></field-->
+        <field name="comments" title="${uiLabelMap.ProductComments}"><text size="60" maxlength="250"/></field>
+
+        <field position="1" name="introductionDate" title="${uiLabelMap.CommonIntroductionDate}" red-when="after-now"><date-time/></field>
+        <field position="2" name="salesDiscontinuationDate" title="${uiLabelMap.ProductSalesThruDate}" red-when="before-now"><date-time/></field>
+        <!--field position="1" name="supportDiscontinuationDate" title="${uiLabelMap.ProductSupportThruDate}" red-when="before-now"><date-time/></field>
+        <field position="2" name="salesDiscWhenNotAvail" title="${uiLabelMap.ProductSalesDiscontinuationNotAvailable}" widget-style="selectBox">
+            <drop-down allow-empty="true"><option key="Y" description="${uiLabelMap.CommonY}"/><option key="N" description="${uiLabelMap.CommonN}"/></drop-down>
+        </field-->
+
+        <!--field position="1" name="manufacturerPartyId" title="${uiLabelMap.ProductOemPartyId}" red-when="before-now"><text size="20" maxlength="20"/></field>
+
+        <field position="1" name="requireInventory" widget-style="selectBox" tooltip="${uiLabelMap.ProductInventoryRequiredProduct}">
+            <drop-down allow-empty="true"><option key="Y" description="${uiLabelMap.CommonY}"/><option key="N" description="${uiLabelMap.CommonN}"/></drop-down>
+        </field>
+        <field position="2" name="inventoryMessage"  title="${uiLabelMap.ProductInventoryMessage}"><text size="20" maxlength="255"/></field>
+
+        <field position="1" name="ratingTypeEnum">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="Enumeration" key-field-name="enumId" description="${description}">
+                    <entity-constraint name="enumTypeId" value="PROD_RATING_TYPE"/>
+                    <entity-order-by field-name="sequenceId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field position="2" title="Rating" name="productRating"><text size="10" maxlength="20"/></field>
+
+        <field position="1" name="requireAmount" title="${uiLabelMap.ProductRequireAmount}" widget-style="selectBox" tooltip="${uiLabelMap.ProductRequireCustomerAmount}">
+            <drop-down allow-empty="true"><option key="Y" description="${uiLabelMap.CommonY}"/><option key="N" description="${uiLabelMap.CommonN}"/></drop-down>
+        </field>
+        <field position="2" name="amountUomTypeId" title="${uiLabelMap.ProductAmountUomTypeId}">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="UomType" key-field-name="uomTypeId" description="${description}">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field position="1" title="${uiLabelMap.ProductProductHeight}" name="productHeight"><text size="10" maxlength="20"/></field>
+        <field position="2" name="heightUomId" title="${uiLabelMap.ProductHeightUomId}">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="Uom" key-field-name="uomId" description="${description} [${abbreviation}]">
+                    <entity-constraint name="uomTypeId" value="LENGTH_MEASURE"/>
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field position="1" title="${uiLabelMap.ProductProductWidth}" name="productWidth"><text size="10" maxlength="20"/></field>
+        <field position="2" name="widthUomId" title="${uiLabelMap.ProductWidthUomId}">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="Uom" key-field-name="uomId" description="${description} [${abbreviation}]">
+                    <entity-constraint name="uomTypeId" value="LENGTH_MEASURE"/>
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field position="1" title="${uiLabelMap.ProductProductDepth}" name="productDepth"><text size="10" maxlength="20"/></field>
+        <field position="2" name="depthUomId" title="${uiLabelMap.ProductDepthUomId}">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="Uom" key-field-name="uomId" description="${description} [${abbreviation}]">
+                    <entity-constraint name="uomTypeId" value="LENGTH_MEASURE"/>
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field position="1" name="weight" title="${uiLabelMap.ProductWeight}"><text size="10" maxlength="20"/></field>
+        <field position="2" name="weightUomId"  title="${uiLabelMap.ProductWeightUomId}">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="Uom" key-field-name="uomId" description="${description} [${abbreviation}]">
+                    <entity-constraint name="uomTypeId" value="WEIGHT_MEASURE"/>
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field position="1" name="quantityIncluded"  title="${uiLabelMap.ProductQuantityIncluded}"><text size="10" maxlength="20"/></field>
+        <field position="2" name="quantityUomId" title="${uiLabelMap.ProductQuantityUomId}"><text size="10" maxlength="20"/></field>
+        <field position="1" name="piecesIncluded" title="${uiLabelMap.ProductPiecesIncluded}"><text size="10" maxlength="20"/></field>
+
+        <field position="1" name="returnable"  title="${uiLabelMap.ProductReturnable}" widget-style="selectBox">
+            <drop-down allow-empty="true"><option key="Y" description="${uiLabelMap.CommonY}"/><option key="N" description="${uiLabelMap.CommonN}"/></drop-down>
+        </field>
+        <field position="2" name="includeInPromotions" title="${uiLabelMap.ProductIncludePromotions}" widget-style="selectBox">
+            <drop-down allow-empty="true"><option key="Y" description="${uiLabelMap.CommonY}"/><option key="N" description="${uiLabelMap.CommonN}"/></drop-down>
+        </field-->
+
+        <field position="1" name="taxable" title="${uiLabelMap.ProductTaxable}" widget-style="selectBox">
+            <drop-down allow-empty="true"><option key="Y" description="${uiLabelMap.CommonY}"/><option key="N" description="${uiLabelMap.CommonN}"/></drop-down>
+        </field>
+        <field position="2" name="taxCategory" title="${uiLabelMap.ProductTaxCategory}"><text size="10" maxlength="20"/></field>
+        <field position="1" name="taxVatCode" title="${uiLabelMap.ProductTaxVatCode}" ><text size="10" maxlength="20"/></field>
+        <field position="2" name="taxDutyCode" title="${uiLabelMap.ProductTaxDutyCode}" ><text size="10" maxlength="20"/></field>
+
+        <field position="1" name="chargeShipping" title="${uiLabelMap.ProductChargeShipping}" widget-style="selectBox">
+            <drop-down allow-empty="true"><option key="Y" description="${uiLabelMap.CommonY}"/><option key="N" description="${uiLabelMap.CommonN}"/></drop-down>
+        </field>
+        <field position="2" name="autoCreateKeywords" title="${uiLabelMap.ProductAutoCreateKeywords}" widget-style="selectBox">
+            <drop-down allow-empty="true"><option key="Y" description="${uiLabelMap.CommonY}"/><option key="N" description="${uiLabelMap.CommonN}"/></drop-down>
+        </field>
+
+        <!--field name="contentInfoText" title="${uiLabelMap.ProductContentInfoText}" widget-style="tabletext">
+            <display description="${uiLabelMap.ProductNoteForContentOptions}" also-hidden="false"/>
+        </field-->
+        <!-- These go on the Content tab-button page
+        <field name="productName"><text size="30" maxlength="60"/></field>
+        <field name="description" widget-style="textAreaBox"><textarea cols="60" rows="2"/></field>
+        <field name="longDescription" widget-style="textAreaBox"><textarea cols="60" rows="3"/></field>
+        <field name="smallImageUrl"><text size="60" maxlength="255"/></field>
+        <field name="mediumImageUrl"><text size="60" maxlength="255"/></field>
+        <field name="largeImageUrl"><text size="60" maxlength="255"/></field>
+        <field name="detailImageUrl"><text size="60" maxlength="255"/></field>
+        <field name="detailTemplate"><text size="60" maxlength="250"/></field>
+        -->
+
+        <field name="submitButton" title="${uiLabelMap.ProductUpdateProduct}" widget-style="standardSubmit"><submit button-type="button"/></field>
+
+        <field use-when="product!=null" position="1" name="lastUpdatedByText" title="${uiLabelMap.ProductLastModifiedBy}:" widget-style="tabletext">
+            <display description="[${product.lastModifiedByUserLogin}] on ${product.lastModifiedDate}" also-hidden="false"/>
+        </field>
+        <field use-when="product!=null" position="2" name="createdByText" title="${uiLabelMap.ProductCreatedBy}:" widget-style="tabletext">
+            <display description="[${product.createdByUserLogin}] on ${product.createdDate}" also-hidden="false"/>
+        </field>
+    </form>
+
+    <form name="ListProductCategoryMembers" type="list"
+            target="updateProductToCategory" title="" list-name="productCategoryMembers"
+            default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+
+        <auto-fields-service service-name="updateProductToCategory" map-name="productCategoryMember"/>
+        <field name="productId"><hidden/></field>
+        <field name="productCategoryId" title="${uiLabelMap.ProductCategory_Id}" widget-style="buttontext">
+            <hyperlink target="EditCategory?productCategoryId=${productCategoryId}" description="${productCategoryId}"/>
+        </field>
+        <field name="fromDate" title="${uiLabelMap.CommonFromDateTime}" widget-style="tabletext"><display/></field>
+        <field name="comments"><hidden/></field>
+        <field name="quantity"><hidden/></field>
+        <field name="sequenceNum"><hidden/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThruDateTime}"></field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
+            <hyperlink target="removeProductFromCategory?productId=${productId}&amp;productCategoryId=${productCategoryId}&amp;fromDate=${fromDate}"
+                description="[${uiLabelMap.CommonDelete}]" also-hidden="false"/>
+        </field>
+    </form>
+</forms>

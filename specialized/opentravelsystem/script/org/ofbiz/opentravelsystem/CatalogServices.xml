@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+ * Copyright (c) 2001-2004 The Open For Business Project and repective authors.
+ * Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * @author <a href="mailto:support@opentravelsystem.org">Hans Bakker</a>
+ * @version 1.0
+ -->
+
+<simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/simple-methods.xsd">
+
+    <!-- ================================================================ -->
+    <!-- Opentravelsystem Catalog Services -->
+    <!-- ================================================================ -->
+    
+    <!-- create a new category and the link to the catalog -->
+    <simple-method method-name="CreateProductCategoryLinkToProdCatalog" short-description="--Create a Category and link to catalog--">
+        <check-permission permission="CATALOG" action="_CREATE">
+            <alt-permission permission="CATALOG_ROLE" action="_CREATE"/>
+            <fail-message message="Security Error: to update you need CATALOG_CREATE or CATALOG_ADMIN permission, or the limited CATALOG_ROLE_CREATE permission"/>
+        </check-permission>        
+        <check-errors/>
+        
+        <!-- create new entity productCategory and create all the fields -->
+        <make-value value-name="newEntity" entity-name="ProductCategory"/>
+        <field-to-field field-name="productCategoryTypeId" map-name="parameters" to-map-name="newEntity"/>
+        <field-to-field field-name="primaryParentCategoryId" map-name="parameters" to-map-name="newEntity"/>
+        <field-to-field field-name="description" map-name="parameters" to-map-name="newEntity"/>
+        <field-to-field field-name="productCategoryId" map-name="parameters" to-map-name="newEntity"/>
+        <!-- create a non existing ID if not supplied -->
+        <if-empty field-name="productCategoryId" map-name="newEntity">
+            <sequenced-id-to-env sequence-name="ProductCategory" env-name="productCategoryId"/>
+            <to-string field-name="productCategoryId"/>
+            <env-to-field env-name="productCategoryId" map-name="newEntity"/>
+            <field-to-result field-name="productCategoryId" result-name="productCategoryId"/>
+        <else>
+            <!-- check the provided ID --> 
+            <check-id field-name="productCategoryId" map-name="newEntity"/>
+            <check-errors/>
+            </else>
+        </if-empty>
+                                       
+        <!-- create the relation to the catalog and create all the fields -->
+        <make-value value-name="newEntity1" entity-name="ProdCatalogCategory"/>
+        <string-to-field string="HotelDemoCtlg" field-name="prodCatalogId"/>
+        <field-to-field field-name="prodCatalogId" map-name="parameters" to-map-name="newEntity1"/>
+        <field-to-field field-name="productCategoryId" map-name="newEntity" to-map-name="newEntity1"/>
+        <field-to-field field-name="prodCatalogCategoryTypeId" map-name="parameters" to-map-name="newEntity1"/>
+        <if-empty field-name="fromDate" map-name="parameters">
+		    <now-timestamp-to-env env-name="nowTimestamp"/>
+		    <env-to-field env-name="nowTimestamp" field-name="fromDate" map-name="parameters"/>
+        </if-empty>
+        <field-to-field field-name="fromDate" map-name="parameters" to-map-name="newEntity1"/>
+        
+        <transaction-begin/>
+        <create-value value-name="newEntity"/>
+        <check-errors/>
+        <create-value value-name="newEntity1"/>
+        <check-errors/>
+        <transaction-commit/>
+    </simple-method>
+
+</simple-methods>
