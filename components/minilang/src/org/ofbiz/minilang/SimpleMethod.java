@@ -1,5 +1,5 @@
 /*
- * $Id: SimpleMethod.java,v 1.4 2003/09/14 05:40:41 jonesde Exp $
+ * $Id: SimpleMethod.java,v 1.5 2003/11/23 11:57:09 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -52,7 +52,7 @@ import org.w3c.dom.Element;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.0
  */
 public class SimpleMethod {
@@ -688,6 +688,8 @@ public class SimpleMethod {
                     methodOperations.add(new org.ofbiz.minilang.method.eventops.FieldToSession(curOperElem, simpleMethod));
                 } else if ("request-to-field".equals(nodeName)) {
                     methodOperations.add(new org.ofbiz.minilang.method.eventops.RequestToField(curOperElem, simpleMethod));
+                } else if ("request-parameters-to-list".equals(nodeName)) {
+                    methodOperations.add(new org.ofbiz.minilang.method.eventops.RequestParametersToList(curOperElem, simpleMethod));                    
                 } else if ("session-to-field".equals(nodeName)) {
                     methodOperations.add(new org.ofbiz.minilang.method.eventops.SessionToField(curOperElem, simpleMethod));
                 } else if ("webapp-property-to-field".equals(nodeName)) {

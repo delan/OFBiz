@@ -42,7 +42,7 @@
 
 <!ENTITY % CallOperations "call-map-processor | set-service-fields | call-service | call-service-asynch | call-bsh | call-simple-method | check-errors | add-error | return">
 <!ENTITY % CallJavaOperations "call-object-method | call-class-method | create-object">
-<!ENTITY % EventOperations "field-to-request | field-to-session | request-to-field | session-to-field | webapp-property-to-field">
+<!ENTITY % EventOperations "field-to-request | field-to-session | request-to-field | request-parameters-to-list | session-to-field | webapp-property-to-field">
 <!ENTITY % ServiceOperations "field-to-result">
 <!ENTITY % EnvOperations "map-to-map | field-to-field | field-to-list | list-to-list | env-to-env | env-to-field | field-to-env | string-append | string-to-field | string-to-list | to-string | clear-field | iterate | iterate-map | first-from-list">
 <!ENTITY % EntityMiscOperations "now-timestamp-to-env | now-date-to-env | sequenced-id-to-env | make-next-seq-id | set-current-user-login">
@@ -305,6 +305,11 @@ Error messages go on the error list and are handled with the check-errors tag.
     field-name CDATA #REQUIRED
     default CDATA #IMPLIED
     request-name CDATA #IMPLIED
+>
+<!ELEMENT request-parameters-to-list EMPTY>
+<!ATTLIST request-parameters-to-list
+	request-name CDATA #REQUIRED
+	list-name CDATA #IMPLIED
 >
 <!ELEMENT session-to-field EMPTY>
 <!ATTLIST session-to-field
