@@ -24,8 +24,10 @@
 package org.ofbiz.ordermgr.task;
 
 import java.util.*;
+import javax.servlet.http.*;
 
 import org.ofbiz.core.entity.*;
+import org.ofbiz.core.service.*;
 import org.ofbiz.core.util.*;
 
 /**
@@ -78,5 +80,39 @@ public class TaskWorker {
         }
         return role.getString("description");
     }   
+    
+    public static String completeAssignment(HttpServletRequest request, HttpServletResponse response) {
+        LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+        GenericValue userLogin = (GenericValue) request.getSession().getAttribute("userLogin");
+        
+        Map parameterMap = UtilMisc.getParameterMap(request);
+        String workEffortId = (String) parameterMap.remove("workEffortId");
+        String partyId = (String) parameterMap.remove("partyId");
+        String roleTypeId = (String) parameterMap.remove("roleTypeId");
+        String fromDateStr = (String) parameterMap.remove("fromDate");
+        java.sql.Timestamp fromDate = null;
+        try {       
+            fromDate = (java.sql.Timestamp) ObjectType.simpleTypeConvert(fromDateStr, "java.sql.Timestamp", null, null);
+        } catch (GeneralException e) {
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "Invalid date format for fromDate");
+            return "error";        
+        }
+        
+        Map result = null;
+        try {
+            Map context = UtilMisc.toMap("workEffortId", workEffortId, "partyId", partyId, "roleTypeId", roleTypeId, 
+                    "fromDate", fromDate, "result", parameterMap, "userLogin", userLogin);
+            result = dispatcher.runSync("wfCompleteAssignment", context);
+            if (result.containsKey(ModelService.RESPOND_ERROR)) {
+                request.setAttribute(SiteDefs.ERROR_MESSAGE, (String) result.get(ModelService.ERROR_MESSAGE));
+                return "error";
+            }
+        } catch (GenericServiceException e) {
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "Problems invoking the complete assignment service");
+            return "error";
+        }
+
+        return "success";              
+    }
 
 }

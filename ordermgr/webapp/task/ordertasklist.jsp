@@ -163,6 +163,9 @@
                       <input type="hidden" name="fromDate" value="<ofbiz:print attribute="fromDate"/>">                      
                     </ofbiz:if>
                     <ofbiz:unless name="currentStatusId" value="WF_NOT_STARTED">
+                      <input type="hidden" name="partyId" value="<%=userLogin.getString("partyId")%>">
+                      <input type="hidden" name="roleTypeId" value="<ofbiz:print attribute="roleTypeId"/>">
+                      <input type="hidden" name="fromDate" value="<ofbiz:print attribute="fromDate"/>">
                       <input type="hidden" name="fromPartyId" value="<ofbiz:print attribute="wepaPartyId"/>">
                       <input type="hidden" name="fromRoleTypeId" value="<ofbiz:print attribute="roleTypeId"/>">
                       <input type="hidden" name="fromFromDate" value="<ofbiz:print attribute="fromDate"/>">  

@@ -1,30 +1,30 @@
-<%--
- *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
- *
- *  Permission is hereby granted, free of charge, to any person obtaining a
- *  copy of this software and associated documentation files (the "Software"),
- *  to deal in the Software without restriction, including without limitation
- *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
- *  and/or sell copies of the Software, and to permit persons to whom the
- *  Software is furnished to do so, subject to the following conditions:
- *
- *  The above copyright notice and this permission notice shall be included
- *  in all copies or substantial portions of the Software.
- *
- *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
- *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
- *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
- *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
- *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *
- *@author     Eric Pabst
- *@author     David E. Jones
- *@author     Andy Zeneski
- *@created    May 22 2001
- *@version    1.0
---%>
+<%
+    /**
+     *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
+     *
+     *  Permission is hereby granted, free of charge, to any person obtaining a
+     *  copy of this software and associated documentation files (the "Software"),
+     *  to deal in the Software without restriction, including without limitation
+     *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+     *  and/or sell copies of the Software, and to permit persons to whom the
+     *  Software is furnished to do so, subject to the following conditions:
+     *
+     *  The above copyright notice and this permission notice shall be included
+     *  in all copies or substantial portions of the Software.
+     *
+     *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+     *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+     *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+     *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+     *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+     *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+     *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+     *
+     * @author     Andy Zeneski
+     * @version    $Revision$
+     * @since      2.0
+     */
+%>
 <%@ page import="java.util.*, java.text.*" %>
 
 <%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.security.*, org.ofbiz.core.entity.*" %>
@@ -42,11 +42,36 @@
     if (orderId == null) orderId = (String) request.getAttribute("orderId");
     if (orderId == null) orderId = (String) request.getSession().getAttribute("orderId");
     else request.getSession().setAttribute("orderId", orderId);
+    
+    String workEffortId = request.getParameter("workEffortId");
+    String assignPartyId = request.getParameter("partyId");
+    String assignRoleTypeId = request.getParameter("roleTypeId");
+    String fromDate = request.getParameter("fromDate");
+    Debug.logWarning(workEffortId + " " + assignPartyId + " " + assignRoleTypeId + " " + fromDate);
 
     GenericValue orderHeader = null;
     GenericValue orderRole = null;
+    GenericValue we = null;
+    GenericValue activity = null;
+    List transitions = null;
+    
+    if (workEffortId != null && assignPartyId != null && assignRoleTypeId != null && fromDate != null) {    	
+    	we = delegator.findByPrimaryKey("WorkEffort", UtilMisc.toMap("workEffortId", workEffortId));  
+    	if (we != null && we.get("currentStatusId") != null && !we.getString("currentStatusId").equals("WF_RUNNING")) we = null;  	
+    	if (we != null) {
+    		pageContext.setAttribute("workeffort", we);
+    		Map actFields = UtilMisc.toMap("packageId", we.getString("workflowPackageId"), "packageVersion", we.getString("workflowPackageVersion"), "processId", we.getString("workflowProcessId"), "processVersion", we.getString("workflowProcessVersion"), "activityId", we.getString("workflowActivityId"));
+    		activity = delegator.findByPrimaryKey("WorkflowActivity", actFields);    	
+    		if (activity != null) {
+    			pageContext.setAttribute("wfActivity", activity);
+    			transitions = activity.getRelated("FromWorkflowTransition", null, UtilMisc.toList("-transitionId"));
+    			if (transitions != null) pageContext.setAttribute("wfTransitions", transitions);
+    		}
+    	}
+    }
 
     if(orderId != null && orderId.length() > 0) {
+    	Debug.logWarning("Getting order data");
         orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
         List orderRoles = delegator.findByAnd("OrderRole",UtilMisc.toMap("orderId", orderId, "roleTypeId", "PLACING_CUSTOMER"));
         orderRole = EntityUtil.getFirst(orderRoles);
@@ -112,6 +137,8 @@
 <%@ include file="/order/orderitems.jsp" %>
 <br>
 <%@ include file="/order/ordernotes.jsp" %>
+<br>
+<%@ include file="/order/transitions.jsp" %>
 
 <%}%><%-- OrderHeader --%>
 <ofbiz:unless name="orderHeader">

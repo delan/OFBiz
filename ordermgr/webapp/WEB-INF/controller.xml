@@ -85,7 +85,14 @@
         <event type="service" path="" invoke="wfDelegateAndAcceptAssignmet"/>
         <response name="success" type="view" value="orderview"/>
         <response name="error" type="view" value="ordertasklist"/>
-    </request-map>    
+    </request-map>
+
+	<request-map uri="completeassignment">
+		<security https="true" auth="true"/>
+		<event type="java" path="org.ofbiz.ordermgr.task.TaskWorker" invoke="completeAssignment"/>
+		<response name="success" type="view" value="ordertasklist"/>
+		<response name="error" type="view" value="ordertasklist"/>
+	</request-map>  
 
 	<!-- Order Manager Edit Requests -->
     <request-map uri="changeOrderStatus">
