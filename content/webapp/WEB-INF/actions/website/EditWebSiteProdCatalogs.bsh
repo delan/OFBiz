@@ -41,7 +41,7 @@ String webSiteId = request.getParameter("webSiteId");
 GenericValue webSite = delegator.findByPrimaryKey("WebSite", UtilMisc.toMap("webSiteId", webSiteId));
 List webSiteCatalogs = null;
 List webSiteCatalogDatas = new LinkedList();
-if (prodCatalog != null) {
+if (webSite != null) {
     webSiteCatalogs = webSite.getRelated("WebSiteCatalog", null, UtilMisc.toList("sequenceNum", "webSiteId"));
     Iterator webSiteCatalogIter = webSiteCatalogs.iterator();
     while (webSiteCatalogIter.hasNext()) {
