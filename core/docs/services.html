@@ -1,0 +1,221 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title>Open For Business Services Framework</title>
+    
+</head>
+ <body>
+<package-name></package-name>
+<h2 align="Center">The Open For Business Project: Services Framework</h2>
+<br>
+       Written By: Andy Zeneski<br>
+       Email: <a href="mailto:jaz@zsolv.com">jaz@zsolv.com</a>
+<br>
+       Open For Business Site: <a href="http://www.ofbiz.org/">http://www.ofbiz.org</a>
+<br>
+<a href="http://sf.net/projects/ofbiz"><img src="http://sourceforge.net/sflogo.php?group_id=27173" border="0" alt="SourceForge Logo">
+</a>
+<br>
+       Founders and Lead Architects: David E. Jones &amp; Andy Zeneski <br>
+Last Updated: January 15, 2002<br>
+       $Id$<br>
+<hr><br>
+<h3>Table of Contents</h3>
+<ul>
+  <li><a href="#Introduction">Introduction</a> </li>
+  <li><a href="#ServiceDispatcher">Service Dispatcher</a> </li>
+  <li><a href="#DispatchContext">Dispatch Context</a> </li>
+  <li><a href="#ServiceEngine">Service Engine</a> </li>
+  <li><a href="#JobScheduler">Job Scheduler</a> </li>
+  <li><a href="#ServiceDefinition">Service Definition</a></li>
+  <li><a href="#Usage">Usage</a> <br>
+  </li>
+</ul>
+<hr>
+<h3><a name="Introduction">Introduction</a>
+</h3>
+<hr>
+<p>The Services Framework is new to OFBiz in Version 2. Services are defined as 
+  independent pieces of logic which when placed together can be used to process 
+  many different types of business requirements. Services can be of many different 
+  types: Workflow, Rules, Java, SOAP, BeanShell, etc. A service with the type 
+  Java is much like an event where it is a static method, however with the Services 
+  Framework we do not limit to web based applications. Services require input 
+  parameters to be in a Map and the results are returned in a Map as well. This 
+  is nice since a Map can be serialized and stored or passed via HTTP (SOAP). 
+  Services are defined through the <a href="#ServiceDefinition">Service Definition</a> 
+  and are assigned to a specific <a href="#ServiceEngine">Service Engine</a>. 
+  Each <a href="#ServiceEngine">Service Engine</a> is responsible for invoking 
+  the defined service in an appropriate way. Since services are not tied to web 
+  based applications this allows services to run when there is no response object 
+  available. This allows services to be scheduled to run at specific times to 
+  run in the background via the <a href="#JobScheduler">Job Scheduler</a>.</p>
+<p>Services have the ability to call other services. So, chaining small services 
+  together to accomplish a larger task makes reusing existing services much easier. 
+  Services which are used in different applications can be defined only once by 
+  creating Global Service Definition files or services specific to an application 
+  can be restricted and available only to that application. </p>
+<p>When used in a web application services are available to web events, which 
+  allow events to stay small and reuse existing logic in the Services Framework. 
+  Also, services can be defined as 'exportable' which means they are allowed to 
+  be accessed by outside parties. Currently there is a SOAP EventHandler which 
+  allows services to be made available via SOAP. Other forms of remote invocation 
+  may be added to the framework in the future. </p>
+<hr>
+<h3><a name="ServiceDispatcher">Service Dispatcher</a> </h3>
+<hr>
+<p>The Service Dispatcher handles dispatching services to the appropriate <a href="#ServiceEngine">Service 
+  Engine</a> where it is then invoked. There is exactly one ServiceDispatcher 
+  for each Entity Delegator. If there are multiple delegators in an application 
+  there will also be multiple dispatchers. The ServiceDispatcher is accessed via 
+  a LocalDispatcher. There can be many LocalDispatchers associated with a ServiceDispatcher. 
+  Each LocalDispatcher is uniquely named and contains its own list of service 
+  definitions. When creating an instance of a LocalDispatcher, a <a href="#DispatchContext">DispatchContext 
+  </a>is also created and passed to the ServiceEngine.</p>
+<p>A LocalDispatcher is associated with an application. Applications never talk 
+  directly to the ServiceDispatcher. The LocalDispatcher contains an API for invoking 
+  services, which are routed through the ServiceDispather. However, applications 
+  may be running in different threads then the actual ServiceDispatcher, so it 
+  is left to the LocalDispatcher to keep a <a href="#DispatchContext">DispatchContext</a> 
+  which among other things keeps a reference to the applications classloader.</p>
+<hr>
+<h3><a name="DispatchContext">Dispatch Context</a>
+</h3>
+<hr>
+<p>The DispatchContext is created by the LocalDispatcher upon instantiation. This 
+  is the runtime dispatcher context. It contains necessary information to process 
+  services for each dispatcher. This context contains the reference to each of 
+  the service definition files, the classloader which should be used for invocation, 
+  a reference to the delegator and its dispatcher along with a 'bag' of user defined 
+  attributes. This context is passed on to each service when invoked and is used 
+  by the dispatcher to determine the service's model.<br>
+</p>
+<hr>
+<h3><a name="ServiceEngine">ServiceEngine</a>
+</h3>
+<hr>
+<p>This is where the service is actually invoked. Each service has an engine name 
+  assigned in its definition. This engine name is mapped via the servicesengine.properties 
+  file and is instantiated by the GenericEngineFactory when called upon. Third-party 
+  engines are supported and must follow the GenericEngine interface when implemented. 
+  Engines defined in the servicesengine.properties file:</p>
+<pre>java.engine=org.ofbiz.core.service.StandJavaEngine
+workflow.engine=org.ofbiz.core.workflow.WorkflowEngine
+beanshll.engine=org.ofbiz.core.service.BeanShellEngine
+soap.engine=org.ofbiz.core.service.SOAPClientEngine</pre>
+<p>It is the job of the engine to handle invocation of both synchronous and asynchronous 
+  services. Engines which use the <a href="#JobScheduler">Job Scheduler</a> for 
+  asynchronous services can extend the GenericAsyncEngine.<br>
+  <br>
+</p>
+<hr>
+<h3><a name="JobScheduler">Job Scheduler</a>
+</h3>
+<hr>
+<p>The overhauled job scheduler is now integrated with the services framework. 
+  This is the most appropriate place for a scheduler. Since it cannot be guarantee 
+  that a HttpServletRequest and HttpServletResponse object will be available when 
+  a job is ready to run it does not make sense to integrate with the web controller. 
+  Plus, this feature is most useful if it were not limited to web environments. 
+</p>
+<p>The scheduler is a multithreaded component with a single thread used for job 
+  managing/scheduling and separate threads used for invocation of each service. 
+  When a job is scheduled to run, the scheduler will call the service dispatcher 
+  associated with the job to invoke the service in its own thread. This will prevent 
+  long or time consuming jobs from slowing down other jobs in the queue.</p>
+<p>The scheduler now supports the iCalendar rule structure for recurrence. The 
+  jobs are no longer stored in an XML file and is part of a ServiceDispatcher. 
+  There is one Job Scheduler for each ServiceDispatcher (which means there is 
+  only one per GenericDelegator as well).</p>
+<p><b>How it works:</b></p>
+<p>The best usage example of the scheduler is an asynchronous service call. When 
+  an asynchronous service is invoked, it is passed to the Job Scheduler to be 
+  queued to run. A recurrence entry is created (RecurrenceInfo and RecurrenceRule 
+  entities are created), the job is stored, (JobSandbox entity is created) and 
+  the context (Map) is serialized and stored (RuntimeData entity is created). 
+  The scheduler then adds the job to the top of the list of scheduled jobs (asynchronous 
+  services do not have any delay time) and invoked.</p>
+<p>Jobs are no longer defined in an XML file. This has been moved to the JobSandbox 
+  entity. There is a web based client in planning for adding predefined jobs to 
+  the queue, but currently the entities will have to be created by hand.</p>
+<hr>
+<h3><a name="ServiceDefinition">Service Definition</a></h3>
+<hr>
+<p>Services are defined in <i>Service Definition Files.</i> There are global definition 
+  files used for all service dispatchers as well as individual files associated 
+  only with a single dispatcher. When a LocalDispatcher is created it is passed 
+  a Collection of Arils which point to these definition files. These files are 
+  composed using XML and defined the necessary information needed to invoke a 
+  service. The <a href="xmldefs/ofbiz/services.dtd">DTD</a> of this file can be 
+  found <a href="xmldefs/ofbiz/services.dtd">here</a>.</p>
+<p>Services are defined with a unique name, associated to a specific service engine 
+  and the input and output parameters are defined explicitly. Below is an example 
+  of a service definition:</p>
+<pre> &lt;service name=&quot;userLogin&quot; engine=&quot;java&quot;<br>  location=&quot;org.ofbiz.commonapp.security.login.LoginServices&quot; invoke=&quot;userLogin&quot;
+    &lt;description&gt;Authenticate a username/password; create a UserLogin object&lt;/description&gt;
+    &lt;attribute name=&quot;login.username&quot; type=&quot;String&quot; mode=&quot;IN&quot;/&gt;<br>    &lt;attribute name=&quot;login.password&quot; type=&quot;String&quot; mode=&quot;IN&quot;/&gt;<br>    &lt;attribute name=&quot;userLogin&quot; type=&quot;org.ofbiz.core.entity.GenericValue&quot; mode=&quot;OUT&quot; optional=&quot;true&quot;/&gt;
+ &lt;/service&gt;</pre>
+<p><b>SERVICE ELEMENT:</b></p>
+<ul>
+  <li><b>name</b> - The unique name of the service </li>
+  <li><b>engine</b> - The name of the engine (defined in servicesengine.properties)</li>
+  <li><b>location </b>- The location or package of the service's class</li>
+  <li><b>invoke</b> - The method name of the service</li>
+  <li><b>auth</b> - Does this service require authorization (true/<u>false</u>)</li>
+  <li><b>export</b> - Is this service allowed to be accessed via SOAP (true/<u>false</u>)</li>
+  <li><b>validate</b> - Do we validate the attributes found below for name and 
+    type matching (<u>true</u>/false)</li>
+</ul>
+<p><b>ATTRIBUTE ELEMENT:</b></p>
+<ul>
+  <li><b>name</b> - The name of this attribute</li>
+  <li><b>type</b> - The object type (String, java.util.Date, etc.)</li>
+  <li><b>mode</b> - Is this an input or output parameter or both (IN/OUT/INOUT)</li>
+  <li><b>optional</b> - Is this parameter optional (true/<u>false</u>) 
+    <p><font size="-1">*underlined values are defaults</font></p>
+  </li>
+</ul>
+<p>Above you can see the name of this service is <i>userLogin</i> and it uses 
+  the <i>java</i> engine. This service expects two <b>required</b> IN parameters: 
+  <i>login.username</i> and <i>login.password</i>. Required parameters are tested 
+  before the service is invoked. If the parameters does not match by name and 
+  object type the service is not invoked. Parameters which may or may not be sent 
+  to the service should be defined as <b>optional</b>. After the service is invoked, 
+  the OUT parameters are tested. Only required parameters are tested, however 
+  if a parameter is passed which is not defined as optional or required it will 
+  cause the service to fail. This service has not required OUT parameters so, 
+  the result is simply returned.</p>
+<hr>
+<h3><a name="Usage">Usage</a></h3>
+<hr>
+<p>Internal Usage of the Services Framework is quite simple. In a Web Application 
+  the LocalDispatcher is stored in the ServletContext which can be accessed via 
+  the Session object in an Event. For non-web based applications you simply create 
+  a delegator object (see the Entity Engine docs) define a Collection of URLs 
+  where service definitions can be found and then create a new instance of the 
+  LocalDispatcher: </p>
+<pre>
+GenericDelegator delegator = GenericDelegator.getGenericDelegator("default");
+Collection definitionFiles = null; // We will use only the global here
+LocalDispatcher dispatcher = new LocalDispatcher(&quot;UniqueName&quot;,&quot;/root/path&quot;,delegator,definitionFiles);</pre>
+<p>Now we have a dispatcher which we can use to invoke services. To invoke the 
+  test service create a Map for the context which contains the IN parameter <i>message</i> 
+  then invoke the service:</p>
+<pre>Map context = UtilMisc.toMap(&quot;message&quot;,&quot;This is a test.&quot;);
+Map result = null;
+try {
+  result = dispatcher.runSync(&quot;testScv&quot;,context);
+}
+catch ( GenericServiceException e ) {
+  e.printStackTrace();
+}
+if ( result != null )
+  System.out.println("Result from service: " + (String) result.get("resp"));
+</pre>
+<p>Now look at the console and see what the test service has echoed.</p>
+<hr>
+<p><br>
+</p>
+<h3>&nbsp;</h3>
+</body>
+</html>

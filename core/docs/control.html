@@ -1,236 +1,207 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-<title>Open For Business Entity Engine</title>
-      <title>Postal Address Entity</title>
-      <package-name>
+  <title>Open For Business Web Controller</title>
+   
 </head>
-
-<body>
-
-<h2 align="center">The Open For Business Project: Controller</h2>
-
+ <body>
+<package-name></package-name>
+<h2 align="Center">The Open For Business Project: Controller</h2>
 <br>
-Written By: Andy Zeneski<br>
-Email: <a href="mailto:jaz@zsolv.com">jaz@zsolv.com</a> <br>
-Open For Business Site: <a href="http://www.ofbiz.org/">http://www.ofbiz.org</a>
+  Written By: Andy Zeneski<br>
+  Email: <a href="mailto:jaz@zsolv.com">jaz@zsolv.com</a>
 <br>
-<A href="http://sf.net/projects/ofbiz"> <IMG src="http://sourceforge.net/sflogo.php?group_id=27173" border="0" alt="SourceForge Logo"></A> 
+  Open For Business Site: <a href="http://www.ofbiz.org/">http://www.ofbiz.org</a>
 <br>
-Founders and Lead Architects: David E. Jones &amp; Andy Zeneski <br>
-Last Updated: September 24, 2001<br>
-$Id$<br>
-<hr>
+<a href="http://sf.net/projects/ofbiz"><img src="http://sourceforge.net/sflogo.php?group_id=27173" border="0" alt="SourceForge Logo">
+</a>
 <br>
+  Founders and Lead Architects: David E. Jones &amp; Andy Zeneski <br>
+  Last Updated: January 11, 2002<br>
+  $Id$<br>
+<hr><br>
 <h3>Table of Contents</h3>
 <ul>
-  <li><a href="#Introduction">Introduction</a> 
-  <li><a href="#ContextSecurityFilter">Context Security Filter</a> 
-  <li><a href="#ControlServlet">Control Servlet</a> 
-  <li><a href="#RequestHandler">Request Handler</a> 
-  <li><a href="#EventHandler">Event Handler</a> 
-  <li><a href="#JobScheduler">Job Scheduler</a> 
+  <li><a href="#Introduction">Introduction</a>
+  </li>
+  <li><a href="#ContextSecurityFilter">Context Security Filter</a>
+  </li>
+  <li><a href="#ControlServlet">Control Servlet</a>
+  </li>
+  <li><a href="#RequestHandler">Request Handler</a>
+  </li>
+  <li><a href="#EventHandler">Event Handler</a>
+  </li>
+  <li><a href="#JobScheduler">Job Scheduler</a>
+  </li>
 </ul>
-
 <hr>
-<h3><a name="Introduction">Introduction</a></h3>
+<h3><a name="Introduction">Introduction</a>
+</h3>
 <hr>
-<p>The Open For Business Controller is a group of classes use to manage the presentation 
-  of a web application designed around the Open For Business framework. The Controller 
-  is designed to work along with the Entity Engine by keeping a constant state 
-  with the Entity Delegator. The goal of the Controller is to provide a clean 
-  mechanism of separating presentation logic from the actual display.<br>
-  <br>
-  This Controller makes use of several J2EE Presentation Tier design patterns. 
-  The Context Security Filter is modeled after the <i><a href="http://developer.java.sun.com/developer/restricted/patterns/DecoratingFilter.html">Decorating 
-  Filter</a></i> pattern. The CSF runs at the context root and is able to restrict 
-  direct access to JSP templates as well as open doors for future services such 
-  as debugging, logging and compression. The Control Servlet is modeled after 
-  the <i><a href="http://developer.java.sun.com/developer/restricted/patterns/FrontController.html">Front 
-  Controller</a></i> pattern. This Servlet is where the web application's request 
-  processing begins. It makes use of helper classes which process security and 
-  events, then dispatches to a defined view. The Views are JSP templates which 
-  are very similar to those described in the <a href="http://developer.java.sun.com/developer/restricted/patterns/CompositeView.html"><i>Composite 
-  View</i></a> pattern. These templates use helper files to limit the amount of 
-  logic found in the actual display page. These helper files are Java classes 
-  which perform the logic for a specific group of views. This process is based 
-  on the <a href="http://developer.java.sun.com/developer/restricted/patterns/ViewHelper.html"><i>View 
-  Helper</i></a> pattern.<br>
-  <br>
-  As stated above, the main purpose of the Controller is to separate logic from 
-  display. This is accomplished by:</p>
+<p>The Open For Business Controller is a group of classes use to manage the 
+presentation    of a web application designed around the Open For Business 
+framework. The Controller is designed to work along with the Entity Engine 
+by keeping a constant state with the Entity Delegator, as well as the Services
+Framework by keeping a state with the Local Service Dispatcher. The goal
+of the Controller is to provide a clean mechanism of separating presentation 
+logic from the actual display.<br>
+<br>
+    This Controller makes use of several J2EE Presentation Tier design patterns. 
+   The Context Security Filter is modeled after the <i><a href="http://developer.java.sun.com/developer/restricted/patterns/DecoratingFilter.html">
+ Decorating    Filter</a>
+</i> pattern. The CSF runs at the context root and is able to restrict   
+direct access to JSP templates as well as open doors for future services such
+   as debugging, logging and compression. The Control Servlet is modeled after
+   the <i><a href="http://developer.java.sun.com/developer/restricted/patterns/FrontController.html">
+ Front    Controller</a>
+</i> pattern. This Servlet is where the web application's request processing 
+begins. It makes use of helper classes which process security and events, 
+then dispatches to a defined view. The Views are JSP templates which    are 
+very similar to those described in the <a href="http://developer.java.sun.com/developer/restricted/patterns/CompositeView.html"><i>
+ Composite    View</i></a>
+  pattern. These templates use helper files to limit the amount of logic found
+in the actual display page. These helper files are Java classes    which
+perform the logic for a specific group of views. This process is based  
+ on the <a href="http://developer.java.sun.com/developer/restricted/patterns/ViewHelper.html"><i>
+ View    Helper</i></a>
+  pattern.<br>
+<br>
+    As stated above, the main purpose of the Controller is to separate logic 
+from    display. This is accomplished by:</p>
 <ul>
   <li>Using a Filter to secure JSP template in the web application</li>
   <li>Using a Servlet to manage application flow</li>
   <li>Using Events (commands) and View Helpers for presentation logic</li>
 </ul>
 <hr>
-<h3><a name="ContextSecurityFilter">Context Security Filter</a></h3>
-<hr>
-The Context Security Filter (CSF) defined in <i>/WEB-INF/web.xml </i>is used to 
-restrict access to the web application files. In the future it may be used for 
-debugging and/or logging requests. This is the starting point for all web requests 
-to the application. By default all paths are rejected and only paths specifically 
-defined are allowed direct access. The CSF is set to allow all requests to the 
-<a href="#ControlServlet">Control Servlet</a> by setting the mount point of the 
-Servlet in the 'allow list'. The allow list is defined as an init-param named 
-<i>allowedPaths</i>.<i> </i>The value is a single string of paths separated by 
-a colon. The example webapps allow '/control:/index.html:/index.jsp:/default.html:/default.jsp:/images' 
-paths. A path may be a directory name (starting from the root directory of the 
+<h3><a name="ContextSecurityFilter">Context Security Filter</a>
+</h3>
+<hr> The Context Security Filter (CSF) defined in <i>/WEB-INF/web.xml </i>
+ is used to  restrict access to the web application files. In the future
+it may be used for  debugging and/or logging requests. This is the starting 
+point for all web requests  to the application. By default all paths are rejected
+and only paths specifically  defined are allowed direct access. The CSF is
+set to allow all requests to the  <a href="#ControlServlet">Control Servlet</a>
+  by setting the mount point of the  Servlet in the 'allow list'. The allow 
+list is defined as an init-param named  <i>allowedPaths</i>.The value is
+a single string of paths separated by  a colon. The example webapps allow 
+'/control:/index.html:/index.jsp:/default.html:/default.jsp:/images'  paths. 
+A path may be a directory name (starting from the root directory of the 
 webapp) or a path to a specific file. <br>
 <br>
-Example: '/images' will allow all files in the /images directory to be directly 
-accessed. <br>
-Example: '/site-pages/contactus.html' will allow only the contactus.html file 
-found in the /site-pages directory to be directly accessed. <br>
+  Example: '/images' will allow all files in the /images directory to be
+directly  accessed. <br>
+  Example: '/site-pages/contactus.html' will allow only the contactus.html 
+file  found in the /site-pages directory to be directly accessed. <br>
+ Example: '/site-pages/info/*' will allow only the files in the subdirectory 
+'info' to be directly accessed.<br>
 <br>
-When a direct request to a protected path is made the filter will do one of two 
-things. One, the filter can redirect the user to a page defined in <i>web.xml</i>. 
-This is defined by setting the init-param <i>redirectPath</i> to properly formatted 
-URL. Two, the filter will throw a server error which can be defined by the init-param 
-<i>errorCode</i>. The error is thrown only if there is no redirect defined. If 
-no errorCode is defined, the filter will throw a 404 server error.<br>
+  When a direct request to a protected path is made the filter will do one 
+of two  things. One, the filter can redirect the user to a page defined in 
+<i>web.xml</i>.  This is defined by setting the init-param <i>redirectPath</i>
+  to properly formatted  URL. Two, the filter will throw a server error which 
+can be defined by the init-param  <i>errorCode</i>. The error is thrown only 
+if there is no redirect defined. If  no errorCode is defined, the filter will
+throw a 404 server error.<br>
 <br>
-The configuration looks like this:<br>
-<pre>&lt;filter&gt; 
-  &lt;filter-name&gt;ContextSecurityFilter&lt;/filter-name&gt;
-  &lt;display-name&gt;ContextSecurityFilter&lt;/display-name&gt; 
-  &lt;filter-class&gt;org.ofbiz.core.control.ContextSecurityFilter&lt;/filter-class&gt;    
-  &lt;init-param&gt; 
-    &lt;param-name&gt;allowedPaths&lt;/param-name&gt; 
-    &lt;param-value&gt;/control:/index.html:/index.jsp:/default.html:/default.jsp:/images&lt;/param-value&gt;    
-  &lt;/init-param&gt; 
-  &lt;init-param&gt; 
-    &lt;param-name&gt;errorCode&lt;/param-name&gt;    
-    &lt;param-value&gt;403&lt;/param-value&gt; 
-  &lt;/init-param&gt; 
-&lt;/filter&gt;    
-&lt;filter-mapping&gt; 
-  &lt;filter-name&gt;ContextSecurityFilter&lt;/filter-name&gt;    
-  &lt;url-pattern&gt;/*&lt;/url-pattern&gt; 
-&lt;/filter-mapping&gt; </pre>
+  The configuration looks like this:<br>
+<pre>&lt;filter&gt; <br>  &lt;filter-name&gt;ContextSecurityFilter&lt;/filter-name&gt;<br>  &lt;display-name&gt;ContextSecurityFilter&lt;/display-name&gt; <br>  &lt;filter-class&gt;org.ofbiz.core.control.ContextSecurityFilter&lt;/filter-class&gt;    <br>  &lt;init-param&gt; <br>    &lt;param-name&gt;allowedPaths&lt;/param-name&gt; <br>    &lt;param-value&gt;/control:/index.html:/index.jsp:/default.html:/default.jsp:/images&lt;/param-value&gt;    <br>  &lt;/init-param&gt; <br>  &lt;init-param&gt; <br>    &lt;param-name&gt;errorCode&lt;/param-name&gt;    <br>    &lt;param-value&gt;403&lt;/param-value&gt; <br>  &lt;/init-param&gt; <br>&lt;/filter&gt;    <br>&lt;filter-mapping&gt; <br>  &lt;filter-name&gt;ContextSecurityFilter&lt;/filter-name&gt;    <br>  &lt;url-pattern&gt;/*&lt;/url-pattern&gt; <br>&lt;/filter-mapping&gt; </pre>
 <hr>
-<h3><a name="ControlServlet">Control Servlet</a></h3>
+<h3><a name="ControlServlet">Control Servlet</a>
+</h3>
 <hr>
 <p>The Control Servlet is at the heart of all request processing. Valid requests 
   which pass through the <a href="#ContextSecurityFilter">Context Security Filter</a> 
   begin processing here. When a request is received, the Control Servlet first 
   sets up an environment for the helper classes. This environment includes (but 
   is not limited to) setting up an initial session object and storing useful information 
-  about the initial request and setting a reference to the Entity Delegator, Job 
-  Scheduler, and Security Handler for use by the helper classes. The request is 
-  then passed to the <a href="#RequestHandler">Request Handler</a> for processing. 
-  The <a href="#RequestHandler">Request Handler</a> processes the request and 
+  about the initial request and setting a reference to the Entity Delegator, Service 
+  Dispatcher, and Security Handler for use by the helper classes. The request 
+  is then passed to the <a href="#RequestHandler"> Request Handler</a> for processing. 
+  The <a href="#RequestHandler">Request Handler</a> processes the request and&nbsp; 
   returns the path and name of a JSP template page (<i>view</i>) which the Control 
-  Servlet then dispatches to. <br>
+  Servlet then dispatches to. </p>
+<p>When the Control Servlet is first loaded it will create objects used by the 
+  web application and store them in the application context (ServletContext). 
+  These objects can be found by accessing the property in the context or via a 
+  JSP &lt;useBean&gt; tag. These objects include: Entity Delegator, Security object, 
+  Service Dispatcher, and the <a href="#RequestHandler">Request Handler</a>.<br>
 </p>
 <hr>
-<h3><a name="RequestHandler">Request Handler</a></h3>
+<h3><a name="RequestHandler">Request Handler</a>
+</h3>
 <hr>
-<p>The Request Handler makes use of a Request Manager helper class to gather a 
-  list of request mappings defined in an XML configuration file. The configuration 
-  file lives in /WEB-INF for the appropriate context. The mapping consists of 
-  a request URI and an optional VIEW name. View names are mapped to JSP templates 
-  in the configuration file as well. A request URI can also be associated with 
-  an <i>Event</i>. Events are used to process data by working with the Entity 
-  Engine through the Entity Delegator.<br>
-  <br>
-  When a request is received through the Request Handler it is first looked up 
-  in the request mappings, if no mapping is found an unknown request error is 
-  returned. Upon a successful lookup, the Security Handler is called to verify 
-  if the current request requires authentication and the user making the request 
-  is properly authenticated. If the current user is not authenticated the Request 
-  Handler redirects the request to a proper login form. After successful authentication 
-  or if no authentication is required the Request Handler then looks up a defined 
-  event for this request. If an event is found, the request is passed to the <a href="#Event%20Handler">Event 
-  Handler</a> for processing. After event processing is complete, the default 
-  view is looked up for this request, unless the <a href="#EventHandler">Event 
-  Handler</a> requests a specific view instead. The view is then checked in the 
-  view mappings and the JSP template name is returned to the <a href="#ControlServlet">Control 
-  Servlet</a> for dispatching.<br>
-  <br>
-  The Request Handler looks up request mappings in an XML file which is setup 
-  like this:<br>
+<p>The Request Handler makes use of a Request Manager helper class to gather 
+a    list of request mappings defined in an XML configuration file. The configuration 
+   file lives in /WEB-INF for the appropriate context. The mapping consists 
+of    a request URI and an optional VIEW name. View names are mapped to JSP 
+templates    in the configuration file as well. A request URI can also be 
+associated with    an <i>Event</i>. Events are used to process web related 
+logic by either working directly with the Entity    Engine through the Entity 
+Delegator or invoking service(s) to handle the logic through the Service Dispatcher.<br>
+<br>
+    When a request is received through the Request Handler it is first looked 
+up    in the request mappings, if no mapping is found an unknown request error
+is    returned. Upon a successful lookup, the Security Handler is called to
+verify    if the current request requires authentication and the user making
+the request    is properly authenticated. If the current user is not authenticated
+the Request    Handler redirects the request to a proper login form. After
+successful authentication    or if no authentication is required the Request
+Handler then looks up a defined    event for this request. If an event is
+found, the request is passed to the <a href="#Event%20Handler"> Event   
+Handler</a>
+  for processing. After event processing is complete, the default    view 
+is looked up for this request, unless the <a href="#EventHandler">Event 
+  Handler</a>
+  requests a specific view instead. The view is then checked in the    view 
+mappings and the JSP template name is returned to the <a href="#ControlServlet">
+ Control    Servlet</a>
+  for dispatching. If the view type is 'NONE' it is expected that the event 
+handles the response itself, if the view type is 'REDIRECT' the RequestHandler 
+then redirects to the specified URL and the ControlServlet is told not to 
+dispatch.<br>
+<br>
+    The Request Handler looks up request mappings in an XML file which is 
+setup    like this:<br>
 </p>
-<pre>&lt;request-map&gt; 
-  &lt;uri&gt;checkLogin&lt;/uri&gt;
-  &lt;secure&gt;false&lt;/secure&gt;
-  &lt;auth&gt;false&lt;/auth&gt; 
-  &lt;event-type&gt;java&lt;/event-type&gt;
-  &lt;event-path&gt;org.ofbiz.core.security.WebEventSecurity&lt;/event-path&gt;
-  &lt;event-invoke&gt;checkLogin&lt;/event-invoke&gt; 
-  &lt;success&gt;view:main&lt;/success&gt;&lt;error&gt;view:login&lt;/error&gt; 
-&lt;/request-map&gt; 
-</pre>
-<p> In the above mapping, the event return code <i>success</i> will load the view 
-  named <i>main</i>. If <i>success</i> was defined as <i>request:main</i> it would 
-  then instead of displaying a view, it in turn call another request. This is 
-  known as <i>request chaining</i>.<br>
-  <br>
-  The view mappings are defined as follows:</p>
-<pre>
-&lt;view-map&gt;
-  &lt;view&gt;error&lt;/view&gt;
-  &lt;mapped-page&gt;/error/error.jsp&lt;/mapped-page&gt;
-&lt;/view-map&gt; 
-</pre>
-<p>A view is looked up by name and mapped to a JSP template.<br>
+<pre>  &lt;request-map uri="checkLogin" edit="false"&gt;<br>    &lt;description&gt;Verify a user is logged in.&lt;/description&gt;<br>    &lt;security https="false" auth="false"/&gt;<br>    &lt;event type="java" path="org.ofbiz.commonapp.security.login.LoginEvents" invoke="checkLogin" /&gt;<br>    &lt;response name="success" type="view" value="name" /&gt;<br>    &lt;response name="error" type="view" value="login" /&gt;<br>  &lt;/request-map&gt;<br></pre>
+<p> In the above mapping, the event return code <i>success</i> will load the
+view    named <i>main</i>. If <i>success</i> was defined with the type&nbsp; 
+<i>request </i>it would    then instead of displaying a view, it in turn call
+another request. This is    known as <i>request chaining</i>.<br>
+<br>
+    The view mappings are defined as follows:</p>
+<pre>  &lt;view-map name="login" page="/login.jsp"/&gt;<br></pre>
+<p>A view is looked up by name and mapped to a JSP template (page).<br>
 </p>
 <hr>
-<h3><a name="EventHandler">Event Handler</a></h3>
+<h3><a name="EventHandler">Event Handler</a>
+</h3>
 <hr>
-<p>The Event Handler receives the event type, path and method. Currently only 
-  Java events are supported, but in the future support for events written in other 
-  languages will be available. <br>
-  <br>
-  Java events are processed by locating the path of the event (package and classname) 
-  then by using the Reflection API the Event Handler invokes the method defined. 
-  A String object is returned to the <a href="#RequestHandler">Request Handler</a> 
-  to determine if the default view should be altered.<br>
-  <br>
-  A document on writing <i>Open For Business Events</i> is forthcoming.</p>
-
+<p>Event Handlers are defined in the XML config file such as:</p>
+<pre>  &lt;handler name="java" class="org.ofbiz.core.event.JavaEventHandler"/&gt;</pre>
+<p>As in the above request mapping the login event is defined with a type
+of 'Java'.  The event type is mapped to an Event Handler using the handler
+definitions. Custom  Event Handlers can be designed and would be implemented
+like the above example. </p>
+<p>   Java events are processed by locating the path of the event (package 
+and classname)    then by using the Reflection API the Event Handler invokes 
+the method defined.    A String object is returned to the <a href="#RequestHandler">
+ Request Handler</a>
+  which is mapped to the response element of the request definition.<br>
+<br>
+  A document on writing <i>Open For Business Events and Services</i> is forthcoming.</p>
 <hr>
-<h3><a name="JobScheduler">Job Scheduler</a></h3>
+<h3><a name="JobScheduler">Job Scheduler</a>
+</h3>
 <hr>
-<p>The Job Scheduler is not actually a part of the Controller, but this is the 
-  most appropriate place to document its functionality. The Job Scheduler is a 
-  background event processor. Events are scheduled in advance to run at specific 
-  times or time intervals. <br>
-  <br>
-  Scheduled events are defined in a scheduler XML file:<br>
-</p>
-<pre>&lt;scheduler&gt; 
-  &lt;schedule&gt; 
-    &lt;name&gt;MainTestJob&lt;/name&gt; 
-    &lt;start-date&gt;2001-07-19 15:08&lt;/start-date&gt; 
-    &lt;end-date&gt;2001-07-19 15:10&lt;/end-date&gt; 
-    &lt;interval&gt;1&lt;/interval&gt; 
-    &lt;interval-type&gt;minute&lt;/interval-type&gt; 
-    &lt;event-type&gt;java&lt;/event-type&gt; 
-    &lt;event-path&gt;org.ofbiz.core.event.SchedulerTestEvent&lt;/event-path&gt; 
-    &lt;event-invoke&gt;testJob&lt;/event-invoke&gt; 
-    &lt;repeat&gt;true&lt;/repeat&gt; 
-    &lt;parameter name="parmName" value="parmValue"/&gt; 
-  &lt;/schedule&gt; 
-&lt;/scheduler&gt; 
-</pre>
-<p> The above Job is set begin running at the <i>start-date</i> and will last 
-  run on the <i>end-date</i>. It is set to repeat every 1 minute and will invoke 
-  the event defined each time. Parameters passed to the event at run time are 
-  defined here as well. An API for adding events at runtime is supplied, an example 
-  is found in the <i>core</i> module. Events added at runtime are not stored over 
-  server reboots. This is on the todo list. <br>
-  <br>
-  The purpose of the Job Scheduler is to allow the ability to queue background 
-  jobs which do not require user response or output. Example usage's include: 
-</p>
 <ul>
-  <li>Sending confirmation or distribution e-mail.</li>
-  <li>Calling credit card payment servers for settlements.</li>
-  <li>Sending reports or updates to affiliates, sponsors or other locations.</li>
+  <li>The Job Scheduler has been moved to the <a href="services.html">Services 
+    Framework</a>. <br>
+  </li>
 </ul>
 <hr>
 <h3>&nbsp;</h3>
 </body>
-
 </html>
