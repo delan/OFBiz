@@ -545,7 +545,7 @@
         <else>
             <set-service-fields map-name="parameters" to-map-name="callServiceMap" service-name="isStoreInventoryAvailable"/>
             <call-service service-name="isStoreInventoryAvailable" in-map-name="callServiceMap">
-                <result-to-result service-result-name="available" result-name="availableOrNotRequired"/>
+                <result-to-result result-name="available" service-result-name="availableOrNotRequired"/>
             </call-service>
         </else>
         </if-compare>

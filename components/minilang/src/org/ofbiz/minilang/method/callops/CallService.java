@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -49,7 +49,7 @@ import org.w3c.dom.Element;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class CallService extends MethodOperation {
@@ -283,9 +283,9 @@ public class CallService extends MethodOperation {
                 Iterator iter = resultToResult.entrySet().iterator();
                 while (iter.hasNext()) {
                     Map.Entry entry = (Map.Entry) iter.next();
-                    ContextAccessor fromAcsr = (ContextAccessor) entry.getKey();
+                    ContextAccessor targetResultAcsr = (ContextAccessor) entry.getKey();
                     ContextAccessor resultAcsr = (ContextAccessor) entry.getValue();
-                    fromAcsr.put(methodContext.getResults(), resultAcsr.get(result, methodContext), methodContext);
+                    targetResultAcsr.put(methodContext.getResults(), resultAcsr.get(result, methodContext), methodContext);
                 }
             }
         }
