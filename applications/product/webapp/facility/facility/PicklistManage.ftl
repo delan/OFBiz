@@ -55,8 +55,13 @@
                         <input type="submit" value="${uiLabelMap.CommonUpdate}" class="smallSubmit"/>
                     </form>
                     <b>created/modified by</b> ${picklist.createdByUserLogin}/${picklist.lastModifiedByUserLogin}
-                    <a href="<@ofbizUrl>PicklistReport.pdf?picklistId=${picklist.picklistId}</@ofbizUrl>" class="buttontext" target="_blank">[Pick/Pack Report]</a>
+                    <a href="<@ofbizUrl>PicklistReport.pdf?picklistId=${picklist.picklistId}</@ofbizUrl>" class="buttontext">[Pick/Pack Report]</a>
                 </div>
+                <#if picklistInfo.shipmentMethodType?has_content>
+                    <div class="tabletext" style="margin-left: 15px;">
+                        <b>for Shipment Method Type</b> ${picklistInfo.shipmentMethodType.description?default(picklistInfo.shipmentMethodType.shipmentMethodTypeId)}
+                    </div>
+                </#if>
                 
                 <#-- PicklistRole -->
                 <#list picklistInfo.picklistRoleInfoList?if_exists as picklistRoleInfo>
@@ -98,16 +103,19 @@
                         <b>Bin</b> ${picklistBinInfo.picklistBin.binLocationNumber}
                         <#if picklistBinInfo.primaryOrderHeader?exists><b>Primary Order</b> ${picklistBinInfo.primaryOrderHeader.orderId}</#if>
                         <#if picklistBinInfo.primaryOrderItemShipGroup?exists><b>Primary Ship Group</b> ${picklistBinInfo.primaryOrderItemShipGroup.shipGroupSeqId}</#if>
-                        <b>Move Bin to Picklist: </b>
+                    </div>
+                    <div class="tabletext" style="margin-left: 30px;">
+                        <b>Update Bin:</b>
 	                    <form method="POST" action="<@ofbizUrl>updatePicklistBin</@ofbizUrl>" style="display: inline;">
 	                        <input type="hidden" name="facilityId" value="${facilityId}"/>
 	                        <input type="hidden" name="picklistBinId" value="${picklistBinInfo.picklistBin.picklistBinId}"/>
+	                        Location#:
+	                        <input type"text" size="2" name="binLocationNumber" value="${picklistBinInfo.picklistBin.binLocationNumber}"/>
+                            Picklist:
 	                        <select name="picklistId" class="smallSelect">
 	                            <#list picklistActiveList as picklistActive>
-	                              <#if picklistActive.picklistId != picklist.picklistId>
 	                                <#assign picklistActiveStatusItem = picklistActive.getRelatedOneCache("StatusItem")>
-	                                <option value="${picklistActive.picklistId}">${picklistActive.picklistId} [Date:${picklistActive.picklistDate},Status:${picklistActiveStatusItem.description}]</option>
-	                              </#if>
+	                                <option value="${picklistActive.picklistId}"<#if picklistActive.picklistId != picklist.picklistId> selected</#if>>${picklistActive.picklistId} [Date:${picklistActive.picklistDate},Status:${picklistActiveStatusItem.description}]</option>
 	                            </#list>
 	                        </select>
 	                        <input type="submit" value="${uiLabelMap.CommonUpdate}" class="smallSubmit"/>
@@ -121,7 +129,7 @@
                             <b>Product</b> ${picklistItemInfo.orderItem.productId}
                             <b>Inventory Item</b> ${inventoryItemAndLocation.inventoryItemId}
                             <b>Location</b> ${inventoryItemAndLocation.areaId?if_exists}-${inventoryItemAndLocation.aisleId?if_exists}-${inventoryItemAndLocation.sectionId?if_exists}-${inventoryItemAndLocation.levelId?if_exists}-${inventoryItemAndLocation.positionId?if_exists}
-                            <b>Quantity</b> ${picklistItem.quantity} of ${picklistItemInfo.orderItem.quantity}
+                            <b>Quantity</b> ${picklistItem.quantity}<#-- of ${picklistItemInfo.orderItem.quantity}-->
                         </div>
                         <#-- picklistItem.orderItemShipGrpInvRes (do we want to display any of this info?) -->
                         <#-- picklistItemInfo.itemIssuanceList -->

@@ -28,6 +28,39 @@
  *@since      3.0
 -->
 
+<#macro pickInfoDetail pickQuantity picklistBinInfoList product facilityLocation>
+    <fo:table-row>
+        <fo:table-cell padding="2pt" background-color="${rowColor}">
+            <#if facilityLocation?has_content>
+                <fo:block>${facilityLocation.areaId?if_exists}-${facilityLocation.aisleId?if_exists}-${facilityLocation.sectionId?if_exists}-${facilityLocation.levelId?if_exists}-${facilityLocation.positionId?if_exists}</fo:block>
+            <#else>
+                <fo:block>[${uiLabelMap.ProductNoLocation}]</fo:block>
+            </#if>
+        </fo:table-cell>
+        <fo:table-cell padding="2pt" background-color="${rowColor}">
+            <#if product?has_content>
+                <fo:block>${product.internalName} [${product.productId}]</fo:block>
+            <#else>
+                <fo:block> </fo:block>
+            </#if>
+        </fo:table-cell>
+        <fo:table-cell padding="2pt" background-color="${rowColor}">
+            <fo:block>${pickQuantity}</fo:block>
+        </fo:table-cell>
+        <fo:table-cell padding="2pt" background-color="${rowColor}">
+            <#list picklistBinInfoList as picklistBinInfo>
+                <fo:block>${picklistBinInfo.quantity} to #${picklistBinInfo.picklistBin.binLocationNumber}</fo:block>
+            </#list>
+        </fo:table-cell>
+    </fo:table-row>
+    <#-- toggle the row color -->
+    <#if rowColor == "white">
+        <#assign rowColor = "#D4D0C8">
+    <#else>
+        <#assign rowColor = "white">
+    </#if>
+</#macro>
+
 <#macro picklistItemInfoDetail picklistItemInfo product facilityLocation>
     <#local picklistItem = picklistItemInfo.picklistItem>
     <#local orderItem = picklistItemInfo.orderItem>
@@ -35,8 +68,6 @@
         <fo:table-cell padding="2pt" background-color="${rowColor}">
             <#if facilityLocation?has_content>
                 <fo:block>${facilityLocation.areaId?if_exists}-${facilityLocation.aisleId?if_exists}-${facilityLocation.sectionId?if_exists}-${facilityLocation.levelId?if_exists}-${facilityLocation.positionId?if_exists}</fo:block>
-            <#elseif product?has_content>
-                <fo:block>[${uiLabelMap.ProductNoLocation}:${product.productId}]</fo:block>
             <#else>
                 <fo:block>[${uiLabelMap.ProductNoLocation}]</fo:block>
             </#if>
@@ -52,7 +83,7 @@
             <fo:block>${picklistItem.quantity}</fo:block>
         </fo:table-cell>
         <fo:table-cell padding="2pt" background-color="${rowColor}">
-            <fo:block>${orderItem.orderId}:${orderItem.orderItemSeqId} [of total: ${orderItem.quantity}]</fo:block>
+            <fo:block>${orderItemShipGrpInvRes.orderId}:${orderItem.orderItemSeqId}</fo:block>
         </fo:table-cell>
         <fo:table-cell padding="2pt" background-color="${rowColor}">
             <fo:block>
@@ -79,7 +110,7 @@
        - picklistBin
        - primaryOrderHeader
        - primaryOrderItemShipGroup
-       - picklistItemInfoList (picklistItem, orderItem, product, inventoryItemAndLocation, orderItemShipGrpInvRes, itemIssuanceList) 
+       - picklistItemInfoList (picklistItem, picklistBin, orderItem, product, inventoryItemAndLocation, orderItemShipGrpInvRes, itemIssuanceList) 
 -->
 <fo:layout-master-set>
     <fo:simple-page-master master-name="main" page-height="11in" page-width="8.5in"
@@ -96,49 +127,57 @@
     <#if security.hasEntityPermission("FACILITY", "_VIEW", session)>
 
     <#if picklistInfo?has_content>
-        <fo:block font-size="14pt">Items to Pick in Facility ${picklistInfo.facility.facilityName} <fo:inline font-size="8pt">[${picklistInfo.facility.facilityId}]</fo:inline></fo:block>
+        <fo:block font-size="12pt">Picklist ${picklistInfo.picklist.picklistId} in Facility ${picklistInfo.facility.facilityName} <fo:inline font-size="8pt">[${picklistInfo.facility.facilityId}]</fo:inline></fo:block>
+        <#if picklistInfo.shipmentMethodType?has_content>
+            <fo:block font-size="10pt">for Shipment Method Type ${picklistInfo.shipmentMethodType.description?default(picklistInfo.shipmentMethodType.shipmentMethodTypeId)}</fo:block>
+        </#if>
     </#if>
 
     <fo:block space-after.optimum="10pt" font-size="10pt">
     <fo:table>
-        <fo:table-column column-width="80pt"/>
-        <fo:table-column column-width="180pt"/>
+        <fo:table-column column-width="90pt"/>
+        <fo:table-column column-width="220pt"/>
         <fo:table-column column-width="50pt"/>
-        <fo:table-column column-width="60pt"/>
         <fo:table-column column-width="80pt"/>
         <fo:table-header>
             <fo:table-row font-weight="bold">
                 <fo:table-cell border-bottom="thin solid grey"><fo:block>${uiLabelMap.ProductLocation}</fo:block></fo:table-cell>
                 <fo:table-cell border-bottom="thin solid grey"><fo:block>${uiLabelMap.ProductProductId}</fo:block></fo:table-cell>
                 <fo:table-cell border-bottom="thin solid grey"><fo:block>${uiLabelMap.ProductToPick}</fo:block></fo:table-cell>
+                <fo:table-cell border-bottom="thin solid grey"><fo:block>Quantity to Bin#</fo:block></fo:table-cell>
+                
+              <#-- Not display details here, just the summary info for the bins
                 <fo:table-cell border-bottom="thin solid grey"><fo:block>${uiLabelMap.OrderOrderItems}</fo:block></fo:table-cell>
                 <fo:table-cell border-bottom="thin solid grey"><fo:block>${uiLabelMap.ProductInventoryItems}</fo:block></fo:table-cell>
+              -->
             </fo:table-row>
         </fo:table-header>
         <fo:table-body>
+            <#--
+              2. facilityLocationInfoList (facilityLocation, product, pickQuantity, picklistBinInfoList (picklistBin, quantity), picklistItemInfoList (picklistItem, picklistBin, orderItem, product, inventoryItemAndLocation, orderItemShipGrpInvRes, itemIssuanceList))
+              3. noLocationProductInfoList (product, pickQuantity, picklistBinInfoList (picklistBin, quantity), picklistItemInfoList (picklistItem, picklistBin, orderItem, product, inventoryItemAndLocation, orderItemShipGrpInvRes, itemIssuanceList))
+            -->
             <#if facilityLocationInfoList?has_content || noLocationProductInfoList?has_content>
                 <#assign rowColor = "white">
-                <#-- facilityLocationInfoList: facilityLocation, picklistItemInfoList (picklistItem, orderItem, product, inventoryItemAndLocation, orderItemShipGrpInvRes, itemIssuanceList) -->
                 <#if facilityLocationInfoList?has_content>
                 <#list facilityLocationInfoList as facilityLocationInfo>
-                    <#assign facilityLocation = facilityLocationInfo.facilityLocation>
-                    <#assign picklistItemInfoList = facilityLocationInfo.picklistItemInfoList>
-                    <#list picklistItemInfoList as picklistItemInfo>
-                        <#assign product = picklistItemInfo.product/>
-                        <@picklistItemInfoDetail picklistItemInfo=picklistItemInfo product=product facilityLocation=facilityLocation/>
+                    <@pickInfoDetail pickQuantity=facilityLocationInfo.pickQuantity picklistBinInfoList=facilityLocationInfo.picklistBinInfoList product=facilityLocationInfo.product facilityLocation=facilityLocationInfo.facilityLocation/>
+                  <#-- Not display details here, just the summary info for the bins
+                    <#list facilityLocationInfo.picklistItemInfoList as picklistItemInfo>
+                        <@picklistItemInfoDetail picklistItemInfo=picklistItemInfo product=picklistItemInfo.product facilityLocation=facilityLocationInfo.facilityLocation/>
                     </#list>
+                  -->
                 </#list>
                 </#if>
-                <#-- noLocationProductInfoList: product, picklistItemInfoList (picklistItem, orderItem, product, inventoryItemAndLocation, orderItemShipGrpInvRes, itemIssuanceList) -->
+
                 <#if noLocationProductInfoList?has_content>
                 <#list noLocationProductInfoList as noLocationProductInfo>
-                    <#if !noLocationProductInfo.facilityLocation?exists>
-                        <#assign product = noLocationProductInfo.product>
-                        <#assign picklistItemInfoList = noLocationProductInfo.picklistItemInfoList>
-                        <#list picklistItemInfoList as picklistItemInfo>
-                            <@picklistItemInfoDetail picklistItemInfo=picklistItemInfo product=product facilityLocation=null/>
-                        </#list>
-                    </#if>
+                    <@pickInfoDetail pickQuantity=noLocationProductInfo.pickQuantity picklistBinInfoList=noLocationProductInfo.picklistBinInfoList product=noLocationProductInfo.product facilityLocation=null/>
+                  <#-- Not display details here, just the summary info for the bins
+                    <#list noLocationProductInfo.picklistItemInfoList as picklistItemInfo>
+                        <@picklistItemInfoDetail picklistItemInfo=picklistItemInfo product=noLocationProductInfo.product facilityLocation=null/>
+                    </#list>
+                  -->
                 </#list>
                 </#if>
             <#else>
@@ -159,7 +198,7 @@
         <#assign picklistItemInfoList = picklistBinInfo.picklistItemInfoList>
         <fo:page-sequence master-reference="main">
         <fo:flow flow-name="xsl-region-body" font-family="Helvetica">
-            <fo:block font-size="14pt">Order ${picklistBinInfo_index+1} to Pack, ID: ${picklistBinInfo.primaryOrderHeader.orderId}, Ship Group ID: ${picklistBinInfo.primaryOrderItemShipGroup.shipGroupSeqId}</fo:block>
+            <fo:block font-size="14pt">Bin ${picklistBin.binLocationNumber} to Pack, Order ID: ${picklistBinInfo.primaryOrderHeader.orderId}, Ship Group ID: ${picklistBinInfo.primaryOrderItemShipGroup.shipGroupSeqId}</fo:block>
             <fo:block space-after.optimum="10pt" font-size="10pt">
             <fo:table>
                 <fo:table-column column-width="60pt"/>
@@ -182,7 +221,7 @@
                         <#assign orderItemShipGrpInvRes = picklistItemInfo.orderItemShipGrpInvRes>
                         <fo:table-row>
                             <fo:table-cell padding="2pt" background-color="${rowColor}">
-                                <fo:block>${picklistItem.orderId}:${picklistItem.shipGroupSeqId}:${picklistItem.orderItemSeqId}</fo:block>
+                                <fo:block><#--${picklistItem.orderId}:${picklistItem.shipGroupSeqId}:-->${picklistItem.orderItemSeqId}</fo:block>
                             </fo:table-cell>
                             <fo:table-cell padding="2pt" background-color="${rowColor}">
                                 <#if product?has_content>
@@ -192,7 +231,7 @@
                                 </#if>
                             </fo:table-cell>
                             <fo:table-cell padding="2pt" background-color="${rowColor}">
-                                <fo:block>${picklistItem.quantity} of ${orderItem.quantity}</fo:block>
+                                <fo:block>${picklistItem.quantity}</fo:block>
                             </fo:table-cell>
                             <fo:table-cell padding="2pt" background-color="${rowColor}">
                                 <fo:block>${orderItemShipGrpInvRes.inventoryItemId}:${orderItemShipGrpInvRes.quantity}:${orderItemShipGrpInvRes.quantityNotAvailable?if_exists}</fo:block>
