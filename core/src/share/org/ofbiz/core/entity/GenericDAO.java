@@ -445,6 +445,7 @@ public class GenericDAO {
       }
     }
     
+    //Debug.logInfo("[GenericDAO.selectByAnd] sql=" + sql);
     try {
       ps = connection.prepareStatement(sql);
       
@@ -457,6 +458,7 @@ public class GenericDAO {
         }
       }
       else dummyValue = new GenericValue(modelEntity);
+      //Debug.logInfo("[GenericDAO.selectByAnd] ps=" + ps.toString());
       rs = ps.executeQuery();
       
       while(rs.next()) {

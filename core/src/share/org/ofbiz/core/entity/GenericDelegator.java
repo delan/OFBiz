@@ -437,11 +437,27 @@ public class GenericDelegator {
   
   /** Finds all Generic entities
    *@param entityName The Name of the Entity as defined in the entity XML file
+   *@return    Collection containing all Generic entities
+   */
+  public Collection findAll(String entityName) throws GenericEntityException {
+    return this.findByAnd(entityName, null, null);
+  }
+  
+  /** Finds all Generic entities
+   *@param entityName The Name of the Entity as defined in the entity XML file
    *@param orderBy The fields of the named entity to order the query by; optionally add a " ASC" for ascending or " DESC" for descending
    *@return    Collection containing all Generic entities
    */
   public Collection findAll(String entityName, List orderBy) throws GenericEntityException {
     return this.findByAnd(entityName, null, orderBy);
+  }
+  
+  /** Finds all Generic entities, looking first in the cache
+   *@param entityName The Name of the Entity as defined in the entity XML file
+   *@return    Collection containing all Generic entities
+   */
+  public Collection findAllCache(String entityName) throws GenericEntityException {
+    return this.findAllCache(entityName, null);
   }
   
   /** Finds all Generic entities, looking first in the cache; uses orderBy for lookup, but only keys results on the entityName and fields
@@ -478,7 +494,8 @@ public class GenericDelegator {
     ModelEntity modelEntity = modelReader.getModelEntity(entityName);
     GenericHelper helper = getEntityHelper(modelEntity);
     
-    if(!modelEntity.areFields(fields.keySet())) throw new IllegalArgumentException("[GenericDelegator.findByAnd] At least of the passed fields is not valid: " + fields.keySet().toString());
+    if(fields != null && !modelEntity.areFields(fields.keySet())) 
+      throw new IllegalArgumentException("[GenericDelegator.findByAnd] At least of the passed fields is not valid: " + fields.keySet().toString());
 
     Collection collection = null;
     collection = helper.findByAnd(modelEntity, fields, orderBy);
