@@ -273,7 +273,6 @@
 
         <!-- now finished, log in the user... -->
         <if-compare field-name="create_allow_password" operator="equals" value="true">
-            <call-bsh>org.ofbiz.core.util.Debug.logError("putting userlogin in session");</call-bsh>
             <field-to-session field-name="newUserLogin" session-name="_USER_LOGIN_"/>
         </if-compare>
     </simple-method>   
