@@ -45,15 +45,31 @@
   <service name="createCreditCardInfo" engine="java"
     location="org.ofbiz.commonapp.party.contact.ContactMechServices" invoke="createCreditCardInfo" auth="true">
 	  <description>Create CreditCardInfo</description>
-	  <attribute name="workEffortTypeId" type="String" mode="IN" optional="false"/>
+	  <attribute name="nameOnCard" type="String" mode="IN" optional="false"/>
+	  <attribute name="companyNameOnCard" type="String" mode="IN" optional="true"/>
+	  <attribute name="cardType" type="String" mode="IN" optional="false"/>
+	  <attribute name="cardNumber" type="String" mode="IN" optional="false"/>
+	  <attribute name="cardSecurityCode" type="String" mode="IN" optional="true"/>
+	  <attribute name="contactMechId" type="String" mode="IN" optional="true"/>
+	  <attribute name="expireDate" type="String" mode="IN" optional="false"/>
+	  <attribute name="creditCardId" type="String" mode="OUT" optional="true"/>
   </service>
   <service name="updateCreditCardInfo" engine="java"
     location="org.ofbiz.commonapp.party.contact.ContactMechServices" invoke="updateCreditCardInfo" auth="true">
 	  <description>Update CreditCardInfo</description>
+	  <attribute name="creditCardId" type="String" mode="IN" optional="false"/>
+	  <attribute name="nameOnCard" type="String" mode="IN" optional="false"/>
+	  <attribute name="companyNameOnCard" type="String" mode="IN" optional="true"/>
+	  <attribute name="cardType" type="String" mode="IN" optional="false"/>
+	  <attribute name="cardNumber" type="String" mode="IN" optional="false"/>
+	  <attribute name="cardSecurityCode" type="String" mode="IN" optional="true"/>
+	  <attribute name="contactMechId" type="String" mode="IN" optional="true"/>
+	  <attribute name="expireDate" type="String" mode="IN" optional="false"/>
+	  <attribute name="newCreditCardId" type="String" mode="OUT" optional="true"/>
   </service>
   <service name="deleteCreditCardInfo" engine="java"
     location="org.ofbiz.commonapp.party.contact.ContactMechServices" invoke="deleteCreditCardInfo" auth="true">
 	  <description>Delete CreditCardInfo</description>
-	  <attribute name="workEffortId" type="String" mode="IN"/>
+	  <attribute name="creditCardId" type="String" mode="IN" optional="false"/>
   </service>
 </services>

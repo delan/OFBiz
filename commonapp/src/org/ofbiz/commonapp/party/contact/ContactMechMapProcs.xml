@@ -29,6 +29,7 @@
  * Created on January 18, 2001
  -->
 <simple-map-processors>
+  <!-- PartyContactMechPurpose map procs -->
   <simple-map-processor name="createPartyContactMechPurpose">
     <process field="contactMechId"><copy/><not-empty><fail-message message="Contact Mech ID is missing"/></not-empty></process>
     <process field="contactMechPurposeTypeId"><copy/><not-empty><fail-message message="Purpose type not specified, cannot add purpose to contact mechanism"/></not-empty></process>
@@ -39,5 +40,35 @@
     <process field="fromDate">
         <not-empty><fail-message message="From Date is missing"/></not-empty>
         <convert type="Timestamp"><fail-message message="From Date is not a valid Date-Time."/></convert></process>
+  </simple-map-processor>
+
+  <!-- CreditCardInfo map procs -->
+  <simple-map-processor name="createCreditCardInfo">
+    <make-in-string field="expireDate">
+      <in-field field="expMonth"/>
+      <constant>/</constant>
+      <in-field field="expYear"/>
+    </make-in-string>
+    <process field="nameOnCard"><copy/><not-empty><fail-message message="Name on Card is missing"/></not-empty></process>
+    <process field="companyNameOnCard"><copy/></process>
+    <process field="cardType"><copy/><not-empty><fail-message message="Card Type is missing"/></not-empty></process>
+    <process field="cardNumber">
+        <copy/>
+        <not-empty><fail-message message="Card Number is missing"/></not-empty>
+        <validate-method method="isAnyCard"><fail-message message="Card Number is not a valid credit card number for any type of card known"/></validate-method></process>
+    <process field="cardSecurityCode"><copy/></process>
+    <process field="contactMechId"><copy/></process>
+    <process field="expMonth"><not-empty><fail-message message="Expiration Month is missing"/></not-empty></process>
+    <process field="expYear"><not-empty><fail-message message="Expiration Year is missing"/></not-empty></process>
+    <process field="expireDate">
+        <copy/>
+        <validate-method method="isDateAfterToday"><fail-message message="The expiration date is before today"/></validate-method></process>
+  </simple-map-processor>
+  <simple-map-processor name="updateCreditCardInfo">
+    <process field="creditCardId"><copy/><not-empty><fail-message message="Credit Card ID is missing"/></not-empty></process>
+    <!-- also call createCreditCardInfo after calling updateCreditCardInfo -->
+  </simple-map-processor>
+  <simple-map-processor name="deleteCreditCardInfo">
+    <process field="creditCardId"><copy/><not-empty><fail-message message="Credit Card ID is missing"/></not-empty></process>
   </simple-map-processor>
 </simple-map-processors>
