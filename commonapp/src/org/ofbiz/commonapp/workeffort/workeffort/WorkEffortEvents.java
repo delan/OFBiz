@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2001/11/11 14:50:36  jonesde
+ * Finished initial working versions of work effort workers and events
+ *
  * Revision 1.2  2001/11/09 01:28:07  jonesde
  * More progress on event and workers, upcoming events worker mostly there
  *
@@ -279,7 +282,7 @@ public class WorkEffortEvents {
     newWorkEffort.set("infoUrl", infoUrl, false);
     
     //if nothing has changed and we are updating, return
-    if("UPDATE".equals(updateMode) && workEffort != null && !newWorkEffort.equals(workEffort)) {
+    if("UPDATE".equals(updateMode) && workEffort != null && newWorkEffort.equals(workEffort)) {
       request.setAttribute("EVENT_MESSAGE", "No changes made, not saving.");
       return "success";
     }
