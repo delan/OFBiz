@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.7  2001/08/17 07:39:03  jonesde
+ * Added initialization to ControlServlet, and put security and helper into the application scope (ServletContext). Other small changes to support this.
+ *
  * Revision 1.6  2001/07/23 18:04:57  azeneski
  * Fixed runaway thread in the job scheduler.
  *
@@ -83,7 +86,9 @@ public class ControlServlet extends HttpServlet {
       String serverName = config.getServletContext().getInitParameter(SiteDefs.ENTITY_SERVER_NAME);
       if(serverName == null || serverName.length() <= 0) serverName = "default";
       GenericHelper helper = GenericHelperFactory.getDefaultHelper(serverName);
+      if(helper == null) Debug.logError("[ControlServlet.init] ERROR: helper factory returned null for serverName \"" + serverName + "\"");
       Security security = new Security(helper);
+      if(security == null) Debug.logError("[ControlServlet.init] ERROR: security create failed for serverName \"" + serverName + "\"");
       //put these two in the "application" scope
       getServletContext().setAttribute("helper", helper);
       getServletContext().setAttribute("security", security);
@@ -111,11 +116,13 @@ public class ControlServlet extends HttpServlet {
         if(helper == null)
         {
           helper = (GenericHelper)getServletContext().getAttribute("helper");
+          if(helper == null) Debug.logError("[ControlServlet] ERROR: helper not found in ServletContext");
           session.setAttribute("helper", helper);
         }
         if(security == null)
         {
           security = (Security)getServletContext().getAttribute("security");
+          if(security == null) Debug.logError("[ControlServlet] ERROR: security not found in ServletContext");
           session.setAttribute("security", security);
         }
         

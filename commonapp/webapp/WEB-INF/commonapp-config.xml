@@ -51,7 +51,7 @@
     <request-map><uri>ViewGeneric</uri><secure>true</secure><auth>true</auth><success>view:ViewGeneric</success></request-map>
     <request-map>
         <uri>UpdateGeneric</uri><secure>true</secure><auth>true</auth>
-        <event-type>java</event-type><event-path>org.ofbiz.core.event.GenericWebEvent</event-path><event-invoke>updateGeneric</event-invoke>
+        <event-type>java</event-type><event-path>org.ofbiz.core.entity.GenericWebEvent</event-path><event-invoke>updateGeneric</event-invoke>
         <success>view:ViewGeneric</success><error>view:ViewGeneric</error>
     </request-map>
 

@@ -99,11 +99,10 @@ public class GenericHelperDAO extends GenericHelperAbstract
   public void removeByPrimaryKey(GenericPK primaryKey)
   {
     if(primaryKey == null) return;
-    GenericValue generic = findByPrimaryKey(primaryKey);
     try 
     { 
-      Debug.logInfo("Removing GenericValue: " + generic.toString());
-      if(generic != null) generic.remove();
+      Debug.logInfo("Removing GenericPK: " + primaryKey.toString());
+      genericDAO.delete(primaryKey);
     }
     catch(Exception e) { Debug.logWarning(e); }
   }

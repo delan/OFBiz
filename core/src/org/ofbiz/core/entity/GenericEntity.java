@@ -221,9 +221,9 @@ public class GenericEntity implements Serializable
     {
       anEntry = (Map.Entry)entries.next();
       theString.append("[");
-      theString.append(anEntry.getKey().toString());
+      theString.append(anEntry.getKey());
       theString.append(",");
-      theString.append(anEntry.getValue().toString());
+      theString.append(anEntry.getValue());
       theString.append("]");
     }
     return theString.toString();

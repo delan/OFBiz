@@ -55,6 +55,7 @@
   String rowClass1 = "viewOneTR1";
   String rowClass2 = "viewOneTR2";
   String rowClass = "";
+  String curFindString = "entityName=" + entityName;
   GenericPK findByPK = new GenericPK(entity);
   for(int fnum=0; fnum<entity.pks.size(); fnum++)
   {
@@ -66,6 +67,8 @@
       String fvalTime = request.getParameter(field.name + "_TIME");
       if(fvalDate != null && fvalDate.length() > 0)
       {
+        curFindString = curFindString + "&" + field.name + "_DATE=" + fvalDate;
+        curFindString = curFindString + "&" + field.name + "_TIME=" + fvalTime;
         findByPK.setString(field.name, fvalDate + " " + fvalTime);
       }
     }
@@ -74,10 +77,12 @@
       String fval = request.getParameter(field.name);
       if(fval != null && fval.length() > 0)
       {
+        curFindString = curFindString + "&" + field.name + "=" + fval;
         findByPK.setString(field.name, fval);
       }
     }
   }
+  curFindString = UtilFormatOut.encodeQuery(curFindString);
 
   GenericValue value = helper.findByPrimaryKey(findByPK);
 %>
@@ -115,7 +120,7 @@ function ShowViewTab(lname)
 <%}%>
 <%if(value != null){%>
   <%if(hasDeletePermission){%>
-    <a href="<%=response.encodeURL(controlPath + "/UpdateGeneric?entityName=" + entityName + "&UPDATE_MODE=DELETE&" + entity.httpArgList(entity.pks))%>" class="buttontext">[Delete this <%=entityName%>]</a>
+    <a href="<%=response.encodeURL(controlPath + "/UpdateGeneric?UPDATE_MODE=DELETE&" + curFindString)%>" class="buttontext">[Delete this <%=entityName%>]</a>
   <%}%>
 <%}%>
 
@@ -312,7 +317,7 @@ function ShowViewTab(lname)
         <%
           String dateString = null;
           String timeString = null;
-          if(value.get(field.name) != null){
+          if(value != null){
             dateString = UtilDateTime.toDateString((java.sql.Timestamp)value.get(field.name));
             timeString = UtilDateTime.toTimeString((java.sql.Timestamp)value.get(field.name));
           } else {
@@ -326,7 +331,7 @@ function ShowViewTab(lname)
       <%} else if(type.javaType.equals("Date") || type.javaType.equals("java.sql.Date")){%>
         <%
           String dateString = null;
-          if(value.get(field.name) != null){
+          if(value != null){
             dateString = UtilDateTime.toDateString((java.sql.Date)value.get(field.name));
           } else {
             dateString = request.getParameter(field.name);
@@ -337,7 +342,7 @@ function ShowViewTab(lname)
       <%} else if(type.javaType.equals("Time") || type.javaType.equals("java.sql.Time")){%>
         <%
           String timeString = null;
-          if(value.get(field.name) != null){
+          if(value != null){
             timeString = UtilDateTime.toTimeString((java.sql.Timestamp)value.get(field.name));
           } else {
             timeString = request.getParameter(field.name);
@@ -345,20 +350,20 @@ function ShowViewTab(lname)
         %>
         Time(HH:MM):<input class='editInputBox' type="text" size="6" maxlength="10" name="<%=field.name%>" value="<%=UtilFormatOut.checkNull(timeString)%>">
       <%}else if(type.javaType.indexOf("Integer") >= 0){%>
-        <input class='editInputBox' type="text" size="20" name="<%=field.name%>" value="<%=value.get(field.name)!=null?UtilFormatOut.formatQuantity((Integer)value.get(field.name)):UtilFormatOut.checkNull(request.getParameter(field.name))%>"> 
+        <input class='editInputBox' type="text" size="20" name="<%=field.name%>" value="<%=value!=null?UtilFormatOut.formatQuantity((Integer)value.get(field.name)):UtilFormatOut.checkNull(request.getParameter(field.name))%>">
       <%}else if(type.javaType.indexOf("Long") >= 0){%>
-        <input class='editInputBox' type="text" size="20" name="<%=field.name%>" value="<%=value.get(field.name)!=null?UtilFormatOut.formatQuantity((Long)value.get(field.name)):UtilFormatOut.checkNull(request.getParameter(field.name))%>"> 
+        <input class='editInputBox' type="text" size="20" name="<%=field.name%>" value="<%=value!=null?UtilFormatOut.formatQuantity((Long)value.get(field.name)):UtilFormatOut.checkNull(request.getParameter(field.name))%>">
       <%}else if(type.javaType.indexOf("Double") >= 0){%>
-        <input class='editInputBox' type="text" size="20" name="<%=field.name%>" value="<%=value.get(field.name)!=null?UtilFormatOut.formatQuantity((Double)value.get(field.name)):UtilFormatOut.checkNull(request.getParameter(field.name))%>"> 
+        <input class='editInputBox' type="text" size="20" name="<%=field.name%>" value="<%=value!=null?UtilFormatOut.formatQuantity((Double)value.get(field.name)):UtilFormatOut.checkNull(request.getParameter(field.name))%>">
       <%}else if(type.javaType.indexOf("Float") >= 0){%>
-        <input class='editInputBox' type="text" size="20" name="<%=field.name%>" value="<%=value.get(field.name)!=null?UtilFormatOut.formatQuantity((Float)value.get(field.name)):UtilFormatOut.checkNull(request.getParameter(field.name))%>"> 
+        <input class='editInputBox' type="text" size="20" name="<%=field.name%>" value="<%=value!=null?UtilFormatOut.formatQuantity((Float)value.get(field.name)):UtilFormatOut.checkNull(request.getParameter(field.name))%>">
       <%}else if(type.javaType.indexOf("String") >= 0){%>
         <%if(type.stringLength() <= 80){%>
-        <input class='editInputBox' type="text" size="<%=type.stringLength()%>" maxlength="<%=type.stringLength()%>" name="<%=field.name%>" value="<%=value.get(field.name)!=null?UtilFormatOut.checkNull((String)value.get(field.name)):UtilFormatOut.checkNull(request.getParameter(field.name))%>">
+        <input class='editInputBox' type="text" size="<%=type.stringLength()%>" maxlength="<%=type.stringLength()%>" name="<%=field.name%>" value="<%=value!=null?UtilFormatOut.checkNull((String)value.get(field.name)):UtilFormatOut.checkNull(request.getParameter(field.name))%>">
         <%} else if(type.stringLength() <= 255){%>
-          <input class='editInputBox' type="text" size="80" maxlength="<%=type.stringLength()%>" name="<%=field.name%>" value="<%=value.get(field.name)!=null?UtilFormatOut.checkNull((String)value.get(field.name)):UtilFormatOut.checkNull(request.getParameter(field.name))%>">
+          <input class='editInputBox' type="text" size="80" maxlength="<%=type.stringLength()%>" name="<%=field.name%>" value="<%=value!=null?UtilFormatOut.checkNull((String)value.get(field.name)):UtilFormatOut.checkNull(request.getParameter(field.name))%>">
         <%} else {%>
-          <textarea cols="60" rows="3" maxlength="<%=type.stringLength()%>" name="<%=field.name%>"><%=value.get(field.name)!=null?UtilFormatOut.checkNull((String)value.get(field.name)):UtilFormatOut.checkNull(request.getParameter(field.name))%></textarea>
+          <textarea cols="60" rows="3" maxlength="<%=type.stringLength()%>" name="<%=field.name%>"><%=value!=null?UtilFormatOut.checkNull((String)value.get(field.name)):UtilFormatOut.checkNull(request.getParameter(field.name))%></textarea>
         <%}%>
       <%}%>
         &nbsp;</div>

@@ -3,7 +3,7 @@ package org.ofbiz.core.entity;
 import java.rmi.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
-import java.math.*;
+import java.lang.reflect.*;
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.entity.model.*;
 import org.ofbiz.core.security.*;
@@ -59,6 +59,7 @@ public class GenericWebEvent
     {
       request.getSession().setAttribute("ERROR_MESSAGE", "The entityName was not specified, but is required.");
       Debug.logWarning("[updateGeneric] The entityName was not specified, but is required.");
+      return "success";
     }
     
     Security security = (Security)request.getSession().getAttribute("security");
@@ -71,12 +72,13 @@ public class GenericWebEvent
     {
       request.getSession().setAttribute("ERROR_MESSAGE", "Update Mode was not specified, but is required.");
       Debug.logWarning("[updateGeneric] Update Mode was not specified, but is required; entityName: " + entityName);
+      return "success";
     }
     
     //check permissions before moving on...
     if(!security.hasEntityPermission(entity.tableName, "_" + updateMode, request.getSession()))
     {
-      request.getSession().setAttribute("ERROR_MESSAGE", "You do not have sufficient permissions to "+ updateMode + " <%=entity.ejbName%> (<%=entity.tableName%>_" + updateMode + " or " + entity.tableName + "_ADMIN needed).");
+      request.getSession().setAttribute("ERROR_MESSAGE", "You do not have sufficient permissions to "+ updateMode + " " + entity.entityName + " (" + entity.tableName + "_" + updateMode + " or " + entity.tableName + "_ADMIN needed).");
       //not really successful, but error return through ERROR_MESSAGE, so quietly fail
       return "success";
     }
@@ -172,11 +174,52 @@ public class GenericWebEvent
     for(int fnum=0; fnum<entity.fields.size(); fnum++)
     {
       ModelField field = (ModelField)entity.fields.get(fnum);
-      findByEntity.get(field.name).toString();
+      
       for(int j=0;j<field.validators.size();j++)
       {
         String curValidate=(String)field.validators.elementAt(j);
-        //if(!UtilValidate.<%=curValidate%>(<%=curField.fieldName%>)) errMsg = errMsg + "<li><%=curField.columnName%> <%=curValidate%> failed: " + UtilValidate.<%=curValidate%>Msg;
+        Class[] paramTypes = new Class[] {String.class};
+        Object[] params = new Object[] {findByEntity.get(field.name).toString()};
+        
+        String className = "org.ofbiz.core.util.UtilValidate";
+        String methodName = curValidate;
+        if(curValidate.indexOf('.') > 0)
+        {
+          className = curValidate.substring(0, curValidate.lastIndexOf('.'));
+          methodName = curValidate.substring(curValidate.lastIndexOf('.') + 1);
+        }
+        Class valClass;
+        try { valClass = Class.forName(className); }
+        catch(ClassNotFoundException cnfe) { Debug.logError("[updateGeneric] Could not find validation class: " + className + "; ignoring."); continue; }
+        Method valMethod;
+        try { valMethod = valClass.getMethod(methodName, paramTypes); }
+        catch(NoSuchMethodException cnfe) { Debug.logError("[updateGeneric] Could not find validation method: " + methodName + " of class " + className + "; ignoring."); continue; }
+
+        Boolean resultBool;
+        try { resultBool = (Boolean)valMethod.invoke(null,params); }
+        catch(Exception e)
+        { 
+          Debug.logError("[updateGeneric] Could not access validation method: " + methodName + " of class " + className + "; returning true."); 
+          resultBool = new Boolean(true);
+        }
+        
+        if(!resultBool.booleanValue())
+        {
+          Field msgField;
+          String message;
+          try 
+          { 
+            msgField = valClass.getField(curValidate + "Msg"); 
+            message = (String)msgField.get(null); 
+          }
+          catch(Exception e)
+          { 
+            Debug.logError("[updateGeneric] Could not find validation message field: " + curValidate + "Msg of class " + className + "; returning generic validation failure message.");
+            message = "validation failed.";
+          }          
+          errMsg = errMsg + "<li>" + field.colName + " " + curValidate + " failed: " + message;
+          Debug.logWarning("[updateGeneric] " + field.colName + " " + curValidate + " failed: " + message);
+        }
       }
     }
 
