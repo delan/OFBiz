@@ -49,12 +49,17 @@ public class ProductPromoWorker {
     public static List getCatalogProductPromos(GenericDelegator delegator, ServletRequest request) {
         List productPromos = new LinkedList();
         try {
-            GenericValue prodCatalog = delegator.findByPrimaryKeyCache("ProdCatalog", UtilMisc.toMap("prodCatalogId", CatalogWorker.getCurrentCatalogId(request)));
-            Iterator prodCatalogPromoAppls = UtilMisc.toIterator(EntityUtil.filterByDate(prodCatalog.getRelatedCache("ProdCatalogPromoAppl", null, UtilMisc.toList("sequenceNum")), true));
-            while (prodCatalogPromoAppls != null && prodCatalogPromoAppls.hasNext()) {
-                GenericValue prodCatalogPromoAppl = (GenericValue) prodCatalogPromoAppls.next();
-                GenericValue productPromo = prodCatalogPromoAppl.getRelatedOneCache("ProductPromo");
-                if (productPromo != null) productPromos.add(productPromo);
+            String prodCatalogId = CatalogWorker.getCurrentCatalogId(request);
+            if (prodCatalogId != null) {
+                GenericValue prodCatalog = delegator.findByPrimaryKeyCache("ProdCatalog", UtilMisc.toMap("prodCatalogId", prodCatalogId));
+                if (prodCatalog != null) {
+                    Iterator prodCatalogPromoAppls = UtilMisc.toIterator(EntityUtil.filterByDate(prodCatalog.getRelatedCache("ProdCatalogPromoAppl", null, UtilMisc.toList("sequenceNum")), true));
+                    while (prodCatalogPromoAppls != null && prodCatalogPromoAppls.hasNext()) {
+                        GenericValue prodCatalogPromoAppl = (GenericValue) prodCatalogPromoAppls.next();
+                        GenericValue productPromo = prodCatalogPromoAppl.getRelatedOneCache("ProductPromo");
+                        if (productPromo != null) productPromos.add(productPromo);
+                    }
+                }
             }
         } catch (GenericEntityException e) {
             Debug.logError(e);
@@ -109,7 +114,7 @@ public class ProductPromoWorker {
                         
                         boolean condResult = checkCondition(productPromoCond, cart, cartItem, oldQuantity, delegator);
                         //if apply, a false condition will cause it to not perform the action
-                        //if unapply, a true condition will cause it to not perofrm the action
+                        //if unapply, a true condition will cause it to not perform the action
                         //so, if apply != condResult (ie true/false or false/true) then don't perform actions
                         if (apply != condResult) {
                             performActions = false;
@@ -119,7 +124,7 @@ public class ProductPromoWorker {
                     
                     if (performActions) {
                         //perform all actions, either apply or unapply
-                        if (Debug.verboseOn()) Debug.logVerbose("Rule Conditions all true, performing actions for rule " + productPromoRule);
+                        if (Debug.infoOn()) Debug.logInfo((apply ? "Performing" : "Un-performing") + " actions for rule " + productPromoRule + "; apply=" + apply);
                         
                         Iterator productPromoActions = UtilMisc.toIterator(productPromoRule.getRelatedCache("ProductPromoAction", null, UtilMisc.toList("productPromoActionSeqId")));
                         while (productPromoActions != null && productPromoActions.hasNext()) {
@@ -236,6 +241,8 @@ public class ProductPromoWorker {
                     ShoppingCartItem cartItemToRemove = cart.findCartItem(itemLoc.intValue());
                     cartItemToRemove.setIsPromo(false);
                     cart.removeCartItem(itemLoc.intValue(), dispatcher);
+                } else {
+                    Debug.logInfo("Could not find cart item for the action " + productPromoAction);
                 }
             }
         } else if ("PROMO_FREE_SHIPPING".equals(productPromoAction.getString("productPromoActionTypeId"))) {
@@ -317,7 +324,9 @@ public class ProductPromoWorker {
             cartItem.addAdjustment(itemAdjustment);
         } else {
             Integer adjLoc = findAdjustment(productPromoAction, (List) cartItem.getAdjustments());
+            Debug.logInfo("Finding adjustment on cartItem for productId " + cartItem.getProductId());
             if (adjLoc != null) {
+                Debug.logInfo("Found adjustment on cartItem for productId " + cartItem.getProductId() + "removing.");
                 cartItem.removeAdjustment(adjLoc.intValue());
             }
         }
