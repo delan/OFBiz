@@ -386,8 +386,8 @@ public class KeywordSearch {
         Iterator productAttributes = UtilMisc.toIterator(delegator.findByAnd("ProductAttribute", UtilMisc.toMap("productId", productId)));
         while (productAttributes != null && productAttributes.hasNext()) {
             GenericValue productAttribute = (GenericValue) productAttributes.next();
-            if (productAttribute.get("name") != null) strings.add(productAttribute.get("name"));
-            if (productAttribute.get("value") != null) strings.add(productAttribute.get("value"));
+            //if (productAttribute.get("attrName") != null) strings.add(productAttribute.get("attrName"));
+            if (productAttribute.get("attrValue") != null) strings.add(productAttribute.get("attrValue"));
         }
         
         Iterator strIter = strings.iterator();
