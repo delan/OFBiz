@@ -288,7 +288,7 @@
     <entity-group group="org.ofbiz.commonapp" entity="EmplPosition" />	
     <entity-group group="org.ofbiz.commonapp" entity="EmplPositionClassType" />	
     <entity-group group="org.ofbiz.commonapp" entity="EmplPositionFulfillment" />	
-    <entity-group group="org.ofbiz.commonapp" entity="EmplPositionReportingStructure" />	
+    <entity-group group="org.ofbiz.commonapp" entity="EmplPositionReportingStruct" />	
     <entity-group group="org.ofbiz.commonapp" entity="EmplPositionResponsibility" />	
     <entity-group group="org.ofbiz.commonapp" entity="EmplPositionType" />	
     <entity-group group="org.ofbiz.commonapp" entity="EmplPositionTypeClass" />	
