@@ -130,11 +130,11 @@ public class PosTransaction {
     }
 
     public double getGrandTotal() {
-        return new Double(UtilFormatOut.formatPrice(cart.getGrandTotal())).doubleValue();
+        return UtilFormatOut.formatPriceNumber(cart.getGrandTotal()).doubleValue();
     }
 
     public double getPaymentTotal() {
-        return new Double(UtilFormatOut.formatPrice(cart.getPaymentTotal())).doubleValue();
+        return UtilFormatOut.formatPriceNumber(cart.getPaymentTotal()).doubleValue();
     }
 
     public double getTotalDue() {
