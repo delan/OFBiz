@@ -35,10 +35,24 @@
 
 <%if(security.hasEntityPermission("ORDERMGR", "_VIEW", session)) {%>
 
-<%	
+<%		
 	GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
+	String sort = request.getParameter("sort");
+	List sortOrder = null;
+	
 	// get user level tasks
-	List partyTasks = delegator.findByAnd("OrderTaskList", UtilMisc.toMap("orderRoleTypeId", "PLACING_CUSTOMER", "wepaPartyId", userLogin.getString("partyId")));
+	sortOrder = UtilMisc.toList("-priority", "orderDate");
+	if (sort != null) {
+		if (sort.equals("name")) {
+			sortOrder.add(0, "firstName");
+			sortOrder.add(0, "lastName");
+		} else {
+			sortOrder.add(0, sort);
+		}
+	}
+	List partyTasks = delegator.findByAnd("OrderTaskList", UtilMisc.toMap("currentStatusId", "WF_RUNNING", "orderRoleTypeId", "PLACING_CUSTOMER", "wepaPartyId", userLogin.getString("partyId")), sortOrder);
+	if (partyTasks != null) partyTasks = EntityUtil.filterByDate(partyTasks);
+	if (partyTasks != null) pageContext.setAttribute("partyTasks", partyTasks);
 
 	// get this user's roles
 	List partyRoles = delegator.findByAnd("PartyRole", UtilMisc.toMap("partyId", userLogin.getString("partyId")));
@@ -46,7 +60,16 @@
 	if (partyRoles != null) pageContext.setAttribute("partyRoles", partyRoles);		
 
 	// get role level tasks
-	List roleTasks = delegator.findByAnd("OrderTaskList", UtilMisc.toMap("orderRoleTypeId", "PLACING_CUSTOMER", "roleTypeId", "ORDER_CLERK"));
+	sortOrder = UtilMisc.toList("currentStatusId", "-priority", "orderDate");
+	if (sort != null) {
+		if (sort.equals("name")) {
+			sortOrder.add(0, "firstName");
+			sortOrder.add(0, "lastName");
+		} else {
+			sortOrder.add(0, sort);
+		}
+	}	
+	List roleTasks = delegator.findByAnd("OrderTaskList", UtilMisc.toMap("orderRoleTypeId", "PLACING_CUSTOMER", "roleTypeId", "ORDER_CLERK"), sortOrder);
 	if (roleTasks != null) roleTasks = EntityUtil.filterByDate(roleTasks);	
 	if (roleTasks != null) pageContext.setAttribute("roleTasks", roleTasks);				
 %>
@@ -102,8 +125,9 @@
                     <TR><TD colspan='8'><HR class='sepbar'></TD></TR>
                     <ofbiz:iterator name="task" property="partyTasks" type="org.ofbiz.core.entity.GenericValue" expandMap="true">
                       <TR>
-                        <td>                          
-                          <a href="<ofbiz:url>/orderview?<ofbiz:print attribute="orderId"/></ofbiz:url>" class="buttontext">
+                        <td>               
+                          <% String orderStr = "order_id=" + task.getString("orderId") + "&partyId=" + userLogin.getString("partyId") + "&roleTypeId=" + task.getString("roleTypeId") + "&workEffortId=" + task.getString("workEffortId") + "&fromDate=" + task.getString("fromDate"); %>           
+                          <a href="<ofbiz:url>/orderview?<%=orderStr%></ofbiz:url>" class="buttontext">
                             <ofbiz:print attribute="orderId"/>
                           </a>
                         </td>
@@ -174,8 +198,7 @@
                       <input type="hidden" name="startActivity" value="true">
                     </ofbiz:unless>
                     <tr>
-                      <td>
-                        <% String acceptString = "orderId=" + task.getString("orderId") + "&partyId=" + userLogin.getString("partyId") + "&roleTypeId=" + task.getString("roleTypeId") + "&workEffortId=" + task.getString("workEffortId") + "&fromDate=" + task.getString("fromDate"); %>
+                      <td>                        
                         <a href="javascript:viewOrder(document.F<ofbiz:print attribute="workEffortId"/>);" class="buttontext">
                           <ofbiz:print attribute="orderId"/>
                         </a>
