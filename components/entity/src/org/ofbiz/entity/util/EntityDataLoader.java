@@ -1,5 +1,5 @@
 /*
- * $Id: EntityDataLoader.java,v 1.3 2004/06/24 02:16:31 jonesde Exp $
+ * $Id: EntityDataLoader.java,v 1.4 2004/06/26 23:16:22 ajzeneski Exp $
  *
  * Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -52,7 +52,8 @@ import org.w3c.dom.Element;
  * Some utility routines for loading seed data.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.3 $
+ * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
+ * @version    $Revision: 1.4 $
  * @since      3.0
  */
 public class EntityDataLoader {
@@ -173,6 +174,10 @@ public class EntityDataLoader {
     }
 
     public static int loadData(URL dataUrl, String helperName, GenericDelegator delegator, List errorMessages) throws GenericEntityException {
+        return loadData(dataUrl, helperName, delegator, errorMessages, -1);
+    }
+
+    public static int loadData(URL dataUrl, String helperName, GenericDelegator delegator, List errorMessages, int txTimeout) throws GenericEntityException {
         int rowsChanged = 0;
         
         if (dataUrl == null) {
@@ -190,7 +195,13 @@ public class EntityDataLoader {
               delegator.storeAll(toBeStored);
               rowsChanged += toBeStored.size();
              */
-            EntitySaxReader reader = new EntitySaxReader(delegator);
+
+            EntitySaxReader reader = null;
+            if (txTimeout > 0) {
+                reader = new EntitySaxReader(delegator, txTimeout);
+            } else {
+                reader = new EntitySaxReader(delegator);
+            }
             rowsChanged += reader.parse(dataUrl);
         } catch (Exception e) {
             String xmlError = "[install.loadData]: Error loading XML Resource \"" + dataUrl.toExternalForm() + "\"; Error was: " + e.getMessage();
