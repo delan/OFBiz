@@ -1,5 +1,5 @@
 /*
- * $Id: PriceServices.java,v 1.3 2003/09/02 18:15:03 jonesde Exp $
+ * $Id: PriceServices.java,v 1.4 2003/10/28 11:10:25 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -50,7 +50,7 @@ import org.ofbiz.service.ServiceUtil;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.0
  */
 public class PriceServices {
@@ -648,6 +648,8 @@ public class PriceServices {
 
         result.put("orderItemPriceInfos", orderItemPriceInfos);
         result.put("isSale", new Boolean(isSale));
+        result.put("currencyUsed", currencyUomId);
+
         // utilTimer.timerString("Finished price calc [productId=" + productId + "]", module);
         return result;
     }

@@ -51,4 +51,10 @@
     	<condition field-name="roleTypeId" operator="equals" value="_NA_"/>
         <action service="ensureNaPartyRole" mode="sync"/>
     </eca>
+
+    <!-- Product Content ECAs -->
+    <eca service="createProductContent" event="in-validate">
+    	<condition field-name="contentId" operator="is-empty"/>
+        <action service="createContent" mode="sync"/>
+    </eca>
 </service-eca>
