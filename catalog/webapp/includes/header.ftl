@@ -25,17 +25,22 @@
 -->
 
 <#assign security = requestAttributes.security>
+<#assign unselectedLeftClassName = "headerButtonLeft">
+<#assign unselectedRightClassName = "headerButtonRight">
+<#assign selectedLeftClassMap = {page.headerItem?default("void") : "headerButtonLeftSelected"}>
+<#assign selectedRightClassMap = {page.headerItem?default("void") : "headerButtonRightSelected"}>
+
 <div class="apptitle">&nbsp;Catalog Manager Application&nbsp;</div>
 <div class="row">
-  <div class="col"><a href="<@ofbizUrl>/main</@ofbizUrl>" class="headerButtonLeft">Main</a></div>  
-  <div class="col"><a href="<ofbiz:url>/EditFeatureCategories</ofbiz:url>" class="headerButtonLeft">FeatureCats</a></div>
-  <div class="col"><a href="<ofbiz:url>/FindProductPromo</ofbiz:url>" class="headerButtonLeft">Promos</a></div>
-  <div class="col"><a href="<ofbiz:url>/FindProductPriceRules</ofbiz:url>" class="headerButtonLeft">PriceRules</a></div>    
+  <div class="col"><a href="<@ofbizUrl>/main</@ofbizUrl>" class="${selectedLeftClassMap.main?default(unselectedLeftClassName)}"">Main</a></div>  
+  <div class="col"><a href="<@ofbizUrl>/EditFeatureCategories</@ofbizUrl>" class="${selectedLeftClassMap.featurecats?default(unselectedLeftClassName)}"">FeatureCats</a></div>
+  <div class="col"><a href="<@ofbizUrl>/FindProductPromo</@ofbizUrl>" class="${selectedLeftClassMap.promos?default(unselectedLeftClassName)}"">Promos</a></div>
+  <div class="col"><a href="<@ofbizUrl>/FindProductPriceRules</@ofbizUrl>" class="${selectedLeftClassMap.pricerules?default(unselectedLeftClassName)}"">PriceRules</a></div>    
 
   <#if requestAttributes.userLogin?has_content>
-    <div class="col-right"><a href="<@ofbizUrl>/logout</@ofbizUrl>" class="headerButtonRight">Logout</a></div>
+    <div class="col-right"><a href="<@ofbizUrl>/logout</@ofbizUrl>" class="${selectedRightClassMap.logout?default(unselectedRightClassName)}">Logout</a></div>
   <#else>
-    <div class="col-right"><a href='<@ofbizUrl>${requestAttributes.checkLoginUrl?if_exists}</@ofbizUrl>' class='headerButtonRight'>Login</a></div>
+    <div class="col-right"><a href="<@ofbizUrl>${requestAttributes.checkLoginUrl?if_exists}</@ofbizUrl>" class="${selectedRightClassMap.login?default(unselectedRightClassName)}">Login</a></div>
   </#if>
   <div class="col-fill">&nbsp;</div>
 </div>
