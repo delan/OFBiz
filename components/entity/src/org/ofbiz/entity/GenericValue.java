@@ -427,6 +427,7 @@ public class GenericValue extends GenericEntity {
                         while (keyMapIter.hasNext()) {
                             ModelKeyMap mkm = (ModelKeyMap) keyMapIter.next();
                             newValue.set(mkm.getRelFieldName(), this.get(mkm.getFieldName()));
+                            if (Debug.infoOn()) Debug.logInfo("Set [" + mkm.getRelFieldName() + "] to - " + this.get(mkm.getFieldName()), module);
                         }
                         if (Debug.infoOn()) Debug.logInfo("Creating place holder value : " + newValue, module);
                         newValue.create();
