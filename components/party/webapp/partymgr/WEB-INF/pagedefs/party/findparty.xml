@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <page>
     <template>main</template>
-    <property name="title">Find party</property>
+    <property name="title">Find Party(s)</property>
     <property name="title.property">PageTitleFindParty</property>
     <property name="headerItem">find</property>
     <content-action name="/party/findparty.bsh"/>

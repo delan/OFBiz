@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -20,188 +20,298 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@author     Olivier Heintz (olivier.heintz@nereide.biz)
- *@version    $Revision: 1.5 $
- *@since      2.2
+ *@version    $Revision: 1.6 $
+ *@since      3.0
 -->
 
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
-<#if security.hasEntityPermission("PARTYMGR", "_VIEW", session)>
-<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
-  <TR>
-    <TD width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
-        <tr>
-          <td width="100%"><div class="boxhead">${uiLabelMap.PartyFindParties}</div></td>
-        </tr>
-      </table>
-      <table width='100%' border='0' cellspacing='0' cellpadding='2' class='boxbottom'>
-          <form method="post" action="<@ofbizUrl>/viewprofile</@ofbizUrl>" name="viewprofileform">
-            <tr>
-              <td width="25%" align=right><div class="tabletext">${uiLabelMap.PartyPartyId}</div></td>
-              <td width="40%">
-                <input type="text" name="party_id" size="20" class="inputBox" value='${requestParameters.party_id?if_exists}'>
-              </td>
-              <td width="35%">
-                <a href="javascript:document.viewprofileform.submit()" class="buttontext">[${uiLabelMap.CommonLookup}]</a>
-                &nbsp;
-                <a href="<@ofbizUrl>/findparty?findAll=true</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonFindAll}]</a>
-              </td>
-            </tr>
-          </form>
-
-          <form method="post" action="<@ofbizUrl>/findparty</@ofbizUrl>" name="findnameform">
-            <tr>
-              <td width="25%" align=right><div class="tabletext">${uiLabelMap.PartyFirstName}</div></td>
-              <td width="40%">
-                <input type="text" name="first_name" size="30" class="inputBox" value='${requestParameters.first_name?if_exists}'>
-              </td>
-              <td width="35%">&nbsp;</td>
-            </tr>
-            <tr>
-              <td width="25%" align=right><div class="tabletext">${uiLabelMap.PartyLastName}</div></td>
-              <td width="40%">
-                <input type="text" name="last_name" size="30" class="inputBox" value='${requestParameters.last_name?if_exists}'>
-              </td>
-              <td width="35%"><a href="javascript:document.findnameform.submit()" class="buttontext">[${uiLabelMap.CommonLookup}]</a></td>
-            </tr>
-          </form>
-
-          <form method="post" action="<@ofbizUrl>/findparty</@ofbizUrl>" name="findgroupnameform">
-            <tr>
-              <td width="25%" align=right><div class="tabletext">${uiLabelMap.PartyPartyGroupName}</div></td>
-              <td width="40%">
-                <input type="text" name="group_name" size="30" class="inputBox" value='${requestParameters.group_name?if_exists}'>
-              </td>
-              <td width="35%"><a href="javascript:document.findgroupnameform.submit()" class="buttontext">[${uiLabelMap.CommonLookup}]</a></td>
-            </tr>
-          </form>
-
-          <form method="post" action="<@ofbizUrl>/findparty</@ofbizUrl>" name="findemailform">
-            <tr>
-              <td width="25%" align=right><div class="tabletext">${uiLabelMap.PartyEmailAddress}</div></td>
-              <td width="40%">
-                <input type="text" name="email" size="30" class="inputBox" value='${requestParameters.email?if_exists}'>
-              </td>
-              <td width="35%"><a href="javascript:document.findemailform.submit()" class="buttontext">[${uiLabelMap.CommonLookup}]</a></td>
-            </tr>
-          </form>
-
-          <form method="post" action="<@ofbizUrl>/viewprofile</@ofbizUrl>" name="findloginform">
-            <tr>
-              <td width="25%" align=right><div class="tabletext">${uiLabelMap.PartyUserLogin}</div></td>
-              <td width="40%">
-                <input type="text" name="userlogin_id" size="30" class="inputBox" value='${requestParameters.userlogin_id?if_exists}'>
-              </td>
-              <td width="35%"><a href="javascript:document.findloginform.submit()" class="buttontext">[${uiLabelMap.CommonLookup}]</a></td>
-            </tr>
-          </form>
-    </table>
-</table>
-<script language="javascript">
+<script language="JavaScript">
 <!-- //
-    document.viewprofileform.party_id.focus();
+function lookupParty(click) {
+    partyIdValue = document.lookupparty.partyId.value;
+    if (partyIdValue.length > 1) {
+        document.lookupparty.action = "<@ofbizUrl>/viewprofile</@ofbizUrl>";
+    } else {
+        document.lookupparty.action = "<@ofbizUrl>/findparty</@ofbizUrl>";
+    }
+
+    if (click) {
+        document.lookupparty.submit();
+    }
+    return true;
+}
+function refreshInfo() {
+    document.lookupparty.lookupFlag.value = "N";
+    document.lookupparty.hideFields.value = "N";
+    document.lookupparty.submit();
+}
 // -->
 </script>
 
-<br>
-<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
-  <TR>
-    <TD width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
-        <tr>
-          <td width="50%"><div class="boxhead">${uiLabelMap.PartyPartiesFound}</div></td>
-          <td width="50%">
-            <div class="boxhead" align=right>
-              <#if parties?has_content>
-                <#if (viewIndex > 0)>
-                  <a href="<@ofbizUrl>/findparty?${searchString + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex-1)}</@ofbizUrl>" class="lightbuttontext">[${uiLabelMap.CommonPrevious}]</a> |
-                </#if>
-                <#if (parties?size > 0)>
-                  ${lowIndex+1} - ${highIndex} of ${parties?size}
-                </#if>
-                <#if (parties?size > highIndex)>
-                  | <a href="<@ofbizUrl>/findparty?${searchString + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex+1)}</@ofbizUrl>" class="lightbuttontext">[${uiLabelMap.CommonNext}]</a>
-                </#if>
-              </#if>
-              &nbsp;
-            </div>
-          </td>
-        </tr>
-      </table>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
-        <tr>
-          <td width="10%"><div class="head3">${uiLabelMap.PartyPartyId}</div></td>
-          <td width="20%"><div class="head3">${uiLabelMap.PartyUserLogin}</div></td>
-          <#if group_name?has_content>
-            <td colspan="2" width="40%"><div class="head3">${uiLabelMap.PartyPartyGroupName}</div></td>
-          <#else>
-            <td width="20%"><div class="head3">${uiLabelMap.PartyLastName}</div></td>
-            <td width="20%"><div class="head3">${uiLabelMap.PartyFirstName}</div></td>
-          </#if>
-          <td width="15%"><div class="head3">${uiLabelMap.PartyType}</div></td>
-          <td width="15%">&nbsp;</td>
-        </tr>
-        <tr>
-          <td colspan='6'><hr class='sepbar'></td>
-        </tr>
-        <#if parties?has_content>
-            <#assign startIndex = viewSize * viewIndex>
-            <#if highIndex < listSize>
-              <#assign endIndex = highIndex - 1>
-            <#else>
-              <#assign endIndex = listSize - 1>
-            </#if>
-            <#list parties[startIndex..endIndex] as partyMap>
-              <#if partyMap_index % 2 = 0>
-                <#assign rowClass = "viewManyTR1">
-              <#else>
-                <#assign rowClass = "viewManyTR2">
-              </#if>
-              <tr class="${rowClass}">
-                <td><a href='<@ofbizUrl>/viewprofile?party_id=${partyMap.party.partyId}</@ofbizUrl>' class="buttontext">${partyMap.party.partyId}</a></td>
-                <td>
-                    <div class="tabletext">${partyMap.userLogins?if_exists}</div>
-                </td>
-                <#if partyMap.person?has_content>
-                    <td><div class="tabletext">${partyMap.person.lastName?if_exists}</div></td>
-                    <td><div class="tabletext">${partyMap.person.firstName?if_exists}</div></td>
-                <#elseif partyMap.group?has_content>
-                        <td colspan='2'><div class="tabletext">${partyMap.group.groupName}</div></td>
-                <#else>
-                        <td><div class="tabletext">&nbsp;</div></td>
-                     <td><div class="tabletext">&nbsp;</div></td>
-                </#if>
-                <td><div class="tabletext">${partyMap.party.partyTypeId?if_exists}</div></td>
-                <td align="right">
-                  <!-- this is all on one line so that no break will be inserted -->
-                  <div class="tabletext"><nobr>
-                    <a href='<@ofbizUrl>/viewprofile?party_id=${partyMap.party.partyId}</@ofbizUrl>' class="buttontext">[${uiLabelMap.CommonDetails}]</a>&nbsp;
-                    <#if security.hasRolePermission("ORDERMGR", "_VIEW", "", "", session)>
-                      <a href='/ordermgr/control/findorders?lookupFlag=Y&hideFields=Y&partyId=${partyMap.party.partyId + externalKeyParam}' class="buttontext">[${uiLabelMap.OrderOrders}]</a>&nbsp;
+<#if security.hasEntityPermission("PARTYMGR", "_VIEW", session)>
+  <form method='post' name="lookupparty" action="<@ofbizUrl>/findparty</@ofbizUrl>" onsubmit="javascript:lookupParty();">
+    <input type='hidden' name='lookupFlag' value='Y'>
+    <input type='hidden' name='hideFields' value='Y'>
+    <table border='0' width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+      <tr>
+        <td width='100%'>
+          <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
+            <tr>
+              <td><div class='boxhead'>Find Party</div></td>
+              <td align='right'>
+                <div class="tabletext">
+                  <#if requestParameters.hideFields?default("N") == "Y">
+                    <a href="<@ofbizUrl>/findparty?hideFields=N${paramList}</@ofbizUrl>" class="submenutextright">Show Lookup Fields</a>
+                  <#else>
+                    <#if partyList?exists><a href="<@ofbizUrl>/findparty?hideFields=Y${paramList}</@ofbizUrl>" class="submenutext">Hide Fields</a></#if>
+                    <a href="javascript:void();" onclick="javascript:lookupParty(true);" class="submenutextright">Lookup Party(s)</a>
+                  </#if>
+                </div>
+              </td>
+            </tr>
+          </table>
+          <#if requestParameters.hideFields?default("N") != "Y">
+            <#assign extInfo = requestParameters.extInfo?default("N")>
+            <table width='100%' border='0' cellspacing='0' cellpadding='2' class='boxbottom'>
+              <tr>
+                <td align='center' width='100%'>
+                  <table border='0' cellspacing='0' cellpadding='2'>
+                    <tr>
+                      <td width='25%' align='right' nowrap><div class='tableheadtext'>Contact Info:</div></td>
+                      <td width='5%'>&nbsp;</td>
+                      <td nowrap>
+                        <div class="tabletext">
+                          <input type="radio" name="extInfo" value="N" onclick="javascript:refreshInfo();" <#if extInfo == "N">checked</#if>>None&nbsp;
+                          <input type="radio" name="extInfo" value="P" onclick="javascript:refreshInfo();" <#if extInfo == "P">checked</#if>>Postal&nbsp;
+                          <input type="radio" name="extInfo" value="T" onclick="javascript:refreshInfo();" <#if extInfo == "T">checked</#if>>Telecom&nbsp;
+                          <input type="radio" name="extInfo" value="O" onclick="javascript:refreshInfo();" <#if extInfo == "O">checked</#if>>Other&nbsp;
+                      </td>
+                    </tr>
+                    <tr>
+                      <td width='25%' align='right'><div class='tableheadtext'>${uiLabelMap.PartyPartyId}:</div></td>
+                      <td width='5%'>&nbsp;</td>
+                      <td><input type='text' class='inputBox' name='partyId'></td>
+                    </tr>
+                    <tr>
+                      <td width='25%' align='right'><div class='tableheadtext'>${uiLabelMap.PartyUserLogin}:</div></td>
+                      <td width='5%'>&nbsp;</td>
+                      <td><input type='text' class='inputBox' name='userLoginId' value='${requestParameters.userLoginId?if_exists}'></td>
+                    </tr>
+                    <tr>
+                      <td width='25%' align='right'><div class='tableheadtext'>${uiLabelMap.PartyLastName}:</div></td>
+                      <td width='5%'>&nbsp;</td>
+                      <td><input type='text' class='inputBox' name='lastName' value='${requestParameters.lastName?if_exists}'></td>
+                    </tr>
+                    <tr>
+                      <td width='25%' align='right'><div class='tableheadtext'>${uiLabelMap.PartyFirstName}:</div></td>
+                      <td width='5%'>&nbsp;</td>
+                      <td><input type='text' class='inputBox' name='firstName' value='${requestParameters.firstName?if_exists}'></td>
+                    </tr>
+                    <tr>
+                      <td width='25%' align='right'><div class='tableheadtext'>${uiLabelMap.PartyPartyGroupName}:</div></td>
+                      <td width='5%'>&nbsp;</td>
+                      <td><input type='text' class='inputBox' name='groupName' value='${requestParameters.groupName?if_exists}'></td>
+                    </tr>
+                    <tr>
+                      <td width='25%' align='right'><div class='tableheadtext'>Role Type:</div></td>
+                      <td width='5%'>&nbsp;</td>
+                      <td>
+                        <select name='roleTypeId' class='selectBox'>
+                          <#if currentRole?has_content>
+                            <option value="${currentRole.roleTypeId}">${currentRole.description}</option>
+                            <option value="${currentRole.roleTypeId}">---</option>
+                          </#if>
+                          <option value="ANY">Any Role Type</option>
+                          <#list roleTypes as roleType>
+                            <option value="${roleType.roleTypeId}">${roleType.description}</option>
+                          </#list>
+                        </select>
+                      </td>
+                    </tr>
+                    <#if extInfo == 'P'>
+                      <tr><td colspan="3"><hr class="sepbar"></td></tr>
+                      <tr>
+                        <td width='25%' align='right'><div class='tableheadtext'>Address 1:</div></td>
+                        <td width='5%'>&nbsp;</td>
+                        <td><input type='text' class='inputBox' name='address1' value='${requestParameters.address1?if_exists}'></td>
+                      </tr>
+                      <tr>
+                        <td width='25%' align='right'><div class='tableheadtext'>Address 2:</div></td>
+                        <td width='5%'>&nbsp;</td>
+                        <td><input type='text' class='inputBox' name='address2' value='${requestParameters.address2?if_exists}'></td>
+                      </tr>
+                      <tr>
+                        <td width='25%' align='right'><div class='tableheadtext'>City:</div></td>
+                        <td width='5%'>&nbsp;</td>
+                        <td><input type='text' class='inputBox' name='city' value='${requestParameters.city?if_exists}'></td>
+                      </tr>
+                      <tr>
+                        <td width='25%' align='right'><div class='tableheadtext'>State/Province:</div></td>
+                        <td width='5%'>&nbsp;</td>
+                        <td>
+                          <select name='stateProvinceGeoId' class='selectBox'>
+                            <#if currentStateGeo?has_content>
+                              <option value="${currentStateGeo.geoId}">${currentStateGeo.geoName?default(currentStateGeo.geoId)}</option>
+                              <option value="${currentStateGeo.geoId}">---</option>
+                            </#if>
+                            <option value="ANY">Any State/Province</option>
+                            ${pages.get("/includes/states.ftl")}
+                          </select>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td width='25%' align='right'><div class='tableheadtext'>Postal Code:</div></td>
+                        <td width='5%'>&nbsp;</td>
+                        <td><input type='text' class='inputBox' name='postalCode' value='${requestParameters.postalCode?if_exists}'></td>
+                      </tr>
                     </#if>
-                    <#if security.hasEntityPermission("ORDERMGR", "_CREATE", session)>
-                      <a href='/ordermgr/control/orderentry?mode=SALES_ORDER&partyId=${partyMap.party.partyId + externalKeyParam}' class="buttontext">[${uiLabelMap.OrderNewOrder}]</a>&nbsp;
+                    <#if extInfo == 'T'>
+                      <tr><td colspan="3"><hr class="sepbar"></td></tr>
+                      <tr>
+                        <td width='25%' align='right'><div class='tableheadtext'>Country Code:</div></td>
+                        <td width='5%'>&nbsp;</td>
+                        <td><input type='text' class='inputBox' name='countryCode' value='${requestParameters.countryCode?if_exists}'></td>
+                      </tr>
+                      <tr>
+                        <td width='25%' align='right'><div class='tableheadtext'>Area Code:</div></td>
+                        <td width='5%'>&nbsp;</td>
+                        <td><input type='text' class='inputBox' name='areaCode' value='${requestParameters.areaCode?if_exists}'></td>
+                      </tr>
+                      <tr>
+                        <td width='25%' align='right'><div class='tableheadtext'>Contact Number:</div></td>
+                        <td width='5%'>&nbsp;</td>
+                        <td><input type='text' class='inputBox' name='contactNumber' value='${requestParameters.contactNumber?if_exists}'></td>
+                      </tr>
                     </#if>
-                  </nobr></div>
+                    <#if extInfo == 'O'>
+                      <tr><td colspan="3"><hr class="sepbar"></td></tr>
+                      <tr>
+                        <td width='25%' align='right'><div class='tableheadtext'>Contact Info (Email, URL, etc):</div></td>
+                        <td width='5%'>&nbsp;</td>
+                        <td><input type='text' class='inputBox' name='infoString' value='${requestParameters.infoString?if_exists}'></td>
+                      </tr>
+                    </#if>
+                    <tr><td colspan="3"><hr class="sepbar"></td></tr>
+                    <tr>
+                      <td width='25%' align='right'>&nbsp;</td>
+                      <td width='5%'>&nbsp;</td>
+                      <td>
+                        <div class="tabletext">
+                          <input type='checkbox' name='showAll' value='Y' onclick="javascript:lookupParty(true);">&nbsp;Show All Records
+                        </div>
+                      </td>
+                    </tr>
+                  </table>
                 </td>
               </tr>
-            </#list>
-        </#if>
-        <#if errorMessage?has_content>
-          <tr>
-            <td colspan='4'><div class="head3"><ofbiz:print attribute="errorMessage"/></div></td>
-          </tr>
-        </#if>
-        <#if !parties?has_content>
-          <tr>
-            <td colspan='4'><div class='head3'>${uiLabelMap.PartyNoPartiesFound}</div></td>
-          </tr>
-        </#if>
-      </table>
-    </TD>
-  </TR>
-</TABLE>
+            </table>
+          </#if>
+        </td>
+      </tr>
+    </table>
+    <input type="image" src="/images/spacer.gif" onClick="javascript:document.lookupparty.submit();">
+  </form>
+  <script language="JavaScript">
+    <!--//
+      document.lookupparty.partyId.focus();
+    //-->
+  </script>
+
+  <#if partyList?exists>
+    <br>
+    <table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+      <tr>
+        <td width='100%'>
+          <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
+            <tr>
+              <td width="50%"><div class="boxhead">Party(s) Found</div></td>
+              <td width="50%">
+                 <div class="boxhead" align=right>
+                  <#if (partyListSize > 0)>
+                    <#if (viewIndex > 1)>
+                      <a href="<@ofbizUrl>/findparty?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}&hideFields=${requestParameters.hideFields?default("N")}${paramList}</@ofbizUrl>" class="submenutext">Previous</a>
+                    <#else>
+                      <span class="submenutextdisabled">Previous</span>
+                    </#if>
+                    <#if (partyListSize > 0)>
+                      <span class="submenutextinfo">${lowIndex} - ${highIndex} of ${partyListSize}</span>
+                    </#if>
+                    <#if (partyListSize > highIndex)>
+                      <a href="<@ofbizUrl>/findparty?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}&hideFields=${requestParameters.hideFields?default("N")}${paramList}</@ofbizUrl>" class="submenutextright">Next</a>
+                    <#else>
+                      <span class="submenutextrightdisabled">Next</span>
+                    </#if>
+                  </#if>
+                  &nbsp;
+                </div>
+              </td>
+            </tr>
+          </table>
+
+          <table width="100%" border="0" cellpadding="0" cellspacing="0">
+            <tr>
+              <td><div class="tableheadtext">Party #</div></td>
+              <td><div class="tableheadtext">User Login</div></td>
+              <td><div class="tableheadtext">Name</div></td>
+              <td><div class="tableheadtext">Postal Code</div></td>
+              <td><div class="tableheadtext">Type</div></td>
+              <td>&nbsp;</td>
+            </tr>
+            <tr><td colspan="6"><hr class="sepbar"></td></tr>
+            <#if partyList?has_content>
+              <#assign rowClass = "viewManyTR2">
+              <#list partyList as partyRow>
+                <#assign partyType = partyRow.getRelatedOne("PartyType")?if_exists>
+                <tr class='${rowClass}'>
+                  <td><a href="<@ofbizUrl>/viewprofile?partyId=${partyRow.partyId}</@ofbizUrl>" class="buttontext">${partyRow.partyId}</a></td>
+                  <td><div class="tabletext">${partyRow.userLoginId?default("N/A")}</div></td>
+                  <td>
+                    <div class="tabletext">
+                      <#if partyRow.lastName?has_content>
+                        ${partyRow.lastName}<#if partyRow.firstName?has_content>, ${partyRow.firstName}</#if>
+                      <#elseif partyRow.groupName?has_content>
+                        ${partyRow.groupName}
+                      <#else>
+                        (No Name Found)
+                      </#if>
+                  </td>
+                  <td><div class="tabletext">${partyRow.postalCode?if_exists}</div></td>
+                  <td><div class="tabletext">${partyType.description?default("???")}</div></td>
+                  <td align="right">
+                    <!-- this is all on one line so that no break will be inserted -->
+                    <div class="tabletext"><nobr>
+                      <a href='<@ofbizUrl>/viewprofile?partyId=${partyRow.partyId}</@ofbizUrl>' class="buttontext">[${uiLabelMap.CommonDetails}]</a>&nbsp;
+                      <#if security.hasRolePermission("ORDERMGR", "_VIEW", "", "", session)>
+                        <a href='/ordermgr/control/findorders?lookupFlag=Y&hideFields=Y&partyId=${partyRow.partyId + externalKeyParam}' class="buttontext">[${uiLabelMap.OrderOrders}]</a>&nbsp;
+                      </#if>
+                      <#if security.hasEntityPermission("ORDERMGR", "_CREATE", session)>
+                        <a href='/ordermgr/control/orderentry?mode=SALES_ORDER&partyId=${partyRow.partyId + externalKeyParam}' class="buttontext">[${uiLabelMap.OrderNewOrder}]</a>&nbsp;
+                      </#if>
+                    </nobr></div>
+                  </td>
+                </tr>
+                <#-- toggle the row color -->
+                <#if rowClass == "viewManyTR2">
+                  <#assign rowClass = "viewManyTR1">
+                <#else>
+                  <#assign rowClass = "viewManyTR2">
+                </#if>
+              </#list>
+            <#else>
+              <tr>
+                <td colspan='5'><div class='head3'>No party(s) found.</div></td>
+              </tr>
+            </#if>
+            <#if lookupErrorMessage?exists>
+              <tr>
+                <td colspan='5'><div class="head3">${lookupErrorMessage}</div></td>
+              </tr>
+            </#if>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </#if>
 <#else>
   <h3>${uiLabelMap.PartyMgrViewPermissionError}</h3>
 </#if>

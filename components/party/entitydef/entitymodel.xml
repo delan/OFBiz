@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.8 $
+ * @version    $Revision: 1.9 $
  */
 -->
 
@@ -1817,6 +1817,66 @@
       <view-link entity-alias="PR" rel-entity-alias="PS">
         <key-map field-name="partyId"/>
       </view-link>
+    </view-entity>
+    <view-entity entity-name="PartySearchView"
+            package-name="org.ofbiz.party.party"
+            title="Party Search View">
+      <member-entity entity-alias="PT" entity-name="Party"/>
+      <member-entity entity-alias="PR" entity-name="Person"/>
+      <member-entity entity-alias="PG" entity-name="PartyGroup"/>
+      <member-entity entity-alias="RT" entity-name="PartyRole"/>
+      <member-entity entity-alias="PC" entity-name="PartyContactMech"/>
+      <member-entity entity-alias="CM" entity-name="ContactMech"/>
+      <member-entity entity-alias="PA" entity-name="PostalAddress"/>
+      <member-entity entity-alias="TC" entity-name="TelecomNumber"/>
+      <member-entity entity-alias="UL" entity-name="UserLogin"/>
+      <alias entity-alias="PT" name="partyId"/>
+      <alias entity-alias="PT" name="partyTypeId"/>
+      <alias entity-alias="PT" name="externalId"/>
+      <alias entity-alias="PR" name="firstName"/>
+      <alias entity-alias="PR" name="lastName"/>
+      <alias entity-alias="PR" name="birthDate"/>
+      <alias entity-alias="PR" name="memberId"/>
+      <alias entity-alias="PG" name="groupName"/>
+      <alias entity-alias="PG" name="federalTaxId"/>
+      <alias entity-alias="RT" name="roleTypeId"/>
+      <alias entity-alias="PC" name="contactMechId"/>
+      <alias entity-alias="CM" name="contactMechTypeId"/>
+      <alias entity-alias="CM" name="infoString"/>
+      <alias entity-alias="PA" name="address1"/>
+      <alias entity-alias="PA" name="address2"/>
+      <alias entity-alias="PA" name="city"/>
+      <alias entity-alias="PA" name="stateProvinceGeoId"/>
+      <alias entity-alias="PA" name="countryGeoId"/>
+      <alias entity-alias="PA" name="postalCode"/>
+      <alias entity-alias="TC" name="countryCode"/>
+      <alias entity-alias="TC" name="areaCode"/>
+      <alias entity-alias="TC" name="contactNumber"/>
+      <alias entity-alias="UL" name="userLoginId"/>
+      <view-link entity-alias="PT" rel-entity-alias="PR" rel-optional="true">
+        <key-map field-name="partyId"/>
+      </view-link>
+      <view-link entity-alias="PT" rel-entity-alias="PG" rel-optional="true">
+        <key-map field-name="partyId"/>
+      </view-link>
+      <view-link entity-alias="PT" rel-entity-alias="PC" rel-optional="true">
+        <key-map field-name="partyId"/>
+      </view-link>
+      <view-link entity-alias="PC" rel-entity-alias="CM" rel-optional="true">
+        <key-map field-name="contactMechId"/>
+      </view-link>
+      <view-link entity-alias="CM" rel-entity-alias="PA" rel-optional="true">
+        <key-map field-name="contactMechId"/>
+      </view-link>
+      <view-link entity-alias="CM" rel-entity-alias="TC" rel-optional="true">
+        <key-map field-name="contactMechId"/>
+      </view-link>
+      <view-link entity-alias="PT" rel-entity-alias="UL" rel-optional="true">
+        <key-map field-name="partyId"/>
+      </view-link>
+      <relation type="one-nofk" rel-entity-name="PartyType">
+        <key-map field-name="partyTypeId"/>
+      </relation>
     </view-entity>
     <entity entity-name="PartyType"
             package-name="org.ofbiz.party.party"
