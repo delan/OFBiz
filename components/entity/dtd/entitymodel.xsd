@@ -1,0 +1,351 @@
+
+<xsd:schema xmlns:xsd='http://www.w3.org/2001/XMLSchema'>
+<!--
+  To refer to this DTD in your XML file, use the following declaration:
+<!DOCTYPE entitymodel PUBLIC "-//OFBiz//DTD Entity Model//EN" "http://www.ofbiz.org/dtds/entitymodel.dtd">
+-->
+
+<!--
+ *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+*This is the DTD for the Open For Business Generic Entity Model entity definition XML file.
+*This DTD is meant to be as simple as possible, and is modelled from the standard ejb deployment descriptor ejb-jar.xml.
+-->
+
+<!-- ====================== Root Element ======================= -->
+ <xsd:element name='entitymodel'>
+  <xsd:complexType>
+   <xsd:sequence>
+    <xsd:element ref='title' minOccurs='0' maxOccurs='1'/>
+    <xsd:element ref='description' minOccurs='0' maxOccurs='1'/>
+    <xsd:element ref='copyright' minOccurs='0' maxOccurs='1'/>
+    <xsd:element ref='author' minOccurs='0' maxOccurs='1'/>
+    <xsd:element ref='version' minOccurs='0' maxOccurs='1'/>
+    <xsd:choice minOccurs='0' maxOccurs='unbounded'>
+     <xsd:element ref='entity'/>
+     <xsd:element ref='view-entity'/>
+    </xsd:choice>
+   </xsd:sequence>
+  </xsd:complexType>
+ </xsd:element>
+
+<!-- ================= Children of entitymodel =================== -->
+ <xsd:element name='title' type='xsd:string'>
+ </xsd:element>
+
+ <xsd:element name='description' type='xsd:string'>
+ </xsd:element>
+
+ <xsd:element name='copyright' type='xsd:string'>
+ </xsd:element>
+
+ <xsd:element name='author' type='xsd:string'>
+ </xsd:element>
+
+ <xsd:element name='version' type='xsd:string'>
+ </xsd:element>
+
+<!-- ================== entity ===================== -->
+<!-- see the children of entitymodel section for description, etc. -->
+ <xsd:element name='entity'>
+  <xsd:complexType>
+   <xsd:sequence>
+    <xsd:element ref='description' minOccurs='0' maxOccurs='1'/>
+    <xsd:element ref='field' maxOccurs='unbounded'/>
+    <xsd:element ref='prim-key' minOccurs='0' maxOccurs='unbounded'/>
+    <xsd:element ref='relation' minOccurs='0' maxOccurs='unbounded'/>
+    <xsd:element ref='index' minOccurs='0' maxOccurs='unbounded'/>
+   </xsd:sequence>
+   <xsd:attribute name='entity-name' type='xsd:string' use='required'/>
+   <xsd:attribute name='table-name' type='xsd:string' use='optional'/>
+   <xsd:attribute name='package-name' type='xsd:string' use='required'/>
+   <xsd:attribute name='default-resource-name' type='xsd:string' use='optional'/>
+   <xsd:attribute name='dependent-on' type='xsd:string' use='optional'/>
+   <xsd:attribute name='enable-lock' default='false'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='true'/>
+      <xsd:enumeration value='false'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+   <xsd:attribute name='no-auto-stamp' default='false'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='true'/>
+      <xsd:enumeration value='false'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+   <xsd:attribute name='never-cache' default='false'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='true'/>
+      <xsd:enumeration value='false'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+   <xsd:attribute name='auto-clear-cache' default='true'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='true'/>
+      <xsd:enumeration value='false'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+   <xsd:attribute name='title' type='xsd:string' use='optional'/>
+   <xsd:attribute name='copyright' type='xsd:string' use='optional'/>
+   <xsd:attribute name='author' type='xsd:string' use='optional'/>
+   <xsd:attribute name='version' type='xsd:string' use='optional'/>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='prim-key'>
+  <xsd:complexType>
+   <xsd:attribute name='field' type='xsd:string' use='required'/>
+  </xsd:complexType>
+ </xsd:element>
+
+<!-- ==================== field ===================== -->
+ <xsd:element name='field'>
+  <xsd:complexType>
+   <xsd:sequence>
+    <xsd:element ref='validate' minOccurs='0' maxOccurs='unbounded'/>
+   </xsd:sequence>
+   <xsd:attribute name='name' type='xsd:string' use='required'/>
+   <xsd:attribute name='col-name' type='xsd:string' use='optional'/>
+   <xsd:attribute name='type' type='xsd:string' use='required'/>
+   <xsd:attribute name='encrypt' default='false'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='true'/>
+      <xsd:enumeration value='false'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='validate'>
+  <xsd:complexType>
+   <xsd:attribute name='name' type='xsd:string' use='required'/>
+  </xsd:complexType>
+ </xsd:element>
+
+<!-- ==================== relation ====================== -->
+<!-- specifies whether or not the relation is a dependent one; ie if the related entity can exist without the main entity -->
+ <xsd:element name='relation'>
+  <xsd:complexType>
+   <xsd:sequence>
+    <xsd:element ref='key-map' maxOccurs='unbounded'/>
+   </xsd:sequence>
+   <xsd:attribute name='type' use='required'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='one'/>
+      <xsd:enumeration value='many'/>
+      <xsd:enumeration value='one-nofk'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+   <xsd:attribute name='title' type='xsd:string' use='optional'/>
+   <xsd:attribute name='rel-entity-name' type='xsd:string' use='required'/>
+   <xsd:attribute name='fk-name' type='xsd:string' use='optional'/>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='key-map'>
+  <xsd:complexType>
+   <xsd:attribute name='field-name' type='xsd:string' use='required'/>
+   <xsd:attribute name='rel-field-name' type='xsd:string' use='optional'/>
+  </xsd:complexType>
+ </xsd:element>
+
+<!-- ==================== index ===================== -->
+ <xsd:element name='index'>
+  <xsd:complexType>
+   <xsd:sequence>
+    <xsd:element ref='index-field' maxOccurs='unbounded'/>
+   </xsd:sequence>
+   <xsd:attribute name='name' type='xsd:string' use='required'/>
+   <xsd:attribute name='unique' default='false'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='true'/>
+      <xsd:enumeration value='false'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='index-field'>
+  <xsd:complexType>
+   <xsd:attribute name='name' type='xsd:string' use='required'/>
+  </xsd:complexType>
+ </xsd:element>
+
+<!-- ================== view-entity ===================== -->
+<!-- see the children of entitymodel section for description, etc. -->
+ <xsd:element name='view-entity'>
+  <xsd:complexType>
+   <xsd:sequence>
+    <xsd:element ref='description' minOccurs='0' maxOccurs='1'/>
+    <xsd:element ref='member-entity' maxOccurs='unbounded'/>
+    <xsd:element ref='alias-all' minOccurs='0' maxOccurs='unbounded'/>
+    <xsd:element ref='alias' minOccurs='0' maxOccurs='unbounded'/>
+    <xsd:element ref='view-link' minOccurs='0' maxOccurs='unbounded'/>
+    <xsd:element ref='relation' minOccurs='0' maxOccurs='unbounded'/>
+   </xsd:sequence>
+   <xsd:attribute name='entity-name' type='xsd:string' use='required'/>
+   <xsd:attribute name='package-name' type='xsd:string' use='required'/>
+   <xsd:attribute name='dependent-on' type='xsd:string' use='optional'/>
+   <xsd:attribute name='default-resource-name' type='xsd:string' use='optional'/>
+   <xsd:attribute name='never-cache' default='false'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='true'/>
+      <xsd:enumeration value='false'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+   <xsd:attribute name='auto-clear-cache' default='true'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='true'/>
+      <xsd:enumeration value='false'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+   <xsd:attribute name='title' type='xsd:string' use='optional'/>
+   <xsd:attribute name='copyright' type='xsd:string' use='optional'/>
+   <xsd:attribute name='author' type='xsd:string' use='optional'/>
+   <xsd:attribute name='version' type='xsd:string' use='optional'/>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='member-entity'>
+  <xsd:complexType>
+   <xsd:attribute name='entity-alias' type='xsd:string' use='required'/>
+   <xsd:attribute name='entity-name' type='xsd:string' use='required'/>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='alias-all'>
+  <xsd:complexType>
+   <xsd:sequence>
+    <xsd:element ref='exclude' minOccurs='0' maxOccurs='unbounded'/>
+   </xsd:sequence>
+   <xsd:attribute name='entity-alias' type='xsd:string' use='required'/>
+   <xsd:attribute name='prefix' type='xsd:string' use='optional'/>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='exclude'>
+  <xsd:complexType>
+   <xsd:attribute name='field' type='xsd:string' use='required'/>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='alias'>
+  <xsd:complexType>
+   <xsd:sequence>
+    <xsd:element ref='complex-alias' minOccurs='0' maxOccurs='1'/>
+   </xsd:sequence>
+   <xsd:attribute name='entity-alias' type='xsd:string' use='required'/>
+   <xsd:attribute name='name' type='xsd:string' use='required'/>
+   <xsd:attribute name='field' type='xsd:string' use='optional'/>
+   <xsd:attribute name='col-alias' type='xsd:string' use='optional'/>
+   <xsd:attribute name='prim-key' type='xsd:string' use='optional'/>
+   <xsd:attribute name='group-by' default='false'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='true'/>
+      <xsd:enumeration value='false'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+   <xsd:attribute name='function' use='optional'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='min'/>
+      <xsd:enumeration value='max'/>
+      <xsd:enumeration value='sum'/>
+      <xsd:enumeration value='avg'/>
+      <xsd:enumeration value='count'/>
+      <xsd:enumeration value='count-distinct'/>
+      <xsd:enumeration value='upper'/>
+      <xsd:enumeration value='lower'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='complex-alias'>
+  <xsd:complexType>
+   <xsd:choice minOccurs='0' maxOccurs='unbounded'>
+    <xsd:element ref='complex-alias'/>
+    <xsd:element ref='complex-alias-field'/>
+   </xsd:choice>
+   <xsd:attribute name='operator' type='xsd:string' use='required'/>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='complex-alias-field'>
+  <xsd:complexType>
+   <xsd:attribute name='entity-alias' type='xsd:string' use='required'/>
+   <xsd:attribute name='field' type='xsd:string' use='required'/>
+   <xsd:attribute name='function' use='optional'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='min'/>
+      <xsd:enumeration value='max'/>
+      <xsd:enumeration value='sum'/>
+      <xsd:enumeration value='avg'/>
+      <xsd:enumeration value='count'/>
+      <xsd:enumeration value='count-distinct'/>
+      <xsd:enumeration value='upper'/>
+      <xsd:enumeration value='lower'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='view-link'>
+  <xsd:complexType>
+   <xsd:sequence>
+    <xsd:element ref='key-map' maxOccurs='unbounded'/>
+   </xsd:sequence>
+   <xsd:attribute name='entity-alias' type='xsd:string' use='required'/>
+   <xsd:attribute name='rel-entity-alias' type='xsd:string' use='required'/>
+   <xsd:attribute name='rel-optional' default='false'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='true'/>
+      <xsd:enumeration value='false'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+  </xsd:complexType>
+ </xsd:element>
+</xsd:schema>
