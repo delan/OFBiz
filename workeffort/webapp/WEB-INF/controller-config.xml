@@ -109,6 +109,11 @@
     	<response name="success" type="view" value="activity"/>
         <response name="error" type="view" value="activity"/>
     </request-map>
+    <request-map uri="acceptassignment"><security https="true" auth="true"/>
+        <event type="simple" path="org/ofbiz/commonapp/workeffort/workeffort/WorkflowSimpleEvents.xml" invoke="acceptAssignment"/>
+    	<response name="success" type="view" value="tasklist"/>
+        <response name="error" type="view" value="tasklist"/>
+    </request-map>
 
     <request-map uri="tasklist"><security https="true" auth="true"/>
     	<response name="success" type="view" value="tasklist"/>
