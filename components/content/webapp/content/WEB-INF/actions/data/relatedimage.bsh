@@ -1,5 +1,5 @@
 /*
- * $Id: relatedprep.bsh,v 1.4 2003/11/04 23:58:06 byersa Exp $
+ * $Id: relatedimage.bsh,v 1.1 2003/11/04 23:58:06 byersa Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -23,16 +23,6 @@
  *
  */
 
-/**
- *
- * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.4 $
- * @since      2.2
-
- * Finds the one-to-many related entities (such as ContentRoles or DataResourceAttributes)
- * that is associated with the current entity (such as Content or DataResource).
- * Builds a listFormWrapper and puts the list in "contentList".
- */
 
 import org.ofbiz.base.util.*;
 import org.ofbiz.entity.*;
@@ -47,25 +37,39 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 
 import java.sql.Timestamp;
+/**
+ *
+ * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
+ * @version    $Revision: 1.1 $
+ * @since      3.0
 
-GenericDelegator delegator = (GenericDelegator)request.getAttribute("delegator");
+ * A special "related" script for the ImageResourceFile that makes the
+ * parent DataResource entity available so the file name can be obtained.
+ */
 
-entityName	= page.getProperty("entityName");
+GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
+
+// Get permission from pagedef config file
+entityName		= page.getProperty("entityName");
 formDefFile	= page.getProperty("formDefFile");
-listFormName	= page.getProperty("listFormName");
+singleFormName = page.getProperty("singleFormName");
+defaultMapName		= page.getProperty("defaultMapName");
+if( defaultMapName == null) defaultMapName	= "currentValue";
+Debug.logInfo("singleFormName" + singleFormName, "");
 
-currentValue = (GenericValue)request.getAttribute("currentValue");
-    org.ofbiz.base.util.Debug.logInfo("in relatedprep, currentValue:" + currentValue, null);
-if(currentValue != null) {
-    relatedList = currentValue.getRelated(entityName);
-    HtmlFormWrapper listWrapper = new HtmlFormWrapper(formDefFile, listFormName, request, response);
-    listWrapper.putInContext("contentList", relatedList);
-    context.put("listWrapper", listWrapper);
-    request.setAttribute("currentList", relatedList);
-} else {
-        errMsg = "No parent record found.";
-        request.setAttribute("_ERROR_MESSAGE_", errMsg);
+HtmlFormWrapper singleWrapper	= null;
 
+
+currentPK = request.getAttribute("currentPK");
+currentValue = delegator.findByPrimaryKey(currentPK);
+
+if (currentPK != null) {
+    dataResourceId = (String)currentPK.get("dataResourceId");
+    singleWrapper = new HtmlFormWrapper(formDefFile, singleFormName, request, response);
+    context.put("dataResourceId", dataResourceId);
+    context.put("currentValue", currentValue);
+    singleWrapper.putInContext("dataResourceId", dataResourceId);
+    singleWrapper.putInContext("currentValue", currentValue);
+    context.put("singleWrapper", singleWrapper);
 }
-
 

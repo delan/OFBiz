@@ -19,35 +19,43 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *@author     David E. Jones
- *@version    $Revision: 1.2 $
- *@since      2.1
  */
+/**
+ *
+ * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
+ * @version    $Revision: 1.3 $
+ * @since      3.0
+
+ * A special script to build the list and forms for maintaining
+ * the content and dataresource setup entities.
+ */
+
 
 import org.ofbiz.base.util.*;
 import org.ofbiz.entity.*;
+import org.ofbiz.security.*;
+import org.ofbiz.service.*;
+import org.ofbiz.entity.model.*;
 import org.ofbiz.content.widget.html.*;
+import org.ofbiz.content.widget.form.*;
 
+
+delegator = request.getAttribute("delegator");
 
 entityName	= page.getProperty("entityName");
 formDefFile	= page.getProperty("formDefFile");
 subMenu	= page.getProperty("subMenu");
 
-security = request.getAttribute("security");
-delegator = request.getAttribute("delegator");
 
-if(security.hasEntityPermission("CONTENTMGR", "_VIEW", session)) {
-    context.put("hasPermission", Boolean.TRUE);
-} else {
-    context.put("hasPermission", Boolean.FALSE);
-}
-
-    List contentList = delegator.findAllCache(entityName);
+contentList = delegator.findAllCache(entityName);
 
 HtmlFormWrapper editWrapper = new HtmlFormWrapper(formDefFile, "Update" + entityName, request, response);
 editWrapper.putInContext("contentList", contentList);
 
 HtmlFormWrapper addWrapper = new HtmlFormWrapper(formDefFile, "Add" + entityName, request, response);
 context.put("contentList", contentList);
-context.put("editWrapper", editWrapper);
-context.put("addWrapper", addWrapper);
+request.setAttribute("contentList", contentList);
+context.put("listWrapper", editWrapper);
+request.setAttribute("listWrapper", editWrapper);
+context.put("singleWrapper", addWrapper);
+request.setAttribute("singleWrapper", addWrapper);

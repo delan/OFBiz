@@ -1,5 +1,5 @@
 /*
- * $Id: contentassocprep.bsh,v 1.4 2003/09/14 05:30:33 jonesde Exp $
+ * $Id: contentassocprep.bsh,v 1.5 2003/11/04 23:58:06 byersa Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -34,71 +34,51 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.sql.Timestamp;
 
-import org.ofbiz.content.widget.html.*;
-import org.ofbiz.content.widget.form.*;
-
 import org.ofbiz.base.util.*;
 import org.ofbiz.entity.*;
 import org.ofbiz.security.*;
 import org.ofbiz.service.*;
 import org.ofbiz.entity.model.*;
+import org.ofbiz.content.widget.html.*;
+import org.ofbiz.content.widget.form.*;
+
 
 import javax.servlet.*;
 import javax.servlet.http.*;
 /**
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.4 $
- * @since      2.1
+ * @version    $Revision: 1.5 $
+ * @since      3.0
 
- * This is a crude general script to find entity data based on the primary key.
- * It only works on entities with one primary key field and it relies on that being
- * in the pagedef config file.
- * It could get and interrogate a GenericEntity object
+ * A special "formprep"-like script for ContentAssoc which has two (from/to)
+ * lists to retrieve.
  */
 
 userLogin = session.getAttribute("userLogin");
 Timestamp now = UtilDateTime.nowTimestamp();
     
-	String formDefFile		= page.getProperty("formDefFile");
-	String entityName		= page.getProperty("entityName");
-	String innerFtlName		= page.getProperty("innerFtlName");
-	context.put("innerFtlName", innerFtlName);
-org.ofbiz.base.util.Debug.log("innerFtlName:" + innerFtlName);
+formDefFile		= page.getProperty("formDefFile");
+entityName		= page.getProperty("entityName");
 
-	LocalDispatcher dispatcher	= (LocalDispatcher)request.getAttribute("dispatcher");
-       	GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
+GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
 
-HashMap currentEntityMap = (HashMap)session.getAttribute("currentEntityMap");
-if(currentEntityMap == null){
-    currentEntityMap     = new HashMap();
-    session.setAttribute("currentEntityMap", currentEntityMap);
-}
+contentValue = (GenericValue)request.getAttribute("currentValue");
 
-GenericPK currentPK = currentEntityMap.get("Content");
-org.ofbiz.base.util.Debug.log("currentPK:" + currentPK);
-contentValue = delegator.findByPrimaryKey(currentPK);
-
-org.ofbiz.base.util.Debug.log("currentContent:" + contentValue);
 	context.put("contentValue", contentValue);
-	toList = contentValue.getRelatedCache("ToContentAssoc");
-org.ofbiz.base.util.Debug.log("toList size:" + toList.size());
+	toList = contentValue.getRelatedCache("FromContentAssoc");
 	context.put("toList", toList);
-	fromList = contentValue.getRelatedCache("FromContentAssoc");
+	fromList = contentValue.getRelatedCache("ToContentAssoc");
 	context.put("fromList", fromList);
-org.ofbiz.base.util.Debug.log("fromList size:" + fromList.size());
-
-        contentAssocValue = session.getAttribute("ContentAssoc");
-	context.put("contentAssocValue", contentAssocValue);
-org.ofbiz.base.util.Debug.log("contentAssocValue:" + contentAssocValue);
-
 
 	HtmlFormWrapper editWrapper = new HtmlFormWrapper(formDefFile, 
 					"EditContentAssoc", request, response);
-org.ofbiz.base.util.Debug.log("editWrapper:" + editWrapper);
+        // Don't this this is ever set
+        contentAssocValue = session.getAttribute("ContentAssoc");
+	context.put("contentAssocValue", contentAssocValue);
 	editWrapper.putInContext("contentAssocValue", contentAssocValue);
-	context.put("editWrapper", editWrapper);
 
+	context.put("editWrapper", editWrapper);
 
 	HtmlFormWrapper addWrapper = new HtmlFormWrapper(formDefFile, 
 					"AddContentAssoc", request, response);
@@ -108,23 +88,15 @@ org.ofbiz.base.util.Debug.log("editWrapper:" + editWrapper);
 	addWrapper.putInContext("lastModifiedDate", now);
 	addWrapper.putInContext("createdByUserLogin", userLogin.get("userLoginId"));
 	addWrapper.putInContext("lastModifiedByUserLogin", userLogin.get("userLoginId"));
-org.ofbiz.base.util.Debug.log("addWrapper:" + addWrapper);
 	context.put("addWrapper", addWrapper);
 
 	HtmlFormWrapper listToWrapper = new HtmlFormWrapper(formDefFile, 
 					"ListContentAssocTo", request, response);
-org.ofbiz.base.util.Debug.log("listToWrapper:" + listToWrapper);
 	listToWrapper.putInContext("toList", toList);
 	context.put("listToWrapper", listToWrapper);
 
 	HtmlFormWrapper listFromWrapper = new HtmlFormWrapper(formDefFile, 
 					"ListContentAssocFrom", request, response);
-org.ofbiz.base.util.Debug.log("listFromWrapper:" + listFromWrapper);
 	listFromWrapper.putInContext("fromList", fromList);
 	context.put("listFromWrapper", listFromWrapper);
-
-
-
-	return "success";
-
 

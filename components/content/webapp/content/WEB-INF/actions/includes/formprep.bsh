@@ -1,5 +1,5 @@
 /*
- * $Id: findprep.bsh,v 1.6 2003/11/04 23:58:06 byersa Exp $
+ * $Id: formprep.bsh,v 1.1 2003/11/04 23:58:06 byersa Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -25,13 +25,13 @@
 /**
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.6 $
- * @since      2.1
-
- * Calls performFind service to return an EntityListIterator of the
- * entities found from the parameter map selection criteria.
- * Also builds a query form wrapper.
+ * @version    $Revision: 1.1 $
+ * @since      3.0
+ *
+ * Builds an edit or add single form wrapper and puts the "currentValue"
+ * (usually generated in currentvalprep.bsh) entity into.
  */
+
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -45,42 +45,39 @@ import java.util.TreeSet;
 
 import org.ofbiz.base.util.*;
 import org.ofbiz.entity.*;
-import org.ofbiz.entity.util.*;
 import org.ofbiz.security.*;
 import org.ofbiz.service.*;
 import org.ofbiz.entity.model.*;
 import org.ofbiz.content.widget.html.*;
 import org.ofbiz.content.widget.form.*;
+import org.ofbiz.content.data.DataResourceWorker;
 
 
-import java.util.ListIterator;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
-LocalDispatcher dispatcher    = (LocalDispatcher)request.getAttribute("dispatcher");
+dispatcher    = (LocalDispatcher)request.getAttribute("dispatcher");
+delegator = (GenericDelegator) request.getAttribute("delegator");
 
-inputFields    	= UtilHttp.getParameterMap(request);
-entityName    	= page.getProperty("entityName");
+
+
 formDefFile		= page.getProperty("formDefFile");
 singleFormName		= page.getProperty("singleFormName");
+entityName		= page.getProperty("entityName");
+//String defaultMapName		= page.getProperty("defaultMapName");
+//if( defaultMapName == null) defaultMapName	= "currentValue";
+defaultMapName	= "currentValue";
 
-HashMap inMap    		= new HashMap();
-inMap.put("entityName", entityName);
-inMap.put("inputFields", inputFields);
-Map result    		= null;
-try {
-           result = dispatcher.runSync("performFind", inMap    );
-} catch (GenericServiceException e) {
-    request.setAttribute("_ERROR_MESSAGE_", "ERROR: Error in findLookup service. "  + e.getMessage() + ")");
-            Debug.log(e, "findprep.bsh");
-            return "error";
-}
+HtmlFormWrapper singleWrapper = new HtmlFormWrapper(formDefFile, 
+				singleFormName, request, response);
 
-listIt = (ListIterator)result.get("listIt");
-request.setAttribute("listIt", listIt);
-
-
-HtmlFormWrapper queryWrapper = new HtmlFormWrapper(formDefFile,
-                        singleFormName, request, response);
-context.put("queryWrapper", queryWrapper);
+// The idea here is that by setting the map name here, dependency on the 
+        // widget-form config file could be eliminated.
+ModelForm modelForm	= singleWrapper.getModelForm();
+//modelForm.setDefaultMapName(defaultMapName);
+currentValue = (GenericValue)request.getAttribute("currentValue");
+    org.ofbiz.base.util.Debug.logInfo("in formprep, currentValue:" + currentValue, null);
+singleWrapper.putInContext(defaultMapName, currentValue);
+context.put("singleWrapper", singleWrapper);
+request.setAttribute("singleWrapper", singleWrapper);
 
