@@ -1,5 +1,5 @@
 /*
- * $Id: NumericEvents.java,v 1.1 2004/07/27 18:37:38 ajzeneski Exp $
+ * $Id: NumericEvents.java,v 1.2 2004/08/13 19:43:21 ajzeneski Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -24,14 +24,14 @@
  */
 package org.ofbiz.pos.event;
 
-import org.ofbiz.pos.screen.PosScreen;
-import org.ofbiz.pos.PosTransaction;
+import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.pos.component.Input;
+import org.ofbiz.pos.screen.PosScreen;
 
 /**
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.1
  */
 public class NumericEvents {
@@ -84,10 +84,11 @@ public class NumericEvents {
 
     // extended number events
     public static void triggerClear(PosScreen pos) {
-        PosTransaction trans = PosTransaction.getCurrentTx(pos.getSession());
-
         // clear the components
-        pos.getInput().clear();
+        if (UtilValidate.isEmpty(pos.getInput().value())) {
+            pos.getInput().clear();
+        }
+        pos.getInput().clearInput();
         pos.getOutput().clear();
         pos.getJournal().refresh(pos);
 
@@ -99,11 +100,6 @@ public class NumericEvents {
             // just re-call set lock
             pos.setLock(true);
         }
-        
-        // clear any/all set payments
-        trans.clearPayments();
-        // clear tax calc
-        trans.clearTax();
     }
 
     public static void triggerQty(PosScreen pos) {
