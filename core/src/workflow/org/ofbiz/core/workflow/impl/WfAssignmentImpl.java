@@ -82,19 +82,24 @@ public class WfAssignmentImpl implements WfAssignment {
         fields.put("statusId", "CAL_SENT");
 
         // check if one exists
-        if (valueObject() != null)
-            return;
+        try {
+            if (valueObject() != null) {
+                Debug.logVerbose("[WfAssignment.checkAssignment] : found existing assignment.", module);
+                return;
+            }
+        } catch (WfException e) {
+            Debug.logVerbose("[WfAssignment.checkAssignment] : no existing assignment.", module);
+        }
 
         // check the state of the activity
         if (!activity.state().equals("open.not_running.not_started"))
-            throw new WfException("Activity already assigned");
+            throw new WfException("Activity already running");
 
         // none exist; create a new one
         try {
-            GenericValue v =
-                    activity.getDelegator().makeValue("WorkEffortPartyAssignment",
-                                                      fields);
+            GenericValue v = activity.getDelegator().makeValue("WorkEffortPartyAssignment", fields);
             value = activity.getDelegator().create(v);
+            Debug.logVerbose("[WfAssignment.checkAssignment] : created new party assignment.", module);
         } catch (GenericEntityException e) {
             throw new WfException(e.getMessage(), e);
         }
@@ -226,11 +231,12 @@ public class WfAssignmentImpl implements WfAssignment {
         fields.put("roleTypeId", resource.resourceRoleId());
         fields.put("fromDate", fromDate);
         try {
-            value = activity.getDelegator().findByPrimaryKey("WorkEffortPartyAssignment",
-                                                             fields);
+            value = activity.getDelegator().findByPrimaryKey("WorkEffortPartyAssignment", fields);
         } catch (GenericEntityException e) {
             throw new WfException(e.getMessage(), e);
         }
+        if (value == null)
+            throw new WfException("Invalid assignment runtime entity");
         return value;
     }
 }

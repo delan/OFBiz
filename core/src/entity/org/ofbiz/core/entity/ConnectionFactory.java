@@ -46,7 +46,7 @@ public class ConnectionFactory {
     static UtilCache dsCache = new UtilCache("JNDIDataSources", 0, 0);
 
     public static Connection getConnection(String helperName) throws SQLException, GenericEntityException {
-        Debug.logVerbose("Getting a connection", module);
+        //Debug.logVerbose("Getting a connection", module);
         
         String jndiName = UtilProperties.getPropertyValue("entityengine", helperName + ".jdbc.jndi.name");
         if (jndiName != null && jndiName.length() > 0) {

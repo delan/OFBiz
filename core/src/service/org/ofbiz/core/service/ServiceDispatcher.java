@@ -115,6 +115,9 @@ public class ServiceDispatcher {
         GenericEngine engine = getGenericEngine(service.engineName);
         engine.setLoader(localName);
 
+        Debug.logVerbose("[ServiceDispatcher.runSync] : invoking service [" + service.location + "/" + service.invoke +
+                "] (" + service.engineName + ")", module);
+
         // validate the context
         if (service.validate) {
             try {
@@ -156,6 +159,10 @@ public class ServiceDispatcher {
                 throw new GenericServiceException("Context (in runSync) does not match expected requirements: ", e);
             }
         }
+
+        Debug.logVerbose("[ServiceDispatcher.runSyncIgnore] : invoking service [" + service.location + "/" + service.invoke +
+                "] (" + service.engineName + ")", module);
+
         engine.runSyncIgnore(service, context);
     }
 
@@ -181,6 +188,10 @@ public class ServiceDispatcher {
                 throw new GenericServiceException("Context (in runAsync) does not match expected requirements: ", e);
             }
         }
+
+        Debug.logVerbose("[ServiceDispatcher.runAsync] : invoking service [" + service.location + "/" + service.invoke +
+                "] (" + service.engineName + ")", module);
+
         engine.runAsync(service, context, requester);
     }
 
@@ -204,6 +215,10 @@ public class ServiceDispatcher {
                 throw new GenericServiceException("Context (in runAsync) does not match expected requirements: ", e);
             }
         }
+
+        Debug.logVerbose("[ServiceDispatcher.runAsync] : invoking service [" + service.location + "/" + service.invoke +
+                "] (" + service.engineName + ")", module);
+
         engine.runAsync(service, context);
     }
 
@@ -212,9 +227,7 @@ public class ServiceDispatcher {
      *@return GenericEngine instance that corresponds to the engineName
      */
     public GenericEngine getGenericEngine(String engineName) throws GenericServiceException {
-        GenericEngine engine =
-                GenericEngineFactory.getGenericEngine(engineName, this);
-        return engine;
+        return GenericEngineFactory.getGenericEngine(engineName, this);
     }
 
     /** Gets the JobManager associated with this dispatcher
