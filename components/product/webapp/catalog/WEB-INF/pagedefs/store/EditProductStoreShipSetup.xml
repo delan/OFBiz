@@ -2,6 +2,7 @@
 <page>
     <template>main</template> 
     <property name="title">Product Store Ship Setup</property>
+    <property name="titleProperty">PageTitleEditProductStoreShipSetup</property>
     <property name="leftbar">/templates/leftbar.ftl</property>
     <property name="headerItem">store</property>
     <property name="tabButtonItem">EditProductStoreShipSetup</property>

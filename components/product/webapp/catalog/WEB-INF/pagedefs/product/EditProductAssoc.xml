@@ -2,6 +2,7 @@
 <page>
     <template>main</template> 
     <property name="title">Edit Product Associations</property>
+    <property name="titleProperty">PageTitleEditProductAssociations</property>
     <property name="leftbar">/templates/leftbar.ftl</property>
     <property name="tabButtonItem">EditProductAssoc</property>
     <content-action name="/product/EditProductAssoc.bsh"/>

@@ -2,5 +2,6 @@
 <page>
     <template>main</template> 
     <property name="title">Choose Top Category</property>
+    <property name="titleProperty">PageTitleChooseTopCategory</property>
     <content-action name="/ChooseTopCategory.bsh"/>
 </page>

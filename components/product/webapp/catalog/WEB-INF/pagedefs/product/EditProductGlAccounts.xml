@@ -2,6 +2,7 @@
 <page>
     <template>main</template> 
     <property name="title">Edit Product GL Accounts</property>
+    <property name="titleProperty">PageTitleEditProductGlAccounts</property>
     <property name="leftbar">/templates/leftbar.ftl</property>
     <property name="tabButtonItem">EditProductGlAccounts</property>
     <content-action name="/product/EditProductGlAccounts.bsh"/>

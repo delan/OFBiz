@@ -2,6 +2,7 @@
 <page>
     <template>main</template> 
     <property name="title">Edit Category Parties</property>
+    <property name="titleProperty">PageTitleEditCategoryParties</property>
     <property name="leftbar">/templates/leftbar.ftl</property>
     <property name="tabButtonItem">EditCategoryParties</property>
     <content-action name="/category/EditCategoryParties.bsh"/>

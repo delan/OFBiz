@@ -2,6 +2,7 @@
 <page>
     <template>main</template> 
     <property name="title">Edit Product Feature Categories</property>
+    <property name="titleProperty">PageTitleEditProductFeatureCategories</property>
     <property name="headerItem">featurecats</property>
     <property name="leftbar">/templates/leftbar.ftl</property>
     <content-action name="/feature/EditFeatureCategories.bsh"/>

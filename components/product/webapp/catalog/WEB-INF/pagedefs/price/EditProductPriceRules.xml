@@ -2,6 +2,7 @@
 <page>
     <template>main</template> 
     <property name="title">Edit Product Price Rules</property>
+    <property name="titleProperty">PageTitleEditProductPriceRules</property>
     <property name="leftbar">/templates/leftbar.ftl</property>
     <content-action name="/price/EditProductPriceRules.bsh"/>
 </page>

@@ -2,6 +2,7 @@
 <page>
     <template>main</template> 
     <property name="title">Edit Product Inventory Items</property>
+    <property name="titleProperty">PageTitleEditProductInventoryItems</property>
     <property name="leftbar">/templates/leftbar.ftl</property>
     <property name="tabButtonItem">EditProductInventoryItems</property>
     <content-action name="/product/EditProductInventoryItems.bsh"/>
