@@ -218,8 +218,7 @@
             <ofbiz:entityfield attribute="shippingAddress" field="stateProvinceGeoId"/>
             <ofbiz:entityfield attribute="shippingAddress" field="postalCode"/>
             <ofbiz:entityfield attribute="shippingAddress" field="countryGeoId" prefix="<br>" suffix=""/>
-            <%--<a href="<ofbiz:url>/profileeditaddress?DONE_PAGE=checkoutoptions.jsp&<%=HttpRequestConstants.ADDRESS_KEY%>=<%=billingLocation.getAddressId()%></ofbiz:url>" class="buttontext">[Update]</a>
-            <a href="<ofbiz:url>/checkoutoptions?<%="event"%>=<%=EventConstants.DELETE_SHIPPING_LOCATION%>&<%=HttpRequestConstants.ADDRESS_KEY%>=<%=billingLocation.getAddressId()%></ofbiz:url>" class="buttontext">[Delete]</a> --%>
+            <a href="<ofbiz:url>/editcontactmech?DONE_PAGE=checkoutoptions&contactMechId=<%=shippingContactMechId%></ofbiz:url>" class="buttontext">[Update]</a>
           </div>
         </td>
       </tr>
