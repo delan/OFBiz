@@ -136,14 +136,14 @@
     <request-map uri="createSchedule">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="createSchedule"/>
-        <response name="success" type="view" value="potasklist"/>
-        <response name="error" type="view" value="potasklist"/>
+        <response name="success" type="view" value="ordertasklist"/>
+        <response name="error" type="view" value="ordertasklist"/>
     </request-map>
     <request-map uri="updateSchedule">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="updateSchedule"/>
-        <response name="success" type="view" value="potasklist"/>
-        <response name="error" type="view" value="potasklist"/>
+        <response name="success" type="view" value="ordertasklist"/>
+        <response name="error" type="view" value="ordertasklist"/>
     </request-map>
 
 	<!-- Order Manager Edit Requests -->
