@@ -49,14 +49,14 @@ public class CategoryEvents {
 
     String updateMode = request.getParameter("UPDATE_MODE");
     if(updateMode == null || updateMode.length() <= 0) {
-      request.setAttribute("ERROR_MESSAGE", "Update Mode was not specified, but is required.");
+      request.setAttribute(SiteDefs.ERROR_MESSAGE, "Update Mode was not specified, but is required.");
       Debug.logWarning("[CategoryEvents.updateCategory] Update Mode was not specified, but is required");
       return "error";
     }
     
     //check permissions before moving on...
     if(!security.hasEntityPermission("CATALOG", "_" + updateMode, request.getSession())) {
-      request.setAttribute("ERROR_MESSAGE", "You do not have sufficient permissions to "+ updateMode + " CATALOG (CATALOG_" + updateMode + " or CATALOG_ADMIN needed).");
+      request.setAttribute(SiteDefs.ERROR_MESSAGE, "You do not have sufficient permissions to "+ updateMode + " CATALOG (CATALOG_" + updateMode + " or CATALOG_ADMIN needed).");
       return "error";
     }
     
@@ -76,7 +76,7 @@ public class CategoryEvents {
         return "success";
       }
       else {
-        request.setAttribute("ERROR_MESSAGE", "Could not find Product Category with ID" + productCategoryId + ", category not deleted.");
+        request.setAttribute(SiteDefs.ERROR_MESSAGE, "Could not find Product Category with ID" + productCategoryId + ", category not deleted.");
         return "error";
       }
     }
@@ -90,7 +90,7 @@ public class CategoryEvents {
     if(!UtilValidate.isNotEmpty(productCategoryId)) errMsg += "<li>Product Category ID is missing.";
     if(errMsg.length() > 0) {
       errMsg = "<b>The following errors occured:</b><br><ul>" + errMsg + "</ul>";
-      request.setAttribute("ERROR_MESSAGE", errMsg);
+      request.setAttribute(SiteDefs.ERROR_MESSAGE, errMsg);
       return "error";
     }
 
@@ -112,7 +112,7 @@ public class CategoryEvents {
       try {
           delegator.storeAll(toBeStored);
       } catch(GenericEntityException e) {
-          request.setAttribute("ERROR_MESSAGE", "Could not create category (write error)");
+          request.setAttribute(SiteDefs.ERROR_MESSAGE, "Could not create category (write error)");
           return "error";
       }
     }
@@ -120,12 +120,12 @@ public class CategoryEvents {
       try {
           delegator.storeAll(toBeStored);
       } catch(GenericEntityException e) {
-        request.setAttribute("ERROR_MESSAGE", "Could not update category (write error)");
+        request.setAttribute(SiteDefs.ERROR_MESSAGE, "Could not update category (write error)");
         Debug.logWarning("[CategoryEvents.updateCategory] Could not update category (write error); message: " + e.getMessage());
         return "error";
       }
     } else {
-      request.setAttribute("ERROR_MESSAGE", "Specified update mode: \"" + updateMode + "\" is not supported.");
+      request.setAttribute(SiteDefs.ERROR_MESSAGE, "Specified update mode: \"" + updateMode + "\" is not supported.");
       return "error";
     }
     
@@ -144,14 +144,14 @@ public class CategoryEvents {
 
     String updateMode = request.getParameter("UPDATE_MODE");
     if(updateMode == null || updateMode.length() <= 0) {
-      request.setAttribute("ERROR_MESSAGE", "Update Mode was not specified, but is required.");
+      request.setAttribute(SiteDefs.ERROR_MESSAGE, "Update Mode was not specified, but is required.");
       Debug.logWarning("[ProductEvents.updateProductCategoryMember] Update Mode was not specified, but is required");
       return "error";
     }
 
     //check permissions before moving on...
     if(!security.hasEntityPermission("CATALOG", "_" + updateMode, request.getSession())) {
-      request.setAttribute("ERROR_MESSAGE", "You do not have sufficient permissions to "+ updateMode + " CATALOG (CATALOG_" + updateMode + " or CATALOG_ADMIN needed).");
+      request.setAttribute(SiteDefs.ERROR_MESSAGE, "You do not have sufficient permissions to "+ updateMode + " CATALOG (CATALOG_" + updateMode + " or CATALOG_ADMIN needed).");
       return "error";
     }
 
@@ -162,7 +162,7 @@ public class CategoryEvents {
     if(!UtilValidate.isNotEmpty(productCategoryId)) errMsg += "<li>Product Category ID is missing.";
     if(errMsg.length() > 0) {
       errMsg = "<b>The following errors occured:</b><br><ul>" + errMsg + "</ul>";
-      request.setAttribute("ERROR_MESSAGE", errMsg);
+      request.setAttribute(SiteDefs.ERROR_MESSAGE, errMsg);
       return "error";
     }
         
@@ -174,7 +174,7 @@ public class CategoryEvents {
       }
       catch(GenericEntityException e) { Debug.logWarning(e.getMessage()); dummyValue = null; }
       if(dummyValue != null) {
-        request.setAttribute("ERROR_MESSAGE", "Could not create product-category entry (already exists)");
+        request.setAttribute(SiteDefs.ERROR_MESSAGE, "Could not create product-category entry (already exists)");
         return "error";
       }
 
@@ -185,7 +185,7 @@ public class CategoryEvents {
       }
       catch(GenericEntityException e) { Debug.logWarning(e.getMessage()); productCategoryMember = null; }
       if(productCategoryMember == null) {
-        request.setAttribute("ERROR_MESSAGE", "Could not create product-category entry (write error)");
+        request.setAttribute(SiteDefs.ERROR_MESSAGE, "Could not create product-category entry (write error)");
         return "error";
       }
     }
@@ -194,7 +194,7 @@ public class CategoryEvents {
       Timestamp fromDate = null;
       try { fromDate = Timestamp.valueOf(fromDateStr); }
       catch(Exception e) {
-        request.setAttribute("ERROR_MESSAGE", "<li>ERROR: Could not delete product-category entry, from date \"" + fromDateStr + "\" was not valid.");
+        request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>ERROR: Could not delete product-category entry, from date \"" + fromDateStr + "\" was not valid.");
         return "error";
       }
 
@@ -202,7 +202,7 @@ public class CategoryEvents {
       try { productCategoryMember = delegator.findByPrimaryKey("ProductCategoryMember", UtilMisc.toMap("productId", productId, "productCategoryId", productCategoryId, "fromDate", fromDate)); }
       catch(GenericEntityException e) { Debug.logWarning(e.getMessage()); productCategoryMember = null; }
       if(productCategoryMember == null) {
-        request.setAttribute("ERROR_MESSAGE", "Could not remove product-category (does not exist)");
+        request.setAttribute(SiteDefs.ERROR_MESSAGE, "Could not remove product-category (does not exist)");
         return "error";
       }
       try { 
@@ -210,13 +210,13 @@ public class CategoryEvents {
         delegator.clearCacheLine("ProductCategoryMember", UtilMisc.toMap("productCategoryId", productCategoryMember.get("productCategoryId")));
       }
       catch(GenericEntityException e) {
-        request.setAttribute("ERROR_MESSAGE", "Could not remove product-category (write error)");
+        request.setAttribute(SiteDefs.ERROR_MESSAGE, "Could not remove product-category (write error)");
         Debug.logWarning("[ProductEvents.updateProductCategoryMember] Could not remove product-category (write error); message: " + e.getMessage());
         return "error";
       }
     }
     else {
-      request.setAttribute("ERROR_MESSAGE", "Specified update mode: \"" + updateMode + "\" is not supported.");
+      request.setAttribute(SiteDefs.ERROR_MESSAGE, "Specified update mode: \"" + updateMode + "\" is not supported.");
       return "error";
     }
     
@@ -235,14 +235,14 @@ public class CategoryEvents {
 
     String updateMode = request.getParameter("UPDATE_MODE");
     if(updateMode == null || updateMode.length() <= 0) {
-      request.setAttribute("ERROR_MESSAGE", "Update Mode was not specified, but is required.");
+      request.setAttribute(SiteDefs.ERROR_MESSAGE, "Update Mode was not specified, but is required.");
       Debug.logWarning("[ProductEvents.updateProductCategoryRollup] Update Mode was not specified, but is required");
       return "error";
     }
 
     //check permissions before moving on...
     if(!security.hasEntityPermission("CATALOG", "_" + updateMode, request.getSession())) {
-      request.setAttribute("ERROR_MESSAGE", "You do not have sufficient permissions to "+ updateMode + " CATALOG (CATALOG_" + updateMode + " or CATALOG_ADMIN needed).");
+      request.setAttribute(SiteDefs.ERROR_MESSAGE, "You do not have sufficient permissions to "+ updateMode + " CATALOG (CATALOG_" + updateMode + " or CATALOG_ADMIN needed).");
       return "error";
     }
 
@@ -253,7 +253,7 @@ public class CategoryEvents {
     if(!UtilValidate.isNotEmpty(parentProductCategoryId)) errMsg += "<li>Parent Product Category ID is missing.";
     if(errMsg.length() > 0) {
       errMsg = "<b>The following errors occured:</b><br><ul>" + errMsg + "</ul>";
-      request.setAttribute("ERROR_MESSAGE", errMsg);
+      request.setAttribute(SiteDefs.ERROR_MESSAGE, errMsg);
       return "error";
     }
         
@@ -263,7 +263,7 @@ public class CategoryEvents {
       try { dummyValue = delegator.findByPrimaryKey(productCategoryRollup.getPrimaryKey()); }
       catch(GenericEntityException e) { Debug.logWarning(e.getMessage()); dummyValue = null; }
       if(dummyValue != null) {
-        request.setAttribute("ERROR_MESSAGE", "Could not create product-category entry (already exists)");
+        request.setAttribute(SiteDefs.ERROR_MESSAGE, "Could not create product-category entry (already exists)");
         return "error";
       }
       try { 
@@ -272,7 +272,7 @@ public class CategoryEvents {
       }
       catch(GenericEntityException e) { Debug.logWarning(e.getMessage()); productCategoryRollup = null; }
       if(productCategoryRollup == null) {
-        request.setAttribute("ERROR_MESSAGE", "Could not create product-category entry (write error)");
+        request.setAttribute(SiteDefs.ERROR_MESSAGE, "Could not create product-category entry (write error)");
         return "error";
       }
     }
@@ -282,7 +282,7 @@ public class CategoryEvents {
       try { productCategoryRollup = delegator.findByPrimaryKey("ProductCategoryRollup", UtilMisc.toMap("productCategoryId", productCategoryId, "parentProductCategoryId", parentProductCategoryId)); }
       catch(GenericEntityException e) { Debug.logWarning(e.getMessage()); productCategoryRollup = null; }
       if(productCategoryRollup == null) {
-        request.setAttribute("ERROR_MESSAGE", "Could not remove product-category (does not exist)");
+        request.setAttribute(SiteDefs.ERROR_MESSAGE, "Could not remove product-category (does not exist)");
         return "error";
       }
       try { 
@@ -290,7 +290,7 @@ public class CategoryEvents {
         delegator.clearCacheLine("ProductCategoryRollup", UtilMisc.toMap("parentProductCategoryId", productCategoryRollup.get("parentProductCategoryId")));
       }
       catch(GenericEntityException e) {
-        request.setAttribute("ERROR_MESSAGE", "Could not remove product-category (write error)");
+        request.setAttribute(SiteDefs.ERROR_MESSAGE, "Could not remove product-category (write error)");
         Debug.logWarning("[ProductEvents.updateProductCategoryRollup] Could not remove product-category (write error); message: " + e.getMessage());
         return "error";
       }
@@ -303,14 +303,14 @@ public class CategoryEvents {
         productCategory.set("primaryParentCategoryId", null);
         try { productCategory.store(); }
         catch(GenericEntityException e) {
-          request.setAttribute("ERROR_MESSAGE", "Removed product-category but could not set primary parent category to null (write error)");
+          request.setAttribute(SiteDefs.ERROR_MESSAGE, "Removed product-category but could not set primary parent category to null (write error)");
           Debug.logWarning("[ProductEvents.updateProductCategoryRollup] Removed product-category but could not set primary parent category to null  (write error); message: " + e.getMessage());
           return "error";
         }
       }
     }
     else {
-      request.setAttribute("ERROR_MESSAGE", "Specified update mode: \"" + updateMode + "\" is not supported.");
+      request.setAttribute(SiteDefs.ERROR_MESSAGE, "Specified update mode: \"" + updateMode + "\" is not supported.");
       return "error";
     }
     

@@ -51,14 +51,14 @@ public class ProductEvents {
         
         String updateMode = request.getParameter("UPDATE_MODE");
         if(updateMode == null || updateMode.length() <= 0) {
-            request.setAttribute("ERROR_MESSAGE", "Update Mode was not specified, but is required.");
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "Update Mode was not specified, but is required.");
             Debug.logWarning("[ProductEvents.updateProduct] Update Mode was not specified, but is required");
             return "error";
         }
         
         //check permissions before moving on...
         if(!security.hasEntityPermission("CATALOG", "_" + updateMode, request.getSession())) {
-            request.setAttribute("ERROR_MESSAGE", "You do not have sufficient permissions to "+ updateMode + " CATALOG (CATALOG_" + updateMode + " or CATALOG_ADMIN needed).");
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "You do not have sufficient permissions to "+ updateMode + " CATALOG (CATALOG_" + updateMode + " or CATALOG_ADMIN needed).");
             return "error";
         }
         
@@ -78,7 +78,7 @@ public class ProductEvents {
         return "success";
       }
       else {
-        request.setAttribute("ERROR_MESSAGE", "Could not find Product with ID" + productId + ", product not deleted.");
+        request.setAttribute(SiteDefs.ERROR_MESSAGE, "Could not find Product with ID" + productId + ", product not deleted.");
         return "error";
       }
     }
@@ -145,7 +145,7 @@ public class ProductEvents {
         if(!UtilValidate.isNotEmpty(name)) errMsg += "<li>Name is missing.";
         if(errMsg.length() > 0) {
             errMsg = "<b>The following errors occured:</b><br><ul>" + errMsg + "</ul>";
-            request.setAttribute("ERROR_MESSAGE", errMsg);
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, errMsg);
             return "error";
         }
         
@@ -190,7 +190,7 @@ public class ProductEvents {
                 delegator.storeAll(toBeStored);
             }
             catch(GenericEntityException e) {
-                request.setAttribute("ERROR_MESSAGE", "Could not create product (write error)");
+                request.setAttribute(SiteDefs.ERROR_MESSAGE, "Could not create product (write error)");
                 return "error";
             }
             if(product != null && !"n".equalsIgnoreCase(product.getString("autoCreateKeywords"))) {
@@ -198,7 +198,7 @@ public class ProductEvents {
                     KeywordSearch.induceKeywords(product);
                 }
                 catch(GenericEntityException e) {
-                    request.setAttribute("ERROR_MESSAGE", "Could not create keywords (write error).");
+                    request.setAttribute(SiteDefs.ERROR_MESSAGE, "Could not create keywords (write error).");
                     return "error";
                 }
             }
@@ -208,7 +208,7 @@ public class ProductEvents {
                 delegator.storeAll(toBeStored);
             }
             catch(GenericEntityException e) {
-                request.setAttribute("ERROR_MESSAGE", "Could not update product (write error)");
+                request.setAttribute(SiteDefs.ERROR_MESSAGE, "Could not update product (write error)");
                 Debug.logWarning("[ProductEvents.updateProduct] Could not update product (write error); message: " + e.getMessage());
                 return "error";
             }
@@ -217,13 +217,13 @@ public class ProductEvents {
                     KeywordSearch.induceKeywords(product);
                 }
                 catch(GenericEntityException e) {
-                    request.setAttribute("ERROR_MESSAGE", "Could not create keywords (write error).");
+                    request.setAttribute(SiteDefs.ERROR_MESSAGE, "Could not create keywords (write error).");
                     return "error";
                 }
             }
         }
         else {
-            request.setAttribute("ERROR_MESSAGE", "Specified update mode: \"" + updateMode + "\" is not supported.");
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "Specified update mode: \"" + updateMode + "\" is not supported.");
             return "error";
         }
         
@@ -242,14 +242,14 @@ public class ProductEvents {
         
         String updateMode = request.getParameter("UPDATE_MODE");
         if(updateMode == null || updateMode.length() <= 0) {
-            request.setAttribute("ERROR_MESSAGE", "Update Mode was not specified, but is required.");
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "Update Mode was not specified, but is required.");
             Debug.logWarning("[ProductEvents.updateProductKeyword] Update Mode was not specified, but is required");
             return "error";
         }
         
         //check permissions before moving on...
         if(!security.hasEntityPermission("CATALOG", "_" + updateMode, request.getSession())) {
-            request.setAttribute("ERROR_MESSAGE", "You do not have sufficient permissions to "+ updateMode + " CATALOG (CATALOG_" + updateMode + " or CATALOG_ADMIN needed).");
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "You do not have sufficient permissions to "+ updateMode + " CATALOG (CATALOG_" + updateMode + " or CATALOG_ADMIN needed).");
             return "error";
         }
         
@@ -260,7 +260,7 @@ public class ProductEvents {
         if(!UtilValidate.isNotEmpty(keyword)) errMsg += "<li>Keyword is missing.";
         if(errMsg.length() > 0) {
             errMsg = "<b>The following errors occured:</b><br><ul>" + errMsg + "</ul>";
-            request.setAttribute("ERROR_MESSAGE", errMsg);
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, errMsg);
             return "error";
         }
         
@@ -271,14 +271,14 @@ public class ProductEvents {
             catch(GenericEntityException e) { Debug.logWarning(e.getMessage()); newValue = null; }
             
             if(newValue != null) {
-                request.setAttribute("ERROR_MESSAGE", "Could not create product-keyword entry (already exists)");
+                request.setAttribute(SiteDefs.ERROR_MESSAGE, "Could not create product-keyword entry (already exists)");
                 return "error";
             }
             
             try { productKeyword = productKeyword.create(); }
             catch(GenericEntityException e) { Debug.logWarning(e.getMessage()); productKeyword = null; }
             if(productKeyword == null) {
-                request.setAttribute("ERROR_MESSAGE", "Could not create product-keyword entry (write error)");
+                request.setAttribute(SiteDefs.ERROR_MESSAGE, "Could not create product-keyword entry (write error)");
                 return "error";
             }
         }
@@ -287,18 +287,18 @@ public class ProductEvents {
             try { productKeyword = delegator.findByPrimaryKey("ProductKeyword", UtilMisc.toMap("productId", productId, "keyword", keyword)); }
             catch(GenericEntityException e) { Debug.logWarning(e.getMessage()); productKeyword = null; }
             if(productKeyword == null) {
-                request.setAttribute("ERROR_MESSAGE", "Could not remove product-keyword (does not exist)");
+                request.setAttribute(SiteDefs.ERROR_MESSAGE, "Could not remove product-keyword (does not exist)");
                 return "error";
             }
             try { productKeyword.remove(); }
             catch(GenericEntityException e) {
-                request.setAttribute("ERROR_MESSAGE", "Could not remove product-keyword (write error)");
+                request.setAttribute(SiteDefs.ERROR_MESSAGE, "Could not remove product-keyword (write error)");
                 Debug.logWarning("[ProductEvents.updateProductKeyword] Could not remove product-keyword (write error); message: " + e.getMessage());
                 return "error";
             }
         }
         else {
-            request.setAttribute("ERROR_MESSAGE", "Specified update mode: \"" + updateMode + "\" is not supported.");
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "Specified update mode: \"" + updateMode + "\" is not supported.");
             return "error";
         }
         
@@ -317,20 +317,20 @@ public class ProductEvents {
         
         String updateMode = request.getParameter("UPDATE_MODE");
         if(updateMode == null || updateMode.length() <= 0) {
-            request.setAttribute("ERROR_MESSAGE", "Update Mode was not specified, but is required.");
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "Update Mode was not specified, but is required.");
             Debug.logWarning("[ProductEvents.updateProductKeywords] Update Mode was not specified, but is required");
             return "error";
         }
         
         //check permissions before moving on...
         if(!security.hasEntityPermission("CATALOG", "_" + updateMode, request.getSession())) {
-            request.setAttribute("ERROR_MESSAGE", "You do not have sufficient permissions to "+ updateMode + " CATALOG (CATALOG_" + updateMode + " or CATALOG_ADMIN needed).");
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "You do not have sufficient permissions to "+ updateMode + " CATALOG (CATALOG_" + updateMode + " or CATALOG_ADMIN needed).");
             return "error";
         }
         
         String productId = request.getParameter("PRODUCT_ID");
         if(!UtilValidate.isNotEmpty(productId)) {
-            request.setAttribute("ERROR_MESSAGE", "No Product ID specified, cannot update keywords.");
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "No Product ID specified, cannot update keywords.");
             return "error";
         }
         
@@ -338,7 +338,7 @@ public class ProductEvents {
         try { product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId)); }
         catch(GenericEntityException e) { Debug.logWarning(e.getMessage()); product = null; }
         if(product == null) {
-            request.setAttribute("ERROR_MESSAGE", "Product with ID \"" + productId + "\", not found; cannot update keywords.");
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "Product with ID \"" + productId + "\", not found; cannot update keywords.");
             return "error";
         }
         
@@ -347,20 +347,20 @@ public class ProductEvents {
                 KeywordSearch.induceKeywords(product);
             }
             catch(GenericEntityException e) {
-                request.setAttribute("ERROR_MESSAGE", "Could not create keywords (write error).");
+                request.setAttribute(SiteDefs.ERROR_MESSAGE, "Could not create keywords (write error).");
                 return "error";
             }
         }
         else if(updateMode.equals("DELETE")) {
             try { product.removeRelated("ProductKeyword"); }
             catch(GenericEntityException e) {
-                request.setAttribute("ERROR_MESSAGE", "Could not remove product-keywords (write error)");
+                request.setAttribute(SiteDefs.ERROR_MESSAGE, "Could not remove product-keywords (write error)");
                 Debug.logWarning("[ProductEvents.updateProductKeywords] Could not remove product-keywords (write error); message: " + e.getMessage());
                 return "error";
             }
         }
         else {
-            request.setAttribute("ERROR_MESSAGE", "Specified update mode: \"" + updateMode + "\" is not supported.");
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "Specified update mode: \"" + updateMode + "\" is not supported.");
             return "error";
         }
         
@@ -380,7 +380,7 @@ public class ProductEvents {
         String updateMode = "CREATE";
         //check permissions before moving on...
         if(!security.hasEntityPermission("CATALOG", "_" + updateMode, request.getSession())) {
-            request.setAttribute("ERROR_MESSAGE", "You do not have sufficient permissions to "+ updateMode + " CATALOG (CATALOG_" + updateMode + " or CATALOG_ADMIN needed).");
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "You do not have sufficient permissions to "+ updateMode + " CATALOG (CATALOG_" + updateMode + " or CATALOG_ADMIN needed).");
             return "error";
         }
         
@@ -396,7 +396,7 @@ public class ProductEvents {
                     KeywordSearch.induceKeywords(product);
                 }
                 catch(GenericEntityException e) {
-                    request.setAttribute("ERROR_MESSAGE", "Could not create keywords (write error).");
+                    request.setAttribute(SiteDefs.ERROR_MESSAGE, "Could not create keywords (write error).");
                     Debug.logWarning("[ProductEvents.updateAllKeywords] Could nindex product-keyword (write error); message: " + e.getMessage());
                     return "error";
                 }
@@ -404,7 +404,7 @@ public class ProductEvents {
             numProds++;
         }
         
-        request.setAttribute("EVENT_MESSAGE", "Keyword creation complete for " + numProds + " products.");
+        request.setAttribute(SiteDefs.EVENT_MESSAGE, "Keyword creation complete for " + numProds + " products.");
         return "success";
     }
     
@@ -420,14 +420,14 @@ public class ProductEvents {
         
         String updateMode = request.getParameter("UPDATE_MODE");
         if(updateMode == null || updateMode.length() <= 0) {
-            request.setAttribute("ERROR_MESSAGE", "Update Mode was not specified, but is required.");
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "Update Mode was not specified, but is required.");
             Debug.logWarning("[ProductEvents.updateProductAssoc] Update Mode was not specified, but is required");
             return "error";
         }
         
         //check permissions before moving on...
         if(!security.hasEntityPermission("CATALOG", "_" + updateMode, request.getSession())) {
-            request.setAttribute("ERROR_MESSAGE", "You do not have sufficient permissions to "+ updateMode + " CATALOG (CATALOG_" + updateMode + " or CATALOG_ADMIN needed).");
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "You do not have sufficient permissions to "+ updateMode + " CATALOG (CATALOG_" + updateMode + " or CATALOG_ADMIN needed).");
             return "error";
         }
         
@@ -457,7 +457,7 @@ public class ProductEvents {
         if(!updateMode.equals("CREATE") && !UtilValidate.isNotEmpty(fromDateStr)) errMsg += "<li>From Date is missing.";
         if(errMsg.length() > 0) {
             errMsg = "<b>The following errors occured:</b><br><ul>" + errMsg + "</ul>";
-            request.setAttribute("ERROR_MESSAGE", errMsg);
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, errMsg);
             return "error";
         }
         
@@ -473,12 +473,12 @@ public class ProductEvents {
             try { productAssoc = delegator.findByPrimaryKey(tempProductAssoc.getPrimaryKey()); }
             catch(GenericEntityException e) { Debug.logWarning(e.getMessage()); productAssoc = null; }
             if(productAssoc == null) {
-                request.setAttribute("ERROR_MESSAGE", "Could not remove product association (does not exist)");
+                request.setAttribute(SiteDefs.ERROR_MESSAGE, "Could not remove product association (does not exist)");
                 return "error";
             }
             try { productAssoc.remove(); }
             catch(GenericEntityException e) {
-                request.setAttribute("ERROR_MESSAGE", "Could not remove product association (write error)");
+                request.setAttribute(SiteDefs.ERROR_MESSAGE, "Could not remove product association (write error)");
                 Debug.logWarning("[ProductEvents.updateProductAssoc] Could not remove product association (write error); message: " + e.getMessage());
                 return "error";
             }
@@ -502,7 +502,7 @@ public class ProductEvents {
         }
         if(errMsg.length() > 0) {
             errMsg = "<b>The following errors occured:</b><br><ul>" + errMsg + "</ul>";
-            request.setAttribute("ERROR_MESSAGE", errMsg);
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, errMsg);
             return "error";
         }
         
@@ -523,12 +523,12 @@ public class ProductEvents {
             try { productAssoc = delegator.findByPrimaryKey(tempProductAssoc.getPrimaryKey()); }
             catch(GenericEntityException e) { Debug.logWarning(e.getMessage()); productAssoc = null; }
             if(productAssoc != null) {
-                request.setAttribute("ERROR_MESSAGE", "Could not create product association (already exists)");
+                request.setAttribute(SiteDefs.ERROR_MESSAGE, "Could not create product association (already exists)");
                 return "error";
             }
             try { productAssoc = tempProductAssoc.create(); }
             catch(GenericEntityException e) {
-                request.setAttribute("ERROR_MESSAGE", "Could not create product association (write error)");
+                request.setAttribute(SiteDefs.ERROR_MESSAGE, "Could not create product association (write error)");
                 Debug.logWarning("[ProductEvents.updateProductAssoc] Could not create product association (write error); message: " + e.getMessage());
                 return "error";
             }
@@ -536,13 +536,13 @@ public class ProductEvents {
         else if(updateMode.equals("UPDATE")) {
             try { tempProductAssoc.store(); }
             catch(GenericEntityException e) {
-                request.setAttribute("ERROR_MESSAGE", "Could not update product association (write error)");
+                request.setAttribute(SiteDefs.ERROR_MESSAGE, "Could not update product association (write error)");
                 Debug.logWarning("[ProductEvents.updateProductAssoc] Could not update product association (write error); message: " + e.getMessage());
                 return "error";
             }
         }
         else {
-            request.setAttribute("ERROR_MESSAGE", "Specified update mode: \"" + updateMode + "\" is not supported.");
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "Specified update mode: \"" + updateMode + "\" is not supported.");
             return "error";
         }
         
