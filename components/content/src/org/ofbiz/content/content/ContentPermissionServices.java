@@ -196,8 +196,10 @@ public class ContentPermissionServices {
                 results.put("permissionStatus", "granted");
             } else {
                 results.put("permissionStatus", "rejected");
+                Debug.logInfo("displayFailCond(0):" + displayFailCond, "");
                 if (displayFailCond) {
                      String errMsg = permCondGetter.dumpAsText();
+                     Debug.logInfo("displayFailCond(0), errMsg:" + errMsg, "");
                      results.put("permissionStatus", errMsg);
                      ServiceUtil.returnError("Permission is denied. \nThese are the conditions of which one must be met:\n" + errMsg);   
                 }
