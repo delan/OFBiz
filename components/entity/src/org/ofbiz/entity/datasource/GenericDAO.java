@@ -1,5 +1,5 @@
 /*
- * $Id: GenericDAO.java,v 1.3 2003/09/19 06:05:12 jonesde Exp $
+ * $Id: GenericDAO.java,v 1.4 2003/11/03 13:13:14 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -78,7 +78,7 @@ import org.ofbiz.entity.util.EntityListIterator;
  * @author     <a href="mailto:jdonnerstag@eds.de">Juergen Donnerstag</a>
  * @author     <a href="mailto:gielen@aixcept.de">Rene Gielen</a>
  * @author     <a href="mailto:john_nutting@telluridetechnologies.com">John Nutting</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      1.0
  */
 public class GenericDAO {
@@ -149,10 +149,7 @@ public class GenericDAO {
             SqlJdbcUtil.setValues(sqlP, fieldsToSave, entity, modelFieldTypeReader);
             int retVal = sqlP.executeUpdate();
 
-            entity.modified = false;
-            if (entity instanceof GenericValue) {
-                ((GenericValue) entity).copyOriginalDbValues();
-            }
+            entity.synchronizedWithDatasource();
             return retVal;
         } catch (GenericEntityException e) {
             throw new GenericEntityException("while inserting: " + entity.toString(), e);
@@ -245,10 +242,7 @@ public class GenericDAO {
             SqlJdbcUtil.setValues(sqlP, fieldsToSave, entity, modelFieldTypeReader);
             SqlJdbcUtil.setPkValues(sqlP, modelEntity, entity, modelFieldTypeReader);
             retVal = sqlP.executeUpdate();
-            entity.modified = false;
-            if (entity instanceof GenericValue) {
-                ((GenericValue) entity).copyOriginalDbValues();
-            }
+            entity.synchronizedWithDatasource();
         } catch (GenericEntityException e) {
             throw new GenericEntityException("while updating: " + entity.toString(), e);
         } finally {
@@ -524,10 +518,7 @@ public class GenericDAO {
                     SqlJdbcUtil.getValue(sqlP.getResultSet(), j + 1, curField, entity, modelFieldTypeReader);
                 }
 
-                entity.modified = false;
-                if (entity instanceof GenericValue) {
-                    ((GenericValue) entity).copyOriginalDbValues();
-                }
+                entity.synchronizedWithDatasource();
             } else {
                 // Debug.logWarning("[GenericDAO.select]: select failed, result set was empty for entity: " + entity.toString(), module);
                 throw new GenericEntityNotFoundException("Result set was empty for entity: " + entity.toString());
@@ -595,10 +586,7 @@ public class GenericDAO {
                     SqlJdbcUtil.getValue(sqlP.getResultSet(), j + 1, curField, entity, modelFieldTypeReader);
                 }
 
-                entity.modified = false;
-                if (entity instanceof GenericValue) {
-                    ((GenericValue) entity).copyOriginalDbValues();
-                }
+                entity.synchronizedWithDatasource();
             } else {
                 // Debug.logWarning("[GenericDAO.select]: select failed, result set was empty.", module);
                 throw new GenericEntityNotFoundException("Result set was empty for entity: " + entity.toString());
@@ -684,7 +672,7 @@ public class GenericDAO {
      *@param fieldsToSelect The fields of the named entity to get from the database; if empty or null all fields will be retreived
      *@param orderBy The fields of the named entity to order the query by; optionally add a " ASC" for ascending or " DESC" for descending
      *@param findOptions An instance of EntityFindOptions that specifies advanced query options. See the EntityFindOptions JavaDoc for more details.
-     *@return EntityListIterator representing the result of the query: NOTE THAT THIS MUST BE CLOSED WHEN YOU ARE 
+     *@return EntityListIterator representing the result of the query: NOTE THAT THIS MUST BE CLOSED WHEN YOU ARE
      *      DONE WITH IT, AND DON'T LEAVE IT OPEN TOO LONG BEACUSE IT WILL MAINTAIN A DATABASE CONNECTION.
      */
     public EntityListIterator selectListIteratorByCondition(ModelEntity modelEntity, EntityCondition whereEntityCondition,
@@ -732,7 +720,7 @@ public class GenericDAO {
             sqlBuffer.append("DISTINCT ");
         }
 
-        if (selectFields.size() > 0) {            
+        if (selectFields.size() > 0) {
             sqlBuffer.append(modelEntity.colNameString(selectFields, ", ", "", datasourceInfo.aliasViews));
         } else {
             sqlBuffer.append("*");
@@ -974,7 +962,7 @@ public class GenericDAO {
             sqlP.prepareStatement(sql);
             SqlJdbcUtil.setPkValues(sqlP, modelEntity, entity, modelFieldTypeReader);
             retVal = sqlP.executeUpdate();
-            entity.modified = true;
+            entity.removedFromDatasource();
         } finally {
             sqlP.close();
         }

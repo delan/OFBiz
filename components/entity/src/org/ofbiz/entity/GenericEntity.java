@@ -1,5 +1,5 @@
 /*
- * $Id: GenericEntity.java,v 1.8 2003/11/03 12:39:20 jonesde Exp $
+ * $Id: GenericEntity.java,v 1.9 2003/11/03 13:13:14 jonesde Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -60,7 +60,7 @@ import org.w3c.dom.Element;
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- *@version    $Revision: 1.8 $
+ *@version    $Revision: 1.9 $
  *@since      2.0
  */
 public class GenericEntity extends Observable implements Map, LocalizedMap, Serializable, Comparable, Cloneable {
@@ -68,10 +68,10 @@ public class GenericEntity extends Observable implements Map, LocalizedMap, Seri
     public static final String module = GenericEntity.class.getName();
 
     /** Name of the GenericDelegator, used to reget the GenericDelegator when deserialized */
-    public String delegatorName = null;
+    protected String delegatorName = null;
 
     /** Reference to an instance of GenericDelegator used to do some basic operations on this entity value. If null various methods in this class will fail. This is automatically set by the GenericDelegator for all GenericValue objects instantiated through it. You may set this manually for objects you instantiate manually, but it is optional. */
-    public transient GenericDelegator internalDelegator = null;
+    protected transient GenericDelegator internalDelegator = null;
 
     /** Contains the fields for this entity. Note that this should always be a
      *  HashMap to allow for two things: non-synchronized reads (synchronized
@@ -83,13 +83,13 @@ public class GenericEntity extends Observable implements Map, LocalizedMap, Seri
     protected Map fields;
 
     /** Contains the entityName of this entity, necessary for efficiency when creating EJBs */
-    public String entityName = null;
+    protected String entityName = null;
 
     /** Contains the ModelEntity instance that represents the definition of this entity, not to be serialized */
-    public transient ModelEntity modelEntity = null;
+    protected transient ModelEntity modelEntity = null;
 
     /** Denotes whether or not this entity has been modified, or is known to be out of sync with the persistent record */
-    public boolean modified = false;
+    protected boolean modified = false;
 
     /** Creates new GenericEntity */
     public GenericEntity() {
@@ -124,8 +124,31 @@ public class GenericEntity extends Observable implements Map, LocalizedMap, Seri
         this.internalDelegator = value.internalDelegator;
     }
 
+    public void refreshFromValue(GenericEntity newValue) throws GenericEntityException {
+        if (newValue == null) {
+            throw new GenericEntityException("Could not refresh value, new value not found for: " + this);
+        }
+        GenericPK thisPK = this.getPrimaryKey();
+        GenericPK newPK = newValue.getPrimaryKey();
+        if (!thisPK.equals(newPK)) {
+            throw new GenericEntityException("Could not refresh value, new value did not have the same primary key; this PK=" + thisPK + ", new value PK=" + newPK);
+        }
+        this.fields = newValue.fields;
+        this.setDelegator(newValue.getDelegator());
+        this.modified = false;
+    }
+
     public boolean isModified() {
         return modified;
+    }
+
+    public void synchronizedWithDatasource() {
+        this.modified = false;
+    }
+
+    public void removedFromDatasource() {
+        // seems kind of minimal, but should do for now...
+        this.modified = true;
     }
 
     public String getEntityName() {
