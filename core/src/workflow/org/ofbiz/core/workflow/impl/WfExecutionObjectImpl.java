@@ -4,6 +4,10 @@
 
 package org.ofbiz.core.workflow.impl;
 
+import java.util.*;
+import java.sql.Timestamp;
+import org.ofbiz.core.workflow.*;
+
 /**
  * <p><b>Title:</b> WfExecutionObjectImpl
  * <p><b>Description:</b> Workflow Execution Object implementation
@@ -31,34 +35,11 @@ package org.ofbiz.core.workflow.impl;
  *@created    November 2, 2001
  *@version    1.0
  */
-
-import org.ofbiz.core.workflow.WfExecutionObject;
-import org.ofbiz.core.workflow.WfException;
-import org.ofbiz.core.workflow.HistoryNotAvailable;
-import org.ofbiz.core.workflow.CannotStop;
-import org.ofbiz.core.workflow.NotRunning;
-import org.ofbiz.core.workflow.CannotResume;
-import org.ofbiz.core.workflow.CannotSuspend;
-import org.ofbiz.core.workflow.NotSuspended;
-import org.ofbiz.core.workflow.AlreadySuspended;
-import org.ofbiz.core.workflow.InvalidData;
-import org.ofbiz.core.workflow.InvalidState;
-import org.ofbiz.core.workflow.UpdateNotAllowed;
-import org.ofbiz.core.workflow.TransitionNotAllowed;
-
-import java.sql.Timestamp;
-import java.util.Calendar;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.ArrayList;
-import java.util.List;
-
 public class WfExecutionObjectImpl implements WfExecutionObject {
     
     // Workflow state types
     public static final int WORKFLOW_STATE_OPEN = 100;
-    public static final int WORKFLOW_STATE_CLOSED = 200;    
+    public static final int WORKFLOW_STATE_CLOSED = 200;
     
     // While open types
     public static final int WORKFLOW_OPEN_NOT_RUNNING = 110;
@@ -76,7 +57,7 @@ public class WfExecutionObjectImpl implements WfExecutionObject {
     // Process Manager state types
     public static final int PROCESS_MGR_DISABLED = 10;
     public static final int PROCESS_MGR_ENABLED = 11;
-        
+    
     // Attribute instance 'name'
     private String name;
     
