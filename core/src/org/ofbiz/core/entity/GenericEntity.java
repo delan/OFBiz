@@ -102,6 +102,9 @@ public class GenericEntity implements Serializable
     }
     if(value != null || setIfNull)
     {
+      if (value instanceof Boolean) {
+        value = ((Boolean) value).booleanValue() ? "Y" : "N";
+      } 
       fields.put(name, value); 
       modified = true;
     }
@@ -138,6 +141,21 @@ public class GenericEntity implements Serializable
     {
       //throw an exception or something...
     }
+  }
+  
+  public Boolean getBoolean(String name) { 
+    String value = getString(name); 
+    Boolean result;
+    if (value == null) {
+        result = null;
+    } else if ("Y".equals(value)) {
+        result = Boolean.TRUE;
+    } else if ("N".equals(value)) {
+        result = Boolean.FALSE;
+    } else {
+        throw new IllegalArgumentException("getBoolean could not map '" + value + "' to Boolean type");
+    }
+    return result;
   }
   
   //might be nice to add some ClassCastException handling...
