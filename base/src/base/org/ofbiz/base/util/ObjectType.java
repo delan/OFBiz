@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectType.java,v 1.2 2003/08/18 18:32:07 ajzeneski Exp $
+ * $Id: ObjectType.java,v 1.3 2003/09/14 05:38:50 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -40,7 +40,7 @@ import java.util.Map;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
  * @author     <a href="mailto:gielen@aixcept.de">Rene Gielen</a> 
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class ObjectType {
@@ -718,11 +718,11 @@ public class ObjectType {
                 // do nothing, handled later...
             } else {
                 if (convertedValue1 == null) {
-                    messages.add("Value1 is null, cannot complete compare for the operator " + operator);
+                    messages.add("Left value is null, cannot complete compare for the operator " + operator);
                     return null;
                 }
                 if (convertedValue2 == null) {
-                    messages.add("Value2 is null, cannot complete compare for the operator " + operator);
+                    messages.add("Right value is null, cannot complete compare for the operator " + operator);
                     return null;
                 }
             }
