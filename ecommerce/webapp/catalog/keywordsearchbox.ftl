@@ -52,10 +52,10 @@
                 <div class='tabletext'>
                   <select name='SEARCH_CATEGORY_ID' size='1' class='selectBox'>
                     <option value="${searchCategoryId?if_exists}">Entire Catalog</option>
-                    <#list otherSearchProdCatalogCategory as searchCat>
+                    <#list otherSearchProdCatalogCategories as otherSearchProdCatalogCategory>
                       <#assign searchProductCategory = otherSearchProdCatalogCategory.getRelatedOneCache("ProductCategory")>
                       <#if searchProductCategory?exists>
-                        <option value="${searchProductCategory.productCategoryId}">${searchProductCategory.description?exists}</option>
+                        <option value="${searchProductCategory.productCategoryId}">${searchProductCategory.description?if_exists}</option>
                       </#if>
                     </#list>
                   </select>
@@ -85,10 +85,10 @@
                 <div class='tabletext'>
                   <select name='SEARCH_CATEGORY_ID' size='1' class='selectBox'>
                     <option value="${searchCategoryId?if_exists}">Entire Catalog</option>
-                    <#list otherSearchProdCatalogCategory as searchCat>
+                    <#list otherSearchProdCatalogCategories as otherSearchProdCatalogCategory>
                       <#assign searchProductCategory = otherSearchProdCatalogCategory.getRelatedOneCache("ProductCategory")>
                       <#if searchProductCategory?exists>
-                        <option value="${searchProductCategory.productCategoryId}">${searchProductCategory.description?exists}</option>
+                        <option value="${searchProductCategory.productCategoryId}">${searchProductCategory.description?if_exists}</option>
                       </#if>
                     </#list>
                   </select>
