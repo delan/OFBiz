@@ -133,6 +133,10 @@
                 <set field="tabButtonItem" value="findBom"/>
                 <set field="headerItem" value="bom"/>
 
+                <set field="bomType" from-field="parameters.bomType"/>
+                <set field="productId" from-field="parameters.productId"/>
+                <set field="type" from-field="parameters.type"/>
+                <set field="rootQuantity" from-field="parameters.rootQuantity"/>
                 <script location="component://manufacturing/webapp/manufacturing/WEB-INF/actions/bom/BomSimulation.bsh"/>
             </actions>
             <widgets>

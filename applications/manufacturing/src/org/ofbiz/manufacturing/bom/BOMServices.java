@@ -160,9 +160,11 @@ public class BOMServices {
                     GenericValue virtualProduct = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", oneVirtualProductAssoc.getString("productId")));
                     if (virtualProduct.get("billOfMaterialLevel") != null) {
                         virtualDepth = virtualProduct.getLong("billOfMaterialLevel").intValue();
-                        if (virtualDepth > virtualMaxDepth) {
-                            virtualMaxDepth = virtualDepth;
-                        }
+                    } else {
+                        virtualDepth = 0;
+                    }
+                    if (virtualDepth > virtualMaxDepth) {
+                        virtualMaxDepth = virtualDepth;
                     }
                 }
                 if (virtualMaxDepth > llc.intValue()) {
@@ -179,7 +181,11 @@ public class BOMServices {
                 for (int i = 0; i < products.size(); i++) {
                     BOMNode oneNode = (BOMNode)products.get(i);
                     GenericValue oneProduct = oneNode.getProduct();
-                    if (oneProduct.getLong("billOfMaterialLevel").intValue() < oneNode.getDepth()) {
+                    int lev = 0;
+                    if (oneProduct.get("billOfMaterialLevel") != null) {
+                        lev = oneProduct.getLong("billOfMaterialLevel").intValue();
+                    }
+                    if (lev < oneNode.getDepth()) {
                         oneProduct.set("billOfMaterialLevel", new Integer(oneNode.getDepth()));
                         oneProduct.store();
                     }
@@ -261,17 +267,10 @@ public class BOMServices {
         LocalDispatcher dispatcher = dctx.getDispatcher();
         String productId = (String) context.get("productId");
         String productIdKey = (String) context.get("productIdTo");
-        String fromDateStr = (String) context.get("fromDate");
+        Timestamp fromDate = (Timestamp) context.get("fromDate");
         String bomType = (String) context.get("productAssocTypeId");
-        Date fromDate = null;
-        if (UtilValidate.isNotEmpty(fromDateStr)) {
-            try {
-                fromDate = Timestamp.valueOf(fromDateStr);
-            } catch (Exception e) {
-            }
-        }
         if (fromDate == null) {
-            fromDate = new Date();
+            fromDate = Timestamp.valueOf((new Date()).toString());
         }
         GenericValue duplicatedProductAssoc = null;
         try {
