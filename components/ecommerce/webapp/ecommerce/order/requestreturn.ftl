@@ -20,62 +20,9 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      3.0
 -->
-
-<script language="JavaScript">
-<!--
-function toggle(e) {
-    e.checked = !e.checked;    
-}
-function checkToggle(e) {
-    var cform = document.returnItems;
-    if (e.checked) {      
-        var len = cform.elements.length;
-        var allchecked = true;
-        for (var i = 0; i < len; i++) {
-            var element = cform.elements[i];
-            var elementName = new java.lang.String(element.name);                    
-            if (elementName.startsWith("_rowSubmit") && !element.checked) {       
-                allchecked = false;
-            }
-            cform.selectAll.checked = allchecked;            
-        }
-    } else {
-        cform.selectAll.checked = false;
-    }
-}
-function toggleAll(e) {
-    var cform = document.returnItems;
-    var len = cform.elements.length;
-    for (var i = 0; i < len; i++) {
-        var element = cform.elements[i];                   
-        var eName = new java.lang.String(element.name);                
-        if (eName.startsWith("_rowSubmit") && element.checked != e.checked) {
-            toggle(element);
-        } 
-    }     
-}
-function selectAll() {
-    var cform = document.returnItems;
-    var len = cform.elements.length;
-    for (var i = 0; i < len; i++) {
-        var element = cform.elements[i];                   
-        var eName = new java.lang.String(element.name);                
-        if ((element.name == "selectAll" || eName.startsWith("_rowSubmit")) && !element.checked) {
-            toggle(element);
-        } 
-    }     
-}
-function removeSelected() {
-    var cform = document.returnItems;
-    cform.removeSelected.value = true;
-    cform.submit();
-}
-//-->
-</script>
-
 
 <table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <tr>
@@ -105,7 +52,7 @@ function removeSelected() {
   <input type="hidden" name="_checkGlobalScope" value="Y">
   <input type="hidden" name="_useRowSubmit" value="Y">
   <input type="hidden" name="fromPartyId" value="${party.partyId}">
-  <input type="hidden" name="order_id" value="${orderId}">
+  <input type="hidden" name="order_id" value="${orderId}">  
   <table border='0' width='100%' cellpadding='2' cellspacing='0'>
     <tr>
       <td colspan="5"><div class="head3">Return Item(s) From Order #<a href="<@ofbizUrl>/orderstatus?order_id=${orderId}</@ofbizUrl>" class="buttontext">${orderId}</div></td>      
@@ -123,12 +70,14 @@ function removeSelected() {
       <td>&nbsp;</td>  
     </tr>
     <tr><td colspan="6"><hr class="sepbar"></td></tr>
-    <#if orderItems?has_content>
+    <#if returnableItems?has_content>
       <#assign rowCount = 0>
-      <#list orderItems as orderItem>
+      <#list returnableItems.keySet() as orderItem>
       <#--<input type="hidden" name="returnId_o_${rowCount}" value="${requestParameters.returnId}">-->            
       <input type="hidden" name="orderId_o_${rowCount}" value="${orderItem.orderId}">
       <input type="hidden" name="orderItemSeqId_o_${rowCount}" value="${orderItem.orderItemSeqId}">
+      <input type="hidden" name="description_o_${rowCount}" value="${orderItem.itemDescription?if_exists}">
+      <input type="hidden" name="returnItemType_o_${rowCount}" value="ITEM">
       <#-- need some order item information -->
       <#assign orderHeader = orderItem.getRelatedOne("OrderHeader")>
       <#assign itemCount = orderItem.quantity>
@@ -152,7 +101,7 @@ function removeSelected() {
           </div>
         </td>               
         <td>
-          <input type="text" class="inputBox" size="6" name="returnQuantity_o_${rowCount}" value="${orderItem.quantity}">
+          <input type="text" class="inputBox" size="6" name="returnQuantity_o_${rowCount}" value="${returnableItems.get(orderItem)}">
         </td>
         <td align='left'>
           <div class="tabletext">${orderItem.unitPrice?string.currency}</div>

@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.7 $
+ *@version    $Revision: 1.8 $
  *@since      2.2
 -->
 
@@ -49,18 +49,22 @@
   <tr><td colspan="8"><hr class="sepbar"></td></tr> 
   <#if returnItems?has_content>
     <#list returnItems as item>
-      <#assign orderItem = item.getRelatedOne("OrderItem")>
-      <#assign returnReason = item.getRelatedOne("ReturnReason")>
-      <#assign returnType = item.getRelatedOne("ReturnType")>
+      <#assign orderItem = item.getRelatedOne("OrderItem")?if_exists>
+      <#assign returnReason = item.getRelatedOne("ReturnReason")?if_exists>
+      <#assign returnType = item.getRelatedOne("ReturnType")?if_exists>
       <tr>
         <td><a href="<@ofbizUrl>/orderview?order_id=${item.orderId}</@ofbizUrl>" class="buttontext">${item.orderId}</a></td>
-        <td><div class="tabletext">${item.orderItemSeqId}</div></td>
-        <td><div class="tabletext">${orderItem.itemDescription}</div></td>
+        <td><div class="tabletext">${item.orderItemSeqId?default("N/A")}</div></td>
+        <td><div class="tabletext">${item.description?default("N/A")}</div></td>
         <td><div class="tabletext">${item.returnQuantity?string.number}</div></td>
         <td><div class="tabletext">${item.returnPrice?string.currency}</div></td>
-        <td><div class="tabletext">${returnReason.description}</div></td>
-        <td><div class="tabletext">${returnType.description}</div></td>
-        <td align='right'><a href="<@ofbizUrl>/removeReturnItem?returnId=${item.returnId}&returnItemSeqId=${item.returnItemSeqId}</@ofbizUrl>" class="buttontext">Remove</a>
+        <td><div class="tabletext">${returnReason.description?default("N/A")}</div></td>
+        <td><div class="tabletext">${returnType.description?default("N/A")}</div></td>
+        <#if returnHeader.statusId == "RETURN_REQUESTED">
+          <td align='right'><a href="<@ofbizUrl>/removeReturnItem?returnId=${item.returnId}&returnItemSeqId=${item.returnItemSeqId}</@ofbizUrl>" class="buttontext">Remove</a>
+        <#else>
+          <td>&nbsp;</td>
+        </#if>
       </tr>
     </#list>
   <#else>
@@ -70,6 +74,7 @@
   </#if>
 </table>
 <br>
+<#if returnHeader.statusId == "RETURN_REQUESTED">
 <form name="returnItems" method="post" action="<@ofbizUrl>/returnItems</@ofbizUrl>">
   <input type="hidden" name="returnId" value="${requestParameters.returnId}">
   <table border='0' cellpadding='2' cellspacing='0'>
@@ -108,6 +113,7 @@
     </tr>
   </table>
 </form>
+</#if>
 <#else>                            
 <form name="returnItems" method="post" action="<@ofbizUrl>/createReturnItems</@ofbizUrl>">
   <input type="hidden" name="returnId" value="${requestParameters.returnId}">
@@ -131,12 +137,14 @@
       <td>&nbsp;</td>  
     </tr>
     <tr><td colspan="8"><hr class="sepbar"></td></tr>
-    <#if orderItems?has_content>
+    <#if returnableItems?has_content>
       <#assign rowCount = 0>
-      <#list orderItems as orderItem>
+      <#list returnableItems.keySet() as orderItem>     
+      <input type="hidden" name="returnItemType_o_${rowCount}" value="ITEM">
       <input type="hidden" name="returnId_o_${rowCount}" value="${requestParameters.returnId}">
       <input type="hidden" name="orderId_o_${rowCount}" value="${orderItem.orderId}">
       <input type="hidden" name="orderItemSeqId_o_${rowCount}" value="${orderItem.orderItemSeqId}">
+      <input type="hidden" name="description_o_${rowCount}" value="${orderItem.itemDescription?if_exists}">
       <#-- need some order item information -->
       <#assign orderHeader = orderItem.getRelatedOne("OrderHeader")>
       <#assign itemCount = orderItem.quantity>
@@ -159,7 +167,7 @@
           <div class="tabletext">${orderItem.quantity?string.number}</div>
         </td>        
         <td>
-          <input type="text" class="inputBox" size="6" name="returnQuantity_o_${rowCount}" value="${orderItem.quantity}">
+          <input type="text" class="inputBox" size="6" name="returnQuantity_o_${rowCount}" value="${returnableItems.get(orderItem)}">
         </td>
         <td align='left'>
           <div class="tabletext">${orderItem.unitPrice?string.currency}</div>
@@ -188,7 +196,35 @@
       <tr><td colspan="8"><hr class="sepbar"></td></tr>  
       <#assign rowCount = rowCount + 1>        
       </#list>
-      <input type="hidden" name="_rowCount" value="${rowCount}">
+
+      <#-- shipping 'refund' -->
+      <input type="hidden" name="returnItemType_o_${rowCount}" value="ADJUSTMENT">
+      <input type="hidden" name="returnId_o_${rowCount}" value="${requestParameters.returnId}">
+      <input type="hidden" name="orderId_o_${rowCount}" value="${requestParameters.orderId}">    
+      <input type="hidden" name="returnQuantity_o_${rowCount}" value="1">      
+      <input type="hidden" name="description_o_${rowCount}" value="Shipping Adjustment">
+      <tr>
+        <td><div class='tabletext'>Shipping Amount</div></td>
+        <td align='center'><div class='tabletext'>-</div></td>
+        <td align='center'><div class='tabletext'>-</div></td>
+        <td><div class='tabletext'>${shippingAmount?string.currency}</div></td>
+        <td>
+          <input type="text" class="inputBox" size="8" name="returnPrice_o_${rowCount}" value="${shippingAmount?string("##0.00")}">
+        </td>
+        <td align="center"><div class='tabletext'>-</div></td>
+        <td>
+          <select name="returnTypeId_o_${rowCount}" class="selectBox">
+            <#list returnTypes as type>
+            <option value="${type.returnTypeId}">${type.description?default(type.returnTypeId)}</option>
+            </#list>
+          </select>
+        </td>        
+        <td align="right">              
+          <input type="checkbox" name="_rowSubmit_o_${rowCount}" value="Y" onclick="javascript:checkToggle(this);">
+        </td>        
+      </tr>
+      <tr><td colspan="8"><hr class="sepbar"></td></tr>  
+      <input type="hidden" name="_rowCount" value="${rowCount+1}">
       <tr>
         <td colspan="7" align="right">
           <a href="javascript:document.returnItems.submit();" class="buttontext">Return Selected Item(s)</a>
