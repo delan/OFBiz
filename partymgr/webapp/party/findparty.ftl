@@ -60,7 +60,7 @@
             </tr>
           </form>
 
-          <form method="post" action="<@ofbizUrl>/findparty</@ofbizUrl>" name="findloginform">
+          <form method="post" action="<@ofbizUrl>/viewprofile</@ofbizUrl>" name="findloginform">
             <tr>
               <td width="25%" align=right><div class="tabletext">User Login ID</div></td>
               <td width="40%">

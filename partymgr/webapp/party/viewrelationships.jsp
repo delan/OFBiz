@@ -39,10 +39,9 @@
 
 <%
     String partyId = request.getParameter("party_id");
+    if (partyId == null) partyId = request.getParameter("partyId");
     if (partyId == null) partyId = (String) request.getAttribute("partyId");
-    if (partyId == null) partyId = (String) request.getSession().getAttribute("partyId");
-    else request.getSession().setAttribute("partyId", partyId);
-
+      
     Collection roleTypes = delegator.findAll("RoleType", UtilMisc.toList("description", "roleTypeId"));
     if (roleTypes != null) pageContext.setAttribute("roleTypes", roleTypes);
 
@@ -83,10 +82,10 @@
     </td>
     <td align='right'>
 	  <div class='tabContainer'>
-      <a href="<ofbiz:url>/viewprofile</ofbiz:url>" class="tabButton">Profile</a>
-      <a href="<ofbiz:url>/viewvendor</ofbiz:url>" class="tabButton">Vendor</a>
-      <a href="<ofbiz:url>/viewroles</ofbiz:url>" class="tabButton">Roles</a>
-      <a href="<ofbiz:url>/viewrelationships</ofbiz:url>" class="tabButtonSelected">Relationships</a>
+      <a href="<ofbiz:url>/viewprofile?party_id=<%=partyId%></ofbiz:url>" class="tabButton">Profile</a>
+      <a href="<ofbiz:url>/viewvendor?party_id=<%=partyId%></ofbiz:url>" class="tabButton">Vendor</a>
+      <a href="<ofbiz:url>/viewroles?party_id=<%=partyId%></ofbiz:url>" class="tabButton">Roles</a>
+      <a href="<ofbiz:url>/viewrelationships?party_id=<%=partyId%></ofbiz:url>" class="tabButtonSelected">Relationships</a>
       </div>
     </td>
   </tr>

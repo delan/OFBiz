@@ -53,16 +53,16 @@
     </td>
     <td align='right'>
       <div class='tabContainer'>
-        <a href="<@ofbizUrl>/viewprofile</@ofbizUrl>" class="tabButtonSelected">Profile</a>
-        <a href="<@ofbizUrl>/viewvendor</@ofbizUrl>" class="tabButton">Vendor</a>
-        <a href="<@ofbizUrl>/viewroles</@ofbizUrl>" class="tabButton">Roles</a>
-        <a href="<@ofbizUrl>/viewrelationships</@ofbizUrl>" class="tabButton">Relationships</a>
+        <a href="<@ofbizUrl>/viewprofile?partyId=${party.partyId}</@ofbizUrl>" class="tabButtonSelected">Profile</a>
+        <a href="<@ofbizUrl>/viewvendor?partyId=${party.partyId}</@ofbizUrl>" class="tabButton">Vendor</a>
+        <a href="<@ofbizUrl>/viewroles?partyId=${party.partyId}</@ofbizUrl>" class="tabButton">Roles</a>
+        <a href="<@ofbizUrl>/viewrelationships?partyId=${party.partyId}</@ofbizUrl>" class="tabButton">Relationships</a>
       </div>
       <nobr>
         <#if showOld>
-          <a href="<@ofbizUrl>/viewprofile</@ofbizUrl>" class="buttontext">[Hide Old]</a>
+          <a href="<@ofbizUrl>/viewprofile?partyId=${party.partyId}</@ofbizUrl>" class="buttontext">[Hide Old]</a>
         <#else>      
-          <a href="<@ofbizUrl>/viewprofile?SHOW_OLD=true</@ofbizUrl>" class="buttontext">[Show Old]</a>
+          <a href="<@ofbizUrl>/viewprofile?partyId=${party.partyId}&SHOW_OLD=true</@ofbizUrl>" class="buttontext">[Show Old]</a>
         </#if>
         <a href="/accounting/control/findBillingAccount?partyId=${partyId}${externalKeyParam}" class="buttontext">[Billing Accounts]</a>
         <#if security.hasRolePermission("ORDERMGR", "_VIEW", "", "", session)>
@@ -88,7 +88,7 @@
             </td>
             <#if security.hasEntityPermission("PARTYMGR", "_UPDATE", session)>
             <td valign="middle" align="right">
-              <a href="<@ofbizUrl>/editperson</@ofbizUrl>" class="lightbuttontext">
+              <a href="<@ofbizUrl>/editperson?partyId=${party.partyId}</@ofbizUrl>" class="lightbuttontext">
               [<#if lookupPerson?has_content>Update</#if>]</a>&nbsp;&nbsp;
             </td>
             </#if>            
@@ -100,7 +100,7 @@
             </td>
             <#if security.hasEntityPermission("PARTYMGR", "_UPDATE", session)>
             <td valign="middle" align="right">
-              <a href="<@ofbizUrl>/editpartygroup</@ofbizUrl>" class="lightbuttontext">
+              <a href="<@ofbizUrl>/editpartygroup?partyId=${party.partyId}</@ofbizUrl>" class="lightbuttontext">
               [<#if lookupGroup?has_content>Update</#if>]</a>&nbsp;&nbsp;
             </td>
             </#if>
@@ -189,7 +189,7 @@
           </td>
           <#if security.hasEntityPermission("PARTYMGR", "_CREATE", session)>
           <td valign="middle" align="right">
-              <a href="<@ofbizUrl>/editcontactmech</@ofbizUrl>" class="lightbuttontext">
+              <a href="<@ofbizUrl>/editcontactmech?partyId=${party.partyId}</@ofbizUrl>" class="lightbuttontext">
               [Create New]</a>&nbsp;&nbsp;
           </td>
           </#if>
@@ -296,13 +296,13 @@
             <td width="5">&nbsp;</td>
             <#if security.hasEntityPermission("PARTYMGR", "_UPDATE", session)>
             <td align="right" valign="top" nowrap width="1%">
-              <div><a href='<@ofbizUrl>/editcontactmech?contactMechId=${contactMech.contactMechId}</@ofbizUrl>' class="buttontext">
+              <div><a href='<@ofbizUrl>/editcontactmech?partyId=${party.partyId}&contactMechId=${contactMech.contactMechId}</@ofbizUrl>' class="buttontext">
               [Update]</a>&nbsp;</div>
             </td>
             </#if>
             <#if security.hasEntityPermission("PARTYMGR", "_DELETE", session)>
             <td align="right" valign="top" width="1%">
-              <div><a href='<@ofbizUrl>/deleteContactMech/viewprofile?contactMechId=${contactMech.contactMechId}&partyId=${partyId}</@ofbizUrl>' class="buttontext">
+              <div><a href='<@ofbizUrl>/deleteContactMech/viewprofile?partyId=${party.partyId}&contactMechId=${contactMech.contactMechId}&partyId=${partyId}</@ofbizUrl>' class="buttontext">
               [Expire]</a>&nbsp;&nbsp;</div>
             </td>
             </#if>
@@ -330,9 +330,9 @@
           </td>
           <td valign="middle" align="right">&nbsp;
               <#if security.hasEntityPermission("PAY_INFO", "_CREATE", session)>
-                <a href="<@ofbizUrl>/editcreditcard</@ofbizUrl>" class="lightbuttontext">
+                <a href="<@ofbizUrl>/editcreditcard?partyId=${party.partyId}</@ofbizUrl>" class="lightbuttontext">
                 [Create New Credit Card]</a>&nbsp;
-                <a href="<@ofbizUrl>/editeftaccount</@ofbizUrl>" class="lightbuttontext">
+                <a href="<@ofbizUrl>/editeftaccount?partyId=${party.partyId}</@ofbizUrl>" class="lightbuttontext">
                 [Create New EFT Account]</a>&nbsp;&nbsp;
               </#if>
           </td>
@@ -374,7 +374,7 @@
                                   <td width="5">&nbsp;</td>
                                   <td align="right" valign="top" width='1%' nowrap>
                                     <#if security.hasEntityPermission("PAY_INFO", "_UPDATE", session)>
-                                        <div><a href='<@ofbizUrl>/editcreditcard?paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>' class="buttontext">
+                                        <div><a href='<@ofbizUrl>/editcreditcard?partyId=${party.partyId}&paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>' class="buttontext">
                                         [Update]</a></div>
                                     </#if>
                                   </td>
@@ -392,14 +392,14 @@
                                   <td width="5">&nbsp;</td>
                                   <td align="right" valign="top" width='1%' nowrap>
                                     <#if security.hasEntityPermission("PAY_INFO", "_UPDATE", session)>
-                                        <div><a href='<@ofbizUrl>/editeftaccount?paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>' class="buttontext">
+                                        <div><a href='<@ofbizUrl>/editeftaccount?partyId=${party.partyId}&paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>' class="buttontext">
                                         [Update]</a></div>
                                     </#if>
                                   </td>
                               </#if>
                               <td align="right" valign="top" width='1%'>
                                 <#if security.hasEntityPermission("PAY_INFO", "_DELETE", session)>
-                                    <div><a href='<@ofbizUrl>/deletePaymentMethod/viewprofile?paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>' class="buttontext">
+                                    <div><a href='<@ofbizUrl>/deletePaymentMethod/viewprofile?partyId=${party.partyId}&paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>' class="buttontext">
                                     [Expire]</a></div>
                                 </#if>
                               </td>
@@ -443,11 +443,11 @@
           </td>
           <#if security.hasEntityPermission("PARTYMGR", "_UPDATE", session)>
           <td align="right" valign="top" width="1%">
-            <a href="<@ofbizUrl>/editAvsOverride</@ofbizUrl>" class="buttontext">[Edit]</a>
+            <a href="<@ofbizUrl>/editAvsOverride?partyId=${party.partyId}</@ofbizUrl>" class="buttontext">[Edit]</a>
           </td>          
           <#if avsOverride?exists>
             <td align="right" valign="top" width="1%">
-              <a href="<@ofbizUrl>/resetAvsOverride?partyId=${avsOverride.partyId}</@ofbizUrl>" class="buttontext">[Reset]</a>
+              <a href="<@ofbizUrl>/resetAvsOverride?partyId=${party.partyId}</@ofbizUrl>" class="buttontext">[Reset]</a>
             </td>
           </#if>
           </#if>
@@ -589,7 +589,7 @@
           </td>
           <#if security.hasEntityPermission("PARTYMGR", "_NOTE", session)>
           <td valign="middle" align="right">&nbsp;
-            <a href="<@ofbizUrl>/createnewnote</@ofbizUrl>" class="lightbuttontext">[Create New]</a>&nbsp;&nbsp;
+            <a href="<@ofbizUrl>/createnewnote?partyId=${partyId}</@ofbizUrl>" class="lightbuttontext">[Create New]</a>&nbsp;&nbsp;
           </td>
           </#if>
         </tr>
@@ -601,7 +601,7 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <tr>
           <td>
-            <#if notes?exists>
+            <#if notes?has_content>
             <table width="100%" border="0" cellpadding="1">
               <#list notes as noteRef>
                 <tr>

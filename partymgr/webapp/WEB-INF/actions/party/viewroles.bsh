@@ -65,12 +65,8 @@ if (security.hasEntityPermission("PARTYMGR", "_DELETE", session)) {
 }
 
 partyId = request.getParameter("party_id");
+if (partyId == null) partyId = request.getParameter("partyId");
 if (partyId == null) partyId = (String) request.getAttribute("partyId");
-if (partyId == null) {
-    partyId = (String) request.getSession().getAttribute("partyId");
-} else {
-    request.getSession().setAttribute("partyId", partyId);
-}
 context.put("partyId", partyId);
 
 partyRoleExprs = UtilMisc.toList(new EntityExpr("partyId", EntityOperator.EQUALS, partyId), new EntityExpr("roleTypeId", EntityOperator.NOT_EQUAL, "_NA_"));

@@ -42,9 +42,8 @@
     String partyId = null;
     if (create == null) {
         partyId = request.getParameter("party_id");
+        if (partyId == null) partyId = request.getParameter("partyId");
         if (partyId == null) partyId = (String) request.getAttribute("partyId");
-        if (partyId == null) partyId = (String) request.getSession().getAttribute("partyId");
-        else request.getSession().setAttribute("partyId", partyId);
     }
 
     if (partyId != null) {
@@ -60,7 +59,7 @@
     }
 
     String donePage = request.getParameter("DONE_PAGE");
-    if(donePage == null || donePage.length() <= 0) donePage="viewprofile";
+    if(donePage == null || donePage.length() <= 0) donePage="viewprofile?partyId=" + partyId;
     pageContext.setAttribute("donePage", donePage);
 %>
 

@@ -54,12 +54,8 @@ if (security.hasEntityPermission("PARTYMGR", "_UPDATE", session)) {
 }
 
 partyId = request.getParameter("party_id");
+if (partyId == null) partyId = request.getParameter("partyId");
 if (partyId == null) partyId = (String) request.getAttribute("partyId");
-if (partyId == null) {
-    partyId = (String) request.getSession().getAttribute("partyId");
-} else {
-    request.getSession().setAttribute("partyId", partyId);
-}
 context.put("partyId", partyId);
 
 party = delegator.findByPrimaryKey("Party", UtilMisc.toMap("partyId", partyId));

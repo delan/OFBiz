@@ -36,7 +36,7 @@
     <#-- When creating a new contact mech, first select the type, then actually create -->
     <#if !preContactMechTypeId?has_content>
     <p class="head1">Create New Contact Information</p>
-    <form method="post" action='<@ofbizUrl>/editcontactmech?DONE_PAGE=${donePage?if_exists}</@ofbizUrl>' name="createcontactmechform">
+    <form method="post" action='<@ofbizUrl>/editcontactmech?partyId=${partyId}&DONE_PAGE=${donePage?if_exists}</@ofbizUrl>' name="createcontactmechform">
       <table width="90%" border="0" cellpadding="2" cellspacing="0">
         <tr>
           <td width="26%"><div class="tabletext">Select Contact Type:</div></td>
@@ -120,7 +120,6 @@
           </td>
         </tr>
         <form method="post" action='<@ofbizUrl>/${mechMap.requestName}</@ofbizUrl>' name="editcontactmechform">
-        <input type=hidden name="DONE_PAGE" value='${donePage}'>
         <input type=hidden name="contactMechId" value='${contactMechId}'>
         <input type=hidden name="contactMechTypeId" value='${mechMap.contactMechTypeId}'>
         <input type=hidden name='partyId' value='${partyId}'>

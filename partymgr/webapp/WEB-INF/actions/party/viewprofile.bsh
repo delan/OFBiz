@@ -44,12 +44,16 @@ context.put("externalKeyParam", externalKeyParam);
 delegator = request.getAttribute("delegator");
 
 partyId = request.getParameter("party_id");
-if (partyId == null) partyId = (String) request.getAttribute("partyId");
-if (partyId == null) {
-    partyId = (String) request.getSession().getAttribute("partyId");
-} else {
-    request.getSession().setAttribute("partyId", partyId);
+userLoginId = request.getParameter("userlogin_id");
+if (partyId == null && userLoginId != null) {
+    thisUserLogin = delegator.findByPrimaryKey("UserLogin", UtilMisc.toMap("userLoginId", userLoginId));
+    if (thisUserLogin != null) {
+        partyId = thisUserLogin.getString("partyId");
+    }
 }
+
+if (partyId == null) partyId = request.getParameter("partyId");
+if (partyId == null) partyId = (String) request.getAttribute("partyId");
 context.put("partyId", partyId);
 
 userLogins = delegator.findByAnd("UserLogin", UtilMisc.toMap("partyId", partyId));

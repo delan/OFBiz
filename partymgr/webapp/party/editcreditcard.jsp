@@ -39,9 +39,11 @@
 
 <%
     String partyId = request.getParameter("party_id");
+    if (partyId == null) partyId = request.getParameter("partyId");
     if (partyId == null) partyId = (String) request.getAttribute("partyId");
-    if (partyId == null) partyId = (String) request.getSession().getAttribute("partyId");
-    else request.getSession().setAttribute("partyId", partyId);
+
+    String donePage = request.getParameter("DONE_PAGE");
+    if(donePage == null || donePage.length() <= 0) donePage="viewprofile?partyId=" + partyId;    
 %>
 
 <%PaymentWorker.getPaymentMethodAndRelated(pageContext, partyId,
@@ -60,20 +62,20 @@
 <%} else {%>
     <ofbiz:unless name="creditCard">
       <p class="head1">Add New Credit Card</p>
-      &nbsp;<a href='<ofbiz:url>/authview/<ofbiz:print attribute="donePage"/></ofbiz:url>' class="buttontext">[Go&nbsp;Back]</a>
+      &nbsp;<a href='<ofbiz:url>/authview/<%=donePage%></ofbiz:url>' class="buttontext">[Go&nbsp;Back]</a>
       <%if (security.hasEntityPermission("PAY_INFO", "_CREATE", session)) {%>
         &nbsp;<a href="javascript:document.editcreditcardform.submit()" class="buttontext">[Create]</a>
       <%}%>
-      <form method="post" action='<ofbiz:url>/createCreditCard?DONE_PAGE=<ofbiz:print attribute="donePage"/></ofbiz:url>' name="editcreditcardform" style='margin: 0;'>
+      <form method="post" action='<ofbiz:url>/createCreditCard/<%=donePage%></ofbiz:url>' name="editcreditcardform" style='margin: 0;'>
       <table width="90%" border="0" cellpadding="2" cellspacing="0">
     </ofbiz:unless>
     <ofbiz:if name="creditCard">
       <p class="head1">Edit Credit Card</p>
-      &nbsp;<a href='<ofbiz:url>/authview/<ofbiz:print attribute="donePage"/></ofbiz:url>' class="buttontext">[Go&nbsp;Back]</a>
+      &nbsp;<a href='<ofbiz:url>/authview/<%=donePage%></ofbiz:url>' class="buttontext">[Go&nbsp;Back]</a>
       <%if (security.hasEntityPermission("PAY_INFO", "_UPDATE", session)) {%>
           &nbsp;<a href="javascript:document.editcreditcardform.submit()" class="buttontext">[Save]</a>
       <%}%>
-      <form method="post" action='<ofbiz:url>/updateCreditCard?DONE_PAGE=<ofbiz:print attribute="donePage"/></ofbiz:url>' name="editcreditcardform" style='margin: 0;'>
+      <form method="post" action='<ofbiz:url>/updateCreditCard/<%=donePage%></ofbiz:url>' name="editcreditcardform" style='margin: 0;'>
       <table width="90%" border="0" cellpadding="2" cellspacing="0">
         <input type=hidden name='paymentMethodId' value='<ofbiz:print attribute="paymentMethodId"/>'>
     </ofbiz:if>
@@ -269,7 +271,7 @@
   </table>
   </form>
 
-  &nbsp;<a href='<ofbiz:url>/authview/<ofbiz:print attribute="donePage"/></ofbiz:url>' class="buttontext">[Go&nbsp;Back]</a>
+  &nbsp;<a href='<ofbiz:url>/authview/<%=donePage%></ofbiz:url>' class="buttontext">[Go&nbsp;Back]</a>
   <ofbiz:unless name="creditCard">
       <%if (security.hasEntityPermission("PAY_INFO", "_CREATE", session)) {%>
         &nbsp;<a href="javascript:document.editcreditcardform.submit()" class="buttontext">[Create]</a>

@@ -39,9 +39,13 @@
 
 <%if(security.hasEntityPermission("PARTYMGR", "_VIEW", session)) {%>
 <%
+    String partyId = request.getParameter("party_id");
+    if (partyId == null) partyId = request.getParameter("partyId");
+    if (partyId == null) partyId = (String) request.getAttribute("partyId");
+    
     String userLoginId = request.getParameter("userlogin_id");
-    if (userLoginId == null) userLoginId = (String) request.getSession().getAttribute("userLoginId");
-    else request.getSession().setAttribute("userLoginId", userLoginId);
+    if (userLoginId == null) userLoginId = request.getParameter("userLoginId");
+    if (userLoginId == null) userLoginId = (String) request.getAttribute("userLoginId");
 
     GenericValue userUserLogin = delegator.findByPrimaryKey("UserLogin", UtilMisc.toMap("userLoginId", userLoginId));
     if (userUserLogin != null) pageContext.setAttribute("userUserLogin", userUserLogin);
@@ -51,7 +55,7 @@
     pageContext.setAttribute("tryEntity", new Boolean(tryEntity));
 
     String donePage = request.getParameter("DONE_PAGE");
-    if(donePage == null || donePage.length() <= 0) donePage="viewprofile";
+    if(donePage == null || donePage.length() <= 0) donePage="viewprofile?partyId=" + partyId;
 %>
  
   <p class="head1">Change UserLogin Password</p>
