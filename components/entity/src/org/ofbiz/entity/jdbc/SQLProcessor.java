@@ -1,5 +1,5 @@
 /*
- * $Id: SQLProcessor.java,v 1.2 2003/08/17 04:56:27 jonesde Exp $
+ * $Id: SQLProcessor.java,v 1.3 2003/09/09 15:18:14 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -48,7 +48,7 @@ import org.ofbiz.entity.transaction.TransactionUtil;
  * SQLProcessor - provides utitlity functions to ease database access
  * 
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class SQLProcessor {
@@ -716,7 +716,7 @@ public class SQLProcessor {
         try {
             this.close();
         } catch (Exception e) {
-            Debug.logError(e, "Error closing the result, connection, etc in finalize EntityListIterator", module);
+            Debug.logError(e, "Error closing the result, connection, etc in finalize SQLProcessor", module);
         }
         super.finalize();
     }
