@@ -20,10 +20,11 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
+ *@version    $Revision: 1.2 $
  *@since      2.2
 -->
-
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#if security.hasEntityPermission("FACILITY", "_VIEW", session)>
 ${pages.get("/shipment/ShipmentTabBar.ftl")}
 
@@ -32,34 +33,34 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
 <form action="<@ofbizUrl>/AddItemsFromOrder</@ofbizUrl>">
 	<input type="hidden" name="shipmentId" value="${shipmentId}"/>
 	<div class="tabletext">
-        Order ID: <input type="text" class='inputBox' size="20" name="orderId" value="${orderId?if_exists}"/>
+        ${uiLabelMap.ProductOrderId} : <input type="text" class='inputBox' size="20" name="orderId" value="${orderId?if_exists}"/>
         <input type="submit" value="Select" class="smallSubmit"/>
     </div>
 </form>
 
-<div class="head2">Add Items to Shipment [${shipmentId?if_exists}] from Order [${orderId?if_exists}]</div>
+<div class="head2">${uiLabelMap.ProductAddItemsShipment} [${shipmentId?if_exists}] ${uiLabelMap.ProductFromOrder} [${orderId?if_exists}]</div>
 <#if orderId?has_content && !orderHeader?exists>
-	<div class="head3" style="color: red;">ERROR: Order with ID [${orderId}] not found.</div>
+	<div class="head3" style="color: red;"><#assign uiLabelWithVar=uiLabelMap.ProductErrorOrderIdNotFound?interpret><@uiLabelWithVar/>.</div>
 </#if>
 <#if orderHeader?exists>
     <#if orderHeader.orderTypeId == "SALES_ORDER" && shipment.shipmentTypeId != "SALES_SHIPMENT">
-        <div class="head3" style="color: red;">WARNING: Order Type is ${(orderType.description)?default(orderHeader.orderTypeId?if_exists)}, but this is NOT a Sales Shipment.</div>
+        <div class="head3" style="color: red;">${uiLabelMap.ProductWarningOrderType} ${(orderType.description)?default(orderHeader.orderTypeId?if_exists)}, ${uiLabelMap.ProductNotSalesShipment}.</div>
     <#elseif orderHeader.orderTypeId == "PURCHASE_ORDER" && shipment.shipmentTypeId != "PURCHASE_SHIPMENT">
-        <div class="head3" style="color: red;">WARNING: Order Type is ${(orderType.description)?default(orderHeader.orderTypeId?if_exists)}, but this is NOT a Purchase Shipment.</div>
+        <div class="head3" style="color: red;">${uiLabelMap.ProductWarningOrderType} ${(orderType.description)?default(orderHeader.orderTypeId?if_exists)}, ${uiLabelMap.ProductNotPurchaseShipment}.</div>
     <#else>
-        <div class="head3">NOTE: Order Type is ${(orderType.description)?default(orderHeader.orderTypeId?if_exists)}.</div>
+        <div class="head3">${uiLabelMap.ProductNoteOrderType} ${(orderType.description)?default(orderHeader.orderTypeId?if_exists)}.</div>
     </#if>
     <#if shipment.shipmentTypeId == "SALES_SHIPMENT">
-		<div class="head3">Origin Facility is: <#if originFacility?exists>${originFacility.facilityName?if_exists} [${originFacility.facilityId}]<#else><span style="color: red;">Not Set</span></#if></div>
+		<div class="head3">${uiLabelMap.ProductOriginFacility}: <#if originFacility?exists>${originFacility.facilityName?if_exists} [${originFacility.facilityId}]<#else><span style="color: red;">${uiLabelMap.ProductNotSet}</span></#if></div>
     <#elseif shipment.shipmentTypeId == "PURCHASE_SHIPMENT">
-		<div class="head3">Destination Facility is: <#if destinationFacility?exists>${destinationFacility.facilityName?if_exists} [${destinationFacility.facilityId}]<#else><span style="color: red;">Not Set</span></#if></div>
+		<div class="head3">${uiLabelMap.ProductDestinationFacility}: <#if destinationFacility?exists>${destinationFacility.facilityName?if_exists} [${destinationFacility.facilityId}]<#else><span style="color: red;">${uiLabelMap.ProductNotSet}</span></#if></div>
     </#if>
     <#if "ORDER_APPROVED" == orderHeader.statusId || "ORDER_BACKORDERED" == orderHeader.statusId>
-        <div class="head3">NOTE: Order Status is ${(orderHeaderStatus.description)?default(orderHeader.statusId?if_exists)}.</div>
+        <div class="head3">${uiLabelMap.ProductNoteOrderStatus} ${(orderHeaderStatus.description)?default(orderHeader.statusId?if_exists)}.</div>
     <#elseif "ORDER_COMPLETED" == orderHeader.statusId>
-        <div class="head3">NOTE: Order Status is ${(orderHeaderStatus.description)?default(orderHeader.statusId?if_exists)}, there should be no items left to issue from this order.</div>
+        <div class="head3">${uiLabelMap.ProductNoteOrderStatus} ${(orderHeaderStatus.description)?default(orderHeader.statusId?if_exists)}, ${uiLabelMap.ProductNoItemsLeft}.</div>
     <#else>
-        <div class="head3" style="color: red;">WARNING: Order Status is ${(orderHeaderStatus.description)?default(orderHeader.statusId?if_exists)}; should generally be Approved before shipping.</div>
+        <div class="head3" style="color: red;">${uiLabelMap.ProductWarningOrderStatus} ${(orderHeaderStatus.description)?default(orderHeader.statusId?if_exists)}; ${uiLabelMap.ProductApprovedBeforeShipping}.</div>
     </#if>
 
     <#assign rowCount = 0>
@@ -72,20 +73,20 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
     <input type="hidden" name="_useRowSubmit" value="Y">
     <table width="100%" cellpadding="2" cellspacing="0" border="1">
         <tr>
-            <td><div class="tableheadtext">Order Item</div></td>
-            <td><div class="tableheadtext">Product</div></td>
+            <td><div class="tableheadtext">${uiLabelMap.ProductOrderItem}</div></td>
+            <td><div class="tableheadtext">${uiLabelMap.ProductProduct}</div></td>
             <#if isSalesOrder>
-                <td><div class="tableheadtext">Items Issued or Reserved</div></td>
-                <td><div class="tableheadtext">[Issued + Reserved = Total] = Ordered</div></td>
-                <td><div class="tableheadtext">Reserved</div></td>
+                <td><div class="tableheadtext">${uiLabelMap.ProductItemsIssuedReserved}</div></td>
+                <td><div class="tableheadtext">${uiLabelMap.ProductIssuedReservedTotalOrdered}</div></td>
+                <td><div class="tableheadtext">${uiLabelMap.ProductReserved}</div></td>
             <#else>
-                <td><div class="tableheadtext">Items Issued</div></td>
-                <td><div class="tableheadtext">Issed = Ordered</div></td>
+                <td><div class="tableheadtext">${uiLabelMap.ProductItemsIssued}</div></td>
+                <td><div class="tableheadtext">${uiLabelMap.ProductIssedOrdered}</div></td>
             </#if>
-            <td><div class="tableheadtext">Issue</div></td>
+            <td><div class="tableheadtext">${uiLabelMap.ProductIssue}</div></td>
             <td align="right">
-                <div class="tableheadtext">Submit?</div>
-                <div class="tableheadtext">All<input type="checkbox" name="selectAll" value="Y" onclick="javascript:toggleAll(this);"></div>
+                <div class="tableheadtext">${uiLabelMap.ProductSubmit} ?</div>
+                <div class="tableheadtext">${uiLabelMap.CommonAll}<input type="checkbox" name="selectAll" value="${uiLabelMap.CommonY}" onclick="javascript:toggleAll(this);"></div>
             </td>
         </tr>
         <#list orderItemDatas?if_exists as orderItemData>
@@ -102,7 +103,7 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
                 <td>
                     <#if itemIssuances?has_content>
                         <#list itemIssuances as itemIssuance>
-                            <div class="tabletext"><b>[${itemIssuance.quantity?if_exists}]</b>${itemIssuance.shipmentId?if_exists}:${itemIssuance.shipmentItemSeqId?if_exists} on [${(itemIssuance.issuedDateTime.toString())?if_exists}] by [${(itemIssuance.issuedByUserLoginId)?if_exists}]</div>
+                            <div class="tabletext"><b>[${itemIssuance.quantity?if_exists}]</b>${itemIssuance.shipmentId?if_exists}:${itemIssuance.shipmentItemSeqId?if_exists} ${uiLabelMap.CommonOn} [${(itemIssuance.issuedDateTime.toString())?if_exists}] ${uiLabelMap.CommonBy} [${(itemIssuance.issuedByUserLoginId)?if_exists}]</div>
                         </#list>
                     <#else>
                         <div class="tabletext">&nbsp;</div>
@@ -166,7 +167,7 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
                                 <#if inventoryItem.facilityId?has_content>
                                     <span<#if originFacility?exists && originFacility.facilityId != inventoryItem.facilityId> style="color: red;"</#if>>[${(inventoryItemFacility.facilityName)?default(inventoryItem.facilityId)}]</span>
                                 <#else>
-                                    <span style="color: red;">[No Facility]</span>
+                                    <span style="color: red;">[${uiLabelMap.ProductNoFacility}]</span>
                                 </#if>
                             </div>
                         </td>
@@ -185,7 +186,7 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
                             </td>
                             <#assign rowCount = rowCount + 1>   
                         <#else>
-                            <td><div class="tabletext">Not In Origin Facility</div></td>
+                            <td><div class="tabletext">${uiLabelMap.ProductNotOriginFacility}</div></td>
                             <td><div class="tabletext">&nbsp;</div></td>
                         </#if>
                     </tr>
@@ -193,18 +194,18 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
             </#if>
         </#list>
         <tr>
-            <td colspan="7" align="right"><input type="submit" class="smallSubmit" value="Issue All"/></td>
+            <td colspan="7" align="right"><input type="submit" class="smallSubmit" value="${uiLabelMap.ProductIssueAll}"/></td>
         </tr>
     </table>
     <input type="hidden" name="_rowCount" value="${rowCount}">
     </form>
-    <script language="JavaScript">selectAll();</script>
+    <script language="JavaScript">${uiLabelMap.CommonSelectAll} ();</script>
 </#if>
 
 <#else>
-  <h3>The Shipment was not found with ID: [${shipmentId?if_exists}]</h3>
+  <h3>${uiLabelMap.ProductShipmentNotFoundId}: [${shipmentId?if_exists}]</h3>
 </#if>
 
 <#else>
-  <h3>You do not have permission to view this page. ("FACILITY_VIEW" or "FACILITY_ADMIN" needed)</h3>
+  <h3>${uiLabelMap.ProductFacilityViewPermissionError}</h3>
 </#if>
