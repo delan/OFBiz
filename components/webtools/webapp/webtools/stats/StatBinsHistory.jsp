@@ -30,7 +30,7 @@
 
 <%@ page import="java.util.*, java.net.*" %>
 <%@ page import="org.ofbiz.security.*, org.ofbiz.entity.*, org.ofbiz.base.util.*, org.ofbiz.content.webapp.pseudotag.*" %>
-<%@ page import="org.ofbiz.cotent.stats.*" %>
+<%@ page import="org.ofbiz.content.stats.*" %>
 
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 <jsp:useBean id="security" type="org.ofbiz.security.Security" scope="request" />
