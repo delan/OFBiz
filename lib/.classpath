@@ -3,8 +3,7 @@
     <classpathentry exported="true" kind="var" path="JRE_LIB" sourcepath="JRE_SRC"/>
     <classpathentry exported="true" kind="lib" path="datavision/DataVision.jar"/>
     <classpathentry exported="true" kind="lib" path="datavision/MinML2.jar"/>
-    <classpathentry exported="true" kind="lib" path="datavision/jcalendar.jar"/>    
-    <classpathentry exported="true" kind="lib" path="jasperreports/itext-0.96.jar"/>
+    <classpathentry exported="true" kind="lib" path="datavision/jcalendar.jar"/>       
     <classpathentry exported="true" kind="lib" path="jasperreports/jasperreports.jar"/>  
     <classpathentry exported="true" kind="lib" path="jasperreports/jasperreports-applet.jar"/>      
     <classpathentry exported="true" kind="lib" path="common/commons-beanutils.jar"/>
@@ -44,8 +43,10 @@
     <classpathentry exported="true" kind="lib" path="share/cactus.jar"/>
     <classpathentry exported="true" kind="lib" path="share/cvslib.jar"/>
     <classpathentry exported="true" kind="lib" path="share/dom4j.jar"/>
-    <classpathentry exported="true" kind="lib" path="share/fop.jar"/>
+    <classpathentry exported="true" kind="lib" path="share/fop.jar"/>    
     <classpathentry exported="true" kind="lib" path="share/freemarker.jar"/>
+    <classpathentry exported="true" kind="lib" path="share/iText.jar"/>
+    <classpathentry exported="true" kind="lib" path="share/iTextXML.jar"/>    
     <classpathentry exported="true" kind="lib" path="share/jakarta-poi-1.5.1-final.jar"/>
     <classpathentry exported="true" kind="lib" path="share/junit.jar"/>
     <classpathentry exported="true" kind="lib" path="share/lucene-1.2.jar"/>
