@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <template>main</template>
+    <property name="title">Split Items For Shipping</property>
+    <content-action name="/order/splitship.bsh"/>
+</page>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <template>main_right</template> 
+    <property name="title">Checkout Options</property>
+    <property name="title-property">PageTitleCheckoutOptions</property>
+    <content-action name="/order/checkoutshippingoptions.bsh"/>
+</page>

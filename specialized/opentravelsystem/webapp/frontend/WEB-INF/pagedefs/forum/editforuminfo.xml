@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <template>main_lr</template> 
+    <property name="title">Edit Forum Content Info</property>
+    <property name="formDefFile">/forum/ForumForms.xml</property>    
+    <property name="singleFormName">EditContentInfo</property>    
+    <property name="headerItem">Admin</property>    
+    <property name="entityName">Content</property>    
+    <property name="permission">CONTENTMGR</property>    
+    <property name="priKeyName">contentId</property>    
+    <property name="permissionIdName">contentIdTo</property>    
+    <property name="permittedOperations">CONTENT_UPDATE</property>    
+    <property name="entityOperation">_UPDATE</property>    
+    <property name="targetOperation">CONTENT_UPDATE</property>    
+    <property name="requiredRoles">BLOG_AUTHOR|BLOG_EDITOR|BLOG_ADMIN|BLOG_PUBLISHER</property>    
+    <property name="contentPurposeTypeId">ARTICLE</property>    
+    <property name="statusId">BLOG_PUBLISHED</property>    
+    <property name="permissionType">complex</property>    
+    <content-action name="/forum/currentvalprep.bsh"/>
+    <content-action name="/forum/permprep.bsh"/>
+    <content-action name="/forum/formprep.bsh"/>
+    <content-action name="/forum/nodetrailprep.bsh"/>
+    <content-action name="/forum/ownercontentprep.bsh"/>
+    <content-action name="/forum/contentaddprep.bsh"/>
+    <content-action name="/forum/contentprep.bsh"/>
+
+</page>

@@ -1,0 +1,8 @@
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="file:../../../../../components/content/dtd/widget-form.xsd">
+    <form name="main" type="single">
+        <field name="mainText"><
+            <text>this is the text</text>
+        </field>
+    </form>
+   
+</forms>

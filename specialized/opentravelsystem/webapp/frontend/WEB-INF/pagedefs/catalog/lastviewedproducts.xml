@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <template>main_lr</template>
+    <property name="title">Last Viewed Products</property>  
+     <property name="title-property">PageTitleLastViewProducts</property>
+</page>

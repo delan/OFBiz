@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <template>main</template> 
+    <property name="title">Order Status</property>
+    <property name="title-property">PageTitleOrderStatus</property>
+    <content-action name="/order/orderstatus.bsh"/>
+</page>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <template>main_lr</template>
+    <property name="title">Quick Add</property>
+     <property name="title-property">PageTitleQuickAdd</property>
+    <content-action name="/catalog/quickadd.bsh"/>
+</page>
