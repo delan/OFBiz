@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCartItem.java,v 1.20 2003/11/27 18:47:38 ajzeneski Exp $
+ * $Id: ShoppingCartItem.java,v 1.21 2003/11/29 14:08:14 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -47,7 +47,7 @@ import org.ofbiz.service.ModelService;
  *
  * @author     <a href="mailto:jaz@ofbiz.org.com">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.20 $
+ * @version    $Revision: 1.21 $
  * @since      2.0
  */
 public class ShoppingCartItem implements java.io.Serializable {
@@ -467,6 +467,16 @@ public class ShoppingCartItem implements java.io.Serializable {
             return promoQuantityToUse;
         } else {
             return 0;
+        }
+    }
+    
+    public double getPromoQuantityCandidateUse(GenericValue productPromoCondAction) {
+        GenericPK productPromoCondActionPK = productPromoCondAction.getPrimaryKey();
+        Double existingValue = (Double) this.quantityUsedPerPromoCandidate.get(productPromoCondActionPK);
+        if (existingValue == null) {
+            return 0;
+        } else {
+            return existingValue.doubleValue();
         }
     }
 
