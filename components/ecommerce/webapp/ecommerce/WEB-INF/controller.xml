@@ -432,7 +432,7 @@
         <security https="true" direct-request="false"/>
         <event type="java" path="org.ofbiz.order.shoppingcart.CheckOutEvents" invoke="processPayment"/>
         <response name="success" type="request" value="clearcartfororder"/>
-        <response name="fail" type="view" value="checkoutoptions"/>
+        <response name="fail" type="request" value="checkouterror"/>
         <response name="error" type="view" value="checkout"/>
     </request-map>
 

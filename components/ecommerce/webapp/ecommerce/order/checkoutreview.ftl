@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.8 $
+ *@version    $Revision: 1.9 $
  *@since      2.1
 -->
 
@@ -57,6 +57,9 @@
       </td>
       <td align="right">
         <form type="POST" action="<@ofbizUrl>/processorder</@ofbizUrl>" name="processForm">
+          <#if (requestParameters.checkoutpage)?has_content>
+            <input type="hidden" name="checkoutpage" value="${requestParameters.checkoutpage}">
+          </#if>
           <input type="button" name="processButton" value="[${uiLabelMap.OrderSubmitOrder}]" onClick="processOrder();" class="mediumSubmit">
         </form>
         <#-- doesn't work with Safari, seems to work with IE, Mozilla <a href="#" onclick="processOrder();" class="buttontextbig">[${uiLabelMap.OrderSubmitOrder}]&nbsp;</a> -->

@@ -2,6 +2,6 @@
 <page>
     <template>main</template> 
     <property name="title">Checkout Options</property>
-      <property name="title.property">PageTitleCheckoutOptions</property>
+    <property name="title.property">PageTitleCheckoutOptions</property>
     <content-action name="/order/checkoutoptions.bsh"/>
 </page>
