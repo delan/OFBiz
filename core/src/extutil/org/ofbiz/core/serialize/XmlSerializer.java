@@ -21,9 +21,7 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
 package org.ofbiz.core.serialize;
-
 
 import java.io.*;
 import java.net.*;
@@ -45,14 +43,13 @@ import org.w3c.dom.NodeList;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.entity.*;
 
-
 /**
  * <p><b>Title:</b> XmlSerializer
  * <p><b>Description:</b> Simple XML serialization/deserialization routines with embedded type information
  *
- *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- *@created    Nov 15, 2001
- *@version    1.0
+ * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
+ * @version    $Revision$
+ * @since      2.0
  */
 public class XmlSerializer {
     private static WeakReference simpleDateFormatter;
