@@ -1,5 +1,5 @@
 /*
- * $Id: UtilValidate.java,v 1.4 2003/12/13 23:55:49 ajzeneski Exp $
+ * $Id: UtilValidate.java,v 1.5 2003/12/17 21:30:02 ajzeneski Exp $
  *
  *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
@@ -32,7 +32,7 @@ import java.util.Collection;
  * See detailed description below.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      1.0
  *
  *
@@ -883,26 +883,25 @@ public class UtilValidate {
         return isValueLinkCard(stPassed);
     }
 
-    public static int getLuhnSum(String stPassed, boolean includesDigit) {
+    public static int getLuhnSum(String stPassed) {
         stPassed = stPassed.replaceAll("\\D", ""); // nuke any non-digit characters
-        int adj = 0;
-        if (includesDigit) adj = 1;                // if the string includes the check digit
 
+        int len = stPassed.length();
         int sum = 0;
-        for (int i = stPassed.length() - adj; i >= 0; i -= 2) {
-            sum += Integer.parseInt(stPassed.substring(i, i + 1));
-            if (i > 0) {
-                int d = 2 * Integer.parseInt(stPassed.substring(i - 1, i));
-                if (d > 9) d -= 9;
-                sum += d;
-            }
+        int mul = 1;
+        for (int i = len - 1; i >= 0; i--) {
+            int digit = Character.digit(stPassed.charAt(i), 10);
+            digit *= (mul == 1) ? mul++ : mul--;
+            sum += (digit >= 10) ? (digit % 10) + 1 : digit;
         }
+
         return sum;
     }
 
     public static int getLuhnCheckDigit(String stPassed) {
-        int sum = getLuhnSum(stPassed, false);
-        return ((sum / 10 + 1) * 10 - sum) % 10;
+        int sum = getLuhnSum(stPassed);
+        int mod = ((sum / 10 + 1) * 10 - sum) % 10;
+        return (10 - mod);
     }
 
     public static boolean sumIsMod10(int sum) {
@@ -925,7 +924,7 @@ public class UtilValidate {
 
         // encoding only works on cars with less the 19 digits
         if (st.length() > 19) return false;
-        return sumIsMod10(getLuhnSum(st, true));
+        return sumIsMod10(getLuhnSum(st));
     }
 
     /** Checks to see if the cc number is a valid Visa number
