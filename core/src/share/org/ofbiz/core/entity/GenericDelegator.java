@@ -1,24 +1,6 @@
-package org.ofbiz.core.entity;
-
-import java.util.*;
-import java.net.*;
-
-import org.ofbiz.core.util.*;
-import org.ofbiz.core.entity.model.*;
-
-import javax.xml.parsers.ParserConfigurationException;
-import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.DOMException;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-
-/**
- * <p><b>Title:</b> Server Delegator Class
- * <p><b>Description:</b> None
+/*
+ * $Id$
+ *
  * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
  * <p>Permission is hereby granted, free of charge, to any person obtaining a
@@ -38,6 +20,28 @@ import org.w3c.dom.NodeList;
  *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
+package org.ofbiz.core.entity;
+
+import java.util.*;
+import java.net.*;
+
+import org.ofbiz.core.util.*;
+import org.ofbiz.core.entity.model.*;
+
+import javax.xml.parsers.ParserConfigurationException;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.DOMException;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+/**
+ * Generic Data Source Delegator Class
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@author     <a href='mailto:chris_maurer@altavista.com'>Chris Maurer</a>

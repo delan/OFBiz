@@ -1,11 +1,6 @@
-
-package org.ofbiz.core.entity;
-
-import org.ofbiz.core.util.*;
-
-/**
- * <p><b>Title:</b> Generic Entity Helper Factory Class
- * <p><b>Description:</b> None
+/*
+ * $Id$
+ *
  * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
  * <p>Permission is hereby granted, free of charge, to any person obtaining a
@@ -25,6 +20,14 @@ import org.ofbiz.core.util.*;
  *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
+package org.ofbiz.core.entity;
+
+import org.ofbiz.core.util.*;
+
+/**
+ * Generic Entity Helper Factory Class
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@created    Tue Aug 07 01:10:32 MDT 2001

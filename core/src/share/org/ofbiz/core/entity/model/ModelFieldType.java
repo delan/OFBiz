@@ -1,11 +1,6 @@
-
-package org.ofbiz.core.entity.model;
-
-import java.util.*;
-
-/**
- * <p><b>Title:</b> Generic Entity - FieldType model class
- * <p><b>Description:</b> None
+/*
+ * $Id$
+ *
  * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
  * <p>Permission is hereby granted, free of charge, to any person obtaining a
@@ -25,6 +20,14 @@ import java.util.*;
  *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
+package org.ofbiz.core.entity.model;
+
+import java.util.*;
+
+/**
+ * Generic Entity - FieldType model class
  *
  *@author     David E. Jones
  *@created    May 15, 2001

@@ -1,23 +1,8 @@
-
-package org.ofbiz.core.entity;
-
-import java.util.*;
-import java.sql.*;
-import javax.sql.*;
-import javax.naming.*;
-
-import org.ofbiz.core.util.*;
-
-// For Tyrex 0.9.8.5
-import tyrex.resource.jdbc.xa.*;
-
-// For Tyrex 0.9.7.0
-//import tyrex.jdbc.xa.*;
-
-/**
- * <p><b>Title:</b> TyrexConnectionFactory.java
- * <p><b>Description:</b> Tyrex ConnectionFactory - central source for JDBC connections from Tyrex
- * <p>Copyright (c) 2001 The Open For Business Project and repected authors.
+/*
+ * $Id$
+ *
+ * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ *
  * <p>Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
  *  to deal in the Software without restriction, including without limitation
@@ -35,6 +20,25 @@ import tyrex.resource.jdbc.xa.*;
  *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
+package org.ofbiz.core.entity;
+
+import java.util.*;
+import java.sql.*;
+import javax.sql.*;
+import javax.naming.*;
+
+import org.ofbiz.core.util.*;
+
+// For Tyrex 0.9.8.5
+import tyrex.resource.jdbc.xa.*;
+
+// For Tyrex 0.9.7.0
+//import tyrex.jdbc.xa.*;
+
+/**
+ * Tyrex ConnectionFactory - central source for JDBC connections from Tyrex
  *
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @version 1.0

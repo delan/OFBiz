@@ -1,15 +1,6 @@
-
-package org.ofbiz.core.entity;
-
-import java.util.*;
-
-import org.ofbiz.core.util.*;
-import org.ofbiz.core.entity.model.*;
-
-/**
- * <p><b>Title:</b> Generic Entity Type Utilities Class
- * <p><b>Description:</b> Makes it easier to deal with entities that follow the
- *    extensibility pattern and that can be of various types as identified in the database.
+/*
+ * $Id$
+ *
  * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
  * <p>Permission is hereby granted, free of charge, to any person obtaining a
@@ -29,6 +20,18 @@ import org.ofbiz.core.entity.model.*;
  *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
+package org.ofbiz.core.entity;
+
+import java.util.*;
+
+import org.ofbiz.core.util.*;
+import org.ofbiz.core.entity.model.*;
+
+/**
+ * Makes it easier to deal with entities that follow the
+ * extensibility pattern and that can be of various types as identified in the database.
  *
  *@author     Eric Pabst and David E. Jones
  *@created    Tue Aug 07 01:10:32 MDT 2001

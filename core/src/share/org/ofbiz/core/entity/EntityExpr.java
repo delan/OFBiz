@@ -1,11 +1,6 @@
-
-package org.ofbiz.core.entity;
-
-import java.io.*;
-
-/**
- * <p><b>Title:</b> EntityExpr
- * <p><b>Description:</b> Encapsulates simple expressions used for specifying queries
+/*
+ * $Id$
+ *
  * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
  * <p>Permission is hereby granted, free of charge, to any person obtaining a
@@ -25,6 +20,14 @@ import java.io.*;
  *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
+package org.ofbiz.core.entity;
+
+import java.io.*;
+
+/**
+ * Encapsulates simple expressions used for specifying queries
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@created    Nov 13, 2001

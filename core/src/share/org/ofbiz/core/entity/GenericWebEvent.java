@@ -1,19 +1,6 @@
-
-package org.ofbiz.core.entity;
-
-import java.rmi.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import java.lang.reflect.*;
-
-import org.ofbiz.core.entity.*;
-import org.ofbiz.core.entity.model.*;
-import org.ofbiz.core.security.*;
-import org.ofbiz.core.util.*;
-
-/**
- * <p><b>Title:</b> Web Event for doing updates on Generic Entities
- * <p><b>Description:</b> none
+/*
+ * $Id$
+ *
  * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
  * <p>Permission is hereby granted, free of charge, to any person obtaining a
@@ -33,6 +20,22 @@ import org.ofbiz.core.util.*;
  *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
+package org.ofbiz.core.entity;
+
+import java.rmi.*;
+import javax.servlet.*;
+import javax.servlet.http.*;
+import java.lang.reflect.*;
+
+import org.ofbiz.core.entity.*;
+import org.ofbiz.core.entity.model.*;
+import org.ofbiz.core.security.*;
+import org.ofbiz.core.util.*;
+
+/**
+ * Web Event for doing updates on Generic Entities
  *
  *@author     <a href='mailto:jonesde@ofbiz.org'>David E. Jones (jonesde@ofbiz.org)</a>
  *@created    Aug 18 2001

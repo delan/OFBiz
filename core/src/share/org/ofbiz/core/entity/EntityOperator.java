@@ -1,9 +1,6 @@
-
-package org.ofbiz.core.entity;
-
-/**
- * <p><b>Title:</b> EntityOperator
- * <p><b>Description:</b> Encapsulates operations between entities and entity fields. This is a immutable class.
+/*
+ * $Id$
+ *
  * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
  * <p>Permission is hereby granted, free of charge, to any person obtaining a
@@ -23,6 +20,12 @@ package org.ofbiz.core.entity;
  *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
+package org.ofbiz.core.entity;
+
+/**
+ * Encapsulates operations between entities and entity fields. This is a immutable class.
  *
  *@author     <a href='mailto:chris_maurer@altavista.com'>Chris Maurer</a>
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>

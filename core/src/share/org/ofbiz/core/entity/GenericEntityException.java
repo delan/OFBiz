@@ -1,31 +1,8 @@
 /*
  * $Id$
- * $Log$
- * Revision 1.1  2001/09/28 22:56:44  jonesde
- * Big update for fromDate PK use, organization stuff
  *
- * Revision 1.4  2001/09/20 18:58:41  jonesde
- * findByPrimaryKey no longer throws exception if not found, just return null.
+ * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
- * Revision 1.3  2001/09/20 14:56:20  jonesde
- * Added a bunch of improved error handling code.
- *
- * Revision 1.2  2001/09/19 21:34:00  jonesde
- * Added field type init and datasource check on start.
- *
- * Revision 1.1  2001/09/19 08:32:01  jonesde
- * Initial checkin of refactored entity engine.
- *
- *
- */
-
-package org.ofbiz.core.entity;
-
-import java.io.*;
-
-/**
- * <p><b>Title:</b> GenericEntityException.java
- * <p>Copyright (c) 2001 The Open For Business Project and repected authors.
  * <p>Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
  *  to deal in the Software without restriction, including without limitation
@@ -43,6 +20,14 @@ import java.io.*;
  *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
+package org.ofbiz.core.entity;
+
+import java.io.*;
+
+/**
+ * GenericEntityException
  *
  *@author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@created Sep 17, 2001

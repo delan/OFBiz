@@ -1,13 +1,6 @@
-
-package org.ofbiz.core.entity;
-
-import java.util.*;
-
-import org.ofbiz.core.util.*;
-
-/**
- * <p><b>Title:</b> Generic Entity Utilities Class
- * <p><b>Description:</b> Helper methods when dealing with Entities.
+/*
+ * $Id$
+ *
  * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
  * <p>Permission is hereby granted, free of charge, to any person obtaining a
@@ -27,6 +20,15 @@ import org.ofbiz.core.util.*;
  *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
+package org.ofbiz.core.entity;
+
+import java.util.*;
+import org.ofbiz.core.util.*;
+
+/**
+ * Helper methods when dealing with Entities, especially ones that follow certain conventions
  *
  *@author     Eric Pabst
  *@created    Tue Aug 07 01:10:32 MDT 2001

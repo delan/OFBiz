@@ -1,37 +1,8 @@
 /*
  * $Id$
- * $Log$
- * Revision 1.4  2002/02/02 19:50:30  azeneski
- * formatting changes (120cols)
  *
- * Revision 1.3  2001/12/07 07:16:38  jonesde
- * Small improvement to make some parameters optional, and add username/password options
+ * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
- * Revision 1.2  2001/10/19 22:17:32  jonesde
- * Changed servers.properties to entityengine.properties
- *
- * Revision 1.1  2001/09/28 22:56:44  jonesde
- * Big update for fromDate PK use, organization stuff
- *
- * Revision 1.1  2001/09/21 19:38:50  jonesde
- * Updated settings to work with PoolMan & Tomcat 4, the current default config
- * Includes updated JNDIContextFactory and default datasource get through JNDI
- *
- *
- */
-
-package org.ofbiz.core.entity;
-
-import java.util.*;
-import javax.naming.Context;
-import javax.naming.InitialContext;
-
-import org.ofbiz.core.util.*;
-
-/**
- * <p><b>Title:</b> JNDIContextFactory.java
- * <p><b>Description:</b> JNDIContextFactory - central source for JNDI Contexts by helper name
- * <p>Copyright (c) 2001 The Open For Business Project and repected authors.
  * <p>Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
  *  to deal in the Software without restriction, including without limitation
@@ -49,6 +20,18 @@ import org.ofbiz.core.util.*;
  *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
+package org.ofbiz.core.entity;
+
+import java.util.*;
+import javax.naming.Context;
+import javax.naming.InitialContext;
+
+import org.ofbiz.core.util.*;
+
+/**
+ * JNDIContextFactory - central source for JNDI Contexts by helper name
  *
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @version 1.0

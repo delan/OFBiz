@@ -1,15 +1,6 @@
-
-package org.ofbiz.core.entity;
-
-import java.io.*;
-import java.util.*;
-
-import org.ofbiz.core.entity.model.*;
-import org.ofbiz.core.util.*;
-
-/**
- * <p><b>Title:</b> Generic Entity Value Object
- * <p><b>Description:</b> Handles persisntence for any defined entity.
+/*
+ * $Id$
+ *
  * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
  * <p>Permission is hereby granted, free of charge, to any person obtaining a
@@ -29,6 +20,18 @@ import org.ofbiz.core.util.*;
  *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
+package org.ofbiz.core.entity;
+
+import java.io.*;
+import java.util.*;
+
+import org.ofbiz.core.entity.model.*;
+import org.ofbiz.core.util.*;
+
+/**
+ * Generic Entity Value Object - Handles persisntence for any defined entity.
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@author     Eric Pabst

@@ -1,14 +1,6 @@
-
-package org.ofbiz.core.entity;
-
-import java.io.*;
-import java.util.*;
-
-import org.ofbiz.core.entity.model.*;
-
-/**
- * <p><b>Title:</b> Generic Entity Primary Key Object
- * <p><b>Description:</b> None
+/*
+ * $Id$
+ *
  * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
  * <p>Permission is hereby granted, free of charge, to any person obtaining a
@@ -28,6 +20,17 @@ import org.ofbiz.core.entity.model.*;
  *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
+package org.ofbiz.core.entity;
+
+import java.io.*;
+import java.util.*;
+
+import org.ofbiz.core.entity.model.*;
+
+/**
+ * Generic Entity Primary Key Object
  *
  *@author     David E. Jones
  *@created    Wed Aug 08 2001

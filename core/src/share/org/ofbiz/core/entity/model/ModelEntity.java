@@ -1,13 +1,6 @@
-
-package org.ofbiz.core.entity.model;
-
-import java.util.*;
-
-import org.ofbiz.core.util.*;
-
-/**
- * <p><b>Title:</b> Generic Entity - Entity model class
- * <p><b>Description:</b> None
+/*
+ * $Id$
+ *
  * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
  * <p>Permission is hereby granted, free of charge, to any person obtaining a
@@ -27,6 +20,16 @@ import org.ofbiz.core.util.*;
  *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
+package org.ofbiz.core.entity.model;
+
+import java.util.*;
+
+import org.ofbiz.core.util.*;
+
+/**
+ * Generic Entity - Entity model class
  *
  *@author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@created    May 15, 2001
@@ -50,15 +53,15 @@ public class ModelEntity {
     public String dependentOn = "";
 
     //Strings to go in the comment header.
-    /** The title for the class JavaDoc comment */
+    /** The title for documentation purposes */
     public String title = "";
-    /** The description for the class JavaDoc comment */
+    /** The description for documentation purposes */
     public String description = "";
-    /** The copyright for the class JavaDoc comment */
+    /** The copyright for documentation purposes */
     public String copyright = "";
-    /** The author for the class JavaDoc comment */
+    /** The author for documentation purposes */
     public String author = "";
-    /** The version for the class JavaDoc comment */
+    /** The version for documentation purposes */
     public String version = "";
 
     /** A Vector of the Field objects for the Entity */

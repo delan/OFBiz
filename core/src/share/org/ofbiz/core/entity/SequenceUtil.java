@@ -1,14 +1,6 @@
-
-package org.ofbiz.core.entity;
-
-import java.sql.*;
-import java.util.*;
-
-import org.ofbiz.core.util.*;
-
-/**
- * <p><b>Title:</b> Sequence Utility to get unique sequences from named sequence banks
- * <p><b>Description:</b> Uses a collision detection approach to safely get unique sequenced ids in banks from the database
+/*
+ * $Id$
+ *
  * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
  * <p>Permission is hereby granted, free of charge, to any person obtaining a
@@ -28,6 +20,18 @@ import org.ofbiz.core.util.*;
  *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
+package org.ofbiz.core.entity;
+
+import java.sql.*;
+import java.util.*;
+
+import org.ofbiz.core.util.*;
+
+/**
+ * <p>Sequence Utility to get unique sequences from named sequence banks
+ * <p>Uses a collision detection approach to safely get unique sequenced ids in banks from the database
  *
  *@author     David E. Jones
  *@created    Wed Aug 29 2001
