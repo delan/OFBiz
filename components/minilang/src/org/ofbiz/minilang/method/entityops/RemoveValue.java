@@ -1,5 +1,5 @@
 /*
- * $Id: RemoveValue.java,v 1.1 2003/08/17 06:06:11 ajzeneski Exp $
+ * $Id: RemoveValue.java,v 1.2 2003/09/14 05:40:41 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -36,7 +36,7 @@ import org.w3c.dom.Element;
  * Uses the delegator to remove the specified value object entity from the datasource
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class RemoveValue extends MethodOperation {
@@ -58,31 +58,17 @@ public class RemoveValue extends MethodOperation {
         GenericValue value = (GenericValue) valueAcsr.get(methodContext);
         if (value == null) {
             String errMsg = "In remove-value a value was not found with the specified valueAcsr: " + valueAcsr + ", not removing";
-
             Debug.logWarning(errMsg, module);
-            if (methodContext.getMethodType() == MethodContext.EVENT) {
-                methodContext.putEnv(simpleMethod.getEventErrorMessageName(), errMsg);
-                methodContext.putEnv(simpleMethod.getEventResponseCodeName(), simpleMethod.getDefaultErrorCode());
-            } else if (methodContext.getMethodType() == MethodContext.SERVICE) {
-                methodContext.putEnv(simpleMethod.getServiceErrorMessageName(), errMsg);
-                methodContext.putEnv(simpleMethod.getServiceResponseMessageName(), simpleMethod.getDefaultErrorCode());
-            }
+            methodContext.setErrorReturn(errMsg, simpleMethod);
             return false;
         }
 
         try {
             methodContext.getDelegator().removeValue(value, doCacheClear);
         } catch (GenericEntityException e) {
-            Debug.logError(e, module);
             String errMsg = "ERROR: Could not complete the " + simpleMethod.getShortDescription() + " process [problem removing the " + valueAcsr + " value: " + e.getMessage() + "]";
-
-            if (methodContext.getMethodType() == MethodContext.EVENT) {
-                methodContext.putEnv(simpleMethod.getEventErrorMessageName(), errMsg);
-                methodContext.putEnv(simpleMethod.getEventResponseCodeName(), simpleMethod.getDefaultErrorCode());
-            } else if (methodContext.getMethodType() == MethodContext.SERVICE) {
-                methodContext.putEnv(simpleMethod.getServiceErrorMessageName(), errMsg);
-                methodContext.putEnv(simpleMethod.getServiceResponseMessageName(), simpleMethod.getDefaultErrorCode());
-            }
+            Debug.logError(e, errMsg, module);
+            methodContext.setErrorReturn(errMsg, simpleMethod);
             return false;
         }
         return true;

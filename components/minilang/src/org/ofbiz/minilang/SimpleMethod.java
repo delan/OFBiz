@@ -1,5 +1,5 @@
 /*
- * $Id: SimpleMethod.java,v 1.3 2003/09/11 13:23:26 jonesde Exp $
+ * $Id: SimpleMethod.java,v 1.4 2003/09/14 05:40:41 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -52,7 +52,7 @@ import org.w3c.dom.Element;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.0
  */
 public class SimpleMethod {
@@ -768,6 +768,8 @@ public class SimpleMethod {
                     methodOperations.add(new org.ofbiz.minilang.method.entityops.CreateValue(curOperElem, simpleMethod));
                 } else if ("store-value".equals(nodeName)) {
                     methodOperations.add(new org.ofbiz.minilang.method.entityops.StoreValue(curOperElem, simpleMethod));
+                } else if ("refresh-value".equals(nodeName)) {
+                    methodOperations.add(new org.ofbiz.minilang.method.entityops.RefreshValue(curOperElem, simpleMethod));
                 } else if ("remove-value".equals(nodeName)) {
                     methodOperations.add(new org.ofbiz.minilang.method.entityops.RemoveValue(curOperElem, simpleMethod));
                 } else if ("remove-related".equals(nodeName)) {
