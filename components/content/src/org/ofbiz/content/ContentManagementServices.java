@@ -1062,15 +1062,11 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
 
         if (utilCache != null) {
             utilCache.clear();
-        } else {
-            return ServiceUtil.returnError("Could not clear cache, cache not found with name: entitycache.entity-list.default.ContentAssocViewFrom");
         }
         
         utilCache = (UtilCache) UtilCache.utilCacheTable.get("entitycache.entity-list.default.ContentAssocViewTo");
         if (utilCache != null) {
             utilCache.clear();
-        } else {
-            return ServiceUtil.returnError("Could not clear cache, cache not found with name: entitycache.entity-list.default.ContentAssocViewTo");
         }
 
         return results;
@@ -1083,15 +1079,11 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
         UtilCache utilCache = (UtilCache) UtilCache.utilCacheTable.get("entitycache.entity-list.default.ContentAssocViewDataResourceFrom");
         if (utilCache != null) {
             utilCache.clear();
-        } else {
-            return ServiceUtil.returnError("Could not clear cache, cache not found with name: entitycache.entity-list.default.ContentAssocViewDataResourceFrom");
         }
         
         utilCache = (UtilCache) UtilCache.utilCacheTable.get("entitycache.entity-list.default.ContentAssocViewDataResourceTo");
         if (utilCache != null) {
             utilCache.clear();
-        } else {
-            return ServiceUtil.returnError("Could not clear cache, cache not found with name: entitycache.entity-list.default.ContentAssocViewDataResourceTo");
         }
 
         return results;
