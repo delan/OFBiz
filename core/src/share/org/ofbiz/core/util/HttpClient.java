@@ -302,7 +302,7 @@ public class HttpClient {
             throw new HttpClientException("Cannot process a null URL.");
 
         if (parameters != null && parameters.size() > 0)
-            arguments = encodeArgs(parameters);
+            arguments = UtilHttp.urlEncodeArgs(parameters);
 
         // Append the arguments to the query string if GET.
         if (method.equalsIgnoreCase("get") && arguments != null)
@@ -347,32 +347,5 @@ public class HttpClient {
         }
 
         return in;
-    }
-
-    public String encodeArgs(Map args) {
-        StringBuffer buf = new StringBuffer();
-        Set names = args.keySet();
-        Iterator i = names.iterator();
-
-        while (i.hasNext()) {
-            String name = (String) i.next();
-            Object value = args.get(name);
-            String valueStr = null;
-            if (value != null && value instanceof String)
-                valueStr = (String) value;
-            else if (value != null)
-                valueStr = value.toString();
-                        
-            if (name != null) {
-                buf.append(URLEncoder.encode(name));
-                buf.append("=");
-                if (valueStr == null)
-                    valueStr = "";
-                buf.append(URLEncoder.encode(valueStr));
-                if (i.hasNext())
-                    buf.append("&");
-            }
-        }
-        return buf.toString();
     }
 }

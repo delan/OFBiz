@@ -125,9 +125,8 @@ public class PayPalEvents {
         parameters.put("image_url", imageUrl);
         parameters.put("no_note", "1");        // no notes allowed in paypal (not passed back)
         parameters.put("no_shipping", "1");    // no shipping address required (local shipping used)
-        
-        HttpClient hclient = new HttpClient();
-        String encodedParameters = hclient.encodeArgs(parameters);
+                
+        String encodedParameters = UtilHttp.urlEncodeArgs(parameters);
         String redirectString = redirectUrl + "?" + encodedParameters;   
         
         // set the order in the session for cancelled orders
@@ -178,22 +177,11 @@ public class PayPalEvents {
         Map parametersMap = UtilHttp.getParameterMap(request);
         parametersMap.put("cmd", "_notify-validate");  
         
-        // send off the confirm request 
-        HttpClient hclient = new HttpClient(confirmUrl, parametersMap);
+        // send off the confirm request     
         String confirmResp = null;
-        /* -- this does not work, use the code below
-        try {
-            confirmResp = hclient.post();
-            Debug.logError("PayPal Verification Response: " + confirmResp, module);
-        } catch (HttpClientException e) {
-            Debug.logError(e, "Problems connection to PayPal confirm URL", module);
-            return "error";
-        }
-        */
         
-        // second verify, without using HttpClient -- testing
         try {                
-            String str = hclient.encodeArgs(parametersMap);
+            String str = UtilHttp.urlEncodeArgs(parametersMap);
             URL u = new URL("http://www.paypal.com/cgi-bin/webscr");
             URLConnection uc = u.openConnection();
             uc.setDoOutput(true);
