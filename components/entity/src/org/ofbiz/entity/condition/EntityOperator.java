@@ -1,5 +1,5 @@
 /*
- * $Id: EntityOperator.java,v 1.2 2003/11/05 12:08:00 jonesde Exp $
+ * $Id: EntityOperator.java,v 1.3 2004/01/14 00:08:11 ajzeneski Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -32,8 +32,8 @@ import java.util.HashMap;
  *@author     <a href='mailto:chris_maurer@altavista.com'>Chris Maurer</a>
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- *@created    Nov 5, 2001
- *@version    1.0
+ *@version    $Revision: 1.3 $
+ *@since      2.0
  */
 public class EntityOperator implements java.io.Serializable {
 
