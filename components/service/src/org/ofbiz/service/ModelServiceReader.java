@@ -1,5 +1,5 @@
 /* 
- * $Id: ModelServiceReader.java,v 1.6 2003/12/13 16:39:55 ajzeneski Exp $
+ * $Id: ModelServiceReader.java,v 1.7 2003/12/15 19:30:14 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -56,7 +56,7 @@ import org.xml.sax.SAXException;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.6 $
+ * @version    $Revision: 1.7 $
  * @since      2.0
  */
 
@@ -436,9 +436,9 @@ public class ModelServiceReader {
                     }                    
                 }
             } catch (GenericEntityException e) {
-                Debug.logError(e, "Problem loading auto-attributes [" + entityName + "]", module);
+                Debug.logError(e, "Problem loading auto-attributes [" + entityName + "] for " + service.name, module);
             } catch (GeneralException e) {
-                Debug.logError(e, "Cannot load auto-attributes : " + e.getMessage());
+                Debug.logError(e, "Cannot load auto-attributes : " + e.getMessage() + " for " + service.name, module);
             }            
         }
     }

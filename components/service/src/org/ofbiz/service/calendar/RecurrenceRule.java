@@ -1,5 +1,5 @@
 /*
- * $Id: RecurrenceRule.java,v 1.3 2003/12/15 09:13:12 jonesde Exp $
+ * $Id: RecurrenceRule.java,v 1.4 2003/12/15 19:30:15 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -41,7 +41,7 @@ import org.ofbiz.entity.GenericValue;
  * Recurrence Rule Object
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.0
  */
 public class RecurrenceRule {
@@ -677,7 +677,9 @@ public class RecurrenceRule {
             value.set("frequency", freqStr);
             value.set("intervalNumber", new Long(interval));
             value.set("countNumber", new Long(count));
-            value.set("untilDateTime", new java.sql.Timestamp(endTime));
+            if (endTime > 0) {
+                value.set("untilDateTime", new java.sql.Timestamp(endTime));
+            }
             delegator.create(value);
             RecurrenceRule newRule = new RecurrenceRule(value);
 
