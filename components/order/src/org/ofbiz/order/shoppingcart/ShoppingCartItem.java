@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCartItem.java,v 1.17 2003/11/25 09:48:04 jonesde Exp $
+ * $Id: ShoppingCartItem.java,v 1.18 2003/11/26 10:07:22 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -47,7 +47,7 @@ import org.ofbiz.service.ModelService;
  *
  * @author     <a href="mailto:jaz@ofbiz.org.com">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.17 $
+ * @version    $Revision: 1.18 $
  * @since      2.0
  */
 public class ShoppingCartItem implements java.io.Serializable {
@@ -102,7 +102,8 @@ public class ShoppingCartItem implements java.io.Serializable {
      * @return a new ShoppingCartItem object
      * @throws CartItemModifyException
      */
-    public static ShoppingCartItem makeItem(Integer cartLocation, GenericDelegator delegator, String productId, double selectedAmount, double quantity, Map additionalProductFeatureAndAppls, Map attributes, String prodCatalogId, LocalDispatcher dispatcher, ShoppingCart cart) throws CartItemModifyException {
+    public static ShoppingCartItem makeItem(Integer cartLocation, String productId, double selectedAmount, double quantity, Map additionalProductFeatureAndAppls, Map attributes, String prodCatalogId, LocalDispatcher dispatcher, ShoppingCart cart) throws CartItemModifyException {
+        GenericDelegator delegator = cart.getDelegator();
         GenericValue product = null;
 
         try {
@@ -225,7 +226,8 @@ public class ShoppingCartItem implements java.io.Serializable {
      * @return a new ShoppingCartItem object
      * @throws CartItemModifyException
      */
-    public static ShoppingCartItem makeItem(Integer cartLocation, GenericDelegator delegator, String itemType, String itemDescription, String productCategoryId, double basePrice, double selectedAmount, double quantity, Map attributes, String prodCatalogId, LocalDispatcher dispatcher, ShoppingCart cart, boolean doPromotions) throws CartItemModifyException {
+    public static ShoppingCartItem makeItem(Integer cartLocation, String itemType, String itemDescription, String productCategoryId, double basePrice, double selectedAmount, double quantity, Map attributes, String prodCatalogId, LocalDispatcher dispatcher, ShoppingCart cart, boolean doPromotions) throws CartItemModifyException {
+        GenericDelegator delegator = cart.getDelegator();
         ShoppingCartItem newItem = new ShoppingCartItem(delegator, itemType, itemDescription, productCategoryId, basePrice, attributes, prodCatalogId);
 
         // add to cart before setting quantity so that we can get order total, etc
@@ -256,7 +258,7 @@ public class ShoppingCartItem implements java.io.Serializable {
             this._product = null;
         }
         this.delegator = item.getDelegator();
-        this.delegatorName = delegator.getDelegatorName();
+        this.delegatorName = item.delegatorName;
         this.prodCatalogId = item.getProdCatalogId();
         this.productId = item.getProductId();
         this.itemType = item.getItemType();
@@ -367,7 +369,7 @@ public class ShoppingCartItem implements java.io.Serializable {
 
         // apply/unapply promotions - only for sales orders
         if (doPromotions && cart.getOrderType().equals("SALES_ORDER")) {
-            org.ofbiz.order.shoppingcart.product.ProductPromoWorker.doPromotions(cart, getDelegator(), dispatcher);
+            org.ofbiz.order.shoppingcart.product.ProductPromoWorker.doPromotions(cart, dispatcher);
         }
     }
 
@@ -383,8 +385,9 @@ public class ShoppingCartItem implements java.io.Serializable {
                 priceContext.put("webSiteId", cart.getWebSiteId());
 
                 String partyId = cart.getPartyId();
-                if (partyId != null)
-                	priceContext.put("partyId", partyId);
+                if (partyId != null) {
+                    priceContext.put("partyId", partyId);
+                }
 
                 priceContext.put("quantity", new Double(this.getQuantity()));
                 Map priceResult = dispatcher.runSync("calculateProductPrice", priceContext);

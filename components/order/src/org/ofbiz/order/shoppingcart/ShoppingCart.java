@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCart.java,v 1.29 2003/11/25 12:41:26 jonesde Exp $
+ * $Id: ShoppingCart.java,v 1.30 2003/11/26 10:07:22 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -44,7 +44,7 @@ import org.ofbiz.product.store.ProductStoreWorker;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.29 $
+ * @version    $Revision: 1.30 $
  * @since      2.0
  */
 public class ShoppingCart implements java.io.Serializable {
@@ -200,7 +200,7 @@ public class ShoppingCart implements java.io.Serializable {
         }
 
         // Add the new item to the shopping cart if it wasn't found.
-        return this.addItem(0, ShoppingCartItem.makeItem(new Integer(0), this.getDelegator(), productId, selectedAmount, quantity, features, attributes, prodCatalogId, dispatcher, this));
+        return this.addItem(0, ShoppingCartItem.makeItem(new Integer(0), productId, selectedAmount, quantity, features, attributes, prodCatalogId, dispatcher, this));
     }
     public int addOrIncreaseItem(String productId, double quantity, Map features, Map attributes, String prodCatalogId, LocalDispatcher dispatcher) throws CartItemModifyException {
         return addOrIncreaseItem(productId, 0.00, quantity, features, attributes, prodCatalogId, dispatcher);
@@ -211,7 +211,7 @@ public class ShoppingCart implements java.io.Serializable {
      * @throws CartItemModifyException
      */
     public int addNonProductItem(String itemType, String description, String categoryId, double price, double quantity, Map attributes, String prodCatalogId, LocalDispatcher dispatcher) throws CartItemModifyException {
-        return this.addItem(0, ShoppingCartItem.makeItem(new Integer(0), this.getDelegator(), itemType, description, categoryId, price, 0.00, quantity, attributes, prodCatalogId, dispatcher, this, true));
+        return this.addItem(0, ShoppingCartItem.makeItem(new Integer(0), itemType, description, categoryId, price, 0.00, quantity, attributes, prodCatalogId, dispatcher, this, true));
     }
 
     /** Add an item to the shopping cart. */
@@ -226,7 +226,7 @@ public class ShoppingCart implements java.io.Serializable {
 
     /** Add an item to the shopping cart. */
     public int addItemToEnd(String productId, double amount, double quantity, HashMap features, HashMap attributes, String prodCatalogId, LocalDispatcher dispatcher) throws CartItemModifyException {
-        return addItemToEnd(ShoppingCartItem.makeItem(null, getDelegator(), productId, amount, quantity, features, attributes, prodCatalogId, dispatcher, this));
+        return addItemToEnd(ShoppingCartItem.makeItem(null, productId, amount, quantity, features, attributes, prodCatalogId, dispatcher, this));
     }
 
     /** Add an item to the shopping cart. */
@@ -328,21 +328,51 @@ public class ShoppingCart implements java.io.Serializable {
         return cartLines.iterator();
     }
 
-    /** Gets the userLogin from the session; may be null */
+    /** Gets the userLogin associated with the cart; may be null */
     public GenericValue getUserLogin() {
         return this.userLogin;
     }
 
-    public void setUserLogin(GenericValue userLogin) {
+    public void setUserLogin(GenericValue userLogin, LocalDispatcher dispatcher) throws CartItemModifyException {
         this.userLogin = userLogin;
-    }
+        this.handleNewUser(dispatcher);
+       }
 
     public GenericValue getAutoUserLogin() {
         return this.autoUserLogin;
     }
 
-    public void setAutoUserLogin(GenericValue autoUserLogin) {
+    public void setAutoUserLogin(GenericValue autoUserLogin, LocalDispatcher dispatcher) throws CartItemModifyException {
         this.autoUserLogin = autoUserLogin;
+        if (getUserLogin() == null) {
+            this.handleNewUser(dispatcher);
+        }
+    }
+    
+    public void handleNewUser(LocalDispatcher dispatcher) throws CartItemModifyException {
+        String partyId = this.getPartyId();
+        if (UtilValidate.isNotEmpty(partyId)) {
+            // recalculate all prices
+            Iterator cartItemIter = this.iterator();
+            while (cartItemIter.hasNext()) {
+                ShoppingCartItem cartItem = (ShoppingCartItem) cartItemIter.next();
+                cartItem.updatePrice(dispatcher, this);
+            }
+            
+            // check all promo codes, remove on failed check
+            Iterator promoCodeIter = this.productPromoCodes.iterator();
+            while (promoCodeIter.hasNext()) {
+                String promoCode = (String) promoCodeIter.next();
+                String checkResult = ProductPromoWorker.checkCanUsePromoCode(promoCode, partyId, this.getDelegator());
+                if (checkResult != null) {
+                    promoCodeIter.remove();
+                    Debug.logWarning("On user change promo code was removed because: " + checkResult, module);
+                }
+            }
+            
+            // rerun promotions
+            ProductPromoWorker.doPromotions(this, dispatcher);
+        }
     }
 
     public String getWebSiteId() {
@@ -356,10 +386,12 @@ public class ShoppingCart implements java.io.Serializable {
     public String getPartyId() {
         String partyId = null;
 
-        if (partyId == null && getUserLogin() != null)
-                partyId = getUserLogin().getString("partyId");
-        if (partyId == null && getAutoUserLogin() != null)
-                partyId = getAutoUserLogin().getString("partyId");
+        if (partyId == null && getUserLogin() != null) {
+            partyId = getUserLogin().getString("partyId");
+        }
+        if (partyId == null && getAutoUserLogin() != null) {
+            partyId = getAutoUserLogin().getString("partyId");
+        }
         return partyId;
     }
 
@@ -1056,8 +1088,11 @@ public class ShoppingCart implements java.io.Serializable {
      * @return String that is null if valid, and added to cart, or an error message of the code was not valid and not added to the cart. 
      */
     public String addProductPromoCode(String productPromoCodeId) {
+        if (this.productPromoCodes.contains(productPromoCodeId)) {
+            return "The promotion code [" + productPromoCodeId + "] has already been entered.";
+        }
         // if the promo code requires it make sure the code is valid
-        String checkResult = ProductPromoWorker.checkCanUsePromoCode(productPromoCodeId, this.getUserLogin(), this.getDelegator());
+        String checkResult = ProductPromoWorker.checkCanUsePromoCode(productPromoCodeId, this.getPartyId(), this.getDelegator());
         if (checkResult == null) {
             this.productPromoCodes.add(productPromoCodeId);
             return null;
