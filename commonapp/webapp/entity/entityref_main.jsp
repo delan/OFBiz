@@ -109,7 +109,11 @@
   <table width="95%" border="1" cellpadding='2' cellspacing='0'>
     <tr bgcolor="#CCCCCC"> 
       <td colspan="5"> 
-        <div align="center" class='titletext'>ENTITY: <%= entityName %> | TABLE: <%= entity.tableName %></div>
+        <div align="center" class="titletext">ENTITY: <%= entityName %> | TABLE: <%= entity.tableName %></div>
+        <div align="center" class="entitytext"><b><%= entity.title %></b></div>
+        <% if ( entity.description != null && !entity.description.equalsIgnoreCase("NONE") && !entity.description.equalsIgnoreCase("") ) {%>
+        <div align="center" class="entitytext"><%= entity.description %></div>
+        <%}%>
       </td>
     </tr>
     <tr class='headertext'>
