@@ -1,5 +1,5 @@
 /*
- * $Id: GenericEntity.java,v 1.26 2004/04/23 14:49:17 doogie Exp $
+ * $Id: GenericEntity.java,v 1.27 2004/04/23 14:51:58 doogie Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -61,7 +61,7 @@ import org.w3c.dom.Element;
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- *@version    $Revision: 1.26 $
+ *@version    $Revision: 1.27 $
  *@since      2.0
  */
 public class GenericEntity extends Observable implements Map, LocalizedMap, Serializable, Comparable, Cloneable {
@@ -716,10 +716,12 @@ public class GenericEntity extends Observable implements Map, LocalizedMap, Seri
     }
 
     public static int addToXmlDocument(Collection values, Document document) {
+        return addToXmlElement(values, document, document.getDocumentElement());
+    }
+
+    public static int addToXmlDocument(Collection values, Document document, Element element) {
         if (values == null) return 0;
         if (document == null) return 0;
-
-        Element rootElement = document.getDocumentElement();
 
         Iterator iter = values.iterator();
         int numberAdded = 0;
@@ -728,7 +730,7 @@ public class GenericEntity extends Observable implements Map, LocalizedMap, Seri
             GenericValue value = (GenericValue) iter.next();
             Element valueElement = value.makeXmlElement(document);
 
-            rootElement.appendChild(valueElement);
+            element.appendChild(valueElement);
             numberAdded++;
         }
         return numberAdded;
