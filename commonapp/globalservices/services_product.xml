@@ -793,6 +793,11 @@
     	<description>Completes the inventory transfer</description>
     	<attribute name="inventoryTransferId" type="String" mode="IN" optional="false"/>
     </service>
+    <service name="cancelInventoryTransfer" engine="java" 
+    		location="org.ofbiz.commonapp.product.inventory.InventoryServices" invoke="cancelInventoryTransfer">
+    	<description>Cancel the inventory transfer</description>
+    	<attribute name="inventoryTransferId" type="String" mode="IN" optional="false"/>
+    </service>
 
     <service name="interfaceProductFacility" engine="interface" location="" invoke="">
         <description>ProductFacility Interface</description>

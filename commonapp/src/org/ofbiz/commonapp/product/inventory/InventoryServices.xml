@@ -402,4 +402,29 @@
             </if-compare>
         </iterate>
     </simple-method>
+    
+    <!-- Inventory Transfer Services -->
+    <simple-method method-name="createInventoryTransfer" short-description="Create an Inventory Transfer">
+        <check-permission permission="FACILITY" action="_CREATE"><fail-message message="Security Error: to run createInventoryTransfer you must have the FACILITY_CREATE or FACILITY_ADMIN permission"/></check-permission>
+        <check-errors/>
+
+        <make-value value-name="newEntity" entity-name="InventoryTransfer"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+        
+        <sequenced-id-to-env sequence-name="InventoryTransfer" env-name="inventoryTransferId"/>
+        <to-string field-name="inventoryTransferId"/>
+        <env-to-field env-name="inventoryTransferId" map-name="newEntity"/>
+        <field-to-result field-name="inventoryTransferId" result-name="inventoryTransferId"/>
+        
+        <create-value value-name="newEntity"/>
+    </simple-method>
+    <simple-method method-name="updateInventoryTransfer" short-description="Update an Inventory Transfer">
+        <check-permission permission="FACILITY" action="_UPDATE"><fail-message message="Security Error: to run updateInventoryTransfer you must have the FACILITY_UPDATE or FACILITY_ADMIN permission"/></check-permission>
+        <check-errors/>
+
+        <field-to-field field-name="inventoryTransferId" map-name="parameters" to-map-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="InventoryTransfer" map-name="lookupPKMap" value-name="inventoryTransfer"/>
+        <set-nonpk-fields map-name="parameters" value-name="inventoryTransfer"/>
+        <store-value value-name="inventoryTransfer"/>
+    </simple-method>    
 </simple-methods>
