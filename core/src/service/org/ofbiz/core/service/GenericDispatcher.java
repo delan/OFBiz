@@ -81,6 +81,7 @@ public class GenericDispatcher extends GenericAbstractDispatcher {
         this.dispatcher = ServiceDispatcher.getInstance(name, ctx, delegator);
         
         ctx.setDispatcher(this);
+        ctx.loadReaders();
         if (Debug.infoOn()) Debug.logInfo("[LocalDispatcher] : Created Dispatcher for: " + name, module);
     }
    

@@ -396,7 +396,7 @@ public class ModelServiceReader {
                     Set keySet = modelParamMap.keySet();
                     Iterator setIter = keySet.iterator();
                     while (setIter.hasNext()) {
-                        ModelParam thisParam = (ModelParam) modelParamMap.get(setIter.next());
+                        ModelParam thisParam = (ModelParam) modelParamMap.get(setIter.next());                        
                         service.addParam(thisParam);
                     }                    
                 }
