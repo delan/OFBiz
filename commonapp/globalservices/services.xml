@@ -23,6 +23,21 @@
         <attribute name="userLogin" type="org.ofbiz.core.entity.GenericValue" mode="OUT" optional="true"/>
     </service>
 
+    <!-- Common services -->
+	<service name="sendMail" engine="java"
+	location="org.ofbiz.commonapp.common.CommonServices" invoke="sendMail">
+	    <description>Send E-Mail Service</description>
+		<attribute name="sendTo" type="String" mode="IN"/>
+		<attribute name="sendCc" type="String" mode="IN" optional="true"/>
+		<attribute name="sendBcc" type="String" mode="IN" optional="true"/>
+		<attribute name="sendFrom" type="String" mode="IN"/>
+		<attribute name="subject" type="String" mode="IN"/>
+		<attribute name="body" type="String" mode="IN"/>
+		<attribute name="sendVia" type="String" mode="IN"/>
+		<attribute name="sendType" type="String" mode="IN" optional="true"/>
+		<attribute name="contentType" type="String" mode="IN" optional="true"/>
+	</service>
+		
     <!-- Workflow services -->
     <service name="assignActivity" engine="java" 
     location="org.ofbiz.core.workflow.WorkflowClient" invoke="assignActivity">
