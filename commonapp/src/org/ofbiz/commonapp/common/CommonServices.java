@@ -93,7 +93,7 @@ public class CommonServices {
             url = new URL(bodyUrl);
         } catch (MalformedURLException e) {
             Debug.logWarning(e);
-            ServiceUtil.returnError("Malformed URL: " + bodyUrl + "; error was: " + e.toString());
+            return ServiceUtil.returnError("Malformed URL: " + bodyUrl + "; error was: " + e.toString());
         }
 
         HttpClient httpClient = new HttpClient(url, bodyUrlParameters);

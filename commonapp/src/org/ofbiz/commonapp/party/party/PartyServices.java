@@ -567,8 +567,9 @@ public class PartyServices {
 
         String noteId = (String) noteRes.get("noteId");
 
-        if (noteId == null || noteId.length() == 0)
-            ServiceUtil.returnError("Problem creating the note, no noteId returned.");
+        if (noteId == null || noteId.length() == 0) {
+            return ServiceUtil.returnError("Problem creating the note, no noteId returned.");
+        }
 
         // Set the party info
         try {
@@ -730,8 +731,9 @@ public class PartyServices {
         Collection parties = new LinkedList();
         String groupName = (String) context.get("groupName");
 
-        if (groupName.length() == 0)
-            ServiceUtil.returnError("Required parameter 'groupName' cannot be empty.");
+        if (groupName.length() == 0) {
+            return ServiceUtil.returnError("Required parameter 'groupName' cannot be empty.");
+        }
 
         try {
             List exprs = new LinkedList();

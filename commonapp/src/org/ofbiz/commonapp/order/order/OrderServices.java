@@ -581,10 +581,11 @@ public class OrderServices {
         String prefId = null;
         Long newId = delegator.getNextSeqId("OrderPaymentPreference");
 
-        if (newId == null)
+        if (newId == null) {
             return ServiceUtil.returnError("ERROR: Could not create OrderPaymentPreference (id generation failure)");
-        else
+        } else {
             prefId = newId.toString();
+        }
 
         Map fields = UtilMisc.toMap("orderPaymentPreferenceId", prefId, "orderId", orderId, "paymentMethodTypeId",
                 paymentMethodTypeId, "paymentMethodId", paymentMethodId, "maxAmount", maxAmount);
@@ -701,8 +702,9 @@ public class OrderServices {
 
         String noteId = (String) noteRes.get("noteId");
 
-        if (noteId == null || noteId.length() == 0)
-            ServiceUtil.returnError("Problem creating the note, no noteId returned.");
+        if (noteId == null || noteId.length() == 0) {
+            return ServiceUtil.returnError("Problem creating the note, no noteId returned.");
+        }
 
         // Set the order info
         try {

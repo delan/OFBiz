@@ -164,7 +164,7 @@ public class ShipmentServices {
             estimate.remove();
         } catch (GenericEntityException e) {
             Debug.logError(e);
-            ServiceUtil.returnError("Problem removing entity or related entities (" + e.toString() + ")");
+            return ServiceUtil.returnError("Problem removing entity or related entities (" + e.toString() + ")");
         }
         return ServiceUtil.returnSuccess();
     }
