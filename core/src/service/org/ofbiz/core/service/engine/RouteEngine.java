@@ -28,41 +28,41 @@ import java.util.*;
 import org.ofbiz.core.service.*;
 
 /**
- * InterfaceEngine.java
- * 
+ * RouteEngine.java
+ *
  * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
  * @version    $Revision$
  * @since      2.0
  */
-public class InterfaceEngine implements GenericEngine {
+public class RouteEngine implements GenericEngine {
     
-    public InterfaceEngine(ServiceDispatcher dispatcher) { }
+    public RouteEngine(ServiceDispatcher dispatcher) { }
 
     /**
      * @see org.ofbiz.core.service.engine.GenericEngine#runSync(java.lang.String, org.ofbiz.core.service.ModelService, java.util.Map)
-     */
+     */    
     public Map runSync(String localName, ModelService modelService, Map context) throws GenericServiceException {
-        throw new GenericServiceException("Interface services cannot be invoked; try invoking an implementing service.");
+        return new HashMap();
     }
 
     /**
      * @see org.ofbiz.core.service.engine.GenericEngine#runSyncIgnore(java.lang.String, org.ofbiz.core.service.ModelService, java.util.Map)
      */
-    public void runSyncIgnore(String localName, ModelService modelService, Map context) throws GenericServiceException {        
-       throw new GenericServiceException("Interface services cannot be invoked; try invoking an implementing service.");
+    public void runSyncIgnore(String localName, ModelService modelService, Map context) throws GenericServiceException {
+        return;
     }
 
     /**
      * @see org.ofbiz.core.service.engine.GenericEngine#runAsync(java.lang.String, org.ofbiz.core.service.ModelService, java.util.Map, org.ofbiz.core.service.GenericRequester, boolean)
      */
     public void runAsync(String localName, ModelService modelService, Map context, GenericRequester requester, boolean persist) throws GenericServiceException {
-       throw new GenericServiceException("Interface services cannot be invoked; try invoking an implementing service.");
-    }        
+        requester.receiveResult(new HashMap());
+    }
 
     /**
      * @see org.ofbiz.core.service.engine.GenericEngine#runAsync(java.lang.String, org.ofbiz.core.service.ModelService, java.util.Map, boolean)
      */
-    public void runAsync(String localName, ModelService modelService, Map context, boolean persist) throws GenericServiceException {        
-        throw new GenericServiceException("Interface services cannot be invoked; try invoking an implementing service.");
+    public void runAsync(String localName, ModelService modelService, Map context, boolean persist) throws GenericServiceException {
+        return;
     }
 }

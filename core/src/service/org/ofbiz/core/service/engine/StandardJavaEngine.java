@@ -94,7 +94,6 @@ public final class StandardJavaEngine extends GenericAsyncEngine {
         try {
             Class c = cl.loadClass(modelService.location);
             Method m = c.getMethod(modelService.invoke, paramTypes);
-
             result = m.invoke(null, params);
         } catch (ClassNotFoundException cnfe) {
             throw new GenericServiceException("Cannot find service location", cnfe);
