@@ -115,7 +115,7 @@ border-width: 1px 1px 1px 1px;
 }
 
 .boxtop {
-background-color: #6666CC;
+background-color: #000099;
 padding-top: 1px;
 padding-bottom: 1px;
 padding-right: 4px;
@@ -256,7 +256,7 @@ font-family: Verdana, Arial, Helvetica, sans-serif;
 font-size: x-small;
 font-weight: bold;
 text-decoration: none;
-color: blue;
+color: #000099;
 }
 
 
@@ -408,10 +408,10 @@ color: #000000;
 
 .headerCompanyName {
 margin: 0px;
-font-size: x-large;
+font-size: large;
 font-family: Verdana, Arial, Helvetica, sans-serif;
 font-weight: bold;
-color: #330099;
+color: #000099;
 white-space: nowrap;
 }
 
