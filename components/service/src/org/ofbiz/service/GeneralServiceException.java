@@ -71,4 +71,8 @@ public class GeneralServiceException extends org.ofbiz.base.util.GeneralExceptio
         }
         return ServiceUtil.returnError(errMsg, this.errorMsgList, this.errorMsgMap, this.nestedServiceResult);
     }
+    
+    public void addErrorMessages(List errMsgs) {
+        this.errorMsgList.addAll(errMsgs);
+    }
 }
