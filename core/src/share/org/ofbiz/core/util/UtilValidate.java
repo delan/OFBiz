@@ -398,6 +398,8 @@ public class UtilValidate {
      *  Does not accept exponential notation.
      */
     public static boolean isFloat(String s) {
+        if (isEmpty(s)) return defaultEmptyOK;
+
         boolean seenDecimalPoint = false;
         if (s.startsWith(decimalPointDelimiter)) return false;
 
