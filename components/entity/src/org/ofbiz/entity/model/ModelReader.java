@@ -1,5 +1,5 @@
 /*
- * $Id: ModelReader.java,v 1.4 2003/10/14 22:34:46 jonesde Exp $
+ * $Id: ModelReader.java,v 1.5 2003/12/04 20:54:53 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -52,7 +52,7 @@ import org.w3c.dom.Node;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.0
  */
 public class ModelReader {
@@ -395,6 +395,12 @@ public class ModelReader {
         return null;
     }
 
+    public ModelField createModelField(String name, String type, String colName, boolean isPk) {
+        this.numFields++;
+        ModelField field = new ModelField(name, type, colName, isPk);
+        return field;
+    }
+    
     public ModelField createModelField(Element fieldElement, Element docElement, Hashtable docElementValues) {
         if (fieldElement == null) {
             return null;
@@ -402,7 +408,6 @@ public class ModelReader {
 
         this.numFields++;
         ModelField field = new ModelField(fieldElement);
-
         return field;
     }
 }

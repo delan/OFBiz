@@ -1,5 +1,5 @@
 /*
- * $Id: ModelEntity.java,v 1.4 2003/12/04 01:51:46 jonesde Exp $
+ * $Id: ModelEntity.java,v 1.5 2003/12/04 20:54:53 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -35,7 +35,7 @@ import org.ofbiz.base.util.*;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.0
  */
 public class ModelEntity implements Comparable {
@@ -99,6 +99,9 @@ public class ModelEntity implements Comparable {
     /** An indicator to specify if this entity requires locking for updates */
     protected boolean doLock = false;
 
+    /** Can be used to disable automatically creating update stamp fields and populating them on inserts and updates */
+    protected boolean noAutoStamp = false;
+    
     /** An indicator to specify if this entity is never cached. 
      * If true causes the delegator to not clear caches on write and to not get 
      * from cache on read showing a warning messages to that effect 
@@ -118,19 +121,27 @@ public class ModelEntity implements Comparable {
 
         if (utilTimer != null) utilTimer.timerString("  createModelEntity: before fields");
         NodeList fieldList = entityElement.getElementsByTagName("field");
-
         for (int i = 0; i < fieldList.getLength(); i++) {
             ModelField field = reader.createModelField((Element) fieldList.item(i), docElement, docElementValues);
-
             if (field != null) this.fields.add(field);
+        }
+        
+        // if applicable automatically add the STAMP_FIELD and STAMP_TX_FIELD fields
+        if ((this.doLock || !this.noAutoStamp) && !this.isField(STAMP_FIELD)) {
+            ModelField newField = reader.createModelField(STAMP_FIELD, "date-time", null, false);
+            newField.setIsAutoCreatedInternal(true);
+            this.fields.add(newField);
+        }
+        if (!this.noAutoStamp && !this.isField(STAMP_TX_FIELD)) {
+            ModelField newField = reader.createModelField(STAMP_TX_FIELD, "date-time", null, false);
+            newField.setIsAutoCreatedInternal(true);
+            this.fields.add(newField);
         }
 
         if (utilTimer != null) utilTimer.timerString("  createModelEntity: before prim-keys");
         NodeList pkList = entityElement.getElementsByTagName("prim-key");
-
         for (int i = 0; i < pkList.getLength(); i++) {
             ModelField field = reader.findModelField(this, ((Element) pkList.item(i)).getAttribute("field"));
-
             if (field != null) {
                 this.pks.add(field);
                 field.isPk = true;
@@ -144,7 +155,6 @@ public class ModelEntity implements Comparable {
         this.nopks = new ArrayList();
         for (int ind = 0; ind < this.fields.size(); ind++) {
             ModelField field = (ModelField) this.fields.get(ind);
-
             if (!field.isPk) this.nopks.add(field);
         }
 
@@ -175,6 +185,7 @@ public class ModelEntity implements Comparable {
         this.defaultResourceName = UtilXml.checkEmpty(entityElement.getAttribute("default-resource-name"));
         this.dependentOn = UtilXml.checkEmpty(entityElement.getAttribute("dependent-on"));
         this.doLock = UtilXml.checkBoolean(entityElement.getAttribute("enable-lock"), false);
+        this.noAutoStamp = UtilXml.checkBoolean(entityElement.getAttribute("no-auto-stamp"), false);
         this.neverCache = UtilXml.checkBoolean(entityElement.getAttribute("never-cache"), false);
 
         if (docElementValues == null) {
