@@ -125,9 +125,9 @@
 
         <field-to-field field-name="productId" map-name="parameters" to-map-name="lookupPKMap"/>
         <find-by-primary-key entity-name="Product" map-name="lookupPKMap" value-name="lookedUpValue"/>
-        <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
+        <field-to-field field-name="productName" map-name="parameters" to-map-name="lookedUpValue"/>
         <if-compare field-name="lookedUpValue.isVirtual" operator="equals" value="Y">
-            <field-to-field field-name="productName" map-name="lookedUpValue" to-field-name="internalName"  to-map-name="lookedUpValue"/>
+            <field-to-field field-name="lookedUpValue.productName" to-field-name="lookedUpValue.internalName"/>
         </if-compare>
 
         <now-timestamp-to-env env-name="lookedUpValue.lastModifiedDate"/>
