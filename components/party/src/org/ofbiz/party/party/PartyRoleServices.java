@@ -1,5 +1,5 @@
 /*
- * $Id: PartyRoleServices.java,v 1.1 2003/08/17 17:57:35 ajzeneski Exp $
+ * $Id: PartyRoleServices.java,v 1.2 2004/02/26 09:10:48 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -25,9 +25,11 @@ package org.ofbiz.party.party;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Locale;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -40,12 +42,13 @@ import org.ofbiz.service.ServiceUtil;
  * Services for Party Role maintenance
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class PartyRoleServices {
     
     public static final String module = PartyRoleServices.class.getName();
+    public static final String resource = "PartyUiLabels";
 
     /** 
      * Creates a PartyRole
@@ -60,6 +63,8 @@ public class PartyRoleServices {
         GenericValue userLogin = (GenericValue) context.get("userLogin");
 
         String partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PARTYMGR", "_CREATE");
+        Locale locale = (Locale) context.get("locale");
+        String errMsg = null;
 
         if (result.size() > 0)
             return result;
@@ -68,18 +73,24 @@ public class PartyRoleServices {
 
         try {
             if (delegator.findByPrimaryKey(partyRole.getPrimaryKey()) != null) {
-                return ServiceUtil.returnError("Could not create party role: already exists");
+                errMsg = UtilProperties.getMessage(resource,"partyroleservices.could_not_create_party_role_exists", locale);
+                return ServiceUtil.returnError(errMsg);
             }
         } catch (GenericEntityException e) {
             Debug.logWarning(e, module);
-            return ServiceUtil.returnError("Could not create party role (read failure): " + e.getMessage());
+            Map messageMap = UtilMisc.toMap("errMessage", e.getMessage());
+            errMsg = UtilProperties.getMessage(resource,"partyroleservices.could_not_create_party_role_read", messageMap, locale);
+            return ServiceUtil.returnError(errMsg);
         }
 
         try {
             partyRole.create();
         } catch (GenericEntityException e) {
             Debug.logWarning(e.getMessage(), module);
-            return ServiceUtil.returnError("Could create party role (write failure): " + e.getMessage());
+            Map messageMap = UtilMisc.toMap("errMessage", e.getMessage());
+            errMsg = UtilProperties.getMessage(resource,"partyroleservices.could_not_create_party_role_write", messageMap, locale);
+            return ServiceUtil.returnError(errMsg);
+//            return ServiceUtil.returnError("Could create party role (write failure): " + e.getMessage());
         }
 
         result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
@@ -99,6 +110,8 @@ public class PartyRoleServices {
         GenericValue userLogin = (GenericValue) context.get("userLogin");
 
         String partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PARTYMGR", "_CREATE");
+        Locale locale = (Locale) context.get("locale");
+        String errMsg = null;
 
         if (result.size() > 0)
             return result;
@@ -109,18 +122,23 @@ public class PartyRoleServices {
             partyRole = delegator.findByPrimaryKey("PartyRole", UtilMisc.toMap("partyId", partyId, "roleTypeId", context.get("roleTypeId")));
         } catch (GenericEntityException e) {
             Debug.logWarning(e, module);
-            return ServiceUtil.returnError("Could not delete party role (read failure): " + e.getMessage());
+            Map messageMap = UtilMisc.toMap("errMessage", e.getMessage());
+            errMsg = UtilProperties.getMessage(resource,"partyroleservices.could_not_delete_party_role_read", messageMap, locale);
+            return ServiceUtil.returnError(errMsg);
         }
 
         if (partyRole == null) {
-            return ServiceUtil.returnError("Could not delete party role (partyRole not found)");
+            errMsg = UtilProperties.getMessage(resource,"partyroleservices.could_not_delete_party_role_not_found", locale);
+            return ServiceUtil.returnError(errMsg);
         }
 
         try {
             partyRole.remove();
         } catch (GenericEntityException e) {
             Debug.logWarning(e.getMessage(), module);
-            return ServiceUtil.returnError("Could delete party role (write failure): " + e.getMessage());
+            Map messageMap = UtilMisc.toMap("errMessage", e.getMessage());
+            errMsg = UtilProperties.getMessage(resource,"partyroleservices.could_not_delete_party_role_write", messageMap, locale);
+            return ServiceUtil.returnError(errMsg);
         }
 
         result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);

@@ -1,5 +1,5 @@
 /*
- * $Id: ProductWorker.java,v 1.12 2004/02/24 02:24:24 jonesde Exp $
+ * $Id: ProductWorker.java,v 1.13 2004/02/26 09:10:50 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -49,18 +49,20 @@ import org.ofbiz.service.ModelService;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.12 $
+ * @version    $Revision: 1.13 $
  * @since      2.0
  */
 public class ProductWorker {
     
     public static final String module = ProductWorker.class.getName();
+    public static final String resource = "ProductUiLabels";
 
     public static void getProduct(PageContext pageContext, String attributeName) {
         getProduct(pageContext, attributeName, null);
     }
 
     public static boolean shippingApplies(GenericValue product) {
+        String errMsg = null;
         if (product != null) {
             String productTypeId = product.getString("productTypeId");
             if ("SERVICE".equals(productTypeId) || "DIGITAL_GOOD".equals(productTypeId)) {
@@ -75,11 +77,14 @@ public class ProductWorker {
                 return chargeShipping.booleanValue();
             }
         } else {
-            throw new IllegalArgumentException("Null Product Entity not valid");            
+            // todo: Hier noch Uebersetzungen einfuegen?
+            //errMsg = UtilProperties.getMessage(resource,"productworker.null_product_entity_not_valid", UtilHttp.getLocale(request));
+            throw new IllegalArgumentException(errMsg);
         }                
     }
     
     public static boolean taxApplies(GenericValue product) {
+        String errMsg = null;
         if (product != null) {        
             Boolean taxable = product.getBoolean("taxable");
     
@@ -89,7 +94,9 @@ public class ProductWorker {
                 return taxable.booleanValue();
             }
         } else {
-            throw new IllegalArgumentException("Null Product Entity not valid");            
+            // todo: Hier noch Uebersetzungen einfuegen?
+            //errMsg = UtilProperties.getMessage(resource,"productworker.null_product_entity_not_valid", UtilHttp.getLocale(request));
+            throw new IllegalArgumentException(errMsg);
         }
     }    
     

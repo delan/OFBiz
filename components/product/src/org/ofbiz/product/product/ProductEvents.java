@@ -1,14 +1,14 @@
 /*
- * $Id: ProductEvents.java,v 1.10 2004/01/27 01:00:59 jonesde Exp $
- * 
+ * $Id: ProductEvents.java,v 1.11 2004/02/26 09:10:49 jonesde Exp $
+ *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
  * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
  * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
@@ -30,6 +30,7 @@ import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -45,18 +46,19 @@ import org.ofbiz.service.LocalDispatcher;
 
 /**
  * Product Information Related Events
- * 
+ *
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  * @since 2.0
  */
 public class ProductEvents {
 
     public static final String module = ProductEvents.class.getName();
+    public static final String resource = "ProductUiLabels";
 
     /**
      * Updates ProductKeyword information according to UPDATE_MODE parameter, only support CREATE and DELETE, no modify becuse all fields are PKs
-     * 
+     *
      * @param request
      *                The HTTPRequest object for the current request
      * @param response
@@ -71,16 +73,17 @@ public class ProductEvents {
         String updateMode = request.getParameter("UPDATE_MODE");
 
         if (updateMode == null || updateMode.length() <= 0) {
-            request.setAttribute("_ERROR_MESSAGE_", "Update Mode was not specified, but is required.");
+            errMsg = UtilProperties.getMessage(resource,"productevents.updatemode_not_specified", UtilHttp.getLocale(request));
+            request.setAttribute("_ERROR_MESSAGE_", errMsg);
             Debug.logWarning("[ProductEvents.updateProductKeyword] Update Mode was not specified, but is required", module);
             return "error";
         }
 
         // check permissions before moving on...
         if (!security.hasEntityPermission("CATALOG", "_" + updateMode, request.getSession())) {
-            request.setAttribute(
-                "_ERROR_MESSAGE_",
-                "You do not have sufficient permissions to " + updateMode + " CATALOG (CATALOG_" + updateMode + " or CATALOG_ADMIN needed).");
+            Map messageMap = UtilMisc.toMap("updateMode", updateMode);
+            errMsg = UtilProperties.getMessage(resource,"productevents.not_sufficient_permissions", messageMap, UtilHttp.getLocale(request));
+            request.setAttribute("_ERROR_MESSAGE_", errMsg);
             return "error";
         }
 
@@ -89,11 +92,12 @@ public class ProductEvents {
         String relevancyWeight = request.getParameter("relevancyWeight");
 
         if (!UtilValidate.isNotEmpty(productId))
-            errMsg += "<li>Product ID is missing.";
+            errMsg += ("<li>" + UtilProperties.getMessage(resource,"productevents.product_ID_missing", UtilHttp.getLocale(request)));
         if (!UtilValidate.isNotEmpty(keyword))
-            errMsg += "<li>Keyword is missing.";
+            errMsg += ("<li>" + UtilProperties.getMessage(resource,"productevents.keyword_missing", UtilHttp.getLocale(request)));
         if (errMsg.length() > 0) {
-            errMsg = "<b>The following errors occurred:</b><br><ul>" + errMsg + "</ul>";
+            errMsg += ("<b>" + UtilProperties.getMessage(resource,"productevents.following_errors_occurred", UtilHttp.getLocale(request)));
+            errMsg += ("</b><br><ul>" + errMsg + "</ul>");
             request.setAttribute("_ERROR_MESSAGE_", errMsg);
             return "error";
         }
@@ -113,7 +117,8 @@ public class ProductEvents {
             }
 
             if (newValue != null) {
-                request.setAttribute("_ERROR_MESSAGE_", "Could not create product-keyword entry (already exists)");
+                errMsg = UtilProperties.getMessage(resource,"productevents.could_not_create_productkeyword_entry_exists", UtilHttp.getLocale(request));
+                request.setAttribute("_ERROR_MESSAGE_", errMsg);
                 return "error";
             }
 
@@ -124,7 +129,8 @@ public class ProductEvents {
                 productKeyword = null;
             }
             if (productKeyword == null) {
-                request.setAttribute("_ERROR_MESSAGE_", "Could not create product-keyword entry (write error)");
+                errMsg = UtilProperties.getMessage(resource,"productevents.could_not_create_productkeyword_entry_write", UtilHttp.getLocale(request));
+                request.setAttribute("_ERROR_MESSAGE_", errMsg);
                 return "error";
             }
         } else if (updateMode.equals("DELETE")) {
@@ -137,18 +143,22 @@ public class ProductEvents {
                 productKeyword = null;
             }
             if (productKeyword == null) {
-                request.setAttribute("_ERROR_MESSAGE_", "Could not remove product-keyword (does not exist)");
+                errMsg = UtilProperties.getMessage(resource,"productevents.could_not_remove_productkeyword_entry_notexists", UtilHttp.getLocale(request));
+                request.setAttribute("_ERROR_MESSAGE_", errMsg);
                 return "error";
             }
             try {
                 productKeyword.remove();
             } catch (GenericEntityException e) {
-                request.setAttribute("_ERROR_MESSAGE_", "Could not remove product-keyword (write error)");
+                errMsg = UtilProperties.getMessage(resource,"productevents.could_not_remove_productkeyword_entry_writeerror", UtilHttp.getLocale(request));
+                request.setAttribute("_ERROR_MESSAGE_", errMsg);
                 Debug.logWarning("[ProductEvents.updateProductKeyword] Could not remove product-keyword (write error); message: " + e.getMessage(), module);
                 return "error";
             }
         } else {
-            request.setAttribute("_ERROR_MESSAGE_", "Specified update mode: \"" + updateMode + "\" is not supported.");
+            Map messageMap = UtilMisc.toMap("updateMode", updateMode);
+            errMsg = UtilProperties.getMessage(resource,"productevents.specified_update_mode_not_supported", messageMap, UtilHttp.getLocale(request));
+            request.setAttribute("_ERROR_MESSAGE_", errMsg);
             return "error";
         }
 
@@ -157,7 +167,7 @@ public class ProductEvents {
 
     /**
      * Update (create/induce or delete) all keywords for a given Product
-     * 
+     *
      * @param request
      *                The HTTPRequest object for the current request
      * @param response
@@ -172,23 +182,24 @@ public class ProductEvents {
         String updateMode = request.getParameter("UPDATE_MODE");
 
         if (updateMode == null || updateMode.length() <= 0) {
-            request.setAttribute("_ERROR_MESSAGE_", "Update Mode was not specified, but is required.");
+            errMsg = UtilProperties.getMessage(resource,"productevents.updatemode_not_specified", UtilHttp.getLocale(request));
+            request.setAttribute("_ERROR_MESSAGE_", errMsg);
             Debug.logWarning("[ProductEvents.updateProductKeywords] Update Mode was not specified, but is required", module);
             return "error";
         }
 
         // check permissions before moving on...
         if (!security.hasEntityPermission("CATALOG", "_" + updateMode, request.getSession())) {
-            request.setAttribute(
-                "_ERROR_MESSAGE_",
-                "You do not have sufficient permissions to " + updateMode + " CATALOG (CATALOG_" + updateMode + " or CATALOG_ADMIN needed).");
+            errMsg = UtilProperties.getMessage(resource,"productevents.not_sufficient_permissions", UtilHttp.getLocale(request));
+            request.setAttribute( "_ERROR_MESSAGE_", errMsg);
             return "error";
         }
 
         String productId = request.getParameter("PRODUCT_ID");
 
         if (!UtilValidate.isNotEmpty(productId)) {
-            request.setAttribute("_ERROR_MESSAGE_", "No Product ID specified, cannot update keywords.");
+            errMsg = UtilProperties.getMessage(resource,"productevents.no_product_ID_specified_keywords", UtilHttp.getLocale(request));
+            request.setAttribute("_ERROR_MESSAGE_", errMsg);
             return "error";
         }
 
@@ -201,7 +212,9 @@ public class ProductEvents {
             product = null;
         }
         if (product == null) {
-            request.setAttribute("_ERROR_MESSAGE_", "Product with ID \"" + productId + "\", not found; cannot update keywords.");
+            Map messageMap = UtilMisc.toMap("productId", productId);
+            errMsg = UtilProperties.getMessage(resource,"productevents.product_with_productId_not_found_keywords", messageMap, UtilHttp.getLocale(request));
+            request.setAttribute("_ERROR_MESSAGE_", errMsg);
             return "error";
         }
 
@@ -209,19 +222,23 @@ public class ProductEvents {
             try {
                 KeywordSearch.induceKeywords(product, true);
             } catch (GenericEntityException e) {
-                request.setAttribute("_ERROR_MESSAGE_", "Could not create keywords (write error).");
+                errMsg = UtilProperties.getMessage(resource,"productevents.could_not_create_keywords_write", UtilHttp.getLocale(request));
+                request.setAttribute("_ERROR_MESSAGE_", errMsg);
                 return "error";
             }
         } else if (updateMode.equals("DELETE")) {
             try {
                 product.removeRelated("ProductKeyword");
             } catch (GenericEntityException e) {
-                request.setAttribute("_ERROR_MESSAGE_", "Could not remove product-keywords (write error)");
+                errMsg = UtilProperties.getMessage(resource,"productevents.could_not_remove_keywords_write", UtilHttp.getLocale(request));
+                request.setAttribute("_ERROR_MESSAGE_", errMsg);
                 Debug.logWarning("[ProductEvents.updateProductKeywords] Could not remove product-keywords (write error); message: " + e.getMessage(), module);
                 return "error";
             }
         } else {
-            request.setAttribute("_ERROR_MESSAGE_", "Specified update mode: \"" + updateMode + "\" is not supported.");
+            Map messageMap = UtilMisc.toMap("updateMode", updateMode);
+            errMsg = UtilProperties.getMessage(resource,"productevents.specified_update_mode_not_supported", messageMap, UtilHttp.getLocale(request));
+            request.setAttribute("_ERROR_MESSAGE_", errMsg);
             return "error";
         }
 
@@ -230,7 +247,7 @@ public class ProductEvents {
 
     /**
      * Updates/adds keywords for all products
-     * 
+     *
      * @param request
      *                The HTTPRequest object for the current request
      * @param response
@@ -244,12 +261,15 @@ public class ProductEvents {
         Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
 
         String updateMode = "CREATE";
-        
+        String errMsg=null;
+
         String doAll = request.getParameter("doAll");
 
         // check permissions before moving on...
         if (!security.hasEntityPermission("CATALOG", "_" + updateMode, request.getSession())) {
-            request.setAttribute("_ERROR_MESSAGE_", "You do not have sufficient permissions to " + updateMode + " CATALOG (CATALOG_" + updateMode + " or CATALOG_ADMIN needed).");
+            Map messageMap = UtilMisc.toMap("updateMode", updateMode);
+            errMsg = UtilProperties.getMessage(resource,"productevents.not_sufficient_permissions", messageMap, UtilHttp.getLocale(request));
+            request.setAttribute("_ERROR_MESSAGE_", errMsg);
             return "error";
         }
 
@@ -263,8 +283,8 @@ public class ProductEvents {
         } else {
             condition = new EntityExpr(new EntityExpr("autoCreateKeywords", EntityOperator.EQUALS, null), EntityOperator.OR, new EntityExpr("autoCreateKeywords", EntityOperator.NOT_EQUAL, "N"));
         }
-        
-        
+
+
         EntityListIterator entityListIterator = null;
         try {
             if (Debug.infoOn()) {
@@ -274,7 +294,9 @@ public class ProductEvents {
             entityListIterator = delegator.findListIteratorByCondition("Product", condition, null, null);
         } catch (GenericEntityException gee) {
             Debug.logWarning(gee, gee.getMessage(), module);
-            request.setAttribute("_ERROR_MESSAGE_", "Error getting the product list to index: " + gee.toString());
+            Map messageMap = UtilMisc.toMap("gee", gee.toString());
+            errMsg = UtilProperties.getMessage(resource,"productevents.error_getting_product_list", messageMap, UtilHttp.getLocale(request));
+            request.setAttribute("_ERROR_MESSAGE_", errMsg);
             return "error";
         }
 
@@ -286,7 +308,8 @@ public class ProductEvents {
             try {
                 KeywordSearch.induceKeywords(product, "Y".equals(doAll));
             } catch (GenericEntityException e) {
-                request.setAttribute("_ERROR_MESSAGE_", "Could not create keywords (write error).");
+                errMsg = UtilProperties.getMessage(resource,"productevents.could_not_create_keywords_write", UtilHttp.getLocale(request));
+                request.setAttribute("_ERROR_MESSAGE_", errMsg);
                 Debug.logWarning("[ProductEvents.updateAllKeywords] Could not create product-keyword (write error); message: " + e.getMessage(), module);
                 try {
                     entityListIterator.close();
@@ -310,19 +333,22 @@ public class ProductEvents {
         }
 
         if (errProds == 0) {
-            request.setAttribute("_EVENT_MESSAGE_", "Keyword creation complete for " + numProds + " products.");
+            Map messageMap = UtilMisc.toMap("numProds", Integer.toString(numProds));
+            errMsg = UtilProperties.getMessage(resource,"productevents.keyword_creation_complete_for_products", messageMap, UtilHttp.getLocale(request));
+            request.setAttribute("_EVENT_MESSAGE_", errMsg);
             return "success";
         } else {
-            request.setAttribute(
-                "_ERROR_MESSAGE_",
-                "Keyword creation complete for " + numProds + " products, with errors in " + errProds + " products (see the log for more details).");
+            Map messageMap = UtilMisc.toMap("numProds", Integer.toString(numProds));
+            messageMap.put("errProds", Integer.toString(errProds));
+            errMsg = UtilProperties.getMessage(resource,"productevents.keyword_creation_complete_for_products_with_errors", messageMap, UtilHttp.getLocale(request));
+            request.setAttribute( "_ERROR_MESSAGE_", errMsg);
             return "error";
         }
     }
 
     /**
      * Updates ProductAssoc information according to UPDATE_MODE parameter
-     * 
+     *
      * @param request
      *                The HTTPRequest object for the current request
      * @param response
@@ -337,16 +363,17 @@ public class ProductEvents {
         String updateMode = request.getParameter("UPDATE_MODE");
 
         if (updateMode == null || updateMode.length() <= 0) {
-            request.setAttribute("_ERROR_MESSAGE_", "Update Mode was not specified, but is required.");
+            errMsg = UtilProperties.getMessage(resource,"productevents.updatemode_not_specified", UtilHttp.getLocale(request));
+            request.setAttribute("_ERROR_MESSAGE_", errMsg);
             Debug.logWarning("[ProductEvents.updateProductAssoc] Update Mode was not specified, but is required", module);
             return "error";
         }
 
         // check permissions before moving on...
         if (!security.hasEntityPermission("CATALOG", "_" + updateMode, request.getSession())) {
-            request.setAttribute(
-                "_ERROR_MESSAGE_",
-                "You do not have sufficient permissions to " + updateMode + " CATALOG (CATALOG_" + updateMode + " or CATALOG_ADMIN needed).");
+            Map messageMap = UtilMisc.toMap("updateMode", updateMode);
+            errMsg = UtilProperties.getMessage(resource,"productevents.not_sufficient_permissions", messageMap, UtilHttp.getLocale(request));
+            request.setAttribute("_ERROR_MESSAGE_", errMsg);
             return "error";
         }
 
@@ -357,10 +384,14 @@ public class ProductEvents {
         Timestamp fromDate = null;
 
         try {
-            if (delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId)) == null)
-                errMsg += "<li>Product with id " + productId + " not found.";
-            if (delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productIdTo)) == null)
-                errMsg += "<li>Product To with id " + productIdTo + " not found.";
+            if (delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId)) == null) {
+                Map messageMap = UtilMisc.toMap("productId", productId);
+                errMsg += ("<li>" + UtilProperties.getMessage(resource,"productevents.product_with_id_not_found", messageMap, UtilHttp.getLocale(request)));
+            }
+            if (delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productIdTo)) == null) {
+                Map messageMap = UtilMisc.toMap("productIdTo", productIdTo);
+                errMsg += ("<li>" + UtilProperties.getMessage(resource,"productevents.product_To_with_id_not_found", messageMap, UtilHttp.getLocale(request)));
+            }
         } catch (GenericEntityException e) {
             // if there is an exception for either, the other probably wont work
             Debug.logWarning(e, module);
@@ -374,16 +405,17 @@ public class ProductEvents {
             }
         }
         if (!UtilValidate.isNotEmpty(productId))
-            errMsg += "<li>Product ID is missing.";
+            errMsg += ("<li>" + UtilProperties.getMessage(resource,"productevents.product_ID_missing", UtilHttp.getLocale(request)));
         if (!UtilValidate.isNotEmpty(productIdTo))
-            errMsg += "<li>Product ID To is missing.";
+            errMsg += ("<li>" + UtilProperties.getMessage(resource,"productevents.product_ID_To_missing", UtilHttp.getLocale(request)));
         if (!UtilValidate.isNotEmpty(productAssocTypeId))
-            errMsg += "<li>Association Type ID is missing.";
+            errMsg += ("<li>" + UtilProperties.getMessage(resource,"productevents.association_type_ID_missing", UtilHttp.getLocale(request)));
         // from date is only required if update mode is not CREATE
         if (!updateMode.equals("CREATE") && !UtilValidate.isNotEmpty(fromDateStr))
-            errMsg += "<li>From Date is missing.";
+            errMsg += ("<li>" + UtilProperties.getMessage(resource,"productevents.from_date_missing", UtilHttp.getLocale(request)));
         if (errMsg.length() > 0) {
-            errMsg = "<b>The following errors occurred:</b><br><ul>" + errMsg + "</ul>";
+            errMsg += ("<b>" + UtilProperties.getMessage(resource,"productevents.following_errors_occurred", UtilHttp.getLocale(request)));
+            errMsg += ("</b><br><ul>" + errMsg + "</ul>");
             request.setAttribute("_ERROR_MESSAGE_", errMsg);
             return "error";
         }
@@ -410,13 +442,15 @@ public class ProductEvents {
                 productAssoc = null;
             }
             if (productAssoc == null) {
-                request.setAttribute("_ERROR_MESSAGE_", "Could not remove product association (does not exist)");
+                errMsg = UtilProperties.getMessage(resource,"productevents.could_not_remove_product_association_exist", UtilHttp.getLocale(request));
+                request.setAttribute("_ERROR_MESSAGE_", errMsg);
                 return "error";
             }
             try {
                 productAssoc.remove();
             } catch (GenericEntityException e) {
-                request.setAttribute("_ERROR_MESSAGE_", "Could not remove product association (write error)");
+                errMsg = UtilProperties.getMessage(resource,"productevents.could_not_remove_product_association_write", UtilHttp.getLocale(request));
+                request.setAttribute("_ERROR_MESSAGE_", errMsg);
                 Debug.logWarning("[ProductEvents.updateProductAssoc] Could not remove product association (write error); message: " + e.getMessage(), module);
                 return "error";
             }
@@ -436,25 +470,26 @@ public class ProductEvents {
             try {
                 thruDate = Timestamp.valueOf(thruDateStr);
             } catch (Exception e) {
-                errMsg += "<li>Thru Date not formatted correctly.";
+                errMsg += ("<li>" + UtilProperties.getMessage(resource,"productevents.thru_date_not_formatted_correctly", UtilHttp.getLocale(request)));
             }
         }
         if (UtilValidate.isNotEmpty(quantityStr)) {
             try {
                 quantity = Double.valueOf(quantityStr);
             } catch (Exception e) {
-                errMsg += "<li>Quantity not formatted correctly.";
+                errMsg += ("<li>" + UtilProperties.getMessage(resource,"productevents.quantity_not_formatted_correctly", UtilHttp.getLocale(request)));
             }
         }
         if (UtilValidate.isNotEmpty(sequenceNumStr)) {
             try {
                 sequenceNum = Long.valueOf(sequenceNumStr);
             } catch (Exception e) {
-                errMsg += "<li>SequenceNum not formatted correctly.";
+                errMsg += ("<li>" + UtilProperties.getMessage(resource,"productevents.sequenceNum_not_formatted_correctly", UtilHttp.getLocale(request)));
             }
         }
         if (errMsg.length() > 0) {
-            errMsg = "<b>The following errors occurred:</b><br><ul>" + errMsg + "</ul>";
+            errMsg += ("<b>" + UtilProperties.getMessage(resource,"productevents.following_errors_occurred", UtilHttp.getLocale(request)));
+            errMsg += ("</b><br><ul>" + errMsg + "</ul>");
             request.setAttribute("_ERROR_MESSAGE_", errMsg);
             return "error";
         }
@@ -482,13 +517,15 @@ public class ProductEvents {
                 productAssoc = null;
             }
             if (productAssoc != null) {
-                request.setAttribute("_ERROR_MESSAGE_", "Could not create product association (already exists)");
+                errMsg = UtilProperties.getMessage(resource,"productevents.could_not_create_product_association_exists", UtilHttp.getLocale(request));
+                request.setAttribute("_ERROR_MESSAGE_", errMsg);
                 return "error";
             }
             try {
                 productAssoc = tempProductAssoc.create();
             } catch (GenericEntityException e) {
-                request.setAttribute("_ERROR_MESSAGE_", "Could not create product association (write error)");
+                errMsg = UtilProperties.getMessage(resource,"productevents.could_not_create_product_association_write", UtilHttp.getLocale(request));
+                request.setAttribute("_ERROR_MESSAGE_", errMsg);
                 Debug.logWarning("[ProductEvents.updateProductAssoc] Could not create product association (write error); message: " + e.getMessage(), module);
                 return "error";
             }
@@ -496,12 +533,15 @@ public class ProductEvents {
             try {
                 tempProductAssoc.store();
             } catch (GenericEntityException e) {
-                request.setAttribute("_ERROR_MESSAGE_", "Could not update product association (write error)");
+                errMsg = UtilProperties.getMessage(resource,"productevents.could_not_update_product_association_write", UtilHttp.getLocale(request));
+                request.setAttribute("_ERROR_MESSAGE_", errMsg);
                 Debug.logWarning("[ProductEvents.updateProductAssoc] Could not update product association (write error); message: " + e.getMessage(), module);
                 return "error";
             }
         } else {
-            request.setAttribute("_ERROR_MESSAGE_", "Specified update mode: \"" + updateMode + "\" is not supported.");
+            Map messageMap = UtilMisc.toMap("updateMode", updateMode);
+            errMsg = UtilProperties.getMessage(resource,"productevents.specified_update_mode_not_supported", messageMap, UtilHttp.getLocale(request));
+            request.setAttribute("_ERROR_MESSAGE_", errMsg);
             return "error";
         }
 
@@ -516,16 +556,17 @@ public class ProductEvents {
         String updateMode = request.getParameter("UPDATE_MODE");
 
         if (updateMode == null || updateMode.length() <= 0) {
-            request.setAttribute("_ERROR_MESSAGE_", "Update Mode was not specified, but is required.");
+            errMsg = UtilProperties.getMessage(resource,"productevents.updatemode_not_specified", UtilHttp.getLocale(request));
+            request.setAttribute("_ERROR_MESSAGE_", errMsg);
             Debug.logWarning("[CategoryEvents.updateCategory] Update Mode was not specified, but is required", module);
             return "error";
         }
 
         // check permissions before moving on...
         if (!security.hasEntityPermission("CATALOG", "_" + updateMode, request.getSession())) {
-            request.setAttribute(
-                "_ERROR_MESSAGE_",
-                "You do not have sufficient permissions to " + updateMode + " CATALOG (CATALOG_" + updateMode + " or CATALOG_ADMIN needed).");
+            Map messageMap = UtilMisc.toMap("updateMode", updateMode);
+            errMsg = UtilProperties.getMessage(resource,"productevents.not_sufficient_permissions", messageMap, UtilHttp.getLocale(request));
+            request.setAttribute("_ERROR_MESSAGE_", errMsg);
             return "error";
         }
 
@@ -535,11 +576,12 @@ public class ProductEvents {
         String attrType = request.getParameter("ATTRIBUTE_TYPE");
 
         if (!UtilValidate.isNotEmpty(productId))
-            errMsg += "<li>Product ID is missing.";
+            errMsg += ("<li>" + UtilProperties.getMessage(resource,"productevents.product_ID_missing", UtilHttp.getLocale(request)));
         if (!UtilValidate.isNotEmpty(productId))
-            errMsg += "<li>Attribute name is missing.";
+            errMsg += ("<li>" + UtilProperties.getMessage(resource,"productevents.attribute_name_missing", UtilHttp.getLocale(request)));
         if (errMsg.length() > 0) {
-            errMsg = "<b>The following errors occurred:</b><br><ul>" + errMsg + "</ul>";
+            errMsg += ("<b>" + UtilProperties.getMessage(resource,"productevents.following_errors_occurred", UtilHttp.getLocale(request)));
+            errMsg += ("</b><br><ul>" + errMsg + "</ul>");
             request.setAttribute("_ERROR_MESSAGE_", errMsg);
             return "error";
         }
@@ -557,14 +599,16 @@ public class ProductEvents {
             try {
                 delegator.storeAll(toBeStored);
             } catch (GenericEntityException e) {
-                request.setAttribute("_ERROR_MESSAGE_", "Could not create attribute (write error)");
+                errMsg = UtilProperties.getMessage(resource,"productevents.could_not_create_attribute_write", UtilHttp.getLocale(request));
+                request.setAttribute("_ERROR_MESSAGE_", errMsg);
                 return "error";
             }
         } else if (updateMode.equals("UPDATE")) {
             try {
                 delegator.storeAll(toBeStored);
             } catch (GenericEntityException e) {
-                request.setAttribute("_ERROR_MESSAGE_", "Could not update attribute (write error)");
+                errMsg = UtilProperties.getMessage(resource,"productevents.could_not_update_attribute_write", UtilHttp.getLocale(request));
+                request.setAttribute("_ERROR_MESSAGE_", errMsg);
                 Debug.logWarning("[ProductEvents.updateAttribute] Could not update attribute (write error); message: " + e.getMessage(), module);
                 return "error";
             }
@@ -572,12 +616,15 @@ public class ProductEvents {
             try {
                 delegator.removeByAnd("ProductAttribute", UtilMisc.toMap("productId", productId, "attrName", attrName));
             } catch (GenericEntityException e) {
-                request.setAttribute("_ERROR_MESSAGE_", "Could not delete attribute (write error)");
+                errMsg = UtilProperties.getMessage(resource,"productevents.could_not_delete_attribute_write", UtilHttp.getLocale(request));
+                request.setAttribute("_ERROR_MESSAGE_", errMsg);
                 Debug.logWarning("[ProductEvents.updateAttribute] Could not delete attribute (write error); message: " + e.getMessage(), module);
                 return "error";
             }
         } else {
-            request.setAttribute("_ERROR_MESSAGE_", "Specified update mode: \"" + updateMode + "\" is not supported.");
+            Map messageMap = UtilMisc.toMap("updateMode", updateMode);
+            errMsg = UtilProperties.getMessage(resource,"productevents.specified_update_mode_not_supported", messageMap, UtilHttp.getLocale(request));
+            request.setAttribute("_ERROR_MESSAGE_", errMsg);
             return "error";
         }
 
@@ -597,7 +644,7 @@ public class ProductEvents {
                     "ProductStoreEmailSetting",
                     UtilMisc.toMap("productStoreId", productStore.get("productStoreId"), "emailType", emailType));
         } catch (GenericEntityException e) {
-            Debug.logError(e, "Unable to get product store email setting for tell-a-frield", module);
+            Debug.logError(e, "Unable to get product store email setting for tell-a-friend", module);
             return "error";
         }
         if (productStoreEmail == null) {

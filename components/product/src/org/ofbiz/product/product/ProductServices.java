@@ -1,5 +1,5 @@
 /*
- * $Id: ProductServices.java,v 1.6 2004/02/06 17:04:48 ajzeneski Exp $
+ * $Id: ProductServices.java,v 1.7 2004/02/26 09:10:50 jonesde Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -30,12 +30,14 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Locale;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.OrderedMap;
 import org.ofbiz.base.util.OrderedSet;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -52,12 +54,13 @@ import org.ofbiz.service.ServiceUtil;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.6 $
+ * @version    $Revision: 1.7 $
  * @since      2.0
  */
 public class ProductServices {
-    
+
     public static final String module = ProductServices.class.getName();
+    public static final String resource = "ProductUiLabels";
 
     /**
      * Creates a Collection of product entities which are variant products from the specified product ID.
@@ -101,6 +104,8 @@ public class ProductServices {
         // * String productId      -- Product ID to look up feature types
         GenericDelegator delegator = dctx.getDelegator();
         String productId = (String) context.get("productId");
+        Locale locale = (Locale) context.get("locale");
+        String errMsg=null;
         Set featureSet = new OrderedSet();
 
         try {
@@ -113,13 +118,15 @@ public class ProductServices {
             }
             //if (Debug.infoOn()) Debug.logInfo("" + featureSet, module);
         } catch (GenericEntityException e) {
-            String errMsg = "Problem reading product features: " + e.getMessage();
+            Map messageMap = UtilMisc.toMap("errProductFeatures", e.toString());
+            errMsg = UtilProperties.getMessage(resource,"productservices.problem_reading_product_features_errors", messageMap, locale);
             Debug.logError(e, errMsg, module);
             return ServiceUtil.returnError(errMsg);
         }
 
         if (featureSet.size() == 0) {
-            String errMsg = "Warning: Problem reading product features: no features found for productId " + productId;
+            errMsg = UtilProperties.getMessage(resource,"productservices.problem_reading_product_features", locale);
+            // ToDo DO 2004-02-23 Where should the errMsg go?
             Debug.logWarning(errMsg, module);
             //return ServiceUtil.returnError(errMsg);
         }
@@ -136,6 +143,9 @@ public class ProductServices {
         // * List featureOrder     -- Order of features
         // * String productStoreId -- Product Store ID for Inventory
         String productStoreId = (String) context.get("productStoreId");
+        Locale locale = (Locale) context.get("locale");
+        String errMsg=null;
+
         GenericDelegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         Map result = new HashMap();
@@ -150,8 +160,9 @@ public class ProductServices {
         Collection variants = (Collection) prodFindAllVariants(dctx, context).get("assocProducts");
 
         if (variants == null || variants.size() == 0) {
+            errMsg = UtilProperties.getMessage(resource,"productservices.empty_list_of_products_returned", locale);
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-            result.put(ModelService.ERROR_MESSAGE, "Empty list of products returned");
+            result.put(ModelService.ERROR_MESSAGE, errMsg);
             return result;
         }
         List items = new ArrayList();
@@ -167,8 +178,11 @@ public class ProductServices {
                 productTo = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", productIdTo));
             } catch (GenericEntityException e) {
                 Debug.logError(e, module);
+                Map messageMap = UtilMisc.toMap("productIdTo", productIdTo);
+                messageMap.put("errMessage", e.toString());
+                errMsg = UtilProperties.getMessage(resource,"productservices.error_finding_associated_variant_with_ID_error", messageMap, locale);
                 result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-                result.put(ModelService.ERROR_MESSAGE, "Error finding associated variant with ID " + productIdTo + ", error was: " + e.toString());
+                result.put(ModelService.ERROR_MESSAGE, errMsg);
                 return result;
             }
             if (productTo == null) {
@@ -220,8 +234,9 @@ public class ProductServices {
             selectableFeatures = EntityUtil.filterByDate(selectableFeatures, true);
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
+            errMsg = UtilProperties.getMessage(resource,"productservices.empty_list_of_selectable_features_found", locale);
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-            result.put(ModelService.ERROR_MESSAGE, "Empty list of selectable features found");
+            result.put(ModelService.ERROR_MESSAGE, errMsg);
             return result;
         }
         Map features = new HashMap();
@@ -256,8 +271,9 @@ public class ProductServices {
             return result;
         }
         if (tree == null || tree.size() == 0) {
+            errMsg = UtilProperties.getMessage(resource,"productservices.feature_grouping_came_back_empty", locale);
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-            result.put(ModelService.ERROR_MESSAGE, "Feature grouping came back empty");
+            result.put(ModelService.ERROR_MESSAGE, errMsg);
         } else {
             result.put("variantTree", tree);
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
@@ -273,8 +289,9 @@ public class ProductServices {
             return result;
         }
         if (sample == null || sample.size() == 0) {
+            errMsg = UtilProperties.getMessage(resource,"productservices.feature_sample_came_back_empty", locale);
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-            result.put(ModelService.ERROR_MESSAGE, "Feature sample came back empty");
+            result.put(ModelService.ERROR_MESSAGE, errMsg);
         } else {
             result.put("variantSample", sample);
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
@@ -295,6 +312,8 @@ public class ProductServices {
         String productId = (String) context.get("productId");
         String distinct = (String) context.get("distinct");
         String type = (String) context.get("type");
+        Locale locale = (Locale) context.get("locale");
+        String errMsg=null;
         Collection features = null;
 
         try {
@@ -307,8 +326,10 @@ public class ProductServices {
             result.put("productFeatures", features);
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         } catch (GenericEntityException e) {
+            Map messageMap = UtilMisc.toMap("errMessage", e.toString());
+            errMsg = UtilProperties.getMessage(resource,"productservices.problem_reading_product_feature_entity", messageMap, locale);
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-            result.put(ModelService.ERROR_MESSAGE, "Problem reading product feature entity: " + e.getMessage());
+            result.put(ModelService.ERROR_MESSAGE, errMsg);
         }
         return result;
     }
@@ -321,10 +342,13 @@ public class ProductServices {
         GenericDelegator delegator = dctx.getDelegator();
         Map result = new HashMap();
         String productId = (String) context.get("productId");
+        Locale locale = (Locale) context.get("locale");
+        String errMsg=null;
 
         if (productId == null || productId.length() == 0) {
+            errMsg = UtilProperties.getMessage(resource,"productservices.invalid_productId_passed", locale);
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-            result.put(ModelService.ERROR_MESSAGE, "Invalid productId passed.");
+            result.put(ModelService.ERROR_MESSAGE, errMsg);
             return result;
         }
 
@@ -353,8 +377,10 @@ public class ProductServices {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         } catch (GenericEntityException e) {
             e.printStackTrace();
+            Map messageMap = UtilMisc.toMap("errMessage", e.getMessage());
+            errMsg = UtilProperties.getMessage(resource,"productservices.problems_reading_product_entity", messageMap, locale);
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-            result.put(ModelService.ERROR_MESSAGE, "Problems reading product entity: " + e.getMessage());
+            result.put(ModelService.ERROR_MESSAGE, errMsg);
         }
 
         return result;
@@ -371,20 +397,24 @@ public class ProductServices {
         String productId = (String) context.get("productId");
         String productIdTo = (String) context.get("productIdTo");
         String type = (String) context.get("type");
+        Locale locale = (Locale) context.get("locale");
+        String errMsg = null;
 
         Boolean cvaBool = (Boolean) context.get("checkViewAllow");
         boolean checkViewAllow = (cvaBool == null ? false : cvaBool.booleanValue());
         String prodCatalogId = (String) context.get("prodCatalogId");
-        
+
         if (productId == null && productIdTo == null) {
+            errMsg = UtilProperties.getMessage(resource,"productservices.both_productId_and_productIdTo_cannot_be_null", locale);
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-            result.put(ModelService.ERROR_MESSAGE, "Both productId and productIdTo cannot be null");
+            result.put(ModelService.ERROR_MESSAGE, errMsg);
             return result;
         }
 
         if (productId != null && productIdTo != null) {
+            errMsg = UtilProperties.getMessage(resource,"productservices.both_productId_and_productIdTo_cannot_be_defined", locale);
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-            result.put(ModelService.ERROR_MESSAGE, "Both productId and productIdTo cannot be defined");
+            result.put(ModelService.ERROR_MESSAGE, errMsg);
             return result;
         }
 
@@ -394,14 +424,17 @@ public class ProductServices {
         try {
             product = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", productId));
         } catch (GenericEntityException e) {
+            Map messageMap = UtilMisc.toMap("errMessage", e.getMessage());
+            errMsg = UtilProperties.getMessage(resource,"productservices.productservices.problems_reading_product_entity", messageMap, locale);
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-            result.put(ModelService.ERROR_MESSAGE, "Problems reading product entity: " + e.getMessage());
+            result.put(ModelService.ERROR_MESSAGE, errMsg);
             return result;
         }
 
         if (product == null) {
+            errMsg = UtilProperties.getMessage(resource,"productservices.problems_getting_product_entity", locale);
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-            result.put(ModelService.ERROR_MESSAGE, "Problems getting the product entity.");
+            result.put(ModelService.ERROR_MESSAGE, errMsg);
             return result;
         }
 
@@ -426,13 +459,15 @@ public class ProductServices {
                     }
                 }
             }
-            
-            
+
+
             result.put("assocProducts", productAssocs);
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         } catch (GenericEntityException e) {
+            Map messageMap = UtilMisc.toMap("errMessage", e.getMessage());
+            errMsg = UtilProperties.getMessage(resource,"productservices.problems_product_association_relation_error", messageMap, locale);
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-            result.put(ModelService.ERROR_MESSAGE, "Problems product association relation: " + e.getMessage());
+            result.put(ModelService.ERROR_MESSAGE, errMsg);
             return result;
         }
 

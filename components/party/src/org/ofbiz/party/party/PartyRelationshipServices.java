@@ -1,5 +1,5 @@
 /*
- * $Id: PartyRelationshipServices.java,v 1.1 2003/08/17 17:57:35 ajzeneski Exp $
+ * $Id: PartyRelationshipServices.java,v 1.2 2004/02/26 09:10:48 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -26,10 +26,12 @@ package org.ofbiz.party.party;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Locale;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -43,12 +45,13 @@ import org.ofbiz.service.ServiceUtil;
  *
  * @author     <a href="mailto:cworley@chris-n-april.com">Christopher Worley</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class PartyRelationshipServices {
-    
+
     public static final String module = PartyRelationshipServices.class.getName();
+    public static final String resource = "PartyUiLabels";
 
     /** Creates a PartyRelationship
      *@param ctx The DispatchContext that this service is operating in
@@ -62,6 +65,8 @@ public class PartyRelationshipServices {
         GenericValue userLogin = (GenericValue) context.get("userLogin");
 
         String partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PARTYMGR", "_CREATE");
+        Locale locale = (Locale) context.get("locale");
+        String errMsg = null;
 
         if (result.size() > 0)
             return result;
@@ -73,7 +78,9 @@ public class PartyRelationshipServices {
 
         String partyIdTo = (String) context.get("partyIdTo");
         if (partyIdTo == null) {
-            return ServiceUtil.returnError("Cannot create party relationship, partyIdTo cannot be null.");
+//            Map messageMap = UtilMisc.toMap("errProductFeatures", e.getMessage());
+            errMsg = UtilProperties.getMessage(resource,"partyrelationshipservices.cannot_create_party_relationship_partyIdTo_null", locale);
+            return ServiceUtil.returnError(errMsg);
         }
 
         String roleTypeIdFrom = (String) context.get("roleTypeIdFrom");
@@ -93,34 +100,43 @@ public class PartyRelationshipServices {
 
         try {
             if (delegator.findByPrimaryKey("PartyRole", UtilMisc.toMap("partyId", partyIdFrom, "roleTypeId", roleTypeIdFrom)) == null) {
-                return ServiceUtil.returnError("Cannot create party relationship, partyIdFrom is not in specified role.");
+                errMsg = UtilProperties.getMessage(resource,"partyrelationshipservices.cannot_create_party_relationship_partyIdFrom_not_in_role", locale);
+                return ServiceUtil.returnError(errMsg);
             }
-            
+
             if (delegator.findByPrimaryKey("PartyRole", UtilMisc.toMap("partyId", partyIdTo, "roleTypeId", roleTypeIdTo)) == null) {
-                return ServiceUtil.returnError("Cannot create party relationship, partyIdTo is not in specified role.");
+                errMsg = UtilProperties.getMessage(resource,"partyrelationshipservices.cannot_create_party_relationship_partyIdTo_not_in_role", locale);
+                return ServiceUtil.returnError(errMsg);
             }
         } catch (GenericEntityException e) {
             Debug.logWarning(e, module);
-            return ServiceUtil.returnError("Could not create party role (read failure): " + e.getMessage());
+            Map messageMap = UtilMisc.toMap("errMessage", e.getMessage());
+            errMsg = UtilProperties.getMessage(resource,"partyrelationshipservices.could_not_create_party_role_read", messageMap, locale);
+            return ServiceUtil.returnError(errMsg);
         }
-        
+
         GenericValue partyRelationship = delegator.makeValue("PartyRelationship", UtilMisc.toMap("partyIdFrom", partyIdFrom, "partyIdTo", partyIdTo, "roleTypeIdFrom", roleTypeIdFrom, "roleTypeIdTo", roleTypeIdTo, "fromDate", fromDate));
         partyRelationship.setNonPKFields(context);
 
         try {
             if (delegator.findByPrimaryKey(partyRelationship.getPrimaryKey()) != null) {
-                return ServiceUtil.returnError("Could not create party relationship: already exists");
+                errMsg = UtilProperties.getMessage(resource,"partyrelationshipservices.could_not_create_party_role_exists", locale);
+                return ServiceUtil.returnError(errMsg);
             }
         } catch (GenericEntityException e) {
             Debug.logWarning(e, module);
-            return ServiceUtil.returnError("Could not create party role (read failure): " + e.getMessage());
+            Map messageMap = UtilMisc.toMap("errMessage", e.getMessage());
+            errMsg = UtilProperties.getMessage(resource,"partyrelationshipservices.could_not_create_party_role_read", messageMap, locale);
+            return ServiceUtil.returnError(errMsg);
         }
 
         try {
             partyRelationship.create();
         } catch (GenericEntityException e) {
             Debug.logWarning(e.getMessage(), module);
-            return ServiceUtil.returnError("Could not create party relationship (write failure): " + e.getMessage());
+            Map messageMap = UtilMisc.toMap("errMessage", e.getMessage());
+            errMsg = UtilProperties.getMessage(resource,"partyrelationshipservices.could_not_create_party_relationship_write", messageMap, locale);
+            return ServiceUtil.returnError(errMsg);
         }
 
         result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
@@ -139,6 +155,8 @@ public class PartyRelationshipServices {
         GenericValue userLogin = (GenericValue) context.get("userLogin");
 
         String partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PARTYMGR", "_UPDATE");
+        Locale locale = (Locale) context.get("locale");
+        String errMsg = null;
 
         if (result.size() > 0)
             return result;
@@ -152,7 +170,8 @@ public class PartyRelationshipServices {
         String partyIdTo = (String) context.get("partyIdTo");
 
         if (partyIdTo == null) {
-            return ServiceUtil.returnError("Cannot create party relationship, partyIdTo cannot be null.");
+            errMsg = UtilProperties.getMessage(resource,"partyrelationshipservices.cannot_create_party_relationship_partyIdTo_null", locale);
+            return ServiceUtil.returnError(errMsg);
         }
 
         String roleTypeIdFrom = (String) context.get("roleTypeIdFrom");
@@ -173,20 +192,24 @@ public class PartyRelationshipServices {
                             "partyIdTo", partyIdTo, "roleTypeIdFrom", roleTypeIdFrom, "roleTypeIdTo", roleTypeIdTo, "fromDate", context.get("fromDate")));
         } catch (GenericEntityException e) {
             Debug.logWarning(e, module);
-            return ServiceUtil.returnError("Could not update party realtion (read failure): " + e.getMessage());
+            Map messageMap = UtilMisc.toMap("errMessage", e.getMessage());
+            errMsg = UtilProperties.getMessage(resource,"partyrelationshipservices.could_not_update_party_relation_read", messageMap, locale);
+            return ServiceUtil.returnError(errMsg);
         }
 
         if (partyRelationship == null) {
-            return ServiceUtil.returnError("Could not update party relationship (relationship not found)");
+            errMsg = UtilProperties.getMessage(resource,"partyrelationshipservices.could_not_update_party_relation_not_found", locale);
+            return ServiceUtil.returnError(errMsg);
         }
-        
+
         partyRelationship.setNonPKFields(context);
 
         try {
             partyRelationship.store();
         } catch (GenericEntityException e) {
             Debug.logWarning(e.getMessage(), module);
-            return ServiceUtil.returnError("Could not update party relationship (write failure): " + e.getMessage());
+            errMsg = UtilProperties.getMessage(resource,"partyrelationshipservices.could_not_update_party_relation_write", locale);
+            return ServiceUtil.returnError(errMsg);
         }
 
         result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
