@@ -1,5 +1,5 @@
 /*
- * $Id: CheckOutEvents.java,v 1.33 2004/07/19 02:41:37 ajzeneski Exp $
+ * $Id: CheckOutEvents.java,v 1.34 2004/07/21 13:35:01 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -62,7 +62,7 @@ import org.ofbiz.service.ServiceUtil;
  * @author <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author <a href="mailto:tristana@twibble.org">Tristan Austin</a>
- * @version $Revision: 1.33 $
+ * @version $Revision: 1.34 $
  * @since 2.0
  */
 public class CheckOutEvents {
@@ -281,8 +281,7 @@ public class CheckOutEvents {
             Iterator npi = nullPaymentIds.iterator();
             while (npi.hasNext()) {
                 String paymentMethodId = (String) npi.next();
-                Double paymentTotal = cart.getPaymentTotal();
-                double selectedPaymentTotal = paymentTotal != null ? paymentTotal.doubleValue() : 0.00;
+                double selectedPaymentTotal = cart.getPaymentTotal();
                 double requiredAmount = cart.getGrandTotal() - cart.getBillingAccountAmount();
                 double nullAmount = requiredAmount - selectedPaymentTotal;
                 if (nullAmount > 0) {
@@ -291,9 +290,8 @@ public class CheckOutEvents {
             }
         }
 
-        // verify the selected payment method amounts will cover the total
-        Double paymentTotal = cart.getPaymentTotal();
-        double selectedPaymentTotal = paymentTotal != null ? paymentTotal.doubleValue() : 0.00;
+        // verify the selected payment method amounts will cover the total        
+        double selectedPaymentTotal = cart.getPaymentTotal();
         double requiredAmount = cart.getGrandTotal() - cart.getBillingAccountAmount();
         if (paymentMethods != null && paymentMethods.size() > 0 && requiredAmount > selectedPaymentTotal) {
             Debug.logError("Required Amount : " + requiredAmount + " / Selected Amount : " + selectedPaymentTotal, module);
