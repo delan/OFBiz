@@ -60,18 +60,21 @@
   String rowClassResult2 = "viewManyTR2";
   String rowClassResult = "";
 
-  String curFindString = "";
+  String find = request.getParameter("find");
+  if(find == null) find="false";
+  String curFindString = "entityName=" + entityName + "&find=" + find;
   GenericEntity findByEntity = new GenericEntity(entity);
   for(int fnum=0; fnum<entity.fields.size(); fnum++)
   {
     ModelField field = (ModelField)entity.fields.get(fnum);
-    ModelFieldType type = field.modelFieldType;
     String fval = request.getParameter(field.name);
-    if(fval != null && fval.length() > 0)
+    if(fval != null)
     {
-      if(curFindString.length() > 0) curFindString = curFindString + "&";
-      curFindString = curFindString + field.name + "=" + fval;
-      findByEntity.setString(field.name, fval);
+      if(fval.length() > 0)
+      {
+        curFindString = curFindString + "&" + field.name + "=" + fval;
+        findByEntity.setString(field.name, fval);
+      }
     }
   }
   curFindString = UtilFormatOut.encodeQuery(curFindString);
@@ -100,8 +103,16 @@
     Debug.logInfo("-=-=-=-=- Current Array not found in session, getting new one...");
     Debug.logInfo("-=-=-=-=- curFindString:" + curFindString + " resultArrayName:" + resultArrayName);
 
-    resultCol = helper.findByAnd(findByEntity.entityName, findByEntity.getAllFields(), null);
-    if(resultCol != null) resultArray = resultCol.toArray();
+    if("true".equals(find))
+    {
+      resultCol = helper.findByAnd(findByEntity.entityName, findByEntity.getAllFields(), null);
+      if(resultCol != null) resultArray = resultCol.toArray();
+    }
+    else
+    {
+      resultCol = new LinkedList();
+      resultArray = resultCol.toArray();
+    }
 
     if(resultArray != null)
     {
@@ -121,6 +132,7 @@
 Note: you may use the '%' character as a wildcard for String fields.
 <br>To find ALL <%=entity.entityName%>s, leave all entries blank.
 <form method="post" action="<%=response.encodeURL(controlPath + "/FindGeneric?entityName=" + entityName)%>" style='margin:0;'>
+<INPUT type=hidden name='find' value='true'>
 <table cellpadding="2" cellspacing="2" border="0">
   <%for(int fnum=0; fnum<entity.fields.size(); fnum++){%>
     <%ModelField field = (ModelField)entity.fields.get(fnum);%>
@@ -137,8 +149,8 @@ Note: you may use the '%' character as a wildcard for String fields.
   </tr>
 </table>
 </form>
-<b><%=entity.entityName%>s found by: <%=findByEntity.toString()%></b>
-<br>
+<b><%=entity.entityName%>s found by: <%=findByEntity.toString()%></b><br>
+<b><%=entity.entityName%>s curFindString: <%=curFindString%></b><br>
 <%if(hasCreatePermission){%>
   <a href="<%=response.encodeURL(controlPath + "/ViewGeneric?entityName=" + entityName)%>" class="buttontext">[Create New <%=entity.entityName%>]</a>
 <%}%>
@@ -148,13 +160,13 @@ Note: you may use the '%' character as a wildcard for String fields.
       <td align="left">
         <b>
         <% if(viewIndex > 0) { %>
-          <a href="<%=response.encodeURL(controlPath + "/FindGeneric?entityName=" + entityName + "&" + curFindString + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex-1))%>" class="buttontext">[Previous]</a> |
+          <a href="<%=response.encodeURL(controlPath + "/FindGeneric?" + curFindString + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex-1))%>" class="buttontext">[Previous]</a> |
         <% } %>
         <% if(arraySize > 0) { %>
           <%=lowIndex%> - <%=highIndex%> of <%=arraySize%>
         <% } %>
         <% if(arraySize>highIndex) { %>
-          | <a href="<%=response.encodeURL(controlPath + "/FindGeneric?entityName=" + entityName + "&" + curFindString + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex+1))%>" class="buttontext">[Next]</a>
+          | <a href="<%=response.encodeURL(controlPath + "/FindGeneric?" + curFindString + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex+1))%>" class="buttontext">[Next]</a>
         <% } %>
         </b>
       </td>
@@ -210,11 +222,19 @@ Note: you may use the '%' character as a wildcard for String fields.
         &nbsp;</div>
       </td><%}%>
       <td>
-        <a href="<%=response.encodeURL(controlPath + "/ViewGeneric?entityName=" + entityName + "&" + entity.httpArgListFromClass(entity.pks))%>" class="buttontext">[View]</a>
+        <%
+          String findString = "entityName=" + entityName;
+          for(int pknum=0; pknum<entity.pks.size(); pknum++)
+          {
+            ModelField pkField = (ModelField)entity.pks.get(pknum);
+            findString = findString + "&" + pkField.name + "=" + value.get(pkField.name);
+          }
+        %>
+        <a href="<%=response.encodeURL(controlPath + "/ViewGeneric?" + findString)%>" class="buttontext">[View]</a>
       </td>
       <%if(hasDeletePermission){%>
         <td>
-          <a href="<%=response.encodeURL(controlPath + "/UpdateGeneric?entityName=" + entityName + "&UPDATE_MODE=DELETE&" + entity.httpArgListFromClass(entity.pks) + "&" + curFindString)%>" class="buttontext">[Delete]</a>
+          <a href="<%=response.encodeURL(controlPath + "/UpdateGeneric?" + findString + "&UPDATE_MODE=DELETE&" + curFindString)%>" class="buttontext">[Delete]</a>
         </td>
       <%}%>
     </tr>
