@@ -9,12 +9,13 @@
 
 <br>Written By: David E. Jones
 <br>Email: <a href="mailto:jonesde@ofbiz.org">jonesde@ofbiz.org</a>
+<br>Minor corrections by: <a href="mailto:PDebski@a4.pl">Pawel H. Debski</a>
 <br>Open For Business Site: <a href="http://www.ofbiz.org/">http://www.ofbiz.org</a>
 <br>
 <A href="http://sf.net/projects/ofbiz"> <IMG src="http://sourceforge.net/sflogo.php?group_id=27173" border="0" alt="SourceForge Logo"></A> 
 <br>
 Founders and Lead Architects: David E. Jones &amp; Andy Zeneski <br>
-Last Updated: Januray 8, 2003<br>
+Last Updated: Januray 28, 2003<br>
 $Id$ <br>
 <hr>
 <br>
@@ -48,14 +49,14 @@ $Id$ <br>
 <hr>
 
 <p>This document describes the configuration of the Core of the Open For Business Framework. 
-It goes through each of the OFBiz Core properties files to explains the available properties and their 
+It goes through each of the OFBiz Core properties files to explain the available properties and their 
 usage. The properties files used for the OFBiz applications have
 examples of the different options and are located in <b><code>ofbiz/commonapp/etc/</code></b>.</p>
 
 <p>These files are resources on the classpath so they must be located somewhere
 on the classpath available to the Java application(s) for the proper operation
 of the OFBiz Core Framework. Because they are resources on the classpath 
-they can be overriden locally in webapps by putting
+they can be overridden locally in webapps by putting
 a changed copy of the desired file in the webapp/WEB-INF/classes directory.</p>
 
 <p>The entityengine.xml file is not described in this document, it is described 
@@ -84,7 +85,7 @@ in the entityengine.xml and other properties files with <b><code>${env.ofbiz.hom
 
 <p>Note that these extensions are only currently available for properties files
 used in configuration. The internationalization and localization related message
-properties files use the standard Java <CODE>MessageBundle</CODE> class which does not use
+properties files use the standard Java <CODE>MessageBundle</CODE> class that does not use
 these conventions. They do, however support parameters inserted into the
 messages using the Java <CODE>MessageFormat</CODE> class and related
 conventions.</p>
@@ -104,7 +105,7 @@ and <b><code>{cache-name}.useSoftReference</code></b> (true or false). The maxSi
 property specifies the maximum number of entries in the cache, but does nothing
 with respect to the size of each cache entry. The expireTime property specifies
 how long in milliseconds each cache entry will be valid. If either value is 0 the
-feature will be disabled, ie unlimited cache size or no expire time.</p>
+feature will be disabled, i.e. unlimited cache size or no expire time.</p>
 
 <p>The useSoftReference property is used to specify, true or false, whether soft
 references should be used for cache entries. Soft references help keep large
@@ -133,7 +134,7 @@ is <b><code>verbose</code></b>, <b><code>timing</code></b>, <b><code>info</code>
 <h3><a name="jndiservers">jndiservers.xml</a></h3>
 <hr>
 
-<p>This is a simple XML file that contains a number <b><code>jndi-server</code></b>
+<p>This is a simple XML file that contains a number of <b><code>jndi-server</code></b>
 tags inside a single <b><code>jndi-config</code></b> tag. Each jndi-server tag
 corresponds to a named JNDI Server configuration that will be used in various
 places in the OFBiz Framework, especially in the Entity and Service Engines.</p>
@@ -265,7 +266,7 @@ names to use with the ports, use the following properties: <B><CODE>port.https</
 <B><CODE>force.https.host</CODE></B>, <B><CODE>port.http</CODE></B>, and 
 <B><CODE>force.http.host</CODE></B>.
 
-<P>The next set of properties in the file are for static content URLs. This
+<P>The next set of properties in the file is for static content URLs. This
 includes images and other resources that can be moved to another server or farm to
 lighten the load of the application servers and the load balancers in front of
 the application servers. This is an inexpensive and easy way to handle more load
@@ -273,7 +274,7 @@ on a site.</P>
 
 <P>There is one property for secure content:
 <B><CODE>content.url.prefix.secure</CODE></B>,
-and one for standard or non-servuce content:
+and one for standard or non-secure content:
 <B><CODE>content.url.prefix.standard</CODE></B>.</P>
 
 </body>

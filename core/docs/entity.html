@@ -9,12 +9,13 @@
 
 <br>Written By: David E. Jones
 <br>Email: <a href="mailto:jonesde@ofbiz.org">jonesde@ofbiz.org</a>
+<br>Minor corrections by: <a href="mailto:PDebski@a4.pl">Pawel H. Debski</a>
 <br>Open For Business Site: <a href="http://www.ofbiz.org/">http://www.ofbiz.org</a>
 <br>
 <A href="http://sf.net/projects/ofbiz"> <IMG src="http://sourceforge.net/sflogo.php?group_id=27173" border="0" alt="SourceForge Logo"></A> 
 <br>
 Founders and Lead Architects: David E. Jones &amp; Andy Zeneski <br>
-Last Updated: January 9, 2003<br>
+Last Updated: January 28, 2003<br>
 $Id$ <br>
 <hr>
 <br>
@@ -55,7 +56,7 @@ simplify the enterprise wide use of entity data. This includes definition,
 maintenance, quality assurance, and development of entity related functionality.&nbsp;</P>
 <P>The entity engine uses a number of Business Tier and Integration Tier
 patterns that will be recognized by most enterprise software programmers. Many
-Presentation Tier patterns are also used in the Open For Busienss project, but
+Presentation Tier patterns are also used in the Open For Business project, but
 only in the servlet controller, not in the entity engine. The patterns used in
 the Entity Engine include: Business Delegate, Value Object, Composite Entity
 (variation), Value Object Assembler, Service Locator, and Data Access Object.
@@ -92,7 +93,7 @@ value objects are generic, using a map to store the fields values of the entity
 instance by name. The get and set methods for the fields take a String with the
 fieldName in it which is used to verify that the field is part of the entity,
 and then either get or set a value as desired. The danger of this flexibility is
-curtailed using a contract between he entity engine and the application, this
+curtailed using a contract between the entity engine and the application, this
 is contained in a special XML file.</P>
 <P>Instead of writing entity specific code, entity definitions are read from an
 XML file and used by the entity engine to enforce a set of rules between the
@@ -113,7 +114,7 @@ done differently without changing the code that interacts with those entities on
 a higher level. An example of the usefulness of this abstraction is that by
 changing a configuration file an application written using the Entity Engine
 can switch from hitting a database directly through JDBC to using an EJB server
-and Entitiy Beans for persistence. The same code could also be used for custom
+and Entity Beans for persistence. The same code could also be used for custom
 data sources like legacy systems over HTTP or messaging services through a bit of custom coding within the same
 framework.</P>
 
@@ -141,7 +142,7 @@ in addition to the <B>entitymodel.xml</B> file. They are all named after the fol
 <P>The MySQL field type model XML file for Open For Business can be found in <B>ofbiz/commonapp/entitydef/fieldtypemysql.xml</B>.
 There are other database specific field type files for Postgres, Hypersonic, Oracle, et cetera.
 From the entity model files and the field type files database tables can be created automatically through
-the checkDataSource routine on the GenericHelper inteface. This can be done automatically on startup or through the tools in WebTools.</P>
+the checkDataSource routine on the GenericHelper interface. This can be done automatically on startup or through the tools in WebTools.</P>
 
 <P><B>Loading Seed Data</B></P>
 
@@ -226,8 +227,8 @@ fieldtypemodel XML file specified by the fieldtypemodel.dtd XML Data Type
 Definition. Each type maps to a Java type and an SQL type. Because of this
 separation different fieldtypemodel XML files can be specified for different
 databases allowing an entitymodel XML file to work with the various databases.
-In addition, validators can be specified for a field type or for any field which
-denote that the named validator should be called when data is input. These
+In addition, validators can be specified for a field type or for any field. This
+denotes that the named validator should be called when data is input. These
 validators are defined in the class <B>org.ofbiz.core.util.UtilValidate</B> and
 follow the definition pattern: [<code>boolean isValid(String in);</code>].</P>
 
@@ -236,11 +237,11 @@ follow the definition pattern: [<code>boolean isValid(String in);</code>].</P>
 <P>Multiple relationships can exist for each entity. Each relation is either of type
 'one', 'one-nofk', or 'many' depending on the cardinality of the relation and
 whether a foreign key is desired or not. If the type is 'one' or 'one-nofk' then 
-the key-map elements must fully specifiy the primary key of
+the key-map elements must fully specify the primary key of
 the related entity. If the type is 'many', the key-map elements are not
 restricted by the primary key of the related entity.</P>
 
-<P>Foreign keys, and indexes on foreign keys, can be created automatically by
+<P>Foreign keys and indexes on foreign keys can be created automatically by
 the Entity Engine. This is only done for type 'one' relations, not for 
 'one-nofk' or 'many' type relations.</P>
 
@@ -343,7 +344,7 @@ specified.</P>
 </tr>
 <tr>
     <td>field</td><td>1 to many</td>
-    <td>Used to declate fields that are part of the entity.</td>
+    <td>Used to declare fields that are part of the entity.</td>
 </tr>
 <tr>
     <td>prim-key</td><td>0 to many</td>
@@ -456,9 +457,9 @@ specified.</P>
     <td>key-map</td><td>1 to many</td>
     <td>The key-map is used to specify a field in this entity that corresponds 
     to a field in the related entity. This element has two attributes:
-    <b>field-name</b> and <b>rel-field-name</b> which are used to specify the
-    name of the field on this entity and the name of the field on the related
-    entity.</td>
+    <b>field-name</b> and <b>rel-field-name</b>. These are used to specify the
+    name of the field on this entity and the corresponding name of the field on 
+    the related entity.</td>
 </tr>
 </table>
 
@@ -472,7 +473,7 @@ The idea of a <B><CODE>view-entity</CODE></B> is the same as the idea of a view 
 or other popular database management systems. View Entities allow
 you to combine, or join, entities to make a new entity. The new entity's fields 
 will be aliases of the fields on the original entities. The member entities of the
-view will be linked together by creating a set of view-links which contain 
+view will be linked together by creating a set of view-links that contain 
 key-maps, just like relationships do as described above.</P>
 
 <P>The meta data for a <B><CODE>view-entity</CODE></B> is nearly the same as for a normal entity. 
@@ -522,7 +523,7 @@ single entity to be linked in multiple times.</P>
 <P>Rather than specifying fields with a view entity you specify aliases. 
 Each <B><CODE>alias</CODE></B> is effectively a field in usage and is defined
 by being mapped to a field on an aliases member entity. If the
-<B><CODE>field</CODE></B> name is that same as the alias
+<B><CODE>field</CODE></B> name is the same as the alias
 <B><CODE>name</CODE></B>, there is no need to specify it. In
 other words if no field name is specified the alias name will be used 
 as the field name to map to on the member entity with the specified
@@ -590,8 +591,8 @@ lower</B>. These parallel commonly available functions in SQL.</P>
 
 <P>While it is not required, to keep things simple I recommend querying only
 aliased fields that are either group-by aliases or function aliases. Also,
-remember that not all specified aliased fields my be included in the list of
-fields to reteive in the query.</P>
+remember that not all specified aliased fields may be included in the list of
+fields to retreive in the query because this will over-constrain the query.</P>
 
 <P>Grouping and summarizing data can be very useful for certain types of custom
 coded reports or for data migration and cleansing.</P>
@@ -802,7 +803,7 @@ how the link tree is kept clean).</P>
     <td>key-map</td><td>1 to many</td>
     <td>The key-map is used to specify a field in this entity that corresponds 
     to a field in the related entity. This element has two attributes:
-    <b>field-name</b> and <b>rel-field-name</b> which are used to specify the
+    <b>field-name</b> and <b>rel-field-name</b>. These are used to specify the
     name of the field on this entity and the name of the field on the related
     entity.</td>
 </tr>
@@ -854,7 +855,7 @@ how the link tree is kept clean).</P>
     <td>key-map</td><td>1 to many</td>
     <td>The key-map is used to specify a field in this entity that corresponds 
     to a field in the related entity. This element has two attributes:
-    <b>field-name</b> and <b>rel-field-name</b> which are used to specify the
+    <b>field-name</b> and <b>rel-field-name</b>. These are used to specify the
     name of the field on this entity and the name of the field on the related
     entity.</td>
 </tr>
@@ -874,12 +875,12 @@ reference to the delegator that created it and through this reference it knows h
 to store, remove and do other operations without requiring a program to invoke methods on the delegator
 itself.</P>
 
-<P>I've been trying to think of how best to present information about this API,
+<P>I've been trying to think of how best to present information about this API
 but short of writing a number of documents about the specific usage of each
-piece, there is not much that is useful that I could write here. I recommend
+piece there is not much that is useful that I could write here. I recommend
 reading through the JavaDocs for the core module, specifically the <B>
-org.ofbiz.core.entity</B> package, and browsing through the eCommerce and other applications
-which make heavy use of this API.</P>
+org.ofbiz.core.entity</B> package, and browsing through the eCommerce and other 
+applications. These heavily use the Entity Engine API.</P>
 
 <P>A few quick notes to help you get started might be in order.</P>
 
@@ -900,7 +901,7 @@ use the <B>store</B> method on the <B>GenericValue</B> or <B>GenericDelegator</B
 objects.</P>
 
 <P>For storing multiple entities the <B>GenericDelegator</B> class has a method
-called <B>storeAll</B> which takes many
+called <B>storeAll</B>. This method takes many
 <B>GenericValue</B> instances and stores them in the same transaction. 
 Actually, to say that
 it stores them is incorrect. It checks to see if they exist and if so does an
@@ -921,9 +922,9 @@ methods, or a collection can be retrieved using the <B>findAll</B> or <B>findByA
 that may include the use of a cache, and may accept an orderBy field list. The two
 main types accept different field lists. One accepts a Map of fields and finds entities
 by anding together expressions where each named field must equal the corresponding value
-in the map. The other type of findByAnd accepts a list of <B>EntityExpr</B> objects which
-are used to specify small expressions that will be anded together. Each EntityExpr specifies
-a field name, an operation, and a value for the field.</P>
+in the map. The other type of findByAnd accepts a list of <B>EntityExpr</B> objects
+that are used to specify small expressions that will be anded together. Each 
+EntityExpr specifies a field name, an operation, and a value for the field.</P>
 
 <P><B>The EntityCondition Object</B></P>
 
@@ -960,7 +961,7 @@ also be created and used as desired by a savvy developer.</P>
 <P>On that note a "short cut" implementation of the EntityCondition abstract
 class has been created to incorporate SQL WHERE clause snippets or full clauses
 into the EntityCondition querying framework. The class is named
-EntityWhereString and is constructed with a simple String argument which
+EntityWhereString and is constructed with a simple String argument that
 represents the SQL that will be inserted into the final generated SQL. This is
 not recommended when other options are available, but it necessary for certain
 functionality that the Entity Engine does not otherwise support.</P>
@@ -986,7 +987,7 @@ the results at once rather than having to create a custom loop to do so.</P>
 
 <P><B>The Entity Engine Cache</B></P>
 
-<P>Because the performance cost of retreiving data from a database can be very
+<P>Because the performance cost of retrieving data from a database can be very
 high and can have a serious impact on the overall performance of an application
 or component of an application the ability to cache data from the database is
 often very important. Many of the find methods on the GenericDelegator have
@@ -997,8 +998,8 @@ value lists found by and, or by all.</P>
 <P>The Entity Engine cache uses the OFBiz <B><CODE>UtilCache</CODE></B> class to
 implement the actual cache. UtilCache has many features such as limited cache
 size, expiring cache entries after a configurable amount of time, and soft
-references so that large caches can be reclaimed by the garbage collector when
-more memory is needed.</P>
+references so that the garbage collector can be reclaim entries from large
+caches when more memory is needed.</P>
 
 <P>There are two ways to configure UtilCache based caches. The first is to
 modify the cache.properties file (as documented in the Core Configuration Guide)
@@ -1033,12 +1034,12 @@ implementation simply change the TransactionFactory class, everything else uses 
 That's the tricky configuration part, if you aren't using Tyrex. For Tyrex make sure a domain
 configuration XML file called tyrexdomain.xml must be on the running classpath.</P>
 
-<P>To demarcate transactions you can use the TransactionUtil class which wraps the UserTransaction 
-class and only throws GenericEntityExceptions, well, and runtime exceptions. The basic methods needed are 
+<P>To demarcate transactions you can use the TransactionUtil class. This class wraps the UserTransaction 
+class and only throws GenericEntityExceptions and runtime exceptions. The basic methods needed are 
 begin(), commit(), and rollback(), but the rest are included and can be very useful. A transaction
 is attached to the current thread so it is not necessary to pass it around all over the place.
 After beginning a transaction make sure it is always either committed or rolled back. This is 
-normally done by committing at the end of a try block and and rolling back in each catch block. 
+normally done by committing at the end of a try block and rolling back in each catch block. 
 You can also use the standard UserTransaction object by getting one from the TransactionFactory.</P>
 
 <hr>
@@ -1052,8 +1053,8 @@ acts as an XML template and also saves the XML entity definitions to their corre
 
 <P>There is also a JSP that acts as a front end to the routines which checks the
 current state of the database table definitions and reports any differences.
-Where possible tables or columns which are missing can be added to the database.
-This is the same routine which optionally runs when the server loads and
+Where possible tables or columns that are missing can be added to the database.
+This is the same routine that optionally runs when the server loads and
 optionally creates missing tables and columns.</P>
 
 <P>The entity code generator has been removed from the project, or deprecated if
@@ -1064,7 +1065,7 @@ necessary. One example of this is the JSP which creates the XML for the entity
 definitions from those definitions, and is used for writing out the XML after
 entity definitions have changed. Other uses for templates include manually
 generating database specific table creation SQL and quick start JSPs and event
-handlers which allow for finding, viewing and editing entity specific data.
+handlers that allow for finding, viewing and editing entity specific data.
 These can be used as starting points for task specific applications.</P>
 
 <P>Where entity data editing is not task specific, but instead is entity

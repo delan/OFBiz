@@ -9,12 +9,14 @@
 
 <br>Written By: Andy Zeneski
 <br>Email: <a href="mailto:jaz@ofbiz.org">jaz@ofbiz.org</a>
+<br>Minor corrections by: <a href="mailto:PDebski@a4.pl">Pawel H. Debski</a> and
+<a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
 <br>Open For Business Site: <a href="http://www.ofbiz.org/">http://www.ofbiz.org</a>
 <br>
 <A href="http://sf.net/projects/ofbiz"> <IMG src="http://sourceforge.net/sflogo.php?group_id=27173" border="0" alt="SourceForge Logo"></A> 
 <br>
 Founders and Lead Architects: David E. Jones &amp; Andy Zeneski <br>
-Last Updated: January 16, 2003<br>
+Last Updated: January 28, 2003<br>
 $Id$ <br>
 <hr>
 <br>
@@ -58,7 +60,7 @@ file called <b><code>serviceengine.xml</code></b> that must exist somewhere on t
 
 <hr>
 <h3><a name="Authorization">Authorization</a></h3>
-<p>The <b><code>authorization</code></b> tag is used to configured the service called for 
+<p>The <b><code>authorization</code></b> tag is used to configure the service called for 
 service authentication. This tag has a single required attribute <code>service-name</code>; the value 
 of this attribute should be the name of the service to use for authorization. By default this
 is defined to use the general OFBiz <code>userLogin</code> service.</p>
@@ -245,13 +247,13 @@ action definition files. This tag has the following two attributes:</p>
 </tr>
 <tr>
     <td>send-mode</td><td>Y</td>
-    <td>The mode which to send the the defined servers (below) can be: 
+    <td>The mode which to send the defined servers (below) can be: 
     <code>none, all, first-available, random, round-robin, or least-load</code>.</td>
 </tr>
 </table>
 
 <p>The <b><code>jms-service</code></b> tag includes one or more <b><code>server</code></b> tags
-which contain the following attributes:</p>
+that contain the following attributes:</p>
 
 <table cellpadding='2' cellspacing='0' border='1'>
 <tr>
@@ -291,8 +293,8 @@ which contain the following attributes:</p>
 
 <p>The jndi-server definition in the jndiservers.xml file should point to where the JMS client APIs can
 be located. This will be used to get either a TopicConnectionFactory or a QueueConnectionFactory depending
-on the <code>type</code> which is defined. The jndi-name should point to the name of the object in JNDI 
-which contains this connection factory instance.</p>
+on the <code>type</code> that is defined. The jndi-name should point to the name of the object in JNDI 
+that contains this connection factory instance.</p>
 <br>
 </body>
 </html>

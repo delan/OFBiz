@@ -9,12 +9,13 @@
 
 <br>Written By: David E. Jones
 <br>Email: <a href="mailto:jonesde@ofbiz.org">jonesde@ofbiz.org</a>
+<br>Minor corrections by: <a href="mailto:PDebski@a4.pl">Pawel H. Debski</a>
 <br>Open For Business Site: <a href="http://www.ofbiz.org/">http://www.ofbiz.org</a>
 <br>
 <A href="http://sf.net/projects/ofbiz"> <IMG src="http://sourceforge.net/sflogo.php?group_id=27173" border="0" alt="SourceForge Logo"></A> 
 <br>
 Founders and Lead Architects: David E. Jones &amp; Andy Zeneski <br>
-Last Updated: February 9, 2002<br>
+Last Updated: January 28, 2003<br>
 $Id$ <br>
 <hr>
 <br>
@@ -61,18 +62,18 @@ XML entity model, entity group, and field type model files will be used for that
 The default file for the OFBiz distribution can be found in <b><code>ofbiz/commonapp/etc/entityengine.xml</code></b>.</p>
 
 <p>Each application that uses the Entity Engine does so through a <b><code>GenericDelegator</code></b>
-instance. The delegator name must be passed to the static factory method which
+instance. The delegator name must be passed to the static factory method that
 is then passed to the constructor if a new instance is needed. This delegator
 name is used to look up settings for that delegator in the <b><code>entityengine.xml</code></b>
 file. Each delegator uses an entity model reader and an entity group reader
-which specifies a group name for each named entity in the entity model file. The
-<b><code>entityengine.xml</code></b> file contains the settings which map each group name
+that specifies a group name for each named entity in the entity model file. The
+<b><code>entityengine.xml</code></b> file contains the settings that map each group name
 to a <b><code>GenericHelper</code></b> for that group. <b><code>GenericHelper</code></b> is an interface
-that must be implemented for each type of data source (ie: JDBC, EJB, SOAP,
+that must be implemented for each type of data source (i.e.: JDBC, EJB, SOAP,
 HTTP, et cetera).&nbsp;</p>
 
 <p>The settings for each named <b><code>GenericHelper</code></b> are specified 
-<b<code>datsource</code></b> elements in the <b><code>entityengine.xml</code></b>
+<b><code>datsource</code></b> elements in the <b><code>entityengine.xml</code></b>
 file. For a JDBC helper these would include database connection parameters such
 as either the JNDI data source parameters or the JDBC parameters including the driver
 name, the JDBC URI, and the username and password for the database. An EJB
@@ -125,21 +126,26 @@ attributes.</p>
 <hr>
 <h3><a name="JTA_Elements">JTA Elements</a></h3>
 <hr>
-<p>For JTA support the Entity Engine needs access to the <b><code>javax.transaction.UserTransaction</code></b> and 
-optionally the <b><code>javax.transaction.TransactionManager</code></b> interface implementations for the TX Manager
-being used. These are retreived through the <b><code>org.ofbiz.core.entity.TransactionFactory</code></b> class. 
-This class uses the class specified with the <b><code>class</code></b> attribute of the <b><code>transaction-factory</code></b>. This
-class may be changed depending on which application server or transaction manager is being used by OFBiz.</p>
+<p>For JTA support the Entity Engine needs access to the 
+<b><code>javax.transaction.UserTransaction</code></b> and optionally the 
+<b><code>javax.transaction.TransactionManager</code></b> interface 
+implementations for the TX Manager being used. These are retrieved through the 
+<b><code>org.ofbiz.core.entity.TransactionFactory</code></b> class. This class 
+uses the class specified with the <b><code>class</code></b> attribute of the 
+<b><code>transaction-factory</code></b>. This class may be changed depending on 
+which application server or transaction manager you are running OFBiz on.</p>
 
-<p>The default TX Manager is Tyrex from Exolab (www.exolab.org) and
-the factory class for Tyrex is <b><code>org.ofbiz.core.entity.transaction.TyrexFactory</code></b>.
-There is also a special class for Weblogc: <b><code>org.ofbiz.core.entity.transaction.WeblogicFactory</code></b>,
-which must be changed to include the Weblogic specific stuff and then compiled
-with weblogic.jar on the classpath.</p>
+<p>The default TX Manager is Tyrex from Exolab (www.exolab.org) and the factory 
+class for Tyrex is 
+<b><code>org.ofbiz.core.entity.transaction.TyrexFactory</code></b>. There is 
+also a special class for Weblogic: 
+<b><code>org.ofbiz.core.entity.transaction.WeblogicFactory</code></b>, which 
+must be changed to include the Weblogic specific stuff and then compiled with 
+weblogic.jar on the classpath.</p>
 
 <p>The most widely useful transaction factory class is the 
-<b><code>org.ofbiz.core.entity.transaction.JNDIFactory</code></b> class. This class uses
-some additional elements from the entityengine.xml file to locate
+<b><code>org.ofbiz.core.entity.transaction.JNDIFactory</code></b> class. This 
+class uses some additional elements from the entityengine.xml file to locate
 the UserTransaction and TransactionManager objects in JNDI.</p>
 
 <p>The <b><code>user-transaction-jndi</code></b> and <b><code>transaction-manager-jndi</code></b> 
@@ -178,21 +184,21 @@ a <b><code>delegator</code></b> tag in the entityengine.xml file.</p>
 
 <p>The delegator tag must contain one or more <b><code>group-map</code></b> tags 
 specifying a datasource to use for each group of entities that the delegator will know about
-from the entity-group-reader. This file is used by the delegator
-to assign a group to each entity and then when an operation on an entity is
-performed it looks up the group and then the datasource helper that corresponds to the group
-and then uses that Helper to perform lower level Data Source operations. With this
-technique the application does not have to know when written which Helper is responsible
-for a given entity, and can therefore handle an entity or groups of entities 
-assigned to different Data Sources.</p>
+from the entity-group-reader. The delegator uses this file 
+to assign a group to each entity. When an operation on an entity is performed it 
+looks up the group and the datasource helper that corresponds to the group
+and uses that Helper to perform lower level Data Source operations. With this
+technique when the application is written it does not have to know which Helper 
+is responsible for a given entity, and can therefore handle an entity or groups 
+of entities assigned to different Data Sources with a simple configuration.</p>
 
 <hr>
 <h3><a name="Entity_Model">Entity Model XML Files</a></h3>
 <hr>
 <p>The <b><code>entity-model-reader</code></b> tag is used to configure each named
 entity model reader. The tag has a <b><code>name</code></b> attribute used to specify the entity model
-reader's name. Each reader may load from multiple resources which are specified
-with as many <b><code>resource</code></b> tags as desired. inside the main tag.</p>
+reader's name. Each reader may load from multiple resources that are each 
+specified with a <b><code>resource</code></b> tag inside the main tag.</p>
 
 <p>Each <b><code>resource</code></b> tag has two required attributes: 
 <b><code>loader</code></b> which specifies which resource-loader to use and
@@ -224,9 +230,9 @@ will use inside itself to load the resource.</p>
 <hr>
 <h3><a name="Datasource">Data Source Elements</a></h3>
 <hr>
-<p>Many datasources can be configured with one <b><code>datasource</code></b> 
-tag each. This tag has the following attributes, and may contain the following
-sub-elements:</p>
+<p>Many datasources can be configured using one <b><code>datasource</code></b> 
+tag for each datasource. This tag has the following attributes, and may contain 
+the following sub-elements:</p>
 <table cellpadding='2' cellspacing='0' border='1'>
 <tr>
     <td><b>Attribute&nbsp;Name</b></td>
@@ -264,7 +270,7 @@ sub-elements:</p>
 </tr>
 <tr>
     <td>use-foreign-key-indices</td><td>N</td>
-    <td>Use/Create indices for foreign keys (ie an index on the foreign key columns)?
+    <td>Use/Create indices for foreign keys (i.e. an index on the foreign key columns)?
     Note that creating foreign keys is not required for this to work and that
     indices are created for type "one" relationship definitions. 
     Must be true or false, defaults to true.</td>
@@ -293,8 +299,8 @@ sub-elements:</p>
 <tr>
     <td>fk-style</td><td>N</td>
     <td>Specifies the foreign key syntax style, either naming the foreign key
-    constraing, or naming the foreign key itself. Most databases use the
-    name_constraing syntax, but SAP DB is an exception to that and there may be
+    constraint, or naming the foreign key itself. Most databases use the
+    name_constraint syntax, but SAP DB is an exception to that and there may be
     others. Must be either "name_constraint" or "name_fk". Defaults to
     name_constraint.</td>
 </tr>
@@ -312,7 +318,7 @@ sub-elements:</p>
     <td>Specifies the syntax to use when doing table joins in view-entity
     operations. Many databases are adopting the ANSI JOIN standard, but before
     that was introduced theta joins were much more common. Two theta join 
-    styles are supported: Oracle and MS SQL. Must be either "ansi",
+    styles are supported: Oracle and MS SQL. Must be "ansi",
     "theta-oracle" or "theta-mssql". Defaults to "ansi".</td>
 </tr>
 </table>
@@ -329,7 +335,7 @@ sub-elements:</p>
     <td>Used to specify a list of full paths to directories that will be searched for XML and SQL files to import
     into the data source by the <b><code>install</code></b> page in the WebTools webapp.
     Each tag has two attributes: path for the path location, and prepend-env to optionally specify
-    a Java environment property to prepedd to the specified path.</td>
+    a Java environment property to prepend to the specified path.</td>
 </tr>
 <tr>
     <td>inline-jdbc</td><td>0 or 1</td>
@@ -405,9 +411,9 @@ sub-elements:</p>
 </tr>
 </table>
 
-<p>The data source retreived
-from JNDI should be pooled and transactional, with connections already enlisted
-if a JTA transaction has been started. It can be either a DataSource or an XADataSource object.</p>
+<p>The data source retrieved from JNDI should be pooled and transactional, with 
+connections already enlisted if a JTA transaction has been started. It can be 
+either a DataSource or an XADataSource object.</p>
 
 <p>If the JNDI elements are not specified the ConnectionFactory will get the
 JDBC parameters from entityengine.xml file and try to use Tyrex for the
