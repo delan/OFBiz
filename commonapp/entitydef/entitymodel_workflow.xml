@@ -320,7 +320,7 @@
     </entity>
     <entity entity-name="WorkflowComplexTypeInfo" 
             package-name="org.ofbiz.commonapp.workeffort.definition"
-            title="Workflow Array Type Members Entity">
+            title="Workflow Complex Type Information Entity">
       <field name="complexTypeInfoId" type="id-ne"></field>
       <field name="memberParentInfoId" type="id"></field>
       <field name="dataTypeEnumId" type="id"></field>
@@ -380,6 +380,7 @@
       <field name="processId" type="id-long-ne"></field>
       <field name="applicationId" type="id-long-ne"></field>
       <field name="formalParamId" type="id-long-ne"></field>
+      <field name="indexNumber" type="numeric"></field>
       <field name="modeEnumId" type="id"></field>
       <field name="description" type="description"></field>
       <field name="dataTypeEnumId" type="id"></field>
