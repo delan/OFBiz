@@ -13,8 +13,8 @@
   <WebSiteCatalog webSiteId="WebStore" prodCatalogId="DemoCatalog" fromDate="2001-01-01 12:00:00.0" sequenceNum="1"/>
   <WebSiteCatalog webSiteId="WebStore" prodCatalogId="TestCatalog" fromDate="2001-01-01 12:00:00.0" sequenceNum="2"/>
 
-  <ProductCategory description="Primary Catalog"
-    longDescription="Product Catalog" productCategoryId="CATALOG1" productCategoryTypeId="CATALOG_CATEGORY"/>
+  <ProductCategory description="Demo Browse Root"
+    longDescription="Demo Catalog Primary Browse Root Category" productCategoryId="CATALOG1" productCategoryTypeId="CATALOG_CATEGORY"/>
   <ProductCategory description="Gizmos"
     longDescription="long description of Gizmos"
     primaryParentCategoryId="CATALOG1" productCategoryId="100" productCategoryTypeId="CATALOG_CATEGORY"/>
@@ -43,12 +43,12 @@
     longDescription="long description of Micro Widgets"
     primaryParentCategoryId="2011" productCategoryId="20111" productCategoryTypeId="CATALOG_CATEGORY"/>
   <ProductCategory description="Featured Products" productCategoryId="PROMOTIONS" productCategoryTypeId="CATALOG_CATEGORY"/>
-  <ProductCategory description="Catalog1 Search Products"
+  <ProductCategory description="Demo Default Search"
     longDescription="Catalog1 Search Products - only products in this category will show up in a search in catalog1"
     productCategoryId="CATALOG1_SEARCH" productCategoryTypeId="SEARCH_CATEGORY"/>
-  <ProductCategory description="Main Quick Add Products"
+  <ProductCategory description="Main Quick Add"
     longDescription="For quick orders, you have found the right place!" productCategoryId="CATALOG1_QUICKADD1" productCategoryTypeId="QUICKADD_CATEGORY"/>
-  <ProductCategory description="Widget Quick Add Products"
+  <ProductCategory description="Widget Quick Add"
     longDescription="Get all you widgets here!" productCategoryId="CATALOG1_QUICKADD2" productCategoryTypeId="QUICKADD_CATEGORY"/>
 
   <ProdCatalogCategory prodCatalogId="DemoCatalog" productCategoryId="CATALOG1" fromDate="2001-01-01 12:00:00.0" 
