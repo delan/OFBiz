@@ -40,7 +40,7 @@
 	engine CDATA #REQUIRED
 	location CDATA #REQUIRED
 	invoke CDATA #REQUIRED
-	auth (true|false) "true"
+	auth (true|false) "false"
 	export (true|false) "false"
 	validate (true|false) "true"
 >
