@@ -115,8 +115,10 @@
 
 <center>
     <table width='100%'>
-        <%int listIndex = lowIndex.intValue();%>
-        <ofbiz:iterator name="productCategoryMember" property="productCategoryMembers">
+        <%ArrayList productCategoryMembers = (ArrayList) pageContext.getAttribute("productCategoryMembers");%>
+        <%for (int listIndex = (lowIndex.intValue() - 1); listIndex < highIndex.intValue(); listIndex++) {%>
+            <%GenericValue productCategoryMember = (GenericValue) productCategoryMembers.get(listIndex);%>
+            <%if (productCategoryMember != null) pageContext.setAttribute("productCategoryMember", productCategoryMember);%>
             <%GenericValue product = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", productCategoryMember.get("productId")));%>
             <%if (product != null) pageContext.setAttribute("product", product);%>
             <tr><td><hr class='sepbar'></td></tr>
@@ -125,8 +127,7 @@
                     <%@ include file="/catalog/productsummary.jsp" %>
                 </td>
             </tr>
-            <%listIndex++;%>
-        </ofbiz:iterator>
+        <%}%>
         <tr><td colspan="2"><hr class='sepbar'></td></tr>
     </table>
 </center>
