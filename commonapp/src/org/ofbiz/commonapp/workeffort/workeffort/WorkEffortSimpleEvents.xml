@@ -31,7 +31,8 @@
 <simple-events>
     <simple-event event-name="createWorkEffort" short-description="Create Work Effort">
         <parameter-map map-name="parameters"/>
-        <simple-map-processor xml-resource="org/ofbiz/commonapp/workeffort/workeffort/WorkEffortProcUpdate.xml" in-map-name="parameters" out-map-name="context"/>
+        <simple-map-processor xml-resource="org/ofbiz/commonapp/workeffort/workeffort/WorkEffortMapProcessors.xml" 
+                processor-name="update" in-map-name="parameters" out-map-name="context"/>
         <check-errors>
             <error-prefix><![CDATA[The following errors occured:<ul>]]></error-prefix><error-suffix><![CDATA[</ul>]]></error-suffix>
             <message-prefix><![CDATA[<li>]]></message-prefix><message-suffix><![CDATA[</li>]]></message-suffix></check-errors>
@@ -44,7 +45,8 @@
     </simple-event>
     <simple-event event-name="updateWorkEffort" short-description="Update Work Effort">
         <parameter-map map-name="parameters"/>
-        <simple-map-processor xml-resource="org/ofbiz/commonapp/workeffort/workeffort/WorkEffortProcUpdate.xml" in-map-name="parameters" out-map-name="context"/>
+        <simple-map-processor xml-resource="org/ofbiz/commonapp/workeffort/workeffort/WorkEffortMapProcessors.xml" 
+                processor-name="update" in-map-name="parameters" out-map-name="context"/>
         <check-errors>
             <error-prefix><![CDATA[The following errors occured:<ul>]]></error-prefix><error-suffix><![CDATA[</ul>]]></error-suffix>
             <message-prefix><![CDATA[<li>]]></message-prefix><message-suffix><![CDATA[</li>]]></message-suffix></check-errors>
@@ -56,7 +58,8 @@
     </simple-event>
     <simple-event event-name="deleteWorkEffort" short-description="Update Work Effort">
         <parameter-map map-name="parameters"/>
-        <simple-map-processor xml-resource="org/ofbiz/commonapp/workeffort/workeffort/WorkEffortProcDelete.xml" in-map-name="parameters" out-map-name="context"/>
+        <simple-map-processor xml-resource="org/ofbiz/commonapp/workeffort/workeffort/WorkEffortMapProcessors.xml" 
+                processor-name="delete" in-map-name="parameters" out-map-name="context"/>
         <check-errors>
             <error-prefix><![CDATA[The following errors occured:<ul>]]></error-prefix><error-suffix><![CDATA[</ul>]]></error-suffix>
             <message-prefix><![CDATA[<li>]]></message-prefix><message-suffix><![CDATA[</li>]]></message-suffix></check-errors>
