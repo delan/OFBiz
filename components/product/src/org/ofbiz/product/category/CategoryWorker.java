@@ -1,5 +1,5 @@
 /*
- * $Id: CategoryWorker.java,v 1.2 2003/12/25 15:17:26 ajzeneski Exp $
+ * $Id: CategoryWorker.java,v 1.3 2003/12/25 15:18:19 ajzeneski Exp $
  *
  *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
@@ -51,17 +51,17 @@ import org.ofbiz.product.product.ProductWorker;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class CategoryWorker {
-    
+
     public static final String module = CategoryWorker.class.getName();
 
     public static String getCatalogTopCategory(PageContext pageContext, String defaultTopCategory) {
         return getCatalogTopCategory(pageContext.getRequest(), defaultTopCategory);
     }
-    
+
     public static String getCatalogTopCategory(ServletRequest request, String defaultTopCategory) {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         Map requestParameters = UtilHttp.getParameterMap(httpRequest);
@@ -92,7 +92,7 @@ public class CategoryWorker {
     public static void getCategoriesWithNoParent(PageContext pageContext, String attributeName) {
         getCategoriesWithNoParent(pageContext.getRequest(), attributeName);
     }
-        
+
     public static void getCategoriesWithNoParent(ServletRequest request, String attributeName) {
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
         Collection results = new LinkedList();
@@ -120,14 +120,14 @@ public class CategoryWorker {
     public static void getRelatedCategories(PageContext pageContext, String attributeName, boolean limitView) {
             getRelatedCategories(pageContext.getRequest(), attributeName, limitView);
     }
-        
-    public static void getRelatedCategories(ServletRequest request, String attributeName, boolean limitView) {  
-        Map requestParameters = UtilHttp.getParameterMap((HttpServletRequest) request);      
+
+    public static void getRelatedCategories(ServletRequest request, String attributeName, boolean limitView) {
+        Map requestParameters = UtilHttp.getParameterMap((HttpServletRequest) request);
         String requestId = null;
 
         requestId = UtilFormatOut.checkNull((String)requestParameters.get("catalog_id"), (String)requestParameters.get("CATALOG_ID"),
                 (String)requestParameters.get("category_id"), (String)requestParameters.get("CATEGORY_ID"));
-                
+
         if (requestId.equals(""))
             return;
         if (Debug.infoOn()) Debug.logInfo("[CatalogHelper.getRelatedCategories] RequestID: " + requestId, module);
@@ -158,7 +158,7 @@ public class CategoryWorker {
     }
 
     public static ArrayList getRelatedCategoriesRet(ServletRequest request, String attributeName, String parentId, boolean limitView, boolean excludeEmpty) {
-        ArrayList categories = new ArrayList();        
+        ArrayList categories = new ArrayList();
 
         if (Debug.verboseOn()) Debug.logVerbose("[CatalogHelper.getRelatedCategories] ParentID: " + parentId, module);
 
@@ -194,7 +194,7 @@ public class CategoryWorker {
                 if (cv != null) {
                     if (excludeEmpty) {
                         if (!isCategoryEmpty(cv)) {
-                            Debug.log("Child : " + cv.getString("productCategoryId") + " is not empty.", module);
+                            //Debug.log("Child : " + cv.getString("productCategoryId") + " is not empty.", module);
                             categories.add(cv);
                         }
                     } else {
@@ -209,14 +209,14 @@ public class CategoryWorker {
     public static boolean isCategoryEmpty(GenericValue category) {
         boolean empty = true;
         long members = categoryMemberCount(category);
-        Debug.log("Category : " + category.get("productCategoryId") + " has " + members  + " members", module);
+        //Debug.log("Category : " + category.get("productCategoryId") + " has " + members  + " members", module);
         if (members > 0) {
             empty = false;
         }
 
         if (empty) {
             long rollups = categoryRollupCount(category);
-            Debug.log("Category : " + category.get("productCategoryId") + " has " + rollups  + " rollups", module);
+            //Debug.log("Category : " + category.get("productCategoryId") + " has " + rollups  + " rollups", module);
             if (rollups > 0) {
                 empty = false;
             }
@@ -347,7 +347,7 @@ public class CategoryWorker {
     }
 
     public static List setTrail(PageContext pageContext, List crumb) {
-        return setTrail(pageContext.getRequest(), crumb);        
+        return setTrail(pageContext.getRequest(), crumb);
     }
 
     public static List setTrail(ServletRequest request, List crumb) {
@@ -382,12 +382,12 @@ public class CategoryWorker {
             return null;
         }
     }
-    
+
     public static boolean isProductInCategory(GenericDelegator delegator, String productId, String productCategoryId) throws GenericEntityException {
         if (productCategoryId == null) return false;
         if (productId == null || productId.length() == 0) return false;
-        
-        List productCategoryMembers = EntityUtil.filterByDate(delegator.findByAndCache("ProductCategoryMember", 
+
+        List productCategoryMembers = EntityUtil.filterByDate(delegator.findByAndCache("ProductCategoryMember",
                 UtilMisc.toMap("productCategoryId", productCategoryId, "productId", productId)), true);
         if (productCategoryMembers == null || productCategoryMembers.size() == 0) {
             //before giving up see if this is a variant product, and if so look up the virtual product and check it...
@@ -403,21 +403,21 @@ public class CategoryWorker {
                     }
                 }
             }
-            
+
             return false;
         } else {
             return true;
         }
     }
-    
+
     public static List filterProductsInCategory(GenericDelegator delegator, List valueObjects, String productCategoryId) throws GenericEntityException {
         return filterProductsInCategory(delegator, valueObjects, productCategoryId, "productId");
     }
-    
+
     public static List filterProductsInCategory(GenericDelegator delegator, List valueObjects, String productCategoryId, String productIdFieldName) throws GenericEntityException {
         if (productCategoryId == null) return new LinkedList();
         if (valueObjects == null) return null;
-        
+
         List newList = new ArrayList(valueObjects.size());
         Iterator valIter = valueObjects.iterator();
         while (valIter.hasNext()) {
