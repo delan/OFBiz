@@ -41,10 +41,13 @@
   <div class="col"><a href="<@ofbizUrl>/tasklist</@ofbizUrl>" class="${selectedLeftClassMap.orderlist?default(unselectedLeftClassName)}">${uiLabelMap.OrderOrderList}</a></div>
   </#if>
   <#if security.hasEntityPermission("ORDERMGR", "_VIEW", session)>
+  <div class="col"><a href="<@ofbizUrl>/FindQuote</@ofbizUrl>" class="${selectedLeftClassMap.quote?default(unselectedLeftClassName)}">${uiLabelMap.OrderQuote}</a></div>  
+  </#if>
+  <#if security.hasEntityPermission("ORDERMGR", "_VIEW", session)>
   <div class="col"><a href="<@ofbizUrl>/findorders</@ofbizUrl>" class="${selectedLeftClassMap.findorders?default(unselectedLeftClassName)}">${uiLabelMap.CommonFind}</a></div>  
   </#if>
   <#if security.hasEntityPermission("ORDERMGR", "_CREATE", session)>
-  <div class="col"><a href="<@ofbizUrl>/orderentry</@ofbizUrl>" class="${selectedLeftClassMap.orderentry?default(unselectedLeftClassName)}">${uiLabelMap.OrderOrderEntry}</a></div>  
+  <div class="col"><a href="<@ofbizUrl>/initorderentry</@ofbizUrl>" class="${selectedLeftClassMap.orderentry?default(unselectedLeftClassName)}">${uiLabelMap.OrderOrderEntry}</a></div>  
   </#if>
   <#if security.hasEntityPermission("ORDERMGR", "_RETURN", session)>
   <div class="col"><a href="<@ofbizUrl>/findreturn</@ofbizUrl>" class="${selectedLeftClassMap.return?default(unselectedLeftClassName)}">${uiLabelMap.OrderOrderReturns}</a></div>

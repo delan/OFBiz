@@ -90,9 +90,12 @@
         <make-value value-name="newEntity" entity-name="CustRequestItem"/>
         <set-pk-fields map-name="parameters" value-name="newEntity"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+        <if-empty field-name="custRequestItemSeqId" map-name="parameters">
+            <make-next-seq-id value-name="newEntity" seq-field-name="custRequestItemSeqId"/>
+        </if-empty>
         <if-empty field-name="statusId" map-name="parameters">
-        	<string-to-field string="CRQ_SUBMITTED" field-name="statusId" map-name="newEntity"/>
-        </if-empty>        
+            <string-to-field string="CRQ_SUBMITTED" field-name="statusId" map-name="newEntity"/>
+        </if-empty>
         <create-value value-name="newEntity"/>
     </simple-method>
     <simple-method method-name="updateCustRequestItem" short-description="Update Customer Request Item">

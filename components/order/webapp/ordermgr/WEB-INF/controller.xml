@@ -247,6 +247,14 @@
     </request-map>
 
     <!-- Order Entry Requests -->
+    <request-map uri="initorderentry">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="checkinits"/>
+    </request-map>
+    <request-map uri="orderagreements">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="orderagreements"/>
+    </request-map>
     <request-map uri="orderentry">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="orderentry"/>
@@ -635,10 +643,81 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="LookupProduct"/>
     </request-map>
+    <request-map uri="LookupProductFeature">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="LookupProductFeature"/>
+    </request-map>
 
     <request-map uri="RequirementsForSupplier">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="RequirementsForSupplier"/>
+    </request-map>
+
+    <!-- =============== Quote mapping =================-->
+    <request-map uri="FindQuote">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindQuote"/>
+    </request-map>
+    <request-map uri="EditQuote">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditQuote"/>
+    </request-map>
+    <request-map uri="ListQuoteItems">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ListQuoteItems"/>
+    </request-map>
+    <request-map uri="EditQuoteItem">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditQuoteItem"/>
+    </request-map>
+    <request-map uri="ListQuoteAttributes">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ListQuoteAttributes"/>
+    </request-map>
+    <request-map uri="EditQuoteAttribute">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditQuoteAttribute"/>
+    </request-map>
+    
+    <request-map uri="createQuote">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createQuote"/>
+        <response name="success" type="view" value="EditQuote"/>
+    </request-map>
+    <request-map uri="updateQuote">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateQuote"/>
+        <response name="success" type="view" value="EditQuote"/>
+    </request-map>
+    <request-map uri="createQuoteItem">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createQuoteItem"/>
+        <response name="success" type="view" value="EditQuoteItem"/>
+    </request-map>
+    <request-map uri="updateQuoteItem">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateQuoteItem"/>
+        <response name="success" type="view" value="EditQuoteItem"/>
+    </request-map>
+    <request-map uri="removeQuoteItem">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="removeQuoteItem"/>
+        <response name="success" type="view" value="ListQuoteItems"/>
+    </request-map>
+    <request-map uri="createQuoteAttribute">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createQuoteAttribute"/>
+        <response name="success" type="view" value="EditQuoteAttribute"/>
+    </request-map>
+    <request-map uri="updateQuoteAttribute">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateQuoteAttribute"/>
+        <response name="success" type="view" value="EditQuoteAttribute"/>
+    </request-map>
+    <request-map uri="removeQuoteAttribute">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="removeQuoteAttribute"/>
+        <response name="success" type="view" value="ListQuoteAttributes"/>
     </request-map>
 
     <!-- end of request mappings -->
@@ -650,6 +729,7 @@
     <view-map name="LookupPerson" page="component://party/widget/partymgr/LookupScreens.xml#LookupPerson" type="screen"/>
     <view-map name="LookupPartyGroup" page="component://party/widget/partymgr/LookupScreens.xml#LookupPartyGroup" type="screen"/>
     <view-map name="LookupProduct" page="component://product/widget/catalog/LookupScreens.xml#LookupProduct" type="screen"/>
+    <view-map name="LookupProductFeature" page="component://product/widget/catalog/LookupScreens.xml#LookupProductFeature" type="screen"/>
     
     <view-map name="orderstats" type="jpublish" page="/order/orderstats.ftl"/>
     <view-map name="findorders" type="jpublish" page="/order/findOrders.ftl"/>
@@ -660,6 +740,8 @@
     <view-map name="receivepayment" type="jpublish" page="/order/receivepayment.ftl"/>
 
     <view-map name="orderentry" type="jpublish" page="/entry/orderentry.ftl"/>
+    <view-map name="checkinits" type="jpublish" page="/entry/checkinits.ftl"/>
+    <view-map name="orderagreements" type="jpublish" page="/entry/orderagreements.ftl"/>
     <view-map name="keywordsearch" type="jpublish" page="/entry/catalog/keywordsearch.ftl"/>
     <view-map name="advancedsearch" type="jpublish" page="/entry/catalog/advancedsearch.ftl"/>
     <view-map name="category" type="jpublish" page="/entry/catalog/category.ftl"/>
@@ -693,5 +775,14 @@
     <view-map name="OrderPurchaseReportProduct" type="screenfop" page="component://order/widget/ordermgr/ReportScreens.xml#OrderPurchaseReportProduct" content-type="application/pdf" encoding="none"/>
     
     <view-map name="RequirementsForSupplier" type="screen" page="component://order/widget/ordermgr/OrderEntryScreens.xml#RequirementsForSupplier"/>
+    
+    <view-map name="FindQuote" type="screen" page="component://order/widget/ordermgr/QuoteScreens.xml#FindQuote"/>
+    <view-map name="EditQuote" type="screen" page="component://order/widget/ordermgr/QuoteScreens.xml#EditQuote"/>
+    <view-map name="ListQuoteItems" type="screen" page="component://order/widget/ordermgr/QuoteScreens.xml#ListQuoteItems"/>
+    <view-map name="EditQuoteItem" type="screen" page="component://order/widget/ordermgr/QuoteScreens.xml#EditQuoteItem"/>
+    <view-map name="ListQuoteAttributes" type="screen" page="component://order/widget/ordermgr/QuoteScreens.xml#ListQuoteAttributes"/>
+    <view-map name="EditQuoteAttribute" type="screen" page="component://order/widget/ordermgr/QuoteScreens.xml#EditQuoteAttribute"/>
+
+
     <!-- end of view mappings -->
 </site-conf>
