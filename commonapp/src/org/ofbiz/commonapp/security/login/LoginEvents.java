@@ -591,6 +591,9 @@ public class LoginEvents {
         Debug.logInfo("Running getExternalLoginKey, externalLoginKeys.size=" + externalLoginKeys.size());
         GenericValue userLogin = (GenericValue) request.getAttribute("userLogin");
         
+        String externalKey = (String) request.getAttribute(EXTERNAL_LOGIN_KEY_ATTR);
+        if (externalKey != null) return externalKey;
+
         HttpSession session = request.getSession();
         synchronized (session) {
             // if the session has a previous key in place, remove it from the master list
@@ -602,9 +605,6 @@ public class LoginEvents {
             //check the userLogin here, after the old session setting is set so that it will always be cleared
             if (userLogin == null) return "";
             
-            String externalKey = (String) request.getAttribute(EXTERNAL_LOGIN_KEY_ATTR);
-            if (externalKey != null) return externalKey;
-
             //no key made yet for this request, create one
             while (externalKey == null || externalLoginKeys.containsKey(externalKey)) {
                 externalKey = "EL" + Long.toString(Math.round(Math.random() * 1000000)) + Long.toString(Math.round(Math.random() * 1000000));
