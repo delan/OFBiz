@@ -131,7 +131,8 @@
                 <%if (orderItemPriceInfos != null) pageContext.setAttribute("orderItemPriceInfos", orderItemPriceInfos);%>
                 <ofbiz:iterator name="orderItemPriceInfo" property="orderItemPriceInfos">
                     <tr>
-                        <td align="right" colspan="3"><div class="tabletext" style='font-size: xx-small;'><b><i>Price Rule</i>:</b> [<%=orderItemPriceInfo.getString("productPriceRuleId")%>:<%=orderItemPriceInfo.getString("productPriceActionSeqId")%>] <%=orderItemPriceInfo.getString("description")%></div></td>
+                        <td align="right" colspan="2"><div class="tabletext" style='font-size: xx-small;'><b><i>Price Rule</i>:</b> [<%=orderItemPriceInfo.getString("productPriceRuleId")%>:<%=orderItemPriceInfo.getString("productPriceActionSeqId")%>] <%=orderItemPriceInfo.getString("description")%></div></td>
+                        <td>&nbsp;</td>
                         <td align="right"><div class="tabletext" style='font-size: xx-small;'><%=UtilFormatOut.formatPrice(orderItemPriceInfo.getDouble("modifyAmount"))%></div></td>
                         <td>&nbsp;</td>
                         <td>&nbsp;</td>
