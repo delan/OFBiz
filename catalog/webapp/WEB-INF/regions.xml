@@ -55,6 +55,10 @@
         <put section='title'>Keyword Search</put>
         <put section='content' content='/find/keywordsearch.jsp'/>
     </define>
+    <define id='FindProductById' region='LEFT_ONLY_REGION'>
+        <put section='title'>Find Products by ID</put>
+        <put section='content' content='/find/FindProductById.jsp'/>
+    </define>
 
     <define id='ChooseTopCategory' region='LEFT_ONLY_REGION'>
         <put section='title'>Choose Top Category</put>

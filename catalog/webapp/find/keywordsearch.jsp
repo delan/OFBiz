@@ -28,6 +28,10 @@
 <%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.entity.*" %>
 <%@ page import="org.ofbiz.commonapp.product.product.*"%>
 
+<jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="request" />
+
+<%if (security.hasEntityPermission("CATALOG", "_VIEW", session)) {%>
+
 <%String searchCategoryId = request.getParameter("SEARCH_CATEGORY_ID");%>
 <%String searchOperator = request.getParameter("SEARCH_OPERATOR");%>
 <%if (!"AND".equalsIgnoreCase(searchOperator) && !"OR".equalsIgnoreCase(searchOperator)) { searchOperator = "OR"; }%>
@@ -110,3 +114,7 @@
     </tr>
 </table>
 </ofbiz:if>
+
+<%}else{%>
+  <h3>You do not have permission to view this page. ("CATALOG_VIEW" or "CATALOG_ADMIN" needed)</h3>
+<%}%>

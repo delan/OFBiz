@@ -74,6 +74,9 @@
     <request-map uri="keywordsearch"><security https="true" auth="true"/>
     	<response name="success" type="view" value="keywordsearch"/>
     </request-map>
+    <request-map uri="FindProductById"><security https="true" auth="true"/>
+    	<response name="success" type="view" value="FindProductById"/>
+    </request-map>
 
     <request-map uri="ChooseTopCategory"><security https="true" auth="true"/>
     	<response name="success" type="view" value="ChooseTopCategory"/>
@@ -634,6 +637,7 @@
 
     <view-map name="FastLoadCache" type="region"/>
     <view-map name="keywordsearch" type="region"/>
+    <view-map name="FindProductById" type="region"/>
     <view-map name="ChooseTopCategory" type="region"/>
 
     <view-map name="EditCategory" type="region"/>

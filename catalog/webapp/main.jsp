@@ -72,6 +72,12 @@
               </FORM>
               <DIV class='tabletext'>OR: <A href='<ofbiz:url>/EditProduct</ofbiz:url>' class='buttontext'>Create New Product</A></DIV>
             <BR>
+              <DIV class='tabletext'>Find Product with ID Value:</DIV>
+              <FORM method=POST action='<ofbiz:url>/FindProductById</ofbiz:url>' style='margin: 0;'>
+                <INPUT type=text size='20' maxlength='20' name='idValue' value=''>
+                <INPUT type=submit value='Find Product'>
+              </FORM>
+            <BR>
             <BR>
             <div><A href='<ofbiz:url>/UpdateAllKeywords</ofbiz:url>' class='buttontext'>Auto-Create Keywords for All Products</A></div>
             <div><A href='<ofbiz:url>/FastLoadCache</ofbiz:url>' class='buttontext'>Fast-Load Catalog into Cache</A></div>
