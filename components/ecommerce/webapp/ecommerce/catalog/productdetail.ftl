@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.13 $
+ *@version    $Revision: 1.14 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -182,19 +182,27 @@ ${requestAttributes.virtualJavaScript?if_exists}
         </#if>
       </form>
 
-      <#if shoppingLists?has_content>
+      <#if sessionAttributes.userLogin?has_content && sessionAttributes.userLogin.userLoginId != "anonymous">
         <hr class="sepbar">
-        <form name="addToShoppingList" method="post" action="<@ofbizUrl>/addItemToShoppingList</@ofbizUrl>">
+        <form name="addToShoppingList" method="post" action="<@ofbizUrl>/addItemToShoppingList<#if requestAttributes._CURRENT_VIEW_?exists>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>">
           <input type="hidden" name="productId" value="${requestParameters.product_id}">
+          <input type="hidden" name="product_id" value="${requestParameters.product_id}">
           <select name="shoppingListId" class="selectBox">
-            <#list shoppingLists as shoppingList>
-              <option value="${shoppingList.shoppingListId}">${shoppingList.listName}</option>
-            </#list>
+            <#if shoppingLists?has_content>
+              <#list shoppingLists as shoppingList>
+                <option value="${shoppingList.shoppingListId}">${shoppingList.listName}</option>
+              </#list>
+            </#if>
+            <option value="">---</option>
+            <option value="">${uiLabelMap.EcommerceNewShoppingList}</option>
           </select>
-          &nbsp;
+          &nbsp;&nbsp;
           <input type="text" size="5" class="inputBox" name="quantity" value="1">
           <a href="javascript:document.addToShoppingList.submit();" class="buttontext">[${uiLabelMap.EcommerceAddtoShoppingList}]</a>
         </form>
+      <#else>
+        ${uiLabelMap.EcommerceYouMust} <a href="<@ofbizUrl>/checkLogin/showcart</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonLogin}</a>
+        ${uiLabelMap.EcommerceToAddSelectedItemsToShoppingList}.&nbsp;
       </#if>
 
       <#-- Prefill first select box (virtual products only) -->

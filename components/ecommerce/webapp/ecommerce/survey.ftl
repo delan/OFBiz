@@ -20,15 +20,15 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      3.0
 -->
 
 <#-- Render the survey -->
 <#if requestAttributes.surveyWrapper?exists && requestAttributes.surveyAction?exists>
-  <#assign surveyAction = requestAttributes.surveyAction>
-  <#assign formAction = Static["org.ofbiz.content.webapp.control.RequestHandler"].makeUrl(request, response, surveyAction)>
-  ${requestAttributes.surveyWrapper.renderSurvey(formAction, null)}
+  <form method="post" action="<@ofbizUrl>${requestAttributes.surveyAction}</@ofbizUrl>" style="margin: 0;">
+    ${requestAttributes.surveyWrapper.renderSurvey()}
+  </form>
 <#else>
   <div class="head1">Nothing to do here. This must have been a mistake, sorry.</div>
 </#if>
