@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -22,22 +22,19 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-
 package org.ofbiz.core.calendar;
-
 
 import java.util.*;
 
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.util.*;
 
-
 /**
  * Recurrence Rule Object
  *
- * @author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
- * @created    November 6, 2001
- * @version    1.0
+ * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
+ * @version    $Revision$
+ * @since      2.0
  */
 public class RecurrenceRule {
     
@@ -123,9 +120,7 @@ public class RecurrenceRule {
         String freq = rule.getString("frequency");
 
         if (!checkFreq(freq))
-            throw new RecurrenceRuleException("Recurrence FREQUENCY is a required parameter.");
-        if (rule.get("untilDateTime") != null && rule.getLong("countNumber").longValue() > 0)
-            throw new RecurrenceRuleException("Recurrence cannot have both UNTIL and COUNT properties.");
+            throw new RecurrenceRuleException("Recurrence FREQUENCY is a required parameter.");       
         if (rule.getLong("intervalNumber").longValue() < 1)
             throw new RecurrenceRuleException("Recurrence INTERVAL must be a positive integer.");
 
@@ -414,7 +409,7 @@ public class RecurrenceRule {
                 String dayRule = (String) iter.next();
                 String dayString = getDailyString(dayRule);
 
-                if (cal.DAY_OF_WEEK == getCalendarDay(dayString)) {
+                if (Calendar.DAY_OF_WEEK == getCalendarDay(dayString)) {
                     if ((hasNumber(dayRule)) && (getFrequency() == MONTHLY || getFrequency() == YEARLY)) {
                         int modifier = getDailyNumber(dayRule);
 
@@ -626,7 +621,17 @@ public class RecurrenceRule {
     }
 
     public static RecurrenceRule makeRule(GenericDelegator delegator, int frequency, int interval, int count)
-        throws RecurrenceRuleException {
+            throws RecurrenceRuleException {
+        return makeRule(delegator, frequency, interval, count, 0);
+    }
+
+    public static RecurrenceRule makeRule(GenericDelegator delegator, int frequency, int interval, long endTime)
+            throws RecurrenceRuleException {
+        return makeRule(delegator, frequency, interval, -1, endTime);
+    }
+        
+    public static RecurrenceRule makeRule(GenericDelegator delegator, int frequency, int interval, int count, long endTime)
+            throws RecurrenceRuleException {
         String freq[] = {"", "SECONDLY", "MINUTELY", "HOURLY", "DAILY", "WEEKLY", "MONTHLY", "YEARLY"};
 
         if (frequency < 1 || frequency > 7)
@@ -643,6 +648,7 @@ public class RecurrenceRule {
             value.set("frequency", freqStr);
             value.set("intervalNumber", new Long(interval));
             value.set("countNumber", new Long(count));
+            value.set("untilDateTime", new java.sql.Timestamp(endTime));
             delegator.create(value);
             RecurrenceRule newRule = new RecurrenceRule(value);
 

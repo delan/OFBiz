@@ -107,7 +107,8 @@ public class JobManager {
         return poll.iterator();
     }
 
-    /** Schedule a job to start at a specific time with specific recurrence info
+    /** 
+     * Schedule a job to start at a specific time with specific recurrence info
      *@param loader The name of the local dispatcher to use
      *@param serviceName The name of the service to invoke
      *@param context The context for the service
@@ -117,7 +118,38 @@ public class JobManager {
      *@param count The number of times to repeat
      */
     public void schedule(String loader, String serviceName, Map context, long startTime,
-        int frequency, int interval, int count) throws JobManagerException {
+            int frequency, int interval, int count) throws JobManagerException {
+        schedule(loader, serviceName, context, startTime, frequency, interval, count, 0);
+    }
+    
+    /** 
+     * Schedule a job to start at a specific time with specific recurrence info
+     *@param loader The name of the local dispatcher to use
+     *@param serviceName The name of the service to invoke
+     *@param context The context for the service
+     *@param startTime The time in milliseconds the service should run
+     *@param frequency The frequency of the recurrence (HOURLY,DAILY,MONTHLY,etc)
+     *@param interval The interval of the frequency recurrence
+     *@param endTime The time in milliseconds the service should expire
+     */
+    public void schedule(String loader, String serviceName, Map context, long startTime,
+            int frequency, int interval, long endTime) throws JobManagerException {
+        schedule(loader, serviceName, context, startTime, frequency, interval, -1, endTime);
+    }    
+        
+    /** 
+     * Schedule a job to start at a specific time with specific recurrence info
+     *@param loader The name of the local dispatcher to use
+     *@param serviceName The name of the service to invoke
+     *@param context The context for the service
+     *@param startTime The time in milliseconds the service should run
+     *@param frequency The frequency of the recurrence (HOURLY,DAILY,MONTHLY,etc)
+     *@param interval The interval of the frequency recurrence
+     *@param count The number of times to repeat
+     *@param endTime The time in milliseconds the service should expire
+     */
+    public void schedule(String loader, String serviceName, Map context, long startTime,
+            int frequency, int interval, int count, long endTime) throws JobManagerException {
         String dataId = null;
         String infoId = null;
         String jobName = new String(new Long((new Date().getTime())).toString());

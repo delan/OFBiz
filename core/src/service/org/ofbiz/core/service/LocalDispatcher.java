@@ -190,22 +190,57 @@ public class LocalDispatcher {
      * @param frequency The frequency of the recurrence (RecurrenceRule.DAILY, etc).
      * @param interval The interval of the frequency recurrence.
      * @param count The number of times to repeat.
+     * @param endTime The time in milliseconds the service should expire
      * @throws GenericServiceException.
      */
-    public void schedule(String serviceName, Map context, long startTime, int frequency, int interval, int count)
-        throws GenericServiceException {
+    public void schedule(String serviceName, Map context, long startTime, int frequency, int interval, int count, long endTime)
+            throws GenericServiceException {
         try {
-            getJobManager().schedule(getName(), serviceName, context, startTime,
-                frequency, interval, count);
-            if (Debug.verboseOn()) Debug.logVerbose("[LocalDispatcher.schedule] : Current time: " + (new Date()).getTime(), module);
-            if (Debug.verboseOn()) Debug.logVerbose("[LocalDispatcher.schedule] : Runtime: " + startTime, module);
-            if (Debug.verboseOn()) Debug.logVerbose("[LocalDispatcher.schedule] : Frequency: " + frequency, module);
-            if (Debug.verboseOn()) Debug.logVerbose("[LocalDispatcher.schedule] : Interval: " + interval, module);
-            if (Debug.verboseOn()) Debug.logVerbose("[LocalDispatcher.schedule] : Count: " + count, module);
+            getJobManager().schedule(getName(), serviceName, context, startTime, frequency, interval, count, endTime);
+                
+            if (Debug.verboseOn()) {
+                Debug.logVerbose("[LocalDispatcher.schedule] : Current time: " + (new Date()).getTime(), module);
+                Debug.logVerbose("[LocalDispatcher.schedule] : Runtime: " + startTime, module);
+                Debug.logVerbose("[LocalDispatcher.schedule] : Frequency: " + frequency, module);
+                Debug.logVerbose("[LocalDispatcher.schedule] : Interval: " + interval, module);
+                Debug.logVerbose("[LocalDispatcher.schedule] : Count: " + count, module);
+                Debug.logVerbose("[LocalDispatcher.schedule] : EndTime: " + endTime, module);
+            }
+            
         } catch (JobManagerException e) {
             throw new GenericServiceException(e.getMessage(), e);
         }
     }
+    
+    /**
+     * Schedule a service to run asynchronously at a specific start time.
+     * @param serviceName Name of the service to invoke.
+     * @param context The name/value pairs composing the context.
+     * @param startTime The time to run this service.
+     * @param frequency The frequency of the recurrence (RecurrenceRule.DAILY, etc).
+     * @param interval The interval of the frequency recurrence.
+     * @param count The number of times to repeat.
+     * @throws GenericServiceException.
+     */
+    public void schedule(String serviceName, Map context, long startTime, int frequency, int interval, int count)
+            throws GenericServiceException {
+        schedule(serviceName, context, startTime, frequency, interval, count, 0);
+    }  
+    
+    /**
+     * Schedule a service to run asynchronously at a specific start time.
+     * @param serviceName Name of the service to invoke.
+     * @param context The name/value pairs composing the context.
+     * @param startTime The time to run this service.
+     * @param frequency The frequency of the recurrence (RecurrenceRule.DAILY, etc).
+     * @param interval The interval of the frequency recurrence.
+     * @param endTime The time in milliseconds the service should expire
+     * @throws GenericServiceException.
+     */
+    public void schedule(String serviceName, Map context, long startTime, int frequency, int interval, long endTime)
+            throws GenericServiceException {
+        schedule(serviceName, context, startTime, frequency, interval, -1, endTime);
+    }      
 
     /**
      * Schedule a service to run asynchronously at a specific start time.

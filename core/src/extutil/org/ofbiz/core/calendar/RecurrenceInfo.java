@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -22,22 +22,19 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-
 package org.ofbiz.core.calendar;
-
 
 import java.util.*;
 
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.util.*;
 
-
 /**
  * Recurrence Info Object
  *
  * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
- * @created    November 6, 2001
- * @version    1.0
+ * @version    $Revision$
+ * @since      2.0
  */
 public class RecurrenceInfo {
     
@@ -270,11 +267,21 @@ public class RecurrenceInfo {
     public String primaryKey() {
         return info.getString("recurrenceInfoId");
     }
+    
+    public static RecurrenceInfo makeInfo(GenericDelegator delegator, long startTime, int frequency,
+            int interval, int count) throws RecurrenceInfoException {
+        return makeInfo(delegator, startTime, frequency, interval, count, 0);
+    }
 
     public static RecurrenceInfo makeInfo(GenericDelegator delegator, long startTime, int frequency,
-        int interval, int count) throws RecurrenceInfoException {
+            int interval, long endTime) throws RecurrenceInfoException {
+        return makeInfo(delegator, startTime, frequency, interval, -1, endTime);
+    }
+
+    public static RecurrenceInfo makeInfo(GenericDelegator delegator, long startTime, int frequency,
+            int interval, int count, long endTime) throws RecurrenceInfoException {
         try {
-            RecurrenceRule r = RecurrenceRule.makeRule(delegator, frequency, interval, count);
+            RecurrenceRule r = RecurrenceRule.makeRule(delegator, frequency, interval, count, endTime);
             String ruleId = r.primaryKey();
             String infoId = delegator.getNextSeqId("RecurrenceInfo").toString();
             GenericValue value = delegator.makeValue("RecurrenceInfo", UtilMisc.toMap("recurrenceInfoId", infoId));
