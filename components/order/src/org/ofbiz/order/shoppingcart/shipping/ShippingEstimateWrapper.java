@@ -1,5 +1,5 @@
 /*
- * $Id: ShippingEstimateWrapper.java,v 1.1 2004/08/12 02:18:13 ajzeneski Exp $
+ * $Id: ShippingEstimateWrapper.java,v 1.2 2004/08/13 18:57:03 ajzeneski Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -39,7 +39,7 @@ import org.ofbiz.service.LocalDispatcher;
 /**
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.2
  */
 public class ShippingEstimateWrapper {
@@ -55,6 +55,7 @@ public class ShippingEstimateWrapper {
     protected GenericValue shippingAddress = null;
     protected Map shippableItemFeatures = null;
     protected List shippableItemSizes = null;
+    protected List shippableItemInfo = null;
     protected String productStoreId = null;
     protected double shippableQuantity = 0;
     protected double shippableWeight = 0;
@@ -66,6 +67,7 @@ public class ShippingEstimateWrapper {
 
         this.shippableItemFeatures = cart.getFeatureIdQtyMap();
         this.shippableItemSizes = cart.getShippableSizes();
+        this.shippableItemInfo = cart.getShippableItemInfo();
         this.productStoreId = cart.getProductStoreId();
         this.shippableQuantity = cart.getShippableQuantity();
         this.shippableWeight = cart.getShippableWeight();
@@ -98,7 +100,7 @@ public class ShippingEstimateWrapper {
 
                 Map estimateMap = ShippingEvents.getShipEstimate(dispatcher, delegator, "SALES_ORDER",
                         shippingMethodTypeId, carrierPartyId, carrierRoleTypeId, shippingCmId, productStoreId,
-                        shippableItemSizes, shippableItemFeatures, shippableWeight, shippableQuantity, shippableTotal);
+                        shippableItemInfo, shippableWeight, shippableQuantity, shippableTotal);
 
                 Double shippingTotal = (Double) estimateMap.get("shippingTotal");
                 shippingEstimates.put(shipMethod, shippingTotal);

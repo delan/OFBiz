@@ -1,5 +1,5 @@
 /*
- * $Id: ShipmentServices.java,v 1.6 2004/08/12 21:33:33 ajzeneski Exp $
+ * $Id: ShipmentServices.java,v 1.7 2004/08/13 18:57:03 ajzeneski Exp $
  *
  *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -30,6 +30,8 @@ import java.util.Map;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.TreeMap;
+import java.util.LinkedList;
+import java.util.Set;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.StringUtil;
@@ -48,7 +50,7 @@ import org.ofbiz.common.geo.GeoWorker;
  * ShipmentServices
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.6 $
+ * @version    $Revision: 1.7 $
  * @since      2.0
  */
 public class ShipmentServices {
@@ -184,8 +186,9 @@ public class ShipmentServices {
         String shipmentMethodTypeId = (String) context.get("shipmentMethodTypeId");
         String shippingContactMechId = (String) context.get("shippingContactMechId");
 
-        Map shippableFeatureMap = (Map) context.get("shippableFeatureMap");
-        List shippableItemSizes = (List) context.get("shippableItemSizes");
+        List shippableItemInfo = (List) context.get("shippableItemInfo");
+        //Map shippableFeatureMap = (Map) context.get("shippableFeatureMap");
+        //List shippableItemSizes = (List) context.get("shippableItemSizes");
 
         Double shippableTotal = (Double) context.get("shippableTotal");
         Double shippableQuantity = (Double) context.get("shippableQuantity");
@@ -330,6 +333,39 @@ public class ShipmentServices {
 
         if (estimateList.size() < 1) {
             return ServiceUtil.returnError("No shipping estimate found");
+        }
+
+        // make the shippable item size/feature objects
+        List shippableItemSizes = new LinkedList();
+        Map shippableFeatureMap = new HashMap();
+        if (shippableItemInfo != null) {
+            Iterator sii = shippableItemInfo.iterator();
+            while (sii.hasNext()) {
+                Map itemMap = (Map) sii.next();
+
+                // add the item sizes
+                Double itemSize = (Double) itemMap.get("size");
+                if (itemSize != null) {
+                    shippableItemSizes.add(itemSize);
+                }
+
+                // add the feature quantities
+                Double quantity = (Double) itemMap.get("quantity");
+                Set featureSet = (Set) itemMap.get("featureSet");
+                if (featureSet != null && featureSet.size() > 0) {
+                    Iterator fi = featureSet.iterator();
+                    while (fi.hasNext()) {
+                        String featureId = (String) fi.next();
+                        Double featureQuantity = (Double) shippableFeatureMap.get(featureId);
+                        if (featureQuantity == null) {
+                            featureQuantity = new Double(0.00);
+                        }
+                        featureQuantity = new Double(featureQuantity.doubleValue() + quantity.doubleValue());
+                        shippableFeatureMap.put(featureId, featureQuantity);
+                    }
+                }
+
+            }
         }
 
         // Calculate priority based on available data.

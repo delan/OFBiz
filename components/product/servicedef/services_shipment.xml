@@ -408,8 +408,7 @@
         <attribute name="carrierPartyId" type="String" mode="IN" optional="false"/>
         <attribute name="carrierRoleTypeId" type="String" mode="IN" optional="false"/>
         <attribute name="productStoreId" type="String" mode="IN" optional="false"/>
-        <attribute name="shippableItemSizes" type="List" mode="IN" optional="false"/>
-        <attribute name="shippableFeatureMap" type="Map" mode="IN" optional="false"/>
+        <attribute name="shippableItemInfo" type="List" mode="IN" optional="false"/>        
         <attribute name="shippableWeight" type="Double" mode="IN" optional="false"/>
         <attribute name="shippableQuantity" type="Double" mode="IN" optional="false"/>
         <attribute name="shippableTotal" type="Double" mode="IN" optional="false"/>

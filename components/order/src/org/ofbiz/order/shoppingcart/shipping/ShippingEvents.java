@@ -1,5 +1,5 @@
 /*
- * $Id: ShippingEvents.java,v 1.13 2004/08/12 21:33:34 ajzeneski Exp $
+ * $Id: ShippingEvents.java,v 1.14 2004/08/13 18:57:03 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -35,7 +35,6 @@ import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.entity.GenericDelegator;
-import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.order.order.OrderReadHelper;
 import org.ofbiz.order.shoppingcart.ShoppingCart;
@@ -49,7 +48,7 @@ import org.ofbiz.product.store.ProductStoreWorker;
  * ShippingEvents - Events used for processing shipping fees
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.13 $
+ * @version    $Revision: 1.14 $
  * @since      2.0
  */
 public class ShippingEvents {
@@ -96,9 +95,8 @@ public class ShippingEvents {
             carrierPartyId = cart.getCarrierPartyId();
         }
         return getShipEstimate(dispatcher, delegator, cart.getOrderType(), shipmentMethodTypeId, carrierPartyId, null,
-                cart.getShippingContactMechId(), cart.getProductStoreId(), cart.getShippableSizes(),
-                cart.getFeatureIdQtyMap(), cart.getShippableWeight(), cart.getShippableQuantity(),
-                cart.getShippableTotal());
+                cart.getShippingContactMechId(), cart.getProductStoreId(), cart.getShippableItemInfo(),
+                cart.getShippableWeight(), cart.getShippableQuantity(), cart.getShippableTotal());
     }
 
     public static Map getShipEstimate(LocalDispatcher dispatcher, GenericDelegator delegator, OrderReadHelper orh) {
@@ -115,13 +113,13 @@ public class ShippingEvents {
         GenericValue shipAddr = orh.getShippingAddress();
         String contactMechId = shipAddr.getString("contactMechId");
         return getShipEstimate(dispatcher, delegator, orh.getOrderTypeId(), shipmentMethodTypeId, carrierPartyId, null,
-                contactMechId, orh.getProductStoreId(), orh.getShippableSizes(), orh.getFeatureIdQtyMap(),
-                orh.getShippableWeight(), orh.getShippableQuantity(), orh.getShippableTotal());
+                contactMechId, orh.getProductStoreId(), orh.getShippableItemInfo(), orh.getShippableWeight(),
+                orh.getShippableQuantity(), orh.getShippableTotal());
     }
 
     public static Map getShipEstimate(LocalDispatcher dispatcher, GenericDelegator delegator, String orderTypeId,
             String shipmentMethodTypeId, String carrierPartyId, String carrierRoleTypeId, String shippingContactMechId,
-            String productStoreId, List itemSizes, Map featureMap, double shippableWeight, double shippableQuantity,
+            String productStoreId, List itemInfo, double shippableWeight, double shippableQuantity,
             double shippableTotal) {
         String standardMessage = "A problem occurred calculating shipping. Fees will be calculated offline.";
         List errorMessageList = new ArrayList();
@@ -168,9 +166,8 @@ public class ShippingEvents {
         serviceFields.put("initialEstimateAmt", new Double(shippingTotal));
         serviceFields.put("shippableTotal", new Double(shippableTotal));
         serviceFields.put("shippableQuantity", new Double(shippableQuantity));
-        serviceFields.put("shippableWeight", new Double(shippableWeight));
-        serviceFields.put("shippableFeatureMap", featureMap);
-        serviceFields.put("shippableItemSizes", itemSizes);
+        serviceFields.put("shippableWeight", new Double(shippableWeight));        
+        serviceFields.put("shippableItemInfo", itemInfo);
         serviceFields.put("productStoreId", productStoreId);
         serviceFields.put("carrierRoleTypeId", "CARRIER");
         serviceFields.put("carrierPartyId", carrierPartyId);
