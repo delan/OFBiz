@@ -1,5 +1,5 @@
 /*
- * $Id: ContentServices.java,v 1.13 2003/12/23 07:24:05 jonesde Exp $
+ * $Id: ContentServices.java,v 1.14 2003/12/30 05:44:33 byersa Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -54,7 +54,7 @@ import org.ofbiz.service.ServiceUtil;
  * ContentServices Class
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.13 $
+ * @version $Revision: 1.14 $
  * @since 2.2
  * 
  *  
@@ -228,6 +228,7 @@ public class ContentServices {
             }
             result.put("contentId", contentId);
         }
+        context.remove("currentContent");
         return result;
     }
 
@@ -241,7 +242,16 @@ public class ContentServices {
         targetOperations.add("CREATE_CONTENT");
         context.put("targetOperationList", targetOperations);
         context.put("skipPermissionCheck", null);
-        Map result = createContentAssocMethod(dctx, context);
+        Map result = null;
+        try {
+            result = createContentAssocMethod(dctx, context);
+        } catch (GenericServiceException e) {
+            return ServiceUtil.returnError(e.getMessage());
+        } catch (GenericEntityException e2) {
+            return ServiceUtil.returnError(e2.getMessage());
+        } catch (Exception e3) {
+            return ServiceUtil.returnError(e3.getMessage());
+        }
         return result;
     }
 
@@ -249,7 +259,7 @@ public class ContentServices {
      * Create a ContentAssoc method. The work is done in this separate method so that complex services that need this functionality do not need to incur the
      * reflection performance penalty.
      */
-    public static Map createContentAssocMethod(DispatchContext dctx, Map context) {
+    public static Map createContentAssocMethod(DispatchContext dctx, Map context) throws GenericServiceException, GenericEntityException {
         Map result = new HashMap();
         GenericDelegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
@@ -338,21 +348,12 @@ public class ContentServices {
         serviceInMap.put("contentIdTo", contentIdTo);
         serviceInMap.put("contentIdFrom", contentIdFrom);
         Map permResults = null;
-        try {
-            permResults = dispatcher.runSync("checkAssocPermission", serviceInMap);
-        } catch (GenericServiceException e) {
-            Debug.logError(e, "Problem checking permissions", "ContentServices");
-            return ServiceUtil.returnError("Problem checking association permissions");
-        }
+        permResults = dispatcher.runSync("checkAssocPermission", serviceInMap);
         permissionStatus = (String) permResults.get("permissionStatus");
 
         //Debug.logInfo("CREATING CONTENTASSOC:" + contentAssoc, null);
         if (permissionStatus != null && permissionStatus.equals("granted")) {
-            try {
-                contentAssoc.create();
-            } catch (GenericEntityException e) {
-                return ServiceUtil.returnError(e.getMessage());
-            }
+            contentAssoc.create();
         }
         result.put("contentIdTo", contentIdTo);
         result.put("contentIdFrom", contentIdFrom);
