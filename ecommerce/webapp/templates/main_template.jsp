@@ -2,10 +2,10 @@
 <%@ include file="/includes/envsetup.jsp" %>
 <%@ taglib uri='regions' prefix='region' %>
 
-<%@page contentType='text/html; charset=UTF-8'%>
-
 <html>
 <head>
+    <%@page contentType='text/html; charset=UTF-8'%>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title><%EntityField.run("layoutSettings", "companyName", pageContext);%>: <region:render section='title'/></title>
     <link rel="stylesheet" href="<%=request.getContextPath()%>/includes/maincss.css" type="text/css">
 </head>

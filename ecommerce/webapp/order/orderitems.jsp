@@ -31,8 +31,6 @@
  */
 %>
 <%double total = 0.0;%>
-<%String controlPath = (String) request.getAttribute(SiteDefs.CONTROL_PATH);%>
-<%String serverRoot = (String) request.getAttribute(SiteDefs.SERVER_ROOT_URL);%>
 
 <TABLE border=0 width='100%' cellpadding='<%EntityField.run("layoutSettings", "boxBorderWidth", pageContext);%>' cellspacing=0 bgcolor='<%EntityField.run("layoutSettings", "boxBorderColor", pageContext);%>'>
   <TR>

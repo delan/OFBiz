@@ -28,6 +28,7 @@
  */
 %>
 
+<%@ include file="/includes/envsetup.jsp" %>
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 
 <%@ page import="java.util.*" %>
@@ -40,10 +41,6 @@
 <%@ page import="org.ofbiz.commonapp.order.order.*" %>
 <%@ page import="org.ofbiz.commonapp.party.contact.ContactHelper" %>
 <%@ page import="org.ofbiz.commonapp.party.party.PartyHelper" %>
-<jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" />
-<ofbiz:object name="person" property="person" type="org.ofbiz.core.entity.GenericValue" />  
-
-<% pageContext.setAttribute("PageName", "confirmorder");%>
 
 <html>
   <head>
@@ -80,7 +77,7 @@
 <ofbiz:if name="orderHeader">
 <h1><div class="head1">Order Confirmation</div></h1>
 <p>NOTE: This is a DEMO store-front.  Orders placed here will NOT be billed, and will NOT be fulfilled.</p>
-<div class="tabletext">Thank you for shopping at <%=companyName%> online. Don't forget to stop back for more great deals, contests, new store openings and specials.<br></div>
+<div class="tabletext">Thank you for shopping at <%EntityField.run("layoutSettings", "companyName", pageContext);%> online. Don't forget to stop back for more great deals, contests, new store openings and specials.<br></div>
 </ofbiz:if>
 <ofbiz:if name="orderHeader">
     <%

@@ -41,6 +41,8 @@
 <%@ page import="org.ofbiz.commonapp.party.party.PartyHelper" %>
 <jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" />
 <ofbiz:object name="person" property="person" type="org.ofbiz.core.entity.GenericValue" />  
+<%String controlPath = (String) request.getAttribute(SiteDefs.CONTROL_PATH);%>
+<%String serverRoot = (String) request.getAttribute(SiteDefs.SERVER_ROOT_URL);%>
 
 <p class="head1">Final Checkout Review</p>
 <p>NOTE: This is a DEMO store-front.  Orders placed here will NOT be billed, and will NOT be fulfilled.</p>

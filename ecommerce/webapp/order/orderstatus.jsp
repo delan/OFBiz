@@ -44,6 +44,8 @@
 <jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" />
 <ofbiz:object name="person" property="person" type="org.ofbiz.core.entity.GenericValue" />  
 <ofbiz:object name="userLogin" property="userLogin" type="org.ofbiz.core.entity.GenericValue" />  
+<%String controlPath = (String) request.getAttribute(SiteDefs.CONTROL_PATH);%>
+<%String serverRoot = (String) request.getAttribute(SiteDefs.SERVER_ROOT_URL);%>
 
 <%
   String orderId = request.getParameter("order_id");
