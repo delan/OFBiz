@@ -46,6 +46,7 @@ public class OrderReadHelper {
     protected Collection adjustments = null;
     protected Collection paymentPrefs = null;
     protected Collection orderStatuses = null;
+    protected Collection orderItemPriceInfos = null;
     protected Double totalPrice = null;
 
     protected OrderReadHelper() {
@@ -66,6 +67,20 @@ public class OrderReadHelper {
         return (List) orderItems;
     }
 
+    public Collection getOrderItemPriceInfos(GenericValue orderItem) {
+        if (orderItem == null) return null;
+        if (this.orderItemPriceInfos == null) {
+            GenericDelegator delegator = orderHeader.getDelegator();
+            try {
+                orderItemPriceInfos = delegator.findByAnd("OrderItemPriceInfo", UtilMisc.toMap("orderId", orderHeader.get("orderId")));
+            } catch (GenericEntityException e) {
+                Debug.logWarning(e);
+            }
+        }
+        String orderItemSeqId = orderItem.getString("orderItemSeqId");
+        return EntityUtil.filterByAnd(this.orderItemPriceInfos, UtilMisc.toMap("orderItemSeqId", orderItemSeqId));
+    }
+    
     public List getAdjustments() {
         if (adjustments == null) {
             try {

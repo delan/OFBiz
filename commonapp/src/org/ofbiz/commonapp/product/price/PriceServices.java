@@ -70,10 +70,10 @@ public class PriceServices {
         String productId = product.getString("productId");
         String prodCatalogId = (String) context.get("prodCatalogId");
 
-        //if currency uom is null, assume CUR_USD (USD: American Dollar) for now
+        //if currency uom is null, assume USD (USD: American Dollar) for now
         String currencyUomId = (String) context.get("currencyUomId");
         if (currencyUomId == null || currencyUomId.length() == 0) {
-            currencyUomId = "CUR_USD";
+            currencyUomId = "USD";
         }
 
         //if this product is variant, find the virtual product and apply checks to it as well
@@ -102,31 +102,72 @@ public class PriceServices {
         Double quantityDbl = (Double) context.get("quantity");
         if (quantityDbl == null) quantityDbl = new Double(1.0);
         double quantity = quantityDbl.doubleValue();
-        double defaultPrice = product.get("defaultPrice") != null ? product.getDouble("defaultPrice").doubleValue() : 0;
         
-        Double listPriceDbl = product.getDouble("listPrice");
+        //for prices, get all ProductPrice entities for this productId and currencyUomId
+        Collection productPrices = null;
+        try {
+            productPrices = delegator.findByAndCache("ProductPrice", UtilMisc.toMap("productId", productId, "currencyUomId", currencyUomId), UtilMisc.toList("-fromDate"));
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "An error occurred while getting the product prices", module);
+        }
+        productPrices = EntityUtil.filterByDate(productPrices);
+       
+        //get the prices we need: list, default, average cost, min, max
+        Collection listPrices = EntityUtil.filterByAnd(productPrices, UtilMisc.toMap("productPriceTypeId", "LIST_PRICE"));
+        GenericValue listPriceValue = EntityUtil.getFirst(productPrices);
+        if (listPrices != null && listPrices.size() > 1) {
+            Debug.logWarning("There is more than one LIST_PRICE with the currencyUomId " + currencyUomId + " and productId " + productId + ", using the latest found with price: " + listPriceValue.getDouble("price"));
+        }
+        
+        Collection defaultPrices = EntityUtil.filterByAnd(productPrices, UtilMisc.toMap("productPriceTypeId", "DEFAULT_PRICE"));
+        GenericValue defaultPriceValue = EntityUtil.getFirst(productPrices);
+        if (defaultPrices != null && defaultPrices.size() > 1) {
+            Debug.logWarning("There is more than one DEFAULT_PRICE with the currencyUomId " + currencyUomId + " and productId " + productId + ", using the latest found with price: " + defaultPriceValue.getDouble("price"));
+        }
+        
+        Collection averageCosts = EntityUtil.filterByAnd(productPrices, UtilMisc.toMap("productPriceTypeId", "AVERAGE_COST"));
+        GenericValue averageCostValue = EntityUtil.getFirst(averageCosts);
+        if (averageCosts != null && averageCosts.size() > 1) {
+            Debug.logWarning("There is more than one AVERAGE_COST with the currencyUomId " + currencyUomId + " and productId " + productId + ", using the latest found with price: " + averageCostValue.getDouble("price"));
+        }
+        
+        Collection minimumPrices = EntityUtil.filterByAnd(productPrices, UtilMisc.toMap("productPriceTypeId", "MINIMUM_PRICE"));
+        GenericValue minimumPriceValue = EntityUtil.getFirst(minimumPrices);
+        if (minimumPrices != null && minimumPrices.size() > 1) {
+            Debug.logWarning("There is more than one MINIMUM_PRICE with the currencyUomId " + currencyUomId + " and productId " + productId + ", using the latest found with price: " + minimumPriceValue.getDouble("price"));
+        }
+        
+        Collection maximumPrices = EntityUtil.filterByAnd(productPrices, UtilMisc.toMap("productPriceTypeId", "MAXIMUM_PRICE"));
+        GenericValue maximumPriceValue = EntityUtil.getFirst(maximumPrices);
+        if (maximumPrices != null && maximumPrices.size() > 1) {
+            Debug.logWarning("There is more than one MAXIMUM_PRICE with the currencyUomId " + currencyUomId + " and productId " + productId + ", using the latest found with price: " + maximumPriceValue.getDouble("price"));
+        }
+        
+        double defaultPrice = (defaultPriceValue != null && defaultPriceValue.get("price") != null) ? defaultPriceValue.getDouble("price").doubleValue() : 0;
+        
+        Double listPriceDbl = listPriceValue != null ? listPriceValue.getDouble("price") : null;
         if (listPriceDbl == null) {
             //no list price, use defaultPrice for the final price
             
             // ========= ensure calculated price is not below minSalePrice or above maxSalePrice =========
-            Double maxSellPrice = product.getDouble("maxSellPrice");
+            Double maxSellPrice = maximumPriceValue != null ? maximumPriceValue.getDouble("price") : null;
             if (maxSellPrice != null && defaultPrice > maxSellPrice.doubleValue()) {
                 defaultPrice = maxSellPrice.doubleValue();
             }
             //min price second to override max price, safety net
-            Double minSellPrice = product.getDouble("minSellPrice");
+            Double minSellPrice = minimumPriceValue != null ? minimumPriceValue.getDouble("price") : null;
             if (minSellPrice != null && defaultPrice < minSellPrice.doubleValue()) {
                 defaultPrice = minSellPrice.doubleValue();
             }
             
             result.put("price", new Double(defaultPrice));
             result.put("defaultPrice", new Double(defaultPrice));
-            result.put("averageCost", product.get("averageCostPrice"));
+            result.put("averageCost", averageCostValue != null ? averageCostValue.getDouble("price") : null);
         } else {
             try {
                 //get some of the base values to calculate with
                 double listPrice = listPriceDbl.doubleValue();
-                double averageCostPrice = product.get("averageCostPrice") != null ? product.getDouble("averageCostPrice").doubleValue() : listPrice;
+                double averageCostPrice = (averageCostValue != null && averageCostValue.get("price") != null) ? averageCostValue.getDouble("price").doubleValue() : listPrice;
                 double margin = listPrice - averageCostPrice;
                 
                 //calculate running sum based on listPrice and rules found
@@ -136,7 +177,7 @@ public class PriceServices {
                 //utilTimer.timerString("Before create rule id list", module);
                 TreeSet productPriceRuleIds = new TreeSet();
 
-                // ------- These are all of them that DON'T depend on the current inputs -------
+                // ------- These are all of the conditions that DON'T depend on the current inputs -------
 
                 //by productCategoryId
                 // for we will always include any rules that go by category, shouldn't be too many to iterate through each time and will save on cache entries
@@ -179,6 +220,17 @@ public class PriceServices {
                 //TODO, not supported yet: by partyClassificationGroupId
                 //later: (by partyClassificationTypeId)
 
+                //by listPrice
+                Collection listPriceConds = delegator.findByAndCache("ProductPriceCond", 
+                        UtilMisc.toMap("inputParamEnumId", "PRIP_LIST_PRICE"));
+                if (listPriceConds != null && listPriceConds.size() > 0) {
+                    Iterator listPriceCondsIter = listPriceConds.iterator();
+                    while (listPriceCondsIter.hasNext()) {
+                        GenericValue listPriceCond = (GenericValue) listPriceCondsIter.next();
+                        productPriceRuleIds.add(listPriceCond.getString("productPriceRuleId"));
+                    }
+                }
+                
                 // ------- These are all of them that DO depend on the current inputs -------
 
                 //by productId
@@ -260,10 +312,10 @@ public class PriceServices {
                         GenericValue productPriceCond = (GenericValue) productPriceCondsIter.next();
                         totalConds++;
                         
-                        if (!checkPriceCondition(productPriceCond, productId, prodCatalogId, partyId, quantity, delegator)) {
+                        if (!checkPriceCondition(productPriceCond, productId, prodCatalogId, partyId, quantity, listPrice, delegator)) {
                             //if there is a virtualProductId, try that given that this one has failed
                             if (virtualProductId != null) {
-                                if (!checkPriceCondition(productPriceCond, virtualProductId, prodCatalogId, partyId, quantity, delegator)) {
+                                if (!checkPriceCondition(productPriceCond, virtualProductId, prodCatalogId, partyId, quantity, listPrice, delegator)) {
                                     allTrue = false;
                                     break;
                                 }
@@ -278,10 +330,10 @@ public class PriceServices {
                         condsDescription.append("[");
                         GenericValue inputParamEnum = productPriceCond.getRelatedOneCache("InputParamEnumeration");
                         condsDescription.append(inputParamEnum.getString("enumCode"));
-                        condsDescription.append(":");
+                        //condsDescription.append(":");
                         GenericValue operatorEnum = productPriceCond.getRelatedOneCache("OperatorEnumeration");
-                        condsDescription.append(operatorEnum.getString("enumCode"));
-                        condsDescription.append(":");
+                        condsDescription.append(operatorEnum.getString("description"));
+                        //condsDescription.append(":");
                         condsDescription.append(productPriceCond.getString("condValue"));
                         condsDescription.append("] ");
                     }
@@ -388,12 +440,12 @@ public class PriceServices {
                 }
 
                 // ========= ensure calculated price is not below minSalePrice or above maxSalePrice =========
-                Double maxSellPrice = product.getDouble("maxSellPrice");
+                Double maxSellPrice = maximumPriceValue != null ? maximumPriceValue.getDouble("price") : null;
                 if (maxSellPrice != null && price > maxSellPrice.doubleValue()) {
                     price = maxSellPrice.doubleValue();
                 }
                 //min price second to override max price, safety net
-                Double minSellPrice = product.getDouble("minSellPrice");
+                Double minSellPrice = minimumPriceValue != null ? minimumPriceValue.getDouble("price") : null;
                 if (minSellPrice != null && price < minSellPrice.doubleValue()) {
                     price = minSellPrice.doubleValue();
                 }
@@ -417,7 +469,7 @@ public class PriceServices {
     }
 
     public static boolean checkPriceCondition(GenericValue productPriceCond, String productId, String prodCatalogId, 
-            String partyId, double quantity, GenericDelegator delegator) throws GenericEntityException {
+            String partyId, double quantity, double listPrice, GenericDelegator delegator) throws GenericEntityException {
         Debug.logVerbose("Checking price condition: " + productPriceCond, module);
         int compare = 0;
         
@@ -464,6 +516,9 @@ public class PriceServices {
             } else {
                 compare = 1;
             }
+        } else if ("PRIP_LIST_PRICE".equals(productPriceCond.getString("inputParamEnumId"))) {
+            Double listPriceValue = new Double(listPrice);
+            compare = listPriceValue.compareTo(Double.valueOf(productPriceCond.getString("condValue")));
         } else {
             Debug.logWarning("An un-supported productPriceCond input parameter (lhs) was used: " + productPriceCond.getString("inputParamEnumId") + ", returning false, ie check failed", module);
             return false;

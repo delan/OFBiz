@@ -1,7 +1,4 @@
-<%
-/**
- *  Title: Order Status Page
- *  Description: None
+<%--
  *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
@@ -27,9 +24,7 @@
  *@author     Andy Zeneski
  *@created    May 22 2001 
  *@version    1.0
- */
-%>
-<%-- FIXME add status history --%>
+--%>
 <%@ page import="java.util.*, java.text.*" %>
 
 <%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.security.*, org.ofbiz.core.entity.*" %>

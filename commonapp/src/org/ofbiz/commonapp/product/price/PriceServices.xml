@@ -1,7 +1,77 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE simple-methods PUBLIC "-//OFBiz//DTD Simple Methods//EN" "http://www.ofbiz.org/dtds/simple-methods.dtd">
 
+<!--
+ * Copyright (c) 2001 The Open For Business Project and repective authors.
+ * Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ * @version 1.0
+ * Created on April 2, 2002
+ -->
 <simple-methods>
+
+    <!-- ProductPrice methods -->
+    <simple-method method-name="createProductPrice" short-description="Create an ProductPrice">
+        <check-permission permission="CATALOG" action="_CREATE"><fail-message message="Security Error: to run createProductPrice you must have the CATALOG_CREATE or CATALOG_ADMIN permission"/></check-permission>
+        <check-errors/>
+
+        <make-value value-name="newEntity" entity-name="ProductPrice"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+        <set-pk-fields map-name="parameters" value-name="newEntity"/>
+
+        <create-value value-name="newEntity"/>
+
+        <!-- this is for the ecommerce cache of prices for a product, findByAnd by productId -->
+        <field-to-field field-name="productId" map-name="parameters" to-map-name="cacheClearMap"/>
+        <field-to-field field-name="currencyUomId" map-name="parameters" to-map-name="cacheClearMap"/>
+        <clear-cache-line entity-name="ProductPrice" map-name="cacheClearMap"/>
+    </simple-method>
+    <simple-method method-name="updateProductPrice" short-description="Update an ProductPrice">
+        <check-permission permission="CATALOG" action="_UPDATE"><fail-message message="Security Error: to run updateProductPrice you must have the CATALOG_UPDATE or CATALOG_ADMIN permission"/></check-permission>
+        <check-errors/>
+
+        <make-value entity-name="ProductPrice" value-name="lookupPKMap"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="ProductPrice" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
+        <store-value value-name="lookedUpValue"/>
+
+        <!-- this is for the ecommerce cache of prices for a product, findByAnd by productId -->
+        <field-to-field field-name="productId" map-name="parameters" to-map-name="cacheClearMap"/>
+        <field-to-field field-name="currencyUomId" map-name="parameters" to-map-name="cacheClearMap"/>
+        <clear-cache-line entity-name="ProductPrice" map-name="cacheClearMap"/>
+    </simple-method>
+    <simple-method method-name="deleteProductPrice" short-description="Delete an ProductPrice">
+        <check-permission permission="CATALOG" action="_DELETE"><fail-message message="Security Error: to run deleteProductPrice you must have the CATALOG_DELETE or CATALOG_ADMIN permission"/></check-permission>
+        <check-errors/>
+
+        <make-value entity-name="ProductPrice" value-name="lookupPKMap"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="ProductPrice" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <remove-value value-name="lookedUpValue"/>
+
+        <!-- this is for the ecommerce cache of prices for a product, findByAnd by productId -->
+        <field-to-field field-name="productId" map-name="parameters" to-map-name="cacheClearMap"/>
+        <field-to-field field-name="currencyUomId" map-name="parameters" to-map-name="cacheClearMap"/>
+        <clear-cache-line entity-name="ProductPrice" map-name="cacheClearMap"/>
+    </simple-method>
 
     <!-- ProductPriceRule methods -->
     <simple-method method-name="createProductPriceRule" short-description="Create an ProductPriceRule">
@@ -13,9 +83,7 @@
         <set-pk-fields map-name="parameters" value-name="newEntity"/>
 
         <create-value value-name="newEntity"/>
-
     </simple-method>
-
     <simple-method method-name="updateProductPriceRule" short-description="Update an ProductPriceRule">
         <check-permission permission="CATALOG" action="_UPDATE"><fail-message message="Security Error: to run updateProductPriceRule you must have the CATALOG_UPDATE or CATALOG_ADMIN permission"/></check-permission>
         <check-errors/>
@@ -25,9 +93,7 @@
         <find-by-primary-key entity-name="ProductPriceRule" map-name="lookupPKMap" value-name="lookedUpValue"/>
         <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
         <store-value value-name="lookedUpValue"/>
-
     </simple-method>
-
     <simple-method method-name="deleteProductPriceRule" short-description="Delete an ProductPriceRule">
         <check-permission permission="CATALOG" action="_DELETE"><fail-message message="Security Error: to run deleteProductPriceRule you must have the CATALOG_DELETE or CATALOG_ADMIN permission"/></check-permission>
         <check-errors/>
@@ -36,7 +102,6 @@
         <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
         <find-by-primary-key entity-name="ProductPriceRule" map-name="lookupPKMap" value-name="lookedUpValue"/>
         <remove-value value-name="lookedUpValue"/>
-
     </simple-method>
 
     <!-- ProductPromoCond methods -->
@@ -49,9 +114,7 @@
         <set-pk-fields map-name="parameters" value-name="newEntity"/>
 
         <create-value value-name="newEntity"/>
-
     </simple-method>
-
     <simple-method method-name="updateProductPriceCond" short-description="Update an ProductPriceCond">
         <check-permission permission="CATALOG" action="_UPDATE"><fail-message message="Security Error: to run updateProductPriceCond you must have the CATALOG_UPDATE or CATALOG_ADMIN permission"/></check-permission>
         <check-errors/>
@@ -61,9 +124,7 @@
         <find-by-primary-key entity-name="ProductPriceCond" map-name="lookupPKMap" value-name="lookedUpValue"/>
         <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
         <store-value value-name="lookedUpValue"/>
-
     </simple-method>
-
     <simple-method method-name="deleteProductPriceCond" short-description="Delete an ProductPriceCond">
         <check-permission permission="CATALOG" action="_DELETE"><fail-message message="Security Error: to run deleteProductPriceCond you must have the CATALOG_DELETE or CATALOG_ADMIN permission"/></check-permission>
         <check-errors/>
@@ -72,7 +133,6 @@
         <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
         <find-by-primary-key entity-name="ProductPriceCond" map-name="lookupPKMap" value-name="lookedUpValue"/>
         <remove-value value-name="lookedUpValue"/>
-
     </simple-method>
 
     <!-- ProductPromoAction methods -->
@@ -85,9 +145,7 @@
         <set-pk-fields map-name="parameters" value-name="newEntity"/>
 
         <create-value value-name="newEntity"/>
-
     </simple-method>
-
     <simple-method method-name="updateProductPriceAction" short-description="Update an ProductPriceAction">
         <check-permission permission="CATALOG" action="_UPDATE"><fail-message message="Security Error: to run updateProductPriceAction you must have the CATALOG_UPDATE or CATALOG_ADMIN permission"/></check-permission>
         <check-errors/>
@@ -97,9 +155,7 @@
         <find-by-primary-key entity-name="ProductPriceAction" map-name="lookupPKMap" value-name="lookedUpValue"/>
         <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
         <store-value value-name="lookedUpValue"/>
-
     </simple-method>
-
     <simple-method method-name="deleteProductPriceAction" short-description="Delete an ProductPriceAction">
         <check-permission permission="CATALOG" action="_DELETE"><fail-message message="Security Error: to run deleteProductPriceAction you must have the CATALOG_DELETE or CATALOG_ADMIN permission"/></check-permission>
         <check-errors/>
@@ -108,7 +164,5 @@
         <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
         <find-by-primary-key entity-name="ProductPriceAction" map-name="lookupPKMap" value-name="lookedUpValue"/>
         <remove-value value-name="lookedUpValue"/>
-
     </simple-method>
-
 </simple-methods>

@@ -1,5 +1,4 @@
-<%
-/**
+<%--
  *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
@@ -21,10 +20,11 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Eric Pabst
+ *@author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
+ *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@created    May 22 2001
  *@version    1.0
- */
-%>
+--%>
 
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
@@ -48,13 +48,13 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <tr>
           <td>
-              <table width="100%" border="0" cellpadding="1" cellspacing='0'>
+              <table width="100%" border="0" cellpadding="0" cellspacing='0'>
                 <tr align=left valign=bottom>
                   <th width="35%" align="left"><div class="tabletext"><b>Product</b></div></th>
                   <th width="30%" align="left"><div class="tabletext"><b>Status</b></div></th>
                   <th width="5%" align="right"><div class="tabletext"><b>Quantity</b></div></th>
-                  <th width="10%" align="right"><div class="tabletext"><b>Unit Price</b></div></th>
-                  <th width="10%" align="right"><div class="tabletext"><b>Adjustments</b></div></th>
+                  <th width="10%" align="right"><div class="tabletext"><b>Unit / List Price</b></div></th>
+                  <th width="10%" align="right"><div class="tabletext"><b>Modifiers</b></div></th>
                   <th width="10%" align="right"><div class="tabletext"><b>Subtotal</b></div></th>
                 </tr>
              <%if (orderItemList != null) pageContext.setAttribute("orderItemList", orderItemList);%>
@@ -99,7 +99,7 @@
                         <div class="tabletext" nowrap><%=UtilFormatOut.formatQuantity(orderItem.getDouble("quantity"))%></div>
                     </td>
                     <td align="right" valign="top">
-                        <div class="tabletext" nowrap><%=UtilFormatOut.formatQuantity(orderItem.getDouble("unitPrice"))%></div>
+                        <div class="tabletext" nowrap><%=UtilFormatOut.formatPrice(orderItem.getDouble("unitPrice"))%> / <%=UtilFormatOut.formatPrice(orderItem.getDouble("unitListPrice"))%></div>
                     </td>
                     <td align="right" valign="top" nowrap>
                         <div class="tabletext" nowrap><%=UtilFormatOut.formatPrice(OrderReadHelper.getOrderItemAdjustments(orderItem, orderAdjustments, true, false, false))%></div>
@@ -120,8 +120,20 @@
                 <ofbiz:iterator name="orderItemAdjustment" property="orderItemAdjustments">
                     <%GenericValue adjustmentType = orderItemAdjustment.getRelatedOneCache("OrderAdjustmentType");%>
                     <tr>
-                        <td align="right" colspan="4"><div class="tabletext"><b><%=adjustmentType.getString("description")%></b> <%=UtilFormatOut.ifNotEmpty(orderItemAdjustment.getString("comments"), ": ", "")%></div></td>
+                        <td align="right" colspan="4"><div class="tabletext"><b><i>Adjustment</i>:</b> <b><%=adjustmentType.getString("description")%></b> <%=UtilFormatOut.ifNotEmpty(orderItemAdjustment.getString("comments"), ": ", "")%></div></td>
                         <td align="right"><div class="tabletext"><%=UtilFormatOut.formatPrice(OrderReadHelper.calcItemAdjustment(orderItemAdjustment, orderItem))%></div></td>
+                        <td>&nbsp;</td>
+                    </tr>
+                </ofbiz:iterator>
+
+                <%-- now show price info per line item --%>
+                <%Collection orderItemPriceInfos = orderReadHelper.getOrderItemPriceInfos(orderItem);%>
+                <%if (orderItemPriceInfos != null) pageContext.setAttribute("orderItemPriceInfos", orderItemPriceInfos);%>
+                <ofbiz:iterator name="orderItemPriceInfo" property="orderItemPriceInfos">
+                    <tr>
+                        <td align="right" colspan="3"><div class="tabletext" style='font-size: xx-small;'><b><i>Price Rule</i>:</b> [<%=orderItemPriceInfo.getString("productPriceRuleId")%>:<%=orderItemPriceInfo.getString("productPriceActionSeqId")%>] <%=orderItemPriceInfo.getString("description")%></div></td>
+                        <td align="right"><div class="tabletext" style='font-size: xx-small;'><%=UtilFormatOut.formatPrice(orderItemPriceInfo.getDouble("modifyAmount"))%></div></td>
+                        <td>&nbsp;</td>
                         <td>&nbsp;</td>
                     </tr>
                 </ofbiz:iterator>

@@ -585,6 +585,7 @@ public class ShoppingCart implements java.io.Serializable {
                 orderItem.set("productId", item.getProductId());
                 orderItem.set("quantity", new Double(item.getQuantity()));
                 orderItem.set("unitPrice", new Double(item.getBasePrice()));
+                orderItem.set("unitListPrice", new Double(item.getListPrice()));
                 
                 orderItem.set("itemDescription", item.getName());
                 orderItem.set("comments", item.getItemComment());

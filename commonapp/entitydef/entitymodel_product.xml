@@ -844,6 +844,29 @@
   <!-- org.ofbiz.commonapp.product.price -->
   <!-- ========================================================= -->
 
+    <entity entity-name="ProductPrice"
+            package-name="org.ofbiz.commonapp.product.price"
+            title="Product Pice Entity">
+      <field name="productId" type="id-ne"></field>
+      <field name="productPriceTypeId" type="id-ne"></field>
+      <field name="currencyUomId" type="name"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>
+      <field name="price" type="currency-amount"></field>
+      <prim-key field="productId"/>
+      <prim-key field="productPriceTypeId"/>
+      <prim-key field="currencyUomId"/>
+      <prim-key field="fromDate"/>
+      <relation type="one" rel-entity-name="Product">
+        <key-map field-name="productId"/>
+      </relation>
+      <relation type="one" rel-entity-name="ProductPriceType">
+        <key-map field-name="productPriceTypeId"/>
+      </relation>
+      <relation type="one" title="Currency" rel-entity-name="Uom">
+        <key-map field-name="currencyUomId" to-field-name="uomId"/>
+      </relation>
+    </entity>
     <entity entity-name="ProductPriceAction"
             package-name="org.ofbiz.commonapp.product.price"
             title="Product Price Action Entity">
@@ -904,6 +927,16 @@
       </relation>
       <relation type="many" rel-entity-name="ProductPriceCond">
         <key-map field-name="productPriceRuleId"/>
+      </relation>
+    </entity>
+    <entity entity-name="ProductPriceType"
+            package-name="org.ofbiz.commonapp.product.price"
+            title="Product Price Type Entity">
+      <field name="productPriceTypeId" type="id-ne"></field>
+      <field name="description" type="description"></field>
+      <prim-key field="productPriceTypeId"/>
+      <relation type="many" rel-entity-name="ProductPrice">
+        <key-map field-name="productPriceTypeId"/>
       </relation>
     </entity>
     <entity entity-name="QuantityBreak"
@@ -992,16 +1025,6 @@
       <field name="mediumImageUrl" type="url"></field>
       <field name="largeImageUrl" type="url"></field>
       <field name="detailImageUrl" type="url"></field>
-      <field name="listPrice" type="currency-amount"></field>
-      <field name="listPriceUomId" type="id"></field>
-      <field name="defaultPrice" type="currency-amount"></field>
-      <field name="defaultPriceUomId" type="id"></field>
-      <field name="averageCostPrice" type="currency-amount"></field>
-      <field name="averageCostPriceUomId" type="id"></field>
-      <field name="minSellPrice" type="currency-amount"></field>
-      <field name="minSellPriceUomId" type="id"></field>
-      <field name="maxSellPrice" type="currency-amount"></field>
-      <field name="maxSellPriceUomId" type="id"></field>
       <field name="quantityUomId" type="id"></field>
       <field name="quantityIncluded" type="floating-point"></field>
       <field name="piecesIncluded" type="numeric"></field>
@@ -1082,6 +1105,9 @@
       </relation>
       <relation type="one" fk-name="PROD_LMB_USERLOGIN" title="LastModifiedBy" rel-entity-name="UserLogin">
         <key-map field-name="lastModifiedByUserLogin" rel-field-name="userLoginId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ProductPrice">
+        <key-map field-name="productId"/>
       </relation>
     </entity>
     <entity entity-name="ProductAssoc"

@@ -222,6 +222,7 @@
   <Enumeration description="Party Group Member" enumCode="PARTY_GROUP_MEMBER" enumId="PRIP_PARTY_GRP_MEM" sequenceId="06" enumTypeId="PROD_PRICE_IN_PARAM"/>
   <Enumeration description="Party Classification" enumCode="PARTY_CLASS" enumId="PRIP_PARTY_CLASS" sequenceId="07" enumTypeId="PROD_PRICE_IN_PARAM"/>
   <Enumeration description="Role Type" enumCode="ROLE_TYPE" enumId="PRIP_ROLE_TYPE" sequenceId="08" enumTypeId="PROD_PRICE_IN_PARAM"/>
+  <Enumeration description="List Price" enumCode="LIST_PRICE" enumId="PRIP_LIST_PRICE" sequenceId="09" enumTypeId="PROD_PRICE_IN_PARAM"/>
 
   <Enumeration description="==" enumCode="EQ" enumId="PRC_EQ" sequenceId="01" enumTypeId="PROD_PRICE_COND"/>
   <Enumeration description="!=" enumCode="NEQ" enumId="PRC_NEQ" sequenceId="02" enumTypeId="PROD_PRICE_COND"/>
@@ -443,6 +444,14 @@
   <ProductPromoActionType description="Item Amount Per Quantity" productPromoActionTypeId="PROMO_ITEM_AMNTPQ"/>
   <ProductPromoActionType description="Order Percent Discount" productPromoActionTypeId="PROMO_ORDER_PERCENT"/>
   <ProductPromoActionType description="Order Amount Flat" productPromoActionTypeId="PROMO_ORDER_AMOUNT"/>
+
+  <ProductPriceType description="List Price" productPriceTypeId="LIST_PRICE"/>
+  <ProductPriceType description="Default Price" productPriceTypeId="DEFAULT_PRICE"/>
+  <ProductPriceType description="Average Cost" productPriceTypeId="AVERAGE_COST"/>
+  <ProductPriceType description="Minimum Price" productPriceTypeId="MINIMUM_PRICE"/>
+  <ProductPriceType description="Maximum Price" productPriceTypeId="MAXIMUM_PRICE"/>
+  <ProductPriceType description="Recurring Charge" productPriceTypeId="RECURRING_CHARGE"/>
+  <ProductPriceType description="Usage Charge" productPriceTypeId="USAGE_CHARGE"/>
 
   <ProductPriceActionType description="Percent Of List Price" productPriceActionTypeId="PRICE_POL"/>
   <ProductPriceActionType description="Percent Of Average Cost" productPriceActionTypeId="PRICE_POAC"/>

@@ -49,6 +49,7 @@ public class ShoppingCartItem implements java.io.Serializable {
     private String itemComment = null;
     private double quantity = 0.0;
     private double basePrice = 0.0;
+    private double listPrice = 0.0;
     private Map features = null;
     private Map attributes = null;
     private String orderItemSeqId = null;
@@ -189,10 +190,8 @@ public class ShoppingCartItem implements java.io.Serializable {
                 throw new CartItemModifyException("There was an error while calculating the price: " + priceResult.get(ModelService.ERROR_MESSAGE));
             }
             
-            Double price = (Double) priceResult.get("price");
-            if (price != null) {
-                this.basePrice = price.doubleValue();
-            }
+            if (priceResult.get("price") != null) this.basePrice = ((Double) priceResult.get("price")).doubleValue();
+            if (priceResult.get("listPrice") != null) this.listPrice = ((Double) priceResult.get("listPrice")).doubleValue();
             this.orderItemPriceInfos = (List) priceResult.get("orderItemPriceInfos");
         } catch (GenericServiceException e) {
             throw new CartItemModifyException("There was an error while calculating the price", e);
@@ -269,6 +268,10 @@ public class ShoppingCartItem implements java.io.Serializable {
     /** Returns the base price. */
     public double getBasePrice() {
         return basePrice;
+    }
+    /** Returns the list price. */
+    public double getListPrice() {
+        return listPrice;
     }
     /** Returns the "other" adjustments. */
     public double getOtherAdjustments() {
