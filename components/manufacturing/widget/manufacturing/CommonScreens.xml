@@ -25,7 +25,7 @@
 
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-screen.xsd">
-    <screen name="main">
+    <screen name="main-decorator">
         <section>
             <actions>
                 <property-map resource="ManufacturingUiLabels" map-name="uiLabelMap" global="true"/>
@@ -44,7 +44,7 @@
                 
                 <container style="centerarea">
                     <!-- render appheader -->
-                    <platform-specific><html><html-template location="component://manufacturing/webapp/manufacturing/includes/appheader.ftl"/></html></platform-specific>
+                    <platform-specific><html><html-template location="component://manufacturing/webapp/manufacturing/includes/header.ftl"/></html></platform-specific>
                     
                     <container style="contentarea">
                         <container style="column-main">
@@ -57,6 +57,19 @@
                 
                 <!-- render footer -->
                 <platform-specific><html><html-template location="component://common/webcommon/includes/footer.ftl"/></html></platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="login">
+        <section>
+            <widgets>
+                <decorator-screen name="main-decorator">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <html><html-template location="component://common/webcommon/login.ftl"/></html>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
             </widgets>
         </section>
     </screen>
