@@ -418,7 +418,7 @@
                       <div class="tableheadtext">${orderItem.productId} - ${orderItem.itemDescription}</div>
                     </td>
                     <td valign="top">
-                      <div class="tabletext"><#if orderItemSeqId?exists && orderItemSeqId == orderItem.orderItemSeqId><font color='red'></#if>${orderItem.currentStatus}</div>
+                      <div class="tabletext"><#if orderItemSeqId?exists && orderItemSeqId == orderItem.orderItemSeqId><font color='red'></#if>${localOrderReadHelper.getCurrentItemStatusString(orderItem)}</div>
                     </td>
                     <td align="right" valign="top">
                       <div class="tabletext" nowrap>${orderItem.quantity?string.number}</div>

@@ -564,6 +564,20 @@ public class OrderReadHelper {
     public List getOrderItemStatuses(GenericValue orderItem) {
         return getOrderItemStatuses(orderItem, getOrderStatuses());
     }
+    
+    public String getCurrentItemStatusString(GenericValue orderItem) {
+        GenericValue statusItem = null;
+        try {
+            statusItem = orderItem.getRelatedOneCache("StatusItem");
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+        }
+        if (statusItem != null) {
+            return statusItem.getString("description");
+        } else {
+            return orderHeader.getString("statusId");
+        }
+    }    
 
     /**
      * Checks to see if this user has read permission on this order
