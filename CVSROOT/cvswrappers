@@ -46,4 +46,6 @@
 *.ppt -k 'b'
 *.PPT -k 'b'
 *.sxi -k 'b'
-
+*.SXI -k 'b'
+*.vsd -k 'b'
+*.VSD -k -b'
