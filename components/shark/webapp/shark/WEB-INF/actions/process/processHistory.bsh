@@ -1,0 +1,39 @@
+
+import java.util.*;
+import org.ofbiz.base.util.*;
+import org.ofbiz.shark.container.*;
+import org.ofbiz.shark.requester.*;
+import org.enhydra.shark.api.client.wfservice.*;
+import org.enhydra.shark.api.client.wfmodel.*;
+
+userLogin = session.getAttribute("userLogin");
+
+// get the admin tools
+admin = SharkContainer.getAdminInterface();
+exMgr = admin.getExecutionAdministration();
+
+if (userLogin == null) {
+    request.setAttribute("_ERROR_MESSAGE_", "UserLogin object not found.");
+    return;
+}
+
+// connect to the engine
+exMgr.connect(userLogin.getString("userLoginId"), userLogin.getString("currentPassword"), null, null);
+
+// process key
+procKey = request.getParameter("process");
+if (procKey != null) {
+    context.put("processKey", procKey);
+
+    // get the process manager
+    proc = exMgr.getProcess(procKey);
+    context.put("process", proc);
+
+    // get the history
+    count = proc.how_many_history();
+    procs = proc.get_sequence_history(count);
+    context.put("historyList", procs);
+}
+
+// disconnect from the engine
+exMgr.disconnect();
