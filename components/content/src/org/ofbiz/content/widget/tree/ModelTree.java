@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTree.java,v 1.2 2004/07/27 20:29:40 byersa Exp $
+ * $Id: ModelTree.java,v 1.3 2004/07/28 00:03:50 byersa Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -57,7 +57,7 @@ import javax.xml.parsers.ParserConfigurationException;
  * Widget Library - Tree model class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      3.1
  */
 public class ModelTree {
@@ -562,7 +562,7 @@ public class ModelTree {
             protected FlexibleStringExpander widthExdr;
             protected FlexibleStringExpander heightExdr;
             protected FlexibleStringExpander borderExdr;
-            protected String urlMode = "content";
+            protected String urlMode;
             
             public Image() {
 
@@ -571,7 +571,7 @@ public class ModelTree {
                 setStyle(null);
                 setWidth(null);
                 setHeight(null);
-                setBorder(null);
+                setBorder("0");
                 setUrlMode(null);
             }
 
@@ -582,8 +582,8 @@ public class ModelTree {
                 setStyle(imageElement.getAttribute("style"));
                 setWidth(imageElement.getAttribute("width"));
                 setHeight(imageElement.getAttribute("height"));
-                setBorder(imageElement.getAttribute("border"));
-                setUrlMode(imageElement.getAttribute("url-mode"));
+                setBorder(UtilFormatOut.checkEmpty(imageElement.getAttribute("border"), "0"));
+                setUrlMode(UtilFormatOut.checkEmpty(imageElement.getAttribute("url-mode"), "content"));
     
             }
     

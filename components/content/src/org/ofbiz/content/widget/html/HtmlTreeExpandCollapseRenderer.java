@@ -1,5 +1,5 @@
 /*
- * $Id: HtmlTreeExpandCollapseRenderer.java,v 1.2 2004/07/27 20:29:40 byersa Exp $
+ * $Id: HtmlTreeExpandCollapseRenderer.java,v 1.3 2004/07/28 00:03:49 byersa Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -49,7 +49,7 @@ import org.ofbiz.content.webapp.control.RequestHandler;
  * Widget Library - HTML Form Renderer implementation
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      3.1
  */
 public class HtmlTreeExpandCollapseRenderer extends HtmlTreeRenderer {
@@ -107,14 +107,14 @@ public class HtmlTreeExpandCollapseRenderer extends HtmlTreeRenderer {
                 currentNodeTrail.add(contentId);
                 currentNodeTrailCsv = StringUtil.join(currentNodeTrail, ",");
                 context.put("currentNodeTrailCsv", currentNodeTrailCsv);
-                expandCollapseImage.setSrc("/ofbizdoc/images/expand.gif");
+                expandCollapseImage.setSrc("/images/expand.gif");
                 expandCollapseLink.setTarget("/ViewOutline?contentId=${rootContentId}&targetNodeTrailCsv=${currentNodeTrailCsv}");
             } else {
                 context.put("processChildren", new Boolean(true));
                 //expandCollapseLink.setText("&nbsp;-&nbsp;");
                 currentNodeTrailCsv = StringUtil.join(currentNodeTrail, ",");
                 context.put("currentNodeTrailCsv", currentNodeTrailCsv);
-                expandCollapseImage.setSrc("/ofbizdoc/images/collapse.gif");
+                expandCollapseImage.setSrc("/images/collapse.gif");
                 expandCollapseLink.setTarget("/ViewOutline?contentId=${rootContentId}&targetNodeTrailCsv=${currentNodeTrailCsv}");
                 // add it so it can be remove in renderNodeEnd
                 currentNodeTrail.add(contentId);
