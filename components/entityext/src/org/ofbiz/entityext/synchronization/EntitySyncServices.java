@@ -1,5 +1,5 @@
 /*
- * $Id: EntitySyncServices.java,v 1.23 2003/12/24 10:10:44 jonesde Exp $
+ * $Id: EntitySyncServices.java,v 1.24 2004/02/06 06:57:33 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -62,7 +62,7 @@ import org.xml.sax.SAXException;
  * Entity Engine Sync Services
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
- * @version    $Revision: 1.23 $
+ * @version    $Revision: 1.24 $
  * @since      3.0
  */
 public class EntitySyncServices {
@@ -415,7 +415,7 @@ public class EntitySyncServices {
             }
             
             // if nothing moved over, remove the history record, otherwise store status
-            long totalRows = totalRowsToStore + totalRowsToRemove;
+            long totalRows = totalRowsToCreate + totalRowsToStore + totalRowsToRemove;
             if (totalRows == 0) {
                 Map deleteEntitySyncHistRes = dispatcher.runSync("deleteEntitySyncHistory", UtilMisc.toMap("entitySyncId", entitySyncId, "startDate", startDate, "userLogin", userLogin));
                 if (ServiceUtil.isError(deleteEntitySyncHistRes)) {
@@ -430,7 +430,7 @@ public class EntitySyncServices {
                 }
             }
             
-            if (Debug.infoOn()) Debug.logInfo("Finished runEntitySync: totalRows=" + totalRows + ", totalRowsToStore=" + totalRowsToStore + ", totalRowsToRemove=" + totalRowsToRemove, module);
+            if (Debug.infoOn()) Debug.logInfo("Finished runEntitySync: totalRows=" + totalRows + ", totalRowsToCreate=" + totalRowsToCreate + ", totalRowsToStore=" + totalRowsToStore + ", totalRowsToRemove=" + totalRowsToRemove, module);
         } catch (GenericEntityException e) {
             String errorMessage = "Error running EntitySync [" + entitySyncId + "], data access error: " + e.toString();
             Debug.logError(e, errorMessage, module);
