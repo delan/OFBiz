@@ -22,7 +22,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *  This is the Open for Business Main build script.
- *  $Id: build.xml,v 1.33 2004/03/31 16:23:37 ajzeneski Exp $
+ *  $Id: build.xml,v 1.34 2004/03/31 16:46:32 ajzeneski Exp $
 -->
 
 <project name="OFBiz Main Build" default="build" basedir=".">
@@ -52,19 +52,19 @@
     </target>
 
     <target name="clean-data">
-        <delete verbose="Y">
+        <delete verbose="on">
             <fileset dir="data" includes="*"/>
         </delete>
     </target>
 
     <target name="clean-logs">
-        <delete verbose="Y">
+        <delete verbose="on">
             <fileset dir="logs" includes="*"/>
         </delete>
     </target>
 
     <target name="clean-xtra" depends="">
-        <delete verbose="Y">
+        <delete verbose="on">
             <fileset dir="."
                      includes="**/.nbattrs,**/*~,**/*.#*,**/.DS_Store,**/*.rej,**/*.orig"/>
         </delete>

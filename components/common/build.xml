@@ -21,7 +21,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *  This is the Open for Business Common Build Script.
- *  $Id: build.xml,v 1.7 2004/03/18 19:11:47 ajzeneski Exp $
+ *  $Id: build.xml,v 1.8 2004/03/31 16:46:33 ajzeneski Exp $
 -->
 
 <project name="OFBiz - Common" default="jar" basedir=".">
@@ -59,8 +59,7 @@
     <!-- ================================================================== -->
 
     <target name="clean" depends="clean-lib">
-        <delete dir="${build.dir}"/>        
-        <delete dir="${doc.dir}/api"/>
+        <delete dir="${build.dir}"/>                
     </target>
 
     <target name="clean-lib" depends="init">
