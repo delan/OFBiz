@@ -1,5 +1,5 @@
 /*
- * $Id: Start.java,v 1.26 2004/07/31 21:17:26 ajzeneski Exp $
+ * $Id: Start.java,v 1.27 2004/07/31 21:54:00 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -46,7 +46,7 @@ import java.util.Properties;
  * Start - OFBiz Container(s) Startup Class
  *
  * @author <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version $Revision: 1.26 $
+ * @version $Revision: 1.27 $
  * @since 2.1
  */
 public class Start implements Runnable {
@@ -63,7 +63,7 @@ public class Start implements Runnable {
     private static final String SHUTDOWN_COMMAND = "SHUTDOWN";
     private static final String STATUS_COMMAND = "STATUS";
 
-    public void init(String[] args) throws IOException {
+    public void init(String[] args, boolean fullInit) throws IOException {
         String firstArg = args.length > 0 ? args[0] : "";
         String cfgFile = Start.getConfigFileName(firstArg);
 
@@ -81,24 +81,30 @@ public class Start implements Runnable {
             }
         }
 
-        // initialize the classpath
-        initClasspath();
+        if (fullInit) {
+            // initialize the classpath
+            initClasspath();
 
-        // initialize the log directory
-        initLogDirectory();
+            // initialize the log directory
+            initLogDirectory();
 
-        // initialize the listener thread
-        initListenerThread();
+            // initialize the listener thread
+            initListenerThread();
 
-        // initialize the startup loaders
-        initStartLoaders();
+            // initialize the startup loaders
+            initStartLoaders();
 
-        // set the shutdown hook
-        if (config.useShutdownHook) {
-            setShutdownHook();
-        } else {
-            System.out.println("Shutdown hook disabled");
+            // set the shutdown hook
+            if (config.useShutdownHook) {
+                setShutdownHook();
+            } else {
+                System.out.println("Shutdown hook disabled");
+            }
         }
+    }
+
+    public void init(String[] args) throws IOException {
+        init(args, true);
     }
 
     public void run() {
@@ -379,16 +385,16 @@ public class Start implements Runnable {
             System.out.println("[no config] --> Use default config");
             System.out.println("[no command] -> Start the server w/ default config");
         } else {
-            // initialize the startup object
-            start.init(args);
-
             // hack for the status and shutdown commands
             if (firstArg.equals("-status")) {
+                start.init(args, false);
                 System.out.println("Current Status : " + start.status());
             } else if (firstArg.equals("-shutdown")) {
+                start.init(args, false);
                 System.out.println("Shutting down server : " + start.shutdown());
             } else {
                 // general start
+                start.init(args, true);
                 start.start();
             }
         }

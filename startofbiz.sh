@@ -1,6 +1,6 @@
 #!/bin/sh
 ####
-# $Id: startofbiz.sh,v 1.6 2004/07/31 21:42:27 ajzeneski Exp $
+# $Id: startofbiz.sh,v 1.7 2004/07/31 21:54:00 ajzeneski Exp $
 ####
 
 # shutdown settings
@@ -15,6 +15,7 @@ rm -f $OFBIZ_LOG
 
 # VM args
 VMARGS="-Xmx128M -Dofbiz.admin.port=$ADMIN_PORT -Dofbiz.admin.key=$ADMIN_KEY"
+
 # Worldpay Config
 #VMARGS="-Xbootclasspath/p:components/accounting/lib/cryptix.jar $VMARGS"
 
