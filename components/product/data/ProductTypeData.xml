@@ -226,6 +226,7 @@
   <ProductPriceType description="Minimum Price" productPriceTypeId="MINIMUM_PRICE"/>
   <ProductPriceType description="Maximum Price" productPriceTypeId="MAXIMUM_PRICE"/>
   <ProductPriceType description="Promotional Price" productPriceTypeId="PROMO_PRICE"/>
+  <ProductPriceType description="Competitive Price" productPriceTypeId="COMPETITIVE_PRICE"/>
   <ProductPriceType description="Recurring Charge" productPriceTypeId="RECURRING_CHARGE"/>
   <ProductPriceType description="Usage Charge" productPriceTypeId="USAGE_CHARGE"/>
 
