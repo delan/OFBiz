@@ -241,6 +241,10 @@
   <Geo abbreviation="YUG" geoCode="YU" geoId="YUG" geoName="Yugoslavia" geoSecCode="891" geoTypeId="COUNTRY"/>
   <Geo abbreviation="ZMB" geoCode="ZM" geoId="ZMB" geoName="Zambia" geoSecCode="894" geoTypeId="COUNTRY"/>
 
+  <Geo abbreviation="AA" geoCode="AA" geoId="AA" geoName="Armed Forces Americas" geoTypeId="STATE"/>
+  <Geo abbreviation="AE" geoCode="AE" geoId="AE" geoName="Armed Forces Europe" geoTypeId="STATE"/>
+  <Geo abbreviation="AP" geoCode="AP" geoId="AP" geoName="Armed Forces Pacific" geoTypeId="STATE"/>
+
   <Geo abbreviation="AK" geoCode="AK" geoId="AK" geoName="Alaska" geoTypeId="STATE"/>
   <Geo abbreviation="AL" geoCode="AL" geoId="AL" geoName="Alabama" geoTypeId="STATE"/>
   <Geo abbreviation="AR" geoCode="AR" geoId="AR" geoName="Arkansas" geoTypeId="STATE"/>
