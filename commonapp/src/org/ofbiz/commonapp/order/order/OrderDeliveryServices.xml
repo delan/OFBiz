@@ -102,18 +102,21 @@
                 <string-to-field field-name="hasSupplierRelatedPermission" string="true"/>
             </then>
             <else>
-                <env-to-field env-name="orderId" map-name="parameters" to-map-name="lookupOrderRoleMap"/>
+                <field-to-field field-name="orderId" map-name="parameters" to-map-name="lookupOrderRoleMap"/>
                 <field-to-field field-name="partyId" map-name="userLogin" to-map-name="lookupOrderRoleMap"/>
                 <string-to-field string="SUPPLIER_AGENT" field-name="roleTypeId" map-name="lookupOrderRoleMap"/>
-                <find-by-primary-key entity-name="OrderRole" map-name="lookupOrderRoleMap" value-name="permOrderRoles"/>
+                <find-by-primary-key entity-name="OrderRole" map-name="lookupOrderRoleMap" value-name="permOrderRole"/>
                 <if>
                     <condition>
-                        <if-empty field-name="permOrderRoles"/>
+                        <if-empty field-name="permOrderRole"/>
                     </condition>
                     <then>
                         <string-to-field field-name="hasSupplierRelatedPermission" string="false"/>
                         <string-to-list list-name="error_list" string="ERROR: You do not have permission to ${checkAction} Delivery Schedule Information; you must be associated with this order as a Supplier Agent or have the ORDERMGR_${checkAction} permission."/>
                     </then>
+                    <else>
+                        <string-to-field field-name="hasSupplierRelatedPermission" string="true"/>
+                    </else>
                 </if>
             </else>
         </if>
