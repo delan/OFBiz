@@ -24,6 +24,7 @@
     <preprocessor>
         <!-- This event allows affilate/distributor entry on any page -->
         <event type="java" path="org.ofbiz.ecommerce.misc.ThirdPartyEvents" invoke="setAssociationId"/>
+        <event type="java" path="org.ofbiz.commonapp.marketing.tracking.TrackingCodeEvents" invoke="checkAutoTrackingCode"/>
     </preprocessor>
 
     <!-- Events to run on every request after all other processing (chains exempt) -->
