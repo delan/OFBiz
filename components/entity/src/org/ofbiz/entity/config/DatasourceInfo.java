@@ -78,6 +78,7 @@ public class DatasourceInfo {
     public String joinStyle = null;
     public boolean aliasViews = true;
     public boolean alwaysUseConstraintKeyword = false;
+    public String tableType = null;
 
     public DatasourceInfo(Element element) {
         this.name = element.getAttribute("name");

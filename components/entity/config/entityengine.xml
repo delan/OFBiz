@@ -206,7 +206,8 @@ access. For a detailed description see the core/docs/entityconfig.html file.
             check-on-start="true"
             add-missing-on-start="true"
             use-foreign-keys="true"
-            join-style="ansi-no-parenthesis">
+            join-style="ansi-no-parenthesis"
+            table-type="InnoDB">
         <read-data reader-name="seed"/>
         <read-data reader-name="demo"/>
         <read-data reader-name="ext"/>
