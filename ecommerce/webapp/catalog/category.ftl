@@ -24,4 +24,11 @@
  *@since      2.1
 -->
 
-${pages.get("/catalog/categorylisting.ftl")}
+<#if productCategory?has_content>
+  ${pages.get("/catalog/categorylisting.ftl")}
+<#else>
+  <#assign categoryId = requestAttributes.productCategoryId?if_exists>
+  <center><div class='head2'>Category not found for Category ID ${categoryId?if_exists}!</div></center>
+</#if>
+
+

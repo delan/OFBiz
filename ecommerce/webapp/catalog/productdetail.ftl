@@ -25,8 +25,8 @@
 -->
 
 <#-- variable setup -->
-<#assign product = requestAttributes.product>
-<#assign price = requestAttributes.priceMap>
+<#assign product = requestAttributes.product?if_exists>
+<#assign price = requestAttributes.priceMap?if_exists>
 <#-- end variable setup -->
 
 <#-- virtual product javascript -->

@@ -24,4 +24,9 @@
  *@since      2.1
 -->
 
-${pages.get(requestAttributes.detailTemplate)}
+<#if requestAttributes.product?has_content>
+  ${pages.get(requestAttributes.detailTemplate)}
+<#else>
+  <#assign productId = requestAttributes.productId?if_exists>
+  <center><div class='head2'>Product not found for Product ID ${productId?if_exists}!</div></center>
+</#if>
