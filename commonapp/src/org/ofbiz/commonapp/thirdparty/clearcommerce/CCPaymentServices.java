@@ -191,9 +191,7 @@ public class CCPaymentServices {
 
         // EngineDocList.EngineDoc.OrderFormDoc
         CcApiRecord recOrderFormDoc = recEngineDoc.getFirstRecord("OrderFormDoc");
-        String orderId = (String) context.get("orderId");
-
-        recOrderFormDoc.setFieldString("Id", orderId);
+        recOrderFormDoc.setFieldString("Comments", (String) context.get("orderId"));
 
         // EngineDocList.EngineDoc.OrderFormDoc.Consumer
         CcApiRecord recConsumer = recOrderFormDoc.addRecord("Consumer");
@@ -314,9 +312,8 @@ public class CCPaymentServices {
         // EngineDocList.EngineDoc.OrderFormDoc
         CcApiRecord recOrderFormDoc = recEngineDoc.getFirstRecord("OrderFormDoc");
         GenericValue paymentPref = (GenericValue) context.get("orderPaymentPreference");
-        String orderId = paymentPref.getString("orderId");
 
-        recOrderFormDoc.setFieldString("Id", orderId);
+        recOrderFormDoc.setFieldString("Id", paymentPref.getString("authRefNum"));
             
         // EngineDocList.EngineDoc.OrderFormDoc.Transaction
         CcApiRecord recTransaction = recOrderFormDoc.addRecord("Transaction");
@@ -328,9 +325,9 @@ public class CCPaymentServices {
             
         // EngineDocList.EngineDoc.OrderFormDoc.Transaction.CurrentTotals.Totals
         CcApiRecord recTotals = recCurrentTotals.addRecord("Totals");
-        Double recCaptureAmount = (Double) context.get("captureAmount");
+        Double captureAmount = (Double) context.get("captureAmount");
         NumberFormat nf = new DecimalFormat("#");
-        CcApiMoney total = new CcApiMoney(nf.format(recCaptureAmount.doubleValue() * 100), "840");
+        CcApiMoney total = new CcApiMoney(nf.format(captureAmount.doubleValue() * 100), "840");
 
         recTotals.setFieldMoney("Total", total);
         
@@ -351,13 +348,14 @@ public class CCPaymentServices {
             CcApiRecord recCurrentTotals = recTransaction.getFirstRecord("CurrentTotals");
             CcApiRecord recTotals = recCurrentTotals.getFirstRecord("Totals");
             CcApiMoney authAmount = recTotals.getFieldMoney("Total"); 
-
-            result.put("processAmount", new Double(authAmount.getAmount()));
+            Double authAmountDouble = new Double(authAmount.getAmount());
+            
+            result.put("processAmount", new Double(authAmountDouble.doubleValue() / 100));
         } else {
             result.put("authResult", new Boolean(false));
             result.put("processAmount", new Double(0.00));
         }
-        result.put("authRefNum", recTransaction.getFieldString("Id"));
+        result.put("authRefNum", recOrderFormDoc.getFieldString("Id"));
         result.put("authFlag", recProcResponse.getFieldString("Status"));
         result.put("authMessage", recProcResponse.getFieldString("CcReturnMsg"));
         String avsDisplay = recProcResponse.getFieldString("AvsDisplay");
@@ -379,14 +377,15 @@ public class CCPaymentServices {
             CcApiRecord recCurrentTotals = recTransaction.getFirstRecord("CurrentTotals");
             CcApiRecord recTotals = recCurrentTotals.getFirstRecord("Totals");
             CcApiMoney captureAmount = recTotals.getFieldMoney("Total");
-
-            result.put("captureAmount", new Double(captureAmount.getAmount()));
+            Double captureAmountDouble = new Double(captureAmount.getAmount());
+            
+            result.put("captureAmount", new Double(captureAmountDouble.doubleValue() / 100));
             result.put("captureResult", new Boolean(true));
         } else {
             result.put("captureAmount", new Double(0.00));
             result.put("captureResult", new Boolean(false));
         }
-        result.put("captureRefNum", recTransaction.getFieldString("Id"));
+        result.put("captureRefNum", recOrderFormDoc.getFieldString("Id"));
     }
     
     private static void initDoc(CcApiDocument doc, Map context) throws CcApiException {            
