@@ -36,8 +36,8 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.load-component">
-        <xs:attribute name="component-name"/>
-        <xs:attribute name="component-location" use="required"/>
+        <xs:attribute type="xs:string" name="component-name"/>
+        <xs:attribute type="xs:string" name="component-location" use="required"/>
     </xs:attributeGroup>
     <xs:element name="load-components">
         <xs:complexType>
@@ -45,6 +45,6 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.load-components">
-        <xs:attribute name="parent-directory" use="required"/>
+        <xs:attribute type="xs:string" name="parent-directory" use="required"/>
     </xs:attributeGroup>
 </xs:schema>
