@@ -1,5 +1,5 @@
 /*
- * $Id: HtmlWidget.java,v 1.1 2004/07/15 22:25:00 jonesde Exp $
+ * $Id: HtmlWidget.java,v 1.2 2004/07/18 10:09:35 jonesde Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -23,22 +23,30 @@
  */
 package org.ofbiz.content.widget.screen;
 
+import java.io.IOException;
 import java.io.Writer;
+import java.net.MalformedURLException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.base.util.collections.MapStack;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
+import org.ofbiz.content.webapp.ftl.FreeMarkerWorker;
+import org.ofbiz.content.widget.screen.ModelScreen.ScreenRenderer;
+import org.ofbiz.content.widget.screen.ModelScreenWidget.SectionsRenderer;
 import org.w3c.dom.Element;
+
+import freemarker.template.TemplateException;
 
 /**
  * Widget Library - Screen model class
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.1
  */
 public class HtmlWidget extends ModelScreenWidget {
@@ -51,7 +59,7 @@ public class HtmlWidget extends ModelScreenWidget {
         List childElementList = UtilXml.childElementList(htmlElement);
         Iterator childElementIter = childElementList.iterator();
         while (childElementIter.hasNext()) {
-            Element childElement = UtilXml.firstChildElement(htmlElement);
+            Element childElement = (Element) childElementIter.next();
             if ("html-template".equals(childElement.getNodeName())) {
                 this.childWidget = new HtmlTemplate(modelScreen, childElement);
             } else if ("html-template-decorator".equals(childElement.getNodeName())) {
@@ -66,10 +74,30 @@ public class HtmlWidget extends ModelScreenWidget {
         childWidget.renderWidgetString(writer, context, screenStringRenderer);
     }
     
-    public static void renderHtmlTemplate(Writer writer, Map context) {
-        //TODO: implement this
+    public static void renderHtmlTemplate(Writer writer, FlexibleStringExpander locationExdr, Map context) {
+        String location = locationExdr.expandString(context);
+        
+        if (location.endsWith(".ftl")) {
+            try {
+                FreeMarkerWorker.renderTemplateAtLocation(location, context, writer);
+            } catch (MalformedURLException e) {
+                String errMsg = "Error rendering included template at location [" + location + "]: " + e.toString();
+                Debug.logError(e, errMsg, module);
+                throw new RuntimeException(errMsg);
+            } catch (TemplateException e) {
+                String errMsg = "Error rendering included template at location [" + location + "]: " + e.toString();
+                Debug.logError(e, errMsg, module);
+                throw new RuntimeException(errMsg);
+            } catch (IOException e) {
+                String errMsg = "Error rendering included template at location [" + location + "]: " + e.toString();
+                Debug.logError(e, errMsg, module);
+                throw new RuntimeException(errMsg);
+            }
+        } else {
+            throw new IllegalArgumentException("Rending not yet support for the tempalte at location: " + location);
+        }
     }
-
+    
     public static class HtmlTemplate extends ModelScreenWidget {
         protected FlexibleStringExpander locationExdr;
         
@@ -79,7 +107,7 @@ public class HtmlWidget extends ModelScreenWidget {
         }
 
         public void renderWidgetString(Writer writer, Map context, ScreenStringRenderer screenStringRenderer) {
-            //TODO: implement this
+            renderHtmlTemplate(writer, this.locationExdr, context);
         }
     }
 
@@ -96,7 +124,7 @@ public class HtmlWidget extends ModelScreenWidget {
             while (htmlTemplateDecoratorSectionElementIter.hasNext()) {
                 Element htmlTemplateDecoratorSectionElement = (Element) htmlTemplateDecoratorSectionElementIter.next();
                 String name = htmlTemplateDecoratorSectionElement.getAttribute("name");
-                this.sectionMap.put(name, null);
+                this.sectionMap.put(name, new HtmlTemplateDecoratorSection(modelScreen, htmlTemplateDecoratorSectionElement));
             }
         }
 
@@ -105,12 +133,19 @@ public class HtmlWidget extends ModelScreenWidget {
             if (!(context instanceof MapStack)) {
                 context = new MapStack(context);
             }
-            ((MapStack) context).push();
+
+            MapStack contextMs = (MapStack) context;
+
+            // create a standAloneStack, basically a "save point" for this SectionsRenderer, and make a new "screens" object just for it so it is isolated and doesn't follow the stack down
+            MapStack standAloneStack = contextMs.standAloneChildStack();
+            standAloneStack.put("screens", new ScreenRenderer(writer, context, screenStringRenderer));
+            SectionsRenderer sections = new SectionsRenderer(this.sectionMap, standAloneStack, screenStringRenderer);
             
             // put the sectionMap in the context, make sure it is in the sub-scope, ie after calling push on the MapStack
-            context.put("sectionMap", sectionMap);
-            
-            //TODO: implement this
+            contextMs.push();
+            context.put("sections", sections);
+
+            renderHtmlTemplate(writer, this.locationExdr, context);
         }
     }
 

@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.8 $
+ *@version    $Revision: 1.9 $
  *@since      2.2
  */
 
@@ -34,6 +34,7 @@ import org.ofbiz.content.widget.html.*;
 import org.ofbiz.content.widget.form.*;
 import org.ofbiz.securityext.login.*;
 import org.ofbiz.common.*;
+import org.ofbiz.content.webapp.control.*;
 
 
 userLogin = session.getAttribute("userLogin");
@@ -76,9 +77,9 @@ layoutSettings.put("headerImageUrl", "/images/ofbiz_logo.jpg");
 layoutSettings.put("headerMiddleBackgroundUrl", null);
 layoutSettings.put("headerRightBackgroundUrl", null);
 
-request.setAttribute("checkLoginUrl", CommonWorkers.makeLoginUrl(request, "checkLogin"));
+request.setAttribute("checkLoginUrl", LoginWorker.makeLoginUrl(request, "checkLogin"));
 
-externalLoginKey = LoginEvents.getExternalLoginKey(request);
+externalLoginKey = LoginWorker.getExternalLoginKey(request);
 externalKeyParam = externalLoginKey == null ? "" : "&externalLoginKey=" + externalLoginKey;
 request.setAttribute("externalKeyParam", externalKeyParam);
 request.setAttribute("activeApp", "contentmgr");

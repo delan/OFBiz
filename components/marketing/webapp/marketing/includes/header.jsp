@@ -1,6 +1,6 @@
 
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
-<%@ page import="org.ofbiz.security.*, org.ofbiz.entity.*, org.ofbiz.base.util.*, org.ofbiz.content.webapp.pseudotag.*" %>
+<%@ page import="org.ofbiz.security.*, org.ofbiz.entity.*, org.ofbiz.base.util.*, org.ofbiz.content.webapp.pseudotag.*, org.ofbiz.content.webapp.control.*" %>
 <%@ page import="org.ofbiz.common.*" %>
 <%@ page import="java.util.*" %>
 
@@ -14,7 +14,7 @@
   <div class="col"><a href="<ofbiz:url>/FindTrackingCode</ofbiz:url>" class="headerButtonLeft">Tracking</a></div>
   <div class="col"><a href="#<%--<ofbiz:url>/FindContactList</ofbiz:url>--%>" class="headerButtonLeft">ContactList</a></div>
   <ofbiz:unless name="userLogin">
-    <div class="col-right"><a href='<ofbiz:url><%=CommonWorkers.makeLoginUrl(pageContext)%></ofbiz:url>' class='headerButtonRight'>Login</a></div>
+    <div class="col-right"><a href='<ofbiz:url><%=LoginWorker.makeLoginUrl(pageContext)%></ofbiz:url>' class='headerButtonRight'>Login</a></div>
   </ofbiz:unless>
   <ofbiz:if name="userLogin">
     <div class="col-right"><a href="<ofbiz:url>/logout</ofbiz:url>" class="headerButtonRight">Logout</a></div>

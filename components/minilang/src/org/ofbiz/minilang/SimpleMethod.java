@@ -1,5 +1,5 @@
 /*
- * $Id: SimpleMethod.java,v 1.11 2004/07/10 06:04:09 ajzeneski Exp $
+ * $Id: SimpleMethod.java,v 1.12 2004/07/18 10:09:38 jonesde Exp $
  *
  *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -56,7 +56,7 @@ import org.w3c.dom.Element;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
- * @version    $Revision: 1.11 $
+ * @version    $Revision: 1.12 $
  * @since      2.0
  */
 public class SimpleMethod {
@@ -782,8 +782,12 @@ public class SimpleMethod {
                     methodOperations.add(new org.ofbiz.minilang.method.entityops.FindByPrimaryKey(curOperElem, simpleMethod));
                 } else if ("find-by-and".equals(nodeName)) {
                     methodOperations.add(new org.ofbiz.minilang.method.entityops.FindByAnd(curOperElem, simpleMethod));
-                } else if ("find-by-condition".equals(nodeName)) {
-                    methodOperations.add(new org.ofbiz.minilang.method.entityops.FindByCondition(curOperElem, simpleMethod));
+                } else if ("entity-one".equals(nodeName)) {
+                    methodOperations.add(new org.ofbiz.minilang.method.entityops.EntityOne(curOperElem, simpleMethod));
+                } else if ("entity-and".equals(nodeName)) {
+                    methodOperations.add(new org.ofbiz.minilang.method.entityops.EntityAnd(curOperElem, simpleMethod));
+                } else if ("entity-condition".equals(nodeName)) {
+                    methodOperations.add(new org.ofbiz.minilang.method.entityops.EntityCondition(curOperElem, simpleMethod));
                 } else if ("get-related-one".equals(nodeName)) {
                     methodOperations.add(new org.ofbiz.minilang.method.entityops.GetRelatedOne(curOperElem, simpleMethod));
                 } else if ("get-related".equals(nodeName)) {

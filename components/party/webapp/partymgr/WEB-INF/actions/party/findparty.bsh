@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.13 $
+ *@version    $Revision: 1.14 $
  *@since      3.0
  */
 
@@ -33,11 +33,12 @@ import org.ofbiz.entity.model.*;
 import org.ofbiz.entity.condition.*;
 import org.ofbiz.securityext.login.*;
 import org.ofbiz.common.*;
+import org.ofbiz.content.webapp.control.*;
 
 delegator = request.getAttribute("delegator");
 extraInfo = request.getParameter("extInfo");
 
-externalLoginKey = LoginEvents.getExternalLoginKey(request);
+externalLoginKey = LoginWorker.getExternalLoginKey(request);
 externalKeyParam = externalLoginKey == null ? "" : "&externalLoginKey=" + externalLoginKey;
 context.put("externalKeyParam",externalKeyParam);
 

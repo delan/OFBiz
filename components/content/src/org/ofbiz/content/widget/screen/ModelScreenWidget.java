@@ -1,5 +1,5 @@
 /*
- * $Id: ModelScreenWidget.java,v 1.3 2004/07/16 18:53:24 byersa Exp $
+ * $Id: ModelScreenWidget.java,v 1.4 2004/07/18 10:09:35 jonesde Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -24,13 +24,15 @@
 package org.ofbiz.content.widget.screen;
 
 import java.io.IOException;
+import java.io.StringWriter;
 import java.io.Writer;
+import java.sql.Timestamp;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Locale;
-import java.sql.Timestamp;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -38,30 +40,32 @@ import javax.servlet.http.HttpSession;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.UtilFormatOut;
-import org.ofbiz.base.util.UtilXml;
+import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilDateTime;
+import org.ofbiz.base.util.UtilFormatOut;
+import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.base.util.collections.MapStack;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
+import org.ofbiz.content.content.ContentWorker;
 import org.ofbiz.content.widget.form.FormFactory;
 import org.ofbiz.content.widget.form.FormStringRenderer;
 import org.ofbiz.content.widget.form.ModelForm;
 import org.ofbiz.content.widget.html.HtmlFormRenderer;
-import org.ofbiz.content.content.ContentWorker;
+import org.ofbiz.content.widget.html.HtmlMenuRenderer;
 import org.ofbiz.content.widget.menu.MenuFactory;
 import org.ofbiz.content.widget.menu.MenuStringRenderer;
 import org.ofbiz.content.widget.menu.ModelMenu;
-import org.ofbiz.content.widget.html.HtmlMenuRenderer;
+import org.ofbiz.content.widget.screen.ModelScreen.ScreenRenderer;
+import org.ofbiz.entity.GenericValue;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
-import org.ofbiz.base.util.GeneralException;
-import org.ofbiz.entity.GenericValue;
 
 /**
  * Widget Library - Screen model class
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      3.1
  */
 public abstract class ModelScreenWidget {
@@ -71,6 +75,7 @@ public abstract class ModelScreenWidget {
     
     public ModelScreenWidget(ModelScreen modelScreen, Element widgetElement) {
         this.modelScreen = modelScreen;
+        if (Debug.verboseOn()) Debug.logVerbose("Reading Screen sub-widget with name: " + widgetElement.getNodeName(), module);
     }
     
     public abstract void renderWidgetString(Writer writer, Map context, ScreenStringRenderer screenStringRenderer);
@@ -84,21 +89,19 @@ public abstract class ModelScreenWidget {
             Element subElement = (Element) subElementIter.next();
 
             if ("section".equals(subElement.getNodeName())) {
-                subWidgets.add(new Section(modelScreen, widgetElement));
+                subWidgets.add(new Section(modelScreen, subElement));
             } else if ("container".equals(subElement.getNodeName())) {
-                subWidgets.add(new Container(modelScreen, widgetElement));
+                subWidgets.add(new Container(modelScreen, subElement));
             } else if ("include-screen".equals(subElement.getNodeName())) {
-                subWidgets.add(new IncludeScreen(modelScreen, widgetElement));
+                subWidgets.add(new IncludeScreen(modelScreen, subElement));
             } else if ("decorator-screen".equals(subElement.getNodeName())) {
-                // TODO: implement this
-            } else if ("decorator-section".equals(subElement.getNodeName())) {
-                // TODO: implement this
+                subWidgets.add(new DecoratorScreen(modelScreen, subElement));
             } else if ("decorator-section-include".equals(subElement.getNodeName())) {
-                // TODO: implement this
+                subWidgets.add(new DecoratorSectionInclude(modelScreen, subElement));
             } else if ("label".equals(subElement.getNodeName())) {
-                subWidgets.add(new Label(modelScreen, widgetElement));
+                subWidgets.add(new Label(modelScreen, subElement));
             } else if ("form".equals(subElement.getNodeName())) {
-                subWidgets.add(new Form(modelScreen, widgetElement));
+                subWidgets.add(new Form(modelScreen, subElement));
             } else if ("menu".equals(subElement.getNodeName())) {
                 subWidgets.add(new Menu(modelScreen, widgetElement));
             } else if ("tree".equals(subElement.getNodeName())) {
@@ -108,7 +111,7 @@ public abstract class ModelScreenWidget {
             } else if ("sub-content".equals(subElement.getNodeName())) {
                 subWidgets.add(new SubContent(modelScreen, widgetElement));
             } else if ("platform-specific".equals(subElement.getNodeName())) {
-                subWidgets.add(new PlatformSpecific(modelScreen, widgetElement));
+                subWidgets.add(new PlatformSpecific(modelScreen, subElement));
             } else {
                 throw new IllegalArgumentException("Found invalid screen widget element with name: " + subElement.getNodeName());
             }
@@ -121,7 +124,34 @@ public abstract class ModelScreenWidget {
         Iterator subWidgetIter = subWidgets.iterator();
         while (subWidgetIter.hasNext()) {
             ModelScreenWidget subWidget = (ModelScreenWidget) subWidgetIter.next();
+            if (Debug.verboseOn()) Debug.logVerbose("Rendering screen widget " + subWidget.getClass().getName(), module);
             subWidget.renderWidgetString(writer, context, screenStringRenderer);
+        }
+    }
+
+    public static class SectionsRenderer {
+        protected Map sectionMap;
+        protected ScreenStringRenderer screenStringRenderer;
+        protected Map context;
+        
+        public SectionsRenderer(Map sectionMap, Map context, ScreenStringRenderer screenStringRenderer) {
+            this.sectionMap = sectionMap;
+            this.context = context;
+            this.screenStringRenderer = screenStringRenderer;
+        }
+
+        public String render(String sectionName) {
+            Writer tempWriter = new StringWriter();
+            this.render(sectionName, tempWriter);
+            return tempWriter.toString();
+        }
+        
+        public void render(String sectionName, Writer writer) {
+            ModelScreenWidget section = (ModelScreenWidget) this.sectionMap.get(sectionName);
+            // if no section by that name, write nothing
+            if (section != null) {
+                section.renderWidgetString(writer, this.context, this.screenStringRenderer);
+            }
         }
     }
 
@@ -138,13 +168,19 @@ public abstract class ModelScreenWidget {
         }
 
         public void renderWidgetString(Writer writer, Map context, ScreenStringRenderer screenStringRenderer) {
-            // section by definition do not themselves do anything, so this method will generally do nothing, but we'll call it anyway
-            screenStringRenderer.renderSectionBegin(writer, context, this);
-            
-            // render sub-widgets
-            renderSubWidgetsString(this.subWidgets, writer, context, screenStringRenderer);
+            try {
+                // section by definition do not themselves do anything, so this method will generally do nothing, but we'll call it anyway
+                screenStringRenderer.renderSectionBegin(writer, context, this);
+                
+                // render sub-widgets
+                renderSubWidgetsString(this.subWidgets, writer, context, screenStringRenderer);
 
-            screenStringRenderer.renderSectionEnd(writer, context, this);
+                screenStringRenderer.renderSectionEnd(writer, context, this);
+            } catch (IOException e) {
+                String errMsg = "Error rendering label in screen named [" + this.modelScreen.getName() + "]: " + e.toString();
+                Debug.logError(e, errMsg, module);
+                throw new RuntimeException(errMsg);
+            }
         }
         
         public String getName() {
@@ -167,12 +203,18 @@ public abstract class ModelScreenWidget {
         }
 
         public void renderWidgetString(Writer writer, Map context, ScreenStringRenderer screenStringRenderer) {
-            screenStringRenderer.renderContainerBegin(writer, context, this);
-            
-            // render sub-widgets
-            renderSubWidgetsString(this.subWidgets, writer, context, screenStringRenderer);
+            try {
+                screenStringRenderer.renderContainerBegin(writer, context, this);
+                
+                // render sub-widgets
+                renderSubWidgetsString(this.subWidgets, writer, context, screenStringRenderer);
 
-            screenStringRenderer.renderContainerEnd(writer, context, this);
+                screenStringRenderer.renderContainerEnd(writer, context, this);
+            } catch (IOException e) {
+                String errMsg = "Error rendering label in screen named [" + this.modelScreen.getName() + "]: " + e.toString();
+                Debug.logError(e, errMsg, module);
+                throw new RuntimeException(errMsg);
+            }
         }
         
         public String getId(Map context) {
@@ -189,11 +231,11 @@ public abstract class ModelScreenWidget {
         protected FlexibleStringExpander locationExdr;
         protected FlexibleStringExpander shareScopeExdr;
         
-        public IncludeScreen(ModelScreen modelScreen, Element sectionElement) {
-            super(modelScreen, sectionElement);
-            this.nameExdr = new FlexibleStringExpander(sectionElement.getAttribute("name"));
-            this.locationExdr = new FlexibleStringExpander(sectionElement.getAttribute("location"));
-            this.shareScopeExdr = new FlexibleStringExpander(sectionElement.getAttribute("share-scope"));
+        public IncludeScreen(ModelScreen modelScreen, Element includeScreenElement) {
+            super(modelScreen, includeScreenElement);
+            this.nameExdr = new FlexibleStringExpander(includeScreenElement.getAttribute("name"));
+            this.locationExdr = new FlexibleStringExpander(includeScreenElement.getAttribute("location"));
+            this.shareScopeExdr = new FlexibleStringExpander(includeScreenElement.getAttribute("share-scope"));
         }
 
         public void renderWidgetString(Writer writer, Map context, ScreenStringRenderer screenStringRenderer) {
@@ -210,22 +252,30 @@ public abstract class ModelScreenWidget {
             String name = this.getName(context);
             String location = this.getLocation(context);
             
-            try {
-                ModelScreen modelScreen = ScreenFactory.getScreenFromLocation(location, name, this.modelScreen.getDelegator(), this.modelScreen.getDispacher());
-                modelScreen.renderScreenString(writer, context, screenStringRenderer);
-            } catch (IOException e) {
-                String errMsg = "Error rendering included screen named [" + name + "] at location [" + location + "]: " + e.toString();
-                Debug.logError(e, errMsg, module);
-                throw new RuntimeException(errMsg);
-            } catch (SAXException e) {
-                String errMsg = "Error rendering included screen named [" + name + "] at location [" + location + "]: " + e.toString();
-                Debug.logError(e, errMsg, module);
-                throw new RuntimeException(errMsg);
-            } catch (ParserConfigurationException e) {
-                String errMsg = "Error rendering included screen named [" + name + "] at location [" + location + "]: " + e.toString();
-                Debug.logError(e, errMsg, module);
-                throw new RuntimeException(errMsg);
+            ModelScreen modelScreen = null;
+            if (UtilValidate.isNotEmpty(location)) {
+                try {
+                    modelScreen = ScreenFactory.getScreenFromLocation(location, name);
+                } catch (IOException e) {
+                    String errMsg = "Error rendering included screen named [" + name + "] at location [" + location + "]: " + e.toString();
+                    Debug.logError(e, errMsg, module);
+                    throw new RuntimeException(errMsg);
+                } catch (SAXException e) {
+                    String errMsg = "Error rendering included screen named [" + name + "] at location [" + location + "]: " + e.toString();
+                    Debug.logError(e, errMsg, module);
+                    throw new RuntimeException(errMsg);
+                } catch (ParserConfigurationException e) {
+                    String errMsg = "Error rendering included screen named [" + name + "] at location [" + location + "]: " + e.toString();
+                    Debug.logError(e, errMsg, module);
+                    throw new RuntimeException(errMsg);
+                }
+            } else {
+                modelScreen = (ModelScreen) this.modelScreen.modelScreenMap.get(name);
+                if (modelScreen == null) {
+                    throw new IllegalArgumentException("Could not find screen with name [" + name + "] in the same file as the screen with name [" + this.modelScreen.getName() + "]");
+                }
             }
+            modelScreen.renderScreenString(writer, context, screenStringRenderer);
         }
         
         public String getName(Map context) {
@@ -243,6 +293,116 @@ public abstract class ModelScreenWidget {
         }
     }
 
+    public static class DecoratorScreen extends ModelScreenWidget {
+        protected FlexibleStringExpander nameExdr;
+        protected FlexibleStringExpander locationExdr;
+        protected Map sectionMap = new HashMap();
+        
+        public DecoratorScreen(ModelScreen modelScreen, Element decoratorScreenElement) {
+            super(modelScreen, decoratorScreenElement);
+            this.nameExdr = new FlexibleStringExpander(decoratorScreenElement.getAttribute("name"));
+            this.locationExdr = new FlexibleStringExpander(decoratorScreenElement.getAttribute("location"));
+            
+            List decoratorSectionElementList = UtilXml.childElementList(decoratorScreenElement, "decorator-section");
+            Iterator decoratorSectionElementIter = decoratorSectionElementList.iterator();
+            while (decoratorSectionElementIter.hasNext()) {
+                Element decoratorSectionElement = (Element) decoratorSectionElementIter.next();
+                String name = decoratorSectionElement.getAttribute("name");
+                this.sectionMap.put(name, new DecoratorSection(modelScreen, decoratorSectionElement));
+            }
+        }
+
+        public void renderWidgetString(Writer writer, Map context, ScreenStringRenderer screenStringRenderer) {
+            // isolate the scope
+            if (!(context instanceof MapStack)) {
+                context = new MapStack(context);
+            }
+            
+            MapStack contextMs = (MapStack) context;
+
+            // create a standAloneStack, basically a "save point" for this SectionsRenderer, and make a new "screens" object just for it so it is isolated and doesn't follow the stack down
+            MapStack standAloneStack = contextMs.standAloneChildStack();
+            standAloneStack.put("screens", new ScreenRenderer(writer, context, screenStringRenderer));
+            SectionsRenderer sections = new SectionsRenderer(this.sectionMap, standAloneStack, screenStringRenderer);
+            
+            // put the sectionMap in the context, make sure it is in the sub-scope, ie after calling push on the MapStack
+            contextMs.push();
+            context.put("sections", sections);
+            
+            String name = this.getName(context);
+            String location = this.getLocation(context);
+            
+            ModelScreen modelScreen = null;
+            if (UtilValidate.isNotEmpty(location)) {
+                try {
+                    modelScreen = ScreenFactory.getScreenFromLocation(location, name);
+                } catch (IOException e) {
+                    String errMsg = "Error rendering included screen named [" + name + "] at location [" + location + "]: " + e.toString();
+                    Debug.logError(e, errMsg, module);
+                    throw new RuntimeException(errMsg);
+                } catch (SAXException e) {
+                    String errMsg = "Error rendering included screen named [" + name + "] at location [" + location + "]: " + e.toString();
+                    Debug.logError(e, errMsg, module);
+                    throw new RuntimeException(errMsg);
+                } catch (ParserConfigurationException e) {
+                    String errMsg = "Error rendering included screen named [" + name + "] at location [" + location + "]: " + e.toString();
+                    Debug.logError(e, errMsg, module);
+                    throw new RuntimeException(errMsg);
+                }
+            } else {
+                modelScreen = (ModelScreen) this.modelScreen.modelScreenMap.get(name);
+                if (modelScreen == null) {
+                    throw new IllegalArgumentException("Could not find screen with name [" + name + "] in the same file as the screen with name [" + this.modelScreen.getName() + "]");
+                }
+            }
+            modelScreen.renderScreenString(writer, context, screenStringRenderer);
+        }
+
+        public String getName(Map context) {
+            return this.nameExdr.expandString(context);
+        }
+        
+        public String getLocation(Map context) {
+            return this.locationExdr.expandString(context);
+        }
+    }
+
+    public static class DecoratorSection extends ModelScreenWidget {
+        protected String name;
+        protected List subWidgets;
+        
+        public DecoratorSection(ModelScreen modelScreen, Element decoratorSectionElement) {
+            super(modelScreen, decoratorSectionElement);
+            this.name = decoratorSectionElement.getAttribute("name");
+            // read sub-widgets
+            this.subWidgets = ModelScreenWidget.readSubWidgets(this.modelScreen, decoratorSectionElement);
+        }
+
+        public void renderWidgetString(Writer writer, Map context, ScreenStringRenderer screenStringRenderer) {
+            // render sub-widgets
+            renderSubWidgetsString(this.subWidgets, writer, context, screenStringRenderer);
+        }
+    }
+    
+    public static class DecoratorSectionInclude extends ModelScreenWidget {
+        protected String name;
+        
+        public DecoratorSectionInclude(ModelScreen modelScreen, Element decoratorSectionElement) {
+            super(modelScreen, decoratorSectionElement);
+            this.name = decoratorSectionElement.getAttribute("name");
+        }
+
+        public void renderWidgetString(Writer writer, Map context, ScreenStringRenderer screenStringRenderer) {
+            SectionsRenderer sections = (SectionsRenderer) context.get("sections");
+            // for now if sections is null, just log a warning; may be permissible to make the screen for flexible
+            if (sections == null) {
+                Debug.logWarning("In decorator-section-include could not find sections object in the context, not rendering section with name [" + this.name + "]", module);
+            } else {
+                sections.render(this.name, writer);
+            }
+        }
+    }
+    
     public static class Label extends ModelScreenWidget {
         protected FlexibleStringExpander textExdr;
         
@@ -262,7 +422,13 @@ public abstract class ModelScreenWidget {
         }
 
         public void renderWidgetString(Writer writer, Map context, ScreenStringRenderer screenStringRenderer) {
-            screenStringRenderer.renderLabel(writer, context, this);
+            try {
+                screenStringRenderer.renderLabel(writer, context, this);
+            } catch (IOException e) {
+                String errMsg = "Error rendering label in screen named [" + this.modelScreen.getName() + "]: " + e.toString();
+                Debug.logError(e, errMsg, module);
+                throw new RuntimeException(errMsg);
+            }
         }
         
         public String getText(Map context) {
@@ -294,7 +460,7 @@ public abstract class ModelScreenWidget {
             String location = this.getLocation(context);
             ModelForm modelForm = null;
             try {
-                modelForm = FormFactory.getFormFromLocation(this.getLocation(context), this.getName(context), this.modelScreen.getDelegator(), this.modelScreen.getDispacher());
+                modelForm = FormFactory.getFormFromLocation(this.getLocation(context), this.getName(context), this.modelScreen.getDelegator(context), this.modelScreen.getDispatcher(context));
             } catch (IOException e) {
                 String errMsg = "Error rendering included form named [" + name + "] at location [" + location + "]: " + e.toString();
                 Debug.logError(e, errMsg, module);
@@ -381,7 +547,7 @@ public abstract class ModelScreenWidget {
             Map map = null;
             String expandedContentId = contentId.expandString(context);
             try {
-                ContentWorker.renderContentAsTextCache(this.modelScreen.delegator, expandedContentId, writer, map, null, locale, mimeTypeId);
+                ContentWorker.renderContentAsTextCache(this.modelScreen.getDelegator(context), expandedContentId, writer, map, null, locale, mimeTypeId);
 
             } catch(GeneralException e) {
                 String errMsg = "Error rendering included content with id [" + contentId + "] : " + e.toString();
@@ -432,7 +598,7 @@ public abstract class ModelScreenWidget {
                 userLogin = (GenericValue)session.getAttribute("userLogin");
             }
             try {
-                ContentWorker.renderSubContentAsTextCache(this.modelScreen.delegator, expandedContentId, writer, expandedAssocName, null, map, locale, mimeTypeId, userLogin, fromDate, nullThruDatesOnly);
+                ContentWorker.renderSubContentAsTextCache(this.modelScreen.getDelegator(context), expandedContentId, writer, expandedAssocName, null, map, locale, mimeTypeId, userLogin, fromDate, nullThruDatesOnly);
             } catch(GeneralException e) {
                 String errMsg = "Error rendering included content with id [" + contentId + "] and assoc [" + assocName + "]: " + e.toString();
                 Debug.logError(e, errMsg, module);
@@ -442,8 +608,6 @@ public abstract class ModelScreenWidget {
                 Debug.logError(e2, errMsg, module);
                 throw new RuntimeException(errMsg);
             }
-
-
         }
         
         public String getContentId(Map context) {
@@ -472,7 +636,7 @@ public abstract class ModelScreenWidget {
             String location = this.getLocation(context);
             ModelMenu modelMenu = null;
             try {
-                modelMenu = MenuFactory.getMenuFromLocation(this.getLocation(context), this.getName(context), this.modelScreen.getDelegator(), this.modelScreen.getDispacher());
+                modelMenu = MenuFactory.getMenuFromLocation(this.getLocation(context), this.getName(context), this.modelScreen.getDelegator(context), this.modelScreen.getDispatcher(context));
             } catch (IOException e) {
                 String errMsg = "Error rendering included menu named [" + name + "] at location [" + location + "]: " + e.toString();
                 Debug.logError(e, errMsg, module);

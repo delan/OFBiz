@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE screens PUBLIC "-//OFBiz//DTD OFBiz Screen Widget//EN" "http://www.ofbiz.org/dtds/widget-screen.dtd">
+
+
+<screens>
+	<screen name="main">
+		<actions>
+			<script location="component://product/widget/catalog/catalogsetup.bsh"/>
+			<set field="layoutSettings.companyName" from-field="uiLabelMap.CatalogCompanyName" global="true"/>
+			<set field="layoutSettings.companySubtitle" from-field="uiLabelMap.ProductCompanySubtitle" global="true"/>
+			<set field="layoutSettings.headerImageUrl" value="/images/ofbiz_logo.jpg" global="true"/>
+			<!-- <set field="layoutSettings.headerMiddleBackgroundUrl" value="" global="true"/> -->
+			<!-- <set field="layoutSettings.headerRightBackgroundUrl" value="" global="true"/> -->
+            <set field="activeApp" value="catalogmgr" global="true"/>
+		</actions>
+		<section>
+			<decorator-section-include name="body"/>
+		</section>
+	</screen>
+</screens>
+

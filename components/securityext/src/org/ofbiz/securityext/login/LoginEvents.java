@@ -1,5 +1,5 @@
 /*
- * $Id: LoginEvents.java,v 1.22 2004/07/10 06:04:10 ajzeneski Exp $
+ * $Id: LoginEvents.java,v 1.23 2004/07/18 10:09:43 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -25,7 +25,6 @@ package org.ofbiz.securityext.login;
 
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.ServletContext;
@@ -33,10 +32,10 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.transaction.TransactionManager;
-import javax.transaction.Transaction;
-import javax.transaction.SystemException;
 import javax.transaction.InvalidTransactionException;
+import javax.transaction.SystemException;
+import javax.transaction.Transaction;
+import javax.transaction.TransactionManager;
 
 import org.ofbiz.base.component.ComponentConfig;
 import org.ofbiz.base.util.Debug;
@@ -47,12 +46,13 @@ import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.content.stats.VisitHandler;
+import org.ofbiz.content.webapp.control.LoginWorker;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.transaction.GenericTransactionException;
 import org.ofbiz.entity.transaction.TransactionFactory;
 import org.ofbiz.entity.transaction.TransactionUtil;
-import org.ofbiz.entity.transaction.GenericTransactionException;
 import org.ofbiz.party.contact.ContactHelper;
 import org.ofbiz.product.store.ProductStoreWorker;
 import org.ofbiz.security.Security;
@@ -67,17 +67,13 @@ import org.ofbiz.service.ModelService;
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="">Dustin Caldwell</a>
  * @author     <a href="mailto:therrick@yahoo.com">Tom Herrick</a>
- * @version    $Revision: 1.22 $
+ * @version    $Revision: 1.23 $
  * @since      2.0
  */
 public class LoginEvents {
 
     public static final String module = LoginEvents.class.getName();
     public static final String resource = "SecurityextUiLabels";
-    public static final String EXTERNAL_LOGIN_KEY_ATTR = "externalLoginKey";
-
-    /** This Map is keyed by the randomly generated externalLoginKey and the value is a UserLogin GenericValue object */
-    public static Map externalLoginKeys = new HashMap();
 
     /**
      * Save USERNAME and PASSWORD for use by auth pages even if we start in non-auth pages.
@@ -256,6 +252,16 @@ public class LoginEvents {
     public static void doBasicLogin(GenericValue userLogin, HttpServletRequest request) {
         HttpSession session = request.getSession();
         session.setAttribute("userLogin", userLogin);
+        
+        try {
+            GenericValue person = userLogin.getRelatedOne("Person");
+            GenericValue partyGroup = userLogin.getRelatedOne("PartyGroup");
+            if (person != null) session.setAttribute("person", person);
+            if (partyGroup != null) session.setAttribute("partyGroup", partyGroup);
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Error getting person/partyGroup info for session, ignoring...", module);
+        }
+        
         // let the visit know who the user is
         VisitHandler.setUserLogin(session, userLogin, false);
     }
@@ -672,46 +678,13 @@ public class LoginEvents {
         return "success";
     }
 
-    /**
-     * Gets (and creates if necessary) a key to be used for an external login parameter
-     */
-    public static String getExternalLoginKey(HttpServletRequest request) {
-        Debug.logInfo("Running getExternalLoginKey, externalLoginKeys.size=" + externalLoginKeys.size(), module);
-        GenericValue userLogin = (GenericValue) request.getAttribute("userLogin");
-
-        String externalKey = (String) request.getAttribute(EXTERNAL_LOGIN_KEY_ATTR);
-        if (externalKey != null) return externalKey;
-
-        HttpSession session = request.getSession();
-        synchronized (session) {
-            // if the session has a previous key in place, remove it from the master list
-            String sesExtKey = (String) session.getAttribute(EXTERNAL_LOGIN_KEY_ATTR);
-            if (sesExtKey != null) {
-                externalLoginKeys.remove(sesExtKey);
-            }
-
-            //check the userLogin here, after the old session setting is set so that it will always be cleared
-            if (userLogin == null) return "";
-
-            //no key made yet for this request, create one
-            while (externalKey == null || externalLoginKeys.containsKey(externalKey)) {
-                externalKey = "EL" + Long.toString(Math.round(Math.random() * 1000000)) + Long.toString(Math.round(Math.random() * 1000000));
-            }
-
-            request.setAttribute(EXTERNAL_LOGIN_KEY_ATTR, externalKey);
-            session.setAttribute(EXTERNAL_LOGIN_KEY_ATTR, externalKey);
-            externalLoginKeys.put(externalKey, userLogin);
-            return externalKey;
-        }
-    }
-
     public static String checkExternalLoginKey(HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession();
 
-        String externalKey = request.getParameter(EXTERNAL_LOGIN_KEY_ATTR);
+        String externalKey = request.getParameter(LoginWorker.EXTERNAL_LOGIN_KEY_ATTR);
         if (externalKey == null) return "success";
 
-        GenericValue userLogin = (GenericValue) externalLoginKeys.get(externalKey);
+        GenericValue userLogin = (GenericValue) LoginWorker.externalLoginKeys.get(externalKey);
         if (userLogin != null) {
             // found userLogin, do the external login...
 
@@ -734,13 +707,6 @@ public class LoginEvents {
         }
 
         return "success";
-    }
-
-    public static void cleanupExternalLoginKey(HttpSession session) {
-        String sesExtKey = (String) session.getAttribute(EXTERNAL_LOGIN_KEY_ATTR);
-        if (sesExtKey != null) {
-            externalLoginKeys.remove(sesExtKey);
-        }
     }
 
     public static boolean isFlaggedLoggedOut(GenericValue userLogin) {
@@ -782,6 +748,5 @@ public class LoginEvents {
         }
 
         return true;
-
     }
 }

@@ -22,7 +22,7 @@
  *@author     Johan Isacsson
  *@author     Andy Zeneski
  *@author     David E. Jones
- *@version    $Revision: 1.4 $
+ *@version    $Revision: 1.5 $
  *@since      2.2
  */
 
@@ -32,8 +32,9 @@ import org.ofbiz.base.util.*;
 import org.ofbiz.securityext.login.*;
 import org.ofbiz.common.*;
 import org.ofbiz.party.contact.*;
+import org.ofbiz.content.webapp.control.*;
 
-String externalLoginKey = LoginEvents.getExternalLoginKey(request);
+String externalLoginKey = LoginWorker.getExternalLoginKey(request);
 String externalKeyParam = externalLoginKey == null ? "" : "&externalLoginKey=" + externalLoginKey;
 context.put("externalKeyParam",externalKeyParam);
 

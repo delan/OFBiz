@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTree.java,v 1.2 2004/07/16 17:35:08 byersa Exp $
+ * $Id: ModelTree.java,v 1.3 2004/07/18 10:09:35 jonesde Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -38,7 +38,7 @@ import org.w3c.dom.Element;
  * Widget Library - Tree model class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      3.1
  */
 public class ModelTree extends ModelScreenWidget {
@@ -102,7 +102,6 @@ public class ModelTree extends ModelScreenWidget {
      *   use the same tree definitions for many types of tree UIs
      */
     public void renderWidgetString(Writer writer, Map context, ScreenStringRenderer screenStringRenderer) {
-        
             ModelNode node = (ModelNode)nodeMap.get(rootNodeName);
             node.renderWidgetString(writer, context, screenStringRenderer);
     }
@@ -137,10 +136,8 @@ public class ModelTree extends ModelScreenWidget {
             this.actions.addAll(lst);
         
             Element screenElement = UtilXml.firstChildElement(nodeElement, "screen");
-            GenericDelegator delegator = modelTree.modelScreen.getDelegator();
-            LocalDispatcher dispatcher = modelTree.modelScreen.getDispacher();
             if (screenElement != null) {
-                this.screen = new ModelScreen(screenElement, delegator, dispatcher);
+                //this isn't how it works at all, can't create a full screen def from here, just references a screen so we need an object that does that: this.screen = new ModelScreen(screenElement);
             }
             
             Element labelElement = UtilXml.firstChildElement(nodeElement, "label");
@@ -167,7 +164,9 @@ public class ModelTree extends ModelScreenWidget {
             
             ModelScreenAction.runSubActions(this.actions, context);
          
-            screenStringRenderer.renderNodeOpen(writer, context,  this);
+            // TODO: the item below needs to be moved to a TreeStringRenderer class, shouldn't be in the ScreenStringRenderer
+            // screenStringRenderer.renderNodeOpen(writer, context,  this);
+            
             if ( screen != null)
                 screen.renderScreenString(writer, context, screenStringRenderer);
             if ( label != null)
@@ -191,7 +190,8 @@ public class ModelTree extends ModelScreenWidget {
                 }
             }
 
-            screenStringRenderer.renderNodeClose(writer, context,  this);
+            // TODO: the item below needs to be moved to a TreeStringRenderer class, shouldn't be in the ScreenStringRenderer
+            //screenStringRenderer.renderNodeClose(writer, context,  this);
         }
 
         public List sortNodes(List nodeList) {
@@ -243,10 +243,6 @@ public class ModelTree extends ModelScreenWidget {
             }
     
         }
-
-
     }
-
-
 }
 

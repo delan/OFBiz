@@ -5,11 +5,12 @@ import org.ofbiz.securityext.login.*;
 import org.ofbiz.common.*;
 import org.ofbiz.party.contact.*;
 import org.ofbiz.workeffort.workeffort.*;
+import org.ofbiz.content.webapp.control.*;
 
 delegator = request.getAttribute("delegator");
 dispatcher = request.getAttribute("dispatcher");
 
-externalLoginKey = LoginEvents.getExternalLoginKey(request);
+externalLoginKey = LoginWorker.getExternalLoginKey(request);
 externalKeyParam = externalLoginKey == null ? "" : "&externalLoginKey=" + externalLoginKey;
 context.put("externalKeyParam",externalKeyParam);
 
