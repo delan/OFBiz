@@ -108,9 +108,11 @@
 
       <field-to-field map-name="parameters" field-name="contentIdTo" to-map-name="context2" />
       <field-to-field map-name="parameters" field-name="mapKey" to-map-name="context2" />
-      <call-service in-map-name="context2" service-name="deactivateAssocs">
-        <result-to-field field-name="deactivateList" result-name="deactivateList"/>
-      </call-service>
+      <if-not-empty map-name="context2" field-name="activeContentId">
+        <call-service in-map-name="context2" service-name="deactivateAssocs">
+          <result-to-field field-name="deactivateList" result-name="deactivateList"/>
+        </call-service>
+      </if-not-empty>
 
       <!-- add to most recently used list -->
       <!--
@@ -202,9 +204,11 @@
 
       <field-to-field map-name="formInput" field-name="contentIdTo" to-map-name="context2" />
       <field-to-field map-name="formInput" field-name="mapKey" to-map-name="context2" />
-      <call-service in-map-name="context2" service-name="deactivateAssocs">
-        <result-to-field field-name="deactivateList" result-name="deactivateList"/>
-      </call-service>
+      <if-not-empty map-name="context2" field-name="activeContentId">
+        <call-service in-map-name="context2" service-name="deactivateAssocs">
+          <result-to-field field-name="deactivateList" result-name="deactivateList"/>
+        </call-service>
+      </if-not-empty>
 
       <!-- add to most recently used list -->
       <!--
@@ -255,9 +259,11 @@
 
       <field-to-field map-name="parameters" field-name="contentIdTo" to-map-name="context2" />
       <field-to-field map-name="parameters" field-name="mapKey" to-map-name="context2" />
-      <call-service in-map-name="context2" service-name="deactivateAssocs">
-        <result-to-field field-name="deactivateList" result-name="deactivateList"/>
-      </call-service>
+      <if-not-empty map-name="context2" field-name="activeContentId">
+        <call-service in-map-name="context2" service-name="deactivateAssocs">
+          <result-to-field field-name="deactivateList" result-name="deactivateList"/>
+        </call-service>
+      </if-not-empty>
 
       <!-- add to most recently used list -->
       <!--
