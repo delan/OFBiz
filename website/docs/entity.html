@@ -7,27 +7,27 @@
 
 <body>
 
-<table width='100%'>
+<table width="100%">
   <tr>
-    <td width='50%' align='left' valign='center'>
-        <a href="http://www.ofbiz.org"><img src="http://www.ofbiz.org/images/ofbiz_logo.jpg"  border="0" alt='The Open For Business Project'></a>
+    <td width="50%" align="left" valign="center">
+        <a href="http://www.ofbiz.org"><img src="http://www.ofbiz.org/images/ofbiz_logo.jpg"  border="0" alt="The Open For Business Project"></a>
     </td>
-    <td width='50%' align='right' valign='center'>
+    <td width="50%" align="right" valign="center">
         <a href="http://sf.net/projects/ofbiz"><img src="http://sourceforge.net/sflogo.php?group_id=27173" width="88" height="31" border="0" alt="SourceForge Logo"></a> 
         <a href="http://www.ofbiz.org"><img src="http://www.ofbiz.org/images/ofbiz_powered.gif" width="88" border="0"></a>
     </td>
   </tr>
 </table>
-<hr class='sepbar'>
+<hr class="sepbar">
 
 <h2 align="center">The Open For Business Project: Entity Engine Guide</h2>
  
-<div class='contenttext'>Written By: David E. Jones, <a href="mailto:jonesde@ofbiz.org">jonesde@ofbiz.org</a></div>
-<div class='contenttext'>Minor corrections by: <a href="mailto:PDebski@a4.pl">Pawel H. Debski</a></div>
-<div class='contenttext'>Last Updated: January 28, 2003</div>
-<!-- $Id: entity.html,v 1.2 2003/08/19 17:45:21 jonesde Exp $ -->
+<div class="contenttext">Written By: David E. Jones, <a href="mailto:jonesde@ofbiz.org">jonesde@ofbiz.org</a></div>
+<div class="contenttext">Minor corrections by: <a href="mailto:PDebski@a4.pl">Pawel H. Debski</a></div>
+<div class="contenttext">Last Updated: March 6, 2004</div>
+<!-- $Id: entity.html,v 1.3 2004/03/07 03:28:30 jonesde Exp $ -->
 
-<hr class='sepbar'>
+<hr class="sepbar">
 <h3>Table of Contents</h3>
 
 <ul>
@@ -40,22 +40,23 @@
   <li><a href="#Core_Web_Tools">Core Web Tools</a>
 </ul>
 
-<hr class='sepbar'>
+<hr class="sepbar">
 
 <h3><a name="Related_Documents">Related Documents:</a></h3>
-<hr class='sepbar'>
+<hr class="sepbar">
 <ul>
   <li><a href="entityconfig.html">Entity Engine Configuration Guide</a></li>
   <li><a href="coreconfig.html">Core Configuration Guide</a></li>
-  <li><a href="api/index.html">Core JavaDoc (includes Entity Engine)</a></li>
+  <li><a href="/api/components/entity/build/javadocs/index.html">Entity Component API</a></li>
+  <li><a href="/api/components/entityext/build/javadocs/index.html">Entity Extensions Component API</a></li>
   <li><a href="/dtds/entitymodel.dtd">Entity Model DTD</a></li>
   <li><a href="/dtds/entitygroup.dtd">Entity Group DTD</a></li>
   <li><a href="/dtds/fieldtypemodel.dtd">Field Type Model DTD</a></li>
 </ul>
 
-<hr class='sepbar'>
+<hr class="sepbar">
 <h3><a name="Introduction">Introduction</a></h3>
-<hr class='sepbar'>
+<hr class="sepbar">
 <P>The Open For Business Entity Engine is a set of tools and patterns used to
 model and manage entity specific data. In this context an entity is a piece of
 data defined by a set of fields and a set of relations to other entities. This
@@ -128,9 +129,9 @@ data sources like legacy systems over HTTP or messaging services through a bit o
 framework.</P>
 
 
-<hr class='sepbar'>
+<hr class="sepbar">
 <h3><a name="Entity_Modeling">Entity Modeling</a></h3>
-<hr class='sepbar'>
+<hr class="sepbar">
 
 <P><B>Entity Modeling Files &amp; Locations</B></P>
 
@@ -176,7 +177,7 @@ name, the corresponding table name, the package name for the entity, and meta
 data about the entity such as the author, a copyright notice, a description, and
 so forth. Here is an example of an XML entity definition:</P>
 
-<pre style='border: solid black 1px; background-color: #EEEEFF; color: black;'>
+<pre style="border: solid black 1px; background-color: #EEEEFF; color: black;">
     &lt;entity title=&quot;Sample Entity&quot;
             copyright=&quot;Copyright (c) 2001 John Doe Enterprises&quot;
             author=&quot;John Doe&quot; version=&quot;1.0&quot;
@@ -266,11 +267,11 @@ key map specified a field name (field-name) and a related field name (rel-field-
 If the two column names are the same, the rel-field-name does not have to be
 specified.</P>
 
-<p class='contenttext'><b>Entity Element Reference</b></p>
+<p class="contenttext"><b>Entity Element Reference</b></p>
 
-<p class='contenttext'><b><u>entity</u></b></p>
+<p class="contenttext"><b><u>entity</u></b></p>
 
-<table cellpadding='2' cellspacing='0' border='1'>
+<table cellpadding="2" cellspacing="0" border="1">
 <tr>
     <td><b>Attribute&nbsp;Name</b></td>
     <td><b>Required?</b></td>
@@ -339,7 +340,7 @@ specified.</P>
 </tr>
 </table>
 <br>
-<table cellpadding='2' cellspacing='0' border='1'>
+<table cellpadding="2" cellspacing="0" border="1">
 <tr>
     <td><b>Sub-Element&nbsp;Name</b></td>
     <td><b>How&nbsp;Many</b></td>
@@ -365,9 +366,9 @@ specified.</P>
 </tr>
 </table>
 
-<p class='contenttext'><b><u>field</u></b></p>
+<p class="contenttext"><b><u>field</u></b></p>
 
-<table cellpadding='2' cellspacing='0' border='1'>
+<table cellpadding="2" cellspacing="0" border="1">
 <tr>
     <td><b>Attribute&nbsp;Name</b></td>
     <td><b>Required?</b></td>
@@ -391,7 +392,7 @@ specified.</P>
 </tr>
 </table>
 <br>
-<table cellpadding='2' cellspacing='0' border='1'>
+<table cellpadding="2" cellspacing="0" border="1">
 <tr>
     <td><b>Sub-Element&nbsp;Name</b></td>
     <td><b>How&nbsp;Many</b></td>
@@ -406,9 +407,9 @@ specified.</P>
 </tr>
 </table>
 
-<p class='contenttext'><b><u>prim-key</u></b></p>
+<p class="contenttext"><b><u>prim-key</u></b></p>
 
-<table cellpadding='2' cellspacing='0' border='1'>
+<table cellpadding="2" cellspacing="0" border="1">
 <tr>
     <td><b>Attribute&nbsp;Name</b></td>
     <td><b>Required?</b></td>
@@ -420,9 +421,9 @@ specified.</P>
 </tr>
 </table>
 
-<p class='contenttext'><b><u>relation</u></b></p>
+<p class="contenttext"><b><u>relation</u></b></p>
 
-<table cellpadding='2' cellspacing='0' border='1'>
+<table cellpadding="2" cellspacing="0" border="1">
 <tr>
     <td><b>Attribute&nbsp;Name</b></td>
     <td><b>Required?</b></td>
@@ -456,7 +457,7 @@ specified.</P>
 </tr>
 </table>
 <br>
-<table cellpadding='2' cellspacing='0' border='1'>
+<table cellpadding="2" cellspacing="0" border="1">
 <tr>
     <td><b>Sub-Element&nbsp;Name</b></td>
     <td><b>How&nbsp;Many</b></td>
@@ -472,9 +473,9 @@ specified.</P>
 </tr>
 </table>
 
-<hr class='sepbar'>
+<hr class="sepbar">
 <h3><a name="View_Entity_Modeling">View Entity Modeling</a></h3>
-<hr class='sepbar'>
+<hr class="sepbar">
 
 <P>In addition to entities that map directly to a single relational table you 
 can create "virtual" or "view" entities that map to a set of other entities.
@@ -493,7 +494,7 @@ entity group XML file, just like any normal entity. All member-entities in a
 view-entity must be in the same database, but not necessarily in the same entity
 group.</P>
 
-<pre style='border: solid black 1px; background-color: #EEEEFF; color: black;'>
+<pre style="border: solid black 1px; background-color: #EEEEFF; color: black;">
     &lt;view-entity title=&quot;Sample View Entity&quot;
             copyright=&quot;Copyright (c) 2001 John Doe Enterprises&quot;
             author=&quot;John Doe&quot; version=&quot;1.0&quot;
@@ -617,11 +618,11 @@ view-links, except for the first one, make sure the member-entity referred to in
 the entity-alias attribute has been referred to in a previous view-link (this is
 how the link tree is kept clean).</P>
 
-<p class='contenttext'><b>View Entity Element Reference</b></p>
+<p class="contenttext"><b>View Entity Element Reference</b></p>
 
-<p class='contenttext'><b><u>view-entity</u></b></p>
+<p class="contenttext"><b><u>view-entity</u></b></p>
 
-<table cellpadding='2' cellspacing='0' border='1'>
+<table cellpadding="2" cellspacing="0" border="1">
 <tr>
     <td><b>Attribute&nbsp;Name</b></td>
     <td><b>Required?</b></td>
@@ -675,7 +676,7 @@ how the link tree is kept clean).</P>
 </tr>
 </table>
 <br>
-<table cellpadding='2' cellspacing='0' border='1'>
+<table cellpadding="2" cellspacing="0" border="1">
 <tr>
     <td><b>Sub-Element&nbsp;Name</b></td>
     <td><b>How&nbsp;Many</b></td>
@@ -708,9 +709,9 @@ how the link tree is kept clean).</P>
 </tr>
 </table>
 
-<p class='contenttext'><b><u>member-entity</u></b></p>
+<p class="contenttext"><b><u>member-entity</u></b></p>
 
-<table cellpadding='2' cellspacing='0' border='1'>
+<table cellpadding="2" cellspacing="0" border="1">
 <tr>
     <td><b>Attribute&nbsp;Name</b></td>
     <td><b>Required?</b></td>
@@ -730,9 +731,9 @@ how the link tree is kept clean).</P>
 </tr>
 </table>
 
-<p class='contenttext'><b><u>alias</u></b></p>
+<p class="contenttext"><b><u>alias</u></b></p>
 
-<table cellpadding='2' cellspacing='0' border='1'>
+<table cellpadding="2" cellspacing="0" border="1">
 <tr>
     <td><b>Attribute&nbsp;Name</b></td>
     <td><b>Required?</b></td>
@@ -778,9 +779,9 @@ how the link tree is kept clean).</P>
 </tr>
 </table>
 
-<p class='contenttext'><b><u>view-link</u></b></p>
+<p class="contenttext"><b><u>view-link</u></b></p>
 
-<table cellpadding='2' cellspacing='0' border='1'>
+<table cellpadding="2" cellspacing="0" border="1">
 <tr>
     <td><b>Attribute&nbsp;Name</b></td>
     <td><b>Required?</b></td>
@@ -802,7 +803,7 @@ how the link tree is kept clean).</P>
 </tr>
 </table>
 <br>
-<table cellpadding='2' cellspacing='0' border='1'>
+<table cellpadding="2" cellspacing="0" border="1">
 <tr>
     <td><b>Sub-Element&nbsp;Name</b></td>
     <td><b>How&nbsp;Many</b></td>
@@ -818,9 +819,9 @@ how the link tree is kept clean).</P>
 </tr>
 </table>
 
-<p class='contenttext'><b><u>relation</u></b></p>
+<p class="contenttext"><b><u>relation</u></b></p>
 
-<table cellpadding='2' cellspacing='0' border='1'>
+<table cellpadding="2" cellspacing="0" border="1">
 <tr>
     <td><b>Attribute&nbsp;Name</b></td>
     <td><b>Required?</b></td>
@@ -854,7 +855,7 @@ how the link tree is kept clean).</P>
 </tr>
 </table>
 <br>
-<table cellpadding='2' cellspacing='0' border='1'>
+<table cellpadding="2" cellspacing="0" border="1">
 <tr>
     <td><b>Sub-Element&nbsp;Name</b></td>
     <td><b>How&nbsp;Many</b></td>
@@ -870,9 +871,9 @@ how the link tree is kept clean).</P>
 </tr>
 </table>
 
-<hr class='sepbar'>
+<hr class="sepbar">
 <h3><a name="The_Entity_Engine_API">The Entity Engine API</a></h3>
-<hr class='sepbar'>
+<hr class="sepbar">
 
 <P>The Entity Engine classes in the package <B>org.ofbiz.entity</B> define the
 API used to interact with Entity Engine entity data. From a users point of view
@@ -887,9 +888,9 @@ itself.</P>
 <P>I've been trying to think of how best to present information about this API
 but short of writing a number of documents about the specific usage of each
 piece there is not much that is useful that I could write here. I recommend
-reading through the JavaDocs for the core module, specifically the <B>
-org.ofbiz.entity</B> package, and browsing through the eCommerce and other 
-applications. These heavily use the Entity Engine API.</P>
+reading through the JavaDocs for the Entity Engine and other framework components of OFBiz, 
+and browsing through the various 
+applications in OFBiz for examples. These heavily use the Entity Engine API.</P>
 
 <P>A few quick notes to help you get started might be in order.</P>
 
@@ -1030,9 +1031,9 @@ and set that was used to find and index the cache for that data. There may be a
 way to do this automatically, but for now manually clearing view-entity caches
 is still necessary.</P>
 
-<hr class='sepbar'>
+<hr class="sepbar">
 <h3><a name="JTA_Support">JTA Support</a></h3>
-<hr class='sepbar'>
+<hr class="sepbar">
 
 <P>The Entity Engine JTA Support is simple to use, but has a few complications in configuration.
 The support runs through an API and a Factory class so that no direct contact with the
@@ -1051,9 +1052,9 @@ After beginning a transaction make sure it is always either committed or rolled 
 normally done by committing at the end of a try block and rolling back in each catch block. 
 You can also use the standard UserTransaction object by getting one from the TransactionFactory.</P>
 
-<hr class='sepbar'>
+<hr class="sepbar">
 <h3><a name="Core_Web_Tools">Core Web Tools</a></h3>
-<hr class='sepbar'>
+<hr class="sepbar">
 
 <P>The WebTools web application contains a number of useful tools for working
 with the entity engine. These include a cross linked reference to the entity
