@@ -56,8 +56,8 @@ public class PriceServices {
      */
     public static Map calculateProductPrice(DispatchContext dctx, Map context) {
         UtilTimer utilTimer = new UtilTimer();
-        utilTimer.setLog(true);
         utilTimer.timerString("Starting price calc", module);
+        utilTimer.setLog(true);
         
         GenericDelegator delegator = dctx.getDelegator();
         Map result = new HashMap();
@@ -133,7 +133,7 @@ public class PriceServices {
                 double price = listPrice;
 
                 // ========= find all rules that must be run for each input type; this is kind of like a pre-filter to slim down the rules to run =========
-                utilTimer.timerString("Before create rule id list", module);
+                //utilTimer.timerString("Before create rule id list", module);
                 TreeSet productPriceRuleIds = new TreeSet();
 
                 // ------- These are all of them that DON'T depend on the current inputs -------
@@ -231,7 +231,7 @@ public class PriceServices {
 
 
                 // ========= go through each price rule by id and eval all conditions =========
-                utilTimer.timerString("Before eval rules", module);
+                //utilTimer.timerString("Before eval rules", module);
                 Iterator productPriceRuleIdsIter = productPriceRuleIds.iterator();
                 int totalConds = 0;
                 int totalActions = 0;
@@ -412,7 +412,7 @@ public class PriceServices {
         
         result.put("orderItemPriceInfos", orderItemPriceInfos);
         result.put("isSale", new Boolean(isSale));
-        utilTimer.timerString("Finished price calc", module);
+        utilTimer.timerString("Finished price calc productId=" + productId, module);
         return result;
     }
 
