@@ -191,14 +191,11 @@ public class ProductPromoWorker {
 
                 GenericValue product = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", productPromoAction.get("productId")));
                 double quantity = productPromoAction.get("quantity") == null ? 0.0 : productPromoAction.getDouble("quantity").doubleValue();
-                double discountAmount = 0.0;
-                if (product.get("defaultPrice") != null) {
-                    discountAmount = quantity * product.getDouble("defaultPrice").doubleValue();
-                }
                 
                 //pass null for cartLocation to add to end of cart, pass false for doPromotions to avoid infinite recursion
                 ShoppingCartItem gwpItem = ShoppingCartItem.makeItem(null, product, quantity, null, null, prodCatalogId, dispatcher, cart, false);
 
+                double discountAmount = quantity * gwpItem.getBasePrice();
                 GenericValue orderAdjustment = delegator.makeValue("OrderAdjustment",
                         UtilMisc.toMap("orderAdjustmentTypeId", "PROMOTION_ADJUSTMENT", "amount", new Double(-discountAmount),
                         "productPromoId", productPromoAction.get("productPromoId"), 
