@@ -1,5 +1,5 @@
 /*
- * $Id: OfbizStore.java,v 1.1 2004/07/04 05:56:41 ajzeneski Exp $
+ * $Id: OfbizStore.java,v 1.2 2004/07/04 05:58:18 ajzeneski Exp $
  *
  */
 package org.ofbiz.catalina.container;
@@ -31,7 +31,7 @@ import org.apache.catalina.util.CustomObjectInputStream;
 /**
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      Jul 4, 2004
  */
 public class OfbizStore extends StoreBase implements Store {
@@ -122,7 +122,7 @@ public class OfbizStore extends StoreBase implements Store {
                     ois = new ObjectInputStream(bis);
                 }
 
-                Debug.logInfo("Loading Session Store [" + id + "]", module);
+                //Debug.logInfo("Loading Session Store [" + id + "]", module);
                 _session = (StandardSession) manager.createEmptySession();
                 _session.readObjectData(ois);
                 _session.setManager(manager);
