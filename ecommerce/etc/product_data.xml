@@ -72,66 +72,59 @@
 
   <ProdCatalogCategory prodCatalogId="TestCatalog" productCategoryId="100" fromDate="2001-01-01 12:00:00.0" 
     sequenceNum="1" prodCatalogCategoryTypeId="PCCT_BROWSE_ROOT"/>
-        
-  <Product description="Round Gizmo w/ Lights"
-    longDescription="A small round gizmo with multi-colored lights. Works great in the dark. Small and compact."
-    primaryProductCategoryId="101" productId="GZ-2644" productTypeId="FINISHED_GOOD"
-    productName="Round Gizmo" quantityIncluded="100.0" weight="7.0"/>
-  <ProductPrice productId="GZ-2644" price="48.0" productPriceTypeId="LIST_PRICE" facilityGroupId="_NA_" currencyUomId="USD" fromDate="2001-01-01 12:00:00.0"/>
-  <ProductPrice productId="GZ-2644" price="47.99" productPriceTypeId="DEFAULT_PRICE" facilityGroupId="_NA_" currencyUomId="USD" fromDate="2001-01-01 12:00:00.0"/>
+                
+  <Product productId="GZ-1000" productTypeId="FINISHED_GOOD" primaryProductCategoryId="101" productName="Tiny Gizmo" description="The smallest gizmo in town." longDescription="This gizmo is very small and runs on solar power." taxable="Y" chargeShipping="Y" autoCreateKeywords="Y" isVirtual="N" isVariant="N" createdDate="2003-03-04 18:48:34.612" createdByUserLogin="admin" lastModifiedDate="2003-03-04 18:48:34.612" lastModifiedByUserLogin="admin"/>
+  <Product productId="GZ-1001" productTypeId="FINISHED_GOOD" primaryProductCategoryId="101" productName="Nan Gizmo" description="Indian style gizmo" taxable="Y" chargeShipping="Y" autoCreateKeywords="Y" isVirtual="N" isVariant="N" createdDate="2003-03-04 18:57:27.248" createdByUserLogin="admin" lastModifiedDate="2003-03-04 18:57:27.248" lastModifiedByUserLogin="admin"/>
+  <Product productId="GZ-1004" productTypeId="FINISHED_GOOD" primaryProductCategoryId="102" productName="Rainbow Gizmo" description="The only multi-colored gizmo" longDescription="This is the original multi-colored gizmo, only available from OFBiz!" taxable="Y" chargeShipping="Y" autoCreateKeywords="Y" isVirtual="N" isVariant="N" createdDate="2003-03-04 18:50:33.463" createdByUserLogin="admin" lastModifiedDate="2003-03-04 18:50:33.463" lastModifiedByUserLogin="admin"/>
+  <Product productId="GZ-1005" productTypeId="FINISHED_GOOD" primaryProductCategoryId="102" productName=".NIT Gizmo" description="M$ gizmo" taxable="Y" chargeShipping="Y" autoCreateKeywords="Y" isVirtual="N" isVariant="N" createdDate="2003-03-04 19:00:29.851" createdByUserLogin="admin" lastModifiedDate="2003-03-04 19:02:17.445" lastModifiedByUserLogin="admin">
+      <longDescription><![CDATA[This gizmo only works in certain areas and requires a lot of extra space to move around. 
+<br><br>
+<b>** Warning this gizmo is known to crash quite often</b>]]></longDescription>
+  </Product>
+  <Product productId="GZ-1006" productTypeId="FINISHED_GOOD" primaryProductCategoryId="102" productName="Open Gizmo" description="Gizmo based on open standards" longDescription="Highest quality gizmo around." taxable="Y" chargeShipping="Y" autoCreateKeywords="Y" isVirtual="N" isVariant="N" createdDate="2003-03-04 19:03:01.298" createdByUserLogin="admin" lastModifiedDate="2003-03-04 19:03:01.298" lastModifiedByUserLogin="admin"/>
+  <Product productId="GZ-2002" productTypeId="FINISHED_GOOD" primaryProductCategoryId="101" productName="Square Gizmo" description="A square gizmo" taxable="Y" chargeShipping="Y" autoCreateKeywords="Y" isVirtual="N" isVariant="N" createdDate="2003-03-04 18:52:03.492" createdByUserLogin="admin" lastModifiedDate="2003-03-04 18:52:03.492" lastModifiedByUserLogin="admin"/>
+  <Product productId="GZ-2644" productTypeId="FINISHED_GOOD" primaryProductCategoryId="101" productName="Round Gizmo" description="Round Gizmo w/ Lights" longDescription="A small round gizmo with multi-colored lights. Works great in the dark. Small and compact." quantityIncluded="100.0" weight="7.0"/>
+  <Product productId="GZ-5005" productTypeId="FINISHED_GOOD" primaryProductCategoryId="101" productName="Purple Gizmo" description="The stylish gizmo" taxable="Y" chargeShipping="Y" autoCreateKeywords="Y" isVirtual="N" isVariant="N" createdDate="2003-03-04 19:05:51.323" createdByUserLogin="admin" lastModifiedDate="2003-03-04 19:05:51.323" lastModifiedByUserLogin="admin"/>
+  <Product productId="GZ-7000" productTypeId="FINISHED_GOOD" primaryProductCategoryId="102" productName="Massive Gizmo" description="The biggest gizmo ever" taxable="Y" chargeShipping="Y" autoCreateKeywords="Y" isVirtual="N" isVariant="N" createdDate="2003-03-04 19:11:58.441" createdByUserLogin="admin" lastModifiedDate="2003-03-04 19:11:58.441" lastModifiedByUserLogin="admin"/>
+  <Product productId="GZ-8544" productTypeId="FINISHED_GOOD" primaryProductCategoryId="102" productName="Big Gizmo" description="Big Gizmo w/ Legs" longDescription="A large gizmo with legs. Walks on its own. Does not require a power supply." quantityIncluded="100.0" weight="12.0"/>
+  <Product productId="GZ-9290" productTypeId="FINISHED_GOOD" primaryProductCategoryId="102" productName="His/Her Gizmo" description="A set of his/her gizmos" longDescription="The his/her gizmo is a perfect gift for your favorite couple. Once you try it out you&apos;ll want a set for yourself!" taxable="Y" chargeShipping="Y" autoCreateKeywords="Y" isVirtual="N" isVariant="N" createdDate="2003-03-04 18:54:49.751" createdByUserLogin="admin" lastModifiedDate="2003-03-04 18:54:49.751" lastModifiedByUserLogin="admin"/>
+  <Product productId="WG-1111" productTypeId="FINISHED_GOOD" primaryProductCategoryId="20111" productName="Micro Chrome Widget" description="Micro Widget - Chrome Colored" longDescription="This micro chrome widget makes a perfect gift. This one is so small that it floats in air." quantityIncluded="50.0" weight="2.0"/>
+  <Product productId="WG-5569" productTypeId="FINISHED_GOOD" primaryProductCategoryId="201" productName="Tiny Chrome Widget" description="Tiny Chrome Widget" longDescription="This tiny chrome widget makes a perfect gift. The shine will last forever. No pollishing required." quantityIncluded="50.0" weight="4.0"/>
+  <Product productId="WG-9943" productTypeId="FINISHED_GOOD" primaryProductCategoryId="202" productName="Giant Widget" description="Giant Widget with Wheels" longDescription="This giant widget is mobile. It will seat one person safely. The wheels will never rust or break. Quite a unique item." quantityIncluded="10.0" weight="22.0" isVirtual="Y"/>
+  <Product productId="WG-9943-B3" productTypeId="FINISHED_GOOD" primaryProductCategoryId="202" productName="Giant Widget B3" description="Black Giant Widget with 3 Wheels" longDescription="This giant widget is mobile. It will seat one person safely. The wheels will never rust or break. Quite a unique item." quantityIncluded="10.0" weight="22.0" isVariant="Y"/>
+  <Product productId="WG-9943-B4" productTypeId="FINISHED_GOOD" primaryProductCategoryId="202" productName="Giant Widget B4" description="Black Giant Widget with 4 Wheels" longDescription="This giant widget is mobile. It will seat one person safely. The wheels will never rust or break. Quite a unique item." quantityIncluded="10.0" weight="22.0" isVariant="Y"/>
+  <Product productId="WG-9943-S3" productTypeId="FINISHED_GOOD" primaryProductCategoryId="202" productName="Giant Widget S3" description="Silver Giant Widget with 3 Wheels" longDescription="This giant widget is mobile. It will seat one person safely. The wheels will never rust or break. Quite a unique item." quantityIncluded="10.0" weight="22.0" isVariant="Y"/>
+  <Product productId="WG-9943-S4" productTypeId="FINISHED_GOOD" primaryProductCategoryId="202" productName="Giant Widget S4" description="Silver Giant Widget with 4 Wheels" longDescription="This giant widget is mobile. It will seat one person safely. The wheels will never rust or break. Quite a unique item." quantityIncluded="10.0" weight="22.0" isVariant="Y"/>
     
-  <Product description="Big Gizmo w/ Legs"
-    longDescription="A large gizmo with legs. Walks on its own. Does not require a power supply."
-    primaryProductCategoryId="102" productId="GZ-8544" productTypeId="FINISHED_GOOD"
-    productName="Big Gizmo" quantityIncluded="100.0" weight="12.0"/>
-  <ProductPrice productId="GZ-8544" price="270.0" productPriceTypeId="LIST_PRICE" facilityGroupId="_NA_" currencyUomId="USD" fromDate="2001-01-01 12:00:00.0"/>
-  <ProductPrice productId="GZ-8544" price="269.99" productPriceTypeId="DEFAULT_PRICE" facilityGroupId="_NA_" currencyUomId="USD" fromDate="2001-01-01 12:00:00.0"/>
-    
-  <Product description="Micro Widget - Chrome Colored"
-    longDescription="This micro chrome widget makes a perfect gift. This one is so small that it floats in air."
-    primaryProductCategoryId="20111" productId="WG-1111" productTypeId="FINISHED_GOOD"
-    productName="Micro Chrome Widget" quantityIncluded="50.0" weight="2.0"/>
-  <ProductPrice productId="WG-1111" price="60.0" productPriceTypeId="LIST_PRICE" facilityGroupId="_NA_" currencyUomId="USD" fromDate="2001-01-01 12:00:00.0"/>
-  <ProductPrice productId="WG-1111" price="59.99" productPriceTypeId="DEFAULT_PRICE" facilityGroupId="_NA_" currencyUomId="USD" fromDate="2001-01-01 12:00:00.0"/>
-    
-  <Product description="Tiny Chrome Widget"
-    longDescription="This tiny chrome widget makes a perfect gift. The shine will last forever. No pollishing required."
-    primaryProductCategoryId="201" productId="WG-5569" productTypeId="FINISHED_GOOD"
-    productName="Tiny Chrome Widget" quantityIncluded="50.0" weight="4.0"/>
-  <ProductPrice productId="WG-5569" price="60.0" productPriceTypeId="LIST_PRICE" facilityGroupId="_NA_" currencyUomId="USD" fromDate="2001-01-01 12:00:00.0"/>
-  <ProductPrice productId="WG-5569" price="59.99" productPriceTypeId="DEFAULT_PRICE" facilityGroupId="_NA_" currencyUomId="USD" fromDate="2001-01-01 12:00:00.0"/>
-    
-  <Product description="Giant Widget with Wheels"
-    longDescription="This giant widget is mobile. It will seat one person safely. The wheels will never rust or break. Quite a unique item."
-    primaryProductCategoryId="202" productId="WG-9943" productTypeId="FINISHED_GOOD" isVirtual="Y"
-    productName="Giant Widget" quantityIncluded="10.0" weight="22.0"/>
-  <ProductPrice productId="WG-9943" price="550.0" productPriceTypeId="LIST_PRICE" facilityGroupId="_NA_" currencyUomId="USD" fromDate="2001-01-01 12:00:00.0"/>
-  <ProductPrice productId="WG-9943" price="549.99" productPriceTypeId="DEFAULT_PRICE" facilityGroupId="_NA_" currencyUomId="USD" fromDate="2001-01-01 12:00:00.0"/>
-    
-  <Product description="Black Giant Widget with 3 Wheels"
-    longDescription="This giant widget is mobile. It will seat one person safely. The wheels will never rust or break. Quite a unique item."
-    primaryProductCategoryId="202" productId="WG-9943-B3" productTypeId="FINISHED_GOOD" isVariant="Y"
-    productName="Giant Widget B3" quantityIncluded="10.0" weight="22.0"/>
-  <!-- not adding prices for each variant because they inherit from the virtual
-  <ProductPrice productId="WG-9943-B3" price="550.0" productPriceTypeId="LIST_PRICE" facilityGroupId="_NA_" currencyUomId="USD" fromDate="2001-01-01 12:00:00.0"/>
-  <ProductPrice productId="WG-9943-B3" price="549.99" productPriceTypeId="DEFAULT_PRICE" facilityGroupId="_NA_" currencyUomId="USD" fromDate="2001-01-01 12:00:00.0"/>
-  -->
-    
-  <Product description="Black Giant Widget with 4 Wheels"
-    longDescription="This giant widget is mobile. It will seat one person safely. The wheels will never rust or break. Quite a unique item."
-    primaryProductCategoryId="202" productId="WG-9943-B4" productTypeId="FINISHED_GOOD" isVariant="Y"
-    productName="Giant Widget B4" quantityIncluded="10.0" weight="22.0"/>
-    
-  <Product description="Silver Giant Widget with 3 Wheels"
-    longDescription="This giant widget is mobile. It will seat one person safely. The wheels will never rust or break. Quite a unique item."
-    primaryProductCategoryId="202" productId="WG-9943-S3" productTypeId="FINISHED_GOOD" isVariant="Y"
-    productName="Giant Widget S3" quantityIncluded="10.0" weight="22.0"/>
-    
-  <Product description="Silver Giant Widget with 4 Wheels"
-    longDescription="This giant widget is mobile. It will seat one person safely. The wheels will never rust or break. Quite a unique item."
-    primaryProductCategoryId="202" productId="WG-9943-S4" productTypeId="FINISHED_GOOD" isVariant="Y"
-    productName="Giant Widget S4" quantityIncluded="10.0" weight="22.0"/>
-    
+  <ProductPrice productId="GZ-1000" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" facilityGroupId="_NA_" fromDate="2003-03-04 18:49:03.163" price="15.99" createdDate="2003-03-04 18:49:14.539" createdByUserLogin="admin" lastModifiedDate="2003-03-04 18:49:14.539" lastModifiedByUserLogin="admin"/>
+  <ProductPrice productId="GZ-1000" productPriceTypeId="LIST_PRICE" currencyUomId="USD" facilityGroupId="_NA_" fromDate="2003-03-04 18:48:49.113" price="15.0" createdDate="2003-03-04 18:49:02.863" createdByUserLogin="admin" lastModifiedDate="2003-03-04 18:49:02.863" lastModifiedByUserLogin="admin"/>
+  <ProductPrice productId="GZ-1001" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" facilityGroupId="_NA_" fromDate="2003-03-04 18:57:38.033" price="25.99" createdDate="2003-03-04 18:57:44.803" createdByUserLogin="admin" lastModifiedDate="2003-03-04 18:57:44.803" lastModifiedByUserLogin="admin"/>
+  <ProductPrice productId="GZ-1001" productPriceTypeId="LIST_PRICE" currencyUomId="USD" facilityGroupId="_NA_" fromDate="2003-03-04 18:57:29.421" price="25.99" createdDate="2003-03-04 18:57:37.813" createdByUserLogin="admin" lastModifiedDate="2003-03-04 18:57:37.813" lastModifiedByUserLogin="admin"/>
+  <ProductPrice productId="GZ-1004" productPriceTypeId="AVERAGE_COST" currencyUomId="USD" facilityGroupId="_NA_" fromDate="2003-03-04 18:50:35.866" price="29.99" createdDate="2003-03-04 18:50:45.0" createdByUserLogin="admin" lastModifiedDate="2003-03-04 18:50:45.0" lastModifiedByUserLogin="admin"/>
+  <ProductPrice productId="GZ-1004" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" facilityGroupId="_NA_" fromDate="2003-03-04 18:50:45.25" price="25.99" createdDate="2003-03-04 18:50:54.383" createdByUserLogin="admin" lastModifiedDate="2003-03-04 18:50:54.383" lastModifiedByUserLogin="admin"/>
+  <ProductPrice productId="GZ-1005" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" facilityGroupId="_NA_" fromDate="2003-03-04 19:00:47.616" price="2799.99" createdDate="2003-03-04 19:00:55.748" createdByUserLogin="admin" lastModifiedDate="2003-03-04 19:00:55.748" lastModifiedByUserLogin="admin"/>
+  <ProductPrice productId="GZ-1005" productPriceTypeId="LIST_PRICE" currencyUomId="USD" facilityGroupId="_NA_" fromDate="2003-03-04 19:00:32.034" price="2799.0" createdDate="2003-03-04 19:00:47.386" createdByUserLogin="admin" lastModifiedDate="2003-03-04 19:00:47.386" lastModifiedByUserLogin="admin"/>
+  <ProductPrice productId="GZ-1006" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" facilityGroupId="_NA_" fromDate="2003-03-04 19:03:12.745" price="1.99" createdDate="2003-03-04 19:03:20.065" createdByUserLogin="admin" lastModifiedDate="2003-03-04 19:03:20.065" lastModifiedByUserLogin="admin"/>
+  <ProductPrice productId="GZ-1006" productPriceTypeId="LIST_PRICE" currencyUomId="USD" facilityGroupId="_NA_" fromDate="2003-03-04 19:03:03.151" price="5.99" createdDate="2003-03-04 19:03:12.524" createdByUserLogin="admin" lastModifiedDate="2003-03-04 19:03:12.524" lastModifiedByUserLogin="admin"/>
+  <ProductPrice productId="GZ-2002" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" facilityGroupId="_NA_" fromDate="2003-03-04 18:52:45.463" price="47.99" createdDate="2003-03-04 18:52:58.712" createdByUserLogin="admin" lastModifiedDate="2003-03-04 18:52:58.712" lastModifiedByUserLogin="admin"/>
+  <ProductPrice productId="GZ-2002" productPriceTypeId="LIST_PRICE" currencyUomId="USD" facilityGroupId="_NA_" fromDate="2003-03-04 18:52:37.181" price="48.0" createdDate="2003-03-04 18:52:45.192" createdByUserLogin="admin" lastModifiedDate="2003-03-04 18:52:45.192" lastModifiedByUserLogin="admin"/>
+  <ProductPrice productId="GZ-2644" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" facilityGroupId="_NA_" fromDate="2001-01-01 12:00:00.0" price="47.99"/>
+  <ProductPrice productId="GZ-2644" productPriceTypeId="LIST_PRICE" currencyUomId="USD" facilityGroupId="_NA_" fromDate="2001-01-01 12:00:00.0" price="48.0"/>
+  <ProductPrice productId="GZ-5005" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" facilityGroupId="_NA_" fromDate="2003-03-04 19:06:07.516" price="47.99" createdDate="2003-03-04 19:06:17.991" createdByUserLogin="admin" lastModifiedDate="2003-03-04 19:06:17.991" lastModifiedByUserLogin="admin"/>
+  <ProductPrice productId="GZ-5005" productPriceTypeId="LIST_PRICE" currencyUomId="USD" facilityGroupId="_NA_" fromDate="2003-03-04 19:05:56.39" price="48.0" createdDate="2003-03-04 19:06:07.286" createdByUserLogin="admin" lastModifiedDate="2003-03-04 19:06:07.286" lastModifiedByUserLogin="admin"/>
+  <ProductPrice productId="GZ-7000" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" facilityGroupId="_NA_" fromDate="2003-03-04 19:12:00.424" price="599.99" createdDate="2003-03-04 19:12:08.765" createdByUserLogin="admin" lastModifiedDate="2003-03-04 19:12:08.765" lastModifiedByUserLogin="admin"/>
+  <ProductPrice productId="GZ-7000" productPriceTypeId="LIST_PRICE" currencyUomId="USD" facilityGroupId="_NA_" fromDate="2003-03-04 19:12:09.006" price="999.99" createdDate="2003-03-04 19:12:22.736" createdByUserLogin="admin" lastModifiedDate="2003-03-04 19:12:22.736" lastModifiedByUserLogin="admin"/>
+  <ProductPrice productId="GZ-8544" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" facilityGroupId="_NA_" fromDate="2001-01-01 12:00:00.0" price="269.99"/>
+  <ProductPrice productId="GZ-8544" productPriceTypeId="LIST_PRICE" currencyUomId="USD" facilityGroupId="_NA_" fromDate="2001-01-01 12:00:00.0" price="270.0"/>
+  <ProductPrice productId="GZ-9290" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" facilityGroupId="_NA_" fromDate="2003-03-04 18:55:00.196" price="97.99" createdDate="2003-03-04 18:55:08.659" createdByUserLogin="admin" lastModifiedDate="2003-03-04 18:55:08.659" lastModifiedByUserLogin="admin"/>
+  <ProductPrice productId="GZ-9290" productPriceTypeId="LIST_PRICE" currencyUomId="USD" facilityGroupId="_NA_" fromDate="2003-03-04 18:54:52.065" price="99.99" createdDate="2003-03-04 18:54:59.976" createdByUserLogin="admin" lastModifiedDate="2003-03-04 18:54:59.976" lastModifiedByUserLogin="admin"/>
+  <ProductPrice productId="WG-1111" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" facilityGroupId="_NA_" fromDate="2001-01-01 12:00:00.0" price="59.99"/>
+  <ProductPrice productId="WG-1111" productPriceTypeId="LIST_PRICE" currencyUomId="USD" facilityGroupId="_NA_" fromDate="2001-01-01 12:00:00.0" price="60.0"/>
+  <ProductPrice productId="WG-5569" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" facilityGroupId="_NA_" fromDate="2001-01-01 12:00:00.0" price="59.99"/>
+  <ProductPrice productId="WG-5569" productPriceTypeId="LIST_PRICE" currencyUomId="USD" facilityGroupId="_NA_" fromDate="2001-01-01 12:00:00.0" price="60.0"/>
+  <ProductPrice productId="WG-9943" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" facilityGroupId="_NA_" fromDate="2001-01-01 12:00:00.0" price="549.99"/>
+  <ProductPrice productId="WG-9943" productPriceTypeId="LIST_PRICE" currencyUomId="USD" facilityGroupId="_NA_" fromDate="2001-01-01 12:00:00.0" price="550.0"/>
+            
   <ProductFeatureCategory productFeatureCategoryId="9000" description="Widget Features"/>
   
   <ProductFeature productFeatureId="9000" productFeatureCategoryId="9000" productFeatureTypeId="COLOR" description="Black"/>
@@ -209,28 +202,48 @@
     productAssocTypeId="PRODUCT_OBSOLESCENCE" productId="GZ-8544"
     productIdTo="WG-9943" quantity="1.0" reason="The Giant Widget is much better than the Big Gizmo, so much so that it makes the Big Gizmo obsolete."/>
 
-  <ProductCategoryMember fromDate="2001-01-01 12:00:00.0" productCategoryId="202" productId="WG-9943"/>
-  <ProductCategoryMember fromDate="2001-01-01 12:00:00.0" productCategoryId="101" productId="GZ-2644"/>
-  <ProductCategoryMember fromDate="2001-01-01 12:00:00.0" productCategoryId="102" productId="GZ-8544"/>
-  <ProductCategoryMember fromDate="2001-01-01 12:00:00.0" productCategoryId="201" productId="WG-5569"/>
-  <ProductCategoryMember fromDate="2001-01-01 12:00:00.0" productCategoryId="20111" productId="WG-1111"/>
-  <ProductCategoryMember fromDate="2001-01-01 12:00:00.0" productCategoryId="PROMOTIONS" productId="GZ-2644"/>
-  <ProductCategoryMember fromDate="2001-01-01 12:00:00.0" productCategoryId="PROMOTIONS" productId="WG-5569"/>
-  <ProductCategoryMember fromDate="2001-01-01 12:00:00.0" productCategoryId="PROMOTIONS" productId="WG-9943"/>
-  <ProductCategoryMember fromDate="2001-01-01 12:00:00.0" productCategoryId="CATALOG1_SEARCH" productId="WG-9943"/>
-  <ProductCategoryMember fromDate="2001-01-01 12:00:00.0" productCategoryId="CATALOG1_SEARCH" productId="GZ-2644"/>
-  <ProductCategoryMember fromDate="2001-01-01 12:00:00.0" productCategoryId="CATALOG1_SEARCH" productId="GZ-8544"/>
-  <ProductCategoryMember fromDate="2001-01-01 12:00:00.0" productCategoryId="CATALOG1_SEARCH" productId="WG-5569"/>
-  <ProductCategoryMember fromDate="2001-01-01 12:00:00.0" productCategoryId="CATALOG1_SEARCH" productId="WG-1111"/>
-  <ProductCategoryMember fromDate="2001-01-01 12:00:00.0" productCategoryId="CATALOG1_QUICKADD1" productId="WG-9943"/>
-  <ProductCategoryMember fromDate="2001-01-01 12:00:00.0" productCategoryId="CATALOG1_QUICKADD1" productId="GZ-2644"/>
-  <ProductCategoryMember fromDate="2001-01-01 12:00:00.0" productCategoryId="CATALOG1_QUICKADD1" productId="GZ-8544"/>
-  <ProductCategoryMember fromDate="2001-01-01 12:00:00.0" productCategoryId="CATALOG1_QUICKADD1" productId="WG-5569"/>
-  <ProductCategoryMember fromDate="2001-01-01 12:00:00.0" productCategoryId="CATALOG1_QUICKADD1" productId="WG-1111"/>
-  <ProductCategoryMember fromDate="2001-01-01 12:00:00.0" productCategoryId="CATALOG1_QUICKADD2" productId="WG-9943"/>
-  <ProductCategoryMember fromDate="2001-01-01 12:00:00.0" productCategoryId="CATALOG1_QUICKADD2" productId="WG-5569"/>
-  <ProductCategoryMember fromDate="2001-01-01 12:00:00.0" productCategoryId="CATALOG1_QUICKADD2" productId="WG-1111"/>
-
+  <ProductCategoryMember productCategoryId="100" productId="GZ-1000" fromDate="2003-03-04 18:49:31.464"/>
+  <ProductCategoryMember productCategoryId="100" productId="GZ-1001" fromDate="2003-03-04 18:57:49.099"/>
+  <ProductCategoryMember productCategoryId="100" productId="GZ-1004" fromDate="2003-03-04 18:51:06.45"/>
+  <ProductCategoryMember productCategoryId="100" productId="GZ-1005" fromDate="2003-03-04 19:01:01.075"/>
+  <ProductCategoryMember productCategoryId="100" productId="GZ-1006" fromDate="2003-03-04 19:03:36.369"/>
+  <ProductCategoryMember productCategoryId="100" productId="GZ-2002" fromDate="2003-03-04 18:53:05.622"/>
+  <ProductCategoryMember productCategoryId="100" productId="GZ-2644" fromDate="2003-03-04 18:46:32.667"/>
+  <ProductCategoryMember productCategoryId="100" productId="GZ-5005" fromDate="2003-03-04 19:06:23.619"/>
+  <ProductCategoryMember productCategoryId="100" productId="GZ-7000" fromDate="2003-03-04 19:12:32.389"/>
+  <ProductCategoryMember productCategoryId="100" productId="GZ-8544" fromDate="2003-03-04 18:46:46.557"/>
+  <ProductCategoryMember productCategoryId="100" productId="GZ-9290" fromDate="2003-03-04 18:55:14.547"/>
+  <ProductCategoryMember productCategoryId="101" productId="GZ-1000" fromDate="2003-03-04 18:49:27.748"/>
+  <ProductCategoryMember productCategoryId="101" productId="GZ-1001" fromDate="2003-03-04 18:57:55.168"/>
+  <ProductCategoryMember productCategoryId="101" productId="GZ-2002" fromDate="2003-03-04 18:53:15.256"/>
+  <ProductCategoryMember productCategoryId="101" productId="GZ-2644" fromDate="2001-01-01 12:00:00.0"/>
+  <ProductCategoryMember productCategoryId="101" productId="GZ-5005" fromDate="2003-03-04 19:06:30.89"/>
+  <ProductCategoryMember productCategoryId="102" productId="GZ-1004" fromDate="2003-03-04 18:51:11.097"/>
+  <ProductCategoryMember productCategoryId="102" productId="GZ-1005" fromDate="2003-03-04 19:01:06.293"/>
+  <ProductCategoryMember productCategoryId="102" productId="GZ-1006" fromDate="2003-03-04 19:03:40.915"/>
+  <ProductCategoryMember productCategoryId="102" productId="GZ-7000" fromDate="2003-03-04 19:12:29.045"/>
+  <ProductCategoryMember productCategoryId="102" productId="GZ-8544" fromDate="2001-01-01 12:00:00.0"/>
+  <ProductCategoryMember productCategoryId="102" productId="GZ-9290" fromDate="2003-03-04 18:55:19.344"/>
+  <ProductCategoryMember productCategoryId="201" productId="WG-5569" fromDate="2001-01-01 12:00:00.0"/>
+  <ProductCategoryMember productCategoryId="20111" productId="WG-1111" fromDate="2001-01-01 12:00:00.0"/>
+  <ProductCategoryMember productCategoryId="202" productId="WG-9943" fromDate="2001-01-01 12:00:00.0"/>
+  <ProductCategoryMember productCategoryId="CATALOG1_QUICKADD1" productId="GZ-2644" fromDate="2001-01-01 12:00:00.0"/>
+  <ProductCategoryMember productCategoryId="CATALOG1_QUICKADD1" productId="GZ-8544" fromDate="2001-01-01 12:00:00.0"/>
+  <ProductCategoryMember productCategoryId="CATALOG1_QUICKADD1" productId="WG-1111" fromDate="2001-01-01 12:00:00.0"/>
+  <ProductCategoryMember productCategoryId="CATALOG1_QUICKADD1" productId="WG-5569" fromDate="2001-01-01 12:00:00.0"/>
+  <ProductCategoryMember productCategoryId="CATALOG1_QUICKADD1" productId="WG-9943" fromDate="2001-01-01 12:00:00.0"/>
+  <ProductCategoryMember productCategoryId="CATALOG1_QUICKADD2" productId="WG-1111" fromDate="2001-01-01 12:00:00.0"/>
+  <ProductCategoryMember productCategoryId="CATALOG1_QUICKADD2" productId="WG-5569" fromDate="2001-01-01 12:00:00.0"/>
+  <ProductCategoryMember productCategoryId="CATALOG1_QUICKADD2" productId="WG-9943" fromDate="2001-01-01 12:00:00.0"/>
+  <ProductCategoryMember productCategoryId="CATALOG1_SEARCH" productId="GZ-2644" fromDate="2001-01-01 12:00:00.0"/>
+  <ProductCategoryMember productCategoryId="CATALOG1_SEARCH" productId="GZ-8544" fromDate="2001-01-01 12:00:00.0"/>
+  <ProductCategoryMember productCategoryId="CATALOG1_SEARCH" productId="WG-1111" fromDate="2001-01-01 12:00:00.0"/>
+  <ProductCategoryMember productCategoryId="CATALOG1_SEARCH" productId="WG-5569" fromDate="2001-01-01 12:00:00.0"/>
+  <ProductCategoryMember productCategoryId="CATALOG1_SEARCH" productId="WG-9943" fromDate="2001-01-01 12:00:00.0"/>
+  <ProductCategoryMember productCategoryId="PROMOTIONS" productId="GZ-2644" fromDate="2001-01-01 12:00:00.0"/>
+  <ProductCategoryMember productCategoryId="PROMOTIONS" productId="WG-5569" fromDate="2001-01-01 12:00:00.0"/>
+  <ProductCategoryMember productCategoryId="PROMOTIONS" productId="WG-9943" fromDate="2001-01-01 12:00:00.0"/>
+        
   <ProductCategoryRollup fromDate="2001-01-01 12:00:00.0" parentProductCategoryId="CATALOG1" productCategoryId="100"/>
   <ProductCategoryRollup fromDate="2001-01-01 12:00:00.0" parentProductCategoryId="100" productCategoryId="101"/>
   <ProductCategoryRollup fromDate="2001-01-01 12:00:00.0" parentProductCategoryId="100" productCategoryId="102"/>
