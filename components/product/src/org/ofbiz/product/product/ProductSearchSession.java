@@ -1,5 +1,5 @@
 /*
- * $Id: ProductSearchSession.java,v 1.14 2004/05/22 20:25:50 ajzeneski Exp $
+ * $Id: ProductSearchSession.java,v 1.15 2004/06/29 20:45:35 jonesde Exp $
  *
  *  Copyright (c) 2001 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -63,7 +63,7 @@ import org.ofbiz.product.store.ProductStoreWorker;
  *  Utility class with methods to prepare and perform ProductSearch operations in the content of an HttpSession
  *
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.14 $
+ * @version    $Revision: 1.15 $
  * @since      3.0
  */
 public class ProductSearchSession {
@@ -486,6 +486,13 @@ public class ProductSearchSession {
         if (featureIdByType.size() > 0) {
             constraintsChanged = true;
             searchAddFeatureIdConstraints(featureIdByType.values(), session);
+        }
+
+        // add a supplier to the search
+        if (UtilValidate.isNotEmpty((String) parameters.get("SEARCH_SUPPLIER_ID"))) {
+            String supplierPartyId = (String) parameters.get("SEARCH_SUPPLIER_ID");
+            searchAddConstraint(new ProductSearch.SupplierConstraint(supplierPartyId), session);
+            constraintsChanged = true;
         }
 
         // set the sort order

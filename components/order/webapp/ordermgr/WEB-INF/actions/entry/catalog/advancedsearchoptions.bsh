@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.5 $
+ *@version    $Revision: 1.6 $
  *@since      2.1
 */
 
@@ -49,6 +49,9 @@ if (!"AND".equals(searchOperator) && !"OR".equals(searchOperator)) {
 searchConstraintStrings = ProductSearchSession.searchGetConstraintStrings(false, session, delegator);
 searchSortOrderString = ProductSearchSession.searchGetSortOrderString(false, session);
 
+//get suppliers in system
+supplerPartyRoleAndPartyDetails = delegator.findByAnd("PartyRoleAndPartyDetail", UtilMisc.toMap("roleTypeId", "SUPPLIER"), UtilMisc.toList("groupName", "firstName"));
+
 context.put("searchCategoryId", searchCategoryId);
 context.put("searchCategory", searchCategory);
 context.put("productFeaturesByTypeMap", productFeaturesByTypeMap);
@@ -56,3 +59,4 @@ context.put("productFeatureTypeIdsOrdered", productFeatureTypeIdsOrdered);
 context.put("searchOperator", searchOperator);
 context.put("searchConstraintStrings", searchConstraintStrings);
 context.put("searchSortOrderString", searchSortOrderString);
+context.put("supplerPartyRoleAndPartyDetails", supplerPartyRoleAndPartyDetails);
