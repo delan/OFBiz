@@ -1,5 +1,5 @@
 /*
- * $Id: EntityComparisonOperator.java,v 1.5 2004/07/07 05:48:22 doogie Exp $
+ * $Id: EntityComparisonOperator.java,v 1.6 2004/07/07 06:01:42 doogie Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -47,7 +47,7 @@ import org.ofbiz.entity.model.ModelField;
  *
  * @author     <a href="mailto:adam@doogie.org">Adam Heath</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      3.0
  */
 public class EntityComparisonOperator extends EntityOperator {
@@ -135,6 +135,7 @@ public class EntityComparisonOperator extends EntityOperator {
             rightValue = rhs;
         }
 
+        if (leftValue == WILDCARD || rightValue == WILDCARD) return true;
         return compare(leftValue, rightValue);
     }
 
