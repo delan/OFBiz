@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCartEvents.java,v 1.6 2003/11/21 06:18:59 ajzeneski Exp $
+ * $Id: ShoppingCartEvents.java,v 1.7 2003/11/21 21:55:33 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -50,7 +50,7 @@ import org.ofbiz.content.webapp.control.RequestHandler;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:tristana@twibble.org">Tristan Austin</a>
- * @version    $Revision: 1.6 $
+ * @version    $Revision: 1.7 $
  * @since      2.0
  */
 public class ShoppingCartEvents {
@@ -165,10 +165,10 @@ public class ShoppingCartEvents {
 
         // get the selected amount
         String selectedAmountStr = "0.00";
-        if (paramMap.containsKey("AMOUNT")) {
-            selectedAmountStr = (String) paramMap.remove("AMOUNT");
-        } else if (paramMap.containsKey("amount")) {
-            selectedAmountStr = (String) paramMap.remove("amount");
+        if (paramMap.containsKey("ADD_AMOUNT")) {
+            selectedAmountStr = (String) paramMap.remove("ADD_AMOUNT");
+        } else if (paramMap.containsKey("add_amount")) {
+            selectedAmountStr = (String) paramMap.remove("add_amount");
         }
 
         // parse the amount

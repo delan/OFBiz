@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCartHelper.java,v 1.5 2003/11/21 06:18:59 ajzeneski Exp $
+ * $Id: ShoppingCartHelper.java,v 1.6 2003/11/21 21:55:33 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -52,7 +52,7 @@ import org.ofbiz.service.ServiceUtil;
  *
  * @author     <a href="mailto:tristana@twibble.org">Tristan Austin</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      2.0
  */
 public class ShoppingCartHelper {
@@ -123,6 +123,19 @@ public class ShoppingCartHelper {
                 attributes = new HashMap();
             if (context.containsKey(ShoppingCartItem.attributeNames[namesIdx])) {
                 attributes.put(ShoppingCartItem.attributeNames[namesIdx], context.get(ShoppingCartItem.attributeNames[namesIdx]));
+            }
+        }
+
+        // check for required amount flag; if amount and no flag set to 0
+        GenericValue product = null;
+        if (productId != null) {
+            try {
+                product = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", productId));
+            } catch (GenericEntityException e) {
+                Debug.logError(e, "Unable to lookup product : " + productId, module);
+            }
+            if (product == null || product.get("requireAmount") == null || "N".equals(product.getString("requireAmount"))) {
+                amount = 0;
             }
         }
 
