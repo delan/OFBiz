@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.2
 -->
 
@@ -63,7 +63,8 @@
           <td width='74%' valign='middle'>
             <div class='tabletext' valign='top'>
               <select class="selectBox" name="productStoreId"<#if sessionAttributes.orderMode?exists> disabled</#if>>
-                <#assign currentStore = shoppingCart.getProductStoreId()?default("NA")>             
+                <#assign currentStore = shoppingCart.getProductStoreId()?default("NA")>
+                <option value="">Not Applicable</option>
                 <#list productStores as productStore>
                   <option value="${productStore.productStoreId}"<#if productStore.productStoreId == currentStore> checked</#if>>${productStore.storeName}</option>
                 </#list>
