@@ -25,14 +25,13 @@
 package org.ofbiz.entity.jdbc;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.entity.GenericEntityException;
-import org.ofbiz.entity.transaction.DBCPConnectionFactory;
-import org.ofbiz.entity.transaction.TransactionFactory;
+import org.ofbiz.entity.transaction.JotmConnectionFactory;
 import org.ofbiz.entity.transaction.MinervaConnectionFactory;
+import org.ofbiz.entity.transaction.TransactionFactory;
 import org.w3c.dom.Element;
 
 /**
@@ -58,7 +57,7 @@ public class ConnectionFactory {
     }
     
     public static Connection tryGenericConnectionSources(String helperName, Element inlineJdbcElement) throws SQLException, GenericEntityException {
-        // first try Minerva
+        // Minerva Based
         try {
             Connection con = MinervaConnectionFactory.getConnection(helperName, inlineJdbcElement);
             if (con != null) return con;
@@ -66,6 +65,17 @@ public class ConnectionFactory {
             Debug.logError(ex, "There was an error getting a Minerva datasource.", module);
         }
 
+        /* DEJ20040103 XAPool still seems to have some serious issues and isn't working right, of course we may not be using it right, but I don't really feel like trying to track it down now
+        // XAPool & JOTM Based
+        try {
+            Connection con = JotmConnectionFactory.getConnection(helperName, inlineJdbcElement);
+            if (con != null) return con;
+        } catch (Exception ex) {
+            Debug.logError(ex, "There was an error getting a Minerva datasource.", module);
+        }
+        */
+
+        /* DEJ20050103 This pretty much never works anyway, so leaving out to reduce error messages when things go bad
         // next try DBCP
         try {
             Connection con = DBCPConnectionFactory.getConnection(helperName, inlineJdbcElement);
@@ -76,7 +86,6 @@ public class ConnectionFactory {
         
         // Default to plain JDBC.
         String driverClassName = inlineJdbcElement.getAttribute("jdbc-driver");
-
         if (driverClassName != null && driverClassName.length() > 0) {
             try {
                 ClassLoader loader = Thread.currentThread().getContextClassLoader();
@@ -95,6 +104,7 @@ public class ConnectionFactory {
             return DriverManager.getConnection(inlineJdbcElement.getAttribute("jdbc-uri"),
                     inlineJdbcElement.getAttribute("jdbc-username"), inlineJdbcElement.getAttribute("jdbc-password"));
         }
+        */
 
         return null;
     }
