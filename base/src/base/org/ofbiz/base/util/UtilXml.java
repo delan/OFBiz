@@ -31,13 +31,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+
+import javolution.util.FastList;
 
 import org.apache.xml.serialize.OutputFormat;
 import org.apache.xml.serialize.XMLSerializer;
@@ -304,7 +305,7 @@ public class UtilXml {
     public static List childElementList(Element element) {
         if (element == null) return null;
 
-        List elements = new LinkedList();
+        List elements = FastList.newInstance();
         Node node = element.getFirstChild();
 
         if (node != null) {
@@ -325,7 +326,7 @@ public class UtilXml {
     public static List childElementList(Element element, String childElementName) {
         if (element == null) return null;
 
-        List elements = new LinkedList();
+        List elements = FastList.newInstance();
         Node node = element.getFirstChild();
 
         if (node != null) {
@@ -347,7 +348,7 @@ public class UtilXml {
     public static List childElementList(Element element, Set childElementNames) {
         if (element == null) return null;
 
-        List elements = new LinkedList();
+        List elements = FastList.newInstance();
         if (childElementNames == null) return elements;
         Node node = element.getFirstChild();
 

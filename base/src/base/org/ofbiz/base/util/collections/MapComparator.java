@@ -77,22 +77,37 @@ public class MapComparator implements Comparator {
 
         Iterator i = keys.iterator();
         while (i.hasNext()) {
+            Object key = i.next();
             // if false will be descending, ie reverse order
             boolean ascending = true;
-            Object key = i.next();
-            if (key instanceof String) {
-                String keyStr = (String) key;
-                if (keyStr.charAt(0) == '-') {
-                    ascending = false;
-                    key = keyStr.substring(1);
-                } else if (keyStr.charAt(0) == '+') {
-                    ascending = true;
-                    key = keyStr.substring(1);
+
+            Object o1 = null;
+            Object o2 = null;
+
+            if (key instanceof FlexibleMapAccessor) {
+                FlexibleMapAccessor fmaKey = (FlexibleMapAccessor) key;
+                ascending = fmaKey.getIsAscending();
+                
+                //Debug.logInfo("Doing compare with a FlexibleMapAccessor [" + fmaKey.getOriginalName() + "] ascending [" + ascending + "]", module);
+                
+                o1 = fmaKey.get(map1);
+                o2 = fmaKey.get(map2);
+            } else {
+                if (key instanceof String) {
+                    String keyStr = (String) key;
+                    if (keyStr.charAt(0) == '-') {
+                        ascending = false;
+                        key = keyStr.substring(1);
+                    } else if (keyStr.charAt(0) == '+') {
+                        ascending = true;
+                        key = keyStr.substring(1);
+                    }
                 }
+                
+                o1 = map1.get(key);
+                o2 = map2.get(key);
             }
-            
-            Object o1 = map1.get(key);
-            Object o2 = map2.get(key);
+
             if (o1 == null && o2 == null) {
                 continue;
             }
