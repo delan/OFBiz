@@ -1,5 +1,5 @@
 /*
- * $Id: ProductSearch.java,v 1.3 2003/10/17 11:34:07 jonesde Exp $
+ * $Id: ProductSearch.java,v 1.4 2003/10/18 00:34:42 jonesde Exp $
  *
  *  Copyright (c) 2001 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -57,18 +57,16 @@ import org.ofbiz.product.product.KeywordSearch;
  *  Utilities for product search based on various constraints including categories, features and keywords.
  *
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      3.0
  */
 public class ProductSearch {
     
     public static final String module = ProductSearch.class.getName();
     
-    public static ArrayList parametricKeywordSearch(Map featureIdByType, String keywordsString, GenericDelegator delegator, String productCategoryId, String visitId, boolean anyPrefix, boolean anySuffix, String intraKeywordOperator) {
+    public static ArrayList parametricKeywordSearch(Map featureIdByType, String keywordsString, GenericDelegator delegator, String productCategoryId, boolean includeSubCategories, String visitId, boolean anyPrefix, boolean anySuffix, String intraKeywordOperator) {
         // TODO: implement this for the new features
         Collection featureIdCol = featureIdByType.values();
-        // TODO: implement the sub categories feature, using pre-query of category list, then an IN condition
-        boolean includeSubCategories = true;
         boolean removeStems = UtilProperties.propertyValueEquals("prodsearch", "remove.stems", "true");
         
         Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
@@ -86,6 +84,16 @@ public class ProductSearch {
         
         // Category
         if (productCategoryId != null && productCategoryId.length() > 0) {
+            List productCategoryIdList = null;
+            if (includeSubCategories) {
+                // find all sub-categories recursively, make a Set of productCategoryId
+                Set productCategoryIdSet = new HashSet();
+                getAllSubCategoryIds(productCategoryId, productCategoryIdSet, delegator, nowTimestamp);
+                productCategoryIdList = new ArrayList(productCategoryIdSet);
+            } else {
+                productCategoryIdList = UtilMisc.toList(productCategoryId);
+            }
+            
             // make index based values and increment
             String entityAlias = "PK" + index;
             String prefix = "pk" + index;
@@ -96,9 +104,9 @@ public class ProductSearch {
             dynamicViewEntity.addAlias(entityAlias, prefix + "FromDate", "fromDate", null, null, null, null);
             dynamicViewEntity.addAlias(entityAlias, prefix + "ThruDate", "thruDate", null, null, null, null);
             dynamicViewEntity.addViewLink("PROD", "PCM", Boolean.FALSE, ModelKeyMap.makeKeyMapList("productId"));
-            entityConditionList.add(new EntityExpr("pcmProductCategoryId", EntityOperator.EQUALS, productCategoryId));
-            entityConditionList.add(new EntityExpr(new EntityExpr("pcmThruDate", EntityOperator.EQUALS, null), EntityOperator.OR, new EntityExpr("pcmThruDate", EntityOperator.GREATER_THAN, nowTimestamp)));
-            entityConditionList.add(new EntityExpr("pcmFromDate", EntityOperator.LESS_THAN, nowTimestamp));
+            entityConditionList.add(new EntityExpr(prefix + "ProductCategoryId", EntityOperator.IN, productCategoryIdList));
+            entityConditionList.add(new EntityExpr(new EntityExpr(prefix + "ThruDate", EntityOperator.EQUALS, null), EntityOperator.OR, new EntityExpr(prefix + "ThruDate", EntityOperator.GREATER_THAN, nowTimestamp)));
+            entityConditionList.add(new EntityExpr(prefix + "FromDate", EntityOperator.LESS_THAN, nowTimestamp));
         }
         
         // Keyword
@@ -190,6 +198,29 @@ public class ProductSearch {
             }
         }
         return productIds;
+    }
+    
+    public static void getAllSubCategoryIds(String productCategoryId, Set productCategoryIdSet, GenericDelegator delegator, Timestamp nowTimestamp) {
+        // TODO: cache the sub-category so this will run faster
+        
+        // first make sure the current category id is in the Set
+        productCategoryIdSet.add(productCategoryId);
+        
+        // now find all sub-categories, filtered by effective dates, and call this routine for them
+        List conditions = new LinkedList();
+        conditions.add(new EntityExpr("parentProductCategoryId", EntityOperator.EQUALS, productCategoryId));
+        conditions.add(new EntityExpr(new EntityExpr("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, new EntityExpr("thruDate", EntityOperator.GREATER_THAN, nowTimestamp)));
+        conditions.add(new EntityExpr("fromDate", EntityOperator.LESS_THAN, nowTimestamp));
+        try {
+            List productCategoryRollupList = delegator.findByCondition("ProductCategoryRollup", new EntityConditionList(conditions, EntityOperator.AND), null, null);
+            Iterator productCategoryRollupIter = productCategoryRollupList.iterator();
+            while (productCategoryRollupIter.hasNext()) {
+                GenericValue productCategoryRollup = (GenericValue) productCategoryRollupIter.next();
+                getAllSubCategoryIds(productCategoryRollup.getString("productCategoryId"), productCategoryIdSet, delegator, nowTimestamp);
+            }
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Error finding sub-categories for product search", module);
+        }
     }
     
         // AND EXAMPLE:
