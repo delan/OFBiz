@@ -55,7 +55,7 @@
   }
 
   ModelDataFile modelDataFile = null;
-  if(dataFile != null) modelDataFile = dataFile.modelDataFile;
+  if(dataFile != null) modelDataFile = dataFile.getModelDataFile();
 
   if(dataFile != null && dataFileSave != null) {
     try {
@@ -122,7 +122,7 @@
       </TR>
     </TABLE>
     <BR>
-    <%request.setAttribute("CUR_RECORD_LIST", dataFile.records);%>
+    <%request.setAttribute("CUR_RECORD_LIST", dataFile.getRecords());%>
     <%pageContext.include("/datafile/showrecords.jsp");%>
   <%}%>
 
