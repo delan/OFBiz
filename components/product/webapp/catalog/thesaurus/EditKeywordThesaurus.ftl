@@ -20,18 +20,19 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Nathan De Graw
- *@version    $Revision: 1.3 $
+ *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
+ *@version    $Revision: 1.4 $
  *@since      3.0
 -->
-
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#if hasPermission>
-  <div class="head1">Alternate Key Word Thesaurus</div>
+  <div class="head1">${uiLabelMap.ProductAlternateKeyWordThesaurus}</div>
   <form method="POST" action="<@ofbizUrl>/createKeywordThesaurus</@ofbizUrl>">
         <div class="tabletext">
-        Keyword:<input type="text" name="enteredKeyword" size="10" class="inputBox"/>
-        Alternate:<input type="text" name="alternateKeyword" size="10" class="inputBox"/>
-        Relationship:<select name="relationshipEnumId" class="selectBox"><#list relationshipEnums as relationshipEnum><option value="${relationshipEnum.enumId}">${relationshipEnum.description}</option></#list></select>
-        <input type="submit" value="Add" class="smallButton">
+        ${uiLabelMap.ProductKeyword} :<input type="text" name="enteredKeyword" size="10" class="inputBox"/>
+        ${uiLabelMap.ProductAlternate} :<input type="text" name="alternateKeyword" size="10" class="inputBox"/>
+        ${uiLabelMap.ProducRelationship} :<select name="relationshipEnumId" class="selectBox"><#list relationshipEnums as relationshipEnum><option value="${relationshipEnum.enumId}">${relationshipEnum.description}</option></#list></select>
+        <input type="submit" value="${uiLabelMap.CommonAdd}" class="smallButton">
     </div>
   </form>
 
@@ -58,13 +59,13 @@
             <form method="POST" action="<@ofbizUrl>/createKeywordThesaurus</@ofbizUrl>">
               <div class="tabletext">
                 <b>${keyword.enteredKeyword}</b>
-                <a href="<@ofbizUrl>/deleteKeywordThesaurus?enteredKeyword=${keyword.enteredKeyword}</@ofbizUrl>" class="buttontext">[Delete All]</a>
+                <a href="<@ofbizUrl>/deleteKeywordThesaurus?enteredKeyword=${keyword.enteredKeyword}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonDeleteAll}]</a>
               </div>
               <div class="tabletext">
                 <input type="hidden" name="enteredKeyword" value=${keyword.enteredKeyword}>
-                Alternate: <input type="text" name="alternateKeyword" size="10">
-                Relationship:<select name="relationshipEnumId" class="selectBox"><#list relationshipEnums as relationshipEnum><option value="${relationshipEnum.enumId}">${relationshipEnum.description}</option></#list></select>
-                <input type="submit" value="Add">
+                ${uiLabelMap.ProductAlternate} : <input type="text" name="alternateKeyword" size="10">
+                ${uiLabelMap.ProducRelationship} :<select name="relationshipEnumId" class="selectBox"><#list relationshipEnums as relationshipEnum><option value="${relationshipEnum.enumId}">${relationshipEnum.description}</option></#list></select>
+                <input type="submit" value="${uiLabelMap.CommonAdd}">
               </div>
             </form>
           </td>
@@ -79,5 +80,5 @@
     </tr>
   </table>
 <#else>
-  <h3>You do not have permission to view this page. ("CATALOG_VIEW" or "CATALOG_ADMIN" needed)</h3>
+  <h3>${uiLabelMap.ProductViewPermissionError}</h3>
 </#if>

@@ -22,7 +22,7 @@
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Brad Steiner (bsteiner@thehungersite.com)
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Revision: 1.15 $
+ *@version    $Revision: 1.16 $
  *@since      2.2
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -365,8 +365,8 @@ ${pages.get("/promo/PromoTabBar.ftl")}
         </tr>
         </#list>
         </table>
-        <div class="tabletext"><b>${uiLabelMap.ProductNoteOnItemId} :</b> ${uiLabelMap.ProductItemIdForGiftWithPurchaseOrFreeShipping}</div>
-        <div class="tabletext"><b>${uiLabelMap.ProductNoteOnPartyId} :</b> ${uiLabelMap.ProductPartyForFreeShipping}</div>
+        <div class="tabletext"><b>${uiLabelMap.ProductNoteOnItemId} :</b> ${uiLabelMap.ProductItemIdGiftPurchaseFreeShipping}</div>
+        <div class="tabletext"><b>${uiLabelMap.ProductNoteOnPartyId} :</b> ${uiLabelMap.ProductPartyFreeShipping}</div>
 
         <br>
 
@@ -419,7 +419,7 @@ ${pages.get("/promo/PromoTabBar.ftl")}
         </div>
         <br/>
         <#-- ======================= Products ======================== -->
-        <div class="head3">Promotion Products:</div>
+        <div class="head3">${uiLabelMap.ProductPromotionProducts} :</div>
         <#list promoProductPromoProducts as promoProductPromoProduct>
             <#assign promoProduct = promoProductPromoProduct.getRelatedOneCache("Product")?if_exists>
             <#assign promoApplEnumeration = promoProductPromoProduct.getRelatedOneCache("ApplEnumeration")>

@@ -22,7 +22,7 @@
  *@author     David E. Jones
  *@author     Brad Steiner
  *@author     thierry.grauss@etu.univ-tours.fr (migration to uiLabelMap)
- *@version    $Revision: 1.4 $
+ *@version    $Revision: 1.5 $
  *@since      2.2
 -->
 
@@ -63,7 +63,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
             </td>
         </tr>
     <#else>
-        <div class="head1">${uiLabelMap.ProductCannotCreateLocationWithoutFacilityId}</div>
+        <div class="head1">${uiLabelMap.ProductNotCreateLocationFacilityId}</div>
     </#if>
     
     <#if facilityId?exists>      
