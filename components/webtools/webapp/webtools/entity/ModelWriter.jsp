@@ -83,6 +83,8 @@ if (security.hasPermission("ENTITY_MAINT", session) || request.getParameter("ori
   Map packages = new HashMap();
   TreeSet packageNames = new TreeSet();
 
+  // ignore fields names
+  List ignoredFields = UtilMisc.toList("lastUpdatedStamp", "lastUpdatedTxStamp", "createdStamp", "createdTxStamp");
   //put the entityNames TreeSets in a HashMap by packageName
   Collection ec = null;
 
@@ -198,14 +200,15 @@ if (security.hasPermission("ENTITY_MAINT", session) || request.getParameter("ori
             version="<%=entity.getVersion()%>"<%}%>><%if (!description.equals(entity.getDescription())) {%>
       <description><%=entity.getDescription()%></description><%}%><%
   for (int y = 0; y < entity.getFieldsSize(); y++) {
-    ModelField field = entity.getField(y);%>
+    ModelField field = entity.getField(y);
+    if (!ignoredFields.contains(field.getName())) {%>
       <field name="<%=field.getName()%>"<%if (!field.getName().equals(ModelUtil.dbNameToVarName(field.getColName()))){
       %> col-name="<%=field.getColName()%>"<%}%> type="<%=field.getType()%>"><%
     for (int v = 0; v<field.getValidatorsSize(); v++) {
       String valName = field.getValidator(v);
       %><validate name="<%=valName%>"/><%
     }%></field><%
-  }
+    }}
   for (int y = 0; y < entity.getPksSize(); y++) {
     ModelField field = entity.getPk(y);%>
       <prim-key field="<%=field.getName()%>"/><%
