@@ -314,7 +314,85 @@
         <implements service="interfaceGlReconciliationEntryPK"/>
     </service>
 	
-	
 	<!-- AcctgTrans & Related -->
+    <service name="interfaceAcctgTrans" engine="interface" location="" invoke="">
+        <attribute name="acctgTransTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="description" type="String" mode="IN" optional="false"/>
+        <attribute name="transactionDate" type="Timestamp" mode="IN" optional="false"/>
+        <attribute name="isPosted" type="String" mode="IN" optional="false"/>
+        <attribute name="postedDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="glJournalId" type="String" mode="IN" optional="false"/>
+        <attribute name="glFiscalTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="voucherRef" type="String" mode="IN" optional="true"/>
+        <attribute name="voucherDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="groupStatusId" type="String" mode="IN" optional="true"/>
+        <attribute name="fixedAssetId" type="String" mode="IN" optional="true"/>
+        <attribute name="inventoryItemId" type="String" mode="IN" optional="true"/>
+        <attribute name="physicalInventoryId" type="String" mode="IN" optional="true"/>
+        <attribute name="partyId" type="String" mode="IN" optional="true"/>
+        <attribute name="roleTypeId" type="String" mode="IN" optional="true"/>
+        <attribute name="invoiceId" type="String" mode="IN" optional="true"/>
+        <attribute name="paymentId" type="String" mode="IN" optional="true"/>
+        <attribute name="theirAcctgTransId" type="String" mode="IN" optional="true"/>
+    </service>
+    <service name="createAcctgTrans" engine="simple"
+            location="org/ofbiz/commonapp/accounting/ledger/AcctgTransServices.xml" invoke="createAcctgTrans" auth="true">
+        <description>Create a AcctgTrans record</description>
+        <implements service="interfaceAcctgTrans"/>
+        <attribute name="acctgTransId" type="String" mode="OUT" optional="false"/>
+    </service>
+    <service name="updateAcctgTrans" engine="simple"
+            location="org/ofbiz/commonapp/accounting/ledger/AcctgTransServices.xml" invoke="updateAcctgTrans" auth="true">
+        <description>Update a AcctgTrans record</description>
+        <implements service="interfaceAcctgTrans"/>
+        <attribute name="acctgTransId" type="String" mode="IN" optional="false"/>
+    </service>
+    <service name="deleteAcctgTrans" engine="simple"
+            location="org/ofbiz/commonapp/accounting/ledger/AcctgTransServices.xml" invoke="deleteAcctgTrans" auth="true">
+        <description>Delete a AcctgTrans record</description>
+        <attribute name="acctgTransId" type="String" mode="IN" optional="false"/>
+    </service>
 	
+    <service name="interfaceAcctgTransEntryPK" engine="interface" location="" invoke="">
+        <attribute name="acctgTransId" type="String" mode="IN" optional="true"/>
+        <attribute name="acctgTransEntrySeqId" type="String" mode="IN" optional="true"/>
+    </service>
+    <service name="interfaceAcctgTransEntry" engine="interface" location="" invoke="">
+        <attribute name="acctgTransEntryTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="description" type="String" mode="IN" optional="false"/>
+        <attribute name="voucherRef" type="String" mode="IN" optional="true"/>
+        <attribute name="partyId" type="String" mode="IN" optional="true"/>
+        <attribute name="roleTypeId" type="String" mode="IN" optional="true"/>
+        <attribute name="theirPartyId" type="String" mode="IN" optional="true"/>
+        <attribute name="productId" type="String" mode="IN" optional="true"/>
+        <attribute name="theirProductId" type="String" mode="IN" optional="true"/>
+        <attribute name="glAccountId" type="String" mode="IN" optional="false"/>
+        <attribute name="organizationPartyId" type="String" mode="IN" optional="false"/>
+        <attribute name="amount" type="Double" mode="IN" optional="false"/>
+        <attribute name="origAmount" type="Double" mode="IN" optional="true"/>
+        <attribute name="debitCreditFlag" type="String" mode="IN" optional="false"/>
+        <attribute name="dueDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="groupId" type="String" mode="IN" optional="true"/>
+        <attribute name="taxId" type="String" mode="IN" optional="true"/>
+        <attribute name="reconcileStatusId" type="String" mode="IN" optional="false"/>
+        <attribute name="settlementTermId" type="String" mode="IN" optional="true"/>
+        <attribute name="isSummary" type="String" mode="IN" optional="false"/>
+    </service>
+    <service name="addEntryToAcctgTrans" engine="simple"
+            location="org/ofbiz/commonapp/accounting/ledger/AcctgTransServices.xml" invoke="addEntryToAcctgTrans" auth="true">
+        <description>Add an Entry to a AcctgTrans</description>
+        <implements service="interfaceAcctgTransEntryPK"/>
+        <implements service="interfaceAcctgTransEntry"/>
+    </service>
+    <service name="updateEntryToAcctgTrans" engine="simple"
+            location="org/ofbiz/commonapp/accounting/ledger/AcctgTransServices.xml" invoke="updateEntryToAcctgTrans" auth="true">
+        <description>Update an Entry to a AcctgTrans record</description>
+        <implements service="interfaceAcctgTransEntryPK"/>
+        <implements service="interfaceAcctgTransEntry"/>
+    </service>
+    <service name="removeEntryFromAcctgTrans" engine="simple"
+            location="org/ofbiz/commonapp/accounting/ledger/AcctgTransServices.xml" invoke="removeEntryFromAcctgTrans" auth="true">
+        <description>Remove an Entry from a AcctgTrans</description>
+        <implements service="interfaceAcctgTransEntryPK"/>
+    </service>
 </services>
