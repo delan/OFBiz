@@ -64,6 +64,7 @@
       <field name="shipmentId" type="id"></field>
       <field name="shipmentItemSeqId" type="id"></field>
       <field name="issuedDateTime" type="date-time"></field>
+      <field name="issuedByUserLoginId" type="id"></field>
       <field name="quantity" type="floating-point"></field>
       <prim-key field="itemIssuanceId"/>
       <relation type="one" fk-name="ITEM_ISS_INVITM" rel-entity-name="InventoryItem">
@@ -87,6 +88,9 @@
       <relation type="one" fk-name="ITEM_ISS_ORITM" rel-entity-name="OrderItem">
         <key-map field-name="orderId"/>
         <key-map field-name="orderItemSeqId"/>
+      </relation>
+      <relation type="one" fk-name="ITEM_ISS_IBUL" title="IssuedBy" rel-entity-name="UserLogin">
+        <key-map field-name="issuedByUserLoginId" rel-field-name="userLoginId"/>
       </relation>
       <relation type="many" rel-entity-name="ItemIssuanceRole">
         <key-map field-name="itemIssuanceId"/>
