@@ -1,5 +1,5 @@
 /*
- * $Id: ServiceGroupEngine.java,v 1.2 2004/07/01 15:27:14 ajzeneski Exp $
+ * $Id$
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *

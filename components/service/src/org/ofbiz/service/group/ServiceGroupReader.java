@@ -1,5 +1,5 @@
 /*
- * $Id: ServiceGroupReader.java,v 1.4 2003/09/02 18:41:32 ajzeneski Exp $
+ * $Id$
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
