@@ -896,7 +896,7 @@
       <field name="productPriceRuleId" type="id-ne"></field>
       <field name="ruleName" type="name"></field>
       <prim-key field="productPriceRuleId"/>
-      <relation type="many" rel-entity-name="ProductPromoAction">
+      <relation type="many" rel-entity-name="ProductPriceAction">
         <key-map field-name="productPriceRuleId"/>
       </relation>
       <relation type="many" rel-entity-name="ProductPriceCond">
