@@ -113,25 +113,24 @@ public class ServiceEventHandler implements EventHandler {
 
             // don't include userLogin, that's taken care of below
             if ("userLogin".equals(name)) continue;
-            String paramStr = request.getParameter(name);
+            
+            Object value = request.getParameter(name);
 
-            // if the parameter wasn't passed, don't pass on the null
-            if (paramStr == null) {
-                continue;
-            }
-
-            // interpreting empty fields as null values for each in back end handling...
-            if (paramStr.length() == 0) {
-                paramStr = null;
-            }
-
-            Object value = paramStr;
-
+            // if the parameter wasn't passed and no other value found, don't pass on the null
             if (value == null) {
                 value = request.getAttribute(name);
-            }
+            } 
             if (value == null) {
                 value = request.getSession().getAttribute(name);
+            }
+            if (value == null) {
+                //still null, give up for this one
+                continue;
+            }
+            
+            if (value instanceof String && ((String) value).length() == 0) {
+                // interpreting empty fields as null values for each in back end handling...
+                value = null;
             }
 
             // set even if null so that values will get nulled in the db later on
