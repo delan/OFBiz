@@ -46,7 +46,7 @@
     <global-services loader="mainfile" location="services_workflow.xml"/>
 
     <!-- Service-Group definition files -->
-    <service-groups loader="mainfile" location="group_test.xml"/>
+    <service-groups loader="mainfile" location="groups_test.xml"/>
     
 	<!-- ECA definition files -->
     <service-ecas loader="mainfile" location="secas_test.xml"/>
