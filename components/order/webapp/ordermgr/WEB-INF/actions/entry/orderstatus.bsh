@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski
- *@version    $Revision: 1.4 $
+ *@version    $Revision: 1.5 $
  *@since      2.1
 */
 
@@ -31,6 +31,7 @@ import org.ofbiz.accounting.payment.*;
 import org.ofbiz.order.order.*;
 import org.ofbiz.party.contact.*;
 import org.ofbiz.product.catalog.*;
+import org.ofbiz.product.store.*;
 
 delegator = request.getAttribute("delegator");
 orderId = request.getParameter("order_id");
@@ -101,8 +102,10 @@ if (orderHeader != null) {
     } 
     
     webSiteId = CatalogWorker.getWebSiteId(request);
-    paymentAddress =  PaymentWorker.getPaymentAddress(delegator, webSiteId, paymentMethodTypeId);
-    if (paymentAddress != null) context.put("paymentAddress", paymentAddress);  
+    productStore = ProductStoreWorker.getProductStore(request);
+    payToPartyId = productStore.getString("payToPartyId");
+    paymentAddress =  PaymentWorker.getPaymentAddress(delegator, payToPartyId);    
+    if (paymentAddress != null) context.put("paymentAddress", paymentAddress);    
        
     orderShipmentPreferences = UtilMisc.toIterator(orderHeader.getRelated("OrderShipmentPreference"));
     if (orderShipmentPreferences != null && orderShipmentPreferences.hasNext()) {
