@@ -24,7 +24,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Fri Jul 06 18:25:23 MDT 2001
+ *@created    Mon Jul 09 23:23:53 MDT 2001
  *@version    1.0
  */
 %>
@@ -123,7 +123,7 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
       <td valign="top">Primary Key:</td>
       <td valign="top">
           <input type="hidden" name="SEARCH_TYPE" value="primaryKey">
-
+        
           <input type="text" name="SEARCH_PARAMETER1" value="" size="20">
           (Must be exact)
       </td>
@@ -148,7 +148,7 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
 <b>SecurityGroups found by:&nbsp; <%=searchType%> : <%=UtilFormatOut.checkNull(searchParam1)%> : <%=UtilFormatOut.checkNull(searchParam2)%> : <%=UtilFormatOut.checkNull(searchParam3)%></b>
 <br>
 <%if(hasCreatePermission){%>
-  <a href="<%=response.encodeURL("EditSecurityGroup.jsp")%>" class="buttontext">[Create SecurityGroup]</a>
+  <a href="<%=response.encodeURL("ViewSecurityGroup.jsp")%>" class="buttontext">[Create New SecurityGroup]</a>
 <%}%>
 <table border="0" width="100%" cellpadding="2">
 <% if(arraySize > 0) { %>
@@ -176,9 +176,6 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
       <td><div class="tabletext"><b><nobr>GROUP_ID</nobr></b></div></td>
       <td><div class="tabletext"><b><nobr>DESCRIPTION</nobr></b></div></td>
       <td>&nbsp;</td>
-      <%if(hasUpdatePermission){%>
-        <td>&nbsp;</td>
-      <%}%>
       <%if(hasDeletePermission){%>
         <td>&nbsp;</td>
       <%}%>
@@ -198,28 +195,17 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
   
       <td>
         <div class="tabletext">
-    
       <%=UtilFormatOut.checkNull(securityGroup.getGroupId())%>
-    
         &nbsp;</div>
       </td>
-  
       <td>
         <div class="tabletext">
-    
       <%=UtilFormatOut.checkNull(securityGroup.getDescription())%>
-    
         &nbsp;</div>
       </td>
-  
       <td>
         <a href="<%=response.encodeURL("ViewSecurityGroup.jsp?" + "SECURITY_GROUP_GROUP_ID=" + securityGroup.getGroupId())%>" class="buttontext">[View]</a>
       </td>
-      <%if(hasUpdatePermission){%>
-        <td>
-          <a href="<%=response.encodeURL("EditSecurityGroup.jsp?" + "SECURITY_GROUP_GROUP_ID=" + securityGroup.getGroupId())%>" class="buttontext">[Edit]</a>
-        </td>
-      <%}%>
       <%if(hasDeletePermission){%>
         <td>
           <a href="<%=response.encodeURL("FindSecurityGroup.jsp?WEBEVENT=UPDATE_SECURITY_GROUP&UPDATE_MODE=DELETE&" + "SECURITY_GROUP_GROUP_ID=" + securityGroup.getGroupId() + "&" + curFindString)%>" class="buttontext">[Delete]</a>
@@ -234,7 +220,7 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
  {
 %>
 <%rowClassResult=(rowClassResult==rowClassResult1?rowClassResult2:rowClassResult1);%><tr class="<%=rowClassResult%>">
-<td colspan="8">
+<td colspan="4">
 <h3>No SecurityGroups Found.</h3>
 </td>
 </tr>
@@ -261,7 +247,7 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
 <% } %>
 </table>
 <%if(hasCreatePermission){%>
-  <a href="<%=response.encodeURL("EditSecurityGroup.jsp")%>" class="buttontext">[Create SecurityGroup]</a>
+  <a href="<%=response.encodeURL("ViewSecurityGroup.jsp")%>" class="buttontext">[Create SecurityGroup]</a>
 <%}%>
 <%}else{%>
   <h3>You do not have permission to view this page (SECURITY_GROUP_ADMIN, or SECURITY_GROUP_VIEW needed).</h3>

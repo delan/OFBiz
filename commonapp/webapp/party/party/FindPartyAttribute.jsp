@@ -24,7 +24,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Fri Jul 06 18:25:20 MDT 2001
+ *@created    Mon Jul 09 23:23:51 MDT 2001
  *@version    1.0
  */
 %>
@@ -127,7 +127,7 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
       <td valign="top">Primary Key:</td>
       <td valign="top">
           <input type="hidden" name="SEARCH_TYPE" value="primaryKey">
-
+        
           <input type="text" name="SEARCH_PARAMETER1" value="" size="20">
           <input type="text" name="SEARCH_PARAMETER2" value="" size="20">
           (Must be exact)
@@ -138,13 +138,12 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
     </form>
   </tr>
 
-  
   <%rowClassTop=(rowClassTop==rowClassTop1?rowClassTop2:rowClassTop1);%><tr class="<%=rowClassTop%>">
     <td valign="top">PartyId: </td>
     <form method="post" action="<%=response.encodeURL("FindPartyAttribute.jsp")%>" style=margin:0;>
       <td valign="top">
         <input type="hidden" name="SEARCH_TYPE" value="PartyId">
-
+      
         <input type="text" name="SEARCH_PARAMETER1" value="" size="20">
       </td>
       <td valign="top">
@@ -153,13 +152,12 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
     </form>
   </tr>
 
-  
   <%rowClassTop=(rowClassTop==rowClassTop1?rowClassTop2:rowClassTop1);%><tr class="<%=rowClassTop%>">
     <td valign="top">Name: </td>
     <form method="post" action="<%=response.encodeURL("FindPartyAttribute.jsp")%>" style=margin:0;>
       <td valign="top">
         <input type="hidden" name="SEARCH_TYPE" value="Name">
-
+      
         <input type="text" name="SEARCH_PARAMETER1" value="" size="20">
       </td>
       <td valign="top">
@@ -183,7 +181,7 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
 <b>PartyAttributes found by:&nbsp; <%=searchType%> : <%=UtilFormatOut.checkNull(searchParam1)%> : <%=UtilFormatOut.checkNull(searchParam2)%> : <%=UtilFormatOut.checkNull(searchParam3)%></b>
 <br>
 <%if(hasCreatePermission){%>
-  <a href="<%=response.encodeURL("EditPartyAttribute.jsp")%>" class="buttontext">[Create PartyAttribute]</a>
+  <a href="<%=response.encodeURL("ViewPartyAttribute.jsp")%>" class="buttontext">[Create New PartyAttribute]</a>
 <%}%>
 <table border="0" width="100%" cellpadding="2">
 <% if(arraySize > 0) { %>
@@ -212,9 +210,6 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
       <td><div class="tabletext"><b><nobr>NAME</nobr></b></div></td>
       <td><div class="tabletext"><b><nobr>VALUE</nobr></b></div></td>
       <td>&nbsp;</td>
-      <%if(hasUpdatePermission){%>
-        <td>&nbsp;</td>
-      <%}%>
       <%if(hasDeletePermission){%>
         <td>&nbsp;</td>
       <%}%>
@@ -234,36 +229,22 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
   
       <td>
         <div class="tabletext">
-    
       <%=UtilFormatOut.checkNull(partyAttribute.getPartyId())%>
-    
         &nbsp;</div>
       </td>
-  
       <td>
         <div class="tabletext">
-    
       <%=UtilFormatOut.checkNull(partyAttribute.getName())%>
-    
         &nbsp;</div>
       </td>
-  
       <td>
         <div class="tabletext">
-    
       <%=UtilFormatOut.checkNull(partyAttribute.getValue())%>
-    
         &nbsp;</div>
       </td>
-  
       <td>
         <a href="<%=response.encodeURL("ViewPartyAttribute.jsp?" + "PARTY_ATTRIBUTE_PARTY_ID=" + partyAttribute.getPartyId() + "&" + "PARTY_ATTRIBUTE_NAME=" + partyAttribute.getName())%>" class="buttontext">[View]</a>
       </td>
-      <%if(hasUpdatePermission){%>
-        <td>
-          <a href="<%=response.encodeURL("EditPartyAttribute.jsp?" + "PARTY_ATTRIBUTE_PARTY_ID=" + partyAttribute.getPartyId() + "&" + "PARTY_ATTRIBUTE_NAME=" + partyAttribute.getName())%>" class="buttontext">[Edit]</a>
-        </td>
-      <%}%>
       <%if(hasDeletePermission){%>
         <td>
           <a href="<%=response.encodeURL("FindPartyAttribute.jsp?WEBEVENT=UPDATE_PARTY_ATTRIBUTE&UPDATE_MODE=DELETE&" + "PARTY_ATTRIBUTE_PARTY_ID=" + partyAttribute.getPartyId() + "&" + "PARTY_ATTRIBUTE_NAME=" + partyAttribute.getName() + "&" + curFindString)%>" class="buttontext">[Delete]</a>
@@ -278,7 +259,7 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
  {
 %>
 <%rowClassResult=(rowClassResult==rowClassResult1?rowClassResult2:rowClassResult1);%><tr class="<%=rowClassResult%>">
-<td colspan="8">
+<td colspan="5">
 <h3>No PartyAttributes Found.</h3>
 </td>
 </tr>
@@ -305,7 +286,7 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
 <% } %>
 </table>
 <%if(hasCreatePermission){%>
-  <a href="<%=response.encodeURL("EditPartyAttribute.jsp")%>" class="buttontext">[Create PartyAttribute]</a>
+  <a href="<%=response.encodeURL("ViewPartyAttribute.jsp")%>" class="buttontext">[Create PartyAttribute]</a>
 <%}%>
 <%}else{%>
   <h3>You do not have permission to view this page (PARTY_ATTRIBUTE_ADMIN, or PARTY_ATTRIBUTE_VIEW needed).</h3>

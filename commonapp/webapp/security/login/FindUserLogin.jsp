@@ -24,7 +24,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Fri Jul 06 18:25:22 MDT 2001
+ *@created    Mon Jul 09 23:23:52 MDT 2001
  *@version    1.0
  */
 %>
@@ -129,7 +129,7 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
       <td valign="top">Primary Key:</td>
       <td valign="top">
           <input type="hidden" name="SEARCH_TYPE" value="primaryKey">
-
+        
           <input type="text" name="SEARCH_PARAMETER1" value="" size="20">
           (Must be exact)
       </td>
@@ -139,13 +139,12 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
     </form>
   </tr>
 
-  
   <%rowClassTop=(rowClassTop==rowClassTop1?rowClassTop2:rowClassTop1);%><tr class="<%=rowClassTop%>">
     <td valign="top">PartyId: </td>
     <form method="post" action="<%=response.encodeURL("FindUserLogin.jsp")%>" style=margin:0;>
       <td valign="top">
         <input type="hidden" name="SEARCH_TYPE" value="PartyId">
-
+      
         <input type="text" name="SEARCH_PARAMETER1" value="" size="20">
       </td>
       <td valign="top">
@@ -154,13 +153,12 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
     </form>
   </tr>
 
-  
   <%rowClassTop=(rowClassTop==rowClassTop1?rowClassTop2:rowClassTop1);%><tr class="<%=rowClassTop%>">
     <td valign="top">ContactMechanismId: </td>
     <form method="post" action="<%=response.encodeURL("FindUserLogin.jsp")%>" style=margin:0;>
       <td valign="top">
         <input type="hidden" name="SEARCH_TYPE" value="ContactMechanismId">
-
+      
         <input type="text" name="SEARCH_PARAMETER1" value="" size="20">
       </td>
       <td valign="top">
@@ -169,13 +167,12 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
     </form>
   </tr>
 
-  
   <%rowClassTop=(rowClassTop==rowClassTop1?rowClassTop2:rowClassTop1);%><tr class="<%=rowClassTop%>">
     <td valign="top">CurrentUserId: </td>
     <form method="post" action="<%=response.encodeURL("FindUserLogin.jsp")%>" style=margin:0;>
       <td valign="top">
         <input type="hidden" name="SEARCH_TYPE" value="CurrentUserId">
-
+      
         <input type="text" name="SEARCH_PARAMETER1" value="" size="20">
       </td>
       <td valign="top">
@@ -199,7 +196,7 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
 <b>UserLogins found by:&nbsp; <%=searchType%> : <%=UtilFormatOut.checkNull(searchParam1)%> : <%=UtilFormatOut.checkNull(searchParam2)%> : <%=UtilFormatOut.checkNull(searchParam3)%></b>
 <br>
 <%if(hasCreatePermission){%>
-  <a href="<%=response.encodeURL("EditUserLogin.jsp")%>" class="buttontext">[Create UserLogin]</a>
+  <a href="<%=response.encodeURL("ViewUserLogin.jsp")%>" class="buttontext">[Create New UserLogin]</a>
 <%}%>
 <table border="0" width="100%" cellpadding="2">
 <% if(arraySize > 0) { %>
@@ -230,9 +227,6 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
       <td><div class="tabletext"><b><nobr>CURRENT_USER_ID</nobr></b></div></td>
       <td><div class="tabletext"><b><nobr>CURRENT_PASSWORD</nobr></b></div></td>
       <td>&nbsp;</td>
-      <%if(hasUpdatePermission){%>
-        <td>&nbsp;</td>
-      <%}%>
       <%if(hasDeletePermission){%>
         <td>&nbsp;</td>
       <%}%>
@@ -252,52 +246,32 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
   
       <td>
         <div class="tabletext">
-    
       <%=UtilFormatOut.checkNull(userLogin.getUserLoginId())%>
-    
         &nbsp;</div>
       </td>
-  
       <td>
         <div class="tabletext">
-    
       <%=UtilFormatOut.checkNull(userLogin.getPartyId())%>
-    
         &nbsp;</div>
       </td>
-  
       <td>
         <div class="tabletext">
-    
       <%=UtilFormatOut.checkNull(userLogin.getContactMechanismId())%>
-    
         &nbsp;</div>
       </td>
-  
       <td>
         <div class="tabletext">
-    
       <%=UtilFormatOut.checkNull(userLogin.getCurrentUserId())%>
-    
         &nbsp;</div>
       </td>
-  
       <td>
         <div class="tabletext">
-    
       <%=UtilFormatOut.checkNull(userLogin.getCurrentPassword())%>
-    
         &nbsp;</div>
       </td>
-  
       <td>
         <a href="<%=response.encodeURL("ViewUserLogin.jsp?" + "USER_LOGIN_USER_LOGIN_ID=" + userLogin.getUserLoginId())%>" class="buttontext">[View]</a>
       </td>
-      <%if(hasUpdatePermission){%>
-        <td>
-          <a href="<%=response.encodeURL("EditUserLogin.jsp?" + "USER_LOGIN_USER_LOGIN_ID=" + userLogin.getUserLoginId())%>" class="buttontext">[Edit]</a>
-        </td>
-      <%}%>
       <%if(hasDeletePermission){%>
         <td>
           <a href="<%=response.encodeURL("FindUserLogin.jsp?WEBEVENT=UPDATE_USER_LOGIN&UPDATE_MODE=DELETE&" + "USER_LOGIN_USER_LOGIN_ID=" + userLogin.getUserLoginId() + "&" + curFindString)%>" class="buttontext">[Delete]</a>
@@ -312,7 +286,7 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
  {
 %>
 <%rowClassResult=(rowClassResult==rowClassResult1?rowClassResult2:rowClassResult1);%><tr class="<%=rowClassResult%>">
-<td colspan="8">
+<td colspan="7">
 <h3>No UserLogins Found.</h3>
 </td>
 </tr>
@@ -339,7 +313,7 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
 <% } %>
 </table>
 <%if(hasCreatePermission){%>
-  <a href="<%=response.encodeURL("EditUserLogin.jsp")%>" class="buttontext">[Create UserLogin]</a>
+  <a href="<%=response.encodeURL("ViewUserLogin.jsp")%>" class="buttontext">[Create UserLogin]</a>
 <%}%>
 <%}else{%>
   <h3>You do not have permission to view this page (USER_LOGIN_ADMIN, or USER_LOGIN_VIEW needed).</h3>

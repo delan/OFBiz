@@ -58,7 +58,7 @@
       <TD>Party</TD>
       <TD>
         <%if(Security.hasEntityPermission("PARTY", "_CREATE", session)){%>
-          <a href="<%=response.encodeURL("/commonapp/party/party/EditParty.jsp")%>" class="buttontext">Create</a>
+          <a href="<%=response.encodeURL("/commonapp/party/party/ViewParty.jsp")%>" class="buttontext">Create</a>
         <%}%>
       </TD>
       <TD><a href="<%=response.encodeURL("/commonapp/party/party/FindParty.jsp")%>" class="buttontext">Find</a></TD>
@@ -69,7 +69,7 @@
       <TD>PartyClassification</TD>
       <TD>
         <%if(Security.hasEntityPermission("PARTY_CLASSIFICATION", "_CREATE", session)){%>
-          <a href="<%=response.encodeURL("/commonapp/party/party/EditPartyClassification.jsp")%>" class="buttontext">Create</a>
+          <a href="<%=response.encodeURL("/commonapp/party/party/ViewPartyClassification.jsp")%>" class="buttontext">Create</a>
         <%}%>
       </TD>
       <TD><a href="<%=response.encodeURL("/commonapp/party/party/FindPartyClassification.jsp")%>" class="buttontext">Find</a></TD>
@@ -80,7 +80,7 @@
       <TD>PartyClassificationType</TD>
       <TD>
         <%if(Security.hasEntityPermission("PARTY_CLASSIFICATION_TYPE", "_CREATE", session)){%>
-          <a href="<%=response.encodeURL("/commonapp/party/party/EditPartyClassificationType.jsp")%>" class="buttontext">Create</a>
+          <a href="<%=response.encodeURL("/commonapp/party/party/ViewPartyClassificationType.jsp")%>" class="buttontext">Create</a>
         <%}%>
       </TD>
       <TD><a href="<%=response.encodeURL("/commonapp/party/party/FindPartyClassificationType.jsp")%>" class="buttontext">Find</a></TD>
@@ -91,7 +91,7 @@
       <TD>PartyType</TD>
       <TD>
         <%if(Security.hasEntityPermission("PARTY_TYPE", "_CREATE", session)){%>
-          <a href="<%=response.encodeURL("/commonapp/party/party/EditPartyType.jsp")%>" class="buttontext">Create</a>
+          <a href="<%=response.encodeURL("/commonapp/party/party/ViewPartyType.jsp")%>" class="buttontext">Create</a>
         <%}%>
       </TD>
       <TD><a href="<%=response.encodeURL("/commonapp/party/party/FindPartyType.jsp")%>" class="buttontext">Find</a></TD>
@@ -102,7 +102,7 @@
       <TD>PartyAttribute</TD>
       <TD>
         <%if(Security.hasEntityPermission("PARTY_ATTRIBUTE", "_CREATE", session)){%>
-          <a href="<%=response.encodeURL("/commonapp/party/party/EditPartyAttribute.jsp")%>" class="buttontext">Create</a>
+          <a href="<%=response.encodeURL("/commonapp/party/party/ViewPartyAttribute.jsp")%>" class="buttontext">Create</a>
         <%}%>
       </TD>
       <TD><a href="<%=response.encodeURL("/commonapp/party/party/FindPartyAttribute.jsp")%>" class="buttontext">Find</a></TD>
@@ -113,7 +113,7 @@
       <TD>PartyTypeAttr</TD>
       <TD>
         <%if(Security.hasEntityPermission("PARTY_TYPE_ATTR", "_CREATE", session)){%>
-          <a href="<%=response.encodeURL("/commonapp/party/party/EditPartyTypeAttr.jsp")%>" class="buttontext">Create</a>
+          <a href="<%=response.encodeURL("/commonapp/party/party/ViewPartyTypeAttr.jsp")%>" class="buttontext">Create</a>
         <%}%>
       </TD>
       <TD><a href="<%=response.encodeURL("/commonapp/party/party/FindPartyTypeAttr.jsp")%>" class="buttontext">Find</a></TD>
@@ -124,7 +124,7 @@
       <TD>UserLogin</TD>
       <TD>
         <%if(Security.hasEntityPermission("USER_LOGIN", "_CREATE", session)){%>
-          <a href="<%=response.encodeURL("/commonapp/security/login/EditUserLogin.jsp")%>" class="buttontext">Create</a>
+          <a href="<%=response.encodeURL("/commonapp/security/login/ViewUserLogin.jsp")%>" class="buttontext">Create</a>
         <%}%>
       </TD>
       <TD><a href="<%=response.encodeURL("/commonapp/security/login/FindUserLogin.jsp")%>" class="buttontext">Find</a></TD>
@@ -135,7 +135,7 @@
       <TD>LoginAccountHistory</TD>
       <TD>
         <%if(Security.hasEntityPermission("LOGIN_ACCOUNT_HISTORY", "_CREATE", session)){%>
-          <a href="<%=response.encodeURL("/commonapp/security/login/EditLoginAccountHistory.jsp")%>" class="buttontext">Create</a>
+          <a href="<%=response.encodeURL("/commonapp/security/login/ViewLoginAccountHistory.jsp")%>" class="buttontext">Create</a>
         <%}%>
       </TD>
       <TD><a href="<%=response.encodeURL("/commonapp/security/login/FindLoginAccountHistory.jsp")%>" class="buttontext">Find</a></TD>
@@ -146,7 +146,7 @@
       <TD>SecurityGroup</TD>
       <TD>
         <%if(Security.hasEntityPermission("SECURITY_GROUP", "_CREATE", session)){%>
-          <a href="<%=response.encodeURL("/commonapp/security/securitygroup/EditSecurityGroup.jsp")%>" class="buttontext">Create</a>
+          <a href="<%=response.encodeURL("/commonapp/security/securitygroup/ViewSecurityGroup.jsp")%>" class="buttontext">Create</a>
         <%}%>
       </TD>
       <TD><a href="<%=response.encodeURL("/commonapp/security/securitygroup/FindSecurityGroup.jsp")%>" class="buttontext">Find</a></TD>
@@ -157,7 +157,7 @@
       <TD>SecurityPermission</TD>
       <TD>
         <%if(Security.hasEntityPermission("SECURITY_PERMISSION", "_CREATE", session)){%>
-          <a href="<%=response.encodeURL("/commonapp/security/securitygroup/EditSecurityPermission.jsp")%>" class="buttontext">Create</a>
+          <a href="<%=response.encodeURL("/commonapp/security/securitygroup/ViewSecurityPermission.jsp")%>" class="buttontext">Create</a>
         <%}%>
       </TD>
       <TD><a href="<%=response.encodeURL("/commonapp/security/securitygroup/FindSecurityPermission.jsp")%>" class="buttontext">Find</a></TD>
@@ -168,7 +168,7 @@
       <TD>SecurityGroupPermission</TD>
       <TD>
         <%if(Security.hasEntityPermission("SECURITY_GROUP_PERMISSION", "_CREATE", session)){%>
-          <a href="<%=response.encodeURL("/commonapp/security/securitygroup/EditSecurityGroupPermission.jsp")%>" class="buttontext">Create</a>
+          <a href="<%=response.encodeURL("/commonapp/security/securitygroup/ViewSecurityGroupPermission.jsp")%>" class="buttontext">Create</a>
         <%}%>
       </TD>
       <TD><a href="<%=response.encodeURL("/commonapp/security/securitygroup/FindSecurityGroupPermission.jsp")%>" class="buttontext">Find</a></TD>
@@ -179,7 +179,7 @@
       <TD>UserLoginSecurityGroup</TD>
       <TD>
         <%if(Security.hasEntityPermission("USER_LOGIN_SECURITY_GROUP", "_CREATE", session)){%>
-          <a href="<%=response.encodeURL("/commonapp/security/securitygroup/EditUserLoginSecurityGroup.jsp")%>" class="buttontext">Create</a>
+          <a href="<%=response.encodeURL("/commonapp/security/securitygroup/ViewUserLoginSecurityGroup.jsp")%>" class="buttontext">Create</a>
         <%}%>
       </TD>
       <TD><a href="<%=response.encodeURL("/commonapp/security/securitygroup/FindUserLoginSecurityGroup.jsp")%>" class="buttontext">Find</a></TD>

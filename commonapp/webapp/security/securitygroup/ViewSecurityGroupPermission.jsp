@@ -24,7 +24,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Fri Jul 06 18:25:24 MDT 2001
+ *@created    Mon Jul 09 23:23:53 MDT 2001
  *@version    1.0
  */
 %>
@@ -39,7 +39,7 @@
 <%@ taglib uri="/WEB-INF/webevent.tld" prefix="webevent" %>
 <webevent:dispatch loginRequired="true" />
 
-<%pageContext.setAttribute("PageName", "EditSecurityGroupPermission"); %>
+<%pageContext.setAttribute("PageName", "ViewSecurityGroupPermission"); %>
 
 <%@ include file="/includes/header.jsp" %>
 <%@ include file="/includes/onecolumn.jsp" %>
@@ -58,32 +58,53 @@
   String groupId = request.getParameter("SECURITY_GROUP_PERMISSION_GROUP_ID");  
   String permissionId = request.getParameter("SECURITY_GROUP_PERMISSION_PERMISSION_ID");  
 
-  
-  
 
   SecurityGroupPermission securityGroupPermission = SecurityGroupPermissionHelper.findByPrimaryKey(groupId, permissionId);
 %>
 
 <br>
+<SCRIPT language='JavaScript'>  
+function ShowViewTab(lname) 
+{
+    document.all.viewtab.className = (lname == 'view') ? 'ontab' : 'offtab';
+    document.all.viewlnk.className = (lname == 'view') ? 'onlnk' : 'offlnk';
+    document.all.viewarea.style.visibility = (lname == 'view') ? 'visible' : 'hidden';
+
+    document.all.edittab.className = (lname == 'edit') ? 'ontab' : 'offtab';
+    document.all.editlnk.className = (lname == 'edit') ? 'onlnk' : 'offlnk';
+    document.all.editarea.style.visibility = (lname == 'edit') ? 'visible' : 'hidden';
+}
+</SCRIPT>
+<table cellpadding='0' cellspacing='0'><tr>  
+  <td id=viewtab class=ontab>
+    <a href='javascript:ShowViewTab("view")' id=viewlnk class=onlnk>View SecurityGroupPermission</a>
+  </td>
+  <%if(hasUpdatePermission || hasCreatePermission){%>
+  <td id=edittab class=offtab>
+    <a href='javascript:ShowViewTab("edit")' id=editlnk class=offlnk>Edit SecurityGroupPermission</a>
+  </td>
+  <%}%>
+</table>
 <div style='color: white; width: 100%; background-color: black; padding:3;'>
   <b>View Entity: SecurityGroupPermission with (GROUP_ID, PERMISSION_ID: <%=groupId%>, <%=permissionId%>).</b>
 </div>
 
 <a href="<%=response.encodeURL("FindSecurityGroupPermission.jsp")%>" class="buttontext">[Find SecurityGroupPermission]</a>
 <%if(hasCreatePermission){%>
-  <a href="<%=response.encodeURL("EditSecurityGroupPermission.jsp")%>" class="buttontext">[Create SecurityGroupPermission]</a>
+  <a href="<%=response.encodeURL("ViewSecurityGroupPermission.jsp")%>" class="buttontext">[Create New SecurityGroupPermission]</a>
 <%}%>
 <%if(securityGroupPermission != null){%>
   <%if(hasDeletePermission){%>
-    <a href="<%=response.encodeURL("EditSecurityGroupPermission.jsp?WEBEVENT=UPDATE_SECURITY_GROUP_PERMISSION&UPDATE_MODE=DELETE&" + "SECURITY_GROUP_PERMISSION_GROUP_ID=" + groupId + "&" + "SECURITY_GROUP_PERMISSION_PERMISSION_ID=" + permissionId)%>" class="buttontext">[Delete this SecurityGroupPermission]</a>
-  <%}%>
-<%}%>
-<%if(hasUpdatePermission){%>
-  <%if(groupId != null && permissionId != null){%>
-    <a href="<%=response.encodeURL("EditSecurityGroupPermission.jsp?" + "SECURITY_GROUP_PERMISSION_GROUP_ID=" + groupId + "&" + "SECURITY_GROUP_PERMISSION_PERMISSION_ID=" + permissionId)%>" class="buttontext">[Edit SecurityGroupPermission]</a>
+    <a href="<%=response.encodeURL("ViewSecurityGroupPermission.jsp?WEBEVENT=UPDATE_SECURITY_GROUP_PERMISSION&UPDATE_MODE=DELETE&" + "SECURITY_GROUP_PERMISSION_GROUP_ID=" + groupId + "&" + "SECURITY_GROUP_PERMISSION_PERMISSION_ID=" + permissionId)%>" class="buttontext">[Delete this SecurityGroupPermission]</a>
   <%}%>
 <%}%>
 
+<%if(securityGroupPermission == null){%>
+<div style='width:100%;height:400px;overflow:visible;border-style:inset;'>
+<%}else{%>
+<div style='width:100%;height:200px;overflow:auto;border-style:inset;'>
+<%}%>
+  <DIV id=viewarea style="VISIBILITY: visible; POSITION: absolute" width="100%">
 <table border="0" cellspacing="2" cellpadding="2">
 <%if(securityGroupPermission == null){%>
 <tr class="<%=rowClass1%>"><td><h3>Specified SecurityGroupPermission was not found.</h3></td></tr>
@@ -93,9 +114,7 @@
   <tr class="<%=rowClass%>">
     <td><b>GROUP_ID</b></td>
     <td>
-    
       <%=UtilFormatOut.checkNull(securityGroupPermission.getGroupId())%>
-    
     </td>
   </tr>
 
@@ -103,30 +122,98 @@
   <tr class="<%=rowClass%>">
     <td><b>PERMISSION_ID</b></td>
     <td>
-    
       <%=UtilFormatOut.checkNull(securityGroupPermission.getPermissionId())%>
-    
     </td>
   </tr>
 
 <%} //end if securityGroupPermission == null %>
 </table>
+  </div>
+<%SecurityGroupPermission securityGroupPermissionSave = securityGroupPermission;%>
+<%if(hasUpdatePermission || hasCreatePermission){%>
+  <DIV id=editarea style="VISIBILITY: hidden; POSITION: absolute" width="100%">
+<%boolean showFields = true;%>
+<%if(securityGroupPermission == null && (groupId != null || permissionId != null)){%>
+    SecurityGroupPermission with (GROUP_ID, PERMISSION_ID: <%=groupId%>, <%=permissionId%>) not found.<br>
+<%}%>
+<%
+  String lastUpdateMode = request.getParameter("UPDATE_MODE");
+  if((session.getAttribute("ERROR_MESSAGE") != null || request.getAttribute("ERROR_MESSAGE") != null) && 
+      lastUpdateMode != null && !lastUpdateMode.equals("DELETE"))
+  {
+    //if we are updating and there is an error, don't use the EJB data for the fields, use parameters to get the old value
+    securityGroupPermission = null;
+  }
+%>
+<form action="<%=response.encodeURL("ViewSecurityGroupPermission.jsp")%>" method="POST" name="updateForm" style="margin:0;">
+  <input type="hidden" name="WEBEVENT" value="UPDATE_SECURITY_GROUP_PERMISSION">
+  <input type="hidden" name="ON_ERROR_PAGE" value="<%=request.getServletPath()%>">
+<table cellpadding="2" cellspacing="2" border="0">
 
-<a href="<%=response.encodeURL("FindSecurityGroupPermission.jsp")%>" class="buttontext">[Find SecurityGroupPermission]</a>
-<%if(hasCreatePermission){%>
-  <a href="<%=response.encodeURL("EditSecurityGroupPermission.jsp")%>" class="buttontext">[Create SecurityGroupPermission]</a>
-<%}%>
-<%if(securityGroupPermission != null){%>
-  <%if(hasDeletePermission){%>
-    <a href="<%=response.encodeURL("EditSecurityGroupPermission.jsp?WEBEVENT=UPDATE_SECURITY_GROUP_PERMISSION&UPDATE_MODE=DELETE&" + "SECURITY_GROUP_PERMISSION_GROUP_ID=" + groupId + "&" + "SECURITY_GROUP_PERMISSION_PERMISSION_ID=" + permissionId)%>" class="buttontext">[Delete this SecurityGroupPermission]</a>
+<%if(securityGroupPermission == null){%>
+  <%if(hasCreatePermission){%>
+    You may create a SecurityGroupPermission by entering the values you want, and clicking Update.
+    <input type="hidden" name="UPDATE_MODE" value="CREATE">
+  
+    <%rowClass=(rowClass==rowClass1?rowClass2:rowClass1);%><tr class="<%=rowClass%>">
+      <td>GROUP_ID</td>
+      <td>
+        <input class='editInputBox' type="text" size="20" maxlength="20" name="SECURITY_GROUP_PERMISSION_GROUP_ID" value="<%=UtilFormatOut.checkNull(groupId)%>">
+      </td>
+    </tr>
+    <%rowClass=(rowClass==rowClass1?rowClass2:rowClass1);%><tr class="<%=rowClass%>">
+      <td>PERMISSION_ID</td>
+      <td>
+        <input class='editInputBox' type="text" size="60" maxlength="60" name="SECURITY_GROUP_PERMISSION_PERMISSION_ID" value="<%=UtilFormatOut.checkNull(permissionId)%>">
+      </td>
+    </tr>
+  <%}else{%>
+    <%showFields=false;%>
+    You do not have permission to create a SecurityGroupPermission (SECURITY_GROUP_PERMISSION_ADMIN, or SECURITY_GROUP_PERMISSION_CREATE needed).
   <%}%>
-<%}%>
-<%if(hasUpdatePermission){%>
-  <%if(groupId != null && permissionId != null){%>
-    <a href="<%=response.encodeURL("EditSecurityGroupPermission.jsp?" + "SECURITY_GROUP_PERMISSION_GROUP_ID=" + groupId + "&" + "SECURITY_GROUP_PERMISSION_PERMISSION_ID=" + permissionId)%>" class="buttontext">[Edit SecurityGroupPermission]</a>
+<%}else{%>
+  <%if(hasUpdatePermission){%>
+    <input type="hidden" name="UPDATE_MODE" value="UPDATE">
+  
+      <input type="hidden" name="SECURITY_GROUP_PERMISSION_GROUP_ID" value="<%=groupId%>">
+    <%rowClass=(rowClass==rowClass1?rowClass2:rowClass1);%><tr class="<%=rowClass%>">
+      <td>GROUP_ID</td>
+      <td>
+        <b><%=groupId%></b> (This cannot be changed without re-creating the securityGroupPermission.)
+      </td>
+    </tr>
+      <input type="hidden" name="SECURITY_GROUP_PERMISSION_PERMISSION_ID" value="<%=permissionId%>">
+    <%rowClass=(rowClass==rowClass1?rowClass2:rowClass1);%><tr class="<%=rowClass%>">
+      <td>PERMISSION_ID</td>
+      <td>
+        <b><%=permissionId%></b> (This cannot be changed without re-creating the securityGroupPermission.)
+      </td>
+    </tr>
+  <%}else{%>
+    <%showFields=false;%>
+    You do not have permission to update a SecurityGroupPermission (SECURITY_GROUP_PERMISSION_ADMIN, or SECURITY_GROUP_PERMISSION_UPDATE needed).
   <%}%>
+<%} //end if securityGroupPermission == null %>
+
+<%if(showFields){%>
+
+  <%rowClass=(rowClass==rowClass1?rowClass2:rowClass1);%><tr class="<%=rowClass%>">
+    <td colspan="2"><input type="submit" name="Update" value="Update"></td>
+  </tr>
 <%}%>
-<br>
+</table>
+</form>
+  </div>
+<%}%>
+</div>
+<%if((hasUpdatePermission || hasCreatePermission) && securityGroupPermission == null){%>
+  <SCRIPT language='JavaScript'>  
+    ShowViewTab("edit");
+  </SCRIPT>
+<%}%>
+<%-- Restore the securityGroupPermission for cases when removed to retain passed form values --%>
+<%securityGroupPermission = securityGroupPermissionSave;%>
+
 <br>
 <SCRIPT language='JavaScript'>  
 var numTabs=2;
@@ -142,28 +229,20 @@ function ShowTab(lname)
 </SCRIPT>
 <%if(securityGroupPermission != null){%>
 <table cellpadding='0' cellspacing='0'><tr>
-
-  
     <%if(Security.hasEntityPermission("SECURITY_GROUP", "_VIEW", session)){%>
-    <td id=tab1 class=ontab>
-      <a href='javascript:ShowTab("tab1")' id=lnk1 class=onlnk> SecurityGroup</a>
-    </td>
+      <td id=tab1 class=ontab>
+        <a href='javascript:ShowTab("tab1")' id=lnk1 class=onlnk> SecurityGroup</a>
+      </td>
     <%}%>
-
-  
     <%if(Security.hasEntityPermission("SECURITY_PERMISSION", "_VIEW", session)){%>
-    <td id=tab2 class=offtab>
-      <a href='javascript:ShowTab("tab2")' id=lnk2 class=offlnk> SecurityPermission</a>
-    </td>
+      <td id=tab2 class=offtab>
+        <a href='javascript:ShowTab("tab2")' id=lnk2 class=offlnk> SecurityPermission</a>
+      </td>
     <%}%>
-
 </tr></table>
 <%}%>
   
 
-  
-  
-  
 <%-- Start Relation for SecurityGroup, type: one --%>
 <%if(securityGroupPermission != null){%>
   <%if(Security.hasEntityPermission("SECURITY_GROUP", "_VIEW", session)){%>
@@ -174,18 +253,14 @@ function ShowTab(lname)
     </div>
     <%if(securityGroupPermission.getGroupId() != null){%>
       
-      <a href="<%=response.encodeURL("/commonapp/security/securitygroup/ViewSecurityGroup.jsp?" + "SECURITY_GROUP_GROUP_ID=" + securityGroupPermission.getGroupId())%>" class="buttontext">[View SecurityGroup Details]</a>
-      
-    <%if(securityGroupRelated != null){%>
-      <%if(Security.hasEntityPermission("SECURITY_GROUP", "_EDIT", session)){%>
-        <a href="<%=response.encodeURL("/commonapp/security/securitygroup/EditSecurityGroup.jsp?" + "SECURITY_GROUP_GROUP_ID=" + securityGroupPermission.getGroupId())%>" class="buttontext">[Edit SecurityGroup]</a>
-      <%}%>
-    <%}else{%>
+      <a href="<%=response.encodeURL("/commonapp/security/securitygroup/ViewSecurityGroup.jsp?" + "SECURITY_GROUP_GROUP_ID=" + securityGroupPermission.getGroupId())%>" class="buttontext">[View SecurityGroup]</a>      
+    <%if(securityGroupRelated == null){%>
       <%if(Security.hasEntityPermission("SECURITY_GROUP", "_CREATE", session)){%>
-        <a href="<%=response.encodeURL("/commonapp/security/securitygroup/EditSecurityGroup.jsp?" + "SECURITY_GROUP_GROUP_ID=" + securityGroupPermission.getGroupId())%>" class="buttontext">[Create SecurityGroup]</a>
+        <a href="<%=response.encodeURL("/commonapp/security/securitygroup/ViewSecurityGroup.jsp?" + "SECURITY_GROUP_GROUP_ID=" + securityGroupPermission.getGroupId())%>" class="buttontext">[Create SecurityGroup]</a>
       <%}%>
     <%}%>
     <%}%>
+  <div style='width:100%;height:250px;overflow:auto;border-style:inset;'>
     <table border="0" cellspacing="2" cellpadding="2">
     <%if(securityGroupRelated == null){%>
     <tr class="<%=rowClass1%>"><td><h3>Specified SecurityGroup was not found.</h3></td></tr>
@@ -195,9 +270,7 @@ function ShowTab(lname)
   <tr class="<%=rowClass%>">
     <td><b>GROUP_ID</b></td>
     <td>
-    
       <%=UtilFormatOut.checkNull(securityGroupRelated.getGroupId())%>
-    
     </td>
   </tr>
 
@@ -205,23 +278,19 @@ function ShowTab(lname)
   <tr class="<%=rowClass%>">
     <td><b>DESCRIPTION</b></td>
     <td>
-    
       <%=UtilFormatOut.checkNull(securityGroupRelated.getDescription())%>
-    
     </td>
   </tr>
 
     <%} //end if securityGroupRelated == null %>
     </table>
+    </div>
   </div>
   <%}%>
 <%}%>
 <%-- End Relation for SecurityGroup, type: one --%>
   
 
-  
-  
-  
 <%-- Start Relation for SecurityPermission, type: one --%>
 <%if(securityGroupPermission != null){%>
   <%if(Security.hasEntityPermission("SECURITY_PERMISSION", "_VIEW", session)){%>
@@ -232,18 +301,14 @@ function ShowTab(lname)
     </div>
     <%if(securityGroupPermission.getPermissionId() != null){%>
       
-      <a href="<%=response.encodeURL("/commonapp/security/securitygroup/ViewSecurityPermission.jsp?" + "SECURITY_PERMISSION_PERMISSION_ID=" + securityGroupPermission.getPermissionId())%>" class="buttontext">[View SecurityPermission Details]</a>
-      
-    <%if(securityPermissionRelated != null){%>
-      <%if(Security.hasEntityPermission("SECURITY_PERMISSION", "_EDIT", session)){%>
-        <a href="<%=response.encodeURL("/commonapp/security/securitygroup/EditSecurityPermission.jsp?" + "SECURITY_PERMISSION_PERMISSION_ID=" + securityGroupPermission.getPermissionId())%>" class="buttontext">[Edit SecurityPermission]</a>
-      <%}%>
-    <%}else{%>
+      <a href="<%=response.encodeURL("/commonapp/security/securitygroup/ViewSecurityPermission.jsp?" + "SECURITY_PERMISSION_PERMISSION_ID=" + securityGroupPermission.getPermissionId())%>" class="buttontext">[View SecurityPermission]</a>      
+    <%if(securityPermissionRelated == null){%>
       <%if(Security.hasEntityPermission("SECURITY_PERMISSION", "_CREATE", session)){%>
-        <a href="<%=response.encodeURL("/commonapp/security/securitygroup/EditSecurityPermission.jsp?" + "SECURITY_PERMISSION_PERMISSION_ID=" + securityGroupPermission.getPermissionId())%>" class="buttontext">[Create SecurityPermission]</a>
+        <a href="<%=response.encodeURL("/commonapp/security/securitygroup/ViewSecurityPermission.jsp?" + "SECURITY_PERMISSION_PERMISSION_ID=" + securityGroupPermission.getPermissionId())%>" class="buttontext">[Create SecurityPermission]</a>
       <%}%>
     <%}%>
     <%}%>
+  <div style='width:100%;height:250px;overflow:auto;border-style:inset;'>
     <table border="0" cellspacing="2" cellpadding="2">
     <%if(securityPermissionRelated == null){%>
     <tr class="<%=rowClass1%>"><td><h3>Specified SecurityPermission was not found.</h3></td></tr>
@@ -253,9 +318,7 @@ function ShowTab(lname)
   <tr class="<%=rowClass%>">
     <td><b>PERMISSION_ID</b></td>
     <td>
-    
       <%=UtilFormatOut.checkNull(securityPermissionRelated.getPermissionId())%>
-    
     </td>
   </tr>
 
@@ -263,14 +326,13 @@ function ShowTab(lname)
   <tr class="<%=rowClass%>">
     <td><b>DESCRIPTION</b></td>
     <td>
-    
       <%=UtilFormatOut.checkNull(securityPermissionRelated.getDescription())%>
-    
     </td>
   </tr>
 
     <%} //end if securityPermissionRelated == null %>
     </table>
+    </div>
   </div>
   <%}%>
 <%}%>

@@ -24,7 +24,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Fri Jul 06 18:25:24 MDT 2001
+ *@created    Mon Jul 09 23:23:53 MDT 2001
  *@version    1.0
  */
 %>
@@ -125,7 +125,7 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
       <td valign="top">Primary Key:</td>
       <td valign="top">
           <input type="hidden" name="SEARCH_TYPE" value="primaryKey">
-
+        
           <input type="text" name="SEARCH_PARAMETER1" value="" size="20">
           (Must be exact)
       </td>
@@ -135,13 +135,12 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
     </form>
   </tr>
 
-  
   <%rowClassTop=(rowClassTop==rowClassTop1?rowClassTop2:rowClassTop1);%><tr class="<%=rowClassTop%>">
     <td valign="top">PermissionId: </td>
     <form method="post" action="<%=response.encodeURL("FindSecurityPermission.jsp")%>" style=margin:0;>
       <td valign="top">
         <input type="hidden" name="SEARCH_TYPE" value="PermissionId">
-
+      
         <input type="text" name="SEARCH_PARAMETER1" value="" size="20">
       </td>
       <td valign="top">
@@ -165,7 +164,7 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
 <b>SecurityPermissions found by:&nbsp; <%=searchType%> : <%=UtilFormatOut.checkNull(searchParam1)%> : <%=UtilFormatOut.checkNull(searchParam2)%> : <%=UtilFormatOut.checkNull(searchParam3)%></b>
 <br>
 <%if(hasCreatePermission){%>
-  <a href="<%=response.encodeURL("EditSecurityPermission.jsp")%>" class="buttontext">[Create SecurityPermission]</a>
+  <a href="<%=response.encodeURL("ViewSecurityPermission.jsp")%>" class="buttontext">[Create New SecurityPermission]</a>
 <%}%>
 <table border="0" width="100%" cellpadding="2">
 <% if(arraySize > 0) { %>
@@ -193,9 +192,6 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
       <td><div class="tabletext"><b><nobr>PERMISSION_ID</nobr></b></div></td>
       <td><div class="tabletext"><b><nobr>DESCRIPTION</nobr></b></div></td>
       <td>&nbsp;</td>
-      <%if(hasUpdatePermission){%>
-        <td>&nbsp;</td>
-      <%}%>
       <%if(hasDeletePermission){%>
         <td>&nbsp;</td>
       <%}%>
@@ -215,28 +211,17 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
   
       <td>
         <div class="tabletext">
-    
       <%=UtilFormatOut.checkNull(securityPermission.getPermissionId())%>
-    
         &nbsp;</div>
       </td>
-  
       <td>
         <div class="tabletext">
-    
       <%=UtilFormatOut.checkNull(securityPermission.getDescription())%>
-    
         &nbsp;</div>
       </td>
-  
       <td>
         <a href="<%=response.encodeURL("ViewSecurityPermission.jsp?" + "SECURITY_PERMISSION_PERMISSION_ID=" + securityPermission.getPermissionId())%>" class="buttontext">[View]</a>
       </td>
-      <%if(hasUpdatePermission){%>
-        <td>
-          <a href="<%=response.encodeURL("EditSecurityPermission.jsp?" + "SECURITY_PERMISSION_PERMISSION_ID=" + securityPermission.getPermissionId())%>" class="buttontext">[Edit]</a>
-        </td>
-      <%}%>
       <%if(hasDeletePermission){%>
         <td>
           <a href="<%=response.encodeURL("FindSecurityPermission.jsp?WEBEVENT=UPDATE_SECURITY_PERMISSION&UPDATE_MODE=DELETE&" + "SECURITY_PERMISSION_PERMISSION_ID=" + securityPermission.getPermissionId() + "&" + curFindString)%>" class="buttontext">[Delete]</a>
@@ -251,7 +236,7 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
  {
 %>
 <%rowClassResult=(rowClassResult==rowClassResult1?rowClassResult2:rowClassResult1);%><tr class="<%=rowClassResult%>">
-<td colspan="8">
+<td colspan="4">
 <h3>No SecurityPermissions Found.</h3>
 </td>
 </tr>
@@ -278,7 +263,7 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
 <% } %>
 </table>
 <%if(hasCreatePermission){%>
-  <a href="<%=response.encodeURL("EditSecurityPermission.jsp")%>" class="buttontext">[Create SecurityPermission]</a>
+  <a href="<%=response.encodeURL("ViewSecurityPermission.jsp")%>" class="buttontext">[Create SecurityPermission]</a>
 <%}%>
 <%}else{%>
   <h3>You do not have permission to view this page (SECURITY_PERMISSION_ADMIN, or SECURITY_PERMISSION_VIEW needed).</h3>

@@ -24,7 +24,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Fri Jul 06 18:25:18 MDT 2001
+ *@created    Mon Jul 09 23:23:49 MDT 2001
  *@version    1.0
  */
 %>
@@ -39,7 +39,7 @@
 <%@ taglib uri="/WEB-INF/webevent.tld" prefix="webevent" %>
 <webevent:dispatch loginRequired="true" />
 
-<%pageContext.setAttribute("PageName", "EditPartyClassification"); %>
+<%pageContext.setAttribute("PageName", "ViewPartyClassification"); %>
 
 <%@ include file="/includes/header.jsp" %>
 <%@ include file="/includes/onecolumn.jsp" %>
@@ -58,32 +58,53 @@
   String partyId = request.getParameter("PARTY_CLASSIFICATION_PARTY_ID");  
   String partyTypeId = request.getParameter("PARTY_CLASSIFICATION_PARTY_TYPE_ID");  
 
-  
-  
 
   PartyClassification partyClassification = PartyClassificationHelper.findByPrimaryKey(partyId, partyTypeId);
 %>
 
 <br>
+<SCRIPT language='JavaScript'>  
+function ShowViewTab(lname) 
+{
+    document.all.viewtab.className = (lname == 'view') ? 'ontab' : 'offtab';
+    document.all.viewlnk.className = (lname == 'view') ? 'onlnk' : 'offlnk';
+    document.all.viewarea.style.visibility = (lname == 'view') ? 'visible' : 'hidden';
+
+    document.all.edittab.className = (lname == 'edit') ? 'ontab' : 'offtab';
+    document.all.editlnk.className = (lname == 'edit') ? 'onlnk' : 'offlnk';
+    document.all.editarea.style.visibility = (lname == 'edit') ? 'visible' : 'hidden';
+}
+</SCRIPT>
+<table cellpadding='0' cellspacing='0'><tr>  
+  <td id=viewtab class=ontab>
+    <a href='javascript:ShowViewTab("view")' id=viewlnk class=onlnk>View PartyClassification</a>
+  </td>
+  <%if(hasUpdatePermission || hasCreatePermission){%>
+  <td id=edittab class=offtab>
+    <a href='javascript:ShowViewTab("edit")' id=editlnk class=offlnk>Edit PartyClassification</a>
+  </td>
+  <%}%>
+</table>
 <div style='color: white; width: 100%; background-color: black; padding:3;'>
   <b>View Entity: PartyClassification with (PARTY_ID, PARTY_TYPE_ID: <%=partyId%>, <%=partyTypeId%>).</b>
 </div>
 
 <a href="<%=response.encodeURL("FindPartyClassification.jsp")%>" class="buttontext">[Find PartyClassification]</a>
 <%if(hasCreatePermission){%>
-  <a href="<%=response.encodeURL("EditPartyClassification.jsp")%>" class="buttontext">[Create PartyClassification]</a>
+  <a href="<%=response.encodeURL("ViewPartyClassification.jsp")%>" class="buttontext">[Create New PartyClassification]</a>
 <%}%>
 <%if(partyClassification != null){%>
   <%if(hasDeletePermission){%>
-    <a href="<%=response.encodeURL("EditPartyClassification.jsp?WEBEVENT=UPDATE_PARTY_CLASSIFICATION&UPDATE_MODE=DELETE&" + "PARTY_CLASSIFICATION_PARTY_ID=" + partyId + "&" + "PARTY_CLASSIFICATION_PARTY_TYPE_ID=" + partyTypeId)%>" class="buttontext">[Delete this PartyClassification]</a>
-  <%}%>
-<%}%>
-<%if(hasUpdatePermission){%>
-  <%if(partyId != null && partyTypeId != null){%>
-    <a href="<%=response.encodeURL("EditPartyClassification.jsp?" + "PARTY_CLASSIFICATION_PARTY_ID=" + partyId + "&" + "PARTY_CLASSIFICATION_PARTY_TYPE_ID=" + partyTypeId)%>" class="buttontext">[Edit PartyClassification]</a>
+    <a href="<%=response.encodeURL("ViewPartyClassification.jsp?WEBEVENT=UPDATE_PARTY_CLASSIFICATION&UPDATE_MODE=DELETE&" + "PARTY_CLASSIFICATION_PARTY_ID=" + partyId + "&" + "PARTY_CLASSIFICATION_PARTY_TYPE_ID=" + partyTypeId)%>" class="buttontext">[Delete this PartyClassification]</a>
   <%}%>
 <%}%>
 
+<%if(partyClassification == null){%>
+<div style='width:100%;height:400px;overflow:visible;border-style:inset;'>
+<%}else{%>
+<div style='width:100%;height:200px;overflow:auto;border-style:inset;'>
+<%}%>
+  <DIV id=viewarea style="VISIBILITY: visible; POSITION: absolute" width="100%">
 <table border="0" cellspacing="2" cellpadding="2">
 <%if(partyClassification == null){%>
 <tr class="<%=rowClass1%>"><td><h3>Specified PartyClassification was not found.</h3></td></tr>
@@ -93,9 +114,7 @@
   <tr class="<%=rowClass%>">
     <td><b>PARTY_ID</b></td>
     <td>
-    
       <%=UtilFormatOut.checkNull(partyClassification.getPartyId())%>
-    
     </td>
   </tr>
 
@@ -103,9 +122,7 @@
   <tr class="<%=rowClass%>">
     <td><b>PARTY_TYPE_ID</b></td>
     <td>
-    
       <%=UtilFormatOut.checkNull(partyClassification.getPartyTypeId())%>
-    
     </td>
   </tr>
 
@@ -113,9 +130,7 @@
   <tr class="<%=rowClass%>">
     <td><b>PARTY_CLASSIFICATION_TYPE_ID</b></td>
     <td>
-    
       <%=UtilFormatOut.checkNull(partyClassification.getPartyClassificationTypeId())%>
-    
     </td>
   </tr>
 
@@ -123,7 +138,6 @@
   <tr class="<%=rowClass%>">
     <td><b>FROM_DATE</b></td>
     <td>
-    
       <%{
         String dateString = null;
         String timeString = null;
@@ -139,7 +153,6 @@
       %>
       <%=UtilFormatOut.checkNull(dateString)%>&nbsp;<%=UtilFormatOut.checkNull(timeString)%>
       <%}%>
-    
     </td>
   </tr>
 
@@ -147,7 +160,6 @@
   <tr class="<%=rowClass%>">
     <td><b>THRU_DATE</b></td>
     <td>
-    
       <%{
         String dateString = null;
         String timeString = null;
@@ -163,28 +175,157 @@
       %>
       <%=UtilFormatOut.checkNull(dateString)%>&nbsp;<%=UtilFormatOut.checkNull(timeString)%>
       <%}%>
-    
     </td>
   </tr>
 
 <%} //end if partyClassification == null %>
 </table>
+  </div>
+<%PartyClassification partyClassificationSave = partyClassification;%>
+<%if(hasUpdatePermission || hasCreatePermission){%>
+  <DIV id=editarea style="VISIBILITY: hidden; POSITION: absolute" width="100%">
+<%boolean showFields = true;%>
+<%if(partyClassification == null && (partyId != null || partyTypeId != null)){%>
+    PartyClassification with (PARTY_ID, PARTY_TYPE_ID: <%=partyId%>, <%=partyTypeId%>) not found.<br>
+<%}%>
+<%
+  String lastUpdateMode = request.getParameter("UPDATE_MODE");
+  if((session.getAttribute("ERROR_MESSAGE") != null || request.getAttribute("ERROR_MESSAGE") != null) && 
+      lastUpdateMode != null && !lastUpdateMode.equals("DELETE"))
+  {
+    //if we are updating and there is an error, don't use the EJB data for the fields, use parameters to get the old value
+    partyClassification = null;
+  }
+%>
+<form action="<%=response.encodeURL("ViewPartyClassification.jsp")%>" method="POST" name="updateForm" style="margin:0;">
+  <input type="hidden" name="WEBEVENT" value="UPDATE_PARTY_CLASSIFICATION">
+  <input type="hidden" name="ON_ERROR_PAGE" value="<%=request.getServletPath()%>">
+<table cellpadding="2" cellspacing="2" border="0">
 
-<a href="<%=response.encodeURL("FindPartyClassification.jsp")%>" class="buttontext">[Find PartyClassification]</a>
-<%if(hasCreatePermission){%>
-  <a href="<%=response.encodeURL("EditPartyClassification.jsp")%>" class="buttontext">[Create PartyClassification]</a>
-<%}%>
-<%if(partyClassification != null){%>
-  <%if(hasDeletePermission){%>
-    <a href="<%=response.encodeURL("EditPartyClassification.jsp?WEBEVENT=UPDATE_PARTY_CLASSIFICATION&UPDATE_MODE=DELETE&" + "PARTY_CLASSIFICATION_PARTY_ID=" + partyId + "&" + "PARTY_CLASSIFICATION_PARTY_TYPE_ID=" + partyTypeId)%>" class="buttontext">[Delete this PartyClassification]</a>
+<%if(partyClassification == null){%>
+  <%if(hasCreatePermission){%>
+    You may create a PartyClassification by entering the values you want, and clicking Update.
+    <input type="hidden" name="UPDATE_MODE" value="CREATE">
+  
+    <%rowClass=(rowClass==rowClass1?rowClass2:rowClass1);%><tr class="<%=rowClass%>">
+      <td>PARTY_ID</td>
+      <td>
+        <input class='editInputBox' type="text" size="20" maxlength="20" name="PARTY_CLASSIFICATION_PARTY_ID" value="<%=UtilFormatOut.checkNull(partyId)%>">
+      </td>
+    </tr>
+    <%rowClass=(rowClass==rowClass1?rowClass2:rowClass1);%><tr class="<%=rowClass%>">
+      <td>PARTY_TYPE_ID</td>
+      <td>
+        <input class='editInputBox' type="text" size="20" maxlength="20" name="PARTY_CLASSIFICATION_PARTY_TYPE_ID" value="<%=UtilFormatOut.checkNull(partyTypeId)%>">
+      </td>
+    </tr>
+  <%}else{%>
+    <%showFields=false;%>
+    You do not have permission to create a PartyClassification (PARTY_CLASSIFICATION_ADMIN, or PARTY_CLASSIFICATION_CREATE needed).
   <%}%>
-<%}%>
-<%if(hasUpdatePermission){%>
-  <%if(partyId != null && partyTypeId != null){%>
-    <a href="<%=response.encodeURL("EditPartyClassification.jsp?" + "PARTY_CLASSIFICATION_PARTY_ID=" + partyId + "&" + "PARTY_CLASSIFICATION_PARTY_TYPE_ID=" + partyTypeId)%>" class="buttontext">[Edit PartyClassification]</a>
+<%}else{%>
+  <%if(hasUpdatePermission){%>
+    <input type="hidden" name="UPDATE_MODE" value="UPDATE">
+  
+      <input type="hidden" name="PARTY_CLASSIFICATION_PARTY_ID" value="<%=partyId%>">
+    <%rowClass=(rowClass==rowClass1?rowClass2:rowClass1);%><tr class="<%=rowClass%>">
+      <td>PARTY_ID</td>
+      <td>
+        <b><%=partyId%></b> (This cannot be changed without re-creating the partyClassification.)
+      </td>
+    </tr>
+      <input type="hidden" name="PARTY_CLASSIFICATION_PARTY_TYPE_ID" value="<%=partyTypeId%>">
+    <%rowClass=(rowClass==rowClass1?rowClass2:rowClass1);%><tr class="<%=rowClass%>">
+      <td>PARTY_TYPE_ID</td>
+      <td>
+        <b><%=partyTypeId%></b> (This cannot be changed without re-creating the partyClassification.)
+      </td>
+    </tr>
+  <%}else{%>
+    <%showFields=false;%>
+    You do not have permission to update a PartyClassification (PARTY_CLASSIFICATION_ADMIN, or PARTY_CLASSIFICATION_UPDATE needed).
   <%}%>
+<%} //end if partyClassification == null %>
+
+<%if(showFields){%>
+
+  <%rowClass=(rowClass==rowClass1?rowClass2:rowClass1);%><tr class="<%=rowClass%>">
+    <td>PARTY_CLASSIFICATION_TYPE_ID</td>
+    <td>
+      <input class='editInputBox' type="text" size="20" maxlength="20" name="PARTY_CLASSIFICATION_PARTY_CLASSIFICATION_TYPE_ID" value="<%if(partyClassification!=null){%><%=UtilFormatOut.checkNull(partyClassification.getPartyClassificationTypeId())%><%}else{%><%=UtilFormatOut.checkNull(request.getParameter("PARTY_CLASSIFICATION_PARTY_CLASSIFICATION_TYPE_ID"))%><%}%>">
+    </td>
+  </tr>
+  <%rowClass=(rowClass==rowClass1?rowClass2:rowClass1);%><tr class="<%=rowClass%>">
+    <td>FROM_DATE</td>
+    <td>
+      <%{
+        String dateString = null;
+        String timeString = null;
+        if(partyClassification != null)
+        {
+          java.util.Date date = partyClassification.getFromDate();
+          if(date  != null)
+          {
+            dateString = UtilDateTime.toDateString(date);
+            timeString = UtilDateTime.toTimeString(date);
+          }
+        }
+        else
+        {
+          dateString = request.getParameter("PARTY_CLASSIFICATION_FROM_DATE_DATE");
+          timeString = request.getParameter("PARTY_CLASSIFICATION_FROM_DATE_TIME");
+        }
+      %>
+      Date(MM/DD/YYYY):<input class='editInputBox' type="text" name="PARTY_CLASSIFICATION_FROM_DATE_DATE" size="11" value="<%=UtilFormatOut.checkNull(dateString)%>">
+      <a href="javascript:show_calendar('updateForm.PARTY_CLASSIFICATION_FROM_DATE_DATE');" onmouseover="window.status='Date Picker';return true;" onmouseout="window.status='';return true;"><img src="/images/show-calendar.gif" border=0 width="24" height="22"></a>
+      Time(HH:MM):<input class='editInputBox' type="text" size="6" maxlength="10" name="PARTY_CLASSIFICATION_FROM_DATE_TIME" value="<%=UtilFormatOut.checkNull(timeString)%>">
+      <%}%>
+    </td>
+  </tr>
+  <%rowClass=(rowClass==rowClass1?rowClass2:rowClass1);%><tr class="<%=rowClass%>">
+    <td>THRU_DATE</td>
+    <td>
+      <%{
+        String dateString = null;
+        String timeString = null;
+        if(partyClassification != null)
+        {
+          java.util.Date date = partyClassification.getThruDate();
+          if(date  != null)
+          {
+            dateString = UtilDateTime.toDateString(date);
+            timeString = UtilDateTime.toTimeString(date);
+          }
+        }
+        else
+        {
+          dateString = request.getParameter("PARTY_CLASSIFICATION_THRU_DATE_DATE");
+          timeString = request.getParameter("PARTY_CLASSIFICATION_THRU_DATE_TIME");
+        }
+      %>
+      Date(MM/DD/YYYY):<input class='editInputBox' type="text" name="PARTY_CLASSIFICATION_THRU_DATE_DATE" size="11" value="<%=UtilFormatOut.checkNull(dateString)%>">
+      <a href="javascript:show_calendar('updateForm.PARTY_CLASSIFICATION_THRU_DATE_DATE');" onmouseover="window.status='Date Picker';return true;" onmouseout="window.status='';return true;"><img src="/images/show-calendar.gif" border=0 width="24" height="22"></a>
+      Time(HH:MM):<input class='editInputBox' type="text" size="6" maxlength="10" name="PARTY_CLASSIFICATION_THRU_DATE_TIME" value="<%=UtilFormatOut.checkNull(timeString)%>">
+      <%}%>
+    </td>
+  </tr>
+  <%rowClass=(rowClass==rowClass1?rowClass2:rowClass1);%><tr class="<%=rowClass%>">
+    <td colspan="2"><input type="submit" name="Update" value="Update"></td>
+  </tr>
 <%}%>
-<br>
+</table>
+</form>
+  </div>
+<%}%>
+</div>
+<%if((hasUpdatePermission || hasCreatePermission) && partyClassification == null){%>
+  <SCRIPT language='JavaScript'>  
+    ShowViewTab("edit");
+  </SCRIPT>
+<%}%>
+<%-- Restore the partyClassification for cases when removed to retain passed form values --%>
+<%partyClassification = partyClassificationSave;%>
+
 <br>
 <SCRIPT language='JavaScript'>  
 var numTabs=5;
@@ -200,49 +341,35 @@ function ShowTab(lname)
 </SCRIPT>
 <%if(partyClassification != null){%>
 <table cellpadding='0' cellspacing='0'><tr>
-
-  
     <%if(Security.hasEntityPermission("PARTY", "_VIEW", session)){%>
-    <td id=tab1 class=ontab>
-      <a href='javascript:ShowTab("tab1")' id=lnk1 class=onlnk> Party</a>
-    </td>
+      <td id=tab1 class=ontab>
+        <a href='javascript:ShowTab("tab1")' id=lnk1 class=onlnk> Party</a>
+      </td>
     <%}%>
-
-  
     <%if(Security.hasEntityPermission("PARTY_TYPE", "_VIEW", session)){%>
-    <td id=tab2 class=offtab>
-      <a href='javascript:ShowTab("tab2")' id=lnk2 class=offlnk> PartyType</a>
-    </td>
+      <td id=tab2 class=offtab>
+        <a href='javascript:ShowTab("tab2")' id=lnk2 class=offlnk> PartyType</a>
+      </td>
     <%}%>
-
-  
     <%if(Security.hasEntityPermission("PARTY_CLASSIFICATION_TYPE", "_VIEW", session)){%>
-    <td id=tab3 class=offtab>
-      <a href='javascript:ShowTab("tab3")' id=lnk3 class=offlnk> PartyClassificationType</a>
-    </td>
+      <td id=tab3 class=offtab>
+        <a href='javascript:ShowTab("tab3")' id=lnk3 class=offlnk> PartyClassificationType</a>
+      </td>
     <%}%>
-
-  
     <%if(Security.hasEntityPermission("PARTY_TYPE_ATTR", "_VIEW", session)){%>
-    <td id=tab4 class=offtab>
-      <a href='javascript:ShowTab("tab4")' id=lnk4 class=offlnk> PartyTypeAttr</a>
-    </td>
+      <td id=tab4 class=offtab>
+        <a href='javascript:ShowTab("tab4")' id=lnk4 class=offlnk> PartyTypeAttr</a>
+      </td>
     <%}%>
-
-  
     <%if(Security.hasEntityPermission("PARTY_ATTRIBUTE", "_VIEW", session)){%>
-    <td id=tab5 class=offtab>
-      <a href='javascript:ShowTab("tab5")' id=lnk5 class=offlnk> PartyAttribute</a>
-    </td>
+      <td id=tab5 class=offtab>
+        <a href='javascript:ShowTab("tab5")' id=lnk5 class=offlnk> PartyAttribute</a>
+      </td>
     <%}%>
-
 </tr></table>
 <%}%>
   
 
-  
-  
-  
 <%-- Start Relation for Party, type: one --%>
 <%if(partyClassification != null){%>
   <%if(Security.hasEntityPermission("PARTY", "_VIEW", session)){%>
@@ -253,18 +380,14 @@ function ShowTab(lname)
     </div>
     <%if(partyClassification.getPartyId() != null){%>
       
-      <a href="<%=response.encodeURL("/commonapp/party/party/ViewParty.jsp?" + "PARTY_PARTY_ID=" + partyClassification.getPartyId())%>" class="buttontext">[View Party Details]</a>
-      
-    <%if(partyRelated != null){%>
-      <%if(Security.hasEntityPermission("PARTY", "_EDIT", session)){%>
-        <a href="<%=response.encodeURL("/commonapp/party/party/EditParty.jsp?" + "PARTY_PARTY_ID=" + partyClassification.getPartyId())%>" class="buttontext">[Edit Party]</a>
-      <%}%>
-    <%}else{%>
+      <a href="<%=response.encodeURL("/commonapp/party/party/ViewParty.jsp?" + "PARTY_PARTY_ID=" + partyClassification.getPartyId())%>" class="buttontext">[View Party]</a>      
+    <%if(partyRelated == null){%>
       <%if(Security.hasEntityPermission("PARTY", "_CREATE", session)){%>
-        <a href="<%=response.encodeURL("/commonapp/party/party/EditParty.jsp?" + "PARTY_PARTY_ID=" + partyClassification.getPartyId())%>" class="buttontext">[Create Party]</a>
+        <a href="<%=response.encodeURL("/commonapp/party/party/ViewParty.jsp?" + "PARTY_PARTY_ID=" + partyClassification.getPartyId())%>" class="buttontext">[Create Party]</a>
       <%}%>
     <%}%>
     <%}%>
+  <div style='width:100%;height:250px;overflow:auto;border-style:inset;'>
     <table border="0" cellspacing="2" cellpadding="2">
     <%if(partyRelated == null){%>
     <tr class="<%=rowClass1%>"><td><h3>Specified Party was not found.</h3></td></tr>
@@ -274,23 +397,19 @@ function ShowTab(lname)
   <tr class="<%=rowClass%>">
     <td><b>PARTY_ID</b></td>
     <td>
-    
       <%=UtilFormatOut.checkNull(partyRelated.getPartyId())%>
-    
     </td>
   </tr>
 
     <%} //end if partyRelated == null %>
     </table>
+    </div>
   </div>
   <%}%>
 <%}%>
 <%-- End Relation for Party, type: one --%>
   
 
-  
-  
-  
 <%-- Start Relation for PartyType, type: one --%>
 <%if(partyClassification != null){%>
   <%if(Security.hasEntityPermission("PARTY_TYPE", "_VIEW", session)){%>
@@ -301,18 +420,14 @@ function ShowTab(lname)
     </div>
     <%if(partyClassification.getPartyTypeId() != null){%>
       
-      <a href="<%=response.encodeURL("/commonapp/party/party/ViewPartyType.jsp?" + "PARTY_TYPE_PARTY_TYPE_ID=" + partyClassification.getPartyTypeId())%>" class="buttontext">[View PartyType Details]</a>
-      
-    <%if(partyTypeRelated != null){%>
-      <%if(Security.hasEntityPermission("PARTY_TYPE", "_EDIT", session)){%>
-        <a href="<%=response.encodeURL("/commonapp/party/party/EditPartyType.jsp?" + "PARTY_TYPE_PARTY_TYPE_ID=" + partyClassification.getPartyTypeId())%>" class="buttontext">[Edit PartyType]</a>
-      <%}%>
-    <%}else{%>
+      <a href="<%=response.encodeURL("/commonapp/party/party/ViewPartyType.jsp?" + "PARTY_TYPE_PARTY_TYPE_ID=" + partyClassification.getPartyTypeId())%>" class="buttontext">[View PartyType]</a>      
+    <%if(partyTypeRelated == null){%>
       <%if(Security.hasEntityPermission("PARTY_TYPE", "_CREATE", session)){%>
-        <a href="<%=response.encodeURL("/commonapp/party/party/EditPartyType.jsp?" + "PARTY_TYPE_PARTY_TYPE_ID=" + partyClassification.getPartyTypeId())%>" class="buttontext">[Create PartyType]</a>
+        <a href="<%=response.encodeURL("/commonapp/party/party/ViewPartyType.jsp?" + "PARTY_TYPE_PARTY_TYPE_ID=" + partyClassification.getPartyTypeId())%>" class="buttontext">[Create PartyType]</a>
       <%}%>
     <%}%>
     <%}%>
+  <div style='width:100%;height:250px;overflow:auto;border-style:inset;'>
     <table border="0" cellspacing="2" cellpadding="2">
     <%if(partyTypeRelated == null){%>
     <tr class="<%=rowClass1%>"><td><h3>Specified PartyType was not found.</h3></td></tr>
@@ -322,9 +437,7 @@ function ShowTab(lname)
   <tr class="<%=rowClass%>">
     <td><b>PARTY_TYPE_ID</b></td>
     <td>
-    
       <%=UtilFormatOut.checkNull(partyTypeRelated.getPartyTypeId())%>
-    
     </td>
   </tr>
 
@@ -332,9 +445,7 @@ function ShowTab(lname)
   <tr class="<%=rowClass%>">
     <td><b>PARENT_TYPE_ID</b></td>
     <td>
-    
       <%=UtilFormatOut.checkNull(partyTypeRelated.getParentTypeId())%>
-    
     </td>
   </tr>
 
@@ -342,9 +453,7 @@ function ShowTab(lname)
   <tr class="<%=rowClass%>">
     <td><b>HAS_TABLE</b></td>
     <td>
-    
       <%=UtilFormatOut.checkNull(partyTypeRelated.getHasTable())%>
-    
     </td>
   </tr>
 
@@ -352,23 +461,19 @@ function ShowTab(lname)
   <tr class="<%=rowClass%>">
     <td><b>DESCRIPTION</b></td>
     <td>
-    
       <%=UtilFormatOut.checkNull(partyTypeRelated.getDescription())%>
-    
     </td>
   </tr>
 
     <%} //end if partyTypeRelated == null %>
     </table>
+    </div>
   </div>
   <%}%>
 <%}%>
 <%-- End Relation for PartyType, type: one --%>
   
 
-  
-  
-  
 <%-- Start Relation for PartyClassificationType, type: one --%>
 <%if(partyClassification != null){%>
   <%if(Security.hasEntityPermission("PARTY_CLASSIFICATION_TYPE", "_VIEW", session)){%>
@@ -379,18 +484,14 @@ function ShowTab(lname)
     </div>
     <%if(partyClassification.getPartyClassificationTypeId() != null){%>
       
-      <a href="<%=response.encodeURL("/commonapp/party/party/ViewPartyClassificationType.jsp?" + "PARTY_CLASSIFICATION_TYPE_PARTY_CLASSIFICATION_TYPE_ID=" + partyClassification.getPartyClassificationTypeId())%>" class="buttontext">[View PartyClassificationType Details]</a>
-      
-    <%if(partyClassificationTypeRelated != null){%>
-      <%if(Security.hasEntityPermission("PARTY_CLASSIFICATION_TYPE", "_EDIT", session)){%>
-        <a href="<%=response.encodeURL("/commonapp/party/party/EditPartyClassificationType.jsp?" + "PARTY_CLASSIFICATION_TYPE_PARTY_CLASSIFICATION_TYPE_ID=" + partyClassification.getPartyClassificationTypeId())%>" class="buttontext">[Edit PartyClassificationType]</a>
-      <%}%>
-    <%}else{%>
+      <a href="<%=response.encodeURL("/commonapp/party/party/ViewPartyClassificationType.jsp?" + "PARTY_CLASSIFICATION_TYPE_PARTY_CLASSIFICATION_TYPE_ID=" + partyClassification.getPartyClassificationTypeId())%>" class="buttontext">[View PartyClassificationType]</a>      
+    <%if(partyClassificationTypeRelated == null){%>
       <%if(Security.hasEntityPermission("PARTY_CLASSIFICATION_TYPE", "_CREATE", session)){%>
-        <a href="<%=response.encodeURL("/commonapp/party/party/EditPartyClassificationType.jsp?" + "PARTY_CLASSIFICATION_TYPE_PARTY_CLASSIFICATION_TYPE_ID=" + partyClassification.getPartyClassificationTypeId())%>" class="buttontext">[Create PartyClassificationType]</a>
+        <a href="<%=response.encodeURL("/commonapp/party/party/ViewPartyClassificationType.jsp?" + "PARTY_CLASSIFICATION_TYPE_PARTY_CLASSIFICATION_TYPE_ID=" + partyClassification.getPartyClassificationTypeId())%>" class="buttontext">[Create PartyClassificationType]</a>
       <%}%>
     <%}%>
     <%}%>
+  <div style='width:100%;height:250px;overflow:auto;border-style:inset;'>
     <table border="0" cellspacing="2" cellpadding="2">
     <%if(partyClassificationTypeRelated == null){%>
     <tr class="<%=rowClass1%>"><td><h3>Specified PartyClassificationType was not found.</h3></td></tr>
@@ -400,9 +501,7 @@ function ShowTab(lname)
   <tr class="<%=rowClass%>">
     <td><b>PARTY_CLASSIFICATION_TYPE_ID</b></td>
     <td>
-    
       <%=UtilFormatOut.checkNull(partyClassificationTypeRelated.getPartyClassificationTypeId())%>
-    
     </td>
   </tr>
 
@@ -410,9 +509,7 @@ function ShowTab(lname)
   <tr class="<%=rowClass%>">
     <td><b>PARENT_TYPE_ID</b></td>
     <td>
-    
       <%=UtilFormatOut.checkNull(partyClassificationTypeRelated.getParentTypeId())%>
-    
     </td>
   </tr>
 
@@ -420,9 +517,7 @@ function ShowTab(lname)
   <tr class="<%=rowClass%>">
     <td><b>HAS_TABLE</b></td>
     <td>
-    
       <%=UtilFormatOut.checkNull(partyClassificationTypeRelated.getHasTable())%>
-    
     </td>
   </tr>
 
@@ -430,23 +525,19 @@ function ShowTab(lname)
   <tr class="<%=rowClass%>">
     <td><b>DESCRIPTION</b></td>
     <td>
-    
       <%=UtilFormatOut.checkNull(partyClassificationTypeRelated.getDescription())%>
-    
     </td>
   </tr>
 
     <%} //end if partyClassificationTypeRelated == null %>
     </table>
+    </div>
   </div>
   <%}%>
 <%}%>
 <%-- End Relation for PartyClassificationType, type: one --%>
   
 
-  
-  
-  
 <%-- Start Relation for PartyTypeAttr, type: many --%>
 <%if(partyClassification != null){%>
   <%if(Security.hasEntityPermission("PARTY_TYPE_ATTR", "_VIEW", session)){%>    
@@ -466,23 +557,18 @@ function ShowTab(lname)
     %>
       
     <%if(relatedCreatePerm){%>
-      <a href="<%=response.encodeURL("/commonapp/party/party/EditPartyTypeAttr.jsp?" + "PARTY_TYPE_ATTR_PARTY_TYPE_ID=" + partyClassification.getPartyTypeId())%>" class="buttontext">[Create PartyTypeAttr]</a>
-    <%}%>
-    
+      <a href="<%=response.encodeURL("/commonapp/party/party/ViewPartyTypeAttr.jsp?" + "PARTY_TYPE_ATTR_PARTY_TYPE_ID=" + partyClassification.getPartyTypeId())%>" class="buttontext">[Create PartyTypeAttr]</a>
+    <%}%>    
     <%String curFindString = "SEARCH_TYPE=PartyTypeId";%>
     <%curFindString = curFindString + "&SEARCH_PARAMETER1=" + partyClassification.getPartyTypeId();%>
     <a href="<%=response.encodeURL("/commonapp/party/party/FindPartyClassification.jsp?" + UtilFormatOut.encodeQuery(curFindString))%>" class="buttontext">[Find PartyTypeAttr]</a>
-
-  <div style='width:100%;height:250px;overflow:scroll;'>
+  <div style='width:100%;height:250px;overflow:auto;border-style:inset;'>
   <table width="100%" cellpadding="2" cellspacing="2" border="0">
     <tr class="<%=rowClassResultHeader%>">
   
       <td><div class="tabletext"><b><nobr>PARTY_TYPE_ID</nobr></b></div></td>
       <td><div class="tabletext"><b><nobr>NAME</nobr></b></div></td>
       <td>&nbsp;</td>
-      <%if(relatedUpdatePerm){%>
-        <td>&nbsp;</td>
-      <%}%>
       <%if(relatedDeletePerm){%>
         <td>&nbsp;</td>
       <%}%>
@@ -502,32 +588,22 @@ function ShowTab(lname)
   
       <td>
         <div class="tabletext">
-    
       <%=UtilFormatOut.checkNull(partyTypeAttrRelated.getPartyTypeId())%>
-    
         &nbsp;</div>
       </td>
   
       <td>
         <div class="tabletext">
-    
       <%=UtilFormatOut.checkNull(partyTypeAttrRelated.getName())%>
-    
         &nbsp;</div>
       </td>
   
       <td>
         <a href="<%=response.encodeURL("/commonapp/party/party/ViewPartyTypeAttr.jsp?" + "PARTY_TYPE_ATTR_PARTY_TYPE_ID=" + partyTypeAttrRelated.getPartyTypeId() + "&" + "PARTY_TYPE_ATTR_NAME=" + partyTypeAttrRelated.getName())%>" class="buttontext">[View]</a>
       </td>
-      <%if(relatedUpdatePerm){%>
-        <td>
-          <a href="<%=response.encodeURL("/commonapp/party/party/EditPartyTypeAttr.jsp?" + "PARTY_TYPE_ATTR_PARTY_TYPE_ID=" + partyTypeAttrRelated.getPartyTypeId() + "&" + "PARTY_TYPE_ATTR_NAME=" + partyTypeAttrRelated.getName())%>" class="buttontext">[Edit]</a>
-        </td>
-      <%}%>
       <%if(relatedDeletePerm){%>
         <td>
-          <%-- <a href="<%=response.encodeURL("ViewPersonSecurityGroup.jsp?" + "PERSON_SECURITY_GROUP_USERNAME=" + username + "&" + "PERSON_SECURITY_GROUP_GROUP_ID=" + groupId + "&" + "WEBEVENT=UPDATE_SECURITY_GROUP_PERMISSION&UPDATE_MODE=DELETE&" + "SECURITY_GROUP_PERMISSION_GROUP_ID=" + securityGroupPermission.getGroupId() + "&" + "SECURITY_GROUP_PERMISSION_PERMISSION_ID=" + securityGroupPermission.getPermissionId())%>" class="buttontext">[Delete]</a> --%>
-          <a href="<%=response.encodeURL("ViewPartyTypeAttr.jsp?" + "PARTY_TYPE_ATTR_PARTY_TYPE_ID=" + partyTypeAttrRelated.getPartyTypeId() + "&" + "PARTY_TYPE_ATTR_NAME=" + partyTypeAttrRelated.getName() + "&" + "PARTY_CLASSIFICATION_PARTY_ID=" + partyId + "&" + "PARTY_CLASSIFICATION_PARTY_TYPE_ID=" + partyTypeId + "&WEBEVENT=UPDATE_PARTY_TYPE_ATTR&UPDATE_MODE=DELETE")%>" class="buttontext">[Delete]</a>
+          <a href="<%=response.encodeURL("ViewPartyClassification.jsp?" + "PARTY_TYPE_ATTR_PARTY_TYPE_ID=" + partyTypeAttrRelated.getPartyTypeId() + "&" + "PARTY_TYPE_ATTR_NAME=" + partyTypeAttrRelated.getName() + "&" + "PARTY_CLASSIFICATION_PARTY_ID=" + partyId + "&" + "PARTY_CLASSIFICATION_PARTY_TYPE_ID=" + partyTypeId + "&WEBEVENT=UPDATE_PARTY_TYPE_ATTR&UPDATE_MODE=DELETE")%>" class="buttontext">[Delete]</a>
         </td>
       <%}%>
     </tr>
@@ -535,7 +611,7 @@ function ShowTab(lname)
   <%}%>
 <%}else{%>
 <%rowClassResult=(rowClassResult==rowClassResult1?rowClassResult2:rowClassResult1);%><tr class="<%=rowClassResult%>">
-<td colspan="8">
+<td colspan="4">
 <h3>No PartyTypeAttrs Found.</h3>
 </td>
 </tr>
@@ -549,9 +625,6 @@ Displaying <%=relatedLoopCount%> entities.
 <%-- End Relation for PartyTypeAttr, type: many --%>
   
 
-  
-  
-  
 <%-- Start Relation for PartyAttribute, type: many --%>
 <%if(partyClassification != null){%>
   <%if(Security.hasEntityPermission("PARTY_ATTRIBUTE", "_VIEW", session)){%>    
@@ -571,14 +644,12 @@ Displaying <%=relatedLoopCount%> entities.
     %>
       
     <%if(relatedCreatePerm){%>
-      <a href="<%=response.encodeURL("/commonapp/party/party/EditPartyAttribute.jsp?" + "PARTY_ATTRIBUTE_PARTY_ID=" + partyClassification.getPartyId())%>" class="buttontext">[Create PartyAttribute]</a>
-    <%}%>
-    
+      <a href="<%=response.encodeURL("/commonapp/party/party/ViewPartyAttribute.jsp?" + "PARTY_ATTRIBUTE_PARTY_ID=" + partyClassification.getPartyId())%>" class="buttontext">[Create PartyAttribute]</a>
+    <%}%>    
     <%String curFindString = "SEARCH_TYPE=PartyId";%>
     <%curFindString = curFindString + "&SEARCH_PARAMETER1=" + partyClassification.getPartyId();%>
     <a href="<%=response.encodeURL("/commonapp/party/party/FindPartyClassification.jsp?" + UtilFormatOut.encodeQuery(curFindString))%>" class="buttontext">[Find PartyAttribute]</a>
-
-  <div style='width:100%;height:250px;overflow:scroll;'>
+  <div style='width:100%;height:250px;overflow:auto;border-style:inset;'>
   <table width="100%" cellpadding="2" cellspacing="2" border="0">
     <tr class="<%=rowClassResultHeader%>">
   
@@ -586,9 +657,6 @@ Displaying <%=relatedLoopCount%> entities.
       <td><div class="tabletext"><b><nobr>NAME</nobr></b></div></td>
       <td><div class="tabletext"><b><nobr>VALUE</nobr></b></div></td>
       <td>&nbsp;</td>
-      <%if(relatedUpdatePerm){%>
-        <td>&nbsp;</td>
-      <%}%>
       <%if(relatedDeletePerm){%>
         <td>&nbsp;</td>
       <%}%>
@@ -608,40 +676,28 @@ Displaying <%=relatedLoopCount%> entities.
   
       <td>
         <div class="tabletext">
-    
       <%=UtilFormatOut.checkNull(partyAttributeRelated.getPartyId())%>
-    
         &nbsp;</div>
       </td>
   
       <td>
         <div class="tabletext">
-    
       <%=UtilFormatOut.checkNull(partyAttributeRelated.getName())%>
-    
         &nbsp;</div>
       </td>
   
       <td>
         <div class="tabletext">
-    
       <%=UtilFormatOut.checkNull(partyAttributeRelated.getValue())%>
-    
         &nbsp;</div>
       </td>
   
       <td>
         <a href="<%=response.encodeURL("/commonapp/party/party/ViewPartyAttribute.jsp?" + "PARTY_ATTRIBUTE_PARTY_ID=" + partyAttributeRelated.getPartyId() + "&" + "PARTY_ATTRIBUTE_NAME=" + partyAttributeRelated.getName())%>" class="buttontext">[View]</a>
       </td>
-      <%if(relatedUpdatePerm){%>
-        <td>
-          <a href="<%=response.encodeURL("/commonapp/party/party/EditPartyAttribute.jsp?" + "PARTY_ATTRIBUTE_PARTY_ID=" + partyAttributeRelated.getPartyId() + "&" + "PARTY_ATTRIBUTE_NAME=" + partyAttributeRelated.getName())%>" class="buttontext">[Edit]</a>
-        </td>
-      <%}%>
       <%if(relatedDeletePerm){%>
         <td>
-          <%-- <a href="<%=response.encodeURL("ViewPersonSecurityGroup.jsp?" + "PERSON_SECURITY_GROUP_USERNAME=" + username + "&" + "PERSON_SECURITY_GROUP_GROUP_ID=" + groupId + "&" + "WEBEVENT=UPDATE_SECURITY_GROUP_PERMISSION&UPDATE_MODE=DELETE&" + "SECURITY_GROUP_PERMISSION_GROUP_ID=" + securityGroupPermission.getGroupId() + "&" + "SECURITY_GROUP_PERMISSION_PERMISSION_ID=" + securityGroupPermission.getPermissionId())%>" class="buttontext">[Delete]</a> --%>
-          <a href="<%=response.encodeURL("ViewPartyAttribute.jsp?" + "PARTY_ATTRIBUTE_PARTY_ID=" + partyAttributeRelated.getPartyId() + "&" + "PARTY_ATTRIBUTE_NAME=" + partyAttributeRelated.getName() + "&" + "PARTY_CLASSIFICATION_PARTY_ID=" + partyId + "&" + "PARTY_CLASSIFICATION_PARTY_TYPE_ID=" + partyTypeId + "&WEBEVENT=UPDATE_PARTY_ATTRIBUTE&UPDATE_MODE=DELETE")%>" class="buttontext">[Delete]</a>
+          <a href="<%=response.encodeURL("ViewPartyClassification.jsp?" + "PARTY_ATTRIBUTE_PARTY_ID=" + partyAttributeRelated.getPartyId() + "&" + "PARTY_ATTRIBUTE_NAME=" + partyAttributeRelated.getName() + "&" + "PARTY_CLASSIFICATION_PARTY_ID=" + partyId + "&" + "PARTY_CLASSIFICATION_PARTY_TYPE_ID=" + partyTypeId + "&WEBEVENT=UPDATE_PARTY_ATTRIBUTE&UPDATE_MODE=DELETE")%>" class="buttontext">[Delete]</a>
         </td>
       <%}%>
     </tr>
@@ -649,7 +705,7 @@ Displaying <%=relatedLoopCount%> entities.
   <%}%>
 <%}else{%>
 <%rowClassResult=(rowClassResult==rowClassResult1?rowClassResult2:rowClassResult1);%><tr class="<%=rowClassResult%>">
-<td colspan="8">
+<td colspan="5">
 <h3>No PartyAttributes Found.</h3>
 </td>
 </tr>

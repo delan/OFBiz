@@ -24,7 +24,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Fri Jul 06 18:25:19 MDT 2001
+ *@created    Mon Jul 09 23:23:50 MDT 2001
  *@version    1.0
  */
 %>
@@ -127,7 +127,7 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
       <td valign="top">Primary Key:</td>
       <td valign="top">
           <input type="hidden" name="SEARCH_TYPE" value="primaryKey">
-
+        
           <input type="text" name="SEARCH_PARAMETER1" value="" size="20">
           (Must be exact)
       </td>
@@ -137,13 +137,12 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
     </form>
   </tr>
 
-  
   <%rowClassTop=(rowClassTop==rowClassTop1?rowClassTop2:rowClassTop1);%><tr class="<%=rowClassTop%>">
     <td valign="top">ParentTypeId: </td>
     <form method="post" action="<%=response.encodeURL("FindPartyClassificationType.jsp")%>" style=margin:0;>
       <td valign="top">
         <input type="hidden" name="SEARCH_TYPE" value="ParentTypeId">
-
+      
         <input type="text" name="SEARCH_PARAMETER1" value="" size="20">
       </td>
       <td valign="top">
@@ -152,13 +151,12 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
     </form>
   </tr>
 
-  
   <%rowClassTop=(rowClassTop==rowClassTop1?rowClassTop2:rowClassTop1);%><tr class="<%=rowClassTop%>">
     <td valign="top">HasTable: </td>
     <form method="post" action="<%=response.encodeURL("FindPartyClassificationType.jsp")%>" style=margin:0;>
       <td valign="top">
         <input type="hidden" name="SEARCH_TYPE" value="HasTable">
-
+      
         <input type="text" name="SEARCH_PARAMETER1" value="" size="20">
       </td>
       <td valign="top">
@@ -182,7 +180,7 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
 <b>PartyClassificationTypes found by:&nbsp; <%=searchType%> : <%=UtilFormatOut.checkNull(searchParam1)%> : <%=UtilFormatOut.checkNull(searchParam2)%> : <%=UtilFormatOut.checkNull(searchParam3)%></b>
 <br>
 <%if(hasCreatePermission){%>
-  <a href="<%=response.encodeURL("EditPartyClassificationType.jsp")%>" class="buttontext">[Create PartyClassificationType]</a>
+  <a href="<%=response.encodeURL("ViewPartyClassificationType.jsp")%>" class="buttontext">[Create New PartyClassificationType]</a>
 <%}%>
 <table border="0" width="100%" cellpadding="2">
 <% if(arraySize > 0) { %>
@@ -212,9 +210,6 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
       <td><div class="tabletext"><b><nobr>HAS_TABLE</nobr></b></div></td>
       <td><div class="tabletext"><b><nobr>DESCRIPTION</nobr></b></div></td>
       <td>&nbsp;</td>
-      <%if(hasUpdatePermission){%>
-        <td>&nbsp;</td>
-      <%}%>
       <%if(hasDeletePermission){%>
         <td>&nbsp;</td>
       <%}%>
@@ -234,44 +229,27 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
   
       <td>
         <div class="tabletext">
-    
       <%=UtilFormatOut.checkNull(partyClassificationType.getPartyClassificationTypeId())%>
-    
         &nbsp;</div>
       </td>
-  
       <td>
         <div class="tabletext">
-    
       <%=UtilFormatOut.checkNull(partyClassificationType.getParentTypeId())%>
-    
         &nbsp;</div>
       </td>
-  
       <td>
         <div class="tabletext">
-    
       <%=UtilFormatOut.checkNull(partyClassificationType.getHasTable())%>
-    
         &nbsp;</div>
       </td>
-  
       <td>
         <div class="tabletext">
-    
       <%=UtilFormatOut.checkNull(partyClassificationType.getDescription())%>
-    
         &nbsp;</div>
       </td>
-  
       <td>
         <a href="<%=response.encodeURL("ViewPartyClassificationType.jsp?" + "PARTY_CLASSIFICATION_TYPE_PARTY_CLASSIFICATION_TYPE_ID=" + partyClassificationType.getPartyClassificationTypeId())%>" class="buttontext">[View]</a>
       </td>
-      <%if(hasUpdatePermission){%>
-        <td>
-          <a href="<%=response.encodeURL("EditPartyClassificationType.jsp?" + "PARTY_CLASSIFICATION_TYPE_PARTY_CLASSIFICATION_TYPE_ID=" + partyClassificationType.getPartyClassificationTypeId())%>" class="buttontext">[Edit]</a>
-        </td>
-      <%}%>
       <%if(hasDeletePermission){%>
         <td>
           <a href="<%=response.encodeURL("FindPartyClassificationType.jsp?WEBEVENT=UPDATE_PARTY_CLASSIFICATION_TYPE&UPDATE_MODE=DELETE&" + "PARTY_CLASSIFICATION_TYPE_PARTY_CLASSIFICATION_TYPE_ID=" + partyClassificationType.getPartyClassificationTypeId() + "&" + curFindString)%>" class="buttontext">[Delete]</a>
@@ -286,7 +264,7 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
  {
 %>
 <%rowClassResult=(rowClassResult==rowClassResult1?rowClassResult2:rowClassResult1);%><tr class="<%=rowClassResult%>">
-<td colspan="8">
+<td colspan="6">
 <h3>No PartyClassificationTypes Found.</h3>
 </td>
 </tr>
@@ -313,7 +291,7 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
 <% } %>
 </table>
 <%if(hasCreatePermission){%>
-  <a href="<%=response.encodeURL("EditPartyClassificationType.jsp")%>" class="buttontext">[Create PartyClassificationType]</a>
+  <a href="<%=response.encodeURL("ViewPartyClassificationType.jsp")%>" class="buttontext">[Create PartyClassificationType]</a>
 <%}%>
 <%}else{%>
   <h3>You do not have permission to view this page (PARTY_CLASSIFICATION_TYPE_ADMIN, or PARTY_CLASSIFICATION_TYPE_VIEW needed).</h3>

@@ -34,6 +34,7 @@ public class UtilTimer
   long startTime;
   long lastMessageTime;
   String lastMessage = null;
+  boolean quiet = false;
 
   /** Default constructor. Starts the timer.
    */  
@@ -52,7 +53,7 @@ public class UtilTimer
     String retString =  "[[" + message + ": seconds since start: " + secondsSinceStart() + ",since last(" + lastMessage + "):" + secondsSinceLast() + "]]";
     lastMessageTime = (new Date()).getTime();
     lastMessage = message;
-    if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.info", "true")) System.out.println(retString);
+    if(!quiet && UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.info", "true")) System.out.println(retString);
     return retString;
   }
   
@@ -88,5 +89,21 @@ public class UtilTimer
   {
     long currentTime = (new Date()).getTime();
     return currentTime - lastMessageTime;
+  }
+  
+  /** Sets the value of the quiet member, denoting whether log output is off or not
+   * @param quiet The new value of quiet
+   */  
+  public void setQuiet(boolean quiet)
+  {
+    this.quiet = quiet;
+  }
+  
+  /** Gets the value of the quiet member, denoting whether log output is off or not
+   * @return The value of quiet
+   */  
+  public boolean getQuiet()
+  {
+    return quiet;
   }
 }

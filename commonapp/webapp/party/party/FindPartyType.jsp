@@ -24,7 +24,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Fri Jul 06 18:25:19 MDT 2001
+ *@created    Mon Jul 09 23:23:50 MDT 2001
  *@version    1.0
  */
 %>
@@ -127,7 +127,7 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
       <td valign="top">Primary Key:</td>
       <td valign="top">
           <input type="hidden" name="SEARCH_TYPE" value="primaryKey">
-
+        
           <input type="text" name="SEARCH_PARAMETER1" value="" size="20">
           (Must be exact)
       </td>
@@ -137,13 +137,12 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
     </form>
   </tr>
 
-  
   <%rowClassTop=(rowClassTop==rowClassTop1?rowClassTop2:rowClassTop1);%><tr class="<%=rowClassTop%>">
     <td valign="top">ParentTypeId: </td>
     <form method="post" action="<%=response.encodeURL("FindPartyType.jsp")%>" style=margin:0;>
       <td valign="top">
         <input type="hidden" name="SEARCH_TYPE" value="ParentTypeId">
-
+      
         <input type="text" name="SEARCH_PARAMETER1" value="" size="20">
       </td>
       <td valign="top">
@@ -152,13 +151,12 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
     </form>
   </tr>
 
-  
   <%rowClassTop=(rowClassTop==rowClassTop1?rowClassTop2:rowClassTop1);%><tr class="<%=rowClassTop%>">
     <td valign="top">HasTable: </td>
     <form method="post" action="<%=response.encodeURL("FindPartyType.jsp")%>" style=margin:0;>
       <td valign="top">
         <input type="hidden" name="SEARCH_TYPE" value="HasTable">
-
+      
         <input type="text" name="SEARCH_PARAMETER1" value="" size="20">
       </td>
       <td valign="top">
@@ -182,7 +180,7 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
 <b>PartyTypes found by:&nbsp; <%=searchType%> : <%=UtilFormatOut.checkNull(searchParam1)%> : <%=UtilFormatOut.checkNull(searchParam2)%> : <%=UtilFormatOut.checkNull(searchParam3)%></b>
 <br>
 <%if(hasCreatePermission){%>
-  <a href="<%=response.encodeURL("EditPartyType.jsp")%>" class="buttontext">[Create PartyType]</a>
+  <a href="<%=response.encodeURL("ViewPartyType.jsp")%>" class="buttontext">[Create New PartyType]</a>
 <%}%>
 <table border="0" width="100%" cellpadding="2">
 <% if(arraySize > 0) { %>
@@ -212,9 +210,6 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
       <td><div class="tabletext"><b><nobr>HAS_TABLE</nobr></b></div></td>
       <td><div class="tabletext"><b><nobr>DESCRIPTION</nobr></b></div></td>
       <td>&nbsp;</td>
-      <%if(hasUpdatePermission){%>
-        <td>&nbsp;</td>
-      <%}%>
       <%if(hasDeletePermission){%>
         <td>&nbsp;</td>
       <%}%>
@@ -234,44 +229,27 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
   
       <td>
         <div class="tabletext">
-    
       <%=UtilFormatOut.checkNull(partyType.getPartyTypeId())%>
-    
         &nbsp;</div>
       </td>
-  
       <td>
         <div class="tabletext">
-    
       <%=UtilFormatOut.checkNull(partyType.getParentTypeId())%>
-    
         &nbsp;</div>
       </td>
-  
       <td>
         <div class="tabletext">
-    
       <%=UtilFormatOut.checkNull(partyType.getHasTable())%>
-    
         &nbsp;</div>
       </td>
-  
       <td>
         <div class="tabletext">
-    
       <%=UtilFormatOut.checkNull(partyType.getDescription())%>
-    
         &nbsp;</div>
       </td>
-  
       <td>
         <a href="<%=response.encodeURL("ViewPartyType.jsp?" + "PARTY_TYPE_PARTY_TYPE_ID=" + partyType.getPartyTypeId())%>" class="buttontext">[View]</a>
       </td>
-      <%if(hasUpdatePermission){%>
-        <td>
-          <a href="<%=response.encodeURL("EditPartyType.jsp?" + "PARTY_TYPE_PARTY_TYPE_ID=" + partyType.getPartyTypeId())%>" class="buttontext">[Edit]</a>
-        </td>
-      <%}%>
       <%if(hasDeletePermission){%>
         <td>
           <a href="<%=response.encodeURL("FindPartyType.jsp?WEBEVENT=UPDATE_PARTY_TYPE&UPDATE_MODE=DELETE&" + "PARTY_TYPE_PARTY_TYPE_ID=" + partyType.getPartyTypeId() + "&" + curFindString)%>" class="buttontext">[Delete]</a>
@@ -286,7 +264,7 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
  {
 %>
 <%rowClassResult=(rowClassResult==rowClassResult1?rowClassResult2:rowClassResult1);%><tr class="<%=rowClassResult%>">
-<td colspan="8">
+<td colspan="6">
 <h3>No PartyTypes Found.</h3>
 </td>
 </tr>
@@ -313,7 +291,7 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
 <% } %>
 </table>
 <%if(hasCreatePermission){%>
-  <a href="<%=response.encodeURL("EditPartyType.jsp")%>" class="buttontext">[Create PartyType]</a>
+  <a href="<%=response.encodeURL("ViewPartyType.jsp")%>" class="buttontext">[Create PartyType]</a>
 <%}%>
 <%}else{%>
   <h3>You do not have permission to view this page (PARTY_TYPE_ADMIN, or PARTY_TYPE_VIEW needed).</h3>
