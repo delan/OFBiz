@@ -1,33 +1,33 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-  <title>Open For Business Core Configuration Guide</title>
+  <title>Open For Business Framework Configuration Guide</title>
   <link rel="stylesheet" href="http://www.ofbiz.org/maincss.css" type="text/css">
 </head>
 
 <body>
 
-<table width='100%'>
+<table width="100%">
   <tr>
-    <td width='50%' align='left' valign='center'>
-        <a href="http://www.ofbiz.org"><img src="http://www.ofbiz.org/images/ofbiz_logo.jpg"  border="0" alt='The Open For Business Project'></a>
+    <td width="50%" align="left" valign="center">
+        <a href="http://www.ofbiz.org"><img src="http://www.ofbiz.org/images/ofbiz_logo.jpg"  border="0" alt="The Open For Business Project"></a>
     </td>
-    <td width='50%' align='right' valign='center'>
+    <td width="50%" align="right" valign="center">
         <a href="http://sf.net/projects/ofbiz"><img src="http://sourceforge.net/sflogo.php?group_id=27173" width="88" height="31" border="0" alt="SourceForge Logo"></a> 
         <a href="http://www.ofbiz.org"><img src="http://www.ofbiz.org/images/ofbiz_powered.gif" width="88" border="0"></a>
     </td>
   </tr>
 </table>
-<hr class='sepbar'>
+<hr class="sepbar">
 
-<h2 align="center">The Open For Business Project: Core Configuration Guide</h2>
+<h2 align="center">The Open For Business Project: Framework Configuration Guide</h2>
  
-<div class='contenttext'>Written By: David E. Jones, <a href="mailto:jonesde@ofbiz.org">jonesde@ofbiz.org</a></div>
-<div class='contenttext'>Minor corrections by: <a href="mailto:PDebski@a4.pl">Pawel H. Debski</a></div>
-<div class='contenttext'>Last Updated: January 28, 2003</div>
-<!-- $Id: coreconfig.html,v 1.1 2003/08/18 23:45:30 jonesde Exp $ -->
+<div class="contenttext">Written By: David E. Jones, <a href="mailto:jonesde@ofbiz.org">jonesde@ofbiz.org</a></div>
+<div class="contenttext">Minor corrections by: <a href="mailto:PDebski@a4.pl">Pawel H. Debski</a></div>
+<div class="contenttext">Last Updated: January 28, 2003</div>
+<!-- $Id: coreconfig.html,v 1.2 2004/03/07 03:28:30 jonesde Exp $ -->
 
-<hr class='sepbar'>
+<hr class="sepbar">
 <h3>Table of Contents</h3>
 
 <ul>
@@ -43,71 +43,81 @@
   <li><a href="#url">url.properties</a>
 </ul>
 
-<hr class='sepbar'>
+<hr class="sepbar">
 
 <h3><a name="Related_Documents">Related Documents:</a></h3>
-<hr class='sepbar'>
+<hr class="sepbar">
 <ul>
-  <li><a href="api/index.html">Core JavaDoc</a></li>
+  <li><a href="api/base/build/javadocs/index.html">Base API</a></li>
+
+  <li><a href="api/components/common/build/javadocs/index.html">Common Component API</a></li>
+  <li><a href="api/components/content/build/javadocs/index.html">Content Component API</a></li>
+  <li><a href="api/components/entity/build/javadocs/index.html">Entity Component API</a></li>
+  <li><a href="api/components/entityext/build/javadocs/index.html">Entity Extensions Component API</a></li>
+  <li><a href="api/components/minerva/build/javadocs/index.html">Minerva Component API</a></li>
+  <li><a href="api/components/security/build/javadocs/index.html">Security Component API</a></li>
+  <li><a href="api/components/securityext/build/javadocs/index.html">Security Extensions Component API</a></li>
+  <li><a href="api/components/service/build/javadocs/index.html">Service Component API</a></li>
+
   <li><a href="entityconfig.html">Entity Engine Configuration Guide</a></li>
   <li><a href="serviceconfig.html">Service Engine Configuration Guide</a></li>
 </ul>
 
-<hr class='sepbar'>
+<hr class="sepbar">
 <h3><a name="Introduction">Introduction</a></h3>
-<hr class='sepbar'>
+<hr class="sepbar">
 
-<p class='contenttext'>This document describes the configuration of the Core of the Open For Business Framework. 
-It goes through each of the OFBiz Core properties files to explain the available properties and their 
+<p class="contenttext">This document describes the configuration of the Framework of the Open For Business Framework. 
+It goes through each of the OFBiz Framework properties files to explain the available properties and their 
 usage. The properties files used for the OFBiz applications have
 examples of the different options and are located in <b><code>ofbiz/commonapp/etc/</code></b>.</p>
 
-<p class='contenttext'>These files are resources on the classpath so they must be located somewhere
+<p class="contenttext">These files are resources on the classpath so they must be located somewhere
 on the classpath available to the Java application(s) for the proper operation
-of the OFBiz Core Framework. Because they are resources on the classpath 
+of the OFBiz Framework. Because they are resources on the classpath 
 they can be overridden locally in webapps by putting
 a changed copy of the desired file in the webapp/WEB-INF/classes directory.</p>
 
-<p class='contenttext'>The entityengine.xml file is not described in this document, it is described 
+<p class="contenttext">The entityengine.xml file is not described in this document, it is described 
 in the Entity Engine Configuration Guide as a separate document because of the 
 large number of options in the file. See the Related Documents section for a link to
 the Entity Engine Configuration Guide. The same is true for the Service Engine
 Configuration Guide and the serviceengine.xml file, including a link in the
 Related Documents section above.</p>
 
-<hr class='sepbar'>
+<hr class="sepbar">
 <h3><a name="Properties">Properties File Extensions</a></h3>
-<hr class='sepbar'>
-<p class='contenttext'>The OFBiz UtilProperties class uses the OFBiz FlexibleProperties to read
+<hr class="sepbar">
+<p class="contenttext">The OFBiz UtilProperties class uses the OFBiz FlexibleProperties to read
 and parse properties files with a few extensions. The FlexibleProperties class
 is an extension of the standard Java Properties class.</p>
 
-<p class='contenttext'>The extensions included allow the value of a property to be substituted into
+<p class="contenttext">The extensions included allow the value of a property to be substituted into
 the value of another property by simply using the ${property.name} syntax. Another
 extension is that if a "env." precedes a property.name inside the ${ and } 
 delimiters then the named property will be looked up in the system environment
 instead of in the current properties file.</p>
 
-<p class='contenttext'>For example the ofbiz.home system
+<p class="contenttext">For example the ofbiz.home system
 property is added using the -D parameter on the java command line and is used
 in the entityengine.xml and other properties files with <b><code>${env.ofbiz.home}</code></b>.</p>
 
-<p class='contenttext'>Note that these extensions are only currently available for properties files
+<p class="contenttext">Note that these extensions are only currently available for properties files
 used in configuration. The internationalization and localization related message
 properties files use the standard Java <CODE>MessageBundle</CODE> class that does not use
 these conventions. They do, however support parameters inserted into the
 messages using the Java <CODE>MessageFormat</CODE> class and related
 conventions.</p>
 
-<hr class='sepbar'>
+<hr class="sepbar">
 <h3><a name="cache">cache.properties</a></h3>
-<hr class='sepbar'>
-<p class='contenttext'>The cache.properties file contains cache setting used by the UtilCache class.
+<hr class="sepbar">
+<p class="contenttext">The cache.properties file contains cache setting used by the UtilCache class.
 Default cache parameters can be passed in when a cache is created but if cache
 parameters exist in this file for the given cache name then they will be
 loaded from the cache.properties file.</p>
 
-<p class='contenttext'>There are three optional properties in this file for each named cache: 
+<p class="contenttext">There are three optional properties in this file for each named cache: 
 <b><code>{cache-name}.maxSize</code></b> (whole number), <b><code>{cache-name}.expireTime</code></b>
 (whole number)
 and <b><code>{cache-name}.useSoftReference</code></b> (true or false). The maxSize
@@ -116,43 +126,43 @@ with respect to the size of each cache entry. The expireTime property specifies
 how long in milliseconds each cache entry will be valid. If either value is 0 the
 feature will be disabled, i.e. unlimited cache size or no expire time.</p>
 
-<p class='contenttext'>The useSoftReference property is used to specify, true or false, whether soft
+<p class="contenttext">The useSoftReference property is used to specify, true or false, whether soft
 references should be used for cache entries. Soft references help keep large
 caches from taking too much memory by allowing the garbage collector to clear
 these entries when more memory is needed.</p>
 
-<p class='contenttext'>If the values
+<p class="contenttext">If the values
 are not specified and are not passed to the UtilCache constructor, the values in
 the <b><code>default.maxSize</code></b>, <b><code>default.expireTime</code></b> 
 and <b><code>default.useSoftReference</code></b> properties will
 be used.</p>
 
-<hr class='sepbar'>
+<hr class="sepbar">
 <h3><a name="debug">debug.properties</a></h3>
-<hr class='sepbar'>
-<p class='contenttext'>The debug.properties file contains options to turn OFBiz debug threads on/off 
+<hr class="sepbar">
+<p class="contenttext">The debug.properties file contains options to turn OFBiz debug threads on/off 
 and also serves as the Log4J properties file (see jakarta.apache.org for 
 documentation on Log4J).</p>
 
-<p class='contenttext'>In addition to the Log4J properties there are properties that turn OFBiz logging
+<p class="contenttext">In addition to the Log4J properties there are properties that turn OFBiz logging
 levels on and off. These are formatted like <b><code>print.{level-name}</code></b> where level-name
 is <b><code>verbose</code></b>, <b><code>timing</code></b>, <b><code>info</code></b>,
 <b><code>important</code></b>, <b><code>warning</code></b>, <b><code>error</code></b>, or <b><code>fatal</code></b>.</p>
 
-<hr class='sepbar'>
+<hr class="sepbar">
 <h3><a name="jndiservers">jndiservers.xml</a></h3>
-<hr class='sepbar'>
+<hr class="sepbar">
 
-<p class='contenttext'>This is a simple XML file that contains a number of <b><code>jndi-server</code></b>
+<p class="contenttext">This is a simple XML file that contains a number of <b><code>jndi-server</code></b>
 tags inside a single <b><code>jndi-config</code></b> tag. Each jndi-server tag
 corresponds to a named JNDI Server configuration that will be used in various
 places in the OFBiz Framework, especially in the Entity and Service Engines.</p>
 
-<p class='contenttext'>The <b><code>jndi-server</code></b> tag is used to configure JNDI servers
+<p class="contenttext">The <b><code>jndi-server</code></b> tag is used to configure JNDI servers
 that will be used for JTA objects, JDBC objects, JMS objects, and other JNDI resources used
 by the Entity Engine, the Service Engine, and other framework or application
 components.</p>
-<table cellpadding='2' cellspacing='0' border='1'>
+<table cellpadding="2" cellspacing="0" border="1">
 <tr>
     <td><b>Attribute&nbsp;Name</b></td>
     <td><b>Required?</b></td>
@@ -187,15 +197,15 @@ components.</p>
 </tr>
 </table>
 
-<hr class='sepbar'>
+<hr class="sepbar">
 <h3><a name="localdtds">localdtds.properties</a></h3>
-<hr class='sepbar'>
-<p class='contenttext'>The localdtds.properties file contains DTD names and the name of the .dtd
+<hr class="sepbar">
+<p class="contenttext">The localdtds.properties file contains DTD names and the name of the .dtd
 file on the classpath that can be used for that name. This is used to accomplish
 local loading of DTDs rather than always getting them over the internet when
 an XML file is loaded and validated. This file is used by the UtilXml class.</p>
 
-<p class='contenttext'>The properties in this file do not follow the standard name=value style
+<p class="contenttext">The properties in this file do not follow the standard name=value style
 properties because DTD names are not legal properties file names. So, they are
 specified using two attribute: <b><code>name.{number}</code></b> and <b><code>value.{number}</code></b>. 
 When looking for the value for a given DTD name the <b><code>name.1</code></b> property is
@@ -205,46 +215,46 @@ both <b><code>name.{number}</code></b> and <b><code>value.{number}</code></b> wi
 between 1 and 8 used. If, for example, the number 5 is skipped, then everything
 beyond 4 will be ignored.</p>
 
-<p class='contenttext'>An example of these properties: <b><code>name.1=-//OFBiz//DTD Data Files//EN</code></code></b> for 
+<p class="contenttext">An example of these properties: <b><code>name.1=-//OFBiz//DTD Data Files//EN</code></code></b> for 
 the name and <b><code>value.1=datafiles.dtd</code></code></b> for the value. The <b><code>datafiles.dtd</code></b> 
 resource will be searched for on the classpath.</p>
 
-<hr class='sepbar'>
+<hr class="sepbar">
 <h3><a name="security">security.properties</a></h3>
-<hr class='sepbar'>
-<p class='contenttext'>The security.properties file contains security related settings such as the
+<hr class="sepbar">
+<p class="contenttext">The security.properties file contains security related settings such as the
 minimum length for passwords. Currently the only property in the file is
 <b><code>password.length.min</code></b> which specifies the minimum number of characters in 
 a UserLogin password.</p>
 
-<hr class='sepbar'>
+<hr class="sepbar">
 <h3><a name="serverstats">serverstats.properties</a></h3>
-<hr class='sepbar'>
-<p class='contenttext'>The serverstats.properties file contains settings to control the gathering
+<hr class="sepbar">
+<p class="contenttext">The serverstats.properties file contains settings to control the gathering
 and persistence of server hit statistics. Statistics are gathered in two ways: 
 logging each resource hit and logging a bin of resource hits where the bin may 
 contain many hits that happen in a certain time period.</p>
 
-<p class='contenttext'>The <b><code>stats.bin.length.millis</code></b> property is used to specify
+<p class="contenttext">The <b><code>stats.bin.length.millis</code></b> property is used to specify
 the length of statistics bins and is a whole number milliseconds value.</p>
 
-<p class='contenttext'>To specify whether the <u>bins</u> for a certain resource should be persisted or not
+<p class="contenttext">To specify whether the <u>bins</u> for a certain resource should be persisted or not
 use the <b><code>stats.persist.{resource-name}.bin</code></b> property where 
 resource-name is <b><code>REQUEST</code></b> for Control Servlet requests, 
 <b><code>EVENT</code></b> for Control Servlet Events, or <b><code>VIEW</code></b> 
 for Control Servlet Views (JSPs mostly).</p>
 
-<p class='contenttext'>To specify whether <u>each hit</u> for a certain resource should be persisted or not
+<p class="contenttext">To specify whether <u>each hit</u> for a certain resource should be persisted or not
 use the <b><code>stats.persist.{resource-name}.hit</code></b> property where 
 resource-name is <b><code>REQUEST</code></b> for Control Servlet requests, 
 <b><code>EVENT</code></b> for Control Servlet Events, or <b><code>VIEW</code></b> 
 for Control Servlet Views (JSPs mostly).</p>
 
-<hr class='sepbar'>
+<hr class="sepbar">
 <h3><a name="url">url.properties</a></h3>
-<hr class='sepbar'>
+<hr class="sepbar">
 
-<p class='contenttext'>The url.properties file is used to configure special server URLs for the
+<p class="contenttext">The url.properties file is used to configure special server URLs for the
 cases where the URL of the current server is not sufficient. Examples of this
 include settings for automatically jumping to secure or non-secure areas of a
 site and referring to content that is on a different server or in a different
