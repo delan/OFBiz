@@ -41,7 +41,7 @@ import org.ofbiz.core.util.*;
  */
 
 public class ModelDataFileReader {
-    public static Map readers = new HashMap();
+    public static UtilCache readers = new UtilCache("ModelDataFile", 0, 0);
 
     public URL readerURL = null;
     public Map modelDataFiles = null;
@@ -228,7 +228,7 @@ public class ModelDataFileReader {
         
         tempStr = UtilXml.checkEmpty(recordElement.getAttribute("tc-isnum"));
         if (tempStr != null && tempStr.length() > 0)
-            record.tcIsNum = Boolean.getBoolean(tempStr);
+            record.tcIsNum = Boolean.valueOf(tempStr).booleanValue();
 
         tempStr = UtilXml.checkEmpty(recordElement.getAttribute("tc-position"));
         if (tempStr != null && tempStr.length() > 0)
@@ -274,7 +274,7 @@ public class ModelDataFileReader {
 
         tempStr = UtilXml.checkEmpty(fieldElement.getAttribute("prim-key"));
         if (tempStr != null && tempStr.length() == 1)
-            field.isPk = Boolean.getBoolean(tempStr);
+            field.isPk = Boolean.valueOf(tempStr).booleanValue();
 
         return field;
     }
