@@ -1,5 +1,5 @@
 /*
- * $Id: layoutprep.bsh,v 1.2 2003/12/15 12:10:58 byersa Exp $
+ * $Id: layoutprep.bsh,v 1.3 2003/12/30 05:51:05 byersa Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -26,7 +26,7 @@
 /**
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      3.0
 
  */
@@ -77,6 +77,11 @@ if (currentValue == void || currentValue == null ) {
 Debug.logInfo("in layoutprep, contentId:" + contentId,"");
     
 }
+
+servletContext = (ServletContext)request.getSession().getServletContext();
+rootDir = servletContext.getRealPath("/");
+context.put("rootDir", rootDir);
+
 
 /*
 context.put("subContentId", null);

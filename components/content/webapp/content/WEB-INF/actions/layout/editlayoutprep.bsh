@@ -1,5 +1,5 @@
 /*
- * $Id: editlayoutprep.bsh,v 1.4 2003/12/22 18:01:19 byersa Exp $
+ * $Id: editlayoutprep.bsh,v 1.5 2003/12/30 05:51:05 byersa Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -26,7 +26,7 @@
 /**
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      3.0
 
  */
@@ -72,13 +72,13 @@ if (currentValue == void || currentValue == null ) {
         }
     } else {
     }
-Debug.logInfo("in editlayoutprep, contentId:" + contentId,"");
     
 } else {
     contentId = (String)currentValue.get("contentId");
     drDataResourceId = (String)currentValue.get("drDataResourceId");
 }
 
+Debug.logInfo("in editlayoutprep, contentId:" + contentId,"");
 context.put("subContentId", null);
 request.setAttribute("subContentId", null);
 context.put("subContentId", contentId);

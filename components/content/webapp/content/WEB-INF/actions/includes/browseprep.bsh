@@ -1,5 +1,5 @@
 /*
- * $Id: browseprep.bsh,v 1.1 2003/11/04 23:58:06 byersa Exp $
+ * $Id: browseprep.bsh,v 1.2 2003/12/30 05:51:05 byersa Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -50,7 +50,7 @@ import javax.servlet.http.*;
 /**
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.0
 
  * Builds DataCategory structure so the pick list can be built.
@@ -61,11 +61,16 @@ delegator = (GenericDelegator) request.getAttribute("delegator");
 inputFields    	= UtilHttp.getParameterMap(request);
 entityName    	= page.getProperty("entityName");
 
+// dataCategoryId is typically a leaf on which the user has clicked the "+" to expand.
 dataCategoryId = (String)inputFields.get("dataCategoryId");
 List dataCategoryTrail = new ArrayList();
+
+// DataCategory entities are linked by the "parentCategoryId" fields,
+// which is what getDataCategoryAncestry(... follows.
 DataResourceWorker.getDataCategoryAncestry(delegator, dataCategoryId, dataCategoryTrail);
 Debug.logInfo(" browseprep, dataCategoryTrail: " + dataCategoryTrail, "FINDPREP");
 rootNode = new HashMap();
+// Set the node map to the top of the tree, then follow the dataCategoryTrail.
 rootNode.put("id", "ROOT");
 DataResourceWorker.getDataCategoryMap(delegator, 0, rootNode, dataCategoryTrail, false);
 Debug.logInfo(" browseprep, rootNode: " + rootNode, "FINDPREP");
