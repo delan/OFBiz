@@ -114,7 +114,8 @@ public final class StandardJavaEngine extends GenericAsyncEngine {
         } catch (IllegalArgumentException iarge) {
             throw new GenericServiceException("Invalid parameter match", iarge);
         } catch (InvocationTargetException ite) {
-            throw new GenericServiceException("Service threw an unexpected exception", ite);
+            Debug.logWarning(ite);
+            throw new GenericServiceException("Service target threw an unexpected exception", ite.getTargetException());
         } catch (NullPointerException npe) {
             throw new GenericServiceException("Specified object is null", npe);
         } catch (ExceptionInInitializerError eie) {

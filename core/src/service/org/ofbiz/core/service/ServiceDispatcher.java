@@ -339,7 +339,7 @@ public class ServiceDispatcher {
     // gets a value object from name/password pair
     private GenericValue getLoginObject(String service, String localName, String username, String password)
             throws GenericServiceException {
-        Map context = UtilMisc.toMap("login.username", username, "login.password", password);
+        Map context = UtilMisc.toMap("login.username", username, "login.password", password, "isServiceAuth", new Boolean(true));
         Debug.logVerbose("[ServiceDispathcer.authenticate] : Invoking UserLogin Service", module);
 
         // Manually invoke the service
