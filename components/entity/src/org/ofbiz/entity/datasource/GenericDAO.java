@@ -1,5 +1,5 @@
 /*
- * $Id: GenericDAO.java,v 1.14 2004/03/10 06:50:47 jonesde Exp $
+ * $Id: GenericDAO.java,v 1.15 2004/03/10 14:33:51 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -59,7 +59,7 @@ import org.ofbiz.entity.util.EntityListIterator;
  * @author     <a href="mailto:jdonnerstag@eds.de">Juergen Donnerstag</a>
  * @author     <a href="mailto:gielen@aixcept.de">Rene Gielen</a>
  * @author     <a href="mailto:john_nutting@telluridetechnologies.com">John Nutting</a>
- * @version    $Revision: 1.14 $
+ * @version    $Revision: 1.15 $
  * @since      1.0
  */
 public class GenericDAO {
@@ -91,6 +91,18 @@ public class GenericDAO {
         this.modelFieldTypeReader = ModelFieldTypeReader.getModelFieldTypeReader(helperName);
         this.datasourceInfo = EntityConfigUtil.getDatasourceInfo(helperName);
     }
+    
+    private void addFieldIfMissing(List fieldsToSave, String fieldName, ModelEntity modelEntity) {
+    	Iterator fieldsToSaveIter = fieldsToSave.iterator();
+    	while (fieldsToSaveIter.hasNext()) {
+    		ModelField fieldToSave = (ModelField) fieldsToSaveIter.next();
+    		if (fieldName.equals(fieldToSave.getName())) {
+    			return;
+    		}
+    	}
+    	// at this point we didn't find it
+    	fieldsToSave.add(modelEntity.getField(fieldName));
+    }
 
     public int insert(GenericEntity entity) throws GenericEntityException {
         ModelEntity modelEntity = entity.getModelEntity();
@@ -103,9 +115,9 @@ public class GenericDAO {
 
         try {
             return singleInsert(entity, modelEntity, modelEntity.getFieldsCopy(), sqlP);
-        } catch (GenericDataSourceException e) {
+        } catch (GenericEntityException e) {
             sqlP.rollback();
-            throw new GenericDataSourceException("Exception while inserting the following entity: " + entity.toString(), e);
+            throw new GenericEntityException("Exception while inserting the following entity: " + entity.toString(), e);
         } finally {
             sqlP.close();
         }
@@ -123,9 +135,11 @@ public class GenericDAO {
             Timestamp txStartStamp = TransactionUtil.getTransactionStartStamp();
             if (stampTxIsField) {
                 entity.set(ModelEntity.STAMP_TX_FIELD, txStartStamp);
+                addFieldIfMissing(fieldsToSave, ModelEntity.STAMP_TX_FIELD, modelEntity);
             }
             if (createStampTxIsField) {
                 entity.set(ModelEntity.CREATE_STAMP_TX_FIELD, txStartStamp);
+                addFieldIfMissing(fieldsToSave, ModelEntity.CREATE_STAMP_TX_FIELD, modelEntity);
             }
         }
 
@@ -136,9 +150,11 @@ public class GenericDAO {
             Timestamp startStamp = TransactionUtil.getTransactionUniqueNowStamp();
             if (stampIsField) {
                 entity.set(ModelEntity.STAMP_FIELD, startStamp);
+                addFieldIfMissing(fieldsToSave, ModelEntity.STAMP_FIELD, modelEntity);
             }
             if (createStampIsField) {
                 entity.set(ModelEntity.CREATE_STAMP_FIELD, startStamp);
+                addFieldIfMissing(fieldsToSave, ModelEntity.CREATE_STAMP_FIELD, modelEntity);
             }
         }
         
@@ -179,12 +195,12 @@ public class GenericDAO {
         // we don't want to update ALL fields, just the nonpk fields that are in the passed GenericEntity
         List partialFields = new ArrayList();
         Collection keys = entity.getAllKeys();
-
+        
         for (int fi = 0; fi < modelEntity.getNopksSize(); fi++) {
             ModelField curField = modelEntity.getNopk(fi);
-
-            if (keys.contains(curField.getName()))
+            if (keys.contains(curField.getName())) {
                 partialFields.add(curField);
+            }
         }
 
         return customUpdate(entity, modelEntity, partialFields);
@@ -192,12 +208,11 @@ public class GenericDAO {
 
     private int customUpdate(GenericEntity entity, ModelEntity modelEntity, List fieldsToSave) throws GenericEntityException {
         SQLProcessor sqlP = new SQLProcessor(helperName);
-
         try {
             return singleUpdate(entity, modelEntity, fieldsToSave, sqlP);
-        } catch (GenericDataSourceException e) {
+        } catch (GenericEntityException e) {
             sqlP.rollback();
-            throw new GenericDataSourceException("Exception while updating the following entity: " + entity.toString(), e);
+            throw new GenericEntityException("Exception while updating the following entity: " + entity.toString(), e);
         } finally {
             sqlP.close();
         }
@@ -231,11 +246,13 @@ public class GenericDAO {
         // if we have a STAMP_TX_FIELD then set it with NOW, always do this before the STAMP_FIELD
         if (modelEntity.isField(ModelEntity.STAMP_TX_FIELD) && !entity.getIsFromEntitySync()) {
             entity.set(ModelEntity.STAMP_TX_FIELD, TransactionUtil.getTransactionStartStamp());
+            addFieldIfMissing(fieldsToSave, ModelEntity.STAMP_TX_FIELD, modelEntity);
         }
 
         // if we have a STAMP_FIELD then update it with NOW.
         if (modelEntity.isField(ModelEntity.STAMP_FIELD) && !entity.getIsFromEntitySync()) {
             entity.set(ModelEntity.STAMP_FIELD, TransactionUtil.getTransactionUniqueNowStamp());
+            addFieldIfMissing(fieldsToSave, ModelEntity.STAMP_FIELD, modelEntity);
         }
         
         String sql = "UPDATE " + modelEntity.getTableName(datasourceInfo) + " SET " + modelEntity.colNameString(fieldsToSave, "=?, ", "=?", false) + " WHERE " +
@@ -306,20 +323,16 @@ public class GenericDAO {
         }
 
         SQLProcessor sqlP = new SQLProcessor(helperName);
-
         int totalStored = 0;
-
         try {
             Iterator entityIter = entities.iterator();
-
             while (entityIter != null && entityIter.hasNext()) {
                 GenericEntity curEntity = (GenericEntity) entityIter.next();
-
                 totalStored += singleStore(curEntity, sqlP);
             }
-        } catch (GenericDataSourceException e) {
+        } catch (GenericEntityException e) {
             sqlP.rollback();
-            throw new GenericDataSourceException("Exception occurred in storeAll", e);
+            throw new GenericEntityException("Exception occurred in storeAll", e);
         } finally {
             sqlP.close();
         }
