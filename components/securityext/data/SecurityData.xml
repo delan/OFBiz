@@ -2,11 +2,11 @@
 <entity-engine-xml>
   <Party partyId="_NA_" partyTypeId="PERSON"/>
   <Person partyId="_NA_"/>
-  
+
   <Party partyId="admin" partyTypeId="PERSON"/>
   <Person firstName="THE" lastName="ADMINISTRATOR" middleName="PRIVILEGED" partyId="admin" personalTitle="Mr."/>
   <PartyRole partyId="admin" roleTypeId="BUYER"/>
-  <PartyRole partyId="admin" roleTypeId="MANAGER"/>   
+  <PartyRole partyId="admin" roleTypeId="MANAGER"/>
   <PartyRole partyId="admin" roleTypeId="ORDER_CLERK"/>
   <PartyRole partyId="admin" roleTypeId="SHIPMENT_CLERK"/>
   <PartyRole partyId="admin" roleTypeId="SALES_REP"/>
@@ -14,15 +14,15 @@
   <PartyContactMech partyId="admin" contactMechId="5000" fromDate="2003-01-01 00:00:00.0" allowSolicitation="Y"/>
 
   <Party partyId="ltdadmin" partyTypeId="PERSON"/>
-  <Person firstName="Limited" lastName="Administrator" middleName="" partyId="ltdadmin" personalTitle="Mr."/>    
+  <Person firstName="Limited" lastName="Administrator" middleName="" partyId="ltdadmin" personalTitle="Mr."/>
   <PartyRole partyId="ltdadmin" roleTypeId="ORDER_CLERK"/>
   <PartyRole partyId="ltdadmin" roleTypeId="LTD_ADMIN"/>
   <PartyContactMech partyId="ltdadmin" contactMechId="5000" fromDate="2003-01-01 00:00:00.0" allowSolicitation="Y"/>
-  
+
   <Party partyId="externaluser" partyTypeId="PERSON"/>
-  <Person firstName="External" lastName="User" middleName="" partyId="externaluser" personalTitle="Mr."/>    
+  <Person firstName="External" lastName="User" middleName="" partyId="externaluser" personalTitle="Mr."/>
   <PartyContactMech partyId="externaluser" contactMechId="5000" fromDate="2003-01-01 00:00:00.0" allowSolicitation="Y"/>
-  
+
   <SecurityGroup description="Full Admin group, has all general permissions." groupId="FULLADMIN"/>
   <SecurityGroup description="Flexible Admin group, has all granular permissions." groupId="FLEXADMIN"/>
   <SecurityGroup description="Demo Admin group, has all view permissions." groupId="VIEWADMIN"/>
@@ -55,7 +55,7 @@
   <SecurityPermission description="Update with the Entity Data Maintenance pages." permissionId="ENTITY_DATA_UPDATE"/>
   <SecurityPermission description="Delete with the Entity Data Maintenance pages." permissionId="ENTITY_DATA_DELETE"/>
   <SecurityPermission description="ALL with the Entity Data Maintenance pages." permissionId="ENTITY_DATA_ADMIN"/>
-  
+
   <SecurityPermission description="Permission to access the WebTools Menu." permissionId="WEBTOOLS_VIEW"/>
 
   <SecurityPermission description="View operations in the Catalog Manager." permissionId="CATALOG_VIEW"/>
@@ -85,7 +85,7 @@
   <SecurityPermission description="Limited Delete operations in the Order Manager." permissionId="ORDERMGR_ROLE_DELETE"/>
   <SecurityPermission description="Create notes in the Order Manager." permissionId="ORDERMGR_NOTE"/>
   <SecurityPermission description="Sales Order Entry in the Order Manager." permissionId="ORDERMGR_SALES_ENTRY"/>
-  <SecurityPermission description="Price change permission for sales orders." permission="ORDERMGR_SALES_PRICEMOD"/>
+  <SecurityPermission description="Price change permission for sales orders." permissionId="ORDERMGR_SALES_PRICEMOD"/>
   <SecurityPermission description="Purchase Order Entry in the Order Manager." permissionId="ORDERMGR_PURCHASE_ENTRY"/>
 
   <SecurityPermission description="View operations in the Shipping Rate Editor." permissionId="SHIPRATE_VIEW"/>
@@ -150,7 +150,7 @@
   <SecurityPermission description="ALL operations in the Content Manager." permissionId="CONTENTMGR_ADMIN"/>
 
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="SERVER_STATS_VIEW"/>
-  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="SEND_CONTROL_APPLET"/>  
+  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="SEND_CONTROL_APPLET"/>
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="DATAFILE_MAINT"/>
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="ENTITY_MAINT"/>
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="SERVICE_MAINT"/>
@@ -165,7 +165,7 @@
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="SERVICE_INVOKE_ANY"/>
 
   <SecurityGroupPermission groupId="FULLADMIN" permissionId="SERVER_STATS_VIEW"/>
-  <SecurityGroupPermission groupId="FULLADMIN" permissionId="SEND_CONTROL_APPLET"/>  
+  <SecurityGroupPermission groupId="FULLADMIN" permissionId="SEND_CONTROL_APPLET"/>
   <SecurityGroupPermission groupId="FULLADMIN" permissionId="DATAFILE_MAINT"/>
   <SecurityGroupPermission groupId="FULLADMIN" permissionId="ENTITY_MAINT"/>
   <SecurityGroupPermission groupId="FULLADMIN" permissionId="SERVICE_MAINT"/>
@@ -219,11 +219,11 @@
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="TAXRATE_DELETE"/>
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="TAXRATE_VIEW"/>
   <SecurityGroupPermission groupId="FULLADMIN" permissionId="TAXRATE_ADMIN"/>
-  
+
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="PAYPROC_CREATE"/>
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="PAYPROC_DELETE"/>
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="PAYPROC_VIEW"/>
-  <SecurityGroupPermission groupId="FULLADMIN" permissionId="PAYPROC_ADMIN"/>  
+  <SecurityGroupPermission groupId="FULLADMIN" permissionId="PAYPROC_ADMIN"/>
 
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="PAY_INFO_CREATE"/>
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="PAY_INFO_DELETE"/>
@@ -266,11 +266,11 @@
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="CONTENTMGR_UPDATE"/>
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="CONTENTMGR_VIEW"/>
   <SecurityGroupPermission groupId="FULLADMIN" permissionId="CONTENTMGR_ADMIN"/>
-  
+
   <SecurityGroupPermission groupId="FULLADMIN" permissionId="WEBTOOLS_VIEW"/>
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="WEBTOOLS_VIEW"/>
   <SecurityGroupPermission groupId="VIEWADMIN" permissionId="WEBTOOLS_VIEW"/>
-  
+
   <SecurityGroupPermission groupId="VIEWADMIN" permissionId="SERVER_STATS_VIEW"/>
   <SecurityGroupPermission groupId="VIEWADMIN" permissionId="UTIL_CACHE_VIEW"/>
   <SecurityGroupPermission groupId="VIEWADMIN" permissionId="UTIL_DEBUG_VIEW"/>
@@ -290,13 +290,13 @@
   <SecurityGroupPermission groupId="VIEWADMIN" permissionId="FACILITY_VIEW"/>
   <SecurityGroupPermission groupId="VIEWADMIN" permissionId="MARKETING_VIEW"/>
   <SecurityGroupPermission groupId="VIEWADMIN" permissionId="CONTENTMGR_VIEW"/>
-  
+
   <SecurityGroupPermission groupId="ORDERPROC" permissionId="ORDERMGR_ROLE_VIEW"/>
   <SecurityGroupPermission groupId="ORDERPROC" permissionId="ORDERMGR_NOTE"/>
   <SecurityGroupPermission groupId="ORDERPROC" permissionId="PARTYMGR_VIEW"/>
   <SecurityGroupPermission groupId="ORDERPROC" permissionId="PARTYMGR_NOTE"/>
-  
-  <SecurityGroupPermission groupId="ORDERENTRY" permissionId="ORDERMGR_SALES_ENTRY"/>  
+
+  <SecurityGroupPermission groupId="ORDERENTRY" permissionId="ORDERMGR_SALES_ENTRY"/>
   <SecurityGroupPermission groupId="ORDERENTRY" permissionId="ORDERMGR_ROLE_VIEW"/>
   <SecurityGroupPermission groupId="ORDERENTRY" permissionId="ORDERMGR_NOTE"/>
   <SecurityGroupPermission groupId="ORDERENTRY" permissionId="ORDERMGR_UPDATE"/>
@@ -318,11 +318,11 @@
   <SecurityGroupPermission groupId="ORDERSUPPLIER_LTD" permissionId="ORDERMGR_ROLE_VIEW"/>
   <SecurityGroupPermission groupId="ORDERSUPPLIER_LTD" permissionId="ORDERMGR_ROLE_CREATE"/>
   <SecurityGroupPermission groupId="ORDERSUPPLIER_LTD" permissionId="ORDERMGR_ROLE_UPDATE"/>
-  
-  <SecurityGroupPermission groupId="CATALOGADMIN" permissionId="CATALOG_ADMIN"/>  
+
+  <SecurityGroupPermission groupId="CATALOGADMIN" permissionId="CATALOG_ADMIN"/>
   <SecurityGroupPermission groupId="ORDERADMIN" permissionId="ORDER_ADMIN"/>
   <SecurityGroupPermission groupId="PARTYADMIN" permissionId="PARTY_ADMIN"/>
-  
+
   <UserLogin userLoginId="admin" partyId="admin" currentPassword="ofbiz" passwordHint="" />
   <UserLogin userLoginId="flexadmin" partyId="admin" currentPassword="ofbiz" passwordHint="" />
   <UserLogin userLoginId="demoadmin" partyId="admin" currentPassword="ofbiz" passwordHint="" />
@@ -332,7 +332,7 @@
   <UserLoginSecurityGroup groupId="FULLADMIN" userLoginId="admin" fromDate="2001-01-01 12:00:00.0"/>
   <UserLoginSecurityGroup groupId="FLEXADMIN" userLoginId="flexadmin" fromDate="2001-01-01 12:00:00.0"/>
   <UserLoginSecurityGroup groupId="VIEWADMIN" userLoginId="demoadmin" fromDate="2001-01-01 12:00:00.0"/>
-  
+
   <UserLoginSecurityGroup groupId="VIEWADMIN" userLoginId="ltdadmin" fromDate="2001-01-01 12:00:00.0"/>
   <UserLoginSecurityGroup groupId="CATALOGADMIN_LTD" userLoginId="ltdadmin" fromDate="2001-01-01 12:00:00.0"/>
 
