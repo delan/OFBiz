@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.21 $
+ * @version    $Revision: 1.22 $
  */
 -->
 
@@ -67,10 +67,10 @@
       <field name="dataResourceId" type="id"></field>
       <field name="dataSourceId" type="id"></field>
       <field name="statusId" type="id"></field>
+      <field name="privilegeEnumId" type="id"></field>
       <field name="serviceName" type="long-varchar"></field>
       <field name="contentName" type="name"></field>
       <field name="description" type="description"></field>
-      <field name="isTemplate" type="indicator"></field>
       <field name="localeString" type="very-short"></field>
       <field name="mimeTypeId" type="id-long"></field>
       <field name="characterSetId" type="id-long"></field>
@@ -87,6 +87,9 @@
       </relation>
       <relation type="one" fk-name="CONTENT_STATUS" rel-entity-name="StatusItem">
         <key-map field-name="statusId"/>
+      </relation>
+      <relation type="one" fk-name="CONTENT_PRIVENM" rel-entity-name="Enumeration">
+        <key-map field-name="privilegeEnumId" rel-field-name="enumId"/>
       </relation>
       <relation type="one" fk-name="CONTENT_MMTP" rel-entity-name="MimeType">
         <key-map field-name="mimeTypeId"/>
@@ -461,6 +464,7 @@
             title="Data Object Entity">
       <field name="dataResourceId" type="id-ne"></field>
       <field name="dataResourceTypeId" type="id"></field>
+      <field name="dataTemplateTypeId" type="id"></field>
       <field name="dataCategoryId" type="id-ne"></field>
       <field name="dataSourceId" type="id"></field>
       <field name="dataResourceName" type="name"></field>
@@ -487,6 +491,9 @@
       </relation>
       <relation type="one" fk-name="DATA_REC_TO_TYPE" rel-entity-name="DataResourceType">
         <key-map field-name="dataResourceTypeId"/>
+      </relation>
+      <relation type="one" fk-name="DATA_REC_TO_TTP" rel-entity-name="DataTemplateType">
+        <key-map field-name="dataTemplateTypeId"/>
       </relation>
       <relation type="one" fk-name="DATA_REC_TO_CAT" rel-entity-name="DataCategory">
         <key-map field-name="dataCategoryId"/>
@@ -623,6 +630,17 @@
       </relation>
       <relation type="many" rel-entity-name="DataResource">
         <key-map field-name="dataResourceTypeId"/>
+      </relation>
+    </entity>
+    <entity entity-name="DataTemplateType"
+            package-name="org.ofbiz.content.data"
+            title="Data Template Type Entity">
+      <field name="dataTemplateTypeId" type="id-ne"></field>
+      <field name="description" type="description"></field>
+      <field name="extension" type="short-varchar"></field>
+      <prim-key field="dataTemplateTypeId"/>
+      <relation type="many" rel-entity-name="DataResource">
+        <key-map field-name="dataTemplateTypeId"/>
       </relation>
     </entity>
     <entity entity-name="ElectronicText"

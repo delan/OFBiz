@@ -49,6 +49,12 @@
   <DataResourceType dataResourceTypeId="IMAGE_OBJECT" description="Image" hasTable="Y" parentTypeId=""/>
   <DataResourceType dataResourceTypeId="OTHER_OBJECT" description="Other" hasTable="Y" parentTypeId=""/>
 
+  <DataTemplateType dataTemplateTypeId="NONE" description="No Template" extension=""/>
+  <DataTemplateType dataTemplateTypeId="FTL" description="FreeMarker" extension="ftl"/>
+  <DataTemplateType dataTemplateTypeId="VTL" description="Velocity" extension="vtl"/>
+  <DataTemplateType dataTemplateTypeId="WM" description="WebMacro" extension="wm"/>
+  <DataTemplateType dataTemplateTypeId="XSLT" description="XSLT" extension="xsl"/>
+
   <DocumentType description="Shipping" documentTypeId="SHIPPING_DOCUMENT" hasTable="Y" parentTypeId=""/>
   <DocumentType description="Bill Of Lading" documentTypeId="BILL_OF_LADING" hasTable="N" parentTypeId="SHIPPING_DOCUMENT"/>
   <DocumentType description="Export" documentTypeId="EXPORT_DOCUMENTATION" hasTable="N" parentTypeId="SHIPPING_DOCUMENT"/>
