@@ -61,11 +61,8 @@
             </drop-down>
         </field>
 
-        <field name="productName"><text size="30" maxlength="60"/></field>
         <field name="internalName"><text size="30" maxlength="60"/></field>
         <field name="brandName"><text size="30" maxlength="60"/></field>
-        <field name="description" widget-style="textAreaBox"><textarea cols="60" rows="2"/></field>
-        <field name="longDescription" widget-style="textAreaBox"><textarea cols="60" rows="7"/></field>
         <field name="comments"><text size="60" maxlength="250"/></field>
 
         <field position="1" name="introductionDate" title="Intro Date" red-when="after-now"><date-time/></field>
@@ -153,13 +150,18 @@
         </field>
 
         <field name="contentInfoText" title="Content" widget-style="tabletext">
-            <display description="NOTE: For more content options, use the Content tab." also-hidden="false"/>
+            <display description="NOTE: For content options, use the Content tab." also-hidden="false"/>
         </field>
+        <!--
+        <field name="productName"><text size="30" maxlength="60"/></field>
+        <field name="description" widget-style="textAreaBox"><textarea cols="60" rows="2"/></field>
+        <field name="longDescription" widget-style="textAreaBox"><textarea cols="60" rows="3"/></field>
         <field name="smallImageUrl"><text size="60" maxlength="255"/></field>
         <field name="mediumImageUrl"><text size="60" maxlength="255"/></field>
         <field name="largeImageUrl"><text size="60" maxlength="255"/></field>
         <field name="detailImageUrl"><text size="60" maxlength="255"/></field>
         <field name="detailTemplate"><text size="60" maxlength="250"/></field>
+        -->
 
         <field name="submitButton" title="Update Product" widget-style="standardSubmit"><submit button-type="button"/></field>
 

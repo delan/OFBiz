@@ -371,10 +371,6 @@
     </request-map>
 
     <!-- ================ Product Content Assoc Requests ================= -->
-    <request-map uri="EditProductContentAssoc">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="EditProductContentAssoc"/>
-    </request-map>
     <request-map uri="EditProductContentContent">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditProductContentContent"/>
@@ -386,14 +382,14 @@
     <request-map uri="updateContentToProduct">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="updateProductContent"/>
-        <response name="success" type="view" value="EditProductContentAssoc"/>
-        <response name="error" type="view" value="EditProductContentAssoc"/>
+        <response name="success" type="view" value="EditProductContent"/>
+        <response name="error" type="view" value="EditProductContent"/>
     </request-map>
     <request-map uri="removeContentFromProduct">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="removeProductContent"/>
-        <response name="success" type="view" value="EditProductContentAssoc"/>
-        <response name="error" type="view" value="EditProductContentAssoc"/>
+        <response name="success" type="view" value="EditProductContent"/>
+        <response name="error" type="view" value="EditProductContent"/>
     </request-map>
     <request-map uri="updateEmailContentForProduct">
         <security https="true" auth="true"/>
@@ -404,7 +400,7 @@
     <request-map uri="createEmailContentForProduct">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="createEmailContentForProduct"/>
-        <response name="success" type="view" value="EditProductContentAssoc"/>
+        <response name="success" type="view" value="EditProductContent"/>
         <response name="error" type="view" value="EditProductContentContent"/>
     </request-map>
     <request-map uri="updateExternalContentForProduct">
@@ -416,7 +412,7 @@
     <request-map uri="createExternalContentForProduct">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="createProductContent"/>
-        <response name="success" type="view" value="EditProductContentAssoc"/>
+        <response name="success" type="view" value="EditProductContent"/>
         <response name="error" type="view" value="EditProductContentContent"/>
     </request-map>
     <request-map uri="updateDownloadContentForProduct">
@@ -428,7 +424,7 @@
     <request-map uri="createDownloadContentForProduct">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="createDownloadContentForProduct"/>
-        <response name="success" type="view" value="EditProductContentAssoc"/>
+        <response name="success" type="view" value="EditProductContent"/>
         <response name="error" type="view" value="EditProductContentContent"/>
     </request-map>
     <request-map uri="updateSimpleTextContentForProduct">
@@ -440,7 +436,7 @@
     <request-map uri="createSimpleTextContentForProduct">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="createSimpleTextContentForProduct"/>
-        <response name="success" type="view" value="EditProductContentAssoc"/>
+        <response name="success" type="view" value="EditProductContent"/>
         <response name="error" type="view" value="EditProductContentContent"/>
     </request-map>
 
@@ -1433,7 +1429,6 @@
     <view-map name="EditProductFacilityLocations" type="jpublish" page="/product/EditProductFacilityLocations.ftl"/>
     <view-map name="EditProductInventoryItems" type="jpublish" page="/product/EditProductInventoryItems.ftl"/>
     <view-map name="EditProductGlAccounts" type="jpublish" page="/product/EditProductGlAccounts.ftl"/>
-    <view-map name="EditProductContentAssoc" type="jpublish" page="/product/EditProductContentAssoc.ftl"/>
     <view-map name="EditProductContentContent" type="jpublish" page="/product/EditProductContentContent.ftl"/>
     <view-map name="UploadImage" type="region"/>
 

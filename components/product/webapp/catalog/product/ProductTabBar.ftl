@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Revision: 1.5 $
+ *@version    $Revision: 1.6 $
  *@since      2.2
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -43,7 +43,6 @@
         <a href="<@ofbizUrl>/EditProductFacilityLocations?productId=${productId}</@ofbizUrl>" class="${selectedClassMap.EditProductFacilityLocations?default(unselectedClassName)}">${uiLabelMap.ProductLocations}</a>
         <a href="<@ofbizUrl>/EditProductInventoryItems?productId=${productId}</@ofbizUrl>" class="${selectedClassMap.EditProductInventoryItems?default(unselectedClassName)}">${uiLabelMap.ProductInventory}</a>
         <a href="<@ofbizUrl>/EditProductGlAccounts?productId=${productId}</@ofbizUrl>" class="${selectedClassMap.EditProductGlAccounts?default(unselectedClassName)}">${uiLabelMap.ProductAccounts}</a>
-        <a href="<@ofbizUrl>/EditProductContentAssoc?productId=${productId}</@ofbizUrl>" class="${selectedClassMap.EditProductContentAssoc?default(unselectedClassName)}">Content Association</a>
         <#if product?exists && product.isVirtual?if_exists == "Y">
             <a href="<@ofbizUrl>/QuickAddVariants?productId=${productId}</@ofbizUrl>" class="${selectedClassMap.QuickAddVariants?default(unselectedClassName)}">${uiLabelMap.ProductVariants}</a>
         </#if>

@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones
  *@author     Brad Steiner
- *@version    $Revision: 1.4 $
+ *@version    $Revision: 1.5 $
  *@since      2.2
  */
 
@@ -55,14 +55,38 @@ if (productId != null) context.put("productId", productId);
 GenericValue product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
 if (product != null) context.put("product", product);
 
+// Start ProductContent stuff
+productContent = product.getRelated("ProductContent", null, UtilMisc.toList("productContentId"));
+if (productContent != null) context.put("productContent", productContent);
+
+List productContentDatas = new LinkedList();
+Iterator productContentIter = productContent.iterator();
+while (productContentIter.hasNext()) {
+    GenericValue productContent = (GenericValue) productContentIter.next();
+    GenericValue content = productContent.getRelatedOne("Content");
+    productContentDatas.add(UtilMisc.toMap("productContent", productContent, "content", content));
+}
+
+HtmlFormWrapper updateProductContentWrapper = new HtmlFormWrapper("/product/ProductForms.xml", "UpdateProductContentAssoc", request, response);
+context.put("updateProductContentWrapper", updateProductContentWrapper);
+updateProductContentWrapper.putInContext("productContentDatas", productContentDatas);
+
+HtmlFormWrapper addProductContentWrapper = new HtmlFormWrapper("/product/ProductForms.xml", "AddProductContentAssoc", request, response);
+context.put("addProductContentWrapper", addProductContentWrapper);
+addProductContentWrapper.putInContext("product", product);
+
+context.put("productContentList", productContentDatas);
+// End ProductContent stuff
+
 boolean tryEntity = true;
 if (request.getAttribute("_ERROR_MESSAGE_") != null) tryEntity = false;
 if (product == null) tryEntity = false;
 if("true".equalsIgnoreCase((String) request.getParameter("tryEntity"))) tryEntity = true;
 context.put("tryEntity", tryEntity);
 
-Object forLock = new Object();
 
+
+Object forLock = new Object();
 String contentType = null;
 String fileType = request.getParameter("upload_file_type");
 if (fileType != null) {

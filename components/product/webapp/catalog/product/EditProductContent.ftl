@@ -22,7 +22,7 @@
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Brad Steiner (bsteiner@thehungersite.com)
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      2.2
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -63,17 +63,61 @@ ${pages.get("/product/ProductTabBar.ftl")}
     <#if !(product?exists)>
         <h3>${uiLabelMap.ProductCouldNotFindProduct} "${productId}".</h3>
     <#else>
+        <table border="1" cellpadding="2" cellspacing="0" width="100%">
+        <tr class="tableheadtext"><td>Content ID</td><td>Type</td><td>From</td><td>Thru</td><td>Purchase From</td><td>Purchase Thru</td><td>Use Count</td><td>Use Days</td><td>&nbsp;</td></tr>
+        <#list productContentList as entry>
+            <#assign productContent=entry.productContent/>
+            <tr class="tabletext">
+                <td><a href="<@ofbizUrl>/EditProductContentContent?productId=${productContent.productId}&amp;contentId=${productContent.contentId}&amp;productContentTypeId=${productContent.productContentTypeId}&amp;fromDate=${productContent.fromDate}</@ofbizUrl>" class="buttontext">${entry.content.description?default("[No description]")} [${entry.content.contentId}]</td>
+                <td>${entry.productContent.productContentTypeId}</td>
+                <td>${entry.productContent.fromDate?default("N/A")}</td>
+                <td>${entry.productContent.thruDate?default("N/A")}</td>
+                <td>${entry.productContent.purchaseFromDate?default("N/A")}</td>
+                <td>${entry.productContent.purchaseThruDate?default("N/A")}</td>
+                <td>${entry.productContent.useCountLimit?default("N/A")}</td>
+                <td>${entry.productContent.useDaysLimit?default("N/A")}</td>
+                <td><a href="<@ofbizUrl>/removeContentFromProduct?productId=${productContent.productId}&amp;contentId=${productContent.contentId}&amp;productContentTypeId=${productContent.productContentTypeId}&amp;fromDate=${productContent.fromDate}</@ofbizUrl>" class="buttontext">[Delete]</a></td>
+             </tr>
+        </#list>
+        </table>
+        <div class="head2">Create/Add Product Content</div>
+        <#if productId?has_content && product?has_content>
+            ${addProductContentWrapper.renderFormString()}
+        </#if>
+
+        <hr class="sepbar"/>
+        
+        <div class="head2">Override Simple Fields</div>
         <form action="<@ofbizUrl>/updateProductContent</@ofbizUrl>" method=POST style="margin: 0;" name="productForm">
         <table border="0" cellpadding="2" cellspacing="0">
         <input type=hidden name="productId" value="${productId?if_exists}">
-        <input type=hidden name="productName" value="${(product.productName)?if_exists}">
-        <input type=hidden name="productTypeId" value="${(product.productTypeId)?if_exists}">        
+        <tr>
+            <td width="20%" align=right valign=top><div class="tabletext"><b>${uiLabelMap.ProductProductName}</b></div></td>
+            <td>&nbsp;</td>
+            <td width="80%" colspan="4" valign=top>
+                <input type="text" class="inputBox" name="productName" value="${(product.productName)?if_exists}" size="30" maxlength="60">
+            </td>
+        </tr>        
+        <tr>
+            <td width="20%" align=right valign=top><div class="tabletext"><b>${uiLabelMap.ProductProductDescription}</b></div></td>
+            <td>&nbsp;</td>
+            <td width="80%" colspan="4" valign=top>
+                <textarea class="textAreaBox" name="description" cols="60" rows="2">${(product.description)?if_exists}</textarea>
+            </td>
+        </tr>        
+        <tr>
+            <td width="20%" align=right valign=top><div class="tabletext"><b>Long Description</b></div></td>
+            <td>&nbsp;</td>
+            <td width="80%" colspan="4" valign=top>
+                <textarea class="textAreaBox" name="longDescription" cols="60" rows="7">${(product.longDescription)?if_exists}</textarea>
+            </td>
+        </tr>        
         <tr>
             <td width="20%" align=right valign=top><div class="tabletext"><b>${uiLabelMap.ProductDetailTemplate}</b></div></td>
             <td>&nbsp;</td>
             <td width="80%" colspan="4" valign=top>
                 <input type="text" class="inputBox" name="detailTemplate" value="${(product.detailTemplate)?if_exists}" size="60" maxlength="250">
-                <br><span class="tabletext">${uiLabelMap.ProductIfNotSpecifiedDefaultsIsProductdetail}"</span>
+                <br><span class="tabletext">${uiLabelMap.ProductIfNotSpecifiedDefaultsIsProductdetail} "/catalog/productdetail.ftl"</span>
             </td>
         </tr>        
         <tr>
@@ -159,7 +203,9 @@ ${pages.get("/product/ProductTabBar.ftl")}
         </tr>
         </table>
         </form>
-        <hr class="sepbar">
+
+        <hr class="sepbar"/>
+
         <SCRIPT language="JavaScript">
             function setUploadUrl(newUrl) {
             var toExec = 'document.imageUploadForm.action="' + newUrl + '";';

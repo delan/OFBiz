@@ -128,11 +128,12 @@
   <ProductContentType description="Fulfillment External (Sync)" hasTable="N" parentTypeId="" productContentTypeId="FULFILLMENT_EXTSYNC"/>
   <ProductContentType description="Product Name" hasTable="N" parentTypeId="" productContentTypeId="PRODUCT_NAME"/>
   <ProductContentType description="Description" hasTable="N" parentTypeId="" productContentTypeId="DESCRIPTION"/>
-  <ProductContentType description="Long Description" hasTable="N" parentTypeId="" productContentTypeId="LONG_DESCRIPTION"/>
-  <ProductContentType description="Small Image" hasTable="N" parentTypeId="" productContentTypeId="SMALL_IMAGE"/>
-  <ProductContentType description="Medium Image" hasTable="N" parentTypeId="" productContentTypeId="MEDIUM_IMAGE"/>
-  <ProductContentType description="Large Image" hasTable="N" parentTypeId="" productContentTypeId="LARGE_IMAGE"/>
-  <ProductContentType description="Detail Image" hasTable="N" parentTypeId="" productContentTypeId="DETAIL_IMAGE"/>
+  <ProductContentType description="Description - Long" hasTable="N" parentTypeId="" productContentTypeId="LONG_DESCRIPTION"/>
+  <ProductContentType description="Ingredients" hasTable="N" parentTypeId="" productContentTypeId="INGREDIENTS"/>
+  <ProductContentType description="Image - Small" hasTable="N" parentTypeId="" productContentTypeId="SMALL_IMAGE"/>
+  <ProductContentType description="Image - Medium" hasTable="N" parentTypeId="" productContentTypeId="MEDIUM_IMAGE"/>
+  <ProductContentType description="Image - Large" hasTable="N" parentTypeId="" productContentTypeId="LARGE_IMAGE"/>
+  <ProductContentType description="Image - Detail" hasTable="N" parentTypeId="" productContentTypeId="DETAIL_IMAGE"/>
 
   <ProductFeatureApplType description="Optional" hasTable="N" parentTypeId="" productFeatureApplTypeId="OPTIONAL_FEATURE"/>
   <ProductFeatureApplType description="Required" hasTable="N" parentTypeId="" productFeatureApplTypeId="REQUIRED_FEATURE"/>
