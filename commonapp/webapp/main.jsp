@@ -32,6 +32,10 @@
 <%@ page import="org.ofbiz.core.security.*" %>
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 
+<ofbiz:service name="testScv">
+  <ofbiz:param name="message" value="hello all!"/>
+</ofbiz:service>
+
 <BR>
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
