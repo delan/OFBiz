@@ -58,7 +58,7 @@ public class FreeMarkerViewRenderer extends org.jpublish.view.freemarker.FreeMar
 
     public void init() throws Exception{
         super.init();
-        fmConfig.setCacheSoftReference(false);
+        fmConfig.setCacheStorage(new OfbizCacheStorage());
     }
     
     protected Object createViewContext(JPublishContext context, String path) throws ViewRenderException {
