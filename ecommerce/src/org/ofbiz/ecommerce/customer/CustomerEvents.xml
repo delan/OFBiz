@@ -262,12 +262,17 @@
         <call-service service-name="createPartyRole" in-map-name="partyRoleContext"/>
 
         <!-- shipping address -->
-        <call-service service-name="createPostalAddress" in-map-name="addressContext">
-            <result-to-field result-name="contactMechId" map-name="addressPurposeContext"/>
-        </call-service>
-        <field-to-field field-name="USERNAME" map-name="parameters" to-field-name="partyId" to-map-name="addressPurposeContext"/>
-        <string-to-field string="SHIPPING_LOCATION" field-name="contactMechPurposeTypeId" map-name="addressPurposeContext"/>
-        <call-service service-name="createPartyContactMechPurpose" in-map-name="addressPurposeContext"/>
+        <if-compare field-name="USE_ADDRESS" map-name="parameters" operator="equals" value="false">
+            <!-- address not used, do nothing -->
+            <else>
+                <call-service service-name="createPostalAddress" in-map-name="addressContext">
+                    <result-to-field result-name="contactMechId" map-name="addressPurposeContext"/>
+                </call-service>
+                <field-to-field field-name="USERNAME" map-name="parameters" to-field-name="partyId" to-map-name="addressPurposeContext"/>
+                <string-to-field string="SHIPPING_LOCATION" field-name="contactMechPurposeTypeId" map-name="addressPurposeContext"/>
+                <call-service service-name="createPartyContactMechPurpose" in-map-name="addressPurposeContext"/>
+            </else>
+        </if-compare>
 
         <!-- home phone -->
         <if-not-empty field-name="CUSTOMER_HOME_CONTACT" map-name="parameters">
