@@ -22,7 +22,7 @@
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Brad Steiner (bsteiner@thehungersite.com)
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Revision: 1.14 $
+ *@version    $Revision: 1.15 $
  *@since      2.2
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -270,7 +270,7 @@ ${pages.get("/promo/PromoTabBar.ftl")}
                                     ${(actionProductCategory.description)?if_exists} [${actionProductPromoCategory.productCategoryId}]
                                     - ${(actionApplEnumeration.description)?default(actionProductPromoCategory.productPromoApplEnumId)}
                                     - SubCats? ${actionProductPromoCategory.includeSubCategories?default("N")}
-                                    <a href="<@ofbizUrl>/deleteProductPromoCategory?productPromoId=${(actionProductPromoCategory.productPromoId)?if_exists}&productPromoRuleId=${(actionProductPromoCategory.productPromoRuleId)?if_exists}&productPromoActionSeqId=${(actionProductPromoCategory.productPromoActionSeqId)?if_exists}&productPromoActionSeqId=${(actionProductPromoCategory.productPromoActionSeqId)?if_exists}&productCategoryId=${(actionProductPromoCategory.productCategoryId)?if_exists}</@ofbizUrl>" class="buttontext">
+                                    <a href="<@ofbizUrl>/deleteProductPromoCategory?productPromoId=${(actionProductPromoCategory.productPromoId)?if_exists}&productPromoRuleId=${(actionProductPromoCategory.productPromoRuleId)?if_exists}&productPromoCondSeqId=${(actionProductPromoCategory.productPromoCondSeqId)?if_exists}&productPromoActionSeqId=${(actionProductPromoCategory.productPromoActionSeqId)?if_exists}&productCategoryId=${(actionProductPromoCategory.productCategoryId)?if_exists}</@ofbizUrl>" class="buttontext">
                                     [${uiLabelMap.CommonDelete}]</a>
                                 </div>
                             </#list>
@@ -306,7 +306,7 @@ ${pages.get("/promo/PromoTabBar.ftl")}
                                 <div class="tabletext">
                                     ${(actionProduct.productName)?if_exists} [${actionProductPromoProduct.productId}]
                                     - ${(actionApplEnumeration.description)?default(actionProductPromoProduct.productPromoApplEnumId)}
-                                    <a href="<@ofbizUrl>/deleteProductPromoProduct?productPromoId=${(actionProductPromoProduct.productPromoId)?if_exists}&productPromoRuleId=${(actionProductPromoProduct.productPromoRuleId)?if_exists}&productPromoActionSeqId=${(actionProductPromoProduct.productPromoActionSeqId)?if_exists}&productPromoActionSeqId=${(actionProductPromoProduct.productPromoActionSeqId)?if_exists}&productId=${(actionProductPromoProduct.productId)?if_exists}</@ofbizUrl>" class="buttontext">
+                                    <a href="<@ofbizUrl>/deleteProductPromoProduct?productPromoId=${(actionProductPromoProduct.productPromoId)?if_exists}&productPromoRuleId=${(actionProductPromoProduct.productPromoRuleId)?if_exists}&productPromoCondSeqId=${(actionProductPromoProduct.productPromoCondSeqId)?if_exists}&productPromoActionSeqId=${(actionProductPromoProduct.productPromoActionSeqId)?if_exists}&productId=${(actionProductPromoProduct.productId)?if_exists}</@ofbizUrl>" class="buttontext">
                                     [${uiLabelMap.CommonDelete}]</a>
                                 </div>
                             </#list>
