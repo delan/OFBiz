@@ -22,7 +22,7 @@
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Brad Steiner (bsteiner@thehungersite.com)
  *@author     Jacopo Cappellato (tiz@sastau.it)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.2
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -39,7 +39,10 @@ function lookupBom() {
 </script>
 
     <div class="head1">${uiLabelMap.ManufacturingBillOfMaterials} <span class="head2"> <#if product?exists>${(product.productName)?if_exists}</#if>[ID:${productId?if_exists}]</span></div>
-    
+    <#if productId?has_content>
+        <a href="<@ofbizUrl>/findBom</@ofbizUrl>?productId=${productId}&partBomTypeId=${productAssocTypeId}" class="buttontext">[${uiLabelMap.ManufacturingBillOfMaterials}]</a>
+    </#if>
+
     <br>
     <br>
 
