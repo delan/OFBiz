@@ -135,10 +135,9 @@ public abstract class EntityFunction extends EntityConditionValue {
     public boolean equals(Object obj) {
         if (!(obj instanceof EntityFunction)) return false;
         EntityFunction otherFunc = (EntityFunction) obj;
-        return
-            this.idInt == otherFunc.idInt
-            && ( this.nested != null ? nested.equals( otherFunc.nested ) : otherFunc.nested != null )
-            && ( this.value != null ? value.equals( otherFunc.value ) : otherFunc.value != null );
+        return (this.idInt == otherFunc.idInt &&
+            (this.nested != null ? nested.equals(otherFunc.nested) : otherFunc.nested == null) &&
+            (this.value != null ? value.equals(otherFunc.value) : otherFunc.value == null));
     }
 
     public void addSqlValue(StringBuffer sql, Map tableAliases, ModelEntity modelEntity, List entityConditionParams, boolean includeTableNamePrefix, DatasourceInfo datasourceinfo) {

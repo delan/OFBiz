@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -40,6 +40,7 @@ import org.ofbiz.entity.model.ModelEntity;
  * @since      2.0
  */
 public abstract class EntityConditionListBase extends EntityCondition {
+    public static final String module = EntityConditionListBase.class.getName();
 
     protected List conditionList;
     protected EntityJoinOperator operator;
@@ -89,5 +90,22 @@ public abstract class EntityConditionListBase extends EntityCondition {
 
     public EntityCondition freeze() {
         return operator.freeze(conditionList);
+    }
+
+    public boolean equals(Object obj) {
+        if (!(obj instanceof EntityConditionListBase)) return false;
+        EntityConditionListBase other = (EntityConditionListBase) obj;
+        
+        boolean isEqual = conditionList.equals(other.conditionList) && operator.equals(other.operator);
+        //if (!isEqual) {
+        //    Debug.logWarning("EntityConditionListBase.equals is false:\n this.operator=" + this.operator + "; other.operator=" + other.operator + 
+        //            "\nthis.conditionList=" + this.conditionList +
+        //            "\nother.conditionList=" + other.conditionList, module);
+        //}
+        return isEqual;
+    }
+
+    public int hashCode() {
+        return conditionList.hashCode() + operator.hashCode();
     }
 }
