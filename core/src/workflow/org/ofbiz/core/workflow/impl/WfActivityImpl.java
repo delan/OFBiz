@@ -327,8 +327,9 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
         // check the start mode
         String mode = getDefinitionObject().getString("startModeEnumId");
 
-        if (mode == null)
+        if (mode == null) {        
             throw new WfException("Start mode cannot be null");
+        }
 
         if (mode.equals("WAM_AUTOMATIC")) {
             Debug.logVerbose("Activity start mode is AUTO", module);
@@ -340,8 +341,6 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
         } else if (howManyAssignment() > 0 && checkAssignStatus(CHECK_ASSIGN)) {
             Debug.logVerbose("Starting activity: " + this.runtimeKey(), module);
             startActivity();
-        } else {
-            throw new CannotStart();
         }
     }
 
@@ -602,13 +601,15 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
         } catch (WfException e) {
             serviceLoader = container().getRuntimeObject().getString("serviceLoaderName");
         }
-        if (serviceLoader == null)
+        if (serviceLoader == null) {        
             throw new WfException("Cannot get dispatch service loader name");
+        }
 
         ServiceDispatcher ds = getDispatcher(serviceLoader);
 
-        if (ds == null)
+        if (ds == null) {        
             throw new WfException("Cannot find dispatcher for the associated loader");
+        }
 
         DispatchContext dctx = ds.getLocalContext(serviceLoader);
         String limitService = getDefinitionObject().getString("limitService");
@@ -625,9 +626,12 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
             return;
         }
 
-        List inNames = service.getParameterNames(ModelService.IN_PARAM, false);
-        String params = StringUtil.join(inNames, ",");
-        Map serviceContext = actualContext(params, null, inNames);
+        // make the limit service context
+        List inList = new ArrayList(service.getInParamNames());
+        String inParams = StringUtil.join(inList, ",");        
+        
+        Map serviceContext = actualContext(inParams, null, null, true);                                              
+        Debug.logInfo("Setting limit service with context: " + serviceContext, module);
 
         Double timeLimit = null;
 
@@ -694,15 +698,16 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
                 module);
     }
 
-    Map actualContext(String actualParameters, String extendedAttr, List serviceSignature) throws WfException {
+    Map actualContext(String actualParameters, String extendedAttr, List serviceSignature, boolean ignoreUnknown) throws WfException {
         Map actualContext = new HashMap();
         Map context = processContext();
 
         // extended attributes take priority over context attributes
         Map extendedAttributes = StringUtil.strToMap(extendedAttr);
 
-        if (extendedAttributes != null && extendedAttributes.size() > 0)
+        if (extendedAttributes != null && extendedAttributes.size() > 0) {        
             context.putAll(extendedAttributes);
+        }
 
         // setup some internal buffer parameters
         GenericValue userLogin = null;
@@ -752,13 +757,15 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
                     if (mName != null) mName = mName.trim();
                     if (cName != null) cName = cName.trim(); 
                                                            
-                    if (mName != null && cName != null && context.containsKey(cName))
-                        actualContext.put(mName, context.get(cName));                                            
+                    if (mName != null && cName != null && context.containsKey(cName)) {                    
+                        actualContext.put(mName, context.get(cName));
+                    }                          
                 } else if (context.containsKey(key)) {
                     // direct assignment from context                   
                     actualContext.put(key, context.get(key));
-                } else if (!actualContext.containsKey(key))
+                } else if (!actualContext.containsKey(key) && !ignoreUnknown) {                
                     throw new WfException("Context does not contain the key: '" + (String) key + "'");
+                }
             }
         }
         
@@ -769,8 +776,9 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
             while (si.hasNext()) {
                 Object key = si.next();
                 String keyStr = (String) key;
-                if (!actualContext.containsKey(key) && context.containsKey(key))
+                if (!actualContext.containsKey(key) && context.containsKey(key)) {                
                     actualContext.put(keyStr, context.get(keyStr));
+                }
             }
         }        
         return actualContext;
