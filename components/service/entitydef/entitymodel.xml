@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  */
 -->
 
@@ -96,9 +96,6 @@
       <field name="recurrenceRuleId" type="id-ne"></field>
       <field name="recurrenceCount" type="numeric"></field>
       <prim-key field="recurrenceInfoId"/>
-      <relation type="many" rel-entity-name="WorkEffort">
-        <key-map field-name="recurrenceInfoId"/>
-      </relation>
       <relation type="one" fk-name="REC_INFO_RCRLE" rel-entity-name="RecurrenceRule">
         <key-map field-name="recurrenceRuleId"/>
       </relation>
@@ -126,12 +123,6 @@
       <field name="weekStart" type="short-varchar"></field>
       <field name="xName" type="very-long"></field>
       <prim-key field="recurrenceRuleId"/>
-      <relation type="many" title="Exception" rel-entity-name="RecurrenceInfo">
-        <key-map field-name="recurrenceRuleId" rel-field-name="exceptionRuleId"/>
-      </relation>
-      <relation type="many" rel-entity-name="RecurrenceInfo">
-        <key-map field-name="recurrenceRuleId"/>
-      </relation>
     </entity>
     <entity entity-name="RuntimeData"
             package-name="org.ofbiz.service.schedule"
@@ -139,12 +130,6 @@
       <field name="runtimeDataId" type="id-ne"></field>
       <field name="runtimeInfo" type="very-long"></field>
       <prim-key field="runtimeDataId"/>
-      <relation type="many" rel-entity-name="JobSandbox">
-        <key-map field-name="runtimeDataId"/>
-      </relation>
-      <relation type="many" rel-entity-name="WorkEffort">
-        <key-map field-name="runtimeDataId"/>
-      </relation>
     </entity>
 </entitymodel>
 
