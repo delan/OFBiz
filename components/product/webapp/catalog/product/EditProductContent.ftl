@@ -21,9 +21,11 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Brad Steiner (bsteiner@thehungersite.com)
- *@version    $Revision: 1.2 $
+ *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
+ *@version    $Revision: 1.3 $
  *@since      2.2
 -->
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 
 <SCRIPT language="JavaScript">
 function insertNowTimestamp(field) {
@@ -36,30 +38,30 @@ function insertImageName(size,ext) {
 
 <#if hasPermission>
     <#if fileType?has_content>
-        <div class='head3'>Result of Image Upload</div>
+        <div class='head3'>${uiLabelMap.ProductResultOfImageUpload}</div>
         <#if !(clientFileName?has_content)>
-            <div class='tabletext'>No file specified for upload.</div>
+            <div class='tabletext'>${uiLabelMap.ProductNoFileSpecifiedForUpload}.</div>
         <#else>
-            <div class='tabletext'>The file on your computer: <b>${clientFileName?if_exists}</b></div>
-            <div class='tabletext'>Server file name: <b>${fileNameToUse?if_exists}</b></div>
-            <div class='tabletext'>Server directory: <b>${imageServerPath?if_exists}</b></div>
-            <div class='tabletext'>The URL of your uploaded file: <b><a href="<@ofbizContentUrl>${imageUrl?if_exists}</@ofbizContentUrl>">${imageUrl?if_exists}</a></b></div>
+            <div class='tabletext'>${uiLabelMap.ProductTheFileOnYourComputer}: <b>${clientFileName?if_exists}</b></div>
+            <div class='tabletext'>${uiLabelMap.ProductServerFileName}: <b>${fileNameToUse?if_exists}</b></div>
+            <div class='tabletext'>${uiLabelMap.ProductServerDirectory}: <b>${imageServerPath?if_exists}</b></div>
+            <div class='tabletext'>${uiLabelMap.ProductTheUrlOfYourUploadedFile}: <b><a href="<@ofbizContentUrl>${imageUrl?if_exists}</@ofbizContentUrl>">${imageUrl?if_exists}</a></b></div>
         </#if>
     <br>
     </#if>    
 
 ${pages.get("/product/ProductTabBar.ftl")}
 
-    <div class="head1">Content <span class="head2">for <#if product?exists>${(product.productName)?if_exists}</#if>[ID:${productId?if_exists}]</span></div>
+    <div class="head1">${uiLabelMap.ProductContent} <span class="head2">${uiLabelMap.CommonFor} <#if product?exists>${(product.productName)?if_exists}</#if>[${uiLabelMap.CommonId}:${productId?if_exists}]</span></div>
     
-    <a href="<@ofbizUrl>/EditProduct</@ofbizUrl>" class="buttontext">[New Product]</a>
+    <a href="<@ofbizUrl>/EditProduct</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewProduct}]</a>
     <#if productId?has_content>
-        <a href="/ecommerce/control/product?product_id=${productId}" class="buttontext" target="_blank">[Product Page]</a>
+        <a href="/ecommerce/control/product?product_id=${productId}" class="buttontext" target="_blank">[${uiLabelMap.ProductProductPage}]</a>
     </#if>
     <p>
     
     <#if !(product?exists)>
-        <h3>Could not find product with ID "${productId}".</h3>
+        <h3>${uiLabelMap.ProductCouldNotFindProduct} "${productId}".</h3>
     <#else>
         <form action="<@ofbizUrl>/updateProductContent</@ofbizUrl>" method=POST style="margin: 0;" name="productForm">
         <table border="0" cellpadding="2" cellspacing="0">
@@ -67,16 +69,16 @@ ${pages.get("/product/ProductTabBar.ftl")}
         <input type=hidden name="productName" value="${(product.productName)?if_exists}">
         <input type=hidden name="productTypeId" value="${(product.productTypeId)?if_exists}">        
         <tr>
-            <td width="20%" align=right valign=top><div class="tabletext"><b>Detail Template</b></div></td>
+            <td width="20%" align=right valign=top><div class="tabletext"><b>${uiLabelMap.ProductDetailTemplate}</b></div></td>
             <td>&nbsp;</td>
             <td width="80%" colspan="4" valign=top>
                 <input type="text" class="inputBox" name="detailTemplate" value="${(product.detailTemplate)?if_exists}" size="60" maxlength="250">
-                <br><span class="tabletext">If not specified defaults to "/catalog/productdetail.ftl"</span>
+                <br><span class="tabletext">${uiLabelMap.ProductIfNotSpecifiedDefaultsIsProductdetail}"</span>
             </td>
         </tr>        
         <tr>
             <td width="20%" align=right valign=top>
-                <div class="tabletext"><b>Small Image</b></div>
+                <div class="tabletext"><b>${uiLabelMap.ProductSmallImage}</b></div>
                 <#if (product.smallImageUrl)?exists>
                     <a href="<@ofbizContentUrl>${(product.smallImageUrl)?if_exists}</@ofbizContentUrl>" target="_blank"><img alt="Small Image" src="<@ofbizContentUrl>${(product.smallImageUrl)?if_exists}</@ofbizContentUrl>" height="40" width="40"></a>
                 </#if>
@@ -86,7 +88,7 @@ ${pages.get("/product/ProductTabBar.ftl")}
             <input type="text" class="inputBox" name="smallImageUrl" value="${(product.smallImageUrl)?if_exists}" size="60" maxlength="255">
             <#if productId?has_content>
                 <div>
-                <span class="tabletext">Insert Default Image URL: </span>
+                <span class="tabletext">${uiLabelMap.ProductInsertDefaultImageUrl}: </span>
                 <a href="javascript:insertImageName('small', 'jpg');" class="buttontext">[.jpg]</a>
                 <a href="javascript:insertImageName('small', 'gif');" class="buttontext">[.gif]</a>
                 </div>
@@ -95,7 +97,7 @@ ${pages.get("/product/ProductTabBar.ftl")}
         </tr>
         <tr>
             <td width="20%" align=right valign=top>
-                <div class="tabletext"><b>Medium Image</b></div>
+                <div class="tabletext"><b>${uiLabelMap.ProductMediumImage}</b></div>
                 <#if (product.mediumImageUrl)?exists>
                     <a href="<@ofbizContentUrl>${product.mediumImageUrl}</@ofbizContentUrl>" target="_blank"><img alt="Medium Image" src="<@ofbizContentUrl>${product.mediumImageUrl}</@ofbizContentUrl>" height="40" width="40"></a>
                 </#if>
@@ -105,7 +107,7 @@ ${pages.get("/product/ProductTabBar.ftl")}
             <input type="text" class="inputBox" name="mediumImageUrl" value="${(product.mediumImageUrl)?if_exists}" size="60" maxlength="255">
             <#if productId?has_content>
                 <div>
-                <span class="tabletext">Insert Default Image URL: </span>
+                <span class="tabletext">${uiLabelMap.ProductInsertDefaultImageUrl}: </span>
                 <a href="javascript:insertImageName('medium', 'jpg');" class="buttontext">[.jpg]</a>
                 <a href="javascript:insertImageName('medium', 'gif');" class="buttontext">[.gif]</a>
                 </div>
@@ -114,7 +116,7 @@ ${pages.get("/product/ProductTabBar.ftl")}
         </tr>
         <tr>
             <td width="20%" align=right valign=top>
-                <div class="tabletext"><b>Large Image</b></div>
+                <div class="tabletext"><b>${uiLabelMap.ProductLargeImage}</b></div>
                 <#if (product.largeImageUrl)?exists>
                     <a href="<@ofbizContentUrl>${product.largeImageUrl}</@ofbizContentUrl>" target="_blank"><img alt="Large Image" src="<@ofbizContentUrl>${product.largeImageUrl}</@ofbizContentUrl>" height="40" width="40"></a>
                 </#if>
@@ -124,7 +126,7 @@ ${pages.get("/product/ProductTabBar.ftl")}
             <input type="text" class="inputBox" name="largeImageUrl" value="${(product.largeImageUrl)?if_exists}" size="60" maxlength="255">
             <#if productId?has_content>
                 <div>
-                <span class="tabletext">Insert Default Image URL: </span>
+                <span class="tabletext">${uiLabelMap.ProductInsertDefaultImageUrl}: </span>
                 <a href="javascript:insertImageName('large', 'jpg');" class="buttontext">[.jpg]</a>
                 <a href="javascript:insertImageName('large', 'gif');" class="buttontext">[.gif]</a>
                 </div>
@@ -133,7 +135,7 @@ ${pages.get("/product/ProductTabBar.ftl")}
         </tr>
         <tr>
             <td width="20%" align=right valign=top>
-                <div class="tabletext"><b>Detail Image</b></div>
+                <div class="tabletext"><b>${uiLabelMap.ProductDetailImage}</b></div>
                 <#if (product.detailImageUrl)?exists>
                     <a href="<@ofbizContentUrl>${product.detailImageUrl}</@ofbizContentUrl>" target="_blank"><img alt="Detail Image" src="<@ofbizContentUrl>${product.detailImageUrl}</@ofbizContentUrl>" height="40" width="40"></a>
                 </#if>
@@ -143,7 +145,7 @@ ${pages.get("/product/ProductTabBar.ftl")}
             <input type="text" class="inputBox" name="detailImageUrl" value="${(product.detailImageUrl)?if_exists}" size="60" maxlength="255">
             <#if productId?has_content>
                 <div>
-                <span class="tabletext">Insert Default Image URL: </span>
+                <span class="tabletext">${uiLabelMap.ProductInsertDefaultImageUrl}: </span>
                 <a href="javascript:insertImageName('detail', 'jpg');" class="buttontext">[.jpg]</a>
                 <a href="javascript:insertImageName('detail', 'gif');" class="buttontext">[.gif]</a>
                 </div>
@@ -152,7 +154,7 @@ ${pages.get("/product/ProductTabBar.ftl")}
         </tr>        
         <tr>
             <td colspan="2">&nbsp;</td>
-            <td><input type="submit" name="Update" value="Update"></td>
+            <td><input type="submit" name="Update" value="${uiLabelMap.CommonUpdate}"></td>
             <td colspan="3">&nbsp;</td>
         </tr>
         </table>
@@ -164,19 +166,19 @@ ${pages.get("/product/ProductTabBar.ftl")}
             eval(toExec);
             };
         </SCRIPT>
-        <div class="head3">Upload Image</div>
+        <div class="head3">${uiLabelMap.ProductUploadImage}</div>
         <form method="POST" enctype="multipart/form-data" action="<@ofbizUrl>/UploadProductImage?productId=${productId}&upload_file_type=small</@ofbizUrl>" name="imageUploadForm">
             <input type="file" class="inputBox" size="50" name="fname">
             <br>
             <span class="tabletext">
-                <input class="radioButton" type=RADIO name="upload_file_type_bogus" value="small" checked onclick='setUploadUrl("<@ofbizUrl>/UploadProductImage?productId=${productId}&upload_file_type=small</@ofbizUrl>");'>Small
-                <input class="radioButton" type=RADIO name="upload_file_type_bogus" value="medium" onclick='setUploadUrl("<@ofbizUrl>/UploadProductImage?productId=${productId}&upload_file_type=medium</@ofbizUrl>");'>Medium
-                <input class="radioButton" type=RADIO name="upload_file_type_bogus" value="large"onclick='setUploadUrl("<@ofbizUrl>/UploadProductImage?productId=${productId}&upload_file_type=large</@ofbizUrl>");'>Large
-                <input class="radioButton" type=RADIO name="upload_file_type_bogus" value="detail" onclick='setUploadUrl("<@ofbizUrl>/UploadProductImage?productId=${productId}&upload_file_type=detail</@ofbizUrl>");'>Detail
+                <input class="radioButton" type=RADIO name="upload_file_type_bogus" value="small" checked onclick='setUploadUrl("<@ofbizUrl>/UploadProductImage?productId=${productId}&upload_file_type=small</@ofbizUrl>");'>${uiLabelMap.CommonSmall}
+                <input class="radioButton" type=RADIO name="upload_file_type_bogus" value="medium" onclick='setUploadUrl("<@ofbizUrl>/UploadProductImage?productId=${productId}&upload_file_type=medium</@ofbizUrl>");'>${uiLabelMap.CommonMedium}
+                <input class="radioButton" type=RADIO name="upload_file_type_bogus" value="large"onclick='setUploadUrl("<@ofbizUrl>/UploadProductImage?productId=${productId}&upload_file_type=large</@ofbizUrl>");'>${uiLabelMap.CommonLarge}
+                <input class="radioButton" type=RADIO name="upload_file_type_bogus" value="detail" onclick='setUploadUrl("<@ofbizUrl>/UploadProductImage?productId=${productId}&upload_file_type=detail</@ofbizUrl>");'>${uiLabelMap.CommonDetail}
             </span>
-            <input type="submit" class="smallSubmit" value="Upload Image">
+            <input type="submit" class="smallSubmit" value="${uiLabelMap.ProductUploadImage}">
         </form>
     </#if>
 <#else>
-  <h3>You do not have permission to view this page. ("CATALOG_VIEW" or "CATALOG_ADMIN" needed)</h3>
+  <h3>${uiLabelMap.ProductViewPermissionError}</h3>
 </#if>

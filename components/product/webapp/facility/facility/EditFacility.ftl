@@ -20,18 +20,20 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@version    $Revision: 1.1 $
+ *@author	  thierry.grauss@etu.univ-tours.fr (migration to uiLabelMap)
+ *@version    $Revision: 1.2 $
  *@since      2.1
 -->
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 
 <#if security.hasEntityPermission("FACILITY", "_VIEW", session)>
 
 ${pages.get("/facility/FacilityTabBar.ftl")}
 
-<div class="head1">Facility <span class='head2'>${facility.facilityName?if_exists} [ID:${facilityId?if_exists}]</span></div>
-<a href="<@ofbizUrl>/EditFacility</@ofbizUrl>" class="buttontext">[New Facility]</a>
+<div class="head1">${uiLabelMap.ProductFacility} <span class='head2'>${facility.facilityName?if_exists} [${uiLabelMap.CommonId}:${facilityId?if_exists}]</span></div>
+<a href="<@ofbizUrl>/EditFacility</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewFacility}]</a>
 <#if facilityId?has_content>
-	<a href="/workeffort/control/month?facilityId=${facilityId}&externalLoginKey=${requestAttributes.externalLoginKey?if_exists}" class="buttontext">[View Calendar]</a>
+	<a href="/workeffort/control/month?facilityId=${facilityId}&externalLoginKey=${requestAttributes.externalLoginKey?if_exists}" class="buttontext">[${uiLabelMap.CommonViewCalendar}]</a>
 </#if>
 
 <#if facility?exists && facilityId?has_content>
@@ -39,21 +41,21 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
   <table border='0' cellpadding='2' cellspacing='0'>
   <input type=hidden name="facilityId" value="${facilityId?if_exists}">
   <tr>
-    <td align=right><div class="tabletext">Facility ID</div></td>
+    <td align=right><div class="tabletext">${uiLabelMap.ProductFacilityId}</div></td>
     <td>&nbsp;</td>
     <td>
-      <b>${facilityId?if_exists}</b> (This cannot be changed without re-creating the facility.)
+      <b>${facilityId?if_exists}</b> (${uiLabelMap.ProductNotModificationRecrationFacility}.)
     </td>
   </tr>
 <#else>
   <form action="<@ofbizUrl>/CreateFacility</@ofbizUrl>" method=POST style='margin: 0;'>
   <table border='0' cellpadding='2' cellspacing='0'>
   <#if facilityId?exists>
-    <h3>Could not find facility with ID "${facilityId?if_exists}".</h3>
+    <h3>${uiLabelMap.ProductCouldNotFindFacilityWithId} "${facilityId?if_exists}".</h3>
   </#if>
 </#if>
   <tr>
-    <td width="26%" align=right><div class="tabletext">Facility Type Id</div></td>
+    <td width="26%" align=right><div class="tabletext">${uiLabelMap.ProductFacilityTypeId}</div></td>
     <td>&nbsp;</td>
     <td width="74%">
       <select name="facilityTypeId" size=1 class='selectBox'>
@@ -66,29 +68,29 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
     </td>
   </tr>
   <tr>
-    <td width="26%" align=right><div class="tabletext">Name</div></td>
+    <td width="26%" align=right><div class="tabletext">${uiLabelMap.ProductName}</div></td>
     <td>&nbsp;</td>
     <td width="74%"><input type="text" class="inputBox" name="facilityName" value="${facility.facilityName?if_exists}" size="30" maxlength="60"></td>
   </tr>
   <tr>
-    <td width="26%" align=right><div class="tabletext">Square Footage</div></td>
+    <td width="26%" align=right><div class="tabletext">${uiLabelMap.ProductSquareFootage}</div></td>
     <td>&nbsp;</td>
     <td width="74%"><input type="text" class="inputBox" name="squareFootage" value="${facility.squareFootage?if_exists}" size="10" maxlength="20"></td>
   </tr>
   <tr>
-    <td width="26%" align=right><div class="tabletext">Description</div></td>
+    <td width="26%" align=right><div class="tabletext">${uiLabelMap.ProductDescription}</div></td>
     <td>&nbsp;</td>
     <td width="74%"><input type="text" class="inputBox" name="description" value="${facility.description?if_exists}" size="60" maxlength="250"></td>
   </tr>
 
   <tr>
     <td colspan='2'>&nbsp;</td>
-    <td colspan='1' align=left><input type="submit" name="Update" value="Update"></td>
+    <td colspan='1' align=left><input type="submit" name="Update" value="${uiLabelMap.CommonUpdate}"></td>
   </tr>
 </table>
 </form>
 
 <#else>
-  <h3>You do not have permission to view this page. ("FACILITY_VIEW" or "FACILITY_ADMIN" needed)</h3>
+  <h3>${uiLabelMap.ProductFacilityViewPermissionError}</h3>
 </#if>
 

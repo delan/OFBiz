@@ -2,5 +2,6 @@
 <page>
     <template>main</template> 
     <property name="title">Catalog Manager Main Page</property>
+    <property name="headerItem">main</property>
     <property name="leftbar">/templates/leftbar.ftl</property>
 </page>

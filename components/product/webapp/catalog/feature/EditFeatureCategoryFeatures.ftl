@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Catherine Heintz (catherine.heintz@nereide.biz)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.2
 -->
 
@@ -171,7 +171,7 @@
       <td><input type=text size='10' name='abbrev' class='inputBox' value=''></td>
     </tr>
     <tr>
-      <td colspan='2'><input type="submit" value="Create"></td>
+      <td colspan='2'><input type="submit" value="${uiLabelMap.CommonCreate}"></td>
     </tr>
   </table>
 </form>

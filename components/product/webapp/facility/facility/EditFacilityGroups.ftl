@@ -21,26 +21,28 @@
  *
  *@author     David E. Jones
  *@author     Brad Steiner
- *@version    $Revision: 1.3 $
+ *@author	  thierry.grauss@etu.univ-tours.fr (migration to uiLabelMap)
+ *@version    $Revision: 1.4 $
  *@since      2.2
 -->
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 
 <#if hasPermission>
 
 ${pages.get("/facility/FacilityTabBar.ftl")}
     
-    <div class="head1">Groups <span class="head2">for <#if facility?exists>${(facility.facilityName)?if_exists}</#if> [ID:${facilityId?if_exists}]</span></div>
-    <a href="<@ofbizUrl>/EditFacility</@ofbizUrl>" class="buttontext">[New Facility]</a>
+    <div class="head1">${uiLabelMap.ProductGroupsFor} <span class="head2"><#if facility?exists>${(facility.facilityName)?if_exists}</#if> [${uiLabelMap.CommonId}:${facilityId?if_exists}]</span></div>
+    <a href="<@ofbizUrl>/EditFacility</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewFacility}]</a>
     <#if activeOnly>
-        <a href="<@ofbizUrl>/EditFacilityGroups?facilityId=${facilityId}&activeOnly=false</@ofbizUrl>" class="buttontext">[Active and Inactive]</a>
+        <a href="<@ofbizUrl>/EditFacilityGroups?facilityId=${facilityId}&activeOnly=false</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductActiveAndInactive}]</a>
     <#else>
-        <a href="<@ofbizUrl>/EditFacilityGroups?facilityId=${facilityId}&activeOnly=true</@ofbizUrl>" class="buttontext">[Active Only]</a>
+        <a href="<@ofbizUrl>/EditFacilityGroups?facilityId=${facilityId}&activeOnly=true</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductActiveOnly}]</a>
     </#if>
     <br>
     <br>
     
     <#if facilityId?exists && facility?exists>
-        <p class="head2">Group Member Maintenance</p>
+        <p class="head2">${uiLabelMap.ProductGroupMemberMaintenance}</p>
         
         <#if (facilityGroupMembers.size() > 0)>
         <table border="0" width="100%" cellpadding="2">
@@ -48,13 +50,13 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
             <td align=right>
                 <b>
                 <#if (viewIndex > 0)>
-                <a href="<@ofbizUrl>/EditFacilityGroups?facilityId=${facilityId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${(viewIndex-1)}&activeOnly=${activeOnly.toString()}</@ofbizUrl>" class="buttontext">[Previous]</a> |
+                <a href="<@ofbizUrl>/EditFacilityGroups?facilityId=${facilityId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${(viewIndex-1)}&activeOnly=${activeOnly.toString()}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonPrevious}]</a> |
                 </#if>
                 <#if (listSize > 0)>
                 ${lowIndex+1} - ${highIndex} of ${listSize}
                 </#if>
                 <#if (listSize > highIndex)>
-                | <a href="<@ofbizUrl>/EditFacilityGroups?facilityId=${facilityId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${(viewIndex+1)}&activeOnly=${activeOnly.toString()}</@ofbizUrl>" class="buttontext">[Next]</a>
+                | <a href="<@ofbizUrl>/EditFacilityGroups?facilityId=${facilityId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${(viewIndex+1)}&activeOnly=${activeOnly.toString()}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonNext}]</a>
                 </#if>
                 </b>
             </td>
@@ -64,9 +66,9 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
         
         <table border="1" width="100%" cellpadding="2" cellspacing="0">
         <tr>
-            <td><div class="tabletext"><b>Facility Group Name [ID]</b></div></td>
-            <td><div class="tabletext"><b>From&nbsp;Date&nbsp;&amp;&nbsp;Time</b></div></td>
-            <td align="center"><div class="tabletext"><b>Thru&nbsp;Date&nbsp;&amp;&nbsp;Time&nbsp;&amp;&nbsp;Sequence</b></div></td>
+            <td><div class="tabletext"><b>${uiLabelMap.ProductFacilityGroupNameId}</b></div></td>
+            <td><div class="tabletext"><b>${uiLabelMap.CommonFromDateTime}</b></div></td>
+            <td align="center"><div class="tabletext"><b>${uiLabelMap.ProductThruDateTimeSequence}</b></div></td>
             <td><div class="tabletext"><b>&nbsp;</b></div></td>
         </tr>
         <#if (facilityGroupMembers.size() > 0)>
@@ -99,7 +101,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
                 </td>
                 <td align="center">
                 <a href="<@ofbizUrl>/removeGroupFromFacility?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex}&facilityId=${(facilityGroupMember.facilityId)?if_exists}&facilityGroupId=${(facilityGroupMember.facilityGroupId)?if_exists}&fromDate=${Static["org.ofbiz.base.util.UtilFormatOut"].encodeQueryValue(facilityGroupMember.getTimestamp("fromDate").toString())}&activeOnly=${activeOnly.toString()}</@ofbizUrl>" class="buttontext">
-                [Delete]</a>
+                [${uiLabelMap.CommonDelete}]</a>
                 </td>
             </tr>
             </#list>
@@ -112,13 +114,13 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
                 <td align=right>
                     <b>
                     <#if (viewIndex > 0)>
-                    <a href="<@ofbizUrl>/EditFacilityGroups?facilityId=${facilityId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${(viewIndex-1)}&activeOnly=${activeOnly.toString()}</@ofbizUrl>" class="buttontext">[Previous]</a> |
+                    <a href="<@ofbizUrl>/EditFacilityGroups?facilityId=${facilityId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${(viewIndex-1)}&activeOnly=${activeOnly.toString()}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonPrevious}]</a> |
                     </#if>
                     <#if (listSize > 0)>
                     ${lowIndex+1} - ${highIndex} of ${listSize}
                     </#if>
                     <#if (listSize > highIndex)>
-                    | <a href="<@ofbizUrl>/EditFacilityGroups?facilityId=${facilityId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${(viewIndex+1)}&activeOnly=${activeOnly.toString()}</@ofbizUrl>" class="buttontext">[Next]</a>
+                    | <a href="<@ofbizUrl>/EditFacilityGroups?facilityId=${facilityId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${(viewIndex+1)}&activeOnly=${activeOnly.toString()}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonNext}]</a>
                     </#if>
                     </b>
                 </td>
@@ -132,7 +134,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
         <input type="hidden" name="useValues" value="true">
         <input type=hidden name="activeOnly" value="${activeOnly.toString()}">
         
-        <div class="head2">Add FacilityGroupMember:</div>
+        <div class="head2">${uiLabelMap.ProductAddFacilityGroupMember}:</div>
         <div class="tabletext">
             Facility Group ID: 
             <select name="facilityGroupId" size=1 class="selectBox">
@@ -174,5 +176,5 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
         -->
     </#if>
 <#else>
-  <h3>You do not have permission to view this page. ("FACILITY_VIEW" or "FACILITY_ADMIN" needed)</h3>
+  <h3>${uiLabelMap.ProductFacilityViewPermissionError}</h3>
 </#if>

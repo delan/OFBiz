@@ -20,9 +20,11 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.2 $
+ *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
+ *@version    $Revision: 1.3 $
  *@since      2.1
 -->
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 
 <#-- looping macro -->
 <#macro categoryList parentCategory category>
@@ -57,7 +59,7 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <td valign=middle align=center>
-            <div class="boxhead">Browse&nbsp;Categories</div>
+            <div class="boxhead">${uiLabelMap.ProductBrowseCategories}</div>
           </td>
           <td valign=middle align=right>
             <#if isOpen>
@@ -76,7 +78,7 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <tr>
           <td>
-            <div><a href='<@ofbizUrl>/ChooseTopCategory</@ofbizUrl>' class='buttontext'>Choose Top Category</a></div>
+            <div><a href='<@ofbizUrl>/ChooseTopCategory</@ofbizUrl>' class='buttontext'>${uiLabelMap.ProductChooseTopCategory}</a></div>
             <div style='margin-left: 10px;'>
             <#if currentTopCategory?exists>
               <#if curCategoryId?exists && curCategoryId == currentTopCategory.productCategoryId>

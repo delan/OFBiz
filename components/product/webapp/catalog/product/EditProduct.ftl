@@ -21,19 +21,20 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Brad Steiner (bsteiner@thehungersite.com)
- *@version    $Revision: 1.1 $
+ *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
+ *@version    $Revision: 1.2 $
  *@since      2.2
 -->
-
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#if hasPermission>
 
 ${pages.get("/product/ProductTabBar.ftl")}
         
-    <div class="head1">Product <span class='head2'><#if product?exists && product.getString("productName")?has_content>${product.getString("productName")}</#if> <#if productId?exists && productId?has_content>[ID:${productId}]</#if></span></div>
+    <div class="head1">${uiLabelMap.ProductProduct}<span class='head2'><#if product?exists && product.getString("productName")?has_content>${product.getString("productName")}</#if> <#if productId?exists && productId?has_content>[${uiLabelMap.CommonId}:${productId}]</#if></span></div>
     
-    <a href="<@ofbizUrl>/EditProduct</@ofbizUrl>" class="buttontext">[New Product]</a>
+    <a href="<@ofbizUrl>/EditProduct</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewProduct}]</a>
     <#if productId?exists && productId?has_content>
-        <a href="/ecommerce/control/product?product_id=${productId}" class='buttontext' target='_blank'>[Product Page]</a>
+        <a href="/ecommerce/control/product?product_id=${productId}" class='buttontext' target='_blank'>[${uiLabelMap.ProductProductPage}]</a>
     </#if>
     <br>
     <br>
@@ -42,7 +43,7 @@ ${pages.get("/product/ProductTabBar.ftl")}
 
     <#if productId?exists>
         <hr class='sepbar'>
-        <div class="head2">Duplicate Product</div>
+        <div class="head2">${uiLabelMap.ProductDuplicateProduct}</div>
         <#if product?exists>
             <form action="<@ofbizUrl>/EditProduct</@ofbizUrl>" method=POST style='margin: 0;'>
                 <INPUT type=hidden name='productTypeId' value='product.productTypeId'>
@@ -74,40 +75,40 @@ ${pages.get("/product/ProductTabBar.ftl")}
                 <INPUT type=hidden name='taxDutyCode' value='product.taxDutyCode'>
                 <INPUT type=hidden name='chargeShipping' value='product.chargeShipping'>
                 <INPUT type=hidden name='autoCreateKeywords' value='product.autoCreateKeywords'>
-                <SPAN class='tabletext'>Populate New Form:</SPAN>&nbsp;
+                <SPAN class='tabletext'>${uiLabelMap.ProductPopulateNewForm}:</SPAN>&nbsp;
                 <INPUT type=submit class='standardSubmit' value='NewForm'>
             </form>
             <hr class='sepbar'>
             <form action="<@ofbizUrl>/DuplicateProduct</@ofbizUrl>" method=POST style='margin: 0;'>
                 <INPUT type=hidden name='oldProductId' value='${productId}'>
                 <div>
-                    <SPAN class='tabletext'>Duplicate/Remove Selected With New ID:</SPAN>
+                    <SPAN class='tabletext'>${uiLabelMap.ProductDuplicateRemoveSelectedWithNewId}:</SPAN>
                     <input type="text" class="inputBox" size='20' maxlength='20' name='productId' >&nbsp;<INPUT type=submit class='standardSubmit' value='Go!'>
                 </div>
                 <div class='tabletext'>
-                    <b>Duplicate:</b>
-                    Prices&nbsp;<input type='checkbox' class='checkBox' name='duplicatePrices' value='Y' checked/>
-                    IDs&nbsp;<input type='checkbox' class='checkBox' name='duplicateIDs' value='Y' checked/>
-                    CategoryMembers&nbsp;<input type='checkbox' class='checkBox' name='duplicateCategoryMembers' value='Y' checked/>
-                    Assocs&nbsp;<input type='checkbox' class='checkBox' name='duplicateAssocs' value='Y' checked/>
-                    Attributes&nbsp;<input type='checkbox' class='checkBox' name='duplicateAttributes' value='Y' checked/>
-                    FeatureAppls&nbsp;<input type='checkbox' class='checkBox' name='duplicateFeatureAppls' value='Y' checked/>
-                    InventoryItems&nbsp;<input type='checkbox' class='checkBox' name='duplicateInventoryItems' value='Y' checked/>
+                    <b>${uiLabelMap.CommonDuplicate}:</b>
+                    ${uiLabelMap.ProductPrices}&nbsp;<input type='checkbox' class='checkBox' name='duplicatePrices' value='Y' checked/>
+                    ${uiLabelMap.CommonId}&nbsp;<input type='checkbox' class='checkBox' name='duplicateIDs' value='Y' checked/>
+                    ${uiLabelMap.ProductCategoryMembers}&nbsp;<input type='checkbox' class='checkBox' name='duplicateCategoryMembers' value='Y' checked/>
+                    ${uiLabelMap.ProductAssocs}&nbsp;<input type='checkbox' class='checkBox' name='duplicateAssocs' value='Y' checked/>
+                    ${uiLabelMap.ProductAttributes}&nbsp;<input type='checkbox' class='checkBox' name='duplicateAttributes' value='Y' checked/>
+                    ${uiLabelMap.ProductFeatureAppls}&nbsp;<input type='checkbox' class='checkBox' name='duplicateFeatureAppls' value='Y' checked/>
+                    ${uiLabelMap.ProductInventoryItems}&nbsp;<input type='checkbox' class='checkBox' name='duplicateInventoryItems' value='Y' checked/>
                 </div>
                 <div class='tabletext'>
-                    <b>Remove:</b>
-                    Prices&nbsp;<input type='checkbox' class='checkBox' name='removePrices' value='Y'/>
-                    IDs&nbsp;<input type='checkbox' class='checkBox' name='removeIDs' value='Y'/>
-                    CategoryMembers&nbsp;<input type='checkbox' class='checkBox' name='removeCategoryMembers' value='Y'/>
-                    Assocs&nbsp;<input type='checkbox' class='checkBox' name='removeAssocs' value='Y'/>
-                    Attributes&nbsp;<input type='checkbox' class='checkBox' name='removeAttributes' value='Y'/>
-                    FeatureAppls&nbsp;<input type='checkbox' class='checkBox' name='removeFeatureAppls' value='Y'/>
-                    InventoryItems&nbsp;<input type='checkbox' class='checkBox' name='removeInventoryItems' value='Y'/>
+                    <b>${uiLabelMap.CommonRemove}:</b>
+                    ${uiLabelMap.ProductPrices}&nbsp;<input type='checkbox' class='checkBox' name='removePrices' value='Y'/>
+                    ${uiLabelMap.CommonId}&nbsp;<input type='checkbox' class='checkBox' name='removeIDs' value='Y'/>
+                    ${uiLabelMap.ProductCategoryMembers}&nbsp;<input type='checkbox' class='checkBox' name='removeCategoryMembers' value='Y'/>
+                    ${uiLabelMap.ProductAssocs}&nbsp;<input type='checkbox' class='checkBox' name='removeAssocs' value='Y'/>
+                    ${uiLabelMap.ProductAttributes}&nbsp;<input type='checkbox' class='checkBox' name='removeAttributes' value='Y'/>
+                    ${uiLabelMap.ProductFeatureAppls}&nbsp;<input type='checkbox' class='checkBox' name='removeFeatureAppls' value='Y'/>
+                    ${uiLabelMap.ProductInventoryItems}&nbsp;<input type='checkbox' class='checkBox' name='removeInventoryItems' value='Y'/>
                 </div>
             </form>
             <br><br>
         </#if>
     </#if>
 <#else>
-  <h3>You do not have permission to view this page. ("CATALOG_VIEW" or "CATALOG_ADMIN" needed)</h3>
+  <h3>${uiLabelMap.ProductViewPermissionError}</h3>
 </#if>

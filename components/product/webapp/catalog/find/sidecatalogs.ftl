@@ -20,9 +20,11 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.2 $
+ *@author     Catherine Heintz (catherine.heintz@nereide.biz)
+ *@version    $Revision: 1.3 $
  *@since      2.1
 -->
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 
 <table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <tr>
@@ -30,7 +32,7 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <td valign=middle align=center>
-            <div class="boxhead">Browse&nbsp;Catalogs</div>
+            <div class="boxhead">${uiLabelMap.ProductBrowseCatalogs}</div>
           </td>
           <td valign=middle align=right>
             <#if isOpen>
@@ -49,7 +51,7 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <tr>
           <td>
-            <div><a href='<@ofbizUrl>/FindProdCatalog</@ofbizUrl>' class='buttontext'>Catalog Detail List</a></div>
+            <div><a href='<@ofbizUrl>/FindProdCatalog</@ofbizUrl>' class='buttontext'>${uiLabelMap.ProductCatalogDetailList}</a></div>
             <div style='margin-left: 10px;'>
               <#assign sortList = Static["org.ofbiz.base.util.UtilMisc"].toList("prodCatalogCategoryTypeId", "sequenceNum", "productCategoryId")>
               <#list prodCatalogs as prodCatalog>

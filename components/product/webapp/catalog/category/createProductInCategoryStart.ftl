@@ -20,18 +20,20 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.2 $
+ *@author     Catherine Heintz (catherine.heintz@nereide.biz)
+ *@version    $Revision: 1.3 $
  *@since      2.1
 -->
 
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#if hasPermission>
 
-<div class="head1">Create Product in Category <span class="head2"><#if (productCategory.description)?has_content>"${productCategory.description}"</#if> [ID:${productCategoryId?if_exists}]</span></div>
+<div class="head1">${uiLabelMap.ProductCreateProductInCategory }<span class="head2"><#if (productCategory.description)?has_content>"${productCategory.description}"</#if> [${uiLabelMap.ProductCategoryId}:${productCategoryId?if_exists}]</span></div>
 <#if productCategoryId?has_content>
-    <a href="<@ofbizUrl>/EditCategory?productCategoryId=${productCategoryId}</@ofbizUrl>" class="buttontext">[Back to Edit Category]</a>
+    <a href="<@ofbizUrl>/EditCategory?productCategoryId=${productCategoryId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductBackToEditCategory}]</a>
 </#if>
 
-<form name="createProductInCategoryCheckExistingForm" method="POST" action="<@ofbizUrl>/createProductInCategoryCheckExisting</@ofbizUrl>" style="margin: 0;">
+<form name="createProductInCategoryCheckExistingForm" method="POST" action="<@ofbizUrl>/ProductCreateProductInCategoryCheckExisting</@ofbizUrl>" style="margin: 0;">
     <input type="hidden" name="productCategoryId" value="${productCategoryId}">
     <table width="100%" cellpadding="1" cellspacing="0" border="1">
         <#list productFeaturesByTypeMap.keySet() as productFeatureTypeId>
@@ -45,40 +47,40 @@
                 <td>
                     <div class="tabletext">
                         <select class="selectBox" name="pft_${productFeatureTypeId}">
-                            <option value="">- none -</option>
+                            <option value="">- ${uiLabelMap.CommonNone} -</option>
                             <#list productFeatures as productFeature>
                                 <option value="${productFeature.productFeatureId}">${productFeature.description}</option>
                             </#list>
                         </select>
-                        <input type="checkbox" name="pftsel_${productFeatureTypeId}"/>Selectable
+                        <input type="checkbox" name="pftsel_${productFeatureTypeId}"/>${uiLabelMap.ProductSelectable}
                     </div>
                 </td>
             </tr>
         </#list>
         <tr>
-            <td width="15%"><div class="tabletext">Product Name:</div></td>
+            <td width="15%"><div class="tabletext">${uiLabelMap.ProductProductName}:</div></td>
             <td><input type="text" name="productName" size="30" maxlength="60" class="inputBox"/></td>
         </tr>
         <tr>
-            <td width="15%"><div class="tabletext">Short Description:</div></td>
+            <td width="15%"><div class="tabletext">${uiLabelMap.ProductShortDescription}:</div></td>
             <td><input type="text" name="description" size="60" maxlength="250" class="inputBox"/></td>
         </tr>
         <tr>
-            <td width="15%"><div class="tabletext">Default Price:</div></td>
+            <td width="15%"><div class="tabletext">${uiLabelMap.ProductDefaultPrice}:</div></td>
             <td><input type="text" name="defaultPrice" size="8" class="inputBox"/></td>
         </tr>
         <tr>
-            <td width="15%"><div class="tabletext">Average Cost:</div></td>
+            <td width="15%"><div class="tabletext">${uiLabelMap.ProductAverageCost}:</div></td>
             <td><input type="text" name="averageCost" size="8" class="inputBox"/></td>
         </tr>
         <tr>
             <td colspan="3">
-                <a href="javascript:document.createProductInCategoryCheckExistingForm.submit()" class="buttontext">Check Existing</a>
+                <a href="javascript:document.createProductInCategoryCheckExistingForm.submit()" class="buttontext">${uiLabelMap.ProductCheckExisting}</a>
             </td>
         </tr>
     </table>
 </form>
 
 <#else>
-  <h3>You do not have permission to view this page. ("CATALOG_VIEW" or "CATALOG_ADMIN" needed)</h3>
+  <h3>${uiLabelMap.ProductViewPermissionError}</h3>
 </#if>

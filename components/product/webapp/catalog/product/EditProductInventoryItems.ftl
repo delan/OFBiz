@@ -21,27 +21,28 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Brad Steiner (bsteiner@thehungersite.com)
- *@version    $Revision: 1.5 $
+ *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
+ *@version    $Revision: 1.6 $
  *@since      2.2
 -->
-
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#if hasPermission>
     <#assign externalKeyParam = "&externalLoginKey=" + requestAttributes.externalLoginKey?if_exists>
 
 ${pages.get("/product/ProductTabBar.ftl")}
     
-    <div class="head1">Inventory Summary <span class="head2">for <#if product?exists>${(product.productName)?if_exists} </#if> [ID:${productId?if_exists}]</span></div>
-    <a href="<@ofbizUrl>/EditProduct</@ofbizUrl>" class="buttontext">[New Product]</a>
+    <div class="head1">${uiLabelMap.ProductInventorySummary} <span class="head2">${uiLabelMap.CommonFor} <#if product?exists>${(product.productName)?if_exists} </#if> [${uiLabelMap.CommonId}:${productId?if_exists}]</span></div>
+    <a href="<@ofbizUrl>/EditProduct</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewProduct}]</a>
     <#if productId?has_content>
-        <a href="/ecommerce/control/product?product_id=${productId}" class="buttontext" target="_blank">[Product Page]</a>
+        <a href="/ecommerce/control/product?product_id=${productId}" class="buttontext" target="_blank">[${uiLabelMap.ProductProductPage}]</a>
     </#if>
     
     <table border="1" cellpadding="2" cellspacing="0">
         <tr>
-            <td><div class="tabletext"><b>Facility</b></div></td>
-            <td><div class="tabletext"><b>ATP</b></div></td>
-            <td><div class="tabletext"><b>QOH</b></div></td>
-            <td><div class="tabletext"><b>Incoming Shipments</b></div></td>
+            <td><div class="tabletext"><b>${uiLabelMap.ProductFacility}</b></div></td>
+            <td><div class="tabletext"><b>${uiLabelMap.ProductAtp}</b></div></td>
+            <td><div class="tabletext"><b>${uiLabelMap.ProductQoh}</b></div></td>
+            <td><div class="tabletext"><b>${uiLabelMap.ProductIncomingShipments}</b></div></td>
         </tr>
         <#list quantitySummaryByFacility.values() as quantitySummary>
             <#assign facilityId = quantitySummary.facilityId?if_exists>
@@ -56,7 +57,7 @@ ${pages.get("/product/ProductTabBar.ftl")}
                 <td>
                     <#if incomingShipmentAndItemList?has_content>
                         <#list incomingShipmentAndItemList as incomingShipmentAndItem>
-                            <div class="tabletext">${incomingShipmentAndItem.shipmentId}:${incomingShipmentAndItem.shipmentItemSeqId}-${(incomingShipmentAndItem.estimatedArrivalDate.toString())?if_exists}-<#if incomingShipmentAndItem.quantity?exists>${incomingShipmentAndItem.quantity?string.number}<#else>[Quantity Not Set]</#if></div>
+                            <div class="tabletext">${incomingShipmentAndItem.shipmentId}:${incomingShipmentAndItem.shipmentItemSeqId}-${(incomingShipmentAndItem.estimatedArrivalDate.toString())?if_exists}-<#if incomingShipmentAndItem.quantity?exists>${incomingShipmentAndItem.quantity?string.number}<#else>[${uiLabelMap.ProductQuantityNotSet}]</#if></div>
                         </#list>
                     <#else>
                         <div class="tabletext">&nbsp;</div>
@@ -68,35 +69,35 @@ ${pages.get("/product/ProductTabBar.ftl")}
     
     <hr class="sepbar"/>
     
-    <div class="head1">Inventory Items <span class="head2">for <#if product?exists>${(product.productName)?if_exists} </#if> [ID:${productId?if_exists}]</span></div>
+    <div class="head1">${uiLabelMap.ProductInventoryItems} <span class="head2">${uiLabelMap.CommonFor} <#if product?exists>${(product.productName)?if_exists} </#if> [${uiLabelMap.CommonId}:${productId?if_exists}]</span></div>
     <#if productId?has_content>
-        <a href="/facility/control/EditInventoryItem?productId=${productId}${externalKeyParam}" class="buttontext">[Create New Inventory Item for this Product]</a>
+        <a href="/facility/control/EditInventoryItem?productId=${productId}${externalKeyParam}" class="buttontext">[${uiLabelMap.ProductCreateNewInventoryItemProduct}]</a>
         <#if showEmpty>
-            <a href="<@ofbizUrl>/EditProductInventoryItems?productId=${productId}</@ofbizUrl>" class="buttontext">[Hide Empty Items]</a>
+            <a href="<@ofbizUrl>/EditProductInventoryItems?productId=${productId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductHideEmptyItems}]</a>
         <#else>
-            <a href="<@ofbizUrl>/EditProductInventoryItems?productId=${productId}&showEmpty=true</@ofbizUrl>" class="buttontext">[Show Empty Items]</a>
+            <a href="<@ofbizUrl>/EditProductInventoryItems?productId=${productId}&showEmpty=true</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductShowEmptyItems}]</a>
         </#if>
     </#if>
     <br>
         
     <#if (product.isVirtual)?if_exists == "Y">
-        <div class="head3">WARNING: This is a Virtual product and generally should not have inventory items associated with it.</div>
+        <div class="head3">${uiLabelMap.ProductWarningVirtualProduct}.</div>
     </#if>
     
     <br>
     <#if productId?exists>
         <table border="1" cellpadding="2" cellspacing="0">
         <tr>
-            <td><div class="tabletext"><b>Item&nbsp;ID</b></div></td>
-            <td><div class="tabletext"><b>Item&nbsp;Type</b></div></td>
-            <td><div class="tabletext"><b>Status</b></div></td>
-            <td><div class="tabletext"><b>Received</b></div></td>
-            <td><div class="tabletext"><b>Expire</b></div></td>
-            <td><div class="tabletext"><b>Facility or Container ID</b></div></td>
-            <td><div class="tabletext"><b>Location</b></div></td>
-            <td><div class="tabletext"><b>Lot&nbsp;ID</b></div></td>
-            <td><div class="tabletext"><b>BinNum</b></div></td>
-            <td><div class="tabletext"><b>ATP/QOH or Serial#</b></div></td>
+            <td><div class="tabletext"><b>${uiLabelMap.ProductItemId}</b></div></td>
+            <td><div class="tabletext"><b>${uiLabelMap.ProductItemType}</b></div></td>
+            <td><div class="tabletext"><b>${uiLabelMap.ProductStatus}</b></div></td>
+            <td><div class="tabletext"><b>${uiLabelMap.CommonReceived}</b></div></td>
+            <td><div class="tabletext"><b>${uiLabelMap.CommonExpire}</b></div></td>
+            <td><div class="tabletext"><b>${uiLabelMap.ProductFacilityContainerId}</b></div></td>
+            <td><div class="tabletext"><b>${uiLabelMap.ProductLocation}</b></div></td>
+            <td><div class="tabletext"><b>${uiLabelMap.ProductLotId}</b></div></td>
+            <td><div class="tabletext"><b>${uiLabelMap.ProductBinNum}</b></div></td>
+            <td><div class="tabletext"><b>${uiLabelMap.ProductAtpQohSerial}</b></div></td>
             <td><div class="tabletext">&nbsp;</div></td>
             <td><div class="tabletext">&nbsp;</div></td>
         </tr>
@@ -121,7 +122,7 @@ ${pages.get("/product/ProductTabBar.ftl")}
                                     <#elseif inventoryItem.statusId?has_content>
                                         [${inventoryItem.statusId}]
                                     <#else>
-                                        Not Set&nbsp;
+                                        ${uiLabelMap.CommonNotSet}&nbsp;
                                     </#if>
                                 <#else>
                                     &nbsp;
@@ -131,13 +132,13 @@ ${pages.get("/product/ProductTabBar.ftl")}
                         <td><div class="tabletext">&nbsp;${(inventoryItem.datetimeReceived)?if_exists}</div></td>
                         <td><div class="tabletext">&nbsp;${(inventoryItem.expireDate)?if_exists}</div></td>
                         <#if inventoryItem.facilityId?exists && inventoryItem.containerId?exists>
-                            <td><div class="tabletext" style="color: red;">Error: facility (${inventoryItem.facilityId}) 
-                                AND container (${inventoryItem.containerId}) specified</div></td>
+                            <td><div class="tabletext" style="color: red;">${uiLabelMap.ProductErrorFacility} (${inventoryItem.facilityId}) 
+                                ${uiLabelMap.ProductAndContainer} (${inventoryItem.containerId}) ${uiLabelMap.CommonSpecified}</div></td>
                         <#elseif inventoryItem.facilityId?exists>
-                            <td><span class="tabletext">F:&nbsp;</span><a href="/facility/control/EditFacility?facilityId=${inventoryItem.facilityId}${externalKeyParam}" class="buttontext">
+                            <td><span class="tabletext">${uiLabelMap.ProductFacilityLetter}:&nbsp;</span><a href="/facility/control/EditFacility?facilityId=${inventoryItem.facilityId}${externalKeyParam}" class="buttontext">
                                 ${inventoryItem.facilityId}</a></td>
                         <#elseif (inventoryItem.containerId)?exists>
-                            <td><span class="tabletext">C:&nbsp;</span><a href="<@ofbizUrl>/EditContainer?containerId=${inventoryItem.containerId }</@ofbizUrl>" class="buttontext">
+                            <td><span class="tabletext">${uiLabelMap.ProductContainerLetter}:&nbsp;</span><a href="<@ofbizUrl>/EditContainer?containerId=${inventoryItem.containerId }</@ofbizUrl>" class="buttontext">
                                 ${inventoryItem.containerId}</a></td>
                         <#else>
                             <td>&nbsp;</td>
@@ -153,17 +154,17 @@ ${pages.get("/product/ProductTabBar.ftl")}
                         <#elseif inventoryItem.inventoryItemTypeId?if_exists == "SERIALIZED_INV_ITEM">
                             <td><div class="tabletext">&nbsp;${(inventoryItem.serialNumber)?if_exists}</div></td>
                         <#else>
-                            <td><div class="tabletext" style="color: red;">Error: type ${(inventoryItem.inventoryItemTypeId)?if_exists} unknown, serialNumber (${(inventoryItem.serialNumber)?if_exists}) 
-                                AND quantityOnHand (${(inventoryItem.quantityOnHand)?if_exists} specified</div></td>
+                            <td><div class="tabletext" style="color: red;">${uiLabelMap.ProductErrorType} ${(inventoryItem.inventoryItemTypeId)?if_exists} ${uiLabelMap.ProductUnknownSerialNumber} (${(inventoryItem.serialNumber)?if_exists}) 
+                                ${uiLabelMap.ProductAndQuantityOnHand} (${(inventoryItem.quantityOnHand)?if_exists} ${uiLabelMap.CommonSpecified}</div></td>
                             <td>&nbsp;</td>
                         </#if>
                         <td>
                         <a href="/facility/control/EditInventoryItem?inventoryItemId=${(inventoryItem.inventoryItemId)?if_exists}${externalKeyParam}" class="buttontext">
-                        [Edit]</a>
+                        [${uiLabelMap.CommonEdit}]</a>
                         </td>
                         <td>
                         <a href="<@ofbizUrl>/DeleteProductInventoryItem?productId=${productId}&inventoryItemId=${(inventoryItem.inventoryItemId)?if_exists}</@ofbizUrl>" class="buttontext">
-                        [Delete]</a>
+                        [${uiLabelMap.CommonDelete}]</a>
                         </td>
                     </tr>
                 </#if>
@@ -172,5 +173,5 @@ ${pages.get("/product/ProductTabBar.ftl")}
         </table>
     </#if>
 <#else>
-  <h3>You do not have permission to view this page. ("CATALOG_VIEW" or "CATALOG_ADMIN" needed)</h3>
+  <h3>${uiLabelMap.ProductViewPermissionError}</h3>
 </#if>

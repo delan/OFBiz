@@ -21,19 +21,20 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Brad Steiner (bsteiner@thehungersite.com)
- *@version    $Revision: 1.1 $
+ *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
+ *@version    $Revision: 1.2 $
  *@since      2.2
 -->
-
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#if hasPermission>
 
 ${pages.get("/product/ProductTabBar.ftl")}
     
-    <div class="head1">Category Members <span class='head2'>for ${product.productName?if_exists} <#if product?has_content>[ID:${productId}]</#if></span></div>
+    <div class="head1">${uiLabelMap.ProductCategoryMembers} <span class='head2'>${uiLabelMap.CommonFor} ${product.productName?if_exists} <#if product?has_content>[${uiLabelMap.CommonId}:${productId}]</#if></span></div>
     
-    <a href="<@ofbizUrl>/EditProduct</@ofbizUrl>" class="buttontext">[New Product]</a>
+    <a href="<@ofbizUrl>/EditProduct</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewProduct}]</a>
     <#if productId?has_content>
-        <a href="/ecommerce/control/product?product_id=${productId}" class='buttontext' target='_blank'>[Product Page]</a>
+        <a href="/ecommerce/control/product?product_id=${productId}" class='buttontext' target='_blank'>[${uiLabelMap.ProductProductPage}]</a>
     </#if>
     <br>
     <br>
@@ -42,5 +43,5 @@ ${pages.get("/product/ProductTabBar.ftl")}
         ${updateProductCategoryMemberWrapper.renderFormString()}<br>${addProductCategoryMemberWrapper.renderFormString()}
     </#if>
 <#else>
-  <h3>You do not have permission to view this page. ("CATALOG_VIEW" or "CATALOG_ADMIN" needed)</h3>
+  <h3>${uiLabelMap.ProductViewPermissionError}</h3>
 </#if>
