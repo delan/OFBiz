@@ -104,6 +104,9 @@
       <relation type="many" rel-entity-name="SalesTaxLookup">
         <key-map field-name="productCategoryId" />
       </relation>
+      <relation type="many" rel-entity-name="ProductFeatureCategoryAppl">
+        <key-map field-name="productCategoryId" />
+      </relation>
     </entity>
     <entity entity-name="ProductCategoryAttribute" 
             package-name="org.ofbiz.commonapp.product.category"
@@ -418,6 +421,26 @@
         <key-map field-name="parentCategoryId" rel-field-name="productFeatureCategoryId" />
       </relation>
       <relation type="many" rel-entity-name="ProductFeature">
+        <key-map field-name="productFeatureCategoryId" />
+      </relation>
+      <relation type="many" rel-entity-name="ProductFeatureCategoryAppl">
+        <key-map field-name="productFeatureCategoryId" />
+      </relation>
+    </entity>
+    <entity entity-name="ProductFeatureCategoryAppl" 
+            package-name="org.ofbiz.commonapp.product.feature"
+            title="Product Feature Category Applicability Entity">
+      <field name="productCategoryId" type="id-ne"></field>
+      <field name="productFeatureCategoryId" type="id-ne"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>	
+      <prim-key field="productCategoryId" />	
+      <prim-key field="productFeatureCategoryId" />	
+      <prim-key field="fromDate" />
+      <relation type="one" rel-entity-name="ProductCategory">
+        <key-map field-name="productCategoryId" />
+      </relation>
+      <relation type="one" rel-entity-name="ProductFeatureCategory">
         <key-map field-name="productFeatureCategoryId" />
       </relation>
     </entity>
