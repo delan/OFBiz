@@ -1,5 +1,5 @@
 /*
- * $Id: EntityUtil.java,v 1.3 2003/11/07 11:46:17 jonesde Exp $
+ * $Id: EntityUtil.java,v 1.4 2003/11/12 07:46:39 jonesde Exp $
  *
  * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
@@ -54,8 +54,8 @@ import org.ofbiz.entity.model.ModelField;
  * Helper methods when dealing with Entities, especially ones that follow certain conventions
  *
  *@author     Eric Pabst
- *@created    Tue Aug 07 01:10:32 MDT 2001
- *@version    1.0
+ *@version    $ Revision: $
+ *@since      1.0
  */
 public class EntityUtil {
 
@@ -205,11 +205,11 @@ public class EntityUtil {
 
         return result;
     }
-    
+
     public static boolean isValueActive(GenericValue datedValue, java.sql.Timestamp moment) {
         return isValueActive(datedValue, moment, "fromDate", "thruDate");
     }
-    
+
     public static boolean isValueActive(GenericValue datedValue, java.sql.Timestamp moment, String fromDateName, String thruDateName) {
         java.sql.Timestamp fromDate = datedValue.getTimestamp(fromDateName);
         java.sql.Timestamp thruDate = datedValue.getTimestamp(thruDateName);
@@ -312,7 +312,7 @@ public class EntityUtil {
         }
         return result;
     }
-    
+
     /**
      *returns the values that match any of the exprs in list
      *
@@ -322,7 +322,7 @@ public class EntityUtil {
      */
     public static List filterByOr(List values, List exprs) {
         if (values == null) return null;
-        if (exprs == null || exprs.size() == 0) {           
+        if (exprs == null || exprs.size() == 0) {
             return values;
         }
 
@@ -386,13 +386,13 @@ public class EntityUtil {
             }
         }
         return result;
-    }    
+    }
 
     /**
      *returns the values in the order specified
      *
      *@param values List of GenericValues
-     *@param order The fields of the named entity to order the query by;
+     *@param orderBy The fields of the named entity to order the query by;
      *      optionally add a " ASC" for ascending or " DESC" for descending
      *@return List of GenericValue's in the proper order
      */
