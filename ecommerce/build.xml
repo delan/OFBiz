@@ -72,7 +72,7 @@
       <property name="api-jars"     value="${servlet.jar}:${jdbc.jar}:${mail.jar}" />
       <property name="xml-jars"     value="${jaxp.jar}" />
       
-      <property name="ofb-jars"     value="${ofbcore.jar}:${ofbcommonapp.jar}" />
+      <property name="ofb-jars"     value="${ofbcore-share.jar}:${ofbcore-webapp.jar}:${ofbcommonapp.jar}" />
       <property name="classpath"    value="${env.CLASSPATH}:${lib.dir}:${ofb-jars}:${api-jars}:${xml-jars}" />
 	  
       <echo message="classpath: ${classpath}" />
