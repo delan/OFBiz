@@ -87,7 +87,7 @@
     <simple-method method-name="updateProduct" short-description="Update an Product">
         <string-to-field string="updateProduct" field-name="callingMethodName"/>
         <string-to-field string="UPDATE" field-name="checkAction"/>
-    	<call-simple-method method-name="checkProductRelatedPermission"/>
+        <call-simple-method method-name="checkProductRelatedPermission"/>
         <check-errors/>
 
         <field-to-field field-name="productId" map-name="parameters" to-map-name="lookupPKMap"/>
@@ -119,9 +119,9 @@
     <simple-method method-name="duplicateProduct" short-description="Duplicate a Product">
         <string-to-field string="duplicateProduct" field-name="callingMethodName"/>
         <string-to-field string="CREATE" field-name="checkAction"/>
-    	<call-simple-method method-name="checkProductRelatedPermission"/>
+        <call-simple-method method-name="checkProductRelatedPermission"/>
         <string-to-field string="DELETE" field-name="checkAction"/>
-    	<call-simple-method method-name="checkProductRelatedPermission"/>
+        <call-simple-method method-name="checkProductRelatedPermission"/>
         <check-errors/>
 
         <!-- look up the old product and clone it -->
@@ -234,27 +234,27 @@
     </simple-method>
 
     <simple-method method-name="indexProductKeywords" short-description="Index the Keywords for a Product" login-required="false">
-    	<!-- this service is meant to be called from an entity ECA for entities that include a productId -->
-    	<!-- if it is the Product entity itself triggering this action, then a [productInstance] parameter 
-    	    will be passed and we can save a few cycles looking that up -->
-    	<field-to-env field-name="productInstance" map-name="parameters" env-name="productInstance"/>
-    	<if-empty field-name="productInstance">
-    		<field-to-field field-name="productId" map-name="parameters" to-map-name="findProductMap"/>
+        <!-- this service is meant to be called from an entity ECA for entities that include a productId -->
+        <!-- if it is the Product entity itself triggering this action, then a [productInstance] parameter 
+            will be passed and we can save a few cycles looking that up -->
+        <field-to-env field-name="productInstance" map-name="parameters" env-name="productInstance"/>
+        <if-empty field-name="productInstance">
+            <field-to-field field-name="productId" map-name="parameters" to-map-name="findProductMap"/>
             <find-by-primary-key entity-name="Product" map-name="findProductMap" value-name="productInstance"/>
-    	</if-empty>
+        </if-empty>
     
         <!-- induce keywords if autoCreateKeywords is emtpy or Y-->
         <if>
             <condition>
-            	<or>
+                <or>
                     <if-empty field-name="autoCreateKeywords" map-name="productInstance"/>
                     <if-compare field-name="autoCreateKeywords" map-name="productInstance" operator="equals" value="Y"/>
-            	</or>
+                </or>
             </condition>
             <then>
-            	<call-class-method class-name="org.ofbiz.product.product.KeywordSearch" method-name="induceKeywords">
-            		<field field-name="productInstance" type="org.ofbiz.entity.GenericValue"/>
-            	</call-class-method>
+                <call-class-method class-name="org.ofbiz.product.product.KeywordSearch" method-name="induceKeywords">
+                    <field field-name="productInstance" type="org.ofbiz.entity.GenericValue"/>
+                </call-class-method>
             </then>
         </if>
     </simple-method>
@@ -263,7 +263,7 @@
     <simple-method method-name="createGoodIdentification" short-description="Create an GoodIdentification">
         <string-to-field string="createGoodIdentification" field-name="callingMethodName"/>
         <string-to-field string="CREATE" field-name="checkAction"/>
-    	<call-simple-method method-name="checkProductRelatedPermission"/>
+        <call-simple-method method-name="checkProductRelatedPermission"/>
         <check-errors/>
 
         <make-value value-name="newEntity" entity-name="GoodIdentification"/>
@@ -274,7 +274,7 @@
     <simple-method method-name="updateGoodIdentification" short-description="Update an GoodIdentification">
         <string-to-field string="updateGoodIdentification" field-name="callingMethodName"/>
         <string-to-field string="UPDATE" field-name="checkAction"/>
-    	<call-simple-method method-name="checkProductRelatedPermission"/>
+        <call-simple-method method-name="checkProductRelatedPermission"/>
         <check-errors/>
 
         <make-value entity-name="GoodIdentification" value-name="lookupPKMap"/>
@@ -286,7 +286,7 @@
     <simple-method method-name="deleteGoodIdentification" short-description="Delete an GoodIdentification">
         <string-to-field string="deleteGoodIdentification" field-name="callingMethodName"/>
         <string-to-field string="DELETE" field-name="checkAction"/>
-    	<call-simple-method method-name="checkProductRelatedPermission"/>
+        <call-simple-method method-name="checkProductRelatedPermission"/>
         <check-errors/>
 
         <make-value entity-name="GoodIdentification" value-name="lookupPKMap"/>
@@ -299,7 +299,7 @@
     <simple-method method-name="createProductGlAccount" short-description="Create an ProductGlAccount">
         <string-to-field string="createProductGlAccount" field-name="callingMethodName"/>
         <string-to-field string="CREATE" field-name="checkAction"/>
-    	<call-simple-method method-name="checkProductRelatedPermission"/>
+        <call-simple-method method-name="checkProductRelatedPermission"/>
         <check-errors/>
 
         <make-value value-name="newEntity" entity-name="ProductGlAccount"/>
@@ -310,7 +310,7 @@
     <simple-method method-name="updateProductGlAccount" short-description="Update an ProductGlAccount">
         <string-to-field string="updateProductGlAccount" field-name="callingMethodName"/>
         <string-to-field string="UPDATE" field-name="checkAction"/>
-    	<call-simple-method method-name="checkProductRelatedPermission"/>
+        <call-simple-method method-name="checkProductRelatedPermission"/>
         <check-errors/>
 
         <make-value entity-name="ProductGlAccount" value-name="lookupPKMap"/>
@@ -322,7 +322,7 @@
     <simple-method method-name="deleteProductGlAccount" short-description="Delete an ProductGlAccount">
         <string-to-field string="deleteProductGlAccount" field-name="callingMethodName"/>
         <string-to-field string="DELETE" field-name="checkAction"/>
-    	<call-simple-method method-name="checkProductRelatedPermission"/>
+        <call-simple-method method-name="checkProductRelatedPermission"/>
         <check-errors/>
 
         <make-value entity-name="ProductGlAccount" value-name="lookupPKMap"/>
@@ -331,18 +331,18 @@
         <remove-value value-name="lookedUpValue"/>
     </simple-method>
 
-	<!-- a method to centralize product security code, meant to be called in-line with 
-		call-simple-method, and the checkAction and callingMethodName attributes should be in the method context -->
+    <!-- a method to centralize product security code, meant to be called in-line with 
+        call-simple-method, and the checkAction and callingMethodName attributes should be in the method context -->
     <simple-method method-name="checkProductRelatedPermission" short-description="Check Product Related Permission">
-    	<if-empty field-name="callingMethodName">
+        <if-empty field-name="callingMethodName">
             <string-to-field string="this operation" field-name="callingMethodName"/>
-    	</if-empty>
-    	<if-empty field-name="checkAction">
+        </if-empty>
+        <if-empty field-name="checkAction">
             <string-to-field string="UPDATE" field-name="checkAction"/>
-    	</if-empty>
+        </if-empty>
     
-    	<!-- find all role-categories that this product is a member of -->
-    	<if>
+        <!-- find all role-categories that this product is a member of -->
+        <if>
             <condition>
                 <not><if-has-permission permission="CATALOG" action="_${checkAction}"/></not>
             </condition>
@@ -355,7 +355,7 @@
                 <filter-list-by-date list-name="roleCategories" valid-date-name="nowTimestamp" from-field-name="roleFromDate" thru-field-name="roleThruDate"/>
             </then>
         </if>
-    	<if>
+        <if>
             <condition>
                 <not>
                     <or>
@@ -377,7 +377,7 @@
         </if>
     </simple-method>
     
-    <simple-method method-name="createProductReview" short-description="Create an ProductReview">    	
+    <simple-method method-name="createProductReview" short-description="Create an ProductReview">        
         <make-value value-name="newEntity" entity-name="ProductReview"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>        
         <field-to-field field-name="userLoginId" map-name="userLogin" to-map-name="newEntity"/>

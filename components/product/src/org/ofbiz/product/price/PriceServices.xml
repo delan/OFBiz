@@ -26,12 +26,12 @@
  * Created on April 2, 2002
  -->
 <simple-methods>
-
     <!-- ProductPrice methods -->
     <simple-method method-name="createProductPrice" short-description="Create an ProductPrice">
-		<string-to-field string="createProductPrice" field-name="callingMethodName"/>
-		<string-to-field string="CREATE" field-name="checkAction"/>
-    	<call-simple-method method-name="checkProductRelatedPermission" xml-resource="org/ofbiz/product/product/ProductServices.xml"/>
+        <string-to-field string="createProductPrice" field-name="callingMethodName"/>
+        <string-to-field string="CREATE" field-name="checkAction"/>
+        <call-simple-method method-name="checkProductRelatedPermission" xml-resource="org/ofbiz/product/product/ProductServices.xml"/>
+        <!-- <check-permission permission="CATALOG_PRICE_MAINT"><fail-property resource="" property=""/></check-permission> -->
         <check-errors/>
 
         <make-value value-name="newEntity" entity-name="ProductPrice"/>
@@ -53,9 +53,9 @@
         <create-value value-name="newEntity"/>
     </simple-method>
     <simple-method method-name="updateProductPrice" short-description="Update an ProductPrice">
-		<string-to-field string="updateProductPrice" field-name="callingMethodName"/>
-		<string-to-field string="UPDATE" field-name="checkAction"/>
-    	<call-simple-method method-name="checkProductRelatedPermission" xml-resource="org/ofbiz/product/product/ProductServices.xml"/>
+        <string-to-field string="updateProductPrice" field-name="callingMethodName"/>
+        <string-to-field string="UPDATE" field-name="checkAction"/>
+        <call-simple-method method-name="checkProductRelatedPermission" xml-resource="org/ofbiz/product/product/ProductServices.xml"/>
         <check-errors/>
 
         <make-value entity-name="ProductPrice" value-name="lookupPKMap"/>
@@ -74,9 +74,9 @@
         <store-value value-name="lookedUpValue"/>
     </simple-method>
     <simple-method method-name="deleteProductPrice" short-description="Delete an ProductPrice">
-		<string-to-field string="deleteProductPrice" field-name="callingMethodName"/>
-		<string-to-field string="DELETE" field-name="checkAction"/>
-    	<call-simple-method method-name="checkProductRelatedPermission" xml-resource="org/ofbiz/product/product/ProductServices.xml"/>
+        <string-to-field string="deleteProductPrice" field-name="callingMethodName"/>
+        <string-to-field string="DELETE" field-name="checkAction"/>
+        <call-simple-method method-name="checkProductRelatedPermission" xml-resource="org/ofbiz/product/product/ProductServices.xml"/>
         <check-errors/>
 
         <make-value entity-name="ProductPrice" value-name="lookupPKMap"/>
@@ -91,16 +91,16 @@
     
     <simple-method method-name="saveProductPriceChange" short-description="Save History of ProductPrice Change">
         <check-permission permission="CATALOG" action="_UPDATE">
-        	<alt-permission permission="CATALOG" action="_CREATE"/>
-        	<alt-permission permission="CATALOG" action="_DELETE"/>
-        	<alt-permission permission="CATALOG_ROLE" action="_CREATE"/>
-        	<alt-permission permission="CATALOG_ROLE" action="_UPDATE"/>
-        	<alt-permission permission="CATALOG_ROLE" action="_DELETE"/>
-        	<fail-message message="Security Error: to run saveProductPriceChange you must have the CATALOG_UPDATE or CATALOG_ADMIN permission"/>
+            <alt-permission permission="CATALOG" action="_CREATE"/>
+            <alt-permission permission="CATALOG" action="_DELETE"/>
+            <alt-permission permission="CATALOG_ROLE" action="_CREATE"/>
+            <alt-permission permission="CATALOG_ROLE" action="_UPDATE"/>
+            <alt-permission permission="CATALOG_ROLE" action="_DELETE"/>
+            <fail-message message="Security Error: to run saveProductPriceChange you must have the CATALOG_UPDATE or CATALOG_ADMIN permission"/>
         </check-permission>
         <check-errors/>
 
-		<!-- Note that this is kept pretty simple: if a price is specific but no oldPrice, then it is generally a create, if both are specified it is generally an update, if only the oldPrice is specified it is generally a delete -->
+        <!-- Note that this is kept pretty simple: if a price is specific but no oldPrice, then it is generally a create, if both are specified it is generally an update, if only the oldPrice is specified it is generally a delete -->
         <make-value value-name="newEntity" entity-name="ProductPriceChange"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
 
