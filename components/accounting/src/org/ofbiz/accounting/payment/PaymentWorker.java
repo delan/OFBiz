@@ -1,5 +1,5 @@
 /*
- * $Id: PaymentWorker.java,v 1.1 2003/08/18 17:31:37 ajzeneski Exp $
+ * $Id: PaymentWorker.java,v 1.2 2003/08/25 20:00:19 ajzeneski Exp $
  *
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -41,13 +41,14 @@ import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityUtil;
+import org.ofbiz.product.store.ProductStoreWorker;
 
 /**
  * Worker methods for Payments
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class PaymentWorker {
@@ -167,45 +168,16 @@ public class PaymentWorker {
         
         return results;
     }
-    
-    public static GenericValue getPaymentSetting(GenericDelegator delegator, String productStoreId, String paymentMethodTypeId, String paymentServiceTypeEnumId) {
-        GenericValue storePayment = null;
-        try {
-            storePayment = delegator.findByPrimaryKeyCache("ProductStorePaymentSetting", UtilMisc.toMap("productStoreId", productStoreId, "paymentMethodTypeId", paymentMethodTypeId, "paymentServiceTypeEnumId", paymentServiceTypeEnumId));    
-        } catch (GenericEntityException e) {
-            Debug.logError(e, "Problems looking up store payment settings", module);
-        }
         
-        if  (storePayment == null) {
-            try {
-                List storePayments = delegator.findByAnd("ProductStorePaymentSetting", UtilMisc.toMap("productStoreId", productStoreId, "paymentMethodTypeId", paymentMethodTypeId));
-                storePayment = EntityUtil.getFirst(storePayments);
-            } catch (GenericEntityException e) {
-                Debug.logError(e, "Problems looking up store payment settings", module);
-            }
-        }
-        
-        if  (storePayment == null) {
-            try {
-                List storePayments = delegator.findByAnd("ProductStorePaymentSetting", UtilMisc.toMap("productStoreId", productStoreId));
-                storePayment = EntityUtil.getFirst(storePayments);
-            } catch (GenericEntityException e) {
-                Debug.logError(e, "Problems looking up store payment settings", module);
-            }
-        } 
-           
-        return storePayment;                          
-    }  
-    
     public static String getPaymentPartyId(GenericDelegator delegator, String productStoreId, String paymentMethodTypeId) {
-        GenericValue paymentSettings = PaymentWorker.getPaymentSetting(delegator, productStoreId, paymentMethodTypeId, null);
+        GenericValue paymentSettings = ProductStoreWorker.getProductStorePaymentSetting(delegator, productStoreId, paymentMethodTypeId, null);
         String paymentConfig = paymentSettings != null && paymentSettings.get("paymentPropertiesPath") != null ? paymentSettings.getString("paymentPropertiesPath") : null;
         if (paymentConfig == null) paymentConfig = "payment.properties";    
         return UtilProperties.getPropertyValue(paymentConfig, "payment.general.payTo", "Company");
     }
     
     public static GenericValue getPaymentAddress(GenericDelegator delegator, String productStoreId, String paymentMethodTypeId) {
-        GenericValue paymentSettings = PaymentWorker.getPaymentSetting(delegator, productStoreId, paymentMethodTypeId, null);
+        GenericValue paymentSettings = ProductStoreWorker.getProductStorePaymentSetting(delegator, productStoreId, paymentMethodTypeId, null);
         String paymentConfig = paymentSettings != null && paymentSettings.get("paymentPropertiesPath") != null ? paymentSettings.getString("paymentPropertiesPath") : null;
         if (paymentConfig == null) paymentConfig = "payment.properties";
         String payToPartyId = UtilProperties.getPropertyValue(paymentConfig, "payment.general.payTo", "Company");      
@@ -232,5 +204,25 @@ public class PaymentWorker {
         }
                                 
         return postalAddress;   
-    }           
+    } 
+    
+    /**
+     * Returns the total from a list of Payment entities
+     * 
+     * @param payments List of Payment GenericValue items
+     * @return total payments as double
+     */
+    public static double getPaymentsTotal(List payments) {
+        if (payments == null) {
+            throw new IllegalArgumentException("Payment list cannot be null");            
+        }
+        
+        double paymentsTotal = 0.00;
+        Iterator i = payments.iterator();
+        while (i.hasNext()) {
+            GenericValue payment = (GenericValue) i.next();
+            paymentsTotal += payment.getDouble("amount").doubleValue();
+        }
+        return paymentsTotal;
+    }          
 }
