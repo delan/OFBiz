@@ -37,6 +37,7 @@
 
     <handler name="ftl" type="view" class="org.ofbiz.content.webapp.ftl.FreeMarkerViewHandler"/>    
     <handler name="jsp" type="view" class="org.ofbiz.content.webapp.view.JspViewHandler"/>
+    <handler name="screen" type="view" class="org.ofbiz.content.webapp.view.ScreenWidgetViewHandler"/>
     
     <handler name="http" type="view" class="org.ofbiz.content.webapp.view.HttpViewHandler"/>
     <handler name="datavision" type="view" class="org.ofbiz.content.webapp.view.DataVisionViewHandler"/>
@@ -90,10 +91,6 @@
     <!-- End of Security Mappings -->
 
     <!-- Request Mappings -->
-    <request-map uri="fieldLookup">
-    	<security https="true" auth="true"/>
-    	<response name="success" type="view" value="fieldLookup"/>
-    </request-map> 
         
     <request-map uri="view">
         <security https="false" auth="false"/>
@@ -110,6 +107,28 @@
     <request-map uri="main">
     	<security https="false" auth="true"/>
     	<response name="success" type="view" value="main"/>
+    </request-map>
+
+    <!-- Lookup request mappings -->
+    <request-map uri="LookupPerson">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="LookupPerson"/>
+    </request-map>
+    <request-map uri="LookupPartyGroup">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="LookupPartyGroup"/>
+    </request-map>
+    <request-map uri="LookupProduct">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="LookupProduct"/>
+    </request-map>
+    <request-map uri="LookupProductFeature">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="LookupProductFeature"/>
+    </request-map>
+    <request-map uri="LookupPartyName">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="LookupPartyName"/>
     </request-map>
 
     <request-map uri="task">
@@ -171,79 +190,105 @@
 
     <request-map uri="requestlist">
     	<security https="true" auth="true"/>
-    	<response name="success" type="view" value="requestlist"/>
+    	<response name="success" type="view" value="RequestList"/>
     </request-map>
     <request-map uri="request">
     	<security https="true" auth="true"/>
-    	<response name="success" type="view" value="request"/>
+    	<response name="success" type="view" value="EditRequest"/>
     </request-map>
     <request-map uri="createrequest">
     	<security https="true" auth="true"/>
         <event type="service" invoke="createCustRequest"/>
-    	<response name="success" type="view" value="request"/>
-        <response name="error" type="view" value="request"/>
+    	<response name="success" type="view" value="EditRequest"/>
+        <response name="error" type="view" value="EditRequest"/>
     </request-map>
     <request-map uri="updaterequest">
     	<security https="true" auth="true"/>
         <event type="service" invoke="updateCustRequest"/>
-    	<response name="success" type="view" value="request"/>
-        <response name="error" type="view" value="request"/>
+    	<response name="success" type="view" value="EditRequest"/>
+        <response name="error" type="view" value="EditRequest"/>
     </request-map>
 
     <request-map uri="requestroles">
     	<security https="true" auth="true"/>
-    	<response name="success" type="view" value="requestroles"/>
+    	<response name="success" type="view" value="RequestRoles"/>
     </request-map>
     <request-map uri="createrequestrole">
     	<security https="true" auth="true"/>
         <event type="service" invoke="createCustRequestRole"/>
-    	<response name="success" type="view" value="requestroles"/>
-        <response name="error" type="view" value="requestroles"/>
+    	<response name="success" type="view" value="RequestRoles"/>
+        <response name="error" type="view" value="RequestRoles"/>
     </request-map>
     <request-map uri="removerequestrole">
     	<security https="true" auth="true"/>
         <event type="service" invoke="removeCustRequestRole"/>
-    	<response name="success" type="view" value="requestroles"/>
-        <response name="error" type="view" value="requestroles"/>
+    	<response name="success" type="view" value="RequestRoles"/>
+        <response name="error" type="view" value="RequestRoles"/>
     </request-map>
 
     <request-map uri="requestitems">
     	<security https="true" auth="true"/>
-    	<response name="success" type="view" value="requestitems"/>
+    	<response name="success" type="view" value="RequestItems"/>
     </request-map>
     <request-map uri="requestitem">
     	<security https="true" auth="true"/>
-    	<response name="success" type="view" value="requestitem"/>
+    	<response name="success" type="view" value="EditRequestItem"/>
     </request-map>    
     <request-map uri="createrequestitem">
     	<security https="true" auth="true"/>
         <event type="service" invoke="createCustRequestItem"/>
-    	<response name="success" type="view" value="requestitems"/>
-        <response name="error" type="view" value="requestitems"/>
+    	<response name="success" type="view" value="RequestItems"/>
+        <response name="error" type="view" value="RequestItems"/>
     </request-map>
     <request-map uri="updaterequestitem">
     	<security https="true" auth="true"/>
         <event type="service" invoke="updateCustRequestItem"/>
-    	<response name="success" type="view" value="requestitems"/>
-        <response name="error" type="view" value="requestitems"/>
+    	<response name="success" type="view" value="RequestItems"/>
+        <response name="error" type="view" value="RequestItems"/>
     </request-map>
     
     <request-map uri="requestitemnotes">
     	<security https="true" auth="true"/>
-    	<response name="success" type="view" value="requestitemnotes"/>    	
+    	<response name="success" type="view" value="RequestItemNotes"/>    	
     </request-map>
     <request-map uri="createrequestitemnote">
     	<security https="true" auth="true"/>
         <event type="service" invoke="createCustRequestItemNote"/>
-    	<response name="success" type="view" value="requestitemnotes"/>
-        <response name="error" type="view" value="requestitemnotes"/>
+    	<response name="success" type="view" value="RequestItemNotes"/>
+        <response name="error" type="view" value="RequestItemNotes"/>
     </request-map>
-    
+    <request-map uri="RequestItemQuotes">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="RequestItemQuotes"/>
+    </request-map>
     <request-map uri="requestitemrequirements">
     	<security https="true" auth="true"/>
-    	<response name="success" type="view" value="requestitemrequirements"/>
+    	<response name="success" type="view" value="RequestItemRequirements"/>
     </request-map>
-
+    <request-map uri="CreateQuoteAndQuoteItemForRequest">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="CreateQuoteAndQuoteItemForRequest"/>
+    </request-map>
+    <request-map uri="createQuoteAndQuoteItemForRequest">
+    	<security https="true" auth="true"/>
+        <event type="service" invoke="createQuoteAndQuoteItemForRequest"/>
+    	<response name="success" type="view" value="RequestItemQuotes"/>
+    </request-map>
+    <request-map uri="EditQuoteItemForRequest">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="EditQuoteItemForRequest"/>
+    </request-map>
+    <request-map uri="createQuoteItemForRequest">
+    	<security https="true" auth="true"/>
+        <event type="service" invoke="createQuoteItem"/>
+    	<response name="success" type="view" value="RequestItemQuotes"/>
+    </request-map>
+    <request-map uri="updateQuoteItemForRequest">
+    	<security https="true" auth="true"/>
+        <event type="service" invoke="updateQuoteItem"/>
+    	<response name="success" type="view" value="RequestItemQuotes"/>
+    </request-map>
+    
     <request-map uri="openApplication">        
         <security https="false" auth="false"/>
         <response name="success" type="view" value="openapplication"/>
@@ -541,18 +586,26 @@
 
     <!-- View Mappings -->
     <view-map name="error" page="/error/error.jsp"/>
-    <view-map name="main" type="jpublish" page="/main.ftl"/>
-    <view-map name="login" type="jpublish" page="/login.ftl"/>
+    <view-map name="main" type="screen" page="component://workeffort/widget/CommonScreens.xml#main"/>
+    <view-map name="login" type="screen" page="component://workeffort/widget/CommonScreens.xml#login"/>
 
-    <view-map name="fieldLookup" type="jpublish" page="/includes/fieldlookup.ftl"/>
+    <view-map name="LookupPerson" page="component://party/widget/partymgr/LookupScreens.xml#LookupPerson" type="screen"/>
+    <view-map name="LookupPartyGroup" page="component://party/widget/partymgr/LookupScreens.xml#LookupPartyGroup" type="screen"/>
+    <view-map name="LookupPartyName" page="component://party/widget/partymgr/LookupScreens.xml#LookupPartyName" type="screen"/>
+    <view-map name="LookupProduct" page="component://product/widget/catalog/LookupScreens.xml#LookupProduct" type="screen"/>
+    <view-map name="LookupProductFeature" page="component://product/widget/catalog/LookupScreens.xml#LookupProductFeature" type="screen"/>
+
+    <view-map name="EditRequest" type="screen" page="component://workeffort/widget/RequestScreens.xml#EditRequest"/>
+    <view-map name="EditRequestItem" type="screen" page="component://workeffort/widget/RequestScreens.xml#EditRequestItem"/>
+    <view-map name="RequestList" type="screen" page="component://workeffort/widget/RequestScreens.xml#RequestList"/>
+    <view-map name="RequestItems" type="screen" page="component://workeffort/widget/RequestScreens.xml#RequestItems"/>
+    <view-map name="RequestRoles" type="screen" page="component://workeffort/widget/RequestScreens.xml#RequestRoles"/>
+    <view-map name="RequestItemNotes" type="screen" page="component://workeffort/widget/RequestScreens.xml#RequestItemNotes"/>
+    <view-map name="RequestItemQuotes" type="screen" page="component://workeffort/widget/RequestScreens.xml#RequestItemQuotes"/>
+    <view-map name="RequestItemRequirements" type="screen" page="component://workeffort/widget/RequestScreens.xml#RequestItemRequirements"/>
+    <view-map name="CreateQuoteAndQuoteItemForRequest" type="screen" page="component://workeffort/widget/RequestScreens.xml#CreateQuoteAndQuoteItemForRequest"/>
+    <view-map name="EditQuoteItemForRequest" type="screen" page="component://workeffort/widget/RequestScreens.xml#EditQuoteItemForRequest"/>
     
-    <view-map name="requestlist" type="jpublish" page="/request/requestlist.ftl"/>
-    <view-map name="request" type="region"/>
-    <view-map name="requestitems" type="jpublish" page="/request/requestitems.ftl"/>
-    <view-map name="requestitem" type="region"/>    
-    <view-map name="requestroles" type="jpublish" page="/request/requestroles.ftl"/>
-    <view-map name="requestitemnotes" type="jpublish" page="/request/requestitemnotes.ftl"/>
-    <view-map name="requestitemrequirements" type="jpublish" page="/request/requestitemrequirements.ftl"/>
     <view-map name="requirementlist" type="jpublish" page="/requirement/requirementlist.ftl"/>
     <view-map name="requirement" type="region"/>
 
