@@ -284,6 +284,7 @@
   <ProductFeatureType description="" hasTable="N" parentTypeId="" productFeatureTypeId="SIZE"/>
   <ProductFeatureType description="" hasTable="N" parentTypeId="" productFeatureTypeId="SOFTWARE_FEATURE"/>
   <ProductFeatureType description="" hasTable="N" parentTypeId="" productFeatureTypeId="DIMENSION"/>
+  <ProductType description="Virtual Product" hasTable="N" parentTypeId="NONE" productTypeId="VIRTUAL_PRODUCT"/>
   <ProductType description="Service" hasTable="N" parentTypeId="NONE" productTypeId="SERVICE"/>
   <ProductType description="Good" hasTable="N" parentTypeId="NONE" productTypeId="GOOD"/>
   <ProductType description="Raw Material" hasTable="N" parentTypeId="GOOD" productTypeId="RAW_MATERIAL"/>
