@@ -65,6 +65,7 @@ public class OfbizBshBsfEngine extends BSFEngineImpl {
         super.initialize(mgr, lang, declaredBeans);
         
         interpreter = new Interpreter();
+        interpreter.setClassLoader(Thread.currentThread().getContextClassLoader());
         
         // declare the bsf manager for callbacks, etc.
         try {
@@ -290,7 +291,7 @@ public class OfbizBshBsfEngine extends BSFEngineImpl {
                 }
             } catch (InterpreterError e) {
                 Debug.logError(e);
-                throw new EvalError("Sourced file: " + sourceFileInfo + " internal Error: " + e.getMessage(), node);
+                throw new EvalError("Sourced file: " + sourceFileInfo + " internal Error: " + e.getMessage(), node, callstack);
             } catch (TargetError e) {
                 // failsafe, set the Line as the origin of the error.
                 if (e.getNode() == null) e.setNode(node);
@@ -302,11 +303,13 @@ public class OfbizBshBsfEngine extends BSFEngineImpl {
                 Debug.logError(e);
                 e.reThrow("Sourced file: " + sourceFileInfo);
             } catch (Exception e) {
-                EvalError newError = new EvalError("Sourced file: " + sourceFileInfo + " unknown error: " + e.getMessage(), node);
+                Debug.logError(e);
+                EvalError newError = new EvalError("Sourced file: " + sourceFileInfo + " unknown error: " + e.getMessage(), node, callstack);
                 Debug.logError(newError);
                 throw newError;
             } catch (TokenMgrError e) {
-                EvalError newError = new EvalError("Sourced file: " + sourceFileInfo + " Token Parsing Error: " + e.getMessage(), node);
+                Debug.logError(e);
+                EvalError newError = new EvalError("Sourced file: " + sourceFileInfo + " Token Parsing Error: " + e.getMessage(), node, callstack);
                 Debug.logError(newError);
                 throw newError;
             } finally {
