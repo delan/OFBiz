@@ -80,29 +80,29 @@ public class XmlSerializer {
         if (object == null) return document.createElement("null");
 
         // - Standard Objects -
-        if (object instanceof String)
+        if (object instanceof String) {
             return makeElement("std-String", object, document);
-        else if (object instanceof Integer)
+        } else if (object instanceof Integer) {
             return makeElement("std-Integer", object, document);
-        else if (object instanceof Long)
+        } else if (object instanceof Long) {
             return makeElement("std-Long", object, document);
-        else if (object instanceof Float)
+        } else if (object instanceof Float) {
             return makeElement("std-Float", object, document);
-        else if (object instanceof Double)
+        } else if (object instanceof Double) {
             return makeElement("std-Double", object, document);
-        else if (object instanceof Boolean)
+        } else if (object instanceof Boolean) {
             return makeElement("std-Boolean", object, document);
-        else if (object instanceof java.util.Date)
+        } else if (object instanceof java.util.Date) {
             return makeElement("std-Date", object, document);
+        } else if (object instanceof java.sql.Timestamp) {
         // - SQL Objects -
-        else if (object instanceof java.sql.Timestamp)
             return makeElement("sql-Timestamp", object, document);
-        else if (object instanceof java.sql.Date)
+        } else if (object instanceof java.sql.Date) {
             return makeElement("sql-Date", object, document);
-        else if (object instanceof java.sql.Time)
+        } else if (object instanceof java.sql.Time) {
             return makeElement("sql-Time", object, document);
-        // - Collections -
-        else if (object instanceof Collection) {
+        } else if (object instanceof Collection) {
+            // - Collections -
             String elementName = null;
             //these ARE order sensitive; for instance Stack extends Vector, so if Vector were first we would lose the stack part
             if (object instanceof ArrayList)
@@ -125,9 +125,15 @@ public class XmlSerializer {
                 element.appendChild(serializeSingle(iter.next(), document));
             }
             return element;
-        }
-        // - Maps -
-        else if (object instanceof Map) {
+        } else if (object instanceof GenericPK) {
+            //Do GenericEntity objects as a special case, use std XML import/export routines
+            GenericPK value = (GenericPK) object;
+            return value.makeXmlElement(document, "eepk-");
+        } else if (object instanceof GenericValue) {
+            GenericValue value = (GenericValue) object;
+            return value.makeXmlElement(document, "eeval-");
+        } else if (object instanceof Map) {
+            // - Maps -
             String elementName = null;
             //these ARE order sensitive; for instance Properties extends Hashtable, so if Hashtable were first we would lose the Properties part
             if (object instanceof HashMap)
@@ -159,14 +165,6 @@ public class XmlSerializer {
             }
             return element;
         }
-        //Do GenericEntity objects as a special case, use std XML import/export routines
-        else if (object instanceof GenericPK) {
-            GenericPK value = (GenericPK) object;
-            return value.makeXmlElement(document, "eepk-");
-        } else if (object instanceof GenericValue) {
-            GenericValue value = (GenericValue) object;
-            return value.makeXmlElement(document, "eeval-");
-        }
 
         return serializeCustom(object, document);
     }
@@ -188,8 +186,8 @@ public class XmlSerializer {
 
         if (tagName.equals("null")) return null;
 
-        // - Standard Objects -
         if (tagName.startsWith("std-")) {
+            // - Standard Objects -
             if ("std-String".equals(tagName)) {
                 return element.getAttribute("value");
             } else if ("std-Integer".equals(tagName)) {
@@ -218,9 +216,8 @@ public class XmlSerializer {
                 }
                 return value;
             }
-        }
-        // - SQL Objects -
-        else if (tagName.startsWith("sql-")) {
+        } else if (tagName.startsWith("sql-")) {
+            // - SQL Objects -
             if ("sql-Timestamp".equals(tagName)) {
                 String valStr = element.getAttribute("value");
                 return java.sql.Timestamp.valueOf(valStr);
@@ -231,9 +228,8 @@ public class XmlSerializer {
                 String valStr = element.getAttribute("value");
                 return java.sql.Time.valueOf(valStr);
             }
-        }
-        // - Collections -
-        else if (tagName.startsWith("col-")) {
+        } else if (tagName.startsWith("col-")) {
+            // - Collections -
             Collection value = null;
             if ("col-ArrayList".equals(tagName))
                 value = new ArrayList();
@@ -259,9 +255,8 @@ public class XmlSerializer {
                 }
                 return value;
             }
-        }
-        // - Maps -
-        else if (tagName.startsWith("map-")) {
+        } else if (tagName.startsWith("map-")) {
+            // - Maps -
             Map value = null;
             if ("map-HashMap".equals(tagName))
                 value = new HashMap();
