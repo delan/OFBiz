@@ -219,7 +219,7 @@
 
 <!ELEMENT submit EMPTY>
 <!ATTLIST submit
-    button-type ( text-link | button | image ) "text-link"
+    button-type ( button | text-link | image ) "button"
     image-location CDATA #IMPLIED
 >
 
