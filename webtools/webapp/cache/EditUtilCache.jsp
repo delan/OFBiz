@@ -84,8 +84,8 @@
     </TR>
     <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr bgcolor="<%=rowColor%>">
       <TD>useSoftReference?</TD>
-      <TD><%=Boolean.toString(utilCache.getUseSoftReference())%></TD>
-      <TD><input type="text" size="6" maxlength="5" name="UTIL_CACHE_USE_SOFT_REFERENCE" value="<%=Boolean.toString(utilCache.getUseSoftReference())%>"></TD>
+      <TD><%=(new Boolean(utilCache.getUseSoftReference())).toString()%></TD>
+      <TD><input type="text" size="6" maxlength="5" name="UTIL_CACHE_USE_SOFT_REFERENCE" value="<%=(new Boolean(utilCache.getUseSoftReference())).toString()%>"></TD>
     </TR>
     <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr bgcolor="<%=rowColor%>">
       <TD colspan="3"><INPUT type="submit" value="Update"></TD>
