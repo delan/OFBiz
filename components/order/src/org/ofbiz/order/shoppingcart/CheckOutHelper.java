@@ -1,5 +1,5 @@
 /*
- * $Id: CheckOutHelper.java,v 1.3 2003/08/27 13:53:25 ajzeneski Exp $
+ * $Id: CheckOutHelper.java,v 1.4 2003/08/28 16:09:39 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -63,7 +63,7 @@ import org.ofbiz.service.ServiceUtil;
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:tristana@twibble.org">Tristan Austin</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.0
  */
 public class CheckOutHelper {
@@ -398,6 +398,9 @@ public class CheckOutHelper {
         String DECLINE_MESSAGE = productStore.getString("authDeclinedMessage");
         String ERROR_MESSAGE = productStore.getString("authErrorMessage");
         String RETRY_ON_ERROR = productStore.getString("retryFailedAuths");
+        if (RETRY_ON_ERROR == null) {
+            RETRY_ON_ERROR = "Y";
+        }
 
         // Get the orderId from the cart.
         String orderId = this.cart.getOrderId();
