@@ -165,7 +165,7 @@ CLASSPATH=$CLASSPATH:$OFBIZ_HOME/lib/common/castor-0.9.3.9.jar:$OFBIZ_HOME/lib/c
 CLASSPATH=$CLASSPATH:$OFBIZ_HOME/lib/common/mm.mysql-2.0.8-bin.jar:$OFBIZ_HOME/lib/common/log4j.jar
 CLASSPATH=$CLASSPATH:$OFBIZ_HOME/lib/share/axis.jar:$OFBIZ_HOME/lib/share/clutil.jar:$OFBIZ_HOME/lib/share/wsdl4j.jar
 CLASSPATH=$CLASSPATH:$OFBIZ_HOME/lib/scripting/bsh.jar:$OFBIZ_HOME/lib/share/jakarta-oro-2.0.6.jar:$OFBIZ_HOME/lib/share/velocity-1.3.jar
-CLASSPATH=$CLASSPATH:$OFBIZ_HOME/lib/datavision/DataVision.jar:$OFBIZ_HOME/lib/datavision/MinML.jar:$OFBIZ_HOME/lib/datavision/jcalendar.jar
+CLASSPATH=$CLASSPATH:$OFBIZ_HOME/lib/datavision/DataVision.jar:$OFBIZ_HOME/lib/datavision/MinML2.jar:$OFBIZ_HOME/lib/datavision/jcalendar.jar:$OFBIZ_HOME/lib/datavision/gnu-regexp-1.1.4.jar
 CLASSPATH=$CLASSPATH:$OFBIZ_HOME/lib/weka/weka.jar
 
 echo

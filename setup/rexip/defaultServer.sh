@@ -46,8 +46,9 @@ if [ -z "$OFBIZ_HOME" ] ; then
 fi
 CP=`ls $OFBIZ_HOME/lib/share/*.jar | paste -s -d":" - `
 CP=$CP:`ls $OFBIZ_HOME/lib/common/*.jar | paste -s -d":" - `
+CP=$CP:`ls $OFBIZ_HOME/lib/scripting/*.jar | paste -s -d":" - `
 CP=$CP:$OFBIZ_HOME/lib/compile/xerces.jar:$OFBIZ_HOME/lib/compile/mail.jar
-CP=$CP:$OFBIZ_HOME/lib/datavision/DataVision.jar:$OFBIZ_HOME/lib/datavision/MinML.jar:$OFBIZ_HOME/lib/datavision/jcalendar.jar
+CP=$CP:$OFBIZ_HOME/lib/datavision/DataVision.jar:$OFBIZ_HOME/lib/datavision/MinML2.jar:$OFBIZ_HOME/lib/datavision/jcalendar.jar:$OFBIZ_HOME/lib/datavision/gnu-regexp-1.1.4.jar
 CP=$CP:$OFBIZ_HOME/lib/jasperreports/jasperreports.jar:$OFBIZ_HOME/lib/jasperreports/itext-0.81.jar
 CP=$CP:$OFBIZ_HOME/lib/weka/weka.jar
 CP=$CP:$OFBIZ_HOME/core/lib/ofbcore-share.jar

@@ -160,15 +160,6 @@
 
         <property environment="env" />
         <property name="home.dir" value="${env.OFBIZ_HOME}" />
-        
-        <!-- This is for the distro: if the libs are not in the ofbiz/lib directory, copy from catalina -->
-        <condition property="catalina.lib.needed">
-            <and>
-                <not><available file="lib/share" type="dir"/></not>
-                <available file="../catalina" type="dir"/>
-            </and>
-        </condition>
-        <antcall target="catalina41-lib-copy" />
     </target>
 
     <target name="catalina-init">
@@ -205,45 +196,6 @@
         <property name="j2eedeploy.dir" value="${catalina.dir}/webapps" />
     </target>
     
-    <target name="catalina41-lib-copy" depends="" if="catalina.lib.needed">
-        <echo message="Libs not found in ofbiz tree, copying from catalina (this must be the first build from a distro package)"/>
-
-        <!-- this is the only dir that will be removed -->        
-        <mkdir dir="lib/share"/>
-        
-        <!-- for this one only we will use ../catalina because in this case it must have come from the distro -->
-        <copy file="../catalina/shared/lib/axis.jar" toDir="lib/share"/>
-        <copy file="../catalina/shared/lib/bsh.jar" toDir="lib/scripting"/>
-        <copy file="../catalina/shared/lib/clutil.jar" toDir="lib/share"/>
-        <copy file="../catalina/shared/lib/wsdl4j.jar" toDir="lib/share"/>
-        <copy file="../catalina/shared/lib/jakarta-oro-2.0.6.jar" toDir="lib/share"/>
-        <copy file="../catalina/shared/lib/jakarta-poi-1.5.1-final.jar" toDir="lib/share"/>
-        <copy file="../catalina/shared/lib/lucene-1.2.jar" toDir="lib/share"/>
-        <copy file="../catalina/shared/lib/velocity-1.3.jar" toDir="lib/share"/>
-        <copy file="../catalina/shared/lib/velocity-dep-1.3.jar" toDir="lib/share"/>
-
-        <copy file="../catalina/shared/lib/DataVision.jar" toDir="lib/datavision"/>
-        <copy file="../catalina/shared/lib/MinML.jar" toDir="lib/datavision"/>
-        <copy file="../catalina/shared/lib/jcalendar.jar" toDir="lib/datavision"/>
-
-        <copy file="../catalina/shared/lib/jasperreports.jar" toDir="lib/jasperreports"/>
-        <copy file="../catalina/shared/lib/itext-0.92.jar" toDir="lib/jasperreports"/>
-
-        <copy file="../catalina/shared/lib/weka.jar" toDir="lib/weka"/>
-
-        <copy file="../catalina/shared/lib/hsqldb.jar" toDir="lib/common"/>
-        <copy file="../catalina/shared/lib/postgresql.jar" toDir="lib/common"/>
-        <copy file="../catalina/shared/lib/sapdbc.jar" toDir="lib/common"/>
-        <copy file="../catalina/shared/lib/log4j.jar" toDir="lib/common"/>
-        <copy file="../catalina/shared/lib/mm.mysql-2.0.14-bin.jar" toDir="lib/common"/>
-
-        <copy file="../catalina/shared/lib/jms_1.0.2a.jar" toDir="lib/common"/>
-        <copy file="../catalina/shared/lib/ots-jts_1.0.jar" toDir="lib/common"/>
-        <copy file="../catalina/shared/lib/castor-0.9.3.9.jar" toDir="lib/tyrex"/>
-        <copy file="../catalina/shared/lib/tyrex-1.0.jar" toDir="lib/tyrex"/>
-    </target>
-
-
     <!-- ================================================================== -->
     <!-- Removes all created files and directories                          -->
     <!-- ================================================================== -->
@@ -652,7 +604,6 @@
         <mkdir dir="${ext.dir}/etc"/>
         <mkdir dir="${ext.dir}/webapps"/>
 
-        <copy file="lib/common/castor-0.9.3.9.jar" toDir="${ext.dir}/lib/ext"/>
         <copy file="lib/common/commons-beanutils.jar" toDir="${ext.dir}/lib/ext"/>
         <copy file="lib/common/commons-collections.jar" toDir="${ext.dir}/lib/ext"/>
         <copy file="lib/common/commons-digester.jar" toDir="${ext.dir}/lib/ext"/>
@@ -663,7 +614,6 @@
         <copy file="lib/common/log4j.jar" toDir="${ext.dir}/lib/ext"/>
         <copy file="lib/common/mm.mysql-2.0.14-bin.jar" toDir="${ext.dir}/lib/ext"/>
         <copy file="lib/common/ots-jts_1.0.jar" toDir="${ext.dir}/lib/ext"/>
-        <copy file="lib/common/tyrex-1.0.jar" toDir="${ext.dir}/lib/ext"/>
 
         <copy file="lib/compile/jdbc2_0-stdext.jar" toDir="${ext.dir}/lib/ext"/>
         <copy file="lib/compile/activation.jar" toDir="${ext.dir}/lib/ext"/>
@@ -1102,25 +1052,6 @@
         <delete dir="${distro.temp.dir}/catalina/webapps/examples" />
         <delete dir="${distro.temp.dir}/catalina/webapps/tomcat-docs" />
 
-        <!-- delete some of the libs that are already in the catalina directory, will be copied back on first build -->
-        <delete dir="${distro.temp.dir}/ofbiz/lib/share" />
-        <delete file="${distro.temp.dir}/ofbiz/lib/datavision/DataVision.jar" />
-        <delete file="${distro.temp.dir}/ofbiz/lib/datavision/MinML.jar" />
-        <delete file="${distro.temp.dir}/ofbiz/lib/datavision/jcalendar.jar" />
-        <delete file="${distro.temp.dir}/ofbiz/lib/jasperreports/jasperreports.jar" />
-        <delete file="${distro.temp.dir}/ofbiz/lib/jasperreports/itext-0.92.jar" />
-        <delete file="${distro.temp.dir}/ofbiz/lib/weka/weka.jar" />
-
-        <delete file="${distro.temp.dir}/ofbiz/lib/common/hsqldb.jar" />
-        <delete file="${distro.temp.dir}/ofbiz/lib/common/postgresql.jar" />
-        <delete file="${distro.temp.dir}/ofbiz/lib/common/sapdbc.jar" />
-        <delete file="${distro.temp.dir}/ofbiz/lib/common/log4j.jar" />
-        <delete file="${distro.temp.dir}/ofbiz/lib/common/mm.mysql-2.0.14-bin.jar" />
-        <delete file="${distro.temp.dir}/ofbiz/lib/common/jms_1.0.2a.jar" />
-        <delete file="${distro.temp.dir}/ofbiz/lib/common/ots-jts_1.0.jar" />
-        <delete file="${distro.temp.dir}/ofbiz/lib/tyrex/castor-0.9.3.9.jar" />
-        <delete file="${distro.temp.dir}/ofbiz/lib/tyrex/tyrex-1.0.jar" />
-        
         <!-- okay, build the archive -->
         <delete file="../ofbiz-apps.zip" />
         <zip destfile="../ofbiz-apps.zip" basedir="${distro.temp.dir}" />

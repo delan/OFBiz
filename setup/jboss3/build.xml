@@ -117,13 +117,15 @@
 	<copy toDir="${j2eedeploy.dir}" file="lib/share/jakarta-oro-2.0.6.jar"/>
 	<copy toDir="${j2eedeploy.dir}" file="lib/share/jakarta-poi-1.5.1-final.jar"/>
 	<copy toDir="${j2eedeploy.dir}" file="lib/share/jaxrpc.jar"/>
-	<copy toDir="${j2eedeploy.dir}" file="lib/datavision/jcalendar.jar"/>
 	<copy toDir="${j2eedeploy.dir}" file="lib/share/JPublish.jar"/>
-	<copy toDir="${j2eedeploy.dir}" file="lib/scripting/js.jar"/>
 	<copy toDir="${j2eedeploy.dir}" file="lib/share/junit.jar"/>
+	<copy toDir="${j2eedeploy.dir}" file="lib/scripting/js.jar"/>
 	<copy toDir="${j2eedeploy.dir}" file="lib/scripting/jython.jar"/>
+	<copy toDir="${j2eedeploy.dir}" file="lib/scripting/jruby.jar"/>
 	<copy toDir="${j2eedeploy.dir}" file="lib/share/lucene-1.2.jar"/>
-	<copy toDir="${j2eedeploy.dir}" file="lib/datavision/MinML.jar"/>
+	<copy toDir="${j2eedeploy.dir}" file="lib/datavision/jcalendar.jar"/>
+	<copy toDir="${j2eedeploy.dir}" file="lib/datavision/MinML2.jar"/>
+	<copy toDir="${j2eedeploy.dir}" file="lib/datavision/gnu-regexp-1.1.4.jar"/>
 	<copy toDir="${j2eedeploy.dir}" file="lib/weka/remoteExperimentServer.jar"/>
 	<copy toDir="${j2eedeploy.dir}" file="lib/share/saaj.jar"/>
 	<copy toDir="${j2eedeploy.dir}" file="lib/share/velocity-dep-1.3.jar"/>
