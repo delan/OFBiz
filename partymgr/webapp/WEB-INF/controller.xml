@@ -234,6 +234,11 @@
         <response name="error" type="view" value="changepassword"/>
     </request-map>
 
+    <request-map uri="findparty">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="findparty"/>
+    </request-map>
+
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
@@ -247,6 +252,7 @@
     <view-map name="editeftaccount" type="region"/>
     <view-map name="changepassword" type="region"/>
     <view-map name="editperson" type="region"/>
+    <view-map name="findparty" type="region"/>
 
     <!-- end of view mappings -->
 </site-conf>
