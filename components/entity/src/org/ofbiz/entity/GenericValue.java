@@ -436,6 +436,9 @@ public class GenericValue extends GenericEntity {
                         }
                         if (allFieldsSet) {
                             if (Debug.infoOn()) Debug.logInfo("Creating place holder value : " + newValue, module);
+
+                            // check the FKs for the newly created entity
+                            newValue.checkFks(true);
                             newValue.create();
                         }
                     } else {
