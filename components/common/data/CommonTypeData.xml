@@ -16,7 +16,19 @@
   <DataSource dataSourceId="CONTEXT_INDUCTION" dataSourceTypeId="CONTENT_CREATION" description="Context Induction"/>
 
   <Enumeration description="NA Enum" enumId="_NA_" enumCode="_NA_" sequenceId="00"/>
-  
+
+  <EnumerationType description="Thesaurus Relationship Type" enumTypeId="KW_THES_REL" hasTable="N" parentTypeId=""/>
+  <Enumeration description="Used For" enumCode="UF" enumId="KWTR_UF" sequenceId="01" enumTypeId="KW_THES_REL"/>
+  <Enumeration description="Use Instead" enumCode="USE" enumId="KWTR_USE" sequenceId="02" enumTypeId="KW_THES_REL"/>
+  <Enumeration description="Correct Spelling" enumCode="CS" enumId="KWTR_CS" sequenceId="03" enumTypeId="KW_THES_REL"/>
+  <Enumeration description="Narrower Term" enumCode="NT" enumId="KWTR_NT" sequenceId="04" enumTypeId="KW_THES_REL"/>
+  <Enumeration description="Broader Term" enumCode="BT" enumId="KWTR_BT" sequenceId="05" enumTypeId="KW_THES_REL"/>
+  <Enumeration description="Micro-thesaurus Term" enumCode="MT" enumId="KWTR_MT" sequenceId="06" enumTypeId="KW_THES_REL"/>
+  <Enumeration description="Related Term" enumCode="RT" enumId="KWTR_RT" sequenceId="07" enumTypeId="KW_THES_REL"/>
+  <Enumeration description="Scope Notes" enumCode="SN" enumId="KWTR_SN" sequenceId="08" enumTypeId="KW_THES_REL"/>
+  <Enumeration description="Lang: Spanish" enumCode="LANG_SP" enumId="KWTR_LANG_SP" sequenceId="21" enumTypeId="KW_THES_REL"/>
+  <Enumeration description="Lang: French" enumCode="LANG_FR" enumId="KWTR_LANG_FR" sequenceId="22" enumTypeId="KW_THES_REL"/>
+
   <GeoType description="City" geoTypeId="CITY" hasTable="N" parentTypeId=""/>
   <GeoType description="State" geoTypeId="STATE" hasTable="N" parentTypeId=""/>
   <GeoType description="Postal Code" geoTypeId="POSTAL_CODE" hasTable="N" parentTypeId=""/>

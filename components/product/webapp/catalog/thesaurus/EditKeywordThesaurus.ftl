@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Nathan De Graw
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      3.0
 -->
 
@@ -30,7 +30,7 @@
         <div class="tabletext">
         Keyword:<input type="text" name="enteredKeyword" size="10" class="inputBox"/>
         Alternate:<input type="text" name="alternateKeyword" size="10" class="inputBox"/>
-        Replace Original?<select name="replaceEntered" class="selectBox"><option>N</option><option>Y</option></select>
+        Relationship:<select name="relationshipEnumId" class="selectBox"><#list relationshipEnums as relationshipEnum><option value="${relationshipEnum.enumId}">${relationshipEnum.description}</option></#list></select>
         <input type="submit" value="Add" class="smallButton">
     </div>
   </form>
@@ -46,6 +46,7 @@
   <#assign lastkeyword = "">
   <table border="1" cellpadding="2" cellspacing="0">
     <#list keywordThesauruses as keyword>
+      <#assign relationship = keyword.getRelatedOneCache("RelationshipEnumeration")>
       <#if keyword.enteredKeyword == lastkeyword><#assign sameRow=true><#else><#assign lastkeyword=keyword.enteredKeyword><#assign sameRow=false></#if>
       <#if sameRow == false>
         <#if (keyword_index > 0)>
@@ -62,7 +63,7 @@
               <div class="tabletext">
                 <input type="hidden" name="enteredKeyword" value=${keyword.enteredKeyword}>
                 Alternate: <input type="text" name="alternateKeyword" size="10">
-                Replace Original?<select name="replaceEntered" class="selectBox"><option>N</option><option>Y</option></select>
+                Relationship:<select name="relationshipEnumId" class="selectBox"><#list relationshipEnums as relationshipEnum><option value="${relationshipEnum.enumId}">${relationshipEnum.description}</option></#list></select>
                 <input type="submit" value="Add">
               </div>
             </form>
@@ -71,7 +72,7 @@
       </#if>
       <div class="tabletext">
         <a href="<@ofbizUrl>/deleteKeywordThesaurus?enteredKeyword=${keyword.enteredKeyword}&alternateKeyword=${keyword.alternateKeyword}</@ofbizUrl>" class="buttontext">[X]</a>
-        <b>${keyword.alternateKeyword}</b>&nbsp;(Replace:${keyword.replaceEntered?if_exists})
+        <b>${keyword.alternateKeyword}</b>&nbsp;(Rel:${(relationship.description)?default(keyword.relationshipEnumId?if_exists)})
       </div>
     </#list>
       </td>
