@@ -42,7 +42,7 @@
 	GenericValue party = null;
 	Collection shippingContactMechList = null;
 
-	if (partyId != null)
+	if (partyId != null && !partyId.equals("_NA_"))
 		party = delegator.findByPrimaryKey("Party", UtilMisc.toMap("partyId", partyId));
 	if (party != null) {
 		pageContext.setAttribute("party", party);
@@ -125,8 +125,14 @@
 </ofbiz:if>
 
 <ofbiz:unless name="party">
-  <form method="post" action="<ofbiz:url>/createPostalAddress</ofbiz:url>" name="shipsetupform">
-  <input type="hidden" name="contactMechTypeId" value="POSTAL_ADDRESS">
+  <ofbiz:if name="postalAddress">
+    <form method="post" action="<ofbiz:url>/updatePostalAddress</ofbiz:url>" name="shipsetupform">
+      <input type="hidden" name="contactMechId" value="<%=shipContactMechId%>">
+  </ofbiz:if>
+  <ofbiz:unless name="postalAddress">
+    <form method="post" action="<ofbiz:url>/createPostalAddress</ofbiz:url>" name="shipsetupform">
+    <input type="hidden" name="contactMechTypeId" value="POSTAL_ADDRESS">
+  </ofbiz:unless>
   <input type="hidden" name="partyId" value="_NA_">
   <input type="hidden" name="finalizeMode" value="ship">
   <table width="100%" border="0" cellpadding="1" cellspacing="0">

@@ -39,11 +39,12 @@
 <%if(security.hasEntityPermission("ORDERMGR", "_CREATE", session)) {%>
 
 <%	
+    String paymentMethodType = request.getParameter("paymentMethodType");
 	String partyId = (String) session.getAttribute("orderPartyId");
 	GenericValue party = null;
 	Collection paymentMethodList = null;
 
-	if (partyId != null)
+	if (partyId != null && !partyId.equals("_NA_"))
 		party = delegator.findByPrimaryKey("Party", UtilMisc.toMap("partyId", partyId));
 	
 	if (party != null) {
@@ -56,14 +57,34 @@
 
     String checkOutPaymentId = null;
     if (shoppingCart != null) {
-        if (shoppingCart.getPaymentMethodIds().size() > 0) {
-            checkOutPaymentId = (String) shoppingCart.getPaymentMethodIds().get(0);
+        if (shoppingCart.getPaymentMethodIds().size() > 0) {        	
+            checkOutPaymentId = (String) shoppingCart.getPaymentMethodIds().get(0);            
+            if (party == null) {            	            	
+            	GenericValue paymentMethod = delegator.findByPrimaryKey("PaymentMethod", UtilMisc.toMap("paymentMethodId", checkOutPaymentId));
+            	GenericValue account = null;
+            	GenericValue address = null;
+            	if (paymentMethod != null && paymentMethod.getString("paymentMethodTypeId").equals("CREDIT_CARD")) {
+            		paymentMethodType = "CC";
+            		account = paymentMethod.getRelatedOne("CreditCard");       
+            		if (account != null) pageContext.setAttribute("creditCard", account);     		
+                } else if (paymentMethod != null && paymentMethod.getString("paymentMethodTypeId").equals("EFT_ACCOUNT")) {
+                	paymentMethodType = "EFT";
+                	account = paymentMethod.getRelatedOne("EftAccount");
+                	if (account != null) pageContext.setAttribute("eftAccount", account);
+                } else {
+                	paymentMethodType = "offline";
+                }
+                if (account != null) {
+                	address = account.getRelatedOne("PostalAddress");
+                	pageContext.setAttribute("postalAddress", address);
+                }
+            }            
         } else if (shoppingCart.getPaymentMethodTypeIds().size() > 0) {
             checkOutPaymentId = (String) shoppingCart.getPaymentMethodTypeIds().get(0);
         }
     }		
 
-	String paymentMethodType = request.getParameter("paymentMethodType");
+	if (checkOutPaymentId != null) pageContext.setAttribute("checkOutPaymentId", checkOutPaymentId);
 	if (paymentMethodType != null) pageContext.setAttribute("paymentMethodType", paymentMethodType);
 %>
 
@@ -155,17 +176,71 @@
 </ofbiz:if>
 
 <ofbiz:unless name="party">
+<%
+	String shippingContactMech = shoppingCart.getShippingContactMechId();
+	String useShipAddr = request.getParameter("useShipAddr");
+	GenericValue postalAddress = null;
+	if (shippingContactMech != null) {
+		pageContext.setAttribute("shippingContactMechId", shippingContactMech);
+		if (useShipAddr != null && useShipAddr.equals("Y")) {
+			postalAddress = delegator.findByPrimaryKey("PostalAddress", UtilMisc.toMap("contactMechId", shippingContactMech));
+			if (postalAddress != null) pageContext.setAttribute("postalAddress", postalAddress);
+		}
+	}
+%>
+
+<script language="javascript">
+<!-- //
+function shipBillAddr() {
+	if (document.billsetupform.useShipAddr.checked)
+		window.location.replace("/ordermgr/control/setBilling?paymentMethodType=<%=paymentMethodType%>&useShipAddr=Y");
+	else 
+    	window.location.replace("/ordermgr/control/setBilling?paymentMethodType=<%=paymentMethodType%>");
+}
+
+// -->
+</script>
+
   <ofbiz:if name="paymentMethodType">
     <ofbiz:if name="paymentMethodType" value="CC">
-      <form method="post" action="<ofbiz:url>/createCreditCardAndPostalAddress</ofbiz:url>" name="billsetupform">
+      <ofbiz:if name="postalAddress">
+        <form method="post" action="<ofbiz:url>/updateCreditCardAndPostalAddress</ofbiz:url>" name="billsetupform">
+          <input type="hidden" name="paymentMethodId" value="<ofbiz:inputvalue field="paymentMethodId" entityAttr="creditCard" tryEntityAttr="tryEntity"/>">
+          <input type="hidden" name="contactMechId" value="<ofbiz:inputvalue field="contactMechId" entityAttr="postalAddress" tryEntityAttr="tryEntity"/>">
+      </ofbiz:if>
+      <ofbiz:unless name="postalAddress">
+        <form method="post" action="<ofbiz:url>/createCreditCardAndPostalAddress</ofbiz:url>" name="billsetupform">
+      </ofbiz:unless>
     </ofbiz:if>
     <ofbiz:if name="paymentMethodType" value="EFT">
-      <form method="post" action="<ofbiz:url>/createEftAndPostalAddress</ofbiz:url>" name="billsetupform">
+      <ofbiz:if name="postalAddress">
+        <form method="post" action="<ofbiz:url>/updateEftAndPostalAddress</ofbiz:url>" name="billsetupform">
+          <input type="hidden" name="paymentMethodId" value="<ofbiz:inputvalue field="paymentMethodId" entityAttr="eftAccount" tryEntityAttr="tryEntity"/>">
+          <input type="hidden" name="contactMechId" value="<ofbiz:inputvalue field="contactMechId" entityAttr="postalAddress" tryEntityAttr="tryEntity"/>">
+      </ofbiz:if>
+      <ofbiz:unless name="postalAddress">
+        <form method="post" action="<ofbiz:url>/createEftAndPostalAddress</ofbiz:url>" name="billsetupform">
+      </ofbiz:unless>        
     </ofbiz:if>
     <input type="hidden" name="contactMechTypeId" value="POSTAL_ADDRESS">
     <input type="hidden" name="partyId" value="_NA_">
     <input type="hidden" name="finalizeMode" value="payment">
     <table width="100%" border="0" cellpadding="1" cellspacing="0">
+      <ofbiz:unless name="checkOutPaymentId">
+        <ofbiz:if name="shippingContactMechId">
+        <tr>
+          <td width="26%" align="right"= valign="top">
+            <input type="checkbox" name="useShipAddr" value="Y" onClick="javascript:shipBillAddr();" <%=useShipAddr != null ? "checked" : ""%>>
+          </td>
+          <td colspan="2" align="left" valign="center">
+            <div class="tabletext">Billing address is the same as the shipping address</div>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="3"><hr class="sepbar"></td>
+        </tr>
+        </ofbiz:if>
+      </ofbiz:unless>
       <tr>
         <td width="26%" align=right valign=top><div class="tabletext">To Name</div></td>
         <td width="5">&nbsp;</td>
@@ -288,13 +363,15 @@
           <%String expYear = "";%>
           <%if (pageContext.getAttribute("creditCard") != null) {%>
             <%String expDate = ((GenericValue) pageContext.getAttribute("creditCard")).getString("expireDate");%>
+            <%Debug.logError("EXPDATE: " + expDate);%>
             <%if (expDate != null && expDate.indexOf('/') > 0){%>
               <%expMonth = expDate.substring(0,expDate.indexOf('/'));%>
               <%expYear = expDate.substring(expDate.indexOf('/')+1);%>
+              <%Debug.logError("M: " + expMonth + "  Y: " + expYear);%>
             <%}%>
           <%}%>
           <select name="expMonth">
-            <option><ofbiz:if name="tryEntity"><%=UtilFormatOut.checkNull(expMonth)%></ofbiz:if><ofbiz:unless name="tryEntity"><%=UtilFormatOut.checkNull(request.getParameter("expMonth"))%></ofbiz:unless></option>
+            <option><ofbiz:if name="creditCard"><%=UtilFormatOut.checkNull(expMonth)%></ofbiz:if><ofbiz:unless name="tryEntity"><%=UtilFormatOut.checkNull(request.getParameter("expMonth"))%></ofbiz:unless></option>
             <option></option>
             <option>01</option>
             <option>02</option>
@@ -310,7 +387,7 @@
             <option>12</option>
           </select>
           <select name="expYear">
-            <option><ofbiz:if name="tryEntity"><%=UtilFormatOut.checkNull(expYear)%></ofbiz:if><ofbiz:unless name="tryEntity"><%=UtilFormatOut.checkNull(request.getParameter("expYear"))%></ofbiz:unless></option>
+            <option><ofbiz:if name="creditCard"><%=UtilFormatOut.checkNull(expYear)%></ofbiz:if><ofbiz:unless name="tryEntity"><%=UtilFormatOut.checkNull(request.getParameter("expYear"))%></ofbiz:unless></option>
             <option></option>
             <option>2001</option>
             <option>2002</option>
@@ -384,7 +461,7 @@
       <table width="100%" border="0" cellpadding="1" cellspacing="0">
         <tr>
           <td><div class="tabletext">Offline Payment: Check/Money Order</div></td>
-          <td><input type="radio" name="paymentMethodType" value="offline">
+          <td><input type="radio" name="paymentMethodType" value="offline" <%=(paymentMethodType != null && paymentMethodType.equals("offline") ? "checked" : "")%>>
         </tr>
         <tr><td colspan="2"><hr class='sepbar'></td></tr>
         <tr>

@@ -83,18 +83,22 @@
     </define>
     <define id='shipsetting' region='LEFT_RIGHT_REGION'>
         <put section='title'>Order ShipTo Settings</put>
+        <put section='error' content='/includes/errormsgnoinfo.jsp'/>
         <put section='content' content='/entry/shipsettings.jsp'/>
     </define>   
     <define id='billsetting' region='LEFT_RIGHT_REGION'>
         <put section='title'>Order Billing Settings</put>
+        <put section='error' content='/includes/errormsgnoinfo.jsp'/>
         <put section='content' content='/entry/billsettings.jsp'/>
     </define>   
     <define id='optionsetting' region='LEFT_RIGHT_REGION'>
         <put section='title'>Order Billing Settings</put>
+        <put section='error' content='/includes/errormsgnoinfo.jsp'/>
         <put section='content' content='/entry/optionsettings.jsp'/>
     </define>    
     <define id='confirm' region='LEFT_ONLY_REGION'>
         <put section='title'>Order Confirmation</put>
+        <put section='error' content='/includes/errormsgnoinfo.jsp'/>
         <put section='content' content='/entry/confirmorder.jsp'/>
     </define>      
         

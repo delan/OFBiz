@@ -179,6 +179,12 @@
         <response name="success" type="request" value="finalizeOrder"/>
         <response name="error" type="view" value="shipsetting"/>
     </request-map>
+    <request-map uri="updatePostalAddress">
+        <security https="true" auth="true"/>
+        <event type="simple" path="org/ofbiz/commonapp/party/contact/ContactMechSimpleEvents.xml" invoke="updatePostalAddress"/>
+        <response name="success" type="request" value="finalizeOrder"/>
+        <response name="error" type="view" value="shipsetting"/>
+    </request-map>    
     <request-map uri="setOptions">
     	<security https="true" auth="true"/>
     	<response name="success" type="view" value="optionsetting"/>
@@ -189,14 +195,28 @@
     </request-map>  
     <request-map uri="createCreditCardAndPostalAddress">
     	<security https="true" auth="true"/>
+    	<event type="service" path="" invoke="createCreditCardAndAddress"/>
     	<response name="success" type="request" value="finalizeOrder"/>
     	<response name="error" type="view" value="billsetting"/>
     </request-map>
+    <request-map uri="updateCreditCardAndPostalAddress">
+    	<security https="true" auth="true"/>
+    	<event type="service" path="" invoke="updateCreditCardAndAddress"/>
+    	<response name="success" type="request" value="finalizeOrder"/>
+    	<response name="error" type="view" value="billsetting"/>
+    </request-map>    
     <request-map uri="createEftAndPostalAddress">
     	<security https="true" auth="true"/>
+    	<event type="service" path="" invoke="createEftAccountAndAddress"/>
     	<response name="success" type="request" value="finalizeOrder"/>
     	<response name="error" type="view" value="billsetting"/>    	
     </request-map>    
+    <request-map uri="updateEftAndPostalAddress">
+    	<security https="true" auth="true"/>
+    	<event type="service" path="" invoke="updateEftAccountAndAddress"/>
+    	<response name="success" type="request" value="finalizeOrder"/>
+    	<response name="error" type="view" value="billsetting"/>    	
+    </request-map>        
     <request-map uri="processorder">
         <security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.commonapp.order.shoppingcart.CheckOutEvents" invoke="createOrder"/>
