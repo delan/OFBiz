@@ -40,7 +40,7 @@
 <br><A href="http://sf.net/projects/ofbiz"> <IMG src="http://sourceforge.net/sflogo.php?group_id=27173" width="88" height="31" border="0" alt="SourceForge Logo"></A>
 
 <p>The Open For Business Project released the newest version of its business automation
-tools, components, and applications on Saturday September 22, 2001. More information can be found
+tools, components, and applications on Thursday September 27, 2001. More information can be found
 on the Open For Business web site at http://www.ofbiz.org or on the Open For Business SourceForge project site at http://sf.net/projects/ofbiz.<p>The
 over-arching vision of the Open For Business Project is to embrace and enable
 the 5 E's: Ease of Cost, Ease of Installation, Ease of Customization, Ease of
@@ -65,7 +65,7 @@ relate to the various tools, components and applications of Open For Business
   template site has a clean look and feel and provides all of the basic needs
   for eCommerce including a dynamic catalog, customer information management,
   and order history and status.
-<li>-- Entity Engine -- The OFBiz Entity Engine which provides a simple and
+<li>-- Entity Engine -- The OFBiz Entity Engine provides a simple and
   powerful API for data source independent retrieval and manipulation of data.
   The API is dynamic so that no entity specific persistence or encoding/decoding
   code ever needs to be written, not even an entity bean of some sort like the
@@ -75,9 +75,15 @@ relate to the various tools, components and applications of Open For Business
   database), and then change the user facing code that displays or handles the
   input of that data. Integrating with other systems is as easy as writing a
   data layout contract in XML in the form of entity definitions, and then moving
-  on to your business logic and user facing pieces.
+  on to your business and display logic, or reusing existing business and
+  display logic based on existing entity definitions. The patterns used in
+the Entity Engine include: Business Delegate, Value Object, Composite Entity
+(variation), Value Object Assembler, Service Locator, Data Access Object, Data Transfer HashMap and
+Generic Attribute Access.
 <li>-- Servlet Controller -- A servlet controller to abstract non-presentation logic, security and
-  web application flow
+  web application flow. It implements the following J2EE patterns: Intercepting
+  Filter, Front Controller, View Helper, and Dispatcher View. The Composite View
+  pattern is used for organization of views in the JSPs of the project.
 <li>An event scheduler along with the controller to provide asynchronous repeated actions
 <li>Core utilities to provide services such as input validation, output formatting, property file access and caching, conditional debug logging, and date and time handling
 <li>A cache utility which supports caches of limited or unlimited size, element expiration, least recently used (LRU) element removal, and a web based cache management application
