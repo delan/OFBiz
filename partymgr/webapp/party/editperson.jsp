@@ -35,19 +35,26 @@
 <jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" />
 
 <%
-    String partyId = request.getParameter("party_id");
-    if (partyId == null) partyId = (String) request.getSession().getAttribute("partyId");
-    else request.getSession().setAttribute("partyId", partyId);
+    String create = request.getParameter("create_new");
+    String partyId = null;
+    if (create == null) {
+        partyId = request.getParameter("party_id");
+        if (partyId == null) partyId = (String) request.getAttribute("partyId");
+        if (partyId == null) partyId = (String) request.getSession().getAttribute("partyId");
+        else request.getSession().setAttribute("partyId", partyId);
+    }
 
-    GenericValue party = delegator.findByPrimaryKeyCache("Party", UtilMisc.toMap("partyId", partyId));
-    GenericValue lookupPerson = party.getRelatedOneCache("Person");
-    if (lookupPerson != null) pageContext.setAttribute("person", lookupPerson);
+    if (partyId != null) {
+        GenericValue party = delegator.findByPrimaryKeyCache("Party", UtilMisc.toMap("partyId", partyId));
+        GenericValue lookupPerson = party.getRelatedOneCache("Person");
+        if (lookupPerson != null) pageContext.setAttribute("person", lookupPerson);
 
-    boolean tryEntity = true;
-    if(request.getAttribute(SiteDefs.ERROR_MESSAGE) != null) tryEntity = false;
-    if(lookupPerson == null)
-        tryEntity = false;
-    pageContext.setAttribute("tryEntity", new Boolean(tryEntity));
+        boolean tryEntity = true;
+        if(request.getAttribute(SiteDefs.ERROR_MESSAGE) != null) tryEntity = false;
+        if(lookupPerson == null)
+           tryEntity = false;
+        pageContext.setAttribute("tryEntity", new Boolean(tryEntity));
+    }
 
     String donePage = request.getParameter("DONE_PAGE");
     if(donePage == null || donePage.length() <= 0) donePage="viewprofile";
@@ -63,7 +70,9 @@
     <FORM method=POST action='<ofbiz:url>/updatePerson/<ofbiz:print attribute="donePage"/></ofbiz:url>' name="editpersonform">
 </ofbiz:if>
 
+<% if (partyId != null) { %>
 <input type="hidden" name="partyId" value="<%=partyId%>">
+<% } %>
 
 &nbsp;<a href='<ofbiz:url>/authview/<ofbiz:print attribute="donePage"/></ofbiz:url>' class="buttontext">[Done/Cancel]</a>
 &nbsp;<a href="javascript:document.editpersonform.submit()" class="buttontext">[Save]</a>

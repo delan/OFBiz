@@ -77,4 +77,9 @@
         <put section='title'>Find Party</put>
         <put section='content' content='/party/findparty.jsp'/>
     </define>
+
+    <define id='createnewlogin' region='MAIN_REGION'>
+        <put section='title'>Create UserLogin</put>
+        <put section='content' content='/party/createnewlogin.jsp'/>
+    </define>
 </regions>

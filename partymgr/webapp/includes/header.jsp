@@ -41,6 +41,7 @@
             <TD width="90%" align=center class='headerCenter'>Welcome<%EntityField.run("person", "firstName", "&nbsp;", "", pageContext);%><%EntityField.run("person", "lastName", "&nbsp;", "", pageContext);%>!</TD>
           </ofbiz:if>
           <td class="headerButtonRight"><a href="<ofbiz:url>/findparty</ofbiz:url>" class="buttontext">Find</a></td> 
+          <td class="headerButtonRight"><a href="<ofbiz:url>/editperson?create_new=Y</ofbiz:url>" class="buttontext">Person</a></td>
         </TR>
       </TABLE>
     </TD>

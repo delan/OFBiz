@@ -39,6 +39,7 @@
 
 <%
     String partyId = request.getParameter("party_id"); 
+    if (partyId == null) partyId = (String) request.getAttribute("partyId");
     if (partyId == null) partyId = (String) request.getSession().getAttribute("partyId");
     else request.getSession().setAttribute("partyId", partyId);
 
@@ -363,7 +364,7 @@
             <div class="boxhead">&nbsp;User Name & Password</div>
           </td>
           <td valign="middle" align="right">&nbsp;
-            <%-- <a href="<ofbiz:url>/changepassword</ofbiz:url>" class="lightbuttontext">[Change Password]</a>&nbsp;&nbsp; --%>
+            <a href="<ofbiz:url>/createnewlogin</ofbiz:url>" class="lightbuttontext">[Create New]</a>&nbsp;&nbsp; 
           </td>
         </tr>
       </table>

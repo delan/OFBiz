@@ -9,13 +9,6 @@
     GenericValue userLogin = (GenericValue) session.getAttribute(SiteDefs.USER_LOGIN);
     if (userLogin != null) request.setAttribute("userLogin", userLogin);
 
-    GenericValue person = (GenericValue) session.getAttribute(SiteDefs.PERSON);
-    if (person == null) {
-        person = userLogin == null ? null : userLogin.getRelatedOne("Person");
-        if (person != null) session.setAttribute(SiteDefs.PERSON, person);
-    }
-    if (person != null) request.setAttribute("person", person);
-
     String controlPath = (String) request.getAttribute(SiteDefs.CONTROL_PATH);
     String contextRoot = (String) request.getAttribute(SiteDefs.CONTEXT_ROOT);
     String serverRoot = (String) request.getAttribute(SiteDefs.SERVER_ROOT_URL);
