@@ -3,7 +3,15 @@
 <%@ include file="/includes/header.jsp" %>
 <%@ include file="/includes/leftcolumn.jsp" %> 
 
-<br> 
+<%
+  // Get a list of all available categories.
+  //org.ofbiz.ecommerce.catalog.CatalogHelper.getRelatedCategories(pageContext,"curCategoryList",request.getParameter("category_id"));
+  // Get a list of all available products.
+  org.ofbiz.ecommerce.catalog.CatalogHelper.getRelatedProducts(pageContext,"","PROMOTIONS");
+%>
+<%-- Main Heading --%>
+<br>
+<%@ include file="/catalog/categorylisting.jsp" %>
 
 <%@ include file="/includes/rightcolumn.jsp" %>
 <%@ include file="/includes/footer.jsp" %>
