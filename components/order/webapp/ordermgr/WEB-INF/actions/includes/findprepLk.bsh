@@ -1,0 +1,78 @@
+/*
+ * $Id: findprepLk.bsh,v 1.1 2004/07/30 16:01:46 ajzeneski Exp $
+ *
+ * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a
+ * copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included
+ * in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ * CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ * OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ *
+ * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
+ * @author     <a href="mailto:holivier@nereide.biz">Olivier Heintz</a>
+ * @version    $Revision: 1.1 $
+ * @since      2.1
+ *
+ * Calls performFind service to return an EntityListIterator of the entities found from the paramLookup map 
+ * which contain the selection criteria, the formDefinition ...
+ * This script is a piece of the GenericLookup realisation.
+ * Also builds a query form wrapper.
+ */
+
+import java.util.HashMap;
+import java.util.Map;
+
+import org.ofbiz.base.util.*;
+import org.ofbiz.service.*;
+import org.ofbiz.content.widget.html.*;
+
+import java.util.ListIterator;
+
+LocalDispatcher dispatcher = (LocalDispatcher)request.getAttribute("dispatcher");
+
+Map inputFields = UtilHttp.getParameterMap(request);
+Map paramLookup = (Map) session.getAttribute("paramLookup");
+Map selectFieldsLookup = (Map) paramLookup.get("selectFieldsLookup");
+
+if (!inputFields.containsKey("submitButton")) {
+    if (selectFieldsLookup != null) {
+        selectFieldsLookup.putAll(inputFields);
+        inputFields = selectFieldsLookup;
+    } else if (paramLookup.containsKey("initialConstraint")) {
+        inputFields.putAll(paramLookup.get("initialConstraint"));
+        paramLookup.remove("initialConstraint");
+        paramLookup.put("selectFieldsLookup",inputFields);
+    }
+} else {
+    paramLookup.put("selectFieldsLookup",inputFields);
+}
+
+String entityName = paramLookup.get("entityName");
+HashMap inMap = new HashMap();
+inMap.put("entityName", entityName);
+inMap.put("inputFields", inputFields);
+
+Map result = dispatcher.runSync("performFind", inMap);
+ListIterator listIt = (ListIterator)result.get("listIt");
+request.setAttribute("listIt", listIt);
+
+String formDefFile = paramLookup.get("formDefFile");
+String singleFormName = paramLookup.get("singleFormName");
+HtmlFormWrapper queryWrapper = new HtmlFormWrapper(formDefFile,singleFormName, request, response);
+queryWrapper.putInContext("uiLabelMap", request.getAttribute("uiLabelMap"));
+queryWrapper.putInContext("inputFields", inputFields);
+context.put("queryWrapper", queryWrapper);

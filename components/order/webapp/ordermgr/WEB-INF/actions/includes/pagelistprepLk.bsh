@@ -1,0 +1,116 @@
+/*
+ * $Id: pagelistprepLk.bsh,v 1.1 2004/07/30 16:01:47 ajzeneski Exp $
+ *
+ * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a
+ * copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included
+ * in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ * CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ * OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
+ * @author     <a href="mailto:holivier@nereide.biz">Olivier Heintz</a>
+ * @version    $Revision: 1.1 $
+ * @since      3.0
+
+ * This script breaks out the generic list pagination code so that it can be used with different query scripts.
+ * It expects, first, an EntityListIterator in the request attr, "listIt", or a list by the name, "currentList" and
+ * the form definition via the paramLookup paramters.
+ * This script is a piece of the GenericLookup realisation.
+ */
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.ofbiz.base.util.*;
+import org.ofbiz.entity.util.*;
+import org.ofbiz.entity.GenericEntityException;
+import org.ofbiz.content.widget.html.*;
+import org.ofbiz.content.widget.form.*;
+import org.ofbiz.base.util.Debug;
+
+import java.util.ListIterator;
+
+Map paramLookup = (Map) session.getAttribute("paramLookup");
+String formDefFile = paramLookup.get("formDefFile");
+String listFormName = paramLookup.get("listFormName");
+String entityName = paramLookup.get("entityName");
+// Can override the listName of "entityList" in the pagedef config file.
+listName = "entityList";
+//listName    		= paramLookup.get("listName");
+//if (listName == null) listName   = "entityList";
+
+// This was pretty much hacked from somewhere else in OFBiz
+int viewIndex = -1;
+try {
+    viewIndex = Integer.valueOf((String) request.getParameter("VIEW_INDEX")).intValue();
+} catch (Exception e) {
+    viewIndex = 0;
+}
+int viewSize    = -1;
+int listSize    = -1;
+
+try {
+    viewSize = Integer.valueOf((String) request.getParameter("VIEW_SIZE")).intValue();
+} catch (Exception e) {
+    try {
+        // If view size is not in page, get it from initial param setup
+        String viewSizePage	= paramLookup.get("viewSize");
+        viewSize = Integer.valueOf(viewSizePage).intValue();
+    } catch (Exception e2){
+        viewSize = 10; // Not good to have a magic number here
+    }
+}
+
+int lowIndex = viewIndex * viewSize;
+int highIndex = (viewIndex + 1) * viewSize;
+
+EntityListIterator listIt = (EntityListIterator)request.getAttribute("listIt");
+List entityList    = new ArrayList();
+// attempt to get the full size
+if (listIt != null && listIt != void ) {
+    try {
+        listIt.last();
+        listSize = listIt.currentIndex();
+        if (listSize < highIndex) highIndex = listSize;
+        if (listSize > 0) {
+            listIt.first();
+            entityList = listIt.getPartialList(lowIndex + 1, viewSize );
+            listIt.close();
+        }
+    } catch (GenericEntityException e) {
+        Debug.logInfo("GenericEntityException = "+ e, "");
+        request.setAttribute("_ERROR_MESSAGE_", e.getMessage());
+	}
+} else {
+    entityList = (List)request.getAttribute("currentList");
+}
+
+request.setAttribute("listName", listName);
+HtmlFormWrapper listWrapper = new HtmlFormWrapper(formDefFile, listFormName, request, response);
+listWrapper.putInContext(listName, entityList);
+listWrapper.putInContext("listSize", listSize);
+listWrapper.putInContext("highIndex", highIndex);
+listWrapper.putInContext("lowIndex", lowIndex);
+listWrapper.putInContext("viewSize", viewSize);
+listWrapper.putInContext("viewIndex", viewIndex);
+listWrapper.putInContext("uiLabelMap", request.getAttribute("uiLabelMap"));
+
+ModelForm modelForm = listWrapper.getModelForm();
+modelForm.setListName(listName);
+context.put("listWrapper", listWrapper);
