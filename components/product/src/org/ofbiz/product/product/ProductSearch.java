@@ -1,5 +1,5 @@
 /*
- * $Id: ProductSearch.java,v 1.21 2003/11/06 23:25:49 jonesde Exp $
+ * $Id: ProductSearch.java,v 1.22 2003/11/07 19:09:29 jonesde Exp $
  *
  *  Copyright (c) 2001 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -53,7 +53,7 @@ import org.ofbiz.entity.util.EntityListIterator;
  *  Utilities for product search based on various constraints including categories, features and keywords.
  *
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.21 $
+ * @version    $Revision: 1.22 $
  * @since      3.0
  */
 public class ProductSearch {
@@ -143,8 +143,9 @@ public class ProductSearch {
         public boolean productIdGroupBy = false;
         public boolean includedKeywordSearch = false;
         public Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
-        public List orKeywordFixedList = new LinkedList();
-        public List andKeywordFixedList = new LinkedList();
+        public List keywordFixedOrSetAndList = new LinkedList();
+        public Set orKeywordFixedSet = new HashSet();
+        public Set andKeywordFixedSet = new HashSet();
         public List productSearchConstraintList = new LinkedList();
         public ResultSortOrder resultSortOrder = null;
         public Integer resultOffset = null;
@@ -205,26 +206,41 @@ public class ProductSearch {
         }
 
         public void finishKeywordConstraints() {
-            if (orKeywordFixedList.size() == 0 && andKeywordFixedList.size() == 0) {
+            if (orKeywordFixedSet.size() == 0 && andKeywordFixedSet.size() == 0 && keywordFixedOrSetAndList.size() == 0) {
                 return;
             }
 
             // we know we have a keyword search to do, so keep track of that now...
             this.includedKeywordSearch = true;
 
-            if (orKeywordFixedList.size() == 1) {
-                // treat it as just another and
-                andKeywordFixedList.add(orKeywordFixedList.get(0));
-                orKeywordFixedList.clear();
+            // if there is anything in the orKeywordFixedSet add it to the keywordFixedOrSetAndList
+            if (orKeywordFixedSet.size() > 0) {
+                // put in keywordFixedOrSetAndList to process with other or lists where at least one is required
+                keywordFixedOrSetAndList.add(orKeywordFixedSet);
             }
 
-            boolean doingBothAndOr = orKeywordFixedList.size() > 0 && andKeywordFixedList.size() > 0;
+            // remove all or sets from the or set and list where the or set is size 1 and put them in the and list
+            Iterator keywordFixedOrSetAndTestIter = keywordFixedOrSetAndList.iterator();
+            while (keywordFixedOrSetAndTestIter.hasNext()) {
+                Set keywordFixedOrSet = (Set) keywordFixedOrSetAndTestIter.next();
+                if (keywordFixedOrSet.size() == 0) {
+                    keywordFixedOrSetAndTestIter.remove();
+                } else if (keywordFixedOrSet.size() == 1) {
+                    // treat it as just another and
+                    andKeywordFixedSet.add(keywordFixedOrSet.iterator().next());
+                    keywordFixedOrSetAndTestIter.remove();
+                }
+            }
+
+            boolean doingBothAndOr = (keywordFixedOrSetAndList.size() > 1) || (keywordFixedOrSetAndList.size() > 0 && andKeywordFixedSet.size() > 0);
+
+            Debug.logInfo("Finished initial setup of keywords, doingBothAndOr=" + doingBothAndOr + ", andKeywordFixedSet=" + andKeywordFixedSet + "\n keywordFixedOrSetAndList=" + keywordFixedOrSetAndList, module);
 
             ComplexAlias relevancyComplexAlias = new ComplexAlias("+");
-            if (andKeywordFixedList.size() > 0) {
+            if (andKeywordFixedSet.size() > 0) {
                 // add up the relevancyWeight fields from all keyword member entities for a total to sort by
 
-                Iterator keywordIter = andKeywordFixedList.iterator();
+                Iterator keywordIter = andKeywordFixedSet.iterator();
                 while (keywordIter.hasNext()) {
                     String keyword = (String) keywordIter.next();
 
@@ -246,29 +262,33 @@ public class ProductSearch {
                     dynamicViewEntity.addAlias(null, "totalRelevancy", null, null, null, null, null, relevancyComplexAlias);
                 }
             }
-            if (orKeywordFixedList.size() > 0) {
-                // make index based values and increment
-                String entityAlias = "PK" + index;
-                String prefix = "pk" + index;
-                index++;
+            if (keywordFixedOrSetAndList.size() > 0) {
+                Iterator keywordFixedOrSetAndIter = keywordFixedOrSetAndList.iterator();
+                while (keywordFixedOrSetAndIter.hasNext()) {
+                    Set keywordFixedOrSet = (Set) keywordFixedOrSetAndIter.next();
+                    // make index based values and increment
+                    String entityAlias = "PK" + index;
+                    String prefix = "pk" + index;
+                    index++;
 
-                dynamicViewEntity.addMemberEntity(entityAlias, "ProductKeyword");
-                dynamicViewEntity.addAlias(entityAlias, prefix + "Keyword", "keyword", null, null, null, null);
-                dynamicViewEntity.addViewLink("PROD", entityAlias, Boolean.FALSE, ModelKeyMap.makeKeyMapList("productId"));
-                List keywordOrList = new LinkedList();
-                Iterator keywordIter = orKeywordFixedList.iterator();
-                while (keywordIter.hasNext()) {
-                    String keyword = (String) keywordIter.next();
-                    keywordOrList.add(new EntityExpr(prefix + "Keyword", EntityOperator.LIKE, keyword));
-                }
-                entityConditionList.add(new EntityConditionList(keywordOrList, EntityOperator.OR));
+                    dynamicViewEntity.addMemberEntity(entityAlias, "ProductKeyword");
+                    dynamicViewEntity.addAlias(entityAlias, prefix + "Keyword", "keyword", null, null, null, null);
+                    dynamicViewEntity.addViewLink("PROD", entityAlias, Boolean.FALSE, ModelKeyMap.makeKeyMapList("productId"));
+                    List keywordOrList = new LinkedList();
+                    Iterator keywordIter = keywordFixedOrSet.iterator();
+                    while (keywordIter.hasNext()) {
+                        String keyword = (String) keywordIter.next();
+                        keywordOrList.add(new EntityExpr(prefix + "Keyword", EntityOperator.LIKE, keyword));
+                    }
+                    entityConditionList.add(new EntityConditionList(keywordOrList, EntityOperator.OR));
 
-                productIdGroupBy = true;
+                    productIdGroupBy = true;
 
-                if (doingBothAndOr) {
-                    relevancyComplexAlias.addComplexAliasMember(new ComplexAliasField(entityAlias, "relevancyWeight", "sum"));
-                } else {
-                    dynamicViewEntity.addAlias(entityAlias, "totalRelevancy", "relevancyWeight", null, null, null, "sum");
+                    if (doingBothAndOr) {
+                        relevancyComplexAlias.addComplexAliasMember(new ComplexAliasField(entityAlias, "relevancyWeight", "sum"));
+                    } else {
+                        dynamicViewEntity.addAlias(entityAlias, "totalRelevancy", "relevancyWeight", null, null, null, "sum");
+                    }
                 }
             }
 
@@ -594,19 +614,55 @@ public class ProductSearch {
             }
         }
 
-        public List makeFullKeywordList() {
+        public List makeFullKeywordList(GenericDelegator delegator) {
             List keywordList = KeywordSearch.makeKeywordList(this.keywordsString);
-            return keywordList;
+            List fullKeywordList = new ArrayList(keywordList.size()*2);
+
+            // expand the keyword list according to the thesaurus and create a new set of keywords
+            Iterator keywordIter = keywordList.iterator();
+            while (keywordIter.hasNext()) {
+                String keyword = (String) keywordIter.next();
+                List expandedList = new LinkedList();
+                boolean replaceEntered = KeywordSearch.expandKeyword(keyword, expandedList, delegator);
+                fullKeywordList.addAll(expandedList);
+                if (!replaceEntered) {
+                    fullKeywordList.add(keyword);
+                }
+            }
+
+            return fullKeywordList;
         }
 
         public void addConstraint(ProductSearchContext productSearchContext) {
             // just make the fixed keyword lists and put them in the context
-            List keywordFirstPass = makeFullKeywordList();
-            List keywordList = KeywordSearch.fixKeywords(keywordFirstPass, anyPrefix, anySuffix, removeStems, isAnd);
             if (isAnd) {
-                productSearchContext.andKeywordFixedList.addAll(keywordList);
+                // when isAnd is true we need to make a list of keyword sets where each set corresponds to one
+                //incoming/entered keyword and contains all of the expanded keywords plus the entered keyword if none of
+                //the expanded keywords are flagged as replacements; now the tricky part: each set should be or'ed together,
+                //but then the sets should be and'ed to produce the overall expression; how to create the SQL for this
+                //needs some work as the curret method only support a list of and'ed words and a list of or'ed words, not
+                //a list of or'ed sets to be and'ed together
+                List keywordList = KeywordSearch.makeKeywordList(this.keywordsString);
+
+                // expand the keyword list according to the thesaurus and create a new set of keywords
+                Iterator keywordIter = keywordList.iterator();
+                while (keywordIter.hasNext()) {
+                    String keyword = (String) keywordIter.next();
+                    List expandedList = new LinkedList();
+                    boolean replaceEntered = KeywordSearch.expandKeyword(keyword, expandedList, productSearchContext.getDelegator());
+                    if (!replaceEntered) {
+                        expandedList.add(keyword);
+                    }
+                    List fixedList = KeywordSearch.fixKeywords(expandedList, anyPrefix, anySuffix, removeStems, isAnd);
+                    Set fixedKeywordSet = new HashSet();
+                    fixedKeywordSet.addAll(fixedList);
+                    productSearchContext.keywordFixedOrSetAndList.add(fixedKeywordSet);
+                }
             } else {
-                productSearchContext.orKeywordFixedList.addAll(keywordList);
+                // when isAnd is false, just add all of the new entries to the big list
+                List keywordFirstPass = makeFullKeywordList(productSearchContext.getDelegator());
+                List keywordList = KeywordSearch.fixKeywords(keywordFirstPass, anyPrefix, anySuffix, removeStems, isAnd);
+                productSearchContext.orKeywordFixedSet.addAll(keywordList);
             }
 
             // add in productSearchConstraint, don't worry about the productSearchResultId or constraintSeqId, those will be fill in later
