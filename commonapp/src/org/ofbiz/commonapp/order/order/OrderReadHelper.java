@@ -53,7 +53,7 @@ public class OrderReadHelper {
         this.orderHeader = orderHeader;
     }
 
-    public Collection getOrderItems() {
+    public List getOrderItems() {
         if (orderItems == null) {
             try {
                 orderItems = orderHeader.getRelated("OrderItem");
@@ -61,10 +61,10 @@ public class OrderReadHelper {
                 Debug.logWarning(e);
             }
         }
-        return orderItems;
+        return (List) orderItems;
     }
 
-    public Collection getAdjustments() {
+    public List getAdjustments() {
         if (adjustments == null) {
             try {
                 adjustments = orderHeader.getRelated("OrderAdjustment");
@@ -74,7 +74,7 @@ public class OrderReadHelper {
             if (adjustments == null)
                 adjustments = new ArrayList();
         }
-        return adjustments;
+        return (List) adjustments;
     }
 
     public Collection getPaymentPreferences() {
@@ -158,9 +158,13 @@ public class OrderReadHelper {
         Iterator orderStatusIter = orderStatusList.iterator();
         while (orderStatusIter.hasNext()) {
             try {
-                GenericValue os = (GenericValue) orderStatusIter.next();
-                GenericValue si = (GenericValue) os.getRelatedOneCache("StatusItem");
-                orderStatusIdSet.add(si.getString("description"));
+                GenericValue orderStatus = (GenericValue) orderStatusIter.next();
+                GenericValue statusItem = (GenericValue) orderStatus.getRelatedOneCache("StatusItem");
+                if (statusItem != null) {
+                    orderStatusIdSet.add(statusItem.getString("description"));
+                } else {
+                    orderStatusIdSet.add(orderStatus.getString("statusId"));
+                }
             } catch (GenericEntityException gee) {
                 Debug.logWarning(gee);
             }
@@ -217,30 +221,36 @@ public class OrderReadHelper {
 
     public double getTotalPrice() {
         if (totalPrice == null) {
-            double total = getOrderItemsTotal();
-            double adj = getOrderAdjustments();
-            totalPrice = new Double(total + adj);
+            totalPrice = new Double(getOrderItemsTotal(getOrderItems(), getAdjustments()));
         }//else already set
         return totalPrice.doubleValue();
     }
 
-    public Iterator getAdjustmentIterator() {
-        return getOrderAdjustmentCollection().iterator();
+    public static double getTotalPrice(List orderItems, List adjustments) {
+        double total = getOrderItemsTotal(orderItems, adjustments);
+        double adj = getOrderAdjustments(orderItems, adjustments);
+        return total + adj;
     }
 
-    public List getOrderAdjustmentCollection() {
+    public List getOrderHeaderAdjustments() {
+        return getOrderHeaderAdjustments(getAdjustments());
+    }
+    public static List getOrderHeaderAdjustments(List adjustments) {
         List contraints1 = UtilMisc.toList(new EntityExpr("orderItemSeqId", EntityOperator.EQUALS, null));
         List contraints2 = UtilMisc.toList(new EntityExpr("orderItemSeqId", EntityOperator.EQUALS, "_NA_"));
         List contraints3 = UtilMisc.toList(new EntityExpr("orderItemSeqId", EntityOperator.EQUALS, ""));
-        ArrayList adj = new ArrayList();
-        adj.addAll(EntityUtil.filterByAnd(getAdjustments(), contraints1));
-        adj.addAll(EntityUtil.filterByAnd(getAdjustments(), contraints2));
-        adj.addAll(EntityUtil.filterByAnd(getAdjustments(), contraints3));
+        List adj = new LinkedList();
+        adj.addAll(EntityUtil.filterByAnd(adjustments, contraints1));
+        adj.addAll(EntityUtil.filterByAnd(adjustments, contraints2));
+        adj.addAll(EntityUtil.filterByAnd(adjustments, contraints3));
         return adj;
     }
 
     public double getOrderAdjustments() {
-        return calcOrderAdjustments(getOrderAdjustmentCollection(), getOrderItemsSubTotal(), true, true, true);
+        return getOrderAdjustments(getOrderItems(), getAdjustments());
+    }
+    public static double getOrderAdjustments(List orderItems, List adjustments) {
+        return calcOrderAdjustments(getOrderHeaderAdjustments(adjustments), getOrderItemsSubTotal(orderItems, adjustments), true, true, true);
     }
 
     // ================= Order Adjustments =================
@@ -283,48 +293,57 @@ public class OrderReadHelper {
     // ================= Order Item Adjustments =================
 
     public double getOrderItemsSubTotal() {
+        return getOrderItemsSubTotal(getOrderItems(), getAdjustments());
+    }
+    
+    public static double getOrderItemsSubTotal(List orderItems, List adjustments) {
         double result = 0.0;
-        Iterator itemIter = UtilMisc.toIterator(getOrderItems());
+        Iterator itemIter = UtilMisc.toIterator(orderItems);
         while (itemIter != null && itemIter.hasNext()) {
-            result += getOrderItemSubTotal((GenericValue) itemIter.next());
+            result += getOrderItemSubTotal((GenericValue) itemIter.next(), adjustments);
         }
         return result;
     }
 
     public double getOrderItemSubTotal(GenericValue orderItem) {
+        return getOrderItemSubTotal(orderItem, getAdjustments());
+    }
+
+    /** The passed adjustments can be all adjustments for the order, ie for all line items */
+    public static double getOrderItemSubTotal(GenericValue orderItem, Collection adjustments) {
         Double unitPrice = orderItem.getDouble("unitPrice");
         Double quantity = orderItem.getDouble("quantity");
+        double result = 0.0;
         if (unitPrice == null || quantity == null) {
-            Debug.logWarning("[getOrderItemTotal] unitPrice or quantity are null, return 0 for the item total price");
-            return 0.0;
+            Debug.logWarning("[getOrderItemTotal] unitPrice or quantity are null, using 0 for the item base price");
+        } else {
+            result = unitPrice.doubleValue() * quantity.doubleValue();
         }
-        double result = unitPrice.doubleValue() * quantity.doubleValue();
 
         //subtotal also includes non tax and shipping adjustments; tax and shipping will be calculated using this adjusted value
-        result += getOrderItemAdjustments(orderItem, true, false, false);
+        result += getOrderItemAdjustments(orderItem, adjustments, true, false, false);
 
         return result;
     }
 
     public double getOrderItemsTotal() {
+        return getOrderItemsTotal(getOrderItems(), getAdjustments());
+    }
+    public static double getOrderItemsTotal(List orderItems, List adjustments) {
         double result = 0.0;
-        Iterator itemIter = UtilMisc.toIterator(getOrderItems());
+        Iterator itemIter = UtilMisc.toIterator(orderItems);
         while (itemIter != null && itemIter.hasNext()) {
-            result += getOrderItemTotal((GenericValue) itemIter.next());
+            result += getOrderItemTotal((GenericValue) itemIter.next(), adjustments);
         }
         return result;
     }
 
     public double getOrderItemTotal(GenericValue orderItem) {
-        //add tax and shipping to subtotal
-        return (getOrderItemSubTotal(orderItem) + getOrderItemAdjustments(orderItem, false, true, true));
+        return getOrderItemTotal(orderItem, getAdjustments());
     }
-
-    public double getOrderItemAdjustments(GenericValue orderItem, boolean includeOther, boolean includeTax, boolean includeShipping) {
-        List contraints = new LinkedList();
-        contraints.add(new EntityExpr("orderItemSeqId", EntityOperator.EQUALS, orderItem.get("orderItemSeqId")));
-        Collection adj = EntityUtil.filterByAnd(getAdjustments(), contraints);
-        return calcItemAdjustments(orderItem, adj, includeOther, includeTax, includeShipping);
+    public static double getOrderItemTotal(GenericValue orderItem, List adjustments) {
+        //add tax and shipping to subtotal
+        return (getOrderItemSubTotal(orderItem, adjustments) + getOrderItemAdjustments(orderItem, adjustments, false, true, true));
     }
 
     public double getOrderItemTax(GenericValue orderItem) {
@@ -333,6 +352,18 @@ public class OrderReadHelper {
 
     public double getOrderItemShipping(GenericValue orderItem) {
         return getOrderItemAdjustments(orderItem, false, false, true);
+    }
+
+    public double getOrderItemAdjustments(GenericValue orderItem, boolean includeOther, boolean includeTax, boolean includeShipping) {
+        return getOrderItemAdjustments(orderItem, getAdjustments(), includeOther, includeTax, includeShipping);
+    }
+
+    /** The passed adjustments can be all adjustments for the order, ie for all line items */
+    public static double getOrderItemAdjustments(GenericValue orderItem, Collection adjustments, boolean includeOther, boolean includeTax, boolean includeShipping) {
+        List contraints = new LinkedList();
+        contraints.add(new EntityExpr("orderItemSeqId", EntityOperator.EQUALS, orderItem.get("orderItemSeqId")));
+        Collection adj = EntityUtil.filterByAnd(adjustments, contraints);
+        return calcItemAdjustments(orderItem, adj, includeOther, includeTax, includeShipping);
     }
 
     //Order Item Adjs Utility Methods
