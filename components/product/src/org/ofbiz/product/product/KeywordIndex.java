@@ -1,5 +1,5 @@
 /*
- * $Id: KeywordIndex.java,v 1.3 2003/12/23 07:24:05 jonesde Exp $
+ * $Id: KeywordIndex.java,v 1.4 2003/12/23 18:51:21 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -24,6 +24,7 @@
  */
 package org.ofbiz.product.product;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -34,9 +35,11 @@ import java.util.StringTokenizer;
 import java.util.TreeMap;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
+import org.ofbiz.content.data.DataResourceWorker;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -46,7 +49,7 @@ import org.ofbiz.entity.util.EntityUtil;
  *  Does indexing in preparation for a keyword search.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.0
  */
 public class KeywordIndex {
@@ -125,22 +128,16 @@ public class KeywordIndex {
             Iterator productContentAndInfoIter = productContentAndInfos.iterator();
             while (productContentAndInfoIter.hasNext()) {
                 GenericValue productContentAndInfo = (GenericValue) productContentAndInfoIter.next();
-
-                // TODO: refactor DataResourceWorker with some methods to getDataResourceText, split rendering text into getting text and then checking if there is a template type other than NONE
+                addWeightedDataResourceString(productContentAndInfo, weight, strings, delegator);
                 
                 List alternateViews = productContentAndInfo.getRelated("ContentAssocDataResourceViewTo", UtilMisc.toMap("caContentAssocTypeId", "ALTERNATE_LOCALE"), UtilMisc.toList("-caFromDate"));
                 alternateViews = EntityUtil.filterByDate(alternateViews, UtilDateTime.nowTimestamp(), "caFromDate", "caThruDate", true);
                 Iterator alternateViewIter = alternateViews.iterator();
                 while (alternateViewIter.hasNext()) {
                     GenericValue thisView = (GenericValue) alternateViewIter.next();
+                    addWeightedDataResourceString(thisView, weight, strings, delegator);
                 }
             }
-            
-            
-            /*
-            for (int i = 0; i < weight; i++) {
-                strings.add(value.getString(fieldName));
-            }*/
         }
         
         Iterator strIter = strings.iterator();
@@ -178,6 +175,19 @@ public class KeywordIndex {
         if (toBeStored.size() > 0) {
             if (Debug.infoOn()) Debug.logInfo("[KeywordSearch.induceKeywords] Storing " + toBeStored.size() + " keywords for productId " + product.getString("productId"), module);
             delegator.storeAll(toBeStored);
+        }
+    }
+    
+    public static void addWeightedDataResourceString(GenericValue drView, int weight, List strings, GenericDelegator delegator) {
+        try {
+            String contentText = DataResourceWorker.renderDataResourceAsText(delegator, drView.getString("dataResourceId"), null, drView, null, null);
+            for (int i = 0; i < weight; i++) {
+                strings.add(contentText);
+            }
+        } catch (IOException e1) {
+            Debug.logError(e1, "Error getting content text to index", module);
+        } catch (GeneralException e1) {
+            Debug.logError(e1, "Error getting content text to index", module);
         }
     }
 
