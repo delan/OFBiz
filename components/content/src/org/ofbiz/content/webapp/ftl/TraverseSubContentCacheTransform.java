@@ -1,5 +1,5 @@
 /*
- * $Id: TraverseSubContentCacheTransform.java,v 1.11 2004/04/17 08:00:15 byersa Exp $
+ * $Id: TraverseSubContentCacheTransform.java,v 1.12 2004/04/19 16:37:55 byersa Exp $
  * 
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  * 
@@ -44,7 +44,7 @@ import freemarker.template.TransformControl;
  * TraverseSubContentCacheTransform - Freemarker Transform for URLs (links)
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  * @since 3.0
  */
 public class TraverseSubContentCacheTransform implements TemplateTransformModel {
@@ -128,9 +128,9 @@ public class TraverseSubContentCacheTransform implements TemplateTransformModel 
             thruDate = UtilDateTime.toTimestamp(thruDateStr);
         }
         traverseContext.put("thruDate", thruDate);
-        if (UtilValidate.isEmpty(startContentAssocTypeId)) {
-            throw new RuntimeException("contentAssocTypeId is empty.");
-        }
+        //if (UtilValidate.isEmpty(startContentAssocTypeId)) {
+            //throw new RuntimeException("contentAssocTypeId is empty.");
+        //}
         traverseContext.put("contentAssocTypeId", startContentAssocTypeId);
         String direction = (String)templateCtx.get( "direction");
         if (UtilValidate.isEmpty(direction)) {
@@ -187,7 +187,7 @@ public class TraverseSubContentCacheTransform implements TemplateTransformModel 
                 traverseContext.put("nodeTrail", nodeTrail);
                 Boolean isPickBool = (Boolean)node.get("isPick");
                 Boolean isFollowBool = (Boolean)node.get("isFollow");
-                //if (Debug.infoOn()) Debug.logInfo("in TraverseSubContentCache, onStart, isPickBool(1):" + isPickBool + " isFollowBool:" + isFollowBool, module);
+                if (Debug.infoOn()) Debug.logInfo("in TraverseSubContentCache, onStart, isPickBool(1):" + isPickBool + " isFollowBool:" + isFollowBool, module);
                 boolean isPick = true;
                 if ((isPickBool == null || !isPickBool.booleanValue())
                    && (isFollowBool != null && isFollowBool.booleanValue())) {
