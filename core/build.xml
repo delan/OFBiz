@@ -63,10 +63,13 @@
         <property name="oro.jar"       value="${extlib.dir}/share/jakarta-oro-2.0.4.jar" />
         <property name="velocity.jar"  value="${extlib.dir}/share/velocity-1.2.jar" />
 
+        <property name="datavision.jar"  value="${extlib.dir}/datavision/DataVision.jar" />
+        
         <property name="api-jars1"     value="${j2ee.jar}:${jdbc.jar}:${mail.jar}:${servlet.jar}:${xerces.jar}" />
         <property name="api-jars2"     value="${log4j.jar}:${tyrex.jar}:${castor.jar}:${velocity.jar}" />
         <property name="api-jars3"     value="${bsh.jar}:${axis.jar}:${clutil.jar}:${wsdl4j.jar}:${oro.jar}" />
-        <property name="api-jars"      value="${api-jars1}:${api-jars2}:${api-jars3}" />
+        <property name="api-jars4"     value="${datavision.jar}" />
+        <property name="api-jars"      value="${api-jars1}:${api-jars2}:${api-jars3}:${api-jars4}" />
         
         <property name="classpath"     value="${api-jars}:${env.CLASSPATH}" />
         <echo message="classpath: ${classpath}" />

@@ -35,6 +35,8 @@ fi
 CP=`ls $OFBIZ_HOME/lib/share/*.jar | paste -s -d":" - `
 CP=$CP:`ls $OFBIZ_HOME/lib/common/*.jar | paste -s -d":" - `
 CP=$CP:$OFBIZ_HOME/lib/compile/xerces.jar:$OFBIZ_HOME/lib/compile/mail.jar
+CP=$CP:$OFBIZ_HOME/lib/datavision/DataVision.jar:$OFBIZ_HOME/lib/datavision/MinML.jar:$OFBIZ_HOME/lib/datavision/jcalendar.jar
+CP=$CP:$OFBIZ_HOME/lib/weka/weka.jar
 CP=$CP:$OFBIZ_HOME/core/lib/ofbcore-share.jar
 CP=$CP:$OFBIZ_HOME/core/lib/ofbcore-entity.jar
 CP=$CP:$OFBIZ_HOME/core/lib/ofbcore-service.jar

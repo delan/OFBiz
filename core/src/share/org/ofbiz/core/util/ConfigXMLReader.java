@@ -88,6 +88,7 @@ public class ConfigXMLReader {
     public static final String VIEW_NAME = "name";
     public static final String VIEW_PAGE = "page";
     public static final String VIEW_TYPE = "type";
+    public static final String VIEW_INFO = "info";
     public static final String VIEW_DESCRIPTION = "description";
 
     /** Handler Config Variables */
@@ -362,6 +363,7 @@ public class ConfigXMLReader {
                 uriMap.put(VIEW_NAME, name);
                 uriMap.put(VIEW_PAGE, page);
                 uriMap.put(VIEW_TYPE, type);
+                uriMap.put(VIEW_INFO, mapping.getAttribute(VIEW_INFO));
 
                 // Check for a description.
                 NodeList descList = mapping.getElementsByTagName(VIEW_DESCRIPTION);

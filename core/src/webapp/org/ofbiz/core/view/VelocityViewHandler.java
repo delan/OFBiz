@@ -101,13 +101,15 @@ public class VelocityViewHandler implements ViewHandler {
         }
     }
 
-    public void render(String viewSource, HttpServletRequest request,
+    public void render(String name, String page, String info, HttpServletRequest request,
                      HttpServletResponse response) throws ViewHandlerException {
-        if (ve == null)
+        if (ve == null) {
             throw new ViewHandlerException("Velocity Template Engine has not been initialized");
+        }
 
-        if (viewSource == null || viewSource.length() == 0)
+        if (page == null || page.length() == 0) {
             throw new ViewHandlerException("Invalid template source");
+        }
 
         Context context = new VelocityContext();
         context.put(REQUEST, request);
@@ -115,7 +117,7 @@ public class VelocityViewHandler implements ViewHandler {
 
         Template template = null;
         try {
-            template = ve.getTemplate(viewSource);
+            template = ve.getTemplate(page);
         } catch (ResourceNotFoundException rne) {
             throw new ViewHandlerException("Invalid template source", rne);
         } catch (Exception e) {
@@ -157,4 +159,3 @@ public class VelocityViewHandler implements ViewHandler {
         }
     }
 }
-

@@ -69,4 +69,5 @@
     name CDATA #REQUIRED
     page CDATA #IMPLIED
     type CDATA "default"
+    info CDATA #IMPLIED
 >

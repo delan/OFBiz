@@ -15,6 +15,7 @@
 
     <handler name="region" type="view" class="org.ofbiz.core.view.RegionViewHandler"/>
     <handler name="velocity" type="view" class="org.ofbiz.core.view.VelocityViewHandler"/>
+    <handler name="datavision" type="view" class="org.ofbiz.core.view.DataVisionViewHandler"/>
     
     <!-- Security Mappings -->
     <request-map uri="checkLogin" edit="false">
@@ -240,6 +241,9 @@
 
     <view-map name="StatsSinceStart" type="region"/>
     <view-map name="StatBinsHistory" type="region"/>
+
+    <view-map name="UomReport" page="/UomReport.xml" type="datavision" info="Uom"/>
+    
     <!-- end of view mappings -->
     
 </site-conf>

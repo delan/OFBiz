@@ -63,20 +63,22 @@ public class RegionViewHandler implements ViewHandler {
         }
     }
 
-    public void render(String viewSource, HttpServletRequest request, HttpServletResponse response) throws ViewHandlerException {
+    public void render(String name, String page, String info, HttpServletRequest request, HttpServletResponse response) throws ViewHandlerException {
         // some containers call filters on EVERY request, even forwarded ones,
         // so let it know that it came from the control servlet
 
-        if (request == null)
+        if (request == null) {
             throw new ViewHandlerException("The HttpServletRequest object was null, how did that happen?");
-        if (viewSource == null || viewSource.length() == 0)
-            throw new ViewHandlerException("View source name was null or empty, but must be specified");
+        }
+        if (page == null || page.length() == 0) {
+            throw new ViewHandlerException("Page name was null or empty, but must be specified");
+        }
 
         request.setAttribute(SiteDefs.FORWARDED_FROM_CONTROL_SERVLET, new Boolean(true));
         
-        Region region = RegionManager.getRegion(regionFile, viewSource);
+        Region region = RegionManager.getRegion(regionFile, page);
         if (region == null) {
-            throw new ViewHandlerException("Error: could not find region with name " + viewSource);
+            throw new ViewHandlerException("Error: could not find region with name " + page);
         }
         
         try {

@@ -48,11 +48,13 @@ public interface ViewHandler {
 
     /**
      * Render the page.
-     * @param viewSource The source of the view; could be a page, url, etc depending on the type of handler.
+     * @param name The name of the view.
+     * @param page The source of the view; could be a page, url, etc depending on the type of handler.
+     * @param info An info string attached to this view
      * @param request The HttpServletRequest object used when requesting this page.
      * @param response The HttpServletResponse object to be used to present the page.
      * @throws ViewHandlerException
      */
-    public void render(String viewSource, HttpServletRequest request, HttpServletResponse response) throws ViewHandlerException;
+    public void render(String name, String page, String info, HttpServletRequest request, HttpServletResponse response) throws ViewHandlerException;
 
 }

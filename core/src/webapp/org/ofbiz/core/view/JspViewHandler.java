@@ -47,19 +47,19 @@ public class JspViewHandler implements ViewHandler {
         this.context = context;
     }
 
-    public void render(String viewSource, HttpServletRequest request, HttpServletResponse response) throws ViewHandlerException {
+    public void render(String name, String page, String info, HttpServletRequest request, HttpServletResponse response) throws ViewHandlerException {
         // some containers call filters on EVERY request, even forwarded ones,
         // so let it know that it came from the control servlet
 
         if (request == null)
             throw new ViewHandlerException("Null HttpServletRequest object");
-        if (viewSource == null || viewSource.length() == 0)
+        if (page == null || page.length() == 0)
             throw new ViewHandlerException("Null or empty source");
 
         request.setAttribute(SiteDefs.FORWARDED_FROM_CONTROL_SERVLET, new Boolean(true));
-        RequestDispatcher rd = request.getRequestDispatcher(viewSource);
+        RequestDispatcher rd = request.getRequestDispatcher(page);
         if (rd == null)
-            throw new ViewHandlerException("Source returned a null dispatcher (" + viewSource + ")");
+            throw new ViewHandlerException("Source returned a null dispatcher (" + page + ")");
         try {
             rd.forward(request, response);
         } catch (IOException ie) {
