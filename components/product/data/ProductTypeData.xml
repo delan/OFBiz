@@ -188,8 +188,8 @@
 
   <EnumerationType description="Product Promotion Input Parameter" enumTypeId="PROD_PROMO_IN_PARAM" hasTable="N" parentTypeId="PROD_PROMO"/>
   <Enumeration description="Cart Sub-total" enumCode="ORDER_TOTAL" enumId="PPIP_ORDER_TOTAL" sequenceId="01" enumTypeId="PROD_PROMO_IN_PARAM"/>
-  <Enumeration description="X Amount of Product" enumCode="PRODUCT_AMOUNT" enumId="PPIP_PRODUCT_AMOUNT" sequenceId="02" enumTypeId="PROD_PROMO_IN_PARAM"/>
-  <Enumeration description="X Amount of Product - Not Counted" enumCode="PRODUCT_AMTNC" enumId="PPIP_PRODUCT_AMTNC" sequenceId="03" enumTypeId="PROD_PROMO_IN_PARAM"/>
+  <Enumeration description="Total Amount of Product" enumCode="PRODUCT_TOTAL" enumId="PPIP_PRODUCT_TOTAL" sequenceId="02" enumTypeId="PROD_PROMO_IN_PARAM"/>
+  <Enumeration description="X Amount of Product" enumCode="PRODUCT_AMOUNT" enumId="PPIP_PRODUCT_AMOUNT" sequenceId="03" enumTypeId="PROD_PROMO_IN_PARAM"/>
   <Enumeration description="X Quantity of Product" enumCode="PRODUCT_QUANT" enumId="PPIP_PRODUCT_QUANT" sequenceId="04" enumTypeId="PROD_PROMO_IN_PARAM"/>
   <Enumeration description="Account Days Since Created" enumCode="NEW_ACCT" enumId="PPIP_NEW_ACCT" sequenceId="05" enumTypeId="PROD_PROMO_IN_PARAM"/>
   <Enumeration description="Party" enumCode="PARTY_ID" enumId="PPIP_PARTY_ID" sequenceId="06" enumTypeId="PROD_PROMO_IN_PARAM"/>
