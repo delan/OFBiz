@@ -20,34 +20,34 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      2.1
 -->
 
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
 <div class='head1'>
-    ${uiLabelMap.CatalogSearchResultfor} "${requestAttributes.keywordString?if_exists}"
-   ${uiLabelMap.CatalogWhere} <#if searchOperator?default("OR") == "OR">${uiLabelMap.CatalgAnyKeyword}<#else>${uiLabelMap.CatalgAnyKeyword}</#if> ${uiLabelMap.CatalogMatched}
+    ${uiLabelMap.CommonSearchResultfor} "${requestAttributes.keywordString?if_exists}"
+   ${uiLabelMap.CommonWhere} <#if searchOperator?default("OR") == "OR">${uiLabelMap.ProductAnyKeyword}<#else>${uiLabelMap.ProductAnyKeyword}</#if> ${uiLabelMap.CommonMatched}
 
   <#assign featureIdByType = requestAttributes.featureIdByType>
   <#if requestAttributes.featureIdByType?has_content>
-  	${uiLabelMap.CatalogAnd} ${uiLabelMap.CatalogWhere} 
+  	${uiLabelMap.CommonAnd} ${uiLabelMap.CommonWhere} 
     <#list featureIdByType.keySet() as productFeatureTypeId>
       <#assign findPftMap = Static["org.ofbiz.base.util.UtilMisc"].toMap("productFeatureTypeId", productFeatureTypeId)>
       <#assign productFeatureType = delegator.findByPrimaryKeyCache("ProductFeatureType", findPftMap)>
       <#assign findProdFeatMap = Static["org.ofbiz.base.util.UtilMisc"].toMap("productFeatureId", featureIdByType[productFeatureTypeId])>
       <#assign productFeature = delegator.findByPrimaryKeyCache("ProductFeature", findProdFeatMap)>
       ${productFeatureType.description} = ${productFeature.description}
-      <#if productFeatureTypeId_has_next>, ${uiLabelMap.CatalogAnd} </#if>
+      <#if productFeatureTypeId_has_next>, ${uiLabelMap.CommonAnd} </#if>
     </#list>
   </#if>
   <#if searchCategory?exists>
-   ${uiLabelMap.CatalogInThe} ${searchCategory.description} ${uiLabelMap.CatalogCategory}
+   ${uiLabelMap.CommonInThe} ${searchCategory.description} ${uiLabelMap.ProductCategory}
   </#if>
 </div>
 
 <#if !requestAttributes.searchProductList?has_content>
-  <br><div class='head2'>&nbsp;${uiLabelMap.CatalogNoResultsFound}.</div>
+  <br><div class='head2'>&nbsp;${uiLabelMap.ProductNoResultsFound}.</div>
 </#if>
 
 <#if requestAttributes.searchProductList?has_content>
@@ -56,13 +56,13 @@
       <td align=right>
         <b>
         <#if 0 < requestAttributes.viewIndex?int>
-          <a href="<@ofbizUrl>/keywordsearch/${prevStr}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CatalogPrevious}]</a> |
+          <a href="<@ofbizUrl>/keywordsearch/${prevStr}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonPrevious}]</a> |
         </#if>
         <#if 0 < requestAttributes.listSize?int>
           <span class="tabletext">${requestAttributes.lowIndex} - ${requestAttributes.highIndex} of ${requestAttributes.listSize}</span>
         </#if>
         <#if requestAttributes.highIndex?int < requestAttributes.listSize?int>      
-          | <a href="<@ofbizUrl>/keywordsearch/${nextStr}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CatalogNext}]</a>
+          | <a href="<@ofbizUrl>/keywordsearch/${nextStr}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonNext}]</a>
         </#if>
         </b>
       </td>
@@ -96,13 +96,13 @@
       <td align=right>
         <b>
         <#if 0 < requestAttributes.viewIndex?int>
-          <a href="<@ofbizUrl>/keywordsearch/${prevStr}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CatalogPrevious}]</a> |
+          <a href="<@ofbizUrl>/keywordsearch/${prevStr}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonPrevious}]</a> |
         </#if>
         <#if 0 < requestAttributes.listSize?int>
           <span class="tabletext">${requestAttributes.lowIndex} - ${requestAttributes.highIndex} of ${requestAttributes.listSize}</span>
         </#if>
         <#if requestAttributes.highIndex?int < requestAttributes.listSize?int>      
-          | <a href="<@ofbizUrl>/keywordsearch/${nextStr}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CatalogNext}]</a>
+          | <a href="<@ofbizUrl>/keywordsearch/${nextStr}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonNext}]</a>
         </#if>
         </b>
       </td>

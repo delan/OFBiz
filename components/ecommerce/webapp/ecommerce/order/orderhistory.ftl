@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.1
 -->
 
@@ -45,16 +45,16 @@
             <table width="100%" cellpadding="1" cellspacing="0" border="0">
               <tr>
                 <td width="30%">
-                  <div class="tabletext"><b>${requestAttributes.uiLabelMap.OrderDate}</b></div>
+                  <div class="tabletext"><b>${requestAttributes.uiLabelMap.CommonDate}</b></div>
                 </td>
                 <td width="15%">
                   <div class="tabletext"><b><nobr>${requestAttributes.uiLabelMap.OrderOrder} #</nobr></b></div>
                 </td>
                 <td width="15%">
-                  <div class="tabletext"><b>${requestAttributes.uiLabelMap.OrderAmount}</b></div>
+                  <div class="tabletext"><b>${requestAttributes.uiLabelMap.CommonAmount}</b></div>
                 </td>
                 <td width="15%">
-                  <div class="tabletext"><b>${requestAttributes.uiLabelMap.OrderStatus}</b></div>
+                  <div class="tabletext"><b>${requestAttributes.uiLabelMap.CommonStatus}</b></div>
                 </td>
                 <td width="15%"><b></b></td>                
               </tr>
@@ -75,7 +75,7 @@
                     <div class="tabletext">${status.description}</div>
                   </td>
                   <td align=right>
-                    <a href="<@ofbizUrl>/orderstatus?order_id=${orderHeader.orderId}</@ofbizUrl>" class='buttontext'>[${requestAttributes.uiLabelMap.OrderView}]</a>
+                    <a href="<@ofbizUrl>/orderstatus?order_id=${orderHeader.orderId}</@ofbizUrl>" class='buttontext'>[${requestAttributes.uiLabelMap.CommonView}]</a>
                   </td>
                 </tr>
               </#list>

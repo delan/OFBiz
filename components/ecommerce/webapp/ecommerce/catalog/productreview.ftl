@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -33,7 +33,7 @@
       <tr>
         <td valign="top">
           <div class="tabletext">
-            <b>${uiLabelMap.CatalogRating}:</b>
+            <b>${uiLabelMap.EcommerceRating}:</b>
             &nbsp;1&nbsp;<input type="radio" name="productRating" value="1.0">
             &nbsp;2&nbsp;<input type="radio" name="productRating" value="2.0">
             &nbsp;3&nbsp;<input type="radio" name="productRating" value="3.0">
@@ -45,15 +45,15 @@
       <tr>
         <td>
           <div class="tabletext">
-            <b>${uiLabelMap.CatalogPostAnonymous}:</b>
-            &nbsp;${uiLabelMap.CatalogYes}&nbsp;<input type="radio" name="postedAnonymous" value="true">
-            &nbsp;${uiLabelMap.CatalogNo}&nbsp;<input type="radio" name="postedAnonymous" value="false">
+            <b>${uiLabelMap.EcommercePostAnonymous}:</b>
+            &nbsp;${uiLabelMap.CommonYes}&nbsp;<input type="radio" name="postedAnonymous" value="true">
+            &nbsp;${uiLabelMap.CommonNo}&nbsp;<input type="radio" name="postedAnonymous" value="false">
           </div>
         </td>
       </tr>
       <tr>
         <td>
-          <div class="tabletext"><b>${uiLabelMap.CatalogReview}:</b>
+          <div class="tabletext"><b>${uiLabelMap.CommonReview}:</b>
         </td>
       </tr>
       <tr>
@@ -63,12 +63,12 @@
       </tr>
       <tr>
         <td>
-          <a href="javascript:document.reviewProduct.submit();" class="buttontext">[${uiLabelMap.CatalogSave}]</a>&nbsp;
-          <a href="<@ofbizUrl>/product?product_id=${requestParameters.product_id}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CatalogCancel}]</a>
+          <a href="javascript:document.reviewProduct.submit();" class="buttontext">[${uiLabelMap.CommonSave}]</a>&nbsp;
+          <a href="<@ofbizUrl>/product?product_id=${requestParameters.product_id}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonCancel}]</a>
         </td>
       </tr>
     </table>
   </form>
 <#else>
-  <h2>${uiLabelMap.CatalogCannotReviewUnKnownProduct}.</h2>
+  <h2>${uiLabelMap.ProductCannotReviewUnKnownProduct}.</h2>
 </#if>

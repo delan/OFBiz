@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      3.0
 -->
 
@@ -169,7 +169,7 @@ function toggleBillingAccount(box) {
                       <tr><td colspan="2"><hr class='sepbar'></td></tr>       
                       <tr>
                         <td colspan="2">
-                          <span class="head2"><b>${uiLabelMap.OrderPONumber}</b></span>&nbsp;
+                          <span class="head2"><b>${uiLabelMap.OrderPoNumber}</b></span>&nbsp;
                           <#if cart.getPoNumber()?exists && cart.getPoNumber() != "(none)">
                             <#assign currentPoNumber = cart.getPoNumber()>
                           </#if>
@@ -200,12 +200,12 @@ function toggleBillingAccount(box) {
                       <tr><td colspan="2"><hr class='sepbar'></td></tr>
                       <tr>
                         <td colspan="2">
-                          <div class="head2"><b>${uiLabelMap.OrderEmailAddresses}</b></div>
+                          <div class="head2"><b>${uiLabelMap.PartyEmailAddresses}</b></div>
                         </td>
                       </tr>
                       <tr>
                         <td colspan="2">
-                          <div class="tabletext">${uiLabelMap.OrderEmailSentToFallowingAddresses}:</div>
+                          <div class="tabletext">${uiLabelMap. OrderEmailSentToFollowingAddresses}:</div>
                           <div class="tabletext">
                             <b>
                               <#list context.emailList as email>
@@ -213,10 +213,10 @@ function toggleBillingAccount(box) {
                               </#list>
                             </b>
                           </div>
-                          <div class="tabletext">${uiLabelMap.OrderUpdateEmailAddress} <a href="<@ofbizUrl>/viewprofile?DONE_PAGE=checkoutoptions</@ofbizUrl>" class="buttontext">${uiLabelMap.OrderProfile}</a>.</div>
+                          <div class="tabletext">${uiLabelMap.OrderUpdateEmailAddress} <a href="<@ofbizUrl>/viewprofile?DONE_PAGE=checkoutoptions</@ofbizUrl>" class="buttontext">${uiLabelMap.PartyProfile}</a>.</div>
                           <br>
                           <div class="tabletext">${uiLabelMap.OrderCommaSeperatedEmailAddresses}:</div>
-                          <input type="text" class='inputBox' size="30" name="order_additional_emails" value='${cart.getOrderAdditionalEmails()?if_exists}'>
+                          <input type="text" class='inputBox' size="30" name="order_additional_emails" value='${cart.getCommonAdditionalEmails()?if_exists}'>
                         </td>
                       </tr>
                     </table>
@@ -239,7 +239,7 @@ function toggleBillingAccount(box) {
       &nbsp;<a href="javascript:submitForm(document.checkoutInfoForm, 'CS', '');" class="buttontextbig">[${uiLabelMap.OrderBacktoShoppingCart}]</a>
     </td>
     <td align="right">
-      <a href="javascript:submitForm(document.checkoutInfoForm, 'DN', '');" class="buttontextbig">[${uiLabelMap.OrderNext}]</a>
+      <a href="javascript:submitForm(document.checkoutInfoForm, 'DN', '');" class="buttontextbig">[${uiLabelMap.CommonNext}]</a>
     </td>
   </tr>
 </table>

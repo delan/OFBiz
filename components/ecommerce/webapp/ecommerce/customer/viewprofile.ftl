@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org) 
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -29,7 +29,7 @@
 <table width='100%' cellpadding='0' cellspacing='0' border='0'>
   <tr>
     <td align=left>
-      <div class="head1">${uiLabelMap.CustomerTheProfileOf}
+      <div class="head1">${uiLabelMap.PartyTheProfileOf}
         <#if person?exists>
           ${person.personalTitle?if_exists}
           ${person.firstName?if_exists}
@@ -37,15 +37,15 @@
           ${person.lastName?if_exists}
           ${person.suffix?if_exists}
         <#else>
-          "${uiLabelMap.CustomerNewUser}"
+          "${uiLabelMap.PartyNewUser}"
         </#if>
       </div>
     </td>
     <td align=right>
       <#if showOld>
-        <a href="<@ofbizUrl>/viewprofile</@ofbizUrl>" class="buttontext">[${uiLabelMap.CustomerHideOld}]</a>&nbsp;&nbsp;
+        <a href="<@ofbizUrl>/viewprofile</@ofbizUrl>" class="buttontext">[${uiLabelMap.PartyHideOld}]</a>&nbsp;&nbsp;
       <#else>
-        <a href="<@ofbizUrl>/viewprofile?SHOW_OLD=true</@ofbizUrl>" class="buttontext">[${uiLabelMap.CustomerShowOld}]</a>&nbsp;&nbsp;
+        <a href="<@ofbizUrl>/viewprofile?SHOW_OLD=true</@ofbizUrl>" class="buttontext">[${uiLabelMap.PartyShowOld}]</a>&nbsp;&nbsp;
       </#if>
     </td>
   </tr>
@@ -58,11 +58,11 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <td valign="middle" align="left">
-            <div class="boxhead">&nbsp;${uiLabelMap.CustomerPersonalInformation}</div>
+            <div class="boxhead">&nbsp;${uiLabelMap.PartyPersonalInformation}</div>
           </td>
           <td valign="middle" align="right">
             <a href="<@ofbizUrl>/editperson</@ofbizUrl>" class="submenutextright">
-            <#if person?exists>${uiLabelMap.CustomerUpdate}<#else>${uiLabelMap.CustomerCreate}</#if></a>
+            <#if person?exists>${uiLabelMap.CommonUpdate}<#else>${uiLabelMap.CommonCreate}</#if></a>
           </td>
         </tr>
       </table>
@@ -76,7 +76,7 @@
 <#if person?exists>
   <table width="100%" border="0" cellpadding="0" cellspacing='0'>
     <tr>
-      <td align="right" width="10%"><div class="tabletext"><b>${uiLabelMap.CustomerName}</b></div></td>
+      <td align="right" width="10%"><div class="tabletext"><b>${uiLabelMap.PartyName}</b></div></td>
       <td width="5">&nbsp;</td>
       <td align="left" width="90%">
         <div class="tabletext">
@@ -88,21 +88,21 @@
         </div>
       </td>
     </tr>
-    <#if person.nickname?has_content><tr><td align=right nowrap><div class='tabletext'><b>${uiLabelMap.CustomerNickName}</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>${person.nickname}</div></td></tr></#if>
-    <#if person.gender?has_content><tr><td align=right nowrap><div class='tabletext'><b>${uiLabelMap.CustomerGender}</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>${person.gender}</div></td></tr></#if>
-    <#if person.birthDate?exists><tr><td align=right nowrap><div class='tabletext'><b>${uiLabelMap.CustomerBirthDate}</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>${person.birthDate.toString()}</div></td></tr></#if>
-    <#if person.height?exists><tr><td align=right nowrap><div class='tabletext'><b>${uiLabelMap.CustomerHeight}</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>${person.height}</div></td></tr></#if>
-    <#if person.weight?exists><tr><td align=right nowrap><div class='tabletext'><b>${uiLabelMap.CustomerWeight}</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>${person.weight}</div></td></tr></#if>
-    <#if person.mothersMaidenName?has_content><tr><td align=right nowrap><div class='tabletext'><b>${uiLabelMap.CustomerMaidenName}</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>${person.mothersMaidenName}</div></td></tr></#if>
-    <#if person.maritalStatus?has_content><tr><td align=right nowrap><div class='tabletext'><b>${uiLabelMap.CustomerMaritalStatus}</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>${person.maritalStatus}</div></td></tr></#if>
-    <#if person.socialSecurityNumber?has_content><tr><td align=right nowrap><div class='tabletext'><b>${uiLabelMap.CustomerSocialSecurityNumber}</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>${person.socialSecurityNumber}</div></td></tr></#if>
-    <#if person.passportNumber?has_content><tr><td align=right nowrap><div class='tabletext'><b>${uiLabelMap.CustomerPassportNumber}</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>${person.passportNumber}</div></td></tr></#if>
-    <#if person.passportExpireDate?exists><tr><td align=right nowrap><div class='tabletext'><b>${uiLabelMap.CustomerPassportExpire}</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>${person.passportExpireDate.toString()}</div></td></tr></#if>
-    <#if person.totalYearsWorkExperience?exists><tr><td align=right nowrap><div class='tabletext'><b>${uiLabelMap.CustomerYearsWork}</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>${person.totalYearsWorkExperience}</div></td></tr></#if>
-    <#if person.comments?has_content><tr><td align=right nowrap><div class='tabletext'><b>${uiLabelMap.CustomerComments}</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>${person.comments}</div></td></tr></#if>
+    <#if person.nickname?has_content><tr><td align=right nowrap><div class='tabletext'><b>${uiLabelMap.PartyNickName}</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>${person.nickname}</div></td></tr></#if>
+    <#if person.gender?has_content><tr><td align=right nowrap><div class='tabletext'><b>${uiLabelMap.PartyGender}</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>${person.gender}</div></td></tr></#if>
+    <#if person.birthDate?exists><tr><td align=right nowrap><div class='tabletext'><b>${uiLabelMap.PartyBirthDate}</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>${person.birthDate.toString()}</div></td></tr></#if>
+    <#if person.height?exists><tr><td align=right nowrap><div class='tabletext'><b>${uiLabelMap.PartyHeight}</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>${person.height}</div></td></tr></#if>
+    <#if person.weight?exists><tr><td align=right nowrap><div class='tabletext'><b>${uiLabelMap.PartyWeight}</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>${person.weight}</div></td></tr></#if>
+    <#if person.mothersMaidenName?has_content><tr><td align=right nowrap><div class='tabletext'><b>${uiLabelMap.PartyMaidenName}</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>${person.mothersMaidenName}</div></td></tr></#if>
+    <#if person.maritalStatus?has_content><tr><td align=right nowrap><div class='tabletext'><b>${uiLabelMap.PartyMaritalStatus}</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>${person.maritalStatus}</div></td></tr></#if>
+    <#if person.socialSecurityNumber?has_content><tr><td align=right nowrap><div class='tabletext'><b>${uiLabelMap.PartySocialSecurityNumber}</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>${person.socialSecurityNumber}</div></td></tr></#if>
+    <#if person.passportNumber?has_content><tr><td align=right nowrap><div class='tabletext'><b>${uiLabelMap.PartyPassportNumber}</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>${person.passportNumber}</div></td></tr></#if>
+    <#if person.passportExpireDate?exists><tr><td align=right nowrap><div class='tabletext'><b>${uiLabelMap.PartyPassportExpireDate}</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>${person.passportExpireDate.toString()}</div></td></tr></#if>
+    <#if person.totalYearsWorkExperience?exists><tr><td align=right nowrap><div class='tabletext'><b>${uiLabelMap.PartyYearsWork}</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>${person.totalYearsWorkExperience}</div></td></tr></#if>
+    <#if person.comments?has_content><tr><td align=right nowrap><div class='tabletext'><b>${uiLabelMap.CommonComments}</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>${person.comments}</div></td></tr></#if>
   </table>
 <#else>
-<div class="tabletext">${uiLabelMap.CustomerPersonalInfoNotFound}</div>
+<div class="tabletext">${uiLabelMap.PartyPersonalInformationNotFound}</div>
 </#if>
           </td>
         </tr>
@@ -118,10 +118,10 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <td valign="middle" align="left">
-            <div class="boxhead">&nbsp;${uiLabelMap.CustomerContactInformation}</div>
+            <div class="boxhead">&nbsp;${uiLabelMap.PartyContactInformation}</div>
           </td>
           <td valign="middle" align="right">
-              <a href="<@ofbizUrl>/editcontactmech</@ofbizUrl>" class="submenutextright">${uiLabelMap.CustomerCreateNew}</a>
+              <a href="<@ofbizUrl>/editcontactmech</@ofbizUrl>" class="submenutextright">${uiLabelMap.CommonCreateNew}</a>
           </td>
         </tr>
       </table>
@@ -135,10 +135,10 @@
   <#if partyContactMechValueMaps?has_content>
     <table width="100%" border="0" cellpadding="0">
       <tr align=left valign=bottom>
-        <th>${uiLabelMap.CustomerContactType}</th>
+        <th>${uiLabelMap.PartyContactType}</th>
         <th width="5">&nbsp;</th>
-        <th>${uiLabelMap.CustomerInformation}</th>
-        <th colspan='2'>${uiLabelMap.CustomerSolicitingOk}?</th>
+        <th>${uiLabelMap.CommonInformation}</th>
+        <th colspan='2'>${uiLabelMap.PartySolicitingOk}?</th>
         <th>&nbsp;</th>
       </tr>
       <#list partyContactMechValueMaps as partyContactMechValueMap>
@@ -158,17 +158,17 @@
                       <#if contactMechPurposeType?exists>
                         <b>${contactMechPurposeType.description}</b>
                       <#else>
-                        <b>${uiLabelMap.CustomerPurposeTypeNotFound}: "${partyContactMechPurpose.contactMechPurposeTypeId}"</b>
+                        <b>${uiLabelMap.PartyPurposeTypeNotFound}: "${partyContactMechPurpose.contactMechPurposeTypeId}"</b>
                       </#if>
-                      <#if partyContactMechPurpose.thruDate?exists>(${uiLabelMap.CustomerExpire}:${partyContactMechPurpose.thruDate.toString()})</#if>
+                      <#if partyContactMechPurpose.thruDate?exists>(${uiLabelMap.CommonExpire}:${partyContactMechPurpose.thruDate.toString()})</#if>
                     </div>
               </#list>
               <#if contactMech.contactMechTypeId?if_exists = "POSTAL_ADDRESS">
                   <#assign postalAddress = partyContactMechValueMap.postalAddress?if_exists>
                   <div class="tabletext">
                   <#if postalAddress?exists>
-                    <#if postalAddress.toName?has_content><b>${uiLabelMap.CustomerTo}:</b> ${postalAddress.toName}<br></#if>
-                    <#if postalAddress.attnName?has_content><b>${uiLabelMap.CustomerAttn}:</b> ${postalAddress.attnName}<br></#if>
+                    <#if postalAddress.toName?has_content><b>${uiLabelMap.CommonTo}:</b> ${postalAddress.toName}<br></#if>
+                    <#if postalAddress.attnName?has_content><b>${uiLabelMap.PartyAddrAttnName}:</b> ${postalAddress.attnName}<br></#if>
                     ${postalAddress.address1}<br>
                     <#if postalAddress.address2?has_content>${postalAddress.address2}<br></#if>
                     ${postalAddress.city}<#if postalAddress.stateProvinceGeoId?has_content>,&nbsp;${postalAddress.stateProvinceGeoId}</#if>&nbsp;${postalAddress.postalCode?if_exists}
@@ -182,7 +182,7 @@
                       </#if>
                     </#if>
                   <#else>
-                    ${uiLabelMap.CustomerPostalInfoNotFound}.
+                    ${uiLabelMap.PartyPostalInformationNotFound}.
                   </#if>
                   </div>
               <#elseif contactMech.contactMechTypeId?if_exists = "TELECOM_NUMBER">
@@ -197,42 +197,42 @@
                       <a target='_blank' href='http://whitepages.com/find_person_results.pl?fid=p&ac=${telecomNumber.areaCode?if_exists}&s=&p=${telecomNumber.contactNumber?if_exists}&pt=b&x=40&y=9' class='buttontext'>(lookup:whitepages.com)</a>
                     </#if>
                   <#else>
-                    ${uiLabelMap.CustomerPhoneNumberInfoNotFound}.
+                    ${uiLabelMap.PartyPhoneNumberInfoNotFound}.
                   </#if>
                   </div>
               <#elseif contactMech.contactMechTypeId?if_exists = "EMAIL_ADDRESS">
                   <div class="tabletext">
                     ${contactMech.infoString}
-                    <a href='mailto:${contactMech.infoString}' class='buttontext'>(${uiLabelMap.CustomerSendEmail})</a>
+                    <a href='mailto:${contactMech.infoString}' class='buttontext'>(${uiLabelMap.PartySendEmail})</a>
                   </div>
               <#elseif contactMech.contactMechTypeId?if_exists = "WEB_ADDRESS">
                   <div class="tabletext">
                     ${contactMech.infoString}
                     <#assign openAddress = contactMech.infoString?if_exists>
                     <#if !openAddress.startsWith("http") && !openAddress.startsWith("HTTP")><#assign openAddress = "http://" + openAddress></#if>
-                    <a target='_blank' href='${openAddress}' class='buttontext'>(${uiLabelMap.CustomerOpenNewWindow})</a>
+                    <a target='_blank' href='${openAddress}' class='buttontext'>(${uiLabelMap.CommonOpenNewWindow})</a>
                   </div>
               <#else>
                   <div class="tabletext">${contactMech.infoString}</div>
               </#if>
-              <div class="tabletext">(${uiLabelMap.CustomerUpdated}:&nbsp;${partyContactMech.fromDate.toString()})</div>
-              <#if partyContactMech.thruDate?exists><div class='tabletext'><b>${uiLabelMap.CustomerDelete}:&nbsp;${partyContactMech.thruDate.toString()}</b></div></#if>
+              <div class="tabletext">(${uiLabelMap.CommonUpdated}:&nbsp;${partyContactMech.fromDate.toString()})</div>
+              <#if partyContactMech.thruDate?exists><div class='tabletext'><b>${uiLabelMap.CommonDelete}:&nbsp;${partyContactMech.thruDate.toString()}</b></div></#if>
             </td>
             <td align="center" valign="top" nowrap width="1%"><div class="tabletext"><b>(${partyContactMech.allowSolicitation?if_exists})</b></div></td>
             <td width="5">&nbsp;</td>
             <td align="right" valign="top" nowrap width="1%">
               <div><a href='<@ofbizUrl>/editcontactmech?contactMechId=${contactMech.contactMechId}</@ofbizUrl>' class="buttontext">
-              [${uiLabelMap.CustomerUpdate}]</a>&nbsp;</div>
+              [${uiLabelMap.CommonUpdate}]</a>&nbsp;</div>
             </td>
             <td align="right" valign="top" width="1%">
               <div><a href='<@ofbizUrl>/deleteContactMech/viewprofile?contactMechId=${contactMech.contactMechId}</@ofbizUrl>' class="buttontext">
-              [${uiLabelMap.CustomerExpire}]</a>&nbsp;&nbsp;</div>
+              [${uiLabelMap.CommonExpire}]</a>&nbsp;&nbsp;</div>
             </td>
           </tr>
       </#list>
     </table>
   <#else>
-    <p>${uiLabelMap.CustomerNoContactInformationOnFile}.</p><br>
+    <p>${uiLabelMap.PartyNoContactInformation}.</p><br>
   </#if>
           </td>
         </tr>
@@ -248,10 +248,10 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <td valign="middle" align="left">
-            <div class="boxhead">&nbsp;${uiLabelMap.CustomerPaymentMethodInfo}</div>
+            <div class="boxhead">&nbsp;${uiLabelMap.AccountingPaymentMethodInformation}</div>
           </td>
           <td valign="middle" align="right">
-            <a href="<@ofbizUrl>/editcreditcard</@ofbizUrl>" class="submenutext">${uiLabelMap.CustomerCreateNewCreditCard}</a><a href="<@ofbizUrl>/editeftaccount</@ofbizUrl>" class="submenutextright">${uiLabelMap.CustomerCreateNewEFTAccount}</a>
+            <a href="<@ofbizUrl>/editcreditcard</@ofbizUrl>" class="submenutext">${uiLabelMap.PartyCreateNewCreditCard}</a><a href="<@ofbizUrl>/editeftaccount</@ofbizUrl>" class="submenutextright">${uiLabelMap.PartyCreateNewEftAccount}</a>
           </td>
         </tr>
       </table>
@@ -276,40 +276,40 @@
                                   <td width="90%" valign="top">
                                     <div class="tabletext">
                                       <b>
-                                        ${uiLabelMap.CustomerCreditCard}: ${creditCard.nameOnCard} - ${Static["org.ofbiz.party.contact.ContactHelper"].formatCreditCard(creditCard)}
+                                        ${uiLabelMap.AccountingCreditCard}: ${creditCard.nameOnCard} - ${Static["org.ofbiz.party.contact.ContactHelper"].formatCreditCard(creditCard)}
                                       </b>
-                                      (${uiLabelMap.CustomerUpdated}:&nbsp;${paymentMethod.fromDate.toString()})
-                                      <#if paymentMethod.thruDate?exists><b>(${uiLabelMap.CustomerDelete}:&nbsp;${paymentMethod.thruDate.toString()})</b></#if>
+                                      (${uiLabelMap.CommonUpdated}:&nbsp;${paymentMethod.fromDate.toString()})
+                                      <#if paymentMethod.thruDate?exists><b>(${uiLabelMap.CommonDelete}:&nbsp;${paymentMethod.thruDate.toString()})</b></#if>
                                     </div>
                                   </td>
                                   <td width="5">&nbsp;</td>
                                   <td align="right" valign="top" width='1%' nowrap>
                                     <div><a href='<@ofbizUrl>/editcreditcard?paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>' class="buttontext">
-                                    [${uiLabelMap.CustomerUpdate}]</a></div>
+                                    [${uiLabelMap.CommonUpdate}]</a></div>
                                   </td>
                               <#elseif paymentMethod.paymentMethodTypeId?if_exists = "EFT_ACCOUNT">
                                   <td width="90%" valign="top">
                                     <div class="tabletext">
-                                      <b>${uiLabelMap.CustomerEFTAccount}: ${eftAccount.nameOnAccount?if_exists} - <#if eftAccount.bankName?has_content>Bank: ${eftAccount.bankName}</#if> <#if eftAccount.accountNumber?has_content>${uiLabelMap.CustomerAccount} #: ${eftAccount.accountNumber}</#if></b>
-                                      (${uiLabelMap.CustomerUpdated}:&nbsp;${paymentMethod.fromDate.toString()})
-                                      <#if paymentMethod.thruDate?exists><b>(${uiLabelMap.CustomerDelete}:&nbsp;${paymentMethod.thruDate.toString()})</b></#if>
+                                      <b>${uiLabelMap.AccountingEftAccount}: ${eftAccount.nameOnAccount?if_exists} - <#if eftAccount.bankName?has_content>Bank: ${eftAccount.bankName}</#if> <#if eftAccount.accountNumber?has_content>${uiLabelMap.AccountingAccount} #: ${eftAccount.accountNumber}</#if></b>
+                                      (${uiLabelMap.CommonUpdated}:&nbsp;${paymentMethod.fromDate.toString()})
+                                      <#if paymentMethod.thruDate?exists><b>(${uiLabelMap.CommonDelete}:&nbsp;${paymentMethod.thruDate.toString()})</b></#if>
                                     </div>
                                   </td>
                                   <td width="5">&nbsp;</td>
                                   <td align="right" valign="top" width='1%' nowrap>
                                     <div><a href='<@ofbizUrl>/editeftaccount?paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>' class="buttontext">
-                                    [${uiLabelMap.CustomerUpdate}]</a></div>
+                                    [${uiLabelMap.CommonUpdate}]</a></div>
                                   </td>
                               </#if>
                               <td align="right" valign="top" width='1%'>
                                 <div><a href='<@ofbizUrl>/deletePaymentMethod/viewprofile?paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>' class="buttontext">
-                                [${uiLabelMap.CustomerExpire}]</a></div>
+                                [${uiLabelMap.CommonExpire}]</a></div>
                               </td>
                             </tr>
                         </#list>
                       </table>
                     <#else>
-                      <div class='tabletext'>${uiLabelMap.CustomerNoPaymentMethodInfo}.</div>
+                      <div class='tabletext'>${uiLabelMap.AccountingNoPaymentMethodInformation}.</div>
                     </#if>
                   </td>
                 </tr>
@@ -328,10 +328,10 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <td valign="middle" align="left">
-            <div class="boxhead">&nbsp;${uiLabelMap.CustomerUsername} & ${uiLabelMap.CustomerPassword}</div>
+            <div class="boxhead">&nbsp;${uiLabelMap.CommonUsername} & ${uiLabelMap.CommonPassword}</div>
           </td>
           <td valign="middle" align="right">
-            <a href="<@ofbizUrl>/changepassword</@ofbizUrl>" class="submenutextright">${uiLabelMap.CustomerChangePassword}</a>
+            <a href="<@ofbizUrl>/changepassword</@ofbizUrl>" class="submenutextright">${uiLabelMap.PartyChangePassword}</a>
           </td>
         </tr>
       </table>
@@ -344,7 +344,7 @@
           <td>
             <table width="100%" border="0" cellpadding="1">
               <tr>
-                <td align="right" valign="top" width="10%" nowrap><div class="tabletext"><b>${uiLabelMap.CustomerUsername}</b></div></td>
+                <td align="right" valign="top" width="10%" nowrap><div class="tabletext"><b>${uiLabelMap.CommonUsername}</b></div></td>
                 <td width="5">&nbsp;</td>
                 <td align="left" valign="top" width="90%"><div class="tabletext">${userLogin.userLoginId}</div></td>
               </tr>
@@ -356,6 +356,6 @@
   </TR>
 </TABLE>
 <#else>
-    <div class='head3'>${uiLabelMap.CustomerNoPartyForCurrentUserName}: ${userLogin.userLoginId}</div>
+    <div class='head3'>${uiLabelMap.PartyNoPartyForCurrentUserName}: ${userLogin.userLoginId}</div>
 </#if>
 

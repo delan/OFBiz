@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -31,14 +31,14 @@
         
     <#if (miniProduct.introductionDate?exists) && (nowTimeLong < miniProduct.introductionDate.getTime())>
         <#-- check to see if introductionDate hasn't passed yet -->
-        <div class='tabletext' style='color: red;'>${uiLabelMap.CatalogNotYetAvailable}</div>
+        <div class='tabletext' style='color: red;'>${uiLabelMap.ProductNotYetAvailable}</div>
     
     <#elseif (miniProduct.salesDiscontinuationDate?exists) && (nowTimeLong > miniProduct.salesDiscontinuationDate.getTime())>
         <#-- check to see if salesDiscontinuationDate has passed -->
-        <div class='tabletext' style='color: red;'>${uiLabelMap.CatalogNoLongerAvailable}</div>
+        <div class='tabletext' style='color: red;'>${uiLabelMap.ProductNoLongerAvailable}</div>
     
     <#elseif miniProduct.isVirtual?default("N") == "Y">
-        <a href='<@ofbizUrl>/product/<#if requestParameters.category_id?exists>~category_id=${requestParameters.category_id}/</#if>~product_id=${miniProduct.productId}</@ofbizUrl>' class="buttontext"><nobr>[${uiLabelMap.CatalogChooseVariations}...]</nobr></a>
+        <a href='<@ofbizUrl>/product/<#if requestParameters.category_id?exists>~category_id=${requestParameters.category_id}/</#if>~product_id=${miniProduct.productId}</@ofbizUrl>' class="buttontext"><nobr>[${uiLabelMap.EcommerceChooseVariations}...]</nobr></a>
     
     <#else>
         <form method="POST" action="<@ofbizUrl>/additem<#if requestAttributes._CURRENT_VIEW_?has_content>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="${miniProdFormName}" style='margin: 0;'>
@@ -50,7 +50,7 @@
             <#if requestParameters.VIEW_INDEX?has_content><input type='hidden' name='VIEW_INDEX' value='${requestParameters.VIEW_INDEX}'></#if>
             <#if requestParameters.SEARCH_STRING?has_content><input type='hidden' name='SEARCH_STRING' value='${requestParameters.SEARCH_STRING}'></#if>
             <#if requestParameters.SEARCH_CATEGORY_ID?has_content><input type='hidden' name='SEARCH_CATEGORY_ID' value='${requestParameters.SEARCH_CATEGORY_ID}'></#if>
-            <a href="javascript:document.${miniProdFormName}.submit()" class="buttontext"><nobr>[${uiLabelMap.CatalogAdd} ${miniProdQuantity} ${uiLabelMap.CatalogToCart}]</nobr></a>
+            <a href="javascript:document.${miniProdFormName}.submit()" class="buttontext"><nobr>[${uiLabelMap.CommonAdd} ${miniProdQuantity} ${uiLabelMap.EcommerceToCart}]</nobr></a>
         </form>
     </#if>
 </#if>

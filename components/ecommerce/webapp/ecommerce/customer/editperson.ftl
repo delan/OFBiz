@@ -20,60 +20,60 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org) 
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#if person?exists>
-  <p class="head1">${uiLabelMap.CustomerEditPersonalInfo}</p>
+  <p class="head1">${uiLabelMap.PartyEditPersonalInformation}</p>
     <form method=POST action="<@ofbizUrl>/updatePerson/${donePage}</@ofbizUrl>" name="editpersonform">
 <#else>
-  <p class="head1">${uiLabelMap.CustomerAddNewPersonalInfo}</p>
+  <p class="head1">${uiLabelMap.PartyAddNewPersonalInformation}</p>
     <form method=POST action="<@ofbizUrl>/createPerson/${donePage}</@ofbizUrl>" name="editpersonform">
 </#if>
 
-&nbsp;<a href='<@ofbizUrl>/authview/${donePage}</@ofbizUrl>' class="buttontext">[${uiLabelMap.CustomerGoBack}]</a>
-&nbsp;<a href="javascript:document.editpersonform.submit()" class="buttontext">[${uiLabelMap.CustomerSave}]</a>
+&nbsp;<a href='<@ofbizUrl>/authview/${donePage}</@ofbizUrl>' class="buttontext">[${uiLabelMap.CommonGoBack}]</a>
+&nbsp;<a href="javascript:document.editpersonform.submit()" class="buttontext">[${uiLabelMap.CommonSave}]</a>
 
 <table width="90%" border="0" cellpadding="2" cellspacing="0">
     <tr>
-      <td width="26%" align=right><div class="tabletext">${uiLabelMap.CustomerTitle}</div></td>
+      <td width="26%" align=right><div class="tabletext">${uiLabelMap.CommonTitle}</div></td>
       <td width="74%" align=left>
         <input type="text" class='inputBox' size="10" maxlength="30" name="personalTitle" value="${personData.personalTitle?if_exists}"/>
       </td>
     </tr>
     <tr>
-      <td width="26%" align=right><div class="tabletext">${uiLabelMap.CustomerFirstName}</div></td>
+      <td width="26%" align=right><div class="tabletext">${uiLabelMap.PartyFirstName}</div></td>
       <td width="74%" align=left>
         <input type="text" class='inputBox' size="30" maxlength="30" name="firstName" value="${personData.firstName?if_exists}"/>
       *</td>
     </tr>
     <tr>
-      <td width="26%" align=right><div class="tabletext">${uiLabelMap.CustomerMiddleInitial}</div></td>
+      <td width="26%" align=right><div class="tabletext">${uiLabelMap.PartyMiddleInitial}</div></td>
       <td width="74%" align=left>
           <input type="text" class='inputBox' size="4" maxlength="4" name="middleName" value="${personData.middleName?if_exists}"/>
       </td>
     </tr>
     <tr>
-      <td width="26%" align=right><div class="tabletext">${uiLabelMap.CustomerLastName} </div></td>
+      <td width="26%" align=right><div class="tabletext">${uiLabelMap.PartyLastName} </div></td>
       <td width="74%" align=left>
         <input type="text" class='inputBox' size="30" maxlength="30" name="lastName" value="${personData.lastName?if_exists}"/>
       *</td>
     </tr>
     <tr>
-      <td width="26%" align=right><div class="tabletext">${uiLabelMap.CustomerSuffix}</div></td>
+      <td width="26%" align=right><div class="tabletext">${uiLabelMap.PartySuffix}</div></td>
       <td width="74%" align=left>
         <input type="text" class='inputBox' size="10" maxlength="30" name="suffix" value="${personData.suffix?if_exists}"/>
       </td>
     </tr>
     <tr>
-      <td width="26%" align=right><div class="tabletext">${uiLabelMap.CustomerNickName}</div></td>
+      <td width="26%" align=right><div class="tabletext">${uiLabelMap.PartyNickName}</div></td>
       <td width="74%" align=left>
         <input type="text" class='inputBox' size="30" maxlength="60" name="nickname" value="${personData.nickname?if_exists}"/>
       </td>
     </tr>
     <tr>
-      <td width="26%" align=right><div class="tabletext">${uiLabelMap.CustomerGender}</div></td>
+      <td width="26%" align=right><div class="tabletext">${uiLabelMap.PartyGender}</div></td>
       <td width="74%" align=left>
         <select name="gender" class='selectBox'>
           <option>${personData.gender?if_exists}</option>
@@ -84,70 +84,70 @@
       </td>
     </tr>
     <tr>
-      <td width="26%" align=right><div class="tabletext">${uiLabelMap.CustomerBirthDate}</div></td>
+      <td width="26%" align=right><div class="tabletext">${uiLabelMap.PartyBirthDate}</div></td>
       <td width="74%" align=left>
         <input type="text" class='inputBox' size="11" maxlength="20" name="birthDate" value="${personData.birthDate?if_exists}"/>
         (yyyy-MM-dd)
       </td>
     </tr>
     <tr>
-      <td width="26%" align=right><div class="tabletext">${uiLabelMap.CustomerHeight}</div></td>
+      <td width="26%" align=right><div class="tabletext">${uiLabelMap.PartyHeight}</div></td>
       <td width="74%" align=left>
         <input type="text" class='inputBox' size="30" maxlength="60" name="height" value="${personData.height?if_exists}"/>
       </td>
     </tr>
     <tr>
-      <td width="26%" align=right><div class="tabletext">${uiLabelMap.CustomerWeight}</div></td>
+      <td width="26%" align=right><div class="tabletext">${uiLabelMap.PartyWeight}</div></td>
       <td width="74%" align=left>
         <input type="text" class='inputBox' size="30" maxlength="60" name="weight" value="${personData.weight?if_exists}"/>
       </td>
     </tr>
 
     <tr>
-      <td width="26%" align=right><div class="tabletext">${uiLabelMap.CustomerMaidenName}</div></td>
+      <td width="26%" align=right><div class="tabletext">${uiLabelMap.PartyMaidenName}</div></td>
       <td width="74%" align=left>
         <input type="text" class='inputBox' size="30" maxlength="60" name="mothersMaidenName" value="${personData.mothersMaidenName?if_exists}"/>
       </td>
     </tr>
     <tr>
-      <td width="26%" align=right><div class="tabletext">${uiLabelMap.CustomerMaritalStatus}</div></td>
+      <td width="26%" align=right><div class="tabletext">${uiLabelMap.PartyMaritalStatus}</div></td>
       <td width="74%" align=left>
         <select name="maritalStatus" class='selectBox'>
           <option>${personData.maritalStatus?if_exists}</option>
           <option></option>
-          <option value="S">${uiLabelMap.CustomerSingle}</option>
-          <option value="M">${uiLabelMap.CustomerMarried}</option>
-          <option value="D">${uiLabelMap.CustomerDivorced}</option>
+          <option value="S">${uiLabelMap.PartySingle}</option>
+          <option value="M">${uiLabelMap.PartyMarried}</option>
+          <option value="D">${uiLabelMap.PartyDivorced}</option>
         </select>
       </td>
     </tr>
     <tr>
-      <td width="26%" align=right><div class="tabletext">${uiLabelMap.CustomerSocialSecurityNumber}</div></td>
+      <td width="26%" align=right><div class="tabletext">${uiLabelMap.PartySocialSecurityNumber}</div></td>
       <td width="74%" align=left>
         <input type="text" class='inputBox' size="30" maxlength="60" name="socialSecurityNumber" value="${personData.socialSecurityNumber?if_exists}"/>
       </td>
     </tr>
     <tr>
-      <td width="26%" align=right><div class="tabletext">${uiLabelMap.CustomerPassportNumber}</div></td>
+      <td width="26%" align=right><div class="tabletext">${uiLabelMap.PartyPassportNumber}</div></td>
       <td width="74%" align=left>
         <input type="text" class='inputBox' size="30" maxlength="60" name="passportNumber" value="${personData.passportNumber?if_exists}"/>
       </td>
     </tr>
     <tr>
-      <td width="26%" align=right><div class="tabletext">${uiLabelMap.CustomerPassportExpireDate}</div></td>
+      <td width="26%" align=right><div class="tabletext">${uiLabelMap.PartyPassportExpireDate}</div></td>
       <td width="74%" align=left>
         <input type="text" class='inputBox' size="11" maxlength="20" name="passportExpireDate" value="${personData.passportExpireDate?if_exists}"/>
         (yyyy-MM-dd)
       </td>
     </tr>
     <tr>
-      <td width="26%" align=right><div class="tabletext">${uiLabelMap.CustomerTotalYearsWorkExperience}</div></td>
+      <td width="26%" align=right><div class="tabletext">${uiLabelMap.PartyTotalYearsWorkExperience}</div></td>
       <td width="74%" align=left>
         <input type="text" class='inputBox' size="30" maxlength="60" name="totalYearsWorkExperience" value="${personData.totalYearsWorkExperience?if_exists}"/>
       </td>
     </tr>
     <tr>
-      <td width="26%" align=right><div class="tabletext">${uiLabelMap.CustomerComment}</div></td>
+      <td width="26%" align=right><div class="tabletext">${uiLabelMap.CommonComment}</div></td>
       <td width="74%" align=left>
         <input type="text" class='inputBox' size="30" maxlength="60" name="comments" value="${personData.comments?if_exists}"/>
       </td>
@@ -155,3 +155,5 @@
 </table>
 </form>
 
+&nbsp;<a href='<@ofbizUrl>/authview/${donePage}</@ofbizUrl>' class="buttontext">[${uiLabelMap.CommonGoBack}]</a>
+&nbsp;<a href="javascript:document.editpersonform.submit()" class="buttontext">[${uiLabelMap.CommonSave}]</a>

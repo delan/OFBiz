@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.4 $
+ *@version    $Revision: 1.5 $
  *@since      2.1
 -->
 
@@ -42,7 +42,7 @@
         <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
           <tr>
             <td valign="middle" align="center">
-              <div class="boxhead">${uiLabelMap.CatalogSpecialOffers}</div>
+              <div class="boxhead">${uiLabelMap.EcommerceSpecialOffers}</div>
             </td>
           </tr>
         </table>

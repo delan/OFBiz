@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      3.0
 -->
 
@@ -104,7 +104,7 @@ function toggleBillingAccount(box) {
                     <table width="100%" border="0" cellpadding="1" cellspacing="0">
                       <tr>
                         <td colspan="2">
-                          <a href="javascript:submitForm(document.checkoutInfoForm, 'NA', '');" class="buttontext">[${uiLabelMap.OrderAddNewAddress}]</a>
+                          <a href="javascript:submitForm(document.checkoutInfoForm, 'NA', '');" class="buttontext">[${uiLabelMap.PartyAddNewAddress}]</a>
                         </td>
                       </tr>
                        <#if context.shippingContactMechList?has_content>
@@ -117,15 +117,15 @@ function toggleBillingAccount(box) {
                              </td>
                              <td align="left" valign="top" width="99%" nowrap>
                                <div class="tabletext">
-                                 <#if shippingAddress.toName?has_content><b>${uiLabelMap.OrderTo}:</b>&nbsp;${shippingAddress.toName}<br></#if>
-                                 <#if shippingAddress.attnName?has_content><b>${uiLabelMap.OrderAttn}:</b>&nbsp;${shippingAddress.attnName}<br></#if>
+                                 <#if shippingAddress.toName?has_content><b>${uiLabelMap.CommonTo}:</b>&nbsp;${shippingAddress.toName}<br></#if>
+                                 <#if shippingAddress.attnName?has_content><b>${uiLabelMap.PartyAddrAttnName}:</b>&nbsp;${shippingAddress.attnName}<br></#if>
                                  <#if shippingAddress.address1?has_content>${shippingAddress.address1}<br></#if>
                                  <#if shippingAddress.address2?has_content>${shippingAddress.address2}<br></#if>
                                  <#if shippingAddress.city?has_content>${shippingAddress.city}</#if>
                                  <#if shippingAddress.stateProvinceGeoId?has_content><br>${shippingAddress.stateProvinceGeoId}</#if>
                                  <#if shippingAddress.postalCode?has_content><br>${shippingAddress.postalCode}</#if>
                                  <#if shippingAddress.countryGeoId?has_content><br>${shippingAddress.countryGeoId}</#if>                                                            
-                                 <a href="javascript:submitForm(document.checkoutInfoForm, 'EA', '${shippingAddress.contactMechId}');" class="buttontext">[${uiLabelMap.OrderUpdate}]</a>
+                                 <a href="javascript:submitForm(document.checkoutInfoForm, 'EA', '${shippingAddress.contactMechId}');" class="buttontext">[${uiLabelMap.CommonUpdate}]</a>
                                </div>
                              </td>
                            </tr>
@@ -156,7 +156,7 @@ function toggleBillingAccount(box) {
       &nbsp;<a href="javascript:submitForm(document.checkoutInfoForm, 'CS', '');" class="buttontextbig">[${uiLabelMap.OrderBacktoShoppingCart}]</a>
     </td>
     <td align="right">
-      <a href="javascript:submitForm(document.checkoutInfoForm, 'DN', '');" class="buttontextbig">[${uiLabelMap.OrderNext}]</a>
+      <a href="javascript:submitForm(document.checkoutInfoForm, 'DN', '');" class="buttontextbig">[${uiLabelMap.CommonNext}]</a>
     </td>
   </tr>
 </table>

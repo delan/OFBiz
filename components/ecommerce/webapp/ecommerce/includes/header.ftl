@@ -21,11 +21,12 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.5 $
+ *@version    $Revision: 1.6 $
  *@since      2.1
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
+
 
 <html>
 <head>
@@ -109,11 +110,11 @@
           </#if>
 
           <#if catalogQuickaddUse>
-              <td class="headerButtonRight"><a href="<@ofbizUrl>/quickadd</@ofbizUrl>" class="headerbuttontext">Quick&nbsp;Add</a></td>
+            <td class="headerButtonRight"><a href="<@ofbizUrl>/quickadd</@ofbizUrl>" class="headerbuttontext">${uiLabelMap.CommonQuickAdd}</a></td>
           </#if>
-          <td class="headerButtonRight"><a href="<@ofbizUrl>/orderhistory</@ofbizUrl>" class="headerbuttontext">Order&nbsp;History</a></td>
-          <td class="headerButtonRight"><a href="<@ofbizUrl>/editShoppingList</@ofbizUrl>" class="headerbuttontext">Shopping&nbsp;Lists</a></td>
-          <td class="headerButtonRight"><a href="<@ofbizUrl>/viewprofile</@ofbizUrl>" class="headerbuttontext">Profile</a></td>
+          <td class="headerButtonRight"><a href="<@ofbizUrl>/orderhistory</@ofbizUrl>" class="headerbuttontext">${uiLabelMap.OrderHistory}</a></td>
+          <td class="headerButtonRight"><a href="<@ofbizUrl>/editShoppingList</@ofbizUrl>" class="headerbuttontext">${uiLabelMap.EcommerceShoppingLists}</a></td>
+          <td class="headerButtonRight"><a href="<@ofbizUrl>/viewprofile</@ofbizUrl>" class="headerbuttontext">${uiLabelMap.CommonProfile}</a></td>
         </tr>
       </table>
     </td>

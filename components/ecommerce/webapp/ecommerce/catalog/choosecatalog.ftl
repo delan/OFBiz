@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -55,7 +55,7 @@
                     <OPTION value='${catalogId}'>${thisCatalogName}</OPTION>
                   </#list>
                 </SELECT>
-                <div><a href="javascript:document.choosecatalogform.submit()" class="buttontext">${uiLabelMap.CatalogChooseCatalog}</a></div>
+                <div><a href="javascript:document.choosecatalogform.submit()" class="buttontext">${uiLabelMap.ProductChooseCatalog}</a></div>
               </form>
             </td>
           </tr>
