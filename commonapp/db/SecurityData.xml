@@ -50,21 +50,21 @@
   
   <SecurityPermission description="Permission to access the WebTools Menu." permissionId="WEBTOOLS_VIEW"/>
 
-  <SecurityPermission description="View operations on the Catalog." permissionId="CATALOG_VIEW"/>
-  <SecurityPermission description="Create operations on the Catalog." permissionId="CATALOG_CREATE"/>
-  <SecurityPermission description="Update operations on the Catalog." permissionId="CATALOG_UPDATE"/>
-  <SecurityPermission description="Delete operations on the Catalog." permissionId="CATALOG_DELETE"/>
-  <SecurityPermission description="ALL operations on the Catalog." permissionId="CATALOG_ADMIN"/>
-  <SecurityPermission description="Limited Create operations on the Catalog." permissionId="CATALOG_ROLE_CREATE"/>
-  <SecurityPermission description="Limited Update operations on the Catalog." permissionId="CATALOG_ROLE_UPDATE"/>
-  <SecurityPermission description="Limited Delete operations on the Catalog." permissionId="CATALOG_ROLE_DELETE"/>
+  <SecurityPermission description="View operations in the Catalog Manager." permissionId="CATALOG_VIEW"/>
+  <SecurityPermission description="Create operations in the Catalog Manager." permissionId="CATALOG_CREATE"/>
+  <SecurityPermission description="Update operations in the Catalog Manager." permissionId="CATALOG_UPDATE"/>
+  <SecurityPermission description="Delete operations in the Catalog Manager." permissionId="CATALOG_DELETE"/>
+  <SecurityPermission description="ALL operations in the Catalog Manager." permissionId="CATALOG_ADMIN"/>
+  <SecurityPermission description="Limited Create operations in the Catalog Manager." permissionId="CATALOG_ROLE_CREATE"/>
+  <SecurityPermission description="Limited Update operations in the Catalog Manager." permissionId="CATALOG_ROLE_UPDATE"/>
+  <SecurityPermission description="Limited Delete operations in the Catalog Manager." permissionId="CATALOG_ROLE_DELETE"/>
 
   <SecurityPermission description="View operations in the Party Manager." permissionId="PARTYMGR_VIEW"/>
   <SecurityPermission description="Create operations in the Party Manager." permissionId="PARTYMGR_CREATE"/>
   <SecurityPermission description="Update operations in the Party Manager." permissionId="PARTYMGR_UPDATE"/>
   <SecurityPermission description="Delete operations in the Party Manager." permissionId="PARTYMGR_DELETE"/>
   <SecurityPermission description="ALL operations in the Party Manager." permissionId="PARTYMGR_ADMIN"/>
-  <SecurityPermission description="Create new party notes." permissionId="PARTYMGR_NOTE"/>
+  <SecurityPermission description="Create notes in the Party Manager." permissionId="PARTYMGR_NOTE"/>
 
   <SecurityPermission description="View operations in the Order Manager." permissionId="ORDERMGR_VIEW"/>
   <SecurityPermission description="Create operations in the Order Manager." permissionId="ORDERMGR_CREATE"/>
@@ -72,10 +72,12 @@
   <SecurityPermission description="Delete operations in the Order Manager." permissionId="ORDERMGR_DELETE"/>
   <SecurityPermission description="ALL operations in the Order Manager." permissionId="ORDERMGR_ADMIN"/>
   <SecurityPermission description="Limited view operations in the Order Manager." permissionId="ORDERMGR_ROLE_VIEW"/>
-  <SecurityPermission description="Limited Create operations on the Order Manager." permissionId="ORDERMGR_ROLE_CREATE"/>
-  <SecurityPermission description="Limited Update operations on the Order Manager." permissionId="ORDERMGR_ROLE_UPDATE"/>
-  <SecurityPermission description="Limited Delete operations on the Order Manager." permissionId="ORDERMGR_ROLE_DELETE"/>
-  <SecurityPermission description="Create new order notes." permissionId="ORDERMGR_NOTE"/>
+  <SecurityPermission description="Limited Create operations in the Order Manager." permissionId="ORDERMGR_ROLE_CREATE"/>
+  <SecurityPermission description="Limited Update operations in the Order Manager." permissionId="ORDERMGR_ROLE_UPDATE"/>
+  <SecurityPermission description="Limited Delete operations in the Order Manager." permissionId="ORDERMGR_ROLE_DELETE"/>
+  <SecurityPermission description="Create notes in the Order Manager." permissionId="ORDERMGR_NOTE"/>
+  <SecurityPermission description="Sales Order Entry in the Order Manager." permissionId="ORDERMGR_SALES_ENTRY"/>
+  <SecurityPermission description="Purchase Order Entry in the Order Manager." permissionId="ORDERMGR_PURCHASE_ENTRY"/>
 
   <SecurityPermission description="View operations in the Shipping Rate Editor." permissionId="SHIPRATE_VIEW"/>
   <SecurityPermission description="Create operations in the Shipping Rate Editor." permissionId="SHIPRATE_CREATE"/>
@@ -285,6 +287,7 @@
   <SecurityGroupPermission groupId="ORDERPROC" permissionId="PARTYMGR_VIEW"/>
   <SecurityGroupPermission groupId="ORDERPROC" permissionId="PARTYMGR_NOTE"/>
   
+  <SecurityGroupPermission groupId="ORDERENTRY" permissionId="ORDERMGR_SALES_ENTRY"/>  
   <SecurityGroupPermission groupId="ORDERENTRY" permissionId="ORDERMGR_ROLE_VIEW"/>
   <SecurityGroupPermission groupId="ORDERENTRY" permissionId="ORDERMGR_NOTE"/>
   <SecurityGroupPermission groupId="ORDERENTRY" permissionId="ORDERMGR_UPDATE"/>
