@@ -31,7 +31,6 @@
 <jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" />
 <jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="request" />
 
-<table cellpadding=0 cellspacing=0 border=0 width="100%"><tr><td>&nbsp;&nbsp;</td><td>
 <%if(security.hasEntityPermission("CATALOG", "_VIEW", request.getSession())) {%>
 <%
     URL catalogPropertiesURL = application.getResource("/WEB-INF/catalog.properties");
@@ -228,4 +227,3 @@
 <%}else{%>
   <h3>You do not have permission to view this page.  ("CATALOG_VIEW" or "CATALOG_ADMIN" needed)</h3>
 <%}%>
-</td><td>&nbsp;&nbsp;</td></tr></table>

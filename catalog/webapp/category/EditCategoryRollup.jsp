@@ -55,7 +55,6 @@
 
 %>
 
-<table cellpadding=0 cellspacing=0 border=0 width="100%"><tr><td>&nbsp;&nbsp;</td><td>
 <script language='JavaScript'>
     function setLineThruDateChild(line) { eval('document.lineChildForm' + line + '.thruDate.value="<%=UtilDateTime.nowTimestamp().toString()%>"'); }
     function setLineThruDateParent(line) { eval('document.lineParentForm' + line + '.thruDate.value="<%=UtilDateTime.nowTimestamp().toString()%>"'); }
@@ -217,4 +216,3 @@
 <%} else {%>
   <h3>You do not have permission to view this page.  ("CATALOG_VIEW" or "CATALOG_ADMIN" needed)</h3>
 <%}%>
-</td><td>&nbsp;&nbsp;</td></tr></table>

@@ -76,8 +76,6 @@ function insertImageName(size,ext) {
   eval('document.productForm.' + size + 'ImageUrl.value="<%=UtilProperties.getPropertyValue(catalogPropertiesURL, "image.url.prefix")%>/product.<%=productId%>.' + size + '.' + ext + '";');
 };
 </SCRIPT>
-<table cellpadding=0 cellspacing=0 border=0 width="100%"><tr><td>&nbsp;&nbsp;</td><td>
-
 <br>
 <%if(productId != null && productId.length() > 0){%>
   <hr class='sepbar'>
@@ -483,4 +481,3 @@ function insertImageName(size,ext) {
 <%}else{%>
   <h3>You do not have permission to view this page. ("CATALOG_VIEW" or "CATALOG_ADMIN" needed)</h3>
 <%}%>
-</td><td>&nbsp;&nbsp;</td></tr></table>
