@@ -1136,34 +1136,48 @@ public class GenericDelegator {
         } catch (GenericEntityException e) {
             Debug.logWarning(e);
         }
-        if (entity == null)
+        if (entity == null) {
             throw new IllegalArgumentException("[GenericDelegator.clearCacheLine] could not find entity for entityName: " + entityName);
+        }
 
-        if (fields == null || fields.size() <= 0) {
-            //findAll
-            if (allCache != null) {
-                allCache.remove(entityName);
-            }
-        } else {
-            GenericPK tempPK = new GenericPK(entity, fields);
+        GenericPK dummyPK = new GenericPK(entity, fields);
+        this.clearCacheLineFlexible(dummyPK);
+    }
 
+    /** Remove a CACHED Generic Entity from the cache by its primary key.
+     * Checks to see if the passed GenericPK is a complete primary key, if
+     * it is then the cache line will be removed from the primaryKeyCache; if it
+     * is NOT a complete primary key it will remove the cache line from the andCache.
+     * If the fields map is empty, then the allCache for the entity will be cleared.
+     *@param dummyPK The dummy primary key to clear by.
+     */
+    public void clearCacheLineFlexible(GenericEntity dummyPK) {
+        if (dummyPK != null) {
             //check to see if passed fields names exactly make the primary key...
-            if (tempPK.isPrimaryKey()) {
+            if (dummyPK.isPrimaryKey()) {
                 //findByPrimaryKey
                 if (primaryKeyCache != null) {
-                    primaryKeyCache.remove(tempPK);
+                    primaryKeyCache.remove(dummyPK);
                 }
             } else {
-                //findByAnd
-                if (andCache != null) {
-                    andCache.remove(tempPK);
+                if (dummyPK.size() == 0) {
+                    //findAll
+                    if (allCache != null) {
+                        allCache.remove(dummyPK.getEntityName());
+                    }
+                } else {
+                    //findByAnd
+                    if (andCache != null) {
+                        andCache.remove(dummyPK);
+                    }
                 }
             }
         }
     }
 
-    /** Remove a CACHED Generic Entity from the cache by its primary key
-     *@param primaryKey The primary key to find by.
+    /** Remove a CACHED Generic Entity from the cache by its primary key, does NOT
+     * check to see if the passed GenericPK is a complete primary key.
+     *@param primaryKey The primary key to clear by.
      */
     public void clearCacheLine(GenericPK primaryKey) {
         if (primaryKey != null && primaryKeyCache != null) {
@@ -1177,7 +1191,7 @@ public class GenericDelegator {
         Iterator iter = dummyPKs.iterator();
         while (iter.hasNext()) {
             GenericEntity entity = (GenericEntity) iter.next();
-            this.clearCacheLine(entity.getEntityName(), entity.getAllFields());
+            this.clearCacheLineFlexible(entity);
         }
     }
 
