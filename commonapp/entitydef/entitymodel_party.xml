@@ -1031,6 +1031,20 @@
         <key-map field-name="partyId" />
       </relation>
     </entity>
+    <entity entity-name="PartyNote" 
+            package-name="org.ofbiz.commonapp.party.party"
+            title="Party Note Entity">
+      <field name="partyId" type="id-ne"></field>
+      <field name="noteId" type="id-ne"></field>	
+      <prim-key field="partyId" />	
+      <prim-key field="noteId" />
+      <relation type="one" rel-entity-name="Party">
+        <key-map field-name="partyId" />
+      </relation>
+      <relation type="one" rel-entity-name="NoteData">
+        <key-map field-name="noteId" />
+      </relation>
+    </entity>
     <entity entity-name="PartyRelationship" 
             package-name="org.ofbiz.commonapp.party.party"
             title="Party Relationship Entity">
