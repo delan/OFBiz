@@ -89,9 +89,6 @@
 <br>
 
 <%if(productId!=null && product!=null){%>
-<script language='JavaScript'>
-    function setLineThruDate(line) { eval('document.lineForm' + line + '.thruDate.value="<%=UtilDateTime.nowTimestamp().toString()%>"'); }
-</script>
 <table border="1" width="100%" cellpadding='2' cellspacing='0'>
   <tr>
     <td><div class="tabletext"><b>Price&nbsp;Type</b></div></td>
@@ -128,8 +125,8 @@
             <input type=hidden <ofbiz:inputvalue entityAttr="productPrice" field="currencyUomId" fullattrs="true"/>>
             <input type=hidden <ofbiz:inputvalue entityAttr="productPrice" field="facilityGroupId" fullattrs="true"/>>
             <input type=hidden <ofbiz:inputvalue entityAttr="productPrice" field="fromDate" fullattrs="true"/>>
-            <input type='text' class='inputBox' size='22' <ofbiz:inputvalue entityAttr="productPrice" field="thruDate" fullattrs="true"/> style='<%if (hasExpired) {%> color: red;<%}%>'>
-            <a href='#' onclick='setLineThruDate("<%=line%>")' class='buttontext'>[Now]</a>
+            <input type='text' class='inputBox' size='25' <ofbiz:inputvalue entityAttr="productPrice" field="thruDate" fullattrs="true"/> style='<%if (hasExpired) {%> color: red;<%}%>'>
+            <a href="javascript:call_cal(document.lineForm<%=line%>.thruDate, '<ofbiz:inputvalue entityAttr="productPrice" field="thruDate" default="<%=nowTimestampString%>"/>');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>
             <input type='text' class='inputBox' size='8' <ofbiz:inputvalue entityAttr="productPrice" field="price" fullattrs="true"/>>
             <INPUT type=submit value='Update' style='font-size: x-small;'>
         </FORM>
@@ -147,9 +144,6 @@
     <input type="hidden" name="productId" value="<%=productId%>">
     <input type="hidden" name="useValues" value="true">
 
-    <script language='JavaScript'>
-      function setPpcFromDate() { document.createProductPriceForm.fromDate.value="<%=UtilDateTime.nowTimestamp().toString()%>"; }
-    </script>
     <div class='head2'>Add Price:</div>
     <div class='tabletext'>
         Price Type:
@@ -174,7 +168,8 @@
         </select>
     </div>
     <div class='tabletext'>
-        From Date: <a href='#' onclick='setPpcFromDate()' class='buttontext'>[Now]</a> <input type='text' size='22' name='fromDate' class='inputBox'>
+        From Date: <input type='text' size='25' name='fromDate' class='inputBox'>
+        <a href="javascript:call_cal(document.createProductPriceForm.fromDate, '<%=nowTimestampString%>');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>
         Price: <input type='text' size='8' name='price' class='inputBox'>&nbsp;<input type="submit" value="Add" style='font-size: x-small;'>
     </div>
 
