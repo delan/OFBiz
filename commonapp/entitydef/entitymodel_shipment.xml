@@ -287,7 +287,9 @@
       <field name="primaryOrderId" type="id"></field>
       <field name="estimatedReadyDate" type="date-time"></field>
       <field name="estimatedShipDate" type="date-time"></field>
+      <field name="estimatedShipWorkEffId" type="id"></field>
       <field name="estimatedArrivalDate" type="date-time"></field>
+      <field name="estimatedArrivalWorkEffId" type="id"></field>
       <field name="latestCancelDate" type="date-time"></field>
       <field name="estimatedShipCost" type="currency-amount"></field>
       <field name="handlingInstructions" type="long-varchar"></field>
@@ -307,6 +309,12 @@
       </relation>
       <relation type="one" fk-name="SHPMNT_STTS" rel-entity-name="StatusItem">
         <key-map field-name="statusId"/>
+      </relation>
+      <relation type="one" fk-name="SHPMNT_ESHWEFF" title="EstimatedShip" rel-entity-name="WorkEffort">
+        <key-map field-name="estimatedShipWorkEffId" rel-field-name="workEffortId"/>
+      </relation>
+      <relation type="one" fk-name="SHPMNT_EARRWEFF" title="EstimatedArrival" rel-entity-name="WorkEffort">
+        <key-map field-name="estimatedArrivalWorkEffId" rel-field-name="workEffortId"/>
       </relation>
       <relation type="one" fk-name="SHPMNT_OFAC" title="Origin" rel-entity-name="Facility">
         <key-map field-name="originFacilityId" rel-field-name="facilityId"/>

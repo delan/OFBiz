@@ -23,191 +23,62 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * @author     Tristan Austin (tristana@twibble.org)
+ * @author     David E. Jones (jonesde@ofbiz.org)
  * @version    $Revision$
  * @since      2.2
  -->
 <simple-methods>
-    <simple-method method-name="createSchedule"
-            short-description="Creates a new Purchase Order Schedule">
-            
+    <simple-method method-name="createSchedule" short-description="Creates a new Purchase Order Schedule">
         <!-- Verify the user is allowed to set the fields -->
-        <field-to-field field-name="orderId" map-name="parameters" to-map-name="checkMap"/>
-        <string-to-field string="updateSchedule" field-name="callingMethodName" map-name="checkMap"/>
-        <string-to-field string="UPDATE" field-name="checkAction" map-name="checkMap"/>
-    	<call-service service-name="checkSupplierRelatedPermission" in-map-name="checkMap">
-            <result-to-field result-name="hasSupplierRelatedPermission" map-name="parameters"/>
-        </call-service>
-    	<call-service service-name="checkCarrierRelatedPermission" in-map-name="checkMap">
-            <result-to-field result-name="hasCarrierRelatedPermission" map-name="parameters"/>
-        </call-service>
+        <string-to-field string="createSchedule" field-name="callingMethodName"/>
+        <string-to-field string="CREATE" field-name="checkAction"/>
+        <call-simple-method method-name="checkSupplierRelatedPermission"/>
+        <check-errors/>
 
-        <!-- Set the primary key fields no matter who they are -->
         <make-value entity-name="OrderDeliverySchedule" value-name="schedule"/>
         <set-pk-fields map-name="parameters" value-name="schedule"/>
         <if-empty field-name="orderItemSeqId" map-name="schedule">
             <string-to-field string="_NA_" field-name="orderItemSeqId" map-name="schedule"/>
         </if-empty>
 	
-        <!-- Need to verify that the user is allowed to set the shipment info fields fields -->
-        <if>
-            <condition>
-                <if-compare field-name="parameters.hasSupplierRelatedPermission" operator="equals" value="true"></if-compare>
-            </condition>
-            <then>
-                <field-to-field field-name="cartons" map-name="parameters" to-map-name="schedule"/>
-                <field-to-field field-name="skidsPallets" map-name="parameters" to-map-name="schedule"/>
-                <field-to-field field-name="unitsPieces" map-name="parameters" to-map-name="schedule"/>
-                <field-to-field field-name="totalCubicSize" map-name="parameters" to-map-name="schedule"/>
-                <field-to-field field-name="totalCubicUomId" map-name="parameters" to-map-name="schedule"/>
-                <field-to-field field-name="totalWeight" map-name="parameters" to-map-name="schedule"/>
-                <field-to-field field-name="totalWeightUomId" map-name="parameters" to-map-name="schedule"/>
-            </then>
-        </if>
+        <!-- only set statusId if hasScheduleAdminRelatedPermission -->
+        <set-nonpk-fields value-name="schedule" map-name="parameters"/>
+        <if-has-permission permission="ORDERMGR" action="_${checkAction}">
+        <else>
+            <!-- no permission, set to initial -->
+            <string-to-field string="ODS_SUBMITTED" field-name="statusId" map-name="schedule"/>
+        </else>
+        </if-has-permission>
         
-        <!-- Define the fields and values of the WorkEffort entity -->
-        <string-to-field string="Purchase Order Delivery" field-name="workEffortName" map-name="deliveryWorkEffortMap"/>
-        <string-to-field string="EVENT" field-name="workEffortTypeId" map-name="deliveryWorkEffortMap"/>
-        <string-to-field string="CAL_CONFIRMED" field-name="currentStatusId" map-name="deliveryWorkEffortMap"/>
-        
-        <!-- Define the fields and values of the WorkEffort entity -->
-        <string-to-field string="Purchase Order Pickup" field-name="workEffortName" map-name="pickupWorkEffortMap"/>
-        <string-to-field string="EVENT" field-name="workEffortTypeId" map-name="pickupWorkEffortMap"/>
-        <string-to-field string="CAL_CONFIRMED" field-name="currentStatusId" map-name="pickupWorkEffortMap"/>
-        
-        <!-- See whether the user has CARRIER permission to set the pickup and delivery dates -->
-        <if>
-            <condition>
-                <if-compare field-name="parameters.hasCarrierRelatedPermission" operator="equals" value="true"></if-compare>
-            </condition>
-            <then>
-                <!-- Only set the delivery dates on the WorkEfforts if the user has CARRIER permission -->
-                <field-to-field map-name="parameters" field-name="deliveryDate" to-field-name="estimatedStartDate" to-map-name="deliveryWorkEffortMap"/>
-                <field-to-field map-name="parameters" field-name="deliveryDate" to-field-name="estimatedCompletionDate" to-map-name="deliveryWorkEffortMap"/>
-                <env-to-field env-name="userLogin.partyId" field-name="quickAssignPartyId" map-name="deliveryWorkEffortMap"/>
-                
-                <!-- Only set the pickup dates on the WorkEfforts if the user has CARRIER permission -->
-                <field-to-field map-name="parameters" field-name="pickupDate" to-field-name="estimatedStartDate" to-map-name="pickupWorkEffortMap"/>
-                <field-to-field map-name="parameters" field-name="pickupDate" to-field-name="estimatedCompletionDate" to-map-name="pickupWorkEffortMap"/>
-                <env-to-field env-name="userLogin.partyId" field-name="quickAssignPartyId" map-name="pickupWorkEffortMap"/>
-                
-                <!-- These are the fields to set for CARRIERs only -->
-                <field-to-field field-name="shipmentMethodTypeId" map-name="parameters" to-map-name="schedule"/>                    
-                <field-to-field field-name="trackingNumber" map-name="parameters" to-map-name="schedule"/>                    
-                <field-to-field field-name="deliveryDate" map-name="parameters" to-map-name="schedule"/>                    
-                <field-to-field field-name="pickupDate" map-name="parameters" to-map-name="schedule"/>                    
-                <field-to-field field-name="statusId" map-name="parameters" to-map-name="schedule"/>
-            </then>
-        </if>
-        
-        <!-- always create the WorkEfforts, even if dates aren't specified yet; when they are they 
-                will be set in the update service... -->
-        
-        <!-- Create and obtain the delivery WorkEffort ID-->
-        <call-service service-name="createWorkEffort" in-map-name="deliveryWorkEffortMap">
-            <result-to-field result-name="workEffortId" map-name="schedule" field-name="deliveryWorkEffortId"/>
-        </call-service>
-
-        <!-- Create and obtain the pickup WorkEffort ID-->
-        <call-service service-name="createWorkEffort" in-map-name="pickupWorkEffortMap">
-            <result-to-field result-name="workEffortId" map-name="schedule" field-name="pickupWorkEffortId"/>
-        </call-service>
-        
-        <!-- Create the actul schedule -->
-        <log level="info" message="Delivery ID is: ${schedule.deliveryWorkEffortId}"/>
-        <log level="info" message="Pickup ID is: ${schedule.pickupWorkEffortId}"/>
         <create-value value-name="schedule"/>
     </simple-method>
-    
-    <simple-method method-name="updateSchedule"
-            short-description="Updates an existing Purchase Order Schedule">
-            
+    <simple-method method-name="updateSchedule" short-description="Updates an existing Purchase Order Schedule">
         <!-- Verify the user is allowed to edit the fields -->
-        <field-to-field field-name="orderId" map-name="parameters" to-map-name="checkMap"/>
-        <string-to-field string="updateSchedule" field-name="callingMethodName" map-name="checkMap"/>
-        <string-to-field string="UPDATE" field-name="checkAction" map-name="checkMap"/>
-    	<call-service service-name="checkSupplierRelatedPermission" in-map-name="checkMap">
-            <result-to-field result-name="hasSupplierRelatedPermission" map-name="parameters"/>
-        </call-service>
-        <call-service service-name="checkCarrierRelatedPermission" in-map-name="checkMap">
-            <result-to-field result-name="hasCarrierRelatedPermission" map-name="parameters"/>
-        </call-service>
+        <string-to-field string="updateSchedule" field-name="callingMethodName"/>
+        <string-to-field string="UPDATE" field-name="checkAction"/>
+        <call-simple-method method-name="checkSupplierRelatedPermission"/>
+        <check-errors/>
 
         <!-- Lookup the existing schedule to modify -->
         <make-value entity-name="OrderDeliverySchedule" value-name="lookupPkMap"/>
         <set-pk-fields map-name="parameters" value-name="lookupPkMap"/>
         <find-by-primary-key entity-name="OrderDeliverySchedule" map-name="lookupPkMap" value-name="schedule"/>
 
-        <!-- Determine whether the user can update the pickup and delivery dates -->
-        <if>
-            <condition>
-                <if-compare field-name="parameters.hasCarrierRelatedPermission" operator="equals" value="true"></if-compare>
-            </condition>
-            <then>
-                <!-- Check the pickup and delivery dates for changes before making updates -->
-                <if>
-                    <condition>
-                        <and>
-                            <not><if-empty field-name="pickupDate" map-name="parameters"/></not>
-                            <if-compare-field field-name="parameters.pickupDate" operator="not-equals" to-field-name="schedule.pickupDate"/>
-                        </and>
-                    </condition>
-                    <then>
-                        <field-to-field map-name="schedule" field-name="pickupWorkEffortId" to-map-name="pickupWorkEffortMap" to-field-name="workEffortId"/>
-                        <find-by-primary-key entity-name="WorkEffort" map-name="pickupWorkEffortMap" value-name="pickupWorkEffort"/>
-                        <field-to-field map-name="schedule" field-name="pickupDate" to-field-name="estimatedStartDate" to-map-name="pickupWorkEffort"/>
-                        <field-to-field map-name="schedule" field-name="pickupDate" to-field-name="estimatedCompletionDate" to-map-name="pickupWorkEffort"/>
-                        <store-value value-name="pickupWorkEffort"/>
-                    </then>
-                </if>
-                <if>
-                    <condition>
-                        <and>
-                            <not><if-empty field-name="deliveryDate" map-name="parameters"/></not>
-                            <if-compare-field field-name="parameters.deliveryDate" operator="not-equals" to-field-name="schedule.deliveryDate"/>
-                        </and>
-                    </condition>
-                    <then>
-                        <!-- Update the existing WorkEfforts -->
-                        <field-to-field map-name="schedule" field-name="deliveryWorkEffortId" to-map-name="deliveryWorkEffortMap" to-field-name="workEffortId"/>
-                        <find-by-primary-key entity-name="WorkEffort" map-name="deliveryWorkEffortMap" value-name="deliveryWorkEffort"/>
-                        <field-to-field map-name="schedule" field-name="deliveryDate" to-field-name="estimatedStartDate" to-map-name="deliveryWorkEffort"/>
-                        <field-to-field map-name="schedule" field-name="deliveryDate" to-field-name="estimatedCompletionDate" to-map-name="deliveryWorkEffort"/>
-                        <store-value value-name="deliveryWorkEffort"/>
-                    </then>
-                </if>
-                
-                <!-- These are the fields to update for CARRIERs -->
-                <field-to-field field-name="shipmentMethodTypeId" map-name="parameters" to-map-name="schedule"/>                    
-                <field-to-field field-name="trackingNumber" map-name="parameters" to-map-name="schedule"/>                    
-                <field-to-field field-name="deliveryDate" map-name="parameters" to-map-name="schedule"/>                    
-                <field-to-field field-name="pickupDate" map-name="parameters" to-map-name="schedule"/>                    
-                <field-to-field field-name="statusId" map-name="parameters" to-map-name="schedule"/>
-            </then>
-        </if>
-        
-        <!-- Need to verify that the user is allowed to set the fields -->
-        <if>
-            <condition>
-                <if-compare field-name="parameters.hasSupplierRelatedPermission" operator="equals" value="true"></if-compare>
-            </condition>
-            <then>
-                <!-- Set the SUPPLIER_AGENT fields -->
-                <field-to-field field-name="cartons" map-name="parameters" to-map-name="schedule"/>
-                <field-to-field field-name="skidsPallets" map-name="parameters" to-map-name="schedule"/>
-                <field-to-field field-name="unitsPieces" map-name="parameters" to-map-name="schedule"/>
-                <field-to-field field-name="totalCubicSize" map-name="parameters" to-map-name="schedule"/>
-                <field-to-field field-name="totalCubicUomId" map-name="parameters" to-map-name="schedule"/>
-                <field-to-field field-name="totalWeight" map-name="parameters" to-map-name="schedule"/>
-                <field-to-field field-name="totalWeightUomId" map-name="parameters" to-map-name="schedule"/>
-            </then>
-        </if>
+        <!-- only set statusId if hasScheduleAdminRelatedPermission -->
+        <field-to-env field-name="statusId" map-name="schedule" env-name="saveStatusId"/>
+        <set-nonpk-fields value-name="schedule" map-name="parameters"/>
+        <if-has-permission permission="ORDERMGR" action="_${checkAction}">
+        <else>
+            <!-- no permission, restore saved status -->
+            <env-to-field env-name="saveStatusId" field-name="statusId" map-name="schedule"/>
+        </else>
+        </if-has-permission>
         
         <!-- Update the actual schedule -->
         <store-value value-name="schedule"/>
     </simple-method>
     
-    <!-- Should be called as a service to use its out parameter indicating whether the
-         user has permission or not. -->
+    <!-- Should be called in-line to use its out parameter indicating whether the user has permission or not. -->
     <simple-method method-name="checkSupplierRelatedPermission" short-description="Check Order Related Permission">
     	<if-empty field-name="callingMethodName">
             <string-to-field string="this operation" field-name="callingMethodName"/>
@@ -215,83 +86,33 @@
     	<if-empty field-name="checkAction">
             <string-to-field string="UPDATE" field-name="checkAction"/>
     	</if-empty>
-    
-    	<!-- find all role-categories that this product is a member of -->
     	<if>
             <condition>
                 <not><if-has-permission permission="ORDERMGR" action="_${checkAction}"/></not>
             </condition>
             <then>
-                <field-to-field field-name="orderId" map-name="parameters" to-map-name="lookupOrderRolesMap"/>
-                <if-empty field-name="userLogin" map-name="parameters">
-                	<field-to-field field-name="partyId" map-name="parameters" to-map-name="lookupOrderRolesMap"/>
-            	<else>
-            		<field-to-field field-name="partyId" map-name="userLogin" to-map-name="lookupOrderRolesMap"/>
-            	</else>
-                </if-empty>
-                <string-to-field string="SUPPLIER_AGENT" field-name="roleTypeId" map-name="lookupOrderRolesMap"/>
-                <find-by-and entity-name="OrderRole" map-name="lookupOrderRolesMap" list-name="orderRoles"/>
-                <filter-list-by-date list-name="orderRoles" valid-date-name="nowTimestamp"/>
-                <filter-list-by-date list-name="orderRoles" valid-date-name="nowTimestamp" from-field-name="fromDate" thru-field-name="thruDate"/>
+                <env-to-field env-name="orderId" map-name="parameters" to-map-name="lookupOrderRoleMap"/>
+                <field-to-field field-name="partyId" map-name="userLogin" to-map-name="lookupOrderRoleMap"/>
+                <string-to-field string="SUPPLIER_AGENT" field-name="roleTypeId" map-name="lookupOrderRoleMap"/>
+                <find-by-primary-key entity-name="OrderRole" map-name="lookupOrderRoleMap" value-name="orderRole"/>
             </then>
-        <else>
-            <string-to-field field-name="hasSupplierRelatedPermission" string="true"/>
-        </else>
+            <else>
+                <string-to-field field-name="hasSupplierRelatedPermission" string="true"/>
+            </else>
         </if>
     	<if>
             <condition>
                 <not>
                     <or>
                         <if-has-permission permission="ORDERMGR" action="_${checkAction}"/>
-                        <and>
-                            <if-has-permission permission="ORDERMGR_ROLE" action="_${checkAction}"/>
-                            <not><if-empty field-name="orderRoles"/></not>
-                        </and>
-                        <and>
-                            <not><if-empty field-name="alternatePermissionRoot"/></not>
-                            <if-has-permission permission="${alternatePermissionRoot}" action="_${checkAction}"/>
-                        </and>
+                        <not><if-empty field-name="orderRole"/></not>
                     </or>
                 </not>
             </condition>
             <then>
-                <string-to-field field-name="hasSupplierRelatedPermission" string="false"/>
+                <string-to-list list-name="error_list" string="ERROR: You do not have permission to modify Delivery Schedule Information; you must be associated with this order as a Supplier Agent or have the ORDERMGR_${checkAction} permission."/>
             </then>
-        <else>
-            <string-to-field field-name="hasSupplierRelatedPermission" string="true"/>
-        </else>
         </if>
-	
         <log level="info" message="hasSupplierRelatedPermission is: ${hasSupplierRelatedPermission}"/>
-    	<field-to-result field-name="hasSupplierRelatedPermission"/>
-    </simple-method>
-    
-    <!-- Should be called as a service to use its out parameter indicating whether the
-         user has permission or not. Currently this always returns true, not sure if it's
-         necessary yet. -->
-    <simple-method method-name="checkCarrierRelatedPermission" short-description="Check Carrier Related Permission">
-        <if-empty field-name="callingMethodName">
-            <string-to-field string="this operation" field-name="callingMethodName"/>
-    	</if-empty>
-    	<if-empty field-name="checkAction">
-            <string-to-field string="UPDATE" field-name="checkAction"/>
-    	</if-empty>
-    
-    	<!-- For the time being, this will just check for admin permissions -->
-    	<if>
-            <condition>
-                <if-has-permission permission="ORDERMGR" action="_${checkAction}"/>
-            </condition>
-            <then>
-                <string-to-field field-name="hasCarrierRelatedPermission" string="true"/>
-            </then>
-        <else>
-            <string-to-field field-name="hasCarrierRelatedPermission" string="false"/>
-        </else>
-        </if>
-	
-    	<!-- Set the result -->
-        <log level="info" message="hasCarrierRelatedPermission is: ${hasCarrierRelatedPermission}"/>
-        <field-to-result field-name="hasCarrierRelatedPermission"/>
     </simple-method>
 </simple-methods>

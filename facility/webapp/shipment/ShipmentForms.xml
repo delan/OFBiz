@@ -72,6 +72,9 @@
 			</drop-down>
 		</field>
 
+		<field name="estimatedShipWorkEffId" title="Estimated Ship Event" widget-style="buttontext"><hyperlink target="/workeffort/control/event?workEffortId=${shipment.estimatedShipWorkEffId}" also-hidden="false" target-type="inter-app"/></field>
+		<field name="estimatedArrivalWorkEffId" title="Estimated Arrival Event" widget-style="buttontext"><hyperlink target="/workeffort/control/event?workEffortId=${shipment.estimatedArrivalWorkEffId}" also-hidden="false" target-type="inter-app"/></field>
+        
 		<field name="originContactMechId" title="Origin Postal Address Id" 
                 tooltip="To: ${originPostalAddress.toName}, Attn: ${originPostalAddress.attnName}, ${originPostalAddress.address1}, ${originPostalAddress.address2}, ${originPostalAddress.city}, ${originPostalAddress.stateProvinceGeoId}, ${originPostalAddress.postalCode}, ${originPostalAddress.countryGeoId}" tooltip-style="tabletext">
         </field>
