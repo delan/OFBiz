@@ -45,6 +45,14 @@ public class FlexibleStringExpander {
         ParseElementHandler handler = new PreParseHandler(stringElements);
         parseString(original, handler);
     }
+    
+    public boolean isEmpty() {
+        if (original == null || original.length() == 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     /** 
      * This expands the pre-parsed String given the context passed in. Note that
