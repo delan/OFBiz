@@ -32,38 +32,51 @@
 		
 		<auto-fields-service service-name="updateShipment" map-name=""/>
 		
-		<field use-when="shipment!=null" name="shipmentId" tooltip="This cannot be changed without re-creating the Product Catalog."><display/></field>
+		<field use-when="shipment!=null" name="shipmentId" tooltip="This cannot be changed without re-creating the Shipment"><display/></field>
 		<field use-when="shipment==null&amp;&amp;shipmentId!=null" name="shipmentId" tooltip="Could not find Shipment with ID [${shipmentId}]"><text size="20" maxlength="20"/></field>
 		<!-- this to be taken care of with auto-fields-service as soon as it uses entity field info too -->
 		<field use-when="shipment==null&amp;&amp;shipmentId==null" name="shipmentId"><text size="20" maxlength="20"/></field>
 
-		<field name="siteName"><text size="30" maxlength="60"/></field>
-		<field name="enableHttps" widget-style="selectBox">
-		    <drop-down allow-empty="true"><option key="Y"/><option key="N"/></drop-down>
+		<field name="shipmentTypeId" widget-style="selectBox">
+			<drop-down allow-empty="false" current="first-in-list">
+				<entity-options entity-name="ShipmentType" description="${description}"/>
+			</drop-down>
 		</field>		
-
+		<field name="statusId" widget-style="selectBox">
+			<drop-down allow-empty="false" current="first-in-list">
+				<entity-options entity-name="StatusItem" description="${description}">
+					<entity-constraint name="statusTypeId" value="SHIPMENT_STATUS"/>
+					<entity-order-by field-name="sequenceId"/>
+				</entity-options>
+			</drop-down>
+		</field>
+		<field name="originFacilityId" widget-style="selectBox">
+			<drop-down allow-empty="false" current="first-in-list">
+				<entity-options entity-name="StatusItem" key-field-name="facilityId" description="${facilityName} [${facilityId}]">
+					<entity-order-by field-name="facilityName"/>
+				</entity-options>
+			</drop-down>
+		</field>
+		
 		<field name="submitButton" title="Update" widget-style="standardSubmit"><submit button-type="button"/></field>
 	</form>
-	<form name="CreateShipmentItem" type="single" 
-		target="createShipmentItem" title=""
+	<form name="CreateRouteSegment" type="single" 
+		target="createRouteSegment" title=""
 		default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
-		<auto-fields-service service-name="createShipmentItem"/>
+		<auto-fields-service service-name="createRouteSegment"/>
 		<field name="shipmentId" map-name="shipment"><hidden/></field>
+		<field name="shipmentRouteSegmentId" map-name="shipment"><ignored/></field>
+		
 		<field name="submitButton" title="Create" widget-style="standardSubmit"><submit button-type="button"/></field>
 	</form>
-	<form name="UpdateShipmentItem" type="list" 
-		target="updateShipmentItem" title="" list-name="shipmentItemDatas"
+	<form name="UpdateRouteSegment" type="list" 
+		target="updateRouteSegment" title="" list-name="shipmentRouteSegmentDatas"
 		default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
-		<auto-fields-service service-name="updateShipmentItem" map-name="shipmentItem"/>
+		<auto-fields-service service-name="updateRouteSegment" map-name="shipmentRouteSegment"/>
 		<field name="shipmentId"><hidden/></field>
-		<!-- three possibilities for the Party: person, partyGroup, neither... just print everything and if it's empty, no biggie -->
-		<field name="partyId" title="Party [ID]" widget-style="buttontext">
-			<hyperlink target-type="inter-app" target="/partymgr/control/viewprofile?partyId=${shipmentItem.partyId}"
-				description="${person.personalTitle} ${person.firstName} ${person.middleName} ${person.lastName} ${person.suffix} ${partyGroup.groupName} [${shipmentItem.partyId}]"/>
-		</field>
 		<field name="submitButton" title="Update" widget-style="standardSubmit"><submit button-type="button"/></field>
 		<field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
-			<hyperlink target="removeShipmentItem?shipmentId=${shipmentItem.shipmentId}&amp;shipmentItemSeqId=${shipmentItem.shipmentItemSeqId}"
+			<hyperlink target="removeRouteSegment?shipmentId=${shipmentRouteSegment.shipmentId}&amp;shipmentRouteSegmentId=${shipmentRouteSegment.shipmentRouteSegmentId}"
 				description="[Delete]" also-hidden="false"/>
 		</field>
 	</form>
