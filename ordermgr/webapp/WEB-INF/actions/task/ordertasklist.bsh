@@ -82,5 +82,16 @@ context.put("now", UtilDateTime.nowTimestamp());
 
 // purchase order schedule
 poList = delegator.findByAnd("OrderHeaderAndRoles", UtilMisc.toMap("partyId", userLogin.get("partyId"), "orderTypeId", "PURCHASE_ORDER"));
+poIter = poList.iterator();
+listedPoIds = new HashSet();
+while (poIter.hasNext()) {
+    poGv = poIter.next();
+    poOrderId = poGv.get("orderId");
+    if (listedPoIds.contains(poOrderId)) {
+    	poIter.remove();
+    } else {
+        listedPoIds.add(poOrderId);
+    }
+}
 context.put("poList", poList);
 
