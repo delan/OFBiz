@@ -332,6 +332,7 @@
         </if-empty>
 
         <!-- create the return items -->
+        <calculate field-name="returnTotal" type="Double"><number value="0.0"/></calculate>
         <iterate entry-name="orderItem" list-name="orderItems">
             <string-to-field string="ITEM" field-name="returnItemType" map-name="newItemCtx"/>
             <field-to-field field-name="returnId" to-map-name="newItemCtx"/>
@@ -348,9 +349,91 @@
                 <result-to-field result-name="returnablePrice" field-name="returnPrice" map-name="newItemCtx"/>
             </call-service>
 
+            <!-- add in the item amount for a calc total -->
+            <calculate field-name="returnTotal">
+        	    <calcop field-name="returnTotal" operator="add">
+        	        <calcop operator="multiply">
+        	            <calcop operator="get" field-name="returnPrice" map-name="newItemCtx"/>
+                        <calcop operator="get" field-name="returnQuantity" map-name="newItemCtx"/>
+                    </calcop>
+                </calcop>
+        	</calculate>
+
             <!-- create the return item -->
             <call-service service-name="createReturnItem" in-map-name="newItemCtx" include-user-login="true"/>
         </iterate>
+
+        <!-- get the order shipping total -->
+        <field-to-field field-name="orderId" map-name="orderHeader" to-map-name="shippingCtx"/>
+        <call-service service-name="getOrderShippingAmount" in-map-name="shippingCtx" include-user-login="true">
+            <result-to-field result-name="shippingAmount"/>
+        </call-service>
+        <log level="always" message="Order #${orderHeader.orderId} shipping total - ${shippingAmount}"/>
+
+        <!-- create the shipping return adjustment -->
+        <if-compare field-name="shippingAmount" operator="greater" value="0.00" type="Double">
+            <log level="always" message="shipping amount is greater than 0"/>
+
+            <string-to-field string="Shipping Adjustment" field-name="description" map-name="shipItemCtx"/>
+            <string-to-field string="ADJUSTMENT" field-name="returnItemType" map-name="shipItemCtx"/>
+
+            <field-to-field field-name="returnId" to-map-name="shipItemCtx"/>
+            <field-to-field field-name="returnReasonId" map-name="parameters" to-map-name="shipItemCtx"/>
+            <field-to-field field-name="returnTypeId" map-name="parameters" to-map-name="shipItemCtx"/>
+            <field-to-field field-name="orderId" map-name="orderHeader" to-map-name="shipItemCtx"/>
+
+            <env-to-field env-name="orderHeader.orderId" field-name="orderId" map-name="shipItemCtx"/>
+            <env-to-field env-name="shippingAmount" field-name="returnPrice" map-name="shipItemCtx"/>
+
+            <calculate field-name="returnQuantity" map-name="shipItemCtx" type="Double">
+                <number value="1"/>
+            </calculate>
+
+            <!-- add in the item amount for a calc total -->
+            <calculate field-name="returnTotal" type="Double">
+        	    <calcop field-name="returnTotal" operator="add">
+        	        <calcop operator="multiply">
+        	            <calcop operator="get" field-name="returnPrice" map-name="shipItemCtx"/>
+                        <calcop operator="get" field-name="returnQuantity" map-name="shipItemCtx"/>
+                    </calcop>
+                </calcop>
+        	</calculate>
+
+            <!-- create the shipping adjustment return item -->
+            <call-service service-name="createReturnItem" in-map-name="shipItemCtx" include-user-login="true"/>
+        </if-compare>
+
+        <!-- get the order total - return total diff -->
+        <calculate field-name="totalDiff" type="Double" decimal-format="##0.00">
+            <calcop operator="subtract">
+                <calcop operator="get" field-name="grandTotal" map-name="orderHeader"/>
+                <calcop operator="get" field-name="returnTotal"/>
+            </calcop>
+        </calculate>
+        <log level="always" message="OrderTotal [${orderHeader.grandTotal}] - ReturnTotal [${returnTotal}] Diff = [${totalDiff}]"/>
+
+        <!-- create the balance adjustment -->
+        <if-compare field-name="totalDiff" operator="not-equals" value="0" type="Double">
+            <log level="always" message="diff amount is not 0"/>
+
+            <string-to-field string="Balance Adjustment" field-name="description" map-name="balanceItemCtx"/>
+            <string-to-field string="ADJUSTMENT" field-name="returnItemType" map-name="balanceItemCtx"/>
+
+            <field-to-field field-name="returnId" to-map-name="balanceItemCtx"/>
+            <field-to-field field-name="returnReasonId" map-name="parameters" to-map-name="balanceItemCtx"/>
+            <field-to-field field-name="returnTypeId" map-name="parameters" to-map-name="balanceItemCtx"/>
+            <field-to-field field-name="orderId" map-name="orderHeader" to-map-name="balanceItemCtx"/>
+
+            <env-to-field env-name="orderHeader.orderId" field-name="orderId" map-name="balanceItemCtx"/>
+            <env-to-field env-name="totalDiff" field-name="returnPrice" map-name="balanceItemCtx"/>
+
+            <calculate field-name="returnQuantity" map-name="balanceItemCtx" type="Double">
+                <number value="1"/>
+            </calculate>
+
+            <!-- create the shipping adjustment return item -->
+            <call-service service-name="createReturnItem" in-map-name="balanceItemCtx" include-user-login="true"/>
+        </if-compare>
 
         <!-- update the header status -->
         <string-to-field string="RETURN_ACCEPTED" field-name="statusId" map-name="updateHeaderCtx"/>

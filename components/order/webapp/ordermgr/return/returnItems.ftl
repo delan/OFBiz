@@ -34,8 +34,8 @@
 
 <#if !requestParameters.orderId?exists>
 <table width="100%" border='0' cellpadding='2' cellspacing='0'>
-  <tr><td colspan="8"><div class="head3">Item(s) In Return #${returnId}</div></td></tr>
-  <tr><td colspan="8"><hr class="sepbar"></td></tr>
+  <tr><td colspan="9"><div class="head3">Item(s) In Return #${returnId}</div></td></tr>
+  <tr><td colspan="9"><hr class="sepbar"></td></tr>
   <tr>
     <td><div class="tableheadtext">Order #</div></td>
     <td><div class="tableheadtext">Item #</div></td>
@@ -43,14 +43,15 @@
     <td><div class="tableheadtext">Return Qty</div></td>
     <td><div class="tableheadtext">Return Price</div></td>
     <td><div class="tableheadtext">Reason</div></td>
-    <td><div class="tableheadtext">Type</div></td> 
+    <td><div class="tableheadtext">Type</div></td>
+    <td><div class="tableheadtext">Response</div></td>
     <td>&nbsp;</td>
   </tr>
-  <tr><td colspan="8"><hr class="sepbar"></td></tr> 
+  <tr><td colspan="9"><hr class="sepbar"></td></tr>
   <#if returnItems?has_content>
     <#list returnItems as item>
       <#assign orderItem = item.getRelatedOne("OrderItem")?if_exists>
-      <#assign orderHeader = orderItem.getRelatedOne("OrderHeader")?if_exists>
+      <#assign orderHeader = item.getRelatedOne("OrderHeader")?if_exists>
       <#assign returnReason = item.getRelatedOne("ReturnReason")?if_exists>
       <#assign returnType = item.getRelatedOne("ReturnType")?if_exists>
       <tr>
@@ -61,6 +62,24 @@
         <td><div class="tabletext"><@ofbizCurrency amount=item.returnPrice isoCode=orderHeader.currencyUom/></div></td>
         <td><div class="tabletext">${returnReason.description?default("N/A")}</div></td>
         <td><div class="tabletext">${returnType.description?default("N/A")}</div></td>
+        <td>
+          <#if returnHeader.statusId == "RETURN_COMPLETED">
+            <#assign itemResp = item.getRelatedOne("ReturnItemResponse")?if_exists>
+            <#if itemResp?has_content>
+              <#if itemResp.paymentId?has_content>
+                <div class="tabletext">Payment #<a href="/accounting/control/editPayment?paymentId=${itemResp.paymentId}${requestAttributes.externalKeyParam}" class="buttontext">${itemResp.paymentId}</a></div>
+              <#elseif itemResp.replacementOrderId?has_content>
+                <div class="tabletext">Order #<a href="<@ofbizUrl>/orderview?order_id=${itemResp.replacementOrderId}</@ofbizUrl>" class="buttontext">${itemResp.replacementOrderId}</a></div>
+              <#elseif itemResp.billingAccountId?has_content>
+                <div class="tabletext">Acct #<a href="/accounting/control/EditBillingAccount?billingAccountId=${itemResp.billingAccountId}${requestAttributes.externalKeyParam}" class="buttontext">${itemResp.billingAccountId}</a></div>
+              </#if>
+            <#else>
+              <div class="tabletext">None</div>
+            </#if>
+          <#else>
+            <div class="tabletext">N/A</div>
+          </#if>
+        </td>
         <#if returnHeader.statusId == "RETURN_REQUESTED">
           <td align='right'><a href="<@ofbizUrl>/removeReturnItem?returnId=${item.returnId}&returnItemSeqId=${item.returnItemSeqId}</@ofbizUrl>" class="buttontext">Remove</a>
         <#else>
@@ -70,7 +89,7 @@
     </#list>
   <#else>
     <tr>
-      <td colspan="8"><div class="tabletext">No item(s) in return.</div>
+      <td colspan="9"><div class="tabletext">No item(s) in return.</div>
     </tr>
   </#if>
 </table>
