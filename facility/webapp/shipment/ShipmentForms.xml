@@ -56,6 +56,13 @@
 				</entity-options>
 			</drop-down>
 		</field>
+		<field name="destinationFacilityId" title="Destination Facility" widget-style="selectBox">
+			<drop-down allow-empty="true" current="first-in-list">
+				<entity-options entity-name="Facility" key-field-name="facilityId" description="${facilityName} [${facilityId}]">
+					<entity-order-by field-name="facilityName"/>
+				</entity-options>
+			</drop-down>
+		</field>
 		
 		<field name="submitButton" title="Update" widget-style="standardSubmit"><submit button-type="button"/></field>
 	</form>

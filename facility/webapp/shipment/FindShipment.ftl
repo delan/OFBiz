@@ -85,9 +85,25 @@ function lookupShipments() {
                 <td width="5%">&nbsp;</td>
                 <td>
                   <select name="originFacilityId" class="selectBox">
-                    <#if currentFacility?has_content>
-                    <option value="${currentFacility.facilityId}">${currentFacility.facilityName} [${currentFacility.facilityId}]</option>
-                    <option value="${currentFacility.facilityId}">---</option>
+                    <#if currentOriginFacility?has_content>
+                    <option value="${currentOriginFacility.facilityId}">${currentOriginFacility.facilityName} [${currentOriginFacility.facilityId}]</option>
+                    <option value="${currentOriginFacility.facilityId}">---</option>
+                    </#if>
+                    <option value="">Any Facility</option>                
+                    <#list facilities as facility>
+                      <option value="${facility.facilityId}">${facility.facilityName} [${facility.facilityId}]</option>
+                    </#list>
+                  </select>
+                </td>
+              </tr>                                           
+              <tr>
+                <td width="25%" align="right"><div class="tableheadtext">Destination Facility:</div></td>
+                <td width="5%">&nbsp;</td>
+                <td>
+                  <select name="destinationFacilityId" class="selectBox">
+                    <#if currentDestinationFacility?has_content>
+                    <option value="${currentDestinationFacility.facilityId}">${currentDestinationFacility.facilityName} [${currentDestinationFacility.facilityId}]</option>
+                    <option value="${currentDestinationFacility.facilityId}">---</option>
                     </#if>
                     <option value="">Any Facility</option>                
                     <#list facilities as facility>
@@ -179,11 +195,12 @@ function lookupShipments() {
       <table width="100%" border="0" cellspacing="0" cellpadding="2" class="boxbottom">
         <tr>
           <td width="5%" align="left"><div class="tableheadtext">ShipmentID</div></td>
-          <td width="5%" align="left"><div class="tableheadtext">Type</div></td>
-          <td width="20%" align="left"><div class="tableheadtext">Status</div></td>
-          <td width="20%" align="left"><div class="tableheadtext">Origin Facility</div></td>
-          <td width="20%" align="left"><div class="tableheadtext">Ship Date</div></td>
-          <td width="10%">&nbsp;</td>
+          <td width="15%" align="left"><div class="tableheadtext">Type</div></td>
+          <td width="10%" align="left"><div class="tableheadtext">Status</div></td>
+          <td width="25%" align="left"><div class="tableheadtext">Origin Facility</div></td>
+          <td width="25%" align="left"><div class="tableheadtext">Dest. Facility</div></td>
+          <td width="15%" align="left"><div class="tableheadtext">Ship Date</div></td>
+          <td width="5%">&nbsp;</td>
         </tr>
         <tr>
           <td colspan="10"><hr class="sepbar"></td>
@@ -191,15 +208,17 @@ function lookupShipments() {
         <#if shipmentList?has_content>
           <#assign rowClass = "viewManyTR2">
           <#list shipmentList[lowIndex..highIndex-1] as shipment>
-            <#assign originFacility = shipment.getRelatedOneCache("OriginFacility")>
+            <#assign originFacility = shipment.getRelatedOneCache("OriginFacility")?if_exists>
+            <#assign destinationFacility = shipment.getRelatedOneCache("DestinationFacility")?if_exists>
             <#assign statusItem = shipment.getRelatedOneCache("StatusItem")>
             <#assign shipmentType = shipment.getRelatedOneCache("ShipmentType")>
             <tr class="${rowClass}">
               <td><a href="<@ofbizUrl>/ViewShipment?shipmentId=${shipment.shipmentId}</@ofbizUrl>" class="buttontext">${shipment.shipmentId}</a></td>
               <td><div class="tabletext">${shipmentType.description?default(shipmentType.shipmentTypeId?default(""))}</div></td>
               <td><div class="tabletext">${statusItem.description?default(statusItem.statusId?default("N/A"))}</div></td>
+              <td><div class="tabletext">${(originFacility.facilityName)?if_exists} [${shipment.originFacilityId?if_exists}]</div></td>
+              <td><div class="tabletext">${(destinationFacility.facilityName)?if_exists} [${shipment.destinationFacilityId?if_exists}]</div></td>
               <td><div class="tabletext"><nobr>${(shipment.estimatedShipDate.toString())?if_exists}</nobr></div></td>
-              <td><div class="tabletext">${(originFacility.facilityName)?if_exists} [${shipment.originFacilityId}]</div></td>
               <td align="right">
                 <a href="<@ofbizUrl>/ViewShipment?shipmentId=${shipment.shipmentId}</@ofbizUrl>" class="buttontext">View</a>
               </td>

@@ -34,6 +34,7 @@ delegator = request.getAttribute("delegator");
 lookupFlag = request.getParameter("lookupFlag");
 shipmentTypeId = request.getParameter("shipmentTypeId");
 originFacilityId = request.getParameter("originFacilityId");
+destinationFacilityId = request.getParameter("destinationFacilityId");
 statusId = request.getParameter("statusId");
 minDate = request.getParameter("minDate");
 maxDate = request.getParameter("maxDate");
@@ -53,8 +54,16 @@ if (UtilValidate.isNotEmpty(originFacilityId)) {
     paramListBuffer.append(originFacilityId);
     findShipmentExprs.add(new EntityExpr("originFacilityId", EntityOperator.EQUALS, originFacilityId));
 
-    currentFacility = delegator.findByPrimaryKeyCache("Facility", UtilMisc.toMap("facilityId", originFacilityId));
-    context.put("currentFacility", currentFacility);
+    currentOriginFacility = delegator.findByPrimaryKeyCache("Facility", UtilMisc.toMap("facilityId", originFacilityId));
+    context.put("currentOriginFacility", currentOriginFacility);
+}
+if (UtilValidate.isNotEmpty(destinationFacilityId)) {
+    paramListBuffer.append("&destinationFacilityId=");
+    paramListBuffer.append(destinationFacilityId);
+    findShipmentExprs.add(new EntityExpr("destinationFacilityId", EntityOperator.EQUALS, destinationFacilityId));
+
+    currentDestinationFacility = delegator.findByPrimaryKeyCache("Facility", UtilMisc.toMap("facilityId", destinationFacilityId));
+    context.put("currentDestinationFacility", currentDestinationFacility);
 }
 if (UtilValidate.isNotEmpty(statusId)) {
     paramListBuffer.append("&statusId=");

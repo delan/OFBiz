@@ -252,6 +252,7 @@
       <field name="shipmentTypeId" type="id"></field>
       <field name="statusId" type="id-ne"></field>
       <field name="originFacilityId" type="id"></field>
+      <field name="destinationFacilityId" type="id"></field>
       <field name="primaryOrderId" type="id"></field>
       <field name="partyIdTo" type="id"></field>
       <field name="partyIdFrom" type="id"></field>
@@ -274,6 +275,9 @@
       </relation>
       <relation type="one" fk-name="SHPMNT_OFAC" title="Origin" rel-entity-name="Facility">
         <key-map field-name="originFacilityId" rel-field-name="facilityId"/>
+      </relation>
+      <relation type="one" fk-name="SHPMNT_DFAC" title="Destination" rel-entity-name="Facility">
+        <key-map field-name="destinationFacilityId" rel-field-name="facilityId"/>
       </relation>
       <relation type="one" fk-name="SHPMNT_PODR" title="Primary" rel-entity-name="OrderHeader">
         <key-map field-name="primaryOrderId" rel-field-name="orderId"/>
