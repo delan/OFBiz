@@ -1914,7 +1914,7 @@ public class OrderServices {
                         
             if (orderStatus.equals("ORDER_CREATED")) {
                 // first check for un-paid orders
-                Timestamp orderDate = orderHeader.getTimestamp("orderDate");
+                Timestamp orderDate = orderHeader.getTimestamp("entryDate");
                 String webSiteId = orderHeader.getString("webSiteId");
                 
                 // need the payment.properties file for the website
