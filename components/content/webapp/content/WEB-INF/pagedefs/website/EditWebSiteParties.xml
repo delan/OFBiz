@@ -3,5 +3,5 @@
     <template>main</template>
     <property name="title">Edit Web Site Parties</property>
     <property name="headerItem">WebSite</property>
-    <content-action name="/website/EditWebSiteParties.bsh"/>
+    <page-action name="/website/EditWebSiteParties.bsh"/>
 </page>

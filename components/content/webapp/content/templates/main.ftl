@@ -22,7 +22,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Al Byers (byersa@automationgroups.com)
- *@version    $Revision: 1.13 $
+ *@version    $Revision: 1.14 $
  *@since      3.0
 -->
 
@@ -193,8 +193,8 @@ ${pages.get("/includes/appbar.ftl")}
             <#if operationTitle?exists>${operationTitle}</#if>
             <#assign permType=page.getProperty("permissionType")?if_exists />
             <#if (permType?exists && (permType == "none"))
-                 ||  hasPermission
-            >${pages.get(page.path)}
+                 ||  hasPermission>
+              ${pages.get(page.path)}
             <#else>
                <h3>You do not have permission to view this page. </h3>
             </#if>

@@ -20,7 +20,10 @@
         <config-dir>WEB-INF/pagedefs</config-dir>
         <root>../../../common/webcommon</root>
     </repository>
-  		
+
+    <!-- Define the global ENV setup action -->
+    <global-action name="/includes/envsetup.bsh"/>
+    
     <!-- Define the character encoding map -->
     <character-encoding-map path="*">
         <page-encoding>UTF-8</page-encoding>

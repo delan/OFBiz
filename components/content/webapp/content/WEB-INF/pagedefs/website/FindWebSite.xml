@@ -3,5 +3,5 @@
     <template>main</template>
     <property name="title">Find Web Site</property>
     <property name="headerItem">WebSite</property>
-    <content-action name="/website/FindWebSite.bsh"/>
+    <page-action name="/website/FindWebSite.bsh"/>
 </page>
