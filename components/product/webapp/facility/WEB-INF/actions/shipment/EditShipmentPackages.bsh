@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.2
  */
 
@@ -31,7 +31,14 @@ import org.ofbiz.base.util.*;
 delegator = request.getAttribute("delegator");
 
 shipmentId = request.getParameter("shipmentId");
-shipment = delegator.findByPrimaryKey("Shipment", UtilMisc.toMap("shipmentId", shipmentId));
+if (UtilValidate.isEmpty(shipmentId)) {
+    shipmentId = context.get("shipmentId");
+}
+
+shipment = null;
+if (UtilValidate.isNotEmpty(shipmentId)) {
+    shipment = delegator.findByPrimaryKey("Shipment", UtilMisc.toMap("shipmentId", shipmentId));
+}
 
 if (shipment != null) {
     shipmentPackages = shipment.getRelated("ShipmentPackage", null, UtilMisc.toList("shipmentPackageSeqId"));
