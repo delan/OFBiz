@@ -29,6 +29,12 @@
         <attribute name="result" type="String" mode="OUT"/>
     </service>
 
+    <service name="testJMS" engine="jmsqueue"
+            location="testQueue" invoke="testScv">
+        <description>Test JMS Queue service</description>
+        <attribute name="message" type="String" mode="IN"/>
+    </service>
+
     <!-- Common services -->
     <service name="sendMail" engine="java"
             location="org.ofbiz.commonapp.common.CommonServices" invoke="sendMail">

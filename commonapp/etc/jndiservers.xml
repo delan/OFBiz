@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE jndi-config PUBLIC "-//OFBiz//DTD JNDI Server Config//EN" "http://www.ofbiz.org/dtds/jndi-config.dtd">
-<!--
- - This file configures the Entity Engine JDBC (or other DataSource) and JTA
-access. For a detailed description see the core/docs/entityconfig.html file.
--->
 
 <jndi-config>
+
+    <!-- this jndi-server has no parameters so the factory will use the default
+        InitialContext constructor which gets these values from the jndi.properties file -->
+    <jndi-server name="default"/>
 
     <jndi-server name="localjndi"
             context-provider-url="rmi://127.0.0.1:1099"
@@ -13,8 +13,9 @@ access. For a detailed description see the core/docs/entityconfig.html file.
             url-pkg-prefixes="java.naming.rmi.security.manager"
             security-principal=""
             security-credentials=""/>
-    <!-- this jndi-server has no parameters so the factory will use the default
-        InitialContext constructor which gets these values from the jndi.properties file -->
-    <jndi-server name="default"/>
+
+    <jndi-server name="OpenJMS"
+            context-provider-url="rmi://127.0.0.1:1099/JndiServer"
+            initial-context-factory="org.exolab.jms.jndi.rmi.RmiJndiInitialContextFactory"/>
 
 </jndi-config>

@@ -39,13 +39,13 @@
     <!-- End of Security Mappings -->
 
     <!-- Request Mappings -->
-    <request-map uri="serviceSchedule">
+    <request-map uri="ServiceSchedule">
         <event type="java" path="org.ofbiz.core.event.CoreEvents" invoke="scheduleService"/>
         <response name="success" type="view" value="error"/>
         <response name="error" type="view" value="error"/>
     </request-map>
 
-    <request-map uri="workflowTest">
+    <request-map uri="WorkflowTest">
         <event type="service" invoke="processOrder"/>
         <response name="success" type="view" value="main"/>
         <response name="error" type="view" value="error"/>
@@ -57,7 +57,7 @@
         <response name="success" type="none"/>
     </request-map>
 
-    <request-map uri="testBeanShell">
+    <request-map uri="TestBeanShell">
        <event type="service" invoke="testBsh"/>
        <response name="error" type="view" value="error"/>
        <response name="success" type="view" value="error"/>
@@ -67,6 +67,12 @@
        <event type="service" invoke="testScv" />
        <response name="error" type="view" value="error"/>
        <response name="success" type="view" value="error"/>
+    </request-map>
+
+    <request-map uri="TestJMS">
+        <event type="service" invoke="testJMS"/>
+        <response name="error" type="view" value="error"/>
+        <response name="success" type="view" value="error"/>
     </request-map>
 
     <request-map uri="yahoo">
