@@ -27,7 +27,15 @@
  -->
 <simple-methods>
     <simple-method method-name="createProductFeatureCategory" short-description="Create Product Feature Category">
-        <!-- TODO: do security check, make sure has "CATALOG", "_CREATE" -->
+        <if-has-permission permission="CATALOG" action="_CREATE">
+            <!-- if they have the permission, great, do nothing, just continue -->
+            <else>
+                <string-to-field string="Security Error: you must have the CATALOG_CREATE or CATALOG_ADMIN permission to run createProductFeatureCategory." field-name="securityError"/>
+                <field-to-list field-name="securityError" list-name="error_list"/>
+                <check-errors/>
+            </else>
+        </if-has-permission>
+        
         <call-map-processor in-map-name="parameters" out-map-name="newEntityContext">
             <simple-map-processor name="populateEntity">
                 <process field="parentCategoryId"><copy/></process>
@@ -41,10 +49,17 @@
         <check-errors/>
         <make-value value-name="newEntity" entity-name="ProductFeatureCategory" map-name="newEntityContext"/>
         <create-value value-name="newEntity"/>
-        <!-- TODO: what caches need to be cleared? -->
     </simple-method>
     <simple-method method-name="updateProductFeatureCategory" short-description="Update Product Feature Category">
-        <!-- TODO: do security check, make sure has "CATALOG", "_UPDATE" -->
+        <if-has-permission permission="CATALOG" action="_UPDATE">
+            <!-- if they have the permission, great, do nothing, just continue -->
+            <else>
+                <string-to-field string="Security Error: you must have the CATALOG_UPDATE or CATALOG_ADMIN permission to run updateProductFeatureCategory" field-name="securityError"/>
+                <field-to-list field-name="securityError" list-name="error_list"/>
+                <check-errors/>
+            </else>
+        </if-has-permission>
+        
         <field-to-field field-name="productFeatureCategoryId" map-name="parameters" to-map-name="productFeatureCategoryPKMap"/>
         <find-by-primary-key entity-name="ProductFeatureCategory" map-name="productFeatureCategoryPKMap" value-name="productFeatureCategory"/>
         <call-map-processor in-map-name="parameters" out-map-name="productFeatureCategory">
@@ -55,11 +70,18 @@
         </call-map-processor>
         <check-errors/>
         <store-value value-name="productFeatureCategory"/>
-        <!-- TODO: what caches need to be cleared? -->
     </simple-method>
 
     <simple-method method-name="createProductFeature" short-description="Create Product Feature">
-        <!-- TODO: do security check, make sure has "CATALOG", "_CREATE" -->
+        <if-has-permission permission="CATALOG" action="_CREATE">
+            <!-- if they have the permission, great, do nothing, just continue -->
+            <else>
+                <string-to-field string="Security Error: you must have the CATALOG_CREATE or CATALOG_ADMIN permission to run createProductFeature" field-name="securityError"/>
+                <field-to-list field-name="securityError" list-name="error_list"/>
+                <check-errors/>
+            </else>
+        </if-has-permission>
+        
         <call-map-processor in-map-name="parameters" out-map-name="newEntityContext">
             <simple-map-processor name="populateEntity">
                 <process field="productFeatureTypeId"><copy/></process>
@@ -76,10 +98,17 @@
         <check-errors/>
         <make-value value-name="newEntity" entity-name="ProductFeature" map-name="newEntityContext"/>
         <create-value value-name="newEntity"/>
-        <!-- TODO: what caches need to be cleared? -->
     </simple-method>
     <simple-method method-name="updateProductFeature" short-description="Update Product Feature">
-        <!-- TODO: do security check, make sure has "CATALOG", "_UPDATE" -->
+        <if-has-permission permission="CATALOG" action="_UPDATE">
+            <!-- if they have the permission, great, do nothing, just continue -->
+            <else>
+                <string-to-field string="Security Error: you must have the CATALOG_UPDATE or CATALOG_ADMIN permission to run updateProductFeature" field-name="securityError"/>
+                <field-to-list field-name="securityError" list-name="error_list"/>
+                <check-errors/>
+            </else>
+        </if-has-permission>
+        
         <field-to-field field-name="productFeatureId" map-name="parameters" to-map-name="productFeaturePKMap"/>
         <find-by-primary-key entity-name="ProductFeature" map-name="productFeaturePKMap" value-name="productFeature"/>
         <call-map-processor in-map-name="parameters" out-map-name="productFeature">
@@ -93,15 +122,22 @@
         </call-map-processor>
         <check-errors/>
         <store-value value-name="productFeature"/>
-        <!-- TODO: what caches need to be cleared? -->
     </simple-method>
 
     <simple-method method-name="applyFeatureToProduct" short-description="Apply Feature to Product">
-        <!-- TODO: do security check, make sure has "CATALOG", "_CREATE" -->
+        <if-has-permission permission="CATALOG" action="_CREATE">
+            <!-- if they have the permission, great, do nothing, just continue -->
+            <else>
+                <string-to-field string="Security Error: you must have the CATALOG_CREATE or CATALOG_ADMIN permission to run applyFeatureToProduct" field-name="securityError"/>
+                <field-to-list field-name="securityError" list-name="error_list"/>
+                <check-errors/>
+            </else>
+        </if-has-permission>
+        
         <if-empty field-name="fromDate" map-name="parameters">
             <now-timestamp-to-env env-name="nowStamp"/>
             <env-to-field env-name="nowStamp" field-name="fromDate" map-name="parameters"/>
-            <!-- TODO: if fromDate is not specified make sure no ProductFeatureAppl exists with a valid date range -->
+            <!-- TODO: if fromDate is not specified make sure no ProductFeatureAppl exists with a valid date range, I guess this is kind of optional... -->
         </if-empty>
         <call-map-processor in-map-name="parameters" out-map-name="newEntityContext">
             <simple-map-processor name="populateEntity">
@@ -116,10 +152,21 @@
         <check-errors/>
         <make-value value-name="newEntity" entity-name="ProductFeatureAppl" map-name="newEntityContext"/>
         <create-value value-name="newEntity"/>
-        <!-- TODO: what caches need to be cleared? -->
+
+        <!-- what caches need to be cleared? hopefully just this one... -->
+        <field-to-field field-name="productId" map-name="parameters" to-map-name="clearCacheByProductIdMap"/>
+        <clear-cache-line entity-name="ProductFeatureAndAppl" map-name="clearCacheByProductIdMap"/>
     </simple-method>
     <simple-method method-name="updateFeatureToProductApplication" short-description="Update Feature to Product Application">
-        <!-- TODO: do security check, make sure has "CATALOG", "_UPDATE" -->
+        <if-has-permission permission="CATALOG" action="_UPDATE">
+            <!-- if they have the permission, great, do nothing, just continue -->
+            <else>
+                <string-to-field string="Security Error: you must have the CATALOG_UPDATE or CATALOG_ADMIN permission to run updateFeatureToProductApplication" field-name="securityError"/>
+                <field-to-list field-name="securityError" list-name="error_list"/>
+                <check-errors/>
+            </else>
+        </if-has-permission>
+        
         <field-to-field field-name="productId" map-name="parameters" to-map-name="productFeatureApplPKMap"/>
         <field-to-field field-name="productFeatureId" map-name="parameters" to-map-name="productFeatureApplPKMap"/>
         <field-to-field field-name="fromDate" map-name="parameters" to-map-name="productFeatureApplPKMap"/>
@@ -133,10 +180,21 @@
         </call-map-processor>
         <check-errors/>
         <store-value value-name="productFeatureAppl"/>
-        <!-- TODO: what caches need to be cleared? -->
+
+        <!-- what caches need to be cleared? hopefully just this one... -->
+        <field-to-field field-name="productId" map-name="parameters" to-map-name="clearCacheByProductIdMap"/>
+        <clear-cache-line entity-name="ProductFeatureAndAppl" map-name="clearCacheByProductIdMap"/>
     </simple-method>
     <simple-method method-name="removeFeatureFromProduct" short-description="Remove Feature from Product">
-        <!-- TODO: do security check, make sure has "CATALOG", "_UPDATE" -->
+        <if-has-permission permission="CATALOG" action="_UPDATE">
+            <!-- if they have the permission, great, do nothing, just continue -->
+            <else>
+                <string-to-field string="Security Error: you must have the CATALOG_UPDATE or CATALOG_ADMIN permission to run removeFeatureFromProduct" field-name="securityError"/>
+                <field-to-list field-name="securityError" list-name="error_list"/>
+                <check-errors/>
+            </else>
+        </if-has-permission>
+        
         <field-to-field field-name="productId" map-name="parameters" to-map-name="productFeatureApplPKMap"/>
         <field-to-field field-name="productFeatureId" map-name="parameters" to-map-name="productFeatureApplPKMap"/>
         <field-to-field field-name="fromDate" map-name="parameters" to-map-name="productFeatureApplPKMap"/>
@@ -148,6 +206,9 @@
         <field-to-field field-name="thruDate" map-name="parameters" to-map-name="productFeatureAppl"/>
         <check-errors/>
         <store-value value-name="productFeatureAppl"/>
-        <!-- TODO: what caches need to be cleared? -->
+
+        <!-- what caches need to be cleared? hopefully just this one... -->
+        <field-to-field field-name="productId" map-name="parameters" to-map-name="clearCacheByProductIdMap"/>
+        <clear-cache-line entity-name="ProductFeatureAndAppl" map-name="clearCacheByProductIdMap"/>
     </simple-method>
 </simple-methods>
