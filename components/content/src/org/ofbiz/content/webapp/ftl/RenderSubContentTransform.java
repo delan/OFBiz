@@ -1,5 +1,5 @@
 /*
- * $Id: RenderSubContentTransform.java,v 1.2 2003/12/15 11:52:07 byersa Exp $
+ * $Id: RenderSubContentTransform.java,v 1.3 2003/12/21 03:40:50 byersa Exp $
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -65,7 +65,7 @@ import org.jpublish.Page;
  * RenderSubContentTransform - Freemarker Transform for Content rendering
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      3.0
  *
  * This transform cannot be called recursively (at this time).
@@ -109,6 +109,20 @@ public class RenderSubContentTransform implements TemplateTransformModel {
                        (GenericDelegator)FreeMarkerWorker.getWrappedObject("delegator", env);
         final GenericValue userLogin = 
                        (GenericValue)FreeMarkerWorker.getWrappedObject("userLogin", env);
+        GenericValue subContentDataResourceViewTemp = 
+                       (GenericValue)FreeMarkerWorker.getWrappedObject("subContentDataResourceView", env);
+        if (subContentDataResourceViewTemp == null) {
+            List assocTypes = UtilMisc.toList("SUB_CONTENT");
+            Timestamp fromDate = UtilDateTime.nowTimestamp();
+            try {
+                subContentDataResourceViewTemp = ContentWorker.getSubContent( delegator,
+                         contentId, mapKey, subContentId, userLogin, assocTypes, fromDate);
+            } catch(IOException e) {
+               throw new RuntimeException(e.getMessage());
+            }
+        }
+
+        final GenericValue subContentDataResourceView = subContentDataResourceViewTemp;  
 
         Debug.logInfo("in RenderSubContent, start.","");
         Debug.logInfo("in RenderSubContent, mapKey:" + mapKey,"");
@@ -143,8 +157,7 @@ public class RenderSubContentTransform implements TemplateTransformModel {
          
             TemplateHashModel dataRoot = env.getDataModel();
         
-                GenericValue subContentDataResourceView 
-                       = (GenericValue)templateContext.get("subContentDataResourceView");
+
                 Timestamp fromDate = UtilDateTime.nowTimestamp();
                 ServletContext servletContext 
                     = (ServletContext)request.getSession().getServletContext();

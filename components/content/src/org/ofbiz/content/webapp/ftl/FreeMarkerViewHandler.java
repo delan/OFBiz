@@ -1,5 +1,5 @@
 /*
- * $Id: FreeMarkerViewHandler.java,v 1.4 2003/12/05 21:36:26 byersa Exp $
+ * $Id: FreeMarkerViewHandler.java,v 1.5 2003/12/21 03:40:50 byersa Exp $
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -60,7 +60,7 @@ import freemarker.template.TemplateScalarModel;
  * FreemarkerViewHandler - Freemarker Template Engine View Handler
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.1
  */
 public class FreeMarkerViewHandler implements ViewHandler {
@@ -74,6 +74,7 @@ public class FreeMarkerViewHandler implements ViewHandler {
     public static EditRenderSubContentTransform  editRenderSubContent = new EditRenderSubContentTransform();
     public static RenderSubContentTransform  renderSubContent = new RenderSubContentTransform();
     public static RenderWrappedTextTransform  renderWrappedText = new RenderWrappedTextTransform();
+    public static LoopSubContentTransform  loopSubContent = new LoopSubContentTransform();
     
     protected ServletContext servletContext = null;
     protected Configuration config = null;
@@ -176,6 +177,7 @@ public class FreeMarkerViewHandler implements ViewHandler {
         root.put("setRequestAttribute", setRequestAttribute);
         root.put("editRenderSubContent", editRenderSubContent);
         root.put("renderSubContent", renderSubContent);
+        root.put("loopSubContent", loopSubContent);
         root.put("renderWrappedText", renderWrappedText);
     }
 
