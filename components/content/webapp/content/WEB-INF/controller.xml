@@ -637,15 +637,13 @@
     </request-map>
     <request-map uri="updateContent">
         <security auth="true" https="true"/>
-        <event invoke="updateContent"
-            path="org/ofbiz/content/content/ContentEvents.xml" type="simple"/>
+        <event invoke="updateContent" type="service"/>
         <response name="success" type="view" value="EditContent"/>
         <response name="error" type="view" value="EditContent"/>
     </request-map>
     <request-map uri="createContent">
         <security auth="true" https="true"/>
-        <event invoke="createContentAndPurpose"
-            path="org/ofbiz/content/content/ContentEvents.xml" type="simple"/>
+        <event invoke="createContent" type="service"/>
         <response name="success" type="view" value="EditContent"/>
         <response name="error" type="view" value="AddContent"/>
     </request-map>
@@ -1334,19 +1332,19 @@
     <view-map name="EditWebSite" page="/website/EditWebSite.ftl" type="jpublish"/>    
     <view-map name="EditWebSiteParties" page="/website/EditWebSiteParties.ftl" type="jpublish"/>
     
-    <view-map name="EditContentPurpose" page="/content/EditContentPurpose.ftl" type="jpublish"/>
-    <view-map name="EditContentRole" page="/content/EditContentRole.ftl" type="jpublish"/>
-    <view-map name="FindContent" page="/content/FindContent.ftl" type="jpublish"/>
-    <view-map name="EditContent" page="/content/EditContent.ftl" type="jpublish"/>
-    <view-map name="EditContentAssoc" page="/content/EditContentAssoc.ftl" type="jpublish"/>
-    <view-map name="AddContent" page="/content/AddContent.ftl" type="jpublish"/>
-    <view-map name="LookupContent" page="/content/LookupContent.ftl" type="jpublish"/>
-    <view-map name="LookupDataResource" page="/data/LookupDataResource.ftl" type="jpublish"/>
+    <view-map name="EditContentPurpose" page="component://content/widget/content/ContentScreens.xml#EditContentPurpose" type="screen"/>
+    <view-map name="EditContentRole" page="component://content/widget/content/ContentScreens.xml#EditContentRole" type="screen"/>
+    <view-map name="FindContent" page="component://content/widget/content/ContentScreens.xml#FindContent" type="screen"/>
+    <view-map name="EditContent" page="component://content/widget/content/ContentScreens.xml#EditContent" type="screen"/>
+    <view-map name="EditContentAssoc" page="component://content/widget/content/ContentScreens.xml#EditContentAssoc" type="screen"/>
+    <view-map name="AddContent" page="component://content/widget/content/ContentScreens.xml#AddContent" type="screen"/>
+    <view-map name="LookupContent" page="component://content/widget/content/ContentScreens.xml#LookupContent" type="screen"/>
+    <view-map name="LookupDataResource" page="component://content/widget/data/DataScreens.xml#LookupDataResource" type="screen"/>
     <view-map name="ClipBoardContent" page="/content/ClipBoardContent.ftl" type="jpublish"/>
     <view-map name="ClipBoardDataResource" page="/data/ClipBoardDataResource.ftl" type="jpublish"/>
-    <view-map name="LookupPerson" page="/content/LookupPerson.ftl" type="jpublish"/>
-    <view-map name="EditContentAttribute" page="/content/EditContentAttribute.ftl" type="jpublish"/>
-    <view-map name="EditContentMetaData" page="/content/EditContentMetaData.ftl" type="jpublish"/>
+    <view-map name="LookupPerson" page="component://content/widget/content/ContentScreens.xml#LookupPerson" type="screen"/>
+    <view-map name="EditContentAttribute" page="component://content/widget/content/ContentScreens.xml#EditContentAttribute" type="screen"/>
+    <view-map name="EditContentMetaData" page="component://content/widget/content/ContentScreens.xml#EditContentMetaData" type="screen"/>
     <view-map name="EditContentType" page="/contentsetup/EditContentType.ftl" type="jpublish"/>
     <view-map name="EditContentAssocType" page="/contentsetup/EditContentAssocType.ftl" type="jpublish"/>
     <view-map name="EditContentPurposeType" page="/contentsetup/EditContentPurposeType.ftl" type="jpublish"/>
@@ -1392,7 +1390,7 @@
     <view-map name="EditLayoutUrl" page="/layout/EditLayoutUrl.ftl" type="jpublish"/>
     <view-map name="LookupSubContent" page="/layout/LookupSubContent.ftl" type="jpublish"/>
 
-    <view-map name="ContentMenu" page="/content/ContentMenu.ftl" type="jpublish"/>
+    <view-map name="ContentMenu"  page="component://content/widget/content/ContentScreens.xml#ContentMenu" type="screen"/>
     <view-map name="ContentSetupMenu" page="/cms/ContentSetupMenu.ftl" type="jpublish"/>
     <view-map name="DataMenu" page="/data/DataMenu.ftl" type="jpublish"/>
     <view-map name="DataSetupMenu" page="/datasetup/DataSetupMenu.ftl" type="jpublish"/>
@@ -1402,7 +1400,7 @@
     <view-map name="FindSurvey" page="/survey/FindSurvey.ftl" type="jpublish"/>
     <view-map name="EditSurvey" page="/survey/EditSurvey.ftl" type="jpublish"/>
     <view-map name="EditSurveyQuestions" page="/survey/EditSurveyQuestions.ftl" type="jpublish"/>
-    <view-map name="LookupPartyAndUserLoginAndPerson" page="/content/LookupPartyAndUserLoginAndPerson.ftl" type="jpublish"/>
+    <view-map name="LookupPartyAndUserLoginAndPerson" page="component://content/widget/content/ContentScreens.xml#LookupPartyAndUserLoginAndPerson" type="screen"/>
     <view-map name="SurveyResponse" page="/survey/SurveyResponse.ftl" type="jpublish"/>
     <view-map name="ViewSurveyResponse" page="/survey/ViewResponse.ftl" type="jpublish"/>
 

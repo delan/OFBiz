@@ -29,6 +29,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -300,6 +301,13 @@ public abstract class ModelScreenWidget {
                     context = new MapStack(context);
                 }
                 ((MapStack) context).push();
+                // build the widgetpath
+        		List widgetTrail = (List)context.get("_WIDGETTRAIL_");
+        		if (widgetTrail == null)
+        		    widgetTrail = new ArrayList();
+        		String thisName = nameExdr.expandString(context);
+        		widgetTrail.add(thisName);
+        		context.put("_WIDGETTRAIL_", widgetTrail);
             }
             
             // dont need the renderer here, will just pass this on down to another screen call; screenStringRenderer.renderContainerBegin(writer, context, this);

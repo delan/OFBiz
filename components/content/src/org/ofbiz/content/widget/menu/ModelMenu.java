@@ -100,6 +100,8 @@ public class ModelMenu {
      * with conditions is not possible.
      */
     protected Map menuItemMap = new HashMap();
+    
+    protected List actions;
 
     
    // ===== CONSTRUCTORS =====
@@ -222,6 +224,11 @@ public class ModelMenu {
         if (this.menuWrapperStyleExdr == null || menuElement.hasAttribute("menu-wrapper-style"))
             this.setMenuWrapperStyle( menuElement.getAttribute("menu-wrapper-style"));
 
+        // read all actions under the "actions" element
+        Element actionsElement = UtilXml.firstChildElement(menuElement, "actions");
+        if (actionsElement != null) {
+            this.actions = ModelMenuAction.readSubActions(this, actionsElement);
+        }
 
         // read in add item defs, add/override one by one using the menuItemList and menuItemMap
         List itemElements = UtilXml.childElementList(menuElement, "menu-item");
@@ -296,6 +303,7 @@ public class ModelMenu {
 
             //Debug.logInfo("in ModelMenu, name:" + this.getName(), module);
         if (passed) {
+            ModelMenuAction.runSubActions(this.actions, context);
 	        if ("simple".equals(this.type)) {
 	            this.renderSimpleMenuString(buffer, context, menuStringRenderer);
 	        } else {

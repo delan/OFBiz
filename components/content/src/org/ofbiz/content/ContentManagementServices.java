@@ -523,6 +523,15 @@ public class ContentManagementServices {
                 	Map ctx = contentAssocModel.makeValid(contentAssoc, "IN");
                     contentAssocContext.putAll(ctx);
                     thisResult = dispatcher.runSync("createContentAssoc", contentAssocContext);
+                    result.put("contentIdTo", thisResult.get("contentIdTo"));
+                    result.put("contentIdFrom", thisResult.get("contentIdFrom"));
+                    result.put("contentId", thisResult.get("contentIdFrom"));
+                    result.put("contentAssocTypeId", thisResult.get("contentAssocTypeId"));
+                    result.put("fromDate", thisResult.get("fromDate"));
+                    
+                    result.put("caContentIdTo", thisResult.get("contentIdTo"));
+                    result.put("caContentAssocTypeId", thisResult.get("contentAssocTypeId"));
+                    result.put("caFromDate", thisResult.get("fromDate"));
                 } else {
                 	if ("true".equalsIgnoreCase(deactivateExisting)) {
                 		Map deactivateContext = UtilMisc.toMap("contentId", contentId, "contentAssocTypeId", contentAssocTypeId );
@@ -542,15 +551,6 @@ public class ContentManagementServices {
        			return ServiceUtil.returnError(errMsg);
    			}
 
-            result.put("contentIdTo", thisResult.get("contentIdTo"));
-            result.put("contentIdFrom", thisResult.get("contentIdFrom"));
-            result.put("contentId", thisResult.get("contentIdFrom"));
-            result.put("contentAssocTypeId", thisResult.get("contentAssocTypeId"));
-            result.put("fromDate", thisResult.get("fromDate"));
-            
-            result.put("caContentIdTo", thisResult.get("contentIdTo"));
-            result.put("caContentAssocTypeId", thisResult.get("contentAssocTypeId"));
-            result.put("caFromDate", thisResult.get("fromDate"));
        }
        context.remove("skipPermissionCheck");
        context.put("contentId", origContentId);
