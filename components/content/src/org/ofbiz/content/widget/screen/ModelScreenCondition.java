@@ -1,5 +1,5 @@
 /*
- * $Id: ModelScreenCondition.java,v 1.1 2004/07/30 02:11:17 jonesde Exp $
+ * $Id: ModelScreenCondition.java,v 1.2 2004/08/18 16:12:35 byersa Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -44,13 +44,14 @@ import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.minilang.operation.BaseCompare;
 import org.ofbiz.security.Security;
+import org.ofbiz.content.content.EntityPermissionChecker;
 import org.w3c.dom.Element;
 
 /**
  * Widget Library - Screen model condition class
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.1
  */
 public class ModelScreenCondition {
@@ -117,6 +118,8 @@ public class ModelScreenCondition {
             return new IfRegexp(modelScreen, conditionElement);
         } else if ("if-empty".equals(conditionElement.getNodeName())) {
             return new IfEmpty(modelScreen, conditionElement);
+        } else if ("if-entity-permission".equals(conditionElement.getNodeName())) {
+            return new IfEntityPermission(modelScreen, conditionElement);
         } else {
             throw new IllegalArgumentException("Condition element not supported with name: " + conditionElement.getNodeName());
         }
@@ -445,6 +448,20 @@ public class ModelScreenCondition {
         public boolean eval(Map context) {
             Object fieldVal = this.fieldAcsr.get(context);
             return ObjectType.isEmpty(fieldVal);
+        }
+    }
+    public static class IfEntityPermission extends ScreenCondition {
+        protected EntityPermissionChecker permissionChecker;
+        
+        public IfEntityPermission(ModelScreen modelScreen, Element condElement) {
+            super (modelScreen, condElement);
+            this.permissionChecker = new EntityPermissionChecker(condElement);
+        }
+        
+        public boolean eval(Map context) {
+        	
+        	boolean passed = permissionChecker.runPermissionCheck(context);
+            return passed;
         }
     }
 }

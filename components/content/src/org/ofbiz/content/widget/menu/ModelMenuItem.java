@@ -1,5 +1,5 @@
 /*
- * $Id: ModelMenuItem.java,v 1.13 2004/07/29 04:42:37 byersa Exp $
+ * $Id: ModelMenuItem.java,v 1.14 2004/08/18 16:12:34 byersa Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -37,6 +37,7 @@ import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
+import org.ofbiz.content.content.EntityPermissionChecker;
 import org.w3c.dom.Element;
 
 /**
@@ -44,7 +45,7 @@ import org.w3c.dom.Element;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.13 $
+ * @version    $Revision: 1.14 $
  * @since      2.2
  */
 public class ModelMenuItem {
@@ -83,6 +84,8 @@ public class ModelMenuItem {
     protected Link link;
 
     public static String DEFAULT_TARGET_TYPE = "intra-app";
+    
+    protected EntityPermissionChecker permissionChecker;
     // ===== CONSTRUCTORS =====
     /** Default Constructor */
     public ModelMenuItem(ModelMenu modelMenu) {
@@ -168,6 +171,9 @@ public class ModelMenuItem {
         if (linkElement != null) {
             link = new Link(linkElement, this);
         }
+        Element permissionElement = UtilXml.firstChildElement(fieldElement, "if-entity-permission");
+        if (permissionElement != null)
+            permissionChecker = new EntityPermissionChecker(permissionElement);
 
     }
 
@@ -233,7 +239,14 @@ public class ModelMenuItem {
     }
 
     public void renderMenuItemString(StringBuffer buffer, Map context, MenuStringRenderer menuStringRenderer) {
+      	boolean passed = true;
+    	if (permissionChecker != null)
+    		passed = permissionChecker.runPermissionCheck(context);
+
+            Debug.logInfo("in ModelMenu, name:" + this.getName(), module);
+        if (passed) {
             menuStringRenderer.renderMenuItem(buffer, context, this);
+        }
     }
 
 

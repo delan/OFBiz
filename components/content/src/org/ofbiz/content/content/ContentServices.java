@@ -1,5 +1,5 @@
 /*
- * $Id: ContentServices.java,v 1.28 2004/08/16 19:37:57 byersa Exp $
+ * $Id: ContentServices.java,v 1.29 2004/08/18 16:12:34 byersa Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -54,7 +54,7 @@ import org.ofbiz.service.ServiceUtil;
  * ContentServices Class
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.28 $
+ * @version $Revision: 1.29 $
  * @since 2.2
  * 
  *  
@@ -511,6 +511,9 @@ public class ContentServices {
             System.out.println("Entity Error:" + e.getMessage());
             return ServiceUtil.returnError("Error in retrieving Content. " + e.getMessage());
         }
+        if (contentAssoc == null) {
+            return ServiceUtil.returnError("Error in updating ContentAssoc. Entity is null.");
+        }
         contentAssoc.put("contentAssocPredicateId", context.get("contentAssocPredicateId"));
         contentAssoc.put("dataSourceId", context.get("dataSourceId"));
         contentAssoc.set("thruDate", context.get("thruDate"));
@@ -531,14 +534,98 @@ public class ContentServices {
 
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         String userLoginId = (String) userLogin.get("userLoginId");
-        String createdByUserLogin = userLoginId;
         String lastModifiedByUserLogin = userLoginId;
-        Timestamp createdDate = UtilDateTime.nowTimestamp();
         Timestamp lastModifiedDate = UtilDateTime.nowTimestamp();
-        contentAssoc.put("createdByUserLogin", createdByUserLogin);
         contentAssoc.put("lastModifiedByUserLogin", lastModifiedByUserLogin);
-        contentAssoc.put("createdDate", createdDate);
         contentAssoc.put("lastModifiedDate", lastModifiedDate);
+
+        String permissionStatus = null;
+        Map serviceInMap = new HashMap();
+        serviceInMap.put("userLogin", context.get("userLogin"));
+        serviceInMap.put("targetOperationList", targetOperationList);
+        serviceInMap.put("contentPurposeList", contentPurposeList);
+        serviceInMap.put("entityOperation", context.get("entityOperation"));
+        serviceInMap.put("contentIdTo", contentIdTo);
+        serviceInMap.put("contentIdFrom", contentIdFrom);
+        Map permResults = null;
+        try {
+            permResults = dispatcher.runSync("checkAssocPermission", serviceInMap);
+        } catch (GenericServiceException e) {
+            Debug.logError(e, "Problem checking permissions", "ContentServices");
+            return ServiceUtil.returnError("Problem checking association permissions");
+        }
+        permissionStatus = (String) permResults.get("permissionStatus");
+
+        if (permissionStatus != null && permissionStatus.equals("granted")) {
+            try {
+                contentAssoc.store();
+            } catch (GenericEntityException e) {
+                return ServiceUtil.returnError(e.getMessage());
+            }
+        } else {
+            String errorMsg = ContentWorker.prepPermissionErrorMsg(permResults);
+            return ServiceUtil.returnError(errorMsg);
+        }
+        return result;
+    }
+
+    /**
+     * Update a ContentAssoc service. The work is done in a separate method so that complex services that need this functionality do not need to incur the
+     * reflection performance penalty.
+     */
+    public static Map deactivateContentAssoc(DispatchContext dctx, Map context) {
+        context.put("entityOperation", "_UPDATE");
+        List targetOperationList = ContentWorker.prepTargetOperationList(context, "_UPDATE");
+        List contentPurposeList = ContentWorker.prepContentPurposeList(context);
+        context.put("targetOperationList", targetOperationList);
+        context.put("contentPurposeList", contentPurposeList);
+        context.put("skipPermissionCheck", null);
+        Map result = deactivateContentAssocMethod(dctx, context);
+        return result;
+    }
+
+    /**
+     * Update a ContentAssoc method. The work is done in this separate method so that complex services that need this functionality do not need to incur the
+     * reflection performance penalty.
+     */
+    public static Map deactivateContentAssocMethod(DispatchContext dctx, Map context) {
+
+        context.put("entityOperation", "_UPDATE");
+        List targetOperationList = ContentWorker.prepTargetOperationList(context, "_UPDATE");
+        List contentPurposeList = ContentWorker.prepContentPurposeList(context);
+        context.put("targetOperationList", targetOperationList);
+        context.put("contentPurposeList", contentPurposeList);
+
+        Map result = new HashMap();
+        GenericDelegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        // This section guesses how contentId should be used (From or To) if
+        // only a contentIdFrom o contentIdTo is passed in
+        String contentIdFrom = (String) context.get("contentId");
+        String contentIdTo = (String) context.get("contentIdTo");
+        String contentId = (String) context.get("contentId");
+        String contentAssocTypeId = (String) context.get("contentAssocTypeId");
+        Timestamp fromDate = (Timestamp) context.get("fromDate");
+
+        GenericValue contentAssoc = null;
+        try {
+            contentAssoc = delegator.findByPrimaryKey("ContentAssoc", UtilMisc.toMap("contentId", contentId, "contentIdTo", contentIdTo, "contentAssocTypeId", contentAssocTypeId, "fromDate", fromDate));
+        } catch (GenericEntityException e) {
+            System.out.println("Entity Error:" + e.getMessage());
+            return ServiceUtil.returnError("Error in retrieving Content. " + e.getMessage());
+        }
+        
+        if (contentAssoc == null) {
+            return ServiceUtil.returnError("Error in deactivating ContentAssoc. Entity is null.");
+        }
+
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        String userLoginId = (String) userLogin.get("userLoginId");
+        String lastModifiedByUserLogin = userLoginId;
+        Timestamp lastModifiedDate = UtilDateTime.nowTimestamp();
+        contentAssoc.put("lastModifiedByUserLogin", lastModifiedByUserLogin);
+        contentAssoc.put("lastModifiedDate", lastModifiedDate);
+        contentAssoc.put("thruDate", UtilDateTime.nowTimestamp());
 
         String permissionStatus = null;
         Map serviceInMap = new HashMap();
