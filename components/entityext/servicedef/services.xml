@@ -156,6 +156,10 @@
         <attribute name="numRemoved" type="Long" mode="OUT" optional="false"/>
         <attribute name="numAlreadyRemoved" type="Long" mode="OUT" optional="false"/>
     </service>
+    <service name="cleanSyncRemoveInfo" engine="java"
+            location="org.ofbiz.entityext.synchronization.EntitySyncServices" invoke="cleanSyncRemoveInfo" auth="true">
+        <description>Clean EntitySyncRemove Info - Generally should be run asynchronously after each sync run</description>
+    </service>
     
     <!-- Services to call store remotely -->
     <service name="remoteStoreEntitySyncDataHttp" engine="http"

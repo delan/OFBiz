@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.7 $
+ * @version    $Revision: 1.8 $
  */
 -->
 
@@ -59,6 +59,7 @@
       <field name="lastSuccessfulSynchTime" type="date-time"></field>
       <field name="syncSplitMillis" type="numeric"></field>
       <field name="targetServiceName" type="long-varchar"></field>
+      <field name="keepRemoveInfoHours" type="floating-point"></field>
       <prim-key field="entitySyncId"/>
       <relation type="many" rel-entity-name="EntitySyncInclude">
         <key-map field-name="entitySyncId"/>
@@ -104,9 +105,6 @@
       <field name="entitySyncRemoveId" type="id-ne"></field>
       <field name="primaryKeyRemoved" type="very-long"></field>
       <prim-key field="entitySyncRemoveId"/>
-      <index name="ENTSNC_REM_TXTM" unique="false">
-      	<index-field name="removedTxTime"/>
-      </index>
     </entity>
 </entitymodel>
 
