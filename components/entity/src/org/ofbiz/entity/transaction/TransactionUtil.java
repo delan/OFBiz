@@ -1,5 +1,5 @@
 /*
- * $Id: TransactionUtil.java,v 1.2 2003/12/04 01:51:46 jonesde Exp $
+ * $Id: TransactionUtil.java,v 1.3 2003/12/04 06:16:05 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -28,6 +28,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 
 import javax.sql.XAConnection;
+import javax.transaction.*;
 import javax.transaction.HeuristicMixedException;
 import javax.transaction.HeuristicRollbackException;
 import javax.transaction.NotSupportedException;
@@ -47,7 +48,7 @@ import org.ofbiz.base.util.UtilDateTime;
  * <p>Provides a wrapper around the transaction objects to allow for changes in underlying implementations in the future.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class TransactionUtil implements Status {
@@ -92,6 +93,12 @@ public class TransactionUtil implements Status {
                 // begin the transaction
                 ut.begin();
                 Debug.logVerbose("[TransactionUtil.begin] transaction begun", module);
+                
+                // reset the transaction stamps, just in case...
+                clearTransactionStamps();
+                // initialize the start stamp
+                getTransactionStartStamp();
+                
                 return true;
             } catch (NotSupportedException e) {
                 //This is Java 1.4 only, but useful for certain debuggins: Throwable t = e.getCause() == null ? e : e.getCause();
@@ -142,6 +149,9 @@ public class TransactionUtil implements Status {
                 if (status != STATUS_NO_TRANSACTION) {
                     ut.commit();
                     Debug.logVerbose("[TransactionUtil.commit] transaction committed", module);
+                    
+                    // clear out the stamps to keep it clean
+                    clearTransactionStamps();
                 } else {
                     Debug.logInfo("[TransactionUtil.commit] Not committing transaction, status is STATUS_NO_TRANSACTION", module);
                 }
@@ -193,6 +203,9 @@ public class TransactionUtil implements Status {
                     }
                     ut.rollback();
                     Debug.logInfo("[TransactionUtil.rollback] transaction rolled back", module);
+                    
+                    // clear out the stamps to keep it clean
+                    clearTransactionStamps();
                 } else {
                     Debug.logInfo("[TransactionUtil.rollback] transaction not rolled back, status is STATUS_NO_TRANSACTION", module);
                 }
@@ -270,10 +283,32 @@ public class TransactionUtil implements Status {
             }
         } catch (RollbackException e) {
             //This is Java 1.4 only, but useful for certain debuggins: Throwable t = e.getCause() == null ? e : e.getCause();
-            throw new GenericTransactionException("Roll Back error, could not enlist connection in transaction even though transactions are available, current transaction rolled back", e);
+            throw new GenericTransactionException("Roll Back error, could not enlist resource in transaction even though transactions are available, current transaction rolled back", e);
         } catch (SystemException e) {
             //This is Java 1.4 only, but useful for certain debuggins: Throwable t = e.getCause() == null ? e : e.getCause();
-            throw new GenericTransactionException("System error, could not enlist connection in transaction even though transactions are available", e);
+            throw new GenericTransactionException("System error, could not enlist resource in transaction even though transactions are available", e);
+        }
+    }
+    
+    public static void registerSynchronization(Synchronization sync) throws GenericTransactionException {
+        if (sync == null) {
+            return;
+        }
+
+        try {
+            TransactionManager tm = TransactionFactory.getTransactionManager();
+            if (tm != null && tm.getStatus() == STATUS_ACTIVE) {
+                Transaction tx = tm.getTransaction();
+                if (tx != null) {
+                    tx.registerSynchronization(sync);
+                }
+            }
+        } catch (RollbackException e) {
+            //This is Java 1.4 only, but useful for certain debuggins: Throwable t = e.getCause() == null ? e : e.getCause();
+            throw new GenericTransactionException("Roll Back error, could not register synchronization in transaction even though transactions are available, current transaction rolled back", e);
+        } catch (SystemException e) {
+            //This is Java 1.4 only, but useful for certain debuggins: Throwable t = e.getCause() == null ? e : e.getCause();
+            throw new GenericTransactionException("System error, could not register synchronization in transaction even though transactions are available", e);
         }
     }
     
@@ -285,6 +320,13 @@ public class TransactionUtil implements Status {
         if (curStamp == null) {
             curStamp = UtilDateTime.nowTimestamp();
             transactionStartStamp.set(curStamp);
+            
+            // we know this is the first time set for this transaction, so make sure the StampClearSync is registered
+            try {
+                registerSynchronization(new StampClearSync());
+            } catch (GenericTransactionException e) {
+                Debug.logError(e, "Error registering StampClearSync synchronization, stamps will still be reset if begin/commit/rollback are call through TransactionUtil, but not if otherwise", module);
+            }
         }
         return curStamp;
     }
@@ -302,8 +344,17 @@ public class TransactionUtil implements Status {
         return nowTimestamp;
     }
 
-    // TODO: consider setting this to protected or private; where will it be called?
-    public static void clearTransactionStartStamp() {
+    protected static void clearTransactionStamps() {
         transactionStartStamp.set(null);
+        transactionLastNowStamp.set(null);
+    }
+    
+    public static class StampClearSync implements Synchronization {
+        public void afterCompletion(int status) {
+            TransactionUtil.clearTransactionStamps();
+        }
+        
+        public void beforeCompletion() {            
+        }
     }
 }
