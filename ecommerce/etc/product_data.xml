@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity-engine-xml>
   <Facility facilityId="WebStoreWarehouse" facilityTypeId="WAREHOUSE" facilityName="Web Store Warehouse" description="Warehouse exclusively for the Web Store "/>
+  <ContactMech contactMechId="9200" contactMechTypeId="POSTAL_ADDRESS"/>
+  <ContactMech contactMechId="9201" contactMechTypeId="TELECOM_NUMBER"/>
+  <PostalAddress contactMechId="9200" toName="Company XYZ" attnName="ZJAA" address1="2003 Open Blvd" city="Open City" postalCode="99999" countryGeoId="USA" stateProvinceGeoId="CA"/>
+  <TelecomNumber contactMechId="9201" areaCode="111" contactNumber="555-5555"/>
+  <FacilityContactMech facilityId="WebStoreWarehouse" contactMechId="9200" fromDate="2001-01-01 12:00:00.0"/>
+  <FacilityContactMech facilityId="WebStoreWarehouse" contactMechId="9201" fromDate="2001-01-01 12:00:00.0"/>
+  <FacilityContactMechPurpose facilityId="WebStoreWarehouse" contactMechId="9200" contactMechPurposeTypeId="SHIPPING_LOCATION" fromDate="2001-01-01 12:00:00.0"/>
+  <FacilityContactMechPurpose facilityId="WebStoreWarehouse" contactMechId="9200" contactMechPurposeTypeId="SHIP_ORIG_LOCATION" fromDate="2001-01-01 12:00:00.0"/>
+  <FacilityContactMechPurpose facilityId="WebStoreWarehouse" contactMechId="9201" contactMechPurposeTypeId="PHONE_SHIPPING" fromDate="2001-01-01 12:00:00.0"/>
+  <FacilityContactMechPurpose facilityId="WebStoreWarehouse" contactMechId="9201" contactMechPurposeTypeId="PHONE_SHIP_ORIG" fromDate="2001-01-01 12:00:00.0"/>
 
   <WebSite webSiteId="WebStore" siteName="eCommerce Web Site"/>
   <WebSite webSiteId="OrderEntry" siteName="Order Entry Web Site"/>
