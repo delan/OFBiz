@@ -65,6 +65,7 @@
               </ofbiz:if>
               <ofbiz:unless name="workEffort">
                 <form action="<ofbiz:url>/createtask</ofbiz:url>" method=POST style='margin: 0;'>
+                <input type='hidden' name='quickAssignPartyId' value='<ofbiz:entityfield field="partyId" attribute="userLogin"/>'>
                 <table border='0' cellpadding='2' cellspacing='0'>
                   <input type='hidden' name='workEffortTypeId' value='TASK'>
                   <ofbiz:if name="workEffortId">
@@ -83,7 +84,7 @@
                   <td width='74%'>
                     <SELECT name='priority'>
                       <OPTION><ofbiz:inputvalue field="priority" param="priority" entityAttr="workEffort" tryEntityAttr="tryEntity"/></OPTION>
-                      <OPTION value=''>--</OPTION>
+                      <OPTION value=''></OPTION>
                       <OPTION>1</OPTION> <OPTION>2</OPTION> <OPTION>3</OPTION>
                       <OPTION>4</OPTION> <OPTION>5</OPTION> <OPTION>6</OPTION>
                       <OPTION>7</OPTION> <OPTION>8</OPTION> <OPTION>9</OPTION>
@@ -96,7 +97,7 @@
                   <td width='74%'>
                     <SELECT name='currentStatusId'>
                       <OPTION value='<ofbiz:entityfield field="statusId" attribute="currentStatusItem" default="CAL_NEEDS_ACTION"/>'><ofbiz:entityfield field="description" attribute="currentStatusItem"/></OPTION>
-                      <OPTION value=''>--</OPTION>
+                      <OPTION value=''></OPTION>
                       <ofbiz:iterator name="statusItem" property="taskStatusItems">
                         <OPTION value='<ofbiz:entityfield field="statusId" attribute="statusItem"/>'><ofbiz:entityfield field="description" attribute="statusItem"/></OPTION>
                       </ofbiz:iterator>

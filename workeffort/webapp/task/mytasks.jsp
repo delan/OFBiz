@@ -43,10 +43,10 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <TD align=left width='40%' >
-            <div class='boxhead'>&nbsp;Current Task List</div>
+            <div class='boxhead'>&nbsp;My Current Task List</div>
           </TD>
           <TD align=right width='60%'>
-            <A href='<ofbiz:url>/tasklist</ofbiz:url>' class='lightbuttontextdisabled'>[Task&nbsp;List]</A>
+            <A href='<ofbiz:url>/mytasks</ofbiz:url>' class='lightbuttontextdisabled'>[Task&nbsp;List]</A>
             <A href='<ofbiz:url>/task</ofbiz:url>' class='lightbuttontext'>[New&nbsp;Task]</A>
           </TD>
         </tr>
