@@ -1,0 +1,159 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<HTML>
+  <HEAD>
+    <TITLE>OFBIZ eCommerce Page Flow</TITLE>
+  </HEAD>
+  <BODY>
+    <TABLE border='1' cellpadding='2' cellspacing='0'>
+      <TR bgcolor='yellow'><TD colspan='4' align=center><H3>OFBIZ eCommerce Page Flow</H3></TD></TR>
+      <TR>
+        <TH>Page Name</TH>
+        <TH>Relmsoft JSP</TH>
+        <TH>Ofbiz JSP</TH>
+        <TH>DONE</TH>
+      </TR>
+      <TR>
+        <TD>Main</TD>
+        <TD>/main.jsp</TD>
+        <TD>/main.jsp</TD>
+        <TD>&nbsp;</TD>
+      </TR>
+      <TR>
+        <TD>Login</TD>
+        <TD>/login.jsp</TD>
+        <TD>/login.jsp</TD>
+        <TD>&nbsp;</TD>
+      </TR>
+      <TR>
+        <TD>Site Map</TD>
+        <TD>/sitemap.jsp</TD>
+        <TD>/</TD>
+        <TD>&nbsp;</TD>
+      </TR>
+      <TR bgcolor='#CCCCFF'><TD colspan='4'><B>Customer/Party</B></TD></TR>
+      <TR>
+        <TD>New User</TD>
+        <TD>/register/newuser.jsp</TD>
+        <TD>/customer</TD>
+        <TD>&nbsp;</TD>
+      </TR>
+      <TR>
+        <TD>View Profile</TD>
+        <TD>/user/viewprofile.jsp</TD>
+        <TD>/customer</TD>
+        <TD>&nbsp;</TD>
+      </TR>
+      <TR>
+        <TD>Edit Profile</TD>
+        <TD>/user/editprofile.jsp & /user/edit*.jsp</TD>
+        <TD>/customer</TD>
+        <TD>&nbsp;</TD>
+      </TR>
+      <TR>
+        <TD>New/Edit Address</TD>
+        <TD>/user/profileeditaddress.jsp & /user/profilenewaddress.jsp</TD>
+        <TD>/customer</TD>
+        <TD>&nbsp;</TD>
+      </TR>
+      <TR>
+        <TD>New/Edit Credit Card</TD>
+        <TD>/user/profileeditcc.jsp & /user/profilenewcc.jsp</TD>
+        <TD>/customer</TD>
+        <TD>&nbsp;</TD>
+      </TR>
+      <TR bgcolor='#CCCCFF'><TD colspan='4'><B>Catalog/Product</B></TD></TR>
+      <TR>
+        <TD>View Category</TD>
+        <TD>/catalog/browse.jsp & /catalog/includes/itemsummary.jsp</TD>
+        <TD>/catalog/category.jsp</TD>
+        <TD>&nbsp;</TD>
+      </TR>
+      <TR>
+        <TD>View Product</TD>
+        <TD>/catalog/details.jsp & /catalog/includes/itemdetails.jsp</TD>
+        <TD>/catalog/product.jsp</TD>
+        <TD>&nbsp;</TD>
+      </TR>
+      <TR>
+        <TD>Keyword Search Snippet</TD>
+        <TD>/catalog/includes/quicksearch.jsp</TD>
+        <TD>/catalog</TD>
+        <TD>&nbsp;</TD>
+      </TR>
+      <TR>
+        <TD>Keyword Search Results</TD>
+        <TD>/catalog/searchresults.jsp</TD>
+        <TD>/catalog</TD>
+        <TD>&nbsp;</TD>
+      </TR>
+      <TR>
+        <TD>Edit Product</TD>
+        <TD>/catalog/EditProduct.jsp</TD>
+        <TD>/admin/catalog</TD>
+        <TD>&nbsp;</TD>
+      </TR>
+      <TR>
+        <TD>Edit Category</TD>
+        <TD>/catalog/EditCategory.jsp</TD>
+        <TD>/admin/catalog</TD>
+        <TD>&nbsp;</TD>
+      </TR>
+      <TR>
+        <TD>Upload Image</TD>
+        <TD>/catalog/UploadImage.jsp</TD>
+        <TD>/admin/catalog</TD>
+        <TD>&nbsp;</TD>
+      </TR>
+      <TR bgcolor='#CCCCFF'><TD colspan='4'><B>Order</B></TD></TR>
+      <TR>
+        <TD>Shopping Cart</TD>
+        <TD>/shoppingcart.jsp</TD>
+        <TD>/order</TD>
+        <TD>&nbsp;</TD>
+      </TR>
+      <TR>
+        <TD>Mini Cart Long</TD>
+        <TD>/includes/minishoppingcart.jsp</TD>
+        <TD>/order</TD>
+        <TD>&nbsp;</TD>
+      </TR>
+      <TR>
+        <TD>Mini Cart Short</TD>
+        <TD>&nbsp;</TD>
+        <TD>/order</TD>
+        <TD>&nbsp;</TD>
+      </TR>
+      <TR>
+        <TD>Check Out Options</TD>
+        <TD>/order/allcheckoutoptions.jsp</TD>
+        <TD>/order</TD>
+        <TD>&nbsp;</TD>
+      </TR>
+      <TR>
+        <TD>Final Checkout Review</TD>
+        <TD>/order/checkout.jsp</TD>
+        <TD>/order</TD>
+        <TD>&nbsp;</TD>
+      </TR>
+      <TR>
+        <TD>Order Confirmation</TD>
+        <TD>/order/confirmorder.jsp</TD>
+        <TD>/order</TD>
+        <TD>&nbsp;</TD>
+      </TR>
+      <TR>
+        <TD>Order History</TD>
+        <TD>/order/orderhistory.jsp</TD>
+        <TD>/order</TD>
+        <TD>&nbsp;</TD>
+      </TR>
+      <TR>
+        <TD>View Order Details</TD>
+        <TD>/order/orderstatus.jsp</TD>
+        <TD>/order</TD>
+        <TD>&nbsp;</TD>
+      </TR>
+    </TABLE>
+  </BODY>
+</HTML>
