@@ -719,12 +719,16 @@ public class GenericDelegator implements DelegatorInterface {
      *@return    List containing all Generic entities
      */
     public List findAllCache(String entityName, List orderBy) throws GenericEntityException {
-        //TODO: add eca eval calls
+        GenericValue dummyValue = makeValue(entityName, null); 
+        Map ecaEventMap = this.getEcaEntityEventMap(entityName);
+        this.evalEcaRules(EntityEcaHandler.EV_CACHE_CHECK, EntityEcaHandler.OP_FIND, dummyValue, ecaEventMap, false);
+
         List lst = this.getFromAllCache(entityName);
 
         if (lst == null) {
             lst = findAll(entityName, orderBy);
             if (lst != null) {
+                this.evalEcaRules(EntityEcaHandler.EV_CACHE_PUT, EntityEcaHandler.OP_FIND, dummyValue, ecaEventMap, false);
                 this.putInAllCache(entityName, lst);
             }
         }
@@ -757,23 +761,28 @@ public class GenericDelegator implements DelegatorInterface {
      * @return List of GenericValue instances that match the query
      */
     public List findByAnd(String entityName, Map fields, List orderBy) throws GenericEntityException {
-        //TODO: add eca eval calls
         ModelEntity modelEntity = getModelReader().getModelEntity(entityName);
+        GenericValue dummyValue = new GenericValue(modelEntity, fields); 
+        this.evalEcaRules(EntityEcaHandler.EV_VALIDATE, EntityEcaHandler.OP_FIND, dummyValue, null, false);
         return findByAnd(modelEntity, fields, orderBy);
     }
 
     public List findByAnd(ModelEntity modelEntity, Map fields, List orderBy) throws GenericEntityException {
-        //TODO: add eca eval calls
+        GenericValue dummyValue = new GenericValue(modelEntity); 
+        Map ecaEventMap = this.getEcaEntityEventMap(modelEntity.getEntityName());
+
         GenericHelper helper = getEntityHelper(modelEntity);
 
         if (fields != null && !modelEntity.areFields(fields.keySet())) {
             throw new GenericModelException("At least one of the passed fields is not valid: " + fields.keySet().toString());
         }
 
+        this.evalEcaRules(EntityEcaHandler.EV_RUN, EntityEcaHandler.OP_FIND, dummyValue, ecaEventMap, false);
         List list = null;
-
         list = helper.findByAnd(modelEntity, fields, orderBy);
         absorbList(list);
+
+        this.evalEcaRules(EntityEcaHandler.EV_RETURN, EntityEcaHandler.OP_FIND, dummyValue, ecaEventMap, false);
         return list;
     }
 
@@ -785,17 +794,23 @@ public class GenericDelegator implements DelegatorInterface {
      * @return List of GenericValue instances that match the query
      */
     public List findByOr(String entityName, Map fields, List orderBy) throws GenericEntityException {
-        //TODO: add eca eval calls
         ModelEntity modelEntity = getModelReader().getModelEntity(entityName);
+        GenericValue dummyValue = new GenericValue(modelEntity); 
+        Map ecaEventMap = this.getEcaEntityEventMap(modelEntity.getEntityName());
+        this.evalEcaRules(EntityEcaHandler.EV_VALIDATE, EntityEcaHandler.OP_FIND, dummyValue, null, false);
+
         GenericHelper helper = getEntityHelper(entityName);
 
-        if (fields != null && !modelEntity.areFields(fields.keySet()))
+        if (fields != null && !modelEntity.areFields(fields.keySet())) {
             throw new IllegalArgumentException("[GenericDelegator.findByOr] At least of the passed fields is not valid: " + fields.keySet().toString());
+        }
 
+        this.evalEcaRules(EntityEcaHandler.EV_RUN, EntityEcaHandler.OP_FIND, dummyValue, ecaEventMap, false);
         List list = null;
-
         list = helper.findByOr(modelEntity, fields, orderBy);
         absorbList(list);
+
+        this.evalEcaRules(EntityEcaHandler.EV_RETURN, EntityEcaHandler.OP_FIND, dummyValue, ecaEventMap, false);
         return list;
     }
 
@@ -815,14 +830,17 @@ public class GenericDelegator implements DelegatorInterface {
      *@return List of GenericValue instances that match the query
      */
     public List findByAndCache(String entityName, Map fields, List orderBy) throws GenericEntityException {
-        //TODO: add eca eval calls
         ModelEntity modelEntity = getModelReader().getModelEntity(entityName);
+        GenericValue dummyValue = new GenericValue(modelEntity); 
+        Map ecaEventMap = this.getEcaEntityEventMap(modelEntity.getEntityName());
 
+        this.evalEcaRules(EntityEcaHandler.EV_CACHE_CHECK, EntityEcaHandler.OP_FIND, dummyValue, null, false);
         List lst = this.getFromAndCache(modelEntity, fields);
 
         if (lst == null) {
             lst = findByAnd(modelEntity, fields, orderBy);
             if (lst != null) {
+                this.evalEcaRules(EntityEcaHandler.EV_CACHE_PUT, EntityEcaHandler.OP_FIND, dummyValue, null, false);
                 this.putInAndCache(modelEntity, fields, lst);
             }
         }
@@ -925,13 +943,19 @@ public class GenericDelegator implements DelegatorInterface {
      *@return List of GenericValue objects representing the result
      */
     public List findByCondition(String entityName, EntityCondition entityCondition, Collection fieldsToSelect, List orderBy) throws GenericEntityException {
-        //TODO: add eca eval calls
         ModelEntity modelEntity = getModelReader().getModelEntity(entityName);
+        GenericValue dummyValue = new GenericValue(modelEntity); 
+        Map ecaEventMap = this.getEcaEntityEventMap(entityName);
 
+        this.evalEcaRules(EntityEcaHandler.EV_VALIDATE, EntityEcaHandler.OP_FIND, dummyValue, ecaEventMap, false);
         if (entityCondition != null) entityCondition.checkCondition(modelEntity);
+
+        this.evalEcaRules(EntityEcaHandler.EV_RUN, EntityEcaHandler.OP_FIND, dummyValue, ecaEventMap, false);
         GenericHelper helper = getEntityHelper(entityName);
         List list = null;
         list = helper.findByCondition(modelEntity, entityCondition, fieldsToSelect, orderBy);
+
+        this.evalEcaRules(EntityEcaHandler.EV_RETURN, EntityEcaHandler.OP_FIND, dummyValue, ecaEventMap, false);
         absorbList(list);
 
         return list;
@@ -963,16 +987,22 @@ public class GenericDelegator implements DelegatorInterface {
     public EntityListIterator findListIteratorByCondition(String entityName, EntityCondition whereEntityCondition,
             EntityCondition havingEntityCondition, Collection fieldsToSelect, List orderBy, EntityFindOptions findOptions)
             throws GenericEntityException {
-        //TODO: add eca eval calls
+
         ModelEntity modelEntity = getModelReader().getModelEntity(entityName);
+        GenericValue dummyValue = new GenericValue(modelEntity); 
+        Map ecaEventMap = this.getEcaEntityEventMap(entityName);
+        this.evalEcaRules(EntityEcaHandler.EV_VALIDATE, EntityEcaHandler.OP_FIND, dummyValue, ecaEventMap, false);
 
         if (whereEntityCondition != null) whereEntityCondition.checkCondition(modelEntity);
         if (havingEntityCondition != null) havingEntityCondition.checkCondition(modelEntity);
+
+        this.evalEcaRules(EntityEcaHandler.EV_RUN, EntityEcaHandler.OP_FIND, dummyValue, ecaEventMap, false);
         GenericHelper helper = getEntityHelper(entityName);
         EntityListIterator eli = helper.findListIteratorByCondition(modelEntity, whereEntityCondition,
                 havingEntityCondition, fieldsToSelect, orderBy, findOptions);
-
         eli.setDelegator(this);
+
+        this.evalEcaRules(EntityEcaHandler.EV_RETURN, EntityEcaHandler.OP_FIND, dummyValue, ecaEventMap, false);
         return eli;
     }
 
@@ -1055,15 +1085,25 @@ public class GenericDelegator implements DelegatorInterface {
      *@return int representing number of rows effected by this operation
      */
     public int removeByAnd(String entityName, Map fields, boolean doCacheClear) throws GenericEntityException {
-        //TODO: add eca eval calls
-        if (doCacheClear) {
-            // always clear cache before the operation
-            this.clearCacheLine(entityName, fields);
-        }
+        GenericValue dummyValue = makeValue(entityName, fields);
+
+        Map ecaEventMap = this.getEcaEntityEventMap(entityName);
+        this.evalEcaRules(EntityEcaHandler.EV_VALIDATE, EntityEcaHandler.OP_REMOVE, dummyValue, ecaEventMap, false);
+
         ModelEntity modelEntity = getModelReader().getModelEntity(entityName);
         GenericHelper helper = getEntityHelper(entityName);
 
-        return helper.removeByAnd(modelEntity, fields);
+        if (doCacheClear) {
+            // always clear cache before the operation
+            this.evalEcaRules(EntityEcaHandler.EV_CACHE_CLEAR, EntityEcaHandler.OP_REMOVE, dummyValue, ecaEventMap, false);
+            this.clearCacheLine(entityName, fields);
+        }
+
+        this.evalEcaRules(EntityEcaHandler.EV_RUN, EntityEcaHandler.OP_REMOVE, dummyValue, ecaEventMap, false);
+        int num = helper.removeByAnd(modelEntity, dummyValue.getAllFields());
+
+        this.evalEcaRules(EntityEcaHandler.EV_RETURN, EntityEcaHandler.OP_REMOVE, dummyValue, ecaEventMap, false);
+        return num;
     }
 
     /**
