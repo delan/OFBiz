@@ -1,5 +1,5 @@
 /*
- * $Id: PriceServices.java,v 1.1 2003/08/17 18:04:24 ajzeneski Exp $
+ * $Id: PriceServices.java,v 1.2 2003/08/26 21:06:19 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -50,7 +50,7 @@ import org.ofbiz.service.ServiceUtil;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class PriceServices {
@@ -310,13 +310,10 @@ public class PriceServices {
                     // but, no we'll do it the other way, any that have a quantity will always get compared
                     Collection quantityConds = delegator.findByAndCache("ProductPriceCond",
                             UtilMisc.toMap("inputParamEnumId", "PRIP_QUANTITY"));
-
                     if (quantityConds != null && quantityConds.size() > 0) {
                         Iterator quantityCondsIter = quantityConds.iterator();
-
                         while (quantityCondsIter.hasNext()) {
                             GenericValue quantityCond = (GenericValue) quantityCondsIter.next();
-
                             productPriceRuleIds.add(quantityCond.getString("productPriceRuleId"));
                         }
                     }
@@ -324,13 +321,10 @@ public class PriceServices {
                     // by roleTypeId
                     Collection roleTypeIdConds = delegator.findByAndCache("ProductPriceCond",
                             UtilMisc.toMap("inputParamEnumId", "PRIP_ROLE_TYPE"));
-
                     if (roleTypeIdConds != null && roleTypeIdConds.size() > 0) {
                         Iterator roleTypeIdCondsIter = roleTypeIdConds.iterator();
-
                         while (roleTypeIdCondsIter.hasNext()) {
                             GenericValue roleTypeIdCond = (GenericValue) roleTypeIdCondsIter.next();
-
                             productPriceRuleIds.add(roleTypeIdCond.getString("productPriceRuleId"));
                         }
                     }
@@ -342,13 +336,10 @@ public class PriceServices {
                     // by listPrice
                     Collection listPriceConds = delegator.findByAndCache("ProductPriceCond",
                             UtilMisc.toMap("inputParamEnumId", "PRIP_LIST_PRICE"));
-
                     if (listPriceConds != null && listPriceConds.size() > 0) {
                         Iterator listPriceCondsIter = listPriceConds.iterator();
-
                         while (listPriceCondsIter.hasNext()) {
                             GenericValue listPriceCond = (GenericValue) listPriceCondsIter.next();
-
                             productPriceRuleIds.add(listPriceCond.getString("productPriceRuleId"));
                         }
                     }
@@ -358,13 +349,10 @@ public class PriceServices {
                     // by productId
                     Collection productIdConds = delegator.findByAndCache("ProductPriceCond",
                             UtilMisc.toMap("inputParamEnumId", "PRIP_PRODUCT_ID", "condValue", productId));
-
                     if (productIdConds != null && productIdConds.size() > 0) {
                         Iterator productIdCondsIter = productIdConds.iterator();
-
                         while (productIdCondsIter.hasNext()) {
                             GenericValue productIdCond = (GenericValue) productIdCondsIter.next();
-
                             productPriceRuleIds.add(productIdCond.getString("productPriceRuleId"));
                         }
                     }
@@ -373,42 +361,35 @@ public class PriceServices {
                     if (virtualProductId != null) {
                         Collection virtualProductIdConds = delegator.findByAndCache("ProductPriceCond",
                                 UtilMisc.toMap("inputParamEnumId", "PRIP_PRODUCT_ID", "condValue", virtualProductId));
-
                         if (virtualProductIdConds != null && virtualProductIdConds.size() > 0) {
                             Iterator virtualProductIdCondsIter = virtualProductIdConds.iterator();
-
                             while (virtualProductIdCondsIter.hasNext()) {
                                 GenericValue virtualProductIdCond = (GenericValue) virtualProductIdCondsIter.next();
-
                                 productPriceRuleIds.add(virtualProductIdCond.getString("productPriceRuleId"));
                             }
                         }
                     }
 
-                    // by prodCatalogId
-                    Collection prodCatalogIdConds = delegator.findByAndCache("ProductPriceCond",
-                            UtilMisc.toMap("inputParamEnumId", "PRIP_PROD_CLG_ID", "condValue", prodCatalogId));
-
-                    if (prodCatalogIdConds != null && prodCatalogIdConds.size() > 0) {
-                        Iterator prodCatalogIdCondsIter = prodCatalogIdConds.iterator();
-
-                        while (prodCatalogIdCondsIter.hasNext()) {
-                            GenericValue prodCatalogIdCond = (GenericValue) prodCatalogIdCondsIter.next();
-
-                            productPriceRuleIds.add(prodCatalogIdCond.getString("productPriceRuleId"));
+                    // by prodCatalogId - which is optional in certain cases
+                    if (UtilValidate.isNotEmpty(prodCatalogId)) {
+                        Collection prodCatalogIdConds = delegator.findByAndCache("ProductPriceCond",
+                                UtilMisc.toMap("inputParamEnumId", "PRIP_PROD_CLG_ID", "condValue", prodCatalogId));
+                        if (prodCatalogIdConds != null && prodCatalogIdConds.size() > 0) {
+                            Iterator prodCatalogIdCondsIter = prodCatalogIdConds.iterator();
+                            while (prodCatalogIdCondsIter.hasNext()) {
+                                GenericValue prodCatalogIdCond = (GenericValue) prodCatalogIdCondsIter.next();
+                                productPriceRuleIds.add(prodCatalogIdCond.getString("productPriceRuleId"));
+                            }
                         }
                     }
                     
                     // by webSiteId
                     Collection webSiteIdConds = delegator.findByAndCache("ProductPriceCond",
                             UtilMisc.toMap("inputParamEnumId", "PRIP_WEBSITE_ID", "condValue", webSiteId));
-                    
                     if (webSiteIdConds != null && webSiteIdConds.size() > 0) {
                         Iterator webSiteIdCondsIter = webSiteIdConds.iterator();
-                        
                         while (webSiteIdCondsIter.hasNext()) {
                             GenericValue webSiteIdCond = (GenericValue) webSiteIdCondsIter.next();
-                            
                             productPriceRuleIds.add(webSiteIdCond.getString("productPriceRuleId"));
                         }
                     }
@@ -417,13 +398,10 @@ public class PriceServices {
                     if (partyId != null) {
                         Collection partyIdConds = delegator.findByAndCache("ProductPriceCond",
                                 UtilMisc.toMap("inputParamEnumId", "PRIP_PARTY_ID", "condValue", partyId));
-
                         if (partyIdConds != null && partyIdConds.size() > 0) {
                             Iterator partyIdCondsIter = partyIdConds.iterator();
-
                             while (partyIdCondsIter.hasNext()) {
                                 GenericValue partyIdCond = (GenericValue) partyIdCondsIter.next();
-
                                 productPriceRuleIds.add(partyIdCond.getString("productPriceRuleId"));
                             }
                         }
@@ -432,24 +410,19 @@ public class PriceServices {
                     // by currencyUomId
                     Collection currencyUomIdConds = delegator.findByAndCache("ProductPriceCond",
                             UtilMisc.toMap("inputParamEnumId", "PRIP_CURRENCY_UOMID", "condValue", currencyUomId));
-
                     if (currencyUomIdConds != null && currencyUomIdConds.size() > 0) {
                         Iterator currencyUomIdCondsIter = currencyUomIdConds.iterator();
-
                         while (currencyUomIdCondsIter.hasNext()) {
                             GenericValue currencyUomIdCond = (GenericValue) currencyUomIdCondsIter.next();
-
                             productPriceRuleIds.add(currencyUomIdCond.getString("productPriceRuleId"));
                         }
                     }
 
                     productPriceRules = new LinkedList();
                     Iterator productPriceRuleIdsIter = productPriceRuleIds.iterator();
-
                     while (productPriceRuleIdsIter.hasNext()) {
                         String productPriceRuleId = (String) productPriceRuleIdsIter.next();
                         GenericValue productPriceRule = delegator.findByPrimaryKeyCache("ProductPriceRule", UtilMisc.toMap("productPriceRuleId", productPriceRuleId));
-
                         if (productPriceRule == null) continue;
                         productPriceRules.add(productPriceRule);
                     }
@@ -700,12 +673,16 @@ public class PriceServices {
                 compare = 1;
             }
         } else if ("PRIP_PROD_CLG_ID".equals(productPriceCond.getString("inputParamEnumId"))) {
-            compare = prodCatalogId.compareTo(productPriceCond.getString("condValue"));
+            if (prodCatalogId != null) {
+                compare = prodCatalogId.compareTo(productPriceCond.getString("condValue"));
+            } else {
+                // this shouldn't happen because if prodCatalogId is null no PRIP_PROD_CLG_ID prices will be in the list
+                compare = 1;
+            }
         } else if ("PRIP_WEBSITE_ID".equals(productPriceCond.getString("inputParamEnumId"))) {
             compare = webSiteId.compareTo(productPriceCond.getString("condValue"));
         } else if ("PRIP_QUANTITY".equals(productPriceCond.getString("inputParamEnumId"))) {
             Double quantityValue = new Double(quantity);
-
             compare = quantityValue.compareTo(Double.valueOf(productPriceCond.getString("condValue")));
         } else if ("PRIP_PARTY_ID".equals(productPriceCond.getString("inputParamEnumId"))) {
             if (partyId != null) {

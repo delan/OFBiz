@@ -339,7 +339,7 @@
                 location="org.ofbiz.product.price.PriceServices" invoke="calculateProductPrice" auth="false" use-transaction="false">
         <description>Calculate a Product's Price from ProductPriceRules</description>
         <attribute name="product" type="org.ofbiz.entity.GenericValue" mode="IN" optional="false"/>
-        <attribute name="prodCatalogId" type="String" mode="IN" optional="false"/>
+        <attribute name="prodCatalogId" type="String" mode="IN" optional="true"/>
         <attribute name="webSiteId" type="String" mode="IN" optional="false"/>
         <attribute name="partyId" type="String" mode="IN" optional="true"/>
         <attribute name="facilityGroupId" type="String" mode="IN" optional="true"/>
