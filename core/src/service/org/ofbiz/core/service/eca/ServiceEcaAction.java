@@ -79,7 +79,7 @@ public class ServiceEcaAction {
 
         // use the result to update the context fields.
         if (resultToContext) {
-            context.putAll(dctx.getModelService(selfService).makeValid(actionResult, ModelService.IN_PARAM));
+            context.putAll(dctx.getModelService(this.serviceName).makeValid(actionResult, ModelService.OUT_PARAM));
         }
 
         // if we aren't ignoring errors check it here...
