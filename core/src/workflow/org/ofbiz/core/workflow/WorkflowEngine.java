@@ -124,7 +124,7 @@ public class WorkflowEngine implements GenericEngine {
         
         // Set the service dispatcher for the workflow
         try {
-            process.setDispatcher(dispatcher,loader);
+            process.setServiceLoader(loader);
         }
         catch ( WfException e ) {
             throw new GenericServiceException(e.getMessage(),e);

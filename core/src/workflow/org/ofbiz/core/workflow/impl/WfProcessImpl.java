@@ -35,31 +35,41 @@ import org.ofbiz.core.workflow.*;
  *
  *@author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
  *@author     David Ostrovsky (d.ostrovsky@gmx.de)
- *@created    November 15, 2001
- *@version    1.0
+ *@created    December 18, 2001
+ *@version    1.2
  */
 
 public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
     
     private WfRequester requester;
     private WfProcessMgr manager;
-    private List activeSteps;
-    private Map result;
-    
+    private List activeSteps; 
+        
     /**
      * Creates new WfProcessImpl
-     * @param valueObject The GenericValue object of this WfProcess.
-     * @param dataObject The GenericValue object of the stored runtime data.
+     * @param valueObject The GenericValue object of this WfProcess.     
      * @param manager The WfProcessMgr invoking this process.
      */
-    public WfProcessImpl(GenericValue valueObject, GenericValue dataObject, WfProcessMgr manager) throws WfException {
-        super(valueObject,dataObject,null);
-        this.manager = manager;
+    public WfProcessImpl(GenericValue valueObject, WfProcessMgr manager) throws WfException {
+        super(valueObject,null);
+        this.manager = manager;        
         this.requester = null;
-        this.result = new HashMap();
         this.activeSteps = new ArrayList();
     }
     
+    /**
+     * Creates new WfProcessImpl
+     * @param delegator The GenericDelegator to be used with this process
+     * @param workEffortId The WorkEffort ID of this process
+     * @throws WfException
+     */
+    public WfProcessImpl(GenericDelegator delegator, String workEffortId) throws WfException {
+        super(delegator,workEffortId);
+        this.manager = WfFactory.getWfProcessMgr(delegator,packageId,processId);
+        this.requester = null;
+        this.activeSteps = new ArrayList();
+    }
+            
     /**
      * Set the originator of this process.
      * @param newValue The Requestor of this process.
@@ -93,7 +103,7 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
         if (workflowStateType().equals("open.running"))
             throw new AlreadyRunning("Process is already running");
         
-        if ( valueObject.get("defaultStartActivityId") == null )
+        if ( getDefinitionObject().get("defaultStartActivityId") == null )
             throw new CannotStart("Initial activity is not defined");
         
         changeState("open.running");
@@ -101,7 +111,7 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
         // start the first activity (using the defaultStartActivityId of this definition)
         GenericValue start = null;
         try {
-            start = valueObject.getRelatedOne("DefaultStartWorkflowActivity");
+            start = getDefinitionObject().getRelatedOne("DefaultStartWorkflowActivity");
         }
         catch ( GenericEntityException e ) {
             throw new WfException(e.getMessage(),e);
@@ -178,6 +188,7 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
     public Map result() throws WfException, ResultNotAvailable {
         Map resultSig = manager().resultSignature();
         Map results = new HashMap();
+        Map context = processContext();
         if ( resultSig != null ) {
             Set resultKeys = resultSig.keySet();
             Iterator i = resultKeys.iterator();
@@ -206,7 +217,8 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
      * @throws WfException
      */
     public synchronized void receiveResults(WfActivity activity, Map results) throws WfException, InvalidData {
-        context.putAll(results);  // Add the result to the existing result or update existing keys
+        Map context = processContext();
+        context.putAll(results); 
         setSerializedData(context);
     }
     
@@ -263,6 +275,7 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
     // Follows the and-join transition
     private void joinTransition(GenericValue toActivity, GenericValue transition) throws WfException {
         // get all TO transitions to this activity
+        GenericValue dataObject = getRuntimeObject();
         Collection toTrans = null;
         try {
             toTrans = toActivity.getRelated("ToWorkflowTransition");
@@ -313,10 +326,9 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
     
     // Activates an activity object
     private void startActivity(GenericValue value) throws WfException {
-        WfActivity activity = WfFactory.getWfActivity(value,this);
-        activity.setDispatcher(dispatcher,serviceLoader);
-        activity.setProcessContext(context);
-        activeSteps.add(activity); // add to list of active steps
+        WfActivity activity = WfFactory.getWfActivity(value,workEffortId);   
+        activity.setServiceLoader(getServiceLoader());
+        activity.setProcessContext(contextKey());        
         try {
             activity.activate();
         }
@@ -375,7 +387,8 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
     }
     
     // Evaluate the transition condition
-    private boolean evalCondition(String condition) {
+    private boolean evalCondition(String condition) throws WfException {
+        Map context = processContext();
         Interpreter bsh = new Interpreter();
         Object o = null;
         if ( condition == null || condition.equals("") )

@@ -84,7 +84,7 @@ public class ModelService {
      * @param mode Test either mode IN or mode OUT
      * @return true if the validation is successful
      */
-    public boolean validate(Map test, String mode) {
+    public boolean validate(Map test, String mode) {                
         Map requiredInfo = new HashMap();        
         Map optionalInfo = new HashMap();        
         
@@ -103,15 +103,18 @@ public class ModelService {
         }     
                         
         // get the test values
+        Map requiredTest = new HashMap();
         Map optionalTest = new HashMap();
-        if ( test != null ) {
-            Set testSet = test.keySet();         
-            Iterator t = testSet.iterator();
+        if ( test != null )
+            requiredTest.putAll(test);
+        if ( requiredTest != null ) {
+            List keyList = new ArrayList(requiredTest.keySet());            
+            Iterator t = keyList.iterator();
             while ( t.hasNext() ) {
                 Object key = t.next();
-                Object value = test.get(key);              
+                Object value = requiredTest.get(key);              
                 if ( !requiredInfo.containsKey(key) ) {                    
-                    test.remove(key);
+                    requiredTest.remove(key);
                     optionalTest.put(key,value);
                 }
             }

@@ -138,12 +138,29 @@ public interface WfExecutionObject  {
     public Map processContext() throws WfException;
     
     /**
+     * Set the process context
      * @param newValue Set new process data.
      * @throws WfException General workflow exception.
      * @throws InvalidData The data is invalid.
      * @throws UpdateNotAllowed Update the context is not allowed.
      */
     public void setProcessContext(Map newValue) throws WfException, InvalidData, UpdateNotAllowed;
+    
+    /**
+     * Set the process context (with previously stored data)
+     * @param newValue RuntimeData entity key.
+     * @throws WfException General workflow exception.
+     * @throws InvalidData The data is invalid.
+     * @throws UpdateNotAllowed Update the context is not allowed.
+     */
+    public void setProcessContext(String newValue) throws WfException, InvalidData, UpdateNotAllowed;    
+    
+    /**
+     * Get the Runtime Data key (context)
+     * @return String primary key for the runtime (context) data
+     * @throws WfException
+     */
+    public String contextKey() throws WfException;
     
     /**
      * Getter for attribute 'priority'.
@@ -234,6 +251,27 @@ public interface WfExecutionObject  {
      * @return Timestamp of last state change.
      */
     public Timestamp lastStateTime() throws WfException;
+       
+    /**
+     * Gets the GenericValue object of the definition.
+     * @returns GenericValue object of the definition.
+     * @throws WfException
+     */
+    public GenericValue getDefinitionObject() throws WfException;
+    
+    /**
+     * Gets the GenericValue object of the runtime workeffort.
+     * @returns GenericValue object of the runtime workeffort.
+     * @throws WfException
+     */
+    public GenericValue getRuntimeObject() throws WfException;
+    
+    /**
+     * Sets the name of the local dispatcher to be used with this workflow
+     * @param loader The name of the loader
+     * @throws WfException
+     */
+    public void setServiceLoader(String loader) throws WfException;
     
     /**
      * Returns the delegator being used by this workflow
@@ -241,33 +279,6 @@ public interface WfExecutionObject  {
      * @throws WfException
      */
     public GenericDelegator getDelegator() throws WfException;
-    
-    /**
-     * Returns the workflow local dispatcher
-     * @return LocalDispatcher for this workflow
-     * @throws WfException
-     */
-    public ServiceDispatcher getDispatcher() throws WfException;
-    
-    /**
-     * Sets the LocalDispatcher for this workflow
-     * @param dispatcher The LocalDispatcher to be used with this workflow
-     * @param loader The name of the LocalDispatcher to use for the DispatchContext.
-     * @throws WfException
-     */
-    public void setDispatcher(ServiceDispatcher dispatcher, String loader) throws WfException;
-    
-    /**
-     * Gets the GenericValue object of the definition.
-     * @returns GenericValue object of the definition.
-     */
-    public GenericValue getDefinitionObject();
-    
-    /**
-     * Gets the GenericValue object of the runtime workeffort.
-     * @returns GenericValue object of the runtime workeffort.
-     */
-    public GenericValue getRuntimeObject();
     
 } // interface WfExecutionObjectOperations
 

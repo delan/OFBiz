@@ -35,26 +35,42 @@ import org.ofbiz.core.workflow.*;
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
- *@author     David Ostrovsky (d.ostrovsky@gmx.de)
- *@created    November 15, 2001
- *@version    1.0
+ *@author     David Ostrovsky (d.ostrovsky@gmx.de) 
+ *@created    December 18, 2001
+ *@version    1.2
  */
 
 public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity {
     
-    protected WfProcess process;
+    protected String process;
     protected List assignments;
+     
+    /**
+     * Create a new WfActivityImpl
+     * @param value GenericValue object of the WorkflowActivity entity
+     * @param process The WorkEffort ID of the parent process
+     * @throws WfException
+     */
+    public WfActivityImpl(GenericValue value, String process) throws WfException {
+        super(value,process);
+        this.process = process;
+        init();
+    }
     
     /**
-     * Creates new WfActivityImpl
-     * @param valueObject The GenericValue object of this WfActivity.
-     * @param dataObject The GenericValue object of the stored runtime data.
-     * @param process The WfProcess object which created this WfActivity.
+     * Create a new WfActivityImpl
+     * @param value GenericValue object of the WorkflowActivity entity
+     * @param process The WorkEffort ID of the parent process
+     * @throws WfException
      */
-    public WfActivityImpl(GenericValue valueObject, GenericValue dataObject, WfProcess process) throws WfException {
-        super(valueObject,dataObject,process.runtimeKey());
-        this.process = process;
+    public WfActivityImpl(GenericDelegator delegator, String workEffortId) throws WfException {
+        super(delegator,workEffortId);
+        init();
+    }
+            
+    private void init() throws WfException {
         this.assignments = new ArrayList();
+        GenericValue valueObject = getDefinitionObject();
         GenericValue performer = null;
         if ( valueObject.get("performerParticipantId") != null ) {
             try {
@@ -67,8 +83,9 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
         if ( performer != null )
             createAssignments(performer);
     }
-    
+            
     private void createAssignments(GenericValue performer) throws WfException {
+    	GenericValue valueObject = getDefinitionObject();
         boolean assignAll = false;
         if ( valueObject.get("acceptAllAssignments") != null )
             assignAll = valueObject.getBoolean("acceptAllAssignments").booleanValue();
@@ -86,10 +103,10 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
             GenericValue groupType = null;
             try {
                 Map fields1 = UtilMisc.toMap("partyId",performer.getString("partyId"));
-                GenericValue v1 = valueObject.getDelegator().findByPrimaryKey("Party",fields1);
+                GenericValue v1 = getDelegator().findByPrimaryKey("Party",fields1);
                 partyType = v1.getRelatedOne("PartyType");
                 Map fields2 = UtilMisc.toMap("partyTypeId","PARTY_GROUP");
-                groupType = valueObject.getDelegator().findByPrimaryKeyCache("PartyType",fields2);
+                groupType = getDelegator().findByPrimaryKeyCache("PartyType",fields2);
             }
             catch ( GenericEntityException e ) {
                 throw new WfException(e.getMessage(),e);
@@ -99,7 +116,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
                 Collection partyRelations = null;
                 try {
                     Map fields = UtilMisc.toMap("partyIdFrom",performer.getString("partyId"),"partyRelationshipTypeId","GROUP_ROLLUP");
-                    partyRelations = valueObject.getDelegator().findByAnd("PartyRelationship",fields);
+                    partyRelations = getDelegator().findByAnd("PartyRelationship",fields);
                 }
                 catch ( GenericEntityException e ) {
                     throw new WfException(e.getMessage(),e);
@@ -109,7 +126,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
                 Iterator i = partyRelations.iterator();
                 while ( i.hasNext() ) {
                     GenericValue value = (GenericValue) i.next();
-                    assign(WfFactory.getWfResource(valueObject.getDelegator(),null,null,value.getString("partyIdTo"),null),true);
+                    assign(WfFactory.getWfResource(getDelegator(),null,null,value.getString("partyIdTo"),null),true);
                 }
             }
             else {
@@ -123,7 +140,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
             Collection partyRoles = null;
             try {
                 Map fields = UtilMisc.toMap("roleTypeId",performer.getString("roleTypeId"));
-                partyRoles = valueObject.getDelegator().findByAnd("PartyRole",fields);
+                partyRoles = getDelegator().findByAnd("PartyRole",fields);
             }
             catch ( GenericEntityException e ) {
                 throw new WfException(e.getMessage(),e);
@@ -149,7 +166,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
             throw new AlreadyRunning();
         
         // test the activity mode
-        String mode = valueObject.getString("startModeEnumId");
+        String mode = getDefinitionObject().getString("startModeEnumId");
         if ( mode == null )
             throw new CannotStart("Start mode cannot be null");        
         if ( mode.equals("WAM_AUTOMATIC") ) {
@@ -231,7 +248,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
      * @return WfProcess Process to which this activity belong.
      */
     public WfProcess container() throws WfException {
-        return process;
+        return WfFactory.getWfProcess(delegator,process);
     }
     
     /**
@@ -241,7 +258,8 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
      * @throws InvalidData Data is invalid
      */
     public void setResult(Map newResult) throws WfException, InvalidData {
-        context.putAll(newResult);  // Add the result to the existing result or update existing keys
+        Map context = processContext();
+        context.putAll(newResult);  
         setSerializedData(context);
     }
     
@@ -264,6 +282,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
         // Get the results from the signature.
         Map resultSig = container().manager().resultSignature();
         Map results = new HashMap();
+        Map context = processContext();
         if ( resultSig != null ) {
             Set resultKeys = resultSig.keySet();
             Iterator i = resultKeys.iterator();
@@ -303,7 +322,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
     
     // Checks to see if we can complete
     private void checkComplete() throws WfException, CannotComplete {
-        String mode = valueObject.getString("finishModeEnumId");
+        String mode = getDefinitionObject().getString("finishModeEnumId");
         if ( mode == null )
             throw new CannotComplete("Finish mode cannot be null");
         
@@ -323,7 +342,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
     private boolean checkAssignStatus(int type) throws WfException {
         boolean acceptAll = false;
         boolean completeAll = false;
-        
+        GenericValue valueObject = getDefinitionObject();
         if ( valueObject.get("acceptAllAssignments") != null )
             acceptAll = valueObject.getBoolean("acceptAllAssignments").booleanValue();
         if ( valueObject.get("completeAllAssignments") != null )
@@ -364,7 +383,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
             throw new CannotStart(tna.getMessage(),tna);
         }
         // get the type of this activity
-        String type = valueObject.getString("activityTypeEnumId");
+        String type = getDefinitionObject().getString("activityTypeEnumId");
         if ( type == null )
             throw new WfException("Illegal activity type");
         
@@ -386,7 +405,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
     private void runTool() throws WfException {
         Collection tools = null;
         try {
-            tools = valueObject.getRelated("WorkflowActivityTool");
+            tools = getDefinitionObject().getRelated("WorkflowActivityTool");
         }
         catch ( GenericEntityException e ) {
             throw new WfException(e.getMessage(),e);
@@ -433,7 +452,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
     private void runSubFlow() throws WfException {
         GenericValue subFlow = null;
         try {
-            subFlow = valueObject.getRelatedOne("WorkflowActivitySubFlow");
+            subFlow = getDefinitionObject().getRelatedOne("WorkflowActivitySubFlow");
         }
         catch ( GenericEntityException e ) {
             throw new WfException(e.getMessage(),e);
@@ -464,8 +483,8 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
     }
     
     // Invoke the procedure (service) -- This will include sub-workflows
-    private GenericResultWaiter runService(String serviceName, String params) throws WfException {
-        DispatchContext dctx = dispatcher.getLocalContext(serviceLoader);
+    private GenericResultWaiter runService(String serviceName, String params) throws WfException {       
+        DispatchContext dctx = getDispatcher().getLocalContext(getServiceLoader());
         ModelService service = null;
         try {
             service = dctx.getModelService(serviceName);
@@ -482,7 +501,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
         Map ctx = this.actualContext(params);
         GenericResultWaiter waiter = new GenericResultWaiter();
         try {
-            dispatcher.runAsync(serviceLoader,service,ctx,waiter);
+            getDispatcher().runAsync(getServiceLoader(),service,ctx,waiter);
         }
         catch ( GenericServiceException e ) {
             throw new WfException(e.getMessage(),e);
@@ -493,6 +512,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
     // Gets the actual context parameters from the context based on the actual paramters field
     private Map actualContext(String actualParameters) throws WfException {
         Map actualContext = new HashMap();
+        Map context = processContext();
         if ( actualParameters != null ) {
             List params = StringUtil.split(actualParameters,",");
             Iterator i = params.iterator();

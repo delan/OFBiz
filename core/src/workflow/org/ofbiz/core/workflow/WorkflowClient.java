@@ -380,6 +380,8 @@ public class WorkflowClient {
     public static boolean isMemberOfActivity(GenericDelegator delegator, String workEffortId, String partyId, String roleType) {
         if ( partyId == null )
             partyId = "_NA_";
+        if ( roleType == null )
+            roleType = "_NA_";
         
         Collection c = null;
         try {

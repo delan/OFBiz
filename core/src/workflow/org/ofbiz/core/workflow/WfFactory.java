@@ -42,30 +42,26 @@ public class WfFactory {
 
     /** Creates a new {@link WfActivity} instance. 
      * @param value GenericValue object defining this activity.     
-     * @param proc The WfProcess which this activity belongs.    
+     * @param process The WorkEffort key of the parent process
      * @return An instance of the WfActivify Interface
      * @throws WfException
      */
-    public static WfActivity getWfActivity(GenericValue value, WfProcess proc) throws WfException {
-        return getWfActivity(value,null,proc);
-    }
-    
-    /** Creates a new {@link WfActivity} instance. 
-     * @param value GenericValue object defining this activity.
-     * @param data GenericValue object for runtime data.
-     * @param proc The WfProcess which this activity belongs.    
-     * @return An instance of the WfActivify Interface
-     * @throws WfException
-     */
-    public static WfActivity getWfActivity(GenericValue value, GenericValue data, WfProcess proc) throws WfException {
+    public static WfActivity getWfActivity(GenericValue value, String process) throws WfException {
         if ( value == null )
-            throw new WfException("GenericValue object cannot be null");
-        if ( proc == null )
-            throw new WfException("WfProcess cannot be null");
-        return new WfActivityImpl(value,data,proc);
+            throw new WfException("Activity definition value object cannot be null");
+        if ( process == null )
+            throw new WfException("Parent process WorkEffort key cannot be null");
+        return new WfActivityImpl(value,process);
     }
     
-    
+    public static WfActivity getWfActivity(GenericDelegator delegator, String workEffortId) throws WfException {
+        if ( delegator == null )
+            throw new WfException("The delegator object cannot be null");
+        if ( workEffortId == null )
+            throw new WfException("The WorkEffort key cannot be null");
+        return new WfActivityImpl(delegator,workEffortId);
+    }
+           
     /** Creates a new {@link WfAssignment} instance.
      * @throws WfException
      * @return An instance of the WfAssignment Interface
@@ -77,8 +73,7 @@ public class WfFactory {
             throw new WfException("WfResource cannot be null");
         return new WfAssignmentImpl(activity,resource);
     }
-    
-    
+        
     /** Creates a new {@link WfProcess} instance.
      * @param value The GenericValue object for the process definition.
      * @param mgr The WfProcessMgr which is managing this process.
@@ -86,22 +81,19 @@ public class WfFactory {
      * @throws WfException     
      */
     public static WfProcess getWfProcess(GenericValue value, WfProcessMgr mgr) throws WfException {
-       return getWfProcess(value,null,mgr);
-    }
-    
-    /** Creates a new {@link WfProcess} instance.
-     * @param value The GenericValue object for the process definition.
-     * @param data The GenericValue object for the runtime data.
-     * @param mgr The WfProcessMgr which is managing this process.
-     * @return An instance of the WfProcess Interface.
-     * @throws WfException     
-     */
-    public static WfProcess getWfProcess(GenericValue value, GenericValue data, WfProcessMgr mgr) throws WfException {
         if ( value == null )
             throw new WfException("Process definition value object cannot be null");
         if ( mgr == null )
             throw new WfException("WfProcessMgr cannot be null");
-        return new WfProcessImpl(value,data,mgr);
+       return new WfProcessImpl(value,mgr);
+    }
+    
+    public static WfProcess getWfProcess(GenericDelegator delegator, String workEffortId) throws WfException {
+        if ( delegator == null )
+            throw new WfException("The delegator object cannot be null");
+        if ( workEffortId == null )
+            throw new WfException("The WorkEffort key cannot be null");
+        return new WfProcessImpl(delegator,workEffortId);
     }    
     
     /** Creates a new {@link WfProcessMgr} instance.
