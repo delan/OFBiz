@@ -272,26 +272,20 @@
 
     <!-- Copy all files necessary for running IN PLACE (ie: OFBIZ_HOME == .) -->
     <target name="int-deploy" depends="build">
-        <copy file="commonapp/etc/entityengine.properties"
-            toFile="${etc.dir}/entityengine.properties" />
-        <copy file="commonapp/etc/security.properties"
-            toFile="${etc.dir}/security.properties" />
-        <copy file="commonapp/etc/debug.properties"
-            toFile="${etc.dir}/debug.properties" />
-        <copy file="commonapp/etc/cache.properties"
-            toFile="${etc.dir}/cache.properties" />
-        <copy file="commonapp/etc/poolman.xml"
-            toFile="${etc.dir}/poolman.xml" />
-        <copy file="commonapp/etc/jndi.properties"
-            toFile="${etc.dir}/jndi.properties" />
+        <copy file="commonapp/etc/entityengine.properties" toFile="${etc.dir}/entityengine.properties" />
+        <copy file="commonapp/etc/security.properties" toFile="${etc.dir}/security.properties" />
+        <copy file="commonapp/etc/debug.properties" toFile="${etc.dir}/debug.properties" />
+        <copy file="commonapp/etc/cache.properties" toFile="${etc.dir}/cache.properties" />
+        <copy file="commonapp/etc/poolman.xml" toFile="${etc.dir}/poolman.xml" />
+        <copy file="commonapp/etc/jndi.properties" toFile="${etc.dir}/jndi.properties" />
 <!--
         <copy file="commonapp/lib/ofbcommonapp.jar"
             toFile="${lib.dir}/ofbcommonapp.jar" />
 -->
         
-        <copy file="core/lib/ofbcore-share.jar"
-            toFile="${lib.dir}/ofbcore-share.jar" />        
-
+        <copy file="core/lib/ofbcore-share.jar" toFile="${lib.dir}/ofbcore-share.jar" />
+        <copy file="core/lib/ofbcore-rules.jar" toFile="${lib.dir}/ofbcore-rules.jar" />
+        <copy file="core/lib/ofbcore-workflow.jar" toFile="${lib.dir}/ofbcore-workflow.jar" />
     </target>
 
     <target name="ejbdeploy" depends="deploy">
