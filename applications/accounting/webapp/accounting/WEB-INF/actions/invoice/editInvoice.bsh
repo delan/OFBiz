@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -24,19 +24,19 @@
  *@since      2.1
  */
  
- import java.util.*;
- import org.ofbiz.entity.*;
- import org.ofbiz.base.util.*;
- import org.ofbiz.base.util.collections.*;
- import org.ofbiz.accounting.invoice.*;
+import java.util.*;
+import org.ofbiz.entity.*;
+import org.ofbiz.base.util.*;
+import org.ofbiz.base.util.collections.*;
+import org.ofbiz.accounting.invoice.*;
  
- delegator = request.getAttribute("delegator");
- invoiceId = request.getParameter("invoiceId");
- 
- if (invoiceId != null) {
-    invoice = delegator.findByPrimaryKey("Invoice", UtilMisc.toMap("invoiceId", invoiceId));
-    context.put("invoice", invoice);
-    
+delegator = request.getAttribute("delegator");
+invoiceId = request.getParameter("invoiceId");
+
+invoice = delegator.findByPrimaryKey("Invoice", UtilMisc.toMap("invoiceId", invoiceId));
+context.put("invoice", invoice);
+
+if (invoice != null) {
     invoiceItems = invoice.getRelated("InvoiceItem");
     context.put("invoiceItems", invoiceItems);
     
@@ -83,5 +83,5 @@
         context.put("invoiceItemTypes", invoiceItemTypes);  
         context.put("editInvoice", new Boolean(true));  
     }    
- }
+}
    
