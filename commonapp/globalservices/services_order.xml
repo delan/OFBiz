@@ -87,7 +87,7 @@
     </service>
 
     <service name="calcTax" engine="java"
-            location="org.ofbiz.commonapp.order.order.OrderServices" invoke="nullTaxCalc">
+            location="org.ofbiz.commonapp.order.order.OrderServices" invoke="simpleTaxCalc">
         <description>Calc Tax Service</description>
         <attribute name="itemProductList" type="java.util.List" mode="IN"/>
         <attribute name="itemAmountList" type="java.util.List" mode="IN"/>
@@ -96,6 +96,25 @@
         <attribute name="shippingAddress" type="org.ofbiz.core.entity.GenericValue" mode="IN"/>
         <attribute name="orderAdjustments" type="java.util.List" mode="OUT"/>
         <attribute name="itemAdjustments" type="java.util.List" mode="OUT"/>
+    </service>
+
+    <service name="createTaxRate" engine="simple"
+            location="org/ofbiz/commonapp/order/order/TaxRateServices.xml" invoke="createTaxRate">
+        <description>Create a Tax Rate entry</description>
+        <attribute name="stateProvinceGeoId" type="String" mode="IN" optional="false"/>
+        <attribute name="taxCategory" type="String" mode="IN" optional="false"/>
+        <attribute name="taxShipping" type="String" mode="IN" optional="false"/>
+        <attribute name="salesTaxPercentage" type="Double" mode="IN" optional="false"/>
+        <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
+    </service>
+
+    <service name="removeTaxRate" engine="simple"
+            location="org/ofbiz/commonapp/order/order/TaxRateServices.xml" invoke="removeTaxRate">
+        <description>Remove a Tax Rate entry</description>
+        <attribute name="stateProvinceGeoId" type="String" mode="IN" optional="false"/>
+        <attribute name="taxCategory" type="String" mode="IN" optional="false"/>
+        <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
     </service>
 
     <!-- Customer Request Services -->

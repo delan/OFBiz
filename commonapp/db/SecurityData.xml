@@ -46,6 +46,11 @@
   <SecurityPermission description="Delete operations in the Shipping Rate Editor." permissionId="SHIPRATE_DELETE"/>
   <SecurityPermission description="ALL operations in the Shipping Rate Editor." permissionId="SHIPRATE_ADMIN"/>
 
+  <SecurityPermission description="View operations in the Tax Rate Editor." permissionId="TAXRATE_VIEW"/>
+  <SecurityPermission description="Create operations in the Tax Rate Editor." permissionId="TAXRATE_CREATE"/>
+  <SecurityPermission description="Delete operations in the Tax Rate Editor." permissionId="TAXRATE_DELETE"/>
+  <SecurityPermission description="ALL operations in the Tax Rate Editor." permissionId="TAXRATE_ADMIN"/>
+
   <SecurityPermission description="View Payment Information." permissionId="PAY_INFO_VIEW"/>
   <SecurityPermission description="Create Payment Information." permissionId="PAY_INFO_CREATE"/>
   <SecurityPermission description="Update Payment Information." permissionId="PAY_INFO_UPDATE"/>
@@ -72,7 +77,7 @@
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="UTIL_CACHE_EDIT"/>
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="UTIL_CACHE_VIEW"/>
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="SERVICE_INVOKE_ANY"/>
-  
+
   <SecurityGroupPermission groupId="FULLADMIN" permissionId="SERVER_STATS_VIEW"/>
   <SecurityGroupPermission groupId="FULLADMIN" permissionId="DATAFILE_MAINT"/>
   <SecurityGroupPermission groupId="FULLADMIN" permissionId="ENTITY_MAINT"/>
@@ -110,6 +115,11 @@
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="SHIPRATE_DELETE"/>
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="SHIPRATE_VIEW"/>
   <SecurityGroupPermission groupId="FULLADMIN" permissionId="SHIPRATE_ADMIN"/>
+
+  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="TAXRATE_CREATE"/>
+  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="TAXRATE_DELETE"/>
+  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="TAXRATE_VIEW"/>
+  <SecurityGroupPermission groupId="FULLADMIN" permissionId="TAXRATE_ADMIN"/>
 
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="PAY_INFO_CREATE"/>
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="PAY_INFO_DELETE"/>

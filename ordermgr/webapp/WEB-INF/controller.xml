@@ -112,6 +112,23 @@
         <response name="error" type="view" value="shipsetup"/>
     </request-map>
 
+    <request-map uri="taxsetup">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="taxsetup"/>
+    </request-map>
+    <request-map uri="createtaxrate">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createTaxRate"/>
+        <response name="success" type="view" value="taxsetup"/>
+        <response name="error" type="view" value="taxsetup"/>
+    </request-map>
+    <request-map uri="removetaxrate">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="removeTaxRate"/>
+        <response name="success" type="view" value="taxsetup"/>
+        <response name="error" type="view" value="taxsetup"/>
+    </request-map>
+
     <request-map uri="changeDelegator">
         <event type="java" path="org.ofbiz.core.event.CoreEvents" invoke="changeDelegator"/>
         <response name="success" type="view" value="main"/>
@@ -129,5 +146,6 @@
     <view-map name="createnewnote" type="region"/>
 
     <view-map name="shipsetup" type="region"/>
+    <view-map name="taxsetup" type="region"/>
     <!-- end of view mappings -->
 </site-conf>

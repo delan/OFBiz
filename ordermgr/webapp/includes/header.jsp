@@ -48,6 +48,10 @@
           <td class="headerButtonLeft"><a href="<ofbiz:url>/shipsetup</ofbiz:url>" class="headerbuttontext">Ship&nbsp;Rates</a></td>
           <%}%>
 
+          <%if(security.hasEntityPermission("TAXRATE", "_VIEW", session)) {%>
+          <td class="headerButtonLeft"><a href="<ofbiz:url>/taxsetup</ofbiz:url>" class="headerbuttontext">Tax&nbsp;Rates</a></td>
+          <%}%>
+
           <td width="90%" align=center class='headerCenter'>&nbsp;</td>
 
           <ofbiz:unless name="userLogin">
