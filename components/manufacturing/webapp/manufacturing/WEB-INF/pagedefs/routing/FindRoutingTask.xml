@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<page>
-    <template>main</template>
-    <property name="titleProperty">PageTitleFindRoutingTask</property>
-    <property name="headerItem">routing</property>   
-    <property name="tabButtonItem">routingTask</property>
-    <content-action name="/routing/FindRoutingTask.bsh"/> 
-</page>
