@@ -376,6 +376,7 @@
 		    	<filter-list-by-date list-name="roleCategories" valid-date-name="nowTimestamp" from-field-name="roleFromDate" thru-field-name="roleThruDate"/>
     		</then>
         </if>
+        <log level="verbose" message="Checking category permission, roleCategories=${roleCategories}"/>
     	<if>
     		<condition>
     			<not>
@@ -389,6 +390,7 @@
     			</not>
     		</condition>
     		<then>
+		        <log level="verbose" message="Permission check failed, user does not have permission"/>
     			<add-error><fail-message message="Security Error: to run ${callingMethodName} you must have the CATALOG_${checkAction} or CATALOG_ADMIN permission or have the CATALOG_ROLE_${checkAction} permission and be associated with a category containing this category."/></add-error>
     		</then>
         </if>
