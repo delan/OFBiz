@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      2.2
 -->
 
@@ -62,7 +62,7 @@
                 <#list orderItemList as orderItem>
                   <tr><td colspan="8"><hr class='sepbar'></td></tr>
                   <tr>
-                    <#assign orderItemType = orderItem.getRelatedOne("OrderItemType")>
+                    <#assign orderItemType = orderItem.getRelatedOne("OrderItemType")?if_exists>
                     <#assign productId = orderItem.productId?if_exists>
                     <#if productId?exists && productId == "shoppingcart.CommentLine">
                       <td colspan="1" valign="top">    
@@ -73,8 +73,10 @@
                         <div class="tabletext">
                           <#if productId?exists>
                             ${orderItem.productId?default("N/A")} - ${orderItem.itemDescription?if_exists}
-                          <#else>
+                          <#elseif orderItemType?exists>
                             ${orderItemType.description} - ${orderItem.itemDescription?if_exists}
+                          <#else>
+                            ${orderItem.itemDescription?if_exists}
                           </#if>
                         </div>
                         <#if productId?exists>

@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      3.0
  */
 
@@ -82,6 +82,7 @@ if (UtilValidate.isNotEmpty(shipmentId)) {
         context.put("originPostalAddress", shipment.getRelatedOne("OriginPostalAddress"));
         context.put("destinationPostalAddress", shipment.getRelatedOne("DestinationPostalAddress"));
         context.put("shipmentPackages", shipment.getRelated("ShipmentPackage", null, UtilMisc.toList("shipmentPackageSeqId")));
+        context.put("shipmentRoutes", shipment.getRelated("ShipmentRouteSegment", null, UtilMisc.toList("shipmentRouteSegmentId")));
         context.put("shipment", shipment);
         context.put("shipmentId", shipmentId);
         

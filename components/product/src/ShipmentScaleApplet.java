@@ -1,5 +1,5 @@
 /*
- * $Id: ShipmentScaleApplet.java,v 1.2 2003/09/11 02:16:05 ajzeneski Exp $
+ * $Id: ShipmentScaleApplet.java,v 1.3 2003/09/11 03:10:07 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -45,7 +45,7 @@ import netscape.javascript.JSObject;
  * ShipmentScaleApplet - Applet for reading weight from a scale and input into the browser
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      3.0
  */
 public class ShipmentScaleApplet extends Applet implements SerialPortEventListener, CommPortOwnershipListener {
@@ -203,7 +203,11 @@ public class ShipmentScaleApplet extends Applet implements SerialPortEventListen
     }
     
     private void sendFakeMessage() throws IOException {
-        setWeight("5");
+        String weight = this.getParameter("fakeWeight");
+        if (weight == null) {
+            weight = "5";
+        }
+        setWeight(weight);
     }
     
     // calls the setWeight(weight) JavaScript function on the current page
