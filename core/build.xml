@@ -68,7 +68,7 @@
         <property name="api-jars3"     value="${bsh.jar}:${axis.jar}:${clutil.jar}:${wsdl4j.jar}:${oro.jar}" />
         <property name="api-jars"      value="${api-jars1}:${api-jars2}:${api-jars3}" />
         
-        <property name="classpath"     value="${env.CLASSPATH}:${api-jars}" />
+        <property name="classpath"     value="${api-jars}:${env.CLASSPATH}" />
         <echo message="classpath: ${classpath}" />
     </target>
 
