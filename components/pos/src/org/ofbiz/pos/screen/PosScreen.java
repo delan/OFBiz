@@ -249,7 +249,7 @@ public class PosScreen extends NavigationHelper implements Runnable, DialogCallb
     public void run() {
         while (monitorRunning) {
             if (!isLocked && (System.currentTimeMillis() - lastActivity) > MAX_INACTIVITY) {
-                this.setLock(true);
+                this.showPage("main/pospanel").setLock(true);                
             }
             try {
                 Thread.sleep(5000);
