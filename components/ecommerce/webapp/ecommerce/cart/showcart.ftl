@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.29 $
+ *@version    $Revision: 1.30 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -69,6 +69,11 @@ function addToList() {
 function gwAll(e) {
     var cform = document.cartform;
     var len = cform.elements.length;
+    var selectedValue = e.value;
+    if (selectedValue == "") {
+        return;
+    }
+    
     var cartSize = ${shoppingCartSize};
     var passed = 0;
     for (var i = 0; i < len; i++) {
@@ -76,7 +81,6 @@ function gwAll(e) {
         var ename = element.name;
         var sname = ename.substring(0,16);
         if (sname == "option^GIFT_WRAP") {
-            var selectedValue = e.value;
             var options = element.options;
             var olen = options.length;
             var matching = -1;
@@ -89,7 +93,7 @@ function gwAll(e) {
             }
         }
     }
-    if (cartSize > passed) {
+    if (cartSize > passed && selectedValue != "NO^") {
         alert("Selected Gift Wrap is not avaiable for all items. The items which are available have been selected, the others remain unchanged.");
     }
     cform.submit();
