@@ -209,13 +209,12 @@ and special objects whose names are defined in the simple-method attributes.
     field-name CDATA #REQUIRED
     result-name CDATA #IMPLIED
 >
-<!-- TODO: handle field-to-field operation -->
 <!ELEMENT field-to-field EMPTY>
 <!ATTLIST field-to-field
     map-name CDATA #REQUIRED
     field-name CDATA #REQUIRED
-    map-name CDATA #IMPLIED
-    field-name CDATA #IMPLIED
+    to-map-name CDATA #IMPLIED
+    to-field-name CDATA #IMPLIED
 >
 
 <!-- TODO: handle if-* operations -->

@@ -420,6 +420,8 @@ public class SimpleMethod {
                     methodOperations.add(new FieldToRequest(curOperElem, this));
                 } else if ("field-to-session".equals(nodeName)) {
                     methodOperations.add(new FieldToSession(curOperElem, this));
+                } else if ("field-to-field".equals(nodeName)) {
+                    methodOperations.add(new FieldToField(curOperElem, this));
                 } else {
                     Debug.logWarning("Operation element \"" + nodeName + "\" no recognized");
                 }
