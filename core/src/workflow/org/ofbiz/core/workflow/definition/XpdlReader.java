@@ -498,10 +498,7 @@ public class XpdlReader {
         
         // ExtendedAttributes?
         workflowProcessValue.set("defaultStartActivityId", getExtendedAttributeValue(workflowProcessElement, "defaultStartActivityId", workflowProcessValue.getString("defaultStartActivityId")));        
-        workflowProcessValue.set("sourceReferenceField", getExtendedAttributeValue(workflowProcessElement, "sourceReferenceField", "sourceReferenceId"));        
-        workflowProcessValue.set("adminEmailList", getExtendedAttributeValue(workflowProcessElement, "adminEmailList", ""));
-        workflowProcessValue.set("processInitiateUrl", getExtendedAttributeValue(workflowProcessElement, "initateUrl", ""));
-        workflowProcessValue.set("processTaskUrl", getExtendedAttributeValue(workflowProcessElement, "taskUrl", ""));
+        workflowProcessValue.set("sourceReferenceField", getExtendedAttributeValue(workflowProcessElement, "sourceReferenceField", "sourceReferenceId"));                               
     }
 
     // ----------------------------------------------------------------
@@ -1043,7 +1040,7 @@ public class XpdlReader {
     }
 
     protected void readApplications(List applications, String packageId, String packageVersion, String processId,
-        String processVersion) throws DefinitionParserException {
+            String processVersion) throws DefinitionParserException {
         if (applications == null || applications.size() == 0)
             return;
         Iterator applicationsIter = applications.iterator();
@@ -1075,7 +1072,7 @@ public class XpdlReader {
     }
 
     protected void readDataFields(List dataFields, String packageId, String packageVersion, String processId,
-        String processVersion) throws DefinitionParserException {
+            String processVersion) throws DefinitionParserException {
         if (dataFields == null || dataFields.size() == 0)
             return;
         Iterator dataFieldsIter = dataFields.iterator();
@@ -1087,13 +1084,14 @@ public class XpdlReader {
             values.add(dataFieldValue);
 
             String dataFieldId = dataFieldElement.getAttribute("Id");
+            String dataFieldName = dataFieldElement.getAttribute("Name");
 
             dataFieldValue.set("packageId", packageId);
             dataFieldValue.set("packageVersion", packageVersion);
             dataFieldValue.set("processId", processId);
             dataFieldValue.set("processVersion", processVersion);
             dataFieldValue.set("dataFieldId", dataFieldId);
-            dataFieldValue.set("dataFieldName", dataFieldElement.getAttribute("Name"));
+            dataFieldValue.set("dataFieldName", dataFieldName == null ? dataFieldId : dataFieldName);
 
             // IsArray attr
             dataFieldValue.set("isArray", ("TRUE".equals(dataFieldElement.getAttribute("IsArray")) ? "Y" : "N"));
