@@ -31,6 +31,7 @@ import java.util.*;
  *
  * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
+ * @author     <a href="mailto:gielen@aixcept.de">Rene Gielen</a> 
  * @version    $Revision$
  * @since      2.0
  */
@@ -421,7 +422,19 @@ public class ObjectType {
                     try {
                         return java.sql.Date.valueOf(str);
                     } catch (Exception e) {
-                        throw new GeneralException("Could not convert " + str + " to " + type + ": ", e);
+                        try {
+                            DateFormat df = null;
+                            if (locale != null) {
+                                df = DateFormat.getDateInstance(DateFormat.SHORT, locale);
+                            } else {
+                                df = DateFormat.getDateInstance(DateFormat.SHORT);
+                            }
+                            Date fieldDate = df.parse(str);
+
+                            return new java.sql.Date(fieldDate.getTime());
+                        } catch (ParseException e1) {
+                            throw new GeneralException("Could not convert " + str + " to " + type + ": ", e);
+                        }
                     }
                 } else {
                     try {
@@ -438,7 +451,19 @@ public class ObjectType {
                     try {
                         return java.sql.Time.valueOf(str);
                     } catch (Exception e) {
-                        throw new GeneralException("Could not convert " + str + " to " + type + ": ", e);
+                        try {
+                            DateFormat df = null;
+                            if (locale != null) {
+                                df = DateFormat.getTimeInstance(DateFormat.SHORT, locale);
+                            } else {
+                                df = DateFormat.getTimeInstance(DateFormat.SHORT);
+                            }
+                            Date fieldDate = df.parse(str);
+
+                            return new java.sql.Time(fieldDate.getTime());
+                        } catch (ParseException e1) {
+                            throw new GeneralException("Could not convert " + str + " to " + type + ": ", e);
+                        }
                     }
                 } else {
                     try {
@@ -455,7 +480,19 @@ public class ObjectType {
                     try {
                         return java.sql.Timestamp.valueOf(str);
                     } catch (Exception e) {
-                        throw new GeneralException("Could not convert " + str + " to " + type + ": ", e);
+                        try {
+                            DateFormat df = null;
+                            if (locale != null) {
+                                df = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT, locale);
+                            } else {
+                                df = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
+                            }
+                            Date fieldDate = df.parse(str);
+
+                            return new java.sql.Timestamp(fieldDate.getTime());
+                        } catch (ParseException e1) {
+                            throw new GeneralException("Could not convert " + str + " to " + type + ": ", e);
+                        }
                     }
                 } else {
                     try {
