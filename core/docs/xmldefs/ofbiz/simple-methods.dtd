@@ -332,12 +332,14 @@ engine and facilitate related operations.
     value-name CDATA #REQUIRED
     entity-name CDATA #REQUIRED
     map-name CDATA #REQUIRED
+    use-cache ( true | false ) "false"
 >
 <!ELEMENT find-by-and EMPTY>
 <!ATTLIST find-by-and
     list-name CDATA #REQUIRED
     entity-name CDATA #REQUIRED
     map-name CDATA #REQUIRED
+    use-cache ( true | false ) "false"
 >
 
 <!ELEMENT make-value EMPTY>

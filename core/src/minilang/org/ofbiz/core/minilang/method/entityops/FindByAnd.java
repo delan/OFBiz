@@ -45,17 +45,24 @@ public class FindByAnd extends MethodOperation {
     String listName;
     String entityName;
     String mapName;
+    boolean useCache;
 
     public FindByAnd(Element element, SimpleMethod simpleMethod) {
         super(element, simpleMethod);
         listName = element.getAttribute("list-name");
         entityName = element.getAttribute("entity-name");
         mapName = element.getAttribute("map-name");
+
+        useCache = "true".equals(element.getAttribute("use-cache"));
     }
 
     public boolean exec(MethodContext methodContext) {
         try {
-            methodContext.putEnv(listName, methodContext.getDelegator().findByAnd(entityName, (Map) methodContext.getEnv(mapName)));
+            if (this.useCache) {
+                methodContext.putEnv(listName, methodContext.getDelegator().findByAndCache(entityName, (Map) methodContext.getEnv(mapName)));
+            } else {
+                methodContext.putEnv(listName, methodContext.getDelegator().findByAnd(entityName, (Map) methodContext.getEnv(mapName)));
+            }
         } catch (GenericEntityException e) {
             Debug.logError(e);
             String errMsg = "ERROR: Could not complete the " + simpleMethod.getShortDescription() + " process [problem finding the " + entityName + " entity: " + e.getMessage() + "]";
