@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.73 $
+ * @version    $Revision: 1.74 $
  */
 -->
 
@@ -1544,6 +1544,7 @@
       <field name="productTypeId" type="id"></field>
       <field name="primaryProductCategoryId" type="id"></field>
       <field name="manufacturerPartyId" type="id"></field>
+      <field name="facilityId" type="id"></field>
       <field name="introductionDate" type="date-time"></field>
       <field name="supportDiscontinuationDate" type="date-time"></field>
       <field name="salesDiscontinuationDate" type="date-time"></field>
@@ -1607,6 +1608,9 @@
       </relation>
       <relation type="many" rel-entity-name="ProductKeyword">
         <key-map field-name="productId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_FACILITY" rel-entity-name="Facility">
+        <key-map field-name="facilityId"/>
       </relation>
       <relation type="one" fk-name="PROD_MFG_PARTY" title="Manufacturer" rel-entity-name="Party">
         <key-map field-name="manufacturerPartyId" rel-field-name="partyId"/>
@@ -2456,6 +2460,9 @@
         <key-map field-name="facilityId"/>
       </relation>
       <relation type="many" rel-entity-name="InventoryItem">
+        <key-map field-name="facilityId"/>
+      </relation>
+      <relation type="many" rel-entity-name="Product">
         <key-map field-name="facilityId"/>
       </relation>
       <relation type="many" rel-entity-name="Container">
