@@ -24,7 +24,7 @@
  *@since      2.1
 -->
 
-<#assign cart = context.shoppingCart>
+<#assign cart = context.shoppingCart?if_exists>
 
 <form method="post" name="checkoutInfoForm" action="<@ofbizUrl>/checkout</@ofbizUrl>" style='margin:0;'>
   <table width="100%" border="0" cellpadding='0' cellspacing='0'>
@@ -56,14 +56,13 @@
                           </td>
                           <td valign="top">        
                             <#assign shipmentMethodType = carrierShipmentMethod.getRelatedOneCache("ShipmentMethodType")>
-                            <div class='tabletext'>
-                              ${shipmentMethodType.description?if_exists}&nbsp;
-                              <#if carrierShipmentMethod.partyId != "_NA_">${carrierShipmentMethod.partyId?if_exists}</#if>
+                            <div class='tabletext'>                              
+                              <#if carrierShipmentMethod.partyId != "_NA_">${carrierShipmentMethod.partyId?if_exists}&nbsp;</#if>${shipmentMethodType.description?if_exists}
                             </div>                           
                           </td>
                         </tr>
                       </#list>
-                      <#if carrierShipmentMethodList?exists || carrierShipmentMethodList?size == 0>                     
+                      <#if !carrierShipmentMethodList?exists || carrierShipmentMethodList?size == 0>                     
                         <tr>
                           <td width='1%' valign="top">
                             <input type='radio' name='shipping_method' value="Default" checked>
@@ -81,7 +80,7 @@
                       </tr>
                       <tr>
                         <td valign="top">
-                          <input type='radio' name="may_split' value='false' <#if !cart.getMaySplit()>checked</#if>>
+                          <input type='radio' <#if !cart.getMaySplit()?default(false)>checked</#if> name='may_split' value='false'>
                         </td>
                         <td valign="top">
                           <div class="tabletext">Please wait until the entire order is ready before shipping.</div>
@@ -89,7 +88,7 @@
                       </tr>
                       <tr>
                         <td valign="top">
-                          <input type='radio' name='may_split' value='true' <#if cart.getMaySplit()>checked</#if>>
+                          <input <#if cart.getMaySplit()?default(false)>checked</#if> type='radio' name='may_split' value='true'>
                         </td>
                         <td valign="top">
                           <div class="tabletext">Please ship items I ordered as they become available (you may incur additional shipping charges).</div>
@@ -111,8 +110,8 @@
                         <td colspan="2">
                           <div>
                             <span class="head2"><b>Is This a Gift?</b></span>
-                            <input type='radio' name='is_gift' value='true' <#if cart.getIsGift()>checked</#if>><span class='tabletext'>Yes</span>
-                            <input type='radio' name='is_gift' value='false' <#if !cart.getIsGift()>checked</#if><span class='tabletext'>No</span>
+                            <input type='radio' name='is_gift' value='true' <#if cart.getIsGift()?default(false)>checked</#if>><span class='tabletext'>Yes</span>
+                            <input type='radio' name='is_gift' value='false' <#if !cart.getIsGift()?default(false)>checked</#if><span class='tabletext'>No</span>
                           </div>
                         </td>
                       </tr>
@@ -188,18 +187,18 @@
                            <#assign shippingAddress = shippingContactMech.getRelatedOne("PostalAddress")>
                            <tr>
                              <td align="left" valign="top" width="1%" nowrap>
-                               <input type="radio" name="shipping_contact_mech_id" value="${shippingAddress.contactMechId}" <#if cart.getShippingContactMechId() == shippingAddress.contactMechId>checked</#if>>        
+                               <input type="radio" name="shipping_contact_mech_id" value="${shippingAddress.contactMechId}" <#if cart.getShippingContactMechId()?default("") == shippingAddress.contactMechId>checked</#if>>        
                              </td>
                              <td align="left" valign="top" width="99%" nowrap>
                                <div class="tabletext">
-                                 <#if shippingAddress.toName?exists><b>To:</b>&nbsp;${shippingAddress.toName}<br></#if>
-                                 <#if shippingAddress.attnName?exists><b>Attn:</b>&nbsp;${shippingAddress.attnName}<br></#if>
-                                 <#if shippingAddress.address1?exists>${shippingAddress.address1}<br></#if>
-                                 <#if shippingAddress.address2?exists>${shippingAddress.address2}<br></#if>
-                                 <#if shippingAddress.city?exists>${shippingAddress.city}</#if>
-                                 <#if shippingAddress.stateProvidenceGeoId?exists><br>${shippingAddress.stateProvidenceId}</#if>
-                                 <#if shippingAddress.postalCode?exists><br>${shippingAddress.postalCode}</#if>
-                                 <#if shippingAddress.countryGeoId?exists><br>${shippingAddress.countryGeoId}</#if>                                                            
+                                 <#if shippingAddress.toName?has_content><b>To:</b>&nbsp;${shippingAddress.toName}<br></#if>
+                                 <#if shippingAddress.attnName?has_content><b>Attn:</b>&nbsp;${shippingAddress.attnName}<br></#if>
+                                 <#if shippingAddress.address1?has_content>${shippingAddress.address1}<br></#if>
+                                 <#if shippingAddress.address2?has_content>${shippingAddress.address2}<br></#if>
+                                 <#if shippingAddress.city?has_content>${shippingAddress.city}</#if>
+                                 <#if shippingAddress.stateProvinceGeoId?has_content><br>${shippingAddress.stateProvinceGeoId}</#if>
+                                 <#if shippingAddress.postalCode?has_content><br>${shippingAddress.postalCode}</#if>
+                                 <#if shippingAddress.countryGeoId?has_content><br>${shippingAddress.countryGeoId}</#if>                                                            
                                  <a href="<@ofbizUrl>/editcontactmech?DONE_PAGE=checkoutoptions&contactMechId=${shippingAddress.contactMechId}</@ofbizUrl>" class="buttontext">[Update]</a>
                                </div>
                              </td>
