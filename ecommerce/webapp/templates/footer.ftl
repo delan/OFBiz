@@ -27,8 +27,10 @@
 
 <br><br>
 <div align="center">
-  <A href="http://www.ofbiz.org"><img src="/images/ofbiz_powered.gif" width="88" height="31" border="0" alt="Powered By OFBiz"></A>  
-  <A href="http://sf.net/projects/ofbiz"><IMG src="http://sourceforge.net/sflogo.php?group_id=27173" width="88" height="31" border="0" alt="OFBiz Hosted By SourceForge"></A>
+  <a href="http://www.ofbiz.org"><img src="/images/ofbiz_powered.gif" width="88" height="31" border="0" alt="Powered By OFBiz"></a>  
+  <a href="http://sf.net/projects/ofbiz"><img src="http://sourceforge.net/sflogo.php?group_id=27173" width="88" height="31" border="0" alt="OFBiz Hosted By SourceForge"/></a>
+  <a href="http://freemarker.org/"><img alt="Powered by FreeMarker" border="0" height="31" src="http://freemarker.org/images/poweredby_sq_simple.png" width="88"/></a>
+  <a href="http://validator.w3.org/check/referer"><img border="0" src="http://www.w3.org/Icons/valid-html401" alt="Valid HTML 4.01!" height="31" width="88"/></a>
 </div>
 
 </body>
