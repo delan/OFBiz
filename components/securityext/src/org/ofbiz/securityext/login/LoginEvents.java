@@ -1,5 +1,5 @@
 /*
- * $Id: LoginEvents.java,v 1.20 2004/07/09 17:03:28 jonesde Exp $
+ * $Id: LoginEvents.java,v 1.21 2004/07/09 17:50:56 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -67,7 +67,7 @@ import org.ofbiz.service.ModelService;
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="">Dustin Caldwell</a>
  * @author     <a href="mailto:therrick@yahoo.com">Tom Herrick</a>
- * @version    $Revision: 1.20 $
+ * @version    $Revision: 1.21 $
  * @since      2.0
  */
 public class LoginEvents {
@@ -756,7 +756,7 @@ public class LoginEvents {
         }
         // refresh the login object -- maybe cache this?
         try {
-            userLogin.refresh();
+            userLogin.refreshFromCache();
         } catch (GenericEntityException e) {
             Debug.logWarning(e, "Unable to refresh UserLogin", module);
         }
