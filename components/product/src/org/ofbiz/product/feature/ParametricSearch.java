@@ -1,5 +1,5 @@
 /*
- * $Id: ParametricSearch.java,v 1.3 2003/10/18 05:13:07 jonesde Exp $
+ * $Id: ParametricSearch.java,v 1.4 2003/10/25 04:15:19 jonesde Exp $
  *
  *  Copyright (c) 2001 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -31,8 +31,10 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
@@ -45,7 +47,7 @@ import org.ofbiz.product.product.KeywordSearch;
  *  Utilities for parametric search based on features.
  *
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.1
  */
 public class ParametricSearch {
@@ -97,14 +99,20 @@ public class ParametricSearch {
     }
     
     public static Map makeFeatureIdByTypeMap(ServletRequest request) {
+        Map parameters = UtilHttp.getParameterMap((HttpServletRequest) request);
+        return makeFeatureIdByTypeMap(parameters);
+    }
+    
+    public static Map makeFeatureIdByTypeMap(Map parameters) {
         Map featureIdByType = new HashMap();
+        if (parameters == null) return featureIdByType;
         
-        Enumeration parameterNames = request.getParameterNames();
-        while (parameterNames.hasMoreElements()) {
-            String parameterName = (String) parameterNames.nextElement();
+        Iterator parameterNameIter = parameters.keySet().iterator();
+        while (parameterNameIter.hasNext()) {
+            String parameterName = (String) parameterNameIter.next();
             if (parameterName.startsWith("pft_")) {
                 String productFeatureTypeId = parameterName.substring(4);
-                String productFeatureId = request.getParameter(parameterName);
+                String productFeatureId = (String) parameters.get(parameterName);
                 if (productFeatureId != null && productFeatureId.length() > 0) {
                     featureIdByType.put(productFeatureTypeId, productFeatureId);
                 }

@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.7 $
+ *@version    $Revision: 1.8 $
  *@since      2.1
 */
 
@@ -32,118 +32,12 @@ import org.ofbiz.product.product.*;
 module = "keywordsearch.bsh";
 delegator = request.getAttribute("delegator");
 
-contentPathPrefix = CatalogWorker.getContentPathPrefix(request);
 requestParams = UtilHttp.getParameterMap(request);
-
-// clear search? by default yes, but if the clearSearch parameter is N then don't
-clearSearchString = requestParams.get("clearSearch");
-if (!"N".equals(clearSearchString)) {
-    ProductSearch.searchClear(session);
-} else {
-    removeConstraint = requestParams.get("removeConstraint");
-    if (UtilValidate.isNotEmpty(removeConstraint)) {
-        try {
-            ProductSearch.searchRemoveConstraint(Integer.parseInt(removeConstraint), session);
-        } catch (Exception e) {
-            Debug.logError(e, "Error removing constraint [" + removeConstraint + "]", "keywordsearch.bsh");
-        }
-    }
+prodCatalogId = CatalogWorker.getCurrentCatalogId(request);
+Map result = ProductSearchSession.getProductSearchResult(requestParams, session, delegator, prodCatalogId);
+Iterator resultIter = result.entrySet().iterator();
+while (resultIter.hasNext()) {
+    Map.Entry entry = resultIter.next();
+    context.put(entry.getKey(), entry.getValue());
 }
-
-// if there is another category, add a constraint for it
-searchCategoryId = requestParams.get("SEARCH_CATEGORY_ID");
-searchSubCategories = requestParams.get("SEARCH_SUB_CATEGORIES");
-if (UtilValidate.isNotEmpty(searchCategoryId)) {
-    ProductSearch.searchAddConstraint(new ProductSearch.CategoryConstraint(searchCategoryId, !"N".equals(searchSubCategories)), session);
-}
-
-// if keywords were specified, add a constraint for them
-keywordString = requestParams.get("SEARCH_STRING");
-searchOperator = requestParams.get("SEARCH_OPERATOR");
-if (searchOperator == null) {
-    searchOperator = session.getAttribute("searchOperator");
-} else {
-    session.setAttribute("searchOperator", searchOperator);
-}
-if (UtilValidate.isNotEmpty(keywordString)) {
-    ProductSearch.searchAddConstraint(new ProductSearch.KeywordConstraint(keywordString, true, true, null, "AND".equals(searchOperator)), session);
-}
-
-// if features were selected add a constraint for each
-featureIdByType = ParametricSearch.makeFeatureIdByTypeMap(request);
-ProductSearch.searchAddFeatureIdConstraints(featureIdByType.values(), session);
-
-// set the sort order
-String sortOrder = requestParams.get("sortOrder");
-sortAscending = requestParams.get("sortAscending");
-boolean ascending = !"N".equals(sortAscending);
-if (sortOrder != null) {
-    if (sortOrder.equals("SortKeywordRelevancy")) {
-        ProductSearch.searchSetSortOrder(new ProductSearch.SortKeywordRelevancy(), session);
-    } else if (sortOrder.startsWith("SortProductField:")) {
-        fieldName = sortOrder.substring("SortProductField:".length());
-        ProductSearch.searchSetSortOrder(new ProductSearch.SortProductField(fieldName, ascending), session);
-    } else if (sortOrder.equals("SortListPrice")) {
-        ProductSearch.searchSetSortOrder(new ProductSearch.SortListPrice(ascending), session);
-    }
-}
-
-// ========== Do the actual search
-productIds = ProductSearch.searchDo(request, delegator);
-context.put("productIds", productIds);
-
-// ========== Create View Indexes
-int viewIndex = 0;
-int viewSize = 20;
-int highIndex = 0;
-int lowIndex = 0;
-int listSize = 0;
-
-try {
-    viewIndexStr = (String) requestParams.get("VIEW_INDEX");
-    if (UtilValidate.isNotEmpty(viewIndexStr)) {
-        viewIndex = Integer.valueOf(viewIndexStr).intValue();
-    }
-} catch (Exception e) {
-    Debug.logError(e, "Error formatting VIEW_INDEX", module);
-    viewIndex = 0;
-}
-
-try {
-    viewSizeStr = (String) requestParams.get("VIEW_SIZE");
-    if (UtilValidate.isNotEmpty(viewSizeStr)) {
-        viewSize = Integer.valueOf(viewSizeStr).intValue();
-    }
-} catch (Exception e) {
-    Debug.logError(e, "Error formatting VIEW_SIZE", module);
-    viewSize = 20;
-}
-
-if (productIds != null) {
-    listSize = productIds.size();
-}
-
-lowIndex = viewIndex * viewSize;
-highIndex = (viewIndex + 1) * viewSize;
-if (listSize < highIndex) {
-    highIndex = listSize;
-}
-
-context.put("viewIndex", viewIndex);
-context.put("viewSize", viewSize);
-context.put("listSize", listSize);
-context.put("lowIndex", lowIndex);
-context.put("highIndex", highIndex);
-
-// ========== Setup other display info
-searchCategory = (searchCategoryId == null || searchCategoryId.length() == 0) ? null : 
-	delegator.findByPrimaryKeyCache("ProductCategory", UtilMisc.toMap("productCategoryId", searchCategoryId));
-
-searchConstraintStrings = ProductSearch.searchGetConstraintStrings(false, session, delegator);
-searchSortOrderString = ProductSearch.searchGetSortOrderString(false, session);
-        
-context.put("searchOperator", searchOperator);
-context.put("searchCategory", searchCategory);
-context.put("searchConstraintStrings", searchConstraintStrings);
-context.put("searchSortOrderString", searchSortOrderString);
 
