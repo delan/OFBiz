@@ -44,7 +44,7 @@ String buildNext(Map map, List order, String current, String prefix, Map feature
         if (order.indexOf(current) == (order.size()-1)) {
             optValue = value.iterator().next();
         } else {
-            optValue = prefix + "" + ct;
+            optValue = prefix + "_" + ct;
         }
         buf.append("document.forms[\"addform\"].elements[\"" + current + "\"].options[" + (ct + 1) + "] = new Option(\"" + key + "\",\"" + optValue + "\");");
         ct++;
