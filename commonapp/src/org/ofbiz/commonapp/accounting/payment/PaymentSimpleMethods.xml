@@ -155,16 +155,18 @@
         
         <find-by-and entity-name="CreditCard" map-name="lookupMap" list-name="creditCards"/>
         <iterate entry-name="creditCard" list-name="creditCards">
-            <field-to-field field-name="newContactMechId" map-name="parameters" to-field-name="contactMechId" to-map-name="creditCard"/>
+            <map-to-map map-name="creditCard" to-map-name="uccMap"/>
+            <field-to-field field-name="newContactMechId" map-name="parameters" to-field-name="contactMechId" to-map-name="uccMap"/>
             <!-- use the service so it will expire the old card and create a new one; don't break on error since this is a background process, just get whatever we can done... -->
-            <call-service service-name="updateCreditCard" in-map-name="creditCard" break-on-error="false"/>
+            <call-service service-name="updateCreditCard" in-map-name="uccMap" break-on-error="false"/>
         </iterate>
         
         <find-by-and entity-name="EftAccount" map-name="lookupMap" list-name="eftAccounts"/>
         <iterate entry-name="eftAccount" list-name="eftAccounts">
-            <field-to-field field-name="newContactMechId" map-name="parameters" to-field-name="contactMechId" to-map-name="eftAccount"/>
+            <map-to-map map-name="eftAccount" to-map-name="ueaMap"/>
+            <field-to-field field-name="newContactMechId" map-name="parameters" to-field-name="contactMechId" to-map-name="ueaMap"/>
             <!-- use the service so it will expire the old account and create a new one; don't break on error since this is a background process, just get whatever we can done... -->
-            <call-service service-name="updateEftAccount" in-map-name="eftAccount" break-on-error="false"/>
+            <call-service service-name="updateEftAccount" in-map-name="ueaMap" break-on-error="false"/>
         </iterate>
     </simple-method>
 </simple-methods>
