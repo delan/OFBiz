@@ -119,7 +119,10 @@ public class GenericDelegator implements DelegatorInterface {
     protected EntityCrypto crypto = null;
 
     public static GenericDelegator getGenericDelegator(String delegatorName) {
-        if (delegatorName == null) delegatorName = "default";
+        if (delegatorName == null) {
+            delegatorName = "default";
+            Debug.logWarning("Got a getGenericDelegator call with a null delegatorName, assuming default for the name.", module);
+        }
         GenericDelegator delegator = (GenericDelegator) delegatorCache.get(delegatorName);
 
         if (delegator == null) {
@@ -154,7 +157,7 @@ public class GenericDelegator implements DelegatorInterface {
             modelGroupReader = ModelGroupReader.getModelGroupReader(delegatorName);
         }
 
-        cache = new Cache( delegatorName );
+        cache = new Cache(delegatorName);
 
         // do the entity model check
         List warningList = new LinkedList();
@@ -202,6 +205,14 @@ public class GenericDelegator implements DelegatorInterface {
             }
         }
 
+        // NOTE: doing some things before the ECAs and such to make sure it is in place just in case it is used in a service engine startup thing or something
+        
+        // setup the crypto class
+        this.crypto = new EntityCrypto(this);
+        
+        // put the delegator in the master Map by its name
+        delegatorCache.put(delegatorName, this);
+        
         //time to do some tricks with manual class loading that resolves circular dependencies, like calling services...
         ClassLoader loader = Thread.currentThread().getContextClassLoader();
 
@@ -241,9 +252,6 @@ public class GenericDelegator implements DelegatorInterface {
         } catch (ClassCastException e) {
             Debug.logWarning(e, "EntityEcaHandler class with name " + ECA_HANDLER_CLASS_NAME + " does not implement the EntityEcaHandler interface, Entity ECA Rules will be disabled", module);
         }
-
-        // setup the crypto class
-        this.crypto = new EntityCrypto(this);
     }
 
     /** Gets the name of the server configuration that corresponds to this delegator
@@ -1672,6 +1680,7 @@ public class GenericDelegator implements DelegatorInterface {
                     // don't send fields that are the same, and if no fields have changed, update nothing
                     ModelEntity modelEntity = value.getModelEntity();
                     GenericValue toStore = new GenericValue(modelEntity, value.getPrimaryKey());
+                    toStore.setDelegator(this);
                     boolean atLeastOneField = false;
                     Iterator nonPksIter = modelEntity.getNopksIterator();
                     while (nonPksIter.hasNext()) {
