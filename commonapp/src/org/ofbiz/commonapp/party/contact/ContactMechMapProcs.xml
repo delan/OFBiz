@@ -51,7 +51,7 @@
     <process field="address2"><copy/></process>
     <process field="directions"><copy/></process>
     <process field="city"><copy/><not-empty><fail-message message="City is missing"/></not-empty></process>
-    <process field="stateProvinceGeoId"><copy/><not-empty><fail-message message="State/Province is missing"/></not-empty></process>
+    <process field="stateProvinceGeoId"><copy/></process>
     <process field="postalCode"><copy/><not-empty><fail-message message="Zip/Postal Code is missing"/></not-empty></process>
     <process field="countryGeoId"><copy/></process>
     <process field="postalCodeGeoId"><copy/></process>
