@@ -45,19 +45,19 @@
   <form method="post" action="<%=response.encodeURL(controlPath + "/updatepassword/" + donePage)%>" name="changepasswordform">
   <table width="90%" border="0" cellpadding="2" cellspacing="0">
     <tr>
-      <td width="26%"><div class="tabletext">Old Password</div></td>
+      <td width="26%" align=right><div class="tabletext">Old Password</div></td>
       <td width="74%">
         <input type="password" name="OLD_PASSWORD" size="20" maxlength="20">
       *</td>
     </tr>
     <tr>
-      <td width="26%"><div class="tabletext">New Password</div></td>
+      <td width="26%" align=right><div class="tabletext">New Password</div></td>
       <td width="74%">
         <input type="password" name="NEW_PASSWORD" size="20" maxlength="20">
       *</td>
     </tr>
     <tr>
-      <td width="26%"><div class="tabletext">Confirm Password</div></td>
+      <td width="26%" align=right><div class="tabletext">Confirm Password</div></td>
       <td width="74%">
         <input type="password" name="NEW_PASSWORD_CONFIRM" size="20" maxlength="20">
       *</td>
