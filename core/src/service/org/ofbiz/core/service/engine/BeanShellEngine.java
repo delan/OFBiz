@@ -36,9 +36,9 @@ import org.ofbiz.core.service.*;
 /**
  * BeanShell Script Service Engine
  *
- * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
- * @created    November 28, 2001
- * @version    1.1
+ * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a> 
+ * @version    $Revision$
+ * @since      2.0
  */
 public final class BeanShellEngine extends GenericAsyncEngine {
 
@@ -94,10 +94,9 @@ public final class BeanShellEngine extends GenericAsyncEngine {
                     if (scriptUrl != null) {
                         try {
                             HttpClient http = new HttpClient(scriptUrl);
-
                             script = http.get();
                         } catch (HttpClientException e) {
-                            throw new GenericServiceException("Cannot read script from resource");
+                            throw new GenericServiceException("Cannot read script from resource", e);
                         }
                     } else {
                         throw new GenericServiceException("Cannot read script, resource [" + modelService.location + "] not found");
