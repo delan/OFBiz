@@ -1,5 +1,5 @@
 /*
- * $Id: PaymentGatewayServices.java,v 1.38 2004/06/28 20:18:31 ajzeneski Exp $
+ * $Id: PaymentGatewayServices.java,v 1.39 2004/07/22 00:01:52 ajzeneski Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -65,7 +65,7 @@ import org.ofbiz.service.ServiceUtil;
  * PaymentGatewayServices
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.38 $
+ * @version    $Revision: 1.39 $
  * @since      2.0
  */
 public class PaymentGatewayServices {
@@ -711,7 +711,7 @@ public class PaymentGatewayServices {
 
             // get the payment prefs
             Map lookupMap = UtilMisc.toMap("orderId", orderId, "statusId", "PAYMENT_AUTHORIZED");
-            List orderList = UtilMisc.toList("-authAmount");
+            List orderList = UtilMisc.toList("-maxAmount");
             paymentPrefs = delegator.findByAnd("OrderPaymentPreference", lookupMap, orderList);
         } catch (GenericEntityException gee) {
             Debug.logError(gee, "Problems getting entity record(s), see stack trace", module);
