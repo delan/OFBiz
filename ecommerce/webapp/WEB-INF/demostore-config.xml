@@ -16,7 +16,7 @@
     <request-map>
         <uri>login</uri><secure>true</secure><auth>false</auth>
         <event-type>java</event-type><event-path>org.ofbiz.core.security.WebEventSecurity</event-path><event-invoke>login</event-invoke>
-        <success>view:main</success><error>view:login</error>
+        <success>request:updatedistributor</success><error>view:login</error>
     </request-map>
     <request-map>
         <uri>logout</uri><secure>true</secure><auth>true</auth>
@@ -27,6 +27,18 @@
     <!-- End of Security Mappings -->
 
     <!-- Request Mappings -->
+    <request-map>
+        <uri>setdistributor</uri><secure>true</secure><auth>false</auth>
+        <event-type>java</event-type><event-path>org.ofbiz.ecommerce.distributor.DistributorEvents</event-path><event-invoke>setDistributor</event-invoke>
+        <success>view:main</success><error>view:main</error>
+    </request-map>
+    <request-map>
+        <uri>updatedistributor</uri><secure>true</secure><auth>false</auth>
+        <event-type>java</event-type><event-path>org.ofbiz.ecommerce.distributor.DistributorEvents</event-path><event-invoke>updateAssociatedDistributor</event-invoke>
+        <success>view:main</success>
+        <error>view:main</error>
+    </request-map>
+
     <request-map>
         <uri>view</uri>
         <secure>false</secure>
@@ -106,7 +118,7 @@
       <event-path>org.ofbiz.ecommerce.checkout.CheckOutEvents</event-path>
       <event-invoke>setCheckOutOptions</event-invoke> 
       <success>view:checkout</success>
-      <error>view:checkoutoptions</error>
+      <error>request:checkoutoptions</error>
     </request-map>
     <request-map>
       <uri>processorder</uri>
