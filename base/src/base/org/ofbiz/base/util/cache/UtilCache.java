@@ -60,9 +60,18 @@ public class UtilCache implements Serializable {
     /** A count of the number of cache hits */
     protected long hitCount = 0;
 
-    /** A count of the number of cache misses */
-    protected long missCount = 0;
+    /** A count of the number of cache misses because it is not found in the cache */
+    protected long missCountNotFound = 0;
+    /** A count of the number of cache misses because it expired */
+    protected long missCountExpired = 0;
+    /** A count of the number of cache misses because it was cleared from the Soft Reference (ie garbage collection, etc) */
+    protected long missCountSoftRef = 0;
 
+    /** A count of the number of cache hits on removes */
+    protected long removeHitCount = 0;
+    /** A count of the number of cache misses on removes */
+    protected long removeMissCount = 0;
+    
     /** The maximum number of elements in the cache.
      * If set to 0, there will be no limit on the number of elements in the cache.
      */
@@ -285,21 +294,23 @@ public class UtilCache implements Serializable {
      */
     public Object get(Object key) {
         CacheLine line = (CacheLine) cacheLineTable.get(key);
-
-        if (this.hasExpired(line)) {
+        if (line == null) {
+            missCountNotFound++;
+            return null;
+        } else if (line.softReferenceCleared()) {
+            removeInternal(key, false);
+            missCountSoftRef++;
+            return null;
+        } else if (this.hasExpired(line)) {
             // note that print.info in debug.properties cannot be checked through UtilProperties here, it would cause infinite recursion...
             // if (Debug.infoOn()) Debug.logInfo("Element has expired with key " + key, module);
-            remove(key);
-            line = null;
-        }
-
-        if (line == null) {
-            missCount++;
+            removeInternal(key, false);
+            missCountExpired++;
             return null;
+        } else {
+            hitCount++;
+            return line.getValue();
         }
-        hitCount++;
-
-        return line.getValue();
     }
 
     public List values() {
@@ -331,12 +342,18 @@ public class UtilCache implements Serializable {
      * @return The value of the removed element specified by the key
      */
     public synchronized Object remove(Object key) {
+        return this.removeInternal(key, true);
+    }
+    
+    /** This is used for internal remove calls because we only want to count external calls */
+    protected synchronized Object removeInternal(Object key, boolean countRemove) {
         CacheLine line = (CacheLine) cacheLineTable.remove(key);
         if (line != null) {
             noteRemoval(key, line.getValue());
+            if (countRemove) this.removeHitCount++;
             return line.getValue();
         } else {
-            missCount++;
+            if (countRemove) this.removeMissCount++;
             return null;
         }
     }
@@ -367,28 +384,61 @@ public class UtilCache implements Serializable {
      * @return The name of the instance
      */
     public String getName() {
-        return name;
+        return this.name;
     }
 
     /** Returns the number of successful hits on the cache
      * @return The number of successful cache hits
      */
     public long getHitCount() {
-        return hitCount;
+        return this.hitCount;
     }
 
-    /** Returns the number of cache misses
+    /** Returns the number of cache misses from entries that are not found in the cache
      * @return The number of cache misses
      */
-    public long getMissCount() {
-        return missCount;
+    public long getMissCountNotFound() {
+        return this.missCountNotFound;
+    }
+
+    /** Returns the number of cache misses from entries that are expired
+     * @return The number of cache misses
+     */
+    public long getMissCountExpired() {
+        return this.missCountExpired;
+    }
+
+    /** Returns the number of cache misses from entries that are have had the soft reference cleared out (by garbage collector and such)
+     * @return The number of cache misses
+     */
+    public long getMissCountSoftRef() {
+        return this.missCountSoftRef;
+    }
+
+    /** Returns the number of cache misses caused by any reason
+     * @return The number of cache misses
+     */
+    public long getMissCountTotal() {
+        return this.missCountSoftRef + this.missCountNotFound + this.missCountExpired;
+    }
+    
+    public long getRemoveHitCount() {
+        return this.removeHitCount;
+    }
+    
+    public long getRemoveMissCount() {
+        return this.removeMissCount;
     }
 
     /** Clears the hit and miss counters
      */
     public void clearCounters() {
-        hitCount = 0;
-        missCount = 0;
+        this.hitCount = 0;
+        this.missCountNotFound = 0;
+        this.missCountExpired = 0;
+        this.missCountSoftRef = 0;
+        this.removeHitCount = 0;
+        this.removeMissCount = 0;
     }
 
     /** Sets the maximum number of elements in the cache.
@@ -464,9 +514,8 @@ public class UtilCache implements Serializable {
      */
     public boolean containsKey(Object key) {
         CacheLine line = (CacheLine) cacheLineTable.get(key);
-
-        if (hasExpired(line)) {
-            remove(key);
+        if (this.hasExpired(line)) {
+            removeInternal(key, false);
             line = null;
         }
         if (line != null) {
@@ -499,12 +548,17 @@ public class UtilCache implements Serializable {
 
     protected boolean hasExpired(CacheLine line) {
         if (line == null) return false;
+
         // check this BEFORE checking to see if expireTime <= 0, ie if time expiration is enabled
         // check to see if we are using softReference first, slight performance increase
-        if (this.useSoftReference && line.getValue() == null) return true;
+        if (line.softReferenceCleared()) return true;
+        
+        // check if expireTime <= 0, ie if time expiration is not enabled
         if (line.expireTime <= 0) return false;
 
+        // check if the time was saved for this; if the time was not saved, but expire time is > 0, then we don't know when it was saved so expire it to be safe
         if (line.loadTime <= 0) return true;
+        
         if ((line.loadTime + line.expireTime) < System.currentTimeMillis()) {
             return true;
         } else {
@@ -518,7 +572,7 @@ public class UtilCache implements Serializable {
         while (keys.hasNext()) {
             Object key = keys.next();
             if (hasExpired(key)) {
-                remove(key);
+                removeInternal(key, false);
             }
         }
     }

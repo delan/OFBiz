@@ -48,22 +48,23 @@
 <div class="tabletext"><u><b>Memory:</b></u> [<b>TOTAL:</b> <%=rt.totalMemory()%>] [<b>FREE:</b> <%=rt.freeMemory()%>] [<b>USED:</b> <%=(rt.totalMemory() - rt.freeMemory())%>] [<b>MAX:</b> <%=rt.maxMemory()%>]</span></div>
 
 <br>
-<TABLE border='0' cellpadding='2' cellspacing='2'>
+<table border='0' cellpadding='2' cellspacing='2'>
 <%
   String rowColor1 = "viewManyTR2";
   String rowColor2 = "viewManyTR1";
   String rowColor = "";
 %>
-  <TR class='viewOneTR1'>
-    <TD>Cache&nbsp;Name</TD>
-    <TD>size</TD>
-    <TD>hitCount</TD>
-    <TD>missCount</TD>
-    <TD>maxSize</TD>
-    <TD>expireTime</TD>
-    <TD>useSoftRef?</TD>
-    <TD colspan="3">Administration</TD>
-  </TR>
+  <tr class='viewOneTR1'>
+    <td>Cache&nbsp;Name</td>
+    <td>size</td>
+    <td>hits</td>
+    <td>misses/NF/EXP/SR</td>
+    <td>removes:H/M</td>
+    <td>maxSize</td>
+    <td>expireTime</td>
+    <td>useSoftRef?</td>
+    <td colspan="3">Administration</td>
+  </tr>
 
   <%TreeSet names = new TreeSet(UtilCache.utilCacheTable.keySet());%>
   <%Iterator nameIter = names.iterator();%>
@@ -73,34 +74,35 @@
       <%UtilCache utilCache = (UtilCache)UtilCache.utilCacheTable.get(cacheName);%>
       <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%>
       <tr class="<%=rowColor%>">
-        <TD><%=UtilFormatOut.checkNull(utilCache.getName())%></TD>
-        <TD><%=UtilFormatOut.formatQuantity(utilCache.size())%></TD>
-        <TD><%=UtilFormatOut.formatQuantity(utilCache.getHitCount())%></TD>
-        <TD><%=UtilFormatOut.formatQuantity(utilCache.getMissCount())%></TD>
-        <TD><%=UtilFormatOut.formatQuantity(utilCache.getMaxSize())%></TD>
-        <TD><%=UtilFormatOut.formatQuantity(utilCache.getExpireTime())%></TD>
-        <TD><%=(new Boolean(utilCache.getUseSoftReference())).toString()%></TD>
-        <TD align=center valign=middle>
+        <td><%=UtilFormatOut.checkNull(utilCache.getName())%></td>
+        <td><%=UtilFormatOut.formatQuantity(utilCache.size())%></td>
+        <td><%=UtilFormatOut.formatQuantity(utilCache.getHitCount())%></td>
+        <td><%=UtilFormatOut.formatQuantity(utilCache.getMissCountTotal())%>/<%=UtilFormatOut.formatQuantity(utilCache.getMissCountNotFound())%>/<%=UtilFormatOut.formatQuantity(utilCache.getMissCountExpired())%>/<%=UtilFormatOut.formatQuantity(utilCache.getMissCountSoftRef())%></td>
+        <td><%=UtilFormatOut.formatQuantity(utilCache.getRemoveHitCount())%>/<%=UtilFormatOut.formatQuantity(utilCache.getRemoveMissCount())%></td>
+        <td><%=UtilFormatOut.formatQuantity(utilCache.getMaxSize())%></td>
+        <td><%=UtilFormatOut.formatQuantity(utilCache.getExpireTime())%></td>
+        <td><%=(new Boolean(utilCache.getUseSoftReference())).toString()%></td>
+        <td align=center valign=middle>
           <a href='<ofbiz:url>/FindUtilCacheElements?UTIL_CACHE_NAME=<%=UtilFormatOut.checkNull(utilCache.getName())%></ofbiz:url>' class="buttontext">Elements</a>
-        </TD>
-        <TD align=center valign=middle>
+        </td>
+        <td align=center valign=middle>
           <%if(hasUtilCacheEdit){%>
             <a href='<ofbiz:url>/EditUtilCache?UTIL_CACHE_NAME=<%=UtilFormatOut.checkNull(utilCache.getName())%></ofbiz:url>' class="buttontext">Edit</a>
           <%}%>
-        </TD>
-        <TD align=center valign=middle>
+        </td>
+        <td align=center valign=middle>
           <%if(hasUtilCacheEdit){%>
             <a href='<ofbiz:url>/FindUtilCacheClear?UTIL_CACHE_NAME=<%=UtilFormatOut.checkNull(utilCache.getName())%></ofbiz:url>' class="buttontext">Clear</a>
           <%}%>
-        </TD>
-      </TR>
+        </td>
+      </tr>
     <%}%>
   <%}else{%>
       <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr bgcolor="<%=rowColor%>">
-        <TD colspan="5">No UtilCache instances found.</TD>
-      </TR>
+        <td colspan="5">No UtilCache instances found.</td>
+      </tr>
   <%}%>
-</TABLE>
+</table>
 
 <div>
 	<a href='<ofbiz:url>/FindUtilCache</ofbiz:url>' class='buttontext'>[Reload Cache List]</a>

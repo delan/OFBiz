@@ -31,7 +31,7 @@ import org.ofbiz.base.util.UtilObject;
 /**
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      3.2
  */
 public class CacheLine implements Serializable {
@@ -64,6 +64,18 @@ public class CacheLine implements Serializable {
             return ((CacheSoftReference) valueRef).get();
         } else {
             return valueRef;
+        }
+    }
+    
+    public boolean softReferenceCleared() {
+        if (!this.useSoftReference || valueRef == null) {
+            return false;
+        } else {
+            if (((CacheSoftReference) valueRef).get() == null) {
+                return true;
+            } else {
+                return false;
+            }
         }
     }
 

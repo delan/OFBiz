@@ -164,5 +164,8 @@
 	<classpathentry kind="lib" path="components/shark/lib/sharkrepositorypersistence-filesystem.jar"/>
 	<classpathentry kind="lib" path="components/shark/lib/sharkassignment-historyrelated.jar"/>
 	<classpathentry kind="lib" path="components/content/lib/XuiCoreSwing.jar"/>
+	<classpathentry kind="lib" path="base/lib/jdbm.jar"/>
+	<classpathentry kind="lib" path="base/lib/commons/commons-primitives.jar"/>
+	<classpathentry kind="lib" path="base/lib/commons/commons-codec.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
