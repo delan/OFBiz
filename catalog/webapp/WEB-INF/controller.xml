@@ -751,71 +751,101 @@
         <response name="success" type="view" value="EditProductStore"/>
         <response name="error" type="view" value="EditProductStore"/>
     </request-map>
-    <request-map uri="ProductStoreWebSites">
+    
+    <!-- ================ ProductStore WebSite Requests ================= -->
+    <request-map uri="EditProductStoreWebSites">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="ProductStoreWebSites"/>
+        <response name="success" type="view" value="EditProductStoreWebSites"/>
     </request-map>
     <request-map uri="storeUpdateWebSite">
         <security https="true" auth="true"/>
         <event type="service" invoke="updateWebSite"/>
-        <response name="success" type="view" value="ProductStoreWebSites"/>
-        <response name="error" type="view" value="ProductStoreWebSites"/>
+        <response name="success" type="view" value="EditProductStoreWebSites"/>
+        <response name="error" type="view" value="EditProductStoreWebSites"/>
     </request-map>
-    <request-map uri="ProductStoreTaxSetup">
+    
+    <!-- ================ ProductStore Payment Requests ================= -->
+    <request-map uri="EditProductStorePaySetup">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="ProductStoreTaxSetup"/>
+        <response name="success" type="view" value="EditProductStorePaySetup"/>
+    </request-map>
+    <request-map uri="storeCreatePaySetting">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createProductStorePaymentSetting"/>
+        <response name="success" type="view" value="EditProductStorePaySetup"/>
+        <response name="error" type="view" value="EditProductStorePaySetup"/>
+    </request-map>
+    <request-map uri="storeUpdatePaySetting">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateProductStorePaymentSetting"/>
+        <response name="success" type="view" value="EditProductStorePaySetup"/>
+        <response name="error" type="view" value="EditProductStorePaySetup"/>
+    </request-map>    
+    <request-map uri="storeRemovePaySetting">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteProductStorePaymentSetting"/>
+        <response name="success" type="view" value="EditProductStorePaySetup"/>
+        <response name="error" type="view" value="EditProductStorePaySetup"/>
+    </request-map>
+           
+    <!-- ================ ProductStore Tax Requests ================= -->
+    <request-map uri="EditProductStoreTaxSetup">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditProductStoreTaxSetup"/>
     </request-map>
     <request-map uri="storeCreateTaxRate">
         <security https="true" auth="true"/>
         <event type="service" invoke="createTaxRate"/>
-        <response name="success" type="view" value="ProductStoreTaxSetup"/>
-        <response name="error" type="view" value="ProductStoreTaxSetup"/>
+        <response name="success" type="view" value="EditProductStoreTaxSetup"/>
+        <response name="error" type="view" value="EditProductStoreTaxSetup"/>
     </request-map>
     <request-map uri="storeRemoveTaxRate">
         <security https="true" auth="true"/>
         <event type="service" invoke="removeTaxRate"/>
-        <response name="success" type="view" value="ProductStoreTaxSetup"/>
-        <response name="error" type="view" value="ProductStoreTaxSetup"/>
-    </request-map> 
-    <request-map uri="ProductStoreShipSetup">
+        <response name="success" type="view" value="EditProductStoreTaxSetup"/>
+        <response name="error" type="view" value="EditProductStoreTaxSetup"/>
+    </request-map>
+    
+    <!-- ================ ProductStore Shipping Requests ================= -->
+    <request-map uri="EditProductStoreShipSetup">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="ProductStoreShipSetup"/>
+        <response name="success" type="view" value="EditProductStoreShipSetup"/>
     </request-map>
     <request-map uri="storeCreateShipRate">
         <security https="true" auth="true"/>
         <event type="service" invoke="createShipmentEstimate"/>
-        <response name="success" type="view" value="ProductStoreShipSetup"/>
-        <response name="error" type="view" value="ProductStoreShipSetup"/>
+        <response name="success" type="view" value="EditProductStoreShipSetup"/>
+        <response name="error" type="view" value="EditProductStoreShipSetup"/>
     </request-map>
     <request-map uri="storeRemoveShipRate">
         <security https="true" auth="true"/>
         <event type="service" invoke="removeShipmentEstimate"/>
-        <response name="success" type="view" value="ProductStoreShipSetup"/>
-        <response name="error" type="view" value="ProductStoreShipSetup"/>
+        <response name="success" type="view" value="EditProductStoreShipSetup"/>
+        <response name="error" type="view" value="EditProductStoreShipSetup"/>
     </request-map>
     <request-map uri="createShipmentMethodType">
         <security https="true" auth="true"/>
         <event type="service" invoke="createShipmentMethodType"/>
-        <response name="success" type="view" value="ProductStoreShipSetup"/>
-        <response name="error" type="view" value="ProductStoreShipSetup"/>
+        <response name="success" type="view" value="EditProductStoreShipSetup"/>
+        <response name="error" type="view" value="EditProductStoreShipSetup"/>
     </request-map>
     <request-map uri="updateShipmentMethodType">
         <security https="true" auth="true"/>
         <event type="service" invoke="updateShipmentMethodType"/>
-        <response name="success" type="view" value="ProductStoreShipSetup"/>
-        <response name="error" type="view" value="ProductStoreShipSetup"/>
+        <response name="success" type="view" value="EditProductStoreShipSetup"/>
+        <response name="error" type="view" value="EditProductStoreShipSetup"/>
     </request-map>        
     <request-map uri="createCarrierShipmentMethod">
         <security https="true" auth="true"/>
         <event type="service" invoke="createCarrierShipmentMethod"/>
-        <response name="success" type="view" value="ProductStoreShipSetup"/>
-        <response name="error" type="view" value="ProductStoreShipSetup"/>
+        <response name="success" type="view" value="EditProductStoreShipSetup"/>
+        <response name="error" type="view" value="EditProductStoreShipSetup"/>
     </request-map>
     <request-map uri="updateCarrierShipmentMethod">
         <security https="true" auth="true"/>
         <event type="service" invoke="updateCarrierShipmentMethod"/>
-        <response name="success" type="view" value="ProductStoreShipSetup"/>
-        <response name="error" type="view" value="ProductStoreShipSetup"/>
+        <response name="success" type="view" value="EditProductStoreShipSetup"/>
+        <response name="error" type="view" value="EditProductStoreShipSetup"/>
     </request-map>           
 
     <!-- ================ ProductStore Promos Requests ================= -->
@@ -923,8 +953,9 @@
     <view-map name="EditProductStore" type="jpublish" page="/store/EditProductStore.ftl"/>    
     <view-map name="EditProductStorePromos" type="jpublish" page="/store/EditProductStorePromos.ftl"/>
     <view-map name="EditProductStoreCatalogs" type="jpublish" page="/store/EditProductStoreCatalogs.ftl"/>
-    <view-map name="ProductStoreShipSetup" type="jpublish" page="/store/ProductStoreShipSetup.ftl"/>
-    <view-map name="ProductStoreTaxSetup" type="jpublish" page="/store/ProductStoreTaxSetup.ftl"/>
-    <view-map name="ProductStoreWebSites" type="jpublish" page="/store/ProductStoreWebSites.ftl"/>
+    <view-map name="EditProductStoreShipSetup" type="jpublish" page="/store/EditProductStoreShipSetup.ftl"/>
+    <view-map name="EditProductStoreTaxSetup" type="jpublish" page="/store/EditProductStoreTaxSetup.ftl"/>
+    <view-map name="EditProductStorePaySetup" type="jpublish" page="/store/EditProductStorePaySetup.ftl"/>
+    <view-map name="EditProductStoreWebSites" type="jpublish" page="/store/EditProductStoreWebSites.ftl"/>
     <!-- end of view mappings -->
 </site-conf>

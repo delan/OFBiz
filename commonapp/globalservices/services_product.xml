@@ -1104,25 +1104,42 @@
     </service>          
 
     <service name="createProductStoreCatalog" default-entity-name="ProductStoreCatalog" engine="simple"
-                location="org/ofbiz/commonapp/product/store/ProductStoreServices.xml" invoke="createProductStoreCatalog" auth="true">
+            location="org/ofbiz/commonapp/product/store/ProductStoreServices.xml" invoke="createProductStoreCatalog" auth="true">
         <description>Create ProductStoreCatalog</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
         <override name="fromDate" optional="true"/>
     </service>
     <service name="updateProductStoreCatalog" default-entity-name="ProductStoreCatalog" engine="simple"
-                location="org/ofbiz/commonapp/product/store/ProductStoreServices.xml" invoke="updateProductStoreCatalog" auth="true">
+            location="org/ofbiz/commonapp/product/store/ProductStoreServices.xml" invoke="updateProductStoreCatalog" auth="true">
         <description>Update ProductStoreCatalog</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
     <service name="deleteProductStoreCatalog" default-entity-name="ProductStoreCatalog" engine="simple"
-                location="org/ofbiz/commonapp/product/store/ProductStoreServices.xml" invoke="deleteProductStoreCatalog" auth="true">
+            location="org/ofbiz/commonapp/product/store/ProductStoreServices.xml" invoke="deleteProductStoreCatalog" auth="true">
         <description>Delete ProductStoreCatalog</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
-
-
+    
+    <service name="createProductStorePaymentSetting" default-entity-name="ProductStorePaymentSetting" engine="simple"
+            location="org/ofbiz/commonapp/product/store/ProductStoreServices.xml" invoke="createProductStorePaymentSetting" auth="true">
+        <description>Create ProductStorePaymentSetting</description>
+        <auto-attributes include="all" mode="IN" optional="false"/>
+        <override name="paymentPropertiesPath" optional="true"/>
+    </service>
+    <service name="updateProductStorePaymentSetting" default-entity-name="ProductStorePaymentSetting" engine="simple"
+            location="org/ofbiz/commonapp/product/store/ProductStoreServices.xml" invoke="updateProductStorePaymentSetting" auth="true">
+        <description>Update ProductStorePaymentSetting</description>
+        <auto-attributes include="all" mode="IN" optional="false"/>
+        <override name="paymentPropertiesPath" optional="true"/>
+    </service>
+    <service name="deleteProductStorePaymentSetting" default-entity-name="ProductStorePaymentSetting" engine="simple"
+            location="org/ofbiz/commonapp/product/store/ProductStoreServices.xml" invoke="deleteProductStorePaymentSetting" auth="true">
+        <description>Delete ProductStorePaymentSetting</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>        
+    </service>        
+            	
     <!-- Product View Services -->
     <service name="getProduct" engine="java"
             location="org.ofbiz.commonapp.product.product.ProductServices" invoke="prodFindProduct">

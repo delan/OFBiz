@@ -26,19 +26,21 @@
 -->
 
 <#if hasPermission>
-    <#if productStoreId?has_content>
-        <div class='tabContainer'>
-	        <a href="<@ofbizUrl>/EditProductStore?productStoreId=${productStoreId}</@ofbizUrl>" class="tabButton">Store</a>
-	        <a href="<@ofbizUrl>/EditProductStorePromos?productStoreId=${productStoreId}</@ofbizUrl>" class="tabButtonSelected">Promos</a>
-	        <a href="<@ofbizUrl>/EditProductStoreCatalogs?productStoreId=${productStoreId}</@ofbizUrl>" class="tabButton">Catalogs</a>
-	        <a href="<@ofbizUrl>/ProductStoreWebSites?productStoreId=${productStoreId}</@ofbizUrl>" class="tabButton">WebSites</a>
-	        <a href="<@ofbizUrl>/ProductStoreTaxSetup?productStoreId=${productStoreId}</@ofbizUrl>" class="tabButton">Sales Tax</a>
-	        <a href="<@ofbizUrl>/ProductStoreShipSetup?productStoreId=${productStoreId}</@ofbizUrl>" class="tabButton">Shipping</a>
-        </div>
-    </#if>
-    <div class="head1">Promotions <span class='head2'>for <#if (productStore.storeName)?has_content>"${productStore.storeName}"</#if> [ID:${productStoreId?if_exists}]</span></div>
-    <a href="<@ofbizUrl>/EditProductStore</@ofbizUrl>" class="buttontext">[New Product Store]</a>
-    <br>
+  <#if productStoreId?has_content>
+    <div class='tabContainer'>
+	  <a href="<@ofbizUrl>/EditProductStore?productStoreId=${productStoreId}</@ofbizUrl>" class="tabButton">Store</a>
+	  <a href="<@ofbizUrl>/EditProductStorePromos?productStoreId=${productStoreId}</@ofbizUrl>" class="tabButtonSelected">Promos</a>
+	  <a href="<@ofbizUrl>/EditProductStoreCatalogs?productStoreId=${productStoreId}</@ofbizUrl>" class="tabButton">Catalogs</a>
+	  <a href="<@ofbizUrl>/EditProductStoreWebSites?productStoreId=${productStoreId}</@ofbizUrl>" class="tabButton">WebSites</a>
+	  <a href="<@ofbizUrl>/EditProductStoreTaxSetup?productStoreId=${productStoreId}</@ofbizUrl>" class="tabButton">Sales Tax</a>
+	  <a href="<@ofbizUrl>/EditProductStoreShipSetup?productStoreId=${productStoreId}</@ofbizUrl>" class="tabButton">Shipping</a>
+	  <a href="<@ofbizUrl>/EditProductStorePaySetup?productStoreId=${productStoreId}</@ofbizUrl>" class="tabButton">Payments</a>
+    </div>
+  </#if>
+  <div class="head1">Promotions <span class='head2'>for <#if (productStore.storeName)?has_content>"${productStore.storeName}"</#if> [ID:${productStoreId?if_exists}]</span></div>
+  <a href="<@ofbizUrl>/EditProductStore</@ofbizUrl>" class="buttontext">[New Product Store]</a>
+  <br>
+  <br>
 
     <#if productStoreId?exists && productStore?exists>
         <table border="1" width="100%" cellpadding="2" cellspacing="0">

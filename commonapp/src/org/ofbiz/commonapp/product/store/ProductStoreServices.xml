@@ -87,4 +87,35 @@
         <find-by-primary-key map-name="lookupPKMap" value-name="lookedUpValue"/>
         <remove-value value-name="lookedUpValue"/>
     </simple-method>
+    
+    <!-- ProductStore Payment Setting Services -->
+	<simple-method method-name="createProductStorePaymentSetting" short-description="Create a Product Store Payment Setting">
+		<check-permission permission="CATALOG" action="_CREATE"><fail-message message="Security Error: to run createProductStorePaymentSetting you must have the CATALOG_CREATE or CATALOG_ADMIN permission"/></check-permission>
+		<check-errors/>
+		
+		<make-value value-name="newEntity" entity-name="ProductStorePaymentSetting"/>
+		<set-pk-fields map-name="parameters" value-name="newEntity"/>
+		<set-nonpk-fields map-name="parameters" value-name="newEntity"/>				
+		<create-value value-name="newEntity"/>		
+	</simple-method>
+	<simple-method method-name="updateProductStorePaymentSetting" short-description="Update a Product Store Payment Setting">
+		<check-permission permission="CATALOG" action="_UPDATE"><fail-message message="Security Error: to run updateProductStorePaymentSetting you must have the CATALOG_UPDATE or CATALOG_ADMIN permission"/></check-permission>
+		<check-errors/>
+		
+		<make-value value-name="lookupPKMap" entity-name="ProductStorePaymentSetting"/>
+		<set-pk-fields map-name="parameters" value-name="lookupPKMap"/>		
+		<find-by-primary-key entity-name="ProductStorePaymentSetting" map-name="lookupPKMap" value-name="setting"/>
+		<set-nonpk-fields map-name="parameters" value-name="setting"/>
+		<store-value value-name="setting"/>		
+	</simple-method> 
+	<simple-method method-name="deleteProductStorePaymentSetting" short-description="Delete a Product Store Payment Setting">
+		<check-permission permission="CATALOG" action="_DELETE"><fail-message message="Security Error: to run deleteProductStorePaymentSetting you must have the CATALOG_DELETE or CATALOG_ADMIN permission"/></check-permission>
+		<check-errors/>
+		
+		<make-value value-name="lookupPKMap" entity-name="ProductStorePaymentSetting"/>
+		<set-pk-fields map-name="parameters" value-name="lookupPKMap"/>		
+		<find-by-primary-key entity-name="ProductStorePaymentSetting" map-name="lookupPKMap" value-name="setting"/>
+		<set-nonpk-fields map-name="parameters" value-name="setting"/>
+		<remove-value value-name="setting"/>
+	</simple-method>	   
 </simple-methods>

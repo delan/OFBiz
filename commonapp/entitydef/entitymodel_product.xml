@@ -2334,11 +2334,12 @@
             title="Product Store Payment Settings Entity">
       <field name="productStoreId" type="id-ne"></field>      
       <field name="paymentMethodTypeId" type="id-ne"></field>
-      <field name="paymentServiceEnumId" type="id-ne"></field>      
+      <field name="paymentServiceTypeEnumId" type="id-ne"></field>
+      <field name="paymentService" type="value"></field>     
       <field name="paymentPropertiesPath" type="value"></field>
       <prim-key field="productStoreId"/>
       <prim-key field="paymentMethodTypeId"/>
-      <prim-key field="paymentServiceEnumId"/>
+      <prim-key field="paymentServiceTypeEnumId"/>
       <relation type="one" fk-name="PRDS_PS_PRDS" rel-entity-name="ProductStore">
         <key-map field-name="productStoreId"/>
       </relation>
@@ -2346,7 +2347,7 @@
         <key-map field-name="paymentMethodTypeId"/>
       </relation>
       <relation type="one" fk-name="PRDS_PS_ENUM" rel-entity-name="Enumeration">
-        <key-map field-name="paymentServiceEnumId" rel-field-name="enumId"/>
+        <key-map field-name="paymentServiceTypeEnumId" rel-field-name="enumId"/>
       </relation>      
     </entity>
     <entity entity-name="ProductStorePromoAppl"
