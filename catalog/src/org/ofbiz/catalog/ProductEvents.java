@@ -501,7 +501,7 @@ public class ProductEvents {
       GenericValue productAssoc = null;
       try { productAssoc = delegator.findByPrimaryKey(tempProductAssoc.getPrimaryKey()); }
       catch(GenericEntityException e) { Debug.logWarning(e.getMessage()); productAssoc = null; }
-      if(productAssoc == null) {
+      if(productAssoc != null) {
         request.setAttribute("ERROR_MESSAGE", "Could not create product association (already exists)");
         return "error";
       }
