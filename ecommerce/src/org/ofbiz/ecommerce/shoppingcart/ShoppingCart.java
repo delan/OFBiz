@@ -43,7 +43,8 @@ public class ShoppingCart implements java.io.Serializable {
     //either paymentMethodId or poNumber must be null (use one or the other)
     private String paymentMethodId;
     private String poNumber;
-    
+    private String orderId;
+
     private String shippingContactMechId;
     private String billingAccountId;
     private String shippingInstructions;
@@ -72,6 +73,7 @@ public class ShoppingCart implements java.io.Serializable {
         shippingContactMechId = "";
         taxString = "";
         cartDiscountString = "";
+        orderId = null;
     }
     
     /** Add an item to the shopping cart, or if already there, increase the quantity.
@@ -502,5 +504,15 @@ public class ShoppingCart implements java.io.Serializable {
     public boolean viewCartOnAdd(boolean viewCartOnAdd) {
         this.viewCartOnAdd = viewCartOnAdd;
         return this.viewCartOnAdd;
+    }
+
+    /** Returns the order ID associated with this cart or null if no order has been created yet. */
+    public String getOrderId() {
+        return this.orderId;
+    }
+
+    /** Sets the orderId associated with this cart. */
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
     }
 }

@@ -129,8 +129,15 @@ public class CheckOutEvents {
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
         GenericValue userLogin = (GenericValue)request.getSession().getAttribute(SiteDefs.USER_LOGIN);
 
-        //remove this whenever creating an order so quick reorder cache will refresh/recalc
+        // remove this whenever creating an order so quick reorder cache will refresh/recalc
         request.getSession().removeAttribute("_QUICK_REORDER_PRODUCTS_");
+
+        // if the order is already stored don't store again.
+        if (cart.getOrderId() != null) {
+            request.setAttribute("order_id", cart.getOrderId());
+            request.setAttribute("orderAdditionalEmails", cart.getOrderAdditionalEmails());
+            return "success";
+        }
 
         // build the service context
         Map context = cart.makeCartMap(delegator);
@@ -144,7 +151,9 @@ public class CheckOutEvents {
         Map result = null;
         try {
             result = dispatcher.runSync("storeOrder",context);
-            cart.clear();
+            String orderId = (String) result.get("orderId");
+            if (orderId != null && orderId.length() > 0)
+                cart.setOrderId(orderId);
         } catch (GenericServiceException e) {
             request.setAttribute(SiteDefs.ERROR_MESSAGE,"ERROR: Could not create order (problem invoking the service: " + e.getMessage() + ")");
             Debug.logError(e);

@@ -159,7 +159,14 @@
 
     <request-map uri="authorizePayment">
         <security https="true" auth="true"/>
-        <event type="java" path="org.ofbiz.core.events.CoreEvents" invoke="respondSuccess"/>
+        <event type="java" path="org.ofbiz.core.event.CoreEvents" invoke="respondSuccess"/>
+        <response name="success" type="request" value="clearCartForOrder"/>
+        <response name="error" type="view" value="checkout"/>
+    </request-map>
+
+    <request-map uri="clearCartForOrder">
+        <security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.ecommerce.shoppingcart.ShoppingCartEvents" invoke="clearCart"/>
         <response name="success" type="request" value="renderconfirmorder"/>
         <response name="error" type="view" value="checkout"/>
     </request-map>
