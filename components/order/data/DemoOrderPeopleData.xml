@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-engine-xml>
+    <!-- this person can view any order but only place purchase orders -->
+    <Party partyId="DemoBuyer" partyTypeId="PERSON"/>
+    <Person partyId="DemoBuyer" firstName="Demo" lastName="Buyer"/>
+    <PartyRole partyId="DemoBuyer" roleTypeId="BUYER"/>
+    <UserLogin partyId="DemoBuyer" userLoginId="demobuyer" currentPassword="ofbiz" passwordHint=""/>
+    <UserLoginSecurityGroup userLoginId="demobuyer" groupId="ORDERPURCH" fromDate="2005-01-01 00:00:00"/>
+    
+    <!-- this person can create sales orders for any store -->
+    <Party partyId="DemoRepAll" partyTypeId="PERSON"/>
+    <Person partyId="DemoRepAll" firstName="Demo" lastName="Rep for All Stores"/>
+    <PartyRole partyId="DemoRepAll" roleTypeId="SALES_REP"/>
+    <UserLogin partyId="DemoRepAll" userLoginId="demorepall" currentPassword="ofbiz" passwordHint=""/>
+    <UserLoginSecurityGroup userLoginId="demorepall" groupId="ORDERENTRY_ALL" fromDate="2005-01-01 00:00:00"/>
+    
+    <!-- this person can only create sales orders for stores for which he is a sales rep -->
+    <Party partyId="DemoRepStore" partyTypeId="PERSON"/>
+    <Person partyId="DemoRepStore" firstName="Demo" lastName="Rep for Specified Stores Only"/>
+    <PartyRole partyId="DemoRepStore" roleTypeId="SALES_REP"/>
+    <UserLogin partyId="DemoRepStore" userLoginId="demorepstore" currentPassword="ofbiz" passwordHint=""/>
+    <UserLoginSecurityGroup userLoginId="demorepstore" groupId="ORDERENTRY" fromDate="2005-01-01 00:00:00"/>
+    <ProductStoreRole partyId="admin" roleTypeId="SALES_REP" productStoreId="9000" fromDate="2001-05-13 12:00:00.0"/><Party partyId="" partyTypeId=""/>
+    
+</entity-engine-xml>

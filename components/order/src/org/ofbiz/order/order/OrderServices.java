@@ -97,13 +97,43 @@ public class OrderServices {
         Map successResult = ServiceUtil.returnSuccess();
 
         GenericValue userLogin = (GenericValue) context.get("userLogin");
-        // check security
+        // get the order type
+        String orderTypeId = (String) context.get("orderTypeId");
+        String partyId = (String) context.get("partyId");
+        
+        // check security permissions for order:
+        //  SALES ORDERS - if userLogin has ORDERMGR_SALES_CREATE or ORDERMGR_CREATE permission, or if it is same party as the partyId, or
+        //                 if it is an AGENT (sales rep) creating an order for his customer
+        //  PURCHASE ORDERS - if there is a PURCHASE_ORDER permission
         Map resultSecurity = new HashMap();
-        String partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, resultSecurity, "ORDERMGR", "_CREATE");
-        if (resultSecurity.size() > 0) {
-            return resultSecurity;
+        boolean hasPermission = false;
+        if (orderTypeId.equals("SALES_ORDER")) {
+            if (security.hasEntityPermission("ORDERMGR", "_SALES_CREATE", userLogin)) {
+                hasPermission = true;
+            } else {
+                // check sales agent/customer relationship
+                List repsCustomers = new LinkedList();
+                try {
+                    repsCustomers = EntityUtil.filterByDate(userLogin.getRelatedOne("Party").getRelatedByAnd("FromPartyRelationship", 
+                            UtilMisc.toMap("roleTypeIdFrom", "AGENT", "roleTypeIdTo", "CUSTOMER", "partyIdTo", partyId)));
+                } catch (GenericEntityException ex) {
+                    Debug.logError("Could not determine if " + partyId + " is a customer of user " + userLogin.getString("userLoginId") + " due to " + ex.getMessage(), module);
+                }
+                if ((repsCustomers != null) && (repsCustomers.size() > 0) && (security.hasEntityPermission("SALESREP", "_ORDER_CREATE", userLogin))) {
+                    hasPermission = true;
+                }
+            }
+        } else if ((orderTypeId.equals("PURCHASE_ORDER") && (security.hasEntityPermission("ORDERMGR", "_PURCHASE_CREATE", userLogin)))) {
+            hasPermission = true;
         }
-
+        // final check - will pass if userLogin's partyId = partyId for order or if userLogin has ORDERMGR_CREATE permission
+        if (!hasPermission) {
+            partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, resultSecurity, "ORDERMGR", "_CREATE");
+            if (resultSecurity.size() > 0) {
+                return resultSecurity;
+            }    
+        }
+        
         boolean isImmediatelyFulfilled = false;
         String productStoreId = (String) context.get("productStoreId");
         GenericValue productStore = null;
@@ -118,8 +148,6 @@ public class OrderServices {
             isImmediatelyFulfilled = "Y".equals(productStore.getString("isImmediatelyFulfilled"));
         }
         
-        // get the order type
-        String orderTypeId = (String) context.get("orderTypeId");
         successResult.put("orderTypeId", orderTypeId);
 
         // lookup the order type entity
