@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE simple-methods PUBLIC "-//OFBiz//DTD Simple Methods//EN" "http://www.ofbiz.org/dtds/simple-methods.dtd">
-
 <!--
- * Copyright (c) 2001 The Open For Business Project and repective authors.
+ * Copyright (c) 2001-2004 The Open For Business Project and repective authors.
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
  *  to deal in the Software without restriction, including without limitation
@@ -25,7 +24,9 @@
  * @version 1.0
  * Created on April 2, 2002
  -->
-<simple-methods>
+
+<simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/simple-methods.xsd">
     <!-- SecurityGroup methods -->
     <simple-method method-name="createSecurityGroup" short-description="Create an SecurityGroup">
         <check-permission permission="SECURITY" action="_CREATE"><fail-message message="Security Error: to run createSecurityGroup you must have the CATALOG_CREATE or CATALOG_ADMIN permission"/></check-permission>

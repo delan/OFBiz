@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE simple-methods PUBLIC "-//OFBiz//DTD Simple Methods//EN" "http://www.ofbiz.org/dtds/simple-methods.dtd">
-
 <!--
  *  Copyright (c) 2003-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -27,7 +25,9 @@
  * @version    $Rev$
  * @since      2.2
 -->
-<simple-methods>
+
+<simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/simple-methods.xsd">
     <!-- Shipment services -->
     <simple-method method-name="createShipment" short-description="Create Shipment">
         <check-permission permission="FACILITY" action="_CREATE">

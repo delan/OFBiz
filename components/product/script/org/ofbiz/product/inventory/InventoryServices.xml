@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE simple-methods PUBLIC "-//OFBiz//DTD Simple Methods//EN" "http://www.ofbiz.org/dtds/simple-methods.dtd">
-
 <!--
  *  Copyright (c) 2002-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -27,7 +25,8 @@
  * Created on April 2, 2002
  -->
 
-<simple-methods>
+<simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/simple-methods.xsd">
     <!-- InventoryItem methods -->
     <simple-method method-name="createInventoryItem" short-description="Create an InventoryItem">
         <check-permission permission="CATALOG" action="_CREATE">

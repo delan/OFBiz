@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-
-<!DOCTYPE simple-methods PUBLIC "-//OFBiz//DTD Simple Methods//EN" "http://www.ofbiz.org/dtds/simple-methods.dtd">
-
 <!--
- *  Copyright (c) 2001 The Open For Business Project and repected authors.
+ *  Copyright (c) 2001-2004 The Open For Business Project and repected authors.
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -27,7 +24,9 @@
  * @author     Olivier.Heintz@nereide.biz (migration to UiLabel) 
  * @version 1.0
  -->
-<simple-methods>
+
+<simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/simple-methods.xsd">
     <!-- PostalAddressBoundary methods -->
     <simple-method method-name="createPostalAddressBoundary" short-description="Create Postal Address Boundary">
         <check-permission permission="PARTYMGR" action="_CREATE"><fail-property resource="PartyUiLabels" property="PartyCreatePostalAddressBoundaryPermissionError"/></check-permission>

@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE simple-map-processors PUBLIC "-//OFBiz//DTD Simple Methods//EN" "http://www.ofbiz.org/dtds/simple-methods.dtd">
-
 <!--
- *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2002-2004 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -24,11 +22,12 @@
  *
  * @author     Johan Isacsson
  * @author     Olivier.Heintz@nereide.biz 
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.2
 -->
 
-<simple-map-processors>
+<simple-map-processors xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/simple-methods.xsd">
   <!-- ContactMech map procs -->
   <simple-map-processor name="contactMech">
     <process field="contactMechTypeId"><copy/><not-empty><fail-property resource="PartyUiLabels" property="PartyContactMechTypeIdMissing"/>
