@@ -65,6 +65,10 @@ public class XuiSession {
         Debug.logInfo("Created XuiSession [" + id + "]", module);
     }
 
+    public XuiContainer getContainer() {
+        return this.container;
+    }
+    
     public GenericDelegator getDelegator() {
         return this.delegator;
     }
