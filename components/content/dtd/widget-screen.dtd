@@ -25,17 +25,31 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
- *  $Id: widget-screen.dtd,v 1.1 2004/06/27 01:07:05 jonesde Exp $
+ *  $Id: widget-screen.dtd,v 1.2 2004/06/27 05:02:07 jonesde Exp $
 -->
 
-<!ENTITY % AllWidgets "container | label | sub-screen | form | menu | tree | content | sub-content | template">
+<!ENTITY % AllWidgets "container | include-screen | decorator-screen | decorator-parent | composite-screen | composite-section | composite-parent | label | form | menu | tree | content | sub-content | platform-specific">
+
+<!ENTITY % AllActions "service | script">
 
 
 <!ELEMENT screens ( screen+ )>
 
-<!ELEMENT screen ( action*, container )>
+<!ELEMENT screen ( actions?, container )>
 <!ATTLIST screen
     name CDATA #REQUIRED
+>
+
+<!ELEMENT actions ( (%AllActions;)* )>
+
+<!ELEMENT service EMPTY>
+<!ATTLIST service
+    name CDATA #REQUIRED
+>
+
+<!ELEMENT script EMPTY>
+<!ATTLIST script
+    location CDATA #REQUIRED
 >
 
 <!ELEMENT container ( (%AllWidgets;)* )>
@@ -44,17 +58,43 @@
     style CDATA #IMPLIED
 >
 
+<!ELEMENT include-screen EMPTY>
+<!ATTLIST include-screen
+    name CDATA #REQUIRED
+    location CDATA #REQUIRED
+>
+
+<!-- renders the named screen and includes the children of this elements at the point where it finds the decorator-parent tag -->
+<!ELEMENT decorator-screen ( (%AllWidgets;)* )>
+<!ATTLIST decorator-screen
+    name CDATA #REQUIRED
+    location CDATA #IMPLIED
+>
+
+<!-- this is just a place holder to tell the renderer to include the parent container's contents at this point -->
+<!ELEMENT decorator-parent EMPTY>
+
+<!ELEMENT composite-screen ( composite-section+ )>
+<!ATTLIST composite-screen
+    name CDATA #REQUIRED
+    location CDATA #IMPLIED
+>
+
+<!ELEMENT composite-section ( (%AllWidgets;)* )>
+<!ATTLIST composite-section
+    name CDATA #REQUIRED
+>
+
+<!ELEMENT composite-parent EMPTY>
+<!ATTLIST composite-parent
+    name CDATA #REQUIRED
+>
+
 <!ELEMENT label (#PCDATA)>
 <!ATTLIST label
     text CDATA #IMPLIED
     id CDATA #IMPLIED
     style CDATA #IMPLIED
->
-
-<!ELEMENT sub-screen EMPTY>
-<!ATTLIST sub-screen
-    name CDATA #REQUIRED
-    location CDATA #REQUIRED
 >
 
 <!ELEMENT form EMPTY>
@@ -86,14 +126,28 @@
     assoc-name CDATA #REQUIRED
 >
 
+<!-- ============== Platform Specific Elements =============== -->
+
+<!ELEMENT platform-specific ( html?, swing? )>
+
+<!-- ============== HTML Specific Elements =============== -->
+
+<!ENTITY % HtmlWidgets "template | template-decorator">
+
+<!ELEMENT html ( (%HtmlWidgets;)* )>
+
 <!ELEMENT template EMPTY>
 <!ATTLIST template
     location CDATA #REQUIRED
 >
 
-<!-- do we really want to encourage this? would rather do it on the screen level, and regions too... -->
+<!-- don't really want to encourage, should be done on the screen level -->
 <!ELEMENT template-decorator ( (%AllWidgets;)* )>
 <!ATTLIST template-decorator
     location CDATA #REQUIRED
 >
+
+<!-- ============== Swing Specific Elements =============== -->
+
+<!ELEMENT swing EMPTY>
 
