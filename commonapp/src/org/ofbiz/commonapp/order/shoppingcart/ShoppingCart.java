@@ -49,9 +49,9 @@ public class ShoppingCart implements java.io.Serializable {
     private List paymentMethodTypeIds = new LinkedList();
     private String poNumber = null;
     private String orderId = null;
-    private String originalOrderId = null;
+    private String firstAttemptOrderId = null;
     private String billingAccountId = null;
-    
+
     private GenericValue orderShipmentPreference = null;
     private String orderAdditionalEmails = null;
     private boolean viewCartOnAdd = true;
@@ -65,10 +65,10 @@ public class ShoppingCart implements java.io.Serializable {
     private transient GenericDelegator delegator = null;
     private String delegatorName = null;
     private HttpSession session;
-    
+
     /** don't allow empty constructor */
     protected ShoppingCart() {}
-    
+
     /** Creates new empty ShoppingCart object. */
     public ShoppingCart(GenericDelegator delegator, HttpSession session) {
         this.delegator = delegator;
@@ -83,7 +83,7 @@ public class ShoppingCart implements java.io.Serializable {
         }
         return delegator;
     }
-    
+
     // =======================================================================
     // Methods for cart items
     // =======================================================================
@@ -217,7 +217,7 @@ public class ShoppingCart implements java.io.Serializable {
     public GenericValue getUserLogin() {
         return (GenericValue) this.session.getAttribute("userLogin");
     }
-    
+
     // =======================================================================
     // Methods for cart fields
     // =======================================================================
@@ -231,7 +231,7 @@ public class ShoppingCart implements java.io.Serializable {
         orderShipmentPreference.remove("maySplit");
         orderShipmentPreference.remove("giftMessage");
         orderShipmentPreference.remove("isGift");
-        
+
         orderAdditionalEmails = null;
         this.freeShippingProductPromoActions.clear();
 
@@ -392,7 +392,7 @@ public class ShoppingCart implements java.io.Serializable {
         while (i.hasNext()) {
             tempTax += ((ShoppingCartItem) i.next()).getItemTax();
         }
-        
+
         tempTax += OrderReadHelper.calcOrderAdjustments(this.getAdjustments(), getSubTotal(), false, true, false);
 
         return tempTax;
@@ -404,7 +404,7 @@ public class ShoppingCart implements java.io.Serializable {
         while (i.hasNext()) {
             tempShipping += ((ShoppingCartItem) i.next()).getItemShipping();
         }
-        
+
         tempShipping += OrderReadHelper.calcOrderAdjustments(this.getAdjustments(), getSubTotal(), false, false, true);
 
         return tempShipping;
@@ -446,7 +446,7 @@ public class ShoppingCart implements java.io.Serializable {
     public Map getOrderContactMechIds() {
         return contactMechIdsMap;
     }
-    
+
     /** Get a List of adjustments on the order (ie cart) */
     public List getAdjustments() {
         return adjustments;
@@ -461,7 +461,7 @@ public class ShoppingCart implements java.io.Serializable {
     /** go through the order adjustments and remove all adjustments with the given type */
     public void removeAdjustmentByType(String orderAdjustmentTypeId) {
         if (orderAdjustmentTypeId == null) return;
-        
+
         //make a list of adjustment lists including the cart adjustments and the cartItem adjustments for each item
         List adjsLists = new LinkedList();
         if (this.getAdjustments() != null) {
@@ -474,7 +474,7 @@ public class ShoppingCart implements java.io.Serializable {
                 adjsLists.add(item.getAdjustments());
             }
         }
-        
+
         Iterator adjsListsIter = adjsLists.iterator();
         while (adjsListsIter.hasNext()) {
             List adjs = (List) adjsListsIter.next();
@@ -572,23 +572,23 @@ public class ShoppingCart implements java.io.Serializable {
     public String getOrderId() {
         return this.orderId;
     }
-    /** Returns the original order ID associated with this cart or null if no order has been created yet. */
-    public String getOriginalOrderId() {
-        return this.originalOrderId;
+    /** Returns the first attempt order ID associated with this cart or null if no order has been created yet. */
+    public String getFirstAttemptOrderId() {
+        return this.firstAttemptOrderId;
     }
     /** Sets the orderId associated with this cart. */
     public void setOrderId(String orderId) {
         this.orderId = orderId;
     }
-    /** Sets the original orderId for this cart. */
-    public void setOriginalOrderId(String orderId) {
-        this.originalOrderId = orderId;
+    /** Sets the first attempt orderId for this cart. */
+    public void setFirstAttemptOrderId(String orderId) {
+        this.firstAttemptOrderId = orderId;
     }
 
     /** Removes a free shipping ProductPromoAction by trying to find one in the list with the same primary key. */
     public void removeFreeShippingProductPromoAction(GenericPK productPromoActionPK) {
         if (productPromoActionPK == null) return;
-        
+
         Iterator fsppas = this.freeShippingProductPromoActions.iterator();
         while (fsppas.hasNext()) {
             if (productPromoActionPK.equals(((GenericValue) fsppas.next()).getPrimaryKey())) {
@@ -601,7 +601,7 @@ public class ShoppingCart implements java.io.Serializable {
         if (productPromoAction == null) return;
         //is this a free shipping action?
         if (!"PROMO_FREE_SHIPPING".equals(productPromoAction.getString("productPromoActionTypeId"))) return;
-        
+
         // to easily make sure that no duplicate exists, do a remove first
         this.removeFreeShippingProductPromoAction(productPromoAction.getPrimaryKey());
         this.freeShippingProductPromoActions.add(productPromoAction);
@@ -610,7 +610,7 @@ public class ShoppingCart implements java.io.Serializable {
     // =======================================================================
     // Methods used for order creation
     // =======================================================================
-    
+
     /** Returns an collection of order items. */
     public List makeOrderItems() {
         synchronized (cartLines) {
@@ -620,7 +620,7 @@ public class ShoppingCart implements java.io.Serializable {
             long seqId = 1;
             while (itemIter.hasNext()) {
                 ShoppingCartItem item = (ShoppingCartItem) itemIter.next();
-                
+
                 //format the string with enough leading zeroes for the number of cartLines
                 NumberFormat nf = NumberFormat.getNumberInstance();
                 if (cartLineSize > 9) {
@@ -636,7 +636,7 @@ public class ShoppingCart implements java.io.Serializable {
                 String orderItemSeqId = nf.format(seqId);
                 seqId++;
                 item.setOrderItemSeqId(orderItemSeqId);
-                
+
                 GenericValue orderItem = getDelegator().makeValue("OrderItem", null);
                 orderItem.set("orderItemSeqId", orderItemSeqId);
                 orderItem.set("orderItemTypeId", "SALES_ORDER_ITEM");
@@ -644,7 +644,7 @@ public class ShoppingCart implements java.io.Serializable {
                 orderItem.set("quantity", new Double(item.getQuantity()));
                 orderItem.set("unitPrice", new Double(item.getBasePrice()));
                 orderItem.set("unitListPrice", new Double(item.getListPrice()));
-                
+
                 orderItem.set("itemDescription", item.getName());
                 orderItem.set("comments", item.getItemComment());
                 orderItem.set("correspondingPoId", this.getPoNumber());
@@ -655,11 +655,11 @@ public class ShoppingCart implements java.io.Serializable {
             return result;
         }
     }
-    
+
     /** make a list of all adjustments including order adjustments, order line adjustments, and special adjustments (shipping and tax if applicable) */
     public List makeAllAdjustments() {
         List allAdjs = new LinkedList();
-        
+
         //before returning adjustments, go through them to find all that need counter adjustments (for instance: free shipping)
         Iterator allAdjsIter = this.getAdjustments().iterator();
         while (allAdjsIter.hasNext()) {
@@ -681,8 +681,8 @@ public class ShoppingCart implements java.io.Serializable {
                                 "productPromoActionSeqId", productPromoAction.get("productPromoActionSeqId")));
                         allAdjs.add(fsOrderAdjustment);
 
-                        //if free shipping IS applied to this orderAdjustment, break 
-                        //  out of the loop so that even if there are multiple free 
+                        //if free shipping IS applied to this orderAdjustment, break
+                        //  out of the loop so that even if there are multiple free
                         //  shipping adjustments that apply to this orderAdjustment it
                         //  will only be compensated for once
                         break;
@@ -690,7 +690,7 @@ public class ShoppingCart implements java.io.Serializable {
                 }
             }
         }
-        
+
         //add all of the item adjustments to this list too
         Iterator itemIter = cartLines.iterator();
         while (itemIter.hasNext()) {
@@ -718,8 +718,8 @@ public class ShoppingCart implements java.io.Serializable {
                                         "productPromoActionSeqId", productPromoAction.get("productPromoActionSeqId")));
                                 allAdjs.add(fsOrderAdjustment);
 
-                                //if free shipping IS applied to this orderAdjustment, break 
-                                //  out of the loop so that even if there are multiple free 
+                                //if free shipping IS applied to this orderAdjustment, break
+                                //  out of the loop so that even if there are multiple free
                                 //  shipping adjustments that apply to this orderAdjustment it
                                 //  will only be compensated for once
                                 break;
@@ -741,7 +741,7 @@ public class ShoppingCart implements java.io.Serializable {
         if (this.orderShipmentPreference.size() > 1) {
             allOshPrefs.add(this.orderShipmentPreference);
         }
-        
+
         //add all of the item adjustments to this list too
         Iterator itemIter = cartLines.iterator();
         while (itemIter.hasNext()) {
@@ -760,7 +760,7 @@ public class ShoppingCart implements java.io.Serializable {
     /** make a list of OrderItemPriceInfos from the ShoppingCartItems */
     public List makeAllOrderItemPriceInfos() {
         List allInfos = new LinkedList();
-        
+
         //add all of the item adjustments to this list too
         Iterator itemIter = cartLines.iterator();
         while (itemIter.hasNext()) {
@@ -775,10 +775,10 @@ public class ShoppingCart implements java.io.Serializable {
                 }
             }
         }
-        
+
         return allInfos;
     }
-    
+
     /** make a list of OrderContactMechs from the ShoppingCart and the ShoppingCartItems */
     public List makeAllOrderContactMechs() {
         List allOrderContactMechs = new LinkedList();
@@ -797,11 +797,11 @@ public class ShoppingCart implements java.io.Serializable {
 
         return allOrderContactMechs;
     }
-    
+
     /** make a list of OrderContactMechs from the ShoppingCart and the ShoppingCartItems */
     public List makeAllOrderItemContactMechs() {
         List allOrderContactMechs = new LinkedList();
-        
+
         Iterator itemIter = cartLines.iterator();
         while (itemIter.hasNext()) {
             ShoppingCartItem item = (ShoppingCartItem) itemIter.next();
@@ -818,10 +818,10 @@ public class ShoppingCart implements java.io.Serializable {
                 }
             }
         }
-        
+
         return allOrderContactMechs;
     }
-    
+
     /** Returns a Map of cart values to pass to the storeOrder service */
     public Map makeCartMap() {
         Map result = new HashMap();
@@ -832,10 +832,10 @@ public class ShoppingCart implements java.io.Serializable {
         result.put("orderContactMechs", makeAllOrderContactMechs());
         result.put("orderItemContactMechs", makeAllOrderItemContactMechs());
         result.put("orderShipmentPreferences", makeAllOrderShipmentPreferences());
-        
+
         result.put("billingAccountId", getBillingAccountId());
         result.put("paymentMethods", getPaymentMethods());
         result.put("paymentMethodTypeIds", getPaymentMethodTypeIds());
         return result;
-    }    
+    }
 }

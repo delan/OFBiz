@@ -157,60 +157,10 @@ public class CheckOutEvents {
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
         GenericValue userLogin = (GenericValue) session.getAttribute(SiteDefs.USER_LOGIN);
 
-        URL orderPropertiesUrl = null;
-        try {
-            orderPropertiesUrl = application.getResource("/WEB-INF/order.properties");
-        } catch (MalformedURLException e) {
-            Debug.logWarning(e, module);
-        }
-
-        // Set rejected order status.
-        final String HEADER_CANCEL_STATUS = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.header.payment.cancelled.status", "ORDER_CANCELLED");
-        final String ITEM_CANCEL_STATUS = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.item.payment.cancelled.status", "ITEM_CANCELLED");
-
         // remove this whenever creating an order so quick reorder cache will refresh/recalc
         session.removeAttribute("_QUICK_REORDER_PRODUCTS_");
 
         String orderId = cart.getOrderId();
-
-        // if the order is already stored cancel the order and create a new one.
-        if (!UtilValidate.isEmpty(orderId)) {
-            Map cancelOrderContext = UtilMisc.toMap("orderId", orderId, "statusId", HEADER_CANCEL_STATUS);
-            Map cancelResult = null;
-            try {
-                cancelResult = dispatcher.runSync("changeOrderStatus", cancelOrderContext);
-
-                if (cancelResult.containsKey("errorMessage")) {
-                    request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>Problems adjusting order status please contact customer service: " + cancelResult.get("errorMessage"));
-                    return "error";
-                }
-                GenericValue orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
-                if (orderHeader != null) {
-                    Collection orderItems = orderHeader.getRelated("OrderItem");
-                    if (orderItems != null && orderItems.size() > 0) {
-                        Iterator i = orderItems.iterator();
-                        while (i.hasNext()) {
-                            GenericValue v = (GenericValue) i.next();
-                            v.set("statusId", ITEM_CANCEL_STATUS);
-                            v.store();
-                        }
-                    }
-                }
-                // blank out the orderId
-                if (cart.getOriginalOrderId() == null)
-                    cart.setOriginalOrderId(orderId);
-                cart.setOrderId(null);
-            } catch (GenericServiceException gse) {
-                request.setAttribute(SiteDefs.ERROR_MESSAGE, "ERROR: Could not update the order status.");
-                Debug.logError(gse, module);
-                return "error";
-            }
-            catch (GenericEntityException gee) {
-               request.setAttribute(SiteDefs.ERROR_MESSAGE, "ERROR: Could not update the order item status.");
-                Debug.logError(gee, module);
-                return "error";
-            }
-        }
 
         // store the order - build the context
         Map context = cart.makeCartMap();
@@ -230,6 +180,8 @@ public class CheckOutEvents {
             orderId = (String) result.get("orderId");
             if (orderId != null && orderId.length() > 0) {
                 cart.setOrderId(orderId);
+                if (cart.getFirstAttemptOrderId() == null)
+                    cart.setFirstAttemptOrderId(orderId);
             }
         } catch (GenericServiceException e) {
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "ERROR: Could not create order (problem invoking the service: " + e.getMessage() + ")");
@@ -250,9 +202,6 @@ public class CheckOutEvents {
         request.setAttribute("order_id", orderId);
         request.setAttribute("orderAdditionalEmails", cart.getOrderAdditionalEmails());
 
-
-        // only clear the cart if we are finished w/ the customer
-        cart.clear();
         return "success";
     }
 
@@ -619,6 +568,9 @@ public class CheckOutEvents {
                                 }
                             }
                         }
+                        // roll back inventory reservations.
+                        // -- TODO
+
                         // null out the orderId for next pass.
                         cart.setOrderId(null);
                         return false;
