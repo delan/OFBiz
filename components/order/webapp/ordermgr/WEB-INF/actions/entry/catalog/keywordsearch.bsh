@@ -20,43 +20,29 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      2.1
 */
 
 import org.ofbiz.base.util.*;
 import org.ofbiz.product.catalog.*;
+import org.ofbiz.product.feature.*;
 import org.ofbiz.product.product.*;
 
+module = "keywordsearch.bsh";
 delegator = request.getAttribute("delegator");
 
-contentPathPrefix = CatalogWorker.getContentPathPrefix(request);
 requestParams = UtilHttp.getParameterMap(request);
-searchCategoryId = requestParams.get("SEARCH_CATEGORY_ID");
-searchOperator = requestParams.get("SEARCH_OPERATOR");
-if (searchOperator == null) searchOperator = session.getAttribute("searchOperator");
-if (searchOperator == null) searchOperator = "OR";
-if (!"AND".equalsIgnoreCase(searchOperator) && !"OR".equalsIgnoreCase(searchOperator)) { 
-    searchOperator = "OR"; 
-}
+prodCatalogId = CatalogWorker.getCurrentCatalogId(request);
+Map result = ProductSearchSession.getProductSearchResult(requestParams, session, delegator, prodCatalogId);
 
-ProductWorker.getKeywordSearchProducts(request, "", searchCategoryId, true, true, searchOperator);
-
-keywordString = request.getAttribute("keywordString");
-viewIndex = request.getAttribute("viewIndex");
-viewSize = request.getAttribute("viewSize");
-
-baseSearchStr = "~SEARCH_STRING="+keywordString+"/~SEARCH_OPERATOR="+searchOperator+"/~SEARCH_CATEGORY_ID="+searchCategoryId+"/~VIEW_SIZE="+viewSize;
-nextStr = baseSearchStr+"/~VIEW_INDEX="+(viewIndex.intValue()+1);
-prevStr = baseSearchStr+"/~VIEW_INDEX="+(viewIndex.intValue()-1);
-
-searchCategory = (searchCategoryId == null || searchCategoryId.length() == 0) ? null : 
-	delegator.findByPrimaryKeyCache("ProductCategory", UtilMisc.toMap("productCategoryId", searchCategoryId));
-
-session.setAttribute("searchOperator", searchOperator);
-context.put("searchOperator", searchOperator);
-context.put("baseSearchStr", baseSearchStr);
-context.put("nextStr", nextStr);
-context.put("prevStr", prevStr);
-context.put("searchCategory", searchCategory);
+context.put("productIds", result.get("productIds"));
+context.put("viewIndex", result.get("viewIndex"));
+context.put("viewSize", result.get("viewSize"));
+context.put("listSize", result.get("listSize"));
+context.put("lowIndex", result.get("lowIndex"));
+context.put("highIndex", result.get("highIndex"));
+context.put("searchCategory", result.get("searchCategory"));
+context.put("searchConstraintStrings", result.get("searchConstraintStrings"));
+context.put("searchSortOrderString", result.get("searchSortOrderString"));
 

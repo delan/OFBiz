@@ -20,42 +20,55 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.1
 -->
-
-<div class='head1'>Advanced Search in Category: ${searchCategory.description}</div>
+<div class="head1">Advanced Search in Category</div>
 <br>
-<form name="advtokeywordsearchform" method="POST" action="<@ofbizUrl>/keywordsearch</@ofbizUrl>" style='margin: 0;'>
-  <input type='hidden' name="VIEW_SIZE" value="10">
-  <input type='hidden' name="SEARCH_CATEGORY_ID" value="${searchCategoryId}">
+<form name="advtokeywordsearchform" method="POST" action="<@ofbizUrl>/keywordsearch</@ofbizUrl>" style="margin: 0;">
+  <input type="hidden" name="VIEW_SIZE" value="10">
   <table border="0" wdith="100%">
+    <#if searchCategory?has_content>
+        <input type="hidden" name="SEARCH_CATEGORY_ID" value="${searchCategoryId?if_exists}">
+        <tr>
+          <td align="right" valign="middle">
+            <div class="tabletext">Category:</div>
+          </td>
+          <td valign="middle">
+            <div class="tabletext">
+              <b>"${(searchCategory.description)?if_exists}"</b> Include sub-categories?
+              Yes<input type="RADIO" name="SEARCH_SUB_CATEGORIES" value="Y" checked>
+              No<input type="RADIO" name="SEARCH_SUB_CATEGORIES" value="N">
+            </div>
+          </td>
+        </tr>
+    </#if>
     <tr>
-      <td>
-        <div class='tabletext'>Keywords:</div>
+      <td align="right" valign="middle">
+        <div class="tabletext">Keywords:</div>
       </td>
-      <td>
-        <div class='tabletext'>
-          <input type='text' class='inputBox' name="SEARCH_STRING" size="40" value="${requestParameters.SEARCH_STRING?if_exists}">&nbsp;
-          Any<input type='RADIO' name='SEARCH_OPERATOR' value='OR' <#if searchOperator == "OR">checked</#if>>
-          All<input type='RADIO' name='SEARCH_OPERATOR' value='AND' <#if searchOperator == "AND">checked</#if>>
+      <td valign="middle">
+        <div class="tabletext">
+          <input type="text" class="inputBox" name="SEARCH_STRING" size="40" value="${requestParameters.SEARCH_STRING?if_exists}">&nbsp;
+          Any<input type="RADIO" name="SEARCH_OPERATOR" value="OR" <#if searchOperator == "OR">checked</#if>>
+          All<input type="RADIO" name="SEARCH_OPERATOR" value="AND" <#if searchOperator == "AND">checked</#if>>
         </div>
       </td>
-    </tr>   
+    </tr>
     <#list productFeaturesByTypeMap.keySet() as productFeatureTypeId>
       <#assign findPftMap = Static["org.ofbiz.base.util.UtilMisc"].toMap("productFeatureTypeId", productFeatureTypeId)>
       <#assign productFeatureType = delegator.findByPrimaryKeyCache("ProductFeatureType", findPftMap)>
       <#assign productFeatures = productFeaturesByTypeMap[productFeatureTypeId]>
       <tr>
-        <td>
-          <div class='tabletext'>${productFeatureType.description}:</div>
+        <td align="right" valign="middle">
+          <div class="tabletext">${(productFeatureType.description)?if_exists}:</div>
         </td>
-        <td>
-          <div class='tabletext'>
+        <td valign="middle">
+          <div class="tabletext">
             <select class="selectBox" name="pft_${productFeatureTypeId}">
-              <option value="">- any -</option>
+              <option value="">- Any -</option>
               <#list productFeatures as productFeature>
-              <option value="${productFeature.productFeatureId}">${productFeature.description}</option>
+              <option value="${productFeature.productFeatureId}">${productFeature.description?default(productFeature.productFeatureId)}</option>
               </#list>
             </select>
           </div>
@@ -63,8 +76,38 @@
       </tr>
     </#list>
     <tr>
+      <td align="right" valign="middle">
+        <div class="tabletext">Sort Order:</div>
+      </td>
+      <td valign="middle">
+        <div class="tabletext">
+          <select name="sortOrder" class="selectBox">
+            <option value="SortKeywordRelevancy">Keyword Relevancy</option>
+            <option value="SortProductField:productName">Product Name</option>
+          </select>
+        </div>
+      </td>
+    </tr>
+    <#if searchConstraintStrings?has_content>
+      <tr>
+        <td align="right" valign="top">
+          <div class="tabletext">Last Search:</div>
+        </td>
+        <td valign="top">
+            <#list searchConstraintStrings as searchConstraintString>
+                <div class="tabletext">&nbsp;-&nbsp;${searchConstraintString}</div>
+            </#list>
+            <div class="tabletext">Sorted by: ${searchSortOrderString}</div>
+            <div class="tabletext">
+              New Search<input type="RADIO" name="clearSearch" value="Y" checked>
+              Refine Search<input type="RADIO" name="clearSearch" value="N">
+            </div>
+        </td>
+      </tr>
+    </#if>
+    <tr>
       <td>
-        <div class='tabletext'>
+        <div class="tabletext">
           <a href="javascript:document.advtokeywordsearchform.submit()" class="buttontext">Find</a>
         </div>
       </td>
