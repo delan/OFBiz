@@ -114,7 +114,7 @@ public class CatalogWorker {
         // if prodCatalog is set to not check inventory break here
         if ("N".equals(prodCatalog.getString("checkInventory"))) {
             // note: if not set, defaults to yes, check inventory
-            if (Debug.infoOn()) Debug.logInfo("Catalog with id " + prodCatalogId + ", is set to NOT check inventory, returning true for inventory available check", module);
+            if (Debug.verboseOn()) Debug.logVerbose("Catalog with id " + prodCatalogId + ", is set to NOT check inventory, returning true for inventory available check", module);
             return true;
         }
 
@@ -145,10 +145,10 @@ public class CatalogWorker {
 
             // whew, finally here: now check to see if we got enough back...
             if (availableToPromise.doubleValue() >= quantity) {
-                if (Debug.infoOn()) Debug.logInfo("Inventory IS available in facility with id " + inventoryFacilityId + " for product id " + productId + "; desired quantity is " + quantity + ", available quantity is " + availableToPromise, module);
+                if (Debug.verboseOn()) Debug.logVerbose("Inventory IS available in facility with id " + inventoryFacilityId + " for product id " + productId + "; desired quantity is " + quantity + ", available quantity is " + availableToPromise, module);
                 return true;
             } else {
-                if (Debug.infoOn()) Debug.logInfo("Returning false because there is insufficient inventory available in facility with id " + inventoryFacilityId + " for product id " + productId + "; desired quantity is " + quantity + ", available quantity is " + availableToPromise, module);
+                if (Debug.verboseOn()) Debug.logVerbose("Returning false because there is insufficient inventory available in facility with id " + inventoryFacilityId + " for product id " + productId + "; desired quantity is " + quantity + ", available quantity is " + availableToPromise, module);
                 return false;
             }
 
@@ -183,7 +183,7 @@ public class CatalogWorker {
         // if prodCatalog is set to not reserve inventory, break here
         if ("N".equals(prodCatalog.getString("reserveInventory"))) {
             // note: if not set, defaults to yes, reserve inventory
-            if (Debug.infoOn()) Debug.logInfo("Catalog with id " + prodCatalogId + ", is set to NOT reserve inventory, not reserving inventory", module);
+            if (Debug.verboseOn()) Debug.logVerbose("Catalog with id " + prodCatalogId + ", is set to NOT reserve inventory, not reserving inventory", module);
             return null;
         }
 
@@ -238,10 +238,10 @@ public class CatalogWorker {
 
             // whew, finally here: now check to see if we were able to reserve...
             if (quantityNotReserved.doubleValue() == 0) {
-                if (Debug.infoOn()) Debug.logInfo("Inventory IS reserved in facility with id " + inventoryFacilityId + " for product id " + productId + "; desired quantity was " + quantity, module);
+                if (Debug.verboseOn()) Debug.logVerbose("Inventory IS reserved in facility with id " + inventoryFacilityId + " for product id " + productId + "; desired quantity was " + quantity, module);
                 return null;
             } else {
-                if (Debug.infoOn()) Debug.logInfo("There is insufficient inventory available in facility with id " + inventoryFacilityId + " for product id " + productId + "; desired quantity is " + quantity + ", amount could not reserve is " + quantityNotReserved, module);
+                if (Debug.verboseOn()) Debug.logVerbose("There is insufficient inventory available in facility with id " + inventoryFacilityId + " for product id " + productId + "; desired quantity is " + quantity + ", amount could not reserve is " + quantityNotReserved, module);
                 return quantityNotReserved;
             }
 

@@ -210,7 +210,7 @@
             availableToPromise will be used to track quantity ordered beyond what is in stock.
         -->
 
-        <log level="info" message="Parameters : ${parameters}"/>
+        <log level="verbose" message="Parameters : ${parameters}"/>
         <field-to-field field-name="productId" map-name="parameters" to-map-name="lookupFieldMap"/>
         <field-to-field field-name="facilityId" map-name="parameters" to-map-name="lookupFieldMap"/>
         <field-to-field field-name="containerId" map-name="parameters" to-map-name="lookupFieldMap"/>
@@ -218,8 +218,7 @@
         
         <make-value entity-name="OrderHeader" value-name="ohLookupMap"/>
         <set-pk-fields map-name="parameters" value-name="ohLookupMap"/>
-        <find-by-primary-key entity-name="OrderHeader" map-name="ohLookupMap" value-name="orderHeader"/>
-        <log level="info" message="Order Header : ${orderHeader}"/>
+        <find-by-primary-key entity-name="OrderHeader" map-name="ohLookupMap" value-name="orderHeader"/>        
 
         <!-- before we do the find, put together the orderBy list based on which reserveOrderEnumId is specified -->
         <if-compare value="INVRO_FIFO_EXP" operator="equals" field-name="reserveOrderEnumId" map-name="parameters">
@@ -468,7 +467,7 @@
         <field-to-field field-name="orderId" map-name="parameters" to-map-name="oiirListLookupMap"/>
         <if-not-empty field-name="orderItemSeqId" map-name="parameters">        	
         	<field-to-field field-name="orderItemSeqId" map-name="parameters" to-map-name="oiirListLookupMap"/>
-        	<log level="info" message="OIIR Cancel for single item : ${oiirListLookupMap}"/>
+        	<log level="verbose" message="OIIR Cancel for single item : ${oiirListLookupMap}"/>
         </if-not-empty>
         <find-by-and entity-name="OrderItemInventoryRes" map-name="oiirListLookupMap" list-name="oiirList" use-cache="false"/>
         <iterate entry-name="oiir" list-name="oiirList">

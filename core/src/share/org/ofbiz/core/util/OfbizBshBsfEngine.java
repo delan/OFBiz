@@ -207,7 +207,7 @@ public class OfbizBshBsfEngine extends BSFEngineImpl {
                         script = (Interpreter.ParsedScript) parsedScripts.get(source);
                         if (script == null) {
                             script = interpreter.parseScript(source, new StringReader((String) expr));
-                            Debug.logInfo("Caching BSH script at: " + source, module);
+                            Debug.logVerbose("Caching BSH script at: " + source, module);
                             parsedScripts.put(source, script);
                         }
                     }

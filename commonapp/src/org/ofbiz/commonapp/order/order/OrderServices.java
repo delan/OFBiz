@@ -240,11 +240,7 @@ public class OrderServices {
         
         // first try to create the OrderHeader; if this does not fail, continue.
         try {            
-            delegator.create(order);
-            if (Debug.verboseOn()) {          
-                GenericValue o = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));            
-                Debug.logVerbose("OrderHeader : " + o, module);
-            }  
+            delegator.create(order);           
         } catch (GenericEntityException e) {
             Debug.logError(e, "Cannot create OrderHeader entity; problems with insert", module);
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
@@ -444,11 +440,7 @@ public class OrderServices {
         try {
             // store line items, etc so that they will be there for the foreign key checks
             delegator.storeAll(toBeStored);
-            
-            // test
-            GenericValue ohr = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
-            Debug.logInfo("Order Header : " + ohr, module);
-
+                      
             if ("SALES_ORDER".equals(orderTypeId) || "WORK_ORDER".equals(orderTypeId)) {                
                 // START inventory reservation
                 // decrement inventory available for each item, within the same transaction

@@ -33,8 +33,7 @@ delegator = request.getAttribute("delegator");
 miniProduct = request.getAttribute("miniProduct");
 optProductId = request.getAttribute("optProductId");
 
-if (optProductId != null) {
-    Debug.log("productId " + optProductId);
+if (optProductId != null) {    
     miniProduct = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", optProductId));
 }
     
