@@ -229,9 +229,13 @@ public class PosScreen extends NavigationHelper implements Runnable, DialogCallb
 
     // generic page display methods - extends those in XPage
     public PosScreen showPage(String pageName) {
+        return this.showPage(pageName, true);
+    }
+
+    public PosScreen showPage(String pageName, boolean refresh) {
         XPage newPage = XProjectManager.getPageManager().showPage(pageName);
         if (newPage instanceof PosScreen) {
-            ((PosScreen) newPage).refresh();
+            if (refresh) ((PosScreen) newPage).refresh();
             return (PosScreen) newPage;
         }
         return null;
