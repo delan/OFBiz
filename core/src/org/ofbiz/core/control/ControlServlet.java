@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.12  2001/08/25 17:29:11  azeneski
+ * Started migrating Debug.log to Debug.logInfo and Debug.logError
+ *
  * Revision 1.11  2001/08/25 01:42:01  azeneski
  * Seperated event processing, now is found totally in EventHandler.java
  * Updated all classes which deal with events to use to new handler.
@@ -143,19 +146,14 @@ public class ControlServlet extends HttpServlet {
             session.setAttribute(SiteDefs.CLIENT_REFERER,(request.getHeader("Referer") != null ? request.getHeader("Referer") : "" ));
         }
         
-        // for convenience, and necessity with event handlers, make security and helper available in the session:
-        GenericHelper helper = (GenericHelper)session.getAttribute("helper");
-        Security security = (Security)session.getAttribute("security");
-        if(helper == null) {
-            helper = (GenericHelper)getServletContext().getAttribute("helper");
-            if(helper == null) Debug.logError("[ControlServlet] ERROR: helper not found in ServletContext");
-            session.setAttribute("helper", helper);
-        }
-        if(security == null) {
-            security = (Security)getServletContext().getAttribute("security");
-            if(security == null) Debug.logError("[ControlServlet] ERROR: security not found in ServletContext");
-            session.setAttribute("security", security);
-        }
+        // for convenience, and necessity with event handlers, make security and helper available in the request:        
+        GenericHelper helper = (GenericHelper)getServletContext().getAttribute("helper");
+        if(helper == null) Debug.logError("[ControlServlet] ERROR: helper not found in ServletContext");
+        request.setAttribute("helper", helper);
+        
+        Security security = (Security)getServletContext().getAttribute("security");
+        if(security == null) Debug.logError("[ControlServlet] ERROR: security not found in ServletContext");
+        request.setAttribute("security", security);        
         
         try {
             nextPage = getRequestHandler().doRequest(request,response, null);

@@ -30,6 +30,26 @@ public class ConnectionFactory
       catch(NamingException ne) { /* Debug.logWarning("Failed to find DataSource named " + jndiName + " in JNDI. Trying normal database."); */ }
     }
     
+    // Try to use PoolMan Connection Pool.
+    boolean usingPoolMan = true;
+    try {
+       Class.forName("com.codestudio.sql.PoolMan").newInstance();
+       Debug.logInfo("Found PoolMan Driver...");
+    }
+    catch ( Exception ex ) { usingPoolMan = false; }
+   
+    if ( usingPoolMan ) {
+        String poolManName = UtilProperties.getPropertyValue("servers", serverName + ".jdbc.poolman");
+        Debug.logInfo("Attempting to connect to '"+poolManName+"'");
+        Connection con = DriverManager.getConnection("jdbc:poolman://" + poolManName);
+        if ( con != null ) {
+            Debug.logInfo("Connection to PoolMan established.");
+            return con;
+        }
+        usingPoolMan = false;
+    }
+    
+    // Default to plain JDBC.
     String driverClassName = UtilProperties.getPropertyValue("servers", serverName + ".jdbc.driver");
     try { Class.forName(driverClassName); }
     catch(ClassNotFoundException cnfe) { Debug.logWarning("Could not find JDBC driver class named " + driverClassName + ".\n"); Debug.logWarning(cnfe); return null; }

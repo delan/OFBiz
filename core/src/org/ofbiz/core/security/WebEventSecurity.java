@@ -95,7 +95,7 @@ public class WebEventSecurity
     String username = request.getParameter("USERNAME");
     String password = request.getParameter("PASSWORD");
 
-    GenericHelper helper = (GenericHelper)request.getSession().getAttribute("helper");
+    GenericHelper helper = (GenericHelper)request.getAttribute("helper");
 
     if(username == null || username.length() <= 0)
     {
@@ -159,7 +159,7 @@ public class WebEventSecurity
   {
     //invalidate the security group list cache
     GenericValue userLogin = (GenericValue) request.getSession().getAttribute(SiteDefs.USER_LOGIN);
-    Security sec = (Security)request.getSession().getAttribute("security");
+    Security sec = (Security)request.getAttribute("security");
     if(sec != null && userLogin != null) sec.userLoginSecurityGroupByUserLoginId.remove(userLogin.getString("userLoginId"));
     
     //invalidate doesn't work because it requires a new request to rebuild for some reason
