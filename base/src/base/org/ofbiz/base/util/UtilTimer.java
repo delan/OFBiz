@@ -1,5 +1,5 @@
 /*
- * $Id: UtilTimer.java,v 1.3 2003/08/20 23:46:03 ajzeneski Exp $
+ * $Id$
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -30,7 +30,7 @@ package org.ofbiz.base.util;
  * and the time since the start are reported in each call to timerString.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.3 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class UtilTimer {

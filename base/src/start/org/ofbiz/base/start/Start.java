@@ -1,5 +1,5 @@
 /*
- * $Id: Start.java,v 1.28 2004/08/02 03:26:59 ajzeneski Exp $
+ * $Id$
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -46,7 +46,7 @@ import java.util.Properties;
  * Start - OFBiz Container(s) Startup Class
  *
  * @author <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version $Revision: 1.28 $
+ * @version $Rev:$
  * @since 2.1
  */
 public class Start implements Runnable {

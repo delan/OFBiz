@@ -1,5 +1,5 @@
 /*
- * $Id: KeyStoreUtil.java,v 1.6 2003/12/04 18:39:14 ajzeneski Exp $
+ * $Id$
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -59,7 +59,7 @@ import javax.crypto.spec.DHParameterSpec;
  * KeyStoreUtil - Utilities for getting KeyManagers and TrustManagers
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.6 $
+ * @version    $Rev:$
  * @since      3.0
  */
 public class KeyStoreUtil {

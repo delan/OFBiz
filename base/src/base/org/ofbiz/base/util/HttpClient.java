@@ -1,5 +1,5 @@
 /*
- * $Id: HttpClient.java,v 1.4 2003/11/13 04:19:31 ajzeneski Exp $
+ * $Id$
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -40,7 +40,7 @@ import java.util.Set;
  * Send HTTP GET/POST requests.
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.4 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class HttpClient {

@@ -1,5 +1,5 @@
 /*
- * $Id: ContainerException.java,v 1.2 2003/08/20 02:33:13 ajzeneski Exp $
+ * $Id$
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -30,7 +30,7 @@ import org.ofbiz.base.config.*;
  * ContainerException
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Rev:$
  * @since      3.0
  */
 public class ContainerException extends GenericConfigException {

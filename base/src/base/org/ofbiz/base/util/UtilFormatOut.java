@@ -1,5 +1,5 @@
 /*
- * $Id: UtilFormatOut.java,v 1.8 2004/08/16 18:20:09 ajzeneski Exp $
+ * $Id$
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -35,7 +35,7 @@ import java.util.Currency;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.8 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class UtilFormatOut {

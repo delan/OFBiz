@@ -1,5 +1,5 @@
 /*
- * $Id: UtilJ2eeCompat.java,v 1.1 2003/08/15 20:23:19 ajzeneski Exp $
+ * $Id$
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -29,7 +29,7 @@ import javax.servlet.ServletContext;
  * Misc J2EE Compatibility Utility Functions
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class UtilJ2eeCompat {

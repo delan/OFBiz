@@ -1,5 +1,5 @@
 /*
- * $Id: BeanShellContainer.java,v 1.4 2004/07/31 20:10:12 ajzeneski Exp $
+ * $Id$
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -33,7 +33,7 @@ import org.ofbiz.base.util.Debug;
  * BeanShellContainer - Container implementation for BeanShell
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
-  *@version    $Revision: 1.4 $
+  *@version    $Rev:$
  * @since      3.0
  */
 public class BeanShellContainer implements Container {

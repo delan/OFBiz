@@ -1,5 +1,5 @@
 /*
- * $Id: StringUtil.java,v 1.5 2003/11/17 21:20:27 ajzeneski Exp $
+ * $Id$
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -38,7 +38,7 @@ import java.util.StringTokenizer;
  * Misc String Utility Functions
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.5 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class StringUtil {
@@ -300,7 +300,7 @@ public class StringUtil {
         str = cleanHexString(str);
         int stringLength = str.length();
         if ((stringLength & 0x1) != 0) {
-            throw new IllegalArgumentException("fromHexStringÊrequiresÊanÊevenÊnumberÊofÊhexÊcharacters");
+            throw new IllegalArgumentException("fromHexStringï¿½requiresï¿½anï¿½evenï¿½numberï¿½ofï¿½hexï¿½characters");
         }
         byte[] b = new byte[stringLength / 2];
 
@@ -321,7 +321,7 @@ public class StringUtil {
         } else if ( 'A' <= c && c <= 'F' ) {
             return c - 'A' + 0xa ;
         } else {
-            throw new IllegalArgumentException("InvalidÊhexÊcharacter:Ê" + c);
+            throw new IllegalArgumentException("Invalidï¿½hexï¿½character:ï¿½" + c);
         }
     }
 }

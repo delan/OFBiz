@@ -1,5 +1,5 @@
 /*
- * $Id: ComponentContainer.java,v 1.20 2004/07/31 20:10:12 ajzeneski Exp $
+ * $Id$
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -47,7 +47,7 @@ import org.ofbiz.base.util.UtilValidate;
  * </pre>
  *
  * @author <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version $Revision: 1.20 $
+ * @version $Rev:$
  * @since 3.0
  */
 public class ComponentContainer implements Container {

@@ -1,5 +1,5 @@
 /*
- * $Id: UtilValidate.java,v 1.5 2003/12/17 21:30:02 ajzeneski Exp $
+ * $Id$
  *
  *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
@@ -32,7 +32,7 @@ import java.util.Collection;
  * See detailed description below.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.5 $
+ * @version    $Rev:$
  * @since      1.0
  *
  *

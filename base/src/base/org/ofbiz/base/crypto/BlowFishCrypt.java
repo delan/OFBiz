@@ -1,5 +1,5 @@
 /*
- * $Id: BlowFishCrypt.java,v 1.1 2003/08/19 17:48:50 ajzeneski Exp $
+ * $Id$
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -40,7 +40,7 @@ import javax.crypto.spec.SecretKeySpec;
  * Blowfish (Two-Way) Byte/String encryption
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class BlowFishCrypt {

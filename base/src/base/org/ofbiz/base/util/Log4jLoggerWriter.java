@@ -1,5 +1,5 @@
 /*
- * $Id: Log4jLoggerWriter.java,v 1.1 2003/10/26 21:10:17 ajzeneski Exp $
+ * $Id$
  *
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -34,7 +34,7 @@ import org.apache.log4j.Priority;
  * Writer implementation for writing to a log4j logger.
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Rev:$
  * @since      3.0
  */
 public class Log4jLoggerWriter extends PrintWriter {

@@ -1,5 +1,5 @@
 /*
- * $Id: AlreadyLoadedException.java,v 1.1 2003/12/06 17:24:47 ajzeneski Exp $
+ * $Id$
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -28,7 +28,7 @@ package org.ofbiz.base.component;
  * Component Already Loaded Exception
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Rev:$
  * @since      3.0
  */
 public class AlreadyLoadedException extends ComponentException {

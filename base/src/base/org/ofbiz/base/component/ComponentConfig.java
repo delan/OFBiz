@@ -1,5 +1,5 @@
 /*
- * $Id: ComponentConfig.java,v 1.20 2004/07/01 07:57:49 jonesde Exp $
+ * $Id$
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -52,7 +52,7 @@ import org.xml.sax.SAXException;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.20 $
+ * @version    $Rev:$
  * @since      3.0
  */
 public class ComponentConfig {

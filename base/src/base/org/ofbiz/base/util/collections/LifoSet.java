@@ -1,5 +1,5 @@
 /*
- * $Id: LifoSet.java,v 1.5 2004/07/17 16:38:27 ajzeneski Exp $
+ * $Id$
  *
  *  Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -34,7 +34,7 @@ import java.util.EmptyStackException;
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.5 $
+ * @version    $Rev:$
  * @since      3.1
  */
 public class LifoSet extends AbstractSet implements Serializable {

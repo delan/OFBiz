@@ -1,5 +1,5 @@
 /*
- * $Id: MainResourceHandler.java,v 1.4 2004/07/07 17:10:36 ajzeneski Exp $
+ * $Id$
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -37,7 +37,7 @@ import org.w3c.dom.Element;
  * Contains resource information and provides for loading data
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.4 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class MainResourceHandler implements ResourceHandler {

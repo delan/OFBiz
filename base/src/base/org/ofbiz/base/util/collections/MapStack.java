@@ -1,5 +1,5 @@
 /*
- * $Id: MapStack.java,v 1.6 2004/07/28 03:40:35 jonesde Exp $
+ * $Id$
  *
  *  Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -38,7 +38,7 @@ import java.util.Set;
  * Map Stack
  * 
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.6 $
+ * @version    $Rev:$
  * @since      3.1
  */
 public class MapStack implements Map {

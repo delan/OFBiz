@@ -1,5 +1,5 @@
 /*
- * $Id: ComponentResourceHandler.java,v 1.6 2004/07/07 17:10:35 ajzeneski Exp $
+ * $Id$
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -39,7 +39,7 @@ import org.w3c.dom.Element;
  * Contains resource information and provides for loading data
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.6 $
+ * @version    $Rev:$
  * @since      3.0
  */
 public class ComponentResourceHandler implements ResourceHandler {

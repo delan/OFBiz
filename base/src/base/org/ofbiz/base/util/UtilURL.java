@@ -1,5 +1,5 @@
 /*
- * $Id: UtilURL.java,v 1.3 2004/06/30 21:25:58 jonesde Exp $
+ * $Id$
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -31,7 +31,7 @@ import java.net.URL;
  * URL Utilities - Simple Class for flexibly working with properties files
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.3 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class UtilURL {

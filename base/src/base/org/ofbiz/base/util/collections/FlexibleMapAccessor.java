@@ -1,5 +1,5 @@
 /*
- * $Id: FlexibleMapAccessor.java,v 1.4 2004/07/30 02:11:15 jonesde Exp $
+ * $Id$
  *
  *  Copyright (c) 2003-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -37,7 +37,7 @@ import org.ofbiz.base.util.UtilMisc;
  * list elements. See individual Map operations for more information.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.4 $
+ * @version    $Rev:$
  * @since      2.1
  */
 public class FlexibleMapAccessor {

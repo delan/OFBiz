@@ -1,5 +1,5 @@
 /*
- * $Id: Base64.java,v 1.1 2003/08/15 20:23:20 ajzeneski Exp $
+ * $Id$
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -29,7 +29,7 @@ package org.ofbiz.base.util;
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@author     UPS XPCI Sample Code
- *@version    $Revision: 1.1 $
+ *@version    $Rev:$
  *@since      2.2
  */
 

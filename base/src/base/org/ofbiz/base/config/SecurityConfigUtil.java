@@ -1,5 +1,5 @@
 /*
- * $Id: SecurityConfigUtil.java,v 1.1 2003/08/15 20:23:20 ajzeneski Exp $
+ * $Id$
  *
  *  Copyright (c) 2002 The Open For Business Project and repected authors.
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -36,7 +36,7 @@ import org.ofbiz.base.util.*;
  * The setup of custom security implementations can be customized in the security.xml file.
  *
  * @author     <a href="mailto:hermanns@aixcept.de">Rainer Hermanns</a>
- * @version    $Revision: 1.1 $
+ * @version    $Rev:$
  */
 public class SecurityConfigUtil {
     

@@ -1,5 +1,5 @@
 /*
- * $Id: StartupException.java,v 1.1 2003/08/15 20:23:20 ajzeneski Exp $
+ * $Id$
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -31,7 +31,7 @@ import java.io.PrintWriter;
  * StartupException
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
- * @version    $Revision: 1.1 $
+ * @version    $Rev:$
  * @since      2.2
  */
 public class StartupException extends Exception {
