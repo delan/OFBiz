@@ -1,5 +1,5 @@
 /*
- * $Id: MinervaConnectionFactory.java,v 1.2 2004/04/22 22:42:15 doogie Exp $
+ * $Id: MinervaConnectionFactory.java,v 1.3 2004/04/30 22:28:51 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -41,7 +41,7 @@ import org.w3c.dom.Element;
  * MinervaConnectionFactory - Central source for Minerva JDBC Objects
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      3.0
  */
 public class MinervaConnectionFactory {
@@ -64,36 +64,14 @@ public class MinervaConnectionFactory {
                 pds = new XAPoolDataSource();
                 pds.setPoolName(helperName);
             }
-            
-            // the xapool wrapper class
-            String wrapperClass = jotmJdbcElement.getAttribute("pool-xa-wrapper-class");
-            
+
             XADataSourceImpl ds = new XADataSourceImpl();
-        
-            /*         
-            try {                        
-                ds = (XADataSourceImpl) ObjectType.getInstance(wrapperClass);
-                pds = new XAPoolDataSource();
-            } catch (NoClassDefFoundError e) {                
-                throw new GenericEntityException("Cannot find xapool.jar");                       
-            } catch (ClassNotFoundException e) {
-                throw new GenericEntityException("Cannot load wrapper class: " + wrapperClass, e);                
-            } catch (InstantiationException e) {
-                throw new GenericEntityException("Unable to instantiate " + wrapperClass, e);                
-            } catch (IllegalAccessException e) {
-                throw new GenericEntityException("Problems getting instance of " + wrapperClass, e);                
-            }
-            */
-            
+
             if (ds == null)
                 throw new GenericEntityException("XADataSource was not created, big problem!");
             
             ds.setDriver(jotmJdbcElement.getAttribute("jdbc-driver"));
             ds.setURL(jotmJdbcElement.getAttribute("jdbc-uri"));
-            //ds.setUser(jotmJdbcElement.getAttribute("jdbc-username"));
-            //ds.setPassword(jotmJdbcElement.getAttribute("jdbc-password"));
-            //ds.setDescription(helperName);  
-            //ds.setTransactionManager(TransactionFactory.getTransactionManager()); 
             
             String transIso = jotmJdbcElement.getAttribute("isolation-level");
             if (transIso != null && transIso.length() > 0) {
@@ -112,10 +90,8 @@ public class MinervaConnectionFactory {
             
             // set the datasource in the pool            
             pds.setDataSource(ds);
-            //pds.setDescription(ds.getDescription());
             pds.setJDBCUser(jotmJdbcElement.getAttribute("jdbc-username"));
             pds.setJDBCPassword(jotmJdbcElement.getAttribute("jdbc-password"));
-            //Debug.logInfo("XADataSource: " + ds.getClass().getName() + " attached to pool.", module);
             
             // set the transaction manager in the pool
             pds.setTransactionManager(TransactionFactory.getTransactionManager());
@@ -124,19 +100,6 @@ public class MinervaConnectionFactory {
             try {            
                 pds.setMaxSize(new Integer(jotmJdbcElement.getAttribute("pool-maxsize")).intValue());
                 pds.setMinSize(new Integer(jotmJdbcElement.getAttribute("pool-minsize")).intValue());
-                //pds.setSleepTime(new Long(jotmJdbcElement.getAttribute("pool-sleeptime")).longValue());
-                //pds.setLifeTime(new Long(jotmJdbcElement.getAttribute("pool-lifetime")).longValue());
-                //pds.setDeadLockMaxWait(new Long(jotmJdbcElement.getAttribute("pool-deadlock-maxwait")).longValue());
-                //pds.setDeadLockRetryWait(new Long(jotmJdbcElement.getAttribute("pool-deadlock-retrywait")).longValue());
-                
-                // set the test statement to test connections
-                /*
-                String testStmt = jotmJdbcElement.getAttribute("pool-jdbc-test-stmt");
-                if (testStmt != null && testStmt.length() > 0) {
-                    pds.setJdbcTestStmt(testStmt);
-                    Debug.logInfo("Set JDBC Test Statement : " + testStmt, module);
-                } 
-                */               
             } catch (NumberFormatException nfe) {
                 Debug.logError(nfe, "Problems with pool settings; the values MUST be numbers, using defaults.", module);
             } catch (Exception e) {

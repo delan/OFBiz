@@ -1,5 +1,5 @@
 /*
- * $Id: EntityConfigUtil.java,v 1.8 2004/04/29 23:00:38 doogie Exp $
+ * $Id: EntityConfigUtil.java,v 1.9 2004/04/30 22:28:48 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -45,7 +45,7 @@ import org.w3c.dom.Element;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
- * @version    $Revision: 1.8 $
+ * @version    $Revision: 1.9 $
  * @since      2.0
  */
 public class EntityConfigUtil {
@@ -397,7 +397,8 @@ public class EntityConfigUtil {
         public boolean checkFkIndicesOnStart = false;
         public boolean usePkConstraintNames = true;
         public int constraintNameClipLength = 30;
-        public String cursorName = "cursor";
+        public boolean useProxyCursor = false;
+        public String cursorName = "p_cursor";
         public int resultFetchSize = -1;
         public String fkStyle = null;
         public boolean useFkInitiallyDeferred = true;
@@ -454,7 +455,8 @@ public class EntityConfigUtil {
                 } catch (Exception e) {
                     Debug.logError("Could not parse constraint-name-clip-length value for datasource with name " + this.name + ", using default value of 30", module);
                 }
-                cursorName = datasourceElement.getAttribute("cursor-name");
+                useProxyCursor = "true".equalsIgnoreCase(datasourceElement.getAttribute("use-proxy-cursor"));
+                cursorName = datasourceElement.getAttribute("proxy-cursor-name");
                 try {
                     resultFetchSize = Integer.parseInt(datasourceElement.getAttribute("result-fetch-size"));
                 } catch (Exception e) {
