@@ -187,17 +187,18 @@ public class PaymentGatewayServices {
 
         // we can determine if all was good if amountToBill is now zero.
         if (amountToBill > 0) {
-            Debug.logError("Problem! Not all payment methods were approved. However, some where and partial payment as been accepted." + "(" + orderId + ")", module);
+            Debug.logError("Problem! Could not authorize funds for entire amount to bill. If multiple payment methods were used a partial payment may have been authorized. (" + orderId + ")", module);
+            //This error message doesn't make sense, ie it isn't really true: Debug.logError("Problem! Not all payment methods were approved. However, some where and partial payment as been accepted." + "(" + orderId + ")", module);
             result.put("processResult", "FAILED");
         }
 
         if (amountToBill == 0) {
-            Debug.logVerbose("All payment methods were processed successfully." + "(" + orderId + ")", module);
+            if (Debug.verboseOn()) Debug.logVerbose("All payment methods were processed successfully. (" + orderId + ")", module);
             result.put("processResult", "APPROVED");
         }
 
         if (amountToBill < 0) {
-            Debug.logError("Something really wierd happened. We processed more then expected!" + "(" + orderId + ")", module);
+            Debug.logError("Something really wierd happened. We processed more then expected! (" + orderId + ")", module);
             result.put("processResult", "ERROR");
         }
         result.put("orderId", orderId);

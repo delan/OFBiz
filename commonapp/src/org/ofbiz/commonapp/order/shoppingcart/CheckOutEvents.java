@@ -543,6 +543,7 @@ public class CheckOutEvents {
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
         ShoppingCart cart = (ShoppingCart) request.getSession().getAttribute(SiteDefs.SHOPPING_CART);
+        GenericValue userLogin = (GenericValue) session.getAttribute(SiteDefs.USER_LOGIN);
 
         // Load the order.properties file.
         URL orderPropertiesUrl = null;
@@ -623,7 +624,7 @@ public class CheckOutEvents {
 
                         // cancel inventory reservations
                         try {
-                            Map cancelResult = dispatcher.runSync("cancelOrderInventoryReservation", UtilMisc.toMap("orderId", orderId));
+                            Map cancelResult = dispatcher.runSync("cancelOrderInventoryReservation", UtilMisc.toMap("orderId", orderId, "userLogin", userLogin));
 
                             if (ModelService.RESPOND_ERROR.equals((String) cancelResult.get(ModelService.RESPONSE_MESSAGE))) {
                                 Debug.logError("cancelOrderInventoryReservation service failed for Order with ID [" + orderId + "] - " + ServiceUtil.makeErrorMessage(cancelResult, "", "\n", "", ""), module);
