@@ -1,5 +1,5 @@
 /*
- * $Id: PartyHelper.java,v 1.3 2004/06/11 16:39:20 ajzeneski Exp $
+ * $Id: PartyHelper.java,v 1.4 2004/06/25 18:15:44 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -35,7 +35,7 @@ import org.ofbiz.entity.GenericValue;
  * PartyHelper
  *
  * @author     <a href="mailto:epabst@bigfoot.com">Eric Pabst</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.0
  */
 public class PartyHelper {
@@ -98,18 +98,30 @@ public class PartyHelper {
         StringBuffer result = new StringBuffer(20);
 
         GenericValue workingObject = null;
-        if ("UserLogin".equals(partyObject.getEntityName())) {
+        if ("PartyGroup".equals(partyObject.getEntityName()) || "Person".equals(partyObject.getEntityName())) {
+            workingObject = partyObject;
+        } else {
+            String partyId = null;
             try {
-                workingObject = partyObject.getDelegator().findByPrimaryKey("Person", UtilMisc.toMap("partyId", partyObject.getString("partyId")));
+                partyId = partyObject.getString("partyId");
+            } catch (IllegalArgumentException e) {
+                Debug.logError("Party object does not contain a party ID", module);
+            }
+
+            if (partyId == null) {
+                Debug.logWarning("No party ID found; cannot get name", module);
+                return null;
+            }
+
+            try {
+                workingObject = partyObject.getDelegator().findByPrimaryKey("Person", UtilMisc.toMap("partyId", partyId));
 
                 if (workingObject == null) {
-                    workingObject = partyObject.getDelegator().findByPrimaryKey("PartyGroup", UtilMisc.toMap("partyId", partyObject.getString("partyId")));
+                    workingObject = partyObject.getDelegator().findByPrimaryKey("PartyGroup", UtilMisc.toMap("partyId", partyId));
                 }
             } catch (GenericEntityException e) {
                 Debug.logWarning(e, module);
             }
-        } else {
-            workingObject = partyObject;
         }
 
         if (workingObject != null) {
@@ -132,6 +144,8 @@ public class PartyHelper {
             } else if ("PartyGroup".equals(workingObject.getEntityName())) {
                 result.append(workingObject.getString("groupName"));
             }
+        } else {
+            Debug.logWarning("No party type object found", module);
         }
 
         return result.toString().trim();
