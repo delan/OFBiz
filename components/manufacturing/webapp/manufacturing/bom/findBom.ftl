@@ -131,7 +131,7 @@ ${pages.get("/bom/BomTabBar.ftl")}
     </td>
   </tr>
 </table>
-<input type="image" src="/images/spacer.gif" onClick="javascript:lookupBom();">
+<input type="image" src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" onClick="javascript:lookupBom();">
 </form> 
 
 <#if requestParameters.hideFields?default("N") != "Y">

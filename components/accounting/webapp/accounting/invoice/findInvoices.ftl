@@ -120,7 +120,7 @@ function lookupInvoices() {
     </td>
   </tr>
 </table>
-<input type="image" src="/images/spacer.gif" onClick="javascript:lookupInvoices();">
+<input type="image" src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" onClick="javascript:lookupInvoices();">
 </form> 
 <script language="JavaScript">
 <!--//

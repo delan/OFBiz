@@ -147,7 +147,7 @@ function lookupPayment() {
     </td>
   </tr>
 </table>
-<input type="image" src="/images/spacer.gif" onClick="javascript:lookupPayment();">
+<input type="image" src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" onClick="javascript:lookupPayment();">
 </form> 
 <script language="JavaScript">
 <!--//
