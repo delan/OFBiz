@@ -68,6 +68,11 @@
       <relation type="one" fk-name="ITEM_ISS_INVITM" rel-entity-name="InventoryItem">
         <key-map field-name="inventoryItemId"/>
       </relation>
+      <relation type="one-nofk" rel-entity-name="OrderItemInventoryRes">
+        <key-map field-name="orderId"/>
+        <key-map field-name="orderItemSeqId"/>
+        <key-map field-name="inventoryItemId"/>
+      </relation>
       <relation type="one-nofk" rel-entity-name="Shipment">
         <key-map field-name="shipmentId"/>
       </relation>

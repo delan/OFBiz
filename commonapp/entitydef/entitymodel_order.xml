@@ -665,6 +665,10 @@
         <key-map field-name="orderId"/>
         <key-map field-name="orderItemSeqId"/>
       </relation>
+      <relation type="many" rel-entity-name="ItemIssuance">
+        <key-map field-name="orderId"/>
+        <key-map field-name="orderItemSeqId"/>
+      </relation>
     </entity>
     <entity entity-name="OrderItemAssociation"
             package-name="org.ofbiz.commonapp.order.order"
@@ -789,6 +793,11 @@
       </relation>
       <relation type="one" fk-name="ORDER_ITIR_STTS" rel-entity-name="StatusItem">
         <key-map field-name="statusId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ItemIssuance">
+        <key-map field-name="orderId"/>
+        <key-map field-name="orderItemSeqId"/>
+        <key-map field-name="inventoryItemId"/>
       </relation>
     </entity>
     <entity entity-name="OrderItemPriceInfo"
