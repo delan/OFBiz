@@ -23,6 +23,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * @author     Andy Zeneski (jaz@ofbiz.org)
+ * @author     David E. Jones (jonesde@ofbiz.org)
  * @version    $Revision$
  * @since      2.1.1
 -->
@@ -108,7 +109,7 @@
         <string-to-list string="-shoppingListItemSeqId" list-name="orderBy"/>
         <find-by-and entity-name="ShoppingListItem" list-name="currentItems" map-name="lookupMap" order-by-list-name="orderBy"></find-by-and>
         <if-empty field-name="currentItems">
-            <string-to-field string="1" field-name="shoppingListItemSeqId" map-name="newEntity"/>                        
+            <string-to-field string="00001" field-name="shoppingListItemSeqId" map-name="newEntity"/>                        
         <else>
            <first-from-list entry-name="newestItem" list-name="currentItems"/>
            <calculate field-name="shoppingListItemSeqId" map-name="newEntity" type="Integer">
