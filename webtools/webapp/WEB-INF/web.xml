@@ -37,13 +37,16 @@
     <param-value>/WEB-INF/webtools-config.xml</param-value>
     <description>Request/View Mapping And Site Configuration File</description>
   </context-param>
-<!--
   <context-param>
     <param-name>serviceReaderUrls</param-name>
     <param-value>/WEB-INF/services.xml</param-value>
     <description>Configuration File(s) For The Service Dispatcher</description>
   </context-param>
--->
+  <context-param>
+    <param-name>scriptLocationPath</param-name>
+    <param-value>/WEB-INF/bsh</param-value>
+    <description>BeanShell Script Location</description>
+  </context-param>   
   
   <filter>
     <filter-name>ContextSecurityFilter</filter-name>
