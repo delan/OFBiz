@@ -871,9 +871,25 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="messagelist"/>
     </request-map>
+    <request-map uri="sentmessages">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="sentmessages"/>
+    </request-map>
     <request-map uri="readmessage">
         <security https="true" auth="true"/>
+        <event type="service" invoke="markMessageRead"/>
         <response name="success" type="view" value="messagedetail"/>
+        <response name="error" type="view" value="messagedetail"/>
+    </request-map>
+    <request-map uri="newmessage">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="messagecreate"/>
+    </request-map>
+    <request-map uri="sendmessage">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createCommunicationEvent"/>
+        <response name="success" type="view" value="messagelist"/>
+        <response name="error" type="view" value="messagecreate"/>
     </request-map>
 
     <request-map uri="contactus">
@@ -1040,7 +1056,9 @@
     <view-map name="giftcardlink" type="jpublish" page="/customer/giftcardlink.ftl"/>
     <view-map name="profilesurvey" type="jpublish" page="/customer/customersurvey.ftl"/>
     <view-map name="messagelist" type="jpublish" page="/customer/messagelist.ftl"/>
+    <view-map name="sentmessages" type="jpublish" page="/customer/sentmessages.ftl"/>    
     <view-map name="messagedetail" type="jpublish" page="/customer/messagedetail.ftl"/>
+    <view-map name="messagecreate" type="jpublish" page="/customer/messagecreate.ftl"/>
 
     <view-map name="defaultcontent" type="jpublish" page="/content/defaultcontent.ftl"/>
 

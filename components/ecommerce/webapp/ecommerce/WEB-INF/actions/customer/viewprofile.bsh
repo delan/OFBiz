@@ -78,7 +78,9 @@ if (userLogin != null) {
     orderBy = UtilMisc.toList("-entryDate");
     findOpts = new EntityFindOptions();
     findOpts.setMaxRows(5);
-    condition = new EntityExpr("partyIdTo", EntityOperator.EQUALS, partyId);
+    exprs = UtilMisc.toList(new EntityExpr("partyIdTo", EntityOperator.EQUALS, partyId));
+    exprs.add(new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "COM_READ"));
+    condition = new EntityConditionList(exprs, EntityOperator.AND);
     eli = delegator.findListIteratorByCondition("CommunicationEvent", condition, null, null, orderBy, findOpts);
     messages = eli.getCompleteList();
     context.put("messages", messages);

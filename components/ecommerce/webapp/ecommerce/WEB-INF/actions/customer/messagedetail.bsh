@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      3.1
  */
 
@@ -33,8 +33,15 @@ userLogin = session.getAttribute("userLogin");
 if (userLogin != null) {
     partyId = userLogin.getString("partyId");
     messageId = request.getParameter("messageId");
-    messages = delegator.findByAnd("CommunicationEvent", UtilMisc.toMap("communicationEventId", messageId, "partyIdTo", partyId));
+    useSentTo = request.getParameter("useSentTo");
+    if (useSentTo.equalsIgnoreCase("true")) {
+        partyField = "partyIdFrom";
+    } else {
+        partyField = "partyIdTo";
+    }
+    messages = delegator.findByAnd("CommunicationEvent", UtilMisc.toMap("communicationEventId", messageId, partyField, partyId));
     message = EntityUtil.getFirst(messages);
     context.put("message", message);
+    context.put("useSentTo", useSentTo);
 }
 

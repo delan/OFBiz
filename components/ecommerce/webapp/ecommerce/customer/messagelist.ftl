@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      3.1
 -->
 
@@ -32,11 +32,13 @@
           <td valign="middle" align="left">
             <div class="boxhead">&nbsp;Messages</div>
           </td>
-          <#if profileMessages?exists>
-            <td valign="middle" align="right">
+          <td valign="middle" align="right">
+            <#if profileMessages?exists || useSentTo?exists>
               <a href="<@ofbizUrl>/messagelist</@ofbizUrl>" class="submenutextright">View All</a>
-            </td>
-          </#if>
+            <#else>
+              <a href="<@ofbizUrl>/sentmessages</@ofbizUrl>" class="submenutextright">View Sent</a>
+            </#if>
+          </td>
         </tr>
       </table>
     </TD>
@@ -51,7 +53,11 @@
                 <tr><td><div class="tabletext">No messages.</div></td></tr>
               <#else>
                 <tr>
-                  <td><div class="tableheadtext">From</div></td>
+                  <#if !useSentTo?exists>
+                    <td><div class="tableheadtext">From</div></td>
+                  <#else>
+                    <td><div class="tableheadtext">To</div></td>
+                  </#if>
                   <td><div class="tableheadtext">Subject</div></td>
                   <td><div class="tableheadtext">Sent Date</div></td>
                   <td>&nbsp;</td>
@@ -59,13 +65,26 @@
                 <tr><td colspan="4"><hr class="sepbar"></td></tr>
                 <#list messages as message>
                   <#assign delegator = requestAttributes.delegator>
-                  <#assign partyId = message.partyIdFrom>
-                  <#assign partyName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyId, true)>
+                  <#if useSentTo?exists>
+                    <#assign partyId = message.partyIdTo?if_exists>
+                  <#else>
+                    <#assign partyId = message.partyIdFrom?if_exists>
+                  </#if>
+                  <#if partyId?has_content>
+                    <#assign partyName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyId, true)>
+                  <#else>
+                    <#assign partyName = "N/A">
+                  </#if>
                   <tr>
                     <td><div class="tabletext">${partyName}</div></td>
                     <td><div class="tabletext">${message.subject?default("")}</div></td>
                     <td><div class="tabletext">${message.entryDate}</div></td>
-                    <td align="right"><a href="<@ofbizUrl>/readmessage?messageId=${message.communicationEventId}</@ofbizUrl>" class="buttontext">[Read]</a></td>
+                    <td align="right">
+                      <#if !useSentTo?exists>
+                        <a href="<@ofbizUrl>/newmessage?messageId=${message.communicationEventId}</@ofbizUrl>" class="buttontext">[Reply]</a>
+                      </#if>
+                      <a href="<@ofbizUrl>/readmessage?messageId=${message.communicationEventId}&useSentTo=${(useSentTo)?default("false")}</@ofbizUrl>" class="buttontext">[Read]</a>
+                    </td>
                   </tr>
                 </#list>
               </#if>
