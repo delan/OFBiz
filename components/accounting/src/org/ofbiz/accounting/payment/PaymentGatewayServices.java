@@ -1,5 +1,5 @@
 /*
- * $Id: PaymentGatewayServices.java,v 1.1 2003/08/18 17:31:37 ajzeneski Exp $
+ * $Id: PaymentGatewayServices.java,v 1.2 2003/08/21 01:33:14 ajzeneski Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -55,7 +55,7 @@ import org.ofbiz.service.ServiceUtil;
  * PaymentGatewayServices
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class PaymentGatewayServices {    
@@ -135,15 +135,16 @@ public class PaymentGatewayServices {
             // handle the response
             if (processorResult != null) {
                 GenericValue paymentSettings = (GenericValue) processorResult.get("paymentSettings");
-                Double thisAmount = (Double) processorResult.get("processAmount");
-                finished.add(processorResult);
+                Double thisAmount = (Double) processorResult.get("processAmount");                
 
                 // process the auth results             
                 boolean processResult = false;
                 try {
                     processResult = processResult(dctx, processorResult, userLogin, paymentPref, paymentSettings);
-                    if (processResult)
+                    if (processResult) {
                         amountToBill -= thisAmount.doubleValue();
+                        finished.add(processorResult);
+                    }
                 } catch (GeneralException e) {
                     Debug.logError(e, "Trouble processing the result; processorResult: " + processorResult, module);
                     ServiceUtil.returnError("Trouble processing the auth results");                     
@@ -891,7 +892,8 @@ public class PaymentGatewayServices {
         Map result = new HashMap();
         Double processAmount = (Double) context.get("processAmount");
         long nowTime = new Date().getTime();
-
+        Debug.logInfo("Test Processor Approving Credit Cart", module);
+        
         result.put("authResult", new Boolean(true));
         result.put("processAmount", context.get("processAmount"));       
         result.put("authRefNum", new Long(nowTime).toString());
@@ -907,6 +909,7 @@ public class PaymentGatewayServices {
         Map result = new HashMap();
         Double processAmount = (Double) context.get("processAmount");
         long nowTime = new Date().getTime();
+        Debug.logInfo("Test Processor Declining Credit Cart", module);
 
         result.put("authResult", new Boolean(false));
         result.put("processAmount", context.get("processAmount"));       
