@@ -316,6 +316,16 @@
 
   <ProductStorePromoAppl fromDate="2001-01-01 12:00:00.0" productStoreId="9000" productPromoId="9000" />
 
+  <!-- Some additional test promotions -->
+    <!-- $ off items, any in category, limit use (try by order, customer, promo) -->
+    <!-- 20% off any one item in product list, ie limit 1 per order -->
+    <!-- 10% off entire purchase -->
+    <!-- $ off entire purchase -->
+    <!-- Buy 2 Get 1 Free, limit to two usages to test interesting combinations -->
+    <!-- Buy 1 Get 1 At 50% off -->
+    <!-- 2 for $ -->
+    <!-- GWP (above exmaple will do) -->
+
   <!-- a default pricing rule to play with; take 20% off all products in the PROMOTIONS category -->
   <ProductPriceRule productPriceRuleId="9000" ruleName="Test Rule 1" isSale="Y"/>
   <ProductPriceAction amount="-20.0" productPriceActionSeqId="01" productPriceActionTypeId="PRICE_POL" productPriceRuleId="9000"/>

@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.29 $
+ * @version    $Revision: 1.30 $
  */
 -->
 
@@ -65,13 +65,13 @@
             package-name="org.ofbiz.product.catalog"
             title="Catalog Entity">
       <field name="prodCatalogId" type="id-ne"></field>
-      <field name="catalogName" type="name"></field>     
+      <field name="catalogName" type="name"></field>
       <field name="useQuickAdd" type="indicator"></field>
       <field name="styleSheet" type="url"></field>
       <field name="headerLogo" type="url"></field>
       <field name="contentPathPrefix" type="long-varchar"></field>
       <field name="templatePathPrefix" type="long-varchar"></field>
-      <prim-key field="prodCatalogId"/>        
+      <prim-key field="prodCatalogId"/>
       <relation type="many" rel-entity-name="ProdCatalogCategory">
         <key-map field-name="prodCatalogId"/>
       </relation>
@@ -2020,17 +2020,29 @@
       <relation type="one" fk-name="PROD_PRACT_OATYPE" rel-entity-name="OrderAdjustmentType">
         <key-map field-name="orderAdjustmentTypeId"/>
       </relation>
+      <relation type="many" rel-entity-name="ProductPromoCategory">
+        <key-map field-name="productPromoId"/>
+        <key-map field-name="productPromoRuleId"/>
+        <key-map field-name="productPromoActionSeqId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ProductPromoProduct">
+        <key-map field-name="productPromoId"/>
+        <key-map field-name="productPromoRuleId"/>
+        <key-map field-name="productPromoActionSeqId"/>
+      </relation>
     </entity>
     <entity entity-name="ProductPromoCategory"
             package-name="org.ofbiz.product.promo"
             title="Product Promotion Category Entity">
       <field name="productPromoId" type="id-ne"></field>
+      <field name="productPromoRuleId" type="id-ne"></field>
       <field name="productPromoActionSeqId" type="id-ne"></field>
       <field name="productPromoCondSeqId" type="id-ne"></field>
       <field name="productCategoryId" type="id-ne"></field>
       <field name="productPromoApplEnumId" type="id-ne"></field>
       <field name="includeSubCategories" type="indicator"></field>
       <prim-key field="productPromoId"/>
+      <prim-key field="productPromoRuleId"/>
       <prim-key field="productPromoActionSeqId"/>
       <prim-key field="productPromoCondSeqId"/>
       <prim-key field="productCategoryId"/>
@@ -2040,7 +2052,7 @@
       <relation type="one" fk-name="PROD_PRCAT_PRCAT" rel-entity-name="ProductCategory">
         <key-map field-name="productCategoryId"/>
       </relation>
-      <relation type="one" fk-name="PROD_PRCAT_ENUM" rel-entity-name="Enumeration">
+      <relation type="one" fk-name="PROD_PRCAT_ENUM" title="Appl" rel-entity-name="Enumeration">
         <key-map field-name="productPromoApplEnumId" rel-field-name="enumId"/>
       </relation>
     </entity>
@@ -2106,16 +2118,28 @@
       <relation type="one" fk-name="PROD_PRCOND_OPENUM" title="Operator" rel-entity-name="Enumeration">
         <key-map field-name="operatorEnumId" rel-field-name="enumId"/>
       </relation>
+      <relation type="many" rel-entity-name="ProductPromoCategory">
+        <key-map field-name="productPromoId"/>
+        <key-map field-name="productPromoRuleId"/>
+        <key-map field-name="productPromoCondSeqId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ProductPromoProduct">
+        <key-map field-name="productPromoId"/>
+        <key-map field-name="productPromoRuleId"/>
+        <key-map field-name="productPromoCondSeqId"/>
+      </relation>
     </entity>
     <entity entity-name="ProductPromoProduct"
             package-name="org.ofbiz.product.promo"
             title="Product Promotion Category Entity">
       <field name="productPromoId" type="id-ne"></field>
+      <field name="productPromoRuleId" type="id-ne"></field>
       <field name="productPromoActionSeqId" type="id-ne"></field>
       <field name="productPromoCondSeqId" type="id-ne"></field>
       <field name="productId" type="id-ne"></field>
       <field name="productPromoApplEnumId" type="id-ne"></field>
       <prim-key field="productPromoId"/>
+      <prim-key field="productPromoRuleId"/>
       <prim-key field="productPromoActionSeqId"/>
       <prim-key field="productPromoCondSeqId"/>
       <prim-key field="productId"/>
@@ -2125,7 +2149,7 @@
       <relation type="one" fk-name="PROD_PRPRD_PROD" rel-entity-name="Product">
         <key-map field-name="productId"/>
       </relation>
-      <relation type="one" fk-name="PROD_PRPRD_ENUM" rel-entity-name="Enumeration">
+      <relation type="one" fk-name="PROD_PRPRD_ENUM" title="Appl" rel-entity-name="Enumeration">
         <key-map field-name="productPromoApplEnumId" rel-field-name="enumId"/>
       </relation>
     </entity>
@@ -2294,7 +2318,7 @@
       <field name="facilityId" type="id-ne"></field>
       <field name="contactMechId" type="id-ne"></field>
       <field name="fromDate" type="date-time"></field>
-      <field name="thruDate" type="date-time"></field>          
+      <field name="thruDate" type="date-time"></field>
       <field name="extension" type="very-short"></field>
       <field name="comments" type="comment"></field>
       <prim-key field="facilityId"/>
@@ -2339,7 +2363,7 @@
       <relation type="one" fk-name="FACIL_CMPRP_CMECH" rel-entity-name="ContactMech">
         <key-map field-name="contactMechId"/>
       </relation>
-    </entity>   
+    </entity>
     <entity entity-name="FacilityGroup"
             package-name="org.ofbiz.product.storage"
             title="Facility Group Entity">
@@ -2557,7 +2581,7 @@
       <field name="itemApprovedStatus" type="id"></field>
       <field name="digitalItemApprovedStatus" type="id"></field>
       <field name="headerDeclinedStatus" type="id"></field>
-      <field name="itemDeclinedStatus" type="id"></field>      
+      <field name="itemDeclinedStatus" type="id"></field>
       <field name="headerCancelStatus" type="id"></field>
       <field name="itemCancelStatus" type="id"></field>
       <field name="authDeclinedMessage" type="long-varchar"></field>
@@ -2616,7 +2640,7 @@
       <relation type="one" fk-name="PS_CAT_CATALOG" rel-entity-name="ProdCatalog">
         <key-map field-name="prodCatalogId"/>
       </relation>
-    </entity>  
+    </entity>
     <entity entity-name="ProductStoreEmailSetting"
             package-name="org.ofbiz.product.store"
             title="Product Store Email Settings Entity">
@@ -2627,7 +2651,7 @@
       <field name="ccAddress" type="email"></field>
       <field name="bccAddress" type="email"></field>
       <field name="subject" type="comment"></field>
-      <field name="contentType" type="long-varchar"></field>               
+      <field name="contentType" type="long-varchar"></field>
       <prim-key field="productStoreId"/>
       <prim-key field="emailType"/>
       <relation type="one" fk-name="PRDSTREM_PRDS" rel-entity-name="ProductStore">
@@ -2635,8 +2659,8 @@
       </relation>
       <relation type="one" fk-name="PRDSTREM_ENUM" rel-entity-name="Enumeration">
         <key-map field-name="emailType" rel-field-name="enumId"/>
-      </relation>     
-    </entity>    
+      </relation>
+    </entity>
     <entity entity-name="ProductStoreFacility"
             package-name="org.ofbiz.product.store"
             title="Product Store Inventory Facility Applicability Entity">
@@ -2661,16 +2685,16 @@
         <member-entity entity-alias="ORH" entity-name="OrderHeader"/>
         <member-entity entity-alias="PSF" entity-name="ProductStoreFacility"/>
         <member-entity entity-alias="PDS" entity-name="ProductStore"/>
-        <member-entity entity-alias="FAC" entity-name="Facility"/>        
+        <member-entity entity-alias="FAC" entity-name="Facility"/>
         <alias entity-alias="ORH" name="orderId"/>
         <alias entity-alias="PSF" name="productStoreId"/>
         <alias entity-alias="PSF" name="facilityId"/>
         <alias entity-alias="PSF" name="fromDate"/>
         <alias entity-alias="PSF" name="thruDate"/>
         <alias entity-alias="PSF" name="sequenceNum"/>
-        <alias entity-alias="PDS" name="storeName"/>  
+        <alias entity-alias="PDS" name="storeName"/>
         <alias entity-alias="FAC" name="facilityName"/>
-        <alias entity-alias="FAC" name="facilityTypeId"/>        
+        <alias entity-alias="FAC" name="facilityTypeId"/>
         <view-link entity-alias="ORH" rel-entity-alias="PSF">
             <key-map field-name="productStoreId"/>
         </view-link>
@@ -2679,7 +2703,7 @@
         </view-link>
         <view-link entity-alias="PSF" rel-entity-alias="FAC">
             <key-map field-name="facilityId"/>
-        </view-link>        
+        </view-link>
     </view-entity>
     <entity entity-name="ProductStoreGroup"
             package-name="org.ofbiz.product.store"
@@ -2802,10 +2826,10 @@
     <entity entity-name="ProductStorePaymentSetting"
             package-name="org.ofbiz.product.store"
             title="Product Store Payment Settings Entity">
-      <field name="productStoreId" type="id-ne"></field>      
+      <field name="productStoreId" type="id-ne"></field>
       <field name="paymentMethodTypeId" type="id-ne"></field>
       <field name="paymentServiceTypeEnumId" type="id-ne"></field>
-      <field name="paymentService" type="value"></field>     
+      <field name="paymentService" type="value"></field>
       <field name="paymentPropertiesPath" type="value"></field>
       <prim-key field="productStoreId"/>
       <prim-key field="paymentMethodTypeId"/>
@@ -2818,7 +2842,7 @@
       </relation>
       <relation type="one" fk-name="PRDS_PS_ENUM" rel-entity-name="Enumeration">
         <key-map field-name="paymentServiceTypeEnumId" rel-field-name="enumId"/>
-      </relation>      
+      </relation>
     </entity>
     <entity entity-name="ProductStorePromoAppl"
             package-name="org.ofbiz.product.store"
@@ -2877,12 +2901,12 @@
       <field name="productStoreId" type="id-ne"></field>
       <field name="shipmentMethodTypeId" type="id-ne"></field>
       <field name="partyId" type="id-ne"></field>
-      <field name="roleTypeId" type="id-ne"></field>      
-      <field name="sequenceNumber" type="numeric"></field> 
-      <prim-key field="productStoreId"/>    
+      <field name="roleTypeId" type="id-ne"></field>
+      <field name="sequenceNumber" type="numeric"></field>
+      <prim-key field="productStoreId"/>
       <prim-key field="shipmentMethodTypeId"/>
       <prim-key field="partyId"/>
-      <prim-key field="roleTypeId"/>    
+      <prim-key field="roleTypeId"/>
     </entity>
     <view-entity entity-name="ProductStoreShipmentMethView"
             package-name="org.ofbiz.product.store"
@@ -2898,7 +2922,7 @@
       <view-link entity-alias="PSSM" rel-entity-alias="SM">
         <key-map field-name="shipmentMethodTypeId"/>
       </view-link>
-    </view-entity>      
+    </view-entity>
 
   <!-- ========================================================= -->
   <!-- org.ofbiz.product.supplier -->
