@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCartEvents.java,v 1.13 2004/06/01 11:27:08 jonesde Exp $
+ * $Id: ShoppingCartEvents.java,v 1.14 2004/06/01 12:43:15 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -56,7 +56,7 @@ import org.ofbiz.service.ModelService;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:tristana@twibble.org">Tristan Austin</a>
- * @version    $Revision: 1.13 $
+ * @version    $Revision: 1.14 $
  * @since      2.0
  */
 public class ShoppingCartEvents {
@@ -423,6 +423,7 @@ public class ShoppingCartEvents {
     public static String setDesiredAlternateGwpProductId(HttpServletRequest request, HttpServletResponse response) {
         ShoppingCart cart = getCartObject(request);
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
+        LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         String alternateGwpProductId = request.getParameter("alternateGwpProductId");
         String alternateGwpLineStr = request.getParameter("alternateGwpLine");
         
@@ -456,11 +457,15 @@ public class ShoppingCartEvents {
                 GenericValue checkOrderAdjustment = (GenericValue) checkOrderAdjustments.next();
                 GenericPK productPromoActionPk = delegator.makeValidValue("ProductPromoAction", checkOrderAdjustment).getPrimaryKey();
                 cart.setDesiredAlternateGiftByAction(productPromoActionPk, alternateGwpProductId);
+                if (cart.getOrderType().equals("SALES_ORDER")) {
+                    org.ofbiz.order.shoppingcart.product.ProductPromoWorker.doPromotions(cart, dispatcher);
+                }
+                return "success";
             }
         }
         
         request.setAttribute("_ERROR_MESSAGE_", "Could not select alternate gift, cart line item found for #" + alternateGwpLine + " does not appear to be a valid promotional gift.");
-        return "success";
+        return "error";
     }
     
     /**

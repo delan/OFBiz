@@ -118,26 +118,26 @@
         <response name="error" type="view" value="ordertasklist"/>
     </request-map>
 
-        <request-map uri="completeassignment">
-                <security https="true" auth="true"/>
-                <event type="java" path="org.ofbiz.order.task.TaskEvents" invoke="completeAssignment"/>
-                <response name="success" type="view" value="ordertasklist"/>
-                <response name="error" type="view" value="ordertasklist"/>
-        </request-map>
+    <request-map uri="completeassignment">
+        <security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.order.task.TaskEvents" invoke="completeAssignment"/>
+        <response name="success" type="view" value="ordertasklist"/>
+        <response name="error" type="view" value="ordertasklist"/>
+    </request-map>
 
-        <request-map uri="holdorder">
-                <security https="true" auth="true"/>
-                <event type="service" path="" invoke="wfSuspendActivity"/>
-                <response name="success" type="view" value="ordertasklist"/>
-                <response name="error" type="view" value="ordertasklist"/>
-        </request-map>
+    <request-map uri="holdorder">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="wfSuspendActivity"/>
+        <response name="success" type="view" value="ordertasklist"/>
+        <response name="error" type="view" value="ordertasklist"/>
+    </request-map>
 
-        <request-map uri="releasehold">
-                <security https="true" auth="true"/>
-                <event type="service" path="" invoke="wfResumeActivity"/>
-                <response name="success" type="view" value="ordertasklist"/>
-                <response name="error" type="view" value="ordertasklist"/>
-        </request-map>
+    <request-map uri="releasehold">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="wfResumeActivity"/>
+        <response name="success" type="view" value="ordertasklist"/>
+        <response name="error" type="view" value="ordertasklist"/>
+    </request-map>
 
     <!-- Purchase Order Manager Delivery Info Requests -->
     <request-map uri="OrderDeliveryScheduleInfo">
@@ -257,6 +257,12 @@
         <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="destroyCart"/>
         <response name="success" type="view" value="orderentry"/>
         <response name="error" type="view" value="orderentry"/>
+    </request-map>
+
+    <request-map uri="setDesiredAlternateGwpProductId">
+        <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="setDesiredAlternateGwpProductId"/>
+        <response name="success" type="view" value="showcart"/>
+        <response name="error" type="view" value="showcart"/>
     </request-map>
 
     <request-map uri="showAllPromotions">

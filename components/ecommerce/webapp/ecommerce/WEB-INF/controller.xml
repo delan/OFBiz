@@ -226,6 +226,12 @@
         <response name="error" type="view" value="showcart"/>
     </request-map>
 
+    <request-map uri="setDesiredAlternateGwpProductId">
+        <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="setDesiredAlternateGwpProductId"/>
+        <response name="success" type="view" value="showcart"/>
+        <response name="error" type="view" value="showcart"/>
+    </request-map>
+
     <request-map uri="showAllPromotions">
         <response name="success" type="view" value="showAllPromotions"/>
     </request-map>

@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.30 $
+ *@version    $Revision: 1.31 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -250,6 +250,16 @@ function gwAll(e) {
                     <b>${cartLine.getItemTypeDescription()?if_exists}</b> : ${cartLine.getName()?if_exists}
                   </#if>
                 </div>
+                
+                <#if (cartLine.getIsPromo() && cartLine.getAlternativeOptionProductIds()?size > 0)>
+                  <#-- Show alternate gifts if there are any... -->
+                  <div class="tableheadtext">You may also choose one of the following for your gift:</div>
+                  <#list cartLine.getAlternativeOptionProductIds() as alternativeOptionProductId>
+                    <#assign alternativeOptionProduct = delegator.findByPrimaryKeyCache("Product", Static["org.ofbiz.base.util.UtilMisc"].toMap("productId", alternativeOptionProductId))>
+                    <#assign alternativeOptionName = Static["org.ofbiz.product.product.ProductContentWrapper"].getProductContentAsText(alternativeOptionProduct, "PRODUCT_NAME", requestAttributes.locale)?if_exists>
+                    <div class="tabletext"><a href="<@ofbizUrl>/setDesiredAlternateGwpProductId?alternateGwpProductId=${alternativeOptionProductId}&alternateGwpLine=${cartLineIndex}</@ofbizUrl>" class="buttontext">Select: ${alternativeOptionName?default(alternativeOptionProductId)}</a></div>
+                  </#list>
+                </#if>
             </td>
 
             <#-- gift wrap option -->
