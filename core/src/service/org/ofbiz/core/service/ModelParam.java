@@ -59,5 +59,19 @@ public class ModelParam {
     
     /** Is this Parameter set internally? */
     public boolean internal = false;
+    
+    public String toString() {
+        StringBuffer buf = new StringBuffer();
+        buf.append(name + "::");
+        buf.append(type + "::");
+        buf.append(mode + "::");
+        buf.append(formLabel + "::");
+        buf.append(entityName + "::");
+        buf.append(fieldName + "::");
+        buf.append(optional + "::");
+        buf.append(formDisplay + "::");
+        buf.append(internal);
+        return buf.toString();
+    }
 }
 
