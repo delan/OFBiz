@@ -41,6 +41,7 @@ public class BOMTree {
     double rootQuantity;
     Date inDate;
     String bomTypeId;
+    GenericValue inputProduct;
 
     /** Creates a new instance of BOMTree by reading downward
      * the productId's bill of materials (explosion).
@@ -80,7 +81,9 @@ public class BOMTree {
         if (productId == null || bomTypeId == null || delegator == null || dispatcher == null) return;
         // If the date is null, set it to today.
         if (inDate == null) inDate = new Date();
-        
+
+        inputProduct = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
+
         String productIdForRules = productId;
         // The selected product features are loaded
         List productFeaturesAppl = delegator.findByAnd("ProductFeatureAppl",
@@ -141,6 +144,10 @@ public class BOMTree {
         rootQuantity = 1;
     }
 
+    public GenericValue getInputProduct() {
+        return inputProduct;
+    }
+    
     private GenericValue manufacturedAsProduct(String productId, Date inDate, GenericDelegator delegator) throws GenericEntityException {
         List manufacturedAsProducts = delegator.findByAnd("ProductAssoc", 
                                          UtilMisc.toMap("productId", productId,
@@ -297,6 +304,12 @@ public class BOMTree {
                 facilityId = shipment.getString("originFacilityId");
             }
             root.createManufacturingOrder(null, orderId, orderItemSeqId, shipmentId, facilityId, date, true, delegator, dispatcher, userLogin);
+        }
+    }
+
+    public void getProductsInPackages(ArrayList arr) {
+        if (root != null) {
+            root.getProductsInPackages(arr, getRootQuantity(), 0, false);
         }
     }
 
