@@ -1,5 +1,5 @@
 /*
- * $Id: ContentWorker.java,v 1.15 2004/01/07 19:30:11 byersa Exp $
+ * $Id: ContentWorker.java,v 1.16 2004/01/11 06:27:04 byersa Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -60,7 +60,7 @@ import bsh.EvalError;
  * ContentWorker Class
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.15 $
+ * @version $Revision: 1.16 $
  * @since 2.2
  * 
  *  
@@ -284,7 +284,9 @@ public class ContentWorker {
                 FreeMarkerWorker.traceNodeTrail("14",nodeTrail);
                 break;
             }
-        } else {
+        } 
+
+        if (!inProgress) {
             // look for next sibling
             while (sz > 1) {
                 currentNode = (Map)nodeTrail.remove(--sz);
@@ -308,14 +310,14 @@ public class ContentWorker {
                FreeMarkerWorker.traceNodeTrail("16",nodeTrail);
                     Boolean isPick = (Boolean)currentNode.get("isPick");
                     if (isPick == null || !isPick.booleanValue()) {
-                        inProgress = true;
-                        break;
-                    } else {
                         // If not a "pick" node, look at kids
                         inProgress = traverseSubContent(ctx);
                FreeMarkerWorker.traceNodeTrail("17",nodeTrail);
                         if (inProgress)
                             break;
+                    } else {
+                        inProgress = true;
+                        break;
                     }
                     idx++;
                 }
