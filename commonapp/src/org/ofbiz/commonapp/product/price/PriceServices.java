@@ -66,9 +66,15 @@ public class PriceServices {
         boolean isSale = false;
         GenericValue product = (GenericValue) context.get("product");
         String productId = product.getString("productId");
-        String partyId = (String) context.get("partyId");
         String prodCatalogId = (String) context.get("prodCatalogId");
-        double quantity = ((Double) context.get("quantity")).doubleValue();
+
+        //NOTE: partyId CAN be null
+        String partyId = (String) context.get("partyId");
+        
+        Double quantityDbl = (Double) context.get("quantity");
+        if (quantityDbl == null) quantityDbl = new Double(1.0);
+        double quantity = quantityDbl.doubleValue();
+        
         List orderItemPriceInfos = new LinkedList();
         
         double defaultPrice = product.get("defaultPrice") != null ? product.getDouble("defaultPrice").doubleValue() : 0;
@@ -171,13 +177,15 @@ public class PriceServices {
                 }
 
                 //by partyId
-                Collection partyIdConds = delegator.findByAndCache("ProductPriceCond", 
-                        UtilMisc.toMap("inputParamEnumId", "PRIP_PARTY_ID", "condValue", partyId));
-                if (partyIdConds != null && partyIdConds.size() > 0) {
-                    Iterator partyIdCondsIter = partyIdConds.iterator();
-                    while (partyIdCondsIter.hasNext()) {
-                        GenericValue partyIdCond = (GenericValue) partyIdCondsIter.next();
-                        productPriceRuleIds.add(partyIdCond.getString("productPriceRuleId"));
+                if (partyId != null) {
+                    Collection partyIdConds = delegator.findByAndCache("ProductPriceCond", 
+                            UtilMisc.toMap("inputParamEnumId", "PRIP_PARTY_ID", "condValue", partyId));
+                    if (partyIdConds != null && partyIdConds.size() > 0) {
+                        Iterator partyIdCondsIter = partyIdConds.iterator();
+                        while (partyIdCondsIter.hasNext()) {
+                            GenericValue partyIdCond = (GenericValue) partyIdCondsIter.next();
+                            productPriceRuleIds.add(partyIdCond.getString("productPriceRuleId"));
+                        }
                     }
                 }
 
@@ -373,18 +381,26 @@ public class PriceServices {
             Double quantityValue = new Double(quantity);
             compare = quantityValue.compareTo(Double.valueOf(productPriceCond.getString("condValue")));
         } else if ("PRIP_PARTY_ID".equals(productPriceCond.getString("inputParamEnumId"))) {
-            compare = partyId.compareTo(productPriceCond.getString("condValue"));
+            if (partyId != null) {
+                compare = partyId.compareTo(productPriceCond.getString("condValue"));
+            } else {
+                compare = 1;
+            }
         /* These aren't supported yet, ie TODO
         } else if ("PRIP_PARTY_GRP_MEM".equals(productPriceCond.getString("inputParamEnumId"))) {
         } else if ("PRIP_PARTY_CLASS".equals(productPriceCond.getString("inputParamEnumId"))) {
         */
         } else if ("PRIP_ROLE_TYPE".equals(productPriceCond.getString("inputParamEnumId"))) {
-            //if a PartyRole exists for this partyId and the specified roleTypeId
-            GenericValue partyRole = delegator.findByPrimaryKeyCache("PartyRole", 
-                    UtilMisc.toMap("partyId", partyId, "roleTypeId", productPriceCond.getString("condValue")));
-            // then 0 (equals), otherwise 1 (not equals)
-            if (partyRole != null) {
-                compare = 0;
+            if (partyId != null) {
+                //if a PartyRole exists for this partyId and the specified roleTypeId
+                GenericValue partyRole = delegator.findByPrimaryKeyCache("PartyRole", 
+                        UtilMisc.toMap("partyId", partyId, "roleTypeId", productPriceCond.getString("condValue")));
+                // then 0 (equals), otherwise 1 (not equals)
+                if (partyRole != null) {
+                    compare = 0;
+                } else {
+                    compare = 1;
+                }
             } else {
                 compare = 1;
             }
