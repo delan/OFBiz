@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.26 $
+ * @version    $Revision: 1.27 $
  */
 -->
 
@@ -142,7 +142,7 @@
       <relation type="many" rel-entity-name="ContentPurpose">
           <key-map field-name="contentId"/>
       </relation>
-      <relation type="one-nofk" rel-entity-name="ContentAssocDataResourceViewFrom">
+      <relation type="many" rel-entity-name="ContentAssocDataResourceViewFrom">
         <key-map field-name="contentId" rel-field-name="contentIdStart" />
       </relation>
     </entity>
@@ -215,7 +215,7 @@
       <relation type="one-nofk" rel-entity-name="OtherDataResource">
         <key-map field-name="drDataResourceId" rel-field-name="dataResourceId" />
       </relation>
-      <relation type="one-nofk" rel-entity-name="ContentAssocDataResourceViewFrom">
+      <relation type="many" rel-entity-name="ContentAssocDataResourceViewFrom">
         <key-map field-name="contentId" rel-field-name="contentIdStart" />
       </relation>
     </view-entity>
@@ -323,7 +323,7 @@
       <relation type="one-nofk" rel-entity-name="OtherDataResource">
         <key-map field-name="drDataResourceId" rel-field-name="dataResourceId" />
       </relation>
-      <relation type="one-nofk" rel-entity-name="ContentAssocDataResourceViewFrom">
+      <relation type="many" rel-entity-name="ContentAssocDataResourceViewFrom">
         <key-map field-name="contentId" rel-field-name="contentIdStart" />
       </relation>
     </view-entity>
@@ -467,9 +467,6 @@
       <relation type="many" rel-entity-name="Content">
         <key-map field-name="contentTypeId"/>
       </relation>
-      <relation type="one-nofk" rel-entity-name="ContentAssocDataResourceViewFrom">
-        <key-map field-name="contentId" rel-field-name="contentIdStart" />
-      </relation>
     </entity>
     <view-entity entity-name="SubContentDataResourceView"
                 package-name="org.ofbiz.commonapp.content"
@@ -490,7 +487,7 @@
       <relation type="one-nofk" rel-entity-name="OtherDataResource">
         <key-map field-name="drDataResourceId" rel-field-name="dataResourceId" />
       </relation>
-      <relation type="one-nofk" rel-entity-name="ContentAssocDataResourceViewFrom">
+      <relation type="many" rel-entity-name="ContentAssocDataResourceViewFrom">
         <key-map field-name="contentId" rel-field-name="contentIdStart" />
       </relation>
     </view-entity>
@@ -630,19 +627,19 @@
       <relation type="one-nofk" rel-entity-name="OtherDataResource">
         <key-map field-name="dataResourceId"/>
       </relation>
-      <relation type="one" fk-name="DATA_REC_TO_TYPE" rel-entity-name="DataResourceType">
+      <relation type="one" rel-entity-name="DataResourceType">
         <key-map field-name="dataResourceTypeId"/>
       </relation>
-      <relation type="one" fk-name="DATA_REC_TO_CAT" rel-entity-name="DataCategory">
+      <relation type="one" rel-entity-name="DataCategory">
         <key-map field-name="dataCategoryId"/>
       </relation>
-      <relation type="one" fk-name="DATA_REC_DTSRC" rel-entity-name="DataSource">
+      <relation type="one" rel-entity-name="DataSource">
         <key-map field-name="dataSourceId"/>
       </relation>
-      <relation type="one" fk-name="DATA_REC_MMTP" rel-entity-name="MimeType">
+      <relation type="one" rel-entity-name="MimeType">
         <key-map field-name="mimeTypeId"/>
       </relation>
-      <relation type="one" fk-name="DATA_REC_CHST" rel-entity-name="CharacterSet">
+      <relation type="one" rel-entity-name="CharacterSet">
         <key-map field-name="characterSetId"/>
       </relation>
       <relation type="many" rel-entity-name="DataResourceTypeAttr">
@@ -654,10 +651,10 @@
       <relation type="many" rel-entity-name="DataResourceRole">
         <key-map field-name="dataResourceId"/>
       </relation>
-      <relation type="one" fk-name="DATA_REC_CB_ULGN" title="CreatedBy" rel-entity-name="UserLogin">
+      <relation type="one" title="CreatedBy" rel-entity-name="UserLogin">
         <key-map field-name="createdByUserLogin" rel-field-name="userLoginId"/>
       </relation>
-      <relation type="one" fk-name="DATA_REC_LMB_ULGN" title="LastModifiedBy" rel-entity-name="UserLogin">
+      <relation type="one" title="LastModifiedBy" rel-entity-name="UserLogin">
         <key-map field-name="lastModifiedByUserLogin" rel-field-name="userLoginId"/>
       </relation>
     </view-entity>
