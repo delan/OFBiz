@@ -46,7 +46,7 @@ import org.ofbiz.commonapp.product.category.*;
  *@created    August 23, 2001, 7:58 PM
  */
 public class CatalogWorker {
-    
+/*    
     public static String getEcommercePropertiesValue(PageContext pageContext, String propertyName) {
         return getEcommercePropertiesValue(pageContext.getServletContext(), propertyName);
     }
@@ -60,34 +60,90 @@ public class CatalogWorker {
         if (url == null) return null;
         else return UtilProperties.getPropertyValue(url, propertyName);
     }
+*/
+    public static String getWebSiteId(PageContext pageContext) {
+        return pageContext.getServletContext().getInitParameter("webSiteId");
+    }
+    
+    public static GenericValue getWebSite(PageContext pageContext) {
+        String webSiteId = getWebSiteId(pageContext);
+        GenericDelegator delegator = (GenericDelegator) pageContext.getRequest().getAttribute("delegator");
+        
+        try {
+            return delegator.findByPrimaryKeyCache("WebSite", UtilMisc.toMap("webSiteId", webSiteId));
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Error looking up website with id " + webSiteId);
+        }
+        return null;
+    }
+    
+    public static Collection getWebSiteCatalogs(PageContext pageContext) {
+        String webSiteId = getWebSiteId(pageContext);
+        GenericDelegator delegator = (GenericDelegator) pageContext.getRequest().getAttribute("delegator");
+        
+        try {
+            return EntityUtil.filterByDate(delegator.findByAndCache("WebSiteCatalog", UtilMisc.toMap("webSiteId", webSiteId), UtilMisc.toList("sequenceNum", "prodCatalogId")));
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Error looking up website catalogs for website with id " + webSiteId);
+        }
+        return null;
+    }
+    
+    public static Collection getProdCatalogCategories(PageContext pageContext, String prodCatalogId, String prodCatalogCategoryTypeId) {
+        GenericDelegator delegator = (GenericDelegator) pageContext.getRequest().getAttribute("delegator");
+        
+        try {
+            Collection prodCatalogCategories = EntityUtil.filterByDate(delegator.findByAndCache("ProdCatalogCategory", 
+                    UtilMisc.toMap("prodCatalogId", prodCatalogId), 
+                    UtilMisc.toList("sequenceNum", "productCategoryId")));
+            if (UtilValidate.isNotEmpty(prodCatalogCategoryTypeId) && prodCatalogCategories != null) {
+                prodCatalogCategories = EntityUtil.filterByAnd(prodCatalogCategories, 
+                        UtilMisc.toMap("prodCatalogCategoryTypeId", prodCatalogCategoryTypeId));
+            }
+            return prodCatalogCategories;
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Error looking up ProdCatalogCategories for prodCatalog with id " + prodCatalogId);
+        }
+        return null;
+    }
     
     public static String getCurrentCatalogId(PageContext pageContext) {
-        String catalogId;
+        String prodCatalogId;
         boolean fromSession = false;
         //first see if a new catalog was specified as a parameter
-        catalogId = pageContext.getRequest().getParameter("CURRENT_CATALOG_ID");
+        prodCatalogId = pageContext.getRequest().getParameter("CURRENT_CATALOG_ID");
         //if no parameter, try from session
-        if (catalogId == null) {
-            catalogId = (String)pageContext.getSession().getAttribute("CURRENT_CATALOG_ID");
-            if (catalogId != null) fromSession = true;
+        if (prodCatalogId == null) {
+            prodCatalogId = (String)pageContext.getSession().getAttribute("CURRENT_CATALOG_ID");
+            if (prodCatalogId != null) fromSession = true;
         }
-        //if nothing else, just use a default top category name
-        if (catalogId == null) catalogId = getEcommercePropertiesValue(pageContext, "catalog.id.default");
-        if (catalogId == null) catalogId = "catalog1";
+        //get it from the database
+        if (prodCatalogId == null) {
+            Collection webSiteCatalogs = getWebSiteCatalogs(pageContext);
+            if (webSiteCatalogs != null && webSiteCatalogs.size() > 0) {
+                GenericValue webSiteCatalog = EntityUtil.getFirst(webSiteCatalogs);
+                prodCatalogId = webSiteCatalog.getString("prodCatalogId");
+            }
+        }
         
         if (!fromSession) {
-            Debug.logInfo("[CatalogWorker.getCurrentCatalogId] Setting new catalog name: " + catalogId);
-            pageContext.getSession().setAttribute("CURRENT_CATALOG_ID", catalogId);
+            Debug.logInfo("[CatalogWorker.getCurrentCatalogId] Setting new catalog name: " + prodCatalogId);
+            pageContext.getSession().setAttribute("CURRENT_CATALOG_ID", prodCatalogId);
             CategoryWorker.setTrail(pageContext, new ArrayList());
         }
-        return catalogId;
+        return prodCatalogId;
     }
     
     public static Collection getCatalogIdsAvailable(PageContext pageContext) {
-        String catsList = getEcommercePropertiesValue(pageContext, "catalog.ids.available");
         Collection categoryIds = new LinkedList();
-        StringTokenizer tokenizer = new StringTokenizer(catsList, ", ");
-        while (tokenizer.hasMoreTokens()) { categoryIds.add(tokenizer.nextToken()); }
+        Collection webSiteCatalogs = getWebSiteCatalogs(pageContext);
+        if (webSiteCatalogs != null && webSiteCatalogs.size() > 0) {
+            Iterator wscIter = webSiteCatalogs.iterator();
+            while (wscIter.hasNext()) {
+                GenericValue webSiteCatalog = (GenericValue) wscIter.next();
+                categoryIds.add(webSiteCatalog.getString("prodCatalogId"));
+            }
+        }
         return categoryIds;
     }
     
@@ -95,66 +151,121 @@ public class CatalogWorker {
         return getCatalogName(pageContext, getCurrentCatalogId(pageContext));
     }
     
-    public static String getCatalogName(PageContext pageContext, String catalogId) {
-        if (catalogId == null || catalogId.length() <= 0) return null;
-        return getEcommercePropertiesValue(pageContext, catalogId + ".name");
+    public static String getCatalogName(PageContext pageContext, String prodCatalogId) {
+        if (prodCatalogId == null || prodCatalogId.length() <= 0) return null;
+        GenericDelegator delegator = (GenericDelegator) pageContext.getRequest().getAttribute("delegator");
+        try {
+            GenericValue prodCatalog = delegator.findByPrimaryKeyCache("ProdCatalog", UtilMisc.toMap("prodCatalogId", prodCatalogId));
+            if (prodCatalog != null) {
+                return prodCatalog.getString("catalogName");
+            }
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Error looking up name for prodCatalog with id " + prodCatalogId);
+        }
+        
+        return null;
     }
     
     public static String getCatalogTopCategoryId(PageContext pageContext) {
         return getCatalogTopCategoryId(pageContext, getCurrentCatalogId(pageContext));
     }
     
-    public static String getCatalogTopCategoryId(PageContext pageContext, String catalogId) {
-        if (catalogId == null || catalogId.length() <= 0) return null;
-        return getEcommercePropertiesValue(pageContext, catalogId + ".top.category");
+    public static String getCatalogTopCategoryId(PageContext pageContext, String prodCatalogId) {
+        if (prodCatalogId == null || prodCatalogId.length() <= 0) return null;
+        
+        Collection prodCatalogCategories = getProdCatalogCategories(pageContext, prodCatalogId, "PCCT_BROWSE_ROOT");
+        if (prodCatalogCategories != null && prodCatalogCategories.size() > 0) {
+            GenericValue prodCatalogCategory = EntityUtil.getFirst(prodCatalogCategories);
+            return prodCatalogCategory.getString("productCategoryId");
+        } else {
+            return null;
+        }
     }
     
     public static String getCatalogSearchCategoryId(PageContext pageContext) {
         return getCatalogSearchCategoryId(pageContext, getCurrentCatalogId(pageContext));
     }
     
-    public static String getCatalogSearchCategoryId(PageContext pageContext, String catalogId) {
-        if (catalogId == null || catalogId.length() <= 0) return null;
-        return getEcommercePropertiesValue(pageContext, catalogId + ".search.category");
+    public static String getCatalogSearchCategoryId(PageContext pageContext, String prodCatalogId) {
+        if (prodCatalogId == null || prodCatalogId.length() <= 0) return null;
+
+        Collection prodCatalogCategories = getProdCatalogCategories(pageContext, prodCatalogId, "PCCT_SEARCH");
+        if (prodCatalogCategories != null && prodCatalogCategories.size() > 0) {
+            GenericValue prodCatalogCategory = EntityUtil.getFirst(prodCatalogCategories);
+            return prodCatalogCategory.getString("productCategoryId");
+        } else {
+            return null;
+        }
     }
     
     public static String getCatalogPromotionsCategoryId(PageContext pageContext) {
         return getCatalogPromotionsCategoryId(pageContext, getCurrentCatalogId(pageContext));
     }
     
-    public static String getCatalogPromotionsCategoryId(PageContext pageContext, String catalogId) {
-        if (catalogId == null || catalogId.length() <= 0) return null;
-        return getEcommercePropertiesValue(pageContext, catalogId + ".promotions.category");
+    public static String getCatalogPromotionsCategoryId(PageContext pageContext, String prodCatalogId) {
+        if (prodCatalogId == null || prodCatalogId.length() <= 0) return null;
+
+        Collection prodCatalogCategories = getProdCatalogCategories(pageContext, prodCatalogId, "PCCT_PROMOTIONS");
+        if (prodCatalogCategories != null && prodCatalogCategories.size() > 0) {
+            GenericValue prodCatalogCategory = EntityUtil.getFirst(prodCatalogCategories);
+            return prodCatalogCategory.getString("productCategoryId");
+        } else {
+            return null;
+        }
     }
     
     public static boolean getCatalogQuickaddUse(PageContext pageContext) {
         return getCatalogQuickaddUse(pageContext, getCurrentCatalogId(pageContext));
     }
     
-    public static boolean getCatalogQuickaddUse(PageContext pageContext, String catalogId) {
-        if (catalogId == null || catalogId.length() <= 0) return false;
-        return "true".equals(getEcommercePropertiesValue(pageContext, catalogId + ".quickadd.use"));
+    public static boolean getCatalogQuickaddUse(PageContext pageContext, String prodCatalogId) {
+        if (prodCatalogId == null || prodCatalogId.length() <= 0) return false;
+        GenericDelegator delegator = (GenericDelegator) pageContext.getRequest().getAttribute("delegator");
+        try {
+            GenericValue prodCatalog = delegator.findByPrimaryKeyCache("ProdCatalog", UtilMisc.toMap("prodCatalogId", prodCatalogId));
+            if (prodCatalog != null) {
+                return "Y".equals(prodCatalog.getString("useQuickAdd"));
+            }
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Error looking up name for prodCatalog with id " + prodCatalogId);
+        }
+        return false;
     }
     
     public static String getCatalogQuickaddCategoryPrimary(PageContext pageContext) {
         return getCatalogQuickaddCategoryPrimary(pageContext, getCurrentCatalogId(pageContext));
     }
     
-    public static String getCatalogQuickaddCategoryPrimary(PageContext pageContext, String catalogId) {
-        if (catalogId == null || catalogId.length() <= 0) return null;
-        return getEcommercePropertiesValue(pageContext, catalogId + ".quickadd.category.primary");
+    public static String getCatalogQuickaddCategoryPrimary(PageContext pageContext, String prodCatalogId) {
+        if (prodCatalogId == null || prodCatalogId.length() <= 0) return null;
+
+        Collection prodCatalogCategories = getProdCatalogCategories(pageContext, prodCatalogId, "PCCT_QUICK_ADD");
+        if (prodCatalogCategories != null && prodCatalogCategories.size() > 0) {
+            GenericValue prodCatalogCategory = EntityUtil.getFirst(prodCatalogCategories);
+            return prodCatalogCategory.getString("productCategoryId");
+        } else {
+            return null;
+        }
     }
     
     public static Collection getCatalogQuickaddCategories(PageContext pageContext) {
         return getCatalogQuickaddCategories(pageContext, getCurrentCatalogId(pageContext));
     }
     
-    public static Collection getCatalogQuickaddCategories(PageContext pageContext, String catalogId) {
-        if (catalogId == null || catalogId.length() <= 0) return null;
-        String catsList = getEcommercePropertiesValue(pageContext, catalogId + ".quickadd.categories");
+    public static Collection getCatalogQuickaddCategories(PageContext pageContext, String prodCatalogId) {
+        if (prodCatalogId == null || prodCatalogId.length() <= 0) return null;
+
         Collection categoryIds = new LinkedList();
-        StringTokenizer tokenizer = new StringTokenizer(catsList, ", ");
-        while (tokenizer.hasMoreTokens()) { categoryIds.add(tokenizer.nextToken()); }
+
+        Collection prodCatalogCategories = getProdCatalogCategories(pageContext, prodCatalogId, "PCCT_QUICK_ADD");
+        if (prodCatalogCategories != null && prodCatalogCategories.size() > 0) {
+            Iterator pccIter = prodCatalogCategories.iterator();
+            while (pccIter.hasNext()) {
+                GenericValue prodCatalogCategory = (GenericValue) pccIter.next();
+                categoryIds.add(prodCatalogCategory.getString("productCategoryId"));
+            }
+        }
+
         return categoryIds;
     }
     
