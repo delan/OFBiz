@@ -281,6 +281,7 @@ public class XAClientConnection implements ConnectionWrapper {
             try {
                 ((Statement) it.next()).close();
             } catch (SQLException e) {
+                e.printStackTrace();
             }
 
         xaCon.clientConnectionClosed(this);
