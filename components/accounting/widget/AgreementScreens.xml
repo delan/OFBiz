@@ -134,12 +134,12 @@
                 <set field="titleProperty" value="PageTitleEditAgreementItem"/>
                 <set field="headerItem" value="agreement"/>
                 <set field="tabButtonItem" value="ListAgreementItems"/>
-
+<!--
                 <set field="agreementId" from-field="parameters.agreementId"/>
-                <set field="agreementItemId" from-field="parameters.agreementItemId"/>
-                
+                <set field="agreementItemSeqId" from-field="parameters.agreementItemSeqId"/>
+-->                
                 <entity-one entity-name="Agreement" value-name="agreement" auto-field-map="true"/>
-                <entity-one entity-name="AgreementItem" value-name="agreementItem"/>
+                <entity-one entity-name="AgreementItem" value-name="agreementItem" auto-field-map="true"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonAgreementDecorator">
