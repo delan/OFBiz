@@ -920,7 +920,8 @@ public class ModelForm {
 
             if (headerFormFieldIter.hasNext()) {
                 // TODO: determine somehow if this is the last one... how?
-                formStringRenderer.renderFormatHeaderRowFormCellTitleSeparator(buffer, context, this, modelFormField, false);
+               if (!separateColumns && !modelFormField.getSeparateColumn()) 
+                    formStringRenderer.renderFormatHeaderRowFormCellTitleSeparator(buffer, context, this, modelFormField, false);
             }
         }
 
