@@ -342,6 +342,10 @@ public class WorkEffortWorker {
     }
 
     public static void getActivityContext(PageContext pageContext, String workEffortId) {
+        getActivityContext(pageContext, workEffortId, "activityContext");
+    }
+
+    public static void getActivityContext(PageContext pageContext, String workEffortId, String attribute) {
         GenericDelegator delegator = (GenericDelegator) pageContext.getRequest().getAttribute("delegator");
         LocalDispatcher dispatcher = (LocalDispatcher) pageContext.getRequest().getAttribute("dispatcher");
         GenericValue userLogin = (GenericValue) pageContext.getSession().getAttribute(SiteDefs.USER_LOGIN);
@@ -354,7 +358,7 @@ public class WorkEffortWorker {
         }
         if (result != null && result.containsKey("activityContext")) {
             Map aC = (Map) result.get("activityContext");
-            pageContext.setAttribute("activityContext", aC);
+            pageContext.setAttribute(attribute, aC);
         }
     }
 

@@ -98,6 +98,13 @@
         <attribute name="activityContext" type="java.util.Map" mode="OUT"/>
     </service>
 
+    <service name="wfAppendActivityContext" engine="java"
+            location="org.ofbiz.core.workflow.WorkflowServices" invoke="appendActivityContext">
+        <description>Appends the current context to the activity context</description>
+        <attribute name="workEffortId" type="String" mode="IN"/>
+        <attribute name="currentContext" type="java.util.Map" mode="IN"/>
+    </service>
+
     <service name="assignActivity" engine="java"
             location="org.ofbiz.core.workflow.WorkflowServices" invoke="assignActivity">
         <description>Assign a new party or role to a workflow activity</description>
