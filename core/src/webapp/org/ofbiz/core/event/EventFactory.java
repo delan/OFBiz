@@ -47,7 +47,7 @@ public class EventFactory {
             synchronized (EventHandler.class) {
                 handler = (EventHandler) handlers.get(type);
                 if (handler == null) {
-                    String handlerClass = rh.getRequestManager().getHandlerClass(type, RequestManager.REQUEST_HANDLER_KEY);
+                    String handlerClass = rh.getRequestManager().getHandlerClass(type, RequestManager.EVENT_HANDLER_KEY);
                     if (handlerClass == null)
                         throw new EventHandlerException("Unknown handler");
                     try {

@@ -43,7 +43,7 @@ public class RequestManager implements Serializable {
 
     public static final String module = RequestManager.class.getName();
     public static final int VIEW_HANDLER_KEY = 1;
-    public static final int REQUEST_HANDLER_KEY = 0;
+    public static final int EVENT_HANDLER_KEY = 0;
 
     private URL configFileUrl;
 
@@ -74,7 +74,7 @@ public class RequestManager implements Serializable {
         if (type == 1)
             hMap = (Map) map.get("view");
         else
-            hMap = (Map) map.get("request");
+            hMap = (Map) map.get("event");
         if (!hMap.containsKey(name))
             return null;
         else

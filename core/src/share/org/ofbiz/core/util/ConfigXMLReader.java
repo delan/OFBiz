@@ -512,20 +512,20 @@ public class ConfigXMLReader {
                     rMap.put(hName, hClass);
             }
             map.put("view", vMap);
-            map.put("request", rMap);
+            map.put("event", rMap);
         }
         /* Debugging */
         Debug.logVerbose("-------- Handler Mappings --------", module);
         Map debugMap = (Map) map.get("request");
         if (debugMap != null && debugMap.size() > 0) {
-            Debug.logVerbose("------------- REQUEST ------------", module);
+            Debug.logVerbose("-------------- EVENT -------------", module);
             Set debugSet = debugMap.keySet();
             Iterator i = debugSet.iterator();
             while (i.hasNext()) {
                 Object o = i.next();
                 String handlerName = (String) o;
                 String className = (String) debugMap.get(o);
-                Debug.logVerbose("[RH] : " + handlerName + " => " + className, module);
+                Debug.logVerbose("[EH] : " + handlerName + " => " + className, module);
             }
         }
         debugMap = (Map) map.get("view");
