@@ -122,7 +122,7 @@
 
 
     <target name="classes" depends="prepare">
-      <javac srcdir="${src.dir}"
+      <javac debug="on" srcdir="${src.dir}"
              classpath="${classpath}"
              destdir="${build.dir}/jar" />
     </target>

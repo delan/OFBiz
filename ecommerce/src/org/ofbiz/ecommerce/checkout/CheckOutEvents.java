@@ -142,7 +142,8 @@ public class CheckOutEvents {
             cart.clear();
         }
         catch ( GenericServiceException e ) {
-            request.setAttribute(SiteDefs.ERROR_MESSAGE,"ERROR: Problem invoking the service: " + e.getMessage());
+            request.setAttribute(SiteDefs.ERROR_MESSAGE,"ERROR: Could not create order (problem invoking the service: " + e.getMessage() + ")");
+            Debug.logError(e);
             return "error";
         }
         
@@ -245,18 +246,18 @@ public class CheckOutEvents {
             }
             catch (Exception e) {
                 e.printStackTrace();
-                request.setAttribute(SiteDefs.ERROR_MESSAGE, "error e-mailing order confirmation, but it was created and will be processed.");
+                request.setAttribute(SiteDefs.ERROR_MESSAGE, "Error e-mailing order confirmation, but it was created and will be processed.");
                 return "success"; //"error";
             }
         }
         catch (RuntimeException re) {
             re.printStackTrace();
-            request.setAttribute(SiteDefs.ERROR_MESSAGE, "error e-mailing order confirmation, but it was created and will be processed.");
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "Error e-mailing order confirmation, but it was created and will be processed.");
             return "success"; //"error";
         }
         catch (Error e) {
             e.printStackTrace();
-            request.setAttribute(SiteDefs.ERROR_MESSAGE, "error e-mailing order confirmation, but it was created and will be processed.");
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "Error e-mailing order confirmation, but it was created and will be processed.");
             return "success"; //"error";
         }
     }

@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.35  2001/10/19 16:45:32  azeneski
+ * Moved party, contact and login related events out.
+ *
  * Revision 1.34  2001/10/14 09:59:42  jonesde
  * Updated field names for round of resolving reserved word collisions
  */
@@ -151,8 +154,7 @@ public class CustomerEvents {
         Timestamp now = UtilDateTime.nowTimestamp();
         
         // create Party, PartyClass, Person, ContactMechs for Address, phones
-        tempUserLogin.preStoreOther(delegator.makeValue("Party", UtilMisc.toMap("partyId", username)));
-        tempUserLogin.preStoreOther(delegator.makeValue("PartyClassification", UtilMisc.toMap("partyId", username, "partyTypeId", "PERSON", "partyClassificationTypeId", "PERSON_CLASSIFICATION", "fromDate", now)));
+        tempUserLogin.preStoreOther(delegator.makeValue("Party", UtilMisc.toMap("partyId", username, "partyTypeId", "PERSON")));
         tempUserLogin.preStoreOther(delegator.makeValue("PartyRole", UtilMisc.toMap("partyId", username, "roleTypeId", "CUSTOMER")));
         tempUserLogin.preStoreOther(delegator.makeValue("Person", UtilMisc.toMap("partyId", username, "firstName", firstName, "middleName", middleName, "lastName", lastName, "personalTitle", personalTitle, "suffix", suffix)));
         
