@@ -229,6 +229,7 @@ public class ProductEvents {
 		}
 
         int numProds = 0;
+        int errProds = 0;
 
         GenericValue product = null;
         while ((product = (GenericValue) entityListIterator.next()) != null) {
@@ -243,7 +244,7 @@ public class ProductEvents {
                     } catch (GenericEntityException gee) {
                         Debug.logError(gee, "Error closing EntityListIterator when indexing product keywords.");
                     }
-                    return "error";
+                    errProds++;
                 }
             }
             numProds++;
@@ -257,8 +258,13 @@ public class ProductEvents {
 			}
         }
         
-        request.setAttribute(SiteDefs.EVENT_MESSAGE, "Keyword creation complete for " + numProds + " products.");
-        return "success";
+        if (errProds == 0) {
+            request.setAttribute(SiteDefs.EVENT_MESSAGE, "Keyword creation complete for " + numProds + " products.");
+            return "success";
+        } else {
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "Keyword creation complete for " + numProds + " products, with errors in " + errProds + " products (see the log for more details).");
+            return "error";
+        }
     }
 
     /** Updates ProductAssoc information according to UPDATE_MODE parameter
