@@ -294,6 +294,8 @@ public class EntitySyncContext {
 
         //Debug.logInfo("Getting values to create; currentRunStartTime=" + currentRunStartTime + ", currentRunEndTime=" + currentRunEndTime, module);
         
+        int entitiesSkippedForKnownNext = 0;
+        
         // iterate through entities, get all records with tx stamp in the current time range, put all in a single list
         Iterator entityModelToUseCreateIter = entityModelToUseList.iterator();
         while (entityModelToUseCreateIter.hasNext()) {
@@ -303,6 +305,8 @@ public class EntitySyncContext {
             // first test to see if we know that there are no records for this entity in this time period...
             Timestamp knownNextCreateTime = (Timestamp) this.nextEntityCreateTxTime.get(modelEntity.getEntityName());
             if (knownNextCreateTime != null && (knownNextCreateTime.equals(currentRunEndTime) || knownNextCreateTime.after(currentRunEndTime))) {
+                //Debug.logInfo("In assembleValuesToCreate found knownNextCreateTime [" + knownNextCreateTime + "] after currentRunEndTime [" + currentRunEndTime + "], so skipping time per period for entity [" + modelEntity.getEntityName() + "]", module);
+                entitiesSkippedForKnownNext++;
                 continue;
             }
             
@@ -335,7 +339,10 @@ public class EntitySyncContext {
                 
                 // if we didn't find anything for this entity, find the next value's Timestamp and keep track of it
                 if (valuesPerEntity == 0) {
-                    EntityCondition findNextCondition = new EntityExpr(ModelEntity.CREATE_STAMP_TX_FIELD, EntityOperator.GREATER_THAN_EQUAL_TO, currentRunEndTime);
+                    EntityCondition findNextCondition = new EntityConditionList(UtilMisc.toList(
+                            new EntityExpr(ModelEntity.CREATE_STAMP_TX_FIELD, EntityOperator.NOT_EQUAL, null),
+                            new EntityExpr(ModelEntity.CREATE_STAMP_TX_FIELD, EntityOperator.GREATER_THAN_EQUAL_TO, currentRunEndTime)), 
+                            EntityOperator.AND);
                     EntityListIterator eliNext = delegator.findListIteratorByCondition(modelEntity.getEntityName(), findNextCondition, null, UtilMisc.toList(ModelEntity.CREATE_STAMP_TX_FIELD));
                     // get the first element and it's tx time value...
                     GenericValue firstVal = (GenericValue) eliNext.next();
@@ -344,10 +351,12 @@ public class EntitySyncContext {
                         Timestamp nextTxTime = firstVal.getTimestamp(ModelEntity.CREATE_STAMP_TX_FIELD);
                         if (this.nextCreateTxTime == null || nextTxTime.before(this.nextCreateTxTime)) {
                             this.nextCreateTxTime = nextTxTime;
+                            Debug.logInfo("EntitySync: Set nextCreateTxTime to [" + nextTxTime + "]", module);
                         }
                         Timestamp curEntityNextTxTime = (Timestamp) this.nextEntityCreateTxTime.get(modelEntity.getEntityName());
                         if (curEntityNextTxTime == null || nextTxTime.before(curEntityNextTxTime)) {
                             this.nextEntityCreateTxTime.put(modelEntity.getEntityName(), nextTxTime);
+                            Debug.logInfo("EntitySync: Set nextEntityCreateTxTime to [" + nextTxTime + "] for the entity [" + modelEntity.getEntityName() + "]", module);
                         }
                     }
                 }
@@ -356,6 +365,10 @@ public class EntitySyncContext {
             } catch (Throwable t) {
                 throw new SyncDataErrorException("Caught runtime error while getting values to create", t);
             }
+        }
+        
+        if (entitiesSkippedForKnownNext > 0) {
+            if (Debug.infoOn()) Debug.logInfo("In assembleValuestoCreate skipped [" + entitiesSkippedForKnownNext + "/" + entityModelToUseList + "] entities for the time period ending at [" + currentRunEndTime + "] because of next known create times", module);
         }
         
         // TEST SECTION: leave false for normal use
@@ -389,6 +402,8 @@ public class EntitySyncContext {
 
         // Debug.logInfo("Getting values to store; currentRunStartTime=" + currentRunStartTime + ", currentRunEndTime=" + currentRunEndTime, module);
         
+        int entitiesSkippedForKnownNext = 0;
+        
         // iterate through entities, get all records with tx stamp in the current time range, put all in a single list
         Iterator entityModelToUseUpdateIter = entityModelToUseList.iterator();
         while (entityModelToUseUpdateIter.hasNext()) {
@@ -398,6 +413,7 @@ public class EntitySyncContext {
             // first test to see if we know that there are no records for this entity in this time period...
             Timestamp knownNextUpdateTime = (Timestamp) this.nextEntityUpdateTxTime.get(modelEntity.getEntityName());
             if (knownNextUpdateTime != null && (knownNextUpdateTime.equals(currentRunEndTime) || knownNextUpdateTime.after(currentRunEndTime))) {
+                entitiesSkippedForKnownNext++;
                 continue;
             }
             
@@ -437,7 +453,9 @@ public class EntitySyncContext {
                 // if we didn't find anything for this entity, find the next value's Timestamp and keep track of it
                 if (valuesPerEntity == 0) {
                     EntityCondition findNextCondition = new EntityConditionList(UtilMisc.toList(
-                            new EntityExpr(ModelEntity.STAMP_TX_FIELD, EntityOperator.GREATER_THAN_EQUAL_TO, currentRunEndTime), 
+                            new EntityExpr(ModelEntity.STAMP_TX_FIELD, EntityOperator.NOT_EQUAL, null), 
+                            new EntityExpr(ModelEntity.STAMP_TX_FIELD, EntityOperator.GREATER_THAN_EQUAL_TO, currentRunEndTime),
+                            new EntityExpr(ModelEntity.CREATE_STAMP_TX_FIELD, EntityOperator.NOT_EQUAL, null),
                             new EntityExpr(ModelEntity.CREATE_STAMP_TX_FIELD, EntityOperator.LESS_THAN, currentRunEndTime)), 
                             EntityOperator.AND);
                     EntityListIterator eliNext = delegator.findListIteratorByCondition(modelEntity.getEntityName(), findNextCondition, null, UtilMisc.toList(ModelEntity.STAMP_TX_FIELD));
@@ -448,10 +466,12 @@ public class EntitySyncContext {
                         Timestamp nextTxTime = firstVal.getTimestamp(ModelEntity.STAMP_TX_FIELD);
                         if (this.nextUpdateTxTime == null || nextTxTime.before(this.nextUpdateTxTime)) {
                             this.nextUpdateTxTime = nextTxTime;
+                            Debug.logInfo("EntitySync: Set nextUpdateTxTime to [" + nextTxTime + "]", module);
                         }
                         Timestamp curEntityNextTxTime = (Timestamp) this.nextEntityUpdateTxTime.get(modelEntity.getEntityName());
                         if (curEntityNextTxTime == null || nextTxTime.before(curEntityNextTxTime)) {
                             this.nextEntityUpdateTxTime.put(modelEntity.getEntityName(), nextTxTime);
+                            Debug.logInfo("EntitySync: Set nextEntityUpdateTxTime to [" + nextTxTime + "] for the entity [" + modelEntity.getEntityName() + "]", module);
                         }
                     }
                 }
@@ -462,6 +482,10 @@ public class EntitySyncContext {
             }
         }
 
+        if (entitiesSkippedForKnownNext > 0) {
+            if (Debug.infoOn()) Debug.logInfo("In assembleValuestoUpdate skipped [" + entitiesSkippedForKnownNext + "/" + entityModelToUseList + "] entities for the time period ending at [" + currentRunEndTime + "] because of next known update times", module);
+        }
+        
         // TEST SECTION: leave false for normal use
         boolean logValues = false;
         if (logValues && valuesToStore.size() > 0) {
