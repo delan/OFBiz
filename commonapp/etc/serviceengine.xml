@@ -19,6 +19,7 @@
     <engine name="workflow" class="org.ofbiz.core.workflow.WorkflowEngine"/>
     <engine name="bsh" class="org.ofbiz.core.service.engine.BeanShellEngine"/>
     <engine name="soap" class="org.ofbiz.core.service.engine.SOAPClientEngine"/>
+    <engine name="http" class="org.ofbiz.core.service.engine.HttpEngine"/>
     <engine name="simple" class="org.ofbiz.core.minilang.SimpleServiceEngine"/>
     <engine name="jms" class="org.ofbiz.core.service.jms.JmsServiceEngine"/>
 
