@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<page>
-    <template>main</template>
-    <property name="title">List Requests</property>
-    <property name="headerItem">request</property>
-    <content-action name="/request/requestlist.bsh"/>
-</page>
