@@ -171,8 +171,15 @@
     <request-map uri="additem">
         <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="addToCart"/>
         <response name="success" type="view" value="showcart"/>
+        <response name="survey" type="view" value="survey"/>
         <response name="viewcart" type="view" value="showcart"/>
         <response name="error" type="view" value="showcart"/>
+    </request-map>
+
+    <request-map uri="additemsurvey">
+        <event type="service" invoke="createSurveyResponse"/>
+        <response name="success" type="request" value="additem"/>
+        <response name="error" type="view" value="main"/>
     </request-map>
 
     <request-map uri="addordertocart">
@@ -767,6 +774,7 @@
     <view-map name="error" page="/error/error.jsp"/>
     <view-map name="main" type="jpublish" page="/main.ftl"/>
     <view-map name="login" type="jpublish" page="/login.ftl"/>
+    <view-map name="survey" type="jpublish" page="/survey.ftl"/>
     <view-map name="passwordemail" page="/customer/passwordemail.jsp"/>
 
     <view-map name="editShoppingList" type="jpublish" page="/shoppinglist/editShoppingList.ftl"/>

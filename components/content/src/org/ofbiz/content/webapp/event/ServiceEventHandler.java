@@ -1,5 +1,5 @@
 /*
- * $Id: ServiceEventHandler.java,v 1.3 2003/09/14 05:36:47 jonesde Exp $
+ * $Id: ServiceEventHandler.java,v 1.4 2003/11/19 21:48:50 ajzeneski Exp $
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -50,7 +50,7 @@ import org.ofbiz.service.ServiceUtil;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.0
  */
 public class ServiceEventHandler implements EventHandler {
@@ -128,6 +128,7 @@ public class ServiceEventHandler implements EventHandler {
             if (modelParam.stringMapPrefix != null && modelParam.stringMapPrefix.length() > 0) {
                 Map paramMap = UtilHttp.makeParamMapWithPrefix(request, modelParam.stringMapPrefix, null);
                 value = paramMap;
+                Debug.logInfo("Set [" + modelParam.name + "]: " + paramMap, module);
             } else {
                 value = request.getParameter(name);
     

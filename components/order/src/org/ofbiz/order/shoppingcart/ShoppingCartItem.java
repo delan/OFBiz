@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCartItem.java,v 1.8 2003/11/19 00:27:55 jonesde Exp $
+ * $Id: ShoppingCartItem.java,v 1.9 2003/11/19 21:50:11 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -47,14 +47,14 @@ import org.ofbiz.service.ModelService;
  *
  * @author     <a href="mailto:jaz@ofbiz.org.com">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.8 $
+ * @version    $Revision: 1.9 $
  * @since      2.0
  */
 public class ShoppingCartItem implements java.io.Serializable {
 
     public static String module = ShoppingCartItem.class.getName();
     public static final String resource = "OrderUiLabels";
-    public static String[] attributeNames = { "shoppingListId", "shoppingListItemSeqId" };
+    public static String[] attributeNames = { "shoppingListId", "shoppingListItemSeqId", "surveyResponses" };
 
     private transient GenericDelegator delegator = null;
     private transient GenericValue _product = null;       // the actual product

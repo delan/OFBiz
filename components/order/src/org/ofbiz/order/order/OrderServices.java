@@ -1,5 +1,5 @@
 /*
- * $Id: OrderServices.java,v 1.19 2003/11/18 23:22:32 ajzeneski Exp $
+ * $Id: OrderServices.java,v 1.20 2003/11/19 21:50:10 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -51,7 +51,7 @@ import org.ofbiz.workflow.WfUtil;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
- * @version    $Revision: 1.19 $
+ * @version    $Revision: 1.20 $
  * @since      2.0
  */
 
@@ -341,6 +341,17 @@ public class OrderServices {
             itemStatus.put("orderItemSeqId", orderItem.get("orderItemSeqId"));
             itemStatus.put("statusDatetime", nowTimestamp);
             toBeStored.add(itemStatus);
+        }
+
+        // set the item survey responses
+        List surveyResponses = (List) context.get("orderItemSurveyResponses");
+        if (surveyResponses != null && surveyResponses.size() > 0) {
+            Iterator oisr = surveyResponses.iterator();
+            while (oisr.hasNext()) {
+                GenericValue surveyResponse = (GenericValue) oisr.next();
+                surveyResponse.set("orderId", orderId);
+                toBeStored.add(surveyResponse);
+            }
         }
 
         // set the item price info; NOTE: this must be after the orderItems are stored for referential integrity

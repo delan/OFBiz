@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCart.java,v 1.21 2003/11/19 00:27:55 jonesde Exp $
+ * $Id: ShoppingCart.java,v 1.22 2003/11/19 21:50:10 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -42,7 +42,7 @@ import org.ofbiz.service.LocalDispatcher;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.21 $
+ * @version    $Revision: 1.22 $
  * @since      2.0
  */
 public class ShoppingCart implements java.io.Serializable {
@@ -1298,6 +1298,31 @@ public class ShoppingCart implements java.io.Serializable {
         return allInfos;
     }
 
+    /** make a list of SurveyResponse object to update with order information set */
+    public List makeAllOrderItemSurveyResponses() {
+        List allInfos = new LinkedList();
+        Iterator itemIter = this.iterator();
+        while (itemIter.hasNext()) {
+            ShoppingCartItem item = (ShoppingCartItem) itemIter.next();
+            List responses = (List) item.getAttribute("surveyResponses");
+            Iterator ri = responses.iterator();
+            while (ri.hasNext()) {
+                String responseId = (String) ri.next();
+                GenericValue response = null;
+                try {
+                    response = delegator.findByPrimaryKey("SurveyResponse", UtilMisc.toMap("surveyResponseId", responseId));
+                } catch (GenericEntityException e) {
+                    Debug.logError(e, "Unable to obtain SurveyResponse record for ID : " + responseId, module);
+                }
+                if (response != null) {
+                    response.set("orderItemSeqId", item.getOrderItemSeqId());
+                    allInfos.add(response);
+                }
+            }
+        }
+        return allInfos;
+    }
+
     /** make a list of OrderContactMechs from the ShoppingCart and the ShoppingCartItems */
     public List makeAllOrderContactMechs() {
         List allOrderContactMechs = new LinkedList();
@@ -1361,6 +1386,7 @@ public class ShoppingCart implements java.io.Serializable {
         result.put("orderItemContactMechs", this.makeAllOrderItemContactMechs());
         result.put("orderPaymentPreferences", this.makeAllOrderPaymentPreferences());
         result.put("orderShipmentPreferences", this.makeAllOrderShipmentPreferences());
+        result.put("orderItemSurveyResponses", this.makeAllOrderItemSurveyResponses());
 
         result.put("firstAttemptOrderId", this.getFirstAttemptOrderId());
         result.put("currencyUom", this.getCurrency());
