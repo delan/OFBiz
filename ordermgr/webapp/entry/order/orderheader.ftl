@@ -159,7 +159,7 @@
         </tr>
       </table>
    
-      <#if orderPaymentPreferences?has_content || billingAccount?has_content>
+      <#if paymentMethod?has_content || paymentMethodType?has_content || billingAccount?has_content>
       <br>      
       <table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
         <#-- order payment info -->

@@ -30,7 +30,7 @@
     <td width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
-          <td align=left width='70%' >
+          <td align='left'>
             <div class='boxhead'>&nbsp;Order Entry ShipTo Settings</div>
           </td> 
           <td nowrap align="right">

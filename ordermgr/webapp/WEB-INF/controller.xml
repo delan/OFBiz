@@ -257,13 +257,13 @@
     </request-map>  
     <request-map uri="createPostalAddress">
         <security https="true" auth="true"/>
-        <event type="simple" path="org/ofbiz/commonapp/party/contact/ContactMechSimpleEvents.xml" invoke="createPostalAddress"/>
+        <event type="service" invoke="createPartyPostalAddress"/>
         <response name="success" type="request" value="finalizeOrder"/>
         <response name="error" type="view" value="shipsetting"/>
     </request-map>
     <request-map uri="updatePostalAddress">
         <security https="true" auth="true"/>
-        <event type="simple" path="org/ofbiz/commonapp/party/contact/ContactMechSimpleEvents.xml" invoke="updatePostalAddress"/>
+        <event type="service" invoke="updatePartyPostalAddress"/>
         <response name="success" type="request" value="finalizeOrder"/>
         <response name="error" type="view" value="shipsetting"/>
     </request-map>    

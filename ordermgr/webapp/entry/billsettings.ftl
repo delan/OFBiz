@@ -42,7 +42,7 @@ function shipBillAddr() {
     <td width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
-          <td align=left width='70%' >
+          <td align='left'>
             <div class='boxhead'>&nbsp;Order Entry Payment Settings</div>
           </td> 
           <td nowrap align="right">
@@ -409,22 +409,26 @@ function shipBillAddr() {
                 <input type="hidden" name="finalizeMode" value="payoption">
                 <table width="100%" border="0" cellpadding="1" cellspacing="0">
                   <tr>
-                    <td><div class="tabletext">Offline Payment: Check/Money Order</div></td>
+                    <td width='25%' align='right' nowrap><div class="tabletext">Offline Payment: Check/Money Order</div></td>
+                    <td width='5'>&nbsp;</td>
                     <td><input type="radio" name="paymentMethodType" value="offline" <#if paymentMethodType?exists && paymentMethodType == "offline">checked</#if>
                   </tr>
-                  <tr><td colspan="2"><hr class='sepbar'></td></tr>
+                  <tr><td colspan="3"><hr class='sepbar'></td></tr>
                   <tr>
-                    <td><div class="tabletext">Credit Card: Visa/Mastercard/Amex/Discover</div></td>
+                    <td width='25%' align='right' nowrap><div class="tabletext">Credit Card: Visa/Mastercard/Amex/Discover</div></td>
+                    <td width='5'>&nbsp;</td>
                     <td><input type="radio" name="paymentMethodType" value="CC">  
                   </tr>
-                  <tr><td colspan="2"><hr class='sepbar'></td></tr>
+                  <tr><td colspan="3"><hr class='sepbar'></td></tr>
                   <tr>
-                    <td><div class="tabletext">EFT Account: AHC/Electronic Check</div></td>
+                    <td width='25%' align='right' nowrap><div class="tabletext">EFT Account: AHC/Electronic Check</div></td>
+                    <td width='5'>&nbsp;</td>
                     <td><input type="radio" name="paymentMethodType" value="EFT">
                   </tr>
-                  <tr><td colspan="2"><hr class='sepbar'></td></tr>
+                  <tr><td colspan="3"><hr class='sepbar'></td></tr>
                   <tr>
-                    <td><div class="tabletext">Payment already received</div></td>
+                    <td width='25%' align='right' nowrap><div class="tabletext">Payment already received</div></td>
+                    <td width='5'>&nbsp;</td>
                     <td><input type="radio" name="paymentMethodType" value="offline_payment"></td>
                   </tr>
                 </table>
