@@ -1,5 +1,5 @@
 /*
- * $Id: GenericServiceException.java,v 1.1 2003/08/17 05:12:42 ajzeneski Exp $
+ * $Id: GenericServiceException.java,v 1.2 2003/11/19 20:42:46 ajzeneski Exp $
  *
  * Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
@@ -29,7 +29,7 @@ package org.ofbiz.service;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class GenericServiceException extends org.ofbiz.base.util.GeneralException {
@@ -44,5 +44,9 @@ public class GenericServiceException extends org.ofbiz.base.util.GeneralExceptio
 
     public GenericServiceException(String str, Throwable nested) {
         super(str, nested);
+    }
+
+    public GenericServiceException(Throwable nested) {
+        super(nested);
     }
 }
