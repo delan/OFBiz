@@ -1,7 +1,7 @@
 /*
- * $Id: JavaEventHandler.java,v 1.2 2003/08/19 17:45:22 jonesde Exp $
+ * $Id: JavaEventHandler.java,v 1.3 2003/09/14 05:36:47 jonesde Exp $
  *
- * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -38,7 +38,7 @@ import org.ofbiz.base.util.Debug;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class JavaEventHandler implements EventHandler {

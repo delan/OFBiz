@@ -1,7 +1,7 @@
 /*
- * $Id: WebSiteWorker.java,v 1.1 2003/08/26 18:45:06 jonesde Exp $
+ * $Id: WebSiteWorker.java,v 1.2 2003/09/14 05:36:48 jonesde Exp $
  *
- *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -37,7 +37,7 @@ import org.ofbiz.entity.GenericValue;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class WebSiteWorker {
