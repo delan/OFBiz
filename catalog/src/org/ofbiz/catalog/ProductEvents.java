@@ -147,7 +147,7 @@ public class ProductEvents {
             try {
                 listPrice = Double.valueOf(listPriceStr);
             } catch (Exception e) {
-                errMsg += "<li>Default Price is not a valid number.";
+                errMsg += "<li>List Price is not a valid number.";
             }
         }
         if (UtilValidate.isNotEmpty(defaultPriceStr)) {
@@ -195,6 +195,7 @@ public class ProductEvents {
         product.set("longDescription", longDescription);
         product.set("smallImageUrl", smallImageUrl);
         product.set("largeImageUrl", largeImageUrl);
+        product.set("listPrice", listPrice);
         product.set("defaultPrice", defaultPrice);
         product.set("quantityUomId", quantityUomId);
         product.set("quantityIncluded", quantityIncluded);
