@@ -33,15 +33,23 @@
           <td width="50%"><div class="boxhead">Delivery Schedule</div></td>
           <td width="50%"><div class="boxhead" align=right></td>
         </tr>
+      </table>
+    </td>
+  </tr>
+  <tr>
+    <td width="100%">
+      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <tr>
-      <#if orderId?has_content>
-            ${updatePODeliveryInfoWrapper.renderFormString()}
-      <#else>
-            No Purchase Order was specified
-      </#if>
+          <td>      
+            <#if orderId?has_content>
+              ${updatePODeliveryInfoWrapper.renderFormString()}
+            <#else>
+              <div class="tabletext">No Purchase Order was specified</div>
+            </#if>
+          </td>
         </tr>
       </table>
-    </td/>
+    </td>
   </tr>
 </table>
 <br>
