@@ -146,7 +146,7 @@
               <td nowrap><div class="tabletext"><b>RoleTypeID</b></div></td>
             </tr>
             <tr class="viewManyTR1">
-              <td><div class="tabletext"><select name="shipMethod" class="selctBox"><%= getShipMethodList(delegator) %></select></div></td>
+              <td><div class="tabletext"><select name="shipMethod" class="selectBox"><%= getShipMethodList(delegator) %></select></div></td>
               <td><div class="tabletext"><select name="fromGeo" class="selectBox"><option value="">None</option><%= getGeoList(delegator) %></select></div></td>
               <td><div class="tabletext"><select name="toGeo" class="selectBox"><option value="">None</option><%= getGeoList(delegator) %></select></div></td>
               <td><div class="tabletext"><input type="text" class="inputBox" name="partyId" size="6"></div></td>
@@ -198,7 +198,7 @@
             <tr class="viewManyTR1">
               <td><div class="tabletext"><input type="text" class="inputBox" name="wmin" size="4"> - <input type="text" class="inputBox" name="wmax" size="4"></div></td>
               <td><div class="tabletext"><select name="wuom" class="selectBox"><%= getUOMList(delegator, "WEIGHT_MEASURE") %></select></div></td>
-              <td><div class="tabletext"><input type="text" name="wprice" size="5"></div></td>
+              <td><div class="tabletext"><input type="text" class='inputBox' name="wprice" size="5"></div></td>
             </tr>
             <tr class="viewOneTR1">
               <td nowrap><div class="tabletext"><b>Min - Max (Qty)</b></div></td>
@@ -208,7 +208,7 @@
             <tr class="viewManyTR1">
               <td><div class="tabletext"><input type="text" class="inputBox" name="qmin" size="4"> - <input type="text" class="inputBox" name="qmax" size="4"></div></td>
               <td><div class="tabletext"><select name="quom" class="selectBox"><%= getUOMList(delegator, "QUANTITY_MEASURE") %></select></div></td>
-              <td><div class="tabletext"><input type="text" name="qprice" size="5"></div></td>
+              <td><div class="tabletext"><input type="text" class='inputBox' name="qprice" size="5"></div></td>
             </tr>
             <tr class="viewOneTR1">
               <td nowrap><div class="tabletext"><b>Min - Max (Price)</b></div></td>
