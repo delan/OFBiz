@@ -9,6 +9,7 @@
   <ContentAssocType contentAssocTypeId="ALTERNATE_LOCALE" description="Alternate Locale"/>
   <ContentAssocType contentAssocTypeId="RESPONSE" description="Response"/>
   <ContentAssocType contentAssocTypeId="SUB_CONTENT" description="SubContent"/>
+  <ContentAssocType contentAssocTypeId="TOPIC" description="Topic"/>
 
   <ContentAssocPredicate contentAssocPredicateId="member-of" description="The object is a member of the subject."/>
   <ContentAssocPredicate contentAssocPredicateId="defines" description="The object defines the subject."/>
