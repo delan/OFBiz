@@ -677,6 +677,11 @@ attribute.</p>
     <td>The name (key) of the map field to use.</td>
 </tr>
 <tr>
+    <td>default</td><td>N</td>
+    <td>A default value to use if the request attribute is null or is a String and is empty.
+    This will also be used when NOT running as an event.</td>
+</tr>
+<tr>
     <td>request-name</td><td>N</td>
     <td>The name of the request attribute to use. Defaults to the field-name.</td>
 </tr>
@@ -684,7 +689,7 @@ attribute.</p>
 <p>The request-to-field tag copies an attribute from the servlet request to a field of a 
 map in the method environment.</p>
 
-<p>The tag is only used when the simple-method is called as an event, it is ignored otherwise.</p>
+<p>The tag is only used when the simple-method is called as an event, it is ignored otherwise (except the default value, if specified).</p>
 
 <p><b><u>session-to-field</u></b></p>
 <table cellpadding='2' cellspacing='0' border='1'>
@@ -703,6 +708,11 @@ map in the method environment.</p>
     <td>The name (key) of the map field to use.</td>
 </tr>
 <tr>
+    <td>default</td><td>N</td>
+    <td>A default value to use if the session attribute is null or is a String and is empty.
+    This will also be used when NOT running as an event.</td>
+</tr>
+<tr>
     <td>session-name</td><td>N</td>
     <td>The name of the session attribute to use. Defaults to the field-name.</td>
 </tr>
@@ -710,7 +720,43 @@ map in the method environment.</p>
 <p>The session-to-field tag copies an attribute from the servlet session to a field of a 
 map in the method environment.</p>
 
-<p>The tag is only used when the simple-method is called as an event, it is ignored otherwise.</p>
+<p>The tag is only used when the simple-method is called as an event, it is ignored otherwise (except the default value, if specified).</p>
+
+<p><b><u>webapp-property-to-field</u></b></p>
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>resource</td><td>Y</td>
+    <td>The resource location of the properties file inside the webapp,
+    and relative to the root of the webapp (can be inside a war file).
+    An example of this is "/WEB-INF/myprops.properties".</td>
+</tr>
+<tr>
+    <td>property</td><td>Y</td>
+    <td>The property whose value will be put in the field.</td>
+</tr>
+<tr>
+    <td>default</td><td>N</td>
+    <td>A default value to use if the property value is null or empty.
+    This will also be used when NOT running as an event.</td>
+</tr>
+<tr>
+    <td>map-name</td><td>N</td>
+    <td>The name of the map in the method environment. If not specified the 
+    field-name will be used to set the field in the method environment.</td>
+</tr>
+<tr>
+    <td>field-name</td><td>Y</td>
+    <td>The name (key) of the map field to use.</td>
+</tr>
+</table>
+<p>The webapp-property-to-field tag copies a property value from a properties file in a ServletContext resource to a field.</p>
+
+<p>The tag is only used when the simple-method is called as an event, it is ignored otherwise (except the default value, if specified).</p>
 
 <!-- ======================================================================= -->
 <!-- ======================================================================= -->

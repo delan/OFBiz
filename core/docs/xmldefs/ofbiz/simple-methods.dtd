@@ -41,7 +41,7 @@
 -->
 
 <!ENTITY % CallOperations "call-map-processor | call-service | call-service-asynch | call-bsh | check-errors">
-<!ENTITY % EventOperations "field-to-request | field-to-session | request-to-field | session-to-field">
+<!ENTITY % EventOperations "field-to-request | field-to-session | request-to-field | session-to-field | webapp-property-to-field">
 <!ENTITY % ServiceOperations "field-to-result">
 <!ENTITY % EnvOperations "field-to-field | field-to-list | env-to-field | field-to-env | string-to-field | property-to-field">
 <!ENTITY % EntityMiscOperations "now-timestamp-to-env | now-date-to-env | sequenced-id-to-env">
@@ -237,11 +237,21 @@ Error messages go on the error list and are handled with the check-errors tag.
 <!ATTLIST request-to-field
     map-name CDATA #IMPLIED
     field-name CDATA #REQUIRED
+    default CDATA #IMPLIED
     request-name CDATA #IMPLIED
 >
 <!ELEMENT session-to-field EMPTY>
 <!ATTLIST session-to-field
     map-name CDATA #IMPLIED
+    field-name CDATA #REQUIRED
+    default CDATA #IMPLIED
+    session-name CDATA #IMPLIED
+>
+<!ELEMENT webapp-property-to-field EMPTY>
+<!ATTLIST webapp-property-to-field
+    resource CDATA #REQUIRED
+    property CDATA #REQUIRED
+    default CDATA #IMPLIED
     field-name CDATA #REQUIRED
     session-name CDATA #IMPLIED
 >

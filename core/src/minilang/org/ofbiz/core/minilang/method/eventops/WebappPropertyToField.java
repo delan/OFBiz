@@ -27,6 +27,7 @@ package org.ofbiz.core.minilang.method.eventops;
 import java.net.*;
 import java.text.*;
 import java.util.*;
+import javax.servlet.*;
 import javax.servlet.http.*;
 
 import org.w3c.dom.*;
@@ -35,37 +36,49 @@ import org.ofbiz.core.minilang.*;
 import org.ofbiz.core.minilang.method.*;
 
 /**
- * Copies a Servlet session attribute to a map field
+ * Copies a property value from a properties file in a ServletContext resource to a field
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- *@created    February 20, 2002
+ *@created    February 23, 2002
  *@version    1.0
  */
-public class SessionToField extends MethodOperation {
+public class WebappPropertyToField extends MethodOperation {
+    String resource;
+    String property;
+    String defaultVal;
     String mapName;
     String fieldName;
-    String sessionName;
-    String defaultVal;
 
-    public SessionToField(Element element, SimpleMethod simpleMethod) {
+    public WebappPropertyToField(Element element, SimpleMethod simpleMethod) {
         super(element, simpleMethod);
+        resource = element.getAttribute("resource");
+        property = element.getAttribute("property");
+        defaultVal = element.getAttribute("default");
         mapName = element.getAttribute("map-name");
         fieldName = element.getAttribute("field-name");
-        sessionName = element.getAttribute("session-name");
-        defaultVal = element.getAttribute("default");
-
-        if (sessionName == null || sessionName.length() == 0) {
-            sessionName = fieldName;
-        }
     }
 
     public boolean exec(MethodContext methodContext) {
-        Object fieldVal = null;
+        String fieldVal = null;
         //only run this if it is in an EVENT context
         if (methodContext.getMethodType() == MethodContext.EVENT) {
-            fieldVal = methodContext.getRequest().getSession().getAttribute(sessionName);
-            if (fieldVal == null) {
-                Debug.logWarning("Session attribute value not found with name " + sessionName);
+            ServletContext servletContext = (ServletContext) methodContext.getRequest().getAttribute("servletContext");
+            URL propsUrl = null;
+            try {
+                propsUrl = servletContext.getResource(resource);
+            } catch (java.net.MalformedURLException e) {
+                Debug.logWarning(e, "Error finding webapp resource (properties file) not found with name " + resource);
+                return true;
+            }
+            
+            if (fieldVal == null || fieldVal.length() == 0) {
+                Debug.logWarning("Webapp resource (properties file) not found with name " + resource);
+                return true;
+            }
+
+            fieldVal = UtilProperties.getPropertyValue(propsUrl, property);
+            if (fieldVal == null || fieldVal.length() == 0) {
+                Debug.logWarning("Webapp resource property value not found with name " + property + " in resource " + resource);
                 return true;
             }
         }

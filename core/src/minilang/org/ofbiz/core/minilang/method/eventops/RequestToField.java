@@ -45,12 +45,14 @@ public class RequestToField extends MethodOperation {
     String mapName;
     String fieldName;
     String requestName;
+    String defaultVal;
 
     public RequestToField(Element element, SimpleMethod simpleMethod) {
         super(element, simpleMethod);
         mapName = element.getAttribute("map-name");
         fieldName = element.getAttribute("field-name");
         requestName = element.getAttribute("request-name");
+        defaultVal = element.getAttribute("default");
 
         if (requestName == null || requestName.length() == 0) {
             requestName = fieldName;
@@ -58,26 +60,37 @@ public class RequestToField extends MethodOperation {
     }
 
     public boolean exec(MethodContext methodContext) {
+        Object fieldVal = null;
         //only run this if it is in an EVENT context
         if (methodContext.getMethodType() == MethodContext.EVENT) {
-            Object fieldVal = methodContext.getRequest().getAttribute(requestName);
+            fieldVal = methodContext.getRequest().getAttribute(requestName);
             if (fieldVal == null) {
-                Debug.logWarning("Field value not found with name " + fieldName + " in Map with name " + mapName);
+                Debug.logWarning("Request attribute value not found with name " + requestName);
                 return true;
             }
-
-            if (mapName != null && mapName.length() > 0) {
-                Map fromMap = (Map) methodContext.getEnv(mapName);
-                if (fromMap == null) {
-                    Debug.logWarning("Map not found with name " + mapName + " creating a new map");
-                    fromMap = new HashMap();
-                    methodContext.putEnv(mapName, fromMap);
-                }
-
-                fromMap.put(fieldName, fieldVal);
-            } else {
-                methodContext.putEnv(fieldName, fieldVal);
+        }
+        
+        //if fieldVal is null, or is a String and has zero length, use defaultVal
+        if (fieldVal == null) {
+            fieldVal = defaultVal;
+        } else if (fieldVal instanceof String) {
+            String strVal = (String) fieldVal;
+            if (strVal.length() == 0) {
+                fieldVal = defaultVal;
             }
+        }
+        
+        if (mapName != null && mapName.length() > 0) {
+            Map fromMap = (Map) methodContext.getEnv(mapName);
+            if (fromMap == null) {
+                Debug.logWarning("Map not found with name " + mapName + " creating a new map");
+                fromMap = new HashMap();
+                methodContext.putEnv(mapName, fromMap);
+            }
+
+            fromMap.put(fieldName, fieldVal);
+        } else {
+            methodContext.putEnv(fieldName, fieldVal);
         }
         return true;
     }

@@ -444,6 +444,8 @@ public class SimpleMethod {
                     methodOperations.add(new org.ofbiz.core.minilang.method.eventops.RequestToField(curOperElem, simpleMethod));
                 } else if ("session-to-field".equals(nodeName)) {
                     methodOperations.add(new org.ofbiz.core.minilang.method.eventops.SessionToField(curOperElem, simpleMethod));
+                } else if ("webapp-property-to-field".equals(nodeName)) {
+                    methodOperations.add(new org.ofbiz.core.minilang.method.eventops.WebappPropertyToField(curOperElem, simpleMethod));
 
                 } else if ("field-to-result".equals(nodeName)) {
                     methodOperations.add(new org.ofbiz.core.minilang.method.serviceops.FieldToResult(curOperElem, simpleMethod));
