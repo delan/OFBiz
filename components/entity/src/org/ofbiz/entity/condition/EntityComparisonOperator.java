@@ -1,5 +1,5 @@
 /*
- * $Id: EntityComparisonOperator.java,v 1.1 2003/11/05 12:08:00 jonesde Exp $
+ * $Id: EntityComparisonOperator.java,v 1.2 2004/07/06 23:40:41 doogie Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -25,6 +25,7 @@
 package org.ofbiz.entity.condition;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.oro.text.regex.MalformedPatternException;
 import org.apache.oro.text.regex.Pattern;
@@ -34,12 +35,18 @@ import org.apache.oro.text.regex.Perl5Compiler;
 import org.apache.oro.text.regex.Perl5Matcher;
 import org.apache.oro.text.perl.Perl5Util;
 
+import org.ofbiz.entity.GenericDelegator;
+import org.ofbiz.entity.GenericEntity;
+import org.ofbiz.entity.GenericModelException;
+import org.ofbiz.entity.model.ModelEntity;
+import org.ofbiz.entity.model.ModelField;
+
 /**
  * Encapsulates operations between entities and entity fields. This is a immutable class.
  *
  * @author     <a href="mailto:adam@doogie.org">Adam Heath</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.0
  */
 public class EntityComparisonOperator extends EntityOperator {
@@ -60,8 +67,74 @@ public class EntityComparisonOperator extends EntityOperator {
         return null;
     }
 
+    public void validateSql(ModelEntity entity, Object lhs, Object rhs) throws GenericModelException {
+        if (lhs instanceof EntityConditionValue) {
+            EntityConditionValue ecv = (EntityConditionValue) lhs;
+            ecv.validateSql(entity);
+        }
+        if (rhs instanceof EntityConditionValue) {
+            EntityConditionValue ecv = (EntityConditionValue) rhs;
+            ecv.validateSql(entity);
+        }
+    }
+
+    public void addSqlValue(StringBuffer sql, ModelEntity entity, List entityConditionParams, Object lhs, Object rhs) {
+        ModelField field;
+        if (lhs instanceof EntityConditionValue) {
+            EntityConditionValue ecv = (EntityConditionValue) lhs;
+            ecv.addSqlValue(sql, entity, entityConditionParams, false, null);
+            field = ecv.getModelField(entity);
+        } else if (lhs instanceof String) {
+            field = getField(entity, (String) lhs);
+            if (field == null) {
+                sql.append(lhs);
+            } else {
+                sql.append(field.getColName());
+            }
+        } else {
+            sql.append(lhs.toString());
+            field = null;
+        }
+        makeRHSWhereString(entity, entityConditionParams, sql, field, rhs);
+    }
+
+    protected void makeRHSWhereString(ModelEntity entity, List entityConditionParams, StringBuffer sql, ModelField field, Object rhs) {
+        sql.append(' ').append(getCode()).append(' ');
+        makeRHSWhereStringValue(entity, entityConditionParams, sql, field, rhs);
+    }
+
+    protected void makeRHSWhereStringValue(ModelEntity entity, List entityConditionParams, StringBuffer sql, ModelField field, Object rhs) {
+        if (rhs instanceof EntityConditionValue) {
+            EntityConditionValue ecv = (EntityConditionValue) rhs;
+            ecv.addSqlValue(sql, entity, entityConditionParams, false, null);
+        } else {
+            addValue(sql, field, rhs, entityConditionParams);
+        }
+    }
+            
     public boolean compare(Object lhs, Object rhs) {
         throw new UnsupportedOperationException(codeString);
+    }
+
+    public boolean entityMatches(GenericEntity entity, Object lhs, Object rhs) {
+        Object leftValue;
+        if (lhs instanceof EntityConditionValue) {
+            EntityConditionValue ecv = (EntityConditionValue) lhs;
+            leftValue = ecv.getValue(entity);
+        } else if (lhs instanceof String) {
+            leftValue = entity.get(lhs);
+        } else {
+            leftValue = lhs;
+        }
+        Object rightValue;
+        if (rhs instanceof EntityConditionValue) {
+            EntityConditionValue ecv = (EntityConditionValue) rhs;
+            rightValue = ecv.getValue(entity);
+        } else {
+            rightValue = rhs;
+        }
+
+        return compare(leftValue, rightValue);
     }
 
     public EntityComparisonOperator(int id, String code) {

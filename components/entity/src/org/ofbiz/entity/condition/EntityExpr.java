@@ -1,5 +1,5 @@
 /*
- * $Id: EntityExpr.java,v 1.6 2004/06/21 15:45:17 jonesde Exp $
+ * $Id: EntityExpr.java,v 1.7 2004/07/06 23:40:41 doogie Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -37,22 +37,20 @@ import org.ofbiz.entity.model.ModelField;
  * Encapsulates simple expressions used for specifying queries
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.6 $
+ * @version    $Revision: 1.7 $
  * @since      2.0
  */
 public class EntityExpr extends EntityCondition {
 
     private Object lhs;
-    private boolean leftUpper = false;
     private EntityOperator operator;
     private Object rhs;
-    private boolean rightUpper = false;
 
     protected EntityExpr() {}
 
     public EntityExpr(Object lhs, EntityComparisonOperator operator, Object rhs) {
         if (lhs == null) {
-            throw new IllegalArgumentException("The field name cannot be null");
+            throw new IllegalArgumentException("The field value cannot be null");
         }
         if (operator == null) {
             throw new IllegalArgumentException("The operator argument cannot be null");
@@ -75,10 +73,24 @@ public class EntityExpr extends EntityCondition {
         this.rhs = rhs;
     }
 
+    /** @deprecated */
     public EntityExpr(String lhs, boolean leftUpper, EntityComparisonOperator operator, Object rhs, boolean rightUpper) {
-        this(lhs, operator, rhs);
-        this.leftUpper = leftUpper;
-        this.rightUpper = rightUpper;
+        if (lhs == null) {
+            throw new IllegalArgumentException("The field value cannot be null");
+        }
+        if (operator == null) {
+            throw new IllegalArgumentException("The operator argument cannot be null");
+        }
+        this.lhs = new EntityFieldValue(lhs);
+        if (leftUpper) this.lhs = new EntityFunction.UPPER(this.lhs);
+        this.operator = operator;
+        if (rhs instanceof EntityConditionValue) {
+            if (rightUpper) rhs = new EntityFunction.UPPER((EntityConditionValue) rhs);
+            this.rhs = rhs;
+        } else {
+            if (rightUpper) rhs = new EntityFunction.UPPER(rhs);
+            this.rhs = rhs;
+        }
     }
 
     public EntityExpr(EntityCondition lhs, EntityJoinOperator operator, EntityCondition rhs) {
@@ -97,20 +109,22 @@ public class EntityExpr extends EntityCondition {
         this.rhs = rhs;
     }
 
+    /** @deprecated */
     public void setLUpper(boolean upper) {
-        leftUpper = upper;
     }
 
+    /** @deprecated */
     public boolean isLUpper() {
-        return leftUpper;
+        return rhs instanceof EntityFunction.UPPER;
     }
 
+    /** @deprecated */
     public boolean isRUpper() {
-        return rightUpper;
+        return rhs instanceof EntityFunction.UPPER;
     }
 
+    /** @deprecated */
     public void setRUpper(boolean upper) {
-        rightUpper = upper;
     }
 
     public Object getLhs() {
@@ -127,122 +141,13 @@ public class EntityExpr extends EntityCondition {
 
     public String makeWhereString(ModelEntity modelEntity, List entityConditionParams) {
         // if (Debug.verboseOn()) Debug.logVerbose("makeWhereString for entity " + modelEntity.getEntityName(), module);
-        StringBuffer whereStringBuffer = new StringBuffer();
-
-        if (lhs instanceof String) {
-            ModelField field = getField(modelEntity, (String) this.getLhs());
-            String colName = getColName(field, (String) this.getLhs());
-            if (colName != null) {
-                if (this.getRhs() == null) {
-                    whereStringBuffer.append(colName);
-                    if (EntityOperator.NOT_EQUAL.equals(this.getOperator())) {
-                        whereStringBuffer.append(" IS NOT NULL ");
-                    } else if (EntityOperator.EQUALS.equals(this.getOperator())) {
-                        whereStringBuffer.append(" IS NULL ");
-                    } else {
-                        throw new IllegalArgumentException("Operator should be EQUAL or NOT EQUAL when right argument is NULL ");
-                    }
-                } else {
-                    if (this.isLUpper()) {
-                        whereStringBuffer.append("UPPER(" + colName + ")");
-                    } else {
-                        whereStringBuffer.append(colName);
-                    }
-                    whereStringBuffer.append(' ');
-                    whereStringBuffer.append(this.getOperator().toString());
-                    whereStringBuffer.append(' ');
-
-                    // treat the IN operator as a special case, especially with a Collection rhs
-                    if (EntityOperator.IN.equals(this.getOperator()) || EntityOperator.NOT_IN.equals(this.getOperator())) {
-                        whereStringBuffer.append('(');
-
-                        if (rhs instanceof Collection) {
-                            Iterator rhsIter = ((Collection) rhs).iterator();
-                            while (rhsIter.hasNext()) {
-                                Object inObj = rhsIter.next();
-                                addValue(whereStringBuffer, field, inObj, entityConditionParams);
-                                if (rhsIter.hasNext()) {
-                                    whereStringBuffer.append(", ");
-                                }
-                            }
-                        } else {
-                            addValue(whereStringBuffer, field, rhs, entityConditionParams);
-                        }
-
-                        whereStringBuffer.append(')');
-                    } else if (EntityOperator.BETWEEN.equals(this.getOperator())) {
-                        if ((rhs instanceof Collection) && (((Collection) rhs).size() == 2)) {
-                            Iterator rhsIter = ((Collection) rhs).iterator();
-                            Object beginObj = rhsIter.next();
-                            Object endObj = rhsIter.next();
-
-                            addValue(whereStringBuffer, field, beginObj, entityConditionParams);
-                            whereStringBuffer.append(" AND ");
-                            addValue(whereStringBuffer, field, endObj, entityConditionParams);
-                        } else {
-                            throw new IllegalArgumentException("BETWEEN Operator requires a Collection with 2 elements");
-                        }
-                    } else {
-                        addValue(whereStringBuffer, field, rhs, entityConditionParams);
-                    }
-                }
-            } else {
-                throw new IllegalArgumentException("ModelField with field name " + (String) this.getLhs() + " not found");
-            }
-        } else if (lhs instanceof EntityCondition) {
-            whereStringBuffer.append('(');
-            whereStringBuffer.append(((EntityCondition) lhs).makeWhereString(modelEntity, entityConditionParams));
-            whereStringBuffer.append(") ");
-            whereStringBuffer.append(this.getOperator().toString());
-            whereStringBuffer.append(" (");
-            if (rhs instanceof EntityCondition) {
-                whereStringBuffer.append(((EntityCondition) rhs).makeWhereString(modelEntity, entityConditionParams));
-            } else {
-                addValue(whereStringBuffer, null, rhs, entityConditionParams);
-            }
-            whereStringBuffer.append(')');
-        }
-        return whereStringBuffer.toString();
+        StringBuffer sql = new StringBuffer();
+        operator.addSqlValue(sql, modelEntity, entityConditionParams, lhs, rhs);
+        return sql.toString();
     }
 
     public boolean entityMatches(GenericEntity entity) {
-        ModelEntity modelEntity = entity.getModelEntity();
-        if (this.operator instanceof EntityComparisonOperator) {
-            EntityComparisonOperator comparer = (EntityComparisonOperator) this.operator;
-            Object leftValue;
-            if (lhs instanceof String) {
-                leftValue = entity.get( (String) lhs );
-                if (this.isLUpper() && leftValue instanceof String ) {
-                    leftValue = ( (String) leftValue ).toUpperCase();
-                }
-            } else if (lhs instanceof EntityFunction) {
-                EntityFunction func = (EntityFunction) lhs;
-                leftValue = func.eval(entity);
-            } else {
-                leftValue = lhs;
-            }
-            Object rightValue;
-            if (rhs instanceof EntityFunction) {
-                EntityFunction func = (EntityFunction) rhs;
-                rightValue = func.eval(entity);
-            } else {
-                rightValue = rhs;
-            }
-            if (this.isRUpper() && rightValue instanceof String ) {
-                rightValue = ( (String) rightValue ).toUpperCase();
-            }
-
-            return comparer.compare(leftValue, rightValue);
-        } else if (lhs instanceof EntityCondition && this.operator instanceof EntityJoinOperator) {
-            EntityJoinOperator joiner = (EntityJoinOperator) this.operator;
-            EntityOperator.MatchResult result = joiner.join((EntityCondition) lhs, entity);
-            if (!result.shortCircuit) {
-                result = joiner.join((EntityCondition) rhs, entity);
-            }
-            return result.matches;
-        } else {
-            return false;
-        }
+        return operator.entityMatches(entity, lhs, rhs);
     }
 
     public void checkCondition(ModelEntity modelEntity) throws GenericModelException {
@@ -271,16 +176,12 @@ public class EntityExpr extends EntityCondition {
         EntityExpr other = (EntityExpr) obj;
         return equals(lhs, other.lhs) &&
                equals(operator, other.operator) &&
-               equals(rhs, other.rhs) &&
-               leftUpper == other.leftUpper &&
-               rightUpper == other.rightUpper;
+               equals(rhs, other.rhs);
     }
 
     public int hashCode() {
         return hashCode(lhs) ^
                hashCode(operator) ^
-               hashCode(rhs) ^
-               (leftUpper ? 1 : 2) ^
-               (rightUpper ? 4 : 8);
+               hashCode(rhs);
     }
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: EntityJoinOperator.java,v 1.1 2003/11/05 12:08:00 jonesde Exp $
+ * $Id: EntityJoinOperator.java,v 1.2 2004/07/06 23:40:42 doogie Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -24,7 +24,14 @@
 
 package org.ofbiz.entity.condition;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import org.ofbiz.entity.GenericEntity;
+import org.ofbiz.entity.GenericModelException;
+import org.ofbiz.entity.config.EntityConfigUtil;
+import org.ofbiz.entity.model.ModelEntity;
 
 /**
  * Encapsulates operations between entities and entity fields. This is a immutable class.
@@ -44,12 +51,67 @@ public class EntityJoinOperator extends EntityOperator {
         this.shortCircuitValue = shortCircuitValue;
     }
 
-    public MatchResult join(EntityCondition condition, GenericEntity entity) {
-        MatchResult result = new MatchResult();
-        result.matches = condition.entityMatches(entity);
-        if (result.matches == shortCircuitValue) {
-            result.shortCircuit = true;
+    public void addSqlValue(StringBuffer sql, ModelEntity modelEntity, List entityConditionParams, Object lhs, Object rhs) {
+        sql.append('(');
+        sql.append(((EntityCondition) lhs).makeWhereString(modelEntity, entityConditionParams));
+        sql.append(") ");
+        sql.append(getCode());
+        sql.append(" (");
+        if (rhs instanceof EntityCondition) {
+            sql.append(((EntityCondition) rhs).makeWhereString(modelEntity, entityConditionParams));
+        } else {
+            addValue(sql, null, rhs, entityConditionParams);
         }
-        return result;
+        sql.append(')');
+    }
+
+    public void addSqlValue(StringBuffer sql, ModelEntity modelEntity, List entityConditionParams, List conditionList) {
+        if (conditionList != null && conditionList.size() > 0) {
+            sql.append('(');
+            for (int i = 0; i < conditionList.size(); i++) {
+                if (i != 0) sql.append(' ').append(getCode()).append(' ');
+                EntityCondition condition = (EntityCondition) conditionList.get(i);
+                sql.append(condition.makeWhereString(modelEntity, entityConditionParams));
+            }
+            sql.append(')');
+        }
+    }
+
+    public boolean entityMatches(GenericEntity entity, Object lhs, Object rhs) {
+        return entityMatches(entity, (EntityCondition) lhs, (EntityCondition) rhs);
+    }
+
+    public boolean entityMatches(GenericEntity entity, EntityCondition lhs, EntityCondition rhs) {
+        if (lhs.entityMatches(entity)) return shortCircuitValue;
+        if (rhs.entityMatches(entity)) return shortCircuitValue;
+        return !shortCircuitValue;
+    }
+
+    public boolean entityMatches(GenericEntity entity, List conditionList) {
+        if (conditionList != null && conditionList.size() > 0) {
+            for (int i = 0; i < conditionList.size(); i++) {
+                EntityCondition condition = (EntityCondition) conditionList.get(i);
+                if (condition.entityMatches(entity) == shortCircuitValue) return shortCircuitValue;
+            }
+        }
+        return !shortCircuitValue;
+    }
+
+    public void validateSql(ModelEntity modelEntity, Object lhs, Object rhs) throws GenericModelException {
+        validateSql(modelEntity, (EntityCondition) lhs, (EntityCondition) rhs);
+    }
+
+    public void validateSql(ModelEntity modelEntity, EntityCondition lhs, EntityCondition rhs) throws GenericModelException {
+        lhs.checkCondition(modelEntity);
+        rhs.checkCondition(modelEntity);
+    }
+
+    public void validateSql(ModelEntity modelEntity, List conditionList) throws GenericModelException {
+        if (conditionList == null && conditionList.size() == 0)
+            throw new GenericModelException("Empty list for joining");
+        for (int i = 0; i < conditionList.size(); i++) {
+            EntityCondition condition = (EntityCondition) conditionList.get(i);
+            condition.checkCondition(modelEntity);
+        }
     }
 }
