@@ -1,0 +1,128 @@
+/*
+ *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a 
+ *  copy of this software and associated documentation files (the "Software"), 
+ *  to deal in the Software without restriction, including without limitation 
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+ *  and/or sell copies of the Software, and to permit persons to whom the 
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included 
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ *@author     Andy Zeneski (jaz@ofbiz.org)
+ *@author     Jacopo Cappellato (tiz@sastau.it)
+ *@author     Malin Nicolas (nicolas@ptimalin.net)
+ *@version    $Revision: 0.1 $
+ *@since      2.2
+*/
+
+import java.util.*;
+import java.sql.Timestamp;
+import org.ofbiz.entity.*;
+import org.ofbiz.entity.condition.*;
+import org.ofbiz.base.util.*;
+import org.ofbiz.manufacturing.mrp.*;
+import org.ofbiz.base.util.Debug;
+
+delegator = request.getAttribute("delegator");
+
+inventory = new HashMap();
+
+//get the inventory (inventoryEventPlanned)
+productId = request.getParameter("productId");
+
+if (productId != null && ! productId.equals("")){
+    Debug.logInfo("productId =  " + productId, "truc");
+    inventory = delegator.findByAnd("InventoryEventPlanned", UtilMisc.toMap("productId", productId));
+}
+
+// create the eventDate for calendar
+UtilDateTime fromDate = new UtilDateTime();
+Timestamp fromTs = fromDate.nowTimestamp();
+fromTs = fromDate.getDayStart( fromTs );
+
+String fromStr = fromTs.toString();
+fromStr = fromStr.substring(0, fromStr.indexOf('.'));
+
+context.put("eventDateStr", fromStr);
+Debug.logInfo("eventDateStr =  " + fromStr, "truc");
+
+// get the lookup flag
+lookupFlag = request.getParameter("lookupFlag");
+
+// blank param list
+paramList = "";
+inventoryList = null;
+
+if (lookupFlag != null) {
+    paramList = paramList + "&lookupFlag=" + lookupFlag;
+    lookupErrorMessage = null;   
+    andExprs = new ArrayList();
+    entityName = "InventoryEventPlanned"; 
+     
+    //define main condition
+    mainCond = null;
+
+    // now do the filtering
+    productId = request.getParameter("productId");
+    eventDate = request.getParameter("eventDate");
+    paramList = paramList + "&productId=" + productId;
+    
+    if (eventDate != null && eventDate.length() > 8) {            
+	eventDate = eventDate.trim();
+	if (eventDate.length() < 14) eventDate = eventDate + " " + "00:00:00.000";
+	paramList = paramList + "&eventDate=" + eventDate;
+    }
+    
+    if (productId != null) {
+            paramList = paramList + "&productId=" + productId;
+	    if ( productId.length() > 0)
+		andExprs.add(new EntityExpr("productId", EntityOperator.EQUALS, productId));
+    } 
+
+    mainCond = new EntityConditionList(andExprs, EntityOperator.AND); 
+    
+    if ( mainCond != null) {
+	// do the lookup
+	inventoryList = delegator.findByCondition(entityName, mainCond, null, null);            
+    }
+    
+    context.put("inventoryList", inventoryList);
+}
+context.put("paramList", paramList);
+
+// set the page parameters
+viewIndex = 0;
+try {
+    viewIndex = Integer.valueOf((String) request.getParameter("VIEW_INDEX")).intValue();
+} catch (Exception e) {}
+viewSize = 20;
+try {
+    viewSize = Integer.valueOf((String) request.getParameter("VIEW_SIZE")).intValue();
+} catch (Exception e) {}
+listSize = 0;
+if (inventoryList != null) {
+    listSize = inventoryList.size();
+}
+lowIndex = viewIndex * viewSize;
+highIndex = (viewIndex + 1) * viewSize;
+if (listSize < highIndex) {
+    highIndex = listSize;
+}
+context.put("viewIndex", viewIndex);
+context.put("listSize", listSize);
+context.put("highIndex", highIndex);
+context.put("lowIndex", lowIndex);
+context.put("viewSize", viewSize);
+
+    
