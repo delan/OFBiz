@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.75 $
+ * @version    $Revision: 1.76 $
  */
 -->
 
@@ -2802,6 +2802,7 @@
       <field name="allowPassword" type="indicator"></field>
       <field name="defaultPassword" type="long-varchar"></field>
       <field name="explodeOrderItems" type="indicator"></field>
+      <field name="checkGcBalance" type="indicator"></field>
       <field name="retryFailedAuths" type="indicator"></field>
       <field name="headerApprovedStatus" type="id"></field>
       <field name="itemApprovedStatus" type="id"></field>
