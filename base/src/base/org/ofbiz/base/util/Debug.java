@@ -1,5 +1,5 @@
 /*
- * $Id: Debug.java,v 1.3 2003/08/20 20:53:41 ajzeneski Exp $
+ * $Id: Debug.java,v 1.4 2003/08/20 21:04:43 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -40,7 +40,7 @@ import org.apache.log4j.spi.LoggerRepository;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.0
  */
 public final class Debug {
@@ -101,8 +101,7 @@ public final class Debug {
             while (enum.hasMoreElements()) {
                 Logger thisLogger = (Logger) enum.nextElement();
                 thisLogger.setLevel(Level.DEBUG);
-            }
-            
+            }            
         }
     }
     
