@@ -100,7 +100,7 @@ public abstract class GenericAsyncEngine implements GenericEngine {
             
             // Create the runtime data 
             String dataId = dispatcher.getDelegator().getNextSeqId("RuntimeData").toString();
-            GenericValue runtimeData = dispatcher.getDelegator().makeValue("RuntimeInfo",UtilMisc.toMap("runtimeDataId",dataId));
+            GenericValue runtimeData = dispatcher.getDelegator().makeValue("RuntimeData",UtilMisc.toMap("runtimeDataId",dataId));
             runtimeData.set("runtimeInfo",XmlSerializer.serialize(context));
             
             // Create the job info
