@@ -120,7 +120,7 @@ public class JmsServiceEngine implements GenericEngine {
             TopicConnectionFactory factory = (TopicConnectionFactory) jndi.lookup(jndiName);
             TopicConnection con = factory.createTopicConnection(userName, password);
 
-            con.setClientID(userName);
+            //con.setClientID("0123456789ABCDEF");
             con.start();
 
             TopicSession session = con.createTopicSession(false, Session.AUTO_ACKNOWLEDGE);
