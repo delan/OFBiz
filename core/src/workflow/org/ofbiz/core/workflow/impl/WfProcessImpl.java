@@ -22,9 +22,7 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-
 package org.ofbiz.core.workflow.impl;
-
 
 import java.util.*;
 
@@ -32,27 +30,26 @@ import org.ofbiz.core.entity.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.workflow.*;
 
-
 /**
  * WfProcessImpl - Workflow Process Object implementation
  *
  *@author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
  *@author     David Ostrovsky (d.ostrovsky@gmx.de)
  *@created    December 18, 2001
- *@version    1.2
+ *@version    $Revision$
  */
-
 public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
 
     public static final String module = WfProcessImpl.class.getName();
 
-    private WfRequester requester;
-    private WfProcessMgr manager;
+    private WfRequester requester = null;
+    private WfProcessMgr manager = null;
 
     /**
-     * Creates new WfProcessImpl
-     * @param valueObject The GenericValue object of this WfProcess.
-     * @param manager The WfProcessMgr invoking this process.
+     * Method WfProcessImpl.
+     * @param valueObject
+     * @param manager
+     * @throws WfException
      */
     public WfProcessImpl(GenericValue valueObject, WfProcessMgr manager) throws WfException {
         super(valueObject, null);
@@ -61,10 +58,7 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
     }
 
     /**
-     * Creates new WfProcessImpl
-     * @param delegator The GenericDelegator to be used with this process
-     * @param workEffortId The WorkEffort ID of this process
-     * @throws WfException
+     * @see org.ofbiz.core.workflow.impl.WfExecutionObjectImpl#WfExecutionObjectImpl(org.ofbiz.core.entity.GenericDelegator, java.lang.String)
      */
     public WfProcessImpl(GenericDelegator delegator, String workEffortId) throws WfException {
         super(delegator, workEffortId);
@@ -75,10 +69,7 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
     }
 
     /**
-     * Set the originator of this process.
-     * @param newValue The Requestor of this process.
-     * @throws WfException General workflow exception.
-     * @throws CannotChangeRequester Requestor cannot be changed.
+     * @see org.ofbiz.core.workflow.WfProcess#setRequester(org.ofbiz.core.workflow.WfRequester)
      */
     public void setRequester(WfRequester newValue) throws WfException, CannotChangeRequester {
         if (requester != null)
@@ -87,22 +78,16 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
     }
 
     /**
-     * Retrieve the List of activities of this process.
-     * @param maxNumber High limit of elements in the result set.
-     * @throws WfException General workflow exception.
-     * @return List of WfActivity objects.
+     * @see org.ofbiz.core.workflow.WfProcess#getSequenceStep(int)
      */
     public List getSequenceStep(int maxNumber) throws WfException {
         if (maxNumber > 0)
             return new ArrayList(activeSteps().subList(0, maxNumber - 1));
         return activeSteps();
     }
-
+  
     /**
-     * Start the process.
-     * @throws WfException General workflow exception.
-     * @throws CannotStart Process cannot be started.
-     * @throws AlreadyRunning Process is already running.
+     * @see org.ofbiz.core.workflow.WfProcess#start()
      */
     public void start() throws WfException, CannotStart, AlreadyRunning {
         if (state().equals("open.running"))
@@ -124,54 +109,41 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
         if (start == null)
             throw new CannotStart("No initial activity set");
 
-        if (Debug.verboseOn()) Debug.logVerbose("[WfProcess.start] : Started the workflow process.", module);
+        if (Debug.verboseOn()) 
+            Debug.logVerbose("[WfProcess.start] : Started the workflow process.", module);
         startActivity(start);
     }
-
+  
     /**
-     * Retrieve the WfProcessMgr of this process.
-     * @throws WfException General workflow exception.
-     * @return WfProcessMgr
+     * @see org.ofbiz.core.workflow.WfProcess#manager()
      */
     public WfProcessMgr manager() throws WfException {
         return manager;
     }
-
+    
     /**
-     * Retrieve the requestor of this process.
-     * @throws WfException General workflow exception.
-     * @return WfRequestor of this process.
+     * @see org.ofbiz.core.workflow.WfProcess#requester()
      */
     public WfRequester requester() throws WfException {
         return requester;
     }
-
+   
     /**
-     * Retrieve the Iterator of active activities of this process.
-     * @throws WfException General workflow exception.
-     * @return Iterator of WfActivity objects.
+     * @see org.ofbiz.core.workflow.WfProcess#getIteratorStep()
      */
     public Iterator getIteratorStep() throws WfException {
         return activeSteps().iterator();
     }
-
+   
     /**
-     * Check if some activity is a member of this process.
-     * @param member Some activity.
-     * @throws WfException General workflow exception.
-     * @return true if the specific activity is amember of this process,
-     * false otherwise.
+     * @see org.ofbiz.core.workflow.WfProcess#isMemberOfStep(org.ofbiz.core.workflow.WfActivity)
      */
     public boolean isMemberOfStep(WfActivity member) throws WfException {
         return activeSteps().contains(member);
     }
-
+    
     /**
-     * Retrieve the iterator of activities in some specific state.
-     * @param state Specific state.
-     * @throws WfException General workflow exception.
-     * @throws InvalidState State is invalid.
-     * @return Iterator of activities in specific state
+     * @see org.ofbiz.core.workflow.WfProcess#getActivitiesInState(java.lang.String)
      */
     public Iterator getActivitiesInState(String state) throws WfException, InvalidState {
         ArrayList res = new ArrayList();
@@ -185,12 +157,9 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
         }
         return res.iterator();
     }
-
+  
     /**
-     * Retrieve the result for this process.
-     * @throws WfException General workflow exception.
-     * @throws ResultNotAvailable No result is available.
-     * @return Result Map.
+     * @see org.ofbiz.core.workflow.WfProcess#result()
      */
     public Map result() throws WfException, ResultNotAvailable {
         Map resultSig = manager().resultSignature();
@@ -210,33 +179,25 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
         }
         return results;
     }
-
+   
     /**
-     * Retrieve the amount of activities in this process.
-     * @throws WfException General workflow exception.
-     * @return Number of activities of this process
+     * @see org.ofbiz.core.workflow.WfProcess#howManyStep()
      */
     public int howManyStep() throws WfException {
         return activeSteps().size();
     }
-
+  
     /**
-     * Receives activity results.
-     * @param activity WfActivity sending the results.
-     * @param results Map of the results.
-     * @throws WfException
+     * @see org.ofbiz.core.workflow.WfProcess#receiveResults(org.ofbiz.core.workflow.WfActivity, java.util.Map)
      */
     public synchronized void receiveResults(WfActivity activity, Map results) throws WfException, InvalidData {
         Map context = processContext();
-
         context.putAll(results);
         setSerializedData(context);
     }
-
+    
     /**
-     * Receives notification when an activity has completed.
-     * @param activity WfActivity which has completed.
-     * @throws WfException
+     * @see org.ofbiz.core.workflow.WfProcess#activityComplete(org.ofbiz.core.workflow.WfActivity)
      */
     public synchronized void activityComplete(WfActivity activity) throws WfException {
         if (!activity.state().equals("closed.completed"))
@@ -245,6 +206,9 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
         queueNext(activity);
     }
 
+    /**
+     * @see org.ofbiz.core.workflow.impl.WfExecutionObjectImpl#executionObjectType()
+     */
     public String executionObjectType() {
         return "WfProcess";
     }
@@ -283,7 +247,8 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
                     joinTransition(toActivity, trans);
             }
         } else {
-            if (Debug.verboseOn()) Debug.logVerbose("[WfProcess.queueNext] : No transitions left to follow.", module);
+            if (Debug.verboseOn()) 
+                Debug.logVerbose("[WfProcess.queueNext] : No transitions left to follow.", module);
             this.finishProcess();
         }
     }
@@ -306,7 +271,6 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
 
         try {
             Map fields = new HashMap();
-
             fields.put("processWorkEffortId", dataObject.getString("workEffortId"));
             fields.put("toActivityId", toActivity.getString("activityId"));
             followed = getDelegator().findByAnd("WorkEffortTransBox", fields);
@@ -323,7 +287,6 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
             startActivity(toActivity);
             try {
                 Map fields = new HashMap();
-
                 fields.put("processWorkEffortId", dataObject.getString("workEffortId"));
                 fields.put("toActivityId", toActivity.getString("activityId"));
                 getDelegator().removeByAnd("WorkEffortTransBox", fields);
@@ -334,7 +297,6 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
             Debug.logVerbose("[WfProcess.joinTransition] : Waiting for transitions to finish.", module);
             try {
                 Map fields = new HashMap();
-
                 fields.put("processWorkEffortId", dataObject.getString("workEffortId"));
                 fields.put("toActivityId", toActivity.getString("activityId"));
                 fields.put("transitionId", transition.getString("transitionId"));
@@ -418,7 +380,6 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
 
         while (i.hasNext()) {
             WfActivity a = (WfActivity) i.next();
-
             if (a.key().equals(key))
                 return a;
         }

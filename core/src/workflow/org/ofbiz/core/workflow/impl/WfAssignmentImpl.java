@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -22,9 +22,7 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-
 package org.ofbiz.core.workflow.impl;
-
 
 import java.util.*;
 import java.sql.Timestamp;
@@ -33,22 +31,21 @@ import org.ofbiz.core.entity.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.workflow.*;
 
-
 /**
  * WfAssignmentImpl - Workflow Assignment Object implementation
  *
  *@author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
  *@created    December 19, 2001
- *@version    1.2
+ *@version    $Revision$
  */
 public class WfAssignmentImpl implements WfAssignment {
 
     public static final String module = WfAssignmentImpl.class.getName();
 
-    protected WfActivity activity;
-    protected WfResource resource;
-    protected Timestamp fromDate;
-    protected boolean create;
+    protected WfActivity activity = null;
+    protected WfResource resource = null;
+    protected Timestamp fromDate = null;
+    protected boolean create = false;
 
     /**
      * Creates new WfAssignment.
@@ -112,10 +109,9 @@ public class WfAssignmentImpl implements WfAssignment {
         if (value == null)
             throw new WfException("Not a valid assignment");
     }
-
+   
     /**
-     * Mark this assignment as accepted.
-     * @throws WfException
+     * @see org.ofbiz.core.workflow.WfAssignment#accept()
      */
     public void accept() throws WfException {
         boolean allDelegated = true;
@@ -144,7 +140,6 @@ public class WfAssignmentImpl implements WfAssignment {
 
                 while (ai.hasNext()) {
                     WfAssignment a = (WfAssignment) ai.next();
-
                     if (!a.equals(this)) a.changeStatus("CAL_DELEGATED");
                 }
             }
@@ -152,19 +147,16 @@ public class WfAssignmentImpl implements WfAssignment {
         // set this assignment as accepted
         changeStatus("CAL_ACCEPTED");
     }
-
+ 
     /**
-     * Set the results of this assignment.
-     * @param Map The results of the assignement.
-     * @throws WfException
+     * @see org.ofbiz.core.workflow.WfAssignment#setResult(java.util.Map)
      */
     public void setResult(Map results) throws WfException {
         activity.setResult(results);
     }
 
     /**
-     * Mark this assignment as complete.
-     * @throws WfException
+     * @see org.ofbiz.core.workflow.WfAssignment#complete()
      */
     public void complete() throws WfException {
         changeStatus("CAL_COMPLETED");
@@ -176,21 +168,17 @@ public class WfAssignmentImpl implements WfAssignment {
     }
 
     /**
-     * Mark this assignment as delegated.
-     * @throws WfException
+     * @see org.ofbiz.core.workflow.WfAssignment#delegated()
      */
     public void delegated() throws WfException {
         changeStatus("CAL_DELEGATED");
     }
 
     /**
-     * Change the status of this assignment.
-     * @param status The new status
-     * @throws WfException
+     * @see org.ofbiz.core.workflow.WfAssignment#changeStatus(java.lang.String)
      */
     public void changeStatus(String status) throws WfException {
         GenericValue valueObject = valueObject();
-
         try {
             valueObject.set("statusId", status);
             valueObject.store();
@@ -202,28 +190,21 @@ public class WfAssignmentImpl implements WfAssignment {
     }
 
     /**
-     * Gets the activity object of this assignment.
-     * @return WfActivity The activity object of this assignment.
-     * @throws WfException
+     * @see org.ofbiz.core.workflow.WfAssignment#activity()
      */
     public WfActivity activity() throws WfException {
         return activity;
     }
 
     /**
-     * Gets the assignee (resource) of this assignment.
-     * @return WfResource The assignee of this assignment.
-     * @throws WfException
+     * @see org.ofbiz.core.workflow.WfAssignment#assignee()
      */
     public WfResource assignee() throws WfException {
         return resource;
     }
 
     /**
-     * Sets the assignee of this assignment.
-     * @param newValue
-     * @throws WfException
-     * @throws InvalidResource
+     * @see org.ofbiz.core.workflow.WfAssignment#setAssignee(org.ofbiz.core.workflow.WfResource)
      */
     public void setAssignee(WfResource newValue) throws WfException, InvalidResource {
         remove();
@@ -233,8 +214,7 @@ public class WfAssignmentImpl implements WfAssignment {
     }
 
     /**
-     * Removes the stored data for this object.
-     * @throws WfException
+     * @see org.ofbiz.core.workflow.WfAssignment#remove()
      */
     public void remove() throws WfException {
         try {
@@ -245,18 +225,14 @@ public class WfAssignmentImpl implements WfAssignment {
     }
 
     /**
-     * Gets the status of this assignment.
-     * @return String status code for this assignment.
-     * @throws WfException
+     * @see org.ofbiz.core.workflow.WfAssignment#status()
      */
     public String status() throws WfException {
         return valueObject().getString("statusId");
     }
 
     /**
-     * Gets the from date of this assignment.
-     * @return Timestamp when this assignment first began.
-     * @throws WfException
+     * @see org.ofbiz.core.workflow.WfAssignment#fromDate()
      */
     public Timestamp fromDate() throws WfException {
         return fromDate;

@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -22,18 +22,15 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-
 package org.ofbiz.core.workflow;
-
 
 /**
  * WfCreateProcessEventAudit - Workflow Create Process Event Audit Interface
  *
  *@author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
  *@created    October 29, 2001
- *@version    1.0
+ *@version    $Revision$
  */
-
 public interface WfCreateProcessEventAudit extends WfEventAudit {
 
     /**

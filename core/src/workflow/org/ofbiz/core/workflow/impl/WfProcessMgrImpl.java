@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -22,9 +22,7 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-
 package org.ofbiz.core.workflow.impl;
-
 
 import java.util.*;
 
@@ -32,33 +30,38 @@ import org.ofbiz.core.entity.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.workflow.*;
 
-
 /**
  * WfProcessMgrImpl - Workflow Process Manager implementation
  *
  *@author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
  *@author     David Ostrovsky (d.ostrovsky@gmx.de)
  *@created    November 19, 2001
- *@version    1.0
+ *@version    $Revision$
  */
-
 public class WfProcessMgrImpl implements WfProcessMgr {
 
     public static final String module = WfProcessMgrImpl.class.getName();
 
     protected GenericValue processDef;
+    
     protected String state; // will probably move to a runtime entity for the manager
     protected List processList; // will probably be a related entity to the runtime entity
-    protected Map contextSignature;
-    protected Map resultSignature;
-
-    /** Creates new WfProcessMgrImpl
-     * @param delegator The GenericDelegator to use for the process definitions.
-     * @param processId The unique key of the process definition.
+    
+    protected Map contextSignature = null;
+    protected Map resultSignature = null;
+    protected Map initialContext = null;
+    
+    /**
+     * Method WfProcessMgrImpl.
+     * @param delegator
+     * @param packageId
+     * @param packageVersion
+     * @param processId
+     * @param processVersion
      * @throws WfException
-     */
+     */   
     public WfProcessMgrImpl(GenericDelegator delegator, String packageId, String packageVersion,
-        String processId, String processVersion) throws WfException {
+            String processId, String processVersion) throws WfException {
         Map finder = UtilMisc.toMap("packageId", packageId, "processId", processId);
         List order = UtilMisc.toList("-packageVersion", "-processVersion");
 
@@ -66,7 +69,6 @@ public class WfProcessMgrImpl implements WfProcessMgr {
         if (processVersion != null) finder.put("processVersion", processVersion);
         try {
             List processes = delegator.findByAnd("WorkflowProcess", finder, order);
-
             if (processes.size() == 0)
                 throw new WfException("No process definition found for the specified processId");
             else
@@ -76,6 +78,7 @@ public class WfProcessMgrImpl implements WfProcessMgr {
         }
 
         buildSignatures();
+        buildInitialContext();
         processList = new ArrayList();
         state = "enabled";
         if (Debug.infoOn()) Debug.logInfo("[WfProcessMgr.init] : Create process manager (" +
@@ -83,21 +86,16 @@ public class WfProcessMgrImpl implements WfProcessMgr {
     }
 
     /**
-     * @param newState
-     * @throws WfException
-     * @throws TransitionNotAllowed
+     * @see org.ofbiz.core.workflow.WfProcessMgr#setProcessMgrState(java.lang.String)
      */
-    public void setProcessMgrState(String newState) throws WfException,
-            TransitionNotAllowed {
+    public void setProcessMgrState(String newState) throws WfException, TransitionNotAllowed {            
         if (!newState.equals("enabled") || !newState.equals("disabled"))
             throw new TransitionNotAllowed();
         this.state = newState;
     }
 
     /**
-     * @param maxNumber
-     * @throws WfException
-     * @return List of WfProcess objects.
+     * @see org.ofbiz.core.workflow.WfProcessMgr#getSequenceProcess(int)
      */
     public List getSequenceProcess(int maxNumber) throws WfException {
         if (maxNumber > 0)
@@ -106,16 +104,10 @@ public class WfProcessMgrImpl implements WfProcessMgr {
     }
 
     /**
-     * Create a WfProcess object
-     * @param requester
-     * @throws WfException
-     * @throws NotEnabled
-     * @throws InvalidRequester
-     * @throws RequesterRequired
-     * @return WfProcess created
+     * @see org.ofbiz.core.workflow.WfProcessMgr#createProcess(org.ofbiz.core.workflow.WfRequester)
      */
-    public WfProcess createProcess(WfRequester requester) throws WfException,
-            NotEnabled, InvalidRequester, RequesterRequired {
+    public WfProcess createProcess(WfRequester requester) throws WfException, NotEnabled, 
+            InvalidRequester, RequesterRequired {            
         if (state.equals("disabled"))
             throw new NotEnabled();
 
@@ -136,83 +128,79 @@ public class WfProcessMgrImpl implements WfProcessMgr {
     }
 
     /**
-     * @throws WfException
-     * @return
-     */
+     * @see org.ofbiz.core.workflow.WfProcessMgr#contextSignature()
+     */   
     public Map contextSignature() throws WfException {
         return this.contextSignature;
     }
-
+    
     /**
-     * @throws WfException
-     * @return
+     * @see org.ofbiz.core.workflow.WfProcessMgr#howManyProcess()
      */
     public int howManyProcess() throws WfException {
         return processList.size();
     }
 
     /**
-     * @throws WfException
-     * @return
+     * @see org.ofbiz.core.workflow.WfProcessMgr#processMgrStateType()
      */
     public List processMgrStateType() throws WfException {
         String[] list = {"enabled", "disabled"};
-
         return Arrays.asList(list);
     }
 
     /**
-     * @throws WfException
-     * @return
+     * @see org.ofbiz.core.workflow.WfProcessMgr#category()
      */
     public String category() throws WfException {
         return processDef.getString("category");
     }
 
     /**
-     * @throws WfException
-     * @return
+     * @see org.ofbiz.core.workflow.WfProcessMgr#version()
      */
     public String version() throws WfException {
         return processDef.getString("version");
     }
 
     /**
-     * @throws WfException
-     * @return
+     * @see org.ofbiz.core.workflow.WfProcessMgr#description()
      */
     public String description() throws WfException {
         return processDef.getString("description");
     }
 
     /**
-     * @throws WfException
-     * @return
+     * @see org.ofbiz.core.workflow.WfProcessMgr#name()
      */
     public String name() throws WfException {
         return processDef.getString("name");
     }
 
     /**
-     * @throws WfException
-     * @return
+     * @see org.ofbiz.core.workflow.WfProcessMgr#resultSignature()
      */
     public Map resultSignature() throws WfException {
         return this.resultSignature;
     }
+    
+    /**
+     * Method getInitialContext.
+     * @return Map
+     */
+    public Map getInitialContext() {
+           return initialContext;
+    }
 
     /**
-     * @param member
-     * @throws WfException
-     * @return
+     * @see org.ofbiz.core.workflow.WfProcessMgr#isMemberOfProcess(org.ofbiz.core.workflow.WfProcess)
      */
     public boolean isMemberOfProcess(WfProcess member) throws WfException {
         return processList.contains(member);
     }
 
     /**
-     * @throws WfException
-     * @return
+     * @see org.ofbiz.core.workflow.WfProcessMgr#getIteratorProcess()
      */
     public Iterator getIteratorProcess() throws WfException {
         return processList.iterator();
@@ -241,7 +229,6 @@ public class WfProcessMgrImpl implements WfProcessMgr {
             return;
 
         Iterator i = params.iterator();
-
         while (i.hasNext()) {
             GenericValue param = (GenericValue) i.next();
             String name = param.getString("formalParamId");
@@ -249,25 +236,37 @@ public class WfProcessMgrImpl implements WfProcessMgr {
             String type = param.getString("dataTypeEnumId");
 
             if (mode.equals("WPM_IN") || mode.equals("WPM_INOUT"))
-                contextSignature.put(name, getJavaType(type));
+                contextSignature.put(name, WfUtil.getJavaType(type));
             else if (mode.equals("WPM_OUT") || mode.equals("WPM_INOUT"))
-                resultSignature.put(name, getJavaType(type));
+                resultSignature.put(name, WfUtil.getJavaType(type));
         }
     }
+                    
+    private void buildInitialContext() throws WfException {
+        initialContext = new HashMap();
+        Collection dataFields = null;
+        try {
+            dataFields = processDef.getRelated("WorkflowDataField");
+        } catch (GenericEntityException e) {
+            throw new WfException(e.getMessage(), e);
+        }
+        if (dataFields == null)
+            return;
 
-    // Gets the Java type from a XPDL datatype
-    private String getJavaType(String xpdlType) {
-        Map typeMap = new HashMap();
-
-        typeMap.put("WDT_BOOLEAN", "java.lang.Boolean");
-        typeMap.put("WDT_STRING", "java.lang.String");
-        typeMap.put("WDT_INTEGER", "java.lang.Long");
-        typeMap.put("WDT_FLOAT", "java.lang.Double");
-        typeMap.put("WDT_DATETIME", "java.sql.Timestamp");
-        if (typeMap.containsKey(xpdlType))
-            return (String) typeMap.get(xpdlType);
-        else
-            return "java.lang.Object";
-    }
+        Iterator i = dataFields.iterator();
+        
+        while (i.hasNext()) {
+            GenericValue dataField = (GenericValue) i.next();
+            final String name = dataField.getString("dataFieldId");
+            final String type = dataField.getString("dataTypeEnumId");
+            final String value = dataField.getString("initialValue");
+   
+            try {                
+                initialContext.put(name, ObjectType.simpleTypeConvert(value, WfUtil.getJavaType(type), null, null));                          
+            } catch (GeneralException e) {
+                throw new WfException(e.getMessage(), e);
+            }            
+        }
+    }      
 }
 

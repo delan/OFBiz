@@ -22,39 +22,32 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-package org.ofbiz.core.workflow;
+package org.ofbiz.core.workflow.impl;
+
+import org.ofbiz.core.workflow.WfActivity;
 
 /**
- * WfAssignmentEventAudit - Workflow Assignment Event Audit Interface
+ * WfActivityLoopImplementation.java
  *
- *@author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
- *@created    October 29, 2001
+ *@author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a> 
+ *@author     Oswin Ondarza and Manuel Soto
+ *@created    Oct 22, 2002
  *@version    $Revision$
  */
-public interface WfAssignmentEventAudit extends WfEventAudit {
+public class WfActivityLoopImplementation extends WfActivityAbstractImplementation {
+
+    public static final String module = WfActivityLoopImplementation.class.getName();
+
+    /**     
+     * @see org.ofbiz.core.workflow.impl.WfActivityAbstractImplementation#WfActivityAbstractImplementation(WfActivityImpl)
+     */
+    public WfActivityLoopImplementation(WfActivityImpl wfActivity) {
+        super(wfActivity);
+    }
 
     /**
-     * @throws WfException
-     * @return
+     * To be implemented.
+     * @see org.ofbiz.core.workflow.impl.WfActivityAbstractImplementation#run()
      */
-    public String oldResourceKey() throws WfException;
-
-    /**
-     * @throws WfException
-     * @return
-     */
-    public String oldResourceName() throws WfException;
-
-    /**
-     * @throws WfException
-     * @return
-     */
-    public String newResourceKey() throws WfException;
-
-    /**
-     * @throws WfException
-     * @return
-     */
-    public String newResourceName() throws WfException;
-
-} // interface WfAssignmentEventAuditOperations
+    public void run() {}
+}

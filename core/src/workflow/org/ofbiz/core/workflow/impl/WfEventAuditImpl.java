@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -22,9 +22,7 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-
 package org.ofbiz.core.workflow.impl;
-
 
 import java.sql.Timestamp;
 import java.util.*;
@@ -32,55 +30,48 @@ import java.util.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.workflow.*;
 
-
 /**
  * WfEventAuditImpl - Workflow Event Audit implementation
  *
  *@author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
  *@created    December 3, 2001
- *@version    1.0
+ *@version    $Revision$
  */
-
 public class WfEventAuditImpl implements WfEventAudit {
 
-    private WfExecutionObject object;
-    private String eventType;
-    private Timestamp timeStamp;
+    private WfExecutionObject object = null;
+    private String eventType = null;
+    private Timestamp timeStamp = null;
 
     public WfEventAuditImpl(WfExecutionObject object, String eventType) {
         this.object = object;
         this.eventType = eventType;
         this.timeStamp = new Timestamp(new Date().getTime());
     }
-
+    
     /**
-     * @throws WfException
-     * @throws SourceNotAvailable
-     * @return
+     * @see org.ofbiz.core.workflow.WfEventAudit#source()
      */
     public WfExecutionObject source() throws WfException, SourceNotAvailable {
         return object;
     }
-
+ 
     /**
-     * @throws WfException
-     * @return
+     * @see org.ofbiz.core.workflow.WfEventAudit#timeStamp()
      */
     public Timestamp timeStamp() throws WfException {
         return timeStamp;
     }
 
     /**
-     * @throws WfException
-     * @return
+     * @see org.ofbiz.core.workflow.WfEventAudit#eventType()
      */
     public String eventType() throws WfException {
         return eventType;
     }
 
     /**
-     * @throws WfException
-     * @return
+     * @see org.ofbiz.core.workflow.WfEventAudit#activityKey()
      */
     public String activityKey() throws WfException {
         try {
@@ -93,8 +84,7 @@ public class WfEventAuditImpl implements WfEventAudit {
     }
 
     /**
-     * @throws WfException
-     * @return
+     * @see org.ofbiz.core.workflow.WfEventAudit#activityName()
      */
     public String activityName() throws WfException {
         try {
@@ -106,8 +96,7 @@ public class WfEventAuditImpl implements WfEventAudit {
     }
 
     /**
-     * @throws WfException
-     * @return
+     * @see org.ofbiz.core.workflow.WfEventAudit#processKey()
      */
     public String processKey() throws WfException {
         try {
@@ -119,8 +108,7 @@ public class WfEventAuditImpl implements WfEventAudit {
     }
 
     /**
-     * @throws WfException
-     * @return
+     * @see org.ofbiz.core.workflow.WfEventAudit#processName()
      */
     public String processName() throws WfException {
         try {
@@ -132,8 +120,7 @@ public class WfEventAuditImpl implements WfEventAudit {
     }
 
     /**
-     * @throws WfException
-     * @return
+     * @see org.ofbiz.core.workflow.WfEventAudit#processMgrName()
      */
     public String processMgrName() throws WfException {
         try {
@@ -146,8 +133,7 @@ public class WfEventAuditImpl implements WfEventAudit {
     }
 
     /**
-     * @throws WfException
-     * @return
+     * @see org.ofbiz.core.workflow.WfEventAudit#processMgrVersion()
      */
     public String processMgrVersion() throws WfException {
         try {
@@ -158,6 +144,5 @@ public class WfEventAuditImpl implements WfEventAudit {
         } catch (Exception e) {}
         throw new WfException("Illegal source object");
     }
-
 }
 

@@ -22,39 +22,30 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-package org.ofbiz.core.workflow;
+package org.ofbiz.core.workflow.impl;
+
+import org.ofbiz.core.workflow.WfActivity;
 
 /**
- * WfAssignmentEventAudit - Workflow Assignment Event Audit Interface
+ * WfActivityRouteImplementation.java
  *
- *@author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
- *@created    October 29, 2001
+ *@author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a> 
+ *@author     Oswin Ondarza and Manuel Soto
+ *@created    Oct 22, 2002
  *@version    $Revision$
  */
-public interface WfAssignmentEventAudit extends WfEventAudit {
+public class WfActivityRouteImplementation extends WfActivityAbstractImplementation {
+
+    public static final String module = WfActivityRouteImplementation.class.getName();
+
+    public WfActivityRouteImplementation(WfActivityImpl wfActivity) {
+        super(wfActivity);
+    }
 
     /**
-     * @throws WfException
-     * @return
+     * @see org.ofbiz.core.workflow.impl.WfActivityAbstractImplementation#run()
      */
-    public String oldResourceKey() throws WfException;
-
-    /**
-     * @throws WfException
-     * @return
-     */
-    public String oldResourceName() throws WfException;
-
-    /**
-     * @throws WfException
-     * @return
-     */
-    public String newResourceKey() throws WfException;
-
-    /**
-     * @throws WfException
-     * @return
-     */
-    public String newResourceName() throws WfException;
-
-} // interface WfAssignmentEventAuditOperations
+    public void run() {
+        setComplete(true);
+    }
+}

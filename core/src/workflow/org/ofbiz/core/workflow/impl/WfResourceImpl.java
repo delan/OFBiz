@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -22,9 +22,7 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-
 package org.ofbiz.core.workflow.impl;
-
 
 import java.util.*;
 
@@ -32,24 +30,22 @@ import org.ofbiz.core.entity.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.workflow.*;
 
-
 /**
  * WfResourceImpl - Workflow Resource Object implementation
  *
  *@author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
  *@created    November 15, 2001
- *@version    1.0
+ *@version    $Revision$
  */
-
 public class WfResourceImpl implements WfResource {
 
-    protected GenericDelegator delegator;
-    protected String resourceKey;
-    protected String resourceName;
-    protected String description;
-    protected String partyId;
-    protected String roleTypeId;
-    protected String type;
+    protected GenericDelegator delegator = null;
+    protected String resourceKey = null;
+    protected String resourceName = null;
+    protected String description = null;
+    protected String partyId = null;
+    protected String roleTypeId = null;
+    protected String type = null;
 
     /**
      * Creates a new WfResource
@@ -86,30 +82,23 @@ public class WfResourceImpl implements WfResource {
         if (roleTypeId == null)
             roleTypeId = "_NA_";
     }
-
+   
     /**
-     * Gets the number of work items
-     * @throws WfException
-     * @return Count of work items
+     * @see org.ofbiz.core.workflow.WfResource#howManyWorkItem()
      */
     public int howManyWorkItem() throws WfException {
         return workItems().size();
     }
-
+ 
     /**
-     * Gets an iterator of work items
-     * @throws WfException
-     * @return Iterator of work items
+     * @see org.ofbiz.core.workflow.WfResource#getIteratorWorkItem()
      */
     public Iterator getIteratorWorkItem() throws WfException {
         return workItems().iterator();
     }
-
+  
     /**
-     * Gets the work items
-     * @param maxNumber
-     * @throws WfException
-     * @return List of WfAssignment objects.
+     * @see org.ofbiz.core.workflow.WfResource#getSequenceWorkItem(int)
      */
     public List getSequenceWorkItem(int maxNumber) throws WfException {
         if (maxNumber > 0)
@@ -118,56 +107,42 @@ public class WfResourceImpl implements WfResource {
     }
 
     /**
-     * Checks if an assignment object is associated with this resource
-     * @param member The assignment object to check
-     * @throws WfException
-     * @return true if assignment is part of the work list
+     * @see org.ofbiz.core.workflow.WfResource#isMemberOfWorkItems(org.ofbiz.core.workflow.WfAssignment)
      */
     public boolean isMemberOfWorkItems(WfAssignment member) throws WfException {
         return workItems().contains(member);
     }
 
     /**
-     * Gets the resource key.
-     * @throws WfException
-     * @return String of the resouce key.
+     * @see org.ofbiz.core.workflow.WfResource#resourceKey()
      */
     public String resourceKey() throws WfException {
         return resourceKey;
     }
 
     /**
-     * Gets the resource name
-     * @throws WfException
-     * @return String of the resource name
+     * @see org.ofbiz.core.workflow.WfResource#resourceName()
      */
     public String resourceName() throws WfException {
         return resourceName;
     }
 
-    /** Gets the role id of this resource
-     * @throws WfException
-     * @return String role id of this participant or null if none
+    /**
+     * @see org.ofbiz.core.workflow.WfResource#resourceRoleId()
      */
     public String resourceRoleId() throws WfException {
         return roleTypeId;
     }
 
     /**
-     * Gets the party id of this resource
-     * @throws WfException
-     * @return String party id of this participant or null if none
+     * @see org.ofbiz.core.workflow.WfResource#resourcePartyId()
      */
     public String resourcePartyId() throws WfException {
         return partyId;
     }
 
     /**
-     * Release the resouce from the assignement
-     * @param fromAssigment
-     * @param releaseInfo
-     * @throws WfException
-     * @throws NotAssigned
+     * @see org.ofbiz.core.workflow.WfResource#release(org.ofbiz.core.workflow.WfAssignment, java.lang.String)
      */
     public void release(WfAssignment fromAssignment,
         String releaseInfo) throws WfException, NotAssigned {
@@ -183,7 +158,6 @@ public class WfResourceImpl implements WfResource {
 
         try {
             Map fields = UtilMisc.toMap("partyId", partyId, "roleTypeId", roleTypeId);
-
             c = delegator.findByAnd("WorkEffortPartyAssignment", fields);
         } catch (GenericEntityException e) {
             throw new WfException(e.getMessage(), e);
@@ -191,7 +165,6 @@ public class WfResourceImpl implements WfResource {
 
         if (c != null) {
             Iterator i = c.iterator();
-
             while (i.hasNext()) {
                 GenericValue v = (GenericValue) i.next();
                 WfActivity a = null;
@@ -207,6 +180,5 @@ public class WfResourceImpl implements WfResource {
         }
         return workList;
     }
-
 }
 

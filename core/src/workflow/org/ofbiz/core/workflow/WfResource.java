@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -22,75 +22,80 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-
 package org.ofbiz.core.workflow;
-
 
 import java.util.Iterator;
 import java.util.List;
-
 
 /**
  * WfResource - Workflow Resource Interface
  *
  *@author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
  *@created    October 29, 2001
- *@version    1.0
+ *@version    $Revision$
  */
-
 public interface WfResource {
 
-    /** Gets the number of work items
+    /** 
+     * Gets the number of work items
      * @throws WfException
      * @return Count of work items
      */
     public int howManyWorkItem() throws WfException;
 
-    /** Gets an iterator of work items
+    /** 
+     * Gets an iterator of work items
      * @throws WfException
      * @return Iterator of work items
      */
     public Iterator getIteratorWorkItem() throws WfException;
 
-    /** Gets the work items
+    /** 
+     * Gets the work items
      * @param maxNumber
      * @throws WfException
      * @return List of WfAssignment objects.
      */
     public List getSequenceWorkItem(int maxNumber) throws WfException;
 
-    /** Checks if an assignment object is associated with this resource
+    /** 
+     * Checks if an assignment object is associated with this resource
      * @param member The assignment object to check
      * @throws WfException
      * @return true if assignment is part of the work list
      */
     public boolean isMemberOfWorkItems(WfAssignment member) throws WfException;
 
-    /** Gets the resource key.
+    /** 
+     * Gets the resource key.
      * @throws WfException
      * @return String of the resouce key.
      */
     public String resourceKey() throws WfException;
 
-    /** Gets the resource name
+    /** 
+     * Gets the resource name
      * @throws WfException
      * @return String of the resource name
      */
     public String resourceName() throws WfException;
 
-    /** Gets the role id of this resource
+    /** 
+     * Gets the role id of this resource
      * @throws WfException
      * @return String role id of this participant or null if none
      */
     public String resourceRoleId() throws WfException;
 
-    /** Gets the party id of this resource
+    /** 
+     * Gets the party id of this resource
      * @throws WfException
      * @return String party id of this participant or null if none
      */
     public String resourcePartyId() throws WfException;
 
-    /** Release the resouce from the assignement
+    /** 
+     * Release the resouce from the assignement
      * @param fromAssigment
      * @param releaseInfo
      * @throws WfException

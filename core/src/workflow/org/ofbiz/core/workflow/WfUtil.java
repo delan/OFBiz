@@ -24,70 +24,32 @@
  */
 package org.ofbiz.core.workflow;
 
-import java.sql.Timestamp;
+import java.util.*;
+import org.ofbiz.core.util.*;
 
 /**
- * WfEventAudit - Workflow Event Audit Interface
+ * WorkflowUtil - Workflow Engine Utilities
  *
  *@author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
- *@created    October 29, 2001
+ *@created    Oct 22, 2002
  *@version    $Revision$
  */
-public interface WfEventAudit {
-
+public final class WfUtil {
+    
+    private static final Map typeMap = UtilMisc.toMap("WDT_BOOLEAN", "java.lang.Boolean",
+        "WDT_STRING", "java.lang.String", "WDT_INTEGER", "java.lang.Long", 
+        "WDT_FLOAT", "java.lang.Double", "WDT_DATETIME", "java.sql.Timestamp");
+                      
     /**
-     * @throws WfException
-     * @throws SourceNotAvailable
-     * @return
+     * Gets the Java type from a XPDL datatype
+     * @param xpdlType XPDL data type to be translated
+     * @return Java Class name equivalence to the XPDL data type
      */
-    public WfExecutionObject source() throws WfException, SourceNotAvailable;
-
-    /**
-     * @throws WfException
-     * @return
-     */
-    public Timestamp timeStamp() throws WfException;
-
-    /**
-     * @throws WfException
-     * @return
-     */
-    public String eventType() throws WfException;
-
-    /**
-     * @throws WfException
-     * @return
-     */
-    public String activityKey() throws WfException;
-
-    /**
-     * @throws WfException
-     * @return
-     */
-    public String activityName() throws WfException;
-
-    /**
-     * @throws WfException
-     * @return
-     */
-    public String processKey() throws WfException;
-
-    /**
-     * @throws WfException
-     * @return
-     */
-    public String processName() throws WfException;
-
-    /**
-     * @throws WfException
-     * @return
-     */
-    public String processMgrName() throws WfException;
-
-    /**
-     * @throws WfException
-     * @return
-     */
-    public String processMgrVersion() throws WfException;
-
-} // interface WfEventAuditOperations
+    public static final String getJavaType(String xpdlType) {        
+        if (typeMap.containsKey(xpdlType))
+            return (String) typeMap.get(xpdlType);
+        else
+            return "java.lang.Object";
+    }
+    
+}

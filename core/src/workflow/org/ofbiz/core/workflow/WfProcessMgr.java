@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -22,23 +22,19 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-
 package org.ofbiz.core.workflow;
-
 
 import java.util.Map;
 import java.util.Iterator;
 import java.util.List;
-
 
 /**
  * WfProcessMgr - Workflow Process Manager Interface
  *
  *@author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
  *@created    October 29, 2001
- *@version    1.0
+ *@version    $Revision$
  */
-
 public interface WfProcessMgr {
 
     /**
@@ -117,6 +113,12 @@ public interface WfProcessMgr {
     public Map resultSignature() throws WfException;
 
     /**
+    * @throws WfException
+    * @return initial context based on DataFields
+    */
+    public Map getInitialContext() throws WfException;
+
+    /**
      * Create a WfProcess object
      * @param requester
      * @throws WfException
@@ -125,7 +127,7 @@ public interface WfProcessMgr {
      * @throws RequesterRequired
      * @return WfProcess created
      */
-    public WfProcess createProcess(WfRequester requester) throws WfException, NotEnabled, InvalidRequester,
-            RequesterRequired;
+    public WfProcess createProcess(WfRequester requester)
+        throws WfException, NotEnabled, InvalidRequester, RequesterRequired;
 
 } // interface WfProcessMgr

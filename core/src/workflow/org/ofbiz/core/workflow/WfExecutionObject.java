@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -22,9 +22,7 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-
 package org.ofbiz.core.workflow;
-
 
 import java.sql.Timestamp;
 import java.util.Iterator;
@@ -35,15 +33,13 @@ import org.ofbiz.core.entity.GenericDelegator;
 import org.ofbiz.core.entity.GenericValue;
 import org.ofbiz.core.service.ServiceDispatcher;
 
-
 /**
  * WfExecutionObject - Workflow Execution Object Interface
  *
  *@author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
  *@created    October 29, 2001
- *@version    1.0
+ *@version    $Revision$
  */
-
 public interface WfExecutionObject {
 
     /**

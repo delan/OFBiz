@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -22,12 +22,9 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-
 package org.ofbiz.core.workflow;
 
-
 import java.util.*;
-
 import javax.transaction.*;
 
 import org.ofbiz.core.entity.*;
@@ -37,13 +34,12 @@ import org.ofbiz.core.service.job.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.workflow.impl.*;
 
-
 /**
  * WorkflowEngine - Workflow Service Engine
  *
  *@author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
  *@created    November 16, 2001
- *@version    1.0
+ *@version    $Revision$
  */
 public class WorkflowEngine implements GenericEngine {
 
@@ -84,12 +80,10 @@ public class WorkflowEngine implements GenericEngine {
     public void runAsync(String localName, ModelService modelService, Map context, GenericRequester requester, boolean persist) throws GenericServiceException {       
         // Suspend the current transaction
         TransactionManager tm = TransactionFactory.getTransactionManager();
-
         if (tm == null)
             throw new GenericServiceException("Cannot get the transaction manager; cannot run persisted services.");
 
         Transaction parentTrans = null;
-
         try {
             parentTrans = tm.suspend();
             Debug.logVerbose("Suspended transaction.", module);
@@ -98,7 +92,6 @@ public class WorkflowEngine implements GenericEngine {
         }
         // Build the requester
         WfRequester req = null;
-
         try {
             req = WfFactory.getWfRequester();
         } catch (WfException e) {
@@ -113,7 +106,6 @@ public class WorkflowEngine implements GenericEngine {
 
         // Build the process manager
         WfProcessMgr mgr = null;
-
         try {
             mgr = WfFactory.getWfProcessMgr(dispatcher.getDelegator(), packageId, packageVersion, processId, processVersion);
         } catch (WfException e) {
@@ -122,7 +114,6 @@ public class WorkflowEngine implements GenericEngine {
 
         // Create the process
         WfProcess process = null;
-
         try {
             process = mgr.createProcess(req);
         } catch (NotEnabled ne) {
@@ -144,7 +135,6 @@ public class WorkflowEngine implements GenericEngine {
 
         // Assign the owner of the process
         GenericValue userLogin = null;
-
         if (context.containsKey("userLogin")) {
             userLogin = (GenericValue) context.remove("userLogin");
             try {
@@ -154,7 +144,6 @@ public class WorkflowEngine implements GenericEngine {
 
                 try {
                     GenericValue wepa = dispatcher.getDelegator().makeValue("WorkEffortPartyAssignment", fields);
-
                     dispatcher.getDelegator().create(wepa);
                 } catch (GenericEntityException e) {
                     throw new GenericServiceException("Cannot set ownership of workflow", e);
@@ -169,7 +158,6 @@ public class WorkflowEngine implements GenericEngine {
             req.registerProcess(process, context, requester);
             if (userLogin != null) {
                 Map pContext = process.processContext();
-
                 pContext.put("workflowOwnerId", userLogin.getString("userLoginId"));
                 process.setProcessContext(pContext);
             }
@@ -179,8 +167,8 @@ public class WorkflowEngine implements GenericEngine {
 
         try {
             Job job = new WorkflowRunner(process, requester);
-
-            if (Debug.verboseOn()) Debug.logVerbose("Created WorkflowRunner: " + job, module);
+            if (Debug.verboseOn()) 
+                Debug.logVerbose("Created WorkflowRunner: " + job, module);
             dispatcher.getJobManager().runJob(job);
         } catch (JobManagerException je) {
             throw new GenericServiceException(je.getMessage(), je);
@@ -207,7 +195,6 @@ public class WorkflowEngine implements GenericEngine {
                 return null;
         }
         List splitList = StringUtil.split(splitString, "::");
-
         return (String) splitList.get(position);
     }
 }

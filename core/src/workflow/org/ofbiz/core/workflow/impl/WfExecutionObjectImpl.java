@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -22,9 +22,7 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-
 package org.ofbiz.core.workflow.impl;
-
 
 import java.io.*;
 import java.util.*;
@@ -38,29 +36,26 @@ import org.ofbiz.core.service.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.workflow.*;
 
-import bsh.*;
-
-
 /**
  * WfExecutionObjectImpl - Workflow Execution Object implementation
  *
  *@author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
  *@author     David Ostrovsky (d.ostrovsky@gmx.de)
  *@created    December 18, 2001
- *@version    1.2
+ *@version    $Revision$
  */
 public abstract class WfExecutionObjectImpl implements WfExecutionObject {
 
     public static final String module = WfExecutionObjectImpl.class.getName();
 
-    protected String packageId;
-    protected String packageVersion;
-    protected String processId;
-    protected String processVersion;
-    protected String activityId;
-    protected String workEffortId;
-    protected GenericDelegator delegator;
-    protected List history;
+    protected String packageId = null;
+    protected String packageVersion = null;
+    protected String processId = null;
+    protected String processVersion = null;
+    protected String activityId = null;
+    protected String workEffortId = null;
+    protected GenericDelegator delegator = null;
+    protected List history = null;
 
     /**
      * Creates a new WfExecutionObjectImpl
@@ -122,7 +117,6 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
 
         try {
             List lst = new ArrayList();
-
             dataObject = getDelegator().makeValue("WorkEffort", dataMap);
             lst.add(dataObject);
             getDelegator().storeAll(lst);
@@ -133,18 +127,14 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
     }
 
     /**
-     * Getter for attribute 'name'.
-     * @throws WfException General workflow exception.
-     * @return Name of the object.
-     */
+     * @see org.ofbiz.core.workflow.WfExecutionObject#name()
+     */   
     public String name() throws WfException {
         return getRuntimeObject().getString("workEffortName");
     }
-
+   
     /**
-     * Setter for attribute 'name'
-     * @param newValue Set the name of the object.
-     * @throws WfException General workflow exception.
+     * @see org.ofbiz.core.workflow.WfExecutionObject#setName(java.lang.String)
      */
     public void setName(String newValue) throws WfException {
         GenericValue dataObject = getRuntimeObject();
@@ -156,11 +146,9 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
             throw new WfException(e.getMessage(), e);
         }
     }
-
+   
     /**
-     * Setter for attribute 'priority'.
-     * @param newValue
-     * @throws WfException General workflow exception
+     * @see org.ofbiz.core.workflow.WfExecutionObject#setPriority(long)
      */
     public void setPriority(long newValue) throws WfException {
         GenericValue dataObject = getRuntimeObject();
@@ -174,9 +162,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
     }
 
     /**
-     * Getter for attribute 'priority'.
-     * @throws WfException General workflow exception.
-     * @return Getter Priority of
+     * @see org.ofbiz.core.workflow.WfExecutionObject#priority()
      */
     public long priority() throws WfException {
         if (getRuntimeObject().get("priority") != null)
@@ -185,9 +171,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
     }
 
     /**
-     * Retrieve the current state of this process or activity.
-     * @throws WfException General workflow exception
-     * @return Current state.
+     * @see org.ofbiz.core.workflow.WfExecutionObject#state()
      */
     public String state() throws WfException {
         GenericValue statusObj = null;
@@ -207,9 +191,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
     }
 
     /**
-     * Retrieve the list of all valid states.
-     * @throws WfException General workflow exception.
-     * @return List of valid states.
+     * @see org.ofbiz.core.workflow.WfExecutionObject#validStates()
      */
     public List validStates() throws WfException {
         String statesArr[] = {"open.running", "open.not_running.not_started", "open.not_running.suspended",
@@ -246,10 +228,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
     }
 
     /**
-     * Getter for history count.
-     * @throws WfException Generall workflow exception
-     * @throws HistoryNotAvailable History can not be retrieved
-     * @return Count of history Elements
+     * @see org.ofbiz.core.workflow.WfExecutionObject#howManyHistory()
      */
     public int howManyHistory() throws WfException, HistoryNotAvailable {
         if (history.size() < 1)
@@ -258,10 +237,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
     }
 
     /**
-     * Abort the execution of this process or activity.
-     * @throws WfException General workflow exception.
-     * @throws CannotStop The execution cannot be stopped.
-     * @throws NotRunning The process or activity is not yet running.
+     * @see org.ofbiz.core.workflow.WfExecutionObject#abort()
      */
     public void abort() throws WfException, CannotStop, NotRunning {
         String stateStr = "closed.aborted";
@@ -274,8 +250,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
     }
 
     /**
-     * @throws WfException General workflow exception.
-     * @return
+     * @see org.ofbiz.core.workflow.WfExecutionObject#whileOpenType()
      */
     public List whileOpenType() throws WfException {
         String[] list = {"running", "not_running"};
@@ -284,8 +259,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
     }
 
     /**
-     * @throws WfException General workflow exception.
-     * @return Reason for not running.
+     * @see org.ofbiz.core.workflow.WfExecutionObject#whyNotRunningType()
      */
     public List whyNotRunningType() throws WfException {
         String[] list = {"not_started", "suspended"};
@@ -293,18 +267,15 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
         return Arrays.asList(list);
     }
 
-    /** Getter for the runtime key
-     * @throws WfException
-     * @return Key of the runtime object
+    /**
+     * @see org.ofbiz.core.workflow.WfExecutionObject#runtimeKey()
      */
     public String runtimeKey() throws WfException {
         return getRuntimeObject().getString("workEffortId");
     }
 
     /**
-     * Getter for definition key
-     * @throws WfException General workflow exception.
-     * @return Key of the definition object.
+     * @see org.ofbiz.core.workflow.WfExecutionObject#key()
      */
     public String key() throws WfException {
         if (activityId != null)
@@ -314,36 +285,23 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
     }
 
     /**
-     * Predicate to check if a 'member' is an element of the history.
-     * @param member An element of the history.
-     * @throws WfException General workflow exception.
-     * @return true if the element of the history, false otherwise.
+     * @see org.ofbiz.core.workflow.WfExecutionObject#isMemberOfHistory(org.ofbiz.core.workflow.WfExecutionObject)
      */
     public boolean isMemberOfHistory(WfExecutionObject member) throws WfException {
         return false;
     }
 
     /**
-     * Set the process context
-     * @param newValue Set new process data.
-     * @throws WfException General workflow exception.
-     * @throws InvalidData The data is invalid.
-     * @throws UpdateNotAllowed Update the context is not allowed.
+     * @see org.ofbiz.core.workflow.WfExecutionObject#setProcessContext(java.util.Map)
      */
-    public void setProcessContext(Map newValue) throws WfException, InvalidData,
-            UpdateNotAllowed {
+    public void setProcessContext(Map newValue) throws WfException, InvalidData, UpdateNotAllowed {            
         setSerializedData(newValue);
     }
 
     /**
-     * Set the process context (with previously stored data)
-     * @param newValue RuntimeData entity key.
-     * @throws WfException General workflow exception.
-     * @throws InvalidData The data is invalid.
-     * @throws UpdateNotAllowed Update the context is not allowed.
+     * @see org.ofbiz.core.workflow.WfExecutionObject#setProcessContext(java.lang.String)
      */
-    public void setProcessContext(String contextKey) throws WfException,
-            InvalidData, UpdateNotAllowed {
+    public void setProcessContext(String contextKey) throws WfException, InvalidData, UpdateNotAllowed {            
         GenericValue dataObject = getRuntimeObject();
 
         try {
@@ -355,9 +313,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
     }
 
     /**
-     * Get the Runtime Data key (context)
-     * @return String primary key for the runtime (context) data
-     * @throws WfException
+     * @see org.ofbiz.core.workflow.WfExecutionObject#contextKey()
      */
     public String contextKey() throws WfException {
         if (getRuntimeObject().get("runtimeDataId") == null)
@@ -365,31 +321,24 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
         else
             return getRuntimeObject().getString("runtimeDataId");
     }
-
+ 
     /**
-     * Getter for attribute 'context'.
-     * @throws WfException General workflow exception.
-     * @return Process context.
+     * @see org.ofbiz.core.workflow.WfExecutionObject#processContext()
      */
     public Map processContext() throws WfException {
         return getContext();
     }
 
     /**
-     * @throws WfException General workflow exception.
-     * @return Current state of this object.
+     * @see org.ofbiz.core.workflow.WfExecutionObject#workflowStateType()
      */
     public List workflowStateType() throws WfException {
         String[] list = {"open", "closed"};
-
         return Arrays.asList(list);
     }
 
     /**
-     * Terminate this process or activity.
-     * @throws WfException General workflow exception
-     * @throws CannotStop
-     * @throws NotRunning
+     * @see org.ofbiz.core.workflow.WfExecutionObject#terminate()
      */
     public void terminate() throws WfException, CannotStop, NotRunning {
         String stateStr = "closed.terminated";
@@ -402,9 +351,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
     }
 
     /**
-     * Setter for attribute 'description'.
-     * @param newValue New value for attribute 'description'.
-     * @throws WfException General workflow exception.
+     * @see org.ofbiz.core.workflow.WfExecutionObject#setDescription(java.lang.String)
      */
     public void setDescription(String newValue) throws WfException {
         GenericValue valueObject = getDefinitionObject();
@@ -418,18 +365,14 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
     }
 
     /**
-     * Getter for attribute 'description'.
-     * @throws WfException General workflow exception.
-     * @return Description of this object.
+     * @see org.ofbiz.core.workflow.WfExecutionObject#description()
      */
     public String description() throws WfException {
         return getDefinitionObject().getString("description");
     }
 
     /**
-     * Getter for timestamp of last state change.
-     * @throws WfException General workflow exception.
-     * @return Timestamp of last state change.
+     * @see org.ofbiz.core.workflow.WfExecutionObject#lastStateTime()
      */
     public Timestamp lastStateTime() throws WfException {
         GenericValue dataObject = getRuntimeObject();
@@ -440,11 +383,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
     }
 
     /**
-     * Getter for history sequence.
-     * @param maxNumber Maximum number of element in result list.
-     * @throws WfException General workflow exception.
-     * @throws HistoryNotAvailable
-     * @return List of History objects.
+     * @see org.ofbiz.core.workflow.WfExecutionObject#getSequenceHistory(int)
      */
     public List getSequenceHistory(int maxNumber) throws WfException,
             HistoryNotAvailable {
@@ -452,12 +391,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
     }
 
     /**
-     * Search in the history for specific elements.
-     * @param query Search criteria.
-     * @param namesInQuery elements to search.
-     * @throws WfException General workflow exception
-     * @throws HistoryNotAvailable
-     * @return Found history elements that meet the search criteria.
+     * @see org.ofbiz.core.workflow.WfExecutionObject#getIteratorHistory(java.lang.String, java.util.Map)
      */
     public Iterator getIteratorHistory(String query,
         Map namesInQuery) throws WfException, HistoryNotAvailable {
@@ -465,11 +399,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
     }
 
     /**
-     * Resume this process or activity.
-     * @throws WfException General workflow exception.
-     * @throws CannotResume
-     * @throws NotRunning
-     * @throws NotSuspended
+     * @see org.ofbiz.core.workflow.WfExecutionObject#resume()
      */
     public void resume() throws WfException, CannotResume, NotRunning, NotSuspended {
         if (state().startsWith("open.not_running")) {
@@ -483,8 +413,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
     }
 
     /**
-     * @throws WfException General workflow exception.
-     * @return Termination art of this process ot activity.
+     * @see org.ofbiz.core.workflow.WfExecutionObject#howClosedType()
      */
     public List howClosedType() throws WfException {
         String[] list = {"completed", "terminated", "aborted"};
@@ -493,11 +422,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
     }
 
     /**
-     * Set new state for this process or activity.
-     * @param newState New state value to be set.
-     * @throws WfException General workflow exception.
-     * @throws InvalidState The state is invalid.
-     * @throws TransitionNotAllowed The transition is not allowed.
+     * @see org.ofbiz.core.workflow.WfExecutionObject#changeState(java.lang.String)
      */
     public void changeState(String newState) throws WfException, InvalidState,
             TransitionNotAllowed {
@@ -520,11 +445,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
     }
 
     /**
-     * Suspend this process or activity.
-     * @throws WfException General workflow exception.
-     * @throws CannotSuspend
-     * @throws NotRunning
-     * @throws AlreadySuspended
+     * @see org.ofbiz.core.workflow.WfExecutionObject#suspend()
      */
     public void suspend() throws WfException, CannotSuspend, NotRunning,
             AlreadySuspended {
@@ -532,17 +453,14 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
     }
 
     /**
-     * Returns the delegator being used by this workflow
-     * @return GenericDelegator used for this workflow
-     * @throws WfException
+     * @see org.ofbiz.core.workflow.WfExecutionObject#getDelegator()
      */
     public GenericDelegator getDelegator() throws WfException {
         return delegator;
     }
 
     /**
-     * Gets the GenericValue object of the definition.
-     * @returns GenericValue object of the definition.
+     * @see org.ofbiz.core.workflow.WfExecutionObject#getDefinitionObject()
      */
     public GenericValue getDefinitionObject() throws WfException {
         String entityName = activityId != null ? "WorkflowActivity" : "WorkflowProcess";
@@ -560,10 +478,6 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
         return value;
     }
 
-    /**
-     * Gets the GenericValue object of the runtime workeffort.
-     * @returns GenericValue object of the runtime workeffort.
-     */
     public GenericValue getRuntimeObject() throws WfException {
         GenericValue value = null;
 
@@ -577,8 +491,8 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
     }
 
     /**
-     * Returns the type of execution object
-     * @return String name of this execution object type
+     * Getter for this type of execution object.
+     * @return String
      */
     public abstract String executionObjectType();
 
@@ -653,9 +567,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
     }
 
     /**
-     * Sets the name of the local dispatcher to be used with this workflow
-     * @param loader The name of the loader
-     * @throws WfException
+     * @see org.ofbiz.core.workflow.WfExecutionObject#setServiceLoader(java.lang.String)
      */
     public void setServiceLoader(String loader) throws WfException {
         GenericValue dataObject = getRuntimeObject();
@@ -670,6 +582,11 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
         }
     }
 
+    /**
+     * Method getEntityStatus.
+     * @param state
+     * @return String
+     */
     protected String getEntityStatus(String state) {
         String statesArr[] = {"open.running", "open.not_running.not_started", "open.not_running.suspended",
                 "closed.completed", "closed.terminated", "closed.aborted"};
@@ -683,6 +600,11 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
         return null;
     }
 
+    /**
+     * Method getOMGStatus.
+     * @param state
+     * @return String
+     */
     protected String getOMGStatus(String state) {
         String statesArr[] = {"open.running", "open.not_running.not_started", "open.not_running.suspended",
                 "closed.completed", "closed.terminated", "closed.aborted"};
@@ -733,7 +655,6 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
      */
     protected boolean evalCondition(String expression) throws WfException {
         Map context = processContext();
-
         return evalCondition(expression, context);
     }
 
@@ -749,7 +670,13 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
             Debug.logVerbose("Null or empty expression, returning true.", module);
             return true;
         }
-        Object o = eval(expression, context);
+        
+        Object o = null;
+        try {
+            o = BshUtil.eval(expression, context);
+        } catch (bsh.EvalError e) {
+            throw new WfException("Bsh evaluation error.", e);
+        }
 
         if (o == null)
             return false;
@@ -758,43 +685,5 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
         else
             return (!o.toString().equalsIgnoreCase("true")) ? false : true;
     }
-
-    protected Object eval(String expression, Map context) throws WfException {
-        Interpreter bsh = new Interpreter();
-        Object o = null;
-
-        if (expression == null || expression.equals(""))
-            throw new WfException("Cannot evaluate empty or null expression");
-
-        if (Debug.verboseOn()) Debug.logVerbose("Evaluating -- " + expression, module);
-        if (Debug.verboseOn()) Debug.logVerbose("Using Context -- " + context, module);
-        try {
-            // Set the context for the condition
-            Set keySet = context.keySet();
-            Iterator i = keySet.iterator();
-
-            while (i.hasNext()) {
-                Object key = i.next();
-                Object value = context.get(key);
-
-                bsh.set((String) key, value);
-            }
-            // evaluate the expression
-            o = bsh.eval(expression);
-            if (Debug.verboseOn()) Debug.logVerbose("Evaluated to -- " + o, module);
-
-            // read back the context info
-            NameSpace ns = bsh.getNameSpace();
-            String[] varNames = ns.getVariableNames();
-
-            for (int x = 0; x < varNames.length; x++) {
-                context.put(varNames[x], bsh.get(varNames[x]));
-            }
-        } catch (EvalError e) {
-            Debug.logError(e, "BSH Evaluation error.", module);
-        }
-        return o;
-    }
-
 }
 

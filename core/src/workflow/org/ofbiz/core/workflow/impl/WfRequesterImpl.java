@@ -41,21 +41,21 @@ import org.ofbiz.core.workflow.*;
  *@version    1.0
  */
 public class WfRequesterImpl implements WfRequester {
+    
+    public static final String module = WfRequesterImpl.class.getName();
 
-    protected Map performers;
-
-    /** Create a new WfRequester */
+    protected Map performers = null;
+      
+    /**
+     * Method WfRequesterImpl.
+     */
     public WfRequesterImpl() {
         this.performers = new HashMap();
     }
 
     /**
-     * Registers a process with this requester; starts the process.
-     *@param process to register
-     *@param context to initialize the process with
-     *@param requester associated with the service
-     *@throws WfException
-     */
+     * @see org.ofbiz.core.workflow.WfRequester#registerProcess(org.ofbiz.core.workflow.WfProcess, java.util.Map, org.ofbiz.core.service.GenericRequester)
+     */  
     public void registerProcess(WfProcess process, Map context, GenericRequester requester) throws WfException {
         if (process == null)
             throw new WfException("Process cannot be null");
@@ -72,65 +72,44 @@ public class WfRequesterImpl implements WfRequester {
             throw new WfException("Context passed does not validate against defined signature: ", e);
         }
 
-        // Set the context w/ the process
-        process.setProcessContext(context);
-
-        // Start the process  -- moved to the WorkflowEngine
-        /*
-         try {
-         process.start();
-         } catch (CannotStart cs) {
-         throw new WfException("Cannot start process", cs);
-         } catch (AlreadyRunning ar) {
-         throw new WfException("Process already running", ar);
-         }
-         */
+        // Set the context w/ the process        
+        Map localContext = new HashMap(context);
+        localContext.putAll(mgr.getInitialContext());
+        process.setProcessContext(localContext);       
     }
 
     /**
-     * Gets the number of processes.
-     * @throws WfException
-     * @return Count of the number of workflow processes
-     */
+     * @see org.ofbiz.core.workflow.WfRequester#howManyPerformer()
+     */    
     public int howManyPerformer() throws WfException {
         return performers.size();
     }
-
-    /** Gets an iterator of processes.
-     * @throws WfException
-     * @return Iterator of workflow processes.
+  
+    /**
+     * @see org.ofbiz.core.workflow.WfRequester#getIteratorPerformer()
      */
     public Iterator getIteratorPerformer() throws WfException {
         return performers.keySet().iterator();
     }
-
+   
     /**
-     * A list of processes
-     * @param maxNumber
-     * @throws WfException
-     * @return List of WfProcess objects.
+     * @see org.ofbiz.core.workflow.WfRequester#getSequencePerformer(int)
      */
     public List getSequencePerformer(int maxNumber) throws WfException {
         if (maxNumber > 0)
             return new ArrayList(performers.keySet()).subList(0, (maxNumber - 1));
         return new ArrayList(performers.keySet());
     }
-
+  
     /**
-     * Checks if a WfProcess is associated with this requester object
-     * @param member
-     * @throws WfException
-     * @return true if the process is found.
+     * @see org.ofbiz.core.workflow.WfRequester#isMemberOfPerformer(org.ofbiz.core.workflow.WfProcess)
      */
     public boolean isMemberOfPerformer(WfProcess member) throws WfException {
         return performers.containsKey(member);
     }
-
+   
     /**
-     * Receives notice of event status changes
-     * @param event
-     * @throws WfException
-     * @throws InvalidPerformer
+     * @see org.ofbiz.core.workflow.WfRequester#receiveEvent(org.ofbiz.core.workflow.WfEventAudit)
      */
     public synchronized void receiveEvent(WfEventAudit event) throws WfException, InvalidPerformer {
         // Should the source of the audit come from the process? if so use this.
