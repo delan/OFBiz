@@ -31,6 +31,7 @@ import org.ofbiz.core.util.*;
  */
 public class GenericHelperFactory
 {
+  static UtilCache helperCache = new UtilCache("GenericHelper", 0, 0);
   public static GenericHelper getDefaultHelper()
   {
     String defaultName = UtilProperties.getPropertyValue("servers", "server.default.name", "default");
@@ -40,9 +41,33 @@ public class GenericHelperFactory
     return getJDBCHelper(defaultName);
   }
 
-  public static GenericHelper getJDBCHelper() { return new GenericHelperDAO(UtilProperties.getPropertyValue("servers", "server.default.name", "default")); }
-  public static GenericHelper getJDBCHelper(String serverName) { return new GenericHelperDAO(serverName); }
+  public static GenericHelper getJDBCHelper() 
+  {
+    return getJDBCHelper(UtilProperties.getPropertyValue("servers", "server.default.name", "default")); 
+  }
+  public static GenericHelper getJDBCHelper(String serverName) 
+  { 
+    GenericHelper helper = (GenericHelper)helperCache.get(serverName + "JDBC");
+    if(helper == null)
+    {
+      helper = new GenericHelperDAO(serverName);
+      helperCache.put(serverName + "JDBC", helper);
+    }
+    return helper;
+  }
 
-  public static GenericHelper getEJBHelper() { return new GenericHelperEJB(UtilProperties.getPropertyValue("servers", "server.default.name", "default")); }
-  public static GenericHelper getEJBHelper(String serverName) { return new GenericHelperEJB(serverName); }
+  public static GenericHelper getEJBHelper() 
+  { 
+    return getEJBHelper(UtilProperties.getPropertyValue("servers", "server.default.name", "default")); 
+  }
+  public static GenericHelper getEJBHelper(String serverName) 
+  { 
+    GenericHelper helper = (GenericHelper)helperCache.get(serverName + "EJB");
+    if(helper == null)
+    {
+      helper = new GenericHelperEJB(serverName);
+      helperCache.put(serverName + "JDBC", helper);
+    }
+    return helper;
+  }
 }
