@@ -75,7 +75,7 @@ public class FreeMarkerViewHandler implements ViewHandler {
         
         // make the root context (data model) for freemarker            
         SimpleHash root = new SimpleHash();
-        prepOfbizRoot(root, request, response, servletContext);
+        prepOfbizRoot(root, request, response);
         
         // get the template
         Template template = null;
@@ -96,7 +96,10 @@ public class FreeMarkerViewHandler implements ViewHandler {
         }       
     }
     
-    public static void prepOfbizRoot(SimpleHash root, HttpServletRequest request, HttpServletResponse response, ServletContext servletContext) {
+    public static void prepOfbizRoot(SimpleHash root, HttpServletRequest request, HttpServletResponse response) {
+        ServletContext servletContext = (ServletContext) request.getAttribute("servletContext");
+        HttpSession session = request.getSession();
+        
         root.put("Static", BeansWrapper.getDefaultInstance().getStaticModels());
 
         // add in the OFBiz objects
@@ -112,38 +115,37 @@ public class FreeMarkerViewHandler implements ViewHandler {
         BeanModel userLoginModel = new BeanModel(request.getAttribute("userLogin"), BeansWrapper.getDefaultInstance());
         root.put("userLogin", userLoginModel);
         
-        // add the session
-        HttpSession session = request.getSession();
-        HttpSessionHashModel sessionModel = new HttpSessionHashModel(session, ObjectWrapper.SIMPLE_WRAPPER);           
-        root.put("session", sessionModel);
-
         // add the session object (for transforms) to the context as a BeanModel
         BeanModel sessionBModel = new BeanModel(session, BeansWrapper.getDefaultInstance());
-        root.put("sessionBean", sessionBModel);        
+        root.put("session", sessionBModel);        
 
-        // add the request
-        HttpRequestHashModel requestModel = new HttpRequestHashModel(request, ObjectWrapper.SIMPLE_WRAPPER);            
-        root.put("request", requestModel);
+        // add the session
+        HttpSessionHashModel sessionModel = new HttpSessionHashModel(session, ObjectWrapper.SIMPLE_WRAPPER);           
+        root.put("sessionAttributes", sessionModel);
 
         // add the request object (for transforms) to the context as a BeanModel
         BeanModel requestBModel = new BeanModel(request, BeansWrapper.getDefaultInstance());
-        root.put("requestBean", requestBModel);
+        root.put("request", requestBModel);
+
+        // add the request
+        HttpRequestHashModel requestModel = new HttpRequestHashModel(request, ObjectWrapper.SIMPLE_WRAPPER);            
+        root.put("requestAttributes", requestModel);
 
         // add the request parameters                        
         HttpRequestParametersHashModel requestParametersModel = new HttpRequestParametersHashModel(request);
         root.put("requestParameters", requestParametersModel);
         
-        // add the response object (for transforms) to the context as a BeanModel
-        BeanModel responseBModel = new BeanModel(response, BeansWrapper.getDefaultInstance());
-        root.put("responseBean", responseBModel);
+        // add the application object (for transforms) to the context as a BeanModel
+        BeanModel applicationBModel = new BeanModel(servletContext, BeansWrapper.getDefaultInstance());
+        root.put("application", applicationBModel);
         
         // add the servlet context    
         ServletContextHashModel servletContextModel = new ServletContextHashModel(servletContext, ObjectWrapper.SIMPLE_WRAPPER);     
-        root.put("application", servletContextModel);
+        root.put("applicationAttributes", servletContextModel);
         
-        // add the application object (for transforms) to the context as a BeanModel
-        BeanModel applicationBModel = new BeanModel(servletContext, BeansWrapper.getDefaultInstance());
-        root.put("applicationBean", applicationBModel);
+        // add the response object (for transforms) to the context as a BeanModel
+        BeanModel responseBModel = new BeanModel(response, BeansWrapper.getDefaultInstance());
+        root.put("response", responseBModel);
         
         // add the OFBiz transforms
         root.put("ofbizUrl", new OFBizUrl());

@@ -102,8 +102,8 @@ public class FreeMarkerGenerator extends AbstractGenerator {
             try {
                 SimpleHash root = new SimpleHash();
 
-                HttpServletRequest request = null;
-                HttpServletResponse response = null;
+                HttpServletRequest request = (HttpServletRequest) inContext.get("request");
+                HttpServletResponse response = (HttpServletResponse) inContext.get("response");
                 ServletContext application = null;
                 
                 //TODO: should make the config file tell us what TemplateModel to create
@@ -112,19 +112,11 @@ public class FreeMarkerGenerator extends AbstractGenerator {
                     Map.Entry entry = (Map.Entry) iter.next();
                     String key = (String) entry.getKey();
                     Object value = entry.getValue();
-                    if ("request".equals(key)) {
-                        request = (HttpServletRequest) value;
-                    } else if ("request".equals(key)) {
-                        response = (HttpServletResponse) value;
-                    } else if ("application".equals(key)) {
-                        application = (ServletContext) value;
-                    } else {
-                        root.put(key, BeansWrapper.getDefaultInstance().wrap(value));
-                        //System.out.println("==== Adding to the freemarker root " + key + ":" + inContext.get(key));
-                    }
+                    root.put(key, BeansWrapper.getDefaultInstance().wrap(value));
+                    //System.out.println("==== Adding to the freemarker root " + key + ":" + value);
                 }
                 
-                FreeMarkerViewHandler.prepOfbizRoot(root, request, response, application);
+                FreeMarkerViewHandler.prepOfbizRoot(root, request, response);
                 
                 /*
                 DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
