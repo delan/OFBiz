@@ -1757,8 +1757,9 @@ public class ShoppingCart implements Serializable {
     }
 
     /** Add an adjustment to the order; don't worry about setting the orderId, orderItemSeqId or orderAdjustmentId; they will be set when the order is created */
-    public void addAdjustment(GenericValue adjustment) {
+    public int addAdjustment(GenericValue adjustment) {
         adjustments.add(adjustment);
+        return adjustments.indexOf(adjustment);
     }
 
     public void removeAdjustment(int index) {
