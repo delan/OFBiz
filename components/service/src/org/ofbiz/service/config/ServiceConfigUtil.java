@@ -1,5 +1,5 @@
 /*
- * $Id: ServiceConfigUtil.java,v 1.1 2003/08/17 05:12:42 ajzeneski Exp $
+ * $Id: ServiceConfigUtil.java,v 1.2 2003/09/19 04:53:29 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -24,6 +24,10 @@
  */
 package org.ofbiz.service.config;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import org.ofbiz.base.config.GenericConfigException;
 import org.ofbiz.base.config.ResourceLoader;
 import org.ofbiz.base.util.Debug;
@@ -35,7 +39,8 @@ import org.w3c.dom.Element;
  * Misc. utility method for dealing with the serviceengine.xml file
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class ServiceConfigUtil {
@@ -51,7 +56,7 @@ public class ServiceConfigUtil {
         return ResourceLoader.getXmlDocument(ServiceConfigUtil.SERVICE_ENGINE_XML_FILENAME);
     }
 
-    public static String getElementAttr(String elementName, String attrName) {
+    public static Element getElement(String elementName) {
         Element rootElement = null;
 
         try {
@@ -59,9 +64,34 @@ public class ServiceConfigUtil {
         } catch (GenericConfigException e) {
             Debug.logError(e, "Error getting Service Engine XML root element", module);
         }
-        Element element = UtilXml.firstChildElement(rootElement, elementName);
+        return  UtilXml.firstChildElement(rootElement, elementName);       
+    }
+    
+    public static String getElementAttr(String elementName, String attrName) {        
+        Element element = getElement(elementName);
 
         if (element == null) return null;
         return element.getAttribute(attrName);
+    }
+    
+    public static String getSendPool() {
+        return getElementAttr("thread-pool", "send-to-pool");        
+    }
+    
+    public static List getRunPools() {
+        List readPools = null;
+        
+        Element threadPool = getElement("thread-pool");
+        List readPoolElements = UtilXml.childElementList(threadPool, "run-from-pool");
+        if (readPoolElements != null) {
+            readPools = new ArrayList();        
+            Iterator i = readPoolElements.iterator();
+        
+            while (i.hasNext()) {                
+                Element e = (Element) i.next();
+                readPools.add(e.getAttribute("name"));
+            }
+        }
+        return readPools;
     }
 }

@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  */
 -->
 
@@ -56,6 +56,7 @@
             title="Job Scheduler Sandbox Entity">
       <field name="jobName" type="name"></field>
       <field name="runTime" type="date-time"></field>
+      <field name="poolId" type="name"></field>
       <field name="serviceName" type="name"></field>
       <field name="loaderName" type="name"></field>
       <field name="runAsUser" type="id-vlong"></field>

@@ -1,5 +1,5 @@
 /*
- * $Id: PersistedServiceJob.java,v 1.2 2003/08/28 17:37:19 ajzeneski Exp $
+ * $Id: PersistedServiceJob.java,v 1.3 2003/09/19 04:53:29 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -49,7 +49,7 @@ import org.xml.sax.SAXException;
  * Entity Service Job - Store => Schedule => Run
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class PersistedServiceJob extends GenericServiceJob {
@@ -100,6 +100,7 @@ public class PersistedServiceJob extends GenericServiceJob {
                 if (Debug.verboseOn()) Debug.logVerbose("Next runtime returned: " + next, module);
                 
                 if (next > runtime) {
+                    newJob.set("startDateTime", null);
                     newJob.set("runTime", new java.sql.Timestamp(next));
                     delegator.create(newJob);
                     if (Debug.verboseOn()) Debug.logVerbose("Created next job entry: " + newJob, module);

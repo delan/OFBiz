@@ -1,5 +1,5 @@
 /*
- * $Id: JobManager.java,v 1.5 2003/09/02 02:17:15 ajzeneski Exp $
+ * $Id: JobManager.java,v 1.6 2003/09/19 04:53:29 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -38,6 +38,8 @@ import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.condition.EntityConditionList;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.serialize.SerializeException;
@@ -50,12 +52,13 @@ import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.calendar.RecurrenceInfo;
 import org.ofbiz.service.calendar.RecurrenceInfoException;
+import org.ofbiz.service.config.ServiceConfigUtil;
 
 /**
  * JobManager
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      2.0
  */
 public class JobManager {
@@ -97,10 +100,30 @@ public class JobManager {
     public synchronized Iterator poll() {
         List poll = new ArrayList();
         Collection jobEnt = null;
+        
+        // sort the results by time
         List order = UtilMisc.toList("runTime");
+        
+        // basic query
         List expressions = UtilMisc.toList(new EntityExpr("runTime", EntityOperator.LESS_THAN_EQUAL_TO, 
             UtilDateTime.nowTimestamp()), new EntityExpr("startDateTime", EntityOperator.EQUALS, null));
         
+        // limit to just defined pools
+        List pools = ServiceConfigUtil.getRunPools();
+        List poolsExpr = UtilMisc.toList(new EntityExpr("poolId", EntityOperator.EQUALS, null));
+        if (pools != null) {
+            Iterator poolsIter = pools.iterator();
+            while (poolsIter.hasNext()) {
+                String poolName = (String) poolsIter.next();
+                poolsExpr.add(new EntityExpr("poolId", EntityOperator.EQUALS, poolName));
+            }
+        }
+        
+        // make the conditions               
+        EntityCondition baseCondition = new EntityConditionList(expressions, EntityOperator.AND);        
+        EntityCondition poolCondition = new EntityConditionList(poolsExpr, EntityOperator.OR);
+        EntityCondition mainCondition = new EntityConditionList(UtilMisc.toList(baseCondition, poolCondition), EntityOperator.AND);        
+                
         // we will loop until we have no more to do        
         boolean pollDone = false;
         
@@ -118,7 +141,7 @@ public class JobManager {
             }
         
             try {
-                jobEnt = delegator.findByAnd("JobSandbox", expressions, order);
+                jobEnt = delegator.findByCondition("JobSandbox", mainCondition, null, order);                
             } catch (GenericEntityException ee) {
                 Debug.logError(ee, "Cannot load jobs from datasource.", module);
             } catch (Exception e) {
@@ -226,6 +249,7 @@ public class JobManager {
         Map jFields = UtilMisc.toMap("jobName", jobName, "runTime", new java.sql.Timestamp(startTime),
                 "serviceName", serviceName, "recurrenceInfoId", infoId, "runtimeDataId", dataId);
 
+        jFields.put("poolId", ServiceConfigUtil.getSendPool());
         GenericValue jobV = null;
 
         try {

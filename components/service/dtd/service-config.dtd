@@ -36,8 +36,9 @@
     service-name CDATA #REQUIRED
 >
 
-<!ELEMENT thread-pool EMPTY>
+<!ELEMENT thread-pool ( run-from-pool* )>
 <!ATTLIST thread-pool
+    send-to-pool CDATA #REQUIRED
     ttl CDATA #REQUIRED
     wait-millis CDATA #REQUIRED
     jobs CDATA #REQUIRED
@@ -45,6 +46,10 @@
     max-threads CDATA #REQUIRED
     poll-enabled (true|false) "true"
     poll-db-millis CDATA #REQUIRED
+>
+<!ELEMENT run-from-pool EMPTY>
+<!ATTLIST run-from-pool
+    name CDATA #REQUIRED
 >
 
 <!ELEMENT engine EMPTY>
