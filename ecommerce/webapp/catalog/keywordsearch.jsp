@@ -1,13 +1,13 @@
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 <%@ page import="org.ofbiz.core.entity.*" %>
-<%@ page import="org.ofbiz.ecommerce.catalog.*"%>
+<%@ page import="org.ofbiz.ecommerce.catalog.*, org.ofbiz.commonapp.product.product.*"%>
 
 <% pageContext.setAttribute("PageName", "Keyword Search"); %>
 <%@ include file="/includes/envsetup.jsp" %>
 <%@ include file="/includes/header.jsp" %>
 <%@ include file="/includes/leftcolumn.jsp" %> 
 
-<%org.ofbiz.ecommerce.catalog.CatalogHelper.getKeywordSearchProducts(pageContext, "");%>
+<%ProductWorker.getKeywordSearchProducts(pageContext, "");%>
 <ofbiz:object name="viewIndex" property="viewIndex" type='java.lang.Integer' />
 <ofbiz:object name="viewSize" property="viewSize" type='java.lang.Integer' />
 <ofbiz:object name="lowIndex" property="lowIndex" type='java.lang.Integer' />
@@ -46,7 +46,7 @@
   <table width='100%'>
     <%int listIndex = lowIndex.intValue();%>
     <ofbiz:iterator name="product" property="searchProductList">
-      <tr><td colspan="2" height="1" bgcolor="#999999"></td></tr>
+      <tr><td colspan="2"><hr class='sepbar'></td></tr>
       <tr>
         <td>
           <%@ include file="/catalog/productsummary.jsp" %>
@@ -59,7 +59,7 @@
 
 <ofbiz:if name="searchProductList">
 <table border="0" width="100%" cellpadding="2">
-    <tr><td colspan="2" height="1" bgcolor="#999999"></td></tr>
+    <tr><td colspan="2"><hr class='sepbar'></td></tr>
     <tr>
       <td align=right>
         <b>

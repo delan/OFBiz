@@ -1,7 +1,7 @@
 
 <ofbiz:if name="miniProduct">
   <a href='<ofbiz:url>/product?product_id=<ofbiz:entityfield attribute="miniProduct" field="productId"/></ofbiz:url>' class='buttontext'>
-    <ofbiz:entityfield attribute="miniProduct" field="name"/>
+    <ofbiz:entityfield attribute="miniProduct" field="productName"/>
   </a>
   <div class='tabletext'>
     <b>

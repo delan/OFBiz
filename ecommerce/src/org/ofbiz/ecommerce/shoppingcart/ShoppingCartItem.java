@@ -1,6 +1,10 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.7  2001/10/07 21:56:18  azeneski
+ * First pass of shipping setup. Now includes NO model and UPS via UPSOnLine.
+ * Coming next: Manual Shipping Calc based on weight/quantity/price
+ *
  * Revision 1.6  2001/09/28 21:57:53  jonesde
  * Big update for fromDate PK use, organization stuff
  *
@@ -126,7 +130,7 @@ public class ShoppingCartItem implements Serializable {
     
     /** Returns the item's description. */
     public String getName() {
-        return product.getString("name");
+        return product.getString("productName");
     }
     
     /** Returns the item's description. */

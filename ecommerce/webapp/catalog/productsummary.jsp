@@ -12,7 +12,7 @@
       </td>
       <td align="left" valign="top" width="100%">
           <div class="tabletext">
-            <a href='<ofbiz:url>/product?product_id=<ofbiz:entityfield attribute="product" field="productId"/></ofbiz:url>' class='buttontext'><ofbiz:entityfield attribute="product" field="name"/></a>
+            <a href='<ofbiz:url>/product?product_id=<ofbiz:entityfield attribute="product" field="productId"/></ofbiz:url>' class='buttontext'><ofbiz:entityfield attribute="product" field="productName"/></a>
           </div>
           <div class="tabletext"><ofbiz:entityfield attribute="product" field="description"/></div>
           <div class="tabletext">

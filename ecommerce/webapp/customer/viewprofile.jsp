@@ -124,7 +124,7 @@
     <%=UtilFormatOut.ifNotEmpty(person.getString("passportNumber"), preBeforeLabel + "Passport Number" + preAfterLabel, postStr)%>
     <%=UtilFormatOut.ifNotEmpty(UtilDateTime.toDateString(person.getDate("passportExpireDate")), preBeforeLabel + "Passport Expire" + preAfterLabel, postStr)%>
     <%=UtilFormatOut.ifNotEmpty(UtilFormatOut.formatQuantity(person.getDouble("totalYearsWorkExperience")), preBeforeLabel + "Years Work" + preAfterLabel, postStr)%>
-    <%=UtilFormatOut.ifNotEmpty(person.getString("comment"), preBeforeLabel + "Comment" + preAfterLabel, postStr)%>
+    <%=UtilFormatOut.ifNotEmpty(person.getString("comments"), preBeforeLabel + "Comment" + preAfterLabel, postStr)%>
   </table>
 <%}else{%>
 <div class="tabletext">Personal Information Not Found</div>

@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.13  2001/10/10 14:02:14  azeneski
+ * Pass two on shipping calc. Requires updated commonapp datamodel.
+ *
  * Revision 1.12  2001/09/19 08:42:08  jonesde
  * Initial checkin of refactored entity engine.
  *
@@ -197,7 +200,7 @@ public class ShoppingCart {
                 "quantity", new Double(item.getQuantity()),
                 "unitPrice", new Double(item.getPrice())));
                 orderItem.set("itemDescription", item.getName());
-                orderItem.set("comment", item.getItemComment());
+                orderItem.set("comments", item.getItemComment());
                 orderItem.set("correspondingPoId", this.getPoNumber());
                 orderItem.set("statusId", "Ordered");
                 result.add(orderItem);

@@ -161,7 +161,7 @@
     <tr>
       <td width="26%" align=right><div class="tabletext">Comment</div></td>
       <td width="74%" align=left>
-        <input type="text" name="PERSON_COMMENT" value="<%=UtilFormatOut.checkNull(useValues?person.getString("comment"):request.getParameter("PERSON_COMMENT"))%>" size="30" maxlength="60">
+        <input type="text" name="PERSON_COMMENT" value="<%=UtilFormatOut.checkNull(useValues?person.getString("comments"):request.getParameter("PERSON_COMMENT"))%>" size="30" maxlength="60">
       </td>
     </tr>
 

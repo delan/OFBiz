@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.33  2001/10/14 05:57:42  jonesde
+ * Changed ecommerce.properties access to go through URL object
+ *
  * Revision 1.32  2001/09/29 05:28:55  jonesde
  * Increased consistency; made CC code work with new PartyContactMech and PartyContactMechPurpose from dates
  *
@@ -996,7 +999,7 @@ public class CustomerEvents {
       person.set("passportNumber", passportNumber, false);
       person.set("passportExpireDate", passportExpireDate, false);
       person.set("totalYearsWorkExperience", totalYearsWorkExperience, false);
-      person.set("comment", comment, false);
+      person.set("comments", comment, false);
       
       if(doCreate) {
         try {

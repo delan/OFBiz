@@ -38,7 +38,7 @@
           <a href="javascript:document.addform.submit()" class="buttontext"><nobr>[Add to Cart]</nobr></a>
         </form>
         <br>
-        <div class="head2"><%=UtilFormatOut.checkNull(mainProduct.getString("name"))%></div>
+        <div class="head2"><%=UtilFormatOut.checkNull(mainProduct.getString("productName"))%></div>
         <div class="tabletext"><%=UtilFormatOut.checkNull(mainProduct.getString("description"))%></div>
         <div class="tabletext"><b><%=UtilFormatOut.checkNull(mainProduct.getString("productId"))%></b></div>
         <div class="tabletext"><b>Our price: <font color="#126544"><%=UtilFormatOut.formatPrice(mainProduct.getDouble("defaultPrice"))%></font></b>
@@ -59,7 +59,7 @@
 <!-- obsolete by -->
     <ofbiz:if name="obsoleteby">
       <tr><td>&nbsp;</td></tr>
-      <tr><td colspan="2"><div class="head2"><%=UtilFormatOut.checkNull(mainProduct.getString("name"))%> is made obsolete by these products:</div></td></tr>
+      <tr><td colspan="2"><div class="head2"><%=UtilFormatOut.checkNull(mainProduct.getString("productName"))%> is made obsolete by these products:</div></td></tr>
       <tr><td><hr class='sepbar'></td></tr>
 
       <ofbiz:iterator name="productAssoc" property="obsoleteby">
@@ -113,7 +113,7 @@
 <!-- up sells -->
     <ofbiz:if name="upgrade">
       <tr><td>&nbsp;</td></tr>
-      <tr><td colspan="2"><div class="head2">Try these instead of <%=UtilFormatOut.checkNull(mainProduct.getString("name"))%>:</div></td></tr>
+      <tr><td colspan="2"><div class="head2">Try these instead of <%=UtilFormatOut.checkNull(mainProduct.getString("productName"))%>:</div></td></tr>
       <tr><td><hr class='sepbar'></td></tr>
 
       <ofbiz:iterator name="productAssoc" property="upgrade">
@@ -140,7 +140,7 @@
 <!-- obsolescence -->
     <ofbiz:if name="obsolescence">
       <tr><td>&nbsp;</td></tr>
-      <tr><td colspan="2"><div class="head2"><%=UtilFormatOut.checkNull(mainProduct.getString("name"))%> makes these products obsolete:</div></td></tr>
+      <tr><td colspan="2"><div class="head2"><%=UtilFormatOut.checkNull(mainProduct.getString("productName"))%> makes these products obsolete:</div></td></tr>
       <tr><td><hr class='sepbar'></td></tr>
 
       <ofbiz:iterator name="productAssoc" property="obsolescence">
