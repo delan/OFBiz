@@ -1,2 +1,2 @@
 
-<%response.sendRedirect("control/main");%>
+<%response.sendRedirect("/webtools/control/main");%>
