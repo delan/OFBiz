@@ -216,7 +216,7 @@ public class WfProcessMgrImpl implements WfProcessMgr {
             Map fields = new HashMap();
 
             fields.put("packageId", processDef.getString("packageId"));
-            fields.put("packageVersion", processDef.getString("processVersion"));
+            fields.put("packageVersion", processDef.getString("packageVersion"));
             fields.put("processId", processDef.getString("processId"));
             fields.put("processVersion", processDef.getString("processVersion"));
             fields.put("applicationId", "_NA_");

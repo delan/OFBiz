@@ -450,7 +450,7 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
             GenericValue v = (GenericValue) i.next();
 
             if (v.get("currentStatusId") != null &&
-                getOMGStatus(v.getString("currentStatusId")).startsWith("open."))
+                WfUtil.getOMGStatus(v.getString("currentStatusId")).startsWith("open."))
                 steps.add(WfFactory.getWfActivity(getDelegator(), v.getString("workEffortId")));
         }
         return steps;

@@ -109,7 +109,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
         dataMap.put("actualStartDate", dataMap.get("createdDate"));
         dataMap.put("lastModifiedDate", dataMap.get("createdDate"));
         dataMap.put("priority", valueObject.getLong("objectPriority"));
-        dataMap.put("currentStatusId", getEntityStatus("open.not_running.not_started"));
+        dataMap.put("currentStatusId", WfUtil.getOFBStatus("open.not_running.not_started"));
         if (activityId != null)
             dataMap.put("workflowActivityId", activityId);
         if (activityId != null && parentId != null) {
@@ -429,8 +429,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
     /**
      * @see org.ofbiz.core.workflow.WfExecutionObject#changeState(java.lang.String)
      */
-    public void changeState(String newState) throws WfException, InvalidState,
-            TransitionNotAllowed {
+    public void changeState(String newState) throws WfException, InvalidState, TransitionNotAllowed {            
         // Test is transaction is allowed???
         GenericValue dataObject = getRuntimeObject();
 
@@ -438,7 +437,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
             try {
                 long now = (new Date()).getTime();
 
-                dataObject.set("currentStatusId", getEntityStatus(newState));
+                dataObject.set("currentStatusId", WfUtil.getOFBStatus(newState));
                 dataObject.set("lastStatusUpdate", new Timestamp(now));
                 dataObject.store();
             } catch (GenericEntityException e) {
@@ -452,8 +451,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
     /**
      * @see org.ofbiz.core.workflow.WfExecutionObject#suspend()
      */
-    public void suspend() throws WfException, CannotSuspend, NotRunning,
-            AlreadySuspended {
+    public void suspend() throws WfException, CannotSuspend, NotRunning, AlreadySuspended {            
         changeState("open.not_running.suspended");
     }
 
@@ -585,42 +583,6 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
         } catch (GenericEntityException e) {
             throw new WfException(e.getMessage(), e);
         }
-    }
-
-    /**
-     * Method getEntityStatus.
-     * @param state
-     * @return String
-     */
-    protected String getEntityStatus(String state) {
-        String statesArr[] = {"open.running", "open.not_running.not_started", "open.not_running.suspended",
-                "closed.completed", "closed.terminated", "closed.aborted"};
-        String entityArr[] = {"WF_RUNNING", "WF_NOT_STARTED", "WF_SUSPENDED", "WF_COMPLETED",
-                "WF_TERMINATED", "WF_ABORTED"};
-
-        for (int i = 0; i < statesArr.length; i++) {
-            if (statesArr[i].equals(state))
-                return entityArr[i];
-        }
-        return null;
-    }
-
-    /**
-     * Method getOMGStatus.
-     * @param state
-     * @return String
-     */
-    protected String getOMGStatus(String state) {
-        String statesArr[] = {"open.running", "open.not_running.not_started", "open.not_running.suspended",
-                "closed.completed", "closed.terminated", "closed.aborted"};
-        String entityArr[] = {"WF_RUNNING", "WF_NOT_STARTED", "WF_SUSPENDED", "WF_COMPLETED",
-                "WF_TERMINATED", "WF_ABORTED"};
-
-        for (int i = 0; i < entityArr.length; i++) {
-            if (entityArr[i].equals(state))
-                return statesArr[i];
-        }
-        return null;
     }
 
     private Map getContext() throws WfException {

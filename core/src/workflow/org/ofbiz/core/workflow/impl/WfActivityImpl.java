@@ -337,10 +337,15 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
         }
         try {
             changeState("closed.completed");
+            GenericValue activityWe = getRuntimeObject();            
+            activityWe.set("actualCompletionDate", UtilDateTime.nowTimestamp());
+            activityWe.store();                       
         } catch (InvalidState is) {
             throw new CannotComplete(is.getMessage(), is);
         } catch (TransitionNotAllowed tna) {
             throw new CannotComplete(tna.getMessage(), tna);
+        } catch (GenericEntityException gee) {
+            throw new CannotComplete(gee.getMessage(), gee);
         }
 
         container().activityComplete(this);

@@ -52,4 +52,41 @@ public final class WfUtil {
             return "java.lang.Object";
     }
     
+    /**
+     * Returns the OFB status code which refers to the passed OMG status code
+     * @param state
+     * @return String
+     */
+    public static String getOFBStatus(String state) {
+        String statesArr[] = {"open.running", "open.not_running.not_started", "open.not_running.suspended",
+                "closed.completed", "closed.terminated", "closed.aborted"};
+        String entityArr[] = {"WF_RUNNING", "WF_NOT_STARTED", "WF_SUSPENDED", "WF_COMPLETED",
+                "WF_TERMINATED", "WF_ABORTED"};
+
+        for (int i = 0; i < statesArr.length; i++) {
+            if (statesArr[i].equals(state))
+                return entityArr[i];
+        }
+        return null;
+    }
+
+    /**
+     * Returns the OMG status code which refers to the passed OFB status code
+     * @param state
+     * @return String
+     */
+    public static String getOMGStatus(String state) {
+        String statesArr[] = {"open.running", "open.not_running.not_started", "open.not_running.suspended",
+                "closed.completed", "closed.terminated", "closed.aborted"};
+        String entityArr[] = {"WF_RUNNING", "WF_NOT_STARTED", "WF_SUSPENDED", "WF_COMPLETED",
+                "WF_TERMINATED", "WF_ABORTED"};
+
+        for (int i = 0; i < entityArr.length; i++) {
+            if (entityArr[i].equals(state))
+                return statesArr[i];
+        }
+        return null;
+    }
+    
+    
 }
