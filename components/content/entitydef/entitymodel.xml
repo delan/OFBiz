@@ -4,7 +4,7 @@
 /**
  *  Title: Entity Generator Definitions for the General Data Model
  *  Description: None
- *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  */
 -->
 
@@ -935,33 +935,63 @@
     <entity entity-name="SurveyQuestion"
             package-name="org.ofbiz.content.survey"
             title="Survey Question Entity">
-      <field name="surveyId" type="id-ne"/>
-      <field name="surveyQuestionSeqId" type="id-ne"/>
-      <field name="surveyQuestionTypeId" type="id"/>
+      <field name="surveyQuestionId" type="id-ne"/>
+      <field name="surveyQuestionCategoryId" type="id-ne"/>
+      <field name="surveyQuestionTypeId" type="id-ne"/>
       <field name="description" type="description"/>
-      <prim-key field="surveyId"/>
-      <prim-key field="surveyQuestionSeqId"/>
-      <relation type="one" fk-name="SRVYQST_SRVY" rel-entity-name="Survey">
-        <key-map field-name="surveyId"/>
-      </relation>
+      <field name="question" type="very-long"/>
+      <field name="hint" type="very-long"/>
+      <prim-key field="surveyQuestionId"/>
       <relation type="one" fk-name="SRVYQST_SRVYQTP" rel-entity-name="SurveyQuestionType">
         <key-map field-name="surveyQuestionTypeId"/>
+      </relation>
+      <relation type="one" fk-name="SRVYQST_SRVYQTCT" rel-entity-name="SurveyQuestionCategory">
+        <key-map field-name="surveyQuestionCategoryId"/>
+      </relation>
+    </entity>
+    <entity entity-name="SurveyQuestionAppl"
+            package-name="org.ofbiz.content.survey"
+            title="Survey Question Application Entity">
+      <field name="surveyId" type="id-ne"/>
+      <field name="surveyQuestionId" type="id-ne"/>
+      <field name="fromDate" type="date-time"/>
+      <field name="thruDate" type="date-time"/>
+      <field name="sequenceNum" type="numeric"/>
+      <prim-key field="surveyId"/>
+      <prim-key field="surveyQuestionId"/>
+      <prim-key field="fromDate"/>
+      <relation type="one" fk-name="SRVYQSTAPL_SRVY" rel-entity-name="Survey">
+        <key-map field-name="surveyId"/>
+      </relation>
+      <relation type="one" fk-name="SRVYQSTAPL_SRVYQ" rel-entity-name="SurveyQuestion">
+        <key-map field-name="surveyQuestionId"/>
+      </relation>
+    </entity>
+    <entity entity-name="SurveyQuestionCategory"
+            package-name="org.ofbiz.content.survey"
+            title="Survey Question Category Entity">
+      <field name="surveyQuestionCategoryId" type="id-ne"/>
+      <field name="parentCategoryId" type="id"/>
+      <field name="description" type="description"/>
+      <prim-key field="surveyQuestionCategoryId"/>
+      <relation type="one" fk-name="SRVYQSTCT_PAR" title="Parent" rel-entity-name="SurveyQuestionCategory">
+        <key-map field-name="parentCategoryId" rel-field-name="surveyQuestionCategoryId"/>
+      </relation>
+      <relation type="many" rel-entity-name="SurveyQuestion">
+        <key-map field-name="surveyQuestionCategoryId"/>
       </relation>
     </entity>
     <entity entity-name="SurveyQuestionOption"
             package-name="org.ofbiz.content.survey"
             title="Survey Question Option Entity">
-      <field name="surveyId" type="id-ne"/>
-      <field name="surveyQuestionSeqId" type="id-ne"/>
+      <field name="surveyQuestionId" type="id-ne"/>
       <field name="surveyOptionSeqId" type="id-ne"/>
       <field name="description" type="description"/>
       <field name="sequenceNum" type="numeric"/>
-      <prim-key field="surveyId"/>
-      <prim-key field="surveyQuestionSeqId"/>
+      <prim-key field="surveyQuestionId"/>
       <prim-key field="surveyOptionSeqId"/>
       <relation type="one" fk-name="SRVYQSTOP_SRVYQ" rel-entity-name="SurveyQuestion">
-        <key-map field-name="surveyId"/>
-        <key-map field-name="surveyQuestionSeqId"/>
+        <key-map field-name="surveyQuestionId"/>
       </relation>
     </entity>
     <entity entity-name="SurveyQuestionType"
@@ -994,26 +1024,24 @@
       <field name="partyId" type="id-ne"></field>
       <field name="surveyId" type="id-ne"></field>
       <field name="responseDate" type="date-time"></field>
-      <field name="surveyQuestionSeqId" type="id-ne"></field>
+      <field name="surveyQuestionId" type="id-ne"></field>
       <field name="booleanResponse" type="indicator"></field>
       <field name="textResponse" type="very-long"></field>
       <field name="surveyOptionSeqId" type="id"></field>
       <prim-key field="partyId"/>
       <prim-key field="surveyId"/>
       <prim-key field="responseDate"/>
-      <prim-key field="surveyQuestionSeqId"/>
+      <prim-key field="surveyQuestionId"/>
       <relation type="one" fk-name="SRVYRSPA_SVRSP" rel-entity-name="SurveyResponse">
         <key-map field-name="partyId"/>
         <key-map field-name="surveyId"/>
         <key-map field-name="responseDate"/>
       </relation>
       <relation type="one" fk-name="SRVYRSPA_SVQU" rel-entity-name="SurveyQuestion">
-        <key-map field-name="surveyId"/>
-        <key-map field-name="surveyQuestionSeqId"/>
+        <key-map field-name="surveyQuestionId"/>
       </relation>
       <relation type="one-nofk" rel-entity-name="SurveyQuestionOption">
-        <key-map field-name="surveyId"/>
-        <key-map field-name="surveyQuestionSeqId"/>
+        <key-map field-name="surveyQuestionId"/>
         <key-map field-name="surveyOptionSeqId"/>
       </relation>
     </entity>
