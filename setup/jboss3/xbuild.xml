@@ -353,6 +353,7 @@
         <copy file="commonapp/etc/security.properties"       toDir="${ext.dir}/etc"/>
         <copy file="commonapp/etc/debug.properties"          toDir="${ext.dir}/etc"/>
         <copy file="commonapp/etc/cache.properties"          toDir="${ext.dir}/etc"/>
+        <copy file="commonapp/etc/general.properties"          toDir="${ext.dir}/etc"/>
         <copy file="commonapp/etc/localdtds.properties"      toDir="${ext.dir}/etc"/>
         <copy file="commonapp/etc/serviceengine.xml"         toDir="${ext.dir}/etc"/>
         <copy file="commonapp/etc/tyrexdomain.xml"           toDir="${ext.dir}/etc"/>

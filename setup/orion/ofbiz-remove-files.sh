@@ -13,7 +13,7 @@ rm $ORION_HOME/lib/ofbcore-workflow.jar $ORION_HOME/lib/ofbcore-rules.jar $ORION
 rm $ORION_HOME/lib/commonapp.jar
 
 # get all of the ofbiz config files
-rm $ORION_HOME/lib/cache.properties $ORION_HOME/lib/debug.properties $ORION_HOME/lib/security.properties
+rm $ORION_HOME/lib/cache.properties $ORION_HOME/lib/debug.properties $OFBIZ_HOME/commonapp/etc/general.properties $ORION_HOME/lib/security.properties
 rm $ORION_HOME/lib/servicesengine.properties $ORION_HOME/lib/controlservlet.properties
 rm $ORION_HOME/lib/localdtds.properties 
 #rm $ORION_HOME/lib/tyrexdomain.xml
