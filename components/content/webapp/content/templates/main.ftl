@@ -22,7 +22,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Al Byers (byersa@automationgroups.com)
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      2.1
 -->
 
@@ -36,20 +36,20 @@
     <link rel='stylesheet' href='<@ofbizContentUrl>/images/maincss.css</@ofbizContentUrl>' type='text/css'>
     <link rel='stylesheet' href='<@ofbizContentUrl>/images/tabstyles.css</@ofbizContentUrl>' type='text/css'>    
     <script type="text/javascript" language="javascript"> 
-      _editor_url = "/images/htmlarea/"; // omit the final slash 
+      _editor_url = "/content/images/htmlarea/"; // omit the final slash 
     </script> 
 
-    <script language='javascript' src='<@ofbizContentUrl>/images/htmlarea/htmlarea.js</@ofbizContentUrl>' 
+    <script language='javascript' src='<@ofbizContentUrl>/content/images/htmlarea/htmlarea.js</@ofbizContentUrl>' 
                                                        type='text/javascript'></script>
-    <script language='javascript' src='<@ofbizContentUrl>/images/htmlarea/lang/en.js</@ofbizContentUrl>' 
+    <script language='javascript' src='<@ofbizContentUrl>/content/images/htmlarea/lang/en.js</@ofbizContentUrl>' 
                                                        type='text/javascript'></script>
-    <script language='javascript' src='<@ofbizContentUrl>/images/htmlarea/dialog.js</@ofbizContentUrl>' 
+    <script language='javascript' src='<@ofbizContentUrl>/content/images/htmlarea/dialog.js</@ofbizContentUrl>' 
                                                        type='text/javascript'></script>
-    <script language='javascript' src='<@ofbizContentUrl>/images/htmlarea/popupwin.js</@ofbizContentUrl>' 
+    <script language='javascript' src='<@ofbizContentUrl>/content/images/htmlarea/popupwin.js</@ofbizContentUrl>' 
                                                        type='text/javascript'></script>
 
     <style type="text/css">
-        @import url(<@ofbizContentUrl>/images/htmlarea/htmlarea.css</@ofbizContentUrl>);
+        @import url(<@ofbizContentUrl>/content/images/htmlarea/htmlarea.css</@ofbizContentUrl>);
     
         html, body {
           font-family: Verdana,sans-serif;
