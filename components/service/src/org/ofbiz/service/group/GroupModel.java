@@ -1,5 +1,5 @@
 /*
- * $Id: GroupModel.java,v 1.3 2003/09/25 23:08:02 ajzeneski Exp $
+ * $Id: GroupModel.java,v 1.4 2003/11/15 20:10:45 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -40,7 +40,7 @@ import org.w3c.dom.Element;
  * GroupModel.java
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.0
  */
 public class GroupModel {
@@ -100,7 +100,7 @@ public class GroupModel {
         if (this.getSendMode().equals("all")) {
             return runAll(dispatcher, localName, context);
         } else if (this.getSendMode().equals("round-robin")) {
-            return runIndex(dispatcher, localName, context, (++lastServiceRan));   
+            return runIndex(dispatcher, localName, context, (++lastServiceRan % services.size()));   
         } else if (this.getSendMode().equals("random")) {
             int randomIndex = (int) (Math.random() * (double) (services.size())); 
             return runIndex(dispatcher, localName, context, randomIndex);
