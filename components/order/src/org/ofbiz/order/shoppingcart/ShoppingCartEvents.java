@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCartEvents.java,v 1.5 2003/11/20 08:15:21 ajzeneski Exp $
+ * $Id: ShoppingCartEvents.java,v 1.6 2003/11/21 06:18:59 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -50,7 +50,7 @@ import org.ofbiz.content.webapp.control.RequestHandler;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:tristana@twibble.org">Tristan Austin</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      2.0
  */
 public class ShoppingCartEvents {
@@ -68,8 +68,8 @@ public class ShoppingCartEvents {
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         ShoppingCart cart = getCartObject(request);
         ShoppingCartHelper cartHelper = new ShoppingCartHelper(delegator, dispatcher, cart);
-        String controlDirective;
-        Map result;
+        String controlDirective = null;
+        Map result = null;
         String productId = null;
         String itemType = null;
         String itemDescription = null;
@@ -163,6 +163,23 @@ public class ShoppingCartEvents {
             quantity = 1;
         }
 
+        // get the selected amount
+        String selectedAmountStr = "0.00";
+        if (paramMap.containsKey("AMOUNT")) {
+            selectedAmountStr = (String) paramMap.remove("AMOUNT");
+        } else if (paramMap.containsKey("amount")) {
+            selectedAmountStr = (String) paramMap.remove("amount");
+        }
+
+        // parse the amount
+        double amount = 0.00;
+        try {
+            amount = NumberFormat.getNumberInstance().parse(selectedAmountStr).doubleValue();
+        } catch (Exception e) {
+            Debug.logWarning(e, "Problem parsing amount string: " + selectedAmountStr, module);
+            amount = 0.00;
+        }
+
         // check for an add-to cart survey
         List surveyResponses = null;
         if (productId != null) {
@@ -198,7 +215,7 @@ public class ShoppingCartEvents {
 
         // Translate the parameters and add to the cart
         result = cartHelper.addToCart(catalogId, shoppingListId, shoppingListItemSeqId, productId, productCategoryId,
-            itemType, itemDescription, price, quantity, paramMap);
+            itemType, itemDescription, price, amount, quantity, paramMap);
         controlDirective = processResult(result, request);
 
         // Determine where to send the browser

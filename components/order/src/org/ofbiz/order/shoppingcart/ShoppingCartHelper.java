@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCartHelper.java,v 1.4 2003/11/08 20:54:17 ajzeneski Exp $
+ * $Id: ShoppingCartHelper.java,v 1.5 2003/11/21 06:18:59 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -52,7 +52,7 @@ import org.ofbiz.service.ServiceUtil;
  *
  * @author     <a href="mailto:tristana@twibble.org">Tristan Austin</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.0
  */
 public class ShoppingCartHelper {
@@ -92,17 +92,9 @@ public class ShoppingCartHelper {
     }
 
     /** Event to add an item to the shopping cart. */
-    public Map addToCart(
-        String catalogId,
-        String shoppingListId,
-        String shoppingListItemSeqId,
-        String productId,
-        String productCategoryId,
-        String itemType,
-        String itemDescription,
-        double price,
-        double quantity,
-        Map context) {
+    public Map addToCart(String catalogId, String shoppingListId, String shoppingListItemSeqId, String productId,
+                         String productCategoryId, String itemType, String itemDescription, double price,
+                         double amount, double quantity, Map context) {
         Map result;
         Map attributes = null;
         String errMsg = null;
@@ -120,6 +112,11 @@ public class ShoppingCartHelper {
             return result;
         }
 
+        // amount sanity check
+        if (amount < 0) {
+            amount = 0;
+        }
+
         // Create a HashMap of product attributes - From ShoppingCartItem.attributeNames[]
         for (int namesIdx = 0; namesIdx < ShoppingCartItem.attributeNames.length; namesIdx++) {
             if (attributes == null)
@@ -131,14 +128,15 @@ public class ShoppingCartHelper {
 
         // Retrieve the catalog ID
         try {
-            int itemId;
+            int itemId = -1;
             if (productId != null) {
-                itemId = cart.addOrIncreaseItem(productId, quantity, null, attributes, catalogId, dispatcher);
+                itemId = cart.addOrIncreaseItem(productId, amount, quantity, null, attributes, catalogId, dispatcher);
             } else {
                 itemId = cart.addNonProductItem(delegator, itemType, itemDescription, productCategoryId, price, quantity, attributes, catalogId, dispatcher);
             }
 
-            if (shoppingListId != null && shoppingListItemSeqId != null) {
+            // set the shopping list info
+            if (itemId > -1 && shoppingListId != null && shoppingListItemSeqId != null) {
                 ShoppingCartItem item = cart.findCartItem(itemId);
                 item.setShoppingList(shoppingListId, shoppingListItemSeqId);
             }
@@ -176,16 +174,15 @@ public class ShoppingCartHelper {
             if (itemIter != null && itemIter.hasNext()) {
                 while (itemIter.hasNext()) {
                     GenericValue orderItem = (GenericValue) itemIter.next();
-
+                    int itemId = -1;
                     if (orderItem.get("productId") != null && orderItem.get("quantity") != null) {
+                        double amount = 0.00;
+                        if (orderItem.get("selectedAmount") != null) {
+                            amount = orderItem.getDouble("selectedAmount").doubleValue();
+                        }
                         try {
-                            this.cart.addOrIncreaseItem(
-                                orderItem.getString("productId"),
-                                orderItem.getDouble("quantity").doubleValue(),
-                                null,
-                                null,
-                                catalogId,
-                                dispatcher);
+                            itemId = this.cart.addOrIncreaseItem(orderItem.getString("productId"),
+                                    amount, orderItem.getDouble("quantity").doubleValue(), null, null, catalogId, dispatcher);
                             noItems = false;
                         } catch (CartItemModifyException e) {
                             errorMsgs.add(e.getMessage());
@@ -217,14 +214,13 @@ public class ShoppingCartHelper {
                     }
                     if (orderItem != null) {
                         if (orderItem.get("productId") != null && orderItem.get("quantity") != null) {
+                            double amount = 0.00;
+                            if (orderItem.get("selectedAmount") != null) {
+                                amount = orderItem.getDouble("selectedAmount").doubleValue();
+                            }
                             try {
-                                this.cart.addOrIncreaseItem(
-                                    orderItem.getString("productId"),
-                                    orderItem.getDouble("quantity").doubleValue(),
-                                    null,
-                                    null,
-                                    catalogId,
-                                    dispatcher);
+                                this.cart.addOrIncreaseItem(orderItem.getString("productId"), amount,
+                                        orderItem.getDouble("quantity").doubleValue(), null, null, catalogId, dispatcher);
                                 noItems = false;
                             } catch (CartItemModifyException e) {
                                 errorMsgs.add(e.getMessage());
@@ -256,7 +252,7 @@ public class ShoppingCartHelper {
      * quantity is 0, do not add
      */
     public Map addToCartBulk(String catalogId, String categoryId, Map context) {
-        Map result;
+        Map result = null;
 
         if (categoryId == null || categoryId.length() <= 0) {
             result = ServiceUtil.returnError("No category specified to add from.");
@@ -295,7 +291,7 @@ public class ShoppingCartHelper {
                 }
                 if (quantity > 0.0) {
                     try {
-                        this.cart.addOrIncreaseItem(productCategoryMember.getString("productId"), quantity, null, null, catalogId, dispatcher);
+                        this.cart.addOrIncreaseItem(productCategoryMember.getString("productId"), 0.00, quantity, null, null, catalogId, dispatcher);
                     } catch (CartItemModifyException cartException) {
                         result = ServiceUtil.returnError(cartException.getMessage());
                         return result;
@@ -316,7 +312,7 @@ public class ShoppingCartHelper {
      */
     public Map addCategoryDefaults(String catalogId, String categoryId) {
         ArrayList errorMsgs = new ArrayList();
-        Map result;
+        Map result = null;
 
         if (categoryId == null || categoryId.length() <= 0) {
             result = ServiceUtil.returnError("No category specified to add from.");
@@ -347,7 +343,7 @@ public class ShoppingCartHelper {
 
             if (quantity != null && quantity.doubleValue() > 0.0) {
                 try {
-                    this.cart.addOrIncreaseItem(productCategoryMember.getString("productId"), quantity.doubleValue(), null, null, catalogId, dispatcher);
+                    this.cart.addOrIncreaseItem(productCategoryMember.getString("productId"), 0.00, quantity.doubleValue(), null, null, catalogId, dispatcher);
                     totalQuantity += quantity.doubleValue();
                 } catch (CartItemModifyException e) {
                     errorMsgs.add(e.getMessage());
@@ -367,7 +363,7 @@ public class ShoppingCartHelper {
 
     /** Delete an item from the shopping cart. */
     public Map deleteFromCart(Map context) {
-        Map result;
+        Map result = null;
         Set names = context.keySet();
         Iterator i = names.iterator();
         ArrayList errorMsgs = new ArrayList();
@@ -401,7 +397,7 @@ public class ShoppingCartHelper {
 
     /** Update the items in the shopping cart. */
     public Map modifyCart(Security security, GenericValue userLogin, Map context, boolean removeSelected, String[] selectedItems) {
-        Map result;
+        Map result = null;
 
         ArrayList deleteList = new ArrayList();
         ArrayList errorMsgs = new ArrayList();

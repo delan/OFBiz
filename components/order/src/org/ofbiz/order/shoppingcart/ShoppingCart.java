@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCart.java,v 1.23 2003/11/21 00:06:43 ajzeneski Exp $
+ * $Id: ShoppingCart.java,v 1.24 2003/11/21 06:18:59 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -42,7 +42,7 @@ import org.ofbiz.service.LocalDispatcher;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.23 $
+ * @version    $Revision: 1.24 $
  * @since      2.0
  */
 public class ShoppingCart implements java.io.Serializable {
@@ -171,14 +171,14 @@ public class ShoppingCart implements java.io.Serializable {
      * @return the new/increased item index
      * @throws CartItemModifyException
      */
-    public int addOrIncreaseItem(String productId, double quantity, Map features, Map attributes, String prodCatalogId, LocalDispatcher dispatcher) throws CartItemModifyException {
+    public int addOrIncreaseItem(String productId, double selectedAmount, double quantity, Map features, Map attributes, String prodCatalogId, LocalDispatcher dispatcher) throws CartItemModifyException {
         // public int addOrIncreaseItem(GenericValue product, double quantity, HashMap features) {
 
         // Check for existing cart item.
         for (int i = 0; i < this.cartLines.size(); i++) {
             ShoppingCartItem sci = (ShoppingCartItem) cartLines.get(i);
 
-            if (sci.equals(productId, features, attributes, prodCatalogId)) {
+            if (sci.equals(productId, features, attributes, prodCatalogId, selectedAmount)) {
                 double newQuantity = sci.getQuantity() + quantity;
 
                 if (Debug.verboseOn()) Debug.logVerbose("Found a match for id " + productId + " on line " + i + ", updating quantity to " + newQuantity, module);
@@ -188,7 +188,10 @@ public class ShoppingCart implements java.io.Serializable {
         }
 
         // Add the new item to the shopping cart if it wasn't found.
-        return this.addItem(0, ShoppingCartItem.makeItem(new Integer(0), getDelegator(), productId, quantity, features, attributes, prodCatalogId, dispatcher, this));
+        return this.addItem(0, ShoppingCartItem.makeItem(new Integer(0), getDelegator(), productId, selectedAmount, quantity, features, attributes, prodCatalogId, dispatcher, this));
+    }
+    public int addOrIncreaseItem(String productId, double quantity, Map features, Map attributes, String prodCatalogId, LocalDispatcher dispatcher) throws CartItemModifyException {
+        return addOrIncreaseItem(productId, 0.00, quantity, features, attributes, prodCatalogId, dispatcher);
     }
 
     /** Add a non-product item to the shopping cart.
@@ -196,7 +199,7 @@ public class ShoppingCart implements java.io.Serializable {
      * @throws CartItemModifyException
      */
     public int addNonProductItem(GenericDelegator delegator, String itemType, String description, String categoryId, double price, double quantity, Map attributes, String prodCatalogId, LocalDispatcher dispatcher) throws CartItemModifyException {
-        return this.addItem(0, ShoppingCartItem.makeItem(new Integer(0), delegator, itemType, description, categoryId, price, quantity, attributes, prodCatalogId, dispatcher, this, true));
+        return this.addItem(0, ShoppingCartItem.makeItem(new Integer(0), delegator, itemType, description, categoryId, price, 0.00, quantity, attributes, prodCatalogId, dispatcher, this, true));
     }
 
     /** Add an item to the shopping cart. */
@@ -210,8 +213,8 @@ public class ShoppingCart implements java.io.Serializable {
     }
 
     /** Add an item to the shopping cart. */
-    public int addItemToEnd(String productId, double quantity, HashMap features, HashMap attributes, String prodCatalogId, LocalDispatcher dispatcher) throws CartItemModifyException {
-        return addItemToEnd(ShoppingCartItem.makeItem(null, getDelegator(), productId, quantity, features, attributes, prodCatalogId, dispatcher, this));
+    public int addItemToEnd(String productId, double amount, double quantity, HashMap features, HashMap attributes, String prodCatalogId, LocalDispatcher dispatcher) throws CartItemModifyException {
+        return addItemToEnd(ShoppingCartItem.makeItem(null, getDelegator(), productId, amount, quantity, features, attributes, prodCatalogId, dispatcher, this));
     }
 
     /** Add an item to the shopping cart. */
@@ -225,12 +228,12 @@ public class ShoppingCart implements java.io.Serializable {
     }
 
     /** Get a ShoppingCartItem from the cart object. */
-    public ShoppingCartItem findCartItem(String productId, Map features, Map attributes, String prodCatalogId) {
+    public ShoppingCartItem findCartItem(String productId, Map features, Map attributes, String prodCatalogId, double selectedAmount) {
         // Check for existing cart item.
         for (int i = 0; i < this.cartLines.size(); i++) {
             ShoppingCartItem cartItem = (ShoppingCartItem) cartLines.get(i);
 
-            if (cartItem.equals(productId, features, attributes, prodCatalogId)) {
+            if (cartItem.equals(productId, features, attributes, prodCatalogId, selectedAmount)) {
                 return cartItem;
             }
         }
