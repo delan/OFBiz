@@ -158,12 +158,37 @@ public class ModelService {
         if ( info.size() == 0 && test.size() == 0 )
             return true;
         // This is to see if the test set contains all from the info set (reverse)
-        if ( reverse && !testSet.containsAll(keySet) )
+        if ( reverse && !testSet.containsAll(keySet) ) {
+            Set missing = new TreeSet(keySet);
+            missing.removeAll(testSet);
+            String missingStr = "";
+            Iterator iter = missing.iterator();
+            while (iter.hasNext()) {
+                missingStr += (String) iter.next();
+                if (iter.hasNext()) {
+                    missingStr += ", ";
+                }
+            }
+            
+            Debug.logError("[ModelService.validate] the following required parameters are missing: " + missingStr);
             return false;
+        }
         // This is to see if the info set contains all from the test set
-        if ( !keySet.containsAll(testSet) )
+        if ( !keySet.containsAll(testSet) ) {
+            Set extra = new TreeSet(testSet);
+            extra.removeAll(keySet);
+            String extraStr = "";
+            Iterator iter = extra.iterator();
+            while (iter.hasNext()) {
+                extraStr += (String) iter.next();
+                if (iter.hasNext()) {
+                    extraStr += ", ";
+                }
+            }
+            
+            Debug.logError("[ModelService.validate] unknown paramters found in context: " + extraStr);
             return false;
-        
+        }
         
         // * Validate types next
         // Warning - the class types MUST be accessible to this classloader
@@ -196,10 +221,13 @@ public class ModelService {
             }
             
             if (infoClass == null)
-                throw new RuntimeException("Illegal type found in info map");
+                throw new RuntimeException("Illegal type found in info map (could not load class for specified type)");
             
-            if (!ObjectType.instanceOf(testObject,infoClass))
+            if (!ObjectType.instanceOf(testObject, infoClass)) {
+                String testType = testObject == null ? "null" : testObject.getClass().getName();
+                Debug.logError("[ModelService.validate] Type check failed for field " + key + "; expected type is " + infoType + "; actual type is: " + testType);
                 return false;
+            }
         }
         
         return true;

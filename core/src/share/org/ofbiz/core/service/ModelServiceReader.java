@@ -186,9 +186,9 @@ public class ModelServiceReader {
         def.mode = "OUT";
         def.optional = true;
         contextMap.put(def.name,def);
-        // userLoginObject
+        // userLogin
         def = new ModelParam();
-        def.name = "userLoginObject";
+        def.name = "userLogin";
         def.type= "org.ofbiz.core.entity.GenericValue";
         def.mode = "IN";
         def.optional = true;
