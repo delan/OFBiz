@@ -1,5 +1,5 @@
 /*
- * $Id: KeyStoreUtil.java,v 1.3 2003/11/04 18:46:29 ajzeneski Exp $
+ * $Id: KeyStoreUtil.java,v 1.4 2003/11/08 20:53:18 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -51,7 +51,7 @@ import javax.crypto.SecretKey;
  * KeyStoreUtil - Utilities for getting KeyManagers and TrustManagers
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      3.0
  */
 public class KeyStoreUtil {
@@ -234,6 +234,12 @@ public class KeyStoreUtil {
         X509EncodedKeySpec x509KeySpec = new X509EncodedKeySpec(keyBytes);
         KeyFactory keyFactory = KeyFactory.getInstance("DH");
         return keyFactory.generatePublic(x509KeySpec);
+    }
+
+    public static PrivateKey readDHPrivateKey(byte[] keyBytes) throws NoSuchAlgorithmException, InvalidKeySpecException {
+        X509EncodedKeySpec x509KeySpec = new X509EncodedKeySpec(keyBytes);
+        KeyFactory keyFactory = KeyFactory.getInstance("DH");
+        return keyFactory.generatePrivate(x509KeySpec);
     }
 
 }

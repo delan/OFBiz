@@ -1,5 +1,5 @@
 /*
- * $Id: UtilFormatOut.java,v 1.1 2003/08/15 20:23:19 ajzeneski Exp $
+ * $Id: UtilFormatOut.java,v 1.2 2003/11/08 20:53:18 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -25,16 +25,21 @@ package org.ofbiz.base.util;
 
 import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.Locale;
+import java.util.Currency;
 
 /**
  * General output formatting functions - mainly for helping in JSPs
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class UtilFormatOut {
+
+    public static final String module = UtilFormatOut.class.getName();
 
     // ------------------- price format handlers -------------------
     static DecimalFormat priceDecimalFormat = new DecimalFormat("#,##0.00");
@@ -54,6 +59,32 @@ public class UtilFormatOut {
      */
     public static String formatPrice(double price) {
         return priceDecimalFormat.format(price);
+    }
+
+    /** Formats a double into a properly formatted currency string based on isoCode and Locale
+     * @param price The price double to be formatted
+     * @param isoCode the currency ISO code
+     * @param locale The Locale used to format the number
+     * @return A String with the formatted price
+     */
+    public static String formatCurrency(double price, String isoCode, Locale locale) {
+        NumberFormat nf = NumberFormat.getCurrencyInstance(locale);
+        if (isoCode != null && isoCode.length() > 1) {
+            nf.setCurrency(Currency.getInstance(isoCode));
+        } else {
+            Debug.logWarning("No isoCode specified to format currency value:" + price, module);
+        }
+        return nf.format(price);
+    }
+
+    /** Formats a double into a properly formatted currency string based on isoCode and Locale
+     * @param price The price Double to be formatted
+     * @param isoCode the currency ISO code
+     * @param locale The Locale used to format the number
+     * @return A String with the formatted price
+     */
+    public static String formatCurrency(Double price, String isoCode, Locale locale) {
+        return formatCurrency(price.doubleValue(), isoCode, locale);
     }
 
     // ------------------- percentage format handlers -------------------
