@@ -1,5 +1,5 @@
 /*
- * $Id: HtmlFormWrapper.java,v 1.3 2003/12/05 20:42:52 byersa Exp $
+ * $Id: HtmlFormWrapper.java,v 1.4 2004/02/28 21:03:24 jonesde Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -43,7 +43,7 @@ import org.xml.sax.SAXException;
  * Widget Library - HTML Form Wrapper class - makes it easy to do the setup and render of a form
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.2
  */
 public class HtmlFormWrapper {
@@ -114,6 +114,28 @@ public class HtmlFormWrapper {
             return false;
         } else {
             return isErrorBoolean.booleanValue();
+        }
+    }
+    
+    /**
+     * The "useRequestParameters" value in the form context tells the form library
+     * to use the request parameters to fill in values instead of the value map.
+     * This is generally used when it is an empty form to pre-set inital values.
+     * This is automatically set to false for list and multi forms. For related
+     * functionality see the setIsError method.
+     * 
+     * @param useRequestParameters
+     */
+    public void setUseRequestParameters(boolean useRequestParameters) {
+        this.context.put("useRequestParameters", new Boolean(useRequestParameters));
+    }
+    
+    public boolean getUseRequestParameters() {
+        Boolean useRequestParametersBoolean = (Boolean) this.context.get("useRequestParameters");
+        if (useRequestParametersBoolean == null) {
+            return false;
+        } else {
+            return useRequestParametersBoolean.booleanValue();
         }
     }
     
