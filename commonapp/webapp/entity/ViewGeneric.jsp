@@ -132,7 +132,8 @@ function ShowTab(lname)
 <tr>
   <%for(int tabIndex=0;tabIndex<entity.relations.size();tabIndex++){%>
     <%ModelRelation relation = (ModelRelation)entity.relations.get(tabIndex);%>
-    <%if(security.hasEntityPermission(relation.relTableName, "_VIEW", session)){%>
+    <%ModelEntity relatedEntity = reader.getModelEntity(relation.relEntityName);%>
+    <%if(security.hasEntityPermission(relatedEntity.tableName, "_VIEW", session)){%>
       <td id='tab<%=tabIndex+3%>' class='offtab'>
         <a href='javascript:ShowTab("tab<%=tabIndex+3%>")' id='lnk<%=tabIndex+3%>' class='offlnk'>
           <%=relation.title%><%=relation.relEntityName%></a>
