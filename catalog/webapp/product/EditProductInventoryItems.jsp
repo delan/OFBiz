@@ -75,6 +75,8 @@
     <td><div class="tabletext"><b>Item&nbsp;ID</b></div></td>
     <td><div class="tabletext"><b>Item&nbsp;Type</b></div></td>
     <td><div class="tabletext"><b>Status</b></div></td>
+    <td><div class="tabletext"><b>Received</b></div></td>
+    <td><div class="tabletext"><b>Expire</b></div></td>
     <td><div class="tabletext"><b>Facility or Container ID</b></div></td>
     <td><div class="tabletext"><b>Lot&nbsp;ID</b></div></td>
     <td><div class="tabletext"><b>BinNum</b></div></td>
@@ -90,6 +92,8 @@
     <td><div class='tabletext'>&nbsp;<ofbiz:inputvalue entityAttr="inventoryItem" field="inventoryItemId"/></div></td>
     <td><div class='tabletext'>&nbsp;<ofbiz:inputvalue entityAttr="curInventoryItemType" field="description"/></div></td>
     <td><div class='tabletext'>&nbsp;<ofbiz:inputvalue entityAttr="inventoryItem" field="statusId"/></div></td>
+    <td><div class='tabletext'>&nbsp;<ofbiz:inputvalue entityAttr="inventoryItem" field="dateReceived"/></div></td>
+    <td><div class='tabletext'>&nbsp;<ofbiz:inputvalue entityAttr="inventoryItem" field="expireDate"/></div></td>
     <%if (UtilValidate.isNotEmpty(inventoryItem.getString("facilityId")) && UtilValidate.isNotEmpty(inventoryItem.getString("containerId"))) {%>
         <td><div class='tabletext' style='color: red;'>Error: facility (<ofbiz:entityfield attribute="inventoryItem" field="facilityId"/>) 
             AND container (<ofbiz:entityfield attribute="inventoryItem" field="containerId"/>) specified</div></td>

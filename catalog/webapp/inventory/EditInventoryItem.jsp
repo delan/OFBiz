@@ -168,6 +168,16 @@
          </td>
        </tr>
       <tr>
+        <td width="26%" align=right><div class="tabletext">Date Received</div></td>
+        <td>&nbsp;</td>
+        <td width="74%"><input type="text" size="22" <ofbiz:inputvalue entityAttr="inventoryItem" field="dateReceived" fullattrs="true"/>></td>
+      </tr>
+      <tr>
+        <td width="26%" align=right><div class="tabletext">Expire Date</div></td>
+        <td>&nbsp;</td>
+        <td width="74%"><input type="text" size="22" <ofbiz:inputvalue entityAttr="inventoryItem" field="expireDate" fullattrs="true"/>></td>
+      </tr>
+      <tr>
         <td width="26%" align=right><div class="tabletext">Facility/Container</div></td>
         <td>&nbsp;</td>
         <td width="74%">

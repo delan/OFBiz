@@ -71,7 +71,7 @@
       <field name="oneInventoryFacility" type="indicator"></field>
       <field name="checkInventory" type="indicator"></field>
       <field name="reserveInventory" type="indicator"></field>
-      <field name="reserveOrderEnumId" type="indicator"></field>
+      <field name="reserveOrderEnumId" type="id"></field>
       <field name="requireInventory" type="indicator"></field>
       <field name="useQuickAdd" type="indicator"></field>
       <prim-key field="prodCatalogId"/>
@@ -856,7 +856,7 @@
             title="Product Pice Entity">
       <field name="productId" type="id-ne"></field>
       <field name="productPriceTypeId" type="id-ne"></field>
-      <field name="currencyUomId" type="name"></field>
+      <field name="currencyUomId" type="id"></field>
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
       <field name="price" type="currency-amount"></field>

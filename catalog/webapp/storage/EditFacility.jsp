@@ -1,6 +1,4 @@
-<%
-/**
- *  Title: Edit Facility Page
+<%--
  *  Description: None
  *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
@@ -25,8 +23,7 @@
  *@author     David E. Jones
  *@created    May 10 2002
  *@version    1.0
- */
-%>
+--%>
 <%try {%>
 <%@ page import="java.util.*, java.io.*" %>
 <%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.entity.*" %>
