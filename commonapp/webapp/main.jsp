@@ -68,22 +68,24 @@ content and knowledge management, data analysis, and so forth.</DIV>
 definitions, checking them with the current database, and generating text based on those definitions. </DIV>
 <ul>
   <%if(security.hasPermission("ENTITY_MAINT", session)){%>
-    <li>Entity Maintenance Utilities
+    <li><DIV class='tabletext'>Entity Maintenance Utilities</div>
     <ul>
       <li><a href="<%=response.encodeURL(controlPath + "/entitymaint")%>" class='buttontext'>Entity Data Maintenance</A>
-      <li><a href="<%=response.encodeURL(controlPath + "/view/entityref")%>" class='buttontext' target='_blank'>Entity Reference</A>
+      <li><a href="<%=response.encodeURL(controlPath + "/view/entityref")%>" class='buttontext' target='_blank'>Entity Reference & Editing Tools</A>
+      <ul>
+        <li><a href="<%=response.encodeURL(controlPath + "/view/checkdb")%>" class='buttontext'>Check/Update Database</A>
+        <li><a href="<%=response.encodeURL(controlPath + "/view/ModelWriter")%>" class='buttontext' target='_blank'>Generate Entity Model XML (all in one)</A>
+        <li><a href="<%=response.encodeURL(controlPath + "/view/ModelWriter?savetofile=true")%>" target='_blank' class='buttontext'>Save Entity Model XML to Files</A><BR>
+        <li><a href="<%=response.encodeURL(controlPath + "/view/ModelGroupWriter")%>" target='_blank' class='buttontext'>Generate Entity Group XML</A><BR>
+        <li><a href="<%=response.encodeURL(controlPath + "/view/ModelGroupWriter?savetofile=true")%>" target='_blank' class='buttontext'>Save Entity Group XML to File</A><BR>
+        <li><a href="<%=response.encodeURL(controlPath + "/view/EditEntity")%>" class='buttontext' target='_blank'>Edit Entity Definitions</A>
+      </ul>
+      <li><a href="<%=response.encodeURL(controlPath + "/view/xmldsdump")%>" class='buttontext'>XML Data Export</A>
+      <li><a href="<%=response.encodeURL(controlPath + "/view/xmldsimport")%>" class='buttontext'>XML Data Import</A>
 <%--
       <li><a href="<%=response.encodeURL(controlPath + "/view/tablesMySql")%>" class='buttontext'>MySQL Table Creation SQL</A>
       <li><a href="<%=response.encodeURL(controlPath + "/view/dataMySql")%>" class='buttontext'>MySQL Auto Data SQL</A>
 --%>
-      <li><a href="<%=response.encodeURL(controlPath + "/view/checkdb")%>" class='buttontext'>Check/Update Database</A>
-      <li><a href="<%=response.encodeURL(controlPath + "/view/ModelWriter")%>" class='buttontext' target='_blank'>Generate Entity Model XML (all in one)</A>
-      <li><a href="<%=response.encodeURL(controlPath + "/view/ModelWriter?savetofile=true")%>" target='_blank' class='buttontext'>Save Entity Model XML to Files</A><BR>
-      <li><a href="<%=response.encodeURL(controlPath + "/view/ModelGroupWriter")%>" target='_blank' class='buttontext'>Generate Entity Group XML</A><BR>
-      <li><a href="<%=response.encodeURL(controlPath + "/view/ModelGroupWriter?savetofile=true")%>" target='_blank' class='buttontext'>Save Entity Group XML to File</A><BR>
-      <li><a href="<%=response.encodeURL(controlPath + "/view/EditEntity")%>" class='buttontext' target='_blank'>Edit Entity Definitions</A> (also see the Entity Reference for this)
-      <li><a href="<%=response.encodeURL(controlPath + "/view/xmldsdump")%>" class='buttontext'>XML Data Export</A>
-      <li><a href="<%=response.encodeURL(controlPath + "/view/xmldsimport")%>" class='buttontext'>XML Data Import</A>
     </ul>
   <%}%>
   <%if(security.hasPermission("UTIL_CACHE_VIEW", session)){%>
