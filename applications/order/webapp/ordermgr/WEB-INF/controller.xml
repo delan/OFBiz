@@ -630,24 +630,6 @@
         <response name="success" type="view" value="OrderPurchaseReportProduct"/>
     </request-map>
 
-    <!-- Lookup request mappings -->
-    <request-map uri="LookupPerson">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="LookupPerson"/>
-    </request-map>
-    <request-map uri="LookupPartyGroup">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="LookupPartyGroup"/>
-    </request-map>
-    <request-map uri="LookupProduct">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="LookupProduct"/>
-    </request-map>
-    <request-map uri="LookupProductFeature">
-        <security auth="true" https="true"/>
-        <response name="success" type="view" value="LookupProductFeature"/>
-    </request-map>
-
     <request-map uri="RequirementsForSupplier">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="RequirementsForSupplier"/>
@@ -720,16 +702,33 @@
         <response name="success" type="view" value="ListQuoteAttributes"/>
     </request-map>
 
+    <!-- Lookup request mappings -->
+    <request-map uri="LookupPerson">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="LookupPerson"/>
+    </request-map>
+    <request-map uri="LookupPartyGroup">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="LookupPartyGroup"/>
+    </request-map>
+    <request-map uri="LookupPartyName">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="LookupPartyName"/>
+    </request-map>
+    <request-map uri="LookupProduct">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="LookupProduct"/>
+    </request-map>
+    <request-map uri="LookupProductFeature">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="LookupProductFeature"/>
+    </request-map>
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
     <view-map name="error" page="/error/error.jsp"/>
     <view-map name="main" type="screen" page="component://order/widget/ordermgr/OrderViewScreens.xml#OrderFindOrder"/>
     <view-map name="login" type="jpublish" page="/login.ftl"/>
-    <view-map name="LookupPerson" page="component://party/widget/partymgr/LookupScreens.xml#LookupPerson" type="screen"/>
-    <view-map name="LookupPartyGroup" page="component://party/widget/partymgr/LookupScreens.xml#LookupPartyGroup" type="screen"/>
-    <view-map name="LookupProduct" page="component://product/widget/catalog/LookupScreens.xml#LookupProduct" type="screen"/>
-    <view-map name="LookupProductFeature" page="component://product/widget/catalog/LookupScreens.xml#LookupProductFeature" type="screen"/>
 
     <view-map name="orderstats" type="screen" page="component://order/widget/ordermgr/OrderViewScreens.xml#OrderStats"/>
     <view-map name="findorders" type="screen" page="component://order/widget/ordermgr/OrderViewScreens.xml#OrderFindOrder"/>
@@ -784,6 +783,10 @@
     <view-map name="ListQuoteAttributes" type="screen" page="component://order/widget/ordermgr/QuoteScreens.xml#ListQuoteAttributes"/>
     <view-map name="EditQuoteAttribute" type="screen" page="component://order/widget/ordermgr/QuoteScreens.xml#EditQuoteAttribute"/>
 
-
+    <view-map name="LookupPerson" page="component://party/widget/partymgr/LookupScreens.xml#LookupPerson" type="screen"/>
+    <view-map name="LookupPartyGroup" page="component://party/widget/partymgr/LookupScreens.xml#LookupPartyGroup" type="screen"/>
+    <view-map name="LookupPartyName" page="component://party/widget/partymgr/LookupScreens.xml#LookupPartyName" type="screen"/>
+    <view-map name="LookupProduct" page="component://product/widget/catalog/LookupScreens.xml#LookupProduct" type="screen"/>
+    <view-map name="LookupProductFeature" page="component://product/widget/catalog/LookupScreens.xml#LookupProductFeature" type="screen"/>
     <!-- end of view mappings -->
 </site-conf>
