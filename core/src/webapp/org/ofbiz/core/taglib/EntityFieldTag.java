@@ -45,7 +45,7 @@ public class EntityFieldTag extends TagSupport {
     protected String field = null;
     protected String type = null;
     protected String attribute = null;
-    protected String defaultStr = "";
+    protected Object defaultObj = "";
     protected String prefix = null;
     protected String suffix = null;
 
@@ -89,17 +89,17 @@ public class EntityFieldTag extends TagSupport {
         this.suffix = suffix;
     }
 
-    public String getDefault() {
-        return defaultStr;
+    public Object getDefault() {
+        return defaultObj;
     }
 
-    public void setDefault(String defaultStr) {
-        this.defaultStr = defaultStr;
+    public void setDefault(Object defaultObj) {
+        this.defaultObj = defaultObj;
     }
 
     public int doStartTag() throws JspException {
         try {
-            EntityField.run(attribute, field, prefix, suffix, defaultStr, type, pageContext);
+            EntityField.run(attribute, field, prefix, suffix, defaultObj.toString(), type, pageContext);
         } catch (IOException e) {
             if (UtilJ2eeCompat.useNestedJspException(pageContext.getServletContext())) {
                 throw new JspException(e.getMessage(), e);
