@@ -48,9 +48,9 @@ public class EntityExpr implements Serializable {
     }
 
     public EntityExpr(Object lhs, EntityOperator operator, Object rhs) {
-        if (!(lhs instanceof String)) {
-            throw new IllegalArgumentException("At the moment left hand side must be a String");
-        }
+//        if (!(lhs instanceof String)) {
+//            throw new IllegalArgumentException("At the moment left hand side must be a String");
+//        }
         if (lhs instanceof EntityExpr || rhs instanceof EntityExpr) {
             throw new IllegalArgumentException("Nested expressions not yet supported");
         }

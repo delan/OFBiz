@@ -1376,4 +1376,14 @@ public class GenericDelegator {
             value.setDelegator(this);
         }
     }
+    public UtilCache getPrimaryKeyCache() {
+        return primaryKeyCache;
+	}
+    public UtilCache getAndCache() {
+        return andCache;
+	}
+    public UtilCache getAllCache() {
+        return allCache;
+	}
+
 }

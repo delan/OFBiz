@@ -51,12 +51,16 @@ public class EntityOperator {
     private String nameString;
     private String codeString;
 
-    private EntityOperator(String name, String code) {
+    public EntityOperator(String name, String code) {
         nameString = name;
         codeString = code;
     }
 
     public String getCode() {
+
+   if (codeString==null)
+    return "null";
+   else
         return codeString;
     }
 
