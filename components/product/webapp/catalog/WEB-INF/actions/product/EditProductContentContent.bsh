@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones
  *@author     Brad Steiner
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      2.2
  */
 
@@ -158,4 +158,5 @@ updateProductContentWrapper.putInContext("productContentData", productContentDat
 context.put("productContentData", productContentData);
 updateProductContentWrapper.putInContext("content", content);
 updateProductContentWrapper.putInContext("contentId", contentId);
+updateProductContentWrapper.putInContext("uiLabelMap", request.getAttribute("uiLabelMap"));
 //context.put("log", log);

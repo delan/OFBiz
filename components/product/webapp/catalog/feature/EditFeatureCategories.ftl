@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Catherine Heintz (catherine.heintz@nereide.biz)
- *@version    $Revision: 1.6 $
+ *@version    $Revision: 1.7 $
  *@since      2.2
 -->
 
@@ -34,7 +34,7 @@ ${pages.get("/feature/FeatureTabBar.ftl")}
 <br>
 
 <form method="POST" action="<@ofbizUrl>/EditFeature</@ofbizUrl>" style="margin: 0;">
-  <div class="head2">Edit Feature with ID:</div>
+  <div class="head2">${uiLabelMap.ProductEditFeatureId} :</div>
   <input type="text" class="inputBox" size="12" name="productFeatureId" value=""/>
   <input type="submit" value="${uiLabelMap.CommonEdit}"/>
 </form>

@@ -346,7 +346,7 @@
 <input type="image" src="/images/spacer.gif" onClick="javascript:document.newuserform.submit();">
 </form>
 
-<br/><div class="commentary">Fields marked with (*) are required.</div>
+<br/><div class="commentary">${uiLabelMap.CommonFieldsMarkedAreRequired}</div>
 
 &nbsp;&nbsp;<a href="<@ofbizUrl>/checkLogin/main</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonBack}]</a>
 &nbsp;&nbsp;<a href="javascript:document.newuserform.submit()" class="buttontext">[${uiLabelMap.CommonSave}]</a>

@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Revision: 1.6 $
+ *@version    $Revision: 1.7 $
  *@since      2.2
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -45,7 +45,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
 <#-- Receiving Results -->
 <#if receivedItems?has_content>
   <table width="100%" border='0' cellpadding='2' cellspacing='0'>
-    <tr><td colspan="7"><div class="head3">${uiLabelMap.ProductReceiptPurchaseOrder} # ${purchaseOrder.orderId}</div></td></tr>
+    <tr><td colspan="7"><div class="head3">${uiLabelMap.ProductReceiptPurchaseOrder} #${purchaseOrder.orderId}</div></td></tr>
     <tr><td colspan="7"><hr class="sepbar"></td></tr>
     <tr>
       <td><div class="tableheadtext">${uiLabelMap.ProductReceipt}#</div></td>

@@ -130,7 +130,7 @@ if (partyId != null || userLoginId != null) {
     }
     //Debug.log("1st PartyID - " + partyId);
     if (partyId != null && partyId.length() > 0) {
-        thisParty = thisParty = delegator.findByPrimaryKey("Party", UtilMisc.toMap("partyId", partyId));
+        thisParty  = delegator.findByPrimaryKey("Party", UtilMisc.toMap("partyId", partyId));
         //Debug.log("This party : " + thisParty);
         if (thisParty == null) {
             request.setAttribute("_ERROR_MESSAGE_", "<li>Could not locate the selected party.");

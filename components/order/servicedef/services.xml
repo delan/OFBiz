@@ -600,9 +600,10 @@
         <attribute name="fixedAssetId" type="String" mode="IN" optional="true"/>
         <attribute name="productId" type="String" mode="IN" optional="true"/>
         <attribute name="description" type="String" mode="IN" optional="false"/>
-        <attribute name="requiredByDate" type="String" mode="IN" optional="true"/>
-        <attribute name="estimatedBudget" type="String" mode="IN" optional="true"/>
-        <attribute name="quantity" type="String" mode="IN" optional="true"/>
+        <attribute name="requirementStartDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="requiredByDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="estimatedBudget" type="Double" mode="IN" optional="true"/>
+        <attribute name="quantity" type="Double" mode="IN" optional="true"/>
         <attribute name="story" type="String" mode="IN" optional="true"/>
         <attribute name="reason" type="String" mode="IN" optional="true"/>
     </service>

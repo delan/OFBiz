@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones
  *@author     Brad Steiner
- *@version    $Revision: 1.7 $
+ *@version    $Revision: 1.8 $
  *@since      2.2
  */
 
@@ -71,14 +71,17 @@ while (productContentIter.hasNext()) {
 HtmlFormWrapper updateProductContentWrapper = new HtmlFormWrapper("/product/ProductForms.xml", "UpdateProductContentAssoc", request, response);
 context.put("updateProductContentWrapper", updateProductContentWrapper);
 updateProductContentWrapper.putInContext("productContentDatas", productContentDatas);
+updateProductContentWrapper.putInContext("uiLabelMap", request.getAttribute("uiLabelMap"));
 
 HtmlFormWrapper prepareAddProductContentWrapper = new HtmlFormWrapper("/product/ProductForms.xml", "PrepareAddProductContentAssoc", request, response);
 context.put("prepareAddProductContentWrapper", prepareAddProductContentWrapper);
 prepareAddProductContentWrapper.putInContext("product", product);
+prepareAddProductContentWrapper.putInContext("uiLabelMap", request.getAttribute("uiLabelMap"));
 
 HtmlFormWrapper addProductContentWrapper = new HtmlFormWrapper("/product/ProductForms.xml", "AddProductContentAssoc", request, response);
 context.put("addProductContentWrapper", addProductContentWrapper);
 addProductContentWrapper.putInContext("product", product);
+addProductContentWrapper.putInContext("uiLabelMap", request.getAttribute("uiLabelMap"));
 
 context.put("productContentList", productContentDatas);
 // End ProductContent stuff
