@@ -36,7 +36,7 @@ public class EntityTypeUtil
   public static boolean isType(Collection thisCollection, String typeRelation, GenericValue targetType) {
       Iterator iter = thisCollection.iterator();
       while (iter.hasNext()) {
-          if (isType(((GenericValue) iter.next()).getRelated(typeRelation), typeRelation, targetType)) {
+          if (isType(((GenericValue) iter.next()).getRelatedOne(typeRelation), targetType)) {
               return true;
           }//else keep looking
       }
