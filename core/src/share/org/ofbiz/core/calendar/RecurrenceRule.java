@@ -228,7 +228,6 @@ public class RecurrenceRule {
             }
             loopProtection++;
         }   
-        Debug.logInfo("[RecurrenceRule.next] : Loop protection - " + loopProtection);        
         return nextRuntime;
     }
     

@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2001/11/14 03:11:59  azeneski
+ * Filter now allows for /path or /path/subdir/file.jsp or /path/subdir/*
+ *
  * Revision 1.1  2001/09/28 22:56:44  jonesde
  * Big update for fromDate PK use, organization stuff
  *
@@ -11,14 +14,11 @@
 
 package org.ofbiz.core.control;
 
+import java.io.*;
+import java.util.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-
-import org.ofbiz.core.util.SiteDefs;
-import org.ofbiz.core.util.Debug;
+import org.ofbiz.core.util.*;
 
 /**
  * <p><b>Title:</b> ContextSecurityFilter.java
@@ -54,8 +54,7 @@ public class ContextSecurityFilter implements Filter {
         this.config = config;
     }
     
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-        ArrayList allowList = new ArrayList();
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {        
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponseWrapper wrapper = new HttpServletResponseWrapper((HttpServletResponse)response);
         
@@ -63,17 +62,9 @@ public class ContextSecurityFilter implements Filter {
         String redirectPath = config.getInitParameter("redirectPath");
         String errorCode = config.getInitParameter("errorCode");
                
-        String allowedPathString = allowedPath;
-        while ( allowedPathString.lastIndexOf(":") > -1 ) {            
-            String newPath = allowedPathString.substring(0,allowedPathString.indexOf(":"));
-            allowedPathString = allowedPathString.substring(allowedPathString.indexOf(":") + 1);
-            allowList.add(newPath);
-            if ( allowedPathString.lastIndexOf(":") == -1 && allowedPathString.length() > 0 )
-                allowList.add(allowedPathString);
-        }
-        
-        allowList.add("");    // No path is allowed.
-        allowList.add("/");  // No path is allowed.
+        List allowList = StringUtil.split(allowedPath,":");        
+        allowList.add("/");    // No path is allowed.
+        allowList.add("");      // No path is allowed.
                 
         String requestPath = httpRequest.getServletPath();
         if ( requestPath.lastIndexOf("/") > 0 ) {
