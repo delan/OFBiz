@@ -48,7 +48,7 @@ import org.ofbiz.service.config.ServiceConfigUtil;
  * Generic Service Utility Class
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class ServiceUtil {
@@ -58,6 +58,9 @@ public class ServiceUtil {
 
     /** A little short-cut method to check to see if a service returned an error */
     public static boolean isError(Map results) {
+        if (results == null) {
+            return false;
+        }
         return ModelService.RESPOND_ERROR.equals(results.get(ModelService.RESPONSE_MESSAGE));
     }
 

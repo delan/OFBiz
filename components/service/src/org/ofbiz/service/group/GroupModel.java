@@ -32,15 +32,16 @@ import java.util.Map;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.service.GenericServiceException;
-import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceDispatcher;
+import org.ofbiz.service.ServiceUtil;
+
 import org.w3c.dom.Element;
 
 /**
  * GroupModel.java
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class GroupModel {
@@ -155,7 +156,7 @@ public class GroupModel {
             if (Debug.verboseOn()) Debug.logVerbose("Result: " + thisResult, module);
             
             // make sure we didn't fail
-            if (((String) thisResult.get(ModelService.RESPONSE_MESSAGE)).equals(ModelService.RESPOND_ERROR)) {
+            if (ServiceUtil.isError(thisResult)) {
                 Debug.logError("Grouped service [" + model.getName() + "] failed.", module);
                 return thisResult;
             }
