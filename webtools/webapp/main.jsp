@@ -1,8 +1,5 @@
-<%
-/**
- *  Title: Main Page
- *  Description: None
- *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+<%--
+ *  Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -25,8 +22,7 @@
  *@author     David E. Jones
  *@created    May 22 2001
  *@version    1.0
- */
-%>
+--%>
  
 <%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.security.*" %>
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
@@ -133,6 +129,10 @@
                     <li><a href="<ofbiz:url>/EditEnumerationTypes</ofbiz:url>" class='buttontext'>Edit Enumerations</a>
                     <li><a href="<ofbiz:url>/EditStatusTypes</ofbiz:url>" class='buttontext'>Edit Status Options</a>
                   <%}%>
+                </ul>
+                <li><div class='tabletext'>Performance Tests</div>
+                <ul>
+                  <li><a href="<ofbiz:url>/EntityPerformanceTest</ofbiz:url>" class='buttontext'>Entity Engine</a>
                 </ul>
               <%}%>
               <%if(security.hasPermission("SERVER_STATS_VIEW", session)){%>

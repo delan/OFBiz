@@ -293,6 +293,12 @@
         <response name="error" type="view" value="EditCustomTimePeriod"/>
     </request-map>
 
+	<!-- PerformanceTest requests -->
+    <request-map uri="EntityPerformanceTest">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="EntityPerformanceTest"/>
+    </request-map>
+
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
@@ -337,6 +343,8 @@
 
     <view-map name="StatsSinceStart" type="region"/>
     <view-map name="StatBinsHistory" type="region"/>
+
+    <view-map name="EntityPerformanceTest" type="region"/>
 
     <view-map name="EditCustomTimePeriod" type="region"/>
     

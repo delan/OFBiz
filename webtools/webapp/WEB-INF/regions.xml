@@ -119,6 +119,11 @@
         <put section='content' content='/stats/StatBinsHistory.jsp'/>
     </define>
 
+    <define id='EntityPerformanceTest' region='MAIN_REGION'>
+        <put section='title'>Entity Performance Test</put>
+        <put section='content' content='/performance/EntityPerformanceTest.jsp'/>
+    </define>
+
     <define id='EditCustomTimePeriod' region='MAIN_REGION'>
         <put section='title'>Edit CustomTimePeriod</put>
         <put section='content' content='/period/EditCustomTimePeriod.jsp'/>
