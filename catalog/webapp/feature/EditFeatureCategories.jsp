@@ -53,7 +53,7 @@
   <tr valign="middle">
     <FORM method=POST action='<ofbiz:url>/UpdateFeatureCategory</ofbiz:url>'>
         <input type=hidden <ofbiz:inputvalue entityAttr="productFeatureCategory" field="productFeatureCategoryId" fullattrs="true"/>>
-    <td><a href='<ofbiz:url>/EditFeatureCategoryFeatures?productFeatureCategoryId=<ofbiz:inputvalue entityAttr="productFeatureCategory" field="productFeatureCategoryId"/></ofbiz:url>' class="buttontext"><ofbiz:entityfield attribute="productFeatureCategory" field="productFeatureCategoryId"/></td>
+    <td><a href='<ofbiz:url>/EditFeatureCategoryFeatures?productFeatureCategoryId=<ofbiz:inputvalue entityAttr="productFeatureCategory" field="productFeatureCategoryId"/></ofbiz:url>' class="buttontext"><ofbiz:entityfield attribute="productFeatureCategory" field="productFeatureCategoryId"/></a></td>
     <td><input type=text size='30' <ofbiz:inputvalue entityAttr="productFeatureCategory" field="description" fullattrs="true"/>></td>
     <td>
       <select name='parentCategoryId' size=1>
@@ -63,7 +63,7 @@
             <option value='<%=curProdFeatCat.getString("productFeatureCategoryId")%>'><%=curProdFeatCat.getString("description")%> [<%=curProdFeatCat.getString("productFeatureCategoryId")%>]</option>
           <%}%>
         <%}%>
-        <option value=''>&nbsp;</option>
+        <option value='<%=curProdFeatCat.getString("productFeatureCategoryId")%>'>&nbsp;</option>
         <ofbiz:iterator name="dropDownProductFeatureCategory" property="productFeatureCategories">
           <option value='<%=dropDownProductFeatureCategory.getString("productFeatureCategoryId")%>'><%=dropDownProductFeatureCategory.getString("description")%> [<%=dropDownProductFeatureCategory.getString("productFeatureCategoryId")%>]</option>
         </ofbiz:iterator>
