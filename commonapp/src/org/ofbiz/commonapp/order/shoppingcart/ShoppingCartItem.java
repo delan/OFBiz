@@ -42,7 +42,7 @@ import org.ofbiz.commonapp.order.order.*;
  * @created    August 4, 2001
  */
 public class ShoppingCartItem implements java.io.Serializable {
-    
+
     private transient GenericDelegator delegator = null;
     private transient GenericValue _product = null;
 
@@ -57,7 +57,7 @@ public class ShoppingCartItem implements java.io.Serializable {
     private Map attributes = null;
     private String orderItemSeqId = null;
     private GenericValue orderShipmentPreference = null;
-    
+
     private Map contactMechIdsMap = new HashMap();
     private List orderItemPriceInfos = null;
     private List itemAdjustments = new LinkedList();
@@ -67,7 +67,7 @@ public class ShoppingCartItem implements java.io.Serializable {
     public static ShoppingCartItem makeItem(Integer cartLocation, GenericValue product, double quantity, String prodCatalogId, LocalDispatcher dispatcher, ShoppingCart cart) throws CartItemModifyException {
         return makeItem(cartLocation, product, quantity, null, null, prodCatalogId, dispatcher, cart);
     }
-    
+
     /** makes a ShoppingCartItem and adds it to the cart at cartLocation, or at the end if cartLocation is null */
     public static ShoppingCartItem makeItem(Integer cartLocation, GenericDelegator delegator, String productId, double quantity, Map additionalProductFeatureAndAppls, HashMap attributes, String prodCatalogId, LocalDispatcher dispatcher, ShoppingCart cart) throws CartItemModifyException {
         GenericValue product = null;
@@ -77,28 +77,28 @@ public class ShoppingCartItem implements java.io.Serializable {
             Debug.logWarning(e.getMessage());
             product = null;
         }
-        
+
         if (product == null) {
             String excMsg = "Product not found, not adding to cart. [productId: " + productId + "]";
             Debug.logWarning(excMsg);
             throw new CartItemModifyException(excMsg);
         }
-        
+
         return makeItem(cartLocation, product, quantity, additionalProductFeatureAndAppls, attributes, prodCatalogId, dispatcher, cart);
     }
-    
+
     /** makes a ShoppingCartItem and adds it to the cart at cartLocation, or at the end if cartLocation is null */
     public static ShoppingCartItem makeItem(Integer cartLocation, GenericValue product, double quantity, Map additionalProductFeatureAndAppls, HashMap attributes, String prodCatalogId, LocalDispatcher dispatcher, ShoppingCart cart) throws CartItemModifyException {
         return makeItem(cartLocation, product, quantity, additionalProductFeatureAndAppls, attributes, prodCatalogId, dispatcher, cart, true);
     }
-    
+
     /** makes a ShoppingCartItem and adds it to the cart at cartLocation, or at the end if cartLocation is null */
     public static ShoppingCartItem makeItem(Integer cartLocation, GenericValue product, double quantity, Map additionalProductFeatureAndAppls, HashMap attributes, String prodCatalogId, LocalDispatcher dispatcher, ShoppingCart cart, boolean doPromotions) throws CartItemModifyException {
         ShoppingCartItem newItem = new ShoppingCartItem(product, additionalProductFeatureAndAppls, attributes, prodCatalogId);
 
         //check to see if product is virtual
         if ("Y".equals(product.getString("isVirtual"))) {
-            String excMsg = "Tried to add the Virtual Product " + product.getString("productName") + 
+            String excMsg = "Tried to add the Virtual Product " + product.getString("productName") +
                     " (productId: " + product.getString("productId") + ") to the cart, not adding.";
             Debug.logWarning(excMsg);
             throw new CartItemModifyException(excMsg);
@@ -107,27 +107,27 @@ public class ShoppingCartItem implements java.io.Serializable {
         java.sql.Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
         //check to see if introductionDate hasn't passed yet
         if (product.get("introductionDate") != null && nowTimestamp.before(product.getTimestamp("introductionDate"))) {
-            String excMsg = "Tried to add the Product " + product.getString("productName") + 
+            String excMsg = "Tried to add the Product " + product.getString("productName") +
                     " (productId: " + product.getString("productId") + ") to the cart. This product has not yet been made available for sale, so not adding.";
             Debug.logWarning(excMsg);
             throw new CartItemModifyException(excMsg);
         }
-        
+
         //check to see if salesDiscontinuationDate has passed
         if (product.get("salesDiscontinuationDate") != null && nowTimestamp.after(product.getTimestamp("salesDiscontinuationDate"))) {
-            String excMsg = "Tried to add the Product " + product.getString("productName") + 
+            String excMsg = "Tried to add the Product " + product.getString("productName") +
                     " (productId: " + product.getString("productId") + ") to the cart. This product is no longer available for sale, so not adding.";
             Debug.logWarning(excMsg);
             throw new CartItemModifyException(excMsg);
         }
-        
+
         //add to cart before setting quantity so that we can get order total, etc
         if (cartLocation == null) {
             cart.addItemToEnd(newItem);
         } else {
             cart.addItem(cartLocation.intValue(), newItem);
         }
-        
+
         try {
             newItem.setQuantity(quantity, dispatcher, cart, doPromotions);
         } catch (CartItemModifyException e) {
@@ -136,12 +136,12 @@ public class ShoppingCartItem implements java.io.Serializable {
         }
         return newItem;
     }
-    
+
     /** can't create shopping cart item with no parameters */
     protected ShoppingCartItem() {}
-    
+
     /** Creates new ShoppingCartItem object. */
-    protected ShoppingCartItem(GenericValue product, Map additionalProductFeatureAndAppls, HashMap attributes, String prodCatalogId) {
+    protected ShoppingCartItem(GenericValue product, Map additionalProductFeatureAndAppls, Map attributes, String prodCatalogId) {
         this._product = product;
         this.productId = _product.getString("productId");
         this.prodCatalogId = prodCatalogId;
@@ -157,7 +157,7 @@ public class ShoppingCartItem implements java.io.Serializable {
     public void setQuantity(double quantity, LocalDispatcher dispatcher, ShoppingCart cart) throws CartItemModifyException {
         setQuantity(quantity, dispatcher, cart, true);
     }
-    
+
     /** Sets the quantity for the item and validates the change in quantity, etc */
     public void setQuantity(double quantity, LocalDispatcher dispatcher, ShoppingCart cart, boolean doPromotions) throws CartItemModifyException {
         if (this.quantity == quantity) {
@@ -167,7 +167,7 @@ public class ShoppingCartItem implements java.io.Serializable {
         if (this.isPromo) {
             throw new CartItemModifyException("Sorry, you can't change the quantity on the promotion item " + getProduct().getString("productName") + " (product ID: " + productId + "), not setting quantity.");
         }
-        
+
         //check inventory if new quantity is greater than old quantity; don't worry about inventory getting pulled out from under, that will be handled at checkout time
         if (quantity > this.quantity) {
             if (org.ofbiz.commonapp.product.catalog.CatalogWorker.isCatalogInventoryRequired(this.prodCatalogId, this.getProduct(), this.getDelegator())) {
@@ -178,11 +178,11 @@ public class ShoppingCartItem implements java.io.Serializable {
                 }
             }
         }
-        
+
         //set quantity before promos so order total, etc will be updated
         double oldQuantity = this.quantity;
         this.quantity = quantity;
-        
+
         //set basePrice using the calculateProductPrice service
         try {
             Map priceContext = new HashMap();
@@ -195,18 +195,18 @@ public class ShoppingCartItem implements java.io.Serializable {
             }
             priceContext.put("quantity", new Double(quantity));
             Map priceResult = dispatcher.runSync("calculateProductPrice", priceContext);
-            
+
             if (ModelService.RESPOND_ERROR.equals(priceResult.get(ModelService.RESPONSE_MESSAGE))) {
                 throw new CartItemModifyException("There was an error while calculating the price: " + priceResult.get(ModelService.ERROR_MESSAGE));
             }
-            
+
             if (priceResult.get("price") != null) this.basePrice = ((Double) priceResult.get("price")).doubleValue();
             if (priceResult.get("listPrice") != null) this.listPrice = ((Double) priceResult.get("listPrice")).doubleValue();
             this.orderItemPriceInfos = (List) priceResult.get("orderItemPriceInfos");
         } catch (GenericServiceException e) {
             throw new CartItemModifyException("There was an error while calculating the price", e);
         }
-        
+
         //apply/unapply promotions
         if (doPromotions) {
             org.ofbiz.commonapp.product.promo.ProductPromoWorker.doPromotions(prodCatalogId, cart, this, oldQuantity, getDelegator(), dispatcher);
@@ -216,7 +216,7 @@ public class ShoppingCartItem implements java.io.Serializable {
     public double getQuantity() {
         return quantity;
     }
-    
+
     /** Sets the item comment. */
     public void setItemComment(String itemComment) {
         this.itemComment = itemComment;
@@ -232,7 +232,7 @@ public class ShoppingCartItem implements java.io.Serializable {
     public String getOrderItemSeqId() {
         return orderItemSeqId;
     }
-        
+
     /** Returns true if shipping charges apply to this item. */
     public boolean shippingApplies() {
         Boolean shipCharge = getProduct().getBoolean("chargeShipping");
@@ -242,7 +242,7 @@ public class ShoppingCartItem implements java.io.Serializable {
             return shipCharge.booleanValue();
         }
     }
-    
+
     /** Returns true if tax charges apply to this item. */
     public boolean taxApplies() {
         Boolean taxable = getProduct().getBoolean("taxable");
@@ -252,7 +252,7 @@ public class ShoppingCartItem implements java.io.Serializable {
             return taxable.booleanValue();
         }
     }
-    
+
     /** Returns the item's productId. */
     public String getProductId() {
         return productId;
@@ -274,7 +274,7 @@ public class ShoppingCartItem implements java.io.Serializable {
             return weight.doubleValue();
         }
     }
-                
+
     /** Returns the base price. */
     public double getBasePrice() {
         return basePrice;
@@ -317,14 +317,14 @@ public class ShoppingCartItem implements java.io.Serializable {
             this.putAdditionalProductFeatureAndAppl(additionalProductFeatureAndAppl);
         }
     }
-    
+
     public void putAdditionalProductFeatureAndAppl(GenericValue additionalProductFeatureAndAppl) {
         if (this.additionalProductFeatureAndAppls == null) this.additionalProductFeatureAndAppls = new HashMap();
         if (additionalProductFeatureAndAppl == null) return;
-        
+
         //if one already exists with the given type, remove it with the corresponding adjustment
         removeAdditionalProductFeatureAndAppl(additionalProductFeatureAndAppl.getString("productFeatureTypeId"));
-        
+
         //adds to additional map and creates an adjustment with given price
         this.additionalProductFeatureAndAppls.put(additionalProductFeatureAndAppl.get("productFeatureTypeId"), additionalProductFeatureAndAppl);
         GenericValue orderAdjustment = this.getDelegator().makeValue("OrderAdjustment", null);
@@ -333,28 +333,28 @@ public class ShoppingCartItem implements java.io.Serializable {
         orderAdjustment.set("productFeatureId", additionalProductFeatureAndAppl.get("productFeatureId"));
         //NOTE: this is a VERY simple pricing scheme for additional features and will likely need to be extended for most real applications
         orderAdjustment.set("amountPerQuantity", additionalProductFeatureAndAppl.get("amount"));
-        
+
         this.addAdjustment(orderAdjustment);
     }
-    
+
     public GenericValue getAdditionalProductFeatureAndAppl(String productFeatureTypeId) {
         if (this.additionalProductFeatureAndAppls == null) return null;
         return (GenericValue) this.additionalProductFeatureAndAppls.get(productFeatureTypeId);
     }
-    
+
     public GenericValue removeAdditionalProductFeatureAndAppl(String productFeatureTypeId) {
         if (this.additionalProductFeatureAndAppls == null) return null;
-        
+
         GenericValue oldAdditionalProductFeatureAndAppl = (GenericValue) this.additionalProductFeatureAndAppls.remove(productFeatureTypeId);
         if (oldAdditionalProductFeatureAndAppl != null) {
             removeFeatureAdjustment(oldAdditionalProductFeatureAndAppl.getString("productFeatureId"));
         }
-        
+
         if (this.additionalProductFeatureAndAppls.size() == 0) this.additionalProductFeatureAndAppls = null;
-        
+
         return oldAdditionalProductFeatureAndAppl;
     }
-    
+
     /** Sets an item attribute. */
     public void setAttribute(String name, String value) {
         if (attributes == null) attributes = new HashMap();
@@ -364,12 +364,12 @@ public class ShoppingCartItem implements java.io.Serializable {
     public String getAttribute(String name) {
         if (attributes == null) return null;
         return (String) attributes.get(name);
-    }        
+    }
     /** Returns the attributes for the item. */
     public Map getAttributes() {
         return attributes;
     }
-    
+
     /** Add an adjustment to the order item; don't worry about setting the orderId, orderItemSeqId or orderAdjustmentId; they will be set when the order is created */
     public void addAdjustment(GenericValue adjustment) {
         itemAdjustments.add(adjustment);
@@ -394,7 +394,7 @@ public class ShoppingCartItem implements java.io.Serializable {
             }
         }
     }
-    
+
     public List getOrderItemPriceInfos() {
         return orderItemPriceInfos;
     }
@@ -415,18 +415,18 @@ public class ShoppingCartItem implements java.io.Serializable {
     public Map getOrderItemContactMechIds() {
         return contactMechIdsMap;
     }
-    
+
     public void setIsPromo(boolean isPromo) {
         this.isPromo = isPromo;
     }
     public boolean getIsPromo() {
         return this.isPromo;
     }
-    
+
     public GenericValue getOrderShipmentPreference() {
         return orderShipmentPreference;
     }
-    
+
     /** Sets the shipment method type. */
     public void setShipmentMethodTypeId(String shipmentMethodTypeId) {
         orderShipmentPreference.set("shipmentMethodTypeId", shipmentMethodTypeId);
@@ -479,18 +479,18 @@ public class ShoppingCartItem implements java.io.Serializable {
         if (item == null) return false;
         return this.equals(item.getProductId(), item.additionalProductFeatureAndAppls, item.attributes, item.prodCatalogId, item.getIsPromo());
     }
-    
+
     /** Compares the specified object with this cart item. Defaults isPromo to false. */
     public boolean equals(String productId, Map additionalProductFeatureAndAppls, Map attributes, String prodCatalogId) {
         return equals(productId, additionalProductFeatureAndAppls, attributes, prodCatalogId, false);
     }
-    
+
     /** Compares the specified object with this cart item. */
     public boolean equals(String productId, Map additionalProductFeatureAndAppls, Map attributes, String prodCatalogId, boolean isPromo) {
         if (!this.productId.equals(productId)) {
             return false;
         }
-        
+
         if (!this.prodCatalogId.equals(prodCatalogId)) {
             return false;
         }
@@ -498,9 +498,9 @@ public class ShoppingCartItem implements java.io.Serializable {
         if (this.isPromo != isPromo) {
             return false;
         }
-        
-        boolean featuresEqual = this.additionalProductFeatureAndAppls == null ? 
-                additionalProductFeatureAndAppls == null : 
+
+        boolean featuresEqual = this.additionalProductFeatureAndAppls == null ?
+                additionalProductFeatureAndAppls == null :
                 this.additionalProductFeatureAndAppls.equals(additionalProductFeatureAndAppls);
         if (!featuresEqual) return false;
 
@@ -508,8 +508,8 @@ public class ShoppingCartItem implements java.io.Serializable {
         if (!attributesEqual) return false;
 
         return true;
-    }      
-    
+    }
+
     // Gets the Product entity if its not there
     public GenericValue getProduct() {
         if (_product != null) {
@@ -525,11 +525,19 @@ public class ShoppingCartItem implements java.io.Serializable {
         }
         return _product;
     }
-    
+
     public GenericDelegator getDelegator() {
         if (delegator == null) {
             delegator = GenericDelegator.getGenericDelegator(delegatorName);
         }
         return delegator;
+    }
+
+    public Object getAttribute(String name) {
+        return attributes.get(name);
+    }
+
+    public void setAttribute(String name, Object object) {
+        this.attributes.put(name, object);
     }
 }
