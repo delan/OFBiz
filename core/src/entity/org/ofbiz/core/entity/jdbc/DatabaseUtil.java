@@ -126,6 +126,16 @@ public class DatabaseUtil {
                 Debug.logError("Could not parse constraint-name-clip-length value for datasource with name " + helperName + ", using default value of 30");
             }
         }
+
+        String fkStyle = null;
+        if (datasourceElement == null) {
+            Debug.logWarning("datasource def not found with name " + helperName + ", using default for fk-style (name_constraint)");
+        } else {
+            fkStyle = datasourceElement.getAttribute("fk-style");
+        }
+        if (fkStyle == null || fkStyle.length() == 0) {
+            fkStyle = "name_constraint";
+        }
         
         UtilTimer timer = new UtilTimer();
         timer.timerString("Start - Before Get Database Meta Data");
@@ -363,7 +373,7 @@ public class DatabaseUtil {
                 
                 if (addMissing) {
                     //create the table
-                    String errMsg = createTable(entity, modelEntities, false, usePkConstraintNames, constraintNameClipLength);
+                    String errMsg = createTable(entity, modelEntities, false, usePkConstraintNames, constraintNameClipLength, fkStyle);
 
                     if (errMsg != null && errMsg.length() > 0) {
                         message = "Could not create table \"" + entity.getTableName() + "\"";
@@ -401,7 +411,7 @@ public class DatabaseUtil {
 
             while (eaIter.hasNext()) {
                 ModelEntity curEntity = (ModelEntity) eaIter.next();
-                String errMsg = this.createForeignKeys(curEntity, modelEntities, constraintNameClipLength);
+                String errMsg = this.createForeignKeys(curEntity, modelEntities, constraintNameClipLength, fkStyle);
 
                 if (errMsg != null && errMsg.length() > 0) {
                     String message = "Could not create foreign keys for entity \"" + curEntity.getEntityName() + "\"";
@@ -496,7 +506,7 @@ public class DatabaseUtil {
                         } else {
                             //if not, create one
                             Debug.logVerbose("No Foreign Key Constraint " + relConstraintName + " found in entity " + entityName);
-                            String errMsg = createForeignKey(entity, modelRelation, relModelEntity, constraintNameClipLength);
+                            String errMsg = createForeignKey(entity, modelRelation, relModelEntity, constraintNameClipLength, fkStyle);
                             if (errMsg != null && errMsg.length() > 0) {
                                 String message = "Could not create foreign key " + relConstraintName + " for entity \"" + entity.getEntityName() + "\"";
 
@@ -726,7 +736,7 @@ public class DatabaseUtil {
             String userName = dbData.supportsSchemasInTableDefinitions() ? dbData.getUserName() : null;
             tableSet = dbData.getTables(null, userName, null, types);
         } catch (SQLException sqle) {
-            String message = "Unable to get list of table information... Error was:" + sqle.toString();
+            String message = "Unable to get list of table information, let's try the create anyway... Error was:" + sqle.toString();
 
             Debug.logError(message, module);
             if (messages != null)
@@ -741,7 +751,8 @@ public class DatabaseUtil {
                 if (messages != null)
                     messages.add(message2);
             }
-            return null;
+            //we are returning an empty set here because databases like SapDB throw an exception when there are no tables in the database
+            return tableNames;
         }
         
         try {
@@ -798,6 +809,11 @@ public class DatabaseUtil {
     }
     
     public Map getColumnInfo(Set tableNames, Collection messages) {
+        //if there are no tableNames, don't even try to get the columns
+        if (tableNames.size() == 0) {
+            return new HashMap();
+        }
+        
         Connection connection = null;
 
         try {
@@ -916,7 +932,8 @@ public class DatabaseUtil {
             Debug.logError(message, module);
             if (messages != null)
                 messages.add(message);
-            colInfo = null;
+            //we are returning an empty set in this case because databases like SapDB throw an exception when there are no tables in the database
+            //colInfo = null;
         } finally {
             try {
                 connection.close();
@@ -1218,7 +1235,7 @@ public class DatabaseUtil {
 
     /* ====================================================================== */
     /* ====================================================================== */
-    public String createTable(ModelEntity entity, Map modelEntities, boolean addFks, boolean usePkConstraintNames, int constraintNameClipLength) {
+    public String createTable(ModelEntity entity, Map modelEntities, boolean addFks, boolean usePkConstraintNames, int constraintNameClipLength, String fkStyle) {
         if (entity == null) {
             return "ModelEntity was null and is required to create a table";
         }
@@ -1294,7 +1311,7 @@ public class DatabaseUtil {
                     }
 
                     sqlBuf.append(", ");
-                    sqlBuf.append(makeFkConstraintClause(entity, modelRelation, relModelEntity, constraintNameClipLength));
+                    sqlBuf.append(makeFkConstraintClause(entity, modelRelation, relModelEntity, constraintNameClipLength, fkStyle));
                 }
             }
         }
@@ -1382,7 +1399,7 @@ public class DatabaseUtil {
     
     /* ====================================================================== */
     /* ====================================================================== */
-    public String createForeignKeys(ModelEntity entity, Map modelEntities, int constraintNameClipLength) {
+    public String createForeignKeys(ModelEntity entity, Map modelEntities, int constraintNameClipLength, String fkStyle) {
         if (entity == null) {
             return "ModelEntity was null and is required to create foreign keys for a table";
         }
@@ -1410,7 +1427,7 @@ public class DatabaseUtil {
                     continue;
                 }
                 
-                String retMsg = createForeignKey(entity, modelRelation, relModelEntity, constraintNameClipLength);
+                String retMsg = createForeignKey(entity, modelRelation, relModelEntity, constraintNameClipLength, fkStyle);
                 if (retMsg != null && retMsg.length() > 0) {
                     if (retMsgsBuffer.length() > 0) {
                         retMsgsBuffer.append("\n");
@@ -1426,7 +1443,7 @@ public class DatabaseUtil {
         }
     }
         
-    public String createForeignKey(ModelEntity entity, ModelRelation modelRelation, ModelEntity relModelEntity, int constraintNameClipLength) {
+    public String createForeignKey(ModelEntity entity, ModelRelation modelRelation, ModelEntity relModelEntity, int constraintNameClipLength, String fkStyle) {
         Connection connection = null;
         Statement stmt = null;
 
@@ -1443,7 +1460,7 @@ public class DatabaseUtil {
 
         sqlBuf.append(entity.getTableName());
         sqlBuf.append(" ADD ");
-        sqlBuf.append(makeFkConstraintClause(entity, modelRelation, relModelEntity, constraintNameClipLength));
+        sqlBuf.append(makeFkConstraintClause(entity, modelRelation, relModelEntity, constraintNameClipLength, fkStyle));
     
         Debug.logVerbose("[createForeignKey] sql=" + sqlBuf.toString());
         try {
@@ -1464,7 +1481,7 @@ public class DatabaseUtil {
         return null;
     }
 
-    public String makeFkConstraintClause(ModelEntity entity, ModelRelation modelRelation, ModelEntity relModelEntity, int constraintNameClipLength) {
+    public String makeFkConstraintClause(ModelEntity entity, ModelRelation modelRelation, ModelEntity relModelEntity, int constraintNameClipLength, String fkStyle) {
         //make the two column lists
         Iterator keyMapsIter = modelRelation.getKeyMapsIterator();
         StringBuffer mainCols = new StringBuffer();
@@ -1490,17 +1507,34 @@ public class DatabaseUtil {
 
         StringBuffer sqlBuf = new StringBuffer("");
 
-        sqlBuf.append("CONSTRAINT ");
-        String relConstraintName = makeFkConstraintName(modelRelation, constraintNameClipLength);
-        sqlBuf.append(relConstraintName);
+        if ("name_constraint".equals(fkStyle)) {
+            sqlBuf.append("CONSTRAINT ");
+            String relConstraintName = makeFkConstraintName(modelRelation, constraintNameClipLength);
+            sqlBuf.append(relConstraintName);
 
-        sqlBuf.append(" FOREIGN KEY (");
-        sqlBuf.append(mainCols.toString());
-        sqlBuf.append(") REFERENCES ");
-        sqlBuf.append(relModelEntity.getTableName());
-        sqlBuf.append(" (");
-        sqlBuf.append(relCols.toString());
-        sqlBuf.append(")");
+            sqlBuf.append(" FOREIGN KEY (");
+            sqlBuf.append(mainCols.toString());
+            sqlBuf.append(") REFERENCES ");
+            sqlBuf.append(relModelEntity.getTableName());
+            sqlBuf.append(" (");
+            sqlBuf.append(relCols.toString());
+            sqlBuf.append(")");
+        } else if ("name_fk".equals(fkStyle)) {
+            sqlBuf.append(" FOREIGN KEY ");
+            String relConstraintName = makeFkConstraintName(modelRelation, constraintNameClipLength);
+            sqlBuf.append(relConstraintName);
+            sqlBuf.append(" (");
+            sqlBuf.append(mainCols.toString());
+            sqlBuf.append(") REFERENCES ");
+            sqlBuf.append(relModelEntity.getTableName());
+            sqlBuf.append(" (");
+            sqlBuf.append(relCols.toString());
+            sqlBuf.append(")");
+        } else {
+            String emsg = "ERROR: fk-style specified for this data-source is not valid: " + fkStyle;
+            Debug.logError(emsg);
+            throw new IllegalArgumentException(emsg);
+        }
         
         return sqlBuf.toString();
     }
