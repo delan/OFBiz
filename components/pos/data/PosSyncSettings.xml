@@ -68,6 +68,59 @@
             keepRemoveInfoHours="24" forPullOnly="Y"/>
     <EntitySyncIncludeGroup entitySyncId="5501" entityGroupId="5501"/>
 
-    <!-- For more example settings for Entity Sync and pre-populated scheduled services, see the EntityScheduledServices.xml file -->
+    <!-- POS Push Scheduled Service -->
+    <!--
+    <RecurrenceRule recurrenceRuleId="POSPUSH" untilDateTime="" frequency="MINUTELY" intervalNumber="5" countNumber="-1"/>
+    <RecurrenceInfo recurrenceInfoId="POSPUSH" startDateTime="2000-01-01 00:00:00.000" recurrenceRuleId="POSPUSH" recurrenceCount="0"/>
+    <RuntimeData runtimeDataId="POSPUSH">
+        <runtimeInfo><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<ofbiz-ser>
+  <map-HashMap>
+    <map-Entry>
+      <map-Key>
+        <std-String value="entitySyncId"/>
+      </map-Key>
+      <map-Value>
+        <std-String value="5505"/>
+      </map-Value>
+    </map-Entry>
+  </map-HashMap>
+</ofbiz-ser>
+        ]]></runtimeInfo>
+    </RuntimeData>
+    <JobSandbox jobId="POSPUSH" jobName="Push POS Orders" runtimeDataId="POSPUSH" runTime="2000-01-01 00:00:00.000" serviceName="runEntitySync" poolId="pool" runAsUser="admin" recurrenceInfoId="POSPUSH"/>
+    -->
+
+    <!-- POS-1 PULL Scheduled Service -->
+    <!--
+    <RecurrenceRule recurrenceRuleId="POS1PULL" untilDateTime="" frequency="HOURLY" intervalNumber="2" countNumber="-1"/>
+    <RecurrenceInfo recurrenceInfoId="POS1PULL" startDateTime="2000-01-01 00:15:00.000" recurrenceRuleId="POS1PULL" recurrenceCount="0"/>
+    <RuntimeData runtimeDataId="POS1PULL">
+        <runtimeInfo><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<ofbiz-ser>
+  <map-HashMap>
+    <map-Entry>
+      <map-Key>
+        <std-String value="entitySyncId"/>
+      </map-Key>
+      <map-Value>
+        <std-String value="5501"/>
+      </map-Value>
+    </map-Entry>
+    <map-Entry>
+      <map-Key>
+        <std-String value="remotePullAndReportEntitySyncDataName"/>
+      </map-Key>
+      <map-Value>
+        <std-String value="remotePullAndReportEntitySyncDataRmi"/>
+      </map-Value>
+    </map-Entry>
+  </map-HashMap>
+</ofbiz-ser>
+        ]]></runtimeInfo>
+    </RuntimeData>
+    <JobSandbox jobId="POS1PULL" jobName="Pull POS Catalog" runtimeDataId="POS1PULL" runTime="2000-01-01 00:00:00.000" serviceName="runPullEntitySync" poolId="pool" runAsUser="admin" recurrenceInfoId="POS1PULL"/>
+    -->
+
 </entity-engine-xml>
 
