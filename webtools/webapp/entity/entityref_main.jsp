@@ -229,7 +229,12 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
           }
       }
 
-      ModelEntity relatedEntity = reader.getModelEntity(relation.getRelEntityName());
+      ModelEntity relatedEntity = null;
+      try {
+      	relatedEntity = reader.getModelEntity(relation.getRelEntityName());
+      } catch (GenericEntityException e) {
+      	Debug.logError("Entity referred to in relation is not defined: " + relation.getRelEntityName());
+      }
       if (relatedEntity != null) {
         //if relation is of type one, make sure keyMaps match the PK of the relatedEntity
         if ("one".equals(relation.getType()) || "one-nofk".equals(relation.getType())) {
