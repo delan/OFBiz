@@ -93,27 +93,30 @@ public class HtmlScreenRenderer implements ScreenStringRenderer {
 
     public void renderLabel(Writer writer, Map context, ModelScreenWidget.Label label) throws IOException {
         // open tag
-        if (Debug.verboseOn()) Debug.logVerbose("renderLabel, depth:" + context.get("depth"), module);
-        writer.write("<span");
-        String id = label.getId(context);
-        if (UtilValidate.isNotEmpty(id)) {
-            writer.write(" id=\"");
-            writer.write(id);
-            writer.write("\"");
-        }
         String style = label.getStyle(context);
-        if (UtilValidate.isNotEmpty(style)) {
-            writer.write(" class=\"");
-            writer.write(style);
-            writer.write("\"");
+        String id = label.getId(context);
+        if (UtilValidate.isNotEmpty(style) || UtilValidate.isNotEmpty(id) ) {
+            writer.write("<span");
+            if (UtilValidate.isNotEmpty(id)) {
+                writer.write(" id=\"");
+                writer.write(id);
+                writer.write("\"");
+            }
+            if (UtilValidate.isNotEmpty(style)) {
+                writer.write(" class=\"");
+                writer.write(style);
+                writer.write("\"");
+            }
+            writer.write(">");
+            
+            // the text
+            writer.write(label.getText(context));
+            
+            // close tag
+            writer.write("</span>");
+        } else {
+            writer.write(label.getText(context));
         }
-        writer.write(">");
-        
-        // the text
-        writer.write(label.getText(context));
-        
-        // close tag
-        writer.write("</span>");
         
         appendWhitespace(writer);
     }
