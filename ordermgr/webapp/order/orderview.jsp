@@ -67,11 +67,9 @@
         GenericValue billingAddress = orderReadHelper.getBillingAddress(); 
         GenericValue billingAccount = orderHeader.getRelatedOne("BillingAccount");
 
-        GenericValue paymentMethod = null;
-        Iterator orderPaymentPreferences = UtilMisc.toIterator(orderHeader.getRelated("OrderPaymentPreference"));
-        if(orderPaymentPreferences != null && orderPaymentPreferences.hasNext()) {
-            GenericValue orderPaymentPreference = (GenericValue)orderPaymentPreferences.next();
-            paymentMethod = orderPaymentPreference.getRelatedOne("PaymentMethod");
+        Collection orderPaymentPreferences = orderHeader.getRelated("OrderPaymentPreference");
+        if(orderPaymentPreferences != null) {
+            pageContext.setAttribute("orderPaymentPreferences", orderPaymentPreferences);
         }
 
         GenericValue shipmentPreference = null;
