@@ -1,5 +1,5 @@
 /*
- * $Id: EntityConditionFunction.java,v 1.2 2004/04/23 01:38:20 doogie Exp $
+ * $Id: EntityConditionFunction.java,v 1.3 2004/04/23 01:39:42 doogie Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -67,20 +67,6 @@ public abstract class EntityConditionFunction extends EntityCondition {
     public int getId() {
         return idInt;
     }
-
-/*
-    public String toString() {
-        StringBuffer sb = new StringBuffer();
-        sb.append(codeString).append('(');
-        if (nested != null) {
-            sb.append(nested.toString());
-        } else {
-            sb.append(value);
-        }
-        sb.append(')');
-        return sb.toString();
-    }
-*/
 
     public boolean equals(Object obj) {
         if (!(obj instanceof EntityConditionFunction)) return false;
