@@ -72,6 +72,7 @@ public class Section extends Content {
     public void render(PageContext pageContext) throws JspException {
         //this check to see if we should flush is done because on most servers this 
         // will just slow things down and not solve any problems, but on Tomcat, Orion, etc it is necessary
+        /* NOTE: this isn't a big deal, just always flush...
         if (doFlushOnRender == null) {
             boolean doflush = false;
             String serverInfo = pageContext.getServletContext().getServerInfo();
@@ -84,12 +85,12 @@ public class Section extends Content {
                 doflush = true;
             }
             doFlushOnRender = new Boolean(doflush);
-        }
+        }*/
         
         try {
-            if (doFlushOnRender.booleanValue()) {
+            //if (doFlushOnRender.booleanValue()) {
                 pageContext.getOut().flush();
-            }
+            //}
             render((HttpServletRequest) pageContext.getRequest(), (HttpServletResponse) pageContext.getResponse());
         } catch (java.io.IOException e) {
             Debug.logError(e, "Error rendering section: ");
