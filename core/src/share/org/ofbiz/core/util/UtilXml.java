@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2001/11/21 07:28:59  jonesde
+ * Improved error handling in UtilXml
+ *
  * Revision 1.2  2001/11/16 14:10:50  jonesde
  * small refactoring, moved root element name set to UtilXml
  *
@@ -174,5 +177,43 @@ public class UtilXml {
     
     if(document == null) return null;
     return document;
+  }
+  
+  public static String childElementValue(Element element, String childElementName) {
+    if(element == null || childElementName == null) return null;
+    //get the value of the first element with the given name
+    Node node = element.getFirstChild();
+    if(node != null) {
+      do {
+        if(node.getNodeType() == Node.ELEMENT_NODE && childElementName.equals(node.getNodeName())) {
+          Element childElement = (Element)node;
+          return elementValue(childElement);
+        }
+      } while((node = node.getNextSibling()) != null);
+    }
+    return null;
+  }
+  
+  public static String elementValue(Element element) {
+    Node textNode = element.getFirstChild();
+    if(textNode == null) return null;
+    //should be of type text
+    return textNode.getNodeValue();
+  }
+  
+  public static String checkEmpty(String string) {
+    if(string != null && string.length() > 0) return string;
+    else return "";
+  }
+  public static String checkEmpty(String string1, String string2) {
+    if(string1 != null && string1.length() > 0) return string1;
+    else if(string2 != null && string2.length() > 0) return string2;
+    else return "";
+  }
+  public static String checkEmpty(String string1, String string2, String string3) {
+    if(string1 != null && string1.length() > 0) return string1;
+    else if(string2 != null && string2.length() > 0) return string2;
+    else if(string3 != null && string3.length() > 0) return string3;
+    else return "";
   }
 }
