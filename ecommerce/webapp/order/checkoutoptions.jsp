@@ -189,7 +189,7 @@
     </TD>
   </TR>
   <TR style='height: 100%;'>
-    <TD width='100%' valign=top>
+    <TD width='100%' valign=top height='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom' style='height: 100%;'>
         <tr>
           <td valign=top>
@@ -252,7 +252,7 @@
     </TD>
   </TR>
   <TR style='height: 100%;'>
-    <TD width='100%' valign=top>
+    <TD width='100%' valign=top height='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom' style='height: 100%;'>
         <tr>
           <td valign=top>
