@@ -31,7 +31,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -45,7 +44,6 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.model.ModelEntity;
-import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.entityext.synchronization.EntitySyncContext.SyncAbortException;
 import org.ofbiz.entityext.synchronization.EntitySyncContext.SyncErrorException;
 import org.ofbiz.service.DispatchContext;
@@ -449,21 +447,8 @@ public class EntitySyncServices {
             nowCal.add(Calendar.SECOND, -keepSeconds);
             Timestamp keepAfterStamp = new Timestamp(nowCal.getTimeInMillis());
             
-            EntityListIterator eli = delegator.findListIteratorByCondition("EntitySyncRemove", new EntityExpr(ModelEntity.STAMP_TX_FIELD, EntityOperator.LESS_THAN, keepAfterStamp), null, UtilMisc.toList(ModelEntity.STAMP_TX_FIELD));
-            GenericValue entitySyncRemove = null;
-            int numRemoved = 0;
-            List valuesToRemove = new LinkedList();
-            while ((entitySyncRemove = (GenericValue) eli.next()) != null) {
-                valuesToRemove.add(entitySyncRemove.getPrimaryKey());
-                numRemoved++;
-                // do 1000 at a time to avoid possible problems with removing values while iterating over a cursor
-                if (numRemoved > 1000) {
-                    eli.close();
-                    delegator.removeAll(valuesToRemove);
-                    eli = delegator.findListIteratorByCondition("EntitySyncRemove", new EntityExpr(ModelEntity.STAMP_TX_FIELD, EntityOperator.LESS_THAN, keepAfterStamp), null, UtilMisc.toList(ModelEntity.STAMP_TX_FIELD));
-                }
-            }
-            eli.close();
+            int numRemoved = delegator.removeByCondition("EntitySyncRemove", new EntityExpr(ModelEntity.STAMP_TX_FIELD, EntityOperator.LESS_THAN, keepAfterStamp));
+            Debug.logInfo("In cleanSyncRemoveInfo removed [" + numRemoved + "] values with TX timestamp before [" + keepAfterStamp + "]", module);
             
             return ServiceUtil.returnSuccess();
         } catch (GenericEntityException e) {

@@ -187,8 +187,8 @@
         <attribute name="toRemoveAlreadyDeleted" type="Long" mode="OUT" optional="false"/>
     </service>
     <service name="cleanSyncRemoveInfo" engine="java"
-            location="org.ofbiz.entityext.synchronization.EntitySyncServices" invoke="cleanSyncRemoveInfo" auth="true">
-        <description>Clean EntitySyncRemove Info - Generally should be run asynchronously after each sync run</description>
+            location="org.ofbiz.entityext.synchronization.EntitySyncServices" invoke="cleanSyncRemoveInfo" auth="true" transaction-timout="600">
+        <description>Clean EntitySyncRemove Info - Generally should be run asynchronously after each sync run, or periodically run on a schedule</description>
     </service>
 
     <!-- Services for Entity Sync Data Pulling -->
