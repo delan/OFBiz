@@ -296,10 +296,15 @@ public class PayPalEvents {
                 Debug.logError(gte, "Unable to rollback transaction", module);
             }
         }
-        
-        // attempt to release the offline hold on the order (workflow)
-        if (okay) 
-            OrderChangeHelper.relaeaseOfflineOrderHold(dispatcher, orderId, orderPropertiesUrl);        
+                
+        if (okay) {
+            // attempt to release the offline hold on the order (workflow)            
+            OrderChangeHelper.relaeaseOfflineOrderHold(dispatcher, orderId, orderPropertiesUrl);   
+            
+            // call the existing confirm order events (calling direct)
+            String confirm = CheckOutEvents.renderConfirmOrder(request, response);
+            String email = CheckOutEvents.emailOrder(request, response);
+        }                 
                                 
         return "success";
     }
