@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      3.0
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -40,6 +40,7 @@ ${pages.get("/promo/PromoTabBar.ftl")}
     <div class="tabletext">
         <form method="POST" action="<@ofbizUrl>/createProductPromoCodeSet</@ofbizUrl>" style="margin: 0;">
             <input type="hidden" name="userEntered" value="N"/>
+            <input type="hidden" name="requireEmailOrParty" value="N"/>
             <input type="hidden" name="productPromoId" value="${productPromoId?if_exists}"/>
             Quantity: <input type="text" size="5" name="quantity" class="inputBox">
             Use Limits:
@@ -52,8 +53,9 @@ ${pages.get("/promo/PromoTabBar.ftl")}
     <table border="1" cellpadding="2" cellspacing="0">
         <tr>
             <td><div class="tabletext"><b>Code</b></div></td>
-            <td><div class="tabletext"><b>PerCode</b></div></td>
-            <td><div class="tabletext"><b>PerCustomer</b></div></td>
+            <td><div class="tabletext"><b>Per Code</b></div></td>
+            <td><div class="tabletext"><b>Per Customer</b></div></td>
+            <td><div class="tabletext"><b>Req. Email or Party</b></div></td>
             <td><div class="tabletext"><b>Created</b></div></td>
             <td><div class="tabletext">&nbsp;</div></td>
         </tr>
@@ -63,6 +65,7 @@ ${pages.get("/promo/PromoTabBar.ftl")}
                 <td><div class='tabletext'>&nbsp;<a href="<@ofbizUrl>/EditProductPromoCode?productPromoCodeId=${(productPromoCode.productPromoCodeId)?if_exists}</@ofbizUrl>" class="buttontext">[${(productPromoCode.productPromoCodeId)?if_exists}]</a></div></td>
                 <td><div class='tabletext'>&nbsp;${(productPromoCode.useLimitPerCode)?if_exists}</div></td>
                 <td><div class='tabletext'>&nbsp;${(productPromoCode.useLimitPerCustomer)?if_exists}</div></td>
+                <td><div class='tabletext'>&nbsp;${(productPromoCode.requireEmailOrParty)?if_exists}</div></td>
                 <td><div class='tabletext'>&nbsp;${(productPromoCode.createdDate)?if_exists}</div></td>
                 <td>
                     <a href='<@ofbizUrl>/EditProductPromoCode?productPromoCodeId=${(productPromoCode.productPromoCodeId)?if_exists}</@ofbizUrl>' class="buttontext">[${uiLabelMap.CommonEdit}]</a>
