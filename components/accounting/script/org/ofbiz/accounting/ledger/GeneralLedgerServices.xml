@@ -98,6 +98,60 @@
     </simple-method>
 
     <!-- ========= GlJournal methods ========= -->
+    <simple-method method-name="createGlJournalEntry" short-description="Creates GlJournal, acctgTrans, and 2 acctgTransEntry">
+    
+        <log level="info" message="XXXX - Copying paramter map to appropriate maps: [${paramters}]"/>
+        
+        <field-to-field field-name="organizationPartyId" map-name="parameters" to-map-name="newGlJournal"/>
+        <field-to-field field-name="glJournalName" map-name="parameters" to-map-name="newGlJournal"/>
+        
+        <log level="info" message="XXXX - Here is the newGlJournal map: [${newGlJournal}]"/>
+        <field-to-field field-name="description" map-name="parameters" to-map-name="newAcctgTrans"/>
+        <field-to-field field-name="acctgTransTypeId" map-name="parameters" to-map-name="newAcctgTrans"/>
+        <field-to-field field-name="glFiscalTypeId" map-name="parameters" to-map-name="newAcctgTrans"/>
+        <field-to-field field-name="transactionDate" map-name="parameters" to-map-name="newAcctgTrans"/>
+        <log level="info" message="XXXX - Here is the newAcctgTrans map: [${newAcctgTrans}]"/>
+        
+        
+        <call-service service-name="createGlJournal" in-map-name="newGlJournal">
+            <result-to-field result-name="glJournalId"/>
+        </call-service>
+        <log level="info" message="XXXX - Finished calling createGlJournal. Return glJournalId: [${glJournalId}]"/>
+        
+        <call-service service-name="createAcctgTrans" in-map-name="newAcctgTrans">
+            <result-to-field result-name="acctgTransId"/>
+        </call-service>
+        <log level="info" message="XXXX - Finished calling createAcctgTrans. Return acctgTransId: [${acctgTransId}]"/>
+	
+        <!-- field-to-field field-name="acctgTransId" map-name="newAcctgTrans" to-map-name="newAcctgTransEntryCredit"/ -->
+        <field-to-field field-name="acctgTransId" to-map-name="newAcctgTransEntryCredit"/>
+        <field-to-field field-name="acctgTransEntryTypeId" map-name="parameters" to-map-name="newAcctgTransEntryCredit"/>
+        <field-to-field field-name="partyId" map-name="parameters" to-map-name="newAcctgTransEntryCredit"/>
+        <field-to-field field-name="creditGlAccountId" map-name="parameters" to-field-name="glAccountId" to-map-name="newAcctgTransEntryCredit"/>
+        <field-to-field field-name="organizationPartyId" map-name="parameters" to-map-name="newAcctgTransEntryCredit"/>
+		<string-to-field field-name="debitCreditFlag" string="C" map-name="newAcctgTransEntryCredit"/>
+        <field-to-field field-name="amount" map-name="parameters" to-map-name="newAcctgTransEntryCredit"/>
+        <log level="info" message="XXXX - Creating AcctgTransEntry for credit side: [${newAcctgTransEntryCredit}]"/>
+        <call-service service-name="createAcctgTransEntry" in-map-name="newAcctgTransEntryCredit"/>
+	
+		
+        <!-- field-to-field field-name="acctgTransId" map-name="newAcctgTrans" to-map-name="newAcctgTransEntryDebit"/ -->
+        <field-to-field field-name="acctgTransId" to-map-name="newAcctgTransEntryDebit"/>
+        <field-to-field field-name="acctgTransEntryTypeId" map-name="parameters" to-map-name="newAcctgTransEntryDebit"/>
+        <field-to-field field-name="partyId" map-name="parameters" to-map-name="newAcctgTransEntryDebit"/>
+        <field-to-field field-name="debitGlAccountId" map-name="parameters" to-field-name="glAccountId" to-map-name="newAcctgTransEntryDebit"/>
+        <field-to-field field-name="organizationPartyId" map-name="parameters" to-map-name="newAcctgTransEntryDebit"/>
+		<string-to-field field-name="debitCreditFlag" string="D" map-name="newAcctgTransEntryDebit"/>
+        <field-to-field field-name="amount" map-name="parameters" to-map-name="newAcctgTransEntryDebit"/>
+        <log level="info" message="XXXX - Creating AcctgTransEntry for debit side: [${newAcctgTransEntryDebit}]"/>
+        <call-service service-name="createAcctgTransEntry" in-map-name="newAcctgTransEntryDebit"/>
+	
+		
+        <field-to-result field-name="glJournalId" result-name="glJournalId"/>
+        <field-to-result field-name="acctgTransId" result-name="acctgTransId"/>
+    </simple-method> 
+	   
+	    
     <simple-method method-name="createGlJournal" short-description="Create an GlJournal">
         <check-permission permission="ACCOUNTING" action="_CREATE"><fail-message message="Security Error: to run createGlJournal you must have the ACCOUNTING_CREATE or ACCOUNTING_ADMIN permission"/></check-permission>
         <check-errors/>

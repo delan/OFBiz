@@ -19,8 +19,7 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *@author     David E. Jones (jonesde@ofbiz.org)
- *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
+ *@author     Brett G. Palmer (brettgpalmer@gmail.com)
  *@version    $Rev$
  *@since      2.2
 -->
@@ -28,27 +27,10 @@
 <#assign unselectedClassName = "tabButton">
 <#assign selectedClassMap = {page.tabButtonItem?default("void") : "tabButtonSelected"}>
 
-<#if product?has_content>
-    <div class="tabContainer">
-        <a href="<@ofbizUrl>/EditProduct?productId=${productId}</@ofbizUrl>" class="${selectedClassMap.EditProduct?default(unselectedClassName)}">${uiLabelMap.ProductProduct}</a>
-        <a href="<@ofbizUrl>/EditProductPrices?productId=${productId}</@ofbizUrl>" class="${selectedClassMap.EditProductPrices?default(unselectedClassName)}">${uiLabelMap.ProductPrices}</a>
-        <a href="<@ofbizUrl>/EditProductContent?productId=${productId}</@ofbizUrl>" class="${selectedClassMap.EditProductContent?default(unselectedClassName)}">${uiLabelMap.ProductContent}</a>
-        <a href="<@ofbizUrl>/EditProductGoodIdentifications?productId=${productId}</@ofbizUrl>" class="${selectedClassMap.EditProductGoodIdentifications?default(unselectedClassName)}">${uiLabelMap.CommonIds}</a>
-        <a href="<@ofbizUrl>/EditProductCategories?productId=${productId}</@ofbizUrl>" class="${selectedClassMap.EditProductCategories?default(unselectedClassName)}">${uiLabelMap.ProductCategories}</a>
-        <a href="<@ofbizUrl>/EditProductKeyword?productId=${productId}</@ofbizUrl>" class="${selectedClassMap.EditProductKeyword?default(unselectedClassName)}">${uiLabelMap.ProductKeywords}</a>
-        <a href="<@ofbizUrl>/EditProductAssoc?productId=${productId}</@ofbizUrl>" class="${selectedClassMap.EditProductAssoc?default(unselectedClassName)}">${uiLabelMap.ProductAssociations}</a>
-        <a href="<@ofbizUrl>/EditProductAttributes?productId=${productId}</@ofbizUrl>" class="${selectedClassMap.EditProductAttributes?default(unselectedClassName)}">${uiLabelMap.ProductAttributes}</a>
-        <a href="<@ofbizUrl>/EditProductFeatures?productId=${productId}</@ofbizUrl>" class="${selectedClassMap.EditProductFeatures?default(unselectedClassName)}">${uiLabelMap.ProductFeatures}</a>
-        <a href="<@ofbizUrl>/EditProductFacilities?productId=${productId}</@ofbizUrl>" class="${selectedClassMap.EditProductFacilities?default(unselectedClassName)}">${uiLabelMap.ProductFacilities}</a>
-        <a href="<@ofbizUrl>/EditProductFacilityLocations?productId=${productId}</@ofbizUrl>" class="${selectedClassMap.EditProductFacilityLocations?default(unselectedClassName)}">${uiLabelMap.ProductLocations}</a>
-        <a href="<@ofbizUrl>/EditProductInventoryItems?productId=${productId}</@ofbizUrl>" class="${selectedClassMap.EditProductInventoryItems?default(unselectedClassName)}">${uiLabelMap.ProductInventory}</a>
-        <a href="<@ofbizUrl>/EditProductSuppliers?productId=${productId}</@ofbizUrl>" class="${selectedClassMap.EditSupplierProduct?default(unselectedClassName)}">${uiLabelMap.ProductSuppliers}</a>
-        <a href="<@ofbizUrl>/EditProductGlAccounts?productId=${productId}</@ofbizUrl>" class="${selectedClassMap.EditProductGlAccounts?default(unselectedClassName)}">${uiLabelMap.ProductAccounts}</a>
-        <#if product?exists && product.isVirtual?if_exists == "Y">
-            <a href="<@ofbizUrl>/QuickAddVariants?productId=${productId}</@ofbizUrl>" class="${selectedClassMap.QuickAddVariants?default(unselectedClassName)}">${uiLabelMap.ProductVariants}</a>
-        </#if>
-        <#if product?exists && product.productTypeId?if_exists == "AGGREGATED">
-            <a href="<@ofbizUrl>/EditProductConfigs?productId=${productId}</@ofbizUrl>" class="${selectedClassMap.EditProductConfigs?default(unselectedClassName)}">${uiLabelMap.ProductConfigs}</a>
-        </#if>
-    </div>
-</#if>
+<div class="tabContainer">
+	<a href="<@ofbizUrl>/FindGlobalGlAccount</@ofbizUrl>" class="${selectedClassMap.AssignGlAccount?default(unselectedClassName)}">${uiLabelMap.AcctgChartOfAcctsTabMenu}</a>
+	<a href="<@ofbizUrl>/GlAccountNavigate</@ofbizUrl>" class="${selectedClassMap.GlAccountNavigate?default(unselectedClassName)}">${uiLabelMap.AcctgNavigateAccts}</a>
+	<a href="<@ofbizUrl>/AssignGlAccount</@ofbizUrl>" class="${selectedClassMap.AssignGlAccount?default(unselectedClassName)}">${uiLabelMap.AcctgAssignGlAccount}</a>
+	<a href="<@ofbizUrl>/EditGlJournalEntry</@ofbizUrl>" class="${selectedClassMap.EditGlJournalEntry?default(unselectedClassName)}">${uiLabelMap.AcctgEditGlJournalEntry}</a>
+	<a href="<@ofbizUrl>/ListGlAccountOrganization</@ofbizUrl>" class="${selectedClassMap.ListGlAccountOrganization?default(unselectedClassName)}">${uiLabelMap.AcctgListGlAcctOrg}</a>
+</div>

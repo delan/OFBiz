@@ -2,7 +2,12 @@
 <entity-engine-xml>
 
 <!-- TODO: check glAccountType entries for top level items -->
-  
+
+<!-- 
+   <AcctgTransEntry acctgTransId="10000" acctgTransEntrySeq="1" description="Test AcctgTransEntry"
+       partyId="ACCOUNTING" glAccountId="700000" organizationPartyId="ACCOUNTING" amount="100" debitCreditFlag="C" />
+-->
+   
   <GlAccount parentGlAccountId="" glAccountId="100000" accountCode="100000" 
     glAccountClassId="ASSET" glAccountTypeId="" glResourceTypeId="MONEY"  
     accountName="ASSETS" description="" postedBalance="0.0"/>
