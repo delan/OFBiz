@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.2
 -->
 
@@ -214,7 +214,7 @@
   <br>
   ID: <input type=text size="20" class="inputBox" name="productPriceRuleId">
   Name: <input type=text size="30" class="inputBox" name="ruleName">
-  <input type="submit" value="Add">
+  <input type="submit" class="smallSubmit" value="Add">
 </form>
 
 <br>
