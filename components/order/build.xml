@@ -21,7 +21,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *  This is the Open for Business Service Build Script.
- *  $Id: build.xml,v 1.1 2003/08/18 17:03:09 ajzeneski Exp $
+ *  $Id: build.xml,v 1.2 2003/08/18 19:38:58 jonesde Exp $
 -->
 
 <project name="OFBiz - Order Component" default="jar" basedir=".">
@@ -95,6 +95,8 @@
                 <path refid="local.class.path"/>                
             </classpath>
             <src path="${src.dir}"/>
+            <!-- exclude the payment processor packages; comment if you have libs -->
+            <exclude name="org/ofbiz/order/thirdparty/taxware/**"/>
         </javac>
         <!-- also put the DTDs in the jar file... -->
         <copy todir="${build.dir}/classes">
