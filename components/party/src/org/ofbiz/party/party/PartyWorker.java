@@ -1,5 +1,5 @@
 /*
- * $Id: PartyWorker.java,v 1.1 2003/08/17 17:57:35 ajzeneski Exp $
+ * $Id: PartyWorker.java,v 1.2 2003/12/17 21:29:10 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -33,6 +33,8 @@ import javax.servlet.jsp.PageContext;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilFormatOut;
+import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -42,7 +44,7 @@ import org.ofbiz.entity.GenericValue;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class PartyWorker {
@@ -89,5 +91,27 @@ public class PartyWorker {
             pageContext.setAttribute((String) e.getKey(), e.getValue());
             
         }      
+    }
+
+    /**
+     * Generate a sequenced club id using the prefix passed and a sequence value + check digit
+     * @param delegator used to obtain a sequenced value
+     * @param prefix prefix inserted at the beginning of the ID
+     * @param length total length of the ID including prefix and check digit
+     * @return Sequenced Club ID string with a length as defined starting with the prefix defined
+     */
+    public static String createClubId(GenericDelegator delegator, String prefix, int length) {
+        final String clubSeqName = "PartyClubSeq";
+        String clubId = prefix != null ? prefix : "";
+
+        // generate the sequenced number and pad
+        Long seq = delegator.getNextSeqId(clubSeqName);
+        clubId = clubId + UtilFormatOut.formatPaddedNumber(seq.longValue(), (length - prefix.length() - 1));
+
+        // get the check digit
+        int check = UtilValidate.getLuhnCheckDigit(clubId);
+        clubId = clubId + new Integer(check).toString();
+
+        return clubId;
     }
 }
