@@ -285,9 +285,18 @@ public class CoreEvents {
         }
 
         // get the mode and service name 
-        String serviceName = request.getParameter("SERVICE_NAME");
-        String mode = request.getParameter("SERVICE_MODE");
+        String serviceName = request.getParameter("serviceName");
+        String mode = request.getParameter("mode");
 
+        if (UtilValidate.isEmpty(serviceName)) {
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>You must specify a 'serviceName', and optionally a 'mode' (sync or async, defaults to sync).");
+            return "error";
+        }
+        
+        if (UtilValidate.isEmpty(mode)) {
+            mode = "sync";
+        }
+        
         // call the service via the ServiceEventHandler which 
         // adapts an event to a service.
         try {
@@ -298,5 +307,3 @@ public class CoreEvents {
         }
     }
 }
-
-

@@ -156,10 +156,15 @@ public class CallService extends MethodOperation {
     }
 
     public boolean exec(MethodContext methodContext) {
-        Map inMap = (Map) methodContext.getEnv(inMapName);
-        if (inMap == null) {
+        Map inMap = null;
+        if (UtilValidate.isEmpty(inMapName)) {
             inMap = new HashMap();
-            methodContext.putEnv(inMapName, inMap);
+        } else {
+            inMap = (Map) methodContext.getEnv(inMapName);
+            if (inMap == null) {
+                inMap = new HashMap();
+                methodContext.putEnv(inMapName, inMap);
+            }
         }
 
         //before invoking the service, clear messages
@@ -177,8 +182,9 @@ public class CallService extends MethodOperation {
         Map result = null;
         if (includeUserLogin) {
             GenericValue userLogin = methodContext.getUserLogin();
-            if (userLogin != null)
+            if (userLogin != null) {
                 inMap.put("userLogin", userLogin);
+            }
         }
         try {
             result = methodContext.getDispatcher().runSync(serviceName, inMap);

@@ -57,10 +57,15 @@ public class CallServiceAsynch extends MethodOperation {
     }
 
     public boolean exec(MethodContext methodContext) {
-        Map inMap = (Map) methodContext.getEnv(inMapName);
-        if (inMap == null) {
+        Map inMap = null;
+        if (UtilValidate.isEmpty(inMapName)) {
             inMap = new HashMap();
-            methodContext.putEnv(inMapName, inMap);
+        } else {
+            inMap = (Map) methodContext.getEnv(inMapName);
+            if (inMap == null) {
+                inMap = new HashMap();
+                methodContext.putEnv(inMapName, inMap);
+            }
         }
 
         // invoke the service

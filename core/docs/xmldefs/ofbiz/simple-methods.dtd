@@ -116,7 +116,7 @@
                          (results-to-map | result-to-field | result-to-request | result-to-session | result-to-result)* )>
 <!ATTLIST call-service
     service-name CDATA #REQUIRED
-    in-map-name CDATA #REQUIRED
+    in-map-name CDATA #IMPLIED
     include-user-login ( true | false ) "true"
     error-code CDATA "error"
     success-code CDATA "success"
@@ -191,7 +191,7 @@ system errors like database failures, etc which all have system error messages.
 <!ELEMENT call-service-asynch EMPTY>
 <!ATTLIST call-service-asynch
     service-name CDATA #REQUIRED
-    in-map-name CDATA #REQUIRED
+    in-map-name CDATA #IMPLIED
     include-user-login ( true | false ) "true"
 >
 
