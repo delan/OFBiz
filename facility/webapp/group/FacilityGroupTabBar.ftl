@@ -1,4 +1,4 @@
-/*
+<#--
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
@@ -19,19 +19,19 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *@author     Andy Zeneski
+ *@author     David E. Jones (jonesde@ofbiz.org)
  *@version    $Revision$
- *@since      2.1
- */
+ *@since      2.2
+-->
 
-import java.util.*;
-import org.ofbiz.core.entity.*;
-import org.ofbiz.core.util.*;
+<#assign unselectedClassName = "tabButton">
+<#assign selectedClassMap = {page.tabButtonItem?default("void") : "tabButtonSelected"}>
 
-delegator = request.getAttribute("delegator");
-
-//facilities
-Collection groups = delegator.findAll("FacilityGroup");
-if (groups != null) {
-    context.put("facilityGroups", groups);
-}
+<#if facilityGroupId?has_content>
+    <div class="tabContainer">
+        <a href="<@ofbizUrl>/EditFacilityGroup?facilityGroupId=${facilityGroupId}</@ofbizUrl>" class="${selectedClassMap.EditFacilityGroup?default(unselectedClassName)}">Facility Group</a>
+        <a href="<@ofbizUrl>/EditFacilityGroupRollup?showFacilityGroupId=${facilityGroupId}</@ofbizUrl>" class="${selectedClassMap.EditFacilityGroupRollup?default(unselectedClassName)}">Rollups</a>
+        <a href="<@ofbizUrl>/EditFacilityGroupMembers?facilityGroupId=${facilityGroupId}</@ofbizUrl>" class="${selectedClassMap.EditFacilityGroupMembers?default(unselectedClassName)}">Facilities</a>
+        <a href="<@ofbizUrl>/EditFacilityGroupRoles?facilityGroupId=${facilityGroupId}</@ofbizUrl>" class="${selectedClassMap.EditFacilityGroupRoles?default(unselectedClassName)}">Roles</a>
+    </div>
+</#if>

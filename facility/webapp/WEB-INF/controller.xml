@@ -646,8 +646,8 @@
     <view-map name="FindFacilityGroup" type="jpublish" page="/group/FindFacilityGroup.ftl"/>
     <view-map name="EditFacilityGroup" type="jpublish" page="/group/EditFacilityGroup.ftl"/>
     <view-map name="EditFacilityGroupMembers" type="jpublish" page="/group/EditFacilityGroupMembers.ftl"/>
-    <view-map name="EditFacilityGroupRollup" type="region"/>
-    <view-map name="EditFacilityGroupRoles" type="region"/>
+    <view-map name="EditFacilityGroupRollup" type="jpublish" page="/group/EditFacilityGroupRollup.ftl"/>
+    <view-map name="EditFacilityGroupRoles" type="jpublish" page="/group/EditFacilityGroupRoles.ftl"/>
     
     <view-map name="FindShipment" type="jpublish" page="/shipment/FindShipment.ftl"/>
     <view-map name="ViewShipment" type="jpublish" page="/shipment/ViewShipment.ftl"/>

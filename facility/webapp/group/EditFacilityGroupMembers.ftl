@@ -26,14 +26,8 @@
 -->
 
 <#if hasPermission>
-    <#if facilityGroupId?has_content>
-        <div class="tabContainer">
-            <a href="<@ofbizUrl>/EditFacilityGroup?facilityGroupId=${facilityGroupId}</@ofbizUrl>" class="tabButton">Facility Group</a>
-            <a href="<@ofbizUrl>/EditFacilityGroupRollup?showFacilityGroupId=${facilityGroupId}</@ofbizUrl>" class="tabButton">Rollups</a>
-            <a href="<@ofbizUrl>/EditFacilityGroupMembers?facilityGroupId=${facilityGroupId}</@ofbizUrl>" class="tabButtonSelected">Facilities</a>
-            <a href="<@ofbizUrl>/EditFacilityGroupRoles?facilityGroupId=${facilityGroupId}</@ofbizUrl>" class="tabButton">Roles</a>
-        </div>
-    </#if>
+
+${pages.get("/group/FacilityGroupTabBar.ftl")}
     
     <div class="head1">Facilities <span class="head2">for&nbsp;<#if facilityGroup?exists>${(facilityGroup.facilityGroupName)?if_exists}</#if> [ID:${facilityGroupId?if_exists}]</span></div>
     <a href="<@ofbizUrl>/EditFacilityGroup</@ofbizUrl>" class="buttontext">[New Group]</a>

@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski
- *@author     Brad Steiner
+ *@author     David E. Jones
  *@version    $Revision$
  *@since      2.2
  */
@@ -40,30 +40,13 @@ if(security.hasEntityPermission("FACILITY", "_VIEW", session)) {
     context.put("hasPermission", Boolean.FALSE);
 }
 
-boolean tryEntity = true;
-if(request.getAttribute(SiteDefs.ERROR_MESSAGE) != null) tryEntity = false;
+facilityGroupId = request.getParameter("facilityGroupId");
+facilityGroup = delegator.findByPrimaryKey("FacilityGroup", UtilMisc.toMap("facilityGroupId", facilityGroupId));
 
-String facilityGroupId = request.getParameter("facilityGroupId");
-if (UtilValidate.isEmpty(facilityGroupId) && UtilValidate.isNotEmpty((String) request.getAttribute("facilityGroupId"))) {
-    facilityGroupId = (String) request.getAttribute("facilityGroupId");
-}
-if (facilityGroupId != null) context.put("facilityGroupId", facilityGroupId);
+facilityRoles = delegator.findByAnd("FacilityGroupRole", UtilMisc.toMap("facilityGroupId", facilityGroupId));
+roles = delegator.findAll("RoleType", UtilMisc.toList("description", "roleTypeId"));
 
-GenericValue facilityGroup = delegator.findByPrimaryKey("FacilityGroup", UtilMisc.toMap("facilityGroupId", facilityGroupId));
-GenericValue facilityGroupType = null;
-if(facilityGroup == null) {
-    tryEntity = false;
-} else {
-    context.put("facilityGroup", facilityGroup);
-
-    facilityGroupType = facilityGroup.getRelatedOne("FacilityGroupType");
-    if (facilityGroupType != null) context.put("facilityGroupType", facilityGroupType);
-}
-
-// Facility Group types
-List facilityGroupTypes = delegator.findAll("FacilityGroupType");
-if (facilityGroupTypes != null) context.put("facilityGroupTypes", facilityGroupTypes);
-
-// Facility Groups
-List facilityGroups = delegator.findAll("FacilityGroup");
-if (facilityGroups != null) context.put("facilityGroups", facilityGroups);
+context.put("facilityGroupId", facilityGroupId);
+context.put("facilityGroup", facilityGroup);
+context.put("facilityRoles", facilityRoles);
+context.put("roles", roles);
