@@ -149,7 +149,6 @@
         <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="sequenceNum" type="Long" mode="IN" optional="true"/>
-        <attribute name="prodCatalogCategoryTypeId" type="String" mode="IN" optional="false"/>
     </service>
     <service name="updateProdCatalogToWebSite" engine="simple"
                 location="org/ofbiz/commonapp/product/catalog/CatalogServices.xml" invoke="updateProdCatalogToWebSite" auth="true">
@@ -159,7 +158,6 @@
         <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
         <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="sequenceNum" type="Long" mode="IN" optional="true"/>
-        <attribute name="prodCatalogCategoryTypeId" type="String" mode="IN" optional="false"/>
     </service>
     <service name="removeProdCatalogFromWebSite" engine="simple"
                 location="org/ofbiz/commonapp/product/catalog/CatalogServices.xml" invoke="removeProdCatalogFromWebSite" auth="true">
