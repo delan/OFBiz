@@ -88,6 +88,10 @@
         <rel-table-name>GEO_ASSOC</rel-table-name>
         <key-map><col-name>GEO_ID</col-name><rel-col-name>GEO_ID_TO</rel-col-name></key-map>
       </relation>
+      <relation>
+        <type>many</type><rel-table-name>POSTAL_ADDRESS_BOUNDARY</rel-table-name>
+        <key-map><col-name>GEO_ID</col-name></key-map>
+      </relation>
     </entity>
     <!-- ========================================================= -->    
     <entity>
@@ -357,8 +361,11 @@
         <key-map><col-name>DATA_OBJECT_ID</col-name></key-map>
       </relation>
       <relation>
-        <type>many</type>
-        <rel-table-name>PRODUCT_DATA_OBJECT</rel-table-name>
+        <type>many</type><rel-table-name>PARTY_DATA_OBJECT</rel-table-name>
+        <key-map><col-name>DATA_OBJECT_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>many</type><rel-table-name>PRODUCT_DATA_OBJECT</rel-table-name>
         <key-map><col-name>DATA_OBJECT_ID</col-name></key-map>
       </relation>
       <relation>
@@ -718,7 +725,7 @@
       <table-name>CONTENT_ASSOCIATION</table-name>
       <field><col-name>CONTENT_ID_FROM</col-name><type>id-ne</type></field>
       <field><col-name>CONTENT_ID_TO</col-name><type>id-ne</type></field>
-      <field><col-name>CONTACT_MECHANISM_ID</col-name><type>id</type></field>
+      <field><col-name>CONTACT_MECH_ID</col-name><type>id</type></field>
       <field><col-name>FUNCTION_TYPE_ID</col-name><type>id</type></field>
       <field><col-name>UPPER_LEFT_COORDINATE</col-name><type>numeric</type></field>
       <prim-key-col>CONTENT_ID_FROM</prim-key-col>
@@ -907,7 +914,7 @@
       <table-name>SUBSCRIPTION</table-name>
       <field><col-name>SUBSCRIPTION_ID</col-name><type>id-ne</type></field>
       <field><col-name>COMMUNICATION_EVENT_ID</col-name><type>id</type></field>
-      <field><col-name>CONTACT_MECHANISM_ID</col-name><type>id</type></field>
+      <field><col-name>CONTACT_MECH_ID</col-name><type>id</type></field>
       <field><col-name>ORIGINATED_FROM_PARTY_ID</col-name><type>id</type></field>
       <field><col-name>ORIGINATED_FROM_ROLE_TYPE_ID</col-name><type>id</type></field>
       <field><col-name>PARTY_ID</col-name><type>id</type></field>
@@ -927,8 +934,8 @@
       </relation>
       <relation>
         <type>one</type>
-        <rel-table-name>CONTACT_MECHANISM</rel-table-name>
-        <key-map><col-name>CONTACT_MECHANISM_ID</col-name></key-map>
+        <rel-table-name>CONTACT_MECH</rel-table-name>
+        <key-map><col-name>CONTACT_MECH_ID</col-name></key-map>
       </relation>
       <relation>
         <type>one</type>
@@ -1241,7 +1248,7 @@
       <package-name>org.ofbiz.commonapp.content.visit</package-name>
       <table-name>VISIT</table-name>
       <field><col-name>VISIT_ID</col-name><type>id-ne</type></field>
-      <field><col-name>CONTACT_MECHANISM_ID</col-name><type>id</type></field>
+      <field><col-name>CONTACT_MECH_ID</col-name><type>id</type></field>
       <field><col-name>PARTY_ID</col-name><type>id</type></field>
       <field><col-name>ROLE_TYPE_ID</col-name><type>id</type></field>
       <field><col-name>COOKIE</col-name><type>short-varchar</type></field>
@@ -1250,8 +1257,8 @@
       <prim-key-col>VISIT_ID</prim-key-col>
       <relation>
         <type>one</type>
-        <rel-table-name>CONTACT_MECHANISM</rel-table-name>
-        <key-map><col-name>CONTACT_MECHANISM_ID</col-name></key-map>
+        <rel-table-name>CONTACT_MECH</rel-table-name>
+        <key-map><col-name>CONTACT_MECH_ID</col-name></key-map>
       </relation>
       <relation>
         <type>one</type>
@@ -1283,8 +1290,8 @@
       <field><col-name>VISIT_ID</col-name><type>id-ne</type></field>
       <field><col-name>DATETIME</col-name><type>date-time</type></field>
       <field><col-name>PARTY_ID</col-name><type>id</type></field>
-      <field><col-name>ID_BY_IP_CONTACT_MECHANISM_ID</col-name><type>id</type></field>
-      <field><col-name>REF_BY_WEB_CONTACT_MECHANISM_ID</col-name><type>id</type></field>
+      <field><col-name>ID_BY_IP_CONTACT_MECH_ID</col-name><type>id</type></field>
+      <field><col-name>REF_BY_WEB_CONTACT_MECH_ID</col-name><type>id</type></field>
       <field><col-name>STATUS_ID</col-name><type>id</type></field>
       <field><col-name>USER_AGENT_ID</col-name><type>id</type></field>
       <field><col-name>USER_LOGIN_ID</col-name><type>id</type></field>
@@ -1304,13 +1311,13 @@
       </relation>
       <relation>
         <type>one</type>
-        <rel-table-name>CONTACT_MECHANISM</rel-table-name>
-        <key-map><col-name>ID_BY_IP_CONTACT_MECHANISM_ID</col-name><rel-col-name>CONTACT_MECHANISM_ID</rel-col-name></key-map>
+        <rel-table-name>CONTACT_MECH</rel-table-name>
+        <key-map><col-name>ID_BY_IP_CONTACT_MECH_ID</col-name><rel-col-name>CONTACT_MECH_ID</rel-col-name></key-map>
       </relation>
       <relation>
         <type>one</type>
-        <rel-table-name>CONTACT_MECHANISM</rel-table-name>
-        <key-map><col-name>REF_BY_WEB_CONTACT_MECHANISM_ID</col-name><rel-col-name>CONTACT_MECHANISM_ID</rel-col-name></key-map>
+        <rel-table-name>CONTACT_MECH</rel-table-name>
+        <key-map><col-name>REF_BY_WEB_CONTACT_MECH_ID</col-name><rel-col-name>CONTACT_MECH_ID</rel-col-name></key-map>
       </relation>
       <relation>
         <type>one</type>
@@ -1338,6 +1345,824 @@
   <!-- ========================== Party ======================== -->
   <!-- ========================================================= -->
   
+  <!-- ========================================================= -->    
+  <!-- ========================================================= -->    
+    <entity>
+      <title>Party Entity</title>
+      <package-name>org.ofbiz.commonapp.party.party</package-name>
+      <table-name>PARTY</table-name>
+      <field><col-name>PARTY_ID</col-name><type>id-ne</type></field>
+      <prim-key-col>PARTY_ID</prim-key-col>
+      <relation>
+        <type>many</type>
+        <rel-table-name>PARTY_CLASSIFICATION</rel-table-name>
+        <key-map><col-name>PARTY_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>many</type>
+        <rel-table-name>PARTY_ATTRIBUTE</rel-table-name>
+        <key-map><col-name>PARTY_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>many</type><rel-table-name>USER_LOGIN</rel-table-name>
+        <key-map><col-name>PARTY_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>many</type><title>From</title><rel-table-name>PARTY_RELATIONSHIP</rel-table-name>
+        <key-map><col-name>PARTY_ID</col-name><rel-col-name>PARTY_ID_FROM</rel-col-name></key-map>
+      </relation>
+      <relation>
+        <type>many</type><title>To</title><rel-table-name>PARTY_RELATIONSHIP</rel-table-name>
+        <key-map><col-name>PARTY_ID</col-name><rel-col-name>PARTY_ID_TO</rel-col-name></key-map>
+      </relation>
+      <relation>
+        <type>many</type><rel-table-name>PARTY_DATA_OBJECT</rel-table-name>
+        <key-map><col-name>PARTY_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>one</type><rel-table-name>PERSON</rel-table-name>
+        <key-map><col-name>PARTY_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>many</type><rel-table-name>CREDIT_CARD_INFO</rel-table-name>
+        <key-map><col-name>PARTY_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>many</type><rel-table-name>PARTY_CONTACT_MECH</rel-table-name>
+        <key-map><col-name>PARTY_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>many</type><rel-table-name>COST_COMPONENT</rel-table-name>
+        <key-map><col-name>PARTY_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>many</type>
+        <rel-table-name>PRICE_COMPONENT</rel-table-name>
+        <key-map><col-name>PARTY_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>many</type>
+        <rel-table-name>INVENTORY_ITEM</rel-table-name>
+        <key-map><col-name>PARTY_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>many</type>
+        <rel-table-name>PARTY_FACILITY</rel-table-name>
+        <key-map><col-name>PARTY_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>many</type>
+        <rel-table-name>REORDER_GUIDELINE</rel-table-name>
+        <key-map><col-name>PARTY_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>many</type>
+        <rel-table-name>SUPPLIER_PRODUCT</rel-table-name>
+        <key-map><col-name>PARTY_ID</col-name></key-map>
+      </relation>
+    </entity>
+    <!-- ========================================================= -->    
+    <entity>
+      <title>Party Classification Entity</title>
+      <package-name>org.ofbiz.commonapp.party.party</package-name>
+      <table-name>PARTY_CLASSIFICATION</table-name>
+      <field><col-name>PARTY_ID</col-name><type>id-ne</type></field>
+      <field><col-name>PARTY_TYPE_ID</col-name><type>id-ne</type></field>
+      <field><col-name>PARTY_CLASSIFICATION_TYPE_ID</col-name><type>id</type></field>
+      <field><col-name>FROM_DATE</col-name><type>date-time</type></field>
+      <field><col-name>THRU_DATE</col-name><type>date-time</type></field>
+      <prim-key-col>PARTY_ID</prim-key-col>
+      <prim-key-col>PARTY_TYPE_ID</prim-key-col>
+      <relation>
+        <type>one</type>
+        <rel-table-name>PARTY</rel-table-name>
+        <key-map><col-name>PARTY_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>one</type>
+        <rel-table-name>PARTY_TYPE</rel-table-name>
+        <key-map><col-name>PARTY_TYPE_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>one</type>
+        <rel-table-name>PARTY_CLASSIFICATION_TYPE</rel-table-name>
+        <key-map><col-name>PARTY_CLASSIFICATION_TYPE_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>many</type>
+        <rel-table-name>PARTY_TYPE_ATTR</rel-table-name>
+        <key-map><col-name>PARTY_TYPE_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>many</type>
+        <rel-table-name>PARTY_ATTRIBUTE</rel-table-name>
+        <key-map><col-name>PARTY_ID</col-name></key-map>
+      </relation>
+    </entity>
+    <!-- ========================================================= -->    
+    <entity>
+      <title>Party Classification Type Entity</title>
+      <package-name>org.ofbiz.commonapp.party.party</package-name>
+      <table-name>PARTY_CLASSIFICATION_TYPE</table-name>
+      <field><col-name>PARTY_CLASSIFICATION_TYPE_ID</col-name><type>id-ne</type></field>
+      <field><col-name>PARENT_TYPE_ID</col-name><type>id</type></field>
+      <field><col-name>HAS_TABLE</col-name><type>indicator</type></field>
+      <field><col-name>DESCRIPTION</col-name><type>description</type></field>
+      <prim-key-col>PARTY_CLASSIFICATION_TYPE_ID</prim-key-col>
+      <relation>
+        <title>Parent</title>
+        <type>one</type>
+        <rel-table-name>PARTY_CLASSIFICATION_TYPE</rel-table-name>
+        <key-map><col-name>PARENT_TYPE_ID</col-name><rel-col-name>PARTY_CLASSIFICATION_TYPE_ID</rel-col-name></key-map>
+      </relation>
+      <relation>
+        <title>Child</title>
+        <type>many</type>
+        <rel-table-name>PARTY_CLASSIFICATION_TYPE</rel-table-name>
+        <key-map><col-name>PARTY_CLASSIFICATION_TYPE_ID</col-name><rel-col-name>PARENT_TYPE_ID</rel-col-name></key-map>
+      </relation>
+      <relation>
+        <type>many</type>
+        <rel-table-name>PARTY_CLASSIFICATION</rel-table-name>
+        <key-map><col-name>PARTY_CLASSIFICATION_TYPE_ID</col-name></key-map>
+      </relation>
+    </entity>
+    <!-- ========================================================= -->    
+    <entity>
+      <title>Party Type Entity</title>
+      <package-name>org.ofbiz.commonapp.party.party</package-name>
+      <table-name>PARTY_TYPE</table-name>
+      <field><col-name>PARTY_TYPE_ID</col-name><type>id-ne</type></field>
+      <field><col-name>PARENT_TYPE_ID</col-name><type>id</type></field>
+      <field><col-name>HAS_TABLE</col-name><type>indicator</type></field>
+      <field><col-name>DESCRIPTION</col-name><type>description</type></field>
+      <prim-key-col>PARTY_TYPE_ID</prim-key-col>
+      <relation>
+        <title>Parent</title>
+        <type>one</type>
+        <rel-table-name>PARTY_TYPE</rel-table-name>
+        <key-map><col-name>PARENT_TYPE_ID</col-name><rel-col-name>PARTY_TYPE_ID</rel-col-name></key-map>
+      </relation>
+      <relation>
+        <title>Child</title>
+        <type>many</type>
+        <rel-table-name>PARTY_TYPE</rel-table-name>
+        <key-map><col-name>PARTY_TYPE_ID</col-name><rel-col-name>PARENT_TYPE_ID</rel-col-name></key-map>
+      </relation>
+      <relation>
+        <title>Sibling</title>
+        <type>many</type>
+        <rel-table-name>PARTY_TYPE</rel-table-name>
+        <key-map><col-name>PARENT_TYPE_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>many</type>
+        <rel-table-name>PARTY_TYPE_ATTR</rel-table-name>
+        <key-map><col-name>PARTY_TYPE_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>many</type>
+        <rel-table-name>PARTY_CLASSIFICATION</rel-table-name>
+        <key-map><col-name>PARTY_TYPE_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>many</type>
+        <rel-table-name>PRICE_COMPONENT</rel-table-name>
+        <key-map><col-name>PARTY_TYPE_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>many</type>
+        <rel-table-name>MARKET_INTEREST</rel-table-name>
+        <key-map><col-name>PARTY_TYPE_ID</col-name></key-map>
+      </relation>
+    </entity>
+    <!-- ========================================================= -->    
+    <entity>
+      <title>Party Attribute Entity</title>
+      <package-name>org.ofbiz.commonapp.party.party</package-name>
+      <table-name>PARTY_ATTRIBUTE</table-name>
+      <field><col-name>PARTY_ID</col-name><type>id-ne</type></field>
+      <field><col-name>NAME</col-name><type>id-long-ne</type></field>
+      <field><col-name>VALUE</col-name><type>value</type></field>
+      <prim-key-col>PARTY_ID</prim-key-col>
+      <prim-key-col>NAME</prim-key-col>
+      <relation>
+        <type>one</type>
+        <rel-table-name>PARTY</rel-table-name>
+        <key-map><col-name>PARTY_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>many</type>
+        <rel-table-name>PARTY_TYPE_ATTR</rel-table-name>
+        <key-map><col-name>NAME</col-name></key-map>
+      </relation>
+    </entity>
+    <!-- ========================================================= -->    
+    <entity>
+      <title>Party Type Attribute Entity</title>
+      <package-name>org.ofbiz.commonapp.party.party</package-name>
+      <table-name>PARTY_TYPE_ATTR</table-name>
+      <field><col-name>PARTY_TYPE_ID</col-name><type>id-ne</type></field>
+      <field><col-name>NAME</col-name><type>id-long-ne</type></field>
+      <prim-key-col>PARTY_TYPE_ID</prim-key-col>
+      <prim-key-col>NAME</prim-key-col>
+      <relation>
+        <type>one</type>
+        <rel-table-name>PARTY_TYPE</rel-table-name>
+        <key-map><col-name>PARTY_TYPE_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>many</type>
+        <rel-table-name>PARTY_ATTRIBUTE</rel-table-name>
+        <key-map><col-name>NAME</col-name></key-map>
+      </relation>
+      <relation>
+        <type>many</type>
+        <rel-table-name>PARTY_CLASSIFICATION</rel-table-name>
+        <key-map><col-name>PARTY_TYPE_ID</col-name></key-map>
+      </relation>
+    </entity>
+    <!-- ========================================================= -->    
+    <entity>
+      <title>Party Role Entity</title>
+      <package-name>org.ofbiz.commonapp.party.party</package-name>
+      <table-name>PARTY_ROLE</table-name>
+      <field><col-name>PARTY_ID</col-name><type>id-ne</type></field>
+      <field><col-name>ROLE_TYPE_ID</col-name><type>id-ne</type></field>
+      <field><col-name>PARTY_ROLE_ID</col-name><type>id</type></field>
+      <prim-key-col>PARTY_ID</prim-key-col>
+      <prim-key-col>ROLE_TYPE_ID</prim-key-col>
+      <relation>
+        <type>one</type>
+        <rel-table-name>PARTY</rel-table-name>
+        <key-map><col-name>PARTY_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>one</type>
+        <rel-table-name>ROLE_TYPE</rel-table-name>
+        <key-map><col-name>ROLE_TYPE_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>many</type>
+        <rel-table-name>ROLE_TYPE_ATTR</rel-table-name>
+        <key-map><col-name>ROLE_TYPE_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>many</type>
+        <rel-table-name>PARTY_ATTRIBUTE</rel-table-name>
+        <key-map><col-name>PARTY_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>many</type><title>From</title><rel-table-name>PARTY_RELATIONSHIP</rel-table-name>
+        <key-map><col-name>PARTY_ID</col-name><rel-col-name>PARTY_ID_FROM</rel-col-name></key-map>
+        <key-map><col-name>ROLE_TYPE_ID</col-name><rel-col-name>ROLE_TYPE_ID_FROM</rel-col-name></key-map>
+      </relation>
+      <relation>
+        <type>many</type><title>To</title><rel-table-name>PARTY_RELATIONSHIP</rel-table-name>
+        <key-map><col-name>PARTY_ID</col-name><rel-col-name>PARTY_ID_TO</rel-col-name></key-map>
+        <key-map><col-name>ROLE_TYPE_ID</col-name><rel-col-name>ROLE_TYPE_ID_TO</rel-col-name></key-map>
+      </relation>
+      <relation>
+        <type>many</type><rel-table-name>PARTY_CONTACT_MECH</rel-table-name>
+        <key-map><col-name>PARTY_ID</col-name></key-map>
+        <key-map><col-name>ROLE_TYPE_ID</col-name></key-map>
+      </relation>
+    </entity>
+    <!-- ========================================================= -->    
+    <entity>
+      <title>Role Type Entity</title>
+      <package-name>org.ofbiz.commonapp.party.party</package-name>
+      <table-name>ROLE_TYPE</table-name>
+      <field><col-name>ROLE_TYPE_ID</col-name><type>id-ne</type></field>
+      <field><col-name>PARENT_TYPE_ID</col-name><type>id</type></field>
+      <field><col-name>HAS_TABLE</col-name><type>indicator</type></field>
+      <field><col-name>DESCRIPTION</col-name><type>description</type></field>
+      <prim-key-col>ROLE_TYPE_ID</prim-key-col>
+      <relation>
+        <type>one</type><title>Parent</title><rel-table-name>ROLE_TYPE</rel-table-name>
+        <key-map><col-name>PARENT_TYPE_ID</col-name><rel-col-name>ROLE_TYPE_ID</rel-col-name></key-map>
+      </relation>
+      <relation>
+        <type>many</type><title>Child</title><rel-table-name>ROLE_TYPE</rel-table-name>        
+        <key-map><col-name>ROLE_TYPE_ID</col-name><rel-col-name>PARENT_TYPE_ID</rel-col-name></key-map>
+      </relation>
+      <relation>
+        <type>many</type><rel-table-name>ROLE_TYPE_ATTR</rel-table-name>
+        <key-map><col-name>ROLE_TYPE_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>many</type><rel-table-name>PARTY_ROLE</rel-table-name>
+        <key-map><col-name>ROLE_TYPE_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>many</type><rel-table-name>VALID_CONTACT_MECH_ROLE</rel-table-name>
+        <key-map><col-name>ROLE_TYPE_ID</col-name></key-map>
+      </relation>
+    </entity>
+    <!-- ========================================================= -->    
+    <entity>
+      <title>Role Type Attribute Entity</title>
+      <package-name>org.ofbiz.commonapp.party.party</package-name>
+      <table-name>ROLE_TYPE_ATTR</table-name>
+      <field><col-name>ROLE_TYPE_ID</col-name><type>id-ne</type></field>
+      <field><col-name>NAME</col-name><type>id-long-ne</type></field>
+      <prim-key-col>ROLE_TYPE_ID</prim-key-col>
+      <prim-key-col>NAME</prim-key-col>
+      <relation>
+        <type>one</type>
+        <rel-table-name>ROLE_TYPE</rel-table-name>
+        <key-map><col-name>ROLE_TYPE_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>many</type>
+        <rel-table-name>PARTY_ATTRIBUTE</rel-table-name>
+        <key-map><col-name>NAME</col-name></key-map>
+      </relation>
+      <relation>
+        <type>many</type>
+        <rel-table-name>PARTY_ROLE</rel-table-name>
+        <key-map><col-name>ROLE_TYPE_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>many</type><title>ValidFrom</title><rel-table-name>PARTY_RELATIONSHIP_TYPE</rel-table-name>
+        <key-map><col-name>ROLE_TYPE_ID</col-name><rel-col-name>ROLE_TYPE_ID_VALID_FROM</rel-col-name></key-map>
+      </relation>
+      <relation>
+        <type>many</type><title>ValidTo</title><rel-table-name>PARTY_RELATIONSHIP_TYPE</rel-table-name>
+        <key-map><col-name>ROLE_TYPE_ID</col-name><rel-col-name>ROLE_TYPE_ID_VALID_TO</rel-col-name></key-map>
+      </relation>
+    </entity>
+    
+    <!-- ========================================================= -->    
+    <entity>
+      <title>Party Relationship Entity</title>
+      <package-name>org.ofbiz.commonapp.party.party</package-name>
+      <table-name>PARTY_RELATIONSHIP</table-name>
+      <field><col-name>PARTY_ID_FROM</col-name><type>id-ne</type></field>
+      <field><col-name>PARTY_ID_TO</col-name><type>id-ne</type></field>
+      <field><col-name>ROLE_TYPE_ID_FROM</col-name><type>id-ne</type></field>
+      <field><col-name>ROLE_TYPE_ID_TO</col-name><type>id-ne</type></field>
+      <field><col-name>FROM_DATE</col-name><type>date-time</type></field>
+      <field><col-name>THRU_DATE</col-name><type>date-time</type></field>
+      <field><col-name>STATUS_ID</col-name><type>id</type></field>
+      <field><col-name>PRIORITY_TYPE_ID</col-name><type>id</type></field>
+      <field><col-name>PARTY_RELATIONSHIP_TYPE_ID</col-name><type>id</type></field>
+      <field><col-name>COMMENT</col-name><type>comment</type></field>
+      <prim-key-col>PARTY_ID_FROM</prim-key-col>
+      <prim-key-col>PARTY_ID_TO</prim-key-col>
+      <prim-key-col>ROLE_TYPE_ID_FROM</prim-key-col>
+      <prim-key-col>ROLE_TYPE_ID_TO</prim-key-col>
+      <relation>
+        <type>one</type><title>From</title><rel-table-name>PARTY</rel-table-name>
+        <key-map><col-name>PARTY_ID_FROM</col-name><rel-col-name>PARTY_ID</rel-col-name></key-map>
+      </relation>
+      <relation>
+        <type>one</type><title>To</title><rel-table-name>PARTY</rel-table-name>
+        <key-map><col-name>PARTY_ID_TO</col-name><rel-col-name>PARTY_ID</rel-col-name></key-map>
+      </relation>
+      <relation>
+        <type>one</type><title>From</title><rel-table-name>PARTY_ROLE</rel-table-name>
+        <key-map><col-name>PARTY_ID_FROM</col-name><rel-col-name>PARTY_ID</rel-col-name></key-map>
+        <key-map><col-name>ROLE_TYPE_ID_FROM</col-name><rel-col-name>ROLE_TYPE_ID</rel-col-name></key-map>
+      </relation>
+      <relation>
+        <type>one</type><title>To</title><rel-table-name>PARTY_ROLE</rel-table-name>
+        <key-map><col-name>PARTY_ID_TO</col-name><rel-col-name>PARTY_ID</rel-col-name></key-map>
+        <key-map><col-name>ROLE_TYPE_ID_TO</col-name><rel-col-name>ROLE_TYPE_ID</rel-col-name></key-map>
+      </relation>
+      <relation>
+        <type>one</type><rel-table-name>STATUS</rel-table-name>
+        <key-map><col-name>STATUS_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>one</type><rel-table-name>PRIORITY_TYPE</rel-table-name>
+        <key-map><col-name>PRIORITY_TYPE_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>one</type><rel-table-name>PARTY_RELATIONSHIP_TYPE</rel-table-name>
+        <key-map><col-name>PARTY_RELATIONSHIP_TYPE_ID</col-name></key-map>
+      </relation>
+    </entity>
+    <!-- ========================================================= -->    
+    <entity>
+      <title>Priority Type Entity</title>
+      <package-name>org.ofbiz.commonapp.party.party</package-name>
+      <table-name>PRIORITY_TYPE</table-name>
+      <field><col-name>PRIORITY_TYPE_ID</col-name><type>id-ne</type></field>
+      <field><col-name>DESCRIPTION</col-name><type>description</type></field>
+      <prim-key-col>PRIORITY_TYPE_ID</prim-key-col>
+      <relation>
+        <type>many</type><rel-table-name>PARTY_RELATIONSHIP</rel-table-name>
+        <key-map><col-name>PRIORITY_TYPE_ID</col-name></key-map>
+      </relation>
+    </entity>
+    <!-- ========================================================= -->    
+    <entity>
+      <title>Party Relationship Type Entity</title>
+      <package-name>org.ofbiz.commonapp.party.party</package-name>
+      <table-name>PARTY_RELATIONSHIP_TYPE</table-name>
+      <field><col-name>PARTY_RELATIONSHIP_TYPE_ID</col-name><type>id-ne</type></field>
+      <field><col-name>PARENT_TYPE_ID</col-name><type>id</type></field>
+      <field><col-name>HAS_TABLE</col-name><type>indicator</type></field>
+      <field><col-name>ROLE_TYPE_ID_VALID_FROM</col-name><type>id</type></field>
+      <field><col-name>ROLE_TYPE_ID_VALID_TO</col-name><type>id</type></field>
+      <field><col-name>DESCRIPTION</col-name><type>description</type></field>
+      <field><col-name>NAME</col-name><type>name</type></field>
+      <prim-key-col>PARTY_RELATIONSHIP_TYPE_ID</prim-key-col>
+      <relation>
+        <type>one</type><title>Parent</title><rel-table-name>PARTY_RELATIONSHIP_TYPE</rel-table-name>
+        <key-map><col-name>PARENT_TYPE_ID</col-name><rel-col-name>PARTY_RELATIONSHIP_TYPE_ID</rel-col-name></key-map>
+      </relation>
+      <relation>
+        <type>many</type><title>Child</title><rel-table-name>PARTY_RELATIONSHIP_TYPE</rel-table-name>
+        <key-map><col-name>PARTY_RELATIONSHIP_TYPE_ID</col-name><rel-col-name>PARENT_TYPE_ID</rel-col-name></key-map>
+      </relation>
+      <relation>
+        <type>many</type><rel-table-name>PARTY_RELATIONSHIP</rel-table-name>
+        <key-map><col-name>PARTY_RELATIONSHIP_TYPE</col-name></key-map>
+      </relation>
+      <relation>
+        <type>one</type><title>ValidFrom</title><rel-table-name>ROLE_TYPE</rel-table-name>
+        <key-map><col-name>ROLE_TYPE_ID_VALID_FROM</col-name><rel-col-name>ROLE_TYPE_ID</rel-col-name></key-map>
+      </relation>
+      <relation>
+        <type>one</type><title>ValidTo</title><rel-table-name>ROLE_TYPE</rel-table-name>
+        <key-map><col-name>ROLE_TYPE_ID_VALID_TO</col-name><rel-col-name>ROLE_TYPE_ID</rel-col-name></key-map>
+      </relation>
+    </entity>
+    <!-- ========================================================= -->    
+    <entity>
+      <title>Party Data Object Entity</title>
+      <package-name>org.ofbiz.commonapp.party.party</package-name>
+      <table-name>PARTY_DATA_OBJECT</table-name>
+      <field><col-name>PARTY_ID</col-name><type>id-ne</type></field>
+      <field><col-name>DATA_OBJECT_ID</col-name><type>id-ne</type></field>
+      <prim-key-col>PARTY_ID</prim-key-col>
+      <prim-key-col>DATA_OBJECT_ID</prim-key-col>
+      <relation>
+        <type>one</type><rel-table-name>PARTY</rel-table-name>
+        <key-map><col-name>PARTY_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>one</type><rel-table-name>DATA_OBJECT_ID</rel-table-name>
+        <key-map><col-name>DATA_OBJECT_ID</col-name></key-map>
+      </relation>
+    </entity>
+    <!-- ========================================================= -->    
+    <entity>
+      <title>Person Entity</title>
+      <package-name>org.ofbiz.commonapp.party.party</package-name>
+      <table-name>PERSON</table-name>
+      <field><col-name>PARTY_ID</col-name><type>id-ne</type></field>
+      <field><col-name>LAST_NAME</col-name><type>name</type></field>
+      <field><col-name>FIRST_NAME</col-name><type>name</type></field>
+      <field><col-name>MIDDLE_NAME</col-name><type>name</type></field>
+      <field><col-name>PERSONAL_TITLE</col-name><type>name</type></field>
+      <field><col-name>SUFFIX</col-name><type>name</type></field>
+      <field><col-name>NICKNAME</col-name><type>name</type></field>
+      <field><col-name>GENDER</col-name><type>indicator</type></field>
+      <field><col-name>BIRTH_DATE</col-name><type>date-time</type></field>
+      <field><col-name>HEIGHT</col-name><type>floating-point</type></field>
+      <field><col-name>WEIGHT</col-name><type>floating-point</type></field>
+      <field><col-name>MOTHERS_MAIDEN_NAME</col-name><type>name</type></field>
+      <field><col-name>MARITAL_STATUS</col-name><type>indicator</type></field>
+      <field><col-name>SOCIAL_SECURITY_NUMBER</col-name><type>short-varchar</type></field>
+      <field><col-name>PASSPORT_NUMBER</col-name><type>short-varchar</type></field>
+      <field><col-name>PASSPORT_EXPIRE_DATE</col-name><type>date-time</type></field>
+      <field><col-name>TOTAL_YEARS_WORK_EXPERIENCE</col-name><type>floating-point</type></field>
+      <field><col-name>COMMENT</col-name><type>comment</type></field>
+      <prim-key-col>PARTY_ID</prim-key-col>
+      <relation>
+        <type>one</type><rel-table-name>PARTY</rel-table-name>
+        <key-map><col-name>PARTY_ID</col-name></key-map>
+      </relation>
+    </entity>
+  <!-- ========================================================= -->    
+  <!-- ========================================================= -->    
+    <entity>
+      <title>Contact Mechanism Entity</title>
+      <package-name>org.ofbiz.commonapp.party.contact</package-name>
+      <table-name>CONTACT_MECH</table-name>
+      <field><col-name>CONTACT_MECH_ID</col-name><type>id-ne</type></field>
+      <field><col-name>CONTACT_MECH_TYPE_ID</col-name><type>id</type></field>
+      <field><col-name>INFO_STRING</col-name><type>long-varchar</type></field>
+      <prim-key-col>CONTACT_MECH_ID</prim-key-col>
+      <relation>
+        <type>one</type><rel-table-name>CONTACT_MECH_TYPE</rel-table-name>
+        <key-map><col-name>CONTACT_MECH_TYPE_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>many</type><rel-table-name>CONTACT_MECH_TYPE_ATTR</rel-table-name>
+        <key-map><col-name>CONTACT_MECH_TYPE_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>many</type><rel-table-name>CONTACT_MECH_ATTRIBUTE</rel-table-name>
+        <key-map><col-name>CONTACT_MECH_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>many</type><title>From</title><rel-table-name>CONTACT_MECH_LINK</rel-table-name>
+        <key-map><col-name>CONTACT_MECH_ID</col-name><rel-col-name>CONTACT_MECH_ID_FROM</rel-col-name></key-map>
+      </relation>
+      <relation>
+        <type>many</type><title>To</title><rel-table-name>CONTACT_MECH_LINK</rel-table-name>
+        <key-map><col-name>CONTACT_MECH_ID</col-name><rel-col-name>CONTACT_MECH_ID_TO</rel-col-name></key-map>
+      </relation>
+      <relation>
+        <type>many</type><rel-table-name>PARTY_CONTACT_MECH</rel-table-name>
+        <key-map><col-name>CONTACT_MECH_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>many</type><rel-table-name>FACILITY_CONTACT_MECH</rel-table-name>
+        <key-map><col-name>CONTACT_MECH_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>one</type><rel-table-name>POSTAL_ADDRESS</rel-table-name>
+        <key-map><col-name>CONTACT_MECH_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>one</type><rel-table-name>TELECOMMUNICATIONS_NUMBER</rel-table-name>
+        <key-map><col-name>CONTACT_MECH_ID</col-name></key-map>
+      </relation>
+    </entity>
+    <!-- ========================================================= -->
+    <entity>
+      <title>Contact Mechanism Type Entity</title>
+      <package-name>org.ofbiz.commonapp.party.contact</package-name>
+      <table-name>CONTACT_MECH_TYPE</table-name>
+      <field><col-name>CONTACT_MECH_TYPE_ID</col-name><type>id-ne</type></field>
+      <field><col-name>PARENT_TYPE_ID</col-name><type>id-ne</type></field>
+      <field><col-name>HAS_TABLE</col-name><type>indicator</type></field>
+      <field><col-name>DESCRIPTION</col-name><type>description</type></field>
+      <prim-key-col>CONTACT_MECH_TYPE_ID</prim-key-col>
+      <relation>
+        <type>one</type><title>Parent</title><rel-table-name>CONTACT_MECH_TYPE</rel-table-name>
+        <key-map><col-name>PARENT_TYPE_ID</col-name><rel-col-name>CONTACT_MECH_TYPE_ID</rel-col-name></key-map>
+      </relation>
+      <relation>
+        <type>many</type><title>Child</title><rel-table-name>CONTACT_MECH_TYPE</rel-table-name>
+        <key-map><col-name>CONTACT_MECH_TYPE_ID</col-name><rel-col-name>PARENT_TYPE_ID</rel-col-name></key-map>
+      </relation>
+      <relation>
+        <type>many</type><rel-table-name>CONTACT_MECH_TYPE_ATTR</rel-table-name>
+        <key-map><col-name>CONTACT_MECH_TYPE_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>many</type><rel-table-name>CONTACT_MECH</rel-table-name>
+        <key-map><col-name>CONTACT_MECH_TYPE_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>many</type><rel-table-name>VALID_CONTACT_MECH_ROLE</rel-table-name>
+        <key-map><col-name>CONTACT_MECH_TYPE_ID</col-name></key-map>
+      </relation>
+    </entity>
+    <!-- ========================================================= -->    
+    <entity>
+      <title>Contact Mechanism Attribute Entity</title>
+      <package-name>org.ofbiz.commonapp.party.contact</package-name>
+      <table-name>CONTACT_MECH_ATTRIBUTE</table-name>
+      <field><col-name>CONTACT_MECH_ID</col-name><type>id-ne</type></field>
+      <field><col-name>NAME</col-name><type>id-long-ne</type></field>
+      <field><col-name>VALUE</col-name><type>value</type></field>
+      <prim-key-col>CONTACT_MECH_ID</prim-key-col>
+      <prim-key-col>NAME</prim-key-col>
+      <relation>
+        <type>one</type>
+        <rel-table-name>CONTACT_MECH</rel-table-name>
+        <key-map><col-name>CONTACT_MECH_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>many</type>
+        <rel-table-name>CONTACT_MECH_TYPE_ATTR</rel-table-name>
+        <key-map><col-name>NAME</col-name></key-map>
+      </relation>
+    </entity>
+    <!-- ========================================================= -->    
+    <entity>
+      <title>Contact Mechanism Type Attribute Entity</title>
+      <package-name>org.ofbiz.commonapp.party.contact</package-name>
+      <table-name>CONTACT_MECH_TYPE_ATTR</table-name>
+      <field><col-name>CONTACT_MECH_TYPE_ID</col-name><type>id-ne</type></field>
+      <field><col-name>NAME</col-name><type>id-long-ne</type></field>
+      <prim-key-col>CONTACT_MECH_TYPE_ID</prim-key-col>
+      <prim-key-col>NAME</prim-key-col>
+      <relation>
+        <type>one</type>
+        <rel-table-name>CONTACT_MECH_TYPE</rel-table-name>
+        <key-map><col-name>CONTACT_MECH_TYPE_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>many</type>
+        <rel-table-name>CONTACT_MECH_ATTRIBUTE</rel-table-name>
+        <key-map><col-name>NAME</col-name></key-map>
+      </relation>
+      <relation>
+        <type>many</type>
+        <rel-table-name>CONTACT_MECH</rel-table-name>
+        <key-map><col-name>CONTACT_MECH_TYPE_ID</col-name></key-map>
+      </relation>
+    </entity>
+    <!-- ========================================================= -->    
+    <entity>
+      <title>Contact Mechanism Link Entity</title>
+      <package-name>org.ofbiz.commonapp.party.contact</package-name>
+      <table-name>CONTACT_MECH_LINK</table-name>
+      <field><col-name>CONTACT_MECH_ID_FROM</col-name><type>id-ne</type></field>
+      <field><col-name>CONTACT_MECH_ID_TO</col-name><type>id-ne</type></field>
+      <prim-key-col>CONTACT_MECH_ID_FROM</prim-key-col>
+      <prim-key-col>CONTACT_MECH_ID_TO</prim-key-col>
+      <relation>
+        <type>one</type><title>From</title><rel-table-name>CONTACT_MECH</rel-table-name>
+        <key-map><col-name>CONTACT_MECH_ID_FROM</col-name><rel-col-name>CONTACT_MECH_ID</rel-col-name></key-map>
+      </relation>
+      <relation>
+        <type>one</type><title>To</title><rel-table-name>CONTACT_MECH</rel-table-name>
+        <key-map><col-name>CONTACT_MECH_ID_TO</col-name><rel-col-name>CONTACT_MECH_ID</rel-col-name></key-map>
+      </relation>
+    </entity>
+    <!-- ========================================================= -->    
+    <entity>
+      <title>Party Contact Mechanism Entity</title>
+      <package-name>org.ofbiz.commonapp.party.contact</package-name>
+      <table-name>PARTY_CONTACT_MECH</table-name>
+      <field><col-name>PARTY_ID</col-name><type>id-ne</type></field>
+      <field><col-name>CONTACT_MECH_ID</col-name><type>id-ne</type></field>
+      <field><col-name>FROM_DATE</col-name><type>date-time</type></field>
+      <field><col-name>THRU_DATE</col-name><type>date-time</type></field>
+      <field><col-name>ROLE_TYPE_ID</col-name><type>id</type></field>
+      <field><col-name>NON_SOLICITATION_INDICATOR</col-name><type>indicator</type></field>
+      <field><col-name>EXTENSION</col-name><type>very-short</type></field>
+      <field><col-name>COMMENT</col-name><type>comment</type></field>
+      <prim-key-col>PARTY_ID</prim-key-col>
+      <prim-key-col>CONTACT_MECH_ID</prim-key-col>
+      <relation>
+        <type>one</type><rel-table-name>PARTY</rel-table-name>
+        <key-map><col-name>PARTY_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>one</type><rel-table-name>PARTY_ROLE</rel-table-name>
+        <key-map><col-name>PARTY_ID</col-name></key-map>
+        <key-map><col-name>ROLE_TYPE_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>one</type><rel-table-name>ROLE_TYPE</rel-table-name>
+        <key-map><col-name>ROLE_TYPE_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>one</type><rel-table-name>CONTACT_MECH</rel-table-name>
+        <key-map><col-name>CONTACT_MECH_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>many</type><rel-table-name>PARTY_CONTACT_MECH_PURPOSE</rel-table-name>
+        <key-map><col-name>PARTY_ID</col-name></key-map>
+        <key-map><col-name>CONTACT_MECH_ID</col-name></key-map>
+      </relation>
+    </entity>
+    <!-- ========================================================= -->    
+    <entity>
+      <title>Party Contact Mechanism Purpose Entity</title>
+      <package-name>org.ofbiz.commonapp.party.contact</package-name>
+      <table-name>PARTY_CONTACT_MECH_PURPOSE</table-name>
+      <field><col-name>PARTY_ID</col-name><type>id-ne</type></field>
+      <field><col-name>CONTACT_MECH_ID</col-name><type>id-ne</type></field>
+      <field><col-name>CONTACT_MECH_PURPOSE_TYPE_ID</col-name><type>id-ne</type></field>
+      <field><col-name>FROM_DATE</col-name><type>date-time</type></field>
+      <field><col-name>THRU_DATE</col-name><type>date-time</type></field>
+      <prim-key-col>PARTY_ID</prim-key-col>
+      <prim-key-col>CONTACT_MECH_ID</prim-key-col>
+      <prim-key-col>CONTACT_MECH_PURPOSE_TYPE_ID</prim-key-col>
+      <relation>
+        <type>one</type><rel-table-name>PARTY_CONTACT_MECH</rel-table-name>
+        <key-map><col-name>PARTY_ID</col-name></key-map>
+        <key-map><col-name>CONTACT_MECH_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>one</type><rel-table-name>CONTACT_MECH_PURPOSE_TYPE</rel-table-name>
+        <key-map><col-name>CONTACT_MECH_PURPOSE_TYPE_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>one</type><rel-table-name>PARTY</rel-table-name>
+        <key-map><col-name>PARTY_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>one</type><rel-table-name>CONTACT_MECH</rel-table-name>
+        <key-map><col-name>CONTACT_MECH_ID</col-name></key-map>
+      </relation>
+    </entity>
+    <!-- ========================================================= -->    
+    <entity>
+      <title>Contact Mechanism Purpose Type Entity</title>
+      <package-name>org.ofbiz.commonapp.party.contact</package-name>
+      <table-name>CONTACT_MECH_PURPOSE_TYPE</table-name>
+      <field><col-name>CONTACT_MECH_PURPOSE_TYPE_ID</col-name><type>id-ne</type></field>
+      <field><col-name>DESCRIPTION</col-name><type>description</type></field>
+      <prim-key-col>CONTACT_MECH_PURPOSE_TYPE_ID</prim-key-col>
+      <relation>
+        <type>many</type><rel-table-name>PARTY_CONTACT_MECH_PURPOSE</rel-table-name>
+        <key-map><col-name>CONTACT_MECH_PURPOSE_TYPE_ID</col-name></key-map>
+      </relation>
+    </entity>
+    <!-- ========================================================= -->    
+    <entity>
+      <title>Postal Address Entity</title>
+      <package-name>org.ofbiz.commonapp.party.contact</package-name>
+      <table-name>POSTAL_ADDRESS</table-name>
+      <field><col-name>CONTACT_MECH_ID</col-name><type>id-ne</type></field>
+      <field><col-name>ADDRESS1</col-name><type>long-varchar</type></field>
+      <field><col-name>ADDRESS2</col-name><type>long-varchar</type></field>
+      <field><col-name>DIRECTIONS</col-name><type>long-varchar</type></field>
+      <prim-key-col>CONTACT_MECH_ID</prim-key-col>
+      <relation>
+        <type>one</type><rel-table-name>CONTACT_MECH</rel-table-name>
+        <key-map><col-name>CONTACT_MECH_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>many</type><rel-table-name>CREDIT_CARD_INFO</rel-table-name>
+        <key-map><col-name>CONTACT_MECH_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>many</type><rel-table-name>POSTAL_ADDRESS_BOUNDARY</rel-table-name>
+        <key-map><col-name>CONTACT_MECH_ID</col-name></key-map>
+      </relation>
+    </entity>
+    <!-- ========================================================= -->    
+    <entity>
+      <title>Postal Address Boundary Entity</title>
+      <package-name>org.ofbiz.commonapp.party.contact</package-name>
+      <table-name>POSTAL_ADDRESS_BOUNDARY</table-name>
+      <field><col-name>CONTACT_MECH_ID</col-name><type>id-ne</type></field>
+      <field><col-name>GEO_ID</col-name><type>id-ne</type></field>
+      <prim-key-col>CONTACT_MECH_ID</prim-key-col>
+      <prim-key-col>GEO_ID</prim-key-col>
+      <relation>
+        <type>one</type><rel-table-name>POSTAL_ADDRESS</rel-table-name>
+        <key-map><col-name>CONTACT_MECH_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>one</type><rel-table-name>GEO</rel-table-name>
+        <key-map><col-name>GEO_ID</col-name></key-map>
+      </relation>
+    </entity>
+    <!-- ========================================================= -->    
+    <entity>
+      <title>Telecommunications Number Entity</title>
+      <package-name>org.ofbiz.commonapp.party.contact</package-name>
+      <table-name>TELECOMMUNICATIONS_NUMBER</table-name>
+      <field><col-name>CONTACT_MECH_ID</col-name><type>id-ne</type></field>
+      <field><col-name>AREA_CODE</col-name><type>short-varchar</type></field>
+      <field><col-name>CONTACT_NUMBER</col-name><type>short-varchar</type></field>
+      <field><col-name>COUNTRY_CODE</col-name><type>short-varchar</type></field>
+      <prim-key-col>CONTACT_MECH_ID</prim-key-col>
+      <relation>
+        <type>one</type><rel-table-name>CONTACT_MECH</rel-table-name>
+        <key-map><col-name>CONTACT_MECH_ID</col-name></key-map>
+      </relation>
+    </entity>
+    <!-- ========================================================= -->    
+    <entity>
+      <title>Valid Contact Mechanism Role Entity</title>
+      <package-name>org.ofbiz.commonapp.party.contact</package-name>
+      <table-name>VALID_CONTACT_MECH_ROLE</table-name>
+      <field><col-name>ROLE_TYPE_ID</col-name><type>id-ne</type></field>
+      <field><col-name>CONTACT_MECH_TYPE_ID</col-name><type>id-ne</type></field>
+      <prim-key-col>ROLE_TYPE_ID</prim-key-col>
+      <prim-key-col>CONTACT_MECH_TYPE_ID</prim-key-col>
+      <relation>
+        <type>one</type><rel-table-name>ROLE_TYPE</rel-table-name>
+        <key-map><col-name>ROLE_TYPE_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>one</type><rel-table-name>CONTACT_MECH_TYPE</rel-table-name>
+        <key-map><col-name>CONTACT_MECH_TYPE_ID</col-name></key-map>
+      </relation>
+    </entity>
+    <!-- ========================================================= -->    
+    <entity>
+      <title>Credit Card Information Entity</title>
+      <package-name>org.ofbiz.commonapp.party.contact</package-name>
+      <table-name>CREDIT_CARD_INFO</table-name>
+      <field><col-name>PARTY_ID</col-name><type>id-ne</type></field>
+      <field><col-name>CREDIT_CARD_ID</col-name><type>id-ne</type></field>
+      <field><col-name>CARD_TYPE</col-name><type>short-varchar</type></field>
+      <field><col-name>CARD_NUMBER</col-name><type>credit-card-number</type></field>
+      <field><col-name>EXPIRE_DATE</col-name><type>credit-card-date</type></field>
+      <field><col-name>NAME_ON_CARD</col-name><type>name</type></field>
+      <field><col-name>COMPANY_NAME_ON_CARD</col-name><type>name</type></field>
+      <field><col-name>CONTACT_MECH_ID</col-name><type>id-ne</type></field>
+      <prim-key-col>PARTY_ID</prim-key-col>
+      <prim-key-col>CREDIT_CARD_ID</prim-key-col>
+      <relation>
+        <type>one</type><rel-table-name>PARTY</rel-table-name>
+        <key-map><col-name>PARTY_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>one</type><rel-table-name>CONTACT_MECH</rel-table-name>
+        <key-map><col-name>CONTACT_MECH_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>one</type><rel-table-name>POSTAL_ADDRESS</rel-table-name>
+        <key-map><col-name>CONTACT_MECH_ID</col-name></key-map>
+      </relation>
+    </entity>
   <!-- ========================================================= -->    
   <!-- ========================================================= -->    
     <entity>
@@ -1872,7 +2697,7 @@
       <field><col-name>COMMUNICATION_EVENT_TYPE_ID</col-name><type>id</type></field>
       <field><col-name>STATUS_ID</col-name><type>id</type></field>
       <field><col-name>ISSUE_CASE_ID</col-name><type>id</type></field>
-      <field><col-name>CONTACT_MECHANISM_TYPE_ID</col-name><type>id</type></field>
+      <field><col-name>CONTACT_MECH_TYPE_ID</col-name><type>id</type></field>
       <field><col-name>ROLE_TYPE_ID_FROM</col-name><type>id</type></field>
       <field><col-name>ROLE_TYPE_ID_TO</col-name><type>id</type></field>
       <field><col-name>PARTY_ID_FROM</col-name><type>id</type></field>
@@ -1983,219 +2808,6 @@
   <!-- ========================================================= -->    
   <!-- ========================================================= -->    
     <entity>
-      <title>Contact Mechanism Entity</title>
-      <package-name>org.ofbiz.commonapp.party.contact</package-name>
-      <table-name>CONTACT_MECHANISM</table-name>
-      <field><col-name>CONTACT_MECHANISM_ID</col-name><type>id-ne</type></field>
-      <field><col-name>CONTACT_MECHANISM_TYPE_ID</col-name><type>id</type></field>
-      <prim-key-col>CONTACT_MECHANISM_ID</prim-key-col>
-      <relation>
-        <type>one</type>
-        <rel-table-name>CONTACT_MECHANISM_TYPE</rel-table-name>
-        <key-map><col-name>CONTACT_MECHANISM_TYPE_ID</col-name></key-map>
-      </relation>
-      <relation>
-        <type>many</type>
-        <rel-table-name>CONTACT_MECHANISM_TYPE_ATTR</rel-table-name>
-        <key-map><col-name>CONTACT_MECHANISM_TYPE_ID</col-name></key-map>
-      </relation>
-      <relation>
-        <type>many</type>
-        <rel-table-name>CONTACT_MECHANISM_ATTRIBUTE</rel-table-name>
-        <key-map><col-name>CONTACT_MECHANISM_ID</col-name></key-map>
-      </relation>
-      <relation>
-        <type>many</type>
-        <rel-table-name>FACILITY_CONTACT_MECHANISM</rel-table-name>
-        <key-map><col-name>CONTACT_MECHANISM_ID</col-name></key-map>
-      </relation>
-    </entity>
-    <!-- ========================================================= -->    
-    <entity>
-      <title>Contact Mechanism Type Entity</title>
-      <package-name>org.ofbiz.commonapp.party.contact</package-name>
-      <table-name>CONTACT_MECHANISM_TYPE</table-name>
-      <field><col-name>CONTACT_MECHANISM_TYPE_ID</col-name><type>id-ne</type></field>
-      <field><col-name>PARENT_TYPE_ID</col-name><type>id-ne</type></field>
-      <field><col-name>HAS_TABLE</col-name><type>indicator</type></field>
-      <field><col-name>DESCRIPTION</col-name><type>description</type></field>
-      <prim-key-col>CONTACT_MECHANISM_TYPE_ID</prim-key-col>
-      <relation>
-        <title>Parent</title>
-        <type>one</type>
-        <rel-table-name>CONTACT_MECHANISM_TYPE</rel-table-name>
-        <key-map><col-name>PARENT_TYPE_ID</col-name><rel-col-name>CONTACT_MECHANISM_TYPE_ID</rel-col-name></key-map>
-      </relation>
-      <relation>
-        <title>Child</title>
-        <type>many</type>
-        <rel-table-name>CONTACT_MECHANISM_TYPE</rel-table-name>
-        <key-map><col-name>CONTACT_MECHANISM_TYPE_ID</col-name><rel-col-name>PARENT_TYPE_ID</rel-col-name></key-map>
-      </relation>
-      <relation>
-        <type>many</type>
-        <rel-table-name>CONTACT_MECHANISM_TYPE_ATTR</rel-table-name>
-        <key-map><col-name>CONTACT_MECHANISM_TYPE_ID</col-name></key-map>
-      </relation>
-      <relation>
-        <type>many</type>
-        <rel-table-name>CONTACT_MECHANISM</rel-table-name>
-        <key-map><col-name>CONTACT_MECHANISM_TYPE_ID</col-name></key-map>
-      </relation>
-    </entity>
-    <!-- ========================================================= -->    
-    <entity>
-      <title>Contact Mechanism Attribute Entity</title>
-      <package-name>org.ofbiz.commonapp.party.contact</package-name>
-      <table-name>CONTACT_MECHANISM_ATTRIBUTE</table-name>
-      <field><col-name>CONTACT_MECHANISM_ID</col-name><type>id-ne</type></field>
-      <field><col-name>NAME</col-name><type>id-long-ne</type></field>
-      <field><col-name>VALUE</col-name><type>value</type></field>
-      <prim-key-col>CONTACT_MECHANISM_ID</prim-key-col>
-      <prim-key-col>NAME</prim-key-col>
-      <relation>
-        <type>one</type>
-        <rel-table-name>CONTACT_MECHANISM</rel-table-name>
-        <key-map><col-name>CONTACT_MECHANISM_ID</col-name></key-map>
-      </relation>
-      <relation>
-        <type>many</type>
-        <rel-table-name>CONTACT_MECHANISM_TYPE_ATTR</rel-table-name>
-        <key-map><col-name>NAME</col-name></key-map>
-      </relation>
-    </entity>
-    <!-- ========================================================= -->    
-    <entity>
-      <title>Contact Mechanism Type Attribute Entity</title>
-      <package-name>org.ofbiz.commonapp.party.contact</package-name>
-      <table-name>CONTACT_MECHANISM_TYPE_ATTR</table-name>
-      <field><col-name>CONTACT_MECHANISM_TYPE_ID</col-name><type>id-ne</type></field>
-      <field><col-name>NAME</col-name><type>id-long-ne</type></field>
-      <prim-key-col>CONTACT_MECHANISM_TYPE_ID</prim-key-col>
-      <prim-key-col>NAME</prim-key-col>
-      <relation>
-        <type>one</type>
-        <rel-table-name>CONTACT_MECHANISM_TYPE</rel-table-name>
-        <key-map><col-name>CONTACT_MECHANISM_TYPE_ID</col-name></key-map>
-      </relation>
-      <relation>
-        <type>many</type>
-        <rel-table-name>CONTACT_MECHANISM_ATTRIBUTE</rel-table-name>
-        <key-map><col-name>NAME</col-name></key-map>
-      </relation>
-      <relation>
-        <type>many</type>
-        <rel-table-name>CONTACT_MECHANISM</rel-table-name>
-        <key-map><col-name>CONTACT_MECHANISM_TYPE_ID</col-name></key-map>
-      </relation>
-    </entity>
-    <!-- ========================================================= -->    
-    <entity>
-      <title>Contact Mechanism Link Entity</title>
-      <package-name>org.ofbiz.commonapp.party.contact</package-name>
-      <table-name>CONTACT_MECHANISM_LINK</table-name>
-      <field><col-name>CONTACT_MECHANISM_ID_TO</col-name><type>id-ne</type></field>
-      <field><col-name>CONTACT_MECHANISM_ID_FROM</col-name><type>id-ne</type></field>
-      <prim-key-col>CONTACT_MECHANISM_ID_TO</prim-key-col>
-      <prim-key-col>CONTACT_MECHANISM_ID_FROM</prim-key-col>
-    </entity>
-    <!-- ========================================================= -->    
-    <entity>
-      <title>Party Contact Mechanism Entity</title>
-      <package-name>org.ofbiz.commonapp.party.contact</package-name>
-      <table-name>PARTY_CONTACT_MECHANISM</table-name>
-      <field><col-name>PARTY_ID</col-name><type>id-ne</type></field>
-      <field><col-name>CONTACT_MECHANISM_ID</col-name><type>id-ne</type></field>
-      <field><col-name>FROM_DATE</col-name><type>date-time</type></field>
-      <field><col-name>THRU_DATE</col-name><type>date-time</type></field>
-      <field><col-name>ROLE_TYPE_ID</col-name><type>id</type></field>
-      <field><col-name>NON_SOLICITATION_INDICATOR</col-name><type>indicator</type></field>
-      <field><col-name>EXTENSION</col-name><type>very-short</type></field>
-      <field><col-name>COMMENT</col-name><type>comment</type></field>
-      <prim-key-col>PARTY_ID</prim-key-col>
-      <prim-key-col>CONTACT_MECHANISM_ID</prim-key-col>
-    </entity>
-    <!-- ========================================================= -->    
-    <entity>
-      <title>Party Contact Mechanism Purpose Entity</title>
-      <package-name>org.ofbiz.commonapp.party.contact</package-name>
-      <table-name>PARTY_CONTACT_MECHANISM_PURPOSE</table-name>
-      <field><col-name>PARTY_ID</col-name><type>id-ne</type></field>
-      <field><col-name>CONTACT_MECHANISM_ID</col-name><type>id-ne</type></field>
-      <field><col-name>CONTACT_MECHANISM_PURPOSE_TYPE_ID</col-name><type>id-ne</type></field>
-      <field><col-name>FROM_DATE</col-name><type>date-time</type></field>
-      <field><col-name>THRU_DATE</col-name><type>date-time</type></field>
-      <prim-key-col>PARTY_ID</prim-key-col>
-      <prim-key-col>CONTACT_MECHANISM_ID</prim-key-col>
-      <prim-key-col>CONTACT_MECHANISM_PURPOSE_TYPE_ID</prim-key-col>
-    </entity>
-    <!-- ========================================================= -->    
-    <entity>
-      <title>Contact Mechanism Purpose Type Entity</title>
-      <package-name>org.ofbiz.commonapp.party.contact</package-name>
-      <table-name>CONTACT_MECHANISM_PURPOSE_TYPE</table-name>
-      <field><col-name>CONTACT_MECHANISM_PURPOSE_TYPE_ID</col-name><type>id-ne</type></field>
-      <field><col-name>DESCRIPTION</col-name><type>description</type></field>
-      <prim-key-col>CONTACT_MECHANISM_PURPOSE_TYPE_ID</prim-key-col>
-    </entity>
-    <!-- ========================================================= -->    
-    <entity>
-      <title>Party Postal Address Entity</title>
-      <package-name>org.ofbiz.commonapp.party.contact</package-name>
-      <table-name>PARTY_POSTAL_ADDRESS</table-name>
-      <field><col-name>PARTY_ID</col-name><type>id-ne</type></field>
-      <field><col-name>CONTACT_MECHANISM_ID</col-name><type>id-ne</type></field>
-      <field><col-name>FROM_DATE</col-name><type>date-time</type></field>
-      <field><col-name>THRU_DATE</col-name><type>date-time</type></field>
-      <field><col-name>COMMENT</col-name><type>comment</type></field>
-      <prim-key-col>PARTY_ID</prim-key-col>
-      <prim-key-col>CONTACT_MECHANISM_ID</prim-key-col>
-    </entity>
-    <!-- ========================================================= -->    
-    <entity>
-      <title>Postal Address Entity</title>
-      <package-name>org.ofbiz.commonapp.party.contact</package-name>
-      <table-name>POSTAL_ADDRESS</table-name>
-      <field><col-name>CONTACT_MECHANISM_ID</col-name><type>id-ne</type></field>
-      <field><col-name>ADDRESS1</col-name><type>long-varchar</type></field>
-      <field><col-name>ADDRESS2</col-name><type>long-varchar</type></field>
-      <field><col-name>DIRECTIONS</col-name><type>long-varchar</type></field>
-      <prim-key-col>CONTACT_MECHANISM_ID</prim-key-col>
-    </entity>
-    <!-- ========================================================= -->    
-    <entity>
-      <title>Postal Address Boundary Entity</title>
-      <package-name>org.ofbiz.commonapp.party.contact</package-name>
-      <table-name>POSTAL_ADDRESS_BOUNDARY</table-name>
-      <field><col-name>GEO_ID</col-name><type>id-ne</type></field>
-      <field><col-name>CONTACT_MECHANISM_ID</col-name><type>id-ne</type></field>
-      <prim-key-col>GEO_ID</prim-key-col>
-      <prim-key-col>CONTACT_MECHANISM_ID</prim-key-col>
-    </entity>
-    <!-- ========================================================= -->    
-    <entity>
-      <title>Telecommunications Number Entity</title>
-      <package-name>org.ofbiz.commonapp.party.contact</package-name>
-      <table-name>TELECOMMUNICATIONS_NUMBER</table-name>
-      <field><col-name>CONTACT_MECHANISM_ID</col-name><type>id-ne</type></field>
-      <field><col-name>AREA_CODE</col-name><type>short-varchar</type></field>
-      <field><col-name>CONTACT_NUMBER</col-name><type>short-varchar</type></field>
-      <field><col-name>COUNTRY_CODE</col-name><type>short-varchar</type></field>
-      <prim-key-col>CONTACT_MECHANISM_ID</prim-key-col>
-    </entity>
-    <!-- ========================================================= -->    
-    <entity>
-      <title>Valid Contact Mechanism Role Entity</title>
-      <package-name>org.ofbiz.commonapp.party.contact</package-name>
-      <table-name>VALID_CONTACT_MECHANISM_ROLE</table-name>
-      <field><col-name>ROLE_TYPE_ID</col-name><type>id-ne</type></field>
-      <field><col-name>CONTACT_MECHANISM_TYPE_ID</col-name><type>id-ne</type></field>
-      <prim-key-col>ROLE_TYPE_ID</prim-key-col>
-      <prim-key-col>CONTACT_MECHANISM_TYPE_ID</prim-key-col>
-    </entity>
-  <!-- ========================================================= -->    
-  <!-- ========================================================= -->    
-    <entity>
       <title>Need Type Entity</title>
       <package-name>org.ofbiz.commonapp.party.need</package-name>
       <table-name>NEED_TYPE</table-name>
@@ -2222,414 +2834,6 @@
       <prim-key-col>PARTY_NEED_ID</prim-key-col>
       <prim-key-col>PARTY_ID</prim-key-col>
       <prim-key-col>ROLE_TYPE_ID</prim-key-col>
-    </entity>
-  <!-- ========================================================= -->    
-  <!-- ========================================================= -->    
-    <entity>
-      <title>Party Entity</title>
-      <package-name>org.ofbiz.commonapp.party.party</package-name>
-      <table-name>PARTY</table-name>
-      <field><col-name>PARTY_ID</col-name><type>id-ne</type></field>
-      <prim-key-col>PARTY_ID</prim-key-col>
-      <relation>
-        <type>many</type>
-        <rel-table-name>PARTY_CLASSIFICATION</rel-table-name>
-        <key-map><col-name>PARTY_ID</col-name></key-map>
-      </relation>
-      <relation>
-        <type>many</type>
-        <rel-table-name>PARTY_ATTRIBUTE</rel-table-name>
-        <key-map><col-name>PARTY_ID</col-name></key-map>
-      </relation>
-      <relation>
-        <type>many</type>
-        <rel-table-name>USER_LOGIN</rel-table-name>
-        <key-map><col-name>PARTY_ID</col-name></key-map>
-      </relation>
-      <relation>
-        <type>many</type>
-        <rel-table-name>COST_COMPONENT</rel-table-name>
-        <key-map><col-name>PARTY_ID</col-name></key-map>
-      </relation>
-      <relation>
-        <type>many</type>
-        <rel-table-name>PRICE_COMPONENT</rel-table-name>
-        <key-map><col-name>PARTY_ID</col-name></key-map>
-      </relation>
-      <relation>
-        <type>many</type>
-        <rel-table-name>INVENTORY_ITEM</rel-table-name>
-        <key-map><col-name>PARTY_ID</col-name></key-map>
-      </relation>
-      <relation>
-        <type>many</type>
-        <rel-table-name>PARTY_FACILITY</rel-table-name>
-        <key-map><col-name>PARTY_ID</col-name></key-map>
-      </relation>
-      <relation>
-        <type>many</type>
-        <rel-table-name>REORDER_GUIDELINE</rel-table-name>
-        <key-map><col-name>PARTY_ID</col-name></key-map>
-      </relation>
-      <relation>
-        <type>many</type>
-        <rel-table-name>SUPPLIER_PRODUCT</rel-table-name>
-        <key-map><col-name>PARTY_ID</col-name></key-map>
-      </relation>
-    </entity>
-    <!-- ========================================================= -->    
-    <entity>
-      <title>Party Classification Entity</title>
-      <package-name>org.ofbiz.commonapp.party.party</package-name>
-      <table-name>PARTY_CLASSIFICATION</table-name>
-      <field><col-name>PARTY_ID</col-name><type>id-ne</type></field>
-      <field><col-name>PARTY_TYPE_ID</col-name><type>id-ne</type></field>
-      <field><col-name>PARTY_CLASSIFICATION_TYPE_ID</col-name><type>id</type></field>
-      <field><col-name>FROM_DATE</col-name><type>date-time</type></field>
-      <field><col-name>THRU_DATE</col-name><type>date-time</type></field>
-      <prim-key-col>PARTY_ID</prim-key-col>
-      <prim-key-col>PARTY_TYPE_ID</prim-key-col>
-      <relation>
-        <type>one</type>
-        <rel-table-name>PARTY</rel-table-name>
-        <key-map><col-name>PARTY_ID</col-name></key-map>
-      </relation>
-      <relation>
-        <type>one</type>
-        <rel-table-name>PARTY_TYPE</rel-table-name>
-        <key-map><col-name>PARTY_TYPE_ID</col-name></key-map>
-      </relation>
-      <relation>
-        <type>one</type>
-        <rel-table-name>PARTY_CLASSIFICATION_TYPE</rel-table-name>
-        <key-map><col-name>PARTY_CLASSIFICATION_TYPE_ID</col-name></key-map>
-      </relation>
-      <relation>
-        <type>many</type>
-        <rel-table-name>PARTY_TYPE_ATTR</rel-table-name>
-        <key-map><col-name>PARTY_TYPE_ID</col-name></key-map>
-      </relation>
-      <relation>
-        <type>many</type>
-        <rel-table-name>PARTY_ATTRIBUTE</rel-table-name>
-        <key-map><col-name>PARTY_ID</col-name></key-map>
-      </relation>
-    </entity>
-    <!-- ========================================================= -->    
-    <entity>
-      <title>Party Classification Type Entity</title>
-      <package-name>org.ofbiz.commonapp.party.party</package-name>
-      <table-name>PARTY_CLASSIFICATION_TYPE</table-name>
-      <field><col-name>PARTY_CLASSIFICATION_TYPE_ID</col-name><type>id-ne</type></field>
-      <field><col-name>PARENT_TYPE_ID</col-name><type>id</type></field>
-      <field><col-name>HAS_TABLE</col-name><type>indicator</type></field>
-      <field><col-name>DESCRIPTION</col-name><type>description</type></field>
-      <prim-key-col>PARTY_CLASSIFICATION_TYPE_ID</prim-key-col>
-      <relation>
-        <title>Parent</title>
-        <type>one</type>
-        <rel-table-name>PARTY_CLASSIFICATION_TYPE</rel-table-name>
-        <key-map><col-name>PARENT_TYPE_ID</col-name><rel-col-name>PARTY_CLASSIFICATION_TYPE_ID</rel-col-name></key-map>
-      </relation>
-      <relation>
-        <title>Child</title>
-        <type>many</type>
-        <rel-table-name>PARTY_CLASSIFICATION_TYPE</rel-table-name>
-        <key-map><col-name>PARTY_CLASSIFICATION_TYPE_ID</col-name><rel-col-name>PARENT_TYPE_ID</rel-col-name></key-map>
-      </relation>
-      <relation>
-        <type>many</type>
-        <rel-table-name>PARTY_CLASSIFICATION</rel-table-name>
-        <key-map><col-name>PARTY_CLASSIFICATION_TYPE_ID</col-name></key-map>
-      </relation>
-    </entity>
-    <!-- ========================================================= -->    
-    <entity>
-      <title>Party Type Entity</title>
-      <package-name>org.ofbiz.commonapp.party.party</package-name>
-      <table-name>PARTY_TYPE</table-name>
-      <field><col-name>PARTY_TYPE_ID</col-name><type>id-ne</type></field>
-      <field><col-name>PARENT_TYPE_ID</col-name><type>id</type></field>
-      <field><col-name>HAS_TABLE</col-name><type>indicator</type></field>
-      <field><col-name>DESCRIPTION</col-name><type>description</type></field>
-      <prim-key-col>PARTY_TYPE_ID</prim-key-col>
-      <relation>
-        <title>Parent</title>
-        <type>one</type>
-        <rel-table-name>PARTY_TYPE</rel-table-name>
-        <key-map><col-name>PARENT_TYPE_ID</col-name><rel-col-name>PARTY_TYPE_ID</rel-col-name></key-map>
-      </relation>
-      <relation>
-        <title>Child</title>
-        <type>many</type>
-        <rel-table-name>PARTY_TYPE</rel-table-name>
-        <key-map><col-name>PARTY_TYPE_ID</col-name><rel-col-name>PARENT_TYPE_ID</rel-col-name></key-map>
-      </relation>
-      <relation>
-        <title>Sibling</title>
-        <type>many</type>
-        <rel-table-name>PARTY_TYPE</rel-table-name>
-        <key-map><col-name>PARENT_TYPE_ID</col-name></key-map>
-      </relation>
-      <relation>
-        <type>many</type>
-        <rel-table-name>PARTY_TYPE_ATTR</rel-table-name>
-        <key-map><col-name>PARTY_TYPE_ID</col-name></key-map>
-      </relation>
-      <relation>
-        <type>many</type>
-        <rel-table-name>PARTY_CLASSIFICATION</rel-table-name>
-        <key-map><col-name>PARTY_TYPE_ID</col-name></key-map>
-      </relation>
-      <relation>
-        <type>many</type>
-        <rel-table-name>PRICE_COMPONENT</rel-table-name>
-        <key-map><col-name>PARTY_TYPE_ID</col-name></key-map>
-      </relation>
-      <relation>
-        <type>many</type>
-        <rel-table-name>MARKET_INTEREST</rel-table-name>
-        <key-map><col-name>PARTY_TYPE_ID</col-name></key-map>
-      </relation>
-    </entity>
-    <!-- ========================================================= -->    
-    <entity>
-      <title>Party Attribute Entity</title>
-      <package-name>org.ofbiz.commonapp.party.party</package-name>
-      <table-name>PARTY_ATTRIBUTE</table-name>
-      <field><col-name>PARTY_ID</col-name><type>id-ne</type></field>
-      <field><col-name>NAME</col-name><type>id-long-ne</type></field>
-      <field><col-name>VALUE</col-name><type>value</type></field>
-      <prim-key-col>PARTY_ID</prim-key-col>
-      <prim-key-col>NAME</prim-key-col>
-      <relation>
-        <type>one</type>
-        <rel-table-name>PARTY</rel-table-name>
-        <key-map><col-name>PARTY_ID</col-name></key-map>
-      </relation>
-      <relation>
-        <type>many</type>
-        <rel-table-name>PARTY_TYPE_ATTR</rel-table-name>
-        <key-map><col-name>NAME</col-name></key-map>
-      </relation>
-    </entity>
-    <!-- ========================================================= -->    
-    <entity>
-      <title>Party Type Attribute Entity</title>
-      <package-name>org.ofbiz.commonapp.party.party</package-name>
-      <table-name>PARTY_TYPE_ATTR</table-name>
-      <field><col-name>PARTY_TYPE_ID</col-name><type>id-ne</type></field>
-      <field><col-name>NAME</col-name><type>id-long-ne</type></field>
-      <prim-key-col>PARTY_TYPE_ID</prim-key-col>
-      <prim-key-col>NAME</prim-key-col>
-      <relation>
-        <type>one</type>
-        <rel-table-name>PARTY_TYPE</rel-table-name>
-        <key-map><col-name>PARTY_TYPE_ID</col-name></key-map>
-      </relation>
-      <relation>
-        <type>many</type>
-        <rel-table-name>PARTY_ATTRIBUTE</rel-table-name>
-        <key-map><col-name>NAME</col-name></key-map>
-      </relation>
-      <relation>
-        <type>many</type>
-        <rel-table-name>PARTY_CLASSIFICATION</rel-table-name>
-        <key-map><col-name>PARTY_TYPE_ID</col-name></key-map>
-      </relation>
-    </entity>
-    <!-- ========================================================= -->    
-    <entity>
-      <title>Party Role Entity</title>
-      <package-name>org.ofbiz.commonapp.party.party</package-name>
-      <table-name>PARTY_ROLE</table-name>
-      <field><col-name>PARTY_ID</col-name><type>id-ne</type></field>
-      <field><col-name>ROLE_TYPE_ID</col-name><type>id-ne</type></field>
-      <field><col-name>PARTY_ROLE_ID</col-name><type>id</type></field>
-      <prim-key-col>PARTY_ID</prim-key-col>
-      <prim-key-col>ROLE_TYPE_ID</prim-key-col>
-      <relation>
-        <type>one</type>
-        <rel-table-name>PARTY</rel-table-name>
-        <key-map><col-name>PARTY_ID</col-name></key-map>
-      </relation>
-      <relation>
-        <type>one</type>
-        <rel-table-name>ROLE_TYPE</rel-table-name>
-        <key-map><col-name>ROLE_TYPE_ID</col-name></key-map>
-      </relation>
-      <relation>
-        <type>many</type>
-        <rel-table-name>ROLE_TYPE_ATTR</rel-table-name>
-        <key-map><col-name>ROLE_TYPE_ID</col-name></key-map>
-      </relation>
-      <relation>
-        <type>many</type>
-        <rel-table-name>PARTY_ATTRIBUTE</rel-table-name>
-        <key-map><col-name>PARTY_ID</col-name></key-map>
-      </relation>
-    </entity>
-    <!-- ========================================================= -->    
-    <entity>
-      <title>Role Type Entity</title>
-      <package-name>org.ofbiz.commonapp.party.party</package-name>
-      <table-name>ROLE_TYPE</table-name>
-      <field><col-name>ROLE_TYPE_ID</col-name><type>id-ne</type></field>
-      <field><col-name>PARENT_TYPE_ID</col-name><type>id</type></field>
-      <field><col-name>HAS_TABLE</col-name><type>indicator</type></field>
-      <field><col-name>DESCRIPTION</col-name><type>description</type></field>
-      <prim-key-col>ROLE_TYPE_ID</prim-key-col>
-      <relation>
-        <title>Parent</title>
-        <type>one</type>
-        <rel-table-name>ROLE_TYPE</rel-table-name>
-        <key-map><col-name>PARENT_TYPE_ID</col-name><rel-col-name>ROLE_TYPE_ID</rel-col-name></key-map>
-      </relation>
-      <relation>
-        <title>Child</title>
-        <type>many</type>
-        <rel-table-name>ROLE_TYPE</rel-table-name>
-        <key-map><col-name>ROLE_TYPE_ID</col-name><rel-col-name>PARENT_TYPE_ID</rel-col-name></key-map>
-      </relation>
-      <relation>
-        <type>many</type>
-        <rel-table-name>ROLE_TYPE_ATTR</rel-table-name>
-        <key-map><col-name>ROLE_TYPE_ID</col-name></key-map>
-      </relation>
-      <relation>
-        <type>many</type>
-        <rel-table-name>PARTY_ROLE</rel-table-name>
-        <key-map><col-name>ROLE_TYPE_ID</col-name></key-map>
-      </relation>
-    </entity>
-    <!-- ========================================================= -->    
-    <entity>
-      <title>Role Type Attribute Entity</title>
-      <package-name>org.ofbiz.commonapp.party.party</package-name>
-      <table-name>ROLE_TYPE_ATTR</table-name>
-      <field><col-name>ROLE_TYPE_ID</col-name><type>id-ne</type></field>
-      <field><col-name>NAME</col-name><type>id-long-ne</type></field>
-      <prim-key-col>ROLE_TYPE_ID</prim-key-col>
-      <prim-key-col>NAME</prim-key-col>
-      <relation>
-        <type>one</type>
-        <rel-table-name>ROLE_TYPE</rel-table-name>
-        <key-map><col-name>ROLE_TYPE_ID</col-name></key-map>
-      </relation>
-      <relation>
-        <type>many</type>
-        <rel-table-name>PARTY_ATTRIBUTE</rel-table-name>
-        <key-map><col-name>NAME</col-name></key-map>
-      </relation>
-      <relation>
-        <type>many</type>
-        <rel-table-name>PARTY_ROLE</rel-table-name>
-        <key-map><col-name>ROLE_TYPE_ID</col-name></key-map>
-      </relation>
-    </entity>
-    
-    <!-- ========================================================= -->    
-    <entity>
-      <title>Party Relationship Entity</title>
-      <package-name>org.ofbiz.commonapp.party.party</package-name>
-      <table-name>PARTY_RELATIONSHIP</table-name>
-      <field><col-name>ROLE_TYPE_ID_FROM</col-name><type>id-ne</type></field>
-      <field><col-name>ROLE_TYPE_ID_TO</col-name><type>id-ne</type></field>
-      <field><col-name>PARTY_ID_FROM</col-name><type>id-ne</type></field>
-      <field><col-name>PARTY_ID_TO</col-name><type>id-ne</type></field>
-      <field><col-name>FROM_DATE</col-name><type>date-time</type></field>
-      <field><col-name>THRU_DATE</col-name><type>date-time</type></field>
-      <field><col-name>STATUS_ID</col-name><type>id</type></field>
-      <field><col-name>PRIORITY_TYPE_ID</col-name><type>id</type></field>
-      <field><col-name>PARTY_RELATIONSHIP_TYPE_ID</col-name><type>id</type></field>
-      <field><col-name>COMMENT</col-name><type>comment</type></field>
-      <prim-key-col>ROLE_TYPE_ID_FROM</prim-key-col>
-      <prim-key-col>ROLE_TYPE_ID_TO</prim-key-col>
-      <prim-key-col>PARTY_ID_FROM</prim-key-col>
-      <prim-key-col>PARTY_ID_TO</prim-key-col>
-    </entity>
-    <!-- ========================================================= -->    
-    <entity>
-      <title>Priority Type Entity</title>
-      <package-name>org.ofbiz.commonapp.party.party</package-name>
-      <table-name>PRIORITY_TYPE</table-name>
-      <field><col-name>PRIORITY_TYPE_ID</col-name><type>id-ne</type></field>
-      <field><col-name>DESCRIPTION</col-name><type>description</type></field>
-      <prim-key-col>PRIORITY_TYPE_ID</prim-key-col>
-    </entity>
-    <!-- ========================================================= -->    
-    <entity>
-      <title>Party Relationship Type Entity</title>
-      <package-name>org.ofbiz.commonapp.party.party</package-name>
-      <table-name>PARTY_RELATIONSHIP_TYPE</table-name>
-      <field><col-name>PARTY_RELATIONSHIP_TYPE_ID</col-name><type>id-ne</type></field>
-      <field><col-name>PARENT_TYPE_ID</col-name><type>id</type></field>
-      <field><col-name>HAS_TABLE</col-name><type>indicator</type></field>
-      <field><col-name>ROLE_TYPE_ID_VALID_FROM</col-name><type>id</type></field>
-      <field><col-name>ROLE_TYPE_ID_VALID_TO</col-name><type>id</type></field>
-      <field><col-name>DESCRIPTION</col-name><type>description</type></field>
-      <field><col-name>NAME</col-name><type>name</type></field>
-      <prim-key-col>PARTY_RELATIONSHIP_TYPE_ID</prim-key-col>
-      <relation>
-        <title>Parent</title>
-        <type>one</type>
-        <rel-table-name>PARTY_RELATIONSHIP_TYPE</rel-table-name>
-        <key-map><col-name>PARENT_TYPE_ID</col-name><rel-col-name>PARTY_RELATIONSHIP_TYPE_ID</rel-col-name></key-map>
-      </relation>
-      <relation>
-        <title>Child</title>
-        <type>many</type>
-        <rel-table-name>PARTY_RELATIONSHIP_TYPE</rel-table-name>
-        <key-map><col-name>PARTY_RELATIONSHIP_TYPE_ID</col-name><rel-col-name>PARENT_TYPE_ID</rel-col-name></key-map>
-      </relation>
-    </entity>
-    <!-- ========================================================= -->    
-    <entity>
-      <title>Customer Entity</title>
-      <description>Data Type Of: Party Role</description>
-      <package-name>org.ofbiz.commonapp.party.party</package-name>
-      <table-name>CUSTOMER</table-name>
-      <field><col-name>CUSTOMER_ID</col-name><type>id-ne</type></field>
-      <field><col-name>PARTY_ID</col-name><type>id-ne</type></field>
-      <field><col-name>ROLE_TYPE_ID</col-name><type>id-ne</type></field>
-      <prim-key-col>CUSTOMER_ID</prim-key-col>
-      <prim-key-col>PARTY_ID</prim-key-col>
-      <prim-key-col>ROLE_TYPE_ID</prim-key-col>
-    </entity>
-    <!-- ========================================================= -->    
-    <entity>
-      <title>Party Data Object Entity</title>
-      <package-name>org.ofbiz.commonapp.party.party</package-name>
-      <table-name>PARTY_DATA_OBJECT</table-name>
-      <field><col-name>DATA_OBJECT_ID</col-name><type>id-ne</type></field>
-      <field><col-name>PARTY_ID</col-name><type>id-ne</type></field>
-      <prim-key-col>DATA_OBJECT_ID</prim-key-col>
-      <prim-key-col>PARTY_ID</prim-key-col>
-    </entity>
-    <!-- ========================================================= -->    
-    <entity>
-      <title>Person Entity</title>
-      <package-name>org.ofbiz.commonapp.party.party</package-name>
-      <table-name>PERSON</table-name>
-      <field><col-name>PARTY_ID</col-name><type>id-ne</type></field>
-      <field><col-name>LAST_NAME</col-name><type>name</type></field>
-      <field><col-name>FIRST_NAME</col-name><type>name</type></field>
-      <field><col-name>MIDDLE_NAME</col-name><type>name</type></field>
-      <field><col-name>PERSONAL_TITLE</col-name><type>name</type></field>
-      <field><col-name>SUFFIX</col-name><type>name</type></field>
-      <field><col-name>NICKNAME</col-name><type>name</type></field>
-      <field><col-name>GENDER</col-name><type>indicator</type></field>
-      <field><col-name>BIRTH_DATE</col-name><type>date-time</type></field>
-      <field><col-name>HEIGHT</col-name><type>floating-point</type></field>
-      <field><col-name>WEIGHT</col-name><type>floating-point</type></field>
-      <field><col-name>MOTHERS_MAIDEN_NAME</col-name><type>name</type></field>
-      <field><col-name>MARITAL_STATUS</col-name><type>indicator</type></field>
-      <field><col-name>SOCIAL_SECURITY_NUMBER</col-name><type>short-varchar</type></field>
-      <field><col-name>PASSPORT_NUMBER</col-name><type>short-varchar</type></field>
-      <field><col-name>PASSPORT_EXPIRE_DATE</col-name><type>date-time</type></field>
-      <field><col-name>TOTAL_YEARS_WORK_EXPERIENCE</col-name><type>floating-point</type></field>
-      <field><col-name>COMMENT</col-name><type>comment</type></field>
-      <prim-key-col>PARTY_ID</prim-key-col>
     </entity>
   
   <!-- ========================================================= -->
@@ -4160,7 +4364,7 @@
       </relation>
       <relation>
         <type>many</type>
-        <rel-table-name>FACILITY_CONTACT_MECHANISM</rel-table-name>
+        <rel-table-name>FACILITY_CONTACT_MECH</rel-table-name>
         <key-map><col-name>FACILITY_ID</col-name></key-map>
       </relation>
       <relation>
@@ -4253,11 +4457,11 @@
       <title>Facility Contact Mechanism Entity</title>
       <description>Data Type Of: Contact Mechanism</description>
       <package-name>org.ofbiz.commonapp.product.storage</package-name>
-      <table-name>FACILITY_CONTACT_MECHANISM</table-name>
+      <table-name>FACILITY_CONTACT_MECH</table-name>
       <field><col-name>FACILITY_ID</col-name><type>id-ne</type></field>
-      <field><col-name>CONTACT_MECHANISM_ID</col-name><type>id-ne</type></field>
+      <field><col-name>CONTACT_MECH_ID</col-name><type>id-ne</type></field>
       <prim-key-col>FACILITY_ID</prim-key-col>
-      <prim-key-col>CONTACT_MECHANISM_ID</prim-key-col>
+      <prim-key-col>CONTACT_MECH_ID</prim-key-col>
       <relation>
         <type>one</type>
         <rel-table-name>FACILITY</rel-table-name>
@@ -4265,8 +4469,8 @@
       </relation>
       <relation>
         <type>one</type>
-        <rel-table-name>CONTACT_MECHANISM</rel-table-name>
-        <key-map><col-name>CONTACT_MECHANISM_ID</col-name></key-map>
+        <rel-table-name>CONTACT_MECH</rel-table-name>
+        <key-map><col-name>CONTACT_MECH_ID</col-name></key-map>
       </relation>
     </entity>
     <!-- ========================================================= -->    
@@ -4656,12 +4860,12 @@
     <entity>
       <title>Order Contact Mechanism Entity</title>
       <package-name>org.ofbiz.commonapp.order.order</package-name>
-      <table-name>ORDER_CONTACT_MECHANISM</table-name>
-      <field><col-name>CONTACT_MECHANISM_ID</col-name><type>id-ne</type></field>
-      <field><col-name>CONTACT_MECHANISM_PURPOSE_TYPE_ID</col-name><type>id-ne</type></field>
+      <table-name>ORDER_CONTACT_MECH</table-name>
+      <field><col-name>CONTACT_MECH_ID</col-name><type>id-ne</type></field>
+      <field><col-name>CONTACT_MECH_PURPOSE_TYPE_ID</col-name><type>id-ne</type></field>
       <field><col-name>ORDER_ID</col-name><type>id-ne</type></field>
-      <prim-key-col>CONTACT_MECHANISM_ID</prim-key-col>
-      <prim-key-col>CONTACT_MECHANISM_PURPOSE_TYPE_ID</prim-key-col>
+      <prim-key-col>CONTACT_MECH_ID</prim-key-col>
+      <prim-key-col>CONTACT_MECH_PURPOSE_TYPE_ID</prim-key-col>
       <prim-key-col>ORDER_ID</prim-key-col>
     </entity>
     <!-- ========================================================= -->    
@@ -4822,13 +5026,13 @@
     <entity>
       <title>Order Item Contact Mechanism Entity</title>
       <package-name>org.ofbiz.commonapp.order.order</package-name>
-      <table-name>ORDER_ITEM_CONTACT_MECHANISM</table-name>
-      <field><col-name>CONTACT_MECHANISM_ID</col-name><type>id-ne</type></field>
-      <field><col-name>CONTACT_MECHANISM_PURPOSE_TYPE_ID</col-name><type>id-ne</type></field>
+      <table-name>ORDER_ITEM_CONTACT_MECH</table-name>
+      <field><col-name>CONTACT_MECH_ID</col-name><type>id-ne</type></field>
+      <field><col-name>CONTACT_MECH_PURPOSE_TYPE_ID</col-name><type>id-ne</type></field>
       <field><col-name>ORDER_ID</col-name><type>id-ne</type></field>
       <field><col-name>ORDER_ITEM_SEQ_ID</col-name><type>id-ne</type></field>
-      <prim-key-col>CONTACT_MECHANISM_ID</prim-key-col>
-      <prim-key-col>CONTACT_MECHANISM_PURPOSE_TYPE_ID</prim-key-col>
+      <prim-key-col>CONTACT_MECH_ID</prim-key-col>
+      <prim-key-col>CONTACT_MECH_PURPOSE_TYPE_ID</prim-key-col>
       <prim-key-col>ORDER_ID</prim-key-col>
       <prim-key-col>ORDER_ITEM_SEQ_ID</prim-key-col>
     </entity>
@@ -5499,7 +5703,7 @@
       <field><col-name>RESPONDING_PARTY_SEQ_ID</col-name><type>id-ne</type></field>
       <field><col-name>CUST_REQUEST_ID</col-name><type>id-ne</type></field>
       <field><col-name>PARTY_ID</col-name><type>id-ne</type></field>
-      <field><col-name>CONTACT_MECHANISM_ID</col-name><type>id</type></field>
+      <field><col-name>CONTACT_MECH_ID</col-name><type>id</type></field>
       <field><col-name>DATE_SENT</col-name><type>date-time</type></field>
       <prim-key-col>RESPONDING_PARTY_SEQ_ID</prim-key-col>
       <prim-key-col>CUST_REQUEST_ID</prim-key-col>
@@ -5655,7 +5859,7 @@
       <table-name>SHIPMENT</table-name>
       <field><col-name>SHIPMENT_ID</col-name><type>id-ne</type></field>
       <field><col-name>SHIPMENT_TYPE_ID</col-name><type>id</type></field>
-      <field><col-name>CONTACT_MECHANISM_ID</col-name><type>id</type></field>
+      <field><col-name>CONTACT_MECH_ID</col-name><type>id</type></field>
       <field><col-name>PARTY_ID</col-name><type>id</type></field>
       <field><col-name>ESTIMATED_SHIP_DATE</col-name><type>date-time</type></field>
       <field><col-name>ESTIMATED_READY_DATE</col-name><type>date-time</type></field>
@@ -7183,7 +7387,6 @@
       <field><col-name>ROLE_TYPE_ID</col-name><type>id-ne</type></field>
       <field><col-name>PRODUCT_ID</col-name><type>id</type></field>
       <field><col-name>PRODUCT_CATEGORY_ID</col-name><type>id</type></field>
-      <field><col-name>CUSTOMER_ID</col-name><type>id</type></field>
       <field><col-name>FROM_DATE</col-name><type>date-time</type></field>
       <field><col-name>THRU_DATE</col-name><type>date-time</type></field>
       <prim-key-col>GENERAL_LEDGER_ACCOUNT_ID</prim-key-col>
@@ -7202,7 +7405,7 @@
       <field><col-name>ROLE_TYPE_ID</col-name><type>id</type></field>
       <field><col-name>STATUS_ID</col-name><type>id</type></field>
       <field><col-name>BILLING_ACCOUNT_ID</col-name><type>id</type></field>
-      <field><col-name>CONTACT_MECHANISM_ID</col-name><type>id</type></field>
+      <field><col-name>CONTACT_MECH_ID</col-name><type>id</type></field>
       <field><col-name>INVOICE_DATE</col-name><type>date-time</type></field>
       <field><col-name>MESSAGE</col-name><type>long-varchar</type></field>
       <field><col-name>DESCRIPTION</col-name><type>description</type></field>
@@ -7485,7 +7688,7 @@
       <package-name>org.ofbiz.commonapp.accounting.payment</package-name>
       <table-name>BILLING_ACCOUNT</table-name>
       <field><col-name>BILLING_ACCOUNT_ID</col-name><type>id-ne</type></field>
-      <field><col-name>CONTACT_MECHANISM_ID</col-name><type>id</type></field>
+      <field><col-name>CONTACT_MECH_ID</col-name><type>id</type></field>
       <field><col-name>FROM_DATE</col-name><type>date-time</type></field>
       <field><col-name>THRU_DATE</col-name><type>date-time</type></field>
       <field><col-name>DESCRIPTION</col-name><type>description</type></field>
@@ -8503,7 +8706,7 @@
       <table-name>USER_LOGIN</table-name>
       <field><col-name>USER_LOGIN_ID</col-name><type>id-ne</type></field>
       <field><col-name>PARTY_ID</col-name><type>id</type></field>
-      <field><col-name>CONTACT_MECHANISM_ID</col-name><type>id</type></field>
+      <field><col-name>CONTACT_MECH_ID</col-name><type>id</type></field>
       <field><col-name>CURRENT_USER_ID</col-name><type>id</type></field>
       <field><col-name>CURRENT_PASSWORD</col-name><type>short-varchar</type></field>
       <prim-key-col>USER_LOGIN_ID</prim-key-col>
