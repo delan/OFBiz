@@ -87,7 +87,7 @@
   </tr>
   <tr>
     <td bgcolor='white' colspan='2'>
-<table width="80%" border="0" cellpadding="1">
+<table width="80%" border="0" cellpadding="0" cellspacing='0'>
   <tr>
     <td align="right" width="15%"><div class="tabletext"><b>Name</b></div></td>
     <td width="5">&nbsp;</td>
@@ -101,6 +101,22 @@
       </div>
     </td>
   </tr>
+  <%String preBeforeLabel = "<tr><td align=right width='15%' nowrap><div class='tabletext'><b>";%>
+  <%String preAfterLabel = "</b></div></td><td width='5'>&nbsp;</td><td align=left><div class='tabletext'>";%>
+  <%String postStr = "</div></td></tr>";%>
+  <%=UtilFormatOut.ifNotEmpty(person.getString("nickname"), preBeforeLabel + "Nickname" + preAfterLabel, postStr)%>
+  <%=UtilFormatOut.ifNotEmpty(person.getString("gender"), preBeforeLabel + "Gender" + preAfterLabel, postStr)%>
+  <%=UtilFormatOut.ifNotEmpty(UtilDateTime.toDateString(person.getDate("birthDate")), preBeforeLabel + "Birth Date" + preAfterLabel, postStr)%>
+  <%=UtilFormatOut.ifNotEmpty(UtilFormatOut.formatQuantity(person.getDouble("height")), preBeforeLabel + "Height" + preAfterLabel, postStr)%>
+  <%=UtilFormatOut.ifNotEmpty(UtilFormatOut.formatQuantity(person.getDouble("weight")), preBeforeLabel + "Weight" + preAfterLabel, postStr)%>
+  <%=UtilFormatOut.ifNotEmpty(person.getString("mothersMaidenName"), preBeforeLabel + "Mothers Maiden Name" + preAfterLabel, postStr)%>
+  <%=UtilFormatOut.ifNotEmpty(person.getString("maritalStatus"), preBeforeLabel + "Marital Status" + preAfterLabel, postStr)%>
+  <%=UtilFormatOut.ifNotEmpty(person.getString("socialSecurityNumber"), preBeforeLabel + "Social Security Number" + preAfterLabel, postStr)%>
+  <%=UtilFormatOut.ifNotEmpty(person.getString("passportNumber"), preBeforeLabel + "Passport Number" + preAfterLabel, postStr)%>
+  <%=UtilFormatOut.ifNotEmpty(UtilDateTime.toDateString(person.getDate("passportExpireDate")), preBeforeLabel + "Passport Expire" + preAfterLabel, postStr)%>
+  <%=UtilFormatOut.ifNotEmpty(UtilFormatOut.formatQuantity(person.getDouble("totalYearsWorkExperience")), preBeforeLabel + "Years Work" + preAfterLabel, postStr)%>
+  <%=UtilFormatOut.ifNotEmpty(person.getString("comment"), preBeforeLabel + "Comment" + preAfterLabel, postStr)%>
+  
 </table>
     </td>
   </tr>
@@ -230,7 +246,6 @@
           <tr>
             <td align="left">
               <%if(creditCardInfoIterator != null && creditCardInfoIterator.hasNext()){%>
-                <p>Select an account on file to update or delete.</p>
                 <table width="100%" cellpadding="2" cellspacing="0" border="0">
                   <%while(creditCardInfoIterator.hasNext()){%>
                     <%GenericValue creditCardInfo = (GenericValue)creditCardInfoIterator.next();%>
