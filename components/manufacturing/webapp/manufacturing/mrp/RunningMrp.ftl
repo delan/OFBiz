@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Olivier.Heintz@nereide.biz
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      3.0
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -37,11 +37,23 @@ ${pages.get("/mrp/MrpTabBar.ftl")}
       <td width='26%' align='right' valign='top'><div class="tabletext">${uiLabelMap.ManufacturingTimePeriod}</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
-           <select class="selectBox" name="timePeriod">
-           <option value="${uiLabelMap.CommonWeek}" SELECTED>${uiLabelMap.CommonWeek}</option>
-           <option value="${uiLabelMap.CommonDay}">${uiLabelMap.CommonDay}</option>
-           <option value="${uiLabelMap.CommonHour}">${uiLabelMap.CommonHour}</option>
+        <select class="selectBox" name="timePeriod">
+          <option value="${uiLabelMap.CommonWeek}" SELECTED>${uiLabelMap.CommonWeek}</option>
+          <option value="${uiLabelMap.CommonDay}">${uiLabelMap.CommonDay}</option>
+          <option value="${uiLabelMap.CommonHour}">${uiLabelMap.CommonHour}</option>
         </select>
+      </td>
+    </tr>
+    <tr>
+      <td width='26%' align='right' valign='top'><div class="tabletext">${uiLabelMap.ProductFacility}</div></td>
+      <td width="5">&nbsp;</td>
+      <td width="74%">
+        <select class="selectBox" name="facilityId">
+          <#list facilities as facility>
+          <option value="${facility.getString("facilityId")}">${facility.getString("facilityName")} [${facility.getString("facilityId")}]</option>
+          </#list>
+        </select>
+      </td>
     </tr>
     <tr>
       <td width="26%" align="right" valign="top">

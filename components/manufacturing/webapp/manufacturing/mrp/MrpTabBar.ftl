@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Olivier.Heintz@nereide.biz
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      3.0
 -->
 
@@ -29,8 +29,8 @@
 <#assign selectedClassMap = {page.tabButtonItem?default("void") : "tabButtonSelected"}>
 
 <div class='tabContainer'>
-        <a href="<@ofbizUrl>/FindInventoryEventPlan</@ofbizUrl>" class="${selectedClassMap.initInventoryEventPlan?default(unselectedClassName)}">${uiLabelMap.ManufacturingMrpInitialisation}</a>
-        <a href="<@ofbizUrl>/RunningMrp</@ofbizUrl>" class="${selectedClassMap.RunningMrp?default(unselectedClassName)}">${uiLabelMap.ManufacturingRunningMrp}</a>
-        <a href="<@ofbizUrl>/FindInventoryEventPlan</@ofbizUrl>" class="${selectedClassMap.findInventoryEventPlan?default(unselectedClassName)}">${uiLabelMap.ManufacturingInventoryEventPlanned}</a>
-        <a href="<@ofbizUrl>/FindProposedOrder</@ofbizUrl>" class="${selectedClassMap.productManufacturingRules?default(unselectedClassName)}">${uiLabelMap.ManufacturingProposedOrder}</a>
+    <!--<a href="<@ofbizUrl>/FindInventoryEventPlan</@ofbizUrl>" class="${selectedClassMap.initInventoryEventPlan?default(unselectedClassName)}">${uiLabelMap.ManufacturingMrpInitialisation}</a>-->
+    <a href="<@ofbizUrl>/RunningMrp</@ofbizUrl>" class="${selectedClassMap.RunningMrp?default(unselectedClassName)}">${uiLabelMap.ManufacturingRunningMrp}</a>
+    <a href="<@ofbizUrl>/FindInventoryEventPlan</@ofbizUrl>" class="${selectedClassMap.findInventoryEventPlan?default(unselectedClassName)}">${uiLabelMap.ManufacturingInventoryEventPlanned}</a>
+    <a href="<@ofbizUrl>/FindProposedOrder</@ofbizUrl>" class="${selectedClassMap.findProposedOrder?default(unselectedClassName)}">${uiLabelMap.ManufacturingProposedOrder}</a>
 </div>

@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Malin Nicolas (nicolas@ptimalin.net)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      3.0
 -->
 
@@ -47,7 +47,7 @@ ${pages.get("/mrp/MrpTabBar.ftl")}
     <td width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
-          <td><div class='boxhead'>${uiLabelMap.ManufacturingImplosion}</div></td>
+          <td><div class='boxhead'></div></td>
           <td align='right'>
             <div class="tabletext">
               <#if requestParameters.hideFields?default("N") == "Y">
@@ -147,12 +147,11 @@ document.lookupinventory.productId.focus();
 
        <table width='100%' border='0' cellspacing='0' cellpadding='2' class='boxbottom'>
         <tr>
-          <td width="25%" align="left"><div class="tableheadtext">${uiLabelMap.CommonDescription}</div></td>
-          <td width="15%" align="left"><div class="tableheadtext">${uiLabelMap.ProductProduct}</div></td>
-          <td width="10%" align="right"><div class="tableheadtext">${uiLabelMap.CommonQuantity}</div></td>
-	  <td width="5%" align="center">&nbsp</td>
-          <td width="15%" align="left"><div class="tableheadtext">${uiLabelMap.CommonEventDate}</div></td>
-          <td width="10%" align="right"><div class="tableheadtext">${uiLabelMap.ManufacturingATPDate}</div></td>
+          <td align="left"><div class="tableheadtext">${uiLabelMap.CommonDescription}</div></td>
+          <td align="left"><div class="tableheadtext">${uiLabelMap.CommonEventDate}</div></td>
+	  <td align="center">&nbsp</td>
+          <td align="right"><div class="tableheadtext">${uiLabelMap.CommonQuantity}</div></td>
+          <td align="right"><div class="tableheadtext">${uiLabelMap.ManufacturingTotalQuantity}</div></td>
         </tr>
         <tr>
 	  <td colspan='7'><hr class='sepbar'>
@@ -166,7 +165,7 @@ document.lookupinventory.productId.focus();
 	    <#if ! product.equals( productTmp )>
 	      <tr bgcolor="lightblue">  
 	       <td colspan='4' align="left">
-	        <div class='tabletext'><b>&nbsp&nbsp&nbsp&nbsp&nbsp QOH de l'article [${inven.productId}]&nbsp/&nbsp${product.productName?if_exists}</b></div>
+	        <div class='tabletext'><b>&nbsp&nbsp&nbsp&nbsp&nbsp[${inven.productId}]&nbsp/&nbsp${product.productName?if_exists}</b></div>
                </td>
 	       <td  colspan='3' align="right">
 	        <#assign qoh = qohProduct[countProd]>
@@ -179,10 +178,9 @@ document.lookupinventory.productId.focus();
 	    <#assign inventoryEventPlannedType = inven.getRelatedOne("InventoryEventPlannedType")>
 	    <tr class="${rowClass}">
 	     <td><div class='tabletext'>${inventoryEventPlannedType.description}</div></td>
-	     <td><div class='tabletext'> [${inven.productId}]&nbsp/&nbsp ${product.productName?if_exists}</div></td>
-	     <td><div class='tabletext'align="right"> ${inven.getString("eventQuantity")}</div></td>
-	     <td>&nbsp</td>
              <td><div class='tabletext'>${inven.getString("eventDate")}</div></td>
+	     <td>&nbsp</td>
+	     <td><div class='tabletext'align="right"> ${inven.getString("eventQuantity")}</div></td>
 	     <td align="right">
 	      <#list numberProductList[count..count] as atpDate> 
 		     <div class='tabletext'>${atpDate}&nbsp&nbsp</div>

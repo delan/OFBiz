@@ -22,7 +22,7 @@
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     Jacopo Cappellato (tiz@sastau.it)
  *@author     Malin Nicolas (nicolas@ptimalin.net)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      2.2
 */
 
@@ -39,7 +39,9 @@ import org.ofbiz.manufacturing.mrp.MrpServices;
 import org.ofbiz.manufacturing.techdata.ProductHelper;
 import org.ofbiz.base.util.Debug;
 
-GenericDelegator  delegator  = request.getAttribute("delegator");
+GenericDelegator delegator = request.getAttribute("delegator");
+LocalDispatcher dispatcher = request.getAttribute("dispatcher");
+
 inventory = new HashMap();
 
 //get the inventory (inventoryEventPlanned)
@@ -135,7 +137,7 @@ context.put("viewSize", viewSize);
 //Calcul variation quantity of product in stock 
 
 if (inventoryList != null && !inventoryList.isEmpty() ){
-    List numberProductList = ProductHelper.getVariationProduct( inventoryList.subList( 0, highIndex) );
+    List numberProductList = ProductHelper.getVariationProduct(inventoryList.subList(0, highIndex), dispatcher);
     context.put("numberProductList", numberProductList);
 
 
@@ -147,7 +149,7 @@ if (inventoryList != null && !inventoryList.isEmpty() ){
 	inventoryTmp = iter.next();
 	productId = inventoryTmp.getString("productId");
 	if( ! productId.equals( productTmp ) ){
-	    qohProduct.add( MrpServices.findProductMrpQoh(inventoryTmp.getRelatedOneCache("Product") ) );
+	    qohProduct.add( MrpServices.findProductMrpQoh(inventoryTmp.getRelatedOneCache("Product"), dispatcher) );
 	    productTmp = productId;
 	}
     }

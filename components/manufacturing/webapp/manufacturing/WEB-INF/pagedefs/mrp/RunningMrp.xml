@@ -4,4 +4,5 @@
     <property name="titleProperty">ManufacturingRunningMrp</property>
     <property name="headerItem">mrp</property>   
     <property name="tabButtonItem">RunningMrp</property>
+    <content-action name="/mrp/RunningMrp.bsh"/>
 </page>
