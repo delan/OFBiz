@@ -86,7 +86,9 @@
       <td width="26%" align=right valign=top><div class="tabletext">Name on Card</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
-        <input type="text" class="inputBox" size="30" maxlength="60" <ofbiz:inputvalue field="nameOnCard" entityAttr="creditCard" tryEntityAttr="tryEntity" fullattrs="true"/>>
+        <input type="text" class="inputBox" size="15" maxlength="60" <ofbiz:inputvalue field="firstNameOnCard" entityAttr="creditCard" tryEntityAttr="tryEntity" fullattrs="true"/>>
+        &nbsp;
+        <input type="text" class="inputBox" size="15" maxlength="60" <ofbiz:inputvalue field="lastNameOnCard" entityAttr="creditCard" tryEntityAttr="tryEntity" fullattrs="true"/>>
       *</td>
     </tr>
     <tr>

@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      2.2
 -->
 
@@ -316,8 +316,10 @@ function makeExpDate() {
   	              <tr>
                     <td width="26%" align=right valign=top><div class="tabletext">Name on Card</div></td>
                     <td width="5">&nbsp;</td>
-                    <td width="74%">
-                      <input type="text" class="inputBox" size="30" maxlength="60" name="nameOnCard" value="${creditCard.nameOnCard?if_exists}">
+                    <td width="74%">                      
+                      <input type="text" class="inputBox" size="15" maxlength="60" name="firstNameOnCard" value="${(creditCard.firstNameOnCard)?if_exists}">
+                      &nbsp;
+                      <input type="text" class="inputBox" size="15" maxlength="60" name="lastNameOnCard" value="${(creditCard.lastNameOnCard)?if_exists}">
                     *</td>
                   </tr>
                   <tr>

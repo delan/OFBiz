@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org) 
- *@version    $Revision: 1.6 $
+ *@version    $Revision: 1.7 $
  *@since      2.1
 -->
 
@@ -47,8 +47,10 @@
     <tr>
       <td width="26%" align=right valign=top><div class="tabletext">${uiLabelMap.AccountingNameOnCard}</div></td>
       <td width="5">&nbsp;</td>
-      <td width="74%">
-        <input type="text" class='inputBox' size="30" maxlength="60" name="nameOnCard" value="${creditCardData.nameOnCard?if_exists}">
+      <td width="74%">        
+        <input type="text" class="inputBox" size="15" maxlength="60" name="firstNameOnCard" value="${(creditCardData.firstNameOnCard)?if_exists}">
+        &nbsp;
+        <input type="text" class="inputBox" size="15" maxlength="60" name="lastNameOnCard" value="${(creditCardData.lastNameOnCard)?if_exists}">
       *</td>
     </tr>
     <tr>
