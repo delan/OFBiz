@@ -4,7 +4,7 @@
 <data-sources>
 	<!--
 		An example/default DataSource that uses an ordinary
-		JDBC-driver (in this case hsql) to create the connections. 
+		JDBC-driver (in this case hsql) to create the connections.
 		This tag creates all the needed kinds
 		of data-sources, transactional, pooled and EJB-aware sources.
 		The source generally used in application code is the "EJB"
@@ -20,6 +20,18 @@
 		username="sa"
 		password=""
 		url="jdbc:HypersonicSQL:./database/defaultdb"
+		inactivity-timeout="30"
+	/>
+	<data-source
+		class="com.evermind.sql.DriverManagerDataSource"
+		name="localpostgres"
+		location="comp/env/jdbc/localpostgres"
+		xa-location="comp/env/jdbc/xa/localpostgres"
+		ejb-location="comp/env/jdbc/ejb/localpostgres"
+		connection-driver="org.postgresql.Driver"
+		username="ofbiz"
+		password="ofbiz"
+		url="jdbc:postgresql://localhost/ofbiz"
 		inactivity-timeout="30"
 	/>
 	<data-source
