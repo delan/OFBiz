@@ -1,5 +1,5 @@
 /*
- * $Id: FreeMarkerWorker.java,v 1.4 2003/12/23 12:34:17 jonesde Exp $
+ * $Id: FreeMarkerWorker.java,v 1.5 2003/12/23 13:50:40 jonesde Exp $
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -59,7 +59,7 @@ import freemarker.template.TemplateModelException;
  * FreemarkerViewHandler - Freemarker Template Engine Util
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      3.0
  */
 public class FreeMarkerWorker {
@@ -129,10 +129,13 @@ public class FreeMarkerWorker {
     public static Object getWrappedObject(String varName, Environment env) {
         Object obj = null;
         try {
-            BeanModel bean = (BeanModel) env.getVariable(varName);
-            if (bean != null) {                    
-                obj = bean.getWrappedObject();
-            } 
+            obj = env.getVariable(varName);
+            if (obj != null) {
+                if (obj instanceof BeanModel) {
+                    BeanModel bean = (BeanModel) obj;
+                    obj = bean.getWrappedObject();
+                }
+            }
         } catch (TemplateModelException e) {
             Debug.logInfo(e.getMessage(), module);
         }
