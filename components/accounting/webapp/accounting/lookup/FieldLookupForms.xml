@@ -26,38 +26,6 @@
 
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-form.xsd">
-    <form name="lookupProduct" 
-        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox"
-        target="LookupProduct" title="" type="single">
-        <auto-fields-entity entity-name="Product" default-field-type="hidden" />
-        <field name="productId" title="${uiLabelMap.ProductProductId}"><text-find default-value="equals"/></field>
-        <field name="productName" title="${uiLabelMap.ProductProductName}"><text-find default-value="equals"/></field>
-        <field name="productTypeId" title="${uiLabelMap.ProductProductType}">
-            <drop-down>
-                <option key="" description=""/>
-                <entity-options entity-name="ProductType" description="${description}">
-                    <entity-constraint name="parentTypeId" value="GOOD"/>
-                </entity-options>
-             </drop-down>
-        </field>
-        <field name="productTypeId_op">
-            <hidden value="equals"/>
-        </field>
-        <field name="submitButton" title="${uiLabelMap.CommonLookup}" widget-style="standardSubmit">
-            <submit button-type="button"/>
-        </field>
-    </form>
-
-    <form name="listLookupProduct" 
-        default-title-style="tableheadtext"  default-tooltip-style="tabletext" default-widget-style="display"
-        list-name="entityList" paginate-target="/GenericLookup" 
-	    title="" type="list">
-        <field name="productId" title="&amp;nbsp;" widget-style="buttontext">
-            <hyperlink also-hidden="false" target-type="plain" description="${productId}" target="javascript:set_value('${productId}')"/>
-        </field>
-        <field name="internalName" title="Internal Name"><display/></field>
-        <field name="productTypeId" title="${uiLabelMap.ProductProductType}"><display/></field>
-    </form>    
 		
 	<form name="lookupFixedAsset" 
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox"
