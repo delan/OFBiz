@@ -142,7 +142,12 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <tr>
           <td>
-<div class="tabletext"><b>Orders with the status: <%=listStatusId%></b></div>
+            <ofbiz:unless name="PARTY_MODE">
+              <div class="tabletext"><b>Orders with the status: <%=listStatusId%></b></div>
+            </ofbiz:unless>
+            <ofbiz:if name="PARTY_MODE">
+              <div class="tabletext"><b>Orders for the party with ID: <%=partyId%></b></div>
+            </ofbiz:if>
 
 <ofbiz:if name="orderHeaderList" size="0">
   <table border="0" width="100%" cellpadding="2">
