@@ -746,7 +746,8 @@ public class MrpServices {
                         }
                         Map eventMap = UtilMisc.toMap("productId", product.getString("productId"),
                                                       "eventDate", eventDate,
-                                                      "inventoryEventPlanTypeId", (isbuild? "MRP_PRO_PROD_ORDER" : "MRP_PRO_PURCH_ORDER"));
+                                                      "inventoryEventPlanTypeId", (isbuild? "PROP_MANUF_O_RECP" : "PROP_PUR_O_RECP"));
+                                                      //"inventoryEventPlanTypeId", (isbuild? "MRP_PRO_PROD_ORDER" : "MRP_PRO_PURCH_ORDER"));
                         try {
                             InventoryEventPlannedServices.createOrUpdateInventoryEventPlanned(eventMap, new Double(proposedOrder.getQuantity()), delegator);
                         } catch (GenericEntityException e) {
