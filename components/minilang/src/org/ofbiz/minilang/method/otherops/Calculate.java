@@ -109,7 +109,7 @@ public class Calculate extends MethodOperation {
         }
 
         // run the decimal-formatting         
-        if (UtilValidate.isNotEmpty(formatString)) {
+        if (UtilValidate.isNotEmpty(formatString) && resultValue > 0) {
             DecimalFormat df = new DecimalFormat(formatString);
             try {
                 resultValue = ((Double) df.parse(df.format(resultValue))).doubleValue();
