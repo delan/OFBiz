@@ -1,5 +1,5 @@
 /*
- * $Id: contentprep.bsh,v 1.1 2004/06/06 07:29:00 byersa Exp $
+ * $Id: contentprep.bsh,v 1.2 2004/06/07 21:50:06 byersa Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -26,7 +26,7 @@
 /**
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.0
 
  */
@@ -66,7 +66,9 @@ GenericValue currentValue = null;
 singleWrapper = context.get("singleWrapper");
 
 paramMap = UtilHttp.getParameterMap(request);
-contentId = request.getAttribute("contentId"); // Want value in viewprofile.bsh to take precedence
+contentId = "";
+if (UtilValidate.isEmpty(contentId))
+    contentId = (String)ContentManagementWorker.getFromSomewhere("masterContentId", paramMap, request, context);
 if (UtilValidate.isEmpty(contentId)) 
     contentId = (String)ContentManagementWorker.getFromSomewhere("contentId", paramMap, request, context);
 if (UtilValidate.isEmpty(contentId)) 

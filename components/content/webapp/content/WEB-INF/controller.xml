@@ -1247,6 +1247,26 @@
         <response name="success" type="view" value="CMSSites"/>
         <response name="error" type="view" value="CMSSites"/>
     </request-map>
+   <request-map uri="EditAddContent">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditAddContent"/>
+    </request-map>
+   <request-map uri="EditAddImage">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditAddImage"/>
+    </request-map>
+    <request-map uri="persistContent">
+        <security auth="true" https="true"/>
+        <event invoke="persistContentAndAssoc" path="" type="service"/>
+        <response name="success" type="view" value="CMSContentEdit"/>
+        <response name="error" type="view" value="EditAddContent"/>
+    </request-map>
+    <request-map uri="persistImage">
+        <security auth="true" https="true"/>
+        <event type="java" path="org.ofbiz.content.content.UploadContentAndImage" invoke="uploadContentAndImage"/>
+        <response name="success" type="view" value="CMSContentEdit"/>
+        <response name="error" type="view" value="EditAddImage"/>
+    </request-map>
 
 
     <!-- View Mappings -->
@@ -1338,5 +1358,7 @@
     <view-map name="CMSEditContentPurposeOperation" page="/cms/CMSEditContentPurposeOperation.ftl" type="jpublish"/>
     <view-map name="CMSMenu" page="/cms/CMSMenu.ftl" type="jpublish"/>
     <view-map name="addSubSite" page="/cms/addSubSite.ftl" type="jpublish"/>
+    <view-map name="EditAddContent" page="/cms/EditAddContent.ftl" type="jpublish"/>
+    <view-map name="EditAddImage" page="/cms/EditAddImage.ftl" type="jpublish"/>
     <!-- end of view mappings -->
 </site-conf>

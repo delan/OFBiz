@@ -156,6 +156,8 @@
             <log level="always" message="createContentRole(5), newEntity:${newEntity}"/>
             <create-value value-name="newEntity"/>
         </if-empty>
+        <check-errors/>
+        <log level="always" message="createContentRole(7), newEntity:${newEntity}"/>
     </simple-method>
     <simple-method method-name="updateContentRole" short-description="Update Content Role">
         <check-permission permission="CONTENTMGR" action="_UPDATE"><fail-message message="Security Error: to run updateContentRole you must have the CONTENTMGR_UPDATE or CONTENTMGR_ADMIN permission"/></check-permission>

@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Al Byers (byersa@automationgroups.com)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.1
 -->
 <SCRIPT language="javascript">
@@ -92,7 +92,7 @@ ${menuAuxWrapper.renderMenuString()}
             <div class="boxhead">&nbsp;Summary Information</div>
           </td>
           <td valign="middle" align="right">
-            <a href="<@ofbizUrl>/EditAddContent?contentId=${sumContentId?if_exists}&dataResourceId=${subDataResourceId?if_exists}</@ofbizUrl>" class="submenutextright">Update</a>
+            <a href="<@ofbizUrl>/EditAddContent?contentIdTo=${contentId?if_exists}&mapKey=SUMMARY</@ofbizUrl>" class="submenutextright">Update</a>
           </td>
         </tr>
       </table>
@@ -124,7 +124,7 @@ ${summaryData?if_exists}
             <div class="boxhead">&nbsp;Article Information</div>
           </td>
           <td valign="middle" align="right">
-            <a href="<@ofbizUrl>/EditAddContent?contentId=${txtContentId?if_exists}&dataResourceId=${txtDataResourceId?if_exists}</@ofbizUrl>" class="submenutextright">Update</a>
+            <a href="<@ofbizUrl>/EditAddContent?contentIdTo=${contentId?if_exists}&mapKey=ARTICLE</@ofbizUrl>" class="submenutextright">Update</a>
           </td>
         </tr>
       </table>
