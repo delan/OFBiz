@@ -31,7 +31,7 @@ import org.ofbiz.base.util.GeneralException;
  * DataEvents Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.10 $
+ * @version    $Revision: 1.11 $
  * @since      3.0
  *
  * 
@@ -76,6 +76,23 @@ public class DataEvents {
         if (dataResourceTypeId != null && dataResourceTypeId.equals("IMAGE_OBJECT")) {
             try {
                 b = DataResourceWorker.acquireImage(delegator, dataResource);
+                if (imageType == null || b == null) {
+                        String errorMsg = "image(" + b + ") or type(" + imageType + ") is null.";
+                        Debug.logVerbose(errorMsg, module);
+                        request.setAttribute("_ERROR_MESSAGE_", errorMsg);
+                        return "error";
+                } else {
+                    try {
+                        if (Debug.infoOn()) Debug.logInfo("in serveImage, byteArray.length:" + b.length, module);
+                        UtilHttp.streamContentToBrowser(response, b, imageType);
+                        response.flushBuffer();
+                    } catch (IOException e) {
+                        String errorMsg = "Error writing image to OutputStream: " + e.toString();
+                        Debug.logError(e, errorMsg, module);
+                        request.setAttribute("_ERROR_MESSAGE_", errorMsg);
+                        return "error";
+                    }
+                }
             } catch (GenericEntityException e) {
                 String errorMsg = "Error getting image record from acquireImage: " + e.toString();
                 Debug.logError(e, errorMsg, module);
@@ -89,21 +106,10 @@ public class DataEvents {
             String rootDir = servletContext.getRealPath("/");
             //if (Debug.infoOn()) Debug.logInfo("in serveImage, rootDir:" + rootDir, module);
             try {
-                ByteArrayOutputStream os = new ByteArrayOutputStream();
-                OutputStreamWriter outWriter = new OutputStreamWriter(os, "ISO8859_1");
-                //DataResourceWorker.renderFile(dataResourceTypeId, fileName, rootDir, outWriter);
                 File contentFile = DataResourceWorker.getContentFile(dataResourceTypeId, fileName, rootDir);
                 FileInputStream fis = new FileInputStream(contentFile);
-                InputStreamReader isr = new InputStreamReader(fis, "ISO8859_1");
-                String enc = isr.getEncoding();
-                //if (Debug.infoOn()) Debug.logInfo("in serveImage, encoding:" + enc, module);
-                int c;
-                while ((c = isr.read()) != -1) {
-                    outWriter.write(c);
-                }
-                outWriter.flush();
-                b = os.toByteArray();
-
+                int fileSize = (new Long(contentFile.length())).intValue();
+                UtilHttp.streamContentToBrowser(response, fis, fileSize, imageType);
             } catch (FileNotFoundException e4) {
                 String errorMsg = "Error getting image record from db: " + e4.toString();
                 Debug.logError(e4, errorMsg, module);
@@ -123,23 +129,6 @@ public class DataEvents {
             }
         }
 
-        if (imageType == null || b == null) {
-                String errorMsg = "image(" + b + ") or type(" + imageType + ") is null.";
-                Debug.logVerbose(errorMsg, module);
-                request.setAttribute("_ERROR_MESSAGE_", errorMsg);
-                return "error";
-        } else {
-            try {
-                if (Debug.infoOn()) Debug.logInfo("in serveImage, byteArray.length:" + b.length, module);
-                UtilHttp.streamContentToBrowser(response, b, imageType);
-                response.flushBuffer();
-            } catch (IOException e) {
-                String errorMsg = "Error writing image to OutputStream: " + e.toString();
-                Debug.logError(e, errorMsg, module);
-                request.setAttribute("_ERROR_MESSAGE_", errorMsg);
-                return "error";
-            }
-        }
 
         return "success";
     }
