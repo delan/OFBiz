@@ -40,11 +40,11 @@ import org.ofbiz.core.workflow.*;
  */
 
 public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
-        
+    
     private WfRequester requester;
     private WfProcessMgr manager;
     private List activeSteps;
-    private Map result;   
+    private Map result;
     
     /**
      * Creates new WfProcessImpl
@@ -57,9 +57,9 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
         this.manager = manager;
         this.requester = null;
         this.result = new HashMap();
-        this.activeSteps = new ArrayList();                       
+        this.activeSteps = new ArrayList();
     }
-        
+    
     /**
      * Set the originator of this process.
      * @param newValue The Requestor of this process.
@@ -89,7 +89,7 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
      * @throws CannotStart Process cannot be started.
      * @throws AlreadyRunning Process is already running.
      */
-    public void start() throws WfException, CannotStart, AlreadyRunning {                
+    public void start() throws WfException, CannotStart, AlreadyRunning {
         if (workflowStateType().equals("open.running"))
             throw new AlreadyRunning("Process is already running");
         
@@ -196,8 +196,9 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
      * @param results Map of the results.
      * @throws WfException
      */
-    public void receiveResults(WfActivity activity, Map results) throws WfException {
-        // implement me
+    public void receiveResults(WfActivity activity, Map results) throws WfException, InvalidData {
+        result.putAll(results);  // Add the result to the existing result or update existing keys
+        setSerializedData("resultDataId",results);
     }
     
     /**
@@ -221,7 +222,7 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
         Iterator i = nextTrans.iterator();
         while ( i.hasNext() ) {
             GenericValue trans = (GenericValue) i.next();
-                        
+            
             // Get the activity definition
             GenericValue toActivity = null;
             try {
@@ -230,7 +231,7 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
             catch ( GenericEntityException e ) {
                 throw new WfException(e.getMessage(),e);
             }
-                                                            
+            
             // check for a join
             String join = "WJT_AND"; // default join is AND
             if ( toActivity.get("joinTypeEnumId") != null )
@@ -255,10 +256,10 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
             throw new WfException(e.getMessage(),e);
         }
         
-        // get a list of followed transition to this activity        
+        // get a list of followed transition to this activity
         Collection followed = null;
         try {
-            Map fields = new HashMap();                                 
+            Map fields = new HashMap();
             fields.put("processWorkEffortId", dataObject.getString("workEffortId"));
             fields.put("toActivityId", toActivity.getString("activityId"));
             followed = getDelegator().findByAnd("WorkEffortTransBox",fields);
@@ -279,20 +280,20 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
             catch ( GenericEntityException e ) {
                 throw new WfException(e.getMessage(),e);
             }
-        }            
+        }
         else {
             try {
                 Map fields = new HashMap();
                 fields.put("processWorkEffortId",dataObject.getString("workEffortId"));
-                fields.put("toActivityId",toActivity.getString("activityId"));                
-                fields.put("transitionId",transition.getString("transitionId"));                
+                fields.put("toActivityId",toActivity.getString("activityId"));
+                fields.put("transitionId",transition.getString("transitionId"));
                 GenericValue obj = getDelegator().makeValue("WorkEffortTransBox", fields);
                 getDelegator().create(obj);
             }
             catch ( GenericEntityException e ) {
                 throw new WfException(e.getMessage(),e);
             }
-        }       
+        }
     }
     
     // Activates an activity object
@@ -323,8 +324,8 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
         catch ( GenericEntityException e ) {
             throw new WfException(e.getMessage(),e);
         }
-                        
-        // check for a split 
+        
+        // check for a split
         String split = "WST_AND"; // default split is AND
         if ( fromActivity.getDefinitionObject().get("splitTypeEnumId") != null )
             split = fromActivity.getDefinitionObject().getString("splitTypeEnumId");

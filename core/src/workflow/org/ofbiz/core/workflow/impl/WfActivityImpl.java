@@ -7,7 +7,6 @@ package org.ofbiz.core.workflow.impl;
 import java.io.*;
 import java.util.*;
 import org.ofbiz.core.entity.*;
-import org.ofbiz.core.serialize.*;
 import org.ofbiz.core.service.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.workflow.*;
@@ -139,32 +138,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
      */
     public void setResult(Map newResult) throws WfException, InvalidData {
         result.putAll(newResult);  // Add the result to the existing result or update existing keys
-        try {
-            GenericValue runtimeData = null;
-            if ( dataObject.get("resultDataId") == null ) {
-                String seqId = getDelegator().getNextSeqId("RuntimeData").toString();
-                runtimeData = getDelegator().makeValue("RuntimeData",UtilMisc.toMap("runtimeDataId",seqId));
-                dataObject.set("resultDataId",seqId);
-                dataObject.store();
-            }
-            else {
-                runtimeData = dataObject.getRelatedOne("ResultRuntimeData");
-            }
-            runtimeData.set("runtimeInfo",XmlSerializer.serialize(context));
-            runtimeData.store();
-        }
-        catch ( GenericEntityException e ) {
-            throw new WfException(e.getMessage(),e);
-        }
-        catch ( SerializeException e ) {
-            throw new InvalidData(e.getMessage(),e);
-        }
-        catch ( FileNotFoundException e ) {
-            throw new InvalidData(e.getMessage(),e);
-        }
-        catch ( IOException e ) {
-            throw new InvalidData(e.getMessage(),e);
-        }
+        setSerializedData("resultDataId",newResult);        
     }
     
     /**
@@ -328,7 +302,12 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
     
     // Finishes an automatic activity
     private void finishActivity() throws WfException, CannotComplete {
-        container().receiveResults(this,result);
+        try {
+            container().receiveResults(this,result);
+        }
+        catch ( InvalidData e ) {
+            throw new CannotComplete("Invalid result data was passed",e);
+        }
         try {
             changeState("closed.complete");
         }

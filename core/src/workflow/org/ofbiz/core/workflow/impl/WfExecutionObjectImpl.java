@@ -52,7 +52,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
     protected List history;
     protected String serviceLoader;
     protected ServiceDispatcher dispatcher;
-           
+    
     /**
      * Creates a new WfExecutionObjectImpl
      * @param valueObject The GenericValue object for the definition entity.
@@ -68,7 +68,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
         loadRuntime();
     }
     
-    // Loads or creates the stored runtime workeffort data. 
+    // Loads or creates the stored runtime workeffort data.
     private void loadRuntime() throws WfException {
         // If no dataObject create one
         if ( this.dataObject == null ) {
@@ -131,7 +131,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
         }
         
     }
-            
+    
     /**
      * Getter for attribute 'name'.
      * @throws WfException General workflow exception.
@@ -316,32 +316,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
     public void setProcessContext(Map newValue)
     throws WfException, InvalidData, UpdateNotAllowed {
         this.context = context;
-        try {            
-            GenericValue runtimeData = null;
-            if ( dataObject.get("contextDataId") == null ) {                
-                String seqId = getDelegator().getNextSeqId("RuntimeData").toString();                
-                runtimeData = getDelegator().makeValue("RuntimeData",UtilMisc.toMap("runtimeDataId",seqId));
-                dataObject.set("contextDataId",seqId);
-                dataObject.store();
-            }
-            else {
-                runtimeData = dataObject.getRelatedOne("ContextRuntimeData");
-            }
-            runtimeData.set("runtimeInfo",XmlSerializer.serialize(context));
-            runtimeData.store();
-        }
-        catch ( GenericEntityException e ) {
-            throw new UpdateNotAllowed(e.getMessage(),e);
-        }
-        catch ( SerializeException e ) {
-            throw new InvalidData(e.getMessage(),e);
-        }
-        catch ( FileNotFoundException e ) {
-            throw new InvalidData(e.getMessage(),e);
-        }
-        catch ( IOException e ) {
-            throw new InvalidData(e.getMessage(),e);
-        }
+        setSerializedData("contextDataId",newValue);
     }
     
     /**
@@ -532,7 +507,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
             throw new WfException(e.getMessage(),e);
         }
     }
-
+    
     /**
      * Gets the GenericValue object of the definition.
      * @returns GenericValue object of the definition.
@@ -554,6 +529,49 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
      * @return String name of this execution object type
      */
     public abstract String executionObjectType();
+    
+    /**
+     * Updates the runtime data entity
+     * @param field The field name of the entity (resultDataId,contextDataId)
+     * @param value The value to serialize and set
+     * @throws WfException
+     */
+    protected void setSerializedData(String field, Map value) throws WfException, InvalidData {
+        String relationName = null;
+        if ( field.equals("resultDataId") )
+            relationName = "ResultRuntimeData";
+        else if ( field.equals("contextDataId") )
+            relationName = "ContextRuntimeData";
+        else                     
+            throw new WfException("Invalid entity field name");
+        
+        try {
+            GenericValue runtimeData = null;
+            if ( dataObject.get(field) == null ) {
+                String seqId = getDelegator().getNextSeqId("RuntimeData").toString();
+                runtimeData = getDelegator().makeValue("RuntimeData",UtilMisc.toMap("runtimeDataId",seqId));
+                dataObject.set(field,seqId);
+                dataObject.store();
+            }
+            else {
+                runtimeData = dataObject.getRelatedOne(relationName);
+            }
+            runtimeData.set("runtimeInfo",XmlSerializer.serialize(context));
+            runtimeData.store();
+        }
+        catch ( GenericEntityException e ) {
+            throw new WfException(e.getMessage(),e);
+        }
+        catch ( SerializeException e ) {
+            throw new InvalidData(e.getMessage(),e);
+        }
+        catch ( FileNotFoundException e ) {
+            throw new InvalidData(e.getMessage(),e);
+        }
+        catch ( IOException e ) {
+            throw new InvalidData(e.getMessage(),e);
+        }        
+    }
     
     private String getEntityStatus(String state) {
         String statesArr[] = { "open.running",  "open.not_running.not_started",
