@@ -95,6 +95,8 @@
   <SurveyQuestionType surveyQuestionTypeId="NUMBER_LONG" description="Numeric (Long)"/>
   <SurveyQuestionType surveyQuestionTypeId="OPTION" description="Selected Option"/>
   <SurveyQuestionType surveyQuestionTypeId="PASSWORD" description="Password"/>
+  <SurveyQuestionType surveyQuestionTypeId="SEPERATOR_LINE" description="Seperator Line"/>
+  <SurveyQuestionType surveyQuestionTypeId="SEPERATOR_TEXT" description="Seperator Text"/>
   <SurveyQuestionType surveyQuestionTypeId="TEXT_SHORT" description="Short Text (single-line)"/>
   <SurveyQuestionType surveyQuestionTypeId="TEXT_LONG" description="Long Text (single-line)"/>
   <SurveyQuestionType surveyQuestionTypeId="TEXTAREA" description="Text (multi-line)"/>
