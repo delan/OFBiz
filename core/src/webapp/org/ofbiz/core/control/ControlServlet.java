@@ -239,21 +239,26 @@ public class ControlServlet extends HttpServlet {
         if (Debug.verboseOn()) {
             Enumeration appNames = servletContext.getAttributeNames();
             Debug.logVerbose("--- Start ServletContext Attributes: ---", module);
-            while (appNames.hasMoreElements()) {
+            while (appNames != null && appNames.hasMoreElements()) {
                 String attName = (String) appNames.nextElement();
                 Debug.logVerbose(attName + ":" + servletContext.getAttribute(attName), module);
             }
             Debug.logVerbose("--- End ServletContext Attributes ---", module);
-            Enumeration sesNames = session.getAttributeNames();
+            Enumeration sesNames = null;
+            try {
+                sesNames = session.getAttributeNames();                
+            } catch (IllegalStateException e) {
+                Debug.logVerbose("Cannot get session attributes : " + e.getMessage(), module);
+            }
             Debug.logVerbose("--- Start Session Attributes: ---", module);
-            while (sesNames.hasMoreElements()) {
+            while (sesNames != null && sesNames.hasMoreElements()) {
                 String attName = (String) sesNames.nextElement();
                 Debug.logVerbose(attName + ":" + session.getAttribute(attName), module);
             }
             Debug.logVerbose("--- End Session Attributes ---", module);
             Enumeration reqNames = request.getAttributeNames();
             Debug.logVerbose("--- Start Request Attributes: ---", module);
-            while (reqNames.hasMoreElements()) {
+            while (reqNames != null && reqNames.hasMoreElements()) {
                 String attName = (String) reqNames.nextElement();
                 Debug.logVerbose(attName + ":" + request.getAttribute(attName), module);
             }
