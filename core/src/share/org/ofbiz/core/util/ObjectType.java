@@ -44,20 +44,21 @@ public class ObjectType {
      * @param className The name of the class to load
      */
     public static Class loadClass(String className) throws ClassNotFoundException {
-        Class theClass = (Class) classCache.get(className);
-        if (theClass == null) {
-            synchronized (ObjectType.class) {
-                theClass = (Class) classCache.get(className);
-                if (theClass == null) {
-                    try {
-                        ClassLoader loader = Thread.currentThread().getContextClassLoader();
-                        theClass = loader.loadClass(className);
-                    } catch (Exception e) {
+        Class theClass = null;
+        try {
+            ClassLoader loader = Thread.currentThread().getContextClassLoader();
+            theClass = loader.loadClass(className);
+        } catch (Exception e) {
+            theClass = (Class) classCache.get(className);
+            if (theClass == null) {
+                synchronized (ObjectType.class) {
+                    theClass = (Class) classCache.get(className);
+                    if (theClass == null) {
                         theClass = Class.forName(className);
-                    }
-                    if (theClass != null) {
-                        if (Debug.verboseOn()) Debug.logVerbose("Loaded Class: " + theClass.getName(), module);
-                        classCache.put(className, theClass);
+                        if (theClass != null) {
+                            if (Debug.verboseOn()) Debug.logVerbose("Loaded Class: " + theClass.getName(), module);
+                            classCache.put(className, theClass);
+                        }
                     }
                 }
             }
