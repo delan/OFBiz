@@ -779,9 +779,11 @@
       <field name="orderId" type="id-ne"></field>
       <field name="orderItemSeqId" type="id-ne"></field>
       <field name="inventoryItemId" type="id-ne"></field>
+      <field name="reserveOrderEnumId" type="id-ne"></field>
       <field name="quantity" type="floating-point"></field>
       <field name="statusId" type="id-ne"></field>
       <field name="reservedDatetime" type="date-time"></field>
+      <field name="createdDatetime" type="date-time"></field>
       <prim-key field="orderId"/>
       <prim-key field="orderItemSeqId"/>
       <prim-key field="inventoryItemId"/>
