@@ -1,5 +1,5 @@
 /*
- * $Id: ContactMechServices.java,v 1.3 2004/07/03 19:54:23 jonesde Exp $
+ * $Id$
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -48,7 +48,7 @@ import org.ofbiz.service.ServiceUtil;
  * Services for Contact Mechanism maintenance
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.3 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class ContactMechServices {

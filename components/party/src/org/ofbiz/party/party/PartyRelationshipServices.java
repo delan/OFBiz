@@ -1,5 +1,5 @@
 /*
- * $Id: PartyRelationshipServices.java,v 1.2 2004/02/26 09:10:48 jonesde Exp $
+ * $Id$
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -45,7 +45,7 @@ import org.ofbiz.service.ServiceUtil;
  *
  * @author     <a href="mailto:cworley@chris-n-april.com">Christopher Worley</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.2 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class PartyRelationshipServices {

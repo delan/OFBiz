@@ -1,5 +1,5 @@
 /*
- * $Id: PartyHelper.java,v 1.7 2004/07/01 20:58:11 ajzeneski Exp $
+ * $Id$
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -35,7 +35,7 @@ import org.ofbiz.entity.model.ModelEntity;
  * PartyHelper
  *
  * @author     <a href="mailto:epabst@bigfoot.com">Eric Pabst</a>
- * @version    $Revision: 1.7 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class PartyHelper {

@@ -1,5 +1,5 @@
 /*
- * $Id: ContactMechWorker.java,v 1.4 2003/11/21 20:01:49 ajzeneski Exp $
+ * $Id$
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -45,7 +45,7 @@ import org.ofbiz.entity.util.EntityUtil;
  * Worker methods for Contact Mechanisms
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.4 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class ContactMechWorker {

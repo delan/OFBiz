@@ -1,5 +1,5 @@
 /*
- * $Id: ContactHelper.java,v 1.2 2003/11/04 18:46:30 ajzeneski Exp $
+ * $Id$
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -38,7 +38,7 @@ import org.ofbiz.entity.util.EntityUtil;
  * Accessors for Contact Mechanisms
  * 
  * @author     <a href="mailto:epabst@bigfoot.com">Eric Pabst</a>
- * @version    $Revision: 1.2 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class ContactHelper {
