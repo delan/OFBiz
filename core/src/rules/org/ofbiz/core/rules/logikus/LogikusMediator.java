@@ -1,7 +1,30 @@
+/*
+ * $Id$
+ *
+ * Copyright (c) 1999 Steven J. Metsker.
+ * Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 package org.ofbiz.core.rules.logikus;
 
-//import com.sun.java.swing.*;
-//import com.sun.java.swing.border.*;
 import javax.swing.*;
 import javax.swing.border.*;
 import java.awt.*;
@@ -10,32 +33,7 @@ import org.ofbiz.core.rules.engine.*;
 import org.ofbiz.core.rules.utensil.*;
 
 /**
- * <p><b>Title:</b> Logikus Mediator
- * <p><b>Description:</b> None
- * <p>Copyright (c) 1999 Steven J. Metsker.
- * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
- *
- * <p>Permission is hereby granted, free of charge, to any person obtaining a
- *  copy of this software and associated documentation files (the "Software"),
- *  to deal in the Software without restriction, including without limitation
- *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
- *  and/or sell copies of the Software, and to permit persons to whom the
- *  Software is furnished to do so, subject to the following conditions:
- *
- * <p>The above copyright notice and this permission notice shall be included
- *  in all copies or substantial portions of the Software.
- *
- * <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
- *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
- *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
- *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
- *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *
- * <br>
- * <p>This class supports a <code>LogikusIde</code> object,
- * handling the interaction of the IDE's components.
+ * This class supports a <code>LogikusIde</code> object, handling the interaction of the IDE's components.
  * <p>
  * An object of the IDE (Interactive Development
  * Environment) has text areas for a Logikus program, a
@@ -58,220 +56,220 @@ import org.ofbiz.core.rules.utensil.*;
  * @version 1.0
  */
 public class LogikusMediator implements ActionListener, Runnable {
-  protected JButton proveNextButton;
-  protected JButton proveRestButton;
-  protected JButton haltButton;
-  protected JButton clearProgramButton;
-  protected JButton clearResultsButton;
-  
-  protected JTextArea programArea;
-  protected JTextArea resultsArea;
-  protected JTextArea queryArea;
-  
-  protected boolean proveRemaining;
-  
-  protected Thread computeThread;
-  
-  protected String lastProgramText = null;
-  protected String lastQueryText = null;
-  protected Program program;
-  protected Query query;
-  /**
-   * This method reacts, when the user presses one of the
-   * IDE's buttons.
-   *
-   * @param   ActionEvent   the event
-   */
-  public void actionPerformed(ActionEvent event) {
-    Object object = event.getSource();
-    if (object == clearResultsButton) {
-      resultsArea.selectAll();
-      resultsArea.copy();
-      resultsArea.setText("");
-    }
-    if (object == clearProgramButton) {
-      programArea.selectAll();
-      programArea.copy();
-      programArea.setText("");
-      queryArea.setText("");
-    }
+    protected JButton proveNextButton;
+    protected JButton proveRestButton;
+    protected JButton haltButton;
+    protected JButton clearProgramButton;
+    protected JButton clearResultsButton;
     
-    if (object == proveNextButton ||
-    object == proveRestButton) {
-      
-      proveRemaining = (object == proveRestButton);
-      conductProof();
-    }
-    if (object == haltButton) {
-        /* 
+    protected JTextArea programArea;
+    protected JTextArea resultsArea;
+    protected JTextArea queryArea;
+    
+    protected boolean proveRemaining;
+    
+    protected Thread computeThread;
+    
+    protected String lastProgramText = null;
+    protected String lastQueryText = null;
+    protected Program program;
+    protected Query query;
+    /**
+     * This method reacts, when the user presses one of the
+     * IDE's buttons.
+     *
+     * @param   ActionEvent   the event
+     */
+    public void actionPerformed(ActionEvent event) {
+        Object object = event.getSource();
+        if (object == clearResultsButton) {
+            resultsArea.selectAll();
+            resultsArea.copy();
+            resultsArea.setText("");
+        }
+        if (object == clearProgramButton) {
+            programArea.selectAll();
+            programArea.copy();
+            programArea.setText("");
+            queryArea.setText("");
+        }
+        
+        if (object == proveNextButton ||
+        object == proveRestButton) {
+            
+            proveRemaining = (object == proveRestButton);
+            conductProof();
+        }
+        if (object == haltButton) {
+        /*
       if (computeThread != null) {
         computeThread.stop();
       }
          */
-      computeThread = null;
-      setComputing(false);
+            computeThread = null;
+            setComputing(false);
+        }
     }
-  }
-  /**
-   * Parse the program and query (if they have changed)
-   * and proved the query in a separate thread.
-   */
-  protected void conductProof() {
-    setComputing(true);
-    try {
-      parseProgramAndQuery();
-    } catch (Exception e) {
-      String text = e.toString();
-      if (e.getMessage() != null) {
-        text = e.getMessage();
-      }
-      resultsArea.append(text + "\n");
-      setComputing(false);
-      return;
+    /**
+     * Parse the program and query (if they have changed)
+     * and proved the query in a separate thread.
+     */
+    protected void conductProof() {
+        setComputing(true);
+        try {
+            parseProgramAndQuery();
+        } catch (Exception e) {
+            String text = e.toString();
+            if (e.getMessage() != null) {
+                text = e.getMessage();
+            }
+            resultsArea.append(text + "\n");
+            setComputing(false);
+            return;
+        }
+        computeThread = new Thread(this);
+        computeThread.start();
+        // this thread will setComputing(false) in due time.
     }
-    computeThread = new Thread(this);
-    computeThread.start();
-    // this thread will setComputing(false) in due time.
-  }
-  /**
-   * Appends the given line to the results text area,
-   * scheduling this event with the event-dispatching thread.
-   *
-   * @param   String   the string to append to the results
-   *                   area
-   */
-  protected void display(final String s) {
-    // Using invokeAndWait() keeps appends from outrunning
-    // the event dispatch thread.
-    
-    Runnable r = new Runnable() {
-      public void run() {
-        resultsArea.append(s);
-      }
-    };
-    try {
-      SwingUtilities.invokeAndWait(r);
-    } catch (Exception e) {
-      resultsArea.append(e.getMessage());
+    /**
+     * Appends the given line to the results text area,
+     * scheduling this event with the event-dispatching thread.
+     *
+     * @param   String   the string to append to the results
+     *                   area
+     */
+    protected void display(final String s) {
+        // Using invokeAndWait() keeps appends from outrunning
+        // the event dispatch thread.
+        
+        Runnable r = new Runnable() {
+            public void run() {
+                resultsArea.append(s);
+            }
+        };
+        try {
+            SwingUtilities.invokeAndWait(r);
+        } catch (Exception e) {
+            resultsArea.append(e.getMessage());
+        }
     }
-  }
-  /**
-   * Make the IDE's GUI components available.
-   */
-  public void initialize
-  (
-  JButton proveNextButton,
-  JButton proveRestButton,
-  JButton haltButton,
-  JButton clearProgramButton,
-  JButton clearResultsButton,
-  JTextArea programArea,
-  JTextArea resultsArea,
-  JTextArea queryArea) {
-    
-    this.proveNextButton = proveNextButton;
-    this.proveRestButton = proveRestButton;
-    this.haltButton = haltButton;
-    this.clearProgramButton = clearProgramButton;
-    this.clearResultsButton = clearResultsButton;
-    this.programArea = programArea;
-    this.resultsArea = resultsArea;
-    this.queryArea = queryArea;
-  }
-  /**
-   * Parses the program and query texts.
-   */
-  protected void parseProgramAndQuery() {
-    
-    boolean programChanged = false;
-    String programText = programArea.getText();
-    programChanged =
-    (lastProgramText == null) ||
-    (!lastProgramText.equals(programText));
-    if (programChanged) {
-      program = LogikusFacade.program(programText);
+    /**
+     * Make the IDE's GUI components available.
+     */
+    public void initialize
+    (
+    JButton proveNextButton,
+    JButton proveRestButton,
+    JButton haltButton,
+    JButton clearProgramButton,
+    JButton clearResultsButton,
+    JTextArea programArea,
+    JTextArea resultsArea,
+    JTextArea queryArea) {
+        
+        this.proveNextButton = proveNextButton;
+        this.proveRestButton = proveRestButton;
+        this.haltButton = haltButton;
+        this.clearProgramButton = clearProgramButton;
+        this.clearResultsButton = clearResultsButton;
+        this.programArea = programArea;
+        this.resultsArea = resultsArea;
+        this.queryArea = queryArea;
     }
-    lastProgramText = programText;
-    
-    String queryText = queryArea.getText();
-    
-    // create a fresh query if the program changes or the
-    // query text changes
-    
-    if (programChanged ||
-    (lastQueryText == null) ||
-    (!lastQueryText.equals(queryText))) {
-      query = LogikusFacade.query(queryText, program);
+    /**
+     * Parses the program and query texts.
+     */
+    protected void parseProgramAndQuery() {
+        
+        boolean programChanged = false;
+        String programText = programArea.getText();
+        programChanged =
+        (lastProgramText == null) ||
+        (!lastProgramText.equals(programText));
+        if (programChanged) {
+            program = LogikusFacade.program(programText);
+        }
+        lastProgramText = programText;
+        
+        String queryText = queryArea.getText();
+        
+        // create a fresh query if the program changes or the
+        // query text changes
+        
+        if (programChanged ||
+        (lastQueryText == null) ||
+        (!lastQueryText.equals(queryText))) {
+            query = LogikusFacade.query(queryText, program);
+        }
+        lastQueryText = queryText;
     }
-    lastQueryText = queryText;
-  }
-  /**
-   * Proves the query against the program.
-   */
-  protected void proveNext() {
-    if (query.canFindNextProof()) {
-      Unification vars = query.variables();
-      if (vars.size() == 0) {
-        display("yes\n");
-      } else {
-        display(vars + "\n");
-      }
-    } else {
-      display("no\n");
+    /**
+     * Proves the query against the program.
+     */
+    protected void proveNext() {
+        if (query.canFindNextProof()) {
+            Unification vars = query.variables();
+            if (vars.size() == 0) {
+                display("yes\n");
+            } else {
+                display(vars + "\n");
+            }
+        } else {
+            display("no\n");
+        }
     }
-  }
-  /**
-   * Proves the query against the program until no proofs
-   * remain.
-   */
-  protected void proveRemaining() {
-    Unification vars = query.variables();
-    while (query.canFindNextProof()) {
-      if (vars.size() == 0) {
-        display("yes\n");
-        return;
-      } else {
-        display(vars + "\n");
-      }
+    /**
+     * Proves the query against the program until no proofs
+     * remain.
+     */
+    protected void proveRemaining() {
+        Unification vars = query.variables();
+        while (query.canFindNextProof()) {
+            if (vars.size() == 0) {
+                display("yes\n");
+                return;
+            } else {
+                display(vars + "\n");
+            }
+        }
+        display("no\n");
     }
-    display("no\n");
-  }
-  /**
-   * Proves the query against the program.
-   */
-  public void run() {
-    try {
-      if (proveRemaining) {
-        proveRemaining();
-      } else {
-        proveNext();
-      }
-    } catch (Exception e) {
-      resultsArea.append(e.getMessage());
-    } finally {
-      setComputing(false);
+    /**
+     * Proves the query against the program.
+     */
+    public void run() {
+        try {
+            if (proveRemaining) {
+                proveRemaining();
+            } else {
+                proveNext();
+            }
+        } catch (Exception e) {
+            resultsArea.append(e.getMessage());
+        } finally {
+            setComputing(false);
+        }
     }
-  }
-  /**
-   * Sets the state of the IDE to computing or not. Most of the
-   * IDE's controls are grayed out during computation of a
-   * program.
-   *
-   * @param   boolean  if true, indicates that a proof thread
-   *                   is finding one or more proofs
-   */
-  protected void setComputing(boolean computing) {
-    
-    // computing means everything is disabled, except "Halt"
-    
-    proveNextButton.setEnabled(!computing);
-    proveRestButton.setEnabled(!computing);
-    clearProgramButton.setEnabled(!computing);
-    clearResultsButton.setEnabled(!computing);
-    programArea.setEnabled(!computing);
-    resultsArea.setEnabled(!computing);
-    queryArea.setEnabled(!computing);
-    
-    haltButton.setEnabled(computing);
-  }
+    /**
+     * Sets the state of the IDE to computing or not. Most of the
+     * IDE's controls are grayed out during computation of a
+     * program.
+     *
+     * @param   boolean  if true, indicates that a proof thread
+     *                   is finding one or more proofs
+     */
+    protected void setComputing(boolean computing) {
+        
+        // computing means everything is disabled, except "Halt"
+        
+        proveNextButton.setEnabled(!computing);
+        proveRestButton.setEnabled(!computing);
+        clearProgramButton.setEnabled(!computing);
+        clearResultsButton.setEnabled(!computing);
+        programArea.setEnabled(!computing);
+        resultsArea.setEnabled(!computing);
+        queryArea.setEnabled(!computing);
+        
+        haltButton.setEnabled(computing);
+    }
 }
