@@ -235,9 +235,6 @@ public class PartyServices {
         Collection toBeStored = new LinkedList();
 
         String partyId = (String) context.get("partyId");
-        if (partyId == null || partyId.length() == 0) {
-            partyId = userLogin.getString("partyId");
-        }
 
         //if specified partyId starts with a number, return an error
         if (Character.isDigit(partyId.charAt(0))) {
