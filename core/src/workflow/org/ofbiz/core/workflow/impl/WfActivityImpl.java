@@ -43,7 +43,7 @@ import org.ofbiz.core.workflow.*;
 public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity {
     
     protected WfProcess process;
-    protected List assignments;    
+    protected List assignments;
     
     /**
      * Creates new WfActivityImpl
@@ -53,8 +53,9 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
      */
     public WfActivityImpl(GenericValue valueObject, GenericValue dataObject, WfProcess process) throws WfException {
         super(valueObject,dataObject,process.runtimeKey());
-        this.process = process;             
-        GenericValue performer = null;     
+        this.process = process;
+        this.assignments = new ArrayList();
+        GenericValue performer = null;
         if ( valueObject.get("performerParticipantId") != null ) {
             try {
                 performer = valueObject.getRelatedOne("PerformerWorkflowParticipant");
@@ -63,58 +64,137 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
                 throw new WfException(e.getMessage(),e);
             }
         }
+        if ( performer != null )
+            createAssignments(performer);
+    }
+    
+    private void createAssignments(GenericValue performer) throws WfException {
+        boolean assignAll = false;
+        if ( valueObject.get("acceptAllAssignments") != null )
+            assignAll = valueObject.getBoolean("acceptAllAssignments").booleanValue();
         
-        if ( performer != null ) {
-            WfResource resource = WfFactory.getWfResource(performer);
-            this.assign(resource,false);            
-        }          
+        if ( !assignAll ) {
+            if ( performer != null ) {
+                Debug.logInfo("[WfActivity.createAssignments] : (S) Single assignment");
+                assign(WfFactory.getWfResource(performer),false);
+            }
+            return;
+        }
+        // check for a party group
+        if ( performer.get("partyId") != null && !performer.getString("partyId").equals("_NA_") ) {
+            GenericValue partyType = null;
+            GenericValue groupType = null;
+            try {
+                Map fields1 = UtilMisc.toMap("partyId",performer.getString("partyId"));
+                GenericValue v1 = valueObject.getDelegator().findByPrimaryKey("Party",fields1);
+                partyType = v1.getRelatedOne("PartyType");
+                Map fields2 = UtilMisc.toMap("partyTypeId","PARTY_GROUP");
+                groupType = valueObject.getDelegator().findByPrimaryKeyCache("PartyType",fields2);
+            }
+            catch ( GenericEntityException e ) {
+                throw new WfException(e.getMessage(),e);
+            }
+            if ( EntityTypeUtil.isType(partyType,groupType) ) {
+                // party is a group
+                Collection partyRelations = null;
+                try {
+                    Map fields = UtilMisc.toMap("partyIdFrom",performer.getString("partyId"),"partyRelationshipTypeId","GROUP_ROLLUP");
+                    partyRelations = valueObject.getDelegator().findByAnd("PartyRelationship",fields);
+                }
+                catch ( GenericEntityException e ) {
+                    throw new WfException(e.getMessage(),e);
+                }
+                // make assignments for these parties
+                Debug.logInfo("[WfActivity.createAssignments] : Group assignment");
+                Iterator i = partyRelations.iterator();
+                while ( i.hasNext() ) {
+                    GenericValue value = (GenericValue) i.next();
+                    assign(WfFactory.getWfResource(valueObject.getDelegator(),null,null,value.getString("partyIdTo"),null),true);
+                }
+            }
+            else {
+                // not a group
+                Debug.logInfo("[WfActivity.createAssignments] : (G) Single assignment");
+                assign(WfFactory.getWfResource(performer),false);
+            }
+        }
+        // check for role types
+        else if ( performer.get("roleTypeId") != null && !performer.getString("roleTypeId").equals("_NA_") ) {
+            Collection partyRoles = null;
+            try {
+                Map fields = UtilMisc.toMap("roleTypeId",performer.getString("roleTypeId"));
+                partyRoles = valueObject.getDelegator().findByAnd("PartyRole",fields);
+            }
+            catch ( GenericEntityException e ) {
+                throw new WfException(e.getMessage(),e);
+            }
+            // loop through the roles and create assignments
+            Debug.logInfo("[WfActivity.createAssignments] : Role assignment");
+            Iterator i = partyRoles.iterator();
+            while ( i.hasNext() ) {
+                GenericValue value = (GenericValue) i.next();
+                assign(WfFactory.getWfResource(value.getDelegator(),null,null,value.getString("partyId"),null),true);
+            }
+        }
     }
     
     /**
      * Activates this activity.
-     * @param manual flag to specify this is a manual attempt
      * @throws WfException
      * @throws CannotStart
      * @throws AlreadyRunning
      */
-    public void activate(boolean manual) throws WfException, CannotStart, AlreadyRunning {
+    public void activate() throws WfException, CannotStart, AlreadyRunning {
         if ( this.state().equals("open.running") )
             throw new AlreadyRunning();
         
         // test the activity mode
         String mode = valueObject.getString("startModeEnumId");
         if ( mode == null )
-            throw new CannotStart("Start mode cannot be null");
-        
-        // Default mode is MANUAL -- only start if we are automatic
-        if ( mode.equals("WAM_AUTOMATIC") || manual ) {
+            throw new CannotStart("Start mode cannot be null");        
+        if ( mode.equals("WAM_AUTOMATIC") ) {
+            // set the status of the assignments
             Iterator i = getIteratorAssignment();
             while ( i.hasNext() )
-                ((WfAssignment)i.next()).accept();            
-            this.startActivity();        
+                ((WfAssignment)i.next()).changeStatus("CAL_ACCEPTED");
         }
+        
+        // check the assignment status
+        if ( !checkAssignStatus(1) )
+            throw new CannotStart("All assignments have not been accepted");
+                
+        this.startActivity();
     }
     
-    /** 
+    /**
      * Assign this activity to a resource
      * @param WfResource to assign this activity to
      * @param append Append to end if existing list (true) or replace existing (false)
      * @throws WfException
      */
     public void assign(WfResource resource, boolean append) throws WfException {
-        if ( !append )
+        if ( !append ) {
+            Iterator ai = getIteratorAssignment();
+            while ( ai.hasNext() ) {
+                WfAssignment a = (WfAssignment) ai.next();
+                a.remove();
+            }
             assignments = new ArrayList();
+        }
         
         WfAssignment assign = WfFactory.getWfAssignment(this,resource);
         assignments.add(assign);
     }
-        
+    
     /**
      * Complete this activity.
      * @throws WfException General workflow exception.
      * @throws CannotComplete Cannot complete the activity
      */
     public void complete() throws WfException, CannotComplete {
+        // check to make sure all assignements are complete
+        if ( !checkAssignStatus(2) )
+            throw new CannotComplete("All assignments have not been completed");
         try {
             container().receiveResults(this,result());
         }
@@ -131,16 +211,11 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
             throw new CannotComplete(tna.getMessage(),tna);
         }
         
-        Iterator i = getIteratorAssignment();
-        while ( i.hasNext() )
-            ((WfAssignment)i.next()).complete();
-        
         container().activityComplete(this);
     }
     
     /**
-     * Check if a specific assignment is the member of assignment objects of
-     * this activity.
+     * Check if a specific assignment is a member of this activity.
      * @param member Assignment object.
      * @throws WfException General workflow exception.
      * @return true if the assignment is a member of this activity.
@@ -167,7 +242,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
      */
     public void setResult(Map newResult) throws WfException, InvalidData {
         context.putAll(newResult);  // Add the result to the existing result or update existing keys
-        setSerializedData(context);        
+        setSerializedData(context);
     }
     
     /**
@@ -183,7 +258,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
      * Retrieve the Result map of this activity.
      * @throws WfException General workflow exception.
      * @throws ResultNotAvailable No result is available.
-     * @return
+     * @return Map of results from this activity
      */
     public Map result() throws WfException, ResultNotAvailable {
         // Get the results from the signature.
@@ -197,7 +272,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
                 if ( context.containsKey(key) )
                     results.put(key,context.get(key));
             }
-        }                        
+        }
         return results;
     }
     
@@ -225,18 +300,58 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
     public String executionObjectType() {
         return "WfActivity";
     }
-
-    // Checks to see if we can complete    
-    public void checkComplete() throws WfException, CannotComplete {
+    
+    // Checks to see if we can complete
+    private void checkComplete() throws WfException, CannotComplete {
         String mode = valueObject.getString("finishModeEnumId");
         if ( mode == null )
             throw new CannotComplete("Finish mode cannot be null");
         
         // Default mode is MANUAL -- only finish if we are automatic
-        if ( mode.equals("WAM_AUTOMATIC") )
-            this.complete();                
+        if ( mode.equals("WAM_AUTOMATIC") ) {
+            // set the status of the assignments
+            Iterator i = getIteratorAssignment();
+            while ( i.hasNext() )
+                ((WfAssignment)i.next()).changeStatus("CAL_COMPLETE");
+            this.complete();
+        }
     }
+    
+    // Checks the staus of all assignments
+    // type 1 -> accept status
+    // type 2 -> complete status
+    private boolean checkAssignStatus(int type) throws WfException {
+        boolean acceptAll = false;
+        boolean completeAll = false;
         
+        if ( valueObject.get("acceptAllAssignments") != null )
+            acceptAll = valueObject.getBoolean("acceptAllAssignments").booleanValue();
+        if ( valueObject.get("completeAllAssignments") != null )
+            completeAll = valueObject.getBoolean("completeAllAssignments").booleanValue();
+        
+        if ( type == 2 && completeAll ) {
+            Debug.logInfo("[WfActivity.checkAssignStatus] : Checking completeAll");
+            Iterator i = assignments.iterator();
+            while ( i.hasNext() ) {
+                WfAssignment a = (WfAssignment) i.next();
+                if ( !a.status().equals("CAL_COMPLETE") )
+                    return false;
+            }
+        }
+        
+        if ( type == 1 && acceptAll ) {
+            Debug.logInfo("[WfActivity.checkAssignStatus] : Checking acceptAll");
+            Iterator i = assignments.iterator();
+            while ( i.hasNext() ) {
+                WfAssignment a = (WfAssignment) i.next();
+                if ( !a.status().equals("CAL_ACCEPTED") )
+                    return false;
+            }
+        }
+        
+        return true;
+    }
+    
     // Starts or activates this automatic activity
     private void startActivity() throws WfException, CannotStart {
         try {
@@ -284,7 +399,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
         while ( i.hasNext() ) {
             GenericValue thisTool = (GenericValue) i.next();
             String toolId = thisTool.getString("toolId");
-            String params = thisTool.getString("actualParameters");            
+            String params = thisTool.getString("actualParameters");
             waiters.add(this.runService(toolId,params));
         }
         
@@ -293,15 +408,15 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
             Collection remove = new ArrayList();
             while ( wi.hasNext() ) {
                 GenericResultWaiter thw = (GenericResultWaiter) wi.next();
-                if ( thw.isCompleted() ) {                    
+                if ( thw.isCompleted() ) {
                     try {
                         this.setResult(thw.getResult());
-                        remove.add(thw);                        
-                    }                    
+                        remove.add(thw);
+                    }
                     catch ( IllegalStateException e ) {
                         throw new WfException("Unknown error",e);
                     }
-                }                
+                }
             }
             waiters.removeAll(remove);
         }
@@ -336,18 +451,18 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
         service.engineName = "workflow";
         service.location = subFlow.getString("packageId");
         service.invoke = subFlow.getString("subFlowProcessId");
-        service.contextInfo = null;  // TODO FIXME        
+        service.contextInfo = null;  // TODO FIXME
         
         String actualParameters = subFlow.getString("actualParameters");
         GenericResultWaiter waiter = this.runService(service,actualParameters);
         if ( type.equals("WSE_SYNCHR") ) {
-            Map subResult = waiter.waitForResult();            
+            Map subResult = waiter.waitForResult();
             this.setResult(subResult);
         }
         
         this.checkComplete();
     }
-            
+    
     // Invoke the procedure (service) -- This will include sub-workflows
     private GenericResultWaiter runService(String serviceName, String params) throws WfException {
         DispatchContext dctx = dispatcher.getLocalContext(serviceLoader);

@@ -164,6 +164,10 @@ public class WfFactory {
      * @return An instance of the WfResource Interface.
      */
     public static WfResource getWfResource(GenericDelegator delegator, String key, String name, String party, String role) throws WfException {        
+        if ( party == null )
+            party = "_NA_";
+        if ( role == null )
+            role = "_NA_";          
         return new WfResourceImpl(delegator,key,name,party,role);
     }    
     

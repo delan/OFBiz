@@ -48,6 +48,9 @@ public class ModelService {
     /** The name of this service */
     public String name;
     
+    /** The description of this service */
+    public String description;
+    
     /** The name of the engine from engine.properties */
     public String engineName;
     

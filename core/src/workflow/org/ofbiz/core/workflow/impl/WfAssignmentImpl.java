@@ -87,31 +87,42 @@ public class WfAssignmentImpl implements WfAssignment {
      *@throws WfException
      */
     public void accept() throws WfException {
+        changeStatus("CAL_ACCEPTED");        
         try {
-            valueObject.set("statusId","CAL_ACCEPTED");
-            valueObject.store();
+            activity.activate();
         }
-        catch ( GenericEntityException e ) {
+        catch ( CannotStart e ) {
             throw new WfException(e.getMessage(),e);
         }
     }
     
-    /** Mark this assignment as complete
-     * @throws CannotComplete
+    /** Mark this assignment as complete     
      * @throws WfException
      */
-    public void complete() throws WfException, CannotComplete {
-        if ( !activity.state().equals("closed.completed") )
-            throw new CannotComplete("Cannot complete assignment before activity completes");
+    public void complete() throws WfException {       
+        changeStatus("CAL_COMPLETE");        
         try {
-            valueObject.set("statusId","CAL_COMPLETE");
+            activity.complete();
+        }
+        catch ( CannotComplete e ) {
+            throw new WfException(e.getMessage(),e);
+        }
+    }
+    
+    /** Change the status of this assignment
+     * @param status The new status
+     * @throws WfException
+     */
+    public void changeStatus(String status) throws WfException {
+        try {
+            valueObject.set("statusId",status);
             valueObject.store();
         }
         catch ( GenericEntityException e ) {
             throw new WfException(e.getMessage(),e);
         }
     }
-    
+                    
     /** Gets the activity object of this assignment.
      * @return WfActivity The activity object of this assignment
      * @throws WfException
@@ -144,4 +155,23 @@ public class WfAssignmentImpl implements WfAssignment {
         this.valueObject = makeAssignment();        
     }
     
+    /** Removes the stored data for this object
+     * @throws WfException 
+     */
+    public void remove() throws WfException {
+        try {
+            valueObject.remove();
+        }
+        catch ( GenericEntityException e ) {
+            throw new WfException(e.getMessage(),e);
+        }
+    }
+    
+    /** Gets the status of this assignment
+     * @return String status code for this assignment
+     * @throws WfException
+     */
+    public String status() throws WfException {
+        return valueObject.getString("statusId");
+    }
 }

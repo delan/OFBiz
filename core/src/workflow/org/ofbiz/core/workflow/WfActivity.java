@@ -39,65 +39,72 @@ import java.util.Map;
 public interface WfActivity extends WfExecutionObject {
     
     /**
-     * @throws WfException
-     * @return
+     * Retrieve amount of Assignment objects.
+     * @throws WfException General workflow exception.
+     * @return Amount of current assignments.
      */
     public int howManyAssignment() throws WfException;
     
     /**
-     * @throws WfException
-     * @return
+     * Retrieve the Iterator of Assignments objects.
+     * @throws WfException General workflow exception.
+     * @return Assignment Iterator.
      */
     public Iterator getIteratorAssignment() throws WfException;
     
     /**
-     * @param maxNumber
-     * @throws WfException
+     * Retrieve all assignments of this activity.
+     * @param maxNumber the high limit of number of assignment in result set (0 for all).
+     * @throws WfException General workflow exception.
      * @return  List of WfAssignment objects.
      */
     public List getSequenceAssignment(int maxNumber) throws WfException;
     
     /**
-     * @param member
-     * @throws WfException
-     * @return
+     * Check if a specific assignment is a member of this activity.
+     * @param member Assignment object.
+     * @throws WfException General workflow exception.
+     * @return true if the assignment is a member of this activity.
      */
     public boolean isMemberOfAssignment(WfAssignment member) throws WfException;
     
     /**
-     * @throws WfException
-     * @return
+     * Getter for the process of this activity.
+     * @throws WfException General workflow exception.
+     * @return WfProcess Process to which this activity belong.
      */
     public WfProcess container() throws WfException;
     
     /**
-     * @throws WfException
-     * @throws ResultNotAvailable
-     * @return
+     * Retrieve the Result map of this activity.
+     * @throws WfException General workflow exception.
+     * @throws ResultNotAvailable No result is available.
+     * @return Map of results from this activity
      */
     public Map result() throws WfException, ResultNotAvailable;
     
     /**
-     * @param result
-     * @throws WfException
-     * @throws InvalidData
+     * Assign Result for this activity.
+     * @param newResult New result.
+     * @throws WfException General workflow exception.
+     * @throws InvalidData Data is invalid
      */
     public void setResult(Map result) throws WfException, InvalidData;
     
     /**
-     * @throws WfException
-     * @throws CannotComplete
+     * Complete this activity.
+     * @throws WfException General workflow exception.
+     * @throws CannotComplete Cannot complete the activity
      */
     public void complete() throws WfException, CannotComplete;
-    
+        
     /**
-     * Activates this activity.
-     * @param manual flag to specify this is a manual attempt
+     * Activates this activity.   
      * @throws WfException
      * @throws CannotStart
      * @throws AlreadyRunning
      */
-    public void activate(boolean manual) throws WfException, CannotStart, AlreadyRunning;
+    public void activate() throws WfException, CannotStart, AlreadyRunning;
     
     /** 
      * Assign this activity to a resource

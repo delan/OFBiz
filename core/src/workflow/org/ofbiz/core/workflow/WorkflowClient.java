@@ -119,7 +119,7 @@ public class WorkflowClient {
         try {
             WfActivity activity = getActivity(delegator,workEffortId);
             try {
-                activity.activate(true);
+                activity.activate();
             }
             catch ( WfException e ) {
                 result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
@@ -166,6 +166,57 @@ public class WorkflowClient {
         catch ( RuntimeException e ) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
             result.put(ModelService.ERROR_MESSAGE,e.getMessage());
+        }
+        
+        return result;
+    }
+    
+    /** Accept an assignment and attempt to start the activity */
+    public static Map acceptAssignment(DispatchContext ctx, Map context) {
+        Map result = new HashMap();
+        GenericDelegator delegator = ctx.getDelegator();
+        
+        String workEffortId = (String) context.get("workEffortId");
+        String partyId = (String) context.get("partyId");
+        String roleType = (String) context.get("roleTypeId");
+        
+        try {
+            WfAssignment assign = getAssignment(delegator,workEffortId,partyId,roleType);
+            assign.accept();
+        }
+        catch ( WfException we ) {
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE,we.getMessage());
+        }
+        catch ( RuntimeException re ) {
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE,re.getMessage());
+        }
+        
+        return result;
+        
+    }
+    
+    /** Complete an assignment */
+    public static Map completeAssignment(DispatchContext ctx, Map context) {
+        Map result = new HashMap();
+        GenericDelegator delegator = ctx.getDelegator();
+        
+        String workEffortId = (String) context.get("workEffortId");
+        String partyId = (String) context.get("partyId");
+        String roleType = (String) context.get("roleTypeId");
+        
+        try {
+            WfAssignment assign = getAssignment(delegator,workEffortId,partyId,roleType);
+            assign.complete();
+        }
+        catch ( WfException we ) {
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE,we.getMessage());
+        }
+        catch ( RuntimeException re ) {
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE,re.getMessage());
         }
         
         return result;
@@ -353,6 +404,42 @@ public class WorkflowClient {
         }
         
         return foundOk;
+    }
+    
+    /**
+     * Gets a WfAssignment object from the activity pool
+     * @param delegator The GenericDelegator used to locate this assignment
+     * @param workEffortId The WorkEffort id associated with the activity
+     * @param partyId The partyId of the user or group
+     * @param roleTypeId The role type id for the user or group
+     */
+    public static WfAssignment getAssignment(GenericDelegator delegator, String workEffortId, String partyId, String roleTypeId) {
+        if ( partyId == null )
+            partyId = "_NA_";
+        if ( roleTypeId == null )
+            roleTypeId = "_NA_";
+        
+        WfActivity activity = getActivity(delegator, workEffortId);
+        WfAssignment assign = null;
+        try {
+            Iterator i = activity.getIteratorAssignment();
+            while ( i.hasNext() ) {
+                WfAssignment a = (WfAssignment) i.next();
+                WfResource r = a.assignee();
+                if ( r.resourcePartyId().equals(partyId) && r.resourceRoleId().equals(roleTypeId) ) {
+                    assign = a;
+                    Debug.logInfo("[WorkflowClient.getAssignment] : Found the assignment");
+                    break;
+                }
+            }
+        }
+        catch ( WfException e ) {
+            throw new RuntimeException(e.getMessage());
+        }
+        
+        if ( assign == null )
+            Debug.logInfo("[WorkflowClient.getAssignment] : Assignment is null");
+        return assign;
     }
     
 }

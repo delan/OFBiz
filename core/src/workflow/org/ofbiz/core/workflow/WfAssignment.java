@@ -59,9 +59,25 @@ public interface WfAssignment {
     public void accept() throws WfException;
     
     /** Mark this assignment as complete
-     * @throws CannotComplete
      * @throws WfException
      */
-    public void complete() throws WfException, CannotComplete;
+    public void complete() throws WfException;
+
+    /** Change the status of this assignment
+     * @param status The new status
+     * @throws WfException
+     */
+    public void changeStatus(String status) throws WfException;
+    
+    /** Gets the status of this assignment
+     * @return String status code for this assignment
+     * @throws WfException
+     */
+    public String status() throws WfException;
+    
+    /** Removes the stored data for this object
+     * @throws WfException 
+     */
+    public void remove() throws WfException;  
     
 } // interface WfAssignmentOperations

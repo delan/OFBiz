@@ -318,7 +318,7 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
         activity.setProcessContext(context);
         activeSteps.add(activity); // add to list of active steps
         try {
-            activity.activate(false);
+            activity.activate();
         }
         catch ( AlreadyRunning e ) {
             throw new WfException(e.getMessage(),e);
