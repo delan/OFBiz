@@ -22,7 +22,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *  This is the Open for Business Main build script.
- *  $Id: build.xml,v 1.14 2003/08/18 22:05:37 jonesde Exp $
+ *  $Id: build.xml,v 1.15 2003/08/19 01:13:44 jonesde Exp $
 -->
 
 <project name="OFBiz Main Build" default="build" basedir=".">
@@ -77,6 +77,18 @@
         <echo message="[clean] ========== Cleaning entityext component ======="/>
         <echo message="[clean] ==============================================="/>                
         <ant dir="components/entityext" target="clean" inheritAll="false"/>
+        
+        <echo message="[clean]"/>
+        <echo message="[clean] ================================================="/>
+        <echo message="[clean] ========== Cleaning datafile component =========="/>
+        <echo message="[clean] ================================================="/>                
+        <ant dir="components/datafile" target="clean" inheritAll="false"/>
+        
+        <echo message="[clean]"/>
+        <echo message="[clean] ================================================="/>
+        <echo message="[clean] ========== Cleaning rules component =========="/>
+        <echo message="[clean] ================================================="/>                
+        <ant dir="components/rules" target="clean" inheritAll="false"/>
         
         <echo message="[clean]"/>
         <echo message="[clean] ================================================="/>
@@ -213,6 +225,18 @@
                                          
         <echo message="[build]" />
         <echo message="[build] ================================================="/>
+        <echo message="[build] ========== Building datafile component =========="/>
+        <echo message="[build] ================================================="/>
+        <ant dir="components/datafile" inheritAll="false"/>
+                                         
+        <echo message="[build]" />
+        <echo message="[build] ================================================="/>
+        <echo message="[build] ========== Building rules component =========="/>
+        <echo message="[build] ================================================="/>
+        <ant dir="components/rules" inheritAll="false"/>
+                                         
+        <echo message="[build]" />
+        <echo message="[build] ================================================="/>
         <echo message="[build] ========== Building common component =========="/>
         <echo message="[build] ================================================="/>
         <ant dir="components/common" inheritAll="false"/>
@@ -329,7 +353,19 @@
         <echo message="[docs] ================================================="/>
         <ant dir="components/minilang" target="docs" inheritAll="false"/>
         
-       <echo message="[docs]"/>
+        <echo message="[docs]"/>
+        <echo message="[docs] ================================================="/>
+        <echo message="[docs] ========== Building datafile component =========="/>
+        <echo message="[docs] ================================================="/>
+        <ant dir="components/datafile" target="docs" inheritAll="false"/>
+        
+        <echo message="[docs]"/>
+        <echo message="[docs] ================================================="/>
+        <echo message="[docs] ========== Building rules component =========="/>
+        <echo message="[docs] ================================================="/>
+        <ant dir="components/rules" target="docs" inheritAll="false"/>
+        
+        <echo message="[docs]"/>
         <echo message="[docs] ================================================="/>
         <echo message="[docs] ========== Building common component =========="/>
         <echo message="[docs] ================================================="/>

@@ -20,6 +20,8 @@
     <classpathentry kind="src" path="components/accounting/src"/>
     <classpathentry kind="src" path="components/ecommerce/src"/>
     <classpathentry kind="src" path="components/webtools/src"/>
+    <classpathentry kind="src" path="components/rules/src"/>
+    <classpathentry kind="src" path="components/datafile/src"/>
     <classpathentry kind="lib" path="components/entity/lib/jotm/carol.jar"/>
     <classpathentry kind="lib" path="components/entity/lib/jotm/commons-cli.jar"/>
     <classpathentry kind="lib" path="components/entity/lib/jotm/jonas_timer.jar"/>
