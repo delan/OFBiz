@@ -73,15 +73,23 @@
   </tr>
 
 </@loopSubContentCache>
+<#if context.listSize == 0 >
+  <tr><td class="tabletext" align="center">No records found</td></tr>
+</#if>
 <@wrapSubContentCache subContentId=contentIdx wrapTemplateId=stdWrapId contentPurposeList="ARTICLE">
 </@wrapSubContentCache>
 </table>
 <table width="100%" border="0" class="summary">
-<tr><td align="right">
 <@checkPermission mode="equals" entityOperation="_CREATE" subContentId=contentDept statusId="BLOG_PUBLISHED" targetOperation="CONTENT_CREATE" contentPurposeList="ARTICLE" quickCheckContentId=contentIdx>
+<tr><td align="right">
 <a class="tabButton" style="height:14pt;" href="<@ofbizUrl>/createforumarticle?forumId=${contentIdx?if_exists}&nodeTrailCsv=${contentIdx?if_exists}</@ofbizUrl>" >New Article</a>
-</@checkPermission>
 </td></tr>
+</@checkPermission>
+<@checkPermission mode="not-equals" entityOperation="_CREATE" subContentId=contentDept statusId="BLOG_PUBLISHED" targetOperation="CONTENT_CREATE" contentPurposeList="ARTICLE" quickCheckContentId=contentIdx>
+<tr><td class="tabletext" align="right">
+(You must be logged in to post)
+</td></tr>
+</@checkPermission>
 </table>
 <#--
 <@checkPermission mode="not-equals" entityOperation="_CREATE" subContentId=contentIdx statusId="BLOG_PUBLISHED" targetOperation="CONTENT_CREATE" contentPurposeList="ARTICLE">
