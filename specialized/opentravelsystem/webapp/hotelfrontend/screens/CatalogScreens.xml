@@ -30,37 +30,37 @@
     <screen name="choosecatalog">
         <section>
             <widgets>
-                <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/catalog/choosecatalog.ftl"/></html></platform-specific>
+                <platform-specific><html><html-template location="applications://ecommerce/webapp/ecommerce/catalog/choosecatalog.ftl"/></html></platform-specific>
             </widgets>
         </section>
     </screen>
     <screen name="keywordsearchbox">
         <section>
             <actions>
-                <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/catalog/keywordsearchoptions.bsh"/>
+                <script location="applications://ecommerce/webapp/ecommerce/WEB-INF/actions/catalog/keywordsearchoptions.bsh"/>
             </actions>
             <widgets>
-                <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/catalog/keywordsearchbox.ftl"/></html></platform-specific>
+                <platform-specific><html><html-template location="applications://ecommerce/webapp/ecommerce/catalog/keywordsearchbox.ftl"/></html></platform-specific>
             </widgets>
         </section>
     </screen>
     <screen name="sidedeepcategory">
         <section>
             <actions>
-                <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/catalog/sidedeepcategory.bsh"/>
+                <script location="applications://ecommerce/webapp/ecommerce/WEB-INF/actions/catalog/sidedeepcategory.bsh"/>
             </actions>
             <widgets>
-                <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/catalog/sidedeepcategory.ftl"/></html></platform-specific>
+                <platform-specific><html><html-template location="applications://ecommerce/webapp/ecommerce/catalog/sidedeepcategory.ftl"/></html></platform-specific>
             </widgets>
         </section>
     </screen>
     <screen name="minireorderprods">
         <section>
             <actions>
-                <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/catalog/minireorderprods.bsh"/>
+                <script location="applications://ecommerce/webapp/ecommerce/WEB-INF/actions/catalog/minireorderprods.bsh"/>
             </actions>
             <widgets>
-                <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/catalog/minireorderprods.ftl"/></html></platform-specific>
+                <platform-specific><html><html-template location="applications://ecommerce/webapp/ecommerce/catalog/minireorderprods.ftl"/></html></platform-specific>
             </widgets>
         </section>
     </screen>
@@ -68,28 +68,28 @@
     <screen name="miniassocprods">
         <section>
             <widgets>
-                <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/catalog/miniassocprods.ftl"/></html></platform-specific>
+                <platform-specific><html><html-template location="applications://ecommerce/webapp/ecommerce/catalog/miniassocprods.ftl"/></html></platform-specific>
             </widgets>
         </section>
     </screen>
     <screen name="minilastviewedcategories">
         <section>
             <widgets>
-                <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/catalog/minilastviewedcategories.ftl"/></html></platform-specific>
+                <platform-specific><html><html-template location="applications://ecommerce/webapp/ecommerce/catalog/minilastviewedcategories.ftl"/></html></platform-specific>
             </widgets>
         </section>
     </screen>
     <screen name="minilastviewedproducts">
         <section>
             <widgets>
-                <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/catalog/minilastviewedproducts.ftl"/></html></platform-specific>
+                <platform-specific><html><html-template location="applications://ecommerce/webapp/ecommerce/catalog/minilastviewedproducts.ftl"/></html></platform-specific>
             </widgets>
         </section>
     </screen>
     <screen name="minilastproductsearches">
         <section>
             <widgets>
-                <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/catalog/minilastproductsearches.ftl"/></html></platform-specific>
+                <platform-specific><html><html-template location="applications://ecommerce/webapp/ecommerce/catalog/minilastproductsearches.ftl"/></html></platform-specific>
             </widgets>
         </section>
     </screen>
@@ -98,20 +98,20 @@
     <screen name="miniproductsummary">
         <section>
             <actions>
-                <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/catalog/miniproductsummary.bsh"/>
+                <script location="applications://ecommerce/webapp/ecommerce/WEB-INF/actions/catalog/miniproductsummary.bsh"/>
             </actions>
             <widgets>
-                <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/catalog/miniproductsummary.ftl"/></html></platform-specific>
+                <platform-specific><html><html-template location="applications://ecommerce/webapp/ecommerce/catalog/miniproductsummary.ftl"/></html></platform-specific>
             </widgets>
         </section>
     </screen>
     <screen name="productsummary">
         <section>
             <actions>
-                <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/catalog/productsummary.bsh"/>
+                <script location="applications://ecommerce/webapp/ecommerce/WEB-INF/actions/catalog/productsummary.bsh"/>
             </actions>
             <widgets>
-                <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/catalog/productsummary.ftl"/></html></platform-specific>
+                <platform-specific><html><html-template location="applications://ecommerce/webapp/ecommerce/catalog/productsummary.ftl"/></html></platform-specific>
             </widgets>
         </section>
     </screen>
@@ -119,7 +119,7 @@
     <screen name="breadcrumbs">
         <section>
             <widgets>
-                <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/catalog/breadcrumbs.ftl"/></html></platform-specific>
+                <platform-specific><html><html-template location="applications://ecommerce/webapp/ecommerce/catalog/breadcrumbs.ftl"/></html></platform-specific>
             </widgets>
         </section>
     </screen>
@@ -136,7 +136,7 @@
                 <set field="title-property" value="PageTitleCategoryPage"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://ecommerce/widget/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="applications://ecommerce/widget/CommonScreens.xml">
                     <decorator-section name="body">
                         <include-screen name="category-include"/>
                     </decorator-section>
@@ -147,7 +147,7 @@
     <screen name="category-include">
         <section>
             <actions>
-                <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/catalog/category.bsh"/>
+                <script location="applications://ecommerce/webapp/ecommerce/WEB-INF/actions/catalog/category.bsh"/>
             </actions>
             <widgets>
                 <section>
@@ -167,10 +167,10 @@
     <screen name="categorydetail">
         <section>
             <actions>
-                <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/catalog/categorydetail.bsh"/>
+                <script location="applications://ecommerce/webapp/ecommerce/WEB-INF/actions/catalog/categorydetail.bsh"/>
             </actions>
             <widgets>
-                <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/catalog/categorydetail.ftl"/></html></platform-specific>
+                <platform-specific><html><html-template location="applications://ecommerce/webapp/ecommerce/catalog/categorydetail.ftl"/></html></platform-specific>
             </widgets>
         </section>
     </screen>
@@ -182,10 +182,10 @@
                 <set field="rightbarScreenName" value="rightbar"/>
 
                 <set field="title-property" value="PageTitleProductPage"/>
-                <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/catalog/product.bsh"/>
+                <script location="applications://ecommerce/webapp/ecommerce/WEB-INF/actions/catalog/product.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://opentravelsystem/webapp/hotelfrontend/screens/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="specialized://opentravelsystem/webapp/hotelfrontend/screens/CommonScreens.xml">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -206,21 +206,21 @@
     <screen name="productdetail">
         <section>
             <actions>
-                <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/catalog/productdetail.bsh"/>
+                <script location="applications://ecommerce/webapp/ecommerce/WEB-INF/actions/catalog/productdetail.bsh"/>
             </actions>
             <widgets>
-                <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/catalog/productdetail.ftl"/></html></platform-specific>
+                <platform-specific><html><html-template location="applications://ecommerce/webapp/ecommerce/catalog/productdetail.ftl"/></html></platform-specific>
             </widgets>
         </section>
     </screen>
     <screen name="configproductdetail">
         <section>
             <actions>
-                <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/catalog/productdetail.bsh"/>
-                <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/catalog/prepareconfigform.bsh"/>
+                <script location="applications://ecommerce/webapp/ecommerce/WEB-INF/actions/catalog/productdetail.bsh"/>
+                <script location="applications://ecommerce/webapp/ecommerce/WEB-INF/actions/catalog/prepareconfigform.bsh"/>
             </actions>
             <widgets>
-                <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/catalog/configproductdetail.ftl"/></html></platform-specific>
+                <platform-specific><html><html-template location="applications://ecommerce/webapp/ecommerce/catalog/configproductdetail.ftl"/></html></platform-specific>
             </widgets>
         </section>
     </screen>
@@ -234,9 +234,9 @@
                 <set field="title-property" value="PageTitleProductReview"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://ecommerce/widget/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="applications://ecommerce/widget/CommonScreens.xml">
                     <decorator-section name="body">
-                        <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/catalog/productreview.ftl"/></html></platform-specific>
+                        <platform-specific><html><html-template location="applications://ecommerce/webapp/ecommerce/catalog/productreview.ftl"/></html></platform-specific>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -251,9 +251,9 @@
                 <set field="title-property" value="PageTitleLastViewProducts"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://ecommerce/widget/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="applications://ecommerce/widget/CommonScreens.xml">
                     <decorator-section name="body">
-                        <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/catalog/lastviewedproducts.ftl"/></html></platform-specific>
+                        <platform-specific><html><html-template location="applications://ecommerce/webapp/ecommerce/catalog/lastviewedproducts.ftl"/></html></platform-specific>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -262,14 +262,14 @@
     <screen name="detailImage">
         <section>
             <widgets>
-               <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/catalog/detailImage.ftl"/></html></platform-specific>
+               <platform-specific><html><html-template location="applications://ecommerce/webapp/ecommerce/catalog/detailImage.ftl"/></html></platform-specific>
             </widgets>
         </section>
     </screen>
     <screen name="tellafriend">
         <section>
             <widgets>
-               <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/catalog/tellafriend.ftl"/></html></platform-specific>
+               <platform-specific><html><html-template location="applications://ecommerce/webapp/ecommerce/catalog/tellafriend.ftl"/></html></platform-specific>
             </widgets>
         </section>
     </screen>
@@ -281,12 +281,12 @@
                 <set field="rightbarScreenName" value="rightbar"/>
 
                 <set field="title-property" value="PageTitleQuickAdd"/>
-                <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/catalog/quickadd.bsh"/>
+                <script location="applications://ecommerce/webapp/ecommerce/WEB-INF/actions/catalog/quickadd.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://ecommerce/widget/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="applications://ecommerce/widget/CommonScreens.xml">
                     <decorator-section name="body">
-                        <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/catalog/quickadd.ftl"/></html></platform-specific>
+                        <platform-specific><html><html-template location="applications://ecommerce/webapp/ecommerce/catalog/quickadd.ftl"/></html></platform-specific>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -295,10 +295,10 @@
     <screen name="quickaddsummary">
         <section>
             <actions>
-                <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/catalog/productsummary.bsh"/>
+                <script location="applications://ecommerce/webapp/ecommerce/WEB-INF/actions/catalog/productsummary.bsh"/>
             </actions>
             <widgets>
-                <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/catalog/quickaddsummary.ftl"/></html></platform-specific>
+                <platform-specific><html><html-template location="applications://ecommerce/webapp/ecommerce/catalog/quickaddsummary.ftl"/></html></platform-specific>
             </widgets>
         </section>
     </screen>
@@ -310,12 +310,12 @@
                 <set field="rightbarScreenName" value="rightbar"/>
 
                 <set field="title-property" value="PageTitleSearchResults"/>
-                <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/catalog/keywordsearch.bsh"/>
+                <script location="applications://ecommerce/webapp/ecommerce/WEB-INF/actions/catalog/keywordsearch.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://ecommerce/widget/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="applications://ecommerce/widget/CommonScreens.xml">
                     <decorator-section name="body">
-                        <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/catalog/keywordsearch.ftl"/></html></platform-specific>
+                        <platform-specific><html><html-template location="applications://ecommerce/webapp/ecommerce/catalog/keywordsearch.ftl"/></html></platform-specific>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -329,12 +329,12 @@
 
                 <set field="title-property" value="PageTitleAdvancedSearch"/>
                 <set field="headerItem" value="Advanced Search"/>
-                <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/catalog/advancedsearchoptions.bsh"/>
+                <script location="applications://ecommerce/webapp/ecommerce/WEB-INF/actions/catalog/advancedsearchoptions.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://ecommerce/widget/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="applications://ecommerce/widget/CommonScreens.xml">
                     <decorator-section name="body">
-                        <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/catalog/advancedsearch.ftl"/></html></platform-specific>
+                        <platform-specific><html><html-template location="applications://ecommerce/webapp/ecommerce/catalog/advancedsearch.ftl"/></html></platform-specific>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

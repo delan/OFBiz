@@ -24,7 +24,7 @@
  *  $Id: build.xml 2888 2004-07-28 03:40:47Z jonesde $
 -->
 
-<project name="OFBiz - Example Component" default="jar" basedir=".">
+<project name="OFBiz - Open Travel System" default="jar" basedir=".">
 
     <!-- ================================================================== -->
     <!-- Initialization of all property settings                            -->
@@ -32,8 +32,8 @@
 
     <target name="init">                
         <property environment="env"/>
-        <property name="desc" value="Example Component"/>
-        <property name="name" value="ofbiz-example"/>
+        <property name="desc" value="Open Travel System"/>
+        <property name="name" value="opentravelsystem"/>
         <property name="src.dir" value="src"/>
         <property name="dtd.dir" value="dtd"/>
         <property name="lib.dir" value="lib"/>        
@@ -45,12 +45,12 @@
             <fileset dir="${lib.dir}" includes="*.jar"/>
             <fileset dir="../../base/lib" includes="*.jar"/>
             <fileset dir="../../base/build/lib" includes="*.jar"/>
-            <fileset dir="../../applications/entity/lib" includes="*.jar"/>
-            <fileset dir="../../applications/entity/build/lib" includes="*.jar"/>
-            <fileset dir="../../applications/security/build/lib" includes="*.jar"/>
-            <fileset dir="../../applications/service/lib" includes="*.jar"/>
-            <fileset dir="../../applications/service/build/lib" includes="*.jar"/>
-            <fileset dir="../../applications/minilang/build/lib" includes="*.jar"/>
+            <fileset dir="../../framework/entity/lib" includes="*.jar"/>
+            <fileset dir="../../framework/entity/build/lib" includes="*.jar"/>
+            <fileset dir="../../framework/security/build/lib" includes="*.jar"/>
+            <fileset dir="../../framework/service/lib" includes="*.jar"/>
+            <fileset dir="../../framework/service/build/lib" includes="*.jar"/>
+            <fileset dir="../../framework/minilang/build/lib" includes="*.jar"/>
             <fileset dir="../../applications/content/build/lib" includes="*.jar"/>
         </path>
     </target>

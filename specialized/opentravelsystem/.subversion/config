@@ -12,7 +12,7 @@
 hansbak
 store-auth-creds = no
 
-### Section for configuring external helper applications.
+### Section for configuring external helper component.
 ### Set editor to the command used to invoke your text editor.
 ###   This will override the environment variables that Subversion
 ###   examines by default to find this information ($EDITOR, 
