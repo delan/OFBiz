@@ -87,7 +87,7 @@ try {
 <br>
 <br>
 
-<form action="<ofbiz:url>/UpdateProductAssoc</ofbiz:url>" method=POST style='margin: 0;'>
+<form action="<ofbiz:url>/UpdateProductAssoc</ofbiz:url>" method=POST style='margin: 0;' name='editProductAssocForm'>
 <table border='0' cellpadding='2' cellspacing='0'>
 
 <%if (productAssoc == null) {%>
@@ -129,7 +129,11 @@ try {
       <td align=right><div class="tabletext">From Date</div></td>
       <td>&nbsp;</td>
       <td>
-        <div class='tabletext'><input type="text" class="inputBox" name="FROM_DATE" size="22" maxlength="40" value="<%=UtilFormatOut.makeString(fromDate)%>">(Will be set to now if empty)</div>
+        <div class='tabletext'>
+            <input type="text" class="inputBox" name="FROM_DATE" size="25" maxlength="40" value="<%=UtilFormatOut.makeString(fromDate)%>">
+            <a href="javascript:call_cal(document.editProductAssocForm.FROM_DATE, '<%=UtilFormatOut.checkEmpty(UtilFormatOut.makeString(fromDate), nowTimestampString)%>');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>
+            (Will be set to now if empty)
+        </div>
       </td>
     </tr>
   <%}else{%>
@@ -162,7 +166,11 @@ try {
       <td align=right><div class="tabletext">From Date</div></td>
       <td>&nbsp;</td>
       <td>
-        <div class='tabletext'><input type="text" class="inputBox" name="FROM_DATE" size="22" maxlength="40" value="">(Will be set to now if empty)</div>
+        <div class='tabletext'>
+            <input type="text" class="inputBox" name="FROM_DATE" size="25" maxlength="40" value="">
+            <a href="javascript:call_cal(document.editProductAssocForm.FROM_DATE, '<%=nowTimestampString%>');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>
+            (Will be set to now if empty)
+        </div>
       </td>
     </tr>
   <%}%>
@@ -202,7 +210,10 @@ try {
     <td width="26%" align=right><div class="tabletext">Thru Date</div></td>
     <td>&nbsp;</td>
     <td width="74%">
-      <div class='tabletext'><input type="text" class="inputBox" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(useValues?UtilFormatOut.makeString(productAssoc.getTimestamp(fieldName)):request.getParameter(paramName))%>" size="30" maxlength="30"></div>
+      <div class='tabletext'>
+        <input type="text" class="inputBox" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(useValues?UtilFormatOut.makeString(productAssoc.getTimestamp(fieldName)):request.getParameter(paramName))%>" size="30" maxlength="30">
+        <a href="javascript:call_cal(document.editProductAssocForm.THRU_DATE, '<%=UtilFormatOut.checkEmpty(useValues?UtilFormatOut.makeString(productAssoc.getTimestamp(fieldName)):request.getParameter(paramName), nowTimestampString)%>');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>
+      </div>
     </td>
   </tr>
   <tr>

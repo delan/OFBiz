@@ -92,12 +92,14 @@
     <td><div class="tabletext"><b>Thru&nbsp;Date, Amount, Sequence, Application&nbsp;Type</b></div></td>
     <td><div class="tabletext">&nbsp;</div></td>
   </tr>
+<%int line = 0;%>
 <ofbiz:iterator name="productFeatureAndAppl" property="productFeatureAndAppls">
+  <%line++;%>
   <%GenericValue curProductFeatureApplType = productFeatureAndAppl.getRelatedOneCache("ProductFeatureApplType");%>
   <%GenericValue curProductFeatureCategory = productFeatureAndAppl.getRelatedOneCache("ProductFeatureCategory");%>
   <%if (curProductFeatureCategory != null) pageContext.setAttribute("curProductFeatureCategory", curProductFeatureCategory);%>
   <tr valign="middle">
-    <FORM method=POST action='<ofbiz:url>/UpdateFeatureToProductApplication</ofbiz:url>'>
+    <form method=POST action='<ofbiz:url>/UpdateFeatureToProductApplication</ofbiz:url>' name='lineForm<%=line%>'>
         <input type=hidden <ofbiz:inputvalue entityAttr="productFeatureAndAppl" field="productId" fullattrs="true"/>>
         <input type=hidden <ofbiz:inputvalue entityAttr="productFeatureAndAppl" field="productFeatureId" fullattrs="true"/>>
         <input type=hidden <ofbiz:inputvalue entityAttr="productFeatureAndAppl" field="fromDate" fullattrs="true"/>>
@@ -112,7 +114,8 @@
     <td>
         <%boolean hasExpired = false;%>
         <%if (productFeatureAndAppl.getTimestamp("thruDate") != null && UtilDateTime.nowTimestamp().after(productFeatureAndAppl.getTimestamp("thruDate"))) { hasExpired = true; }%>
-        <input type=text size='22' <ofbiz:inputvalue entityAttr="productFeatureAndAppl" field="thruDate" fullattrs="true"/> class='inputBox' style='<%if (hasExpired) {%>color: red;<%}%>'>
+        <input type=text size='25' <ofbiz:inputvalue entityAttr="productFeatureAndAppl" field="thruDate" fullattrs="true"/> class='inputBox' <%if (hasExpired) {%>style='color: red;'<%}%>>
+        <a href="javascript:call_cal(document.lineForm<%=line%>.thruDate, '<ofbiz:inputvalue entityAttr="productFeatureAndAppl" field="thruDate" default="<%=nowTimestampString%>"/>');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>
         <input type=text size='6' <ofbiz:inputvalue entityAttr="productFeatureAndAppl" field="amount" fullattrs="true"/> class='inputBox'>
         <input type=text size='5' <ofbiz:inputvalue entityAttr="productFeatureAndAppl" field="sequenceNum" fullattrs="true"/> class='inputBox'>
       <select class='selectBox' name='productFeatureApplTypeId' size=1>
@@ -124,9 +127,9 @@
           <option value='<%=productFeatureApplType.getString("productFeatureApplTypeId")%>'><%=productFeatureApplType.getString("description")%> <%--[<%=productFeatureApplType.getString("productFeatureApplTypeId")%>]--%></option>
         </ofbiz:iterator>
       </select>
-        <INPUT type=submit value='Update' style='font-size: x-small;'>
+        <input type=submit value='Update' style='font-size: x-small;'/>
     </td>
-    </FORM>
+    </form>
     <td>
       <a href='<ofbiz:url>/RemoveFeatureFromProduct?productId=<ofbiz:inputvalue entityAttr="productFeatureAndAppl" field="productId"/>&productFeatureId=<ofbiz:inputvalue entityAttr="productFeatureAndAppl" field="productFeatureId"/>&fromDate=<%=UtilFormatOut.encodeQueryValue(productFeatureAndAppl.getTimestamp("fromDate").toString())%></ofbiz:url>' class="buttontext">
       [Delete]</a>
@@ -147,7 +150,7 @@
   <input type="submit" value="Add" style='font-size: x-small;'>
 </form>
 <br>
-<form method="POST" action="<ofbiz:url>/ApplyFeatureToProductFromTypeAndCode</ofbiz:url>" style='margin: 0;'>
+<form method="POST" action="<ofbiz:url>/ApplyFeatureToProductFromTypeAndCode</ofbiz:url>" style='margin: 0;' name='addFeatureByTypeIdCode'>
   <input type="hidden" name="productId" value="<%=productId%>">
   <div class='head2'>Add ProductFeature with Type and ID Code:</div>
   <br>
@@ -164,8 +167,10 @@
     </ofbiz:iterator>
   </select>
   <br>
-  <span class='tabletext'>From: </span><input type=text size='18' name='fromDate' class='inputBox'>
-  <span class='tabletext'>Thru: </span><input type=text size='18' name='thruDate' class='inputBox'>
+  <span class='tabletext'>From: </span><input type=text size='25' name='fromDate' class='inputBox'>
+  <a href="javascript:call_cal(document.addFeatureByTypeIdCode.fromDate, '<%=nowTimestampString%>');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>
+  <span class='tabletext'>Thru: </span><input type=text size='25' name='thruDate' class='inputBox'>
+  <a href="javascript:call_cal(document.addFeatureByTypeIdCode.thruDate, '<%=nowTimestampString%>');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>
   <span class='tabletext'>Sequence: </span><input type=text size='5' name='sequenceNum' class='inputBox'>
   <input type="submit" value="Add" style='font-size: x-small;'>
 </form>

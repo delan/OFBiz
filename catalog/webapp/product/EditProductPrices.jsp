@@ -119,7 +119,7 @@
     <td align="center">
         <%boolean hasExpired = false;%>
         <%if (productPrice.getTimestamp("thruDate") != null && UtilDateTime.nowTimestamp().after(productPrice.getTimestamp("thruDate"))) { hasExpired = true; }%>
-        <FORM method=POST action='<ofbiz:url>/updateProductPrice</ofbiz:url>' name='lineForm<%=line%>'>
+        <form method=POST action='<ofbiz:url>/updateProductPrice</ofbiz:url>' name='lineForm<%=line%>'>
             <input type=hidden <ofbiz:inputvalue entityAttr="productPrice" field="productId" fullattrs="true"/>>
             <input type=hidden <ofbiz:inputvalue entityAttr="productPrice" field="productPriceTypeId" fullattrs="true"/>>
             <input type=hidden <ofbiz:inputvalue entityAttr="productPrice" field="currencyUomId" fullattrs="true"/>>
@@ -129,7 +129,7 @@
             <a href="javascript:call_cal(document.lineForm<%=line%>.thruDate, '<ofbiz:inputvalue entityAttr="productPrice" field="thruDate" default="<%=nowTimestampString%>"/>');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>
             <input type='text' class='inputBox' size='8' <ofbiz:inputvalue entityAttr="productPrice" field="price" fullattrs="true"/>>
             <INPUT type=submit value='Update' style='font-size: x-small;'>
-        </FORM>
+        </form>
     </td>
     <td><div class='tabletext'>[<ofbiz:inputvalue entityAttr='productPrice' field='lastModifiedByUserLogin'/>] on <ofbiz:inputvalue entityAttr='productPrice' field='lastModifiedDate'/></div></td>
     <td align="center">
