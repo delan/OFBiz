@@ -201,6 +201,8 @@
 
     <TermType description="Financial" hasTable="N" parentTypeId="" termTypeId="FINANCIAL_TERM"/>
     <TermType description="Payment (net days)" hasTable="N" parentTypeId="FINANCIAL_TERM" termTypeId="FIN_PAYMENT_TERM"/>
+    <TermType description="Payment (discounted if paid within specified days)" hasTable="N" parentTypeId="FINANCIAL_TERM" termTypeId="FIN_PAYMENT_DISC"/>
+    <TermType description="Payment (due on specified day of month)" hasTable="N" parentTypeId="FINANCIAL_TERM" termTypeId="FIN_PAYMENT_FIXDAY"/>
     <TermType description="Late Fee (percent)" hasTable="N" parentTypeId="FINANCIAL_TERM" termTypeId="FIN_LATE_FEE_TERM"/>
     <TermType description="Penalty For Collection Agency" hasTable="N" parentTypeId="FINANCIAL_TERM" termTypeId="FIN_COLLECT_TERM"/>
     <TermType description="Non-Returnable Sales Item" hasTable="N" parentTypeId="FINANCIAL_TERM" termTypeId="FIN_NORTN_ITEM_TERM"/>
