@@ -221,7 +221,7 @@ public class OrderReadHelper {
 
     public double getTotalPrice() {
         if (totalPrice == null) {
-            totalPrice = new Double(getOrderItemsTotal(getOrderItems(), getAdjustments()));
+            totalPrice = new Double(getTotalPrice(getOrderItems(), getAdjustments()));
         }//else already set
         return totalPrice.doubleValue();
     }
@@ -255,25 +255,14 @@ public class OrderReadHelper {
 
     // ================= Order Adjustments =================
 
-    public static double calcOrderAdjustments(Collection adjustments, double subTotal, boolean includeOther, boolean includeTax, boolean includeShipping) {
+    public static double calcOrderAdjustments(Collection orderHeaderAdjustments, double subTotal, boolean includeOther, boolean includeTax, boolean includeShipping) {
         double adjTotal = 0.0;
-        if (adjustments != null && adjustments.size() > 0) {
-            Iterator adjIt = adjustments.iterator();
+        if (orderHeaderAdjustments != null && orderHeaderAdjustments.size() > 0) {
+            List filteredAdjs = filterOrderAdjustments(orderHeaderAdjustments, includeOther, includeTax, includeShipping);
+            Iterator adjIt = filteredAdjs.iterator();
             while (adjIt.hasNext()) {
                 GenericValue orderAdjustment = (GenericValue) adjIt.next();
-
-                boolean includeAdjustment = false;
-                if ("SALES_TAX".equals(orderAdjustment.getString("orderAdjustmentTypeId"))) {
-                    if (includeTax) includeAdjustment = true;
-                } else if ("SHIPPING_CHARGES".equals(orderAdjustment.getString("orderAdjustmentTypeId"))) {
-                    if (includeShipping) includeAdjustment = true;
-                } else {
-                    if (includeOther) includeAdjustment = true;
-                }
-
-                if (includeAdjustment) {
-                    adjTotal += OrderReadHelper.calcOrderAdjustment(orderAdjustment, subTotal);
-                }
+                adjTotal += OrderReadHelper.calcOrderAdjustment(orderAdjustment, subTotal);
             }
         }
         return adjTotal;
@@ -354,10 +343,17 @@ public class OrderReadHelper {
         return getOrderItemAdjustments(orderItem, false, false, true);
     }
 
+    public static double getOrderItemsAdjustments(List orderItems, List adjustments, boolean includeOther, boolean includeTax, boolean includeShipping) {
+        double result = 0.0;
+        Iterator itemIter = UtilMisc.toIterator(orderItems);
+        while (itemIter != null && itemIter.hasNext()) {
+            result += getOrderItemAdjustments((GenericValue) itemIter.next(), adjustments, includeOther, includeTax, includeShipping);
+        }
+        return result;
+    }
     public double getOrderItemAdjustments(GenericValue orderItem, boolean includeOther, boolean includeTax, boolean includeShipping) {
         return getOrderItemAdjustments(orderItem, getAdjustments(), includeOther, includeTax, includeShipping);
     }
-
     /** The passed adjustments can be all adjustments for the order, ie for all line items */
     public static double getOrderItemAdjustments(GenericValue orderItem, Collection adjustments, boolean includeOther, boolean includeTax, boolean includeShipping) {
         List contraints = new LinkedList();
@@ -375,22 +371,11 @@ public class OrderReadHelper {
     public static double calcItemAdjustments(Double quantity, Double unitPrice, Collection adjustments, boolean includeOther, boolean includeTax, boolean includeShipping) {
         double adjTotal = 0.0;
         if (adjustments != null && adjustments.size() > 0) {
-            Iterator adjIt = adjustments.iterator();
+            List filteredAdjs = filterOrderAdjustments(adjustments, includeOther, includeTax, includeShipping);
+            Iterator adjIt = filteredAdjs.iterator();
             while (adjIt.hasNext()) {
                 GenericValue orderAdjustment = (GenericValue) adjIt.next();
-
-                boolean includeAdjustment = false;
-                if ("SALES_TAX".equals(orderAdjustment.getString("orderAdjustmentTypeId"))) {
-                    if (includeTax) includeAdjustment = true;
-                } else if ("SHIPPING_CHARGES".equals(orderAdjustment.getString("orderAdjustmentTypeId"))) {
-                    if (includeShipping) includeAdjustment = true;
-                } else {
-                    if (includeOther) includeAdjustment = true;
-                }
-
-                if (includeAdjustment) {
-                    adjTotal += OrderReadHelper.calcItemAdjustment(orderAdjustment, quantity, unitPrice);
-                }
+                adjTotal += OrderReadHelper.calcItemAdjustment(orderAdjustment, quantity, unitPrice);
             }
         }
         return adjTotal;
@@ -413,5 +398,29 @@ public class OrderReadHelper {
         }
         Debug.logVerbose("calcItemAdjustment: " + itemAdjustment + ", quantity=" + quantity + ", unitPrice=" + unitPrice + ", adjustment=" + adjustment);
         return adjustment;
+    }
+
+    public static List filterOrderAdjustments(Collection adjustments, boolean includeOther, boolean includeTax, boolean includeShipping) {
+        List newOrderAdjustmentsList = new LinkedList();
+        if (adjustments != null && adjustments.size() > 0) {
+            Iterator adjIt = adjustments.iterator();
+            while (adjIt.hasNext()) {
+                GenericValue orderAdjustment = (GenericValue) adjIt.next();
+
+                boolean includeAdjustment = false;
+                if ("SALES_TAX".equals(orderAdjustment.getString("orderAdjustmentTypeId"))) {
+                    if (includeTax) includeAdjustment = true;
+                } else if ("SHIPPING_CHARGES".equals(orderAdjustment.getString("orderAdjustmentTypeId"))) {
+                    if (includeShipping) includeAdjustment = true;
+                } else {
+                    if (includeOther) includeAdjustment = true;
+                }
+
+                if (includeAdjustment) {
+                    newOrderAdjustmentsList.add(orderAdjustment);
+                }
+            }
+        }
+        return newOrderAdjustmentsList;
     }
 }
