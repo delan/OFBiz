@@ -1,5 +1,5 @@
 /*
- * $Id: LoginEvents.java,v 1.18 2004/07/07 18:25:11 ajzeneski Exp $
+ * $Id: LoginEvents.java,v 1.19 2004/07/09 06:11:41 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -32,6 +32,10 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.transaction.TransactionManager;
+import javax.transaction.Transaction;
+import javax.transaction.SystemException;
+import javax.transaction.InvalidTransactionException;
 
 import org.ofbiz.base.component.ComponentConfig;
 import org.ofbiz.base.util.Debug;
@@ -45,6 +49,9 @@ import org.ofbiz.content.stats.VisitHandler;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.transaction.TransactionFactory;
+import org.ofbiz.entity.transaction.TransactionUtil;
+import org.ofbiz.entity.transaction.GenericTransactionException;
 import org.ofbiz.party.contact.ContactHelper;
 import org.ofbiz.product.store.ProductStoreWorker;
 import org.ofbiz.security.Security;
@@ -59,7 +66,7 @@ import org.ofbiz.service.ModelService;
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="">Dustin Caldwell</a>
  * @author     <a href="mailto:therrick@yahoo.com">Tom Herrick</a>
- * @version    $Revision: 1.18 $
+ * @version    $Revision: 1.19 $
  * @since      2.0
  */
 public class LoginEvents {
@@ -68,20 +75,8 @@ public class LoginEvents {
     public static final String resource = "SecurityextUiLabels";
     public static final String EXTERNAL_LOGIN_KEY_ATTR = "externalLoginKey";
 
-    // the amount of time after restart we will ignore the auto-logout feature
-    // this will allow users logged in during a restart to resume where they left
-    public static final long SESSION_ALLOW_TIME = (long) UtilProperties.getPropertyNumber("security.properties", "login.ignore.autologout.time");
-
     /** This Map is keyed by the randomly generated externalLoginKey and the value is a UserLogin GenericValue object */
     public static Map externalLoginKeys = new HashMap();
-
-    /** This Map is keyed by userLoginId and the value is another Map keyed by the webappName and the value is the sessionId.
-     * When a user logs in an entry in this Map will be populated for the given user, webapp and session.
-     * When checking security this Map will be checked if the user is logged in to see if we should log them out automatically; this implements the universal logout.
-     * When a user logs out this Map will be cleared so the user will be logged out automatically on subsequent requests.
-     */
-    public static Map loggedInSessions = new HashMap();
-    private static final long classInitTime = System.currentTimeMillis();
 
     /**
      * Save USERNAME and PASSWORD for use by auth pages even if we start in non-auth pages.
@@ -100,10 +95,10 @@ public class LoginEvents {
             String username = request.getParameter("USERNAME");
             String password = request.getParameter("PASSWORD");
 
-            if ((username != null) && ("true".equals(UtilProperties.getPropertyValue("security.properties", "username.lowercase")))) {
+            if ((username != null) && ("true".equalsIgnoreCase(UtilProperties.getPropertyValue("security.properties", "username.lowercase")))) {
                 username = username.toLowerCase();
             }
-            if ((password != null) && ("true".equals(UtilProperties.getPropertyValue("security.properties", "password.lowercase")))) {
+            if ((password != null) && ("true".equalsIgnoreCase(UtilProperties.getPropertyValue("security.properties", "password.lowercase")))) {
                 password = password.toLowerCase();
             }
 
@@ -137,14 +132,13 @@ public class LoginEvents {
             userLogin = null;
         }
 
-        // user is logged in; check to see if there is an entry in the loggedInSessions Map, if not log out this user
-        // also check if they have permission for this login attempt; if not log them out as well.
+        // user is logged in; check to see if they have globally logged out if not
+        // check if they have permission for this login attempt; if not log them out
         if (userLogin != null) {
-            boolean loggedInSession = isLoggedInSession(userLogin, request);
-            boolean hasBasePermission = hasBasePermission(userLogin, request);
-            if (!loggedInSession || !hasBasePermission) {
+            if (!hasBasePermission(userLogin, request) || isFlaggedLoggedOut(userLogin)) {
                 doBasicLogout(userLogin, request);
                 userLogin = null;
+
                 // have to reget this because the old session object will be invalid
                 session = request.getSession();
             }
@@ -161,10 +155,10 @@ public class LoginEvents {
             if (username == null) username = (String) session.getAttribute("USERNAME");
             if (password == null) password = (String) session.getAttribute("PASSWORD");
 
-            if ((username != null) && ("true".equals(UtilProperties.getPropertyValue("security.properties", "username.lowercase")))) {
+            if ((username != null) && ("true".equalsIgnoreCase(UtilProperties.getPropertyValue("security.properties", "username.lowercase")))) {
                 username = username.toLowerCase();
             }
-            if ((password != null) && ("true".equals(UtilProperties.getPropertyValue("security.properties", "password.lowercase")))) {
+            if ((password != null) && ("true".equalsIgnoreCase(UtilProperties.getPropertyValue("security.properties", "password.lowercase")))) {
                 password = password.toLowerCase();
             }
 
@@ -215,16 +209,6 @@ public class LoginEvents {
             password = password.toLowerCase();
         }
 
-        if ("true".equalsIgnoreCase(UtilProperties.getPropertyValue("security.properties", "login.lock.active"))) {
-            boolean userIdLoggedIn = isLoggedInSession(username, request, false);
-            boolean thisUserLoggedIn = isLoggedInSession(username, request, true);
-            if (userIdLoggedIn && !thisUserLoggedIn) {
-                errMsg = UtilProperties.getMessage(resource, "loginevents.user_already_logged_in", UtilHttp.getLocale(request));
-                request.setAttribute("_ERROR_MESSAGE_", "<b>" + errMsg + "</b>");
-                return "error";
-            }
-        }
-
         // get the visit id to pass to the userLogin for history
         String visitId = VisitHandler.getVisitId(session);
 
@@ -273,7 +257,6 @@ public class LoginEvents {
         session.setAttribute("userLogin", userLogin);
         // let the visit know who the user is
         VisitHandler.setUserLogin(session, userLogin, false);
-        loginToSession(userLogin, request);
     }
 
     /**
@@ -287,9 +270,6 @@ public class LoginEvents {
     public static String logout(HttpServletRequest request, HttpServletResponse response) {
         // invalidate the security group list cache
         GenericValue userLogin = (GenericValue) request.getSession().getAttribute("userLogin");
-
-        // log out from all other sessions too; do this here so that it is only done when a user explicitly logs out
-        logoutFromAllSessions(userLogin);
 
         doBasicLogout(userLogin, request);
 
@@ -308,6 +288,9 @@ public class LoginEvents {
             Security.userLoginSecurityGroupByUserLoginId.remove(userLogin.getString("userLoginId"));
         }
 
+        // set the logged out flag
+        setLoggedOut(userLogin);
+
         // this is a setting we don't want to lose, although it would be good to have a more general solution here...
         String currCatalog = (String) session.getAttribute("CURRENT_CATALOG_ID");
         // also make sure the delegatorName is preserved, especially so that a new Visit can be created
@@ -322,6 +305,53 @@ public class LoginEvents {
         if (currCatalog != null) session.setAttribute("CURRENT_CATALOG_ID", currCatalog);
         if (delegatorName != null) session.setAttribute("delegatorName", delegatorName);
         // DON'T save the cart, causes too many problems: if (shoppingCart != null) session.setAttribute("shoppingCart", new WebShoppingCart(shoppingCart, session));
+    }
+
+    public static void setLoggedOut(GenericValue userLogin) {
+        // set the logged out flag - need a mutable object first
+        userLogin = new GenericValue(userLogin);
+        userLogin.set("hasLoggedOut", "Y");
+
+        TransactionManager txMgr = TransactionFactory.getTransactionManager();
+        Transaction parentTx = null;
+        boolean beganTransaction = false;
+
+        try {
+            if (txMgr != null) {
+                try {
+                    parentTx = txMgr.suspend();
+                    beganTransaction = TransactionUtil.begin();
+                } catch (SystemException se) {
+                    Debug.logError(se, "Cannot suspend transaction: " + se.getMessage(), module);
+                } catch (GenericTransactionException e) {
+                    Debug.logError(e, "Cannot begin nested transaction: " + e.getMessage(), module);
+                }
+            }
+
+            try {
+                userLogin.store();
+            } catch (GenericEntityException e) {
+                Debug.logWarning(e, "Unable to set logged out flag on UserLogin", module);
+            }
+
+            try {
+                TransactionUtil.commit(beganTransaction);
+            } catch (GenericTransactionException e) {
+                Debug.logError(e, "Could not commit nested transaction: " + e.getMessage(), module);
+            }
+        } finally {
+            // resume/restore parent transaction
+            if (parentTx != null) {
+                try {
+                    txMgr.resume(parentTx);
+                    Debug.logVerbose("Resumed the parent transaction.", module);
+                } catch (InvalidTransactionException ite) {
+                    Debug.logError(ite, "Cannot resume transaction: " + ite.getMessage(), module);
+                } catch (SystemException se) {
+                    Debug.logError(se, "Unexpected transaction error: " + se.getMessage(), module);
+                }
+            }
+        }
     }
 
     /**
@@ -697,16 +727,6 @@ public class LoginEvents {
                 // ignore the return value; even if the operation failed we want to set the new UserLogin
             }
 
-            if ("true".equalsIgnoreCase(UtilProperties.getPropertyValue("security.properties", "login.lock.active"))) {
-                String username = userLogin.getString("userLoginId");
-                boolean userIdLoggedIn = isLoggedInSession(username, request, false);
-                boolean thisUserLoggedIn = isLoggedInSession(username, request, true);
-                if (userIdLoggedIn && !thisUserLoggedIn) {
-                    request.setAttribute("_ERROR_MESSAGE_", "<b>This user is already logged in.</b><br>");
-                    return "error";
-                }
-            }
-
             doBasicLogin(userLogin, request);
         } else {
             Debug.logWarning("Could not find userLogin for external login key: " + externalKey, module);
@@ -722,73 +742,23 @@ public class LoginEvents {
         }
     }
 
-    public static boolean isLoggedInSession(GenericValue userLogin, HttpServletRequest request) {
-        if (userLogin == null || userLogin.get("userLoginId") == null) {
+    public static boolean isFlaggedLoggedOut(GenericValue userLogin) {
+        if ("true".equalsIgnoreCase(UtilProperties.getPropertyValue("security.properties", "login.disable.global.logout"))) {
             return false;
         }
-        return isLoggedInSession(userLogin.getString("userLoginId"), request, true);
-    }
-
-    public static boolean isLoggedInSession(String userLoginId, HttpServletRequest request, boolean checkSessionId) {
-        if (userLoginId != null) {
-            Map webappMap = (Map) loggedInSessions.get(userLoginId);
-            if (webappMap == null) {
-                return checkServerReboot(userLoginId, request);
-            } else {
-                String sessionId = (String) webappMap.get(UtilHttp.getApplicationName(request));
-                if (!checkSessionId) {
-                    if (sessionId == null) {
-                        return false;
-                    }
-                } else {
-                    if (sessionId == null || !sessionId.equals(request.getSession().getId())) {
-                        return false;
-                    }
-                }
-            }
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    private static boolean checkServerReboot(String userLoginId, HttpServletRequest request) {
-        HttpSession session = request.getSession();
-        long created = session.getCreationTime();
-        long now = System.currentTimeMillis();
-        if ((created < classInitTime) && (classInitTime + SESSION_ALLOW_TIME) > now) {
-            loginToSession(userLoginId, request);
-            return true;
-        }
-        return false;
-    }
-
-    public static void loginToSession(GenericValue userLogin, HttpServletRequest request) {
         if (userLogin == null || userLogin.get("userLoginId") == null) {
-            return;
+            return true;
         }
-        loginToSession(userLogin.getString("userLoginId"), request);
+        // refresh the login object -- maybe cache this?
+        try {
+            userLogin.refresh();
+        } catch (GenericEntityException e) {
+            Debug.logWarning(e, "Unable to refresh UserLogin", module);
+        }
+        return (userLogin.get("hasLoggedOut") != null ?
+                "Y".equalsIgnoreCase(userLogin.getString("hasLoggedOut")) : false);
     }
 
-    public static void loginToSession(String userLoginId, HttpServletRequest request) {
-        if (userLoginId != null) {
-            Map webappMap = (Map) loggedInSessions.get(userLoginId);
-            if (webappMap == null) {
-                webappMap = new HashMap();
-                loggedInSessions.put(userLoginId, webappMap);
-            }
-
-            String webappName = UtilHttp.getApplicationName(request);
-            webappMap.put(webappName, request.getSession().getId());
-        }
-    }
-
-    public static void logoutFromAllSessions(GenericValue userLogin) {
-        if (userLogin != null) {
-            loggedInSessions.remove(userLogin.get("userLoginId"));
-        }
-    }
-    
     protected static boolean hasBasePermission(GenericValue userLogin, HttpServletRequest request) {
         ServletContext context = (ServletContext) request.getAttribute("servletContext");
         Security security = (Security) request.getAttribute("security");

@@ -1,5 +1,5 @@
 /*
- * $Id: LoginServices.java,v 1.5 2004/06/06 08:00:53 jonesde Exp $
+ * $Id: LoginServices.java,v 1.6 2004/07/09 06:11:41 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -58,7 +58,7 @@ import org.ofbiz.service.ServiceUtil;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      2.0
  */
 public class LoginServices {
@@ -139,6 +139,10 @@ public class LoginServices {
                     // we might change & store this userLogin, so we should clone it here to get a mutable copy
                     userLogin = new GenericValue(userLogin);
 
+                    // grab the hasLoggedOut flag
+                    boolean hasLoggedOut = userLogin.get("hasLoggedOut") != null ?
+                            "Y".equalsIgnoreCase(userLogin.getString("hasLoggedOut")) : false;
+
                     if (UtilValidate.isEmpty(userLogin.getString("enabled")) || "Y".equals(userLogin.getString("enabled")) ||
                         (reEnableTime != null && reEnableTime.before(UtilDateTime.nowTimestamp()))) {
 
@@ -151,12 +155,17 @@ public class LoginServices {
                                 ("true".equals(UtilProperties.getPropertyValue("security.properties", "password.accept.encrypted.and.plain")) && password.equals(userLogin.getString("currentPassword"))))) {
                             Debug.logVerbose("[LoginServices.userLogin] : Password Matched", module);
 
+                            // update the hasLoggedOut flag
+                            if (hasLoggedOut) {
+                                userLogin.set("hasLoggedOut", "N");
+                            }
+
                             // reset failed login count if necessry
                             Long currentFailedLogins = userLogin.getLong("successiveFailedLogins");
                             if (currentFailedLogins != null && currentFailedLogins.longValue() > 0) {
                                 userLogin.set("successiveFailedLogins", new Long(0));
-                            } else {
-                                // successful login, no need to change anything, so don't do the store
+                            } else if (!hasLoggedOut) {                                                                                            
+                                // successful login & no loggout flag, no need to change anything, so don't do the store
                                 doStore = false;
                             }
 
@@ -661,7 +670,7 @@ public class LoginServices {
             return ServiceUtil.returnError(errMsg);
         }
 
-        // TODO: Ab hier weitere Übersetzungen einfügen
+        // TODO: Ab hier weitere ï¿½bersetzungen einfï¿½gen
 
         boolean wasEnabled = !"N".equals(userLoginToUpdate.get("enabled"));
 
