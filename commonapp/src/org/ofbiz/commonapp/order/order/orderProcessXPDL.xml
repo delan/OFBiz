@@ -144,6 +144,7 @@
                         <ExtendedAttribute Name="canStart" Value="N"/>
                         <ExtendedAttribute Name="limitAfterStart" Value="N"/>
                         <ExtendedAttribute Name="limitService" Value="testScv"/>
+                        <ExtendedAttribute Name="restartOnDelegate" Value="Y"/>
                         <ExtendedAttribute Name="inheritPriority" Value="Y"/>
                     </ExtendedAttributes>
                 </Activity>

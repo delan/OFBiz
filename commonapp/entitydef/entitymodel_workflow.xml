@@ -88,6 +88,8 @@
       <field name="completeAllAssignments" type="indicator"></field>
       <field name="limitService" type="name"></field>
       <field name="limitAfterStart" type="indicator"></field>
+      <field name="delegateAfterStart" type="indicator"></field>
+      <field name="restartOnDelegate" type="indicator"></field>
       <field name="inheritPriority" type="indicator"></field>
       <prim-key field="packageId"/>
       <prim-key field="packageVersion"/>

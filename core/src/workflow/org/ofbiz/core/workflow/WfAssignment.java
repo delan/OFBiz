@@ -85,7 +85,7 @@ public interface WfAssignment {
      * Mark this assignment as delegated.
      * @throws WfException
      */
-    public void delegated() throws WfException;
+    public void delegate() throws WfException;
 
     /**
      * Change the status of this assignment.

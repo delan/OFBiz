@@ -234,7 +234,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
             if (status.equals("CAL_SENT") || status.equals("CAL_ACCEPTED") || status.equals("CAL_TENTATIVE"))
                 assignments.add(WfFactory.getWfAssignment(getDelegator(), runtimeKey(), party, role, from));
         }
-        Debug.logInfo("Found [" + assignments.size() + "] assignment(s)", module);
+        if (Debug.verboseOn()) Debug.logVerbose("Found [" + assignments.size() + "] assignment(s)", module);
         return assignments;
     }
 

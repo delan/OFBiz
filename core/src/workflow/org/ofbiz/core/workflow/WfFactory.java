@@ -83,8 +83,7 @@ public class WfFactory {
      * @return An instance of the WfAssignment Interface
      * @throws WfException
      */
-    public static WfAssignment getWfAssignment(WfActivity activity, WfResource resource,
-        Timestamp fromDate, boolean create) throws WfException {
+    public static WfAssignment getWfAssignment(WfActivity activity, WfResource resource, Timestamp fromDate, boolean create) throws WfException {            
         if (activity == null) throw new WfException("WfActivity cannot be null");
         if (resource == null) throw new WfException("WfResource cannot be null");
         if (fromDate == null) fromDate = new Timestamp(new Date().getTime());
@@ -101,7 +100,7 @@ public class WfFactory {
     }
 
     public static WfAssignment getWfAssignment(GenericDelegator delegator, String work, String party, String role,
-        Timestamp from) throws WfException {
+            Timestamp from) throws WfException {
         WfActivity act = getWfActivity(delegator, work);
         WfResource res = getWfResource(delegator, null, null, party, role);
         return getWfAssignment(act, res, from, false);

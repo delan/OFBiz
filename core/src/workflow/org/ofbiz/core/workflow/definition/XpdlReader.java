@@ -692,6 +692,8 @@ public class XpdlReader {
         activityValue.set("completeAllAssignments", getExtendedAttributeValue(activityElement, "completeAllAssignments", "N"));
         activityValue.set("limitService", getExtendedAttributeValue(activityElement, "limitService", null), false);
         activityValue.set("limitAfterStart", getExtendedAttributeValue(activityElement, "limitAfterStart", "Y"));
+        activityValue.set("restartOnDelegate", getExtendedAttributeValue(activityElement, "restartOnDelegate", "N"));
+        activityValue.set("delegateAfterStart", getExtendedAttributeValue(activityElement, "delegateAfterStart", "Y"));
         activityValue.set("inheritPriority", getExtendedAttributeValue(activityElement, "inheritPriority", "N"));
         activityValue.set("canStart", getExtendedAttributeValue(activityElement, "canStart", "Y"));
     }

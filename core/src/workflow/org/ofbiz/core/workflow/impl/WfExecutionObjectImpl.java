@@ -246,7 +246,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
      */
     public void abort() throws WfException, CannotStop, NotRunning {
         String stateStr = "closed.aborted";
-
+        
         if (!state().equals("open.running"))
             throw new NotRunning();
         if (!validStates().contains(stateStr))

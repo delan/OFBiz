@@ -126,7 +126,6 @@ public class WfAssignmentImpl implements WfAssignment {
 
                 while (ai.hasNext() && allDelegated) {
                     WfAssignment a = (WfAssignment) ai.next();
-
                     if (!a.status().equals("CAL_DELEGATED"))
                         allDelegated = false;
                 }
@@ -140,7 +139,7 @@ public class WfAssignmentImpl implements WfAssignment {
 
                 while (ai.hasNext()) {
                     WfAssignment a = (WfAssignment) ai.next();
-                    if (!a.equals(this)) a.changeStatus("CAL_DELEGATED");
+                    if (!a.equals(this)) a.delegate();
                 }
             }
         }
@@ -168,9 +167,13 @@ public class WfAssignmentImpl implements WfAssignment {
     }
 
     /**
-     * @see org.ofbiz.core.workflow.WfAssignment#delegated()
+     * @see org.ofbiz.core.workflow.WfAssignment#delegate()
      */
-    public void delegated() throws WfException {
+    public void delegate() throws WfException {
+        // check and make sure we are not already delegated
+        if (status().equals("CAL_DELEGATED"))
+            throw new WfException("Assignment has already been delegated");
+        
         // set the thru-date
         GenericValue valueObject = valueObject();
         try {
@@ -180,14 +183,16 @@ public class WfAssignmentImpl implements WfAssignment {
         } catch (GenericEntityException e) {
             e.printStackTrace();            
             throw new WfException(e.getMessage(), e);
-        }        
+        }  
+        
+        // change the status      
         changeStatus("CAL_DELEGATED");     
     }
 
     /**
      * @see org.ofbiz.core.workflow.WfAssignment#changeStatus(java.lang.String)
      */
-    public void changeStatus(String status) throws WfException {
+    public void changeStatus(String status) throws WfException {    
         // change the status
         GenericValue valueObject = valueObject();
         try {

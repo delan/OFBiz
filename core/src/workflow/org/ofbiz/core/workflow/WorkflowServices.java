@@ -61,7 +61,6 @@ public class WorkflowServices {
         }
         try {
             WfProcess process = WfFactory.getWfProcess(delegator, workEffortId);
-
             process.abort();
         } catch (WfException we) {
             we.printStackTrace();
@@ -88,7 +87,6 @@ public class WorkflowServices {
         }
         try {
             WorkflowClient client = WfFactory.getClient(ctx);
-
             client.setState(workEffortId, newState);
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         } catch (WfException we) {
@@ -108,7 +106,6 @@ public class WorkflowServices {
 
         try {
             WorkflowClient client = WfFactory.getClient(ctx);
-
             result.put("activityState", client.getState(workEffortId));
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         } catch (WfException we) {
@@ -128,7 +125,6 @@ public class WorkflowServices {
 
         try {
             WorkflowClient client = WfFactory.getClient(ctx);
-
             result.put("activityContext", client.getContext(workEffortId));
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         } catch (WfException we) {
@@ -161,7 +157,6 @@ public class WorkflowServices {
         }
         try {
             WorkflowClient client = WfFactory.getClient(ctx);
-
             client.appendContext(workEffortId, appendContext);
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         } catch (WfException we) {
@@ -195,7 +190,6 @@ public class WorkflowServices {
         }
         try {
             WorkflowClient client = WfFactory.getClient(ctx);
-
             client.assign(workEffortId, partyId, roleType, null, removeOldAssign ? false : true);
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         } catch (WfException we) {
@@ -216,7 +210,6 @@ public class WorkflowServices {
 
         try {
             WorkflowClient client = WfFactory.getClient(ctx);
-
             client.acceptAndStart(workEffortId, partyId, roleType, fromDate);
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         } catch (WfException we) {
@@ -227,7 +220,67 @@ public class WorkflowServices {
         return result;
 
     }
+    
+    /** Delegate an assignment */
+    public static Map delegateAssignment(DispatchContext ctx, Map context) {
+        Map result = new HashMap();
+        String workEffortId = (String) context.get("workEffortId");
+        String fromParty = (String) context.get("fromPartyId");
+        String fromRole = (String) context.get("fromRoleTypeId");
+        Timestamp fromFromDate = (Timestamp) context.get("fromFromDate");
+        String toParty = (String) context.get("toPartyId");
+        String toRole = (String) context.get("toRoleTypeId");
+        Timestamp toFromDate = (Timestamp) context.get("toFromDate");      
+       
+        // optional fromDate (default now)
+        if (toFromDate == null)
+            toFromDate = UtilDateTime.nowTimestamp();
 
+        try {
+            WorkflowClient client = new WorkflowClient(ctx);
+            client.delegate(workEffortId, fromParty, fromRole, fromFromDate, toParty, toRole, toFromDate);
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
+        } catch (WfException we) {
+             we.printStackTrace();
+             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+             result.put(ModelService.ERROR_MESSAGE, we.getMessage());
+        }
+        return result;
+    }
+    
+    /** Delegate, accept an assignment */
+    public static Map delegateAcceptAssignment(DispatchContext ctx, Map context) {
+        Map result = new HashMap();
+        String workEffortId = (String) context.get("workEffortId");
+        String fromParty = (String) context.get("fromPartyId");
+        String fromRole = (String) context.get("fromRoleTypeId");
+        Timestamp fromFromDate = (Timestamp) context.get("fromFromDate");
+        String toParty = (String) context.get("toPartyId");
+        String toRole = (String) context.get("toRoleTypeId");
+        Timestamp toFromDate = (Timestamp) context.get("toFromDate");
+        Boolean startObj = (Boolean) context.get("startActivity");
+        
+        // optional start activity (default false)
+        boolean start = false;
+        if (startObj != null)
+            start = startObj.booleanValue();
+        
+        // optional fromDate (default now)
+        if (toFromDate == null)
+            toFromDate = UtilDateTime.nowTimestamp();
+            
+        try {
+            WorkflowClient client = new WorkflowClient(ctx);
+            client.delegateAndAccept(workEffortId, fromParty, fromRole, fromFromDate, toParty, toRole, toFromDate, start);
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
+        } catch (WfException we) {
+             we.printStackTrace();
+             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+             result.put(ModelService.ERROR_MESSAGE, we.getMessage());
+        }
+        return result;
+    }         
+        
     /** Accept a role assignment and attempt to start the activity */
     public static Map acceptRoleAssignment(DispatchContext ctx, Map context) {
         Map result = new HashMap();
@@ -238,7 +291,6 @@ public class WorkflowServices {
 
         try {
             WorkflowClient client = new WorkflowClient(ctx);
-
             client.delegateAndAccept(workEffortId, "_NA_", roleType, fromDate, partyId, roleType, fromDate, true);
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         } catch (WfException we) {
