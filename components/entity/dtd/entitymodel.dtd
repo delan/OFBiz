@@ -49,6 +49,7 @@
     default-resource-name CDATA #IMPLIED
     dependent-on CDATA #IMPLIED
     enable-lock ( true | false ) "false"
+    no-auto-stamp ( true | false ) "false"
     never-cache ( true | false ) "false"
     title CDATA #IMPLIED
     copyright CDATA #IMPLIED

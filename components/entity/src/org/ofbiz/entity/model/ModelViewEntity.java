@@ -1,5 +1,5 @@
 /*
- * $Id: ModelViewEntity.java,v 1.9 2003/10/19 09:27:49 jonesde Exp $
+ * $Id: ModelViewEntity.java,v 1.10 2003/12/04 20:54:53 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -35,7 +35,7 @@ import org.ofbiz.entity.jdbc.*;
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:peterm@miraculum.com">Peter Moon</a>    
- * @version    $Revision: 1.9 $
+ * @version    $Revision: 1.10 $
  * @since      2.0
  */
 public class ModelViewEntity extends ModelEntity {
@@ -415,6 +415,11 @@ public class ModelViewEntity extends ModelEntity {
                 // now merge the lists, leaving out any that duplicate an existing alias name
                 String fieldName = (String) fieldnamesIterator.next();
                 String aliasName = fieldName;
+                ModelField modelField = aliasedEntity.getField(fieldName);
+                if (modelField.getIsAutoCreatedInternal()) {
+                    // never auto-alias these
+                    continue;
+                }
                 if (UtilValidate.isNotEmpty(prefix)) {
                     StringBuffer newAliasBuffer = new StringBuffer(prefix);
                     //make sure the first letter is uppercase to delineate the field name
