@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.1  2001/09/28 22:56:44  jonesde
+ * Big update for fromDate PK use, organization stuff
+ *
  * Revision 1.1  2001/08/06 00:45:09  azeneski
  * minor adjustments to tag files. added new format tag.
  *
@@ -44,50 +47,55 @@ import java.io.IOException;
  * Created on August 4, 2001, 8:21 PM
  */
 public class FormatTag extends BodyTagSupport {
-     
+
     private String type = "N";
-           
+    private String defaultStr = "";
+
     public void setType(String type) {
         this.type = type;
     }
-    
+
     public String getType() {
         return type;
     }
-    
-    public int doAfterBody() throws JspException {       
+
+    public String getDefault() {
+        return defaultStr;
+    }
+    public void setDefault(String defaultStr) {
+        this.defaultStr = defaultStr;
+    }
+
+    public int doAfterBody() throws JspException {
         NumberFormat nf = null;
         DateFormat df = null;
         BodyContent body = getBodyContent();
         String value = body.getString();
-                
-        if ( type.substring(0,1).equalsIgnoreCase("C") )       
-            nf = NumberFormat.getCurrencyInstance();                            
-        if ( type.substring(0,1).equalsIgnoreCase("N") )
+
+        if (type.substring(0, 1).equalsIgnoreCase("C"))
+            nf = NumberFormat.getCurrencyInstance();
+        if (type.substring(0, 1).equalsIgnoreCase("N"))
             nf = NumberFormat.getNumberInstance();
-        if ( type.substring(0,1).equalsIgnoreCase("D") )
+        if (type.substring(0, 1).equalsIgnoreCase("D"))
             df = DateFormat.getDateInstance();
-        
+
         try {
-            if ( nf != null ) {
+            if (nf != null) {
                 // do the number formatting
                 getPreviousOut().print(nf.format(Double.parseDouble(value)));
-            }
-            else if ( df != null ) {
+            } else if (df != null) {
                 // do the date formatting
                 getPreviousOut().print(df.format(df.parse(value)));
-            }
-            else {
+            } else {
                 // just return the value
                 getPreviousOut().print(value);
             }
-        }
-        catch ( Exception e ) {
+        } catch (Exception e) {
             throw new JspException(e.getMessage());
         }
-        
-        return SKIP_BODY;                
+
+        return SKIP_BODY;
     }
-    
+
 }
-       
+

@@ -49,47 +49,76 @@ import org.ofbiz.core.util.Debug;
  *@version    1.0
  */
 public class InputValueTag extends TagSupport {
-  private String field = null;
-  private String param = null;
-  private String entityAttr = null;
-  private String tryEntityAttr = null;
-  
-  public String getField() { return field; }
-  public void setField(String field) { this.field = field; }
-  
-  public String getParam() { return param; }
-  public void setParam(String param) { this.param = param; }
-  
-  public String getEntityAttr() { return entityAttr; }
-  public void setEntityAttr(String entityAttr) { this.entityAttr = entityAttr; }
-  
-  public String getTryEntityAttr() { return tryEntityAttr; }
-  public void setTryEntityAttr(String tryEntityAttr) { this.tryEntityAttr = tryEntityAttr; }
-  
-  public int doStartTag() throws JspTagException {
-    String inputValue = null;
-    GenericValue entity = null;
-    String paramValue = null;
-    boolean tryEntity = true;
-    
-    Boolean tempBool = (Boolean)pageContext.getAttribute(tryEntityAttr);
-    if(tempBool != null) tryEntity = tempBool.booleanValue();
-    if(tryEntity) entity = (GenericValue)pageContext.getAttribute(entityAttr);
-    if(entity != null) {
-      Object fieldVal = entity.get(field);
-      if(fieldVal != null) inputValue = entity.get(field).toString();
+    private String field = null;
+    private String param = null;
+    private String entityAttr = null;
+    private String tryEntityAttr = null;
+    private String defaultStr = "";
+
+    public String getField() {
+        return field;
     }
-    else {
-      inputValue = pageContext.getRequest().getParameter(param);
+    public void setField(String field) {
+        this.field = field;
     }
-    
-    try {
-      if(inputValue != null && inputValue.length() > 0) pageContext.getOut().print(inputValue);
+
+    public String getParam() {
+        return param;
     }
-    catch(IOException e) {
-      throw new JspTagException(e.getMessage());
+    public void setParam(String param) {
+        this.param = param;
     }
-    
-    return (SKIP_BODY);
-  }
+
+    public String getEntityAttr() {
+        return entityAttr;
+    }
+    public void setEntityAttr(String entityAttr) {
+        this.entityAttr = entityAttr;
+    }
+
+    public String getTryEntityAttr() {
+        return tryEntityAttr;
+    }
+    public void setTryEntityAttr(String tryEntityAttr) {
+        this.tryEntityAttr = tryEntityAttr;
+    }
+
+    public String getDefault() {
+        return defaultStr;
+    }
+    public void setDefault(String defaultStr) {
+        this.defaultStr = defaultStr;
+    }
+
+    public int doStartTag() throws JspTagException {
+        String inputValue = null;
+        GenericValue entity = null;
+        String paramValue = null;
+        boolean tryEntity = true;
+
+        Boolean tempBool = (Boolean) pageContext.getAttribute(tryEntityAttr);
+        if (tempBool != null)
+            tryEntity = tempBool.booleanValue();
+        if (tryEntity)
+            entity = (GenericValue) pageContext.getAttribute(entityAttr);
+        if (entity != null) {
+            Object fieldVal = entity.get(field);
+            if (fieldVal != null)
+                inputValue = entity.get(field).toString();
+        } else {
+            inputValue = pageContext.getRequest().getParameter(param);
+        }
+
+        try {
+            if (inputValue != null && inputValue.length() > 0)
+                pageContext.getOut().print(inputValue);
+            else
+                pageContext.getOut().print(defaultStr);
+        } catch (IOException e) {
+            throw new JspTagException(e.getMessage());
+        }
+
+        return (SKIP_BODY);
+    }
 }
+

@@ -31,91 +31,97 @@ import org.ofbiz.core.util.Debug;
  * @version
  */
 public class EntityFieldTag extends TagSupport {
-    
+
     private String field = null;
     private String type = null;
     private String attribute = null;
-    
+    private String defaultStr = "";
+
     public String getAttribute() {
         return attribute;
     }
-    
+
     public String getField() {
         return field;
     }
-    
+
     public String getType() {
         return type;
     }
-    
+
     public void setType(String type) {
         this.type = type;
     }
-    
+
     public void setAttribute(String attribute) {
         this.attribute = attribute;
     }
-    
+
     public void setField(String field) {
         this.field = field;
     }
-    
+
+    public String getDefault() {
+        return defaultStr;
+    }
+    public void setDefault(String defaultStr) {
+        this.defaultStr = defaultStr;
+    }
+
     public int doStartTag() throws JspTagException {
         String javaType = null;
         String fieldObjectType = null;
         Object fieldObject = null;
-        
+
         /* TYPE and FIELD should not be used together. TYPE defines the type of an object.
          *  When FIELD is defined, type is assumed to be 'ValueObject'.
          */
-        
+
         // We should be a ValueObject
-        if ( type == null ) {
+        if (type == null) {
             // Get the ValueObject from PageContext.
             GenericValue valueObject = (GenericValue) pageContext.findAttribute(attribute);
-            if ( valueObject == null ) {
-                return (SKIP_BODY);
-            }
-            
-            // Get the Delegator from the ValueObject.
-            GenericDelegator delegator = null;
-            try {
-                delegator = valueObject.getDelegator();
-            }
-            catch ( IllegalStateException e ) {
-                throw new JspTagException("Delegator not found in ValueObject.");
-            }
-            
-            // Get the Entity Model from the ValueObject
-            ModelEntity entityModel = null;
-            try {
-                entityModel = valueObject.getModelEntity();
-            }
-            catch ( IllegalStateException e ) {
-                throw new JspTagException("ModelEntity not found in ValueObject.");
-            }
-            
-            // Get the field as an object.
-            fieldObject = valueObject.get(field);
-            
-            // Get the Object Type.
-            if ( fieldObject != null ) {
-                ModelField fieldModel = entityModel.getField(field);
-                fieldObjectType = fieldModel.type;
-            }
-            else {
-                Debug.logWarning("[EntityFieldTag] : Null ValueObject passed.");
-                fieldObject = new String();
+            if (valueObject == null) {
+                fieldObject = defaultStr;
                 fieldObjectType = "comment"; // Default for NULL objects.
-            }
-            
-            // Try to get the Field Type
-            try {
-                ModelFieldType fieldType = delegator.getEntityFieldType(entityModel,fieldObjectType);
-                javaType = fieldType.javaType;
-            }
-            catch ( GenericEntityException e ) {
-                throw new JspTagException("[EntityFieldTag] : Cannot get the ModelFieldType from the Delegator.");
+                javaType = "java.lang.String";
+            } else {
+                // Get the Delegator from the ValueObject.
+                GenericDelegator delegator = null;
+                try {
+                    delegator = valueObject.getDelegator();
+                } catch (IllegalStateException e) {
+                    throw new JspTagException("Delegator not found in ValueObject.");
+                }
+
+                // Get the Entity Model from the ValueObject
+                ModelEntity entityModel = null;
+                try {
+                    entityModel = valueObject.getModelEntity();
+                } catch (IllegalStateException e) {
+                    throw new JspTagException("ModelEntity not found in ValueObject.");
+                }
+
+                // Get the field as an object.
+                fieldObject = valueObject.get(field);
+
+                // Get the Object Type.
+                if (fieldObject != null) {
+                    ModelField fieldModel = entityModel.getField(field);
+                    fieldObjectType = fieldModel.type;
+                    // Try to get the Field Type
+                    try {
+                        ModelFieldType fieldType = delegator.getEntityFieldType(entityModel, fieldObjectType);
+                        javaType = fieldType.javaType;
+                    } catch (GenericEntityException e) {
+                        throw new JspTagException("[EntityFieldTag] : Cannot get the ModelFieldType from the Delegator.");
+                    }
+                } else {
+                    Debug.logWarning("[EntityFieldTag] : Null ValueObject passed.");
+                    fieldObject = defaultStr;
+                    fieldObjectType = "comment"; // Default for NULL objects.
+                    javaType = "java.lang.String";
+                }
             }
         }
         // We should be either a 'currency' or a java type.
@@ -123,19 +129,18 @@ public class EntityFieldTag extends TagSupport {
             fieldObject = pageContext.findAttribute(attribute);
             javaType = type;
             // Set a default for NULL objects.
-            if ( fieldObject == null ) {
+            if (fieldObject == null) {
                 Debug.logWarning("[EntityFieldTag] : Null Object passed.");
-                fieldObject = new String();
+                fieldObject = defaultStr;
                 javaType = "java.lang.String";
             }
-            if ( javaType.equalsIgnoreCase("currency") ) {
+            if (javaType.equalsIgnoreCase("currency")) {
                 // Convert the String to a Double for standard processing.
-                if ( fieldObject instanceof String ) {
+                if (fieldObject instanceof String) {
                     try {
                         String objStr = (String) fieldObject;
                         fieldObject = new Double(objStr);
-                    }
-                    catch ( NumberFormatException nfe ) {
+                    } catch (NumberFormatException nfe) {
                         throw new JspTagException("[EntityFieldTag] : String not a number.");
                     }
                 }
@@ -144,65 +149,60 @@ public class EntityFieldTag extends TagSupport {
                 fieldObjectType = "currency-amount";
             }
         }
-        
+
         // Get the Locale from the Request object.
         Locale userLocale = pageContext.getRequest().getLocale();
-        if ( userLocale == null )
+        if (userLocale == null)
             userLocale = Locale.getDefault();
-        
+
         // Format the Object based on its type.
-        String fieldString = new String();
-        if ( javaType.equals("java.lang.Object") || javaType.equals("Object") ) {
+        String fieldString = null;
+        if (javaType.equals("java.lang.Object") || javaType.equals("Object")) {
             fieldString = fieldObject.toString();
-        }
-        else if ( javaType.equals("java.lang.String") || javaType.equals("String") ) {
+        } else if (javaType.equals("java.lang.String") || javaType.equals("String")) {
             fieldString = (String) fieldObject;
-        }
-        else if ( javaType.equals("java.lang.Double") || javaType.equals("Double") ) {
+        } else if (javaType.equals("java.lang.Double") || javaType.equals("Double")) {
             Double doubleValue = (Double) fieldObject;
             NumberFormat nf = null;
-            if ( fieldObjectType.equals("currency-amount") )
+            if (fieldObjectType.equals("currency-amount")) {
+                //TODO: convert currency to current Locale
                 nf = NumberFormat.getCurrencyInstance(userLocale);
-            else
+            } else {
                 nf = NumberFormat.getNumberInstance(userLocale);
+            }
             fieldString = nf.format(doubleValue);
-        }
-        else if ( javaType.equals("java.lang.Long") || javaType.equals("Long") ) {
+        } else if (javaType.equals("java.lang.Long") || javaType.equals("Long")) {
             Long longValue = (Long) fieldObject;
             NumberFormat nf = NumberFormat.getNumberInstance(userLocale);
             fieldString = nf.format(longValue);
-        }
-        else if ( javaType.equals("java.lang.Boolean") || javaType.equals("Boolean") ) {
+        } else if (javaType.equals("java.lang.Boolean") || javaType.equals("Boolean")) {
             Boolean booleanValue = (Boolean) fieldObject;
-            if ( booleanValue.booleanValue() )
+            if (booleanValue.booleanValue())
                 fieldString = "Yes";
             else
                 fieldString = "No";
-        }
-        else if ( javaType.equals("java.sql.Timestamp") ) {
+        } else if (javaType.equals("java.sql.Timestamp")) {
             Date dateValue = (Date) fieldObject;
-            DateFormat df = DateFormat.getDateTimeInstance(DateFormat.LONG,DateFormat.FULL,userLocale);
+            DateFormat df = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.FULL, userLocale);
+            fieldString = df.format(dateValue);
+        } else if (javaType.equals("java.sql.Time")) {
+            Date dateValue = (Date) fieldObject;
+            DateFormat df = DateFormat.getTimeInstance(DateFormat.FULL, userLocale);
+            fieldString = df.format(dateValue);
+        } else if (javaType.equals("java.sql.Date")) {
+            Date dateValue = (Date) fieldObject;
+            DateFormat df = DateFormat.getDateInstance(DateFormat.LONG, userLocale);
             fieldString = df.format(dateValue);
         }
-        else if ( javaType.equals("java.sql.Time") ) {
-            Date dateValue = (Date) fieldObject;
-            DateFormat df = DateFormat.getTimeInstance(DateFormat.FULL,userLocale);
-            fieldString = df.format(dateValue);
-        }
-        else if ( javaType.equals("java.sql.Date") ) {
-            Date dateValue = (Date) fieldObject;
-            DateFormat df = DateFormat.getDateInstance(DateFormat.LONG,userLocale);
-            fieldString = df.format(dateValue);
-        }
-        
+
         try {
             JspWriter out = pageContext.getOut();
             out.print(fieldString);
-        }
-        catch ( IOException e ) {
+        } catch (IOException e) {
             throw new JspTagException(e.getMessage());
         }
-        
+
         return (SKIP_BODY);
     }
 }
+

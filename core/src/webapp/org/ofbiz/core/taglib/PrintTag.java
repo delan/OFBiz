@@ -40,29 +40,38 @@ import org.ofbiz.core.util.Debug;
  * Created on November 7, 2001
  */
 public class PrintTag extends TagSupport {
-  private String attribute = null;
-  
-  public String getAttribute() {
-    return attribute;
-  }
-  
-  public void setAttribute(String attribute) {
-    this.attribute = attribute;
-  }
-  
-  public int doStartTag() throws JspTagException {
-    if(attribute == null) return SKIP_BODY;
-    Object obj = pageContext.getAttribute(attribute);
-    if(obj == null) return SKIP_BODY;
-    
-    try {
-      JspWriter out = pageContext.getOut();
-      out.print(obj.toString());
+    private String attribute = null;
+    private String defaultStr = "";
+
+    public String getAttribute() {
+        return attribute;
     }
-    catch ( IOException e ) {
-      throw new JspTagException(e.getMessage());
+    public void setAttribute(String attribute) {
+        this.attribute = attribute;
     }
-    
-    return SKIP_BODY;
-  }
+
+    public String getDefault() {
+        return defaultStr;
+    }
+    public void setDefault(String defaultStr) {
+        this.defaultStr = defaultStr;
+    }
+
+    public int doStartTag() throws JspTagException {
+        if (attribute == null)
+            return SKIP_BODY;
+        Object obj = pageContext.getAttribute(attribute);
+        if (obj == null)
+            obj = defaultStr;
+
+        try {
+            JspWriter out = pageContext.getOut();
+            out.print(obj.toString());
+        } catch (IOException e) {
+            throw new JspTagException(e.getMessage());
+        }
+
+        return SKIP_BODY;
+    }
 }
+
