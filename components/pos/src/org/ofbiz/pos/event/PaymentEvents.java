@@ -44,6 +44,8 @@ public class PaymentEvents {
 
     public static void payCash(PosScreen pos) {
         PosTransaction trans = PosTransaction.getCurrentTx(pos.getSession());
+
+        // all cash transactions are NO_PAYMENT; no need to check
         try {
             double amount = processAmount(trans, pos, null);
             Debug.log("Processing [Cash] Amount : " + amount, module);
@@ -59,17 +61,52 @@ public class PaymentEvents {
 
     public static void payCheck(PosScreen pos) {
         PosTransaction trans = PosTransaction.getCurrentTx(pos.getSession());
-        try {
-            double amount = processAmount(trans, pos, null);
-            Debug.log("Processing [Check] Amount : " + amount, module);
+        Input input = pos.getInput();
+        String[] ckInfo = input.getFunction("CHECK");
 
-            // add the payment
-            trans.addPayment("PERSONAL_CHECK", amount);
-        } catch (GeneralException e) {
-            // errors handled
+        // check for no/external payment processing
+        int paymentCheck = trans.checkPaymentMethodType("PERSONAL_CHECK");
+        if (paymentCheck == PosTransaction.NO_PAYMENT) {
+            processNoPayment(pos, "PERSONAL_CHECK");
+            return;
+        } else if (paymentCheck == PosTransaction.EXTERNAL_PAYMENT) {
+            if (ckInfo == null) {
+                input.setFunction("CHECK");
+                pos.getOutput().print(Output.REFNUM);
+                return;
+            } else {
+                processExternalPayment(pos, "PERSONAL_CHECK", ckInfo[1]);
+                return;
+            }
         }
 
-        pos.refresh();
+        // now for internal payment processing
+        pos.showDialog("main/dialog/error/notyetsupported");
+    }
+
+    public static void payGiftCard(PosScreen pos) {
+        PosTransaction trans = PosTransaction.getCurrentTx(pos.getSession());
+        Input input = pos.getInput();
+        String[] gcInfo = input.getFunction("GIFTCARD");
+
+        // check for no/external payment processing
+        int paymentCheck = trans.checkPaymentMethodType("GIFT_CARD");
+        if (paymentCheck == PosTransaction.NO_PAYMENT) {
+            processNoPayment(pos, "GIFT_CARD");
+            return;
+        } else if (paymentCheck == PosTransaction.EXTERNAL_PAYMENT) {
+            if (gcInfo == null) {
+                input.setFunction("GIFTCARD");
+                pos.getOutput().print(Output.REFNUM);
+                return;
+            } else {
+                processExternalPayment(pos, "GIFT_CARD", gcInfo[1]);
+                return;
+            }
+        }
+
+        // now for internal payment processing
+        pos.showDialog("main/dialog/error/notyetsupported");
     }
 
     public static void payCredit(PosScreen pos) {
@@ -78,6 +115,23 @@ public class PaymentEvents {
         String[] msrInfo = input.getFunction("MSRINFO");
         String[] crtInfo = input.getFunction("CREDIT");
 
+        // check for no/external payment processing
+        int paymentCheck = trans.checkPaymentMethodType("CREDIT_CARD");
+        if (paymentCheck == PosTransaction.NO_PAYMENT) {
+            processNoPayment(pos, "CREDIT_CARD");
+            return;
+        } else if (paymentCheck == PosTransaction.EXTERNAL_PAYMENT) {
+            if (crtInfo == null) {
+                input.setFunction("CREDIT");
+                pos.getOutput().print(Output.REFNUM);
+                return;
+            } else {
+                processExternalPayment(pos, "CREDIT_CARD", crtInfo[1]);
+                return;
+            }
+        }
+
+        // now for internal payment processing
         if (crtInfo == null) {
             input.setFunction("CREDIT");
             pos.getOutput().print(Output.CREDNO);
@@ -141,6 +195,45 @@ public class PaymentEvents {
         }        
     }
 
+    private static void processNoPayment(PosScreen pos, String paymentMethodTypeId) {
+        PosTransaction trans = PosTransaction.getCurrentTx(pos.getSession());
+
+        try {
+            double amount = processAmount(trans, pos, null);
+            Debug.log("Processing [" + paymentMethodTypeId + "] Amount : " + amount, module);
+
+            // add the payment
+            trans.addPayment(paymentMethodTypeId, amount, "N/A");
+        } catch (GeneralException e) {
+            // errors handled
+        }
+
+        pos.refresh();
+    }
+
+    private static void processExternalPayment(PosScreen pos, String paymentMethodTypeId, String amountStr) {
+        PosTransaction trans = PosTransaction.getCurrentTx(pos.getSession());
+        Input input = pos.getInput();
+        String refNum = input.value();
+        if (refNum == null) {
+            pos.getOutput().print(Output.REFNUM);
+            return;
+        }
+        input.clearInput();
+
+        try {
+            double amount = processAmount(trans, pos, amountStr);
+            Debug.log("Processing [" + paymentMethodTypeId + "] Amount : " + amount, module);
+
+            // add the payment
+            trans.addPayment(paymentMethodTypeId, amount, refNum);
+        } catch (GeneralException e) {
+            // errors handled
+        }
+
+        pos.refresh();
+    }
+
     public static void clearAllPayments(PosScreen pos) {
         PosTransaction trans = PosTransaction.getCurrentTx(pos.getSession());
         trans.clearPayments();
@@ -196,6 +289,9 @@ public class PaymentEvents {
             } else {
                 Debug.log("Amount is empty; assumption is full amount : " + trans.getTotalDue(), module);
                 amount = trans.getTotalDue();
+                if (amount <= 0) {
+                    throw new GeneralException();
+                }
             }
             return amount;
         } else {

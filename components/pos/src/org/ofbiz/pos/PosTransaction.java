@@ -66,6 +66,9 @@ import org.ofbiz.service.GenericServiceException;
 public class PosTransaction {
 
     public static final String module = PosTransaction.class.getName();
+    public static final int NO_PAYMENT = 0;
+    public static final int INTERNAL_PAYMENT = 1;
+    public static final int EXTERNAL_PAYMENT = 2;
 
     private static PrintWriter defaultPrintWriter = new Log4jLoggerWriter(Debug.getLogger(module));
     private static PosTransaction currentTx = null;
@@ -263,7 +266,42 @@ public class PosTransaction {
         cart.removeAdjustmentByType("SALES_TAX");
     }
 
+    public int checkPaymentMethodType(String paymentMethodTypeId) {
+        Map fields = UtilMisc.toMap("paymentMethodTypeId", paymentMethodTypeId, "productStoreId", productStoreId);
+        List values = null;
+        try {
+            values = session.getDelegator().findByAndCache("ProductStorePaymentSetting", fields);
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+        }
+
+        final String externalCode = "PRDS_PAY_EXTERNAL";
+        if (values == null || values.size() == 0) {
+            return NO_PAYMENT;
+        } else {
+            boolean isExternal = true;
+            Iterator i = values.iterator();
+            while (i.hasNext() && isExternal) {
+                GenericValue v = (GenericValue) i.next();
+                Debug.log("Testing [" + paymentMethodTypeId + "] - " + v, module);
+                if (!externalCode.equals(v.getString("paymentServiceTypeEnumId"))) {
+                    isExternal = false;
+                }
+            }
+
+            if (isExternal) {
+                return EXTERNAL_PAYMENT;
+            } else {
+                return INTERNAL_PAYMENT;
+            }
+        }
+    }
+
     public double addPayment(String id, double amount) {
+        return this.addPayment(id, amount, null);
+    }
+
+    public double addPayment(String id, double amount, String refNum) {
         trace("added payment", id + "/" + amount);
         /*
         Double currentAmt = cart.getPaymentAmount(id);
@@ -271,7 +309,7 @@ public class PosTransaction {
             amount += currentAmt.doubleValue();
         }
         */
-        cart.addPaymentAmount(id, new Double(amount), null, true, false);
+        cart.addPaymentAmount(id, new Double(amount), refNum, true, false);
         return this.getTotalDue();
     }
 
