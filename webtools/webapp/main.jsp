@@ -117,6 +117,13 @@
                   <li><a href="<ofbiz:url>/readxpdl</ofbiz:url>" class='buttontext'>Read XPDL File</A>
                 </ul>
               <%}%>
+              <%if(security.hasPermission("WEBTOOLS_VIEW", session)) {%>
+                <li><div class='tabletext'>Service Utilities</div>
+                <ul>
+                  <li><a href="<ofbiz:url>/jobList</ofbiz:url>" class="buttontext">Job List</a>
+                  <li><a href="<ofbiz:url>/scheduleJob</ofbiz:url>" class="buttontext">Schedule Job</a>
+                </ul>
+              <%}%>
               <% if (session.getAttribute("userLogin") != null) { %>
                 <li><div class='tabletext'>Misc. Setup</div>
                 <ul>

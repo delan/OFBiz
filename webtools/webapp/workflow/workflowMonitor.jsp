@@ -62,12 +62,12 @@
     <div class="tabletext">This page is used to view the status of running workflows.</div>  
     <table cellpadding="2" cellspacing="0" border="1" width="100%">
       <tr>
-        <td><div class="tabletext"><b>Package/Version</b></div></td>
-	    <td><div class="tabletext"><b>Process/Version</b></div></td>
-        <td><div class="tabletext"><b>Current Status</b></div></td>
-        <td><div class="tabletext"><b>Priority</b></div></td>
-        <td><div class="tabletext"><b>Actual StartDate</b></div></td>
-        <td><div class="tabletext"><b>Source Reference ID</b></div></td>
+        <td><div class="tableheadtext">Package/Version</div></td>
+	    <td><div class="tableheadtext">Process/Version</div></td>
+        <td><div class="tableheadtext">Current Status</div></td>
+        <td><div class="tableheadtext">Priority</div></td>
+        <td><div class="tableheadtext">Actual StartDate</div></td>
+        <td><div class="tableheadtext">Source Reference ID</div></td>
         <td>&nbsp;</td>
       </tr>
       <ofbiz:iterator name="runningProcess" property="runningProcesses">
