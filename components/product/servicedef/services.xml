@@ -85,7 +85,7 @@
         <attribute name="removeInventoryItems" type="String" mode="IN" optional="true"/>
     </service>
     <service name="copyToProductVariants" engine="simple"
-                location="org/ofbiz/product/product/ProductServices.xml" invoke="updateProductVariants" auth="true">
+                location="org/ofbiz/product/product/ProductServices.xml" invoke="copyToProductVariants" auth="true">
         <description>Copy Virtual Product's data to the Variant Products</description>
         <attribute name="virtualProductId" type="String" mode="IN" optional="false"/>
         <attribute name="removeBefore" type="String" mode="IN" optional="true"/>
