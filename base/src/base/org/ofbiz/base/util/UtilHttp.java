@@ -41,12 +41,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.ofbiz.base.util.collections.OrderedMap;
+import org.apache.commons.collections.map.LinkedMap;
 
 /**
  * HttpUtil - Misc TTP Utility Functions
@@ -65,7 +64,7 @@ public class UtilHttp {
      * @return The resulting Map
      */
     public static Map getParameterMap(HttpServletRequest request) {
-        Map paramMap = new OrderedMap();
+        Map paramMap = new LinkedMap();
         // first add in all path info parameters /~name1=value1/~name2=value2/
         String pathInfoStr = request.getPathInfo();
 
