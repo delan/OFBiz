@@ -1,5 +1,5 @@
 /*
- * $Id: FreeMarkerWorker.java,v 1.25 2004/06/02 17:50:09 byersa Exp $
+ * $Id: FreeMarkerWorker.java,v 1.26 2004/06/10 00:10:07 byersa Exp $
  *
  * Copyright (c) 2002-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -60,6 +60,7 @@ import freemarker.template.Configuration;
 import freemarker.template.SimpleHash;
 import freemarker.template.SimpleScalar;
 import freemarker.template.Template;
+import freemarker.template.TemplateModel;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateHashModel;
 import freemarker.template.TemplateModelException;
@@ -70,7 +71,7 @@ import freemarker.template.TemplateModelException;
  * FreemarkerViewHandler - Freemarker Template Engine Util
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.25 $
+ * @version    $Revision: 1.26 $
  * @since      3.0
  */
 public class FreeMarkerWorker {
@@ -795,5 +796,17 @@ public class FreeMarkerWorker {
 
         }
         return mimeTypeId;
+    }
+
+    public static TemplateModel autoWrap(Object obj, Environment env) {
+
+       BeansWrapper wrapper = BeansWrapper.getDefaultInstance();
+       TemplateModel templateModelObj = null;
+       try {
+           templateModelObj = wrapper.wrap(obj);
+       } catch(TemplateModelException e) {
+           throw new RuntimeException(e.getMessage());
+       }
+       return templateModelObj;
     }
 }

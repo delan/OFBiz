@@ -1,5 +1,5 @@
 /*
- * $Id: DataResourceWorker.java,v 1.29 2004/06/08 19:53:10 byersa Exp $
+ * $Id: DataResourceWorker.java,v 1.30 2004/06/10 00:10:06 byersa Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -64,7 +64,7 @@ import freemarker.template.TemplateException;
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version $Revision: 1.29 $
+ * @version $Revision: 1.30 $
  * @since 3.0
  */
 public class DataResourceWorker {
@@ -453,21 +453,21 @@ public class DataResourceWorker {
             templateRoot = new HashMap();
         }
 
-        Map context = (Map) templateRoot.get("context");
-        if (context == null) {
-            context = new HashMap();
-        }
+        //Map context = (Map) templateRoot.get("context");
+        //if (context == null) {
+            //context = new HashMap();
+        //}
         
         String disableCache = UtilProperties.getPropertyValue("content", "disable.ftl.template.cache");
         if (disableCache == null || !disableCache.equalsIgnoreCase("true")) {
             Template cachedTemplate = FreeMarkerWorker.getTemplateCached(dataResourceId);
             if (cachedTemplate != null) {
                 try {
-                    String subContentId = (String)context.get("subContentId");
+                    String subContentId = (String)templateRoot.get("subContentId");
                     if (UtilValidate.isNotEmpty(subContentId)) {
-                        context.put("contentId", subContentId);
-                        context.put("subContentId", null);
-                        context.put("globalNodeTrail", null); // Force getCurrentContent to query for subContent
+                        templateRoot.put("contentId", subContentId);
+                        templateRoot.put("subContentId", null);
+                        templateRoot.put("globalNodeTrail", null); // Force getCurrentContent to query for subContent
                     }
                     FreeMarkerWorker.renderTemplateCached(cachedTemplate, templateRoot, out);
                 } catch (TemplateException e) {
@@ -532,29 +532,28 @@ public class DataResourceWorker {
         if (UtilValidate.isEmpty(dataTemplateTypeId) || "NONE".equals(dataTemplateTypeId)) {
             writeDataResourceTextCache(dataResource, mimeTypeId, locale, templateRoot, delegator, out);
         } else {
-            String subContentId = (String)context.get("subContentId");
+            String subContentId = (String)templateRoot.get("subContentId");
             if (UtilValidate.isNotEmpty(subContentId)) {
-                context.put("contentId", subContentId);
-                context.put("subContentId", null);
+                templateRoot.put("contentId", subContentId);
+                templateRoot.put("subContentId", null);
             }
             
-            //String subContentId2 = (String)context.get("subContentId");
+            //String subContentId2 = (String)templateRoot.get("subContentId");
 
             // get the full text of the DataResource
             String templateText = getDataResourceTextCache(dataResource, mimeTypeId, locale, templateRoot, delegator);
             // if (Debug.infoOn()) Debug.logInfo("in renderDataResourceAsText, templateText:" + templateText,"");
             
-            //String subContentId3 = (String)context.get("subContentId");
+            //String subContentId3 = (String)templateRoot.get("subContentId");
             
-            context.put("mimeTypeId", null);
-            templateRoot.put("context", context);
+            templateRoot.put("mimeTypeId", null);
             
             if ("FTL".equals(dataTemplateTypeId)) {
                 try {
                     // This is something of a hack. FTL templates should need "contentId" value and
                     // not subContentId so that it will find subContent.
-                    context.put("subContentId", null);
-                    context.put("globalNodeTrail", null); // Force getCurrentContent to query for subContent
+                    templateRoot.put("subContentId", null);
+                    templateRoot.put("globalNodeTrail", null); // Force getCurrentContent to query for subContent
                     //StringWriter sw = new StringWriter();
                     FreeMarkerWorker.renderTemplate("DataResource:" + dataResourceId, templateText, templateRoot, out);
                     //if (Debug.infoOn()) Debug.logInfo("in renderDataResourceAsText, sw:" + sw.toString(),"");
@@ -832,4 +831,17 @@ public class DataResourceWorker {
         return file;
     }
 
+
+    public static String getDataResourceMimeType(GenericDelegator delegator, String dataResourceId, GenericValue view) throws GenericEntityException {
+        
+        String mimeType = null;
+        if (view != null)
+            mimeType = view.getString("mimeTypeId");
+        if (UtilValidate.isEmpty(mimeType) && UtilValidate.isNotEmpty(dataResourceId)) {
+                GenericValue dataResource = delegator.findByPrimaryKeyCache("DataResource", UtilMisc.toMap("dataResourceId", dataResourceId));
+                mimeType = dataResource.getString("mimeTypeId");
+                
+        }
+        return mimeType;
+    }
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: RenderSubContentCacheTransform.java,v 1.17 2004/06/08 19:53:11 byersa Exp $
+ * $Id: RenderSubContentCacheTransform.java,v 1.18 2004/06/10 00:10:07 byersa Exp $
  * 
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  * 
@@ -44,7 +44,7 @@ import freemarker.template.TemplateTransformModel;
  * RenderSubContentCacheTransform - Freemarker Transform for Content rendering
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.17 $
+ * @version $Revision: 1.18 $
  * @since 3.0
  * 
  * This transform cannot be called recursively (at this time).
@@ -69,7 +69,7 @@ public class RenderSubContentCacheTransform implements TemplateTransformModel {
         FreeMarkerWorker.overrideWithArgs(templateRoot, args);
         final GenericValue userLogin = (GenericValue) FreeMarkerWorker.getWrappedObject("userLogin", env);
         List trail = (List)templateRoot.get( "globalNodeTrail");
-        //if (Debug.infoOn()) Debug.logInfo("in Render(0), globalNodeTrail ." + trail , module);
+        if (Debug.infoOn()) Debug.logInfo("in Render(0), globalNodeTrail ." + trail , module);
         String contentAssocPredicateId = (String)templateRoot.get( "contentAssocPredicateId");
         String strNullThruDatesOnly = (String)templateRoot.get( "nullThruDatesOnly");
         Boolean nullThruDatesOnly = (strNullThruDatesOnly != null && strNullThruDatesOnly.equalsIgnoreCase("true")) ? new Boolean(true) :new Boolean(false);
@@ -107,7 +107,7 @@ public class RenderSubContentCacheTransform implements TemplateTransformModel {
         templateRoot.put( "drDataResourceId", dataResourceId);
         templateRoot.put( "mimeTypeId", mimeTypeId);
         templateRoot.put( "dataResourceId", dataResourceId);
-        templateRoot.put( "subContentIdSub", subContentIdSub);
+        templateRoot.put( "subContentId", subContentIdSub);
         templateRoot.put( "subDataResourceTypeId", subDataResourceTypeId);
 
         //final Map savedValues = new HashMap();
@@ -124,7 +124,7 @@ public class RenderSubContentCacheTransform implements TemplateTransformModel {
 
             public void close() throws IOException {
                 List globalNodeTrail = (List)templateRoot.get( "globalNodeTrail");
-                //if (Debug.infoOn()) Debug.logInfo("Render close, globalNodeTrail(2a):" + FreeMarkerWorker.nodeTrailToCsv(globalNodeTrail), "");
+                if (Debug.infoOn()) Debug.logInfo("Render close, globalNodeTrail(2a):" + FreeMarkerWorker.nodeTrailToCsv(globalNodeTrail), "");
                 try {
                     renderSubContent();
                 FreeMarkerWorker.reloadValues(templateRoot, savedValuesUp);
@@ -140,7 +140,9 @@ public class RenderSubContentCacheTransform implements TemplateTransformModel {
                 List passedGlobalNodeTrail = (List)templateRoot.get( "globalNodeTrail");
                  //if (Debug.infoOn()) Debug.logInfo("in Render(3), passedGlobalNodeTrail ." + passedGlobalNodeTrail , module);
                 GenericValue thisView = null;
-                if (passedGlobalNodeTrail.size() > 0) {
+                if (view != null) {
+                    thisView = view;
+                } else if (passedGlobalNodeTrail.size() > 0) {
                     Map map = (Map)passedGlobalNodeTrail.get(passedGlobalNodeTrail.size() - 1);
                     if (Debug.infoOn()) Debug.logInfo("in Render(3), map ." + map , module);
                     if (map != null)
@@ -174,11 +176,15 @@ public class RenderSubContentCacheTransform implements TemplateTransformModel {
                 Locale locale = (Locale) templateRoot.get( "locale");
                 if (locale == null)
                     locale = Locale.getDefault();
-                try {
-                    ContentWorker.renderContentAsTextCache(delegator, null, out, templateRoot, thisView, locale, mimeTypeId);
-                } catch (GeneralException e) {
-                    Debug.logError(e, "Error rendering content", module);
-                    throw new IOException("Error rendering thisView:" + thisView + " msg:" + e.toString());
+
+                if (thisView != null) {
+                    try {
+                        ContentWorker.renderContentAsTextCache(delegator, null, out, templateRoot, thisView, locale, mimeTypeId);
+                    if (Debug.infoOn()) Debug.logInfo("in RenderSubContent, after renderContentAsTextCache:", module);
+                    } catch (GeneralException e) {
+                        Debug.logError(e, "Error rendering content", module);
+                        throw new IOException("Error rendering thisView:" + thisView + " msg:" + e.toString());
+                    }
                 }
                 //if (Debug.infoOn()) Debug.logInfo("in Render(4), globalNodeTrail ." + getWrapped(env, "globalNodeTrail") , module);
                 return;
