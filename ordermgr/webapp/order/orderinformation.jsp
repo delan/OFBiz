@@ -33,15 +33,15 @@
  <tr>
   <td width='50%' valign=top align=left>
 
-<%GenericValue localOrderHeader = null;%>
-<%OrderReadHelper localOrder = null;%>
-<ofbiz:if name="orderHeader">
-    <%localOrderHeader = (GenericValue) pageContext.getAttribute("orderHeader");%>
-    <%localOrder = new OrderReadHelper(localOrderHeader);%>
-</ofbiz:if>
+<%
+    GenericValue currentStatus = orderHeader.getRelatedOneCache("StatusItem");
+    if (currentStatus != null) pageContext.setAttribute("currentStatus", currentStatus);
+    List orderHeaderStatuses = orderReadHelper.getOrderHeaderStatuses();
+    if (orderHeaderStatuses != null) pageContext.setAttribute("orderHeaderStatuses", orderHeaderStatuses);
+%>
 <%String partyId = orderRole.getString("partyId");%>
 <%GenericValue userPerson = delegator.findByPrimaryKey("Person",UtilMisc.toMap("partyId",orderRole.getString("partyId")));%>    
-<%String distributorId = localOrder != null ? localOrder.getDistributorId() : null;%>
+<%String distributorId = orderReadHelper != null ? orderReadHelper.getDistributorId() : null;%>
 <%if (distributorId != null) pageContext.setAttribute("distributorId", distributorId);%>
 <%if (paymentMethod != null) pageContext.setAttribute("paymentMethod", paymentMethod);%>
 <%if (billingAccount != null) pageContext.setAttribute("billingAccount", billingAccount);%>
@@ -54,7 +54,7 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <td valign="middle" align="left">
-            <div class="boxhead">&nbsp;Order <ofbiz:if name="orderHeader">#<%=localOrderHeader.getString("orderId")%> </ofbiz:if>Information</div>
+            <div class="boxhead">&nbsp;Order <ofbiz:if name="orderHeader">#<%=orderHeader.getString("orderId")%> </ofbiz:if>Information</div>
           </td>
           <td valign="middle" align="right">&nbsp;</td>
         </tr>
@@ -66,7 +66,7 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <tr>
           <td>
-              <table width="100%" border="0" cellpadding="1">
+              <table width="100%" border="0" cellpadding="1" cellspacing='0'>
                 <tr>
                   <td align="right" valign="top" width="15%">
                     <div class="tabletext">&nbsp;<b>Name</b></div>
@@ -80,42 +80,63 @@
                     </div>
                   </td>
                 </tr>
+                <%if (security.hasEntityPermission("ORDERMGR", "_UPDATE", session)) {%>
+                    <tr><td colspan="7"><hr class='sepbar'></td></tr>
+                    <tr>
+                      <td align="right" valign="top" width="15%">
+                        <div class="tabletext">&nbsp;<b>Change Status</b></div>
+                      </td>
+                      <td width="5">&nbsp;</td>
+                      <td align="left" valign="top" width="80%">
+                        <ofbiz:if name="orderHeader">
+                            <form name="statusUpdate" method="get" action="<ofbiz:url>/changeOrderStatus</ofbiz:url>">
+                               <input type="hidden" name="orderId" value="<%=orderHeader.getString("orderId")%>">        
+                               <select name="statusId">
+                                 <option value="<%=orderHeader.getString("statusId")%>"><%=orderHeader.getString("statusId")%></option>
+                                 <option value="<%=orderHeader.getString("statusId")%>">----</option>
+                                 <ofbiz:iterator name="status" property="statusChange">
+                                   <option value="<%=status.getString("statusIdTo")%>"><%=status.getString("statusIdTo")%></option>               
+                                 </ofbiz:iterator>
+                               </select>
+                               <a href="javascript:document.statusUpdate.submit();" class="buttontext">[Save]</a>
+                              <%--<div class="tabletext"><%=orderReadHelper.getStatusString()%></div>--%>
+                            </form>
+                        </ofbiz:if>
+                        <ofbiz:unless name="orderHeader">
+                          <div class="tabletext"><b>Not Yet Ordered</b></div>
+                        </ofbiz:unless>
+                      </td>
+                    </tr>
+                <%}%>
                 <tr><td colspan="7"><hr class='sepbar'></td></tr>
                 <tr>
                   <td align="right" valign="top" width="15%">
-                    <div class="tabletext">&nbsp;<b>Status</b></div>
+                    <div class="tabletext">&nbsp;<b>Status History</b></div>
                   </td>
                   <td width="5">&nbsp;</td>
                   <td align="left" valign="top" width="80%">
-                    <ofbiz:if name="orderHeader"> 
-                        <form name="statusUpdate" method="get" action="<ofbiz:url>/changeOrderStatus</ofbiz:url>">
-                           <input type="hidden" name="orderId" value="<%=localOrderHeader.getString("orderId")%>">        
-                           <select name="statusId">
-                             <option value="<%=localOrderHeader.getString("statusId")%>"><%=localOrderHeader.getString("statusId")%></option>
-                             <option value="<%=localOrderHeader.getString("statusId")%>">----</option>
-                             <ofbiz:iterator name="status" property="statusChange">
-                               <option value="<%=status.getString("statusIdTo")%>"><%=status.getString("statusIdTo")%></option>               
-                             </ofbiz:iterator>
-                           </select>
-                           <a href="javascript:document.statusUpdate.submit();" class="buttontext">[Save]</a>
-                          <%--<div class="tabletext"><%=localOrder.getStatusString()%></div>--%>
-                        </form>
-                    </ofbiz:if>
-                    <ofbiz:unless name="orderHeader">
-                      <div class="tabletext"><b>Not Yet Ordered</b></div>
-                    </ofbiz:unless>
+                    <div class='tabletext'>Current Status: <ofbiz:entityfield attribute="currentStatus" field="description"/> [<ofbiz:entityfield attribute="orderHeader" field="statusId"/>]</div>
+                    <ofbiz:iterator name="orderHeaderStatus" property="orderHeaderStatuses">
+                        <%GenericValue loopStatusItem = orderHeaderStatus.getRelatedOneCache("StatusItem");%>
+                        <%if (loopStatusItem != null) pageContext.setAttribute("loopStatusItem", loopStatusItem);%>
+                        <div class='tabletext'>
+                            <ofbiz:entityfield attribute="orderHeaderStatus" field="statusDatetime"/>: 
+                            <ofbiz:entityfield attribute="loopStatusItem" field="description"/>
+                            [<ofbiz:entityfield attribute="orderHeaderStatus" field="statusId"/>]
+                        </div>
+                    </ofbiz:iterator>
                   </td>
                 </tr>
               <ofbiz:if name="orderHeader">
                 <tr><td colspan="7"><hr class='sepbar'></td></tr>
                 <tr>
                   <td align="right" valign="top" width="15%">
-                    <div class="tabletext">&nbsp;<b>Date</b></div>
+                      <div class="tabletext">&nbsp;<b>Date Ordered</b></div>
                   </td>
                   <td width="5">&nbsp;</td>
                   <td align="left" valign="top" width="80%">
                       <div class="tabletext">
-                      <%=UtilDateTime.toDateTimeString(localOrderHeader.getTimestamp("orderDate"))%>
+                          <ofbiz:entityfield attribute="orderHeader" field="orderDate"/>
                       </div>
                   </td>
                 </tr>
@@ -162,7 +183,7 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <tr>
           <td>
-              <table width="100%" border="0" cellpadding="1">
+              <table width="100%" border="0" cellpadding="1" cellspacing='0'>
               <ofbiz:unless name="paymentMethod">
                 <tr>
                   <td colspan="2" valign="top">
@@ -290,7 +311,7 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <tr>
           <td>
-              <table width="100%" border="0" cellpadding="1">
+              <table width="100%" border="0" cellpadding="1" cellspacing='0'>
                 <ofbiz:if name="shippingAddress">
                 <tr>
                   <td align="right" valign="top" width="15%">
@@ -335,28 +356,48 @@
                   <td width="5">&nbsp;</td>
                   <td align="left" valign="top" width="80%">
                       <div class="tabletext">
-                      <%if (maySplit != null) pageContext.setAttribute("maySplit", maySplit);%>
-                      <ofbiz:if name="maySplit" value="false" type="Boolean">
-                      Please wait until the entire order is ready before shipping.
-                      </ofbiz:if>
-                      <ofbiz:if name="maySplit" value="true" type="Boolean">
-                      Please ship items I ordered as they become available (may incur additional shipping charges).    
-                      </ofbiz:if>
+                      <ofbiz:unless name="maySplit">Please wait until the entire order is ready before shipping.</ofbiz:unless>
+                      <ofbiz:if name="maySplit">Please ship items I ordered as they become available (may incur additional shipping charges).</ofbiz:if>
                       </div>
                   </td>
                 </tr>
+                <%if (UtilValidate.isNotEmpty(shippingInstructions)) {%>
+                    <tr><td colspan="7"><hr class='sepbar'></td></tr>
+                    <tr>
+                      <td align="right" valign="top" width="15%">
+                        <div class="tabletext">&nbsp;<b>Instructions</b></div>
+                      </td>
+                      <td width="5">&nbsp;</td>
+                      <td align="left" valign="top" width="80%">
+                          <div class="tabletext"><%=UtilFormatOut.checkNull(shippingInstructions)%></div>
+                       </td>
+                    </tr>
+                <%}%>
                 <tr><td colspan="7"><hr class='sepbar'></td></tr>
                 <tr>
                   <td align="right" valign="top" width="15%">
-                    <div class="tabletext">&nbsp;<b>Instructions</b></div>
+                    <div class="tabletext">&nbsp;<b>Gift?</b></div>
                   </td>
                   <td width="5">&nbsp;</td>
                   <td align="left" valign="top" width="80%">
                       <div class="tabletext">
-                      <%=UtilFormatOut.checkNull(shippingInstructions)%>
+                      <ofbiz:unless name="isGift">This order is not a gift.</ofbiz:unless>
+                      <ofbiz:if name="isGift">This order is a gift.</ofbiz:if>
                       </div>
-                   </td>
+                  </td>
                 </tr>
+                <%if (UtilValidate.isNotEmpty(giftMessage)) {%>
+                    <tr><td colspan="7"><hr class='sepbar'></td></tr>
+                    <tr>
+                      <td align="right" valign="top" width="15%">
+                        <div class="tabletext">&nbsp;<b>Gift Message</b></div>
+                      </td>
+                      <td width="5">&nbsp;</td>
+                      <td align="left" valign="top" width="80%">
+                          <div class="tabletext"><%=UtilFormatOut.checkNull(giftMessage)%></div>
+                       </td>
+                    </tr>
+                <%}%>
               </table>
           </td>
         </tr>

@@ -48,12 +48,13 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <tr>
           <td>
-              <table width="100%" border="0" cellpadding="1">
+              <table width="100%" border="0" cellpadding="1" cellspacing='0'>
                 <tr align=left valign=bottom>
-                  <th width="65%" align="left">Product</th>
+                  <th width="40%" align="left">Product</th>
+                  <th width="25%" align="left">Status</th>
                   <th width="5%" align="right">Quantity</th>
                   <th width="10%" align="right">Unit Price</th>
-                  <th width="10%" align="right">Adjustments</th>
+                  <th width="10%" align="right">&nbsp;Adjustments</th>
                   <th width="10%" align="right">Subtotal</th>
                 </tr>
              <%if (orderItemList != null) pageContext.setAttribute("orderItemList", orderItemList);%>
@@ -72,6 +73,23 @@
                       <div class="tabletext">
                       <a href="/catalog/control/EditProduct?productId=<%=orderItem.getString("productId")%>" class="buttontext"><%=orderItem.getString("productId")%> - <%=orderItem.getString("itemDescription")%></a>
                       </div>
+                    </td>
+                    <%-- now show status details per line item --%>
+                    <%GenericValue currentItemStatus = orderItem.getRelatedOneCache("StatusItem");%>
+                    <%if (currentItemStatus != null) pageContext.setAttribute("currentItemStatus", currentItemStatus);%>
+                    <td align="left" colspan="1">
+                        <div class='tabletext'>Current: <ofbiz:entityfield attribute="currentItemStatus" field="description"/> [<ofbiz:entityfield attribute="orderItem" field="statusId"/>]</div>
+                        <%Collection orderItemStatuses = orderReadHelper.getOrderItemStatuses(orderItem);%>
+                        <%if (orderItemStatuses != null) pageContext.setAttribute("orderItemStatuses", orderItemStatuses);%>
+                        <ofbiz:iterator name="orderItemStatus" property="orderItemStatuses">
+                            <%GenericValue loopStatusItem = orderItemStatus.getRelatedOneCache("StatusItem");%>
+                            <%if (loopStatusItem != null) pageContext.setAttribute("loopStatusItem", loopStatusItem);%>
+                            <div class='tabletext'>
+                                <ofbiz:entityfield attribute="orderItemStatus" field="statusDatetime"/>: 
+                                <ofbiz:entityfield attribute="loopStatusItem" field="description"/>
+                                [<ofbiz:entityfield attribute="orderItemStatus" field="statusId"/>]
+                            </div>
+                        </ofbiz:iterator>
                     </td>
                     <td align="right" valign="top">
                         <div class="tabletext" nowrap><%=UtilFormatOut.formatQuantity(orderItem.getDouble("quantity"))%></div>
@@ -98,13 +116,14 @@
                 <ofbiz:iterator name="orderItemAdjustment" property="orderItemAdjustments">
                     <%GenericValue adjustmentType = orderItemAdjustment.getRelatedOneCache("OrderAdjustmentType");%>
                     <tr>
-                        <td align="right" colspan="3"><div class="tabletext"><b><%=adjustmentType.getString("description")%></b> <%=UtilFormatOut.ifNotEmpty(orderItemAdjustment.getString("comments"), ": ", "")%></div></td>
-                        <td align="right" nowrap><div class="tabletext"><%=UtilFormatOut.formatPrice(OrderReadHelper.calcItemAdjustment(orderItemAdjustment, orderItem))%></div></td>
+                        <td align="right" colspan="4"><div class="tabletext"><b><%=adjustmentType.getString("description")%></b> <%=UtilFormatOut.ifNotEmpty(orderItemAdjustment.getString("comments"), ": ", "")%></div></td>
+                        <td align="right"><div class="tabletext"><%=UtilFormatOut.formatPrice(OrderReadHelper.calcItemAdjustment(orderItemAdjustment, orderItem))%></div></td>
+                        <td>&nbsp;</td>
                     </tr>
                 </ofbiz:iterator>
               </ofbiz:iterator>
               <ofbiz:unless name="orderItemList" size="0">
-              <tr><td><font color="red">ERROR: Sales Order Lines lookup failed.</font></td></tr>
+                <tr><td><font color="red">ERROR: Sales Order Lines lookup failed.</font></td></tr>
               </ofbiz:unless>
 
                 <tr><td colspan="7"><hr class='sepbar'></td></tr>
@@ -114,37 +133,37 @@
                     <tr>
                         <td align="right" colspan="4"><div class="tabletext"><b><%=adjustmentType.getString("description")%></b> <%=UtilFormatOut.ifNotEmpty(orderHeaderAdjustment.getString("comments"), ": ", "")%></div></td>
                         <td align="right" nowrap><div class="tabletext"><%=UtilFormatOut.formatPrice(OrderReadHelper.calcOrderAdjustment(orderHeaderAdjustment, orderSubTotal))%></div></td>
+                        <td>&nbsp;</td>
                     </tr>
                 </ofbiz:iterator>
 
                 <tr><td colspan=1></td><td colspan="7"><hr class='sepbar'></td></tr>
-
                 <tr>
-                    <td align="right" colspan="4"><div class="tabletext"><b>Items Subtotal</b></div></td>
+                    <td align="right" colspan="5"><div class="tabletext"><b>Items Subtotal</b></div></td>
                     <td align="right" nowrap><div class="tabletext"><%= UtilFormatOut.formatPrice(orderSubTotal)%></div></td>
                 </tr>
 
                 <%double otherAdjAmount = OrderReadHelper.calcOrderAdjustments(orderHeaderAdjustments, orderSubTotal, true, false, false);%>
                 <tr>
-                    <td align="right" colspan="4"><div class="tabletext"><b>Total Other Order Adjustments</b></div></td>
+                    <td align="right" colspan="5"><div class="tabletext"><b>Total Other Order Adjustments</b></div></td>
                     <td align="right" nowrap><div class="tabletext"><%=UtilFormatOut.formatPrice(otherAdjAmount)%></div></td>
                 </tr>
                 <%-- do tax and shipping separate so that we can total up the line item adjustments and the order header adjustments --%>
                 <%double shippingAmount = OrderReadHelper.getOrderItemsAdjustments(orderItems, orderAdjustments, false, false, true);%>
                 <%shippingAmount += OrderReadHelper.calcOrderAdjustments(orderHeaderAdjustments, orderSubTotal, false, false, true);%>
                 <tr>
-                    <td align="right" colspan="4"><div class="tabletext"><b>Total Shipping and Handling</b></div></td>
+                    <td align="right" colspan="5"><div class="tabletext"><b>Total Shipping and Handling</b></div></td>
                     <td align="right" nowrap><div class="tabletext"><%=UtilFormatOut.formatPrice(shippingAmount)%></div></td>
                 </tr>
                 <%double taxAmount = OrderReadHelper.getOrderItemsAdjustments(orderItems, orderAdjustments, false, true, false);%>
                 <%taxAmount += OrderReadHelper.calcOrderAdjustments(orderHeaderAdjustments, orderSubTotal, false, true, false);%>
                 <tr>
-                    <td align="right" colspan="4"><div class="tabletext"><b>Total Sales Tax</b></div></td>
+                    <td align="right" colspan="5"><div class="tabletext"><b>Total Sales Tax</b></div></td>
                     <td align="right" nowrap><div class="tabletext"><%=UtilFormatOut.formatPrice(taxAmount)%></div></td>
                 </tr>
                 <tr><td colspan=1></td><td colspan="7"><hr class='sepbar'></td></tr>
                 <tr>
-                    <td align="right" colspan="4"><div class="tabletext"><b>Total Due</b></div></td>
+                    <td align="right" colspan="5"><div class="tabletext"><b>Total Due</b></div></td>
                    <td align="right" nowrap>
                   <div class="tabletext"><%=UtilFormatOut.formatPrice(OrderReadHelper.getTotalPrice(orderItems, orderAdjustments))%></div>
                     </td>

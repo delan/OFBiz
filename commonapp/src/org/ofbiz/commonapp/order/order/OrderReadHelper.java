@@ -28,6 +28,7 @@ import java.util.*;
 
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.util.*;
+import org.ofbiz.commonapp.common.*;
 
 /**
  * Utility class for easily extracting important information from orders
@@ -44,6 +45,7 @@ public class OrderReadHelper {
     protected Collection orderItems = null;
     protected Collection adjustments = null;
     protected Collection paymentPrefs = null;
+    protected Collection orderStatuses = null;
     protected Double totalPrice = null;
 
     protected OrderReadHelper() {
@@ -86,6 +88,17 @@ public class OrderReadHelper {
             }
         }
         return paymentPrefs;
+    }
+
+    public List getOrderStatuses() {
+        if (orderStatuses == null) {
+            try {
+                orderStatuses = orderHeader.getRelated("OrderStatus");
+            } catch (GenericEntityException e) {
+                Debug.logError(e);
+            }
+        }
+        return (List) orderStatuses;
     }
 
     public String getShippingMethod() {
@@ -146,13 +159,8 @@ public class OrderReadHelper {
     }
 
     public String getStatusString() {
-        Collection orderStatusList = null;
-        try {
-            orderStatusList = orderHeader.getRelated("OrderStatus");
-        } catch (GenericEntityException e) {
-            Debug.logWarning(e);
-            return "";
-        }
+        Collection orderStatusList = this.getOrderHeaderStatuses();
+        if (orderStatusList == null) return "";
 
         Set orderStatusIdSet = new HashSet();
         Iterator orderStatusIter = orderStatusList.iterator();
@@ -237,13 +245,27 @@ public class OrderReadHelper {
     }
     public static List getOrderHeaderAdjustments(List adjustments) {
         List contraints1 = UtilMisc.toList(new EntityExpr("orderItemSeqId", EntityOperator.EQUALS, null));
-        List contraints2 = UtilMisc.toList(new EntityExpr("orderItemSeqId", EntityOperator.EQUALS, "_NA_"));
+        List contraints2 = UtilMisc.toList(new EntityExpr("orderItemSeqId", EntityOperator.EQUALS, DataModelConstants.SEQ_ID_NA));
         List contraints3 = UtilMisc.toList(new EntityExpr("orderItemSeqId", EntityOperator.EQUALS, ""));
         List adj = new LinkedList();
         adj.addAll(EntityUtil.filterByAnd(adjustments, contraints1));
         adj.addAll(EntityUtil.filterByAnd(adjustments, contraints2));
         adj.addAll(EntityUtil.filterByAnd(adjustments, contraints3));
         return adj;
+    }
+
+    public List getOrderHeaderStatuses() {
+        return getOrderHeaderStatuses(getOrderStatuses());
+    }
+    public static List getOrderHeaderStatuses(List orderStatuses) {
+        List contraints1 = UtilMisc.toList(new EntityExpr("orderItemSeqId", EntityOperator.EQUALS, null));
+        List contraints2 = UtilMisc.toList(new EntityExpr("orderItemSeqId", EntityOperator.EQUALS, DataModelConstants.SEQ_ID_NA));
+        List contraints3 = UtilMisc.toList(new EntityExpr("orderItemSeqId", EntityOperator.EQUALS, ""));
+        List newOrderStatuses = new LinkedList();
+        newOrderStatuses.addAll(EntityUtil.filterByAnd(orderStatuses, contraints1));
+        newOrderStatuses.addAll(EntityUtil.filterByAnd(orderStatuses, contraints2));
+        newOrderStatuses.addAll(EntityUtil.filterByAnd(orderStatuses, contraints3));
+        return newOrderStatuses;
     }
 
     public double getOrderAdjustments() {
@@ -360,6 +382,13 @@ public class OrderReadHelper {
     }
     public static Collection getOrderItemAdjustmentList(GenericValue orderItem, Collection adjustments) {
         return EntityUtil.filterByAnd(adjustments, UtilMisc.toMap("orderItemSeqId", orderItem.get("orderItemSeqId")));
+    }
+
+    public Collection getOrderItemStatuses(GenericValue orderItem) {
+        return getOrderItemStatuses(orderItem, getOrderStatuses());
+    }
+    public static Collection getOrderItemStatuses(GenericValue orderItem, Collection orderStatuses) {
+        return EntityUtil.filterByAnd(orderStatuses, UtilMisc.toMap("orderItemSeqId", orderItem.get("orderItemSeqId")));
     }
 
     //Order Item Adjs Utility Methods
