@@ -23,7 +23,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.2
 -->
 
@@ -64,6 +64,19 @@
     
     <simple-method method-name="createReturnItem" short-description="Create Return Item">
         <check-permission permission="ORDERMGR" action="_CREATE"><fail-message message="Security Error: to run createReturnHeader you must have the ORDERMGR_CREATE or ORDERMGR_ADMIN permission"/></check-permission>
+        <check-errors/>
+        
+        <make-value value-name="itemLookup" entity-name="OrderItem"/>
+        <set-pk-fields map-name="parameters" value-name="itemLookup"/>
+        <find-by-primary-key entity-name="OrderItem" value-name="orderItem" map-name="itemLookup"/>
+        
+        <if-compare-field field-name="returnQuantity" map-name="parameters" operator="greater" to-field-name="quantity" to-map-name="orderItem" type="Double">
+            <add-error><fail-message message="Return quantity cannot exceed the ordered quantity."/></add-error>
+        </if-compare-field>
+        
+        <if-compare-field field-name="returnPrice" map-name="parameters" operator="greater" to-field-name="unitPrice" to-map-name="orderItem" type="Double">
+            <add-error><fail-message message="Return price cannot exceed the ordered price."/></add-error>
+        </if-compare-field>
         <check-errors/>
         
         <make-value value-name="newEntity" entity-name="ReturnItem"/>
