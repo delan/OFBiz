@@ -116,6 +116,15 @@ public class FreeMarkerViewHandler implements ViewHandler {
             root.put("security", wrapper.wrap(request.getAttribute("security")));
             root.put("userLogin", wrapper.wrap(session.getAttribute("userLogin")));
 
+            // add the response object (for transforms) to the context as a BeanModel
+            root.put("response", wrapper.wrap(response));
+            
+            // add the application object (for transforms) to the context as a BeanModel
+            root.put("application", wrapper.wrap(servletContext));
+            
+            // add the servlet context -- this has been deprecated, and now requires servlet, do we really need it?
+            //root.put("applicationAttributes", new ServletContextHashModel(servletContext, BeansWrapper.getDefaultInstance()));                       
+                                 
             // add the session object (for transforms) to the context as a BeanModel
             root.put("session", wrapper.wrap(session));
 
@@ -128,17 +137,10 @@ public class FreeMarkerViewHandler implements ViewHandler {
             // add the request
             root.put("requestAttributes", new HttpRequestHashModel(request, wrapper));
 
-            // add the request parameters
-            root.put("requestParameters", new HttpRequestParametersHashModel(request));
+            // add the request parameters -- this now uses a Map from UtilHttp
+            Map requestParameters = UtilHttp.getParameterMap(request);
+            root.put("requestParameters", wrapper.wrap(requestParameters));
 
-            // add the application object (for transforms) to the context as a BeanModel
-            root.put("application", wrapper.wrap(servletContext));
-
-            // add the servlet context -- this has been deprecated, and now requires servlet, do we really need it?
-            //root.put("applicationAttributes", new ServletContextHashModel(servletContext, BeansWrapper.getDefaultInstance()));
-
-            // add the response object (for transforms) to the context as a BeanModel
-            root.put("response", wrapper.wrap(response));
         } catch (freemarker.template.TemplateModelException e) {
             Debug.logError(e, "Error creating template model in OFBiz FreeMarker preparation");
         }
