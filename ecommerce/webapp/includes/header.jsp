@@ -13,7 +13,7 @@
 
 <%String pageName = (String)pageContext.getAttribute("PageName");%>
 
-<%String companyName = UtilProperties.getPropertyValue("ecommerce", "company.name", "Open For Commerce");%>
+<%String companyName = UtilProperties.getPropertyValue("ecommerce", "company.name");%>
 <%String companySubtitle = UtilProperties.getPropertyValue("ecommerce", "company.subtitle");%>
 <%String headerImageUrl = UtilProperties.getPropertyValue("ecommerce", "header.image.url");%>
 
@@ -60,11 +60,6 @@ function mClk(src){
 		src.children.tags('A')[0].click();
 }
 </script>
-<style>
- .headerButtonLeft { BORDER-RIGHT:solid white 1px; PADDING-RIGHT: 10px; PADDING-LEFT: 10px; }
- .headerButtonRight { BORDER-LEFT:solid white 1px; PADDING-RIGHT: 10px; PADDING-LEFT: 10px; }
- .headerCenter { PADDING-RIGHT:10px; PADDING-LEFT:10px; font-size: 10pt; font-weight: bold; COLOR: #000000; }
-</style>
 </head>
 
 <body>
@@ -80,9 +75,11 @@ function mClk(src){
             </TD>
           <%}%>
           <TD align=left width='50%'>
-            <div style="margin: 0; font-size: 24pt; font-weight: bold; color: white; white-space: nowrap;"><%=companyName%></div>
+            <%if(companyName != null && companyName.length() > 0) {%>
+              <div class='headerCompanyName'><%=companyName%></div>
+            <%}%>
             <%if(companySubtitle != null && companySubtitle.length() > 0) {%>
-              <div style="font-size: 8pt; margin: 0; color: white; white-space: nowrap;"><%=companySubtitle%></div>
+              <div class='headerCompanySubtitle'><%=companySubtitle%></div>
             <%}%>
           </TD>
           <TD align=right width='50%'>
