@@ -1,5 +1,5 @@
 /*
- * $Id: RenderSubContentTransform.java,v 1.1 2003/12/05 21:37:16 byersa Exp $
+ * $Id: RenderSubContentTransform.java,v 1.2 2003/12/15 11:52:07 byersa Exp $
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -40,6 +40,7 @@ import java.sql.Timestamp;
 
 import org.ofbiz.content.webapp.control.RequestHandler;
 import org.ofbiz.content.ContentManagementWorker;
+import org.ofbiz.content.content.ContentWorker;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
@@ -50,6 +51,7 @@ import org.ofbiz.service.*;
 import freemarker.ext.beans.BeanModel;
 import freemarker.template.Environment;
 import freemarker.template.SimpleScalar;
+import freemarker.template.SimpleHash;
 import freemarker.template.TemplateModelException;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateScalarModel;
@@ -63,7 +65,7 @@ import org.jpublish.Page;
  * RenderSubContentTransform - Freemarker Transform for Content rendering
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.0
  *
  * This transform cannot be called recursively (at this time).
@@ -79,15 +81,11 @@ public class RenderSubContentTransform implements TemplateTransformModel {
     * which checks the request object instead of the template context object.
     */
     public static String getArg(Map args, String key, Environment env ) {
-            SimpleScalar s = (SimpleScalar)args.get(key);
-            String returnVal = (s == null) ? null : s.toString();
-            if (returnVal == null) {
-                Map templateContext = (Map)FreeMarkerWorker.getWrappedObject("context", env);
-                if (templateContext != null) {
-                    returnVal = (String)templateContext.get(key);
-                }
-            }
-            return returnVal;
+        return FreeMarkerWorker.getArg(args, key, env);
+    }
+
+    public static String getArg(Map args, String key, Map ctx ) {
+        return FreeMarkerWorker.getArg(args, key, ctx);
     }
 
    
@@ -96,18 +94,22 @@ public class RenderSubContentTransform implements TemplateTransformModel {
 
         final StringBuffer buf = new StringBuffer();
         final Environment env = Environment.getCurrentEnvironment();
-        final String mapKey = getArg(args, "mapKey", env);
-        final String subContentId = getArg(args, "subContentId", env);
-        final String subDataResourceTypeId = getArg(args, "subDataResourceTypeId", env);
-        final String contentId = getArg(args, "contentId", env);
-        final String mimeTypeId = getArg(args, "mimeTypeId", env);
+        Map ctx = (Map)FreeMarkerWorker.getWrappedObject("context", env);
+        if (ctx == null) 
+            ctx = new HashMap();
+        final String mapKey = getArg(args, "mapKey", ctx);
+        final String subContentId = getArg(args, "subContentId", ctx);
+        final String subDataResourceTypeId = getArg(args, "subDataResourceTypeId", ctx);
+        final String contentId = getArg(args, "contentId", ctx);
+        final String mimeTypeId = getArg(args, "mimeTypeId", ctx);
         final Locale locale = (Locale)FreeMarkerWorker.getWrappedObject("locale", env);
-        final LocalDispatcher dispatcher = 
-                       (LocalDispatcher)FreeMarkerWorker.getWrappedObject("dispatcher", env);
+        final HttpServletRequest request = 
+                       (HttpServletRequest)FreeMarkerWorker.getWrappedObject("request", env);
+        final GenericDelegator delegator = 
+                       (GenericDelegator)FreeMarkerWorker.getWrappedObject("delegator", env);
         final GenericValue userLogin = 
                        (GenericValue)FreeMarkerWorker.getWrappedObject("userLogin", env);
 
-        /*
         Debug.logInfo("in RenderSubContent, start.","");
         Debug.logInfo("in RenderSubContent, mapKey:" + mapKey,"");
         Debug.logInfo("in RenderSubContent, subContentId:" + subContentId,"");
@@ -115,8 +117,8 @@ public class RenderSubContentTransform implements TemplateTransformModel {
         Debug.logInfo("in RenderSubContent, contentId:" + contentId,"");
         Debug.logInfo("in RenderSubContent, mimeTypeId:" + mimeTypeId,"");
         Debug.logInfo("in RenderSubContent, locale:" + locale,"");
-        Debug.logInfo("in RenderSubContent, dispatcher:" + dispatcher,"");
-        */
+
+        final Map templateContext = ctx;
         
         return new Writer(out) {
 
@@ -129,6 +131,7 @@ public class RenderSubContentTransform implements TemplateTransformModel {
 
             public void close() throws IOException {  
                 try {                              
+        Debug.logInfo("in RenderSubContent, close:","");
                     renderSubContent();
                 } catch (IOException e) {
                     throw new IOException(e.getMessage());
@@ -139,60 +142,56 @@ public class RenderSubContentTransform implements TemplateTransformModel {
         public void renderSubContent() throws IOException {
          
             TemplateHashModel dataRoot = env.getDataModel();
-                Map ctx = (Map)FreeMarkerWorker.getWrappedObject("context", env);
-                //Debug.logInfo("in RenderSubContent, ctx:" + ctx,"");
-                if (ctx == null) 
-                    ctx = new HashMap();
-                final Map templateContext = ctx;
         
                 GenericValue subContentDataResourceView 
                        = (GenericValue)templateContext.get("subContentDataResourceView");
-                //Debug.logInfo("in RenderSubContent, subContentDataResourceView:" + subContentDataResourceView,"");
-    
-                Map serviceIn = new HashMap();
-                serviceIn.put("contentId", contentId);
-                serviceIn.put("mapKey", mapKey);
-                serviceIn.put("subContentId", subContentId);
-                serviceIn.put("mimeTypeId", mimeTypeId);
-                serviceIn.put("locale", locale);
-                serviceIn.put("templateContext", ctx);
-                serviceIn.put("outWriter", out);
-                serviceIn.put("subContentDataResourceView", subContentDataResourceView);
-                try {
-                    Map results = dispatcher.runSync("renderSubContentAsText", serviceIn);
-                    subContentDataResourceView = (GenericValue)results.get("view");
-                    //Debug.logInfo("in EditRenderSubContent, subContentDataResourceView:" + subContentDataResourceView, "");
-                } catch(GenericServiceException e) {
-                    throw new RuntimeException(e.getMessage());
-                }
-                /* to use this call, dispatcher and delegator must be passed in templateContext
                 Timestamp fromDate = UtilDateTime.nowTimestamp();
-                Map results = ContentWorker.renderSubContentAsText(dispatcher, delegator,
+                ServletContext servletContext 
+                    = (ServletContext)request.getSession().getServletContext();
+                String rootDir = servletContext.getRealPath("/");
+                String webSiteId = (String)servletContext.getAttribute("webSiteId");
+                String https = (String)servletContext.getAttribute("https");
+                  Debug.logInfo("in RenderSubContent, rootDir:"+rootDir,"");
+                templateContext.put("webSiteId", webSiteId);
+                templateContext.put("https", https);
+                templateContext.put("rootDir", rootDir);
+                TemplateHashModel oldRoot = env.getDataModel();
+                SimpleHash templateRoot = FreeMarkerWorker.buildNewRoot(oldRoot);
+                templateRoot.put("context", templateContext);
+                  Debug.logInfo("in RenderSubContent, calling renderSubCasT:"
+                           + " contentId:" + contentId
+                           + " mapKey:" + mapKey
+                           + " subContentId:" + subContentId
+                     ,"");
+                if (subContentDataResourceView != null) {
+                  Debug.logInfo("in RenderSubContent, "
+                           + " subContentDataResourceView:" + subContentDataResourceView.get("contentId")
+                           + " / " + subContentDataResourceView.get("drDataResourceId")
+                     ,"");
+                }
+                Map results = ContentWorker.renderSubContentAsText( delegator,
                                   contentId, out, mapKey, subContentId, subContentDataResourceView,
-                                  ctx, locale, mimeTypeId, userLogin, fromDate);
-                */
+                                  templateRoot, locale, mimeTypeId, userLogin, fromDate);
     
+        Map ctx = (Map)FreeMarkerWorker.getWrappedObject("context", env);
+        Debug.logInfo("in RenderSubContent, contentId." + ctx.get("contentId"),"");
+                templateContext.put("mapKey", null);
+                templateContext.put("subContentId", null);
+                templateContext.put("subDataResourceTypeId", null);
+                templateContext.put("contentId", contentId);
+                templateContext.put("mimeTypeId", null);
+                templateContext.put("locale", locale);
+        Debug.logInfo("in RenderSubContent, after.","");
+        Debug.logInfo("in RenderSubContent, mapKey:" + mapKey,"");
+        Debug.logInfo("in RenderSubContent, subContentId:" + subContentId,"");
+        Debug.logInfo("in RenderSubContent, subDataResourceTypeId:" + subDataResourceTypeId,"");
+        Debug.logInfo("in RenderSubContent, contentId:" + contentId,"");
+        Debug.logInfo("in RenderSubContent, mimeTypeId:" + mimeTypeId,"");
+        Debug.logInfo("in RenderSubContent, locale:" + locale,"");
+        Debug.logInfo("in RenderSubContent, contentId2." + ctx.get("contentId"),"");
             return;
             }
         };
     }
-
-/*
-    public void checkForLoop(String path) throws IOException {
-        List templateList = (List)request.getAttribute("templateList");
-            //Debug.logInfo("in checkForLoop, templateList:" +templateList, "");
-            //Debug.logInfo("in checkForLoop, templatePath:" +path, "");
-        if (templateList == null) {
-            templateList = new ArrayList();
-        } else {
-            if (templateList.contains(path)) {
-                throw new IOException(path + " has already been visited.");
-            }
-        }
-        templateList.add(path);
-        request.setAttribute("templateList", templateList);
-        return;
-    }
-*/
 
 }

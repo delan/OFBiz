@@ -1,5 +1,5 @@
 /*
- * $Id: RenderWrappedTextTransform.java,v 1.1 2003/12/05 21:37:16 byersa Exp $
+ * $Id: RenderWrappedTextTransform.java,v 1.2 2003/12/15 11:52:07 byersa Exp $
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -84,14 +84,16 @@ import org.ofbiz.content.webapp.view.JPublishWrapper;
  * RenderWrappedTextTransform - Freemarker Transform for URLs (links)
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.0
  */
 public class RenderWrappedTextTransform implements  TemplateTransformModel {
    
     public Writer getWriter(final Writer out, Map args) {                      
         final Environment env = Environment.getCurrentEnvironment();
-        final String wrappedFTL = (String)FreeMarkerWorker.getWrappedObject("wrappedFTL", env);
+        Map ctx = (Map)FreeMarkerWorker.getWrappedObject("context", env);
+        final String wrappedFTL = FreeMarkerWorker.getArg(args, "wrappedFTL", ctx);
+        Debug.logInfo("in RenderWrappedText, wrappedFTL:"+wrappedFTL,"");
 
         return new Writer(out) {
 
