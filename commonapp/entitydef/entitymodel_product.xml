@@ -1421,7 +1421,7 @@
       <view-link entity-alias="PVA" rel-entity-alias="PVAR">
         <key-map field-name="productIdTo" rel-field-name="productId"/>
       </view-link>
-      <view-link entity-alias="PVAR" rel-entity-alias="PVARFA">
+      <view-link entity-alias="PVAR" rel-entity-alias="PVARFA" rel-optional="true">
         <key-map field-name="productId"/>
       </view-link>
       <view-link entity-alias="PVARFA" rel-entity-alias="PVARF">
