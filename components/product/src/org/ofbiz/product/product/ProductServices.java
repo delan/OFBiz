@@ -1,5 +1,5 @@
 /*
- * $Id: ProductServices.java,v 1.5 2004/02/03 23:26:47 jonesde Exp $
+ * $Id: ProductServices.java,v 1.6 2004/02/06 17:04:48 ajzeneski Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -52,7 +52,7 @@ import org.ofbiz.service.ServiceUtil;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      2.0
  */
 public class ProductServices {
@@ -111,7 +111,7 @@ public class ProductServices {
             while (i.hasNext()) {
                 featureSet.add(((GenericValue) i.next()).getString("productFeatureTypeId"));
             }
-            if (Debug.infoOn()) Debug.logInfo("" + featureSet, module);
+            //if (Debug.infoOn()) Debug.logInfo("" + featureSet, module);
         } catch (GenericEntityException e) {
             String errMsg = "Problem reading product features: " + e.getMessage();
             Debug.logError(e, errMsg, module);
@@ -337,15 +337,15 @@ public class ProductServices {
                         UtilMisc.toMap("productAssocTypeId", "PRODUCT_VARIANT"));
 
                 if (c != null) {
-                    if (Debug.infoOn()) Debug.logInfo("Found related: " + c, module);
+                    //if (Debug.infoOn()) Debug.logInfo("Found related: " + c, module);
                     c = EntityUtil.filterByDate(c, true);
-                    if (Debug.infoOn()) Debug.logInfo("Found Filtered related: " + c, module);
+                    //if (Debug.infoOn()) Debug.logInfo("Found Filtered related: " + c, module);
                     if (c.size() > 0) {
                         GenericValue asV = (GenericValue) c.iterator().next();
 
-                        if (Debug.infoOn()) Debug.logInfo("ASV: " + asV, module);
+                        //if (Debug.infoOn()) Debug.logInfo("ASV: " + asV, module);
                         mainProduct = asV.getRelatedOneCache("MainProduct");
-                        if (Debug.infoOn()) Debug.logInfo("Main product = " + mainProduct, module);
+                        //if (Debug.infoOn()) Debug.logInfo("Main product = " + mainProduct, module);
                     }
                 }
             }
