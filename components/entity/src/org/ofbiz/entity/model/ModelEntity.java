@@ -1,5 +1,5 @@
 /*
- * $Id: ModelEntity.java,v 1.11 2003/12/25 19:03:55 jonesde Exp $
+ * $Id: ModelEntity.java,v 1.12 2004/02/06 22:14:09 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -44,7 +44,7 @@ import org.w3c.dom.NodeList;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.11 $
+ * @version    $Revision: 1.12 $
  * @since      2.0
  */
 public class ModelEntity implements Comparable {
@@ -503,15 +503,25 @@ public class ModelEntity implements Comparable {
     public ModelField getField(String fieldName) {
         if (fieldName == null) return null;
         if (fieldsMap == null) {
-            fieldsMap = new HashMap(fields.size());
-
-            for (int i = 0; i < fields.size(); i++) {
-                ModelField field = (ModelField) fields.get(i);
-
-                fieldsMap.put(field.name, field);
-            }
+            createFieldsMap();
         }
-        return (ModelField) fieldsMap.get(fieldName);
+        ModelField modelField = (ModelField) fieldsMap.get(fieldName);
+        if (modelField == null) {
+            // sometimes weird things happen and this getField method is called before the fields are all populated, so before moving on just re-create the fieldsMap again real quick...
+            // the purpose of the fieldsMap is for speed, but if failures are a little slower, no biggie
+            createFieldsMap();
+            modelField = (ModelField) fieldsMap.get(fieldName);
+        }
+        return modelField;
+    }
+    
+    protected synchronized void createFieldsMap() {
+        Map tempMap = new HashMap(fields.size());
+        for (int i = 0; i < fields.size(); i++) {
+            ModelField field = (ModelField) fields.get(i);
+            tempMap.put(field.name, field);
+        }
+        fieldsMap = tempMap;
     }
 
     public void addField(ModelField field) {
