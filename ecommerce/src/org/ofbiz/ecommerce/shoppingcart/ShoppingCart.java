@@ -406,6 +406,11 @@ public class ShoppingCart implements java.io.Serializable {
     public void removeAdjustmentByType(String orderAdjustmentTypeId) {
         if (orderAdjustmentTypeId == null) return;
         List adjs = this.getAdjustments();
+        Iterator cartIterator = this.iterator();
+        while (cartIterator.hasNext()) {
+            ShoppingCartItem item = (ShoppingCartItem) cartIterator.next();
+            adjs.addAll(item.getAdjustments());
+        }
         if (adjs != null) {
             for (int i = 0; i < adjs.size(); ) {
                 GenericValue orderAdjustment = (GenericValue) adjs.get(i);
