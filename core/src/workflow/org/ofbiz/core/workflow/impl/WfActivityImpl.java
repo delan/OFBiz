@@ -4,8 +4,12 @@
 
 package org.ofbiz.core.workflow.impl;
 
+import java.io.*;
 import java.util.*;
 import org.ofbiz.core.entity.*;
+import org.ofbiz.core.serialize.*;
+import org.ofbiz.core.service.*;
+import org.ofbiz.core.util.*;
 import org.ofbiz.core.workflow.*;
 
 /**
@@ -38,15 +42,10 @@ import org.ofbiz.core.workflow.*;
  */
 
 public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity {
-    
-    // Attribute instance 'process'
-    private WfProcess process;
-    
-    // Attribute instance 'result'
-    private Map result;
-    
-    // Attribute instance 'assignments'
+        
+    private WfProcess process;          
     private List assignments;
+    private Map result;       
          
     /**
      * Creates new WfProcessImpl
@@ -124,7 +123,33 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
      * @throws InvalidData Data is invalid
      */
     public void setResult(Map newResult) throws WfException, InvalidData {
-        result = new HashMap(newResult);
+        this.result = result;
+        try {            
+            GenericValue runtimeData = null;
+            if ( dataObject.get("resultDataId") == null ) {                
+                String seqId = getDelegator().getNextSeqId("RuntimeData").toString();                
+                runtimeData = getDelegator().makeValue("RuntimeData",UtilMisc.toMap("runtimeDataId",seqId));
+                dataObject.set("resultDataId",seqId);
+                dataObject.store();
+            }
+            else {
+                runtimeData = dataObject.getRelatedOne("ResultRuntimeData");
+            }
+            runtimeData.set("runtimeInfo",XmlSerializer.serialize(context));
+            runtimeData.store();
+        }
+        catch ( GenericEntityException e ) {
+            throw new WfException(e.getMessage(),e);
+        }
+        catch ( SerializeException e ) {
+            throw new InvalidData(e.getMessage(),e);
+        }
+        catch ( FileNotFoundException e ) {
+            throw new InvalidData(e.getMessage(),e);
+        }
+        catch ( IOException e ) {
+            throw new InvalidData(e.getMessage(),e);
+        }            
     }
     
     /**
@@ -153,6 +178,8 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
      * @return  List of WfAssignment objects.
      */
     public List getSequenceAssignment(int maxNumber) throws WfException {
+        if ( maxNumber > 0 ) 
+            return assignments.subList(0,(maxNumber-1));
         return assignments;
     }
     

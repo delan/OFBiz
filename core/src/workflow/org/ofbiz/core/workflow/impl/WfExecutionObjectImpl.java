@@ -316,11 +316,16 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
     public void setProcessContext(Map newValue)
     throws WfException, InvalidData, UpdateNotAllowed {
         this.context = context;
-        try {
-            GenericValue runtimeData = dataObject.getRelatedOne("RuntimeData");
-            if ( runtimeData == null ) {
-                String seqId = getDelegator().getNextSeqId("RuntimeData").toString();
+        try {            
+            GenericValue runtimeData = null;
+            if ( dataObject.get("contextDataId") == null ) {                
+                String seqId = getDelegator().getNextSeqId("RuntimeData").toString();                
                 runtimeData = getDelegator().makeValue("RuntimeData",UtilMisc.toMap("runtimeDataId",seqId));
+                dataObject.set("contextDataId",seqId);
+                dataObject.store();
+            }
+            else {
+                runtimeData = dataObject.getRelatedOne("ContextRuntimeData");
             }
             runtimeData.set("runtimeInfo",XmlSerializer.serialize(context));
             runtimeData.store();

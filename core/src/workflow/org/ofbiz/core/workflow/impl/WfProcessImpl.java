@@ -38,9 +38,10 @@ import org.ofbiz.core.workflow.*;
  */
 
 public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
-    
+        
     private WfRequester requester;       
     private WfProcessMgr manager;
+    private Collection transitions;
     private List steps;                
     private Map result;
      
@@ -56,6 +57,12 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
         this.requester = null;
         result = new HashMap();
         steps = new ArrayList();
+        try {
+            transitions = valueObject.getRelated("WorkflowTransition");
+        }
+        catch ( GenericEntityException e ) {
+            throw new WfException(e.getMessage(),e);
+        }
         makeSteps();
     }
     
