@@ -98,13 +98,14 @@ public class CategoryServices {
         String previous = null;
         String next = null;
 
-        if (index.intValue() - 2 > memberList.size())
+        if (index.intValue() - 2 > memberList.size())  {
             previous = ((GenericValue) memberList.get(index.intValue() - 1)).getString("productId");
-        if (index.intValue() + 2 < memberList.size())
+            result.put("previousProductId", previous);
+        }
+        if (index.intValue() + 2 < memberList.size()) {
             next = ((GenericValue) memberList.get(index.intValue() + 1)).getString("productId");
-
-        result.put("previousProductId", previous);
-        result.put("nextProductId", next);
+            result.put("nextProductId", next);
+        }
         return result;
     }
 
