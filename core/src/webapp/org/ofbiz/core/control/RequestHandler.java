@@ -483,8 +483,11 @@ public class RequestHandler implements Serializable {
         }
     }
     
-    
     public String makeLink(HttpServletRequest request, HttpServletResponse response, String url) {
+        return makeLink(request, response, url, false, false, false);
+    }
+    
+    public String makeLink(HttpServletRequest request, HttpServletResponse response, String url, boolean fullPath, boolean secure, boolean encode) {
         String httpsPort = UtilProperties.getPropertyValue("url.properties", "port.https", "443");
         String httpsServer = UtilProperties.getPropertyValue("url.properties", "force.https.host");
         String httpPort = UtilProperties.getPropertyValue("url.properties", "port.http", "80");
@@ -495,10 +498,10 @@ public class RequestHandler implements Serializable {
         String requestUri = RequestHandler.getRequestUri(url);
         StringBuffer newURL = new StringBuffer();
 
-        boolean useHttps = UtilProperties.propertyValueEqualsIgnoreCase("url.properties", "port.https.enabled", "Y");
-
-        if (useHttps) {
-            if (requestManager.requiresHttps(requestUri) && !request.isSecure()) {
+        boolean useHttps = UtilProperties.propertyValueEqualsIgnoreCase("url.properties", "port.https.enabled", "Y");        
+        
+        if (useHttps || fullPath || secure || encode) {
+            if (secure || (useHttps && requestManager.requiresHttps(requestUri) && !request.isSecure())) {
                 String server = httpsServer;
 
                 if (server == null || server.length() == 0) {
@@ -509,7 +512,7 @@ public class RequestHandler implements Serializable {
                 if (!httpsPort.equals("443")) {
                     newURL.append(":" + httpsPort);
                 }
-            } else if (!requestManager.requiresHttps(requestUri) && request.isSecure()) {
+            } else if (fullPath || encode || (useHttps && !requestManager.requiresHttps(requestUri) && request.isSecure())) {
                 String server = httpServer;
 
                 if (server == null || server.length() == 0) {
@@ -522,9 +525,20 @@ public class RequestHandler implements Serializable {
                 }
             }
         }
-        
+                
         newURL.append(controlPath);
         newURL.append(url);
-        return response.encodeURL(newURL.toString());                
+        String encodedUrl = null;
+        if (response != null && !encode) {
+            encodedUrl = response.encodeURL(newURL.toString());
+        } else {            
+            if (encode) {
+                String sessionId = request.getSession().getId();
+                newURL.append(";jsessionid=" + sessionId);
+            }            
+            encodedUrl = newURL.toString();
+        }
+        
+        return encodedUrl;              
     }    
 }
