@@ -1,5 +1,5 @@
 /*
- * $Id: EntityJoinOperator.java,v 1.6 2004/07/14 04:18:52 doogie Exp $
+ * $Id: EntityJoinOperator.java,v 1.7 2004/07/14 06:36:18 doogie Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -41,7 +41,7 @@ import org.ofbiz.entity.model.ModelEntity;
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  *@since      1.0
- *@version    $Revision: 1.6 $
+ *@version    $Revision: 1.7 $
  */
 public class EntityJoinOperator extends EntityOperator {
 
@@ -52,7 +52,7 @@ public class EntityJoinOperator extends EntityOperator {
         this.shortCircuitValue = shortCircuitValue;
     }
 
-    public void addSqlValue(StringBuffer sql, ModelEntity modelEntity, List entityConditionParams, Object lhs, Object rhs) {
+    public void addSqlValue(StringBuffer sql, ModelEntity modelEntity, List entityConditionParams, boolean compat, Object lhs, Object rhs) {
         sql.append('(');
         sql.append(((EntityCondition) lhs).makeWhereString(modelEntity, entityConditionParams));
         sql.append(") ");

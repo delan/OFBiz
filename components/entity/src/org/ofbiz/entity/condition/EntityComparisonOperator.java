@@ -1,5 +1,5 @@
 /*
- * $Id: EntityComparisonOperator.java,v 1.8 2004/07/14 06:34:35 doogie Exp $
+ * $Id: EntityComparisonOperator.java,v 1.9 2004/07/14 06:36:17 doogie Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -47,7 +47,7 @@ import org.ofbiz.entity.model.ModelField;
  *
  * @author     <a href="mailto:adam@doogie.org">Adam Heath</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.8 $
+ * @version    $Revision: 1.9 $
  * @since      3.0
  */
 public class EntityComparisonOperator extends EntityOperator {
@@ -84,13 +84,13 @@ public class EntityComparisonOperator extends EntityOperator {
         visitor.accept(rhs);
     }
 
-    public void addSqlValue(StringBuffer sql, ModelEntity entity, List entityConditionParams, Object lhs, Object rhs) {
+    public void addSqlValue(StringBuffer sql, ModelEntity entity, List entityConditionParams, boolean compat, Object lhs, Object rhs) {
         ModelField field;
         if (lhs instanceof EntityConditionValue) {
             EntityConditionValue ecv = (EntityConditionValue) lhs;
             ecv.addSqlValue(sql, entity, entityConditionParams, false, null);
             field = ecv.getModelField(entity);
-        } else if (lhs instanceof String) {
+        } else if (compat && lhs instanceof String) {
             field = getField(entity, (String) lhs);
             if (field == null) {
                 sql.append(lhs);

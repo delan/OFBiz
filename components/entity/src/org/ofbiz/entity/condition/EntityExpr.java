@@ -1,5 +1,5 @@
 /*
- * $Id: EntityExpr.java,v 1.13 2004/07/14 04:18:52 doogie Exp $
+ * $Id: EntityExpr.java,v 1.14 2004/07/14 06:36:17 doogie Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -39,7 +39,7 @@ import org.ofbiz.entity.model.ModelField;
  * Encapsulates simple expressions used for specifying queries
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.13 $
+ * @version    $Revision: 1.14 $
  * @since      2.0
  */
 public class EntityExpr extends EntityCondition {
@@ -148,7 +148,7 @@ public class EntityExpr extends EntityCondition {
     public String makeWhereString(ModelEntity modelEntity, List entityConditionParams) {
         // if (Debug.verboseOn()) Debug.logVerbose("makeWhereString for entity " + modelEntity.getEntityName(), module);
         StringBuffer sql = new StringBuffer();
-        operator.addSqlValue(sql, modelEntity, entityConditionParams, lhs, rhs);
+        operator.addSqlValue(sql, modelEntity, entityConditionParams, false, lhs, rhs);
         return sql.toString();
     }
 
@@ -158,11 +158,7 @@ public class EntityExpr extends EntityCondition {
 
     public void checkCondition(ModelEntity modelEntity) throws GenericModelException {
         // if (Debug.verboseOn()) Debug.logVerbose("checkCondition for entity " + modelEntity.getEntityName(), module);
-        if (lhs instanceof String) {
-            if (modelEntity.getField((String) lhs) == null) {
-                throw new GenericModelException("Field with name " + lhs + " not found in the " + modelEntity.getEntityName() + " Entity");
-            }
-        } else if (lhs instanceof EntityCondition) {
+        if (lhs instanceof EntityCondition) {
             ((EntityCondition) lhs).checkCondition(modelEntity);
             ((EntityCondition) rhs).checkCondition(modelEntity);
         }
