@@ -55,7 +55,7 @@ public class UtilProperties {
     public static boolean propertyValueEquals(String resource, String name, String compareString) {
         String value = getPropertyValue(resource, name);
         if (value == null) return false;
-        return value.equals(compareString);
+        return value.trim().equals(compareString);
     }
 
     /** Compares Ignoring Case the specified property to the compareString, returns true if they are the same, false otherwise
@@ -67,7 +67,7 @@ public class UtilProperties {
     public static boolean propertyValueEqualsIgnoreCase(String resource, String name, String compareString) {
         String value = getPropertyValue(resource, name);
         if (value == null) return false;
-        return value.equalsIgnoreCase(compareString);
+        return value.trim().equalsIgnoreCase(compareString);
     }
 
     /** Returns the value of the specified property name from the specified resource/properties file.
@@ -125,7 +125,7 @@ public class UtilProperties {
         } catch (Exception e) {
             Debug.log(e.getMessage());
         }
-        return value == null ? "" : value;
+        return value == null ? "" : value.trim();
     }
 
     /** Returns the specified resource/properties file
@@ -165,7 +165,7 @@ public class UtilProperties {
     public static boolean propertyValueEquals(URL url, String name, String compareString) {
         String value = getPropertyValue(url, name);
         if (value == null) return false;
-        return value.equals(compareString);
+        return value.trim().equals(compareString);
     }
 
     /** Compares Ignoring Case the specified property to the compareString, returns true if they are the same, false otherwise
@@ -177,7 +177,7 @@ public class UtilProperties {
     public static boolean propertyValueEqualsIgnoreCase(URL url, String name, String compareString) {
         String value = getPropertyValue(url, name);
         if (value == null) return false;
-        return value.equalsIgnoreCase(compareString);
+        return value.trim().equalsIgnoreCase(compareString);
     }
 
     /** Returns the value of the specified property name from the specified resource/properties file.
@@ -233,7 +233,7 @@ public class UtilProperties {
         } catch (Exception e) {
             Debug.log(e.getMessage());
         }
-        return value == null ? "" : value;
+        return value == null ? "" : value.trim();
     }
 
 
@@ -277,6 +277,6 @@ public class UtilProperties {
         } catch (Exception e) {
             Debug.log(e.getMessage());
         }
-        return value == null ? "" : value;
+        return value == null ? "" : value.trim();
     }
 }

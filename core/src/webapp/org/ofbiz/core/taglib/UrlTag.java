@@ -60,13 +60,27 @@ public class UrlTag extends BodyTagSupport {
         String requestUri = RequestHandler.getRequestUri(baseURL);
 
         StringBuffer newURL = new StringBuffer();
+
         boolean useHttps = UtilProperties.propertyValueEqualsIgnoreCase("url.properties", "port.https.enabled", "Y");
-        if (rm.requiresHttps(requestUri) && useHttps) {
-            String port = UtilProperties.getPropertyValue("url.properties", "port.https", "443");
-            newURL.append("https://");
-            newURL.append(request.getServerName());
-            if (!port.equals("443"))
-                newURL.append(":" + port);
+
+        if (useHttps) {
+            if (rm.requiresHttps(requestUri) && !request.isSecure()) {
+                String port = UtilProperties.getPropertyValue("url.properties", "port.https", "443");
+                String server = UtilProperties.getPropertyValue("url.properties", "force.http.host", request.getServerName());
+                newURL.append("https://");
+                newURL.append(server);
+                if (!port.equals("443"))
+                    newURL.append(":" + port.trim());
+            }
+
+            else if (!rm.requiresHttps(requestUri) && request.isSecure()) {
+                String port = UtilProperties.getPropertyValue("url.properties", "port.http", "80");
+                String server = UtilProperties.getPropertyValue("url.properties", "force.http.host", request.getServerName());
+                newURL.append("http://");
+                newURL.append(server);
+                if (!port.equals("80"))
+                    newURL.append(":" + port.trim());
+            }
         }
 
         Debug.logVerbose("UseHTTPS: " + useHttps + " -- URI: " + requestUri + " -> " + rm.requiresHttps(requestUri), module);
