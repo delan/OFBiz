@@ -56,16 +56,37 @@ import org.ofbiz.core.util.*;
  * @author David E. Jones
  */
 public class OfbizBshBsfEngine extends BSFEngineImpl {
-    Interpreter interpreter;
-    boolean installedApplyMethod;
+    protected static Map masterClassManagers = new HashMap();
+    protected Interpreter interpreter;
+    protected boolean installedApplyMethod;
     
     public static UtilCache parsedScripts = new UtilCache("webapp.BshBsfParsedCache", 0, 0, false);
     
     public void initialize(BSFManager mgr, String lang, Vector declaredBeans) throws BSFException {
         super.initialize(mgr, lang, declaredBeans);
         
-        interpreter = new Interpreter();
-        interpreter.setClassLoader(Thread.currentThread().getContextClassLoader());
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        
+        //find the "master" BshClassManager for this classpath
+        BshClassManager master = (BshClassManager) masterClassManagers.get(classLoader);
+        if (master == null) {
+            synchronized (OfbizBshBsfEngine.class) {
+                master = (BshClassManager) masterClassManagers.get(classLoader);
+                if (master == null) {
+                    master = BshClassManager.createClassManager();
+                    master.setClassLoader(classLoader);
+                    masterClassManagers.put(classLoader, master);
+                }
+            }
+        }
+        
+        if (master != null) {
+            interpreter = new Interpreter(new StringReader(""), System.out, System.err, 
+                    false, new NameSpace(master, "global"), null, null);
+        } else {
+            interpreter = new Interpreter();
+            interpreter.setClassLoader(classLoader);
+        }
         
         // declare the bsf manager for callbacks, etc.
         try {
