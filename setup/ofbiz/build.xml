@@ -78,7 +78,6 @@
         <copy file="lib/datavision/DataVision.jar" toDir="${catalina.dir}/lib"/>
         <copy file="lib/datavision/MinML.jar" toDir="${catalina.dir}/lib"/>
         <copy file="lib/datavision/jcalendar.jar" toDir="${catalina.dir}/lib"/>
-
         <copy file="lib/jasperreports/jasperreports.jar" toDir="${catalina.dir}/lib"/>
         <copy file="lib/jasperreports/itext-0.92.jar" toDir="${catalina.dir}/lib"/>
 
@@ -128,6 +127,10 @@
         <copy file="lib/share/clutil.jar" toDir="${catalina.dir}/shared/lib"/>
         <copy file="lib/share/wsdl4j.jar" toDir="${catalina.dir}/shared/lib"/>
         <copy file="lib/share/jakarta-oro-2.0.6.jar" toDir="${catalina.dir}/shared/lib"/>
+        <copy file="lib/share/jakarta-poi-1.5.1-final.jar" toDir="${catalina.dir}/shared/lib"/>
+        <copy file="lib/share/lucene-1.2.jar" toDir="${catalina.dir}/shared/lib"/>
+        <copy file="lib/share/velocity-1.3.jar" toDir="${catalina.dir}/shared/lib"/>
+        <copy file="lib/share/velocity-dep-1.3.jar" toDir="${catalina.dir}/shared/lib"/>
 
         <copy file="lib/datavision/DataVision.jar" toDir="${catalina.dir}/shared/lib"/>
         <copy file="lib/datavision/MinML.jar" toDir="${catalina.dir}/shared/lib"/>
@@ -155,6 +158,12 @@
 
         <property environment="env" />
         <property name="home.dir"       value="${env.OFBIZ_HOME}" />
+        
+        <!-- This is for the distro: if the libs are not in the ofbiz/lib directory, copy from catalina -->
+        <condition property="catalina.lib.needed">
+            <not><available file="lib/share" type="dir"/></not>
+        </condition>
+        <antcall target="catalina41-lib-copy" />
     </target>
 
     <target name="catalina-init">
@@ -189,6 +198,44 @@
         <property name="classes.dir"     value="${catalina.dir}/shared/classes" />
         <property name="lib.dir"         value="${catalina.dir}/shared/lib" />
         <property name="j2eedeploy.dir"  value="${catalina.dir}/webapps" />
+    </target>
+    
+    <target name="catalina41-lib-copy" depends="" if="catalina.lib.needed">
+        <echo message="Libs not found in ofbiz tree, copying from catalina (this must be the first build from a distro package)"/>
+
+        <!-- this is the only dir that will be removed -->        
+        <mkdir dir="lib/share"/>
+        
+        <!-- for this one only we will use ../catalina because in this case it must have come from the distro -->
+        <copy file="../catalina/shared/lib/axis.jar" toDir="lib/share"/>
+        <copy file="../catalina/shared/lib/bsh-1.2b7.jar" toDir="lib/share"/>
+        <copy file="../catalina/shared/lib/clutil.jar" toDir="lib/share"/>
+        <copy file="../catalina/shared/lib/wsdl4j.jar" toDir="lib/share"/>
+        <copy file="../catalina/shared/lib/jakarta-oro-2.0.6.jar" toDir="lib/share"/>
+        <copy file="../catalina/shared/lib/jakarta-poi-1.5.1-final.jar" toDir="lib/share"/>
+        <copy file="../catalina/shared/lib/lucene-1.2.jar" toDir="lib/share"/>
+        <copy file="../catalina/shared/lib/velocity-1.3.jar" toDir="lib/share"/>
+        <copy file="../catalina/shared/lib/velocity-dep-1.3.jar" toDir="lib/share"/>
+
+        <copy file="../catalina/shared/lib/DataVision.jar" toDir="lib/datavision"/>
+        <copy file="../catalina/shared/lib/MinML.jar" toDir="lib/datavision"/>
+        <copy file="../catalina/shared/lib/jcalendar.jar" toDir="lib/datavision"/>
+
+        <copy file="../catalina/shared/lib/jasperreports.jar" toDir="lib/jasperreports"/>
+        <copy file="../catalina/shared/lib/itext-0.92.jar" toDir="lib/jasperreports"/>
+
+        <copy file="../catalina/shared/lib/weka.jar" toDir="lib/weka"/>
+
+        <copy file="../catalina/shared/lib/castor-0.9.3.9.jar" toDir="lib/common"/>
+        <copy file="../catalina/shared/lib/hsqldb.jar" toDir="lib/common"/>
+        <copy file="../catalina/shared/lib/postgresql.jar" toDir="lib/common"/>
+        <copy file="../catalina/shared/lib/sapdbc.jar" toDir="lib/common"/>
+        <copy file="../catalina/shared/lib/log4j.jar" toDir="lib/common"/>
+        <copy file="../catalina/shared/lib/mm.mysql-2.0.14-bin.jar" toDir="lib/common"/>
+
+        <copy file="../catalina/shared/lib/jms_1.0.2a.jar" toDir="lib/common"/>
+        <copy file="../catalina/shared/lib/ots-jts_1.0.jar" toDir="lib/common"/>
+        <copy file="../catalina/shared/lib/tyrex-1.0.jar" toDir="lib/common"/>
     </target>
 
 
@@ -424,20 +471,20 @@
         <ant dir="ecommerce" target="docs" />
         <echo message="[docs] ===== Javadoc catalog =====" />
         <ant dir="catalog" target="docs" />
-        <echo message="[docs] ===== Javadoc partymgr =====" />
-        <ant dir="partymgr" target="docs" />
-        <echo message="[docs] ===== Javadoc ordermgr =====" />
-        <ant dir="ordermgr" target="docs" />
-        <echo message="[docs] ===== Javadoc workeffort =====" />
-        <ant dir="workeffort" target="docs" />
-        <echo message="[docs] ===== Javadoc accounting =====" />
-        <ant dir="accounting" target="docs" />
-        <echo message="[docs] ===== Javadoc facility =====" />
-        <ant dir="facility" target="docs" />
-        <echo message="[docs] ===== Javadoc marketing =====" />
-        <ant dir="marketing" target="docs" />
-        <echo message="[docs] ===== Javadoc content =====" />
-        <ant dir="content" target="docs" />
+        <echo message="[docs] ===== Javadoc partymgr - skipping =====" />
+        <!-- <ant dir="partymgr" target="docs" /> -->
+        <echo message="[docs] ===== Javadoc ordermgr - skipping =====" />
+        <!-- <ant dir="ordermgr" target="docs" /> -->
+        <echo message="[docs] ===== Javadoc workeffort - skipping =====" />
+        <!-- <ant dir="workeffort" target="docs" /> -->
+        <echo message="[docs] ===== Javadoc accounting - skipping =====" />
+        <!-- <ant dir="accounting" target="docs" /> -->
+        <echo message="[docs] ===== Javadoc facility - skipping =====" />
+        <!-- <ant dir="facility" target="docs" /> -->
+        <echo message="[docs] ===== Javadoc marketing - skipping =====" />
+        <!-- <ant dir="marketing" target="docs" /> -->
+        <echo message="[docs] ===== Javadoc content - skipping =====" />
+        <!-- <ant dir="content" target="docs" /> -->
 
         <echo message="[docs] ===== Done Building (Docs) =====" />
     </target>
@@ -614,6 +661,7 @@
         <copy file="lib/share/clutil.jar"                    toDir="${ext.dir}/lib/ext"/>
         <copy file="lib/share/wsdl4j.jar"                    toDir="${ext.dir}/lib/ext"/>
         <copy file="lib/share/jakarta-oro-2.0.6.jar"         toDir="${ext.dir}/lib/ext"/>
+        <copy file="lib/share/jakarta-poi-1.5.1-final.jar"         toDir="${ext.dir}/lib/ext"/>
         <copy file="lib/share/velocity-1.3.jar"              toDir="${ext.dir}/lib/ext"/>
         <copy file="lib/share/velocity-dep-1.3.jar"          toDir="${ext.dir}/lib/ext"/>
         <copy file="lib/compile/jdbc2_0-stdext.jar"          toDir="${ext.dir}/lib/ext"/>
@@ -700,5 +748,161 @@
 
         <jar jarfile="./ofbiz.ear" basedir="${eartemp.dir}" />
         <delete dir="${eartemp.dir}" />
+    </target>
+
+    <target name="distro-docs" depends="">
+        <!-- This is meant to be copied to the website and release as a documentation set -->
+        <antcall target="clean" />
+        <antcall target="docs" />
+        
+        <property name="docstemp.dir" value="../docstemp" />
+        <delete dir="${docstemp.dir}" />
+        <mkdir dir="${docstemp.dir}" />
+
+        <copy toDir="${docstemp.dir}"><fileset dir="website"/></copy>
+
+        <mkdir dir="${docstemp.dir}/setup" />
+        <copy file="setup/setup.html" toDir="${docstemp.dir}/setup" />
+
+        <mkdir dir="${docstemp.dir}/core/docs" />
+        <copy toDir="${docstemp.dir}/core/docs"><fileset dir="core/docs"/></copy>
+        <mkdir dir="${docstemp.dir}/commonapp/docs" />
+        <copy toDir="${docstemp.dir}/commonapp/docs"><fileset dir="commonapp/docs"/></copy>
+        <mkdir dir="${docstemp.dir}/webtools/docs" />
+        <copy toDir="${docstemp.dir}/webtools/docs"><fileset dir="webtools/docs"/></copy>
+        <mkdir dir="${docstemp.dir}/content/docs" />
+        <!-- <copy toDir="${docstemp.dir}/content/docs"><fileset dir="content/docs"/></copy> -->
+        <mkdir dir="${docstemp.dir}/catalog/docs" />
+        <copy toDir="${docstemp.dir}/catalog/docs"><fileset dir="catalog/docs"/></copy>
+        <mkdir dir="${docstemp.dir}/facility/docs" />
+        <!-- <copy toDir="${docstemp.dir}/facility/docs"><fileset dir="facility/docs"/></copy> -->
+        <mkdir dir="${docstemp.dir}/partymgr/docs" />
+        <!-- <copy toDir="${docstemp.dir}/partymgr/docs"><fileset dir="partymgr/docs"/></copy> -->
+        <mkdir dir="${docstemp.dir}/ordermgr/docs" />
+        <!-- <copy toDir="${docstemp.dir}/ordermgr/docs"><fileset dir="ordermgr/docs"/></copy> -->
+        <mkdir dir="${docstemp.dir}/workeffort/docs" />
+        <!-- <copy toDir="${docstemp.dir}/workeffort/docs"><fileset dir="workeffort/docs"/></copy> -->
+        <mkdir dir="${docstemp.dir}/accounting/docs" />
+        <!-- <copy toDir="${docstemp.dir}/accounting/docs"><fileset dir="accounting/docs"/></copy> -->
+        <mkdir dir="${docstemp.dir}/marketing/docs" />
+        <!-- <copy toDir="${docstemp.dir}/marketing/docs"><fileset dir="marketing/docs"/></copy> -->
+        <mkdir dir="${docstemp.dir}/ecommerce/docs" />
+        <copy toDir="${docstemp.dir}/ecommerce/docs"><fileset dir="ecommerce/docs"/></copy>
+        
+        <mkdir dir="${docstemp.dir}/dtds" />
+        <copy toDir="${docstemp.dir}/dtds"><fileset dir="core/docs/xmldefs/ofbiz"/></copy>
+        <copy toDir="${docstemp.dir}/dtds"><fileset dir="core/docs/xmldefs/wfmc"/></copy>
+
+        <!-- make the archive -->
+        <delete file="../ofbiz-docs.tgz" />
+        <tar destfile="../ofbiz-docs.tgz" basedir="${docstemp.dir}" longfile="gnu" compression="gzip" />
+        <delete dir="${docstemp.dir}" />
+    </target>
+
+    <target name="cleanextras" depends="">
+        <delete><fileset dir="." includes="**/.nbattrs,**/*~,**/*.#*" /></delete>
+    </target>
+    
+    <target name="distro-apps" depends="">
+        <antcall target="clean" />
+        <antcall target="cleanextras" />
+        <antcall target="install" />
+        <antcall target="deploy" />
+
+        <property name="distro.temp.dir" value="../distrotemp" />
+        
+        <echo message="[distro] -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-" />
+        <echo message="[distro] NOTE before running this: manually remove data directory contents, start the server &amp; load data, stop server" />
+        <echo message="[distro] -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-" />
+
+        <delete dir="${distro.temp.dir}" />
+        <mkdir dir="${distro.temp.dir}" />
+        <mkdir dir="${distro.temp.dir}/ofbiz" />
+        <mkdir dir="${distro.temp.dir}/catalina" />
+        <mkdir dir="${distro.temp.dir}/data" />
+        
+        <copy toDir="${distro.temp.dir}/ofbiz"><fileset dir="."/></copy>
+        <copy toDir="${distro.temp.dir}/catalina"><fileset dir="../catalina"/></copy>
+        <copy toDir="${distro.temp.dir}/data"><fileset dir="../data"/></copy>
+
+        <!-- don't want the CVS directories in there -->
+        <delete><fileset dir="${distro.temp.dir}/ofbiz" includes="**/CVS" /></delete>
+
+        <!-- the build directories aren't really needed to run and can save some space -->
+        <delete dir="${distro.temp.dir}/ofbiz/core/build" />
+        <delete dir="${distro.temp.dir}/ofbiz/commonapp/build" />
+        <delete dir="${distro.temp.dir}/ofbiz/webtools/build" />
+        <delete dir="${distro.temp.dir}/ofbiz/content/build" />
+        <delete dir="${distro.temp.dir}/ofbiz/catalog/build" />
+        <delete dir="${distro.temp.dir}/ofbiz/facility/build" />
+        <delete dir="${distro.temp.dir}/ofbiz/partymgr/build" />
+        <delete dir="${distro.temp.dir}/ofbiz/ordermgr/build" />
+        <delete dir="${distro.temp.dir}/ofbiz/workeffort/build" />
+        <delete dir="${distro.temp.dir}/ofbiz/accounting/build" />
+        <delete dir="${distro.temp.dir}/ofbiz/marketing/build" />
+        <delete dir="${distro.temp.dir}/ofbiz/ecommerce/build" />
+        
+        <!-- === some other misc things to savce space === -->
+
+        <!-- temporary work & log files -->
+        <delete dir="${distro.temp.dir}/catalina/work/Standalone/localhost" />
+        <delete><fileset dir="${distro.temp.dir}/catalina/logs" includes="*" /></delete>
+
+        <!-- since there is a separate docs distro, remove all docs directories here -->
+        <delete dir="${distro.temp.dir}/ofbiz/commonapp/docs" />
+        <delete dir="${distro.temp.dir}/ofbiz/webtools/docs" />
+        <delete dir="${distro.temp.dir}/ofbiz/content/docs" />
+        <delete dir="${distro.temp.dir}/ofbiz/catalog/docs" />
+        <delete dir="${distro.temp.dir}/ofbiz/facility/docs" />
+        <delete dir="${distro.temp.dir}/ofbiz/partymgr/docs" />
+        <delete dir="${distro.temp.dir}/ofbiz/ordermgr/docs" />
+        <delete dir="${distro.temp.dir}/ofbiz/workeffort/docs" />
+        <delete dir="${distro.temp.dir}/ofbiz/accounting/docs" />
+        <delete dir="${distro.temp.dir}/ofbiz/marketing/docs" />
+        <delete dir="${distro.temp.dir}/ofbiz/ecommerce/docs" />
+
+        <!-- can't delete core/docs, need some of the xmldefs for building -->
+        <delete><fileset dir="${distro.temp.dir}/ofbiz/core/docs" includes="*" /></delete>
+        <delete dir="${distro.temp.dir}/ofbiz/core/docs/examples" />
+        <delete dir="${distro.temp.dir}/ofbiz/core/docs/xmldefs/oagis" />
+        <delete dir="${distro.temp.dir}/ofbiz/core/docs/xmldefs/intuit" />
+                
+        <!-- the diagrams are just too big, and don't compress very well -->
+        <!-- not needed, all of website gone now: <delete dir="${distro.temp.dir}/ofbiz/website/diagrams" /> -->
+
+        <!-- also since there is a separate docs distro, remove the website directory here -->
+        <delete dir="${distro.temp.dir}/ofbiz/website" />
+                
+        <!-- if we aren't including our own docs, no sense doing the tomcat ones -->
+        <delete dir="${distro.temp.dir}/catalina/webapps/examples" />
+        <delete dir="${distro.temp.dir}/catalina/webapps/tomcat-docs" />
+
+        <!-- delete some of the libs that are already in the catalina directory, will be copied back on first build -->
+        <delete dir="${distro.temp.dir}/ofbiz/lib/share" />
+        <delete file="${distro.temp.dir}/ofbiz/lib/datavision/DataVision.jar" />
+        <delete file="${distro.temp.dir}/ofbiz/lib/datavision/MinML.jar" />
+        <delete file="${distro.temp.dir}/ofbiz/lib/datavision/jcalendar.jar" />
+        <delete file="${distro.temp.dir}/ofbiz/lib/jasperreports/jasperreports.jar" />
+        <delete file="${distro.temp.dir}/ofbiz/lib/jasperreports/itext-0.92.jar" />
+        <delete file="${distro.temp.dir}/ofbiz/lib/weka/weka.jar" />
+
+        <delete file="${distro.temp.dir}/ofbiz/lib/common/castor-0.9.3.9.jar" />
+        <delete file="${distro.temp.dir}/ofbiz/lib/common/hsqldb.jar" />
+        <delete file="${distro.temp.dir}/ofbiz/lib/common/postgresql.jar" />
+        <delete file="${distro.temp.dir}/ofbiz/lib/common/sapdbc.jar" />
+        <delete file="${distro.temp.dir}/ofbiz/lib/common/log4j.jar" />
+        <delete file="${distro.temp.dir}/ofbiz/lib/common/mm.mysql-2.0.14-bin.jar" />
+        <delete file="${distro.temp.dir}/ofbiz/lib/common/jms_1.0.2a.jar" />
+        <delete file="${distro.temp.dir}/ofbiz/lib/common/ots-jts_1.0.jar" />
+        <delete file="${distro.temp.dir}/ofbiz/lib/common/tyrex-1.0.jar" />
+        
+        <!-- okay, build the archive -->
+        <delete file="../ofbiz-apps.tgz" />
+        <tar destfile="../ofbiz-apps.tgz" basedir="${distro.temp.dir}" longfile="gnu" compression="gzip" />
+
+        <delete dir="${distro.temp.dir}" />
+
+        <!-- clean at the end again to leave everything in a "raw" state -->
+        <antcall target="clean" />
     </target>
 </project>
