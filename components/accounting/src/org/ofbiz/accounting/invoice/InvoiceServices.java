@@ -1,5 +1,5 @@
 /*
- * $Id: InvoiceServices.java,v 1.1 2003/08/18 17:31:37 ajzeneski Exp $
+ * $Id: InvoiceServices.java,v 1.2 2003/08/26 14:12:25 ajzeneski Exp $
  *
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -49,7 +49,7 @@ import org.ofbiz.service.ServiceUtil;
  * InvoiceServices - Services for creating invoices
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.2
  */
 public class InvoiceServices {
@@ -64,6 +64,7 @@ public class InvoiceServices {
         
         String orderId = (String) context.get("orderId");
         List billItems = (List) context.get("billItems");
+        boolean previousInvoiceFound = false;
         
         if (billItems == null || billItems.size() == 0) {
             Debug.logVerbose("No items to invoice; not creating; returning success", module);
@@ -78,8 +79,21 @@ public class InvoiceServices {
             Debug.logError(e, "Cannot get order header", module);
         }
 
-        if (orderHeader == null)
-            ServiceUtil.returnError("No OrderHeader, cannot create invoice");
+        if (orderHeader == null) {
+            return ServiceUtil.returnError("No OrderHeader, cannot create invoice");
+        }
+        
+        // get list of previous invoices for the order
+        List billedItems = null;
+        try {
+            billedItems = delegator.findByAnd("OrderItemBilling", UtilMisc.toMap("orderId", orderId));
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Cannot looking billed items", module);
+            return ServiceUtil.returnError("Unable to looked previous billed items");
+        }
+        if (billedItems != null && billedItems.size() > 0) {
+            previousInvoiceFound = true;   
+        }
 
         // figure out the invoice type   
         String invoiceType = null;        
@@ -191,8 +205,8 @@ public class InvoiceServices {
         } catch (GenericEntityException e) {
             Debug.logError(e, "Cannot create invoice record", module);
             ServiceUtil.returnError("Problems storing Invoice record");
-        } 
-        
+        }
+                
         // get a list of the payment method types
         List paymentPreferences = null;
         try {
@@ -373,11 +387,36 @@ public class InvoiceServices {
             }
         }
 
+        // get the shipping adjustment mode (P = Pro-Rate; F = First-Invoice)
+        String shippingMode = "P"; // TODO: get this setting from somewhere
+        
         // create header adjustments as line items
         List headerAdjustments = orh.getOrderHeaderAdjustments();
         Iterator headerAdjIter = headerAdjustments.iterator();
         while (headerAdjIter.hasNext()) {
             GenericValue adj = (GenericValue) headerAdjIter.next();
+            if ("SHIPPING_CHARGES".equals(adj.getString("orderAdjustmentTypeId"))) {
+                if ("F".equalsIgnoreCase(shippingMode)) {
+                    if (previousInvoiceFound) {
+                        Debug.logInfo("Previous invoice found for this order [" + orderId + "]; shipping already billed", module);
+                        continue;
+                    } else {
+                        // this is the first invoice; bill it all now
+                        if (adj.get("amount") != null) {
+                            GenericValue invoiceItem = delegator.makeValue("InvoiceItem", UtilMisc.toMap("invoiceId", invoiceId, "invoiceItemSeqId", new Integer(itemSeqId).toString()));
+                            invoiceItem.set("invoiceItemTypeId", getInvoiceItemType(delegator, adj.getString("orderAdjustmentTypeId"), "INVOICE_ADJ"));
+                            invoiceItem.set("quantity", new Double(1));
+                            invoiceItem.set("amount", adj.getDouble("amount"));
+                            invoiceItem.set("description", adj.get("description"));
+                            toStore.add(invoiceItem);
+                            
+                            // increment the counter
+                            itemSeqId++;   
+                        }
+                        continue;
+                    }
+                }
+            }
             if (adj.get("amount") != null) {
                 // pro-rate the amount
                 double amount = ((adj.getDouble("amount").doubleValue() / totalOrderAmt) * totalInvoiceAmt);                
