@@ -1,5 +1,5 @@
 /*
- * $Id: ContentPermissionServices.java,v 1.13 2004/04/01 19:21:31 byersa Exp $
+ * $Id: ContentPermissionServices.java,v 1.14 2004/04/11 02:54:39 byersa Exp $
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -52,7 +52,7 @@ import org.ofbiz.service.ServiceUtil;
  * ContentPermissionServices Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.13 $
+ * @version    $Revision: 1.14 $
  * @since      2.2
  * 
  * Services for granting operation permissions on Content entities in a data-driven manner.
@@ -110,25 +110,39 @@ public class ContentPermissionServices {
         String privilegeEnumId = (String) context.get("privilegeEnumId");
         GenericValue content = (GenericValue) context.get("currentContent"); 
         GenericValue userLogin = (GenericValue) context.get("userLogin"); 
+
+        Debug.logInfo("context(b):" + context, "");
+        // I realized, belatedly, that I wanted to be able to pass parameters in as
+        // strings so this service could be used in an action event directly,
+        // so I had to write this code to handle both list and strings
         List passedPurposes = (List) context.get("contentPurposeList"); 
+        String contentPurposeString = (String) context.get("contentPurposeString"); 
+        Debug.logInfo("contentPurposeString(b):" + contentPurposeString, "");
+        if (UtilValidate.isNotEmpty(contentPurposeString)) {
+            List purposesFromString = StringUtil.split(contentPurposeString, "|");
+            if (passedPurposes == null) {
+                passedPurposes = new ArrayList();
+            }
+            passedPurposes.addAll(purposesFromString);
+        }
+        Debug.logInfo("passedPurposes(b):" + passedPurposes, "");
         List targetOperations = (List) context.get("targetOperationList"); 
+        String targetOperationString = (String) context.get("targetOperationString"); 
+        Debug.logInfo("targetOperationString(b):" + targetOperationString, "");
+        if (UtilValidate.isNotEmpty(targetOperationString)) {
+            List operationsFromString = StringUtil.split(targetOperationString, "|");
+            if (targetOperations == null) {
+                targetOperations = new ArrayList();
+            }
+            targetOperations.addAll(operationsFromString);
+        }
+        Debug.logInfo("targetOperations(b):" + targetOperations, "");
         if (Debug.verboseOn()) Debug.logVerbose("targetOperations(0):" + targetOperations, null);
         if (Debug.verboseOn()) Debug.logVerbose("content:" + content, null);
         List passedRoles = (List) context.get("roleTypeList"); 
         if (passedRoles == null) passedRoles = new ArrayList();
         // If the current user created the content, then add "_OWNER_" as one of
         //   the contentRoles that is in effect.
-        if (content != null ) {
-            // TODO: Need to use ContentManagementWorker.getAuthorContent first
-            if ( content.get("createdByUserLogin") != null && userLogin != null) {
-                String userLoginId = (String)userLogin.get("userLoginId");
-                String userLoginIdCB = (String)content.get("createdByUserLogin");
-                //if (Debug.infoOn()) Debug.logInfo("userLoginId:" + userLoginId + " userLoginIdCB:" + userLoginIdCB, null);
-                if (userLoginIdCB.equals(userLoginId)) {
-                    passedRoles.add("_OWNER_");
-                }
-            }
-        }
         String entityAction = (String) context.get("entityOperation");
         if (entityAction == null) entityAction = "_ADMIN";
 
@@ -182,6 +196,8 @@ public class ContentPermissionServices {
                                       String privilegeEnumId
         ) {
 
+        Debug.logInfo("passedPurposes(c):" + passedPurposes, "");
+        Debug.logInfo("targetOperations(c):" + targetOperations, "");
         Map result = new HashMap();
         PermissionRecorder recorder = new PermissionRecorder();
                 //Debug.logInfo("recorder(a):" + recorder, "");
@@ -197,18 +213,19 @@ public class ContentPermissionServices {
             if (UtilValidate.isEmpty(privilegeEnumId))
                 privilegeEnumId = (String)content.get("privilegeEnumId");
         }
+        if (passedRoles == null) passedRoles = new ArrayList();
         if (UtilValidate.isEmpty(privilegeEnumId))
             privilegeEnumId = "_00_"; // minimum privilege. any request passes
 
         if (recorder.isOn()) recorder.setUserLogin(userLogin);
-        if (Debug.verboseOn()) Debug.logVerbose("in checkPermission, content(1):" + content, null);
-        if (Debug.verboseOn()) Debug.logVerbose("in checkPermission, targetOperations(2):" + targetOperations, null);
+
         if (targetOperations == null || targetOperations.size() == 0) {
             Debug.logWarning("No targetOperations.", module);
         }
 	List roleIds = null;
         String permissionStatus = null;
         result.put("roleTypeList", passedRoles);
+        //if (Debug.infoOn()) Debug.logInfo("in permissionCheck, passedRoles(1):" + passedRoles, null);
 
         // Get the ContentPurposeOperation table and save the result to be reused.
         List purposeOperations = null;
@@ -271,17 +288,20 @@ public class ContentPermissionServices {
         if (Debug.verboseOn()) Debug.logVerbose("userLogin:" + userLogin, null);
         if (userLogin != null ) {
 
+/*
             // Get all roles associated with this Content and the user,
             // including groups.
         if (Debug.verboseOn()) Debug.logVerbose("before getUserRoles, content(1):" + content, null);
             roleIds = getUserRoles(content, userLogin, passedRoles, delegator);
+        if (Debug.infoOn()) Debug.logInfo("in permissionCheck, roleIds(0):" + roleIds, null);
         if (Debug.verboseOn()) Debug.logVerbose("roleIds:" + roleIds, null);
-		if (passedRoles == null) {
-                    passedRoles = roleIds;
-                } else {
-                    passedRoles.addAll(roleIds);
-                }
-                result.put("roleTypeList", passedRoles);
+		//if (passedRoles == null) {
+                    //passedRoles = roleIds;
+                //} else {
+                    //passedRoles.addAll(roleIds);
+                //}
+                result.put("roleTypeList", roleIds);
+*/
 
             // This is a recursive query that looks for any "owner" content in the 
             // ancestoral path that might have ContentRole associations that
@@ -319,15 +339,15 @@ public class ContentPermissionServices {
 
         String permissionStatus = null;
         Map result = new HashMap();
+        List roleIds = getUserRoles(content, userLogin, passedRoles, delegator);
+        result.put("roleTypeList", roleIds);
         result.put("permissionStatus", permissionStatus);
-        result.put("roleTypeList", passedRoles);
-        List roleIds = null;
         if (Debug.verboseOn()) Debug.logVerbose("in checkPermission, contentId(3):" + content.get("contentId"), null);
         String contentId = null;
         if (content != null)
             contentId = content.getString("contentId");
         //if (Debug.infoOn()) Debug.logInfo("in publicMatches, contentId(2):" + contentId, null);
-        boolean isMatch = publicMatches(purposeOperations, targetOperations, passedPurposes, passedRoles, statusList, privilegeEnumId, recorder, contentId);
+        boolean isMatch = publicMatches(purposeOperations, targetOperations, passedPurposes, roleIds, statusList, privilegeEnumId, recorder, contentId);
         if (isMatch) {
             result.put("permissionStatus", "granted");
             return result;
@@ -347,12 +367,6 @@ public class ContentPermissionServices {
             if (ownerContent != null) {
         if (Debug.verboseOn()) Debug.logVerbose("before getUserRoles, ownerContent(2):" + ownerContent, null);
                 // Already been checked with old roles, so send only new roles to checkPermission.
-                roleIds = getUserRoles(ownerContent, userLogin, null, delegator);
-		if (passedRoles == null) {
-                    passedRoles = roleIds;
-                } else {
-                    passedRoles.addAll(roleIds);
-                }
         if (Debug.verboseOn()) Debug.logVerbose("after getUserRoles, passedRoles(2):" + passedRoles, null);
                 Map result2 = checkPermissionWithRoles(ownerContent, passedPurposes, roleIds, 
                              targetOperations, purposeOperations, userLogin,  delegator, statusList, privilegeEnumId, recorder );
@@ -376,6 +390,7 @@ public class ContentPermissionServices {
                                     List passedRoles, GenericDelegator delegator) {
 
         if(content == null) return passedRoles;
+            // TODO: Need to use ContentManagementWorker.getAuthorContent first
 
         ArrayList roles = null;
         if (passedRoles == null) {
@@ -383,6 +398,18 @@ public class ContentPermissionServices {
         } else {
             roles = new ArrayList( passedRoles );
         }
+
+        roles.remove("_OWNER_"); // always test with the owner of the current content
+        if ( content.get("createdByUserLogin") != null && userLogin != null) {
+            String userLoginId = (String)userLogin.get("userLoginId");
+            String userLoginIdCB = (String)content.get("createdByUserLogin");
+            //if (Debug.infoOn()) Debug.logInfo("userLoginId:" + userLoginId + ": userLoginIdCB:" + userLoginIdCB + ":", null);
+            if (userLoginIdCB.equals(userLoginId)) {
+                roles.add("_OWNER_");
+                //if (Debug.infoOn()) Debug.logInfo("in getUserRoles, passedRoles(0):" + passedRoles, null);
+            }
+        }
+        
         String partyId = (String)userLogin.get("partyId");
 	List relatedRoles = null;
         try {

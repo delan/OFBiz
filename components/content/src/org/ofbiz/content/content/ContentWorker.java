@@ -1,5 +1,5 @@
 /*
- * $Id: ContentWorker.java,v 1.20 2004/03/31 16:58:39 byersa Exp $
+ * $Id: ContentWorker.java,v 1.21 2004/04/11 02:54:40 byersa Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -63,7 +63,7 @@ import bsh.EvalError;
  * ContentWorker Class
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.20 $
+ * @version $Revision: 1.21 $
  * @since 2.2
  * 
  *  
@@ -730,7 +730,14 @@ public class ContentWorker {
      * callContentPermissionCheck Formats data for a call to the checkContentPermission service.
      */
     public static String callContentPermissionCheck(GenericDelegator delegator, LocalDispatcher dispatcher, Map context) {
-        String permissionStatus = "granted";
+        Map permResults = callContentPermissionCheckResult(delegator, dispatcher, context);
+        String permissionStatus = (String) permResults.get("permissionStatus");
+        return permissionStatus;
+    }
+
+    public static Map callContentPermissionCheckResult(GenericDelegator delegator, LocalDispatcher dispatcher, Map context) {
+        
+        Map permResults = new HashMap();
         String skipPermissionCheck = (String) context.get("skipPermissionCheck");
 
         if (skipPermissionCheck == null
@@ -741,17 +748,18 @@ public class ContentWorker {
             serviceInMap.put("userLogin", userLogin);
             serviceInMap.put("targetOperationList", context.get("targetOperationList"));
             serviceInMap.put("contentPurposeList", context.get("contentPurposeList"));
+            serviceInMap.put("targetOperationString", context.get("targetOperationString"));
+            serviceInMap.put("contentPurposeString", context.get("contentPurposeString"));
             serviceInMap.put("entityOperation", context.get("entityOperation"));
             serviceInMap.put("currentContent", context.get("currentContent"));
 
             try {
-                Map permResults = dispatcher.runSync("checkContentPermission", serviceInMap);
-                permissionStatus = (String) permResults.get("permissionStatus");
+                permResults = dispatcher.runSync("checkContentPermission", serviceInMap);
             } catch (GenericServiceException e) {
                 Debug.logError(e, "Problem checking permissions", "ContentServices");
             }
         }
-        return permissionStatus;
+        return permResults;
     }
 
     public static GenericValue getSubContent(GenericDelegator delegator, String contentId, String mapKey, String subContentId, GenericValue userLogin, List assocTypes, Timestamp fromDate) throws IOException {
@@ -1151,4 +1159,58 @@ public class ContentWorker {
         return bool;
     }
         
+
+    public static List prepTargetOperationList(Map context, String md) {
+
+        List targetOperationList = (List)context.get("targetOperationList");
+        String targetOperationString = (String)context.get("targetOperationString");
+        if (Debug.infoOn()) Debug.logInfo("in createContentAssocMethod, targetOperationString(0):" + targetOperationString, "");
+        if (UtilValidate.isNotEmpty(targetOperationString) ) {
+            List opsFromString = StringUtil.split(targetOperationString, "|");
+            if (targetOperationList == null || targetOperationList.size() == 0) {
+                targetOperationList = new ArrayList();
+            }
+            targetOperationList.addAll(opsFromString);
+        }
+        if (targetOperationList == null || targetOperationList.size() == 0) {
+            targetOperationList = new ArrayList();
+            if (UtilValidate.isEmpty(md))
+                md ="_CREATE";
+            targetOperationList.add("CONTENT" + md);
+        }
+        if (Debug.infoOn()) Debug.logInfo("in createContentAssocMethod, targetOperationList(0):" + targetOperationList, "");
+        return targetOperationList;
+    }
+
+    public static List prepContentPurposeList(Map context) {
+
+        List contentPurposeList = (List)context.get("contentPurposeList");
+        String contentPurposeString = (String)context.get("contentPurposeString");
+        if (Debug.infoOn()) Debug.logInfo("in createContentAssocMethod, contentPurposeString(0):" + contentPurposeString, "");
+        if (UtilValidate.isNotEmpty(contentPurposeString) ) {
+            List purposesFromString = StringUtil.split(contentPurposeString, "|");
+            if (contentPurposeList == null || contentPurposeList.size() == 0) {
+                contentPurposeList = new ArrayList();
+            }
+            contentPurposeList.addAll(purposesFromString);
+        }
+        if (contentPurposeList == null || contentPurposeList.size() == 0) {
+            contentPurposeList = new ArrayList();
+        }
+        if (Debug.infoOn()) Debug.logInfo("in createContentAssocMethod, contentPurposeList(0):" + contentPurposeList, "");
+        return contentPurposeList;
+    }
+
+    public static String prepPermissionErrorMsg(Map permResults) {
+
+        String errorMessage = "Permission is denied."; 
+        PermissionRecorder recorder = (PermissionRecorder)permResults.get("permissionRecorder");
+            Debug.logInfo("recorder(0):" + recorder, "");
+        if (recorder != null && recorder.isOn()) {
+            String permissionMessage = recorder.toHtml();
+            //Debug.logInfo("permissionMessage(0):" + permissionMessage, "");
+            errorMessage += " \n " + permissionMessage;
+        }
+        return errorMessage;
+    }
 }

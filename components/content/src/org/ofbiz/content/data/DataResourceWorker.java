@@ -1,5 +1,5 @@
 /*
- * $Id: DataResourceWorker.java,v 1.24 2004/04/01 17:53:48 byersa Exp $
+ * $Id: DataResourceWorker.java,v 1.25 2004/04/11 02:54:40 byersa Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -64,7 +64,7 @@ import freemarker.template.Template;
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version $Revision: 1.24 $
+ * @version $Revision: 1.25 $
  * @since 3.0
  */
 public class DataResourceWorker {
@@ -250,8 +250,19 @@ public class DataResourceWorker {
      * callDataResourcePermissionCheck Formats data for a call to the checkContentPermission service.
      */
     public static String callDataResourcePermissionCheck(GenericDelegator delegator, LocalDispatcher dispatcher, Map context) {
-        String permissionStatus = "granted";
+        Map permResults = callDataResourcePermissionCheckResult(delegator, dispatcher, context);
+        String permissionStatus = (String) permResults.get("permissionStatus");
+        return permissionStatus;
+    }
+
+    /**
+     * callDataResourcePermissionCheck Formats data for a call to the checkContentPermission service.
+     */
+    public static Map callDataResourcePermissionCheckResult(GenericDelegator delegator, LocalDispatcher dispatcher, Map context) {
+
+        Map permResults = new HashMap();
         String skipPermissionCheck = (String) context.get("skipPermissionCheck");
+            if (Debug.infoOn()) Debug.logInfo("in callDataResourcePermissionCheckResult, skipPermissionCheck:" + skipPermissionCheck,"");
 
         if (skipPermissionCheck == null
             || skipPermissionCheck.length() == 0
@@ -276,13 +287,14 @@ public class DataResourceWorker {
                 }
             }
             try {
-                Map permResults = dispatcher.runSync("checkContentPermission", serviceInMap);
-                permissionStatus = (String) permResults.get("permissionStatus");
+                permResults = dispatcher.runSync("checkContentPermission", serviceInMap);
             } catch (GenericServiceException e) {
                 Debug.logError(e, "Problem checking permissions", "ContentServices");
             }
+        } else {
+            permResults.put("permissionStatus", "granted");
         }
-        return permissionStatus;
+        return permResults;
     }
 
     /**

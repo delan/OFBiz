@@ -1,5 +1,5 @@
 /*
- * $Id: MenuStringRenderer.java,v 1.1 2004/03/15 22:06:16 byersa Exp $
+ * $Id: MenuStringRenderer.java,v 1.2 2004/04/11 02:54:42 byersa Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -29,7 +29,7 @@ import java.util.Map;
  * Widget Library - Form String Renderer interface
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.2
  */
 public interface MenuStringRenderer {
@@ -38,4 +38,5 @@ public interface MenuStringRenderer {
     public void renderMenuClose(StringBuffer buffer, Map context, ModelMenu menu);
     public void renderFormatSimpleWrapperOpen(StringBuffer buffer, Map context, ModelMenu menu);
     public void renderFormatSimpleWrapperClose(StringBuffer buffer, Map context, ModelMenu menu);
+    public void renderFormatSimpleWrapperRows(StringBuffer buffer, Map context, Object menu);
 }

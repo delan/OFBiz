@@ -1,5 +1,5 @@
 /*
- * $Id: HtmlMenuRenderer.java,v 1.4 2004/03/29 18:14:15 byersa Exp $
+ * $Id: HtmlMenuRenderer.java,v 1.5 2004/04/11 02:54:41 byersa Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -37,6 +37,7 @@ import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.GenericEntityException;
@@ -48,13 +49,14 @@ import org.ofbiz.content.widget.menu.ModelMenu;
 import org.ofbiz.content.widget.menu.ModelMenuItem;
 import org.ofbiz.content.widget.menu.ModelMenuItem.MenuTarget;
 import org.ofbiz.content.content.ContentPermissionServices;
+import org.ofbiz.content.content.ContentWorker;
 
 /**
  * Widget Library - HTML Menu Renderer implementation
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.2
  */
 public class HtmlMenuRenderer implements MenuStringRenderer {
@@ -63,6 +65,7 @@ public class HtmlMenuRenderer implements MenuStringRenderer {
     HttpServletResponse response;
     protected String userLoginIdAtPermGrant;
     protected boolean userLoginIdHasChanged = true;
+    protected String permissionErrorMessage = "";
 
     protected HtmlMenuRenderer() {}
 
@@ -146,18 +149,36 @@ public class HtmlMenuRenderer implements MenuStringRenderer {
         }
     }
 
+    public void renderFormatSimpleWrapperRows(StringBuffer buffer, Map context, Object menuObj) {
+
+        List menuItemList = ((ModelMenu)menuObj).getMenuItemList();
+        Iterator menuItemIter = menuItemList.iterator();
+        ModelMenuItem currentMenuItem = null;
+
+        while (menuItemIter.hasNext()) {
+            currentMenuItem = (ModelMenuItem)menuItemIter.next();
+            renderMenuItem(buffer, context, currentMenuItem);
+        }
+        return;
+    }
+
     public void renderMenuItem(StringBuffer buffer, Map context, ModelMenuItem menuItem) {
         
-            //Debug.logInfo("in renderMenuItem, menuItem:" + menuItem.getName() + " context:" + context ,"");
+            Debug.logInfo("in renderMenuItem, menuItem:" + menuItem.getName() + " context:" + context ,"");
         boolean hideThisItem = isHideIfSelected(menuItem);
             //if (Debug.infoOn()) Debug.logInfo("in HtmlMenuRendererImage, hideThisItem:" + hideThisItem,"");
         if (hideThisItem)
             return;
 
         boolean bHasPermission = permissionCheck(menuItem, context);
-        if (!bHasPermission) 
+        if (!bHasPermission) {
+            if (!permissionErrorMessage.equalsIgnoreCase("SKIP")) {
+                //buffer.append(permissionErrorMessage);
+            }
+            permissionErrorMessage = "";
             return;
-            //if (Debug.infoOn()) Debug.logInfo("in HtmlMenuRendererImage, bHasPermission(2):" + bHasPermission,"");
+        }
+        if (Debug.infoOn()) Debug.logInfo("in HtmlMenuRendererImage, bHasPermission(2):" + bHasPermission,"");
 
         String orientation = menuItem.getModelMenu().getOrientation();
         if (orientation.equalsIgnoreCase("vertical"))
@@ -168,18 +189,67 @@ public class HtmlMenuRenderer implements MenuStringRenderer {
             widthStr = " width=\"" + cellWidth + "\" ";
         
         buffer.append("<td " + widthStr + ">");
-        MenuTarget target = menuItem.getCurrentMenuTarget();
-        String divStr = buildDivStr(menuItem, context);
-        String url = target.renderAsUrl( context);
-        String titleStyle = menuItem.getTitleStyle();
-        buffer.append("<a  class=\"" + titleStyle + "\" href=\""); 
-        appendOfbizUrl(buffer,  url);
-        buffer.append("\">" + divStr + "</a>");
-        buffer.append("</td>");
-        if (orientation.equalsIgnoreCase("vertical"))
-            buffer.append("</tr>");
-        this.appendWhitespace(buffer);
+        MenuTarget target = selectMenuTarget(menuItem, context);
+        if (Debug.infoOn()) Debug.logInfo("in HtmlMenuRendererImage, target(0):" + target,"");
+        if (target != null) {
+            String divStr = buildDivStr(menuItem, context);
+            String url = target.renderAsUrl( context);
+            String titleStyle = menuItem.getTitleStyle();
+            buffer.append("<a  class=\"" + titleStyle + "\" href=\""); 
+            appendOfbizUrl(buffer,  url);
+            buffer.append("\">" + divStr + "</a>");
+            buffer.append("</td>");
+            if (orientation.equalsIgnoreCase("vertical"))
+                buffer.append("</tr>");
+            this.appendWhitespace(buffer);
+        }
         return;
+    }
+
+    public MenuTarget selectMenuTarget(ModelMenuItem menuItem, Map context) {
+   
+        MenuTarget menuTarget = null;
+        String currentMenuTargetName = menuItem.getCurrentMenuTargetName();
+        Map targetMap = menuItem.getMenuTargetMap();
+        if (UtilValidate.isNotEmpty(currentMenuTargetName)) {
+            menuTarget = (MenuTarget)targetMap.get(currentMenuTargetName);
+            if (menuTarget != null) {
+                String resultMsg = doMenuTargetPermissionCheck(menuItem, menuTarget, context);
+                if (UtilValidate.isNotEmpty(resultMsg)) 
+                    menuTarget = null;
+            }
+            if (Debug.infoOn()) Debug.logInfo("in selectMenuTarget menuItemName:" + menuItem.getName() + " currentMenuTargetName:" + currentMenuTargetName + ", target(0):" + menuTarget,"");
+        }
+ 
+        if (menuTarget == null) {
+            String defaultMenuTargetName = menuItem.getDefaultMenuTargetName();
+            if (UtilValidate.isNotEmpty(defaultMenuTargetName)) {
+                menuTarget = (MenuTarget)targetMap.get(defaultMenuTargetName);
+                if (menuTarget != null) {
+                    String resultMsg = doMenuTargetPermissionCheck(menuItem, menuTarget, context);
+                    if (UtilValidate.isNotEmpty(resultMsg)) 
+                        menuTarget = null;
+                }
+            }
+            if (Debug.infoOn()) Debug.logInfo("in selectMenuTarget menuItemName:" + menuItem.getName() + " defaultMenuTargetName:" + defaultMenuTargetName + ", target(1):" + menuTarget,"");
+        }
+ 
+        if (menuTarget == null) {
+            List targetList = menuItem.getMenuTargetList();
+            Iterator iter = targetList.iterator();
+            while (iter.hasNext()) {
+                menuTarget = (MenuTarget)iter.next();
+                if (menuTarget != null) {
+                    String resultMsg = doMenuTargetPermissionCheck(menuItem, menuTarget, context);
+                    if (UtilValidate.isEmpty(resultMsg)) {
+                        if (Debug.infoOn()) Debug.logInfo("in selectMenuTarget menuTarget:" + menuTarget.getMenuTargetName(),"");
+                        break;
+                    }
+                }
+            }
+        }
+
+        return menuTarget;
     }
 
     public String buildDivStr(ModelMenuItem menuItem, Map context) {
@@ -281,7 +351,12 @@ public class HtmlMenuRenderer implements MenuStringRenderer {
         Boolean hasPerm = menuItem.getHasPermission();
         boolean bHasPermission = false;
         if (hasPerm == null || userLoginIdHasChanged) {
-            bHasPermission = doPermissionCheck(menuItem, context);
+            String sHasPermission = doMenuItemPermissionCheck(menuItem, context);
+            if (UtilValidate.isEmpty(sHasPermission)) {
+                bHasPermission = true;
+            } else {
+                permissionErrorMessage += sHasPermission;
+            }
             menuItem.setHasPermission(new Boolean(bHasPermission));
         } else {
             bHasPermission = hasPerm.booleanValue();
@@ -315,40 +390,71 @@ public class HtmlMenuRenderer implements MenuStringRenderer {
         return hasChanged;
     }
 
-    public boolean doPermissionCheck( ModelMenuItem menuItem, Map context) {
+    public String doMenuTargetPermissionCheck(ModelMenuItem menuItem, MenuTarget menuTarget, Map context) {
 
-        String permissionOperation = menuItem.getPermissionOperation();
-                //Debug.logInfo("in HtmlMenuRenderer, permissionOperation:" + permissionOperation,"");
+        String permissionOperation = menuTarget.getPermissionOperation();
+        Debug.logInfo("in doMenuTargetPermissionCheck, menuItem:" + menuItem.getName() + " permissionOperation:" + permissionOperation,"");
         if (UtilValidate.isEmpty(permissionOperation)) 
-            return true;
+            return "";
+        String associatedContentId = menuItem.getAssociatedContentId(context);
+        String entityAction = menuTarget.getPermissionEntityAction();
+        String privilegeEnumId = menuTarget.getPrivilegeEnumId();
+        String permissionStatusId = menuTarget.getPermissionStatusId();
+        String b = doPermissionCheck(associatedContentId, permissionOperation, entityAction, privilegeEnumId, permissionStatusId);
+        if (UtilValidate.isNotEmpty(b))
+            b += b + ">>>> in doMenuTargetPermissionCheck, menuItem:" + menuItem.getName()+" <<<";
+        return b;
+    }
+
+    public String doMenuItemPermissionCheck( ModelMenuItem menuItem, Map context) {
+        String permissionOperation = menuItem.getPermissionOperation();
+        Debug.logInfo("in doMenuItemPermissionCheck, menuItem:" + menuItem.getName() + " permissionOperation:" + permissionOperation,"");
+        if (UtilValidate.isEmpty(permissionOperation)) 
+            return "";
+        String associatedContentId = menuItem.getAssociatedContentId(context);
+        String entityAction = menuItem.getPermissionEntityAction();
+        String privilegeEnumId = menuItem.getPrivilegeEnumId();
+        String permissionStatusId = menuItem.getPermissionStatusId();
+        String b = doPermissionCheck(associatedContentId, permissionOperation, entityAction, privilegeEnumId, permissionStatusId);
+        Debug.logInfo("in doMenuItemPermChk, menuItemName:" + menuItem.getName() + " permissionOperation:" + permissionOperation + " associatedContentId:" + associatedContentId + " entityAction:" + entityAction + " privilegeEnumId:" + privilegeEnumId + " permissionStatusId:" + permissionStatusId,"");
+        if (UtilValidate.isNotEmpty(b))
+            b += b + ">>>> in doMenuItemPermissionCheck, menuItem:" + menuItem.getName() +"<<<";
+        return b;
+    }
+
+    public String doPermissionCheck( String associatedContentId, String permissionOperation, String entityAction, String privilegeEnumId, String permissionStatusId) {
 
         GenericDelegator delegator = (GenericDelegator)request.getAttribute("delegator");
-        String associatedContentId = menuItem.getAssociatedContentId(context);
         GenericValue content = null;
+        String contentId = null;
         try {
             content = delegator.findByPrimaryKeyCache("Content", UtilMisc.toMap("contentId", associatedContentId));
         } catch(GenericEntityException e) {
             throw new RuntimeException(e.getMessage());
         }
-        String contentId = content.getString("contentId");
+        if (content != null)
+            contentId = content.getString("contentId");
                 //Debug.logInfo("in HtmlMenuRenderer, contentId:" + contentId,"");
         GenericValue userLogin = (GenericValue) request.getSession().getAttribute("userLogin");
         Security security = (Security) request.getAttribute("security");
-        List targetOperations = UtilMisc.toList(permissionOperation);
-        String entityAction = menuItem.getPermissionEntityAction();
-        String privilegeEnumId = menuItem.getPrivilegeEnumId();
-        String permissionStatusId = menuItem.getPermissionStatusId();
+        List targetOperations = StringUtil.split(permissionOperation, "|");
         List passedPurposes = null;
         List passedRoles = null;
 
+        //Debug.logInfo("in doPermissionCheck, content:" + content,"");
+        Debug.logInfo("in doPermissionCheck, targetOperations:" + targetOperations,"");
         Map results = ContentPermissionServices.checkPermission(content, permissionStatusId, userLogin, passedPurposes, targetOperations, passedRoles, delegator , security, entityAction, privilegeEnumId );
         String permissionStatus = (String)results.get("permissionStatus");
-                //Debug.logInfo("in HtmlMenuRenderer, permissionStatus:" + permissionStatus,"");
+                Debug.logInfo("in doPermissionCheck, permissionStatus:" + permissionStatus,"");
                 //Debug.logInfo("in HtmlMenuRenderer, results:" + results,"");
-        if (permissionStatus != null && permissionStatus.equalsIgnoreCase("granted"))
-            return true;
-        else
-            return false;
+        String errorMessage = null;
+        if (permissionStatus != null && permissionStatus.equalsIgnoreCase("granted")) {
+            return "";
+        } else {
+            errorMessage = ContentWorker.prepPermissionErrorMsg(results);
+                //Debug.logInfo("in doPermissionCheck, errorMessage:" + errorMessage,"");
+            return errorMessage;
+        }
 
     }
 

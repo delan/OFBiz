@@ -1,5 +1,5 @@
 /*
- * $Id: ModelMenu.java,v 1.3 2004/03/29 18:14:16 byersa Exp $
+ * $Id: ModelMenu.java,v 1.4 2004/04/11 02:54:42 byersa Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -55,7 +55,7 @@ import bsh.Interpreter;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.2
  */
 public class ModelMenu {
@@ -312,17 +312,7 @@ public class ModelMenu {
 
             //Debug.logInfo("in ModelMenu, menuItemList:" + menuItemList, module);
         // render each menuItem row, except hidden & ignored rows
-        menuItemIter = this.menuItemList.iterator();
-        ModelMenuItem currentMenuItem = null;
-
-        boolean isFirstPass = true;
-        while (menuItemIter.hasNext()) {
-         
-            currentMenuItem = (ModelMenuItem)menuItemIter.next();
-            // render widget
-            currentMenuItem.renderMenuItemString(buffer, context, menuStringRenderer);
-
-        }
+        menuStringRenderer.renderFormatSimpleWrapperRows(buffer, context, this);
 
         // render formatting wrapper close
         menuStringRenderer.renderFormatSimpleWrapperClose(buffer, context, this);
@@ -660,6 +650,10 @@ public class ModelMenu {
         return currentMenuItem;
     }
 
+    public List getMenuItemList() {
+        return menuItemList;
+    }
+
     public void dump(StringBuffer buffer ) {
         buffer.append("ModelMenu:" 
             + "\n name=" + this.name
@@ -683,5 +677,14 @@ public class ModelMenu {
         }
             
         return;
+    }
+
+    public void clearCurrentMenuTargets() {
+      
+        Iterator iter = menuItemList.iterator();
+        while (iter.hasNext()) {
+            ModelMenuItem menuItem = (ModelMenuItem)iter.next();
+            menuItem.setCurrentMenuTargetName(null);
+        }
     }
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: FreeMarkerWorker.java,v 1.11 2004/03/24 16:04:20 byersa Exp $
+ * $Id: FreeMarkerWorker.java,v 1.12 2004/04/11 02:54:41 byersa Exp $
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -69,7 +69,7 @@ import freemarker.template.TemplateModelException;
  * FreemarkerViewHandler - Freemarker Template Engine Util
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.11 $
+ * @version    $Revision: 1.12 $
  * @since      3.0
  */
 public class FreeMarkerWorker {
@@ -616,6 +616,9 @@ public class FreeMarkerWorker {
             if (csv.length() > 0)
                 csv.append(",");
             Map node = (Map)it.next();
+            if (node == null)
+                break;
+
             String contentId = (String)node.get("contentId");
             csv.append(contentId);
         }
@@ -710,7 +713,7 @@ public class FreeMarkerWorker {
         }
         ctx.put("globalNodeTrail", passedGlobalNodeTrail);
         ctx.put("indent", new Integer(sz));
-        if (Debug.verboseOn()) Debug.logVerbose("getCurrentContent, currentContent:" + currentContent, "");
+        //if (Debug.infoOn()) Debug.logInfo("getCurrentContent, currentContent:" + currentContent, "");
         return currentContent;
     }
 

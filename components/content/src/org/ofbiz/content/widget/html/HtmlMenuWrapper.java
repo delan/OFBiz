@@ -1,5 +1,5 @@
 /*
- * $Id: HtmlMenuWrapper.java,v 1.3 2004/03/29 18:14:15 byersa Exp $
+ * $Id: HtmlMenuWrapper.java,v 1.4 2004/04/11 02:54:42 byersa Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -49,7 +49,7 @@ import org.ofbiz.entity.*;
  * Widget Library - HTML Menu Wrapper class - makes it easy to do the setup and render of a menu
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      3.0
  */
 public class HtmlMenuWrapper {
@@ -257,4 +257,7 @@ public class HtmlMenuWrapper {
         context.put("parameters", paramMap);
     }
 
+    public void clearCurrentMenuTargets() {
+        this.modelMenu.clearCurrentMenuTargets();
+    }
 }

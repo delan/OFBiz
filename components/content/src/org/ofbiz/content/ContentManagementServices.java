@@ -41,7 +41,7 @@ import org.ofbiz.content.content.ContentWorker;
  * ContentManagementServices Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.10 $
+ * @version    $Revision: 1.11 $
  * @since      3.0
  *
  * 
@@ -129,9 +129,13 @@ public class ContentManagementServices {
         GenericDelegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         Map permContext = new HashMap();
+        String mapKey = (String) context.get("mapKey"); 
+        if (Debug.infoOn()) Debug.logInfo("in persist... mapKey(0):" + mapKey, null);
 
         List contentPurposeList = (List)context.get("contentPurposeList");
         //if (Debug.infoOn()) Debug.logInfo("in persist... contentPurposeList(0):" + contentPurposeList, null);
+        if (Debug.infoOn()) Debug.logInfo("in persist... textData(0):" + context.get("textData"), null);
+
         GenericValue content = delegator.makeValue("Content", null);
         content.setPKFields(context);
         content.setNonPKFields(context);
@@ -140,6 +144,7 @@ public class ContentManagementServices {
         String origContentId = (String)content.get("contentId");
         String origDataResourceId = (String)content.get("dataResourceId");
         String origContentTypeId = (String)content.get("contentTypeId");
+        if (Debug.infoOn()) Debug.logInfo("in persist... contentId(0):" + contentId, null);
 
 
         GenericValue dataResource = delegator.makeValue("DataResource", null);
@@ -147,13 +152,13 @@ public class ContentManagementServices {
         dataResource.setNonPKFields(context);
         String dataResourceId = (String)dataResource.get("dataResourceId");
         String dataResourceTypeId = (String)dataResource.get("dataResourceTypeId");
+        if (Debug.infoOn()) Debug.logInfo("in persist... dataResourceId(0):" + dataResourceId, null);
 
         GenericValue electronicText = delegator.makeValue("ElectronicText", null);
         electronicText.setPKFields(context);
         electronicText.setNonPKFields(context);
         String textData = (String)electronicText.get("textData");
 
-        ByteWrapper byteWrapper = (ByteWrapper)context.get("imageData");
 
         // get user info for multiple use
         GenericValue userLogin = (GenericValue) context.get("userLogin"); 
@@ -168,14 +173,29 @@ public class ContentManagementServices {
         boolean createPermOK = false;
 
         boolean dataResourceExists = true;
+        if (Debug.infoOn()) Debug.logInfo("in persist... dataResourceTypeId(0):" + dataResourceTypeId, null);
         if (UtilValidate.isNotEmpty(dataResourceTypeId) ) {
+                context.put("skipPermissionCheck", "granted"); // TODO: a temp hack because I don't want to bother with DataResource permissions at this time.
                 if (UtilValidate.isEmpty(dataResourceId)) {
                     dataResourceExists = false;
-                    context.put("skipPermissionCheck", "granted"); // TODO: a temp hack because I don't want to bother with DataResource permissions at this time.
                     Map thisResult = DataServices.createDataResourceMethod(dctx, context);
+                    String errorResult = (String)thisResult.get(ModelService.RESPONSE_MESSAGE);
+                    if (errorResult != null && errorResult.equals(ModelService.RESPOND_ERROR)) {
+                            return ServiceUtil.returnError((String)thisResult.get(ModelService.ERROR_MESSAGE));
+                    }
                     dataResourceId = (String)thisResult.get("dataResourceId");
+                    if (Debug.infoOn()) Debug.logInfo("in persist... dataResourceId(0):" + dataResourceId, null);
                     dataResource = (GenericValue)thisResult.get("dataResource");
-                    if (dataResourceTypeId.indexOf("_FILE") >=0) {
+                    if (dataResourceTypeId.indexOf("_FILE_BIN") >=0) {
+                        dataResource = (GenericValue)thisResult.get("dataResource");
+                        context.put("dataResource", dataResource);
+                        try {
+                            thisResult = DataServices.createBinaryFileMethod(dctx, context);
+                        } catch(GenericServiceException e) {
+                            Debug.logVerbose("in persistContentAndAssoc. " + e.getMessage(),"");
+                            return ServiceUtil.returnError(e.getMessage());
+                        }
+                    } else if (dataResourceTypeId.indexOf("_FILE") >=0) {
                         dataResource = (GenericValue)thisResult.get("dataResource");
                         context.put("dataResource", dataResource);
                         try {
@@ -185,6 +205,7 @@ public class ContentManagementServices {
                             return ServiceUtil.returnError(e.getMessage());
                         }
                     } else if (dataResourceTypeId.equals("IMAGE_OBJECT")) {
+                        ByteWrapper byteWrapper = (ByteWrapper)context.get("imageData");
                         if (byteWrapper != null) {
                             context.put("dataResourceId", dataResourceId);
                             thisResult = DataServices.createImageMethod(dctx, context);
@@ -203,6 +224,7 @@ public class ContentManagementServices {
                 //Debug.logVerbose("dataResourceId(create):" + dataResourceId, null);
                 } else {
                     Map thisResult = DataServices.updateDataResourceMethod(dctx, context);
+                    if (Debug.infoOn()) Debug.logInfo("in persist... thisResult.permissionStatus(0):" + thisResult.get("permissionStatus"), null);
                     if (dataResourceTypeId.indexOf("_FILE") >=0) {
                         dataResource = (GenericValue)thisResult.get("dataResource");
                         context.put("dataResource", dataResource);
@@ -224,7 +246,9 @@ public class ContentManagementServices {
 
         // Do update and create permission checks on Content if warranted.
 
+        context.put("skipPermissionCheck", null);  // Force check here
         boolean contentExists = true;
+            if (Debug.infoOn()) Debug.logInfo("in persist... contentTypeId" +  contentTypeId + " dataResourceTypeId:" + dataResourceTypeId + " contentId:" + contentId + " dataResourceId:" + dataResourceId, null);
         if (UtilValidate.isNotEmpty(contentTypeId) ) {
             if (UtilValidate.isEmpty(contentId)) 
                 contentExists = false;
@@ -276,12 +300,22 @@ public class ContentManagementServices {
                 }
             }
 
+        } else if (UtilValidate.isNotEmpty(dataResourceTypeId) && UtilValidate.isNotEmpty(contentId)) {
+            if (UtilValidate.isNotEmpty(dataResourceId)) {
+                context.put("dataResourceId", dataResourceId);
+                if (Debug.infoOn()) Debug.logInfo("in persist... context:" + context, module);
+                Map r = ContentServices.updateContentMethod(dctx, context);
+                boolean isError = ModelService.RESPOND_ERROR.equals(r.get(ModelService.RESPONSE_MESSAGE));
+                if (isError) 
+                    return ServiceUtil.returnError( (String)r.get(ModelService.ERROR_MESSAGE));
+            }
         }
 
         // If parentContentIdTo or parentContentIdFrom exists, create association with newly created content
         String contentAssocTypeId = (String)context.get("contentAssocTypeId");
-            Debug.logVerbose("CREATING contentASSOC contentAssocTypeId:" +  contentAssocTypeId, null);
+            if (Debug.infoOn()) Debug.logInfo("CREATING contentASSOC contentAssocTypeId:" +  contentAssocTypeId, null);
         if (contentAssocTypeId != null && contentAssocTypeId.length() > 0 ) {
+            context.put("deactivateExisting", "true");
             Debug.logVerbose("CREATING contentASSOC context:" +  context, null);
             Map thisResult = null;
             try {

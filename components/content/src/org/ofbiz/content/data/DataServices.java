@@ -1,5 +1,5 @@
 /*
- * $Id: DataServices.java,v 1.12 2004/03/16 17:27:14 byersa Exp $
+ * $Id: DataServices.java,v 1.13 2004/04/11 02:54:40 byersa Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -30,8 +30,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.io.IOException;
+import java.io.FileNotFoundException;
 import java.io.Writer;
 import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.File;
 
 import org.ofbiz.base.util.Debug;
@@ -48,12 +50,13 @@ import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
+import org.ofbiz.content.content.ContentWorker;
 
 /**
  * DataServices Class
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  * @since 3.0
  * 
  *  
@@ -74,7 +77,8 @@ public class DataServices {
         targetOperations.add("CONTENT_CREATE");
         context.put("targetOperationList", targetOperations);
         context.put("skipPermissionCheck", null);
-        String permissionStatus = DataResourceWorker.callDataResourcePermissionCheck(delegator, dispatcher, context);
+        Map permResults = DataResourceWorker.callDataResourcePermissionCheckResult(delegator, dispatcher, context);
+        String permissionStatus = (String)permResults.get("permissionStatus");
         if (permissionStatus != null && permissionStatus.equalsIgnoreCase("granted")) {
             context.put("skipPermissionCheck", "granted");
             Map thisResult = createDataResourceMethod(dctx, context);
@@ -91,6 +95,9 @@ public class DataServices {
                     return ServiceUtil.returnError((String) thisResult.get(ModelService.ERROR_MESSAGE));
                 }
             }
+        } else {
+            String errorMsg = ContentWorker.prepPermissionErrorMsg(permResults);
+            return ServiceUtil.returnError(errorMsg);
         }
 
         return result;
@@ -113,7 +120,10 @@ public class DataServices {
         Map result = new HashMap();
         GenericDelegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
-        String permissionStatus = DataResourceWorker.callDataResourcePermissionCheck(delegator, dispatcher, context);
+        Map permResults = DataResourceWorker.callDataResourcePermissionCheckResult(delegator, dispatcher, context);
+        String permissionStatus = (String)permResults.get("permissionStatus");
+
+        if (Debug.infoOn()) Debug.logInfo("in createDataResourceMethod, permissionStatus:" + permissionStatus, module);
         if (permissionStatus != null && permissionStatus.equalsIgnoreCase("granted")) {
             GenericValue userLogin = (GenericValue) context.get("userLogin");
             String userLoginId = (String) userLogin.get("userLoginId");
@@ -131,6 +141,7 @@ public class DataServices {
             String dataResourceId = (String) context.get("dataResourceId");
             if (UtilValidate.isEmpty(dataResourceId))
                 dataResourceId = delegator.getNextSeqId("DataResource").toString();
+            if (Debug.infoOn()) Debug.logInfo("in createDataResourceMethod, dataResourceId:" + dataResourceId, module);
             GenericValue dataResource = delegator.makeValue("DataResource", UtilMisc.toMap("dataResourceId", dataResourceId));
             dataResource.setNonPKFields(context);
             dataResource.put("createdByUserLogin", createdByUserLogin);
@@ -146,6 +157,9 @@ public class DataServices {
             }
             result.put("dataResourceId", dataResourceId);
             result.put("dataResource", dataResource);
+        } else {
+            String errorMsg = ContentWorker.prepPermissionErrorMsg(permResults);
+            return ServiceUtil.returnError(errorMsg);
         }
         return result;
     }
@@ -168,7 +182,8 @@ public class DataServices {
         GenericDelegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         //Debug.logVerbose("in create ETextMethod context:" + context, null);
-        String permissionStatus = DataResourceWorker.callDataResourcePermissionCheck(delegator, dispatcher, context);
+        Map permResults = DataResourceWorker.callDataResourcePermissionCheckResult(delegator, dispatcher, context);
+        String permissionStatus = (String)permResults.get("permissionStatus");
         //Debug.logVerbose("in create ETextMethod permissionStatus:" + permissionStatus, null);
         if (permissionStatus != null && permissionStatus.equalsIgnoreCase("granted")) {
             String dataResourceId = (String) context.get("dataResourceId");
@@ -181,7 +196,11 @@ public class DataServices {
                     return ServiceUtil.returnError(e.getMessage());
                 }
             }
+        } else {
+            String errorMsg = ContentWorker.prepPermissionErrorMsg(permResults);
+            return ServiceUtil.returnError(errorMsg);
         }
+        
 
         return result;
     }
@@ -209,7 +228,8 @@ public class DataServices {
         GenericDelegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         //Debug.logVerbose("in create FileMethod context:" + context, module);
-        String permissionStatus = DataResourceWorker.callDataResourcePermissionCheck(delegator, dispatcher, context);
+        Map permResults = DataResourceWorker.callDataResourcePermissionCheckResult(delegator, dispatcher, context);
+        String permissionStatus = (String)permResults.get("permissionStatus");
         //Debug.logVerbose("in create FileMethod permissionStatus:" + permissionStatus, module);
         if (permissionStatus != null && permissionStatus.equalsIgnoreCase("granted")) {
             GenericValue dataResource = (GenericValue) context.get("dataResource");
@@ -253,7 +273,11 @@ public class DataServices {
                     throw new GenericServiceException(e.getMessage());
                 }
             }
+        } else {
+            String errorMsg = ContentWorker.prepPermissionErrorMsg(permResults);
+            return ServiceUtil.returnError(errorMsg);
         }
+        
 
         return result;
     }
@@ -270,7 +294,8 @@ public class DataServices {
         targetOperations.add("CONTENT_UPDATE");
         context.put("targetOperationList", targetOperations);
         context.put("skipPermissionCheck", null);
-        String permissionStatus = DataResourceWorker.callDataResourcePermissionCheck(delegator, dispatcher, context);
+        Map permResults = DataResourceWorker.callDataResourcePermissionCheckResult(delegator, dispatcher, context);
+        String permissionStatus = (String)permResults.get("permissionStatus");
         if (permissionStatus != null && permissionStatus.equalsIgnoreCase("granted")) {
             context.put("skipPermissionCheck", "granted");
             Map thisResult = updateDataResourceMethod(dctx, context);
@@ -286,7 +311,11 @@ public class DataServices {
                     return ServiceUtil.returnError((String) thisResult.get(ModelService.ERROR_MESSAGE));
                 }
             }
+        } else {
+            String errorMsg = ContentWorker.prepPermissionErrorMsg(permResults);
+            return ServiceUtil.returnError(errorMsg);
         }
+        
 
         return result;
     }
@@ -310,7 +339,8 @@ public class DataServices {
         LocalDispatcher dispatcher = dctx.getDispatcher();
         GenericValue dataResource = null;
         //Locale locale = (Locale) context.get("locale");
-        String permissionStatus = DataResourceWorker.callDataResourcePermissionCheck(delegator, dispatcher, context);
+        Map permResults = DataResourceWorker.callDataResourcePermissionCheckResult(delegator, dispatcher, context);
+        String permissionStatus = (String)permResults.get("permissionStatus");
         if (permissionStatus != null && permissionStatus.equalsIgnoreCase("granted")) {
             GenericValue userLogin = (GenericValue) context.get("userLogin");
             String userLoginId = (String) userLogin.get("userLoginId");
@@ -334,7 +364,11 @@ public class DataServices {
             } catch (GenericEntityException e) {
                 return ServiceUtil.returnError(e.getMessage());
             }
-        }
+        } else {
+            String errorMsg = ContentWorker.prepPermissionErrorMsg(permResults);
+            return ServiceUtil.returnError(errorMsg);
+        } 
+        
         result.put("dataResource", dataResource);
         return result;
     }
@@ -358,10 +392,13 @@ public class DataServices {
         LocalDispatcher dispatcher = dctx.getDispatcher();
         GenericValue electronicText = null;
         //Locale locale = (Locale) context.get("locale");
-        String permissionStatus = DataResourceWorker.callDataResourcePermissionCheck(delegator, dispatcher, context);
+        Map permResults = DataResourceWorker.callDataResourcePermissionCheckResult(delegator, dispatcher, context);
+        String permissionStatus = (String)permResults.get("permissionStatus");
+        if (Debug.infoOn()) Debug.logInfo("in updateElectronicText, permissionStatus:" + permissionStatus, module);
         if (permissionStatus != null && permissionStatus.equalsIgnoreCase("granted")) {
             String dataResourceId = (String) context.get("dataResourceId");
             String textData = (String) context.get("textData");
+            if (Debug.infoOn()) Debug.logInfo("in updateElectronicText, textData:" + textData, module);
             if (textData != null && textData.length() > 0) {
                 try {
                     electronicText = delegator.findByPrimaryKey("ElectronicText", UtilMisc.toMap("dataResourceId", dataResourceId));
@@ -372,6 +409,9 @@ public class DataServices {
                     return ServiceUtil.returnError("electronicText.update.read_failure" + e.getMessage());
                 }
             }
+        } else {
+            String errorMsg = ContentWorker.prepPermissionErrorMsg(permResults);
+            return ServiceUtil.returnError(errorMsg);
         }
 
         return result;
@@ -401,7 +441,8 @@ public class DataServices {
         LocalDispatcher dispatcher = dctx.getDispatcher();
         //GenericValue fileText = null;
         //Locale locale = (Locale) context.get("locale");
-        String permissionStatus = DataResourceWorker.callDataResourcePermissionCheck(delegator, dispatcher, context);
+        Map permResults = DataResourceWorker.callDataResourcePermissionCheckResult(delegator, dispatcher, context);
+        String permissionStatus = (String)permResults.get("permissionStatus");
         if (permissionStatus != null && permissionStatus.equalsIgnoreCase("granted")) {
             GenericValue dataResource = (GenericValue) context.get("dataResource");
             //String dataResourceId = (String) dataResource.get("dataResourceId");
@@ -445,6 +486,9 @@ public class DataServices {
                 Debug.logWarning(e, module);
                 throw new GenericServiceException(e.getMessage());
             }
+        } else {
+            String errorMsg = ContentWorker.prepPermissionErrorMsg(permResults);
+            return ServiceUtil.returnError(errorMsg);
         }
 
         return result;
@@ -496,7 +540,8 @@ public class DataServices {
         LocalDispatcher dispatcher = dctx.getDispatcher();
         GenericValue image = null;
         //Locale locale = (Locale) context.get("locale");
-        String permissionStatus = DataResourceWorker.callDataResourcePermissionCheck(delegator, dispatcher, context);
+        Map permResults = DataResourceWorker.callDataResourcePermissionCheckResult(delegator, dispatcher, context);
+        String permissionStatus = (String)permResults.get("permissionStatus");
         if (permissionStatus != null && permissionStatus.equalsIgnoreCase("granted")) {
             String dataResourceId = (String) context.get("dataResourceId");
             ByteWrapper byteWrapper = (ByteWrapper)context.get("imageData");
@@ -510,6 +555,9 @@ public class DataServices {
                     return ServiceUtil.returnError(e.getMessage());
                 }
             }
+        } else {
+            String errorMsg = ContentWorker.prepPermissionErrorMsg(permResults);
+            return ServiceUtil.returnError(errorMsg);
         }
 
         return result;
@@ -532,7 +580,8 @@ public class DataServices {
         HashMap result = new HashMap();
         GenericDelegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
-        String permissionStatus = DataResourceWorker.callDataResourcePermissionCheck(delegator, dispatcher, context);
+        Map permResults = DataResourceWorker.callDataResourcePermissionCheckResult(delegator, dispatcher, context);
+        String permissionStatus = (String)permResults.get("permissionStatus");
         if (permissionStatus != null && permissionStatus.equalsIgnoreCase("granted")) {
             String dataResourceId = (String) context.get("dataResourceId");
             ByteWrapper byteWrapper = (ByteWrapper)context.get("imageData");
@@ -546,6 +595,71 @@ public class DataServices {
                     return ServiceUtil.returnError(e.getMessage());
                 }
             }
+        } else {
+            String errorMsg = ContentWorker.prepPermissionErrorMsg(permResults);
+            return ServiceUtil.returnError(errorMsg);
+        }
+
+        return result;
+    }
+
+    /**
+     * A service wrapper for the createBinaryFileMethod method. Forces permissions to be checked.
+     */
+    public static Map createBinaryFile(DispatchContext dctx, Map context) {
+        context.put("entityOperation", "_CREATE");
+        List targetOperations = new ArrayList();
+        targetOperations.add("CONTENT_CREATE");
+        context.put("targetOperationList", targetOperations);
+        context.put("skipPermissionCheck", null);
+        Map result = null;
+        try {
+            result = createBinaryFileMethod(dctx, context);
+        } catch (GenericServiceException e) {
+            return ServiceUtil.returnError(e.getMessage());
+        }
+        return result;
+    }
+
+    public static Map createBinaryFileMethod(DispatchContext dctx, Map context) throws GenericServiceException {
+        HashMap result = new HashMap();
+        GenericDelegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        //Debug.logVerbose("in create FileMethod context:" + context, module);
+        Map permResults = DataResourceWorker.callDataResourcePermissionCheckResult(delegator, dispatcher, context);
+        String permissionStatus = (String)permResults.get("permissionStatus");
+        //Debug.logVerbose("in create FileMethod permissionStatus:" + permissionStatus, module);
+        if (permissionStatus != null && permissionStatus.equalsIgnoreCase("granted")) {
+            GenericValue dataResource = (GenericValue) context.get("dataResource");
+            //String dataResourceId = (String) dataResource.get("dataResourceId");
+            String dataResourceTypeId = (String) dataResource.get("dataResourceTypeId");
+            String objectInfo = (String) dataResource.get("objectInfo");
+            byte [] imageData = (byte []) context.get("imageData");
+            String rootDir = (String)context.get("rootDir");
+            String prefix = "";
+            File file = null;
+            try {
+                file = DataResourceWorker.getContentFile(dataResourceTypeId, objectInfo, rootDir);
+            } catch (FileNotFoundException e) {
+                    Debug.logWarning(e, module);
+                    throw new GenericServiceException(e.getMessage());
+            } catch (GeneralException e2) {
+                    Debug.logWarning(e2, module);
+                    throw new GenericServiceException(e2.getMessage());
+            }
+            if (imageData != null && imageData.length > 0) {
+                try {
+                    FileOutputStream out = new FileOutputStream(file);
+                    out.write(imageData);
+                    out.close();
+                } catch (IOException e) {
+                    Debug.logWarning(e, module);
+                    throw new GenericServiceException(e.getMessage());
+                }
+            }
+        } else {
+            String errorMsg = ContentWorker.prepPermissionErrorMsg(permResults);
+            return ServiceUtil.returnError(errorMsg);
         }
 
         return result;

@@ -1,5 +1,5 @@
 /*
- * $Id: ModelMenuItem.java,v 1.4 2004/04/01 21:55:47 byersa Exp $
+ * $Id: ModelMenuItem.java,v 1.5 2004/04/11 02:54:42 byersa Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -30,6 +30,11 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
 
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
 import org.ofbiz.base.util.BshUtil;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.FlexibleMapAccessor;
@@ -59,7 +64,7 @@ import bsh.Interpreter;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.2
  */
 public class ModelMenuItem {
@@ -146,7 +151,7 @@ public class ModelMenuItem {
         Iterator targetElementIter = targetElements.iterator();
         while (targetElementIter.hasNext()) {
             Element targetElement = (Element) targetElementIter.next();
-            MenuTarget target = new MenuTarget(targetElement);
+            MenuTarget target = new MenuTarget(targetElement, this);
             this.addUpdateMenuTarget(target);
             //Debug.logInfo("Added target " + modelMenuItem.getName() + " from def, mapName=" + modelMenuItem.getMapName(), module);
         }
@@ -372,6 +377,14 @@ public class ModelMenuItem {
         this.currentMenuTargetName = target;
     }
 
+    public String getCurrentMenuTargetName() {
+        return this.currentMenuTargetName;
+    }
+
+    public String getDefaultMenuTargetName() {
+        return this.defaultMenuTargetName;
+    }
+
     /**
      * @return
      */
@@ -389,6 +402,14 @@ public class ModelMenuItem {
             }
         }
         return target;
+    }
+
+    public Map getMenuTargetMap() {
+        return this.targetMap;
+    }
+
+    public List getMenuTargetList() {
+        return this.targetList;
     }
 
     /**
@@ -555,25 +576,40 @@ public class ModelMenuItem {
             
         return;
     }
+
     public class MenuTarget {
 
         protected String targetName;
         protected String targetTitle;
         protected String requestName;
         protected String requestType;
+        protected String targetType;
+        protected String permissionOperation;
+        protected String permissionStatusId;
+        protected String permissionEntityAction;
+        protected String privilegeEnumId;
     
         protected Map paramMap = new HashMap();
         protected List paramList = new ArrayList();
+
+        protected ModelMenuItem modelMenuItem;
 
         public MenuTarget() {
         }
     
         /** XML Constructor */
-        public MenuTarget(Element fieldElement) {
+        public MenuTarget(Element fieldElement, ModelMenuItem item) {
+
+            this.modelMenuItem = item;
             this.targetName = fieldElement.getAttribute("name");
             this.targetTitle = fieldElement.getAttribute("title");
             this.requestName = fieldElement.getAttribute("request-name");
             this.requestType = fieldElement.getAttribute("request-type");
+            this.targetType = fieldElement.getAttribute("target-type");
+            this.permissionOperation = fieldElement.getAttribute("permission-operation");
+            this.permissionStatusId = fieldElement.getAttribute("permission-status-id");
+            this.permissionEntityAction = fieldElement.getAttribute("permission-entity-action");
+            this.privilegeEnumId = fieldElement.getAttribute("privilege-enum-id");
     
             // read in add param defs, add/override one by one using the paramList and paramMap
             List paramElements = UtilXml.childElementList(fieldElement, "param");
@@ -585,6 +621,78 @@ public class ModelMenuItem {
                 this.addUpdateMenuParam(param);
             }
     
+        }
+
+        /**
+         * @param string
+         */
+        public void setPermissionOperation(String string) {
+            this.permissionOperation = string;
+        }
+    
+        /**
+         * @return
+         */
+        public String getPermissionOperation() {
+            if (UtilValidate.isNotEmpty(this.permissionOperation )) {
+                return this.permissionOperation ;
+            } else {
+                return this.modelMenuItem.getPermissionOperation();
+            }
+        }
+    
+        /**
+         * @param string
+         */
+        public void setPermissionStatusId(String string) {
+            this.permissionStatusId = string;
+        }
+    
+        /**
+         * @return
+         */
+        public String getPermissionStatusId() {
+            if (UtilValidate.isNotEmpty(this.permissionStatusId )) {
+                return this.permissionStatusId ;
+            } else {
+                return this.modelMenuItem.getPermissionStatusId ();
+            }
+        }
+    
+        /**
+         * @param string
+         */
+        public void setPrivilegeEnumId(String string) {
+            this.privilegeEnumId = string;
+        }
+    
+        /**
+         * @return
+         */
+        public String getPrivilegeEnumId() {
+            if (UtilValidate.isNotEmpty(this.privilegeEnumId )) {
+                return this.privilegeEnumId ;
+            } else {
+                return this.modelMenuItem.getPrivilegeEnumId ();
+            }
+        }
+    
+        /**
+         * @param string
+         */
+        public void setPermissionEntityAction(String string) {
+            this.permissionEntityAction = string;
+        }
+    
+        /**
+         * @return
+         */
+        public String getPermissionEntityAction() {
+            if (UtilValidate.isNotEmpty(this.permissionEntityAction )) {
+                return this.permissionEntityAction ;
+            } else {
+                return this.modelMenuItem.getPermissionEntityAction ();
+            }
         }
 
     public void dump(StringBuffer buffer ) {
@@ -669,6 +777,7 @@ public class ModelMenuItem {
                Map map = menuParamInfo.getParamMap(context);
                return map;
            }
+
         }
 
         public class MenuParamInfo {
