@@ -43,8 +43,8 @@ import org.ofbiz.entity.util.EntityListIterator;
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@author     <a href='mailto:chris_maurer@altavista.com'>Chris Maurer</a>
- *@created    Tue Aug 07 01:10:32 MDT 2001
- *@version    1.0
+ *@version    $ revision: $
+ *@since      1.0
  */
 public interface GenericHelper {
 
@@ -121,12 +121,14 @@ public interface GenericHelper {
      *@param fieldsToSelect The fields of the named entity to get from the database; if empty or null all fields will be retreived
      *@param orderBy The fields of the named entity to order the query by; optionally add a " ASC" for ascending or " DESC" for descending
      *@param findOptions An instance of EntityFindOptions that specifies advanced query options. See the EntityFindOptions JavaDoc for more details.
-     *@return EntityListIterator representing the result of the query: NOTE THAT THIS MUST BE CLOSED WHEN YOU ARE 
+     *@return EntityListIterator representing the result of the query: NOTE THAT THIS MUST BE CLOSED WHEN YOU ARE
      *      DONE WITH IT, AND DON'T LEAVE IT OPEN TOO LONG BEACUSE IT WILL MAINTAIN A DATABASE CONNECTION.
      */
     public EntityListIterator findListIteratorByCondition(ModelEntity modelEntity, EntityCondition whereEntityCondition,
         EntityCondition havingEntityCondition, Collection fieldsToSelect, List orderBy, EntityFindOptions findOptions)
         throws GenericEntityException;
+
+    public long findCountByCondition(ModelEntity modelEntity, EntityCondition whereEntityCondition, EntityCondition havingEntityCondition) throws GenericEntityException;
 
     /** Removes/deletes Generic Entity records found by all of the specified fields (ie: combined using AND)
      *@param modelEntity The ModelEntity of the Entity as defined in the entity XML file

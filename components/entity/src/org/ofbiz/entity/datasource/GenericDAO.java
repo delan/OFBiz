@@ -1,5 +1,5 @@
 /*
- * $Id: GenericDAO.java,v 1.4 2003/11/03 13:13:14 jonesde Exp $
+ * $Id: GenericDAO.java,v 1.5 2003/11/14 22:17:48 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -25,6 +25,7 @@
 package org.ofbiz.entity.datasource;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -78,7 +79,7 @@ import org.ofbiz.entity.util.EntityListIterator;
  * @author     <a href="mailto:jdonnerstag@eds.de">Juergen Donnerstag</a>
  * @author     <a href="mailto:gielen@aixcept.de">Rene Gielen</a>
  * @author     <a href="mailto:john_nutting@telluridetechnologies.com">John Nutting</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      1.0
  */
 public class GenericDAO {
@@ -676,8 +677,8 @@ public class GenericDAO {
      *      DONE WITH IT, AND DON'T LEAVE IT OPEN TOO LONG BEACUSE IT WILL MAINTAIN A DATABASE CONNECTION.
      */
     public EntityListIterator selectListIteratorByCondition(ModelEntity modelEntity, EntityCondition whereEntityCondition,
-        EntityCondition havingEntityCondition, Collection fieldsToSelect, List orderBy, EntityFindOptions findOptions)
-        throws GenericEntityException {
+            EntityCondition havingEntityCondition, Collection fieldsToSelect, List orderBy, EntityFindOptions findOptions)
+            throws GenericEntityException {
         if (modelEntity == null) {
             return null;
         }
@@ -785,7 +786,6 @@ public class GenericDAO {
         String sql = sqlBuffer.toString();
 
         SQLProcessor sqlP = new SQLProcessor(helperName);
-
         sqlP.prepareStatement(sql, findOptions.getSpecifyTypeAndConcur(), findOptions.getResultSetType(), findOptions.getResultSetConcurrency());
         if (verboseOn) {
             // put this inside an if statement so that we don't have to generate the string when not used...
@@ -793,7 +793,6 @@ public class GenericDAO {
         }
         // set all of the values from the Where EntityCondition
         Iterator whereEntityConditionParamsIter = whereEntityConditionParams.iterator();
-
         while (whereEntityConditionParamsIter.hasNext()) {
             EntityConditionParam whereEntityConditionParam = (EntityConditionParam) whereEntityConditionParamsIter.next();
 
@@ -805,7 +804,6 @@ public class GenericDAO {
         }
         // set all of the values from the Having EntityCondition
         Iterator havingEntityConditionParamsIter = havingEntityConditionParams.iterator();
-
         while (havingEntityConditionParamsIter.hasNext()) {
             EntityConditionParam havingEntityConditionParam = (EntityConditionParam) havingEntityConditionParamsIter.next();
 
@@ -813,7 +811,6 @@ public class GenericDAO {
         }
 
         sqlP.executeQuery();
-
         return new EntityListIterator(sqlP, modelEntity, selectFields, modelFieldTypeReader);
     }
 
@@ -926,6 +923,120 @@ public class GenericDAO {
         }
 
         return retlist;
+    }
+
+    public long selectCountByCondition(ModelEntity modelEntity, EntityCondition whereEntityCondition, EntityCondition havingEntityCondition) throws GenericEntityException {
+        if (modelEntity == null) {
+            return 0;
+        }
+
+        // if no find options passed, use default
+        EntityFindOptions findOptions = new EntityFindOptions();
+        boolean verboseOn = Debug.verboseOn();
+
+        if (verboseOn) {
+            // put this inside an if statement so that we don't have to generate the string when not used...
+            Debug.logVerbose("Doing selectListIteratorByCondition with whereEntityCondition: " + whereEntityCondition, module);
+        }
+
+        StringBuffer sqlBuffer = new StringBuffer("SELECT ");
+
+        if (findOptions.getDistinct()) {
+            sqlBuffer.append("DISTINCT ");
+        }
+
+        sqlBuffer.append("COUNT(*) ");
+
+        // FROM clause and when necessary the JOIN or LEFT JOIN clause(s) as well
+        sqlBuffer.append(SqlJdbcUtil.makeFromClause(modelEntity, datasourceInfo));
+
+        // WHERE clause
+        StringBuffer whereString = new StringBuffer();
+        String entityCondWhereString = "";
+        List whereEntityConditionParams = new LinkedList();
+
+        if (whereEntityCondition != null) {
+            entityCondWhereString = whereEntityCondition.makeWhereString(modelEntity, whereEntityConditionParams);
+        }
+
+        String viewClause = SqlJdbcUtil.makeViewWhereClause(modelEntity, datasourceInfo.joinStyle);
+
+        if (viewClause.length() > 0) {
+            if (entityCondWhereString.length() > 0) {
+                whereString.append("(");
+                whereString.append(entityCondWhereString);
+                whereString.append(") AND ");
+            }
+
+            whereString.append(viewClause);
+        } else {
+            whereString.append(entityCondWhereString);
+        }
+
+        if (whereString.length() > 0) {
+            sqlBuffer.append(" WHERE ");
+            sqlBuffer.append(whereString.toString());
+        }
+
+        // GROUP BY clause for view-entity
+        if (modelEntity instanceof ModelViewEntity) {
+            ModelViewEntity modelViewEntity = (ModelViewEntity) modelEntity;
+            String groupByString = modelViewEntity.colNameString(modelViewEntity.getGroupBysCopy(), ", ", "", false);
+
+            if (UtilValidate.isNotEmpty(groupByString)) {
+                sqlBuffer.append(" GROUP BY ");
+                sqlBuffer.append(groupByString);
+            }
+        }
+
+        // HAVING clause
+        String entityCondHavingString = "";
+        List havingEntityConditionParams = new LinkedList();
+
+        if (havingEntityCondition != null) {
+            entityCondHavingString = havingEntityCondition.makeWhereString(modelEntity, havingEntityConditionParams);
+        }
+        if (entityCondHavingString.length() > 0) {
+            sqlBuffer.append(" HAVING ");
+            sqlBuffer.append(entityCondHavingString);
+        }
+
+        String sql = sqlBuffer.toString();
+
+        SQLProcessor sqlP = new SQLProcessor(helperName);
+        sqlP.prepareStatement(sql, findOptions.getSpecifyTypeAndConcur(), findOptions.getResultSetType(), findOptions.getResultSetConcurrency());
+        if (verboseOn) {
+            // put this inside an if statement so that we don't have to generate the string when not used...
+            Debug.logVerbose("Setting the whereEntityConditionParams: " + whereEntityConditionParams, module);
+        }
+        // set all of the values from the Where EntityCondition
+        Iterator whereEntityConditionParamsIter = whereEntityConditionParams.iterator();
+        while (whereEntityConditionParamsIter.hasNext()) {
+            EntityConditionParam whereEntityConditionParam = (EntityConditionParam) whereEntityConditionParamsIter.next();
+            SqlJdbcUtil.setValue(sqlP, whereEntityConditionParam.getModelField(), modelEntity.getEntityName(), whereEntityConditionParam.getFieldValue(), modelFieldTypeReader);
+        }
+        if (verboseOn) {
+            // put this inside an if statement so that we don't have to generate the string when not used...
+            Debug.logVerbose("Setting the havingEntityConditionParams: " + havingEntityConditionParams, module);
+        }
+        // set all of the values from the Having EntityCondition
+        Iterator havingEntityConditionParamsIter = havingEntityConditionParams.iterator();
+        while (havingEntityConditionParamsIter.hasNext()) {
+            EntityConditionParam havingEntityConditionParam = (EntityConditionParam) havingEntityConditionParamsIter.next();
+            SqlJdbcUtil.setValue(sqlP, havingEntityConditionParam.getModelField(), modelEntity.getEntityName(), havingEntityConditionParam.getFieldValue(), modelFieldTypeReader);
+        }
+
+        sqlP.executeQuery();
+        long count = 0;
+        try {
+            ResultSet resultSet = sqlP.getResultSet();
+            if (resultSet.next()) {
+                count = resultSet.getLong(1);
+            }
+        } catch (SQLException e) {
+            throw new GenericDataSourceException("Error getting count value", e);
+        }
+        return count;
     }
 
     /* ====================================================================== */

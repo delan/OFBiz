@@ -1,5 +1,5 @@
 /*
- * $Id: GenericHelperDAO.java,v 1.2 2003/09/19 06:05:12 jonesde Exp $
+ * $Id: GenericHelperDAO.java,v 1.3 2003/11/14 22:17:48 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -46,7 +46,7 @@ import org.ofbiz.entity.util.EntityListIterator;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href='mailto:chris_maurer@altavista.com'>Chris Maurer</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class GenericHelperDAO implements GenericHelper {
@@ -176,7 +176,7 @@ public class GenericHelperDAO implements GenericHelper {
      *@param fieldsToSelect The fields of the named entity to get from the database; if empty or null all fields will be retreived
      *@param orderBy The fields of the named entity to order the query by; optionally add a " ASC" for ascending or " DESC" for descending
      *@param findOptions An instance of EntityFindOptions that specifies advanced query options. See the EntityFindOptions JavaDoc for more details.
-     *@return EntityListIterator representing the result of the query: NOTE THAT THIS MUST BE CLOSED WHEN YOU ARE 
+     *@return EntityListIterator representing the result of the query: NOTE THAT THIS MUST BE CLOSED WHEN YOU ARE
      *      DONE WITH IT, AND DON'T LEAVE IT OPEN TOO LONG BEACUSE IT WILL MAINTAIN A DATABASE CONNECTION.
      */
     public EntityListIterator findListIteratorByCondition(ModelEntity modelEntity, EntityCondition whereEntityCondition,
@@ -189,6 +189,10 @@ public class GenericHelperDAO implements GenericHelper {
     public List findByMultiRelation(GenericValue value, ModelRelation modelRelationOne, ModelEntity modelEntityOne,
         ModelRelation modelRelationTwo, ModelEntity modelEntityTwo, List orderBy) throws GenericEntityException {
         return genericDAO.selectByMultiRelation(value, modelRelationOne, modelEntityOne, modelRelationTwo, modelEntityTwo, orderBy);
+    }
+
+    public long findCountByCondition(ModelEntity modelEntity, EntityCondition whereEntityCondition, EntityCondition havingEntityCondition) throws GenericEntityException {
+        return genericDAO.selectCountByCondition(modelEntity, whereEntityCondition, havingEntityCondition);
     }
 
     /** Removes/deletes Generic Entity records found by all of the specified fields (ie: combined using AND)
