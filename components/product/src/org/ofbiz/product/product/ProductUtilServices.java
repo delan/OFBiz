@@ -1,5 +1,5 @@
 /*
- * $Id: ProductUtilServices.java,v 1.29 2004/01/28 16:17:36 jonesde Exp $
+ * $Id: ProductUtilServices.java,v 1.30 2004/01/28 16:27:28 jonesde Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -60,7 +60,7 @@ import org.ofbiz.service.ServiceUtil;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.29 $
+ * @version    $Revision: 1.30 $
  * @since      2.0
  */
 public class ProductUtilServices {
@@ -269,11 +269,11 @@ public class ProductUtilServices {
                 if (paList.size() != 1) {
                     Debug.logInfo("Virtual product with ID " + productId + " should have 1 assoc, has " + paList.size(), module);
                 } else {
-                    if (numWithOneOnly < 100) {
-                        Debug.logInfo("Virtual product ID to make stand-alone: " + productId, module);
-                    }
+                    //if (numWithOneOnly < 100) {
+                    //    Debug.logInfo("Virtual product ID to make stand-alone: " + productId, module);
+                    //}
                     // for all virtuals with one variant move all info from virtual to variant and remove virtual, make variant as not a variant
-                    //dispatcher.runSync("mergeVirtualWithSingleVariant", UtilMisc.toMap("productId", productId, "removeOld", Boolean.TRUE, "userLogin", userLogin));
+                    dispatcher.runSync("mergeVirtualWithSingleVariant", UtilMisc.toMap("productId", productId, "removeOld", Boolean.TRUE, "userLogin", userLogin));
                     
                     numWithOneOnly++;
                     if (numWithOneOnly % 100 == 0) {
@@ -308,7 +308,7 @@ public class ProductUtilServices {
                     Debug.logInfo("Virtual product with ID " + productId + " should have 1 assoc, has " + paList.size(), module);
                 } else {
                     // for all virtuals with one valid variant move info from virtual to variant, put variant in categories from virtual, remove virtual from all categories but leave "family" otherwise intact, mark variant as not a variant
-                    //dispatcher.runSync("mergeVirtualWithSingleVariant", UtilMisc.toMap("productId", productId, "removeOld", Boolean.FALSE, "userLogin", userLogin));
+                    dispatcher.runSync("mergeVirtualWithSingleVariant", UtilMisc.toMap("productId", productId, "removeOld", Boolean.FALSE, "userLogin", userLogin));
                     
                     numWithOneValid++;
                     if (numWithOneValid % 100 == 0) {
@@ -322,10 +322,10 @@ public class ProductUtilServices {
             String errMsg = "Entity error running makeStandAloneFromSingleVariantVirtuals: " + e.toString();
             Debug.logError(e, errMsg, module);
             return ServiceUtil.returnError(errMsg);
-        //} catch (GenericServiceException e) {
-        //    String errMsg = "Entity error running makeStandAloneFromSingleVariantVirtuals: " + e.toString();
-        //    Debug.logError(e, errMsg, module);
-        //    return ServiceUtil.returnError(errMsg);
+        } catch (GenericServiceException e) {
+            String errMsg = "Entity error running makeStandAloneFromSingleVariantVirtuals: " + e.toString();
+            Debug.logError(e, errMsg, module);
+            return ServiceUtil.returnError(errMsg);
         }
         
         return ServiceUtil.returnSuccess();
