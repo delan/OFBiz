@@ -105,21 +105,6 @@ if (mode != null && mode.equals("SALES_ORDER")) {
     associatedProducts = ProductDisplayWorker.getRandomCartProductAssoc(request, true);
     if (associatedProducts != null) 
         context.put("associatedProducts", associatedProducts);
-
-    //Get Promo Text Data
-    productPromos = ProductPromoWorker.getStoreProductPromos(delegator, request);
-    //Make sure that at least one promo has non-empty promoText
-    showPromoText = false;
-    productPromoIterator = productPromos.iterator(); 
-    while (productPromoIterator.hasNext()) {
-        productPromo = productPromoIterator.next(); 
-        promoText = productPromo.get("promoText"); 
-        if (promoText != null && promoText.length() > 0) showPromoText = true;
-    }
-    context.put("productPromos", productPromos);
-    context.put("showPromoText", showPromoText);
-} else {
-    context.put("showPromoText", false);
 }
 context.put("contentPathPrefix", CatalogWorker.getContentPathPrefix(request));
 

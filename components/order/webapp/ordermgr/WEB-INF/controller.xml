@@ -229,37 +229,57 @@
         <response name="success" type="view" value="orderentry"/>
     </request-map>
     <request-map uri="additem">
+        <security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="addToCart"/>
         <response name="success" type="view" value="orderentry"/>
         <response name="error" type="view" value="orderentry"/>
     </request-map>
     <request-map uri="addseperator">
+        <security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="addSeparator"/>
         <response name="success" type="view" value="orderentry"/>
         <response name="error" type="view" value="orderentry"/>
     </request-map>
     <request-map uri="modifycart">
+        <security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="modifyCart"/>
         <response name="success" type="view" value="orderentry"/>
         <response name="error" type="view" value="orderentry"/>
     </request-map>
     <request-map uri="emptycart">
+        <security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="destroyCart"/>
         <response name="success" type="view" value="orderentry"/>
         <response name="error" type="view" value="orderentry"/>
     </request-map>
+
+    <request-map uri="showAllPromotions">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="showAllPromotions"/>
+    </request-map>
+    <request-map uri="showPromotionDetails">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="showPromotionDetails"/>
+    </request-map>
+
+
     <request-map uri="advancedsearch">
+        <security https="true" auth="true"/>
         <response name="success" type="view" value="advancedsearch"/>
     </request-map>
     <request-map uri="keywordsearch">
+        <security https="true" auth="true"/>
         <response name="success" type="view" value="keywordsearch"/>
     </request-map>
     <request-map uri="category">
+        <security https="true" auth="true"/>
         <response name="success" type="view" value="category"/>
     </request-map>
     <request-map uri="product">
+        <security https="true" auth="true"/>
         <response name="success" type="view" value="product"/>
     </request-map>
+
     <request-map uri="finalizeOrder">
         <security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.order.shoppingcart.CheckOutEvents" invoke="finalizeOrderEntry"/>
@@ -522,6 +542,9 @@
     <view-map name="optionsetting" type="jpublish" page="/entry/optionsettings.ftl"/>
     <view-map name="confirm" type="jpublish" page="/entry/confirmorder.ftl"/>
     <view-map name="ordercomplete" type="jpublish" page="/entry/ordercomplete.ftl"/>
+
+    <view-map name="showAllPromotions" type="jpublish" page="/entry/showAllPromotions.ftl"/>
+    <view-map name="showPromotionDetails" type="jpublish" page="/entry/showPromotionDetails.ftl"/>
 
     <view-map name="findreturn" type="jpublish" page="/return/findReturn.ftl"/>
     <view-map name="returnlist" type="jpublish" page="/return/returnList.ftl"/>
