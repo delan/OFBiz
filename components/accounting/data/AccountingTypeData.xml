@@ -83,7 +83,7 @@
     <GlAccountType description="Purchase" glAccountTypeId="PURCHASE_ACCOUNT" hasTable="N" parentTypeId=""/>
     <GlAccountType description="Inventory Change" glAccountTypeId="INV_CHANGE_ACCOUNT" hasTable="N" parentTypeId=""/>
     <GlAccountType description="Operating Expense" glAccountTypeId="OPERATING_EXPENSE" hasTable="N" parentTypeId=""/>
-    <GlAccountType description="Other Expense" glAccountTypeId="OPERATING_EXPENSE" hasTable="N" parentTypeId=""/>
+    <GlAccountType description="Other Expense" glAccountTypeId="OTHER_EXPENSE" hasTable="N" parentTypeId=""/>
     <GlAccountType description="Owner's Equity" glAccountTypeId="OWNERS_EQUITY" hasTable="N" parentTypeId=""/>
 
     <GlResourceType description="Money" glResourceTypeId="MONEY"/>
