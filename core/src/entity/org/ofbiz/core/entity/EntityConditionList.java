@@ -55,7 +55,9 @@ public class EntityConditionList extends EntityCondition {
             for (int i = 0; i < conditionList.size(); i++) {
                 EntityCondition condition = (EntityCondition) conditionList.get(i);
 
+                whereStringBuffer.append('(');
                 whereStringBuffer.append(condition.makeWhereString(modelEntity, entityConditionParams));
+                whereStringBuffer.append(')');
                 if (i < conditionList.size() - 1) {
                     whereStringBuffer.append(' ');
                     whereStringBuffer.append(operator.getCode());

@@ -55,7 +55,9 @@ public class EntityExprList extends EntityCondition {
             for (int i = 0; i < exprList.size(); i++) {
                 EntityExpr expr = (EntityExpr) exprList.get(i);
 
+                whereStringBuffer.append('(');
                 whereStringBuffer.append(expr.makeWhereString(modelEntity, entityConditionParams));
+                whereStringBuffer.append(')');
                 if (i < exprList.size() - 1) {
                     whereStringBuffer.append(' ');
                     whereStringBuffer.append(operator.getCode());
