@@ -21,23 +21,26 @@
  *
  *@author     David E. Jones
  *@author     Brad Steiner
- *@version    $Revision: 1.2 $
+ *@authorn    thierry.grauss@etu.univ-tours.fr (migration to uiLabelMap)
+ *@version    $Revision: 1.3 $
  *@since      2.2
 -->
+
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 
 <#if hasPermission>
 
 ${pages.get("/facility/FacilityTabBar.ftl")}
     
-    <div class="head1">Find Locations <span class="head2">for&nbsp;<#if facility?exists>${(facility.facilityName)?if_exists}</#if> [ID:${facilityId?if_exists}]</span></div>
-    <a href="<@ofbizUrl>/EditFacility</@ofbizUrl>" class="buttontext">[New Facility]</a>
-    <a href="<@ofbizUrl>/EditFacilityLocation?facilityId=${facilityId?if_exists}</@ofbizUrl>" class="buttontext">[New Facility Location]</a>
+    <div class="head1">${uiLabelMap.ProductFindLocationsFor}<span class="head2"><#if facility?exists>${(facility.facilityName)?if_exists}</#if> [${uiLabelMap.CommonId}:${facilityId?if_exists}]</span></div>
+    <a href="<@ofbizUrl>/EditFacility</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewFacility}]</a>
+    <a href="<@ofbizUrl>/EditFacilityLocation?facilityId=${facilityId?if_exists}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewFacilityLocation}]</a>
         
     <form action="<@ofbizUrl>/FindFacilityLocation</@ofbizUrl>" method="GET" style="margin: 0;">
         <table border="0" cellpadding="2" cellspacing="0">
         <#if !(facilityId?exists)>
             <tr>
-                <td width="26%" align=right><div class="tabletext">Facility</div></td>
+                <td width="26%" align=right><div class="tabletext">${uiLabelMap.ProductFacility}</div></td>
                 <td>&nbsp;</td>
                 <td width="74%"><input type="text" class="inputBox" value="" size="19" maxlength="20"></td>
             </tr>
@@ -45,56 +48,56 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
             <input type="hidden" name="facilityId" value="${facilityId}">
         </#if>
         <tr>
-            <td width="26%" align=right><div class="tabletext">Location SeqID</div></td>
+            <td width="26%" align=right><div class="tabletext">${uiLabelMap.ProductLocationSeqId}</div></td>
             <td>&nbsp;</td>
             <td width="74%"><input type="text" class="inputBox" name="locationSeqId" value="" size="19" maxlength="20"></td>
         </tr>
         <tr>
         <tr>
-            <td width="26%" align=right><div class="tabletext">Area</div></td>
+            <td width="26%" align=right><div class="tabletext">${uiLabelMap.CommonArea}</div></td>
             <td>&nbsp;</td>
             <td width="74%"><input type="text" class="inputBox" name="areaId" value="" size="19" maxlength="20"></td>
         </tr>
         <tr>
-            <td width="26%" align=right><div class="tabletext">Aisle</div></td>
+            <td width="26%" align=right><div class="tabletext">${uiLabelMap.ProductAisle}</div></td>
             <td>&nbsp;</td>
             <td width="74%"><input type="text" class="inputBox" name="aisleId" value="" size="19" maxlength="20"></td>
         </tr>
         <tr>
-            <td width="26%" align=right><div class="tabletext">Section</div></td>
+            <td width="26%" align=right><div class="tabletext">${uiLabelMap.ProductSection}</div></td>
             <td>&nbsp;</td>
             <td width="74%"><input type="text" class="inputBox" name="sectionId" value="" size="19" maxlength="20"></td>
         </tr>
         <tr>
-            <td width="26%" align=right><div class="tabletext">Level</div></td>
+            <td width="26%" align=right><div class="tabletext">${uiLabelMap.ProductLevel}</div></td>
             <td>&nbsp;</td>
             <td width="74%"><input type="text" class="inputBox" name="levelId" value="" size="19" maxlength="20"></td>
         </tr>
         <tr>
-            <td width="26%" align=right><div class="tabletext">Position</div></td>
+            <td width="26%" align=right><div class="tabletext">${uiLabelMap.ProductPosition}</div></td>
             <td>&nbsp;</td>
             <td width="74%"><input type="text" class="inputBox" name="positionId" value="" size="19" maxlength="20"></td>
         </tr>             
         <tr>
             <td colspan="2">&nbsp;</td>
-            <td colspan="1" align=left><input type="submit" name="look_up" value="Find"></td>
+            <td colspan="1" align=left><input type="submit" name="look_up" value="${uiLabelMap.CommonFind}"></td>
         </tr>
         </table>
     </form>
     
     <#if foundLocations?exists>
         <br>
-        <span class="head1">Found:&nbsp;</span><span class="head2"><b>${foundLocations.size()}</b>&nbsp;Location(s) for&nbsp;<#if facility?exists>${(facility.facilityName)?if_exists}</#if> [ID:${facilityId?if_exists}]</span>
+        <span class="head1">${uiLabelMap.CommonFound}:&nbsp;</span><span class="head2"><b>${foundLocations.size()}</b>&nbsp;${uiLabelMap.ProductLocationsFor}&nbsp;<#if facility?exists>${(facility.facilityName)?if_exists}</#if> [ID:${facilityId?if_exists}]</span>
         <table border="1" cellpadding="2" cellspacing="0">
         <tr>
-            <td><div class="tabletext"><b>Facility</b></div></td>
-            <td><div class="tabletext"><b>SeqID</b></div></td>
-            <td><div class="tabletext"><b>Type</b></div></td>
-            <td><div class="tabletext"><b>Area</b></div></td>
-            <td><div class="tabletext"><b>Aisle</b></div></td>
-            <td><div class="tabletext"><b>Section</b></div></td>
-            <td><div class="tabletext"><b>Level</b></div></td>
-            <td><div class="tabletext"><b>Position</b></div></td>
+            <td><div class="tabletext"><b>${uiLabelMap.ProductFacility}</b></div></td>
+            <td><div class="tabletext"><b>${uiLabelMap.ProductSeqId}</b></div></td>
+            <td><div class="tabletext"><b>${uiLabelMap.ProductType}</b></div></td>
+            <td><div class="tabletext"><b>${uiLabelMap.CommonArea}</b></div></td>
+            <td><div class="tabletext"><b>${uiLabelMap.ProductAisle}</b></div></td>
+            <td><div class="tabletext"><b>${uiLabelMap.ProductSection}</b></div></td>
+            <td><div class="tabletext"><b>${uiLabelMap.ProductLevel}</b></div></td>
+            <td><div class="tabletext"><b>${uiLabelMap.ProductPosition}</b></div></td>
             <td>&nbsp;</td>
             <td>&nbsp;</td>
             <#if itemId?exists>
@@ -113,20 +116,20 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
             <td><div class="tabletext">&nbsp;${(location.levelId)?if_exists}</div></td>
             <td><div class="tabletext">&nbsp;${(location.positionId)?if_exists}</div></td>       
             <td>
-            <a href="<@ofbizUrl>/EditInventoryItem?facilityId=${(location.facilityId)?if_exists}&locationSeqId=${(location.locationSeqId)?if_exists}</@ofbizUrl>" class="buttontext">[New Inventory Item]</a>
+            <a href="<@ofbizUrl>/EditInventoryItem?facilityId=${(location.facilityId)?if_exists}&locationSeqId=${(location.locationSeqId)?if_exists}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewInventoryItem}]</a>
             </td>
             <#if itemId?exists>
                 <td>
-                <a href="<@ofbizUrl>/UpdateInventoryItem?inventoryItemId=${itemId}&facilityId=${facilityId}&locationSeqId=${(location.locationSeqId)?if_exists}</@ofbizUrl>" class="buttontext">[Set Item ${itemId}]</a>
+                <a href="<@ofbizUrl>/UpdateInventoryItem?inventoryItemId=${itemId}&facilityId=${facilityId}&locationSeqId=${(location.locationSeqId)?if_exists}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductSetItem} ${itemId}]</a>
                 </td>
             </#if>   
             <td>          
-            <a href="<@ofbizUrl>/EditFacilityLocation?facilityId=${(location.facilityId)?if_exists}&locationSeqId=${(location.locationSeqId)?if_exists}</@ofbizUrl>" class="buttontext">[Edit]</a>
+            <a href="<@ofbizUrl>/EditFacilityLocation?facilityId=${(location.facilityId)?if_exists}&locationSeqId=${(location.locationSeqId)?if_exists}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonEdit}]</a>
             </td>     
         </tr>
         </#list>
         </table>
     </#if>
 <#else>
-  <h3>You do not have permission to view this page. ("FACILITY_VIEW" or "FACILITY_ADMIN" needed)</h3>
+  <h3>${uiLabelMap.ProductFacilityViewPermissionError})</h3>
 </#if>

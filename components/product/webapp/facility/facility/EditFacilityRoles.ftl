@@ -21,23 +21,26 @@
  *
  *@author     David E. Jones
  *@author     Brad Steiner
- *@version    $Revision: 1.1 $
+ *@author     thierry.grauss@etu.univ-tours.fr (migration to uiLabelMap)
+ *@version    $Revision: 1.2 $
  *@since      2.2
 -->
+
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 
 <#if hasPermission>
 
 ${pages.get("/facility/FacilityTabBar.ftl")}
     
-    <div class="head1">Roles <span class="head2">for <#if facility?exists>${(facility.facilityName)?if_exists}</#if> [ID:${facilityId?if_exists}]</span></div>
-    <a href="<@ofbizUrl>/EditFacility</@ofbizUrl>" class="buttontext">[New Facility]</a>
+    <div class="head1">${uiLabelMap.ProductRoleFor} <span class="head2"><#if facility?exists>${(facility.facilityName)?if_exists}</#if> [${uiLabelMap.CommonId}:${facilityId?if_exists}]</span></div>
+    <a href="<@ofbizUrl>/EditFacility</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewFacility}]</a>
     <p>
     
-    <p class="head2">Facility Role Member Maintenance</p>
+    <p class="head2">${uiLabelMap.ProductFacilityRoleMemberMaintenance}</p>
     <table border="1" cellpadding="2" cellspacing="0">
     <tr>
-        <td><div class="tabletext"><b>Party ID</b></div></td>
-        <td><div class="tabletext"><b>Role Type</b></div></td>  
+        <td><div class="tabletext"><b>${uiLabelMap.PartyPartyId}</b></div></td>
+        <td><div class="tabletext"><b>${uiLabelMap.ProductRoleType}</b></div></td>  
         <td><div class="tabletext"><b>&nbsp;</b></div></td>
     </tr>
     
@@ -48,7 +51,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
         <td><div class="tabletext">${(roleType.description)?if_exists}</div></td>    
         <td align="center">
         <a href="<@ofbizUrl>/removePartyFromFacility?facilityId=${(facilityRole.facilityId)?if_exists}&partyId=${(facilityRole.partyId)?if_exists}&roleTypeId=${(facilityRole.roleTypeId)?if_exists}</@ofbizUrl>" class="buttontext">
-        [Delete]</a>
+        [${uiLabelMap.CommonDelete}]</a>
         </td>
     </tr>
     </#list>
@@ -57,18 +60,18 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
     <br>
     <form method="POST" action="<@ofbizUrl>/addPartyToFacility</@ofbizUrl>" style="margin: 0;">
     <input type="hidden" name="facilityId" value="${facilityId}">  
-    <div class="head2">Add Facility Party Role:</div>
+    <div class="head2">${uiLabelMap.ProductAddFacilityPartyRole}:</div>
     <div class="tabletext">
-        Party ID: <input type="text" class="inputBox" size="20" name="partyId">
-        Role Type:
+        ${uiLabelMap.PartyPartyId}: <input type="text" class="inputBox" size="20" name="partyId">
+        ${uiLabelMap.ProductRoleType}:
         <select name="roleTypeId" class="selectBox"><option></option>
         <#list roles as role>
             <option value="${(role.roleTypeId)?if_exists}">${(role.description)?if_exists}</option>
         </#list>
         </select>
-        <input type="submit" value="Add">
+        <input type="submit" value="${uiLabelMap.CommonAdd}">
     </div>
     </form>
 <#else>
-  <h3>You do not have permission to view this page. ("FACILITY_VIEW" or "FACILITY_ADMIN" needed)</h3>
+  <h3>${uiLabelMap.ProductFacilityViewPermissionError}</h3>
 </#if>

@@ -20,22 +20,25 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
+ *@author     thierry.grauss@etu.univ-tours.fr (migration to uiLabelMap)
  *@created    May 10, 2002
  *@version    1.0
 -->
 
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
+
 <#if security.hasEntityPermission("FACILITY", "_VIEW", session)>
 
-<div class="head1">Facilities List</div>
+<div class="head1">${uiLabelMap.ProductFacilitiesList}</div>
 
-<div><a href='<@ofbizUrl>/EditFacility</@ofbizUrl>' class="buttontext">[Create New Facility]</a></div>
+<div><a href='<@ofbizUrl>/EditFacility</@ofbizUrl>' class="buttontext">[${uiLabelMap.ProductCreateNewFacility}]</a></div>
 <br>
 <table border="1" cellpadding='2' cellspacing='0'>
   <tr>
-    <td><div class="tabletext"><b>Facility&nbsp;Name&nbsp;[ID]</b></div></td>
-    <td><div class="tabletext"><b>Facility&nbsp;Type</b></div></td>
-    <td><div class="tabletext"><b>SqFt</b></div></td>
-    <td><div class="tabletext"><b>Description</b></div></td>
+    <td><div class="tabletext"><b>${uiLabelMap.ProductFacilityNameId}</b></div></td>
+    <td><div class="tabletext"><b>${uiLabelMap.ProductFacilityType}</b></div></td>
+    <td><div class="tabletext"><b>${uiLabelMap.ProductSqFt}</b></div></td>
+    <td><div class="tabletext"><b>${uiLabelMap.ProductDescription}</b></div></td>
     <td><div class="tabletext">&nbsp;</div></td>
   </tr>
 <#list facilities as facility>
@@ -55,6 +58,6 @@
 <br>
 
 <#else>
-  <h3>You do not have permission to view this page. ("FACILITY_VIEW" or "FACILITY_ADMIN" needed)</h3>
+  <h3>${uiLabelMap.ProductFacilityViewPermissionError}</h3>
 </#if>
 

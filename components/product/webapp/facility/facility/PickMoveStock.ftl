@@ -20,9 +20,12 @@
  *    THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author         David E. Jones (jonesde@ofbiz.org)
- *@version        $Revision: 1.3 $
+ *@author	  thierry.grauss@etu.univ-tours.fr (migration to uiLabelMap)
+ *@version        $Revision: 1.4 $
  *@since          3.0
 -->
+
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 
 <#if security.hasEntityPermission("FACILITY", "_VIEW", session)>
 
@@ -33,7 +36,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
         <td width="100%">
             <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
                 <tr>
-                    <td><div class="boxhead">Stock Moves Needed</div></td>
+                    <td><div class="boxhead">${uiLabelMap.ProductStockMovesNeeded}</div></td>
                     <td align="right">&nbsp;</td>
                 </tr>
             </table>
@@ -47,13 +50,13 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
                             <#assign rowCount = 0>     
                           <table border="1" cellspacing="0" cellpadding="2">
                             <tr>
-                                <td><div class="tableheadtext">Product</div></td>
-                                <td><div class="tableheadtext">From Location</div></td>
-                                <td><div class="tableheadtext">To Location</div></td>
-                                <td><div class="tableheadtext">Quantity</div></td>
-                                <td><div class="tableheadtext">Confirm</div></td>
+                                <td><div class="tableheadtext">${uiLabelMap.ProductProduct}</div></td>
+                                <td><div class="tableheadtext">${uiLabelMap.ProductFromLocation}</div></td>
+                                <td><div class="tableheadtext">${uiLabelMap.ProductToLocation}</div></td>
+                                <td><div class="tableheadtext">${uiLabelMap.ProductQuantity}</div></td>
+                                <td><div class="tableheadtext">${uiLabelMap.OrderConfirm}</div></td>
                                 <td align="right">
-                                    <span class="tableheadtext">Select All</span>&nbsp;
+                                    <span class="tableheadtext">${uiLabelMap.ProductSelectAll}</span>&nbsp;
                                     <input type="checkbox" name="selectAll" value="Y" onclick="javascript:toggleAll(this);">
                                 </td>
                             </tr>
@@ -110,11 +113,11 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
                                 </#list>
                                 <tr>
                                     <td colspan="6" align="right">
-                                        <a href="javascript:document.selectAllForm.submit();" class="buttontext">Confirm Selected Moves</a>
+                                        <a href="javascript:document.selectAllForm.submit();" class="buttontext">${uiLabelMap.ProductConfirmSelectedMoves}</a>
                                     </td>
                                 </tr>
                             <#else>
-                                <tr><td colspan="6"><div class="head3">No stock moves needed right now.</div></td></tr>
+                                <tr><td colspan="6"><div class="head3">${uiLabelMap.ProductNoStockMovesNeeded}.</div></td></tr>
                             </#if>
                         </table>
                         <input type="hidden" name="_rowCount" value="${rowCount}">
@@ -127,5 +130,5 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
 </table>
 
 <#else>
-    <h3>You do not have permission to view this page. ("FACILITY_VIEW" or "FACILITY_ADMIN" needed)</h3>
+    <h3>${uiLabelMap.ProductFacilityViewPermissionError}</h3>
 </#if>

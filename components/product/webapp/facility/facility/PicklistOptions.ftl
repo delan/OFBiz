@@ -21,9 +21,12 @@
  *
  *@author         David E. Jones (jonesde@ofbiz.org)
  *@author         Andy Zeneski (jaz@ofbiz.org)
- *@version        $Revision: 1.8 $
+ *@author	  thierry.grauss@etu.univ-tours.fr (migration to uiLabelMap)
+ *@version        $Revision: 1.9 $
  *@since            2.2
 -->
+
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 
 <#if security.hasEntityPermission("FACILITY", "_VIEW", session)>
 
@@ -34,10 +37,10 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
         <td width="100%">
             <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
                 <tr>
-                    <td><div class="boxhead">Find Orders to Pick</div></td>
+                    <td><div class="boxhead">${uiLabelMap.ProductFindOrdersToPick}</div></td>
                     <td align="right">
-                        <a href="<@ofbizUrl>/PickStarted?facilityId=${facilityId?if_exists}</@ofbizUrl>" class="submenutext">Picks In Progress</a>
-                        <a href="<@ofbizUrl>/PickMoveStock?facilityId=${facilityId?if_exists}</@ofbizUrl>" class="submenutext">Stock Moves</a>
+                        <a href="<@ofbizUrl>/PickStarted?facilityId=${facilityId?if_exists}</@ofbizUrl>" class="submenutext">${uiLabelMap.ProductPicksInProgress}</a>
+                        <a href="<@ofbizUrl>/PickMoveStock?facilityId=${facilityId?if_exists}</@ofbizUrl>" class="submenutext">${uiLabelMap.ProductStockMoves}</a>
                     </td>
                 </tr>
             </table>
@@ -46,9 +49,9 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
                     <td align="left" width="100%">
                         <table border="1" cellspacing="0" cellpadding="2">
                             <tr>
-                                <td><div class="tableheadtext">Shipment Method</div></td>
-                                <td><div class="tableheadtext">Ready To Pick</div></td>
-                                <td><div class="tableheadtext">Need Stock Move</div></td>
+                                <td><div class="tableheadtext">${uiLabelMap.ProductShipmentMethod}</div></td>
+                                <td><div class="tableheadtext">${uiLabelMap.ProductReadyToPick}</div></td>
+                                <td><div class="tableheadtext">${uiLabelMap.ProductNeedStockMove}</div></td>
                                 <td><div class="tableheadtext">&nbsp;</div></td>
                             </tr>
                             <#if pickMoveByShipmentMethodInfoList?has_content>
@@ -72,9 +75,9 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
                                                     <form method="POST" action="<@ofbizUrl>/Picklist.pdf</@ofbizUrl>">
                                                         <input type="hidden" name="facilityId" value="${facilityId}"/>
                                                         <input type="hidden" name="shipmentMethodTypeId" value="${shipmentMethodType.shipmentMethodTypeId}"/>
-                                                        Pick First:<input type="text" size="4" name="maxNumberOfOrders" value="20" class="inputBox"/>
-                                                        <input type="checkbox" name="setPickStartedDate" value="Y" class="checkBox"/>Flag Picking Started?
-                                                        <input type="submit" value="Pick" class="smallSubmit"/>
+                                                        ${uiLabelMap.ProductPickFirst}:<input type="text" size="4" name="maxNumberOfOrders" value="20" class="inputBox"/>
+                                                        <input type="checkbox" name="setPickStartedDate" value="Y" class="checkBox"/>${uiLabelMap.ProductFlagPickingStarted}?
+                                                        <input type="submit" value="${uiLabelMap.ProductPick}" class="smallSubmit"/>
                                                     </form>
                                                 <#else>
                                                     &nbsp;
@@ -84,22 +87,22 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
                                     </tr>
                                 </#list>
                                 <tr>
-                                    <td><div class="tableheadtext">All Methods</div></td>
+                                    <td><div class="tableheadtext">${uiLabelMap.CommonAllMethods}</div></td>
                                     <td><div class="tableheadtext">${orderReadyToPickInfoListSizeTotal}</div></td>
                                     <td><div class="tableheadtext">${orderNeedsStockMoveInfoListSizeTotal}</div></td>
                                     <td>
                                         <div class="tabletext">
                                             <form method="POST" action="<@ofbizUrl>/Picklist.pdf</@ofbizUrl>">
                                                 <input type="hidden" name="facilityId" value="${facilityId}"/>
-                                                Pick First:<input type="text" size="4" name="maxNumberOfOrders" value="20" class="inputBox"/>
-                                                <input type="checkbox" name="setPickStartedDate" value="Y" class="checkBox"/>Flag Picking Started?
-                                                <input type="submit" value="Pick" class="smallSubmit"/>
+                                                ${uiLabelMap.ProductPickFirst}:<input type="text" size="4" name="maxNumberOfOrders" value="20" class="inputBox"/>
+                                                <input type="checkbox" name="setPickStartedDate" value="Y" class="checkBox"/>${uiLabelMap.ProductFlagPickingStarted}?
+                                                <input type="submit" value="${uiLabelMap.ProductPick}" class="smallSubmit"/>
                                         </form>
                                         </div>
                                     </td>
                                 </tr>
                             <#else>
-                                <tr><td colspan="4"><div class="head3">No orders found that are ready to pick or that need stock moves.</div></td></tr>
+                                <tr><td colspan="4"><div class="head3">${uiLabelMap.ProductNoOrdersFoundReadyToPickOrNeedStockMoves}.</div></td></tr>
                             </#if>
                         </table>
                     </td>
@@ -110,5 +113,5 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
 </table>
 
 <#else>
-    <h3>You do not have permission to view this page. ("FACILITY_VIEW" or "FACILITY_ADMIN" needed)</h3>
+    <h3>${uiLabelMap.ProductFacilityViewPermissionError}</h3>
 </#if>
