@@ -31,6 +31,7 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.pos.adaptor.DataEventAdaptor;
 import org.ofbiz.pos.device.GenericDevice;
 import org.ofbiz.pos.screen.PosScreen;
+import org.ofbiz.pos.event.MenuEvents;
 
 /**
  *
@@ -99,7 +100,8 @@ public class Scanner extends GenericDevice {
             PosScreen.currentScreen.getInput().appendString(new String(data));
 
             // call the ENTER event
-            this.callEnter();
+            //this.callEnter();
+            MenuEvents.addItem(PosScreen.currentScreen, null);
         }
     }
 }
