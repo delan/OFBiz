@@ -131,6 +131,7 @@ public class GenericDelegator {
                 boolean addMissing = false;
                 if (datasourceElement == null) {
                     Debug.logWarning("datasource def not found with name " + helperName + ", using defaults for check-on-start (true) and add-missing-on-start (false)");
+                } else {
                     checkOnStart = !"false".equals(datasourceElement.getAttribute("check-on-start"));
                     addMissing = "true".equals(datasourceElement.getAttribute("add-missing-on-start"));
                 }
