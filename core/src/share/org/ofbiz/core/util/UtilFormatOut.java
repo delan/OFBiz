@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.1  2001/09/28 22:56:44  jonesde
+ * Big update for fromDate PK use, organization stuff
+ *
  * Revision 1.5  2001/09/10 21:40:44  epabst
  * added formatPercentage
  *
@@ -233,6 +236,32 @@ public class UtilFormatOut
     else return "";
   }
   
+  /** Returns the first passed String if not empty, otherwise the second if not empty, otherwise an empty but non-null String.
+   * @param string1 The first passed String
+   * @param string2 The second passed String
+   * @return The first passed String if not empty, otherwise the second if not empty, otherwise an empty but non-null String
+   */  
+  public static String checkEmpty(String string1, String string2)
+  {
+    if(string1 != null && string1.length() > 0) return string1;
+    else if(string2 != null && string2.length() > 0) return string2;
+    else return "";
+  }
+
+  /** Returns the first passed String if not empty, otherwise the second if not empty, otherwise the third if not empty, otherwise an empty but non-null String.
+   * @param string1 The first passed String
+   * @param string2 The second passed String
+   * @param string3 The third passed String
+   * @return The first passed String if not empty, otherwise the second if not empty, otherwise the third if not empty, otherwise an empty but non-null String
+   */  
+  public static String checkEmpty(String string1, String string2, String string3)
+  {
+    if(string1 != null && string1.length() > 0) return string1;
+    else if(string2 != null && string2.length() > 0) return string2;
+    else if(string3 != null && string3.length() > 0) return string3;
+    else return "";
+  }
+
   //------------------- web encode handlers -------------------
   /** Encodes an HTTP URL query String, replacing characters used for other things in HTTP URL query strings, but not touching the separator characters '?', '=', and '&'
    * @param query The plain query String
