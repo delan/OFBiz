@@ -6,4 +6,10 @@
         <condition field-name="message" operator="equals" value="12345"/>
         <action service="testBsh" mode="sync"/>
     </eca>
+    <eca service="testCommit" event="global-commit">
+        <action service="testScv" mode="sync"/>
+    </eca>
+    <eca service="testRollback" event="global-rollback">
+        <action service="testScv" mode="sync"/>
+    </eca>
 </service-eca>
