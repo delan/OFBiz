@@ -36,7 +36,7 @@
                   <widgets>
                        <decorator-screen name="main" location="component://content/widget/CommonScreens.xml" >
                          <decorator-section name="body">
-                           <menu name="cms" location="component://content/webapp/content/cms/CMSMenus.xml" />
+                           <include-menu name="cms" location="component://content/webapp/content/cms/CMSMenus.xml" />
                            <decorator-section-include name="body"/>
                           </decorator-section>
                         </decorator-screen>
