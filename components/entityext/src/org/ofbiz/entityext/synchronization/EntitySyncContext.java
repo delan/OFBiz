@@ -509,7 +509,7 @@ public class EntitySyncContext {
             long runningTimeMillis = System.currentTimeMillis() - startDate.getTime();
 
             this.currentRunStartTime = this.currentRunEndTime;
-            setCurrentRunEndTime();
+            this.setCurrentRunEndTime();
 
             // get the total for this split
             long splitTotalTime = System.currentTimeMillis() - this.splitStartTime;
