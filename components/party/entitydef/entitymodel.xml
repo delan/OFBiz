@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.12 $
+ * @version    $Revision: 1.13 $
  */
 -->
 
@@ -497,6 +497,8 @@
       <field name="entryDate" type="date-time"></field>
       <field name="datetimeStarted" type="date-time"></field>
       <field name="datetimeEnded" type="date-time"></field>
+      <field name="subject" type="long-varchar"></field>
+      <field name="content" type="very-long"></field>
       <field name="note" type="comment"></field>
       <prim-key field="communicationEventId"/>
       <relation type="one" fk-name="COM_EVNT_TYPE" rel-entity-name="CommunicationEventType">
@@ -544,6 +546,86 @@
         <key-map field-name="communicationEventId"/>
       </relation>
     </entity>
+    <view-entity entity-name="CommunicationEventAndRole"
+                 package-name="org.ofbiz.party.communication"
+                 title="Communication Event And Role View Entity">
+
+      <member-entity entity-alias="CR" entity-name="CommunicationEventRole"/>
+      <member-entity entity-alias="CE" entity-name="CommunicationEvent"/>
+      <alias entity-alias="CR" name="communicationEventId"/>
+      <alias entity-alias="CR" name="partyId"/>
+      <alias entity-alias="CR" name="roleTypeId"/>
+      <alias entity-alias="CE" name="communicationEventTypeId"/>
+      <alias entity-alias="CE" name="statusId"/>
+      <alias entity-alias="CE" name="custRequestId"/>
+      <alias entity-alias="CE" name="contactMechTypeId"/>
+      <alias entity-alias="CE" name="roleTypeIdFrom"/>
+      <alias entity-alias="CE" name="roleTypeIdTo"/>
+      <alias entity-alias="CE" name="partyIdFrom"/>
+      <alias entity-alias="CE" name="partyIdTo"/>
+      <alias entity-alias="CE" name="entryDate"/>
+      <alias entity-alias="CE" name="datetimeStarted"/>
+      <alias entity-alias="CE" name="datetimeEnded"/>
+      <alias entity-alias="CE" name="content"/>
+      <alias entity-alias="CE" name="note"/>
+      <view-link entity-alias="CR" rel-entity-alias="CE">
+        <key-map field-name="communicationEventId"/>
+      </view-link>
+      <relation type="one-nofk" rel-entity-name="Party">
+        <key-map field-name="partyId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="RoleType">
+        <key-map field-name="roleTypeId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="PartyRole">
+        <key-map field-name="partyId"/>
+        <key-map field-name="roleTypeId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="CommunicationEventType">
+        <key-map field-name="communicationEventTypeId"/>
+      </relation>
+      <relation type="many" rel-entity-name="CommunicationEventPurpose">
+        <key-map field-name="communicationEventId"/>
+      </relation>
+      <relation type="one-nofk" title="To" rel-entity-name="Party">
+        <key-map field-name="partyIdTo" rel-field-name="partyId"/>
+      </relation>
+      <relation type="one-nofk" title="To" rel-entity-name="RoleType">
+        <key-map field-name="roleTypeIdTo" rel-field-name="roleTypeId"/>
+      </relation>
+      <relation type="one-nofk" title="To" rel-entity-name="PartyRole">
+        <key-map field-name="partyIdTo" rel-field-name="partyId"/>
+        <key-map field-name="roleTypeIdTo" rel-field-name="roleTypeId"/>
+      </relation>
+      <relation type="one-nofk" title="From" rel-entity-name="Party">
+        <key-map field-name="partyIdFrom" rel-field-name="partyId"/>
+      </relation>
+      <relation type="one-nofk" title="From" rel-entity-name="RoleType">
+        <key-map field-name="roleTypeIdFrom" rel-field-name="roleTypeId"/>
+      </relation>
+      <relation type="one-nofk" title="From" rel-entity-name="PartyRole">
+        <key-map field-name="partyIdFrom" rel-field-name="partyId"/>
+        <key-map field-name="roleTypeIdFrom" rel-field-name="roleTypeId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="StatusItem">
+        <key-map field-name="statusId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="CustRequest">
+        <key-map field-name="custRequestId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="ContactMechType">
+        <key-map field-name="contactMechTypeId"/>
+      </relation>
+      <relation type="many" rel-entity-name="CommunicationEventRole">
+        <key-map field-name="communicationEventId"/>
+      </relation>
+      <relation type="many" rel-entity-name="PartyNeed">
+        <key-map field-name="communicationEventId"/>
+      </relation>
+      <relation type="many" rel-entity-name="CommunicationEventWorkEff">
+        <key-map field-name="communicationEventId"/>
+      </relation>
+    </view-entity>
     <entity entity-name="CommunicationEventPrpTyp"
             package-name="org.ofbiz.party.communication"
             title="Communication Event Purpose Type Entity">

@@ -24,17 +24,26 @@
  *
  * @author     Andy Zeneski (jaz@ofbiz.org)
  * @author     Olivier.Heintz@nereide.biz 
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.2
 -->
 
 <simple-methods>
 	<simple-method method-name="createCommunicationEvent" short-description="Create a CommunicationEvent">
-		<check-permission permission="PARTYMGR" action="_CREATE">
-				<fail-property resource="PartyUiLabels" property="PartyCreateCommunicationEventPermissionError"/>
-		</check-permission>
-		<check-errors/>
-		
+        <if>
+            <condition>
+                <and>
+                    <if-compare-field field-name="partyIdFrom" map-name="parameters" to-map-name="userLogin" to-field-name="partyId" operator="not-equals"/>
+                    <if-compare-field field-name="partyIdTo" map-name="parameters" to-map-name="userLogin" to-field-name="partyId" operator="not-equals"/>
+                </and>
+            </condition>
+            <then>
+                <check-permission permission="PARTYMGR" action="_CREATE">
+				    <fail-property resource="PartyUiLabels" property="PartyCreateCommunicationEventPermissionError"/>
+                </check-permission>
+            </then>
+        </if>
+
 		<make-value value-name="newEntity" entity-name="CommunicationEvent"/>
 		<set-nonpk-fields map-name="parameters" value-name="newEntity"/>
 		
