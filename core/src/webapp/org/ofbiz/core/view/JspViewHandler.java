@@ -70,8 +70,10 @@ public class JspViewHandler implements ViewHandler {
         } catch (ServletException e) {
             Throwable throwable = e.getRootCause() != null ? e.getRootCause() : e;
             if (throwable instanceof JspException) {
-                throwable = ((JspException) throwable).getRootCause();
+                JspException jspe = (JspException) throwable;
+                throwable = jspe.getRootCause() != null ? jspe.getRootCause() : jspe;
             }
+            Debug.logError(throwable, "ServletException rendering JSP view");
             throw new ViewHandlerException(e.getMessage(), throwable);
         }
     }
