@@ -1,5 +1,5 @@
 /*
- * $Id: BOMServices.java,v 1.1 2003/11/26 10:16:39 jacopo Exp $
+ * $Id: BOMServices.java,v 1.2 2004/02/17 11:27:39 jacopo Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -46,19 +46,22 @@ import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
 
-/**
- * ContentServices Class
- *
- * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.1 $
- * @since      2.2
- *
- *
+/** Bills of Materials' services implementation.
+ * These services are useful when dealing with product's
+ * bills of materials.
+ * @author <a href="mailto:tiz@sastau.it">Jacopo Cappellato</a>
  */
 public class BOMServices {
 
     public static final String module = BOMServices.class.getName();
 
+    /** Returns the product's low level code (llc) i.e. the maximum depth
+     * in which the productId can be found in any of the
+     * bills of materials of bomType type.
+     * @param dctx
+     * @param context
+     * @return
+     */    
     public static Map getMaxDepth(DispatchContext dctx, Map context) {
 
         Map result = new HashMap();
@@ -92,6 +95,14 @@ public class BOMServices {
         return result;
     }
 
+    /** Returns the ProductAssoc generic value for a duplicate productIdKey
+     * ancestor if present, null otherwise.
+     * Useful to avoid loops when adding new assocs (components)
+     * to a bill of materials.
+     * @param dctx
+     * @param context
+     * @return
+     */    
     public static Map searchDuplicatedAncestor(DispatchContext dctx, Map context) {
 
         Map result = new HashMap();
@@ -126,6 +137,16 @@ public class BOMServices {
         return result;
     }
 
+    /** It reads the product's bill of materials,
+     * if necessary configure it, and it returns
+     * an object (see {@link ItemConfigurationTree}
+     * and {@link ItemConfigurationNode}) that represents a
+     * configured bill of material tree.
+     * Useful for tree traversal (breakdown, explosion, implosion).
+     * @param dctx
+     * @param context
+     * @return
+     */    
     public static Map getItemConfigurationTree(DispatchContext dctx, Map context) {
 
         Map result = new HashMap();

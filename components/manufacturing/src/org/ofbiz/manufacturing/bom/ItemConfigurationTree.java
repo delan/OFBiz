@@ -20,22 +20,50 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 
-/**
- *
- * @author  jacopo
- */
+    /** It represents an (in-memory) bill of materials (in which each
+     * component is an ItemConfigurationNode)
+     * Useful for tree traversal (breakdown, explosion, implosion).
+     * @author <a href="mailto:tiz@sastau.it">Jacopo Cappellato</a>
+     */    
+ 
 public class ItemConfigurationTree {
     
     ItemConfigurationNode root;
     float rootQuantity;
     Date inDate;
     String bomTypeId;
-    
+
+    /** Creates a new instance of ItemConfigurationTree by reading downward
+     * the productId's bill of materials (explosion).
+     * If virtual products are found, it tries to configure them by running
+     * the Product Configurator.
+     * @param productId The product for which we want to get the bom.
+     * @param bomTypeId The bill of materials type (e.g. manufacturing, engineering, ...)
+     * @param inDate Validity date (if null, today is used).
+     *
+     * @param delegator The delegator used.
+     * @throws GenericEntityException If a db problem occurs.
+     *
+     */
     public ItemConfigurationTree(String productId, String bomTypeId, Date inDate, GenericDelegator delegator) throws GenericEntityException {
         this(productId, bomTypeId, inDate, true, delegator);
     }
     
-    /** Creates a new instance of ItemConfigurationTree */
+    /** Creates a new instance of ItemConfigurationTree by reading
+     * the productId's bill of materials (upward or downward).
+     * If virtual products are found, it tries to configure them by running
+     * the Product Configurator.
+     * @param productId The product for which we want to get the bom.
+     * @param bomTypeId The bill of materials type (e.g. manufacturing, engineering, ...)
+     * @param inDate Validity date (if null, today is used).
+     *
+     * @param explosion if true, a downward visit is performed (explosion);
+     * otherwise an upward visit is done (implosion).
+     *
+     * @param delegator The delegator used.
+     * @throws GenericEntityException If a db problem occurs.
+     *
+     */
     public ItemConfigurationTree(String productId, String bomTypeId, Date inDate, boolean explosion, GenericDelegator delegator) throws GenericEntityException {
         // If the parameters are not valid, return.
         if (productId == null || bomTypeId == null || delegator == null) return;
@@ -110,6 +138,12 @@ public class ItemConfigurationTree {
         return (children != null && children.size() > 0);
     }
 
+    /** It tells if the current (in-memory) tree representing
+     * a product's bill of materials is completely configured
+     * or not.
+     * @return true if no virtual nodes (products) are present in the tree.
+     *
+     */    
     public boolean isConfigured() {
         ArrayList notConfiguredParts = new ArrayList();
         root.isConfigured(notConfiguredParts);
@@ -157,28 +191,43 @@ public class ItemConfigurationTree {
         return bomTypeId;
     }
     
-    // ------------------------------------
-    // Method used for TEST and DEBUG purposes
+    /** It visits the in-memory tree that represents a bill of materials
+     * and it collects info of its nodes in the StringBuffer.
+     * Method used for debug purposes.
+     * @param sb The StringBuffer used to collect tree info.
+     */    
     public void print(StringBuffer sb) {
         if (root != null) {
             root.print(sb, getRootQuantity(), 0);
         }
     }
 
-    // Method used for TEST and DEBUG purposes
+    /** It visits the in-memory tree that represents a bill of materials
+     * and it collects info of its nodes in the ArrayList.
+     * Method used for bom breakdown (explosion/implosion).
+     * @param arr The ArrayList used to collect tree info.
+     */    
     public void print(ArrayList arr) {
         if (root != null) {
             root.print(arr, getRootQuantity(), 0);
         }
     }
 
-    // Method used for TEST and DEBUG purposes
+    /** It visits the in-memory tree that represents a bill of materials
+     * and it collects info of its nodes in the HashMap.
+     * Method used for bom summarized explosion.
+     * @param quantityPerNode The HashMap that will contain the summarized quantities per productId.
+     */    
     public void sumQuantities(HashMap quantityPerNode) {
         if (root != null) {
             root.sumQuantity(quantityPerNode);
         }
     }
     
+    /** It visits the in-memory tree that represents a bill of materials
+     * and it collects all the productId it contains.
+     * @return ArrayLsit conatining all the tree's productId.
+     */    
     public ArrayList getAllProductsId() {
         ArrayList nodeArr = new ArrayList();
         ArrayList productsId = new ArrayList();
