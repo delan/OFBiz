@@ -86,6 +86,13 @@
 
         <auto-fields-service service-name="createSurveyQuestionCategory"/>
         <field name="surveyId"><hidden value="${surveyId}"/></field>
+        <field name="parentCategoryId">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="SurveyQuestionCategory" description="${description} [${surveyQuestionCategoryId}]" key-field-name="surveyQuestionCategoryId">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
         <field name="submitButton" title="Create" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="CreateSurveyQuestionOption" type="single"
