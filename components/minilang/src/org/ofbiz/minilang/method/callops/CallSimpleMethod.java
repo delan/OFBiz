@@ -1,5 +1,5 @@
 /*
- * $Id: CallSimpleMethod.java,v 1.2 2003/09/14 05:40:41 jonesde Exp $
+ * $Id$
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -34,7 +34,7 @@ import org.ofbiz.minilang.method.*;
  * An operation that calls a simple method in the same, or from another, file
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.2 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class CallSimpleMethod extends MethodOperation {

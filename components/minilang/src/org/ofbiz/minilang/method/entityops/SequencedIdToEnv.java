@@ -1,5 +1,5 @@
 /*
- * $Id: SequencedIdToEnv.java,v 1.3 2004/07/03 19:54:22 jonesde Exp $
+ * $Id$
  *
  *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -34,7 +34,7 @@ import org.w3c.dom.Element;
  * Gets a sequenced ID from the delegator and puts it in the env
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.3 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class SequencedIdToEnv extends MethodOperation {

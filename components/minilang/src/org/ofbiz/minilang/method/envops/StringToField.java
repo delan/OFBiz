@@ -1,5 +1,5 @@
 /*
- * $Id: StringToField.java,v 1.2 2004/05/15 23:06:01 jonesde Exp $
+ * $Id$
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -36,7 +36,7 @@ import org.ofbiz.minilang.method.*;
  * Copies the specified String to a field
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.2 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class StringToField extends MethodOperation {

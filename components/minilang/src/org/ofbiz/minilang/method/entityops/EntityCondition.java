@@ -1,5 +1,5 @@
 /*
- * $Id: EntityCondition.java,v 1.1 2004/07/18 10:09:38 jonesde Exp $
+ * $Id$
  *
  *  Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -36,7 +36,7 @@ import org.w3c.dom.Element;
  * Uses the delegator to find entity values by a condition
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Rev:$
  * @since      3.1
  */
 public class EntityCondition extends MethodOperation {

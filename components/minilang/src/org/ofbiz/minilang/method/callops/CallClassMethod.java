@@ -1,5 +1,5 @@
 /*
- * $Id: CallClassMethod.java,v 1.2 2004/04/30 00:24:07 jonesde Exp $
+ * $Id$
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -36,7 +36,7 @@ import org.ofbiz.minilang.method.*;
  * Calls a Java class method using the given fields as parameters
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.2 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class CallClassMethod extends MethodOperation {

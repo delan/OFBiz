@@ -1,5 +1,5 @@
 /*
- * $Id: SimpleMapOperation.java,v 1.3 2004/05/14 23:37:41 jonesde Exp $
+ * $Id$
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -32,7 +32,7 @@ import org.ofbiz.base.util.*;
  * A single operation, does the specified operation on the given field
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.3 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public abstract class SimpleMapOperation {

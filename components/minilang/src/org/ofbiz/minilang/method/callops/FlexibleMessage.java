@@ -1,5 +1,5 @@
 /*
- * $Id: FlexibleMessage.java,v 1.3 2004/07/22 05:00:59 ajzeneski Exp $
+ * $Id$
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -32,7 +32,7 @@ import org.ofbiz.minilang.method.*;
  * Simple class to wrap messages that come either from a straight string or a properties file
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.3 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class FlexibleMessage {

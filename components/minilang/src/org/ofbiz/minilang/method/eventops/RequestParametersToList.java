@@ -1,5 +1,5 @@
 /*
- * $Id: RequestParametersToList.java,v 1.1 2003/11/23 11:57:09 jonesde Exp $
+ * $Id$
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -34,7 +34,7 @@ import org.ofbiz.minilang.method.*;
  * Copies a Servlet request parameter values to a list
  *
  * @author     <a href="mailto:quake.sh@ofbizchina.com">Quake Wang</a>
- * @version    $Revision: 1.1 $
+ * @version    $Rev:$
  * @since      3.0
  */
 public class RequestParametersToList extends MethodOperation {

@@ -1,5 +1,5 @@
 /*
- * $Id: IterateMap.java,v 1.1 2003/08/17 06:06:12 ajzeneski Exp $
+ * $Id$
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -39,7 +39,7 @@ import org.w3c.dom.Element;
  * Process sub-operations for each entry in the map
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class IterateMap extends MethodOperation {

@@ -1,5 +1,5 @@
 /*
- * $Id: CompareFieldCondition.java,v 1.2 2003/09/14 05:40:41 jonesde Exp $
+ * $Id$
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -34,7 +34,7 @@ import org.ofbiz.minilang.operation.*;
  * Implements compare to a field condition.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.2 $
+ * @version    $Rev:$
  * @since      2.1
  */
 public class CompareFieldCondition implements Conditional {
