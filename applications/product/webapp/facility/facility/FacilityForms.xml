@@ -43,6 +43,7 @@
                 </entity-options>
             </drop-down>
         </field>
+        <field name="offsetQty" title="${uiLabelMap.ProductQtyOffset}"><text/></field>
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="standardSubmit">
             <submit button-type="button"/>
         </field>
@@ -58,5 +59,6 @@
         <field name="daysToShip"><display/></field>
         <field name="totalAvailableToPromise"><display/></field>
         <field name="totalQuantityOnHand"><display/></field>
+        <field name="offsetQtyAvailable"><display/></field>
     </form>
 </forms>
