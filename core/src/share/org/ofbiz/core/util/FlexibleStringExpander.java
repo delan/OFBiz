@@ -88,6 +88,11 @@ public class FlexibleStringExpander {
      * @return The original String expanded by replacing varaible place holders.
      */
     public static String expandString(String original, Map context) {
+        // if null or less than 3 return original; 3 chars because that is the minimum necessary for a ${}
+        if (original == null || original.length() < 3) {
+            return original;
+        }
+        
         // start by checking to see if expansion is necessary for better performance
         // this is also necessary for the nested stuff since this will be the stopping point for nested expansions
         int start = original.indexOf("${");
