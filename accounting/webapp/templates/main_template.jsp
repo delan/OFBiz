@@ -43,40 +43,22 @@
 <region:render section='appbar'/>
 
 <div class="centerarea">
-<region:render section='header'/>
-
-<table width="100%" border="0" align="center" cellspacing="0" cellpadding="1">   							  
-  <tr> 
-    <td valign="bottom" style="padding-bottom: 0pt;"> 
-      <table cellpadding="0" cellspacing="2" width="100%">      
+  <region:render section='header'/>
+  <div class="contentarea">
+    <div style='border: 0; margin: 0; padding: 0; width: 100%;'>
+      <table style='border: 0; margin: 0; padding: 0; width: 100%;' cellpadding='0' cellspacing='0'>
         <tr>
-          <td height="4"><img src="merchandising_files/spacer.gif" width="1" height="4"></td>
-          <td align="right" nowrap="nowrap" width="100%" rowspan="2"></td>
-        </tr>
-      </table>
-    </td>
-  </tr>						  
-  <tr> 
-    <td class="blackarea"> 
-      <table width="100%" border="0" cellspacing="0" cellpadding="7">    
-        <tr> 
-          <td class="contentarea">          
-            <table width="100%" border="0" cellpadding="0" cellspacing="0">
-              <tr>
-                <region:render section='leftbar'/>
-                <td width='100%' valign='top' align='left'>
-                  <region:render section='error'/>
-                  <region:render section='content'/>
-                </td>
-                <region:render section='rightbar'/>
-              </tr>
-            </table>                              
+          <region:render section='leftbar'/>
+          <td width='100%' valign='top' align='left'>
+            <region:render section='error'/>
+            <region:render section='content'/>
           </td>
-        </tr>              
-      </table>
-    </td>
-  </tr>  
-</table>
+          <region:render section='rightbar'/>
+        </tr>
+      </table>       
+    </div>
+    <div class='spacer'></div>
+  </div>
 </div>
 
 <region:render section='footer'/>

@@ -6,34 +6,14 @@
 
 <jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="request" />
 
-<ofbiz:if name="userLogin">
-<table width="100%" border="0" align="center" cellspacing="0" cellpadding="0">                                                    
-  <tr> 
-    <td> 
-      <table width="100%" border="0" cellspacing="0" cellpadding="0">                                                              
-        <tr>                                     
-          <td align="left" height="22" class="apptitle">&nbsp;Content Manager Application&nbsp;</td>
-        </tr>                            
-      </table>
-    </td>
-  </tr>
-  <tr>  
-    <td width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0'>
-        <tr>
-          <td class="headerButtonLeft"><a href="<ofbiz:url>/main</ofbiz:url>" class="headerbuttontext">Main</a></td>
-
-          <td width="90%" align=center class='headerCenter'>&nbsp;</td>
-
-          <ofbiz:unless name="userLogin">
-            <td class="headerButtonRight"><a href='<ofbiz:url><%=CommonWorkers.makeLoginUrl(pageContext)%></ofbiz:url>' class='headerbuttontext'>Login</a></td>
-          </ofbiz:unless>
-          <ofbiz:if name="userLogin">
-            <td class="headerButtonRight"><a href="<ofbiz:url>/logout</ofbiz:url>" class="headerbuttontext">Logout</a></td>
-          </ofbiz:if>
-        </TR>
-      </table>
-    </td>
-  </tr>               
-</table>
-</ofbiz:if>
+<div class="apptitle">&nbsp;Content Manager Application&nbsp;</div>
+<div class="row">
+  <div class="col"><a href="<ofbiz:url>/main</ofbiz:url>" class="headerButtonLeft">Main</a></div>   
+  <ofbiz:unless name="userLogin">
+    <div class="col-right"><a href='<ofbiz:url><%=CommonWorkers.makeLoginUrl(pageContext)%></ofbiz:url>' class='headerButtonRight'>Login</a></div>
+  </ofbiz:unless>
+  <ofbiz:if name="userLogin">
+    <div class="col-right"><a href="<ofbiz:url>/logout</ofbiz:url>" class="headerButtonRight">Logout</a></div>
+  </ofbiz:if>  
+  <div class="col-fill">&nbsp;</div>
+</div>

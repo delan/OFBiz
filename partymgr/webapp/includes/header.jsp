@@ -6,47 +6,28 @@
 
 <jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="request" />
 
-<ofbiz:if name="userLogin">
-<table width="100%" border="0" align="center" cellspacing="0" cellpadding="0">                                                    
-  <tr> 
-    <td> 
-      <table width="100%" border="0" cellspacing="0" cellpadding="0">                                                              
-        <tr>                                     
-          <td align="left" height="22" class="apptitle">&nbsp;Party Manager Application&nbsp;</td>
-        </tr>                            
-      </table>
-    </td>
-  </tr>
-  <tr>  
-    <td width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0'>
-        <tr>
-          <td class="headerButtonLeft"><a href="<ofbiz:url>/main</ofbiz:url>" class="headerbuttontext">Main</a></td>
-          <td nowrap class="headerButtonLeft"><a href="<ofbiz:url>/findparty</ofbiz:url>" class="headerbuttontext">Find&nbsp;Party</a></td>
-          <%if(security.hasEntityPermission("PARTYMGR", "_CREATE", session)) {%>
-            <td nowrap class="headerButtonLeft"><a href="<ofbiz:url>/editpartygroup?create_new=Y</ofbiz:url>" class="headerbuttontext">New&nbsp;Group</a></td>
-          <%}%>
-          <%if(security.hasEntityPermission("PARTYMGR", "_CREATE", session)) {%>
-            <td nowrap class="headerButtonLeft"><a href="<ofbiz:url>/editperson?create_new=Y</ofbiz:url>" class="headerbuttontext">New&nbsp;Person</a></td>
-          <%}%>
-          <%if(security.hasEntityPermission("PARTYMGR", "_CREATE", session)) {%>
-            <td nowrap class="headerButtonLeft"><a href="<ofbiz:url>/newcustomer</ofbiz:url>" class="headerbuttontext">New&nbsp;Customer</a></td>
-          <%}%>
-          <%if(security.hasEntityPermission("SECURITY", "_VIEW", session)) {%>
-            <td nowrap class="headerButtonLeft"><a href="<ofbiz:url>/FindSecurityGroup</ofbiz:url>" class="headerbuttontext">Security</a></td>
-          <%}%>
+<div class="apptitle">&nbsp;Party Manager Application&nbsp;</div>
+<div class="row">
+  <div class="col"><a href="<ofbiz:url>/main</ofbiz:url>" class="headerButtonLeft">Main</a></div>   
+  <div class="col"><a href="<ofbiz:url>/findparty</ofbiz:url>" class="headerButtonLeft">Find&nbsp;Party</a></div>
+  <%if(security.hasEntityPermission("PARTYMGR", "_CREATE", session)) {%>
+  <div class="col"><a href="<ofbiz:url>/editpartygroup?create_new=Y</ofbiz:url>" class="headerButtonLeft">New&nbsp;Group</a></div>
+  <%}%>
+  <%if(security.hasEntityPermission("PARTYMGR", "_CREATE", session)) {%>
+  <div class="col"><a href="<ofbiz:url>/editperson?create_new=Y</ofbiz:url>" class="headerButtonLeft">New&nbsp;Person</a></div>
+  <%}%>
+  <%if(security.hasEntityPermission("PARTYMGR", "_CREATE", session)) {%>
+  <div class="col"><a href="<ofbiz:url>/newcustomer</ofbiz:url>" class="headerButtonLeft">New&nbsp;Customer</a></div>
+  <%}%>
+  <%if(security.hasEntityPermission("SECURITY", "_VIEW", session)) {%>
+  <div class="col"><a href="<ofbiz:url>/FindSecurityGroup</ofbiz:url>" class="headerButtonLeft">Security</a></div>
+  <%}%>    
+  <ofbiz:unless name="userLogin">
+    <div class="col-right"><a href='<ofbiz:url><%=CommonWorkers.makeLoginUrl(pageContext)%></ofbiz:url>' class='headerButtonRight'>Login</a></div>
+  </ofbiz:unless>
+  <ofbiz:if name="userLogin">
+    <div class="col-right"><a href="<ofbiz:url>/logout</ofbiz:url>" class="headerButtonRight">Logout</a></div>
+  </ofbiz:if>  
+  <div class="col-fill">&nbsp;</div>
+</div>
 
-          <td width="90%" align=center class='headerCenter'>&nbsp;</td>
-
-          <ofbiz:unless name="userLogin">
-            <td class="headerButtonRight"><a href='<ofbiz:url><%=CommonWorkers.makeLoginUrl(pageContext)%></ofbiz:url>' class='headerbuttontext'>Login</a></td>
-          </ofbiz:unless>
-          <ofbiz:if name="userLogin">
-            <td class="headerButtonRight"><a href="<ofbiz:url>/logout</ofbiz:url>" class="headerbuttontext">Logout</a></td>
-          </ofbiz:if>
-        </TR>
-      </table>
-    </td>
-  </tr>               
-</table>
-</ofbiz:if>

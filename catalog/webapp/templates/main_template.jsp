@@ -45,20 +45,24 @@
 <div class="centerarea">
   <region:render section='header'/>
   <div class="contentarea">
-    <table style='border: 0; margin: 0; padding: 0; width: auto;' cellpadding='0' cellspacing='0'>
-      <tr>
-        <region:render section='leftbar'/>
-        <td width='100%' valign='top' align='left'>
-          <region:render section='error'/>
-          <region:render section='content'/>
-        </td>
-        <region:render section='rightbar'/>
-      </tr>
-    </table>          
-  </div>  
+    <div style='border: 0; margin: 0; padding: 0; width: 100%;'>
+      <table style='border: 0; margin: 0; padding: 0; width: 100%;' cellpadding='0' cellspacing='0'>
+        <tr>
+          <region:render section='leftbar'/>
+          <td width='100%' valign='top' align='left'>
+            <region:render section='error'/>
+            <region:render section='content'/>
+          </td>
+          <region:render section='rightbar'/>
+        </tr>
+      </table>       
+    </div>
+    <div class='spacer'></div>
+  </div>
 </div>
 
 <region:render section='footer'/>
+
 
 </body>
 </html>

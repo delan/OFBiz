@@ -28,6 +28,10 @@
 <%@ page import="org.ofbiz.core.security.*" %>
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 
+<div style= "width: 100%; background-color: #000099;
+border: 0; padding: 0px; margin: 0px auto;">
+<div class="spacer"></div>
+
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>

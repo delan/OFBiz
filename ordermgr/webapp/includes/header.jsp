@@ -6,50 +6,26 @@
 
 <jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="request" />
 
-<ofbiz:if name="userLogin">
-<table width="100%" border="0" align="center" cellspacing="0" cellpadding="0">                                                    
-  <tr> 
-    <td> 
-      <table width="100%" border="0" cellspacing="0" cellpadding="0">                                                              
-        <tr>                                     
-          <td align="left" height="22" class="apptitle">&nbsp;Order Manager Application&nbsp;</td>
-        </tr>                            
-      </table>
-    </td>
-  </tr>
-  <tr>  
-    <td width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0'>
-        <tr>
-          <td class="headerButtonLeft"><a href="<ofbiz:url>/main</ofbiz:url>" class="headerbuttontext">Main</a></td>
-
-		  <%if(security.hasRolePermission("ORDERMGR", "_VIEW", "", "", session)) {%>
-          <td class="headerButtonLeft"><a href="<ofbiz:url>/tasklist</ofbiz:url>" class="headerbuttontext">Order&nbsp;List</a></td>
-          <%}%>
-
-		  <%if(security.hasEntityPermission("ORDERMGR", "_VIEW", session)) {%>
-          <td class="headerButtonLeft"><a href="<ofbiz:url>/orderlist</ofbiz:url>" class="headerbuttontext">Find&nbsp;Orders</a></td>
-          <%}%>
-
-		  <%if(security.hasEntityPermission("ORDERMGR", "_CREATE", session)) {%>
-		  <td class="headerButtonLeft"><a href="<ofbiz:url>/salesentry</ofbiz:url>" class="headerbuttontext">Sale&nbsp;Entry</a></td>
-		  <!--<td class="headerButtonLeft"><a href="#" class="headerbuttontext">Purchase&nbsp;Entry</a></td>-->
-          <%}%>
-
-          <td class="headerButtonLeft"><a href="<ofbiz:url>/orderreportlist</ofbiz:url>" class="headerbuttontext">Order&nbsp;Reports</a></td>
-         
-          <td width="90%" align='center' class='headerCenter'>&nbsp;</td>
-
-          <td class="headerButtonRight"><a href='<ofbiz:url>/shipsetup</ofbiz:url>' class="headerbuttontext">Setup</a></td>
-          <ofbiz:unless name="userLogin">
-            <td class="headerButtonRight"><a href='<ofbiz:url><%=CommonWorkers.makeLoginUrl(pageContext)%></ofbiz:url>' class='headerbuttontext'>Login</a></td>
-          </ofbiz:unless>
-          <ofbiz:if name="userLogin">
-            <td class="headerButtonRight"><a href="<ofbiz:url>/logout</ofbiz:url>" class="headerbuttontext">Logout</a></td>
-          </ofbiz:if>
-        </TR>
-      </table>
-    </td>
-  </tr>               
-</table>
-</ofbiz:if>
+<div class="apptitle">&nbsp;Order Manager Application&nbsp;</div>
+<div class="row">
+  <div class="col"><a href="<ofbiz:url>/main</ofbiz:url>" class="headerButtonLeft">Main</a></div>
+  <%if(security.hasRolePermission("ORDERMGR", "_VIEW", "", "", session)) {%>
+  <div class="col"><a href="<ofbiz:url>/tasklist</ofbiz:url>" class="headerButtonLeft">Order&nbsp;List</a></div>
+  <%}%>
+  <%if(security.hasEntityPermission("ORDERMGR", "_VIEW", session)) {%>
+  <div class="col"><a href="<ofbiz:url>/orderlist</ofbiz:url>" class="headerButtonLeft">Find&nbsp;Orders</a></div>
+  <%}%>
+  <%if(security.hasEntityPermission("ORDERMGR", "_CREATE", session)) {%>
+  <div class="col"><a href="<ofbiz:url>/salesentry</ofbiz:url>" class="headerButtonLeft">Sale&nbsp;Entry</a></div>
+  <%--<div class="col"><a href="#" class="headerButtonLeft">Purchase&nbsp;Entry</a></div>--%>
+  <%}%>
+  <div class="col"><a href="<ofbiz:url>/orderreportlist</ofbiz:url>" class="headerButtonLeft">Order&nbsp;Reports</a></div>                 
+  <ofbiz:unless name="userLogin">
+    <div class="col-right"><a href='<ofbiz:url><%=CommonWorkers.makeLoginUrl(pageContext)%></ofbiz:url>' class='headerButtonRight'>Login</a></div>
+  </ofbiz:unless>
+  <ofbiz:if name="userLogin">
+    <div class="col-right"><a href="<ofbiz:url>/logout</ofbiz:url>" class="headerButtonRight">Logout</a></div>
+  </ofbiz:if>  
+  <div class="col-right"><a href='<ofbiz:url>/shipsetup</ofbiz:url>' class="headerButtonRight">Setup</a></div>
+  <div class="col-fill">&nbsp;</div>
+</div>
