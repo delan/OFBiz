@@ -435,7 +435,7 @@ public class ModelService {
         if (!inheritedParameters) {
             // services w/ engine 'group' auto-implement the grouped services
             if (this.engineName.equals("group") && implServices.size() == 0) {
-                GroupModel group = ServiceGroupReader.getGroupModel(this.name);
+                GroupModel group = ServiceGroupReader.getGroupModel(this.location);
                 if (group != null) {
                     List groupedServices = group.getServices();
                     Iterator i = groupedServices.iterator();
