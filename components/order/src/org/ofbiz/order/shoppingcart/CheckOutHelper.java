@@ -1,5 +1,5 @@
 /*
- * $Id: CheckOutHelper.java,v 1.22 2004/06/06 02:44:17 jonesde Exp $
+ * $Id: CheckOutHelper.java,v 1.23 2004/06/28 20:17:59 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -64,7 +64,7 @@ import org.ofbiz.service.ServiceUtil;
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:tristana@twibble.org">Tristan Austin</a>
- * @version    $Revision: 1.22 $
+ * @version    $Revision: 1.23 $
  * @since      2.0
  */
 public class CheckOutHelper {
@@ -662,6 +662,10 @@ public class CheckOutHelper {
                 Debug.logWarning(e, module);
             }
             if (Debug.verboseOn()) Debug.logVerbose("Finsished w/ Payment Service", module);
+
+            // grab the customer messages -- only passed back in the case of an error or failure
+            List messages = (List) paymentResult.get("authResultMsgs");
+
             if (paymentResult != null && paymentResult.containsKey("processResult")) {
                 String authResp = (String) paymentResult.get("processResult");
 
@@ -676,7 +680,11 @@ public class CheckOutHelper {
 
                     // null out the orderId for next pass.
                     cart.setOrderId(null);
-                    return ServiceUtil.returnError(DECLINE_MESSAGE);
+                    if (messages == null || messages.size() == 0) {
+                        return ServiceUtil.returnError(DECLINE_MESSAGE);
+                    } else {
+                        return ServiceUtil.returnError(messages);
+                    }
                 } else if (authResp.equals("APPROVED")) {
                     // order WAS approved
                     if (Debug.verboseOn()) Debug.logVerbose("Payment auth was a success!", module);
@@ -700,7 +708,11 @@ public class CheckOutHelper {
                         }
                         // null out orderId for next pass
                         this.cart.setOrderId(null);
-                        return ServiceUtil.returnError(ERROR_MESSAGE);
+                        if (messages == null || messages.size() == 0) {
+                            return ServiceUtil.returnError(ERROR_MESSAGE);
+                        } else {
+                            return ServiceUtil.returnError(messages);
+                        }
                     }
                 } else {
                     // should never happen

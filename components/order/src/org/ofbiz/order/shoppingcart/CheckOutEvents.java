@@ -1,5 +1,5 @@
 /*
- * $Id: CheckOutEvents.java,v 1.31 2004/06/02 16:29:14 ajzeneski Exp $
+ * $Id: CheckOutEvents.java,v 1.32 2004/06/28 20:17:59 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -62,7 +62,7 @@ import org.ofbiz.service.ServiceUtil;
  * @author <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author <a href="mailto:tristana@twibble.org">Tristan Austin</a>
- * @version $Revision: 1.31 $
+ * @version $Revision: 1.32 $
  * @since 2.0
  */
 public class CheckOutEvents {
@@ -570,6 +570,12 @@ public class CheckOutEvents {
 
         // generate any messages required
         ServiceUtil.getMessages(request, callResult, null);
+
+        // check for customer message(s)
+        List messages = (List) callResult.get("authResultMsgs");
+        if (messages != null && messages.size() > 0) {
+            request.setAttribute("_EVENT_MESSAGE_LIST_", messages);
+        }
 
         // determine whether it was a success or failure
         return (callResult.get(ModelService.RESPONSE_MESSAGE).equals(ModelService.RESPOND_SUCCESS));
