@@ -1375,17 +1375,18 @@ public class OrderServices {
     // return / refund services
     
     // credit (billingAccount) return
-    public static Map processCreditRefund(DispatchContext ctx, Map context) {
+    public static Map processCreditReturn(DispatchContext ctx, Map context) {
         LocalDispatcher dispatcher = ctx.getDispatcher(); 
         GenericDelegator delegator = ctx.getDelegator();
-        String returnId = (String) context.get("returnId");        
+        String returnId = (String) context.get("returnId"); 
+        GenericValue userLogin = (GenericValue) context.get("userLogin");       
         
         GenericValue returnHeader = null;
         List returnItems = null;
         try {
             returnHeader = delegator.findByPrimaryKey("ReturnHeader", UtilMisc.toMap("returnId", returnId));
             if (returnHeader != null) {
-                returnItems = returnHeader.getRelatedByAnd("ReturnItem", UtilMisc.toMap("returnItemTypeId", "RTN_CREDIT"));
+                returnItems = returnHeader.getRelatedByAnd("ReturnItem", UtilMisc.toMap("returnTypeId", "RTN_CREDIT"));
             }
         } catch (GenericEntityException e) {
             Debug.logError(e, "Problems looking up return information", module);
@@ -1398,13 +1399,20 @@ public class OrderServices {
             if (billingAccountId == null) {
                 // create new BillingAccount w/ 0 balance                
                 try {
-                    Map newBa = dispatcher.runSync("createBillingAccount", UtilMisc.toMap("accountLimit", new Double(0.00), "description", "Credit Account"));
+                    Map newBa = dispatcher.runSync("createBillingAccount", UtilMisc.toMap("accountLimit", new Double(0.00), "description", "Credit Account", "userLogin", userLogin));
                     if (!newBa.get(ModelService.RESPONSE_MESSAGE).equals(ModelService.RESPOND_ERROR)) {
                         billingAccountId = (String) newBa.get("billingAccountId");
                         if (billingAccountId != null) {
                             // set the role on the account
-                            Map newBaR = dispatcher.runSync("createBillingAccountRole", UtilMisc.toMap("billingAccountId", billingAccountId, "partyId", fromPartyId, "roleTypeId", "BILL_TO_CUSTOMER"));
+                            Map newBaR = dispatcher.runSync("createBillingAccountRole", UtilMisc.toMap("billingAccountId", billingAccountId, "partyId", fromPartyId, "roleTypeId", "BILL_TO_CUSTOMER", "userLogin", userLogin));
+                            if (newBaR.get(ModelService.RESPONSE_MESSAGE).equals(ModelService.RESPOND_ERROR)) {
+                                Debug.logError("Error with createBillingAccountRole: " + newBaR.get(ModelService.ERROR_MESSAGE), module);
+                                return ServiceUtil.returnError("Error with createBillingAccountRole: " + newBaR.get(ModelService.ERROR_MESSAGE));                                
+                            }
                         }
+                    } else {                        
+                        Debug.logError("Error with createBillingAccount: " + newBa.get(ModelService.ERROR_MESSAGE), module);
+                        return ServiceUtil.returnError("Error with createBillingAccount: " + newBa.get(ModelService.ERROR_MESSAGE));                        
                     }
                 } catch (GenericServiceException e) {
                     Debug.logError(e, "Problems creating BillingAccount", module);
@@ -1475,7 +1483,7 @@ public class OrderServices {
         try {
             returnHeader = delegator.findByPrimaryKey("ReturnHeader", UtilMisc.toMap("returnId", returnId));
             if (returnHeader != null) {
-                returnItems = returnHeader.getRelatedByAnd("ReturnItem", UtilMisc.toMap("returnItemTypeId", "RTN_REFUND"));
+                returnItems = returnHeader.getRelatedByAnd("ReturnItem", UtilMisc.toMap("returnTypeId", "RTN_REFUND"));
             }
         } catch (GenericEntityException e) {
             Debug.logError(e, "Problems looking up return information", module);

@@ -202,6 +202,16 @@
         <description>Remove a ReturnItem</description>
         <auto-attributes entity-name="ReturnItem" include="pk" mode="IN" optional="false"/>
     </service>
+    <service name="processCreditReturn" engine="java"
+            location="org.ofbiz.commonapp.order.order.OrderServices" invoke="processCreditReturn">
+        <description>Process the credits in a return</description>
+        <attribute name="returnId" type="String" mode="IN" optional="false"/>
+    </service>
+    <service name="processRefundReturn" engine="java"
+            location="org.ofbiz.commonapp.order.order.OrderServices" invoke="processRefundReturn">
+        <description>Process the refunds in a return</description>
+        <attribute name="returnId" type="String" mode="IN" optional="false"/>
+    </service>        
     
     <!-- Tax Services -->
     <service name="calcTax" engine="java"
