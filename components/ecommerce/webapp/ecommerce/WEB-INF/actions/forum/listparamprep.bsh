@@ -52,7 +52,7 @@ import javax.servlet.http.*;
 String getParamOrProp(Map params, String propName, String dflt) {
     String val = ContentManagementWorker.getFromSomewhere(propName, params, request, context);
     if (UtilValidate.isEmpty(val)) {
-        val = page.getProperty(propName);
+        val = page.get(propName);
     }
     if (UtilValidate.isEmpty(val)) {
         if (dflt == null) dflt = "";
@@ -61,14 +61,13 @@ String getParamOrProp(Map params, String propName, String dflt) {
     return val;
 }
     
-dispatcher = (LocalDispatcher)request.getAttribute("dispatcher");
-delegator = (GenericDelegator) request.getAttribute("delegator");
 paramMap = UtilHttp.getParameterMap(request);
 contentId = getParamOrProp(paramMap, "contentId", null);
 followWhen = getParamOrProp(paramMap, "followWhen", null);
 pickWhen = getParamOrProp(paramMap, "pickWhen", null);
 returnBeforePickWhen = getParamOrProp(paramMap, "returnBeforePickWhen", null);
 returnAfterPickWhen = getParamOrProp(paramMap, "returnAfterPickWhen", null);
+
 fromDate = getParamOrProp(paramMap, "fromDate", null);
 listName = getParamOrProp(paramMap, "listName", null);
 listSize = getParamOrProp(paramMap, "listSize", null);
@@ -77,8 +76,10 @@ lowIndex = getParamOrProp(paramMap, "lowIndex", null);
 viewSize = getParamOrProp(paramMap, "viewSize", "10");
 //Debug.logInfo("in bloglistprep, paramMap:" + paramMap, "");
 //Debug.logInfo("in bloglistprep, viewSize:" + viewSize, "");
+
 viewIndex = getParamOrProp(paramMap, "viewIndex", "0");
 //Debug.logInfo("in bloglistprep, viewIndex:" + viewIndex, "");
+
 queryString = getParamOrProp(paramMap, "queryString", null);
 entityName = getParamOrProp(paramMap, "entityName", null);
 //Debug.logInfo("in bloglistprep, contentId:" + contentId, "");

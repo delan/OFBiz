@@ -37,7 +37,6 @@
     <handler name="jsp" type="view" class="org.ofbiz.content.webapp.view.JspViewHandler"/>
     <handler name="ftl" type="view" class="org.ofbiz.content.webapp.ftl.FreeMarkerViewHandler"/>
     <handler name="http" type="view" class="org.ofbiz.content.webapp.view.HttpViewHandler"/>
-    <handler name="jpublish" type="view" class="org.ofbiz.content.webapp.view.JPublishViewHandler"/>
     <handler name="screen" type="view" class="org.ofbiz.content.webapp.view.ScreenWidgetViewHandler"/>
 
     <!-- Events run from here for the first hit in a visit -->
@@ -1086,11 +1085,13 @@
     <view-map name="main" type="screen" page="component://ecommerce/widget/CommonScreens.xml#main"/>
     <view-map name="login" type="screen" page="component://ecommerce/widget/CommonScreens.xml#login"/>
 
+    <!-- Cart Views -->
     <view-map name="editShoppingList" type="screen" page="component://ecommerce/widget/ShoppingListScreens.xml#editShoppingList"/>
     <view-map name="showcart" type="screen" page="component://ecommerce/widget/CartScreens.xml#showcart"/>
     <view-map name="showAllPromotions" type="screen" page="component://ecommerce/widget/CartScreens.xml#showAllPromotions"/>
     <view-map name="showPromotionDetails" type="screen" page="component://ecommerce/widget/CartScreens.xml#showPromotionDetails"/>
 
+    <!-- Catalog Views -->
     <view-map name="quickadd" type="screen" page="component://ecommerce/widget/CatalogScreens.xml#quickadd"/>
     <view-map name="category" type="screen" page="component://ecommerce/widget/CatalogScreens.xml#category"/>
     <view-map name="product" type="screen" page="component://ecommerce/widget/CatalogScreens.xml#product"/>
@@ -1102,6 +1103,7 @@
     <view-map name="advancedsearch" type="screen" page="component://ecommerce/widget/CatalogScreens.xml#advancedsearch"/>
     <view-map name="tellafriend" type="screen" page="component://ecommerce/widget/CatalogScreens.xml#tellafriend"/>
 
+    <!-- Order Views -->
     <view-map name="custsetting" type="screen" page="component://ecommerce/widget/OrderScreens.xml#custsettings"/>
     <view-map name="shipsetting" type="screen" page="component://ecommerce/widget/OrderScreens.xml#shipsettings"/>
     <view-map name="billsetting" type="screen" page="component://ecommerce/widget/OrderScreens.xml#billsettings"/>
@@ -1122,6 +1124,7 @@
     <view-map name="orderstatus" type="screen" page="component://ecommerce/widget/OrderScreens.xml#orderstatus"/>
     <view-map name="requestreturn" type="screen" page="component://ecommerce/widget/OrderScreens.xml#requestreturn"/>
 
+    <!-- Customer Info Views -->
     <view-map name="survey" type="screen" page="component://ecommerce/widget/CustomerScreens.xml#survey"/>
     <view-map name="newcustomer" type="screen" page="component://ecommerce/widget/CustomerScreens.xml#newcustomer"/>
     <view-map name="passwordemail" page="/customer/passwordemail.jsp"/>
@@ -1143,21 +1146,24 @@
     <view-map name="messagedetail" type="screen" page="component://ecommerce/widget/CustomerScreens.xml#messagedetail"/>
     <view-map name="messagecreate" type="screen" page="component://ecommerce/widget/CustomerScreens.xml#messagecreate"/>
 
-    <view-map name="defaultcontent" type="jpublish" page="/content/defaultcontent.ftl"/>
-    <view-map name="showcontenttree" page="/content/showcontenttree.ftl" type="jpublish"/>
-    <view-map name="viewcontent" page="/content/viewcontent.ftl" type="jpublish"/>
-    <view-map name="searchContent" page="/content/searchContent.ftl" type="jpublish"/>
+    <!-- Content Views -->
+    <view-map name="defaultcontent" type="screen" page="component://ecommerce/widget/ContentScreens.xml#defaultcontent"/>
+    <view-map name="showcontenttree" type="screen" page="component://ecommerce/widget/ContentScreens.xml#showcontenttree"/>
+    <view-map name="viewcontent" type="screen" page="component://ecommerce/widget/ContentScreens.xml#viewcontent"/>
+    <view-map name="searchContent" type="screen" page="component://ecommerce/widget/ContentScreens.xml#searchContent"/>
 
-    <view-map name="showforum" type="jpublish" page="/forum/showforum.ftl"/>
-    <view-map name="showforumarticle" type="jpublish" page="/forum/showforumarticle.ftl"/>
-    <view-map name="createforumarticle" type="jpublish" page="/forum/createforumarticle.ftl"/>
-    <view-map name="editforumarticle" type="jpublish" page="/forum/editforumarticle.ftl"/>
-    <view-map name="showforumresponse" type="jpublish" page="/forum/showforumresponse.ftl"/>
-    <view-map name="createforumresponse" type="jpublish" page="/forum/createforumresponse.ftl"/>
-    <view-map name="editforuminfo" type="jpublish" page="/forum/editforuminfo.ftl"/>
-    <view-map name="editaddforumdata" type="jpublish" page="/forum/editaddforumdata.ftl"/>
-    <view-map name="editaddimage" type="jpublish" page="/forum/editaddimage.ftl"/>
-    <view-map name="mostrecent" page="/forum/mostrecent.ftl" type="jpublish"/>
+    <!-- Forum Views -->
+    <view-map name="showforum" type="screen" page="component://ecommerce/widget/ForumScreens.xml#showforum"/>
+    <view-map name="showforumarticle" type="screen" page="component://ecommerce/widget/ForumScreens.xml#showforumarticle"/>
+    <view-map name="createforumarticle" type="screen" page="component://ecommerce/widget/ForumScreens.xml#createforumarticle"/>
+    <view-map name="editforumarticle" type="screen" page="component://ecommerce/widget/ForumScreens.xml#editforumarticle"/>
+
+    <view-map name="showforumresponse" type="screen" page="component://ecommerce/widget/ForumScreens.xml#showforumresponse"/>
+    <view-map name="createforumresponse" type="screen" page="component://ecommerce/widget/ForumScreens.xml#createforumresponse"/>
+    <view-map name="editforuminfo" type="screen" page="component://ecommerce/widget/ForumScreens.xml#editforuminfo"/>
+    <view-map name="editaddforumdata" type="screen" page="component://ecommerce/widget/ForumScreens.xml#editaddforumdata"/>
+    <view-map name="editaddimage" type="screen" page="component://ecommerce/widget/ForumScreens.xml#editaddimage"/>
+    <!-- Is this used? DEJ20050113 <view-map name="mostrecent" type="screen" page="component://ecommerce/widget/ForumScreens.xml#mostrecent"/> -->
 
     <!-- End of View Mappings -->
 </site-conf>

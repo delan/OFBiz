@@ -1,4 +1,6 @@
+
 <#import "/includes/bloglib.ftl" as blog/>
+
 <div class="boxoutside" >
 <div class="head1">&nbsp;&nbsp;&nbsp;&nbsp;From Site:</div><br/>
 <div style="margin:10px;" >

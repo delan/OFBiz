@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- *  Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2004-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -65,7 +65,7 @@
                     <include-screen name="sidedeepcategory" location="component://ecommerce/widget/CatalogScreens.xml"/>
                     <include-screen name="minireorderprods" location="component://ecommerce/widget/CatalogScreens.xml"/>
                     <include-screen name="minipoll" location="component://ecommerce/widget/ContentScreens.xml"/>
-                    <include-screen name="forums" location="component://ecommerce/widget/ContentScreens.xml"/>
+                    <include-screen name="forums" location="component://ecommerce/widget/ForumScreens.xml"/>
                     <include-screen name="content_categories" location="component://ecommerce/widget/ContentScreens.xml"/>
                 </container>
             </widgets>
