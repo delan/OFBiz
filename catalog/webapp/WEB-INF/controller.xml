@@ -315,6 +315,7 @@
     	<response name="error" type="view" value="EditFeatureCategoryFeatures"/>
     </request-map>
 
+    <!-- ================ Product Feature Requests ================= -->
     <request-map uri="EditProductFeatures"><security https="true" auth="true"/>
     	<response name="success" type="view" value="EditProductFeatures"/>
     </request-map>
@@ -339,6 +340,14 @@
     	<response name="error" type="view" value="EditProductFeatures"/>
     </request-map>
     
+    <request-map uri="QuickAddVariants"><security https="true" auth="true"/>
+    	<response name="success" type="view" value="QuickAddVariants"/>
+    </request-map>
+    <request-map uri="QuickAddChosenVariant"><security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.catalog.VariantEvents" invoke="quickAddChosenVariant" />
+    	<response name="success" type="view" value="QuickAddVariants"/>
+    	<response name="error" type="view" value="QuickAddVariants"/>
+    </request-map>
 
     <!-- ================ FACILITY REQUESTS ================= -->
     <request-map uri="FindFacility"><security https="true" auth="true"/>
@@ -564,6 +573,8 @@
     <view-map name="EditProductFeatures" type="region"/>
     <view-map name="EditProductInventoryItems" type="region"/>
     <view-map name="UploadImage" type="region"/>
+
+    <view-map name="QuickAddVariants" type="region"/>
 
     <view-map name="EditInventoryItem" type="region"/>
         

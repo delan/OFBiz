@@ -93,6 +93,11 @@
         <put section='content' content='/product/UploadImage.jsp'/>
     </define>
 
+    <define id='QuickAddVariants' region='LEFT_ONLY_REGION'>
+        <put section='title'>Quick-Add Variants Page</put>
+        <put section='content' content='/product/QuickAddVariants.jsp'/>
+    </define>
+
     <define id='EditInventoryItem' region='LEFT_ONLY_REGION'>
         <put section='title'>Edit Inventory Item Page</put>
         <put section='content' content='/inventory/EditInventoryItem.jsp'/>

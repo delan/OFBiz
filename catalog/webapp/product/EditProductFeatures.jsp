@@ -36,6 +36,9 @@
 <%if (security.hasEntityPermission("CATALOG", "_VIEW", session)) {%>
 <%
     String productId = request.getParameter("productId");
+
+    GenericValue product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
+
     Collection productFeatureAndAppls = delegator.findByAnd("ProductFeatureAndAppl", 
             UtilMisc.toMap("productId", productId), 
             UtilMisc.toList("sequenceNum", "productFeatureApplTypeId", "productFeatureTypeId", "description"));
@@ -68,6 +71,11 @@
 <br>
 <br>
 <%if (productId != null){%>
+    <%if (product != null && "Y".equals(product.getString("isVirtual"))) {%>
+        <a href="<ofbiz:url>/QuickAddVariants?productId=<%=productId%></ofbiz:url>" class="buttontextdisabled">[Quick Add Variants]</a>
+        <br>
+    <%}%>
+
 <p class="head2">Product Feature Application Maintenance</p>
 <table border="1" cellpadding='2' cellspacing='0'>
   <tr>
