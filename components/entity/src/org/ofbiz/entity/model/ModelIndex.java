@@ -1,5 +1,5 @@
 /*
- * $Id: ModelIndex.java,v 1.2 2003/12/11 01:58:19 jonesde Exp $
+ * $Id: ModelIndex.java,v 1.3 2004/07/07 05:17:16 doogie Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -32,13 +32,10 @@ import org.ofbiz.base.util.*;
  * Generic Entity - Relation model class
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
-public class ModelIndex {
-
-    /** reference to the entity this index refers to */
-    protected ModelEntity mainEntity;
+public class ModelIndex extends ModelChild {
 
     /** the index name, used for the database index name */
     protected String name;
@@ -57,14 +54,14 @@ public class ModelIndex {
 
     /** Direct Create Constructor */
     public ModelIndex(ModelEntity mainEntity, String name, boolean unique) {
-        this.mainEntity = mainEntity;
+        super(mainEntity);
         this.name = name;
         this.unique = unique;
     }
 
     /** XML Constructor */
     public ModelIndex(ModelEntity mainEntity, Element indexElement) {
-        this.mainEntity = mainEntity;
+        super(mainEntity);
 
         this.name = UtilXml.checkEmpty(indexElement.getAttribute("name"));
         this.unique = "true".equals(UtilXml.checkEmpty(indexElement.getAttribute("unique")));
@@ -97,13 +94,15 @@ public class ModelIndex {
         this.unique = unique;
     }
 
-    /** the main entity of this relation */
+    /** @deprecated
+      * the main entity of this relation */
     public ModelEntity getMainEntity() {
-        return this.mainEntity;
+        return getModelEntity();
     }
 
+    /** @deprecated */
     public void setMainEntity(ModelEntity mainEntity) {
-        this.mainEntity = mainEntity;
+        setModelEntity(mainEntity);
     }
 
     public Iterator getIndexFieldsIterator() {

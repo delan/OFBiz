@@ -1,5 +1,5 @@
 /*
- * $Id: ModelField.java,v 1.4 2003/12/25 19:03:55 jonesde Exp $
+ * $Id: ModelField.java,v 1.5 2004/07/07 05:17:16 doogie Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -33,10 +33,10 @@ import org.ofbiz.base.util.*;
  * Generic Entity - Field model class
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.0
  */
-public class ModelField {
+public class ModelField extends ModelChild {
 
     /** The name of the Field */
     protected String name = "";
