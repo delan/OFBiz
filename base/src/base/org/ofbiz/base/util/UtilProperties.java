@@ -1,5 +1,5 @@
 /*
- * $Id: UtilProperties.java,v 1.10 2004/05/29 07:48:51 jonesde Exp $
+ * $Id: UtilProperties.java,v 1.11 2004/06/03 01:54:33 jonesde Exp $
  *
  *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -36,7 +36,7 @@ import java.util.ResourceBundle;
  * Generic Property Accessor with Cache - Utilities for working with properties files
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.10 $
+ * @version    $Revision: 1.11 $
  * @since      1.0
  */
 public class UtilProperties {
@@ -438,7 +438,8 @@ public class UtilProperties {
         if (bundleMap == null) {
             return null;
         }
-        return (ResourceBundle) bundleMap.get("_RESOURCE_BUNDLE_");
+        //return (ResourceBundle) bundleMap.get("_RESOURCE_BUNDLE_");
+        return ((ResourceBundleMapWrapper) bundleMap).getResourceBundle();
     }
     
     /** Returns the specified resource/properties file as a Map with the original ResourceBundle in the Map under the key _RESOURCE_BUNDLE_
