@@ -38,7 +38,6 @@ import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.service.LocalDispatcher;
-import org.ofbiz.content.content.EntityPermissionChecker;
 import org.w3c.dom.Element;
 
 import bsh.EvalError;

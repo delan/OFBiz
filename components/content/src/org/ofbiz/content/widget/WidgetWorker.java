@@ -23,16 +23,12 @@
  */
 package org.ofbiz.content.widget;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.content.webapp.control.RequestHandler;
 import org.ofbiz.content.webapp.taglib.ContentUrlTag;
