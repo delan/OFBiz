@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -21,23 +21,21 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
 package org.ofbiz.core.util;
-
 
 import java.text.*;
 import java.util.*;
 
-
 /**
  * Utilities for analyzing and converting Object types in Java - takes advantage of a lot of reflection and other stuff
  *
- *@author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
- *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- *@created    December 3, 2001
- *@version    1.0
+ * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
+ * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
+ * @version    $Revision$
+ * @since      2.0
  */
 public class ObjectType {
+    
     public static final String module = ObjectType.class.getName();
 
     protected static Map classCache = new HashMap();
