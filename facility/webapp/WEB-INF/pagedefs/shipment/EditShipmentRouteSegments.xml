@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<page>
-    <template>main</template>
-    <property name="title">Edit Shipment Route Segments</property>
-    <property name="headerItem">shipment</property>
-    <property name="tabButtonItem">EditShipmentRouteSegments</property>
-    <page-action name="/shipment/EditShipmentRouteSegments.bsh"/> 
-</page>
