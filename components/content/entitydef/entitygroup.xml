@@ -26,7 +26,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.11 $
+ *@version    $Revision: 1.12 $
  */
 -->
 
@@ -144,6 +144,7 @@
     <entity-group group="org.ofbiz" entity="WebPage" />
     <entity-group group="org.ofbiz" entity="WebSite" />
     <entity-group group="org.ofbiz" entity="WebSiteRole" />
+    <entity-group group="org.ofbiz" entity="WebSitePublishPoint" />
 
 </entitygroup>
 

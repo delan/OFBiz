@@ -26,7 +26,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.6 $
+ *@version    $Revision: 1.7 $
  */
 -->
 
@@ -59,6 +59,7 @@
   <!-- ========================================================= -->
 
     <entity-group group="org.ofbiz" entity="CommunicationEvent" />
+    <entity-group group="org.ofbiz" entity="CommunicationEventAndRole" />
     <entity-group group="org.ofbiz" entity="CommunicationEventPrpTyp" />
     <entity-group group="org.ofbiz" entity="CommunicationEventPurpose" />
     <entity-group group="org.ofbiz" entity="CommunicationEventRole" />
@@ -97,6 +98,7 @@
     <entity-group group="org.ofbiz" entity="Party" />
     <entity-group group="org.ofbiz" entity="PartyAndContactMech" />
     <entity-group group="org.ofbiz" entity="PartyAndUserLogin" />
+    <entity-group group="org.ofbiz" entity="PartyAndUserLoginAndPerson" />
     <entity-group group="org.ofbiz" entity="PartyAttribute" />
     <entity-group group="org.ofbiz" entity="PartyClassification" />
     <entity-group group="org.ofbiz" entity="PartyClassificationGroup" />
