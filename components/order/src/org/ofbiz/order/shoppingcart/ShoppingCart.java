@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCart.java,v 1.7 2003/09/05 02:21:36 ajzeneski Exp $
+ * $Id: ShoppingCart.java,v 1.8 2003/10/16 03:05:06 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -42,7 +42,6 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.order.order.OrderReadHelper;
 import org.ofbiz.service.LocalDispatcher;
 
-
 /**
  * <p><b>Title:</b> ShoppingCart.java
  * <p><b>Description:</b> Shopping Cart Object.
@@ -50,15 +49,15 @@ import org.ofbiz.service.LocalDispatcher;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.7 $
+ * @version    $Revision: 1.8 $
  * @since      2.0
  */
 public class ShoppingCart implements java.io.Serializable {
     public static final String module = ShoppingCart.class.getName();
-       
+
     private List paymentMethodIds = new LinkedList();
     private Map paymentMethodAmounts = new HashMap();
-    private List paymentMethodTypeIds = new LinkedList();   
+    private List paymentMethodTypeIds = new LinkedList();
     private Map paymentMethodTypeAmounts = new HashMap();
     private String orderType = "SALES_ORDER"; // default orderType
     private String poNumber = null;
@@ -80,9 +79,9 @@ public class ShoppingCart implements java.io.Serializable {
 
     private transient GenericDelegator delegator = null;
     private String delegatorName = null;
-    private String productStoreId = null; 
+    private String productStoreId = null;
     private String webSiteId = null;
-    
+
     private GenericValue userLogin = null;
     private GenericValue autoUserLogin = null;
 
@@ -93,7 +92,7 @@ public class ShoppingCart implements java.io.Serializable {
     public ShoppingCart(ShoppingCart cart) {
         this.delegator = cart.getDelegator();
         this.delegatorName = delegator.getDelegatorName();
-        this.productStoreId = cart.getProductStoreId();        
+        this.productStoreId = cart.getProductStoreId();
         this.paymentMethodIds = cart.getPaymentMethodIds();
         this.paymentMethodTypeIds = cart.getPaymentMethodTypeIds();
         this.poNumber = cart.getPoNumber();
@@ -129,11 +128,11 @@ public class ShoppingCart implements java.io.Serializable {
         }
         return delegator;
     }
-    
+
     public String getProductStoreId() {
-    	return this.productStoreId;
+        return this.productStoreId;
     }
-    
+
     public void setProductStoreId(String productStoreId) {
         this.productStoreId = productStoreId;
     }
@@ -165,8 +164,8 @@ public class ShoppingCart implements java.io.Serializable {
         // Add the new item to the shopping cart if it wasn't found.
         return this.addItem(0, ShoppingCartItem.makeItem(new Integer(0), getDelegator(), productId, quantity, features, attributes, prodCatalogId, dispatcher, this));
     }
-    
-    /** Add a non-product item to the shopping cart.     
+
+    /** Add a non-product item to the shopping cart.
      * @return the new item index
      * @throws CartItemModifyException
      */
@@ -292,7 +291,7 @@ public class ShoppingCart implements java.io.Serializable {
     public GenericValue getUserLogin() {
         return this.userLogin;
     }
-    
+
     public void setUserLogin(GenericValue userLogin) {
         this.userLogin = userLogin;
     }
@@ -304,23 +303,23 @@ public class ShoppingCart implements java.io.Serializable {
     public void setAutoUserLogin(GenericValue autoUserLogin) {
         this.autoUserLogin = autoUserLogin;
     }
-    
+
     public String getWebSiteId() {
         return this.webSiteId;
     }
-    
+
     public void setWebSiteId(String webSiteId) {
         this.webSiteId = webSiteId;
     }
-    
+
     public String getPartyId() {
         String partyId = null;
-        
-    	if (partyId == null && getUserLogin() != null)
-    		partyId = getUserLogin().getString("partyId");
-    	if (partyId == null && getAutoUserLogin() != null)
-    		partyId = getAutoUserLogin().getString("partyId");
-    	return partyId;
+
+        if (partyId == null && getUserLogin() != null)
+                partyId = getUserLogin().getString("partyId");
+        if (partyId == null && getAutoUserLogin() != null)
+                partyId = getAutoUserLogin().getString("partyId");
+        return partyId;
     }
 
     // =======================================================================
@@ -346,12 +345,12 @@ public class ShoppingCart implements java.io.Serializable {
         this.adjustments.clear();
         this.cartLines.clear();
     }
-    
+
     /** Sets the order type. */
     public void setOrderType(String orderType) {
         this.orderType = orderType;
     }
-    
+
     /** Returns the order type. */
     public String getOrderType() {
         return this.orderType;
@@ -366,7 +365,16 @@ public class ShoppingCart implements java.io.Serializable {
     public String getPoNumber() {
         return poNumber;
     }
-            
+
+    /** Checks to see if a Payment Method is selected. */
+    public boolean isPaymentMethodSelected(String paymentMethodId) {
+        if (paymentMethodId != null) {
+            return this.paymentMethodIds.contains(paymentMethodId);
+        } else {
+            return false;
+        }
+    }
+
     /** Sets the amount of a Payment Method. */
     public void setPaymentMethodAmount(String paymentMethodId, Double amount) {
         if (paymentMethodId != null) {
@@ -381,36 +389,36 @@ public class ShoppingCart implements java.io.Serializable {
     public List getPaymentMethodIds() {
         return paymentMethodIds;
     }
-    
+
     /** Clears the list of Payment Method Ids. */
     public void clearPaymentMethodIds() {
         this.paymentMethodIds.clear();
     }
-    
+
     /** Clears a specific Payment Method Id. */
     public void clearPaymentMethodId(String paymentMethodId) {
         this.paymentMethodIds.remove(paymentMethodId);
         this.paymentMethodAmounts.remove(paymentMethodId);
-    }    
+    }
 
     /** Add the Payment Method Type Id to the cart. */
     public void addPaymentMethodTypeId(String paymentMethodTypeId) {
         addPaymentMethodTypeId(paymentMethodTypeId, null);
     }
-    
+
     /** Add the Payment Method Type Id with amount to the cart. */
     public void addPaymentMethodTypeId(String paymentMethodTypeId, Double amount) {
         if (paymentMethodTypeId != null) {
-            this.paymentMethodTypeIds.add(paymentMethodTypeId);            
+            this.paymentMethodTypeIds.add(paymentMethodTypeId);
             this.paymentMethodTypeAmounts.put(paymentMethodTypeId, amount);
         }
     }
-    
+
     /** Returns set amount of the Payment Method. */
     public Double getPaymentMethodAmount(String paymentMethodId) {
         return (Double) this.paymentMethodAmounts.get(paymentMethodId);
     }
-            
+
     /** Returns the Payment Method Ids. */
     public List getPaymentMethodTypeIds() {
         return paymentMethodTypeIds;
@@ -426,12 +434,12 @@ public class ShoppingCart implements java.io.Serializable {
         this.billingAccountId = billingAccountId;
         this.billingAccountAmt = amount;
     }
-        
+
     /** Returns the billing message string. */
     public String getBillingAccountId() {
         return this.billingAccountId;
     }
-    
+
     /** Returns the amount to be billed to the billing account.*/
     public double getBillingAccountAmount() {
         return this.billingAccountAmt;
@@ -678,10 +686,10 @@ public class ShoppingCart implements java.io.Serializable {
     }
 
     /** Returns the total from the cart, including tax/shipping. */
-    public double getGrandTotal() {    
+    public double getGrandTotal() {
         List orderAdjustments = this.makeAllAdjustments();
-        List orderItems = this.makeOrderItems();   
-        return OrderReadHelper.getOrderGrandTotal(orderItems, orderAdjustments);         
+        List orderItems = this.makeOrderItems();
+        return OrderReadHelper.getOrderGrandTotal(orderItems, orderAdjustments);
     }
 
     /** Returns the SHIPPABLE item-total in the cart. */
@@ -781,23 +789,23 @@ public class ShoppingCart implements java.io.Serializable {
     public void setFirstAttemptOrderId(String orderId) {
         this.firstAttemptOrderId = orderId;
     }
-    
+
     /** Sets the currency for the cart. */
     public void setCurrency(LocalDispatcher dispatcher, String currencyUom) throws CartItemModifyException {
         String previousCurrency = this.currencyUom;
-        this.currencyUom = currencyUom;        
+        this.currencyUom = currencyUom;
         if (!previousCurrency.equals(this.currencyUom)) {
             Iterator itemIterator = this.iterator();
             while (itemIterator.hasNext()) {
                 ShoppingCartItem item = (ShoppingCartItem) itemIterator.next();
                 item.updatePrice(dispatcher, this);
-            }            
-        }        
+            }
+        }
     }
-    
+
     /** Get the current currency setting. */
     public String getCurrency() {
-        if (this.currencyUom != null) {        
+        if (this.currencyUom != null) {
             return this.currencyUom;
         } else {
             return UtilProperties.getPropertyValue("general.properties", "currency.uom.id.default", "USD");
@@ -896,7 +904,7 @@ public class ShoppingCart implements java.io.Serializable {
 
                 // the initial status for all item types
                 String initialStatus = "ITEM_CREATED";
-                
+
                 GenericValue orderItem = getDelegator().makeValue("OrderItem", null);
                 orderItem.set("orderItemSeqId", orderItemSeqId);
                 orderItem.set("orderItemTypeId", item.getItemType());
@@ -906,7 +914,7 @@ public class ShoppingCart implements java.io.Serializable {
                 orderItem.set("quantity", new Double(item.getQuantity()));
                 orderItem.set("unitPrice", new Double(item.getBasePrice()));
                 orderItem.set("unitListPrice", new Double(item.getListPrice()));
-                
+
                 orderItem.set("shoppingListId", item.getShoppingListId());
                 orderItem.set("shoppingListItemSeqId", item.getShoppingListItemSeqId());
 
@@ -1007,11 +1015,11 @@ public class ShoppingCart implements java.io.Serializable {
 
         return allAdjs;
     }
-    
+
     /** make a list of all OrderPaymentPreferences including all payment methods and types */
     public List makeAllOrderPaymentPreferences() {
         List allOpPrefs = new LinkedList();
-        
+
         // first create the payment methods (online payments?)
         List paymentMethods = this.getPaymentMethods();
         Iterator pmi = paymentMethods.iterator();
@@ -1019,14 +1027,14 @@ public class ShoppingCart implements java.io.Serializable {
             GenericValue paymentMethod = (GenericValue) pmi.next();
             GenericValue p = delegator.makeValue("OrderPaymentPreference", new HashMap());
             p.set("paymentMethodTypeId", paymentMethod.get("paymentMethodTypeId"));
-            p.set("paymentMethodId", paymentMethod.get("paymentMethodId"));            
-            p.set("statusId", "PAYMENT_NOT_AUTH");            
+            p.set("paymentMethodId", paymentMethod.get("paymentMethodId"));
+            p.set("statusId", "PAYMENT_NOT_AUTH");
             if (this.paymentMethodAmounts.get(paymentMethod.getString("paymentMethodId")) != null) {
                 p.set("maxAmount", this.paymentMethodAmounts.get(paymentMethod.getString("paymentMethodId")));
             }
-            allOpPrefs.add(p);                                                    
+            allOpPrefs.add(p);
         }
-        
+
         // next create the payment types (offline payments?)
         List paymentMethodTypeIds = this.getPaymentMethodTypeIds();
         Iterator pti = paymentMethodTypeIds.iterator();
@@ -1040,7 +1048,7 @@ public class ShoppingCart implements java.io.Serializable {
             }
             allOpPrefs.add(p);
         }
-                
+
         return allOpPrefs;
     }
 
@@ -1162,7 +1170,7 @@ public class ShoppingCart implements java.io.Serializable {
 
         result.put("firstAttemptOrderId", this.getFirstAttemptOrderId());
         result.put("currencyUom", this.getCurrency());
-        result.put("billingAccountId", this.getBillingAccountId());          
+        result.put("billingAccountId", this.getBillingAccountId());
         return result;
     }
 }
