@@ -73,16 +73,19 @@
     <request-map uri="task"><security https="true" auth="true"/>
     	<response name="success" type="view" value="task"/>
     </request-map>
+
     <request-map uri="createtask"><security https="true" auth="true"/>
         <event type="service" invoke="createWorkEffort"/>
     	<response name="success" type="view" value="task"/>
         <response name="error" type="view" value="task"/>
     </request-map>
+
     <request-map uri="updatetask"><security https="true" auth="true"/>
         <event type="service" invoke="updateWorkEffort"/>
     	<response name="success" type="view" value="task"/>
         <response name="error" type="view" value="task"/>
     </request-map>
+
     <request-map uri="deletetask"><security https="true" auth="true"/>
         <event type="service" invoke="deleteWorkEffort"/>
     	<response name="success" type="view" value="task"/>
@@ -92,16 +95,19 @@
     <request-map uri="requirement"><security https="true" auth="true"/>
     	<response name="success" type="view" value="requirement"/>
     </request-map>
+
     <request-map uri="createrequirement"><security https="true" auth="true"/>
         <event type="service" invoke="createRequirement"/>
     	<response name="success" type="view" value="requirement"/>
         <response name="error" type="view" value="requirement"/>
     </request-map>
+
     <request-map uri="updaterequirement"><security https="true" auth="true"/>
         <event type="service" invoke="updateRequirement"/>
     	<response name="success" type="view" value="requirement"/>
         <response name="error" type="view" value="requirement"/>
     </request-map>
+
     <request-map uri="deleterequirement"><security https="true" auth="true"/>
         <event type="service" invoke="deleteRequirement"/>
     	<response name="success" type="view" value="requirement"/>
@@ -111,32 +117,38 @@
     <request-map uri="activity"><security https="true" auth="true"/>
     	<response name="success" type="view" value="activity"/>
     </request-map>
+
     <request-map uri="createactivity"><security https="true" auth="true"/>
         <event type="service" invoke="createWorkEffort"/>
     	<response name="success" type="view" value="activity"/>
         <response name="error" type="view" value="activity"/>
     </request-map>
+
     <request-map uri="updateactivity"><security https="true" auth="true"/>
         <event type="service" invoke="updateWorkEffort"/>
     	<response name="success" type="view" value="activity"/>
         <response name="error" type="view" value="activity"/>
     </request-map>
+
     <request-map uri="deleteactivity"><security https="true" auth="true"/>
         <event type="service" invoke="deleteWorkEffort"/>
     	<response name="success" type="view" value="activity"/>
         <response name="error" type="view" value="activity"/>
     </request-map>
+
     <request-map uri="updateactivityassign"><security https="true" auth="true"/>
         <event type="service" invoke="updatePartyToWorkEffortAssignment"/>
     	<response name="success" type="view" value="activity"/>
         <response name="error" type="view" value="activity"/>
     </request-map>
+
     <request-map uri="acceptAssignment"><security https="true" auth="true"/>
         <event type="simple" path="org/ofbiz/commonapp/workeffort/workeffort/WorkflowSimpleEvents.xml" invoke="acceptAssignment"/>
     	<response name="success" type="view" value="tasklist"/>
         <response name="error" type="view" value="tasklist"/>
     </request-map>
-        <request-map uri="acceptRoleAssignment"><security https="true" auth="true"/>
+
+    <request-map uri="acceptRoleAssignment"><security https="true" auth="true"/>
         <event type="simple" path="org/ofbiz/commonapp/workeffort/workeffort/WorkflowSimpleEvents.xml" invoke="acceptRoleAssignment"/>
     	<response name="success" type="view" value="tasklist"/>
         <response name="error" type="view" value="tasklist"/>
@@ -146,19 +158,26 @@
     	<response name="success" type="view" value="tasklist"/>
     </request-map>
 
+    <request-map uri="requirementlist"><security https="true" auth="true"/>
+    	<response name="success" type="view" value="requirementlist"/>
+    </request-map>
+
     <request-map uri="event"><security https="true" auth="true"/>
     	<response name="success" type="view" value="event"/>
     </request-map>
+
     <request-map uri="createevent"><security https="true" auth="true"/>
         <event type="service" invoke="createWorkEffort"/>
     	<response name="success" type="view" value="event"/>
         <response name="error" type="view" value="event"/>
     </request-map>
+
     <request-map uri="updateevent"><security https="true" auth="true"/>
         <event type="service" invoke="updateWorkEffort"/>
     	<response name="success" type="view" value="event"/>
         <response name="error" type="view" value="event"/>
     </request-map>
+
     <request-map uri="deleteevent"><security https="true" auth="true"/>
         <event type="service" invoke="deleteWorkEffort"/>
     	<response name="success" type="view" value="event"/>
@@ -168,12 +187,15 @@
     <request-map uri="day"><security https="true" auth="true"/>
     	<response name="success" type="view" value="day"/>
     </request-map>
+
     <request-map uri="week"><security https="true" auth="true"/>
     	<response name="success" type="view" value="week"/>
     </request-map>
+
     <request-map uri="month"><security https="true" auth="true"/>
     	<response name="success" type="view" value="month"/>
     </request-map>
+
     <request-map uri="upcoming"><security https="true" auth="true"/>
     	<response name="success" type="view" value="upcoming"/>
     </request-map>
@@ -188,7 +210,7 @@
     <view-map name="requirement" type="region"/>
     <view-map name="activity" type="region"/>
     <view-map name="tasklist" type="region"/>
-    <view-map name="requirementList" type="region"/>
+    <view-map name="requirementlist" type="region"/>
 
     <view-map name="event" type="region"/>
     <view-map name="day" type="region"/>

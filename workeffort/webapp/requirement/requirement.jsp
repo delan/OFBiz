@@ -58,8 +58,8 @@
             <div class='boxhead'>&nbsp;Requirement Detail</div>
           </TD>
           <TD align=right width='60%'>
-            <A href='<ofbiz:url>/tasklist</ofbiz:url>' class='lightbuttontext'>[Requirement&nbsp;List]</A>
-            <A href='<ofbiz:url>/task</ofbiz:url>' class='lightbuttontext'>[New&nbsp;Requirement]</A>
+            <A href='<ofbiz:url>/requirementlist</ofbiz:url>' class='lightbuttontext'>[Requirement&nbsp;List]</A>
+            <A href='<ofbiz:url>/requirement</ofbiz:url>' class='lightbuttontext'>[New&nbsp;Requirement]</A>
           </TD>
         </tr>
       </table>
@@ -107,19 +107,19 @@
                 <tr>
                   <td width='26%' align=right><div class='tabletext'>Description</div></td>
                   <td>&nbsp;</td>
-                  <td width='74%'><input type='text' size='30' maxlength='30' name='description' value='<ofbiz:inputvalue field="description" param="description" entityAttr="requirement" tryEntityAttr="tryEntity"/>'><span class='tabletext'>(YYYY-MM-DD hh:mm:ss)</span></td>
+                  <td width='74%'><input type='text' size='30' maxlength='255' name='description' value='<ofbiz:inputvalue field="description" param="description" entityAttr="requirement" tryEntityAttr="tryEntity"/>'><span class='tabletext'>(YYYY-MM-DD hh:mm:ss)</span></td>
                 </tr>
 
                 <tr>
                   <td width='26%' align=right><div class='tabletext'>Story</div></td>
                   <td>&nbsp;</td>
-                  <td width='74%'><TEXTAREA name='story' cols='50' rows='4'><ofbiz:inputvalue field="story" param="story" entityAttr="requirement" tryEntityAttr="tryEntity"/></TEXTAREA>
+                  <td width='74%'><TEXTAREA name='story' cols='50' rows='10'><ofbiz:inputvalue field="story" param="story" entityAttr="requirement" tryEntityAttr="tryEntity"/></TEXTAREA>
                 </tr>
 
                  <tr>
                   <td width='26%' align=right><div class='tabletext'>Reason</div></td>
                   <td>&nbsp;</td>
-                  <td width='74%'><TEXTAREA name='reason' cols='50' rows='4'><ofbiz:inputvalue field="reason" param="reason" entityAttr="requirement" tryEntityAttr="tryEntity"/></TEXTAREA>
+                  <td width='74%'><input type='text' size='50' maxlength='255' name='reason' value='<ofbiz:inputvalue field="reason" param="reason" entityAttr="requirement" tryEntityAttr="tryEntity"/>'></td>
                 </tr>
 
                 <tr>
