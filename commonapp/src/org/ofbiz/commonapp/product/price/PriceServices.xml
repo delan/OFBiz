@@ -83,6 +83,9 @@
         <set-pk-fields map-name="parameters" value-name="newEntity"/>
 
         <create-value value-name="newEntity"/>
+        
+        <!-- clear the findAll cache -->
+        <clear-cache-line entity-name="ProductPriceRule"/>
     </simple-method>
     <simple-method method-name="updateProductPriceRule" short-description="Update an ProductPriceRule">
         <check-permission permission="CATALOG" action="_UPDATE"><fail-message message="Security Error: to run updateProductPriceRule you must have the CATALOG_UPDATE or CATALOG_ADMIN permission"/></check-permission>
@@ -93,6 +96,9 @@
         <find-by-primary-key entity-name="ProductPriceRule" map-name="lookupPKMap" value-name="lookedUpValue"/>
         <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
         <store-value value-name="lookedUpValue"/>
+        
+        <!-- clear the findAll cache -->
+        <clear-cache-line entity-name="ProductPriceRule"/>
     </simple-method>
     <simple-method method-name="deleteProductPriceRule" short-description="Delete an ProductPriceRule">
         <check-permission permission="CATALOG" action="_DELETE"><fail-message message="Security Error: to run deleteProductPriceRule you must have the CATALOG_DELETE or CATALOG_ADMIN permission"/></check-permission>
@@ -102,6 +108,9 @@
         <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
         <find-by-primary-key entity-name="ProductPriceRule" map-name="lookupPKMap" value-name="lookedUpValue"/>
         <remove-value value-name="lookedUpValue"/>
+        
+        <!-- clear the findAll cache -->
+        <clear-cache-line entity-name="ProductPriceRule"/>
     </simple-method>
 
     <!-- ProductPriceCond methods -->

@@ -55,6 +55,8 @@ public class PriceServices {
      * </ul>
      */
     public static Map calculateProductPrice(DispatchContext dctx, Map context) {
+        boolean optimizeForLargeRuleSet = false;
+        
         //UtilTimer utilTimer = new UtilTimer();
         //utilTimer.timerString("Starting price calc", module);
         //utilTimer.setLog(false);
@@ -172,140 +174,165 @@ public class PriceServices {
                 //calculate running sum based on listPrice and rules found
                 double price = listPrice;
 
-                // ========= find all rules that must be run for each input type; this is kind of like a pre-filter to slim down the rules to run =========
-                //utilTimer.timerString("Before create rule id list", module);
-                TreeSet productPriceRuleIds = new TreeSet();
+                Collection productPriceRules = null;
 
-                // ------- These are all of the conditions that DON'T depend on the current inputs -------
+                //At this point we have two options: optimize for large ruleset, or optimize for small ruleset
+                // NOTE: This only effects the way that the rules to be evaluated are selected.
+                // For large rule sets we can do a cached pre-filter to limit the rules that need to be evaled for a specific product.
+                // Genercally I don't think that rule sets will get that big though, so the default is optimize for smaller rule set.
+                if (optimizeForLargeRuleSet) {
+                    // ========= find all rules that must be run for each input type; this is kind of like a pre-filter to slim down the rules to run =========
+                    //utilTimer.timerString("Before create rule id list", module);
+                    TreeSet productPriceRuleIds = new TreeSet();
 
-                //by productCategoryId
-                // for we will always include any rules that go by category, shouldn't be too many to iterate through each time and will save on cache entries
-                // note that we always want to put the category, quantity, etc ones that find all rules with these conditions in separate cache lists so that they can be easily cleared
-                Collection productCategoryIdConds = delegator.findByAndCache("ProductPriceCond", 
-                        UtilMisc.toMap("inputParamEnumId", "PRIP_PROD_CAT_ID"));
-                if (productCategoryIdConds != null && productCategoryIdConds.size() > 0) {
-                    Iterator productCategoryIdCondsIter = productCategoryIdConds.iterator();
-                    while (productCategoryIdCondsIter.hasNext()) {
-                        GenericValue productCategoryIdCond = (GenericValue) productCategoryIdCondsIter.next();
-                        productPriceRuleIds.add(productCategoryIdCond.getString("productPriceRuleId"));
-                    }
-                }
+                    // ------- These are all of the conditions that DON'T depend on the current inputs -------
 
-                //by quantity -- should we really do this one, ie is it necessary? 
-                // we could say that all rules with quantity on them must have one of these other values
-                // but, no we'll do it the other way, any that have a quantity will always get compared
-                Collection quantityConds = delegator.findByAndCache("ProductPriceCond", 
-                        UtilMisc.toMap("inputParamEnumId", "PRIP_QUANTITY"));
-                if (quantityConds != null && quantityConds.size() > 0) {
-                    Iterator quantityCondsIter = quantityConds.iterator();
-                    while (quantityCondsIter.hasNext()) {
-                        GenericValue quantityCond = (GenericValue) quantityCondsIter.next();
-                        productPriceRuleIds.add(quantityCond.getString("productPriceRuleId"));
-                    }
-                }
-                
-                //by roleTypeId
-                Collection roleTypeIdConds = delegator.findByAndCache("ProductPriceCond", 
-                        UtilMisc.toMap("inputParamEnumId", "PRIP_ROLE_TYPE"));
-                if (roleTypeIdConds != null && roleTypeIdConds.size() > 0) {
-                    Iterator roleTypeIdCondsIter = roleTypeIdConds.iterator();
-                    while (roleTypeIdCondsIter.hasNext()) {
-                        GenericValue roleTypeIdCond = (GenericValue) roleTypeIdCondsIter.next();
-                        productPriceRuleIds.add(roleTypeIdCond.getString("productPriceRuleId"));
-                    }
-                }
-                
-                //TODO, not supported yet: by groupPartyId
-                //TODO, not supported yet: by partyClassificationGroupId
-                //later: (by partyClassificationTypeId)
-
-                //by listPrice
-                Collection listPriceConds = delegator.findByAndCache("ProductPriceCond", 
-                        UtilMisc.toMap("inputParamEnumId", "PRIP_LIST_PRICE"));
-                if (listPriceConds != null && listPriceConds.size() > 0) {
-                    Iterator listPriceCondsIter = listPriceConds.iterator();
-                    while (listPriceCondsIter.hasNext()) {
-                        GenericValue listPriceCond = (GenericValue) listPriceCondsIter.next();
-                        productPriceRuleIds.add(listPriceCond.getString("productPriceRuleId"));
-                    }
-                }
-                
-                // ------- These are all of them that DO depend on the current inputs -------
-
-                //by productId
-                Collection productIdConds = delegator.findByAndCache("ProductPriceCond", 
-                        UtilMisc.toMap("inputParamEnumId", "PRIP_PRODUCT_ID", "condValue", productId));
-                if (productIdConds != null && productIdConds.size() > 0) {
-                    Iterator productIdCondsIter = productIdConds.iterator();
-                    while (productIdCondsIter.hasNext()) {
-                        GenericValue productIdCond = (GenericValue) productIdCondsIter.next();
-                        productPriceRuleIds.add(productIdCond.getString("productPriceRuleId"));
-                    }
-                }
-                
-                //by virtualProductId, if not null
-                if (virtualProductId != null) {
-                    Collection virtualProductIdConds = delegator.findByAndCache("ProductPriceCond", 
-                            UtilMisc.toMap("inputParamEnumId", "PRIP_PRODUCT_ID", "condValue", virtualProductId));
-                    if (virtualProductIdConds != null && virtualProductIdConds.size() > 0) {
-                        Iterator virtualProductIdCondsIter = virtualProductIdConds.iterator();
-                        while (virtualProductIdCondsIter.hasNext()) {
-                            GenericValue virtualProductIdCond = (GenericValue) virtualProductIdCondsIter.next();
-                            productPriceRuleIds.add(virtualProductIdCond.getString("productPriceRuleId"));
+                    //by productCategoryId
+                    // for we will always include any rules that go by category, shouldn't be too many to iterate through each time and will save on cache entries
+                    // note that we always want to put the category, quantity, etc ones that find all rules with these conditions in separate cache lists so that they can be easily cleared
+                    Collection productCategoryIdConds = delegator.findByAndCache("ProductPriceCond", 
+                            UtilMisc.toMap("inputParamEnumId", "PRIP_PROD_CAT_ID"));
+                    if (productCategoryIdConds != null && productCategoryIdConds.size() > 0) {
+                        Iterator productCategoryIdCondsIter = productCategoryIdConds.iterator();
+                        while (productCategoryIdCondsIter.hasNext()) {
+                            GenericValue productCategoryIdCond = (GenericValue) productCategoryIdCondsIter.next();
+                            productPriceRuleIds.add(productCategoryIdCond.getString("productPriceRuleId"));
                         }
                     }
-                }
 
-                //by prodCatalogId
-                Collection prodCatalogIdConds = delegator.findByAndCache("ProductPriceCond", 
-                        UtilMisc.toMap("inputParamEnumId", "PRIP_PROD_CLG_ID", "condValue", prodCatalogId));
-                if (prodCatalogIdConds != null && prodCatalogIdConds.size() > 0) {
-                    Iterator prodCatalogIdCondsIter = prodCatalogIdConds.iterator();
-                    while (prodCatalogIdCondsIter.hasNext()) {
-                        GenericValue prodCatalogIdCond = (GenericValue) prodCatalogIdCondsIter.next();
-                        productPriceRuleIds.add(prodCatalogIdCond.getString("productPriceRuleId"));
-                    }
-                }
-
-                //by partyId
-                if (partyId != null) {
-                    Collection partyIdConds = delegator.findByAndCache("ProductPriceCond", 
-                            UtilMisc.toMap("inputParamEnumId", "PRIP_PARTY_ID", "condValue", partyId));
-                    if (partyIdConds != null && partyIdConds.size() > 0) {
-                        Iterator partyIdCondsIter = partyIdConds.iterator();
-                        while (partyIdCondsIter.hasNext()) {
-                            GenericValue partyIdCond = (GenericValue) partyIdCondsIter.next();
-                            productPriceRuleIds.add(partyIdCond.getString("productPriceRuleId"));
+                    //by quantity -- should we really do this one, ie is it necessary? 
+                    // we could say that all rules with quantity on them must have one of these other values
+                    // but, no we'll do it the other way, any that have a quantity will always get compared
+                    Collection quantityConds = delegator.findByAndCache("ProductPriceCond", 
+                            UtilMisc.toMap("inputParamEnumId", "PRIP_QUANTITY"));
+                    if (quantityConds != null && quantityConds.size() > 0) {
+                        Iterator quantityCondsIter = quantityConds.iterator();
+                        while (quantityCondsIter.hasNext()) {
+                            GenericValue quantityCond = (GenericValue) quantityCondsIter.next();
+                            productPriceRuleIds.add(quantityCond.getString("productPriceRuleId"));
                         }
                     }
-                }
 
-                //by currencyUomId
-                Collection currencyUomIdConds = delegator.findByAndCache("ProductPriceCond", 
-                        UtilMisc.toMap("inputParamEnumId", "PRIP_CURRENCY_UOMID", "condValue", currencyUomId));
-                if (currencyUomIdConds != null && currencyUomIdConds.size() > 0) {
-                    Iterator currencyUomIdCondsIter = currencyUomIdConds.iterator();
-                    while (currencyUomIdCondsIter.hasNext()) {
-                        GenericValue currencyUomIdCond = (GenericValue) currencyUomIdCondsIter.next();
-                        productPriceRuleIds.add(currencyUomIdCond.getString("productPriceRuleId"));
+                    //by roleTypeId
+                    Collection roleTypeIdConds = delegator.findByAndCache("ProductPriceCond", 
+                            UtilMisc.toMap("inputParamEnumId", "PRIP_ROLE_TYPE"));
+                    if (roleTypeIdConds != null && roleTypeIdConds.size() > 0) {
+                        Iterator roleTypeIdCondsIter = roleTypeIdConds.iterator();
+                        while (roleTypeIdCondsIter.hasNext()) {
+                            GenericValue roleTypeIdCond = (GenericValue) roleTypeIdCondsIter.next();
+                            productPriceRuleIds.add(roleTypeIdCond.getString("productPriceRuleId"));
+                        }
                     }
-                }
 
+                    //TODO, not supported yet: by groupPartyId
+                    //TODO, not supported yet: by partyClassificationGroupId
+                    //later: (by partyClassificationTypeId)
+
+                    //by listPrice
+                    Collection listPriceConds = delegator.findByAndCache("ProductPriceCond", 
+                            UtilMisc.toMap("inputParamEnumId", "PRIP_LIST_PRICE"));
+                    if (listPriceConds != null && listPriceConds.size() > 0) {
+                        Iterator listPriceCondsIter = listPriceConds.iterator();
+                        while (listPriceCondsIter.hasNext()) {
+                            GenericValue listPriceCond = (GenericValue) listPriceCondsIter.next();
+                            productPriceRuleIds.add(listPriceCond.getString("productPriceRuleId"));
+                        }
+                    }
+
+                    // ------- These are all of them that DO depend on the current inputs -------
+
+                    //by productId
+                    Collection productIdConds = delegator.findByAndCache("ProductPriceCond", 
+                            UtilMisc.toMap("inputParamEnumId", "PRIP_PRODUCT_ID", "condValue", productId));
+                    if (productIdConds != null && productIdConds.size() > 0) {
+                        Iterator productIdCondsIter = productIdConds.iterator();
+                        while (productIdCondsIter.hasNext()) {
+                            GenericValue productIdCond = (GenericValue) productIdCondsIter.next();
+                            productPriceRuleIds.add(productIdCond.getString("productPriceRuleId"));
+                        }
+                    }
+
+                    //by virtualProductId, if not null
+                    if (virtualProductId != null) {
+                        Collection virtualProductIdConds = delegator.findByAndCache("ProductPriceCond", 
+                                UtilMisc.toMap("inputParamEnumId", "PRIP_PRODUCT_ID", "condValue", virtualProductId));
+                        if (virtualProductIdConds != null && virtualProductIdConds.size() > 0) {
+                            Iterator virtualProductIdCondsIter = virtualProductIdConds.iterator();
+                            while (virtualProductIdCondsIter.hasNext()) {
+                                GenericValue virtualProductIdCond = (GenericValue) virtualProductIdCondsIter.next();
+                                productPriceRuleIds.add(virtualProductIdCond.getString("productPriceRuleId"));
+                            }
+                        }
+                    }
+
+                    //by prodCatalogId
+                    Collection prodCatalogIdConds = delegator.findByAndCache("ProductPriceCond", 
+                            UtilMisc.toMap("inputParamEnumId", "PRIP_PROD_CLG_ID", "condValue", prodCatalogId));
+                    if (prodCatalogIdConds != null && prodCatalogIdConds.size() > 0) {
+                        Iterator prodCatalogIdCondsIter = prodCatalogIdConds.iterator();
+                        while (prodCatalogIdCondsIter.hasNext()) {
+                            GenericValue prodCatalogIdCond = (GenericValue) prodCatalogIdCondsIter.next();
+                            productPriceRuleIds.add(prodCatalogIdCond.getString("productPriceRuleId"));
+                        }
+                    }
+
+                    //by partyId
+                    if (partyId != null) {
+                        Collection partyIdConds = delegator.findByAndCache("ProductPriceCond", 
+                                UtilMisc.toMap("inputParamEnumId", "PRIP_PARTY_ID", "condValue", partyId));
+                        if (partyIdConds != null && partyIdConds.size() > 0) {
+                            Iterator partyIdCondsIter = partyIdConds.iterator();
+                            while (partyIdCondsIter.hasNext()) {
+                                GenericValue partyIdCond = (GenericValue) partyIdCondsIter.next();
+                                productPriceRuleIds.add(partyIdCond.getString("productPriceRuleId"));
+                            }
+                        }
+                    }
+
+                    //by currencyUomId
+                    Collection currencyUomIdConds = delegator.findByAndCache("ProductPriceCond", 
+                            UtilMisc.toMap("inputParamEnumId", "PRIP_CURRENCY_UOMID", "condValue", currencyUomId));
+                    if (currencyUomIdConds != null && currencyUomIdConds.size() > 0) {
+                        Iterator currencyUomIdCondsIter = currencyUomIdConds.iterator();
+                        while (currencyUomIdCondsIter.hasNext()) {
+                            GenericValue currencyUomIdCond = (GenericValue) currencyUomIdCondsIter.next();
+                            productPriceRuleIds.add(currencyUomIdCond.getString("productPriceRuleId"));
+                        }
+                    }
+
+
+                    productPriceRules = new LinkedList();
+                    Iterator productPriceRuleIdsIter = productPriceRuleIds.iterator();
+                    while (productPriceRuleIdsIter.hasNext()) {
+                        String productPriceRuleId = (String) productPriceRuleIdsIter.next();
+                        GenericValue productPriceRule = delegator.findByPrimaryKeyCache("ProductPriceRule", UtilMisc.toMap("productPriceRuleId", productPriceRuleId));
+                        if (productPriceRule == null) continue;
+                        productPriceRules.add(productPriceRule);
+                    }
+                } else {
+                    //this would be nice, but we can't cache this so easily...
+                    //List pprExprs = UtilMisc.toList(new EntityExpr("thruDate", EntityOperator.EQUALS, null), 
+                    //        new EntityExpr("thruDate", EntityOperator.GREATER_THAN, UtilDateTime.nowTimestamp()));
+                    //productPriceRules = delegator.findByOr("ProductPriceRule", pprExprs);
+                    
+                    productPriceRules = delegator.findAllCache("ProductPriceRule");
+                    if (productPriceRules == null) productPriceRules = new LinkedList();
+                }
 
                 // ========= go through each price rule by id and eval all conditions =========
                 //utilTimer.timerString("Before eval rules", module);
-                Iterator productPriceRuleIdsIter = productPriceRuleIds.iterator();
                 int totalConds = 0;
                 int totalActions = 0;
                 int totalRules = 0;
-                while (productPriceRuleIdsIter.hasNext()) {
-                    String productPriceRuleId = (String) productPriceRuleIdsIter.next();
-                    GenericValue productPriceRule = delegator.findByPrimaryKeyCache("ProductPriceRule", UtilMisc.toMap("productPriceRuleId", productPriceRuleId));
-                    if (productPriceRule == null) continue;
+                
+                Iterator productPriceRulesIter = productPriceRules.iterator();
+                while (productPriceRulesIter.hasNext()) {
+                    GenericValue productPriceRule = (GenericValue) productPriceRulesIter.next();
+                    String productPriceRuleId = productPriceRule.getString("productPriceRuleId");
 
                     //check from/thru dates
-		    java.sql.Timestamp fromDate = productPriceRule.getTimestamp("fromDate");
-		    java.sql.Timestamp thruDate = productPriceRule.getTimestamp("thruDate");
+                    java.sql.Timestamp fromDate = productPriceRule.getTimestamp("fromDate");
+                    java.sql.Timestamp thruDate = productPriceRule.getTimestamp("thruDate");
                     if (fromDate != null && fromDate.after(nowTimestamp)) {
                         //hasn't started yet
                         continue;
