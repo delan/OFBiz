@@ -32,6 +32,8 @@
             default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
         <auto-fields-service service-name="updateProductManufacturingRule" map-name="manufacturingRule"/>
         <field name="ruleId"><display/></field>
+        <field name="ruleSeqId"><display/></field>
+        <field name="description"><display/></field>
         <field name="productId"><display/></field>
         <field name="productIdFor"><display/></field>
         <field name="productIdIn"><display/></field>
@@ -42,7 +44,7 @@
         <field name="fromDate"><display/></field>
         <field name="thruDate"><display/></field>
         <field name="updateLink" title="&amp;nbsp;" widget-style="buttontext">
-            <hyperlink target="EditProductManufacturingRules?ruleId=${ruleId}" description="[${uiLabelMap.CommonSelected}]" />
+            <hyperlink target="EditProductManufacturingRules?ruleId=${ruleId}" description="[${uiLabelMap.CommonSelect}]" />
         </field> 
         <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
             <hyperlink target="DeleteProductManufacturingRule?ruleId=${ruleId}" description="[${uiLabelMap.CommonDelete}]" also-hidden="false"/>
