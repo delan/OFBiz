@@ -14,4 +14,4 @@ java -Xbootclasspath:[PATH TO]/cryptix.jar:[PATH TO]/rt.jar:[PATH TO]/i18n.jar -
 Jetty and Orion will require the bootclasspath setting, only tested with these two.
 
 Submit questions to:
-ofbiz-users@lists.sourceforge.net
+users@ofbiz.dev.java.net
