@@ -1141,7 +1141,11 @@
             title="Web Site Email Settings Entity">
       <field name="webSiteId" type="id-ne"></field>
       <field name="emailType" type="id-ne"></field>
-      <field name="location" type="long-varchar"></field>          
+      <field name="templatePath" type="long-varchar"></field>
+      <field name="fromAddress" type="email"></field>
+      <field name="ccAddress" type="email"></field>
+      <field name="bccAddress" type="email"></field>
+      <field name="subject" type="comment"></field>               
       <prim-key field="webSiteId"/>
       <prim-key field="emailType"/>
       <relation type="one" fk-name="WES_WEB_SITE" rel-entity-name="WebSite">
