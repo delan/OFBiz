@@ -1,6 +1,10 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.25  2001/09/25 20:26:09  epabst
+ * enabled emailing a password or showing the password hint if the user forgot the password
+ * put helper method into ContactHelper as an overload to getContactMech()
+ *
  * Revision 1.24  2001/09/25 15:02:14  epabst
  * when adding an EMAIL_ADDRESS, if no PRIMARY_EMAIL is currently
  * set, it is automatically set to be the PRIMARY_EMAIL address.  If it is set, the
@@ -386,7 +390,7 @@ public class CustomerEvents {
         String cmPurposeTypeId;
         try {
             GenericValue party = userLogin.getRelatedOne("Party");
-            if (UtilValidate.isEmpty(ContactHelper.getContactMech(party, "PRIMARY_EMAIL", null, false))) {
+            if (UtilValidate.isEmpty(ContactHelper.getContactMech(party, "PRIMARY_EMAIL", false))) {
                 cmPurposeTypeId = "PRIMARY_EMAIL";
             } else {
                 cmPurposeTypeId = "OTHER_EMAIL";
@@ -1119,7 +1123,8 @@ public class CustomerEvents {
     try { party = supposedUserLogin.getRelatedOne("Party"); }
     catch(GenericEntityException e) { Debug.logWarning(e.getMessage()); party = null; }
     if(party != null) {
-        Iterator emailIter = UtilMisc.toIterator(ContactHelper.getContactMech(party, "PRIMARY_EMAIL", "EMAIL_ADDRESS", false));
+        //Iterator emailIter = UtilMisc.toIterator(ContactHelper.getContactMech(party, "PRIMARY_EMAIL", "EMAIL_ADDRESS", false));
+        Iterator emailIter = UtilMisc.toIterator(ContactHelper.getContactMech(party, "PRIMARY_EMAIL", false));
         while(emailIter != null && emailIter.hasNext()) {
             GenericValue email = (GenericValue) emailIter.next();
             emails.append(emails.length() > 0 ? "," : "").append(email.getString("infoString"));
