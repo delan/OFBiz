@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE simple-methods PUBLIC "-//OFBiz//DTD Simple Methods//EN" "http://www.ofbiz.org/dtds/simple-methods.dtd">
+
+<!--
+ * Copyright (c) 2001 The Open For Business Project and repective authors.
+ * Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ * @version 1.0
+ * Created on November 13, 2002
+ -->
+<simple-methods>
+
+    <!-- ========= GlAccount methods ========= -->
+    <simple-method method-name="createGlAccount" short-description="Create an GlAccount">
+        <check-permission permission="ACCOUNTING" action="_CREATE"><fail-message message="Security Error: to run createGlAccount you must have the ACCOUNTING_CREATE or ACCOUNTING_ADMIN permission"/></check-permission>
+        <check-errors/>
+
+        <make-value entity-name="GlAccount" value-name="newEntity"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+
+        <!-- GlAccount uses a sequenced id, so get the next one now and set it... -->        
+        <sequenced-id-to-env sequence-name="GlAccount" env-name="newSequencedId"/>
+        <to-string field-name="newSequencedId"/>
+        <env-to-field env-name="newSequencedId" field-name="glAccountId" map-name="newEntity"/>
+        
+        <create-value value-name="newEntity"/>
+        
+        <field-to-result field-name="newSequencedId" result-name="glAccountId"/>
+    </simple-method>
+    <simple-method method-name="updateGlAccount" short-description="Update an GlAccount">
+        <check-permission permission="ACCOUNTING" action="_UPDATE"><fail-message message="Security Error: to run updateGlAccount you must have the ACCOUNTING_UPDATE or ACCOUNTING_ADMIN permission"/></check-permission>
+        <check-errors/>
+
+        <make-value entity-name="GlAccount" value-name="lookupPKMap"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="GlAccount" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
+        
+        <store-value value-name="lookedUpValue"/>
+    </simple-method>
+    <simple-method method-name="deleteGlAccount" short-description="Delete an GlAccount">
+        <check-permission permission="ACCOUNTING" action="_DELETE"><fail-message message="Security Error: to run deleteGlAccount you must have the ACCOUNTING_DELETE or ACCOUNTING_ADMIN permission"/></check-permission>
+        <check-errors/>
+
+        <make-value entity-name="GlAccount" value-name="lookupPKMap"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="GlAccount" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <remove-value value-name="lookedUpValue"/>
+    </simple-method>
+    
+    <!-- ========= GlAccountOrganization methods ========= -->
+    <simple-method method-name="addGlAccountToOrganization" short-description="Add GlAccount To Organization">
+        <check-permission permission="ACCOUNTING" action="_CREATE"><fail-message message="Security Error: to run addGlAccountToOrganization you must have the ACCOUNTING_CREATE or ACCOUNTING_ADMIN permission"/></check-permission>
+        <check-errors/>
+
+        <make-value entity-name="GlAccountOrganization" value-name="newEntity"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+        <set-pk-fields map-name="parameters" value-name="newEntity"/>
+
+        <create-value value-name="newEntity"/>
+    </simple-method>
+    <simple-method method-name="updateGlAccountToOrganization" short-description="Update GlAccount To Organization">
+        <check-permission permission="ACCOUNTING" action="_UPDATE"><fail-message message="Security Error: to run updateGlAccountToOrganization you must have the ACCOUNTING_CREATE or ACCOUNTING_ADMIN permission"/></check-permission>
+        <check-errors/>
+
+        <make-value entity-name="GlAccountOrganization" value-name="lookupPKMap"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="GlAccountOrganization" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+
+        <store-value value-name="newEntity"/>
+    </simple-method>
+    <simple-method method-name="removeGlAccountFromOrganization" short-description="Remove GlAccount from Organization">
+        <check-permission permission="ACCOUNTING" action="_DELETE"><fail-message message="Security Error: to run removeGlAccountFromOrganization you must have the ACCOUNTING_DELETE or ACCOUNTING_ADMIN permission"/></check-permission>
+        <check-errors/>
+
+        <make-value entity-name="GlAccountOrganization" value-name="lookupPKMap"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="GlAccountOrganization" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <remove-value value-name="lookedUpValue"/>
+    </simple-method>
+
+    <!-- ========= GlJournal methods ========= -->
+    <simple-method method-name="createGlJournal" short-description="Create an GlJournal">
+        <check-permission permission="ACCOUNTING" action="_CREATE"><fail-message message="Security Error: to run createGlJournal you must have the ACCOUNTING_CREATE or ACCOUNTING_ADMIN permission"/></check-permission>
+        <check-errors/>
+
+        <make-value entity-name="GlJournal" value-name="newEntity"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+
+        <!-- GlJournal uses a sequenced id, so get the next one now and set it... -->        
+        <sequenced-id-to-env sequence-name="GlJournal" env-name="newSequencedId"/>
+        <to-string field-name="newSequencedId"/>
+        <env-to-field env-name="newSequencedId" field-name="glJournalId" map-name="newEntity"/>
+        
+        <create-value value-name="newEntity"/>
+        
+        <field-to-result field-name="newSequencedId" result-name="glJournalId"/>
+    </simple-method>
+    <simple-method method-name="updateGlJournal" short-description="Update an GlJournal">
+        <check-permission permission="ACCOUNTING" action="_UPDATE"><fail-message message="Security Error: to run updateGlJournal you must have the ACCOUNTING_UPDATE or ACCOUNTING_ADMIN permission"/></check-permission>
+        <check-errors/>
+
+        <make-value entity-name="GlJournal" value-name="lookupPKMap"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="GlJournal" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
+        
+        <store-value value-name="lookedUpValue"/>
+    </simple-method>
+    <simple-method method-name="deleteGlJournal" short-description="Delete an GlJournal">
+        <check-permission permission="ACCOUNTING" action="_DELETE"><fail-message message="Security Error: to run deleteGlJournal you must have the ACCOUNTING_DELETE or ACCOUNTING_ADMIN permission"/></check-permission>
+        <check-errors/>
+
+        <make-value entity-name="GlJournal" value-name="lookupPKMap"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="GlJournal" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <remove-value value-name="lookedUpValue"/>
+    </simple-method>
+
+    <!-- ========= GlReconciliation methods ========= -->
+    <simple-method method-name="createGlReconciliation" short-description="Create an GlReconciliation">
+        <check-permission permission="ACCOUNTING" action="_CREATE"><fail-message message="Security Error: to run createGlReconciliation you must have the ACCOUNTING_CREATE or ACCOUNTING_ADMIN permission"/></check-permission>
+        <check-errors/>
+
+        <make-value entity-name="GlReconciliation" value-name="newEntity"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+
+        <!-- GlReconciliation uses a sequenced id, so get the next one now and set it... -->        
+        <sequenced-id-to-env sequence-name="GlReconciliation" env-name="newSequencedId"/>
+        <to-string field-name="newSequencedId"/>
+        <env-to-field env-name="newSequencedId" field-name="glReconciliationId" map-name="newEntity"/>
+        
+        <now-timestamp-to-env env-name="nowTimestamp"/>
+        <env-to-field env-name="nowTimestamp" field-name="lastModifiedDate" map-name="newEntity"/>
+        <env-to-field env-name="nowTimestamp" field-name="createdDate" map-name="newEntity"/>
+        <field-to-field field-name="userLoginId" map-name="userLogin" to-field-name="lastModifiedByUserLogin" to-map-name="newEntity"/>
+        <field-to-field field-name="userLoginId" map-name="userLogin" to-field-name="createdByUserLogin" to-map-name="newEntity"/>
+        
+        <create-value value-name="newEntity"/>
+        
+        <field-to-result field-name="newSequencedId" result-name="glReconciliationId"/>
+    </simple-method>
+    <simple-method method-name="updateGlReconciliation" short-description="Update an GlReconciliation">
+        <check-permission permission="ACCOUNTING" action="_UPDATE"><fail-message message="Security Error: to run updateGlReconciliation you must have the ACCOUNTING_UPDATE or ACCOUNTING_ADMIN permission"/></check-permission>
+        <check-errors/>
+
+        <make-value entity-name="GlReconciliation" value-name="lookupPKMap"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="GlReconciliation" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
+        
+        <now-timestamp-to-env env-name="nowTimestamp"/>
+        <env-to-field env-name="nowTimestamp" field-name="lastModifiedDate" map-name="lookedUpValue"/>
+        <field-to-field field-name="userLoginId" map-name="userLogin" to-field-name="lastModifiedByUserLogin" to-map-name="lookedUpValue"/>
+
+        <store-value value-name="lookedUpValue"/>
+    </simple-method>
+    <simple-method method-name="deleteGlReconciliation" short-description="Delete an GlReconciliation">
+        <check-permission permission="ACCOUNTING" action="_DELETE"><fail-message message="Security Error: to run deleteGlReconciliation you must have the ACCOUNTING_DELETE or ACCOUNTING_ADMIN permission"/></check-permission>
+        <check-errors/>
+
+        <make-value entity-name="GlReconciliation" value-name="lookupPKMap"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="GlReconciliation" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <remove-value value-name="lookedUpValue"/>
+    </simple-method>
+    
+    <!-- ========= GlReconciliationEntry methods ========= -->
+    <simple-method method-name="addEntryToGlReconciliation" short-description="Add Entry To GlReconciliation">
+        <check-permission permission="ACCOUNTING" action="_CREATE"><fail-message message="Security Error: to run addEntryToGlReconciliation you must have the ACCOUNTING_CREATE or ACCOUNTING_ADMIN permission"/></check-permission>
+        <check-errors/>
+
+        <make-value entity-name="GlReconciliationEntry" value-name="newEntity"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+        <set-pk-fields map-name="parameters" value-name="newEntity"/>
+
+        <create-value value-name="newEntity"/>
+
+		<!-- when changing entries, also update the last modified info for the GlReconciliation -->
+		<call-simple-method method-name="updateGlReconciliationLastModified"/>
+    </simple-method>
+    <simple-method method-name="updateEntryToGlReconciliation" short-description="Update Entry To GlReconciliation">
+        <check-permission permission="ACCOUNTING" action="_UPDATE"><fail-message message="Security Error: to run updateEntryToGlReconciliation you must have the ACCOUNTING_CREATE or ACCOUNTING_ADMIN permission"/></check-permission>
+        <check-errors/>
+
+        <make-value entity-name="GlReconciliationEntry" value-name="lookupPKMap"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="GlReconciliationEntry" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+
+        <store-value value-name="newEntity"/>
+
+		<!-- when changing entries, also update the last modified info for the GlReconciliation -->
+		<call-simple-method method-name="updateGlReconciliationLastModified"/>
+    </simple-method>
+    <simple-method method-name="removeEntryFromGlReconciliation" short-description="Remove Entry From GlReconciliation">
+        <check-permission permission="ACCOUNTING" action="_DELETE"><fail-message message="Security Error: to run removeEntryFromGlReconciliation you must have the ACCOUNTING_DELETE or ACCOUNTING_ADMIN permission"/></check-permission>
+        <check-errors/>
+
+        <make-value entity-name="GlReconciliationEntry" value-name="lookupPKMap"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="GlReconciliationEntry" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <remove-value value-name="lookedUpValue"/>
+
+		<!-- when changing entries, also update the last modified info for the GlReconciliation -->
+		<call-simple-method method-name="updateGlReconciliationLastModified"/>
+    </simple-method>
+
+    <simple-method method-name="updateGlReconciliationLastModified" short-description="Update GlReconciliation LastModified Info">
+    	<!-- this is just a little method that is meant to be called as an inline call-simple-method target with the context already setup -->
+        <make-value entity-name="GlReconciliation" value-name="lookupGLRMap"/>
+        <set-pk-fields map-name="parameters" value-name="lookupGLRMap"/>
+        <find-by-primary-key entity-name="GlReconciliation" map-name="lookupGLRMap" value-name="lookedUpGLR"/>
+        
+        <now-timestamp-to-env env-name="nowTimestamp"/>
+        <env-to-field env-name="nowTimestamp" field-name="lastModifiedDate" map-name="lookedUpGLR"/>
+        <field-to-field field-name="userLoginId" map-name="userLogin" to-field-name="lastModifiedByUserLogin" to-map-name="lookedUpGLR"/>
+
+        <store-value value-name="lookedUpValue"/>
+    </simple-method>
+</simple-methods>

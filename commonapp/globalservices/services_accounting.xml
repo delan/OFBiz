@@ -183,4 +183,138 @@
         <attribute name="orderStatusId" type="String" mode="IN" optional="false" />
     </service>
 
+
+	<!-- ========= General Ledger Services ========= -->
+
+	<!-- GlAccount & Related -->
+    <service name="interfaceGlAccount" engine="interface" location="" invoke="">
+        <attribute name="glAccountTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="glAccountClassId" type="String" mode="IN" optional="false"/>
+        <attribute name="glResourceTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="glXbrlClassId" type="String" mode="IN" optional="true"/>
+        <attribute name="parentGlAccountId" type="String" mode="IN" optional="true"/>
+        <attribute name="accountCode" type="String" mode="IN" optional="true"/>
+        <attribute name="accountName" type="String" mode="IN" optional="false"/>
+        <attribute name="description" type="String" mode="IN" optional="true"/>
+        <attribute name="productId" type="String" mode="IN" optional="true"/>
+    </service>
+    <service name="createGlAccount" engine="simple"
+            location="org/ofbiz/commonapp/accounting/ledger/GeneralLedgerServices.xml" invoke="createGlAccount" auth="true">
+        <description>Create a GlAccount record</description>
+        <implements service="interfaceGlAccount"/>
+        <attribute name="glAccountId" type="String" mode="OUT" optional="false"/>
+    </service>
+    <service name="updateGlAccount" engine="simple"
+            location="org/ofbiz/commonapp/accounting/ledger/GeneralLedgerServices.xml" invoke="updateGlAccount" auth="true">
+        <description>Update a GlAccount record</description>
+        <implements service="interfaceGlAccount"/>
+        <attribute name="glAccountId" type="String" mode="IN" optional="false"/>
+    </service>
+    <service name="deleteGlAccount" engine="simple"
+            location="org/ofbiz/commonapp/accounting/ledger/GeneralLedgerServices.xml" invoke="deleteGlAccount" auth="true">
+        <description>Delete a GlAccount record</description>
+        <attribute name="glAccountId" type="String" mode="IN" optional="false"/>
+    </service>
+	
+    <service name="interfaceGlAccountOrganization" engine="interface" location="" invoke="">
+        <attribute name="roleTypeId" type="String" mode="IN" optional="true"/>
+        <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
+    </service>
+    <service name="addGlAccountToOrganization" engine="simple"
+            location="org/ofbiz/commonapp/accounting/ledger/GeneralLedgerServices.xml" invoke="addGlAccountToOrganization" auth="true">
+        <description>Create a GlAccount record</description>
+        <implements service="interfaceGlAccountOrganization"/>
+        <attribute name="glAccountId" type="String" mode="IN" optional="false"/>
+        <attribute name="organizationPartyId" type="String" mode="IN" optional="false"/>
+    </service>
+    <service name="updateGlAccountToOrganization" engine="simple"
+            location="org/ofbiz/commonapp/accounting/ledger/GeneralLedgerServices.xml" invoke="updateGlAccountToOrganization" auth="true">
+        <description>Update a GlAccount record</description>
+        <implements service="interfaceGlAccountOrganization"/>
+        <attribute name="glAccountId" type="String" mode="IN" optional="false"/>
+        <attribute name="organizationPartyId" type="String" mode="IN" optional="false"/>
+    </service>
+    <service name="removeGlAccountFromOrganization" engine="simple"
+            location="org/ofbiz/commonapp/accounting/ledger/GeneralLedgerServices.xml" invoke="removeGlAccountFromOrganization" auth="true">
+        <description>Delete a GlAccount record</description>
+        <attribute name="glAccountId" type="String" mode="IN" optional="false"/>
+        <attribute name="organizationPartyId" type="String" mode="IN" optional="false"/>
+    </service>
+	
+	<!-- GlJournal -->
+    <service name="interfaceGlJournal" engine="interface" location="" invoke="">
+        <attribute name="glJournalName" type="String" mode="IN" optional="false"/>
+        <attribute name="organizationPartyId" type="String" mode="IN" optional="false"/>
+    </service>
+    <service name="createGlJournal" engine="simple"
+            location="org/ofbiz/commonapp/accounting/ledger/GeneralLedgerServices.xml" invoke="createGlJournal" auth="true">
+        <description>Create a GlJournal record</description>
+        <implements service="interfaceGlJournal"/>
+        <attribute name="glJournalId" type="String" mode="OUT" optional="false"/>
+    </service>
+    <service name="updateGlJournal" engine="simple"
+            location="org/ofbiz/commonapp/accounting/ledger/GeneralLedgerServices.xml" invoke="updateGlJournal" auth="true">
+        <description>Update a GlJournal record</description>
+        <implements service="interfaceGlJournal"/>
+        <attribute name="glJournalId" type="String" mode="IN" optional="false"/>
+    </service>
+    <service name="deleteGlJournal" engine="simple"
+            location="org/ofbiz/commonapp/accounting/ledger/GeneralLedgerServices.xml" invoke="deleteGlJournal" auth="true">
+        <description>Delete a GlJournal record</description>
+        <attribute name="glJournalId" type="String" mode="IN" optional="false"/>
+    </service>
+	
+	<!-- GlReconciliation & Related -->
+    <service name="interfaceGlReconciliation" engine="interface" location="" invoke="">
+        <attribute name="glReconciliationName" type="String" mode="IN" optional="false"/>
+        <attribute name="description" type="String" mode="IN" optional="false"/>
+    </service>
+    <service name="createGlReconciliation" engine="simple"
+            location="org/ofbiz/commonapp/accounting/ledger/GeneralLedgerServices.xml" invoke="createGlReconciliation" auth="true">
+        <description>Create a GlReconciliation record</description>
+        <implements service="interfaceGlReconciliation"/>
+        <attribute name="glReconciliationId" type="String" mode="OUT" optional="false"/>
+    </service>
+    <service name="updateGlReconciliation" engine="simple"
+            location="org/ofbiz/commonapp/accounting/ledger/GeneralLedgerServices.xml" invoke="updateGlReconciliation" auth="true">
+        <description>Update a GlReconciliation record</description>
+        <implements service="interfaceGlReconciliation"/>
+        <attribute name="glReconciliationId" type="String" mode="IN" optional="false"/>
+    </service>
+    <service name="deleteGlReconciliation" engine="simple"
+            location="org/ofbiz/commonapp/accounting/ledger/GeneralLedgerServices.xml" invoke="deleteGlReconciliation" auth="true">
+        <description>Delete a GlReconciliation record</description>
+        <attribute name="glReconciliationId" type="String" mode="IN" optional="false"/>
+    </service>
+	
+    <service name="interfaceGlReconciliationEntryPK" engine="interface" location="" invoke="">
+        <attribute name="glReconciliationId" type="String" mode="IN" optional="true"/>
+        <attribute name="acctgTransId" type="String" mode="IN" optional="true"/>
+        <attribute name="acctgTransEntrySeqId" type="String" mode="IN" optional="true"/>
+    </service>
+    <service name="interfaceGlReconciliationEntry" engine="interface" location="" invoke="">
+        <attribute name="reconciledAmount" type="Double" mode="IN" optional="false"/>
+    </service>
+    <service name="addEntryToGlReconciliation" engine="simple"
+            location="org/ofbiz/commonapp/accounting/ledger/GeneralLedgerServices.xml" invoke="addEntryToGlReconciliation" auth="true">
+        <description>Add an Entry to a GlReconciliation</description>
+        <implements service="interfaceGlReconciliationEntryPK"/>
+        <implements service="interfaceGlReconciliationEntry"/>
+    </service>
+    <service name="updateEntryToGlReconciliation" engine="simple"
+            location="org/ofbiz/commonapp/accounting/ledger/GeneralLedgerServices.xml" invoke="updateEntryToGlReconciliation" auth="true">
+        <description>Update an Entry to a GlReconciliation record</description>
+        <implements service="interfaceGlReconciliationEntryPK"/>
+        <implements service="interfaceGlReconciliationEntry"/>
+    </service>
+    <service name="removeEntryFromGlReconciliation" engine="simple"
+            location="org/ofbiz/commonapp/accounting/ledger/GeneralLedgerServices.xml" invoke="removeEntryFromGlReconciliation" auth="true">
+        <description>Remove an Entry from a GlReconciliation</description>
+        <implements service="interfaceGlReconciliationEntryPK"/>
+    </service>
+	
+	
+	<!-- AcctgTrans & Related -->
+	
 </services>
