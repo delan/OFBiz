@@ -173,5 +173,5 @@
 </#if>
 
 <#else>
-  <h3>${uiLabelMap.MsgErr0002})</h3>
+  <h3>${uiLabelMap.PartyMgrViewPermissionError})</h3>
 </#if>
