@@ -69,7 +69,7 @@ public class ControlEventListener implements HttpSessionListener {
             try {
                 visit.store();
             } catch (GenericEntityException e) {
-                Debug.logError(e, "Could not update visit for session destuction: ", module);
+                Debug.logError(e, "Could not update visit for session destuction: " + visit, module);
             }
         }
 
