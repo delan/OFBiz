@@ -284,6 +284,10 @@ public class OrderServices {
             orderHeader.set("visitId", context.get("visitId"));
         }
 
+        if (UtilValidate.isNotEmpty((String) context.get("originFacilityId"))) {
+            orderHeader.set("originFacilityId", context.get("originFacilityId"));
+        }
+
         if (UtilValidate.isNotEmpty((String) context.get("productStoreId"))) {
             orderHeader.set("productStoreId", context.get("productStoreId"));
         }

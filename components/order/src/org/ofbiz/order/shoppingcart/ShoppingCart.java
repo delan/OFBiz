@@ -234,6 +234,7 @@ public class ShoppingCart implements Serializable {
     private String delegatorName = null;
 
     protected String productStoreId = null;
+    protected String facilityId = null;
     protected String webSiteId = null;
     protected String orderPartyId = null;
 
@@ -325,6 +326,14 @@ public class ShoppingCart implements Serializable {
 
     public void setProductStoreId(String productStoreId) {
         this.productStoreId = productStoreId;
+    }
+
+    public String getFacilityId() {
+        return this.facilityId;
+    }
+    
+    public void setFacilityId(String facilityId) {
+        this.facilityId = facilityId;
     }
 
     public Locale getLocale() {
