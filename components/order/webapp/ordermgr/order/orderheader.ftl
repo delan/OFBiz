@@ -20,18 +20,18 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.6 $
+ *@version    $Revision: 1.7 $
  *@since      2.2
 -->
 
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
   <tr>
-    <td width='50%' valign='top' align='left'>
+    <td width="50%" valign="top" align="left">
       <#-- header box -->
-      <table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+      <table border=0 width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
         <tr>
-          <td width='100%'>
-            <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
+          <td width="100%">
+            <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
               <tr>
                 <td valign="middle" align="left">
                   <div class="boxhead">&nbsp;Order #${orderId} Information</div>
@@ -41,30 +41,30 @@
           </td>
         </tr>
         <tr>
-          <td width='100%'>
-            <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
+          <td width="100%">
+            <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxbottom">
               <tr>
                 <td>
-                  <table width="100%" border="0" cellpadding="1" cellspacing='0'>
+                  <table width="100%" border="0" cellpadding="1" cellspacing="0">
                     <tr>
                       <td align="right" valign="top" width="15%">
                         <div class="tabletext">&nbsp;<b>Status History</b></div>
                       </td>
                       <td width="5">&nbsp;</td>
                       <td align="left" valign="top" width="80%">
-                        <div class='tabletext'>Current Status: ${currentStatus.description}</div>
+                        <div class="tabletext">Current Status: ${currentStatus.description}</div>
                         <#if orderHeaderStatuses?has_content>
                           <hr class="sepbar">
                           <#list orderHeaderStatuses as orderHeaderStatus>
                             <#assign loopStatusItem = orderHeaderStatus.getRelatedOne("StatusItem")>
-                            <div class='tabletext'>
+                            <div class="tabletext">
                               ${loopStatusItem.description} - ${orderHeaderStatus.statusDatetime.toString()}
                             </div>
                           </#list>
                         </#if>
                       </td>
                     </tr>
-                    <tr><td colspan="7"><hr class='sepbar'></td></tr>
+                    <tr><td colspan="7"><hr class="sepbar"></td></tr>
                     <tr>
                       <td align="right" valign="top" width="15%">
                         <div class="tabletext">&nbsp;<b>Date Ordered</b></div>
@@ -77,7 +77,7 @@
                       </td>
                     </tr>
                     <#if distributorId?exists>
-                    <tr><td colspan="7"><hr class='sepbar'></td></tr>
+                    <tr><td colspan="7"><hr class="sepbar"></td></tr>
                     <tr>
                       <td align="right" valign="top" width="15%">
                         <div class="tabletext">&nbsp;<b>Distributor</b></div>
@@ -91,7 +91,7 @@
                     </tr>
                     </#if>
                     <#if affiliateId?exists>
-                    <tr><td colspan="7"><hr class='sepbar'></td></tr>
+                    <tr><td colspan="7"><hr class="sepbar"></td></tr>
                     <tr>
                       <td align="right" valign="top" width="15%">
                         <div class="tabletext">&nbsp;<b>Affiliate</b></div>
@@ -115,10 +115,10 @@
       <br>
       <#-- payment box -->
       <#if orderPaymentPreferences?has_content || billingAccount?has_content>
-        <table border='0' width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+        <table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
           <tr>
-            <td width='100%'>
-              <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
+            <td width="100%">
+              <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
                 <tr>
                   <td valign="middle" align="left">
                     <div class="boxhead">&nbsp;Payment Information</div>
@@ -128,14 +128,14 @@
             </td>
           </tr>
           <tr>
-            <td width='100%'>
-              <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
+            <td width="100%">
+              <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxbottom">
                 <tr>
                   <td>
-                    <table width="100%" border="0" cellpadding="1" cellspacing='0'>
+                    <table width="100%" border="0" cellpadding="1" cellspacing="0">
                     <#list orderPaymentPreferences as orderPaymentPreference>
                       <#if outputted?default("false") == "true">
-                        <tr><td colspan="7"><hr class='sepbar'></td></tr>
+                        <tr><td colspan="7"><hr class="sepbar"></td></tr>
                       </#if>
                       <#assign outputted = "true">
                       <#-- try the paymentMethod first; if paymentMethodId is specified it overrides paymentMethodTypeId -->
@@ -229,7 +229,7 @@
                         </#if>
                       </#if>
                       <#if pmBillingAddress?exists>
-                        <tr><td>&nbsp;</td><td>&nbsp;</td><td colspan="5"><hr class='sepbar'></td></tr>
+                        <tr><td>&nbsp;</td><td>&nbsp;</td><td colspan="5"><hr class="sepbar"></td></tr>
                         <tr>
                           <td align="right" valign="top" width="15%">
                             <div class="tabletext">&nbsp;</div>
@@ -253,7 +253,7 @@
                     <#-- billing account -->
                     <#if billingAccount?exists>
                       <#if outputted?default("false") == "true">
-                        <tr><td colspan="7"><hr class='sepbar'></td></tr>
+                        <tr><td colspan="7"><hr class="sepbar"></td></tr>
                       </#if>
                       <tr>
                         <td align="right" valign="top" width="15%">
@@ -266,7 +266,7 @@
                           </div>
                         </td>
                       </tr>
-                      <tr><td colspan="7"><hr class='sepbar'></td></tr>
+                      <tr><td colspan="7"><hr class="sepbar"></td></tr>
                       <tr>
                         <td align="right" valign="top" width="15%">
                           <div class="tabletext">&nbsp;<b>Purchase Order Number</b></div>
@@ -280,7 +280,7 @@
 
                     <#-- invoices -->
                     <#if invoices?has_content>
-                      <tr><td colspan="7"><hr class='sepbar'></td></tr>
+                      <tr><td colspan="7"><hr class="sepbar"></td></tr>
                       <tr>
                         <td align="right" valign="top" width="15%">
                           <div class="tabletext">&nbsp;<b>Invoices</b></div>
@@ -304,13 +304,13 @@
       <#-- end of payment box -->
     </td>
     <td width="1">&nbsp;&nbsp;</td>
-    <td width='50%' valign='top' align='left'>
+    <td width="50%" valign="top" align="left">
       <#-- contact box -->
       <#if userPerson?has_content || orderContactMechValueMaps?has_content>
-      <table border='0' width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+      <table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
         <tr>
-          <td width='100%'>
-            <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
+          <td width="100%">
+            <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
               <tr>
                 <td valign="middle" align="left">
                   <div class="boxhead">&nbsp;Contact Information</div>
@@ -320,11 +320,11 @@
           </td>
         </tr>
         <tr>
-          <td width='100%'>
-            <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
+          <td width="100%">
+            <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxbottom">
               <tr>
                 <td>
-                  <table width="100%" border="0" cellpadding="1" cellspacing='0'>
+                  <table width="100%" border="0" cellpadding="1" cellspacing="0">
                     <tr>
                       <td align="right" valign="top" width="15%">
                         <div class="tabletext">&nbsp;<b>Name</b></div>
@@ -336,7 +336,7 @@
                             ${Static["org.ofbiz.party.party.PartyHelper"].getPersonName(userPerson)}
                           </#if>
                           <#if partyId?exists>
-                            &nbsp;(<a href="/partymgr/control/viewprofile?party_id=${partyId}${requestAttributes.externalKeyParam}" target='partymgr' class="buttontext">${partyId}</a>)
+                            &nbsp;(<a href="/partymgr/control/viewprofile?party_id=${partyId}${requestAttributes.externalKeyParam}" target="partymgr" class="buttontext">${partyId}</a>)
                           </#if>
                         </div>
                       </td>
@@ -345,7 +345,7 @@
                       <#assign contactMech = orderContactMechValueMap.contactMech>
                       <#assign contactMechPurpose = orderContactMechValueMap.contactMechPurposeType>
                       <#--<#assign partyContactMech = orderContactMechValueMap.partyContactMech>-->
-                      <tr><td colspan="7"><hr class='sepbar'></td></tr>
+                      <tr><td colspan="7"><hr class="sepbar"></td></tr>
                       <tr>
                         <td align="right" valign="top" width="15%">
                           <div class="tabletext">&nbsp;<b>${contactMechPurpose.description}</b></div>
@@ -368,7 +368,7 @@
                                   <#if (addr1.indexOf(" ") > 0)>
                                     <#assign addressNum = addr1.substring(0, addr1.indexOf(" "))>
                                     <#assign addressOther = addr1.substring(addr1.indexOf(" ")+1)>
-                                    <a target='_blank' href='http://www.whitepages.com/find_person_results.pl?fid=a&s_n=${addressNum}&s_a=${addressOther}&c=${postalAddress.city?if_exists}&s=${postalAddress.stateProvinceGeoId?if_exists}&x=29&y=18' class='buttontext'>(lookup:whitepages.com)</a>
+                                    <a target="_blank" href="http://www.whitepages.com/find_person_results.pl?fid=a&s_n=${addressNum}&s_a=${addressOther}&c=${postalAddress.city?if_exists}&s=${postalAddress.stateProvinceGeoId?if_exists}&x=29&y=18" class="buttontext">(lookup:whitepages.com)</a>
                                   </#if>
                                 </#if>
                               </div>
@@ -380,14 +380,14 @@
                               <#if telecomNumber.areaCode?exists>${telecomNumber.areaCode}-</#if>${telecomNumber.contactNumber}
                               <#--<#if partyContactMech.extension?exists>ext&nbsp;${partyContactMech.extension}</#if>-->
                               <#if !telecomNumber.countryCode?exists || telecomNumber.countryCode == "011" || telecomNumber.countryCode == "1">
-                                <a target='_blank' href='http://www.anywho.com/qry/wp_rl?npa=${telecomNumber.areaCode?if_exists}&telephone=${telecomNumber.contactNumber?if_exists}&btnsubmit.x=20&btnsubmit.y=8' class='buttontext'>(lookup:anywho.com)</a>
-                                <a target='_blank' href='http://whitepages.com/find_person_results.pl?fid=p&ac=${telecomNumber.areaCode}&s=&p=${telecomNumber.contactNumber}&pt=b&x=40&y=9' class='buttontext'>(lookup:whitepages.com)</a>
+                                <a target="_blank" href="http://www.anywho.com/qry/wp_rl?npa=${telecomNumber.areaCode?if_exists}&telephone=${telecomNumber.contactNumber?if_exists}&btnsubmit.x=20&btnsubmit.y=8" class="buttontext">(lookup:anywho.com)</a>
+                                <a target="_blank" href="http://whitepages.com/find_person_results.pl?fid=p&ac=${telecomNumber.areaCode}&s=&p=${telecomNumber.contactNumber}&pt=b&x=40&y=9" class="buttontext">(lookup:whitepages.com)</a>
                               </#if>
                             </div>
                           <#elseif contactMech.contactMechTypeId == "EMAIL_ADDRESS">
                             <div class="tabletext">
                               ${contactMech.infoString}
-                              <a href='mailto:${contactMech.infoString}' class='buttontext'>(send&nbsp;email)</a>
+                              <a href="mailto:${contactMech.infoString}" class="buttontext">(send&nbsp;email)</a>
                             </div>
                           <#elseif contactMech.contactMechTypeId == "WEB_ADDRESS">
                             <div class="tabletext">
@@ -396,7 +396,7 @@
                               <#if !openString?starts_with("http") && !openString?starts_with("HTTP")>
                                 <#assign openString = "http://" + openString>
                               </#if>
-                              <a target='_blank' href='${openString}' class='buttontext'>(open&nbsp;page&nbsp;in&nbsp;new&nbsp;window)</a>
+                              <a target="_blank" href="${openString}" class="buttontext">(open&nbsp;page&nbsp;in&nbsp;new&nbsp;window)</a>
                             </div>
                           <#else>
                             <div class="tabletext">
@@ -418,10 +418,10 @@
       <#-- end of contact box -->
 
       <#-- shipping info box -->
-      <table border='0' width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+      <table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
         <tr>
-          <td width='100%'>
-            <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
+          <td width="100%">
+            <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
               <tr>
                 <td valign="middle" align="left">
                   <div class="boxhead">&nbsp;Shipment Information</div>
@@ -431,11 +431,11 @@
           </td>
         </tr>
         <tr>
-          <td width='100%'>
-            <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
+          <td width="100%">
+            <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxbottom">
               <tr>
                 <td>
-                  <table width="100%" border="0" cellpadding="1" cellspacing='0'>
+                  <table width="100%" border="0" cellpadding="1" cellspacing="0">
                   <#if shipmentPreference?has_content>
                     <tr>
                       <td align="right" valign="top" width="15%">
@@ -452,7 +452,7 @@
                       </td>
                     </tr>
                     <#if maySplit?has_content>
-                      <tr><td colspan="7"><hr class='sepbar'></td></tr>
+                      <tr><td colspan="7"><hr class="sepbar"></td></tr>
                       <tr>
                         <td align="right" valign="top" width="15%">
                           <div class="tabletext">&nbsp;<b>Splitting Preference</b></div>
@@ -471,7 +471,7 @@
                       </tr>
                     </#if>
                     <#if shippingInstructions?has_content>
-                      <tr><td colspan="7"><hr class='sepbar'></td></tr>
+                      <tr><td colspan="7"><hr class="sepbar"></td></tr>
                       <tr>
                         <td align="right" valign="top" width="15%">
                           <div class="tabletext">&nbsp;<b>Instructions</b></div>
@@ -483,7 +483,7 @@
                       </tr>
                     </#if>
                     <#if isGift?has_content>
-                      <tr><td colspan="7"><hr class='sepbar'></td></tr>
+                      <tr><td colspan="7"><hr class="sepbar"></td></tr>
                       <tr>
                         <td align="right" valign="top" width="15%">
                           <div class="tabletext">&nbsp;<b>Gift?</b></div>
@@ -497,7 +497,7 @@
                       </tr>
                     </#if>
                     <#if giftMessage?has_content>
-                      <tr><td colspan="7"><hr class='sepbar'></td></tr>
+                      <tr><td colspan="7"><hr class="sepbar"></td></tr>
                       <tr>
                         <td align="right" valign="top" width="15%">
                           <div class="tabletext">&nbsp;<b>Gift Message</b></div>
@@ -510,7 +510,7 @@
                     </#if>
                   </#if>
                   <#if allShipments?has_content>
-                      <tr><td colspan="7"><hr class='sepbar'></td></tr>
+                      <tr><td colspan="7"><hr class="sepbar"></td></tr>
                       <tr>
                         <td align="right" valign="top" width="15%">
                           <div class="tabletext">&nbsp;<b>Shipments</b></div>
@@ -523,7 +523,7 @@
                         </td>
                       </tr>
                   </#if>
-                      <tr><td colspan="7"><hr class='sepbar'></td></tr>
+                      <tr><td colspan="7"><hr class="sepbar"></td></tr>
                       <tr>
                         <td align="right" valign="top" width="15%">
                           <div class="tabletext">&nbsp;</div>
