@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2001, 2002, 2003 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -24,12 +24,26 @@
  */
 package org.ofbiz.core.event;
 
-import java.util.*;
-import javax.servlet.http.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Locale;
+import java.util.Map;
 
-import org.ofbiz.core.entity.*;
-import org.ofbiz.core.service.*;
-import org.ofbiz.core.util.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.ofbiz.core.entity.GenericValue;
+import org.ofbiz.core.service.DispatchContext;
+import org.ofbiz.core.service.GenericServiceException;
+import org.ofbiz.core.service.LocalDispatcher;
+import org.ofbiz.core.service.ModelService;
+import org.ofbiz.core.service.ServiceUtil;
+import org.ofbiz.core.util.Debug;
+import org.ofbiz.core.util.SiteDefs;
+import org.ofbiz.core.util.UtilHttp;
+import org.ofbiz.core.util.UtilProperties;
+import org.ofbiz.core.util.UtilValidate;
 
 /**
  * ServiceEventHandler - Service Event Handler
@@ -45,17 +59,22 @@ public class ServiceEventHandler implements EventHandler {
 
     public static final String SYNC = "sync";
     public static final String ASYNC = "async";
-
-    /** 
-     * Invoke the web event
-     *@param eventPath The mode of service invokation
-     *@param eventMethod The service to invoke
-     *@param request The servlet request object
-     *@param response The servlet response object
-     *@return String Result code
-     *@throws EventHandlerException
+  
+    /**
+     * @see org.ofbiz.core.event.EventHandler#invoke(java.lang.String, java.lang.String, javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
      */
     public String invoke(String eventPath, String eventMethod, HttpServletRequest request, HttpServletResponse response) throws EventHandlerException {
+        // make sure we have a valid reference to the Service Engine
+        LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+        if (dispatcher == null) {
+            throw new EventHandlerException("The local service dispatcher is null");
+        }
+        DispatchContext dctx = dispatcher.getDispatchContext();
+        if (dctx == null) {
+            throw new EventHandlerException("Dispatch context cannot be found");
+        }        
+        
+        // get the details for the service(s) to call
         String mode = SYNC;
         String serviceName = null;
 
@@ -64,29 +83,19 @@ public class ServiceEventHandler implements EventHandler {
         } else {
             mode = eventPath;
         }
-        serviceName = eventMethod;
-        if (Debug.verboseOn()) Debug.logVerbose("[Set mode/service]: " + mode + "/" + serviceName, module);
-
-        HttpSession session = request.getSession();
-        LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
-
-        if (dispatcher == null) {
-            throw new EventHandlerException("The local service dispatcher is null");
-        }
-
-        GenericValue userLogin = (GenericValue) request.getSession().getAttribute(SiteDefs.USER_LOGIN);
-        Locale locale = UtilHttp.getLocale(request);
         
-        DispatchContext dctx = dispatcher.getDispatchContext();
-                
-        if (dctx == null) {
-            throw new EventHandlerException("Dispatch context cannot be found");
-        }
-
+        // nake sure we have a defined service to call
+        serviceName = eventMethod;                       
         if (serviceName == null) {
             throw new EventHandlerException("Service name (eventMethod) cannot be null");
         }
-
+        if (Debug.verboseOn()) Debug.logVerbose("[Set mode/service]: " + mode + "/" + serviceName, module);
+                
+        // some needed info for when running the service
+        Locale locale = UtilHttp.getLocale(request);
+        HttpSession session = request.getSession();
+        GenericValue userLogin = (GenericValue) session.getAttribute(SiteDefs.USER_LOGIN);
+                                
         // get the service model to generate context
         ModelService model = null;
 
@@ -112,6 +121,8 @@ public class ServiceEventHandler implements EventHandler {
 
             // don't include userLogin, that's taken care of below
             if ("userLogin".equals(name)) continue;
+            // don't include locale, that is also taken care of below
+            if ("locale".equals(name)) continue;
             
             Object value = request.getParameter(name);
 
@@ -136,16 +147,18 @@ public class ServiceEventHandler implements EventHandler {
             serviceContext.put(name, value);
         }
 
-        // get only the parameters for this service
+        // get only the parameters for this service - converted to proper type
         serviceContext = model.makeValid(serviceContext, ModelService.IN_PARAM);
         
         // include the UserLogin value object
-        if (userLogin != null) 
-            serviceContext.put("userLogin", userLogin);        
+        if (userLogin != null) {        
+            serviceContext.put("userLogin", userLogin);
+        }        
         
         // include the Locale object
-        if (locale != null)
+        if (locale != null) {        
             serviceContext.put("locale", locale);
+        }
 
         // invoke the service
         Map result = null;
@@ -157,7 +170,7 @@ public class ServiceEventHandler implements EventHandler {
                 result = dispatcher.runSync(serviceName, serviceContext);
             }
         } catch (GenericServiceException e) {
-            Debug.logError(e);
+            Debug.logError(e, "Service invocation error", module);
             throw new EventHandlerException("Service invocation error", e.getNested());
         }
 
