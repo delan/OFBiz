@@ -229,7 +229,7 @@
         <field-to-result field-name="primaryOrderId" map-name="lookedUpValue" result-name="oldPrimaryOrderId"/>
         <field-to-result field-name="originFacilityId" map-name="lookedUpValue" result-name="oldOriginFacilityId"/>
         <field-to-result field-name="destinationFacilityId" map-name="lookedUpValue" result-name="oldDestinationFacilityId"/>
-        
+
         <!-- now that all changes have been checked, set the nonpks -->
         <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
         <now-timestamp-to-env env-name="lookedUpValue.lastModifiedDate"/>
@@ -424,6 +424,8 @@
         <field-to-field field-name="shipmentId" map-name="parameters" to-map-name="lookupShipmentPKMap"/>
         <find-by-primary-key entity-name="Shipment" map-name="lookupShipmentPKMap" value-name="shipment"/>
         
+        <clone-value value-name="shipment" new-value-name="shipmentCopy"/>
+        
         <string-to-list string="-fromDate" list-name="descendingFromDateOrder"/>
         <if-not-empty field-name="originFacilityId" map-name="shipment">
 	        <if-empty field-name="originContactMechId" map-name="shipment">
@@ -432,7 +434,7 @@
 	            <find-by-and entity-name="FacilityContactMechPurpose" map-name="findFcmpMap" order-by-list-name="descendingFromDateOrder" list-name="facilityContactMechPurposes"/>
 	            <filter-list-by-date list-name="facilityContactMechPurposes"/>
 	            <first-from-list entry-name="facilityContactMechPurpose" list-name="facilityContactMechPurposes"/>
-	            <field-to-field field-name="facilityId" map-name="facilityContactMechPurpose" to-field-name="originContactMechId" to-map-name="shipment"/>
+	            <field-to-field field-name="contactMechId" map-name="facilityContactMechPurpose" to-field-name="originContactMechId" to-map-name="shipment"/>
 	        </if-empty>
 	        <if-empty field-name="originTelecomNumberId" map-name="shipment">
 	            <field-to-field field-name="originFacilityId" map-name="shipment" to-field-name="facilityId" to-map-name="findFcmpMap"/>
@@ -440,7 +442,7 @@
 	            <find-by-and entity-name="FacilityContactMechPurpose" map-name="findFcmpMap" order-by-list-name="descendingFromDateOrder" list-name="facilityContactMechPurposes"/>
 	            <filter-list-by-date list-name="facilityContactMechPurposes"/>
 	            <first-from-list entry-name="facilityContactMechPurpose" list-name="facilityContactMechPurposes"/>
-	            <field-to-field field-name="facilityId" map-name="facilityContactMechPurpose" to-field-name="originTelecomNumberId" to-map-name="shipment"/>
+	            <field-to-field field-name="contactMechId" map-name="facilityContactMechPurpose" to-field-name="originTelecomNumberId" to-map-name="shipment"/>
 	        </if-empty>
         </if-not-empty>
         <if-not-empty field-name="destinationFacilityId" map-name="shipment">
@@ -450,7 +452,7 @@
 	            <find-by-and entity-name="FacilityContactMechPurpose" map-name="findFcmpMap" order-by-list-name="descendingFromDateOrder" list-name="facilityContactMechPurposes"/>
 	            <filter-list-by-date list-name="facilityContactMechPurposes"/>
 	            <first-from-list entry-name="facilityContactMechPurpose" list-name="facilityContactMechPurposes"/>
-	            <field-to-field field-name="facilityId" map-name="facilityContactMechPurpose" to-field-name="destinationContactMechId" to-map-name="shipment"/>
+	            <field-to-field field-name="contactMechId" map-name="facilityContactMechPurpose" to-field-name="destinationContactMechId" to-map-name="shipment"/>
 	        </if-empty>
 	        <if-empty field-name="destinationTelecomNumberId" map-name="shipment">
 	            <field-to-field field-name="destinationFacilityId" map-name="shipment" to-field-name="facilityId" to-map-name="findFcmpMap"/>
@@ -458,9 +460,14 @@
 	            <find-by-and entity-name="FacilityContactMechPurpose" map-name="findFcmpMap" order-by-list-name="descendingFromDateOrder" list-name="facilityContactMechPurposes"/>
 	            <filter-list-by-date list-name="facilityContactMechPurposes"/>
 	            <first-from-list entry-name="facilityContactMechPurpose" list-name="facilityContactMechPurposes"/>
-	            <field-to-field field-name="facilityId" map-name="facilityContactMechPurpose" to-field-name="destinationTelecomNumberId" to-map-name="shipment"/>
+	            <field-to-field field-name="contactMechId" map-name="facilityContactMechPurpose" to-field-name="destinationTelecomNumberId" to-map-name="shipment"/>
 	        </if-empty>
 	    </if-not-empty>
+	    
+	    <if-compare-field field-name="shipment" operator="not-equals" to-field-name="shipmentCopy">
+	        <set-service-fields service-name="updateShipment" map-name="shipment" to-map-name="shipmentUpdateMap"/>
+	        <call-service service-name="updateShipment" in-map-name="shipmentUpdateMap"/>
+	    </if-compare-field>
     </simple-method>
     <simple-method method-name="sendShipmentScheduledNotification" short-description="Send Shipment Scheduled Notification">
         <check-permission permission="FACILITY" action="_CREATE">
