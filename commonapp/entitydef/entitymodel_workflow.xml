@@ -541,7 +541,7 @@
       <field name="participantIndex" type="numeric"></field>
       <prim-key field="participantListId"/>
       <prim-key field="participantId"/>
-      <relation type="one" fk-name="WFLW_PTLST_PTCPNT" rel-entity-name="WorkflowParticipant">
+      <relation type="one-nofk" rel-entity-name="WorkflowParticipant">
         <key-map field-name="participantId"/>
       </relation>
       <relation type="many" rel-entity-name="WorkflowProcess">
