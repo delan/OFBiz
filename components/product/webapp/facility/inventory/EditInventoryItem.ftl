@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.2
 -->
 
@@ -86,7 +86,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
         <td>&nbsp;</td>
         <td><input type="text" name="partyId" value="${inventoryItemData.partyId?if_exists}" size="20" maxlength="20" class="inputBox"></td>
       </tr>
-      <#if "SERIALIZED_INV_ITEM" == (inventoryItem.statusId)?if_exists>
+      <#if "SERIALIZED_INV_ITEM" == (inventoryItem.inventoryItemTypeId)?if_exists>
 	      <tr>
 	        <td align=right><div class="tabletext">Status</div></td>
 	        <td>&nbsp;</td>
