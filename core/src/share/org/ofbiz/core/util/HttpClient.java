@@ -227,11 +227,11 @@ public class HttpClient {
         StringBuffer buf = new StringBuffer();
 
         try {
-            if (Debug.verboseOn()) Debug.logVerbose("ContentEncoding: " + con.getContentEncoding() + "; ContentType: " + con.getContentType() + " or: " + con.guessContentTypeFromStream(in));
+            if (Debug.verboseOn()) Debug.logVerbose("ContentEncoding: " + con.getContentEncoding() + "; ContentType: " + con.getContentType() + " or: " + URLConnection.guessContentTypeFromStream(in));
             
             String charset = null;
             String contentType = con.getContentType();
-            if (contentType == null) contentType = con.guessContentTypeFromStream(in);
+            if (contentType == null) contentType = URLConnection.guessContentTypeFromStream(in);
             
             if (contentType != null) {
                 contentType = contentType.toUpperCase();
