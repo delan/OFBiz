@@ -70,6 +70,16 @@
         <attribute name="productReview" type="String" mode="IN" optional="true"/>
         <attribute name="productReviewId" type="String" mode="OUT" optional="false"/>
     </service>
+    <service name="updateProductReview" engine="simple" default-entity-name="ProductReview"
+            location="org/ofbiz/product/product/ProductServices.xml" invoke="updateProductReview" auth="true">
+        <description>Updates a product review record</description>
+        <required-permissions join-type="OR">
+            <check-permission permission="CATALOG_UPDATE"/>
+            <check-permission permission="CATALOG_ADMIN"/>
+        </required-permissions>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
 
     <!-- Product Price Services -->
     <service name="createProductPrice" default-entity-name="ProductPrice" engine="simple"

@@ -24,7 +24,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.8 $
+ * @version    $Revision: 1.9 $
  * @since      2.0
  -->
 
@@ -406,8 +406,18 @@
         <make-value value-name="newEntity" entity-name="ProductReview"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
         <field-to-field field-name="userLoginId" map-name="userLogin" to-map-name="newEntity"/>
-        <string-to-field string="PRR_PENDING" field-name="statusId" map-name="newEntity"/> 
+        <string-to-field string="PRR_PENDING" field-name="statusId" map-name="newEntity"/>
 
+        <!-- code to check for auto-approved reviews (store setting) -->
+        <field-to-field field-name="productStoreId" map-name="parameters" to-map-name="storeLookup"/>
+        <find-by-primary-key entity-name="ProductStore" map-name="storeLookup" value-name="productStore"/>
+        <if-not-empty field-name="productStore">
+            <if-compare field-name="autoApproveReviews" operator="equals" value="Y">
+                <string-to-field string="PRR_APPROVED" field-name="statusId" map-name="newEntity"/>
+            </if-compare>
+        </if-not-empty>
+
+        <!-- create the new ProductReview -->
         <sequenced-id-to-env sequence-name="ProductReview" env-name="productReviewId"/>
         <to-string field-name="productReviewId"/>
         <env-to-field env-name="productReviewId" map-name="newEntity"/>
@@ -421,4 +431,14 @@
         <create-value value-name="newEntity"/>
     </simple-method>
 
+    <simple-method method-name="updateProductReview" short-description="Update ProductStoreCatalog">
+        <check-permission permission="CATALOG" action="_UPDATE"><fail-message message="Security Error: to run updateProductReview you must have the CATALOG_UPDATE or CATALOG_ADMIN permission"/></check-permission>
+        <check-errors/>
+
+        <make-value value-name="lookupPKMap" entity-name="ProductReview"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
+        <find-by-primary-key map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
+        <store-value value-name="lookedUpValue"/>
+    </simple-method>
 </simple-methods>

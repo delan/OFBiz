@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -40,6 +40,7 @@
   <div class="col"><a href="<@ofbizUrl>/FindProductPriceRules</@ofbizUrl>" class="${selectedLeftClassMap.pricerules?default(unselectedLeftClassName)}">${uiLabelMap.ProductPriceRules}</a></div>
   <div class="col"><a href="<@ofbizUrl>/FindProductStore</@ofbizUrl>" class="${selectedLeftClassMap.store?default(unselectedLeftClassName)}">${uiLabelMap.ProductStores}</a></div>
   <div class="col"><a href="<@ofbizUrl>/editKeywordThesaurus</@ofbizUrl>" class="${selectedLeftClassMap.thesaurus?default(unselectedLeftClassName)}">Thesaurus</a></div>
+  <div class="col"><a href="<@ofbizUrl>/pendingReviews</@ofbizUrl>" class="${selectedLeftClassMap.reviews?default(unselectedLeftClassName)}">Reviews</a></div>
 
   <#if requestAttributes.userLogin?has_content>
     <div class="col-right"><a href="<@ofbizUrl>/logout</@ofbizUrl>" class="${selectedRightClassMap.logout?default(unselectedRightClassName)}">${uiLabelMap.CommonLogout}</a></div>

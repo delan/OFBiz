@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.4 $
+ *@version    $Revision: 1.5 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -59,7 +59,7 @@
       </tr>
       <tr>
         <td>
-          <textarea class="textAreaBox" name="productReview" cols="40"></textarea>
+          <textarea class="textAreaBox" name="productReview" cols="40" wrap="hard"></textarea>
         </td>
       </tr>
       <tr>

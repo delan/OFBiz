@@ -1447,6 +1447,18 @@
         <response name="error" type="view" value="EditKeywordThesaurus"/>
     </request-map>
 
+    <!-- ================ Keyword Thesaurus Requests ================= -->
+    <request-map uri="pendingReviews">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="pendingReviews"/>
+    </request-map>
+    <request-map uri="updateProductReview">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateProductReview"/>
+        <response name="success" type="view" value="pendingReviews"/>
+        <response name="error" type="view" value="pendingReviews"/>
+    </request-map>
+
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
@@ -1525,5 +1537,7 @@
     <view-map name="EditProductStoreKeywordOvrd" type="jpublish" page="/store/EditProductStoreKeywordOvrd.ftl"/>
 
     <view-map name="EditKeywordThesaurus" type="jpublish" page="/thesaurus/EditKeywordThesaurus.ftl"/>
+
+    <view-map name="pendingReviews" type="jpublish" page="/reviews/pendingReviews.ftl"/>
     <!-- end of view mappings -->
 </site-conf>
