@@ -1,5 +1,5 @@
 /*
- * $Id: ProductPromoWorker.java,v 1.9 2003/11/15 09:08:09 jonesde Exp $
+ * $Id: ProductPromoWorker.java,v 1.10 2003/11/16 09:02:02 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -53,7 +53,7 @@ import org.ofbiz.service.LocalDispatcher;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.9 $
+ * @version    $Revision: 1.10 $
  * @since      2.0
  */
 public class ProductPromoWorker {
@@ -342,27 +342,31 @@ public class ProductPromoWorker {
 
     protected static boolean checkCondition(GenericValue productPromoCond, ShoppingCart cart, GenericDelegator delegator, Timestamp nowTimestamp) throws GenericEntityException {
         /* TODO: implement these
-        <Enumeration description="Order Total" enumCode="ORDER_TOTAL" enumId="PPIP_ORDER_TOTAL" sequenceId="01" enumTypeId="PROD_PROMO_IN_PARAM"/>
         <Enumeration description="X Quantity of Product" enumCode="PRODUCT_QUANT" enumId="PPIP_PRODUCT_QUANT" sequenceId="02" enumTypeId="PROD_PROMO_IN_PARAM"/>
-        <Enumeration description="New Account" enumCode="NEW_ACCT" enumId="PPIP_NEW_ACCT" sequenceId="05" enumTypeId="PROD_PROMO_IN_PARAM"/>
-        <Enumeration description="Party" enumCode="PARTY_ID" enumId="PPIP_PARTY_ID" sequenceId="06" enumTypeId="PROD_PROMO_IN_PARAM"/>
         <Enumeration description="Party Group Member" enumCode="PARTY_GROUP_MEMBER" enumId="PPIP_PARTY_GRP_MEM" sequenceId="07" enumTypeId="PROD_PROMO_IN_PARAM"/>
         <Enumeration description="Party Classification" enumCode="PARTY_CLASS" enumId="PPIP_PARTY_CLASS" sequenceId="08" enumTypeId="PROD_PROMO_IN_PARAM"/>
-        <Enumeration description="Role Type" enumCode="ROLE_TYPE" enumId="PPIP_ROLE_TYPE" sequenceId="09" enumTypeId="PROD_PROMO_IN_PARAM"/>
         */
-        GenericValue userLogin = null;
-        String partyId = null;
 
-        if (cart != null) userLogin = cart.getUserLogin();
-        if (cart != null && userLogin == null) userLogin = cart.getAutoUserLogin();
-        if (userLogin != null && userLogin.get("partyId") != null)
-            partyId = userLogin.getString("partyId");
+        String condValue = productPromoCond.getString("condValue");
+        String inputParamEnumId = productPromoCond.getString("inputParamEnumId");
+        String operatorEnumId = productPromoCond.getString("operatorEnumId");
+
+        String partyId = cart.getPartyId();
 
         if (Debug.verboseOn()) Debug.logVerbose("Checking promotion condition: " + productPromoCond, module);
         int compare = 0;
 
-        if ("PPIP_PRODUCT_ID_IC".equals(productPromoCond.getString("inputParamEnumId"))) {
-            String candidateProductId = productPromoCond.getString("condValue");
+        if ("PPIP_PRODUCT_QUANT".equals(inputParamEnumId)) {
+            double quantity = 1.0;
+            if (UtilValidate.isNotEmpty(condValue)) {
+                quantity = Double.parseDouble(condValue);
+            }
+
+
+
+        /* replaced by PPIP_PRODUCT_QUANT
+        } else if ("PPIP_PRODUCT_ID_IC".equals(inputParamEnumId)) {
+            String candidateProductId = condValue;
 
             if (candidateProductId == null) {
                 // if null, then it's not in the cart
@@ -386,8 +390,8 @@ public class ProductPromoWorker {
                     compare = 1;
                 }
             }
-        } else if ("PPIP_CATEGORY_ID_IC".equals(productPromoCond.getString("inputParamEnumId"))) {
-            String productCategoryId = productPromoCond.getString("condValue");
+        } else if ("PPIP_CATEGORY_ID_IC".equals(inputParamEnumId)) {
+            String productCategoryId = condValue;
             Set productIds = new HashSet();
 
             Iterator cartItemIter = cart.iterator();
@@ -416,22 +420,30 @@ public class ProductPromoWorker {
                     break;
                 }
             }
-        } else if ("PPIP_PARTY_ID".equals(productPromoCond.getString("inputParamEnumId"))) {
+        */
+        } else if ("PPIP_NEW_ACCT".equals(inputParamEnumId)) {
+            Double acctDays = cart.getPartyDaysSinceCreated(nowTimestamp);
+            if (acctDays == null) {
+                // condition always fails if we don't know how many days since account created
+                return false;
+            }
+            compare = acctDays.compareTo(Double.valueOf(condValue));
+        } else if ("PPIP_PARTY_ID".equals(inputParamEnumId)) {
             if (partyId != null) {
-                compare = partyId.compareTo(productPromoCond.getString("condValue"));
+                compare = partyId.compareTo(condValue);
             } else {
                 compare = 1;
             }
 
             /* These aren't supported yet, ie TODO
-             } else if ("PRIP_PARTY_GRP_MEM".equals(productPriceCond.getString("inputParamEnumId"))) {
-             } else if ("PRIP_PARTY_CLASS".equals(productPriceCond.getString("inputParamEnumId"))) {
+             } else if ("PRIP_PARTY_GRP_MEM".equals(inputParamEnumId)) {
+             } else if ("PRIP_PARTY_CLASS".equals(inputParamEnumId)) {
              */
-        } else if ("PPIP_ROLE_TYPE".equals(productPromoCond.getString("inputParamEnumId"))) {
+        } else if ("PPIP_ROLE_TYPE".equals(inputParamEnumId)) {
             if (partyId != null) {
                 // if a PartyRole exists for this partyId and the specified roleTypeId
                 GenericValue partyRole = delegator.findByPrimaryKeyCache("PartyRole",
-                        UtilMisc.toMap("partyId", partyId, "roleTypeId", productPromoCond.getString("condValue")));
+                        UtilMisc.toMap("partyId", partyId, "roleTypeId", condValue));
 
                 // then 0 (equals), otherwise 1 (not equals)
                 if (partyRole != null) {
@@ -442,11 +454,10 @@ public class ProductPromoWorker {
             } else {
                 compare = 1;
             }
-        } else if ("PPIP_ORDER_TOTAL".equals(productPromoCond.getString("inputParamEnumId"))) {
+        } else if ("PPIP_ORDER_TOTAL".equals(inputParamEnumId)) {
             Double orderSubTotal = new Double(cart.getSubTotal());
-
             if (Debug.verboseOn()) Debug.logVerbose("Doing order total compare: orderSubTotal=" + orderSubTotal, module);
-            compare = orderSubTotal.compareTo(Double.valueOf(productPromoCond.getString("condValue")));
+            compare = orderSubTotal.compareTo(Double.valueOf(condValue));
         } else {
             Debug.logWarning("An un-supported productPromoCond input parameter (lhs) was used: " + productPromoCond.getString("inputParamEnumId") + ", returning false, ie check failed", module);
             return false;
@@ -454,20 +465,20 @@ public class ProductPromoWorker {
 
         if (Debug.verboseOn()) Debug.logVerbose("Condition compare done, compare=" + compare, module);
 
-        if ("PPC_EQ".equals(productPromoCond.getString("operatorEnumId"))) {
+        if ("PPC_EQ".equals(operatorEnumId)) {
             if (compare == 0) return true;
-        } else if ("PPC_NEQ".equals(productPromoCond.getString("operatorEnumId"))) {
+        } else if ("PPC_NEQ".equals(operatorEnumId)) {
             if (compare != 0) return true;
-        } else if ("PPC_LT".equals(productPromoCond.getString("operatorEnumId"))) {
+        } else if ("PPC_LT".equals(operatorEnumId)) {
             if (compare < 0) return true;
-        } else if ("PPC_LTE".equals(productPromoCond.getString("operatorEnumId"))) {
+        } else if ("PPC_LTE".equals(operatorEnumId)) {
             if (compare <= 0) return true;
-        } else if ("PPC_GT".equals(productPromoCond.getString("operatorEnumId"))) {
+        } else if ("PPC_GT".equals(operatorEnumId)) {
             if (compare > 0) return true;
-        } else if ("PPC_GTE".equals(productPromoCond.getString("operatorEnumId"))) {
+        } else if ("PPC_GTE".equals(operatorEnumId)) {
             if (compare >= 0) return true;
         } else {
-            Debug.logWarning("An un-supported productPromoCond condition was used: " + productPromoCond.getString("operatorEnumId") + ", returning false, ie check failed", module);
+            Debug.logWarning("An un-supported productPromoCond condition was used: " + operatorEnumId + ", returning false, ie check failed", module);
             return false;
         }
         return false;

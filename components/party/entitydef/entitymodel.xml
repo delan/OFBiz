@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  */
 -->
 
@@ -1012,9 +1012,19 @@
             title="Party Entity">
       <field name="partyId" type="id-ne"></field>
       <field name="partyTypeId" type="id-ne"></field>
+      <field name="createdDate" type="date-time"></field>
+      <field name="createdByUserLogin" type="id-vlong"></field>
+      <field name="lastModifiedDate" type="date-time"></field>
+      <field name="lastModifiedByUserLogin" type="id-vlong"></field>
       <prim-key field="partyId"/>
       <relation type="one" fk-name="PARTY_PTY_TYP" rel-entity-name="PartyType">
         <key-map field-name="partyTypeId"/>
+      </relation>
+      <relation type="one" fk-name="PARTY_CUL" title="CreatedBy" rel-entity-name="UserLogin">
+        <key-map field-name="createdByUserLogin" rel-field-name="userLoginId"/>
+      </relation>
+      <relation type="one" fk-name="PARTY_LMCUL" title="LastModifiedBy" rel-entity-name="UserLogin">
+        <key-map field-name="lastModifiedByUserLogin" rel-field-name="userLoginId"/>
       </relation>
       <relation type="many" rel-entity-name="PartyTypeAttr">
         <key-map field-name="partyTypeId"/>

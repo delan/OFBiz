@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCart.java,v 1.17 2003/11/14 18:28:20 jonesde Exp $
+ * $Id: ShoppingCart.java,v 1.18 2003/11/16 09:02:02 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -42,7 +42,7 @@ import org.ofbiz.service.LocalDispatcher;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.17 $
+ * @version    $Revision: 1.18 $
  * @since      2.0
  */
 public class ShoppingCart implements java.io.Serializable {
@@ -346,6 +346,29 @@ public class ShoppingCart implements java.io.Serializable {
         if (partyId == null && getAutoUserLogin() != null)
                 partyId = getAutoUserLogin().getString("partyId");
         return partyId;
+    }
+
+    public Double getPartyDaysSinceCreated(Timestamp nowTimestamp) {
+        String partyId = this.getPartyId();
+        if (UtilValidate.isEmpty(partyId)) {
+            return null;
+        }
+        try {
+            GenericValue party = this.getDelegator().findByPrimaryKeyCache("Party", UtilMisc.toMap("partyId", partyId));
+            if (party == null) {
+                return null;
+            }
+            Timestamp createdDate = party.getTimestamp("createdDate");
+            if (createdDate == null) {
+                return null;
+            }
+            long diffMillis = nowTimestamp.getTime() - createdDate.getTime();
+            // millis per day: 1000.0 * 60.0 * 60.0 * 24.0 = 86400000.0
+            return new Double(((double) diffMillis) / 86400000.0);
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Error looking up party when getting createdDate", module);
+            return null;
+        }
     }
 
     // =======================================================================
