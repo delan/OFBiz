@@ -75,6 +75,8 @@
         <%if (product != null) {%>
             <%pageContext.setAttribute("product", product);%>
         <%-- calculate the "your" price --%>
+        <%pageContext.removeAttribute("listPrice");%>
+        <%pageContext.removeAttribute("defaultPrice");%>
         <ofbiz:service name='calculateProductPrice'>
             <ofbiz:param name='product' attribute='product'/>
             <ofbiz:param name='prodCatalogId' value='<%=CatalogWorker.getCurrentCatalogId(pageContext)%>'/>
