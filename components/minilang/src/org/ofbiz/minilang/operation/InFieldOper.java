@@ -1,5 +1,5 @@
 /*
- * $Id: InFieldOper.java,v 1.1 2003/08/17 06:06:11 ajzeneski Exp $
+ * $Id$
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -32,7 +32,7 @@ import org.ofbiz.base.util.*;
  * A MakeInStringOperation that inserts the value of an in-field
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class InFieldOper extends MakeInStringOperation {

@@ -1,5 +1,5 @@
 /*
- * $Id: CheckErrors.java,v 1.2 2004/05/14 23:37:40 jonesde Exp $
+ * $Id$
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -36,7 +36,7 @@ import org.w3c.dom.Element;
  * An event operation that checks a message list and may introduce a return code and stop the event
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.2 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class CheckErrors extends MethodOperation {

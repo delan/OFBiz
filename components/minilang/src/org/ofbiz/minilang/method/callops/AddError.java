@@ -1,5 +1,5 @@
 /*
- * $Id: AddError.java,v 1.2 2003/10/10 09:55:53 jonesde Exp $
+ * $Id$
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -34,7 +34,7 @@ import org.ofbiz.minilang.method.*;
  * Adds the fail-message or fail-property value to the error-list.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.2 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class AddError extends MethodOperation {

@@ -1,5 +1,5 @@
 /*
- * $Id: MasterIf.java,v 1.2 2004/04/30 00:24:10 jonesde Exp $
+ * $Id$
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -34,7 +34,7 @@ import org.ofbiz.minilang.method.*;
  * Represents the top-level element and only mounted operation for the more flexible if structure.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.2 $
+ * @version    $Rev:$
  * @since      2.1
  */
 public class MasterIf extends MethodOperation {

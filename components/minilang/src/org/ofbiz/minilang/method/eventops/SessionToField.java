@@ -1,5 +1,5 @@
 /*
- * $Id: SessionToField.java,v 1.2 2004/07/01 08:37:53 jonesde Exp $
+ * $Id$
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -38,7 +38,7 @@ import org.w3c.dom.Element;
  * Copies a Servlet session attribute to a map field
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.2 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class SessionToField extends MethodOperation {

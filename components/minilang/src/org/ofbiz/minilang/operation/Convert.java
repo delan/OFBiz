@@ -1,5 +1,5 @@
 /*
- * $Id: Convert.java,v 1.1 2003/08/17 06:06:11 ajzeneski Exp $
+ * $Id$
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -32,7 +32,7 @@ import org.ofbiz.base.util.*;
  * Convert the current field from the in-map and place it in the out-map
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class Convert extends SimpleMapOperation {

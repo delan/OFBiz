@@ -1,5 +1,5 @@
 /*
- * $Id: MiniLangException.java,v 1.1 2003/08/17 06:06:13 ajzeneski Exp $
+ * $Id$
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -27,7 +27,7 @@ package org.ofbiz.minilang;
  * MiniLangException
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class MiniLangException extends org.ofbiz.base.util.GeneralException {

@@ -1,5 +1,5 @@
 /*
- * $Id: ContextAccessor.java,v 1.2 2004/07/01 08:37:51 jonesde Exp $
+ * $Id$
  *
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -33,7 +33,7 @@ import org.ofbiz.base.util.collections.FlexibleMapAccessor;
  * list elements. See individual Map operations for more information.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.2 $
+ * @version    $Rev:$
  * @since      2.1
  */
 public class ContextAccessor {

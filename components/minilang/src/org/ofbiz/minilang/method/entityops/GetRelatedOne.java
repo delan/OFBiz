@@ -1,5 +1,5 @@
 /*
- * $Id: GetRelatedOne.java,v 1.2 2003/09/14 05:40:41 jonesde Exp $
+ * $Id$
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -36,7 +36,7 @@ import org.w3c.dom.Element;
  * Gets a list of related entity instance according to the specified relation-name
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.2 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class GetRelatedOne extends MethodOperation {

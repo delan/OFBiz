@@ -1,5 +1,5 @@
 /*
- * $Id: ValidateMethod.java,v 1.2 2004/04/04 07:04:26 jonesde Exp $
+ * $Id$
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -34,7 +34,7 @@ import org.ofbiz.base.util.*;
  * A string operation that calls a validation method
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.2 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class ValidateMethod extends SimpleMapOperation {
