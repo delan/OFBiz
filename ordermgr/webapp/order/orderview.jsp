@@ -52,7 +52,7 @@
     GenericValue orderHeader = null;
     GenericValue orderRole = null; 
     
-    if(orderId != null && orderId.length() > 0) {
+    if (orderId != null && orderId.length() > 0) {
         orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
         List orderRoles = delegator.findByAnd("OrderRole",UtilMisc.toMap("orderId", orderId, "roleTypeId", "PLACING_CUSTOMER"));
         orderRole = EntityUtil.getFirst(orderRoles);
