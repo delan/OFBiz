@@ -267,4 +267,25 @@
 
         <field-to-result field-name="contentId" map-name="content"/>
     </simple-method>
+
+    <!-- get parties based on PartyRelationship -->
+    <simple-method method-name="getPartiesByRelationship" 
+            short-description="Gets all parties related to partyIdFrom using the PartyRelationship entity" login-required="false">
+        <field-to-field field-name="partyIdFrom" map-name="parameters" to-map-name="lookupMap"/>
+        <field-to-field field-name="partyIdTo" map-name="parameters" to-map-name="lookupMap"/>
+        <field-to-field field-name="roleTypeIdFrom" map-name="parameters" to-map-name="lookupMap"/>
+        <field-to-field field-name="roleTypeIdTo" map-name="parameters" to-map-name="lookupMap"/>
+        <field-to-field field-name="statusId" map-name="parameters" to-map-name="lookupMap"/>
+        <field-to-field field-name="priorityTypeId" map-name="parameters" to-map-name="lookupMap"/>
+        <field-to-field field-name="partyRelationshipTypeId" map-name="parameters" to-map-name="lookupMap"/>
+        
+        <find-by-and entity-name="PartyRelationship" map-name="lookupMap" list-name="partyRelationships"/>
+        <iterate list-name="partyRelationships" entry-name="partyRelationship">
+            <get-related-one value-name="partyRelationship" relation-name="ToParty" to-value-name="party"/>
+            <field-to-list field-name="party" list-name="parties"/>
+        </iterate>
+        <if-not-empty field-name="parties">   
+            <field-to-result field-name="parties"/>
+        </if-not-empty>         
+    </simple-method>    
 </simple-methods>
