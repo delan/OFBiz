@@ -194,7 +194,8 @@
 
 	<target name="docs" depends="prepare-docs">
 		<javadoc packagenames="org.ofbiz.*" classpath="${classpath}"
-		         sourcepath="${src.dir}" destdir="${doc.dir}/api" />
+		         sourcepath="${src.dir}" destdir="${doc.dir}/api" 
+		         Windowtitle="Open for Business - Commonapp API"/>
 	</target>
 
 
