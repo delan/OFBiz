@@ -1,5 +1,5 @@
 /*
- * $Id: PayPalEvents.java,v 1.3 2003/11/16 19:07:14 ajzeneski Exp $
+ * $Id: PayPalEvents.java,v 1.4 2003/12/03 23:50:52 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -32,10 +32,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletRequest;
@@ -64,7 +61,7 @@ import org.ofbiz.service.LocalDispatcher;
  * PayPal Events
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.0
  */
 public class PayPalEvents {
@@ -401,7 +398,9 @@ public class PayPalEvents {
         String paymentAmount = request.getParameter("mc_gross");    
         String paymentStatus = request.getParameter("payment_status");        
         String transactionId = request.getParameter("txn_id");
-        
+
+        List toStore = new LinkedList();
+
         // PayPal returns the timestamp in the format 'hh:mm:ss Jan 1, 2000 PST'
         // Parse this into a valid Timestamp Object
         SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss MMM d, yyyy z");
@@ -409,10 +408,10 @@ public class PayPalEvents {
         try {        
             authDate = new java.sql.Timestamp(sdf.parse(paymentDate).getTime());
         } catch (ParseException e) {
-            Debug.logError(e, "Canno parse date string: " + paymentDate, module);
+            Debug.logError(e, "Cannot parse date string: " + paymentDate, module);
             authDate = UtilDateTime.nowTimestamp();
         } catch (NullPointerException e) {
-            Debug.logError(e, "Canno parse date string: " + paymentDate, module);
+            Debug.logError(e, "Cannot parse date string: " + paymentDate, module);
             authDate = UtilDateTime.nowTimestamp();
         }
         
@@ -420,20 +419,36 @@ public class PayPalEvents {
             paymentPreference.set("statusId", "PAYMENT_RECEIVED");
         } else {
             paymentPreference.set("statusId", "PAYMENT_CANCELLED");
-        }        
-                
-        paymentPreference.set("authRefNum", transactionId);
-        paymentPreference.set("authDate", authDate);
-        paymentPreference.set("authFlag", paymentStatus.substring(0,1));
-        paymentPreference.set("authMessage", paymentType);
-        paymentPreference.set("maxAmount", new Double(paymentAmount));
-        
+        }
+        toStore.add(paymentPreference);
+
+
+        GenericDelegator delegator = paymentPreference.getDelegator();
+
+        // create the PaymentGatewayResponse
+        String responseId = delegator.getNextSeqId("PaymentGatewayResponse").toString();
+        GenericValue response = delegator.makeValue("PaymentGatewayResponse", null);
+        response.set("paymentGatewayResponseId", responseId);
+        response.set("paymentServiceTypeEnumId", "PRDS_PAY_EXTERNAL");
+        response.set("orderPaymentPreferenceId", paymentPreference.get("orderPaymentPreferenceId"));
+        response.set("paymentMethodTypeId", paymentPreference.get("paymentMethodTypeId"));
+        response.set("paymentMethodId", paymentPreference.get("paymentMethodId"));
+
+        // set the auth info
+        response.set("amount", new Double(paymentAmount));
+        response.set("referenceNum", transactionId);
+        response.set("gatewayCode", paymentStatus);
+        response.set("gatewayFlag", paymentStatus.substring(0,1));
+        response.set("gatewayMessage", paymentType);
+        response.set("transactionDate", authDate);
+        toStore.add(response);
+
         // create a payment record too
         GenericValue payment = OrderChangeHelper.createPaymentFromPreference(paymentPreference, null, null, "Payment receive via PayPal");
-                
+        toStore.add(payment);
+
         try {
-            paymentPreference.store();
-            paymentPreference.getDelegator().create(payment);
+            delegator.storeAll(toStore);
         } catch (GenericEntityException e) {
             Debug.logError(e, "Cannot set payment preference/payment info", module);
             return false;
