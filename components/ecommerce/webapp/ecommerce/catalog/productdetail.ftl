@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.27 $
+ *@version    $Revision: 1.28 $
  *@since      2.1
 -->
 <#-- variable setup -->
@@ -81,25 +81,26 @@ ${requestAttributes.virtualJavaScript?if_exists}
         return -1;
     }
 
-    function getList(name, value, src) {
+    function getList(name, index, src) {
         currentFeatureIndex = findIndex(name);
 
         if (currentFeatureIndex == 0) {
             // set the images for the first selection
-            if (IMG[value] != null) {
+            if (IMG[index] != null) {
                 if (document.images['mainImage'] != null) {
-                    document.images['mainImage'].src = IMG[value];
-                    detailImageUrl = DET[value];
+                    document.images['mainImage'].src = IMG[index];
+                    detailImageUrl = DET[index];
                 }
             }
 
             // set the drop down index for swatch selection
-            document.forms["addform"].elements[name].selectedIndex = (value*1)+1;
+            document.forms["addform"].elements[name].selectedIndex = (index*1)+1;
         }
 
         if (currentFeatureIndex < (OPT.length-1)) {
             // eval the next list if there are more
-            eval("list" + OPT[(currentFeatureIndex+1)] + value + "()");
+            var selectedValue = document.forms["addform"].elements[name].options[(index*1)+1].value;
+            eval("list" + OPT[(currentFeatureIndex+1)] + selectedValue + "()");
 
             // set the product ID to NULL to trigger the alerts
             document.addform.add_product_id.value = 'NULL';
@@ -207,7 +208,7 @@ ${requestAttributes.virtualJavaScript?if_exists}
             <p>&nbsp;</p>
             <#list requestAttributes.featureSet as currentType>
               <div class="tabletext">
-                <select name="FT${currentType}" class="selectBox" onchange="javascript:getList(this.name, (this.value), 1);">
+                <select name="FT${currentType}" class="selectBox" onchange="javascript:getList(this.name, (this.selectedIndex-1), 1);">
                   <option>${requestAttributes.featureTypes.get(currentType)}</option>
                 </select>
               </div>
