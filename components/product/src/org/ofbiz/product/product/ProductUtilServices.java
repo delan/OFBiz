@@ -1,5 +1,5 @@
 /*
- * $Id: ProductUtilServices.java,v 1.28 2004/01/28 15:52:31 jonesde Exp $
+ * $Id: ProductUtilServices.java,v 1.29 2004/01/28 16:17:36 jonesde Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -60,7 +60,7 @@ import org.ofbiz.service.ServiceUtil;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.28 $
+ * @version    $Revision: 1.29 $
  * @since      2.0
  */
 public class ProductUtilServices {
@@ -443,7 +443,7 @@ public class ProductUtilServices {
             // create a new one? see if one already exists with different from/thru dates
             ModelEntity modelEntity = relatedValue.getModelEntity();
             if (modelEntity.isField("fromDate")) {
-                GenericPK findValue = relatedValue.getPrimaryKey();
+                GenericPK findValue = newRelatedValue.getPrimaryKey();
                 // can't just set to null, need to remove the value so it isn't a constraint in the query
                 //findValue.set("fromDate", null);
                 findValue.remove("fromDate");
