@@ -1,5 +1,5 @@
 /*
- * $Id: GenericDelegator.java,v 1.10 2003/12/12 03:42:54 jonesde Exp $
+ * $Id: GenericDelegator.java,v 1.11 2003/12/12 04:02:04 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -78,7 +78,7 @@ import org.xml.sax.SAXException;
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:chris_maurer@altavista.com">Chris Maurer</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a
- * @version    $Revision: 1.10 $
+ * @version    $Revision: 1.11 $
  * @since      1.0
  */
 public class GenericDelegator implements DelegatorInterface {
@@ -545,6 +545,30 @@ public class GenericDelegator implements DelegatorInterface {
         }
 
         return this.create(new GenericValue(primaryKey), doCacheClear);
+    }
+
+    /** Creates or stores an Entity
+     *@param value The GenericValue instance containing the new or existing instance
+     *@param doCacheClear boolean that specifies whether or not to automatically clear cache entries related to this operation
+     *@return GenericValue instance containing the new or updated instance
+     */
+    public GenericValue createOrStore(GenericValue value, boolean doCacheClear) throws GenericEntityException {
+        GenericValue checkValue = this.findByPrimaryKey(value.getPrimaryKey());
+        if (checkValue != null) {
+            this.store(value, doCacheClear);
+        } else {
+            this.create(value, doCacheClear);
+        }
+        this.refresh(value);
+        return value;
+    }
+
+    /** Creates or stores an Entity
+     *@param value The GenericValue instance containing the new or existing instance
+     *@return GenericValue instance containing the new or updated instance
+     */
+    public GenericValue createOrStore(GenericValue value) throws GenericEntityException {
+        return createOrStore(value, true);
     }
 
     /** Find a Generic Entity by its Primary Key
