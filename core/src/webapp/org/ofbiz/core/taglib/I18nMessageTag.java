@@ -82,7 +82,9 @@ public class I18nMessageTag extends BodyTagSupport {
                 }
             }
             
-            this.value = this.bundle.getString(this.key);
+            //this.value = this.bundle.getString(this.key);
+            String s = this.bundle.getString(this.key);
+            this.value = new String(s.getBytes ("ISO8859_1"));
         } catch (Exception e) {
             throw new JspException(e.getMessage());
         }

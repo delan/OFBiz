@@ -123,8 +123,18 @@ public class ControlServlet extends HttpServlet {
         GenericValue userLogin = (GenericValue) request.getSession().getAttribute(SiteDefs.USER_LOGIN);
 
         HttpSession session = request.getSession();
-        if (request.getCharacterEncoding() == null)
-            request.setCharacterEncoding("UTF-8");
+
+        String charset = getServletContext().getInitParameter("charset");
+        if (request.getCharacterEncoding() == null) {
+            if (charset == null) {
+                request.setCharacterEncoding("UTF-8");
+            } else {
+                request.setCharacterEncoding(charset);
+            }
+        }
+        if (charset != null) {
+            response.setContentType("text/html; charset=" + charset);
+        }
 
         // Setup the CONTROL_PATH for JSP dispatching.
         request.setAttribute(SiteDefs.CONTROL_PATH, request.getContextPath() + request.getServletPath());
