@@ -89,10 +89,7 @@ public class ControlServlet extends HttpServlet {
         if (charset == null || charset.length() == 0) charset = request.getCharacterEncoding();
         if (charset == null || charset.length() == 0) charset = "UTF-8";
         if (!"none".equals(charset)) {
-                request.setCharacterEncoding(charset);
-            //} catch (UnsupportedEncodingException e) {
-            //    throw new RequestHandlerException("Could not set character encoding to " + charset, e);
-            //}
+            request.setCharacterEncoding(charset);
         }
         // setup content type
         String contentType = "text/html";
