@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.5 $
+ *@version    $Revision: 1.6 $
  *@since      2.1
  */
 
@@ -40,7 +40,7 @@ ProductSearchSession.processSearchParameters(requestParams, session);
 Map result = ProductSearchSession.getProductSearchResult(session, delegator, prodCatalogId);
 //Debug.set(Debug.VERBOSE, false);
 
-applicationTypes = delegator.findAll("ProductFeatureApplType", UtilMisc.toList("discription"));
+applicationTypes = delegator.findAll("ProductFeatureApplType", UtilMisc.toList("description"));
 productCategories = delegator.findAll("ProductCategory", UtilMisc.toList("description"));
 
 context.put("applicationTypes", applicationTypes);
