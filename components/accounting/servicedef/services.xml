@@ -296,6 +296,7 @@
         <description>Finds CreditCards and EftAccounts that use the contactMechId and updates to the newContactMechId</description>
         <attribute name="contactMechId" type="String" mode="IN" optional="false"/>
         <attribute name="newContactMechId" type="String" mode="IN" optional="false"/>
+        <attribute name="partyId" type="String" mode="IN" optional="true"/>
     </service>
 
     <service name="createPayment" engine="simple" default-entity-name="Payment"
