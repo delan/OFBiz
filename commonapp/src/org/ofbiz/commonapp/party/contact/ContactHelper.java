@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.6  2001/09/27 15:56:13  epabst
+ * refactored code to use getRelatedByAnd, filterByDate
+ *
  * Revision 1.5  2001/09/26 18:40:34  epabst
  * created getRelatedByAnd (filtering)
  * created helper methods for getting Related from a collection

@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.9  2001/09/26 17:17:57  epabst
+ * added formatPartyId method
+ *
  * Revision 1.8  2001/09/12 17:26:32  epabst
  * updated
  *

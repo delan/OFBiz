@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.5  2001/09/26 05:08:43  jonesde
+ * Fixed keyword stuff to work minimally with group name
+ *
  * Revision 1.4  2001/09/19 08:35:19  jonesde
  * Initial checkin of refactored entity engine.
  *

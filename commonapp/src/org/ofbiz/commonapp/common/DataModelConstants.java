@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2001/09/10 21:52:39  epabst
+ * minor
+ *
  * Revision 1.1  2001/09/07 17:33:24  epabst
  * Added constants
  *

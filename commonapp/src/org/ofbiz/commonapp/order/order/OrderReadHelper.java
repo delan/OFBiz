@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.10  2001/09/27 15:56:13  epabst
+ * refactored code to use getRelatedByAnd, filterByDate
+ *
  * Revision 1.9  2001/09/26 17:18:14  epabst
  * added getDistributorId() method
  *
