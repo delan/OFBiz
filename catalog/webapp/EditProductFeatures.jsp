@@ -88,7 +88,9 @@
         <input type=hidden <ofbiz:inputvalue entityAttr="productFeatureAndAppl" field="fromDate" fullattrs="true"/>>
     <td><div class='tabletext'><ofbiz:entityfield attribute="productFeatureAndAppl" field="description"/></div></td>
     <td><div class='tabletext'><ofbiz:entityfield attribute="productFeatureAndAppl" field="productFeatureTypeId"/></div></td>
-    <td><div class='tabletext'><ofbiz:entityfield attribute="curProductFeatureCategory" field="description"/> [<ofbiz:entityfield attribute="productFeatureAndAppl" field="productFeatureCategoryId"/>]</div></td>
+    <td><a href='<ofbiz:url>/EditFeatureCategoryFeatures?productFeatureCategoryId=<ofbiz:entityfield attribute="productFeatureAndAppl" field="productFeatureCategoryId"/>&productId=<ofbiz:entityfield attribute="productFeatureAndAppl" field="productId"/></ofbiz:url>' class='buttontext'>
+        <ofbiz:entityfield attribute="curProductFeatureCategory" field="description"/>
+        [<ofbiz:entityfield attribute="productFeatureAndAppl" field="productFeatureCategoryId"/>]</a></td>
     <td><div class='tabletext'><ofbiz:inputvalue entityAttr="productFeatureAndAppl" field="fromDate"/></div></td>
     <td><input type=text size='18' <ofbiz:inputvalue entityAttr="productFeatureAndAppl" field="thruDate" fullattrs="true"/>></td>
     <td><input type=text size='5' <ofbiz:inputvalue entityAttr="productFeatureAndAppl" field="sequenceNum" fullattrs="true"/>></td>
