@@ -37,6 +37,7 @@ import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.GeneralException;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.accounting.payment.PaymentGatewayServices;
 
@@ -93,12 +94,15 @@ public class PcChargeServices {
         if (out != null) {
             Map result = ServiceUtil.returnSuccess();
             String resultCode = out.get(PcChargeApi.RESULT);
+            boolean passed = false;
             if ("CAPTURED".equals(resultCode)) {
                 result.put("authResult", new Boolean(true));
                 result.put("captureResult", new Boolean(true));
+                passed = true;
             } else if ("APPROVED".equals(resultCode)) {
                 result.put("authCode", out.get(PcChargeApi.AUTH_CODE));
                 result.put("authResult", new Boolean(true));
+                passed = true;
             } else if ("PROCESSED".equals(resultCode)) {
                 result.put("authResult", new Boolean(true));
             } else {
@@ -112,6 +116,12 @@ public class PcChargeServices {
             result.put("authMessage", out.get(PcChargeApi.RESULT));
             result.put("cvCode", out.get(PcChargeApi.CVV2_CODE));
             result.put("avsCode", out.get(PcChargeApi.AVS_CODE));
+
+            if (!passed) {
+                String respMsg = out.get(PcChargeApi.RESULT) + " / " + out.get(PcChargeApi.AUTH_CODE);
+                String refNum = out.get(PcChargeApi.TROUTD);
+                result.put("customerRespMsgs", UtilMisc.toList(respMsg, refNum));
+            }
 
             if (result.get("captureResult") != null) {
                 result.put("captureCode", out.get(PcChargeApi.AUTH_CODE));
