@@ -29,6 +29,9 @@
     <form name="lookupRouting" 
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox"
         target="LookupRouting" title="" type="single">
+        <actions>
+            <property-map resource="ManufacturingUiLabels" map-name="uiLabelMap"/>
+        </actions>
 	<auto-fields-service service-name="lookupRoutingTask" default-field-type="hidden"/>
 	<field name="workEffortName"><text-find default-value="equals"/></field>
         <field name="workEffortTypeId"><hidden value="ROUTING"/></field>
@@ -42,8 +45,15 @@
 
     <form name="listLookupRouting" 
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="display"
-        list-name="entityList" paginate-target="/GenericLookup" 
+        list-name="entityList" paginate-target="LookupRouting" 
         title="" type="list">
+        <actions>
+            <property-map resource="ManufacturingUiLabels" map-name="uiLabelMap"/>
+            <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
+                <field-map field-name="inputFields" env-name="requestParameters"/>
+                <field-map field-name="entityName" env-name="entityName"/>
+            </service>
+        </actions>
         <field name="workEffortId" title="&amp;nbsp;" widget-style="buttontext">
             <hyperlink also-hidden="false" target-type="plain" description="${workEffortId}" target="javascript:set_value('${workEffortId}')"/>
         </field>
@@ -55,7 +65,10 @@
     <form name="lookupRoutingTask" 
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox"
         target="LookupRoutingTask" title="" type="single">
-		<auto-fields-service service-name="lookupRoutingTask" default-field-type="find"/>
+        <actions>
+            <property-map resource="ManufacturingUiLabels" map-name="uiLabelMap"/>
+        </actions>
+        <auto-fields-service service-name="lookupRoutingTask" default-field-type="find"/>
         <field name="workEffortTypeId"><hidden value="ROU_TASK"/></field>
         <field name="fixedAssetId" >
             <drop-down>
@@ -73,8 +86,15 @@
 
     <form name="listLookupRoutingTask" 
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="display"
-        list-name="entityList" paginate-target="/GenericLookup" 
+        list-name="entityList" paginate-target="LookupRoutingTask" 
         title="" type="list">
+        <actions>
+            <property-map resource="ManufacturingUiLabels" map-name="uiLabelMap"/>
+            <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
+                <field-map field-name="inputFields" env-name="requestParameters"/>
+                <field-map field-name="entityName" env-name="entityName"/>
+            </service>
+        </actions>
         <field name="workEffortId" title="&amp;nbsp;" widget-style="buttontext">
             <hyperlink also-hidden="false" target-type="plain" description="${workEffortId}" target="javascript:set_value('${workEffortId}')"/>
         </field>
@@ -124,4 +144,28 @@
         <field name="internalName"><display/></field>
         <field name="productTypeId"><display/></field>
     </form>
+    <form name="lookupVirtualProduct" extends="lookupProduct"
+        default-map-name= "inputFields" default-title-style="tableheadtext"
+        default-tooltip-style="tabletext" default-widget-style="inputBox"
+        target="LookupVirtualProduct" title="" type="single">
+        <actions>
+            <property-map resource="ManufacturingUiLabels" map-name="uiLabelMap"/>
+        </actions>
+    </form>
+    <form name="listLookupVirtualProduct" extends="listLookupProduct"
+        default-title-style="tableheadtext"
+        default-tooltip-style="tabletext" default-widget-style="display"
+        list-name="entityList" paginate-target="LookupVirtualProduct" 
+        title="" type="list">
+        <actions>
+            <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
+                <field-map field-name="inputFields" env-name="requestParameters"/>
+                <field-map field-name="entityName" env-name="entityName"/>
+            </service>
+        </actions>
+        <field name="productId" title="&amp;nbsp;" widget-style="buttontext">
+            <hyperlink also-hidden="false" target-type="plain" description="${productId}" target="javascript:set_value('${productId}')"/>
+        </field>
+    </form>
+
 </forms>
