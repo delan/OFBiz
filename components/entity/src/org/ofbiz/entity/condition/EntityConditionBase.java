@@ -1,5 +1,5 @@
 /*
- * $Id: EntityConditionBase.java,v 1.3 2004/07/17 07:05:03 doogie Exp $
+ * $Id: EntityConditionBase.java,v 1.4 2004/07/21 03:01:43 doogie Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -46,7 +46,7 @@ import org.ofbiz.entity.model.ModelField;
  * These can be used in various combinations using the EntityConditionList and EntityExpr objects.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.0
  */
 public abstract class EntityConditionBase implements Serializable {
@@ -108,5 +108,9 @@ public abstract class EntityConditionBase implements Serializable {
 
     protected static int hashCode(Object o) {
         return o != null ? o.hashCode() : 0;
+    }
+
+    public static Boolean castBoolean(boolean result) {
+        return result ? Boolean.TRUE : Boolean.FALSE;
     }
 }
