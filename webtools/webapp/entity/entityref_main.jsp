@@ -208,7 +208,7 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
       ModelEntity relatedEntity = reader.getModelEntity(relation.getRelEntityName());
       if (relatedEntity != null) {
         //if relation is of type one, make sure keyMaps match the PK of the relatedEntity
-        if (relation.getType().equalsIgnoreCase("one")) {
+        if ("one".equals(relation.getType()) || "one-nofk".equals(relation.getType())) {
           if (relatedEntity.getPksSize() != relation.getKeyMapsSize())
             warningString = warningString + "<li><div style=\"color: red;\">[RelatedOneKeyMapsWrongSize]</div> The number of primary keys (" + relatedEntity.getPksSize() + ") of related entity <b>" + relation.getRelEntityName() + "</b> does not match the number of keymaps (" + relation.getKeyMapsSize() + ") for relation of type one \"" +  relation.getTitle() + relation.getRelEntityName() + "\" of entity <A href=\"#" + entity.getEntityName() + "\">" + entity.getEntityName() + "</A>.</li>";
           for (int repks = 0; repks < relatedEntity.getPksSize(); repks++) {

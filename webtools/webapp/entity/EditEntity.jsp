@@ -106,7 +106,7 @@ if (security.hasPermission("ENTITY_MAINT", session)) {
       relation.setTitle(title);
       relation.setMainEntity(entity);
       entity.addRelation(relation);
-      if ("one".equals(type)) {
+      if ("one".equals(type) || "one-nofk".equals(type)) {
         for (int pk = 0; pk < relEntity.getPksSize(); pk++) {
           ModelField pkf = relEntity.getPk(pk);
           ModelKeyMap keyMap = new ModelKeyMap();
@@ -166,7 +166,7 @@ if (security.hasPermission("ENTITY_MAINT", session)) {
 
         newRel.setRelEntityName(entity.getEntityName());
         newRel.setTitle(relation.getTitle());
-        if (relation.getType().equalsIgnoreCase("one")) newRel.setType("many");
+        if ("one".equalsIgnoreCase(relation.getType()) || "one-nofk".equalsIgnoreCase(relation.getType())) newRel.setType("many");
         else newRel.setType("one");
 
         for (int kmn = 0; kmn < relation.getKeyMapsSize(); kmn++) {
@@ -363,6 +363,7 @@ The following errors occurred:
             <OPTION selected><%=relation.getType()%></OPTION>
             <OPTION>&nbsp;</OPTION>
             <OPTION>one</OPTION>
+            <OPTION>one-nofk</OPTION>
             <OPTION>many</OPTION>
           </SELECT>
         </td>
@@ -419,6 +420,7 @@ The following errors occurred:
   </SELECT>
   <SELECT name='type'>
     <OPTION>one</OPTION>
+    <OPTION>one-nofk</OPTION>
     <OPTION>many</OPTION>
   </SELECT>
   <INPUT type=submit value='Create'>
