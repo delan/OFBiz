@@ -239,7 +239,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
             use-fk-initially-deferred="false">
         <read-data reader-name="main"/>
         <inline-jdbc
-                jdbc-driver="org.ofbiz.jdbc.sqlserver.SQLServerDriver"
+                jdbc-driver="com.microsoft.jdbc.sqlserver.SQLServerDriver"
                 jdbc-uri="jdbc:microsoft:sqlserver://localhost:1433;DatabaseName=ofbiz;SelectMethod=Cursor"
                 jdbc-username="ofbiz"
                 jdbc-password="ofbiz"
