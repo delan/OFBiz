@@ -20,11 +20,11 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *  This is the Open for Business Work Effort Build Script.
- *  $Id: build.xml,v 1.2 2003/08/18 17:31:37 ajzeneski Exp $
+ *  This is the Open for Business Service Build Script.
+ *  $Id: build.xml,v 1.1 2003/08/18 17:31:37 ajzeneski Exp $
 -->
 
-<project name="OFBiz - Work Effort Component" default="jar" basedir=".">
+<project name="OFBiz - Order Component" default="jar" basedir=".">
 
     <!-- ================================================================== -->
     <!-- Initialization of all property settings                            -->
@@ -32,8 +32,8 @@
 
     <target name="init">                
         <property environment="env"/>
-        <property name="desc" value="Work Effort Component"/>
-        <property name="name" value="ofbiz-workeffort"/>
+        <property name="desc" value="Order Component"/>
+        <property name="name" value="ofbiz-order"/>
         <property name="src.dir" value="src"/>
         <property name="dtd.dir" value="dtd"/>
         <property name="lib.dir" value="lib"/>        
@@ -44,16 +44,20 @@
         <path id="local.class.path">
             <!--<fileset dir="${lib.dir}" includes="*.jar"/>-->
             <fileset dir="../../base/lib" includes="*.jar"/>
-            <fileset dir="../../base/lib/scripting" includes="*.jar"/>
             <fileset dir="../../base/build/lib" includes="*.jar"/>
             <fileset dir="../entity/lib" includes="*.jar"/>
             <fileset dir="../entity/build/lib" includes="*.jar"/>
             <fileset dir="../security/build/lib" includes="*.jar"/>
             <fileset dir="../service/lib" includes="*.jar"/>
             <fileset dir="../service/build/lib" includes="*.jar"/>
-            <fileset dir="../workflow/build/lib" includes="*.jar"/>
+            <fileset dir="../minilang/build/lib" includes="*.jar"/>
             <fileset dir="../content/build/lib" includes="*.jar"/>
+            <fileset dir="../common/build/lib" includes="*.jar"/>
+            <fileset dir="../workflow/build/lib" includes="*.jar"/>
             <fileset dir="../party/build/lib" includes="*.jar"/>
+            <fileset dir="../product/build/lib" includes="*.jar"/>
+            <fileset dir="../marketing/build/lib" includes="*.jar"/>
+            <fileset dir="../order/build/lib" includes="*.jar"/>
         </path>
     </target>
     
@@ -93,7 +97,7 @@
             </classpath>
             <src path="${src.dir}"/>
         </javac>
-        <!-- also put the DTDs, etc in the jar file... -->
+        <!-- also put the DTDs in the jar file... -->
         <copy todir="${build.dir}/classes">
             <!--<fileset dir="${dtd.dir}" includes="*.dtd"/>-->
             <fileset dir="${src.dir}" includes="**/*.properties,**/*.xml,**/*.bsh,**/*.logic,**/*.js,**/*.jacl,**/*.py"/>
