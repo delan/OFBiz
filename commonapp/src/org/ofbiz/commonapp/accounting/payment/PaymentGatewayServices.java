@@ -140,7 +140,7 @@ public class PaymentGatewayServices {
                 contactEmail = (GenericValue) emails.iterator().next();
 
             GenericValue paymentSettings = PaymentWorker.getPaymentSetting(delegator, webSiteId, paymentMethod.getString("paymentMethodTypeId"));
-            String serviceName = paymentSettings != null && paymentSettings.get("paymentService") != null ? paymentSettings.getString("paymentService") : null;
+            String serviceName = paymentSettings != null && paymentSettings.get("paymentAuthService") != null ? paymentSettings.getString("paymentAuthService") : null;
             String paymentConfig = paymentSettings != null && paymentSettings.get("paymentConfiguration") != null ? paymentSettings.getString("paymentConfiguration") : null;
             Map processContext = new HashMap();
             

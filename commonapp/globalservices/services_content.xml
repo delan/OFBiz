@@ -26,7 +26,8 @@
         <description>Create an WebSite</description>
         <attribute name="webSiteId" type="String" mode="IN" optional="false"/>
         <attribute name="paymentMethodTypeId" type="String" mode="IN" optional="false"/>
-        <attribute name="paymentService" type="String" mode="IN" optional="true"/>
+        <attribute name="paymentAuthService" type="String" mode="IN" optional="true"/>
+        <attribute name="paymentCaptureService" type="String" mode="IN" optional="true"/>
         <attribute name="paymentConfiguration" type="String" mode="IN" optional="true"/>
     </service>
     <service name="updateWebSitePaymentSetting" engine="simple"
@@ -34,7 +35,8 @@
         <description>Update an WebSite</description>
         <attribute name="webSiteId" type="String" mode="IN" optional="false"/>
         <attribute name="paymentMethodTypeId" type="String" mode="IN" optional="false"/>
-        <attribute name="paymentService" type="String" mode="IN" optional="true"/>
+        <attribute name="paymentAuthService" type="String" mode="IN" optional="true"/>
+        <attribute name="paymentCaptureService" type="String" mode="IN" optional="true"/>
         <attribute name="paymentConfiguration" type="String" mode="IN" optional="true"/>
     </service>    
     <service name="removeWebSitePaymentSetting" engine="simple"

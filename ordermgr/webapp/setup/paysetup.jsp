@@ -56,7 +56,8 @@
               <tr>
                 <td nowrap><div class="tableheadtext"><b>WebSite</b></div></td>
                 <td nowrap><div class="tableheadtext"><b>Payment Method Type</b></div></td>
-                <td nowrap><div class="tableheadtext"><b>Service Name</b></div></td>
+                <td nowrap><div class="tableheadtext"><b>Auth Service Name</b></div></td>
+                <td nowrap><div class="tableheadtext"><b>Capture Service Name</b></div></td>
                 <td nowrap><div class="tableheadtext"><b>Payment Config</b></div></td>               
                 <td nowrap><div class="tableheadtext">&nbsp;</div></td>
               </tr>
@@ -70,7 +71,8 @@
               <tr class="<%= viewStr = viewStr == "viewManyTR1" ? "viewManyTR2" : "viewManyTR1" %>">
                 <td><div class="tabletext"><ofbiz:entityfield attribute="paymentSetting" field="siteName"/></div></td>
                 <td><div class="tabletext"><ofbiz:entityfield attribute="paymentSetting" field="description"/></div></td>
-                <td><div class="tabletext"><ofbiz:entityfield attribute="paymentSetting" field="paymentService"/></div></td>
+                <td><div class="tabletext"><ofbiz:entityfield attribute="paymentSetting" field="paymentAuthService"/></div></td>
+                <td><div class="tabletext"><ofbiz:entityfield attribute="paymentSetting" field="paymentCaptureService"/></div></td>
                 <td><div class="tabletext"><ofbiz:entityfield attribute="paymentSetting" field="paymentConfiguration"/></div></td>                
                 <td nowrap>
                   <div class="tabletext">&nbsp;

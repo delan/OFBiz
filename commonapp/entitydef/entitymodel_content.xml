@@ -1111,7 +1111,8 @@
             title="Web Site Payment Settings Entity">
       <field name="webSiteId" type="id-ne"></field>
       <field name="paymentMethodTypeId" type="id-ne"></field>
-      <field name="paymentService" type="name"></field>
+      <field name="paymentAuthService" type="name"></field>
+      <field name="paymentCaptureService" type="name"></field>
       <field name="paymentConfiguration" type="value"></field>
       <prim-key field="webSiteId"/>
       <prim-key field="paymentMethodTypeId"/>
@@ -1131,7 +1132,8 @@
     	<member-entity entity-alias="PT" entity-name="PaymentMethodType"/>
     	<alias entity-alias="WS" name="webSiteId"/>
     	<alias entity-alias="WS" name="siteName"/>
-    	<alias entity-alias="PS" name="paymentService"/>
+    	<alias entity-alias="PS" name="paymentAuthService"/>
+    	<alias entity-alias="PS" name="paymentCaptureService"/>
     	<alias entity-alias="PS" name="paymentConfiguration"/>
     	<alias entity-alias="PT" name="paymentMethodTypeId"/>
     	<alias entity-alias="PT" name="description"/>
