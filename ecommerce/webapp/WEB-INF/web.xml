@@ -52,7 +52,7 @@
     <param-value>default</param-value>
     <description>The Name of the Entity Delegator to use, defined in entityengine.properties</description>
   </context-param>
-<!--
+
   <filter>
     <filter-name>ContextSecurityFilter</filter-name>
 	<display-name>ContextSecurityFilter</display-name>
@@ -68,7 +68,7 @@
     <filter-name>ContextSecurityFilter</filter-name>
 	<url-pattern>/*</url-pattern>
   </filter-mapping>
--->
+
   <servlet>
     <servlet-name>ControlServlet</servlet-name>
     <display-name>ControlServlet</display-name>
