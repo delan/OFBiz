@@ -2,23 +2,31 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-  <title>Open For Business Regions Guide</title>
+  <title>The Open For Business Project: Regions Guide</title>
 
 </head>
 <body>
 
+<table width='100%'>
+  <tr>
+    <td width='50%' align='left' valign='center'>
+        <a href="http://www.ofbiz.org"><img src="http://www.ofbiz.org/images/ofbiz_logo.jpg"  border="0" alt='The Open For Business Project'></a>
+    </td>
+    <td width='50%' align='right' valign='center'>
+        <a href="http://sf.net/projects/ofbiz"><img src="http://sourceforge.net/sflogo.php?group_id=27173" width="88" height="31" border="0" alt="SourceForge Logo"></a> 
+        <a href="http://www.ofbiz.org"><img src="http://www.ofbiz.org/images/ofbiz_powered.gif" width="88" border="0"></a>
+    </td>
+  </tr>
+</table>
+<hr class='sepbar'>
+
 <h2 align="Center">The Open For Business Project: Regions Guide</h2>
-<br>Written By: David E. Jones
-<br>Email: <a href="mailto:jonesde@ofbiz.org">jonesde@ofbiz.org</a>
-<br>Open For Business Site: <a href="http://www.ofbiz.org/">http://www.ofbiz.org</a>
-<br>
-<A href="http://sf.net/projects/ofbiz"> <IMG src="http://sourceforge.net/sflogo.php?group_id=27173" border="0" alt="SourceForge Logo"></A> 
-<br>
-Founders and Lead Architects: David E. Jones &amp; Andy Zeneski <br>
-Last Updated: January 11, 2003<br>
-$Id$ <br>
-<hr>
-<br>
+ 
+<div class='contenttext'>Written By: David E. Jones, <a href="mailto:jonesde@ofbiz.org">jonesde@ofbiz.org</a></div>
+<div class='contenttext'>Last Updated: January 11, 2003</div>
+<!-- $Id$ -->
+
+<hr class='sepbar'>
 <h3>Table of Contents</h3>
 <ul>
   <li><a href="#Related_Documents">Related Documents</a></li>
@@ -26,7 +34,7 @@ $Id$ <br>
   <li><a href="#Defining">Defining Regions</a> </li>
   <li><a href="#Templates">Creating Region Templates</a> </li>
 </ul>
-<hr>
+<hr class='sepbar'>
 <h3><a name="#Related_Documents">Related Documents</a></h3>
 <ul>
   <li><a href="api/index.html">Core JavaDoc (including Regions)</a></li>
@@ -35,31 +43,31 @@ $Id$ <br>
   <li><a href="taglib.html">JSP Tag Library Guide</a></li>
 </ul>
 
-<hr>
+<hr class='sepbar'>
 <h3><a name="Introduction">Introduction</a> </h3>
-<hr>
+<hr class='sepbar'>
 
-<p>The Regions Tool, or Framework, is an implementation of the Composite View
+<p class='contenttext'>The Regions Tool, or Framework, is an implementation of the Composite View
 pattern as described in various works on Enterprise Architecture Patterns and is 
 based on the implementation presented in the book Advanced Java Server Pages by 
 David Geary. You can get more information about this book on the Docs & Books
 page on the <a href="http://www.ofbiz.org">www.ofbiz.org</a> website.</p>
 
-<p>Regions are large content areas made up of named Sections that are inserted
+<p class='contenttext'>Regions are large content areas made up of named Sections that are inserted
 into a template for the regions. Regions and sections are configured in the 
 <b>WEB-INF/regions.xml</b> file in each webapp. Regions can be incorporated into
 an OFBiz Control Servlet based web application using a view with the type
 <b>region</b>.</p>
 
-<p>Regions can also be declared in JSP files, and included in JSP files, using
+<p class='contenttext'>Regions can also be declared in JSP files, and included in JSP files, using
 the regions taglib described in the regions.tld tag library descriptor file.
 These tags are also used in the Region templates to include named Sections in
 specific locations in the template.</p>
 
 
-<hr>
+<hr class='sepbar'>
 <h3><a name="Defining">Defining Regions</a> </h3>
-<hr>
+<hr class='sepbar'>
 
 <P><B>A Basic Region Definition</B></P>
 
@@ -185,9 +193,9 @@ region will be used for the section content. If the content attribute value is
 not a region name then it is assumed to be a resource and the regions framework
 will look up the named resource in the current webapp.</P>
 
-<hr>
+<hr class='sepbar'>
 <h3><a name="Templates">Creating Region Templates</a> </h3>
-<hr>
+<hr class='sepbar'>
 
 <P><B>Introduction</B></P>
 

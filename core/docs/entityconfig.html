@@ -1,24 +1,33 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-<title>Open For Business Entity Engine Configuration Guide</title>
+  <title>The Open For Business Project: Entity Engine Configuration Guide</title>
+  <link rel="stylesheet" href="http://www.ofbiz.org/maincss.css" type="text/css">
 </head>
 
 <body>
 
-<h2 align="center">The Open For Business Project: Entity Engine Configuration Guide</h2>
+<table width='100%'>
+  <tr>
+    <td width='50%' align='left' valign='center'>
+        <a href="http://www.ofbiz.org"><img src="http://www.ofbiz.org/images/ofbiz_logo.jpg"  border="0" alt='The Open For Business Project'></a>
+    </td>
+    <td width='50%' align='right' valign='center'>
+        <a href="http://sf.net/projects/ofbiz"><img src="http://sourceforge.net/sflogo.php?group_id=27173" width="88" height="31" border="0" alt="SourceForge Logo"></a> 
+        <a href="http://www.ofbiz.org"><img src="http://www.ofbiz.org/images/ofbiz_powered.gif" width="88" border="0"></a>
+    </td>
+  </tr>
+</table>
+<hr class='sepbar'>
 
-<br>Written By: David E. Jones
-<br>Email: <a href="mailto:jonesde@ofbiz.org">jonesde@ofbiz.org</a>
-<br>Minor corrections by: <a href="mailto:PDebski@a4.pl">Pawel H. Debski</a>
-<br>Open For Business Site: <a href="http://www.ofbiz.org/">http://www.ofbiz.org</a>
-<br>
-<A href="http://sf.net/projects/ofbiz"> <IMG src="http://sourceforge.net/sflogo.php?group_id=27173" border="0" alt="SourceForge Logo"></A> 
-<br>
-Founders and Lead Architects: David E. Jones &amp; Andy Zeneski <br>
-Last Updated: January 28, 2003<br>
-$Id$ <br>
-<hr>
-<br>
+<h2 align="center">The Open For Business Project: Entity Engine Configuration Guide</h2>
+ 
+<div class='contenttext'>Written By: David E. Jones, <a href="mailto:jonesde@ofbiz.org">jonesde@ofbiz.org</a></div>
+<div class='contenttext'>Minor corrections by: <a href="mailto:PDebski@a4.pl">Pawel H. Debski</a></div>
+<div class='contenttext'>Last Updated: January 28, 2003</div>
+<!-- $Id$ -->
+
+<hr class='sepbar'>
 <h3>Table of Contents</h3>
 
 <ul>
@@ -33,10 +42,10 @@ $Id$ <br>
   <li><a href="#Datasource">Data Source Elements</a>
 </ul>
 
-<hr>
+<hr class='sepbar'>
 
 <h3><a name="Related_Documents">Related Documents:</a></h3>
-<hr>
+<hr class='sepbar'>
 <ul>
   <li><a href="entity.html">Entity Engine Guide</a></li>
   <li><a href="coreconfig.html">Core Configuration Guide</a></li>
@@ -44,24 +53,24 @@ $Id$ <br>
   <li><a href="../dtds/entity-config.html">Entity Engine Config DTD</a></li>
 </ul>
 
-<hr>
+<hr class='sepbar'>
 <h3><a name="Introduction">Introduction</a></h3>
-<hr>
+<hr class='sepbar'>
 
-<p>This document describes the configuration of the Entity Engine. It starts
+<p class='contenttext'>This document describes the configuration of the Entity Engine. It starts
 with an introduction to general ideas and then goes through each part of the
 entityengine.xml file and explains the available elements and their 
 usage. The entityengine.xml file used for the OFBiz applications has
 examples of a number of different options and is located in <b><code>ofbiz/commonapp/etc/entityengine.xml</code></b>.</p>
 
-<p>The configuration of the Entity Engine is done through a simple XML
+<p class='contenttext'>The configuration of the Entity Engine is done through a simple XML
 file called <b><code>entityengine.xml</code></b> that must exist somewhere on the classpath. This
 file is used to define parameters for persistence servers such as EJB
 server parameters or JDBC server parameters. It is also used to specify which
 XML entity model, entity group, and field type model files will be used for that server.
 The default file for the OFBiz distribution can be found in <b><code>ofbiz/commonapp/etc/entityengine.xml</code></b>.</p>
 
-<p>Each application that uses the Entity Engine does so through a <b><code>GenericDelegator</code></b>
+<p class='contenttext'>Each application that uses the Entity Engine does so through a <b><code>GenericDelegator</code></b>
 instance. The delegator name must be passed to the static factory method that
 is then passed to the constructor if a new instance is needed. This delegator
 name is used to look up settings for that delegator in the <b><code>entityengine.xml</code></b>
@@ -72,7 +81,7 @@ to a <b><code>GenericHelper</code></b> for that group. <b><code>GenericHelper</c
 that must be implemented for each type of data source (i.e.: JDBC, EJB, SOAP,
 HTTP, et cetera).&nbsp;</p>
 
-<p>The settings for each named <b><code>GenericHelper</code></b> are specified 
+<p class='contenttext'>The settings for each named <b><code>GenericHelper</code></b> are specified 
 <b><code>datsource</code></b> elements in the <b><code>entityengine.xml</code></b>
 file. For a JDBC helper these would include database connection parameters such
 as either the JNDI data source parameters or the JDBC parameters including the driver
@@ -80,17 +89,17 @@ name, the JDBC URI, and the username and password for the database. An EJB
 helper would contain JNDI parameters such as the context provider URL, the initial context factory, and
 the URL package prefixes.</p>
 
-<p>The <b><code>GenericDelegator</code></b> is the primary access method for Entity Engine
+<p class='contenttext'>The <b><code>GenericDelegator</code></b> is the primary access method for Entity Engine
 services. Each service request is dispatched to the helper that corresponds to
 the entity that the service is requested for according to the group name of the
 entity specified in the entity group XML file and the helper for that group
 specified in the <b><code>entityengine.xml</code></b> file. The default entity group XML
 file for the OFBiz entity model can be found in <b><code>ofbiz/commonapp/entitydef/entitygroup.xml</code></b>.</p>
 
-<hr>
+<hr class='sepbar'>
 <h3><a name="Resource">Resource Loaders</a></h3>
-<hr>
-<p>The <b><code>resource-loader</code></b> tag is used to configure a named resource loader
+<hr class='sepbar'>
+<p class='contenttext'>The <b><code>resource-loader</code></b> tag is used to configure a named resource loader
 that can be used elsewhere to load XML and other resources. It has the following
 attributes.</p>
 <table cellpadding='2' cellspacing='0' border='1'>
@@ -123,10 +132,10 @@ attributes.</p>
 </table>
 
 <br>
-<hr>
+<hr class='sepbar'>
 <h3><a name="JTA_Elements">JTA Elements</a></h3>
-<hr>
-<p>For JTA support the Entity Engine needs access to the 
+<hr class='sepbar'>
+<p class='contenttext'>For JTA support the Entity Engine needs access to the 
 <b><code>javax.transaction.UserTransaction</code></b> and optionally the 
 <b><code>javax.transaction.TransactionManager</code></b> interface 
 implementations for the TX Manager being used. These are retrieved through the 
@@ -135,7 +144,7 @@ uses the class specified with the <b><code>class</code></b> attribute of the
 <b><code>transaction-factory</code></b>. This class may be changed depending on 
 which application server or transaction manager you are running OFBiz on.</p>
 
-<p>The default TX Manager is Tyrex from Exolab (www.exolab.org) and the factory 
+<p class='contenttext'>The default TX Manager is Tyrex from Exolab (www.exolab.org) and the factory 
 class for Tyrex is 
 <b><code>org.ofbiz.core.entity.transaction.TyrexFactory</code></b>. There is 
 also a special class for Weblogic: 
@@ -143,22 +152,22 @@ also a special class for Weblogic:
 must be changed to include the Weblogic specific stuff and then compiled with 
 weblogic.jar on the classpath.</p>
 
-<p>The most widely useful transaction factory class is the 
+<p class='contenttext'>The most widely useful transaction factory class is the 
 <b><code>org.ofbiz.core.entity.transaction.JNDIFactory</code></b> class. This 
 class uses some additional elements from the entityengine.xml file to locate
 the UserTransaction and TransactionManager objects in JNDI.</p>
 
-<p>The <b><code>user-transaction-jndi</code></b> and <b><code>transaction-manager-jndi</code></b> 
+<p class='contenttext'>The <b><code>user-transaction-jndi</code></b> and <b><code>transaction-manager-jndi</code></b> 
 tags are used to specify the object names in JNDI and the name of the JNDI Server to use, 
 as configured above. Both tags have two required attributes: 
 <b><code>jndi-server-name</code></b> and <b><code>jndi-name</code></b>. An example
 jndi-name for the UserTransaction object is <b><code>java:comp/UserTransaction</code></b> and
 for the TransactionManager object is <b><code>java:comp/TransactionManager</code></b>.</p>
 
-<hr>
+<hr class='sepbar'>
 <h3><a name="Delegator_Elements">Delegator Elements</a></h3>
-<hr>
-<p>The GenericDelagator is created through a factory method that takes a String
+<hr class='sepbar'>
+<p class='contenttext'>The GenericDelagator is created through a factory method that takes a String
 argument containing the delegator name. This delegator name is used to look up
 a <b><code>delegator</code></b> tag in the entityengine.xml file.</p>
 
@@ -182,7 +191,7 @@ a <b><code>delegator</code></b> tag in the entityengine.xml file.</p>
 </tr>
 </table>
 
-<p>The delegator tag must contain one or more <b><code>group-map</code></b> tags 
+<p class='contenttext'>The delegator tag must contain one or more <b><code>group-map</code></b> tags 
 specifying a datasource to use for each group of entities that the delegator will know about
 from the entity-group-reader. The delegator uses this file 
 to assign a group to each entity. When an operation on an entity is performed it 
@@ -192,45 +201,45 @@ technique when the application is written it does not have to know which Helper
 is responsible for a given entity, and can therefore handle an entity or groups 
 of entities assigned to different Data Sources with a simple configuration.</p>
 
-<hr>
+<hr class='sepbar'>
 <h3><a name="Entity_Model">Entity Model XML Files</a></h3>
-<hr>
-<p>The <b><code>entity-model-reader</code></b> tag is used to configure each named
+<hr class='sepbar'>
+<p class='contenttext'>The <b><code>entity-model-reader</code></b> tag is used to configure each named
 entity model reader. The tag has a <b><code>name</code></b> attribute used to specify the entity model
 reader's name. Each reader may load from multiple resources that are each 
 specified with a <b><code>resource</code></b> tag inside the main tag.</p>
 
-<p>Each <b><code>resource</code></b> tag has two required attributes: 
+<p class='contenttext'>Each <b><code>resource</code></b> tag has two required attributes: 
 <b><code>loader</code></b> which specifies which resource-loader to use and
 <b><code>location</code></b> which specifies the location that the resource-loader
 will use inside itself to load the resource.</p>
 
-<hr>
+<hr class='sepbar'>
 <h3><a name="Entity_Group">Entity Group XML File</a></h3>
-<hr>
-<p>The <b><code>entity-group-reader</code></b> tag is used to configure each named
+<hr class='sepbar'>
+<p class='contenttext'>The <b><code>entity-group-reader</code></b> tag is used to configure each named
 entity group reader. The tag has a <b><code>name</code></b> attribute used to specify the entity group
 reader's name. The group reader uses a single XML file to get the entity-group mappings.</p>
-<p>The tag has two required attributes: 
+<p class='contenttext'>The tag has two required attributes: 
 <b><code>loader</code></b> which specifies which resource-loader to use and
 <b><code>location</code></b> which specifies the location that the resource-loader
 will use inside itself to load the resource.</p>
 
-<hr>
+<hr class='sepbar'>
 <h3><a name="Field_Type">Field Type XML File</a></h3>
-<hr>
-<p>The <b><code>field-type</code></b> tag is used to configure each named
+<hr class='sepbar'>
+<p class='contenttext'>The <b><code>field-type</code></b> tag is used to configure each named
 field type. The tag has a <b><code>name</code></b> attribute used to specify the field type's
 name. The group reader uses a single XML file to get the field type information.</p>
-<p>The tag has two required attributes: 
+<p class='contenttext'>The tag has two required attributes: 
 <b><code>loader</code></b> which specifies which resource-loader to use and
 <b><code>location</code></b> which specifies the location that the resource-loader
 will use inside itself to load the resource.</p>
 
-<hr>
+<hr class='sepbar'>
 <h3><a name="Datasource">Data Source Elements</a></h3>
-<hr>
-<p>Many datasources can be configured using one <b><code>datasource</code></b> 
+<hr class='sepbar'>
+<p class='contenttext'>Many datasources can be configured using one <b><code>datasource</code></b> 
 tag for each datasource. This tag has the following attributes, and may contain 
 the following sub-elements:</p>
 <table cellpadding='2' cellspacing='0' border='1'>
@@ -356,7 +365,7 @@ the following sub-elements:</p>
 </tr>
 </table>
 
-<p>The <b><code>inline-jdbc</code></b> tag has the following attributes:</p>
+<p class='contenttext'>The <b><code>inline-jdbc</code></b> tag has the following attributes:</p>
 <table cellpadding='2' cellspacing='0' border='1'>
 <tr>
     <td><b>Attribute&nbsp;Name</b></td>
@@ -393,7 +402,7 @@ the following sub-elements:</p>
 </tr>
 </table>
 
-<p>The <b><code>jndi-jdbc</code></b> tag has the following attributes:</p>
+<p class='contenttext'>The <b><code>jndi-jdbc</code></b> tag has the following attributes:</p>
 <table cellpadding='2' cellspacing='0' border='1'>
 <tr>
     <td><b>Attribute&nbsp;Name</b></td>
@@ -411,11 +420,11 @@ the following sub-elements:</p>
 </tr>
 </table>
 
-<p>The data source retrieved from JNDI should be pooled and transactional, with 
+<p class='contenttext'>The data source retrieved from JNDI should be pooled and transactional, with 
 connections already enlisted if a JTA transaction has been started. It can be 
 either a DataSource or an XADataSource object.</p>
 
-<p>If the JNDI elements are not specified the ConnectionFactory will get the
+<p class='contenttext'>If the JNDI elements are not specified the ConnectionFactory will get the
 JDBC parameters from entityengine.xml file and try to use Tyrex for the
 transaction manager and connection pool. If Tyrex is not available the Entity
 Engine will hobble along creating a JDBC connection manually each time one is

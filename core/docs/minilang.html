@@ -1,23 +1,30 @@
 <html>
 <head>
-<title>Open For Business Mini-Language Guide</title>
+  <title>The Open For Business Project: Mini-Language Guide</title>
 </head>
 
 <body>
 
-<h2 align="center">The Open For Business Project: Mini-Language Guide</h2>
+<table width='100%'>
+  <tr>
+    <td width='50%' align='left' valign='center'>
+        <a href="http://www.ofbiz.org"><img src="http://www.ofbiz.org/images/ofbiz_logo.jpg"  border="0" alt='The Open For Business Project'></a>
+    </td>
+    <td width='50%' align='right' valign='center'>
+        <a href="http://sf.net/projects/ofbiz"><img src="http://sourceforge.net/sflogo.php?group_id=27173" width="88" height="31" border="0" alt="SourceForge Logo"></a> 
+        <a href="http://www.ofbiz.org"><img src="http://www.ofbiz.org/images/ofbiz_powered.gif" width="88" border="0"></a>
+    </td>
+  </tr>
+</table>
+<hr class='sepbar'>
 
-<br>Written By: David E. Jones
-<br>Email: <a href="mailto:jonesde@ofbiz.org">jonesde@ofbiz.org</a>
-<br>Open For Business Site: <a href="http://www.ofbiz.org/">http://www.ofbiz.org</a>
-<br>
-<A href="http://sf.net/projects/ofbiz"><IMG src="http://sourceforge.net/sflogo.php?group_id=27173" border="0" alt="SourceForge Logo"></A> 
-<br>
-Founders and Lead Architects: David E. Jones &amp; Andy Zeneski <br>
-Last Updated: December 12, 2002<br>
-$Id$ <br>
-<hr>
-<br>
+<h2 align="center">The Open For Business Project: Mini-Language Guide</h2>
+ 
+<div class='contenttext'>Written By: David E. Jones, <a href="mailto:jonesde@ofbiz.org">jonesde@ofbiz.org</a></div>
+<div class='contenttext'>Last Updated: January 1, 2003</div>
+<!-- $Id$ -->
+
+<hr class='sepbar'>
 <h3>Table of Contents</h3>
 
 <ul>
@@ -51,49 +58,49 @@ $Id$ <br>
 
 <br>
 
-<hr>
+<hr class='sepbar'>
 <h3><a name="Introduction">Introduction</a></h3>
-<hr>
-<p>The Mini-Language concept in Open For Business is similar to the Gang of Four Interpreter
+<hr class='sepbar'>
+<p class='contenttext'>The Mini-Language concept in Open For Business is similar to the Gang of Four Interpreter
 pattern, or the Mark Grand Little Language pattern. This is also the central theme
 of the Building Parsers with Java book by Steven John Metsker which the OFBiz Rule Engine
 is based on. The idea is to create simple languages that simplify complex or
 frequently performed tasks.</p>
-<p>In business software there are things that are done
+<p class='contenttext'>In business software there are things that are done
 hundreds or thousands of times in a single application that a Mini-Language
 can simplify to the point of cutting implementation and maintenance times not
 by just 50%, but often as much as 70-90%. Yes, certain tasks will take only 10% of
 the effort and knowledge to perform. This makes it easier people not familiar
 with the software to manipulate existing or build new functionality.</p>
-<p>Mini-Languages tend to have instructions that are more like method calls in a 
+<p class='contenttext'>Mini-Languages tend to have instructions that are more like method calls in a 
 general purpose language. They are meant to solve a specific problem in a specific
 context, and are generally worthless or need to be modified for other contexts
 or problems.</p>
-<p>Often this idea is implemented using a free form (BNF) or english-like syntax.
+<p class='contenttext'>Often this idea is implemented using a free form (BNF) or english-like syntax.
 In Open For Business the Mini-Languages are expressed as XML files to simplify the
 learning and manipulation of the syntax, in addition to making the Mini-Languages
 easier to write and extend.</p>
 
-<p>The DTD for the simple-map-processor and simple-method XML files is 
+<p class='contenttext'>The DTD for the simple-map-processor and simple-method XML files is 
 in the distribution in <b>ofbiz/core/docs/xmldefs/ofbiz/simple-methods.dtd</b> or
 on the website at <a href='http://www.ofbiz.org/dtds/simple-methods.dtd'>www.ofbiz.org/dtds/simple-methods.dtd</a>.
 These are combined into a single DTD to make it easy to use inlined 
 simple-map-processors inside a simple-method.</p>
 
-<p>To specify the DOCTYPE for a simple-map-processors XML file use the following:</p>
+<p class='contenttext'>To specify the DOCTYPE for a simple-map-processors XML file use the following:</p>
 <pre>
 &lt;!DOCTYPE simple-map-processors PUBLIC "-//OFBiz//DTD Simple Methods//EN" "http://www.ofbiz.org/dtds/simple-methods.dtd"&gt;
 </pre>
 
-<p>To specify the DOCTYPE for a simple-methods XML file use the following:</p>
+<p class='contenttext'>To specify the DOCTYPE for a simple-methods XML file use the following:</p>
 <pre>
 &lt;!DOCTYPE simple-methods PUBLIC "-//OFBiz//DTD Simple Methods//EN" "http://www.ofbiz.org/dtds/simple-methods.dtd"&gt;
 </pre>
 
-<p>The only difference between the two DOCTYPE definitions is the root node to use
+<p class='contenttext'>The only difference between the two DOCTYPE definitions is the root node to use
 from the DTD.</p>
 
-<hr>
+<hr class='sepbar'>
 <h3><a name="Simple_Map_Processor">The Simple Map Processor Mini-Language</a></h3>
 <ul>
 <li><a href='#MapOverview'>Simple Map Processor Overview</a>
@@ -101,82 +108,82 @@ from the DTD.</p>
 <li><a href='#Process'>Process Field Operations</a>
 <li><a href='#MapExample'>Simple Map Processors Example</a>
 </ul>
-<hr>
+<hr class='sepbar'>
 
 <h3><a name='MapOverview'>Simple Map Processor Overview</a></h3>
 
-<p>The Simple Map Processor Mini-Language performes two primary tasks: validation
+<p class='contenttext'>The Simple Map Processor Mini-Language performes two primary tasks: validation
 and conversion. It does this in a context of moving values from one Map to another. The
 input map will commonly contain Strings, but can contain other object types like Integer, Long,
 Float, Double, java.sql.Date, Time, and Timestamp.</p>
 
-<hr>
+<hr class='sepbar'>
 <h3><a name='MakeInString'>Make In String Operations</a></h3>
 
-<p><b><u>make-in-string</u></b></p>
-<p>In addition to dealing with the fields already in the incoming Map you can build 
+<p class='contenttext'><b><u>make-in-string</u></b></p>
+<p class='contenttext'>In addition to dealing with the fields already in the incoming Map you can build 
 Strings and add them to the in-Map before the processing begins with the make-in-string tag. You can have zero or
 many make-in-string tags, and they must all come before the process tags. Inside each
 make-in-string is a list of snippets to concatenate together to make the final String. 
 Each snippet can be another field in the in-Map (in-field element), a value from a properties 
 file (property element), or a constant (constant element).</p>
 
-<hr>
+<hr class='sepbar'>
 <h3><a name='Process'>Process Field Operations</a></h3>
 
-<p><b><u>process</u></b></p>
-<p>The process tag is used to contain the operations to be done on the specified 
+<p class='contenttext'><b><u>process</u></b></p>
+<p class='contenttext'>The process tag is used to contain the operations to be done on the specified 
 field in the in-Map. It has one required attribute, the field to operate on. The
 operations that it contains are: validate-method, compare, compare-field, regexp, 
 not-empty, copy,  and convert.</p>
 
-<p>All process operations tags except copy must contain one of two tags: 
+<p class='contenttext'>All process operations tags except copy must contain one of two tags: 
 fail-message or fail-property. If the operation fails a message is added to
 the message list that is either the specified fail-message, or the String from
 the properties file value that is specified in fail-property.</p>
 
-<p>Messages are collected in List as the Simple Map Processor runs. If the List
+<p class='contenttext'>Messages are collected in List as the Simple Map Processor runs. If the List
 is not empty when it completes then something failed in the map processor. This
 is done so that all failures will be reported immediately rather than having to 
 fix one failure before another can be discovered.</p>
 
-<p>All process operations automatically convert the field value and other values
+<p class='contenttext'>All process operations automatically convert the field value and other values
 from their current type to the type specified for the operation, where applicable.
 The ObjectType.simpleTypeConvert method is used to do the conversion. It supports
 the following types: String, Double, Float, Long, Integer, Date, Time, and 
 Timestamp. If the type is not specified String is the default.</p>
 
-<p><b><u>process:validate-method</u></b></p>
-<p>The validate-method tag is used to call any static method that accepts
+<p class='contenttext'><b><u>process:validate-method</u></b></p>
+<p class='contenttext'>The validate-method tag is used to call any static method that accepts
 a String and returns a boolean. If the field coming in is not a String
 it will be converted to a String before calling the method. The two attributes
 for this tag are class and method which should contain the fully qualified class 
 name and the method name, respectively. If the class name is not specified it 
 will default to org.ofbiz.core.util.UtilValidate.</p>
 
-<p><b><u>process:compare</u></b></p>
-<p>The compare tag is used to compare the field value to the value specified
+<p class='contenttext'><b><u>process:compare</u></b></p>
+<p class='contenttext'>The compare tag is used to compare the field value to the value specified
 in the value attribute. An operator must be specified to indicate
 the comparison desired. Operators available include less, greater, less-equals, 
 greater-equals, equals, not-equals, and contains.</p>
 
-<p><b><u>process:compare-field</u></b></p>
-<p>The compare-field tag is just like the compare tag except that instead
+<p class='contenttext'><b><u>process:compare-field</u></b></p>
+<p class='contenttext'>The compare-field tag is just like the compare tag except that instead
 of specifying a value you specify the name of another field in the in-Map 
 to compare the current field to.</p>
 
-<p><b><u>process:regexp</u></b></p>
-<p>The regexp tag validate the current field against the regular expression 
+<p class='contenttext'><b><u>process:regexp</u></b></p>
+<p class='contenttext'>The regexp tag validate the current field against the regular expression 
 specified in the expr attribute of the tag. Standard Perl style regular
 expressions are used with the ORO library from Jakarta.</p>
 
-<p><b><u>process:not-empty</u></b></p>
-<p>The not-empty tag verifies that the current field is not empty. If the
+<p class='contenttext'><b><u>process:not-empty</u></b></p>
+<p class='contenttext'>The not-empty tag verifies that the current field is not empty. If the
 field is a String it must not be null and must have a length greater than
 zero, otherwise it must simply not be null. The not-empty tag has no attributes.</p>
 
-<p><b><u>process:copy</u></b></p>
-<p>The copy operation simply copies the current field value to the out-Map from
+<p class='contenttext'><b><u>process:copy</u></b></p>
+<p class='contenttext'>The copy operation simply copies the current field value to the out-Map from
 the in-Map. There are three optional attributes. If a different field name is
 desired in the out-Map it can be specified in the to-field attribute. The replace
 attribute can be used to specify if an existing field in the out-Map should be 
@@ -184,13 +191,13 @@ replaced or not. The replace attribute defaults to true. The set-if-null
 attribute specifies whether or not the value should be put in the out-Map if
 it is null. The default for set-if-null is false.</p>
 
-<p><b><u>process:convert</u></b></p>
-<p>The convert tag does the same thing as copy except that the type can be
+<p class='contenttext'><b><u>process:convert</u></b></p>
+<p class='contenttext'>The convert tag does the same thing as copy except that the type can be
 converted to the type specified in the type attribute. The format attribute
 can be used to specify the format for date/time fields. These two tags are
 in addition to all of the the attributes in the copy tag.</p>
 
-<hr>
+<hr class='sepbar'>
 <h3><a name='MapExample'>Simple Map Processors Example</a></h3>
 <pre>
 &lt;!DOCTYPE simple-map-processors PUBLIC "-//OFBiz//DTD Simple Methods//EN" "http://www.ofbiz.org/dtds/simple-methods.dtd"&gt;
@@ -225,7 +232,7 @@ in addition to all of the the attributes in the copy tag.</p>
 &lt;/simple-map-processors&gt;
 </pre>
 
-<hr>
+<hr class='sepbar'>
 <h3><a name="Simple_Method">The Simple Method Mini-Language</a></h3>
 <ul>
 <li><a href='#MethodOverview'>Simple Method Overview</a>
@@ -244,11 +251,11 @@ in addition to all of the the attributes in the copy tag.</p>
 <li><a href='#Other'>Other Operations</a>
 <li><a href='#MethodExample'>Simple Methods Example</a>
 </ul>
-<hr>
+<hr class='sepbar'>
 
 <h3><a name='MethodOverview'>Simple Method Overview</a></h3>
 
-<p>The Simple Method Mini-Language is a simple way to implement an event
+<p class='contenttext'>The Simple Method Mini-Language is a simple way to implement an event
 that is invoked by the Control Servlet or a service that is invoked by the Service Engine.
 A Simple Method can be invoked through the static methods on the SimpleMethod
 class, or as an event through an entry in the controller configuration XML file
@@ -258,7 +265,7 @@ like the following:</p>
     &lt;event type="simple" path="org/ofbiz/commonapp/workeffort/workeffort/WorkEffortSimpleEvents.xml" invoke="update"/&gt;
 </pre>
 
-<p>or as a service through an entry in a services.xml file like the following:
+<p class='contenttext'>or as a service through an entry in a services.xml file like the following:
 
 <pre>
     &lt;service name="createPartyRole" engine="simple"
@@ -269,14 +276,14 @@ like the following:</p>
     &lt;/service&gt;
 </pre>
 
-<p>The path or location for a Simple Method is the classpath and filename of the XML file.</p>
+<p class='contenttext'>The path or location for a Simple Method is the classpath and filename of the XML file.</p>
 
-<p>In this Mini-Language you can invoke Simple Map Processors, Services and bsh scripts,
+<p class='contenttext'>In this Mini-Language you can invoke Simple Map Processors, Services and bsh scripts,
 perform entity related operations, and create messages to return to the caller.
 Speficic operations can be enclosed in if blocks to execute conditionally and
 values or fields can be copied around in the maps, lists and method environment.</p>
 
-<p>There are a number of tags which can be used to get and set attributes to/from
+<p class='contenttext'>There are a number of tags which can be used to get and set attributes to/from
 a request or session object when called as an event or to set attributes in the
 result when called as a service. These operations are only applied when applicable. 
 In other words if you include a <b>env-to-request</b> operation it will only be
@@ -285,14 +292,14 @@ operation will only be invoked when the simple-method is called as a service.
 Everything else is the same when called as an event or a service which makes it
 easy to write flexible logic that can be mounted/applied in various ways.</p>
 
-<p>There are a number of objects that exist in the method environment when a
+<p class='contenttext'>There are a number of objects that exist in the method environment when a
 simple-method starts or that are used as it executes to keep track of certain 
 information. Some will exist when called as an event or a service, these
 are marked in the following list. Each name can be overridden using an attribute
 on the <b>simple-method</b> tag. The defaults are listed below (you can also find 
 them in the DTD).</p>
 
-<p>Here is a complete list of the attributes of the simple-method tag:</p>
+<p class='contenttext'>Here is a complete list of the attributes of the simple-method tag:</p>
 
 <table cellpadding='2' cellspacing='0' border='1'>
 <tr>
@@ -381,23 +388,23 @@ them in the DTD).</p>
 </tr>
 </table>
 
-<p>Okay, enough of the general stuff, here is a catalog and description of the 
+<p class='contenttext'>Okay, enough of the general stuff, here is a catalog and description of the 
 available operations.</p>
 
 <!-- ======================================================================= -->
 <!-- ======================================================================= -->
-<hr>
+<hr class='sepbar'>
 <h3><a name='Call'>Call Operations</a></h3>
 
-<p><b><u>call-map-processor</u></b></p>
+<p class='contenttext'><b><u>call-map-processor</u></b></p>
 
-<p>The call-map-processor tag invokes a simple map processor from an existing 
+<p class='contenttext'>The call-map-processor tag invokes a simple map processor from an existing 
 map, creating a new map or adding to an existing one if the named out-map already
 exists. Resulting messages are added to the named list, and a new list is
 created if a list with the given name does not yet exist. Note that all lists 
 and maps exist in the same context and must have unique names.</p>
 
-<p>An inline simple-map-processor can be used by putting a <b>simple-map-processor</b>
+<p class='contenttext'>An inline simple-map-processor can be used by putting a <b>simple-map-processor</b>
 tag under the <b>call-map-processor</b> tag. If both an external and an inline 
 map-processor are specified, the external one will be called first, allowing the 
 inline one to override its behavior</p>
@@ -449,14 +456,14 @@ inline one to override its behavior</p>
 </tr>
 </table>
 
-<p><b><u>call-service</u></b></p>
+<p class='contenttext'><b><u>call-service</u></b></p>
 
-<p>The call-service tag invokes a service through the Service Engine. If the
+<p class='contenttext'>The call-service tag invokes a service through the Service Engine. If the
 specified error code is returned from the service, the event is aborted
 and the transaction in the current thread is rolled back. Otherwise, the
 remaining operations are invoked.</p>
 
-<p>The result-to-request and result-to-session elements will be IGNORED when 
+<p class='contenttext'>The result-to-request and result-to-session elements will be IGNORED when 
 called in a service context. So, they are ONLY used when called in an event context.</p>
 
 <table cellpadding='2' cellspacing='0' border='1'>
@@ -543,9 +550,9 @@ called in a service context. So, they are ONLY used when called in an event cont
 </tr>
 </table>
 
-<p><b><u>call-service-asynch</u></b></p>
+<p class='contenttext'><b><u>call-service-asynch</u></b></p>
 
-<p>Calls a service asynchronously and ignores the result, so no return messages 
+<p class='contenttext'>Calls a service asynchronously and ignores the result, so no return messages 
 are used; that doesn't mean no errors will result, but they would just be
 system errors like database failures, etc which all have system error messages.</p>
 
@@ -569,18 +576,18 @@ system errors like database failures, etc which all have system error messages.<
 </tr>
 </table>
 
-<p><b><u>call-bsh</u></b></p>
+<p class='contenttext'><b><u>call-bsh</u></b></p>
 
-<p>Runs an external bsh script from the classpath if resource is specified and 
+<p class='contenttext'>Runs an external bsh script from the classpath if resource is specified and 
 then runs the inlined bsh script if any is specified.</p>
 
-<p>The bsh context is the current simple-method environment including maps, lists
+<p class='contenttext'>The bsh context is the current simple-method environment including maps, lists
 and special objects whose names are defined in the simple-method attributes.</p>
 
-<p>The current env cannot be modified, but if a Map is returned by the bsh block
+<p class='contenttext'>The current env cannot be modified, but if a Map is returned by the bsh block
 the entries in the map will be put into the current env.</p>
 
-<p>Error messages go on the error list and are handled with the check-errors tag.</p>
+<p class='contenttext'>Error messages go on the error list and are handled with the check-errors tag.</p>
 
 <table cellpadding='2' cellspacing='0' border='1'>
 <tr>
@@ -598,9 +605,9 @@ the entries in the map will be put into the current env.</p>
 </tr>
 </table>
 
-<p><b><u>call-simple-method</u></b></p>
+<p class='contenttext'><b><u>call-simple-method</u></b></p>
 
-<p>The call-simple-method tag calls another simple-method in the same context as
+<p class='contenttext'>The call-simple-method tag calls another simple-method in the same context as
 the current one. In other words the called simple-method will have the same 
 environment as the calling simple-method, including all environment fields, and
 either the event or service objects that the calling simple-method was called with.</p>
@@ -626,14 +633,14 @@ either the event or service objects that the calling simple-method was called wi
 
 <!-- ======================================================================= -->
 <!-- ======================================================================= -->
-<hr>
+<hr class='sepbar'>
 <h3><a name='JavaCall'>Java Call Operations</a></h3>
 
-<p><b><u>create-object</u></b></p>
+<p class='contenttext'><b><u>create-object</u></b></p>
 
-<p>Creates an object of the given class and if the field-name is specified saves it in that field.</p>
+<p class='contenttext'>Creates an object of the given class and if the field-name is specified saves it in that field.</p>
 
-<p>The string and field sub-elements are passed to the constructor method as arguments in the order they are specified. If the sub-elements do not match the constructor method arguments an error will be returned.</p>
+<p class='contenttext'>The string and field sub-elements are passed to the constructor method as arguments in the order they are specified. If the sub-elements do not match the constructor method arguments an error will be returned.</p>
 
 <table cellpadding='2' cellspacing='0' border='1'>
 <tr>
@@ -671,13 +678,13 @@ either the event or service objects that the calling simple-method was called wi
 </tr>
 </table>
 
-<p><b><u>call-object-method</u></b></p>
+<p class='contenttext'><b><u>call-object-method</u></b></p>
 
-<p>Calls a method on an existing object that exists in a field in the environment or in a map in the environment.</p>
+<p class='contenttext'>Calls a method on an existing object that exists in a field in the environment or in a map in the environment.</p>
 
-<p>The string and field sub-elements are passed to the method as arguments in the order they are specified. If the sub-elements do not match the method arguments an error will be returned.</p>
+<p class='contenttext'>The string and field sub-elements are passed to the method as arguments in the order they are specified. If the sub-elements do not match the method arguments an error will be returned.</p>
 
-<p>The return value will be put in the named field if an value is returned and if a field and optionally a map name are specified.</p>
+<p class='contenttext'>The return value will be put in the named field if an value is returned and if a field and optionally a map name are specified.</p>
 
 <table cellpadding='2' cellspacing='0' border='1'>
 <tr>
@@ -723,13 +730,13 @@ either the event or service objects that the calling simple-method was called wi
 </tr>
 </table>
 
-<p><b><u>call-class-method</u></b></p>
+<p class='contenttext'><b><u>call-class-method</u></b></p>
 
-<p>Calls a static method on a class.</p>
+<p class='contenttext'>Calls a static method on a class.</p>
 
-<p>The string and field sub-elements are passed to the method as arguments in the order they are specified. If the sub-elements do not match the method arguments an error will be returned.</p>
+<p class='contenttext'>The string and field sub-elements are passed to the method as arguments in the order they are specified. If the sub-elements do not match the method arguments an error will be returned.</p>
 
-<p>The return value will be put in the named field if an value is returned and if a field and optionally a map name are specified.</p>
+<p class='contenttext'>The return value will be put in the named field if an value is returned and if a field and optionally a map name are specified.</p>
 
 <table cellpadding='2' cellspacing='0' border='1'>
 <tr>
@@ -774,12 +781,12 @@ either the event or service objects that the calling simple-method was called wi
 
 <!-- ======================================================================= -->
 <!-- ======================================================================= -->
-<hr>
+<hr class='sepbar'>
 <h3><a name='ControlError'>Control and Error Handling Operations</a></h3>
 
-<p><b><u>check-errors</u></b></p>
+<p class='contenttext'><b><u>check-errors</u></b></p>
 
-<p>The message lists from invoking are not checked until the check-errors tag
+<p class='contenttext'>The message lists from invoking are not checked until the check-errors tag
 is used. The named list is checked and if it contains any messages they are 
 put in the servlet request object and the specified error code is returned to
 the control servlet.</p>
@@ -824,9 +831,9 @@ the control servlet.</p>
 </tr>
 </table>
 
-<p><b><u>add-error</u></b></p>
+<p class='contenttext'><b><u>add-error</u></b></p>
 
-<p>Adds an error message with to the given error list from either an inline message or a message from a properties file.</p>
+<p class='contenttext'>Adds an error message with to the given error list from either an inline message or a message from a properties file.</p>
 
 <table cellpadding='2' cellspacing='0' border='1'>
 <tr>
@@ -856,9 +863,9 @@ the control servlet.</p>
 </tr>
 </table>
 
-<p><b><u>return</u></b></p>
+<p class='contenttext'><b><u>return</u></b></p>
 
-<p>Returns immediately from the simple-method with the given response code string.</p>
+<p class='contenttext'>Returns immediately from the simple-method with the given response code string.</p>
 
 <table cellpadding='2' cellspacing='0' border='1'>
 <tr>
@@ -874,15 +881,15 @@ the control servlet.</p>
 
 <!-- ======================================================================= -->
 <!-- ======================================================================= -->
-<hr>
+<hr class='sepbar'>
 <h3><a name='Event'>Event Specific Operations</a></h3>
 
-<p><b><u>field-to-request</u></b></p>
+<p class='contenttext'><b><u>field-to-request</u></b></p>
 
-<p>The field-to-request tag copies a field from a map to the specified servlet request
+<p class='contenttext'>The field-to-request tag copies a field from a map to the specified servlet request
 attribute.</p>
 
-<p>The tag is only used when the simple-method is called as an event, it is ignored otherwise.</p>
+<p class='contenttext'>The tag is only used when the simple-method is called as an event, it is ignored otherwise.</p>
 
 <table cellpadding='2' cellspacing='0' border='1'>
 <tr>
@@ -905,11 +912,11 @@ attribute.</p>
 </tr>
 </table>
 
-<p><b><u>field-to-session</u></b></p>
+<p class='contenttext'><b><u>field-to-session</u></b></p>
 
-<p>The field-to-session tag copies a field from a map to the specified servlet session attribute.</p>
+<p class='contenttext'>The field-to-session tag copies a field from a map to the specified servlet session attribute.</p>
 
-<p>The tag is only used when the simple-method is called as an event, it is ignored otherwise.</p>
+<p class='contenttext'>The tag is only used when the simple-method is called as an event, it is ignored otherwise.</p>
 
 <table cellpadding='2' cellspacing='0' border='1'>
 <tr>
@@ -932,12 +939,12 @@ attribute.</p>
 </tr>
 </table>
 
-<p><b><u>request-to-field</u></b></p>
+<p class='contenttext'><b><u>request-to-field</u></b></p>
 
-<p>The request-to-field tag copies an attribute from the servlet request to a field of a 
+<p class='contenttext'>The request-to-field tag copies an attribute from the servlet request to a field of a 
 map in the method environment.</p>
 
-<p>The tag is only used when the simple-method is called as an event, it is ignored otherwise (except the default value, if specified).</p>
+<p class='contenttext'>The tag is only used when the simple-method is called as an event, it is ignored otherwise (except the default value, if specified).</p>
 
 <table cellpadding='2' cellspacing='0' border='1'>
 <tr>
@@ -965,11 +972,11 @@ map in the method environment.</p>
 </tr>
 </table>
 
-<p><b><u>session-to-field</u></b></p>
+<p class='contenttext'><b><u>session-to-field</u></b></p>
 
-<p>The session-to-field tag copies an attribute from the servlet session to a field of a map in the method environment.</p>
+<p class='contenttext'>The session-to-field tag copies an attribute from the servlet session to a field of a map in the method environment.</p>
 
-<p>The tag is only used when the simple-method is called as an event, it is ignored otherwise (except the default value, if specified).</p>
+<p class='contenttext'>The tag is only used when the simple-method is called as an event, it is ignored otherwise (except the default value, if specified).</p>
 
 <table cellpadding='2' cellspacing='0' border='1'>
 <tr>
@@ -997,11 +1004,11 @@ map in the method environment.</p>
 </tr>
 </table>
 
-<p><b><u>webapp-property-to-field</u></b></p>
+<p class='contenttext'><b><u>webapp-property-to-field</u></b></p>
 
-<p>The webapp-property-to-field tag copies a property value from a properties file in a ServletContext resource to a field.</p>
+<p class='contenttext'>The webapp-property-to-field tag copies a property value from a properties file in a ServletContext resource to a field.</p>
 
-<p>The tag is only used when the simple-method is called as an event, it is ignored otherwise (except the default value, if specified).</p>
+<p class='contenttext'>The tag is only used when the simple-method is called as an event, it is ignored otherwise (except the default value, if specified).</p>
 
 <table cellpadding='2' cellspacing='0' border='1'>
 <tr>
@@ -1037,14 +1044,14 @@ map in the method environment.</p>
 
 <!-- ======================================================================= -->
 <!-- ======================================================================= -->
-<hr>
+<hr class='sepbar'>
 <h3><a name='Service'>Service Specific Operations</a></h3>
 
-<p><b><u>field-to-result</u></b></p>
+<p class='contenttext'><b><u>field-to-result</u></b></p>
 
-<p>The field-to-result tag copies a field from a map to the specified service result field.</p>
+<p class='contenttext'>The field-to-result tag copies a field from a map to the specified service result field.</p>
 
-<p>The tag is only used when the simple-method is called as a service, it is ignored otherwise.</p>
+<p class='contenttext'>The tag is only used when the simple-method is called as a service, it is ignored otherwise.</p>
 
 <table cellpadding='2' cellspacing='0' border='1'>
 <tr>
@@ -1069,12 +1076,12 @@ map in the method environment.</p>
 
 <!-- ======================================================================= -->
 <!-- ======================================================================= -->
-<hr>
+<hr class='sepbar'>
 <h3><a name='Environment'>Method Environment Operations</a></h3>
 
-<p><b><u>map-to-map</u></b></p>
+<p class='contenttext'><b><u>map-to-map</u></b></p>
 
-<p>The map-to-map tag copies all fields from one map to another map.</p>
+<p class='contenttext'>The map-to-map tag copies all fields from one map to another map.</p>
 
 <table cellpadding='2' cellspacing='0' border='1'>
 <tr>
@@ -1093,9 +1100,9 @@ map in the method environment.</p>
 </tr>
 </table>
 
-<p><b><u>field-to-field</u></b></p>
+<p class='contenttext'><b><u>field-to-field</u></b></p>
 
-<p>The field-to-field tag copies a field from a map to a field in another map.</p>
+<p class='contenttext'>The field-to-field tag copies a field from a map to a field in another map.</p>
 
 <table cellpadding='2' cellspacing='0' border='1'>
 <tr>
@@ -1127,9 +1134,9 @@ map in the method environment.</p>
 </tr>
 </table>
 
-<p><b><u>field-to-list</u></b></p>
+<p class='contenttext'><b><u>field-to-list</u></b></p>
 
-<p>The field-to-list tag appends a field to the specified list.</p>
+<p class='contenttext'>The field-to-list tag appends a field to the specified list.</p>
 
 <table cellpadding='2' cellspacing='0' border='1'>
 <tr>
@@ -1152,9 +1159,9 @@ map in the method environment.</p>
 </tr>
 </table>
 
-<p><b><u>env-to-field</u></b></p>
+<p class='contenttext'><b><u>env-to-field</u></b></p>
 
-<p>The env-to-field tag copies a field from the method environment to a field in a map.</p>
+<p class='contenttext'>The env-to-field tag copies a field from the method environment to a field in a map.</p>
 
 <table cellpadding='2' cellspacing='0' border='1'>
 <tr>
@@ -1178,9 +1185,9 @@ map in the method environment.</p>
 </tr>
 </table>
 
-<p><b><u>field-to-env</u></b></p>
+<p class='contenttext'><b><u>field-to-env</u></b></p>
 
-<p>The field-to-env tag copies a field from a map to a field in the method environment.</p>
+<p class='contenttext'>The field-to-env tag copies a field from a map to a field in the method environment.</p>
 
 <table cellpadding='2' cellspacing='0' border='1'>
 <tr>
@@ -1204,9 +1211,9 @@ map in the method environment.</p>
 </tr>
 </table>
 
-<p><b><u>string-to-field</u></b></p>
+<p class='contenttext'><b><u>string-to-field</u></b></p>
 
-<p>The string-to-field tag puts the inlined string value in the specified field.</p>
+<p class='contenttext'>The string-to-field tag puts the inlined string value in the specified field.</p>
 
 <table cellpadding='2' cellspacing='0' border='1'>
 <tr>
@@ -1236,9 +1243,9 @@ map in the method environment.</p>
 </tr>
 </table>
 
-<p><b><u>string-to-list</u></b></p>
+<p class='contenttext'><b><u>string-to-list</u></b></p>
 
-<p>The string-to-list tag appends the inlined string value in the specified List.</p>
+<p class='contenttext'>The string-to-list tag appends the inlined string value in the specified List.</p>
 
 <table cellpadding='2' cellspacing='0' border='1'>
 <tr>
@@ -1263,30 +1270,9 @@ map in the method environment.</p>
 </tr>
 </table>
 
-<p><b><u>to-string</u></b></p>
+<p class='contenttext'><b><u>to-string</u></b></p>
 
-<p>The to-string tag converts the Object in the specified field to a String, putting the string in the same field.</p>
-
-<table cellpadding='2' cellspacing='0' border='1'>
-<tr>
-    <td><b>Attribute&nbsp;Name</b></td>
-    <td><b>Required?</b></td>
-    <td><b>Description</b></td>
-</tr>
-<tr>
-    <td>map-name</td><td>N</td>
-    <td>The name of the map in the method environment. If not specified the 
-    field-name will be used to get the field from the method environment.</td>
-</tr>
-<tr>
-    <td>field-name</td><td>Y</td>
-    <td>The name (key) of the map field to use.</td>
-</tr>
-</table>
-
-<p><b><u>clear-field</u></b></p>
-
-<p>The clear-field tag clears/removes the specified field.</p>
+<p class='contenttext'>The to-string tag converts the Object in the specified field to a String, putting the string in the same field.</p>
 
 <table cellpadding='2' cellspacing='0' border='1'>
 <tr>
@@ -1305,9 +1291,30 @@ map in the method environment.</p>
 </tr>
 </table>
 
-<p><b><u>iterate</u></b></p>
+<p class='contenttext'><b><u>clear-field</u></b></p>
 
-<p>The operations contained by the iterate tag will be executed
+<p class='contenttext'>The clear-field tag clears/removes the specified field.</p>
+
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>map-name</td><td>N</td>
+    <td>The name of the map in the method environment. If not specified the 
+    field-name will be used to get the field from the method environment.</td>
+</tr>
+<tr>
+    <td>field-name</td><td>Y</td>
+    <td>The name (key) of the map field to use.</td>
+</tr>
+</table>
+
+<p class='contenttext'><b><u>iterate</u></b></p>
+
+<p class='contenttext'>The operations contained by the iterate tag will be executed
 for each of the entries in the list, and will make the current entry available
 in the method environment by the entry-name specified. This tag can contain any of the simple-method
 operations, including the conditional/if operations.</p>
@@ -1340,9 +1347,9 @@ operations, including the conditional/if operations.</p>
 </tr>
 </table>
 
-<p><b><u>first-from-list</u></b></p>
+<p class='contenttext'><b><u>first-from-list</u></b></p>
 
-<p>The first-from-list tag will get the first entry from the given list and put it in the environment field with the given entry-name.</p>
+<p class='contenttext'>The first-from-list tag will get the first entry from the given list and put it in the environment field with the given entry-name.</p>
 
 <table cellpadding='2' cellspacing='0' border='1'>
 <tr>
@@ -1363,12 +1370,12 @@ operations, including the conditional/if operations.</p>
 
 <!-- ======================================================================= -->
 <!-- ======================================================================= -->
-<hr>
+<hr class='sepbar'>
 <h3><a name='EntityMisc'>Entity Engine Misc. Operations</a></h3>
 
-<p><b><u>now-timestamp-to-env</u></b></p>
+<p class='contenttext'><b><u>now-timestamp-to-env</u></b></p>
 
-<p>The now-timestamp-to-env tag creates a java.sql.Timestamp object with the current date
+<p class='contenttext'>The now-timestamp-to-env tag creates a java.sql.Timestamp object with the current date
 and time in it and puts it in a field in the method environment.</p>
 
 <table cellpadding='2' cellspacing='0' border='1'>
@@ -1383,9 +1390,9 @@ and time in it and puts it in a field in the method environment.</p>
 </tr>
 </table>
 
-<p><b><u>now-date-to-env</u></b></p>
+<p class='contenttext'><b><u>now-date-to-env</u></b></p>
 
-<p>The now-date-to-env tag creates a java.sql.Date object with the current date
+<p class='contenttext'>The now-date-to-env tag creates a java.sql.Date object with the current date
 in it and puts it in a field in the method environment.</p>
 
 <table cellpadding='2' cellspacing='0' border='1'>
@@ -1400,9 +1407,9 @@ in it and puts it in a field in the method environment.</p>
 </tr>
 </table>
 
-<p><b><u>sequenced-id-to-env</u></b></p>
+<p class='contenttext'><b><u>sequenced-id-to-env</u></b></p>
 
-<p>The sequenced-id-to-env tag gets a sequenced ID from the Entity Engine (through
+<p class='contenttext'>The sequenced-id-to-env tag gets a sequenced ID from the Entity Engine (through
 the delegator) and puts it in the specified method environment field. The object
 will be a java.lang.Long, but can of course be converted to a String.</p>
 
@@ -1424,9 +1431,9 @@ will be a java.lang.Long, but can of course be converted to a String.</p>
 </tr>
 </table>
 
-<p><b><u>set-current-user-login</u></b></p>
+<p class='contenttext'><b><u>set-current-user-login</u></b></p>
 
-<p>The set-current-user-login tag sets the UserLogin GenericValue object to be 
+<p class='contenttext'>The set-current-user-login tag sets the UserLogin GenericValue object to be 
 used for authentication for the rest of the method. This is mostly used for 
 calling services, etc.</p>
 
@@ -1444,12 +1451,12 @@ calling services, etc.</p>
 
 <!-- ======================================================================= -->
 <!-- ======================================================================= -->
-<hr>
+<hr class='sepbar'>
 <h3><a name='EntityFind'>Entity Engine Find Operations</a></h3>
 
-<p><b><u>find-by-primary-key</u></b></p>
+<p class='contenttext'><b><u>find-by-primary-key</u></b></p>
 
-<p>The find-by-primary-key tag uses the delegator to find an entity value by
+<p class='contenttext'>The find-by-primary-key tag uses the delegator to find an entity value by
 its primary key. The resulting GenericValue object will be placed in the method
 environment using the specified value-name.</p>
 
@@ -1481,9 +1488,9 @@ environment using the specified value-name.</p>
 </tr>
 </table>
 
-<p><b><u>find-by-and</u></b></p>
+<p class='contenttext'><b><u>find-by-and</u></b></p>
 
-<p>The find-by-and tag uses the delegator to find entity values by
+<p class='contenttext'>The find-by-and tag uses the delegator to find entity values by
 anding the fields passed in the map. The resulting GenericValue objects will be 
 placed in the method environment using the specified list-name.</p>
 
@@ -1520,9 +1527,9 @@ placed in the method environment using the specified list-name.</p>
 </tr>
 </table>
 
-<p><b><u>filter-list-by-and</u></b></p>
+<p class='contenttext'><b><u>filter-list-by-and</u></b></p>
 
-<p>The filter-list-by-and tag filters the given list by the fields in the specified map.</p>
+<p class='contenttext'>The filter-list-by-and tag filters the given list by the fields in the specified map.</p>
 
 <table cellpadding='2' cellspacing='0' border='1'>
 <tr>
@@ -1547,9 +1554,9 @@ placed in the method environment using the specified list-name.</p>
 </tr>
 </table>
 
-<p><b><u>filter-list-by-date</u></b></p>
+<p class='contenttext'><b><u>filter-list-by-date</u></b></p>
 
-<p>The filter-list-by-date tag filters the given list by the valid date using the from and thru dates in each value object.</p>
+<p class='contenttext'>The filter-list-by-date tag filters the given list by the valid date using the from and thru dates in each value object.</p>
 
 <table cellpadding='2' cellspacing='0' border='1'>
 <tr>
@@ -1590,12 +1597,12 @@ placed in the method environment using the specified list-name.</p>
 
 <!-- ======================================================================= -->
 <!-- ======================================================================= -->
-<hr>
+<hr class='sepbar'>
 <h3><a name='EntityValue'>Entity Engine Value Operations</a></h3>
 
-<p><b><u>make-value</u></b></p>
+<p class='contenttext'><b><u>make-value</u></b></p>
 
-<p>The make-value tag uses the delegator to construct an entity value.
+<p class='contenttext'>The make-value tag uses the delegator to construct an entity value.
 The resulting value will not necessarily exist in the database, but will simply
 be assembled using the entity-name and fields map.
 The resulting GenericValue object will be placed in the method
@@ -1622,9 +1629,9 @@ environment using the specified value-name.</p>
 </tr>
 </table>
 
-<p><b><u>clone-value</u></b></p>
+<p class='contenttext'><b><u>clone-value</u></b></p>
 
-<p>The clone-value tag make a copy of the value in the method environment field 
+<p class='contenttext'>The clone-value tag make a copy of the value in the method environment field 
 specified by value-name. The resulting GenericValue object will be placed in the method
 environment using the specified new-value-name.</p>
 
@@ -1644,9 +1651,9 @@ environment using the specified new-value-name.</p>
 </tr>
 </table>
 
-<p><b><u>create-value</u></b></p>
+<p class='contenttext'><b><u>create-value</u></b></p>
 
-<p>The create-value tag persists the specified GenericValue object by creating a
+<p class='contenttext'>The create-value tag persists the specified GenericValue object by creating a
 new instance of the entity in the datasource. An error will result if an 
 instance of the entity exists in the datasource with the same primary key.</p>
 
@@ -1662,9 +1669,9 @@ instance of the entity exists in the datasource with the same primary key.</p>
 </tr>
 </table>
 
-<p><b><u>store-value</u></b></p>
+<p class='contenttext'><b><u>store-value</u></b></p>
 
-<p>The store-value tag persists the specified GenericValue object by updating the
+<p class='contenttext'>The store-value tag persists the specified GenericValue object by updating the
 instance of the entity in the datasource. An error will result if an 
 instance of the entity does not exist in the datasource with the same primary key.</p>
 
@@ -1680,9 +1687,9 @@ instance of the entity does not exist in the datasource with the same primary ke
 </tr>
 </table>
 
-<p><b><u>remove-value</u></b></p>
+<p class='contenttext'><b><u>remove-value</u></b></p>
 
-<p>The remove-value tag removes the specified GenericValue object by removing the
+<p class='contenttext'>The remove-value tag removes the specified GenericValue object by removing the
 instance of the entity in the datasource. An error will result if an 
 instance of the entity does not exist in the datasource with the same primary key.</p>
 
@@ -1698,9 +1705,9 @@ instance of the entity does not exist in the datasource with the same primary ke
 </tr>
 </table>
 
-<p><b><u>remove-by-and</u></b></p>
+<p class='contenttext'><b><u>remove-by-and</u></b></p>
 
-<p>The remove-by-and tag uses the delegator to remove entity values from the 
+<p class='contenttext'>The remove-by-and tag uses the delegator to remove entity values from the 
 datasource and is constrained by anding the fields passed in the map. Make sure
 the map contains something, or all values will be removed.</p>
 
@@ -1721,9 +1728,9 @@ the map contains something, or all values will be removed.</p>
 </tr>
 </table>
 
-<p><b><u>clear-cache-line</u></b></p>
+<p class='contenttext'><b><u>clear-cache-line</u></b></p>
 
-<p>Uses the delegator to clear elements from the cache; intelligently looks at
+<p class='contenttext'>Uses the delegator to clear elements from the cache; intelligently looks at
 the map passed to see if it is a byPrimaryKey, and byAnd, or an all.</p>
 
 <table cellpadding='2' cellspacing='0' border='1'>
@@ -1746,13 +1753,13 @@ the map passed to see if it is a byPrimaryKey, and byAnd, or an all.</p>
 </tr>
 </table>
 
-<p><b><u>clear-entity-caches</u></b></p>
+<p class='contenttext'><b><u>clear-entity-caches</u></b></p>
 
-<p>This is a very simple tag that should be used sparingly because of the performance impact. It clears all lines from all Entity Engine caches. It has no attributes or sub-elements.</p>
+<p class='contenttext'>This is a very simple tag that should be used sparingly because of the performance impact. It clears all lines from all Entity Engine caches. It has no attributes or sub-elements.</p>
 
-<p><b><u>set-pk-fields</u></b></p>
+<p class='contenttext'><b><u>set-pk-fields</u></b></p>
 
-<p>Looks for each PK field in the named map and if it exists there it will copy it into the named value object.</p>
+<p class='contenttext'>Looks for each PK field in the named map and if it exists there it will copy it into the named value object.</p>
 
 <table cellpadding='2' cellspacing='0' border='1'>
 <tr>
@@ -1775,9 +1782,9 @@ the map passed to see if it is a byPrimaryKey, and byAnd, or an all.</p>
 </tr>
 </table>
 
-<p><b><u>set-nonpk-fields</u></b></p>
+<p class='contenttext'><b><u>set-nonpk-fields</u></b></p>
 
-<p>Looks for each non-PK field in the named map and if it exists there it will copy it into the named value object.</p>
+<p class='contenttext'>Looks for each non-PK field in the named map and if it exists there it will copy it into the named value object.</p>
 
 <table cellpadding='2' cellspacing='0' border='1'>
 <tr>
@@ -1802,12 +1809,12 @@ the map passed to see if it is a byPrimaryKey, and byAnd, or an all.</p>
 
 <!-- ======================================================================= -->
 <!-- ======================================================================= -->
-<hr>
+<hr class='sepbar'>
 <h3><a name='EntityList'>Entity Engine List Operations</a></h3>
 
-<p><b><u>store-list</u></b></p>
+<p class='contenttext'><b><u>store-list</u></b></p>
 
-<p>The store-list tag uses the delegator to store all entity values in the list.
+<p class='contenttext'>The store-list tag uses the delegator to store all entity values in the list.
 This is different than storing a single value in that values in the list will
 be inserted if it does not exist or updated if it does exist.</p>
 
@@ -1823,9 +1830,9 @@ be inserted if it does not exist or updated if it does exist.</p>
 </tr>
 </table>
 
-<p><b><u>remove-list</u></b></p>
+<p class='contenttext'><b><u>remove-list</u></b></p>
 
-<p>The remove-list tag uses the delegator to remove all entity values in the list.
+<p class='contenttext'>The remove-list tag uses the delegator to remove all entity values in the list.
 For each value in the list if it is a primary key just that entity instance will
 be removed, but if it is not a full primary key all entity instances will be
 removed from the datasource that match the constraint of the field map.</p>
@@ -1844,15 +1851,15 @@ removed from the datasource that match the constraint of the field map.</p>
 
 <!-- ======================================================================= -->
 <!-- ======================================================================= -->
-<hr>
+<hr class='sepbar'>
 <h3><a name='EntityTx'>Entity Engine Transaction Operations</a></h3>
 
-<p><b><u>transaction-begin</u></b></p>
+<p class='contenttext'><b><u>transaction-begin</u></b></p>
 
-<p>The transaction-begin tag will begin a transaction if one is not already in place. If a transaction is 
+<p class='contenttext'>The transaction-begin tag will begin a transaction if one is not already in place. If a transaction is 
 begun the environment field named as the began-transaction-name will be set to true, otherwise it will be set to false.</p>
 
-<p>Note that unless the simple-method is flagged to not use a transaction all simple-methods will be inside a transaction. 
+<p class='contenttext'>Note that unless the simple-method is flagged to not use a transaction all simple-methods will be inside a transaction. 
 The same is true for service calls through the Service Engine.</p>
 
 <table cellpadding='2' cellspacing='0' border='1'>
@@ -1867,9 +1874,9 @@ The same is true for service calls through the Service Engine.</p>
 </tr>
 </table>
 
-<p><b><u>transaction-commit</u></b></p>
+<p class='contenttext'><b><u>transaction-commit</u></b></p>
 
-<p>The transaction-commit tag will commit a transaction if a transaction was begun in the current demarcation 
+<p class='contenttext'>The transaction-commit tag will commit a transaction if a transaction was begun in the current demarcation 
 context as represented by the environment field named as the began-transaction-name. If the Boolean in that 
 field is false no commit will be done.</p>
 
@@ -1885,9 +1892,9 @@ field is false no commit will be done.</p>
 </tr>
 </table>
 
-<p><b><u>transaction-rollback</u></b></p>
+<p class='contenttext'><b><u>transaction-rollback</u></b></p>
 
-<p>The transaction-rollback tag will rollback a transaction if a transaction was begun in the current demarcation 
+<p class='contenttext'>The transaction-rollback tag will rollback a transaction if a transaction was begun in the current demarcation 
 context as represented by the environment field named as the began-transaction-name. If the Boolean in that field 
 is false a set rollback only will operation will be done instead of rollback which will force the transaction to 
 rollback regardless of which method or object is responsible for beginning and ending the transaction.</p>
@@ -1908,12 +1915,12 @@ rollback regardless of which method or object is responsible for beginning and e
 
 <!-- ======================================================================= -->
 <!-- ======================================================================= -->
-<hr>
+<hr class='sepbar'>
 <h3><a name='Conditional'>Conditional (If) Operations</a></h3>
 
-<p><b><u>if-validate-method</u></b></p>
+<p class='contenttext'><b><u>if-validate-method</u></b></p>
 
-<p>The operations contained by the if-validate-method tag will only be executed
+<p class='contenttext'>The operations contained by the if-validate-method tag will only be executed
 if the validate method returns true. This tag can contain any of the simple-method
 operations, including the conditional/if operations.</p>
 
@@ -1964,9 +1971,9 @@ operations, including the conditional/if operations.</p>
 </tr>
 </table>
 
-<p><b><u>if-compare</u></b></p>
+<p class='contenttext'><b><u>if-compare</u></b></p>
 
-<p>The operations contained by the if-compare tag will only be executed
+<p class='contenttext'>The operations contained by the if-compare tag will only be executed
 if the comparison returns true. This tag can contain any of the simple-method
 operations, including the conditional/if operations.</p>
 
@@ -2028,9 +2035,9 @@ operations, including the conditional/if operations.</p>
 </tr>
 </table>
 
-<p><b><u>if-compare-field</u></b></p>
+<p class='contenttext'><b><u>if-compare-field</u></b></p>
 
-<p>The operations contained by the if-compare-field tag will only be executed
+<p class='contenttext'>The operations contained by the if-compare-field tag will only be executed
 if the comparison returns true. This tag can contain any of the simple-method
 operations, including the conditional/if operations.</p>
 
@@ -2098,9 +2105,9 @@ operations, including the conditional/if operations.</p>
 </tr>
 </table>
 
-<p><b><u>if-regexp</u></b></p>
+<p class='contenttext'><b><u>if-regexp</u></b></p>
 
-<p>The operations contained by the if-regexp tag will only be executed
+<p class='contenttext'>The operations contained by the if-regexp tag will only be executed
 if the value complies with the regular expression. This tag can contain any of the simple-method
 operations, including the conditional/if operations.</p>
 
@@ -2145,9 +2152,9 @@ operations, including the conditional/if operations.</p>
 </tr>
 </table>
 
-<p><b><u>if-empty</u></b></p>
+<p class='contenttext'><b><u>if-empty</u></b></p>
 
-<p>The operations contained by the if-empty tag will only be executed
+<p class='contenttext'>The operations contained by the if-empty tag will only be executed
 if the map field is empty. This tag can contain any of the simple-method
 operations, including the conditional/if operations.</p>
 
@@ -2188,9 +2195,9 @@ operations, including the conditional/if operations.</p>
 </tr>
 </table>
 
-<p><b><u>if-not-empty</u></b></p>
+<p class='contenttext'><b><u>if-not-empty</u></b></p>
 
-<p>The operations contained by the if-not-empty tag will only be executed
+<p class='contenttext'>The operations contained by the if-not-empty tag will only be executed
 if the map field is not empty. This tag can contain any of the simple-method
 operations, including the conditional/if operations.</p>
 
@@ -2231,9 +2238,9 @@ operations, including the conditional/if operations.</p>
 </tr>
 </table>
 
-<p><b><u>if-has-permission</u></b></p>
+<p class='contenttext'><b><u>if-has-permission</u></b></p>
 
-<p>The operations contained by the if-has-permission tag will only be executed
+<p class='contenttext'>The operations contained by the if-has-permission tag will only be executed
 if the user has the specified permission, and optionally the action. This tag can contain any of the simple-method
 operations, including the conditional/if operations.</p>
 
@@ -2275,9 +2282,9 @@ operations, including the conditional/if operations.</p>
 </tr>
 </table>
 
-<p><b><u>check-permission</u></b></p>
+<p class='contenttext'><b><u>check-permission</u></b></p>
 
-<p>The check-permission tag checks to see if the current user has the specified
+<p class='contenttext'>The check-permission tag checks to see if the current user has the specified
 permission. The the user does not have the specified permission or there is no
 user associated with the context then the failure message from fail-message or
 file-property will be added to the specified error list.</p>
@@ -2322,9 +2329,9 @@ file-property will be added to the specified error list.</p>
 </tr>
 </table>
 
-<p><b><u>check-id</u></b></p>
+<p class='contenttext'><b><u>check-id</u></b></p>
 
-<p>The check-id tag checks to see if the ID value in the given field is a valid ID string. 
+<p class='contenttext'>The check-id tag checks to see if the ID value in the given field is a valid ID string. 
 Valid IDs can be any sequence of characters or digits but must not containt the following characters: 
 space [ ], doublequote ["], single quote ['], ampersand [&amp;], question mark [?], less-than sign [&lt;], greater-than sign [&gt;].</p>
 
@@ -2368,12 +2375,12 @@ space [ ], doublequote ["], single quote ['], ampersand [&amp;], question mark [
 
 <!-- ======================================================================= -->
 <!-- ======================================================================= -->
-<hr>
+<hr class='sepbar'>
 <h3><a name='Other'>Other Operations</a></h3>
 
-<p><b><u>property-to-field</u></b></p>
+<p class='contenttext'><b><u>property-to-field</u></b></p>
 
-<p>The property-to-field tag puts the inlined string value in the specified field.</p>
+<p class='contenttext'>The property-to-field tag puts the inlined string value in the specified field.</p>
 
 <table cellpadding='2' cellspacing='0' border='1'>
 <tr>
@@ -2404,9 +2411,9 @@ space [ ], doublequote ["], single quote ['], ampersand [&amp;], question mark [
 </tr>
 </table>
 
-<p><b><u>log</u></b></p>
+<p class='contenttext'><b><u>log</u></b></p>
 
-<p>The log tag logs a message used the OFBiz Debug class, which uses Log4J to log to the console, a file, or some other location.
+<p class='contenttext'>The log tag logs a message used the OFBiz Debug class, which uses Log4J to log to the console, a file, or some other location.
 The message is a concatenation of the message attribute and then all of the field and string sub-element values in the order they are specified.</p>
 
 <table cellpadding='2' cellspacing='0' border='1'>
@@ -2441,34 +2448,34 @@ The message is a concatenation of the message attribute and then all of the fiel
 </tr>
 </table>
 
-<p><b><u>calculate</u></b></p>
+<p class='contenttext'><b><u>calculate</u></b></p>
 
-<p>The calculate tag performs the specified calculation and puts the result in
+<p class='contenttext'>The calculate tag performs the specified calculation and puts the result in
 an object in the field of the specified map (see the calculate element attribute
 descriptions above). The type of the object can be specified with the
 <b>type</b> attribute, but defaults to Double.</p>
 
-<p>The calculate tag can contain <b>calcop</b> and <b>number</b> tags, and the
+<p class='contenttext'>The calculate tag can contain <b>calcop</b> and <b>number</b> tags, and the
 <b>calcop</b> tag can also contain these two tags to enable nested
 calculations.</p>
 
-<p>Each calcop tag has three attributes: operator, map-name and field-name. Only
+<p class='contenttext'>Each calcop tag has three attributes: operator, map-name and field-name. Only
 the operator is required. The operator specifies the operation to perform on the
 given field and nested calcops and numbers. It must be one of the following: 
 get | add | subtract | multiply | divide | negative.</p>
 
-<p>Regardless of the operator the action is very similar. It translates to a
+<p class='contenttext'>Regardless of the operator the action is very similar. It translates to a
 formula like the following: <b><code>(V1 [operator] V2 [operator] V3)</code></b>. In other
 words a final result is calculated by applying the operator to the values in the
 order they are specified. If a field-name (and optionally map-name) is specifies
 on the calcop tag that field will be used as the first value, otherwise the
 first nested <b>calcop</b> or <b>number</b> will be the first value.</p>
 
-<p>The get operator is just an alias for add. It adds all of the values under
+<p class='contenttext'>The get operator is just an alias for add. It adds all of the values under
 it. Likewise the negative operator is almost an alias for subtract, with the
 exception that the first value is negated instead of left positive. For
 convenience the calculate tag itself acts like an add, in other words the
-calcops and numbers under it are all added together.<p>
+calcops and numbers under it are all added together.<p class='contenttext'>
 
 <table cellpadding='2' cellspacing='0' border='1'>
 <tr>
@@ -2513,7 +2520,7 @@ calcops and numbers under it are all added together.<p>
 </tr>
 </table>
 
-<p>Here is an example of an XML snippet the performs the calculation
+<p class='contenttext'>Here is an example of an XML snippet the performs the calculation
 <b><code>a=b+(((c+x+2)*-d)/e)</code></b>, or in Reverse Polish Notation (a little
 bit closer to the resulting XML, and the notation used in the Rule Engine)
 <b><code>a=+(b,/(*(+(c,x,2),-d),e))</code></b>. Here is the XML:</p>
@@ -2537,7 +2544,7 @@ bit closer to the resulting XML, and the notation used in the Rule Engine)
 
 <!-- ======================================================================= -->
 <!-- ======================================================================= -->
-<hr>
+<hr class='sepbar'>
 <h3><a name='MethodExample'>Simple Methods Example</a></h3>
 <pre>
 &lt;!DOCTYPE simple-methods PUBLIC "-//OFBiz//DTD Simple Methods//EN" "http://www.ofbiz.org/dtds/simple-methods.dtd"&gt;

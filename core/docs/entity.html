@@ -1,24 +1,33 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-<title>Open For Business Entity Engine Guide</title>
+  <title>Open For Business Entity Engine Guide</title>
+  <link rel="stylesheet" href="http://www.ofbiz.org/maincss.css" type="text/css">
 </head>
 
 <body>
 
-<h2 align="center">The Open For Business Project: Entity Engine Guide</h2>
+<table width='100%'>
+  <tr>
+    <td width='50%' align='left' valign='center'>
+        <a href="http://www.ofbiz.org"><img src="http://www.ofbiz.org/images/ofbiz_logo.jpg"  border="0" alt='The Open For Business Project'></a>
+    </td>
+    <td width='50%' align='right' valign='center'>
+        <a href="http://sf.net/projects/ofbiz"><img src="http://sourceforge.net/sflogo.php?group_id=27173" width="88" height="31" border="0" alt="SourceForge Logo"></a> 
+        <a href="http://www.ofbiz.org"><img src="http://www.ofbiz.org/images/ofbiz_powered.gif" width="88" border="0"></a>
+    </td>
+  </tr>
+</table>
+<hr class='sepbar'>
 
-<br>Written By: David E. Jones
-<br>Email: <a href="mailto:jonesde@ofbiz.org">jonesde@ofbiz.org</a>
-<br>Minor corrections by: <a href="mailto:PDebski@a4.pl">Pawel H. Debski</a>
-<br>Open For Business Site: <a href="http://www.ofbiz.org/">http://www.ofbiz.org</a>
-<br>
-<A href="http://sf.net/projects/ofbiz"> <IMG src="http://sourceforge.net/sflogo.php?group_id=27173" border="0" alt="SourceForge Logo"></A> 
-<br>
-Founders and Lead Architects: David E. Jones &amp; Andy Zeneski <br>
-Last Updated: January 28, 2003<br>
-$Id$ <br>
-<hr>
-<br>
+<h2 align="center">The Open For Business Project: Entity Engine Guide</h2>
+ 
+<div class='contenttext'>Written By: David E. Jones, <a href="mailto:jonesde@ofbiz.org">jonesde@ofbiz.org</a></div>
+<div class='contenttext'>Minor corrections by: <a href="mailto:PDebski@a4.pl">Pawel H. Debski</a></div>
+<div class='contenttext'>Last Updated: January 28, 2003</div>
+<!-- $Id$ -->
+
+<hr class='sepbar'>
 <h3>Table of Contents</h3>
 
 <ul>
@@ -31,10 +40,10 @@ $Id$ <br>
   <li><a href="#Core_Web_Tools">Core Web Tools</a>
 </ul>
 
-<hr>
+<hr class='sepbar'>
 
 <h3><a name="Related_Documents">Related Documents:</a></h3>
-<hr>
+<hr class='sepbar'>
 <ul>
   <li><a href="entityconfig.html">Entity Engine Configuration Guide</a></li>
   <li><a href="coreconfig.html">Core Configuration Guide</a></li>
@@ -44,9 +53,9 @@ $Id$ <br>
   <li><a href="/dtds/fieldtypemodel.dtd">Field Type Model DTD</a></li>
 </ul>
 
-<hr>
+<hr class='sepbar'>
 <h3><a name="Introduction">Introduction</a></h3>
-<hr>
+<hr class='sepbar'>
 <P>The Open For Business Entity Engine is a set of tools and patterns used to
 model and manage entity specific data. In this context an entity is a piece of
 data defined by a set of fields and a set of relations to other entities. This
@@ -119,9 +128,9 @@ data sources like legacy systems over HTTP or messaging services through a bit o
 framework.</P>
 
 
-<hr>
+<hr class='sepbar'>
 <h3><a name="Entity_Modeling">Entity Modeling</a></h3>
-<hr>
+<hr class='sepbar'>
 
 <P><B>Entity Modeling Files &amp; Locations</B></P>
 
@@ -257,9 +266,9 @@ key map specified a field name (field-name) and a related field name (rel-field-
 If the two column names are the same, the rel-field-name does not have to be
 specified.</P>
 
-<p><b>Entity Element Reference</b></p>
+<p class='contenttext'><b>Entity Element Reference</b></p>
 
-<p><b><u>entity</u></b></p>
+<p class='contenttext'><b><u>entity</u></b></p>
 
 <table cellpadding='2' cellspacing='0' border='1'>
 <tr>
@@ -356,7 +365,7 @@ specified.</P>
 </tr>
 </table>
 
-<p><b><u>field</u></b></p>
+<p class='contenttext'><b><u>field</u></b></p>
 
 <table cellpadding='2' cellspacing='0' border='1'>
 <tr>
@@ -397,7 +406,7 @@ specified.</P>
 </tr>
 </table>
 
-<p><b><u>prim-key</u></b></p>
+<p class='contenttext'><b><u>prim-key</u></b></p>
 
 <table cellpadding='2' cellspacing='0' border='1'>
 <tr>
@@ -411,7 +420,7 @@ specified.</P>
 </tr>
 </table>
 
-<p><b><u>relation</u></b></p>
+<p class='contenttext'><b><u>relation</u></b></p>
 
 <table cellpadding='2' cellspacing='0' border='1'>
 <tr>
@@ -463,9 +472,9 @@ specified.</P>
 </tr>
 </table>
 
-<hr>
+<hr class='sepbar'>
 <h3><a name="View_Entity_Modeling">View Entity Modeling</a></h3>
-<hr>
+<hr class='sepbar'>
 
 <P>In addition to entities that map directly to a single relational table you 
 can create "virtual" or "view" entities that map to a set of other entities.
@@ -608,9 +617,9 @@ view-links, except for the first one, make sure the member-entity referred to in
 the entity-alias attribute has been referred to in a previous view-link (this is
 how the link tree is kept clean).</P>
 
-<p><b>View Entity Element Reference</b></p>
+<p class='contenttext'><b>View Entity Element Reference</b></p>
 
-<p><b><u>view-entity</u></b></p>
+<p class='contenttext'><b><u>view-entity</u></b></p>
 
 <table cellpadding='2' cellspacing='0' border='1'>
 <tr>
@@ -699,7 +708,7 @@ how the link tree is kept clean).</P>
 </tr>
 </table>
 
-<p><b><u>member-entity</u></b></p>
+<p class='contenttext'><b><u>member-entity</u></b></p>
 
 <table cellpadding='2' cellspacing='0' border='1'>
 <tr>
@@ -721,7 +730,7 @@ how the link tree is kept clean).</P>
 </tr>
 </table>
 
-<p><b><u>alias</u></b></p>
+<p class='contenttext'><b><u>alias</u></b></p>
 
 <table cellpadding='2' cellspacing='0' border='1'>
 <tr>
@@ -769,7 +778,7 @@ how the link tree is kept clean).</P>
 </tr>
 </table>
 
-<p><b><u>view-link</u></b></p>
+<p class='contenttext'><b><u>view-link</u></b></p>
 
 <table cellpadding='2' cellspacing='0' border='1'>
 <tr>
@@ -809,7 +818,7 @@ how the link tree is kept clean).</P>
 </tr>
 </table>
 
-<p><b><u>relation</u></b></p>
+<p class='contenttext'><b><u>relation</u></b></p>
 
 <table cellpadding='2' cellspacing='0' border='1'>
 <tr>
@@ -861,9 +870,9 @@ how the link tree is kept clean).</P>
 </tr>
 </table>
 
-<hr>
+<hr class='sepbar'>
 <h3><a name="The_Entity_Engine_API">The Entity Engine API</a></h3>
-<hr>
+<hr class='sepbar'>
 
 <P>The Entity Engine classes in the package <B>org.ofbiz.core.entity</B> define the
 API used to interact with Entity Engine entity data. From a users point of view
@@ -1021,9 +1030,9 @@ and set that was used to find and index the cache for that data. There may be a
 way to do this automatically, but for now manually clearing view-entity caches
 is still necessary.</P>
 
-<hr>
+<hr class='sepbar'>
 <h3><a name="JTA_Support">JTA Support</a></h3>
-<hr>
+<hr class='sepbar'>
 
 <P>The Entity Engine JTA Support is simple to use, but has a few complications in configuration.
 The support runs through an API and a Factory class so that no direct contact with the
@@ -1042,9 +1051,9 @@ After beginning a transaction make sure it is always either committed or rolled 
 normally done by committing at the end of a try block and rolling back in each catch block. 
 You can also use the standard UserTransaction object by getting one from the TransactionFactory.</P>
 
-<hr>
+<hr class='sepbar'>
 <h3><a name="Core_Web_Tools">Core Web Tools</a></h3>
-<hr>
+<hr class='sepbar'>
 
 <P>The WebTools web application contains a number of useful tools for working
 with the entity engine. These include a cross linked reference to the entity
