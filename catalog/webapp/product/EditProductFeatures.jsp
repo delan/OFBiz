@@ -33,8 +33,9 @@
 
 <%if (security.hasEntityPermission("CATALOG", "_VIEW", session)) {%>
 <%
-    String productId = request.getParameter("productId");
+    String nowTimestampString = UtilDateTime.nowTimestamp().toString();
 
+    String productId = request.getParameter("productId");
     GenericValue product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
 
     Collection productFeatureAndAppls = delegator.findByAnd("ProductFeatureAndAppl", 

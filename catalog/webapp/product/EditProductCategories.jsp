@@ -33,6 +33,8 @@
 
 <%if (security.hasEntityPermission("CATALOG", "_VIEW", session)) {%>
 <%
+    String nowTimestampString = UtilDateTime.nowTimestamp().toString();
+
     boolean useValues = true;
     if (request.getAttribute(SiteDefs.ERROR_MESSAGE) != null) useValues = false;
 

@@ -33,6 +33,8 @@
 
 <%if (security.hasEntityPermission("CATALOG", "_VIEW", session)) {%>
 <%
+    String nowTimestampString = UtilDateTime.nowTimestamp().toString();
+
     String defaultCurrencyUomId = UtilProperties.getPropertyValue("general", "currency.uom.id.default");
     if (UtilValidate.isEmpty(defaultCurrencyUomId)) defaultCurrencyUomId = "USD";
 

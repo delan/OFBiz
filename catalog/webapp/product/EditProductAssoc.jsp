@@ -35,25 +35,27 @@
 
 <%
 try {
-  boolean useValues = true;
-  if(request.getAttribute(SiteDefs.ERROR_MESSAGE) != null) useValues = false;
+    String nowTimestampString = UtilDateTime.nowTimestamp().toString();
 
-  String productId = request.getParameter("PRODUCT_ID");
-  String productIdTo = request.getParameter("PRODUCT_ID_TO");
-  String productAssocTypeId = request.getParameter("PRODUCT_ASSOC_TYPE_ID");
-  String fromDateStr = request.getParameter("FROM_DATE");
-  Timestamp fromDate = null;
-  if(fromDateStr != null && fromDateStr.length() > 0) fromDate = Timestamp.valueOf(fromDateStr);
-  if(fromDate == null) fromDate = (Timestamp)request.getAttribute("ProductAssocCreateFromDate");
+    boolean useValues = true;
+    if(request.getAttribute(SiteDefs.ERROR_MESSAGE) != null) useValues = false;
 
-  GenericValue product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
-  GenericValue productAssoc = delegator.findByPrimaryKey("ProductAssoc", UtilMisc.toMap("productId", productId, "productIdTo", productIdTo, "productAssocTypeId", productAssocTypeId, "fromDate", fromDate));
+    String productId = request.getParameter("PRODUCT_ID");
+    String productIdTo = request.getParameter("PRODUCT_ID_TO");
+    String productAssocTypeId = request.getParameter("PRODUCT_ASSOC_TYPE_ID");
+    String fromDateStr = request.getParameter("FROM_DATE");
+    Timestamp fromDate = null;
+    if(fromDateStr != null && fromDateStr.length() > 0) fromDate = Timestamp.valueOf(fromDateStr);
+    if(fromDate == null) fromDate = (Timestamp)request.getAttribute("ProductAssocCreateFromDate");
 
-  if("true".equalsIgnoreCase((String)request.getParameter("useValues"))) useValues = true;
-  if(productAssoc == null) useValues = false;
-  boolean isCreate = true;
+    GenericValue product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
+    GenericValue productAssoc = delegator.findByPrimaryKey("ProductAssoc", UtilMisc.toMap("productId", productId, "productIdTo", productIdTo, "productAssocTypeId", productAssocTypeId, "fromDate", fromDate));
 
-  Collection assocTypes = delegator.findAll("ProductAssocType");
+    if("true".equalsIgnoreCase((String)request.getParameter("useValues"))) useValues = true;
+    if(productAssoc == null) useValues = false;
+    boolean isCreate = true;
+
+    Collection assocTypes = delegator.findAll("ProductAssocType");
 %>
 
 <%if(productId != null && productId.length() > 0){%>

@@ -33,6 +33,8 @@
 
 <%if(security.hasEntityPermission("CATALOG", "_VIEW", session)) {%>
 <%
+    String nowTimestampString = UtilDateTime.nowTimestamp().toString();
+
     URL catalogPropertiesURL = application.getResource("/WEB-INF/catalog.properties");
 
     boolean tryEntity = true;
@@ -69,9 +71,6 @@
 %>
 
 <SCRIPT language='JavaScript'>
-function insertNowTimestamp(field) {
-  eval('document.productForm.' + field + '.value="<%=UtilDateTime.nowTimestamp().toString()%>";');
-};
 function insertImageName(size,ext) {
   eval('document.productForm.' + size + 'ImageUrl.value="<%=UtilProperties.getPropertyValue(catalogPropertiesURL, "image.url.prefix")%>/product.<%=productId%>.' + size + '.' + ext + '";');
 };
@@ -236,20 +235,20 @@ function insertImageName(size,ext) {
     <%if (product != null && product.getTimestamp("introductionDate") != null && UtilDateTime.nowTimestamp().before(product.getTimestamp("introductionDate"))) { hasntStarted = true; }%>
     <td width="20%" align=right><div class="tabletext"><b>Intro Date</b></div></td>
     <td>&nbsp;</td>
-    <td width="30%"><input type="text" class="inputBox" <ofbiz:inputvalue entityAttr='product' field='introductionDate' tryEntityAttr="tryEntity" fullattrs="true"/> size="22" maxlength="22" style='font-size: x-small;<%if (hasntStarted) {%> color: red;<%}%>'><a href='#' onclick='insertNowTimestamp("introductionDate")' class='buttontext'>[Now]</a></td>
+    <td width="30%"><input type="text" class="inputBox" <ofbiz:inputvalue entityAttr='product' field='introductionDate' tryEntityAttr="tryEntity" fullattrs="true"/> size="22" maxlength="22" style='font-size: x-small;<%if (hasntStarted) {%> color: red;<%}%>'><a href="javascript:call_cal(document.productForm.introductionDate, '<ofbiz:inputvalue entityAttr="product" field="introductionDate" default="<%=nowTimestampString%>"/>');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a></td>
 
     <%boolean hasExpiredSales = false;%>
     <%if (product != null && product.getTimestamp("salesDiscontinuationDate") != null && UtilDateTime.nowTimestamp().after(product.getTimestamp("salesDiscontinuationDate"))) { hasExpiredSales = true; }%>
     <td width="20%" align=right><div class="tabletext"><b>Sales Thru Date</b></div></td>
     <td>&nbsp;</td>
-    <td width="30%"><input type="text" class="inputBox" <ofbiz:inputvalue entityAttr='product' field='salesDiscontinuationDate' tryEntityAttr="tryEntity" fullattrs="true"/> size="22" maxlength="22" style='font-size: x-small;<%if (hasExpiredSales) {%> color: red;<%}%>'><a href='#' onclick='insertNowTimestamp("salesDiscontinuationDate")' class='buttontext'>[Now]</a></td>
+    <td width="30%"><input type="text" class="inputBox" <ofbiz:inputvalue entityAttr='product' field='salesDiscontinuationDate' tryEntityAttr="tryEntity" fullattrs="true"/> size="22" maxlength="22" style='font-size: x-small;<%if (hasExpiredSales) {%> color: red;<%}%>'><a href="javascript:call_cal(document.productForm.salesDiscontinuationDate, '<ofbiz:inputvalue entityAttr="product" field="salesDiscontinuationDate" default="<%=nowTimestampString%>"/>');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a></td>
   </tr>
   <tr>
     <%boolean hasExpiredSupport = false;%>
     <%if (product != null && product.getTimestamp("supportDiscontinuationDate") != null && UtilDateTime.nowTimestamp().after(product.getTimestamp("supportDiscontinuationDate"))) { hasExpiredSupport = true; }%>
     <td width="20%" align=right><div class="tabletext"><b>Support Thru Date</b></div></td>
     <td>&nbsp;</td>
-    <td width="30%"><input type="text" class="inputBox" <ofbiz:inputvalue entityAttr='product' field='supportDiscontinuationDate' tryEntityAttr="tryEntity" fullattrs="true"/> size="22" maxlength="22" style='font-size: x-small;<%if (hasExpiredSupport) {%> color: red;<%}%>'><a href='#' onclick='insertNowTimestamp("supportDiscontinuationDate")' class='buttontext'>[Now]</a></td>
+    <td width="30%"><input type="text" class="inputBox" <ofbiz:inputvalue entityAttr='product' field='supportDiscontinuationDate' tryEntityAttr="tryEntity" fullattrs="true"/> size="22" maxlength="22" style='font-size: x-small;<%if (hasExpiredSupport) {%> color: red;<%}%>'><a href="javascript:call_cal(document.productForm.supportDiscontinuationDate, '<ofbiz:inputvalue entityAttr="product" field="supportDiscontinuationDate" default="<%=nowTimestampString%>"/>');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a></td>
 
     <td width="20%" align=right><div class="tabletext"><b>OEM Party Id</b></div></td>
     <td>&nbsp;</td>
