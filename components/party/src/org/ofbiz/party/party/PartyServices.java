@@ -1,5 +1,5 @@
 /*
- * $Id: PartyServices.java,v 1.3 2003/11/16 09:02:02 jonesde Exp $
+ * $Id: PartyServices.java,v 1.4 2003/11/19 21:13:28 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002, 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -55,7 +55,7 @@ import org.ofbiz.service.ServiceUtil;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.0
  */
 public class PartyServices {
@@ -470,60 +470,6 @@ public class PartyServices {
             affiliate.store();
         } catch (GenericEntityException e) {
             return ServiceUtil.returnError("Could update affiliate information (write failure): " + e.getMessage());
-        }
-        return ServiceUtil.returnSuccess();
-    }
-
-    /**
-     * Create a party survey response record.
-     * @param ctx The DispatchContext that this service is operating in.
-     * @param context Map containing the input parameters.
-     * @return Map with the result of the service, the output parameters.
-     */
-    public static Map createSurveyResp(DispatchContext ctx, Map context) {
-        GenericDelegator delegator = ctx.getDelegator();
-        GenericValue userLogin = (GenericValue) context.get("userLogin");
-        String partyId = (String) context.get("partyId");
-        String surveyId = (String) context.get("surveyId");
-        String responseId = (String) context.get("responseId");
-        String response = (String) context.get("response");
-        Timestamp now = UtilDateTime.nowTimestamp();
-
-        if (partyId == null) {
-            if (userLogin != null && userLogin.get("partyId") != null)
-                partyId = userLogin.getString("partyId");
-        }
-        if (partyId == null)
-            return ServiceUtil.returnError("Could not create survey response (no partyId sent)");
-
-        Map gFields = UtilMisc.toMap("partyId", partyId, "surveyId", surveyId, "surveyResponseId", responseId);
-
-        // look for existing record to update
-        GenericValue getter = null;
-
-        try {
-            getter = delegator.findByPrimaryKey("PartySurveyResponse", gFields);
-        } catch (GenericEntityException e) {
-            return ServiceUtil.returnError("Cannot check survey response (read failure): " + e.getMessage());
-        }
-        if (getter != null) {
-            getter.set("surveyResponse", response);
-            getter.set("responseDateTime", now);
-            try {
-                getter.store();
-            } catch (GenericEntityException ge) {
-                return ServiceUtil.returnError("Cannot update survey response (write failure): " + ge.getMessage());
-            }
-        } else {
-            try {
-                Map sFields = UtilMisc.toMap("partyId", partyId, "surveyId", surveyId, "surveyResponseId", responseId,
-                        "surveyResponse", response, "responseDateTime", now);
-                GenericValue newValue = delegator.makeValue("PartySurveyResponse", sFields);
-
-                delegator.create(newValue);
-            } catch (GenericEntityException e) {
-                return ServiceUtil.returnError("Cannot create survey response (write failure): " + e.getMessage());
-            }
         }
         return ServiceUtil.returnSuccess();
     }
