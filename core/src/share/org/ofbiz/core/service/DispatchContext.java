@@ -198,6 +198,8 @@ public class DispatchContext {
         if ( path == null )
             return null;
         List paths = StringUtil.split(path,";");
+        if ( paths == null || paths.size() == 0 )
+            return null;
         Iterator i = paths.iterator();
         while ( i.hasNext() ) {
             URL readerURL = UtilURL.fromFilename((String)i.next());
