@@ -636,7 +636,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
             case 'D':
                 cal.add(Calendar.DATE, timeLimit.intValue());
                 break;
-            case 'H':
+            case 'h':
                 cal.add(Calendar.HOUR, timeLimit.intValue());
                 break;
             case 'm':
