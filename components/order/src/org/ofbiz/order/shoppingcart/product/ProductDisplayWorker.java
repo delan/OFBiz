@@ -245,11 +245,12 @@ public class ProductDisplayWorker {
 
             // if desired check view allow category
             //if (checkViewAllow) {
-                Set prodKeySet = products.keySet();
+                List prodKeyList = new ArrayList(products.keySet());
+                //Set prodKeySet = products.keySet();
                 String currentCatalogId = CatalogWorker.getCurrentCatalogId(request);
                 String viewProductCategoryId = CatalogWorker.getCatalogViewAllowCategoryId(delegator, currentCatalogId);
                 if (viewProductCategoryId != null) {
-                    Iterator valIter = prodKeySet.iterator();
+                    Iterator valIter = prodKeyList.iterator();
                     while (valIter.hasNext()) {
                         String productId = (String) valIter.next();
                         if (!CategoryWorker.isProductInCategory(delegator, productId, viewProductCategoryId)) {
