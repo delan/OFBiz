@@ -1,5 +1,5 @@
 /*
- * $Id: MapStack.java,v 1.2 2004/07/01 08:05:39 jonesde Exp $
+ * $Id: MapStack.java,v 1.3 2004/07/08 04:42:31 jonesde Exp $
  *
  *  Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -24,6 +24,7 @@
 package org.ofbiz.base.util.collections;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -37,7 +38,7 @@ import java.util.Set;
  * Map Stack
  * 
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      3.1
  */
 public class MapStack implements Map {
@@ -215,7 +216,7 @@ public class MapStack implements Map {
             Map curMap = (Map) stackIter.next();
             resultSet.addAll(curMap.keySet());
         }
-        return resultSet;
+        return Collections.unmodifiableSet(resultSet);
     }
 
     /* (non-Javadoc)
@@ -237,7 +238,7 @@ public class MapStack implements Map {
                 }
             }
         }
-        return resultValues;
+        return Collections.unmodifiableCollection(resultValues);
     }
 
     /* (non-Javadoc)
@@ -259,6 +260,6 @@ public class MapStack implements Map {
                 }
             }
         }
-        return resultEntrySet;
+        return Collections.unmodifiableSet(resultEntrySet);
     }
 }
