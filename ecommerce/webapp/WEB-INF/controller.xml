@@ -162,7 +162,7 @@
         <event type="java" path="org.ofbiz.core.events.CoreEvents" invoke="respondSuccess"/>
         <response name="success" type="request" value="renderconfirmorder"/>
         <response name="error" type="view" value="checkout"/>
-    </response-map>
+    </request-map>
 
     <request-map uri="renderconfirmorder">
         <security https="true" auth="true"/>
