@@ -133,7 +133,7 @@
                         <td>&nbsp;</td>
                         <td align="right">
                           <div class="tabletext" style='font-size: xx-small;'>
-                            ${Static["org.ofbiz.commonapp.order.order.OrderReadHelper"].calcItemAdjustment(orderItemAdjustment, orderItem)}
+                            ${Static["org.ofbiz.commonapp.order.order.OrderReadHelper"].calcItemAdjustment(orderItemAdjustment, orderItem)?string.currency}
                           </div>
                          </td>
                         <td>&nbsp;</td>
@@ -163,7 +163,7 @@
                   </#if>
 
                   <#-- now show inventory reservation info per line item -->
-                  <#assign orderItemInventoryReses = orderReadHelper.getOrderItemInventoryReses(orderItem)>
+                  <#assign orderItemInventoryReses = orderReadHelper.getOrderItemInventoryReses(orderItem)>                  
                   <#if orderItemInventoryReses?exists && orderItemInventoryReses?has_content>
                     <#list orderItemInventoryReses as orderItemInventoryRes>
                       <tr>
