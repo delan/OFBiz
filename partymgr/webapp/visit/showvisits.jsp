@@ -40,18 +40,19 @@
 	String sort = request.getParameter("sort");
 	if (showAll == null || showAll.equals("")) showAll = "false";
 	
-	EntityListIterator visitList = null;			
+	EntityListIterator visitListIt = null;			
 	List sortList = UtilMisc.toList("-fromDate");
 	if (sort != null) sortList.add(0, sort);
 	
 	if (partyId != null) {
-		visitList = delegator.findListIteratorByCondition("Visit", new EntityExpr("partyId", EntityOperator.EQUALS, partyId), null, sortList);	
+		visitListIt = delegator.findListIteratorByCondition("Visit", new EntityExpr("partyId", EntityOperator.EQUALS, partyId), null, sortList);	
 	} else if (showAll.equalsIgnoreCase("true")) {
-		visitList = delegator.findListIteratorByCondition("Visit", null, null, sortList);
+		visitListIt = delegator.findListIteratorByCondition("Visit", null, null, sortList);
 	} else {
 		// show active visits		
-		visitList = delegator.findListIteratorByCondition("Visit", new EntityExpr("thruDate", EntityOperator.EQUALS, null), null, sortList);		
+		visitListIt = delegator.findListIteratorByCondition("Visit", new EntityExpr("thruDate", EntityOperator.EQUALS, null), null, sortList);		
 	}
+	List visitList = visitListIt.getCompleteList();
 	if (visitList != null) pageContext.setAttribute("visitList", visitList);
 	String rowClass = "";
 	
@@ -60,7 +61,7 @@
     int highIndex = 0;
     int lowIndex = 0;
     int listSize = 0;
-
+    
     try {
         viewIndex = Integer.valueOf((String) pageContext.getRequest().getParameter("VIEW_INDEX")).intValue();
     } catch (Exception e) {
@@ -72,9 +73,7 @@
         viewSize = 20;
     }
     if (visitList != null) {
-    	//visitList.afterLast();
-    	listSize = visitList.currentIndex();
-    	//visitList.beforeFirst();
+    	listSize = visitList.size();
     }
     lowIndex = viewIndex * viewSize;
     highIndex = (viewIndex + 1) * viewSize;
@@ -170,7 +169,7 @@
   </table>
 </ofbiz:if>
 
-<% visitList.close(); %>
+<% visitListIt.close(); %>
 
 <%}else{%>
   <h3>You do not have permission to view this page. ("PARTYMGR_VIEW" or "PARTYMGR_ADMIN" needed)</h3>
