@@ -1,5 +1,5 @@
 /*
- * $Id: ServiceCondition.java,v 1.2 2003/08/19 17:45:18 jonesde Exp $
+ * $Id$
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -42,7 +42,7 @@ import org.ofbiz.workflow.TransitionCondition;
  * to return a Boolean OUT parameter named 'evaluationResult'
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
- * @version    $Revision: 1.2 $
+ * @version    $Rev:$
  * @since      2.1
  */
 public class ServiceCondition implements TransitionCondition {

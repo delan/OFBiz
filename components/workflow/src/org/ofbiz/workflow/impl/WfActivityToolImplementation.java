@@ -1,5 +1,5 @@
 /*
- * $Id: WfActivityToolImplementation.java,v 1.3 2003/11/26 07:24:17 ajzeneski Exp $
+ * $Id$
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -44,7 +44,7 @@ import org.ofbiz.workflow.WfException;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
  * @author     Oswin Ondarza and Manuel Soto
- * @version    $Revision: 1.3 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class WfActivityToolImplementation extends WfActivityAbstractImplementation {

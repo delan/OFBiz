@@ -1,5 +1,5 @@
 /*
- * $Id: WfActivityImpl.java,v 1.4 2003/09/02 02:17:15 ajzeneski Exp $
+ * $Id$
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -72,7 +72,7 @@ import org.ofbiz.workflow.WfResource;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     David Ostrovsky (d.ostrovsky@gmx.de)
  * @author     Oswin Ondarza and Manuel Soto 
- * @version    $Revision: 1.4 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity {

@@ -1,5 +1,5 @@
 /*
- * $Id: WfRequesterImpl.java,v 1.4 2004/03/12 23:45:02 ajzeneski Exp $
+ * $Id$
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -48,7 +48,7 @@ import org.ofbiz.workflow.WfRequester;
  * WfRequesterImpl - Workflow Requester implementation
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.4 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class WfRequesterImpl implements WfRequester {

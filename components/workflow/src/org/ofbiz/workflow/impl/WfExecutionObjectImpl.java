@@ -1,5 +1,5 @@
 /*
- * $Id: WfExecutionObjectImpl.java,v 1.7 2004/07/01 08:37:56 jonesde Exp $
+ * $Id$
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -71,7 +71,7 @@ import org.ofbiz.workflow.WfUtil;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     David Ostrovsky (d.ostrovsky@gmx.de) 
- * @version    $Revision: 1.7 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public abstract class WfExecutionObjectImpl implements WfExecutionObject {

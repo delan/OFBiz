@@ -1,5 +1,5 @@
 /*
- * $Id: WfProcessImpl.java,v 1.5 2003/11/26 07:24:17 ajzeneski Exp $
+ * $Id$
  *
  * Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
@@ -68,7 +68,7 @@ import org.ofbiz.workflow.client.StartActivityJob;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     David Ostrovsky (d.ostrovsky@gmx.de) 
- * @version    $Revision: 1.5 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {

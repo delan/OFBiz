@@ -1,5 +1,5 @@
 /*
- * $Id: StartActivityJob.java,v 1.4 2004/06/17 00:52:17 ajzeneski Exp $
+ * $Id$
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -36,7 +36,7 @@ import org.ofbiz.workflow.WfActivity;
  * Workflow Client API - Start Activity Async-Job
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
- * @version    $Revision: 1.4 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class StartActivityJob extends AbstractJob {

@@ -1,5 +1,5 @@
 /*
- * $Id: WfActivityImplementationFact.java,v 1.1 2003/08/17 09:29:34 ajzeneski Exp $
+ * $Id$
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -29,7 +29,7 @@ package org.ofbiz.workflow.impl;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
  * @author     Oswin Ondarza and Manuel Soto
- * @version    $Revision: 1.1 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class WfActivityImplementationFact {
