@@ -231,6 +231,14 @@
     <entity-group group="org.ofbiz" entity="ItemIssuanceRole" />
 
   <!-- ========================================================= -->
+  <!-- org.ofbiz.shipment.picklist -->
+  <!-- ========================================================= -->
+
+    <entity-group group="org.ofbiz" entity="Picklist" />
+    <entity-group group="org.ofbiz" entity="PicklistBin" />
+    <entity-group group="org.ofbiz" entity="PicklistItem" />
+
+  <!-- ========================================================= -->
   <!-- org.ofbiz.shipment.receipt -->
   <!-- ========================================================= -->
 
