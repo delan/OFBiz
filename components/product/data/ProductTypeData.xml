@@ -183,11 +183,12 @@
 
   <EnumerationType description="Product Promotion Action" enumTypeId="PROD_PROMO_ACTION" hasTable="N" parentTypeId="PROD_PROMO"/>
   <Enumeration description="Gift With Purchase" enumCode="GWP" enumId="PROMO_GWP" sequenceId="01" enumTypeId="PROD_PROMO_ACTION"/>
-  <Enumeration description="Free Shipping" enumCode="FREE_SHIPPING" enumId="PROMO_FREE_SHIPPING" sequenceId="01" enumTypeId="PROD_PROMO_ACTION"/>
-  <Enumeration description="X Product for Y% Discount" enumCode="PROD_DISC" enumId="PROMO_PROD_DISC" sequenceId="01" enumTypeId="PROD_PROMO_ACTION"/>
-  <Enumeration description="X Product for Y Price" enumCode="PROD_PRICE" enumId="PROMO_PROD_PRICE" sequenceId="01" enumTypeId="PROD_PROMO_ACTION"/>
-  <Enumeration description="Order Percent Discount" enumCode="ORDER_PERCENT" enumId="PROMO_ORDER_PERCENT" sequenceId="01" enumTypeId="PROD_PROMO_ACTION"/>
-  <Enumeration description="Order Amount Flat" enumCode="ORDER_AMOUNT" enumId="PROMO_ORDER_AMOUNT" sequenceId="01" enumTypeId="PROD_PROMO_ACTION"/>
+  <Enumeration description="Free Shipping" enumCode="FREE_SHIPPING" enumId="PROMO_FREE_SHIPPING" sequenceId="02" enumTypeId="PROD_PROMO_ACTION"/>
+  <Enumeration description="X Product for Y% Discount" enumCode="PROD_DISC" enumId="PROMO_PROD_DISC" sequenceId="03" enumTypeId="PROD_PROMO_ACTION"/>
+  <Enumeration description="X Product for Y Discount" enumCode="PROD_AMDISC" enumId="PROMO_PROD_AMDISC" sequenceId="04" enumTypeId="PROD_PROMO_ACTION"/>
+  <Enumeration description="X Product for Y Price" enumCode="PROD_PRICE" enumId="PROMO_PROD_PRICE" sequenceId="05" enumTypeId="PROD_PROMO_ACTION"/>
+  <Enumeration description="Order Percent Discount" enumCode="ORDER_PERCENT" enumId="PROMO_ORDER_PERCENT" sequenceId="06" enumTypeId="PROD_PROMO_ACTION"/>
+  <Enumeration description="Order Amount Flat" enumCode="ORDER_AMOUNT" enumId="PROMO_ORDER_AMOUNT" sequenceId="07" enumTypeId="PROD_PROMO_ACTION"/>
 
   <ProductPriceType description="List Price" productPriceTypeId="LIST_PRICE"/>
   <ProductPriceType description="Default Price" productPriceTypeId="DEFAULT_PRICE"/>
