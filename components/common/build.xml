@@ -21,7 +21,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *  This is the Open for Business Common Build Script.
- *  $Id: build.xml,v 1.3 2003/08/18 18:21:41 jonesde Exp $
+ *  $Id: build.xml,v 1.4 2003/08/20 09:38:53 jonesde Exp $
 -->
 
 <project name="OFBiz - Common" default="jar" basedir=".">
@@ -38,7 +38,9 @@
         <property name="dtd.dir" value="dtd"/>
         <property name="lib.dir" value="lib"/>        
         <property name="build.dir" value="build"/>        
-		        
+    </target>
+
+    <target name="classpath">		        
         <path id="local.class.path">
             <fileset dir="../../base/lib" includes="*.jar"/>
             <fileset dir="../../base/build/lib" includes="*.jar"/>               
@@ -82,7 +84,7 @@
     <!-- Compilation of the base files                                                                                                                         -->
     <!-- ================================================================== -->               
 
-    <target name="classes" depends="prepare">
+    <target name="classes" depends="prepare,classpath">
     	<javac debug="on" deprecation="on" destdir="${build.dir}/classes">
             <classpath>
                 <path refid="local.class.path"/>                
