@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.2
 -->
 
@@ -240,6 +240,7 @@ function setAssocFields(select) {
     <div class="head2">New Shipment Estimate:</div>    
     <form name="addform" method="post" action="<@ofbizUrl>/storeCreateShipRate</@ofbizUrl>">    
       <input type="hidden" name="viewProductStoreId" value="${productStoreId}">
+      <input type="hidden" name="productStoreId" value="${productStoreId}">
       <table cellspacing="2" cellpadding="2">
         <tr>
           <td align='right'><span class="tableheadtext">Shipment Method</span></td>
