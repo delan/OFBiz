@@ -35,7 +35,7 @@
   <SecurityPermission description="ALL operations on the Catalog." permissionId="CATALOG_ADMIN"/>
 
   <SecurityPermission description="View operations in the Party Manager." permissionId="PARTYMGR_VIEW"/>
-  <SecurityPermission description="Create new party notes." permissionId="PARTYMGR_NOTES"/>
+  <SecurityPermission description="Create new party notes." permissionId="PARTYMGR_NOTE"/>
   <SecurityPermission description="Create operations in the Party Manager." permissionId="PARTYMGR_CREATE"/>
   <SecurityPermission description="Update operations in the Party Manager." permissionId="PARTYMGR_UPDATE"/>
   <SecurityPermission description="Delete operations in the Party Manager." permissionId="PARTYMGR_DELETE"/>
