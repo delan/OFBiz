@@ -50,7 +50,7 @@ import org.ofbiz.entity.util.EntityUtil;
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:tiz@sastau.it">Jacopo Cappellato</a>
  */
-public class ProductConfigItemContentWrapper {
+public class ProductConfigItemContentWrapper implements java.io.Serializable {
     
     public static final String module = ProductConfigItemContentWrapper.class.getName();
     

@@ -28,6 +28,11 @@
 function insertNowTimestamp(field) {
   eval('document.productForm.' + field + '.value="${nowTimestampString}";');
 };
+function insertImageName(size,nameValue) {
+  eval('document.productForm.' + size + 'ImageUrl.value=nameValue;');
+};
+</HTML>
+
 </SCRIPT>
 
 <#if hasPermission>
@@ -114,9 +119,9 @@ ${pages.get("/config/ConfigItemTabBar.ftl")}
             <#if configItemId?has_content>
                 <div>
                 <span class="tabletext">${uiLabelMap.ProductInsertDefaultImageUrl}: </span>
-                <a href="javascript:document.productForm.imageUrl.value='${imageNameSmall}.jpg';" class="buttontext">[.jpg]</a>
-                <a href="javascript:document.productForm.imageUrl.value='${imageNameSmall}.gif';" class="buttontext">[.gif]</a>
-                <a href="javascript:document.productForm.imageUrl.value='';" class="buttontext">[clear]</a>
+                <a href="javascript:insertImageName('small','${imageNameSmall}.jpg');" class="buttontext">[.jpg]</a>
+                <a href="javascript:insertImageName('small','${imageNameSmall}.gif');" class="buttontext">[.gif]</a>
+                <a href="javascript:insertImageName('small','');" class="buttontext">[clear]</a>
                 </div>
             </#if>
             </td>

@@ -32,6 +32,7 @@ delegator = request.getAttribute("delegator");
 
 shipmentId = request.getParameter("shipmentId");
 orderId = request.getParameter("orderId");
+
 if (UtilValidate.isEmpty(shipmentId)) {
     shipmentId = context.get("shipmentId");
 }
@@ -253,12 +254,14 @@ if (orderItems != null) {
         planQuantity = (orderedQuantity - plannedQuantity - issuedQuantity > 0? orderedQuantity - plannedQuantity - issuedQuantity: 0);
         oneRow.put("quantity", planQuantity);
         // Planned (unitary) Weight and Volume
+        weight = new Double(0);
         product = oneOrderItem.getRelatedOne("Product");
         if (product.getDouble("weight") != null) {
             weight = product.getDouble("weight");
         }
         oneRow.put("weight", weight);
-        if (product.get("weightUomId") != null) {
+
+        if (product.getString("weightUomId") != null) {
             weightUom = delegator.findByPrimaryKeyCache("Uom", UtilMisc.toMap("uomId", product.getString("weightUomId")));
             oneRow.put("weightUom", weightUom.getString("abbreviation"));
         }
@@ -271,6 +274,7 @@ if (orderItems != null) {
                          product.getDouble("productWidth") *
                          product.getDouble("productDepth");
         }
+
         oneRow.put("volume", volume);
         if (product.get("heightUomId") != null &&
             product.get("widthUomId") != null &&
@@ -283,7 +287,6 @@ if (orderItems != null) {
                                     widthUom.getString("abbreviation") + "x" +
                                     depthUom.getString("abbreviation"));
         }
-       
         addRows.add(oneRow);
     }
 }
@@ -292,20 +295,13 @@ HtmlFormWrapper addToShipmentPlanForm = new HtmlFormWrapper("/shipment/ShipmentF
 addToShipmentPlanForm.putInContext("uiLabelMap", request.getAttribute("uiLabelMap"));
 addToShipmentPlanForm.putInContext("shipmentPlan", addRows);
 
-// **************************************
-// Orders search form
-// **************************************
 HtmlFormWrapper findOrderItemsForm = new HtmlFormWrapper("/shipment/ShipmentForms.xml", "findOrderItems", request, response);
 findOrderItemsForm.putInContext("uiLabelMap", request.getAttribute("uiLabelMap"));
 findOrderItemsForm.putInContext("shipmentId", shipmentId);
 
-// **************************************
-// Orders search form
-// **************************************
 HtmlFormWrapper shipmentPlanToOrderItemsForm = new HtmlFormWrapper("/shipment/ShipmentForms.xml", "shipmentPlanToOrderItems", request, response);
 shipmentPlanToOrderItemsForm.putInContext("uiLabelMap", request.getAttribute("uiLabelMap"));
 shipmentPlanToOrderItemsForm.putInContext("shipmentId", shipmentId);
-
 
 
 context.put("findOrderItemsForm", findOrderItemsForm); // Form for Order search: find By orderId

@@ -141,7 +141,7 @@ public class ProductConfigWrapper implements java.io.Serializable {
         }
         for (int i = 0; i < questions.size(); i++) {
             ConfigItem ci = (ConfigItem)questions.get(i);
-            if (ci.equals(cwq.get(i))) {
+            if (!ci.equals(cwq.get(i))) {
                 return false;
             }
         }
@@ -352,7 +352,7 @@ public class ProductConfigWrapper implements java.io.Serializable {
             }
             for (int i = 0; i < options.size(); i++) {
                 ConfigOption co = (ConfigOption)options.get(i);
-                if (co.equals(opts.get(i))) {
+                if (!co.equals(opts.get(i))) {
                     return false;
                 }
             }
