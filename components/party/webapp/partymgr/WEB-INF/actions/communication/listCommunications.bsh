@@ -52,4 +52,9 @@ if (previousSort != null && previousSort.equals(sortField)) {
 
 eventExprs = UtilMisc.toList(new EntityExpr("partyIdTo", EntityOperator.EQUALS, partyId), new EntityExpr("partyIdFrom", EntityOperator.EQUALS, partyId));
 events = delegator.findByOr("CommunicationEvent", eventExprs, UtilMisc.toList(sortField));
-context.put("events", events);
+context.put("eventList", events);
+context.put("eventListSize", events.size());
+context.put("highIndex", events.size());
+context.put("viewSize", events.size());
+context.put("lowIndex", 1);
+context.put("viewIndex", 1);

@@ -26,6 +26,7 @@
 
 import org.ofbiz.base.util.*;
 import org.ofbiz.entity.*;
+import org.ofbiz.entity.util.*;
 import org.ofbiz.entity.condition.*;
 
 delegator = request.getAttribute("delegator");
@@ -37,14 +38,17 @@ fromFlag = request.getParameter("showFromEvents");
 
 // get the sort field
 sortField = request.getParameter("sort");
-if (sortField == null) sortField = "entryDate";
-context.put("previousSort", sortField);
+previousSort = request.getParameter("previousSort");
 
 // previous sort field
 previousSort = request.getParameter("previousSort");
-if (previousSort != null && previousSort.equals(sortField)) {
-    sortField = "-" + sortField;
+if (previousSort != null && sortField != null && previousSort.equals(sortField)) {
+    sortField = sortField.startsWith("-") ? sortField : "-" + sortField;
 }
+
+if (sortField == null) sortField = previousSort;
+if (sortField == null) sortField = "entryDate";
+context.put("previousSort", sortField);
 
 // set the page parameters
 viewIndex = 1;
@@ -60,6 +64,9 @@ try {
     viewSize = Integer.valueOf((String) request.getParameter("VIEW_SIZE")).intValue();
 } catch (Exception e) {
     viewSize = 20;
+}
+if (viewSize > 100) {
+    viewSize = 100;
 }
 context.put("viewSize", viewSize);
 
@@ -88,10 +95,17 @@ if ("Y".equalsIgnoreCase(fromFlag)) {
     partyList.add(new EntityExpr("partyIdFrom", EntityOperator.EQUALS, partyId));
 }
 
+// limit to non-completed items
+statusList = new ArrayList();
+statusList.add(new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "COM_COMPLETE"));
+statusList.add(new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "COM_RESOLVED"));
+statusList.add(new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "COM_REFERRED"));
+
 // build the condition
 expressions = new ArrayList();
 expressions.add(new EntityConditionList(partyList, EntityOperator.OR));
 expressions.add(new EntityConditionList(pRolesList, EntityOperator.OR));
+expressions.add(new EntityConditionList(statusList, EntityOperator.AND));
 condition = new EntityConditionList(expressions, EntityOperator.AND);
 
 // specific fields to select
@@ -101,12 +115,32 @@ fieldsToSelect = null;
 orderBy = UtilMisc.toList(sortField);
 
 // entity find options
-findOpts = null;
+findOpts = new EntityFindOptions(true, EntityFindOptions.TYPE_SCROLL_INSENSITIVE, EntityFindOptions.CONCUR_READ_ONLY, true);
 
 // obtain the ELI
 eli = delegator.findListIteratorByCondition("CommunicationEvent", condition, null, fieldsToSelect, orderBy, findOpts);
 
-// get the entire list (todo move this to page by page)
-events = eli.getCompleteList();
+// get the indexes for the partial list
+lowIndex = (((viewIndex - 1) * viewSize) + 1);
+highIndex = viewIndex * viewSize;
+
+// get the partial list for this page
+eventList = eli.getPartialList(lowIndex, viewSize);
+if (eventList == null) {
+    eventList = new ArrayList();
+}
+
+// attempt to get the full size
+eli.last();
+eventListSize = eli.currentIndex();
+if (highIndex > eventListSize) {
+    highIndex = eventListSize;
+}
+
+// close the list iterator
 eli.close();
-context.put("events", events);
+
+context.put("eventList", eventList);
+context.put("eventListSize", eventListSize);
+context.put("highIndex", highIndex);
+context.put("lowIndex", lowIndex);
