@@ -1,6 +1,10 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.10  2001/08/24 17:14:34  azeneski
+ * Removed plain text attribute and created a defination in SiteDefs.
+ * NOTE: Need to update all pages/events which use the old name!
+ *
  * Revision 1.9  2001/08/17 07:39:03  jonesde
  * Added initialization to ControlServlet, and put security and helper into the application scope (ServletContext). Other small changes to support this.
  *
@@ -110,13 +114,7 @@ public final class SiteDefs {
 
     /** Session attribute name for UserLogin entity of current logged in user, if one is logged in */
     public static final String USER_LOGIN = "_USER_LOGIN_";
-    
-    /** Context/Session attribute for the Entity Helper */
-    public static final String ENTITY_HELPER = "_ENTITY_HELPER_";
-    
-    /** Context/Session attribute for the SECURITY handler */
-    public static final String SECURITY_OBJECT = "_OFBIZ_SECURITY_";
-    
+        
     /** Session attributes for the client's initial connect variables */
     public static final String CLIENT_REFERER = "_CLIENT_REFERER_";
     public static final String CLIENT_USER_AGENT = "_CLIENT_USER_AGENT_";
