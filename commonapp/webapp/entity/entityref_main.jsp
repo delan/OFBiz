@@ -20,6 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
  *
  * @author Andy Zeneski (jaz@zsolv.com)
+ * @author David E. Jones (jonesde@ofbiz.org)
  * @version 1.0
 -->
 
@@ -30,14 +31,32 @@
 <jsp:useBean id="helper" type="org.ofbiz.core.entity.GenericHelper" scope="application" />
 
 <% 
-	String search = null;
-	//GenericHelper helper = GenericHelperFactory.getDefaultHelper();
-	ModelReader reader = helper.getModelReader();
-	Collection ec = reader.getEntityNames();
-	TreeSet entities = new TreeSet(ec);
-	int numberOfEntities = entities.size();
-	int numberShowed = 0;
-	search = (String) request.getParameter("search");
+  String search = null;
+  //GenericHelper helper = GenericHelperFactory.getDefaultHelper();
+  ModelReader reader = helper.getModelReader();
+  Map packages = new HashMap();
+  TreeSet packageNames = new TreeSet();
+
+  //put the entityNames TreeSets in a HashMap by packageName
+  Collection ec = reader.getEntityNames();
+  TreeSet entityNames = new TreeSet(ec);
+  Iterator ecIter = ec.iterator();
+  while(ecIter.hasNext())
+  {
+    String eName = (String)ecIter.next();
+    ModelEntity ent = reader.getModelEntity(eName);
+    TreeSet entities = (TreeSet)packages.get(ent.packageName);
+    if(entities == null)
+    {
+      entities = new TreeSet();
+      packages.put(ent.packageName, entities);
+      packageNames.add(ent.packageName);
+    }
+    entities.add(eName);
+  }
+  int numberOfEntities = ec.size();
+  int numberShowed = 0;
+  search = (String) request.getParameter("search");
   //as we are iterating through, check a few things and put any warnings here inside <li></li> tags
   String warningString = "";
 %>
@@ -47,6 +66,7 @@
 <title>Entity Reference</title>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 <style>
+  .packagetext {font-family: Helvetica,sans-serif; font-size: 18pt; font-weight: bold; text-decoration: none; color: black;}
   .toptext {font-family: Helvetica,sans-serif; font-size: 16pt; font-weight: bold; text-decoration: none; color: black;}
   .titletext {font-family: Helvetica,sans-serif; font-size: 12pt; font-weight: bold; text-decoration: none; color: blue;}
   .headertext {font-family: Helvetica,sans-serif; font-size: 8pt; font-weight: bold; text-decoration: none; background-color: blue; color: white;}
@@ -67,14 +87,21 @@
 
 <A href='#WARNINGS'>View Warnings</A>
 <%
-	Iterator i = entities.iterator();
-	while ( i.hasNext() ) {
-		Object o = i.next();
-		String entityName = (String) o;
-		if ( search == null || entityName.toLowerCase().indexOf(search.toLowerCase()) != -1 ) {
-			ModelEntity entity = reader.getModelEntity(entityName);			
-    if(entity.tableName.length() > 30)
-      warningString = warningString + "<li><div style=\"color: red;\">[TableNameGT30]</div> Table name <b>" + entity.tableName + "</b> of entity <A href=\"#" + entity.entityName + "\">" + entity.entityName + "</A> is longer than 30 characters.</li>";
+  Iterator piter = packageNames.iterator();
+  while(piter.hasNext())
+  {
+    String pName = (String)piter.next();
+    TreeSet entities = (TreeSet)packages.get(pName);
+%><A name='<%=pName%>'></A><HR><DIV class='packagetext'><%=pName%></DIV><HR><%
+    Iterator i = entities.iterator();
+    while ( i.hasNext() ) 
+    {
+      String entityName = (String)i.next();
+      if ( search == null || entityName.toLowerCase().indexOf(search.toLowerCase()) != -1 )
+      {
+        ModelEntity entity = reader.getModelEntity(entityName);
+        if(entity.tableName.length() > 30)
+          warningString = warningString + "<li><div style=\"color: red;\">[TableNameGT30]</div> Table name <b>" + entity.tableName + "</b> of entity <A href=\"#" + entity.entityName + "\">" + entity.entityName + "</A> is longer than 30 characters.</li>";
 %>	
   <a name="<%= entityName %>"></a>
   <table width="95%" border="1" cellpadding='2' cellspacing='0'>
@@ -92,11 +119,12 @@
 	
 <%
   TreeSet ufields = new TreeSet();
-			for ( int y = 0; y < entity.fields.size(); y++ ) {
-				ModelField field = (ModelField) entity.fields.elementAt(y);	
-				ModelFieldType type = reader.getModelFieldType(field.type);
-				String javaName = new String();
-				javaName = field.isPk ? "<div style=\"color: red;\">" + field.name + "</div>" : field.name;
+  for(int y = 0; y < entity.fields.size(); y++)
+  {
+    ModelField field = (ModelField) entity.fields.elementAt(y);	
+    ModelFieldType type = reader.getModelFieldType(field.type);
+    String javaName = new String();
+    javaName = field.isPk ? "<div style=\"color: red;\">" + field.name + "</div>" : field.name;
     if(ufields.contains(field.name))
       warningString = warningString + "<li><div style=\"color: red;\">[FieldNotUnique]</div> Field <b>" + field.name + "</b> of entity <A href=\"#" + entity.entityName + "\">" + entity.entityName + "</A> is not unique for that entity.</li>";
     else
@@ -134,7 +162,7 @@
   for ( int r = 0; r < entity.relations.size(); r++ ) {
     ModelRelation relation = (ModelRelation) entity.relations.elementAt(r);
     
-    if(!entities.contains(relation.relEntityName))
+    if(!entityNames.contains(relation.relEntityName))
       warningString = warningString + "<li><div style=\"color: red;\">[RelatedEntityNotFound]</div> Related entity <b>" + relation.relEntityName + "</b> of entity <A href=\"#" + entity.entityName + "\">" + entity.entityName + "</A> not found.</li>";
     if(relations.contains(relation.title + relation.relEntityName))
       warningString = warningString + "<li><div style=\"color: red;\">[RelationNameNotUnique]</div> Relation <b>" + relation.title + relation.relEntityName + "</b> of entity <A href=\"#" + entity.entityName + "\">" + entity.entityName + "</A> is not unique for that entity.</li>";
@@ -200,9 +228,10 @@
   </table>
   <br>
 <%
-		numberShowed++;
-		}	
-	}
+      numberShowed++;
+      }
+    }
+  }
 %>  
   <br><br>
   <p align="center">Displayed: <%= numberShowed %></p>

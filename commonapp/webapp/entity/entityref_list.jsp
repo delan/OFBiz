@@ -30,12 +30,23 @@
 <jsp:useBean id="helper" type="org.ofbiz.core.entity.GenericHelper" scope="application" />
 
 <% 
-	String search = null;
-	//GenericHelper helper = GenericHelperFactory.getDefaultHelper();
-	ModelReader reader = helper.getModelReader();
-	Collection ec = reader.getEntityNames();
-	TreeSet entities = new TreeSet(ec);
-	search = (String) request.getParameter("search");
+  String search = null;
+  //GenericHelper helper = GenericHelperFactory.getDefaultHelper();
+  ModelReader reader = helper.getModelReader();
+  Collection ec = reader.getEntityNames();
+  TreeSet entities = new TreeSet(ec);
+  search = (String) request.getParameter("search");
+
+  TreeSet packageNames = new TreeSet();
+
+  //put the packageNames in a TreeSet
+  Iterator ecIter = ec.iterator();
+  while(ecIter.hasNext())
+  {
+    String eName = (String)ecIter.next();
+    ModelEntity ent = reader.getModelEntity(eName);
+    packageNames.add(ent.packageName);
+  }
 %>
 
 <html>
@@ -51,14 +62,25 @@
 
 <body bgcolor="#FFFFFF">
 <div align="left">
-	
+
+<%
+  Iterator piter = packageNames.iterator();
+  while(piter.hasNext())
+  {
+    String pName = (String)piter.next();
+%><a href="entityref_main#<%=pName%>" target="entityFrame" class='listtext'><%=pName%></a><br><%
+  }
+%>
+
+<HR>
+
 <%
 	Iterator i = entities.iterator();
 	while ( i.hasNext() ) {
 		Object o = i.next();
 		String entityName = (String) o;
 		if ( search == null || entityName.toLowerCase().indexOf(search.toLowerCase()) != -1 ) {						
-			String url = search == null ? "entityref_main#"+entityName : "entityref_main.jsp#"+entityName+"?search="+search;
+			String url = search == null ? "entityref_main#"+entityName : "entityref_main#"+entityName+"?search="+search;
 %>	
 <a href="<%= url %>" target="entityFrame" class='listtext'><%= entityName %></a><br>
 <%
