@@ -11,6 +11,7 @@ import javax.servlet.http.*;
 import org.apache.axis.*;
 import org.apache.axis.message.*;
 import org.apache.axis.server.*;
+import org.apache.log4j.Category;
 import org.w3c.dom.*;
 import org.ofbiz.core.service.*;
 import org.ofbiz.core.util.*;
@@ -43,6 +44,8 @@ import org.ofbiz.core.util.*;
  *@version    1.0
  */
 public class SOAPEventHandler implements EventHandler {
+    
+    static Category category = Category.getInstance(SOAPEventHandler.class.getName());
     
     private String eventPath = null;
     private String eventMethod = null;
@@ -143,6 +146,7 @@ public class SOAPEventHandler implements EventHandler {
                     ModelService model = dispatcher.getDispatchContext().getModelService(serviceName);
                     if ( model != null && model.export ) {
                         Map result = dispatcher.runSync(serviceName,serviceContext);
+                        Debug.logInfo("[EventHandler] : Service invoked");
                         RPCElement resBody = new RPCElement(serviceName + "Response");
                         resBody.setPrefix(body.getPrefix());
                         resBody.setNamespaceURI(body.getNamespaceURI());
@@ -169,6 +173,7 @@ public class SOAPEventHandler implements EventHandler {
         }
         
         // setup the response
+        Debug.logInfo("[EventHandler] : Setting up response message");
         msg = new Message(resEnv);
         mctx.setResponseMessage(msg);
         if ( msg == null ) {
