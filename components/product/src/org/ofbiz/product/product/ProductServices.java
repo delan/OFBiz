@@ -1,5 +1,5 @@
 /*
- * $Id: ProductServices.java,v 1.4 2004/01/13 20:27:36 ajzeneski Exp $
+ * $Id: ProductServices.java,v 1.5 2004/02/03 23:26:47 jonesde Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -45,13 +45,14 @@ import org.ofbiz.product.category.CategoryWorker;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
+import org.ofbiz.service.ServiceUtil;
 
 /**
  * Product Services
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.0
  */
 public class ProductServices {
@@ -74,11 +75,10 @@ public class ProductServices {
         // * String productId      -- Parent (virtual) product ID
         // * Map selectedFeatures  -- Selected features
         GenericDelegator delegator = dctx.getDelegator();
-        Map result = new HashMap();
         String productId = (String) context.get("productId");
         Map selectedFeatures = (Map) context.get("selectedFeatures");
 
-        return result;
+        return ServiceUtil.returnError("This service has not yet been implemented.");
     }
 
     /**
@@ -88,11 +88,10 @@ public class ProductServices {
         // * String productId      -- Parent (virtual) product ID
         // * String feature        -- Distinct feature name
         GenericDelegator delegator = dctx.getDelegator();
-        Map result = new HashMap();
         String productId = (String) context.get("productId");
         String feature = (String) context.get("feature");
 
-        return result;
+        return ServiceUtil.returnError("This service has not yet been implemented.");
     }
 
     /**
@@ -101,33 +100,32 @@ public class ProductServices {
     public static Map prodFindFeatureTypes(DispatchContext dctx, Map context) {
         // * String productId      -- Product ID to look up feature types
         GenericDelegator delegator = dctx.getDelegator();
-        Map result = new HashMap();
         String productId = (String) context.get("productId");
         Set featureSet = new OrderedSet();
 
         try {
             Map fields = UtilMisc.toMap("productId", productId, "productFeatureApplTypeId", "SELECTABLE_FEATURE");
             List order = UtilMisc.toList("sequenceNum", "productFeatureTypeId");
-            Collection features = delegator.findByAndCache("ProductFeatureAndAppl", fields, order);
+            List features = delegator.findByAndCache("ProductFeatureAndAppl", fields, order);
             Iterator i = features.iterator();
-
-            while (i.hasNext())
+            while (i.hasNext()) {
                 featureSet.add(((GenericValue) i.next()).getString("productFeatureTypeId"));
+            }
             if (Debug.infoOn()) Debug.logInfo("" + featureSet, module);
         } catch (GenericEntityException e) {
-            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-            result.put(ModelService.ERROR_MESSAGE, "Problem reading product features: " + e.getMessage());
-            return result;
+            String errMsg = "Problem reading product features: " + e.getMessage();
+            Debug.logError(e, errMsg, module);
+            return ServiceUtil.returnError(errMsg);
         }
 
         if (featureSet.size() == 0) {
-            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-            result.put(ModelService.ERROR_MESSAGE, "Problem reading product features");
-            return result;
-        } else {
-            result.put("featureSet", featureSet);
-            return result;
+            String errMsg = "Warning: Problem reading product features: no features found for productId " + productId;
+            Debug.logWarning(errMsg, module);
+            //return ServiceUtil.returnError(errMsg);
         }
+        Map result = ServiceUtil.returnSuccess();
+        result.put("featureSet", featureSet);
+        return result;
     }
 
     /**
@@ -444,7 +442,7 @@ public class ProductServices {
     // Builds a product feature tree
     private static Map makeGroup(GenericDelegator delegator, Map featureList, List items, List order, int index)
         throws IllegalArgumentException, IllegalStateException {
-        List featureKey = new ArrayList();
+        //List featureKey = new ArrayList();
         Map tempGroup = new HashMap();
         Map group = new OrderedMap();
         String orderKey = (String) order.get(index);
