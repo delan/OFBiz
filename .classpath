@@ -2,6 +2,12 @@
 <classpath>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="src" path="base/src/base"/>
+	<classpathentry kind="src" path="components/catalina/src"/>
+	<classpathentry kind="src" path="components/jetty/src"/>
+	<classpathentry kind="src" path="components/jotm/src"/>
+	<classpathentry kind="src" path="components/manufacturing/src"/>
+	<classpathentry kind="src" path="components/pos/src"/>
+	<classpathentry kind="src" path="components/shark/src"/>
 	<classpathentry kind="src" path="components/minerva/src"/>
 	<classpathentry kind="src" path="base/src/start"/>
 	<classpathentry kind="src" path="components/entity/src"/>
@@ -39,7 +45,6 @@
 	<classpathentry kind="lib" path="components/content/lib/velocity-1.3.jar"/>
 	<classpathentry kind="lib" path="components/content/lib/velocity-dep-1.3.jar"/>
 	<classpathentry kind="lib" path="components/content/lib/DataVision.jar"/>
-	<classpathentry kind="lib" path="components/content/lib/gnu-regexp-1.1.4.jar"/>
 	<classpathentry kind="lib" path="components/content/lib/iText.jar"/>
 	<classpathentry kind="lib" path="components/content/lib/jcalendar.jar"/>
 	<classpathentry kind="lib" path="components/content/lib/MinML2.jar"/>
@@ -68,8 +73,6 @@
 	<classpathentry kind="lib" path="components/jotm/lib/jotm_iiop_stubs.jar"/>
 	<classpathentry kind="lib" path="components/jetty/lib/org.mortbay.jmx.jar"/>
 	<classpathentry kind="lib" path="components/jetty/lib/org.mortbay.jetty.jar"/>
-	<classpathentry kind="lib" path="components/jetty/lib/jasper-runtime.jar"/>
-	<classpathentry kind="lib" path="components/jetty/lib/jasper-compiler.jar"/>
 	<classpathentry kind="lib" path="base/lib/scripting/jython.jar"/>
 	<classpathentry kind="lib" path="components/jotm/lib/connector-1_5.jar"/>
 	<classpathentry kind="lib" path="components/shark/lib/sharkxpdl-standard.jar"/>
@@ -110,9 +113,6 @@
 	<classpathentry kind="lib" path="components/catalina/lib/common/naming-resources.jar"/>
 	<classpathentry kind="lib" path="components/catalina/lib/common/naming-java.jar"/>
 	<classpathentry kind="lib" path="components/catalina/lib/common/naming-factory.jar"/>
-	<classpathentry kind="lib" path="components/catalina/lib/common/naming-common.jar"/>
-	<classpathentry kind="lib" path="components/catalina/lib/common/jasper-runtime.jar"/>
-	<classpathentry kind="lib" path="components/catalina/lib/common/jasper-compiler.jar"/>
 	<classpathentry kind="lib" path="components/catalina/lib/common/ant.jar"/>
 	<classpathentry kind="lib" path="components/catalina/lib/server/tomcat-util.jar"/>
 	<classpathentry kind="lib" path="components/catalina/lib/server/tomcat-jni.jar"/>
@@ -128,7 +128,6 @@
 	<classpathentry kind="lib" path="components/catalina/lib/server/servlets-cgi.jar"/>
 	<classpathentry kind="lib" path="components/catalina/lib/server/jkshm.jar"/>
 	<classpathentry kind="lib" path="components/catalina/lib/server/jkconfig.jar"/>
-	<classpathentry kind="lib" path="components/catalina/lib/server/jakarta-regexp-1.3.jar"/>
 	<classpathentry kind="lib" path="components/catalina/lib/server/catalina-optional.jar"/>
 	<classpathentry kind="lib" path="components/catalina/lib/server/catalina-i18n-ja.jar"/>
 	<classpathentry kind="lib" path="components/catalina/lib/server/catalina-i18n-fr.jar"/>
@@ -147,8 +146,6 @@
 	<classpathentry kind="lib" path="components/tests/lib/Quick4rt.jar"/>
 	<classpathentry kind="lib" path="components/tests/lib/jxweb.jar"/>
 	<classpathentry kind="lib" path="components/tests/lib/jxunit3.jar"/>
-	<classpathentry kind="lib" path="components/tests/lib/jakarta-regexp-1.2.jar"/>
-	<classpathentry kind="lib" path="components/tests/lib/httpunit.jar"/>
 	<classpathentry kind="lib" path="components/tests/lib/dtdparser113.jar"/>
 	<classpathentry kind="lib" path="components/tests/lib/dom4j-full.jar"/>
 	<classpathentry kind="lib" path="base/lib/xml-apis.jar"/>
@@ -167,5 +164,10 @@
 	<classpathentry kind="lib" path="base/lib/jdbm.jar"/>
 	<classpathentry kind="lib" path="base/lib/commons/commons-primitives.jar"/>
 	<classpathentry kind="lib" path="base/lib/commons/commons-codec.jar"/>
+	<classpathentry kind="lib" path="base/lib/jakarta-regexp.jar"/>
+	<classpathentry kind="lib" path="base/lib/httpunit.jar"/>
+	<classpathentry kind="lib" path="base/lib/scripting/jruby.jar"/>
+	<classpathentry kind="lib" path="components/content/lib/poi.jar"/>
+	<classpathentry kind="lib" path="components/content/lib/iTextXML.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
