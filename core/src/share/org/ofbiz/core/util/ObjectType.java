@@ -54,6 +54,9 @@ public class ObjectType {
 
         classNameClassMap.put("String", java.lang.String.class);
         classNameClassMap.put("java.lang.String", java.lang.String.class);
+        
+        classNameClassMap.put("Boolean", java.lang.Boolean.class);
+        classNameClassMap.put("java.lang.Boolean", java.lang.Boolean.class);
 
         classNameClassMap.put("Double", java.lang.Double.class);
         classNameClassMap.put("java.lang.Double", java.lang.Double.class);
@@ -96,7 +99,8 @@ public class ObjectType {
         }
     }
 
-    /** Loads a class with the current thread's context classloader
+    /** 
+     * Loads a class with the current thread's context classloader
      * @param className The name of the class to load
      */
     public static Class loadClass(String className) throws ClassNotFoundException {
@@ -108,7 +112,8 @@ public class ObjectType {
         return loadClass(className, null);
     }
 
-    /** Loads a class with the current thread's context classloader
+    /** 
+     * Loads a class with the current thread's context classloader
      * @param className The name of the class to load
      */
     public static Class loadClass(String className, ClassLoader loader) throws ClassNotFoundException {
@@ -140,7 +145,8 @@ public class ObjectType {
         return theClass;
     }
 
-    /** Returns an instance of the specified class
+    /** 
+     * Returns an instance of the specified class
      * @param className Name of the class to instantiate
      */
     public static Object getInstance(String className) throws ClassNotFoundException,
@@ -152,7 +158,8 @@ public class ObjectType {
         return o;
     }
 
-    /** Tests if an object properly implements the specified interface
+    /** 
+     * Tests if an object properly implements the specified interface
      * @param obj Object to test
      * @param interfaceName Name of the interface to test against
      */
@@ -162,7 +169,8 @@ public class ObjectType {
         return interfaceOf(obj, interfaceClass);
     }
 
-    /** Tests if an object properly implements the specified interface
+    /** 
+     * Tests if an object properly implements the specified interface
      * @param obj Object to test
      * @param interfaceObject to test against
      */
@@ -172,7 +180,8 @@ public class ObjectType {
         return interfaceOf(obj, interfaceClass);
     }
 
-    /** Tests if an object properly implements the specified interface
+    /** 
+     * Tests if an object properly implements the specified interface
      * @param obj Object to test
      * @param interfaceClass Class to test against
      */
@@ -190,7 +199,8 @@ public class ObjectType {
         return false;
     }
 
-    /** Tests if an object is an instance of or a sub-class of the parent
+    /** 
+     * Tests if an object is an instance of or a sub-class of the parent
      * @param obj Object to test
      * @param parentName Name of the parent class to test against
      */
@@ -200,7 +210,8 @@ public class ObjectType {
         return isOrSubOf(obj, parentClass);
     }
 
-    /** Tests if an object is an instance of or a sub-class of the parent
+    /** 
+     * Tests if an object is an instance of or a sub-class of the parent
      * @param obj Object to test
      * @param parentObject Object to test against
      */
@@ -210,7 +221,8 @@ public class ObjectType {
         return isOrSubOf(obj, parentClass);
     }
 
-    /** Tests if an object is an instance of or a sub-class of the parent
+    /** 
+     * Tests if an object is an instance of or a sub-class of the parent
      * @param obj Object to test
      * @param parentClass Class to test against
      */
@@ -224,7 +236,8 @@ public class ObjectType {
         return false;
     }
 
-    /** Tests if an object is an instance of a sub-class of or properly implements an interface
+    /** 
+     * Tests if an object is an instance of a sub-class of or properly implements an interface
      * @param obj Object to test
      * @param typeObject Object to test against
      */
@@ -234,7 +247,8 @@ public class ObjectType {
         return instanceOf(obj, typeClass);
     }
 
-    /** Tests if an object is an instance of a sub-class of or properly implements an interface
+    /** 
+     * Tests if an object is an instance of a sub-class of or properly implements an interface
      * @param obj Object to test
      * @param typeObject Object to test against
      */
@@ -242,7 +256,8 @@ public class ObjectType {
         return instanceOf(obj, typeName, null);
     }
 
-    /** Tests if an object is an instance of a sub-class of or properly implements an interface
+    /** 
+     * Tests if an object is an instance of a sub-class of or properly implements an interface
      * @param obj Object to test
      * @param typeObject Object to test against
      */
@@ -280,7 +295,8 @@ public class ObjectType {
         return instanceOf(obj, infoClass);
     }
 
-    /** Tests if an object is an instance of a sub-class of or properly implements an interface
+    /** 
+     * Tests if an object is an instance of a sub-class of or properly implements an interface
      * @param obj Object to test
      * @param typeClass Class to test against
      */
@@ -295,8 +311,9 @@ public class ObjectType {
         }
     }
 
-    /** Converts the passed object to the named simple type; supported types
-     * include: String, Double, Float, Long, Integer, Date (java.sql.Date),
+    /** 
+     * Converts the passed object to the named simple type; supported types
+     * include: String, Boolean, Double, Float, Long, Integer, Date (java.sql.Date),
      * Time, Timestamp;
      * @param obj Object to convert
      * @param type Name of type to convert to
@@ -601,6 +618,21 @@ public class ObjectType {
             } else if ("Timestamp".equals(type) || "java.sql.Timestamp".equals(type)) {
                 return obj;
             } else {
+                throw new GeneralException("Conversion from " + fromType + " to " + type + " not currently supported");
+            }
+        } else if (obj instanceof java.lang.Boolean) {
+            fromType = "Boolean";
+            Boolean bol = (Boolean) obj;
+            if ("Boolean".equals(type) || "java.lang.Boolean".equals(type)) {
+                return bol;
+            } else if ("String".equals(type) || "java.lang.String".equals(type)) {
+                return bol.toString();
+            } else if ("Integer".equals(type) || "java.lang.Integer".equals(type)) {
+                if (bol.booleanValue())
+                    return new Integer(1);
+                else
+                    return new Integer(0);                
+            } else { 
                 throw new GeneralException("Conversion from " + fromType + " to " + type + " not currently supported");
             }
         } else {
