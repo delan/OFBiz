@@ -20,25 +20,17 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.7 $
+ *@version    $Revision: 1.1 $
  *@since      2.1
 -->
 
-<#-- get these for the promoText -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
-<#assign productPromos = Static["org.ofbiz.order.shoppingcart.product.ProductPromoWorker"].getStoreProductPromos(delegator, request)>
-
-<#-- Make sure that at least one promo has non-empty promoText && showToCustomer == "Y" -->
-<#assign showPromoText = false>
-<#list productPromos as productPromo>
-    <#if productPromo.promoText?has_content && productPromo.showToCustomer?if_exists != "N"><#assign showPromoText = true></#if>
-</#list>
 
 <#if showPromoText>
-  <table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+  <table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
     <tr>
-      <td width='100%'>
-        <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
+      <td width="100%">
+        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
           <tr>
             <td valign="middle" align="center">
               <div class="boxhead">${uiLabelMap.EcommerceSpecialOffers}</div>
@@ -48,24 +40,28 @@
       </td>
     </tr>
     <tr>
-      <td width='100%'>
-        <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
+      <td width="100%">
+        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxbottom">
           <tr>
             <td>
-                <table width='100%' cellspacing="0" cellpadding="1" border="0">
+                <table width="100%" cellspacing="0" cellpadding="1" border="0">
                   <#-- show promotions text -->
                   <#list productPromos as productPromo>
-                    <#if productPromo.promoText?has_content && productPromo.showToCustomer?if_exists != "N">
-                        <tr>
-                          <td>
-                            <div class='tabletext'>${productPromo.promoText}</div>
-                          </td>
-                        </tr>
-                        <#if productPromo_has_next>
-                          <tr><td><hr class='sepbar'></td></tr>
-                        </#if>
+                    <tr>
+                      <td>
+                        <div class="tabletext"><a href="<@ofbizUrl>/showPromotionDetails?productPromoId=${productPromo.productPromoId}</@ofbizUrl>" class="buttontext">[Details]</a> ${productPromo.promoText}</div>
+                      </td>
+                    </tr>
+                    <#if productPromo_has_next>
+                      <tr><td><hr class="sepbar"></td></tr>
                     </#if>
                   </#list>
+                  <tr><td><hr class="sepbar"></td></tr>
+                  <tr>
+                    <td>
+                      <div class="tabletext"><a href="<@ofbizUrl>/showAllPromotions</@ofbizUrl>" class="buttontext">[View All Promotions]</a></div>
+                    </td>
+                  </tr>
                 </table>
             </td>
           </tr>

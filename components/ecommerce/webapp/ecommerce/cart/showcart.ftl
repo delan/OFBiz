@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.15 $
+ *@version    $Revision: 1.16 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -320,17 +320,21 @@ function addToList() {
                 <table width="100%" cellspacing="0" cellpadding="1" border="0">
                   <#-- show promotions text -->
                   <#list productPromos as productPromo>
-                    <#if productPromo.promoText?has_content && productPromo.showToCustomer?if_exists != "N">
-                        <tr>
-                          <td>
-                            <div class="tabletext">${productPromo.promoText}</div>
-                          </td>
-                        </tr>
-                        <#if productPromo_has_next>
-                          <tr><td><hr class="sepbar"></td></tr>
-                        </#if>
+                    <tr>
+                      <td>
+                        <div class="tabletext"><a href="<@ofbizUrl>/showPromotionDetails?productPromoId=${productPromo.productPromoId}</@ofbizUrl>" class="buttontext">[Details]</a> ${productPromo.promoText}</div>
+                      </td>
+                    </tr>
+                    <#if productPromo_has_next>
+                      <tr><td><hr class="sepbar"></td></tr>
                     </#if>
                   </#list>
+                  <tr><td><hr class="sepbar"></td></tr>
+                  <tr>
+                    <td>
+                      <div class="tabletext"><a href="<@ofbizUrl>/showAllPromotions</@ofbizUrl>" class="buttontext">[View All Promotions]</a></div>
+                    </td>
+                  </tr>
                 </table>
             </td>
           </tr>
@@ -385,64 +389,5 @@ function addToList() {
 
 <#if (shoppingCartSize > 0)>
   <br/>
-  <table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
-    <tr>
-      <td width="100%">
-        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
-          <tr>
-            <td valign="middle" align="left">
-              <div class="boxhead">&nbsp;Promotion Information:</div>
-            </td>
-          </tr>
-        </table>
-      </td>
-    </tr>
-    <tr>
-      <td width="100%">
-        <table width="100%" border="0" cellspacing="0" cellpadding="4" class="boxbottom">
-          <tr>
-            <td width="50%" valign="top">
-                <div class="tableheadtext">Promotions Applied:</div>
-                <#list shoppingCart.getProductPromoUseInfoIter() as productPromoUseInfo>
-                    <#-- TODO: when promo pretty print is done show promo short description here -->
-                    <div class="tabletext">Promotion [${productPromoUseInfo.productPromoId?default("No Code")}]<#if productPromoUseInfo.productPromoCodeId?has_content> - with Code [${productPromoUseInfo.productPromoCodeId}]</#if></div>
-                </#list>
-            </td>
-            <td width="50%" valign="top" style="border-left: 1px solid grey">
-                <div class="tableheadtext">Cart Item Use in Promotions:</div>
-                <#list shoppingCart.items() as cartLine>
-                    <#assign cartLineIndex = shoppingCart.getItemIndex(cartLine)>
-                    <#if cartLine.getIsPromo()>
-                        <div class="tabletext">Item #${cartLineIndex+1} [${cartLine.getProductId()?if_exists}] - Is a Promotional Item</div>
-                    <#else>
-                        <div class="tabletext">Item #${cartLineIndex+1} [${cartLine.getProductId()?if_exists}] - ${cartLine.getPromoQuantityUsed()?string.number}/${cartLine.getQuantity()?string.number} Used - ${cartLine.getPromoQuantityAvailable()?string.number} Available</div>
-                        <#list cartLine.getQuantityUsedPerPromoActualIter() as quantityUsedPerPromoActualEntry>
-                            <#assign productPromoActualPK = quantityUsedPerPromoActualEntry.getKey()>
-                            <#assign actualQuantityUsed = quantityUsedPerPromoActualEntry.getValue()>
-                            <#assign isQualifier = "ProductPromoCond" == productPromoActualPK.getEntityName()>
-                            <div class="tabletext">&nbsp;&nbsp;-&nbsp;${actualQuantityUsed} Used as <#if isQualifier>Qualifier<#else>Benefit</#if> of Promotion [${productPromoActualPK.productPromoId}]</div>
-                            <!-- productPromoActualPK ${productPromoActualPK.toString()} -->
-                        </#list>
-                        <#list cartLine.getQuantityUsedPerPromoFailedIter() as quantityUsedPerPromoFailedEntry>
-                            <#assign productPromoFailedPK = quantityUsedPerPromoFailedEntry.getKey()>
-                            <#assign failedQuantityUsed = quantityUsedPerPromoFailedEntry.getValue()>
-                            <#assign isQualifier = "ProductPromoCond" == productPromoActualPK.getEntityName()>
-                            <div class="tabletext">&nbsp;&nbsp;-&nbsp;Could be Used as <#if isQualifier>Qualifier<#else>Benefit</#if> of Promotion [${productPromoFailedPK.productPromoId}]</div>
-                            <!-- Total times checked but failed: ${failedQuantityUsed}, productPromoFailedPK ${productPromoFailedPK.toString()} -->
-                        </#list>
-                        <#list cartLine.getQuantityUsedPerPromoCandidateIter() as quantityUsedPerPromoCandidateEntry>
-                            <#assign productPromoCandidatePK = quantityUsedPerPromoCandidateEntry.getKey()>
-                            <#assign candidateQuantityUsed = quantityUsedPerPromoCandidateEntry.getValue()>
-                            <#assign isQualifier = "ProductPromoCond" == productPromoActualPK.getEntityName()>
-                            <!-- Left over not reset or confirmed, shouldn't happen: ${candidateQuantityUsed} Might be Used (Candidate) as <#if isQualifier>Qualifier<#else>Benefit</#if> of Promotion [${productPromoCandidatePK.productPromoId}] -->
-                            <!-- productPromoCandidatePK ${productPromoCandidatePK.toString()} -->
-                        </#list>
-                    </#if>
-                </#list>
-            </td>
-          </tr>
-        </table>
-      </td>
-    </tr>
-  </table>
+  <#include "/cart/promoUseDetailsInline.ftl"/>
 </#if>
