@@ -1,5 +1,5 @@
 /*
- * $Id: TraverseSubContentCacheTransform.java,v 1.7 2004/03/24 16:04:21 byersa Exp $
+ * $Id: TraverseSubContentCacheTransform.java,v 1.8 2004/03/31 16:58:41 byersa Exp $
  * 
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  * 
@@ -52,7 +52,7 @@ import freemarker.template.TemplateModelException;
  * TraverseSubContentCacheTransform - Freemarker Transform for URLs (links)
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  * @since 3.0
  */
 public class TraverseSubContentCacheTransform implements TemplateTransformModel {
@@ -94,8 +94,8 @@ public class TraverseSubContentCacheTransform implements TemplateTransformModel 
         FreeMarkerWorker.getSiteParameters(request, templateCtx);
         final GenericValue userLogin = (GenericValue) FreeMarkerWorker.getWrappedObject("userLogin", env);
         List trail = (List)templateCtx.get("globalNodeTrail");
-                String csvTrail = FreeMarkerWorker.nodeTrailToCsv(trail);
-                //if (Debug.infoOn()) Debug.logInfo("in Traverse(0), csvTrail:"+csvTrail,module);
+        String csvTrail = FreeMarkerWorker.nodeTrailToCsv(trail);
+        //if (Debug.infoOn()) Debug.logInfo("in Traverse(0), csvTrail:"+csvTrail,module);
         //if (Debug.infoOn()) Debug.logInfo("in TraverseSubContentCache, trail(1):" + trail , module);
         String strNullThruDatesOnly = (String)templateCtx.get("nullThruDatesOnly");
         String contentAssocPredicateId = (String)templateCtx.get("contentAssocPredicateId");
@@ -172,6 +172,7 @@ public class TraverseSubContentCacheTransform implements TemplateTransformModel 
                     //if (Debug.infoOn()) Debug.logInfo("in TraverseSubContentCache, onStart, node(1):" + node , module);
                     Boolean checkedObj = (Boolean)node.get("checked");
                     Map whenMap = (Map)templateCtx.get("whenMap");
+                    //if (Debug.infoOn()) Debug.logInfo("in TraverseSubContentCache, whenMap(2):" + whenMap , module);
                     if (checkedObj == null || !checkedObj.booleanValue()) {
                         ContentWorker.checkConditions(delegator, node, null, whenMap);
                     }
@@ -326,14 +327,17 @@ public class TraverseSubContentCacheTransform implements TemplateTransformModel 
                 List passedGlobalNodeTrail = (List)templateContext.get("passedGlobalNodeTrail");
     if (Debug.verboseOn()) Debug.logVerbose("populateContext, passedGlobalNodeTrail csv(a):" + FreeMarkerWorker.nodeTrailToCsv((List)passedGlobalNodeTrail), "");
                 List globalNodeTrail = null;
-                if (passedGlobalNodeTrail != null) 
+                String contentIdEnd = null;
+                String contentIdStart = null;
+                if (passedGlobalNodeTrail != null) {
                     globalNodeTrail = new ArrayList(passedGlobalNodeTrail);
-                else
+                    Map ndEnd = (Map)passedGlobalNodeTrail.get(passedGlobalNodeTrail.size() - 1);
+                    contentIdEnd = (String)ndEnd.get("contentId");
+                    Map ndStart = (Map)nodeTrail.get(0);
+                    contentIdStart = (String)ndStart.get("contentId");
+                } else {
                     globalNodeTrail = new ArrayList();
-                Map ndEnd = (Map)passedGlobalNodeTrail.get(passedGlobalNodeTrail.size() - 1);
-                String contentIdEnd = (String)ndEnd.get("contentId");
-                Map ndStart = (Map)nodeTrail.get(0);
-                String contentIdStart = (String)ndStart.get("contentId");
+                }
                 if (UtilValidate.isNotEmpty(contentIdEnd)
                     && UtilValidate.isNotEmpty(contentIdStart)
                     && contentIdStart.equals(contentIdEnd)) {

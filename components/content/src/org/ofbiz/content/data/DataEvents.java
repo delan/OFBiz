@@ -3,25 +3,31 @@ package org.ofbiz.content.data;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.io.ByteArrayOutputStream;
+import java.io.OutputStreamWriter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.ServletContext;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilHttp;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericPK;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.service.LocalDispatcher;
+import org.ofbiz.base.util.GeneralException;
 
 /**
  * DataEvents Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.7 $
+ * @version    $Revision: 1.8 $
  * @since      3.0
  *
  * 
@@ -41,16 +47,60 @@ public class DataEvents {
 
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
         String dataResourceId = request.getParameter("imgId");
-        byte[] b = null;
-        String imageType = null;
+        if (UtilValidate.isEmpty(dataResourceId)) {
+            String errorMsg = "Error getting image record from db: " + " dataResourceId is empty";
+            Debug.logError(errorMsg, module);
+            request.setAttribute("_ERROR_MESSAGE_", errorMsg);
+            return "error";
+        }
+       
+        GenericValue dataResource = null;
         try {
-            b = DataResourceWorker.acquireImage(delegator, dataResourceId);
-            imageType = DataResourceWorker.getImageType(delegator, dataResourceId);
+            dataResource = delegator.findByPrimaryKeyCache("DataResource", UtilMisc.toMap("dataResourceId", dataResourceId));
         } catch (GenericEntityException e) {
             String errorMsg = "Error getting image record from db: " + e.toString();
             Debug.logError(e, errorMsg, module);
             request.setAttribute("_ERROR_MESSAGE_", errorMsg);
             return "error";
+        }
+
+        byte[] b = null;
+        String imageType = DataResourceWorker.getImageType(delegator, dataResource);
+        if (Debug.infoOn()) Debug.logInfo("in serveImage, imageType:" + imageType, module);
+        String dataResourceTypeId = dataResource.getString("dataResourceTypeId");
+        if (Debug.infoOn()) Debug.logInfo("in serveImage, dataResourceTypeId:" + dataResourceTypeId, module);
+        if (dataResourceTypeId != null && dataResourceTypeId.equals("IMAGE_OBJECT")) {
+            try {
+                b = DataResourceWorker.acquireImage(delegator, dataResource);
+            } catch (GenericEntityException e) {
+                String errorMsg = "Error getting image record from acquireImage: " + e.toString();
+                Debug.logError(e, errorMsg, module);
+                request.setAttribute("_ERROR_MESSAGE_", errorMsg);
+                return "error";
+            }
+        } else if (dataResourceTypeId != null && dataResourceTypeId.indexOf("_FILE") >= 0) {
+            String fileName = dataResource.getString("objectInfo");
+            if (Debug.infoOn()) Debug.logInfo("in serveImage, fileName:" + fileName, module);
+            ServletContext servletContext = request.getSession().getServletContext();
+            String rootDir = servletContext.getRealPath("/");
+            if (Debug.infoOn()) Debug.logInfo("in serveImage, rootDir:" + rootDir, module);
+            try {
+                ByteArrayOutputStream os = new ByteArrayOutputStream();
+                OutputStreamWriter outWriter = new OutputStreamWriter(os);
+                DataResourceWorker.renderFile(dataResourceTypeId, fileName, rootDir, outWriter);
+                outWriter.flush();
+                b = os.toByteArray();
+            } catch (IOException e2) {
+                String errorMsg = "Error getting image record from db: " + e2.toString();
+                Debug.logError(e2, errorMsg, module);
+                request.setAttribute("_ERROR_MESSAGE_", errorMsg);
+                return "error";
+            } catch (GeneralException e3) {
+                String errorMsg = "Error getting image record from db: " + e3.toString();
+                Debug.logError(e3, errorMsg, module);
+                request.setAttribute("_ERROR_MESSAGE_", errorMsg);
+                return "error";
+            }
         }
 
         if (imageType == null || b == null) {
@@ -61,6 +111,7 @@ public class DataEvents {
         } else {
             try {
                 UtilHttp.streamContentToBrowser(response, b, imageType);
+                response.flushBuffer();
             } catch (IOException e) {
                 String errorMsg = "Error writing image to OutputStream: " + e.toString();
                 Debug.logError(e, errorMsg, module);
