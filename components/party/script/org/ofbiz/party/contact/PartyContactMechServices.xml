@@ -25,7 +25,7 @@
  * @author     Johan Isacsson
  * @author     David E. Jones
  * @author     Olivier.Heintz@nereide.biz 
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.2
 -->
 
@@ -211,7 +211,8 @@
         <check-errors/>
         
         <call-map-processor xml-resource="org/ofbiz/party/contact/ContactMechMapProcs.xml"
-                processor-name="postalAddress" in-map-name="parameters" out-map-name="context"/>   		
+                processor-name="postalAddress" in-map-name="parameters" out-map-name="context"/>   
+        <field-to-field field-name="partyId" map-name="parameters" to-field-name="partyId" to-map-name="context"/> 		
         <call-service in-map-name="context" service-name="updatePostalAddress">
             <default-message>Postal Address successfully updated</default-message>
             <result-to-field result-name="newContactMechId" map-name="newPartyContactMech" field-name="contactMechId" />             
