@@ -203,6 +203,9 @@
         result-name CDATA #REQUIRED
         session-name CDATA #IMPLIED
     >
+    <!-- NOTE that these attributes are somewhat confusing: result-name is the name of the field in the result of this service call that the value comes FROM; 
+        service-result-name is the name of the field in the result of this simple-method called as a service where the value goes TO;
+        in other words FROM result-name and TO service-result-name -->
     <!ELEMENT result-to-result EMPTY>
     <!ATTLIST result-to-result
         result-name CDATA #REQUIRED
