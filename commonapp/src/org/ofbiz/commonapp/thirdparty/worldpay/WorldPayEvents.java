@@ -161,7 +161,7 @@ public class WorldPayEvents {
             Debug.logWarning(e, "Problems getting order email address", module);
         }
         
-        // get the properties file
+        // get the payment properties file
         String configString = null;
         try {
             GenericValue webSitePayment = delegator.findByPrimaryKey("WebSitePaymentSetting", UtilMisc.toMap("webSiteId", webSiteId, "paymentMethodTypeId", "EXT_WORLDPAY"));

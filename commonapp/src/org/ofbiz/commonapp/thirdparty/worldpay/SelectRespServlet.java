@@ -142,26 +142,37 @@ public class SelectRespServlet extends SelectServlet implements SelectDefs {
             Debug.logError(gte, "Unable to begin transaction", module);
         }                
         
+        boolean okay = false;
         if (transStatus.equalsIgnoreCase("Y")) {
             // order was approved
             Debug.logInfo("Order #" + orderId + " approved", module);
-            OrderChangeHelper.approveOrder(dispatcher, userLogin, orderId, orderPropertiesUrl);                  
+            okay = OrderChangeHelper.approveOrder(dispatcher, userLogin, orderId, orderPropertiesUrl);                  
         } else {
             // order was cancelled
             Debug.logInfo("Order #" + orderId + " cancelled", module);
-            OrderChangeHelper.cancelOrder(dispatcher, userLogin, orderId, orderPropertiesUrl);
+            okay = OrderChangeHelper.cancelOrder(dispatcher, userLogin, orderId, orderPropertiesUrl);
         }
         
-        // set the payment preference
-        setPaymentPreferences(orderId, request);
-        
-        try {
-            TransactionUtil.commit(beganTransaction);
-        } catch (GenericTransactionException gte) {
-            Debug.logError(gte, "Unable to commit transaction", module);
+        if (okay) {        
+            // set the payment preference
+            okay = setPaymentPreferences(orderId, request);
         }
         
-        // release the offline hold on the order (workflow)
+        if (okay) {                
+            try {
+                TransactionUtil.commit(beganTransaction);
+            } catch (GenericTransactionException gte) {
+                Debug.logError(gte, "Unable to commit transaction", module);
+            }
+        } else {
+            try {
+                TransactionUtil.rollback(beganTransaction);
+            } catch (GenericTransactionException gte) {
+                Debug.logError(gte, "Unable to rollback transaction", module);
+            }
+        }
+        
+        // attempt to release the offline hold on the order (workflow)
         OrderChangeHelper.relaeaseOfflineOrderHold(dispatcher, orderId, orderPropertiesUrl); 
                 
         // call the existing confirm order events (calling direct)
@@ -178,8 +189,9 @@ public class SelectRespServlet extends SelectServlet implements SelectDefs {
             out.println("Error getting content");                                         
     }
                
-    private void setPaymentPreferences(String orderId, ServletRequest request) {
+    private boolean setPaymentPreferences(String orderId, ServletRequest request) {
         List paymentPrefs = null;
+        boolean okay = true;
         try {
             Map paymentFields = UtilMisc.toMap("orderId", orderId, "statusId", "PAYMENT_NOT_RECEIVED");
             paymentPrefs = delegator.findByAnd("OrderPaymentPreference", paymentFields);
@@ -187,15 +199,16 @@ public class SelectRespServlet extends SelectServlet implements SelectDefs {
             Debug.logError(e, "Cannot get payment preferences for order #" + orderId, module);
         }
         if (paymentPrefs != null && paymentPrefs.size() > 0) {
-            Iterator i = paymentPrefs.iterator();
-            while (i.hasNext()) {
+            Iterator i = paymentPrefs.iterator();            
+            while (okay && i.hasNext()) {
                 GenericValue pref = (GenericValue) i.next();
-                setPaymentPreference(pref, request);
+                okay = setPaymentPreference(pref, request);
             }
         }
+        return okay;
     }
         
-    private void setPaymentPreference(GenericValue paymentPreference, ServletRequest request) {
+    private boolean setPaymentPreference(GenericValue paymentPreference, ServletRequest request) {
         String transId = request.getParameter(SelectDefs.SEL_transId);       
         String transTime = request.getParameter(SelectDefs.SEL_transTime);
         String transStatus = request.getParameter(SelectDefs.SEL_transStatus);
@@ -224,7 +237,9 @@ public class SelectRespServlet extends SelectServlet implements SelectDefs {
             paymentPreference.store();
         } catch (GenericEntityException e) {
             Debug.logError(e, "Cannot set payment preference info", module);
-        }                   
+            return false;
+        } 
+        return true;                  
     }  
     
     private void callError(ServletRequest request) throws ServletException {
