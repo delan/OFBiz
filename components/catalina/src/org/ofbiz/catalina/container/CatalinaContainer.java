@@ -1,5 +1,5 @@
 /*
- * $Id: CatalinaContainer.java,v 1.20 2004/08/02 03:32:00 ajzeneski Exp $
+ * $Id$
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -136,7 +136,7 @@ import org.xml.sax.SAXException;
  * CatalinaContainer -  Tomcat 5
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.20 $
+ * @version    $Rev:$
  * @since      3.1
  */
 public class CatalinaContainer implements Container {
