@@ -20,7 +20,7 @@
     String donePage = request.getParameter("DONE_PAGE");
     if(donePage == null || donePage.length() <= 0) donePage="viewprofile";
 %>
-  <br>
+  
   <p class="head1">Create New RoleType</p>
 
     &nbsp;<a href="<ofbiz:url>/authview/<%=donePage%></ofbiz:url>" class="buttontext">[Go&nbsp;Back]</a>

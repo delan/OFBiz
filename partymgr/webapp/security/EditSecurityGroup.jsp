@@ -50,7 +50,6 @@
     }
 %>
 
-<br>
 <a href="<ofbiz:url>/FindSecurityGroup</ofbiz:url>" class="buttontext">[All SecurityGroups]</a>
 <a href="<ofbiz:url>/EditSecurityGroup</ofbiz:url>" class="buttontext">[New SecurityGroup]</a>
 <%if(groupId != null && groupId.length() > 0){%>
@@ -69,7 +68,7 @@
         <td align=right><div class="tabletext">SecurityGroup ID</div></td>
         <td>&nbsp;</td>
         <td>
-          <input type=text name='groupId' value='<%=groupId%>' size='20'>
+          <input type=text name='groupId' class="inputBox" value='<%=groupId%>' size='20'>
         </td>
       </tr>
   <%} else {%>
@@ -79,7 +78,7 @@
         <td align=right><div class="tabletext">SecurityGroup ID</div></td>
         <td>&nbsp;</td>
         <td>
-          <input type=text name='groupId' value='' size='20'>
+          <input type=text name='groupId' class="inputBox" value='' size='20'>
         </td>
       </tr>
   <%}%>
@@ -98,7 +97,7 @@
       <tr>
         <td width="26%" align=right><div class="tabletext">Description</div></td>
         <td>&nbsp;</td>
-        <td width="74%"><input type="text" <ofbiz:inputvalue entityAttr="securityGroup" field="description" fullattrs="true"/> size="60" maxlength="250"></td>
+        <td width="74%"><input type="text" class="inputBox" <ofbiz:inputvalue entityAttr="securityGroup" field="description" fullattrs="true"/> size="60" maxlength="250"></td>
       </tr>
 
   <tr>

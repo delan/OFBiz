@@ -67,7 +67,6 @@
         highIndex = listSize;
     }
 %>
-<br>
 
 <a href="<ofbiz:url>/viewprofile</ofbiz:url>" class="buttontext">[Back To Profile]</a>
 

@@ -67,7 +67,6 @@
         highIndex = listSize;
     }
 %>
-<br>
 
 <a href="<ofbiz:url>/FindSecurityGroup</ofbiz:url>" class="buttontext">[All SecurityGroups]</a>
 <a href="<ofbiz:url>/EditSecurityGroup</ofbiz:url>" class="buttontext">[New SecurityGroup]</a>
@@ -145,7 +144,7 @@
   <div class='head2'>Add Permission (from list) to SecurityGroup:</div>
   <div class='tabletext'>
     Permission:
-      <select name="permissionId">
+      <select name="permissionId" class='selectBox'>
       <ofbiz:iterator name="securityPermission" property="securityPermissions">
         <option value='<ofbiz:entityfield attribute="securityPermission" field="permissionId"/>'><ofbiz:entityfield attribute="securityPermission" field="description"/> [<ofbiz:entityfield attribute="securityPermission" field="permissionId"/>]</option>
       </ofbiz:iterator>

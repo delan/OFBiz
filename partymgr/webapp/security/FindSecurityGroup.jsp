@@ -62,7 +62,6 @@
         highIndex = listSize;
     }
 %>
-<br>
 
 <div class="head1">SecurityGroups List</div>
 

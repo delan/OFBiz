@@ -62,7 +62,6 @@
 </script>
 
 <%-- Main Heading --%>
-<br>
 <table width='100%' cellpadding='0' cellspacing='0' border='0'>
   <tr>
     <td align='left'>
@@ -156,9 +155,9 @@
 				        	<input type="hidden" <ofbiz:inputvalue entityAttr='partyRelationship' field='partyIdTo' fullattrs="true"/>/>
 				        	<input type="hidden" <ofbiz:inputvalue entityAttr='partyRelationship' field='roleTypeIdTo' fullattrs="true"/>/>
 				        	<input type="hidden" <ofbiz:inputvalue entityAttr='partyRelationship' field='fromDate' fullattrs="true"/>/>
-	                		<span class='tabletext'><b>Thru Date: </b></span><input type="text" size="24" style="font-size: x-small;" <ofbiz:inputvalue entityAttr='partyRelationship' field='thruDate' fullattrs="true"/>/>
+	                		<span class='tabletext'><b>Thru Date: </b></span><input type="text" size="24" class="inputBox" <ofbiz:inputvalue entityAttr='partyRelationship' field='thruDate' fullattrs="true"/>/>
 	                		<%-- <%entityField.run("partyRelationship", "statusId");%>--%>
-	                		<span class='tabletext'><b>Comments: </b></span><input type="text" size="50" style="font-size: x-small;" <ofbiz:inputvalue entityAttr='partyRelationship' field='comments' fullattrs="true"/>/>
+	                		<span class='tabletext'><b>Comments: </b></span><input type="text" size="50" class="inputBox" <ofbiz:inputvalue entityAttr='partyRelationship' field='comments' fullattrs="true"/>/>
 	                		<input type="submit" value="Update" style="font-size: x-small;"/>
 	                	</form>
 	                </td>
@@ -187,25 +186,25 @@
         <tr>
           <td>
           	<div class="tabletext" style="font-weight: bold;">
-	            The party with ID <input type="text" size="20" name="partyIdTo" style="font-size: x-small;">
-	            in the role of <select name="roleTypeIdTo" style="font-size: x-small;">
+	            The party with ID <input type="text" size="20" name="partyIdTo" class="inputBox">
+	            in the role of <select name="roleTypeIdTo" class="selectBox">
 	              <ofbiz:iterator name="roleType" property="roleTypes">
 	                <option <%=("_NA_".equals(roleType.getString("roleTypeId"))) ? "SELECTED" : ""%> value='<ofbiz:entityfield attribute="roleType" field="roleTypeId"/>'><ofbiz:entityfield attribute="roleType" field="description"/><%-- [<ofbiz:entityfield attribute="roleType" field="roleTypeId"/>]--%></option>
 	              </ofbiz:iterator>
 	            </select>
-	            is a <select name="partyRelationshipTypeId" style="font-size: x-small;">
+	            is a <select name="partyRelationshipTypeId" class="selectBox">
 	              <ofbiz:iterator name="relateType" property="relateTypes">
 	                <option value='<ofbiz:entityfield attribute="relateType" field="partyRelationshipTypeId"/>'><ofbiz:entityfield attribute="relateType" field="partyRelationshipName"/><%-- [<ofbiz:entityfield attribute="relateType" field="partyRelationshipTypeId"/>]--%></option>
 	              </ofbiz:iterator>
 	            </select>
 	            of the current party in the role of
-	            <select name="roleTypeIdFrom" style="font-size: x-small;">
+	            <select name="roleTypeIdFrom" class="selectBox">
 	              <ofbiz:iterator name="roleType" property="roleTypes">
 	                <option <%=("_NA_".equals(roleType.getString("roleTypeId"))) ? "SELECTED" : ""%> value='<ofbiz:entityfield attribute="roleType" field="roleTypeId"/>'><ofbiz:entityfield attribute="roleType" field="description"/><%-- [<ofbiz:entityfield attribute="roleType" field="roleTypeId"/>]--%></option>
 	              </ofbiz:iterator>
 	            </select>
-	            from <input type="text" size="24" name="fromDate" style="font-size: x-small;">&nbsp;<a href="javascript:setNowFromDate('addPartyRelationshipTo')" class="buttontext">[Now]</a>
-	            thru <input type="text" size="24" name="thruDate" style="font-size: x-small;">
+	            from <input type="text" size="24" name="fromDate" class="inputBox">&nbsp;<a href="javascript:setNowFromDate('addPartyRelationshipTo')" class="buttontext">[Now]</a>
+	            thru <input type="text" size="24" name="thruDate" class="inputBox">
 	        </div>
           </td>
           <td>
@@ -213,7 +212,7 @@
           </td>
         </tr>
         <tr>
-         <td colspan="2"><span class="tabletext">Comments:&nbsp;&nbsp;</span><input type="text" size="60" name="comments" style="font-size: x-small;"></td>
+         <td colspan="2"><span class="tabletext">Comments:&nbsp;&nbsp;</span><input type="text" size="60" name="comments" class="inputBox"></td>
         </tr>
         </form>
       </table>
@@ -231,27 +230,27 @@
           <td>
           	<div class="tabletext" style="font-weight: bold;">
           		The current party in the role of
-	            <select name="roleTypeIdTo" style="font-size: x-small;">
+	            <select name="roleTypeIdTo" class="selectBox">
 	              <ofbiz:iterator name="roleType" property="roleTypes">
 	                <option <%=("_NA_".equals(roleType.getString("roleTypeId"))) ? "SELECTED" : ""%> value='<ofbiz:entityfield attribute="roleType" field="roleTypeId"/>'><ofbiz:entityfield attribute="roleType" field="description"/><%-- [<ofbiz:entityfield attribute="roleType" field="roleTypeId"/>]--%></option>
 	              </ofbiz:iterator>
 	            </select>
 	            is a 
-	            <select name="partyRelationshipTypeId" style="font-size: x-small;">
+	            <select name="partyRelationshipTypeId" class="selectBox">
 	              <ofbiz:iterator name="relateType" property="relateTypes">
 	                <option value='<ofbiz:entityfield attribute="relateType" field="partyRelationshipTypeId"/>'><ofbiz:entityfield attribute="relateType" field="partyRelationshipName"/><%-- [<ofbiz:entityfield attribute="relateType" field="partyRelationshipTypeId"/>]--%></option>
 	              </ofbiz:iterator>
 	            </select>
 	            of the party with ID
-	            <input type="text" size="20" name="partyIdFrom" style="font-size: x-small;">
+	            <input type="text" size="20" name="partyIdFrom" class="inputBox">
 	            in the role of 
-	            <select name="roleTypeIdFrom" style="font-size: x-small;">
+	            <select name="roleTypeIdFrom" class="selectBox">
 	              <ofbiz:iterator name="roleType" property="roleTypes">
 	                <option <%=("_NA_".equals(roleType.getString("roleTypeId"))) ? "SELECTED" : ""%> value='<ofbiz:entityfield attribute="roleType" field="roleTypeId"/>'><ofbiz:entityfield attribute="roleType" field="description"/><%-- [<ofbiz:entityfield attribute="roleType" field="roleTypeId"/>]--%></option>
 	              </ofbiz:iterator>
 	            </select>
-	            from <input type="text" size="24" name="fromDate" style="font-size: x-small;">&nbsp;<a href="javascript:setNowFromDate('addPartyRelationshipFrom')" class="buttontext">[Now]</a>&nbsp;
-	            thru <input type="text" size="24" name="thruDate" style="font-size: x-small;">
+	            from <input type="text" size="24" name="fromDate" class="inputBox">&nbsp;<a href="javascript:setNowFromDate('addPartyRelationshipFrom')" class="buttontext">[Now]</a>&nbsp;
+	            thru <input type="text" size="24" name="thruDate" class="inputBox">
 	        </div>
           </td>
           <td>
@@ -259,7 +258,7 @@
           </td>
         </tr>
         <tr>
-         <td colspan="2"><span class="tabletext">Comments:&nbsp;&nbsp;</span><input type="text" size="60" name="comments" style="font-size: x-small;"></td>
+         <td colspan="2"><span class="tabletext">Comments:&nbsp;&nbsp;</span><input type="text" size="60" name="comments" class="inputBox"></td>
         </tr>
         </form>
       </table>
@@ -291,25 +290,25 @@
         <tr>
           <td width="16%"><div class="tabletext">Relationship Type ID</div></td>
           <td width="84%">
-            <input type="text" name="partyRelationshipTypeId" size="20" style="font-size: x-small;">
+            <input type="text" name="partyRelationshipTypeId" size="20" class="inputBox">
           *</td>
         </tr>
         <tr>
           <td width="16%"><div class="tabletext">Relationship Name</div></td>
           <td width="84%">
-            <input type="text" name="partyRelationshipName" size="20" style="font-size: x-small;">
+            <input type="text" name="partyRelationshipName" size="20" class="inputBox">
           *</td>
         </tr>
         <tr>
           <td width="16%"><div class="tabletext">Description</div></td>
           <td width="84%">
-            <input type="text" name="description" size="60" style="font-size: x-small;">
+            <input type="text" name="description" size="60" class="inputBox">
           </td>
         </tr>
         <tr>
           <td width="16%"><div class="tabletext">Parent Type</div></td>
           <td width="84%">
-            <select name="parentTypeId" style="font-size: x-small;">
+            <select name="parentTypeId" class="selectBox">
               <option value=''></option>
               <ofbiz:iterator name="relateType" property="relateTypes">
                 <option value='<ofbiz:entityfield attribute="relateType" field="partyRelationshipTypeId"/>'><ofbiz:entityfield attribute="relateType" field="partyRelationshipName"/><%-- [<ofbiz:entityfield attribute="relateType" field="partyRelationshipTypeId"/>]--%></option>
@@ -320,7 +319,7 @@
         <tr>
           <td width="16%"><div class="tabletext">Has Table</div></td>
           <td width="84%">
-            <select name="hasTable" style="font-size: x-small;">
+            <select name="hasTable" class="selectBox">
             <option value='N'>No</option>
             <option value='Y'>Yes</option>
             </select>
@@ -329,7 +328,7 @@
         <tr>
           <td width="16%"><div class="tabletext">Valid From RoleType</div></td>
           <td width="84%">
-            <select name="roleTypeIdValidFrom" style="font-size: x-small;">
+            <select name="roleTypeIdValidFrom" class="selectBox">
             <option value=''></option>
               <ofbiz:iterator name="roleType" property="roleTypes">
                 <option value='<ofbiz:entityfield attribute="roleType" field="roleTypeId"/>'><ofbiz:entityfield attribute="roleType" field="description"/><%-- [<ofbiz:entityfield attribute="roleType" field="roleTypeId"/>]--%></option>
@@ -340,7 +339,7 @@
         <tr>
           <td width="16%"><div class="tabletext">Valid To RoleType</div></td>
           <td width="84%">
-            <select name="roleTypeIdValidTo" style="font-size: x-small;">
+            <select name="roleTypeIdValidTo" class="selectBox">
             <option value=''></option>
               <ofbiz:iterator name="roleType" property="roleTypes">
                 <option value='<ofbiz:entityfield attribute="roleType" field="roleTypeId"/>'><ofbiz:entityfield attribute="roleType" field="description"/><%-- [<ofbiz:entityfield attribute="roleType" field="roleTypeId"/>]--%></option>

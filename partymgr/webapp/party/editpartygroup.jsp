@@ -64,7 +64,6 @@
         pageContext.setAttribute("donePage", donePage);
 %>
 
-<br>
 <ofbiz:unless name="lookupGroup">
   <p class="head1">Add New Group Information</p>
     <FORM method=POST action='<ofbiz:url>/createPartyGroup/<ofbiz:print attribute="donePage"/></ofbiz:url>' name="editgroupform">

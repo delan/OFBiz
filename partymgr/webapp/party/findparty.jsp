@@ -106,7 +106,6 @@
     }
 %>
 
-<br>
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
@@ -121,7 +120,7 @@
             <tr>
               <td width="25%" align=right><div class="tabletext">Party ID</div></td>
               <td width="40%">
-                <input type="text" name="party_id" size="20" style="font-size: small;" value='<%=UtilFormatOut.checkNull(request.getParameter("party_id"))%>'>
+                <input type="text" name="party_id" size="20" class="inputBox" value='<%=UtilFormatOut.checkNull(request.getParameter("party_id"))%>'>
               </td>
               <td width="35%"><a href="javascript:document.viewprofileform.submit()" class="buttontext">[Lookup]</a></td>
             </tr>
@@ -131,14 +130,14 @@
             <tr>
               <td width="25%" align=right><div class="tabletext">First Name</div></td>
               <td width="40%">
-                <input type="text" name="first_name" size="30" style="font-size: small;" value='<%=UtilFormatOut.checkNull(request.getParameter("first_name"))%>'>
+                <input type="text" name="first_name" size="30" class="inputBox" value='<%=UtilFormatOut.checkNull(request.getParameter("first_name"))%>'>
               </td>
               <td width="35%">&nbsp;</td>
             </tr>
             <tr>
               <td width="25%" align=right><div class="tabletext">Last Name</div></td>
               <td width="40%">
-                <input type="text" name="last_name" size="30" style="font-size: small;" value='<%=UtilFormatOut.checkNull(request.getParameter("last_name"))%>'>
+                <input type="text" name="last_name" size="30" class="inputBox" value='<%=UtilFormatOut.checkNull(request.getParameter("last_name"))%>'>
               </td>
               <td width="35%"><a href="javascript:document.findnameform.submit()" class="buttontext">[Lookup]</a></td>
             </tr>
@@ -148,7 +147,7 @@
             <tr>
               <td width="25%" align=right><div class="tabletext">Party Group Name</div></td>
               <td width="40%">
-                <input type="text" name="group_name" size="30" style="font-size: small;" value='<%=UtilFormatOut.checkNull(request.getParameter("group_name"))%>'>
+                <input type="text" name="group_name" size="30" class="inputBox" value='<%=UtilFormatOut.checkNull(request.getParameter("group_name"))%>'>
               </td>
               <td width="35%"><a href="javascript:document.findgroupnameform.submit()" class="buttontext">[Lookup]</a></td>
             </tr>
@@ -158,7 +157,7 @@
             <tr>
               <td width="25%" align=right><div class="tabletext">E-Mail Address</div></td>
               <td width="40%">
-                <input type="text" name="email" size="30" style="font-size: small;" value='<%=UtilFormatOut.checkNull(request.getParameter("email"))%>'>
+                <input type="text" name="email" size="30" class="inputBox" value='<%=UtilFormatOut.checkNull(request.getParameter("email"))%>'>
               </td>
               <td width="35%"><a href="javascript:document.findemailform.submit()" class="buttontext">[Lookup]</a></td>
             </tr>
@@ -168,7 +167,7 @@
             <tr>
               <td width="25%" align=right><div class="tabletext">User Login ID</div></td>
               <td width="40%">
-                <input type="text" name="userlogin_id" size="30" style="font-size: small;" value='<%=UtilFormatOut.checkNull(request.getParameter("userlogin_id"))%>'>
+                <input type="text" name="userlogin_id" size="30" class="inputBox" value='<%=UtilFormatOut.checkNull(request.getParameter("userlogin_id"))%>'>
               </td>
               <td width="35%"><a href="javascript:document.findloginform.submit()" class="buttontext">[Lookup]</a></td>
             </tr>

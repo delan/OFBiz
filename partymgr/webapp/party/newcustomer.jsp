@@ -35,7 +35,6 @@
 <%String previousParams = (String) session.getAttribute(SiteDefs.PREVIOUS_PARAMS);%>
 <%String fontColor = "Black";%>
 
-<br>
 <p class="head1">Create New Customer</p>
 <br>
 <form method="post" action="<ofbiz:url>/createcustomer<%=UtilFormatOut.ifNotEmpty(previousParams, "?", "")%></ofbiz:url>" name="newuserform" style='margin:0;'>
@@ -61,55 +60,55 @@
   <tr>
     <td width="26%"><div class="tabletext"><font color='<%=fontColor%>'>Title</font></div></td>
     <td width="74%">
-      <input type="text" name="USER_TITLE" value="<%=UtilFormatOut.checkNull(request.getParameter("USER_TITLE"))%>" size="10" maxlength="30">
+      <input type="text" name="USER_TITLE" class="inputBox" value="<%=UtilFormatOut.checkNull(request.getParameter("USER_TITLE"))%>" size="10" maxlength="30">
     </td>
   </tr>
   <tr>
     <td width="26%"><div class="tabletext"><font color='<%=fontColor%>'>First name</font></div></td>
     <td width="74%">
-      <input type="text" name="USER_FIRST_NAME" value="<%=UtilFormatOut.checkNull(request.getParameter("USER_FIRST_NAME"))%>" size="30" maxlength="30">
+      <input type="text" name="USER_FIRST_NAME" class="inputBox" value="<%=UtilFormatOut.checkNull(request.getParameter("USER_FIRST_NAME"))%>" size="30" maxlength="30">
     * </td>
   </tr>
   <tr>
     <td width="26%"><div class="tabletext"><font color='<%=fontColor%>'>Middle initial</font></div></td>
     <td width="74%">
-        <input type="text" name="USER_MIDDLE_NAME" value="<%=UtilFormatOut.checkNull(request.getParameter("USER_MIDDLE_NAME"))%>" size="4" maxlength="4">
+        <input type="text" name="USER_MIDDLE_NAME" class="inputBox" value="<%=UtilFormatOut.checkNull(request.getParameter("USER_MIDDLE_NAME"))%>" size="4" maxlength="4">
     </td>
   </tr>
   <tr>
     <td width="26%"><div class="tabletext"><font color='<%=fontColor%>'>Last name </font></div></td>
     <td width="74%">
-      <input type="text" name="USER_LAST_NAME" value="<%=UtilFormatOut.checkNull(request.getParameter("USER_LAST_NAME"))%>" size="30" maxlength="30">
+      <input type="text" name="USER_LAST_NAME" class="inputBox" value="<%=UtilFormatOut.checkNull(request.getParameter("USER_LAST_NAME"))%>" size="30" maxlength="30">
     * </td>
   </tr>
   <tr>
     <td width="26%"><div class="tabletext"><font color='<%=fontColor%>'>Suffix</font></div></td>
     <td width="74%">
-      <input type="text" name="USER_SUFFIX" value="<%=UtilFormatOut.checkNull(request.getParameter("USER_SUFFIX"))%>" size="10" maxlength="30">
+      <input type="text" name="USER_SUFFIX" class="inputBox" value="<%=UtilFormatOut.checkNull(request.getParameter("USER_SUFFIX"))%>" size="10" maxlength="30">
     </td>
   </tr>
   <tr>
     <td width="26%"><div class="tabletext"><font color='<%=fontColor%>'>Address Line 1</font></div></td>
     <td width="74%">
-      <input type="text" name="CUSTOMER_ADDRESS1" value="<%=UtilFormatOut.checkNull(request.getParameter("CUSTOMER_ADDRESS1"))%>" size="30" maxlength="30">
+      <input type="text" name="CUSTOMER_ADDRESS1" class="inputBox" value="<%=UtilFormatOut.checkNull(request.getParameter("CUSTOMER_ADDRESS1"))%>" size="30" maxlength="30">
     *</td>
   </tr>
   <tr>
     <td width="26%"><div class="tabletext"><font color='<%=fontColor%>'>Address Line 2</font></div></td>
     <td width="74%">
-        <input type="text" name="CUSTOMER_ADDRESS2" value="<%=UtilFormatOut.checkNull(request.getParameter("CUSTOMER_ADDRESS2"))%>" size="30" maxlength="30">
+        <input type="text" name="CUSTOMER_ADDRESS2" class="inputBox" value="<%=UtilFormatOut.checkNull(request.getParameter("CUSTOMER_ADDRESS2"))%>" size="30" maxlength="30">
     </td>
   </tr>
   <tr>
     <td width="26%"><div class="tabletext"><font color='<%=fontColor%>'>City</font></div></td>
     <td width="74%">
-        <input type="text" name="CUSTOMER_CITY" value="<%=UtilFormatOut.checkNull(request.getParameter("CUSTOMER_CITY"))%>" size="30" maxlength="30">
+        <input type="text" name="CUSTOMER_CITY" class="inputBox" value="<%=UtilFormatOut.checkNull(request.getParameter("CUSTOMER_CITY"))%>" size="30" maxlength="30">
     * </td>
   </tr>
   <tr>
     <td width="26%"><div class="tabletext"><font color='<%=fontColor%>'>State/Province</font></div></td>
     <td width="74%">
-      <select name="CUSTOMER_STATE">
+      <select name="CUSTOMER_STATE" class="selectBox">
           <option><%=UtilFormatOut.checkNull(request.getParameter("CUSTOMER_STATE"))%></option>
           <%@ include file="/includes/states.jsp" %>
       </select>
@@ -118,13 +117,13 @@
   <tr>
     <td width="26%"><div class="tabletext"><font color='<%=fontColor%>'>Zip/Postal Code</font></div></td>
     <td width="74%">
-        <input type="text" name="CUSTOMER_POSTAL_CODE" value="<%=UtilFormatOut.checkNull(request.getParameter("CUSTOMER_POSTAL_CODE"))%>" size="12" maxlength="10">
+        <input type="text" name="CUSTOMER_POSTAL_CODE" class="inputBox" value="<%=UtilFormatOut.checkNull(request.getParameter("CUSTOMER_POSTAL_CODE"))%>" size="12" maxlength="10">
     * </td>
   </tr>
   <tr>
       <td width="26%"><div class="tabletext"><font color='<%=fontColor%>'>Country</font></div></td>
       <td width="74%">
-          <select name="CUSTOMER_COUNTRY" >
+          <select name="CUSTOMER_COUNTRY" class="selectBox">
             <option><%=UtilFormatOut.checkNull(request.getParameter("CUSTOMER_COUNTRY"))%></option>
             <%@ include file="/includes/countries.jsp" %>
           </select>
@@ -133,7 +132,7 @@
   <tr>
     <td width="26%"><div class="tabletext"><font color='<%=fontColor%>'>Allow Address Solicitation?</font></div></td>
     <td width="74%">
-      <select name="CUSTOMER_ADDRESS_ALLOW_SOL">
+      <select name="CUSTOMER_ADDRESS_ALLOW_SOL" class="selectBox">
         <option><%=UtilFormatOut.checkNull(request.getParameter("CUSTOMER_ADDRESS_ALLOW_SOL"), "Y")%></option>
         <option></option><option>Y</option><option>N</option>
       </select>
@@ -174,12 +173,12 @@
   <tr>
     <td width="26%"><div class="tabletext"><font color='<%=fontColor%>'>Home phone<BR>(allow solicitation?)</font></div></td>
     <td width="74%">
-        <input type="text" name="CUSTOMER_HOME_COUNTRY" value="<%=UtilFormatOut.checkNull(request.getParameter("CUSTOMER_HOME_COUNTRY"))%>" size="4" maxlength="10">
-        -&nbsp;<input type="text" name="CUSTOMER_HOME_AREA" value="<%=UtilFormatOut.checkNull(request.getParameter("CUSTOMER_HOME_AREA"))%>" size="4" maxlength="10">
-        -&nbsp;<input type="text" name="CUSTOMER_HOME_CONTACT" value="<%=UtilFormatOut.checkNull(request.getParameter("CUSTOMER_HOME_CONTACT"))%>" size="15" maxlength="15">
-        &nbsp;ext&nbsp;<input type="text" name="CUSTOMER_HOME_EXT" value="<%=UtilFormatOut.checkNull(request.getParameter("CUSTOMER_HOME_EXT"))%>" size="6" maxlength="10">
+        <input type="text" name="CUSTOMER_HOME_COUNTRY" class="inputBox" value="<%=UtilFormatOut.checkNull(request.getParameter("CUSTOMER_HOME_COUNTRY"))%>" size="4" maxlength="10">
+        -&nbsp;<input type="text" name="CUSTOMER_HOME_AREA" class="inputBox" value="<%=UtilFormatOut.checkNull(request.getParameter("CUSTOMER_HOME_AREA"))%>" size="4" maxlength="10">
+        -&nbsp;<input type="text" name="CUSTOMER_HOME_CONTACT" class="inputBox" value="<%=UtilFormatOut.checkNull(request.getParameter("CUSTOMER_HOME_CONTACT"))%>" size="15" maxlength="15">
+        &nbsp;ext&nbsp;<input type="text" name="CUSTOMER_HOME_EXT" class="inputBox" value="<%=UtilFormatOut.checkNull(request.getParameter("CUSTOMER_HOME_EXT"))%>" size="6" maxlength="10">
         <BR>
-        <select name="CUSTOMER_HOME_ALLOW_SOL">
+        <select name="CUSTOMER_HOME_ALLOW_SOL" class="selectBox">
           <option><%=UtilFormatOut.checkNull(request.getParameter("CUSTOMER_HOME_ALLOW_SOL"), "Y")%></option>
           <option></option><option>Y</option><option>N</option>
         </select>
@@ -188,12 +187,12 @@
   <tr>
     <td width="26%"><div class="tabletext"><font color='<%=fontColor%>'>Business phone<BR>(allow solicitation?)</font></div></td>
     <td width="74%">
-        <input type="text" name="CUSTOMER_WORK_COUNTRY" value="<%=UtilFormatOut.checkNull(request.getParameter("CUSTOMER_WORK_COUNTRY"))%>" size="4" maxlength="10">
-        -&nbsp;<input type="text" name="CUSTOMER_WORK_AREA" value="<%=UtilFormatOut.checkNull(request.getParameter("CUSTOMER_WORK_AREA"))%>" size="4" maxlength="10">
-        -&nbsp;<input type="text" name="CUSTOMER_WORK_CONTACT" value="<%=UtilFormatOut.checkNull(request.getParameter("CUSTOMER_WORK_CONTACT"))%>" size="15" maxlength="15">
-        &nbsp;ext&nbsp;<input type="text" name="CUSTOMER_WORK_EXT" value="<%=UtilFormatOut.checkNull(request.getParameter("CUSTOMER_WORK_EXT"))%>" size="6" maxlength="10">
+        <input type="text" name="CUSTOMER_WORK_COUNTRY" class="inputBox" value="<%=UtilFormatOut.checkNull(request.getParameter("CUSTOMER_WORK_COUNTRY"))%>" size="4" maxlength="10">
+        -&nbsp;<input type="text" name="CUSTOMER_WORK_AREA" class="inputBox" value="<%=UtilFormatOut.checkNull(request.getParameter("CUSTOMER_WORK_AREA"))%>" size="4" maxlength="10">
+        -&nbsp;<input type="text" name="CUSTOMER_WORK_CONTACT" class="inputBox" value="<%=UtilFormatOut.checkNull(request.getParameter("CUSTOMER_WORK_CONTACT"))%>" size="15" maxlength="15">
+        &nbsp;ext&nbsp;<input type="text" name="CUSTOMER_WORK_EXT" class="inputBox" value="<%=UtilFormatOut.checkNull(request.getParameter("CUSTOMER_WORK_EXT"))%>" size="6" maxlength="10">
         <BR>
-        <select name="CUSTOMER_WORK_ALLOW_SOL">
+        <select name="CUSTOMER_WORK_ALLOW_SOL" class="selectBox">
           <option><%=UtilFormatOut.checkNull(request.getParameter("CUSTOMER_WORK_ALLOW_SOL"), "Y")%></option>
           <option></option><option>Y</option><option>N</option>
         </select>
@@ -202,11 +201,11 @@
   <tr>
     <td width="26%"><div class="tabletext"><font color='<%=fontColor%>'>Fax number<BR>(allow solicitation?)</font></div></td>
     <td width="74%">
-        <input type="text" name="CUSTOMER_FAX_COUNTRY" value="<%=UtilFormatOut.checkNull(request.getParameter("CUSTOMER_FAX_COUNTRY"))%>" size="4" maxlength="10">
-        -&nbsp;<input type="text" name="CUSTOMER_FAX_AREA" value="<%=UtilFormatOut.checkNull(request.getParameter("CUSTOMER_FAX_AREA"))%>" size="4" maxlength="10">
-        -&nbsp;<input type="text" name="CUSTOMER_FAX_CONTACT" value="<%=UtilFormatOut.checkNull(request.getParameter("CUSTOMER_FAX_CONTACT"))%>" size="15" maxlength="15">
+        <input type="text" name="CUSTOMER_FAX_COUNTRY" class="inputBox" value="<%=UtilFormatOut.checkNull(request.getParameter("CUSTOMER_FAX_COUNTRY"))%>" size="4" maxlength="10">
+        -&nbsp;<input type="text" name="CUSTOMER_FAX_AREA" class="inputBox" value="<%=UtilFormatOut.checkNull(request.getParameter("CUSTOMER_FAX_AREA"))%>" size="4" maxlength="10">
+        -&nbsp;<input type="text" name="CUSTOMER_FAX_CONTACT" class="inputBox" value="<%=UtilFormatOut.checkNull(request.getParameter("CUSTOMER_FAX_CONTACT"))%>" size="15" maxlength="15">
         <BR>
-        <select name="CUSTOMER_FAX_ALLOW_SOL">
+        <select name="CUSTOMER_FAX_ALLOW_SOL" class="selectBox">
           <option><%=UtilFormatOut.checkNull(request.getParameter("CUSTOMER_FAX_ALLOW_SOL"), "Y")%></option>
           <option></option><option>Y</option><option>N</option>
         </select>
@@ -215,11 +214,11 @@
   <tr>
     <td width="26%"><div class="tabletext"><font color='<%=fontColor%>'>Mobile phone<BR>(allow solicitation?)</font></div></td>
     <td width="74%">
-        <input type="text" name="CUSTOMER_MOBILE_COUNTRY" value="<%=UtilFormatOut.checkNull(request.getParameter("CUSTOMER_MOBILE_COUNTRY"))%>" size="4" maxlength="10">
-        -&nbsp;<input type="text" name="CUSTOMER_MOBILE_AREA" value="<%=UtilFormatOut.checkNull(request.getParameter("CUSTOMER_MOBILE_AREA"))%>" size="4" maxlength="10">
-        -&nbsp;<input type="text" name="CUSTOMER_MOBILE_CONTACT" value="<%=UtilFormatOut.checkNull(request.getParameter("CUSTOMER_MOBILE_CONTACT"))%>" size="15" maxlength="15">
+        <input type="text" name="CUSTOMER_MOBILE_COUNTRY" class="inputBox" value="<%=UtilFormatOut.checkNull(request.getParameter("CUSTOMER_MOBILE_COUNTRY"))%>" size="4" maxlength="10">
+        -&nbsp;<input type="text" name="CUSTOMER_MOBILE_AREA" class="inputBox" value="<%=UtilFormatOut.checkNull(request.getParameter("CUSTOMER_MOBILE_AREA"))%>" size="4" maxlength="10">
+        -&nbsp;<input type="text" name="CUSTOMER_MOBILE_CONTACT" class="inputBox" value="<%=UtilFormatOut.checkNull(request.getParameter("CUSTOMER_MOBILE_CONTACT"))%>" size="15" maxlength="15">
         <BR>
-        <select name="CUSTOMER_MOBILE_ALLOW_SOL">
+        <select name="CUSTOMER_MOBILE_ALLOW_SOL" class="selectBox">
           <option><%=UtilFormatOut.checkNull(request.getParameter("CUSTOMER_MOBILE_ALLOW_SOL"), "Y")%></option>
           <option></option><option>Y</option><option>N</option>
         </select>
@@ -256,9 +255,9 @@
   <tr>
     <td width="26%"><div class="tabletext"><font color='<%=fontColor%>'>Email address<BR>(allow solicitation?)</font></div></td>
     <td width="74%">
-        <input type="text" name="CUSTOMER_EMAIL" value="<%=UtilFormatOut.checkNull(request.getParameter("CUSTOMER_EMAIL"))%>" size="60" maxlength="255"> *
+        <input type="text" name="CUSTOMER_EMAIL" class="inputBox" value="<%=UtilFormatOut.checkNull(request.getParameter("CUSTOMER_EMAIL"))%>" size="60" maxlength="255"> *
         <BR>
-        <select name="CUSTOMER_EMAIL_ALLOW_SOL">
+        <select name="CUSTOMER_EMAIL_ALLOW_SOL" class="selectBox">
           <option><%=UtilFormatOut.checkNull(request.getParameter("CUSTOMER_EMAIL_ALLOW_SOL"), "Y")%></option>
           <option></option><option>Y</option><option>N</option>
         </select>
@@ -270,7 +269,7 @@
         <div class="tabletext"><font color='<%=fontColor%>'>Order Email addresses (comma separated)</font></div>
     </td>
     <td width="74%">
-        <input type="text" name="CUSTOMER_ORDER_EMAIL" value="<%=UtilFormatOut.checkNull(request.getParameter("CUSTOMER_ORDER_EMAIL"))%>" size="40" maxlength="80">
+        <input type="text" name="CUSTOMER_ORDER_EMAIL" class="inputBox" value="<%=UtilFormatOut.checkNull(request.getParameter("CUSTOMER_ORDER_EMAIL"))%>" size="40" maxlength="80">
     </td>
   </tr>
 --%>
@@ -308,7 +307,7 @@
     <tr>
       <td width="26%"><div class="tabletext"><font color='<%=fontColor%>'>Username</font></div></td>
       <td width="74%">
-          <input type="text" name="USERNAME" value="<%=UtilFormatOut.checkNull(request.getParameter("USERNAME"))%>" size="20" maxlength="50">
+          <input type="text" name="USERNAME" class="inputBox" value="<%=UtilFormatOut.checkNull(request.getParameter("USERNAME"))%>" size="20" maxlength="50">
       * </td>
     </tr>
     <% if(UtilProperties.propertyValueEqualsIgnoreCase(application.getResource("/WEB-INF/ecommerce.properties"), "create.allow.password", "true")) { pageContext.setAttribute("createAllowPassword", "true"); }%>
@@ -318,7 +317,7 @@
             <div class="tabletext"><font color='<%=fontColor%>'>Password</font></div>
         </td>
         <td width="74%">
-            <input type="password" name="PASSWORD" value="" size="20" maxlength="50">
+            <input type="password" name="PASSWORD" class="inputBox" value="" size="20" maxlength="50">
           * </td>
       </tr>
       <tr>
@@ -326,7 +325,7 @@
             <div class="tabletext"><font color='<%=fontColor%>'>Repeat password to confirm</font></div>
         </td>
         <td width="74%">
-            <input type="password" name="CONFIRM_PASSWORD" value="" size="20" maxlength="50">
+            <input type="password" name="CONFIRM_PASSWORD" class="inputBox" value="" size="20" maxlength="50">
         * </td>
       </tr>
       <tr>
@@ -334,7 +333,7 @@
             <div class="tabletext"><font color='<%=fontColor%>'>Password Hint</font></div>
         </td>
         <td width="74%">
-            <input type="text" name="PASSWORD_HINT" value="<%=UtilFormatOut.checkNull(request.getParameter("PASSWORD_HINT"))%>" size="40" maxlength="100">
+            <input type="text" name="PASSWORD_HINT" class="inputBox" value="<%=UtilFormatOut.checkNull(request.getParameter("PASSWORD_HINT"))%>" size="40" maxlength="100">
         </td>
       </tr>
     </ofbiz:if>

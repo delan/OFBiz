@@ -20,7 +20,7 @@
     String donePage = request.getParameter("DONE_PAGE");
     if(donePage == null || donePage.length() <= 0) donePage="viewprofile";
 %>
-  <br>
+  
   <p class="head1">Add Note</p>
 
     &nbsp;<a href="<ofbiz:url>/authview/<%=donePage%></ofbiz:url>" class="buttontext">[Go&nbsp;Back]</a>
@@ -32,7 +32,7 @@
     <tr>
       <td width="26%" align=right><div class="tabletext">Note</div></td>
       <td width="74%">
-        <textarea name="note" rows="5" cols="70"></textarea>
+        <textarea name="note" class="textAreaBox" rows="5" cols="70"></textarea>
       *</td>
     </tr>
   </table>

@@ -64,7 +64,6 @@
         highIndex = listSize;
     }
 %>
-<br>
 
 <a href="<ofbiz:url>/FindSecurityGroup</ofbiz:url>" class="buttontext">[All SecurityGroups]</a>
 <a href="<ofbiz:url>/EditSecurityGroup</ofbiz:url>" class="buttontext">[New SecurityGroup]</a>
@@ -117,7 +116,7 @@
             <input type=hidden name='userLoginId' value='<ofbiz:inputvalue entityAttr="userLoginSecurityGroup" field="userLoginId"/>'>
             <input type=hidden name='groupId' value='<ofbiz:inputvalue entityAttr="userLoginSecurityGroup" field="groupId"/>'>
             <input type=hidden name='fromDate' value='<ofbiz:inputvalue entityAttr="userLoginSecurityGroup" field="fromDate"/>'>
-            <input type=text <ofbiz:inputvalue entityAttr="userLoginSecurityGroup" field="thruDate" fullattrs="true"/>>
+            <input type=text class="inputBox" <ofbiz:inputvalue entityAttr="userLoginSecurityGroup" field="thruDate" fullattrs="true"/>>
             <input type=submit value='Update'>
         </form>
     </td>
@@ -161,9 +160,9 @@
   </script>
   <div class='head2'>Add UserLogin to this Security Group:</div>
   <div class='tabletext'>
-    UserLogin ID: <input type=text size='60' name='userLoginId'>
+    UserLogin ID: <input type=text class="inputBox" size='60' name='userLoginId'>
     <br>
-    From Date: <a href='#' onclick='setUltsgFromDate()' class='buttontext'>[Now]</a> <input type=text size='22' name='fromDate'>
+    From Date: <a href='#' onclick='setUltsgFromDate()' class='buttontext'>[Now]</a> <input type=text class="inputBox" size='22' name='fromDate'>
     <input type="submit" value="Add">
   </div>
 </form>

@@ -54,7 +54,6 @@
 <%EntityField entityField = new EntityField(pageContext);%>
 
 <%-- Main Heading --%>
-<br>
 <table width='100%' cellpadding='0' cellspacing='0' border='0'>
   <tr>
     <td align='left'>
@@ -140,7 +139,7 @@
         <tr>
           <td align="right" width="75%"><span class="tabletext">&nbsp;Add To Role:&nbsp;</span></td>
           <td>
-            <select name="roleTypeId" style="font-size: x-small;">
+            <select name="roleTypeId" class="selectBox">
               <ofbiz:iterator name="role" property="roles">
                 <option value='<ofbiz:entityfield attribute="role" field="roleTypeId"/>'><ofbiz:entityfield attribute="role" field="description"/><%-- [<ofbiz:entityfield attribute="role" field="roleTypeId"/>]--%></option>
               </ofbiz:iterator>
@@ -180,12 +179,12 @@
         <tr>
           <td width="16%"><div class="tabletext">Role Type ID</div></td>
           <td width="84%">
-            <input type="text" name="roleTypeId" size="20" style="font-size: x-small;">*
+            <input type="text" name="roleTypeId" size="20" class="inputBox">*
           </td>
         <tr>
           <td width="16%"><div class="tabletext">Description</div></td>
           <td width="84%">
-            <input type="text" name="description" size="30" style="font-size: x-small;">*
+            <input type="text" name="description" size="30" class="inputBox">*
             &nbsp;&nbsp;<a href="javascript:document.createroleform.submit()" class="buttontext">[Save]</a>
           </td>
         </tr>
