@@ -26,7 +26,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author David E. Jones (jonesde@ofbiz.org)
- *@created    Mon Aug 27 14:18:31 PDT 2001
+ *@created    Mon Aug 27 16:13:20 PDT 2001
  *@version    1.0
  */
 -->
@@ -5175,8 +5175,9 @@
       <field><col-name>DIRECTIONS</col-name><type>long-varchar</type></field>
       <field><col-name>CITY</col-name><type>name</type></field>
       <field><col-name>POSTAL_CODE</col-name><type>short-varchar</type></field>
-      <field><col-name>STATE_PROVINCE</col-name><type>name</type></field>
-      <field><col-name>COUNTRY</col-name><type>name</type></field>	
+      <field><col-name>COUNTRY_GEO_ID</col-name><type>id</type></field>
+      <field><col-name>STATE_PROVINCE_GEO_ID</col-name><type>id</type></field>
+      <field><col-name>POSTAL_CODE_GEO_ID</col-name><type>id</type></field>	
       <prim-key-col>CONTACT_MECH_ID</prim-key-col>
       <relation>
         <type>one</type>
@@ -5192,6 +5193,21 @@
         <type>many</type>
         <rel-table-name>POSTAL_ADDRESS_BOUNDARY</rel-table-name>
         <key-map><col-name>CONTACT_MECH_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>one</type><title>Country</title>
+        <rel-table-name>GEO</rel-table-name>
+        <key-map><col-name>COUNTRY_GEO_ID</col-name><rel-col-name>GEO_ID</rel-col-name></key-map>
+      </relation>
+      <relation>
+        <type>one</type><title>StateProvince</title>
+        <rel-table-name>GEO</rel-table-name>
+        <key-map><col-name>STATE_PROVINCE_GEO_ID</col-name><rel-col-name>GEO_ID</rel-col-name></key-map>
+      </relation>
+      <relation>
+        <type>one</type><title>PostalCode</title>
+        <rel-table-name>GEO</rel-table-name>
+        <key-map><col-name>POSTAL_CODE_GEO_ID</col-name><rel-col-name>GEO_ID</rel-col-name></key-map>
       </relation>
     </entity>	
     <entity>
@@ -6899,8 +6915,6 @@
       <field><col-name>PRODUCT_ID</col-name><type>id-ne</type></field>
       <field><col-name>PRIMARY_PRODUCT_CATEGORY_ID</col-name><type>id</type></field>
       <field><col-name>MANUFACTURER_PARTY_ID</col-name><type>id</type></field>
-      <field><col-name>UOM_ID</col-name><type>id</type></field>
-      <field><col-name>QUANTITY_INCLUDED</col-name><type>floating-point</type></field>
       <field><col-name>INTRODUCTION_DATE</col-name><type>date-time</type></field>
       <field><col-name>SALES_DISCONTINUATION_DATE</col-name><type>date-time</type></field>
       <field><col-name>SUPPORT_DISCONTINUATION_DATE</col-name><type>date-time</type></field>
@@ -6910,7 +6924,12 @@
       <field><col-name>LONG_DESCRIPTION</col-name><type>very-long</type></field>
       <field><col-name>SMALL_IMAGE_URL</col-name><type>url</type></field>
       <field><col-name>LARGE_IMAGE_URL</col-name><type>url</type></field>
-      <field><col-name>DEFAULT_PRICE</col-name><type>currency-amount</type></field>	
+      <field><col-name>DEFAULT_PRICE</col-name><type>currency-amount</type></field>
+      <field><col-name>QUANTITY_UOM_ID</col-name><type>id</type></field>
+      <field><col-name>QUANTITY_INCLUDED</col-name><type>floating-point</type></field>
+      <field><col-name>WEIGHT_UOM_ID</col-name><type>id</type></field>
+      <field><col-name>WEIGHT</col-name><type>floating-point</type></field>
+      <field><col-name>TAXABLE</col-name><type>indicator</type></field>	
       <prim-key-col>PRODUCT_ID</prim-key-col>
       <relation>
         <type>many</type>
@@ -6940,7 +6959,7 @@
       <relation>
         <type>one</type><title>Quantity</title>
         <rel-table-name>UOM</rel-table-name>
-        <key-map><col-name>UOM_ID</col-name></key-map>
+        <key-map><col-name>QUANTITY_UOM_ID</col-name><rel-col-name>UOM_ID</rel-col-name></key-map>
       </relation>
       <relation>
         <type>many</type>
@@ -6986,6 +7005,11 @@
         <type>many</type>
         <rel-table-name>SUPPLIER_PRODUCT</rel-table-name>
         <key-map><col-name>PRODUCT_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>one</type><title>Weight</title>
+        <rel-table-name>UOM</rel-table-name>
+        <key-map><col-name>WEIGHT_UOM_ID</col-name><rel-col-name>UOM_ID</rel-col-name></key-map>
       </relation>
     </entity>	
     <entity>
