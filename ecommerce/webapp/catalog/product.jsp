@@ -3,6 +3,8 @@
 <%@ page import="java.util.*, org.ofbiz.core.util.*, org.ofbiz.core.entity.*"%>
 <%@ page import="org.ofbiz.core.pseudotag.*, org.ofbiz.commonapp.product.product.*"%>
 
+<jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" />
+
 <%-- ====================================================== --%>
 <%-- Get the requested product                              --%>
 <%-- ====================================================== --%>
@@ -28,6 +30,7 @@
 <ofbiz:if name="product">
     <ofbiz:object name="product" property="product" />
     <% String productTypeId = product.getString("productTypeId"); %>
+    <% Map featureTypes = new HashMap(); %>
     <% List featureOrder = null; %>
 
     <%-- ====================================================== --%>
@@ -50,18 +53,26 @@
               Map variantTree = (Map) pageContext.getAttribute("variantTree");
               Map imageMap = (Map) pageContext.getAttribute("variantSample");
               Debug.logVerbose("Setup variables: " + featureOrder + " / " + variantTree + " / " + imageMap);
+
+              Iterator foi = featureOrder.iterator();
+              while (foi.hasNext()) {
+                  String featureKey = (String) foi.next();
+                  GenericValue featureValue = delegator.findByPrimaryKeyCache("ProductFeatureType", UtilMisc.toMap("productFeatureTypeId", featureKey));
+                  String fValue = featureValue.get("description") != null ? featureValue.getString("description") : featureValue.getString("productFeatureTypeId");
+                  featureTypes.put(featureKey, fValue);
+              }
             %>
 
 
             <%!
-                public static String buildNext(Map map, List order, String current, String prefix) {
+                public static String buildNext(Map map, List order, String current, String prefix, Map featureTypes) {
                     Set keySet = map.keySet();
                     int ct = 0;
                     Iterator i = keySet.iterator();
                     StringBuffer buf = new StringBuffer();
                     buf.append("function list" + current + prefix + "() { ");
                     buf.append("document.forms[\"addform\"].elements[\"" + current + "\"].options.length = 1;");
-                    buf.append("document.forms[\"addform\"].elements[\"" + current + "\"].options[0] = new Option(\"" + current + "\",\"\",true,true);");
+                    buf.append("document.forms[\"addform\"].elements[\"" + current + "\"].options[0] = new Option(\"" + featureTypes.get(current) + "\",\"\",true,true);");
                     while (i.hasNext()) {
                         Object key = i.next();
                         Object value = map.get(key);
@@ -84,26 +95,27 @@
                             Object key = i2.next();
                             Map value = (Map) map.get(key);
                             String newPrefix = prefix + "_" + ct;
-                            buf.append(buildNext(value, order, nextOrder, newPrefix));
+                            buf.append(buildNext(value, order, nextOrder, newPrefix, featureTypes));
                         }
                     }
                     return buf.toString();
                 }
             %>
 
-            <script language="JavaScript">
-            <!--
+           <script language="JavaScript">
+           <!--
                 var IMG = new Array(<%=variantTree.size()%>);
                 var OPT = new Array(<%=featureOrder.size()%>);
-                <% for (int li = 0; li < featureOrder.size(); li++) { %>
-                    OPT[<%=li%>] = "<%=featureOrder.get(li)%>";
+
+                <% for (int li = 0; li < featureOrder.size(); li++) {%>
+                     OPT[<%=li%>] = "<%=featureOrder.get(li)%>";
                 <% } %>
-     
+
                 <%-- Build the top level --%>
                 <% String topLevelName = (String) featureOrder.get(0);%>
                 function list<%=topLevelName%>() {
                     document.forms["addform"].elements["<%=topLevelName%>"].options.length = 1;
-                    document.forms["addform"].elements["<%=topLevelName%>"].options[0] = new Option("<%=topLevelName%>","",true,true);
+                    document.forms["addform"].elements["<%=topLevelName%>"].options[0] = new Option("<%=featureTypes.get(topLevelName)%>","",true,true);
                     <%
                       if (variantTree != null) {
                           Set vTreeKeySet = variantTree.keySet();
@@ -139,7 +151,7 @@
                           Object varTree = variantTree.get(tli.next());
                           if (varTree instanceof Map) {
                 %>
-                            <%=buildNext((Map)varTree, featureOrder, (String)featureOrder.get(1), cnt)%>
+                            <%=buildNext((Map)varTree, featureOrder, (String)featureOrder.get(1), cnt, featureTypes)%>
                 <%
                          }
                           topLevelKeysCt++;
@@ -259,7 +271,7 @@
               <%Debug.logVerbose("CurrentType: " + currentType);%>
               <div class="tabletext">
                 <select name="<%=currentType%>" onChange="getList(this.name, this.options[this.selectedIndex].value)">
-                  <option><%=currentType%></option>
+                  <option><%=featureTypes.get(currentType)%></option>
                 </select>
               </div>
             </ofbiz:iterator>
