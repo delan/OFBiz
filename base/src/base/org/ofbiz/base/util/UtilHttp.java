@@ -1,5 +1,5 @@
 /*
- * $Id: UtilHttp.java,v 1.7 2003/09/21 05:58:51 jonesde Exp $
+ * $Id: UtilHttp.java,v 1.8 2003/09/26 17:05:35 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -48,7 +48,7 @@ import javax.servlet.http.HttpSession;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
- * @version    $Revision: 1.7 $
+ * @version    $Revision: 1.8 $
  * @since      2.1
  */
 public class UtilHttp {
@@ -183,11 +183,20 @@ public class UtilHttp {
     }
 
     public static void setLocale(HttpServletRequest request, String localeString) {
-        UtilHttp.setLocale(request, UtilMisc.parseLocale(localeString));        
+        UtilHttp.setLocale(request, UtilMisc.parseLocale(localeString));
     }
 
     public static void setLocale(HttpServletRequest request, Locale locale) {
-        request.getSession().setAttribute("locale", locale);        
+        request.getSession().setAttribute("locale", locale);
+    }
+    
+    /** Simple event to set the users per-session locale setting */
+    public static String setSessionLocale(HttpServletRequest request, HttpServletResponse response) {
+        String localeString = request.getParameter("locale");
+        if (UtilValidate.isNotEmpty(localeString)) {
+            UtilHttp.setLocale(request, localeString);
+        }
+        return "success";
     }
     
     /** URL Encodes a Map of arguements */
