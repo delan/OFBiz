@@ -75,7 +75,7 @@ public class SetServiceFields extends MethodOperation {
         try {
             modelService = dispatcher.getDispatchContext().getModelService(serviceName);
         } catch (GenericServiceException e) {
-            String errMsg = "In set-entity-fields could not get service definition for service name [" + serviceName + "]: " + e.toString();
+            String errMsg = "In set-service-fields could not get service definition for service name [" + serviceName + "]: " + e.toString();
             Debug.logError(e, errMsg);
             methodContext.setErrorReturn(errMsg, simpleMethod);
             return false;
