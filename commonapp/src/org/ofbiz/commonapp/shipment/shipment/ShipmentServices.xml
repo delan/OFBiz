@@ -100,7 +100,7 @@
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
 
         <!-- if no shipmentItemSeqId, generate one based on existing items, ie one greater than the current higher number -->
-        <make-next-seq-id value-name="newEntity" seq-field-name="shipmentItemSeqId" numeric-padding="5" increment-by="1"/>
+        <make-next-seq-id value-name="newEntity" seq-field-name="shipmentItemSeqId"/>
         <field-to-result field-name="shipmentItemSeqId" map-name="newEntity" result-name="shipmentItemSeqId"/>
         
         <create-value value-name="newEntity"/>
@@ -141,7 +141,7 @@
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
 
         <!-- if no shipmentPackageSeqId, generate one based on existing items, ie one greater than the current higher number -->
-        <make-next-seq-id value-name="newEntity" seq-field-name="shipmentPackageSeqId" numeric-padding="5" increment-by="1"/>
+        <make-next-seq-id value-name="newEntity" seq-field-name="shipmentPackageSeqId"/>
         <field-to-result field-name="shipmentPackageSeqId" map-name="newEntity" result-name="shipmentPackageSeqId"/>
         
         <create-value value-name="newEntity"/>
@@ -256,7 +256,7 @@
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
 
         <!-- if no shipmentRouteSegmentSeqId, generate one based on existing items, ie one greater than the current higher number -->
-        <make-next-seq-id value-name="newEntity" seq-field-name="shipmentRouteSegmentId" numeric-padding="5" increment-by="1"/>
+        <make-next-seq-id value-name="newEntity" seq-field-name="shipmentRouteSegmentId"/>
         <field-to-result field-name="shipmentRouteSegmentId" map-name="newEntity" result-name="shipmentRouteSegmentId"/>
         
         <create-value value-name="newEntity"/>
