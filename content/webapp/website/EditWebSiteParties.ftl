@@ -30,6 +30,7 @@
   <div class='tabContainer'>
   <a href="<@ofbizUrl>/EditWebSite?webSiteId=${webSiteId}</@ofbizUrl>" class="tabButton">Catalog</a>
   <a href="<@ofbizUrl>/EditWebSiteParties?webSiteId=${webSiteId}</@ofbizUrl>" class="tabButtonSelected">Parties</a>
+  <a href="<@ofbizUrl>/EditWebSiteProdCatalogs?webSiteId=${webSiteId}</@ofbizUrl>" class="tabButton">Catalogs</a>
   </div>
 </#if>
 

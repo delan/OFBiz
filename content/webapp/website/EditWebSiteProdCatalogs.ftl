@@ -28,16 +28,23 @@
 
 <#if webSiteId?has_content>
   <div class='tabContainer'>
-  <a href="<@ofbizUrl>/EditWebSite?webSiteId=${webSiteId}</@ofbizUrl>" class="tabButtonSelected">WebSite</a>
+  <a href="<@ofbizUrl>/EditWebSite?webSiteId=${webSiteId}</@ofbizUrl>" class="tabButton">Catalog</a>
   <a href="<@ofbizUrl>/EditWebSiteParties?webSiteId=${webSiteId}</@ofbizUrl>" class="tabButton">Parties</a>
-  <a href="<@ofbizUrl>/EditWebSiteProdCatalogs?webSiteId=${webSiteId}</@ofbizUrl>" class="tabButton">Catalogs</a>
+  <a href="<@ofbizUrl>/EditWebSiteProdCatalogs?webSiteId=${webSiteId}</@ofbizUrl>" class="tabButtonSelected">Catalogs</a>
   </div>
 </#if>
-<div class="head1">Web Site <span class='head2'><#if (webSite.siteName)?has_content>"${webSite.siteName}"</#if> [ID:${webSiteId?if_exists}]</span></div>
-<a href="<@ofbizUrl>/EditWebSite</@ofbizUrl>" class="buttontext">[New WebSite]</a>
 
-${editWebSiteWrapper.renderFormString()}
+<div class="head1">Catalogs <span class='head2'>for <#if (webSite.siteName)?has_content>"${webSite.siteName}"</#if> [ID:${webSiteId?if_exists}]</span></div>
+<a href="<@ofbizUrl>/EditWebSite</@ofbizUrl>" class="buttontext">[New WebSite]</a>
+<br>
+<br>
+<#if webSiteId?has_content>
+${updateProdCatalogToWebSiteWrapper.renderFormString()}
+<br>
+${addProdCatalogToWebSiteWrapper.renderFormString()}
+</#if>
+<br>
 
 <#else>
-  <h3>You do not have permission to view this page. ("CONTENTMGR_VIEW" or "CONTENTMGR_ADMIN" needed)</h3>
+ <h3>You do not have permission to view this page. ("CONTENTMGR_VIEW" or "CONTENTMGR_ADMIN" needed)</h3>
 </#if>

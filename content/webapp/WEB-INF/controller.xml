@@ -120,6 +120,26 @@
     	<response name="success" type="view" value="EditWebSiteParties"/>
     	<response name="error" type="view" value="EditWebSiteParties"/>
     </request-map>
+
+    <!-- ================ WebSite ProdCatalogs Requests ================= -->
+    <request-map uri="EditWebSiteProdCatalogs"><security https="true" auth="true"/>
+    	<response name="success" type="view" value="EditWebSiteProdCatalogs"/>
+    </request-map>
+    <request-map uri="addProdCatalogToWebSite"><security https="true" auth="true"/>
+        <event type="service" path="" invoke="addProdCatalogToWebSite"/>
+    	<response name="success" type="view" value="EditWebSiteProdCatalogs"/>
+    	<response name="error" type="view" value="EditWebSiteProdCatalogs"/>
+    </request-map>
+    <request-map uri="updateProdCatalogToWebSite"><security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateProdCatalogToWebSite"/>
+    	<response name="success" type="view" value="EditWebSiteProdCatalogs"/>
+    	<response name="error" type="view" value="EditWebSiteProdCatalogs"/>
+    </request-map>
+    <request-map uri="removeProdCatalogFromWebSite"><security https="true" auth="true"/>
+        <event type="service" path="" invoke="removeProdCatalogFromWebSite"/>
+    	<response name="success" type="view" value="EditWebSiteProdCatalogs"/>
+    	<response name="error" type="view" value="EditWebSiteProdCatalogs"/>
+    </request-map>
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
@@ -130,5 +150,6 @@
     <view-map name="FindWebSite" type="jpublish" page="/website/FindWebSite.ftl"/>
     <view-map name="EditWebSite" type="jpublish" page="/website/EditWebSite.ftl"/>
     <view-map name="EditWebSiteParties" type="jpublish" page="/website/EditWebSiteParties.ftl"/>
+    <view-map name="EditWebSiteProdCatalogs" type="jpublish" page="/website/EditWebSiteProdCatalogs.ftl"/>
     <!-- end of view mappings -->
 </site-conf>
