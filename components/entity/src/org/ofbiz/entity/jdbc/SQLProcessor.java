@@ -269,7 +269,13 @@ public class SQLProcessor {
         } catch (SQLException sqle) {
             throw new GenericDataSourceException("Unable to esablish a connection with the database.", sqle);
         }
-        
+
+        // make sure we actually did get a connection
+        if (_connection == null) {
+            throw new GenericDataSourceException("Unable to esablish a connection with the database. Connection was null!");
+        }
+
+        // test the connection
         testConnection(_connection);
         
         /* causes problems w/ postgres ??
