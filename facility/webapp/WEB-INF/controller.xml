@@ -101,7 +101,7 @@
         <response name="error" type="view" value="EditFacility"/>
     </request-map>
 
-    <request-map uri="FindFacilityLocations">
+    <request-map uri="FindFacilityLocation">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindFacilityLocation"/>
     </request-map>        
