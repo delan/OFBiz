@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.4  2001/09/05 20:22:12  jonesde
+ * Added another checknull with 4 params
+ *
  * Revision 1.3  2001/08/31 17:44:04  epabst
  * added shopping cart code
  *
@@ -51,6 +54,7 @@ public class UtilFormatOut
 {
   //------------------- price format handlers -------------------
   static DecimalFormat priceDecimalFormat = new DecimalFormat("#,##0.00");
+
   /** Formats a Double representing a price into a string
    * @param price The price Double to be formatted
    * @return A String with the formatted price
@@ -67,6 +71,27 @@ public class UtilFormatOut
   public static String formatPrice(double price)
   {
     return priceDecimalFormat.format(price);
+  }
+
+  //------------------- percentage format handlers -------------------
+  static DecimalFormat percentageDecimalFormat = new DecimalFormat("##0.##%");
+
+  /** Formats a Double representing a percentage into a string
+   * @param percentage The percentage Double to be formatted
+   * @return A String with the formatted percentage
+   */  
+  public static String formatPercentage(Double percentage)
+  {
+    if(percentage == null) return "";
+    return formatPercentage(percentage.doubleValue());
+  }
+  /** Formats a double representing a percentage into a string
+   * @param percentage The percentage double to be formatted
+   * @return A String with the formatted percentage
+   */  
+  public static String formatPercentage(double percentage)
+  {
+    return percentageDecimalFormat.format(percentage);
   }
 
   //------------------- quantity format handlers -------------------
