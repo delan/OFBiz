@@ -568,6 +568,7 @@
     <entity-group group="org.ofbiz.commonapp" entity="RoleType" />
     <entity-group group="org.ofbiz.commonapp" entity="RoleTypeAndParty" />
     <entity-group group="org.ofbiz.commonapp" entity="RoleTypeAttr" />
+    <entity-group group="org.ofbiz.commonapp" entity="Vendor" />
 
   <!-- ========================================================= -->
   <!-- org.ofbiz.commonapp.product.catalog -->

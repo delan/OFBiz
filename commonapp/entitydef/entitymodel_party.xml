@@ -1088,6 +1088,9 @@
       <relation type="one-nofk" rel-entity-name="Affiliate">
         <key-map field-name="partyId"/>
       </relation>
+      <relation type="one-nofk" rel-entity-name="Vendor">
+        <key-map field-name="partyId"/>
+      </relation>
       <relation type="many" rel-entity-name="BudgetReview">
         <key-map field-name="partyId"/>
       </relation>
@@ -1996,6 +1999,19 @@
       </relation>
       <relation type="many" title="ValidTo" rel-entity-name="PartyRelationshipType">
         <key-map field-name="roleTypeId" rel-field-name="roleTypeIdValidTo"/>
+      </relation>
+    </entity>
+    <entity entity-name="Vendor"
+            package-name="org.ofbiz.commonapp.party.party"
+            title="Vendor Entity">
+      <field name="partyId" type="id-ne"></field>
+      <field name="manifestCompanyName" type="name"></field>
+      <field name="manifestCompanyTitle" type="name"></field>
+      <field name="manifestLogoUrl" type="url"></field>
+      <field name="manifestPolicies" type="very-long"></field>
+      <prim-key field="partyId"/>
+      <relation type="one" fk-name="VENDOR_PARTY" rel-entity-name="Party">
+        <key-map field-name="partyId"/>
       </relation>
     </entity>
 </entitymodel>
