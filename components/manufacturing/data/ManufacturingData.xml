@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<entity-engine-xml>
+    <MrpInventoryEventType inventoryEventTypeId="MRP_REQUIREMENT" description="Mrp requirement" inOut="-"/>
+    <MrpInventoryEventType inventoryEventTypeId="PROD_ORDER_RECP" description="Production Order receipt" inOut="+"/>
+    <MrpInventoryEventType inventoryEventTypeId="PUR_ORDER_RECP" description="Purchase Order receipt" inOut="+"/>
+    <MrpInventoryEventType inventoryEventTypeId="SALE_ORDER_SHIP" description="Sales order shipment" inOut="-"/>
+    <TechDataCalendarWeek calendarWeekId="DEFAULT" description="8hours/days" mondayStartTime="08:30:00" mondayCapacity="2.88E7" tuesdayStartTime="08:30:00" tuesdayCapacity="2.88E7" wednesdayStartTime="08:30:00" wednesdayCapacity="2.88E7" thursdayStartTime="08:30:00" thursdayCapacity="2.88E7" fridayStartTime="08:30:00" fridayCapacity="2.88E7"/>
+    <TechDataCalendar calendarId="DEFAULT" description="Default calendar used when no specific calendar is defined" calendarWeekId="DEFAULT"/>
+</entity-engine-xml>
