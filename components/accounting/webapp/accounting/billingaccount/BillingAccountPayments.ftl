@@ -22,7 +22,7 @@
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Olivier Heintz (olivier.heintz@nereide.biz)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.2
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -50,7 +50,7 @@ ${pages.get("/billingaccount/BillingAccountTabBar.ftl")}
             <td><div class="tabletext">${payment.invoiceId?default(uiLabelMap.CommonNA)}</div></td>
             <td><div class="tabletext">${payment.invoiceItemSeqId?default(uiLabelMap.CommonNA)}</div></td>
             <td><div class="tabletext">${payment.effectiveDate?string}</div></td>
-            <td align="right"><div class="tabletext">${payment.amount?string.currency}</div></td>   
+            <td align="right"><div class="tabletext"><@ofbizCurrency amount=payment.amountApplied isoCode=payment.currencyUomId?if_exists/> of <@ofbizCurrency amount=payment.amount isoCode=payment.currencyUomId?if_exists/></div></td>
         </tr>
     </#list>
 </table>
