@@ -51,7 +51,7 @@ public class TrackingCodeEvents {
      * of events that run on every request. This event looks for the parameter 
      * <code>autoTrackingCode</code>.
      */
-    public static String checkAutoTrackingCode(HttpServletRequest request, HttpServletResponse response) {
+    public static String checkTrackingCodeUrlParam(HttpServletRequest request, HttpServletResponse response) {
         String trackingCodeId = request.getParameter("autoTrackingCode");
         if (UtilValidate.isNotEmpty(trackingCodeId)) {
             //tracking code is specified on the request, get the TrackingCode value and handle accordingly
@@ -60,7 +60,7 @@ public class TrackingCodeEvents {
             try {
                 trackingCode = delegator.findByPrimaryKeyCache("TrackingCode", UtilMisc.toMap("trackingCodeId", trackingCodeId));
             } catch (GenericEntityException e) {
-                Debug.logError(e, "Error looking up TrackingCode with trackingCodeId [" + trackingCodeId + "]");
+                Debug.logError(e, "Error looking up TrackingCode with trackingCodeId [" + trackingCodeId + "], ignoring this trackingCodeId");
                 return "error";
             }
             
@@ -68,6 +68,17 @@ public class TrackingCodeEvents {
                 Debug.logError("TrackingCode not found for trackingCodeId [" + trackingCodeId + "], ignoring this trackingCodeId.");
                 //this return value will be ignored, but we'll designate this as an error anyway
                 return "error";
+            }
+
+            //check effective dates
+            java.sql.Timestamp nowStamp = UtilDateTime.nowTimestamp();
+            if (trackingCode.get("fromDate") != null && nowStamp.before(trackingCode.getTimestamp("fromDate"))) {
+                if (Debug.infoOn()) Debug.logInfo("The TrackingCode with ID [" + trackingCodeId + "] has not yet gone into effect, ignoring this trackingCodeId");
+                return "success";
+            }
+            if (trackingCode.get("thruDate") != null && nowStamp.after(trackingCode.getTimestamp("thruDate"))) {
+                if (Debug.infoOn()) Debug.logInfo("The TrackingCode with ID [" + trackingCodeId + "] has expired, ignoring this trackingCodeId");
+                return "success";
             }
             
             //persist that info by associating with the current visit
@@ -77,7 +88,7 @@ public class TrackingCodeEvents {
             } else {
                 GenericValue trackingCodeVisit = delegator.makeValue("TrackingCodeVisit", 
                         UtilMisc.toMap("trackingCodeId", trackingCodeId, "visitId", visit.get("visitId"), 
-                        "fromDate", UtilDateTime.nowTimestamp()));
+                        "fromDate", UtilDateTime.nowTimestamp(), "trackingCodeSourceId", "URL_PARAM"));
                 try {
                     trackingCodeVisit.create();
                 } catch (GenericEntityException e) {
@@ -85,9 +96,13 @@ public class TrackingCodeEvents {
                 }
             }
             
-            //TODO: keep a list of current tracking codes in the session (is this needed?)
+            //write trackingCode cookies with the value set to the trackingCodeId
+            //NOTE: just write these cookies and if others exist from other tracking codes they will be overwritten, ie only keep the newest
             
-            //TODO: keep a tracking code history in cookies too
+            //TODO: if trackingCode.billableLifetime not null and is > 0 write a billable cookie with name in the form: TKCDB_{trackingCode.trackingCodeTypeId} and timeout will be trackingCode.billableLifetime
+            
+            //TODO: if trackingCode.trackableLifetime not null and is > 0 write a trackable cookie with name in the form: TKCDT_{trackingCode.trackingCodeTypeId} and timeout will be trackingCode.trackableLifetime
+            
             
             //if forward/redirect is needed, do a response.sendRedirect and return null to tell the control servlet to not do any other requests/views
             String redirectUrl = trackingCode.getString("redirectUrl");
@@ -100,6 +115,17 @@ public class TrackingCodeEvents {
                 return null;
             }
         }
+        
+        return "success";
+    }
+    
+    /** If attaching TrackingCode Cookies to the visit is desired this event should be added to the list 
+     * of events that run on the first hit in a visit.
+     */
+    public static String checkTrackingCodeCookies(HttpServletRequest request, HttpServletResponse response) {
+        //TODO: loop through cookies and look for ones with a name that starts with TKCDT_ for trackable cookies
+        
+        //TODO: for each trackingCodeId found in this way attach to the visit with the COOKIE trackingCodeSourceId
         
         return "success";
     }
