@@ -59,7 +59,6 @@ public class OrderServices {
 
         // create the order object
         String orderId = delegator.getNextSeqId("OrderHeader").toString();
-        String shippingInstructions = (String) context.get("shippingInstructions");
         String billingAccountId = (String) context.get("billingAccountId");
         GenericValue order = delegator.makeValue("OrderHeader",
                 UtilMisc.toMap("orderId", orderId, "orderTypeId", "SALES_ORDER",
@@ -94,13 +93,14 @@ public class OrderServices {
         // set the shipment preference
         String shipmentMethodTypeId = (String) context.get("shipmentMethodTypeId");
         String carrierPartyId = (String) context.get("carrierPartyId");
-        Boolean maySplit = (Boolean) context.get("maySplit");
         GenericValue orderShipmentPreference = delegator.makeValue("OrderShipmentPreference",
                 UtilMisc.toMap("orderId", orderId, "orderItemSeqId", DataModelConstants.SEQ_ID_NA,
                         "shipmentMethodTypeId", shipmentMethodTypeId,
-                        "carrierPartyId", carrierPartyId, "carrierRoleTypeId", "CARRIER",
-                        "shippingInstructions", shippingInstructions));
-        orderShipmentPreference.set("maySplit", maySplit);
+                        "carrierPartyId", carrierPartyId, "carrierRoleTypeId", "CARRIER"));
+        orderShipmentPreference.set("shippingInstructions", context.get("shippingInstructions"));
+        orderShipmentPreference.set("maySplit", context.get("maySplit"));
+        orderShipmentPreference.set("giftMessage", context.get("giftMessage"));
+        orderShipmentPreference.set("isGift", context.get("isGift"));
         toBeStored.add(orderShipmentPreference);
 
         // set the order items

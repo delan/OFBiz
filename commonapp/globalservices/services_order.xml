@@ -28,6 +28,8 @@
         <attribute name="shipmentMethodTypeId" type="String" mode="IN"/>
         <attribute name="carrierPartyId" type="String" mode="IN"/>
         <attribute name="maySplit" type="Boolean" mode="IN"/>
+        <attribute name="giftMessage" type="String" mode="IN"/>
+        <attribute name="isGift" type="Boolean" mode="IN"/>
         <attribute name="paymentMethodId" type="String" mode="IN"/>
         <attribute name="paymentMethod" type="org.ofbiz.core.entity.GenericValue" mode="IN" optional="true"/>
         <attribute name="orderId" type="String" mode="OUT"/>
