@@ -1,5 +1,5 @@
 /*
- * $Id: EntityUtil.java,v 1.10 2004/05/08 17:40:34 jonesde Exp $
+ * $Id: EntityUtil.java,v 1.11 2004/07/07 06:33:23 doogie Exp $
  *
  * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
@@ -50,6 +50,7 @@ import org.ofbiz.entity.condition.EntityDateFilterCondition;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityFieldMap;
 import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.entity.condition.OrderByItem;
 import org.ofbiz.entity.model.ModelField;
 
 /**
@@ -479,11 +480,9 @@ public class EntityUtil {
         return result;
     }
 
-    static class OrderByComparator implements Comparator {
+    static class OrderByComparator extends OrderByItem implements Comparator {
 
-        private String field;
         private ModelField modelField = null;
-        private boolean descending, upper = false, lower = false;
         private Comparator next = null;
 
         OrderByComparator(List orderBy) {
@@ -491,44 +490,10 @@ public class EntityUtil {
         }
 
         private OrderByComparator(List orderBy, int startIndex) {
+            super();
             if (orderBy == null) throw new IllegalArgumentException("orderBy may not be empty");
             if (startIndex >= orderBy.size()) throw new IllegalArgumentException("startIndex may not be greater than or equal to orderBy size");
-            String fieldAndDirection = ((String) orderBy.get(startIndex)).trim();
-            String upper = fieldAndDirection.trim().toUpperCase();
-
-            if (upper.endsWith(" DESC")) {
-                this.descending = true;
-                upper = upper.substring(0, upper.length() - 5);
-                fieldAndDirection = fieldAndDirection.substring(0, fieldAndDirection.length() - 5);
-            } else if (upper.endsWith(" ASC")) {
-                this.descending = false;
-                upper = upper.substring(0, upper.length() - 4);
-                fieldAndDirection = fieldAndDirection.substring(0, fieldAndDirection.length() - 4);
-            } else if (upper.startsWith("-")) {
-                this.descending = true;
-                upper = upper.substring(1, upper.length());
-                fieldAndDirection = fieldAndDirection.substring(1, fieldAndDirection.length());
-            } else if (upper.startsWith("+")) {
-                this.descending = false;
-                upper = upper.substring(1, upper.length());
-                fieldAndDirection = fieldAndDirection.substring(1, fieldAndDirection.length());
-            } else {
-                this.descending = false;
-            }
-            if (upper.endsWith(")")) {
-                upper = upper.substring(0, upper.length() - 1);
-                fieldAndDirection = fieldAndDirection.substring(0, fieldAndDirection.length() - 1);
-                if (upper.startsWith("UPPER(")) {
-                    this.upper = true;
-                    upper = upper.substring(6);
-                    fieldAndDirection = fieldAndDirection.substring(6);
-                } else if (upper.startsWith("LOWER(")) {
-                    this.lower = true;
-                    upper = upper.substring(6);
-                    fieldAndDirection = fieldAndDirection.substring(6);
-                }
-            }
-            this.field = fieldAndDirection;
+            parse(((String) orderBy.get(startIndex)));
             if (startIndex + 1 < orderBy.size()) {
                 this.next = new OrderByComparator(orderBy, startIndex + 1);
             }// else keep null
@@ -561,10 +526,10 @@ public class EntityUtil {
             if (value == null) return value2 == null ? 0 : 1;
             if (value2 == null) return value == null ? 0 : -1;
             if (value instanceof String) {
-                if (this.lower) {
+                if (caseSensitivity == LOWER) {
                     value = ((String) value).toLowerCase();
                     value2 = ((String) value2).toLowerCase();
-                } else if (this.upper) {
+                } else if (caseSensitivity == UPPER) {
                     value = ((String) value).toUpperCase();
                     value2 = ((String) value2).toUpperCase();
                 }
