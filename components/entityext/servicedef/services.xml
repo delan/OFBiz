@@ -150,7 +150,7 @@
     
     <!-- Services to call store remotely -->
     <service name="remoteStoreEntitySyncData" engine="http"
-            location="http://localhost:8080/webtools/control/httpService" invoke="storeEntitySyncData" auth="true">
+            location="http://localhost:8080/webtools/control/httpService" invoke="storeEntitySyncData" auth="true" require-new-transaction="true" transaction-timout="300">
         <description>Run Entity Sync</description>
         <implements service="storeEntitySyncData"/>
     </service>
