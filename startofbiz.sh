@@ -1,6 +1,6 @@
 #!/bin/sh
 ####
-# $Id: startofbiz.sh,v 1.7 2004/07/31 21:54:00 ajzeneski Exp $
+# $Id$
 ####
 
 # shutdown settings
@@ -27,7 +27,7 @@ else
 fi
 
 # start ofbiz
-$JAVA $VMARGS -jar ofbiz.jar >>$OFBIZ_LOG 2>>$OFBIZ_LOG&
+$JAVA $VMARGS -jar ofbiz.jar $* >>$OFBIZ_LOG 2>>$OFBIZ_LOG&
 #$JAVA $VMARGS -jar ofbiz.jar
 exit 0
 
