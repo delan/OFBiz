@@ -24,7 +24,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author David E. Jones (jonesde@ofbiz.org)
- *@created    Wed Sep 19 18:53:16 PDT 2001
+ *@created    Thu Sep 20 06:48:39 MDT 2001
  *@version    1.0
  */
 -->
@@ -33,7 +33,7 @@
     <!-- ====================== Root Element ======================= -->
     <!ELEMENT entitymodel ( title?, description?, copyright?, author?, version?, entity* )>
     <!-- ================= Children of entitymodel =================== -->
-    <!ELEMENT entity ( description?, field*, prim-key-field*, relation* )>
+    <!ELEMENT entity ( description?, field*, prim-key*, relation* )>
     <!ELEMENT title ( #PCDATA  )>
     <!ELEMENT description ( #PCDATA  )>
     <!ELEMENT copyright ( #PCDATA  )>
@@ -56,7 +56,9 @@
     <!ATTLIST entity
 	version CDATA #IMPLIED >
     <!ELEMENT field ( validate* )>
-    <!ELEMENT prim-key-field ( #PCDATA  )>
+    <!ELEMENT prim-key EMPTY>
+    <!ATTLIST prim-key
+	field CDATA #REQUIRED >
     <!ELEMENT relation ( key-map* )>
     <!-- ==================== Children of field ===================== -->
     <!ATTLIST field
@@ -130,7 +132,7 @@
       <field name="budgetTypeId" type="id"></field>
       <field name="standardTimePeriodId" type="id"></field>
       <field name="comment" type="comment"></field>	
-      <prim-key-field>budgetId</prim-key-field>
+      <prim-key field="budgetId" />
       <relation type="one" rel-entity-name="BudgetType">
         <key-map field-name="budgetTypeId" />
       </relation>
@@ -147,8 +149,8 @@
       <field name="budgetId" type="id-ne"></field>
       <field name="name" type="id-long-ne"></field>
       <field name="value" type="value"></field>	
-      <prim-key-field>budgetId</prim-key-field>	
-      <prim-key-field>name</prim-key-field>
+      <prim-key field="budgetId" />	
+      <prim-key field="name" />
       <relation type="one" rel-entity-name="Budget">
         <key-map field-name="budgetId" />
       </relation>
@@ -165,8 +167,8 @@
       <field name="amount" type="currency-amount"></field>
       <field name="purpose" type="long-varchar"></field>
       <field name="justification" type="long-varchar"></field>	
-      <prim-key-field>budgetId</prim-key-field>	
-      <prim-key-field>budgetItemSeqId</prim-key-field>
+      <prim-key field="budgetId" />	
+      <prim-key field="budgetItemSeqId" />
       <relation type="one" rel-entity-name="BudgetItemType">
         <key-map field-name="budgetItemTypeId" />
       </relation>
@@ -185,9 +187,9 @@
       <field name="budgetItemSeqId" type="id-ne"></field>
       <field name="name" type="id-long-ne"></field>
       <field name="value" type="value"></field>	
-      <prim-key-field>budgetId</prim-key-field>	
-      <prim-key-field>budgetItemSeqId</prim-key-field>	
-      <prim-key-field>name</prim-key-field>
+      <prim-key field="budgetId" />	
+      <prim-key field="budgetItemSeqId" />	
+      <prim-key field="name" />
       <relation type="one" rel-entity-name="BudgetItem">
         <key-map field-name="budgetId" />
         <key-map field-name="budgetItemSeqId" />
@@ -203,7 +205,7 @@
       <field name="parentTypeId" type="id-ne"></field>
       <field name="hasTable" type="indicator"></field>
       <field name="description" type="description"></field>	
-      <prim-key-field>budgetItemTypeId</prim-key-field>
+      <prim-key field="budgetItemTypeId" />
       <relation type="one" title="Parent" rel-entity-name="BudgetItemType">
         <key-map field-name="parentTypeId" rel-field-name="budgetItemTypeId" />
       </relation>
@@ -222,8 +224,8 @@
             title="Budget Item Type Attribute Entity">
       <field name="budgetItemTypeId" type="id-ne"></field>
       <field name="name" type="id-long-ne"></field>	
-      <prim-key-field>budgetItemTypeId</prim-key-field>	
-      <prim-key-field>name</prim-key-field>
+      <prim-key field="budgetItemTypeId" />	
+      <prim-key field="name" />
       <relation type="one" rel-entity-name="BudgetItemType">
         <key-map field-name="budgetItemTypeId" />
       </relation>
@@ -242,10 +244,10 @@
       <field name="partyId" type="id-ne"></field>
       <field name="budgetReviewResultTypeId" type="id-ne"></field>
       <field name="reviewDate" type="date-time"></field>	
-      <prim-key-field>budgetId</prim-key-field>	
-      <prim-key-field>budgetReviewId</prim-key-field>	
-      <prim-key-field>partyId</prim-key-field>	
-      <prim-key-field>budgetReviewResultTypeId</prim-key-field>
+      <prim-key field="budgetId" />	
+      <prim-key field="budgetReviewId" />	
+      <prim-key field="partyId" />	
+      <prim-key field="budgetReviewResultTypeId" />
     </entity>	
     <entity entity-name="BudgetReviewResultType" 
             package-name="org.ofbiz.commonapp.accounting.budget"
@@ -253,7 +255,7 @@
       <field name="budgetReviewResultTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>
       <field name="comment" type="comment"></field>	
-      <prim-key-field>budgetReviewResultTypeId</prim-key-field>
+      <prim-key field="budgetReviewResultTypeId" />
     </entity>	
     <entity entity-name="BudgetRevision" 
             package-name="org.ofbiz.commonapp.accounting.budget"
@@ -261,8 +263,8 @@
       <field name="budgetId" type="id-ne"></field>
       <field name="revisionSeqId" type="id-ne"></field>
       <field name="dateRevised" type="date-time"></field>	
-      <prim-key-field>budgetId</prim-key-field>	
-      <prim-key-field>revisionSeqId</prim-key-field>
+      <prim-key field="budgetId" />	
+      <prim-key field="revisionSeqId" />
     </entity>	
     <entity entity-name="BudgetRevisionImpact" 
             package-name="org.ofbiz.commonapp.accounting.budget"
@@ -273,9 +275,9 @@
       <field name="revisedAmount" type="currency-amount"></field>
       <field name="addDeleteFlag" type="indicator"></field>
       <field name="revisionReason" type="long-varchar"></field>	
-      <prim-key-field>budgetId</prim-key-field>	
-      <prim-key-field>budgetItemSeqId</prim-key-field>	
-      <prim-key-field>revisionSeqId</prim-key-field>
+      <prim-key field="budgetId" />	
+      <prim-key field="budgetItemSeqId" />	
+      <prim-key field="revisionSeqId" />
     </entity>	
     <entity entity-name="BudgetRole" 
             package-name="org.ofbiz.commonapp.accounting.budget"
@@ -283,16 +285,16 @@
       <field name="budgetId" type="id-ne"></field>
       <field name="partyId" type="id-ne"></field>
       <field name="roleTypeId" type="id-ne"></field>	
-      <prim-key-field>budgetId</prim-key-field>	
-      <prim-key-field>partyId</prim-key-field>	
-      <prim-key-field>roleTypeId</prim-key-field>
+      <prim-key field="budgetId" />	
+      <prim-key field="partyId" />	
+      <prim-key field="roleTypeId" />
     </entity>	
     <entity entity-name="BudgetScenario" 
             package-name="org.ofbiz.commonapp.accounting.budget"
             title="Budget Scenario Entity">
       <field name="budgetScenarioId" type="id-ne"></field>
       <field name="description" type="description"></field>	
-      <prim-key-field>budgetScenarioId</prim-key-field>
+      <prim-key field="budgetScenarioId" />
     </entity>	
     <entity entity-name="BudgetScenarioApplication" 
             package-name="org.ofbiz.commonapp.accounting.budget"
@@ -303,8 +305,8 @@
       <field name="budgetItemSeqId" type="id"></field>
       <field name="amountChange" type="currency-amount"></field>
       <field name="percentageChange" type="floating-point"></field>	
-      <prim-key-field>budgetScenarioApplicId</prim-key-field>	
-      <prim-key-field>budgetScenarioId</prim-key-field>
+      <prim-key field="budgetScenarioApplicId" />	
+      <prim-key field="budgetScenarioId" />
     </entity>	
     <entity entity-name="BudgetScenarioRule" 
             package-name="org.ofbiz.commonapp.accounting.budget"
@@ -313,8 +315,8 @@
       <field name="budgetItemTypeId" type="id-ne"></field>
       <field name="amountChange" type="currency-amount"></field>
       <field name="percentageChange" type="floating-point"></field>	
-      <prim-key-field>budgetScenarioId</prim-key-field>	
-      <prim-key-field>budgetItemTypeId</prim-key-field>
+      <prim-key field="budgetScenarioId" />	
+      <prim-key field="budgetItemTypeId" />
     </entity>	
     <entity entity-name="BudgetStatus" 
             package-name="org.ofbiz.commonapp.accounting.budget"
@@ -323,8 +325,8 @@
       <field name="statusId" type="id-ne"></field>
       <field name="statusDate" type="date-time"></field>
       <field name="comment" type="comment"></field>	
-      <prim-key-field>budgetId</prim-key-field>	
-      <prim-key-field>statusId</prim-key-field>
+      <prim-key field="budgetId" />	
+      <prim-key field="statusId" />
     </entity>	
     <entity entity-name="BudgetType" 
             package-name="org.ofbiz.commonapp.accounting.budget"
@@ -333,7 +335,7 @@
       <field name="parentTypeId" type="id-ne"></field>
       <field name="hasTable" type="indicator"></field>
       <field name="description" type="description"></field>	
-      <prim-key-field>budgetTypeId</prim-key-field>
+      <prim-key field="budgetTypeId" />
       <relation type="one" title="Parent" rel-entity-name="BudgetType">
         <key-map field-name="parentTypeId" rel-field-name="budgetTypeId" />
       </relation>
@@ -352,8 +354,8 @@
             title="Budget Type Attribute Entity">
       <field name="budgetTypeId" type="id-ne"></field>
       <field name="name" type="id-long-ne"></field>	
-      <prim-key-field>budgetTypeId</prim-key-field>	
-      <prim-key-field>name</prim-key-field>
+      <prim-key field="budgetTypeId" />	
+      <prim-key field="name" />
       <relation type="one" rel-entity-name="BudgetType">
         <key-map field-name="budgetTypeId" />
       </relation>
@@ -375,7 +377,7 @@
       <field name="acctgTransId" type="id-ne"></field>
       <field name="assetId" type="id"></field>
       <field name="fixedAssetId" type="id"></field>	
-      <prim-key-field>acctgTransId</prim-key-field>
+      <prim-key field="acctgTransId" />
     </entity>	
     <entity entity-name="DepreciationMethod" 
             package-name="org.ofbiz.commonapp.accounting.fixedasset"
@@ -383,7 +385,7 @@
       <field name="depreciationMethodId" type="id-ne"></field>
       <field name="description" type="description"></field>
       <field name="formula" type="long-varchar"></field>	
-      <prim-key-field>depreciationMethodId</prim-key-field>
+      <prim-key field="depreciationMethodId" />
     </entity>	
     <entity entity-name="FixedAsset" 
             package-name="org.ofbiz.commonapp.accounting.fixedasset"
@@ -398,7 +400,7 @@
       <field name="dateLastServiced" type="date-time"></field>
       <field name="dateNextService" type="date-time"></field>
       <field name="productionCapacity" type="floating-point"></field>	
-      <prim-key-field>fixedAssetId</prim-key-field>
+      <prim-key field="fixedAssetId" />
       <relation type="one" rel-entity-name="FixedAssetType">
         <key-map field-name="fixedAssetTypeId" />
       </relation>
@@ -415,8 +417,8 @@
       <field name="fixedAssetId" type="id-ne"></field>
       <field name="name" type="id-long-ne"></field>
       <field name="value" type="value"></field>	
-      <prim-key-field>fixedAssetId</prim-key-field>	
-      <prim-key-field>name</prim-key-field>
+      <prim-key field="fixedAssetId" />	
+      <prim-key field="name" />
       <relation type="one" rel-entity-name="FixedAsset">
         <key-map field-name="fixedAssetId" />
       </relation>
@@ -431,8 +433,8 @@
       <field name="fixedAssetId" type="id-ne"></field>
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>	
-      <prim-key-field>depreciationMethodId</prim-key-field>	
-      <prim-key-field>fixedAssetId</prim-key-field>
+      <prim-key field="depreciationMethodId" />	
+      <prim-key field="fixedAssetId" />
     </entity>	
     <entity entity-name="FixedAssetType" 
             package-name="org.ofbiz.commonapp.accounting.fixedasset"
@@ -441,7 +443,7 @@
       <field name="parentTypeId" type="id-ne"></field>
       <field name="hasTable" type="indicator"></field>
       <field name="description" type="description"></field>	
-      <prim-key-field>fixedAssetTypeId</prim-key-field>
+      <prim-key field="fixedAssetTypeId" />
       <relation type="one" title="Parent" rel-entity-name="FixedAssetType">
         <key-map field-name="parentTypeId" rel-field-name="fixedAssetTypeId" />
       </relation>
@@ -460,8 +462,8 @@
             title="Fixed Asset Type Attribute Entity">
       <field name="fixedAssetTypeId" type="id-ne"></field>
       <field name="name" type="id-long-ne"></field>	
-      <prim-key-field>fixedAssetTypeId</prim-key-field>	
-      <prim-key-field>name</prim-key-field>
+      <prim-key field="fixedAssetTypeId" />	
+      <prim-key field="name" />
       <relation type="one" rel-entity-name="FixedAssetType">
         <key-map field-name="fixedAssetTypeId" />
       </relation>
@@ -482,9 +484,9 @@
       <field name="thruDate" type="date-time"></field>
       <field name="allocatedDate" type="date-time"></field>
       <field name="comment" type="comment"></field>	
-      <prim-key-field>partyId</prim-key-field>	
-      <prim-key-field>fixedAssetId</prim-key-field>	
-      <prim-key-field>statusId</prim-key-field>
+      <prim-key field="partyId" />	
+      <prim-key field="fixedAssetId" />	
+      <prim-key field="statusId" />
     </entity>
 
   <!-- ========================================================= -->
@@ -504,7 +506,7 @@
       <field name="invoiceDate" type="date-time"></field>
       <field name="message" type="long-varchar"></field>
       <field name="description" type="description"></field>	
-      <prim-key-field>invoiceId</prim-key-field>
+      <prim-key field="invoiceId" />
       <relation type="one" rel-entity-name="InvoiceType">
         <key-map field-name="invoiceTypeId" />
       </relation>
@@ -524,8 +526,8 @@
       <field name="invoiceId" type="id-ne"></field>
       <field name="name" type="id-long-ne"></field>
       <field name="value" type="value"></field>	
-      <prim-key-field>invoiceId</prim-key-field>	
-      <prim-key-field>name</prim-key-field>
+      <prim-key field="invoiceId" />	
+      <prim-key field="name" />
       <relation type="one" rel-entity-name="Invoice">
         <key-map field-name="invoiceId" />
       </relation>
@@ -547,8 +549,8 @@
       <field name="quantity" type="floating-point"></field>
       <field name="amount" type="currency-amount"></field>
       <field name="description" type="description"></field>	
-      <prim-key-field>invoiceId</prim-key-field>	
-      <prim-key-field>invoiceItemSeqId</prim-key-field>
+      <prim-key field="invoiceId" />	
+      <prim-key field="invoiceItemSeqId" />
       <relation type="one" rel-entity-name="InvoiceItemType">
         <key-map field-name="invoiceItemTypeId" />
       </relation>
@@ -571,9 +573,9 @@
       <field name="invoiceItemSeqId" type="id-ne"></field>
       <field name="name" type="id-long-ne"></field>
       <field name="value" type="value"></field>	
-      <prim-key-field>invoiceId</prim-key-field>	
-      <prim-key-field>invoiceItemSeqId</prim-key-field>	
-      <prim-key-field>name</prim-key-field>
+      <prim-key field="invoiceId" />	
+      <prim-key field="invoiceItemSeqId" />	
+      <prim-key field="name" />
       <relation type="one" rel-entity-name="InvoiceItem">
         <key-map field-name="invoiceId" />
         <key-map field-name="invoiceItemSeqId" />
@@ -589,7 +591,7 @@
       <field name="parentTypeId" type="id-ne"></field>
       <field name="hasTable" type="indicator"></field>
       <field name="description" type="description"></field>	
-      <prim-key-field>invoiceItemTypeId</prim-key-field>
+      <prim-key field="invoiceItemTypeId" />
       <relation type="one" title="Parent" rel-entity-name="InvoiceItemType">
         <key-map field-name="parentTypeId" rel-field-name="invoiceItemTypeId" />
       </relation>
@@ -608,8 +610,8 @@
             title="Invoice Item Type Attribute Entity">
       <field name="invoiceItemTypeId" type="id-ne"></field>
       <field name="name" type="id-long-ne"></field>	
-      <prim-key-field>invoiceItemTypeId</prim-key-field>	
-      <prim-key-field>name</prim-key-field>
+      <prim-key field="invoiceItemTypeId" />	
+      <prim-key field="name" />
       <relation type="one" rel-entity-name="InvoiceItemType">
         <key-map field-name="invoiceItemTypeId" />
       </relation>
@@ -628,9 +630,9 @@
       <field name="roleTypeId" type="id-ne"></field>
       <field name="datetime" type="date-time"></field>
       <field name="percentage" type="floating-point"></field>	
-      <prim-key-field>invoiceId</prim-key-field>	
-      <prim-key-field>partyId</prim-key-field>	
-      <prim-key-field>roleTypeId</prim-key-field>
+      <prim-key field="invoiceId" />	
+      <prim-key field="partyId" />	
+      <prim-key field="roleTypeId" />
     </entity>	
     <entity entity-name="InvoiceStatus" 
             package-name="org.ofbiz.commonapp.accounting.invoice"
@@ -638,9 +640,9 @@
       <field name="statusId" type="id-ne"></field>
       <field name="invoiceId" type="id-ne"></field>
       <field name="statusDate" type="date-time"></field>	
-      <prim-key-field>statusId</prim-key-field>	
-      <prim-key-field>invoiceId</prim-key-field>	
-      <prim-key-field>statusDate</prim-key-field>
+      <prim-key field="statusId" />	
+      <prim-key field="invoiceId" />	
+      <prim-key field="statusDate" />
     </entity>	
     <entity entity-name="InvoiceTerm" 
             package-name="org.ofbiz.commonapp.accounting.invoice"
@@ -650,7 +652,7 @@
       <field name="invoiceId" type="id"></field>
       <field name="invoiceItemSeqId" type="id"></field>
       <field name="termValue" type="numeric"></field>	
-      <prim-key-field>invoiceTermId</prim-key-field>
+      <prim-key field="invoiceTermId" />
     </entity>	
     <entity entity-name="InvoiceTermAttribute" 
             package-name="org.ofbiz.commonapp.accounting.invoice"
@@ -658,8 +660,8 @@
       <field name="invoiceTermId" type="id-ne"></field>
       <field name="name" type="id-long-ne"></field>
       <field name="value" type="value"></field>	
-      <prim-key-field>invoiceTermId</prim-key-field>	
-      <prim-key-field>name</prim-key-field>
+      <prim-key field="invoiceTermId" />	
+      <prim-key field="name" />
       <relation type="one" rel-entity-name="InvoiceTerm">
         <key-map field-name="invoiceTermId" />
       </relation>
@@ -674,7 +676,7 @@
       <field name="parentTypeId" type="id-ne"></field>
       <field name="hasTable" type="indicator"></field>
       <field name="description" type="description"></field>	
-      <prim-key-field>invoiceTypeId</prim-key-field>
+      <prim-key field="invoiceTypeId" />
       <relation type="one" title="Parent" rel-entity-name="InvoiceType">
         <key-map field-name="parentTypeId" rel-field-name="invoiceTypeId" />
       </relation>
@@ -693,8 +695,8 @@
             title="Invoice Type Attribute Entity">
       <field name="invoiceTypeId" type="id-ne"></field>
       <field name="name" type="id-long-ne"></field>	
-      <prim-key-field>invoiceTypeId</prim-key-field>	
-      <prim-key-field>name</prim-key-field>
+      <prim-key field="invoiceTypeId" />	
+      <prim-key field="name" />
       <relation type="one" rel-entity-name="InvoiceType">
         <key-map field-name="invoiceTypeId" />
       </relation>
@@ -720,7 +722,7 @@
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
       <field name="partyId" type="id"></field>	
-      <prim-key-field>accountingPeriodId</prim-key-field>
+      <prim-key field="accountingPeriodId" />
     </entity>	
     <entity entity-name="AcctgTrans" 
             package-name="org.ofbiz.commonapp.accounting.ledger"
@@ -730,7 +732,7 @@
       <field name="description" type="description"></field>
       <field name="transactionDate" type="date-time"></field>
       <field name="entryDate" type="date-time"></field>	
-      <prim-key-field>acctgTransId</prim-key-field>
+      <prim-key field="acctgTransId" />
       <relation type="one" rel-entity-name="AcctgTransType">
         <key-map field-name="acctgTransTypeId" />
       </relation>
@@ -762,8 +764,8 @@
       <field name="acctgTransId" type="id-ne"></field>
       <field name="name" type="id-long-ne"></field>
       <field name="value" type="value"></field>	
-      <prim-key-field>acctgTransId</prim-key-field>	
-      <prim-key-field>name</prim-key-field>
+      <prim-key field="acctgTransId" />	
+      <prim-key field="name" />
       <relation type="one" rel-entity-name="AcctgTrans">
         <key-map field-name="acctgTransId" />
       </relation>
@@ -781,8 +783,8 @@
       <field name="generalLedgerAccountId" type="id"></field>
       <field name="amount" type="currency-amount"></field>
       <field name="debitCreditFlag" type="indicator"></field>	
-      <prim-key-field>acctgTransId</prim-key-field>	
-      <prim-key-field>acctgTransDetailSeqId</prim-key-field>
+      <prim-key field="acctgTransId" />	
+      <prim-key field="acctgTransDetailSeqId" />
     </entity>	
     <entity entity-name="AcctgTransType" 
             package-name="org.ofbiz.commonapp.accounting.ledger"
@@ -791,7 +793,7 @@
       <field name="parentTypeId" type="id-ne"></field>
       <field name="hasTable" type="indicator"></field>
       <field name="description" type="description"></field>	
-      <prim-key-field>acctgTransTypeId</prim-key-field>
+      <prim-key field="acctgTransTypeId" />
       <relation type="one" title="Parent" rel-entity-name="AcctgTransType">
         <key-map field-name="parentTypeId" rel-field-name="acctgTransTypeId" />
       </relation>
@@ -810,8 +812,8 @@
             title="Accounting Transaction Type Attribute Entity">
       <field name="acctgTransTypeId" type="id-ne"></field>
       <field name="name" type="id-long-ne"></field>	
-      <prim-key-field>acctgTransTypeId</prim-key-field>	
-      <prim-key-field>name</prim-key-field>
+      <prim-key field="acctgTransTypeId" />	
+      <prim-key field="name" />
       <relation type="one" rel-entity-name="AcctgTransType">
         <key-map field-name="acctgTransTypeId" />
       </relation>
@@ -828,7 +830,7 @@
       <description>Data Type Of: Accounting Transaction</description>
       <field name="acctgTransId" type="id-ne"></field>
       <field name="partyId" type="id"></field>	
-      <prim-key-field>acctgTransId</prim-key-field>
+      <prim-key field="acctgTransId" />
       <relation type="one" rel-entity-name="AcctgTrans">
         <key-map field-name="acctgTransId" />
       </relation>
@@ -840,14 +842,14 @@
       <field name="generalLedgerAccountTypeId" type="id"></field>
       <field name="name" type="name"></field>
       <field name="description" type="description"></field>	
-      <prim-key-field>generalLedgerAccountId</prim-key-field>
+      <prim-key field="generalLedgerAccountId" />
     </entity>	
     <entity entity-name="GeneralLedgerAccountType" 
             package-name="org.ofbiz.commonapp.accounting.ledger"
             title="General Ledger Account Type Entity">
       <field name="generalLedgerAccountTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>	
-      <prim-key-field>generalLedgerAccountTypeId</prim-key-field>
+      <prim-key field="generalLedgerAccountTypeId" />
     </entity>	
     <entity entity-name="GeneralLedgerBudgetXref" 
             package-name="org.ofbiz.commonapp.accounting.ledger"
@@ -857,8 +859,8 @@
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
       <field name="allocationPercentage" type="floating-point"></field>	
-      <prim-key-field>generalLedgerAccountId</prim-key-field>	
-      <prim-key-field>budgetItemTypeId</prim-key-field>
+      <prim-key field="generalLedgerAccountId" />	
+      <prim-key field="budgetItemTypeId" />
     </entity>	
     <entity entity-name="InternalAcctgTrans" 
             package-name="org.ofbiz.commonapp.accounting.ledger"
@@ -867,7 +869,7 @@
       <field name="acctgTransId" type="id-ne"></field>
       <field name="partyId" type="id"></field>
       <field name="roleTypeId" type="id"></field>	
-      <prim-key-field>acctgTransId</prim-key-field>
+      <prim-key field="acctgTransId" />
       <relation type="one" rel-entity-name="AcctgTrans">
         <key-map field-name="acctgTransId" />
       </relation>
@@ -882,16 +884,16 @@
       <field name="productCategoryId" type="id"></field>
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>	
-      <prim-key-field>generalLedgerAccountId</prim-key-field>	
-      <prim-key-field>partyId</prim-key-field>	
-      <prim-key-field>roleTypeId</prim-key-field>
+      <prim-key field="generalLedgerAccountId" />	
+      <prim-key field="partyId" />	
+      <prim-key field="roleTypeId" />
     </entity>	
     <entity entity-name="SalesAcctgTrans" 
             package-name="org.ofbiz.commonapp.accounting.ledger"
             title="Sales Accounting Transaction Entity">
       <field name="acctgTransId" type="id-ne"></field>
       <field name="invoiceId" type="id-ne"></field>	
-      <prim-key-field>acctgTransId</prim-key-field>
+      <prim-key field="acctgTransId" />
       <relation type="one" rel-entity-name="AcctgTrans">
         <key-map field-name="acctgTransId" />
       </relation>
@@ -909,7 +911,7 @@
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
       <field name="description" type="description"></field>	
-      <prim-key-field>billingAccountId</prim-key-field>
+      <prim-key field="billingAccountId" />
       <relation type="many" rel-entity-name="OrderHeader">
         <key-map field-name="billingAccountId" />
       </relation>
@@ -937,9 +939,9 @@
       <field name="roleTypeId" type="id-ne"></field>
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>	
-      <prim-key-field>billingAccountId</prim-key-field>	
-      <prim-key-field>partyId</prim-key-field>	
-      <prim-key-field>roleTypeId</prim-key-field>
+      <prim-key field="billingAccountId" />	
+      <prim-key field="partyId" />	
+      <prim-key field="roleTypeId" />
       <relation type="one" rel-entity-name="BillingAccount">
         <key-map field-name="billingAccountId" />
       </relation>
@@ -957,14 +959,14 @@
       <field name="deductionTypeId" type="id"></field>
       <field name="paymentId" type="id"></field>
       <field name="amount" type="currency-amount"></field>	
-      <prim-key-field>deductionId</prim-key-field>
+      <prim-key field="deductionId" />
     </entity>	
     <entity entity-name="DeductionType" 
             package-name="org.ofbiz.commonapp.accounting.payment"
             title="Deduction Type Entity">
       <field name="deductionTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>	
-      <prim-key-field>deductionTypeId</prim-key-field>
+      <prim-key field="deductionTypeId" />
     </entity>	
     <entity entity-name="FinAccount" 
             package-name="org.ofbiz.commonapp.accounting.payment"
@@ -972,7 +974,7 @@
       <field name="finAccountId" type="id-ne"></field>
       <field name="finAccountTypeId" type="id"></field>
       <field name="finAccountName" type="name"></field>	
-      <prim-key-field>finAccountId</prim-key-field>
+      <prim-key field="finAccountId" />
       <relation type="one" rel-entity-name="FinAccountType">
         <key-map field-name="finAccountTypeId" />
       </relation>
@@ -987,7 +989,7 @@
             package-name="org.ofbiz.commonapp.accounting.payment"
             title="Financial Account Adjustment Entity">
       <field name="finAccountTransId" type="id-ne"></field>	
-      <prim-key-field>finAccountTransId</prim-key-field>
+      <prim-key field="finAccountTransId" />
     </entity>	
     <entity entity-name="FinAccountAttribute" 
             package-name="org.ofbiz.commonapp.accounting.payment"
@@ -995,8 +997,8 @@
       <field name="finAccountId" type="id-ne"></field>
       <field name="name" type="id-long-ne"></field>
       <field name="value" type="value"></field>	
-      <prim-key-field>finAccountId</prim-key-field>	
-      <prim-key-field>name</prim-key-field>
+      <prim-key field="finAccountId" />	
+      <prim-key field="name" />
       <relation type="one" rel-entity-name="FinAccount">
         <key-map field-name="finAccountId" />
       </relation>
@@ -1012,9 +1014,9 @@
       <field name="roleTypeId" type="id-ne"></field>
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>	
-      <prim-key-field>finAccountId</prim-key-field>	
-      <prim-key-field>partyId</prim-key-field>	
-      <prim-key-field>roleTypeId</prim-key-field>
+      <prim-key field="finAccountId" />	
+      <prim-key field="partyId" />	
+      <prim-key field="roleTypeId" />
     </entity>	
     <entity entity-name="FinAccountTrans" 
             package-name="org.ofbiz.commonapp.accounting.payment"
@@ -1025,7 +1027,7 @@
       <field name="partyId" type="id"></field>
       <field name="transactionDate" type="date-time"></field>
       <field name="entryDate" type="date-time"></field>	
-      <prim-key-field>finAccountTransId</prim-key-field>
+      <prim-key field="finAccountTransId" />
       <relation type="one" rel-entity-name="FinAccountTransType">
         <key-map field-name="finAccountTransTypeId" />
       </relation>
@@ -1042,8 +1044,8 @@
       <field name="finAccountTransId" type="id-ne"></field>
       <field name="name" type="id-long-ne"></field>
       <field name="value" type="value"></field>	
-      <prim-key-field>finAccountTransId</prim-key-field>	
-      <prim-key-field>name</prim-key-field>
+      <prim-key field="finAccountTransId" />	
+      <prim-key field="name" />
       <relation type="one" rel-entity-name="FinAccountTrans">
         <key-map field-name="finAccountTransId" />
       </relation>
@@ -1058,7 +1060,7 @@
       <field name="parentTypeId" type="id-ne"></field>
       <field name="hasTable" type="indicator"></field>
       <field name="description" type="description"></field>	
-      <prim-key-field>finAccountTransTypeId</prim-key-field>
+      <prim-key field="finAccountTransTypeId" />
       <relation type="one" title="Parent" rel-entity-name="FinAccountTransType">
         <key-map field-name="parentTypeId" rel-field-name="finAccountTransTypeId" />
       </relation>
@@ -1077,8 +1079,8 @@
             title="Financial Account Transaction Type Attribute Entity">
       <field name="finAccountTransTypeId" type="id-ne"></field>
       <field name="name" type="id-long-ne"></field>	
-      <prim-key-field>finAccountTransTypeId</prim-key-field>	
-      <prim-key-field>name</prim-key-field>
+      <prim-key field="finAccountTransTypeId" />	
+      <prim-key field="name" />
       <relation type="one" rel-entity-name="FinAccountTransType">
         <key-map field-name="finAccountTransTypeId" />
       </relation>
@@ -1096,7 +1098,7 @@
       <field name="parentTypeId" type="id-ne"></field>
       <field name="hasTable" type="indicator"></field>
       <field name="description" type="description"></field>	
-      <prim-key-field>finAccountTypeId</prim-key-field>
+      <prim-key field="finAccountTypeId" />
       <relation type="one" title="Parent" rel-entity-name="FinAccountType">
         <key-map field-name="parentTypeId" rel-field-name="finAccountTypeId" />
       </relation>
@@ -1115,8 +1117,8 @@
             title="Financial Account Type Attribute Entity">
       <field name="finAccountTypeId" type="id-ne"></field>
       <field name="name" type="id-long-ne"></field>	
-      <prim-key-field>finAccountTypeId</prim-key-field>	
-      <prim-key-field>name</prim-key-field>
+      <prim-key field="finAccountTypeId" />	
+      <prim-key field="name" />
       <relation type="one" rel-entity-name="FinAccountType">
         <key-map field-name="finAccountTypeId" />
       </relation>
@@ -1139,7 +1141,7 @@
       <field name="paymentRefNum" type="short-varchar"></field>
       <field name="amount" type="currency-amount"></field>
       <field name="comment" type="comment"></field>	
-      <prim-key-field>paymentId</prim-key-field>
+      <prim-key field="paymentId" />
       <relation type="one" rel-entity-name="PaymentType">
         <key-map field-name="paymentTypeId" />
       </relation>
@@ -1155,7 +1157,7 @@
             title="Payment Accounting Transaction Entity">
       <field name="acctgTransId" type="id-ne"></field>
       <field name="paymentId" type="id-ne"></field>	
-      <prim-key-field>acctgTransId</prim-key-field>
+      <prim-key field="acctgTransId" />
       <relation type="one" rel-entity-name="AcctgTrans">
         <key-map field-name="acctgTransId" />
       </relation>
@@ -1169,8 +1171,8 @@
       <field name="invoiceItemSeqId" type="id"></field>
       <field name="billingAccountId" type="id"></field>
       <field name="amountApplied" type="currency-amount"></field>	
-      <prim-key-field>paymentId</prim-key-field>	
-      <prim-key-field>paymentApplicationId</prim-key-field>
+      <prim-key field="paymentId" />	
+      <prim-key field="paymentApplicationId" />
     </entity>	
     <entity entity-name="PaymentAttribute" 
             package-name="org.ofbiz.commonapp.accounting.payment"
@@ -1178,8 +1180,8 @@
       <field name="paymentId" type="id-ne"></field>
       <field name="name" type="id-long-ne"></field>
       <field name="value" type="value"></field>	
-      <prim-key-field>paymentId</prim-key-field>	
-      <prim-key-field>name</prim-key-field>
+      <prim-key field="paymentId" />	
+      <prim-key field="name" />
       <relation type="one" rel-entity-name="Payment">
         <key-map field-name="paymentId" />
       </relation>
@@ -1194,16 +1196,16 @@
       <field name="budgetItemSeqId" type="id-ne"></field>
       <field name="paymentId" type="id-ne"></field>
       <field name="amount" type="currency-amount"></field>	
-      <prim-key-field>budgetId</prim-key-field>	
-      <prim-key-field>budgetItemSeqId</prim-key-field>	
-      <prim-key-field>paymentId</prim-key-field>
+      <prim-key field="budgetId" />	
+      <prim-key field="budgetItemSeqId" />	
+      <prim-key field="paymentId" />
     </entity>	
     <entity entity-name="PaymentMethodType" 
             package-name="org.ofbiz.commonapp.accounting.payment"
             title="Payment Method Type Entity">
       <field name="paymentMethodTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>	
-      <prim-key-field>paymentMethodTypeId</prim-key-field>
+      <prim-key field="paymentMethodTypeId" />
       <relation type="many" rel-entity-name="OrderPaymentPreference">
         <key-map field-name="paymentMethodTypeId" />
       </relation>
@@ -1215,7 +1217,7 @@
       <field name="parentTypeId" type="id-ne"></field>
       <field name="hasTable" type="indicator"></field>
       <field name="description" type="description"></field>	
-      <prim-key-field>paymentTypeId</prim-key-field>
+      <prim-key field="paymentTypeId" />
       <relation type="one" title="Parent" rel-entity-name="PaymentType">
         <key-map field-name="parentTypeId" rel-field-name="paymentTypeId" />
       </relation>
@@ -1234,8 +1236,8 @@
             title="Payment Type Attribute Entity">
       <field name="paymentTypeId" type="id-ne"></field>
       <field name="name" type="id-long-ne"></field>	
-      <prim-key-field>paymentTypeId</prim-key-field>	
-      <prim-key-field>name</prim-key-field>
+      <prim-key field="paymentTypeId" />	
+      <prim-key field="name" />
       <relation type="one" rel-entity-name="PaymentType">
         <key-map field-name="paymentTypeId" />
       </relation>
@@ -1251,14 +1253,14 @@
             title="Receipt Entity">
       <field name="paymentId" type="id-ne"></field>
       <field name="finAccountTransId" type="id"></field>	
-      <prim-key-field>paymentId</prim-key-field>
+      <prim-key field="paymentId" />
     </entity>	
     <entity entity-name="Withdrawal" 
             package-name="org.ofbiz.commonapp.accounting.payment"
             title="Withdrawal Entity">
       <field name="finAccountTransId" type="id-ne"></field>
       <field name="paymentId" type="id-ne"></field>	
-      <prim-key-field>finAccountTransId</prim-key-field>
+      <prim-key field="finAccountTransId" />
     </entity>
 
   <!-- ========================================================= -->
@@ -1273,7 +1275,7 @@
       <field name="name" type="name"></field>
       <field name="geoCode" type="short-varchar"></field>
       <field name="abbreviation" type="short-varchar"></field>	
-      <prim-key-field>geoId</prim-key-field>
+      <prim-key field="geoId" />
       <relation type="one" rel-entity-name="GeoType">
         <key-map field-name="geoTypeId" />
       </relation>
@@ -1293,8 +1295,8 @@
       <field name="geoId" type="id-ne"></field>
       <field name="geoIdTo" type="id-ne"></field>
       <field name="geoAssocTypeId" type="id"></field>	
-      <prim-key-field>geoId</prim-key-field>	
-      <prim-key-field>geoIdTo</prim-key-field>
+      <prim-key field="geoId" />	
+      <prim-key field="geoIdTo" />
       <relation type="one" title="Main" rel-entity-name="Geo">
         <key-map field-name="geoId" />
       </relation>
@@ -1310,7 +1312,7 @@
             title="Geographic Boundary Association Entity">
       <field name="geoAssocTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>	
-      <prim-key-field>geoAssocTypeId</prim-key-field>
+      <prim-key field="geoAssocTypeId" />
       <relation type="many" rel-entity-name="GeoAssoc">
         <key-map field-name="geoAssocTypeId" />
       </relation>
@@ -1322,7 +1324,7 @@
       <field name="parentTypeId" type="id-ne"></field>
       <field name="hasTable" type="indicator"></field>
       <field name="description" type="description"></field>	
-      <prim-key-field>geoTypeId</prim-key-field>
+      <prim-key field="geoTypeId" />
       <relation type="one" title="Parent" rel-entity-name="GeoType">
         <key-map field-name="parentTypeId" rel-field-name="geoTypeId" />
       </relation>
@@ -1343,7 +1345,7 @@
             title="Period Type Entity">
       <field name="periodTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>	
-      <prim-key-field>periodTypeId</prim-key-field>
+      <prim-key field="periodTypeId" />
     </entity>	
     <entity entity-name="StandardTimePeriod" 
             package-name="org.ofbiz.commonapp.common.period"
@@ -1352,7 +1354,7 @@
       <field name="periodTypeId" type="id"></field>
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>	
-      <prim-key-field>standardTimePeriodId</prim-key-field>
+      <prim-key field="standardTimePeriodId" />
     </entity>
 
   <!-- ========================================================= -->
@@ -1364,7 +1366,7 @@
             title="Sequence Entity">
       <field name="seqName" type="id-ne"></field>
       <field name="seqId" type="numeric"></field>	
-      <prim-key-field>seqName</prim-key-field>
+      <prim-key field="seqName" />
     </entity>
 
   <!-- ========================================================= -->
@@ -1378,7 +1380,7 @@
       <field name="statusTypeId" type="id"></field>
       <field name="sequenceId" type="id"></field>
       <field name="description" type="description"></field>	
-      <prim-key-field>statusId</prim-key-field>
+      <prim-key field="statusId" />
       <relation type="one" rel-entity-name="StatusType">
         <key-map field-name="statusTypeId" />
       </relation>
@@ -1393,7 +1395,7 @@
       <field name="parentTypeId" type="id-ne"></field>
       <field name="hasTable" type="indicator"></field>
       <field name="description" type="description"></field>	
-      <prim-key-field>statusTypeId</prim-key-field>
+      <prim-key field="statusTypeId" />
       <relation type="one" title="Parent" rel-entity-name="StatusType">
         <key-map field-name="parentTypeId" rel-field-name="statusTypeId" />
       </relation>
@@ -1416,7 +1418,7 @@
       <field name="uomTypeId" type="id"></field>
       <field name="abbreviation" type="short-varchar"></field>
       <field name="description" type="description"></field>	
-      <prim-key-field>uomId</prim-key-field>
+      <prim-key field="uomId" />
       <relation type="one" rel-entity-name="UomType">
         <key-map field-name="uomTypeId" />
       </relation>
@@ -1433,8 +1435,8 @@
       <field name="uomId" type="id-ne"></field>
       <field name="uomIdTo" type="id-ne"></field>
       <field name="conversionFactor" type="floating-point"></field>	
-      <prim-key-field>uomId</prim-key-field>	
-      <prim-key-field>uomIdTo</prim-key-field>
+      <prim-key field="uomId" />	
+      <prim-key field="uomIdTo" />
       <relation type="one" title="Main" rel-entity-name="Uom">
         <key-map field-name="uomId" />
       </relation>
@@ -1449,7 +1451,7 @@
       <field name="parentTypeId" type="id-ne"></field>
       <field name="hasTable" type="indicator"></field>
       <field name="description" type="description"></field>	
-      <prim-key-field>uomTypeId</prim-key-field>
+      <prim-key field="uomTypeId" />
       <relation type="one" title="Parent" rel-entity-name="UomType">
         <key-map field-name="parentTypeId" rel-field-name="uomTypeId" />
       </relation>
@@ -1474,7 +1476,7 @@
       <field name="description" type="description"></field>
       <field name="fileLocation" type="long-varchar"></field>
       <field name="urlLocation" type="long-varchar"></field>	
-      <prim-key-field>contentId</prim-key-field>
+      <prim-key field="contentId" />
       <relation type="one" rel-entity-name="Status">
         <key-map field-name="statusId" />
       </relation>
@@ -1502,8 +1504,8 @@
       <field name="contactMechId" type="id"></field>
       <field name="functionTypeId" type="id"></field>
       <field name="upperLeftCoordinate" type="numeric"></field>	
-      <prim-key-field>contentIdFrom</prim-key-field>	
-      <prim-key-field>contentIdTo</prim-key-field>
+      <prim-key field="contentIdFrom" />	
+      <prim-key field="contentIdTo" />
     </entity>	
     <entity entity-name="ContentAttribute" 
             package-name="org.ofbiz.commonapp.content.content"
@@ -1511,8 +1513,8 @@
       <field name="contentId" type="id-ne"></field>
       <field name="name" type="id-long-ne"></field>
       <field name="value" type="value"></field>	
-      <prim-key-field>contentId</prim-key-field>	
-      <prim-key-field>name</prim-key-field>
+      <prim-key field="contentId" />	
+      <prim-key field="name" />
       <relation type="one" rel-entity-name="Content">
         <key-map field-name="contentId" />
       </relation>
@@ -1527,7 +1529,7 @@
       <field name="parentCategoryId" type="id"></field>
       <field name="parentSeqId" type="id"></field>
       <field name="description" type="description"></field>	
-      <prim-key-field>contentCategoryId</prim-key-field>
+      <prim-key field="contentCategoryId" />
       <relation type="one" rel-entity-name="ContentCategory">
         <key-map field-name="parentCategoryId" rel-field-name="contentCategoryId" />
       </relation>
@@ -1541,9 +1543,9 @@
       <field name="contentCategoryId" type="id-ne"></field>
       <field name="contentId" type="id-ne"></field>
       <field name="seqId" type="id-ne"></field>	
-      <prim-key-field>contentCategoryId</prim-key-field>	
-      <prim-key-field>contentId</prim-key-field>	
-      <prim-key-field>seqId</prim-key-field>
+      <prim-key field="contentCategoryId" />	
+      <prim-key field="contentId" />	
+      <prim-key field="seqId" />
       <relation type="one" rel-entity-name="Content">
         <key-map field-name="contentId" />
       </relation>
@@ -1559,9 +1561,9 @@
       <field name="seqId" type="id-ne"></field>
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>	
-      <prim-key-field>contentId</prim-key-field>	
-      <prim-key-field>dataObjectId</prim-key-field>	
-      <prim-key-field>seqId</prim-key-field>
+      <prim-key field="contentId" />	
+      <prim-key field="dataObjectId" />	
+      <prim-key field="seqId" />
       <relation type="one" rel-entity-name="Content">
         <key-map field-name="contentId" />
       </relation>
@@ -1578,9 +1580,9 @@
       <field name="roleTypeId" type="id-ne"></field>
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>	
-      <prim-key-field>contentId</prim-key-field>	
-      <prim-key-field>partyId</prim-key-field>	
-      <prim-key-field>roleTypeId</prim-key-field>
+      <prim-key field="contentId" />	
+      <prim-key field="partyId" />	
+      <prim-key field="roleTypeId" />
     </entity>	
     <entity entity-name="ContentType" 
             package-name="org.ofbiz.commonapp.content.content"
@@ -1589,7 +1591,7 @@
       <field name="parentTypeId" type="id-ne"></field>
       <field name="hasTable" type="indicator"></field>
       <field name="description" type="description"></field>	
-      <prim-key-field>contentTypeId</prim-key-field>
+      <prim-key field="contentTypeId" />
       <relation type="one" title="Parent" rel-entity-name="ContentType">
         <key-map field-name="parentTypeId" rel-field-name="contentTypeId" />
       </relation>
@@ -1608,8 +1610,8 @@
             title="Content Type Attribute Entity">
       <field name="contentTypeId" type="id-ne"></field>
       <field name="name" type="id-long-ne"></field>	
-      <prim-key-field>contentTypeId</prim-key-field>	
-      <prim-key-field>name</prim-key-field>
+      <prim-key field="contentTypeId" />	
+      <prim-key field="name" />
       <relation type="one" rel-entity-name="ContentType">
         <key-map field-name="contentTypeId" />
       </relation>
@@ -1628,7 +1630,7 @@
       <field name="description" type="description"></field>
       <field name="fileLocation" type="long-varchar"></field>
       <field name="dataObjectName" type="name"></field>	
-      <prim-key-field>dataObjectId</prim-key-field>
+      <prim-key field="dataObjectId" />
       <relation type="one" rel-entity-name="ElectronicText">
         <key-map field-name="dataObjectId" />
       </relation>
@@ -1666,8 +1668,8 @@
       <field name="dataObjectId" type="id-ne"></field>
       <field name="name" type="id-long-ne"></field>
       <field name="value" type="value"></field>	
-      <prim-key-field>dataObjectId</prim-key-field>	
-      <prim-key-field>name</prim-key-field>
+      <prim-key field="dataObjectId" />	
+      <prim-key field="name" />
       <relation type="one" rel-entity-name="DataObject">
         <key-map field-name="dataObjectId" />
       </relation>
@@ -1680,8 +1682,8 @@
             title="Data Object Purpose Entity">
       <field name="dataObjectId" type="id-ne"></field>
       <field name="dataObjectPurposeTypeId" type="id-ne"></field>	
-      <prim-key-field>dataObjectId</prim-key-field>	
-      <prim-key-field>dataObjectPurposeTypeId</prim-key-field>
+      <prim-key field="dataObjectId" />	
+      <prim-key field="dataObjectPurposeTypeId" />
       <relation type="one" rel-entity-name="DataObject">
         <key-map field-name="dataObjectId" />
       </relation>
@@ -1694,7 +1696,7 @@
             title="Data Object Purpose Type Entity">
       <field name="dataObjectPurposeTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>	
-      <prim-key-field>dataObjectPurposeTypeId</prim-key-field>
+      <prim-key field="dataObjectPurposeTypeId" />
       <relation type="many" rel-entity-name="DataObjectPurpose">
         <key-map field-name="dataObjectPurposeTypeId" />
       </relation>
@@ -1706,7 +1708,7 @@
       <field name="parentTypeId" type="id-ne"></field>
       <field name="hasTable" type="indicator"></field>
       <field name="description" type="description"></field>	
-      <prim-key-field>dataObjectTypeId</prim-key-field>
+      <prim-key field="dataObjectTypeId" />
       <relation type="one" title="Parent" rel-entity-name="DataObjectType">
         <key-map field-name="parentTypeId" rel-field-name="dataObjectTypeId" />
       </relation>
@@ -1725,8 +1727,8 @@
             title="Data Object Type Attribute Entity">
       <field name="dataObjectTypeId" type="id-ne"></field>
       <field name="name" type="id-long-ne"></field>	
-      <prim-key-field>dataObjectTypeId</prim-key-field>	
-      <prim-key-field>name</prim-key-field>
+      <prim-key field="dataObjectTypeId" />	
+      <prim-key field="name" />
       <relation type="one" rel-entity-name="DataObjectType">
         <key-map field-name="dataObjectTypeId" />
       </relation>
@@ -1742,7 +1744,7 @@
             title="Electronic Text Entity">
       <field name="dataObjectId" type="id-ne"></field>
       <field name="text" type="very-long"></field>	
-      <prim-key-field>dataObjectId</prim-key-field>
+      <prim-key field="dataObjectId" />
       <relation type="one" rel-entity-name="DataObject">
         <key-map field-name="dataObjectId" />
       </relation>
@@ -1752,14 +1754,14 @@
             title="Function Type Entity">
       <field name="functionTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>	
-      <prim-key-field>functionTypeId</prim-key-field>
+      <prim-key field="functionTypeId" />
     </entity>	
     <entity entity-name="ImageDataObject" 
             package-name="org.ofbiz.commonapp.content.content"
             title="Image Data Object Entity">
       <field name="dataObjectId" type="id-ne"></field>
       <field name="image" type="blob"></field>	
-      <prim-key-field>dataObjectId</prim-key-field>
+      <prim-key field="dataObjectId" />
       <relation type="one" rel-entity-name="DataObject">
         <key-map field-name="dataObjectId" />
       </relation>
@@ -1769,7 +1771,7 @@
             title="Other Data Object Entity">
       <field name="dataObjectId" type="id-ne"></field>
       <field name="dataObjectContent" type="blob"></field>	
-      <prim-key-field>dataObjectId</prim-key-field>
+      <prim-key field="dataObjectId" />
       <relation type="one" rel-entity-name="DataObject">
         <key-map field-name="dataObjectId" />
       </relation>
@@ -1789,7 +1791,7 @@
       <field name="documentLocation" type="long-varchar"></field>
       <field name="documentText" type="long-varchar"></field>
       <field name="image" type="blob"></field>	
-      <prim-key-field>documentId</prim-key-field>
+      <prim-key field="documentId" />
       <relation type="one" rel-entity-name="DocumentType">
         <key-map field-name="documentTypeId" />
       </relation>
@@ -1806,8 +1808,8 @@
       <field name="documentId" type="id-ne"></field>
       <field name="name" type="id-long-ne"></field>
       <field name="value" type="value"></field>	
-      <prim-key-field>documentId</prim-key-field>	
-      <prim-key-field>name</prim-key-field>
+      <prim-key field="documentId" />	
+      <prim-key field="name" />
       <relation type="one" rel-entity-name="Document">
         <key-map field-name="documentId" />
       </relation>
@@ -1822,7 +1824,7 @@
       <field name="parentTypeId" type="id-ne"></field>
       <field name="hasTable" type="indicator"></field>
       <field name="description" type="description"></field>	
-      <prim-key-field>documentTypeId</prim-key-field>
+      <prim-key field="documentTypeId" />
       <relation type="one" title="Parent" rel-entity-name="DocumentType">
         <key-map field-name="parentTypeId" rel-field-name="documentTypeId" />
       </relation>
@@ -1841,8 +1843,8 @@
             title="Document Type Attribute Entity">
       <field name="documentTypeId" type="id-ne"></field>
       <field name="name" type="id-long-ne"></field>	
-      <prim-key-field>documentTypeId</prim-key-field>	
-      <prim-key-field>name</prim-key-field>
+      <prim-key field="documentTypeId" />	
+      <prim-key field="name" />
       <relation type="one" rel-entity-name="DocumentType">
         <key-map field-name="documentTypeId" />
       </relation>
@@ -1863,7 +1865,7 @@
             title="Web Preference Type Entity">
       <field name="webPreferenceTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>	
-      <prim-key-field>webPreferenceTypeId</prim-key-field>
+      <prim-key field="webPreferenceTypeId" />
       <relation type="many" rel-entity-name="WebUserPreference">
         <key-map field-name="webPreferenceTypeId" />
       </relation>
@@ -1874,9 +1876,9 @@
       <field name="userLoginId" type="id-ne"></field>
       <field name="partyId" type="id-ne"></field>
       <field name="webPreferenceTypeId" type="id-ne"></field>	
-      <prim-key-field>userLoginId</prim-key-field>	
-      <prim-key-field>partyId</prim-key-field>	
-      <prim-key-field>webPreferenceTypeId</prim-key-field>
+      <prim-key field="userLoginId" />	
+      <prim-key field="partyId" />	
+      <prim-key field="webPreferenceTypeId" />
       <relation type="one" rel-entity-name="WebPreferenceType">
         <key-map field-name="webPreferenceTypeId" />
       </relation>
@@ -1909,7 +1911,7 @@
       <field name="subscriptionTypeId" type="id"></field>
       <field name="startDate" type="date-time"></field>
       <field name="endDate" type="date-time"></field>	
-      <prim-key-field>subscriptionId</prim-key-field>
+      <prim-key field="subscriptionId" />
       <relation type="one" rel-entity-name="CommunicationEvent">
         <key-map field-name="communicationEventId" />
       </relation>
@@ -1969,7 +1971,7 @@
       <field name="subscriptionActivityId" type="id-ne"></field>
       <field name="comment" type="comment"></field>
       <field name="dateSent" type="date-time"></field>	
-      <prim-key-field>subscriptionActivityId</prim-key-field>
+      <prim-key field="subscriptionActivityId" />
       <relation type="many" rel-entity-name="SubscriptionFulfillmentPiece">
         <key-map field-name="subscriptionActivityId" />
       </relation>
@@ -1980,8 +1982,8 @@
       <field name="subscriptionId" type="id-ne"></field>
       <field name="name" type="id-long-ne"></field>
       <field name="value" type="value"></field>	
-      <prim-key-field>subscriptionId</prim-key-field>	
-      <prim-key-field>name</prim-key-field>
+      <prim-key field="subscriptionId" />	
+      <prim-key field="name" />
       <relation type="one" rel-entity-name="Subscription">
         <key-map field-name="subscriptionId" />
       </relation>
@@ -1994,8 +1996,8 @@
             title="Subscription Fulfillment Piece Entity">
       <field name="subscriptionActivityId" type="id-ne"></field>
       <field name="subscriptionId" type="id-ne"></field>	
-      <prim-key-field>subscriptionActivityId</prim-key-field>	
-      <prim-key-field>subscriptionId</prim-key-field>
+      <prim-key field="subscriptionActivityId" />	
+      <prim-key field="subscriptionId" />
       <relation type="one" rel-entity-name="Subscription">
         <key-map field-name="subscriptionId" />
       </relation>
@@ -2010,7 +2012,7 @@
       <field name="parentTypeId" type="id-ne"></field>
       <field name="hasTable" type="indicator"></field>
       <field name="description" type="description"></field>	
-      <prim-key-field>subscriptionTypeId</prim-key-field>
+      <prim-key field="subscriptionTypeId" />
       <relation type="one" title="Parent" rel-entity-name="SubscriptionType">
         <key-map field-name="parentTypeId" rel-field-name="subscriptionTypeId" />
       </relation>
@@ -2029,8 +2031,8 @@
             title="Subscription Type Attribute Entity">
       <field name="subscriptionTypeId" type="id-ne"></field>
       <field name="name" type="id-long-ne"></field>	
-      <prim-key-field>subscriptionTypeId</prim-key-field>	
-      <prim-key-field>name</prim-key-field>
+      <prim-key field="subscriptionTypeId" />	
+      <prim-key field="name" />
       <relation type="one" rel-entity-name="SubscriptionType">
         <key-map field-name="subscriptionTypeId" />
       </relation>
@@ -2052,7 +2054,7 @@
       <field name="browserTypeId" type="id-ne"></field>
       <field name="name" type="name"></field>
       <field name="version" type="very-short"></field>	
-      <prim-key-field>browserTypeId</prim-key-field>
+      <prim-key field="browserTypeId" />
       <relation type="many" rel-entity-name="UserAgent">
         <key-map field-name="browserTypeId" />
       </relation>
@@ -2063,7 +2065,7 @@
       <field name="platformTypeId" type="id-ne"></field>
       <field name="name" type="name"></field>
       <field name="version" type="very-short"></field>	
-      <prim-key-field>platformTypeId</prim-key-field>
+      <prim-key field="platformTypeId" />
       <relation type="many" rel-entity-name="UserAgent">
         <key-map field-name="platformTypeId" />
       </relation>
@@ -2073,7 +2075,7 @@
             title="Protocol Type Entity">
       <field name="protocolTypeId" type="id-ne"></field>
       <field name="name" type="name"></field>	
-      <prim-key-field>protocolTypeId</prim-key-field>
+      <prim-key field="protocolTypeId" />
       <relation type="many" rel-entity-name="UserAgent">
         <key-map field-name="protocolTypeId" />
       </relation>
@@ -2091,8 +2093,8 @@
       <field name="userLoginId" type="id"></field>
       <field name="contentId" type="id"></field>
       <field name="numOfBytes" type="numeric"></field>	
-      <prim-key-field>visitId</prim-key-field>	
-      <prim-key-field>datetime</prim-key-field>
+      <prim-key field="visitId" />	
+      <prim-key field="datetime" />
       <relation type="one" rel-entity-name="Visit">
         <key-map field-name="visitId" />
       </relation>
@@ -2127,7 +2129,7 @@
       <field name="protocolTypeId" type="id"></field>
       <field name="userAgentTypeId" type="id"></field>
       <field name="userAgentMethodTypeId" type="id"></field>	
-      <prim-key-field>userAgentId</prim-key-field>
+      <prim-key field="userAgentId" />
       <relation type="one" rel-entity-name="BrowserType">
         <key-map field-name="browserTypeId" />
       </relation>
@@ -2152,7 +2154,7 @@
             title="User Agent Method Type Entity">
       <field name="userAgentMethodTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>	
-      <prim-key-field>userAgentMethodTypeId</prim-key-field>
+      <prim-key field="userAgentMethodTypeId" />
       <relation type="many" rel-entity-name="UserAgent">
         <key-map field-name="userAgentMethodTypeId" />
       </relation>
@@ -2162,7 +2164,7 @@
             title="User Agent Type Entity">
       <field name="userAgentTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>	
-      <prim-key-field>userAgentTypeId</prim-key-field>
+      <prim-key field="userAgentTypeId" />
       <relation type="many" rel-entity-name="UserAgent">
         <key-map field-name="userAgentTypeId" />
       </relation>
@@ -2177,7 +2179,7 @@
       <field name="cookie" type="short-varchar"></field>
       <field name="fromDatetime" type="date-time"></field>
       <field name="thruDatetime" type="date-time"></field>	
-      <prim-key-field>visitId</prim-key-field>
+      <prim-key field="visitId" />
       <relation type="one" rel-entity-name="ContactMech">
         <key-map field-name="contactMechId" />
       </relation>
@@ -2218,9 +2220,9 @@
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
       <field name="comment" type="comment"></field>	
-      <prim-key-field>employeePartyId</prim-key-field>	
-      <prim-key-field>employeeRoleTypeId</prim-key-field>	
-      <prim-key-field>perfReviewId</prim-key-field>
+      <prim-key field="employeePartyId" />	
+      <prim-key field="employeeRoleTypeId" />	
+      <prim-key field="perfReviewId" />
     </entity>	
     <entity entity-name="PartyQual" 
             package-name="org.ofbiz.commonapp.humanres.ability"
@@ -2229,8 +2231,8 @@
       <field name="partyQualTypeId" type="id-ne"></field>
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>	
-      <prim-key-field>partyId</prim-key-field>	
-      <prim-key-field>partyQualTypeId</prim-key-field>
+      <prim-key field="partyId" />	
+      <prim-key field="partyQualTypeId" />
       <relation type="one" rel-entity-name="PartyQualType">
         <key-map field-name="partyQualTypeId" />
       </relation>
@@ -2249,9 +2251,9 @@
       <field name="partyQualTypeId" type="id-ne"></field>
       <field name="name" type="id-long-ne"></field>
       <field name="value" type="value"></field>	
-      <prim-key-field>partyId</prim-key-field>	
-      <prim-key-field>partyQualTypeId</prim-key-field>	
-      <prim-key-field>name</prim-key-field>
+      <prim-key field="partyId" />	
+      <prim-key field="partyQualTypeId" />	
+      <prim-key field="name" />
       <relation type="one" rel-entity-name="PartyQual">
         <key-map field-name="partyId" />
         <key-map field-name="partyQualTypeId" />
@@ -2267,7 +2269,7 @@
       <field name="parentTypeId" type="id-ne"></field>
       <field name="hasTable" type="indicator"></field>
       <field name="description" type="description"></field>	
-      <prim-key-field>partyQualTypeId</prim-key-field>
+      <prim-key field="partyQualTypeId" />
       <relation type="one" title="Parent" rel-entity-name="PartyQualType">
         <key-map field-name="parentTypeId" rel-field-name="partyQualTypeId" />
       </relation>
@@ -2286,8 +2288,8 @@
             title="Party Qualification Type Attribute Entity">
       <field name="partyQualTypeId" type="id-ne"></field>
       <field name="name" type="id-long-ne"></field>	
-      <prim-key-field>partyQualTypeId</prim-key-field>	
-      <prim-key-field>name</prim-key-field>
+      <prim-key field="partyQualTypeId" />	
+      <prim-key field="name" />
       <relation type="one" rel-entity-name="PartyQualType">
         <key-map field-name="partyQualTypeId" />
       </relation>
@@ -2307,22 +2309,22 @@
       <field name="rating" type="numeric"></field>
       <field name="skillLevel" type="numeric"></field>
       <field name="startedUsingDate" type="date-time"></field>	
-      <prim-key-field>partyId</prim-key-field>	
-      <prim-key-field>skillTypeId</prim-key-field>
+      <prim-key field="partyId" />	
+      <prim-key field="skillTypeId" />
     </entity>	
     <entity entity-name="PerfRatingType" 
             package-name="org.ofbiz.commonapp.humanres.ability"
             title="Performance Rating Type Entity">
       <field name="perfRatingTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>	
-      <prim-key-field>perfRatingTypeId</prim-key-field>
+      <prim-key field="perfRatingTypeId" />
     </entity>	
     <entity entity-name="PerfReviewItemType" 
             package-name="org.ofbiz.commonapp.humanres.ability"
             title="Performance Review Item Type Entity">
       <field name="perfReviewItemTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>	
-      <prim-key-field>perfReviewItemTypeId</prim-key-field>
+      <prim-key field="perfReviewItemTypeId" />
     </entity>	
     <entity entity-name="PerformanceNote" 
             package-name="org.ofbiz.commonapp.humanres.ability"
@@ -2333,8 +2335,8 @@
       <field name="thruDate" type="date-time"></field>
       <field name="communicationDate" type="date-time"></field>
       <field name="comment" type="comment"></field>	
-      <prim-key-field>partyId</prim-key-field>	
-      <prim-key-field>roleTypeId</prim-key-field>
+      <prim-key field="partyId" />	
+      <prim-key field="roleTypeId" />
     </entity>	
     <entity entity-name="PerformanceReviewItem" 
             package-name="org.ofbiz.commonapp.humanres.ability"
@@ -2346,10 +2348,10 @@
       <field name="perfRatingTypeId" type="id"></field>
       <field name="perfReviewItemTypeId" type="id"></field>
       <field name="comment" type="comment"></field>	
-      <prim-key-field>employeePartyId</prim-key-field>	
-      <prim-key-field>employeeRoleTypeId</prim-key-field>	
-      <prim-key-field>perfReviewId</prim-key-field>	
-      <prim-key-field>perfReviewSeqId</prim-key-field>
+      <prim-key field="employeePartyId" />	
+      <prim-key field="employeeRoleTypeId" />	
+      <prim-key field="perfReviewId" />	
+      <prim-key field="perfReviewSeqId" />
     </entity>	
     <entity entity-name="PersonTraining" 
             package-name="org.ofbiz.commonapp.humanres.ability"
@@ -2358,15 +2360,15 @@
       <field name="trainingClassTypeId" type="id-ne"></field>
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>	
-      <prim-key-field>partyId</prim-key-field>	
-      <prim-key-field>trainingClassTypeId</prim-key-field>
+      <prim-key field="partyId" />	
+      <prim-key field="trainingClassTypeId" />
     </entity>	
     <entity entity-name="ResponsibilityType" 
             package-name="org.ofbiz.commonapp.humanres.ability"
             title="Responsibility Type Entity">
       <field name="responsibilityTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>	
-      <prim-key-field>responsibilityTypeId</prim-key-field>
+      <prim-key field="responsibilityTypeId" />
     </entity>	
     <entity entity-name="Resume" 
             package-name="org.ofbiz.commonapp.humanres.ability"
@@ -2375,22 +2377,22 @@
       <field name="partyId" type="id-ne"></field>
       <field name="resumeDate" type="date-time"></field>
       <field name="resumeText" type="long-varchar"></field>	
-      <prim-key-field>resumeId</prim-key-field>	
-      <prim-key-field>partyId</prim-key-field>
+      <prim-key field="resumeId" />	
+      <prim-key field="partyId" />
     </entity>	
     <entity entity-name="SkillType" 
             package-name="org.ofbiz.commonapp.humanres.ability"
             title="Skill Type Entity">
       <field name="skillTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>	
-      <prim-key-field>skillTypeId</prim-key-field>
+      <prim-key field="skillTypeId" />
     </entity>	
     <entity entity-name="TrainingClassType" 
             package-name="org.ofbiz.commonapp.humanres.ability"
             title="Training Class Type Entity">
       <field name="trainingClassTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>	
-      <prim-key-field>trainingClassTypeId</prim-key-field>
+      <prim-key field="trainingClassTypeId" />
     </entity>
 
   <!-- ========================================================= -->
@@ -2404,7 +2406,7 @@
       <field name="name" type="name"></field>
       <field name="description" type="description"></field>
       <field name="employerPaidPercentage" type="floating-point"></field>	
-      <prim-key-field>benefitTypeId</prim-key-field>
+      <prim-key field="benefitTypeId" />
     </entity>	
     <entity entity-name="Employment" 
             package-name="org.ofbiz.commonapp.humanres.employment"
@@ -2416,10 +2418,10 @@
       <field name="fromDate" type="date-time"></field>
       <field name="terminationReasonId" type="id"></field>
       <field name="terminationTypeId" type="id"></field>	
-      <prim-key-field>roleTypeIdFrom</prim-key-field>	
-      <prim-key-field>roleTypeIdTo</prim-key-field>	
-      <prim-key-field>partyIdFrom</prim-key-field>	
-      <prim-key-field>partyIdTo</prim-key-field>
+      <prim-key field="roleTypeIdFrom" />	
+      <prim-key field="roleTypeIdTo" />	
+      <prim-key field="partyIdFrom" />	
+      <prim-key field="partyIdTo" />
     </entity>	
     <entity entity-name="EmploymentApp" 
             package-name="org.ofbiz.commonapp.humanres.employment"
@@ -2431,14 +2433,14 @@
       <field name="applyingPartyId" type="id"></field>
       <field name="referredByPartyId" type="id"></field>
       <field name="applicationDate" type="date-time"></field>	
-      <prim-key-field>applicationId</prim-key-field>
+      <prim-key field="applicationId" />
     </entity>	
     <entity entity-name="EmploymentAppSourceType" 
             package-name="org.ofbiz.commonapp.humanres.employment"
             title="Employment Application Source Type Entity">
       <field name="employmentAppSourceTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>	
-      <prim-key-field>employmentAppSourceTypeId</prim-key-field>
+      <prim-key field="employmentAppSourceTypeId" />
     </entity>	
     <entity entity-name="PartyBenefit" 
             package-name="org.ofbiz.commonapp.humanres.employment"
@@ -2454,11 +2456,11 @@
       <field name="cost" type="currency-amount"></field>
       <field name="actualEmployerPaidPercent" type="floating-point"></field>
       <field name="availableTime" type="numeric"></field>	
-      <prim-key-field>roleTypeIdFrom</prim-key-field>	
-      <prim-key-field>roleTypeIdTo</prim-key-field>	
-      <prim-key-field>partyIdFrom</prim-key-field>	
-      <prim-key-field>partyIdTo</prim-key-field>	
-      <prim-key-field>benefitTypeId</prim-key-field>
+      <prim-key field="roleTypeIdFrom" />	
+      <prim-key field="roleTypeIdTo" />	
+      <prim-key field="partyIdFrom" />	
+      <prim-key field="partyIdTo" />	
+      <prim-key field="benefitTypeId" />
     </entity>	
     <entity entity-name="PayCheck" 
             package-name="org.ofbiz.commonapp.humanres.employment"
@@ -2466,7 +2468,7 @@
       <field name="paymentId" type="id-ne"></field>
       <field name="partyId" type="id"></field>
       <field name="roleTypeId" type="id"></field>	
-      <prim-key-field>paymentId</prim-key-field>
+      <prim-key field="paymentId" />
     </entity>	
     <entity entity-name="PayGrade" 
             package-name="org.ofbiz.commonapp.humanres.employment"
@@ -2474,7 +2476,7 @@
       <field name="payGradeId" type="id-ne"></field>
       <field name="name" type="name"></field>
       <field name="comment" type="comment"></field>	
-      <prim-key-field>payGradeId</prim-key-field>
+      <prim-key field="payGradeId" />
     </entity>	
     <entity entity-name="PayHistory" 
             package-name="org.ofbiz.commonapp.humanres.employment"
@@ -2490,10 +2492,10 @@
       <field name="periodTypeId" type="id"></field>
       <field name="amount" type="currency-amount"></field>
       <field name="comment" type="comment"></field>	
-      <prim-key-field>roleTypeIdFrom</prim-key-field>	
-      <prim-key-field>roleTypeIdTo</prim-key-field>	
-      <prim-key-field>partyIdFrom</prim-key-field>	
-      <prim-key-field>partyIdTo</prim-key-field>
+      <prim-key field="roleTypeIdFrom" />	
+      <prim-key field="roleTypeIdTo" />	
+      <prim-key field="partyIdFrom" />	
+      <prim-key field="partyIdTo" />
     </entity>	
     <entity entity-name="PayrollPreference" 
             package-name="org.ofbiz.commonapp.humanres.employment"
@@ -2511,16 +2513,16 @@
       <field name="routingNumber" type="short-varchar"></field>
       <field name="accountNumber" type="short-varchar"></field>
       <field name="bankName" type="name"></field>	
-      <prim-key-field>partyId</prim-key-field>	
-      <prim-key-field>roleTypeId</prim-key-field>	
-      <prim-key-field>payrollPreferenceSeqId</prim-key-field>
+      <prim-key field="partyId" />	
+      <prim-key field="roleTypeId" />	
+      <prim-key field="payrollPreferenceSeqId" />
     </entity>	
     <entity entity-name="RejectionReason" 
             package-name="org.ofbiz.commonapp.humanres.employment"
             title="Rejection Reason Entity">
       <field name="rejectionId" type="id-ne"></field>
       <field name="description" type="description"></field>	
-      <prim-key-field>rejectionId</prim-key-field>
+      <prim-key field="rejectionId" />
     </entity>	
     <entity entity-name="SalaryStep" 
             package-name="org.ofbiz.commonapp.humanres.employment"
@@ -2529,22 +2531,22 @@
       <field name="payGradeId" type="id-ne"></field>
       <field name="dateModified" type="date-time"></field>
       <field name="amount" type="currency-amount"></field>	
-      <prim-key-field>salaryStepSeqId</prim-key-field>	
-      <prim-key-field>payGradeId</prim-key-field>
+      <prim-key field="salaryStepSeqId" />	
+      <prim-key field="payGradeId" />
     </entity>	
     <entity entity-name="TerminationReason" 
             package-name="org.ofbiz.commonapp.humanres.employment"
             title="Termination Reason Entity">
       <field name="terminationReasonId" type="id-ne"></field>
       <field name="description" type="description"></field>	
-      <prim-key-field>terminationReasonId</prim-key-field>
+      <prim-key field="terminationReasonId" />
     </entity>	
     <entity entity-name="TerminationType" 
             package-name="org.ofbiz.commonapp.humanres.employment"
             title="Termination Type Entity">
       <field name="terminationTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>	
-      <prim-key-field>terminationTypeId</prim-key-field>
+      <prim-key field="terminationTypeId" />
     </entity>	
     <entity entity-name="UnemploymentClaim" 
             package-name="org.ofbiz.commonapp.humanres.employment"
@@ -2558,7 +2560,7 @@
       <field name="roleTypeIdFrom" type="id"></field>
       <field name="roleTypeIdTo" type="id"></field>
       <field name="fromDate" type="date-time"></field>	
-      <prim-key-field>unemploymentClaimId</prim-key-field>
+      <prim-key field="unemploymentClaimId" />
     </entity>
 
   <!-- ========================================================= -->
@@ -2582,14 +2584,14 @@
       <field name="temporaryFlag" type="indicator"></field>
       <field name="actualFromDate" type="date-time"></field>
       <field name="actualThruDate" type="date-time"></field>	
-      <prim-key-field>positionId</prim-key-field>
+      <prim-key field="positionId" />
     </entity>	
     <entity entity-name="PositionClassType" 
             package-name="org.ofbiz.commonapp.humanres.position"
             title="Position Classification Type Entity">
       <field name="positionClassTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>	
-      <prim-key-field>positionClassTypeId</prim-key-field>
+      <prim-key field="positionClassTypeId" />
     </entity>	
     <entity entity-name="PositionFulfillment" 
             package-name="org.ofbiz.commonapp.humanres.position"
@@ -2599,8 +2601,8 @@
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
       <field name="comment" type="comment"></field>	
-      <prim-key-field>positionId</prim-key-field>	
-      <prim-key-field>partyId</prim-key-field>
+      <prim-key field="positionId" />	
+      <prim-key field="partyId" />
     </entity>	
     <entity entity-name="PositionReportingStructure" 
             package-name="org.ofbiz.commonapp.humanres.position"
@@ -2611,8 +2613,8 @@
       <field name="thruDate" type="date-time"></field>
       <field name="comment" type="comment"></field>
       <field name="primaryFlag" type="indicator"></field>	
-      <prim-key-field>positionIdReportingTo</prim-key-field>	
-      <prim-key-field>positionIdManagedBy</prim-key-field>
+      <prim-key field="positionIdReportingTo" />	
+      <prim-key field="positionIdManagedBy" />
     </entity>	
     <entity entity-name="PositionResponsibility" 
             package-name="org.ofbiz.commonapp.humanres.position"
@@ -2622,8 +2624,8 @@
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
       <field name="comment" type="comment"></field>	
-      <prim-key-field>positionId</prim-key-field>	
-      <prim-key-field>responsibilityTypeId</prim-key-field>
+      <prim-key field="positionId" />	
+      <prim-key field="responsibilityTypeId" />
     </entity>	
     <entity entity-name="PositionType" 
             package-name="org.ofbiz.commonapp.humanres.position"
@@ -2632,7 +2634,7 @@
       <field name="partyId" type="id"></field>
       <field name="roleTypeId" type="id"></field>
       <field name="description" type="description"></field>	
-      <prim-key-field>positionTypeId</prim-key-field>
+      <prim-key field="positionTypeId" />
     </entity>	
     <entity entity-name="PositionTypeClass" 
             package-name="org.ofbiz.commonapp.humanres.position"
@@ -2642,8 +2644,8 @@
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
       <field name="standardHoursPerWeek" type="floating-point"></field>	
-      <prim-key-field>positionTypeId</prim-key-field>	
-      <prim-key-field>positionClassTypeId</prim-key-field>
+      <prim-key field="positionTypeId" />	
+      <prim-key field="positionClassTypeId" />
     </entity>	
     <entity entity-name="ValidResponsibility" 
             package-name="org.ofbiz.commonapp.humanres.position"
@@ -2653,8 +2655,8 @@
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
       <field name="comment" type="comment"></field>	
-      <prim-key-field>positionTypeId</prim-key-field>	
-      <prim-key-field>responsibilityTypeId</prim-key-field>
+      <prim-key field="positionTypeId" />	
+      <prim-key field="responsibilityTypeId" />
     </entity>
 
   <!-- ========================================================= -->
@@ -2670,7 +2672,7 @@
       <field name="orderItemSeqId" type="id"></field>
       <field name="amount" type="currency-amount"></field>
       <field name="percentage" type="floating-point"></field>	
-      <prim-key-field>orderAdjustmentId</prim-key-field>
+      <prim-key field="orderAdjustmentId" />
       <relation type="one" rel-entity-name="OrderAdjustmentType">
         <key-map field-name="orderAdjustmentTypeId" />
       </relation>
@@ -2694,8 +2696,8 @@
       <field name="orderAdjustmentId" type="id-ne"></field>
       <field name="name" type="id-long-ne"></field>
       <field name="value" type="value"></field>	
-      <prim-key-field>orderAdjustmentId</prim-key-field>	
-      <prim-key-field>name</prim-key-field>
+      <prim-key field="orderAdjustmentId" />	
+      <prim-key field="name" />
       <relation type="one" rel-entity-name="OrderAdjustment">
         <key-map field-name="orderAdjustmentId" />
       </relation>
@@ -2710,7 +2712,7 @@
       <field name="parentTypeId" type="id-ne"></field>
       <field name="hasTable" type="indicator"></field>
       <field name="description" type="description"></field>	
-      <prim-key-field>orderAdjustmentTypeId</prim-key-field>
+      <prim-key field="orderAdjustmentTypeId" />
       <relation type="one" title="Parent" rel-entity-name="OrderAdjustmentType">
         <key-map field-name="parentTypeId" rel-field-name="orderAdjustmentTypeId" />
       </relation>
@@ -2729,8 +2731,8 @@
             title="Order Adjustment Type Attribute Entity">
       <field name="orderAdjustmentTypeId" type="id-ne"></field>
       <field name="name" type="id-long-ne"></field>	
-      <prim-key-field>orderAdjustmentTypeId</prim-key-field>	
-      <prim-key-field>name</prim-key-field>
+      <prim-key field="orderAdjustmentTypeId" />	
+      <prim-key field="name" />
       <relation type="one" rel-entity-name="OrderAdjustmentType">
         <key-map field-name="orderAdjustmentTypeId" />
       </relation>
@@ -2747,8 +2749,8 @@
       <field name="orderId" type="id-ne"></field>
       <field name="name" type="id-long-ne"></field>
       <field name="value" type="value"></field>	
-      <prim-key-field>orderId</prim-key-field>	
-      <prim-key-field>name</prim-key-field>
+      <prim-key field="orderId" />	
+      <prim-key field="name" />
       <relation type="one" rel-entity-name="OrderHeader">
         <key-map field-name="orderId" />
       </relation>
@@ -2762,9 +2764,9 @@
       <field name="contactMechId" type="id-ne"></field>
       <field name="contactMechPurposeTypeId" type="id-ne"></field>
       <field name="orderId" type="id-ne"></field>	
-      <prim-key-field>contactMechId</prim-key-field>	
-      <prim-key-field>contactMechPurposeTypeId</prim-key-field>	
-      <prim-key-field>orderId</prim-key-field>
+      <prim-key field="contactMechId" />	
+      <prim-key field="contactMechPurposeTypeId" />	
+      <prim-key field="orderId" />
       <relation type="one" rel-entity-name="OrderHeader">
         <key-map field-name="orderId" />
       </relation>
@@ -2785,7 +2787,7 @@
       <field name="visitId" type="id"></field>
       <field name="statusId" type="id"></field>
       <field name="billingAccountId" type="id"></field>	
-      <prim-key-field>orderId</prim-key-field>
+      <prim-key field="orderId" />
       <relation type="one" rel-entity-name="OrderType">
         <key-map field-name="orderTypeId" />
       </relation>
@@ -2868,8 +2870,8 @@
       <field name="comment" type="comment"></field>
       <field name="correspondingPoId" type="id"></field>
       <field name="statusId" type="id"></field>	
-      <prim-key-field>orderId</prim-key-field>	
-      <prim-key-field>orderItemSeqId</prim-key-field>
+      <prim-key field="orderId" />	
+      <prim-key field="orderItemSeqId" />
       <relation type="one" rel-entity-name="OrderItemType">
         <key-map field-name="orderItemTypeId" />
       </relation>
@@ -2942,10 +2944,10 @@
       <field name="soItemSeqId" type="id-ne"></field>
       <field name="purchaseOrderId" type="id-ne"></field>
       <field name="poItemSeqId" type="id-ne"></field>	
-      <prim-key-field>salesOrderId</prim-key-field>	
-      <prim-key-field>soItemSeqId</prim-key-field>	
-      <prim-key-field>purchaseOrderId</prim-key-field>	
-      <prim-key-field>poItemSeqId</prim-key-field>
+      <prim-key field="salesOrderId" />	
+      <prim-key field="soItemSeqId" />	
+      <prim-key field="purchaseOrderId" />	
+      <prim-key field="poItemSeqId" />
       <relation type="one" title="Sales" rel-entity-name="OrderHeader">
         <key-map field-name="salesOrderId" rel-field-name="orderId" />
       </relation>
@@ -2968,9 +2970,9 @@
       <field name="orderItemSeqId" type="id-ne"></field>
       <field name="name" type="id-long-ne"></field>
       <field name="value" type="value"></field>	
-      <prim-key-field>orderId</prim-key-field>	
-      <prim-key-field>orderItemSeqId</prim-key-field>	
-      <prim-key-field>name</prim-key-field>
+      <prim-key field="orderId" />	
+      <prim-key field="orderItemSeqId" />	
+      <prim-key field="name" />
       <relation type="one" rel-entity-name="OrderItem">
         <key-map field-name="orderId" />
         <key-map field-name="orderItemSeqId" />
@@ -2988,10 +2990,10 @@
       <field name="invoiceItemSeqId" type="id-ne"></field>
       <field name="quantity" type="floating-point"></field>
       <field name="amount" type="currency-amount"></field>	
-      <prim-key-field>orderId</prim-key-field>	
-      <prim-key-field>orderItemSeqId</prim-key-field>	
-      <prim-key-field>invoiceId</prim-key-field>	
-      <prim-key-field>invoiceItemSeqId</prim-key-field>
+      <prim-key field="orderId" />	
+      <prim-key field="orderItemSeqId" />	
+      <prim-key field="invoiceId" />	
+      <prim-key field="invoiceItemSeqId" />
       <relation type="one" rel-entity-name="OrderHeader">
         <key-map field-name="orderId" />
       </relation>
@@ -3014,10 +3016,10 @@
       <field name="contactMechPurposeTypeId" type="id-ne"></field>
       <field name="orderId" type="id-ne"></field>
       <field name="orderItemSeqId" type="id-ne"></field>	
-      <prim-key-field>contactMechId</prim-key-field>	
-      <prim-key-field>contactMechPurposeTypeId</prim-key-field>	
-      <prim-key-field>orderId</prim-key-field>	
-      <prim-key-field>orderItemSeqId</prim-key-field>
+      <prim-key field="contactMechId" />	
+      <prim-key field="contactMechPurposeTypeId" />	
+      <prim-key field="orderId" />	
+      <prim-key field="orderItemSeqId" />
       <relation type="one" rel-entity-name="OrderHeader">
         <key-map field-name="orderId" />
       </relation>
@@ -3039,10 +3041,10 @@
       <field name="orderItemSeqId" type="id-ne"></field>
       <field name="partyId" type="id-ne"></field>
       <field name="roleTypeId" type="id-ne"></field>	
-      <prim-key-field>orderId</prim-key-field>	
-      <prim-key-field>orderItemSeqId</prim-key-field>	
-      <prim-key-field>partyId</prim-key-field>	
-      <prim-key-field>roleTypeId</prim-key-field>
+      <prim-key field="orderId" />	
+      <prim-key field="orderItemSeqId" />	
+      <prim-key field="partyId" />	
+      <prim-key field="roleTypeId" />
       <relation type="one" rel-entity-name="OrderHeader">
         <key-map field-name="orderId" />
       </relation>
@@ -3068,7 +3070,7 @@
       <field name="parentTypeId" type="id-ne"></field>
       <field name="hasTable" type="indicator"></field>
       <field name="description" type="description"></field>	
-      <prim-key-field>orderItemTypeId</prim-key-field>
+      <prim-key field="orderItemTypeId" />
       <relation type="one" title="Parent" rel-entity-name="OrderItemType">
         <key-map field-name="parentTypeId" rel-field-name="orderItemTypeId" />
       </relation>
@@ -3087,8 +3089,8 @@
             title="Order Item Type Attribute Entity">
       <field name="orderItemTypeId" type="id-ne"></field>
       <field name="name" type="id-long-ne"></field>	
-      <prim-key-field>orderItemTypeId</prim-key-field>	
-      <prim-key-field>name</prim-key-field>
+      <prim-key field="orderItemTypeId" />	
+      <prim-key field="name" />
       <relation type="one" rel-entity-name="OrderItemType">
         <key-map field-name="orderItemTypeId" />
       </relation>
@@ -3107,7 +3109,7 @@
       <field name="paymentMethodTypeId" type="id"></field>
       <field name="paymentInfoId" type="id"></field>
       <field name="maxAmount" type="currency-amount"></field>	
-      <prim-key-field>orderPaymentPreferenceId</prim-key-field>
+      <prim-key field="orderPaymentPreferenceId" />
       <relation type="one" rel-entity-name="OrderHeader">
         <key-map field-name="orderId" />
       </relation>
@@ -3124,9 +3126,9 @@
       <field name="orderId" type="id-ne"></field>
       <field name="partyId" type="id-ne"></field>
       <field name="roleTypeId" type="id-ne"></field>	
-      <prim-key-field>orderId</prim-key-field>	
-      <prim-key-field>partyId</prim-key-field>	
-      <prim-key-field>roleTypeId</prim-key-field>
+      <prim-key field="orderId" />	
+      <prim-key field="partyId" />	
+      <prim-key field="roleTypeId" />
       <relation type="one" rel-entity-name="OrderHeader">
         <key-map field-name="orderId" />
       </relation>
@@ -3149,10 +3151,10 @@
       <field name="shipmentId" type="id-ne"></field>
       <field name="shipmentItemSeqId" type="id-ne"></field>
       <field name="quantity" type="floating-point"></field>	
-      <prim-key-field>orderId</prim-key-field>	
-      <prim-key-field>orderItemSeqId</prim-key-field>	
-      <prim-key-field>shipmentId</prim-key-field>	
-      <prim-key-field>shipmentItemSeqId</prim-key-field>
+      <prim-key field="orderId" />	
+      <prim-key field="orderItemSeqId" />	
+      <prim-key field="shipmentId" />	
+      <prim-key field="shipmentItemSeqId" />
       <relation type="one" rel-entity-name="OrderHeader">
         <key-map field-name="orderId" />
       </relation>
@@ -3178,8 +3180,8 @@
       <field name="carrierRoleTypeId" type="id"></field>
       <field name="shippingInstructions" type="long-varchar"></field>
       <field name="maySplit" type="indicator"></field>	
-      <prim-key-field>orderId</prim-key-field>	
-      <prim-key-field>orderItemSeqId</prim-key-field>
+      <prim-key field="orderId" />	
+      <prim-key field="orderItemSeqId" />
       <relation type="one" rel-entity-name="CarrierShipmentMethod">
         <key-map field-name="shipmentMethodTypeId" />
         <key-map field-name="carrierPartyId" rel-field-name="partyId" />
@@ -3211,7 +3213,7 @@
       <field name="orderId" type="id"></field>
       <field name="orderItemSeqId" type="id"></field>
       <field name="statusDatetime" type="date-time"></field>	
-      <prim-key-field>orderStatusId</prim-key-field>
+      <prim-key field="orderStatusId" />
       <relation type="one" rel-entity-name="Status">
         <key-map field-name="statusId" />
       </relation>
@@ -3231,7 +3233,7 @@
       <field name="orderId" type="id"></field>
       <field name="orderItemSeqId" type="id"></field>
       <field name="termValue" type="numeric"></field>	
-      <prim-key-field>orderTermId</prim-key-field>
+      <prim-key field="orderTermId" />
       <relation type="one" rel-entity-name="OrderHeader">
         <key-map field-name="orderId" />
       </relation>
@@ -3249,8 +3251,8 @@
       <field name="orderTermId" type="id-ne"></field>
       <field name="name" type="id-long-ne"></field>
       <field name="value" type="value"></field>	
-      <prim-key-field>orderTermId</prim-key-field>	
-      <prim-key-field>name</prim-key-field>
+      <prim-key field="orderTermId" />	
+      <prim-key field="name" />
       <relation type="one" rel-entity-name="OrderTerm">
         <key-map field-name="orderTermId" />
       </relation>
@@ -3265,7 +3267,7 @@
       <field name="parentTypeId" type="id-ne"></field>
       <field name="hasTable" type="indicator"></field>
       <field name="description" type="description"></field>	
-      <prim-key-field>orderTypeId</prim-key-field>
+      <prim-key field="orderTypeId" />
       <relation type="one" title="Parent" rel-entity-name="OrderType">
         <key-map field-name="parentTypeId" rel-field-name="orderTypeId" />
       </relation>
@@ -3284,8 +3286,8 @@
             title="Order Type Attribute Entity">
       <field name="orderTypeId" type="id-ne"></field>
       <field name="name" type="id-long-ne"></field>	
-      <prim-key-field>orderTypeId</prim-key-field>	
-      <prim-key-field>name</prim-key-field>
+      <prim-key field="orderTypeId" />	
+      <prim-key field="name" />
       <relation type="one" rel-entity-name="OrderType">
         <key-map field-name="orderTypeId" />
       </relation>
@@ -3301,7 +3303,7 @@
             title="Picklist Entity">
       <field name="picklistId" type="id-ne"></field>
       <field name="dateCreated" type="date-time"></field>	
-      <prim-key-field>picklistId</prim-key-field>
+      <prim-key field="picklistId" />
       <relation type="many" rel-entity-name="PicklistItem">
         <key-map field-name="picklistId" />
       </relation>
@@ -3312,8 +3314,8 @@
       <field name="picklistId" type="id-ne"></field>
       <field name="inventoryItemId" type="id-ne"></field>
       <field name="quantity" type="floating-point"></field>	
-      <prim-key-field>picklistId</prim-key-field>	
-      <prim-key-field>inventoryItemId</prim-key-field>
+      <prim-key field="picklistId" />	
+      <prim-key field="inventoryItemId" />
       <relation type="one" rel-entity-name="Picklist">
         <key-map field-name="picklistId" />
       </relation>
@@ -3329,10 +3331,10 @@
       <field name="engagementId" type="id-ne"></field>
       <field name="engagementItemSeqId" type="id-ne"></field>
       <field name="productId" type="id"></field>	
-      <prim-key-field>orderId</prim-key-field>	
-      <prim-key-field>orderItemSeqId</prim-key-field>	
-      <prim-key-field>engagementId</prim-key-field>	
-      <prim-key-field>engagementItemSeqId</prim-key-field>
+      <prim-key field="orderId" />	
+      <prim-key field="orderItemSeqId" />	
+      <prim-key field="engagementId" />	
+      <prim-key field="engagementItemSeqId" />
       <relation type="one" rel-entity-name="OrderHeader">
         <key-map field-name="orderId" />
       </relation>
@@ -3357,9 +3359,9 @@
       <field name="workEffortId" type="id-ne"></field>
       <field name="orderId" type="id-ne"></field>
       <field name="orderItemSeqId" type="id-ne"></field>	
-      <prim-key-field>workEffortId</prim-key-field>	
-      <prim-key-field>orderId</prim-key-field>	
-      <prim-key-field>orderItemSeqId</prim-key-field>
+      <prim-key field="workEffortId" />	
+      <prim-key field="orderId" />	
+      <prim-key field="orderItemSeqId" />
       <relation type="one" rel-entity-name="OrderHeader">
         <key-map field-name="orderId" />
       </relation>
@@ -3386,7 +3388,7 @@
       <field name="validFromDate" type="date-time"></field>
       <field name="validThruDate" type="date-time"></field>
       <field name="description" type="description"></field>	
-      <prim-key-field>quoteId</prim-key-field>
+      <prim-key field="quoteId" />
       <relation type="one" rel-entity-name="QuoteType">
         <key-map field-name="quoteTypeId" />
       </relation>
@@ -3403,8 +3405,8 @@
       <field name="quoteId" type="id-ne"></field>
       <field name="name" type="id-long-ne"></field>
       <field name="value" type="value"></field>	
-      <prim-key-field>quoteId</prim-key-field>	
-      <prim-key-field>name</prim-key-field>
+      <prim-key field="quoteId" />	
+      <prim-key field="name" />
       <relation type="one" rel-entity-name="Quote">
         <key-map field-name="quoteId" />
       </relation>
@@ -3429,8 +3431,8 @@
       <field name="quoteUnitPrice" type="currency-amount"></field>
       <field name="estimatedDeliveryDate" type="date-time"></field>
       <field name="comment" type="comment"></field>	
-      <prim-key-field>quoteId</prim-key-field>	
-      <prim-key-field>quoteItemSeqId</prim-key-field>
+      <prim-key field="quoteId" />	
+      <prim-key field="quoteItemSeqId" />
     </entity>	
     <entity entity-name="QuoteRole" 
             package-name="org.ofbiz.commonapp.order.quote"
@@ -3438,9 +3440,9 @@
       <field name="quoteId" type="id-ne"></field>
       <field name="partyId" type="id-ne"></field>
       <field name="roleTypeId" type="id-ne"></field>	
-      <prim-key-field>quoteId</prim-key-field>	
-      <prim-key-field>partyId</prim-key-field>	
-      <prim-key-field>roleTypeId</prim-key-field>
+      <prim-key field="quoteId" />	
+      <prim-key field="partyId" />	
+      <prim-key field="roleTypeId" />
     </entity>	
     <entity entity-name="QuoteTerm" 
             package-name="org.ofbiz.commonapp.order.quote"
@@ -3450,7 +3452,7 @@
       <field name="quoteId" type="id"></field>
       <field name="quoteItemSeqId" type="id"></field>
       <field name="termValue" type="numeric"></field>	
-      <prim-key-field>quoteTermId</prim-key-field>
+      <prim-key field="quoteTermId" />
     </entity>	
     <entity entity-name="QuoteTermAttribute" 
             package-name="org.ofbiz.commonapp.order.quote"
@@ -3458,8 +3460,8 @@
       <field name="quoteTermId" type="id-ne"></field>
       <field name="name" type="id-long-ne"></field>
       <field name="value" type="value"></field>	
-      <prim-key-field>quoteTermId</prim-key-field>	
-      <prim-key-field>name</prim-key-field>
+      <prim-key field="quoteTermId" />	
+      <prim-key field="name" />
       <relation type="one" rel-entity-name="QuoteTerm">
         <key-map field-name="quoteTermId" />
       </relation>
@@ -3474,7 +3476,7 @@
       <field name="parentTypeId" type="id-ne"></field>
       <field name="hasTable" type="indicator"></field>
       <field name="description" type="description"></field>	
-      <prim-key-field>quoteTypeId</prim-key-field>
+      <prim-key field="quoteTypeId" />
       <relation type="one" title="Parent" rel-entity-name="QuoteType">
         <key-map field-name="parentTypeId" rel-field-name="quoteTypeId" />
       </relation>
@@ -3493,8 +3495,8 @@
             title="Quote Type Attribute Entity">
       <field name="quoteTypeId" type="id-ne"></field>
       <field name="name" type="id-long-ne"></field>	
-      <prim-key-field>quoteTypeId</prim-key-field>	
-      <prim-key-field>name</prim-key-field>
+      <prim-key field="quoteTypeId" />	
+      <prim-key field="name" />
       <relation type="one" rel-entity-name="QuoteType">
         <key-map field-name="quoteTypeId" />
       </relation>
@@ -3518,7 +3520,7 @@
       <field name="custRequestDate" type="date-time"></field>
       <field name="responseRequiredDate" type="date-time"></field>
       <field name="description" type="description"></field>	
-      <prim-key-field>custRequestId</prim-key-field>
+      <prim-key field="custRequestId" />
       <relation type="one" rel-entity-name="CustRequestType">
         <key-map field-name="custRequestTypeId" />
       </relation>
@@ -3535,8 +3537,8 @@
       <field name="custRequestId" type="id-ne"></field>
       <field name="name" type="id-long-ne"></field>
       <field name="value" type="value"></field>	
-      <prim-key-field>custRequestId</prim-key-field>	
-      <prim-key-field>name</prim-key-field>
+      <prim-key field="custRequestId" />	
+      <prim-key field="name" />
       <relation type="one" rel-entity-name="CustRequest">
         <key-map field-name="custRequestId" />
       </relation>
@@ -3553,8 +3555,8 @@
       <field name="quantity" type="floating-point"></field>
       <field name="maximumAmount" type="currency-amount"></field>
       <field name="description" type="description"></field>	
-      <prim-key-field>custRequestId</prim-key-field>	
-      <prim-key-field>custRequestItemSeqId</prim-key-field>
+      <prim-key field="custRequestId" />	
+      <prim-key field="custRequestItemSeqId" />
     </entity>	
     <entity entity-name="CustRequestRole" 
             package-name="org.ofbiz.commonapp.order.request"
@@ -3562,9 +3564,9 @@
       <field name="custRequestId" type="id-ne"></field>
       <field name="partyId" type="id-ne"></field>
       <field name="roleTypeId" type="id-ne"></field>	
-      <prim-key-field>custRequestId</prim-key-field>	
-      <prim-key-field>partyId</prim-key-field>	
-      <prim-key-field>roleTypeId</prim-key-field>
+      <prim-key field="custRequestId" />	
+      <prim-key field="partyId" />	
+      <prim-key field="roleTypeId" />
     </entity>	
     <entity entity-name="CustRequestType" 
             package-name="org.ofbiz.commonapp.order.request"
@@ -3573,7 +3575,7 @@
       <field name="parentTypeId" type="id-ne"></field>
       <field name="hasTable" type="indicator"></field>
       <field name="description" type="description"></field>	
-      <prim-key-field>custRequestTypeId</prim-key-field>
+      <prim-key field="custRequestTypeId" />
       <relation type="one" title="Parent" rel-entity-name="CustRequestType">
         <key-map field-name="parentTypeId" rel-field-name="custRequestTypeId" />
       </relation>
@@ -3592,8 +3594,8 @@
             title="Customer Request Type Attribute Entity">
       <field name="custRequestTypeId" type="id-ne"></field>
       <field name="name" type="id-long-ne"></field>	
-      <prim-key-field>custRequestTypeId</prim-key-field>	
-      <prim-key-field>name</prim-key-field>
+      <prim-key field="custRequestTypeId" />	
+      <prim-key field="name" />
       <relation type="one" rel-entity-name="CustRequestType">
         <key-map field-name="custRequestTypeId" />
       </relation>
@@ -3611,8 +3613,8 @@
       <field name="requirementId" type="id-ne"></field>
       <field name="productFeatureId" type="id"></field>
       <field name="optionalInd" type="indicator"></field>	
-      <prim-key-field>desiredFeatureId</prim-key-field>	
-      <prim-key-field>requirementId</prim-key-field>
+      <prim-key field="desiredFeatureId" />	
+      <prim-key field="requirementId" />
     </entity>	
     <entity entity-name="OrderRequirementCommitment" 
             package-name="org.ofbiz.commonapp.order.request"
@@ -3621,9 +3623,9 @@
       <field name="orderItemSeqId" type="id-ne"></field>
       <field name="requirementId" type="id-ne"></field>
       <field name="quantity" type="floating-point"></field>	
-      <prim-key-field>orderId</prim-key-field>	
-      <prim-key-field>orderItemSeqId</prim-key-field>	
-      <prim-key-field>requirementId</prim-key-field>
+      <prim-key field="orderId" />	
+      <prim-key field="orderItemSeqId" />	
+      <prim-key field="requirementId" />
     </entity>	
     <entity entity-name="Requirement" 
             package-name="org.ofbiz.commonapp.order.request"
@@ -3637,7 +3639,7 @@
       <field name="estimatedBudget" type="currency-amount"></field>
       <field name="quantity" type="floating-point"></field>
       <field name="reason" type="long-varchar"></field>	
-      <prim-key-field>requirementId</prim-key-field>
+      <prim-key field="requirementId" />
       <relation type="one" rel-entity-name="RequirementType">
         <key-map field-name="requirementTypeId" />
       </relation>
@@ -3654,8 +3656,8 @@
       <field name="requirementId" type="id-ne"></field>
       <field name="name" type="id-long-ne"></field>
       <field name="value" type="value"></field>	
-      <prim-key-field>requirementId</prim-key-field>	
-      <prim-key-field>name</prim-key-field>
+      <prim-key field="requirementId" />	
+      <prim-key field="name" />
       <relation type="one" rel-entity-name="Requirement">
         <key-map field-name="requirementId" />
       </relation>
@@ -3670,9 +3672,9 @@
       <field name="budgetItemSeqId" type="id-ne"></field>
       <field name="requirementId" type="id-ne"></field>
       <field name="amount" type="currency-amount"></field>	
-      <prim-key-field>budgetId</prim-key-field>	
-      <prim-key-field>budgetItemSeqId</prim-key-field>	
-      <prim-key-field>requirementId</prim-key-field>
+      <prim-key field="budgetId" />	
+      <prim-key field="budgetItemSeqId" />	
+      <prim-key field="requirementId" />
     </entity>	
     <entity entity-name="RequirementCustRequest" 
             package-name="org.ofbiz.commonapp.order.request"
@@ -3680,9 +3682,9 @@
       <field name="custRequestId" type="id-ne"></field>
       <field name="custRequestItemSeqId" type="id-ne"></field>
       <field name="requirementId" type="id-ne"></field>	
-      <prim-key-field>custRequestId</prim-key-field>	
-      <prim-key-field>custRequestItemSeqId</prim-key-field>	
-      <prim-key-field>requirementId</prim-key-field>
+      <prim-key field="custRequestId" />	
+      <prim-key field="custRequestItemSeqId" />	
+      <prim-key field="requirementId" />
     </entity>	
     <entity entity-name="RequirementRole" 
             package-name="org.ofbiz.commonapp.order.request"
@@ -3692,9 +3694,9 @@
       <field name="roleTypeId" type="id-ne"></field>
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>	
-      <prim-key-field>requirementId</prim-key-field>	
-      <prim-key-field>partyId</prim-key-field>	
-      <prim-key-field>roleTypeId</prim-key-field>
+      <prim-key field="requirementId" />	
+      <prim-key field="partyId" />	
+      <prim-key field="roleTypeId" />
     </entity>	
     <entity entity-name="RequirementStatus" 
             package-name="org.ofbiz.commonapp.order.request"
@@ -3702,8 +3704,8 @@
       <field name="requirementId" type="id-ne"></field>
       <field name="statusId" type="id-ne"></field>
       <field name="statusDate" type="date-time"></field>	
-      <prim-key-field>requirementId</prim-key-field>	
-      <prim-key-field>statusId</prim-key-field>
+      <prim-key field="requirementId" />	
+      <prim-key field="statusId" />
     </entity>	
     <entity entity-name="RequirementType" 
             package-name="org.ofbiz.commonapp.order.request"
@@ -3712,7 +3714,7 @@
       <field name="parentTypeId" type="id-ne"></field>
       <field name="hasTable" type="indicator"></field>
       <field name="description" type="description"></field>	
-      <prim-key-field>requirementTypeId</prim-key-field>
+      <prim-key field="requirementTypeId" />
       <relation type="one" title="Parent" rel-entity-name="RequirementType">
         <key-map field-name="parentTypeId" rel-field-name="requirementTypeId" />
       </relation>
@@ -3731,8 +3733,8 @@
             title="Requirement Type Attribute Entity">
       <field name="requirementTypeId" type="id-ne"></field>
       <field name="name" type="id-long-ne"></field>	
-      <prim-key-field>requirementTypeId</prim-key-field>	
-      <prim-key-field>name</prim-key-field>
+      <prim-key field="requirementTypeId" />	
+      <prim-key field="name" />
       <relation type="one" rel-entity-name="RequirementType">
         <key-map field-name="requirementTypeId" />
       </relation>
@@ -3751,9 +3753,9 @@
       <field name="partyId" type="id-ne"></field>
       <field name="contactMechId" type="id"></field>
       <field name="dateSent" type="date-time"></field>	
-      <prim-key-field>respondingPartySeqId</prim-key-field>	
-      <prim-key-field>custRequestId</prim-key-field>	
-      <prim-key-field>partyId</prim-key-field>
+      <prim-key field="respondingPartySeqId" />	
+      <prim-key field="custRequestId" />	
+      <prim-key field="partyId" />
     </entity>	
     <entity entity-name="WorkRequirement" 
             package-name="org.ofbiz.commonapp.order.request"
@@ -3762,15 +3764,15 @@
       <field name="deliverableId" type="id"></field>
       <field name="fixedAssetId" type="id"></field>
       <field name="productId" type="id"></field>	
-      <prim-key-field>requirementId</prim-key-field>
+      <prim-key field="requirementId" />
     </entity>	
     <entity entity-name="WorkRequirementFulfillment" 
             package-name="org.ofbiz.commonapp.order.request"
             title="Work Requirement Fulfillment Entity">
       <field name="requirementId" type="id-ne"></field>
       <field name="workEffortId" type="id-ne"></field>	
-      <prim-key-field>requirementId</prim-key-field>	
-      <prim-key-field>workEffortId</prim-key-field>
+      <prim-key field="requirementId" />	
+      <prim-key field="workEffortId" />
     </entity>
 
   <!-- ========================================================= -->
@@ -3786,7 +3788,7 @@
       <field name="addendumCreationDate" type="date-time"></field>
       <field name="addendumEffectiveDate" type="date-time"></field>
       <field name="addendumText" type="long-varchar"></field>	
-      <prim-key-field>addendumId</prim-key-field>
+      <prim-key field="addendumId" />
       <relation type="one" rel-entity-name="Agreement">
         <key-map field-name="agreementId" />
       </relation>
@@ -3810,7 +3812,7 @@
       <field name="thruDate" type="date-time"></field>
       <field name="description" type="description"></field>
       <field name="text" type="long-varchar"></field>	
-      <prim-key-field>agreementId</prim-key-field>
+      <prim-key field="agreementId" />
       <relation type="one" rel-entity-name="Product">
         <key-map field-name="productId" />
       </relation>
@@ -3862,8 +3864,8 @@
       <field name="agreementId" type="id-ne"></field>
       <field name="name" type="id-long-ne"></field>
       <field name="value" type="value"></field>	
-      <prim-key-field>agreementId</prim-key-field>	
-      <prim-key-field>name</prim-key-field>
+      <prim-key field="agreementId" />	
+      <prim-key field="name" />
       <relation type="one" rel-entity-name="Agreement">
         <key-map field-name="agreementId" />
       </relation>
@@ -3877,9 +3879,9 @@
       <field name="agreementId" type="id-ne"></field>
       <field name="agreementItemSeqId" type="id-ne"></field>
       <field name="geoId" type="id-ne"></field>	
-      <prim-key-field>agreementId</prim-key-field>	
-      <prim-key-field>agreementItemSeqId</prim-key-field>	
-      <prim-key-field>geoId</prim-key-field>
+      <prim-key field="agreementId" />	
+      <prim-key field="agreementItemSeqId" />	
+      <prim-key field="geoId" />
     </entity>	
     <entity entity-name="AgreementItem" 
             package-name="org.ofbiz.commonapp.party.agreement"
@@ -3889,8 +3891,8 @@
       <field name="agreementItemTypeId" type="id"></field>
       <field name="agreementText" type="long-varchar"></field>
       <field name="agreementImage" type="blob"></field>	
-      <prim-key-field>agreementId</prim-key-field>	
-      <prim-key-field>agreementItemSeqId</prim-key-field>
+      <prim-key field="agreementId" />	
+      <prim-key field="agreementItemSeqId" />
       <relation type="one" rel-entity-name="Agreement">
         <key-map field-name="agreementId" />
       </relation>
@@ -3916,9 +3918,9 @@
       <field name="agreementItemSeqId" type="id-ne"></field>
       <field name="name" type="id-long-ne"></field>
       <field name="value" type="value"></field>	
-      <prim-key-field>agreementId</prim-key-field>	
-      <prim-key-field>agreementItemSeqId</prim-key-field>	
-      <prim-key-field>name</prim-key-field>
+      <prim-key field="agreementId" />	
+      <prim-key field="agreementItemSeqId" />	
+      <prim-key field="name" />
       <relation type="one" rel-entity-name="AgreementItem">
         <key-map field-name="agreementId" />
         <key-map field-name="agreementItemSeqId" />
@@ -3934,7 +3936,7 @@
       <field name="parentTypeId" type="id-ne"></field>
       <field name="hasTable" type="indicator"></field>
       <field name="description" type="description"></field>	
-      <prim-key-field>agreementItemTypeId</prim-key-field>
+      <prim-key field="agreementItemTypeId" />
       <relation type="one" title="Parent" rel-entity-name="AgreementItemType">
         <key-map field-name="parentTypeId" rel-field-name="agreementItemTypeId" />
       </relation>
@@ -3953,8 +3955,8 @@
             title="Agreement Item Type Attribute Entity">
       <field name="agreementItemTypeId" type="id-ne"></field>
       <field name="name" type="id-long-ne"></field>	
-      <prim-key-field>agreementItemTypeId</prim-key-field>	
-      <prim-key-field>name</prim-key-field>
+      <prim-key field="agreementItemTypeId" />	
+      <prim-key field="name" />
       <relation type="one" rel-entity-name="AgreementItemType">
         <key-map field-name="agreementItemTypeId" />
       </relation>
@@ -3971,9 +3973,9 @@
       <field name="agreementId" type="id-ne"></field>
       <field name="agreementItemSeqId" type="id-ne"></field>
       <field name="partyId" type="id-ne"></field>	
-      <prim-key-field>agreementId</prim-key-field>	
-      <prim-key-field>agreementItemSeqId</prim-key-field>	
-      <prim-key-field>partyId</prim-key-field>
+      <prim-key field="agreementId" />	
+      <prim-key field="agreementItemSeqId" />	
+      <prim-key field="partyId" />
     </entity>	
     <entity entity-name="AgreementProductApplic" 
             package-name="org.ofbiz.commonapp.party.agreement"
@@ -3981,9 +3983,9 @@
       <field name="agreementId" type="id-ne"></field>
       <field name="agreementItemSeqId" type="id-ne"></field>
       <field name="productId" type="id-ne"></field>	
-      <prim-key-field>agreementId</prim-key-field>	
-      <prim-key-field>agreementItemSeqId</prim-key-field>	
-      <prim-key-field>productId</prim-key-field>
+      <prim-key field="agreementId" />	
+      <prim-key field="agreementItemSeqId" />	
+      <prim-key field="productId" />
     </entity>	
     <entity entity-name="AgreementRole" 
             package-name="org.ofbiz.commonapp.party.agreement"
@@ -3991,9 +3993,9 @@
       <field name="agreementId" type="id-ne"></field>
       <field name="partyId" type="id-ne"></field>
       <field name="roleTypeId" type="id-ne"></field>	
-      <prim-key-field>agreementId</prim-key-field>	
-      <prim-key-field>partyId</prim-key-field>	
-      <prim-key-field>roleTypeId</prim-key-field>
+      <prim-key field="agreementId" />	
+      <prim-key field="partyId" />	
+      <prim-key field="roleTypeId" />
     </entity>	
     <entity entity-name="AgreementTerm" 
             package-name="org.ofbiz.commonapp.party.agreement"
@@ -4005,7 +4007,7 @@
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
       <field name="termValue" type="numeric"></field>	
-      <prim-key-field>agreementTermId</prim-key-field>
+      <prim-key field="agreementTermId" />
     </entity>	
     <entity entity-name="AgreementTermAttribute" 
             package-name="org.ofbiz.commonapp.party.agreement"
@@ -4013,8 +4015,8 @@
       <field name="agreementTermId" type="id-ne"></field>
       <field name="name" type="id-long-ne"></field>
       <field name="value" type="value"></field>	
-      <prim-key-field>agreementTermId</prim-key-field>	
-      <prim-key-field>name</prim-key-field>
+      <prim-key field="agreementTermId" />	
+      <prim-key field="name" />
       <relation type="one" rel-entity-name="AgreementTerm">
         <key-map field-name="agreementTermId" />
       </relation>
@@ -4029,7 +4031,7 @@
       <field name="parentTypeId" type="id-ne"></field>
       <field name="hasTable" type="indicator"></field>
       <field name="description" type="description"></field>	
-      <prim-key-field>agreementTypeId</prim-key-field>
+      <prim-key field="agreementTypeId" />
       <relation type="one" title="Parent" rel-entity-name="AgreementType">
         <key-map field-name="parentTypeId" rel-field-name="agreementTypeId" />
       </relation>
@@ -4048,8 +4050,8 @@
             title="Agreement Type Attribute Entity">
       <field name="agreementTypeId" type="id-ne"></field>
       <field name="name" type="id-long-ne"></field>	
-      <prim-key-field>agreementTypeId</prim-key-field>	
-      <prim-key-field>name</prim-key-field>
+      <prim-key field="agreementTypeId" />	
+      <prim-key field="name" />
       <relation type="one" rel-entity-name="AgreementType">
         <key-map field-name="agreementTypeId" />
       </relation>
@@ -4067,7 +4069,7 @@
       <field name="parentTypeId" type="id-ne"></field>
       <field name="hasTable" type="indicator"></field>
       <field name="description" type="description"></field>	
-      <prim-key-field>termTypeId</prim-key-field>
+      <prim-key field="termTypeId" />
       <relation type="one" title="Parent" rel-entity-name="TermType">
         <key-map field-name="parentTypeId" rel-field-name="termTypeId" />
       </relation>
@@ -4095,8 +4097,8 @@
             title="Term Type Attribute Entity">
       <field name="termTypeId" type="id-ne"></field>
       <field name="name" type="id-long-ne"></field>	
-      <prim-key-field>termTypeId</prim-key-field>	
-      <prim-key-field>name</prim-key-field>
+      <prim-key field="termTypeId" />	
+      <prim-key field="name" />
       <relation type="one" rel-entity-name="TermType">
         <key-map field-name="termTypeId" />
       </relation>
@@ -4146,7 +4148,7 @@
       <field name="datetimeStarted" type="date-time"></field>
       <field name="datetimeEnded" type="date-time"></field>
       <field name="note" type="comment"></field>	
-      <prim-key-field>communicationEventId</prim-key-field>
+      <prim-key field="communicationEventId" />
       <relation type="one" rel-entity-name="CommunicationEventType">
         <key-map field-name="communicationEventTypeId" />
       </relation>
@@ -4161,7 +4163,7 @@
       <field name="parentTypeId" type="id-ne"></field>
       <field name="hasTable" type="indicator"></field>
       <field name="description" type="description"></field>	
-      <prim-key-field>communicationEventPrpTypId</prim-key-field>
+      <prim-key field="communicationEventPrpTypId" />
       <relation type="one" title="Parent" rel-entity-name="CommunicationEventPrpTyp">
         <key-map field-name="parentTypeId" rel-field-name="communicationEventPrpTypId" />
       </relation>
@@ -4178,8 +4180,8 @@
       <field name="communicationEventPrpTypId" type="id-ne"></field>
       <field name="communicationEventId" type="id-ne"></field>
       <field name="description" type="description"></field>	
-      <prim-key-field>communicationEventPrpTypId</prim-key-field>	
-      <prim-key-field>communicationEventId</prim-key-field>
+      <prim-key field="communicationEventPrpTypId" />	
+      <prim-key field="communicationEventId" />
       <relation type="one" rel-entity-name="CommunicationEvent">
         <key-map field-name="communicationEventId" />
       </relation>
@@ -4193,9 +4195,9 @@
       <field name="communicationEventId" type="id-ne"></field>
       <field name="partyId" type="id-ne"></field>
       <field name="roleTypeId" type="id-ne"></field>	
-      <prim-key-field>communicationEventId</prim-key-field>	
-      <prim-key-field>partyId</prim-key-field>	
-      <prim-key-field>roleTypeId</prim-key-field>
+      <prim-key field="communicationEventId" />	
+      <prim-key field="partyId" />	
+      <prim-key field="roleTypeId" />
     </entity>	
     <entity entity-name="CommunicationEventType" 
             package-name="org.ofbiz.commonapp.party.communication"
@@ -4204,7 +4206,7 @@
       <field name="parentTypeId" type="id-ne"></field>
       <field name="hasTable" type="indicator"></field>
       <field name="description" type="description"></field>	
-      <prim-key-field>communicationEventTypeId</prim-key-field>
+      <prim-key field="communicationEventTypeId" />
       <relation type="one" title="Parent" rel-entity-name="CommunicationEventType">
         <key-map field-name="parentTypeId" rel-field-name="communicationEventTypeId" />
       </relation>
@@ -4222,7 +4224,7 @@
       <field name="statusId" type="id"></field>
       <field name="description" type="description"></field>
       <field name="startDatetime" type="date-time"></field>	
-      <prim-key-field>issueCaseId</prim-key-field>
+      <prim-key field="issueCaseId" />
     </entity>	
     <entity entity-name="IssueCaseRole" 
             package-name="org.ofbiz.commonapp.party.communication"
@@ -4230,9 +4232,9 @@
       <field name="issueCaseId" type="id-ne"></field>
       <field name="partyId" type="id-ne"></field>
       <field name="roleTypeId" type="id-ne"></field>	
-      <prim-key-field>issueCaseId</prim-key-field>	
-      <prim-key-field>partyId</prim-key-field>	
-      <prim-key-field>roleTypeId</prim-key-field>
+      <prim-key field="issueCaseId" />	
+      <prim-key field="partyId" />	
+      <prim-key field="roleTypeId" />
     </entity>
 
   <!-- ========================================================= -->
@@ -4245,7 +4247,7 @@
       <field name="contactMechId" type="id-ne"></field>
       <field name="contactMechTypeId" type="id"></field>
       <field name="infoString" type="long-varchar"></field>	
-      <prim-key-field>contactMechId</prim-key-field>
+      <prim-key field="contactMechId" />
       <relation type="one" rel-entity-name="ContactMechType">
         <key-map field-name="contactMechTypeId" />
       </relation>
@@ -4286,8 +4288,8 @@
       <field name="contactMechId" type="id-ne"></field>
       <field name="name" type="id-long-ne"></field>
       <field name="value" type="value"></field>	
-      <prim-key-field>contactMechId</prim-key-field>	
-      <prim-key-field>name</prim-key-field>
+      <prim-key field="contactMechId" />	
+      <prim-key field="name" />
       <relation type="one" rel-entity-name="ContactMech">
         <key-map field-name="contactMechId" />
       </relation>
@@ -4300,8 +4302,8 @@
             title="Contact Mechanism Link Entity">
       <field name="contactMechIdFrom" type="id-ne"></field>
       <field name="contactMechIdTo" type="id-ne"></field>	
-      <prim-key-field>contactMechIdFrom</prim-key-field>	
-      <prim-key-field>contactMechIdTo</prim-key-field>
+      <prim-key field="contactMechIdFrom" />	
+      <prim-key field="contactMechIdTo" />
       <relation type="one" title="From" rel-entity-name="ContactMech">
         <key-map field-name="contactMechIdFrom" rel-field-name="contactMechId" />
       </relation>
@@ -4314,7 +4316,7 @@
             title="Contact Mechanism Purpose Type Entity">
       <field name="contactMechPurposeTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>	
-      <prim-key-field>contactMechPurposeTypeId</prim-key-field>
+      <prim-key field="contactMechPurposeTypeId" />
       <relation type="many" rel-entity-name="PartyContactMechPurpose">
         <key-map field-name="contactMechPurposeTypeId" />
       </relation>
@@ -4335,7 +4337,7 @@
       <field name="parentTypeId" type="id-ne"></field>
       <field name="hasTable" type="indicator"></field>
       <field name="description" type="description"></field>	
-      <prim-key-field>contactMechTypeId</prim-key-field>
+      <prim-key field="contactMechTypeId" />
       <relation type="one" title="Parent" rel-entity-name="ContactMechType">
         <key-map field-name="parentTypeId" rel-field-name="contactMechTypeId" />
       </relation>
@@ -4360,8 +4362,8 @@
             title="Contact Mechanism Type Attribute Entity">
       <field name="contactMechTypeId" type="id-ne"></field>
       <field name="name" type="id-long-ne"></field>	
-      <prim-key-field>contactMechTypeId</prim-key-field>	
-      <prim-key-field>name</prim-key-field>
+      <prim-key field="contactMechTypeId" />	
+      <prim-key field="name" />
       <relation type="one" rel-entity-name="ContactMechType">
         <key-map field-name="contactMechTypeId" />
       </relation>
@@ -4378,8 +4380,8 @@
       <description>Defines which ContactMechPurposeType entites apply to which ContactMechType</description>
       <field name="contactMechTypeId" type="id-ne"></field>
       <field name="contactMechPurposeTypeId" type="id-ne"></field>	
-      <prim-key-field>contactMechTypeId</prim-key-field>	
-      <prim-key-field>contactMechPurposeTypeId</prim-key-field>
+      <prim-key field="contactMechTypeId" />	
+      <prim-key field="contactMechPurposeTypeId" />
       <relation type="one" rel-entity-name="ContactMechType">
         <key-map field-name="contactMechTypeId" />
       </relation>
@@ -4401,7 +4403,7 @@
       <field name="nameOnCard" type="name"></field>
       <field name="companyNameOnCard" type="name"></field>
       <field name="contactMechId" type="id-ne"></field>	
-      <prim-key-field>creditCardId</prim-key-field>
+      <prim-key field="creditCardId" />
       <relation type="one" rel-entity-name="Party">
         <key-map field-name="partyId" />
       </relation>
@@ -4426,8 +4428,8 @@
       <field name="allowSolicitation" type="indicator"></field>
       <field name="extension" type="very-short"></field>
       <field name="comment" type="comment"></field>	
-      <prim-key-field>partyId</prim-key-field>	
-      <prim-key-field>contactMechId</prim-key-field>
+      <prim-key field="partyId" />	
+      <prim-key field="contactMechId" />
       <relation type="one" rel-entity-name="Party">
         <key-map field-name="partyId" />
       </relation>
@@ -4454,9 +4456,9 @@
       <field name="contactMechPurposeTypeId" type="id-ne"></field>
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>	
-      <prim-key-field>partyId</prim-key-field>	
-      <prim-key-field>contactMechId</prim-key-field>	
-      <prim-key-field>contactMechPurposeTypeId</prim-key-field>
+      <prim-key field="partyId" />	
+      <prim-key field="contactMechId" />	
+      <prim-key field="contactMechPurposeTypeId" />
       <relation type="one" rel-entity-name="PartyContactMech">
         <key-map field-name="partyId" />
         <key-map field-name="contactMechId" />
@@ -4485,7 +4487,7 @@
       <field name="countryGeoId" type="id"></field>
       <field name="stateProvinceGeoId" type="id"></field>
       <field name="postalCodeGeoId" type="id"></field>	
-      <prim-key-field>contactMechId</prim-key-field>
+      <prim-key field="contactMechId" />
       <relation type="one" rel-entity-name="ContactMech">
         <key-map field-name="contactMechId" />
       </relation>
@@ -4510,8 +4512,8 @@
             title="Postal Address Boundary Entity">
       <field name="contactMechId" type="id-ne"></field>
       <field name="geoId" type="id-ne"></field>	
-      <prim-key-field>contactMechId</prim-key-field>	
-      <prim-key-field>geoId</prim-key-field>
+      <prim-key field="contactMechId" />	
+      <prim-key field="geoId" />
       <relation type="one" rel-entity-name="PostalAddress">
         <key-map field-name="contactMechId" />
       </relation>
@@ -4526,7 +4528,7 @@
       <field name="countryCode" type="very-short"></field>
       <field name="areaCode" type="very-short"></field>
       <field name="contactNumber" type="short-varchar"></field>	
-      <prim-key-field>contactMechId</prim-key-field>
+      <prim-key field="contactMechId" />
       <relation type="one" rel-entity-name="ContactMech">
         <key-map field-name="contactMechId" />
       </relation>
@@ -4536,8 +4538,8 @@
             title="Valid Contact Mechanism Role Entity">
       <field name="roleTypeId" type="id-ne"></field>
       <field name="contactMechTypeId" type="id-ne"></field>	
-      <prim-key-field>roleTypeId</prim-key-field>	
-      <prim-key-field>contactMechTypeId</prim-key-field>
+      <prim-key field="roleTypeId" />	
+      <prim-key field="contactMechTypeId" />
       <relation type="one" rel-entity-name="RoleType">
         <key-map field-name="roleTypeId" />
       </relation>
@@ -4555,7 +4557,7 @@
             title="Need Type Entity">
       <field name="needTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>	
-      <prim-key-field>needTypeId</prim-key-field>
+      <prim-key field="needTypeId" />
     </entity>	
     <entity entity-name="PartyNeed" 
             package-name="org.ofbiz.commonapp.party.need"
@@ -4571,9 +4573,9 @@
       <field name="visitId" type="id"></field>
       <field name="datetime" type="date-time"></field>
       <field name="description" type="description"></field>	
-      <prim-key-field>partyNeedId</prim-key-field>	
-      <prim-key-field>partyId</prim-key-field>	
-      <prim-key-field>roleTypeId</prim-key-field>
+      <prim-key field="partyNeedId" />	
+      <prim-key field="partyId" />	
+      <prim-key field="roleTypeId" />
     </entity>
 
   <!-- ========================================================= -->
@@ -4584,7 +4586,7 @@
             package-name="org.ofbiz.commonapp.party.party"
             title="Party Entity">
       <field name="partyId" type="id-ne"></field>	
-      <prim-key-field>partyId</prim-key-field>
+      <prim-key field="partyId" />
       <relation type="many" rel-entity-name="PartyClassification">
         <key-map field-name="partyId" />
       </relation>
@@ -4646,8 +4648,8 @@
       <field name="partyId" type="id-ne"></field>
       <field name="name" type="id-long-ne"></field>
       <field name="value" type="value"></field>	
-      <prim-key-field>partyId</prim-key-field>	
-      <prim-key-field>name</prim-key-field>
+      <prim-key field="partyId" />	
+      <prim-key field="name" />
       <relation type="one" rel-entity-name="Party">
         <key-map field-name="partyId" />
       </relation>
@@ -4663,8 +4665,8 @@
       <field name="partyClassificationTypeId" type="id"></field>
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>	
-      <prim-key-field>partyId</prim-key-field>	
-      <prim-key-field>partyTypeId</prim-key-field>
+      <prim-key field="partyId" />	
+      <prim-key field="partyTypeId" />
       <relation type="one" rel-entity-name="Party">
         <key-map field-name="partyId" />
       </relation>
@@ -4688,7 +4690,7 @@
       <field name="parentTypeId" type="id"></field>
       <field name="hasTable" type="indicator"></field>
       <field name="description" type="description"></field>	
-      <prim-key-field>partyClassificationTypeId</prim-key-field>
+      <prim-key field="partyClassificationTypeId" />
       <relation type="one" title="Parent" rel-entity-name="PartyClassificationType">
         <key-map field-name="parentTypeId" rel-field-name="partyClassificationTypeId" />
       </relation>
@@ -4704,8 +4706,8 @@
             title="Party Data Object Entity">
       <field name="partyId" type="id-ne"></field>
       <field name="dataObjectId" type="id-ne"></field>	
-      <prim-key-field>partyId</prim-key-field>	
-      <prim-key-field>dataObjectId</prim-key-field>
+      <prim-key field="partyId" />	
+      <prim-key field="dataObjectId" />
       <relation type="one" rel-entity-name="Party">
         <key-map field-name="partyId" />
       </relation>
@@ -4726,10 +4728,10 @@
       <field name="priorityTypeId" type="id"></field>
       <field name="partyRelationshipTypeId" type="id"></field>
       <field name="comment" type="comment"></field>	
-      <prim-key-field>partyIdFrom</prim-key-field>	
-      <prim-key-field>partyIdTo</prim-key-field>	
-      <prim-key-field>roleTypeIdFrom</prim-key-field>	
-      <prim-key-field>roleTypeIdTo</prim-key-field>
+      <prim-key field="partyIdFrom" />	
+      <prim-key field="partyIdTo" />	
+      <prim-key field="roleTypeIdFrom" />	
+      <prim-key field="roleTypeIdTo" />
       <relation type="one" title="From" rel-entity-name="Party">
         <key-map field-name="partyIdFrom" rel-field-name="partyId" />
       </relation>
@@ -4764,7 +4766,7 @@
       <field name="roleTypeIdValidTo" type="id"></field>
       <field name="description" type="description"></field>
       <field name="name" type="name"></field>	
-      <prim-key-field>partyRelationshipTypeId</prim-key-field>
+      <prim-key field="partyRelationshipTypeId" />
       <relation type="one" title="Parent" rel-entity-name="PartyRelationshipType">
         <key-map field-name="parentTypeId" rel-field-name="partyRelationshipTypeId" />
       </relation>
@@ -4787,8 +4789,8 @@
       <field name="partyId" type="id-ne"></field>
       <field name="roleTypeId" type="id-ne"></field>
       <field name="partyRoleId" type="id"></field>	
-      <prim-key-field>partyId</prim-key-field>	
-      <prim-key-field>roleTypeId</prim-key-field>
+      <prim-key field="partyId" />	
+      <prim-key field="roleTypeId" />
       <relation type="one" rel-entity-name="Party">
         <key-map field-name="partyId" />
       </relation>
@@ -4833,7 +4835,7 @@
       <field name="parentTypeId" type="id"></field>
       <field name="hasTable" type="indicator"></field>
       <field name="description" type="description"></field>	
-      <prim-key-field>partyTypeId</prim-key-field>
+      <prim-key field="partyTypeId" />
       <relation type="one" title="Parent" rel-entity-name="PartyType">
         <key-map field-name="parentTypeId" rel-field-name="partyTypeId" />
       </relation>
@@ -4861,8 +4863,8 @@
             title="Party Type Attribute Entity">
       <field name="partyTypeId" type="id-ne"></field>
       <field name="name" type="id-long-ne"></field>	
-      <prim-key-field>partyTypeId</prim-key-field>	
-      <prim-key-field>name</prim-key-field>
+      <prim-key field="partyTypeId" />	
+      <prim-key field="name" />
       <relation type="one" rel-entity-name="PartyType">
         <key-map field-name="partyTypeId" />
       </relation>
@@ -4894,7 +4896,7 @@
       <field name="passportExpireDate" type="date"></field>
       <field name="totalYearsWorkExperience" type="floating-point"></field>
       <field name="comment" type="comment"></field>	
-      <prim-key-field>partyId</prim-key-field>
+      <prim-key field="partyId" />
       <relation type="one" rel-entity-name="Party">
         <key-map field-name="partyId" />
       </relation>
@@ -4904,7 +4906,7 @@
             title="Priority Type Entity">
       <field name="priorityTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>	
-      <prim-key-field>priorityTypeId</prim-key-field>
+      <prim-key field="priorityTypeId" />
       <relation type="many" rel-entity-name="PartyRelationship">
         <key-map field-name="priorityTypeId" />
       </relation>
@@ -4916,7 +4918,7 @@
       <field name="parentTypeId" type="id"></field>
       <field name="hasTable" type="indicator"></field>
       <field name="description" type="description"></field>	
-      <prim-key-field>roleTypeId</prim-key-field>
+      <prim-key field="roleTypeId" />
       <relation type="one" title="Parent" rel-entity-name="RoleType">
         <key-map field-name="parentTypeId" rel-field-name="roleTypeId" />
       </relation>
@@ -4941,8 +4943,8 @@
             title="Role Type Attribute Entity">
       <field name="roleTypeId" type="id-ne"></field>
       <field name="name" type="id-long-ne"></field>	
-      <prim-key-field>roleTypeId</prim-key-field>	
-      <prim-key-field>name</prim-key-field>
+      <prim-key field="roleTypeId" />	
+      <prim-key field="name" />
       <relation type="one" rel-entity-name="RoleType">
         <key-map field-name="roleTypeId" />
       </relation>
@@ -4971,7 +4973,7 @@
       <field name="primaryParentCategoryId" type="id"></field>
       <field name="description" type="description"></field>
       <field name="categoryImageUrl" type="long-varchar"></field>	
-      <prim-key-field>productCategoryId</prim-key-field>
+      <prim-key field="productCategoryId" />
       <relation type="many" rel-entity-name="ProductCategoryClass">
         <key-map field-name="productCategoryId" />
       </relation>
@@ -5009,8 +5011,8 @@
       <field name="productCategoryId" type="id-ne"></field>
       <field name="name" type="id-long-ne"></field>
       <field name="value" type="value"></field>	
-      <prim-key-field>productCategoryId</prim-key-field>	
-      <prim-key-field>name</prim-key-field>
+      <prim-key field="productCategoryId" />	
+      <prim-key field="name" />
       <relation type="one" rel-entity-name="ProductCategory">
         <key-map field-name="productCategoryId" />
       </relation>
@@ -5025,8 +5027,8 @@
       <field name="productCategoryTypeId" type="id-ne"></field>
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>	
-      <prim-key-field>productCategoryId</prim-key-field>	
-      <prim-key-field>productCategoryTypeId</prim-key-field>
+      <prim-key field="productCategoryId" />	
+      <prim-key field="productCategoryTypeId" />
       <relation type="one" rel-entity-name="ProductCategory">
         <key-map field-name="productCategoryId" />
       </relation>
@@ -5048,8 +5050,8 @@
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
       <field name="comment" type="comment"></field>	
-      <prim-key-field>productCategoryId</prim-key-field>	
-      <prim-key-field>productId</prim-key-field>
+      <prim-key field="productCategoryId" />	
+      <prim-key field="productId" />
       <relation type="one" rel-entity-name="Product">
         <key-map field-name="productId" />
       </relation>
@@ -5062,8 +5064,8 @@
             title="Product Category Rollup Entity">
       <field name="productCategoryId" type="id-ne"></field>
       <field name="parentProductCategoryId" type="id-ne"></field>	
-      <prim-key-field>productCategoryId</prim-key-field>	
-      <prim-key-field>parentProductCategoryId</prim-key-field>
+      <prim-key field="productCategoryId" />	
+      <prim-key field="parentProductCategoryId" />
       <relation type="one" title="Current" rel-entity-name="ProductCategory">
         <key-map field-name="productCategoryId" />
       </relation>
@@ -5087,7 +5089,7 @@
       <field name="parentTypeId" type="id"></field>
       <field name="hasTable" type="indicator"></field>
       <field name="description" type="description"></field>	
-      <prim-key-field>productCategoryTypeId</prim-key-field>
+      <prim-key field="productCategoryTypeId" />
       <relation type="one" title="Parent" rel-entity-name="ProductCategoryType">
         <key-map field-name="parentTypeId" rel-field-name="productCategoryTypeId" />
       </relation>
@@ -5106,8 +5108,8 @@
             title="Product Category Type Attribute Entity">
       <field name="productCategoryTypeId" type="id-ne"></field>
       <field name="name" type="id-long-ne"></field>	
-      <prim-key-field>productCategoryTypeId</prim-key-field>	
-      <prim-key-field>name</prim-key-field>
+      <prim-key field="productCategoryTypeId" />	
+      <prim-key field="name" />
       <relation type="one" rel-entity-name="ProductCategoryType">
         <key-map field-name="productCategoryTypeId" />
       </relation>
@@ -5135,7 +5137,7 @@
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
       <field name="cost" type="currency-amount"></field>	
-      <prim-key-field>costComponentId</prim-key-field>
+      <prim-key field="costComponentId" />
       <relation type="one" rel-entity-name="CostComponentType">
         <key-map field-name="costComponentTypeId" />
       </relation>
@@ -5164,8 +5166,8 @@
       <field name="costComponentId" type="id-ne"></field>
       <field name="name" type="id-long-ne"></field>
       <field name="value" type="value"></field>	
-      <prim-key-field>costComponentId</prim-key-field>	
-      <prim-key-field>name</prim-key-field>
+      <prim-key field="costComponentId" />	
+      <prim-key field="name" />
       <relation type="one" rel-entity-name="CostComponent">
         <key-map field-name="costComponentId" />
       </relation>
@@ -5180,7 +5182,7 @@
       <field name="parentTypeId" type="id-ne"></field>
       <field name="hasTable" type="indicator"></field>
       <field name="description" type="description"></field>	
-      <prim-key-field>costComponentTypeId</prim-key-field>
+      <prim-key field="costComponentTypeId" />
       <relation type="one" title="Parent" rel-entity-name="CostComponentType">
         <key-map field-name="parentTypeId" rel-field-name="costComponentTypeId" />
       </relation>
@@ -5199,8 +5201,8 @@
             title="Cost Component Type Attribute Entity">
       <field name="costComponentTypeId" type="id-ne"></field>
       <field name="name" type="id-long-ne"></field>	
-      <prim-key-field>costComponentTypeId</prim-key-field>	
-      <prim-key-field>name</prim-key-field>
+      <prim-key field="costComponentTypeId" />	
+      <prim-key field="name" />
       <relation type="one" rel-entity-name="CostComponentType">
         <key-map field-name="costComponentTypeId" />
       </relation>
@@ -5221,8 +5223,8 @@
             title="Feature Data Object Entity">
       <field name="dataObjectId" type="id-ne"></field>
       <field name="productFeatureId" type="id-ne"></field>	
-      <prim-key-field>dataObjectId</prim-key-field>	
-      <prim-key-field>productFeatureId</prim-key-field>
+      <prim-key field="dataObjectId" />	
+      <prim-key field="productFeatureId" />
       <relation type="one" rel-entity-name="ProductFeature">
         <key-map field-name="productFeatureId" />
       </relation>
@@ -5239,7 +5241,7 @@
       <field name="description" type="description"></field>
       <field name="uomId" type="id"></field>
       <field name="numberSpecified" type="numeric"></field>	
-      <prim-key-field>productFeatureId</prim-key-field>
+      <prim-key field="productFeatureId" />
       <relation type="one" rel-entity-name="ProductFeatureCategory">
         <key-map field-name="productFeatureCategoryId" />
       </relation>
@@ -5273,8 +5275,8 @@
       <field name="productFeatureApplTypeId" type="id"></field>
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>	
-      <prim-key-field>productId</prim-key-field>	
-      <prim-key-field>productFeatureId</prim-key-field>
+      <prim-key field="productId" />	
+      <prim-key field="productFeatureId" />
       <relation type="one" rel-entity-name="ProductFeatureApplType">
         <key-map field-name="productFeatureApplTypeId" />
       </relation>
@@ -5292,7 +5294,7 @@
       <field name="parentTypeId" type="id"></field>
       <field name="hasTable" type="indicator"></field>
       <field name="description" type="description"></field>	
-      <prim-key-field>productFeatureApplTypeId</prim-key-field>
+      <prim-key field="productFeatureApplTypeId" />
       <relation type="one" title="Parent" rel-entity-name="ProductFeatureApplType">
         <key-map field-name="parentTypeId" rel-field-name="productFeatureApplTypeId" />
       </relation>
@@ -5309,7 +5311,7 @@
       <field name="productFeatureCategoryId" type="id-ne"></field>
       <field name="parentCategoryId" type="id"></field>
       <field name="description" type="description"></field>	
-      <prim-key-field>productFeatureCategoryId</prim-key-field>
+      <prim-key field="productFeatureCategoryId" />
       <relation type="one" rel-entity-name="ProductFeatureCategory">
         <key-map field-name="parentCategoryId" rel-field-name="productFeatureCategoryId" />
       </relation>
@@ -5324,8 +5326,8 @@
       <field name="productFeatureIdTo" type="id-ne"></field>
       <field name="productFeatureIactnTypeId" type="id"></field>
       <field name="productId" type="id"></field>	
-      <prim-key-field>productFeatureId</prim-key-field>	
-      <prim-key-field>productFeatureIdTo</prim-key-field>
+      <prim-key field="productFeatureId" />	
+      <prim-key field="productFeatureIdTo" />
       <relation type="one" rel-entity-name="ProductFeatureIactnType">
         <key-map field-name="productFeatureIactnTypeId" />
       </relation>
@@ -5343,7 +5345,7 @@
       <field name="parentTypeId" type="id"></field>
       <field name="hasTable" type="indicator"></field>
       <field name="description" type="description"></field>	
-      <prim-key-field>productFeatureIactnTypeId</prim-key-field>
+      <prim-key field="productFeatureIactnTypeId" />
       <relation type="one" title="Parent" rel-entity-name="ProductFeatureIactnType">
         <key-map field-name="parentTypeId" rel-field-name="productFeatureIactnTypeId" />
       </relation>
@@ -5361,7 +5363,7 @@
       <field name="parentTypeId" type="id"></field>
       <field name="hasTable" type="indicator"></field>
       <field name="description" type="description"></field>	
-      <prim-key-field>productFeatureTypeId</prim-key-field>
+      <prim-key field="productFeatureTypeId" />
       <relation type="one" title="Parent" rel-entity-name="ProductFeatureType">
         <key-map field-name="parentTypeId" rel-field-name="productFeatureTypeId" />
       </relation>
@@ -5391,7 +5393,7 @@
       <field name="uomId" type="id"></field>
       <field name="quantityOnHand" type="floating-point"></field>
       <field name="serialNumber" type="value"></field>	
-      <prim-key-field>inventoryItemId</prim-key-field>
+      <prim-key field="inventoryItemId" />
       <relation type="one" rel-entity-name="InventoryItemType">
         <key-map field-name="inventoryItemTypeId" />
       </relation>
@@ -5435,8 +5437,8 @@
       <field name="inventoryItemId" type="id-ne"></field>
       <field name="name" type="id-long-ne"></field>
       <field name="value" type="value"></field>	
-      <prim-key-field>inventoryItemId</prim-key-field>	
-      <prim-key-field>name</prim-key-field>
+      <prim-key field="inventoryItemId" />	
+      <prim-key field="name" />
       <relation type="one" rel-entity-name="InventoryItem">
         <key-map field-name="inventoryItemId" />
       </relation>
@@ -5451,7 +5453,7 @@
       <field name="parentTypeId" type="id-ne"></field>
       <field name="hasTable" type="indicator"></field>
       <field name="description" type="description"></field>	
-      <prim-key-field>inventoryItemTypeId</prim-key-field>
+      <prim-key field="inventoryItemTypeId" />
       <relation type="one" title="Parent" rel-entity-name="InventoryItemType">
         <key-map field-name="parentTypeId" rel-field-name="inventoryItemTypeId" />
       </relation>
@@ -5470,8 +5472,8 @@
             title="Inventory Item Type Attribute Entity">
       <field name="inventoryItemTypeId" type="id-ne"></field>
       <field name="name" type="id-long-ne"></field>	
-      <prim-key-field>inventoryItemTypeId</prim-key-field>	
-      <prim-key-field>name</prim-key-field>
+      <prim-key field="inventoryItemTypeId" />	
+      <prim-key field="name" />
       <relation type="one" rel-entity-name="InventoryItemType">
         <key-map field-name="inventoryItemTypeId" />
       </relation>
@@ -5490,8 +5492,8 @@
       <field name="varianceReasonId" type="id"></field>
       <field name="quantity" type="floating-point"></field>
       <field name="comment" type="comment"></field>	
-      <prim-key-field>inventoryItemId</prim-key-field>	
-      <prim-key-field>physicalInventoryId</prim-key-field>
+      <prim-key field="inventoryItemId" />	
+      <prim-key field="physicalInventoryId" />
       <relation type="one" rel-entity-name="VarianceReason">
         <key-map field-name="varianceReasonId" />
       </relation>
@@ -5512,7 +5514,7 @@
       <field name="acctgTransId" type="id-ne"></field>
       <field name="inventoryItemId" type="id"></field>
       <field name="physicalInventoryId" type="id"></field>	
-      <prim-key-field>acctgTransId</prim-key-field>
+      <prim-key field="acctgTransId" />
       <relation type="one" rel-entity-name="AcctgTrans">
         <key-map field-name="acctgTransId" />
       </relation>
@@ -5534,7 +5536,7 @@
       <field name="creationDate" type="date-time"></field>
       <field name="quantity" type="floating-point"></field>
       <field name="expirationDate" type="date-time"></field>	
-      <prim-key-field>lotId</prim-key-field>
+      <prim-key field="lotId" />
       <relation type="many" rel-entity-name="InventoryItem">
         <key-map field-name="lotId" />
       </relation>
@@ -5546,7 +5548,7 @@
       <field name="date" type="date-time"></field>
       <field name="partyId" type="id"></field>
       <field name="comment" type="comment"></field>	
-      <prim-key-field>physicalInventoryId</prim-key-field>
+      <prim-key field="physicalInventoryId" />
       <relation type="many" rel-entity-name="InventoryItemVariance">
         <key-map field-name="physicalInventoryId" />
       </relation>
@@ -5556,7 +5558,7 @@
             title="Variance Reason Entity">
       <field name="varianceReasonId" type="id-ne"></field>
       <field name="description" type="description"></field>	
-      <prim-key-field>varianceReasonId</prim-key-field>
+      <prim-key field="varianceReasonId" />
       <relation type="many" rel-entity-name="InventoryItemVariance">
         <key-map field-name="varianceReasonId" />
       </relation>
@@ -5572,7 +5574,7 @@
       <field name="orderValueBreakId" type="id-ne"></field>
       <field name="fromAmount" type="currency-amount"></field>
       <field name="thruAmount" type="currency-amount"></field>	
-      <prim-key-field>orderValueBreakId</prim-key-field>
+      <prim-key field="orderValueBreakId" />
       <relation type="many" rel-entity-name="PriceComponent">
         <key-map field-name="orderValueBreakId" />
       </relation>
@@ -5601,7 +5603,7 @@
       <field name="price" type="currency-amount"></field>
       <field name="percent" type="floating-point"></field>
       <field name="comment" type="comment"></field>	
-      <prim-key-field>priceComponentId</prim-key-field>
+      <prim-key field="priceComponentId" />
       <relation type="one" rel-entity-name="PriceComponentType">
         <key-map field-name="priceComponentTypeId" />
       </relation>
@@ -5658,8 +5660,8 @@
       <field name="priceComponentId" type="id-ne"></field>
       <field name="name" type="id-long-ne"></field>
       <field name="value" type="value"></field>	
-      <prim-key-field>priceComponentId</prim-key-field>	
-      <prim-key-field>name</prim-key-field>
+      <prim-key field="priceComponentId" />	
+      <prim-key field="name" />
       <relation type="one" rel-entity-name="PriceComponent">
         <key-map field-name="priceComponentId" />
       </relation>
@@ -5674,7 +5676,7 @@
       <field name="parentTypeId" type="id-ne"></field>
       <field name="hasTable" type="indicator"></field>
       <field name="description" type="description"></field>	
-      <prim-key-field>priceComponentTypeId</prim-key-field>
+      <prim-key field="priceComponentTypeId" />
       <relation type="one" title="Parent" rel-entity-name="PriceComponentType">
         <key-map field-name="parentTypeId" rel-field-name="priceComponentTypeId" />
       </relation>
@@ -5693,8 +5695,8 @@
             title="Price Component Type Attribute Entity">
       <field name="priceComponentTypeId" type="id-ne"></field>
       <field name="name" type="id-long-ne"></field>	
-      <prim-key-field>priceComponentTypeId</prim-key-field>	
-      <prim-key-field>name</prim-key-field>
+      <prim-key field="priceComponentTypeId" />	
+      <prim-key field="name" />
       <relation type="one" rel-entity-name="PriceComponentType">
         <key-map field-name="priceComponentTypeId" />
       </relation>
@@ -5711,7 +5713,7 @@
       <field name="quantityBreakId" type="id-ne"></field>
       <field name="fromQuantity" type="floating-point"></field>
       <field name="thruQuantity" type="floating-point"></field>	
-      <prim-key-field>quantityBreakId</prim-key-field>
+      <prim-key field="quantityBreakId" />
       <relation type="many" rel-entity-name="PriceComponent">
         <key-map field-name="quantityBreakId" />
       </relation>
@@ -5721,7 +5723,7 @@
             title="Sale Type Entity">
       <field name="saleTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>	
-      <prim-key-field>saleTypeId</prim-key-field>
+      <prim-key field="saleTypeId" />
       <relation type="many" rel-entity-name="PriceComponent">
         <key-map field-name="saleTypeId" />
       </relation>
@@ -5737,8 +5739,8 @@
       <field name="goodIdentificationTypeId" type="id-ne"></field>
       <field name="productId" type="id-ne"></field>
       <field name="idValue" type="id-long"></field>	
-      <prim-key-field>goodIdentificationTypeId</prim-key-field>	
-      <prim-key-field>productId</prim-key-field>
+      <prim-key field="goodIdentificationTypeId" />	
+      <prim-key field="productId" />
       <relation type="one" rel-entity-name="GoodIdentificationType">
         <key-map field-name="goodIdentificationTypeId" />
       </relation>
@@ -5753,7 +5755,7 @@
       <field name="parentTypeId" type="id"></field>
       <field name="hasTable" type="indicator"></field>
       <field name="description" type="description"></field>	
-      <prim-key-field>goodIdentificationTypeId</prim-key-field>
+      <prim-key field="goodIdentificationTypeId" />
       <relation type="one" title="Parent" rel-entity-name="GoodIdentificationType">
         <key-map field-name="parentTypeId" rel-field-name="goodIdentificationTypeId" />
       </relation>
@@ -5791,7 +5793,7 @@
       <field name="taxVatCode" type="short-varchar"></field>
       <field name="taxDutyCode" type="short-varchar"></field>
       <field name="chargeShipping" type="indicator"></field>	
-      <prim-key-field>productId</prim-key-field>
+      <prim-key field="productId" />
       <relation type="many" rel-entity-name="ProductClass">
         <key-map field-name="productId" />
       </relation>
@@ -5858,9 +5860,9 @@
       <field name="reason" type="long-varchar"></field>
       <field name="quantity" type="floating-point"></field>
       <field name="instruction" type="long-varchar"></field>	
-      <prim-key-field>productId</prim-key-field>	
-      <prim-key-field>productIdTo</prim-key-field>	
-      <prim-key-field>productAssocTypeId</prim-key-field>
+      <prim-key field="productId" />	
+      <prim-key field="productIdTo" />	
+      <prim-key field="productAssocTypeId" />
       <relation type="one" rel-entity-name="ProductAssocType">
         <key-map field-name="productAssocTypeId" />
       </relation>
@@ -5878,7 +5880,7 @@
       <field name="parentTypeId" type="id"></field>
       <field name="hasTable" type="indicator"></field>
       <field name="description" type="description"></field>	
-      <prim-key-field>productAssocTypeId</prim-key-field>
+      <prim-key field="productAssocTypeId" />
       <relation type="one" title="Parent" rel-entity-name="ProductAssocType">
         <key-map field-name="parentTypeId" rel-field-name="productAssocTypeId" />
       </relation>
@@ -5895,8 +5897,8 @@
       <field name="productId" type="id-ne"></field>
       <field name="name" type="id-long-ne"></field>
       <field name="value" type="value"></field>	
-      <prim-key-field>productId</prim-key-field>	
-      <prim-key-field>name</prim-key-field>
+      <prim-key field="productId" />	
+      <prim-key field="name" />
       <relation type="one" rel-entity-name="Product">
         <key-map field-name="productId" />
       </relation>
@@ -5911,8 +5913,8 @@
       <field name="productTypeId" type="id-ne"></field>
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>	
-      <prim-key-field>productId</prim-key-field>	
-      <prim-key-field>productTypeId</prim-key-field>
+      <prim-key field="productId" />	
+      <prim-key field="productTypeId" />
       <relation type="one" rel-entity-name="Product">
         <key-map field-name="productId" />
       </relation>
@@ -5931,8 +5933,8 @@
             title="Product Data Object Entity">
       <field name="dataObjectId" type="id-ne"></field>
       <field name="productId" type="id-ne"></field>	
-      <prim-key-field>dataObjectId</prim-key-field>	
-      <prim-key-field>productId</prim-key-field>
+      <prim-key field="dataObjectId" />	
+      <prim-key field="productId" />
       <relation type="one" rel-entity-name="Product">
         <key-map field-name="productId" />
       </relation>
@@ -5945,8 +5947,8 @@
             title="Product Keyword Entity">
       <field name="productId" type="id-ne"></field>
       <field name="keyword" type="short-varchar"></field>	
-      <prim-key-field>productId</prim-key-field>	
-      <prim-key-field>keyword</prim-key-field>
+      <prim-key field="productId" />	
+      <prim-key field="keyword" />
       <relation type="one" rel-entity-name="Product">
         <key-map field-name="productId" />
       </relation>
@@ -5958,7 +5960,7 @@
       <field name="parentTypeId" type="id"></field>
       <field name="hasTable" type="indicator"></field>
       <field name="description" type="description"></field>	
-      <prim-key-field>productTypeId</prim-key-field>
+      <prim-key field="productTypeId" />
       <relation type="one" title="Parent" rel-entity-name="ProductType">
         <key-map field-name="parentTypeId" rel-field-name="productTypeId" />
       </relation>
@@ -5977,8 +5979,8 @@
             title="Product Type Attribute Entity">
       <field name="productTypeId" type="id-ne"></field>
       <field name="name" type="id-long-ne"></field>	
-      <prim-key-field>productTypeId</prim-key-field>	
-      <prim-key-field>name</prim-key-field>
+      <prim-key field="productTypeId" />	
+      <prim-key field="name" />
       <relation type="one" rel-entity-name="ProductType">
         <key-map field-name="productTypeId" />
       </relation>
@@ -6000,7 +6002,7 @@
       <field name="containerId" type="id-ne"></field>
       <field name="containerTypeId" type="id"></field>
       <field name="facilityId" type="id"></field>	
-      <prim-key-field>containerId</prim-key-field>
+      <prim-key field="containerId" />
       <relation type="one" rel-entity-name="ContainerType">
         <key-map field-name="containerTypeId" />
       </relation>
@@ -6016,7 +6018,7 @@
             title="Container Type Entity">
       <field name="containerTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>	
-      <prim-key-field>containerTypeId</prim-key-field>
+      <prim-key field="containerTypeId" />
       <relation type="many" rel-entity-name="Container">
         <key-map field-name="containerTypeId" />
       </relation>
@@ -6029,7 +6031,7 @@
       <field name="facilityName" type="name"></field>
       <field name="squareFootage" type="numeric"></field>
       <field name="description" type="description"></field>	
-      <prim-key-field>facilityId</prim-key-field>
+      <prim-key field="facilityId" />
       <relation type="one" rel-entity-name="FacilityType">
         <key-map field-name="facilityTypeId" />
       </relation>
@@ -6058,8 +6060,8 @@
       <field name="facilityId" type="id-ne"></field>
       <field name="name" type="id-long-ne"></field>
       <field name="value" type="value"></field>	
-      <prim-key-field>facilityId</prim-key-field>	
-      <prim-key-field>name</prim-key-field>
+      <prim-key field="facilityId" />	
+      <prim-key field="name" />
       <relation type="one" rel-entity-name="Facility">
         <key-map field-name="facilityId" />
       </relation>
@@ -6073,8 +6075,8 @@
       <description>Data Type Of: Contact Mechanism</description>
       <field name="facilityId" type="id-ne"></field>
       <field name="contactMechId" type="id-ne"></field>	
-      <prim-key-field>facilityId</prim-key-field>	
-      <prim-key-field>contactMechId</prim-key-field>
+      <prim-key field="facilityId" />	
+      <prim-key field="contactMechId" />
       <relation type="one" rel-entity-name="Facility">
         <key-map field-name="facilityId" />
       </relation>
@@ -6087,7 +6089,7 @@
             title="Facility Role Type Entity">
       <field name="facilityRoleTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>	
-      <prim-key-field>facilityRoleTypeId</prim-key-field>
+      <prim-key field="facilityRoleTypeId" />
       <relation type="many" rel-entity-name="PartyFacility">
         <key-map field-name="facilityRoleTypeId" />
       </relation>
@@ -6099,7 +6101,7 @@
       <field name="parentTypeId" type="id-ne"></field>
       <field name="hasTable" type="indicator"></field>
       <field name="description" type="description"></field>	
-      <prim-key-field>facilityTypeId</prim-key-field>
+      <prim-key field="facilityTypeId" />
       <relation type="one" title="Parent" rel-entity-name="FacilityType">
         <key-map field-name="parentTypeId" rel-field-name="facilityTypeId" />
       </relation>
@@ -6118,8 +6120,8 @@
             title="Facility Type Attribute Entity">
       <field name="facilityTypeId" type="id-ne"></field>
       <field name="name" type="id-long-ne"></field>	
-      <prim-key-field>facilityTypeId</prim-key-field>	
-      <prim-key-field>name</prim-key-field>
+      <prim-key field="facilityTypeId" />	
+      <prim-key field="name" />
       <relation type="one" rel-entity-name="FacilityType">
         <key-map field-name="facilityTypeId" />
       </relation>
@@ -6136,8 +6138,8 @@
       <field name="partyId" type="id-ne"></field>
       <field name="facilityId" type="id-ne"></field>
       <field name="facilityRoleTypeId" type="id"></field>	
-      <prim-key-field>partyId</prim-key-field>	
-      <prim-key-field>facilityId</prim-key-field>
+      <prim-key field="partyId" />	
+      <prim-key field="facilityId" />
       <relation type="one" rel-entity-name="Party">
         <key-map field-name="partyId" />
       </relation>
@@ -6160,8 +6162,8 @@
       <field name="partyTypeId" type="id-ne"></field>
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>	
-      <prim-key-field>productCategoryId</prim-key-field>	
-      <prim-key-field>partyTypeId</prim-key-field>
+      <prim-key field="productCategoryId" />	
+      <prim-key field="partyTypeId" />
       <relation type="one" rel-entity-name="ProductCategory">
         <key-map field-name="productCategoryId" />
       </relation>
@@ -6182,7 +6184,7 @@
       <field name="thruDate" type="date-time"></field>
       <field name="reorderQuantity" type="floating-point"></field>
       <field name="reorderLevel" type="floating-point"></field>	
-      <prim-key-field>reorderGuidelineId</prim-key-field>
+      <prim-key field="reorderGuidelineId" />
       <relation type="one" rel-entity-name="Product">
         <key-map field-name="productId" />
       </relation>
@@ -6201,7 +6203,7 @@
             title="Preference Type Entity">
       <field name="supplierPrefOrderId" type="id-ne"></field>
       <field name="description" type="description"></field>	
-      <prim-key-field>supplierPrefOrderId</prim-key-field>
+      <prim-key field="supplierPrefOrderId" />
       <relation type="many" rel-entity-name="SupplierProduct">
         <key-map field-name="supplierPrefOrderId" />
       </relation>
@@ -6217,8 +6219,8 @@
       <field name="supplierRatingTypeId" type="id"></field>
       <field name="standardLeadTime" type="date-time"></field>
       <field name="comment" type="comment"></field>	
-      <prim-key-field>productId</prim-key-field>	
-      <prim-key-field>partyId</prim-key-field>
+      <prim-key field="productId" />	
+      <prim-key field="partyId" />
       <relation type="one" rel-entity-name="Product">
         <key-map field-name="productId" />
       </relation>
@@ -6237,7 +6239,7 @@
             title="Supplier Rating Type Entity">
       <field name="supplierRatingTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>	
-      <prim-key-field>supplierRatingTypeId</prim-key-field>
+      <prim-key field="supplierRatingTypeId" />
       <relation type="many" rel-entity-name="SupplierProduct">
         <key-map field-name="supplierRatingTypeId" />
       </relation>
@@ -6253,7 +6255,7 @@
       <field name="userLoginId" type="id-vlong-ne"></field>
       <field name="partyId" type="id"></field>
       <field name="currentPassword" type="short-varchar"></field>	
-      <prim-key-field>userLoginId</prim-key-field>
+      <prim-key field="userLoginId" />
       <relation type="one" rel-entity-name="Party">
         <key-map field-name="partyId" />
       </relation>
@@ -6276,8 +6278,8 @@
       <field name="partyId" type="id"></field>
       <field name="referrerUrl" type="url"></field>
       <field name="password" type="short-varchar"></field>	
-      <prim-key-field>userLoginId</prim-key-field>	
-      <prim-key-field>fromDate</prim-key-field>
+      <prim-key field="userLoginId" />	
+      <prim-key field="fromDate" />
       <relation type="one" rel-entity-name="UserLogin">
         <key-map field-name="userLoginId" />
       </relation>
@@ -6295,7 +6297,7 @@
             title="Security Component - Security Group Entity">
       <field name="groupId" type="id-ne"></field>
       <field name="description" type="description"></field>	
-      <prim-key-field>groupId</prim-key-field>
+      <prim-key field="groupId" />
       <relation type="many" rel-entity-name="UserLoginSecurityGroup">
         <key-map field-name="groupId" />
       </relation>
@@ -6309,8 +6311,8 @@
       <description>Defines a permission available to a security group</description>
       <field name="groupId" type="id-ne"></field>
       <field name="permissionId" type="id-long-ne"></field>	
-      <prim-key-field>groupId</prim-key-field>	
-      <prim-key-field>permissionId</prim-key-field>
+      <prim-key field="groupId" />	
+      <prim-key field="permissionId" />
       <relation type="one" rel-entity-name="SecurityGroup">
         <key-map field-name="groupId" />
       </relation>
@@ -6323,7 +6325,7 @@
             title="Security Component - Security Permission Entity">
       <field name="permissionId" type="id-long-ne"></field>
       <field name="description" type="description"></field>	
-      <prim-key-field>permissionId</prim-key-field>
+      <prim-key field="permissionId" />
       <relation type="many" rel-entity-name="SecurityGroupPermission">
         <key-map field-name="permissionId" />
       </relation>
@@ -6334,8 +6336,8 @@
       <description>Defines a permission available to a security group</description>
       <field name="userLoginId" type="id-ne"></field>
       <field name="groupId" type="id-ne"></field>	
-      <prim-key-field>userLoginId</prim-key-field>	
-      <prim-key-field>groupId</prim-key-field>
+      <prim-key field="userLoginId" />	
+      <prim-key field="groupId" />
       <relation type="one" rel-entity-name="UserLogin">
         <key-map field-name="userLoginId" />
       </relation>
@@ -6361,7 +6363,7 @@
       <field name="shipmentItemSeqId" type="id"></field>
       <field name="issuedDateTime" type="date-time"></field>
       <field name="quantity" type="floating-point"></field>	
-      <prim-key-field>itemIssuanceId</prim-key-field>
+      <prim-key field="itemIssuanceId" />
     </entity>	
     <entity entity-name="ItemIssuanceRole" 
             package-name="org.ofbiz.commonapp.shipment.issuance"
@@ -6369,9 +6371,9 @@
       <field name="itemIssuanceId" type="id-ne"></field>
       <field name="partyId" type="id-ne"></field>
       <field name="roleTypeId" type="id-ne"></field>	
-      <prim-key-field>itemIssuanceId</prim-key-field>	
-      <prim-key-field>partyId</prim-key-field>	
-      <prim-key-field>roleTypeId</prim-key-field>
+      <prim-key field="itemIssuanceId" />	
+      <prim-key field="partyId" />	
+      <prim-key field="roleTypeId" />
     </entity>
 
   <!-- ========================================================= -->
@@ -6392,7 +6394,7 @@
       <field name="itemDescription" type="description"></field>
       <field name="quantityAccepted" type="floating-point"></field>
       <field name="quantityRejected" type="floating-point"></field>	
-      <prim-key-field>receiptId</prim-key-field>
+      <prim-key field="receiptId" />
     </entity>	
     <entity entity-name="ShipmentReceiptRole" 
             package-name="org.ofbiz.commonapp.shipment.receipt"
@@ -6400,9 +6402,9 @@
       <field name="receiptId" type="id-ne"></field>
       <field name="partyId" type="id-ne"></field>
       <field name="roleTypeId" type="id-ne"></field>	
-      <prim-key-field>receiptId</prim-key-field>	
-      <prim-key-field>partyId</prim-key-field>	
-      <prim-key-field>roleTypeId</prim-key-field>
+      <prim-key field="receiptId" />	
+      <prim-key field="partyId" />	
+      <prim-key field="roleTypeId" />
     </entity>
 
   <!-- ========================================================= -->
@@ -6426,8 +6428,8 @@
       <field name="startMileage" type="floating-point"></field>
       <field name="endMileage" type="floating-point"></field>
       <field name="fuelUsed" type="floating-point"></field>	
-      <prim-key-field>shipmentRouteSegmentId</prim-key-field>	
-      <prim-key-field>shipmentId</prim-key-field>
+      <prim-key field="shipmentRouteSegmentId" />	
+      <prim-key field="shipmentId" />
     </entity>
 
   <!-- ========================================================= -->
@@ -6440,9 +6442,9 @@
       <field name="shipmentMethodTypeId" type="id-ne"></field>
       <field name="partyId" type="id-ne"></field>
       <field name="roleTypeId" type="id-ne"></field>	
-      <prim-key-field>shipmentMethodTypeId</prim-key-field>	
-      <prim-key-field>partyId</prim-key-field>	
-      <prim-key-field>roleTypeId</prim-key-field>
+      <prim-key field="shipmentMethodTypeId" />	
+      <prim-key field="partyId" />	
+      <prim-key field="roleTypeId" />
       <relation type="one" rel-entity-name="ShipmentMethodType">
         <key-map field-name="shipmentMethodTypeId" />
       </relation>
@@ -6459,9 +6461,9 @@
       <field name="shipmentId" type="id-ne"></field>
       <field name="shipmentItemSeqId" type="id-ne"></field>
       <field name="quantity" type="floating-point"></field>	
-      <prim-key-field>shipmentPackageId</prim-key-field>	
-      <prim-key-field>shipmentId</prim-key-field>	
-      <prim-key-field>shipmentItemSeqId</prim-key-field>
+      <prim-key field="shipmentPackageId" />	
+      <prim-key field="shipmentId" />	
+      <prim-key field="shipmentItemSeqId" />
     </entity>	
     <entity entity-name="Shipment" 
             package-name="org.ofbiz.commonapp.shipment.shipment"
@@ -6478,7 +6480,7 @@
       <field name="latestCancelDate" type="date-time"></field>
       <field name="handlingInstructions" type="long-varchar"></field>
       <field name="lastUpdated" type="date-time"></field>	
-      <prim-key-field>shipmentId</prim-key-field>
+      <prim-key field="shipmentId" />
       <relation type="one" rel-entity-name="ShipmentType">
         <key-map field-name="shipmentTypeId" />
       </relation>
@@ -6498,8 +6500,8 @@
       <field name="shipmentId" type="id-ne"></field>
       <field name="name" type="id-long-ne"></field>
       <field name="value" type="value"></field>	
-      <prim-key-field>shipmentId</prim-key-field>	
-      <prim-key-field>name</prim-key-field>
+      <prim-key field="shipmentId" />	
+      <prim-key field="name" />
       <relation type="one" rel-entity-name="Shipment">
         <key-map field-name="shipmentId" />
       </relation>
@@ -6515,8 +6517,8 @@
       <field name="productId" type="id"></field>
       <field name="quantity" type="floating-point"></field>
       <field name="shipmentContentDescription" type="description"></field>	
-      <prim-key-field>shipmentId</prim-key-field>	
-      <prim-key-field>shipmentItemSeqId</prim-key-field>
+      <prim-key field="shipmentId" />	
+      <prim-key field="shipmentItemSeqId" />
       <relation type="many" rel-entity-name="OrderShipment">
         <key-map field-name="shipmentId" />
         <key-map field-name="shipmentItemSeqId" />
@@ -6529,10 +6531,10 @@
       <field name="shipmentItemSeqId" type="id-ne"></field>
       <field name="invoiceId" type="id-ne"></field>
       <field name="invoiceItemSeqId" type="id-ne"></field>	
-      <prim-key-field>shipmentId</prim-key-field>	
-      <prim-key-field>shipmentItemSeqId</prim-key-field>	
-      <prim-key-field>invoiceId</prim-key-field>	
-      <prim-key-field>invoiceItemSeqId</prim-key-field>
+      <prim-key field="shipmentId" />	
+      <prim-key field="shipmentItemSeqId" />	
+      <prim-key field="invoiceId" />	
+      <prim-key field="invoiceItemSeqId" />
     </entity>	
     <entity entity-name="ShipmentItemFeature" 
             package-name="org.ofbiz.commonapp.shipment.shipment"
@@ -6540,16 +6542,16 @@
       <field name="shipmentId" type="id-ne"></field>
       <field name="shipmentItemSeqId" type="id-ne"></field>
       <field name="productFeatureId" type="id-ne"></field>	
-      <prim-key-field>shipmentId</prim-key-field>	
-      <prim-key-field>shipmentItemSeqId</prim-key-field>	
-      <prim-key-field>productFeatureId</prim-key-field>
+      <prim-key field="shipmentId" />	
+      <prim-key field="shipmentItemSeqId" />	
+      <prim-key field="productFeatureId" />
     </entity>	
     <entity entity-name="ShipmentMethodType" 
             package-name="org.ofbiz.commonapp.shipment.shipment"
             title="Shipment Method Type Entity">
       <field name="shipmentMethodTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>	
-      <prim-key-field>shipmentMethodTypeId</prim-key-field>
+      <prim-key field="shipmentMethodTypeId" />
       <relation type="many" rel-entity-name="OrderShipmentPreference">
         <key-map field-name="shipmentMethodTypeId" />
       </relation>
@@ -6559,7 +6561,7 @@
             title="Shipment Package Entity">
       <field name="shipmentPackageId" type="id-ne"></field>
       <field name="dateCreated" type="date-time"></field>	
-      <prim-key-field>shipmentPackageId</prim-key-field>
+      <prim-key field="shipmentPackageId" />
     </entity>	
     <entity entity-name="ShipmentStatus" 
             package-name="org.ofbiz.commonapp.shipment.shipment"
@@ -6567,8 +6569,8 @@
       <field name="statusId" type="id-ne"></field>
       <field name="shipmentId" type="id-ne"></field>
       <field name="statusDate" type="date-time"></field>	
-      <prim-key-field>statusId</prim-key-field>	
-      <prim-key-field>shipmentId</prim-key-field>
+      <prim-key field="statusId" />	
+      <prim-key field="shipmentId" />
     </entity>	
     <entity entity-name="ShipmentType" 
             package-name="org.ofbiz.commonapp.shipment.shipment"
@@ -6577,7 +6579,7 @@
       <field name="parentTypeId" type="id-ne"></field>
       <field name="hasTable" type="indicator"></field>
       <field name="description" type="description"></field>	
-      <prim-key-field>shipmentTypeId</prim-key-field>
+      <prim-key field="shipmentTypeId" />
       <relation type="one" title="Parent" rel-entity-name="ShipmentType">
         <key-map field-name="parentTypeId" rel-field-name="shipmentTypeId" />
       </relation>
@@ -6596,8 +6598,8 @@
             title="Shipment Type Attribute Entity">
       <field name="shipmentTypeId" type="id-ne"></field>
       <field name="name" type="id-long-ne"></field>	
-      <prim-key-field>shipmentTypeId</prim-key-field>	
-      <prim-key-field>name</prim-key-field>
+      <prim-key field="shipmentTypeId" />	
+      <prim-key field="name" />
       <relation type="one" rel-entity-name="ShipmentType">
         <key-map field-name="shipmentTypeId" />
       </relation>
@@ -6616,7 +6618,7 @@
       <field name="shipmentItemSeqId" type="id"></field>
       <field name="shipmentPackageId" type="id"></field>
       <field name="description" type="description"></field>	
-      <prim-key-field>documentId</prim-key-field>
+      <prim-key field="documentId" />
     </entity>
 
   <!-- ========================================================= -->
@@ -6631,15 +6633,15 @@
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
       <field name="rate" type="currency-amount"></field>	
-      <prim-key-field>partyId</prim-key-field>	
-      <prim-key-field>rateTypeId</prim-key-field>
+      <prim-key field="partyId" />	
+      <prim-key field="rateTypeId" />
     </entity>	
     <entity entity-name="RateType" 
             package-name="org.ofbiz.commonapp.workeffort.timesheet"
             title="Rate Type Entity">
       <field name="rateTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>	
-      <prim-key-field>rateTypeId</prim-key-field>
+      <prim-key field="rateTypeId" />
     </entity>	
     <entity entity-name="TimeEntry" 
             package-name="org.ofbiz.commonapp.workeffort.timesheet"
@@ -6655,7 +6657,7 @@
       <field name="timesheetId" type="id"></field>
       <field name="hours" type="floating-point"></field>
       <field name="comment" type="comment"></field>	
-      <prim-key-field>timeEntryId</prim-key-field>
+      <prim-key field="timeEntryId" />
     </entity>	
     <entity entity-name="TimeEntryBilling" 
             package-name="org.ofbiz.commonapp.workeffort.timesheet"
@@ -6663,9 +6665,9 @@
       <field name="timeEntryId" type="id-ne"></field>
       <field name="invoiceId" type="id-ne"></field>
       <field name="invoiceItemSeqId" type="id-ne"></field>	
-      <prim-key-field>timeEntryId</prim-key-field>	
-      <prim-key-field>invoiceId</prim-key-field>	
-      <prim-key-field>invoiceItemSeqId</prim-key-field>
+      <prim-key field="timeEntryId" />	
+      <prim-key field="invoiceId" />	
+      <prim-key field="invoiceItemSeqId" />
     </entity>	
     <entity entity-name="Timesheet" 
             package-name="org.ofbiz.commonapp.workeffort.timesheet"
@@ -6676,7 +6678,7 @@
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
       <field name="comment" type="comment"></field>	
-      <prim-key-field>timesheetId</prim-key-field>
+      <prim-key field="timesheetId" />
     </entity>	
     <entity entity-name="TimesheetRole" 
             package-name="org.ofbiz.commonapp.workeffort.timesheet"
@@ -6684,9 +6686,9 @@
       <field name="timesheetId" type="id-ne"></field>
       <field name="partyId" type="id-ne"></field>
       <field name="roleTypeId" type="id-ne"></field>	
-      <prim-key-field>timesheetId</prim-key-field>	
-      <prim-key-field>partyId</prim-key-field>	
-      <prim-key-field>roleTypeId</prim-key-field>
+      <prim-key field="timesheetId" />	
+      <prim-key field="partyId" />	
+      <prim-key field="roleTypeId" />
     </entity>	
     <entity entity-name="WorkEffortAssignmentRate" 
             package-name="org.ofbiz.commonapp.workeffort.timesheet"
@@ -6698,10 +6700,10 @@
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
       <field name="rate" type="currency-amount"></field>	
-      <prim-key-field>workEffortId</prim-key-field>	
-      <prim-key-field>rateTypeId</prim-key-field>	
-      <prim-key-field>partyId</prim-key-field>	
-      <prim-key-field>roleTypeId</prim-key-field>
+      <prim-key field="workEffortId" />	
+      <prim-key field="rateTypeId" />	
+      <prim-key field="partyId" />	
+      <prim-key field="roleTypeId" />
     </entity>
 
   <!-- ========================================================= -->
@@ -6714,8 +6716,8 @@
       <field name="workEffortId" type="id-ne"></field>
       <field name="communicationEventId" type="id-ne"></field>
       <field name="description" type="description"></field>	
-      <prim-key-field>workEffortId</prim-key-field>	
-      <prim-key-field>communicationEventId</prim-key-field>
+      <prim-key field="workEffortId" />	
+      <prim-key field="communicationEventId" />
     </entity>	
     <entity entity-name="Deliverable" 
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
@@ -6724,14 +6726,14 @@
       <field name="deliverableTypeId" type="id"></field>
       <field name="name" type="name"></field>
       <field name="description" type="description"></field>	
-      <prim-key-field>deliverableId</prim-key-field>
+      <prim-key field="deliverableId" />
     </entity>	
     <entity entity-name="DeliverableType" 
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
             title="Deliverable Type Entity">
       <field name="deliverableTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>	
-      <prim-key-field>deliverableTypeId</prim-key-field>
+      <prim-key field="deliverableTypeId" />
     </entity>	
     <entity entity-name="WorkEffort" 
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
@@ -6752,7 +6754,7 @@
       <field name="actualCompletionDate" type="date-time"></field>
       <field name="actualHours" type="floating-point"></field>
       <field name="specialTerms" type="long-varchar"></field>	
-      <prim-key-field>workEffortId</prim-key-field>
+      <prim-key field="workEffortId" />
       <relation type="one" rel-entity-name="WorkEffortType">
         <key-map field-name="workEffortTypeId" />
       </relation>
@@ -6772,8 +6774,8 @@
       <field name="workEffortIdFrom" type="id-ne"></field>
       <field name="workEffortIdTo" type="id-ne"></field>
       <field name="workEffortAssocTypeId" type="id"></field>	
-      <prim-key-field>workEffortIdFrom</prim-key-field>	
-      <prim-key-field>workEffortIdTo</prim-key-field>
+      <prim-key field="workEffortIdFrom" />	
+      <prim-key field="workEffortIdTo" />
       <relation type="one" rel-entity-name="WorkEffortAssocType">
         <key-map field-name="workEffortAssocTypeId" />
       </relation>
@@ -6792,9 +6794,9 @@
       <field name="workEffortIdTo" type="id-ne"></field>
       <field name="name" type="id-long-ne"></field>
       <field name="value" type="value"></field>	
-      <prim-key-field>workEffortIdFrom</prim-key-field>	
-      <prim-key-field>workEffortIdTo</prim-key-field>	
-      <prim-key-field>name</prim-key-field>
+      <prim-key field="workEffortIdFrom" />	
+      <prim-key field="workEffortIdTo" />	
+      <prim-key field="name" />
       <relation type="one" rel-entity-name="WorkEffortAssoc">
         <key-map field-name="workEffortIdFrom" />
         <key-map field-name="workEffortIdTo" />
@@ -6810,7 +6812,7 @@
       <field name="parentTypeId" type="id-ne"></field>
       <field name="hasTable" type="indicator"></field>
       <field name="description" type="description"></field>	
-      <prim-key-field>workEffortAssocTypeId</prim-key-field>
+      <prim-key field="workEffortAssocTypeId" />
       <relation type="one" title="Parent" rel-entity-name="WorkEffortAssocType">
         <key-map field-name="parentTypeId" rel-field-name="workEffortAssocTypeId" />
       </relation>
@@ -6832,8 +6834,8 @@
             title="Work Effort Association Type Attribute Entity">
       <field name="workEffortAssocTypeId" type="id-ne"></field>
       <field name="name" type="id-long-ne"></field>	
-      <prim-key-field>workEffortAssocTypeId</prim-key-field>	
-      <prim-key-field>name</prim-key-field>
+      <prim-key field="workEffortAssocTypeId" />	
+      <prim-key field="name" />
       <relation type="one" rel-entity-name="WorkEffortAssocType">
         <key-map field-name="workEffortAssocTypeId" />
       </relation>
@@ -6856,8 +6858,8 @@
       <field name="workEffortId" type="id-ne"></field>
       <field name="name" type="id-long-ne"></field>
       <field name="value" type="value"></field>	
-      <prim-key-field>workEffortId</prim-key-field>	
-      <prim-key-field>name</prim-key-field>
+      <prim-key field="workEffortId" />	
+      <prim-key field="name" />
       <relation type="one" rel-entity-name="WorkEffort">
         <key-map field-name="workEffortId" />
       </relation>
@@ -6872,9 +6874,9 @@
       <field name="invoiceId" type="id-ne"></field>
       <field name="invoiceItemSeqId" type="id-ne"></field>
       <field name="percentage" type="floating-point"></field>	
-      <prim-key-field>workEffortId</prim-key-field>	
-      <prim-key-field>invoiceId</prim-key-field>	
-      <prim-key-field>invoiceItemSeqId</prim-key-field>
+      <prim-key field="workEffortId" />	
+      <prim-key field="invoiceId" />	
+      <prim-key field="invoiceItemSeqId" />
     </entity>	
     <entity entity-name="WorkEffortDef" 
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
@@ -6886,7 +6888,7 @@
       <field name="fixedAssetTypeId" type="id"></field>
       <field name="standardWorkHours" type="floating-point"></field>
       <field name="description" type="description"></field>	
-      <prim-key-field>workEffortDefId</prim-key-field>
+      <prim-key field="workEffortDefId" />
       <relation type="one" rel-entity-name="WorkEffortType">
         <key-map field-name="workEffortTypeId" />
       </relation>
@@ -6903,8 +6905,8 @@
       <field name="workEffortDefIdFrom" type="id-ne"></field>
       <field name="workEffortDefIdTo" type="id-ne"></field>
       <field name="workEffortAssocTypeId" type="id"></field>	
-      <prim-key-field>workEffortDefIdFrom</prim-key-field>	
-      <prim-key-field>workEffortDefIdTo</prim-key-field>
+      <prim-key field="workEffortDefIdFrom" />	
+      <prim-key field="workEffortDefIdTo" />
       <relation type="one" rel-entity-name="WorkEffortAssocType">
         <key-map field-name="workEffortAssocTypeId" />
       </relation>
@@ -6923,9 +6925,9 @@
       <field name="workEffortDefIdTo" type="id-ne"></field>
       <field name="name" type="id-long-ne"></field>
       <field name="value" type="value"></field>	
-      <prim-key-field>workEffortDefIdFrom</prim-key-field>	
-      <prim-key-field>workEffortDefIdTo</prim-key-field>	
-      <prim-key-field>name</prim-key-field>
+      <prim-key field="workEffortDefIdFrom" />	
+      <prim-key field="workEffortDefIdTo" />	
+      <prim-key field="name" />
       <relation type="one" rel-entity-name="WorkEffortDefAssoc">
         <key-map field-name="workEffortDefIdFrom" />
         <key-map field-name="workEffortDefIdTo" />
@@ -6940,8 +6942,8 @@
       <field name="workEffortDefId" type="id-ne"></field>
       <field name="name" type="id-long-ne"></field>
       <field name="value" type="value"></field>	
-      <prim-key-field>workEffortDefId</prim-key-field>	
-      <prim-key-field>name</prim-key-field>
+      <prim-key field="workEffortDefId" />	
+      <prim-key field="name" />
       <relation type="one" rel-entity-name="WorkEffortDef">
         <key-map field-name="workEffortDefId" />
       </relation>
@@ -6954,8 +6956,8 @@
             title="Work Effort Deliverable Produced Entity">
       <field name="workEffortId" type="id-ne"></field>
       <field name="deliverableId" type="id-ne"></field>	
-      <prim-key-field>workEffortId</prim-key-field>	
-      <prim-key-field>deliverableId</prim-key-field>
+      <prim-key field="workEffortId" />	
+      <prim-key field="deliverableId" />
     </entity>	
     <entity entity-name="WorkEffortFixedAssetAssign" 
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
@@ -6967,8 +6969,8 @@
       <field name="thruDate" type="date-time"></field>
       <field name="allocatedCost" type="currency-amount"></field>
       <field name="comment" type="comment"></field>	
-      <prim-key-field>workEffortId</prim-key-field>	
-      <prim-key-field>fixedAssetId</prim-key-field>
+      <prim-key field="workEffortId" />	
+      <prim-key field="fixedAssetId" />
     </entity>	
     <entity entity-name="WorkEffortFixedAssetStd" 
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
@@ -6978,8 +6980,8 @@
       <field name="estimatedQuantity" type="floating-point"></field>
       <field name="estimatedDuration" type="floating-point"></field>
       <field name="estimatedCost" type="currency-amount"></field>	
-      <prim-key-field>workEffortDefId</prim-key-field>	
-      <prim-key-field>fixedAssetTypeId</prim-key-field>
+      <prim-key field="workEffortDefId" />	
+      <prim-key field="fixedAssetTypeId" />
     </entity>	
     <entity entity-name="WorkEffortGoodStandard" 
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
@@ -6988,8 +6990,8 @@
       <field name="productId" type="id-ne"></field>
       <field name="estimatedQuantity" type="floating-point"></field>
       <field name="estimatedCost" type="currency-amount"></field>	
-      <prim-key-field>workEffortDefId</prim-key-field>	
-      <prim-key-field>productId</prim-key-field>
+      <prim-key field="workEffortDefId" />	
+      <prim-key field="productId" />
     </entity>	
     <entity entity-name="WorkEffortInventoryAssign" 
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
@@ -6997,16 +6999,16 @@
       <field name="workEffortId" type="id-ne"></field>
       <field name="inventoryItemId" type="id-ne"></field>
       <field name="quantity" type="floating-point"></field>	
-      <prim-key-field>workEffortId</prim-key-field>	
-      <prim-key-field>inventoryItemId</prim-key-field>
+      <prim-key field="workEffortId" />	
+      <prim-key field="inventoryItemId" />
     </entity>	
     <entity entity-name="WorkEffortInventoryProduced" 
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
             title="Work Effort Inventory Produced Entity">
       <field name="workEffortId" type="id-ne"></field>
       <field name="inventoryItemId" type="id-ne"></field>	
-      <prim-key-field>workEffortId</prim-key-field>	
-      <prim-key-field>inventoryItemId</prim-key-field>
+      <prim-key field="workEffortId" />	
+      <prim-key field="inventoryItemId" />
     </entity>	
     <entity entity-name="WorkEffortPartyAssignment" 
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
@@ -7018,9 +7020,9 @@
       <field name="thruDate" type="date-time"></field>
       <field name="facilityId" type="id"></field>
       <field name="comment" type="comment"></field>	
-      <prim-key-field>workEffortId</prim-key-field>	
-      <prim-key-field>partyId</prim-key-field>	
-      <prim-key-field>roleTypeId</prim-key-field>
+      <prim-key field="workEffortId" />	
+      <prim-key field="partyId" />	
+      <prim-key field="roleTypeId" />
     </entity>	
     <entity entity-name="WorkEffortSkillStandard" 
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
@@ -7030,8 +7032,8 @@
       <field name="estimatedNumPeople" type="floating-point"></field>
       <field name="estimatedDuration" type="floating-point"></field>
       <field name="estimatedCost" type="currency-amount"></field>	
-      <prim-key-field>workEffortDefId</prim-key-field>	
-      <prim-key-field>skillTypeId</prim-key-field>
+      <prim-key field="workEffortDefId" />	
+      <prim-key field="skillTypeId" />
     </entity>	
     <entity entity-name="WorkEffortStatus" 
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
@@ -7039,8 +7041,8 @@
       <field name="workEffortId" type="id-ne"></field>
       <field name="statusId" type="id-ne"></field>
       <field name="datetime" type="date-time"></field>	
-      <prim-key-field>workEffortId</prim-key-field>	
-      <prim-key-field>statusId</prim-key-field>
+      <prim-key field="workEffortId" />	
+      <prim-key field="statusId" />
     </entity>	
     <entity entity-name="WorkEffortType" 
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
@@ -7049,7 +7051,7 @@
       <field name="parentTypeId" type="id-ne"></field>
       <field name="hasTable" type="indicator"></field>
       <field name="description" type="description"></field>	
-      <prim-key-field>workEffortTypeId</prim-key-field>
+      <prim-key field="workEffortTypeId" />
       <relation type="one" title="Parent" rel-entity-name="WorkEffortType">
         <key-map field-name="parentTypeId" rel-field-name="workEffortTypeId" />
       </relation>
@@ -7071,8 +7073,8 @@
             title="Work Effort Type Attribute Entity">
       <field name="workEffortTypeId" type="id-ne"></field>
       <field name="name" type="id-long-ne"></field>	
-      <prim-key-field>workEffortTypeId</prim-key-field>	
-      <prim-key-field>name</prim-key-field>
+      <prim-key field="workEffortTypeId" />	
+      <prim-key field="name" />
       <relation type="one" rel-entity-name="WorkEffortType">
         <key-map field-name="workEffortTypeId" />
       </relation>

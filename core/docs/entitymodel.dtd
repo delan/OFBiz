@@ -26,7 +26,7 @@
     <!-- ====================== Root Element ======================= -->
     <!ELEMENT entitymodel ( title?, description?, copyright?, author?, version?, entity* )>
     <!-- ================= Children of entitymodel =================== -->
-    <!ELEMENT entity ( description?, field*, prim-key-field*, relation* )>
+    <!ELEMENT entity ( description?, field*, prim-key*, relation* )>
     <!ELEMENT title ( #PCDATA  )>
     <!ELEMENT description ( #PCDATA  )>
     <!ELEMENT copyright ( #PCDATA  )>
@@ -49,7 +49,9 @@
     <!ATTLIST entity
 	version CDATA #IMPLIED >
     <!ELEMENT field ( validate* )>
-    <!ELEMENT prim-key-field ( #PCDATA  )>
+    <!ELEMENT prim-key EMPTY>
+    <!ATTLIST prim-key
+	field CDATA #REQUIRED >
     <!ELEMENT relation ( key-map* )>
     <!-- ==================== Children of field ===================== -->
     <!ATTLIST field

@@ -68,7 +68,7 @@ else
     <!-- ====================== Root Element ======================= -->
     <!ELEMENT entitymodel ( title?, description?, copyright?, author?, version?, entity* )>
     <!-- ================= Children of entitymodel =================== -->
-    <!ELEMENT entity ( description?, field*, prim-key-field*, relation* )>
+    <!ELEMENT entity ( description?, field*, prim-key*, relation* )>
     <!ELEMENT title ( #PCDATA  )>
     <!ELEMENT description ( #PCDATA  )>
     <!ELEMENT copyright ( #PCDATA  )>
@@ -91,7 +91,9 @@ else
     <!ATTLIST entity
 	version CDATA #IMPLIED >
     <!ELEMENT field ( validate* )>
-    <!ELEMENT prim-key-field ( #PCDATA  )>
+    <!ELEMENT prim-key EMPTY>
+    <!ATTLIST prim-key
+	field CDATA #REQUIRED >
     <!ELEMENT relation ( key-map* )>
     <!-- ==================== Children of field ===================== -->
     <!ATTLIST field
@@ -209,7 +211,7 @@ else
   }
   for(int y = 0; y < entity.pks.size(); y++) {
     ModelField field = (ModelField) entity.pks.elementAt(y);%>	
-      <prim-key-field><%=field.name%></prim-key-field><%
+      <prim-key field="<%=field.name%>" /><%
   }
   if(entity.relations != null && entity.relations.size() > 0) {
     for(int r=0; r<entity.relations.size(); r++) {

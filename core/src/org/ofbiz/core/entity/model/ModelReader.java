@@ -209,10 +209,10 @@ public class ModelReader {
       if(field != null) entity.fields.add(field);
     }
     
-    if(utilTimer != null) utilTimer.timerString("  createModelEntity: before prim-key-cols");
-    NodeList pkList = entityElement.getElementsByTagName("prim-key-field");
+    if(utilTimer != null) utilTimer.timerString("  createModelEntity: before prim-keys");
+    NodeList pkList = entityElement.getElementsByTagName("prim-key");
     for(int i=0; i<pkList.getLength(); i++) {
-      ModelField field = findModelField(entity, elementValue((Element)pkList.item(i)));
+      ModelField field = findModelField(entity, ((Element)pkList.item(i)).getAttribute("field"));
       if(field != null) {
         entity.pks.add(field);
         field.isPk = true;
