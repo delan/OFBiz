@@ -140,7 +140,7 @@
             <condition>
                 <or>
                     <and>
-                        <not><if-empty field-name="estimatedShipDate" map-name="parameters"/></not>
+                        <not><if-empty field-name="parameters.estimatedShipDate"/></not>
                         <if-compare-field field-name="parameters.estimatedShipDate" operator="not-equals" to-field-name="lookedUpValue.estimatedShipDate"/>
                     </and>
                     <and>
@@ -150,13 +150,14 @@
                 </or>
             </condition>
             <then>
-                <field-to-field field-name="estimatedShipWorkEffId" map-name="lookedUpValue" to-field-name="workEffortId" to-map-name="estimatedShipWorkEffortMap"/>
-                <find-by-primary-key entity-name="WorkEffort" map-name="estimatedShipWorkEffortMap" value-name="estimatedShipWorkEffort"/>
-                <field-to-field map-name="parameters" field-name="estimatedShipDate" to-field-name="estimatedStartDate" to-map-name="estimatedShipWorkEffort"/>
-                <field-to-field map-name="parameters" field-name="estimatedShipDate" to-field-name="estimatedCompletionDate" to-map-name="estimatedShipWorkEffort"/>
-                <field-to-field map-name="parameters" field-name="originFacilityId" to-field-name="facilityId" to-map-name="estimatedShipWorkEffort"/>
-                <set-service-fields service-name="updateWorkEffort" map-name="estimatedShipWorkEffort" to-map-name="estimatedShipWorkEffortUpdMap"/>
-                <call-service service-name="updateWorkEffort" in-map-name="estimatedShipWorkEffortUpdMap"/>
+                <entity-one entity-name="WorkEffort" value-name="estShipWe" auto-field-map="false">
+                    <field-map field-name="workEffortId" env-name="lookedUpValue.estimatedShipWorkEffId"/>
+                </entity-one>
+                <env-to-env env-name="parameters.estimatedShipDate" to-env-name="estShipWe.estimatedStartDate"/>
+                <env-to-env env-name="parameters.estimatedShipDate" to-env-name="estShipWe.estimatedCompletionDate"/>
+                <env-to-env env-name="parameters.originFacilityId" to-env-name="estShipWe.facilityId"/>
+                <set-service-fields service-name="updateWorkEffort" map-name="estShipWe" to-map-name="estShipWeUpdMap"/>
+                <call-service service-name="updateWorkEffort" in-map-name="estShipWeUpdMap"/>
             </then>
         </if>
         <if>
@@ -266,7 +267,7 @@
 
         <if-empty field-name="shipment.primaryOrderId">
             <!-- No primaryOrderId specified, don't do anything -->
-            <log level="info" message="Not running setShipmentSettingsFromPrimaryOrder, primaryOrderId is empty for shipmentId [${parameters.shipmentId}]"/>
+            <log level="info" message="Not running setShipmentSettingsFromPrimaryOrder, primaryOrderId is empty for shipmentId [${shipment.shipmentId}]"/>
             <return response-code="success"/>
         </if-empty>
 
