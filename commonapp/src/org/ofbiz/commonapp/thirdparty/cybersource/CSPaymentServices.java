@@ -23,7 +23,192 @@
 
 package org.ofbiz.commonapp.thirdparty.cybersource;
 
+import java.net.*;
 import java.util.*;
 
+import org.ofbiz.core.entity.*;
+import org.ofbiz.core.service.*;
+import org.ofbiz.core.util.*;
+import org.ofbiz.commonapp.order.order.*;
+import org.ofbiz.commonapp.party.contact.ContactHelper;
+
+import com.cybersource.ics.base.message.*;
+import com.cybersource.ics.base.exception.*;
+import com.cybersource.ics.client.message.*;
+import com.cybersource.ics.client.*;
+
+/**
+ * CyberSource Integration Services
+ *
+ * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
+ * @version    1.0
+ * @created    May 29, 2002
+ */
 public class CSPaymentServices {
+
+    public static final String module = CSPaymentServices.class.getName();
+
+    public static Map authorizeCC(DispatchContext dctx, Map context) {
+        Map result = new HashMap();
+        GenericDelegator delegator = dctx.getDelegator();
+
+        String currency = (String) context.get("currency");
+        String orderId = (String) context.get("orderId");
+        String paymentMethodId = (String) context.get("paymentMethodId");
+
+        // Create a new ICSClient using the cybersource properties found on global classpath.
+        ICSClient client = new ICSClient(UtilProperties.getProperties("cybersource.properties");
+        ICSClientRequest request = null;
+        try {
+            buildAuthRequest(client, delegator, orderId, paymentMethodId);
+        } catch (GeneralException e) {
+            e.printStackTrace();
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, "ERROR: Could not get order information (" + e.getMessage() + ").");
+            return result;
+        }
+
+        // Basic Info
+        request.setMerchantID(client.getMerchantID());
+        request.setMerchantRefNo(orderId);
+        request.setCurrency("USD");  // todo read the props for default or use supplied currency.
+        request.addApplication("ics_auth");
+
+        Debug.logVerbose("---- CyberSource Request To: " + client.url.toString() + " ----", module);
+        Debug.logVerbose("[REQ]: " + request, module);
+        Debug.logVerbose("---- End Request ----", module);
+
+        ICSReply reply = client.send(request);
+
+        Debug.logVerbose("---- CyberSource Response ----", module);
+        Debug.logVerbose("[RES]: " + reply, module);
+        Debug.logVerbose("---- End Request ----", module);
+
+        return processResult(reply, result);
+    }
+
+    public static Map billCC(DispatchContext dctx, Map context) {
+        return new HashMap();
+    }
+
+    public static Map creditCC(DispatchContext dctx, Map context) {
+        return new HashMap();
+    }
+
+    public static Map debitECP(DispatchContext dctx, Map context) {
+        return new HashMap();
+    }
+
+    public static Map creditECP(DispatchContext dctx, Map context) {
+        return new HashMap();
+    }
+
+    public static Map dav(DispatchContext dctx, Map context) {
+        return new HashMap();
+    }
+
+    public static Map fraudScore(DispatchContext dctx, Map context) {
+        return new HashMap();
+    }
+
+    public static Map taxCalc(DispatchContext dctx, Map context) {
+        return new HashMap();
+    }
+
+    private static ICSClientRequest buildAuthRequest(ICSClient client, GenericDelegator delegator,
+                                                     String orderId, String paymentMethodId) throws GeneralException {
+        GenericValue orderHeader = null;
+        GenericValue paymentMethod = null;
+        GenericValue creditCard = null;
+        GenericValue billingAddress = null;
+        Collection adjustments = null;
+        try {
+            orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
+            adjustments = delegator.findByAnd("OrderAdjustment", UtilMisc.toMap("orderId", orderId));
+            paymentMethod = delegator.findByPrimaryKey("PaymentMethod", UtilMisc.toMap("paymentMethodId", paymentMethodId));
+
+            if (paymentMethod.get("paymentMethodTypeId") != null &&
+                    !paymentMethod.getString("paymentMethodTypeId").equals("CREDIT_CARD"))
+                throw new GenericEntityException("Payment method is not a credit card.");
+
+            creditCard = paymentMethod.getRelatedOne("CreditCard");
+            billingAddress = creditCard.getRelatedOne("PostalAddress");
+        } catch (GenericEntityException e) {
+            throw new GeneralException("Error getting order information", e);
+        }
+
+        OrderReadHelper orh = new OrderReadHelper(orderHeader);
+        Collection orderItems = orh.getOrderItems();
+
+        // Create a new ICSClientRequest Object.
+        ICSClientRequest request = new ICSClientRequest(client);
+
+        // Person Info
+        GenericValue person = orh.getBillToPerson();
+        request.setCustomerFirstName(person.getString("firstName"));
+        request.setCustomerLastName(person.getString("lastName"));
+
+        // Contact Info
+        Collection emails = ContactHelper.getContactMech(person.getRelatedOne("Party"), "PRIMARY_EMAIL", "EMAIL_ADDRESS", false);
+        if (emails != null && emails.size() > 0) {
+            GenericValue em = (GenericValue) emails.iterator().next();
+            request.setCustomerEmailAddress(em.getString("infoString"));
+        }
+        // Phone number seems to not be used; possibly only for reporting.
+
+        // Payment Info
+        List expDateList = StringUtil.split(creditCard.getString("expireDate"), "/");
+        request.setCustomerCreditCardNumber(creditCard.getString("cardNumber"));
+        request.setCustomerCreditCardExpirationMonth((String)expDateList.get(0));
+        request.setCustomerCreditCardExpirationYear((String)expDateList.get(1));
+
+        // Payment Contact Info
+        request.setBillAddress1(billingAddress.getString("address1"));
+        if (billingAddress.get("address2") != null)
+            request.setBillAddress2(billingAddress.getString("address2"));
+        request.setBillCity(billingAddress.getString("city"));
+        request.setBillCountry(billingAddress.getString("countryGeoId"));
+        request.setBillZip(billingAddress.getString("postalCode"));
+        if (billingAddress.get("stateProvinceGeoId") != null)
+            request.setBillState(billingAddress.getString("stateProvinceGeoId"));
+
+        // Create the offers (one for each line item)
+        Iterator itemIterator = orderItems.iterator();
+        while (itemIterator.hasNext()) {
+            ICSClientOffer offer = new ICSClientOffer();
+            GenericValue item = (GenericValue) itemIterator.next();
+            GenericValue product = null;
+            try {
+                product = item.getRelatedOne("Product");
+            } catch (GenericEntityException e) {
+                e.printStackTrace();
+            }
+            offer.setProductName(product.getString("productName"));
+            offer.setMerchantProductSKU(product.getString("productId"));
+            offer.setAmount(item.getString("unitPrice"));
+            offer.setQuantity(item.getString("quantity"));
+            //offer.setProductCode("electronic_software");
+            //offer.setPackerCode("portland10");
+
+            Collection taxItems = EntityUtil.filterByAnd(adjustments, UtilMisc.toMap("orderAdjustmentTypeId",
+                    "SALES_TAX", "orderItemSeqId", item.getString("orderItemSeqId")));
+            double taxAmount = 0.00;
+            Iterator taxIt = taxItems.iterator();
+            while (taxIt.hasNext()) {
+                GenericValue adj = (GenericValue) taxIt.next();
+                taxAmount += adj.getDouble("amount").doubleValue();
+            }
+            if (taxAmount > 0.00) {
+                Double tax = new Double(taxAmount);
+                offer.setTaxAmount(tax.toString());
+            }
+            request.addOffer(offer);
+        }
+        return request;
+    }
+
+    private static Map processResult(ICSReply reply, Map result) {
+        // Process the return codes and return a nice response
+        return result;
+    }
 }

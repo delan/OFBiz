@@ -124,7 +124,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
 
     <datasource name="localpostgres"
             helper-class="org.ofbiz.core.entity.GenericHelperDAO"
-            field-type-name="postgres72"
+            field-type-name="postgres"
             check-on-start="true"
             add-missing-on-start="true">
         <sql-load-path path="commonapp/db" prepend-env="ofbiz.home"/>

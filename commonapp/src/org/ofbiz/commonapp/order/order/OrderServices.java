@@ -104,7 +104,6 @@ public class OrderServices {
         toBeStored.add(orderShipmentPreference);
 
         // set the order items
-        // productId|productName|price|quantity|comment|poNumber
         Iterator oi = orderItems.iterator();
         //*cn*int seqId = 1;
         while (oi.hasNext()) {
