@@ -1,5 +1,5 @@
 /*
- * $Id: mruprep.bsh,v 1.3 2004/07/10 16:24:10 byersa Exp $
+ * $Id: mruprep.bsh,v 1.4 2004/07/13 16:11:36 byersa Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -25,7 +25,7 @@
 /**
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      3.0
 
  * Builds a list of most recently used EntityValues from a session-kept cache
@@ -50,6 +50,7 @@ import org.ofbiz.service.*;
 import org.ofbiz.entity.model.*;
 import org.ofbiz.content.widget.html.*;
 import org.ofbiz.content.widget.form.*;
+import org.ofbiz.base.util.collections.LifoSet;
 
 
 import javax.servlet.*;
@@ -66,29 +67,49 @@ if(lookupCaches == null){
     session.setAttribute("lookupCaches", lookupCaches);
 } 
 cacheEntityName = entityName;
+Debug.logInfo("index:" + entityName.indexOf("DataResource") , "");
+if (UtilValidate.isNotEmpty(entityName) && entityName.indexOf("DataResource") >= 0) {
+    cacheEntityName = "DataResourceContentView";
+    dataResourceTypeId = request.getParameter("drDataResourceTypeId");
+    if (UtilValidate.isNotEmpty(dataResourceTypeId)) {
+        cacheEntityName += "_" + dataResourceTypeId;
+        if (cacheEntityName.indexOf("ELECTRONIC_TEXT") >= 0) {
+            mimeTypeId = request.getParameter("drMimeTypeId");
+            if (UtilValidate.isNotEmpty(mimeTypeId)) {
+                cacheEntityName += "_" + mimeTypeId;
+            }
+        }
+    }
+}
 Debug.logInfo("cacheEntityName:" + cacheEntityName, "");
-lifoSet = (LIFOSet)lookupCaches.get(cacheEntityName);
+lifoSet = (LifoSet)lookupCaches.get(cacheEntityName);
 org.ofbiz.base.util.Debug.logInfo("lifoSet:" + lifoSet, "");
     if(lifoSet == null){
-        lifoSet	= new LIFOSet(10);
+        lifoSet	= new LifoSet(10);
         lookupCaches.put(cacheEntityName, lifoSet);
     }    
 
 LinkedList mruList = new LinkedList();
-iter = lifoSet.iterator();
+int sz = lifoSet.keyLRUList.size();
 GenericValue gv	= null;
 GenericPK pk	= null;
 GenericPK pk2	= null;
 Object contentIdKey = null;
 
-mruList = new ArrayList();
-while(iter.hasNext()) {
+for(int i=(sz-1); i >= 0; i--){
+    contentIdKey = lifoSet.keyLRUList.get(i);
 
-    pk = iter.next();
-    pk2 = pk.getPrimaryKey();
-    gv = delegator.findByPrimaryKey(pk2);
-    if (gv != null)
-        mruList.add(gv);
+Debug.logInfo("contentIdKey:" + contentIdKey, "");
+    if (contentIdKey != null && contentIdKey.length() > 0) {
+        pk = (GenericEntity)lifoSet.cacheLineTable.get(contentIdKey).getValue();
+        gv = delegator.findByPrimaryKey(pk);
+        if (gv != null)
+            mruList.add(gv);
+    }
+}
+iter = lifoSet.iterator();
+while (iter.hasNext()) {
+    pk0 = iter.next();
 }
 String formDefFile		= page.getProperty("formDefFile");
 String mruFormName		= page.getProperty("mruFormName");
