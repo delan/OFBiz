@@ -22,7 +22,7 @@
  *@author     David E. Jones
  *@author     Arukala
  *@author     Brad Steiner
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.2
  */
 
@@ -72,7 +72,7 @@ context.put("productCategoryTypes", productCategoryTypes);
 // Start CategoryContent stuff
 
 categoryContent = null;
-if (productCategory != null) categoryContent = productCategory.getRelated("ProductCategoryContent", null, UtilMisc.toList("productCategoryContentId"));
+if (productCategory != null) categoryContent = productCategory.getRelated("ProductCategoryContent", null, UtilMisc.toList("prodCatContentTypeId"));
 context.put("categoryContent", categoryContent);
 
 List categoryContentDatas = new LinkedList();
