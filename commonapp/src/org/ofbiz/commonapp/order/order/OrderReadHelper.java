@@ -406,12 +406,12 @@ public class OrderReadHelper {
             GenericDelegator delegator = orderItem.getDelegator();
 
             try {
-                orderItemInventoryReses = delegator.findByAnd("OrderItemInventoryRes", UtilMisc.toMap("orderId", orderItem.get("orderId"), "orderItemSeqId", orderItem.getString("orderItemSeqId")));
+                orderItemInventoryReses = delegator.findByAnd("OrderItemInventoryRes", UtilMisc.toMap("orderId", orderItem.get("orderId")));
             } catch (GenericEntityException e) {
                 Debug.logWarning(e, "Trouble getting OrderItemInventoryRes(s)", module);
             }
-        }        
-        return orderItemInventoryReses;
+        } 
+        return EntityUtil.filterByAnd(orderItemInventoryReses, UtilMisc.toMap("orderItemSeqId", orderItem.getString("orderItemSeqId")));       
     }
 
     public List getOrderItemIssuances(GenericValue orderItem) {
@@ -420,12 +420,12 @@ public class OrderReadHelper {
             GenericDelegator delegator = orderItem.getDelegator();
 
             try {
-                orderItemIssuances = delegator.findByAnd("ItemIssuance", UtilMisc.toMap("orderId", orderItem.get("orderId"), "orderItemSeqId", orderItem.getString("orderItemSeqId")));
+                orderItemIssuances = delegator.findByAnd("ItemIssuance", UtilMisc.toMap("orderId", orderItem.get("orderId")));
             } catch (GenericEntityException e) {
                 Debug.logWarning(e, "Trouble getting ItemIssuance(s)", module);
             }            
         }        
-        return orderItemIssuances;
+        return EntityUtil.filterByAnd(orderItemIssuances, UtilMisc.toMap("orderItemSeqId", orderItem.getString("orderItemSeqId")));
     }
 
     public double getItemShippedQuantity(GenericValue orderItem) {
