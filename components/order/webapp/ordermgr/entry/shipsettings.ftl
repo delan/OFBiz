@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.2
 -->
 
@@ -95,7 +95,7 @@
                 <input type="hidden" name="contactMechTypeId" value="POSTAL_ADDRESS">
                 <input type="hidden" name="contactMechPurposeTypeId" value="SHIPPING_LOCATION">
               </#if>
-                <input type="hidden" name="partyId" value="${sessionAttributes.orderPartyId?default("_NA_")}">
+                <input type="hidden" name="partyId" value="${cart.partyId?default("_NA_")}">
                 <input type="hidden" name="finalizeMode" value="ship">
                 <#if person?exists && person?has_content>
                   <#assign toName = "">

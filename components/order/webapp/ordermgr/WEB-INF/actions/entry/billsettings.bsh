@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.5 $
+ *@version    $Revision: 1.6 $
  *@since      2.2
 */
 
@@ -32,8 +32,8 @@ import org.ofbiz.order.shoppingcart.*;
 import org.ofbiz.party.contact.*;
 
 delegator = request.getAttribute("delegator");
-partyId = session.getAttribute("orderPartyId");
 cart = session.getAttribute("shoppingCart");
+partyId = cart.getPartyId();
 context.put("cart", cart);
 context.put("paymentMethodType", request.getParameter("paymentMethodType"));
 

@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.6 $
+ *@version    $Revision: 1.7 $
  *@since      2.2
 -->
 
@@ -75,7 +75,7 @@ function makeExpDate() {
     <td width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <tr>
-          <td>  
+          <td>
             <#if (paymentMethodList?has_content || billingAccountList?has_content) && !requestParameters.createNew?exists>
               <#-- initial screen when we have a associated party -->
               <form method="post" action="<@ofbizUrl>/finalizeOrder</@ofbizUrl>" name="billsetupform">
@@ -199,7 +199,7 @@ function makeExpDate() {
               </#if>
               
               <input type="hidden" name="contactMechTypeId" value="POSTAL_ADDRESS">
-              <input type="hidden" name="partyId" value="${sessionAttributes.orderPartyId}">
+              <input type="hidden" name="partyId" value="${cart.partyId}">
               <input type="hidden" name="paymentMethodType" value="${paymentMethodType}">
               <input type="hidden" name="finalizeMode" value="payment">
               <input type="hidden" name="createNew" value="Y">

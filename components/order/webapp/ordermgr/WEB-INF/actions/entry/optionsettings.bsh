@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.4 $
+ *@version    $Revision: 1.5 $
  *@since      2.2
 */
 
@@ -39,7 +39,7 @@ productStoreId = ProductStoreWorker.getProductStoreId(request);
 request.removeAttribute("_EVENT_MESSAGE_");
 
 party = null;
-partyId = session.getAttribute("orderPartyId");
+partyId = cart.getPartyId();
 if (partyId != null) {
     party = delegator.findByPrimaryKey("Party", UtilMisc.toMap("partyId", partyId));
     context.put("party", party);
