@@ -26,21 +26,19 @@
     <!-- Security Mappings -->
     <request-map uri="checkLogin" edit="false">
       <description>Verify a user is logged in.</description>
-      <security https="false" auth="false"/>
+      <security https="true" auth="false"/>
       <event type="java" path="org.ofbiz.commonapp.security.login.LoginEvents" invoke="checkLogin" />
       <response name="success" type="view" value="name" />
       <response name="error" type="view" value="login" />
     </request-map>
 
-    <request-map uri="login">
-      <security https="true" auth="false"/>
+    <request-map uri="login"><security https="true" auth="false"/>
       <event type="java" path="org.ofbiz.commonapp.security.login.LoginEvents" invoke="login"/>
       <response name="success" type="view" value="main"/>
       <response name="error" type="view" value="login"/>
     </request-map>
 
-    <request-map uri="logout">
-      <security https="true" auth="true"/>
+    <request-map uri="logout"><security https="true" auth="true"/>
       <event type="java" path="org.ofbiz.commonapp.security.login.LoginEvents" invoke="logout"/>
       <response name="success" type="view" value="main"/>
       <response name="error" type="view" value="main"/>
@@ -48,8 +46,7 @@
     <!-- End of Security Mappings -->
 
     <!-- Request Mappings -->
-    <request-map uri="view">
-        <security https="false" auth="false"/>
+    <request-map uri="view"><security https="true" auth="false"/>
         <response name="success" type="view" value="main"/>
         <response name="error" type="view" value="error"/>
     </request-map>
@@ -64,34 +61,29 @@
     </request-map>
 
     <!-- ================ Misc. Requests ================= -->
-    <request-map uri="FastLoadCache">
-    	<security https="true" auth="true"/>
+    <request-map uri="FastLoadCache"><security https="true" auth="true"/>
     	<response name="success" type="view" value="FastLoadCache"/>
     </request-map>
 
-    <request-map uri="changeDelegator">
+    <request-map uri="changeDelegator"><security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.core.event.CoreEvents" invoke="changeDelegator"/>
         <response name="success" type="view" value="main"/>
         <response name="error" type="view" value="error"/>
     </request-map>
 
-    <request-map uri="keywordsearch">
-    	<security https="true" auth="true"/>
+    <request-map uri="keywordsearch"><security https="true" auth="true"/>
     	<response name="success" type="view" value="keywordsearch"/>
     </request-map>
 
-    <request-map uri="ChooseTopCategory">
-    	<security https="true" auth="true"/>
+    <request-map uri="ChooseTopCategory"><security https="true" auth="true"/>
     	<response name="success" type="view" value="ChooseTopCategory"/>
     </request-map>
 
     <!-- ================ Category Requests ================= -->
-    <request-map uri="EditCategory">
-    	<security https="true" auth="true"/>
+    <request-map uri="EditCategory"><security https="true" auth="true"/>
     	<response name="success" type="view" value="EditCategory"/>
     </request-map>
-    <request-map uri="UploadCategoryImage">
-    	<security https="true" auth="true"/>
+    <request-map uri="UploadCategoryImage"><security https="true" auth="true"/>
     	<response name="success" type="view" value="UploadCategoryImage"/>
     </request-map>
 
@@ -107,8 +99,7 @@
     </request-map>
 
     <!-- ================ Category Rollup Requests ================= -->
-    <request-map uri="EditCategoryRollup">
-    	<security https="true" auth="true"/>
+    <request-map uri="EditCategoryRollup"><security https="true" auth="true"/>
     	<response name="success" type="view" value="EditCategoryRollup"/>
     </request-map>
     <request-map uri="addProductCategoryToCategory"><security https="true" auth="true"/>
@@ -128,8 +119,7 @@
     </request-map>
 
     <!-- ================ Category Products Requests ================= -->
-    <request-map uri="EditCategoryProducts">
-    	<security https="true" auth="true"/>
+    <request-map uri="EditCategoryProducts"><security https="true" auth="true"/>
     	<response name="success" type="view" value="EditCategoryProducts"/>
     </request-map>
     <request-map uri="addCategoryProductMember"><security https="true" auth="true"/>
@@ -185,8 +175,7 @@
     </request-map>
 
     <!-- ================ Product Requests ================= -->
-    <request-map uri="EditProduct">
-    	<security https="true" auth="true"/>
+    <request-map uri="EditProduct"><security https="true" auth="true"/>
     	<response name="success" type="view" value="EditProduct"/>
     </request-map>
     <request-map uri="createProduct"><security https="true" auth="true"/>
@@ -204,14 +193,12 @@
     	<response name="success" type="view" value="EditProduct"/>
     	<response name="error" type="view" value="EditProduct"/>
     </request-map>
-    <request-map uri="UploadImage">
-    	<security https="true" auth="true"/>
+    <request-map uri="UploadImage"><security https="true" auth="true"/>
     	<response name="success" type="view" value="UploadImage"/>
     </request-map>
 
     <!-- ================ Product Categories Requests ================= -->
-    <request-map uri="EditProductCategories">
-    	<security https="true" auth="true"/>
+    <request-map uri="EditProductCategories"><security https="true" auth="true"/>
     	<response name="success" type="view" value="EditProductCategories"/>
     </request-map>
     <request-map uri="addProductToCategory"><security https="true" auth="true"/>
@@ -235,20 +222,17 @@
     <request-map uri="EditProductKeyword"><security https="true" auth="true"/>
     	<response name="success" type="view" value="EditProductKeyword"/>
     </request-map>
-    <request-map uri="UpdateProductKeyword">
-    	<security https="true" auth="true"/>
+    <request-map uri="UpdateProductKeyword"><security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.catalog.ProductEvents" invoke="updateProductKeyword"/>
         <response name="success" type="view" value="EditProductKeyword"/>
         <response name="error" type="view" value="EditProductKeyword"/>
     </request-map>
-    <request-map uri="UpdateProductKeywords">
-    	<security https="true" auth="true"/>
+    <request-map uri="UpdateProductKeywords"><security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.catalog.ProductEvents" invoke="updateProductKeywords"/>
         <response name="success" type="view" value="EditProductKeyword"/>
         <response name="error" type="view" value="EditProductKeyword"/>
     </request-map>
-    <request-map uri="UpdateAllKeywords">
-    	<security https="true" auth="true"/>
+    <request-map uri="UpdateAllKeywords"><security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.catalog.ProductEvents" invoke="updateAllKeywords"/>
         <response name="success" type="view" value="main"/>
         <response name="error" type="view" value="main"/>
