@@ -296,67 +296,28 @@
     <entity entity-name="WorkflowApplication" 
             package-name="org.ofbiz.commonapp.workeffort.definition"
             title="Workflow Application Entity">
-      <field name="applicationId" type="id-ne"></field>
+      <description>The primary key of a WorkflowApplication is funny because it can be associated with either a WorkflowPackage or a WorkflowProcess. If it is associated with a WorkflowPackage, then the processId will be set to the constant "_NA_".</description>
+      <field name="packageId" type="id-long-ne"></field>
+      <field name="processId" type="id-long-ne"></field>
+      <field name="applicationId" type="id-long-ne"></field>
       <field name="applicationName" type="name"></field>
-      <field name="description" type="description"></field>
-      <field name="formalParamListId" type="id"></field>	
+      <field name="description" type="description"></field>	
+      <prim-key field="packageId" />	
+      <prim-key field="processId" />	
       <prim-key field="applicationId" />
-      <relation type="many" rel-entity-name="WorkflowFormalParamList">
-        <key-map field-name="formalParamListId" />
+      <relation type="one" rel-entity-name="WorkflowPackage">
+        <key-map field-name="packageId" />
       </relation>
-      <relation type="many" rel-entity-name="WorkflowFormalParamsView">
-        <key-map field-name="formalParamListId" />
+      <relation type="one" rel-entity-name="WorkflowProcess">
+        <key-map field-name="packageId" />
+        <key-map field-name="processId" />
+      </relation>
+      <relation type="many" rel-entity-name="WorkflowFormalParam">
+        <key-map field-name="packageId" />
+        <key-map field-name="processId" />
+        <key-map field-name="applicationId" />
       </relation>
     </entity>
-    <entity entity-name="WorkflowApplicationList" 
-            package-name="org.ofbiz.commonapp.workeffort.definition"
-            title="Workflow Application List Entity">
-      <field name="applicationListId" type="id-ne"></field>
-      <field name="applicationId" type="id-ne"></field>
-      <field name="applicationIndex" type="numeric"></field>	
-      <prim-key field="applicationListId" />	
-      <prim-key field="applicationId" />
-      <relation type="one" rel-entity-name="WorkflowApplication">
-        <key-map field-name="applicationId" />
-      </relation>
-      <relation type="many" rel-entity-name="WorkflowProcess">
-        <key-map field-name="applicationListId" />
-      </relation>
-      <relation type="many" rel-entity-name="WorkflowPackage">
-        <key-map field-name="applicationListId" />
-      </relation>
-    </entity>	
-    <view-entity entity-name="WorkflowApplicationsView" 
-            package-name="org.ofbiz.commonapp.workeffort.definition"
-            title="Workflow Applications View Entity">	
-      <member-entity entity-alias="WAL" entity-name="WorkflowApplicationList" />	
-      <member-entity entity-alias="WA" entity-name="WorkflowApplication" />
-      <alias entity-alias="WA" name="applicationId" prim-key="true" />
-      <alias entity-alias="WA" name="applicationName" />
-      <alias entity-alias="WA" name="description" />
-      <alias entity-alias="WA" name="formalParamListId" />
-      <alias entity-alias="WAL" name="applicationListId" prim-key="true" />
-      <alias entity-alias="WAL" name="applicationIndex" />
-      <view-link entity-alias="WA" rel-entity-alias="WAL">
-        <key-map field-name="applicationId" />
-      </view-link>
-      <relation type="one" rel-entity-name="WorkflowApplication">
-        <key-map field-name="applicationId" />
-      </relation>
-      <relation type="one" rel-entity-name="WorkflowApplicationList">
-        <key-map field-name="applicationListId" />
-        <key-map field-name="applicationId" />
-      </relation>
-      <relation type="many" rel-entity-name="WorkflowFormalParamList">
-        <key-map field-name="formalParamListId" />
-      </relation>
-      <relation type="many" rel-entity-name="WorkflowProcess">
-        <key-map field-name="applicationListId" />
-      </relation>
-      <relation type="many" rel-entity-name="WorkflowPackage">
-        <key-map field-name="applicationListId" />
-      </relation>
-    </view-entity>
     <entity entity-name="WorkflowArrayTypeMembers" 
             package-name="org.ofbiz.commonapp.workeffort.definition"
             title="Workflow Array Type Members Entity">
@@ -367,13 +328,7 @@
       <relation type="many" rel-entity-name="WorkflowFormalParam">
         <key-map field-name="arrayTypeMembersId" />
       </relation>
-      <relation type="many" rel-entity-name="WorkflowFormalParamsView">
-        <key-map field-name="arrayTypeMembersId" />
-      </relation>
       <relation type="many" rel-entity-name="WorkflowDataField">
-        <key-map field-name="arrayTypeMembersId" />
-      </relation>
-      <relation type="many" rel-entity-name="WorkflowDataFieldsView">
         <key-map field-name="arrayTypeMembersId" />
       </relation>
       <relation type="one" title="DataType" rel-entity-name="Enumeration">
@@ -383,7 +338,10 @@
     <entity entity-name="WorkflowDataField" 
             package-name="org.ofbiz.commonapp.workeffort.definition"
             title="Workflow Data Field Entity">
-      <field name="dataFieldId" type="id-ne"></field>
+      <description>The primary key of a WorkflowDataField is funny because it can be associated with either a WorkflowPackage or a WorkflowProcess. If it is associated with a WorkflowPackage, then the processId will be set to the constant "_NA_".</description>
+      <field name="packageId" type="id-long-ne"></field>
+      <field name="processId" type="id-long-ne"></field>
+      <field name="dataFieldId" type="id-long-ne"></field>
       <field name="dataFieldName" type="name"></field>
       <field name="description" type="description"></field>
       <field name="dataTypeEnumId" type="id"></field>
@@ -391,85 +349,36 @@
       <field name="lengthBytes" type="numeric"></field>
       <field name="arrayTypeMembersId" type="id"></field>
       <field name="isArray" type="indicator"></field>	
+      <prim-key field="packageId" />	
+      <prim-key field="processId" />	
       <prim-key field="dataFieldId" />
       <relation type="one" title="DataType" rel-entity-name="Enumeration">
         <key-map field-name="dataTypeEnumId" rel-field-name="enumId" />
       </relation>
-      <relation type="many" rel-entity-name="WorkflowArrayTypeMembers">
-        <key-map field-name="arrayTypeMembersId" />
+      <relation type="one" rel-entity-name="WorkflowPackage">
+        <key-map field-name="packageId" />
       </relation>
-      <relation type="many" rel-entity-name="WorkflowDataFieldList">
-        <key-map field-name="dataFieldId" />
+      <relation type="one" rel-entity-name="WorkflowProcess">
+        <key-map field-name="packageId" />
+        <key-map field-name="processId" />
       </relation>
     </entity>
-    <entity entity-name="WorkflowDataFieldList" 
-            package-name="org.ofbiz.commonapp.workeffort.definition"
-            title="Workflow Data Field List Entity">
-      <field name="dataFieldListId" type="id-ne"></field>
-      <field name="dataFieldId" type="id-ne"></field>
-      <field name="dataFieldIndex" type="numeric"></field>	
-      <prim-key field="dataFieldListId" />	
-      <prim-key field="dataFieldId" />
-      <relation type="one" rel-entity-name="WorkflowDataField">
-        <key-map field-name="dataFieldId" />
-      </relation>
-      <relation type="many" rel-entity-name="WorkflowProcess">
-        <key-map field-name="dataFieldListId" />
-      </relation>
-      <relation type="many" rel-entity-name="WorkflowPackage">
-        <key-map field-name="dataFieldListId" />
-      </relation>
-    </entity>	
-    <view-entity entity-name="WorkflowDataFieldsView" 
-            package-name="org.ofbiz.commonapp.workeffort.definition"
-            title="Workflow Data Fields View Entity">	
-      <member-entity entity-alias="WDF" entity-name="WorkflowDataField" />	
-      <member-entity entity-alias="WDFL" entity-name="WorkflowDataFieldList" />
-      <alias entity-alias="WDF" name="dataFieldId" prim-key="true" />
-      <alias entity-alias="WDF" name="dataFieldName" />
-      <alias entity-alias="WDF" name="description" />
-      <alias entity-alias="WDF" name="dataTypeEnumId" />
-      <alias entity-alias="WDF" name="initialValue" />
-      <alias entity-alias="WDF" name="lengthBytes" />
-      <alias entity-alias="WDF" name="arrayTypeMembersId" />
-      <alias entity-alias="WDF" name="isArray" />
-      <alias entity-alias="WDFL" name="dataFieldListId" prim-key="true" />
-      <alias entity-alias="WDFL" name="dataFieldIndex" />
-      <view-link entity-alias="WDF" rel-entity-alias="WDFL">
-        <key-map field-name="dataFieldId" />
-      </view-link>
-      <relation type="one" rel-entity-name="WorkflowDataField">
-        <key-map field-name="dataFieldId" />
-      </relation>
-      <relation type="one" rel-entity-name="WorkflowDataFieldList">
-        <key-map field-name="dataFieldListId" />
-        <key-map field-name="dataFieldId" />
-      </relation>
-      <relation type="one" title="DataType" rel-entity-name="Enumeration">
-        <key-map field-name="dataTypeEnumId" rel-field-name="enumId" />
-      </relation>
-      <relation type="many" rel-entity-name="WorkflowArrayTypeMembers">
-        <key-map field-name="arrayTypeMembersId" />
-      </relation>
-      <relation type="many" rel-entity-name="WorkflowProcess">
-        <key-map field-name="dataFieldListId" />
-      </relation>
-      <relation type="many" rel-entity-name="WorkflowPackage">
-        <key-map field-name="dataFieldListId" />
-      </relation>
-    </view-entity>
     <entity entity-name="WorkflowFormalParam" 
             package-name="org.ofbiz.commonapp.workeffort.definition"
             title="Workflow Formal Parameter Entity">
-      <field name="formalParamId" type="id-ne"></field>
+      <description>The primary key of a WorkflowFormalParam is funny because it can be associated with either a WorkflowProcess or a WorkflowApplication. If it is associated with a WorkflowProcess, then the applicationId will be set to the constant "_NA_". Note that if it is associated with a WorkflowApplication, that entity may be associated with either a package or a process, so see the description on the WorkflowApplication entity.</description>
+      <field name="packageId" type="id-long-ne"></field>
+      <field name="processId" type="id-long-ne"></field>
+      <field name="applicationId" type="id-long-ne"></field>
+      <field name="formalParamId" type="id-long-ne"></field>
       <field name="modeEnumId" type="id"></field>
       <field name="description" type="description"></field>
       <field name="dataTypeEnumId" type="id"></field>
       <field name="arrayTypeMembersId" type="id"></field>	
+      <prim-key field="packageId" />	
+      <prim-key field="processId" />	
+      <prim-key field="applicationId" />	
       <prim-key field="formalParamId" />
-      <relation type="many" rel-entity-name="WorkflowFormalParamList">
-        <key-map field-name="formalParamId" />
-      </relation>
       <relation type="one" title="Mode" rel-entity-name="Enumeration">
         <key-map field-name="modeEnumId" rel-field-name="enumId" />
       </relation>
@@ -478,67 +387,17 @@
       </relation>
       <relation type="many" rel-entity-name="WorkflowArrayTypeMembers">
         <key-map field-name="arrayTypeMembersId" />
+      </relation>
+      <relation type="one" rel-entity-name="WorkflowProcess">
+        <key-map field-name="packageId" />
+        <key-map field-name="processId" />
+      </relation>
+      <relation type="one" rel-entity-name="WorkflowApplication">
+        <key-map field-name="packageId" />
+        <key-map field-name="processId" />
+        <key-map field-name="applicationId" />
       </relation>
     </entity>
-    <entity entity-name="WorkflowFormalParamList" 
-            package-name="org.ofbiz.commonapp.workeffort.definition"
-            title="Workflow Formal Parameter List Entity">
-      <field name="formalParamListId" type="id-ne"></field>
-      <field name="formalParamId" type="id-ne"></field>
-      <field name="formalParamIndex" type="numeric"></field>	
-      <prim-key field="formalParamListId" />	
-      <prim-key field="formalParamId" />
-      <relation type="one" rel-entity-name="WorkflowFormalParam">
-        <key-map field-name="formalParamId" />
-      </relation>
-      <relation type="many" rel-entity-name="WorkflowProcess">
-        <key-map field-name="formalParamListId" />
-      </relation>
-      <relation type="many" rel-entity-name="WorkflowApplication">
-        <key-map field-name="formalParamListId" />
-      </relation>
-      <relation type="many" rel-entity-name="WorkflowApplicationsView">
-        <key-map field-name="formalParamListId" />
-      </relation>
-    </entity>	
-    <view-entity entity-name="WorkflowFormalParamsView" 
-            package-name="org.ofbiz.commonapp.workeffort.definition"
-            title="Workflow Formal Parameters View Entity">	
-      <member-entity entity-alias="WFPL" entity-name="WorkflowFormalParamList" />	
-      <member-entity entity-alias="WFP" entity-name="WorkflowFormalParam" />
-      <alias entity-alias="WFP" name="formalParamId" prim-key="true" />
-      <alias entity-alias="WFP" name="modeEnumId" />
-      <alias entity-alias="WFP" name="description" />
-      <alias entity-alias="WFP" name="dataTypeEnumId" />
-      <alias entity-alias="WFP" name="arrayTypeMembersId" />
-      <alias entity-alias="WFPL" name="formalParamListId" prim-key="true" />
-      <alias entity-alias="WFPL" name="formalParamIndex" />
-      <view-link entity-alias="WFP" rel-entity-alias="WFPL">
-        <key-map field-name="formalParamId" />
-      </view-link>
-      <relation type="one" rel-entity-name="WorkflowFormalParam">
-        <key-map field-name="formalParamId" />
-      </relation>
-      <relation type="one" rel-entity-name="WorkflowFormalParamList">
-        <key-map field-name="formalParamListId" />
-        <key-map field-name="formalParamId" />
-      </relation>
-      <relation type="one" title="Mode" rel-entity-name="Enumeration">
-        <key-map field-name="modeEnumId" rel-field-name="enumId" />
-      </relation>
-      <relation type="one" title="DataType" rel-entity-name="Enumeration">
-        <key-map field-name="dataTypeEnumId" rel-field-name="enumId" />
-      </relation>
-      <relation type="many" rel-entity-name="WorkflowArrayTypeMembers">
-        <key-map field-name="arrayTypeMembersId" />
-      </relation>
-      <relation type="many" rel-entity-name="WorkflowProcess">
-        <key-map field-name="formalParamListId" />
-      </relation>
-      <relation type="many" rel-entity-name="WorkflowApplication">
-        <key-map field-name="formalParamListId" />
-      </relation>
-    </view-entity>
     <entity entity-name="WorkflowPackage" 
             package-name="org.ofbiz.commonapp.workeffort.definition"
             title="Workflow Package Entity">
@@ -560,8 +419,6 @@
       <field name="responsibleListId" type="id"></field>
       <field name="documentationUrl" type="url"></field>
       <field name="importedFromUrl" type="url"></field>
-      <field name="applicationListId" type="id"></field>
-      <field name="dataFieldListId" type="id"></field>
       <field name="participantListId" type="id"></field>	
       <prim-key field="packageId" />
       <relation type="many" title="Main" rel-entity-name="WorkflowPackageExternal">
@@ -594,25 +451,19 @@
       <relation type="many" title="Responsible" rel-entity-name="WorkflowParticipantsView">
         <key-map field-name="responsibleListId" rel-field-name="participantListId" />
       </relation>
-      <relation type="many" rel-entity-name="WorkflowDataFieldList">
-        <key-map field-name="dataFieldListId" />
-      </relation>
       <relation type="many" rel-entity-name="WorkflowParticipantList">
         <key-map field-name="participantListId" />
-      </relation>
-      <relation type="many" rel-entity-name="WorkflowApplicationList">
-        <key-map field-name="applicationListId" />
-      </relation>
-      <relation type="many" rel-entity-name="WorkflowApplicationsView">
-        <key-map field-name="applicationListId" />
-      </relation>
-      <relation type="many" rel-entity-name="WorkflowDataFieldsView">
-        <key-map field-name="dataFieldListId" />
       </relation>
       <relation type="many" rel-entity-name="WorkflowParticipantsView">
         <key-map field-name="participantListId" />
       </relation>
       <relation type="many" rel-entity-name="WorkflowTypeDeclaration">
+        <key-map field-name="packageId" />
+      </relation>
+      <relation type="many" rel-entity-name="WorkflowApplication">
+        <key-map field-name="packageId" />
+      </relation>
+      <relation type="many" rel-entity-name="WorkflowDataField">
         <key-map field-name="packageId" />
       </relation>
     </entity>
@@ -760,10 +611,7 @@
       <field name="validFromDate" type="date-time"></field>
       <field name="validToDate" type="date-time"></field>
       <field name="responsibleListId" type="id"></field>
-      <field name="formalParamListId" type="id"></field>
-      <field name="dataFieldListId" type="id"></field>
       <field name="participantListId" type="id"></field>
-      <field name="applicationListId" type="id"></field>
       <field name="documentationUrl" type="url"></field>
       <field name="durationUomId" type="id"></field>
       <field name="duration" type="floating-point"></field>
@@ -803,29 +651,23 @@
       <relation type="one" title="Duration" rel-entity-name="Uom">
         <key-map field-name="durationUomId" rel-field-name="uomId" />
       </relation>
-      <relation type="many" rel-entity-name="WorkflowFormalParamList">
-        <key-map field-name="formalParamListId" />
-      </relation>
-      <relation type="many" rel-entity-name="WorkflowDataFieldList">
-        <key-map field-name="dataFieldListId" />
-      </relation>
       <relation type="many" rel-entity-name="WorkflowParticipantList">
         <key-map field-name="participantListId" />
       </relation>
-      <relation type="many" rel-entity-name="WorkflowApplicationList">
-        <key-map field-name="applicationListId" />
-      </relation>
-      <relation type="many" rel-entity-name="WorkflowApplicationsView">
-        <key-map field-name="applicationListId" />
-      </relation>
-      <relation type="many" rel-entity-name="WorkflowDataFieldsView">
-        <key-map field-name="dataFieldListId" />
-      </relation>
-      <relation type="many" rel-entity-name="WorkflowFormalParamsView">
-        <key-map field-name="formalParamListId" />
-      </relation>
       <relation type="many" rel-entity-name="WorkflowParticipantsView">
         <key-map field-name="participantListId" />
+      </relation>
+      <relation type="many" rel-entity-name="WorkflowApplication">
+        <key-map field-name="packageId" />
+        <key-map field-name="processId" />
+      </relation>
+      <relation type="many" rel-entity-name="WorkflowDataField">
+        <key-map field-name="packageId" />
+        <key-map field-name="processId" />
+      </relation>
+      <relation type="many" rel-entity-name="WorkflowFormalParam">
+        <key-map field-name="packageId" />
+        <key-map field-name="processId" />
       </relation>
     </entity>
     <entity entity-name="WorkflowSpecification" 
