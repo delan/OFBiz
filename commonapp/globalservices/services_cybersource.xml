@@ -6,16 +6,16 @@
     <vendor>OFBiz</vendor>
     <version>1.0</version>
 
-    <service name="authCC" engine="java"
-            location="org.ofbiz.commonapp.thirdparty.cybersource.CSPaymentServices" invoke="authorizeCC">
+    <service name="authorizePayment" engine="java"
+            location="org.ofbiz.commonapp.thirdparty.cybersource.CSPaymentServices" invoke="authorize">
         <description>Authorize Credit Cart</description>
         <attribute name="orderId" type="String" mode="IN"/>
         <attribute name="currency" type="String" mode="IN" optional="true"/>
         <attribute name="authResponse" type="String" mode="OUT"/>
     </service>
 
-    <service name="billCC" engine="java"
-            location="org.ofbiz.commonapp.thirdparty.cybersource.CSPaymentServices" invoke="billCC">
+    <service name="settleAuths" engine="java"
+            location="org.ofbiz.commonapp.thirdparty.cybersource.CSPaymentServices" invoke="settle">
         <description>Bill (Settle) Credit Card Authorization</description>
         <attribute name="orderId" type="String" mode="IN"/>
         <attribute name="billResponse" type="String" mode="OUT"/>
