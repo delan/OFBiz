@@ -1,5 +1,5 @@
 /*
- * $Id: LoginEvents.java,v 1.13 2004/04/16 02:06:19 jonesde Exp $
+ * $Id: LoginEvents.java,v 1.14 2004/06/06 08:00:52 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -59,7 +59,7 @@ import org.ofbiz.service.ModelService;
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="">Dustin Caldwell</a>
  * @author     <a href="mailto:therrick@yahoo.com">Tom Herrick</a>
- * @version    $Revision: 1.13 $
+ * @version    $Revision: 1.14 $
  * @since      2.0
  */
 public class LoginEvents {
@@ -215,8 +215,8 @@ public class LoginEvents {
             boolean userIdLoggedIn = isLoggedInSession(username, request, false);
             boolean thisUserLoggedIn = isLoggedInSession(username, request, true);
             if (userIdLoggedIn && !thisUserLoggedIn) {
-                errMsg = UtilProperties.getMessage(resource,"loginevents.user_already_logged_in", UtilHttp.getLocale(request));
-                request.setAttribute("_ERROR_MESSAGE_", "<b>" + errMsg + "</b><br>");
+                errMsg = UtilProperties.getMessage(resource, "loginevents.user_already_logged_in", UtilHttp.getLocale(request));
+                request.setAttribute("_ERROR_MESSAGE_", "<b>" + errMsg + "</b>");
                 return "error";
             }
         }
@@ -228,11 +228,11 @@ public class LoginEvents {
         Map result = null;
 
         try {
-            result = dispatcher.runSync("userLogin", UtilMisc.toMap("login.username", username, "login.password", password, "visitId", visitId));
+            result = dispatcher.runSync("userLogin", UtilMisc.toMap("login.username", username, "login.password", password, "visitId", visitId, "locale", UtilHttp.getLocale(request)));
         } catch (GenericServiceException e) {
             Debug.logError(e, "Error calling userLogin service", module);
             Map messageMap = UtilMisc.toMap("errorMessage", e.getMessage());
-            errMsg = UtilProperties.getMessage(resource,"loginevents.following_error_occurred_during_login", messageMap, UtilHttp.getLocale(request));
+            errMsg = UtilProperties.getMessage(resource, "loginevents.following_error_occurred_during_login", messageMap, UtilHttp.getLocale(request));
             request.setAttribute("_ERROR_MESSAGE_", errMsg );
             return "error";
         }

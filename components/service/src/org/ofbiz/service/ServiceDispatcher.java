@@ -1,5 +1,5 @@
 /*
- * $Id: ServiceDispatcher.java,v 1.16 2004/05/25 06:30:57 ajzeneski Exp $
+ * $Id: ServiceDispatcher.java,v 1.17 2004/06/06 08:01:09 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -56,7 +56,7 @@ import org.ofbiz.service.job.JobManager;
  * Global Service Dispatcher
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.16 $
+ * @version    $Revision: 1.17 $
  * @since      2.0
  */
 public class ServiceDispatcher {
@@ -628,10 +628,10 @@ public class ServiceDispatcher {
             if (context.containsKey("login.password")) {
                 String password = (String) context.get("login.password");
 
-                context.put("userLogin", getLoginObject(service, localName, username, password));
+                context.put("userLogin", getLoginObject(service, localName, username, password, (Locale) context.get("locale")));
                 context.remove("login.password");
             } else {
-                context.put("userLogin", getLoginObject(service, localName, username, null));
+                context.put("userLogin", getLoginObject(service, localName, username, null, (Locale) context.get("locale")));
             }
             context.remove("login.username");
         } else {
@@ -639,7 +639,7 @@ public class ServiceDispatcher {
             GenericValue userLogin = (GenericValue) context.get("userLogin");
 
             if (userLogin != null) {
-                GenericValue newUserLogin = getLoginObject(service, localName, userLogin.getString("userLoginId"), userLogin.getString("currentPassword"));
+                GenericValue newUserLogin = getLoginObject(service, localName, userLogin.getString("userLoginId"), userLogin.getString("currentPassword"), (Locale) context.get("locale"));
 
                 if (newUserLogin == null) {
                     // uh oh, couldn't validate that one...
@@ -660,8 +660,8 @@ public class ServiceDispatcher {
     }
 
     // gets a value object from name/password pair
-    private GenericValue getLoginObject(String service, String localName, String username, String password) throws GenericServiceException {
-        Map context = UtilMisc.toMap("login.username", username, "login.password", password, "isServiceAuth", new Boolean(true));
+    private GenericValue getLoginObject(String service, String localName, String username, String password, Locale locale) throws GenericServiceException {
+        Map context = UtilMisc.toMap("login.username", username, "login.password", password, "isServiceAuth", new Boolean(true), "locale", locale);
 
         if (Debug.verboseOn()) Debug.logVerbose("[ServiceDispathcer.authenticate] : Invoking UserLogin Service", module);
 

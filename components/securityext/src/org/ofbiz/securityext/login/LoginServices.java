@@ -1,5 +1,5 @@
 /*
- * $Id: LoginServices.java,v 1.4 2004/04/07 07:07:37 jonesde Exp $
+ * $Id: LoginServices.java,v 1.5 2004/06/06 08:00:53 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -58,7 +58,7 @@ import org.ofbiz.service.ServiceUtil;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.0
  */
 public class LoginServices {
@@ -320,7 +320,7 @@ public class LoginServices {
                     }
                 } else {
                     // userLogin record not found, user does not exist
-                    errMsg = UtilProperties.getMessage(resource,"loginservices.user_not_found",locale);
+                    errMsg = UtilProperties.getMessage(resource, "loginservices.user_not_found", locale);
                     Debug.logInfo("[LoginServices.userLogin] : Invalid User : " + errMsg, module);
                 }
             }
