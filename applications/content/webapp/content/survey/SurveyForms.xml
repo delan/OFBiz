@@ -97,8 +97,25 @@
         <field name="surveyId"><hidden value="${surveyId}"/></field>
         <field name="surveyQuestionId"><hidden value="${surveyQuestionId}"/></field>
         <field use-when="surveyQuestionOption!=null" name="surveyOptionSeqId"><hidden/></field>
+        
+        <field name="amountBaseUomId">
+            <drop-down allow-empty="true">
+               <entity-options entity-name="Uom" key-field-name="uomId" description="${description} (${abbreviation})">
+                   <entity-constraint name="uomTypeId" value="CURRENCY_MEASURE"/>
+                   <entity-order-by field-name="description"/>
+               </entity-options>
+            </drop-down>
+        </field>
+        <field name="durationUomId">
+            <drop-down allow-empty="true">
+               <entity-options entity-name="Uom" key-field-name="uomId" description="${description} (${abbreviation})">
+                   <entity-constraint name="uomTypeId" value="TIME_FREQ_MEASURE"/>
+                   <entity-order-by field-name="description"/>
+               </entity-options>
+            </drop-down>
+        </field>
 
         <field use-when="surveyQuestionOption!=null" name="submitButton" title="Update" widget-style="smallSubmit"><submit button-type="button"/></field>
-        <field name="submitButton" title="Create" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field use-when="surveyQuestionOption==null" name="submitButton" title="Create" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 </forms>

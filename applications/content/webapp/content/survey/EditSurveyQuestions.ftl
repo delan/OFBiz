@@ -39,36 +39,40 @@
       <td><div class="tableheadtext">Question</div></td>
       <td><div class="tableheadtext">Required</div></td>
       <td><div class="tableheadtext">Seq #</div></td>
+      <td><div class="tableheadtext">W/Question</div></td>
+      <td><div class="tableheadtext">W/Option</div></td>
       <td><div class="tableheadtext">&nbsp;</div></td>
       <td><div class="tableheadtext">&nbsp;</div></td>
       <td><div class="tableheadtext">&nbsp;</div></td>
     </tr>
 
-    <#list surveyQuestionList as question>
-      <#assign questionType = question.getRelatedOne("SurveyQuestionType")>
-      <#assign questionCat = question.getRelatedOne("SurveyQuestionCategory")>
+    <#list surveyQuestionAndApplList as surveyQuestionAndAppl>
+      <#assign questionType = surveyQuestionAndAppl.getRelatedOne("SurveyQuestionType")>
+      <#assign questionCat = surveyQuestionAndAppl.getRelatedOne("SurveyQuestionCategory")>
       <form method="post" action="<@ofbizUrl>/updateSurveyQuestionAppl</@ofbizUrl>">
-        <input type="hidden" name="surveyId" value="${question.surveyId}">
-        <input type="hidden" name="surveyQuestionId" value="${question.surveyQuestionId}">
-        <input type="hidden" name="fromDate" value="${question.fromDate}">
+        <input type="hidden" name="surveyId" value="${surveyQuestionAndAppl.surveyId}">
+        <input type="hidden" name="surveyQuestionId" value="${surveyQuestionAndAppl.surveyQuestionId}">
+        <input type="hidden" name="fromDate" value="${surveyQuestionAndAppl.fromDate}">
         <tr valign="middle">
-          <td><div class="tabletext">${question.surveyQuestionId}</div></td>
+          <td><div class="tabletext">${surveyQuestionAndAppl.surveyQuestionId}</div></td>
           <td><div class="tabletext">${questionType.description}</div></td>
           <td><div class="tabletext">${questionCat.description}</div></td>
-          <td><div class="tabletext">${question.description?if_exists}</div></td>
-          <td><div class="tabletext">${question.question?if_exists}</div></td>
+          <td><div class="tabletext">${surveyQuestionAndAppl.description?if_exists}</div></td>
+          <td><div class="tabletext">${surveyQuestionAndAppl.question?if_exists}</div></td>
           <td>
             <select class="selectBox" name="requiredField">
-              <option>${question.requiredField?default("N")}</option>
+              <option>${surveyQuestionAndAppl.requiredField?default("N")}</option>
               <option value="N">----</option>
               <option>Y</option>
               <option>N</option>
             </select>
           </td>
-          <td><input type="text" name="sequenceNum" size="5" class="textBox" value="${question.sequenceNum?if_exists}">
+          <td><input type="text" name="sequenceNum" size="5" class="textBox" value="${surveyQuestionAndAppl.sequenceNum?if_exists}">
+          <td><input type="text" name="withSurveyQuestionId" size="5" class="textBox" value="${surveyQuestionAndAppl.withSurveyQuestionId?if_exists}">
+          <td><input type="text" name="withSurveyOptionSeqId" size="5" class="textBox" value="${surveyQuestionAndAppl.withSurveyOptionSeqId?if_exists}">
           <td><input type="submit" value="Update">
-          <td><a href="<@ofbizUrl>/EditSurveyQuestions?surveyId=${requestParameters.surveyId}&surveyQuestionId=${question.surveyQuestionId}#edit</@ofbizUrl>" class="buttontext">[Edit]</a>
-          <td><a href="<@ofbizUrl>/removeSurveyQuestionAppl?surveyId=${question.surveyId}&surveyQuestionId=${question.surveyQuestionId}&fromDate=${question.fromDate}</@ofbizUrl>" class="buttontext">[Remove]</a>
+          <td><a href="<@ofbizUrl>/EditSurveyQuestions?surveyId=${requestParameters.surveyId}&surveyQuestionId=${surveyQuestionAndAppl.surveyQuestionId}#edit</@ofbizUrl>" class="buttontext">[Edit]</a>
+          <td><a href="<@ofbizUrl>/removeSurveyQuestionAppl?surveyId=${surveyQuestionAndAppl.surveyId}&surveyQuestionId=${surveyQuestionAndAppl.surveyQuestionId}&fromDate=${surveyQuestionAndAppl.fromDate}</@ofbizUrl>" class="buttontext">[Remove]</a>
         </tr>
       </form>
     </#list>
@@ -88,6 +92,8 @@
         <td><div class="tableheadtext">Question</div></td>
         <td><div class="tableheadtext">Required</div></td>
         <td><div class="tableheadtext">Seq #</div></td>
+        <td><div class="tableheadtext">W/Question</div></td>
+        <td><div class="tableheadtext">W/Option</div></td>
         <td><div class="tableheadtext">&nbsp;</div></td>
       </tr>
 
@@ -109,6 +115,8 @@
               </select>
             </td>
             <td><input type="text" name="sequenceNum" size="5" class="textBox">
+            <td><input type="text" name="withSurveyQuestionId" size="5" class="textBox">
+            <td><input type="text" name="withSurveyOptionSeqId" size="5" class="textBox">
             <td><input type="submit" value="Apply">
           </tr>
         </form>

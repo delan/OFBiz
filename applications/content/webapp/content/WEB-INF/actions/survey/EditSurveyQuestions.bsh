@@ -46,12 +46,9 @@ if (surveyQuestionId == null) {
 }
 context.put("surveyQuestionId", surveyQuestionId);
 
-surveyQuestionList = delegator.findByAnd("SurveyQuestionAndAppl", UtilMisc.toMap("surveyId", surveyId), UtilMisc.toList("sequenceNum"));
+surveyQuestionAndApplList = delegator.findByAnd("SurveyQuestionAndAppl", UtilMisc.toMap("surveyId", surveyId), UtilMisc.toList("sequenceNum"));
+surveyQuestion = delegator.findByPrimaryKey("SurveyQuestion", UtilMisc.toMap("surveyQuestionId", surveyQuestionId));
 
-surveyQuestion = null;
-if (surveyQuestionId != null && surveyQuestionId.length() > 0) {
-    surveyQuestion = delegator.findByPrimaryKey("SurveyQuestion", UtilMisc.toMap("surveyQuestionId", surveyQuestionId));
-}
 context.put("surveyQuestion", surveyQuestion);
 
 HtmlFormWrapper createSurveyQuestionWrapper = new HtmlFormWrapper("/survey/SurveyForms.xml", "CreateSurveyQuestion", request, response);
@@ -62,7 +59,7 @@ HtmlFormWrapper createSurveyQuestionCategoryWrapper = new HtmlFormWrapper("/surv
 createSurveyQuestionCategoryWrapper.putInContext("surveyId", surveyId);
 
 context.put("surveyId", surveyId);
-context.put("surveyQuestionList", surveyQuestionList);
+context.put("surveyQuestionAndApplList", surveyQuestionAndApplList);
 context.put("createSurveyQuestionWrapper", createSurveyQuestionWrapper);
 context.put("createSurveyQuestionCategoryWrapper", createSurveyQuestionCategoryWrapper);
 
