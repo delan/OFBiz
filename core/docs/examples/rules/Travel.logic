@@ -1,5 +1,19 @@
-//try the query: travel(AltBand, X)
-// travel.txt
+/*
+Try the query:
+    travel(AltBand, X)
+which should produce the result:
+    AltBand = 1000.0, X = jacksonville
+    AltBand = 1000.0, X = richmond
+    AltBand = 2000.0, X = abilene
+    AltBand = 2000.0, X = madrid
+    AltBand = 2000.0, X = spokane
+    AltBand = 2000.0, X = wichita
+    AltBand = 6000.0, X = denver
+    AltBand = 7000.0, X = flagstaff
+    AltBand = 8000.0, X = addis ababa
+    AltBand = 11000.0, X = leadville
+    no more results
+*/
 city("abilene", 1718);
 city("addis ababa", 8000);
 city("denver", 5280);

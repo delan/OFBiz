@@ -1,25 +1,48 @@
+/*
+This ruleset shows a number of examples of useful information isolated from other
+facts.
+
+Try the query:
+    male(X)
+which should produce the result:
+    X = jim
+    X = kyle
+    X = kirk
+    X = kevin
+    X = leo
+    no more results
+
+Try the query:
+    grandfather(grandFather, grandChild)
+which should produce the result:
+    grandFather = jim, grandChild = leo
+    grandFather = jim, grandChild = lisa
+    grandFather = jim, grandChild = laura
+    no more results
+*/
 begat(900, "jim", 19350801, "male");
-begat(901, janie, 19370310, female);
 
-begat(902, kyle, 19600829, male);
-begat(903, kirk, 19550404, male);
-begat(904, kevin, 19580815, male);
+begat(901, "janie", 19370310, "female");
+
+begat(902, "kyle", 19600829, "male");
+begat(903, "kirk", 19550404, "male");
+begat(904, "kevin", 19580815, "male");
  
-marriage(001, jim, janie, 19560512, present);
-begat(001, karla, 19570114, female);
-begat(001, katie, 19590712, female);
+marriage(001, "jim", "janie", 19560512, "present");
+begat(001, "karla", 19570114, "female");
+begat(001, "katie", 19590712, "female");
 
-marriage(002, kevin, karla, 19790623, 19831112);
-begat(002, leo, 19800115, male);
-begat(002, lisa, 19810226, female);
+marriage(002, "kevin", "karla", 19790623, 19831112);
+begat(002, "leo", 19800115, "male");
+begat(002, "lisa", 19810226, "female");
 
-marriage(003, kirk, karla, 19900114, present);
+marriage(003, "kirk", "karla", 19900114, "present");
 
-marriage(004, katie, kyle, 19951203, present);
-begat(004, laura, 19980217, female);
+marriage(004, "katie", "kyle", 19951203, "present");
+begat(004, "laura", 19980217, "female");
 
-male(X) :- begat(_, X, _, male);
-female(X) :- begat(_, X, _, female);
+male(X) :- begat(_, X, _, "male");
+female(X) :- begat(_, X, _, "female");
 birthdate(X, D) :- begat(_, X, D, _);
 
 marriagePartner(M, X) :- marriage(M, X, _, _, _);
@@ -53,5 +76,3 @@ brother(X, Y) :- siblings(X, Y), male(X);
 grandparent(G, C) :- parent(G, P), parent(P, C);
 grandfather(G, C) :- father(G, P), parent(P, C);
 grandmother(G, C) :- mother(G, P), parent(P, C);
-
-

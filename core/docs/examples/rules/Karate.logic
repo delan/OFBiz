@@ -1,4 +1,11 @@
-//To run this program use the query: geneval(Solution)
+/*
+To run this program use the query: 
+    geneval(Solution)
+which should produce the result:
+    Solution = [student(amy, hightower, shootFighting), student(betti, ellis, sparring), student(carla, fowler, childrens), student(dianne, goodrich, pressurePoints)]
+    no more results
+*/
+
 /*
  * This program solves the following puzzle:
  * 

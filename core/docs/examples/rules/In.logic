@@ -1,4 +1,26 @@
-// in.txt
+/* 
+Demonstrates the necessary indirection for transitive rules, like in done through within.
+
+Try the query:
+    leaf(L)
+which should produce the result:
+    L = englewood
+    L = fortCollins
+    L = westbrook
+    L = yarmouth
+    L = austin
+    L = menzingen
+    L = lexington
+    L = richmond
+    no more results
+
+Try the query:
+    within(X, "switzerland")
+which should produce the result:
+    X = zug
+    X = menzingen
+    no more results
+*/
 in("englewood", "colorado");  
 in("fortCollins", "colorado");
 in("westbrook", "maine");

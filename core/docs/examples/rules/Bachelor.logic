@@ -1,3 +1,11 @@
+/*
+This demonstrates the comparison, and mostly negation.
+Try the query:
+    bachelor(B)
+which should produce the result:
+    B = dirk
+    no more results
+*/
 bachelor(X) :- 
     male(X), oldEnough(X), not married(X);
 

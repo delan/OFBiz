@@ -1,3 +1,11 @@
+/*
+This is a very simple example of a fact query.
+Try the following query:
+    starred("James Cagney", Title, Year)
+or for something a little more fun:
+    starred("James Cagney", Title, Year), >(Year, 1950)
+*/
+
 starred("James Cagney", "13 Rule Madeleine", 1956);
 starred("James Cagney", "Angels With Dirty Faces", 1938);
 starred("James Cagney", "Arizona Bushwhackers", 1968);
