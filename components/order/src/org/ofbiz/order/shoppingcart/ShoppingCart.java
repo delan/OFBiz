@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCart.java,v 1.6 2003/09/04 19:23:52 ajzeneski Exp $
+ * $Id: ShoppingCart.java,v 1.7 2003/09/05 02:21:36 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -50,7 +50,7 @@ import org.ofbiz.service.LocalDispatcher;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.6 $
+ * @version    $Revision: 1.7 $
  * @since      2.0
  */
 public class ShoppingCart implements java.io.Serializable {
@@ -385,6 +385,12 @@ public class ShoppingCart implements java.io.Serializable {
     /** Clears the list of Payment Method Ids. */
     public void clearPaymentMethodIds() {
         this.paymentMethodIds.clear();
+    }
+    
+    /** Clears a specific Payment Method Id. */
+    public void clearPaymentMethodId(String paymentMethodId) {
+        this.paymentMethodIds.remove(paymentMethodId);
+        this.paymentMethodAmounts.remove(paymentMethodId);
     }    
 
     /** Add the Payment Method Type Id to the cart. */
@@ -392,11 +398,17 @@ public class ShoppingCart implements java.io.Serializable {
         addPaymentMethodTypeId(paymentMethodTypeId, null);
     }
     
+    /** Add the Payment Method Type Id with amount to the cart. */
     public void addPaymentMethodTypeId(String paymentMethodTypeId, Double amount) {
         if (paymentMethodTypeId != null) {
             this.paymentMethodTypeIds.add(paymentMethodTypeId);            
             this.paymentMethodTypeAmounts.put(paymentMethodTypeId, amount);
         }
+    }
+    
+    /** Returns set amount of the Payment Method. */
+    public Double getPaymentMethodAmount(String paymentMethodId) {
+        return (Double) this.paymentMethodAmounts.get(paymentMethodId);
     }
             
     /** Returns the Payment Method Ids. */
