@@ -124,18 +124,6 @@ public class ControlServlet extends HttpServlet {
 
         HttpSession session = request.getSession();
 
-        String charset = getServletContext().getInitParameter("charset");
-        if (request.getCharacterEncoding() == null) {
-            if (charset == null) {
-                request.setCharacterEncoding("UTF-8");
-            } else {
-                request.setCharacterEncoding(charset);
-            }
-        }
-        if (charset != null) {
-            response.setContentType("text/html; charset=" + charset);
-        }
-
         // Setup the CONTROL_PATH for JSP dispatching.
         request.setAttribute(SiteDefs.CONTROL_PATH, request.getContextPath() + request.getServletPath());
         // Debug.logInfo("Control Path: " + request.getAttribute(SiteDefs.CONTROL_PATH), module);
@@ -196,6 +184,13 @@ public class ControlServlet extends HttpServlet {
         ServletContext servletContext = getServletContext();
         request.setAttribute("servletContext", servletContext);
 
+        //setup chararcter encoding and content type, do before so that view can override
+        String charset = getServletContext().getInitParameter("charset");
+        if (charset == null || charset.length() == 0) charset = request.getCharacterEncoding();
+        if (charset == null || charset.length() == 0) charset = "UTF-8";
+        request.setCharacterEncoding(charset);
+        response.setContentType("text/html; charset=" + charset);
+        
         if (Debug.timingOn()) timer.timerString("[" + rname + "] Setup done, doing Event(s) and View(s)", module);
 
         String errorPage = null;
@@ -222,7 +217,7 @@ public class ControlServlet extends HttpServlet {
                 request.setAttribute("_ERROR_OCCURRED_", new Boolean(true));
                 if (rd != null) rd.forward(request, response);
             } else {
-                response.getWriter().print("ERROR in error page, but here is the text anyway: " + request.getAttribute(SiteDefs.ERROR_MESSAGE));
+                response.getWriter().print("ERROR in error page, avoiding infinite loop, but here is the text just in case it helps you: " + request.getAttribute(SiteDefs.ERROR_MESSAGE));
             }
         }
 
