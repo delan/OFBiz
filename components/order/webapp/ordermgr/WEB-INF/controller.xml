@@ -301,7 +301,7 @@
     <request-map uri="finalizeOrder">
         <security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.order.shoppingcart.CheckOutEvents" invoke="finalizeOrderEntry"/>
-        <response name="addparty" type="view" value="addParty"/>
+        <response name="addparty" type="view" value="setAdditionalParty"/>
         <response name="customer" type="view" value="custsetting"/>
         <response name="shipping" type="view" value="shipsetting"/>
         <response name="options" type="view" value="optionsetting"/>
@@ -316,19 +316,19 @@
     <!-- ================================================================= -->
     <request-map uri="setAdditionalParty">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="setAdditionalPartyView"/>
+        <response name="success" type="view" value="setAdditionalParty"/>
     </request-map>
     <request-map uri="addAdditionalParty">
         <security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="addAdditionalParty"/>
-        <response name="success" type="view" value="setAdditionalPartyView"/>
-        <response name="error" type="view" value="setAdditionalPartyView"/>
+        <response name="success" type="view" value="setAdditionalParty"/>
+        <response name="error" type="view" value="setAdditionalParty"/>
     </request-map>
     <request-map uri="removeAdditionalParty">
         <security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="removeAdditionalParty"/>
-        <response name="success" type="view" value="setAdditionalPartyView"/>
-        <response name="error" type="view" value="setAdditionalPartyView"/>
+        <response name="success" type="view" value="setAdditionalParty"/>
+        <response name="error" type="view" value="setAdditionalParty"/>
     </request-map>
 
     <request-map uri="calcShipping">
@@ -561,12 +561,6 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="genericLookup"/>
     </request-map>
-    <request-map uri="lookupParty">
-        <security https="true" auth="true"/>
-        <event type="java" path="org.ofbiz.order.OrderLookupParams" invoke="lookupParty"/>
-        <response name="success" type="view" value="genericLookup"/>
-        <response name="error" type="view" value="genericLookup"/>
-    </request-map>
     <request-map uri="lookupPerson">
         <security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.order.OrderLookupParams" invoke="lookupPerson"/>
@@ -599,7 +593,7 @@
     <view-map name="keywordsearch" type="jpublish" page="/entry/catalog/keywordsearch.ftl"/>
     <view-map name="advancedsearch" type="jpublish" page="/entry/catalog/advancedsearch.ftl"/>
     <view-map name="category" type="jpublish" page="/entry/catalog/category.ftl"/>
-    <view-map name="addParty" type="jpublish" page="/entry/setAdditionalParty.ftl"/>
+    <view-map name="setAdditionalParty" type="jpublish" page="/entry/setAdditionalParty.ftl"/>
     <view-map name="product" type="jpublish" page="/entry/catalog/product.ftl"/>
     <view-map name="custsetting" type="jpublish" page="/entry/custsettings.ftl"/>
     <view-map name="shipsetting" type="jpublish" page="/entry/shipsettings.ftl"/>
