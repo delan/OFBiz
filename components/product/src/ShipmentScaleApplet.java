@@ -1,5 +1,5 @@
 /*
- * $Id: ShipmentScaleApplet.java,v 1.1 2003/09/11 00:18:51 ajzeneski Exp $
+ * $Id: ShipmentScaleApplet.java,v 1.2 2003/09/11 02:16:05 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -45,7 +45,7 @@ import netscape.javascript.JSObject;
  * ShipmentScaleApplet - Applet for reading weight from a scale and input into the browser
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.0
  */
 public class ShipmentScaleApplet extends Applet implements SerialPortEventListener, CommPortOwnershipListener {
@@ -61,19 +61,23 @@ public class ShipmentScaleApplet extends Applet implements SerialPortEventListen
     
     public void init() {
         this.ctx = this.getAppletContext();
-        
+        /*
         String port = this.getParameter("serialPort");
         try {
             this.configurePort(port);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        
+        */
         try {
-            this.sendMessage();
+            this.sendFakeMessage();
         } catch (IOException e) {           
             e.printStackTrace();
         }
+    }
+    
+    public void paint() {
+        
     }
     
     public void configurePort(String port) throws UnsupportedCommOperationException, IOException {
@@ -198,12 +202,13 @@ public class ShipmentScaleApplet extends Applet implements SerialPortEventListen
         }
     }
     
+    private void sendFakeMessage() throws IOException {
+        setWeight("5");
+    }
+    
     // calls the setWeight(weight) JavaScript function on the current page
     private void setWeight(String weight) {
-        JSObject win = JSObject.getWindow(this);
-        JSObject doc = (JSObject) win.getMember("document");
-        JSObject frm = (JSObject) win.getMember("weightForm");
-        JSObject obj = (JSObject) win.getMember("weight");
+        JSObject win = JSObject.getWindow(this);      
         String[] args = { weight };
         win.call("setWeight", args);
     }
