@@ -23,8 +23,7 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *@author David E. Jones (jonesde@ofbiz.org)
- *@created    Wed Oct 17 19:08:46 EDT 2001
+ *@author David E. Jones (jonesde@ofbiz.org) 
  *@version    1.0
  */
 -->
@@ -1119,9 +1118,9 @@
             package-name="org.ofbiz.commonapp.product.product"
             title="Product Keyword Entity">
       <field name="productId" type="id-ne"></field>
-      <field name="keyword" type="short-varchar"></field>
+      <field name="keyword" type="short-varchar"></field>	
       <prim-key field="productId" />	
-      <prim-key field="keyword" />	
+      <prim-key field="keyword" />
       <relation type="one" rel-entity-name="Product">
         <key-map field-name="productId" />
       </relation>

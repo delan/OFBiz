@@ -33,7 +33,6 @@
 
 <% 
   String search = null;
-  //GenericDelegator delegator = GenericHelperFactory.getDefaultHelper();
   ModelReader reader = delegator.getModelReader();
   Collection ec = reader.getEntityNames();
   TreeSet entities = new TreeSet(ec);
@@ -69,6 +68,8 @@
 <a href="<%=response.encodeURL(controlPath + "/view/entityref_main")%>" target="entityFrame" class='listtext'>Entity Reference Main Page</A><BR>
 <a href="<%=response.encodeURL(controlPath + "/view/ModelWriter")%>" target='_blank' class='listtext'>Generate Entity Model XML (all in one)</A><BR>
 <a href="<%=response.encodeURL(controlPath + "/view/ModelWriter?savetofile=true")%>" target='_blank' class='listtext'>Save Entity Model XML to Files</A><BR>
+<a href="<%=response.encodeURL(controlPath + "/view/ModelGroupWriter")%>" target='_blank' class='listtext'>Generate Entity Group XML</A><BR>
+<a href="<%=response.encodeURL(controlPath + "/view/ModelGroupWriter?savetofile=true")%>" target='_blank' class='listtext'>Save Entity Group XML to File</A><BR>
 <a href="<%=response.encodeURL(controlPath + "/view/checkdb")%>" target="entityFrame" class='listtext'>Check/Update Database</A>
 <HR>
 

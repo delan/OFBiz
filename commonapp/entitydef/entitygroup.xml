@@ -23,8 +23,7 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *@author David E. Jones (jonesde@ofbiz.org)
- *@created    Mon Sep 17 23:57:18 MDT 2001
+ *@author David E. Jones (jonesde@ofbiz.org) 
  *@version    1.0
  */
 -->
@@ -41,12 +40,14 @@
 <!ATTLIST entity-group entity CDATA #REQUIRED>
 ]>
 
+
 <entitygroup>
+
   <!-- ========================================================= -->
   <!-- org.ofbiz.commonapp.accounting.budget -->
   <!-- ========================================================= -->
 	
-    <entity-group group="org.ofbiz.commonapp" entity="Budget" />
+    <entity-group group="org.ofbiz.commonapp" entity="Budget" />	
     <entity-group group="org.ofbiz.commonapp" entity="BudgetAttribute" />	
     <entity-group group="org.ofbiz.commonapp" entity="BudgetItem" />	
     <entity-group group="org.ofbiz.commonapp" entity="BudgetItemAttribute" />	
@@ -144,15 +145,16 @@
   <!-- ========================================================= -->
   <!-- org.ofbiz.commonapp.common.currency -->
   <!-- ========================================================= -->
-    <entity-group group="org.ofbiz.commonapp" entity="CurrencyCode" />	
+	
+    <entity-group group="org.ofbiz.commonapp" entity="CurrencyCode" />
 
   <!-- ========================================================= -->
   <!-- org.ofbiz.commonapp.common.geo -->
   <!-- ========================================================= -->
 	
-    <entity-group group="org.ofbiz.commonapp" entity="CountryCode"/>
-	<entity-group group="org.ofbiz.commonapp" entity="CountryTeleCode"/>
-	<entity-group group="org.ofbiz.commonapp" entity="CountryCapital"/>
+    <entity-group group="org.ofbiz.commonapp" entity="CountryCapital" />	
+    <entity-group group="org.ofbiz.commonapp" entity="CountryCode" />	
+    <entity-group group="org.ofbiz.commonapp" entity="CountryTeleCode" />	
     <entity-group group="org.ofbiz.commonapp" entity="Geo" />	
     <entity-group group="org.ofbiz.commonapp" entity="GeoAssoc" />	
     <entity-group group="org.ofbiz.commonapp" entity="GeoAssocType" />	
@@ -256,9 +258,8 @@
 	
     <entity-group group="org.ofbiz.commonapp" entity="EmployeePerformanceReview" />	
     <entity-group group="org.ofbiz.commonapp" entity="PartyQual" />	
-    <entity-group group="org.ofbiz.commonapp" entity="PartyQualAttribute" />	
     <entity-group group="org.ofbiz.commonapp" entity="PartyQualType" />	
-    <entity-group group="org.ofbiz.commonapp" entity="PartyQualTypeAttr" />	
+    <entity-group group="org.ofbiz.commonapp" entity="PartyResume" />	
     <entity-group group="org.ofbiz.commonapp" entity="PartySkill" />	
     <entity-group group="org.ofbiz.commonapp" entity="PerfRatingType" />	
     <entity-group group="org.ofbiz.commonapp" entity="PerfReviewItemType" />	
@@ -266,7 +267,6 @@
     <entity-group group="org.ofbiz.commonapp" entity="PerformanceReviewItem" />	
     <entity-group group="org.ofbiz.commonapp" entity="PersonTraining" />	
     <entity-group group="org.ofbiz.commonapp" entity="ResponsibilityType" />	
-    <entity-group group="org.ofbiz.commonapp" entity="PartyResume" />	
     <entity-group group="org.ofbiz.commonapp" entity="SkillType" />	
     <entity-group group="org.ofbiz.commonapp" entity="TrainingClassType" />
 
@@ -333,7 +333,7 @@
     <entity-group group="org.ofbiz.commonapp" entity="Picklist" />	
     <entity-group group="org.ofbiz.commonapp" entity="PicklistItem" />	
     <entity-group group="org.ofbiz.commonapp" entity="ProductOrderItem" />	
-    <entity-group group="org.ofbiz.commonapp" entity="SalesTaxLookup" />
+    <entity-group group="org.ofbiz.commonapp" entity="SalesTaxLookup" />	
     <entity-group group="org.ofbiz.commonapp" entity="WorkOrderItemFulfillment" />
 
   <!-- ========================================================= -->
@@ -379,7 +379,7 @@
 	
     <entity-group group="org.ofbiz.commonapp" entity="ShoppingList" />	
     <entity-group group="org.ofbiz.commonapp" entity="ShoppingListItem" />	
-    <entity-group group="org.ofbiz.commonapp" entity="ShoppingListType" />	
+    <entity-group group="org.ofbiz.commonapp" entity="ShoppingListType" />
 
   <!-- ========================================================= -->
   <!-- org.ofbiz.commonapp.party.agreement -->
@@ -517,7 +517,7 @@
     <entity-group group="org.ofbiz.commonapp" entity="PriceComponentType" />	
     <entity-group group="org.ofbiz.commonapp" entity="PriceComponentTypeAttr" />	
     <entity-group group="org.ofbiz.commonapp" entity="QuantityBreak" />	
-    <entity-group group="org.ofbiz.commonapp" entity="QuantityBreakType" />
+    <entity-group group="org.ofbiz.commonapp" entity="QuantityBreakType" />	
     <entity-group group="org.ofbiz.commonapp" entity="SaleType" />
 
   <!-- ========================================================= -->

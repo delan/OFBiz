@@ -3,7 +3,7 @@
 if("true".equals(request.getParameter("savetofile"))) {
   //save to the file specified in the ModelReader config
   String controlPath=(String)request.getAttribute(SiteDefs.CONTROL_PATH);
-  String serverRoorUrl=(String)request.getAttribute(SiteDefs.SERVER_ROOT_URL);
+  String serverRootUrl=(String)request.getAttribute(SiteDefs.SERVER_ROOT_URL);
   ModelReader modelReader = delegator.getModelReader();
   
   Map fileNameEntities = modelReader.fileNameEntities;
@@ -11,7 +11,7 @@ if("true".equals(request.getParameter("savetofile"))) {
   while(filenameIter.hasNext()) {
     String filename = (String)filenameIter.next();
 
-    java.net.URL url = new java.net.URL(serverRoorUrl + controlPath + "/view/ModelWriter");
+    java.net.URL url = new java.net.URL(serverRootUrl + controlPath + "/view/ModelWriter");
     HashMap params = new HashMap();
     params.put("originalFileName", filename);
     HttpClient httpClient = new HttpClient(url, params);
@@ -144,7 +144,7 @@ else
   TreeSet packageNames = new TreeSet();
 
   //put the entityNames TreeSets in a HashMap by packageName
-  Collection ec = reader.getEntityNames();
+  Collection ec = null;
 
   String originalFileName = request.getParameter("originalFileName");
   if(originalFileName != null) {
@@ -155,13 +155,11 @@ else
   }
 
   Iterator ecIter = ec.iterator();
-  while(ecIter.hasNext())
-  {
+  while(ecIter.hasNext()) {
     String eName = (String)ecIter.next();
     ModelEntity ent = reader.getModelEntity(eName);
     TreeSet entities = (TreeSet)packages.get(ent.packageName);
-    if(entities == null)
-    {
+    if(entities == null) {
       entities = new TreeSet();
       packages.put(ent.packageName, entities);
       packageNames.add(ent.packageName);
@@ -183,16 +181,14 @@ else
   <!-- ======================== Data Model ===================== -->
   <!-- The modules in this file are as follows:                  --><%
   Iterator packageNameIter = packageNames.iterator();
-  while(packageNameIter.hasNext())
-  {
+  while(packageNameIter.hasNext()) {
     String pName = (String)packageNameIter.next();%>
   <!--  - <%=pName%> --><%
   }%>
   <!-- ========================================================= -->
 <%
   Iterator piter = packageNames.iterator();
-  while(piter.hasNext())
-  {
+  while(piter.hasNext()) {
     String pName = (String)piter.next();
     TreeSet entities = (TreeSet)packages.get(pName);
 %>

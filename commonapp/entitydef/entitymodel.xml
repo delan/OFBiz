@@ -23,8 +23,7 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *@author David E. Jones (jonesde@ofbiz.org)
- *@created    Wed Oct 17 19:08:46 EDT 2001
+ *@author David E. Jones (jonesde@ofbiz.org) 
  *@version    1.0
  */
 -->
@@ -133,7 +132,6 @@
             package-name="org.ofbiz.commonapp.common.currency"
             title="Currency ISO Code Chart"
             author="Andy Zeneski (jaz@zsolv.com)">
-      <description></description>
       <field name="currencyCode" type="id-ne"></field>
       <field name="currencyName" type="description"></field>	
       <prim-key field="currencyCode" />
@@ -148,7 +146,6 @@
             dependent-on="CountryCode"
             title="Country Capital Entity"
             author="Andy Zeneski (jaz@zsolv.com)">
-      <description></description>
       <field name="countryCode" type="id-ne"></field>
       <field name="countryCapital" type="description"></field>	
       <prim-key field="countryCode" />
@@ -160,7 +157,6 @@
             package-name="org.ofbiz.commonapp.common.geo"
             title="ISO Country Code Entity"
             author="Andy Zeneski (jaz@zsolv.com)">
-      <description></description>
       <field name="countryCode" type="id-ne"></field>
       <field name="countryAbbr" type="short-varchar"></field>
       <field name="countryNumber" type="short-varchar"></field>
@@ -178,7 +174,6 @@
             dependent-on="CountryCode"
             title="Telephone Country Code Entity"
             author="Andy Zeneski (jaz@zsolv.com)">
-      <description></description>
       <field name="countryCode" type="id-ne"></field>
       <field name="teleCode" type="short-varchar"></field>	
       <prim-key field="countryCode" />

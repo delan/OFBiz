@@ -79,6 +79,8 @@ definitions, checking them with the current database, and generating text based 
       <li><a href="<%=response.encodeURL(controlPath + "/view/checkdb")%>" class='buttontext'>Check/Update Database</A>
       <li><a href="<%=response.encodeURL(controlPath + "/view/ModelWriter")%>" class='buttontext' target='_blank'>Generate Entity Model XML (all in one)</A>
       <li><a href="<%=response.encodeURL(controlPath + "/view/ModelWriter?savetofile=true")%>" target='_blank' class='buttontext'>Save Entity Model XML to Files</A><BR>
+      <li><a href="<%=response.encodeURL(controlPath + "/view/ModelGroupWriter")%>" target='_blank' class='listtext'>Generate Entity Group XML</A><BR>
+      <li><a href="<%=response.encodeURL(controlPath + "/view/ModelGroupWriter?savetofile=true")%>" target='_blank' class='listtext'>Save Entity Group XML to File</A><BR>
       <li><a href="<%=response.encodeURL(controlPath + "/view/EditEntity")%>" class='buttontext' target='_blank'>Edit Entity Definitions</A> (also see the Entity Reference for this)
       <li><a href="<%=response.encodeURL(controlPath + "/view/xmldsdump")%>" class='buttontext'>XML Data Export</A>
       <li><a href="<%=response.encodeURL(controlPath + "/view/xmldsimport")%>" class='buttontext'>XML Data Import</A>
