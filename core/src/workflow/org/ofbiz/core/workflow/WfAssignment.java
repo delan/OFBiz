@@ -53,6 +53,10 @@ public interface WfAssignment {
      */
     public void setAssignee(WfResource newValue) throws WfException, InvalidResource;
     
+    /** Mark this assignment as accepted
+     *@throws WfException
+     */
+    public void accept() throws WfException;
     
     /** Mark this assignment as complete
      * @throws CannotComplete

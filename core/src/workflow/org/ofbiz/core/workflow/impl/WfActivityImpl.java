@@ -87,8 +87,12 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
             throw new CannotStart("Start mode cannot be null");
         
         // Default mode is MANUAL -- only start if we are automatic
-        if ( mode.equals("WAM_AUTOMATIC") || manual )
+        if ( mode.equals("WAM_AUTOMATIC") || manual ) {
+            Iterator i = getIteratorAssignment();
+            while ( i.hasNext() )
+                ((WfAssignment)i.next()).accept();            
             this.startActivity();        
+        }
     }
     
     /** 

@@ -83,6 +83,19 @@ public class WfAssignmentImpl implements WfAssignment {
         return value;
     }
     
+    /** Mark this assignment as accepted
+     *@throws WfException
+     */
+    public void accept() throws WfException {
+        try {
+            valueObject.set("statusId","CAL_ACCEPTED");
+            valueObject.store();
+        }
+        catch ( GenericEntityException e ) {
+            throw new WfException(e.getMessage(),e);
+        }
+    }
+    
     /** Mark this assignment as complete
      * @throws CannotComplete
      * @throws WfException
