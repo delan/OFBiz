@@ -312,6 +312,36 @@ function insertImageName(size,ext) {
     <td>&nbsp;</td>
     <td width="24%"><input type="text" <ofbiz:inputvalue entityAttr='product' field='defaultPriceUomId' tryEntityAttr="tryEntity" fullattrs="true"/> size="10" maxlength="20"></td>
   </tr>
+  <tr>
+    <td width="26%" align=right><div class="tabletext"><b>Average Cost Price</b></div></td>
+    <td>&nbsp;</td>
+    <td width="24%"><input type="text" <ofbiz:inputvalue entityAttr='product' field='averageCostPrice' tryEntityAttr="tryEntity" fullattrs="true"/> size="10" maxlength="20"></td>
+
+    <td width="26%" align=right><div class="tabletext"><b>Average Cost Price Uom Id</b></div></td>
+    <td>&nbsp;</td>
+    <td width="24%"><input type="text" <ofbiz:inputvalue entityAttr='product' field='averageCostPriceUomId' tryEntityAttr="tryEntity" fullattrs="true"/> size="10" maxlength="20"></td>
+  </tr>
+  <tr><td colspan="6">&nbsp;</td></tr>
+  <tr>
+    <td width="26%" align=right><div class="tabletext"><b>Minimum Sell Price</b></div></td>
+    <td>&nbsp;</td>
+    <td width="24%"><input type="text" <ofbiz:inputvalue entityAttr='product' field='minSellPrice' tryEntityAttr="tryEntity" fullattrs="true"/> size="10" maxlength="20"></td>
+
+    <td width="26%" align=right><div class="tabletext"><b>Minimum Sell Price Uom Id</b></div></td>
+    <td>&nbsp;</td>
+    <td width="24%"><input type="text" <ofbiz:inputvalue entityAttr='product' field='minSellPriceUomId' tryEntityAttr="tryEntity" fullattrs="true"/> size="10" maxlength="20"></td>
+  </tr>
+  <tr>
+    <td width="26%" align=right><div class="tabletext"><b>Maximum Sell Price</b></div></td>
+    <td>&nbsp;</td>
+    <td width="24%"><input type="text" <ofbiz:inputvalue entityAttr='product' field='maxSellPrice' tryEntityAttr="tryEntity" fullattrs="true"/> size="10" maxlength="20"></td>
+
+    <td width="26%" align=right><div class="tabletext"><b>Maximum Sell Price Uom Id</b></div></td>
+    <td>&nbsp;</td>
+    <td width="24%"><input type="text" <ofbiz:inputvalue entityAttr='product' field='maxSellPriceUomId' tryEntityAttr="tryEntity" fullattrs="true"/> size="10" maxlength="20"></td>
+  </tr>
+
+  <tr><td colspan="6">&nbsp;</td></tr>
 
   <tr>
     <td width="26%" align=right><div class="tabletext"><b>Weight</b></div></td>
