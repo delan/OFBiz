@@ -1,3 +1,7 @@
+/*
+ * $Id$
+ */
+
 package org.ofbiz.core.service;
 
 import java.io.*;
