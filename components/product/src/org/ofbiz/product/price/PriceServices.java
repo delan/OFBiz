@@ -1,7 +1,7 @@
 /*
- * $Id: PriceServices.java,v 1.6 2004/02/18 10:31:37 jonesde Exp $
+ * $Id: PriceServices.java,v 1.7 2004/02/26 07:14:33 jonesde Exp $
  *
- *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -50,7 +50,7 @@ import org.ofbiz.service.ServiceUtil;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.6 $
+ * @version    $Revision: 1.7 $
  * @since      2.0
  */
 public class PriceServices {
