@@ -1,5 +1,5 @@
 /*
- * $Id: JobManager.java,v 1.7 2003/11/25 23:56:08 ajzeneski Exp $
+ * $Id: JobManager.java,v 1.8 2003/12/05 21:02:46 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -58,7 +58,7 @@ import org.ofbiz.service.config.ServiceConfigUtil;
  * JobManager
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.7 $
+ * @version    $Revision: 1.8 $
  * @since      2.0
  */
 public class JobManager {
@@ -180,7 +180,6 @@ public class JobManager {
 
     /** 
      * Schedule a job to start at a specific time with specific recurrence info
-     *@param loader The name of the local dispatcher to use
      *@param serviceName The name of the service to invoke
      *@param context The context for the service
      *@param startTime The time in milliseconds the service should run
@@ -194,7 +193,6 @@ public class JobManager {
     
     /** 
      * Schedule a job to start at a specific time with specific recurrence info
-     *@param loader The name of the local dispatcher to use
      *@param serviceName The name of the service to invoke
      *@param context The context for the service
      *@param startTime The time in milliseconds the service should run
@@ -204,11 +202,10 @@ public class JobManager {
      */
     public void schedule(String serviceName, Map context, long startTime, int frequency, int interval, long endTime) throws JobManagerException {
         schedule(serviceName, context, startTime, frequency, interval, -1, endTime);
-    }    
-        
-    /** 
+    }
+
+    /**
      * Schedule a job to start at a specific time with specific recurrence info
-     *@param loader The name of the local dispatcher to use
      *@param serviceName The name of the service to invoke
      *@param context The context for the service
      *@param startTime The time in milliseconds the service should run
@@ -218,6 +215,21 @@ public class JobManager {
      *@param endTime The time in milliseconds the service should expire
      */
     public void schedule(String serviceName, Map context, long startTime, int frequency, int interval, int count, long endTime) throws JobManagerException {
+        schedule(null, serviceName, context, startTime, frequency, interval, count, endTime);
+    }
+
+    /**
+     * Schedule a job to start at a specific time with specific recurrence info
+     *@param poolName The name of the pool to run the service from
+     *@param serviceName The name of the service to invoke
+     *@param context The context for the service
+     *@param startTime The time in milliseconds the service should run
+     *@param frequency The frequency of the recurrence (HOURLY,DAILY,MONTHLY,etc)
+     *@param interval The interval of the frequency recurrence
+     *@param count The number of times to repeat
+     *@param endTime The time in milliseconds the service should expire
+     */
+    public void schedule(String poolName, String serviceName, Map context, long startTime, int frequency, int interval, int count, long endTime) throws JobManagerException {
         String dataId = null;
         String infoId = null;
         String jobName = new String(new Long((new Date().getTime())).toString());
@@ -250,7 +262,13 @@ public class JobManager {
         Map jFields = UtilMisc.toMap("jobName", jobName, "runTime", new java.sql.Timestamp(startTime),
                 "serviceName", serviceName, "recurrenceInfoId", infoId, "runtimeDataId", dataId);
 
-        jFields.put("poolId", ServiceConfigUtil.getSendPool());
+        // set the pool ID
+        if (poolName != null && poolName.length() > 0) {
+            jFields.put("poolId", poolName);
+        } else {
+            jFields.put("poolId", ServiceConfigUtil.getSendPool());
+        }
+
         GenericValue jobV = null;
 
         try {

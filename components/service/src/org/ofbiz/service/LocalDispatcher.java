@@ -1,5 +1,5 @@
 /*
- * $Id: LocalDispatcher.java,v 1.2 2003/12/02 06:39:32 ajzeneski Exp $
+ * $Id: LocalDispatcher.java,v 1.3 2003/12/05 21:02:46 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -35,7 +35,7 @@ import org.ofbiz.service.job.JobManager;
  * Generic Services Local Dispatcher
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public interface LocalDispatcher {
@@ -112,6 +112,21 @@ public interface LocalDispatcher {
      * @throws GenericServiceException
      */
     public GenericResultWaiter runAsyncWait(String serviceName, Map context) throws GenericServiceException;
+
+    /**
+     * Schedule a service to run asynchronously at a specific start time.
+     * @param poolName Name of the service pool to send to.
+     * @param serviceName Name of the service to invoke.
+     * @param context The name/value pairs composing the context.
+     * @param startTime The time to run this service.
+     * @param frequency The frequency of the recurrence (RecurrenceRule.DAILY, etc).
+     * @param interval The interval of the frequency recurrence.
+     * @param count The number of times to repeat.
+     * @param endTime The time in milliseconds the service should expire
+     * @throws GenericServiceException
+     */
+    public void schedule(String poolName, String serviceName, Map context, long startTime, int frequency, int interval, int count, long endTime) throws GenericServiceException;
+
 
     /**
      * Schedule a service to run asynchronously at a specific start time.

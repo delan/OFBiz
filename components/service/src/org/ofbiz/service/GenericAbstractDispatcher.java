@@ -1,5 +1,5 @@
 /*
- * $Id: GenericAbstractDispatcher.java,v 1.2 2003/08/28 19:34:57 ajzeneski Exp $
+ * $Id: GenericAbstractDispatcher.java,v 1.3 2003/12/05 21:02:46 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -39,7 +39,7 @@ import org.ofbiz.base.util.Debug;
  * Generic Services Local Dispatcher
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public abstract class GenericAbstractDispatcher implements LocalDispatcher {
@@ -97,11 +97,11 @@ public abstract class GenericAbstractDispatcher implements LocalDispatcher {
     // generic methods
     
     /**
-     * @see org.ofbiz.service.LocalDispatcher#schedule(java.lang.String, java.util.Map, long, int, int, int, long)
+     * @see org.ofbiz.service.LocalDispatcher#schedule(java.lang.String, java.lang.String, java.util.Map, long, int, int, int, long)
      */
-    public void schedule(String serviceName, Map context, long startTime, int frequency, int interval, int count, long endTime) throws GenericServiceException {            
+    public void schedule(String poolName, String serviceName, Map context, long startTime, int frequency, int interval, int count, long endTime) throws GenericServiceException {
         try {
-            getJobManager().schedule(serviceName, context, startTime, frequency, interval, count, endTime);
+            getJobManager().schedule(poolName, serviceName, context, startTime, frequency, interval, count, endTime);
                 
             if (Debug.verboseOn()) {
                 Debug.logVerbose("[LocalDispatcher.schedule] : Current time: " + (new Date()).getTime(), module);
@@ -116,7 +116,14 @@ public abstract class GenericAbstractDispatcher implements LocalDispatcher {
             throw new GenericServiceException(e.getMessage(), e);
         }
     }
-      
+
+    /**
+     * @see org.ofbiz.service.LocalDispatcher#schedule(java.lang.String, java.util.Map, long, int, int, int, long)
+     */
+    public void schedule(String serviceName, Map context, long startTime, int frequency, int interval, int count, long endTime) throws GenericServiceException {
+        schedule(null, serviceName, context, startTime, frequency, interval, count, endTime);
+    }
+
     /**
      * @see org.ofbiz.service.LocalDispatcher#schedule(java.lang.String, java.util.Map, long, int, int, int)
      */
