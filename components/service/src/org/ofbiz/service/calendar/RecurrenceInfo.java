@@ -1,5 +1,5 @@
 /*
- * $Id: RecurrenceInfo.java,v 1.2 2003/12/14 02:16:47 ajzeneski Exp $
+ * $Id: RecurrenceInfo.java,v 1.3 2003/12/15 09:13:12 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -42,7 +42,7 @@ import org.ofbiz.entity.GenericValue;
  * Recurrence Info Object
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class RecurrenceInfo {
@@ -77,8 +77,9 @@ public class RecurrenceInfo {
             int nanos = info.getTimestamp("startDateTime").getNanos();
 
             startTime += (nanos / 1000000);
-        } else
+        } else {
             throw new RecurrenceInfoException("Recurrence startDateTime must have a value.");
+        }
         startDate = new Date(startTime);
 
         // Get the recurrence rules objects
@@ -87,8 +88,9 @@ public class RecurrenceInfo {
             Iterator i = c.iterator();
 
             rRulesList = new ArrayList();
-            while (i.hasNext())
+            while (i.hasNext()) {
                 rRulesList.add(new RecurrenceRule((GenericValue) i.next()));
+            }
         } catch (GenericEntityException gee) {
             rRulesList = null;
         } catch (RecurrenceRuleException rre) {
@@ -101,8 +103,9 @@ public class RecurrenceInfo {
             Iterator i = c.iterator();
 
             eRulesList = new ArrayList();
-            while (i.hasNext())
+            while (i.hasNext()) {
                 eRulesList.add(new RecurrenceRule((GenericValue) i.next()));
+            }
         } catch (GenericEntityException gee) {
             eRulesList = null;
         } catch (RecurrenceRuleException rre) {
@@ -215,8 +218,9 @@ public class RecurrenceInfo {
     /** Returns the next recurrence from the specified time. */
     public long next(long fromTime) {
         // Check for the first recurrence (StartTime is always the first recurrence)
-        if (getCurrentCount() == 0 || fromTime == 0 || fromTime == startDate.getTime())
+        if (getCurrentCount() == 0 || fromTime == 0 || fromTime == startDate.getTime()) {
             return first();
+        }
             
         if (Debug.verboseOn()) {
             Debug.logVerbose("Date List Size: " + (rDateList == null ? 0 : rDateList.size()), module);
@@ -224,21 +228,24 @@ public class RecurrenceInfo {
         }            
 
         // Check the rules and date list
-        if (rDateList == null && rRulesList == null)
+        if (rDateList == null && rRulesList == null) {
             return 0;
+        }
 
         long nextRuleTime = fromTime;
         boolean hasNext = true;
 
         // Get the next recurrence from the rule(s).
         Iterator rulesIterator = getRecurrenceRuleIterator();
-
         while (rulesIterator.hasNext()) {
             RecurrenceRule rule = (RecurrenceRule) rulesIterator.next();
             while (hasNext) {
-                nextRuleTime = getNextTime(rule, nextRuleTime);  // Gets the next recurrence time from the rule.
-                if (nextRuleTime == 0 || isValid(nextRuleTime))  // Tests the next recurrence against the rules.
+                // Gets the next recurrence time from the rule.
+                nextRuleTime = getNextTime(rule, nextRuleTime);
+                // Tests the next recurrence against the rules.
+                if (nextRuleTime == 0 || isValid(nextRuleTime)) {
                     hasNext = false;
+                }
             }
         }
         return nextRuleTime;
