@@ -24,6 +24,7 @@ ${description} ${basePrice}
 
 [BEGIN PAY LOOP]
 ${infoString}: ${amount}
+${authInfoString}
 [END PAY LOOP]
 
                             CHANGE: ${change}

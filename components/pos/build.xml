@@ -21,7 +21,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *  This is the Open for Business Common Build Script.
- *  $Id: build.xml,v 1.2 2004/08/10 06:10:34 ajzeneski Exp $
+ *  $Id$
 -->
 
 <project name="OFBiz - POS" default="jar" basedir=".">
@@ -57,6 +57,7 @@
             <fileset dir="../party/build/lib" includes="*.jar"/>
             <fileset dir="../product/build/lib" includes="*.jar"/>
             <fileset dir="../order/build/lib" includes="*.jar"/>
+            <fileset dir="../accounting/build/lib" includes="*.jar"/>
         </path>
     </target>
     

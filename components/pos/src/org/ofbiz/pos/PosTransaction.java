@@ -56,6 +56,7 @@ import org.ofbiz.product.store.ProductStoreWorker;
 import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.GenericServiceException;
+import org.ofbiz.accounting.payment.PaymentGatewayServices;
 
 /**
  * 
@@ -190,8 +191,52 @@ public class PosTransaction {
 
     public Map getPaymentInfo(int index) {
         ShoppingCart.CartPaymentInfo inf = cart.getPaymentInfo(index);
+        GenericValue prefValue = inf.makeOrderPaymentPreference(session.getDelegator());
         GenericValue infValue = inf.getValueObject(session.getDelegator());
+        GenericValue paymentPref = null;
+        try {
+            Map fields = new HashMap();
+            fields.put("paymentMethodTypeId", prefValue.get("paymentMethodTypeId"));
+            fields.put("paymentMethodId", prefValue.get("paymentMethodId"));
+            fields.put("maxAmount", prefValue.get("maxAmount"));
+            fields.put("orderId", this.getOrderId());
+
+            List paymentPrefs = session.getDelegator().findByAnd("OrderPaymentPreference", fields);
+            if (paymentPrefs != null && paymentPrefs.size() > 0) {
+                Debug.log("Found some prefs - " + paymentPrefs.size(), module);
+                if (paymentPrefs.size() > 1) {
+                    Debug.logError("Multiple OrderPaymentPreferences found for the same payment method!", module);
+                } else {
+                    paymentPref = EntityUtil.getFirst(paymentPrefs);
+                    Debug.log("Got the first pref - " + paymentPref, module);
+                }
+            } else {
+                Debug.logError("No OrderPaymentPreference found - " + fields, module);
+            }
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+        }
+        Debug.log("PaymentPref - " + paymentPref, module);
+
         Map payInfo = new HashMap();
+
+        // locate the auth info
+        GenericValue authTrans = null;
+        if (paymentPref != null) {
+            authTrans = PaymentGatewayServices.getAuthTransaction(paymentPref);
+            if (authTrans != null) {
+                payInfo.putAll(authTrans);
+
+                String authInfoString = "Ref: " + authTrans.getString("referenceNum") + " Auth: " + authTrans.getString("gatewayCode");
+                payInfo.put("authInfoString", authInfoString);
+            } else {
+                Debug.logError("No Authorization transaction found for payment preference - " + paymentPref, module);
+            }
+        } else {
+            Debug.logError("Payment preference is empty!", module);
+            return payInfo;
+        }
+        Debug.log("AuthTrans - " + authTrans, module);
 
         if ("PAYMENT_METHOD_TYPE".equals(infValue.getEntityName())) {
             payInfo.put("description", infValue.getString("description"));
@@ -221,12 +266,12 @@ public class PosTransaction {
                 nameOnCard.trim();
 
                 String cardNum = cc.getString("cardNumber");
-                cardNum = cardNum.substring(0, 2);
-                cardNum = cardNum + "****";
-                cardNum = cardNum + cardNum.substring(cardNum.length() - 4);
+                String cardStr = cardNum.substring(0, 2);
+                cardStr = cardStr + "****";
+                cardStr = cardStr + cardNum.substring(cardNum.length() - 4);
 
                 String expDate = cc.getString("expireDate");
-                String infoString = (nameOnCard.length() > 0 ? nameOnCard + " " : "") + cardNum + " " + expDate;
+                String infoString = (nameOnCard.length() > 0 ? nameOnCard + " " : "") + cardStr + " " + expDate;
                 payInfo.put("infoString", infoString);
                 payInfo.putAll(cc);
 
@@ -444,7 +489,7 @@ public class PosTransaction {
         DeviceLoader.drawer[drawerIdx].openDrawer();
 
         // print the receipt
-        DeviceLoader.receipt.printReceipt(this, false);
+        DeviceLoader.receipt.printReceipt(this, true);
 
         // clear the tx
         cart.clear();
