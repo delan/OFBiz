@@ -461,6 +461,15 @@ public class GenericDelegator {
   /** Finds Generic Entity records by all of the specified fields (ie: combined using AND)
    * @param entityName The Name of the Entity as defined in the entity XML file
    * @param fields The fields of the named entity to query by with their corresponging values
+   * @return Collection of GenericValue instances that match the query
+   */
+  public Collection findByAnd(String entityName, Map fields) throws GenericEntityException {
+    return this.findByAnd(entityName, fields, null);
+  }
+  
+  /** Finds Generic Entity records by all of the specified fields (ie: combined using AND)
+   * @param entityName The Name of the Entity as defined in the entity XML file
+   * @param fields The fields of the named entity to query by with their corresponging values
    * @param order The fields of the named entity to order the query by;
    *      optionally add a " ASC" for ascending or " DESC" for descending
    * @return Collection of GenericValue instances that match the query
@@ -473,6 +482,15 @@ public class GenericDelegator {
     collection = helper.findByAnd(modelEntity, fields, orderBy);
     absorbCollection(collection);
     return collection;
+  }
+  
+  /** Finds Generic Entity records by all of the specified fields (ie: combined using AND), looking first in the cache; uses orderBy for lookup, but only keys results on the entityName and fields
+   *@param entityName The Name of the Entity as defined in the entity XML file
+   *@param fields The fields of the named entity to query by with their corresponging values
+   *@return Collection of GenericValue instances that match the query
+   */
+  public Collection findByAndCache(String entityName, Map fields) throws GenericEntityException {
+    return this.findByAndCache(entityName, fields, null);
   }
   
   /** Finds Generic Entity records by all of the specified fields (ie: combined using AND), looking first in the cache; uses orderBy for lookup, but only keys results on the entityName and fields
