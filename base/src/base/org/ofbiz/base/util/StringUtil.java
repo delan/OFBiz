@@ -1,5 +1,5 @@
 /*
- * $Id: StringUtil.java,v 1.2 2003/08/26 22:12:24 ajzeneski Exp $
+ * $Id: StringUtil.java,v 1.3 2003/10/28 06:22:42 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -38,7 +38,7 @@ import java.util.StringTokenizer;
  * Misc String Utility Functions
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class StringUtil {
@@ -237,5 +237,54 @@ public class StringUtil {
                 newString.append(str.charAt(i));
         }
         return newString.toString();        
+    }
+
+    public static String toHexString(byte[] bytes) {
+        StringBuffer buf = new StringBuffer(bytes.length * 2);
+        for (int i = 0; i < bytes.length; i++) {
+            buf.append(hexChar[(bytes[i] & 0xf0) >>> 4]);
+            buf.append(hexChar[bytes[i] & 0x0f]);
+        }
+        return buf.toString();
+
+    }
+
+    public static String cleanHexString(String str) {
+        StringBuffer buf = new StringBuffer();
+        for (int i = 0; i < str.length(); i++) {
+            if (str.charAt(i) != (int) 32 && str.charAt(i) != ':') {
+                buf.append(str.charAt(i));
+            }
+        }
+        return buf.toString();
+    }
+
+    public static byte[] fromHexString(String str) {
+        str = cleanHexString(str);
+        int stringLength = str.length();
+        if ((stringLength & 0x1) != 0) {
+            throw new IllegalArgumentException("fromHexStringÊrequiresÊanÊevenÊnumberÊofÊhexÊcharacters");
+        }
+        byte[] b = new byte[stringLength / 2];
+
+        for (int i = 0, j = 0; i < stringLength; i+= 2, j++) {
+            int high= convertChar(str.charAt(i));
+            int low = convertChar(str.charAt(i+1));
+            b[j] = (byte) ((high << 4) | low);
+        }
+        return b;
+    }
+
+    private static char[] hexChar = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
+    private static int convertChar(char c) {
+        if ( '0' <= c && c <= '9' ) {
+            return c - '0' ;
+        } else if ( 'a' <= c && c <= 'f' ) {
+            return c - 'a' + 0xa ;
+        } else if ( 'A' <= c && c <= 'F' ) {
+            return c - 'A' + 0xa ;
+        } else {
+            throw new IllegalArgumentException("InvalidÊhexÊcharacter:Ê" + c);
+        }
     }
 }
