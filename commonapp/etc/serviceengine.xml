@@ -15,15 +15,16 @@
                  poll-db-millis="20000"/>
 
     <!-- Service Engine Configuration -->
+    <engine name="bsh" class="org.ofbiz.core.service.engine.BeanShellEngine"/>
+    <engine name="group" class="org.ofbiz.core.service.group.ServiceGroupEngine"/>    
+    <engine name="http" class="org.ofbiz.core.service.engine.HttpEngine"/>
     <engine name="interface" class="org.ofbiz.core.service.engine.InterfaceEngine"/>
     <engine name="java" class="org.ofbiz.core.service.engine.StandardJavaEngine"/>
-    <engine name="workflow" class="org.ofbiz.core.workflow.WorkflowEngine"/>
-    <engine name="bsh" class="org.ofbiz.core.service.engine.BeanShellEngine"/>
-    <engine name="soap" class="org.ofbiz.core.service.engine.SOAPClientEngine"/>
-    <engine name="http" class="org.ofbiz.core.service.engine.HttpEngine"/>
+    <engine name="jms" class="org.ofbiz.core.service.jms.JmsServiceEngine"/>    
     <engine name="simple" class="org.ofbiz.core.minilang.SimpleServiceEngine"/>
-    <engine name="jms" class="org.ofbiz.core.service.jms.JmsServiceEngine"/>
-
+    <engine name="soap" class="org.ofbiz.core.service.engine.SOAPClientEngine"/>
+    <engine name="workflow" class="org.ofbiz.core.workflow.WorkflowEngine"/>    
+       
     <!-- Resource Loader Configuration -->
     <resource-loader name="mainfile" class="org.ofbiz.core.config.FileLoader"
             prepend-env="ofbiz.home" prefix="/commonapp/globalservices/"/>

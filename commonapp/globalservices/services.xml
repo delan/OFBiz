@@ -13,6 +13,8 @@
         <attribute name="message" type="String" mode="IN" optional="true"/>
         <attribute name="resp" type="String" mode="OUT"/>
     </service>
+    
+    <service name="groupTest" engine="group" location="testGroup"/>
 
 	<service name="testHttp" engine="http" 
 			location="http://localhost:8080/commonapp/control/httpService" invoke="testScv">

@@ -29,7 +29,7 @@
 -->
 
 <!-- ====================== Root Element ======================= -->
-<!ELEMENT service-config ( authorization, thread-pool, engine*, resource-loader*, global-services*, service-ecas*, jms-service* )>
+<!ELEMENT service-config ( authorization, thread-pool, engine*, resource-loader*, global-services*, service-groups*, service-ecas*, jms-service* )>
 
 <!ELEMENT authorization EMPTY>
 <!ATTLIST authorization
@@ -67,14 +67,14 @@
     location CDATA #REQUIRED
 >
 
-<!ELEMENT service-ecas EMPTY>
-<!ATTLIST service-ecas
+<!ELEMENT service-groups EMPTY>
+<!ATTLIST service-groups
     loader CDATA #REQUIRED
     location CDATA #REQUIRED
 >
 
-<!ELEMENT service-groups EMPTY>
-<!ATTLIST service-groups
+<!ELEMENT service-ecas EMPTY>
+<!ATTLIST service-ecas
     loader CDATA #REQUIRED
     location CDATA #REQUIRED
 >
