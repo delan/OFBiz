@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
- *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -89,6 +89,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
     <field-type name="hsql" loader="fieldfile" location="fieldtypehsql.xml"/>
     <field-type name="derby" loader="fieldfile" location="fieldtypederby.xml"/>
     <field-type name="cloudscape" loader="fieldfile" location="fieldtypecloudscape.xml"/>
+    <field-type name="daffodil" loader="fieldfile" location="fieldtypedaffodil.xml"/>
     <field-type name="axion" loader="fieldfile" location="fieldtypeaxion.xml"/>
     <field-type name="mysql" loader="fieldfile" location="fieldtypemysql.xml"/>
     <field-type name="postgres" loader="fieldfile" location="fieldtypepostgres.xml"/>
@@ -179,6 +180,27 @@ access. For a detailed description see the core/docs/entityconfig.html file.
                 pool-minsize="2"
                 pool-maxsize="20"/>
         <!-- <jndi-jdbc jndi-server-name="localjndi" jndi-name="java:/CloudscapeDataSource" isolation-level="Serializable"/> -->
+    </datasource>
+
+    <datasource name="localdaffodil"
+            helper-class="org.ofbiz.entity.datasource.GenericHelperDAO"
+            field-type-name="daffodil"
+            check-on-start="true"
+            add-missing-on-start="true">
+        <read-data reader-name="seed"/>
+        <read-data reader-name="demo"/>
+        <read-data reader-name="ext"/>
+        <!-- this setup is for the embedded version of Daffodil, with in.co.daffodil.db.jdbc.DaffodilDBDriver --> 
+        <!-- note that Daffodil can also run in a network mode with the driver class: in.co.daffodil.db.rmi.RmiDaffodilDBDriver and URI: jdbc:daffodilDB://<hostname>:<port>/ofbiz;create=true -->
+        <inline-jdbc
+                jdbc-driver="in.co.daffodil.db.jdbc.DaffodilDBDriver"
+                jdbc-uri="jdbc:daffodilDB_embedded:ofbiz;create=true"
+                jdbc-username="ofbiz"
+                jdbc-password="ofbiz"
+                isolation-level="ReadCommitted"
+                pool-minsize="2"
+                pool-maxsize="20"/>
+        <!-- <jndi-jdbc jndi-server-name="localjndi" jndi-name="java:/DaffodilDataSource" isolation-level="ReadCommitted"/> -->
     </datasource>
 
     <datasource name="localaxion"
@@ -444,4 +466,3 @@ access. For a detailed description see the core/docs/entityconfig.html file.
                 pool-maxsize="20"/>
     </datasource>
 </entity-config>
-
