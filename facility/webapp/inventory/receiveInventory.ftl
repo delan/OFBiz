@@ -24,6 +24,58 @@
  *@since      2.2
 -->
 
+<script language="JavaScript">
+<!--
+function toggle(e) {
+    e.checked = !e.checked;    
+}
+function checkToggle(e) {
+    var cform = document.receiveform;
+    if (e.checked) {      
+        var len = cform.elements.length;
+        var allchecked = true;
+        for (var i = 0; i < len; i++) {
+            var element = cform.elements[i];
+            var elementName = new java.lang.String(element.name);          
+            if (elementName.startsWith("_rowSubmit") && !element.checked) {       
+                allchecked = false;
+            }
+            cform.selectAll.checked = allchecked;            
+        }
+    } else {
+        cform.selectAll.checked = false;
+    }
+}
+function toggleAll(e) {
+    var cform = document.receiveform;
+    var len = cform.elements.length;
+    for (var i = 0; i < len; i++) {
+        var element = cform.elements[i];                   
+        var eName = new java.lang.String(element.name);                
+        if (eName.startsWith("_rowSubmit") && element.checked != e.checked) {
+            toggle(element);
+        } 
+    }     
+}
+function selectAll() {
+    var cform = document.receiveform;
+    var len = cform.elements.length;
+    for (var i = 0; i < len; i++) {
+        var element = cform.elements[i];                   
+        var eName = new java.lang.String(element.name);                
+        if ((element.name == "selectAll" || eName.startsWith("_rowSubmit")) && !element.checked) {
+            toggle(element);
+        } 
+    }     
+}
+function removeSelected() {
+    var cform = document.receiveform;
+    cform.removeSelected.value = true;
+    cform.submit();
+}
+//-->
+</script>
+
 <#if security.hasEntityPermission("FACILITY", "_CREATE", session)>
 
 <#if invalidProductId?exists>
@@ -206,21 +258,21 @@
             <div class="head3">Receive Purchase Order #${purchaseOrder.orderId}</div>
           </td>
           <td align="right">
-            <input type="checkbox" name="selectAll" value="Y" checked>
+            <input type="checkbox" name="selectAll" value="Y" onclick="javascript:toggleAll(this);">
           </td>
         </tr>
                
         <#list purchaseOrderItems as orderItem>
+          <input type="hidden" name="orderId|${rowCount}" value="${orderItem.orderId}">
+          <input type="hidden" name="orderItemSeqId|${rowCount}" value="${orderItem.orderItemSeqId}"> 
+          <input type="hidden" name="facilityId|${rowCount}" value="${requestParameters.facilityId?if_exists}">       
+          <input type="hidden" name="datetimeReceived|${rowCount}" value="${now}">        
+          <tr>
+            <td colspan="2"><hr class="sepbar"></td>
+          </tr>        
           <#if orderItem.productId?exists>
             <#assign product = orderItem.getRelatedOneCache("Product")>  
             <input type="hidden" name="productId|${rowCount}" value="${product.productId}">  
-            <input type="hidden" name="orderId|${rowCount}" value="${orderItem.orderId}">
-            <input type="hidden" name="orderItemSeqId|${rowCount}" value="${orderItem.orderItemSeqId}"> 
-            <input type="hidden" name="facilityId|${rowCount}" value="${requestParameters.facilityId?if_exists}">       
-            <input type="hidden" name="datetimeReceived|${rowCount}" value="${now}">
-            <tr>
-              <td colspan="2"><hr class="sepbar"></td>
-            </tr>
             <tr>
               <td>
                 <table width="100%" border='0' cellpadding='2' cellspacing='0'>
@@ -273,14 +325,18 @@
                 </table>
               </td>
               <td align="right">              
-                <input type="checkbox" name="_rowSubmit|${rowCount}" value="Y" checked>
+                <input type="checkbox" name="_rowSubmit|${rowCount}" value="Y" onclick="javascript:checkToggle(this);">
               </td>
             </tr>
           <#else>
+            <#assign orderItemType = orderItem.getRelatedOne("OrderItemType")>
             <tr>
-              <td colspan="2">
+              <td>
                 <div class="tabletext">No Product Available</div>
               </td>
+              <td align="right">              
+                <input type="checkbox" name="_rowSubmit|${rowCount}" value="Y" onclick="javascript:checkToggle(this);">
+              </td>              
             </tr>
           </#if>
           <#assign rowCount = rowCount + 1>
@@ -299,6 +355,7 @@
     </table>
     <input type="hidden" name="_rowCount" value="${rowCount}">
   </form>
+  <script language="JavaScript">selectAll();</script>
 <#else>
   <form name="receiveform" method="post" action="<@ofbizUrl>/ReceiveInventory</@ofbizUrl>" style='margin: 0;'>
     <input type="hidden" name="facilityId" value="${requestParameters.facilityId?if_exists}">
