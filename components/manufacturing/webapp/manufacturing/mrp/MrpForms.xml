@@ -22,7 +22,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Nicolas.Malin@librenberry.net
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      3.0
 -->
 
@@ -32,18 +32,23 @@
 	default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
     <field name="hideSearch"><hidden value="Y"/></field>
     <field name="requirementId" title="${uiLabelMap.ManufacturingRequirementId}"><text-find default-value="equals"/></field>
+    <field name="requirementTypeId" title="${uiLabelMap.ManufacturingRequirementTypeId}">
+        <drop-down allow-empty="true">
+            <entity-options entity-name="RequirementType" description="${description}"/>
+        </drop-down>
+    </field>
     <field name="productId" title="${uiLabelMap.ProductProductId}">
        <lookup target-form-name="/manufacturing/control/LookupProduct"/>
     </field>
-    <field name="requirementStartDate" title="${uiLabelMap.ManufacturingRequirementStartDate}"><text-find default-value="equals"/></field>
-    <field name="requirementByDate" title="${uiLabelMap.ManufacturingRequirementByDate}"><text-find default-value="equals"/></field>
+    <field name="requirementStartDate" title="${uiLabelMap.ManufacturingRequirementStartDate}"><date-find type="date"/></field>
+    <field name="requirementByDate" title="${uiLabelMap.ManufacturingRequirementByDate}"><date-find type="date"/></field>
     <field name="submitButton" title="${uiLabelMap.CommonLookup}" widget-style="smallSubmit">
       <submit button-type="button"/>
      </field>
   </form>
-  <form name="listProposedOrder" type="list" 
-	target="FindProposedOrder" title="" list-name="requirementList" paginate-target="/FindProposedOrder"
-	default-title-style="tableheadtext" default-widget-style="tabletextcenter" default-tooltip-style="tabletext">
+  <form name="listProposedOrder" type="multi" row-count="${listSize}"
+        target="createProductionRunsFromRequirements" title="" list-name="requirementList" paginate-target="/FindProposedOrder"
+        default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
     <field name="requirementId" title="${uiLabelMap.ManufacturingRequirementId}"><display/></field>
     <field name="description" title="descritpion"><display/></field>
     <field name="productId" title="${uiLabelMap.ProductProductId}"><display/></field>
@@ -51,5 +56,12 @@
     <field name="requirementStartDate" title="${uiLabelMap.ManufacturingRequirementStartDate}"><display/></field>
     <field name="requirementByDate" title="${uiLabelMap.ManufacturingRequirementByDate}"><display/></field>
     <field name="quantity" title="${uiLabelMap.CommonQuantity}"><display/></field>
+    <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><check/></field>
+    <!--
+    <field name="requirementTypeId" use-when="&quot;MRP_PRO_PURCH_ORDER&quot;.equals(&quot;${requirementTypeId}&quot;)"><text/></field>
+    -->
+    <field name="submitButton" widget-style="smallSubmit">
+      <submit/>
+    </field>
   </form>
 </forms>

@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Malin Nicolas (nicolas@ptimalin.net)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      3.0
 -->
 
@@ -30,21 +30,22 @@ ${pages.get("/mrp/MrpTabBar.ftl")}
 
 <table border=0 width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
   <tr>
-   <td align="center" width="100%">
-	<table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
-		<tr>
-            <#if requestParameters.hideSearch?default("N") == "N">
-    		<td><div class="boxhead">${uiLabelMap.CommonSelection}</div></td>
-    		<#else>
-        	<td align="right"><div class="tabletext">
+    <td align="center" width="100%">
+      <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
+        <tr>
+          <#if requestParameters.hideSearch?default("N") == "N">
+            <td><div class="boxhead">${uiLabelMap.CommonSelection}</div></td>
+          <#else>
+            <td align="right">
+              <div class="tabletext">
                 <a href="<@ofbizUrl>/FindProposedOrder?hideSearch=N${paramList?if_exists}</@ofbizUrl>" class="submenutextright">${uiLabelMap.CommonNewSelection}</a>
-              </#if>
-           	  </div>
-       		</td>
+              </div>
+            </td>
+          </#if>
     	</tr>
-	</table>
+      </table>
     <#if requestParameters.hideSearch?default("N") != "Y">
-		${singleWrapper.renderFormString()} 
+        ${singleWrapper.renderFormString()} 
     </#if>
     </td>
   </tr>
@@ -52,6 +53,6 @@ ${pages.get("/mrp/MrpTabBar.ftl")}
 
 <#if showList?default("Y") == "Y">
 <br>
-	${listWrapper.renderFormString()}
+  ${listWrapper.renderFormString()}
 </#if>
 <hr/>

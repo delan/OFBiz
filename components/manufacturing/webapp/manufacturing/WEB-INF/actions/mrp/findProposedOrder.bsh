@@ -25,7 +25,7 @@
  * copy from content component  actions/includes/findprep.bsh 1.8 
  * @author     Olivier.Heintz@nereide.biz
  * @author     Nicolas.Malin@librenberry.net	
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      3.0
  *
  * This script is a special version of includes/pagelistprep that
@@ -67,7 +67,7 @@ if(security.hasEntityPermission("MANUFACTURING", "_VIEW", session)) {
 delegator = (GenericDelegator) request.getAttribute("delegator");
 
 // field from the user query 
-Map inputFields            = UtilHttp.getParameterMap(request);
+Map inputFields = UtilHttp.getParameterMap(request);
 //preload the query 
 staticConditionsStr = page.getProperty("staticConditions");
 if (staticConditionsStr != null && staticConditionsStr.length() > 0) {
@@ -77,73 +77,74 @@ if (staticConditionsStr != null && staticConditionsStr.length() > 0) {
         inputFields.put(staticConditions[i], staticConditions[i+1]);
     }
 }
-//Debug.logInfo("inputFields:"+ inputFields, "");
+
 String hideSearch = inputFields.get("hideSearch");
-context.put("hideSearch",hideSearch);
+context.put("hideSearch", hideSearch);
 String showListIfSelection = page.getProperty("showListIfSelection");
-Debug.logInfo("avant test","");
+
 if (UtilValidate.isEmpty(showListIfSelection) || showListIfSelection.equals("Y") || (UtilValidate.isNotEmpty(hideSearch) && hideSearch.equals("Y"))) {
     context.put("showList", "Y");
-    Debug.logInfo("apr�s test","");
 
-     // create the dynamic view entity
+    // create the dynamic view entity
     DynamicViewEntity dynamicView = new DynamicViewEntity();
 
-     // default view settings ProposedOrder
-     dynamicView.addMemberEntity("RE", "Requirement");
-     dynamicView.addAlias("RE", "requirementId" );
-     dynamicView.addAlias("RE", "requirementStartDate" );
-     dynamicView.addAlias("RE", "requiredByDate" );
-     dynamicView.addAlias("RE", "quantity" );
-     dynamicView.addAlias("RE", "productId");
-     dynamicView.addAlias("RE", "requirementTypeId" );
-     //RequirementType
-     dynamicView.addMemberEntity("RT", "RequirementType" );
-     dynamicView.addAlias("RT", "description" );
-     dynamicView.addViewLink("RE", "RT", Boolean.TRUE, ModelKeyMap.makeKeyMapList("requirementTypeId"));
-     //Product
-     dynamicView.addMemberEntity("PR", "Product" );
-     dynamicView.addAlias("PR", "internalName" );
-     dynamicView.addViewLink("RE", "PR", Boolean.TRUE, ModelKeyMap.makeKeyMapList("productId"));
-     // fieldsToSelect
-     Collection fieldsToSelect=null;
+    // default view settings ProposedOrder
+    dynamicView.addMemberEntity("RE", "Requirement");
+    dynamicView.addAlias("RE", "requirementId" );
+    dynamicView.addAlias("RE", "requirementStartDate" );
+    dynamicView.addAlias("RE", "requiredByDate" );
+    dynamicView.addAlias("RE", "quantity" );
+    dynamicView.addAlias("RE", "productId");
+    dynamicView.addAlias("RE", "requirementTypeId" );
+    //RequirementType
+    dynamicView.addMemberEntity("RT", "RequirementType" );
+    dynamicView.addAlias("RT", "description" );
+    dynamicView.addViewLink("RE", "RT", Boolean.TRUE, ModelKeyMap.makeKeyMapList("requirementTypeId"));
+    //Product
+    dynamicView.addMemberEntity("PR", "Product" );
+    dynamicView.addAlias("PR", "internalName" );
+    dynamicView.addViewLink("RE", "PR", Boolean.TRUE, ModelKeyMap.makeKeyMapList("productId"));
+    // fieldsToSelect
+    Collection fieldsToSelect=null;
+    
+    // read and analyse the inputFields
+    Map queryStringMap = new HashMap();
+    Map origValueMap = new HashMap();
+    HashMap normalizedFields = FindServices.prepareField((Map) inputFields,(Map) queryStringMap,(Map) origValueMap);
+    //HashMap normalizedFields = FindServices.prepareField((Map) inputFields,new Double(5),(Map) origValueMap);
      
-     // read and analyse the inputFields
-     Map queryStringMap = new HashMap();
-     Map origValueMap = new HashMap();
-     HashMap normalizedFields = FindServices.prepareField((Map) inputFields,(Map) queryStringMap,(Map) origValueMap);
-     //HashMap normalizedFields = FindServices.prepareField((Map) inputFields,new Double(5),(Map) origValueMap);
-     
-     // compare the normalizedFields with the field the user can query on
-     List keys = UtilMisc.toList("requirementId");
-     keys.add("description");
-     keys.add("productId");
-     keys.add("internalName");
-     keys.add("requirementStartDate");
-     keys.add("requiredByDate");
-     keys.add("quantity") ;
-     ArrayList tmpList = FindServices.createCondition(keys, normalizedFields, queryStringMap, origValueMap);
+    // compare the normalizedFields with the field the user can query on
+    List keys = UtilMisc.toList("requirementId");
+    keys.add("description");
+    keys.add("productId");
+    keys.add("internalName");
+    keys.add("requirementStartDate");
+    keys.add("requiredByDate");
+    keys.add("quantity") ;
+    keys.add("requirementTypeId");
+    ArrayList tmpList = FindServices.createCondition(keys, normalizedFields, queryStringMap, origValueMap);
     
-     //create the entity condition
-     EntityOperator entOp = EntityOperator.AND;
-     EntityConditionList mainCond = new EntityConditionList(tmpList, (EntityJoinOperator) entOp);
+    //create the entity condition
+    EntityOperator entOp = EntityOperator.AND;
+    EntityConditionList mainCond = new EntityConditionList(tmpList, (EntityJoinOperator) entOp);
     
-     // create the orderBy
-     List orderByList = null;
-     String orderBy  = page.getProperty("orderBy");
-     if (UtilValidate.isNotEmpty(orderBy)) {
-	 orderByList = StringUtil.split(orderBy,"|");
-     }
+    // create the orderBy
+    List orderByList = null;
+    String orderBy  = page.getProperty("orderBy");
+    if (UtilValidate.isNotEmpty(orderBy)) {
+        orderByList = StringUtil.split(orderBy,"|");
+    }
+
+    // set entityFindOptions
+    EntityFindOptions findOpts = new EntityFindOptions(true, EntityFindOptions.TYPE_SCROLL_INSENSITIVE, EntityFindOptions.CONCUR_READ_ONLY, true);
     
-     // set entityFindOptions
-     EntityFindOptions findOpts = new EntityFindOptions(true, EntityFindOptions.TYPE_SCROLL_INSENSITIVE, EntityFindOptions.CONCUR_READ_ONLY, true);
+    // using list iterator
+    EntityListIterator listIt = delegator.findListIteratorByCondition(dynamicView, mainCond, null, fieldsToSelect, orderBy, findOpts);
+    request.setAttribute("listIt", listIt);
     
-     // using list iterator
-     EntityListIterator listIt = delegator.findListIteratorByCondition(dynamicView, mainCond, null, fieldsToSelect, orderBy, findOpts);
-     request.setAttribute("listIt", listIt);
-    
-     String queryString = UtilHttp.urlEncodeArgs(inputFields);
-     context.put("queryString", queryString);
+    String queryString = UtilHttp.urlEncodeArgs(inputFields);
+    context.put("queryString", queryString);
+} else {
+    context.put("showList", "N");
 }
-else  context.put("showList", "N");
 
