@@ -301,6 +301,7 @@ public class ShoppingCart implements java.io.Serializable {
 
     /** Clears out the cart. */
     public void clear() {
+        firstAttemptOrderId = null;
         poNumber = null;
         orderId = null;
 
