@@ -118,7 +118,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
             check-indices-on-start="true"
             use-foreign-keys="true"
             use-foreign-key-indices="true"
-            use-fk-initially-deferred="false"
+            use-fk-initially-deferred="true"
             join-style="ansi-no-parenthesis"
             alias-view-columns="true">
         <read-data reader-name="seed"/>
@@ -143,6 +143,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
             field-type-name="derby"
             check-on-start="true"
             add-missing-on-start="true"
+            use-fk-initially-deferred="true"
             use-pk-constraint-names="false">
         <read-data reader-name="seed"/>
         <read-data reader-name="demo"/>
@@ -162,7 +163,8 @@ access. For a detailed description see the core/docs/entityconfig.html file.
             helper-class="org.ofbiz.entity.datasource.GenericHelperDAO"
             field-type-name="cloudscape"
             check-on-start="true"
-            add-missing-on-start="true">
+            add-missing-on-start="true"
+            use-fk-initially-deferred="true">
         <read-data reader-name="seed"/>
         <read-data reader-name="demo"/>
         <read-data reader-name="ext"/>
@@ -182,6 +184,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
             field-type-name="axion"
             check-on-start="true"
             add-missing-on-start="true"
+            use-fk-initially-deferred="true"
             use-pk-constraint-names="false">
         <read-data reader-name="seed"/>
         <read-data reader-name="demo"/>
@@ -202,7 +205,8 @@ access. For a detailed description see the core/docs/entityconfig.html file.
             check-on-start="true"
             add-missing-on-start="true"
             use-foreign-keys="false"
-            join-style="ansi-no-parenthesis">
+            join-style="ansi-no-parenthesis"
+            use-fk-initially-deferred="true">
         <read-data reader-name="seed"/>
         <read-data reader-name="demo"/>
         <read-data reader-name="ext"/>
@@ -223,8 +227,8 @@ access. For a detailed description see the core/docs/entityconfig.html file.
             field-type-name="postgres72"
             check-on-start="true"
             add-missing-on-start="true"
-            use-fk-initially-deferred="false"            
-            join-style="ansi">
+            join-style="ansi"
+            use-fk-initially-deferred="true">
             <!-- use this attribute to make the EntityListIterator more effective for pgjdbc 7.5devel and later:
                 result-fetch-size="50"
             -->
@@ -233,7 +237,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
         <read-data reader-name="ext"/>
         <inline-jdbc
                 jdbc-driver="org.postgresql.Driver"
-                jdbc-uri="jdbc:postgresql://127.0.0.1/ofbiz"
+                jdbc-uri="jdbc:postgresql://127.0.0.1/ofbiz2"
                 jdbc-username="ofbiz"
                 jdbc-password="ofbiz"
                 isolation-level="ReadCommitted"
@@ -252,7 +256,8 @@ access. For a detailed description see the core/docs/entityconfig.html file.
             field-type-name="oracle"
             check-on-start="true"
             add-missing-on-start="true"
-            join-style="ansi">
+            join-style="ansi"
+            use-fk-initially-deferred="true">
         <read-data reader-name="seed"/>
         <read-data reader-name="demo"/>
         <read-data reader-name="ext"/>
@@ -270,7 +275,8 @@ access. For a detailed description see the core/docs/entityconfig.html file.
             field-type-name="oracle"
             check-on-start="true"
             add-missing-on-start="true"
-            join-style="ansi">
+            join-style="ansi"
+            use-fk-initially-deferred="true">
         <read-data reader-name="main"/>
         <inline-jdbc
                 jdbc-driver="com.ddtek.jdbc.oracle.OracleDriver"
@@ -287,7 +293,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
             schema-name="dbo"
             check-on-start="true"
             add-missing-on-start="true"
-            use-fk-initially-deferred="false"
+            use-fk-initially-deferred="true"
             join-style="ansi">
         <read-data reader-name="seed"/>
         <read-data reader-name="demo"/>
@@ -308,7 +314,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
             check-on-start="true"
             add-missing-on-start="true"
             fk-style="name_fk"
-            use-fk-initially-deferred="false"
+            use-fk-initially-deferred="true"
             join-style="ansi-no-parenthesis">
         <read-data reader-name="seed"/>
         <read-data reader-name="demo"/>
@@ -332,7 +338,8 @@ access. For a detailed description see the core/docs/entityconfig.html file.
             field-type-name="firebird"
             check-on-start="false"
             add-missing-on-start="false"
-            join-style="ansi">
+            join-style="ansi"
+            use-fk-initially-deferred="true">
         <read-data reader-name="seed"/>
         <read-data reader-name="demo"/>
         <read-data reader-name="ext"/>
@@ -355,7 +362,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
             check-on-start="true"
             add-missing-on-start="true"
             join-style="ansi"
-            use-fk-initially-deferred="false">
+            use-fk-initially-deferred="true">
         <read-data reader-name="seed"/>
         <read-data reader-name="demo"/>
         <read-data reader-name="ext"/>
@@ -376,7 +383,8 @@ access. For a detailed description see the core/docs/entityconfig.html file.
             field-type-name="postgres72"
             check-on-start="true"
             add-missing-on-start="true"
-            join-style="ansi">
+            join-style="ansi"
+            use-fk-initially-deferred="true">
         <read-data reader-name="seed"/>
         <read-data reader-name="demo"/>
         <read-data reader-name="ext"/>
@@ -399,7 +407,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
             check-indices-on-start="true"
             use-foreign-keys="true"
             use-foreign-key-indices="true"
-            use-fk-initially-deferred="false"
+            use-fk-initially-deferred="true"
             join-style="ansi-no-parenthesis"
             alias-view-columns="true">
         <read-data reader-name="seed"/>
@@ -423,6 +431,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
             check-indices-on-start="true"
             use-foreign-keys="false"
             use-foreign-key-indices="true"
+            use-fk-initially-deferred="true"
             join-style="ansi-no-parenthesis"
             alias-view-columns="true"
             always-use-constraint-keyword="true">
