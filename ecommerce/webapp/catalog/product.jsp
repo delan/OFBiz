@@ -14,15 +14,6 @@
     <ofbiz:param name='productId' attribute='product_id'/>
 </ofbiz:service>
 
-<%if (request.getParameter("category_id") != null) pageContext.setAttribute("category_id", request.getParameter("category_id"));%>
-<%String categoryId = request.getParameter("category_id");%>
-<ofbiz:if name="category_id">
-    <ofbiz:service name='getPreviousNextProducts'>
-        <ofbiz:param name='categoryId' attribute='category_id'/>
-        <ofbiz:param name='productId' attribute='product_id'/>
-    </ofbiz:service>
-</ofbiz:if>
-
 <ofbiz:unless name="product">
   <center><h2>Product not found for Product ID "<%=UtilFormatOut.checkNull(productId)%>"!</h2></center>
 </ofbiz:unless>
@@ -34,6 +25,17 @@
     <% String productTypeId = product.getString("productTypeId"); %>
     <% Map featureTypes = new HashMap(); %>
     <% List featureOrder = null; %>
+
+    <%String categoryId = request.getParameter("category_id");%>
+    <%if (categoryId == null) categoryId = product.getString("primaryProductCategoryId");%>
+    <%if (categoryId != null) pageContext.setAttribute("category_id", categoryId);%>
+
+    <ofbiz:if name="category_id">
+        <ofbiz:service name='getPreviousNextProducts'>
+            <ofbiz:param name='categoryId' attribute='category_id'/>
+            <ofbiz:param name='productId' attribute='product_id'/>
+        </ofbiz:service>
+    </ofbiz:if>
 
     <%-- ====================================================== --%>
     <%-- Special Variant Code                                   --%>
