@@ -36,68 +36,77 @@ import org.ofbiz.core.util.*;
  *@version    1.0
  */
 public class ServiceUtil {
-    public static void getHtmlMessages(HttpServletRequest request, Map result, String defaultMessage) {
-        String errorMessage = ServiceUtil.makeHtmlErrorMessage(result);
+    public static void getMessages(HttpServletRequest request, Map result, String defaultMessage, 
+            String msgPrefix, String msgSuffix, String errorPrefix, String errorSuffix, String successPrefix, String successSuffix) {
+        String errorMessage = ServiceUtil.makeErrorMessage(result, msgPrefix, msgSuffix, errorPrefix, errorSuffix);
         if (UtilValidate.isNotEmpty(errorMessage))
             request.setAttribute(SiteDefs.ERROR_MESSAGE, errorMessage);
             
-        String successMessage = ServiceUtil.makeHtmlSuccessMessage(result);
+        String successMessage = ServiceUtil.makeSuccessMessage(result, msgPrefix, msgSuffix, successPrefix, successSuffix);
         if (UtilValidate.isNotEmpty(successMessage))
             request.setAttribute(SiteDefs.EVENT_MESSAGE, successMessage);
 
-        if (UtilValidate.isEmpty(errorMessage) && UtilValidate.isEmpty(successMessage))
+        if (UtilValidate.isEmpty(errorMessage) && UtilValidate.isEmpty(successMessage) && UtilValidate.isNotEmpty(defaultMessage))
             request.setAttribute(SiteDefs.EVENT_MESSAGE, defaultMessage);
     }
     
-    public static String makeHtmlErrorMessage(Map result) {
+    public static String makeErrorMessage(Map result, String msgPrefix, String msgSuffix, String errorPrefix, String errorSuffix) {
         String errorMsg = (String) result.get(ModelService.ERROR_MESSAGE);
         List errorMsgList = (List) result.get(ModelService.ERROR_MESSAGE_LIST);
         StringBuffer outMsg = new StringBuffer();
         
-        outMsg.append(makeHtmlMessageList(errorMsgList));
+        outMsg.append(makeMessageList(errorMsgList, msgPrefix, msgSuffix));
         
         if (errorMsg != null) {
-            outMsg.append("<li>");
+            if (msgPrefix != null) outMsg.append(msgPrefix);
             outMsg.append(errorMsg);
-            outMsg.append("</li>");
+            if (msgSuffix != null) outMsg.append(msgSuffix);
         }
         
         if (outMsg.length() > 0) {
-            return "<b>The following errors occured:</b><br><ul>" + outMsg + "</ul>";
+            StringBuffer strBuf = new StringBuffer();
+            if (errorPrefix != null) strBuf.append(errorPrefix);
+            strBuf.append(outMsg);
+            if (errorSuffix != null) strBuf.append(errorSuffix);
+            return strBuf.toString();
         } else {
             return null;
         }
     }
 
-    public static String makeHtmlSuccessMessage(Map result) {
+    public static String makeSuccessMessage(Map result, String msgPrefix, String msgSuffix, String successPrefix, String successSuffix) {
         String successMsg = (String) result.get(ModelService.SUCCESS_MESSAGE);
         List successMsgList = (List) result.get(ModelService.SUCCESS_MESSAGE_LIST);
         StringBuffer outMsg = new StringBuffer();
         
-        outMsg.append(makeHtmlMessageList(successMsgList));
+        outMsg.append(makeMessageList(successMsgList, msgPrefix, msgSuffix));
         
         if (successMsg != null) {
-            outMsg.append("<li>");
+            if (msgPrefix != null) outMsg.append(msgPrefix);
             outMsg.append(successMsg);
-            outMsg.append("</li>");
+            if (msgSuffix != null) outMsg.append(msgSuffix);
         }
         
         if (outMsg.length() > 0) {
-            return "<b>The following occured:</b><br><ul>" + outMsg + "</ul>";
+            StringBuffer strBuf = new StringBuffer();
+            if (successPrefix != null) strBuf.append(successPrefix);
+            strBuf.append(outMsg);
+            if (successSuffix != null) strBuf.append(successSuffix);
+            return strBuf.toString();
         } else {
             return null;
         }
     }
 
-    public static String makeHtmlMessageList(List msgList) {
+    public static String makeMessageList(List msgList, String msgPrefix, String msgSuffix) {
         StringBuffer outMsg = new StringBuffer();
         if (msgList != null && msgList.size() > 0) {
             Iterator iter = msgList.iterator();
             while (iter.hasNext()) {
                 String curMsg = (String) iter.next();
-                outMsg.append("<li>");
+                if (msgPrefix != null) outMsg.append(msgPrefix);
                 outMsg.append(curMsg);
-                outMsg.append("</li>");
+                if (msgSuffix != null) outMsg.append(msgSuffix);
             }
         }
         return outMsg.toString();
