@@ -93,6 +93,7 @@ public class PaymentEvents {
                         }
                         break;
                     default :
+                        Debug.log("Hit the default switch case [" + allInfo + "] refreshing.", module);
                         input.clearFunction("MSRINFO");
                         pos.getOutput().print(Output.CREDNO);
                         break;

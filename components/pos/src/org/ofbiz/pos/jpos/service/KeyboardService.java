@@ -168,8 +168,7 @@ public class KeyboardService extends BaseService implements jpos.services.POSKey
     // KeyListener
     public void keyPressed(KeyEvent event) {
         this.keyEvent = POSKeyboardConst.KBD_KET_KEYDOWN;
-        this.lastEvent = event;
-        Debug.log("Last Event Set : " + this.lastEvent.getKeyCode(), module);
+        this.lastEvent = event;        
     }
 
     public void keyTyped(KeyEvent event) {
