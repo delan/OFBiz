@@ -1,5 +1,5 @@
 /*
- * $Id: LoginEvents.java,v 1.16 2004/07/04 14:50:25 ajzeneski Exp $
+ * $Id: LoginEvents.java,v 1.17 2004/07/06 17:07:19 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -26,6 +26,12 @@ package org.ofbiz.securityext.login;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.FileInputStream;
+import java.io.ByteArrayInputStream;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.Cookie;
@@ -40,6 +46,7 @@ import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.UtilObject;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.content.stats.VisitHandler;
 import org.ofbiz.entity.GenericDelegator;
@@ -59,7 +66,7 @@ import org.ofbiz.service.ModelService;
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="">Dustin Caldwell</a>
  * @author     <a href="mailto:therrick@yahoo.com">Tom Herrick</a>
- * @version    $Revision: 1.16 $
+ * @version    $Revision: 1.17 $
  * @since      2.0
  */
 public class LoginEvents {
@@ -68,6 +75,16 @@ public class LoginEvents {
     public static final String resource = "SecurityextUiLabels";
 
     public static final String EXTERNAL_LOGIN_KEY_ATTR = "externalLoginKey";
+
+    /** This Map is keyed by the randomly generated externalLoginKey and the value is a UserLogin GenericValue object */
+    public static Map externalLoginKeys = new HashMap();
+
+    /** This Map is keyed by userLoginId and the value is another Map keyed by the webappName and the value is the sessionId.
+     * When a user logs in an entry in this Map will be populated for the given user, webapp and session.
+     * When checking security this Map will be checked if the user is logged in to see if we should log them out automatically; this implements the universal logout.
+     * When a user logs out this Map will be cleared so the user will be logged out automatically on subsequent requests.
+     */
+    public static Map loggedInSessions = new HashMap();
 
     /**
      * Save USERNAME and PASSWORD for use by auth pages even if we start in non-auth pages.
@@ -126,7 +143,7 @@ public class LoginEvents {
         // user is logged in; check to see if there is an entry in the loggedInSessions Map, if not log out this user
         // also check if they have permission for this login attempt; if not log them out as well.
         if (userLogin != null) {
-            boolean loggedInSession = PersistedLoginContainer.isLoggedInSession(userLogin, request);
+            boolean loggedInSession = isLoggedInSession(userLogin, request);
             boolean hasBasePermission = hasBasePermission(userLogin, request);
             if (!loggedInSession || !hasBasePermission) {
                 doBasicLogout(userLogin, request);
@@ -202,8 +219,8 @@ public class LoginEvents {
         }
 
         if ("true".equalsIgnoreCase(UtilProperties.getPropertyValue("security.properties", "login.lock.active"))) {
-            boolean userIdLoggedIn = PersistedLoginContainer.isLoggedInSession(username, request, false);
-            boolean thisUserLoggedIn = PersistedLoginContainer.isLoggedInSession(username, request, true);
+            boolean userIdLoggedIn = isLoggedInSession(username, request, false);
+            boolean thisUserLoggedIn = isLoggedInSession(username, request, true);
             if (userIdLoggedIn && !thisUserLoggedIn) {
                 errMsg = UtilProperties.getMessage(resource, "loginevents.user_already_logged_in", UtilHttp.getLocale(request));
                 request.setAttribute("_ERROR_MESSAGE_", "<b>" + errMsg + "</b>");
@@ -259,7 +276,7 @@ public class LoginEvents {
         session.setAttribute("userLogin", userLogin);
         // let the visit know who the user is
         VisitHandler.setUserLogin(session, userLogin, false);
-        PersistedLoginContainer.loginToSession(userLogin, request);
+        loginToSession(userLogin, request);
     }
 
     /**
@@ -275,7 +292,7 @@ public class LoginEvents {
         GenericValue userLogin = (GenericValue) request.getSession().getAttribute("userLogin");
 
         // log out from all other sessions too; do this here so that it is only done when a user explicitly logs out
-        PersistedLoginContainer.logoutFromAllSessions(userLogin);
+        logoutFromAllSessions(userLogin);
 
         doBasicLogout(userLogin, request);
 
@@ -631,7 +648,7 @@ public class LoginEvents {
      * Gets (and creates if necessary) a key to be used for an external login parameter
      */
     public static String getExternalLoginKey(HttpServletRequest request) {
-        //Debug.logInfo("Running getExternalLoginKey, externalLoginKeys.size=" + externalLoginKeys.size(), module);
+        Debug.logInfo("Running getExternalLoginKey, externalLoginKeys.size=" + externalLoginKeys.size(), module);
         GenericValue userLogin = (GenericValue) request.getAttribute("userLogin");
 
         String externalKey = (String) request.getAttribute(EXTERNAL_LOGIN_KEY_ATTR);
@@ -642,17 +659,20 @@ public class LoginEvents {
             // if the session has a previous key in place, remove it from the master list
             String sesExtKey = (String) session.getAttribute(EXTERNAL_LOGIN_KEY_ATTR);
             if (sesExtKey != null) {
-                PersistedLoginContainer.removeExternalLoginKey(sesExtKey);
+                externalLoginKeys.remove(sesExtKey);
             }
 
             //check the userLogin here, after the old session setting is set so that it will always be cleared
             if (userLogin == null) return "";
 
-            externalKey = PersistedLoginContainer.createExternalLoginKey();
+            //no key made yet for this request, create one
+            while (externalKey == null || externalLoginKeys.containsKey(externalKey)) {
+                externalKey = "EL" + Long.toString(Math.round(Math.random() * 1000000)) + Long.toString(Math.round(Math.random() * 1000000));
+            }
 
             request.setAttribute(EXTERNAL_LOGIN_KEY_ATTR, externalKey);
             session.setAttribute(EXTERNAL_LOGIN_KEY_ATTR, externalKey);
-            PersistedLoginContainer.setExternalLoginKey(externalKey, userLogin);
+            externalLoginKeys.put(externalKey, userLogin);
             return externalKey;
         }
     }
@@ -663,7 +683,7 @@ public class LoginEvents {
         String externalKey = request.getParameter(EXTERNAL_LOGIN_KEY_ATTR);
         if (externalKey == null) return "success";
 
-        GenericValue userLogin = PersistedLoginContainer.getExternalLoginKeyValue(externalKey);
+        GenericValue userLogin = (GenericValue) externalLoginKeys.get(externalKey);
         if (userLogin != null) {
             // found userLogin, do the external login...
 
@@ -682,8 +702,8 @@ public class LoginEvents {
 
             if ("true".equalsIgnoreCase(UtilProperties.getPropertyValue("security.properties", "login.lock.active"))) {
                 String username = userLogin.getString("userLoginId");
-                boolean userIdLoggedIn = PersistedLoginContainer.isLoggedInSession(username, request, false);
-                boolean thisUserLoggedIn = PersistedLoginContainer.isLoggedInSession(username, request, true);
+                boolean userIdLoggedIn = isLoggedInSession(username, request, false);
+                boolean thisUserLoggedIn = isLoggedInSession(username, request, true);
                 if (userIdLoggedIn && !thisUserLoggedIn) {
                     request.setAttribute("_ERROR_MESSAGE_", "<b>This user is already logged in.</b><br>");
                     return "error";
@@ -698,6 +718,59 @@ public class LoginEvents {
         return "success";
     }
 
+    public static void cleanupExternalLoginKey(HttpSession session) {
+        String sesExtKey = (String) session.getAttribute(EXTERNAL_LOGIN_KEY_ATTR);
+        if (sesExtKey != null) {
+            externalLoginKeys.remove(sesExtKey);
+        }
+    }
+
+    public static boolean isLoggedInSession(GenericValue userLogin, HttpServletRequest request) {
+        return isLoggedInSession(userLogin.getString("userLoginId"), request, true);
+    }
+
+    public static boolean isLoggedInSession(String userLoginId, HttpServletRequest request, boolean checkSessionId) {
+        if (userLoginId != null) {
+            Map webappMap = (Map) loggedInSessions.get(userLoginId);
+            if (webappMap == null) {
+                return false;
+            } else {
+                String sessionId = (String) webappMap.get(UtilHttp.getApplicationName(request));
+                if (!checkSessionId) {
+                    if (sessionId == null) {
+                        return false;
+                    }
+                } else {
+                    if (sessionId == null || !sessionId.equals(request.getSession().getId())) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public static void loginToSession(GenericValue userLogin, HttpServletRequest request) {
+        if (userLogin != null) {
+            Map webappMap = (Map) loggedInSessions.get(userLogin.get("userLoginId"));
+            if (webappMap == null) {
+                webappMap = new HashMap();
+                loggedInSessions.put(userLogin.get("userLoginId"), webappMap);
+            }
+
+            String webappName = UtilHttp.getApplicationName(request);
+            webappMap.put(webappName, request.getSession().getId());
+        }
+    }
+
+    public static void logoutFromAllSessions(GenericValue userLogin) {
+        if (userLogin != null) {
+            loggedInSessions.remove(userLogin.get("userLoginId"));
+        }
+    }
+    
     protected static boolean hasBasePermission(GenericValue userLogin, HttpServletRequest request) {
         ServletContext context = (ServletContext) request.getAttribute("servletContext");
         Security security = (Security) request.getAttribute("security");

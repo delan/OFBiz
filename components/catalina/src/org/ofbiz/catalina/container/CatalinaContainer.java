@@ -1,5 +1,5 @@
 /*
- * $Id: CatalinaContainer.java,v 1.15 2004/07/05 16:56:01 ajzeneski Exp $
+ * $Id: CatalinaContainer.java,v 1.16 2004/07/06 17:07:18 ajzeneski Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -56,7 +56,6 @@ import org.apache.catalina.Connector;
 import org.apache.catalina.Cluster;
 import org.apache.catalina.Manager;
 import org.apache.catalina.session.PersistentManager;
-import org.apache.catalina.session.FileStore;
 import org.apache.catalina.session.StandardManager;
 import org.apache.catalina.cluster.tcp.SimpleTcpCluster;
 import org.apache.catalina.cluster.tcp.ReplicationValve;
@@ -125,7 +124,7 @@ import org.xml.sax.SAXException;
  *
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.15 $
+ * @version    $Revision: 1.16 $
  * @since      3.1
  */
 public class CatalinaContainer implements Container {
