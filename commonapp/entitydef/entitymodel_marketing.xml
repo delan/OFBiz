@@ -188,7 +188,7 @@
       <field name="redirectUrl" type="url"></field>
       <field name="comments" type="comment"></field>
       <field name="description" type="description"></field>
-      <field name="cookieLifetime" type="numeric"></field>
+      <field name="trackableLifetime" type="numeric"></field>
       <field name="billableLifetime" type="numeric"></field>
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
@@ -212,6 +212,7 @@
       <field name="orderId" type="id-ne"></field>
       <field name="trackingCodeTypeId" type="id-ne"></field>
       <field name="trackingCodeId" type="id-ne"></field>
+      <field name="isBillable" type="indicator"></field>
       <prim-key field="orderId"/>
       <prim-key field="trackingCodeTypeId"/>
       <relation type="one" fk-name="TKNG_CODODR_ODR" rel-entity-name="OrderHeader">
@@ -240,6 +241,7 @@
       <field name="trackingCodeId" type="id-ne"></field>
       <field name="visitId" type="id-ne"></field>
       <field name="fromDate" type="date-time"></field>
+      <field name="sourceEnumId" type="id"></field>
       <prim-key field="trackingCodeId"/>
       <prim-key field="visitId"/>
       <prim-key field="fromDate"/>
@@ -248,6 +250,9 @@
       </relation>
       <relation type="one" fk-name="TKNG_CODVST_VST" rel-entity-name="Visit">
         <key-map field-name="visitId"/>
+      </relation>
+      <relation type="one" fk-name="TKNG_CODVST_SRCEM" rel-entity-name="Enumeration">
+        <key-map field-name="sourceEnumId" rel-field-name="enumId"/>
       </relation>
     </entity>
 </entitymodel>
