@@ -1,5 +1,5 @@
 /*
- * $Id: PaymentGatewayServices.java,v 1.24 2004/01/21 16:00:19 ajzeneski Exp $
+ * $Id: PaymentGatewayServices.java,v 1.25 2004/01/21 16:17:57 ajzeneski Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -63,7 +63,7 @@ import org.ofbiz.security.Security;
  * PaymentGatewayServices
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.24 $
+ * @version    $Revision: 1.25 $
  * @since      2.0
  */
 public class PaymentGatewayServices {
@@ -1387,7 +1387,9 @@ public class PaymentGatewayServices {
 
         // get the reference number // TODO add support for other tx types
         String refNum = (String) response.get("creditRefNum");
-        Map returnResults = ServiceUtil.returnSuccess("Transaction reference number : " + refNum);
+        String code = (String) response.get("creditCode");
+        String msg = (String) response.get("creditMessage");
+        Map returnResults = ServiceUtil.returnSuccess("Transaction result [" + msg + "/" + code +"] Ref#: " + refNum);
         returnResults.put("referenceNum", refNum);
         return returnResults;
     }
