@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectType.java,v 1.4 2003/11/25 07:48:14 jonesde Exp $
+ * $Id: ObjectType.java,v 1.5 2004/03/22 03:32:05 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -32,6 +32,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 
 /**
  * Utilities for analyzing and converting Object types in Java 
@@ -40,7 +42,7 @@ import java.util.Map;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
  * @author     <a href="mailto:gielen@aixcept.de">Rene Gielen</a> 
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.0
  */
 public class ObjectType {
@@ -120,7 +122,30 @@ public class ObjectType {
         return o;
     }
 
-    /** 
+    /**
+     * Returns an instance of the specified class using the constructor matching the specified parameters
+     * @param className Name of the class to instantiate
+     * @param parameters Parameters passed to the constructor
+     * @return An instance of the named class
+     * @throws ClassNotFoundException
+     * @throws InstantiationException
+     * @throws IllegalAccessException
+     */
+    public static Object getInstance(String className, Object[] parameters) throws ClassNotFoundException,
+            InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+        Class[] sig = new Class[parameters.length];
+        for (int i = 0; i < sig.length; i++) {
+            sig[i] = parameters[i].getClass();
+        }
+        Class c = loadClass(className);
+        Constructor con = c.getConstructor(sig);
+        Object o = con.newInstance(parameters);
+
+        if (Debug.verboseOn()) Debug.logVerbose("Instantiated object: " + o.toString(), module);
+        return o;
+    }
+
+    /**
      * Tests if an object properly implements the specified interface
      * @param obj Object to test
      * @param interfaceName Name of the interface to test against
