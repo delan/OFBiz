@@ -41,6 +41,8 @@ import org.ofbiz.core.util.*;
  */
 public class SimpleEventHandler implements EventHandler {
 
+    public static final String module = SimpleEventHandler.class.getName();
+
     private String xmlResource = null;
     private String eventName = null;
 
@@ -51,6 +53,7 @@ public class SimpleEventHandler implements EventHandler {
     public void initialize(String eventPath, String eventMethod) {
         this.xmlResource = eventPath;
         this.eventName = eventMethod;
+        Debug.logVerbose("[Set path/method]: " + xmlResource + " / " + eventName, module);
     }
 
     /** Invoke the web event
@@ -65,8 +68,11 @@ public class SimpleEventHandler implements EventHandler {
         if (eventName == null)
             throw new EventHandlerException("Event Name (eventMethod) cannot be null");
 
+        Debug.logVerbose("[Processing]: SIMPLE Event", module);
         try {
-            return SimpleMethod.runSimpleEvent(xmlResource, eventName, request);
+            String eventReturn = SimpleMethod.runSimpleEvent(xmlResource, eventName, request);
+            Debug.logVerbose("[Event Return]: " + eventReturn, module);
+            return eventReturn;
         } catch (MiniLangException e) {
             Debug.logError(e);
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "Could not complete event: " + e.getMessage());

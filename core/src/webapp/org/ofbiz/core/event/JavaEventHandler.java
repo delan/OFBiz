@@ -69,7 +69,6 @@ public class JavaEventHandler implements EventHandler {
     }
 
     private String invoke(Class[] paramTypes, Object[] params) throws EventHandlerException {
-        String eventReturnString = null;
         if (eventPath == null || eventMethod == null)
             throw new EventHandlerException("Invalid event method or path; call initialize()");
 
@@ -77,13 +76,12 @@ public class JavaEventHandler implements EventHandler {
         try {
             Class c = Class.forName(eventPath);
             Method m = c.getMethod(eventMethod, paramTypes);
-            eventReturnString = (String) m.invoke(null, params);
-            Debug.logVerbose("[Event Return]: " + eventReturnString, module);
+            String eventReturn = (String) m.invoke(null, params);
+            Debug.logVerbose("[Event Return]: " + eventReturn, module);
+            return eventReturn;
         } catch (Exception e) {
             Debug.logError(e, "Problems Processing Event", module);
             throw new EventHandlerException("Problems processing event: " + e.getMessage());
         }
-
-        return eventReturnString;
     }
 }
