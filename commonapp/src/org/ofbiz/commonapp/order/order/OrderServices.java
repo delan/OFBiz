@@ -193,6 +193,15 @@ public class OrderServices {
         // implement me
         return result;
     }
+
+    /** Service to remove a role type from an order */
+    public static Map removeRoleType(DispatchContext ctx, Map context) {
+        Map result = new HashMap();
+        GenericDelegator delegator = ctx.getDelegator();
+        // This would be for removing a party/role to an order after it has been created
+        // implement me
+        return result;
+    }    
     
     /** Service to email a customer with order status */    
     public static Map emailOrder(DispatchContext ctx, Map context) {
