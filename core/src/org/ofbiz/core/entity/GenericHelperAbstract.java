@@ -65,6 +65,24 @@ public abstract class GenericHelperAbstract implements GenericHelper
     return pk;
   }
 
+  /** Find a Generic Entity by its Primary Key
+   *@param primaryKey The primary key to find by.
+   *@return The GenericValue corresponding to the primaryKey
+   */
+  public GenericValue findByPrimaryKey(String entityName, Map fields)
+  {
+    return findByPrimaryKey(makePK(entityName, fields));
+  }
+  
+  /** Find a CACHED Generic Entity by its Primary Key
+   *@param primaryKey The primary key to find by.
+   *@return The GenericValue corresponding to the primaryKey
+   */
+  public GenericValue findByPrimaryKeyCache(String entityName, Map fields)
+  {
+    return findByPrimaryKeyCache(makePK(entityName, fields));
+  }
+
   /** Find a CACHED Generic Entity by its Primary Key
    *@param primaryKey The primary key to find by.
    *@return The GenericValue corresponding to the primaryKey

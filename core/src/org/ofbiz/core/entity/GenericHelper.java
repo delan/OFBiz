@@ -66,11 +66,21 @@ public interface GenericHelper
    *@return The GenericValue corresponding to the primaryKey
    */
   public GenericValue findByPrimaryKey(GenericPK primaryKey);
+  /** Find a Generic Entity by its Primary Key
+   *@param primaryKey The primary key to find by.
+   *@return The GenericValue corresponding to the primaryKey
+   */
+  public GenericValue findByPrimaryKey(String entityName, Map fields);
   /** Find a CACHED Generic Entity by its Primary Key
    *@param primaryKey The primary key to find by.
    *@return The GenericValue corresponding to the primaryKey
    */
   public GenericValue findByPrimaryKeyCache(GenericPK primaryKey);
+  /** Find a CACHED Generic Entity by its Primary Key
+   *@param primaryKey The primary key to find by.
+   *@return The GenericValue corresponding to the primaryKey
+   */
+  public GenericValue findByPrimaryKeyCache(String entityName, Map fields);
 
   /** Remove a Generic Entity corresponding to the primaryKey
    *@param  primaryKey  The primary key of the entity to remove.
