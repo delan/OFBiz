@@ -48,6 +48,9 @@ access. For a detailed description see the core/docs/entityconfig.html file.
     <!-- need to at least define a name for the components to use -->
     <entity-eca-reader name="main"/>
 
+    <!-- need to at least define a name for the components to use -->
+    <entity-data-reader name="main"/>
+
     <field-type name="hsql" loader="fieldfile" location="fieldtypehsql.xml"/>
     <field-type name="cloudscape" loader="fieldfile" location="fieldtypecloudscape.xml"/>
     <field-type name="mysql" loader="fieldfile" location="fieldtypemysql.xml"/>
@@ -73,6 +76,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
      * Serializable (default)
     -->
     <datasource name="localhsql"
+    		data-reader-name="main"
             helper-class="org.ofbiz.entity.datasource.GenericHelperDAO"
             field-type-name="hsql"
             check-on-start="true"
@@ -82,8 +86,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
             use-fk-initially-deferred="false"
             join-style="ansi-no-parenthesis"
             alias-view-columns="true">
-        <sql-load-path path="commonapp/db" prepend-env="ofbiz.home"/>
-        <sql-load-path path="ecommerce/etc" prepend-env="ofbiz.home"/>
+        <read-data reader-name="main"/>
         <inline-jdbc
                 jdbc-driver="org.hsqldb.jdbcDriver"
                 jdbc-uri="jdbc:hsqldb:data/ofbiz"
@@ -102,8 +105,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
             field-type-name="cloudscape"
             check-on-start="true"
             add-missing-on-start="true">
-        <sql-load-path path="commonapp/db" prepend-env="ofbiz.home"/>
-        <sql-load-path path="ecommerce/etc" prepend-env="ofbiz.home"/>
+        <read-data reader-name="main"/>
         <inline-jdbc
                 jdbc-driver="COM.cloudscape.core.JDBCDriver"
                 jdbc-uri="jdbc:cloudscape:../../data/ofbiz; create=true"
@@ -120,8 +122,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
             add-missing-on-start="true"
             use-foreign-keys="false"
             join-style="theta-oracle">
-        <sql-load-path path="commonapp/db" prepend-env="ofbiz.home"/>
-        <sql-load-path path="ecommerce/etc" prepend-env="ofbiz.home"/>
+        <read-data reader-name="main"/>
         <inline-jdbc
                 jdbc-driver="org.gjt.mm.mysql.Driver"
                 jdbc-uri="jdbc:mysql://127.0.0.1/ofbiz"
@@ -137,8 +138,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
             check-on-start="true"
             add-missing-on-start="true"
             join-style="ansi">
-        <sql-load-path path="commonapp/db" prepend-env="ofbiz.home"/>
-        <sql-load-path path="ecommerce/etc" prepend-env="ofbiz.home"/>
+        <read-data reader-name="main"/>
         <inline-jdbc
                 jdbc-driver="org.postgresql.Driver"
                 jdbc-uri="jdbc:postgresql://127.0.0.1/ofbiz"
@@ -161,8 +161,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
             check-on-start="true"
             add-missing-on-start="true"
             join-style="theta-oracle">
-        <sql-load-path path="commonapp/db" prepend-env="ofbiz.home"/>
-        <sql-load-path path="ecommerce/etc" prepend-env="ofbiz.home"/>
+        <read-data reader-name="main"/>
         <inline-jdbc
                 jdbc-driver="oracle.jdbc.driver.OracleDriver"
                 jdbc-uri="jdbc:oracle:thin:@127.0.0.1:1521:ofbiz"
@@ -181,8 +180,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
             fk-style="name_fk"
             use-fk-initially-deferred="false"
             join-style="ansi-no-parenthesis">
-        <sql-load-path path="commonapp/db" prepend-env="ofbiz.home"/>
-        <sql-load-path path="ecommerce/etc" prepend-env="ofbiz.home"/>
+        <read-data reader-name="main"/>
         <inline-jdbc
                 jdbc-driver="com.sap.dbtech.jdbc.DriverSapDB"
                 jdbc-uri="jdbc:sapdb://localhost/OFBIZ"
@@ -203,8 +201,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
             check-on-start="false"
             add-missing-on-start="false"
             join-style="ansi">
-        <sql-load-path path="commonapp/db" prepend-env="ofbiz.home"/>
-        <sql-load-path path="ecommerce/etc" prepend-env="ofbiz.home"/>
+        <read-data reader-name="main"/>
         <inline-jdbc
                 jdbc-driver="org.firebirdsql.jdbc.FBDriver"
                 jdbc-uri="jdbc:firebirdsql://localhost:3050//opt/interbase/data/ofbiz.gdb"
@@ -222,8 +219,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
             add-missing-on-start="true"
             join-style="ansi"
             use-fk-initially-deferred="false">
-        <sql-load-path path="commonapp/db" prepend-env="ofbiz.home"/>
-        <sql-load-path path="ecommerce/etc" prepend-env="ofbiz.home"/>
+        <read-data reader-name="main"/>
         <inline-jdbc
                 jdbc-driver="org.ofbiz.jdbc.sqlserver.SQLServerDriver"
                 jdbc-uri="jdbc:microsoft:sqlserver://localhost:1433;DatabaseName=ofbiz;SelectMethod=Cursor"
@@ -238,8 +234,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
             field-type-name="oracle"
             check-on-start="true"
             add-missing-on-start="true">
-        <sql-load-path path="commonapp/db" prepend-env="ofbiz.home"/>
-        <sql-load-path path="ecommerce/etc" prepend-env="ofbiz.home"/>
+        <read-data reader-name="main"/>
         <inline-jdbc
                 jdbc-driver="com.p6spy.engine.spy.P6SpyDriver"
                 jdbc-uri="jdbc:oracle:oci8:@EDS2"

@@ -24,7 +24,7 @@
  *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *  $Id: ofbiz-component.dtd,v 1.3 2003/08/16 23:22:02 jonesde Exp $
+ *  $Id: ofbiz-component.dtd,v 1.4 2003/08/19 11:00:47 jonesde Exp $
 -->
 
 <!ELEMENT ofbiz-component ( depends-on*, resource-loader*, classpath*, entity-resource*, service-resource*, webapp* )>
@@ -53,7 +53,7 @@
 
 <!ELEMENT entity-resource EMPTY>
 <!ATTLIST entity-resource
-    type ( model | group | eca ) #REQUIRED
+    type ( model | group | eca | data ) #REQUIRED
     reader-name CDATA #REQUIRED
     loader CDATA #REQUIRED
     location CDATA #REQUIRED
