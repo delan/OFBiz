@@ -149,6 +149,7 @@
 	
     <target name="war" depends="jar-deploy,prepare">
         <jar jarfile="${lib.dir}/${name}.war" basedir="${webapp.dir}" />
+        <jar jarfile="${lib.dir}/images.war" basedir="images" />
     </target>
 
 
