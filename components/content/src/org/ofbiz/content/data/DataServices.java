@@ -32,8 +32,8 @@ import org.ofbiz.service.ModelService;
  * DataServices Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.1 $
- * @since      2.2
+ * @version    $Revision: 1.2 $
+ * @since      3.0
  *
  * 
  */
@@ -42,6 +42,9 @@ public class DataServices {
     public static final String module = DataServices.class.getName();
 
 
+    /**
+     * A top-level service for creating a DataResource and ElectronicText together.
+     */
     public static Map createDataResourceAndText(DispatchContext dctx, Map context) {
         Map result = new HashMap();
         GenericDelegator delegator = dctx.getDelegator();
@@ -74,6 +77,10 @@ public class DataServices {
         return result;
     }
 
+    /**
+     * A service wrapper for the createDataResourceMethod method.
+     * Forces permissions to be checked.
+     */
     public static Map createDataResource(DispatchContext dctx, Map context) {
         context.put("entityOperation", "_CREATE");
         List targetOperations = new ArrayList();
@@ -119,6 +126,10 @@ public class DataServices {
         return result;
     }
 
+    /**
+     * A service wrapper for the createElectronicTextMethod method.
+     * Forces permissions to be checked.
+     */
     public static Map createElectronicText(DispatchContext dctx, Map context) {
         context.put("entityOperation", "_CREATE");
         List targetOperations = new ArrayList();
@@ -153,41 +164,10 @@ public class DataServices {
     }
 
 
-    public static Map createImageDataResource(DispatchContext dctx, Map context) {
-        context.put("entityOperation", "_CREATE");
-        List targetOperations = new ArrayList();
-        targetOperations.add("CREATE_CONTENT");
-        context.put("targetOperationList", targetOperations);
-        context.put("skipPermissionCheck", null);
-        Map result = createImageDataResourceMethod(dctx, context);
-        return result;
-    }
 
-    public static Map createImageDataResourceMethod(DispatchContext dctx, Map context) {
-        HashMap result = new HashMap();
-        GenericDelegator delegator = dctx.getDelegator();
-        LocalDispatcher dispatcher = dctx.getDispatcher();
-        String permissionStatus = DataResourceWorker.callDataResourcePermissionCheck( delegator, dispatcher,
-                                      context );
-        if (permissionStatus != null && permissionStatus.equalsIgnoreCase("granted") ) {
-            String dataResourceId = (String)context.get("dataResourceId");
-            ByteWrapper imageData = (ByteWrapper)context.get("imageData");
-            byte[] bytes = imageData.getBytes();
-            if (imageData != null ) {
-                GenericValue electronicText = delegator.makeValue("ImageResourceData", 
-                       UtilMisc.toMap("dataResourceId", dataResourceId));
-                electronicText.setBytes( "imageData", imageData.getBytes());
-                try {
-                    electronicText.create();
-                } catch(GenericEntityException e) {
-                    return ServiceUtil.returnError(e.getMessage());
-                }
-            }
-        }
-        
-        return result;
-    }
-
+    /**
+     * A top-level service for updating a DataResource and ElectronicText together.
+     */
     public static Map updateDataResourceAndText(DispatchContext dctx, Map context) {
         Map result = new HashMap();
         GenericDelegator delegator = dctx.getDelegator();
@@ -205,7 +185,6 @@ public class DataServices {
             if (thisResult.get(ModelService.RESPONSE_MESSAGE) != null) {
                 return ServiceUtil.returnError((String)thisResult.get(ModelService.ERROR_MESSAGE));
             }
-            result.put("dataResourceId", thisResult.get("dataResourceId"));
             context.put("dataResourceId", thisResult.get("dataResourceId"));
 
             String dataResourceTypeId = (String)context.get("dataResourceTypeId");
@@ -221,6 +200,10 @@ public class DataServices {
     }
 
 
+    /**
+     * A service wrapper for the updateDataResourceMethod method.
+     * Forces permissions to be checked.
+     */
     public static Map updateDataResource(DispatchContext dctx, Map context) {
         context.put("entityOperation", "_CREATE");
         List targetOperations = new ArrayList();
@@ -263,11 +246,14 @@ public class DataServices {
             } catch(GenericEntityException e) {
                 return ServiceUtil.returnError(e.getMessage());
             }
-            result.put("dataResourceId", dataResourceId);
         }
         return result;
     }
 
+    /**
+     * A service wrapper for the updateElectronicTextMethod method.
+     * Forces permissions to be checked.
+     */
     public static Map updateElectronicText(DispatchContext dctx, Map context) {
         context.put("entityOperation", "_UPDATE");
         List targetOperations = new ArrayList();
