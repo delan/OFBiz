@@ -45,7 +45,7 @@ context.put("orderItems", orderDisplayItems);
 orderHeaderAdjustments = OrderReadHelper.getOrderHeaderAdjustments(orderAdjustments);
 context.put("orderHeaderAdjustments", orderHeaderAdjustments);
 
-orderSubTotal = OrderReadHelper.getOrderItemsSubTotal(orderItems, orderAdjustments)
+orderSubTotal = OrderReadHelper.getOrderItemsSubTotal(orderItems, orderAdjustments);
 context.put("orderSubTotal", orderSubTotal);
 context.put("placingCustomerPerson", userLogin == null ? null : userLogin.getRelatedOne("Person"));
 context.put("shippingAddress", cart.getShippingAddress());
@@ -54,8 +54,8 @@ paymentMethods = cart.getPaymentMethods();
 paymentMethod = null;
 if (paymentMethods != null && paymentMethods.size() > 0) {
     paymentMethod = paymentMethods.get(0);
+    context.put("paymentMethod", paymentMethod);
 }
-context.put("paymentMethod", paymentMethod);
 
 if (paymentMethod != null && "CREDIT_CARD".equals(paymentMethod.getString("paymentMethodTypeId"))) {
     creditCard = paymentMethod.getRelatedOneCache("CreditCard");
@@ -72,8 +72,8 @@ paymentMethodTypeId = null;
 if (paymentMethodTypeIds != null && paymentMethodTypeIds.size() > 0) {
     paymentMethodTypeId = paymentMethodTypeIds.get(0);
     paymentMethodType = delegator.findByPrimaryKey("PaymentMethodType", UtilMisc.toMap("paymentMethodTypeId", paymentMethodTypeId));
+    context.put("paymentMethodType", paymentMethodType);
 }   
-context.put("paymentMethodType", paymentMethodType);
 
 billingAddress = null;
 if (paymentMethod != null) {
@@ -82,9 +82,13 @@ if (paymentMethod != null) {
         billingAddress = creditCard.getRelatedOne("PostalAddress");
     }
 }
-context.put("billingAddress", billingAddress);
+if (billingAddress != null)
+    context.put("billingAddress", billingAddress);
 
-context.put("billingAccount", cart.getBillingAccountId() != null ? delegator.findByPrimaryKey("BillingAccount", UtilMisc.toMap("billingAccountId", cart.getBillingAccountId())) : null);
+billingAccount = cart.getBillingAccountId() != null ? delegator.findByPrimaryKey("BillingAccount", UtilMisc.toMap("billingAccountId", cart.getBillingAccountId())) : null;
+if (billingAccount != null)
+    context.put("billingAccount", billingAccount);
+    
 context.put("customerPoNumber", cart.getPoNumber());
 context.put("carrierPartyId", cart.getCarrierPartyId());
 context.put("shipmentMethodTypeId", cart.getShipmentMethodTypeId());

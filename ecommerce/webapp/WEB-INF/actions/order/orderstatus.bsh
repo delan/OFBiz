@@ -82,15 +82,18 @@ if (orderHeader != null) {
     shippingAddress = orderReadHelper.getShippingAddress();
     context.put("shippingAddress", shippingAddress);
     billingAccount = orderHeader.getRelatedOne("BillingAccount");
-    context.put("billingAccount", billingAccount);
+    if (billingAccount != null)
+        context.put("billingAccount", billingAccount);
   
     orderPaymentPreferences = UtilMisc.toIterator(orderHeader.getRelated("OrderPaymentPreference"));
     if (orderPaymentPreferences != null && orderPaymentPreferences.hasNext()) {
         orderPaymentPreference = orderPaymentPreferences.next();
         paymentMethod = orderPaymentPreference.getRelatedOne("PaymentMethod");        
         paymentMethodType = orderPaymentPreference.getRelatedOne("PaymentMethodType");
-        context.put("paymentMethod", paymentMethod);
-        context.put("paymentMethodType", paymentMethodType);
+        if (paymentMethod != null)
+            context.put("paymentMethod", paymentMethod);
+        if (paymentMethodType != null)
+            context.put("paymentMethodType", paymentMethodType);
         
         if (paymentMethod != null && "CREDIT_CARD".equals(paymentMethod.getString("paymentMethodTypeId"))) {
             creditCard = paymentMethod.getRelatedOneCache("CreditCard");

@@ -46,12 +46,15 @@ if (cart != null) {
 context.put("shoppingCart", cart);
 context.put("userLogin", userLogin);
 context.put("checkOutPaymentId", checkOutPaymentId);
-context.put("chosenShippingMethod", cart.getShipmentMethodTypeId() + '@' + cart.getCarrierPartyId());
 context.put("carrierShipmentMethodList", delegator.findAllCache("CarrierShipmentMethod", UtilMisc.toList("sequenceNumber")));
 context.put("shippingContactMechList", ContactHelper.getContactMech(party, "SHIPPING_LOCATION", "POSTAL_ADDRESS", false));   
 context.put("paymentMethodList", EntityUtil.filterByDate(party.getRelated("PaymentMethod"), true)); 
 context.put("emailList",  ContactHelper.getContactMechByType(party, "EMAIL_ADDRESS", false));
-context.put("billingAccountRoleList", delegator.findByAnd("BillingAccountRole", UtilMisc.toMap("partyId", userLogin.getString("partyId"), "roleTypeId", "BILL_TO_CUSTOMER"), null));
 
+billingAccountRoleList = delegator.findByAnd("BillingAccountRole", UtilMisc.toMap("partyId", userLogin.getString("partyId"), "roleTypeId", "BILL_TO_CUSTOMER"));
+if (billingAccountRoleList != null && billingAccountRoleList.size() > 0)
+    context.put("billingAccountRoleList", billingAccountRoleList);
+if (cart.getShipmentMethodTypeId() != null && cart.getCarrierPartyId() != null)
+    context.put("chosenShippingMethod", cart.getShipmentMethodTypeId() + '@' + cart.getCarrierPartyId());
   
 

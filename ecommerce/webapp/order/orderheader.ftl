@@ -210,7 +210,7 @@
                         </td>
                         <td width="5">&nbsp;</td>
                         <td align="left" valign="top" width="80%">
-                          <div class="tabletext">${customerPoNumber?if_exists}></div>
+                          <div class="tabletext">${customerPoNumber?if_exists}</div>
                         </td>
                       </tr>
                     </#if>                
