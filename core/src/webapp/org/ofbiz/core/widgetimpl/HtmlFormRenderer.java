@@ -70,6 +70,12 @@ public class HtmlFormRenderer implements FormStringRenderer {
         this.response = response;
     }
     
+    public void appendWhitespace(StringBuffer buffer) {
+        // appending line ends for now, but this could be replaced with a simple space or something
+        buffer.append("\r\n");
+        //buffer.append(' ');
+    }
+    
     public void appendOfbizUrl(StringBuffer buffer, String location) {
         ServletContext ctx = (ServletContext) this.request.getAttribute("servletContext");
         RequestHandler rh = (RequestHandler) ctx.getAttribute(SiteDefs.REQUEST_HANDLER);
@@ -104,6 +110,8 @@ public class HtmlFormRenderer implements FormStringRenderer {
         buffer.append(">");
         buffer.append(displayField.getDescription(context));
         buffer.append("</span>");
+        
+        this.appendWhitespace(buffer);
     }
 
     /* (non-Javadoc)
@@ -128,6 +136,8 @@ public class HtmlFormRenderer implements FormStringRenderer {
         
         buffer.append(hyperlinkField.getDescription(context));
         buffer.append("</a>");
+        
+        this.appendWhitespace(buffer);
     }
 
     /* (non-Javadoc)
@@ -173,6 +183,8 @@ public class HtmlFormRenderer implements FormStringRenderer {
         }
 
         buffer.append("/>");
+        
+        this.appendWhitespace(buffer);
     }
 
     /* (non-Javadoc)
@@ -210,6 +222,8 @@ public class HtmlFormRenderer implements FormStringRenderer {
         }
 
         buffer.append("<textarea/>");
+        
+        this.appendWhitespace(buffer);
     }
 
     /* (non-Javadoc)
@@ -277,6 +291,8 @@ public class HtmlFormRenderer implements FormStringRenderer {
             this.appendContentUrl(buffer, "/images/cal.gif");
             buffer.append("\" width=\"16\" height=\"16\" border=\"0\" alt=\"Calendar\"></a>");
         }
+        
+        this.appendWhitespace(buffer);
     }
 
     /* (non-Javadoc)
@@ -342,6 +358,8 @@ public class HtmlFormRenderer implements FormStringRenderer {
         }
 
         buffer.append("</select>");
+        
+        this.appendWhitespace(buffer);
     }
     
     /* (non-Javadoc)
@@ -350,6 +368,8 @@ public class HtmlFormRenderer implements FormStringRenderer {
     public void renderCheckField(StringBuffer buffer, Map context, CheckField checkField) {
         // TODO Auto-generated method stub
         buffer.append("<!-- Sorry, check box fields have not been implemented yet -->");
+        
+        this.appendWhitespace(buffer);
     }
 
     /* (non-Javadoc)
@@ -358,6 +378,8 @@ public class HtmlFormRenderer implements FormStringRenderer {
     public void renderRadioField(StringBuffer buffer, Map context, RadioField radioField) {
         // TODO Auto-generated method stub
         buffer.append("<!-- Sorry, radio button fields have not been implemented yet -->");
+        
+        this.appendWhitespace(buffer);
     }
 
     /* (non-Javadoc)
@@ -435,6 +457,8 @@ public class HtmlFormRenderer implements FormStringRenderer {
         
             buffer.append("/>");
         }
+        
+        this.appendWhitespace(buffer);
     }
 
     /* (non-Javadoc)
@@ -464,6 +488,8 @@ public class HtmlFormRenderer implements FormStringRenderer {
         }
         
         buffer.append("/>");
+        
+        this.appendWhitespace(buffer);
     }
 
     /* (non-Javadoc)
@@ -489,6 +515,8 @@ public class HtmlFormRenderer implements FormStringRenderer {
         }
         
         buffer.append("/>");
+        
+        this.appendWhitespace(buffer);
     }
 
     /* (non-Javadoc)
@@ -511,6 +539,8 @@ public class HtmlFormRenderer implements FormStringRenderer {
         buffer.append(">");
         buffer.append(modelFormField.getTitle(context));
         buffer.append("</span>");
+        
+        this.appendWhitespace(buffer);
     }
 
     /* (non-Javadoc)
@@ -522,6 +552,8 @@ public class HtmlFormRenderer implements FormStringRenderer {
         buffer.append("\" name=\"");
         buffer.append(modelForm.getCurrentFormName(context));
         buffer.append("\">");
+        
+        this.appendWhitespace(buffer);
     }
 
     /* (non-Javadoc)
@@ -529,14 +561,20 @@ public class HtmlFormRenderer implements FormStringRenderer {
      */
     public void renderFormClose(StringBuffer buffer, Map context, ModelForm modelForm) {
         buffer.append("</form>");
+        
+        this.appendWhitespace(buffer);
     }
 
     public void renderFormatListWrapperOpen(StringBuffer buffer, Map context, ModelForm modelForm) {
         buffer.append("<table border=\"1\" cellpadding=\"2\" cellspacing=\"0\" width=\"100%\">");
+        
+        this.appendWhitespace(buffer);
     }
 
     public void renderFormatListWrapperClose(StringBuffer buffer, Map context, ModelForm modelForm) {
         buffer.append("</table>");
+        
+        this.appendWhitespace(buffer);
     }
 
     /* (non-Javadoc)
@@ -544,6 +582,8 @@ public class HtmlFormRenderer implements FormStringRenderer {
      */
     public void renderFormatHeaderRowOpen(StringBuffer buffer, Map context, ModelForm modelForm) {
         buffer.append("<tr>");
+        
+        this.appendWhitespace(buffer);
     }
 
     /* (non-Javadoc)
@@ -551,6 +591,8 @@ public class HtmlFormRenderer implements FormStringRenderer {
      */
     public void renderFormatHeaderRowClose(StringBuffer buffer, Map context, ModelForm modelForm) {
         buffer.append("</tr>");
+        
+        this.appendWhitespace(buffer);
     }
 
     /* (non-Javadoc)
@@ -558,6 +600,8 @@ public class HtmlFormRenderer implements FormStringRenderer {
      */
     public void renderFormatHeaderRowCellOpen(StringBuffer buffer, Map context, ModelForm modelForm, ModelFormField modelFormField) {
         buffer.append("<td>");
+        
+        this.appendWhitespace(buffer);
     }
 
     /* (non-Javadoc)
@@ -565,10 +609,14 @@ public class HtmlFormRenderer implements FormStringRenderer {
      */
     public void renderFormatHeaderRowCellClose(StringBuffer buffer, Map context, ModelForm modelForm, ModelFormField modelFormField) {
         buffer.append("</td>");
+        
+        this.appendWhitespace(buffer);
     }
 
     public void renderFormatHeaderRowFormCellOpen(StringBuffer buffer, Map context, ModelForm modelForm) {
         buffer.append("<td align=\"center\">");
+        
+        this.appendWhitespace(buffer);
     }
 
     /* (non-Javadoc)
@@ -576,6 +624,8 @@ public class HtmlFormRenderer implements FormStringRenderer {
      */
     public void renderFormatHeaderRowFormCellClose(StringBuffer buffer, Map context, ModelForm modelForm) {
         buffer.append("</td>");
+        
+        this.appendWhitespace(buffer);
     }
 
     /* (non-Javadoc)
@@ -594,6 +644,8 @@ public class HtmlFormRenderer implements FormStringRenderer {
      */
     public void renderFormatItemRowOpen(StringBuffer buffer, Map context, ModelForm modelForm) {
         buffer.append("<tr>");
+        
+        this.appendWhitespace(buffer);
     }
 
     /* (non-Javadoc)
@@ -601,6 +653,8 @@ public class HtmlFormRenderer implements FormStringRenderer {
      */
     public void renderFormatItemRowClose(StringBuffer buffer, Map context, ModelForm modelForm) {
         buffer.append("</tr>");
+        
+        this.appendWhitespace(buffer);
     }
 
     /* (non-Javadoc)
@@ -608,6 +662,8 @@ public class HtmlFormRenderer implements FormStringRenderer {
      */
     public void renderFormatItemRowCellOpen(StringBuffer buffer, Map context, ModelForm modelForm, ModelFormField modelFormField) {
         buffer.append("<td>");
+        
+        this.appendWhitespace(buffer);
     }
 
     /* (non-Javadoc)
@@ -615,6 +671,8 @@ public class HtmlFormRenderer implements FormStringRenderer {
      */
     public void renderFormatItemRowCellClose(StringBuffer buffer, Map context, ModelForm modelForm, ModelFormField modelFormField) {
         buffer.append("</td>");
+        
+        this.appendWhitespace(buffer);
     }
 
     /* (non-Javadoc)
@@ -622,6 +680,8 @@ public class HtmlFormRenderer implements FormStringRenderer {
      */
     public void renderFormatItemRowFormCellOpen(StringBuffer buffer, Map context, ModelForm modelForm) {
         buffer.append("<td align=\"center\">");
+        
+        this.appendWhitespace(buffer);
     }
 
     /* (non-Javadoc)
@@ -629,14 +689,20 @@ public class HtmlFormRenderer implements FormStringRenderer {
      */
     public void renderFormatItemRowFormCellClose(StringBuffer buffer, Map context, ModelForm modelForm) {
         buffer.append("</td>");
+        
+        this.appendWhitespace(buffer);
     }
 
     public void renderFormatSingleWrapperOpen(StringBuffer buffer, Map context, ModelForm modelForm) {
         buffer.append("<table border=\"0\" cellpadding=\"2\" cellspacing=\"0\">");
+        
+        this.appendWhitespace(buffer);
     }
 
     public void renderFormatSingleWrapperClose(StringBuffer buffer, Map context, ModelForm modelForm) {
         buffer.append("</table>");
+        
+        this.appendWhitespace(buffer);
     }
 
     /* (non-Javadoc)
@@ -644,6 +710,8 @@ public class HtmlFormRenderer implements FormStringRenderer {
      */
     public void renderFormatFieldRowOpen(StringBuffer buffer, Map context, ModelForm modelForm) {
         buffer.append("<tr>");
+        
+        this.appendWhitespace(buffer);
     }
 
     /* (non-Javadoc)
@@ -651,6 +719,8 @@ public class HtmlFormRenderer implements FormStringRenderer {
      */
     public void renderFormatFieldRowClose(StringBuffer buffer, Map context, ModelForm modelForm) {
         buffer.append("</tr>");
+        
+        this.appendWhitespace(buffer);
     }
 
     /* (non-Javadoc)
@@ -658,6 +728,8 @@ public class HtmlFormRenderer implements FormStringRenderer {
      */
     public void renderFormatFieldRowTitleCellOpen(StringBuffer buffer, Map context, ModelFormField modelFormField) {
         buffer.append("<td width=\"20%\">");
+        
+        this.appendWhitespace(buffer);
     }
 
     /* (non-Javadoc)
@@ -665,6 +737,8 @@ public class HtmlFormRenderer implements FormStringRenderer {
      */
     public void renderFormatFieldRowTitleCellClose(StringBuffer buffer, Map context, ModelFormField modelFormField) {
         buffer.append("</td>");
+        
+        this.appendWhitespace(buffer);
     }
 
     /* (non-Javadoc)
@@ -672,6 +746,8 @@ public class HtmlFormRenderer implements FormStringRenderer {
      */
     public void renderFormatFieldRowSpacerCell(StringBuffer buffer, Map context, ModelFormField modelFormField) {
         buffer.append("<td>&nbsp;</td>");
+        
+        this.appendWhitespace(buffer);
     }
 
     /* (non-Javadoc)
@@ -683,6 +759,8 @@ public class HtmlFormRenderer implements FormStringRenderer {
         } else {
             buffer.append("<td width=\"30%\">");
         }
+        
+        this.appendWhitespace(buffer);
     }
 
     /* (non-Javadoc)
@@ -690,6 +768,8 @@ public class HtmlFormRenderer implements FormStringRenderer {
      */
     public void renderFormatFieldRowWidgetCellClose(StringBuffer buffer, Map context, ModelFormField modelFormField, int positions) {
         buffer.append("</td>");
+        
+        this.appendWhitespace(buffer);
     }
 
     public void renderFormatEmptySpace(StringBuffer buffer, Map context, ModelForm modelForm) {
