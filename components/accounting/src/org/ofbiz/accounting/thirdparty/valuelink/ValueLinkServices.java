@@ -1,5 +1,5 @@
 /*
- * $Id: ValueLinkServices.java,v 1.2 2004/02/23 16:44:42 ajzeneski Exp $
+ * $Id: ValueLinkServices.java,v 1.3 2004/02/28 19:26:48 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -41,7 +41,7 @@ import javax.transaction.xa.XAException;
  * ValueLinkServices - Integration with ValueLink Gift Cards
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      3.0
  */
 public class ValueLinkServices {
@@ -233,8 +233,9 @@ public class ValueLinkServices {
 
         if (response != null) {
             String responseCode = (String) response.get("responsecode");
-            Map result = ServiceUtil.returnSuccess();
+            Map result = ServiceUtil.returnSuccess("Activation of physical card complete.");
             if (responseCode.equals("00")) {
+
                 result.put("processResult", new Boolean(true));
             } else {
                 result.put("processResult", new Boolean(false));
@@ -290,7 +291,7 @@ public class ValueLinkServices {
 
         if (response != null) {
             String responseCode = (String) response.get("responsecode");
-            Map result = ServiceUtil.returnSuccess();
+            Map result = ServiceUtil.returnSuccess("PIN disabled.");
             if (responseCode.equals("00")) {
                 result.put("processResult", new Boolean(true));
             } else {
