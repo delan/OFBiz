@@ -1304,7 +1304,7 @@
       <relation type="one" fk-name="PROD_KWDRES_VST" rel-entity-name="Visit">
         <key-map field-name="visitId"/>
       </relation>
-      <relation type="one" fk-name="PROD_KWDRES_PCAT" rel-entity-name="ProductCategory">
+      <relation type="one-nofk" rel-entity-name="ProductCategory">
         <key-map field-name="productCategoryId"/>
       </relation>
     </entity>
