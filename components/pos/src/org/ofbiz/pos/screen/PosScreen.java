@@ -58,12 +58,10 @@ public class PosScreen extends NavigationHelper implements Runnable, DialogCallb
     public static final long MAX_INACTIVITY = 1800000;
     public static PosScreen currentScreen;
 
+    protected static boolean monitorRunning = false;
     protected static boolean deviceInit = false;
-    protected boolean monitorRunning = false;
-    protected boolean isLocked = false;
-
-    protected Thread activityMonitor = null;
-    protected long lastActivity = 0;
+    protected static long lastActivity = 0;
+    protected static Thread activityMonitor = null;
 
     protected XuiSession session = null;
     protected Output output = null;
@@ -71,6 +69,7 @@ public class PosScreen extends NavigationHelper implements Runnable, DialogCallb
     protected Journal journal = null;
     protected Operator operator = null;
     protected PosButton buttons = null;
+    protected boolean isLocked = false;
 
     public void pageCreated() {
         super.pageCreated();
@@ -85,7 +84,7 @@ public class PosScreen extends NavigationHelper implements Runnable, DialogCallb
         this.input = new Input(this);
         this.journal = new Journal(this);
         this.operator = new Operator(this);
-        this.lastActivity = System.currentTimeMillis();
+        this.setLastActivity(System.currentTimeMillis());
                 
         if (!deviceInit) {
             deviceInit = true;
@@ -103,8 +102,12 @@ public class PosScreen extends NavigationHelper implements Runnable, DialogCallb
             XProjectManager.getPageManager().loadPage("main/promopanel");
 
             // start the shared monitor thread
-            this.activityMonitor = new Thread(this);
-            this.activityMonitor.setDaemon(false);
+            if (activityMonitor == null) {
+                monitorRunning = true;
+                activityMonitor = new Thread(this);
+                activityMonitor.setDaemon(false);
+                activityMonitor.start();
+            }
         }
 
         // buttons are different per screen
@@ -122,10 +125,6 @@ public class PosScreen extends NavigationHelper implements Runnable, DialogCallb
             this.setLock(true);
         } else {
             this.setLock(isLocked);
-            if (!monitorRunning && activityMonitor != null) {
-                monitorRunning = true;
-                activityMonitor.start();
-            }
         }
 
         currentScreen = this;
@@ -218,7 +217,7 @@ public class PosScreen extends NavigationHelper implements Runnable, DialogCallb
     }
 
     public void setLastActivity(long l) {
-        this.lastActivity = l;
+        lastActivity = l;
     }
 
     // generic button XUI event calls into PosButton to lookup the external reference    
@@ -266,7 +265,8 @@ public class PosScreen extends NavigationHelper implements Runnable, DialogCallb
     public void run() {
         while (monitorRunning) {
             if (!isLocked && (System.currentTimeMillis() - lastActivity) > MAX_INACTIVITY) {
-                this.showPage("main/pospanel").setLock(true);
+                Debug.log("POS terminal auto-lock activated", module);
+                PosScreen.currentScreen.showPage("main/pospanel").setLock(true);
             }
             try {
                 Thread.sleep(5000);
