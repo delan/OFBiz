@@ -735,9 +735,9 @@ public class CheckOutEvents {
         
         GenericValue shippingAddressObj = cart.getShippingAddress();
         String shippingAddress = UtilFormatOut.checkNull(shippingAddressObj.getString("address1").toUpperCase());
-        List exprs = UtilMisc.toList(new EntityExprList(UtilMisc.toList(
-                new EntityExpr("orderBlacklistString", true, EntityOperator.EQUALS, shippingAddress, true),
-                new EntityExpr("orderBlacklistTypeId", EntityOperator.EQUALS, "BLACKLIST_ADDRESS")), EntityOperator.AND));
+        List exprs = UtilMisc.toList(new EntityExpr(
+                new EntityExpr("orderBlacklistString", true, EntityOperator.EQUALS, shippingAddress, true), EntityOperator.AND,                
+                new EntityExpr("orderBlacklistTypeId", EntityOperator.EQUALS, "BLACKLIST_ADDRESS")));
         
         List paymentMethods = cart.getPaymentMethods();
         Iterator i = paymentMethods.iterator();
@@ -757,17 +757,17 @@ public class CheckOutEvents {
                 }
                 if (creditCard != null) {
                     String creditCardNumber = UtilFormatOut.checkNull(creditCard.getString("cardNumber"));
-                    exprs.add(new EntityExprList(UtilMisc.toList(
+                    exprs.add(new EntityExpr(
                             new EntityExpr("orderBlacklistString", EntityOperator.EQUALS, creditCardNumber),
-                            new EntityExpr("orderBlacklistTypeId", EntityOperator.EQUALS, "BLACKLIST_CREDITCARD")), 
-                            EntityOperator.AND));
+                            EntityOperator.AND,
+                            new EntityExpr("orderBlacklistTypeId", EntityOperator.EQUALS, "BLACKLIST_CREDITCARD")));
                 }
                 if (billingAddress != null) {
                     String address = UtilFormatOut.checkNull(billingAddress.getString("address1").toUpperCase());
-                    exprs.add(new EntityExprList(UtilMisc.toList(
+                    exprs.add(new EntityExpr(
                             new EntityExpr("orderBlacklistString", true, EntityOperator.EQUALS, address, true),
-                            new EntityExpr("orderBlacklistTypeId", EntityOperator.EQUALS, "BLACKLIST_ADDRESS")), 
-                            EntityOperator.AND));  
+                            EntityOperator.AND,
+                            new EntityExpr("orderBlacklistTypeId", EntityOperator.EQUALS, "BLACKLIST_ADDRESS")));
                 }  
             }
         }
@@ -775,7 +775,7 @@ public class CheckOutEvents {
         List blacklistFound = null;
         if (exprs.size() > 0) {            
             try {
-                blacklistFound = delegator.findByAnd("OrderBlacklist", exprs);
+                blacklistFound = delegator.findByOr("OrderBlacklist", exprs);
             } catch (GenericEntityException e) {
                 Debug.logError(e, "Problems with OrderBlacklist lookup.", module);
                 request.setAttribute(SiteDefs.ERROR_MESSAGE, "Problems reading the database, please try again.");
