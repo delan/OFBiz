@@ -245,6 +245,7 @@ public class ShoppingCart implements java.io.Serializable {
     public void clear() {
         salesTax = 0.00;
         shipping = 0.00;
+        orderId = null;
         cartLines.clear();
     }
     
