@@ -161,10 +161,14 @@
       ModelEntity entity = reader.getModelEntity((String)classNamesIterator.next());
       if(helper.create("SecurityPermission", UtilMisc.toMap("permissionId", entity.tableName + "_ADMIN", "description", "Permission to Administer a " + entity.entityName + " entity.")) != null) rowsChanged++;
       else { String errorMsg = "[install.generateData]: Generated Data Load error for entity \"" + entity.tableName + "\" creating ADMIN SecurityPermission"; errorMessages.add(errorMsg); }
-      //if(helper.create("SecurityPermission", UtilMisc.toMap("permissionId", entity.tableName + "_VIEW", "description", "Permission to View a " + entity.entityName + " entity.")) != null) rowsChanged++;
-      //if(helper.create("SecurityPermission", UtilMisc.toMap("permissionId", entity.tableName + "_CREATE", "description", "Permission to Create a " + entity.entityName + " entity.")) != null) rowsChanged++;
-      //if(helper.create("SecurityPermission", UtilMisc.toMap("permissionId", entity.tableName + "_UPDATE", "description", "Permission to Update a " + entity.entityName + " entity.")) != null) rowsChanged++;
-      //if(helper.create("SecurityPermission", UtilMisc.toMap("permissionId", entity.tableName + "_DELETE", "description", "Permission to Delete a " + entity.entityName + " entity.")) != null) rowsChanged++;
+      if(helper.create("SecurityPermission", UtilMisc.toMap("permissionId", entity.tableName + "_VIEW", "description", "Permission to View a " + entity.entityName + " entity.")) != null) rowsChanged++;
+      else { String errorMsg = "[install.generateData]: Generated Data Load error for entity \"" + entity.tableName + "\" creating VIEW SecurityPermission"; errorMessages.add(errorMsg); }
+      if(helper.create("SecurityPermission", UtilMisc.toMap("permissionId", entity.tableName + "_CREATE", "description", "Permission to Create a " + entity.entityName + " entity.")) != null) rowsChanged++;
+      else { String errorMsg = "[install.generateData]: Generated Data Load error for entity \"" + entity.tableName + "\" creating CREATE SecurityPermission"; errorMessages.add(errorMsg); }
+      if(helper.create("SecurityPermission", UtilMisc.toMap("permissionId", entity.tableName + "_UPDATE", "description", "Permission to Update a " + entity.entityName + " entity.")) != null) rowsChanged++;
+      else { String errorMsg = "[install.generateData]: Generated Data Load error for entity \"" + entity.tableName + "\" creating UPDATE SecurityPermission"; errorMessages.add(errorMsg); }
+      if(helper.create("SecurityPermission", UtilMisc.toMap("permissionId", entity.tableName + "_DELETE", "description", "Permission to Delete a " + entity.entityName + " entity.")) != null) rowsChanged++;
+      else { String errorMsg = "[install.generateData]: Generated Data Load error for entity \"" + entity.tableName + "\" creating DELETE SecurityPermission"; errorMessages.add(errorMsg); }
 
       if(helper.create("SecurityGroupPermission", UtilMisc.toMap("groupId", "FULLADMIN", "permissionId", entity.tableName + "_ADMIN")) != null) rowsChanged++;
       else { String errorMsg = "[install.generateData]: Generated Data Load error for entity \"" + entity.tableName + "\" creating FULLADMIN SecurityGroupPermission"; errorMessages.add(errorMsg); }
