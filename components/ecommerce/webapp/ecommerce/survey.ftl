@@ -20,13 +20,13 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      3.0
 -->
 
 <#-- Render the survey -->
 <#if requestAttributes.surveyWrapper?exists && requestAttributes.surveyAction?exists>
-  <form method="post" enctype="multipart/mixed" action="<@ofbizUrl>${requestAttributes.surveyAction}</@ofbizUrl>" style="margin: 0;">
+  <form method="post" enctype="multipart/form-data" action="<@ofbizUrl>${requestAttributes.surveyAction}</@ofbizUrl>" style="margin: 0;">
     ${requestAttributes.surveyWrapper.renderSurvey().toString()}
   </form>
 <#else>
