@@ -115,4 +115,41 @@
         <find-by-primary-key entity-name="PartyRelationship" map-name="relationshipMap" value-name="relationshipValue" />
         <remove-value value-name="relationshipValue" />
     </simple-method>
+
+    <!-- Vendor Party services -->
+    <simple-method method-name="createVendor" short-description="createVendorcreateVendor">
+        <check-permission permission="PARTYMGR" action="_CREATE">
+        	<fail-message message="Security Error: to run addWebSiteRole you must have the PARTYMGR_CREATE or PARTYMGR_ADMIN permission"/>
+        </check-permission>
+        <check-errors/>
+
+        <make-value value-name="newEntity" entity-name="Vendor"/>
+        <set-pk-fields map-name="parameters" value-name="newEntity"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+        
+        <create-value value-name="newEntity"/>
+    </simple-method>
+    <simple-method method-name="updateWebSiteRole" short-description="Update WebSite Role">
+        <check-permission permission="PARTYMGR" action="_UPDATE">
+        	<fail-message message="Security Error: to run updateWebSiteRole you must have the PARTYMGR_UPDATE or PARTYMGR_ADMIN permission"/>
+        </check-permission>
+        <check-errors/>
+
+        <make-value value-name="lookupPKMap" entity-name="Vendor"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="Vendor" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
+        <store-value value-name="lookedUpValue"/>
+    </simple-method>
+    <simple-method method-name="removeWebSiteRole" short-description="Remove WebSite Role">
+        <check-permission permission="PARTYMGR" action="_DELETE">
+        	<fail-message message="Security Error: to run removeWebSiteRole you must have the PARTYMGR_DELETE or PARTYMGR_ADMIN permission"/>
+        </check-permission>
+        <check-errors/>
+
+        <make-value value-name="lookupPKMap" entity-name="Vendor"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="Vendor" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <remove-value value-name="lookedUpValue"/>
+    </simple-method>
 </simple-methods>

@@ -370,7 +370,6 @@
         <attribute name="geos" type="java.util.List" mode="OUT" optional="true"/>
     </service>
     
- 
     <service name="createPartyClassification" engine="simple"
             location="org/ofbiz/commonapp/party/party/PartyServices.xml" invoke="createPartyClassification">
         <description>delete party classifications</description>
@@ -384,5 +383,29 @@
         <attribute name="partyId" type="String" mode="IN" optional="false"/>
         <attribute name="partyClassificationGroupId" type="String" mode="IN" optional="false"/>
         <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
+    </service>
+
+    <service name="interfaceVendor" engine="interface" location="" invoke="">
+        <attribute name="manifestCompanyName" type="String" mode="IN" optional="true"/>
+        <attribute name="manifestCompanyTitle" type="String" mode="IN" optional="true"/>
+        <attribute name="manifestLogoUrl" type="String" mode="IN" optional="true"/>
+        <attribute name="manifestPolicies" type="String" mode="IN" optional="true"/>
+    </service>
+    <service name="createVendor" engine="simple"
+            location="org/ofbiz/commonapp/party/party/PartyServices.xml" invoke="createVendor" auth="false">
+        <description>Create Vendor Information</description>
+        <implements service="interfaceVendor"/>
+        <attribute name="partyId" type="String" mode="INOUT" optional="false"/>
+    </service>
+    <service name="updateVendor" engine="simple"
+            location="org/ofbiz/commonapp/party/party/PartyServices.xml" invoke="updateVendor" auth="true">
+        <description>Update Vendor Information</description>
+        <implements service="interfaceVendor"/>
+        <attribute name="partyId" type="String" mode="IN" optional="false"/>
+    </service>
+    <service name="removeVendor" engine="simple"
+            location="org/ofbiz/commonapp/party/party/PartyServices.xml" invoke="removeVendor" auth="true">
+        <description>Remove Vendor Information</description>
+        <attribute name="partyId" type="String" mode="IN" optional="false"/>
     </service>
 </services>

@@ -94,7 +94,7 @@
         </check-permission>
         <check-errors/>
 
-        <make-value value-name="newEntity" entity-name="ProdCatalogRole"/>
+        <make-value value-name="newEntity" entity-name="WebSiteRole"/>
         <set-pk-fields map-name="parameters" value-name="newEntity"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
         
@@ -112,9 +112,9 @@
         </check-permission>
         <check-errors/>
 
-        <make-value value-name="lookupPKMap" entity-name="ProdCatalogRole"/>
+        <make-value value-name="lookupPKMap" entity-name="WebSiteRole"/>
         <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
-        <find-by-primary-key entity-name="ProdCatalogRole" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <find-by-primary-key entity-name="WebSiteRole" map-name="lookupPKMap" value-name="lookedUpValue"/>
         <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
         <store-value value-name="lookedUpValue"/>
     </simple-method>
@@ -125,9 +125,9 @@
         </check-permission>
         <check-errors/>
 
-        <make-value value-name="lookupPKMap" entity-name="ProdCatalogRole"/>
+        <make-value value-name="lookupPKMap" entity-name="WebSiteRole"/>
         <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
-        <find-by-primary-key entity-name="ProdCatalogRole" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <find-by-primary-key entity-name="WebSiteRole" map-name="lookupPKMap" value-name="lookedUpValue"/>
         <remove-value value-name="lookedUpValue"/>
     </simple-method>
 </simple-methods>
