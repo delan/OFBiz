@@ -377,7 +377,7 @@
                                   <td width="90%" valign="top">
                                     <div class="tabletext">
                                       <b>
-                                        ${uiLabelMap.PartyGiftCard}:
+                                        ${uiLabelMap.AccountingGiftCard}:
                                         <#if security.hasEntityPermission("PAY_INFO", "_VIEW", session)>
                                             ${giftCard.physicalNumber?default("N/A")} [${giftCard.physicalPin?default("N/A")}]
                                             &nbsp;-&nbsp;
