@@ -192,6 +192,25 @@ public class ModelReader {
     return entityCache;
   }
   
+  /** rebuilds the fileNameEntities Map of Collections based on the current 
+   *  entityFile Map, must be done whenever a manual change is made to the
+   *  entityFile Map after the initial load to make them consistent again.
+   */
+  public void rebuildFileNameEntities() {
+    fileNameEntities = new HashMap();
+    Iterator entityFileIter = entityFile.entrySet().iterator();
+    while(entityFileIter.hasNext()) {
+      Map.Entry entry = (Map.Entry)entityFileIter.next();
+      //add entityName to appropriate fileNameEntities collection
+      Collection fileEntityNames = (Collection)fileNameEntities.get(entry.getValue());
+      if(fileEntityNames == null) {
+        fileEntityNames = new LinkedList();
+        fileNameEntities.put(entry.getValue(), fileEntityNames);
+      }
+      fileEntityNames.add(entry.getKey());
+    }
+  }
+  
   /** Gets an Entity object based on a definition from the specified XML Entity descriptor file.
    * @param entityName The entityName of the Entity definition to use.
    * @return An Entity object describing the specified entity of the specified descriptor file.
