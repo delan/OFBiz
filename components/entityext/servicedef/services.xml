@@ -65,22 +65,19 @@
     <!-- HTTP Engine localhost cache clearing (example: duplicate entire block for each server) -->
     <service name="localhostClearAllEntityCaches" engine="http"
             location="http://localhost:8080/webtools/control/httpService" invoke="clearAllEntityCaches">
-        <attribute name="distribute" type="Boolean" mode="IN" optional="true"/>
+        <implements service="clearAllEntityCaches"/>
     </service>
     <service name="localhostClearCacheLineByValue" engine="http"
             location="http://localhost:8080/webtools/control/httpService" invoke="clearCacheLineByValue">
-        <attribute name="value" type="GenericValue" mode="IN" optional="false"/>
-        <attribute name="distribute" type="Boolean" mode="IN" optional="true"/>
+        <implements service="clearCacheLineByValue"/>
     </service>
     <service name="localhostClearCacheLineByDummyPK" engine="http"
             location="http://localhost:8080/webtools/control/httpService" invoke="clearCacheLineByDummyPK">
-        <attribute name="dummyPK" type="GenericEntity" mode="IN" optional="false"/>
-        <attribute name="distribute" type="Boolean" mode="IN" optional="true"/>
+        <implements service="clearCacheLineByDummyPK"/>
     </service>
     <service name="localhostClearCacheLineByPrimaryKey" engine="http"
             location="http://localhost:8080/webtools/control/httpService" invoke="clearCacheLineByPrimaryKey">
-        <attribute name="primaryKey" type="GenericPK" mode="IN" optional="false"/>
-        <attribute name="distribute" type="Boolean" mode="IN" optional="true"/>
+        <implements service="clearCacheLineByPrimaryKey"/>
     </service>
     
     <!-- EntitySync Services -->
@@ -128,5 +125,28 @@
     </service>
 
     <!-- Entity Remote Synchronization services -->
-
+    <service name="runEntitySync" engine="java"
+            location="org.ofbiz.entityext.synchronization.EntitySyncServices" invoke="runEntitySync" auth="true">
+        <description>Run Entity Sync</description>
+        <attribute name="entitySyncId" type="String" mode="IN" optional="false"/>
+    </service>
+    <service name="storeEntitySyncData" engine="java"
+            location="org.ofbiz.entityext.synchronization.EntitySyncServices" invoke="storeEntitySyncData" auth="true">
+        <description>Run Entity Sync</description>
+        <attribute name="entitySyncId" type="String" mode="IN" optional="false"/>
+        <attribute name="valuesToStore" type="List" mode="IN" optional="false"/>
+        <attribute name="keysToRemove" type="List" mode="IN" optional="false"/>
+        <attribute name="numInserted" type="Long" mode="OUT" optional="false"/>
+        <attribute name="numUpdated" type="Long" mode="OUT" optional="false"/>
+        <attribute name="numNotUpdated" type="Long" mode="OUT" optional="false"/>
+        <attribute name="numRemoved" type="Long" mode="OUT" optional="false"/>
+        <attribute name="numAlreadyRemoved" type="Long" mode="OUT" optional="false"/>
+    </service>
+    
+    <!-- Services to call store remotely -->
+    <service name="remoteStoreEntitySyncData" engine="http"
+            location="http://localhost:8080/webtools/control/httpService" invoke="storeEntitySyncData" auth="true">
+        <description>Run Entity Sync</description>
+        <implements service="storeEntitySyncData"/>
+    </service>
 </services>

@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  */
 -->
 
@@ -57,8 +57,12 @@
       <field name="entitySyncId" type="id-ne"></field>
       <field name="runStatusId" type="id-ne"></field>
       <field name="lastSuccessfulSynchTime" type="date-time"></field>
+      <field name="syncSplitMillis" type="numeric"></field>
       <field name="targetServiceName" type="long-varchar"></field>
       <prim-key field="entitySyncId"/>
+      <relation type="many" rel-entity-name="EntitySyncInclude">
+        <key-map field-name="entitySyncId"/>
+      </relation>
     </entity>
     <entity entity-name="EntitySyncHistory"
             package-name="org.ofbiz.entity.synchronization"
@@ -68,6 +72,11 @@
       <field name="runStatusId" type="id-ne"></field>
       <field name="beginningSynchTime" type="date-time"></field>
       <field name="lastSuccessfulSynchTime" type="date-time"></field>
+      <field name="numInserted" type="numeric"></field>
+      <field name="numUpdated" type="numeric"></field>
+      <field name="numNotUpdated" type="numeric"></field>
+      <field name="numRemoved" type="numeric"></field>
+      <field name="numAlreadyRemoved" type="numeric"></field>
       <prim-key field="entitySyncId"/>
       <prim-key field="startDate"/>
       <relation type="one" fk-name="ENTSYNC_HSTSNC" rel-entity-name="EntitySync">
@@ -85,6 +94,15 @@
       <relation type="one" fk-name="ENTSYNC_INCSNC" rel-entity-name="EntitySync">
         <key-map field-name="entitySyncId"/>
       </relation>
+    </entity>
+    <entity entity-name="EntitySyncRemove"
+            package-name="org.ofbiz.entity.synchronization"
+            title="Entity Synchronization Remove Entity" no-auto-sync="true">
+      <field name="entitySyncRemoveId" type="id-ne"></field>
+      <field name="removedTime" type="date-time"></field>
+      <field name="removedTxTime" type="date-time"></field>
+      <field name="primaryKeyRemoved" type="very-long"></field>
+      <prim-key field="entitySyncRemoveId"/>
     </entity>
 </entitymodel>
 
