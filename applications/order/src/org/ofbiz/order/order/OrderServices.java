@@ -333,7 +333,14 @@ public class OrderServices {
         successResult.put("statusId", initialStatus);
 
         // create the order object
-        String orderId = ProductStoreWorker.makeProductStoreOrderId(delegator, productStoreId);
+        String orderId = null;
+        if ((orderTypeId.equals("SALES_ORDER")) || (productStoreId != null)) {
+            orderId = ProductStoreWorker.makeProductStoreOrderId(delegator, productStoreId);
+        } else {
+            // for purchase orders, a product store id should not be required to make an order
+            orderId = delegator.getNextSeqId("OrderHeader"); 
+        }
+
         String billingAccountId = (String) context.get("billingAccountId");
         
         Map orderHeaderMap = UtilMisc.toMap("orderId", orderId, "orderTypeId", orderTypeId,
