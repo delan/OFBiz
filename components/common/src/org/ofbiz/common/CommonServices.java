@@ -1,5 +1,5 @@
 /*
- * $Id: CommonServices.java,v 1.4 2003/11/26 11:52:44 jonesde Exp $
+ * $Id: CommonServices.java,v 1.5 2003/12/03 18:51:40 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -46,7 +46,7 @@ import org.ofbiz.service.ServiceXaWrapper;
  * Common Services
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.0
  */
 public class CommonServices {
@@ -159,7 +159,7 @@ public class CommonServices {
 
     /**
      * Service for setting debugging levels.
-     *@param ctx The DispatchContext that this service is operating in
+     *@param dctx The DispatchContext that this service is operating in
      *@param context Map containing the input parameters
      *@return Map with the result of the service, the output parameters
      */
@@ -212,5 +212,12 @@ public class CommonServices {
          context.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
          return context;
      }
+
+    /**
+     * Return Error Service; Used for testing error handling
+     */
+    public static Map returnErrorService(DispatchContext dctx, Map context) {
+        return ServiceUtil.returnError("Return Error Service : Returning Error");
+    }
 }
 
