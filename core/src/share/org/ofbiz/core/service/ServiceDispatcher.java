@@ -69,16 +69,16 @@ public class ServiceDispatcher {
      */
     public static ServiceDispatcher getInstance(String name, DispatchContext context, GenericDelegator delegator) {
         ServiceDispatcher sd = null;
-        if ( dispatchers.containsKey(delegator) ) 
-            sd = (ServiceDispatcher) dispatchers.get(delegator);        
-        else 
-            sd = new ServiceDispatcher(delegator);       
+        if ( dispatchers.containsKey(delegator) )
+            sd = (ServiceDispatcher) dispatchers.get(delegator);
+        else
+            sd = new ServiceDispatcher(delegator);
         dispatchers.put(delegator,sd);
         if ( name != null && context != null )
             sd.register(name,context);
         return sd;
     }
-                     
+    
     /** Registers the loader with this ServiceDispatcher
      *@param name the local dispatcher
      *@param loader the classloader of the local dispatcher
@@ -92,6 +92,7 @@ public class ServiceDispatcher {
      *@return Map of name, value pairs composing the result
      */
     public Map runSync(String localName, ModelService service, Map context) throws GenericServiceException {
+        context = checkAuth(localName,context);
         GenericEngine engine = getGenericEngine(service.engineName);
         engine.setLoader(localName);
         return engine.runSync(service, context);
@@ -101,6 +102,7 @@ public class ServiceDispatcher {
      *@param context Map of name, value pairs composing the context
      */
     public void runSyncIgnore(String localName, ModelService service, Map context) throws GenericServiceException {
+        context = checkAuth(localName,context);
         GenericEngine engine = getGenericEngine(service.engineName);
         engine.setLoader(localName);
         engine.runSyncIgnore(service, context);
@@ -111,6 +113,7 @@ public class ServiceDispatcher {
      *@param requester Object implementing GenericRequester interface which will receive the result
      */
     public void runAsync(String localName, ModelService service, Map context, GenericRequester requester) throws GenericServiceException {
+        context = checkAuth(localName,context);
         GenericEngine engine = getGenericEngine(service.engineName);
         engine.setLoader(localName);
         engine.runAsync(service, context, requester);
@@ -120,6 +123,7 @@ public class ServiceDispatcher {
      *@param context Map of name, value pairs composing the context
      */
     public void runAsync(String localName, ModelService service, Map context) throws GenericServiceException {
+        context = checkAuth(localName,context);
         GenericEngine engine = getGenericEngine(service.engineName);
         engine.setLoader(localName);
         engine.runAsync(service, context);
@@ -145,10 +149,10 @@ public class ServiceDispatcher {
      *@return GenericEntityDelegator associated with this dispatcher
      */
     public GenericDelegator getDelegator() {
-        return this.delegator;                    
+        return this.delegator;
     }
     
-    /** Gets the local dispatcher from a name 
+    /** Gets the local dispatcher from a name
      *@param String name of the loader to find.
      */
     public DispatchContext getLocalContext(String name) {
@@ -164,4 +168,46 @@ public class ServiceDispatcher {
     public boolean containsContext(String name) {
         return localContext.containsKey(name);
     }
+    
+    // checks if parameters were passed for authentication
+    private Map checkAuth(String localName, Map context) throws GenericServiceException {
+        // check for a username/password
+        if ( context.containsKey("login.username") ) {
+            String username = (String) context.get("login.username");
+            if ( context.containsKey("login.password") ) {
+                String password = (String) context.get("login.password");
+                context.put("userLoginObject",getLoginObject(localName,username,password));
+                context.remove("login.password");
+            }
+            else
+                context.put("userLoginObject",getLoginObject(localName,username,null));
+            context.remove("login.username");
+        }
+        return context;
+    }
+    
+    // gets a value object from name/password pair  
+    private GenericValue getLoginObject(String localName, String username, String password) throws GenericServiceException {
+        String service = UtilProperties.getPropertyValue("servicesengine","auth.service");
+        Map context = UtilMisc.toMap("login.username",username,"login.password",password);
+        
+        if ( service == null )
+            throw new GenericServiceException("No Authentication Service Defined");
+        
+        Debug.logInfo("[ServiceDispathcer.authenticate] : Invoking UserLogin Service");
+        
+        // Manually invoke the service
+        DispatchContext dctx = getLocalContext(localName);
+        ModelService model = dctx.getModelService(service);
+        GenericEngine engine = getGenericEngine(model.engineName);
+        engine.setLoader(localName);
+        Map result = engine.runSync(model,context);
+        
+        GenericValue value = null;
+        if ( result.containsKey("userLoginObject") && result.get("userLoginObject") != null )
+            value = (GenericValue) result.get("userLoginObject");
+        
+        return value;
+    }
+    
 }

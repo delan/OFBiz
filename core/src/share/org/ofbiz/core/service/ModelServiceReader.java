@@ -170,19 +170,30 @@ public class ModelServiceReader {
     }
     
     protected void createAttrDefs(Element baseElement, String parentNodeName, Map contextMap) {
-        // Add the default responseMessage and errorMessage OUT parameters
-        ModelParam d1 = new ModelParam();
-        d1.name = ModelService.RESPONSE_MESSAGE;
-        d1.type = "String";
-        d1.mode = "OUT";
-        d1.optional = true;
-        contextMap.put(d1.name,d1);
-        ModelParam d2 = new ModelParam();
-        d2.name = ModelService.ERROR_MESSAGE;
-        d2.type = "String";
-        d2.mode = "OUT";
-        d2.optional = true;
-        contextMap.put(d2.name,d2);
+        // Add the default optional parameters
+        ModelParam def = null;
+        // responseMessage
+        def = new ModelParam();
+        def.name = ModelService.RESPONSE_MESSAGE;
+        def.type = "String";
+        def.mode = "OUT";
+        def.optional = true;
+        contextMap.put(def.name,def);
+        // errorMessage
+        def = new ModelParam();
+        def.name = ModelService.ERROR_MESSAGE;
+        def.type = "java.util.List";
+        def.mode = "OUT";
+        def.optional = true;
+        contextMap.put(def.name,def);
+        // userLoginObject
+        def = new ModelParam();
+        def.name = "userLoginObject";
+        def.type= "org.ofbiz.core.entity.GenericValue";
+        def.mode = "IN";
+        def.optional = true;
+        contextMap.put(def.name,def);
+        
         // Add in the defined attributes (override the above defaults if specified)
         NodeList attrList = baseElement.getElementsByTagName(parentNodeName);
         for ( int i = 0; i < attrList.getLength(); i++ ) {
