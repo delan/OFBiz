@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2002/01/31 00:47:39  jonesde
+ * Major refactoring and improvements for the Debug class, preparing to use Log4J to finish it off
+ *
  * Revision 1.2  2001/12/19 06:43:05  jonesde
  * Added method to get the debug PrintWriter and PrintStream
  *
@@ -28,6 +31,8 @@ package org.ofbiz.core.util;
 import java.io.*;
 import java.util.Date;
 import java.text.DateFormat;
+
+import org.apache.log4j.*;
 
 /**
  * <p><b>Title:</b> Debug.java
@@ -57,6 +62,7 @@ import java.text.DateFormat;
  * Created on July 1, 2001, 5:03 PM
  */
 public final class Debug {
+    public static final boolean useLog4J = true;
     static DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM);
     
     public static final int ALWAYS = 0;
@@ -65,12 +71,20 @@ public final class Debug {
     public static final int INFO = 3;
     public static final int WARNING = 4;
     public static final int ERROR = 5;
+    public static final int FATAL = 6;
     
-    public static final String[] levels = {"Always", "Verbose", "Timing", "Info", "Warning", "Error"};
-    public static final String[] levelProps = {"", "print.verbose", "print.timing", "print.info", "print.warning", "print.error"};
-    
+    public static final String[] levels = {"Always", "Verbose", "Timing", "Info", "Warning", "Error", "Fatal"};
+    public static final String[] levelProps = {"", "print.verbose", "print.timing", "print.info", "print.warning", "print.error", "print.fatal"};
+    public static final Priority[] levelObjs = {Priority.DEBUG, Priority.DEBUG, Priority.INFO, Priority.INFO, Priority.WARN, Priority.ERROR, Priority.FATAL};
+
     protected static PrintStream printStream = System.out;
     protected static PrintWriter printWriter = new PrintWriter(printStream);
+
+    static {
+        //initialize Log4J
+        PropertyConfigurator.configure(FlexibleProperties.makeFlexibleProperties(UtilURL.fromResource("debug")));
+    }
+    static Category root = Category.getRoot();
     
     public static PrintStream getPrintStream() {
         return printStream;
@@ -84,63 +98,82 @@ public final class Debug {
         return printWriter;
     }
     
-    public static void log(Throwable t, String msg, int level, String module) {
+    public static Category getLogger(String module) {
+        if (module != null && module.length() > 0) {
+            return Category.getInstance(module);
+        } else {
+            return root;
+        }
+    }
+    
+    public static void log(int level, Throwable t, String msg, String module) {
         if(level == Debug.ALWAYS || UtilProperties.propertyValueEqualsIgnoreCase("debug", levelProps[level], "true")) {
-            StringBuffer prefixBuf = new StringBuffer();
-            prefixBuf.append(dateFormat.format(new java.util.Date()));
-            prefixBuf.append(" [OFBiz");
-            if (module != null) {
+            if (useLog4J) {
+                Category logger = getLogger(module);
+                logger.log("org.ofbiz.core.util.Debug", levelObjs[level], msg, t);
+            } else {
+                StringBuffer prefixBuf = new StringBuffer();
+                prefixBuf.append(dateFormat.format(new java.util.Date()));
+                prefixBuf.append(" [OFBiz");
+                if (module != null) {
+                    prefixBuf.append(":");
+                    prefixBuf.append(module);
+                }
                 prefixBuf.append(":");
-                prefixBuf.append(module);
-            }
-            prefixBuf.append(":");
-            prefixBuf.append(levels[level]);
-            prefixBuf.append("] ");
-            if (msg != null) {
-                getPrintWriter().print(prefixBuf.toString());
-                getPrintWriter().println(msg);
-            }
-            if (t != null) {
-                getPrintWriter().print(prefixBuf.toString());
-                getPrintWriter().println("Received throwable:");
-                t.printStackTrace(getPrintWriter());
+                prefixBuf.append(levels[level]);
+                prefixBuf.append("] ");
+                if (msg != null) {
+                    getPrintWriter().print(prefixBuf.toString());
+                    getPrintWriter().println(msg);
+                }
+                if (t != null) {
+                    getPrintWriter().print(prefixBuf.toString());
+                    getPrintWriter().println("Received throwable:");
+                    t.printStackTrace(getPrintWriter());
+                }
             }
         }
     }
     
-    public static void log(String msg) { log(null, msg, Debug.ALWAYS, null); }
-    public static void log(String msg, String module) { log(null, msg, Debug.ALWAYS, module); }
-    public static void log(Throwable t) { log(t, null, Debug.ALWAYS, null); }
-    public static void log(Throwable t, String msg) { log(t, msg, Debug.ALWAYS, null); }
-    public static void log(Throwable t, String msg, String module) { log(t, msg, Debug.ALWAYS, module); }
+    public static void log(String msg) { log(Debug.ALWAYS, null, msg, null); }
+    public static void log(String msg, String module) { log(Debug.ALWAYS, null, msg, module); }
+    public static void log(Throwable t) { log(Debug.ALWAYS, t, null, null); }
+    public static void log(Throwable t, String msg) { log(Debug.ALWAYS, t, msg, null); }
+    public static void log(Throwable t, String msg, String module) { log(Debug.ALWAYS, t, msg, module); }
     
-    public static void logVerbose(String msg) { log(null, msg, Debug.VERBOSE, null); }
-    public static void logVerbose(String msg, String module) { log(null, msg, Debug.VERBOSE, module); }
-    public static void logVerbose(Throwable t) { log(t, null, Debug.VERBOSE, null); }
-    public static void logVerbose(Throwable t, String msg) { log(t, msg, Debug.VERBOSE, null); }
-    public static void logVerbose(Throwable t, String msg, String module) { log(t, msg, Debug.VERBOSE, module); }
+    public static void logVerbose(String msg) { log(Debug.VERBOSE, null, msg, null); }
+    public static void logVerbose(String msg, String module) { log(Debug.VERBOSE, null, msg, module); }
+    public static void logVerbose(Throwable t) { log(Debug.VERBOSE, t, null, null); }
+    public static void logVerbose(Throwable t, String msg) { log(Debug.VERBOSE, t, msg, null); }
+    public static void logVerbose(Throwable t, String msg, String module) { log(Debug.VERBOSE, t, msg, module); }
     
-    public static void logTiming(String msg) { log(null, msg, Debug.TIMING, null); }
-    public static void logTiming(String msg, String module) { log(null, msg, Debug.TIMING, module); }
-    public static void logTiming(Throwable t) { log(t, null, Debug.TIMING, null); }
-    public static void logTiming(Throwable t, String msg) { log(t, msg, Debug.TIMING, null); }
-    public static void logTiming(Throwable t, String msg, String module) { log(t, msg, Debug.TIMING, module); }
+    public static void logTiming(String msg) { log(Debug.TIMING, null, msg, null); }
+    public static void logTiming(String msg, String module) { log(Debug.TIMING, null, msg, module); }
+    public static void logTiming(Throwable t) { log(Debug.TIMING, t, null, null); }
+    public static void logTiming(Throwable t, String msg) { log(Debug.TIMING, t, msg, null); }
+    public static void logTiming(Throwable t, String msg, String module) { log(Debug.TIMING, t, msg, module); }
 
-    public static void logInfo(String msg) { log(null, msg, Debug.INFO, null); }
-    public static void logInfo(String msg, String module) { log(null, msg, Debug.INFO, module); }
-    public static void logInfo(Throwable t) { log(t, null, Debug.INFO, null); }
-    public static void logInfo(Throwable t, String msg) { log(t, msg, Debug.INFO, null); }
-    public static void logInfo(Throwable t, String msg, String module) { log(t, msg, Debug.INFO, module); }
+    public static void logInfo(String msg) { log(Debug.INFO, null, msg, null); }
+    public static void logInfo(String msg, String module) { log(Debug.INFO, null, msg, module); }
+    public static void logInfo(Throwable t) { log(Debug.INFO, t, null, null); }
+    public static void logInfo(Throwable t, String msg) { log(Debug.INFO, t, msg, null); }
+    public static void logInfo(Throwable t, String msg, String module) { log(Debug.INFO, t, msg, module); }
 
-    public static void logWarning(String msg) { log(null, msg, Debug.WARNING, null); }
-    public static void logWarning(String msg, String module) { log(null, msg, Debug.WARNING, module); }
-    public static void logWarning(Throwable t) { log(t, null, Debug.WARNING, null); }
-    public static void logWarning(Throwable t, String msg) { log(t, msg, Debug.WARNING, null); }
-    public static void logWarning(Throwable t, String msg, String module) { log(t, msg, Debug.WARNING, module); }
+    public static void logWarning(String msg) { log(Debug.WARNING, null, msg, null); }
+    public static void logWarning(String msg, String module) { log(Debug.WARNING, null, msg, module); }
+    public static void logWarning(Throwable t) { log(Debug.WARNING, t, null, null); }
+    public static void logWarning(Throwable t, String msg) { log(Debug.WARNING, t, msg, null); }
+    public static void logWarning(Throwable t, String msg, String module) { log(Debug.WARNING, t, msg, module); }
 
-    public static void logError(String msg) { log(null, msg, Debug.ERROR, null); }
-    public static void logError(String msg, String module) { log(null, msg, Debug.ERROR, module); }
-    public static void logError(Throwable t) { log(t, null, Debug.ERROR, null); }
-    public static void logError(Throwable t, String msg) { log(t, msg, Debug.ERROR, null); }
-    public static void logError(Throwable t, String msg, String module) { log(t, msg, Debug.ERROR, module); }
+    public static void logError(String msg) { log(Debug.ERROR, null, msg, null); }
+    public static void logError(String msg, String module) { log(Debug.ERROR, null, msg, module); }
+    public static void logError(Throwable t) { log(Debug.ERROR, t, null, null); }
+    public static void logError(Throwable t, String msg) { log(Debug.ERROR, t, msg, null); }
+    public static void logError(Throwable t, String msg, String module) { log(Debug.ERROR, t, msg, module); }
+
+    public static void logFatal(String msg) { log(Debug.FATAL, null, msg, null); }
+    public static void logFatal(String msg, String module) { log(Debug.FATAL, null, msg, module); }
+    public static void logFatal(Throwable t) { log(Debug.FATAL, t, null, null); }
+    public static void logFatal(Throwable t, String msg) { log(Debug.FATAL, t, msg, null); }
+    public static void logFatal(Throwable t, String msg, String module) { log(Debug.FATAL, t, msg, module); }
 }
