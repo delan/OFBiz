@@ -25,11 +25,11 @@ package org.ofbiz.content.widget.screen;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.ArrayList;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -47,7 +47,6 @@ import org.ofbiz.content.widget.form.FormStringRenderer;
 import org.ofbiz.content.widget.form.ModelForm;
 import org.ofbiz.content.widget.html.HtmlFormRenderer;
 import org.ofbiz.content.widget.html.HtmlMenuRenderer;
-import org.ofbiz.content.widget.html.HtmlTreeExpandCollapseRenderer;
 import org.ofbiz.content.widget.html.HtmlTreeRenderer;
 import org.ofbiz.content.widget.menu.MenuFactory;
 import org.ofbiz.content.widget.menu.MenuStringRenderer;

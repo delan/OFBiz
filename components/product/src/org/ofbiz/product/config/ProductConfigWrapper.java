@@ -46,7 +46,7 @@ import org.ofbiz.service.LocalDispatcher;
  *
  */
 
-public class ProductConfigWrapper implements java.io.Serializable {
+public class ProductConfigWrapper implements Serializable {
     
     public static final String module = ProductConfigWrapper.class.getName();
     

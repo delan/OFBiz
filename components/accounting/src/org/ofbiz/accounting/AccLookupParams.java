@@ -23,15 +23,12 @@
  */
 package org.ofbiz.accounting;
 
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
-import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.UtilMisc;
 
 /**
  * Fixed Asset Information Related Events
