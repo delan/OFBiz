@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.10 $
+ *@version    $Revision: 1.11 $
  *@since      3.0
  */
 
@@ -285,21 +285,21 @@ if (lookupFlag != null && lookupFlag.equalsIgnoreCase("Y")) {
         countryCode = request.getParameter("countryCode");
         if (countryCode != null && countryCode.length() > 0) {
             paramList = paramList + "&countryCode=" + countryCode;
-            andExprs.add(new EntityExpr("countryCode", true, EntityOperator.LIKE, "%"+countryCode+"%", true));
+            andExprs.add(new EntityExpr("countryCode", true, EntityOperator.EQUALS, countryCode, true));
         }
 
         // filter on areaCode
         areaCode = request.getParameter("areaCode");
         if (areaCode != null && areaCode.length() > 0) {
             paramList = paramList + "&areaCode=" + areaCode;
-            andExprs.add(new EntityExpr("areaCode", true, EntityOperator.LIKE, "%"+areaCode+"%", true));
+            andExprs.add(new EntityExpr("areaCode", true, EntityOperator.EQUALS, areaCode, true));
         }
 
         // filter on contact number
         contactNumber = request.getParameter("contactNumber");
         if (contactNumber != null && contactNumber.length() > 0) {
             paramList = paramList + "&contactNumber=" + contactNumber;
-            andExprs.add(new EntityExpr("contactNumber", true, EntityOperator.LIKE, "%"+contactNumber+"%", true));
+            andExprs.add(new EntityExpr("contactNumber", true, EntityOperator.EQUALS, contactNumber, true));
         }
     }
 
