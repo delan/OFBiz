@@ -261,6 +261,14 @@ public class GenericDelegator implements DelegatorInterface {
         return this.delegatorName;
     }
 
+    public String getSequencedIdPrefix() {
+        String sequencedIdPrefix = this.getDelegatorInfo().sequencedIdPrefix;
+        if (sequencedIdPrefix == null) {
+            sequencedIdPrefix = "";
+        }
+        return sequencedIdPrefix;
+    }
+    
     protected DelegatorInfo getDelegatorInfo() {
         if (delegatorInfo == null) {
             delegatorInfo = EntityConfigUtil.getDelegatorInfo(this.delegatorName);
@@ -2094,7 +2102,7 @@ public class GenericDelegator implements DelegatorInterface {
             throw new IllegalArgumentException("Could not get next sequenced ID for sequence name: " + seqName);
         }
         
-        if (UtilValidate.isNotEmpty(this.delegatorInfo.sequencedIdPrefix)) {
+        if (UtilValidate.isNotEmpty(this.getDelegatorInfo().sequencedIdPrefix)) {
             return this.delegatorInfo.sequencedIdPrefix + nextSeqLong.toString();
         } else {
             return nextSeqLong.toString();
