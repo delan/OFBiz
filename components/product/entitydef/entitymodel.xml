@@ -306,7 +306,6 @@
         <key-map field-name="parentTypeId" rel-field-name="prodCatContentTypeId"/>
       </relation>
     </entity>
-        
     <entity entity-name="ProductCategoryMember"
             package-name="org.ofbiz.product.category"
             title="Product Category Member Entity">
