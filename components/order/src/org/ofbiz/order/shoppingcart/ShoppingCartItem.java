@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCartItem.java,v 1.12 2003/11/21 19:08:10 ajzeneski Exp $
+ * $Id: ShoppingCartItem.java,v 1.13 2003/11/22 12:57:35 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -47,7 +47,7 @@ import org.ofbiz.service.ModelService;
  *
  * @author     <a href="mailto:jaz@ofbiz.org.com">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.12 $
+ * @version    $Revision: 1.13 $
  * @since      2.0
  */
 public class ShoppingCartItem implements java.io.Serializable {
@@ -418,6 +418,14 @@ public class ShoppingCartItem implements java.io.Serializable {
 
     public double getPromoQuantityAvailable() {
         return this.quantity - this.promoQuantityUsed;
+    }
+
+    public Iterator getQuantityUsedPerPromoActionIter() {
+        return this.quantityUsedPerPromoActionActual.entrySet().iterator();
+    }
+
+    public Iterator getQuantityUsedPerPromoCondIter() {
+        return this.quantityUsedPerPromoCondActual.entrySet().iterator();
     }
 
     public synchronized double addPromoQuantityCondUse(double quantityDesired, GenericValue productPromoCond) {

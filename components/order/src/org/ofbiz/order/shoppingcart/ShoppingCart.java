@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCart.java,v 1.25 2003/11/21 19:08:10 ajzeneski Exp $
+ * $Id: ShoppingCart.java,v 1.26 2003/11/22 12:57:35 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -42,7 +42,7 @@ import org.ofbiz.service.LocalDispatcher;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.25 $
+ * @version    $Revision: 1.26 $
  * @since      2.0
  */
 public class ShoppingCart implements java.io.Serializable {
@@ -77,6 +77,8 @@ public class ShoppingCart implements java.io.Serializable {
             this.productPromoId = productPromoId;
             this.productPromoCodeId = productPromoCodeId;
         }
+        public String getProductPromoId() { return this.productPromoId; }
+        public String getProductPromoCodeId() { return this.productPromoCodeId; }
     }
     /** Contains a List for each productPromoId (key) containing a productPromoCodeId (or empty string for no code) for each use of the productPromoId */
     private List productPromoUseInfoList = new LinkedList();
@@ -1000,6 +1002,10 @@ public class ShoppingCart implements java.io.Serializable {
 
     public void clearProductPromoUses() {
         this.productPromoUseInfoList.clear();
+    }
+
+    public Iterator getProductPromoUseInfoIter() {
+        return productPromoUseInfoList.iterator();
     }
 
     public int getProductPromoUseCount(String productPromoId) {
