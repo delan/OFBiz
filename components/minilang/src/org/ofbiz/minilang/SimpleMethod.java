@@ -56,7 +56,7 @@ import org.w3c.dom.Element;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class SimpleMethod {
@@ -833,6 +833,8 @@ public class SimpleMethod {
                     methodOperations.add(new org.ofbiz.minilang.method.conditional.MasterIf(curOperElem, simpleMethod));
                 } else if ("if-validate-method".equals(nodeName)) {
                     methodOperations.add(new org.ofbiz.minilang.method.ifops.IfValidateMethod(curOperElem, simpleMethod));
+                } else if ("if-instance-of".equals(nodeName)) {
+                    methodOperations.add(new org.ofbiz.minilang.method.ifops.IfInstanceOf(curOperElem, simpleMethod));
                 } else if ("if-compare".equals(nodeName)) {
                     methodOperations.add(new org.ofbiz.minilang.method.ifops.IfCompare(curOperElem, simpleMethod));
                 } else if ("if-compare-field".equals(nodeName)) {
