@@ -63,9 +63,21 @@
     <request-map uri="task"><security https="true" auth="true"/>
     	<response name="success" type="view" value="task"/>
     </request-map>
+    <request-map uri="updatetask"><security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.commonapp.workeffort.workeffort.WorkEffortEvents" invoke="updateWorkEffort"/>
+    	<response name="success" type="view" value="task"/>
+        <response name="error" type="view" value="task"/>
+    </request-map>
+
     <request-map uri="activity"><security https="true" auth="true"/>
     	<response name="success" type="view" value="activity"/>
     </request-map>
+    <request-map uri="updateactivity"><security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.commonapp.workeffort.workeffort.WorkEffortEvents" invoke="updateWorkEffort"/>
+    	<response name="success" type="view" value="activity"/>
+        <response name="error" type="view" value="activity"/>
+    </request-map>
+
     <request-map uri="tasklist"><security https="true" auth="true"/>
     	<response name="success" type="view" value="tasklist"/>
     </request-map>

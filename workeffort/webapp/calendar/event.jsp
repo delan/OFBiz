@@ -112,7 +112,6 @@
                     </ofbiz:if>
                   </td>
                 </tr>
-                <input type='hidden' name='CURRENT_STATUS_ID' value='CAL_ACCEPTED'>
 
                 <tr>
                   <td width='26%' align=right><div class='tabletext'>Location</div></td>

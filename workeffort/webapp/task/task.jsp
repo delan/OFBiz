@@ -65,7 +65,7 @@
         <tr>
           <td>
             <ofbiz:if name="canView" type="Boolean">
-              <form action="<ofbiz:url>/updateevent</ofbiz:url>" method=POST style='margin: 0;'>
+              <form action="<ofbiz:url>/updatetask</ofbiz:url>" method=POST style='margin: 0;'>
               <table border='0' cellpadding='2' cellspacing='0'>
                 <ofbiz:if name="workEffort">
                   <input type='hidden' name='UPDATE_MODE' value='UPDATE'>
@@ -73,7 +73,7 @@
                 </ofbiz:if>
                 <ofbiz:unless name="workEffort">
                   <input type='hidden' name='UPDATE_MODE' value='CREATE'>
-                  <input type='hidden' name='WORK_EFFORT_TYPE_ID' value='EVENT'>
+                  <input type='hidden' name='WORK_EFFORT_TYPE_ID' value='TASK'>
                   <ofbiz:if name="workEffortId">
                     <DIV class='tabletext'>ERROR: Could not find Task with ID "<ofbiz:print attribute="workEffortId"/>"</DIV>
                   </ofbiz:if>
@@ -102,7 +102,7 @@
                   <td>&nbsp;</td>
                   <td width='74%'>
                     <SELECT name='CURRENT_STATUS_ID'>
-                      <OPTION value='<ofbiz:entityfield field="statusId" attribute="currentStatusItem"/>'><ofbiz:entityfield field="description" attribute="currentStatusItem"/></OPTION>
+                      <OPTION value='<ofbiz:entityfield field="statusId" attribute="currentStatusItem" default="CAL_NEEDS_ACTION"/>'><ofbiz:entityfield field="description" attribute="currentStatusItem"/></OPTION>
                       <OPTION value=''>--</OPTION>
                       <ofbiz:iterator name="statusItem" property="taskStatusItems">
                         <OPTION value='<ofbiz:entityfield field="statusId" attribute="statusItem"/>'><ofbiz:entityfield field="description" attribute="statusItem"/></OPTION>
@@ -113,7 +113,6 @@
                     </ofbiz:if>
                   </td>
                 </tr>
-                <input type='hidden' name='CURRENT_STATUS_ID' value='CAL_ACCEPTED'>
 
                 <tr>
                   <td width='26%' align=right><div class='tabletext'>Location</div></td>

@@ -65,7 +65,7 @@
         <tr>
           <td>
             <ofbiz:if name="canView" type="Boolean">
-              <form action="<ofbiz:url>/updateevent</ofbiz:url>" method=POST style='margin: 0;'>
+              <form action="<ofbiz:url>/updateactivity</ofbiz:url>" method=POST style='margin: 0;'>
               <table border='0' cellpadding='2' cellspacing='0'>
                 <ofbiz:if name="workEffort">
                   <input type='hidden' name='UPDATE_MODE' value='UPDATE'>
@@ -105,7 +105,6 @@
                     </ofbiz:if>
                   </td>
                 </tr>
-                <input type='hidden' name='CURRENT_STATUS_ID' value='CAL_ACCEPTED'>
 
                 <tr>
                   <td width='26%' align=right><div class='tabletext'>Location</div></td>

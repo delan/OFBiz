@@ -71,11 +71,12 @@
                   <TD><DIV class='tabletext'><b>My Status</b></DIV></TD>
                   <TD><DIV class='tabletext'><b>Activity Name</b></DIV></TD>
                 </TR>
-                <TR><TD colspan='3'><HR class='sepbar'></TD></TR>
+                <TR><TD colspan='5'><HR class='sepbar'></TD></TR>
                 <ofbiz:iterator name="workEffort" property="activities">
                   <TR>
                     <TD><DIV class='tabletext'><ofbiz:entityfield attribute="workEffort" field="estimatedStartDate"/></DIV></TD>
                     <TD><DIV class='tabletext'><ofbiz:entityfield attribute="workEffort" field="priority"/></DIV></TD>
+                    <%GenericValue status;%>
                     <TD><DIV class='tabletext'><ofbiz:entityfield attribute="workEffort" field="currentStatusId"/></DIV></TD>
                     <TD><DIV class='tabletext'><ofbiz:entityfield attribute="workEffort" field="statusId"/></DIV></TD>
                     <TD><A class='buttontext' href='<ofbiz:url>/activity?WORK_EFFORT_ID=<ofbiz:entityfield attribute="workEffort" field="workEffortId"/></ofbiz:url>'>
@@ -101,7 +102,7 @@
                   <TD><DIV class='tabletext'><b>Status</b></DIV></TD>
                   <TD><DIV class='tabletext'><b>Task Name</b></DIV></TD>
                 </TR>
-                <TR><TD colspan='3'><HR class='sepbar'></TD></TR>
+                <TR><TD colspan='4'><HR class='sepbar'></TD></TR>
                 <ofbiz:iterator name="workEffort" property="tasks">
                   <TR>
                     <TD><DIV class='tabletext'><ofbiz:entityfield attribute="workEffort" field="estimatedStartDate"/></DIV></TD>
