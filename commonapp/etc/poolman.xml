@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<poolman>
+
+  <management-mode>local</management-mode>
+  
+  <datasource>
+    <dbname>MySql</dbname>
+	<jndiName>java:/MainDataSource</jndiName>
+	<driver>org.gjt.mm.mysql.Driver</driver>
+	<url>jdbc:mysql://localhost/ofbiz</url>
+    <username>mysqldb</username>
+	<password>mysqldb</password>
+    <minimumSize>1</minimumSize>
+    <maximumSize>10</maximumSize>
+    <connectionTimeout>600</connectionTimeout>
+    <userTimeout>12</userTimeout>
+    <shrinkBy>2</shrinkBy>
+    <debugging>true</debugging>
+    <cacheEnabled>true</cacheEnabled>
+    <cacheSize>20</cacheSize>
+    <cacheRefreshInterval>120</cacheRefreshInterval>
+  </datasource>
+
+  <datasource>
+    <dbname>Hsql</dbname>
+	<jndiName>java:/MainDataSource</jndiName>
+	<driver>org.hsqldb.jdbcDriver</driver>
+	<url>jdbc:hsqldb:ofbiz</url>
+    <username>sa</username>
+	<password></password>
+    <minimumSize>1</minimumSize>
+    <maximumSize>10</maximumSize>
+    <connectionTimeout>600</connectionTimeout>
+    <userTimeout>12</userTimeout>
+    <shrinkBy>2</shrinkBy>
+    <debugging>true</debugging>
+    <cacheEnabled>true</cacheEnabled>
+    <cacheSize>20</cacheSize>
+    <cacheRefreshInterval>120</cacheRefreshInterval>
+  </datasource>
+  
+</poolman>
+
+
+
+
