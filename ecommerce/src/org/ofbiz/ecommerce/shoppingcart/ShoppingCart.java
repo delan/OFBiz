@@ -58,7 +58,7 @@ public class ShoppingCart implements java.io.Serializable {
     private String shipmentMethodTypeId = "";
     private String carrierPartyId = "";
     private String orderAdditionalEmails = null;
-    private String freeShippingPromoId = null;
+    private Map freeShippingInfo = null;
     private boolean viewCartOnAdd = true;
 
     /** Holds value of order adjustments. */
@@ -91,28 +91,36 @@ public class ShoppingCart implements java.io.Serializable {
             if (sci.equals(productId, features, attributes, prodCatalogId)) {
                 double newQuantity = sci.getQuantity() + quantity;
                 Debug.logVerbose("Found a match for id " + productId + " on line " + i + ", updating quantity to " + newQuantity);
-                sci.setQuantity(newQuantity, dispatcher);
+                sci.setQuantity(newQuantity, dispatcher, this);
                 return i;
             }
         }
 
         // Add the new item to the shopping cart if it wasn't found.
-        return this.addItem(0, ShoppingCartItem.makeItem(delegator, productId, quantity, features, attributes, prodCatalogId, dispatcher));
+        return this.addItem(0, ShoppingCartItem.makeItem(new Integer(0), delegator, productId, quantity, features, attributes, prodCatalogId, dispatcher, this));
     }
     /** Add an item to the shopping cart. */
     public int addItem(int index, ShoppingCartItem item) {
-        cartLines.add(index, item);
-        return index;
+        if (!cartLines.contains(item)) {
+            cartLines.add(index, item);
+            return index;
+        } else {
+            return this.getItemIndex(item);
+        }
     }
 
     /** Add an item to the shopping cart. */
     public int addItemToEnd(GenericDelegator delegator, String productId, double quantity, HashMap features, HashMap attributes, String prodCatalogId, LocalDispatcher dispatcher) throws CartItemModifyException {
-        return addItemToEnd(ShoppingCartItem.makeItem(delegator, productId, quantity, features, attributes, prodCatalogId, dispatcher));
+        return addItemToEnd(ShoppingCartItem.makeItem(null, delegator, productId, quantity, features, attributes, prodCatalogId, dispatcher, this));
     }
     /** Add an item to the shopping cart. */
     public int addItemToEnd(ShoppingCartItem item) {
-        cartLines.add(item);
-        return cartLines.size() - 1;
+        if (!cartLines.contains(item)) {
+            cartLines.add(item);
+            return cartLines.size() - 1;
+        } else {
+            return this.getItemIndex(item);
+        }
     }
 
     /** Get a ShoppingCartItem from the cart object. */
@@ -144,7 +152,7 @@ public class ShoppingCart implements java.io.Serializable {
         if (cartLines.size() <= index) return;
         ShoppingCartItem item = (ShoppingCartItem) cartLines.remove(index);
         //set quantity to 0 to trigger necessary events
-        item.setQuantity(0.0, dispatcher);
+        item.setQuantity(0.0, dispatcher, this);
     }
 
     /** Moves a line item to a differnt index. */
@@ -161,8 +169,8 @@ public class ShoppingCart implements java.io.Serializable {
         return cartLines.size();
     }
     /** Returns a Collection of items in the cart object. */
-    public Collection items() {
-        return (Collection) cartLines;
+    public List items() {
+        return cartLines;
     }
     /** Returns an iterator of cart items. */
     public Iterator iterator() {
@@ -184,7 +192,7 @@ public class ShoppingCart implements java.io.Serializable {
         isGift = null;
 
         orderAdditionalEmails = null;
-        freeShippingPromoId = null;
+        freeShippingInfo = null;
 
         paymentMethodIds.clear();
         paymentMethodTypeIds.clear();
@@ -396,7 +404,7 @@ public class ShoppingCart implements java.io.Serializable {
         return (getSubTotal() + getOrderOtherAdjustmentTotal() + getTotalShipping() + getTotalSalesTax());
     }
 
-    /** Returns the SHIPABLE item-total in the cart. */
+    /** Returns the SHIPPABLE item-total in the cart. */
     public double getShippableTotal() {
         double itemTotal = 0.0;
         Iterator i = iterator();
@@ -418,7 +426,7 @@ public class ShoppingCart implements java.io.Serializable {
         return count;
     }
 
-    /** Returns the total SHIPABLE quantity in the cart. */
+    /** Returns the total SHIPPABLE quantity in the cart. */
     public double getShippableQuantity() {
         double count = 0.0;
         Iterator i = iterator();
@@ -431,7 +439,7 @@ public class ShoppingCart implements java.io.Serializable {
         return count;
     }
 
-    /** Returns the total SHIPABLE weight in the cart. */
+    /** Returns the total SHIPPABLE weight in the cart. */
     public double getShippableWeight() {
         double weight = 0.0;
         Iterator i = iterator();
@@ -473,7 +481,16 @@ public class ShoppingCart implements java.io.Serializable {
     public void setOrderId(String orderId) {
         this.orderId = orderId;
     }
-    
+
+    /** Returns the productPromoId used for free shipping or null if free shipping is not used. */
+    public Map getFreeShippingInfo() {
+        return this.freeShippingInfo;
+    }
+    /** Sets the productPromoId used for free shipping. */
+    public void setFreeShippingInfo(Map freeShippingInfo) {
+        this.freeShippingInfo = freeShippingInfo;
+    }
+
     // =======================================================================
     // Methods used for order creation
     // =======================================================================
@@ -525,10 +542,16 @@ public class ShoppingCart implements java.io.Serializable {
     public List makeAllAdjustments(GenericDelegator delegator) {
         List allAdjs = new LinkedList(this.getAdjustments());
         
-        if (this.freeShippingPromoId != null) {
-            allAdjs.add(delegator.makeValue("OrderAdjustment",
-                    UtilMisc.toMap("orderAdjustmentTypeId", "DISCOUNT", "amount", new Double(-this.getTotalShipping()),
-                    "productPromoId", freeShippingPromoId)));
+        if (this.freeShippingInfo != null) {
+            GenericValue fsOrderAdjustment = delegator.makeValue("OrderAdjustment",
+                    UtilMisc.toMap("orderAdjustmentTypeId", "PROMOTION_ADJUSTMENT", "amount", new Double(-this.getTotalShipping()),
+                    "productPromoId", freeShippingInfo.get("productPromoId"), "productPromoRuleId", freeShippingInfo.get("productPromoRuleId")));
+            
+            //if an orderAdjustmentTypeId was passed, override the default
+            if (UtilValidate.isNotEmpty((String) freeShippingInfo.get("orderAdjustmentTypeId"))) {
+                fsOrderAdjustment.set("orderAdjustmentTypeId", freeShippingInfo.get("orderAdjustmentTypeId"));
+            }
+            allAdjs.add(fsOrderAdjustment);
         }
         
         //add all of the item adjustments to this list too

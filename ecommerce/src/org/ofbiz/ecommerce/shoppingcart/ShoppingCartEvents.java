@@ -357,7 +357,7 @@ public class ShoppingCartEvents {
                             if (item != null) {
                                 try {
                                     Debug.logInfo("Setting quantity.");
-                                    item.setQuantity(quantity, dispatcher);
+                                    item.setQuantity(quantity, dispatcher, cart);
                                 } catch (CartItemModifyException e) {
                                     errMsg += "<li>" + e.getMessage();
                                 }
