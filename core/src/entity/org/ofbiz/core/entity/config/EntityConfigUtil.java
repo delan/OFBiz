@@ -25,6 +25,7 @@
 
 package org.ofbiz.core.entity.config;
 
+
 import java.util.*;
 import java.net.*;
 import java.io.*;
@@ -33,6 +34,7 @@ import org.w3c.dom.*;
 import org.ofbiz.core.config.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.entity.*;
+
 
 /**
  * Misc. utility method for dealing with the entityengine.xml file
@@ -43,7 +45,7 @@ import org.ofbiz.core.entity.*;
  */
 public class EntityConfigUtil {
     public static final String ENTITY_ENGINE_XML_FILENAME = "entityengine.xml";
-    
+
     public static Element getXmlRootElement() throws GenericEntityConfException {
         try {
             return ResourceLoader.getXmlRootElement(EntityConfigUtil.ENTITY_ENGINE_XML_FILENAME);
