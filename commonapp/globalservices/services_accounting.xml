@@ -138,7 +138,7 @@
         <attribute name="authFlag" type="String" mode="OUT" optional="false"/>        
         <attribute name="authMessage" type="String" mode="OUT" optional="false"/>
         <attribute name="avsCode" type="String" mode="OUT" optional="true"/>
-        <attribute name="scoreCode" type="Strihg" mode="OUT" optional="true"/>
+        <attribute name="scoreCode" type="String" mode="OUT" optional="true"/>
         <attribute name="captureRefNum" type="String" mode="OUT" optional="true"/>
     </service>
 
