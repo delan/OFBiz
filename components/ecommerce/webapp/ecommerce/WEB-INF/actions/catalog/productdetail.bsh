@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski
  *@author     David E. Jones
- *@version    $Revision: 1.13 $
+ *@version    $Revision: 1.14 $
  *@since      2.1
  */
 
@@ -65,6 +65,7 @@ String buildNext(Map map, List order, String current, String prefix, Map feature
             value = map.get(key);
             newPrefix = prefix + "_" + ct;
             buf.append(buildNext(value, order, nextOrder, newPrefix, featureTypes));
+            ct++;
         }
     }
     return buf.toString();
