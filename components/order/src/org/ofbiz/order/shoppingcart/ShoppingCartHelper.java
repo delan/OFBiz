@@ -370,11 +370,11 @@ public class ShoppingCartHelper {
      */
     public Map addToCartBulkRequirements(String catalogId, Map context) {
         // check if we are using per row submit
-        boolean useRowSubmit = context.containsKey("_useRowSubmit")? false : 
+        boolean useRowSubmit = (!context.containsKey("_useRowSubmit"))? false : 
                 "Y".equalsIgnoreCase((String)context.get("_useRowSubmit"));
         
         // check if we are to also look in a global scope (no delimiter)        
-        boolean checkGlobalScope = context.containsKey("_checkGlobalScope")? false :
+        boolean checkGlobalScope = (!context.containsKey("_checkGlobalScope"))? false :
                 "Y".equalsIgnoreCase((String)context.get("_checkGlobalScope"));
         
         int rowCount = 0; // parsed int value
@@ -392,7 +392,7 @@ public class ShoppingCartHelper {
             String quantStr = null;
             String requirementId = null;
             String thisSuffix = org.ofbiz.content.webapp.event.ServiceMultiEventHandler.DELIMITER + i;
-            boolean rowSelected = context.containsKey("_rowSubmit" + thisSuffix)? false :
+            boolean rowSelected = (!context.containsKey("_rowSubmit" + thisSuffix))? false :
                     "Y".equalsIgnoreCase((String)context.get("_rowSubmit" + thisSuffix));
             
             // make sure we are to process this row
