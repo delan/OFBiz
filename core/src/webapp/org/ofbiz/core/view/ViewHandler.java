@@ -22,20 +22,17 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-
 package org.ofbiz.core.view;
-
 
 import javax.servlet.*;
 import javax.servlet.http.*;
 
-
 /**
  * ViewHandler - View Handler Interface
  *
- *@author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
- *@created    Feb 26, 2002
- *@version    1.0
+ * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
+ * @version    $Revision$
+ * @since      2.0
  */
 public interface ViewHandler {
 
