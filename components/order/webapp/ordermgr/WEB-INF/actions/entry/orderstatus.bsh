@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -82,14 +82,13 @@ if (orderHeader != null) {
     
     placingCustomerOrderRoles = delegator.findByAnd("OrderRole",UtilMisc.toMap("orderId", orderId, "roleTypeId", "PLACING_CUSTOMER"));
     placingCustomerOrderRole = EntityUtil.getFirst(placingCustomerOrderRoles);        
-    placingCustomerPerson = placingCustomerOrderRole == null ? null : delegator.findByPrimaryKey("Person",UtilMisc.toMap("partyId", placingCustomerOrderRole.getString("partyId")));
+    placingCustomerPerson = placingCustomerOrderRole == null ? null : delegator.findByPrimaryKey("Person", UtilMisc.toMap("partyId", placingCustomerOrderRole.getString("partyId")));
     context.put("placingCustomerPerson", placingCustomerPerson);
 
     shippingAddress = orderReadHelper.getShippingAddress("00001");
     context.put("shippingAddress", shippingAddress);
     billingAccount = orderHeader.getRelatedOne("BillingAccount");
-    if (billingAccount != null)
-        context.put("billingAccount", billingAccount);
+    context.put("billingAccount", billingAccount);
   
     orderPaymentPreferences = UtilMisc.toIterator(orderHeader.getRelated("OrderPaymentPreference"));
     paymentMethodTypeId = null;
@@ -98,10 +97,8 @@ if (orderHeader != null) {
         paymentMethod = orderPaymentPreference.getRelatedOne("PaymentMethod");        
         paymentMethodType = orderPaymentPreference.getRelatedOne("PaymentMethodType");
         paymentMethodTypeId = paymentMethodType.getString("paymentMethodTypeId");
-        if (paymentMethod != null)
-            context.put("paymentMethod", paymentMethod);
-        if (paymentMethodType != null)
-            context.put("paymentMethodType", paymentMethodType);
+        context.put("paymentMethod", paymentMethod);
+        context.put("paymentMethodType", paymentMethodType);
         
         if (paymentMethod != null && "CREDIT_CARD".equals(paymentMethod.getString("paymentMethodTypeId"))) {
             creditCard = paymentMethod.getRelatedOneCache("CreditCard");
@@ -145,5 +142,4 @@ if (orderHeader != null) {
     }
     orderType = orderReadHelper.getOrderTypeId();
     context.put("orderType", orderType);
-
 }
