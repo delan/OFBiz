@@ -1,5 +1,5 @@
 /*
- * $Id: PaymentGatewayServices.java,v 1.29 2004/05/14 18:23:08 ajzeneski Exp $
+ * $Id: PaymentGatewayServices.java,v 1.30 2004/05/14 18:53:35 ajzeneski Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -68,7 +68,7 @@ import org.ofbiz.security.Security;
  * PaymentGatewayServices
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.29 $
+ * @version    $Revision: 1.30 $
  * @since      2.0
  */
 public class PaymentGatewayServices {
@@ -80,6 +80,7 @@ public class PaymentGatewayServices {
     public static final String CAPTURE_SERVICE_TYPE = "PRDS_PAY_CAPTURE";
     public static final String REFUND_SERVICE_TYPE = "PRDS_PAY_REFUND";
     public static final String CREDIT_SERVICE_TYPE = "PRDS_PAY_CREDIT";
+    private static final int TX_TIME = 300;
 
     /**
      * Processes payments through service calls to the defined processing service for the ProductStore/PaymentMethodType
@@ -261,7 +262,8 @@ public class PaymentGatewayServices {
         // invoke the processor.
         Map processorResult = null;
         try {
-            processorResult = dispatcher.runSync(serviceName, processContext);
+            // invoke the payment processor; allow 5 minute transaction timeout and require a new tx; we'll capture the error and pass back nicely.
+            processorResult = dispatcher.runSync(serviceName, processContext, TX_TIME, true);
         } catch (GenericServiceException gse) {
             Debug.logError("Error occurred on: " + serviceName + " => " + processContext, module);
             Debug.logError(gse, "Problems invoking payment processor! Will retry later." + "(" + orh.getOrderId() + ")", module);
@@ -506,7 +508,7 @@ public class PaymentGatewayServices {
             // run the defined service
             Map releaseResult = null;
             try {
-                releaseResult = dispatcher.runSync(serviceName, releaseContext);
+                releaseResult = dispatcher.runSync(serviceName, releaseContext, TX_TIME, true);
             } catch (GenericServiceException e) {
                 Debug.logError(e, "Problem releasing payment", module);
             }
@@ -922,7 +924,7 @@ public class PaymentGatewayServices {
         // now invoke the capture service
         Map captureResult = null;
         try {
-            captureResult = dispatcher.runSync(serviceName, captureContext);
+            captureResult = dispatcher.runSync(serviceName, captureContext, TX_TIME, true);
         } catch (GenericServiceException e) {
             Debug.logError(e, "Could not capture payment ... serviceName: " + serviceName + " ... context: " + captureContext, module);
             return null;
@@ -1198,7 +1200,7 @@ public class PaymentGatewayServices {
                 // call the service
                 Map refundResponse = null;
                 try {
-                    refundResponse = dispatcher.runSync(serviceName, serviceContext);
+                    refundResponse = dispatcher.runSync(serviceName, serviceContext, TX_TIME, true);
                 } catch (GenericServiceException e) {
                     Debug.logError(e, "Problem refunding payment through processor", module);
                     return ServiceUtil.returnError("Refund processor problems; see logs");
@@ -1347,7 +1349,7 @@ public class PaymentGatewayServices {
         LocalDispatcher dispatcher = dctx.getDispatcher();
 
         // get a list of all payment prefs still pending
-        List exprs = UtilMisc.toList(new EntityExpr("statusId", EntityOperator.EQUALS, "PAYMENT_NOT_RECEIVED"),
+        List exprs = UtilMisc.toList(new EntityExpr("statusId", EntityOperator.EQUALS, "PAYMENT_NOT_AUTH"),
                 new EntityExpr("processAttempt", EntityOperator.GREATER_THAN, new Long(0)));
 
         EntityListIterator eli = null;
@@ -1489,7 +1491,7 @@ public class PaymentGatewayServices {
         // process the transaction
         Map response = null;
         try {
-            response = dispatcher.runSync(paymentService, requestContext);
+            response = dispatcher.runSync(paymentService, requestContext, TX_TIME, true);
         } catch (GenericServiceException e) {
             Debug.logError(e, module);
             return ServiceUtil.returnError("Error calling service : " + paymentService + " / " + requestContext);
