@@ -24,12 +24,11 @@
  *@since      3.0
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
-<#assign locale = requestAttributes.locale>
 
 <#if hasPermission>
 ${pages.get("/routing/RoutingTabBar.ftl")}
 
-	<div class="head1">${uiLabelMap.ManufacturingEditMachine}&nbsp; 
+	<div class="head1">${uiLabelMap.ManufacturingEditMachine}
 	</div>
 	<br>
 	<#if machine?has_content>
