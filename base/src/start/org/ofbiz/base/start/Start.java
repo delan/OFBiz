@@ -676,7 +676,7 @@ public class Start implements Runnable {
             String fileSep = System.getProperty("file.separator");
             String javaHome = System.getProperty("java.home");
             String errorMsg = "Unable to locate " + jarName + " - ";
-            String foundMsg = "Found " + jarName + " - ";
+            //String foundMsg = "Found " + jarName + " - ";
             String jarLoc = "lib" + fileSep + jarName;
             File tj = null;
 
@@ -706,7 +706,7 @@ public class Start implements Runnable {
                         System.err.println(errorMsg + tj.getAbsolutePath());
                     }
                 } else {
-                    System.out.println(foundMsg + tj.getAbsolutePath());
+                    //System.out.println(foundMsg + tj.getAbsolutePath());
                     return jarProps;
                 }
             }
@@ -718,7 +718,7 @@ public class Start implements Runnable {
                     System.err.println(errorMsg + tj.getAbsolutePath());
                 }
             } else {
-                System.out.println(foundMsg + tj.getAbsolutePath());
+                //System.out.println(foundMsg + tj.getAbsolutePath());
                 return tj.getAbsolutePath();
             }
 
@@ -732,7 +732,7 @@ public class Start implements Runnable {
                         System.err.println(errorMsg + tj.getAbsolutePath());
                     }
                 } else {
-                    System.out.println(foundMsg + tj.getAbsolutePath());
+                    //System.out.println(foundMsg + tj.getAbsolutePath());
                     return tj.getAbsolutePath();
                 }
             }
@@ -747,7 +747,7 @@ public class Start implements Runnable {
                         System.err.println(errorMsg + tj.getAbsolutePath());
                     }
                 } else {
-                    System.out.println(foundMsg + tj.getAbsolutePath());
+                    //System.out.println(foundMsg + tj.getAbsolutePath());
                     return tj.getAbsolutePath();
                 }
             }
