@@ -36,9 +36,9 @@ import org.ofbiz.core.util.*;
 
 public class DataFile {
     /** List of record in the file, contains Record objects */
-    public List records = null;
+    protected List records = null;
     /** Contains the definition for the file */
-    public ModelDataFile modelDataFile;
+    protected ModelDataFile modelDataFile;
 
     /** Creates a DataFile object which will contain the parsed objects for the specified datafile, using the specified definition.
      * @param fileUrl The URL where the data file is located
@@ -48,6 +48,18 @@ public class DataFile {
      * @return A new DataFile object with the specified file pre-loaded
      */
     public static DataFile readFile(URL fileUrl, URL definitionUrl, String dataFileName) throws DataFileException {
+        DataFile dataFile = makeDataFile(definitionUrl, dataFileName);
+        dataFile.readDataFile(fileUrl);
+        return dataFile;
+    }
+
+    /** Creates a DataFile object using the specified definition.
+     * @param definitionUrl The location of the data file definition XML file
+     * @param dataFileName The data file model name, as specified in the definition XML file
+     * @throws DataFileException Exception thown for various errors, generally has a nested exception
+     * @return A new DataFile object
+     */
+    public static DataFile makeDataFile(URL definitionUrl, String dataFileName) throws DataFileException {
         ModelDataFileReader reader = ModelDataFileReader.getModelDataFileReader(definitionUrl);
         if (reader == null)
             throw new IllegalArgumentException("Could not load definition file located at \"" + definitionUrl + "\"");
@@ -55,7 +67,6 @@ public class DataFile {
         if (modelDataFile == null)
             throw new IllegalArgumentException("Could not find file definition for data file named \"" + dataFileName + "\"");
         DataFile dataFile = new DataFile(modelDataFile);
-        dataFile.readDataFile(fileUrl);
         return dataFile;
     }
 
@@ -65,7 +76,19 @@ public class DataFile {
     public DataFile(ModelDataFile modelDataFile) {
         this.modelDataFile = modelDataFile;
     }
+    
+    public ModelDataFile getModelDataFile() {
+        return modelDataFile;
+    }
 
+    public List getRecords() {
+        return records;
+    }
+
+    public void addRecord(Record record) {
+        records.add(record);
+    }
+    
     /** Loads (or reloads) the data file at the pre-specified location.
      * @param fileUrl The URL that the file will be loaded from
      * @throws DataFileException Exception thown for various errors, generally has a nested exception
