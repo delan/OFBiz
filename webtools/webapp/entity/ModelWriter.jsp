@@ -152,10 +152,12 @@ if (security.hasPermission("ENTITY_MAINT", session) || request.getParameter("ori
             author="<%=entity.getAuthor()%>"<%}%><%if (!version.equals(entity.getVersion())) {%>
             version="<%=entity.getVersion()%>"<%}%>><%if (!description.equals(entity.getDescription())) {%>
       <description><%=entity.getDescription()%></description><%}%><%
-  Iterator meIter = viewEntity.getMemberEntityNames().entrySet().iterator();
+  Iterator meIter = viewEntity.getAllModelMemberEntities().iterator();
   while(meIter.hasNext()) {
-    Map.Entry entry = (Map.Entry)meIter.next();%>
-      <member-entity entity-alias="<%=(String)entry.getKey()%>" entity-name="<%=(String)entry.getValue()%>"/><%
+    ModelViewEntity.ModelMemberEntity modelMemberEntity = (ModelViewEntity.ModelMemberEntity) meIter.next();
+%>
+      <member-entity entity-alias="<%=modelMemberEntity.getEntityAlias()%>" entity-name="<%=modelMemberEntity.getEntityName()%>"<%
+          if (modelMemberEntity.getOptional()) {%> optional="true"<%}%>/><%
   }
   for (int y = 0; y < viewEntity.getAliasesSize(); y++) {
     ModelViewEntity.ModelAlias alias = viewEntity.getAlias(y);%>
