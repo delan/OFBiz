@@ -61,7 +61,7 @@
     entity-model-reader CDATA #REQUIRED
     entity-group-reader CDATA #REQUIRED
     distributed-cache-clear-enabled ( true | false ) "false"
-    distributed-cache-clear-class-name CDATA "org.ofbiz.commonapp.common.EntityCacheServices"
+    distributed-cache-clear-class-name CDATA "org.ofbiz.core.extentity.EntityCacheServices"
 >
     <!ELEMENT group-map EMPTY>
     <!ATTLIST group-map 
