@@ -314,6 +314,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
         </tr>               
         <#list purchaseOrderItems as orderItem>
           <#assign defaultQuantity = orderItem.quantity - receivedQuantities[orderItem.orderItemSeqId]?double>
+          <#assign salesOrderItem = salesOrderItems[orderItem.orderItemSeqId]?if_exists>
           <#if shipment?has_content>
           <#assign defaultQuantity = shippedQuantities[orderItem.orderItemSeqId]?double - receivedQuantities[orderItem.orderItemSeqId]?double>
           </#if>
@@ -326,9 +327,14 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
           <#if shipment?exists && shipment.shipmentId?has_content>
             <input type="hidden" name="shipmentId_o_${rowCount}" value="${shipment.shipmentId}">        
           </#if>
+          <#if salesOrderItem?has_content>
+            <input type="hidden" name="priorityOrderId_o_${rowCount}" value="${salesOrderItem.salesOrderId}">
+            <input type="hidden" name="priorityOrderItemSeqId_o_${rowCount}" value="${salesOrderItem.soItemSeqId}">
+          </#if>
+
           <tr>
             <td colspan="2"><hr class="sepbar"></td>
-          </tr>                 
+          </tr>
           <tr>
             <td>
               <table width="100%" border='0' cellpadding='2' cellspacing='0'>

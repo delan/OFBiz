@@ -134,6 +134,8 @@
             location="org/ofbiz/product/inventory/InventoryServices.xml" invoke="balanceInventoryItems" auth="true">
         <description>Balance inventory items based on the item passed</description>
         <attribute name="inventoryItemId" type="String" mode="IN" optional="false"/>
+        <attribute name="priorityOrderId" type="String" mode="IN" optional="true"/>
+        <attribute name="priorityOrderItemSeqId" type="String" mode="IN" optional="true"/>
     </service>
 
     <service name="reserveProductInventory" engine="simple"

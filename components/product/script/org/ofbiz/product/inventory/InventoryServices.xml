@@ -408,7 +408,24 @@
                     </condition>
                     <then>
                         <get-related value-name="item" relation-name="OrderItemShipGrpInvRes" list-name="relatedRes"/>
-                        <list-to-list list-name="relatedRes" to-list-name="reservations"/>
+                        <!--<list-to-list list-name="relatedRes" to-list-name="reservations"/>-->
+                        
+                        <iterate list-name="relatedRes" entry-name="oneRelatedRes">
+                            <if>
+                                <condition>
+                                    <and>
+                                        <if-compare-field field-name="parameters.priorityOrderId" operator="equals" to-field-name="oneRelatedRes.orderId"/>
+                                        <if-compare-field field-name="parameters.priorityOrderItemSeqId" operator="equals" to-field-name="oneRelatedRes.orderItemSeqId"/>
+                                    </and>
+                                </condition>
+                                <then>
+                                    <field-to-list field-name="oneRelatedRes" list-name="privilegedReservations"/>
+                                </then>
+                                <else>
+                                    <field-to-list field-name="oneRelatedRes" list-name="reservations"/>
+                                </else>
+                            </if>
+                        </iterate>
                     </then>
                 </if>
             </iterate>
@@ -416,7 +433,10 @@
             <!-- sort the list by date -->
             <order-value-list list-name="reservations" order-by-list-name="reservedDatetime"/>
 
-            <iterate list-name="reservations" entry-name="oisgir">
+            <list-to-list list-name="privilegedReservations" to-list-name="allReservations"/>
+            <list-to-list list-name="reservations" to-list-name="allReservations"/>
+            
+            <iterate list-name="allReservations" entry-name="oisgir">
                 <!-- cancel the reservation -->
                 <field-to-field field-name="orderId" map-name="oisgir" to-map-name="cancelOisgirMap"/>
                 <field-to-field field-name="orderItemSeqId" map-name="oisgir" to-map-name="cancelOisgirMap"/>
