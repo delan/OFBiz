@@ -1,5 +1,5 @@
 /*
- * $Id: EntityUtil.java,v 1.7 2004/02/12 20:34:12 jonesde Exp $
+ * $Id: EntityUtil.java,v 1.8 2004/04/23 05:34:09 doogie Exp $
  *
  * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
@@ -479,7 +479,7 @@ public class EntityUtil {
 
         private String field;
         private ModelField modelField = null;
-        private boolean descending;
+        private boolean descending, upper = false, lower = false;
         private Comparator next = null;
 
         OrderByComparator(List orderBy) {
@@ -489,25 +489,42 @@ public class EntityUtil {
         private OrderByComparator(List orderBy, int startIndex) {
             if (orderBy == null) throw new IllegalArgumentException("orderBy may not be empty");
             if (startIndex >= orderBy.size()) throw new IllegalArgumentException("startIndex may not be greater than or equal to orderBy size");
-            String fieldAndDirection = (String) orderBy.get(startIndex);
+            String fieldAndDirection = ((String) orderBy.get(startIndex)).trim();
             String upper = fieldAndDirection.trim().toUpperCase();
 
             if (upper.endsWith(" DESC")) {
                 this.descending = true;
-                this.field = fieldAndDirection.substring(0, fieldAndDirection.length() - 5);
+                upper = upper.substring(0, upper.length() - 5);
+                fieldAndDirection = fieldAndDirection.substring(0, fieldAndDirection.length() - 5);
             } else if (upper.endsWith(" ASC")) {
                 this.descending = false;
-                this.field = fieldAndDirection.substring(0, fieldAndDirection.length() - 4);
+                upper = upper.substring(0, upper.length() - 4);
+                fieldAndDirection = fieldAndDirection.substring(0, fieldAndDirection.length() - 4);
             } else if (upper.startsWith("-")) {
                 this.descending = true;
-                this.field = fieldAndDirection.substring(1);
+                upper = upper.substring(0, upper.length() - 1);
+                fieldAndDirection = fieldAndDirection.substring(0, fieldAndDirection.length() - 1);
             } else if (upper.startsWith("+")) {
                 this.descending = false;
-                this.field = fieldAndDirection.substring(1);
+                upper = upper.substring(0, upper.length() - 1);
+                fieldAndDirection = fieldAndDirection.substring(0, fieldAndDirection.length() - 1);
             } else {
                 this.descending = false;
-                this.field = fieldAndDirection;
             }
+            if (upper.endsWith(")")) {
+                upper = upper.substring(0, upper.length() - 1);
+                fieldAndDirection = fieldAndDirection.substring(0, fieldAndDirection.length() - 1);
+                if (upper.startsWith("UPPER(")) {
+                    this.upper = true;
+                    upper = upper.substring(6);
+                    fieldAndDirection = fieldAndDirection.substring(6);
+                } else if (upper.startsWith("LOWER(")) {
+                    this.lower = true;
+                    upper = upper.substring(6);
+                    fieldAndDirection = fieldAndDirection.substring(6);
+                }
+            }
+            this.field = fieldAndDirection;
             if (startIndex + 1 < orderBy.size()) {
                 this.next = new OrderByComparator(orderBy, startIndex + 1);
             }// else keep null
@@ -539,6 +556,15 @@ public class EntityUtil {
             // null is defined as the largest possible value
             if (value == null) return value2 == null ? 0 : 1;
             if (value2 == null) return value == null ? 0 : -1;
+            if (value instanceof String) {
+                if (this.lower) {
+                    value = ((String) value).toLowerCase();
+                    value2 = ((String) value2).toLowerCase();
+                } else if (this.upper) {
+                    value = ((String) value).toUpperCase();
+                    value2 = ((String) value2).toUpperCase();
+                }
+            }
             int result = ((Comparable) value).compareTo(value2);
 
             // if (Debug.infoOn()) Debug.logInfo("[OrderByComparator.compareAsc] Result is " + result + " for [" + value + "] and [" + value2 + "]", module);
