@@ -267,6 +267,29 @@
     	<response name="success" type="view" value="EditFeatureCategoryFeatures"/>
     	<response name="error" type="view" value="EditFeatureCategoryFeatures"/>
     </request-map>
+
+    <!-- ================ FACILITY REQUESTS ================= -->
+    <request-map uri="FindFacility"><security https="true" auth="true"/>
+    	<response name="success" type="view" value="FindFacility"/>
+    </request-map>
+
+    <request-map uri="EditFacility"><security https="true" auth="true"/>
+    	<response name="success" type="view" value="EditFacility"/>
+    </request-map>
+    <request-map uri="CreateFacility"><security https="true" auth="true"/>
+        <event type="service" path="" invoke="createFacility"/>
+    	<response name="success" type="view" value="EditFacility"/>
+    	<response name="error" type="view" value="EditFacility"/>
+    </request-map>
+    <request-map uri="UpdateFacility"><security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateFacility"/>
+    	<response name="success" type="view" value="EditFacility"/>
+    	<response name="error" type="view" value="EditFacility"/>
+    </request-map>
+
+    <request-map uri="EditFacilityInventoryItems"><security https="true" auth="true"/>
+    	<response name="success" type="view" value="EditFacilityInventoryItems"/>
+    </request-map>
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
@@ -296,5 +319,8 @@
     <view-map name="EditFeatureCategories" type="region"/>
     <view-map name="EditFeatureCategoryFeatures" type="region"/>
     
+    <view-map name="FindFacility" type="region"/>
+    <view-map name="EditFacility" type="region"/>
+    <view-map name="EditFacilityInventoryItems" type="region"/>
     <!-- end of view mappings -->
 </site-conf>

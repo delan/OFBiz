@@ -119,4 +119,17 @@
         <put section='title'>Upload Category Image Page</put>
         <put section='content' content='/category/UploadCategoryImage.jsp'/>
     </define>
+    
+    <define id='FindFacility' region='MAIN_REGION'>
+        <put section='title'>Edit Facility Page</put>
+        <put section='content' content='/storage/FindFacility.jsp'/>
+    </define>
+    <define id='EditFacility' region='MAIN_REGION'>
+        <put section='title'>Edit Facility Page</put>
+        <put section='content' content='/storage/EditFacility.jsp'/>
+    </define>
+    <define id='EditFacilityInventoryItems' region='MAIN_REGION'>
+        <put section='title'>Edit Facility InventoryItems Page</put>
+        <put section='content' content='/storage/EditFacilityInventoryItems.jsp'/>
+    </define>
 </regions>
