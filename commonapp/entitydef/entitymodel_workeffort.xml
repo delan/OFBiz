@@ -203,6 +203,12 @@
       <field name="lastRuntime" type="date-time"></field>
       <field name="runCount" type="numeric"></field>	
       <prim-key field="jobName" />
+      <relation type="one" rel-entity-name="RecurrenceInfo">
+        <key-map field-name="recurrenceInfoId" />
+      </relation>
+      <relation type="one" rel-entity-name="RuntimeData">
+        <key-map field-name="runtimeDataId" />
+      </relation>
     </entity>	
     <entity entity-name="RecurrenceInfo" 
             package-name="org.ofbiz.commonapp.workeffort.scheduler"
