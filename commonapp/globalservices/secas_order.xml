@@ -8,7 +8,7 @@
     </eca>
     <eca service="changeOrderStatus" event="commit" run-on-error="false">
         <condition field-name="statusId" operator="equals" value="ORDER_COMPLETED"/>
-        <action service="createInvoiceFromOrder" mode="async" update-context="true"/>
+        <action service="createInvoiceFromOrder" mode="async"/>
     </eca>
     <eca service="createOrderAdjustment" event="commit">        
         <action service="resetGrandTotal" mode="sync"/>
