@@ -48,7 +48,10 @@ if (shipmentItems != null && shipmentItems.size() > 0) {
 	}
 }
 
+shipmentPackages = shipment.getRelated("ShipmentPackage", null, UtilMisc.toList("shipmentPackageSeqId"));
+
 context.put("shipmentId", shipmentId);
 context.put("shipment", shipment);
 context.put("shipmentItemDatas", shipmentItemDatas);
+context.put("shipmentPackages", shipmentPackages);
 

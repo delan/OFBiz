@@ -27,6 +27,81 @@
 <#if security.hasEntityPermission("FACILITY", "_VIEW", session)>
 ${pages.get("/shipment/ShipmentTabBar.ftl")}
 
+<table width="100%">
+	<tr>
+		<td><div class="tableheadtext">Item#</div></td>
+		<td><div class="tableheadtext">&nbsp;</div></td>
+		<td><div class="tableheadtext">&nbsp;</div></td>
+		<td><div class="tableheadtext">Quantity</div></td>
+		<td><div class="tableheadtext">&nbsp;</div></td>
+		<td><div class="tableheadtext">&nbsp;</div></td>
+		<td><div class="tableheadtext">&nbsp;</div></td>
+	</tr>
+<#list shipmentItemDatas as shipmentItemData>
+	<#assign shipmentItem = shipmentItemData.shipmentItem>
+	<#assign itemIssuances = shipmentItemData.itemIssuances>
+	<#assign shipmentPackageContents = shipmentItemData.shipmentPackageContents>
+	<#assign product = shipmentItemData.product>
+	<tr>
+		<td><div class="tabletext">${shipmentItem.shipmentItemSeqId}</div></td>
+		<td colspan="2"><div class="tabletext">${(product.productName)?if_exists} [<a href="<@ofbizUrl>/EditProduct?productId=${shipmentItem.productId?if_exists}</@ofbizUrl>" class="buttontext">${shipmentItem.productId?if_exists}</a>]</div></td>
+		<td><div class="tabletext">${shipmentItem.quantity}</div></td>
+		<td colspan="2"><div class="tabletext">${shipmentItem.shipmentContentDescription}</div></td>
+		<td><div class="tabletext"><a href="<@ofbizUrl>/deleteShipmentItem?shipmentId=${shipmentId}&shipmentItemSeqId=${shipmentItem.shipmentItemSeqId}</@ofbizUrl>" class="buttontext">Delete</a></div></td>
+	</tr>
+	<#list itemIssuances as itemIssuance>
+		<tr>
+			<td><div class="tabletext">&nbsp;</div></td>
+			<td><div class="tabletext"><a href="/ordermgr/control/vieworder?order_id=${itemIssuance.orderId?if_exists}" class="buttontext">${itemIssuance.orderId?if_exists}</a>:${itemIssuance.orderItemSeqId?if_exists}</div></td>
+			<td><div class="tabletext"><a href="<@ofbizUrl>/EditInventoryItem?inventoryItemId=${itemIssuance.inventoryItemId?if_exists}</@ofbizUrl>" class="buttontext">${itemIssuance.inventoryItemId?if_exists}</a></div></td>
+			<td><div class="tabletext">${itemIssuance.quantity?if_exists}</div></td>
+			<td><div class="tabletext">${itemIssuance.issuedDateTime?if_exists}</div></td>
+			<td><div class="tabletext">Future Party/Role List</div></td>
+			<td><div class="tabletext"><a href="<@ofbizUrl>/deleteShipmentItemIssuance?shipmentId=${shipmentId}&itemIssuanceId=${itemIssuance.itemIssuanceId}</@ofbizUrl>" class="buttontext">Delete</a></div></td>
+		</tr>
+	</#list>
+	<#list shipmentPackageContents as shipmentPackageContent>
+		<tr>
+			<td><div class="tabletext">&nbsp;</div></td>
+			<td><div class="tabletext">&nbsp;</div></td>
+			<td><div class="tabletext">${shipmentPackageContent.shipmentPackageSeqId}</div></td>
+			<td><div class="tabletext">${shipmentPackageContent.quantity?if_exists}</div></td>
+			<td><div class="tabletext">&nbsp;</div></td>
+			<td><div class="tabletext">&nbsp;</div></td>
+			<td><div class="tabletext"><a href="<@ofbizUrl>/deleteShipmentItemPackageContent?shipmentId=${shipmentId}&shipmentItemSeqId=${shipmentPackageContent.shipmentItemSeqId}&shipmentPackageSeqId=${shipmentPackageContent.shipmentPackageSeqId}</@ofbizUrl>" class="buttontext">Delete</a></div></td>
+		</tr>
+	</#list>
+	<tr>
+		<form action="<@ofbizUrl>/createShipmentItemPackageContent</@ofbizUrl>" name="createShipmentPackageContentForm${shipmentItemData_index}">
+		<input type="hidden" name="shipmentId" value="${shipmentId}"/>
+		<input type="hidden" name="shipmentItemSeqId" value="${shipmentItem.shipmentItemSeqId}"/>
+		<td><div class="tabletext">&nbsp;</div></td>
+		<td><div class="tabletext">Package:</div></td>
+		<td colspan="2">
+			<select name="shipmentPackageSeqId" class="selectBox">
+				<#list shipmentPackages as shipmentPackage>
+					<option>${shipmentPackage.shipmentPackageSeqId}</option>
+				</#list>
+				<option>New</option>
+			</select>
+		</td>
+		<td><div class="tabletext">Quantity:<input name="quantity" size="5" value="0"/></div></td>
+		<td colspan="2"><div class="tabletext">&nbsp;</div></td>
+		<td><a href="javascript:document.createShipmentPackageContentForm${shipmentItemData_index}.submit()">Add</a></td>
+		</form>
+	</tr>
+</#list>
+<tr>
+	<form action="<@ofbizUrl>/createShipmentItem</@ofbizUrl>" name="createShipmentItemForm">
+	<input type="hidden" name="shipmentId" value="${shipmentId}"/>
+	<td><div class="tabletext">New Item:</div></td>
+	<td colspan="2"><div class="tabletext">ProductID:<input name="productId" size="15" maxlength="20"/></div></td>
+	<td><div class="tabletext">Quantity:<input name="quantity" size="5" value="0"/></div></td>
+	<td colspan="2"><div class="tabletext">Description:<input name="shipmentContentDescription" size="30" maxlength="255"/></div></td>
+	<td><a href="javascript:document.createShipmentItemForm.submit()">Create</a></td>
+	</form>
+</tr>
+</table>
 
 <#else>
   <h3>You do not have permission to view this page. ("FACILITY_VIEW" or "FACILITY_ADMIN" needed)</h3>
