@@ -50,25 +50,15 @@ public class SOAPEventHandler implements EventHandler {
     public static final String module = SOAPEventHandler.class.getName();
     public static Category category = Category.getInstance(SOAPEventHandler.class.getName());
 
-    private String eventPath = null;
-    private String eventMethod = null;
-
-    /** Initialize the required parameters
+    /** Invoke the web event
      *@param eventPath The path or location of this event
      *@param eventMethod The method to invoke
-     */
-    public void initialize(String eventPath, String eventMethod) {
-        this.eventPath = null;
-        this.eventMethod = null;
-    }
-
-    /** Invoke the web event
      *@param request The servlet request object
      *@param response The servlet response object
      *@return String Result code
      *@throws EventHandlerException
      */
-    public String invoke(HttpServletRequest request, HttpServletResponse response) throws EventHandlerException {
+    public String invoke(String eventPath, String eventMethod, HttpServletRequest request, HttpServletResponse response) throws EventHandlerException {
         HttpSession session = request.getSession();
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         AxisServer axisServer;
@@ -207,5 +197,4 @@ public class SOAPEventHandler implements EventHandler {
             throw new EventHandlerException(e.getMessage(), e);
         }
     }
-
 }

@@ -114,8 +114,7 @@ public class RequestHandler implements Serializable {
                     String eMeth = (String) eventMap.get(org.ofbiz.core.util.ConfigXMLReader.EVENT_METHOD);
                     try {
                         EventHandler preEvent = EventFactory.getEventHandler(this, eType);
-                        preEvent.initialize(ePath, eMeth);
-                        String returnString = preEvent.invoke(request, response);
+                        String returnString = preEvent.invoke(ePath, eMeth, request, response);
                         if (!returnString.equalsIgnoreCase("success"))
                             throw new EventHandlerException("Event did not return 'success'.");
                     } catch (EventHandlerException e) {
@@ -139,8 +138,7 @@ public class RequestHandler implements Serializable {
             String checkLoginReturnString = null;
             try {
                 EventHandler loginEvent = EventFactory.getEventHandler(this, checkLoginType);
-                loginEvent.initialize(checkLoginPath, checkLoginMethod);
-                checkLoginReturnString = loginEvent.invoke(request, response);
+                checkLoginReturnString = loginEvent.invoke(checkLoginPath, checkLoginMethod, request, response);
             } catch (EventHandlerException e) {
                 throw new RequestHandlerException(e.getMessage(), e);
             }
@@ -167,8 +165,7 @@ public class RequestHandler implements Serializable {
                 try {
                     long eventStartTime = System.currentTimeMillis();
                     EventHandler eh = EventFactory.getEventHandler(this, eventType);
-                    eh.initialize(eventPath, eventMethod);
-                    eventReturnString = eh.invoke(request, response);
+                    eventReturnString = eh.invoke(eventPath, eventMethod, request, response);
                     ServerHitBin.countEvent(cname + "." + eventMethod, request, eventStartTime,
                             System.currentTimeMillis() - eventStartTime, userLogin, delegator);
                 } catch (EventHandlerException e) {

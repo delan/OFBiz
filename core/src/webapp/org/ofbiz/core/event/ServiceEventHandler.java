@@ -37,6 +37,7 @@ import org.ofbiz.core.util.*;
  * <p><b>Title:</b> ServiceEventHandler - Service Event Handler
  *
  *@author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
+ *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@created    December 7, 2001
  *@version    1.0
  */
@@ -47,32 +48,27 @@ public class ServiceEventHandler implements EventHandler {
     public static final String SYNC = "sync";
     public static final String ASYNC = "async";
 
-    private String mode = SYNC;
-    private String serviceName = null;
-
-    /** Initialize the required parameters
+    /** Invoke the web event
      *@param eventPath The mode of service invokation
      *@param eventMethod The service to invoke
-     */
-    public void initialize(String eventPath, String eventMethod) {
-        if (eventPath == null || eventPath.length() == 0) {
-          this.mode = SYNC;
-        }
-        else {
-          this.mode = eventPath;
-        }
-        this.serviceName = eventMethod;
-        if (Debug.verboseOn()) Debug.logVerbose("[Set mode/service]: " +
-                                mode + "/" + serviceName, module);
-    }
-
-    /** Invoke the web event
      *@param request The servlet request object
      *@param response The servlet response object
      *@return String Result code
      *@throws EventHandlerException
      */
-    public String invoke(HttpServletRequest request, HttpServletResponse response) throws EventHandlerException {
+    public String invoke(String eventPath, String eventMethod, HttpServletRequest request, HttpServletResponse response) throws EventHandlerException {
+        String mode = SYNC;
+        String serviceName = null;
+
+        if (eventPath == null || eventPath.length() == 0) {
+          mode = SYNC;
+        }
+        else {
+          mode = eventPath;
+        }
+        serviceName = eventMethod;
+        if (Debug.verboseOn()) Debug.logVerbose("[Set mode/service]: " + mode + "/" + serviceName, module);
+        
         HttpSession session = request.getSession();
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         if (dispatcher == null) {
@@ -197,8 +193,6 @@ public class ServiceEventHandler implements EventHandler {
         }
 
         if (Debug.verboseOn()) Debug.logVerbose("[Event Return]: " + responseString, module);
-
         return responseString;
-
     }
 }

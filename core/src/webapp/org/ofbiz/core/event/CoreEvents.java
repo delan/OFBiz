@@ -266,6 +266,7 @@ public class CoreEvents {
         return "success";
     }
 
+    public static ServiceEventHandler seh = new ServiceEventHandler();
     /**
      * Run a service.
      *  Request Parameters which are used for this event:
@@ -278,8 +279,8 @@ public class CoreEvents {
     public static String runService(HttpServletRequest request, HttpServletResponse response)  {
         // first do a security check
         Security security = (Security) request.getAttribute("security");
-        if (!security.hasPermission("ENTITY_MAINT", request.getSession())) {
-            request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>You are not authorized to use this function.");
+        if (!security.hasPermission("SERVICE_INVOKE_ANY", request.getSession())) {
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>You are not authorized to use this function, you must have the SERVICE_INVOKE_ANY permission.");
             return "error";
         }
 
@@ -289,10 +290,8 @@ public class CoreEvents {
 
         // call the service via the ServiceEventHandler which 
         // adapts an event to a service.
-        ServiceEventHandler seh = new ServiceEventHandler();
-        seh.initialize(mode, serviceName);
         try {
-            return seh.invoke(request, response);
+            return seh.invoke(mode, serviceName, request, response);
         } catch (EventHandlerException e) {
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>ServiceEventHandler threw an exception: " + e.getMessage());
             return "error";

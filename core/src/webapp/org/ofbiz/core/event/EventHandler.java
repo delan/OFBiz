@@ -32,25 +32,20 @@ import javax.servlet.http.HttpServletResponse;
  * EventHandler - Event Handler Interface
  *
  *@author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
+ *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@created    December 7, 2001
  *@version    1.0
  */
 
 public interface EventHandler {
-
-    /** Initialize the required parameters
+    /** Invoke the web event
      *@param eventPath The path or location of this event
      *@param eventMethod The method to invoke
-     */
-    public void initialize(String eventPath, String eventMethod);
-
-    /** Invoke the web event
      *@param request The servlet request object
      *@param response The servlet response object
      *@return String Result code
      *@throws EventHandlerException
      */
-    public String invoke(HttpServletRequest request, HttpServletResponse response) throws EventHandlerException;
-
+    public String invoke(String eventPath, String eventMethod, HttpServletRequest request, HttpServletResponse response) throws EventHandlerException;
 }
 

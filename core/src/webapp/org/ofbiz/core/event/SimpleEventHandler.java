@@ -43,26 +43,19 @@ public class SimpleEventHandler implements EventHandler {
 
     public static final String module = SimpleEventHandler.class.getName();
 
-    private String xmlResource = null;
-    private String eventName = null;
-
-    /** Initialize the required parameters
+    /** Invoke the web event
      *@param eventPath The path or location of this event
      *@param eventMethod The method to invoke
-     */
-    public void initialize(String eventPath, String eventMethod) {
-        this.xmlResource = eventPath;
-        this.eventName = eventMethod;
-        if (Debug.verboseOn()) Debug.logVerbose("[Set path/method]: " + xmlResource + " / " + eventName, module);
-    }
-
-    /** Invoke the web event
      *@param request The servlet request object
      *@param response The servlet response object
      *@return String Result code
      *@throws EventHandlerException
      */
-    public String invoke(HttpServletRequest request, HttpServletResponse response) throws EventHandlerException {
+    public String invoke(String eventPath, String eventMethod, HttpServletRequest request, HttpServletResponse response) throws EventHandlerException {
+        String xmlResource = eventPath;
+        String eventName = eventMethod;
+        if (Debug.verboseOn()) Debug.logVerbose("[Set path/method]: " + xmlResource + " / " + eventName, module);
+
         if (xmlResource == null)
             throw new EventHandlerException("XML Resource (eventPath) cannot be null");
         if (eventName == null)

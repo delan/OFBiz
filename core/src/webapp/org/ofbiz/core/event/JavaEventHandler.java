@@ -35,6 +35,7 @@ import org.ofbiz.core.util.*;
  * <p><b>Title:</b> JavaEventHandler - Static Method Java Event Handler
  *
  *@author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
+ *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@created    December 7, 2001
  *@version    1.0
  */
@@ -42,47 +43,43 @@ public class JavaEventHandler implements EventHandler {
 
     public static final String module = JavaEventHandler.class.getName();
 
-    private String eventPath = null;
-    private String eventMethod = null;
     private Map eventClassMap = new HashMap();
-    private Class eventClass = null;
-
-    /** Initialize the required parameters
-     *@param eventPath The path or location of this event
-     *@param eventMethod The method to invoke
-     */
-    public void initialize(String eventPath, String eventMethod) {
-        this.eventPath = eventPath;
-        this.eventMethod = eventMethod;
-        
-        this.eventClass = (Class) this.eventClassMap.get(eventPath);
-        if (this.eventClass == null) {
-            try {
-                this.eventClass = Class.forName(eventPath);
-            } catch (ClassNotFoundException e) {
-                Debug.logError(e, "Error loading class with name: " + eventPath + ", will not be able to run event...");
-            }
-            if (this.eventClass != null) {
-                eventClassMap.put(eventPath, this.eventClass);
-            }
-        }
-        if (Debug.verboseOn()) Debug.logVerbose("[Set path/method]: " + eventPath + " / " + eventMethod, module);
-    }
 
     /** Invoke the web event
+     *@param eventPath The path or location of this event
+     *@param eventMethod The method to invoke
      *@param request The servlet request object
      *@param response The servlet response object
      *@return String Result code
      *@throws EventHandlerException
      */
-    public String invoke(HttpServletRequest request, HttpServletResponse response) throws EventHandlerException {
+    public String invoke(String eventPath, String eventMethod, HttpServletRequest request, HttpServletResponse response) throws EventHandlerException {
+        Class eventClass = (Class) this.eventClassMap.get(eventPath);
+        
+        if (eventClass == null) {
+            synchronized (this) {
+                eventClass = (Class) this.eventClassMap.get(eventPath);
+                if (eventClass == null) {
+                    try {
+                        eventClass = Class.forName(eventPath);
+                    } catch (ClassNotFoundException e) {
+                        Debug.logError(e, "Error loading class with name: " + eventPath + ", will not be able to run event...");
+                    }
+                    if (eventClass != null) {
+                        eventClassMap.put(eventPath, eventClass);
+                    }
+                }
+            }
+        }
+        if (Debug.verboseOn()) Debug.logVerbose("[Set path/method]: " + eventPath + " / " + eventMethod, module);
+        
         Class[] paramTypes = new Class[]{HttpServletRequest.class, HttpServletResponse.class};
         Debug.logVerbose("*[[Event invocation]]*", module);
         Object[] params = new Object[]{request, response};
-        return invoke(paramTypes, params);
+        return invoke(eventPath, eventMethod, eventClass, paramTypes, params);
     }
 
-    private String invoke(Class[] paramTypes, Object[] params) throws EventHandlerException {
+    private String invoke(String eventPath, String eventMethod, Class eventClass, Class[] paramTypes, Object[] params) throws EventHandlerException {
         if (eventClass == null) {
             throw new EventHandlerException("Error invoking event, the class " + eventPath + " was not found");
         }
