@@ -113,7 +113,7 @@ public class GenericHelperEJB implements GenericHelper {
    *@return The GenericValue corresponding to the primaryKey
    */
   public GenericValue findByPrimaryKeyPartial(GenericPK primaryKey, Set keys) throws GenericEntityException {
-    throw new GenericNotImplementedException("Check Data Source not yet implemented for EJB data source.");
+    throw new GenericNotImplementedException("Find By Primary Key Partial not yet implemented for EJB data source.");
   }
   
   /** Remove a Generic Entity corresponding to the primaryKey
@@ -197,7 +197,7 @@ public class GenericHelperEJB implements GenericHelper {
    *@param values Collection of GenericValue instances containing the entities to store
    */
   public void storeAll(Collection values) throws GenericEntityException {
-    throw new GenericNotImplementedException("Check Data Source not yet implemented for EJB data source.");
+    throw new GenericNotImplementedException("Store All not yet implemented for EJB data source.");
   }
 
   private Collection remoteToValue(Collection remoteCol) {
