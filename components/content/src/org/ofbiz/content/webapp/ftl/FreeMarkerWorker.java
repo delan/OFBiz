@@ -1,5 +1,5 @@
 /*
- * $Id: FreeMarkerWorker.java,v 1.17 2004/04/19 16:37:55 byersa Exp $
+ * $Id: FreeMarkerWorker.java,v 1.18 2004/04/19 20:58:43 byersa Exp $
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -69,7 +69,7 @@ import freemarker.template.TemplateModelException;
  * FreemarkerViewHandler - Freemarker Template Engine Util
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.17 $
+ * @version    $Revision: 1.18 $
  * @since      3.0
  */
 public class FreeMarkerWorker {
@@ -751,7 +751,7 @@ public class FreeMarkerWorker {
                 return currentContent;
             }
         }
-        if (Debug.infoOn()) Debug.logInfo("getCurrentContent(2), contentId:" + contentId + " viewContentId:" + viewContentId + " subContentId:" + subContentId, "");
+        //if (Debug.infoOn()) Debug.logInfo("getCurrentContent(2), contentId:" + contentId + " viewContentId:" + viewContentId + " subContentId:" + subContentId, "");
         if (UtilValidate.isNotEmpty(contentId) || UtilValidate.isNotEmpty(subContentId)) {
             
                 try {

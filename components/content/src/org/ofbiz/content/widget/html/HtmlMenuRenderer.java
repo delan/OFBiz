@@ -1,5 +1,5 @@
 /*
- * $Id: HtmlMenuRenderer.java,v 1.7 2004/04/13 04:56:14 byersa Exp $
+ * $Id: HtmlMenuRenderer.java,v 1.8 2004/04/19 20:58:44 byersa Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -54,7 +54,7 @@ import org.ofbiz.security.Security;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.7 $
+ * @version    $Revision: 1.8 $
  * @since      2.2
  */
 public class HtmlMenuRenderer implements MenuStringRenderer {
@@ -86,7 +86,7 @@ public class HtmlMenuRenderer implements MenuStringRenderer {
             if (session != null) {
                 ctx = session.getServletContext();
             } else {
-                if (Debug.infoOn()) Debug.logInfo("in appendOfbizUrl, session is null(1)", "");
+                //if (Debug.infoOn()) Debug.logInfo("in appendOfbizUrl, session is null(1)", "");
             }
             if (ctx == null) {
                 throw new RuntimeException("ctx is null. buffer=" + buffer.toString() + " location:" + location);
@@ -101,7 +101,7 @@ public class HtmlMenuRenderer implements MenuStringRenderer {
         // make and append the link
         String s = rh.makeLink(this.request, this.response, location);
             if (s.indexOf("null") >= 0) {
-                if (Debug.infoOn()) Debug.logInfo("in appendOfbizUrl(3), url: " + s, "");
+                //if (Debug.infoOn()) Debug.logInfo("in appendOfbizUrl(3), url: " + s, "");
             }
         buffer.append(s);
     }
@@ -176,7 +176,7 @@ public class HtmlMenuRenderer implements MenuStringRenderer {
             permissionErrorMessage = "";
             return;
         }
-        if (Debug.infoOn()) Debug.logInfo("in HtmlMenuRendererImage, bHasPermission(2):" + bHasPermission,"");
+        //if (Debug.infoOn()) Debug.logInfo("in HtmlMenuRendererImage, bHasPermission(2):" + bHasPermission,"");
 
         String orientation = menuItem.getModelMenu().getOrientation();
         if (orientation.equalsIgnoreCase("vertical"))
@@ -188,7 +188,7 @@ public class HtmlMenuRenderer implements MenuStringRenderer {
         
         buffer.append("<td " + widthStr + ">");
         MenuTarget target = selectMenuTarget(menuItem, context);
-        if (Debug.infoOn()) Debug.logInfo("in HtmlMenuRendererImage, target(0):" + target.getMenuTargetName(),"");
+        //if (Debug.infoOn()) Debug.logInfo("in HtmlMenuRendererImage, target(0):" + target.getMenuTargetName(),"");
         if (target != null) {
             String divStr = buildDivStr(menuItem, context);
             String url = target.renderAsUrl( context);
@@ -216,7 +216,7 @@ public class HtmlMenuRenderer implements MenuStringRenderer {
                 if (UtilValidate.isNotEmpty(resultMsg)) 
                     menuTarget = null;
             }
-            if (Debug.infoOn()) Debug.logInfo("in selectMenuTarget menuItemName:" + menuItem.getName() + " currentMenuTargetName:" + currentMenuTargetName + ", target(0):" + menuTarget,"");
+            //if (Debug.infoOn()) Debug.logInfo("in selectMenuTarget menuItemName:" + menuItem.getName() + " currentMenuTargetName:" + currentMenuTargetName + ", target(0):" + menuTarget,"");
         }
  
         if (menuTarget == null) {
@@ -229,7 +229,7 @@ public class HtmlMenuRenderer implements MenuStringRenderer {
                         menuTarget = null;
                 }
             }
-            if (Debug.infoOn()) Debug.logInfo("in selectMenuTarget menuItemName:" + menuItem.getName() + " defaultMenuTargetName:" + defaultMenuTargetName + ", target(1):" + menuTarget,"");
+            //if (Debug.infoOn()) Debug.logInfo("in selectMenuTarget menuItemName:" + menuItem.getName() + " defaultMenuTargetName:" + defaultMenuTargetName + ", target(1):" + menuTarget,"");
         }
  
         if (menuTarget == null) {
@@ -240,7 +240,7 @@ public class HtmlMenuRenderer implements MenuStringRenderer {
                 if (menuTarget != null) {
                     String resultMsg = doMenuTargetPermissionCheck(menuItem, menuTarget, context);
                     if (UtilValidate.isEmpty(resultMsg)) {
-                        if (Debug.infoOn()) Debug.logInfo("in selectMenuTarget menuTarget:" + menuTarget.getMenuTargetName(),"");
+                        //if (Debug.infoOn()) Debug.logInfo("in selectMenuTarget menuTarget:" + menuTarget.getMenuTargetName(),"");
                         break;
                     }
                 }

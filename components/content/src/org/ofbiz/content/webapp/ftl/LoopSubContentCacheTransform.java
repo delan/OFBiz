@@ -1,5 +1,5 @@
 /*
- * $Id: LoopSubContentCacheTransform.java,v 1.9 2004/04/17 08:00:15 byersa Exp $
+ * $Id: LoopSubContentCacheTransform.java,v 1.10 2004/04/19 20:58:43 byersa Exp $
  * 
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  * 
@@ -50,7 +50,7 @@ import freemarker.template.TransformControl;
  * LoopSubContentCacheTransform - Freemarker Transform for URLs (links)
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  * @since 3.0
  */
 public class LoopSubContentCacheTransform implements TemplateTransformModel {
@@ -86,14 +86,14 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
             return false;
         }
         GenericValue view = (GenericValue) lst.get(entityIndex);
-        if (Debug.infoOn()) Debug.logInfo("in LoopSubContentCache, subContentDataResourceView contentId/drDataResourceId:" + view.get("contentId")  + " / " + view.get("drDataResourceId") + " entityIndex:" + entityIndex, module);
+        //if (Debug.infoOn()) Debug.logInfo("in LoopSubContentCache, subContentDataResourceView contentId/drDataResourceId:" + view.get("contentId")  + " / " + view.get("drDataResourceId") + " entityIndex:" + entityIndex, module);
 
         String dataResourceId = (String) view.get("drDataResourceId");
-        if (Debug.verboseOn()) Debug.logVerbose("in LoopSubContentCache(0), dataResourceId ." + dataResourceId, module);
+        //if (Debug.verboseOn()) Debug.logVerbose("in LoopSubContentCache(0), dataResourceId ." + dataResourceId, module);
         String subContentIdSub = (String) view.get("contentId");
         //String contentAssocTypeId = (String) view.get("caContentAssocTypeId");
         //String mapKey = (String) view.get("caMapKey");
-        if (Debug.infoOn()) Debug.logInfo("in LoopSubContentCache(0), subContentIdSub ." + subContentIdSub, module);
+        //if (Debug.infoOn()) Debug.logInfo("in LoopSubContentCache(0), subContentIdSub ." + subContentIdSub, module);
         // This order is taken so that the dataResourceType can be overridden in the transform arguments.
         String subDataResourceTypeId = (String)ctx.get("subDataResourceTypeId");
         if (UtilValidate.isEmpty(subDataResourceTypeId)) {
@@ -130,7 +130,7 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
             ctx.put("globalNodeTrail", globalNodeTrail);
             String csvTrail = FreeMarkerWorker.nodeTrailToCsv(globalNodeTrail);
             ctx.put("nodeTrailCsv", csvTrail);
-            if (Debug.infoOn()) Debug.logInfo("prepCtx, csvTrail(2):" + csvTrail, "");
+            //if (Debug.infoOn()) Debug.logInfo("prepCtx, csvTrail(2):" + csvTrail, "");
             int indentSz = globalNodeTrail.size();
             ctx.put("indent", new Integer(indentSz));
                 //if (Debug.infoOn()) Debug.logInfo("prepCtx, trail(2):" + trail, "");
@@ -239,7 +239,7 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
        
         final GenericValue userLogin = (GenericValue) FreeMarkerWorker.getWrappedObject("userLogin", env);
         List globalNodeTrail = (List)templateCtx.get("globalNodeTrail");
-        if (Debug.infoOn()) Debug.logInfo("in LoopSubContentCache(0), nodeTrailCsv ." + FreeMarkerWorker.nodeTrailToCsv(globalNodeTrail), module);
+        //if (Debug.infoOn()) Debug.logInfo("in LoopSubContentCache(0), nodeTrailCsv ." + FreeMarkerWorker.nodeTrailToCsv(globalNodeTrail), module);
         String strNullThruDatesOnly = (String)templateCtx.get("nullThruDatesOnly");
         Boolean nullThruDatesOnly = (strNullThruDatesOnly != null && strNullThruDatesOnly.equalsIgnoreCase("true")) ? new Boolean(true) :new Boolean(false);
         GenericValue val = null;
@@ -257,13 +257,13 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
         templateCtx.put("subContentId", null);
 
         String contentId = (String)view.get("contentId");
-        if (Debug.infoOn()) Debug.logInfo("in LoopSubContentCache(0), contentId ." + contentId, module);
+        //if (Debug.infoOn()) Debug.logInfo("in LoopSubContentCache(0), contentId ." + contentId, module);
         final String contentIdTo = contentId;
 
         String thisMapKey = (String)templateCtx.get("mapKey");
-        if (Debug.infoOn()) Debug.logInfo("in LoopSubContentCache(0), thisMapKey ." + thisMapKey, module);
+        //if (Debug.infoOn()) Debug.logInfo("in LoopSubContentCache(0), thisMapKey ." + thisMapKey, module);
         Map results = null;
-        if (Debug.infoOn()) Debug.logInfo("in LoopSubContentCache(0), assocTypes ." + assocTypes, module);
+        //if (Debug.infoOn()) Debug.logInfo("in LoopSubContentCache(0), assocTypes ." + assocTypes, module);
         String contentAssocPredicateId = (String)templateCtx.get("contentAssocPredicateId");
         try {
             results = ContentServicesComplex.getAssocAndContentAndDataResourceCacheMethod(delegator, contentId, thisMapKey, "From", fromDate, null, assocTypes, null, new Boolean(true), contentAssocPredicateId);
@@ -273,7 +273,7 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
             throw new RuntimeException(e.getMessage());
         }
         List longList = (List) results.get("entityList");
-        if (Debug.infoOn()) Debug.logInfo("in LoopSubContentCache(0), longList ." + longList.size(), module);
+        //if (Debug.infoOn()) Debug.logInfo("in LoopSubContentCache(0), longList ." + longList.size(), module);
         String viewSizeStr = (String)templateCtx.get("viewSize");
         if (UtilValidate.isEmpty(viewSizeStr))
             viewSizeStr = "10";
@@ -319,7 +319,7 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
             public int onStart() throws TemplateModelException, IOException {
                 List globalNodeTrail = (List)templateCtx.get("globalNodeTrail");
                 String trailCsv = FreeMarkerWorker.nodeTrailToCsv(globalNodeTrail);
-                if (Debug.infoOn()) Debug.logInfo("in Loop, onStart, trailCsv:" + trailCsv, "");
+                //if (Debug.infoOn()) Debug.logInfo("in Loop, onStart, trailCsv:" + trailCsv, "");
                 int viewIndex = ((Integer)templateCtx.get("viewIndex")).intValue(); 
                 int viewSize = ((Integer)templateCtx.get("viewSize")).intValue(); 
                 int listSize = ((Integer)templateCtx.get("listSize")).intValue(); 
