@@ -81,6 +81,9 @@
          <relation type="one" fk-name="ORDER_HDR_STTS" rel-entity-name="StatusItem">
         	<key-map field-name="statusId"/>
       	</relation>
+      	<relation type="many" rel-entity-name="OrderItem">
+      		<key-map field-name="orderId"/>
+      	</relation>
 	</view-entity>
 </entitymodel>
 
