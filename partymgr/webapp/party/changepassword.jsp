@@ -35,6 +35,8 @@
 <%@ page import="org.ofbiz.core.entity.*" %>
 
 <%
+    String userLoginId = request.getParameter("userlogin_id");
+   
     boolean tryEntity = true;
     if(request.getAttribute(SiteDefs.ERROR_MESSAGE) != null) tryEntity = false;
     pageContext.setAttribute("tryEntity", new Boolean(tryEntity));
@@ -48,6 +50,7 @@
     &nbsp;<a href="javascript:document.changepasswordform.submit()" class="buttontext">[Save]</a>
 
   <form method="post" action="<ofbiz:url>/updatePassword/<%=donePage%></ofbiz:url>" name="changepasswordform">
+  <input type="hidden" name="userLoginId" value="<%=userLoginId%>"> 
   <table width="90%" border="0" cellpadding="2" cellspacing="0">
     <tr>
       <td width="26%" align=right><div class="tabletext">Current (Old) Password</div></td>

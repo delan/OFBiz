@@ -35,11 +35,15 @@
 <%@ page import="org.ofbiz.core.entity.*" %>
 <%@ page import="org.ofbiz.commonapp.party.contact.*, org.ofbiz.commonapp.party.party.*" %>
 <%@ page import="org.ofbiz.commonapp.accounting.payment.*" %>
+<jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" />
 
 <%
     String partyId = request.getParameter("party_id"); 
     if (partyId == null) partyId = (String) request.getSession().getAttribute("partyId");
     else request.getSession().setAttribute("partyId", partyId);
+
+    Collection userLogins = delegator.findByAnd("UserLogin", UtilMisc.toMap("partyId", partyId));
+    if (userLogins != null) pageContext.setAttribute("userLogins", userLogins);
 
     PartyWorker.getPartyOtherValues(pageContext, partyId, "party", "person", "partyGroup");
     boolean showOld = "true".equals(request.getParameter("SHOW_OLD"));
@@ -348,6 +352,7 @@
   </TR>
 </TABLE>
 
+<ofbiz:if name="userLogins">
 <br>
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
@@ -357,8 +362,8 @@
           <td valign="middle" align="left">
             <div class="boxhead">&nbsp;User Name & Password</div>
           </td>
-          <td valign="middle" align="right">
-            <a href="<ofbiz:url>/changepassword</ofbiz:url>" class="lightbuttontext">[Change Password]</a>&nbsp;&nbsp;
+          <td valign="middle" align="right">&nbsp;
+            <%-- <a href="<ofbiz:url>/changepassword</ofbiz:url>" class="lightbuttontext">[Change Password]</a>&nbsp;&nbsp; --%>
           </td>
         </tr>
       </table>
@@ -370,11 +375,14 @@
         <tr>
           <td>
             <table width="100%" border="0" cellpadding="1">
+              <ofbiz:iterator name="userUserLogin" property="userLogins">
               <tr>
                 <td align="right" valign="top" width="10%" nowrap><div class="tabletext"><b>User Name</b></div></td>
                 <td width="5">&nbsp;</td>
-                <%-- <td align="left" valign="top" width="90%"><div class="tabletext"><%entityField.run("userLogin", "userLoginId");%></div></td> --%>
+                <td align="left" valign="top" width="70%"><div class="tabletext"><%entityField.run("userUserLogin", "userLoginId");%></div></td> 
+                <td align="right" valign="top" width="20%"><a href="<ofbiz:url>/changepassword?userlogin_id=<%entityField.run("userUserLogin", "userLoginId");%></ofbiz:url>" class="buttontext">[Change Password]</a>&nbsp;&nbsp;
               </tr>
+              </ofbiz:iterator>
             </table>
           </td>
         </tr>
@@ -382,6 +390,7 @@
     </TD>
   </TR>
 </TABLE>
+</ofbiz:if>
 </ofbiz:if>
 <ofbiz:unless name="party">
     No party found with the partyId of: <%=partyId%>
