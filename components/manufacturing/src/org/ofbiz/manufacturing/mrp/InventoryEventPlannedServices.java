@@ -1,5 +1,5 @@
 /*
- * $Id: InventoryEventPlannedServices.java,v 1.1 2004/04/19 20:39:52 holivier Exp $
+ * $Id$
  *
  * Copyright (c) 2003, 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -45,7 +45,7 @@ import org.ofbiz.service.ServiceUtil;
  * InventoryEventPlannedServices - InventoryEventPlanned related Services
  *
  * @author     <a href="mailto:olivier.heintz@nereide.biz">Olivier Heintz</a>
- * @version    $Revision: 1.1 $
+ * @version    $Rev:$
  * @since      3.0
  */
 public class InventoryEventPlannedServices {

@@ -1,5 +1,5 @@
 /*
- * $Id: pagelistprep.bsh,v 1.5 2004/05/09 21:14:03 holivier Exp $
+ * $Id$
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -32,7 +32,7 @@
 /**
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.5 $
+ * @version    $Rev:$
  * @since      3.0
 
  * This script breaks out the generic list pagination code so that it can be

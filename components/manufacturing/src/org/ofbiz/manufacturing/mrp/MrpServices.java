@@ -1,5 +1,5 @@
 /*
- * $Id: MrpServices.java,v 1.2 2004/05/10 06:24:00 holivier Exp $
+ * $Id$
  * Copyright (c) 2003, 2004 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
@@ -59,7 +59,7 @@ import org.ofbiz.service.GenericServiceException;
  * Services for running MRP
  *
  * @author     <a href=mailto:thierry.grauss@etu.univ-tours.fr">Thierry GRAUSS</a>
- * @version    $Revision: 1.2 $
+ * @version    $Rev:$
  * @since      0.1
  */
 public class MrpServices {

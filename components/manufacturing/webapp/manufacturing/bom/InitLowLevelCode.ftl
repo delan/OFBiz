@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Jacopo Cappellato (tiz@sastau.it)
- *@version    $Revision: 1.1 $
+ *@version    $Rev:$
  *@since      2.2
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>

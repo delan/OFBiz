@@ -23,7 +23,7 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     Olivier.Heintz@nereide.biz
- *@version    $Revision: 1.5 $
+ *@version    $Rev:$
  *@since      3.0
 -->
 

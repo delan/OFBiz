@@ -1,5 +1,5 @@
 /*
- * $Id: ProductionRunServices.java,v 1.6 2004/05/15 13:21:18 jacopo Exp $
+ * $Id$
  *
  * Copyright (c) 2001, 2002, 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -58,7 +58,7 @@ import org.ofbiz.manufacturing.techdata.TechDataServices;
  * Services for Production Run maintenance
  *
  * @author     <a href="mailto:olivier.heintz@nereide.biz">Olivier Heintz</a>
- * @version    $Revision: 1.6 $
+ * @version    $Rev:$
  * @since      3.0
  */
 public class ProductionRunServices {
@@ -126,11 +126,11 @@ public class ProductionRunServices {
 			workEffortProducts = delegator.findByAnd("WorkEffortGoodStandard", UtilMisc.toMap("productId", productId,"workEffortId",workEffortId));
 			routing = delegator.findByPrimaryKey("WorkEffort", UtilMisc.toMap("workEffortId",workEffortId));
 			product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
-// TODO: sort by seq and filter by date, pour ne prendre que les composants valide à la date de lancement de l'OF
+// TODO: sort by seq and filter by date, pour ne prendre que les composants valide ï¿½ la date de lancement de l'OF
                // The following line has been commented out because the product components will be obtained 
                // calling the getManufacturingComponents service.
                //productBoms = product.getRelatedByAnd("MainProductAssoc",UtilMisc.toMap("productAssocTypeId","MANUF_COMPONENT"));
-// TODO:   filter by date, pour ne prendre que les opérations valide à la date de lancement de l'OF
+// TODO:   filter by date, pour ne prendre que les opï¿½rations valide ï¿½ la date de lancement de l'OF
 			routingTaskAssocs = routing.getRelated("FromWorkEffortAssoc",UtilMisc.toMap("workEffortAssocTypeId","ROUTING_COMPONENT"), UtilMisc.toList("sequenceNum","fromDate"));
 		} catch (GenericEntityException e) {
 			Debug.logWarning(e.getMessage(), module);
@@ -151,7 +151,7 @@ public class ProductionRunServices {
 
                 // By Jacopo: this is a temp patch; I've removed this check because a configured product could be linked indirectly to a routing by
                 //            it's virtual (not configured) product; maybe we could add an input flag and test it to see if we want to perform this check...
-//TODO: test sur quantité vide et choix de la bonne gamme
+//TODO: test sur quantitï¿½ vide et choix de la bonne gamme
 //		if (workEffortProducts == null) 
 //				return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ManufacturingProductRoutingNotExist", locale));
                 // Here we test the components list instead of the productBoms list
@@ -278,7 +278,7 @@ public class ProductionRunServices {
 						}
 					}
 				}
-//              TODO: generate the WorkEffortGoodStandard if there are some BOM at this RoutingTask pour ça il faut une jointure de table BOM et ROU
+//              TODO: generate the WorkEffortGoodStandard if there are some BOM at this RoutingTask pour ï¿½a il faut une jointure de table BOM et ROU
                 startDate = endDate;
 	 		}
  		}

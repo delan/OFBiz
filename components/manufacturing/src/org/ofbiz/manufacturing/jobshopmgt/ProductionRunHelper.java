@@ -1,5 +1,5 @@
 /*
- * $Id: ProductionRunHelper.java,v 1.1 2004/05/09 21:13:58 holivier Exp $
+ * $Id$
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -58,7 +58,7 @@ import org.ofbiz.manufacturing.techdata.TechDataServices;
  * Helper for Production Run maintenance
  *
  * @author     <a href="mailto:olivier.heintz@nereide.biz">Olivier Heintz</a>
- * @version    $Revision: 1.1 $
+ * @version    $Rev:$
  * @since      3.0
  */
 public class ProductionRunHelper {
