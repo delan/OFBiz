@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Johan Isacsson (johan@oddjob.se)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      3.0
 -->
 
@@ -30,11 +30,10 @@ ${pages.get("/product/ProductTabBar.ftl")}
     
     <div class="head1">Edit Content <span class='head2'>for ${product.productName?if_exists} <#if content?has_content>[ID:${contentId}]</#if></span></div>
     
-    <a href="<@ofbizUrl>/EditProductContentAssoc?productId=${productId}</@ofbizUrl>" class="buttontext">[Product Content List]</a>
+    <a href="<@ofbizUrl>/EditProductContent?productId=${productId}</@ofbizUrl>" class="buttontext">[Product Content List]</a>
     <#if contentId?has_content>
         <a href="/content/control/gotoContent?contentId=${contentId}" class='buttontext' target='_blank'>[Content Page]</a>
     </#if>
-    <br>
     <br>
 
     <#if productId?has_content && productContent?has_content>

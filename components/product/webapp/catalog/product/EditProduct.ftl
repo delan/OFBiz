@@ -22,7 +22,7 @@
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Brad Steiner (bsteiner@thehungersite.com)
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Revision: 1.5 $
+ *@version    $Revision: 1.6 $
  *@since      2.2
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -45,41 +45,6 @@ ${pages.get("/product/ProductTabBar.ftl")}
         <hr class='sepbar'>
         <div class="head2">${uiLabelMap.ProductDuplicateProduct}</div>
         <#if product?exists>
-            <form action="<@ofbizUrl>/EditProduct</@ofbizUrl>" method=POST style='margin: 0;'>
-                <INPUT type=hidden name='productTypeId' value='product.productTypeId'>
-                <INPUT type=hidden name='isVirtual' value='product.isVirtual'>
-                <INPUT type=hidden name='isVariant' value='product.isVariant'>
-                <INPUT type=hidden name='primaryProductCategoryId' value='product.primaryProductCategoryId'>
-                <INPUT type=hidden name='manufacturerPartyId' value='product.manufacturerPartyId'>
-                <INPUT type=hidden name='introductionDate' value='product.introductionDate'>
-                <INPUT type=hidden name='salesDiscontinuationDate' value='product.salesDiscontinuationDate'>
-                <INPUT type=hidden name='supportDiscontinuationDate' value='product.supportDiscontinuationDate'>
-                <INPUT type=hidden name='comments' value='product.comments'>
-                <INPUT type=hidden name='productname=' value='product.productname'>
-                <INPUT type=hidden name='brandname' value='product.brandname'>
-                <INPUT type=hidden name='internalname' value='product.internalname'>
-                <INPUT type=hidden name='description' value='product.description'>
-                <INPUT type=hidden name='longDescription' value='product.longDescription'>
-                <INPUT type=hidden name='smallImageUrl' value='product.smallImageUrl'>
-                <INPUT type=hidden name='mediumImageUrl' value='product.mediumImageUrl'>
-                <INPUT type=hidden name='largeImageUrl' value='product.largeImageUrl'>
-                <INPUT type=hidden name='detailImageUrl' value='product.detailImageUrl'>
-                <INPUT type=hidden name='quantityUomId' value='product.quantityUomId'>
-                <INPUT type=hidden name='quantityIncluded' value='product.quantityIncluded'>
-                <INPUT type=hidden name='piecesIncluded' value='product.piecesIncluded'>
-                <INPUT type=hidden name='weightUomId' value='product.weightUomId'>
-                <INPUT type=hidden name='weight' value='product.weight'>
-                <INPUT type=hidden name="returnable" value='product.returnable'>
-                <INPUT type=hidden name='taxable' value='product.taxable'>
-                <INPUT type=hidden name='taxCategory' value='product.taxCategory'>
-                <INPUT type=hidden name='taxVatCode' value='product.taxVatCode'>
-                <INPUT type=hidden name='taxDutyCode' value='product.taxDutyCode'>
-                <INPUT type=hidden name='chargeShipping' value='product.chargeShipping'>
-                <INPUT type=hidden name='autoCreateKeywords' value='product.autoCreateKeywords'>
-                <SPAN class='tabletext'>${uiLabelMap.ProductPopulateNewForm}:</SPAN>&nbsp;
-                <INPUT type=submit class='standardSubmit' value='NewForm'>
-            </form>
-            <hr class='sepbar'>
             <form action="<@ofbizUrl>/DuplicateProduct</@ofbizUrl>" method=POST style='margin: 0;'>
                 <INPUT type=hidden name='oldProductId' value='${productId}'>
                 <div>
