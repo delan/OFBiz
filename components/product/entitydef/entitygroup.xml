@@ -220,6 +220,7 @@
     <entity-group group="org.ofbiz" entity="ReorderGuideline" />
     <entity-group group="org.ofbiz" entity="SupplierPrefOrder" />
     <entity-group group="org.ofbiz" entity="SupplierProduct" />
+    <entity-group group="org.ofbiz" entity="SupplierProductFeature" />
     <entity-group group="org.ofbiz" entity="SupplierRatingType" />
 
   <!-- ========================================================= -->

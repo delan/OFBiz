@@ -624,6 +624,9 @@
       <relation type="one-nofk" rel-entity-name="ProductFeatureCategory">
         <key-map field-name="productFeatureCategoryId"/>
       </relation>
+      <relation type="many" rel-entity-name="SupplierProductFeature">
+        <key-map field-name="productFeatureId"/>
+      </relation>
     </view-entity>
     <entity entity-name="ProductFeatureAppl"
             package-name="org.ofbiz.product.feature"
@@ -3133,6 +3136,8 @@
       <field name="comments" type="comment"></field>
       <prim-key field="productId"/>
       <prim-key field="partyId"/>
+      <prim-key field="currencyUomId"/>
+      <prim-key field="minimumOrderQuantity"/>
       <relation type="one" fk-name="SUPPL_PROD_PROD" rel-entity-name="Product">
         <key-map field-name="productId"/>
       </relation>
@@ -3147,6 +3152,25 @@
       </relation>
       <relation type="one" fk-name="SUPPL_PROD_CUOM" title="Currency" rel-entity-name="Uom">
         <key-map field-name="currencyUomId" rel-field-name="uomId"/>
+      </relation>
+    </entity>
+    <entity entity-name="SupplierProductFeature" package-name="org.ofbiz.product.supplier" 
+            title="Supplier-specific product feature information">
+      <field name="partyId" type="id-ne"/>
+      <field name="productFeatureId" type="id-ne"/>
+      <field name="description" type="name"/>
+      <field name="uomId" type="id"/>
+      <field name="idCode" type="id"/>
+      <prim-key field="partyId"/>
+      <prim-key field="productFeatureId"/>
+      <relation rel-entity-name="Party" type="one" fk-name="SUPPL_FEAT_PARTY">
+         <key-map field-name="partyId"/>
+      </relation>
+      <relation rel-entity-name="ProductFeature" type="one" fk-name="SUPPL_FEAT_FEAT">
+         <key-map field-name="productFeatureId"/>
+      </relation>
+      <relation rel-entity-name="Uom" type="one" fk-name="SUPPL_FEAT_UOM">
+         <key-map field-name="uomId"/>
       </relation>
     </entity>
     <entity entity-name="SupplierRatingType"

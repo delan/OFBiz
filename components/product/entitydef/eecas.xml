@@ -24,6 +24,7 @@
 <entity-eca xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/entity-eca.xsd">
     <!-- Product Keyword Indexing ECAs -->
+    <!--
     <eca entity="Product" operation="create-store" event="return">
         <condition field-name="autoCreateKeywords" operator="not-equals" value="N"/>
         <action service="indexProductKeywords" mode="sync" value-attr="productInstance"/>
@@ -37,7 +38,8 @@
     <eca entity="ProductContent" operation="create-store" event="return">
         <action service="indexProductKeywords" mode="sync"/>
     </eca>
-
+    -->
+    
     <eca entity="InventoryItem" operation="create-store" event="return">
         <condition field-name="productId" operator="is-not-empty"/>
         <condition field-name="availableToPromiseTotal" operator="is-not-empty"/>

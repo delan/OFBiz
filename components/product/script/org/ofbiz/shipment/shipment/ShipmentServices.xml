@@ -308,6 +308,7 @@
             </if-compare>
         </if-empty>
 
+
         <!-- partyIdFrom, partyIdTo (vendorPartyId) - NOTE: these work the same for Purchase and Sales Orders... -->
         <field-to-field field-name="primaryOrderId" map-name="shipment" to-field-name="orderId" to-map-name="lookupOrderHeaderPKMap"/>
         <find-by-and entity-name="OrderRole" map-name="lookupOrderHeaderPKMap" list-name="orderRoles"/>
@@ -365,15 +366,17 @@
                 <env-to-env env-name="destinationOrderContactMech.contactMechId" to-env-name="shipment.destinationContactMechId"/>
             </if-not-empty>
         </if-empty>
-        <!-- originContactMechId -->
-        <if-empty field-name="shipment.originContactMechId">
-            <string-to-field string="SHIP_ORIG_LOCATION" field-name="contactMechPurposeTypeId" map-name="originContactMap"/>
-            <filter-list-by-and list-name="orderContactMechs" map-name="originContactMap" to-list-name="originOrderContactMechs"/>
-            <first-from-list entry-name="originOrderContactMech" list-name="originOrderContactMechs"/>
-            <if-not-empty field-name="originOrderContactMech">
-                <env-to-env env-name="originOrderContactMech.contactMechId" to-env-name="shipment.originContactMechId"/>
-            </if-not-empty>
-        </if-empty>
+        <!-- originContactMechId.  Only do this if it is not a purchase shipment -->
+        <if-compare field-name="shipmentTypeId" map-name="shipment" operator="not-equals" value="PURCHASE_SHIPMENT">
+            <if-empty field-name="shipment.originContactMechId">
+                <string-to-field string="SHIP_ORIG_LOCATION" field-name="contactMechPurposeTypeId" map-name="originContactMap"/>
+                <filter-list-by-and list-name="orderContactMechs" map-name="originContactMap" to-list-name="originOrderContactMechs"/>
+                <first-from-list entry-name="originOrderContactMech" list-name="originOrderContactMechs"/>
+                <if-not-empty field-name="originOrderContactMech">
+                    <env-to-env env-name="originOrderContactMech.contactMechId" to-env-name="shipment.originContactMechId"/>
+                </if-not-empty>
+            </if-empty>
+        </if-compare>
 
         <!-- destinationTelecomNumberId -->
         <if-empty field-name="shipment.destinationTelecomNumberId">
@@ -394,6 +397,16 @@
             </if-not-empty>
         </if-empty>
 
+        <!-- set the destination facility if it is a purchase order -->
+        <if-empty field-name="originFacilityId" map-name="shipment">
+            <if-compare field-name="shipmentTypeId" map-name="shipment" operator="equals" value="PURCHASE_SHIPMENT">
+                 <env-to-field env-name="shipment.destinationContactMechId" map-name="facilityLookup" field-name="contactMechId"/>
+                 <find-by-and entity-name="FacilityContactMech" map-name="facilityLookup" list-name="facilities"/>
+                 <first-from-list list-name="facilities" entry-name="destinationFacility"/>
+                 <field-to-field field-name="facilityId" map-name="destinationFacility" to-field-name="destinationFacilityId" to-map-name="shipment"/>
+            </if-compare>
+        </if-empty>
+
         <!-- NOTE: use new place to find source/destination location/addresses for new OrderItemShipGroup.contactMechId (destination address for sales orders, source address for purchase orders) -->
         <!-- do this second so it will override the orderContactMech -->
         <!-- TODO: maybe we should add a new entity for OrderItemShipGroup ContactMechs? -->
@@ -404,14 +417,6 @@
                 </if-empty>
                 <if-empty field-name="shipment.destinationTelecomNumberId">
                     <env-to-env env-name="orderItemShipGroup.telecomContactMechId" to-env-name="shipment.destinationTelecomNumberId"/>
-                </if-empty>
-            </if-compare>
-            <if-compare field-name="orderHeader.orderTypeId" operator="equals" value="PURCHASE_ORDER">
-                <if-empty field-name="shipment.originContactMechId">
-                    <env-to-env env-name="orderItemShipGroup.contactMechId" to-env-name="shipment.originContactMechId"/>
-                </if-empty>
-                <if-empty field-name="shipment.originTelecomNumberId">
-                    <env-to-env env-name="orderItemShipGroup.telecomContactMechId" to-env-name="shipment.originTelecomNumberId"/>
                 </if-empty>
             </if-compare>
         </if-not-empty>
@@ -1138,6 +1143,7 @@
                             <result-to-field result-name="shipmentPackageSeqId" field-name="shipmentPackageSeqId"/>
                         </call-service>
                     </iterate>
+
                     <!-- update the shipment status to packed -->
                     <field-to-field field-name="shipmentId" map-name="shipment" to-map-name="packedContext"/>
                     <string-to-field string="SHIPMENT_PACKED" field-name="packedContext.statusId"/>

@@ -43,7 +43,7 @@
         <field use-when="shipment==null" name="statusId" title="Status" widget-style="selectBox">
             <drop-down allow-empty="false" current="first-in-list">
                 <entity-options entity-name="StatusItem" description="${description}">
-                    <entity-constraint name="statusTypeId" value="SHIPMENT_STATUS"/>
+                    <entity-constraint name="statusTypeId" value="${statusItemType}"/>
                     <entity-order-by field-name="sequenceId"/>
                 </entity-options>
             </drop-down>
