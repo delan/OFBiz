@@ -226,7 +226,7 @@
       <field name="fromDate" type="date-time"></field>
       <field name="runtimeDataId" type="id"></field>
       <prim-key field="applicationId"/>
-      <relation type="one" rel-entity-name="WorkEffortPartyAssignment">
+      <relation type="one" fk-name="APP_SNDBX_WEPA" rel-entity-name="WorkEffortPartyAssignment">
         <key-map field-name="workEffortId"/>
         <key-map field-name="partyId"/>
         <key-map field-name="roleTypeId"/>
