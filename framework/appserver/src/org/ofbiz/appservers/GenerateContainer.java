@@ -30,7 +30,7 @@ import org.ofbiz.webapp.ftl.FreeMarkerWorker;
 public class GenerateContainer implements Container {
 
     public static final String module = GenerateContainer.class.getName();
-    public static final String source = "/components/appservers/templates/";
+    public static final String source = "/framework/appservers/templates/";
     public static final String target = "/setup/";
 
     protected String configFile = null;

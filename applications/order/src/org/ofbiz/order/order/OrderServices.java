@@ -2009,7 +2009,7 @@ public class OrderServices {
 
         // prepare the mail info
         String ofbizHome = System.getProperty("ofbiz.home");
-        String templateName = ofbizHome + "/components/order/email/default/emailprocessnotify.ftl";
+        String templateName = ofbizHome + "/applications/order/email/default/emailprocessnotify.ftl";
 
         Map sendMailContext = new HashMap();
         sendMailContext.put("sendTo", emailList.toString());

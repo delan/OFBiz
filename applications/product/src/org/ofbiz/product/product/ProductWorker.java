@@ -172,7 +172,7 @@ public class ProductWorker {
     }
 
     /** 
-     * Invokes the getInventoryAvailableByFacility service, returns true if specified quantity is available for all the selected components, else false.
+     * Invokes the getInventoryAvailableByFacility service, returns true if specified quantity is available for all the selected parts, else false.
      * Also, set the available flag for all the product configuration's options.
      **/
     public static boolean isProductInventoryAvailableByFacility(ProductConfigWrapper productConfig, String inventoryFacilityId, double quantity, LocalDispatcher dispatcher) throws GenericServiceException {

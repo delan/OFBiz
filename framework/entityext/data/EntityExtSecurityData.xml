@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity-engine-xml>
     <!-- Entity Sync Admin security -->
-    <!-- Target file: components/entityext/data/EntityextSecurityData.xml -->
+    <!-- Target file: framework/entityext/data/EntityextSecurityData.xml -->
     <SecurityPermission description="Use the Entity Sync Admin pages." permissionId="ENTITY_SYNC_ADMIN"/>
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="ENTITY_SYNC_ADMIN"/>
     <SecurityGroupPermission groupId="FLEXADMIN" permissionId="ENTITY_SYNC_ADMIN"/>

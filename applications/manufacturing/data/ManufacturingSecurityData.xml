@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity-engine-xml>
     <!-- Manufacturing Manager security -->
-    <!-- Target file: components/manufacturing/data/ManufacturingSecurityData.xml -->
+    <!-- Target file: applications/manufacturing/data/ManufacturingSecurityData.xml -->
     <SecurityPermission description="View operations in the Manufacturing Manager." permissionId="MANUFACTURING_VIEW"/>
     <SecurityPermission description="Create operations in the Manufacturing Manager." permissionId="MANUFACTURING_CREATE"/>
     <SecurityPermission description="Update operations in the Manufacturing Manager." permissionId="MANUFACTURING_UPDATE"/>

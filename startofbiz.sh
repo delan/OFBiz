@@ -21,7 +21,7 @@ MEMIF="-Xms128M -Xmx128M"
 VMARGS="$MEMIF $DEBUG $RMIIF $ADMIN"
 
 # Worldpay Config
-#VMARGS="-Xbootclasspath/p:components/accounting/lib/cryptix.jar $VMARGS"
+#VMARGS="-Xbootclasspath/p:applications/accounting/lib/cryptix.jar $VMARGS"
 
 # location of java executable
 if [ -e $JAVA_HOME ]; then

@@ -63,7 +63,7 @@ Map featureIdByType = ParametricSearch.makeFeatureIdByTypeMap(paramMap);
           }
         if (UtilValidate.isNotEmpty(queryLine) || UtilValidate.isNotEmpty(siteId) ) {
 
-//            reader = IndexReader.open("/usr/local/agi/ofbiz/components/content/index");
+//            reader = IndexReader.open("/usr/local/agi/ofbiz/applications/content/index");
 //            Debug.logInfo("in search, reader:" + reader, "");
 //            termEnum = reader.terms();
 //            while (termEnum.next()) {

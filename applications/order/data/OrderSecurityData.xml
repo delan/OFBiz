@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity-engine-xml>
     <!-- Order Manager security -->
-    <!-- Target file: components/order/data/OrderSecurityData.xml -->
+    <!-- Target file: applications/order/data/OrderSecurityData.xml -->
     <SecurityPermission description="View operations in the Order Manager." permissionId="ORDERMGR_VIEW"/>
     <SecurityPermission description="Create operations in the Order Manager." permissionId="ORDERMGR_CREATE"/>
     <SecurityPermission description="Update operations in the Order Manager." permissionId="ORDERMGR_UPDATE"/>
@@ -100,7 +100,7 @@
     <UserLoginSecurityGroup groupId="ORDERSUPPLIER_LTD" userLoginId="supplier" fromDate="2001-01-01 12:00:00.0"/>
 
     <!-- Tax Rate security -->
-    <!-- Target file: components/order/data/OrderSecurityData.xml -->
+    <!-- Target file: applications/order/data/OrderSecurityData.xml -->
     <SecurityPermission description="View operations in the Tax Rate Editor." permissionId="TAXRATE_VIEW"/>
     <SecurityPermission description="Create operations in the Tax Rate Editor." permissionId="TAXRATE_CREATE"/>
     <SecurityPermission description="Delete operations in the Tax Rate Editor." permissionId="TAXRATE_DELETE"/>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity-engine-xml>
     <!-- Payment Processors security -->
-    <!-- Target file: components/accounting/data/AccountingSecurityData.xml -->
+    <!-- Target file: applications/accounting/data/AccountingSecurityData.xml -->
     <SecurityPermission description="View operations in the Payment Processors Setup." permissionId="PAYPROC_VIEW"/>
     <SecurityPermission description="Create operations in the Payment Processors Setup." permissionId="PAYPROC_CREATE"/>
     <SecurityPermission description="Delete operations in the Payment Processors Setup." permissionId="PAYPROC_DELETE"/>
@@ -13,7 +13,7 @@
     <SecurityGroupPermission groupId="VIEWADMIN" permissionId="PAYPROC_VIEW"/>
 
     <!-- Payment Information security -->
-    <!-- Target file: components/accounting/data/AccountingSecurityData.xml -->
+    <!-- Target file: applications/accounting/data/AccountingSecurityData.xml -->
     <SecurityPermission description="View Payment Information." permissionId="PAY_INFO_VIEW"/>
     <SecurityPermission description="Create Payment Information." permissionId="PAY_INFO_CREATE"/>
     <SecurityPermission description="Update Payment Information." permissionId="PAY_INFO_UPDATE"/>
@@ -27,7 +27,7 @@
     <SecurityGroupPermission groupId="VIEWADMIN" permissionId="PAY_INFO_VIEW"/>
 
     <!-- Accounting Manager security -->
-    <!-- Target file: components/accounting/data/AccountingSecurityData.xml -->
+    <!-- Target file: applications/accounting/data/AccountingSecurityData.xml -->
     <SecurityPermission description="View operations in the Accounting Manager." permissionId="ACCOUNTING_VIEW"/>
     <SecurityPermission description="Create operations in the Accounting Manager." permissionId="ACCOUNTING_CREATE"/>
     <SecurityPermission description="Update operations in the Accounting Manager." permissionId="ACCOUNTING_UPDATE"/>
@@ -41,7 +41,7 @@
     <SecurityGroupPermission groupId="VIEWADMIN" permissionId="ACCOUNTING_VIEW"/>
 
     <!-- Manual Payment security -->
-    <!-- Target file: components/accounting/data/AccountingSecurityData.xml -->
+    <!-- Target file: applications/accounting/data/AccountingSecurityData.xml -->
     <SecurityPermission description="Manual Payment Transaction." permissionId="MANUAL_PAYMENT"/>
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="MANUAL_PAYMENT"/>
     <SecurityGroupPermission groupId="FLEXADMIN" permissionId="MANUAL_PAYMENT"/>

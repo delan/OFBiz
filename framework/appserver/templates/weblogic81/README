@@ -5,7 +5,7 @@ For ease of use these three files are meant to be used in the "examples" domain 
 
 The main reason for this is that it is difficult to configure Weblogic security settings for a new domain and this way it is easy to get started fast.
 
-To use just put OFBiz somewhere on your system and once it is in place generate the Weblogic configuration files from the templates, as described in the ofbiz/components/appservers/README file. Copy those files into the $WL_HOME/samples/domains/examples directory.
+To use just put OFBiz somewhere on your system and once it is in place generate the Weblogic configuration files from the templates, as described in the ofbiz/framework/appservers/README file. Copy those files into the $WL_HOME/samples/domains/examples directory.
 
 Before running there are some things that come by default in OFBiz that conflict with Weblogic. These are things to do before running:
 

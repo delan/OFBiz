@@ -195,7 +195,7 @@ ${virtualJavaScript?if_exists}
       </#if>
       
       <#-- for prices:
-              - if totalPrice is present, use it (totalPrice is the price calculated from the components)
+              - if totalPrice is present, use it (totalPrice is the price calculated from the parts)
               - if price < competitivePrice, show competitive or "Compare At" price
               - if price < listPrice, show list price
               - if price < defaultPrice and defaultPrice < listPrice, show default

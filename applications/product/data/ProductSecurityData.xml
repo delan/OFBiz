@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity-engine-xml>
     <!-- Catalog Manager security -->
-    <!-- Target file: components/product/data/ProductSecurityData.xml -->
+    <!-- Target file: applications/product/data/ProductSecurityData.xml -->
     <SecurityPermission description="View operations in the Catalog Manager." permissionId="CATALOG_VIEW"/>
     <SecurityPermission description="Create operations in the Catalog Manager." permissionId="CATALOG_CREATE"/>
     <SecurityPermission description="Update operations in the Catalog Manager." permissionId="CATALOG_UPDATE"/>
@@ -29,7 +29,7 @@
     <UserLoginSecurityGroup groupId="CATALOGADMIN_LTD" userLoginId="ltdadmin" fromDate="2001-01-01 12:00:00.0"/>
 
     <!-- Shipping Rate security -->
-    <!-- Target file: components/product/data/ProductSecurityData.xml -->
+    <!-- Target file: applications/product/data/ProductSecurityData.xml -->
     <SecurityPermission description="View operations in the Shipping Rate Editor." permissionId="SHIPRATE_VIEW"/>
     <SecurityPermission description="Create operations in the Shipping Rate Editor." permissionId="SHIPRATE_CREATE"/>
     <SecurityPermission description="Delete operations in the Shipping Rate Editor." permissionId="SHIPRATE_DELETE"/>
@@ -41,7 +41,7 @@
     <SecurityGroupPermission groupId="VIEWADMIN" permissionId="SHIPRATE_VIEW"/>
 
     <!-- Facility Manager security -->
-    <!-- Target file: components/product/data/ProductSecurityData.xml -->
+    <!-- Target file: applications/product/data/ProductSecurityData.xml -->
     <SecurityPermission description="View operations in the Facility Manager." permissionId="FACILITY_VIEW"/>
     <SecurityPermission description="Create operations in the Facility Manager." permissionId="FACILITY_CREATE"/>
     <SecurityPermission description="Update operations in the Facility Manager." permissionId="FACILITY_UPDATE"/>

@@ -25,7 +25,7 @@
 
 <!--  =============== Catalog services ===================== -->
 <services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
- xsi:noNamespaceSchemaLocation="file:/home/hansbak/ofbiz/components/service/dtd/services.xsd">
+ xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/services.xsd">
     <description>OpenTravelSystemServices</description>
     <vendor>OFBiz</vendor>
     <version>1.0</version>

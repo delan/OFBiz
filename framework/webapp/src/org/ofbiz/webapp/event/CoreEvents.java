@@ -54,7 +54,7 @@ import org.ofbiz.service.WebAppDispatcher;
 import org.ofbiz.service.calendar.RecurrenceRule;
 
 /**
- * CoreEvents - WebApp Events Related To CORE components
+ * CoreEvents - WebApp Events Related To Framework pieces
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @version    $Rev$

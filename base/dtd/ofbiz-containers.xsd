@@ -83,9 +83,9 @@
             </property>
         </container>
         <container name="component-container" class="org.ofbiz.base.container.ComponentContainer">
-            <property name="entity" value="${ofbiz.home}/components/entity/component.xml"/>
-            <property name="service" value="${ofbiz.home}/components/service/component.xml"/>
-            <property name="party" value="${ofbiz.home}/components/party/component.xml"/>
+            <property name="entity" value="${ofbiz.home}/framework/entity/component.xml"/>
+            <property name="service" value="${ofbiz.home}/framework/service/component.xml"/>
+            <property name="party" value="${ofbiz.home}/applications/party/component.xml"/>
         </container>
     </ofbiz-containers>
     

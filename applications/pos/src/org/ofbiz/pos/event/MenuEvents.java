@@ -52,7 +52,7 @@ public class MenuEvents {
 
     // extended number events
     public static void triggerClear(PosScreen pos) {
-        // clear the components
+        // clear the pieces
         String[] totalFunc = pos.getInput().getFunction("TOTAL");
         String[] paidFunc = pos.getInput().getFunction("PAID");
         if (paidFunc != null) {
@@ -190,7 +190,7 @@ public class MenuEvents {
         // re-calc tax
         trans.calcTax();
 
-        // refresh the other components
+        // refresh the others
         pos.refresh();
     }
 
@@ -247,7 +247,7 @@ public class MenuEvents {
         // re-calc tax
         trans.calcTax();
 
-        // refresh the other components
+        // refresh the others
         pos.refresh();
     }
 

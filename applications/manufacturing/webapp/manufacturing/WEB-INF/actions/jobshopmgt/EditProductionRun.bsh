@@ -173,7 +173,7 @@ if (!UtilValidate.isEmpty(productionRunId)) {
             context.put("editPrProductComponentWrapper",editPrProductComponentWrapper);
             context.put("productId",productId);
         }
-        //  Product components list
+        //  Product component/parts list
         List productionRunComponents = productionRun.getProductionRunComponents();
         List productionRunComponentsData = new LinkedList();
         if (productionRunComponents != null){
