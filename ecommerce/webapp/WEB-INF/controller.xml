@@ -173,6 +173,7 @@
         <security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.commonapp.order.shoppingcart.CheckOutEvents" invoke="processPayment"/>
         <response name="success" type="request" value="clearcart"/>
+        <response name="fail" type="view" value="checkoutoptions"/>
         <response name="error" type="view" value="checkout"/>
     </request-map>
 
