@@ -247,7 +247,7 @@
     	<response name="success" type="view" value="EditProductAssoc"/>
         <response name="error" type="view" value="EditProductAssoc"/>
     </request-map>
-    
+
     <request-map uri="EditProductAttributes"><security https="true" auth="true"/>
     	<response name="success" type="view" value="EditProductAttributes"/>
     </request-map>
@@ -285,7 +285,7 @@
     	<response name="success" type="view" value="EditInventoryItem"/>
     	<response name="error" type="view" value="EditInventoryItem"/>
     </request-map>
-        
+
     <!-- ================ Feature Requests ================= -->
     <request-map uri="EditFeatureCategories"><security https="true" auth="true"/>
     	<response name="success" type="view" value="EditFeatureCategories"/>
@@ -300,7 +300,7 @@
     	<response name="success" type="view" value="EditFeatureCategories"/>
     	<response name="error" type="view" value="EditFeatureCategories"/>
     </request-map>
-    
+
     <request-map uri="EditFeatureCategoryFeatures"><security https="true" auth="true"/>
     	<response name="success" type="view" value="EditFeatureCategoryFeatures"/>
     </request-map>
@@ -339,7 +339,7 @@
     	<response name="success" type="view" value="EditProductFeatures"/>
     	<response name="error" type="view" value="EditProductFeatures"/>
     </request-map>
-    
+
     <request-map uri="QuickAddVariants"><security https="true" auth="true"/>
     	<response name="success" type="view" value="QuickAddVariants"/>
     </request-map>
@@ -456,7 +456,7 @@
     	<response name="success" type="view" value="EditProdCatalogWebSites"/>
     	<response name="error" type="view" value="EditProdCatalogWebSites"/>
     </request-map>
-    
+
     <!-- ================ ProductPromo Requests ================= -->
     <request-map uri="FindProductPromo"><security https="true" auth="true"/>
     	<response name="success" type="view" value="FindProductPromo"/>
@@ -548,6 +548,70 @@
     	<response name="success" type="view" value="EditProductPromoRules"/>
     	<response name="error" type="view" value="EditProductPromoRules"/>
     </request-map>
+
+    <!-- ================ ProductPrice Rules Requests ================= -->
+    <request-map uri="EditProductPriceRules">
+        <security https="true" auth="true"/>
+    	<response name="success" type="view" value="EditProductPriceRules"/>
+    </request-map>
+
+    <request-map uri="createProductPriceRule">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createProductPriceRule"/>
+    	<response name="success" type="view" value="EditProductPriceRules"/>
+    	<response name="error" type="view" value="EditProductPriceRules"/>
+    </request-map>
+    <request-map uri="updateProductPriceRule">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateProductPriceRule"/>
+    	<response name="success" type="view" value="EditProductPriceRules"/>
+    	<response name="error" type="view" value="EditProductPriceRules"/>
+    </request-map>
+    <request-map uri="deleteProductPriceRule">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="deleteProductPriceRule"/>
+    	<response name="success" type="view" value="EditProductPriceRules"/>
+    	<response name="error" type="view" value="EditProductPriceRules"/>
+    </request-map>
+
+    <request-map uri="createProductPriceCond">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createProductPriceCond"/>
+    	<response name="success" type="view" value="EditProductPriceRules"/>
+    	<response name="error" type="view" value="EditProductPriceRules"/>
+    </request-map>
+    <request-map uri="updateProductPriceCond">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateProductPriceCond"/>
+    	<response name="success" type="view" value="EditProductPriceRules"/>
+    	<response name="error" type="view" value="EditProductPriceRules"/>
+    </request-map>
+    <request-map uri="deleteProductPriceCond">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="deleteProductPriceCond"/>
+    	<response name="success" type="view" value="EditProductPriceRules"/>
+    	<response name="error" type="view" value="EditProductPriceRules"/>
+    </request-map>
+
+    <request-map uri="createProductPriceAction">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createProductPriceAction"/>
+    	<response name="success" type="view" value="EditProductPriceRules"/>
+    	<response name="error" type="view" value="EditProductPriceRules"/>
+    </request-map>
+    <request-map uri="updateProductPriceAction">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateProductPriceAction"/>
+    	<response name="success" type="view" value="EditProductPriceRules"/>
+    	<response name="error" type="view" value="EditProductPriceRules"/>
+    </request-map>
+    <request-map uri="deleteProductPriceAction">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="deleteProductPriceAction"/>
+    	<response name="success" type="view" value="EditProductPriceRules"/>
+    	<response name="error" type="view" value="EditProductPriceRules"/>
+    </request-map>
+
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
@@ -577,23 +641,25 @@
     <view-map name="QuickAddVariants" type="region"/>
 
     <view-map name="EditInventoryItem" type="region"/>
-        
+
     <view-map name="EditFeatureCategories" type="region"/>
     <view-map name="EditFeatureCategoryFeatures" type="region"/>
-    
+
     <view-map name="FindFacility" type="region"/>
     <view-map name="EditFacility" type="region"/>
     <view-map name="EditFacilityInventoryItems" type="region"/>
-    
+
     <view-map name="FindProdCatalog" type="region"/>
     <view-map name="EditProdCatalog" type="region"/>
     <view-map name="EditProdCatalogCategories" type="region"/>
     <view-map name="EditProdCatalogPromos" type="region"/>
     <view-map name="EditProdCatalogWebSites" type="region"/>
-    
+
     <view-map name="FindProductPromo" type="region"/>
     <view-map name="EditProductPromo" type="region"/>
     <view-map name="EditProductPromoRules" type="region"/>
     <view-map name="EditProductPromoCatalogs" type="region"/>
+
+    <view-map name="EditProductPriceRules" type="region"/>
     <!-- end of view mappings -->
 </site-conf>

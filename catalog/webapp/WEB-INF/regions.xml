@@ -111,7 +111,7 @@
         <put section='title'>Edit Product Feature Category Features Page</put>
         <put section='content' content='/feature/EditFeatureCategoryFeatures.jsp'/>
     </define>
-    
+
     <define id='EditCategory' region='LEFT_ONLY_REGION'>
         <put section='title'>Edit Category Page</put>
         <put section='content' content='/category/EditCategory.jsp'/>
@@ -132,7 +132,7 @@
         <put section='title'>Upload Category Image Page</put>
         <put section='content' content='/category/UploadCategoryImage.jsp'/>
     </define>
-    
+
     <define id='FindFacility' region='MAIN_REGION'>
         <put section='title'>Edit Facility Page</put>
         <put section='content' content='/storage/FindFacility.jsp'/>
@@ -145,7 +145,7 @@
         <put section='title'>Edit Facility InventoryItems Page</put>
         <put section='content' content='/storage/EditFacilityInventoryItems.jsp'/>
     </define>
-    
+
     <define id='FindProdCatalog' region='MAIN_REGION'>
         <put section='title'>Edit ProdCatalog</put>
         <put section='content' content='/catalog/FindProdCatalog.jsp'/>
@@ -166,7 +166,7 @@
         <put section='title'>Edit ProdCatalog WebSites</put>
         <put section='content' content='/catalog/EditProdCatalogWebSites.jsp'/>
     </define>
-    
+
     <define id='FindProductPromo' region='MAIN_REGION'>
         <put section='title'>Edit ProductPromo</put>
         <put section='content' content='/promo/FindProductPromo.jsp'/>
@@ -182,5 +182,10 @@
     <define id='EditProductPromoCatalogs' region='MAIN_REGION'>
         <put section='title'>Edit ProductPromo Catalogs</put>
         <put section='content' content='/promo/EditProductPromoCatalogs.jsp'/>
+    </define>
+
+    <define id='EditProductPriceRules' region='MAIN_REGION'>
+        <put section='title'>Edit ProductPrice Rules</put>
+        <put section='content' content='/price/EditProductPriceRules.jsp'/>
     </define>
 </regions>
