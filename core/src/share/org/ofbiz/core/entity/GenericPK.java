@@ -39,4 +39,13 @@ public class GenericPK extends GenericEntity
   public GenericPK(ModelEntity modelEntity, Map fields) { super(modelEntity, fields); }
   /** Creates new GenericPK from existing GenericPK */
   public GenericPK(GenericPK value) { super(value); }
+
+  /** Clones this GenericPK, this is a shallow clone & uses the default shallow HashMap clone
+   *@return Object that is a clone of this GenericPK
+   */
+  public Object clone() {
+    GenericPK newEntity = new GenericPK(this);
+    newEntity.setDelegator(internalDelegator);
+    return newEntity;
+  }
 }

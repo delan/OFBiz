@@ -271,7 +271,7 @@ public class GenericDelegator {
   public GenericValue create(GenericValue value) throws GenericEntityException {
     GenericHelper helper = getEntityHelper(value.getModelEntity());
     value = helper.create(value);
-    if(value != null) value.delegator = this;
+    if(value != null) value.setDelegator(this);
     return value;
   }
   
@@ -281,7 +281,7 @@ public class GenericDelegator {
   public GenericValue create(GenericPK primaryKey) throws GenericEntityException {
     GenericHelper helper = getEntityHelper(primaryKey.getModelEntity());
     GenericValue value = helper.create(primaryKey);
-    if(value != null) value.delegator = this;
+    if(value != null) value.setDelegator(this);
     return value;
   }
   
@@ -295,7 +295,7 @@ public class GenericDelegator {
     if(!primaryKey.isPrimaryKey()) throw new IllegalArgumentException("[GenericDelegator.findByPrimaryKey] Passed primary key is not a valid primary key: " + primaryKey);
     try { value = helper.findByPrimaryKey(primaryKey); }
     catch(GenericEntityNotFoundException e) { value = null; }
-    if(value != null) value.delegator = this;
+    if(value != null) value.setDelegator(this);
     return value;
   }
   
@@ -341,7 +341,7 @@ public class GenericDelegator {
     if(!primaryKey.isPrimaryKey()) throw new IllegalArgumentException("[GenericDelegator.findByPrimaryKey] Passed primary key is not a valid primary key: " + primaryKey);
     try { value = helper.findByPrimaryKeyPartial(primaryKey, keys); }
     catch(GenericEntityNotFoundException e) { value = null; }
-    if(value != null) value.delegator = this;
+    if(value != null) value.setDelegator(this);
     return value;
   }
 
@@ -743,7 +743,7 @@ public class GenericDelegator {
     GenericValue newValue = findByPrimaryKey(pk);
     if(newValue == null) throw new IllegalArgumentException("[GenericDelegator.refresh] could not refresh value: " + value);
     value.fields = newValue.fields;
-    value.delegator = this;
+    value.setDelegator(this);
     value.modified = false;
   }
   
@@ -990,7 +990,7 @@ public class GenericDelegator {
     Iterator iter = col.iterator();
     while(iter.hasNext()) {
       GenericValue value = (GenericValue)iter.next();
-      value.delegator = this;
+      value.setDelegator(this);
     }
   }
 }

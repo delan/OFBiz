@@ -53,9 +53,11 @@ import org.apache.xml.serialize.*;
  *@created    Wed Aug 08 2001
  *@version    1.0
  */
-public class GenericEntity implements Serializable {
-  /** Reference to an instance of GenericDelegator used to do some basic operations on this entity value. If null various methods in this class will fail. This is automatically set by the GenericDelegator implementations for all GenericValue objects instantiated through them. You may set this manually for objects you instantiate manually, but it is optional. */
-  public transient GenericDelegator delegator = null;
+public class GenericEntity implements Serializable, Comparable, Cloneable {
+  /** Name of the GenericDelegator, used to reget the GenericDelegator when deserialized */
+  public String delegatorName = null;
+  /** Reference to an instance of GenericDelegator used to do some basic operations on this entity value. If null various methods in this class will fail. This is automatically set by the GenericDelegator for all GenericValue objects instantiated through it. You may set this manually for objects you instantiate manually, but it is optional. */
+  public transient GenericDelegator internalDelegator = null;
   
   /** Contains the fields for this entity. Note that this should always be a
    *  HashMap to allow for two things: non-synchronized reads (synchronized
@@ -88,7 +90,12 @@ public class GenericEntity implements Serializable {
   
   public String getEntityName() { return entityName; }
   public ModelEntity getModelEntity() {
-    if(modelEntity == null) throw new IllegalStateException("[GenericEntity.getModelEntity] modelEntity not set");
+    if(modelEntity == null) {
+      if(entityName != null) modelEntity = this.getDelegator().getModelEntity(entityName);
+      if(modelEntity == null) {
+        throw new IllegalStateException("[GenericEntity.getModelEntity] could not find modelEntity for entityName " + entityName);
+      }
+    }
     return modelEntity; 
   }
   
@@ -96,13 +103,22 @@ public class GenericEntity implements Serializable {
    *@return GenericDelegator object
    */
   public GenericDelegator getDelegator() {
-    if(delegator == null) throw new IllegalStateException("[GenericEntity.getDelegator] delegator not set");
-    return delegator;
+    if(internalDelegator == null) {
+      if(delegatorName != null) internalDelegator = GenericDelegator.getGenericDelegator(delegatorName);
+      if(internalDelegator == null) {
+        throw new IllegalStateException("[GenericEntity.getDelegator] could not find delegator with name " + delegatorName);
+      }
+    }
+    return internalDelegator;
   }
   /** Get the GenericDelegator implementation instance that created this value object and that is repsonsible for it.
    *@return GenericDelegator object
    */
-  public void setDelegator(GenericDelegator delegator) { this.delegator = delegator; }
+  public void setDelegator(GenericDelegator internalDelegator) {
+    if(internalDelegator == null) return;
+    this.delegatorName = internalDelegator.getDelegatorName();
+    this.internalDelegator = internalDelegator;
+  }
 
   public Object get(String name) {
     if(getModelEntity().getField(name) == null) {
@@ -417,5 +433,81 @@ public class GenericEntity implements Serializable {
       theString.append("]");
     }
     return theString.toString();
+  }
+  
+  /** Compares this GenericEntity to the passed object
+   *@param obj Object to compare this to
+   *@return int representing the result of the comparison (-1,0, or 1)
+   */
+  public int compareTo(Object obj) {
+    //if null, it will push to the beginning
+    if(obj == null) return -1;
+    
+    //rather than doing an if instanceof, just cast it and let it throw an exception if
+    // it fails, this will be faster for the expected case (that it IS a GenericEntity)
+    //if not a GenericEntity throw ClassCastException, as the spec says
+    GenericEntity that = (GenericEntity)obj;
+    return this.compareTo(that);
+  }
+  
+  /** Compares this GenericEntity to the passed object
+   *@param obj Object to compare this to
+   *@return int representing the result of the comparison (-1,0, or 1)
+   */
+  public int compareTo(GenericEntity that) {
+    //if null, it will push to the beginning
+    if(that == null) return -1;
+    
+    int tempResult = this.entityName.compareTo(that.entityName);
+    //if they did not match, we know the order, otherwise compare the primary keys
+    if(tempResult != 0) return tempResult;
+    
+    //both have same entityName, should be the same so let's compare PKs
+    for(int i=0; i<modelEntity.pks.size(); i++) {
+      ModelField curField = (ModelField)modelEntity.pks.get(i);
+      Comparable thisVal = (Comparable)this.get(curField.name);
+      Comparable thatVal = (Comparable)that.get(curField.name);
+      if(thisVal == null) {
+        if(thatVal == null) tempResult = 0;
+        //if thisVal is null, but thatVal is not, return 1 to put this earlier in the list
+        else tempResult = 1;
+      }
+      else {
+        //if thatVal is null, put the other earlier in the list
+        if(thatVal == null) tempResult = -1;
+        else tempResult = thisVal.compareTo(thatVal);
+      }
+      if(tempResult != 0) return tempResult;
+    }
+    
+    //okay, if we got here it means the primaryKeys are exactly the SAME, so compare the rest of the fields
+    for(int i=0; i<modelEntity.nopks.size(); i++) {
+      ModelField curField = (ModelField)modelEntity.nopks.get(i);
+      Comparable thisVal = (Comparable)this.get(curField.name);
+      Comparable thatVal = (Comparable)that.get(curField.name);
+      if(thisVal == null) {
+        if(thatVal == null) tempResult = 0;
+        //if thisVal is null, but thatVal is not, return 1 to put this earlier in the list
+        else tempResult = 1;
+      }
+      else {
+        //if thatVal is null, put the other earlier in the list
+        if(thatVal == null) tempResult = -1;
+        else tempResult = thisVal.compareTo(thatVal);
+      }
+      if(tempResult != 0) return tempResult;
+    }
+    
+    //if we got here it means the two are exactly the same, so return tempResult, which should be 0
+    return tempResult;
+  }
+  
+  /** Clones this GenericEntity, this is a shallow clone & uses the default shallow HashMap clone
+   *@return Object that is a clone of this GenericEntity
+   */
+  public Object clone() {
+    GenericEntity newEntity = new GenericEntity(this);
+    newEntity.setDelegator(internalDelegator);
+    return newEntity;
   }
 }
