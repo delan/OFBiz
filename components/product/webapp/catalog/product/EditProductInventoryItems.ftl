@@ -1,28 +1,28 @@
 <#--
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
- *  Permission is hereby granted, free of charge, to any person obtaining a 
- *  copy of this software and associated documentation files (the "Software"), 
- *  to deal in the Software without restriction, including without limitation 
- *  the rights to use, copy, modify, merge, publish, distribute, sublicense, 
- *  and/or sell copies of the Software, and to permit persons to whom the 
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
  *  Software is furnished to do so, subject to the following conditions:
  *
- *  The above copyright notice and this permission notice shall be included 
+ *  The above copyright notice and this permission notice shall be included
  *  in all copies or substantial portions of the Software.
  *
- *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
- *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
- *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
- *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Brad Steiner (bsteiner@thehungersite.com)
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Revision: 1.6 $
+ *@version    $Revision: 1.7 $
  *@since      2.2
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -30,13 +30,13 @@
     <#assign externalKeyParam = "&externalLoginKey=" + requestAttributes.externalLoginKey?if_exists>
 
 ${pages.get("/product/ProductTabBar.ftl")}
-    
+
     <div class="head1">${uiLabelMap.ProductInventorySummary} <span class="head2">${uiLabelMap.CommonFor} <#if product?exists>${(product.productName)?if_exists} </#if> [${uiLabelMap.CommonId}:${productId?if_exists}]</span></div>
     <a href="<@ofbizUrl>/EditProduct</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewProduct}]</a>
     <#if productId?has_content>
         <a href="/ecommerce/control/product?product_id=${productId}" class="buttontext" target="_blank">[${uiLabelMap.ProductProductPage}]</a>
     </#if>
-    
+
     <table border="1" cellpadding="2" cellspacing="0">
         <tr>
             <td><div class="tabletext"><b>${uiLabelMap.ProductFacility}</b></div></td>
@@ -66,9 +66,9 @@ ${pages.get("/product/ProductTabBar.ftl")}
             </tr>
         </#list>
     </table>
-    
+
     <hr class="sepbar"/>
-    
+
     <div class="head1">${uiLabelMap.ProductInventoryItems} <span class="head2">${uiLabelMap.CommonFor} <#if product?exists>${(product.productName)?if_exists} </#if> [${uiLabelMap.CommonId}:${productId?if_exists}]</span></div>
     <#if productId?has_content>
         <a href="/facility/control/EditInventoryItem?productId=${productId}${externalKeyParam}" class="buttontext">[${uiLabelMap.ProductCreateNewInventoryItemProduct}]</a>
@@ -79,11 +79,11 @@ ${pages.get("/product/ProductTabBar.ftl")}
         </#if>
     </#if>
     <br>
-        
+
     <#if (product.isVirtual)?if_exists == "Y">
         <div class="head3">${uiLabelMap.ProductWarningVirtualProduct}.</div>
     </#if>
-    
+
     <br>
     <#if productId?exists>
         <table border="1" cellpadding="2" cellspacing="0">
@@ -102,15 +102,15 @@ ${pages.get("/product/ProductTabBar.ftl")}
             <td><div class="tabletext">&nbsp;</div></td>
         </tr>
         <#list productInventoryItems as inventoryItem>
-            <#if showEmpty || (inventoryItem.inventoryItemTypeId?if_exists == "SERIALIZED_INV_ITEM" && inventoryItem.statusId?if_exists != "INV_DELIVERED") 
+            <#if showEmpty || (inventoryItem.inventoryItemTypeId?if_exists == "SERIALIZED_INV_ITEM" && inventoryItem.statusId?if_exists != "INV_DELIVERED")
                            || (inventoryItem.inventoryItemTypeId?if_exists == "NON_SERIAL_INV_ITEM" && ((inventoryItem.availableToPromise?exists && inventoryItem.availableToPromise > 0) || (inventoryItem.quantityOnHand?exists && inventoryItem.quantityOnHand > 0)))>
                 <#assign curInventoryItemType = inventoryItem.getRelatedOne("InventoryItemType")>
                 <#if inventoryItem.inventoryItemTypeId?if_exists == "SERIALIZED_INV_ITEM">
                     <#assign curStatusItem = inventoryItem.getRelatedOneCache("StatusItem")?if_exists>
                 </#if>
-                <#assign facilityLocation = inventoryItem.getRelatedOne("FacilityLocation")>
+                <#assign facilityLocation = inventoryItem.getRelatedOne("FacilityLocation")?if_exists>
                 <#assign facilityLocationTypeEnum = (facilityLocation.getRelatedOneCache("TypeEnumeration"))?if_exists>
-                <#if curInventoryItemType?exists> 
+                <#if curInventoryItemType?exists>
                     <tr valign="middle">
                         <td><a href="/facility/control/EditInventoryItem?inventoryItemId=${(inventoryItem.inventoryItemId)?if_exists}${externalKeyParam}" class="buttontext">${(inventoryItem.inventoryItemId)?if_exists}</a></td>
                         <td><div class="tabletext">&nbsp;${(curInventoryItemType.description)?if_exists}</div></td>
@@ -132,7 +132,7 @@ ${pages.get("/product/ProductTabBar.ftl")}
                         <td><div class="tabletext">&nbsp;${(inventoryItem.datetimeReceived)?if_exists}</div></td>
                         <td><div class="tabletext">&nbsp;${(inventoryItem.expireDate)?if_exists}</div></td>
                         <#if inventoryItem.facilityId?exists && inventoryItem.containerId?exists>
-                            <td><div class="tabletext" style="color: red;">${uiLabelMap.ProductErrorFacility} (${inventoryItem.facilityId}) 
+                            <td><div class="tabletext" style="color: red;">${uiLabelMap.ProductErrorFacility} (${inventoryItem.facilityId})
                                 ${uiLabelMap.ProductAndContainer} (${inventoryItem.containerId}) ${uiLabelMap.CommonSpecified}</div></td>
                         <#elseif inventoryItem.facilityId?exists>
                             <td><span class="tabletext">${uiLabelMap.ProductFacilityLetter}:&nbsp;</span><a href="/facility/control/EditFacility?facilityId=${inventoryItem.facilityId}${externalKeyParam}" class="buttontext">
@@ -154,7 +154,7 @@ ${pages.get("/product/ProductTabBar.ftl")}
                         <#elseif inventoryItem.inventoryItemTypeId?if_exists == "SERIALIZED_INV_ITEM">
                             <td><div class="tabletext">&nbsp;${(inventoryItem.serialNumber)?if_exists}</div></td>
                         <#else>
-                            <td><div class="tabletext" style="color: red;">${uiLabelMap.ProductErrorType} ${(inventoryItem.inventoryItemTypeId)?if_exists} ${uiLabelMap.ProductUnknownSerialNumber} (${(inventoryItem.serialNumber)?if_exists}) 
+                            <td><div class="tabletext" style="color: red;">${uiLabelMap.ProductErrorType} ${(inventoryItem.inventoryItemTypeId)?if_exists} ${uiLabelMap.ProductUnknownSerialNumber} (${(inventoryItem.serialNumber)?if_exists})
                                 ${uiLabelMap.ProductAndQuantityOnHand} (${(inventoryItem.quantityOnHand)?if_exists} ${uiLabelMap.CommonSpecified}</div></td>
                             <td>&nbsp;</td>
                         </#if>
