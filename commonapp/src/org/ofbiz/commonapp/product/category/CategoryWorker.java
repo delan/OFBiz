@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2001/10/18 18:07:31  jonesde
+ * Added worker methods for multiple catalog, or multiple top category stuff
+ *
  * Revision 1.1  2001/10/05 02:32:39  jonesde
  * Refactored CatalogHelper: split into CatalogWorker and in commonapp CategoryWorker and ProductWorker
  *
@@ -95,7 +98,7 @@ public class CategoryWorker {
       
       if(category != null) {
         Collection prodCatMemberCol = null;
-        try { prodCatMemberCol = category.getRelated("ProductCategoryMember"); }
+        try { prodCatMemberCol = category.getRelatedCache("ProductCategoryMember"); }
         catch(GenericEntityException e) { Debug.logWarning(e.getMessage()); prodCatMemberCol = null; }
         if(prodCatMemberCol != null) prodCatMembers = new ArrayList(prodCatMemberCol);
       } 

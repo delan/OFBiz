@@ -103,6 +103,7 @@ public class CategoryEvents {
     
     if(UtilValidate.isNotEmpty(primaryParentCategoryId)) {
       category.preStoreOther(delegator.makeValue("ProductCategoryRollup", UtilMisc.toMap("productCategoryId", productCategoryId, "parentProductCategoryId", primaryParentCategoryId)));
+      delegator.clearCacheLine("ProductCategoryRollup", UtilMisc.toMap("parentProductCategoryId", primaryParentCategoryId));
     }
     
     if(updateMode.equals("CREATE")) {
@@ -179,6 +180,7 @@ public class CategoryEvents {
       GenericValue productCategoryMember = null;
       try { 
         productCategoryMember = delegator.create("ProductCategoryMember", UtilMisc.toMap("productId", productId, "productCategoryId", productCategoryId, "fromDate", UtilDateTime.nowTimestamp()));
+        delegator.clearCacheLine("ProductCategoryMember", UtilMisc.toMap("productCategoryId", productCategoryMember.get("productCategoryId")));
       }
       catch(GenericEntityException e) { Debug.logWarning(e.getMessage()); productCategoryMember = null; }
       if(productCategoryMember == null) {
@@ -202,7 +204,10 @@ public class CategoryEvents {
         request.setAttribute("ERROR_MESSAGE", "Could not remove product-category (does not exist)");
         return "error";
       }
-      try { productCategoryMember.remove(); }
+      try { 
+        productCategoryMember.remove();
+        delegator.clearCacheLine("ProductCategoryMember", UtilMisc.toMap("productCategoryId", productCategoryMember.get("productCategoryId")));
+      }
       catch(GenericEntityException e) {
         request.setAttribute("ERROR_MESSAGE", "Could not remove product-category (write error)");
         Debug.logWarning("[ProductEvents.updateProductCategoryMember] Could not remove product-category (write error); message: " + e.getMessage());
@@ -260,8 +265,10 @@ public class CategoryEvents {
         request.setAttribute("ERROR_MESSAGE", "Could not create product-category entry (already exists)");
         return "error";
       }
-      delegator.clearCacheLine("ProductCategoryRollup", UtilMisc.toMap("parentProductCategoryId", productCategoryRollup.get("parentProductCategoryId")));
-      try { productCategoryRollup = productCategoryRollup.create(); }
+      try { 
+        productCategoryRollup = productCategoryRollup.create();
+        delegator.clearCacheLine("ProductCategoryRollup", UtilMisc.toMap("parentProductCategoryId", productCategoryRollup.get("parentProductCategoryId")));
+      }
       catch(GenericEntityException e) { Debug.logWarning(e.getMessage()); productCategoryRollup = null; }
       if(productCategoryRollup == null) {
         request.setAttribute("ERROR_MESSAGE", "Could not create product-category entry (write error)");
@@ -277,8 +284,10 @@ public class CategoryEvents {
         request.setAttribute("ERROR_MESSAGE", "Could not remove product-category (does not exist)");
         return "error";
       }
-      delegator.clearCacheLine("ProductCategoryRollup", UtilMisc.toMap("parentProductCategoryId", productCategoryRollup.get("parentProductCategoryId")));
-      try { productCategoryRollup.remove(); }
+      try { 
+        productCategoryRollup.remove(); 
+        delegator.clearCacheLine("ProductCategoryRollup", UtilMisc.toMap("parentProductCategoryId", productCategoryRollup.get("parentProductCategoryId")));
+      }
       catch(GenericEntityException e) {
         request.setAttribute("ERROR_MESSAGE", "Could not remove product-category (write error)");
         Debug.logWarning("[ProductEvents.updateProductCategoryRollup] Could not remove product-category (write error); message: " + e.getMessage());

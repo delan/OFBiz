@@ -188,6 +188,7 @@ public class ProductEvents {
       catch(GenericEntityException e) { Debug.logWarning(e.getMessage()); dummyValue = null; }
       if(dummyValue == null) {
         product.preStoreOther(delegator.makeValue("ProductCategoryMember", UtilMisc.toMap("productId", productId, "productCategoryId", primaryProductCategoryId, "fromDate", UtilDateTime.nowTimestamp())));
+        delegator.clearCacheLine("ProductCategoryMember", UtilMisc.toMap("productCategoryId", primaryProductCategoryId));
       }
     }
 

@@ -81,7 +81,7 @@
   <%}else{%>
     <input type=hidden name="UPDATE_MODE" value="CREATE">
     <tr>
-      <td align=right><div class="tabletext">Product ID></div></td>
+      <td align=right><div class="tabletext">Product ID</div></td>
       <td>&nbsp;</td>
       <td>
         <input type="text" name="PRODUCT_ID" size="20" maxlength="40" value="">
