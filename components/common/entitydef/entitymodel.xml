@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  */
 -->
 
@@ -356,7 +356,7 @@
 
     <entity entity-name="StatusItem"
             package-name="org.ofbiz.common.status"
-            title="Status Entity">
+            title="Status Entity" default-resource-name="CommonEntityLabels">
       <field name="statusId" type="id-ne"></field>
       <field name="statusTypeId" type="id"></field>
       <field name="statusCode" type="short-varchar"></field>
