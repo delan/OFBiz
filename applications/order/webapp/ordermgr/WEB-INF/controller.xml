@@ -272,13 +272,13 @@
         <security https="true" auth="true"/>
          <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="selectAgreement"/>
         <response name="success" type="request" value="orderentry"/>
-        <response name="error" type="request" value="orderentry"/>
+        <response name="error" type="request" value="orderagreements"/>
     </request-map>
     <request-map uri="setOrderCurrency">
         <security https="true" auth="true"/>
          <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="setCurrency"/>
         <response name="success" type="request" value="orderentry"/>
-        <response name="error" type="request" value="orderentry"/>
+        <response name="error" type="request" value="orderagreements"/>
     </request-map>
     <request-map uri="additem">
         <security https="true" auth="true"/>
