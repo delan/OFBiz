@@ -353,6 +353,8 @@ public class EntitySyncContext {
                 }
             } catch (GenericEntityException e) {
                 throw new SyncDataErrorException("Error getting values to create from the datasource", e);
+            } catch (Throwable t) {
+                throw new SyncDataErrorException("Caught runtime error while getting values to create", t);
             }
         }
         
@@ -455,6 +457,8 @@ public class EntitySyncContext {
                 }
             } catch (GenericEntityException e) {
                 throw new SyncDataErrorException("Error getting values to store from the datasource", e);
+            } catch (Throwable t) {
+                throw new SyncDataErrorException("Caught runtime error while getting values to store", t);
             }
         }
 
@@ -548,6 +552,8 @@ public class EntitySyncContext {
             }
         } catch (GenericEntityException e) {
             throw new SyncDataErrorException("Error getting keys to remove from the datasource", e);
+        } catch (Throwable t) {
+            throw new SyncDataErrorException("Caught runtime error while getting keys to remove", t);
         }
 
         // TEST SECTION: leave false for normal use

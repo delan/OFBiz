@@ -332,8 +332,12 @@ public class EntitySyncServices {
                     return ServiceUtil.returnError(errMsg);
                 }
             } catch (GenericServiceException e) {
-                String errMsg = "Error calling remote pull and report EntitySync service with name: " + remotePullAndReportEntitySyncDataName + "; " + e.toString();
+                String errMsg = "Exception calling remote pull and report EntitySync service with name: " + remotePullAndReportEntitySyncDataName + "; " + e.toString();
                 Debug.logError(e, errMsg, module);
+                return ServiceUtil.returnError(errMsg);
+            } catch (Throwable t) {
+                String errMsg = "Error calling remote pull and report EntitySync service with name: " + remotePullAndReportEntitySyncDataName + "; " + t.toString();
+                Debug.logError(t, errMsg, module);
                 return ServiceUtil.returnError(errMsg);
             }
         }
