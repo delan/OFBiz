@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.17 $
+ * @version    $Revision: 1.18 $
  */
 -->
 
@@ -1216,6 +1216,9 @@
       <relation type="many" rel-entity-name="GlAccountRole">
         <key-map field-name="glAccountId"/>
       </relation>
+      <index name="GLACCT_UNQCD" unique="true">
+        <index-field name="accountCode"/>
+      </index>
     </entity>
     <entity entity-name="GlAccountClass"
             package-name="org.ofbiz.accounting.ledger"
@@ -1474,16 +1477,13 @@
             never-cache="true">
       <member-entity entity-alias="BA" entity-name="BillingAccount"/>
       <member-entity entity-alias="BR" entity-name="BillingAccountRole"/>
+      <alias-all entity-alias="BR"/>
       <alias entity-alias="BA" name="billingAccountId"/>
       <alias entity-alias="BA" name="accountLimit"/>
       <alias entity-alias="BA" name="contactMechId"/>
       <alias entity-alias="BA" name="accountFromDate" field="fromDate"/>
       <alias entity-alias="BA" name="accountThruDate" field="thruDate"/>
       <alias entity-alias="BA" name="description"/>
-      <alias entity-alias="BR" name="partyId"/>
-      <alias entity-alias="BR" name="roleTypeId"/>
-      <alias entity-alias="BR" name="fromDate"/>
-      <alias entity-alias="BR" name="thruDate"/>
       <view-link entity-alias="BA" rel-entity-alias="BR">
         <key-map field-name="billingAccountId"/>
       </view-link>
