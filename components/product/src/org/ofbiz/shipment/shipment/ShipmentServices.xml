@@ -24,7 +24,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.6 $
+ * @version    $Revision: 1.7 $
  * @since      2.2
 -->
 <simple-methods>
@@ -38,7 +38,7 @@
         <make-value value-name="newEntity" entity-name="Shipment"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
         
-        <sequenced-id-to-env sequence-name="Shipment" env-name="sequencedId" to-string="true"/>
+        <sequenced-id-to-env sequence-name="Shipment" env-name="sequencedId" to-string="true"/>        
         <env-to-field env-name="sequencedId" field-name="shipmentId" map-name="newEntity"/>
         <field-to-result field-name="sequencedId" result-name="shipmentId"/>
         
@@ -115,7 +115,7 @@
         <find-by-primary-key entity-name="Shipment" map-name="lookupPKMap" value-name="lookedUpValue"/>
         
         <if-not-empty field-name="parameters.statusId">
-            <if-compare-field field-name="parameters.statusId" operator="not-equals" to-field-name="lookedUpValue.statusId">
+			<if-compare-field field-name="parameters.statusId" operator="not-equals" to-field-name="lookedUpValue.statusId">
                 <!-- make sure a StatusValidChange record exists, if not return error -->
                 <env-to-field env-name="lookedUpValue.statusId" field-name="statusId" map-name="checkStatusValidChangeMap"/>
                 <env-to-field env-name="parameters.statusId" field-name="statusIdTo" map-name="checkStatusValidChangeMap"/>
@@ -124,12 +124,12 @@
                     <string-to-list string="ERROR: Changing the status from ${lookedUpValue.statusId} to ${parameters.statusId} is not allowed." list-name="error_list"/>
                 </if-empty>
                 
-                <make-value entity-name="ShipmentStatus" value-name="newStatusValue"/>
-                <field-to-field field-name="statusId" map-name="parameters" to-map-name="newStatusValue"/>
-                <field-to-field field-name="shipmentId" map-name="parameters" to-map-name="newStatusValue"/>
-                <now-timestamp-to-env env-name="newStatusValue.statusDate"/>
-                <create-value value-name="newStatusValue"/>
-            </if-compare-field>
+				<make-value entity-name="ShipmentStatus" value-name="newStatusValue"/>
+				<field-to-field field-name="statusId" map-name="parameters" to-map-name="newStatusValue"/>
+				<field-to-field field-name="shipmentId" map-name="parameters" to-map-name="newStatusValue"/>
+				<now-timestamp-to-env env-name="newStatusValue.statusDate"/>
+				<create-value value-name="newStatusValue"/>
+			</if-compare-field>
         </if-not-empty>
 
         <!-- now finally check for errors -->
@@ -138,16 +138,16 @@
         <!-- Check the pickup and delivery dates for changes and update the corresponding WorkEfforts -->
         <if>
             <condition>
-                <or>
-                    <and>
-                        <not><if-empty field-name="estimatedShipDate" map-name="parameters"/></not>
-                        <if-compare-field field-name="parameters.estimatedShipDate" operator="not-equals" to-field-name="lookedUpValue.estimatedShipDate"/>
-                    </and>
-                    <and>
-                        <not><if-empty field-name="originFacilityId" map-name="parameters"/></not>
-                        <if-compare-field field-name="parameters.originFacilityId" operator="not-equals" to-field-name="lookedUpValue.originFacilityId"/>
-                    </and>
-                </or>
+            	<or>
+					<and>
+						<not><if-empty field-name="estimatedShipDate" map-name="parameters"/></not>
+						<if-compare-field field-name="parameters.estimatedShipDate" operator="not-equals" to-field-name="lookedUpValue.estimatedShipDate"/>
+					</and>
+					<and>
+						<not><if-empty field-name="originFacilityId" map-name="parameters"/></not>
+						<if-compare-field field-name="parameters.originFacilityId" operator="not-equals" to-field-name="lookedUpValue.originFacilityId"/>
+					</and>
+            	</or>
             </condition>
             <then>
                 <field-to-field field-name="estimatedShipWorkEffId" map-name="lookedUpValue" to-field-name="workEffortId" to-map-name="estimatedShipWorkEffortMap"/>
@@ -161,16 +161,16 @@
         </if>
         <if>
             <condition>
-                <or>
-                    <and>
-                        <not><if-empty field-name="estimatedArrivalDate" map-name="parameters"/></not>
-                        <if-compare-field field-name="parameters.estimatedArrivalDate" operator="not-equals" to-field-name="lookedUpValue.estimatedArrivalDate"/>
-                    </and>
-                    <and>
-                        <not><if-empty field-name="destinationFacilityId" map-name="parameters"/></not>
-                        <if-compare-field field-name="parameters.destinationFacilityId" operator="not-equals" to-field-name="lookedUpValue.destinationFacilityId"/>
-                    </and>
-                </or>
+            	<or>
+					<and>
+						<not><if-empty field-name="estimatedArrivalDate" map-name="parameters"/></not>
+						<if-compare-field field-name="parameters.estimatedArrivalDate" operator="not-equals" to-field-name="lookedUpValue.estimatedArrivalDate"/>
+					</and>
+					<and>
+						<not><if-empty field-name="destinationFacilityId" map-name="parameters"/></not>
+						<if-compare-field field-name="parameters.destinationFacilityId" operator="not-equals" to-field-name="lookedUpValue.destinationFacilityId"/>
+					</and>
+            	</or>
             </condition>
             <then>
                 <field-to-field field-name="estimatedArrivalWorkEffId" map-name="lookedUpValue" to-field-name="workEffortId" to-map-name="estimatedArrivalWorkEffortMap"/>
@@ -282,13 +282,13 @@
         <!-- set the facility if we are from a store with a single facility -->
         <if-empty field-name="originFacilityId" map-name="shipment">
             <if-compare field-name="shipmentTypeId" map-name="shipment" operator="equals" value="SALES_SHIPMENT">
-                <if-not-empty field-name="productStoreId" map-name="orderHeader">
-                    <field-to-field field-name="productStoreId" map-name="orderHeader" to-map-name="storeLookup"/>
-                    <find-by-primary-key entity-name="ProductStore" map-name="storeLookup" value-name="productStore"/>
-                    <if-compare field-name="oneInventoryFacility" map-name="productStore" operator="equals" value="Y">
-                           <field-to-field field-name="inventoryFacilityId" map-name="productStore" to-field-name="originFacilityId" to-map-name="shipment"/>
-                    </if-compare>
-                </if-not-empty>
+        	    <if-not-empty field-name="productStoreId" map-name="orderHeader">
+        		    <field-to-field field-name="productStoreId" map-name="orderHeader" to-map-name="storeLookup"/>
+        		    <find-by-primary-key entity-name="ProductStore" map-name="storeLookup" value-name="productStore"/>
+        		    <if-compare field-name="oneInventoryFacility" map-name="productStore" operator="equals" value="Y">
+        		   	    <field-to-field field-name="inventoryFacilityId" map-name="productStore" to-field-name="originFacilityId" to-map-name="shipment"/>
+        		    </if-compare>
+        	    </if-not-empty>
             </if-compare>
         </if-empty>
         
@@ -440,46 +440,46 @@
         
         <string-to-list string="-fromDate" list-name="descendingFromDateOrder"/>
         <if-not-empty field-name="originFacilityId" map-name="shipment">
-            <if-empty field-name="originContactMechId" map-name="shipment">
-                <field-to-field field-name="originFacilityId" map-name="shipment" to-field-name="facilityId" to-map-name="findFcmpMap"/>
-                <string-to-field string="SHIP_ORIG_LOCATION" field-name="contactMechPurposeTypeId" map-name="findFcmpMap"/>
-                <find-by-and entity-name="FacilityContactMechPurpose" map-name="findFcmpMap" order-by-list-name="descendingFromDateOrder" list-name="facilityContactMechPurposes"/>
-                <filter-list-by-date list-name="facilityContactMechPurposes"/>
-                <first-from-list entry-name="facilityContactMechPurpose" list-name="facilityContactMechPurposes"/>
-                <field-to-field field-name="contactMechId" map-name="facilityContactMechPurpose" to-field-name="originContactMechId" to-map-name="shipment"/>
-            </if-empty>
-            <if-empty field-name="originTelecomNumberId" map-name="shipment">
-                <field-to-field field-name="originFacilityId" map-name="shipment" to-field-name="facilityId" to-map-name="findFcmpMap"/>
-                <string-to-field string="PHONE_SHIP_ORIG" field-name="contactMechPurposeTypeId" map-name="findFcmpMap"/>
-                <find-by-and entity-name="FacilityContactMechPurpose" map-name="findFcmpMap" order-by-list-name="descendingFromDateOrder" list-name="facilityContactMechPurposes"/>
-                <filter-list-by-date list-name="facilityContactMechPurposes"/>
-                <first-from-list entry-name="facilityContactMechPurpose" list-name="facilityContactMechPurposes"/>
-                <field-to-field field-name="contactMechId" map-name="facilityContactMechPurpose" to-field-name="originTelecomNumberId" to-map-name="shipment"/>
-            </if-empty>
+	        <if-empty field-name="originContactMechId" map-name="shipment">
+	            <field-to-field field-name="originFacilityId" map-name="shipment" to-field-name="facilityId" to-map-name="findFcmpMap"/>
+	            <string-to-field string="SHIP_ORIG_LOCATION" field-name="contactMechPurposeTypeId" map-name="findFcmpMap"/>
+	            <find-by-and entity-name="FacilityContactMechPurpose" map-name="findFcmpMap" order-by-list-name="descendingFromDateOrder" list-name="facilityContactMechPurposes"/>
+	            <filter-list-by-date list-name="facilityContactMechPurposes"/>
+	            <first-from-list entry-name="facilityContactMechPurpose" list-name="facilityContactMechPurposes"/>
+	            <field-to-field field-name="contactMechId" map-name="facilityContactMechPurpose" to-field-name="originContactMechId" to-map-name="shipment"/>
+	        </if-empty>
+	        <if-empty field-name="originTelecomNumberId" map-name="shipment">
+	            <field-to-field field-name="originFacilityId" map-name="shipment" to-field-name="facilityId" to-map-name="findFcmpMap"/>
+	            <string-to-field string="PHONE_SHIP_ORIG" field-name="contactMechPurposeTypeId" map-name="findFcmpMap"/>
+	            <find-by-and entity-name="FacilityContactMechPurpose" map-name="findFcmpMap" order-by-list-name="descendingFromDateOrder" list-name="facilityContactMechPurposes"/>
+	            <filter-list-by-date list-name="facilityContactMechPurposes"/>
+	            <first-from-list entry-name="facilityContactMechPurpose" list-name="facilityContactMechPurposes"/>
+	            <field-to-field field-name="contactMechId" map-name="facilityContactMechPurpose" to-field-name="originTelecomNumberId" to-map-name="shipment"/>
+	        </if-empty>
         </if-not-empty>
         <if-not-empty field-name="destinationFacilityId" map-name="shipment">
-            <if-empty field-name="destinationContactMechId" map-name="shipment">
-                <field-to-field field-name="destinationFacilityId" map-name="shipment" to-field-name="facilityId" to-map-name="findFcmpMap"/>
-                <string-to-field string="SHIPPING_LOCATION" field-name="contactMechPurposeTypeId" map-name="findFcmpMap"/>
-                <find-by-and entity-name="FacilityContactMechPurpose" map-name="findFcmpMap" order-by-list-name="descendingFromDateOrder" list-name="facilityContactMechPurposes"/>
-                <filter-list-by-date list-name="facilityContactMechPurposes"/>
-                <first-from-list entry-name="facilityContactMechPurpose" list-name="facilityContactMechPurposes"/>
-                <field-to-field field-name="contactMechId" map-name="facilityContactMechPurpose" to-field-name="destinationContactMechId" to-map-name="shipment"/>
-            </if-empty>
-            <if-empty field-name="destinationTelecomNumberId" map-name="shipment">
-                <field-to-field field-name="destinationFacilityId" map-name="shipment" to-field-name="facilityId" to-map-name="findFcmpMap"/>
-                <string-to-field string="PHONE_SHIPPING" field-name="contactMechPurposeTypeId" map-name="findFcmpMap"/>
-                <find-by-and entity-name="FacilityContactMechPurpose" map-name="findFcmpMap" order-by-list-name="descendingFromDateOrder" list-name="facilityContactMechPurposes"/>
-                <filter-list-by-date list-name="facilityContactMechPurposes"/>
-                <first-from-list entry-name="facilityContactMechPurpose" list-name="facilityContactMechPurposes"/>
-                <field-to-field field-name="contactMechId" map-name="facilityContactMechPurpose" to-field-name="destinationTelecomNumberId" to-map-name="shipment"/>
-            </if-empty>
-        </if-not-empty>
-        
-        <if-compare-field field-name="shipment" operator="not-equals" to-field-name="shipmentCopy">
-            <set-service-fields service-name="updateShipment" map-name="shipment" to-map-name="shipmentUpdateMap"/>
-            <call-service service-name="updateShipment" in-map-name="shipmentUpdateMap"/>
-        </if-compare-field>
+	        <if-empty field-name="destinationContactMechId" map-name="shipment">
+	            <field-to-field field-name="destinationFacilityId" map-name="shipment" to-field-name="facilityId" to-map-name="findFcmpMap"/>
+	            <string-to-field string="SHIPPING_LOCATION" field-name="contactMechPurposeTypeId" map-name="findFcmpMap"/>
+	            <find-by-and entity-name="FacilityContactMechPurpose" map-name="findFcmpMap" order-by-list-name="descendingFromDateOrder" list-name="facilityContactMechPurposes"/>
+	            <filter-list-by-date list-name="facilityContactMechPurposes"/>
+	            <first-from-list entry-name="facilityContactMechPurpose" list-name="facilityContactMechPurposes"/>
+	            <field-to-field field-name="contactMechId" map-name="facilityContactMechPurpose" to-field-name="destinationContactMechId" to-map-name="shipment"/>
+	        </if-empty>
+	        <if-empty field-name="destinationTelecomNumberId" map-name="shipment">
+	            <field-to-field field-name="destinationFacilityId" map-name="shipment" to-field-name="facilityId" to-map-name="findFcmpMap"/>
+	            <string-to-field string="PHONE_SHIPPING" field-name="contactMechPurposeTypeId" map-name="findFcmpMap"/>
+	            <find-by-and entity-name="FacilityContactMechPurpose" map-name="findFcmpMap" order-by-list-name="descendingFromDateOrder" list-name="facilityContactMechPurposes"/>
+	            <filter-list-by-date list-name="facilityContactMechPurposes"/>
+	            <first-from-list entry-name="facilityContactMechPurpose" list-name="facilityContactMechPurposes"/>
+	            <field-to-field field-name="contactMechId" map-name="facilityContactMechPurpose" to-field-name="destinationTelecomNumberId" to-map-name="shipment"/>
+	        </if-empty>
+	    </if-not-empty>
+	    
+	    <if-compare-field field-name="shipment" operator="not-equals" to-field-name="shipmentCopy">
+	        <set-service-fields service-name="updateShipment" map-name="shipment" to-map-name="shipmentUpdateMap"/>
+	        <call-service service-name="updateShipment" in-map-name="shipmentUpdateMap"/>
+	    </if-compare-field>
     </simple-method>
     <simple-method method-name="sendShipmentScheduledNotification" short-description="Send Shipment Scheduled Notification">
         <check-permission permission="FACILITY" action="_CREATE">
@@ -534,8 +534,8 @@
         <if>
             <condition>
                 <and>
-                    <not><if-empty field-name="sendTo" map-name="sendEmailMap"/></not>
-                    <not><if-empty field-name="sendFrom" map-name="sendEmailMap"/></not>
+	                <not><if-empty field-name="sendTo" map-name="sendEmailMap"/></not>
+	                <not><if-empty field-name="sendFrom" map-name="sendEmailMap"/></not>
                 </and>
             </condition>
             <then>
@@ -607,9 +607,9 @@
         <set-pk-fields map-name="parameters" value-name="newEntity"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
 
-        <if-compare value="New" operator="equals" field-name="shipmentPackageSeqId" map-name="newEntity">
-            <clear-field field-name="shipmentPackageSeqId" map-name="newEntity"/>
-        </if-compare>
+		<if-compare value="New" operator="equals" field-name="shipmentPackageSeqId" map-name="newEntity">
+			<clear-field field-name="shipmentPackageSeqId" map-name="newEntity"/>
+		</if-compare>
 
         <!-- if no shipmentPackageSeqId, generate one based on existing items, ie one greater than the current higher number -->
         <make-next-seq-id value-name="newEntity" seq-field-name="shipmentPackageSeqId"/>
@@ -619,8 +619,8 @@
         
         <create-value value-name="newEntity"/>
 
-        <field-to-env map-name="newEntity" env-name="shipmentId"/>
-        <field-to-env map-name="newEntity" env-name="shipmentPackageSeqId"/>
+		<field-to-env map-name="newEntity" env-name="shipmentId"/>
+		<field-to-env map-name="newEntity" env-name="shipmentPackageSeqId"/>
         <call-simple-method method-name="ensurePackageRouteSeg"/>
     </simple-method>
     <simple-method method-name="updateShipmentPackage" short-description="Update ShipmentPackage">
@@ -637,8 +637,8 @@
         <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
         <store-value value-name="lookedUpValue"/>
         
-        <field-to-env map-name="lookedUpValue" env-name="shipmentId"/>
-        <field-to-env map-name="lookedUpValue" env-name="shipmentPackageSeqId"/>
+		<field-to-env map-name="lookedUpValue" env-name="shipmentId"/>
+		<field-to-env map-name="lookedUpValue" env-name="shipmentPackageSeqId"/>
         <call-simple-method method-name="ensurePackageRouteSeg"/>
     </simple-method>
     <simple-method method-name="deleteShipmentPackage" short-description="Delete ShipmentPackage">
@@ -658,8 +658,8 @@
         <env-to-field env-name="shipmentId" map-name="lookupRouteSegmentsMap"/>
         <find-by-and entity-name="ShipmentRouteSegment" map-name="lookupRouteSegmentsMap" list-name="shipmentRouteSegments"/>
         <iterate entry-name="shipmentRouteSegment" list-name="shipmentRouteSegments">
-            <env-to-field env-name="shipmentId" map-name="checkShipmentPackageRouteSegMap"/>
-            <env-to-field env-name="shipmentPackageSeqId" map-name="checkShipmentPackageRouteSegMap"/>
+	        <env-to-field env-name="shipmentId" map-name="checkShipmentPackageRouteSegMap"/>
+	        <env-to-field env-name="shipmentPackageSeqId" map-name="checkShipmentPackageRouteSegMap"/>
             <field-to-field field-name="shipmentRouteSegmentId" map-name="shipmentRouteSegment" to-map-name="checkShipmentPackageRouteSegMap"/>
             <find-by-primary-key entity-name="ShipmentPackageRouteSeg" map-name="checkShipmentPackageRouteSegMap" value-name="checkShipmentPackageRouteSeg"/>
             <if-empty field-name="checkShipmentPackageRouteSeg">
@@ -813,8 +813,8 @@
         
         <create-value value-name="newEntity"/>
 
-        <field-to-env map-name="newEntity" env-name="shipmentId"/>
-        <field-to-env map-name="newEntity" env-name="shipmentRouteSegmentId"/>
+		<field-to-env map-name="newEntity" env-name="shipmentId"/>
+		<field-to-env map-name="newEntity" env-name="shipmentRouteSegmentId"/>
         <call-simple-method method-name="ensureRouteSegPackage"/>
     </simple-method>
     <simple-method method-name="updateShipmentRouteSegment" short-description="Update ShipmentRouteSegment">
@@ -836,8 +836,8 @@
         
         <store-value value-name="lookedUpValue"/>
 
-        <field-to-env map-name="lookedUpValue" env-name="shipmentId"/>
-        <field-to-env map-name="lookedUpValue" env-name="shipmentRouteSegmentId"/>
+		<field-to-env map-name="lookedUpValue" env-name="shipmentId"/>
+		<field-to-env map-name="lookedUpValue" env-name="shipmentRouteSegmentId"/>
         <call-simple-method method-name="ensureRouteSegPackage"/>
     </simple-method>
     <simple-method method-name="deleteShipmentRouteSegment" short-description="Delete ShipmentRouteSegment">
@@ -857,8 +857,8 @@
         <env-to-field env-name="shipmentId" map-name="lookupPackagesMap"/>
         <find-by-and entity-name="ShipmentPackage" map-name="lookupPackagesMap" list-name="shipmentPackages"/>
         <iterate entry-name="shipmentPackage" list-name="shipmentPackages">
-            <env-to-field env-name="shipmentId" map-name="checkShipmentPackageRouteSegMap"/>
-            <env-to-field env-name="shipmentRouteSegmentId" map-name="checkShipmentPackageRouteSegMap"/>
+	        <env-to-field env-name="shipmentId" map-name="checkShipmentPackageRouteSegMap"/>
+	        <env-to-field env-name="shipmentRouteSegmentId" map-name="checkShipmentPackageRouteSegMap"/>
             <field-to-field field-name="shipmentPackageSeqId" map-name="shipmentPackage" to-map-name="checkShipmentPackageRouteSegMap"/>
             <find-by-primary-key entity-name="ShipmentPackageRouteSeg" map-name="checkShipmentPackageRouteSegMap" value-name="checkShipmentPackageRouteSeg"/>
             <if-empty field-name="checkShipmentPackageRouteSeg">
@@ -917,124 +917,125 @@
     </simple-method>
     
     <!-- shipment method type services -->
-    <simple-method method-name="createCarrierShipmentMethod" short-description="Creates a CarrierShipmentMethod">        
-        <make-value value-name="carrierShipmentMethod" entity-name="CarrierShipmentMethod"/>
-        <set-pk-fields map-name="parameters" value-name="carrierShipmentMethod"/>
-        <set-nonpk-fields map-name="parameters" value-name="carrierShipmentMethod"/>
-        <create-value value-name="carrierShipmentMethod"/>                        
-    </simple-method>
-    <simple-method method-name="updateCarrierShipmentMethod" short-description="Updates a CarrierShipmentMethod">        
-        <make-value value-name="lookupMap" entity-name="CarrierShipmentMethod"/>
-        <set-pk-fields map-name="parameters" value-name="lookupMap"/>
-        <find-by-primary-key entity-name="CarrierShipmentMethod" map-name="lookupMap" value-name="carrierShipmentMethod"/>
-        
-        <set-nonpk-fields map-name="parameters" value-name="carrierShipmentMethod"/>
-        <store-value value-name="carrierShipmentMethod"/>                        
-    </simple-method>    
-    <simple-method method-name="createShipmentMethodType" short-description="Creates a ShipmentMethodType">
-        <make-value value-name="shipmentMethodType" entity-name="ShipmentMethodType"/>
-        <set-pk-fields map-name="parameters" value-name="shipmentMethodType"/>
-        <set-nonpk-fields map-name="parameters" value-name="shipmentMethodType"/>
-        <create-value value-name="shipmentMethodType"/>                        
-    </simple-method>
-    <simple-method method-name="updateShipmentMethodType" short-description="Updates a ShipmentMethodType">
-        <make-value value-name="lookupMap" entity-name="ShipmentMethodType"/>
-        <set-pk-fields map-name="parameters" value-name="lookupMap"/>
-        <find-by-primary-key entity-name="ShipmentMethodType" map-name="lookupMap" value-name="shipmentMethodType"/>
-        
-        <set-nonpk-fields map-name="parameters" value-name="shipmentMethodType"/>
-        <store-value value-name="shipmentMethodType"/>                        
-    </simple-method>
-    
-    <!-- quick ship entire order in single package -->
-    <simple-method method-name="quickShipEntireOrder" short-description="Quick ships an entire order">
-        <!-- first get the order header; make sure we have a product store -->
-        <field-to-field field-name="orderId" map-name="parameters" to-map-name="ohpkmap"/>
-        <find-by-primary-key entity-name="OrderHeader" map-name="ohpkmap" value-name="orderHeader"/>
-        <if-empty field-name="originFacilityId" map-name="parameters">
-            <if-empty field-name="productStoreId" map-name="orderHeader">
-                <!-- no store cannot use quick ship; throw error -->
-                <add-error><fail-message message="No ProductStore associated with order; cannot use Quick Ship"/></add-error>
-                <check-errors/>
-            </if-empty>
-            <if-not-empty field-name="productStoreId" map-name="orderHeader">
-                <!-- get the product store entity -->
-                <field-to-field field-name="productStoreId" map-name="orderHeader" to-map-name="storeLookup"/>
-                <find-by-primary-key entity-name="ProductStore" map-name="storeLookup" value-name="productStore"/>
-                <if-compare field-name="reserveInventory" map-name="productStore" operator="not-equals" value="Y">
-                    <!-- no reservations; no shipment; cannot use quick ship -->
-                    <add-error><fail-message message="ProductStore [${productStore.productStoreID}] does not reserve inventory; cannot use Quick Ship"/></add-error>
-                </if-compare>
-                <if-compare field-name="oneInventoryFacility" map-name="productStore" operator="not-equals" value="Y">
-                    <!-- if we allow multiple facilities we cannot use quick ship; throw error -->
-                    <add-error><fail-message message="ProductStore [${productStore.productStoreId}] allows multiple facilities; cannot use Quick Ship"/></add-error>
-                    <check-errors/>
-                </if-compare>
-                <if-empty field-name="inventoryFacilityId" map-name="productStore">
-                    <!-- if no inventoryFacility is defined we cannot use quick ship; throw error -->
-                    <add-error><fail-message message="No inventory facility associated with ProductStore [${productStore.productStoreId}]; cannot use Quick Ship"/></add-error>
-                    <check-errors/>
-                </if-empty>
-            </if-not-empty>
-        </if-empty>
-        
-        <!-- we are all good to go; create the shipment -->
-        <if-not-empty field-name="originFacilityId" map-name="parameters">
-            <field-to-field field-name="originFacilityId" map-name="parameters" to-field-name="originFacilityId" to-map-name="shipmentContext"/>
-        </if-not-empty>
-        <field-to-field field-name="orderId" map-name="orderHeader" to-field-name="primaryOrderId" to-map-name="shipmentContext"/>
-        <string-to-field field-name="statusId" map-name="shipmentContext" string="SHIPMENT_INPUT"/>
-        <call-service service-name="createShipment" in-map-name="shipmentContext">
-            <result-to-field result-name="shipmentId" field-name="shipmentId" map-name="shipmentLookupMap"/>
-        </call-service>
-        <find-by-primary-key entity-name="Shipment" map-name="shipmentLookupMap" value-name="shipment"/>
-        <!-- issue all order items that are in approved status -->
-        <string-to-field field-name="statusId" map-name="itemLookupMap" string="ITEM_APPROVED"/>
-        <field-to-field field-name="orderId" map-name="orderHeader" to-map-name="itemLookupMap"/>
-        <find-by-and entity-name="OrderItem" map-name="itemLookupMap" list-name="orderItems"/>
-        <iterate list-name="orderItems" entry-name="orderItem">
-            <get-related value-name="orderItem" relation-name="OrderItemInventoryRes" list-name="itemReses"/>
-            <iterate list-name="itemReses" entry-name="itemRes">
-                <field-to-field field-name="shipmentId" map-name="shipment" to-map-name="issueContext"/>
-                <field-to-field field-name="orderId" map-name="itemRes" to-map-name="issueContext"/>
-                <field-to-field field-name="orderItemSeqId" map-name="itemRes" to-map-name="issueContext"/>
-                <field-to-field field-name="inventoryItemId" map-name="itemRes" to-map-name="issueContext"/>
-                <field-to-field field-name="quantity" map-name="itemRes" to-map-name="issueContext"/>
-                <call-service service-name="issueOrderItemInventoryResToShipment" in-map-name="issueContext"/>
-            </iterate>
-        </iterate>
-        <!-- place all issued items into a single package -->
-        <field-to-field field-name="shipmentId" to-map-name="issueLookupMap"/>
-        <field-to-field field-name="orderId" map-name="orderHeader" to-map-name="issueLookupMap"/>
-        <find-by-and entity-name="ItemIssuance" map-name="issueLookupMap" list-name="itemIssuances"/>
-        <string-to-field field-name="packageId" map-name="packageSeqMap" string="New"/>
-        <iterate list-name="itemIssuances" entry-name="itemIssuance">
-            <field-to-field field-name="shipmentId" map-name="itemIssuance" to-map-name="shipItemContext"/>
-            <field-to-field field-name="shipmentItemSeqId" map-name="itemIssuance" to-map-name="shipItemContext"/>
-            <field-to-field field-name="quantity" map-name="itemIssuance" to-map-name="shipItemContext"/>
-            <field-to-field field-name="packageId" map-name="packageSeqMap" to-field-name="shipmentPackageSeqId" to-map-name="shipItemContext"/>
-            <call-service service-name="createShipmentPackageContent" in-map-name="shipItemContext">
-                <result-to-field result-name="shipmentPackageSeqId" field-name="packageId" map-name="packageSeqMap"/>
-            </call-service>
-        </iterate>
-        <!-- update the shipment status to packed -->
-        <field-to-field field-name="shipmentId" map-name="shipment" to-map-name="packedContext"/>
-        <string-to-field field-name="statusId" map-name="packedContext" string="SHIPMENT_PACKED"/>
-        <call-service service-name="updateShipment" in-map-name="packedContext"/>
-        <!-- update the shipment status to shipped -->
-        <if-empty map-name="parameters" field-name="_packOnly">
-              <field-to-field field-name="shipmentId" map-name="shipment" to-map-name="packedContext"/>
-            <string-to-field field-name="statusId" map-name="packedContext" string="SHIPMENT_SHIPPED"/>
-            <call-service service-name="updateShipment" in-map-name="packedContext"/>
-        </if-empty>
-    </simple-method>            
+	<simple-method method-name="createCarrierShipmentMethod" short-description="Creates a CarrierShipmentMethod">		
+		<make-value value-name="carrierShipmentMethod" entity-name="CarrierShipmentMethod"/>
+		<set-pk-fields map-name="parameters" value-name="carrierShipmentMethod"/>
+		<set-nonpk-fields map-name="parameters" value-name="carrierShipmentMethod"/>
+		<create-value value-name="carrierShipmentMethod"/>						
+	</simple-method>
+	<simple-method method-name="updateCarrierShipmentMethod" short-description="Updates a CarrierShipmentMethod">		
+		<make-value value-name="lookupMap" entity-name="CarrierShipmentMethod"/>
+		<set-pk-fields map-name="parameters" value-name="lookupMap"/>
+		<find-by-primary-key entity-name="CarrierShipmentMethod" map-name="lookupMap" value-name="carrierShipmentMethod"/>
+		
+		<set-nonpk-fields map-name="parameters" value-name="carrierShipmentMethod"/>
+		<store-value value-name="carrierShipmentMethod"/>						
+	</simple-method>	
+	<simple-method method-name="createShipmentMethodType" short-description="Creates a ShipmentMethodType">
+		<make-value value-name="shipmentMethodType" entity-name="ShipmentMethodType"/>
+		<set-pk-fields map-name="parameters" value-name="shipmentMethodType"/>
+		<set-nonpk-fields map-name="parameters" value-name="shipmentMethodType"/>
+		<create-value value-name="shipmentMethodType"/>						
+	</simple-method>
+	<simple-method method-name="updateShipmentMethodType" short-description="Updates a ShipmentMethodType">
+		<make-value value-name="lookupMap" entity-name="ShipmentMethodType"/>
+		<set-pk-fields map-name="parameters" value-name="lookupMap"/>
+		<find-by-primary-key entity-name="ShipmentMethodType" map-name="lookupMap" value-name="shipmentMethodType"/>
+		
+		<set-nonpk-fields map-name="parameters" value-name="shipmentMethodType"/>
+		<store-value value-name="shipmentMethodType"/>						
+	</simple-method>
+	
+	<!-- quick ship entire order in single package -->
+	<simple-method method-name="quickShipEntireOrder" short-description="Quick ships an entire order">
+		<!-- first get the order header; make sure we have a product store -->
+		<field-to-field field-name="orderId" map-name="parameters" to-map-name="ohpkmap"/>
+		<find-by-primary-key entity-name="OrderHeader" map-name="ohpkmap" value-name="orderHeader"/>
+		<if-empty field-name="originFacilityId" map-name="parameters">
+			<if-empty field-name="productStoreId" map-name="orderHeader">
+				<!-- no store cannot use quick ship; throw error -->
+				<add-error><fail-message message="No ProductStore associated with order; cannot use Quick Ship"/></add-error>
+				<check-errors/>
+			</if-empty>
+			<if-not-empty field-name="productStoreId" map-name="orderHeader">
+				<!-- get the product store entity -->
+				<field-to-field field-name="productStoreId" map-name="orderHeader" to-map-name="storeLookup"/>
+				<find-by-primary-key entity-name="ProductStore" map-name="storeLookup" value-name="productStore"/>
+				<if-compare field-name="reserveInventory" map-name="productStore" operator="not-equals" value="Y">
+					<!-- no reservations; no shipment; cannot use quick ship -->
+					<add-error><fail-message message="ProductStore [${productStore.productStoreID}] does not reserve inventory; cannot use Quick Ship"/></add-error>
+				</if-compare>
+				<if-compare field-name="oneInventoryFacility" map-name="productStore" operator="not-equals" value="Y">
+					<!-- if we allow multiple facilities we cannot use quick ship; throw error -->
+					<add-error><fail-message message="ProductStore [${productStore.productStoreId}] allows multiple facilities; cannot use Quick Ship"/></add-error>
+					<check-errors/>
+				</if-compare>
+				<if-empty field-name="inventoryFacilityId" map-name="productStore">
+					<!-- if no inventoryFacility is defined we cannot use quick ship; throw error -->
+					<add-error><fail-message message="No inventory facility associated with ProductStore [${productStore.productStoreId}]; cannot use Quick Ship"/></add-error>
+					<check-errors/>
+				</if-empty>
+			</if-not-empty>
+		</if-empty>
+		
+		<!-- we are all good to go; create the shipment -->
+		<if-not-empty field-name="originFacilityId" map-name="parameters">
+			<field-to-field field-name="originFacilityId" map-name="parameters" to-field-name="originFacilityId" to-map-name="shipmentContext"/>
+		</if-not-empty>
+		<field-to-field field-name="orderId" map-name="orderHeader" to-field-name="primaryOrderId" to-map-name="shipmentContext"/>
+		<string-to-field field-name="statusId" map-name="shipmentContext" string="SHIPMENT_INPUT"/>
+		<call-service service-name="createShipment" in-map-name="shipmentContext">
+			<result-to-field result-name="shipmentId" field-name="shipmentId" map-name="shipmentLookupMap"/>
+		</call-service>
+		<find-by-primary-key entity-name="Shipment" map-name="shipmentLookupMap" value-name="shipment"/>
+		<!-- issue all order items that are in approved status -->
+		<string-to-field field-name="statusId" map-name="itemLookupMap" string="ITEM_APPROVED"/>
+		<field-to-field field-name="orderId" map-name="orderHeader" to-map-name="itemLookupMap"/>
+		<find-by-and entity-name="OrderItem" map-name="itemLookupMap" list-name="orderItems"/>
+		<iterate list-name="orderItems" entry-name="orderItem">
+			<get-related value-name="orderItem" relation-name="OrderItemInventoryRes" list-name="itemReses"/>
+			<iterate list-name="itemReses" entry-name="itemRes">
+				<field-to-field field-name="shipmentId" map-name="shipment" to-map-name="issueContext"/>
+				<field-to-field field-name="orderId" map-name="itemRes" to-map-name="issueContext"/>
+				<field-to-field field-name="orderItemSeqId" map-name="itemRes" to-map-name="issueContext"/>
+				<field-to-field field-name="inventoryItemId" map-name="itemRes" to-map-name="issueContext"/>
+				<field-to-field field-name="quantity" map-name="itemRes" to-map-name="issueContext"/>
+				<call-service service-name="issueOrderItemInventoryResToShipment" in-map-name="issueContext"/>
+			</iterate>
+		</iterate>
+		<!-- place all issued items into a single package -->
+		<field-to-field field-name="shipmentId" to-map-name="issueLookupMap"/>
+		<field-to-field field-name="orderId" map-name="orderHeader" to-map-name="issueLookupMap"/>
+		<find-by-and entity-name="ItemIssuance" map-name="issueLookupMap" list-name="itemIssuances"/>
+		<string-to-field field-name="packageId" map-name="packageSeqMap" string="New"/>
+		<iterate list-name="itemIssuances" entry-name="itemIssuance">
+			<field-to-field field-name="shipmentId" map-name="itemIssuance" to-map-name="shipItemContext"/>
+			<field-to-field field-name="shipmentItemSeqId" map-name="itemIssuance" to-map-name="shipItemContext"/>
+			<field-to-field field-name="quantity" map-name="itemIssuance" to-map-name="shipItemContext"/>
+			<field-to-field field-name="packageId" map-name="packageSeqMap" to-field-name="shipmentPackageSeqId" to-map-name="shipItemContext"/>
+			<call-service service-name="createShipmentPackageContent" in-map-name="shipItemContext">
+				<result-to-field result-name="shipmentPackageSeqId" field-name="packageId" map-name="packageSeqMap"/>
+			</call-service>
+		</iterate>
+		<!-- update the shipment status to packed -->
+		<field-to-field field-name="shipmentId" map-name="shipment" to-map-name="packedContext"/>
+		<string-to-field field-name="statusId" map-name="packedContext" string="SHIPMENT_PACKED"/>
+		<call-service service-name="updateShipment" in-map-name="packedContext"/>
+		<!-- update the shipment status to shipped -->
+		<if-empty map-name="parameters" field-name="_packOnly">
+	  		<field-to-field field-name="shipmentId" map-name="shipment" to-map-name="packedContext"/>
+			<string-to-field field-name="statusId" map-name="packedContext" string="SHIPMENT_SHIPPED"/>
+			<call-service service-name="updateShipment" in-map-name="packedContext"/>
+		</if-empty>
+		<field-to-result field-name="shipmentId" map-name="shipment" result-name="shipmentId"/>
+	</simple-method>	 	   
 </simple-methods>
 
     <!-- FooBar services -->
 <!--
     <simple-method method-name="createFooBar" short-description="Create FooBar">
         <check-permission permission="FACILITY" action="_CREATE">
-            <fail-message message="Security Error: to run createFooBar you must have the FACILITY_CREATE or FACILITY_ADMIN permission"/>
+        	<fail-message message="Security Error: to run createFooBar you must have the FACILITY_CREATE or FACILITY_ADMIN permission"/>
         </check-permission>
         <check-errors/>
 
@@ -1046,7 +1047,7 @@
     </simple-method>
     <simple-method method-name="updateFooBar" short-description="Update FooBar">
         <check-permission permission="FACILITY" action="_UPDATE">
-            <fail-message message="Security Error: to run updateFooBar you must have the FACILITY_UPDATE or FACILITY_ADMIN permission"/>
+        	<fail-message message="Security Error: to run updateFooBar you must have the FACILITY_UPDATE or FACILITY_ADMIN permission"/>
         </check-permission>
         <check-errors/>
 
@@ -1058,7 +1059,7 @@
     </simple-method>
     <simple-method method-name="deleteFooBar" short-description="Delete FooBar">
         <check-permission permission="FACILITY" action="_DELETE">
-            <fail-message message="Security Error: to run deleteFooBar you must have the FACILITY_DELETE or FACILITY_ADMIN permission"/>
+        	<fail-message message="Security Error: to run deleteFooBar you must have the FACILITY_DELETE or FACILITY_ADMIN permission"/>
         </check-permission>
         <check-errors/>
 
