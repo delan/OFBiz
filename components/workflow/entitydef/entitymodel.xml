@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  */
 -->
 
@@ -109,46 +109,11 @@
         <key-map field-name="processVersion"/>
         <key-map field-name="performerParticipantId" rel-field-name="participantId"/>
       </relation>
-      <relation type="many" title="From" rel-entity-name="WorkflowTransition">
-        <key-map field-name="packageId"/>
-        <key-map field-name="packageVersion"/>
-        <key-map field-name="processId"/>
-        <key-map field-name="processVersion"/>
-        <key-map field-name="activityId" rel-field-name="fromActivityId"/>
-      </relation>
-      <relation type="many" title="To" rel-entity-name="WorkflowTransition">
-        <key-map field-name="packageId"/>
-        <key-map field-name="packageVersion"/>
-        <key-map field-name="processId"/>
-        <key-map field-name="processVersion"/>
-        <key-map field-name="activityId" rel-field-name="toActivityId"/>
-      </relation>
       <relation type="one" fk-name="WFLW_ACT_WFLW_PRC" rel-entity-name="WorkflowProcess">
         <key-map field-name="packageId"/>
         <key-map field-name="packageVersion"/>
         <key-map field-name="processId"/>
         <key-map field-name="processVersion"/>
-      </relation>
-      <relation type="one-nofk" rel-entity-name="WorkflowActivityLoop">
-        <key-map field-name="packageId"/>
-        <key-map field-name="packageVersion"/>
-        <key-map field-name="processId"/>
-        <key-map field-name="processVersion"/>
-        <key-map field-name="activityId"/>
-      </relation>
-      <relation type="one-nofk" rel-entity-name="WorkflowActivitySubFlow">
-        <key-map field-name="packageId"/>
-        <key-map field-name="packageVersion"/>
-        <key-map field-name="processId"/>
-        <key-map field-name="processVersion"/>
-        <key-map field-name="activityId"/>
-      </relation>
-      <relation type="many" rel-entity-name="WorkflowActivityTool">
-        <key-map field-name="packageId"/>
-        <key-map field-name="packageVersion"/>
-        <key-map field-name="processId"/>
-        <key-map field-name="processVersion"/>
-        <key-map field-name="activityId"/>
       </relation>
       <relation type="one" fk-name="WFLW_ACT_BLB_ACT" title="BlockBegin" rel-entity-name="WorkflowActivity">
         <key-map field-name="packageId"/>
@@ -183,13 +148,6 @@
       </relation>
       <relation type="one" fk-name="WFLW_ACT_SPT_ENUM" title="Split" rel-entity-name="Enumeration">
         <key-map field-name="splitTypeEnumId" rel-field-name="enumId"/>
-      </relation>
-      <relation type="many" rel-entity-name="WorkflowTransitionRef">
-        <key-map field-name="packageId"/>
-        <key-map field-name="packageVersion"/>
-        <key-map field-name="processId"/>
-        <key-map field-name="processVersion"/>
-        <key-map field-name="activityId"/>
       </relation>
     </entity>
     <entity entity-name="WorkflowActivityLoop"
@@ -299,13 +257,6 @@
         <key-map field-name="processId"/>
         <key-map field-name="processVersion"/>
       </relation>
-      <relation type="many" rel-entity-name="WorkflowFormalParam">
-        <key-map field-name="packageId"/>
-        <key-map field-name="packageVersion"/>
-        <key-map field-name="processId"/>
-        <key-map field-name="processVersion"/>
-        <key-map field-name="applicationId"/>
-      </relation>
     </entity>
     <entity entity-name="WorkflowComplexTypeInfo"
             package-name="org.ofbiz.workflow.definition"
@@ -317,15 +268,6 @@
       <field name="arrayLowerIndex" type="numeric"></field>
       <field name="arrayUpperIndex" type="numeric"></field>
       <prim-key field="complexTypeInfoId"/>
-      <relation type="many" rel-entity-name="WorkflowDataField">
-        <key-map field-name="complexTypeInfoId"/>
-      </relation>
-      <relation type="many" rel-entity-name="WorkflowFormalParam">
-        <key-map field-name="complexTypeInfoId"/>
-      </relation>
-      <relation type="many" rel-entity-name="WorkflowTypeDeclaration">
-        <key-map field-name="complexTypeInfoId"/>
-      </relation>
       <relation type="one" fk-name="WFLW_CXTI_DT_ENUM" title="DataType" rel-entity-name="Enumeration">
         <key-map field-name="dataTypeEnumId" rel-field-name="enumId"/>
       </relation>
@@ -436,14 +378,6 @@
       <field name="participantListId" type="id"></field>
       <prim-key field="packageId"/>
       <prim-key field="packageVersion"/>
-      <relation type="many" title="Main" rel-entity-name="WorkflowPackageExternal">
-        <key-map field-name="packageId"/>
-        <key-map field-name="packageVersion"/>
-      </relation>
-      <relation type="many" title="External" rel-entity-name="WorkflowPackageExternal">
-        <key-map field-name="packageId" rel-field-name="externalPackageId"/>
-        <key-map field-name="packageVersion"/>
-      </relation>
       <relation type="one" fk-name="WFLW_FPRM_SPEC" rel-entity-name="WorkflowSpecification">
         <key-map field-name="specificationId"/>
       </relation>
@@ -467,18 +401,6 @@
       </relation>
       <relation type="many" rel-entity-name="WorkflowParticipantList">
         <key-map field-name="participantListId"/>
-      </relation>
-      <relation type="many" rel-entity-name="WorkflowTypeDeclaration">
-        <key-map field-name="packageId"/>
-        <key-map field-name="packageVersion"/>
-      </relation>
-      <relation type="many" rel-entity-name="WorkflowApplication">
-        <key-map field-name="packageId"/>
-        <key-map field-name="packageVersion"/>
-      </relation>
-      <relation type="many" rel-entity-name="WorkflowDataField">
-        <key-map field-name="packageId"/>
-        <key-map field-name="packageVersion"/>
       </relation>
     </entity>
     <entity entity-name="WorkflowPackageExternal"
@@ -517,22 +439,8 @@
       <prim-key field="processId"/>
       <prim-key field="processVersion"/>
       <prim-key field="participantId"/>
-      <relation type="many" title="Performer" rel-entity-name="WorkflowActivity">
-        <key-map field-name="packageId"/>
-        <key-map field-name="packageVersion"/>
-        <key-map field-name="processId"/>
-        <key-map field-name="processVersion"/>
-        <key-map field-name="participantId" rel-field-name="performerParticipantId"/>
-      </relation>
       <relation type="one" fk-name="WFLW_PART_TYPE" rel-entity-name="WorkflowParticipantType">
         <key-map field-name="participantTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="WorkflowParticipantList">
-        <key-map field-name="packageId"/>
-        <key-map field-name="packageVersion"/>
-        <key-map field-name="processId"/>
-        <key-map field-name="processVersion"/>
-        <key-map field-name="participantId"/>
       </relation>
     </entity>
     <entity entity-name="WorkflowParticipantList"
@@ -580,9 +488,6 @@
       <field name="parentTypeId" type="id"></field>
       <field name="hasTable" type="indicator"></field>
       <prim-key field="participantTypeId"/>
-      <relation type="many" rel-entity-name="WorkflowParticipant">
-        <key-map field-name="participantTypeId"/>
-      </relation>
     </entity>
     <entity entity-name="WorkflowProcess"
             package-name="org.ofbiz.workflow.definition"
@@ -619,24 +524,12 @@
         <key-map field-name="packageId"/>
         <key-map field-name="packageVersion"/>
       </relation>
-      <relation type="many" rel-entity-name="WorkflowActivity">
-        <key-map field-name="packageId"/>
-        <key-map field-name="packageVersion"/>
-        <key-map field-name="processId"/>
-        <key-map field-name="processVersion"/>
-      </relation>
       <relation type="one-nofk" title="DefaultStart" rel-entity-name="WorkflowActivity">
         <key-map field-name="packageId"/>
         <key-map field-name="packageVersion"/>
         <key-map field-name="processId"/>
         <key-map field-name="processVersion"/>
         <key-map field-name="defaultStartActivityId" rel-field-name="activityId"/>
-      </relation>
-      <relation type="many" rel-entity-name="WorkflowTransition">
-        <key-map field-name="packageId"/>
-        <key-map field-name="packageVersion"/>
-        <key-map field-name="processId"/>
-        <key-map field-name="processVersion"/>
       </relation>
       <relation type="one" fk-name="WFLW_PROC_CT_GEO" title="Country" rel-entity-name="Geo">
         <key-map field-name="countryGeoId" rel-field-name="geoId"/>
@@ -653,24 +546,6 @@
       <relation type="many" rel-entity-name="WorkflowParticipantList">
         <key-map field-name="participantListId"/>
       </relation>
-      <relation type="many" rel-entity-name="WorkflowApplication">
-        <key-map field-name="packageId"/>
-        <key-map field-name="packageVersion"/>
-        <key-map field-name="processId"/>
-        <key-map field-name="processVersion"/>
-      </relation>
-      <relation type="many" rel-entity-name="WorkflowDataField">
-        <key-map field-name="packageId"/>
-        <key-map field-name="packageVersion"/>
-        <key-map field-name="processId"/>
-        <key-map field-name="processVersion"/>
-      </relation>
-      <relation type="many" rel-entity-name="WorkflowFormalParam">
-        <key-map field-name="packageId"/>
-        <key-map field-name="packageVersion"/>
-        <key-map field-name="processId"/>
-        <key-map field-name="processVersion"/>
-      </relation>
     </entity>
     <entity entity-name="WorkflowSpecification"
             package-name="org.ofbiz.workflow.definition"
@@ -680,9 +555,6 @@
       <field name="description" type="description"></field>
       <field name="currentVersion" type="very-short"></field>
       <prim-key field="specificationId"/>
-      <relation type="many" rel-entity-name="WorkflowPackage">
-        <key-map field-name="specificationId"/>
-      </relation>
     </entity>
     <entity entity-name="WorkflowTransition"
             package-name="org.ofbiz.workflow.definition"
@@ -730,13 +602,6 @@
       </relation>
       <relation type="one" fk-name="WFLW_TRNS_LT_ENUM" title="LoopType" rel-entity-name="Enumeration">
         <key-map field-name="loopTypeEnumId" rel-field-name="enumId"/>
-      </relation>
-      <relation type="many" rel-entity-name="WorkflowTransitionRef">
-        <key-map field-name="packageId"/>
-        <key-map field-name="packageVersion"/>
-        <key-map field-name="processId"/>
-        <key-map field-name="processVersion"/>
-        <key-map field-name="transitionId"/>
       </relation>
     </entity>
     <entity entity-name="WorkflowTransitionRef"

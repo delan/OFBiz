@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.7 $
+ * @version    $Revision: 1.8 $
  */
 -->
 
@@ -76,15 +76,6 @@
       <field name="rateTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>
       <prim-key field="rateTypeId"/>
-      <relation type="many" rel-entity-name="PartyRate">
-        <key-map field-name="rateTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="TimeEntry">
-        <key-map field-name="rateTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="WorkEffortAssignmentRate">
-        <key-map field-name="rateTypeId"/>
-      </relation>
     </entity>
     <entity entity-name="TimeEntry"
             package-name="org.ofbiz.workeffort.timesheet"
@@ -657,12 +648,6 @@
       <relation type="many" rel-entity-name="WorkEffortAssocTypeAttr">
         <key-map field-name="workEffortAssocTypeId"/>
       </relation>
-      <relation type="many" rel-entity-name="WorkEffortAssocAttribute">
-        <key-map field-name="workEffortIdFrom"/>
-        <key-map field-name="workEffortIdTo"/>
-        <key-map field-name="workEffortAssocTypeId"/>
-        <key-map field-name="fromDate"/>
-      </relation>
       <relation type="one" fk-name="WK_EFFRTASSC_FWE" title="From" rel-entity-name="WorkEffort">
         <key-map field-name="workEffortIdFrom" rel-field-name="workEffortId"/>
       </relation>
@@ -719,15 +704,6 @@
       <prim-key field="workEffortAssocTypeId"/>
       <relation type="one" fk-name="WK_EFFRTASSC_TPAR" title="Parent" rel-entity-name="WorkEffortAssocType">
         <key-map field-name="parentTypeId" rel-field-name="workEffortAssocTypeId"/>
-      </relation>
-      <relation type="many" title="Child" rel-entity-name="WorkEffortAssocType">
-        <key-map field-name="workEffortAssocTypeId" rel-field-name="parentTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="WorkEffortAssocTypeAttr">
-        <key-map field-name="workEffortAssocTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="WorkEffortAssoc">
-        <key-map field-name="workEffortAssocTypeId"/>
       </relation>
     </entity>
     <entity entity-name="WorkEffortAssocTypeAttr"
@@ -1163,9 +1139,6 @@
       <field name="workEffortPurposeTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>
       <prim-key field="workEffortPurposeTypeId"/>
-      <relation type="many" rel-entity-name="WorkEffort">
-        <key-map field-name="workEffortPurposeTypeId"/>
-      </relation>
     </entity>
     <entity entity-name="WorkEffortSkillStandard"
             package-name="org.ofbiz.workeffort.workeffort"
@@ -1227,15 +1200,6 @@
       <prim-key field="workEffortTypeId"/>
       <relation type="one" fk-name="WK_EFFRT_TYPE_PAR" title="Parent" rel-entity-name="WorkEffortType">
         <key-map field-name="parentTypeId" rel-field-name="workEffortTypeId"/>
-      </relation>
-      <relation type="many" title="Child" rel-entity-name="WorkEffortType">
-        <key-map field-name="workEffortTypeId" rel-field-name="parentTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="WorkEffortTypeAttr">
-        <key-map field-name="workEffortTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="WorkEffort">
-        <key-map field-name="workEffortTypeId"/>
       </relation>
     </entity>
     <entity entity-name="WorkEffortTypeAttr"

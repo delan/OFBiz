@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  */
 -->
 
@@ -63,21 +63,6 @@
       <prim-key field="marketingCampaignId"/>
       <relation type="one" fk-name="MKTGCPN_PRNT" title="Parent" rel-entity-name="MarketingCampaign">
         <key-map field-name="parentCampaignId" rel-field-name="marketingCampaignId"/>
-      </relation>
-      <relation type="many" title="Child" rel-entity-name="MarketingCampaign">
-        <key-map field-name="marketingCampaignId" rel-field-name="parentCampaignId"/>
-      </relation>
-      <relation type="many" rel-entity-name="MarketingCampaignNote">
-        <key-map field-name="marketingCampaignId"/>
-      </relation>
-      <relation type="many" rel-entity-name="MarketingCampaignPrice">
-        <key-map field-name="marketingCampaignId"/>
-      </relation>
-      <relation type="many" rel-entity-name="MarketingCampaignPromo">
-        <key-map field-name="marketingCampaignId"/>
-      </relation>
-      <relation type="many" rel-entity-name="TrackingCode">
-        <key-map field-name="marketingCampaignId"/>
       </relation>
     </entity>
     <entity entity-name="MarketingCampaignNote"

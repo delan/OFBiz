@@ -1,7 +1,7 @@
 /*
- * $Id: ModelReader.java,v 1.7 2004/06/18 14:46:23 jonesde Exp $
+ * $Id: ModelReader.java,v 1.8 2004/06/20 04:03:23 jonesde Exp $
  *
- *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -55,7 +55,7 @@ import org.w3c.dom.Node;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.7 $
+ * @version    $Revision: 1.8 $
  * @since      2.0
  */
 public class ModelReader {
@@ -285,7 +285,7 @@ public class ModelReader {
                             Iterator relationsIter = curModelEntity.getRelationsIterator();
                             while (relationsIter.hasNext()) {
                                 ModelRelation modelRelation = (ModelRelation) relationsIter.next();
-                                if ("one".equals(modelRelation.getType())) {
+                                if ("one".equals(modelRelation.getType()) || "one-nofk".equals(modelRelation.getType())) {
                                     ModelEntity relatedEnt = this.getModelEntity(modelRelation.getRelEntityName());
                                     if (relatedEnt != null) {
                                         // don't do relationship to the same entity, unless title is "Parent", then do a "Child" automatically
@@ -294,44 +294,52 @@ public class ModelReader {
                                             targetTitle = "Child";
                                         }
                                         
-                                        if (relatedEnt.getRelation(targetTitle + curModelEntity.getEntityName()) == null) {
-                                            ModelRelation newRel = new ModelRelation();
+                                        // create the new relationship even if one exists so we can show what we are looking for in the info message
+                                        ModelRelation newRel = new ModelRelation();
+                                        newRel.setMainEntity(relatedEnt);
+                                        newRel.setRelEntityName(curModelEntity.getEntityName());
+                                        newRel.setTitle(targetTitle);
+                                        newRel.setAutoRelation(true);
+                                        Set curEntityKeyFields = new HashSet();
+                                        for (int kmn = 0; kmn < modelRelation.getKeyMapsSize(); kmn++) {
+                                            ModelKeyMap curkm = modelRelation.getKeyMap(kmn);
+                                            ModelKeyMap newkm = new ModelKeyMap();
+                                            newRel.addKeyMap(newkm);
+                                            newkm.setFieldName(curkm.getRelFieldName());
+                                            newkm.setRelFieldName(curkm.getFieldName());
+                                            curEntityKeyFields.add(curkm.getFieldName());
+                                        }
+                                        // decide whether it should be one or many by seeing if the key map represents the complete pk of the relEntity
+                                        if (curModelEntity.containsAllPkFieldNames(curEntityKeyFields)) {
+                                            // always use one-nofk, we don't want auto-fks getting in
+                                            newRel.setType("one-nofk");
+                                        } else {
+                                            newRel.setType("many");
+                                        }
+                                        
+                                        ModelRelation existingRelation = relatedEnt.getRelation(targetTitle + curModelEntity.getEntityName());
+                                        if (existingRelation == null) {
+                                            numAutoRelations++;
                                             if (curModelEntity.getEntityName().equals(relatedEnt.getEntityName())) {
                                                 newSameEntityRelations.add(newRel);
                                             } else {
                                                 relatedEnt.addRelation(newRel);
                                             }
-                                            newRel.setMainEntity(relatedEnt);
-                                            newRel.setRelEntityName(curModelEntity.getEntityName());
-                                            newRel.setTitle(targetTitle);
-                                            newRel.setAutoRelation(true);
-
-                                            Set curEntityKeyFields = new HashSet();
-                                            for (int kmn = 0; kmn < modelRelation.getKeyMapsSize(); kmn++) {
-                                                ModelKeyMap curkm = modelRelation.getKeyMap(kmn);
-                                                ModelKeyMap newkm = new ModelKeyMap();
-                                                newRel.addKeyMap(newkm);
-                                                newkm.setFieldName(curkm.getRelFieldName());
-                                                newkm.setRelFieldName(curkm.getFieldName());
-                                                
-                                                curEntityKeyFields.add(curkm.getFieldName());
-                                            }
-
-                                            // decide whether it should be one or many by seeing if the key map represents the complete pk of the relEntity
-                                            if (curModelEntity.containsAllPkFieldNames(curEntityKeyFields)) {
-                                                // always use one-nofk, we don't want auto-fks getting in
-                                                newRel.setType("one-nofk");
-                                            } else {
-                                                newRel.setType("many");
-                                            }
-                                            
-                                            numAutoRelations++;
                                         } else {
-                                            // don't warn if the target title+entity = current title+entity
-                                            if (!(targetTitle + curModelEntity.getEntityName()).equals(modelRelation.getTitle() + modelRelation.getRelEntityName())) {
-                                                //String errorMsg = "Relation already exists to entity [] with title [" + targetTitle + "],from entity []";
-                                                String message = "Entity [" + relatedEnt.getEntityName() + "] already has relationship to entity [" + curModelEntity.getEntityName() + "] title [" + targetTitle + "]";
-                                                orderedMessages.add(message);
+                                            if (newRel.equals(existingRelation)) {
+                                                // don't warn if the target title+entity = current title+entity
+                                                if (!(targetTitle + curModelEntity.getEntityName()).equals(modelRelation.getTitle() + modelRelation.getRelEntityName())) {
+                                                    //String errorMsg = "Relation already exists to entity [] with title [" + targetTitle + "],from entity []";
+                                                    String message = "Entity [" + relatedEnt.getPackageName() + ":" + relatedEnt.getEntityName() + "] already has identical relationship to entity [" + 
+                                                            curModelEntity.getEntityName() + "] title [" + targetTitle + "]; would auto-create: type [" + 
+                                                            newRel.getType() + "] and fields [" + newRel.keyMapString(",", "") + "]";
+                                                    orderedMessages.add(message);
+                                                }
+                                            } else {
+                                                String message = "Existing relationship with the same name, but different specs found from what would be auto-created for Entity [" + relatedEnt.getEntityName() + "] ant relationship to entity [" + 
+                                                        curModelEntity.getEntityName() + "] title [" + targetTitle + "]; would auto-create: type [" + 
+                                                        newRel.getType() + "] and fields [" + newRel.keyMapString(",", "") + "]";
+                                                //Debug.logInfo(message, module);
                                             }
                                         }
                                     } else {

@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.22 $
+ * @version    $Revision: 1.23 $
  */
 -->
 
@@ -84,9 +84,6 @@
       <relation type="many" rel-entity-name="OrderAdjustmentTypeAttr">
         <key-map field-name="orderAdjustmentTypeId"/>
       </relation>
-      <relation type="many" rel-entity-name="OrderAdjustmentAttribute">
-        <key-map field-name="orderAdjustmentId"/>
-      </relation>
       <relation type="one" fk-name="ORDER_ADJ_OHEAD" rel-entity-name="OrderHeader">
         <key-map field-name="orderId"/>
       </relation>
@@ -132,15 +129,6 @@
       <prim-key field="orderAdjustmentTypeId"/>
       <relation type="one" fk-name="ORDER_ADJ_TYPPAR" title="Parent" rel-entity-name="OrderAdjustmentType">
         <key-map field-name="parentTypeId" rel-field-name="orderAdjustmentTypeId"/>
-      </relation>
-      <relation type="many" title="Child" rel-entity-name="OrderAdjustmentType">
-        <key-map field-name="orderAdjustmentTypeId" rel-field-name="parentTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="OrderAdjustmentTypeAttr">
-        <key-map field-name="orderAdjustmentTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="OrderAdjustment">
-        <key-map field-name="orderAdjustmentTypeId"/>
       </relation>
     </entity>
     <entity entity-name="OrderAdjustmentTypeAttr"
@@ -192,9 +180,6 @@
       <field name="orderBlacklistTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>
       <prim-key field="orderBlacklistTypeId"/>
-      <relation type="many" rel-entity-name="OrderBlacklist">
-        <key-map field-name="orderBlacklistTypeId"/>
-      </relation>
     </entity>
     <entity entity-name="OrderContactMech"
             package-name="org.ofbiz.order.order"
@@ -279,14 +264,8 @@
       <relation type="many" rel-entity-name="OrderTypeAttr">
         <key-map field-name="orderTypeId"/>
       </relation>
-      <relation type="many" rel-entity-name="OrderItemInventoryRes">
-        <key-map field-name="orderId"/>
-      </relation>
       <relation type="one" fk-name="ORDER_HDR_BACCT" rel-entity-name="BillingAccount">
         <key-map field-name="billingAccountId"/>
-      </relation>
-      <relation type="many" rel-entity-name="OrderHeaderNoteView">
-        <key-map field-name="orderId"/>
       </relation>
       <relation type="one-nofk" rel-entity-name="ProductStore">
         <key-map field-name="productStoreId"/>
@@ -300,10 +279,7 @@
       <relation type="one" fk-name="ORDER_HDR_SYST" title="Sync" rel-entity-name="StatusItem">
         <key-map field-name="syncStatusId" rel-field-name="statusId"/>
       </relation>
-      <relation type="many" rel-entity-name="ShipmentReceipt">
-        <key-map field-name="orderId"/>
-      </relation>
-      <relation type="many" rel-entity-name="ItemIssuance">
+      <relation type="many" rel-entity-name="OrderHeaderNoteView">
         <key-map field-name="orderId"/>
       </relation>
     </entity>
@@ -661,42 +637,14 @@
       <relation type="many" rel-entity-name="OrderItemTypeAttr">
         <key-map field-name="orderItemTypeId"/>
       </relation>
-      <relation type="many" rel-entity-name="OrderAdjustment">
-        <key-map field-name="orderId"/>
-        <key-map field-name="orderItemSeqId"/>
-      </relation>
-      <relation type="many" title="Sales" rel-entity-name="OrderItemAssociation">
-        <key-map field-name="orderId" rel-field-name="salesOrderId"/>
-        <key-map field-name="orderItemSeqId" rel-field-name="soItemSeqId"/>
-      </relation>
-      <relation type="many" title="Purchase" rel-entity-name="OrderItemAssociation">
-        <key-map field-name="orderId" rel-field-name="purchaseOrderId"/>
-        <key-map field-name="orderItemSeqId" rel-field-name="poItemSeqId"/>
-      </relation>
-      <relation type="many" rel-entity-name="OrderShipment">
-        <key-map field-name="orderId"/>
-        <key-map field-name="orderItemSeqId"/>
-      </relation>
-      <relation type="many" rel-entity-name="OrderStatus">
-        <key-map field-name="orderId"/>
-        <key-map field-name="orderItemSeqId"/>
-      </relation>
-      <relation type="many" rel-entity-name="OrderTerm">
-        <key-map field-name="orderId"/>
-        <key-map field-name="orderItemSeqId"/>
-      </relation>
-      <relation type="many" rel-entity-name="ProductFacilityLocation">
-        <key-map field-name="productId"/>
-      </relation>
       <relation type="one" fk-name="ORDER_ITEM_PRODUCT" rel-entity-name="Product">
         <key-map field-name="productId"/>
       </relation>
-      <relation type="one-nofk" rel-entity-name="OrderShipmentPreference">
-        <key-map field-name="orderId"/>
-        <key-map field-name="orderItemSeqId"/>
-      </relation>
       <relation type="one" fk-name="ORDER_ITEM_STTS" rel-entity-name="StatusItem">
         <key-map field-name="statusId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ProductFacilityLocation">
+        <key-map field-name="productId"/>
       </relation>
       <relation type="many" rel-entity-name="StatusValidChange">
         <key-map field-name="statusId"/>
@@ -834,11 +782,6 @@
         <key-map field-name="orderItemSeqId"/>
       </relation>
       <relation type="one" fk-name="ORDER_ITIR_INVITM" rel-entity-name="InventoryItem">
-        <key-map field-name="inventoryItemId"/>
-      </relation>
-      <relation type="many" rel-entity-name="ItemIssuance">
-        <key-map field-name="orderId"/>
-        <key-map field-name="orderItemSeqId"/>
         <key-map field-name="inventoryItemId"/>
       </relation>
     </entity>
@@ -1627,20 +1570,8 @@
       <relation type="many" rel-entity-name="QuoteTypeAttr">
         <key-map field-name="quoteTypeId"/>
       </relation>
-      <relation type="many" rel-entity-name="QuoteAttribute">
-        <key-map field-name="quoteId"/>
-      </relation>
       <relation type="one" fk-name="QUOTE_PRTY" rel-entity-name="Party">
         <key-map field-name="partyId"/>
-      </relation>
-      <relation type="many" rel-entity-name="QuoteItem">
-        <key-map field-name="quoteId"/>
-      </relation>
-      <relation type="many" rel-entity-name="QuoteTerm">
-        <key-map field-name="quoteId"/>
-      </relation>
-      <relation type="many" rel-entity-name="QuoteRole">
-        <key-map field-name="quoteId"/>
       </relation>
     </entity>
     <entity entity-name="QuoteAttribute"
@@ -1705,10 +1636,6 @@
         <key-map field-name="custRequestId"/>
         <key-map field-name="custRequestItemSeqId"/>
       </relation>
-      <relation type="many" rel-entity-name="QuoteTerm">
-        <key-map field-name="quoteId"/>
-        <key-map field-name="quoteItemSeqId"/>
-      </relation>
     </entity>
     <entity entity-name="QuoteRole"
             package-name="org.ofbiz.order.quote"
@@ -1754,11 +1681,6 @@
       <relation type="one" fk-name="QUOTE_TERM_TTYPE" rel-entity-name="TermType">
         <key-map field-name="termTypeId"/>
       </relation>
-      <relation type="many" rel-entity-name="QuoteTermAttribute">
-        <key-map field-name="termTypeId"/>
-        <key-map field-name="quoteId"/>
-        <key-map field-name="quoteItemSeqId"/>
-      </relation>
     </entity>
     <entity entity-name="QuoteTermAttribute"
             package-name="org.ofbiz.order.quote"
@@ -1788,15 +1710,6 @@
       <prim-key field="quoteTypeId"/>
       <relation type="one" fk-name="QUOTE_TYPE_PAR" title="Parent" rel-entity-name="QuoteType">
         <key-map field-name="parentTypeId" rel-field-name="quoteTypeId"/>
-      </relation>
-      <relation type="many" title="Child" rel-entity-name="QuoteType">
-        <key-map field-name="quoteTypeId" rel-field-name="parentTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="QuoteTypeAttr">
-        <key-map field-name="quoteTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="Quote">
-        <key-map field-name="quoteTypeId"/>
       </relation>
     </entity>
     <entity entity-name="QuoteTypeAttr"
@@ -1849,9 +1762,6 @@
       </relation>
       <relation type="many" rel-entity-name="CustRequestTypeAttr">
         <key-map field-name="custRequestTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="RequirementCustRequest">
-        <key-map field-name="custRequestId"/>
       </relation>
     </entity>
     <view-entity entity-name="CustRequestAndRole"
@@ -2135,9 +2045,6 @@
       <relation type="many" rel-entity-name="RequirementTypeAttr">
         <key-map field-name="requirementTypeId"/>
       </relation>
-      <relation type="many" rel-entity-name="RequirementAttribute">
-        <key-map field-name="requirementId"/>
-      </relation>
       <relation type="one" fk-name="REQ_FACILITY" rel-entity-name="Facility">
         <key-map field-name="facilityId"/>
       </relation>
@@ -2149,27 +2056,6 @@
       </relation>
       <relation type="one" fk-name="REQ_PRODUCT" rel-entity-name="Product">
         <key-map field-name="productId"/>
-      </relation>
-      <relation type="many" rel-entity-name="OrderRequirementCommitment">
-        <key-map field-name="requirementId"/>
-      </relation>
-      <relation type="many" rel-entity-name="DesiredFeature">
-        <key-map field-name="requirementId"/>
-      </relation>
-      <relation type="many" rel-entity-name="RequirementBudgetAllocation">
-        <key-map field-name="requirementId"/>
-      </relation>
-      <relation type="many" rel-entity-name="RequirementStatus">
-        <key-map field-name="requirementId"/>
-      </relation>
-      <relation type="many" rel-entity-name="RequirementRole">
-        <key-map field-name="requirementId"/>
-      </relation>
-      <relation type="many" rel-entity-name="RequirementCustRequest">
-        <key-map field-name="requirementId"/>
-      </relation>
-      <relation type="many" rel-entity-name="WorkRequirementFulfillment">
-        <key-map field-name="requirementId"/>
       </relation>
     </entity>
     <view-entity entity-name="RequirementAndRole"
@@ -2352,15 +2238,6 @@
       <prim-key field="requirementTypeId"/>
       <relation type="one" fk-name="REQ_TYPE_PARENT" title="Parent" rel-entity-name="RequirementType">
         <key-map field-name="parentTypeId" rel-field-name="requirementTypeId"/>
-      </relation>
-      <relation type="many" title="Child" rel-entity-name="RequirementType">
-        <key-map field-name="requirementTypeId" rel-field-name="parentTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="RequirementTypeAttr">
-        <key-map field-name="requirementTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="Requirement">
-        <key-map field-name="requirementTypeId"/>
       </relation>
     </entity>
     <entity entity-name="RequirementTypeAttr"

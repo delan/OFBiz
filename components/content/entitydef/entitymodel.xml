@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.41 $
+ * @version    $Revision: 1.42 $
  */
 -->
 
@@ -784,12 +784,6 @@
       <field name="metaDataPredicateId" type="id-ne"></field>
       <field name="description" type="description"></field>
       <prim-key field="metaDataPredicateId"/>
-      <relation type="many" rel-entity-name="ContentMetaData">
-        <key-map field-name="metaDataPredicateId"/>
-      </relation>
-      <relation type="many" rel-entity-name="DataResourceMetaData">
-        <key-map field-name="metaDataPredicateId"/>
-      </relation>
     </entity>
     <entity entity-name="MimeType"
             package-name="org.ofbiz.content.data"
@@ -797,15 +791,6 @@
       <field name="mimeTypeId" type="id-long-ne"></field>
       <field name="description" type="description"></field>
       <prim-key field="mimeTypeId"/>
-      <relation type="many" rel-entity-name="Content">
-        <key-map field-name="mimeTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="DataResource">
-        <key-map field-name="mimeTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="FileExtension">
-        <key-map field-name="mimeTypeId"/>
-      </relation>
     </entity>
     <entity entity-name="OtherDataResource"
             package-name="org.ofbiz.content.data"
@@ -839,9 +824,6 @@
       <relation type="many" rel-entity-name="DocumentTypeAttr">
         <key-map field-name="documentTypeId"/>
       </relation>
-      <relation type="many" rel-entity-name="DocumentAttribute">
-        <key-map field-name="documentId"/>
-      </relation>
       <relation type="many" rel-entity-name="ShippingDocument">
         <key-map field-name="documentId"/>
       </relation>
@@ -872,15 +854,6 @@
       <relation type="one" fk-name="DOC_TYPE_PARENT" title="Parent" rel-entity-name="DocumentType">
         <key-map field-name="parentTypeId" rel-field-name="documentTypeId"/>
       </relation>
-      <relation type="many" title="Child" rel-entity-name="DocumentType">
-        <key-map field-name="documentTypeId" rel-field-name="parentTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="DocumentTypeAttr">
-        <key-map field-name="documentTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="Document">
-        <key-map field-name="documentTypeId"/>
-      </relation>
     </entity>
     <entity entity-name="DocumentTypeAttr"
             package-name="org.ofbiz.content.document"
@@ -910,9 +883,6 @@
       <field name="webPreferenceTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>
       <prim-key field="webPreferenceTypeId"/>
-      <relation type="many" rel-entity-name="WebUserPreference">
-        <key-map field-name="webPreferenceTypeId"/>
-      </relation>
     </entity>
     <entity entity-name="WebUserPreference"
             package-name="org.ofbiz.content.preference"
@@ -996,17 +966,11 @@
       <relation type="one" fk-name="SUBSC_PROD_CAT" rel-entity-name="ProductCategory">
         <key-map field-name="productCategoryId"/>
       </relation>
-      <relation type="many" rel-entity-name="SubscriptionFulfillmentPiece">
-        <key-map field-name="subscriptionId"/>
-      </relation>
       <relation type="one" fk-name="SUBSC_TO_TYPE" rel-entity-name="SubscriptionType">
         <key-map field-name="subscriptionTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="SubscriptionTypeAttr">
         <key-map field-name="subscriptionTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="SubscriptionAttribute">
-        <key-map field-name="subscriptionId"/>
       </relation>
     </entity>
     <entity entity-name="SubscriptionActivity"
@@ -1016,9 +980,6 @@
       <field name="comments" type="comment"></field>
       <field name="dateSent" type="date-time"></field>
       <prim-key field="subscriptionActivityId"/>
-      <relation type="many" rel-entity-name="SubscriptionFulfillmentPiece">
-        <key-map field-name="subscriptionActivityId"/>
-      </relation>
     </entity>
     <entity entity-name="SubscriptionAttribute"
             package-name="org.ofbiz.content.subscription"
@@ -1060,15 +1021,6 @@
       <relation type="one" fk-name="SUBSC_TYPE_PARENT" title="Parent" rel-entity-name="SubscriptionType">
         <key-map field-name="parentTypeId" rel-field-name="subscriptionTypeId"/>
       </relation>
-      <relation type="many" title="Child" rel-entity-name="SubscriptionType">
-        <key-map field-name="subscriptionTypeId" rel-field-name="parentTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="SubscriptionTypeAttr">
-        <key-map field-name="subscriptionTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="Subscription">
-        <key-map field-name="subscriptionTypeId"/>
-      </relation>
     </entity>
     <entity entity-name="SubscriptionTypeAttr"
             package-name="org.ofbiz.content.subscription"
@@ -1104,9 +1056,6 @@
       <field name="allowMultiple" type="indicator"/>
       <field name="allowUpdate" type="indicator"/>
       <prim-key field="surveyId"/>
-      <relation type="many" rel-entity-name="SurveyTrigger">
-        <key-map field-name="surveyId"/>
-      </relation>
     </entity>
     <entity entity-name="SurveyApplType"
             package-name="org.ofbiz.content.survey"
@@ -1114,9 +1063,6 @@
       <field name="surveyApplTypeId" type="id-ne"/>
       <field name="description" type="description"/>
       <prim-key field="surveyApplTypeId"/>
-      <relation type="many" rel-entity-name="SurveyTrigger">
-        <key-map field-name="surveyApplTypeId"/>
-      </relation>
     </entity>
     <entity entity-name="SurveyQuestion"
             package-name="org.ofbiz.content.survey"
@@ -1133,9 +1079,6 @@
       </relation>
       <relation type="one" fk-name="SRVYQST_SRVYQTCT" rel-entity-name="SurveyQuestionCategory">
         <key-map field-name="surveyQuestionCategoryId"/>
-      </relation>
-      <relation type="many" rel-entity-name="SurveyQuestionOption">
-        <key-map field-name="surveyQuestionId"/>
       </relation>
     </entity>
     <view-entity entity-name="SurveyQuestionAndAppl"
@@ -1199,9 +1142,6 @@
       <relation type="one" fk-name="SRVYQSTCT_PAR" title="Parent" rel-entity-name="SurveyQuestionCategory">
         <key-map field-name="parentCategoryId" rel-field-name="surveyQuestionCategoryId"/>
       </relation>
-      <relation type="many" rel-entity-name="SurveyQuestion">
-        <key-map field-name="surveyQuestionCategoryId"/>
-      </relation>
     </entity>
     <entity entity-name="SurveyQuestionOption"
             package-name="org.ofbiz.content.survey"
@@ -1248,9 +1188,6 @@
       </relation>
       <relation type="one" fk-name="SRVYRSP_SRVY" rel-entity-name="Survey">
         <key-map field-name="surveyId"/>
-      </relation>
-      <relation type="many" rel-entity-name="SurveyResponseAnswer">
-        <key-map field-name="surveyResponseId"/>
       </relation>
     </entity>
     <view-entity entity-name="SurveyResponseAndAnswer"
@@ -1343,9 +1280,6 @@
       <field name="browserName" type="name"></field>
       <field name="browserVersion" type="very-short"></field>
       <prim-key field="browserTypeId"/>
-      <relation type="many" rel-entity-name="UserAgent">
-        <key-map field-name="browserTypeId"/>
-      </relation>
     </entity>
     <entity entity-name="PlatformType"
             package-name="org.ofbiz.content.visit"
@@ -1354,9 +1288,6 @@
       <field name="platformName" type="name"></field>
       <field name="platformVersion" type="very-short"></field>
       <prim-key field="platformTypeId"/>
-      <relation type="many" rel-entity-name="UserAgent">
-        <key-map field-name="platformTypeId"/>
-      </relation>
     </entity>
     <entity entity-name="ProtocolType"
             package-name="org.ofbiz.content.visit"
@@ -1364,9 +1295,6 @@
       <field name="protocolTypeId" type="id-ne"></field>
       <field name="protocolName" type="name"></field>
       <prim-key field="protocolTypeId"/>
-      <relation type="many" rel-entity-name="UserAgent">
-        <key-map field-name="protocolTypeId"/>
-      </relation>
     </entity>
     <entity entity-name="ServerHit"
             package-name="org.ofbiz.content.visit"
@@ -1447,12 +1375,6 @@
       <field name="hitTypeId" type="id"></field>
       <field name="description" type="description"></field>
       <prim-key field="hitTypeId"/>
-      <relation type="many" rel-entity-name="ServerHit">
-        <key-map field-name="hitTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="ServerHitBin">
-        <key-map field-name="hitTypeId"/>
-      </relation>
     </entity>
     <entity entity-name="UserAgent"
             package-name="org.ofbiz.content.visit"
@@ -1479,9 +1401,6 @@
       <relation type="one" fk-name="UAGENT_METHOD" rel-entity-name="UserAgentMethodType">
         <key-map field-name="userAgentMethodTypeId"/>
       </relation>
-      <relation type="many" rel-entity-name="Visit">
-        <key-map field-name="userAgentId"/>
-      </relation>
     </entity>
     <entity entity-name="UserAgentMethodType"
             package-name="org.ofbiz.content.visit"
@@ -1489,9 +1408,6 @@
       <field name="userAgentMethodTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>
       <prim-key field="userAgentMethodTypeId"/>
-      <relation type="many" rel-entity-name="UserAgent">
-        <key-map field-name="userAgentMethodTypeId"/>
-      </relation>
     </entity>
     <entity entity-name="UserAgentType"
             package-name="org.ofbiz.content.visit"
@@ -1499,9 +1415,6 @@
       <field name="userAgentTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>
       <prim-key field="userAgentTypeId"/>
-      <relation type="many" rel-entity-name="UserAgent">
-        <key-map field-name="userAgentTypeId"/>
-      </relation>
     </entity>
     <entity entity-name="Visit"
             package-name="org.ofbiz.content.visit"
@@ -1545,21 +1458,6 @@
         <key-map field-name="partyId"/>
         <key-map field-name="roleTypeId"/>
       </relation>
-      <relation type="many" rel-entity-name="ServerHit">
-        <key-map field-name="visitId"/>
-      </relation>
-      <relation type="many" rel-entity-name="PartyNeed">
-        <key-map field-name="visitId"/>
-      </relation>
-      <relation type="many" rel-entity-name="InventoryItemTempRes">
-        <key-map field-name="visitId"/>
-      </relation>
-      <relation type="many" rel-entity-name="ProductKeywordResult">
-        <key-map field-name="visitId"/>
-      </relation>
-      <relation type="many" rel-entity-name="CartAbandonedLine">
-        <key-map field-name="visitId"/>
-      </relation>
     </entity>
 
   <!-- ========================================================= -->
@@ -1598,12 +1496,6 @@
       <prim-key field="webSiteId"/>
       <relation type="one" fk-name="WEB_SITE_PRDS" rel-entity-name="ProductStore">
         <key-map field-name="productStoreId"/>
-      </relation>
-      <relation type="many" rel-entity-name="WebPage">
-        <key-map field-name="webSiteId"/>
-      </relation>
-      <relation type="many" rel-entity-name="WebSiteRole">
-        <key-map field-name="webSiteId"/>
       </relation>
     </entity>
     <entity entity-name="WebSiteRole"

@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.88 $
+ * @version    $Revision: 1.89 $
  */
 -->
 
@@ -72,15 +72,6 @@
       <field name="contentPathPrefix" type="long-varchar"></field>
       <field name="templatePathPrefix" type="long-varchar"></field>
       <prim-key field="prodCatalogId"/>
-      <relation type="many" rel-entity-name="ProdCatalogCategory">
-        <key-map field-name="prodCatalogId"/>
-      </relation>
-      <relation type="many" rel-entity-name="ProdCatalogRole">
-        <key-map field-name="prodCatalogId"/>
-      </relation>
-      <relation type="many" rel-entity-name="ProductStoreCatalog">
-        <key-map field-name="prodCatalogId"/>
-      </relation>
     </entity>
     <entity entity-name="ProdCatalogCategory"
             package-name="org.ofbiz.product.catalog"
@@ -111,9 +102,6 @@
       <field name="prodCatalogCategoryTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>
       <prim-key field="prodCatalogCategoryTypeId"/>
-      <relation type="many" rel-entity-name="ProdCatalogCategory">
-        <key-map field-name="prodCatalogCategoryTypeId"/>
-      </relation>
     </entity>
     <entity entity-name="ProdCatalogInvFacility"
             package-name="org.ofbiz.product.catalog"
@@ -196,9 +184,6 @@
       </relation>
       <relation type="many" title="PrimaryChild" rel-entity-name="ProductCategory">
         <key-map field-name="productCategoryId" rel-field-name="primaryParentCategoryId"/>
-      </relation>
-      <relation type="many" rel-entity-name="ProductKeywordResult">
-        <key-map field-name="productCategoryId"/>
       </relation>
     </entity>
     <view-entity entity-name="ProductCategoryAndMember"
@@ -411,15 +396,6 @@
       <relation type="one" fk-name="PROD_CTGRY_TYPEPAR" title="Parent" rel-entity-name="ProductCategoryType">
         <key-map field-name="parentTypeId" rel-field-name="productCategoryTypeId"/>
       </relation>
-      <relation type="many" title="Child" rel-entity-name="ProductCategoryType">
-        <key-map field-name="productCategoryTypeId" rel-field-name="parentTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="ProductCategoryTypeAttr">
-        <key-map field-name="productCategoryTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="ProductCategory">
-        <key-map field-name="productCategoryTypeId"/>
-      </relation>
     </entity>
     <entity entity-name="ProductCategoryTypeAttr"
             package-name="org.ofbiz.product.category"
@@ -613,12 +589,6 @@
       <relation type="one" fk-name="PROD_FAPPL_TYPPAR" title="Parent" rel-entity-name="ProductFeatureApplType">
         <key-map field-name="parentTypeId" rel-field-name="productFeatureApplTypeId"/>
       </relation>
-      <relation type="many" title="Child" rel-entity-name="ProductFeatureApplType">
-        <key-map field-name="productFeatureApplTypeId" rel-field-name="parentTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="ProductFeatureAppl">
-        <key-map field-name="productFeatureApplTypeId"/>
-      </relation>
     </entity>
     <entity entity-name="ProductFeatureCategory"
             package-name="org.ofbiz.product.feature"
@@ -629,12 +599,6 @@
       <prim-key field="productFeatureCategoryId"/>
       <relation type="one" fk-name="PROD_FEAT_CAT_PAR" title="Parent" rel-entity-name="ProductFeatureCategory">
         <key-map field-name="parentCategoryId" rel-field-name="productFeatureCategoryId"/>
-      </relation>
-      <relation type="many" rel-entity-name="ProductFeature">
-        <key-map field-name="productFeatureCategoryId"/>
-      </relation>
-      <relation type="many" rel-entity-name="ProductFeatureCategoryAppl">
-        <key-map field-name="productFeatureCategoryId"/>
       </relation>
     </entity>
     <entity entity-name="ProductFeatureCategoryAppl"
@@ -691,9 +655,6 @@
       <field name="productFeatureGroupId" type="id-ne"></field>
       <field name="description" type="description"></field>
       <prim-key field="productFeatureGroupId"/>
-      <relation type="many" rel-entity-name="ProductFeatureGroupAppl">
-        <key-map field-name="productFeatureGroupId"/>
-      </relation>
     </entity>
     <view-entity entity-name="ProductFeatureGroupAndAppl"
             package-name="org.ofbiz.product.feature"
@@ -753,12 +714,6 @@
       <relation type="one" fk-name="PROD_FICTN_TYPPAR" title="Parent" rel-entity-name="ProductFeatureIactnType">
         <key-map field-name="parentTypeId" rel-field-name="productFeatureIactnTypeId"/>
       </relation>
-      <relation type="many" title="Child" rel-entity-name="ProductFeatureIactnType">
-        <key-map field-name="productFeatureIactnTypeId" rel-field-name="parentTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="ProductFeatureIactn">
-        <key-map field-name="productFeatureIactnTypeId"/>
-      </relation>
     </entity>
     <entity entity-name="ProductFeatureType"
             package-name="org.ofbiz.product.feature"
@@ -770,12 +725,6 @@
       <prim-key field="productFeatureTypeId"/>
       <relation type="one" fk-name="PROD_FEAT_TYPPAR" title="Parent" rel-entity-name="ProductFeatureType">
         <key-map field-name="parentTypeId" rel-field-name="productFeatureTypeId"/>
-      </relation>
-      <relation type="many" title="Child" rel-entity-name="ProductFeatureType">
-        <key-map field-name="productFeatureTypeId" rel-field-name="parentTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="ProductFeature">
-        <key-map field-name="productFeatureTypeId"/>
       </relation>
     </entity>
 
@@ -1108,11 +1057,6 @@
         <key-map field-name="facilityId"/>
         <key-map field-name="locationSeqId"/>
       </relation>
-      <relation type="many" rel-entity-name="InventoryItem">
-        <key-map field-name="productId"/>
-        <key-map field-name="facilityId"/>
-        <key-map field-name="locationSeqId"/>
-      </relation>
     </entity>
     <view-entity entity-name="ProductFacilityLocationQuantityTest"
             package-name="org.ofbiz.product.inventory"
@@ -1228,13 +1172,6 @@
       <relation type="one" fk-name="PROD_PRICE_LMBUL" title="LastModifiedBy" rel-entity-name="UserLogin">
         <key-map field-name="lastModifiedByUserLogin" rel-field-name="userLoginId"/>
       </relation>
-      <relation type="many" rel-entity-name="ProductPriceChange">
-        <key-map field-name="productId"/>
-        <key-map field-name="productPriceTypeId"/>
-        <key-map field-name="currencyUomId"/>
-        <key-map field-name="productStoreGroupId"/>
-        <key-map field-name="fromDate"/>
-      </relation>
     </entity>
     <entity entity-name="ProductPriceAction"
             package-name="org.ofbiz.product.price"
@@ -1258,9 +1195,6 @@
       <field name="productPriceActionTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>
       <prim-key field="productPriceActionTypeId"/>
-      <relation type="many" rel-entity-name="ProductPriceAction">
-        <key-map field-name="productPriceActionTypeId"/>
-      </relation>
     </entity>
     <entity entity-name="ProductPriceAutoNotice"
             package-name="org.ofbiz.product.price"
@@ -1334,9 +1268,6 @@
       <field name="productPriceTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>
       <prim-key field="productPriceTypeId"/>
-      <relation type="many" rel-entity-name="ProductPrice">
-        <key-map field-name="productPriceTypeId"/>
-      </relation>
     </entity>
     <entity entity-name="QuantityBreak"
             package-name="org.ofbiz.product.price"
@@ -1397,12 +1328,6 @@
       <prim-key field="goodIdentificationTypeId"/>
       <relation type="one" fk-name="GOOD_ID_TYPE_PAR" title="Parent" rel-entity-name="GoodIdentificationType">
         <key-map field-name="parentTypeId" rel-field-name="goodIdentificationTypeId"/>
-      </relation>
-      <relation type="many" title="Child" rel-entity-name="GoodIdentificationType">
-        <key-map field-name="goodIdentificationTypeId" rel-field-name="parentTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="GoodIdentification">
-        <key-map field-name="goodIdentificationTypeId"/>
       </relation>
     </entity>
     <entity entity-name="Product"
@@ -1552,12 +1477,6 @@
       <relation type="one" fk-name="PROD_ASSOC_TYPEPAR" title="Parent" rel-entity-name="ProductAssocType">
         <key-map field-name="parentTypeId" rel-field-name="productAssocTypeId"/>
       </relation>
-      <relation type="many" title="Child" rel-entity-name="ProductAssocType">
-        <key-map field-name="productAssocTypeId" rel-field-name="parentTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="ProductAssoc">
-        <key-map field-name="productAssocTypeId"/>
-      </relation>
     </entity>
     <entity entity-name="ProductAttribute"
             package-name="org.ofbiz.product.product"
@@ -1643,12 +1562,6 @@
       <relation type="one" fk-name="PRDCT_TYP_PARENT" title="Parent" rel-entity-name="ProductContentType">
         <key-map field-name="parentTypeId" rel-field-name="productContentTypeId"/>
       </relation>
-      <relation type="many" title="Child" rel-entity-name="ProductContentType">
-        <key-map field-name="productContentTypeId" rel-field-name="parentTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="ProductContent">
-        <key-map field-name="productContentTypeId"/>
-      </relation>
     </entity>
     <entity entity-name="ProductGlAccount"
             package-name="org.ofbiz.product.product"
@@ -1674,9 +1587,6 @@
       <field name="productGlAccountTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>
       <prim-key field="productGlAccountTypeId"/>
-      <relation type="many" rel-entity-name="ProductGlAccount">
-        <key-map field-name="productGlAccountTypeId"/>
-      </relation>
     </entity>
     <entity entity-name="ProductKeyword"
             package-name="org.ofbiz.product.product"
@@ -1785,15 +1695,6 @@
       <prim-key field="productTypeId"/>
       <relation type="one" fk-name="PROD_TYPE_PARENT" title="Parent" rel-entity-name="ProductType">
         <key-map field-name="parentTypeId" rel-field-name="productTypeId"/>
-      </relation>
-      <relation type="many" title="Child" rel-entity-name="ProductType">
-        <key-map field-name="productTypeId" rel-field-name="parentTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="ProductTypeAttr">
-        <key-map field-name="productTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="Product">
-        <key-map field-name="productTypeId"/>
       </relation>
     </entity>
     <entity entity-name="ProductTypeAttr"
@@ -1920,18 +1821,6 @@
       <relation type="one" fk-name="PROD_PRMO_LMCUL" title="LastModifiedBy" rel-entity-name="UserLogin">
         <key-map field-name="lastModifiedByUserLogin" rel-field-name="userLoginId"/>
       </relation>
-      <relation type="many" rel-entity-name="ProductPromoRule">
-        <key-map field-name="productPromoId"/>
-      </relation>
-      <relation type="many" rel-entity-name="ProductStorePromoAppl">
-        <key-map field-name="productPromoId"/>
-      </relation>
-      <relation type="many" rel-entity-name="OrderAdjustment">
-        <key-map field-name="productPromoId"/>
-      </relation>
-      <relation type="many" rel-entity-name="MarketingCampaignPromo">
-        <key-map field-name="productPromoId"/>
-      </relation>
     </entity>
     <entity entity-name="ProductPromoAction"
             package-name="org.ofbiz.product.promo"
@@ -2021,12 +1910,6 @@
       </relation>
       <relation type="one" fk-name="PROD_PRCOD_LMCUL" title="LastModifiedBy" rel-entity-name="UserLogin">
         <key-map field-name="lastModifiedByUserLogin" rel-field-name="userLoginId"/>
-      </relation>
-      <relation type="many" rel-entity-name="ProductPromoCodeEmail">
-        <key-map field-name="productPromoCodeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="ProductPromoCodeParty">
-        <key-map field-name="productPromoCodeId"/>
       </relation>
     </entity>
     <entity entity-name="ProductPromoCodeEmail"
@@ -2142,14 +2025,6 @@
       <prim-key field="productPromoRuleId"/>
       <relation type="one" fk-name="PROD_PRRLE_PROMO" rel-entity-name="ProductPromo">
         <key-map field-name="productPromoId"/>
-      </relation>
-      <relation type="many" rel-entity-name="ProductPromoAction">
-        <key-map field-name="productPromoId"/>
-        <key-map field-name="productPromoRuleId"/>
-      </relation>
-      <relation type="many" rel-entity-name="ProductPromoCond">
-        <key-map field-name="productPromoId"/>
-        <key-map field-name="productPromoRuleId"/>
       </relation>
     </entity>
     <entity entity-name="ProductPromoUse"
@@ -2448,14 +2323,6 @@
       <relation type="one" fk-name="FACILITY_LOC_TENM" title="Type" rel-entity-name="Enumeration">
         <key-map field-name="locationTypeEnumId" rel-field-name="enumId"/>
       </relation>
-      <relation type="many" rel-entity-name="InventoryItem">
-        <key-map field-name="facilityId"/>
-        <key-map field-name="locationSeqId"/>
-      </relation>
-      <relation type="many" rel-entity-name="ProductFacilityLocation">
-        <key-map field-name="facilityId"/>
-        <key-map field-name="locationSeqId"/>
-      </relation>
     </entity>
     <entity entity-name="FacilityRole"
             package-name="org.ofbiz.product.storage"
@@ -2562,27 +2429,6 @@
       <relation type="one" fk-name="PROD_STR_RORDENUM" title="ReserveOrder" rel-entity-name="Enumeration">
         <key-map field-name="reserveOrderEnumId" rel-field-name="enumId"/>
       </relation>
-      <relation type="many" rel-entity-name="ProductStoreGroupMember">
-        <key-map field-name="productStoreId"/>
-      </relation>
-      <relation type="many" rel-entity-name="ProductStoreFacility">
-        <key-map field-name="productStoreId"/>
-      </relation>
-      <relation type="many" rel-entity-name="ProductStorePromoAppl">
-        <key-map field-name="productStoreId"/>
-      </relation>
-      <relation type="many" rel-entity-name="WebSite">
-        <key-map field-name="productStoreId"/>
-      </relation>
-      <relation type="many" rel-entity-name="ProductStoreRole">
-        <key-map field-name="productStoreId"/>
-      </relation>
-      <relation type="many" rel-entity-name="ProductStoreCatalog">
-        <key-map field-name="productStoreId"/>
-      </relation>
-      <relation type="many" rel-entity-name="InventoryItemTempRes">
-        <key-map field-name="productStoreId"/>
-      </relation>
     </entity>
     <entity entity-name="ProductStoreCatalog"
             package-name="org.ofbiz.product.store"
@@ -2681,15 +2527,6 @@
       <relation type="one" fk-name="PRDSTR_GP_PGRP" title="PrimaryParent" rel-entity-name="ProductStoreGroup">
         <key-map field-name="primaryParentGroupId" rel-field-name="productStoreGroupId"/>
       </relation>
-      <relation type="many" title="Current" rel-entity-name="ProductStoreGroupRollup">
-        <key-map field-name="productStoreGroupId"/>
-      </relation>
-      <relation type="many" title="Parent" rel-entity-name="ProductStoreGroupRollup">
-        <key-map field-name="productStoreGroupId" rel-field-name="parentGroupId"/>
-      </relation>
-      <relation type="many" rel-entity-name="ProductStoreGroupMember">
-        <key-map field-name="productStoreGroupId"/>
-      </relation>
     </entity>
     <entity entity-name="ProductStoreGroupMember"
             package-name="org.ofbiz.product.store"
@@ -2761,9 +2598,6 @@
       <field name="productStoreGroupTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>
       <prim-key field="productStoreGroupTypeId"/>
-      <relation type="many" rel-entity-name="ProductStoreGroup">
-        <key-map field-name="productStoreGroupTypeId"/>
-      </relation>
     </entity>
     <entity entity-name="ProductStoreKeywordOvrd"
             package-name="org.ofbiz.product.store"
@@ -3032,9 +2866,6 @@
       <field name="supplierPrefOrderId" type="id-ne"></field>
       <field name="description" type="description"></field>
       <prim-key field="supplierPrefOrderId"/>
-      <relation type="many" rel-entity-name="SupplierProduct">
-        <key-map field-name="supplierPrefOrderId"/>
-      </relation>
     </entity>
     <entity entity-name="SupplierProduct"
             package-name="org.ofbiz.product.supplier"
@@ -3072,9 +2903,6 @@
       <field name="supplierRatingTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>
       <prim-key field="supplierRatingTypeId"/>
-      <relation type="many" rel-entity-name="SupplierProduct">
-        <key-map field-name="supplierRatingTypeId"/>
-      </relation>
     </entity>
 </entitymodel>
 
