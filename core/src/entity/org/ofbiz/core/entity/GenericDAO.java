@@ -115,6 +115,8 @@ public class GenericDAO {
             SqlJdbcUtil.setValues(sqlP, fieldsToSave, entity, modelFieldTypeReader);
             sqlP.executeUpdate();
             entity.modified = false;
+        } catch (GenericEntityException e) {
+            throw new GenericEntityException("while inserting: " + entity.toString(), e);
         } finally {
             sqlP.close();
         }
@@ -204,6 +206,8 @@ public class GenericDAO {
             SqlJdbcUtil.setPkValues(sqlP, modelEntity, entity, modelFieldTypeReader);
             sqlP.executeUpdate();
             entity.modified = false;
+        } catch (GenericEntityException e) {
+            throw new GenericEntityException("while updating: " + entity.toString(), e);
         } finally {
             sqlP.close();
         }
