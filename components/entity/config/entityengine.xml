@@ -173,6 +173,23 @@ access. For a detailed description see the core/docs/entityconfig.html file.
         <!-- <tyrex-dataSource dataSource-name="localoracle" isolation-level="ReadCommitted"/> -->
     </datasource>
 
+    <datasource name="localsybase"
+            helper-class="org.ofbiz.entity.datasource.GenericHelperDAO"
+            field-type-name="sybase"
+            schema-name="dbo"
+            check-on-start="true"
+            add-missing-on-start="true"
+            use-fk-initially-deferred="false"
+            join-style="ansi">
+        <read-data reader-name="main"/>
+        <inline-jdbc
+                jdbc-driver="com.sybase.jdbc2.jdbc.SybDriver"
+                jdbc-uri="jdbc:sybase:Tds:10.1.1.10:11222/ofbiz?DYNAMIC_PREPARE=true"
+                jdbc-username="ofbiz"
+                jdbc-password="ofbiz1"
+                isolation-level="ReadCommitted"/>
+    </datasource>
+
     <datasource name="localsapdb"
             helper-class="org.ofbiz.entity.datasource.GenericHelperDAO"
             field-type-name="sapdb"
