@@ -23,7 +23,7 @@
  * @version 1.0
 --%>
 
-<%@ page import="java.util.*, java.net.*" %>
+<%@ page import="java.util.*, java.net.*, java.io.*" %>
 <%@ page import="org.w3c.dom.*" %>
 <%@ page import="org.ofbiz.security.*, org.ofbiz.entity.*, org.ofbiz.base.util.*, org.ofbiz.content.webapp.pseudotag.* " %>
 <%@ page import="java.io.InputStream, java.io.StringWriter, java.io.FileReader, freemarker.template.*, freemarker.ext.dom.NodeModel, java.io.IOException, org.xml.sax.InputSource, freemarker.ext.beans.BeansWrapper " %>
@@ -36,6 +36,7 @@
 <jsp:useBean id="delegator" type="org.ofbiz.entity.GenericDelegator" scope="request" />
 <%
   String filename = request.getParameter("filename");
+        Debug.logInfo("filename:" + filename, "JSP");
   String fmfilename = request.getParameter("fmfilename");
   boolean isUrl = request.getParameter("IS_URL") != null;
 
@@ -93,6 +94,7 @@
       } catch(java.net.MalformedURLException e) {
           %><div>ERROR: <%=e.toString()%></div><%
       }
+        Debug.logInfo("url:" + url, "JSP");
 
       if (UtilValidate.isNotEmpty(fmfilename)) {
         FileReader templateReader = null;
@@ -158,8 +160,45 @@
 
   <%} else if (fulltext != null && fulltext.length() > 0) {%>
   <%
-    EntitySaxReader reader = new EntitySaxReader(delegator);
-    long numberRead = reader.parse(fulltext);
+      long numberRead = -1;
+      EntitySaxReader reader = new EntitySaxReader(delegator);
+      if (UtilValidate.isNotEmpty(fmfilename)) {
+        FileReader templateReader = null;
+        try {
+            templateReader = new FileReader(fmfilename);
+        } catch(java.io.FileNotFoundException e) {
+            %><div>ERROR: <%=e.toString()%></div><%
+        }
+        
+        StringWriter outWriter = new StringWriter();
+        Configuration conf = org.ofbiz.content.webapp.ftl.FreeMarkerWorker.makeDefaultOfbizConfig();
+        
+        Template template = null;
+        try {
+            template = new Template("FMImportFilter", templateReader, conf);
+        } catch(IOException e) {
+            %><div>ERROR: <%=e.toString()%></div><%
+        }
+
+        Map context = new HashMap();
+        StringReader sr = new StringReader(fulltext);
+
+        NodeModel nodeModel = NodeModel.parse(new InputSource(sr));
+        context.put("doc", nodeModel);
+        BeansWrapper wrapper = BeansWrapper.getDefaultInstance();
+        TemplateHashModel staticModels = wrapper.getStaticModels();
+        context.put("Static", staticModels);
+
+        template.process(context, outWriter);
+        String s = outWriter.toString();
+        //Debug.logInfo("filtered xml:" + s, "JSP");
+
+        numberRead = reader.parse(s);
+        Debug.logInfo("numberRead(s):" + numberRead, "JSP");
+      } else {
+        numberRead = reader.parse(fulltext);
+        Debug.logInfo("numberRead(fulltext):" + numberRead, "JSP");
+      }
   %>
       <div>Got <%=numberRead%> entities to write to the datasource.</div>
 
