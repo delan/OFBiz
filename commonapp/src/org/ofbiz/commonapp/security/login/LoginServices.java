@@ -39,7 +39,7 @@ import org.ofbiz.core.util.*;
 public class LoginServices {
     
     /** Login service to authenticate username and password
-     * @return Map of results including (userLoginObject) GenericValue object
+     * @return Map of results including (userLogin) GenericValue object
      */
     public static Map userLogin(DispatchContext ctx, Map context) {
         Map result = new HashMap();
@@ -58,7 +58,7 @@ public class LoginServices {
         }
         if ( value != null ) {
             if( password.compareTo(value.getString("currentPassword")) == 0 ) {
-                result.put("userLoginObject",value);
+                result.put("userLogin",value);
                 result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
             }
             else {

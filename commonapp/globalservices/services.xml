@@ -20,7 +20,7 @@
         <description>Authenticate a username/password; create a UserLogin object</description>
         <attribute name="login.username" type="String" mode="IN"/>
         <attribute name="login.password" type="String" mode="IN"/>
-        <attribute name="userLoginObject" type="org.ofbiz.core.entity.GenericValue" mode="OUT" optional="true"/>
+        <attribute name="userLogin" type="org.ofbiz.core.entity.GenericValue" mode="OUT" optional="true"/>
     </service>
 
     <!-- Workflow services -->
