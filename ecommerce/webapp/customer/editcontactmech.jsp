@@ -28,13 +28,16 @@
  */
 %>
 
-<%@ page import="java.util.*" %>
-<%@ page import="org.ofbiz.core.entity.*, org.ofbiz.commonapp.party.contact.*" %>
+<%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 
-<% pageContext.setAttribute("PageName", "Edit Contact Mechanism"); %>
-<%@ include file="/includes/envsetup.jsp" %>
-<%@ include file="/includes/header.jsp" %>
-<%@ include file="/includes/onecolumn.jsp" %>
+<%@ page import="java.util.*" %>
+<%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.pseudotag.*" %>
+<%@ page import="org.ofbiz.core.entity.*" %>
+<%@ page import="org.ofbiz.commonapp.party.contact.*, org.ofbiz.commonapp.party.party.*" %>
+<jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="request" />
+<jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" />
+<ofbiz:object name="userLogin" property="userLogin" type="org.ofbiz.core.entity.GenericValue" />  
+
 <%ContactMechWorker.getContactMechAndRelated(pageContext, userLogin.getString("partyId"), "contactMech", "contactMechId", "partyContactMech", "partyContactMechPurposes",
     "contactMechTypeId", "contactMechType", "purposeTypes", "postalAddress", "telecomNumber", "requestName", "donePage", "tryEntity", "contactMechTypes");%>
 
@@ -250,6 +253,3 @@
     &nbsp;<a href='<ofbiz:url>/authview/<ofbiz:print attribute="donePage"/></ofbiz:url>' class="buttontext">[Done/Cancel]</a>
   </ofbiz:unless>
 <%}%>
-
-<%@ include file="/includes/onecolumnclose.jsp" %>
-<%@ include file="/includes/footer.jsp" %>

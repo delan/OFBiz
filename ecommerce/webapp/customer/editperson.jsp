@@ -28,13 +28,12 @@
  */
 %>
 
-<%@ page import="java.util.*" %>
-<%@ page import="org.ofbiz.core.entity.*" %>
+<%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 
-<% pageContext.setAttribute("PageName", "Edit Person"); %>
-<%@ include file="/includes/envsetup.jsp" %>
-<%@ include file="/includes/header.jsp" %>
-<%@ include file="/includes/onecolumn.jsp" %>
+<%@ page import="java.util.*" %>
+<%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.entity.*" %>
+<ofbiz:object name="person" property="person" type="org.ofbiz.core.entity.GenericValue" />  
+
 <%
     boolean tryEntity = true;
     if(request.getAttribute(SiteDefs.ERROR_MESSAGE) != null) tryEntity = false;
@@ -175,6 +174,3 @@
 
 &nbsp;<a href='<ofbiz:url>/authview/<ofbiz:print attribute="donePage"/></ofbiz:url>' class="buttontext">[Done/Cancel]</a>
 &nbsp;<a href="javascript:document.editpersonform.submit()" class="buttontext">[Save]</a>
-
-<%@ include file="/includes/onecolumnclose.jsp" %>
-<%@ include file="/includes/footer.jsp" %>

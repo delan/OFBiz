@@ -28,13 +28,12 @@
  */
 %>
 
+<%@ taglib uri="ofbizTags" prefix="ofbiz" %>
+
 <%@ page import="java.util.*" %>
+<%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.pseudotag.*" %>
 <%@ page import="org.ofbiz.core.entity.*" %>
 
-<% pageContext.setAttribute("PageName", "Change Password"); %>
-<%@ include file="/includes/envsetup.jsp" %>
-<%@ include file="/includes/header.jsp" %>
-<%@ include file="/includes/onecolumn.jsp" %>
 <%
     boolean tryEntity = true;
     if(request.getAttribute(SiteDefs.ERROR_MESSAGE) != null) tryEntity = false;
@@ -79,6 +78,3 @@
 
     &nbsp;<a href="<ofbiz:url>/authview/<%=donePage%></ofbiz:url>" class="buttontext">[Done/Cancel]</a>
     &nbsp;<a href="javascript:document.changepasswordform.submit()" class="buttontext">[Save]</a>
-
-<%@ include file="/includes/onecolumnclose.jsp" %>
-<%@ include file="/includes/footer.jsp" %>

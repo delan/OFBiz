@@ -28,13 +28,13 @@
  */
 %>
 
-<%@ page import="java.util.*" %>
-<%@ page import="org.ofbiz.core.entity.*, org.ofbiz.commonapp.party.contact.*" %>
+<%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 
-<% pageContext.setAttribute("PageName", "Edit Credit Card Info"); %>
-<%@ include file="/includes/envsetup.jsp" %>
-<%@ include file="/includes/header.jsp" %>
-<%@ include file="/includes/onecolumn.jsp" %>
+<%@ page import="java.util.*" %>
+<%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.pseudotag.*" %>
+<%@ page import="org.ofbiz.core.entity.*, org.ofbiz.commonapp.party.contact.*" %>
+<jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="request" />
+<ofbiz:object name="userLogin" property="userLogin" type="org.ofbiz.core.entity.GenericValue" />  
 
 <%ContactMechWorker.getCreditCardInfoAndRelated(pageContext, userLogin.getString("partyId"), "creditCard", "creditCardId",
     "curContactMechId", "curPartyContactMech", "curContactMech", "curPostalAddress", "curPartyContactMechPurposes", "donePage", "tryEntity");%>
@@ -244,6 +244,3 @@
   &nbsp;<a href='<ofbiz:url>/authview/<ofbiz:print attribute="donePage"/></ofbiz:url>' class="buttontext">[Done/Cancel]</a>
   &nbsp;<a href="javascript:document.editcreditcardform.submit()" class="buttontext">[Save]</a>
 <%}%>
-
-<%@ include file="/includes/onecolumnclose.jsp" %>
-<%@ include file="/includes/footer.jsp" %>

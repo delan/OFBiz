@@ -28,14 +28,14 @@
  */
 %>
 
+<%@ taglib uri="ofbizTags" prefix="ofbiz" %>
+
 <%@ page import="java.util.*" %>
+<%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.pseudotag.*" %>
 <%@ page import="org.ofbiz.core.entity.*" %>
 <%@ page import="org.ofbiz.commonapp.party.contact.*, org.ofbiz.commonapp.party.party.*" %>
+<ofbiz:object name="userLogin" property="userLogin" type="org.ofbiz.core.entity.GenericValue" />  
 
-<%pageContext.setAttribute("PageName", "viewprofile");%>
-<%@ include file="/includes/envsetup.jsp" %>
-<%@ include file="/includes/header.jsp" %>
-<%@ include file="/includes/onecolumn.jsp" %>
 <%
     PartyWorker.getPartyOtherValues(pageContext, userLogin.getString("partyId"), "party", "person", "partyGroup");
     boolean showOld = "true".equals(request.getParameter("SHOW_OLD"));
@@ -43,6 +43,8 @@
     ContactMechWorker.getPartyContactMechValueMaps(pageContext, userLogin.getString("partyId"), showOld, "partyContactMechValueMaps");
     ContactMechWorker.getPartyCreditCardInfos(pageContext, userLogin.getString("partyId"), showOld, "creditCardInfos");
 %>
+<%EntityField entityField = new EntityField(pageContext);%>
+
 <ofbiz:if name="party">
 <%-- Main Heading --%>
 <table width='100%' cellpadding='0' cellspacing='0' border='0'>
@@ -72,10 +74,10 @@
 </table>
 <br>
 
-<TABLE border=0 width='100%' cellpadding='<%=boxBorderWidth%>' cellspacing=0 bgcolor='<%=boxBorderColor%>'>
+<TABLE border=0 width='100%' cellpadding='<%EntityField.run("layoutSettings", "boxBorderWidth", pageContext);%>' cellspacing=0 bgcolor='<%EntityField.run("layoutSettings", "boxBorderColor", pageContext);%>'>
   <TR>
     <TD width='100%'>
-      <table width='100%' border='0' cellpadding='<%=boxTopPadding%>' cellspacing='0' bgcolor='<%=boxTopColor%>'>
+      <table width='100%' border='0' cellpadding='<%EntityField.run("layoutSettings", "boxTopPadding", pageContext);%>' cellspacing='0' bgcolor='<%EntityField.run("layoutSettings", "boxTopColor", pageContext);%>'>
         <tr>
           <td valign="middle" align="left">
             <div class="boxhead">&nbsp;Personal Information</div>
@@ -90,7 +92,7 @@
   </TR>
   <TR>
     <TD width='100%'>
-      <table width='100%' border='0' cellpadding='<%=boxBottomPadding%>' cellspacing='0' bgcolor='<%=boxBottomColor%>'>
+      <table width='100%' border='0' cellpadding='<%EntityField.run("layoutSettings", "boxBottomPadding", pageContext);%>' cellspacing='0' bgcolor='<%EntityField.run("layoutSettings", "boxBottomColor", pageContext);%>'>
         <tr>
           <td>
 <ofbiz:if name="person">
@@ -133,10 +135,10 @@
 </TABLE>
 <%-- ============================================================= --%>
 <br>
-<TABLE border=0 width='100%' cellpadding='<%=boxBorderWidth%>' cellspacing=0 bgcolor='<%=boxBorderColor%>'>
+<TABLE border=0 width='100%' cellpadding='<%EntityField.run("layoutSettings", "boxBorderWidth", pageContext);%>' cellspacing=0 bgcolor='<%EntityField.run("layoutSettings", "boxBorderColor", pageContext);%>'>
   <TR>
     <TD width='100%'>
-      <table width='100%' border='0' cellpadding='<%=boxTopPadding%>' cellspacing='0' bgcolor='<%=boxTopColor%>'>
+      <table width='100%' border='0' cellpadding='<%EntityField.run("layoutSettings", "boxTopPadding", pageContext);%>' cellspacing='0' bgcolor='<%EntityField.run("layoutSettings", "boxTopColor", pageContext);%>'>
         <tr>
           <td valign="middle" align="left">
             <div class="boxhead">&nbsp;Contact Information</div>
@@ -151,7 +153,7 @@
   </TR>
   <TR>
     <TD width='100%'>
-      <table width='100%' border='0' cellpadding='<%=boxBottomPadding%>' cellspacing='0' bgcolor='<%=boxBottomColor%>'>
+      <table width='100%' border='0' cellpadding='<%EntityField.run("layoutSettings", "boxBottomPadding", pageContext);%>' cellspacing='0' bgcolor='<%EntityField.run("layoutSettings", "boxBottomColor", pageContext);%>'>
         <tr>
           <td>
   <ofbiz:if name="partyContactMechValueMaps" size="0">
@@ -259,10 +261,10 @@
 </TABLE>
 <%-- ============================================================= --%>
 <br>
-<TABLE border=0 width='100%' cellpadding='<%=boxBorderWidth%>' cellspacing=0 bgcolor='<%=boxBorderColor%>'>
+<TABLE border=0 width='100%' cellpadding='<%EntityField.run("layoutSettings", "boxBorderWidth", pageContext);%>' cellspacing=0 bgcolor='<%EntityField.run("layoutSettings", "boxBorderColor", pageContext);%>'>
   <TR>
     <TD width='100%'>
-      <table width='100%' border='0' cellpadding='<%=boxTopPadding%>' cellspacing='0' bgcolor='<%=boxTopColor%>'>
+      <table width='100%' border='0' cellpadding='<%EntityField.run("layoutSettings", "boxTopPadding", pageContext);%>' cellspacing='0' bgcolor='<%EntityField.run("layoutSettings", "boxTopColor", pageContext);%>'>
         <tr>
           <td valign="middle" align="left">
             <div class="boxhead">&nbsp;Credit Card Information</div>
@@ -277,44 +279,44 @@
   </TR>
   <TR>
     <TD width='100%'>
-      <table width='100%' border='0' cellpadding='<%=boxBottomPadding%>' cellspacing='0' bgcolor='<%=boxBottomColor%>'>
+      <table width='100%' border='0' cellpadding='<%EntityField.run("layoutSettings", "boxBottomPadding", pageContext);%>' cellspacing='0' bgcolor='<%EntityField.run("layoutSettings", "boxBottomColor", pageContext);%>'>
         <tr>
           <td>
-  <table width="100%" border="0" cellpadding="1">
-    <tr>
-      <td align="left">
-        <ofbiz:if name="creditCardInfos" size="0">
-          <table width="100%" cellpadding="2" cellspacing="0" border="0">
-            <ofbiz:iterator name="creditCardInfo" property="creditCardInfos">
+              <table width="100%" border="0" cellpadding="1">
                 <tr>
-                  <td width="90%" valign="top">
-                    <div class="tabletext">
-                      <b>
-                        <%entityField.run("creditCardInfo", "nameOnCard");%> - <%=ContactHelper.formatCreditCard(creditCardInfo)%>
-                      </b>
-                      (Updated:&nbsp;<%entityField.run("creditCardInfo", "fromDate");%>)
-                      <%entityField.run("creditCardInfo", "thruDate", "(Delete:&nbsp;", ")");%>
-                    </div>
-                  </td>
-                  <td width="5">&nbsp;</td>
-                  <td align="right" valign="top" width='1%' nowrap>
-                    <div><a href='<ofbiz:url>/editcreditcard?creditCardId=<%entityField.run("creditCardInfo", "creditCardId");%></ofbiz:url>' class="buttontext">
-                    [Update]</a></div>
-                  </td>
-                  <td align="right" valign="top" width='1%'>
-                    <div><a href='<ofbiz:url>/deleteCreditCardInfo/viewprofile?creditCardId=<%entityField.run("creditCardInfo", "creditCardId");%></ofbiz:url>' class="buttontext">
-                    [Delete]</a></div>
+                  <td align="left">
+                    <ofbiz:if name="creditCardInfos" size="0">
+                      <table width="100%" cellpadding="2" cellspacing="0" border="0">
+                        <ofbiz:iterator name="creditCardInfo" property="creditCardInfos">
+                            <tr>
+                              <td width="90%" valign="top">
+                                <div class="tabletext">
+                                  <b>
+                                    <%entityField.run("creditCardInfo", "nameOnCard");%> - <%=ContactHelper.formatCreditCard(creditCardInfo)%>
+                                  </b>
+                                  (Updated:&nbsp;<%entityField.run("creditCardInfo", "fromDate");%>)
+                                  <%entityField.run("creditCardInfo", "thruDate", "(Delete:&nbsp;", ")");%>
+                                </div>
+                              </td>
+                              <td width="5">&nbsp;</td>
+                              <td align="right" valign="top" width='1%' nowrap>
+                                <div><a href='<ofbiz:url>/editcreditcard?creditCardId=<%entityField.run("creditCardInfo", "creditCardId");%></ofbiz:url>' class="buttontext">
+                                [Update]</a></div>
+                              </td>
+                              <td align="right" valign="top" width='1%'>
+                                <div><a href='<ofbiz:url>/deleteCreditCardInfo/viewprofile?creditCardId=<%entityField.run("creditCardInfo", "creditCardId");%></ofbiz:url>' class="buttontext">
+                                [Delete]</a></div>
+                              </td>
+                            </tr>
+                        </ofbiz:iterator>
+                      </table>
+                    </ofbiz:if>
+                    <ofbiz:unless name="creditCardInfos" size="0">
+                      <p>No credit card information on file.</p>
+                    </ofbiz:unless>
                   </td>
                 </tr>
-            </ofbiz:iterator>
-          </table>
-        </ofbiz:if>
-        <ofbiz:unless name="creditCardInfos" size="0">
-          <p>No credit card information on file.</p>
-        </ofbiz:unless>
-      </td>
-    </tr>
-  </table>
+              </table>
           </td>
         </tr>
       </table>
@@ -323,10 +325,10 @@
 </TABLE>
 
 <br>
-<TABLE border=0 width='100%' cellpadding='<%=boxBorderWidth%>' cellspacing=0 bgcolor='<%=boxBorderColor%>'>
+<TABLE border=0 width='100%' cellpadding='<%EntityField.run("layoutSettings", "boxBorderWidth", pageContext);%>' cellspacing=0 bgcolor='<%EntityField.run("layoutSettings", "boxBorderColor", pageContext);%>'>
   <TR>
     <TD width='100%'>
-      <table width='100%' border='0' cellpadding='<%=boxTopPadding%>' cellspacing='0' bgcolor='<%=boxTopColor%>'>
+      <table width='100%' border='0' cellpadding='<%EntityField.run("layoutSettings", "boxTopPadding", pageContext);%>' cellspacing='0' bgcolor='<%EntityField.run("layoutSettings", "boxTopColor", pageContext);%>'>
         <tr>
           <td valign="middle" align="left">
             <div class="boxhead">&nbsp;User Name & Password</div>
@@ -340,16 +342,16 @@
   </TR>
   <TR>
     <TD width='100%'>
-      <table width='100%' border='0' cellpadding='<%=boxBottomPadding%>' cellspacing='0' bgcolor='<%=boxBottomColor%>'>
+      <table width='100%' border='0' cellpadding='<%EntityField.run("layoutSettings", "boxBottomPadding", pageContext);%>' cellspacing='0' bgcolor='<%EntityField.run("layoutSettings", "boxBottomColor", pageContext);%>'>
         <tr>
           <td>
-<table width="100%" border="0" cellpadding="1">
-  <tr>
-    <td align="right" valign="top" width="10%" nowrap><div class="tabletext"><b>User Name</b></div></td>
-    <td width="5">&nbsp;</td>
-    <td align="left" valign="top" width="90%"><div class="tabletext"><%entityField.run("userLogin", "userLoginId");%></div></td>
-  </tr>
-</table>
+            <table width="100%" border="0" cellpadding="1">
+              <tr>
+                <td align="right" valign="top" width="10%" nowrap><div class="tabletext"><b>User Name</b></div></td>
+                <td width="5">&nbsp;</td>
+                <td align="left" valign="top" width="90%"><div class="tabletext"><%entityField.run("userLogin", "userLoginId");%></div></td>
+              </tr>
+            </table>
           </td>
         </tr>
       </table>
@@ -360,6 +362,3 @@
 <ofbiz:unless name="party">
     No party found for current user with user name: <%entityField.run("userLogin", "userLoginId");%>
 </ofbiz:unless>
-
-<%@ include file="/includes/onecolumnclose.jsp" %>
-<%@ include file="/includes/footer.jsp" %> 

@@ -28,14 +28,12 @@
  */
 %>
 
+<%@ taglib uri="ofbizTags" prefix="ofbiz" %>
+
 <%@ page import="javax.servlet.*" %>
 <%@ page import="javax.servlet.http.*" %>
 <%@ page import="org.ofbiz.core.util.*" %> 
 
-<%pageContext.setAttribute("PageName", "newuser");%>
-<%@ include file="/includes/envsetup.jsp" %>
-<%@ include file="/includes/header.jsp" %>
-<%@ include file="/includes/onecolumn.jsp" %>
 <%String previousParams=(String)session.getAttribute(SiteDefs.PREVIOUS_PARAMS);%>
 <%String createFormUrl=controlPath + "/createcustomer"; if(previousParams != null) createFormUrl=createFormUrl + "?" + previousParams;%>
 
@@ -368,5 +366,3 @@
 <a href="javascript:document.newuserform.submit()" class="buttontext">&nbsp;&nbsp;[Save]</a>
 <br>
 <br>
-<%@ include file="/includes/onecolumnclose.jsp" %>
-<%@ include file="/includes/footer.jsp" %>
