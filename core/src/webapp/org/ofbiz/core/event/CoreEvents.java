@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -41,14 +41,35 @@ import org.ofbiz.core.util.*;
 /**
  * CoreEvents - WebApp Events Related To CORE components
  *
- *@author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
+ *@author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
  *@created    January 8, 2002
  *@version    1.0
  */
 
 public class CoreEvents {
 
-    /** Change delegator event. Changes the delegator for the current session
+    /**
+     * Return success event. Used as a place holder for events.
+     * @param request HttpServletRequest
+     * @param response HttpServletResponse
+     * @return Response code string
+     */
+    public static String returnSuccess(HttpServletRequest request, HttpServletResponse response) {
+        return "success";
+    }
+
+    /**
+     * Return error event. Used as a place holder for events.
+     * @param request HttpServletRequest
+     * @param response HttpServletResponse
+     * @return Response code string
+     */
+    public static String returnError(HttpServletRequest request, HttpServletResponse response) {
+        return "error";
+    }
+
+    /**
+     * Change delegator event. Changes the delegator for the current session
      * @param request HttpServletRequest
      * @param response HttpServletResponse
      * @return Response code string
@@ -98,7 +119,8 @@ public class CoreEvents {
         return "success";
     }
 
-    /** Change dispatcher event. Changes the dispatch for the current session
+    /**
+     * Change dispatcher event. Changes the dispatch for the current session
      * @param request HttpServletRequest
      * @param response HttpServletResponse
      * @return Response code string
@@ -126,7 +148,8 @@ public class CoreEvents {
         return "success";
     }
 
-    /** Schedule a service for a specific time or recurrence
+    /**
+     * Schedule a service for a specific time or recurrence
      *  Request Parameters which are used for this service:
      *
      *  SERVICE_NAME      - Name of the service to invoke
@@ -243,7 +266,8 @@ public class CoreEvents {
         return "success";
     }
 
-    /** Run a service.
+    /**
+     * Run a service.
      *  Request Parameters which are used for this event:
      *  SERVICE_NAME      - Name of the service to invoke
      *
