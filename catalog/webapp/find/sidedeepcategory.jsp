@@ -1,7 +1,7 @@
 
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 <%@ page import="org.ofbiz.commonapp.product.category.*, org.ofbiz.core.util.*" %>
-<%String defaultTopCategoryId = "CATALOG1";%>
+<%String defaultTopCategoryId = request.getParameter("TOP_CATEGORY") != null ? request.getParameter("TOP_CATEGORY") : "CATALOG1";%>
 <%String currentTopCategoryId = CategoryWorker.getCatalogTopCategory(pageContext, defaultTopCategoryId);%>
 <%CategoryWorker.getRelatedCategories(pageContext, "topLevelList", currentTopCategoryId);%>
 <%GenericValue currentTopCategory = delegator.findByPrimaryKeyCache("ProductCategory", UtilMisc.toMap("productCategoryId", currentTopCategoryId));%>
