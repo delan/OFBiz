@@ -1,5 +1,5 @@
 /*
- * $Id: EntityDataServices.java,v 1.6 2003/12/22 05:15:10 ajzeneski Exp $
+ * $Id: EntityDataServices.java,v 1.7 2004/01/20 17:05:10 ajzeneski Exp $
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -48,7 +48,7 @@ import java.net.URISyntaxException;
  * Entity Data Import/Export Services
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.6 $
+ * @version    $Revision: 1.7 $
  * @since      2.1
  */
 public class EntityDataServices {
@@ -130,6 +130,8 @@ public class EntityDataServices {
             delimiter = "\t";
         }
 
+        long startTime = System.currentTimeMillis();
+
         File file = (File) context.get("file");
         int records = 0;
         try {
@@ -143,7 +145,10 @@ public class EntityDataServices {
             return ServiceUtil.returnError("Problem reading file : " + file.getName());
         }
 
-        Debug.logInfo("Imported/Updated [" + records + "] from : " + file.getAbsolutePath(), module);
+        long endTime = System.currentTimeMillis();
+        long runTime = endTime - startTime;
+
+        Debug.logInfo("Imported/Updated [" + records + "] from : " + file.getAbsolutePath() + "[" + (runTime/1000) + " seconds.]", module);
         Map result = ServiceUtil.returnSuccess();
         result.put("records", new Integer(records));
         return result;
@@ -248,8 +253,7 @@ public class EntityDataServices {
                 break;
             }
 
-            Map fieldMap = makeMap(header, fields);
-            GenericValue newValue = delegator.makeValue(entityName, fieldMap);
+            GenericValue newValue = makeGenericValue(delegator, entityName, header, fields);
             newValue = delegator.createOrStore(newValue);
 
             if (lineNumber % 500 == 0 || lineNumber == 1) {
@@ -269,8 +273,8 @@ public class EntityDataServices {
         return lineNumber;
     }
 
-    private static Map makeMap(String[] header, String[] line) {
-        Map newMap = new HashMap();
+    private static GenericValue makeGenericValue(GenericDelegator delegator, String entityName, String[] header, String[] line) {
+        GenericValue newValue = delegator.makeValue(entityName, null);
         for (int i = 0; i < header.length; i++) {
             String name = header[i].trim();
 
@@ -294,10 +298,10 @@ public class EntityDataServices {
                 value = null;
             }
 
-            // insert into map
-            newMap.put(name, value);
+            // convert and set the fields
+            newValue.setString(name, value);
         }
-        return newMap;
+        return newValue;
     }
 
     private String[] getEntityFieldNames(GenericDelegator delegator, String entityName) {
