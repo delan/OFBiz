@@ -24,7 +24,6 @@ import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
-import org.ofbiz.manufacturing.techdata.ProductHelper;
 
 /** An ItemCoinfigurationNode represents a component in a bill of materials.
  * @author <a href="mailto:tiz@sastau.it">Jacopo Cappellato</a>
@@ -104,7 +103,7 @@ public class BOMNode {
                         oneChildNode.loadChildren(partBomTypeId, inDate, productFeatures, BOMTree.EXPLOSION, dispatcher);
                     break;
                     case BOMTree.EXPLOSION_MANUFACTURING:
-                        if (!oneChildNode.isPurchased()) {
+                        if (!oneChildNode.isWarehouseManaged()) {
                             oneChildNode.loadChildren(partBomTypeId, inDate, productFeatures, type, dispatcher);
                         }
                     break;
@@ -372,7 +371,7 @@ public class BOMNode {
         }
     }
 
-    public void print(ArrayList arr, double quantity, int depth, boolean excludePhantoms) {
+    public void print(ArrayList arr, double quantity, int depth, boolean excludeWIPs) {
         // Now we set the depth and quantity of the current node
         // in this breakdown.
         this.depth = depth;
@@ -387,12 +386,11 @@ public class BOMNode {
         for (int i = 0; i < children.size(); i++) {
             oneChild = (GenericValue)children.get(i);
             oneChildNode = (BOMNode)childrenNodes.get(i);
-            // FIXME: phantom flag?
-            if (excludePhantoms && "PHANTOM".equals(oneChildNode.getProduct().getString("productTypeId"))) {
+            if (excludeWIPs && "WIP".equals(oneChildNode.getProduct().getString("productTypeId"))) {
                 continue;
             }
             if (oneChildNode != null) {
-                oneChildNode.print(arr, this.quantity, depth, excludePhantoms);
+                oneChildNode.print(arr, this.quantity, depth, excludeWIPs);
             }
         }
     }
@@ -460,10 +458,10 @@ public class BOMNode {
         }
     }
 
-    public boolean isPurchased() {
-        boolean isPurchased = false;
+    public boolean isWarehouseManaged() {
+        boolean isWarehouseManaged = false;
         try {
-            if ("PHANTOM".equals(getProduct().getString("productTypeId"))) {
+            if ("WIP".equals(getProduct().getString("productTypeId"))) {
                 return false;
             }
             List pfs = getProduct().getRelatedCache("ProductFacility");
@@ -474,7 +472,7 @@ public class BOMNode {
                 found = true;
                 pf = (GenericValue)pfsIt.next();
                 if (pf.getDouble("minimumStock") != null && pf.getDouble("minimumStock").doubleValue() > 0) {
-                    isPurchased = true;
+                    isWarehouseManaged = true;
                 }
             }
             // If no records are found, we try to search for substituted node's records
@@ -485,18 +483,18 @@ public class BOMNode {
                 while(pfsIt.hasNext()) {
                     pf = (GenericValue)pfsIt.next();
                     if (pf.getDouble("minimumStock") != null && pf.getDouble("minimumStock").doubleValue() > 0) {
-                        isPurchased = true;
+                        isWarehouseManaged = true;
                     }
                 }
             }
         } catch(GenericEntityException gee) {
-            System.out.println("Error in BOMNode.isPurchased() " + gee);
+            System.out.println("Error in BOMNode.isWarehouseManaged() " + gee);
         }
-        return isPurchased;
+        return isWarehouseManaged;
     }
 
     public boolean isManufactured() {
-        return childrenNodes.size() > 0 && !isPurchased();
+        return childrenNodes.size() > 0;
     }
     
     public boolean isVirtual() {
