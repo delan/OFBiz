@@ -767,7 +767,7 @@
         <attribute name="processResult" type="Boolean" mode="OUT" optional="false"/>
         <attribute name="responseCode" type="String" mode="OUT" optional="false"/>
         <attribute name="balance" type="Double" mode="OUT" optional="true"/>
-        <attribute name="history" type="Map" mode="OUT" optional="true"/>
+        <attribute name="history" type="List" mode="OUT" optional="true"/>
         <attribute name="expireDate" type="String" mode="OUT" optional="true"/>
         <attribute name="cardClass" type="String" mode="OUT" optional="true"/>
         <attribute name="referenceNum" type="String" mode="OUT" optional="false"/>
