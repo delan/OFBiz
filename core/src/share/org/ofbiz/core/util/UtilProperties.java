@@ -170,6 +170,31 @@ public class UtilProperties {
         }
         return properties;
     }
+    
+    /** Returns the specified resource/properties file
+     * @param resource The name of the resource - can be a file, class, or URL
+     * @return The properties file
+     */
+    public static Properties getProperties(URL url) {
+        if (url == null)
+            return null;
+        Properties properties = (FlexibleProperties) resourceCache.get(url);
+
+        if (properties == null) {
+            try {                                
+                properties = FlexibleProperties.makeFlexibleProperties(url);
+                resourceCache.put(url, properties);
+            } catch (MissingResourceException e) {
+                Debug.log(e.getMessage());
+            }
+        }
+        if (properties == null) {
+            Debug.log("[UtilProperties.getProperties] could not find resource: " + url);
+            return null;
+        }
+        return properties;
+    }
+    
 
     // ========= URL Based Methods ==========
 
