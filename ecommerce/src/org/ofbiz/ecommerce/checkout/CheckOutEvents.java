@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.5  2001/09/11 21:11:06  jonesde
+ * Improved error handling.
+ *
  * Revision 1.4  2001/09/11 17:27:14  epabst
  * updated order process to be more complete
  *
@@ -33,6 +36,7 @@ import java.util.Set;
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.commonapp.common.*;
+import org.ofbiz.commonapp.party.contact.ContactHelper;
 import org.ofbiz.ecommerce.shoppingcart.*;
 
 /**
@@ -106,7 +110,7 @@ public class CheckOutEvents {
         GenericValue userLogin = (GenericValue)request.getSession().getAttribute(SiteDefs.USER_LOGIN);
         StringBuffer errorMessage = new StringBuffer();
         if (cart != null && cart.size() > 0) {
-            GenericHelper helper = userLogin.helper;
+            GenericHelper helper = userLogin.getHelper();
             String orderId = helper.getNextSeqId("OrderHeader").toString();
             GenericValue order = helper.makeValue("OrderHeader", UtilMisc.toMap("orderId", orderId, "orderTypeId", "SALES_ORDER", "orderDate", UtilDateTime.nowTimestamp(), "entryDate", UtilDateTime.nowTimestamp(), "statusId", "Ordered", "shippingInstructions", cart.getShippingInstructions())); 
             order.set("billingAccountId", cart.getBillingAccountId());
@@ -187,24 +191,41 @@ public class CheckOutEvents {
     }
 
     public static String renderConfirmOrder(HttpServletRequest request, HttpServletResponse response) {
-        String controlPath = (String) request.getAttribute(SiteDefs.CONTROL_PATH);  
+        String controlPath=(String)request.getAttribute(SiteDefs.CONTROL_PATH);
         //XXX need to add secret code since no security yet
-        String url = "http://" + request.getServerName() + ":" + request.getServerPort() + controlPath + "/confirmorder?order_id=" + request.getAttribute("order_id");
-
-        HttpClient client = new HttpClient(url);
         try {
-            String content = client.get();
+            java.net.URL url = new java.net.URL("http",request.getServerName(),request.getServerPort(),controlPath + "/confirmorder?order_id=" + request.getAttribute("order_id"));
+            HttpClient httpClient = new HttpClient(url);
+            String content = httpClient.get();
             request.setAttribute("confirmorder", content);
             return "success";
-        } catch (HttpClientException hce) {
-            hce.printStackTrace();
-            request.setAttribute(SiteDefs.ERROR_MESSAGE, "error generating order confirmation");
+        } catch (Exception e) {
+            e.printStackTrace();
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "error generating order confirmation, but it was recorded and will be processed.");
             return "error";
         }
     }
 
-    public static String emailOrder(HttpServletRequest request, HttpServletResponse response) {
-        //FIXME use HttpClient to call /confirmorder, store the HTML in request attributes to be used by emailOrder and renderConfirmOrder
-        return "success";
+    public static String emailOrder(HttpServletRequest request, HttpServletResponse response) {        
+        final String SMTP_SERVER = UtilProperties.getPropertyValue("servers", "smtp.server");
+        final String ORDER_SENDER_EMAIL = UtilProperties.getPropertyValue("servers", "smtp.sender.confirmorder");
+        GenericValue userLogin = (GenericValue)request.getSession().getAttribute(SiteDefs.USER_LOGIN);
+        StringBuffer emails = new StringBuffer((String) request.getAttribute("orderAdditionalEmails"));
+        Iterator emailIter = ContactHelper.getContactMech(userLogin.getRelatedOne("Party"), "EMAIL_ADDRESS", false).iterator();
+        while (emailIter.hasNext()) {
+            GenericValue email = (GenericValue) emailIter.next();
+            emails.append(emails.length() > 0 ? "," : "").append(email.getString("infoString"));
+        }
+
+        String content = (String) request.getAttribute("confirmorder");
+        try {
+            SendMailSMTP mail = new SendMailSMTP(SMTP_SERVER, ORDER_SENDER_EMAIL, emails.toString(), content);
+            mail.send();
+            return "success";
+        } catch (Exception e) {
+            e.printStackTrace();
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "error e-mailing order confirmation, but it was created and will be processed.");
+            return "success"; //"error";
+        }
     }
 }
