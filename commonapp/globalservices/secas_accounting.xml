@@ -3,7 +3,7 @@
 
 <service-eca>
     <eca service="createPostalAddress" event="commit">
-        <condition field-name="paymentMethodId" operator="is-not-null"/>
+        <condition field-name="paymentMethodId" operator="is-not-empty"/>
         <action service="setPaymentMethodAddress" mode="sync"/>
     </eca>
     <!-- do the updatePostalAddress before the return and after the commit so it can use its own transaction and not effect the updating of the PostalAddress -->
