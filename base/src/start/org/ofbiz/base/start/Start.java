@@ -1,5 +1,5 @@
 /*
- * $Id: Start.java,v 1.14 2004/03/30 22:35:10 ajzeneski Exp $
+ * $Id: Start.java,v 1.15 2004/03/30 23:38:28 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -46,7 +46,7 @@ import java.util.Properties;
  * Start - OFBiz Container(s) Startup Class
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
-  *@version    $Revision: 1.14 $
+  *@version    $Revision: 1.15 $
  * @since      2.1
  */
 public class Start implements Runnable {
@@ -77,7 +77,7 @@ public class Start implements Runnable {
             if (args.length > 2) {
                 this.loaderArgs = new String[args.length - 2];
                 for (int i = 2; i < args.length; i++) {
-                    this.loaderArgs[i] = args[i];
+                    this.loaderArgs[i-2] = args[i];
                 }
             }
         }
