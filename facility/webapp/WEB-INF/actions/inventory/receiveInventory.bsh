@@ -37,19 +37,16 @@ facility = null;
 if (facilityId != null) {
     facility = delegator.findByPrimaryKey("Facility", UtilMisc.toMap("facilityId", facilityId));
 }
-context.put("facility", facility);
 
 purchaseOrder = null;
 if (purchaseOrderId != null && purchaseOrderId.length() > 0) {
     purchaseOrder = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", purchaseOrderId));
 }
-context.put("purchaseOrder", purchaseOrder);
 
 product = null;
 if (productId != null) {  
     product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));      
 }
-context.put("product", product);
 
 shipments = null;
 if (purchaseOrder != null && shipmentId == null) {
@@ -64,13 +61,11 @@ if (purchaseOrder != null && shipmentId == null) {
         }        
     }
 }
-context.put("shipments", shipments);
 
 shipment = null;
 if (shipmentId != null && !shipmentId.equals("_NA_")) {
     shipment = delegator.findByPrimaryKey("Shipment", UtilMisc.toMap("shipmentId", shipmentId));
 }
-context.put("shipment", shipment);
 
 purchaseOrderItems = null;
 if (purchaseOrder != null) {
@@ -115,8 +110,6 @@ if (purchaseOrderItems != null && purchaseOrderItems.size() > 0) {
         receivedQuantities.put(thisItem.getString("orderItemSeqId"), new Double(totalReceived));        
     }
 }
-context.put("purchaseOrderItems", purchaseOrderItems);
-context.put("receivedQuantities", receivedQuantities);
 
 receivedItems = null;
 if (purchaseOrder != null) {
@@ -132,13 +125,22 @@ if (productId != null && productId.length() > 0 && product == null) {
 
 // reject reasons
 rejectReasons = delegator.findAll("RejectionReason");
-context.put("rejectReasons", rejectReasons);
 
 // inv item types
 inventoryItemTypes = delegator.findAll("InventoryItemType");
-context.put("inventoryItemTypes", inventoryItemTypes);
 
 // facilities
 facilities = delegator.findAll("Facility");
+    
+context.put("facilityId", facilityId);
+context.put("facility", facility);
+context.put("purchaseOrder", purchaseOrder);
+context.put("product", product);
+context.put("shipments", shipments);
+context.put("shipment", shipment);
+context.put("purchaseOrderItems", purchaseOrderItems);
+context.put("receivedQuantities", receivedQuantities);
+context.put("rejectReasons", rejectReasons);
+context.put("inventoryItemTypes", inventoryItemTypes);
 context.put("facilities", facilities);
     

@@ -624,31 +624,31 @@
     <view-map name="login" type="jpublish" page="/login.ftl"/>
     
     <view-map name="FindFacility" type="jpublish" page="facility/FindFacility.ftl"/>
-    <view-map name="FindFacilityGroup" type="jpublish" page="group/FindFacilityGroup.ftl"/>
     <view-map name="EditFacility" type="jpublish" page="facility/EditFacility.ftl"/>
-    <view-map name="FindFacilityTransfers" type="region"/>
-    <view-map name="FindFacilityLocation" type="region"/>
-    <view-map name="EditFacilityLocation" type="region"/>
-    <view-map name="EditFacilityGroup" type="region"/>
-    <view-map name="EditFacilityGroupRollup" type="region"/>
-    <view-map name="EditFacilityInventoryItems" type="region"/> 
-    <view-map name="EditFacilityGroupMembers" type="region"/>
-    <view-map name="EditFacilityGroups" type="region"/>
-    <view-map name="EditFacilityGroupRoles" type="region"/>   
-    <view-map name="EditFacilityRoles" type="region"/>
+    <view-map name="FindFacilityTransfers" type="jpublish" page="/facility/FindFacilityTransfers.ftl"/>
+    <view-map name="FindFacilityLocation" type="jpublish" page="/facility/FindFacilityLocation.ftl"/>
+    <view-map name="EditFacilityLocation" type="jpublish" page="/facility/EditFacilityLocation.ftl"/>
+    <view-map name="EditFacilityInventoryItems" type="jpublish" page="/facility/EditFacilityInventoryItems.ftl"/>
+    <view-map name="EditFacilityGroups" type="jpublish" page="/facility/EditFacilityGroups.ftl"/>
+    <view-map name="EditFacilityRoles" type="jpublish" page="/facility/EditFacilityRoles.ftl"/>
     
     <view-map name="ViewContactMechs" type="jpublish" page="/facility/ViewContactMechs.ftl"/>
     <view-map name="EditContactMech" type="jpublish" page="/facility/EditContactMech.ftl"/>
     
-    <view-map name="EditInventoryItem" type="region"/>  
-    <view-map name="TransferInventoryItem" type="region"/>  
+    <view-map name="EditInventoryItem" type="jpublish" page="/inventory/EditInventoryItem.ftl"/>
+    <view-map name="TransferInventoryItem" type="jpublish" page="/inventory/TransferInventoryItem.ftl"/>
     <view-map name="ReceiveInventory" type="jpublish" page="/inventory/receiveInventory.ftl"/>
-    
     <view-map name="ReceiveReturn" type="jpublish" page="/returns/receiveReturn.ftl"/>
 
     <view-map name="PicklistOptions" type="jpublish" page="/facility/PicklistOptions.ftl"/>
     <view-map name="Picklist" type="jpublish" page="/facility/Picklist.ftl"/>
 
+    <view-map name="FindFacilityGroup" type="jpublish" page="/group/FindFacilityGroup.ftl"/>
+    <view-map name="EditFacilityGroup" type="jpublish" page="/group/EditFacilityGroup.ftl"/>
+    <view-map name="EditFacilityGroupMembers" type="jpublish" page="/group/EditFacilityGroupMembers.ftl"/>
+    <view-map name="EditFacilityGroupRollup" type="region"/>
+    <view-map name="EditFacilityGroupRoles" type="region"/>
+    
     <view-map name="FindShipment" type="jpublish" page="/shipment/FindShipment.ftl"/>
     <view-map name="ViewShipment" type="jpublish" page="/shipment/ViewShipment.ftl"/>
     <view-map name="EditShipment" type="jpublish" page="/shipment/EditShipment.ftl"/>

@@ -3,5 +3,6 @@
     <template>main</template>
     <property name="title">View Facility Contact Mechanism</property>
     <property name="headerItem">facility</property>
+    <property name="tabButtonItem">ViewContactMechs</property>
     <content-action name="/facility/ViewContactMechs.bsh"/>
 </page>

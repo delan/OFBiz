@@ -1,6 +1,5 @@
 <#--
- *  Description: None
- *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -21,27 +20,13 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    May 10 2002
- *@version    1.0
+ *@version    $Revision$
+ *@since      2.1
 -->
 
 <#if security.hasEntityPermission("FACILITY", "_VIEW", session)>
 
-<#if facility?exists && facilityId?has_content>
-  <div class='tabContainer'>
-    <a href="<@ofbizUrl>/EditFacility?facilityId=${facilityId}</@ofbizUrl>" class="tabButtonSelected">Facility</a>
-    <a href="<@ofbizUrl>/ViewContactMechs?facilityId=${facilityId}</@ofbizUrl>" class="tabButton">Contact Mechs</a>
-    <a href="<@ofbizUrl>/EditFacilityGroups?facilityId=${facilityId}</@ofbizUrl>" class="tabButton">Groups</a>
-    <a href="<@ofbizUrl>/FindFacilityLocations?facilityId=${facilityId}</@ofbizUrl>" class="tabButton">Locations</a>
-    <a href="<@ofbizUrl>/EditFacilityRoles?facilityId=${facilityId}</@ofbizUrl>" class="tabButton">Roles</a>
-    <a href="<@ofbizUrl>/EditFacilityInventoryItems?facilityId=${facilityId}</@ofbizUrl>" class="tabButton">Inventory&nbsp;Items</a>
-    <a href="<@ofbizUrl>/ReceiveInventory?facilityId=${facilityId}</@ofbizUrl>" class="tabButton">Inventory&nbsp;Receive</a>
-    <a href="<@ofbizUrl>/FindFacilityTransfers?facilityId=${facilityId}</@ofbizUrl>" class="tabButton">Inventory&nbsp;Xfers</a>
-    <a href="<@ofbizUrl>/ReceiveReturn?facilityId=${facilityId}</@ofbizUrl>" class="tabButton">Receive Return</a>
-    <a href="<@ofbizUrl>/PicklistOptions?facilityId=${facilityId}</@ofbizUrl>" class="tabButton">Picklist</a>
-    <a href="<@ofbizUrl>/FindShipment?facilityId=${facilityId}</@ofbizUrl>" class="tabButton">Shipments</a>
-  </div>
-</#if>
+${pages.get("/facility/FacilityTabBar.ftl")}
 
 <div class="head1">Facility <span class='head2'>${facility.facilityName?if_exists} [ID:${facilityId?if_exists}]</span></div>
 <a href="<@ofbizUrl>/EditFacility</@ofbizUrl>" class="buttontext">[New Facility]</a>

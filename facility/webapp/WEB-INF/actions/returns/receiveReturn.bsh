@@ -35,7 +35,6 @@ facility = null;
 if (facilityId != null) {
     facility = delegator.findByPrimaryKey("Facility", UtilMisc.toMap("facilityId", facilityId));
 }
-context.put("facility", facility);
 
 returnHeader = null;
 returnItems = null;
@@ -45,8 +44,6 @@ if (returnId != null) {
         returnItems = returnHeader.getRelated("ReturnItem");        
     }
 }
-context.put("returnHeader", returnHeader);
-context.put("returnItems", returnItems);
 
 receivedQuantities = new HashMap();
 if (returnItems != null && returnItems.size() > 0) {
@@ -72,7 +69,6 @@ if (returnItems != null && returnItems.size() > 0) {
         receivedQuantities.put(thisItem.getString("returnItemSeqId"), new Double(totalReceived));        
     }
 }
-context.put("receivedQuantities", receivedQuantities);
 
 receivedItems = null;
 if (returnHeader != null) {
@@ -82,4 +78,11 @@ if (returnHeader != null) {
 
 // facilities
 facilities = delegator.findAll("Facility");
+
+context.put("facilityId", facilityId);
+context.put("facility", facility);
+context.put("returnHeader", returnHeader);
+context.put("returnItems", returnItems);
+context.put("receivedQuantities", receivedQuantities);
 context.put("facilities", facilities);
+

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <template>main</template> 
+    <property name="title">Transfer Inventory Item</property>
+    <property name="headerItem">inventory</property>
+    <content-action name="/inventory/TransferInventoryItem.bsh"/>
+</page>

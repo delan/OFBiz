@@ -1,0 +1,79 @@
+import java.util.*;
+import java.io.*;
+import org.ofbiz.core.entity.*;
+import org.ofbiz.core.util.*;
+import org.ofbiz.core.widgetimpl.*;
+
+security = request.getAttribute("security");
+delegator = request.getAttribute("delegator");
+
+if(security.hasEntityPermission("FACILITY", "_VIEW", session)) {
+    context.put("hasPermission", Boolean.TRUE);
+} else {
+    context.put("hasPermission", Boolean.FALSE);
+}
+String nowTimestampString = UtilDateTime.nowTimestamp().toString();
+context.put("nowTimestampString", nowTimestampString);
+
+//default this to true, ie only show active
+boolean activeOnly = !"false".equals(request.getParameter("activeOnly"));
+context.put("activeOnly", activeOnly);
+
+boolean useValues = true;
+if (request.getAttribute(SiteDefs.ERROR_MESSAGE) != null) useValues = false;
+
+String facilityGroupId = request.getParameter("facilityGroupId");
+if (facilityGroupId != null) context.put("facilityGroupId", facilityGroupId);
+
+GenericValue facilityGroup = delegator.findByPrimaryKey("FacilityGroup", UtilMisc.toMap("facilityGroupId", facilityGroupId));
+if (facilityGroup != null) context.put("facilityGroup", facilityGroup);
+
+if (facilityGroup == null) useValues = false;
+
+List facilityGroupMembers = facilityGroup.getRelated("FacilityGroupMember", null, UtilMisc.toList("sequenceNum", "facilityId"));
+if (activeOnly) facilityGroupMembers = EntityUtil.filterByDate(facilityGroupMembers, true);
+
+if (facilityGroupMembers != null) context.put("facilityGroupMembers", facilityGroupMembers);
+
+List facilityGroups = delegator.findAll("FacilityGroup", UtilMisc.toList("description"));
+if (facilityGroups != null) context.put("facilityGroups", facilityGroups);
+
+if ("true".equalsIgnoreCase((String)request.getParameter("useValues"))) useValues = true;
+context.put("useValues", useValues);
+
+int viewIndex = 0;
+int viewSize = 20;
+int highIndex = 0;
+int lowIndex = 0;
+int listSize = 0;
+
+try {
+    viewIndex = Integer.valueOf((String) request.getParameter("VIEW_INDEX")).intValue();
+} catch (Exception e) {
+    viewIndex = 0;
+}
+context.put("viewIndex", viewIndex);
+
+try {
+    viewSize = Integer.valueOf((String) request.getParameter("VIEW_SIZE")).intValue();
+} catch (Exception e) {
+    viewSize = 20;
+}
+context.put("viewSize", viewSize);
+
+if (facilityGroupMembers != null) {
+    listSize = facilityGroupMembers.size();
+}
+context.put("listSize", listSize);
+
+lowIndex = viewIndex * viewSize;
+highIndex = (viewIndex + 1) * viewSize;
+if (listSize < highIndex) {
+    if (listSize > 0) { 
+        highIndex = listSize-1;
+    } else {
+        highIndex = 0;
+    }
+}    
+context.put("lowIndex", lowIndex);
+context.put("highIndex", highIndex);

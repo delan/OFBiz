@@ -26,19 +26,7 @@
 
 <#if security.hasEntityPermission("FACILITY", "_CREATE", session)>
 
-<#if requestParameters.facilityId?exists>
-  <div class='tabContainer'>
-    <a href="<@ofbizUrl>/EditFacility?facilityId=${requestParameters.facilityId?if_exists}</@ofbizUrl>" class="tabButton">Facility</a>
-    <a href="<@ofbizUrl>/EditFacilityGroups?facilityId=${requestParameters.facilityId?if_exists}</@ofbizUrl>" class="tabButton">Groups</a>
-    <a href="<@ofbizUrl>/FindFacilityLocations?facilityId=${requestParameters.facilityId?if_exists}</@ofbizUrl>" class="tabButton">Locations</a>
-    <a href="<@ofbizUrl>/EditFacilityRoles?facilityId=${requestParameters.facilityId?if_exists}</@ofbizUrl>" class="tabButton">Roles</a>
-    <a href="<@ofbizUrl>/EditFacilityInventoryItems?facilityId=${requestParameters.facilityId?if_exists}</@ofbizUrl>" class="tabButton">Inventory&nbsp;Items</a>
-    <a href="<@ofbizUrl>/ReceiveInventory?facilityId=${requestParameters.facilityId?if_exists}</@ofbizUrl>" class="tabButton">Inventory&nbsp;Receive</a>
-    <a href="<@ofbizUrl>/FindFacilityTransfers?facilityId=${requestParameters.facilityId?if_exists}</@ofbizUrl>" class="tabButton">Inventory&nbsp;Xfers</a>
-    <a href="<@ofbizUrl>/ReceiveReturn?facilityId=${requestParameters.facilityId?if_exists}</@ofbizUrl>" class="tabButtonSelected">Receive Return</a>
-    <a href="<@ofbizUrl>/PicklistOptions?facilityId=${requestParameters.facilityId?if_exists}</@ofbizUrl>" class="tabButton">Picklist</a>
-  </div>
-</#if>
+${pages.get("/facility/FacilityTabBar.ftl")}
 
 <div class="head1">Receive Return <span class='head2'>into&nbsp;<#if facility?has_content>"${facility.facilityName?default("Not Defined")}"</#if> [ID:${facility.facilityId?if_exists}]</span></div>
 <a href="<@ofbizUrl>/EditFacility</@ofbizUrl>" class="buttontext">[New Facility]</a>
