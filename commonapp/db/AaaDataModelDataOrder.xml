@@ -46,11 +46,9 @@
   <RequirementType description="Product Requirement" hasTable="N" parentTypeId="" requirementTypeId="PRODUCT_REQUIREMENT"/>
   <RequirementType description="Work Requirement" hasTable="N" parentTypeId="" requirementTypeId="WORK_REQUIREMENT"/>
 
-  <ShoppingListType description="Public Wish List" shoppingListTypeId="SLT_PUB_WISH_LIST"/>
-  <ShoppingListType description="Private Wish List" shoppingListTypeId="SLT_PRIV_WISH_LIST"/>
+  <ShoppingListType description="Wish List" shoppingListTypeId="SLT_WISH_LIST"/>
   <ShoppingListType description="Gift Registry" shoppingListTypeId="SLT_GIFT_REG"/>
-  <ShoppingListType description="Baby Registry" shoppingListTypeId="SLT_BABY_REG"/>
-  <ShoppingListType description="Wedding Registry" shoppingListTypeId="SLT_WEDDING_REG"/>
+  <ShoppingListType description="Automatic Re-Orders" shoppingListTypeId="SLT_AUTO_REODR"/>
   <ShoppingListType description="Frequent Purchases" shoppingListTypeId="SLT_FREQ_PURCHASES"/>
 
   <!-- order item inventory res status -->

@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE simple-methods PUBLIC "-//OFBiz//DTD Simple Methods//EN" "http://www.ofbiz.org/dtds/simple-methods.dtd">
+
+<!--
+ *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * @author     Andy Zeneski (jaz@ofbiz.org)
+ * @version    $Revision$
+ * @since      2.1.1
+-->
+
+<simple-methods>
+    <simple-method method-name="createShoppingList" short-description="Create a ShoppingList">
+    	<if>
+    	    <condition>
+  	            <or>
+    	            <not><if-empty field-name="partyId" map-name="parameters"/></not>
+    	            <not><if-has-permission permission="PARTYMGR" action="_CREATE"/></not>
+    	        </or>
+    	    </condition>
+    	    <then>
+    	        <add-error><fail-message message="Security Error: to run createShoppingList for another party you must have the PARTYMGR_CREATE or PARTYMGR_ADMIN permission"/></add-error>
+    	    </then>
+    	</if>
+        <check-errors/>
+
+        <make-value value-name="newEntity" entity-name="ShoppingList"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+        
+        <sequenced-id-to-env sequence-name="ShoppingList" env-name="shoppingListId"/>
+        <to-string field-name="shoppingListId"/>
+        <env-to-field env-name="shoppingListId" map-name="newEntity"/>
+        <field-to-result field-name="shoppingListId" result-name="shoppingListId"/>
+        
+        <create-value value-name="newEntity"/>
+    </simple-method>
+    
+    <simple-method method-name="updateShoppingList" short-description="Update a ShoppingList">
+        <string-to-field field-name="parentMethodName" string="updateShoppingList"/>
+        <string-to-field field-name="permissionAction" string="UPDATE"/>
+        <call-simple-method method-name="checkShoppingListSecurity"/>
+        <check-errors/>    	     
+
+        <field-to-field field-name="shoppingListId" map-name="parameters" to-map-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="ShoppingList" map-name="lookupPKMap" value-name="shoppingList"/>
+        <set-nonpk-fields map-name="parameters" value-name="shoppingList"/>
+        <store-value value-name="shoppingList"/>
+    </simple-method>
+    
+    <simple-method method-name="removeShoppingList" short-description="Remove a ShoppingList">
+        <string-to-field field-name="parentMethodName" string="updateShoppingList"/>
+        <string-to-field field-name="permissionAction" string="UPDATE"/>
+        <call-simple-method method-name="checkShoppingListSecurity"/>
+        <check-errors/>    	     
+
+        <field-to-field field-name="shoppingListId" map-name="parameters" to-map-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="ShoppingListItem" map-name="lookupPKMap" value-name="shoppingListItem"/>
+        <remove-value value-name="shoppingListItem"/>
+    </simple-method>
+    
+    <simple-method method-name="createShoppingListItem" short-description="Create a ShoppingList Item">
+        <string-to-field field-name="parentMethodName" string="createShoppingListItem"/>
+        <string-to-field field-name="permissionAction" string="CREATE"/>
+        <call-simple-method method-name="checkShoppingListItemSecurity"/>
+        <check-errors/> 
+
+        <make-value value-name="newEntity" entity-name="ShoppingList"/>
+        <field-to-field field-name="shoppingListId" map-name="parameters" to-map-name="newEntity"/>
+        
+        <field-to-field field-name="shoppingListId" map-name="parameters" to-map-name="lookupMap"/>
+        <string-to-list string="-shoppingListItemSeqId" list-name="orderBy"/>
+        <find-by-and entity-name="ShoppingListItem" list-name="currentItems" map-name="lookupMap" order-by-list-name="orderBy"></find-by-and>
+        <if-empty field-name="currentItems">
+            <string-to-field string="1" field-name="shoppingListItemSeqId" map-name="newEntity"/>            
+        <else>
+           <first-from-list entry-name="newestItem" list-name="currentItems"/>
+           <calculate field-name="shoppingListItemSeqId" map-name="newEntity" type="Integer">
+               <calcop field-name="shoppingListItemSeqId" map-name="newEntity" operator="add">
+                   <number value="1"/>
+               </calcop>
+           </calculate>
+           <to-string field-name="shoppingListItemSeqId" map-name="newEntity"/>
+        </else>
+        </if-empty>
+                        
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+        <field-to-result field-name="shoppingListItemSeqId" map-name="newEntity"/>                                        
+        <create-value value-name="newEntity"/>
+    </simple-method>
+    
+    <simple-method method-name="updateShoppingListItem" short-description="Update a ShoppingListItem">
+        <string-to-field field-name="parentMethodName" string="updateShoppingListItem"/>
+        <string-to-field field-name="permissionAction" string="UPDATE"/>
+        <call-simple-method method-name="checkShoppingListItemSecurity"/>
+        <check-errors/>    	     
+
+        <field-to-field field-name="shoppingListId" map-name="parameters" to-map-name="lookupPKMap"/>
+        <field-to-field field-name="shoppingListItemSeqId" map-name="parameters" to-map-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="ShoppingListItem" map-name="lookupPKMap" value-name="shoppingListItem"/>
+        <set-nonpk-fields map-name="parameters" value-name="shoppingListItem"/>
+        <store-value value-name="shoppingListItem"/>
+    </simple-method>
+    
+    <simple-method method-name="removeShoppingListItem" short-description="Remove a ShoppingListItem">
+        <string-to-field field-name="parentMethodName" string="removeShoppingListItem"/>
+        <string-to-field field-name="permissionAction" string="DELETE"/>
+        <call-simple-method method-name="checkShoppingListItemSecurity"/>
+        <check-errors/>    
+
+        <field-to-field field-name="shoppingListId" map-name="parameters" to-map-name="lookupPKMap"/>
+        <field-to-field field-name="shoppingListItemSeqId" map-name="parameters" to-map-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="ShoppingListItem" map-name="lookupPKMap" value-name="shoppingListItem"/>
+        <remove-value value-name="shoppingListItem"/>
+    </simple-method>    
+    
+    <simple-method method-name="checkShoppingListSecurity" short-description="Checks security on a ShoppingList">
+    	<if>
+    	    <condition>
+  	            <or>
+    	            <not><if-compare-field field-name="partyId" map-name="userLogin" operator="equals" to-map-name="parameters"/></not>
+    	            <not><if-has-permission permission="PARTYMGR" action="_${permissionAction}"/></not>
+    	        </or>
+    	    </condition>
+    	    <then>
+    	        <add-error><fail-message message="Security Error: to run ${parentMethodName} for another party you must have the PARTYMGR_${permissionAction} or PARTYMGR_ADMIN permission"/></add-error>
+    	    </then>
+    	</if>    	    	
+    </simple-method>    
+    
+    <simple-method method-name="checkShoppingListItemSecurity" short-description="Checks security on a ShoppingListItem">
+    	<field-to-field field-name="shoppingListId" map-name="parameters" to-map-name="lookupSLMap"/>
+    	<find-by-primary-key entity-name="ShoppingList" map-name="lookupSLMap" value-name="shoppingList"/>
+   	    <if>
+    	    <condition>
+  	            <or>
+    	            <not><if-compare-field field-name="partyId" map-name="userLogin" operator="equals" to-map-name="shoppingList"/></not>
+    	            <not><if-has-permission permission="PARTYMGR" action="_${permissionAction}"/></not>
+    	        </or>
+    	    </condition>
+    	    <then>
+    	        <add-error><fail-message message="Security Error: to run ${parentMethodName} for another party you must have the PARTYMGR_${permissionAction} or PARTYMGR_ADMIN permission"/></add-error>
+    	    </then>
+    	</if>        
+    </simple-method>
+</simple-methods>

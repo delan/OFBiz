@@ -347,6 +347,60 @@
         <attribute name="workReqFulfTypeId" type="String" mode="IN" optional="true"/>
     </service>
 
+    <!-- Shopping List Services -->
+    <service name="shoppingListInterface" engine="interface" location="" invoke="">
+        <description>Shopping List Interface</description>
+        <attribute name="shoppingListTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="parentShoppingListId" type="String" mode="IN" optional="true"/>
+        <attribute name="partyId" type="String" mode="IN" optional="false"/>
+        <attribute name="listName" type="String" mode="IN" optional="false"/>
+        <attribute name="description" type="String" mode="IN" optional="true"/>
+        <attribute name="isPublic" type="Boolean" mode="IN" optional="false"/>        
+    </service>
+    <service name="createShoppingList" engine="simple" auth="true"
+            location="org/ofbiz/commonapp/order/shoppinglist/ShoppingListServices.xml" invoke="createShoppingList">
+        <description>Create a shopping list entity</description>
+        <implements service="shoppingListInterface"/>
+        <attribute name="shoppingListId" type="String" mode="OUT" optional="false"/>
+    </service>    
+    <service name="updateShoppingList" engine="simple" auth="true"
+            location="org/ofbiz/commonapp/order/shoppinglist/ShoppingListServices.xml" invoke="updateShoppingList">
+        <description>Update a shopping list entity</description>
+        <implements service="shoppingListInterface"/>
+        <attribute name="shoppingListId" type="String" mode="IN" optional="false"/>
+    </service> 
+    <service name="removeShoppingList" engine="simple" auth="true"
+            location="org/ofbiz/commonapp/order/shoppinglist/ShoppingListServices.xml" invoke="removeShoppingList">
+        <description>Remove a shopping list entity</description>       
+        <attribute name="shoppingListId" type="String" mode="IN" optional="false"/>
+    </service>    
+          
+    <service name="shoppingListItemInterface" engine="interface" location="" invoke="">
+        <description>Interface of shopping list items</description>
+        <attribute name="shoppingListId" type="String" mode="IN" optional="false"/>
+        <attribute name="productId" type="String" mode="IN" optional="false"/>
+        <attribute name="quantity" type="Double" mode="IN" optional="true"/>
+        <attribute name="quantityPurchased" type="Double" mode="IN" optional="true"/>
+    </service>
+    <service name="createShoppingListItem" engine="simple" auth="true"
+            location="org/ofbiz/commonapp/order/shoppinglist/ShoppingListServices.xml" invoke="createShoppingListItem">
+        <description>Create a shopping list item</description>
+        <implements service="shoppingListItemInterface"/>
+        <attribute name="shoppingListItemSeqId" type="String" mode="OUT" optional="false"/>
+    </service>
+    <service name="updateShoppingListItem" engine="simple" auth="true"
+            location="org/ofbiz/commonapp/order/shoppinglist/ShoppingListServices.xml" invoke="updateShoppingListItem">
+        <description>Update a shopping list item</description>
+        <implements service="shoppingListItemInterface"/>
+        <attribute name="shoppingListItemSeqId" type="String" mode="IN" optional="false"/>
+    </service>    
+    <service name="removeShoppingListItem" engine="simple" auth="true"
+            location="org/ofbiz/commonapp/order/shoppinglist/ShoppingListServices.xml" invoke="removeShoppingListItem">
+        <description>Remove a shopping list item</description>
+        <attribute name="shoppingListId" type="String" mode="IN" optional="false"/>
+        <attribute name="shoppingListItemSeqId" type="String" mode="IN" optional="false"/>
+    </service>        
+    
     <!-- Order View Services -->
     <service name="getOrderInformation" engine="java"
             location="org.ofbiz.commonapp.order.order.OrderServices" invoke="getOrderInformation">
