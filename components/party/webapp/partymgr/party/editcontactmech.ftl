@@ -79,7 +79,7 @@
     &nbsp;<a href='<@ofbizUrl>/authview/${donePage}</@ofbizUrl>' class='buttontext'>[${uiLabelMap.CommonGoBack}]</a>
     &nbsp;<a href="javascript:document.editcontactmechform.submit()" class="buttontext">[${uiLabelMap.CommonSave}]</a>
       <table width="90%" border="0" cellpadding="2" cellspacing="0">
-      
+        <#if mechMap.purposeTypes?has_content>
         <tr>
           <td width="26%" align=right valign=top><div class="tabletext">${uiLabelMap.PartyContactPurposes}</div></td>
           <td width="5">&nbsp;</td>
@@ -103,7 +103,7 @@
                 </tr>
               </#list>
             </#if>              
-            <#if mechMap.purposeTypes?has_content>
+            
               <tr>
                 <form method=POST action='<@ofbizUrl>/createPartyContactMechPurpose</@ofbizUrl>' name='newpurposeform'>
                 <input type=hidden name='partyId' value='${partyId}'>
@@ -121,10 +121,10 @@
                 </form>
                 <td bgcolor='white'><div><a href='javascript:document.newpurposeform.submit()' class='buttontext'>&nbsp;${uiLabelMap.PartyAddPurpose}&nbsp;</a></div></td>
               </tr>
-              </#if>
             </table>
           </td>
         </tr>
+        </#if>
         <form method="post" action='<@ofbizUrl>/${mechMap.requestName}</@ofbizUrl>' name="editcontactmechform">
         <input type=hidden name="contactMechId" value='${contactMechId}'>
         <input type=hidden name="contactMechTypeId" value='${mechMap.contactMechTypeId}'>
