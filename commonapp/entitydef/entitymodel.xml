@@ -664,19 +664,6 @@
       <relation type="many" rel-entity-name="SecurityGroupPermission">
         <key-map field-name="groupId"/>
       </relation>
-    </entity>
-    
-  <!-- ========================================================= -->
-  <!-- org.ofbiz.commonapp.test -->
-  <!-- ========================================================= -->
-    <entity entity-name="JotmXapoolTest"
-            package-name="org.ofbiz.commonapp.test"
-            title="JOTM/XAPool Test Table">
-      <field name="idx_1" col-name="idx_1" type="numeric"></field>
-      <field name="col_2" col-name="col_2" type="short-varchar"></field>
-      <field name="col_3" col-name="col_3" type="short-varchar"></field>
-      <field name="stamp_4" col-name="stamp_4" type="date-time"></field>
-      <prim-key field="idx_1"/>     
-    </entity>     
+    </entity>    
 </entitymodel>
 

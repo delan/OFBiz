@@ -795,12 +795,6 @@
     <entity-group group="org.ofbiz.commonapp" entity="ShipmentType" />
     <entity-group group="org.ofbiz.commonapp" entity="ShipmentTypeAttr" />
     <entity-group group="org.ofbiz.commonapp" entity="ShippingDocument" />
-    
-  <!-- ========================================================= -->
-  <!-- org.ofbiz.commonapp.test -->
-  <!-- ========================================================= -->
-
-    <entity-group group="org.ofbiz.commonapp" entity="JotmXapoolTest" />    
 
   <!-- ========================================================= -->
   <!-- org.ofbiz.commonapp.workeffort.definition -->
