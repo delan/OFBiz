@@ -50,6 +50,40 @@ public class GenericEntity implements Serializable
   public GenericEntity(String entityName, Map fields) { this.entityName = entityName; this.fields = new HashMap(fields); }
   /** Copy Constructor: Creates new GenericEntity from existing GenericEntity */
   public GenericEntity(GenericEntity value) { this.entityName = value.entityName; this.fields = new HashMap(value.fields); }
+  /** Creates new GenericPK from Map based on parameters */
+  public GenericEntity(String entityName, String name1, Object value1)
+  { 
+    this.entityName = entityName;
+    fields = new HashMap();
+    fields.put(name1, value1);
+  }
+  /** Creates new GenericPK from Map based on parameters */
+  public GenericEntity(String entityName, String name1, Object value1, String name2, Object value2)
+  { 
+    this.entityName = entityName;
+    fields = new HashMap();
+    fields.put(name1, value1);
+    fields.put(name2, value2);
+  }
+  /** Creates new GenericPK from Map based on parameters */
+  public GenericEntity(String entityName, String name1, Object value1, String name2, Object value2, String name3, Object value3)
+  { 
+    this.entityName = entityName;
+    fields = new HashMap();
+    fields.put(name1, value1);
+    fields.put(name2, value2);
+    fields.put(name3, value3);
+  }
+  /** Creates new GenericPK from Map based on parameters */
+  public GenericEntity(String entityName, String name1, Object value1, String name2, Object value2, String name3, Object value3, String name4, Object value4)
+  { 
+    this.entityName = entityName;
+    fields = new HashMap();
+    fields.put(name1, value1);
+    fields.put(name2, value2);
+    fields.put(name3, value3);
+    fields.put(name4, value4);
+  }
   
   public boolean isModified() { return modified; }
   

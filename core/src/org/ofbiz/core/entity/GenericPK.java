@@ -39,4 +39,12 @@ public class GenericPK extends GenericEntity
   public GenericPK(String entityName, Map fields) { super(entityName, fields); }
   /** Creates new GenericPK from existing GenericPK */
   public GenericPK(GenericPK value) { super(value); }
+  /** Creates new GenericPK from Map based on parameters */
+  public GenericPK(String entityName, String name1, Object value1) { super(entityName, name1, value1); }
+  /** Creates new GenericPK from Map based on parameters */
+  public GenericPK(String entityName, String name1, Object value1, String name2, Object value2) { super(entityName, name1, value1, name2, value2); }
+  /** Creates new GenericPK from Map based on parameters */
+  public GenericPK(String entityName, String name1, Object value1, String name2, Object value2, String name3, Object value3) { super(entityName, name1, value1, name2, value2, name3, value3); }
+  /** Creates new GenericPK from Map based on parameters */
+  public GenericPK(String entityName, String name1, Object value1, String name2, Object value2, String name3, Object value3, String name4, Object value4) { super(entityName, name1, value1, name2, value2, name3, value3, name4, value4); }
 }
