@@ -324,7 +324,11 @@ public class CatalogWorker {
     }
 
     public static List getProdCatalogCategories(PageContext pageContext, String prodCatalogId, String prodCatalogCategoryTypeId) {
-        GenericDelegator delegator = (GenericDelegator) pageContext.getRequest().getAttribute("delegator");
+            return getProdCatalogCategories(pageContext.getRequest(), prodCatalogId, prodCatalogCategoryTypeId);
+    }
+    
+    public static List getProdCatalogCategories(ServletRequest request, String prodCatalogId, String prodCatalogCategoryTypeId) {
+        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
 
         try {
             List prodCatalogCategories = EntityUtil.filterByDate(delegator.findByAndCache("ProdCatalogCategory",
@@ -395,12 +399,20 @@ public class CatalogWorker {
     }
 
     public static String getCatalogName(PageContext pageContext) {
-        return getCatalogName(pageContext, getCurrentCatalogId(pageContext));
+        return getCatalogName(pageContext.getRequest());
+    }
+    
+    public static String getCatalogName(PageContext pageContext, String prodCatalogId) {
+        return getCatalogName(pageContext.getRequest(), prodCatalogId);
+    }
+    
+    public static String getCatalogName(ServletRequest request) {
+        return getCatalogName(request, getCurrentCatalogId(request));
     }
 
-    public static String getCatalogName(PageContext pageContext, String prodCatalogId) {
+    public static String getCatalogName(ServletRequest request, String prodCatalogId) {
         if (prodCatalogId == null || prodCatalogId.length() <= 0) return null;
-        GenericDelegator delegator = (GenericDelegator) pageContext.getRequest().getAttribute("delegator");
+        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
 
         try {
             GenericValue prodCatalog = delegator.findByPrimaryKeyCache("ProdCatalog", UtilMisc.toMap("prodCatalogId", prodCatalogId));
@@ -416,7 +428,11 @@ public class CatalogWorker {
     }
 
     public static String getContentPathPrefix(PageContext pageContext) {
-        GenericValue prodCatalog = getProdCatalog(pageContext, getCurrentCatalogId(pageContext));
+        return getContentPathPrefix(pageContext.getRequest());
+    }
+    
+    public static String getContentPathPrefix(ServletRequest request) {
+        GenericValue prodCatalog = getProdCatalog(request, getCurrentCatalogId(request));
 
         if (prodCatalog == null) return "";
         String contentPathPrefix = prodCatalog.getString("contentPathPrefix");
@@ -425,7 +441,11 @@ public class CatalogWorker {
     }
 
     public static String getTemplatePathPrefix(PageContext pageContext) {
-        GenericValue prodCatalog = getProdCatalog(pageContext, getCurrentCatalogId(pageContext));
+        return getTemplatePathPrefix(pageContext.getRequest());
+    }
+        
+    public static String getTemplatePathPrefix(ServletRequest request) {
+        GenericValue prodCatalog = getProdCatalog(request, getCurrentCatalogId(request));
 
         if (prodCatalog == null) return "";
         String templatePathPrefix = prodCatalog.getString("templatePathPrefix");
@@ -457,13 +477,21 @@ public class CatalogWorker {
     }
 
     public static String getCatalogTopCategoryId(PageContext pageContext) {
-        return getCatalogTopCategoryId(pageContext, getCurrentCatalogId(pageContext));
+        return getCatalogTopCategoryId(pageContext.getRequest());
     }
-
+    
+    public static String getCatalogTopCategoryId(ServletRequest request) {
+        return getCatalogTopCategoryId(request, getCurrentCatalogId(request));
+    }
+    
     public static String getCatalogTopCategoryId(PageContext pageContext, String prodCatalogId) {
+        return getCatalogTopCategoryId(pageContext.getRequest(), prodCatalogId);            
+    }
+    
+    public static String getCatalogTopCategoryId(ServletRequest request, String prodCatalogId) {
         if (prodCatalogId == null || prodCatalogId.length() <= 0) return null;
 
-        List prodCatalogCategories = getProdCatalogCategories(pageContext, prodCatalogId, "PCCT_BROWSE_ROOT");
+        List prodCatalogCategories = getProdCatalogCategories(request, prodCatalogId, "PCCT_BROWSE_ROOT");
 
         if (prodCatalogCategories != null && prodCatalogCategories.size() > 0) {
             GenericValue prodCatalogCategory = EntityUtil.getFirst(prodCatalogCategories);
@@ -473,15 +501,22 @@ public class CatalogWorker {
             return null;
         }
     }
-
     public static String getCatalogSearchCategoryId(PageContext pageContext) {
-        return getCatalogSearchCategoryId(pageContext, getCurrentCatalogId(pageContext));
+        return getCatalogSearchCategoryId(pageContext.getRequest());
     }
-
+    
+    public static String getCatalogSearchCategoryId(ServletRequest request) {
+        return getCatalogSearchCategoryId(request, getCurrentCatalogId(request));
+    }
+    
     public static String getCatalogSearchCategoryId(PageContext pageContext, String prodCatalogId) {
+        return getCatalogSearchCategoryId(pageContext.getRequest(), prodCatalogId);
+    }
+    
+    public static String getCatalogSearchCategoryId(ServletRequest request, String prodCatalogId) {
         if (prodCatalogId == null || prodCatalogId.length() <= 0) return null;
 
-        List prodCatalogCategories = getProdCatalogCategories(pageContext, prodCatalogId, "PCCT_SEARCH");
+        List prodCatalogCategories = getProdCatalogCategories(request, prodCatalogId, "PCCT_SEARCH");
 
         if (prodCatalogCategories != null && prodCatalogCategories.size() > 0) {
             GenericValue prodCatalogCategory = EntityUtil.getFirst(prodCatalogCategories);
@@ -493,13 +528,21 @@ public class CatalogWorker {
     }
 
     public static String getCatalogPromotionsCategoryId(PageContext pageContext) {
-        return getCatalogPromotionsCategoryId(pageContext, getCurrentCatalogId(pageContext));
+        return getCatalogPromotionsCategoryId(pageContext.getRequest());
+    }
+    
+    public static String getCatalogPromotionsCategoryId(ServletRequest request) {
+        return getCatalogPromotionsCategoryId(request, getCurrentCatalogId(request));
     }
 
     public static String getCatalogPromotionsCategoryId(PageContext pageContext, String prodCatalogId) {
+        return getCatalogPromotionsCategoryId(pageContext.getRequest(), prodCatalogId);
+    }
+                
+    public static String getCatalogPromotionsCategoryId(ServletRequest request, String prodCatalogId) {
         if (prodCatalogId == null || prodCatalogId.length() <= 0) return null;
 
-        List prodCatalogCategories = getProdCatalogCategories(pageContext, prodCatalogId, "PCCT_PROMOTIONS");
+        List prodCatalogCategories = getProdCatalogCategories(request, prodCatalogId, "PCCT_PROMOTIONS");
 
         if (prodCatalogCategories != null && prodCatalogCategories.size() > 0) {
             GenericValue prodCatalogCategory = EntityUtil.getFirst(prodCatalogCategories);
@@ -538,13 +581,21 @@ public class CatalogWorker {
     }
 
     public static String getCatalogQuickaddCategoryPrimary(PageContext pageContext) {
-        return getCatalogQuickaddCategoryPrimary(pageContext, getCurrentCatalogId(pageContext));
+        return getCatalogQuickaddCategoryPrimary(pageContext.getRequest());
+    }
+               
+    public static String getCatalogQuickaddCategoryPrimary(ServletRequest request) {
+        return getCatalogQuickaddCategoryPrimary(request, getCurrentCatalogId(request));
     }
 
     public static String getCatalogQuickaddCategoryPrimary(PageContext pageContext, String prodCatalogId) {
+        return getCatalogQuickaddCategoryPrimary(pageContext.getRequest(), prodCatalogId);
+    }
+                        
+    public static String getCatalogQuickaddCategoryPrimary(ServletRequest request, String prodCatalogId) {
         if (prodCatalogId == null || prodCatalogId.length() <= 0) return null;
 
-        List prodCatalogCategories = getProdCatalogCategories(pageContext, prodCatalogId, "PCCT_QUICK_ADD");
+        List prodCatalogCategories = getProdCatalogCategories(request, prodCatalogId, "PCCT_QUICK_ADD");
 
         if (prodCatalogCategories != null && prodCatalogCategories.size() > 0) {
             GenericValue prodCatalogCategory = EntityUtil.getFirst(prodCatalogCategories);
@@ -556,15 +607,23 @@ public class CatalogWorker {
     }
 
     public static Collection getCatalogQuickaddCategories(PageContext pageContext) {
-        return getCatalogQuickaddCategories(pageContext, getCurrentCatalogId(pageContext));
+        return getCatalogQuickaddCategories(pageContext.getRequest());
+    }
+                    
+    public static Collection getCatalogQuickaddCategories(ServletRequest request) {
+        return getCatalogQuickaddCategories(request, getCurrentCatalogId(request));
     }
 
     public static Collection getCatalogQuickaddCategories(PageContext pageContext, String prodCatalogId) {
+        return getCatalogQuickaddCategories(pageContext.getRequest(), prodCatalogId);
+    }
+                
+    public static Collection getCatalogQuickaddCategories(ServletRequest request, String prodCatalogId) {
         if (prodCatalogId == null || prodCatalogId.length() <= 0) return null;
 
         Collection categoryIds = new LinkedList();
 
-        Collection prodCatalogCategories = getProdCatalogCategories(pageContext, prodCatalogId, "PCCT_QUICK_ADD");
+        Collection prodCatalogCategories = getProdCatalogCategories(request, prodCatalogId, "PCCT_QUICK_ADD");
 
         if (prodCatalogCategories != null && prodCatalogCategories.size() > 0) {
             Iterator pccIter = prodCatalogCategories.iterator();
@@ -613,8 +672,13 @@ public class CatalogWorker {
     /* ============================= Special Data Retreival Methods ===========================*/
 
     public static void getRandomCartProductAssoc(PageContext pageContext, String assocsAttrName) {
-        GenericDelegator delegator = (GenericDelegator) pageContext.getRequest().getAttribute("delegator");
-        ShoppingCart cart = (ShoppingCart) pageContext.getSession().getAttribute("shoppingCart");
+        getRandomCartProductAssoc(pageContext.getRequest(), assocsAttrName);
+    }
+                
+    public static void getRandomCartProductAssoc(ServletRequest request, String assocsAttrName) {
+        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
+        HttpServletRequest httpRequest = (HttpServletRequest) request;
+        ShoppingCart cart = (ShoppingCart) httpRequest.getSession().getAttribute("shoppingCart");
 
         if (cart == null || cart.size() <= 0) return;
 
@@ -661,7 +725,7 @@ public class CatalogWorker {
                 cartAssocs.remove(toRemove);
             }
             if (cartAssocs.size() > 0) {
-                pageContext.setAttribute(assocsAttrName, cartAssocs);
+                request.setAttribute(assocsAttrName, cartAssocs);
             }
         } catch (GenericEntityException e) {
             Debug.logWarning(e);
@@ -669,16 +733,21 @@ public class CatalogWorker {
     }
 
     public static void getQuickReorderProducts(PageContext pageContext, String productsAttrName, String quantitiesAttrName) {
-        GenericDelegator delegator = (GenericDelegator) pageContext.getRequest().getAttribute("delegator");
-        GenericValue userLogin = (GenericValue) pageContext.findAttribute(SiteDefs.USER_LOGIN);
+            getQuickReorderProducts(pageContext.getRequest(), productsAttrName, quantitiesAttrName);
+    }
+                
+    public static void getQuickReorderProducts(ServletRequest request, String productsAttrName, String quantitiesAttrName) {
+        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
+        HttpServletRequest httpRequest = (HttpServletRequest) request;
+        GenericValue userLogin = (GenericValue) httpRequest.getSession().getAttribute(SiteDefs.USER_LOGIN);
 
-        if (userLogin == null) userLogin = (GenericValue) pageContext.findAttribute("autoUserLogin");
+        if (userLogin == null) userLogin = (GenericValue) httpRequest.getSession().getAttribute("autoUserLogin");
         if (userLogin == null) return;
 
         try {
-            Map products = (Map) pageContext.getSession().getAttribute("_QUICK_REORDER_PRODUCTS_");
-            Map productQuantities = (Map) pageContext.getSession().getAttribute("_QUICK_REORDER_PRODUCT_QUANTITIES_");
-            Map productOccurances = (Map) pageContext.getSession().getAttribute("_QUICK_REORDER_PRODUCT_OCCURANCES_");
+            Map products = (Map) httpRequest.getSession().getAttribute("_QUICK_REORDER_PRODUCTS_");
+            Map productQuantities = (Map) httpRequest.getSession().getAttribute("_QUICK_REORDER_PRODUCT_QUANTITIES_");
+            Map productOccurances = (Map) httpRequest.getSession().getAttribute("_QUICK_REORDER_PRODUCT_OCCURANCES_");
 
             if (products == null || productQuantities == null || productOccurances == null) {
                 products = new HashMap();
@@ -737,9 +806,9 @@ public class CatalogWorker {
                     productQuantities.put(prodId, new Integer(nqint));
                 }
 
-                pageContext.getSession().setAttribute("_QUICK_REORDER_PRODUCTS_", new HashMap(products));
-                pageContext.getSession().setAttribute("_QUICK_REORDER_PRODUCT_QUANTITIES_", new HashMap(productQuantities));
-                pageContext.getSession().setAttribute("_QUICK_REORDER_PRODUCT_OCCURANCES_", new HashMap(productOccurances));
+                httpRequest.getSession().setAttribute("_QUICK_REORDER_PRODUCTS_", new HashMap(products));
+                httpRequest.getSession().setAttribute("_QUICK_REORDER_PRODUCT_QUANTITIES_", new HashMap(productQuantities));
+                httpRequest.getSession().setAttribute("_QUICK_REORDER_PRODUCT_OCCURANCES_", new HashMap(productOccurances));
             } else {
                 // make a copy since we are going to change them
                 products = new HashMap(products);
@@ -748,7 +817,7 @@ public class CatalogWorker {
             }
 
             // remove all products that are already in the cart
-            ShoppingCart cart = (ShoppingCart) pageContext.getSession().getAttribute(SiteDefs.SHOPPING_CART);
+            ShoppingCart cart = (ShoppingCart) httpRequest.getSession().getAttribute(SiteDefs.SHOPPING_CART);
 
             if (cart != null && cart.size() > 0) {
                 Iterator cartiter = cart.iterator();
@@ -794,8 +863,8 @@ public class CatalogWorker {
                 reorderProds.remove(reorderProds.size() - 1);
             }
 
-            pageContext.setAttribute(productsAttrName, reorderProds);
-            pageContext.setAttribute(quantitiesAttrName, productQuantities);
+            request.setAttribute(productsAttrName, reorderProds);
+            request.setAttribute(quantitiesAttrName, productQuantities);
         } catch (GenericEntityException e) {
             Debug.logWarning(e);
         }
@@ -848,7 +917,7 @@ public class CatalogWorker {
             }
         }
     }
-
+                        
     public static void printSubCategories(GenericValue pcategory, GenericValue category, String curcatid, PageContext pageContext) throws java.io.IOException {
         String controlPath = (String) pageContext.getRequest().getAttribute(SiteDefs.CONTROL_PATH);
         JspWriter out = pageContext.getOut();
