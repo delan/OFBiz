@@ -333,6 +333,12 @@
     	<response name="success" type="view" value="EditProductFeatures"/>
     	<response name="error" type="view" value="EditProductFeatures"/>
     </request-map>
+    <request-map uri="ApplyFeatureToProductFromTypeAndCode"><security https="true" auth="true"/>
+        <event type="service" path="" invoke="applyFeatureToProductFromTypeAndCode"/>
+    	<response name="success" type="view" value="EditProductFeatures"/>
+    	<response name="error" type="view" value="EditProductFeatures"/>
+    </request-map>
+    
 
     <!-- ================ FACILITY REQUESTS ================= -->
     <request-map uri="FindFacility"><security https="true" auth="true"/>
