@@ -516,8 +516,18 @@ public class ProductStoreWorker {
         }
     }
 
-    /** This method is used in the showcart pages to determine whether or not to show the inventory message */
-    public static boolean isStoreInventoryNotRequiredAndNotAvailable(ServletRequest request, GenericValue product, double quantity) {
+    /** 
+     * This method is used in the showcart pages to determine whether or not to show the inventory message and 
+     * in the productdetail pages to determine whether or not to show the item as out of stock.
+     * 
+     * @param request ServletRequest (or HttpServletRequest of course)
+     * @param product GenericValue representing the product in question
+     * @param quantity Quantity desired.
+     * @param wantRequired If true then inventory required must be true for the result to be true, if false must be false; if null don't care
+     * @param wantAvailable If true then inventory avilable must be true for the result to be true, if false must be false; if null don't care
+     * @return
+     */
+    public static boolean isStoreInventoryRequiredAndAvailable(ServletRequest request, GenericValue product, double quantity, Boolean wantRequired, Boolean wantAvailable) {
         GenericValue productStore = getProductStore(request);
         if (productStore == null) {
             Debug.logWarning("No ProductStore found, return false for inventory check", module);
@@ -528,18 +538,27 @@ public class ProductStoreWorker {
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         
         try {
-            Map invReqResult = dispatcher.runSync("isStoreInventoryRequired", UtilMisc.toMap("productStoreId", productStoreId, "productId", product.get("productId"), "product", product, "productStore", productStore));
-            if (ServiceUtil.isError(invReqResult)) {
-                Debug.logError("Error calling isStoreInventoryRequired service, result is: " + invReqResult, module);
-                return false;
-            }
-            Map invAvailResult = dispatcher.runSync("isStoreInventoryAvailable", UtilMisc.toMap("productStoreId", productStoreId, "productId", product.get("productId"), "product", product, "productStore", productStore, "quantity", new Double(quantity)));
-            if (ServiceUtil.isError(invAvailResult)) {
-                Debug.logError("Error calling isStoreInventoryAvailable service, result is: " + invAvailResult, module);
-                return false;
+            Boolean requiredOkay = null;
+            if (wantRequired != null) {
+                Map invReqResult = dispatcher.runSync("isStoreInventoryRequired", UtilMisc.toMap("productStoreId", productStoreId, "productId", product.get("productId"), "product", product, "productStore", productStore));
+                if (ServiceUtil.isError(invReqResult)) {
+                    Debug.logError("Error calling isStoreInventoryRequired service, result is: " + invReqResult, module);
+                    return false;
+                }
+                requiredOkay = new Boolean(wantRequired.booleanValue() == "Y".equals((String) invReqResult.get("requireInventory")));
             }
 
-            if (!"Y".equals((String) invAvailResult.get("available")) && !"Y".equals((String) invReqResult.get("requireInventory"))) {
+            Boolean availableOkay = null;
+            if (wantAvailable != null) {
+                Map invAvailResult = dispatcher.runSync("isStoreInventoryAvailable", UtilMisc.toMap("productStoreId", productStoreId, "productId", product.get("productId"), "product", product, "productStore", productStore, "quantity", new Double(quantity)));
+                if (ServiceUtil.isError(invAvailResult)) {
+                    Debug.logError("Error calling isStoreInventoryAvailable service, result is: " + invAvailResult, module);
+                    return false;
+                }
+                availableOkay = new Boolean(wantAvailable.booleanValue() == "Y".equals((String) invAvailResult.get("available")));
+            }
+
+            if ((requiredOkay == null || requiredOkay.booleanValue()) && (availableOkay == null || availableOkay.booleanValue())) {
                 return true;
             } else {
                 return false;
