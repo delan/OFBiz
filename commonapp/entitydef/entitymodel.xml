@@ -1,5 +1,4 @@
 <?xml version="1.0"?>
-
 <!--
 /**
  *  $Id$
@@ -26,7 +25,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author David E. Jones (jonesde@ofbiz.org)
- *@created    Mon Aug 27 23:48:55 MDT 2001
+ *@created    Tue Aug 28 12:04:58 PDT 2001
  *@version    1.0
  */
 -->
@@ -3875,6 +3874,11 @@
         <key-map><col-name>PARTY_ID</col-name></key-map>
         <key-map><col-name>ROLE_TYPE_ID</col-name></key-map>
       </relation>
+      <relation>
+        <type>one</type>
+        <rel-table-name>ROLE_TYPE</rel-table-name>
+        <key-map><col-name>ROLE_TYPE_ID</col-name></key-map>
+      </relation>
     </entity>	
     <entity>
       <title>Order Shipment Entity</title>
@@ -4101,6 +4105,17 @@
         <type>one</type>
         <rel-table-name>PRODUCT</rel-table-name>
         <key-map><col-name>PRODUCT_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>one</type><title>Engagement</title>
+        <rel-table-name>ORDER_HEADER</rel-table-name>
+        <key-map><col-name>ENGAGEMENT_ID</col-name><rel-col-name>ORDER_ID</rel-col-name></key-map>
+      </relation>
+      <relation>
+        <type>one</type><title>Engagement</title>
+        <rel-table-name>ORDER_ITEM</rel-table-name>
+        <key-map><col-name>ENGAGEMENT_ID</col-name><rel-col-name>ORDER_ID</rel-col-name></key-map>
+        <key-map><col-name>ENGAGEMENT_ITEM_SEQ_ID</col-name><rel-col-name>ORDER_ITEM_SEQ_ID</rel-col-name></key-map>
       </relation>
     </entity>	
     <entity>
@@ -6175,6 +6190,11 @@
       <relation>
         <type>many</type>
         <rel-table-name>VALID_CONTACT_MECH_ROLE</rel-table-name>
+        <key-map><col-name>ROLE_TYPE_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>many</type>
+        <rel-table-name>ORDER_ROLE</rel-table-name>
         <key-map><col-name>ROLE_TYPE_ID</col-name></key-map>
       </relation>
     </entity>	
