@@ -413,8 +413,8 @@ public class WorkflowServices {
         GenericDelegator delegator = ctx.getDelegator();
         LocalDispatcher dispatcher = ctx.getDispatcher();
         String workEffortId = (String) context.get("workEffortId");
-        String limitService = (String) context.get("limitService");
-        Map limitContext = (Map) context.get("limitContext");
+        String limitService = (String) context.get("serviceName");
+        Map limitContext = (Map) context.get("serviceContext");
 
         try {
             WorkflowClient client = WfFactory.getClient(ctx);
