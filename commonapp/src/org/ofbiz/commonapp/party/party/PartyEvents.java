@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2002/01/02 04:36:46  jonesde
+ * Simplified message stuff
+ *
  * Revision 1.1  2001/10/19 16:44:42  azeneski
  * Moved Party/ContactMech/Login events to more appropiate packages.
  * 
@@ -63,24 +66,24 @@ public class PartyEvents {
         String updateMode = request.getParameter("UPDATE_MODE");
         
         if("CREATE".equals(updateMode) || "UPDATE".equals(updateMode)) {
-            String firstName = request.getParameter("PERSON_FIRST_NAME");
-            String middleName = request.getParameter("PERSON_MIDDLE_NAME");
-            String lastName = request.getParameter("PERSON_LAST_NAME");
-            String personalTitle = request.getParameter("PERSON_TITLE");
-            String suffix = request.getParameter("PERSON_SUFFIX");
+            String firstName = request.getParameter("firstName");
+            String middleName = request.getParameter("middleName");
+            String lastName = request.getParameter("lastName");
+            String personalTitle = request.getParameter("personalTitle");
+            String suffix = request.getParameter("suffix");
             
-            String nickname = request.getParameter("PERSON_NICKNAME");
-            String gender = request.getParameter("PERSON_GENDER");
-            String birthDateStr = request.getParameter("PERSON_BIRTH_DATE");
-            String heightStr = request.getParameter("PERSON_HEIGHT");
-            String weightStr = request.getParameter("PERSON_WEIGHT");
-            String mothersMaidenName = request.getParameter("PERSON_MOTHERS_MAIDEN_NAME");
-            String maritalStatus = request.getParameter("PERSON_MARITAL_STATUS");
-            String socialSecurityNumber = request.getParameter("PERSON_SOCIAL_SECURITY_NUMBER");
-            String passportNumber = request.getParameter("PERSON_PASSPORT_NUMBER");
-            String passportExpireDateStr = request.getParameter("PERSON_PASSPORT_EXPIRE_DATE");
-            String totalYearsWorkExperienceStr = request.getParameter("PERSON_TOTAL_YEARS_WORK_EXPERIENCE");
-            String comment = request.getParameter("PERSON_COMMENT");
+            String nickname = request.getParameter("nickname");
+            String gender = request.getParameter("gender");
+            String birthDateStr = request.getParameter("birthDate");
+            String heightStr = request.getParameter("height");
+            String weightStr = request.getParameter("weight");
+            String mothersMaidenName = request.getParameter("mothersMaidenName");
+            String maritalStatus = request.getParameter("maritalStatus");
+            String socialSecurityNumber = request.getParameter("socialSecurityNumber");
+            String passportNumber = request.getParameter("passportNumber");
+            String passportExpireDateStr = request.getParameter("passportExpireDate");
+            String totalYearsWorkExperienceStr = request.getParameter("totalYearsWorkExperience");
+            String comments = request.getParameter("comments");
             
             java.sql.Date birthDate = null;
             java.sql.Date passportExpireDate = null;
@@ -145,7 +148,7 @@ public class PartyEvents {
             person.set("passportNumber", passportNumber, false);
             person.set("passportExpireDate", passportExpireDate, false);
             person.set("totalYearsWorkExperience", totalYearsWorkExperience, false);
-            person.set("comments", comment, false);
+            person.set("comments", comments, false);
             
             if(doCreate) {
                 try {
@@ -153,23 +156,21 @@ public class PartyEvents {
                         request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>ERROR: Could not add person info (write failure). Please contact customer service.");
                         return "error";
                     }
-                }
-                catch(GenericEntityException e) {
+                } catch(GenericEntityException e) {
                     Debug.logWarning(e.getMessage());
                     request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>ERROR: Could not add person info (write failure). Please contact customer service.");
                     return "error";
                 }
-            }
-            else {
-                try { person.store(); }
-                catch(GenericEntityException e) {
+            } else {
+                try {
+                    person.store();
+                } catch(GenericEntityException e) {
                     Debug.logWarning(e.getMessage());
                     request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>ERROR: Could update personal information (write failure). Please contact customer service.");
                     return "error";
                 }
             }
-        }
-        else if("DELETE".equals(updateMode)) {
+        } else if("DELETE".equals(updateMode)) {
       /* Leave delete disabled for now...
       GenericValue person = delegator.findByPrimaryKey("Person", UtilMisc.toMap("partyId", partyId));
       if(person != null)
@@ -190,5 +191,4 @@ public class PartyEvents {
         request.setAttribute(SiteDefs.EVENT_MESSAGE, "Personal Information Updated.");
         return "success";
     }
-    
 }
