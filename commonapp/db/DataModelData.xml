@@ -176,11 +176,11 @@
   <Enumeration description="Parameter Used for Input and Output" enumCode="INOUT" enumId="WPM_INOUT" sequenceId="03" enumTypeId="WORKFLOW_PARAM_MODE"/>
   <Enumeration description="Automatic Mode" enumCode="Automatic" enumId="WAM_AUTOMATIC" sequenceId="01" enumTypeId="WFLOW_ACTIVITY_MODE"/>
   <Enumeration description="Manual Mode" enumCode="Manual" enumId="WAM_MANUAL" sequenceId="02" enumTypeId="WFLOW_ACTIVITY_MODE"/>
-  <Enumeration description="Route" enumCode="Route" enumId="WAT_ROUTE" sequenceId="01" enumTypeId="WFLOW_ACTIVITY_MODE"/>
-  <Enumeration description="No Implementation" enumCode="No" enumId="WAT_NO" sequenceId="02" enumTypeId="WFLOW_ACTIVITY_MODE"/>
-  <Enumeration description="Tools Implementation" enumCode="Tool" enumId="WAT_TOOL" sequenceId="03" enumTypeId="WFLOW_ACTIVITY_MODE"/>
-  <Enumeration description="Subflow Implementation" enumCode="Subflow" enumId="WAT_SUBFLOW" sequenceId="04" enumTypeId="WFLOW_ACTIVITY_MODE"/>
-  <Enumeration description="Loop Implementation" enumCode="Loop" enumId="WAT_LOOP" sequenceId="05" enumTypeId="WFLOW_ACTIVITY_MODE"/>
+  <Enumeration description="Route" enumCode="Route" enumId="WAT_ROUTE" sequenceId="01" enumTypeId="WFLOW_ACTIVITY_TYPE"/>
+  <Enumeration description="No Implementation" enumCode="No" enumId="WAT_NO" sequenceId="02" enumTypeId="WFLOW_ACTIVITY_TYPE"/>
+  <Enumeration description="Tools Implementation" enumCode="Tool" enumId="WAT_TOOL" sequenceId="03" enumTypeId="WFLOW_ACTIVITY_TYPE"/>
+  <Enumeration description="Subflow Implementation" enumCode="Subflow" enumId="WAT_SUBFLOW" sequenceId="04" enumTypeId="WFLOW_ACTIVITY_TYPE"/>
+  <Enumeration description="Loop Implementation" enumCode="Loop" enumId="WAT_LOOP" sequenceId="05" enumTypeId="WFLOW_ACTIVITY_TYPE"/>
   <Enumeration description="Activity can only be instantiated once (DEFAULT)" enumCode="ONCE" enumId="WFI_ONCE" sequenceId="01" enumTypeId="WFLOW_INSTANTIATION"/>
   <Enumeration description="Activity can be instantiated multiple times" enumCode="MULTIPLE" enumId="WFI_MULTIPLE" sequenceId="02" enumTypeId="WFLOW_INSTANTIATION"/>
   <Enumeration description="Synchronize all incoming transitions (wait for all)" enumCode="AND" enumId="WJT_AND" sequenceId="01" enumTypeId="WORKFLOW_JOIN_TYPE"/>
