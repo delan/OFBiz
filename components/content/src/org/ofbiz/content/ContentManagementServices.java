@@ -888,7 +888,7 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
             	serviceIn.put("userLogin", userLogin);
             	serviceIn.put("contentIdTo", contentId);
             	serviceIn.put("contentAssocTypeId", "SUB_CONTENT");
-            	serviceIn.put("sequenceNum", new Integer(50));
+            	serviceIn.put("sequenceNum", new Long(50));
             	try {
                 	Map thisResult = dispatcher.runSync("persistContentAndAssoc", serviceIn);
             	} catch(ServiceAuthException e) {
