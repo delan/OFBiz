@@ -55,7 +55,11 @@ if (shipment != null) {
             shipmentRouteSegmentData.put("carrierServiceStatusItem", shipmentRouteSegment.getRelatedOne("CarrierServiceStatusItem"));
             shipmentRouteSegmentData.put("currencyUom", shipmentRouteSegment.getRelatedOne("CurrencyUom"));
             shipmentRouteSegmentData.put("billingWeightUom", shipmentRouteSegment.getRelatedOne("BillingWeightUom"));
-            shipmentRouteSegmentData.put("carrierServiceStatusValidChangeToDetails", delegator.findByAnd("StatusValidChangeToDetail", UtilMisc.toMap("statusId", shipmentRouteSegment.get("carrierServiceStatusId")), UtilMisc.toList("sequenceId")));
+            if (UtilValidate.isNotEmpty(shipmentRouteSegment.getString("carrierServiceStatusId"))) {
+                shipmentRouteSegmentData.put("carrierServiceStatusValidChangeToDetails", delegator.findByAnd("StatusValidChangeToDetail", UtilMisc.toMap("statusId", shipmentRouteSegment.get("carrierServiceStatusId")), UtilMisc.toList("sequenceId")));
+            } else {
+                shipmentRouteSegmentData.put("carrierServiceStatusValidChangeToDetails", delegator.findByAnd("StatusValidChangeToDetail", UtilMisc.toMap("statusId", "SHRSCS_NOT_STARTED"), UtilMisc.toList("sequenceId")));
+            }
             shipmentRouteSegmentDatas.add(shipmentRouteSegmentData);
         }
     }

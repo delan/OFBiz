@@ -155,9 +155,9 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
                 <br/>
         	</#if>
             <select name="carrierServiceStatusId" class="selectBox">
-                <#if carrierServiceStatus?has_content>
-                    <option value="${carrierServiceStatus.statusId}">${carrierServiceStatus.description}</option>
-                    <option value="${carrierServiceStatus.statusId}">---</option>
+                <#if carrierServiceStatusItem?has_content>
+                    <option value="${carrierServiceStatusItem.statusId}">${carrierServiceStatusItem.description}</option>
+                    <option value="${carrierServiceStatusItem.statusId}">---</option>
                 <#else>
                     <option value="">&nbsp;</option>
                 </#if>
