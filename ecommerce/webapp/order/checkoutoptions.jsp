@@ -56,7 +56,7 @@
       <table width="100%" border="0" cellpadding="4" cellspacing="0" bgcolor="#678475">
         <tr>
           <td valign=middle align=left>
-            <div class="boxhead" nowrap>How shall WE ship it?</div>
+            <div class="boxhead" nowrap>1) How shall we ship it?</div>
           </td>
         </tr>
       </table>
@@ -190,7 +190,7 @@
       <table width="100%" border="0" cellpadding="4" cellspacing="0" bgcolor="#678475">
         <tr>
           <td valign=middle align=left>
-            <div class="boxhead" nowrap><b>Where&nbsp;shall&nbsp;WE&nbsp;ship&nbsp;it?</b></div>
+            <div class="boxhead" nowrap><b>2) Where&nbsp;shall&nbsp;we&nbsp;ship&nbsp;it?</b></div>
           </td>
         </tr>
       </table>
@@ -263,7 +263,7 @@
       <table width="100%" border="0" cellpadding="4" cellspacing="0" bgcolor="#678475">
         <tr>
           <td valign=middle align=left>
-            <div class="boxhead" nowrap><b>How shall YOU pay?</b></div>
+            <div class="boxhead" nowrap><b>3) How shall you pay?</b></div>
           </td>
         </tr>
       </table>

@@ -35,9 +35,9 @@
           <a href="javascript:document.addform.submit()" class="buttontext"><nobr>[Add to Cart]</nobr></a>
         </form>
         <br>
-        <div class="head2"><%=product.getString("name")%></div>
-        <div class="tabletext"><%=product.getString("description")%></div>
-        <div class="tabletext"><b><%=product.getString("productId")%></b></div>
+        <div class="head2"><%=UtilFormatOut.checkNull(product.getString("name"))%></div>
+        <div class="tabletext"><%=UtilFormatOut.checkNull(product.getString("description"))%></div>
+        <div class="tabletext"><b><%=UtilFormatOut.checkNull(product.getString("productId"))%></b></div>
         <div class="tabletext"><b>Our price: <font color="#126544"><%=UtilFormatOut.formatPrice(product.getDouble("defaultPrice"))%></font></b>
            (Reg. <%=UtilFormatOut.formatPrice(product.getDouble("defaultPrice"))%>)</div>
       </td>
@@ -45,7 +45,7 @@
     <tr><td colspan="2" height="1" bgcolor="#999999"></td></tr>
     <tr>
       <td colspan="2">
-        <div class="tabletext"><%=product.getString("longDescription")%></div>
+        <div class="tabletext"><%=UtilFormatOut.checkNull(product.getString("longDescription"))%></div>
       </td>
     </tr>
     <tr><td colspan="2" height="1" bgcolor="#999999"></td></tr>
