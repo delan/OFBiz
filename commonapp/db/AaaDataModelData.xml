@@ -6,10 +6,10 @@
   <ContentAssocType contentAssocTypeId="GRAPH_LINK" description="Graph Link"/>
   <ContentAssocType contentAssocTypeId="ALTERNATE_LOCALE" description="Alternate Locale"/>
 
-  <ContentAssocPredicate contentAssocPredicateId="member-of" description="The subject is a member of the object."/>
-  <ContentAssocPredicate contentAssocPredicateId="defines" description="The subject defines the object."/>
-  <ContentAssocPredicate contentAssocPredicateId="extends" description="The subject extends the object."/>
-  <ContentAssocPredicate contentAssocPredicateId="related-to" description="The subject is related to the object."/>
+  <ContentAssocPredicate contentAssocPredicateId="member-of" description="The object is a member of the subject."/>
+  <ContentAssocPredicate contentAssocPredicateId="defines" description="The object defines the subject."/>
+  <ContentAssocPredicate contentAssocPredicateId="extends" description="The object extends the subject."/>
+  <ContentAssocPredicate contentAssocPredicateId="related-to" description="The object is related to the subject."/>
 
   <!-- These ContentTypes are primarily for structuring documents or content -->  
   <ContentType contentTypeId="ARTICLE" description="Article" hasTable="N" parentTypeId=""/>
