@@ -6,7 +6,7 @@
 
 <table width="100%" border="0" bgcolor="black" cellpadding="4" cellspacing="1">
   <tr>
-    <td bgcolor='#678475' align=center>
+    <td bgcolor='#678475' align=center
       <div class='boxhead'><b>Cart&nbsp;Summary</b></div>
     </td>
   </tr>
@@ -17,7 +17,7 @@
 <%if(miniShoppingCart != null && miniShoppingCart.size() > 0){%>
     <tr>
       <td colspan="3">
-        <a href="<%=response.encodeURL(controlPath + "/view/showcart")%>" class="buttontext">[View&nbsp;Cart]&nbsp;</a><a href="<%=response.encodeURL(controlPath + "/shippingAddress")%>" class="buttontext">[Checkout]</a>
+        <a href="<%=response.encodeURL(controlPath + "/view/showcart")%>" class="buttontext">[View&nbsp;Cart]&nbsp;</a><a href="<%=response.encodeURL(controlPath + "/checkoutoptions")%>" class="buttontext">[Checkout]</a>
       </td>
     </tr>
     <tr>

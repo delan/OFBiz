@@ -12,4 +12,4 @@
 </font>
 <br>
 <a href="<%=response.encodeURL(controlPath + "/view/showcart")%>" class="lightbuttontext">[View&nbsp;Cart]</a>
-<a href="<%=response.encodeURL(controlPath + "/shippingAddress")%>" class="lightbuttontext">[Checkout]</a>
+<a href="<%=response.encodeURL(controlPath + "/checkoutoptions")%>" class="lightbuttontext">[Checkout]</a>
