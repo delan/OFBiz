@@ -1,5 +1,5 @@
 /*
- * $Id: EntityFunction.java,v 1.4 2004/07/06 23:40:42 doogie Exp $
+ * $Id: EntityFunction.java,v 1.5 2004/07/06 23:55:46 doogie Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -146,8 +146,7 @@ public abstract class EntityFunction extends EntityConditionValue {
         return null;
     }
 
-    public void validateSql(ModelEntity modelEntity) throws GenericModelException 
-    {
+    public void validateSql(ModelEntity modelEntity) throws GenericModelException {
         if (nested != null) {
             nested.validateSql(modelEntity);
         }
