@@ -1175,6 +1175,14 @@
         <attribute mode="OUT" name="pickList" optional="true" type="List"/>
         <attribute mode="OUT" name="nodeMap" optional="true" type="Map"/>
     </service>
+    <service name="getContent"
+            engine="java"
+            location="org.ofbiz.content.ContentManagementServices"
+            invoke="getContent" auth="false">
+        <description>Get Content of passed contentId</description>
+        <attribute mode="IN" name="contentId" optional="true" type="String"/>
+        <attribute mode="OUT" name="view" optional="true" type="GenericValue"/>
+    </service>
     <service name="getSubContent"
             engine="java"
             location="org.ofbiz.content.ContentManagementServices"
@@ -1350,6 +1358,8 @@
         location="org.ofbiz.content.search.SearchServices" invoke="indexTree">
     <description>Index content under publish point</description>
     <attribute mode="IN" name="contentId" optional="false" type="String"/>
+    <attribute mode="OUT" name="badIndexList" optional="true" type="List"/>
+    <attribute mode="OUT" name="goodIndexCount" optional="true" type="Integer"/>
   </service>
 
 </services>
