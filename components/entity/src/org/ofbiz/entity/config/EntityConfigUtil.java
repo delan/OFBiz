@@ -1,5 +1,5 @@
 /*
- * $Id: EntityConfigUtil.java,v 1.3 2003/08/18 03:15:10 ajzeneski Exp $
+ * $Id: EntityConfigUtil.java,v 1.4 2003/08/19 11:08:58 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -45,7 +45,7 @@ import org.w3c.dom.Element;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.0
  */
 public class EntityConfigUtil {
@@ -65,6 +65,7 @@ public class EntityConfigUtil {
     protected static Map entityModelReaderInfos = new HashMap();
     protected static Map entityGroupReaderInfos = new HashMap();
     protected static Map entityEcaReaderInfos = new HashMap();
+    protected static Map entityDataReaderInfos = new HashMap();
     protected static Map fieldTypeInfos = new HashMap();
     protected static Map datasourceInfos = new HashMap();
 
@@ -174,6 +175,15 @@ public class EntityConfigUtil {
             Element curElement = (Element) elementIter.next();
             EntityConfigUtil.EntityEcaReaderInfo entityEcaReaderInfo = new EntityConfigUtil.EntityEcaReaderInfo(curElement);
             EntityConfigUtil.entityEcaReaderInfos.put(entityEcaReaderInfo.name, entityEcaReaderInfo);
+        }
+
+        // entity-data-reader - entityDataReaderInfos
+        childElements = UtilXml.childElementList(rootElement, "entity-data-reader");
+        elementIter = childElements.iterator();
+        while (elementIter.hasNext()) {
+            Element curElement = (Element) elementIter.next();
+            EntityConfigUtil.EntityDataReaderInfo entityDataReaderInfo = new EntityConfigUtil.EntityDataReaderInfo(curElement);
+            EntityConfigUtil.entityDataReaderInfos.put(entityDataReaderInfo.name, entityDataReaderInfo);
         }
 
         // field-type - fieldTypeInfos
@@ -307,7 +317,6 @@ public class EntityConfigUtil {
         }
     }
 
-
     public static class EntityGroupReaderInfo {
         public String name;
         public List resourceElements;
@@ -325,12 +334,21 @@ public class EntityConfigUtil {
         }
     }
 
-
     public static class EntityEcaReaderInfo {
         public String name;
         public List resourceElements;
 
         public EntityEcaReaderInfo(Element element) {
+            this.name = element.getAttribute("name");
+            resourceElements = UtilXml.childElementList(element, "resource");
+        }
+    }
+
+    public static class EntityDataReaderInfo {
+        public String name;
+        public List resourceElements;
+
+        public EntityDataReaderInfo(Element element) {
             this.name = element.getAttribute("name");
             resourceElements = UtilXml.childElementList(element, "resource");
         }
@@ -353,6 +371,7 @@ public class EntityConfigUtil {
         public String helperClass;
         public String fieldTypeName;
         public List sqlLoadPaths = new LinkedList();
+        public List readDatas = new LinkedList();
         public Element datasourceElement;
         
         public static final int TYPE_JNDI_JDBC = 1;        
@@ -386,6 +405,7 @@ public class EntityConfigUtil {
             this.fieldTypeName = element.getAttribute("field-type-name");
 
             sqlLoadPaths = UtilXml.childElementList(element, "sql-load-path");
+            readDatas = UtilXml.childElementList(element, "read-data");
             datasourceElement = element;
 
             if (datasourceElement == null) {
