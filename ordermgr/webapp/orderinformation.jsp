@@ -23,6 +23,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Eric Pabst
+ *@author     Andy Zeneski
  *@created    May 22 2001
  *@version    1.0
  */
@@ -56,7 +57,7 @@
             <div class="boxhead">&nbsp;Order <ofbiz:if name="orderHeader">#<%=localOrderHeader.getString("orderId")%> </ofbiz:if>Information</div>
           </td>
           <td valign="middle" align="right">
-            <a href="javascript:void(0);" class="lightbuttontext">[Print]</a>&nbsp;<a href="javascript:void(0);" class="lightbuttontext">[Edit]</a>
+            <a href="javascript:document.statusUpdate.submit();" class="lightbuttontext">[Save]</a>
           </td>
         </tr>
       </table>
@@ -68,8 +69,6 @@
         <tr>
           <td>
   <table width="100%" border="0" cellpadding="1">
-   <%if (userLogin != null) pageContext.setAttribute("userLogin", userLogin);%>
-   <ofbiz:if name="userLogin">
     <tr>
       <td align="right" valign="top" width="15%">
         <div class="tabletext">&nbsp;<b>Name</b></div>
@@ -77,24 +76,32 @@
       <td width="5">&nbsp;</td>
       <td align="left" valign="top" width="80%">
         <div class="tabletext">
-        <%GenericValue userPerson = userLogin.getRelatedOne("Person");%>
+        <%String partyId = orderRole.getString("partyId");%>
+        <%GenericValue userPerson = delegator.findByPrimaryKey("Person",UtilMisc.toMap("partyId",orderRole.getString("partyId")));%>    
         <%if(userPerson!=null){%>
           <%=PartyHelper.getPersonName(userPerson)%>
-        <%}%>
-        <%=UtilFormatOut.ifNotEmpty(userLogin.getString("userLoginId"), " (", ")")%>
+        <%}%>        
         </div>
       </td>
     </tr>
     <tr><td colspan="7"><hr class='sepbar'></td></tr>
-   </ofbiz:if>
     <tr>
       <td align="right" valign="top" width="15%">
         <div class="tabletext">&nbsp;<b>Status</b></div>
       </td>
       <td width="5">&nbsp;</td>
       <td align="left" valign="top" width="80%">
-        <ofbiz:if name="orderHeader">
-          <div class="tabletext"><%=localOrder.getStatusString()%></div>
+        <ofbiz:if name="orderHeader"> 
+        <form name="statusUpdate" method="get" action="<ofbiz:url>/changeOrderStatus</ofbiz:url>">
+           <input type="hidden" name="orderId" value="<%=localOrderHeader.getString("orderId")%>">        
+           <select name="statusId">
+             <option value="<%=localOrderHeader.getString("statusId")%>"><%=localOrderHeader.getString("statusId")%></option>
+             <option value="">----</option>
+               <ofbiz:iterator name="status" property="statusChange">
+                 <option value="<%=status.getString("statusIdTo")%>"><%=status.getString("statusIdTo")%></option>               
+               </ofbiz:iterator>          
+          <%--<div class="tabletext"><%=localOrder.getStatusString()%></div>--%>
+        </form>
         </ofbiz:if>
         <ofbiz:unless name="orderHeader">
           <div class="tabletext"><b>Not Yet Ordered</b></div>
@@ -148,7 +155,7 @@
             <div class="boxhead">&nbsp;Payment Information</div>
           </td>
           <td valign="middle" align="right">
-            <a href="javascript:void(0);" class="lightbuttontext">[Edit]</a>
+            <%--<a href="javascript:void(0);" class="lightbuttontext">[Edit]</a>--%>
           </td>
         </tr>
       </table>
@@ -249,7 +256,7 @@
             <div class="boxhead">&nbsp;Shipping Information</div>
           </td>
           <td valign="middle" align="right">
-            <a href="javascript:void(0);" class="lightbuttontext">[Edit]</a>
+            <%--<a href="javascript:void(0);" class="lightbuttontext">[Edit]</a>--%>
           </td>
         </tr>
       </table>

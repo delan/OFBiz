@@ -120,7 +120,7 @@
               <div class="tabletext"><ofbiz:field attribute="totalPrice" type="currency"/></div>
             </td>
             <td>
-              <div class="tabletext"><ofbiz:field attribute="orderStatus" type="String"/></div>
+              <div class="tabletext"><ofbiz:entityfield attribute="orderHeader" field="statusId"/></div>
             </td>
             <td align=right>
               <a href="<ofbiz:url>/orderview?order_id=<ofbiz:entityfield attribute="orderHeader" field="orderId"/></ofbiz:url>" class='buttontext'>[View]</a>

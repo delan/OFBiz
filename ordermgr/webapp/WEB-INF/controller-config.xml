@@ -64,6 +64,13 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="orderview"/>
     </request-map>
+    
+    <request-map uri="changeOrderStatus">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="changeOrderStatus"/>
+        <response name="success" type="view" value="main"/>
+        <response name="error" type="view" value="error"/>
+    </request-map>
 
     <request-map uri="changeDelegator">
 	    <event type="java" path="org.ofbiz.core.event.CoreEvents" invoke="changeDelegator"/>

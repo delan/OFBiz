@@ -24,6 +24,7 @@
  *
  *@author     Eric Pabst
  *@author     David E. Jones
+ *@author     Andy Zeneski
  *@created    May 22 2001 
  *@version    1.0
  */
@@ -50,19 +51,12 @@
 <%
   String orderId = request.getParameter("order_id");
   GenericValue orderHeader = null;
+  GenericValue orderRole = null;
 
   if(orderId != null && orderId.length() > 0) {
     orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
-    /*
-    if (orderHeader != null) {
-        //check ownership
-        GenericValue orderRole = delegator.findByPrimaryKey("OrderRole", UtilMisc.toMap("orderId", orderId, "partyId", userLogin.getString("partyId"), "roleTypeId", "PLACING_CUSTOMER"));
-        if (orderRole == null) {
-            pageContext.removeAttribute("orderHeader");
-            orderHeader = null;
-        }
-    }
-    */
+    Collection c = delegator.findByAnd("OrderRole",UtilMisc.toMap("orderId", orderId, "roleTypeId", "PLACING_CUSTOMER"));
+    orderRole = (GenericValue) (new ArrayList(c).get(0));
   }%>
 <%if (orderHeader != null) pageContext.setAttribute("orderHeader", orderHeader);%>
 <ofbiz:if name="orderHeader">
@@ -106,14 +100,14 @@
   Iterator orderAdjustmentIterator = order.getAdjustmentIterator();
 %>
 
+
+<%Collection statusChange = delegator.findByAnd("StatusValidChange",UtilMisc.toMap("statusId",orderHeader.getString("statusId")));%>
+<%if (statusChange != null) pageContext.setAttribute("statusChange", statusChange);%>
+  
+
 <%@ include file="orderinformation.jsp" %>
 
 
-  <%pageContext.setAttribute("maySelectItems", "true");%>
-  <form name="addOrderToCartForm" action="<ofbiz:url><%="/addordertocart/orderstatus?order_id=" + orderId%></ofbiz:url>" method="GET">
-  <input type="HIDDEN" name="add_all" value="false">
-  <input type="HIDDEN" name="order_id" value="<%=orderId%>">
-<BR>
 <%@ include file="orderitems.jsp" %>
 
   </form>
