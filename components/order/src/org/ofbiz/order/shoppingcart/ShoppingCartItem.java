@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCartItem.java,v 1.21 2003/11/29 14:08:14 jonesde Exp $
+ * $Id: ShoppingCartItem.java,v 1.22 2003/11/30 00:42:11 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -47,7 +47,7 @@ import org.ofbiz.service.ModelService;
  *
  * @author     <a href="mailto:jaz@ofbiz.org.com">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.21 $
+ * @version    $Revision: 1.22 $
  * @since      2.0
  */
 public class ShoppingCartItem implements java.io.Serializable {
@@ -478,6 +478,35 @@ public class ShoppingCartItem implements java.io.Serializable {
         } else {
             return existingValue.doubleValue();
         }
+    }
+
+    public double getPromoQuantityCandidateUseActionAndAllConds(GenericValue productPromoAction) {
+        double totalUse = 0;
+        String productPromoId = productPromoAction.getString("productPromoId");
+        String productPromoRuleId = productPromoAction.getString("productPromoRuleId");
+        
+        GenericPK productPromoActionPK = productPromoAction.getPrimaryKey();
+        Double existingValue = (Double) this.quantityUsedPerPromoCandidate.get(productPromoActionPK);
+        if (existingValue != null) {
+            totalUse = existingValue.doubleValue();
+        }
+        
+        Iterator entryIter = this.quantityUsedPerPromoCandidate.entrySet().iterator();
+        while (entryIter.hasNext()) {
+            Map.Entry entry = (Map.Entry) entryIter.next();
+            GenericPK productPromoCondActionPK = (GenericPK) entry.getKey();
+            Double quantityUsed = (Double) entry.getValue();
+            if (quantityUsed != null) {
+                // must be in the same rule and be a condition
+                if (productPromoId.equals(productPromoCondActionPK.getString("productPromoId")) && 
+                        productPromoRuleId.equals(productPromoCondActionPK.getString("productPromoRuleId")) &&
+                        productPromoCondActionPK.containsKey("productPromoCondSeqId")) {
+                    totalUse += quantityUsed.doubleValue();
+                }
+            }
+        }
+        
+        return totalUse;
     }
 
     public synchronized void resetPromoRuleUse(String productPromoId, String productPromoRuleId) {

@@ -1,5 +1,5 @@
 /*
- * $Id: ProductPromoWorker.java,v 1.26 2003/11/29 19:45:33 jonesde Exp $
+ * $Id: ProductPromoWorker.java,v 1.27 2003/11/30 00:42:11 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -54,7 +54,7 @@ import org.ofbiz.service.LocalDispatcher;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.26 $
+ * @version    $Revision: 1.27 $
  * @since      2.0
  */
 public class ProductPromoWorker {
@@ -630,6 +630,7 @@ public class ProductPromoWorker {
         } else if ("PROMO_PROD_DISC".equals(productPromoActionEnumId)) {
             double quantityDesired = productPromoAction.get("quantity") == null ? 1.0 : productPromoAction.getDouble("quantity").doubleValue();
             double startingQuantity = quantityDesired;
+            double discountAmountTotal = 0;
 
             Set productIds = ProductPromoWorker.getPromoRuleActionProductIds(productPromoAction, delegator, nowTimestamp);
 
@@ -642,12 +643,16 @@ public class ProductPromoWorker {
                 if (!cartItem.getIsPromo() && (productIds.contains(cartItem.getProductId()) || (parentProductId != null && productIds.contains(parentProductId)))) {
                     // reduce quantity still needed to qualify for promo (quantityNeeded)
                     double quantityUsed = cartItem.addPromoQuantityCandidateUse(quantityDesired, productPromoAction);
-                    quantityDesired -= quantityUsed;
+                    if (quantityUsed > 0) {
+                        quantityDesired -= quantityUsed;
 
-                    // create an adjustment and add it to the cartItem that implements the promotion action
-                    double percentModifier = productPromoAction.get("amount") == null ? 0.0 : (productPromoAction.getDouble("amount").doubleValue()/100.0);
-                    double discountAmount = -(quantityUsed * cartItem.getBasePrice() * percentModifier);
-                    doOrderItemPromoAction(productPromoAction, cartItem, discountAmount, "amount", delegator);
+                        // create an adjustment and add it to the cartItem that implements the promotion action
+                        double percentModifier = productPromoAction.get("amount") == null ? 0.0 : (productPromoAction.getDouble("amount").doubleValue()/100.0);
+                        double lineAmount = quantityUsed * cartItem.getBasePrice();
+                        double discountAmount = -(lineAmount * percentModifier);
+                        discountAmountTotal += discountAmount;
+                        // not doing this any more, now distributing among conditions and actions (see call below): doOrderItemPromoAction(productPromoAction, cartItem, discountAmount, "amount", delegator);
+                    }
                 }
             }
 
@@ -655,12 +660,16 @@ public class ProductPromoWorker {
                 // couldn't find any cart items to give a discount to, don't consider action run
                 ranAction = false;
             } else {
+                double totalAmount = getCartItemsUsedTotalAmount(cart, productPromoAction);
+                Debug.logInfo("Applying promo [" + productPromoAction.getPrimaryKey() + "]\n totalAmount=" + totalAmount + ", discountAmountTotal=" + discountAmountTotal, module);
+                distributeDiscountAmount(discountAmountTotal, totalAmount, getCartItemsUsed(cart, productPromoAction), productPromoAction, delegator);
                 ranAction = true;
             }
         } else if ("PROMO_PROD_AMDISC".equals(productPromoActionEnumId)) {
             double quantityDesired = productPromoAction.get("quantity") == null ? 1.0 : productPromoAction.getDouble("quantity").doubleValue();
             double startingQuantity = quantityDesired;
-
+            double discountAmountTotal = 0;
+            
             Set productIds = ProductPromoWorker.getPromoRuleActionProductIds(productPromoAction, delegator, nowTimestamp);
 
             List lineOrderedByBasePriceList = cart.getLineListOrderedByBasePrice(false);
@@ -681,7 +690,8 @@ public class ProductPromoWorker {
                         discount = cartItem.getBasePrice();
                     }
                     double discountAmount = -(quantityUsed * discount);
-                    doOrderItemPromoAction(productPromoAction, cartItem, discountAmount, "amount", delegator);
+                    discountAmountTotal += discountAmount;
+                    // not doing this any more, now distributing among conditions and actions (see call below): doOrderItemPromoAction(productPromoAction, cartItem, discountAmount, "amount", delegator);
                 }
             }
 
@@ -689,12 +699,14 @@ public class ProductPromoWorker {
                 // couldn't find any cart items to give a discount to, don't consider action run
                 ranAction = false;
             } else {
+                double totalAmount = getCartItemsUsedTotalAmount(cart, productPromoAction);
+                Debug.logInfo("Applying promo [" + productPromoAction.getPrimaryKey() + "]\n totalAmount=" + totalAmount + ", discountAmountTotal=" + discountAmountTotal, module);
+                distributeDiscountAmount(discountAmountTotal, totalAmount, getCartItemsUsed(cart, productPromoAction), productPromoAction, delegator);
                 ranAction = true;
             }
         } else if ("PROMO_PROD_PRICE".equals(productPromoActionEnumId)) {
             // with this we want the set of used items to be one price, so total the price for all used items, subtract the amount we want them to cost, and create an adjustment for what is left
             double quantityDesired = productPromoAction.get("quantity") == null ? 1.0 : productPromoAction.getDouble("quantity").doubleValue();
-
             double desiredAmount = productPromoAction.get("amount") == null ? 0.0 : productPromoAction.getDouble("amount").doubleValue();
             double totalAmount = 0;
 
@@ -722,28 +734,7 @@ public class ProductPromoWorker {
             if (totalAmount > desiredAmount && quantityDesired == 0) {
                 ranAction = true;
                 double discountAmountTotal = -(totalAmount - desiredAmount);
-                double discountAmount = discountAmountTotal;
-                // distribute the discount evenly weighted according to price over the order items that the individual quantities came from; avoids a number of issues with tax/shipping calc, inclusion in the sub-total for other promotions, etc
-                Iterator cartItemsUsedIter = cartItemsUsed.iterator();
-                while (cartItemsUsedIter.hasNext()) {
-                    ShoppingCartItem cartItem = (ShoppingCartItem) cartItemsUsedIter.next();
-                    // to minimize rounding issues use the remaining total for the last one, otherwise use a calculated value
-                    if (cartItemsUsedIter.hasNext()) {
-                        double quantityUsed = cartItem.getPromoQuantityCandidateUse(productPromoAction);
-                        double ratioOfTotal = (quantityUsed * cartItem.getBasePrice()) / totalAmount;
-                        double weightedAmount = ratioOfTotal * discountAmountTotal;
-                        // round the weightedAmount to 2 decimal places, ie a whole number of cents or 2 decimal place monetary units
-                        weightedAmount = weightedAmount * 100.0;
-                        long roundedAmount = Math.round(weightedAmount);
-                        weightedAmount = ((double) roundedAmount) / 100.0;
-                        discountAmount -= weightedAmount;
-                        doOrderItemPromoAction(productPromoAction, cartItem, weightedAmount, "amount", delegator);
-                    } else {
-                        // last one, just use discountAmount
-                        doOrderItemPromoAction(productPromoAction, cartItem, discountAmount, "amount", delegator);
-                    }
-                }
-                // this is the old way that causes problems: doOrderPromoAction(productPromoAction, cart, discountAmount, "amount", delegator);
+                distributeDiscountAmount(discountAmountTotal, totalAmount, cartItemsUsed, productPromoAction, delegator);
             } else {
                 // clear out any action uses for this so they don't become part of anything else
                 cart.resetPromoRuleUse(productPromoAction.getString("productPromoId"), productPromoAction.getString("productPromoRuleId"));
@@ -769,6 +760,57 @@ public class ProductPromoWorker {
         }
 
         return ranAction;
+    }
+    
+    protected static List getCartItemsUsed(ShoppingCart cart, GenericValue productPromoAction) {
+        List cartItemsUsed = new LinkedList();
+        Iterator cartItemsIter = cart.iterator();
+        while (cartItemsIter.hasNext()) {
+            ShoppingCartItem cartItem = (ShoppingCartItem) cartItemsIter.next();
+            double quantityUsed = cartItem.getPromoQuantityCandidateUseActionAndAllConds(productPromoAction);
+            if (quantityUsed > 0) {
+                cartItemsUsed.add(cartItem);
+            }
+        }
+        return cartItemsUsed;
+    }
+    
+    protected static double getCartItemsUsedTotalAmount(ShoppingCart cart, GenericValue productPromoAction) {
+        double totalAmount = 0;
+        Iterator cartItemsIter = cart.iterator();
+        while (cartItemsIter.hasNext()) {
+            ShoppingCartItem cartItem = (ShoppingCartItem) cartItemsIter.next();
+            double quantityUsed = cartItem.getPromoQuantityCandidateUseActionAndAllConds(productPromoAction);
+            if (quantityUsed > 0) {
+                totalAmount += quantityUsed * cartItem.getBasePrice();
+            }
+        }
+        return totalAmount;
+    }
+    
+    protected static void distributeDiscountAmount(double discountAmountTotal, double totalAmount, List cartItemsUsed, GenericValue productPromoAction, GenericDelegator delegator) {
+        double discountAmount = discountAmountTotal;
+        // distribute the discount evenly weighted according to price over the order items that the individual quantities came from; avoids a number of issues with tax/shipping calc, inclusion in the sub-total for other promotions, etc
+        Iterator cartItemsUsedIter = cartItemsUsed.iterator();
+        while (cartItemsUsedIter.hasNext()) {
+            ShoppingCartItem cartItem = (ShoppingCartItem) cartItemsUsedIter.next();
+            // to minimize rounding issues use the remaining total for the last one, otherwise use a calculated value
+            if (cartItemsUsedIter.hasNext()) {
+                double quantityUsed = cartItem.getPromoQuantityCandidateUseActionAndAllConds(productPromoAction);
+                double ratioOfTotal = (quantityUsed * cartItem.getBasePrice()) / totalAmount;
+                double weightedAmount = ratioOfTotal * discountAmountTotal;
+                // round the weightedAmount to 2 decimal places, ie a whole number of cents or 2 decimal place monetary units
+                weightedAmount = weightedAmount * 100.0;
+                long roundedAmount = Math.round(weightedAmount);
+                weightedAmount = ((double) roundedAmount) / 100.0;
+                discountAmount -= weightedAmount;
+                doOrderItemPromoAction(productPromoAction, cartItem, weightedAmount, "amount", delegator);
+            } else {
+                // last one, just use discountAmount
+                doOrderItemPromoAction(productPromoAction, cartItem, discountAmount, "amount", delegator);
+            }
+        }
+        // this is the old way that causes problems: doOrderPromoAction(productPromoAction, cart, discountAmount, "amount", delegator);
     }
 
     protected static Integer findPromoItem(GenericValue productPromoAction, ShoppingCart cart) {
