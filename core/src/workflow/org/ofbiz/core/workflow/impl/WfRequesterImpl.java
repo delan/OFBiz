@@ -62,7 +62,7 @@ public class WfRequesterImpl implements WfRequester {
         WfProcessMgr mgr = process.manager();
         
         // Validate the process context w/ what was passed.
-        if ( !ModelService.validate(mgr.contextSignature(), context) )
+        if ( !ModelService.validate(mgr.contextSignature(), context, true) )
             throw new WfException("Context passed does not validate against defined signature");
         
         // Set the context w/ the process

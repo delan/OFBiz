@@ -161,26 +161,24 @@ public class ModelServiceReader {
         service.engineName = checkEmpty(serviceElement.getAttribute("engine"));
         service.location = checkEmpty(serviceElement.getAttribute("location"));
         service.invoke = checkEmpty(serviceElement.getAttribute("invoke"));
-        service.export = checkBoolean(serviceElement.getAttribute("export"));
+        service.export = checkBoolean(serviceElement.getAttribute("export"));        
+        service.contextInfo = new HashMap();        
         
-        service.contextInfo = new HashMap();
-        service.resultInfo = new HashMap();
-        
-        createAttrDefs(serviceElement, "attribute", service.contextInfo,service.resultInfo);                
+        createAttrDefs(serviceElement, "attribute", service.contextInfo);                
         return service;
     }
     
-    protected void createAttrDefs(Element baseElement, String parentNodeName, Map contextMap, Map resultMap) {
+    protected void createAttrDefs(Element baseElement, String parentNodeName, Map contextMap) {
         NodeList attrList = baseElement.getElementsByTagName(parentNodeName);
         for ( int i = 0; i < attrList.getLength(); i++ ) {
             Element attribute = (Element) attrList.item(i);
-            String name = checkEmpty(attribute.getAttribute("name"));
-            String type = checkEmpty(attribute.getAttribute("type"));
-            String mode = checkEmpty(attribute.getAttribute("mode"));
-            if ( mode.equals("IN") || mode.equals("INOUT") )
-                contextMap.put(name,type);
-            if ( mode.equals("OUT") || mode.equals("INOUT") )
-                resultMap.put(name,type);
+            ModelParam param = new ModelParam();
+            param.description = checkEmpty(attribute.getAttribute("description"));
+            param.name = checkEmpty(attribute.getAttribute("name"));
+            param.type = checkEmpty(attribute.getAttribute("type"));
+            param.mode = checkEmpty(attribute.getAttribute("mode"));
+            param.optional = checkBoolean(attribute.getAttribute("optional"));
+            contextMap.put(param.name,param);            
         }
     }
      

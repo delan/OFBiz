@@ -327,8 +327,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
         service.engineName = "workflow";
         service.location = subFlow.getString("packageId");
         service.invoke = subFlow.getString("subFlowProcessId");
-        service.contextInfo = null;  // TODO FIXME
-        service.resultInfo = null;     // TODO FIXME
+        service.contextInfo = null;  // TODO FIXME        
         
         String actualParameters = subFlow.getString("actualParameters");
         GenericResultWaiter waiter = this.runService(service,actualParameters);
