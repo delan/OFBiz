@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.19 $
+ * @version    $Revision: 1.20 $
  */
 -->
 
@@ -995,9 +995,7 @@
       <field name="invoiceId" type="id"></field>
       <field name="paymentId" type="id"></field>
       <field name="theirAcctgTransId" type="id-long"></field>
-      <field name="createdDate" type="date-time"></field>
       <field name="createdByUserLogin" type="id-vlong"></field>
-      <field name="lastModifiedDate" type="date-time"></field>
       <field name="lastModifiedByUserLogin" type="id-vlong"></field>
       <prim-key field="acctgTransId"/>
       <relation type="one" fk-name="ACCTTX_TYPE" rel-entity-name="AcctgTransType">
@@ -1361,6 +1359,8 @@
       <field name="glJournalId" type="id-ne"></field>
       <field name="glJournalName" type="name"></field>
       <field name="organizationPartyId" type="id-ne"></field>
+      <field name="isPosted" type="indicator"></field>
+      <field name="postedDate" type="date-time"></field>
       <prim-key field="glJournalId"/>
       <relation type="one" fk-name="GLJOURN_PARTY" rel-entity-name="Party">
         <key-map field-name="organizationPartyId" rel-field-name="partyId"/>
@@ -1375,9 +1375,7 @@
       <field name="glReconciliationId" type="id-ne"></field>
       <field name="glReconciliationName" type="name"></field>
       <field name="description" type="description"></field>
-      <field name="createdDate" type="date-time"></field>
       <field name="createdByUserLogin" type="id-vlong"></field>
-      <field name="lastModifiedDate" type="date-time"></field>
       <field name="lastModifiedByUserLogin" type="id-vlong"></field>
       <prim-key field="glReconciliationId"/>
       <relation type="many" rel-entity-name="GlReconciliationEntry">

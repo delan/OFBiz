@@ -924,183 +924,172 @@
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
 
-    <service name="interfaceGlAccountOrganization" engine="interface" location="" invoke="">
-        <attribute name="roleTypeId" type="String" mode="IN" optional="true"/>
-        <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
-        <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
-    </service>
-    <service name="createGlAccountOrganization" engine="simple"
+    <service name="createGlAccountOrganization" default-entity-name="GlAccountOrganization" engine="simple"
             location="org/ofbiz/accounting/ledger/GeneralLedgerServices.xml" invoke="createGlAccountOrganization" auth="true">
         <description>Create a GlAccount record</description>
-        <implements service="interfaceGlAccountOrganization"/>
-        <attribute name="glAccountId" type="String" mode="IN" optional="false"/>
-        <attribute name="organizationPartyId" type="String" mode="IN" optional="false"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
-    <service name="updateGlAccountOrganization" engine="simple"
+    <service name="updateGlAccountOrganization" default-entity-name="GlAccountOrganization" engine="simple"
             location="org/ofbiz/accounting/ledger/GeneralLedgerServices.xml" invoke="updateGlAccountOrganization" auth="true">
         <description>Update a GlAccount record</description>
-        <implements service="interfaceGlAccountOrganization"/>
-        <attribute name="glAccountId" type="String" mode="IN" optional="false"/>
-        <attribute name="organizationPartyId" type="String" mode="IN" optional="false"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
-    <service name="deleteGlAccountOrganization" engine="simple"
+    <service name="deleteGlAccountOrganization" default-entity-name="GlAccountOrganization" engine="simple"
             location="org/ofbiz/accounting/ledger/GeneralLedgerServices.xml" invoke="deleteGlAccountOrganization" auth="true">
         <description>Delete a GlAccount record</description>
-        <attribute name="glAccountId" type="String" mode="IN" optional="false"/>
-        <attribute name="organizationPartyId" type="String" mode="IN" optional="false"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
 
-        <!-- GlJournal -->
-    <service name="interfaceGlJournal" engine="interface" location="" invoke="">
-        <attribute name="glJournalName" type="String" mode="IN" optional="false"/>
-        <attribute name="organizationPartyId" type="String" mode="IN" optional="false"/>
-    </service>
-    <service name="createGlJournal" engine="simple"
+    <!-- GlJournal -->
+    <service name="createGlJournal" default-entity-name="GlJournal" engine="simple"
             location="org/ofbiz/accounting/ledger/GeneralLedgerServices.xml" invoke="createGlJournal" auth="true">
         <description>Create a GlJournal record</description>
-        <implements service="interfaceGlJournal"/>
-        <attribute name="glJournalId" type="String" mode="OUT" optional="false"/>
+        <auto-attributes include="pk" mode="OUT" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true">
+            <exclude field-name="isPosted"/>
+            <exclude field-name="postedDate"/>
+        </auto-attributes>
+        <override name="organizationPartyId" optional="false"/>
     </service>
-    <service name="updateGlJournal" engine="simple"
+    <service name="updateGlJournal" default-entity-name="GlJournal" engine="simple"
             location="org/ofbiz/accounting/ledger/GeneralLedgerServices.xml" invoke="updateGlJournal" auth="true">
         <description>Update a GlJournal record</description>
-        <implements service="interfaceGlJournal"/>
-        <attribute name="glJournalId" type="String" mode="IN" optional="false"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true">
+            <exclude field-name="isPosted"/>
+            <exclude field-name="postedDate"/>
+        </auto-attributes>
     </service>
-    <service name="deleteGlJournal" engine="simple"
+    <service name="deleteGlJournal" default-entity-name="GlJournal" engine="simple"
             location="org/ofbiz/accounting/ledger/GeneralLedgerServices.xml" invoke="deleteGlJournal" auth="true">
         <description>Delete a GlJournal record</description>
-        <attribute name="glJournalId" type="String" mode="IN" optional="false"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
 
-        <!-- GlReconciliation & Related -->
-    <service name="interfaceGlReconciliation" engine="interface" location="" invoke="">
-        <attribute name="glReconciliationName" type="String" mode="IN" optional="false"/>
-        <attribute name="description" type="String" mode="IN" optional="false"/>
+    <service name="calculateGlJournalTrialBalance" default-entity-name="GlJournal" engine="simple"
+            location="org/ofbiz/accounting/ledger/GeneralLedgerServices.xml" invoke="calculateGlJournalTrialBalance" auth="true">
+        <description>Calculate Trial Balance for a GlJournal</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
-    <service name="createGlReconciliation" engine="simple"
+    <service name="postGlJournal" default-entity-name="GlJournal" engine="simple"
+            location="org/ofbiz/accounting/ledger/GeneralLedgerServices.xml" invoke="postGlJournal" auth="true">
+        <description>Post a GlJournal</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+
+    <!-- GlReconciliation & Related -->
+    <service name="createGlReconciliation" default-entity-name="GlReconciliation" engine="simple"
             location="org/ofbiz/accounting/ledger/GeneralLedgerServices.xml" invoke="createGlReconciliation" auth="true">
         <description>Create a GlReconciliation record</description>
-        <implements service="interfaceGlReconciliation"/>
-        <attribute name="glReconciliationId" type="String" mode="OUT" optional="false"/>
+        <auto-attributes include="pk" mode="OUT" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true">
+            <exclude field-name="createdByUserLogin"/>
+            <exclude field-name="lastModifiedByUserLogin"/>
+        </auto-attributes>
+        <override name="glReconciliationName" optional="false"/>
     </service>
-    <service name="updateGlReconciliation" engine="simple"
+    <service name="updateGlReconciliation" default-entity-name="GlReconciliation" engine="simple"
             location="org/ofbiz/accounting/ledger/GeneralLedgerServices.xml" invoke="updateGlReconciliation" auth="true">
         <description>Update a GlReconciliation record</description>
-        <implements service="interfaceGlReconciliation"/>
-        <attribute name="glReconciliationId" type="String" mode="IN" optional="false"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true">
+            <exclude field-name="createdByUserLogin"/>
+            <exclude field-name="lastModifiedByUserLogin"/>
+        </auto-attributes>
     </service>
-    <service name="deleteGlReconciliation" engine="simple"
+    <service name="deleteGlReconciliation" default-entity-name="GlReconciliation" engine="simple"
             location="org/ofbiz/accounting/ledger/GeneralLedgerServices.xml" invoke="deleteGlReconciliation" auth="true">
         <description>Delete a GlReconciliation record</description>
-        <attribute name="glReconciliationId" type="String" mode="IN" optional="false"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
 
-    <service name="interfaceGlReconciliationEntryPK" engine="interface" location="" invoke="">
-        <attribute name="glReconciliationId" type="String" mode="IN" optional="true"/>
-        <attribute name="acctgTransId" type="String" mode="IN" optional="true"/>
-        <attribute name="acctgTransEntrySeqId" type="String" mode="IN" optional="true"/>
-    </service>
-    <service name="interfaceGlReconciliationEntry" engine="interface" location="" invoke="">
-        <attribute name="reconciledAmount" type="Double" mode="IN" optional="false"/>
-    </service>
-    <service name="addEntryToGlReconciliation" engine="simple"
-            location="org/ofbiz/accounting/ledger/GeneralLedgerServices.xml" invoke="addEntryToGlReconciliation" auth="true">
+    <service name="createGlReconciliationEntry" default-entity-name="GlReconciliationEntry" engine="simple"
+            location="org/ofbiz/accounting/ledger/GeneralLedgerServices.xml" invoke="createGlReconciliationEntry" auth="true">
         <description>Add an Entry to a GlReconciliation</description>
-        <implements service="interfaceGlReconciliationEntryPK"/>
-        <implements service="interfaceGlReconciliationEntry"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="false"/>
     </service>
-    <service name="updateEntryToGlReconciliation" engine="simple"
-            location="org/ofbiz/accounting/ledger/GeneralLedgerServices.xml" invoke="updateEntryToGlReconciliation" auth="true">
+    <service name="updateGlReconciliationEntry" default-entity-name="GlReconciliationEntry" engine="simple"
+            location="org/ofbiz/accounting/ledger/GeneralLedgerServices.xml" invoke="updateGlReconciliationEntry" auth="true">
         <description>Update an Entry to a GlReconciliation record</description>
-        <implements service="interfaceGlReconciliationEntryPK"/>
-        <implements service="interfaceGlReconciliationEntry"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="false"/>
     </service>
-    <service name="removeEntryFromGlReconciliation" engine="simple"
-            location="org/ofbiz/accounting/ledger/GeneralLedgerServices.xml" invoke="removeEntryFromGlReconciliation" auth="true">
+    <service name="deleteGlReconciliationEntry" default-entity-name="GlReconciliationEntry" engine="simple"
+            location="org/ofbiz/accounting/ledger/GeneralLedgerServices.xml" invoke="deleteGlReconciliationEntry" auth="true">
         <description>Remove an Entry from a GlReconciliation</description>
-        <implements service="interfaceGlReconciliationEntryPK"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
 
         <!-- AcctgTrans & Related -->
     <service name="interfaceAcctgTrans" engine="interface" location="" invoke="">
-        <attribute name="acctgTransTypeId" type="String" mode="IN" optional="false"/>
-        <attribute name="description" type="String" mode="IN" optional="false"/>
-        <attribute name="transactionDate" type="Timestamp" mode="IN" optional="false"/>
-        <attribute name="isPosted" type="String" mode="IN" optional="false"/>
-        <attribute name="postedDate" type="Timestamp" mode="IN" optional="true"/>
-        <attribute name="glJournalId" type="String" mode="IN" optional="false"/>
-        <attribute name="glFiscalTypeId" type="String" mode="IN" optional="false"/>
-        <attribute name="voucherRef" type="String" mode="IN" optional="true"/>
-        <attribute name="voucherDate" type="Timestamp" mode="IN" optional="true"/>
-        <attribute name="groupStatusId" type="String" mode="IN" optional="true"/>
-        <attribute name="fixedAssetId" type="String" mode="IN" optional="true"/>
-        <attribute name="inventoryItemId" type="String" mode="IN" optional="true"/>
-        <attribute name="physicalInventoryId" type="String" mode="IN" optional="true"/>
-        <attribute name="partyId" type="String" mode="IN" optional="true"/>
-        <attribute name="roleTypeId" type="String" mode="IN" optional="true"/>
-        <attribute name="invoiceId" type="String" mode="IN" optional="true"/>
-        <attribute name="paymentId" type="String" mode="IN" optional="true"/>
-        <attribute name="theirAcctgTransId" type="String" mode="IN" optional="true"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true">
+            <exclude field-name="isPosted"/>
+            <exclude field-name="postedDate"/>
+            <exclude field-name="createdByUserLogin"/>
+            <exclude field-name="lastModifiedByUserLogin"/>
+        </auto-attributes>
+        <override name="acctgTransTypeId" optional="false"/>
+        <override name="transactionDate" optional="false"/>
+        <override name="glFiscalTypeId" optional="false"/>
     </service>
-    <service name="createAcctgTrans" engine="simple"
+    <service name="createAcctgTrans" default-entity-name="AcctgTrans" engine="simple"
             location="org/ofbiz/accounting/ledger/AcctgTransServices.xml" invoke="createAcctgTrans" auth="true">
         <description>Create a AcctgTrans record</description>
         <implements service="interfaceAcctgTrans"/>
-        <attribute name="acctgTransId" type="String" mode="OUT" optional="false"/>
+        <auto-attributes include="pk" mode="OUT" optional="false"/>
     </service>
-    <service name="updateAcctgTrans" engine="simple"
+    <service name="updateAcctgTrans" default-entity-name="AcctgTrans" engine="simple"
             location="org/ofbiz/accounting/ledger/AcctgTransServices.xml" invoke="updateAcctgTrans" auth="true">
         <description>Update a AcctgTrans record</description>
         <implements service="interfaceAcctgTrans"/>
-        <attribute name="acctgTransId" type="String" mode="IN" optional="false"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
-    <service name="deleteAcctgTrans" engine="simple"
+    <service name="deleteAcctgTrans" default-entity-name="AcctgTrans" engine="simple"
             location="org/ofbiz/accounting/ledger/AcctgTransServices.xml" invoke="deleteAcctgTrans" auth="true">
         <description>Delete a AcctgTrans record</description>
-        <attribute name="acctgTransId" type="String" mode="IN" optional="false"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
 
-    <service name="interfaceAcctgTransEntryPK" engine="interface" location="" invoke="">
-        <attribute name="acctgTransId" type="String" mode="IN" optional="true"/>
-        <attribute name="acctgTransEntrySeqId" type="String" mode="IN" optional="true"/>
+    <service name="calculateAcctgTransTrialBalance" default-entity-name="AcctgTrans" engine="simple"
+            location="org/ofbiz/accounting/ledger/AcctgTransServices.xml" invoke="calculateAcctgTransTrialBalance" auth="true">
+        <description>Calculate Trial Balance for a AcctgTrans</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
+    <service name="postAcctgTrans" default-entity-name="AcctgTrans" engine="simple"
+            location="org/ofbiz/accounting/ledger/AcctgTransServices.xml" invoke="postAcctgTrans" auth="true">
+        <description>Post a AcctgTrans</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+
     <service name="interfaceAcctgTransEntry" engine="interface" location="" invoke="">
-        <attribute name="acctgTransEntryTypeId" type="String" mode="IN" optional="false"/>
-        <attribute name="description" type="String" mode="IN" optional="false"/>
-        <attribute name="voucherRef" type="String" mode="IN" optional="true"/>
-        <attribute name="partyId" type="String" mode="IN" optional="true"/>
-        <attribute name="roleTypeId" type="String" mode="IN" optional="true"/>
-        <attribute name="theirPartyId" type="String" mode="IN" optional="true"/>
-        <attribute name="productId" type="String" mode="IN" optional="true"/>
-        <attribute name="theirProductId" type="String" mode="IN" optional="true"/>
-        <attribute name="glAccountId" type="String" mode="IN" optional="false"/>
-        <attribute name="organizationPartyId" type="String" mode="IN" optional="false"/>
-        <attribute name="amount" type="Double" mode="IN" optional="false"/>
-        <attribute name="origAmount" type="Double" mode="IN" optional="true"/>
-        <attribute name="debitCreditFlag" type="String" mode="IN" optional="false"/>
-        <attribute name="dueDate" type="Timestamp" mode="IN" optional="true"/>
-        <attribute name="groupId" type="String" mode="IN" optional="true"/>
-        <attribute name="taxId" type="String" mode="IN" optional="true"/>
-        <attribute name="reconcileStatusId" type="String" mode="IN" optional="false"/>
-        <attribute name="settlementTermId" type="String" mode="IN" optional="true"/>
-        <attribute name="isSummary" type="String" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true">
+            <exclude field-name="reconcileStatusId"/>
+        </auto-attributes>
+        <override name="acctgTransEntryTypeId" optional="false"/>
+        <override name="glAccountId" optional="false"/>
+        <override name="organizationPartyId" optional="false"/>
+        <override name="amount" optional="false"/>
+        <override name="debitCreditFlag" optional="false"/>
     </service>
-    <service name="addEntryToAcctgTrans" engine="simple"
-            location="org/ofbiz/accounting/ledger/AcctgTransServices.xml" invoke="addEntryToAcctgTrans" auth="true">
+    <service name="createAcctgTransEntry" default-entity-name="AcctgTransEntry" engine="simple"
+            location="org/ofbiz/accounting/ledger/AcctgTransServices.xml" invoke="createAcctgTransEntry" auth="true">
         <description>Add an Entry to a AcctgTrans</description>
-        <implements service="interfaceAcctgTransEntryPK"/>
         <implements service="interfaceAcctgTransEntry"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <override name="acctgTransEntrySeqId" mode="OUT"/>
     </service>
-    <service name="updateEntryToAcctgTrans" engine="simple"
-            location="org/ofbiz/accounting/ledger/AcctgTransServices.xml" invoke="updateEntryToAcctgTrans" auth="true">
+    <service name="updateAcctgTransEntry" default-entity-name="AcctgTransEntry" engine="simple"
+            location="org/ofbiz/accounting/ledger/AcctgTransServices.xml" invoke="updateAcctgTransEntry" auth="true">
         <description>Update an Entry to a AcctgTrans record</description>
-        <implements service="interfaceAcctgTransEntryPK"/>
         <implements service="interfaceAcctgTransEntry"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
-    <service name="removeEntryFromAcctgTrans" engine="simple"
-            location="org/ofbiz/accounting/ledger/AcctgTransServices.xml" invoke="removeEntryFromAcctgTrans" auth="true">
+    <service name="deleteAcctgTransEntry" default-entity-name="AcctgTransEntry" engine="simple"
+            location="org/ofbiz/accounting/ledger/AcctgTransServices.xml" invoke="deleteAcctgTransEntry" auth="true">
         <description>Remove an Entry from a AcctgTrans</description>
-        <implements service="interfaceAcctgTransEntryPK"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
 </services>
