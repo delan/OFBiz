@@ -530,11 +530,17 @@ public class UpsServices {
      * @return XML string response from UPS
      * @throws UpsConnectException
      */
-    protected static String sendUpsRequest(String upsService, String xmlString, Properties upsProps) throws UpsConnectException {        
-        //String conStr = upsProps.getProperty("connectUrl"); // for now we can test with null props
-        String conStr = "https://wwwcie.ups.com/ups.app/xml";        
+    public static String sendUpsRequest(String upsService, String xmlString) throws UpsConnectException {
+        String conStr = UtilProperties.getPropertyValue("shipment.properties", "shipment.ups.connect.url");                
         if (conStr == null) {
             throw new UpsConnectException("Incomplete connection URL; check your UPS configuration");
+        }
+        
+        if (upsService == null) {
+            throw new UpsConnectException("UPS service name cannot be null");
+        }
+        if (xmlString == null) {
+            throw new UpsConnectException("XML message cannot be null");
         }
         
         // prepare the connect string
@@ -543,8 +549,8 @@ public class UpsServices {
             conStr = conStr + "/";
         }
         conStr = conStr + upsService;
-        
-        Debug.logInfo("Opening URL to : " + conStr, module);               
+               
+        Debug.logInfo("UPS Connect URL :" + conStr, module); 
         Debug.logInfo("UPS XML String : " + xmlString, module);
         
         HttpClient http = new HttpClient(conStr);
