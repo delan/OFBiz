@@ -40,7 +40,7 @@ import org.ofbiz.core.minilang.method.*;
  */
 public class CheckErrors extends MethodOperation {
     
-    String errorListName;
+    ContextAccessor errorListAcsr;
     String errorCode;
 
     FlexibleMessage errorPrefix;
@@ -51,11 +51,9 @@ public class CheckErrors extends MethodOperation {
     public CheckErrors(Element element, SimpleMethod simpleMethod) {
         super(element, simpleMethod);
         errorCode = element.getAttribute("error-code");
-        if (errorCode == null || errorCode.length() == 0)
-            errorCode = "error";
-        errorListName = element.getAttribute("error-list-name");
-        if (errorListName == null || errorListName.length() == 0)
-            errorListName = "error_list";
+        if (errorCode == null || errorCode.length() == 0) errorCode = "error";
+        
+        errorListAcsr = new ContextAccessor(element.getAttribute("error-list-name"), "error_list");
 
         errorPrefix = new FlexibleMessage(UtilXml.firstChildElement(element, "error-prefix"), "check.error.prefix");
         errorSuffix = new FlexibleMessage(UtilXml.firstChildElement(element, "error-suffix"), "check.error.suffix");
@@ -64,13 +62,16 @@ public class CheckErrors extends MethodOperation {
     }
 
     public boolean exec(MethodContext methodContext) {
-        List messages = (List) methodContext.getEnv(errorListName);
+        List messages = (List) errorListAcsr.get(methodContext);
 
         if (messages != null && messages.size() > 0) {
+            String errorCode = methodContext.expandString(this.errorCode);
+            
             if (methodContext.getMethodType() == MethodContext.EVENT) {
-                String errMsg = errorPrefix.getMessage(methodContext.getLoader()) +
-                    ServiceUtil.makeMessageList(messages, messagePrefix.getMessage(methodContext.getLoader()), messageSuffix.getMessage(methodContext.getLoader())) +
-                    errorSuffix.getMessage(methodContext.getLoader());
+                String errMsg = errorPrefix.getMessage(methodContext.getLoader(), methodContext) +
+                    ServiceUtil.makeMessageList(messages, messagePrefix.getMessage(methodContext.getLoader(), methodContext), 
+                            messageSuffix.getMessage(methodContext.getLoader(), methodContext)) +
+                            errorSuffix.getMessage(methodContext.getLoader(), methodContext);
 
                 methodContext.putEnv(simpleMethod.getEventErrorMessageName(), errMsg);
 

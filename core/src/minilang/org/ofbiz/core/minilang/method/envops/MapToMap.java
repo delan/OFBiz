@@ -39,32 +39,33 @@ import org.ofbiz.core.minilang.method.*;
  */
 public class MapToMap extends MethodOperation {
     
-    String mapName;
-    String toMapName;
+    ContextAccessor mapAcsr;
+    ContextAccessor toMapAcsr;
 
     public MapToMap(Element element, SimpleMethod simpleMethod) {
         super(element, simpleMethod);
-        mapName = element.getAttribute("map-name");
-        toMapName = element.getAttribute("to-map-name");
+        mapAcsr = new ContextAccessor(element.getAttribute("map-name"));
+        toMapAcsr = new ContextAccessor(element.getAttribute("to-map-name"));
     }
 
     public boolean exec(MethodContext methodContext) {
         Map fromMap = null;
-        if (mapName != null && mapName.length() > 0) {
-            fromMap = (Map) methodContext.getEnv(mapName);
+        if (!mapAcsr.isEmpty()) {
+            fromMap = (Map) mapAcsr.get(methodContext);
 
             if (fromMap == null) {
-                if (Debug.infoOn()) Debug.logInfo("Map not found with name " + mapName + ", not copying from this map");
-                return true;
+                if (Debug.infoOn()) Debug.logInfo("Map not found with name " + mapAcsr + ", not copying from this map");
+                fromMap = new HashMap();
+                mapAcsr.put(methodContext, fromMap);
             }
         }
 
-        if (toMapName != null && toMapName.length() > 0) {
-            Map toMap = (Map) methodContext.getEnv(toMapName);
+        if (!toMapAcsr.isEmpty()) {
+            Map toMap = (Map) toMapAcsr.get(methodContext);
             if (toMap == null) {
-                if (Debug.verboseOn()) Debug.logVerbose("Map not found with name " + toMapName + ", creating new map");
+                if (Debug.verboseOn()) Debug.logVerbose("Map not found with name " + toMapAcsr + ", creating new map");
                 toMap = new HashMap();
-                methodContext.putEnv(toMapName, toMap);
+                toMapAcsr.put(methodContext, toMap);
             }
 
             toMap.putAll(fromMap);

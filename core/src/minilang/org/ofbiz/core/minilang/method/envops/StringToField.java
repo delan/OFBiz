@@ -42,39 +42,39 @@ import org.ofbiz.core.minilang.method.*;
 public class StringToField extends MethodOperation {
     
     String string;
-    String mapName;
-    String fieldName;
-    String argListName;
+    ContextAccessor mapAcsr;
+    ContextAccessor fieldAcsr;
+    ContextAccessor argListAcsr;
 
     public StringToField(Element element, SimpleMethod simpleMethod) {
         super(element, simpleMethod);
         string = element.getAttribute("string");
-        mapName = element.getAttribute("map-name");
-        fieldName = element.getAttribute("field-name");
-        argListName = element.getAttribute("arg-list-name");
+        mapAcsr = new ContextAccessor(element.getAttribute("map-name"));
+        fieldAcsr = new ContextAccessor(element.getAttribute("field-name"));
+        argListAcsr = new ContextAccessor(element.getAttribute("arg-list-name"));
     }
 
     public boolean exec(MethodContext methodContext) {
-        String value = string;
+        String value = methodContext.expandString(string);
         
-        if (UtilValidate.isNotEmpty(argListName)) {
-            List argList = (List) methodContext.getEnv(argListName);
+        if (!argListAcsr.isEmpty()) {
+            List argList = (List) argListAcsr.get(methodContext);
             if (argList != null && argList.size() > 0) {
                 value = MessageFormat.format(value, argList.toArray());
             }
         }
 
-        if (mapName != null && mapName.length() > 0) {
-            Map toMap = (Map) methodContext.getEnv(mapName);
+        if (!mapAcsr.isEmpty()) {
+            Map toMap = (Map) mapAcsr.get(methodContext);
 
             if (toMap == null) {
-                if (Debug.verboseOn()) Debug.logVerbose("Map not found with name " + mapName + ", creating new map");
+                if (Debug.verboseOn()) Debug.logVerbose("Map not found with name " + mapAcsr + ", creating new map");
                 toMap = new HashMap();
-                methodContext.putEnv(mapName, toMap);
+                mapAcsr.put(methodContext, toMap);
             }
-            toMap.put(fieldName, value);
+            fieldAcsr.put(toMap, value);
         } else {
-            methodContext.putEnv(fieldName, value);
+            fieldAcsr.put(methodContext, value);
         }
 
         return true;

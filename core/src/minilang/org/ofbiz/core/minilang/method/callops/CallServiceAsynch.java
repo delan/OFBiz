@@ -46,26 +46,28 @@ public class CallServiceAsynch extends MethodOperation {
     public static final String module = CallServiceAsynch.class.getName();
     
     String serviceName;
-    String inMapName;
-    boolean includeUserLogin = true;
+    ContextAccessor inMapAcsr;
+    String includeUserLoginStr;
 
     public CallServiceAsynch(Element element, SimpleMethod simpleMethod) {
         super(element, simpleMethod);
         serviceName = element.getAttribute("service-name");
-        inMapName = element.getAttribute("in-map-name");
-        includeUserLogin = !"false".equals(element.getAttribute("include-user-login"));
+        inMapAcsr = new ContextAccessor(element.getAttribute("in-map-name"));
+        includeUserLoginStr = element.getAttribute("include-user-login");
     }
 
     public boolean exec(MethodContext methodContext) {
+        String serviceName = methodContext.expandString(this.serviceName);
+        boolean includeUserLogin = !"false".equals(methodContext.expandString(includeUserLoginStr));
+        
         Map inMap = null;
-
-        if (UtilValidate.isEmpty(inMapName)) {
+        if (inMapAcsr.isEmpty()) {
             inMap = new HashMap();
         } else {
-            inMap = (Map) methodContext.getEnv(inMapName);
+            inMap = (Map) inMapAcsr.get(methodContext);
             if (inMap == null) {
                 inMap = new HashMap();
-                methodContext.putEnv(inMapName, inMap);
+                inMapAcsr.put(methodContext, inMap);
             }
         }
 

@@ -175,7 +175,7 @@ public class MethodContext {
         return fma.get(env);
     }
 
-    /** Gets the named value from the environment. Supports the "." (dot) syntax to access Map members and the
+    /** Puts the named value in the environment. Supports the "." (dot) syntax to access Map members and the
      * "[]" (bracket) syntax to access List entries. 
      * If the brackets for a list are empty the value will be appended to end of the list,
      * otherwise the value will be set in the position of the number in the brackets.
@@ -288,6 +288,10 @@ public class MethodContext {
     
     /** Expands environment variables delimited with ${} */
     public String expandString(String original) {
+        if (original == null || original.length() == 0) {
+            return original;
+        }
+        
         int start = original.indexOf("${");
         if (start == -1) {
             return original;

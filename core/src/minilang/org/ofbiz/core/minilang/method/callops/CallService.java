@@ -46,9 +46,9 @@ public class CallService extends MethodOperation {
     public static final String module = CallService.class.getName();
     
     String serviceName;
-    String inMapName;
-    boolean includeUserLogin = true;
-    boolean breakOnError = true;
+    ContextAccessor inMapAcsr;
+    String includeUserLoginStr;
+    String breakOnErrorStr;
     String errorCode;
     String successCode;
 
@@ -78,16 +78,14 @@ public class CallService extends MethodOperation {
     public CallService(Element element, SimpleMethod simpleMethod) {
         super(element, simpleMethod);
         serviceName = element.getAttribute("service-name");
-        inMapName = element.getAttribute("in-map-name");
-        includeUserLogin = !"false".equals(element.getAttribute("include-user-login"));
-        breakOnError = !"false".equals(element.getAttribute("break-on-error"));
+        inMapAcsr = new ContextAccessor(element.getAttribute("in-map-name"));
+        includeUserLoginStr = element.getAttribute("include-user-login");
+        breakOnErrorStr = element.getAttribute("break-on-error");
         errorCode = element.getAttribute("error-code");
-        if (errorCode == null || errorCode.length() == 0)
-            errorCode = "error";
+        if (errorCode == null || errorCode.length() == 0) errorCode = "error";
 
         successCode = element.getAttribute("success-code");
-        if (successCode == null || successCode.length() == 0)
-            successCode = "success";
+        if (successCode == null || successCode.length() == 0) successCode = "success";
 
         errorPrefix = new FlexibleMessage(UtilXml.firstChildElement(element, "error-prefix"), "service.error.prefix");
         errorSuffix = new FlexibleMessage(UtilXml.firstChildElement(element, "error-suffix"), "service.error.suffix");
@@ -167,15 +165,21 @@ public class CallService extends MethodOperation {
     }
 
     public boolean exec(MethodContext methodContext) {
-        Map inMap = null;
+        boolean includeUserLogin = !"false".equals(methodContext.expandString(includeUserLoginStr));
+        boolean breakOnError = !"false".equals(methodContext.expandString(breakOnErrorStr));
 
-        if (UtilValidate.isEmpty(inMapName)) {
+        String serviceName = methodContext.expandString(this.serviceName);
+        String errorCode = methodContext.expandString(this.errorCode);
+        String successCode = methodContext.expandString(this.successCode);
+
+        Map inMap = null;
+        if (inMapAcsr.isEmpty()) {
             inMap = new HashMap();
         } else {
-            inMap = (Map) methodContext.getEnv(inMapName);
+            inMap = (Map) inMapAcsr.get(methodContext);
             if (inMap == null) {
                 inMap = new HashMap();
-                methodContext.putEnv(inMapName, inMap);
+                inMapAcsr.put(methodContext, inMap);
             }
         }
 
@@ -288,12 +292,12 @@ public class CallService extends MethodOperation {
             }
         }
 
-        String errorPrefixStr = errorPrefix.getMessage(methodContext.getLoader());
-        String errorSuffixStr = errorSuffix.getMessage(methodContext.getLoader());
-        String successPrefixStr = successPrefix.getMessage(methodContext.getLoader());
-        String successSuffixStr = successSuffix.getMessage(methodContext.getLoader());
-        String messagePrefixStr = messagePrefix.getMessage(methodContext.getLoader());
-        String messageSuffixStr = messageSuffix.getMessage(methodContext.getLoader());
+        String errorPrefixStr = errorPrefix.getMessage(methodContext.getLoader(), methodContext);
+        String errorSuffixStr = errorSuffix.getMessage(methodContext.getLoader(), methodContext);
+        String successPrefixStr = successPrefix.getMessage(methodContext.getLoader(), methodContext);
+        String successSuffixStr = successSuffix.getMessage(methodContext.getLoader(), methodContext);
+        String messagePrefixStr = messagePrefix.getMessage(methodContext.getLoader(), methodContext);
+        String messageSuffixStr = messageSuffix.getMessage(methodContext.getLoader(), methodContext);
 
         String errorMessage = ServiceUtil.makeErrorMessage(result, messagePrefixStr, messageSuffixStr, errorPrefixStr, errorSuffixStr);
 
@@ -315,7 +319,7 @@ public class CallService extends MethodOperation {
             }
         }
 
-        String defaultMessageStr = defaultMessage.getMessage(methodContext.getLoader());
+        String defaultMessageStr = defaultMessage.getMessage(methodContext.getLoader(), methodContext);
 
         if (UtilValidate.isEmpty(errorMessage) && UtilValidate.isEmpty(successMessage) && UtilValidate.isNotEmpty(defaultMessageStr)) {
             if (methodContext.getMethodType() == MethodContext.EVENT) {

@@ -42,9 +42,9 @@ public class CallSimpleMapProcessor extends MethodOperation {
     
     String xmlResource;
     String processorName;
-    String inMapName;
-    String outMapName;
-    String errorListName;
+    ContextAccessor inMapAcsr;
+    ContextAccessor outMapAcsr;
+    ContextAccessor errorListAcsr;
 
     MapProcessor inlineMapProcessor = null;
 
@@ -52,45 +52,40 @@ public class CallSimpleMapProcessor extends MethodOperation {
         super(element, simpleMethod);
         xmlResource = element.getAttribute("xml-resource");
         processorName = element.getAttribute("processor-name");
-        inMapName = element.getAttribute("in-map-name");
-        outMapName = element.getAttribute("out-map-name");
-
-        errorListName = element.getAttribute("error-list-name");
-        if (errorListName == null || errorListName.length() == 0)
-            errorListName = "error_list";
+        inMapAcsr = new ContextAccessor(element.getAttribute("in-map-name"));
+        outMapAcsr = new ContextAccessor(element.getAttribute("out-map-name"));
+        errorListAcsr = new ContextAccessor(element.getAttribute("error-list-name"), "error_list");
 
         Element simpleMapProcessorElement = UtilXml.firstChildElement(element, "simple-map-processor");
-
         if (simpleMapProcessorElement != null) {
             inlineMapProcessor = new MapProcessor(simpleMapProcessorElement);
         }
     }
 
     public boolean exec(MethodContext methodContext) {
-        List messages = (List) methodContext.getEnv(errorListName);
-
+        List messages = (List) errorListAcsr.get(methodContext);
         if (messages == null) {
             messages = new LinkedList();
-            methodContext.putEnv(errorListName, messages);
+            errorListAcsr.put(methodContext, messages);
         }
 
-        Map inMap = (Map) methodContext.getEnv(inMapName);
-
+        Map inMap = (Map) inMapAcsr.get(methodContext);
         if (inMap == null) {
             inMap = new HashMap();
-            methodContext.putEnv(inMapName, inMap);
+            inMapAcsr.put(methodContext, inMap);
         }
 
-        Map outMap = (Map) methodContext.getEnv(outMapName);
-
+        Map outMap = (Map) outMapAcsr.get(methodContext);
         if (outMap == null) {
             outMap = new HashMap();
-            methodContext.putEnv(outMapName, outMap);
+            outMapAcsr.put(methodContext, outMap);
         }
 
         // run external map processor first
-        if (xmlResource != null && xmlResource.length() > 0 &&
-            processorName != null && processorName.length() > 0) {
+        if (this.xmlResource != null && this.xmlResource.length() > 0 &&
+                this.processorName != null && this.processorName.length() > 0) {
+            String xmlResource = methodContext.expandString(this.xmlResource);
+            String processorName = methodContext.expandString(this.processorName);
             try {
                 org.ofbiz.core.minilang.SimpleMapProcessor.runSimpleMapProcessor(
                     xmlResource, processorName, inMap, outMap, messages,

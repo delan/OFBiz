@@ -39,46 +39,46 @@ import org.ofbiz.core.minilang.method.*;
  */
 public class FieldToField extends MethodOperation {
     
-    String mapName;
-    String fieldName;
-    String toMapName;
-    String toFieldName;
+    ContextAccessor mapAcsr;
+    ContextAccessor fieldAcsr;
+    ContextAccessor toMapAcsr;
+    ContextAccessor toFieldAcsr;
 
     public FieldToField(Element element, SimpleMethod simpleMethod) {
         super(element, simpleMethod);
-        mapName = element.getAttribute("map-name");
-        fieldName = element.getAttribute("field-name");
-        toMapName = element.getAttribute("to-map-name");
-        toFieldName = element.getAttribute("to-field-name");
+        mapAcsr = new ContextAccessor(element.getAttribute("map-name"));
+        fieldAcsr = new ContextAccessor(element.getAttribute("field-name"));
+        toMapAcsr = new ContextAccessor(element.getAttribute("to-map-name"));
+        toFieldAcsr = new ContextAccessor(element.getAttribute("to-field-name"));
 
-        // set toMapName and toFieldName to their defualt values of mapName and fieldName if empty
-        if (toMapName == null || toMapName.length() == 0) {
-            toMapName = mapName;
+        // set toMapAcsr and toFieldAcsr to their defualt values of mapAcsr and fieldAcsr if empty
+        if (toMapAcsr.isEmpty()) {
+            toMapAcsr = mapAcsr;
         }
-        if (toFieldName == null || toFieldName.length() == 0) {
-            toFieldName = fieldName;
+        if (toFieldAcsr.isEmpty()) {
+            toFieldAcsr = fieldAcsr;
         }
     }
 
     public boolean exec(MethodContext methodContext) {
         Object fieldVal = null;
 
-        if (mapName != null && mapName.length() > 0) {
-            Map fromMap = (Map) methodContext.getEnv(mapName);
+        if (!mapAcsr.isEmpty()) {
+            Map fromMap = (Map) mapAcsr.get(methodContext);
 
             if (fromMap == null) {
-                if (Debug.infoOn()) Debug.logInfo("Map not found with name " + mapName + ", not copying from this map");
+                if (Debug.infoOn()) Debug.logInfo("Map not found with name " + mapAcsr + ", not copying from this map");
                 return true;
             }
 
-            fieldVal = fromMap.get(fieldName);
+            fieldVal = fieldAcsr.get(fromMap);
         } else {
             // no map name, try the env
-            fieldVal = methodContext.getEnv(fieldName);
+            fieldVal = fieldAcsr.get(methodContext);
         }
 
         if (fieldVal == null) {
-            if (Debug.verboseOn()) Debug.logVerbose("Field value not found with name " + fieldName + " in Map with name " + mapName + ", not copying field");
+            if (Debug.verboseOn()) Debug.logVerbose("Field value not found with name " + fieldAcsr + " in Map with name " + mapAcsr + ", not copying field");
             return true;
         }
 
@@ -87,17 +87,17 @@ public class FieldToField extends MethodOperation {
         // to go from a map field to an env field, use the field-to-env operation
         Map toMap = null;
 
-        if (toMapName != null && toMapName.length() > 0) {
-            toMap = (Map) methodContext.getEnv(toMapName);
+        if (!toMapAcsr.isEmpty()) {
+            toMap = (Map) toMapAcsr.get(methodContext);
             if (toMap == null) {
-                if (Debug.verboseOn()) Debug.logVerbose("Map not found with name " + toMapName + ", creating new map");
+                if (Debug.verboseOn()) Debug.logVerbose("Map not found with name " + toMapAcsr + ", creating new map");
                 toMap = new HashMap();
-                methodContext.putEnv(toMapName, toMap);
+                toMapAcsr.put(methodContext, toMap);
             }
-            toMap.put(toFieldName, fieldVal);
+            toFieldAcsr.put(toMap, fieldVal);
         } else {
             // no to-map, so put in env
-            methodContext.putEnv(toFieldName, fieldVal);
+            toFieldAcsr.put(methodContext, fieldVal);
         }
 
         return true;

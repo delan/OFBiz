@@ -39,45 +39,45 @@ import org.ofbiz.core.minilang.method.*;
  */
 public class FieldToEnv extends MethodOperation {
     
-    String envName;
-    String mapName;
-    String fieldName;
+    ContextAccessor envAcsr;
+    ContextAccessor mapAcsr;
+    ContextAccessor fieldAcsr;
 
     public FieldToEnv(Element element, SimpleMethod simpleMethod) {
         super(element, simpleMethod);
-        envName = element.getAttribute("env-name");
-        mapName = element.getAttribute("map-name");
-        fieldName = element.getAttribute("field-name");
+        envAcsr = new ContextAccessor(element.getAttribute("env-name"));
+        mapAcsr = new ContextAccessor(element.getAttribute("map-name"));
+        fieldAcsr = new ContextAccessor(element.getAttribute("field-name"));
 
-        // set fieldName to their defualt value of envName if empty
-        if (fieldName == null || fieldName.length() == 0) {
-            fieldName = envName;
+        // set fieldAcsr to their defualt value of envAcsr if empty
+        if (fieldAcsr.isEmpty()) {
+            fieldAcsr = envAcsr;
         }
     }
 
     public boolean exec(MethodContext methodContext) {
         Object fieldVal = null;
 
-        if (mapName != null && mapName.length() > 0) {
-            Map fromMap = (Map) methodContext.getEnv(mapName);
+        if (!mapAcsr.isEmpty()) {
+            Map fromMap = (Map) mapAcsr.get(methodContext);
 
             if (fromMap == null) {
-                Debug.logWarning("Map not found with name " + mapName + ", not copying field");
+                Debug.logWarning("Map not found with name " + mapAcsr + ", not copying field");
                 return true;
             }
 
-            fieldVal = fromMap.get(fieldName);
+            fieldVal = fieldAcsr.get(fromMap);
         } else {
             // no map name, try the env
-            fieldVal = methodContext.getEnv(fieldName);
+            fieldVal = fieldAcsr.get(methodContext);
         }
 
         if (fieldVal == null) {
-            if (Debug.infoOn()) Debug.logInfo("Field value not found with name " + fieldName + " in Map with name " + mapName + ", not copying field");
+            if (Debug.infoOn()) Debug.logInfo("Field value not found with name " + fieldAcsr + " in Map with name " + mapAcsr + ", not copying field");
             return true;
         }
 
-        methodContext.putEnv(envName, fieldVal);
+        envAcsr.put(methodContext, fieldVal);
         return true;
     }
 }

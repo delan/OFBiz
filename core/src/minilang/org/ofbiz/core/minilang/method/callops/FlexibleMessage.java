@@ -26,6 +26,8 @@ package org.ofbiz.core.minilang.method.callops;
 import org.w3c.dom.*;
 import org.ofbiz.core.util.*;
 
+import org.ofbiz.core.minilang.method.*;
+
 /**
  * Simple class to wrap messages that come either from a straight string or a properties file
  *
@@ -65,7 +67,10 @@ public class FlexibleMessage {
         }
     }
 
-    public String getMessage(ClassLoader loader) {
+    public String getMessage(ClassLoader loader, MethodContext methodContext) {
+        String message = methodContext.expandString(this.message);
+        String propertyResource = methodContext.expandString(this.propertyResource);
+        
         // if (Debug.infoOn()) Debug.logInfo("[FlexibleMessage.getMessage] isProperty: " + isProperty + ", message: " + message + ", propertyResource: " + propertyResource);
         if (!isProperty && message != null) {
             // if (Debug.infoOn()) Debug.logInfo("[FlexibleMessage.getMessage] Adding message: " + message);

@@ -42,13 +42,13 @@ public class Iterate extends MethodOperation {
 
     List subOps = new LinkedList();
 
-    String entryName;
-    String listName;
+    ContextAccessor entryAcsr;
+    ContextAccessor listAcsr;
 
     public Iterate(Element element, SimpleMethod simpleMethod) {
         super(element, simpleMethod);
-        this.entryName = element.getAttribute("entry-name");
-        this.listName = element.getAttribute("list-name");
+        this.entryAcsr = new ContextAccessor(element.getAttribute("entry-name"));
+        this.listAcsr = new ContextAccessor(element.getAttribute("list-name"));
 
         SimpleMethod.readOperations(element, subOps, simpleMethod);
     }
@@ -56,19 +56,19 @@ public class Iterate extends MethodOperation {
     public boolean exec(MethodContext methodContext) {
         Object fieldVal = null;
 
-        if (listName == null || listName.length() == 0) {
+        if (listAcsr.isEmpty()) {
             Debug.logWarning("No list-name specified in iterate tag, doing nothing");
             return true;
         }
 
-        Object oldEntryValue = methodContext.getEnv(entryName);
-        Object objList = methodContext.getEnv(listName);
+        Object oldEntryValue = entryAcsr.get(methodContext);
+        Object objList = listAcsr.get(methodContext);
         if (objList instanceof EntityListIterator) {
             EntityListIterator eli = (EntityListIterator) objList;
 
             GenericValue theEntry;
             while ((theEntry = (GenericValue) eli.next()) != null) {
-                methodContext.putEnv(entryName, theEntry);
+                entryAcsr.put(methodContext, theEntry);
 
                 if (!SimpleMethod.runSubOps(subOps, methodContext)) {
                     // only return here if it returns false, otherwise just carry on
@@ -96,11 +96,11 @@ public class Iterate extends MethodOperation {
             Collection theList = (Collection) objList;
 
             if (theList == null) {
-                if (Debug.infoOn()) Debug.logInfo("List not found with name " + listName + ", doing nothing");
+                if (Debug.infoOn()) Debug.logInfo("List not found with name " + listAcsr + ", doing nothing");
                 return true;
             }
             if (theList.size() == 0) {
-                if (Debug.verboseOn()) Debug.logVerbose("List with name " + listName + " has zero entries, doing nothing");
+                if (Debug.verboseOn()) Debug.logVerbose("List with name " + listAcsr + " has zero entries, doing nothing");
                 return true;
             }
 
@@ -108,8 +108,7 @@ public class Iterate extends MethodOperation {
 
             while (theIterator.hasNext()) {
                 Object theEntry = theIterator.next();
-
-                methodContext.putEnv(entryName, theEntry);
+                entryAcsr.put(methodContext, theEntry);
 
                 if (!SimpleMethod.runSubOps(subOps, methodContext)) {
                     // only return here if it returns false, otherwise just carry on
@@ -117,7 +116,7 @@ public class Iterate extends MethodOperation {
                 }
             }
         }
-        methodContext.putEnv(entryName, oldEntryValue);
+        entryAcsr.put(methodContext, oldEntryValue);
         return true;
     }
 }

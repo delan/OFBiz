@@ -48,32 +48,27 @@ public class CallBsh extends MethodOperation {
 
     String inline = null;
     String resource = null;
-    String errorListName;
+    ContextAccessor errorListAcsr;
 
     public CallBsh(Element element, SimpleMethod simpleMethod) {
         super(element, simpleMethod);
         inline = UtilXml.elementValue(element);
         resource = element.getAttribute("resource");
-
-        errorListName = element.getAttribute("error-list-name");
-        if (errorListName == null || errorListName.length() == 0) {
-            errorListName = "error_list";
-        }
+        errorListAcsr = new ContextAccessor(element.getAttribute("error-list-name"), "error_list");
 
         if (inline != null && inline.length() > 0) {// pre-parse/compile inlined bsh, only accessed here
         }
     }
 
     public boolean exec(MethodContext methodContext) {
-        List messages = (List) methodContext.getEnv(errorListName);
+        List messages = (List) errorListAcsr.get(methodContext);
 
         if (messages == null) {
             messages = new LinkedList();
-            methodContext.putEnv(errorListName, messages);
+            errorListAcsr.put(methodContext, messages);
         }
 
         Interpreter bsh = new Interpreter();
-
         bsh.setClassLoader(methodContext.getLoader());
 
         try {
@@ -87,6 +82,7 @@ public class CallBsh extends MethodOperation {
 
             // run external, from resource, first if resource specified
             if (resource != null && resource.length() > 0) {
+                String resource = methodContext.expandString(this.resource);
                 InputStream is = methodContext.getLoader().getResourceAsStream(resource);
 
                 if (is == null) {

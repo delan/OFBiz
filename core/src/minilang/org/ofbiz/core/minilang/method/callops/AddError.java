@@ -42,14 +42,11 @@ public class AddError extends MethodOperation {
     String propertyResource = null;
     boolean isProperty = false;
 
-    String errorListName;
+    ContextAccessor errorListAcsr;
 
     public AddError(Element element, SimpleMethod simpleMethod) {
         super(element, simpleMethod);
-        errorListName = element.getAttribute("error-list-name");
-        if (errorListName == null || errorListName.length() == 0) {
-            errorListName = "error_list";
-        }
+        errorListAcsr = new ContextAccessor(element.getAttribute("error-list-name"), "error_list");
 
         Element failMessage = UtilXml.firstChildElement(element, "fail-message");
         Element failProperty = UtilXml.firstChildElement(element, "fail-property");
@@ -67,28 +64,31 @@ public class AddError extends MethodOperation {
     public boolean exec(MethodContext methodContext) {
         boolean hasPermission = false;
 
-        List messages = (List) methodContext.getEnv(errorListName);
-
+        List messages = (List) errorListAcsr.get(methodContext);
         if (messages == null) {
             messages = new LinkedList();
-            methodContext.putEnv(errorListName, messages);
+            errorListAcsr.put(methodContext, messages);
         }
 
-        this.addMessage(messages, methodContext.getLoader());
+        this.addMessage(messages, methodContext.getLoader(), methodContext);
         return true;
     }
 
-    public void addMessage(List messages, ClassLoader loader) {
+    public void addMessage(List messages, ClassLoader loader, MethodContext methodContext) {
+        String message = methodContext.expandString(this.message);
+        String propertyResource = methodContext.expandString(this.propertyResource);
+        
         if (!isProperty && message != null) {
             messages.add(message);
             // if (Debug.infoOn()) Debug.logInfo("[SimpleMapOperation.addMessage] Adding message: " + message);
         } else if (isProperty && propertyResource != null && message != null) {
             String propMsg = UtilProperties.getPropertyValue(UtilURL.fromResource(propertyResource, loader), message);
 
-            if (propMsg == null || propMsg.length() == 0)
+            if (propMsg == null || propMsg.length() == 0) {
                 messages.add("Simple Method error occurred, but no message was found, sorry.");
-            else
+            } else {
                 messages.add(propMsg);
+            }
             // if (Debug.infoOn()) Debug.logInfo("[SimpleMapOperation.addMessage] Adding property message: " + propMsg);
         } else {
             messages.add("Simple Method error occurred, but no message was found, sorry.");

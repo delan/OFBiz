@@ -23,6 +23,7 @@
  */
 package org.ofbiz.core.minilang.method;
 
+import java.util.*;
 import org.ofbiz.core.util.*;
 
 /**
@@ -39,25 +40,49 @@ public class ContextAccessor {
     protected String name;
     protected FlexibleMapAccessor fma;
     protected boolean needsExpand;
+    protected boolean empty;
 
     public ContextAccessor(String name) {
-        this.name = name;
-        int openPos = name.indexOf("${");
-        if (openPos != -1 && name.indexOf("}", openPos) != -1) {
-            fma = null;
-            needsExpand = true;
+        init(name);
+    }
+    
+    public ContextAccessor(String name, String defaultName) {
+        if (name == null || name.length() == 0) {
+            init(defaultName);
         } else {
-            fma = new FlexibleMapAccessor(name);
-            needsExpand = false;
+            init(name);
         }
     }
     
-    /** Based on name get from Map or from List in Map */
-    public Object get(MethodContext context) {
-        if (this.needsExpand) {
-            return context.getEnv(name);
+    protected void init(String name) {
+        this.name = name;
+        if (name == null || name.length() == 0) {
+            empty = true;
+            needsExpand = false;
+            fma = new FlexibleMapAccessor(name);
         } else {
-            return context.getEnv(fma);
+            empty = false;
+            int openPos = name.indexOf("${");
+            if (openPos != -1 && name.indexOf("}", openPos) != -1) {
+                fma = null;
+                needsExpand = true;
+            } else {
+                fma = new FlexibleMapAccessor(name);
+                needsExpand = false;
+            }
+        }
+    }
+    
+    public boolean isEmpty() {
+        return this.empty;
+    }
+    
+    /** Based on name get from Map or from List in Map */
+    public Object get(MethodContext methodContext) {
+        if (this.needsExpand) {
+            return methodContext.getEnv(name);
+        } else {
+            return methodContext.getEnv(fma);
         }
     }
     
@@ -67,20 +92,79 @@ public class ContextAccessor {
      * If a "+" (plus sign) is included inside the square brackets before the index 
      * number the value will inserted/added at that point instead of set at the point.
      */
-    public void put(MethodContext context, Object value) {
+    public void put(MethodContext methodContext, Object value) {
         if (this.needsExpand) {
-            context.putEnv(name, value);
+            methodContext.putEnv(name, value);
         } else {
-            context.putEnv(fma, value);
+            methodContext.putEnv(fma, value);
         }
     }
     
     /** Based on name remove from Map or from List in Map */
-    public Object remove(MethodContext context) {
+    public Object remove(MethodContext methodContext) {
         if (this.needsExpand) {
-            return context.removeEnv(name);
+            return methodContext.removeEnv(name);
         } else {
-            return context.removeEnv(fma);
+            return methodContext.removeEnv(fma);
         }
+    }
+    
+    /** Based on name get from Map or from List in Map */
+    public Object get(Map theMap) {
+        if (this.needsExpand) {
+            return theMap.get(name);
+        } else {
+            return fma.get(theMap);
+        }
+    }
+    
+    /** Based on name put in Map or from List in Map;
+     * If the brackets for a list are empty the value will be appended to the list,
+     * otherwise the value will be set in the position of the number in the brackets.
+     * If a "+" (plus sign) is included inside the square brackets before the index 
+     * number the value will inserted/added at that point instead of set at the point.
+     */
+    public void put(Map theMap, Object value) {
+        if (this.needsExpand) {
+            theMap.put(name, value);
+        } else {
+            fma.put(theMap, value);
+        }
+    }
+    
+    /** Based on name remove from Map or from List in Map */
+    public Object remove(Map theMap) {
+        if (this.needsExpand) {
+            return theMap.remove(name);
+        } else {
+            return fma.remove(theMap);
+        }
+    }
+    
+    /** The equals and hashCode methods are imnplemented just case this object is ever accidently used as a Map key */    
+    public int hashCode() {
+        return this.name.hashCode();
+    }
+
+    /** The equals and hashCode methods are imnplemented just case this object is ever accidently used as a Map key */    
+    public boolean equals(Object obj) {
+        if (obj instanceof ContextAccessor) {
+            ContextAccessor contextAccessor = (ContextAccessor) obj;
+            if (this.name == null) {
+                return contextAccessor.name == null;
+            }
+            return this.name.equals(contextAccessor.name);
+        } else {
+            String str = (String) obj;
+            if (this.name == null) {
+                return str == null;
+            }
+            return this.name.equals(str);
+        }
+    }
+
+    /** To be used for a string representation of the accessor, returns the original name. */    
+    public String toString() {
+        return this.name;
     }
 }

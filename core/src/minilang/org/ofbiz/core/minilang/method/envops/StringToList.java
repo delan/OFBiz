@@ -42,32 +42,32 @@ import org.ofbiz.core.minilang.method.*;
 public class StringToList extends MethodOperation {
     
     String string;
-    String listName;
-    String argListName;
+    ContextAccessor listAcsr;
+    ContextAccessor argListAcsr;
 
     public StringToList(Element element, SimpleMethod simpleMethod) {
         super(element, simpleMethod);
         string = element.getAttribute("string");
-        listName = element.getAttribute("list-name");
-        argListName = element.getAttribute("arg-list-name");
+        listAcsr = new ContextAccessor(element.getAttribute("list-name"));
+        argListAcsr = new ContextAccessor(element.getAttribute("arg-list-name"));
     }
 
     public boolean exec(MethodContext methodContext) {
-        String value = string;
+        String value = methodContext.expandString(string);
         
-        if (UtilValidate.isNotEmpty(argListName)) {
-            List argList = (List) methodContext.getEnv(argListName);
+        if (!argListAcsr.isEmpty()) {
+            List argList = (List) argListAcsr.get(methodContext);
             if (argList != null && argList.size() > 0) {
                 value = MessageFormat.format(value, argList.toArray());
             }
         }
 
-        List toList = (List) methodContext.getEnv(listName);
+        List toList = (List) listAcsr.get(methodContext);
 
         if (toList == null) {
-            if (Debug.verboseOn()) Debug.logVerbose("List not found with name " + listName + ", creating new List");
+            if (Debug.verboseOn()) Debug.logVerbose("List not found with name " + listAcsr + ", creating new List");
             toList = new LinkedList();
-            methodContext.putEnv(listName, toList);
+            listAcsr.put(methodContext, toList);
         }
         toList.add(value);
 

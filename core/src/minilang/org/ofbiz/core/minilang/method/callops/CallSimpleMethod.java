@@ -51,11 +51,12 @@ public class CallSimpleMethod extends MethodOperation {
     }
 
     public boolean exec(MethodContext methodContext) {
-        if (xmlResource != null && xmlResource.length() > 0 &&
-            methodName != null && methodName.length() > 0) {
+        if (this.xmlResource != null && this.xmlResource.length() > 0 &&
+                this.methodName != null && this.methodName.length() > 0) {
+            String xmlResource = methodContext.expandString(this.xmlResource);
+            String methodName = methodContext.expandString(this.methodName);
 
             Map simpleMethods = null;
-
             try {
                 simpleMethods = SimpleMethod.getSimpleMethods(xmlResource, methodName, methodContext.getLoader());
             } catch (MiniLangException e) {
@@ -73,7 +74,6 @@ public class CallSimpleMethod extends MethodOperation {
             }
 
             SimpleMethod simpleMethodToCall = (SimpleMethod) simpleMethods.get(methodName);
-
             if (simpleMethodToCall == null) {
                 String errMsg = "ERROR: Could not complete the " + simpleMethod.getShortDescription() + " process, could not find SimpleMethod " + methodName + " in XML document in resource: " + xmlResource;
 
@@ -86,8 +86,8 @@ public class CallSimpleMethod extends MethodOperation {
                 }
                 return false;
             }
+            
             String returnVal = simpleMethodToCall.exec(methodContext);
-
             if (returnVal != null && returnVal.equals(simpleMethodToCall.getDefaultErrorCode())) {
                 // in this case just set the error code, the error messages will already be in place...
                 if (methodContext.getMethodType() == MethodContext.EVENT) {

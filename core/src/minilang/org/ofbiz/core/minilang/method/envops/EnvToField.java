@@ -39,42 +39,42 @@ import org.ofbiz.core.minilang.method.*;
  */
 public class EnvToField extends MethodOperation {
     
-    String envName;
-    String mapName;
-    String fieldName;
+    ContextAccessor envAcsr;
+    ContextAccessor mapAcsr;
+    ContextAccessor fieldAcsr;
 
     public EnvToField(Element element, SimpleMethod simpleMethod) {
         super(element, simpleMethod);
-        envName = element.getAttribute("env-name");
-        mapName = element.getAttribute("map-name");
-        fieldName = element.getAttribute("field-name");
+        envAcsr = new ContextAccessor(element.getAttribute("env-name"));
+        mapAcsr = new ContextAccessor(element.getAttribute("map-name"));
+        fieldAcsr = new ContextAccessor(element.getAttribute("field-name"));
 
-        // set fieldName to their defualt value of envName if empty
-        if (fieldName == null || fieldName.length() == 0) {
-            fieldName = envName;
+        // set fieldAcsr to their defualt value of envAcsr if empty
+        if (fieldAcsr.isEmpty()) {
+            fieldAcsr = envAcsr;
         }
     }
 
     public boolean exec(MethodContext methodContext) {
-        Object envVar = methodContext.getEnv(envName);
+        Object envVar = envAcsr.get(methodContext);
 
         if (envVar == null) {
-            Debug.logWarning("Environment field not found with name " + envName + ", not copying env field");
+            Debug.logWarning("Environment field not found with name " + envAcsr + ", not copying env field");
             return true;
         }
 
-        if (mapName != null && mapName.length() > 0) {
-            Map toMap = (Map) methodContext.getEnv(mapName);
+        if (!mapAcsr.isEmpty()) {
+            Map toMap = (Map) mapAcsr.get(methodContext);
 
             if (toMap == null) {
-                if (Debug.infoOn()) Debug.logInfo("Map not found with name " + mapName + ", creating new map");
+                if (Debug.infoOn()) Debug.logInfo("Map not found with name " + mapAcsr + ", creating new map");
                 toMap = new HashMap();
-                methodContext.putEnv(mapName, toMap);
+                mapAcsr.put(methodContext, toMap);
             }
-            toMap.put(fieldName, envVar);
+            fieldAcsr.put(toMap, envVar);
         } else {
             // no to-map, so put in env
-            methodContext.putEnv(fieldName, envVar);
+            fieldAcsr.put(methodContext, envVar);
         }
         return true;
     }

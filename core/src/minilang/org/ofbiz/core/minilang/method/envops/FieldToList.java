@@ -39,45 +39,45 @@ import org.ofbiz.core.minilang.method.*;
  */
 public class FieldToList extends MethodOperation {
     
-    String mapName;
-    String fieldName;
-    String listName;
+    ContextAccessor mapAcsr;
+    ContextAccessor fieldAcsr;
+    ContextAccessor listAcsr;
 
     public FieldToList(Element element, SimpleMethod simpleMethod) {
         super(element, simpleMethod);
-        mapName = element.getAttribute("map-name");
-        fieldName = element.getAttribute("field-name");
-        listName = element.getAttribute("list-name");
+        mapAcsr = new ContextAccessor(element.getAttribute("map-name"));
+        fieldAcsr = new ContextAccessor(element.getAttribute("field-name"));
+        listAcsr = new ContextAccessor(element.getAttribute("list-name"));
     }
 
     public boolean exec(MethodContext methodContext) {
         Object fieldVal = null;
 
-        if (mapName != null && mapName.length() > 0) {
-            Map fromMap = (Map) methodContext.getEnv(mapName);
+        if (!mapAcsr.isEmpty()) {
+            Map fromMap = (Map) mapAcsr.get(methodContext);
 
             if (fromMap == null) {
-                Debug.logWarning("Map not found with name " + mapName + ", Not copying to list");
+                Debug.logWarning("Map not found with name " + mapAcsr + ", Not copying to list");
                 return true;
             }
 
-            fieldVal = fromMap.get(fieldName);
+            fieldVal = fieldAcsr.get(fromMap);
         } else {
             // no map name, try the env
-            fieldVal = methodContext.getEnv(fieldName);
+            fieldVal = fieldAcsr.get(methodContext);
         }
 
         if (fieldVal == null) {
-            Debug.logWarning("Field value not found with name " + fieldName + " in Map with name " + mapName + ", Not copying to list");
+            Debug.logWarning("Field value not found with name " + fieldAcsr + " in Map with name " + mapAcsr + ", Not copying to list");
             return true;
         }
 
-        List toList = (List) methodContext.getEnv(listName);
+        List toList = (List) listAcsr.get(methodContext);
 
         if (toList == null) {
-            if (Debug.verboseOn()) Debug.logVerbose("List not found with name " + listName + ", creating new list");
+            if (Debug.verboseOn()) Debug.logVerbose("List not found with name " + listAcsr + ", creating new list");
             toList = new LinkedList();
-            methodContext.putEnv(listName, toList);
+            listAcsr.put(methodContext, toList);
         }
 
         toList.add(fieldVal);

@@ -40,30 +40,30 @@ import org.ofbiz.core.minilang.method.*;
  */
 public class ClearField extends MethodOperation {
     
-    String mapName;
-    String fieldName;
+    ContextAccessor mapAcsr;
+    ContextAccessor fieldAcsr;
 
     public ClearField(Element element, SimpleMethod simpleMethod) {
         super(element, simpleMethod);
-        mapName = element.getAttribute("map-name");
-        fieldName = element.getAttribute("field-name");
+        mapAcsr = new ContextAccessor(element.getAttribute("map-name"));
+        fieldAcsr = new ContextAccessor(element.getAttribute("field-name"));
     }
 
     public boolean exec(MethodContext methodContext) {
-        if (mapName != null && mapName.length() > 0) {
-            Map toMap = (Map) methodContext.getEnv(mapName);
+        if (!mapAcsr.isEmpty()) {
+            Map toMap = (Map) mapAcsr.get(methodContext);
 
             if (toMap == null) {
                 // it seems silly to create a new map, but necessary since whenever
                 // an env field like a Map or List is referenced it should be created, even if empty
-                if (Debug.verboseOn()) Debug.logVerbose("Map not found with name " + mapName + ", creating new map");
+                if (Debug.verboseOn()) Debug.logVerbose("Map not found with name " + mapAcsr + ", creating new map");
                 toMap = new HashMap();
-                methodContext.putEnv(mapName, toMap);
+                mapAcsr.put(methodContext, toMap);
             }
 
-            toMap.remove(fieldName);
+            fieldAcsr.remove(toMap);
         } else {
-            methodContext.removeEnv(fieldName);
+            fieldAcsr.remove(methodContext);
         }
 
         return true;

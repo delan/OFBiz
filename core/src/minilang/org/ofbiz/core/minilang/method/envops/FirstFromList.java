@@ -39,35 +39,35 @@ import org.ofbiz.core.minilang.method.*;
  */
 public class FirstFromList extends MethodOperation {
 
-    String entryName;
-    String listName;
+    ContextAccessor entryAcsr;
+    ContextAccessor listAcsr;
 
     public FirstFromList(Element element, SimpleMethod simpleMethod) {
         super(element, simpleMethod);
-        this.entryName = element.getAttribute("entry-name");
-        this.listName = element.getAttribute("list-name");
+        this.entryAcsr = new ContextAccessor(element.getAttribute("entry-name"));
+        this.listAcsr = new ContextAccessor(element.getAttribute("list-name"));
     }
 
     public boolean exec(MethodContext methodContext) {
         Object fieldVal = null;
 
-        if (listName == null || listName.length() == 0) {
+        if (listAcsr.isEmpty()) {
             Debug.logWarning("No list-name specified in iterate tag, doing nothing");
             return true;
         }
 
-        List theList = (List) methodContext.getEnv(listName);
+        List theList = (List) listAcsr.get(methodContext);
 
         if (theList == null) {
-            if (Debug.infoOn()) Debug.logInfo("List not found with name " + listName + ", doing nothing");
+            if (Debug.infoOn()) Debug.logInfo("List not found with name " + listAcsr + ", doing nothing");
             return true;
         }
         if (theList.size() == 0) {
-            if (Debug.verboseOn()) Debug.logVerbose("List with name " + listName + " has zero entries, doing nothing");
+            if (Debug.verboseOn()) Debug.logVerbose("List with name " + listAcsr + " has zero entries, doing nothing");
             return true;
         }
 
-        methodContext.putEnv(entryName, theList.get(0));
+        entryAcsr.put(methodContext, theList.get(0));
         return true;
     }
 }
