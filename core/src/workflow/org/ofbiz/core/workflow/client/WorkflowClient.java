@@ -256,8 +256,8 @@ public class WorkflowClient {
         WfActivity activity = WfFactory.getWfActivity(context.getDelegator(), workEffortId);
 
         if (Debug.verboseOn()) Debug.logVerbose("Resuming activity: " + activity.name(), module);
-        if (!activityRunning(activity))
-            throw new WfException("Activity is not running");
+        if (activityRunning(activity))
+            throw new WfException("Activity is already running");
 
         activity.resume();
     }
