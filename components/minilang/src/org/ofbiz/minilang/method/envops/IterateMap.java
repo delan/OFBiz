@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2002-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -65,7 +65,7 @@ public class IterateMap extends MethodOperation {
         Object fieldVal = null;
 
         if (mapAcsr.isEmpty()) {
-            Debug.logWarning("No map-name specified in iterate tag, doing nothing", module);
+            Debug.logWarning("No map-name specified in iterate tag, doing nothing: " + rawString(), module);
             return true;
         }
 
@@ -74,11 +74,11 @@ public class IterateMap extends MethodOperation {
         Map theMap = (Map) mapAcsr.get(methodContext);
 
         if (theMap == null) {
-            if (Debug.infoOn()) Debug.logInfo("Map not found with name " + mapAcsr + ", doing nothing", module);
+            if (Debug.infoOn()) Debug.logInfo("Map not found with name " + mapAcsr + ", doing nothing: " + rawString(), module);
             return true;
         }
         if (theMap.size() == 0) {
-            if (Debug.verboseOn()) Debug.logVerbose("Map with name " + mapAcsr + " has zero entries, doing nothing", module);
+            if (Debug.verboseOn()) Debug.logVerbose("Map with name " + mapAcsr + " has zero entries, doing nothing: " + rawString(), module);
             return true;
         }
 
