@@ -1,5 +1,5 @@
 /*
- * $Id: EntitySyncServices.java,v 1.13 2003/12/13 13:06:57 jonesde Exp $
+ * $Id: EntitySyncServices.java,v 1.14 2003/12/14 06:33:43 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -42,7 +42,6 @@ import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntity;
 import org.ofbiz.entity.GenericEntityException;
-import org.ofbiz.entity.GenericPK;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityConditionList;
@@ -64,7 +63,7 @@ import org.xml.sax.SAXException;
  * Entity Engine Sync Services
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
- * @version    $Revision: 1.13 $
+ * @version    $Revision: 1.14 $
  * @since      3.0
  */
 public class EntitySyncServices {
@@ -222,26 +221,28 @@ public class EntitySyncServices {
                 totalRowsToStore += totalRowsToStoreCur;
                 totalRowsToRemove += totalRowsToRemoveCur;
                 
-                // call service named on EntitySync
-                Map remoteStoreResult = dispatcher.runSync(targetServiceName, UtilMisc.toMap("entitySyncId", entitySyncId, "valuesToStore", valuesToStore, "keysToRemove", keysToRemove, "userLogin", userLogin));
-                if (ServiceUtil.isError(remoteStoreResult)) {
-                    String errorMsg = "Error running EntitySync [" + entitySyncId + "], call to store service [" + targetServiceName + "] failed.";
-                    List errorList = new LinkedList();
-                    saveSyncErrorInfo(entitySyncId, startDate, "ESR_OTHER_ERROR", errorList, dispatcher, userLogin);
-                    return ServiceUtil.returnError(errorMsg, errorList, null, remoteStoreResult);
+                // call service named on EntitySync, IFF there is actually data to send over
+                if (totalRowsToStoreCur > 0 && totalRowsToStoreCur > 0) {
+                    Map remoteStoreResult = dispatcher.runSync(targetServiceName, UtilMisc.toMap("entitySyncId", entitySyncId, "valuesToStore", valuesToStore, "keysToRemove", keysToRemove, "userLogin", userLogin));
+                    if (ServiceUtil.isError(remoteStoreResult)) {
+                        String errorMsg = "Error running EntitySync [" + entitySyncId + "], call to store service [" + targetServiceName + "] failed.";
+                        List errorList = new LinkedList();
+                        saveSyncErrorInfo(entitySyncId, startDate, "ESR_OTHER_ERROR", errorList, dispatcher, userLogin);
+                        return ServiceUtil.returnError(errorMsg, errorList, null, remoteStoreResult);
+                    }
+                    
+                    long numInsertedCur = remoteStoreResult.get("numInserted") == null ? 0 : ((Long) remoteStoreResult.get("numInserted")).longValue();
+                    long numUpdatedCur = remoteStoreResult.get("numUpdated") == null ? 0 : ((Long) remoteStoreResult.get("numUpdated")).longValue();
+                    long numNotUpdatedCur = remoteStoreResult.get("numNotUpdated") == null ? 0 : ((Long) remoteStoreResult.get("numNotUpdated")).longValue();
+                    long numRemovedCur = remoteStoreResult.get("numRemoved") == null ? 0 : ((Long) remoteStoreResult.get("numRemoved")).longValue();
+                    long numAlreadyRemovedCur = remoteStoreResult.get("numAlreadyRemoved") == null ? 0 : ((Long) remoteStoreResult.get("numAlreadyRemoved")).longValue();
+                    
+                    numInserted += numInsertedCur;
+                    numUpdated += numUpdatedCur;
+                    numNotUpdated += numNotUpdatedCur;
+                    numRemoved += numRemovedCur;
+                    numAlreadyRemoved += numAlreadyRemovedCur;
                 }
-                
-                long numInsertedCur = remoteStoreResult.get("numInserted") == null ? 0 : ((Long) remoteStoreResult.get("numInserted")).longValue();
-                long numUpdatedCur = remoteStoreResult.get("numUpdated") == null ? 0 : ((Long) remoteStoreResult.get("numUpdated")).longValue();
-                long numNotUpdatedCur = remoteStoreResult.get("numNotUpdated") == null ? 0 : ((Long) remoteStoreResult.get("numNotUpdated")).longValue();
-                long numRemovedCur = remoteStoreResult.get("numRemoved") == null ? 0 : ((Long) remoteStoreResult.get("numRemoved")).longValue();
-                long numAlreadyRemovedCur = remoteStoreResult.get("numAlreadyRemoved") == null ? 0 : ((Long) remoteStoreResult.get("numAlreadyRemoved")).longValue();
-                
-                numInserted += numInsertedCur;
-                numUpdated += numUpdatedCur;
-                numNotUpdated += numNotUpdatedCur;
-                numRemoved += numRemovedCur;
-                numAlreadyRemoved += numAlreadyRemovedCur;
                 
                 // store latest result on EntitySync, ie update lastSuccessfulSynchTime, should run in own tx
                 Map updateEsRunResult = dispatcher.runSync("updateEntitySyncRunning", UtilMisc.toMap("entitySyncId", entitySyncId, "lastSuccessfulSynchTime", currentRunEndTime, "userLogin", userLogin));
@@ -264,6 +265,7 @@ public class EntitySyncServices {
                     saveSyncErrorInfo(entitySyncId, startDate, "ESR_DATA_ERROR", errorList, dispatcher, userLogin);
                     return ServiceUtil.returnError(errorMsg, errorList, null, updateEsRunResult);
                 }
+                
                 if (ServiceUtil.isError(updateEsHistRunResult)) {
                     String errorMsg = "Error running EntitySync [" + entitySyncId + "], update of EntitySyncHistory (startDate:[" + startDate + "]) record with lastSuccessfulSynchTime and result stats failed.";
                     List errorList = new LinkedList();
