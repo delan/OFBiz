@@ -685,6 +685,8 @@ public class SimpleMethod {
                     methodOperations.add(new org.ofbiz.core.minilang.method.entityops.NowDateToEnv(curOperElem, simpleMethod));
                 } else if ("sequenced-id-to-env".equals(nodeName)) {
                     methodOperations.add(new org.ofbiz.core.minilang.method.entityops.SequencedIdToEnv(curOperElem, simpleMethod));
+                } else if ("make-next-seq-id".equals(nodeName)) {
+                    methodOperations.add(new org.ofbiz.core.minilang.method.entityops.MakeNextSeqId(curOperElem, simpleMethod));
                 } else if ("set-current-user-login".equals(nodeName)) {
                     methodOperations.add(new org.ofbiz.core.minilang.method.entityops.SetCurrentUserLogin(curOperElem, simpleMethod));
 
