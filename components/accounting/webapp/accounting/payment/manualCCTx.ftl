@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      3.0
 -->
 
@@ -71,7 +71,7 @@
         <td width="5">&nbsp;</td>
         <td width="74%">
           <input type="text" class="inputBox" size="30" maxlength="60" name="referenceNum">
-        *</td>
+        (*)</td>
       </tr>
     </#if>
 
