@@ -1,5 +1,5 @@
 /*
- * $Id: ProductContentWorker.java,v 1.1 2003/12/19 06:45:54 jonesde Exp $
+ * $Id: ProductContentWrapper.java,v 1.1 2003/12/19 11:08:35 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -29,6 +29,10 @@ import java.io.Writer;
 import java.util.List;
 import java.util.Locale;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.content.content.ContentWorker;
@@ -40,16 +44,43 @@ import org.ofbiz.entity.model.ModelUtil;
 import org.ofbiz.entity.util.EntityUtil;
 
 /**
- * Product Worker class to reduce code in JSPs.
+ * Product Content Worker: gets product content to display
  *
- * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @version    $Revision: 1.1 $
- * @since      2.0
+ * @since      3.0
  */
-public class ProductContentWorker {
+public class ProductContentWrapper {
     
-    public static final String module = ProductContentWorker.class.getName();
+    public static final String module = ProductContentWrapper.class.getName();
+    
+    protected GenericValue product;
+    protected Locale locale;
+    protected String mimeTypeId;
+    
+    public ProductContentWrapper(GenericValue product, Locale locale, String mimeTypeId) {
+        this.product = product;
+        this.locale = locale;
+        this.mimeTypeId = mimeTypeId;
+    }
+    
+    public ProductContentWrapper(GenericValue product, HttpServletRequest request) {
+        this.product = product;
+        this.locale = UtilHttp.getLocale(request);
+        this.mimeTypeId = "text/html";
+    }
+    
+    public String get(String productContentTypeId) {
+        try {
+            return getProductContentAsText(product, productContentTypeId, locale, mimeTypeId, product.getDelegator());
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Error rendering ProductContent, inserting empty String", module);
+            return "";
+        } catch (IOException e) {
+            Debug.logError(e, "Error rendering ProductContent, inserting empty String", module);
+            return "";
+        }
+    }
 
     public static String getProductContentAsText(GenericValue product, String productContentTypeId, Locale locale, String mimeTypeId, GenericDelegator delegator) throws GenericEntityException, IOException {
         Writer outWriter = new StringWriter();
@@ -67,6 +98,7 @@ public class ProductContentWorker {
         }
         
         String candidateFieldName = ModelUtil.dbNameToVarName(productContentTypeId);
+        //Debug.logInfo("candidateFieldName=" + candidateFieldName, module);
         ModelEntity productModel = delegator.getModelEntity("Product");
         if (productModel.isField(candidateFieldName)) {
             if (product == null) {
@@ -75,7 +107,7 @@ public class ProductContentWorker {
             if (product != null) {
                 String candidateValue = product.getString(candidateFieldName);
                 if (UtilValidate.isNotEmpty(candidateValue)) {
-                    
+                    outWriter.write(candidateValue);
                 }
             }
         }
