@@ -2,6 +2,7 @@
 <page>
     <template>main</template>
     <property name="title">Billing Account Payments</property>
+    <property name="titleProperty">PageTitleEditBillingAccountPayments</property>
     <property name="headerItem">billingaccount</property>
     <property name="tabButtonItem">BillingAccountPayments</property>
     <page-action name="/billingaccount/BillingAccountPayments.bsh"/>
