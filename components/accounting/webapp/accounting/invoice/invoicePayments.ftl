@@ -21,12 +21,12 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     Eric.Barbier@nereide.biz (migration to uiLabelMap)
- *@version    $Revision: 1.5 $
+ *@version    $Revision: 1.6 $
  *@since      2.2
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
 
-<div class="head1">${uiLabelMap.AccountingInvoicePayments}</div>
+<div class="head1">${uiLabelMap.AccountingInvoicePayments} - <a href="<@ofbizUrl>/viewInvoice?invoiceId=${invoiceId}</@ofbizUrl>" class="buttontext">#${invoiceId}</div>
 
 <br>
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
