@@ -123,8 +123,8 @@ public class GenericHelperDAO implements GenericHelper {
     return genericDAO.selectByAnd(modelEntity, fields, orderBy);
   }
 
-  public Collection findByAnd(ModelEntity modelEntity, List fields, List intraFieldOperations, List values, List orderBy) throws GenericEntityException {
-    return genericDAO.selectByAnd(modelEntity, fields, intraFieldOperations, values, orderBy);
+  public Collection findByAnd(ModelEntity modelEntity, List expressions, List orderBy) throws GenericEntityException {
+    return genericDAO.selectByAnd(modelEntity, expressions, orderBy);
   }
 
   public Collection findByLike(ModelEntity modelEntity, Map fields, List orderBy) throws GenericEntityException {

@@ -514,14 +514,14 @@ public class GenericDAO {
     return collection;
   }
   
-  public Collection selectByAnd(ModelEntity modelEntity, List fields, List intraFieldOperations, List values, List orderBy) throws GenericEntityException {
+  public Collection selectByAnd(ModelEntity modelEntity, List expressions, List orderBy) throws GenericEntityException {
     if(modelEntity == null) return null;
     ModelViewEntity modelViewEntity = null;
     if(modelEntity instanceof ModelViewEntity) {
       modelViewEntity = (ModelViewEntity)modelEntity;
     }
 
-    if(intraFieldOperations == null) return null;
+    if(expressions == null) return null;
     Collection collection = new LinkedList();
     
     Connection connection = null;
@@ -535,12 +535,9 @@ public class GenericDAO {
     //make two Vectors of fields, one for fields to select and the other for where clause fields (to find by)
     Vector selectFields = modelEntity.fields;
     
-    Vector whereFields = new Vector();
-    Vector modelEntityFields = modelEntity.fields;
-    if(fields != null && fields.size() > 0) {
-      for(int fi=0; fi<fields.size(); fi++) {
-        if(modelEntity.getField((String)fields.get(fi)) != null )
-          whereFields.add((ModelField)modelEntity.getField((String)fields.get(fi)));
+    //Vector modelEntityFields = modelEntity.fields;
+    if(expressions != null && expressions.size() > 0) {
+      for(int fi=0; fi<expressions.size(); fi++) {
       }
     }
     
@@ -551,14 +548,21 @@ public class GenericDAO {
     sqlBuffer.append(makeFromClause(modelEntity));
 
     StringBuffer whereString = new StringBuffer("");
-    if(whereFields != null && whereFields.size() > 0) {
-      int i = 0;
-      for(; i < whereFields.size() - 1; i++) {
-        whereString.append(((ModelField)whereFields.elementAt(i)).colName + ((EntityOperator)intraFieldOperations.get(i)).getCode());
-        whereString.append(" ? AND ");
+    Vector whereFields = new Vector();
+    if(expressions != null && expressions.size() > 0) {
+      for(int i=0; i<expressions.size(); i++) {
+        EntityExpr expr = (EntityExpr)expressions.get(i);
+        ModelField field = (ModelField)modelEntity.getField((String)expr.getLhs());
+        if(field != null) {
+          whereFields.add(field);
+          whereString.append(field.colName + expr.getOperator().getCode());
+          if(i<expressions.size()-1) whereString.append(" ? AND ");
+          else whereString.append(" ? ");
+        }
+        else {
+          throw new IllegalArgumentException("ModelField with field name " + (String)expr.getLhs() + " not found");
+        }
       }
-      whereString.append(((ModelField)whereFields.elementAt(i)).colName + ((EntityOperator)intraFieldOperations.get(i)).getCode());
-      whereString.append(" ? ");
     }
     
     String viewClause = makeViewWhereClause(modelEntity);
@@ -579,11 +583,12 @@ public class GenericDAO {
     try {
       ps = connection.prepareStatement(sql);
       GenericValue dummyValue = new GenericValue(modelEntity);
-      if(values != null && values.size() > 0 ) {
-        for(int i=0;i<whereFields.size();i++) {
-          String fieldName = (String)fields.get(i);
-          dummyValue.set(fieldName, values.get(i));
-          setValue(ps, i+1, ((ModelField)modelEntity.getField(fieldName)), dummyValue);
+      if(expressions != null && expressions.size() > 0) {
+        for(int i=0;i<expressions.size();i++) {
+          EntityExpr expr = (EntityExpr)expressions.get(i);
+          ModelField field = (ModelField)modelEntity.getField((String)expr.getLhs());
+          dummyValue.set(field.name, expr.getRhs());
+          setValue(ps, i+1, field, dummyValue);
         }
       }
       rs = ps.executeQuery();

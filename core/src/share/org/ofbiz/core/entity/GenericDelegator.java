@@ -442,7 +442,7 @@ public class GenericDelegator {
    *@return    Collection containing all Generic entities
    */
   public Collection findAll(String entityName) throws GenericEntityException {
-    return this.findByAnd(entityName, null, null);
+    return this.findByAnd(entityName, new HashMap(), null);
   }
   
   /** Finds all Generic entities
@@ -451,7 +451,7 @@ public class GenericDelegator {
    *@return    Collection containing all Generic entities
    */
   public Collection findAll(String entityName, List orderBy) throws GenericEntityException {
-    return this.findByAnd(entityName, null, orderBy);
+    return this.findByAnd(entityName, new HashMap(), orderBy);
   }
   
   /** Finds all Generic entities, looking first in the cache
@@ -529,16 +529,16 @@ public class GenericDelegator {
     return col;
   }
   
-  public Collection findByAnd(String entityName, List fields, List intraFieldOperations, List values) throws GenericEntityException {
-    return findByAnd(entityName, fields, intraFieldOperations, values, null);
+  public Collection findByAnd(String entityName, List expressions) throws GenericEntityException {
+    return findByAnd(entityName, expressions, null);
   }
   
-  public Collection findByAnd(String entityName, List fields, List intraFieldOperations, List values, List orderBy) throws GenericEntityException {
+  public Collection findByAnd(String entityName, List expressions, List orderBy) throws GenericEntityException {
     ModelEntity modelEntity = modelReader.getModelEntity(entityName);
     GenericHelper helper = getEntityHelper(modelEntity);
 
     Collection collection = null;
-    collection = helper.findByAnd(modelEntity, fields, intraFieldOperations, values, orderBy);
+    collection = helper.findByAnd(modelEntity, expressions, orderBy);
     absorbCollection(collection);
     return collection;
   }

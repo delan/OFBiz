@@ -80,7 +80,7 @@ public interface GenericHelper
    */
   public Collection findByAnd(ModelEntity modelEntity, Map fields, List orderBy) throws GenericEntityException;
   
-  public Collection findByAnd(ModelEntity modelEntity, List fields, List intraFieldOperations, List values, List orderBy) throws GenericEntityException;
+  public Collection findByAnd(ModelEntity modelEntity, List expressions, List orderBy) throws GenericEntityException;
 
   public Collection findByLike(ModelEntity modelEntity, Map fields, List orderBy) throws GenericEntityException;
 
