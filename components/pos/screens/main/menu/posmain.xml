@@ -15,7 +15,7 @@
         <Button name="" x="204" y="62" w="100" h="60" style="posButton" content="" alignment="Center"/>
         <Button name="" x="306" y="62" w="100" h="60" style="posButton" content="" alignment="Center"/>
         <Button name="" x="408" y="62" w="100" h="60" style="posButton" content="" alignment="Center"/>
-        <Button name="" x="510" y="62" w="100" h="60" style="posButton" content="" alignment="Center"/>
+        <Button name="menuLogout" x="510" y="62" w="100" h="60" style="posButton" content="LOGOFF" alignment="Center"/>
 
         <!-- col 3 -->
         <Button name="" x="0" y="124" w="100" h="60" style="posButton" content="" alignment="Center"/>

@@ -142,16 +142,13 @@ public class Msr extends GenericDevice {
         } catch (NumberFormatException e) {            
         }
 
-        // make sure we are on the POS pay screen
-        if (!"main/paypanel".equals(PosScreen.currentScreen.getName())) {
-            PosScreen pos = PosScreen.currentScreen.showPage("main/paypanel");
-            pos.getInput().setFunction("TOTAL", "");
-            Debug.log("Switched to paypanel.xml; triggered TOTAL function", module);
-        }
-
         // all implemented types
         switch (msrType) {
             case MSR_CREDIT_CARD:
+                // make sure we are on the POS pay screen
+                this.setPayPanel();
+                PosScreen.currentScreen.getButtons().setLock(true);
+
                 String[] credInfo = PosScreen.currentScreen.getInput().getFunction("CREDIT");
                 if (credInfo == null) {
                     PosScreen.currentScreen.getInput().setFunction("CREDIT", "");
@@ -162,6 +159,10 @@ public class Msr extends GenericDevice {
                 this.callEnter();
                 break;
             case MSR_GIFT_CARD:
+                // make sure we are on the POS pay screen
+                this.setPayPanel();
+                PosScreen.currentScreen.getButtons().setLock(true);
+
                 PosScreen.currentScreen.getInput().setFunction("MSRINFO", msrStr.toString());
                 PosScreen.currentScreen.getOutput().print("Gift Card Read");
                 PosScreen.currentScreen.getInput().clearInput();
@@ -170,6 +171,15 @@ public class Msr extends GenericDevice {
             case MSR_UNKNOWN:
                 PosScreen.currentScreen.showDialog("main/dialog/error/unknowncardtype");
                 break;
+        }
+    }
+
+    private void setPayPanel() {
+        if (!"main/paypanel".equals(PosScreen.currentScreen.getName())) {
+            PosScreen pos = PosScreen.currentScreen.showPage("main/paypanel", false);            
+            pos.getInput().setFunction("TOTAL", "");
+            pos.refresh();
+            Debug.log("Switched to paypanel.xml; triggered TOTAL function", module);
         }
     }
 }

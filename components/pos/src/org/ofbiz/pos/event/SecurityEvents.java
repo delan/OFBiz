@@ -27,6 +27,7 @@ package org.ofbiz.pos.event;
 import org.ofbiz.pos.screen.PosScreen;
 import org.ofbiz.pos.component.Input;
 import org.ofbiz.pos.component.Output;
+import org.ofbiz.pos.PosTransaction;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.content.xui.XuiSession;
@@ -76,6 +77,14 @@ public class SecurityEvents {
         } else {
             Debug.log("Login function called but not prepared as a function!", module);
         }
+    }
+
+    public static void logout(PosScreen pos) {
+        PosTransaction trans = PosTransaction.getCurrentTx(pos.getSession());
+        XuiSession session = pos.getSession();
+        trans.voidSale();
+        session.logout();
+        pos.setLock(true);
     }
 
     public static void mgrLogin(PosScreen pos) {

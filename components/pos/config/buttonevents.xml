@@ -71,6 +71,7 @@ $Id$
     <!-- pos main menu events -->
     <event button-name="menuSku" class-name="org.ofbiz.pos.event.MenuEvents" method-name="addItem" disable-lock="false"/>
     <event button-name="menuLock" class-name="org.ofbiz.pos.event.SecurityEvents" method-name="lock" disable-lock="false"/>
+    <event button-name="menuLogout" class-name="org.ofbiz.pos.event.SecurityEvents" method-name="logout" disable-lock="false"/>
     <event button-name="menuMgr" class-name="org.ofbiz.pos.event.SecurityEvents" method-name="mgrLogin" disable-lock="false"/>
     <event button-name="menuMain" class-name="org.ofbiz.pos.event.NavagationEvents" method-name="showPosScreen" disable-lock="false"/>    
     <event button-name="menuPay" class-name="org.ofbiz.pos.event.NavagationEvents" method-name="showPayScreen" disable-lock="false"/>
@@ -82,7 +83,7 @@ $Id$
     <event button-name="mgrPopDrwr" class-name="org.ofbiz.pos.event.ManagerEvents" method-name="openDrawer" disable-lock="false"/>
     <event button-name="mgrCacheClear" class-name="org.ofbiz.pos.event.ManagerEvents" method-name="clearCache" disable-lock="false"/>
     <event button-name="mgrResetXui" class-name="org.ofbiz.pos.event.ManagerEvents" method-name="resetXui" disable-lock="false"/>
-    <event button-name="mgrLogOut" class-name="org.ofbiz.pos.event.ManagerEvents" method-name="logoff" disable-lock="false"/>
+    <event button-name="mgrShutDown" class-name="org.ofbiz.pos.event.ManagerEvents" method-name="shutdown" disable-lock="false"/>
 
     <!-- test events -->
     <event button-name="testAlert" class-name="org.ofbiz.pos.event.TestEvents" method-name="testAlert" disable-lock="false"/>

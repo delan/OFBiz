@@ -55,8 +55,8 @@ public class ManagerEvents {
         pos.refresh();
     }
 
-    public static void logoff(PosScreen pos) {
-        pos.getOutput().print("Logging out...");
+    public static void shutdown(PosScreen pos) {
+        pos.getOutput().print("Shutting down...");
         System.exit(0);
     }
 }
