@@ -24,24 +24,6 @@
     <FileRealm Name="wl_default_file_realm"/>
     <PasswordPolicy Name="wl_default_password_policy"/>
 
-<#list webApps as webapp>
-    <Application Deployed="true" Name="${webapp.getName()}" Path="${webapp.getLocation()}" TwoPhase="true">
-        <WebAppComponent Name="${webapp.getName()}" Targets="OFBizServer" URI="${webapp.getContextRoot()}"/>
-    </Application>
-</#list>
-
-    <JDBCConnectionPool CapacityIncrement="1"
-        DriverName="org.hsqldb.jdbcDriver"
-        InitialCapacity="2" MaxCapacity="20" Name="localhsql"
-        Password=""
-        Properties="user=sa" RefreshMinutes="0"
-        ShrinkPeriodMinutes="15" ShrinkingEnabled="true"
-        Targets="OFBizServer" TestConnectionsOnRelease="false"
-        TestConnectionsOnReserve="false" URL="jdbc:hsqldb:data/ofbiz"/> <!--  TestTableName="SYSTABLES" -->
-    <JDBCTxDataSource EnableTwoPhaseCommit="true"
-        JNDIName="localhsqlDataSource"
-        Name="localhsqlDataSource" PoolName="localhsql"/>
-    
 <!--
     <Application Deployed="true" Name="mainWebApp"
         Path="C:\bea\weblogic81\samples\server\examples\build" TwoPhase="true">
@@ -165,4 +147,29 @@
         <EJBComponent Name="jms_messageformat" Targets="OFBizServer" URI="jms_messageformat.jar"/>
     </Application>
 -->
+
+<#list webApps as webapp>
+    <#-- Remove last directory segment from path, Weblogic is expecting the parent directory -->
+    <#if webapp.getLocation().lastIndexOf("/") != -1>
+        <#assign lastSlash = webapp.getLocation().lastIndexOf("/")>
+    </#if>
+    <#if (webapp.getLocation().lastIndexOf("\\") > lastSlash)>
+        <#assign lastSlash = webapp.getLocation().lastIndexOf("\\")>
+    </#if>
+    <Application Deployed="true" Name="${webapp.getName()}" Path="${webapp.getLocation().substring(0,lastSlash)}" TwoPhase="true">
+        <WebAppComponent Name="${webapp.getName()}" Targets="OFBizServer" URI="${webapp.getContextRoot()}"/>
+    </Application>
+</#list>
+
+    <JDBCConnectionPool CapacityIncrement="1"
+        DriverName="org.hsqldb.jdbcDriver"
+        InitialCapacity="2" MaxCapacity="20" Name="localhsql"
+        Password=""
+        Properties="user=sa" RefreshMinutes="0"
+        ShrinkPeriodMinutes="15" ShrinkingEnabled="true"
+        Targets="OFBizServer" TestConnectionsOnRelease="false"
+        TestConnectionsOnReserve="false" URL="jdbc:hsqldb:data/ofbiz"/> <!--  TestTableName="SYSTABLES" -->
+    <JDBCTxDataSource EnableTwoPhaseCommit="true"
+        JNDIName="localhsqlDataSource"
+        Name="localhsqlDataSource" PoolName="localhsql"/>
 </Domain>
