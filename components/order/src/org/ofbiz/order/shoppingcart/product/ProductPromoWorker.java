@@ -1,5 +1,5 @@
 /*
- * $Id: ProductPromoWorker.java,v 1.3 2003/11/12 07:46:20 jonesde Exp $
+ * $Id: ProductPromoWorker.java,v 1.4 2003/11/12 20:35:14 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -50,7 +50,7 @@ import org.ofbiz.service.LocalDispatcher;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.0
  */
 public class ProductPromoWorker {
@@ -281,19 +281,33 @@ public class ProductPromoWorker {
             }
         } else if ("PPIP_CATEGORY_ID_IC".equals(productPromoCond.getString("inputParamEnumId"))) {
             String productCategoryId = productPromoCond.getString("condValue");
-            // TODO: update this implementation to check all cart lines, not just current
-            // if a ProductCategoryMember exists for this productId and the specified productCategoryId
-            List productCategoryMembers = null;
-            //productCategoryMembers = delegator.findByAndCache("ProductCategoryMember",
-            //        UtilMisc.toMap("productId", productId, "productCategoryId", productCategoryId));
+            Set productIds = new HashSet();
 
-            // and from/thru date within range
-            productCategoryMembers = EntityUtil.filterByDate(productCategoryMembers, true);
-            // then 0 (equals), otherwise 1 (not equals)
-            if (productCategoryMembers != null && productCategoryMembers.size() > 0) {
-                compare = 0;
-            } else {
-                compare = 1;
+            Iterator cartItemIter = cart.iterator();
+            while (cartItemIter.hasNext()) {
+                ShoppingCartItem cartItem = (ShoppingCartItem) cartItemIter.next();
+                if (!cartItem.getIsPromo()) {
+                    productIds.add(cartItem.getProductId());
+                }
+            }
+
+            compare = 1;
+            // NOTE: this technique is efficient for a smaller number of items in the cart, if there are a lot of lines
+            //in the cart then a non-cached query with a set of productIds using the IN operator would be better
+            Iterator productIdIter = productIds.iterator();
+            while (productIdIter.hasNext()) {
+                String productId = (String) productIdIter.next();
+
+                // if a ProductCategoryMember exists for this productId and the specified productCategoryId
+                List productCategoryMembers = delegator.findByAndCache("ProductCategoryMember", UtilMisc.toMap("productId", productId, "productCategoryId", productCategoryId));
+                // and from/thru date within range
+                productCategoryMembers = EntityUtil.filterByDate(productCategoryMembers, nowTimestamp);
+                if (productCategoryMembers != null && productCategoryMembers.size() > 0) {
+                    // if any product is in category, set true and break
+                    // then 0 (equals), otherwise 1 (not equals)
+                    compare = 0;
+                    break;
+                }
             }
         } else if ("PPIP_PARTY_ID".equals(productPromoCond.getString("inputParamEnumId"))) {
             if (partyId != null) {
@@ -477,6 +491,9 @@ public class ProductPromoWorker {
                 }
             }
         }
+
+        // remove all free shipping promo actions
+        cart.removeAllFreeShippingProductPromoActions();
     }
 
     protected static boolean doItemPromoAction(GenericValue productPromoAction, ShoppingCartItem cartItem, String quantityField, GenericDelegator delegator) {
@@ -588,7 +605,7 @@ public class ProductPromoWorker {
             String productCategoryId = (String) productCategoryIdIter.next();
             // get all product category memebers, filter by date
             List productCategoryMembers = delegator.findByAndCache("ProductCategoryMember", UtilMisc.toMap("productCategoryId", productCategoryId));
-            productCategoryMembers = EntityUtil.filterByDate(productCategoryMembers, nowTimestamp, "fromDate", "thruDate", true);
+            productCategoryMembers = EntityUtil.filterByDate(productCategoryMembers, nowTimestamp);
             Iterator productCategoryMemberIter = productCategoryMembers.iterator();
             while (productCategoryMemberIter.hasNext()) {
                 GenericValue productCategoryMember = (GenericValue) productCategoryMemberIter.next();

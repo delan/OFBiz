@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCart.java,v 1.14 2003/11/12 07:46:19 jonesde Exp $
+ * $Id: ShoppingCart.java,v 1.15 2003/11/12 20:35:14 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -45,7 +45,7 @@ import org.ofbiz.service.LocalDispatcher;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.14 $
+ * @version    $Revision: 1.15 $
  * @since      2.0
  */
 public class ShoppingCart implements java.io.Serializable {
@@ -894,12 +894,15 @@ public class ShoppingCart implements java.io.Serializable {
         }
     }
 
+    public void removeAllFreeShippingProductPromoActions() {
+        this.freeShippingProductPromoActions.clear();
+    }
+
     /** Removes a free shipping ProductPromoAction by trying to find one in the list with the same primary key. */
     public void removeFreeShippingProductPromoAction(GenericPK productPromoActionPK) {
         if (productPromoActionPK == null) return;
 
         Iterator fsppas = this.freeShippingProductPromoActions.iterator();
-
         while (fsppas.hasNext()) {
             if (productPromoActionPK.equals(((GenericValue) fsppas.next()).getPrimaryKey())) {
                 fsppas.remove();
