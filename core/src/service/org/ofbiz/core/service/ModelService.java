@@ -240,6 +240,16 @@ public class ModelService {
         }
 
         if (verboseOn) {
+            String requiredNames = "";
+            Iterator requiredIter = requiredInfo.keySet().iterator();
+            while (requiredIter.hasNext()) {            
+                requiredNames = requiredNames + requiredIter.next();
+                if (requiredIter.hasNext()) {
+                    requiredNames = requiredNames + ", ";                    
+                }
+            }
+            Debug.logVerbose("[ModelService.validate] : required fields - " + requiredNames, module);
+            
             Debug.logVerbose("[ModelService.validate] : (" + mode + ") Required - " +
                 requiredTest.size() + " / " + requiredInfo.size(), module);
             Debug.logVerbose("[ModelService.validate] : (" + mode + ") Optional - " +
@@ -479,7 +489,8 @@ public class ModelService {
                     while (i.hasNext()) {
                         GroupServiceModel sm = (GroupServiceModel) i.next();
                         implServices.add(sm.getName());
-                        Debug.logVerbose("Adding service [" + sm.getName() + "] as interface of: [" + this.name + "]", module);
+                        if (Debug.verboseOn())
+                            Debug.logVerbose("Adding service [" + sm.getName() + "] as interface of: [" + this.name + "]", module);
                     }
                 }                
             }
@@ -490,8 +501,9 @@ public class ModelService {
                 while (implIter.hasNext()) {
                     String serviceName = (String) implIter.next();
                     ModelService model = dctx.getModelService(serviceName);
-                    if (model != null) {                        
-                        Debug.logVerbose("Adding contextInfo from [" + model.name + "] to [" + this.name + "]", module);
+                    if (model != null) { 
+                        if (Debug.verboseOn())                       
+                            Debug.logVerbose("Adding contextInfo from [" + model.name + "] to [" + this.name + "]", module);
                         newInfo.putAll(model.contextInfo);
                         newParams.addAll(model.contextParamList);                        
                     } else {
