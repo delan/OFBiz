@@ -22,14 +22,18 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
+ *@author     Andy Zeneski (jaz@zsolv.com)
  *@author     David E. Jones
- *@created    May 22 2001
+ *@created    October 18, 2001
  *@version    1.0
  */
 %>
 
+<%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 <%@ page import="org.ofbiz.core.util.*" %>
 <%@ page import="org.ofbiz.core.security.*" %>
+<%@ page import="org.ofbiz.commonapp.order.order.*" %>
+<%@ page import="org.ofbiz.commonapp.party.contact.*" %>
 
 <% pageContext.setAttribute("PageName", "Main Page"); %> 
 
@@ -38,16 +42,21 @@
 <BR>
 <TABLE border=0 width='100%' cellpadding='<%=boxBorderWidth%>' cellspacing=0 bgcolor='<%=boxBorderColor%>'>
   <TR>
-    <TD width='100%'>
+  <FORM name="lookup" action="<ofbiz:url>/orderview</ofbiz:url>" method="GET">
+    <TD width='100%'>    
       <table width='100%' border='0' cellpadding='<%=boxTopPadding%>' cellspacing='0' bgcolor='<%=boxTopColor%>'>
         <tr>
-          <TD align=left width='90%' >
+          <TD align=left width='70%' >
             <div class='boxhead'>&nbsp;Order Manager Main Page</div>
           </TD>
-          <TD align=right width='10%'>&nbsp;</TD>
+          <TD align=right width='30%'>            
+              <input type="text" name="order_id" size="9">&nbsp;
+              <a href="javascript:document.lookup.submit();" class="lightbuttontext">[LookUp Order]</a>            
+          </TD>
         </tr>
       </table>
     </TD>
+    </FORM>
   </TR>
   <TR>
     <TD width='100%'>
@@ -58,8 +67,77 @@
 <DIV class='tabletext'>For something interesting make sure you are logged in, try username:admin, password:ofbiz.</DIV>
 <BR>
 <%}%>
+
 <DIV class='tabletext'>This application is primarily intended for those repsonsible for the maintenance of Order Manager related information.</DIV>
-<DIV class='tabletext'>NOTE: This application is currently empty, so don't bother looking for anything.</DIV>
+<br>
+<div class="tabletext"><b>New Orders:</b></div>
+<!-- Insert in here -->
+<center>
+  <table width="95%" border="0" class="edittable">
+    <tr>
+      <td>
+        
+        <%
+          //Collection orderRoleCollection = delegator.findByAnd("OrderRole",
+          //   UtilMisc.toMap("partyId", "%", "roleTypeId", "PLACING_CUSTOMER"), null);
+          //Collection orderHeaderList = EntityUtil.orderBy(EntityUtil.getRelated("OrderHeader", orderRoleCollection), UtilMisc.toList("orderDate DESC"));
+          Collection orderHeaderList = delegator.findAll("OrderHeader");
+          pageContext.setAttribute("orderHeaderList", orderHeaderList);
+        %>
+        
+        <table width="100%" cellpadding="3" cellspacing="0" border="0">
+          <tr class="viewOneTR1">
+            <td width="25%">
+              <div class="tabletext"><b>Date</b></div>
+            </td>
+            <td width="15%">
+              <div class="tabletext"><b><nobr>Order #</nobr></b></div>
+            </td>
+            <td width="25%">
+              <div class="tabletext"><b>Amount</b></div>
+            </td>
+            <td width="25%">
+              <div class="tabletext"><b>Status</b></div>
+            </td>   
+            <td width="10%"><div class="tabletext">&nbsp;</div></td>                              
+          </tr>
+          <%String rowClass = "viewManyTR2";%>
+          <ofbiz:iterator name="orderHeader" property="orderHeaderList">
+          
+	        <%OrderReadHelper order = new OrderReadHelper(orderHeader); %>
+	        <%pageContext.setAttribute("totalPrice", new Double(order.getTotalPrice()));%>
+	        <%pageContext.setAttribute("orderStatus", order.getStatusString());%>          
+            <%rowClass = rowClass.equals("viewManyTR2") ? "viewManyTR1" : "viewManyTR2";%> 
+                   
+          <tr class="<%=rowClass%>">
+            <td>
+              <div class="tabletext"><nobr><ofbiz:entityfield attribute="orderHeader" field="orderDate"/></nobr></div>
+            </td>
+            <td>
+              <div class="tabletext"><ofbiz:entityfield attribute="orderHeader" field="orderId"/></div>
+            </td>            
+            <td>
+              <div class="tabletext"><ofbiz:field attribute="totalPrice" type="currency"/></div>
+            </td>
+            <td>
+              <div class="tabletext"><ofbiz:field attribute="orderStatus" type="String"/></div>
+            </td>
+            <td align=right>
+              <a href="<ofbiz:url>/orderview?order_id=<ofbiz:entityfield attribute="orderHeader" field="orderId"/></ofbiz:url>" class='buttontext'>[View]</a>
+            </td>
+          </tr>
+          </ofbiz:iterator>
+          <ofbiz:unless name="orderHeaderList" size="0">
+          <tr><td colspan="8"><div class='head3'>No Orders Found</div></td></tr>
+          </ofbiz:unless>
+        </table>
+                
+      </td>
+    </tr>
+  </table>
+</center>
+<!-- Between here -->
+<br>
           </td>
         </tr>
       </table>
