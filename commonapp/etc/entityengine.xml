@@ -106,7 +106,8 @@ access. For a detailed description see the core/docs/entityconfig.html file.
                 jdbc-password=""
                 isolation-level="ReadUncommitted"
                 pool-minsize="2"
-                pool-maxsize="20"/>
+                pool-maxsize="20"
+                pool-jdbc-test-stmt="SELECT count(seqName) FROM SEQUENCE_VALUE_ITEM"/>
         <!-- <jndi-jdbc jndi-server-name="localjndi" jndi-name="java:/HsqlDataSource" isolation-level="ReadUncommitted"/> -->
         <jndi-jdbc jndi-server-name="default" jndi-name="comp/env/jdbc/xa/localhsql" isolation-level="ReadUncommitted"/> <!-- Orion Style JNDI name -->
     </datasource>
