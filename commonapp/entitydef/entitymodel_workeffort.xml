@@ -366,6 +366,7 @@
       <member-entity entity-alias="WEPA" entity-name="WorkEffortPartyAssignment" />
       <alias entity-alias="WE" name="workEffortId" prim-key="true" />
       <alias entity-alias="WE" name="workEffortTypeId" />
+      <alias entity-alias="WE" name="workEffortParentId" />
       <alias entity-alias="WE" name="currentStatusId" />
       <alias entity-alias="WE" name="lastStatusUpdate" />
       <alias entity-alias="WE" name="universalId" />
