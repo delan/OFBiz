@@ -290,7 +290,33 @@ sub-elements:</p>
     <td>Specifies max length of a constraint name. Constraint names are clipped
     to this length. When playing with this watch for duplicate constraint names. Must be an integer, defaults to 30.</td>
 </tr>
+<tr>
+    <td>fk-style</td><td>N</td>
+    <td>Specifies the foreign key syntax style, either naming the foreign key
+    constraing, or naming the foreign key itself. Most databases use the
+    name_constraing syntax, but SAP DB is an exception to that and there may be
+    others. Must be either "name_constraint" or "name_fk". Defaults to
+    name_constraint.</td>
+</tr>
+<tr>
+    <td>use-fk-initially-deferred</td><td>N</td>
+    <td>Specifies whether or not to use the INITIALLY DEFERRED option available
+    in many databases when creating foreign keys. Not all databases support
+    this option. When enabled and supported the foreign keys will not be checked
+    until a transaction is committed, as opposed to checking foreign keys as
+    operations are done inside a transaction. Must be set to "true" or "false".
+    Defaults to true.</td>
+</tr>
+<tr>
+    <td>join-style</td><td>N</td>
+    <td>Specifies the syntax to use when doing table joins in view-entity
+    operations. Many databases are adopting the ANSI JOIN standard, but before
+    that was introduced theta joins were much more common. Two theta join 
+    styles are supported: Oracle and MS SQL. Must be either "ansi",
+    "theta-oracle" or "theta-mssql". Defaults to "ansi".</td>
+</tr>
 </table>
+
 <br>
 <table cellpadding='2' cellspacing='0' border='1'>
 <tr>
