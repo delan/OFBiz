@@ -118,7 +118,7 @@
           <td height="15" class="${isActive.accountingmgr?default(unselectedClass).col}">
             <table width="100%" border="0" cellspacing="0" cellpadding="0">                
               <tr>
-                <td class="${isActive.accountingmgr?default(unselectedClass).left}"><a href="${response.encodeURL("/accouting/control/main" + externalKeyParam)}" title="Accounting" class="${isActive.accountingmgr?default(unselectedClass).link}"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" width="10" height="15" border="0"></a></td>
+                <td class="${isActive.accountingmgr?default(unselectedClass).left}"><a href="${response.encodeURL("/accounting/control/main" + externalKeyParam)}" title="Accounting" class="${isActive.accountingmgr?default(unselectedClass).link}"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" width="10" height="15" border="0"></a></td>
                 <td nowrap="nowrap" class="${isActive.accountingmgr?default(unselectedClass).center}"><a href="${response.encodeURL("/accounting/control/main" + externalKeyParam)}" title="Accounting" class="${isActive.accountingmgr?default(unselectedClass).link}">Accounting</a></td>
                 <td class="${isActive.accountingmgr?default(unselectedClass).right}"><a href="${response.encodeURL("/accounting/control/main" + externalKeyParam)}" title="Accounting" class="${isActive.accountingmgr?default(unselectedClass).link}"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" width="10" height="15" border="0"></a></td>
               </tr>
