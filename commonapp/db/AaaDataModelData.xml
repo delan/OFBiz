@@ -406,12 +406,13 @@
   <PaymentType description="Pay Check" hasTable="N" parentTypeId="DISBURSEMENT" paymentTypeId="PAY_CHECK"/>
   <PaymentType description="Receipt" hasTable="N" parentTypeId="" paymentTypeId="RECEIPT"/>
 
-  <ProdCatalogCategoryType description="Browse Root Category (One)" prodCatalogCategoryTypeId="PCCT_BROWSE_ROOT"/>
-  <ProdCatalogCategoryType description="Search Constraint Category (One)" prodCatalogCategoryTypeId="PCCT_SEARCH"/>
-  <ProdCatalogCategoryType description="Quick Add Category (Many)" prodCatalogCategoryTypeId="PCCT_QUICK_ADD"/>
-  <ProdCatalogCategoryType description="Promotions Category (One)" prodCatalogCategoryTypeId="PCCT_PROMOTIONS"/>
-  <ProdCatalogCategoryType description="Most Popular Category (One)" prodCatalogCategoryTypeId="PCCT_MOST_POPULAR"/>
-  <ProdCatalogCategoryType description="What's New Category (One)" prodCatalogCategoryTypeId="PCCT_WHATS_NEW"/>
+  <ProdCatalogCategoryType description="Browse Root (One)" prodCatalogCategoryTypeId="PCCT_BROWSE_ROOT"/>
+  <ProdCatalogCategoryType description="Default Search (One)" prodCatalogCategoryTypeId="PCCT_SEARCH"/>
+  <ProdCatalogCategoryType description="Other Search (Many)" prodCatalogCategoryTypeId="PCCT_OTHER_SEARCH"/>
+  <ProdCatalogCategoryType description="Quick Add (Many)" prodCatalogCategoryTypeId="PCCT_QUICK_ADD"/>
+  <ProdCatalogCategoryType description="Promotions (One)" prodCatalogCategoryTypeId="PCCT_PROMOTIONS"/>
+  <ProdCatalogCategoryType description="Most Popular (One)" prodCatalogCategoryTypeId="PCCT_MOST_POPULAR"/>
+  <ProdCatalogCategoryType description="What's New (One)" prodCatalogCategoryTypeId="PCCT_WHATS_NEW"/>
 
   <ProductAssocType description="Upgrade or Up-Sell" hasTable="N" parentTypeId="" productAssocTypeId="PRODUCT_UPGRADE"/>
   <ProductAssocType description="Complementary or Cross-Sell" hasTable="N" parentTypeId="" productAssocTypeId="PRODUCT_COMPLEMENT"/>
