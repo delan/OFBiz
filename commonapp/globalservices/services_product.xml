@@ -792,6 +792,7 @@
         <attribute name="orderId" type="String" mode="IN" optional="false"/>
         <attribute name="orderItemSeqId" type="String" mode="IN" optional="false"/>
         <attribute name="quantity" type="Double" mode="IN" optional="false"/>
+        <attribute name="reservedDatetime" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="requireInventory" type="String" mode="IN" optional="false"/>
         <attribute name="reserveOrderEnumId" type="String" mode="IN" optional="true"/>
         <attribute name="quantityNotReserved" type="Double" mode="OUT" optional="false"/>
@@ -807,6 +808,7 @@
         <attribute name="orderId" type="String" mode="IN" optional="false"/>
         <attribute name="orderItemSeqId" type="String" mode="IN" optional="false"/>
         <attribute name="quantity" type="Double" mode="IN" optional="false"/>
+        <attribute name="reservedDatetime" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="requireInventory" type="String" mode="IN" optional="false"/>
         <attribute name="reserveOrderEnumId" type="String" mode="IN" optional="true"/>
         <attribute name="quantityNotReserved" type="Double" mode="OUT" optional="false"/>
@@ -821,6 +823,11 @@
             corresponding serialized inventoryItem to available.
         </description>
         <attribute name="orderId" type="String" mode="IN" optional="false"/>
+    </service>
+    <service name="cancelOrderItemInventoryRes" engine="simple"
+                location="org/ofbiz/commonapp/product/inventory/InventoryServices.xml" invoke="cancelOrderInventoryReservation" auth="true">
+        <description>Cancels an inventory reservation</description>
+        <auto-attributes entity-name="OrderItemInventoryRes" include="pk" mode="IN" optional="false"/>
     </service>
     
     <service name="interfaceInventoryTransfer" engine="interface" location="" invoke="">
