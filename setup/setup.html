@@ -20,10 +20,11 @@
   <li><a href="#Introduction">Introduction</a></li>
   <li><a href="#Quick &amp; Easy Setup">Quick &amp; Easy Setup</a></li>
   <li><a href="#MySQL Setup">MySQL Setup (or other database)</a></li>
-  <li><a href="#JBoss &amp; Tomcat Setup">JBoss &amp; Tomcat (and Ant and
-    PoolMan) Setup</a></li>
+  <li><a href="#JBoss &amp; Tomcat Setup">JBoss &amp; Tomcat (and Ant and PoolMan) 
+    Setup</a></li>
   <li><a href="#OFBiz Setup">OFBiz Setup</a></li>
   <li><a href="#Running">Running</a></li>
+  <li><a href="#DeployOptions">Alternative Deployment Options</a></li>
 </ul>
 
 <h3><a name="Introduction">Introduction</a></h3>
@@ -233,8 +234,22 @@ for the first time, they all need to be compiled when it is run freshly.</p>
 <p>The other applications can be reached at similar looking URLs. For instance,
 the ecommerce application can be accessed at <a href="http://localhost:8080/commonapp/control/main">http://localhost:8080/ecommerce/control/main</a>,
 or since it has an index.jsp that forwards for convenience, you can go to <a href="http://localhost:8080/commonapp/control/main">http://localhost:8080/ecommerce</a>.</p>
-<p>&nbsp;</p>
 
+<h3><a name="DeployOptions">Alternative Deployment Options</a></h3>
+<p>Future releases of The Open For Business Project will support alternative deployment 
+  options, for use with application servers other then Jakarta Tomcat and JBoss. 
+  The <i>webapp</i> directory in each module is a fully self sufficient web application. 
+  Each of these may be packaged into a WAR file and deployed normally. Please 
+  keep in mind the OFBiz required libraries must be in the global classpath. An 
+  alternative method of deploying with Catalina would be not to modify the server.xml 
+  file, but instead place the required files in the /lib and /classes directory 
+  as described above and deploy the WAR files in the /webapps directory. <br>
+  <br>
+  Full testing and deployment instructions for WebSphere, WebLogic, iPlanet, Orion, 
+  JRun and ServletExec are forthcoming in future releases. If you are interested 
+  in helping with this please contact one of the project administrators.</p>
+
+<p>&nbsp;</p>
 </body>
 
 </html>
