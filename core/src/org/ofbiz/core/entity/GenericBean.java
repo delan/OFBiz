@@ -34,7 +34,7 @@ import org.ofbiz.core.entity.model.*;
  */
 public class GenericBean extends GenericEntity implements EntityBean
 {
-  GenericDAO dao;
+  GenericDAO dao = null;
   EntityContext entityContext;
 
   /** Sets the values from ValueObject attribute of the GenericBean object
@@ -117,7 +117,11 @@ public class GenericBean extends GenericEntity implements EntityBean
   /** Sets the EntityContext attribute of the GenericBean object
    *@param  entityContext  The new EntityContext value
    */
-  public void setEntityContext(EntityContext entityContext) { this.entityContext = entityContext; }
+  public void setEntityContext(EntityContext entityContext) 
+  { 
+    if(dao == null) dao = new GenericDAO("default");
+    this.entityContext = entityContext; 
+  }
   /** Unsets the EntityContext, ie sets it to null. */
   public void unsetEntityContext() { entityContext = null; }
 }
