@@ -1,5 +1,5 @@
 /*
- * $Id: GenericEntity.java,v 1.7 2003/10/27 22:47:50 jonesde Exp $
+ * $Id: GenericEntity.java,v 1.8 2003/11/03 12:39:20 jonesde Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -60,11 +60,11 @@ import org.w3c.dom.Element;
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- *@version    $Revision: 1.7 $
+ *@version    $Revision: 1.8 $
  *@since      2.0
  */
 public class GenericEntity extends Observable implements Map, LocalizedMap, Serializable, Comparable, Cloneable {
-    
+
     public static final String module = GenericEntity.class.getName();
 
     /** Name of the GenericDelegator, used to reget the GenericDelegator when deserialized */
@@ -400,8 +400,8 @@ public class GenericEntity extends Observable implements Map, LocalizedMap, Seri
         return wrapper.getBytes();
     }
 
-    /** Checks a resource bundle for a value for this field using the entity name, the field name 
-     *    and a composite of the Primary Key field values as a key. If no value is found in the 
+    /** Checks a resource bundle for a value for this field using the entity name, the field name
+     *    and a composite of the Primary Key field values as a key. If no value is found in the
      *    resource then the field value is returned. Uses the default-resource-name from the entity
      *    definition as the resource name. To specify a resource name manually, use the other getResource method.
      *
@@ -411,24 +411,24 @@ public class GenericEntity extends Observable implements Map, LocalizedMap, Seri
      *    ProductType.description.FINISHED_GOOD
      *
      * @param name The name of the field on the entity
-     * @param locale The locale to use when finding the ResourceBundle, if null uses the default 
+     * @param locale The locale to use when finding the ResourceBundle, if null uses the default
      *    locale for the current instance of Java
-     * @return If the corresponding resource is found and contains a key as described above, then that 
+     * @return If the corresponding resource is found and contains a key as described above, then that
      *    property value is returned; otherwise returns the field value
-     */    
+     */
     public Object get(String name, Locale locale) {
         return get(name, null, locale);
     }
-    
-    /** Same as the getResource method that does not take resource name, but instead allows manually 
+
+    /** Same as the getResource method that does not take resource name, but instead allows manually
      *    specifying the resource name. In general you should use the other method for more consistent
      *    naming and use of the corresponding properties files.
      * @param name The name of the field on the entity
-     * @param resource The name of the resource to get the value from; if null defaults to the 
+     * @param resource The name of the resource to get the value from; if null defaults to the
      *    default-resource-name on the entity definition, if specified there
-     * @param locale The locale to use when finding the ResourceBundle, if null uses the default 
+     * @param locale The locale to use when finding the ResourceBundle, if null uses the default
      *    locale for the current instance of Java
-     * @return If the specified resource is found and contains a key as described above, then that 
+     * @return If the specified resource is found and contains a key as described above, then that
      *    property value is returned; otherwise returns the field value
      */
     public Object get(String name, String resource, Locale locale) {
@@ -446,7 +446,7 @@ public class GenericEntity extends Observable implements Map, LocalizedMap, Seri
             //Debug.logWarning("Tried to getResource value for field named " + name + " but no resource was found with the name " + resource + " in the locale " + locale, module);
             return fieldValue;
         }
-        
+
         StringBuffer keyBuffer = new StringBuffer();
         // start with the Entity Name
         keyBuffer.append(this.getEntityName());
@@ -475,7 +475,7 @@ public class GenericEntity extends Observable implements Map, LocalizedMap, Seri
             return resourceValue;
         }
     }
-    
+
     public GenericPK getPrimaryKey() {
         Collection pkNames = new LinkedList();
         Iterator iter = this.getModelEntity().getPksIterator();
@@ -792,7 +792,11 @@ public class GenericEntity extends Observable implements Map, LocalizedMap, Seri
         if (obj == null) return false;
 
         // from here, use the compareTo method since it is more efficient:
-        return this.compareTo(obj) == 0;
+        try {
+            return this.compareTo(obj) == 0;
+        } catch (ClassCastException e) {
+            return false;
+        }
     }
 
     /** Creates a hashCode for the entity, using the default String hashCode and Map hashCode, overrides the default hashCode
@@ -829,7 +833,7 @@ public class GenericEntity extends Observable implements Map, LocalizedMap, Seri
         }
         return theString.toString();
     }
-    
+
     /** Compares this GenericEntity to the passed object
      *@param obj Object to compare this to
      *@return int representing the result of the comparison (-1,0, or 1)
