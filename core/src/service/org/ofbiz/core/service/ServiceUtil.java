@@ -89,7 +89,7 @@ public class ServiceUtil {
     }
 
     /** A small routine used all over to improve code efficiency, get the partyId and does a security check
-     *<b>security check</b>: userLogin partyId must equal partyId, or must have <secEntity><secOperation> permission
+     *<b>security check</b>: userLogin partyId must equal partyId, or must have [secEntity][secOperation] permission
      */
     public static String getPartyIdCheckSecurity(GenericValue userLogin, Security security, Map context, Map result, String secEntity, String secOperation) {
         String partyId = (String) context.get("partyId");
