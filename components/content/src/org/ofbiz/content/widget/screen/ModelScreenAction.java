@@ -115,6 +115,7 @@ public abstract class ModelScreenAction {
         protected FlexibleMapAccessor field;
         protected FlexibleMapAccessor fromField;
         protected FlexibleStringExpander valueExdr;
+        protected FlexibleStringExpander defaultExdr;
         protected FlexibleStringExpander globalExdr;
         protected String type;
         
@@ -123,6 +124,7 @@ public abstract class ModelScreenAction {
             this.field = new FlexibleMapAccessor(setElement.getAttribute("field"));
             this.fromField = UtilValidate.isNotEmpty(setElement.getAttribute("from-field")) ? new FlexibleMapAccessor(setElement.getAttribute("from-field")) : null;
             this.valueExdr = UtilValidate.isNotEmpty(setElement.getAttribute("value")) ? new FlexibleStringExpander(setElement.getAttribute("value")) : null;
+            this.defaultExdr = UtilValidate.isNotEmpty(setElement.getAttribute("default-value")) ? new FlexibleStringExpander(setElement.getAttribute("default-value")) : null;
             this.globalExdr = new FlexibleStringExpander(setElement.getAttribute("global"));
             this.type = setElement.getAttribute("type");
             if (this.fromField != null && this.valueExdr != null) {
@@ -142,6 +144,14 @@ public abstract class ModelScreenAction {
             } else if (this.valueExdr != null) {
                 newValue = this.valueExdr.expandString(context);
             }
+
+            // If newValue is still empty, use the default value
+           	if (this.defaultExdr != null) {
+           		if (ObjectType.isEmpty(newValue)) {
+            		newValue = this.defaultExdr.expandString(context);
+               	}
+            }
+            
             if (UtilValidate.isNotEmpty(this.type)) {
                 try {
                     newValue = ObjectType.simpleTypeConvert(newValue, this.type, null, null);

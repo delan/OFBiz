@@ -113,6 +113,7 @@
         field CDATA #REQUIRED
         from-field CDATA #IMPLIED
         value CDATA #IMPLIED
+        default-value CDATA #IMPLIED
         global ( true | false ) "false"
         type ( PlainString | String | Double | Float | Long | Integer | Date | Time | Timestamp | Boolean | Object ) "String"
     >
