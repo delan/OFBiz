@@ -1096,14 +1096,15 @@
             package-name="org.ofbiz.accounting.ledger"
             title="GL Account History Entity">
       <field name="glAccountId" type="id-ne"></field>
-      <field name="customTimePeriodId" type="id-ne"></field>
       <field name="organizationPartyId" type="id-ne"></field>
+      <field name="customTimePeriodId" type="id-ne"></field>
       <field name="postedDebits" type="currency-amount"></field>
       <field name="postedCredits" type="currency-amount"></field>
       <field name="endingBalance" type="currency-amount"></field>
+      <field name="isClosed" type="indicator"></field>
       <prim-key field="glAccountId"/>
-      <prim-key field="customTimePeriodId"/>
       <prim-key field="organizationPartyId"/>
+      <prim-key field="customTimePeriodId"/>
       <relation type="one" fk-name="GLACCT_HST_GLA" rel-entity-name="GlAccount">
         <key-map field-name="glAccountId"/>
       </relation>
@@ -1173,6 +1174,24 @@
       <field name="hasTable" type="indicator"></field>
       <field name="description" type="description"></field>
       <prim-key field="glAccountTypeId"/>
+    </entity>
+    <entity entity-name="GlAccountTypeDefault"
+            package-name="org.ofbiz.accounting.ledger"
+            title="GL Account Organization Entity">
+      <field name="glAccountTypeId" type="id-ne"></field>
+      <field name="organizationPartyId" type="id-ne"></field>
+      <field name="glAccountId" type="id-ne"></field>
+      <prim-key field="glAccountTypeId"/>
+      <prim-key field="organizationPartyId"/>
+      <relation type="one" fk-name="GLACCT_TPDF_GLAT" rel-entity-name="GlAccountType">
+        <key-map field-name="glAccountTypeId"/>
+      </relation>
+      <relation type="one" fk-name="GLACCT_TPDF_OPTY" title="Organization" rel-entity-name="Party">
+        <key-map field-name="organizationPartyId" rel-field-name="partyId"/>
+      </relation>
+      <relation type="one" fk-name="GLACCT_TPDF_GLA" rel-entity-name="GlAccount">
+        <key-map field-name="glAccountId"/>
+      </relation>
     </entity>
     <entity entity-name="GlBudgetXref"
             package-name="org.ofbiz.accounting.ledger"
