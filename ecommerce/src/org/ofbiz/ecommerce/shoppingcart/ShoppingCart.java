@@ -596,7 +596,7 @@ public class ShoppingCart implements java.io.Serializable {
             GenericValue fsOrderAdjustment = delegator.makeValue("OrderAdjustment",
                     UtilMisc.toMap("orderAdjustmentTypeId", "SHIPPING_CHARGES", "amount", new Double(-this.getTotalShipping()),
                     "productPromoId", freeShippingInfo.get("productPromoId"), "productPromoRuleId", freeShippingInfo.get("productPromoRuleId"),
-                    "productPromoActionId", freeShippingInfo.get("productPromoActionId")));
+                    "productPromoActionSeqId", freeShippingInfo.get("productPromoActionSeqId")));
             
             //if an orderAdjustmentTypeId was passed, override the default
             //NOTE: depending on how some back end processes will work (like recalculating shipping), we may remove this
