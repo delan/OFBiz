@@ -188,7 +188,17 @@ public class ServiceUtil {
     }
 
     public static String getErrorMessage(Map result) {
-        return (String) result.get(ModelService.ERROR_MESSAGE);
+        String errorMessage = (String) result.get(ModelService.ERROR_MESSAGE);
+        if (result.get(ModelService.ERROR_MESSAGE_LIST) != null) {
+            List errors = (List) result.get(ModelService.ERROR_MESSAGE_LIST);
+            for (int i = 0; i < errors.size(); i++) {
+                if (errorMessage != null) {
+                    errorMessage = errorMessage + ", ";
+                }
+                errorMessage = errorMessage + ((String) errors.get(i));
+            }
+        }
+        return errorMessage;
     }
 
     public static String makeErrorMessage(Map result, String msgPrefix, String msgSuffix, String errorPrefix, String errorSuffix) {
