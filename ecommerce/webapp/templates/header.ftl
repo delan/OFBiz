@@ -80,14 +80,14 @@
     <td width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='headerboxbottom'>
         <tr>
-          <#if userLogin?exists>
+          <#if userLogin?has_content>
             <td class="headerButtonLeft"><a href="<@ofbizUrl>/logout</@ofbizUrl>" class="headerbuttontext">Logout</a></td>
           <#else>
             <td class="headerButtonLeft"><a href='<@ofbizUrl>${Static["org.ofbiz.commonapp.common.CommonWorkers"].makeLoginUrl(request, "checkLogin")}</@ofbizUrl>' class='headerbuttontext'>Login</a></td>
           </#if>
           <td class="headerButtonLeft"><a href="<@ofbizUrl>/main</@ofbizUrl>" class="headerbuttontext">Main</a></td>
 
-          <#if sessionAttributes.autoName?exists>
+          <#if sessionAttributes.autoName?has_content>
             <td width="90%" align="center" class="headerCenter">
                 Welcome&nbsp;${sessionAttributes.autoName}!
                 (Not&nbsp;You?&nbsp;<a href="<@ofbizUrl>/autoLogout</@ofbizUrl>" class="buttontext">click&nbsp;here</a>)
