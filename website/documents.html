@@ -57,6 +57,14 @@
   <li class='contenttext'><a href="setup/setup.html">Setup &amp; Installation</a></li>
   <li class='contenttext'><a href="core/docs/coreconfig.html">OFBiz Core Configuration Guide</a></li>
   <li class='contenttext'><a href="core/docs/entityconfig.html">Entity Engine (database) Configuration Guide</a></li>
+  <li class='contenttext'><a href="core/docs/serviceconfig.html">Service Engine Configuration Guide</a></li>
+</ul>
+
+<div class='contenttext'><b><u>Training Documents</u></b></div>
+<ul>
+  <li class='contenttext'>See the <a href="services.html">Services</a> page for
+more information on training and the freely available materials used in the
+training classes.</li>
 </ul>
 
 <div class='contenttext'><b><u>Getting Started Documents</u></b></div>
@@ -82,16 +90,10 @@ documents.</div>
   <li class='contenttext'><a href="refactorentsystems.html">Paper Abstract: Refactoring Enterprise Automation Systems</a>
 </ul>
 
-<div class='contenttext'><b><u>Development Documents</u></b></div>
+<div class='contenttext'><b><u>Data Model Documents &amp; Diagrams</u></b></div>
 <ul>
   <li class='contenttext'><a href="entityref.html">Entity Reference (very big, entityref page from commonapp)</a></li>
   <li class='contenttext'><a href="entity-overview.html">Entity Overview</a></li>
-  <li class='contenttext'><a href="http://sourceforge.net/pm/?group_id=27173">Sub-Project List</a></li>
-  <li class='contenttext'><a href="scalabilityplan.html">Scalability and Performance Plans</a></li>
-</ul>
-
-<div class='contenttext'><b><u>Data Model Diagrams</u></b></div>
-<ul>
   <li class='contenttext'><a href="diagrams/ofbiz.complete.20021212.gif">Complete Data Model 2002-12-12; GIF File; ~2.2Mb</a></li>
   <li class='contenttext'><a href="diagrams/ofbiz.complete.20021212.vis5.vsd">Complete Data Model 2002-12-12; Visio 5 File; ~1.9Mb</a></li>
   <li class='contenttext'><a href="diagrams/ofbiz.party.20020828.vsd">Party Data Model 2002-08-28; Visio 2000 File; ~400Kb</a></li>
@@ -101,20 +103,6 @@ documents.</div>
 
 <div class='contenttext'><b><u>Documents from Modules</u></b></div>
 <ul>
-  <li class='contenttext'>Core Module (Entity Engine, Service Engine, Workflow Engine, Rule Engine, &amp; Webapp Controller)
-  <ul>
-    <li class='contenttext'><a href="core/docs/core.html">Core Overview</a></li>
-    <li class='contenttext'><a href="core/docs/api/index.html">Core JavaDoc</a></li>
-    <li class='contenttext'><a href="core/docs/control.html">Control Servlet Guide</a></li>
-    <li class='contenttext'><a href="core/docs/entity.html">Entity Engine Guide</a></li>
-    <li class='contenttext'><a href="core/docs/services.html">Services Engine Guide</a></li>
-    <li class='contenttext'><a href="core/docs/workflow.html">Workflow Engine Guide</a></li>
-    <li class='contenttext'><a href="core/docs/rules.html">Rule Engine Guide</a></li>
-    <li class='contenttext'><a href="core/docs/minilang.html">Mini-Languages Guide</a></li>
-    <li class='contenttext'><a href="dtds/entitymodel.dtd">Entity Engine Entity Model DTD</a></li>
-    <li class='contenttext'><a href="dtds/fieldtypemodel.dtd">Entity Engine Field Type Model DTD</a></li>
-    <li class='contenttext'><a href="dtds/simple-methods.dtd">Simple Methods Mini-Lang DTD</a></li>
-  </ul>
   <li class='contenttext'>Commonapp Module (Common Entity &amp; Service Definitions)
   <ul>
     <li class='contenttext'><a href="commonapp/docs/api/index.html">CommonApp JavaDoc</a></li>
@@ -138,6 +126,50 @@ documents.</div>
   <li class='contenttext'>Work Effort (Activity, Task, Calendar) Manager Module
   <ul>
     <li class='contenttext'>No docs yet.</li>
+  </ul>
+</ul>
+
+<div class='contenttext'><b><u>Core Framework Documentation</u></b></div>
+<ul>
+  <li class='contenttext'>Documents &amp; Guides
+  <ul>
+    <li class='contenttext'><a href="core/docs/core.html">Core Framework Overview</a></li>
+    <li class='contenttext'><a href="core/docs/api/index.html">Core Framework JavaDoc</a></li>
+    <li class='contenttext'><a href="core/docs/entity.html">Entity Engine Guide</a></li>
+    <li class='contenttext'><a href="core/docs/services.html">Service Engine Guide</a></li>
+    <li class='contenttext'><a href="core/docs/workflow.html">Workflow Engine Guide</a></li>
+    <li class='contenttext'><a href="core/docs/rules.html">Rule Engine Guide</a></li>
+    <li class='contenttext'><a href="core/docs/minilang.html">Mini-Languages Guide</a></li>
+    <li class='contenttext'><a href="core/docs/control.html">Control Servlet Guide</a></li>
+    <li class='contenttext'><a href="scalabilityplan.html">Scalability and Performance Plans</a></li>
+  </ul>
+  <li class='contenttext'>General XML Definitions
+  <ul>
+    <li class='contenttext'><a href="dtds/jndi-config.dtd">JNDI Server Config DTD (jndiservers.xml)</a></li>
+    <li class='contenttext'><a href="dtds/security-config.dtd">Security Config DTD (security.xml)</a></li>
+  </ul>
+  <li class='contenttext'>Entity Engine XML Definitions
+  <ul>
+    <li class='contenttext'><a href="dtds/entity-config.dtd">Entity Config DTD (entityengine.xml)</a></li>
+    <li class='contenttext'><a href="dtds/entitygroup.dtd">Entity Group DTD (entitygroup.xml)</a></li>
+    <li class='contenttext'><a href="dtds/entitymodel.dtd">Entity Model DTD (entitymodel_*.xml)</a></li>
+    <li class='contenttext'><a href="dtds/fieldtypemodel.dtd">Field Type Model DTD (fieldtype*.xml)</a></li>
+  </ul>
+  <li class='contenttext'>Service Engine XML Definitions
+  <ul>
+    <li class='contenttext'><a href="dtds/service-config.dtd">Service Config DTD (serviceengine.xml)</a></li>
+    <li class='contenttext'><a href="dtds/services.dtd">Service Definition DTD (services_*.xml)</a></li>
+    <li class='contenttext'><a href="dtds/service-eca.dtd">Service ECAs DTD (secas_*.xml)</a></li>
+    <li class='contenttext'><a href="dtds/service-group.dtd">Service Groups DTD (groups_*.xml)</a></li>
+  </ul>
+  <li class='contenttext'>Mini-Language XML Definitions
+  <ul>
+    <li class='contenttext'><a href="dtds/simple-methods.dtd">Simple Methods DTD</a></li>
+  </ul>
+  <li class='contenttext'>Webapp Framework XML Definitions
+  <ul>
+    <li class='contenttext'><a href="dtds/site-conf.dtd">Site Config DTD (controller.xml)</a></li>
+    <li class='contenttext'><a href="dtds/regions.dtd">Regions Definition DTD (regions.xml)</a></li>
   </ul>
 </ul>
 
