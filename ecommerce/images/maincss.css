@@ -84,7 +84,7 @@
 
   .boxoutside {
     background-color: white;
-    padding: 0;
+    padding: 0px;
     border-color: #999999;
     border-style: solid;
     border-width: 1px 1px 1px 1px;
@@ -92,7 +92,10 @@
 
   .boxtop {
     background-color: #6666CC;
-    padding: 4;
+    padding-top: 1px;
+    padding-bottom: 1px;
+    padding-right: 4px;
+    padding-left: 4px;
     border-color: #999999;
     border-style: solid;
     border-width: 0px 0px 0px 0px;
@@ -100,7 +103,7 @@
 
   .boxbottom {
     background-color: white;
-    padding: 4;
+    padding: 4px;
     border-color: #999999;
     border-style: solid;
     border-width: 0px 0px 0px 0px;
