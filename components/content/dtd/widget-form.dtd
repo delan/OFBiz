@@ -25,10 +25,10 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
- *  $Id: widget-form.dtd,v 1.2 2003/11/05 00:18:15 byersa Exp $
+ *  $Id: widget-form.dtd,v 1.3 2003/12/05 22:08:16 byersa Exp $
 -->
 
-<!ENTITY % AllFields "display | hyperlink | lookup | text | textarea | date-time | drop-down | check | radio | submit | reset | hidden | ignored | file">
+<!ENTITY % AllFields "display | hyperlink | lookup | text | textarea | date-time | drop-down | check | radio | submit | reset | hidden | ignored | file | text-find | date-find | range-find">
 
 <!ELEMENT forms ( form+ )>
 
