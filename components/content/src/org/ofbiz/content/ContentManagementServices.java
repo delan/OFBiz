@@ -57,6 +57,8 @@ import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceAuthException;
 import org.ofbiz.service.ServiceUtil;
+import org.ofbiz.base.util.cache.UtilCache;
+
 
 
 /**
@@ -466,10 +468,14 @@ public class ContentManagementServices {
             }
 
         } else if (UtilValidate.isNotEmpty(dataResourceTypeId) && UtilValidate.isNotEmpty(contentId)) {
-            if (UtilValidate.isNotEmpty(dataResourceId)) {
-                context.put("dataResourceId", dataResourceId);
+            // If dataResource was not previously existing, then update the associated content with its id
+            if (UtilValidate.isNotEmpty(dataResourceId) && !dataResourceExists) {
+                Map map = new HashMap();
+                map.put("userLogin", userLogin);
+                map.put("dataResourceId", dataResourceId);
+                map.put("contentId", contentId);
                 if (Debug.infoOn()) Debug.logInfo("in persist... context:" + context, module);
-                Map r = ContentServices.updateContentMethod(dctx, context);
+                Map r = ContentServices.updateContentMethod(dctx, map);
                 boolean isError = ModelService.RESPOND_ERROR.equals(r.get(ModelService.RESPONSE_MESSAGE));
                 if (isError) 
                     return ServiceUtil.returnError( (String)r.get(ModelService.ERROR_MESSAGE));
@@ -1000,7 +1006,7 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
             while (iter.hasNext()) {
             	GenericValue kidContent = (GenericValue)iter.next();
                 if (contentTypeId.equals("OUTLINE_NODE")) {
-                	updateOutlineNodeChildren(kidContent);
+                	updateOutlineNodeChildren(kidContent, false);
                 } else {
                 	updatePageNodeChildren(kidContent);
                 }
@@ -1010,6 +1016,74 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
             return ServiceUtil.returnError(e.getMessage());
         }
             
+        return results;
+    }
+    
+    public static Map resetToOutlineMode(DispatchContext dctx, Map context) throws GenericServiceException{
+        
+        GenericDelegator delegator = dctx.getDelegator();
+        Map results = new HashMap();
+    	String contentId = (String)context.get("contentId");
+        GenericValue thisContent = null;
+        try {
+            thisContent = delegator.findByPrimaryKey("Content", UtilMisc.toMap("contentId", contentId));
+            if (thisContent == null)
+                ServiceUtil.returnError("No entity found for id=" + contentId);
+            thisContent.set("contentTypeId", "OUTLINE_NODE");
+            thisContent.store();
+            List kids = ContentWorker.getAssociatedContent(thisContent, "from", UtilMisc.toList("SUB_CONTENT"), null, null, null);
+            Iterator iter = kids.iterator();
+            while (iter.hasNext()) {
+            	GenericValue kidContent = (GenericValue)iter.next();
+                	updateOutlineNodeChildren(kidContent, true);
+            }
+        } catch(GenericEntityException e) {
+        	Debug.logError(e, module);
+            return ServiceUtil.returnError(e.getMessage());
+        }
+            
+        return results;
+    }
+    
+    public static Map clearContentAssocViewCache(DispatchContext dctx, Map context) throws GenericServiceException{
+        Map results = new HashMap();
+
+        UtilCache utilCache = (UtilCache) UtilCache.utilCacheTable.get("entitycache.entity-list.default.ContentAssocViewFrom");
+
+        if (utilCache != null) {
+            utilCache.clear();
+        } else {
+            return ServiceUtil.returnError("Could not clear cache, cache not found with name: entitycache.entity-list.default.ContentAssocViewFrom");
+        }
+        
+        utilCache = (UtilCache) UtilCache.utilCacheTable.get("entitycache.entity-list.default.ContentAssocViewTo");
+        if (utilCache != null) {
+            utilCache.clear();
+        } else {
+            return ServiceUtil.returnError("Could not clear cache, cache not found with name: entitycache.entity-list.default.ContentAssocViewTo");
+        }
+
+        return results;
+    }
+    
+    public static Map clearContentAssocDataResourceViewCache(DispatchContext dctx, Map context) throws GenericServiceException{
+    
+        Map results = new HashMap();
+
+        UtilCache utilCache = (UtilCache) UtilCache.utilCacheTable.get("entitycache.entity-list.default.ContentAssocViewDataResourceFrom");
+        if (utilCache != null) {
+            utilCache.clear();
+        } else {
+            return ServiceUtil.returnError("Could not clear cache, cache not found with name: entitycache.entity-list.default.ContentAssocViewDataResourceFrom");
+        }
+        
+        utilCache = (UtilCache) UtilCache.utilCacheTable.get("entitycache.entity-list.default.ContentAssocViewDataResourceTo");
+        if (utilCache != null) {
+            utilCache.clear();
+        } else {
+            return ServiceUtil.returnError("Could not clear cache, cache not found with name: entitycache.entity-list.default.ContentAssocViewDataResourceTo");
+        }
+
         return results;
     }
     
@@ -1037,13 +1111,15 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
         return;
     }
 
-    public static void updateOutlineNodeChildren(GenericValue content) throws GenericEntityException {
+    public static void updateOutlineNodeChildren(GenericValue content, boolean forceOutline) throws GenericEntityException {
     	
     	String contentTypeId = content.getString("contentTypeId");
     	String newContentTypeId = contentTypeId;
     	String dataResourceId = content.getString("dataResourceId");
     	Long branchCount = (Long)content.get("childBranchCount");
-        if (contentTypeId == null || contentTypeId.equals("DOCUMENT")) {
+    	if (forceOutline) {
+            newContentTypeId = "OUTLINE_NODE";
+        } else if (contentTypeId == null || contentTypeId.equals("DOCUMENT")) {
         	if (UtilValidate.isEmpty(dataResourceId) || (branchCount != null && branchCount.intValue() > 0))
         		newContentTypeId = "OUTLINE_NODE";
        		else
@@ -1061,7 +1137,7 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
             Iterator iter = kids.iterator();
             while (iter.hasNext()) {
             	GenericValue kidContent = (GenericValue)iter.next();
-            	updateOutlineNodeChildren(kidContent);
+            	updateOutlineNodeChildren(kidContent, forceOutline);
             }
         }
         return;
