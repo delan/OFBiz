@@ -893,10 +893,10 @@ public class ProductPromoWorker {
                     }
                 } catch (GenericServiceException e) {
                     Debug.logError(e, "Error getting order history sub-total in the getOrderedSummaryInformation service, evaluating condition to false.", module);
-                    compare = 1;
+                    return false;
                 }
             } else {
-                compare = 1;
+                return false;
             }
         } else {
             Debug.logWarning("An un-supported productPromoCond input parameter (lhs) was used: " + productPromoCond.getString("inputParamEnumId") + ", returning false, ie check failed", module);
