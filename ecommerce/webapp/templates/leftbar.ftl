@@ -32,6 +32,6 @@
     <br>
     ${pages.get("/catalog/sidedeepcategory.ftl")}
     <br>
-    <#--${pages.get("/catalog/minireorderprods.ftl")}-->
+    ${pages.get("/catalog/minireorderprods.ftl")}
   </td>
   <td width='5'>&nbsp;&nbsp;&nbsp;</td>
