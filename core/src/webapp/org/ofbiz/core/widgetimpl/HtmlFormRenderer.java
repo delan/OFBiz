@@ -381,6 +381,10 @@ public class HtmlFormRenderer implements FormStringRenderer {
             // if current value should be selected in the list, select it
             if (UtilValidate.isNotEmpty(currentValue) && currentValue.equals(optionValue.getKey()) && "selected".equals(dropDownField.getCurrent())) {
                 buffer.append(" selected");
+            } else if (UtilValidate.isEmpty(currentValue) && 
+                    dropDownField.getNoCurrentSelectedKey() != null && 
+                    dropDownField.getNoCurrentSelectedKey().equals(optionValue.getKey())) {
+                buffer.append(" selected");
             }
             buffer.append(" value=\"");
             buffer.append(optionValue.getKey());

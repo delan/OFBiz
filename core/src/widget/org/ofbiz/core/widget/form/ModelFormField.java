@@ -808,6 +808,7 @@ public class ModelFormField {
     public static abstract class FieldInfoWithOptions extends FieldInfo {
         protected FieldInfoWithOptions() { super(); }
         
+        protected String noCurrentSelectedKey;
         protected List optionSources = new LinkedList();
 
         public FieldInfoWithOptions(int fieldType, ModelFormField modelFormField) {
@@ -816,6 +817,8 @@ public class ModelFormField {
 
         public FieldInfoWithOptions(Element element, ModelFormField modelFormField) {
             super(element, modelFormField);
+            
+            noCurrentSelectedKey = element.getAttribute("no-current-selected-key");
             
             // read all option and entity-options sub-elements, maintaining order
             List childElements = UtilXml.childElementList(element, null);
@@ -861,6 +864,14 @@ public class ModelFormField {
             
             // if we get here we didn't find a match, just return the key
             return key;
+        }
+        
+        public String getNoCurrentSelectedKey() {
+            return this.noCurrentSelectedKey;
+        }
+
+        public void setNoCurrentSelectedKey(String string) {
+            this.noCurrentSelectedKey = string;
         }
     }
     

@@ -205,6 +205,10 @@ public class ModelForm {
         Iterator modelParamIter = modelParams.iterator();
         while (modelParamIter.hasNext()) {
             ModelParam modelParam = (ModelParam) modelParamIter.next();
+            // skip auto params that the service engine populates...
+            if ("userLogin".equals(modelParam.name) || "locale".equals(modelParam.name)) {
+                continue;
+            }
             if (modelParam.formDisplay) {
                 ModelFormField modelFormField = this.addFieldFromServiceParam(modelService, modelParam);
                 if (UtilValidate.isNotEmpty(autoFieldsService.mapName)) {

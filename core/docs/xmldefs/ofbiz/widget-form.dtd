@@ -215,13 +215,22 @@
     description CDATA #IMPLIED
 >
 
+<!--
+	no-current-selected-key: the key to mark as selected when there is no
+		current entry value
+-->
 <!ELEMENT drop-down ( (entity-options | option)* )>
 <!ATTLIST drop-down
     allow-empty ( true | false ) "false"
     current ( first-in-list | selected ) "first-in-list"
+    no-current-selected-key CDATA #IMPLIED
 >
 
 <!ELEMENT radio ( (entity-options | option)* )>
+<!ATTLIST radio
+    no-current-selected-key CDATA #IMPLIED
+>
+
 <!ELEMENT check EMPTY>
 
 <!ELEMENT submit EMPTY>
