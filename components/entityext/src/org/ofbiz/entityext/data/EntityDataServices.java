@@ -1,5 +1,5 @@
 /*
- * $Id: EntityDataServices.java,v 1.8 2004/01/20 17:10:49 ajzeneski Exp $
+ * $Id: EntityDataServices.java,v 1.9 2004/01/30 21:16:14 ajzeneski Exp $
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -48,7 +48,7 @@ import java.net.URISyntaxException;
  * Entity Data Import/Export Services
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.8 $
+ * @version    $Revision: 1.9 $
  * @since      2.1
  */
 public class EntityDataServices {
@@ -293,6 +293,10 @@ public class EntityDataServices {
                 // trim non-null values
                 if (value != null) {
                     value = value.trim();
+                }
+
+                if (value != null && value.length() == 0) {
+                    value = null;
                 }
             } else {
                 value = null;
