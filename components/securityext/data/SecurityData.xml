@@ -44,6 +44,7 @@
   <SecurityPermission description="Use the Workflow Maintenance pages." permissionId="WORKFLOW_MAINT"/>
   <SecurityPermission description="Use the Period Maintenance pages." permissionId="PERIOD_MAINT"/>
   <SecurityPermission description="Use the Enum and Status Maintenance pages." permissionId="ENUM_STATUS_MAINT"/>
+  <SecurityPermission description="Use the Entity Sync Admin pages." permissionId="ENTITY_SYNC_ADMIN"/>
   <SecurityPermission description="View a UtilCache instance." permissionId="UTIL_CACHE_VIEW"/>
   <SecurityPermission description="Edit a UtilCache instance." permissionId="UTIL_CACHE_EDIT"/>
   <SecurityPermission description="View a UtilDebug instance." permissionId="UTIL_CACHE_VIEW"/>
@@ -165,6 +166,7 @@
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="WORKFLOW_MAINT"/>
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="PERIOD_MAINT"/>
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="ENUM_STATUS_MAINT"/>
+  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="ENTITY_SYNC_ADMIN"/>
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="UTIL_CACHE_EDIT"/>
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="UTIL_CACHE_VIEW"/>
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="UTIL_DEBUG_EDIT"/>
@@ -180,6 +182,7 @@
   <SecurityGroupPermission groupId="FULLADMIN" permissionId="WORKFLOW_MAINT"/>
   <SecurityGroupPermission groupId="FULLADMIN" permissionId="PERIOD_MAINT"/>
   <SecurityGroupPermission groupId="FULLADMIN" permissionId="ENUM_STATUS_MAINT"/>
+  <SecurityGroupPermission groupId="FULLADMIN" permissionId="ENTITY_SYNC_ADMIN"/>
   <SecurityGroupPermission groupId="FULLADMIN" permissionId="UTIL_CACHE_EDIT"/>
   <SecurityGroupPermission groupId="FULLADMIN" permissionId="UTIL_CACHE_VIEW"/>
   <SecurityGroupPermission groupId="FULLADMIN" permissionId="UTIL_DEBUG_EDIT"/>
