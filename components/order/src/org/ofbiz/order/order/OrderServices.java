@@ -266,39 +266,39 @@ public class OrderServices {
             // also flag this order as needing inventory issuance so that when it is set to complete it will be issued immediately (needsInventoryIssuance = Y)
             orderHeaderMap.put("needsInventoryIssuance", "Y");
         }
-        GenericValue order = delegator.makeValue("OrderHeader", orderHeaderMap);
+        GenericValue orderHeader = delegator.makeValue("OrderHeader", orderHeaderMap);
 
         if (context.get("currencyUom") != null) {
-            order.set("currencyUom", context.get("currencyUom"));
+            orderHeader.set("currencyUom", context.get("currencyUom"));
         }
 
         if (context.get("firstAttemptOrderId") != null) {
-            order.set("firstAttemptOrderId", context.get("firstAttemptOrderId"));
+            orderHeader.set("firstAttemptOrderId", context.get("firstAttemptOrderId"));
         }
 
         if (context.get("grandTotal") != null) {
-            order.set("grandTotal", context.get("grandTotal"));
+            orderHeader.set("grandTotal", context.get("grandTotal"));
         }
 
         if (UtilValidate.isNotEmpty((String) context.get("visitId"))) {
-            order.set("visitId", context.get("visitId"));
+            orderHeader.set("visitId", context.get("visitId"));
         }
 
         if (UtilValidate.isNotEmpty((String) context.get("productStoreId"))) {
-            order.set("productStoreId", context.get("productStoreId"));
+            orderHeader.set("productStoreId", context.get("productStoreId"));
         }
 
         if (UtilValidate.isNotEmpty((String) context.get("webSiteId"))) {
-            order.set("webSiteId", context.get("webSiteId"));
+            orderHeader.set("webSiteId", context.get("webSiteId"));
         }
 
         if (userLogin != null && userLogin.get("userLoginId") != null) {
-            order.set("createdBy", userLogin.getString("userLoginId"));
+            orderHeader.set("createdBy", userLogin.getString("userLoginId"));
         }
 
         // first try to create the OrderHeader; if this does not fail, continue.
         try {
-            delegator.create(order);
+            delegator.create(orderHeader);
         } catch (GenericEntityException e) {
             Debug.logError(e, "Cannot create OrderHeader entity; problems with insert", module);
             return ServiceUtil.returnError("Order creation failed; please notify customer service.");
@@ -308,7 +308,7 @@ public class OrderServices {
         String orderStatusSeqId = delegator.getNextSeqId("OrderStatus").toString();
         GenericValue orderStatus = delegator.makeValue("OrderStatus", UtilMisc.toMap("orderStatusId", orderStatusSeqId));
         orderStatus.set("orderId", orderId);
-        orderStatus.set("statusId", order.getString("statusId"));
+        orderStatus.set("statusId", orderHeader.getString("statusId"));
         orderStatus.set("statusDatetime", nowTimestamp);
         toBeStored.add(orderStatus);
 
@@ -1232,12 +1232,11 @@ public class OrderServices {
 
     /** Service for changing the status on an order header */
     public static Map setOrderStatus(DispatchContext ctx, Map context) {
-        Map result = new HashMap();
         GenericDelegator delegator = ctx.getDelegator();
-
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         String orderId = (String) context.get("orderId");
         String statusId = (String) context.get("statusId");
+        Map successResult = ServiceUtil.returnSuccess();
 
         // check and make sure we have permission to change the order
         Security security = ctx.getSecurity();
@@ -1257,30 +1256,22 @@ public class OrderServices {
             GenericValue orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
 
             if (orderHeader == null) {
-                result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-                result.put(ModelService.ERROR_MESSAGE, "ERROR: Could not change order status; order cannot be found.");
-                return result;
+                return ServiceUtil.returnError("ERROR: Could not change order status; order cannot be found.");
             }
             if (Debug.verboseOn()) Debug.logVerbose("[OrderServices.setOrderStatus] : From Status : " + orderHeader.getString("statusId"), module);
             if (Debug.verboseOn()) Debug.logVerbose("[OrderServices.setOrderStatus] : To Status : " + statusId, module);
 
             if (orderHeader.getString("statusId").equals(statusId)) {
-                result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
-                return result;
+                return ServiceUtil.returnSuccess();
             }
             try {
                 Map statusFields = UtilMisc.toMap("statusId", orderHeader.getString("statusId"), "statusIdTo", statusId);
                 GenericValue statusChange = delegator.findByPrimaryKeyCache("StatusValidChange", statusFields);
-
                 if (statusChange == null) {
-                    result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-                    result.put(ModelService.ERROR_MESSAGE, "ERROR: Could not change order status; status is not a valid change.");
-                    return result;
+                    return ServiceUtil.returnError("ERROR: Could not change order status; status is not a valid change.");
                 }
             } catch (GenericEntityException e) {
-                result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-                result.put(ModelService.ERROR_MESSAGE, "ERROR: Could not change order status (" + e.getMessage() + ").");
-                return result;
+                return ServiceUtil.returnError("ERROR: Could not change order status (" + e.getMessage() + ").");
             }
 
             // update the current status
@@ -1294,14 +1285,14 @@ public class OrderServices {
             fields.put("statusDatetime", UtilDateTime.nowTimestamp());
             GenericValue orderStatus = delegator.makeValue("OrderStatus", fields);
             List toBeStored = new ArrayList();
-
             toBeStored.add(orderHeader);
             toBeStored.add(orderStatus);
             delegator.storeAll(toBeStored);
+
+            successResult.put("needsInventoryIssuance", orderHeader.get("needsInventoryIssuance"));
+            successResult.put("grandTotal", orderHeader.get("grandTotal"));
         } catch (GenericEntityException e) {
-            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-            result.put(ModelService.ERROR_MESSAGE, "ERROR: Could not change order status (" + e.getMessage() + ").");
-            return result;
+            return ServiceUtil.returnError("ERROR: Could not change order status (" + e.getMessage() + ").");
         }
 
         // release the inital hold if we are cancelled or approved
@@ -1314,9 +1305,8 @@ public class OrderServices {
             }
         }
 
-        result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
-        result.put("orderStatusId", statusId);
-        return result;
+        successResult.put("orderStatusId", statusId);
+        return successResult;
     }
 
     /** Service to update the order tracking number */

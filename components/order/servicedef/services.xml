@@ -246,6 +246,8 @@
         <attribute name="orderId" type="String" mode="IN"/>
         <attribute name="statusId" type="String" mode="IN"/>
         <attribute name="orderStatusId" type="String" mode="OUT" optional="true"/>
+        <attribute name="needsInventoryIssuance" type="String" mode="OUT" optional="true"/>
+        <attribute name="grandTotal" type="Double" mode="OUT" optional="true"/>
     </service>
 
     <service name="changeOrderItemStatus" engine="java" auth="true"

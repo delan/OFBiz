@@ -242,6 +242,25 @@
     	<attribute name="inventoryTransferId" type="String" mode="IN" optional="false"/>
     </service>
 
+    <service name="issueImmediatelyFulfilledOrder" engine="simple"
+                location="org/ofbiz/product/inventory/InventoryServices.xml" invoke="issueImmediatelyFulfilledOrder" auth="true">
+        <description>
+            Issues the Inventory for an Order that was Immediately Fulfilled, like in a POS environment.
+            Note that this skips the normal inventory reservation process, and the shipment process (no shipment is created).
+        </description>
+        <attribute name="orderId" type="String" mode="IN" optional="false"/>
+    </service>
+    <service name="issueImmediatelyFulfilledOrderItem" engine="simple"
+                location="org/ofbiz/product/inventory/InventoryServices.xml" invoke="issueImmediatelyFulfilledOrderItem" auth="true">
+        <description>
+            Issues the Inventory for an Order Item that was Immediately Fulfilled for more info see the issueImmediatelyFulfilledOrder service.
+        </description>
+        <attribute name="orderId" type="String" mode="IN" optional="false"/>
+        <attribute name="orderItemSeqId" type="String" mode="IN" optional="false"/>
+        <attribute name="orderHeader" type="GenericValue" mode="IN" optional="true"/>
+        <attribute name="orderItem" type="GenericValue" mode="IN" optional="true"/>
+    </service>
+
     <service name="createProductFacility" default-entity-name="ProductFacility" engine="simple"
                 location="org/ofbiz/product/inventory/InventoryServices.xml" invoke="createProductFacility" auth="true">
         <description>Create an ProductFacility</description>
