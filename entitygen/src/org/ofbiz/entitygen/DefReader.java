@@ -395,7 +395,8 @@ public class DefReader
         else
         {
           fieldTypeDef = findFieldTypeDef(fieldType, docElement);
-          docElementValues.put("field-type:" + fieldType, fieldTypeDef);
+          if(fieldTypeDef == null) Debug.logWarning("-- -- ENTITYGEN ERROR:createField: Could not find field type: " + fieldType);
+          else docElementValues.put("field-type:" + fieldType, fieldTypeDef);
         }
       }
       

@@ -32,14 +32,12 @@ import java.io.*;
  */
 public class <%=entity.ejbName%>PK implements Serializable
 {<%for(i=0;i<entity.pks.size();i++){%>
-  /** The variable of the <%=((Field)entity.pks.elementAt(i)).columnName%> column of the <%=entity.tableName%> table. */
   public <%=((Field)entity.pks.elementAt(i)).javaType%> <%=((Field)entity.pks.elementAt(i)).fieldName%>;<%}%>
 
   /** Constructor for the <%=entity.ejbName%>PK object */
   public <%=entity.ejbName%>PK() { }
 
-  /** Constructor for the <%=entity.ejbName%>PK object
-<%for(i=0;i<entity.pks.size();i++){%>
+  /** Constructor for the <%=entity.ejbName%>PK object<%for(i=0;i<entity.pks.size();i++){%>
    *@param  <%=((Field)entity.pks.elementAt(i)).fieldName%>                  Field of the <%=((Field)entity.pks.elementAt(i)).columnName%> column.<%}%>
    */
   public <%=entity.ejbName%>PK(<%=entity.primKeyClassNameString()%>)

@@ -43,10 +43,7 @@ public interface <%=entity.ejbName%>Home extends EJBHome
   public Collection findAll() throws RemoteException, FinderException;
 
 <%for(i=0;i<entity.finders.size();i++){%><%Finder finderDesc = (Finder)entity.finders.elementAt(i);%>
-  /**
-   *  Finds <%=entity.ejbName%>s by the following fields:
-   *
-<%for(int j=0;j<finderDesc.fields.size();j++){%>
+  /** Finds <%=entity.ejbName%>s by the following fields:<%for(int j=0;j<finderDesc.fields.size();j++){%>
    *@param  <%=((Field)finderDesc.fields.elementAt(j)).fieldName%>                  Field for the <%=((Field)finderDesc.fields.elementAt(j)).columnName%> column.<%}%>
    *@return      Collection containing the found <%=entity.ejbName%>s
    */
