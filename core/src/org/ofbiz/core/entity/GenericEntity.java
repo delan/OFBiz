@@ -2,6 +2,7 @@ package org.ofbiz.core.entity;
 
 import java.io.*;
 import java.util.*;
+import org.ofbiz.core.util.*;
 import org.ofbiz.core.entity.model.*;
 
 /**
@@ -61,7 +62,14 @@ public class GenericEntity implements Serializable
 
   public Object get(String name) { return fields.get(name); }
   //would be nice to add valid field name checking for the given entityName
-  public synchronized void set(String name, Object value) { fields.put(name, value); modified = true; }
+  public synchronized void set(String name, Object value) 
+  { 
+    if(modelEntity.getField(name) == null)
+    {
+      Debug.logWarning("[GenericEntity.set] Specified fieldName \"" + name + "\" is not a field of this entity (" + entityName + "). This may be what you want, so setting anyway...");
+    }
+    fields.put(name, value); modified = true;
+  }
   
   //might be nice to add some ClassCastException handling...
   public String getString(String name) { return (String)fields.get(name); }
