@@ -613,6 +613,9 @@ public class ContentWorker {
             thruList.add(thruExpr2);
             EntityConditionList thruExprList = new EntityConditionList(thruList, EntityOperator.OR);
             exprList.add(thruExprList);
+        } else {
+            EntityExpr thruExpr2 = new EntityExpr("thruDate", EntityOperator.EQUALS, null);
+            exprList.add(thruExpr2);
         }
         EntityConditionList assocExprList = new EntityConditionList(exprList, EntityOperator.AND);
         //if (Debug.infoOn()) Debug.logInfo(" assocExprList:" + assocExprList , "");
