@@ -107,29 +107,51 @@
     <!-- GoodIdentification Services -->
     <service name="createGoodIdentification" engine="simple"
                 location="org/ofbiz/commonapp/product/product/ProductServices.xml" invoke="createGoodIdentification" auth="true">
-        <description>Create an GoodIdentification</description>
-        <attribute name="goodIdentificationTypeId" type="String" mode="IN" optional="false"/>
+        <description>Create a GoodIdentification</description>
         <attribute name="productId" type="String" mode="IN" optional="false"/>
+        <attribute name="goodIdentificationTypeId" type="String" mode="IN" optional="false"/>
         <attribute name="idValue" type="String" mode="IN" optional="false"/>
     </service>
     <service name="updateGoodIdentification" engine="simple"
                 location="org/ofbiz/commonapp/product/product/ProductServices.xml" invoke="updateGoodIdentification" auth="true">
-        <description>Update an GoodIdentification</description>
-        <attribute name="goodIdentificationTypeId" type="String" mode="IN" optional="false"/>
+        <description>Update a GoodIdentification</description>
         <attribute name="productId" type="String" mode="IN" optional="false"/>
+        <attribute name="goodIdentificationTypeId" type="String" mode="IN" optional="false"/>
         <attribute name="idValue" type="String" mode="IN" optional="false"/>
     </service>
     <service name="deleteGoodIdentification" engine="simple"
                 location="org/ofbiz/commonapp/product/product/ProductServices.xml" invoke="deleteGoodIdentification" auth="true">
-        <description>Delete an GoodIdentification</description>
-        <attribute name="goodIdentificationTypeId" type="String" mode="IN" optional="false"/>
+        <description>Delete a GoodIdentification</description>
         <attribute name="productId" type="String" mode="IN" optional="false"/>
+        <attribute name="goodIdentificationTypeId" type="String" mode="IN" optional="false"/>
+    </service>    
+
+    <!-- ProductGlAccount Services -->
+    <service name="createProductGlAccount" engine="simple"
+                location="org/ofbiz/commonapp/product/product/ProductServices.xml" invoke="createProductGlAccount" auth="true">
+        <description>Create a ProductGlAccount</description>
+        <attribute name="productId" type="String" mode="IN" optional="false"/>
+        <attribute name="productGlAccountTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="glAccountId" type="String" mode="IN" optional="false"/>
+    </service>
+    <service name="updateProductGlAccount" engine="simple"
+                location="org/ofbiz/commonapp/product/product/ProductServices.xml" invoke="updateProductGlAccount" auth="true">
+        <description>Update a ProductGlAccount</description>
+        <attribute name="productId" type="String" mode="IN" optional="false"/>
+        <attribute name="productGlAccountTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="glAccountId" type="String" mode="IN" optional="false"/>
+    </service>
+    <service name="deleteProductGlAccount" engine="simple"
+                location="org/ofbiz/commonapp/product/product/ProductServices.xml" invoke="deleteProductGlAccount" auth="true">
+        <description>Delete a ProductGlAccount</description>
+        <attribute name="productId" type="String" mode="IN" optional="false"/>
+        <attribute name="productGlAccountTypeId" type="String" mode="IN" optional="false"/>
     </service>    
 
     <!-- Product Catalog Services -->
     <service name="createProdCatalog" engine="simple"
                 location="org/ofbiz/commonapp/product/catalog/CatalogServices.xml" invoke="createProdCatalog" auth="true">
-        <description>Create an ProdCatalog</description>
+        <description>Create a ProdCatalog</description>
         <attribute name="prodCatalogId" type="String" mode="IN" optional="false"/>
         <attribute name="catalogName" type="String" mode="IN" optional="false"/>
         <attribute name="title" type="String" mode="IN" optional="false"/>
@@ -601,9 +623,8 @@
     </service>
 
     <!-- Product Inventory Services -->
-    <service name="createInventoryItem" engine="simple"
-                location="org/ofbiz/commonapp/product/inventory/InventoryServices.xml" invoke="createInventoryItem" auth="true">
-        <description>Create an InventoryItem</description>
+    <service name="interfaceInventoryItem" engine="interface" location="" invoke="">
+        <description>InventoryItem Interface</description>
         <attribute name="inventoryItemTypeId" type="String" mode="IN" optional="false"/>
         <attribute name="productId" type="String" mode="IN" optional="false"/>
         <attribute name="partyId" type="String" mode="IN" optional="true"/>
@@ -620,28 +641,18 @@
         <attribute name="quantityOnHand" type="Double" mode="IN" optional="true"/>
         <attribute name="availableToPromise" type="Double" mode="IN" optional="true"/>
         <attribute name="serialNumber" type="String" mode="IN" optional="true"/>
+    </service>
+    <service name="createInventoryItem" engine="simple"
+                location="org/ofbiz/commonapp/product/inventory/InventoryServices.xml" invoke="createInventoryItem" auth="true">
+        <description>Create an InventoryItem</description>
+        <implements service="interfaceInventoryItem"/>
         <attribute name="inventoryItemId" type="String" mode="OUT" optional="false"/>
     </service>
     <service name="updateInventoryItem" engine="simple"
                 location="org/ofbiz/commonapp/product/inventory/InventoryServices.xml" invoke="updateInventoryItem" auth="true">
         <description>Update an InventoryItem</description>
+        <implements service="interfaceInventoryItem"/>
         <attribute name="inventoryItemId" type="String" mode="IN" optional="false"/>
-        <attribute name="inventoryItemTypeId" type="String" mode="IN" optional="false"/>
-        <attribute name="productId" type="String" mode="IN" optional="false"/>
-        <attribute name="partyId" type="String" mode="IN" optional="true"/>
-        <attribute name="statusId" type="String" mode="IN" optional="true"/>
-        <attribute name="dateReceived" type="java.sql.Timestamp" mode="IN" optional="true"/>
-        <attribute name="expireDate" type="java.sql.Timestamp" mode="IN" optional="true"/>
-        <attribute name="facilityId" type="String" mode="IN" optional="true"/>
-        <attribute name="containerId" type="String" mode="IN" optional="true"/>
-        <attribute name="locationSeqId" type="String" mode="IN" optional="true"/>
-        <attribute name="lotId" type="String" mode="IN" optional="true"/>
-        <attribute name="uomId" type="String" mode="IN" optional="true"/>
-        <attribute name="binNumber" type="String" mode="IN" optional="true"/>
-        <attribute name="comments" type="String" mode="IN" optional="true"/>
-        <attribute name="quantityOnHand" type="Double" mode="IN" optional="true"/>
-        <attribute name="availableToPromise" type="Double" mode="IN" optional="true"/>
-        <attribute name="serialNumber" type="String" mode="IN" optional="true"/>
     </service>
     <service name="deleteInventoryItem" engine="simple"
                 location="org/ofbiz/commonapp/product/inventory/InventoryServices.xml" invoke="deleteInventoryItem" auth="true">
@@ -739,6 +750,34 @@
             corresponding serialized inventoryItem to available.
         </description>
         <attribute name="orderId" type="String" mode="IN" optional="false"/>
+    </service>
+
+    <service name="interfaceProductFacility" engine="interface" location="" invoke="">
+        <description>ProductFacility Interface</description>
+        <attribute name="minimumStock" type="Double" mode="IN" optional="true"/>
+        <attribute name="reorderQuantity" type="Double" mode="IN" optional="true"/>
+    </service>
+    <service name="interfaceProductFacilityPK" engine="interface" location="" invoke="">
+        <description>ProductFacility Interface</description>
+        <attribute name="productId" type="String" mode="IN" optional="false"/>
+        <attribute name="facilityId" type="String" mode="IN" optional="false"/>
+    </service>
+    <service name="createProductFacility" engine="simple"
+                location="org/ofbiz/commonapp/product/inventory/InventoryServices.xml" invoke="createProductFacility" auth="true">
+        <description>Create an ProductFacility</description>
+        <implements service="interfaceProductFacilityPK"/>
+        <implements service="interfaceProductFacility"/>
+    </service>
+    <service name="updateProductFacility" engine="simple"
+                location="org/ofbiz/commonapp/product/inventory/InventoryServices.xml" invoke="updateProductFacility" auth="true">
+        <description>Update an ProductFacility</description>
+        <implements service="interfaceProductFacilityPK"/>
+        <implements service="interfaceProductFacility"/>
+    </service>
+    <service name="deleteProductFacility" engine="simple"
+                location="org/ofbiz/commonapp/product/inventory/InventoryServices.xml" invoke="deleteProductFacility" auth="true">
+        <description>Delete an ProductFacility</description>
+        <implements service="interfaceProductFacilityPK"/>
     </service>
 
     <!-- Product Feature Services -->

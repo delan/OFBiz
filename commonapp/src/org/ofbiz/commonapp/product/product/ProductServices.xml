@@ -257,4 +257,34 @@
         <find-by-primary-key entity-name="GoodIdentification" map-name="lookupPKMap" value-name="lookedUpValue"/>
         <remove-value value-name="lookedUpValue"/>
     </simple-method>
+
+    <!-- ProductGlAccount methods -->
+    <simple-method method-name="createProductGlAccount" short-description="Create an ProductGlAccount">
+        <check-permission permission="CATALOG" action="_CREATE"><fail-message message="Security Error: to run createProductGlAccount you must have the CATALOG_CREATE or CATALOG_ADMIN permission"/></check-permission>
+        <check-errors/>
+
+        <make-value value-name="newEntity" entity-name="ProductGlAccount"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+        <set-pk-fields map-name="parameters" value-name="newEntity"/>
+        <create-value value-name="newEntity"/>
+    </simple-method>
+    <simple-method method-name="updateProductGlAccount" short-description="Update an ProductGlAccount">
+        <check-permission permission="CATALOG" action="_UPDATE"><fail-message message="Security Error: to run updateProductGlAccount you must have the CATALOG_UPDATE or CATALOG_ADMIN permission"/></check-permission>
+        <check-errors/>
+
+        <make-value entity-name="ProductGlAccount" value-name="lookupPKMap"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="ProductGlAccount" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
+        <store-value value-name="lookedUpValue"/>
+    </simple-method>
+    <simple-method method-name="deleteProductGlAccount" short-description="Delete an ProductGlAccount">
+        <check-permission permission="CATALOG" action="_DELETE"><fail-message message="Security Error: to run deleteProductGlAccount you must have the CATALOG_DELETE or CATALOG_ADMIN permission"/></check-permission>
+        <check-errors/>
+
+        <make-value entity-name="ProductGlAccount" value-name="lookupPKMap"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="ProductGlAccount" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <remove-value value-name="lookedUpValue"/>
+    </simple-method>
 </simple-methods>

@@ -28,6 +28,7 @@
  -->
 
 <simple-methods>
+    <!-- InventoryItem methods -->
     <simple-method method-name="createInventoryItem" short-description="Create an InventoryItem">
         <check-permission permission="CATALOG" action="_CREATE"><fail-message message="Security Error: to run createInventoryItem you must have the CATALOG_CREATE or CATALOG_ADMIN permission"/></check-permission>
         <check-errors/>
@@ -46,10 +47,11 @@
         <check-permission permission="CATALOG" action="_UPDATE"><fail-message message="Security Error: to run updateInventoryItem you must have the CATALOG_UPDATE or CATALOG_ADMIN permission"/></check-permission>
         <check-errors/>
 
-        <field-to-field field-name="inventoryItemId" map-name="parameters" to-map-name="lookupPKMap"/>
-        <find-by-primary-key entity-name="InventoryItem" map-name="lookupPKMap" value-name="inventoryItem"/>
-        <set-nonpk-fields map-name="parameters" value-name="inventoryItem"/>
-        <store-value value-name="inventoryItem"/>
+        <make-value entity-name="InventoryItem" value-name="lookupPKMap"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="InventoryItem" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
+        <store-value value-name="lookedUpValue"/>
     </simple-method>
     <simple-method method-name="deleteInventoryItem" short-description="Delete an InventoryItem">
         <check-permission permission="CATALOG" action="_DELETE"><fail-message message="Security Error: to run deleteInventoryItem you must have the CATALOG_DELETE or CATALOG_ADMIN permission"/></check-permission>
@@ -57,6 +59,35 @@
 
         <field-to-field field-name="inventoryItemId" map-name="parameters" to-map-name="lookupPKMap"/>
         <find-by-primary-key entity-name="InventoryItem" map-name="lookupPKMap" value-name="inventoryItem"/>
+        <remove-value value-name="inventoryItem"/>
+    </simple-method>
+
+    <!-- ProductFacility methods -->
+    <simple-method method-name="createProductFacility" short-description="Create a ProductFacility">
+        <check-permission permission="CATALOG" action="_CREATE"><fail-message message="Security Error: to run createProductFacility you must have the CATALOG_CREATE or CATALOG_ADMIN permission"/></check-permission>
+        <check-errors/>
+
+        <make-value value-name="newEntity" entity-name="ProductFacility"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+        <set-pk-fields map-name="parameters" value-name="newEntity"/>
+        <create-value value-name="newEntity"/>
+    </simple-method>
+    <simple-method method-name="updateProductFacility" short-description="Update a ProductFacility">
+        <check-permission permission="CATALOG" action="_UPDATE"><fail-message message="Security Error: to run updateProductFacility you must have the CATALOG_UPDATE or CATALOG_ADMIN permission"/></check-permission>
+        <check-errors/>
+
+        <make-value entity-name="ProductFacility" value-name="lookupPKMap"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="ProductFacility" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
+        <store-value value-name="lookedUpValue"/>
+    </simple-method>
+    <simple-method method-name="deleteProductFacility" short-description="Delete a ProductFacility">
+        <check-permission permission="CATALOG" action="_DELETE"><fail-message message="Security Error: to run deleteProductFacility you must have the CATALOG_DELETE or CATALOG_ADMIN permission"/></check-permission>
+        <check-errors/>
+
+        <field-to-field field-name="inventoryItemId" map-name="parameters" to-map-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="ProductFacility" map-name="lookupPKMap" value-name="inventoryItem"/>
         <remove-value value-name="inventoryItem"/>
     </simple-method>
 
