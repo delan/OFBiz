@@ -143,16 +143,16 @@ public class ControlServlet extends HttpServlet {
         return rh;
     }
     
-    private ServiceDispatcher getDispatcher() {
-        ServiceDispatcher dispatcher = (ServiceDispatcher) getServletContext().getAttribute("dispatcher");
+    private LocalDispatcher getDispatcher() {
+        LocalDispatcher dispatcher = (LocalDispatcher) getServletContext().getAttribute("dispatcher");
         if ( dispatcher == null ) {
             GenericDelegator delegator = getDelegator();
             if ( delegator == null ) {
                 Debug.logError("[ControlServlet.init] ERROR: delegator not defined.");
                 return null;
             }
-            Collection readers = null;
-            dispatcher = new ServiceDispatcher(delegator,readers);            
+            Collection readers = null; // TODO get the readers from the Servlet INIT PARAM
+            dispatcher = new LocalDispatcher("NAME",delegator,readers);            
             getServletContext().setAttribute("dispatcher",dispatcher);
             if ( dispatcher == null )
                 Debug.logError("[ControlServlet.init] ERROR: dispatcher could not be initialized.");

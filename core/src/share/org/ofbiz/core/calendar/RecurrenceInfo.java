@@ -2,7 +2,7 @@
  * $Id$
  */
 
-package org.ofbiz.core.scheduler;
+package org.ofbiz.core.calendar;
 
 import java.util.*;
 import org.ofbiz.core.entity.*;

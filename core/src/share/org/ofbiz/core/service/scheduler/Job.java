@@ -2,10 +2,11 @@
  * $Id$
  */
 
-package org.ofbiz.core.scheduler;
+package org.ofbiz.core.service.scheduler;
 
 import java.io.*;
 import java.util.*;
+import org.ofbiz.core.calendar.*;
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.service.*;
 import org.ofbiz.core.util.*;
@@ -42,7 +43,7 @@ public class Job implements Comparable, Serializable {
     private RecurrenceInfo recurrence;
     private GenericValue job;
     private GenericRequester requester;
-    private Map context;
+    private Map context;   
     private long runtime;
     private long seqNum;
     
@@ -50,7 +51,7 @@ public class Job implements Comparable, Serializable {
     public Job(GenericValue job, Map context, GenericRequester requester) {
         this.job = job;
         this.context = context;
-        this.requester = requester;
+        this.requester = requester;       
         this.runtime = -1;
         this.seqNum = 0;
         init();
@@ -91,6 +92,11 @@ public class Job implements Comparable, Serializable {
     /** Returns the context of this job. */
     public Map getContext() {
         return this.context;
+    }
+    
+    /** Returns the name of the dispatcher used to initialize this job */
+    public String getLoader() {
+        return job.getString("loaderName");
     }
     
     /** Checks to see if this Job is scheduled to run within the next second. */

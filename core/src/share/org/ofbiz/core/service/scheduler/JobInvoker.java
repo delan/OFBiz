@@ -2,7 +2,7 @@
  * $Id$ 
  */
 
-package org.ofbiz.core.scheduler;
+package org.ofbiz.core.service.scheduler;
 
 import java.util.*;
 import org.ofbiz.core.service.*;
@@ -57,7 +57,9 @@ public class JobInvoker implements Runnable {
         Debug.logInfo("JobInvoker: Thread (" + thread.getName() + ") Running...");
         Map result = null;
         try {
-            result = dispatcher.runSync(job.getService(),job.getContext());
+            ServiceContext ctx = dispatcher.getLocalContext(job.getLoader());
+            ModelService service = ctx.getModelService(job.getService());
+            result = dispatcher.runSync(job.getLoader(),service,job.getContext());
         }
         catch ( GenericServiceException e ) {
             e.printStackTrace();

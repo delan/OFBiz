@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.1  2001/09/28 22:56:44  jonesde
+ * Big update for fromDate PK use, organization stuff
+ *
  * Revision 1.4  2001/07/23 19:16:15  azeneski
  * Fixed up finalize() method to not debug everytime.
  *
@@ -25,7 +28,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.ServletContext;
 
-import org.ofbiz.core.scheduler.JobManager;
+import org.ofbiz.core.service.scheduler.JobManager;
 import org.ofbiz.core.util.HttpClient;
 import org.ofbiz.core.util.SiteDefs;
 import org.ofbiz.core.util.Debug;
