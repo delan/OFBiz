@@ -21,8 +21,8 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.2 $
+ *@author     Al Byers (byersa@automationgroups.com)
+ *@version    $Revision: 1.3 $
  *@since      2.1
 -->
 
@@ -35,9 +35,68 @@
     <script language='javascript' src='<@ofbizContentUrl>/images/calendar1.js</@ofbizContentUrl>' type='text/javascript'></script>
     <link rel='stylesheet' href='<@ofbizContentUrl>/images/maincss.css</@ofbizContentUrl>' type='text/css'>
     <link rel='stylesheet' href='<@ofbizContentUrl>/images/tabstyles.css</@ofbizContentUrl>' type='text/css'>    
+    <script type="text/javascript" language="javascript"> 
+      _editor_url = "/images/htmlarea/"; // omit the final slash 
+    </script> 
+
+    <script language='javascript' src='<@ofbizContentUrl>/images/htmlarea/htmlarea.js</@ofbizContentUrl>' 
+                                                       type='text/javascript'></script>
+    <script language='javascript' src='<@ofbizContentUrl>/images/htmlarea/lang/en.js</@ofbizContentUrl>' 
+                                                       type='text/javascript'></script>
+    <script language='javascript' src='<@ofbizContentUrl>/images/htmlarea/dialog.js</@ofbizContentUrl>' 
+                                                       type='text/javascript'></script>
+    <script language='javascript' src='<@ofbizContentUrl>/images/htmlarea/popupwin.js</@ofbizContentUrl>' 
+                                                       type='text/javascript'></script>
+
+    <style type="text/css">
+        @import url(<@ofbizContentUrl>/images/htmlarea/htmlarea.css</@ofbizContentUrl>);
+    
+        html, body {
+          font-family: Verdana,sans-serif;
+          background-color: #fea;
+          color: #000;
+        }
+        a:link, a:visited { color: #00f; }
+        a:hover { color: #048; }
+        a:active { color: #f00; }
+        
+        textarea { background-color: #fff; border: 1px solid 00f; }
+    </style>
+
+    <script type="text/javascript">
+        var editor = null;
+        var summary = null;
+        function initEditor() {
+        <#assign primaryHTMLField= page.getProperty("primaryHTMLField")?if_exists />
+        <#if primaryHTMLField?exists>
+            primaryHTMLArea = new HTMLArea("${primaryHTMLField}"); primaryHTMLArea.generate();
+        </#if>
+        <#assign secondaryHTMLField= page.getProperty("secondaryHTMLField")?if_exists />
+        <#if secondaryHTMLField?exists>
+            secondaryHTMLArea = new HTMLArea("${secondaryHTMLField}"); secondaryHTMLArea.generate();
+        </#if>
+        }
+    </script>
+
+    <script language="JavaScript">
+        // This code inserts the value lookedup by a popup window back into the associated form element
+        var re_id = new RegExp('id=(\\d+)');
+        var num_id = (re_id.exec(String(window.location))
+                ? new Number(RegExp.$1) : 0);
+        var obj_caller = (window.opener ? window.opener.lookups[num_id] : null);
+        
+        
+        // function passing selected value to calling window
+        function set_value(value) {
+                if (!obj_caller) return;
+                window.close();
+                obj_caller.target.value = value;
+        }
+    </script>
+
 </head>
 
-<body>
+<body <#if primaryHTMLField?exists>onLoad="initEditor()"</#if> >
 <table border=0 width='100%' cellspacing='0' cellpadding='0' class='headerboxoutside'>
   <tr>
     <td width='100%'>
@@ -73,7 +132,20 @@ ${pages.get("/includes/appbar.ftl")}
           <#if page.leftbar?exists>${pages.get(page.leftbar)}</#if>
           <td width='100%' valign='top' align='left'>
             ${pages.get("/includes/errormsg.ftl")}
-            ${pages.get(page.path)}
+            <#assign subMenu=page.getProperty("subMenu")?if_exists />
+            <#if subMenu?exists && (0 < subMenu?length ) >${pages.get(subMenu)}</#if>
+            <#assign entityName= page.getProperty("entityName")?if_exists />
+            <#if entityName?exists>${entityName}</#if>
+            <hr align="left" width="25%" />
+            <#assign operationTitle=page.getProperty("operationTitle")?if_exists />
+            <#if operationTitle?exists>${operationTitle}</#if>
+            <#assign permType=page.getProperty("permissionType")?if_exists />
+            <#if (permType?exists && (permType == "none"))
+                 ||  hasPermission?exists
+            >${pages.get(page.path)}
+            <#else>
+               <h3>You do not have permission to view this page. </h3>
+            </#if>
           </td>
           <#if page.rightbar?exists>${pages.get(page.rightbar)}</#if>
         </tr>
