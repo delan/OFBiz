@@ -1039,8 +1039,8 @@ public class ContentWorker {
             templateRoot = new HashMap();
         }
 
-        templateRoot.put("contentId", contentIdSub);
-        templateRoot.put("subContentId", null);
+        //templateRoot.put("contentId", contentIdSub);
+        //templateRoot.put("subContentId", null);
 
         renderContentAsTextCache(delegator, contentIdSub, out, templateRoot, subContentDataResourceView, locale, mimeTypeId);
 
