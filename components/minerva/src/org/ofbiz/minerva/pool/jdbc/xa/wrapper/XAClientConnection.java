@@ -28,6 +28,8 @@ import org.ofbiz.minerva.pool.jdbc.PreparedStatementFactory;
 import org.ofbiz.minerva.pool.jdbc.PreparedStatementInPool;
 import org.ofbiz.minerva.pool.jdbc.StatementInPool;
 
+import org.apache.log4j.Logger;
+
 /**
  * Wrapper for database connections used by an XAConnection.  When close is
  * called, it does not close the underlying connection, just informs the
@@ -49,6 +51,7 @@ public class XAClientConnection implements ConnectionWrapper {
     private int preparedStatementCacheSize = 0;
     private ObjectCache preparedStatementCache;
     private String stackTrace = null;
+    private static Logger log = Logger.getLogger(XADataSourceImpl.class);
 
     /**
      * Creates a new connection wrapper.
@@ -281,7 +284,7 @@ public class XAClientConnection implements ConnectionWrapper {
             try {
                 ((Statement) it.next()).close();
             } catch (SQLException e) {
-                e.printStackTrace();
+                log.warn("SQLException : ", e);
             }
 
         xaCon.clientConnectionClosed(this);
