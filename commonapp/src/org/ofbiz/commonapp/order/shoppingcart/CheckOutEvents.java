@@ -359,8 +359,8 @@ public class CheckOutEvents {
             String CONFIRM_BCC = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.confirmation.email.bcc");
             String CONFIRM_CC = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.confirmation.email.cc");            
 
-            String NOTIFY_TEMPLATE = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.confirmation.email.template");
-            String NOTIFY_SUBJECT = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.confirmation.email.subject");
+            String NOTIFY_TEMPLATE = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.notification.email.template");
+            String NOTIFY_SUBJECT = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.notification.email.subject");
             String NOTIFY_FROM = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.notification.email.from");
             String NOTIFY_TO = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.notification.email.to");
             String NOTIFY_CC = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.notification.email.cc");
