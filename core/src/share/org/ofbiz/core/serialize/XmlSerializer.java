@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2001/11/17 21:31:13  jonesde
+ * Fixed a problem with deserializing maps - wasn't getting the child element of the key and value, was just trying to deserialize the key and value marker elements
+ *
  * Revision 1.2  2001/11/17 05:52:42  jonesde
  * First pretty complete pass of the serialization/deser methods, cleaned up a bit too
  *
@@ -66,7 +69,8 @@ public class XmlSerializer {
   }
   
   public static Object deserialize(String content, GenericDelegator delegator) throws SerializeException, SAXException, ParserConfigurationException, IOException {
-    Document document = UtilXml.readXmlDocument(content);
+    //readXmlDocument with false second parameter to disable validation
+    Document document = UtilXml.readXmlDocument(content, false);
     Element rootElement = document.getDocumentElement();
     //find the first element below the root element, that should be the object
     Node curChild = rootElement.getFirstChild();

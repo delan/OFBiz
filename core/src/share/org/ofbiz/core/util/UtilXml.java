@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.5  2001/11/24 06:32:17  jonesde
+ * Added a few more useful routines
+ *
  * Revision 1.4  2001/11/24 05:09:11  jonesde
  * Added some more useful utility methods, part of refactoring
  *
@@ -126,23 +129,35 @@ public class UtilXml {
     }
     
     public static Document readXmlDocument(String content) throws SAXException, ParserConfigurationException, java.io.IOException {
+        return readXmlDocument(content, true);
+    }
+    
+    public static Document readXmlDocument(String content, boolean validate) throws SAXException, ParserConfigurationException, java.io.IOException {
         if(content == null) {
             Debug.logWarning("[UtilXml.readXmlDocument] URL was null, doing nothing");
             return null;
         }
         ByteArrayInputStream bis = new ByteArrayInputStream(content.getBytes());
-        return readXmlDocument(bis);
+        return readXmlDocument(bis, validate);
     }
     
     public static Document readXmlDocument(URL url) throws SAXException, ParserConfigurationException, java.io.IOException {
+        return readXmlDocument(url, true);
+    }
+    
+    public static Document readXmlDocument(URL url, boolean validate) throws SAXException, ParserConfigurationException, java.io.IOException {
         if(url == null) {
             Debug.logWarning("[UtilXml.readXmlDocument] URL was null, doing nothing");
             return null;
         }
-        return readXmlDocument(url.openStream());
+        return readXmlDocument(url.openStream(), validate);
     }
     
     public static Document readXmlDocument(InputStream is) throws SAXException, ParserConfigurationException, java.io.IOException {
+        return readXmlDocument(is, true);
+    }
+    
+    public static Document readXmlDocument(InputStream is, boolean validate) throws SAXException, ParserConfigurationException, java.io.IOException {
         if(is == null) {
             Debug.logWarning("[UtilXml.readXmlDocument] InputStream was null, doing nothing");
             return null;
@@ -150,7 +165,7 @@ public class UtilXml {
         
         Document document = null;
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        factory.setValidating(true);
+        factory.setValidating(validate);
         //factory.setNamespaceAware(true);
         DocumentBuilder builder = factory.newDocumentBuilder();
         document = builder.parse(is);
