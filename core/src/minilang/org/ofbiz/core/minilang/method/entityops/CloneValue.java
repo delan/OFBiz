@@ -32,26 +32,34 @@ import org.w3c.dom.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.minilang.*;
 import org.ofbiz.core.minilang.method.*;
+import org.ofbiz.core.entity.*;
 
 /**
- * Gets a sequenced ID from the delegator and puts it in the env
+ * Uses the delegator to find entity values by anding the map fields
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@created    February 19, 2002
  *@version    1.0
  */
-public class SequencedIdToEnv extends MethodOperation {
-    String seqName;
-    String envName;
+public class CloneValue extends MethodOperation {
+    String valueName;
+    String newValueName;
 
-    public SequencedIdToEnv(Element element, SimpleMethod simpleMethod) {
+    public CloneValue(Element element, SimpleMethod simpleMethod) {
         super(element, simpleMethod);
-        seqName = element.getAttribute("sequence-name");
-        envName = element.getAttribute("env-name");
+        valueName = element.getAttribute("value-name");
+        newValueName = element.getAttribute("new-value-name");
     }
 
     public boolean exec(MethodContext methodContext) {
-        methodContext.putEnv(envName, methodContext.getDelegator().getNextSeqId(seqName));
+        GenericValue value = (GenericValue) methodContext.getEnv(valueName);
+        
+        if (value == null) {
+            Debug.logWarning("In clone-value a value was not found with the specified valueName: " + valueName + ", not copying");
+            return true;
+        }
+        
+        methodContext.putEnv(newValueName, new GenericValue(value));
         return true;
     }
 }

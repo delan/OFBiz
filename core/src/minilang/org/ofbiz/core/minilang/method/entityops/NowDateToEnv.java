@@ -34,7 +34,7 @@ import org.ofbiz.core.minilang.*;
 import org.ofbiz.core.minilang.method.*;
 
 /**
- * Copies a map field to a map field
+ * Creates a java.sql.Date with the current date and puts it in the env
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@created    February 19, 2002

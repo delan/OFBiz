@@ -475,6 +475,29 @@ public class SimpleMethod {
                 } else if ("sequenced-id-to-env".equals(nodeName)) {
                     methodOperations.add(new org.ofbiz.core.minilang.method.entityops.SequencedIdToEnv(curOperElem, simpleMethod));
 
+                } else if ("find-by-primary-key".equals(nodeName)) {
+                    methodOperations.add(new org.ofbiz.core.minilang.method.entityops.FindByPrimaryKey(curOperElem, simpleMethod));
+                } else if ("find-by-and".equals(nodeName)) {
+                    methodOperations.add(new org.ofbiz.core.minilang.method.entityops.FindByAnd(curOperElem, simpleMethod));
+
+                } else if ("make-value".equals(nodeName)) {
+                    methodOperations.add(new org.ofbiz.core.minilang.method.entityops.MakeValue(curOperElem, simpleMethod));
+                } else if ("clone-value".equals(nodeName)) {
+                    methodOperations.add(new org.ofbiz.core.minilang.method.entityops.CloneValue(curOperElem, simpleMethod));
+                } else if ("create-value".equals(nodeName)) {
+                    methodOperations.add(new org.ofbiz.core.minilang.method.entityops.CreateValue(curOperElem, simpleMethod));
+                } else if ("store-value".equals(nodeName)) {
+                    methodOperations.add(new org.ofbiz.core.minilang.method.entityops.StoreValue(curOperElem, simpleMethod));
+                } else if ("remove-value".equals(nodeName)) {
+                    methodOperations.add(new org.ofbiz.core.minilang.method.entityops.RemoveValue(curOperElem, simpleMethod));
+                } else if ("remove-by-and".equals(nodeName)) {
+                    methodOperations.add(new org.ofbiz.core.minilang.method.entityops.RemoveByAnd(curOperElem, simpleMethod));
+
+                } else if ("store-list".equals(nodeName)) {
+                    methodOperations.add(new org.ofbiz.core.minilang.method.entityops.StoreList(curOperElem, simpleMethod));
+                } else if ("remove-list".equals(nodeName)) {
+                    methodOperations.add(new org.ofbiz.core.minilang.method.entityops.RemoveList(curOperElem, simpleMethod));
+
                 } else if ("if-validate-method".equals(nodeName)) {
                     methodOperations.add(new org.ofbiz.core.minilang.method.ifops.IfValidateMethod(curOperElem, simpleMethod));
                 } else if ("if-compare".equals(nodeName)) {

@@ -47,7 +47,7 @@
 <!ENTITY % EnvOperations "field-to-field | env-to-list | env-to-field | field-to-env">
 <!ENTITY % EntityMiscOperations "now-timestamp-to-env | now-date-to-env | sequenced-id-to-env">
 <!ENTITY % EntityFindOperations "find-by-primary-key | find-by-and">
-<!ENTITY % EntityValueOperations "make-value | clone-value | create-value | update-value | remove-value | remove-by-and">
+<!ENTITY % EntityValueOperations "make-value | clone-value | create-value | store-value | remove-value | remove-by-and">
 <!ENTITY % EntityListOperations "store-list | remove-list">
 <!ENTITY % IfOperations "if-validate-method | if-compare | if-compare-field | if-regexp | if-empty | if-not-empty">
 
@@ -327,7 +327,6 @@ engine and facilitate related operations.
     env-name CDATA #REQUIRED
 >
 
-<!-- TODO: implement remaining entity engine related ops -->
 <!ELEMENT find-by-primary-key EMPTY>
 <!ATTLIST find-by-primary-key
     value-name CDATA #REQUIRED
@@ -357,8 +356,8 @@ engine and facilitate related operations.
 <!ATTLIST create-value
     value-name CDATA #REQUIRED
 >
-<!ELEMENT update-value EMPTY>
-<!ATTLIST update-value
+<!ELEMENT store-value EMPTY>
+<!ATTLIST store-value
     value-name CDATA #REQUIRED
 >
 <!ELEMENT remove-value EMPTY>

@@ -32,26 +32,40 @@ import org.w3c.dom.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.minilang.*;
 import org.ofbiz.core.minilang.method.*;
+import org.ofbiz.core.entity.*;
 
 /**
- * Gets a sequenced ID from the delegator and puts it in the env
+ * Uses the delegator to remove entity values constrained by anding the map fields
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@created    February 19, 2002
  *@version    1.0
  */
-public class SequencedIdToEnv extends MethodOperation {
-    String seqName;
-    String envName;
+public class RemoveByAnd extends MethodOperation {
+    String entityName;
+    String mapName;
 
-    public SequencedIdToEnv(Element element, SimpleMethod simpleMethod) {
+    public RemoveByAnd(Element element, SimpleMethod simpleMethod) {
         super(element, simpleMethod);
-        seqName = element.getAttribute("sequence-name");
-        envName = element.getAttribute("env-name");
+        entityName = element.getAttribute("entity-name");
+        mapName = element.getAttribute("map-name");
     }
 
     public boolean exec(MethodContext methodContext) {
-        methodContext.putEnv(envName, methodContext.getDelegator().getNextSeqId(seqName));
+        try {
+            methodContext.getDelegator().removeByAnd(entityName, (Map) methodContext.getEnv(mapName));
+        } catch (GenericEntityException e) {
+            Debug.logError(e);
+            String errMsg = "ERROR: Could not complete the " + simpleMethod.getShortDescription() + " process [problem removing the " + entityName + " entity by and: " + e.getMessage() + "]";
+            if (methodContext.getMethodType() == MethodContext.EVENT) {
+                methodContext.putEnv(simpleMethod.getEventErrorMessageName(), errMsg);
+                methodContext.putEnv(simpleMethod.getEventResponseCodeName(), simpleMethod.getDefaultErrorCode());
+            } else if (methodContext.getMethodType() == MethodContext.SERVICE) {
+                methodContext.putEnv(simpleMethod.getServiceErrorMessageName(), errMsg);
+                methodContext.putEnv(simpleMethod.getServiceResponseMessageName(), simpleMethod.getDefaultErrorCode());
+            }
+            return false;
+        }
         return true;
     }
 }
