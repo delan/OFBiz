@@ -29,13 +29,13 @@
         <attribute name="result" type="String" mode="OUT"/>
     </service>
 
-    <service name="testJMSQueue" engine="jmsqueue"
+    <service name="testJMSQueue" engine="jms"
             location="testQueue" invoke="testScv">
         <description>Test JMS Queue service</description>
         <attribute name="message" type="String" mode="IN"/>
     </service>
 
-    <service name="testJMSTopic" engine="jmstopic"
+    <service name="testJMSTopic" engine="jms"
             location="testTopic" invoke="testScv">
         <description>Test JMS Topic service</description>
         <attribute name="message" type="String" mode="IN"/>
