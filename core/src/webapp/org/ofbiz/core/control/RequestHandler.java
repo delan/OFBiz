@@ -461,7 +461,7 @@ public class RequestHandler implements Serializable {
         try {
             if (Debug.verboseOn()) Debug.logVerbose("Rendering view [" + nextPage + "] of type [" + viewType + "]");
             ViewHandler vh = viewFactory.getViewHandler(viewType);
-            vh.render(view, nextPage, contentType, charset, requestManager.getViewInfo(view), req, resp);
+            vh.render(view, nextPage, requestManager.getViewInfo(view), contentType, charset, req, resp);           
         } catch (ViewHandlerException e) {
             Throwable throwable = e.getNested() != null ? e.getNested() : e;
 
