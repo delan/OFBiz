@@ -646,6 +646,556 @@ public class GenericDelegator implements DelegatorInterface {
         return createOrStore(value, true);
     }
 
+    protected void saveEntitySyncRemoveInfo(GenericEntity dummyPK) throws GenericEntityException {
+        // don't store remove info on entities where it is disabled
+        if (dummyPK.getModelEntity().getNoAutoStamp()) {
+            return;
+        }
+
+        // don't store remove info on things removed on an entity sync
+        if (dummyPK.getIsFromEntitySync()) {
+            return;
+        }
+
+        String serializedPK = null;
+        try {
+            serializedPK = XmlSerializer.serialize(dummyPK);
+        } catch (SerializeException e) {
+            Debug.logError(e, "Could not serialize primary key to save EntitySyncRemove", module);
+        } catch (FileNotFoundException e) {
+            Debug.logError(e, "Could not serialize primary key to save EntitySyncRemove", module);
+        } catch (IOException e) {
+            Debug.logError(e, "Could not serialize primary key to save EntitySyncRemove", module);
+        }
+
+        if (serializedPK != null) {
+            GenericValue entitySyncRemove = this.makeValue("EntitySyncRemove", null);
+            entitySyncRemove.set("entitySyncRemoveId", this.getNextSeqId("EntitySyncRemove"));
+            entitySyncRemove.set("primaryKeyRemoved", serializedPK);
+            entitySyncRemove.create();
+        }
+    }
+
+    /** Remove a Generic Entity corresponding to the primaryKey
+     *@param primaryKey  The primary key of the entity to remove.
+     *@return int representing number of rows effected by this operation
+     */
+    public int removeByPrimaryKey(GenericPK primaryKey) throws GenericEntityException {
+        int retVal = this.removeByPrimaryKey(primaryKey, true);
+        return retVal;
+    }
+
+    /** Remove a Generic Entity corresponding to the primaryKey
+     *@param primaryKey  The primary key of the entity to remove.
+     *@param doCacheClear boolean that specifies whether to clear cache entries for this primaryKey to be removed
+     *@return int representing number of rows effected by this operation
+     */
+    public int removeByPrimaryKey(GenericPK primaryKey, boolean doCacheClear) throws GenericEntityException {
+        boolean beganTransaction = false;
+        try {
+            if (alwaysUseTransaction) {
+                beganTransaction = TransactionUtil.begin();
+            }
+
+            Map ecaEventMap = this.getEcaEntityEventMap(primaryKey.getEntityName());
+            this.evalEcaRules(EntityEcaHandler.EV_VALIDATE, EntityEcaHandler.OP_REMOVE, primaryKey, ecaEventMap, (ecaEventMap == null), false);
+    
+            GenericHelper helper = getEntityHelper(primaryKey.getEntityName());
+    
+            if (doCacheClear) {
+                // always clear cache before the operation
+                this.evalEcaRules(EntityEcaHandler.EV_CACHE_CLEAR, EntityEcaHandler.OP_REMOVE, primaryKey, ecaEventMap, (ecaEventMap == null), false);
+                this.clearCacheLine(primaryKey);
+            }
+    
+            this.evalEcaRules(EntityEcaHandler.EV_RUN, EntityEcaHandler.OP_REMOVE, primaryKey, ecaEventMap, (ecaEventMap == null), false);
+            int num = helper.removeByPrimaryKey(primaryKey);
+            this.saveEntitySyncRemoveInfo(primaryKey);
+            
+            // only commit the transaction if we started one...
+            TransactionUtil.commit(beganTransaction);
+            
+            this.evalEcaRules(EntityEcaHandler.EV_RETURN, EntityEcaHandler.OP_REMOVE, primaryKey, ecaEventMap, (ecaEventMap == null), false);
+            return num;
+        } catch (GenericEntityException e) {
+            try {
+                // only rollback the transaction if we started one...
+                TransactionUtil.rollback(beganTransaction);
+            } catch (GenericEntityException e2) {
+                Debug.logError(e2, "[GenericDelegator] Could not rollback transaction: " + e2.toString(), module);
+            }
+            // after rolling back, rethrow the exception
+            throw e;
+        }
+    }
+
+    /** Remove a Generic Value from the database
+     *@param value The GenericValue object of the entity to remove.
+     *@return int representing number of rows effected by this operation
+     */
+    public int removeValue(GenericValue value) throws GenericEntityException {
+        return this.removeValue(value, true);
+    }
+
+    /** Remove a Generic Value from the database
+     *@param value The GenericValue object of the entity to remove.
+     *@param doCacheClear boolean that specifies whether to clear cache entries for this value to be removed
+     *@return int representing number of rows effected by this operation
+     */
+    public int removeValue(GenericValue value, boolean doCacheClear) throws GenericEntityException {
+        // NOTE: this does not call the GenericDelegator.removeByPrimaryKey method because it has more information to pass to the ECA rule hander 
+        boolean beganTransaction = false;
+        try {
+            if (alwaysUseTransaction) {
+                beganTransaction = TransactionUtil.begin();
+            }
+
+            Map ecaEventMap = this.getEcaEntityEventMap(value.getEntityName());
+            this.evalEcaRules(EntityEcaHandler.EV_VALIDATE, EntityEcaHandler.OP_REMOVE, value, ecaEventMap, (ecaEventMap == null), false);
+    
+            GenericHelper helper = getEntityHelper(value.getEntityName());
+    
+            if (doCacheClear) {
+                this.evalEcaRules(EntityEcaHandler.EV_CACHE_CLEAR, EntityEcaHandler.OP_REMOVE, value, ecaEventMap, (ecaEventMap == null), false);
+                this.clearCacheLine(value);
+            }
+    
+            this.evalEcaRules(EntityEcaHandler.EV_RUN, EntityEcaHandler.OP_REMOVE, value, ecaEventMap, (ecaEventMap == null), false);
+            int num = helper.removeByPrimaryKey(value.getPrimaryKey());
+            this.saveEntitySyncRemoveInfo(value.getPrimaryKey());
+            
+            // only commit the transaction if we started one...
+            TransactionUtil.commit(beganTransaction);
+            
+            this.evalEcaRules(EntityEcaHandler.EV_RETURN, EntityEcaHandler.OP_REMOVE, value, ecaEventMap, (ecaEventMap == null), false);
+            return num;
+        } catch (GenericEntityException e) {
+            try {
+                // only rollback the transaction if we started one...
+                TransactionUtil.rollback(beganTransaction);
+            } catch (GenericEntityException e2) {
+                Debug.logError(e2, "[GenericDelegator] Could not rollback transaction: " + e2.toString(), module);
+            }
+            // after rolling back, rethrow the exception
+            throw e;
+        }
+    }
+
+    /** Removes/deletes Generic Entity records found by all of the specified fields (ie: combined using AND)
+     *@param entityName The Name of the Entity as defined in the entity XML file
+     *@param fields The fields of the named entity to query by with their corresponging values
+     *@return int representing number of rows effected by this operation
+     */
+    public int removeByAnd(String entityName, Map fields) throws GenericEntityException {
+        return this.removeByAnd(entityName, fields, true);
+    }
+
+    /** Removes/deletes Generic Entity records found by all of the specified fields (ie: combined using AND)
+     *@param entityName The Name of the Entity as defined in the entity XML file
+     *@param fields The fields of the named entity to query by with their corresponging values
+     *@param doCacheClear boolean that specifies whether to clear cache entries for this value to be removed
+     *@return int representing number of rows effected by this operation
+     */
+    public int removeByAnd(String entityName, Map fields, boolean doCacheClear) throws GenericEntityException {
+        boolean beganTransaction = false;
+        try {
+            if (alwaysUseTransaction) {
+                beganTransaction = TransactionUtil.begin();
+            }
+
+            GenericValue dummyPK = makeValue(entityName, null);
+            dummyPK.setFields(fields);
+    
+            Map ecaEventMap = this.getEcaEntityEventMap(entityName);
+            this.evalEcaRules(EntityEcaHandler.EV_VALIDATE, EntityEcaHandler.OP_REMOVE, dummyPK, ecaEventMap, (ecaEventMap == null), false);
+    
+            ModelEntity modelEntity = getModelReader().getModelEntity(entityName);
+            GenericHelper helper = getEntityHelper(entityName);
+    
+            if (doCacheClear) {
+                // always clear cache before the operation
+                this.evalEcaRules(EntityEcaHandler.EV_CACHE_CLEAR, EntityEcaHandler.OP_REMOVE, dummyPK, ecaEventMap, (ecaEventMap == null), false);
+                this.clearCacheLine(entityName, fields);
+            }
+    
+            this.evalEcaRules(EntityEcaHandler.EV_RUN, EntityEcaHandler.OP_REMOVE, dummyPK, ecaEventMap, (ecaEventMap == null), false);
+            int num = helper.removeByAnd(modelEntity, dummyPK.getAllFields());
+            this.saveEntitySyncRemoveInfo(dummyPK);
+            
+            // only commit the transaction if we started one...
+            TransactionUtil.commit(beganTransaction);
+            
+            this.evalEcaRules(EntityEcaHandler.EV_RETURN, EntityEcaHandler.OP_REMOVE, dummyPK, ecaEventMap, (ecaEventMap == null), false);
+            return num;
+        } catch (GenericEntityException e) {
+            try {
+                // only rollback the transaction if we started one...
+                TransactionUtil.rollback(beganTransaction);
+            } catch (GenericEntityException e2) {
+                Debug.logError(e2, "[GenericDelegator] Could not rollback transaction: " + e2.toString(), module);
+            }
+            // after rolling back, rethrow the exception
+            throw e;
+        }
+    }
+
+    /** Removes/deletes Generic Entity records found by the condition
+     *@param entityName The Name of the Entity as defined in the entity XML file
+     *@param condition The condition used to restrict the removing
+     *@return int representing number of rows effected by this operation
+     */
+    public int removeByCondition(String entityName, EntityCondition condition) throws GenericEntityException {
+        return this.removeByCondition(entityName, condition, true);
+    }
+
+    /** Removes/deletes Generic Entity records found by the condition
+     *@param entityName The Name of the Entity as defined in the entity XML file
+     *@param condition The condition used to restrict the removing
+     *@param doCacheClear boolean that specifies whether to clear cache entries for this value to be removed
+     *@return int representing number of rows effected by this operation
+     */
+    public int removeByCondition(String entityName, EntityCondition condition, boolean doCacheClear) throws GenericEntityException {
+        boolean beganTransaction = false;
+        try {
+            if (alwaysUseTransaction) {
+                beganTransaction = TransactionUtil.begin();
+            }
+
+            if (doCacheClear) {
+                // always clear cache before the operation
+                this.clearCacheLineByCondition(entityName, condition);
+            }
+            ModelEntity modelEntity = getModelReader().getModelEntity(entityName);
+            GenericHelper helper = getEntityHelper(entityName);
+            
+            // only commit the transaction if we started one...
+            TransactionUtil.commit(beganTransaction);
+            
+            return helper.removeByCondition(modelEntity, condition);
+        } catch (GenericEntityException e) {
+            try {
+                // only rollback the transaction if we started one...
+                TransactionUtil.rollback(beganTransaction);
+            } catch (GenericEntityException e2) {
+                Debug.logError(e2, "[GenericDelegator] Could not rollback transaction: " + e2.toString(), module);
+            }
+            // after rolling back, rethrow the exception
+            throw e;
+        }
+    }
+
+    /** Remove the named Related Entity for the GenericValue from the persistent store
+     *@param relationName String containing the relation name which is the
+     *      combination of relation.title and relation.rel-entity-name as
+     *      specified in the entity XML definition file
+     *@param value GenericValue instance containing the entity
+     *@return int representing number of rows effected by this operation
+     */
+    public int removeRelated(String relationName, GenericValue value) throws GenericEntityException {
+        return this.removeRelated(relationName, value, true);
+    }
+
+    /** Remove the named Related Entity for the GenericValue from the persistent store
+     *@param relationName String containing the relation name which is the
+     *      combination of relation.title and relation.rel-entity-name as
+     *      specified in the entity XML definition file
+     *@param value GenericValue instance containing the entity
+     *@param doCacheClear boolean that specifies whether to clear cache entries for this value to be removed
+     *@return int representing number of rows effected by this operation
+     */
+    public int removeRelated(String relationName, GenericValue value, boolean doCacheClear) throws GenericEntityException {
+        ModelEntity modelEntity = value.getModelEntity();
+        ModelRelation relation = modelEntity.getRelation(relationName);
+
+        if (relation == null) {
+            throw new GenericModelException("Could not find relation for relationName: " + relationName + " for value " + value);
+        }
+
+        Map fields = new HashMap();
+        for (int i = 0; i < relation.getKeyMapsSize(); i++) {
+            ModelKeyMap keyMap = relation.getKeyMap(i);
+            fields.put(keyMap.getRelFieldName(), value.get(keyMap.getFieldName()));
+        }
+
+        return this.removeByAnd(relation.getRelEntityName(), fields, doCacheClear);
+    }
+
+    /** Refresh the Entity for the GenericValue from the persistent store
+     *@param value GenericValue instance containing the entity to refresh
+     */
+    public void refresh(GenericValue value) throws GenericEntityException {
+        this.refresh(value, true);
+    }
+
+    /** Refresh the Entity for the GenericValue from the persistent store
+     *@param value GenericValue instance containing the entity to refresh
+     *@param doCacheClear boolean that specifies whether or not to automatically clear cache entries related to this operation
+     */
+    public void refresh(GenericValue value, boolean doCacheClear) throws GenericEntityException {
+        if (doCacheClear) {
+            // always clear cache before the operation
+            clearCacheLine(value);
+        }
+        GenericPK pk = value.getPrimaryKey();
+        GenericValue newValue = findByPrimaryKey(pk);
+        value.refreshFromValue(newValue);
+    }
+
+    /** Refresh the Entity for the GenericValue from the cache
+     *@param value GenericValue instance containing the entity to refresh
+     */
+    public void refreshFromCache(GenericValue value) throws GenericEntityException {
+        GenericPK pk = value.getPrimaryKey();
+        GenericValue newValue = findByPrimaryKeyCache(pk);
+        value.refreshFromValue(newValue);
+    }
+
+    /** Store the Entity from the GenericValue to the persistent store
+     *@param value GenericValue instance containing the entity
+     *@return int representing number of rows effected by this operation
+     */
+    public int store(GenericValue value) throws GenericEntityException {
+        return this.store(value, true);
+    }
+
+    /** Store the Entity from the GenericValue to the persistent store
+     *@param value GenericValue instance containing the entity
+     *@param doCacheClear boolean that specifies whether or not to automatically clear cache entries related to this operation
+     *@return int representing number of rows effected by this operation
+     */
+    public int store(GenericValue value, boolean doCacheClear) throws GenericEntityException {
+        boolean beganTransaction = false;
+        try {
+            if (alwaysUseTransaction) {
+                beganTransaction = TransactionUtil.begin();
+            }
+
+            Map ecaEventMap = this.getEcaEntityEventMap(value.getEntityName());
+            this.evalEcaRules(EntityEcaHandler.EV_VALIDATE, EntityEcaHandler.OP_STORE, value, ecaEventMap, (ecaEventMap == null), false);
+            GenericHelper helper = getEntityHelper(value.getEntityName());
+    
+            if (doCacheClear) {
+                // always clear cache before the operation
+                this.evalEcaRules(EntityEcaHandler.EV_CACHE_CLEAR, EntityEcaHandler.OP_STORE, value, ecaEventMap, (ecaEventMap == null), false);
+                this.clearCacheLine(value);
+            }
+    
+            this.evalEcaRules(EntityEcaHandler.EV_RUN, EntityEcaHandler.OP_STORE, value, ecaEventMap, (ecaEventMap == null), false);
+            this.encryptFields(value);
+            int retVal = helper.store(value);
+    
+            // refresh the valueObject to get the new version
+            if (value.lockEnabled()) {
+                refresh(value, doCacheClear);
+            }
+            
+            // only commit the transaction if we started one...
+            TransactionUtil.commit(beganTransaction);
+            
+            this.evalEcaRules(EntityEcaHandler.EV_RETURN, EntityEcaHandler.OP_STORE, value, ecaEventMap, (ecaEventMap == null), false);
+            return retVal;
+        } catch (GenericEntityException e) {
+            try {
+                // only rollback the transaction if we started one...
+                TransactionUtil.rollback(beganTransaction);
+            } catch (GenericEntityException e2) {
+                Debug.logError(e2, "[GenericDelegator] Could not rollback transaction: " + e2.toString(), module);
+            }
+            // after rolling back, rethrow the exception
+            throw e;
+        }
+    }
+
+    /** Store the Entities from the List GenericValue instances to the persistent store.
+     *  <br>This is different than the normal store method in that the store method only does
+     *  an update, while the storeAll method checks to see if each entity exists, then
+     *  either does an insert or an update as appropriate.
+     *  <br>These updates all happen in one transaction, so they will either all succeed or all fail,
+     *  if the data source supports transactions. This is just like to othersToStore feature
+     *  of the GenericEntity on a create or store.
+     *@param values List of GenericValue instances containing the entities to store
+     *@return int representing number of rows effected by this operation
+     */
+    public int storeAll(List values) throws GenericEntityException {
+        return this.storeAll(values, true);
+    }
+
+    /** Store the Entities from the List GenericValue instances to the persistent store.
+     *  <br>This is different than the normal store method in that the store method only does
+     *  an update, while the storeAll method checks to see if each entity exists, then
+     *  either does an insert or an update as appropriate.
+     *  <br>These updates all happen in one transaction, so they will either all succeed or all fail,
+     *  if the data source supports transactions. This is just like to othersToStore feature
+     *  of the GenericEntity on a create or store.
+     *@param values List of GenericValue instances containing the entities to store
+     *@param doCacheClear boolean that specifies whether or not to automatically clear cache entries related to this operation
+     *@return int representing number of rows effected by this operation
+     */
+    public int storeAll(List values, boolean doCacheClear) throws GenericEntityException {
+        return this.storeAll(values, doCacheClear, false);
+    }
+
+    /** Store the Entities from the List GenericValue instances to the persistent store.
+     *  <br>This is different than the normal store method in that the store method only does
+     *  an update, while the storeAll method checks to see if each entity exists, then
+     *  either does an insert or an update as appropriate.
+     *  <br>These updates all happen in one transaction, so they will either all succeed or all fail,
+     *  if the data source supports transactions. This is just like to othersToStore feature
+     *  of the GenericEntity on a create or store.
+     *@param values List of GenericValue instances containing the entities to store
+     *@param doCacheClear boolean that specifies whether or not to automatically clear cache entries related to this operation
+     *@param createDummyFks boolean that specifies whether or not to automatically create "dummy" place holder FKs
+     *@return int representing number of rows effected by this operation
+     */
+    public int storeAll(List values, boolean doCacheClear, boolean createDummyFks) throws GenericEntityException {
+        if (values == null) {
+            return 0;
+        }
+
+        int numberChanged = 0;
+
+        boolean beganTransaction = false;
+        try {
+            beganTransaction = TransactionUtil.begin();
+
+            Iterator viter = values.iterator();
+            while (viter.hasNext()) {
+                GenericValue value = (GenericValue) viter.next();
+                String entityName = value.getEntityName();
+                GenericPK primaryKey = value.getPrimaryKey();
+                Map ecaEventMap = this.getEcaEntityEventMap(entityName);
+                GenericHelper helper = getEntityHelper(entityName);
+
+                // exists?
+                // NOTE: don't use findByPrimaryKey because we don't want to the ECA events to fire and such
+                if (!primaryKey.isPrimaryKey()) {
+                    throw new GenericModelException("[GenericDelegator.storeAll] One of the passed primary keys is not a valid primary key: " + primaryKey);
+                }
+                GenericValue existing = null;
+                try {
+                    existing = helper.findByPrimaryKey(primaryKey);
+                    this.decryptFields(existing);
+                } catch (GenericEntityNotFoundException e) {
+                    existing = null;
+                }
+                
+                if (existing == null) {
+                    if (createDummyFks) {
+                        value.checkFks(true);
+                    }
+                    this.create(value, doCacheClear);
+                    numberChanged++;
+                } else {
+                    // don't send fields that are the same, and if no fields have changed, update nothing
+                    ModelEntity modelEntity = value.getModelEntity();
+                    GenericValue toStore = new GenericValue(modelEntity, value.getPrimaryKey());
+                    toStore.setDelegator(this);
+                    boolean atLeastOneField = false;
+                    Iterator nonPksIter = modelEntity.getNopksIterator();
+                    while (nonPksIter.hasNext()) {
+                        ModelField modelField = (ModelField) nonPksIter.next();
+                        String fieldName = modelField.getName();
+                        if (value.containsKey(fieldName)) {
+                            Object fieldValue = value.get(fieldName);
+                            Object oldValue = existing.get(fieldName);
+                            if ((fieldValue == null && oldValue != null) || (fieldValue != null && !fieldValue.equals(oldValue))) {
+                                toStore.put(fieldName, fieldValue);
+                                atLeastOneField = true;
+                            }
+                        }
+                    }
+
+                    if (atLeastOneField) {
+                        if (createDummyFks) {
+                            value.checkFks(true);
+                        }
+                        numberChanged += this.store(toStore, doCacheClear);
+                    }
+                }
+            }
+
+            // only commit the transaction if we started one...
+            TransactionUtil.commit(beganTransaction);
+        } catch (GenericEntityException e) {
+            try {
+                // only rollback the transaction if we started one...
+                TransactionUtil.rollback(beganTransaction);
+            } catch (GenericEntityException e2) {
+                Debug.logError(e2, "[GenericDelegator] Could not rollback transaction: " + e2.toString(), module);
+            }
+            // after rolling back, rethrow the exception
+            throw e;
+        }
+
+        return numberChanged;
+    }
+    
+    /** Remove the Entities from the List from the persistent store.
+     *  <br>The List contains GenericEntity objects, can be either GenericPK or GenericValue.
+     *  <br>If a certain entity contains a complete primary key, the entity in the datasource corresponding
+     *  to that primary key will be removed, this is like a removeByPrimary Key.
+     *  <br>On the other hand, if a certain entity is an incomplete or non primary key,
+     *  if will behave like the removeByAnd method.
+     *  <br>These updates all happen in one transaction, so they will either all succeed or all fail,
+     *  if the data source supports transactions.
+     *@param dummyPKs Collection of GenericEntity instances containing the entities or by and fields to remove
+     *@return int representing number of rows effected by this operation
+     */
+    public int removeAll(List dummyPKs) throws GenericEntityException {
+        return this.removeAll(dummyPKs, true);
+    }
+
+    /** Remove the Entities from the List from the persistent store.
+     *  <br>The List contains GenericEntity objects, can be either GenericPK or GenericValue.
+     *  <br>If a certain entity contains a complete primary key, the entity in the datasource corresponding
+     *  to that primary key will be removed, this is like a removeByPrimary Key.
+     *  <br>On the other hand, if a certain entity is an incomplete or non primary key,
+     *  if will behave like the removeByAnd method.
+     *  <br>These updates all happen in one transaction, so they will either all succeed or all fail,
+     *  if the data source supports transactions.
+     *@param dummyPKs Collection of GenericEntity instances containing the entities or by and fields to remove
+     *@param doCacheClear boolean that specifies whether or not to automatically clear cache entries related to this operation
+     *@return int representing number of rows effected by this operation
+     */
+    public int removeAll(List dummyPKs, boolean doCacheClear) throws GenericEntityException {
+        if (dummyPKs == null) {
+            return 0;
+        }
+
+        boolean beganTransaction = false;
+        int numRemoved = 0;
+
+        try {
+            Iterator viter = dummyPKs.iterator();
+            while (viter.hasNext()) {
+                GenericEntity value = (GenericEntity) viter.next();
+                if (value.containsPrimaryKey()) {
+                    numRemoved += this.removeByPrimaryKey(value.getPrimaryKey(), doCacheClear);
+                } else {
+                    numRemoved += this.removeByAnd(value.getEntityName(), value.getAllFields(), doCacheClear);
+                }
+            }
+
+            // only commit the transaction if we started one...
+            TransactionUtil.commit(beganTransaction);
+        } catch (GenericEntityException e) {
+            try {
+                // only rollback the transaction if we started one...
+                TransactionUtil.rollback(beganTransaction);
+            } catch (GenericEntityException e2) {
+                Debug.logError(e2, "[GenericDelegator] Could not rollback transaction: " + e2.toString(), module);
+            }
+            // after rolling back, rethrow the exception
+            throw e;
+        }
+
+        return numRemoved;
+    }
+
+    // ======================================
+    // ======= Find Methods =================
+    // ======================================
+
     /** Find a Generic Entity by its Primary Key
      *@param primaryKey The primary key to find by.
      *@return The GenericValue corresponding to the primaryKey
@@ -1192,244 +1742,6 @@ public class GenericDelegator implements DelegatorInterface {
         return count;
     }
 
-    protected void saveEntitySyncRemoveInfo(GenericEntity dummyPK) throws GenericEntityException {
-        // don't store remove info on entities where it is disabled
-        if (dummyPK.getModelEntity().getNoAutoStamp()) {
-            return;
-        }
-
-        // don't store remove info on things removed on an entity sync
-        if (dummyPK.getIsFromEntitySync()) {
-            return;
-        }
-
-        String serializedPK = null;
-        try {
-            serializedPK = XmlSerializer.serialize(dummyPK);
-        } catch (SerializeException e) {
-            Debug.logError(e, "Could not serialize primary key to save EntitySyncRemove", module);
-        } catch (FileNotFoundException e) {
-            Debug.logError(e, "Could not serialize primary key to save EntitySyncRemove", module);
-        } catch (IOException e) {
-            Debug.logError(e, "Could not serialize primary key to save EntitySyncRemove", module);
-        }
-
-        if (serializedPK != null) {
-            GenericValue entitySyncRemove = this.makeValue("EntitySyncRemove", null);
-            entitySyncRemove.set("entitySyncRemoveId", this.getNextSeqId("EntitySyncRemove"));
-            entitySyncRemove.set("primaryKeyRemoved", serializedPK);
-            entitySyncRemove.create();
-        }
-    }
-
-    /** Remove a Generic Entity corresponding to the primaryKey
-     *@param primaryKey  The primary key of the entity to remove.
-     *@return int representing number of rows effected by this operation
-     */
-    public int removeByPrimaryKey(GenericPK primaryKey) throws GenericEntityException {
-        int retVal = this.removeByPrimaryKey(primaryKey, true);
-        return retVal;
-    }
-
-    /** Remove a Generic Entity corresponding to the primaryKey
-     *@param primaryKey  The primary key of the entity to remove.
-     *@param doCacheClear boolean that specifies whether to clear cache entries for this primaryKey to be removed
-     *@return int representing number of rows effected by this operation
-     */
-    public int removeByPrimaryKey(GenericPK primaryKey, boolean doCacheClear) throws GenericEntityException {
-        boolean beganTransaction = false;
-        try {
-            if (alwaysUseTransaction) {
-                beganTransaction = TransactionUtil.begin();
-            }
-
-            Map ecaEventMap = this.getEcaEntityEventMap(primaryKey.getEntityName());
-            this.evalEcaRules(EntityEcaHandler.EV_VALIDATE, EntityEcaHandler.OP_REMOVE, primaryKey, ecaEventMap, (ecaEventMap == null), false);
-    
-            GenericHelper helper = getEntityHelper(primaryKey.getEntityName());
-    
-            if (doCacheClear) {
-                // always clear cache before the operation
-                this.evalEcaRules(EntityEcaHandler.EV_CACHE_CLEAR, EntityEcaHandler.OP_REMOVE, primaryKey, ecaEventMap, (ecaEventMap == null), false);
-                this.clearCacheLine(primaryKey);
-            }
-    
-            this.evalEcaRules(EntityEcaHandler.EV_RUN, EntityEcaHandler.OP_REMOVE, primaryKey, ecaEventMap, (ecaEventMap == null), false);
-            int num = helper.removeByPrimaryKey(primaryKey);
-            this.saveEntitySyncRemoveInfo(primaryKey);
-            
-            // only commit the transaction if we started one...
-            TransactionUtil.commit(beganTransaction);
-            
-            this.evalEcaRules(EntityEcaHandler.EV_RETURN, EntityEcaHandler.OP_REMOVE, primaryKey, ecaEventMap, (ecaEventMap == null), false);
-            return num;
-        } catch (GenericEntityException e) {
-            try {
-                // only rollback the transaction if we started one...
-                TransactionUtil.rollback(beganTransaction);
-            } catch (GenericEntityException e2) {
-                Debug.logError(e2, "[GenericDelegator] Could not rollback transaction: " + e2.toString(), module);
-            }
-            // after rolling back, rethrow the exception
-            throw e;
-        }
-    }
-
-    /** Remove a Generic Value from the database
-     *@param value The GenericValue object of the entity to remove.
-     *@return int representing number of rows effected by this operation
-     */
-    public int removeValue(GenericValue value) throws GenericEntityException {
-        return this.removeValue(value, true);
-    }
-
-    /** Remove a Generic Value from the database
-     *@param value The GenericValue object of the entity to remove.
-     *@param doCacheClear boolean that specifies whether to clear cache entries for this value to be removed
-     *@return int representing number of rows effected by this operation
-     */
-    public int removeValue(GenericValue value, boolean doCacheClear) throws GenericEntityException {
-        // NOTE: this does not call the GenericDelegator.removeByPrimaryKey method because it has more information to pass to the ECA rule hander 
-        boolean beganTransaction = false;
-        try {
-            if (alwaysUseTransaction) {
-                beganTransaction = TransactionUtil.begin();
-            }
-
-            Map ecaEventMap = this.getEcaEntityEventMap(value.getEntityName());
-            this.evalEcaRules(EntityEcaHandler.EV_VALIDATE, EntityEcaHandler.OP_REMOVE, value, ecaEventMap, (ecaEventMap == null), false);
-    
-            GenericHelper helper = getEntityHelper(value.getEntityName());
-    
-            if (doCacheClear) {
-                this.evalEcaRules(EntityEcaHandler.EV_CACHE_CLEAR, EntityEcaHandler.OP_REMOVE, value, ecaEventMap, (ecaEventMap == null), false);
-                this.clearCacheLine(value);
-            }
-    
-            this.evalEcaRules(EntityEcaHandler.EV_RUN, EntityEcaHandler.OP_REMOVE, value, ecaEventMap, (ecaEventMap == null), false);
-            int num = helper.removeByPrimaryKey(value.getPrimaryKey());
-            this.saveEntitySyncRemoveInfo(value.getPrimaryKey());
-            
-            // only commit the transaction if we started one...
-            TransactionUtil.commit(beganTransaction);
-            
-            this.evalEcaRules(EntityEcaHandler.EV_RETURN, EntityEcaHandler.OP_REMOVE, value, ecaEventMap, (ecaEventMap == null), false);
-            return num;
-        } catch (GenericEntityException e) {
-            try {
-                // only rollback the transaction if we started one...
-                TransactionUtil.rollback(beganTransaction);
-            } catch (GenericEntityException e2) {
-                Debug.logError(e2, "[GenericDelegator] Could not rollback transaction: " + e2.toString(), module);
-            }
-            // after rolling back, rethrow the exception
-            throw e;
-        }
-    }
-
-    /** Removes/deletes Generic Entity records found by all of the specified fields (ie: combined using AND)
-     *@param entityName The Name of the Entity as defined in the entity XML file
-     *@param fields The fields of the named entity to query by with their corresponging values
-     *@return int representing number of rows effected by this operation
-     */
-    public int removeByAnd(String entityName, Map fields) throws GenericEntityException {
-        return this.removeByAnd(entityName, fields, true);
-    }
-
-    /** Removes/deletes Generic Entity records found by all of the specified fields (ie: combined using AND)
-     *@param entityName The Name of the Entity as defined in the entity XML file
-     *@param fields The fields of the named entity to query by with their corresponging values
-     *@param doCacheClear boolean that specifies whether to clear cache entries for this value to be removed
-     *@return int representing number of rows effected by this operation
-     */
-    public int removeByAnd(String entityName, Map fields, boolean doCacheClear) throws GenericEntityException {
-        boolean beganTransaction = false;
-        try {
-            if (alwaysUseTransaction) {
-                beganTransaction = TransactionUtil.begin();
-            }
-
-            GenericValue dummyPK = makeValue(entityName, null);
-            dummyPK.setFields(fields);
-    
-            Map ecaEventMap = this.getEcaEntityEventMap(entityName);
-            this.evalEcaRules(EntityEcaHandler.EV_VALIDATE, EntityEcaHandler.OP_REMOVE, dummyPK, ecaEventMap, (ecaEventMap == null), false);
-    
-            ModelEntity modelEntity = getModelReader().getModelEntity(entityName);
-            GenericHelper helper = getEntityHelper(entityName);
-    
-            if (doCacheClear) {
-                // always clear cache before the operation
-                this.evalEcaRules(EntityEcaHandler.EV_CACHE_CLEAR, EntityEcaHandler.OP_REMOVE, dummyPK, ecaEventMap, (ecaEventMap == null), false);
-                this.clearCacheLine(entityName, fields);
-            }
-    
-            this.evalEcaRules(EntityEcaHandler.EV_RUN, EntityEcaHandler.OP_REMOVE, dummyPK, ecaEventMap, (ecaEventMap == null), false);
-            int num = helper.removeByAnd(modelEntity, dummyPK.getAllFields());
-            this.saveEntitySyncRemoveInfo(dummyPK);
-            
-            // only commit the transaction if we started one...
-            TransactionUtil.commit(beganTransaction);
-            
-            this.evalEcaRules(EntityEcaHandler.EV_RETURN, EntityEcaHandler.OP_REMOVE, dummyPK, ecaEventMap, (ecaEventMap == null), false);
-            return num;
-        } catch (GenericEntityException e) {
-            try {
-                // only rollback the transaction if we started one...
-                TransactionUtil.rollback(beganTransaction);
-            } catch (GenericEntityException e2) {
-                Debug.logError(e2, "[GenericDelegator] Could not rollback transaction: " + e2.toString(), module);
-            }
-            // after rolling back, rethrow the exception
-            throw e;
-        }
-    }
-
-    /** Removes/deletes Generic Entity records found by the condition
-     *@param entityName The Name of the Entity as defined in the entity XML file
-     *@param condition The condition used to restrict the removing
-     *@return int representing number of rows effected by this operation
-     */
-    public int removeByCondition(String entityName, EntityCondition condition) throws GenericEntityException {
-        return this.removeByCondition(entityName, condition, true);
-    }
-
-    /** Removes/deletes Generic Entity records found by the condition
-     *@param entityName The Name of the Entity as defined in the entity XML file
-     *@param condition The condition used to restrict the removing
-     *@param doCacheClear boolean that specifies whether to clear cache entries for this value to be removed
-     *@return int representing number of rows effected by this operation
-     */
-    public int removeByCondition(String entityName, EntityCondition condition, boolean doCacheClear) throws GenericEntityException {
-        boolean beganTransaction = false;
-        try {
-            if (alwaysUseTransaction) {
-                beganTransaction = TransactionUtil.begin();
-            }
-
-            if (doCacheClear) {
-                // always clear cache before the operation
-                this.clearCacheLineByCondition(entityName, condition);
-            }
-            ModelEntity modelEntity = getModelReader().getModelEntity(entityName);
-            GenericHelper helper = getEntityHelper(entityName);
-            
-            // only commit the transaction if we started one...
-            TransactionUtil.commit(beganTransaction);
-            
-            return helper.removeByCondition(modelEntity, condition);
-        } catch (GenericEntityException e) {
-            try {
-                // only rollback the transaction if we started one...
-                TransactionUtil.rollback(beganTransaction);
-            } catch (GenericEntityException e2) {
-                Debug.logError(e2, "[GenericDelegator] Could not rollback transaction: " + e2.toString(), module);
-            }
-            // after rolling back, rethrow the exception
-            throw e;
-        }
-    }
-
     /**
      * Get the named Related Entity for the GenericValue from the persistent store across another Relation.
      * Helps to get related Values in a multi-to-multi relationship.
@@ -1634,316 +1946,10 @@ public class GenericDelegator implements DelegatorInterface {
         return this.findByPrimaryKeyCache(relation.getRelEntityName(), fields);
     }
 
-    /** Remove the named Related Entity for the GenericValue from the persistent store
-     *@param relationName String containing the relation name which is the
-     *      combination of relation.title and relation.rel-entity-name as
-     *      specified in the entity XML definition file
-     *@param value GenericValue instance containing the entity
-     *@return int representing number of rows effected by this operation
-     */
-    public int removeRelated(String relationName, GenericValue value) throws GenericEntityException {
-        return this.removeRelated(relationName, value, true);
-    }
-
-    /** Remove the named Related Entity for the GenericValue from the persistent store
-     *@param relationName String containing the relation name which is the
-     *      combination of relation.title and relation.rel-entity-name as
-     *      specified in the entity XML definition file
-     *@param value GenericValue instance containing the entity
-     *@param doCacheClear boolean that specifies whether to clear cache entries for this value to be removed
-     *@return int representing number of rows effected by this operation
-     */
-    public int removeRelated(String relationName, GenericValue value, boolean doCacheClear) throws GenericEntityException {
-        ModelEntity modelEntity = value.getModelEntity();
-        ModelRelation relation = modelEntity.getRelation(relationName);
-
-        if (relation == null) {
-            throw new GenericModelException("Could not find relation for relationName: " + relationName + " for value " + value);
-        }
-
-        Map fields = new HashMap();
-        for (int i = 0; i < relation.getKeyMapsSize(); i++) {
-            ModelKeyMap keyMap = relation.getKeyMap(i);
-            fields.put(keyMap.getRelFieldName(), value.get(keyMap.getFieldName()));
-        }
-
-        return this.removeByAnd(relation.getRelEntityName(), fields, doCacheClear);
-    }
-
-    /** Refresh the Entity for the GenericValue from the persistent store
-     *@param value GenericValue instance containing the entity to refresh
-     */
-    public void refresh(GenericValue value) throws GenericEntityException {
-        this.refresh(value, true);
-    }
-
-    /** Refresh the Entity for the GenericValue from the persistent store
-     *@param value GenericValue instance containing the entity to refresh
-     *@param doCacheClear boolean that specifies whether or not to automatically clear cache entries related to this operation
-     */
-    public void refresh(GenericValue value, boolean doCacheClear) throws GenericEntityException {
-        if (doCacheClear) {
-            // always clear cache before the operation
-            clearCacheLine(value);
-        }
-        GenericPK pk = value.getPrimaryKey();
-        GenericValue newValue = findByPrimaryKey(pk);
-        value.refreshFromValue(newValue);
-    }
-
-    /** Refresh the Entity for the GenericValue from the cache
-     *@param value GenericValue instance containing the entity to refresh
-     */
-    public void refreshFromCache(GenericValue value) throws GenericEntityException {
-        GenericPK pk = value.getPrimaryKey();
-        GenericValue newValue = findByPrimaryKeyCache(pk);
-        value.refreshFromValue(newValue);
-    }
-
-    /** Store the Entity from the GenericValue to the persistent store
-     *@param value GenericValue instance containing the entity
-     *@return int representing number of rows effected by this operation
-     */
-    public int store(GenericValue value) throws GenericEntityException {
-        return this.store(value, true);
-    }
-
-    /** Store the Entity from the GenericValue to the persistent store
-     *@param value GenericValue instance containing the entity
-     *@param doCacheClear boolean that specifies whether or not to automatically clear cache entries related to this operation
-     *@return int representing number of rows effected by this operation
-     */
-    public int store(GenericValue value, boolean doCacheClear) throws GenericEntityException {
-        boolean beganTransaction = false;
-        try {
-            if (alwaysUseTransaction) {
-                beganTransaction = TransactionUtil.begin();
-            }
-
-            Map ecaEventMap = this.getEcaEntityEventMap(value.getEntityName());
-            this.evalEcaRules(EntityEcaHandler.EV_VALIDATE, EntityEcaHandler.OP_STORE, value, ecaEventMap, (ecaEventMap == null), false);
-            GenericHelper helper = getEntityHelper(value.getEntityName());
-    
-            if (doCacheClear) {
-                // always clear cache before the operation
-                this.evalEcaRules(EntityEcaHandler.EV_CACHE_CLEAR, EntityEcaHandler.OP_STORE, value, ecaEventMap, (ecaEventMap == null), false);
-                this.clearCacheLine(value);
-            }
-    
-            this.evalEcaRules(EntityEcaHandler.EV_RUN, EntityEcaHandler.OP_STORE, value, ecaEventMap, (ecaEventMap == null), false);
-            this.encryptFields(value);
-            int retVal = helper.store(value);
-    
-            // refresh the valueObject to get the new version
-            if (value.lockEnabled()) {
-                refresh(value, doCacheClear);
-            }
-            
-            // only commit the transaction if we started one...
-            TransactionUtil.commit(beganTransaction);
-            
-            this.evalEcaRules(EntityEcaHandler.EV_RETURN, EntityEcaHandler.OP_STORE, value, ecaEventMap, (ecaEventMap == null), false);
-            return retVal;
-        } catch (GenericEntityException e) {
-            try {
-                // only rollback the transaction if we started one...
-                TransactionUtil.rollback(beganTransaction);
-            } catch (GenericEntityException e2) {
-                Debug.logError(e2, "[GenericDelegator] Could not rollback transaction: " + e2.toString(), module);
-            }
-            // after rolling back, rethrow the exception
-            throw e;
-        }
-    }
-
-    /** Store the Entities from the List GenericValue instances to the persistent store.
-     *  <br>This is different than the normal store method in that the store method only does
-     *  an update, while the storeAll method checks to see if each entity exists, then
-     *  either does an insert or an update as appropriate.
-     *  <br>These updates all happen in one transaction, so they will either all succeed or all fail,
-     *  if the data source supports transactions. This is just like to othersToStore feature
-     *  of the GenericEntity on a create or store.
-     *@param values List of GenericValue instances containing the entities to store
-     *@return int representing number of rows effected by this operation
-     */
-    public int storeAll(List values) throws GenericEntityException {
-        return this.storeAll(values, true);
-    }
-
-    /** Store the Entities from the List GenericValue instances to the persistent store.
-     *  <br>This is different than the normal store method in that the store method only does
-     *  an update, while the storeAll method checks to see if each entity exists, then
-     *  either does an insert or an update as appropriate.
-     *  <br>These updates all happen in one transaction, so they will either all succeed or all fail,
-     *  if the data source supports transactions. This is just like to othersToStore feature
-     *  of the GenericEntity on a create or store.
-     *@param values List of GenericValue instances containing the entities to store
-     *@param doCacheClear boolean that specifies whether or not to automatically clear cache entries related to this operation
-     *@return int representing number of rows effected by this operation
-     */
-    public int storeAll(List values, boolean doCacheClear) throws GenericEntityException {
-        return this.storeAll(values, doCacheClear, false);
-    }
-
-    /** Store the Entities from the List GenericValue instances to the persistent store.
-     *  <br>This is different than the normal store method in that the store method only does
-     *  an update, while the storeAll method checks to see if each entity exists, then
-     *  either does an insert or an update as appropriate.
-     *  <br>These updates all happen in one transaction, so they will either all succeed or all fail,
-     *  if the data source supports transactions. This is just like to othersToStore feature
-     *  of the GenericEntity on a create or store.
-     *@param values List of GenericValue instances containing the entities to store
-     *@param doCacheClear boolean that specifies whether or not to automatically clear cache entries related to this operation
-     *@param createDummyFks boolean that specifies whether or not to automatically create "dummy" place holder FKs
-     *@return int representing number of rows effected by this operation
-     */
-    public int storeAll(List values, boolean doCacheClear, boolean createDummyFks) throws GenericEntityException {
-        if (values == null) {
-            return 0;
-        }
-
-        int numberChanged = 0;
-
-        boolean beganTransaction = false;
-        try {
-            beganTransaction = TransactionUtil.begin();
-
-            Iterator viter = values.iterator();
-            while (viter.hasNext()) {
-                GenericValue value = (GenericValue) viter.next();
-                String entityName = value.getEntityName();
-                GenericPK primaryKey = value.getPrimaryKey();
-                Map ecaEventMap = this.getEcaEntityEventMap(entityName);
-                GenericHelper helper = getEntityHelper(entityName);
-
-                // exists?
-                // NOTE: don't use findByPrimaryKey because we don't want to the ECA events to fire and such
-                if (!primaryKey.isPrimaryKey()) {
-                    throw new GenericModelException("[GenericDelegator.storeAll] One of the passed primary keys is not a valid primary key: " + primaryKey);
-                }
-                GenericValue existing = null;
-                try {
-                    existing = helper.findByPrimaryKey(primaryKey);
-                    this.decryptFields(existing);
-                } catch (GenericEntityNotFoundException e) {
-                    existing = null;
-                }
-                
-                if (existing == null) {
-                    if (createDummyFks) {
-                        value.checkFks(true);
-                    }
-                    this.create(value, doCacheClear);
-                    numberChanged++;
-                } else {
-                    // don't send fields that are the same, and if no fields have changed, update nothing
-                    ModelEntity modelEntity = value.getModelEntity();
-                    GenericValue toStore = new GenericValue(modelEntity, value.getPrimaryKey());
-                    toStore.setDelegator(this);
-                    boolean atLeastOneField = false;
-                    Iterator nonPksIter = modelEntity.getNopksIterator();
-                    while (nonPksIter.hasNext()) {
-                        ModelField modelField = (ModelField) nonPksIter.next();
-                        String fieldName = modelField.getName();
-                        if (value.containsKey(fieldName)) {
-                            Object fieldValue = value.get(fieldName);
-                            Object oldValue = existing.get(fieldName);
-                            if ((fieldValue == null && oldValue != null) || (fieldValue != null && !fieldValue.equals(oldValue))) {
-                                toStore.put(fieldName, fieldValue);
-                                atLeastOneField = true;
-                            }
-                        }
-                    }
-
-                    if (atLeastOneField) {
-                        if (createDummyFks) {
-                            value.checkFks(true);
-                        }
-                        numberChanged += this.store(toStore, doCacheClear);
-                    }
-                }
-            }
-
-            // only commit the transaction if we started one...
-            TransactionUtil.commit(beganTransaction);
-        } catch (GenericEntityException e) {
-            try {
-                // only rollback the transaction if we started one...
-                TransactionUtil.rollback(beganTransaction);
-            } catch (GenericEntityException e2) {
-                Debug.logError(e2, "[GenericDelegator] Could not rollback transaction: " + e2.toString(), module);
-            }
-            // after rolling back, rethrow the exception
-            throw e;
-        }
-
-        return numberChanged;
-    }
-    
-    /** Remove the Entities from the List from the persistent store.
-     *  <br>The List contains GenericEntity objects, can be either GenericPK or GenericValue.
-     *  <br>If a certain entity contains a complete primary key, the entity in the datasource corresponding
-     *  to that primary key will be removed, this is like a removeByPrimary Key.
-     *  <br>On the other hand, if a certain entity is an incomplete or non primary key,
-     *  if will behave like the removeByAnd method.
-     *  <br>These updates all happen in one transaction, so they will either all succeed or all fail,
-     *  if the data source supports transactions.
-     *@param dummyPKs Collection of GenericEntity instances containing the entities or by and fields to remove
-     *@return int representing number of rows effected by this operation
-     */
-    public int removeAll(List dummyPKs) throws GenericEntityException {
-        return this.removeAll(dummyPKs, true);
-    }
-
-    /** Remove the Entities from the List from the persistent store.
-     *  <br>The List contains GenericEntity objects, can be either GenericPK or GenericValue.
-     *  <br>If a certain entity contains a complete primary key, the entity in the datasource corresponding
-     *  to that primary key will be removed, this is like a removeByPrimary Key.
-     *  <br>On the other hand, if a certain entity is an incomplete or non primary key,
-     *  if will behave like the removeByAnd method.
-     *  <br>These updates all happen in one transaction, so they will either all succeed or all fail,
-     *  if the data source supports transactions.
-     *@param dummyPKs Collection of GenericEntity instances containing the entities or by and fields to remove
-     *@param doCacheClear boolean that specifies whether or not to automatically clear cache entries related to this operation
-     *@return int representing number of rows effected by this operation
-     */
-    public int removeAll(List dummyPKs, boolean doCacheClear) throws GenericEntityException {
-        if (dummyPKs == null) {
-            return 0;
-        }
-
-        boolean beganTransaction = false;
-        int numRemoved = 0;
-
-        try {
-            Iterator viter = dummyPKs.iterator();
-            while (viter.hasNext()) {
-                GenericEntity value = (GenericEntity) viter.next();
-                if (value.containsPrimaryKey()) {
-                    numRemoved += this.removeByPrimaryKey(value.getPrimaryKey(), doCacheClear);
-                } else {
-                    numRemoved += this.removeByAnd(value.getEntityName(), value.getAllFields(), doCacheClear);
-                }
-            }
-
-            // only commit the transaction if we started one...
-            TransactionUtil.commit(beganTransaction);
-        } catch (GenericEntityException e) {
-            try {
-                // only rollback the transaction if we started one...
-                TransactionUtil.rollback(beganTransaction);
-            } catch (GenericEntityException e2) {
-                Debug.logError(e2, "[GenericDelegator] Could not rollback transaction: " + e2.toString(), module);
-            }
-            // after rolling back, rethrow the exception
-            throw e;
-        }
-
-        return numRemoved;
-    }
 
     // ======================================
     // ======= Cache Related Methods ========
+    // ======================================
 
     /** This method is a shortcut to completely clear all entity engine caches.
      * For performance reasons this should not be called very often.
