@@ -106,15 +106,16 @@
   <a name="<%= entityName %>"></a>
   <table width="95%" border="1" cellpadding='2' cellspacing='0'>
     <tr bgcolor="#CCCCCC"> 
-      <td colspan="4"> 
+      <td colspan="5"> 
         <div align="center" class='titletext'>ENTITY: <%= entityName %> | TABLE: <%= entity.tableName %></div>
       </td>
     </tr>
     <tr class='headertext'>
       <td width="30%" align=center>Java Name</td>
       <td width="30%" align=center>DB Name</td>
-      <td width="20%" align=center>Java-Type</td>
-      <td width="20%" align=center nowrap>SQL-Type</td>
+      <td width="10%" align=center>Field-Type</td>
+      <td width="15%" align=center>Java-Type</td>
+      <td width="15%" align=center nowrap>SQL-Type</td>
     </tr>
 	
 <%
@@ -135,6 +136,7 @@
     <tr bgcolor="#EFFFFF">
       <td><div align="left" class='enametext'><%= javaName %></div></td>
       <td><div align="left" class='entitytext'><%= field.colName %></div></td>
+      <td><div align="left" class='entitytext'><%= field.type %></div></td>
     <%if(type != null){%>
       <td><div align="left" class='entitytext'><%= type.javaType %></div></td>
       <td><div align="left" class='entitytext'><%= type.sqlType %></div></td>
@@ -149,12 +151,12 @@
 			if ( entity.relations != null && entity.relations.size() > 0 ) {
 %>
 	<tr bgcolor="#FFCCCC">
-	  <td colspan="4"><hr></td>
+	  <td colspan="5"><hr></td>
 	</tr>
     <tr class='headertext'> 
       <td align="center">Relation</td>
       <td align="center">Table</td>
-      <td align="center" colspan='2'>Type</td>	  
+      <td align="center" colspan='3'>Type</td>	  
       
     </tr>
 <%
@@ -208,7 +210,7 @@
         </div>
       </td>
       <td><div align="left" class='relationtext'><%= relation.relTableName %></div></td>
-      <td width="25%" colspan='2'><div align="left" class='relationtext'>
+      <td width="25%" colspan='3'><div align="left" class='relationtext'>
         <%= relation.type %>:<%if(relation.type.length()==3){%>&nbsp;<%}%>
         <%for(int km=0; km<relation.keyMaps.size(); km++){ ModelKeyMap keyMap = (ModelKeyMap)relation.keyMaps.get(km);%>
           <%=km+1%>)&nbsp;
@@ -223,7 +225,7 @@
 			}
 %>
     <tr bgcolor="#CCCCCC">
-	  <td colspan="4">&nbsp;</td>
+	  <td colspan="5">&nbsp;</td>
 	</tr>
   </table>
   <br>
