@@ -14,8 +14,12 @@
     KeywordSearch.induceKeywords(prod1, helper);
   }
   
-  if(request.getParameter("makeall") != null)
-  {
+  if(request.getParameter("makeall") == null) {
+%>Just added the keywords from all existing product info.
+<br><a href='makebogodata.jsp?makeall=true'>Create a LOT of products, categories, and keywords.</a>
+<%
+  }
+  else {
     String[] wordBag = {"a", "product", "big", "ugly", "pretty", "small", "under", "over", "one", "two", "three", "four", "five", "six", "seven", "eight", "tree"};
     String[] longWordBag = {"b", "item", "little", "cute", "frightening", "massive", "top", "btoom", "bush", "shrub", "gadget"};
 
@@ -42,5 +46,6 @@
         helper.create("ProductCategoryMember", UtilMisc.toMap("productId", "" + (cat*100 + prod), "productCategoryId", "" + (cat)));
       }
     }
+%>Created lots of products and categories and keywords.<%
   }
 %>
