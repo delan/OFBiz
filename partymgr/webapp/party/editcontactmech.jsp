@@ -38,14 +38,14 @@
 <jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" />
 <ofbiz:object name="userLogin" property="userLogin" type="org.ofbiz.core.entity.GenericValue" />  
 
-<%ContactMechWorker.getContactMechAndRelated(pageContext, userLogin.getString("partyId"), "contactMech", "contactMechId", "partyContactMech", "partyContactMechPurposes",
-    "contactMechTypeId", "contactMechType", "purposeTypes", "postalAddress", "telecomNumber", "requestName", "donePage", "tryEntity", "contactMechTypes");%>
-
 <%
     String partyId = request.getParameter("party_id");
     if (partyId == null) partyId = (String) request.getSession().getAttribute("partyId");
     else request.getSession().setAttribute("partyId", partyId);
 %>
+
+<%ContactMechWorker.getContactMechAndRelated(pageContext, partyId, "contactMech", "contactMechId", "partyContactMech", "partyContactMechPurposes",
+    "contactMechTypeId", "contactMechType", "purposeTypes", "postalAddress", "telecomNumber", "requestName", "donePage", "tryEntity", "contactMechTypes");%>
 
 <%if (!security.hasEntityPermission("PARTYMGR", "_VIEW", session) && pageContext.getAttribute("partyContactMech") == null && pageContext.getAttribute("contactMech") != null){%>
   <p><h3>The contact information specified does not belong to you, you may not view or edit it.</h3></p>
@@ -116,12 +116,14 @@
                       (Since:<%=UtilDateTime.toDateString(partyContactMechPurpose.getTimestamp("fromDate"))%>)
                       <%=UtilFormatOut.ifNotEmpty(UtilDateTime.toDateTimeString(partyContactMechPurpose.getTimestamp("thruDate")), "(Expires:", ")")%>
                     &nbsp;</div></td>
-                  <td bgcolor='white'><div><a href='<ofbiz:url>/deletePartyContactMechPurpose?contactMechId=<ofbiz:print attribute="contactMechId"/>&contactMechPurposeTypeId=<%=partyContactMechPurpose.getString("contactMechPurposeTypeId")%>&fromDate=<%=UtilFormatOut.encodeQueryValue(partyContactMechPurpose.getTimestamp("fromDate").toString())%>&DONE_PAGE=<ofbiz:print attribute="donePage"/>&useValues=true</ofbiz:url>' class='buttontext'>&nbsp;Delete&nbsp;</a></div></td>
+                  <td bgcolor='white'><div><a href='<ofbiz:url>/deletePartyContactMechPurpose?partyId=<%=partyId%>&contactMechId=<ofbiz:print attribute="contactMechId"/>&contactMechPurposeTypeId=<%=partyContactMechPurpose.getString("contactMechPurposeTypeId")%>&fromDate=<%=UtilFormatOut.encodeQueryValue(partyContactMechPurpose.getTimestamp("fromDate").toString())%>&DONE_PAGE=<ofbiz:print attribute="donePage"/>&useValues=true</ofbiz:url>' class='buttontext'>&nbsp;Delete&nbsp;</a></div></td>
                 </tr>
               </ofbiz:iterator>
               <ofbiz:if name="purposeTypes" size="0">
               <tr>
-                <form method=POST action='<ofbiz:url>/createPartyContactMechPurpose?contactMechId=<ofbiz:print attribute="contactMechId"/>&DONE_PAGE=<ofbiz:print attribute="donePage"/>&useValues=true</ofbiz:url>' name='newpurposeform'>
+                <form method=POST action='<ofbiz:url>/createPartyContactMechPurpose?DONE_PAGE=<ofbiz:print attribute="donePage"/>&useValues=true</ofbiz:url>' name='newpurposeform'>
+                <input type=hidden name='partyId' value='<%=partyId%>'>
+                <input type=hidden name='contactMechId' value='<ofbiz:print attribute="contactMechId"/>'>
                   <td bgcolor='white'>
                     <SELECT name='contactMechPurposeTypeId'>
                       <OPTION></OPTION>

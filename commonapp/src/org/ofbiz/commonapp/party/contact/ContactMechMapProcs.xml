@@ -79,10 +79,12 @@
 
   <!-- PartyContactMechPurpose map procs -->
   <simple-map-processor name="createPartyContactMechPurpose">
+    <process field="partyId"><copy/></process>
     <process field="contactMechId"><copy/><not-empty><fail-message message="Contact Mech ID is missing"/></not-empty></process>
     <process field="contactMechPurposeTypeId"><copy/><not-empty><fail-message message="Purpose type not specified, cannot add purpose to contact mechanism"/></not-empty></process>
   </simple-map-processor>
   <simple-map-processor name="deletePartyContactMechPurpose">
+    <process field="partyId"><copy/></process>
     <process field="contactMechId"><copy/><not-empty><fail-message message="Contact Mech ID is missing"/></not-empty></process>
     <process field="contactMechPurposeTypeId"><copy/><not-empty><fail-message message="Purpose type not specified, cannot remove purpose from contact mechanism"/></not-empty></process>
     <process field="fromDate">
