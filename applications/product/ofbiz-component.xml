@@ -41,7 +41,10 @@
     <service-resource type="model" loader="main" location="servicedef/services_facility.xml"/>
     <service-resource type="model" loader="main" location="servicedef/services_feature.xml"/>
     <service-resource type="model" loader="main" location="servicedef/services_maint.xml"/>
+    <service-resource type="model" loader="main" location="servicedef/services_picklist.xml"/>
     <service-resource type="model" loader="main" location="servicedef/services_pricepromo.xml"/>
+    <service-resource type="model" loader="main" location="servicedef/services_shipment_ups.xml"/>
+    <service-resource type="model" loader="main" location="servicedef/services_shipment_usps.xml"/>
     <service-resource type="model" loader="main" location="servicedef/services_shipment.xml"/>
     <service-resource type="model" loader="main" location="servicedef/services_store.xml"/>
     <service-resource type="model" loader="main" location="servicedef/services_view.xml"/>
