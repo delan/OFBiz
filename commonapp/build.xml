@@ -97,7 +97,6 @@
         
 	    <path id="build.classpath">
             <pathelement path="${classpath}"/>
-            <fileset dir="${extlib.dir}/user_extras" />
         </path>
         <echo message="classpath: ${classpath}"/>
     </target>
