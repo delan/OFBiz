@@ -6,6 +6,7 @@ package org.ofbiz.core.workflow.impl;
 
 import java.util.*;
 import java.sql.Timestamp;
+import org.ofbiz.core.entity.*;
 import org.ofbiz.core.workflow.*;
 
 /**
@@ -31,56 +32,34 @@ import org.ofbiz.core.workflow.*;
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
+ *@author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
  *@author     David Ostrovsky (d.ostrovsky@gmx.de)
  *@created    November 2, 2001
  *@version    1.0
  */
-public class WfExecutionObjectImpl implements WfExecutionObject {
-    
-    // Workflow state types
-    public static final int WORKFLOW_STATE_OPEN = 100;
-    public static final int WORKFLOW_STATE_CLOSED = 200;
-    
-    // While open types
-    public static final int WORKFLOW_OPEN_NOT_RUNNING = 110;
-    public static final int WORKFLOW_OPEN_RUNNING = 120;
-    
-    // Why not running types
-    public static final int WORKFLOW_NOT_STARTED = 111;
-    public static final int WORKFLOW_SUSPENDED = 112;
-    
-    // How closed types
-    public static final int WORKFLOW_COMPLETED = 201;
-    public static final int WORKFLOW_TERMINATED = 202;
-    public static final int WORKFLOW_ABORTED = 203;
-    
-    // Process Manager state types
-    public static final int PROCESS_MGR_DISABLED = 10;
-    public static final int PROCESS_MGR_ENABLED = 11;
-    
-    // Attribute instance 'name'
-    private String name;
-    
-    // Attribute instance 'description'
-    private String description;
-    
-    // Attribute instance 'priority'
-    private int priority;
-    
-    // Attribute instance 'context'
-    private HashMap context;
-    
-    // Attribute instance 'history'
-    private ArrayList history;
+public abstract class WfExecutionObjectImpl implements WfExecutionObject {
+       
+    // The value object for this execution object (wfprocess,wfactivity)
+    protected GenericValue valueObject;
+        
+    // Attributes of this object
+    protected Map context;     // TODO: move to a RuntimeData value object           
+    protected List history;        
     
     /**
      * Creates new WfExecutionObjectImpl
-     * @param pName Initial value for attribute 'name'
-     * @param pDescription Initial value for attribute 'description'
+     * @param valueObject The GenericValue object.     
      */
-    public WfExecutionObjectImpl(String name, String description) {
-        this.name = name;
-        this.description = description;
+    public WfExecutionObjectImpl(GenericValue valueObject) {
+        this.valueObject = valueObject;        
+        context = new HashMap();
+        history = new ArrayList();
+        try {
+            changeState("open.not_running.not_started");
+        }
+        catch ( WfException e ) {
+            e.printStackTrace();
+        }
     }
     
     /**
@@ -88,7 +67,9 @@ public class WfExecutionObjectImpl implements WfExecutionObject {
      * @throws WfException General workflow exception.
      * @return Name of the object.
      */
-    public String name() throws WfException { return name; }
+    public String name() throws WfException { 
+        return valueObject.getString("objectName");
+    }
     
     /**
      * Setter for attribute 'name'
@@ -96,7 +77,13 @@ public class WfExecutionObjectImpl implements WfExecutionObject {
      * @throws WfException General workflow exception.
      */
     public void setName(String newValue) throws WfException {
-        name = newValue;
+        try {
+            valueObject.set("objectName",newValue);
+            valueObject.store();
+        }
+        catch ( GenericEntityException e ) {
+            throw new WfException(e.getMessage(),e);
+        }                
     }
     
     /**
@@ -105,7 +92,13 @@ public class WfExecutionObjectImpl implements WfExecutionObject {
      * @throws WfException General workflow exception
      */
     public void setPriority(int newValue) throws WfException {
-        priority = newValue;
+        try {
+            valueObject.set("objectPriority",new Integer(newValue));
+            valueObject.store();
+        }
+        catch ( GenericEntityException e ) {
+            throw new WfException(e.getMessage(),e);
+        }                        
     }
     
     /**
@@ -113,23 +106,57 @@ public class WfExecutionObjectImpl implements WfExecutionObject {
      * @throws WfException General workflow exception.
      * @return Getter Priority of
      */
-    public int priority() throws WfException { return priority; }
+    public int priority() throws WfException { 
+        if ( valueObject.get("objectPriority") != null )
+            return valueObject.getInteger("objectPriority").intValue();                
+        return 0;  // change to default priority value
+    }
     
     /**
      * Retrieve the current state of this process or activity.
      * @throws WfException General workflow exception
      * @return Current state.
      */
-    public String state() throws WfException {
-        return new String("");
+    public String state() throws WfException {         
+        return valueObject.getString("objectState");            
     }
-    
+            
     /**
      * Retrieve the list of all valid states.
      * @throws WfException General workflow exception.
      * @return List of valid states.
      */
     public List validStates() throws WfException {
+         String statesArr[] = { "open.running",  "open.not_running.not_started",
+          "open.not_running.suspended",  "closed.completed", "closed.terminated",
+          "closed.aborted" };
+          List possibleStates = Arrays.asList(statesArr);
+          String currentState = state();
+          if ( currentState.startsWith("closed") )
+              return new ArrayList();
+          if ( !currentState.startsWith("open") )
+              throw new WfException("Currently in an unknown state.");
+          if ( currentState.equals("open.running") ) {
+              possibleStates.remove("open.running");
+              possibleStates.remove("open.not_running.not_started");
+              return possibleStates;
+          }
+          if ( currentState.equals("open.not_running.not_started") ) {
+              possibleStates.remove("open.not_running.not_started");
+              possibleStates.remove("open.not_running.suspended");
+              possibleStates.remove("closed.completed");
+              possibleStates.remove("closed.terminated");      
+              possibleStates.remove("closed.aborted");
+              return possibleStates;
+          }
+          if ( currentState.equals("open.not_running.suspended") ) {
+              possibleStates.remove("open.not_running.suspended");
+              possibleStates.remove("open.not_running.not_started");
+              possibleStates.remove("closed.complete");
+              possibleStates.remove("closed.terminated");
+              possibleStates.remove("closed.aborted");
+              return possibleStates;
+          }                     
         return new ArrayList();
     }
     
@@ -140,7 +167,9 @@ public class WfExecutionObjectImpl implements WfExecutionObject {
      * @return Count of history Elements
      */
     public int howManyHistory() throws WfException, HistoryNotAvailable {
-        return 0;
+        if ( history.size() < 1 )
+            throw new HistoryNotAvailable();
+        return history.size();
     }
     
     /**
@@ -156,16 +185,18 @@ public class WfExecutionObjectImpl implements WfExecutionObject {
      * @throws WfException General workflow exception.
      * @return
      */
-    public int whileOpen() throws WfException {
-        return 0;
+    public List whileOpenType() throws WfException {
+        String[] list = { "running", "not_running" };
+        return Arrays.asList(list);
     }
     
     /**
      * @throws WfException General workflow exception.
      * @return Reason for not running.
      */
-    public int whyNotRunning() throws WfException {
-        return 0;
+    public List whyNotRunningType() throws WfException {
+        String[] list = { "not_started", "suspended" };
+        return Arrays.asList(list);
     }
     
     /**
@@ -174,7 +205,7 @@ public class WfExecutionObjectImpl implements WfExecutionObject {
      * @return Key of the object.
      */
     public String key() throws WfException {
-        return new String("");
+        return valueObject.getString("executionObjectId");
     }
     
     /**
@@ -210,8 +241,9 @@ public class WfExecutionObjectImpl implements WfExecutionObject {
      * @throws WfException General workflow exception.
      * @return Current state of this object.
      */
-    public int workflowState() throws WfException {
-        return 0;
+    public List workflowStateType() throws WfException {        
+        String[] list = { "open", "closed" };
+        return Arrays.asList(list);
     }
     
     /**
@@ -229,7 +261,13 @@ public class WfExecutionObjectImpl implements WfExecutionObject {
      * @throws WfException General workflow exception.
      */
     public void setDescription(String newValue) throws WfException {
-        description = newValue;
+        try {
+            valueObject.set("description",newValue);
+            valueObject.store();
+        }
+        catch ( GenericEntityException e ) {
+            throw new WfException(e.getMessage(),e);
+        }
     }
     
     /**
@@ -237,7 +275,9 @@ public class WfExecutionObjectImpl implements WfExecutionObject {
      * @throws WfException General workflow exception.
      * @return Description of this object.
      */
-    public String description() throws WfException {return description;}
+    public String description() throws WfException {
+        return valueObject.getString("description");
+    }
     
     /**
      * Getter for timestamp of last state change.
@@ -290,19 +330,33 @@ public class WfExecutionObjectImpl implements WfExecutionObject {
      * @throws WfException General workflow exception.
      * @return Termination art of this process ot activity.
      */
-    public int howClosed() throws WfException {
-        return 0;
+    public List howClosedType() throws WfException {
+        String[] list = { "completed", "terminated", "aborted" };
+        return Arrays.asList(list);               
     }
     
     /**
      * Set new state for this process or activity.
-     * @param newState New state to be set.
+     * @param newState New state value to be set.
      * @throws WfException General workflow exception.
      * @throws InvalidState The state is invalid.
      * @throws TransitionNotAllowed The transition is not allowed.
      */
     public void changeState(String newState) throws WfException, InvalidState,
-    TransitionNotAllowed {
+      TransitionNotAllowed {
+          // Test is transaction is allowed???
+          if ( validStates().contains(newState) ) {
+              try {
+                  valueObject.set("objectState",newState);
+                  valueObject.store();
+              }
+              catch ( GenericEntityException e ) {
+                  throw new WfException(e.getMessage(),e);
+              }
+          }
+          else {
+              throw new InvalidState();
+          }                    
     }
     
     /**
@@ -314,5 +368,11 @@ public class WfExecutionObjectImpl implements WfExecutionObject {
      */
     public void suspend() throws WfException, CannotSuspend, NotRunning,
     AlreadySuspended {
-    }
+    }        
+    
+    /** 
+     * Returns the type of execution object
+     * @return String name of this execution object type
+     */
+    public abstract String executionObjectType();
 }

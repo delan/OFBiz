@@ -5,6 +5,7 @@
 package org.ofbiz.core.workflow;
 
 import java.util.*;
+import org.ofbiz.core.entity.*;
 import org.ofbiz.core.workflow.impl.*;
 
 /**
@@ -41,8 +42,8 @@ public class WfFactory {
    * @throws WfException
    * @return An instance of the WfActivify Interface
    */
-  public static WfActivity newWfActivity(String name, String description) {
-      return new WfActivityImpl(name,description);      
+  public static WfActivity newWfActivity(GenericValue value) {
+      return new WfActivityImpl(value);      
   }
   
   
@@ -59,8 +60,8 @@ public class WfFactory {
    * @throws WfException
    * @return An instance of the WfProcess Interface.
    */
-  public static WfProcess newWfProcess(String name, String description) {
-      return new WfProcessImpl(name,description);      
+  public static WfProcess newWfProcess(GenericValue value) {
+      return new WfProcessImpl(value);      
   }
   
   
@@ -89,7 +90,7 @@ public class WfFactory {
    * @throws WfException
    * @return An instance of the WfResource Interface.
    */
-  public static WfResource newWfResource(String name, String key, List items) {
-      return new WfResourceImpl(name,key,items);
+  public static WfResource newWfResource(GenericValue value) {
+      return new WfResourceImpl(value);
   }
 }

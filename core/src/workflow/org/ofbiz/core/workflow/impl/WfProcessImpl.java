@@ -5,6 +5,7 @@
 package org.ofbiz.core.workflow.impl;
 
 import java.util.*;
+import org.ofbiz.core.entity.*;
 import org.ofbiz.core.workflow.*;
 
 /**
@@ -52,12 +53,12 @@ implements WfProcess {
     
     /**
      * Creates new WfProcessImpl
-     * @param pName Initial value for attribute 'name'
-     * @param pDescription Initial value for attribute 'description'
+     * @param valueObject The GenericValue object of this WfProcess     
      */
-    public WfProcessImpl(String pName, String pDescriprion) {
-        super(pName, pDescriprion);
+    public WfProcessImpl(GenericValue valueObject) {
+        super(valueObject);
         steps = new ArrayList();
+        result = new HashMap();
     }
 
     /**
@@ -93,7 +94,7 @@ implements WfProcess {
         if (steps.size() == 0)
             throw new CannotStart("No Activities exist");
         
-        if (workflowState() == WORKFLOW_OPEN_RUNNING)
+        if (workflowStateType().equals("open.running"))
             throw new AlreadyRunning("Process is already running");
         
         WfActivity activity = (WfActivity)steps.get(0);
@@ -186,4 +187,8 @@ implements WfProcess {
     public int howManyStep() throws WfException {
             return steps.size();
     }    
+    
+    public String executionObjectType() {
+        return "WfProcess";
+    }
 }

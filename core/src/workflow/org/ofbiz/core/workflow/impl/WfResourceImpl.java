@@ -5,6 +5,7 @@
 package org.ofbiz.core.workflow.impl;
 
 import java.util.*;
+import org.ofbiz.core.entity.*;
 import org.ofbiz.core.workflow.*;
 
 /**
@@ -37,8 +38,7 @@ import org.ofbiz.core.workflow.*;
 
 public class WfResourceImpl implements WfResource {
     
-    protected String resourceName;
-    protected String resourceKey;
+    protected GenericValue valueObject;    
     protected List workItems;
     
     /** Creates a new WfResource
@@ -46,10 +46,9 @@ public class WfResourceImpl implements WfResource {
      * @param resourceKey Uniquely identifies the resource
      * @param workItems Assignments associated with this resource
      */
-    public WfResourceImpl(String resourceName, String resourceKey, List workItems) {
-        this.resourceName = resourceName;
-        this.resourceKey = resourceKey;
-        this.workItems = workItems;
+    public WfResourceImpl(GenericValue valueObject) {
+        this.valueObject = valueObject;
+        this.workItems = new ArrayList();
     }
     
     /** Gets the number of work items
@@ -93,7 +92,7 @@ public class WfResourceImpl implements WfResource {
      * @return String of the resouce key.
      */
     public String resourceKey() throws WfException {
-        return this.resourceKey;
+        return valueObject.getString("participantId");
     }
     
     /** Gets the resource name
@@ -101,7 +100,7 @@ public class WfResourceImpl implements WfResource {
      * @return String of the resource name
      */
     public String resourceName() throws WfException {
-        return this.resourceName;
+        return valueObject.getString("participantName");
     }
     
     /** Release the resouce from the assignement

@@ -57,6 +57,7 @@ public class ModelService {
           return false;
       
       // validate types next
+      String DEFAULT_PACKAGE = "java.lang.";
       
       return true;
   }

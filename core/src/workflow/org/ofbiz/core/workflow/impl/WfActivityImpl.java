@@ -5,6 +5,7 @@
 package org.ofbiz.core.workflow.impl;
 
 import java.util.*;
+import org.ofbiz.core.entity.*;
 import org.ofbiz.core.workflow.*;
 
 /**
@@ -49,11 +50,10 @@ implements WfActivity
     
     /**
      * Creates new WfProcessImpl
-     * @param pName Initial value for attribute 'name'
-     * @param pDescription Initial value for attribute 'description'
+     * @param valueObject The GenericValue object of this WfActivity.   
      */
-    public WfActivityImpl(String pName, String pDescription) {
-        super(pName, pDescription);
+    public WfActivityImpl(GenericValue valueObject) {
+        super(valueObject);
         result = new HashMap();
         assignments = new ArrayList();
     }
@@ -133,5 +133,9 @@ implements WfActivity
      */
     public Iterator getIteratorAssignment() throws WfException {
             return assignments.iterator();
+    }
+    
+    public String executionObjectType() {
+        return "WfActivity";
     }
 }

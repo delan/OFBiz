@@ -37,12 +37,16 @@ import org.ofbiz.core.workflow.*;
 
 public class WfProcessMgrImpl implements WfProcessMgr
 {
-    String name;
-    String description;
-    String version;
-    String category;
-    int state;
-    List processList;
+    // Process Manager state types
+    public static final int PROCESS_MGR_DISABLED = 10;
+    public static final int PROCESS_MGR_ENABLED = 11;
+    
+    protected String name;
+    protected String description;
+    protected String version;
+    protected String category;
+    protected int state;
+    protected List processList;
     
     /** Creates new WfProcessMgrImpl 
      * @param pName Initial value for attribute 'name'
@@ -57,7 +61,7 @@ public class WfProcessMgrImpl implements WfProcessMgr
         version = pVersion;
         
         processList = new ArrayList();
-        state = WfExecutionObjectImpl.PROCESS_MGR_DISABLED;
+        state = PROCESS_MGR_DISABLED;
     }
 
     /**
@@ -67,8 +71,8 @@ public class WfProcessMgrImpl implements WfProcessMgr
      */
     public void setProcessMgrState(int newState) throws WfException, 
     TransitionNotAllowed {
-        if (newState != WfExecutionObjectImpl.PROCESS_MGR_DISABLED &&
-            newState != WfExecutionObjectImpl.PROCESS_MGR_ENABLED)
+        if (newState != PROCESS_MGR_DISABLED &&
+            newState != PROCESS_MGR_ENABLED)
             throw new TransitionNotAllowed("TransitionNotAllowed Exception");
         state = newState;
     }
@@ -95,14 +99,15 @@ public class WfProcessMgrImpl implements WfProcessMgr
      */
     public WfProcess createProcess(WfRequester requester) 
     throws WfException, NotEnabled, InvalidRequester, RequesterRequired {
-        if (state == WfExecutionObjectImpl.PROCESS_MGR_DISABLED)
+        if (state == PROCESS_MGR_DISABLED)
             throw new NotEnabled("Process Manager not enabled");
         
         if (requester == null)
             throw new RequesterRequired("REquestor is null");
         
         // test if the requestor is OK: how?
-        WfProcess process = WfFactory.newWfProcess(name, description);
+        String key = null;  // work on this...
+        WfProcess process = WfFactory.newWfProcess(null); // TODO: FIXME!
         
         try {
             process.setRequester(requester);

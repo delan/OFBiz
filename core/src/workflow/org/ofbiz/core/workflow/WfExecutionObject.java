@@ -43,25 +43,25 @@ public interface WfExecutionObject  {
    * @throws WfException General workflow exception.
    * @return Current state of this object.
    */
-  public int workflowState() throws WfException;
+  public List workflowStateType() throws WfException;
   
   /**
    * @throws WfException General workflow exception.
    * @return 
    */
-  public int whileOpen() throws WfException;
+  public List whileOpenType() throws WfException;
   
   /**
    * @throws WfException General workflow exception.
    * @return Reason for not running.
    */
-  public int whyNotRunning() throws WfException;
+  public List whyNotRunningType() throws WfException;
   
   /**
    * @throws WfException General workflow exception.
    * @return Termination art of this process ot activity.
    */
-  public int howClosed() throws WfException;
+  public List howClosedType() throws WfException;
   
   /**
    * Retrieve the list of all valid states.
