@@ -1,0 +1,213 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+<HEAD>
+	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=windows-1252">
+	<TITLE></TITLE>
+	<META NAME="GENERATOR" CONTENT="OpenOffice.org 1.0.1  (Win32)">
+	<META NAME="AUTHOR" CONTENT="David E. Jones">
+	<META NAME="CREATED" CONTENT="20030101;19474300">
+	<META NAME="CHANGEDBY" CONTENT="David E. Jones">
+	<META NAME="CHANGED" CONTENT="20030104;2223800">
+	<STYLE>
+	<!--
+		@page { margin-left: 3.18cm; margin-right: 3.18cm; margin-top: 2.54cm; margin-bottom: 2.54cm }
+	-->
+	</STYLE>
+</HEAD>
+<BODY LANG="en-US">
+<P STYLE="margin-bottom: 0cm"><BR>
+</P>
+<P STYLE="margin-bottom: 0cm">OFBiz Basic Technical Course Outline</P>
+<P STYLE="margin-bottom: 0cm"><BR>
+</P>
+<P STYLE="margin-bottom: 0cm">Day 1: Architecture, Configuration &amp;
+Deployment Overview and a Simple Example</P>
+<P STYLE="margin-bottom: 0cm"><BR>
+</P>
+<OL>
+	<LI><P STYLE="margin-bottom: 0cm">Architecture Overview</P>
+	<OL>
+		<LI><P STYLE="margin-bottom: 0cm">Model-Controller-View Pattern (an
+		old story with a new name)</P>
+		<LI><P STYLE="margin-bottom: 0cm">Lots of Controllers</P>
+		<OL>
+			<LI><P STYLE="margin-bottom: 0cm">Applying the Controller Pattern</P>
+			<LI><P STYLE="margin-bottom: 0cm">Data Level Controller (Entity
+			Engine)</P>
+			<LI><P STYLE="margin-bottom: 0cm">Logic Level Controller (Service
+			Engine)</P>
+			<LI><P STYLE="margin-bottom: 0cm">Web User Interface Level
+			Controller (Control Servlet, Regions Framework, etc)</P>
+		</OL>
+		<LI><P STYLE="margin-bottom: 0cm">The Model goes in the Database</P>
+		<LI><P STYLE="margin-bottom: 0cm">The View is what the user
+		interacts with</P>
+		<LI><P STYLE="margin-bottom: 0cm">Everything else follows from
+		those, and the only trick is to do it efficiently for initial
+		implementation and maintenance.</P>
+		<LI><P STYLE="margin-bottom: 0cm">Data Flow Between Components</P>
+		<OL>
+			<LI><P STYLE="margin-bottom: 0cm">Request from Browser</P>
+			<LI><P STYLE="margin-bottom: 0cm">Control Servlet Called</P>
+			<LI><P STYLE="margin-bottom: 0cm">Request Looked Up</P>
+			<LI><P STYLE="margin-bottom: 0cm">Security Checked (encryption,
+			authentication)</P>
+			<LI><P STYLE="margin-bottom: 0cm">Event Called (if defined)</P>
+			<OL>
+				<LI><P STYLE="margin-bottom: 0cm">Service Definition Looked Up</P>
+				<LI><P STYLE="margin-bottom: 0cm">Simple Method Called As a
+				Service</P>
+				<OL>
+					<LI><P STYLE="margin-bottom: 0cm">Handle Data Coming In</P>
+					<LI><P STYLE="margin-bottom: 0cm">Look Up Information From
+					Database</P>
+					<LI><P STYLE="margin-bottom: 0cm">Save Information to Database</P>
+				</OL>
+			</OL>
+			<LI><P STYLE="margin-bottom: 0cm">Response Chosen and Called</P>
+			<OL>
+				<LI><P STYLE="margin-bottom: 0cm">View Looked Up</P>
+				<LI><P STYLE="margin-bottom: 0cm">Region Looked Up</P>
+				<LI><P STYLE="margin-bottom: 0cm">Template Called, Sections
+				Filled In</P>
+				<LI><P STYLE="margin-bottom: 0cm">Data Looked Up (directly
+				through the Entity Engine or through a service)</P>
+			</OL>
+		</OL>
+	</OL>
+	<LI><P STYLE="margin-bottom: 0cm">Configuration &amp; Deployment
+	Overview</P>
+	<OL>
+		<LI><P STYLE="margin-bottom: 0cm">Choosing and Setting Up a
+		Database</P>
+		<LI><P STYLE="margin-bottom: 0cm">Choosing and Setting Up an
+		Application Server</P>
+		<LI><P STYLE="margin-bottom: 0cm">OFBiz Configuration</P>
+		<OL>
+			<LI><P STYLE="margin-bottom: 0cm">entityengine.xml</P>
+			<OL>
+				<LI><P STYLE="margin-bottom: 0cm">Transaction Manager Setup</P>
+				<LI><P STYLE="margin-bottom: 0cm">Database Setup</P>
+			</OL>
+			<LI><P STYLE="margin-bottom: 0cm">serviceengine.xml</P>
+			<LI><P STYLE="margin-bottom: 0cm">debug.properties</P>
+			<LI><P STYLE="margin-bottom: 0cm">Other Configuration Files</P>
+		</OL>
+	</OL>
+	<LI><P STYLE="margin-bottom: 0cm">Beginning With the End in Mind</P>
+	<OL>
+		<LI><P STYLE="margin-bottom: 0cm">What to build?</P>
+	</OL>
+	<LI><P STYLE="margin-bottom: 0cm">Data (Entity) Layer</P>
+	<OL>
+		<LI><P STYLE="margin-bottom: 0cm">Define Entities (configure data
+		level controller)</P>
+	</OL>
+	<LI><P STYLE="margin-bottom: 0cm">Logic (Service) Layer</P>
+	<OL>
+		<LI><P STYLE="margin-bottom: 0cm">Define Services  (configure logic
+		level controller)</P>
+		<LI><P STYLE="margin-bottom: 0cm">Implement Services</P>
+	</OL>
+	<LI><P STYLE="margin-bottom: 0cm">User Interface Layer</P>
+	<OL>
+		<LI><P STYLE="margin-bottom: 0cm">Configure Web User Interface
+		Level Controllers</P>
+		<OL>
+			<LI><P STYLE="margin-bottom: 0cm">Define Web Requests
+			(controller.xml)</P>
+			<OL>
+				<LI><P STYLE="margin-bottom: 0cm">Simple Request</P>
+				<LI><P STYLE="margin-bottom: 0cm">Requests with an Event
+				implemented as a Service</P>
+			</OL>
+			<LI><P STYLE="margin-bottom: 0cm">Define Web Views
+			(controller.xml)</P>
+			<LI><P STYLE="margin-bottom: 0cm">Define View Regions
+			(regions.xml)</P>
+		</OL>
+		<LI><P STYLE="margin-bottom: 0cm">Create Web User Interfaces</P>
+		<OL>
+			<LI><P STYLE="margin-bottom: 0cm">Create a Region Template JSP</P>
+			<LI><P STYLE="margin-bottom: 0cm">Create a Header JSP</P>
+			<LI><P STYLE="margin-bottom: 0cm">Create an Editing JSP 
+			</P>
+			<LI><P STYLE="margin-bottom: 0cm">Create a Listing JSP</P>
+		</OL>
+	</OL>
+	<LI><P STYLE="margin-bottom: 0cm">Throwing a Wrench in the Works</P>
+	<OL>
+		<LI><P STYLE="margin-bottom: 0cm">Adding a New Field</P>
+		<LI><P STYLE="margin-bottom: 0cm">Change the Entity Definition</P>
+		<LI><P STYLE="margin-bottom: 0cm">Change the Service Definition</P>
+		<LI><P STYLE="margin-bottom: 0cm">Add to the Listing JSP (if
+		needed)</P>
+		<LI><P STYLE="margin-bottom: 0cm">Add to the Editing JSP</P>
+	</OL>
+	<LI><P STYLE="margin-bottom: 0cm">Questions and Feedback</P>
+</OL>
+<P STYLE="margin-bottom: 0cm"><BR>
+</P>
+<P STYLE="margin-bottom: 0cm">Day 2: Data, Logic &amp; Applications</P>
+<P STYLE="margin-bottom: 0cm"><BR>
+</P>
+<OL>
+	<LI><P STYLE="margin-bottom: 0cm">The OFBiz Data Model (Common Data
+	Components)</P>
+	<OL>
+		<LI><P STYLE="margin-bottom: 0cm">Data Model Patterns</P>
+		<OL>
+			<LI><P STYLE="margin-bottom: 0cm">Extensibility Pattern</P>
+			<OL>
+				<LI><P STYLE="margin-bottom: 0cm">Types</P>
+				<LI><P STYLE="margin-bottom: 0cm">Attributes</P>
+			</OL>
+			<LI><P STYLE="margin-bottom: 0cm">Entity Relationships</P>
+			<LI><P STYLE="margin-bottom: 0cm">Effective Dating</P>
+		</OL>
+		<LI><P STYLE="margin-bottom: 0cm">Data Model Packages</P>
+		<OL>
+			<LI><P STYLE="margin-bottom: 0cm">Common</P>
+			<OL>
+				<LI><P STYLE="margin-bottom: 0cm">Enumeration, Status,
+				TimePeriod, etc.</P>
+				<LI><P STYLE="margin-bottom: 0cm">UserLogin, Security</P>
+			</OL>
+			<LI><P STYLE="margin-bottom: 0cm">Content</P>
+			<LI><P STYLE="margin-bottom: 0cm">Party</P>
+			<LI><P STYLE="margin-bottom: 0cm">Product</P>
+			<LI><P STYLE="margin-bottom: 0cm">Order</P>
+			<LI><P STYLE="margin-bottom: 0cm">Marketing</P>
+			<LI><P STYLE="margin-bottom: 0cm">Accounting</P>
+			<LI><P STYLE="margin-bottom: 0cm">Shipment</P>
+			<LI><P STYLE="margin-bottom: 0cm">Human Resources</P>
+			<LI><P STYLE="margin-bottom: 0cm">Work Effort</P>
+		</OL>
+	</OL>
+	<LI><P STYLE="margin-bottom: 0cm">The OFBiz Common Logic Components</P>
+	<OL>
+		<LI><P STYLE="margin-bottom: 0cm">Parallels the Data Model Package
+		Organization</P>
+		<LI><P STYLE="margin-bottom: 0cm">Services, Events and Workers</P>
+	</OL>
+	<LI><P STYLE="margin-bottom: 0cm">The OFBiz Applications</P>
+	<OL>
+		<LI><P STYLE="margin-bottom: 0cm">WebTools</P>
+		<LI><P STYLE="margin-bottom: 0cm">Content Manager</P>
+		<LI><P STYLE="margin-bottom: 0cm">Party Manager</P>
+		<LI><P STYLE="margin-bottom: 0cm">Marketing Manager</P>
+		<LI><P STYLE="margin-bottom: 0cm">Catalog Manager</P>
+		<LI><P STYLE="margin-bottom: 0cm">Facility Manager</P>
+		<LI><P STYLE="margin-bottom: 0cm">Order Manager</P>
+		<LI><P STYLE="margin-bottom: 0cm">Accounting Manager</P>
+		<LI><P STYLE="margin-bottom: 0cm">WorkEffort Manager</P>
+	</OL>
+</OL>
+<P STYLE="margin-bottom: 0cm"><BR>
+</P>
+<P STYLE="margin-bottom: 0cm"><BR>
+</P>
+<P STYLE="margin-bottom: 0cm"><BR>
+</P>
+</BODY>
+</HTML>

@@ -1,0 +1,287 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+<HEAD>
+	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=windows-1252">
+	<TITLE></TITLE>
+	<META NAME="GENERATOR" CONTENT="OpenOffice.org 1.0.1  (Win32)">
+	<META NAME="AUTHOR" CONTENT="Tom Verbeek">
+	<META NAME="CREATED" CONTENT="20010507;17110400">
+	<META NAME="CHANGEDBY" CONTENT="David E. Jones">
+	<META NAME="CHANGED" CONTENT="20030104;2393400">
+	<STYLE>
+	<!--
+		@page { margin-left: 3.18cm; margin-right: 3.18cm; margin-top: 2.54cm; margin-bottom: 2.54cm }
+	-->
+	</STYLE>
+</HEAD>
+<BODY LANG="en-US">
+<P STYLE="margin-bottom: 0cm"><BR>
+</P>
+<P STYLE="margin-bottom: 0cm">OFBiz Advanced Framework Training
+Outline</P>
+<P STYLE="margin-bottom: 0cm"><BR>
+</P>
+<P STYLE="margin-bottom: 0cm">Day 1: The Webapp Framework &amp;
+MiniLang</P>
+<P STYLE="margin-bottom: 0cm"><BR>
+</P>
+<OL>
+	<LI><P STYLE="margin-bottom: 0cm">The Webapp Framework</P>
+	<OL>
+		<LI><P STYLE="margin-bottom: 0cm">Control Servlet</P>
+		<OL>
+			<LI><P STYLE="margin-bottom: 0cm">Requests</P>
+			<LI><P STYLE="margin-bottom: 0cm">Events</P>
+			<OL>
+				<LI><P STYLE="margin-bottom: 0cm">Event Context (parameters and
+				return values)</P>
+				<LI><P STYLE="margin-bottom: 0cm">Event Types</P>
+				<LI><P STYLE="margin-bottom: 0cm">simple-method Events</P>
+				<LI><P STYLE="margin-bottom: 0cm">Java Events</P>
+			</OL>
+			<LI><P STYLE="margin-bottom: 0cm">Responses</P>
+			<LI><P STYLE="margin-bottom: 0cm">Views</P>
+		</OL>
+		<LI><P STYLE="margin-bottom: 0cm">Region Framework</P>
+		<OL>
+			<LI><P STYLE="margin-bottom: 0cm">Defining Template Based Regions</P>
+			<LI><P STYLE="margin-bottom: 0cm">Defining Inheritance or Region
+			Based Regions</P>
+			<LI><P STYLE="margin-bottom: 0cm">Using, or Not Using, Sections</P>
+		</OL>
+		<LI><P STYLE="margin-bottom: 0cm">Taglib</P>
+		<OL>
+			<LI><P STYLE="margin-bottom: 0cm">Control Tags</P>
+			<LI><P STYLE="margin-bottom: 0cm">Entity Engine Related Tags</P>
+			<LI><P STYLE="margin-bottom: 0cm">Service Engine Related Tags</P>
+			<LI><P STYLE="margin-bottom: 0cm">i18n Tags</P>
+			<LI><P STYLE="margin-bottom: 0cm">Other Tags</P>
+		</OL>
+	</OL>
+	<LI><P STYLE="margin-bottom: 0cm">MiniLang</P>
+	<OL>
+		<LI><P STYLE="margin-bottom: 0cm">simple-map-processor</P>
+		<OL>
+			<LI><P STYLE="margin-bottom: 0cm">General Concept</P>
+			<LI><P STYLE="margin-bottom: 0cm">Make In String Operations</P>
+			<LI><P STYLE="margin-bottom: 0cm">Process Field Operations</P>
+		</OL>
+		<LI><P STYLE="margin-bottom: 0cm">simple-method</P>
+		<OL>
+			<LI><P STYLE="margin-bottom: 0cm">General Concept</P>
+			<LI><P STYLE="margin-bottom: 0cm">Call Operations</P>
+			<LI><P STYLE="margin-bottom: 0cm">Java Call Operations</P>
+			<LI><P STYLE="margin-bottom: 0cm">Control and Error Handling
+			Operations</P>
+			<LI><P STYLE="margin-bottom: 0cm">Event Specific Operations</P>
+			<LI><P STYLE="margin-bottom: 0cm">Service Specific Operations</P>
+			<LI><P STYLE="margin-bottom: 0cm">Method Environment Operations</P>
+			<LI><P STYLE="margin-bottom: 0cm">Entity Engine Misc. Operations</P>
+			<LI><P STYLE="margin-bottom: 0cm">Entity Engine Find Operations</P>
+			<LI><P STYLE="margin-bottom: 0cm">Entity Engine Value Operations</P>
+			<LI><P STYLE="margin-bottom: 0cm">Entity Engine List Operations</P>
+			<LI><P STYLE="margin-bottom: 0cm">Entity Engine Transaction
+			Operations</P>
+			<LI><P STYLE="margin-bottom: 0cm">Conditional (If) Operations</P>
+			<LI><P STYLE="margin-bottom: 0cm">Other Operations</P>
+		</OL>
+		<LI><P STYLE="margin-bottom: 0cm">Some Examples</P>
+	</OL>
+</OL>
+<P STYLE="margin-bottom: 0cm"><BR>
+</P>
+<P STYLE="margin-bottom: 0cm">Day 2: The Entity and Service Engines</P>
+<P STYLE="margin-bottom: 0cm"><BR>
+</P>
+<OL>
+	<LI><P STYLE="margin-bottom: 0cm">Basic Framework Review</P>
+	<LI><P STYLE="margin-bottom: 0cm">The Entity Engine</P>
+	<OL>
+		<LI><P STYLE="margin-bottom: 0cm">Architecture &amp; Design Goals</P>
+		<OL>
+			<LI><P STYLE="margin-bottom: 0cm">Database (or datasource)
+			Agnostic</P>
+			<LI><P STYLE="margin-bottom: 0cm">Dynamic API Behaves According to
+			Entity Definitions</P>
+			<LI><P STYLE="margin-bottom: 0cm">Minimal Redundancy from Data
+			Definitions</P>
+			<LI><P STYLE="margin-bottom: 0cm">Uses JDBC and JTA J2EE
+			Components</P>
+			<OL>
+				<LI><P STYLE="margin-bottom: 0cm">Can operate in the same
+				transaction with EJB and JDO code</P>
+			</OL>
+		</OL>
+		<LI><P STYLE="margin-bottom: 0cm">Configuration</P>
+		<OL>
+			<LI><P STYLE="margin-bottom: 0cm">JTA Setup</P>
+			<LI><P STYLE="margin-bottom: 0cm">Delegators</P>
+			<LI><P STYLE="margin-bottom: 0cm">Datasources</P>
+		</OL>
+		<LI><P STYLE="margin-bottom: 0cm">Advanced Entity Definitions</P>
+		<OL>
+			<LI><P STYLE="margin-bottom: 0cm">Entities</P>
+			<LI><P STYLE="margin-bottom: 0cm">Fields</P>
+			<LI><P STYLE="margin-bottom: 0cm">Primary Keys</P>
+			<LI><P STYLE="margin-bottom: 0cm">Relationships</P>
+		</OL>
+		<LI><P STYLE="margin-bottom: 0cm">View Entity Definitions</P>
+		<OL>
+			<LI><P STYLE="margin-bottom: 0cm">Member Entities</P>
+			<LI><P STYLE="margin-bottom: 0cm">Field Aliases</P>
+			<LI><P STYLE="margin-bottom: 0cm">View Links</P>
+			<LI><P STYLE="margin-bottom: 0cm">Relationships</P>
+			<LI><P STYLE="margin-bottom: 0cm">Joins: Inner &amp; Outer</P>
+			<LI><P STYLE="margin-bottom: 0cm">Grouping and Summary Data</P>
+		</OL>
+		<LI><P STYLE="margin-bottom: 0cm">The GenericDelegator API</P>
+		<OL>
+			<LI><P STYLE="margin-bottom: 0cm">Factory Methods
+			(GenericDelegator, GenericPK, GenericValue)</P>
+			<LI><P STYLE="margin-bottom: 0cm">Creating, Storing &amp; Removing</P>
+			<LI><P STYLE="margin-bottom: 0cm">Finding</P>
+			<OL>
+				<LI><P STYLE="margin-bottom: 0cm">By Primary Key</P>
+				<LI><P STYLE="margin-bottom: 0cm">By &ldquo;And&rdquo;</P>
+				<LI><P STYLE="margin-bottom: 0cm">EntityConditions</P>
+				<OL>
+					<LI><P STYLE="margin-bottom: 0cm">EntityFieldMap</P>
+					<LI><P STYLE="margin-bottom: 0cm">EntityExpr</P>
+					<LI><P STYLE="margin-bottom: 0cm">EntityConditionList</P>
+					<LI><P STYLE="margin-bottom: 0cm">EntityWhereString</P>
+				</OL>
+				<LI><P STYLE="margin-bottom: 0cm">The EntityListIterator</P>
+			</OL>
+			<LI><P STYLE="margin-bottom: 0cm">Caching</P>
+			<OL>
+				<LI><P STYLE="margin-bottom: 0cm">Theory of Operation</P>
+				<LI><P STYLE="margin-bottom: 0cm">UtilCache &amp; The Webtools
+				Cache Page</P>
+				<LI><P STYLE="margin-bottom: 0cm">Automatic &amp; Manual Cache
+				Clearing</P>
+			</OL>
+		</OL>
+		<LI><P STYLE="margin-bottom: 0cm">The GenericEntity API</P>
+		<OL>
+			<LI><P STYLE="margin-bottom: 0cm">GenericPK</P>
+			<LI><P STYLE="margin-bottom: 0cm">GenericValue</P>
+		</OL>
+		<LI><P STYLE="margin-bottom: 0cm">Overview of GenericHelper
+		Interface</P>
+	</OL>
+	<LI><P STYLE="margin-bottom: 0cm">The Service Engine</P>
+	<OL>
+		<LI><P STYLE="margin-bottom: 0cm">Architecture &amp; Design Goals</P>
+		<OL>
+			<LI><P STYLE="margin-bottom: 0cm">Agnostic Service Calls</P>
+			<OL>
+				<LI><P STYLE="margin-bottom: 0cm">Implementation Agnostic</P>
+				<LI><P STYLE="margin-bottom: 0cm">Location Agnostic</P>
+			</OL>
+			<LI><P STYLE="margin-bottom: 0cm">Service &ldquo;Engines&rdquo;</P>
+		</OL>
+		<LI><P STYLE="margin-bottom: 0cm">Advanced Service Definitions</P>
+		<LI><P STYLE="margin-bottom: 0cm">Implementing Services</P>
+		<OL>
+			<LI><P STYLE="margin-bottom: 0cm">Service Context (parameters and
+			return values)</P>
+			<LI><P STYLE="margin-bottom: 0cm">Java Services</P>
+			<LI><P STYLE="margin-bottom: 0cm">Bean Shell Services</P>
+			<LI><P STYLE="margin-bottom: 0cm">simple-method Services</P>
+		</OL>
+		<LI><P STYLE="margin-bottom: 0cm">Remote Services</P>
+		<OL>
+			<LI><P STYLE="margin-bottom: 0cm">JMS Services</P>
+			<LI><P STYLE="margin-bottom: 0cm">HTTP Services</P>
+		</OL>
+		<LI><P STYLE="margin-bottom: 0cm">Calling Services</P>
+		<OL>
+			<LI><P STYLE="margin-bottom: 0cm">Synch &amp; Asynch</P>
+			<LI><P STYLE="margin-bottom: 0cm">Scheduled Services</P>
+		</OL>
+		<LI><P STYLE="margin-bottom: 0cm">Service Groups</P>
+		<LI><P STYLE="margin-bottom: 0cm">Event-Condition-Action (ECA)
+		Rules</P>
+	</OL>
+</OL>
+<P STYLE="margin-bottom: 0cm"><BR>
+</P>
+<P STYLE="margin-bottom: 0cm">Day 3: The Workflow &amp; Rule Engines,
+Data Files, Review, Q&amp;A</P>
+<P STYLE="margin-bottom: 0cm"><BR>
+</P>
+<OL>
+	<LI><P STYLE="margin-bottom: 0cm">The Worklfow Engine</P>
+	<OL>
+		<LI><P STYLE="margin-bottom: 0cm">Based on XPDL and Other Standards
+		from WfMC and OMG</P>
+		<LI><P STYLE="margin-bottom: 0cm">Workflow Concepts</P>
+		<OL>
+			<LI><P STYLE="margin-bottom: 0cm">Processes</P>
+			<LI><P STYLE="margin-bottom: 0cm">Activities</P>
+			<OL>
+				<LI><P STYLE="margin-bottom: 0cm">Manual</P>
+				<LI><P STYLE="margin-bottom: 0cm">Automatic</P>
+			</OL>
+			<LI><P STYLE="margin-bottom: 0cm">Transitions</P>
+			<LI><P STYLE="margin-bottom: 0cm">Splitting and Merging</P>
+			<LI><P STYLE="margin-bottom: 0cm">Workflow Data Context</P>
+			<LI><P STYLE="margin-bottom: 0cm">Asynchronous Execution</P>
+		</OL>
+		<LI><P STYLE="margin-bottom: 0cm">For the future: Message Flow
+		Style Business Process Management</P>
+		<LI><P STYLE="margin-bottom: 0cm">Workflow Engine Architecture</P>
+		<OL>
+			<LI><P STYLE="margin-bottom: 0cm">Service Engine Based</P>
+			<OL>
+				<LI><P STYLE="margin-bottom: 0cm">Calling Workflows Through
+				Service Engine</P>
+				<LI><P STYLE="margin-bottom: 0cm">Calling Other Services in a
+				Workflow</P>
+			</OL>
+			<LI><P STYLE="margin-bottom: 0cm">Uses Entity Engine for Workflow
+			Definition and Run-Time Data Persistence</P>
+		</OL>
+		<LI><P STYLE="margin-bottom: 0cm">Defining Workflows</P>
+		<OL>
+			<LI><P STYLE="margin-bottom: 0cm">Basic XPDL</P>
+			<LI><P STYLE="margin-bottom: 0cm">Working With Parties, Groups,
+			and Roles</P>
+			<LI><P STYLE="margin-bottom: 0cm">OFBiz Extensions</P>
+		</OL>
+		<LI><P STYLE="margin-bottom: 0cm">Importing and Managing Workflow
+		Definitions</P>
+		<LI><P STYLE="margin-bottom: 0cm">Running Workflows</P>
+		<LI><P STYLE="margin-bottom: 0cm">Interacting With Running
+		Workflows</P>
+	</OL>
+	<LI><P STYLE="margin-bottom: 0cm">The Rule Engine</P>
+	<OL>
+		<LI><P STYLE="margin-bottom: 0cm">A Declarative Logic Language</P>
+		<LI><P STYLE="margin-bottom: 0cm">Based on Building Parsers In Java
+		by Steven Metsker</P>
+		<LI><P STYLE="margin-bottom: 0cm">Constraint Based Problem Solving</P>
+		<LI><P STYLE="margin-bottom: 0cm">Deductive Problem Solving</P>
+		<LI><P STYLE="margin-bottom: 0cm">Interaction With a Database (ie
+		as a fact-base)</P>
+		<LI><P STYLE="margin-bottom: 0cm">Needs Some Work</P>
+		<LI><P STYLE="margin-bottom: 0cm">Applying Concepts with Custom
+		Rule Engines</P>
+	</OL>
+	<LI><P STYLE="margin-bottom: 0cm">The Data File Tool</P>
+	<OL>
+		<LI><P STYLE="margin-bottom: 0cm">The Wonderful World of Flat Files</P>
+		<LI><P STYLE="margin-bottom: 0cm">Generic Data Structures for Flat
+		File Data (very similar to the Entity Engine structures)</P>
+		<LI><P STYLE="margin-bottom: 0cm">Defining Data Files</P>
+		<LI><P STYLE="margin-bottom: 0cm">The Data File API</P>
+	</OL>
+	<LI><P STYLE="margin-bottom: 0cm">Review</P>
+	<LI><P STYLE="margin-bottom: 0cm">Q&amp;A</P>
+</OL>
+<P STYLE="margin-bottom: 0cm"><BR>
+</P>
+<P STYLE="margin-bottom: 0cm"><BR>
+</P>
+</BODY>
+</HTML>
