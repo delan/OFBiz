@@ -134,9 +134,9 @@
 
     <!-- list availability/occupation period on a fixed asset -->
     <form name="listFixedAssetCalendar" type="list"  default-required-field-style="calendar" list-name="weeks"  target="updateFixedAssetProductCalendar"
-            default-title-style="calendarHeader" default-widget-style="calendarContent" default-tooltip-style="tabletext">
+            default-title-style="calendarHeader" default-title-area-style="calendarHeader" default-widget-style="calendarContent" default-tooltip-style="tabletext">
 
-        <field name="week" title="${uiLabelMap.Common${month}} ${year}" title-style="calendarHeader" widget-style="calendarWeek"><display description="Week ${week}"/></field>
+        <field name="week" title="${uiLabelMap.Common${month}} ${year}" widget-area-style="calendarWeek" widget-style="calendarWeek"><display description="Week ${week}"/></field>
         <field name="Monday" title="&amp;nbsp;" widget-style="calendarDayNumber"><display/></field>
         <field name="MondayData" title="${uiLabelMap.CommonMonday}" ><display/></field>
         <field name="Tuesday" title="&amp;nbsp;" widget-style="calendarDayNumber"><display/> </field>
