@@ -1561,7 +1561,7 @@
       <relation type="one" fk-name="USER_PARTY" rel-entity-name="Party">
         <key-map field-name="partyId"/>
       </relation>
-      <relation type="one" fk-name="USER_SESSION" rel-entity-name="UserLoginSession">
+      <relation type="one-nofk" rel-entity-name="UserLoginSession">
         <key-map field-name="userLoginId"/>
       </relation>
       <relation type="many" rel-entity-name="UserLoginSecurityGroup">
