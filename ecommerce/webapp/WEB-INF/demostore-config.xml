@@ -91,9 +91,9 @@
       <success>view:showcart</success>
       <error>view:error</error>
     </request-map>		
-    <request-map><uri>checkoutoptions</uri><success>view:checkoutoptions</success></request-map>
+    <request-map><uri>checkoutoptions</uri><secure>true</secure><auth>true</auth><success>view:checkoutoptions</success></request-map>
     <request-map>
-      <uri>checkout</uri>
+      <uri>checkout</uri><secure>true</secure><auth>true</auth>
 <!--      <event-type>java</event-type>
       <event-path>org.ofbiz.ecommerce.shoppingcart.ShoppingCartEvents</event-path>
       <event-invoke>updateCheckOutOptions</event-invoke> -->
