@@ -49,7 +49,7 @@ public class CSPaymentServices {
 
     public static final String module = CSPaymentServices.class.getName();
 
-    public static Map authorizeCC(DispatchContext dctx, Map context) {
+    public static Map authorize(DispatchContext dctx, Map context) {
         Map result = new HashMap();
         GenericDelegator delegator = dctx.getDelegator();
 
@@ -71,6 +71,7 @@ public class CSPaymentServices {
         String timeout = UtilProperties.getPropertyValue("cybersource.properties", "timeout", "90");
         String retryWait = UtilProperties.getPropertyValue("cybersource.properties", "retryWait", "90");
 
+        // TODO: move this below and implement EFT
         apps.append("ics_auth");
         if (fraudScore)
             apps.append(",ics_score");
@@ -79,14 +80,15 @@ public class CSPaymentServices {
         if (autoBill)
             apps.append(",ics_bill");
 
-        // Create a new ICSClient using the cybersource properties found on global classpath.
-        ICSClientRequest request = null;
-        ICSClient client = null;
-        ICSReply reply = null;
-
         try {
             orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
-            paymentPreferences = orderHeader.getRelated("OrderPaymentPreference");
+            paymentPreferences = orderHeader.getRelatedOrderBy("OrderPaymentPreference", UtilMisc.toList("maxAmount"));
+
+            // filter out payment prefs which have been authorized declined or settled.
+            List exprs = UtilMisc.toList(new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "PAYMENT_AUTHORIZED"),
+                                         new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "PAYMENT_DECLINED"),
+                                         new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "PAYMENT_SETTLED"));
+            paymentPreferences = EntityUtil.filterByAnd(paymentPreferences, exprs);
         } catch (GenericEntityException gee) {
             gee.printStackTrace();
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
@@ -94,62 +96,75 @@ public class CSPaymentServices {
             return result;
         }
 
-        // TODO: Loop through and authorize ALL payment prefs.
-        GenericValue paymentPreference = EntityUtil.getFirst(paymentPreferences);
+        boolean lastWasOkay = true;
+        Iterator prefIterator = paymentPreferences.iterator();
+        while (prefIterator.hasNext() && lastWasOkay) {
+            GenericValue paymentPreference = (GenericValue) prefIterator.next();
+            ICSClientRequest request = null;
+            ICSClient client = null;
+            ICSReply reply = null;
 
-        try {
-            client = new ICSClient(UtilProperties.getProperties("cybersource.properties"));
-            request = buildAuthRequest(client, orderHeader, paymentPreference);
-            if (client == null)
-                throw new GeneralException("ICS returned a null client.");
-        } catch (ICSException ie) {
-            ie.printStackTrace();
-            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-            result.put(ModelService.ERROR_MESSAGE, "ERROR: ICS Problem (" + ie.getMessage() + ").");
-            return result;
-        } catch (GenericEntityException gee) {
-            gee.printStackTrace();
-            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-            result.put(ModelService.ERROR_MESSAGE, "ERROR: Could not get order information (" + gee.getMessage() + ").");
-            return result;
-        } catch (GeneralException ge) {
-            ge.printStackTrace();
-            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-            result.put(ModelService.ERROR_MESSAGE, "ERROR: GeneralException (" + ge.getMessage() + ").");
-            return result;
+            try {
+                client = new ICSClient(UtilProperties.getProperties("cybersource.properties"));
+                request = buildAuthRequest(client, orderHeader, paymentPreference);
+                if (client == null)
+                    throw new GeneralException("ICS returned a null client.");
+            } catch (ICSException ie) {
+                ie.printStackTrace();
+                result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+                result.put(ModelService.ERROR_MESSAGE, "ERROR: ICS Problem (" + ie.getMessage() + ").");
+                return result;
+            } catch (GenericEntityException gee) {
+                gee.printStackTrace();
+                result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+                result.put(ModelService.ERROR_MESSAGE, "ERROR: Could not get order information (" + gee.getMessage() + ").");
+                return result;
+            } catch (GeneralException ge) {
+                ge.printStackTrace();
+                result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+                result.put(ModelService.ERROR_MESSAGE, "ERROR: GeneralException (" + ge.getMessage() + ").");
+                return result;
+            }
+
+            // Basic Info
+            request.setMerchantID(client.getMerchantID());
+            request.addApplication(apps.toString());
+            request.setMerchantRefNo(orderId);
+            request.setDisableAVS(disableAVS);
+            request.setRetryStart(retryWait);
+            request.setTimeout(timeout);
+            request.setRetryEnabled(enableRetry ? "yes" : "no");
+            request.setCurrency((currency == null ? defCur : currency));
+
+            Debug.logVerbose("---- CyberSource Request To: " + client.url.toString() + " ----", module);
+            Debug.logVerbose("[REQ]: " + request, module);
+            Debug.logVerbose("---- End Request ----", module);
+
+            try {
+                reply = client.send(request);
+            } catch (ICSException ie) {
+                ie.printStackTrace();
+                result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+                result.put(ModelService.ERROR_MESSAGE, "ERROR: ICS Problem (" + ie.getMessage() + ").");
+                return result;
+            }
+
+            Debug.logVerbose("---- CyberSource Response ----", module);
+            Debug.logVerbose("[RES]: " + reply, module);
+            Debug.logVerbose("---- End Reply ----", module);
+
+
+            result = processAuthResult(reply, result, paymentPreference);
+            if (result != null && result.containsKey("authResponse")) {
+                String authResp = (String) result.get("authResponse");
+                if ("FAIL".equalsIgnoreCase(authResp))
+                    lastWasOkay = false;
+            }
         }
-
-        // Basic Info
-        request.setMerchantID(client.getMerchantID());
-        request.addApplication(apps.toString());
-        request.setMerchantRefNo(orderId);
-        request.setDisableAVS(disableAVS);
-        request.setRetryStart(retryWait);
-        request.setTimeout(timeout);
-        request.setRetryEnabled(enableRetry ? "yes" : "no");
-        request.setCurrency((currency == null ? defCur : currency));
-
-        Debug.logVerbose("---- CyberSource Request To: " + client.url.toString() + " ----", module);
-        Debug.logVerbose("[REQ]: " + request, module);
-        Debug.logVerbose("---- End Request ----", module);
-
-        try {
-            reply = client.send(request);
-        } catch (ICSException ie) {
-            ie.printStackTrace();
-            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-            result.put(ModelService.ERROR_MESSAGE, "ERROR: ICS Problem (" + ie.getMessage() + ").");
-            return result;
-        }
-
-        Debug.logVerbose("---- CyberSource Response ----", module);
-        Debug.logVerbose("[RES]: " + reply, module);
-        Debug.logVerbose("---- End Reply ----", module);
-
-        return processAuthResult(reply, result, paymentPreference);
+        return result;
     }
 
-    public static Map billCC(DispatchContext dctx, Map context) {
+    public static Map settle(DispatchContext dctx, Map context) {
         Map result = new HashMap();
         GenericDelegator delegator = dctx.getDelegator();
 
@@ -175,6 +190,8 @@ public class CSPaymentServices {
         try {
             orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
             paymentPreferences = orderHeader.getRelated("OrderPaymentPreference");
+            List exprs = UtilMisc.toList(new EntityExpr("statusId", EntityOperator.EQUALS, "PAYMENT_AUTHORIZED"));
+            paymentPreferences = EntityUtil.filterByAnd(paymentPreferences, exprs);
         } catch (GenericEntityException gee) {
             gee.printStackTrace();
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
@@ -242,18 +259,6 @@ public class CSPaymentServices {
         Debug.logVerbose("---- End Reply ----", module);
 
         return ServiceUtil.returnSuccess();
-    }
-
-    public static Map creditCC(DispatchContext dctx, Map context) {
-        return new HashMap();
-    }
-
-    public static Map debitECP(DispatchContext dctx, Map context) {
-        return new HashMap();
-    }
-
-    public static Map creditECP(DispatchContext dctx, Map context) {
-        return new HashMap();
     }
 
     public static Map dav(DispatchContext dctx, Map context) {
