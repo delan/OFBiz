@@ -47,6 +47,7 @@ CP=$CP:`find $OFBIZ_HOME/lib/common -name *.jar | paste -s -d":" -`
 CP=$CP:`find $OFBIZ_HOME/lib/datavision -name *.jar | paste -s -d":" -`
 CP=$CP:`find $OFBIZ_HOME/lib/jasperreports -name *.jar | paste -s -d":" -`
 CP=$CP:`find $OFBIZ_HOME/lib/jotm -name *.jar | paste -s -d":" -`
+#CP=$CP:`find $OFBIZ_HOME/lib/tyrex -name *.jar | paste -s -d":" -`
 CP=$CP:`find $OFBIZ_HOME/lib/scripting -name *.jar | paste -s -d":" -`
 CP=$CP:`find $OFBIZ_HOME/lib/weka -name *.jar | paste -s -d":" -`
 CP=$CP:`find $OFBIZ_HOME/lib/worldpay -name *.jar | paste -s -d":" -`

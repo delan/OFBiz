@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!--
- *  Copyright (c) 2001 The Open For Business Project and respected authors.
+ *  Copyright (c) 2001-2003 The Open For Business Project and respected authors.
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -57,7 +57,6 @@
         <copy file="setup/catalina/bin/ofbiz.sh" toDir="${catalina.dir}/bin" />
         <copy file="setup/catalina/bin/ofbiz.bat" toDir="${catalina.dir}/bin" />
 
-        <copy file="lib/common/castor-0.9.3.9.jar" toDir="${catalina.dir}/common/lib"/>
         <copy file="lib/common/hsqldb.jar" toDir="${catalina.dir}/common/lib"/>
         <copy file="lib/common/postgresql.jar" toDir="${catalina.dir}/common/lib"/>
         <copy file="lib/common/sapdbc.jar" toDir="${catalina.dir}/common/lib"/>
@@ -66,7 +65,6 @@
 
         <copy file="lib/common/jms_1.0.2a.jar" toDir="${catalina.dir}/common/lib"/>
         <copy file="lib/common/ots-jts_1.0.jar" toDir="${catalina.dir}/common/lib"/>
-        <copy file="lib/common/tyrex-1.0.jar" toDir="${catalina.dir}/common/lib"/>
 
         <copy file="lib/common/commons-beanutils.jar" toDir="${catalina.dir}/common/lib"/>
         <copy file="lib/common/commons-collections.jar" toDir="${catalina.dir}/common/lib"/>
@@ -83,6 +81,7 @@
             <fileset dir="lib/jasperreports" includes="*.jar"/>
             <fileset dir="lib/weka" includes="*.jar"/>           
             <fileset dir="lib/jotm" includes="*.jar"/>
+            <!-- <fileset dir="lib/tyrex" includes="*.jar"/> -->
         </copy>
 
         <delete file="${catalina.dir}/common/lib/tyrex-0.9.7.0.jar"/>
@@ -110,7 +109,6 @@
         <copy file="setup/catalina41/bin/ofbiz.sh" toDir="${catalina.dir}/bin" />
         <copy file="setup/catalina41/bin/ofbiz.bat" toDir="${catalina.dir}/bin" />
 
-        <copy file="lib/common/castor-0.9.3.9.jar" toDir="${catalina.dir}/shared/lib"/>
         <copy file="lib/common/hsqldb.jar" toDir="${catalina.dir}/shared/lib"/>
         <copy file="lib/common/postgresql.jar" toDir="${catalina.dir}/shared/lib"/>
         <copy file="lib/common/sapdbc.jar" toDir="${catalina.dir}/shared/lib"/>
@@ -119,7 +117,6 @@
 
         <copy file="lib/common/jms_1.0.2a.jar" toDir="${catalina.dir}/shared/lib"/>
         <copy file="lib/common/ots-jts_1.0.jar" toDir="${catalina.dir}/shared/lib"/>
-        <copy file="lib/common/tyrex-1.0.jar" toDir="${catalina.dir}/shared/lib"/>
 
         <!--
         <copy file="lib/common/commons-collections.jar" toDir="${catalina.dir}/shared/lib"/>
@@ -138,6 +135,7 @@
             <fileset dir="lib/jasperreports" includes="*.jar"/>
             <fileset dir="lib/weka" includes="*.jar"/>            
             <fileset dir="lib/jotm" includes="*.jar"/>
+            <!-- <fileset dir="lib/tyrex" includes="*.jar"/> -->
         </copy>
     </target>
 
@@ -231,7 +229,6 @@
 
         <copy file="../catalina/shared/lib/weka.jar" toDir="lib/weka"/>
 
-        <copy file="../catalina/shared/lib/castor-0.9.3.9.jar" toDir="lib/common"/>
         <copy file="../catalina/shared/lib/hsqldb.jar" toDir="lib/common"/>
         <copy file="../catalina/shared/lib/postgresql.jar" toDir="lib/common"/>
         <copy file="../catalina/shared/lib/sapdbc.jar" toDir="lib/common"/>
@@ -240,7 +237,8 @@
 
         <copy file="../catalina/shared/lib/jms_1.0.2a.jar" toDir="lib/common"/>
         <copy file="../catalina/shared/lib/ots-jts_1.0.jar" toDir="lib/common"/>
-        <copy file="../catalina/shared/lib/tyrex-1.0.jar" toDir="lib/common"/>
+        <copy file="../catalina/shared/lib/castor-0.9.3.9.jar" toDir="lib/tyrex"/>
+        <copy file="../catalina/shared/lib/tyrex-1.0.jar" toDir="lib/tyrex"/>
     </target>
 
 
@@ -899,7 +897,6 @@
         <delete file="${distro.temp.dir}/ofbiz/lib/jasperreports/itext-0.92.jar" />
         <delete file="${distro.temp.dir}/ofbiz/lib/weka/weka.jar" />
 
-        <delete file="${distro.temp.dir}/ofbiz/lib/common/castor-0.9.3.9.jar" />
         <delete file="${distro.temp.dir}/ofbiz/lib/common/hsqldb.jar" />
         <delete file="${distro.temp.dir}/ofbiz/lib/common/postgresql.jar" />
         <delete file="${distro.temp.dir}/ofbiz/lib/common/sapdbc.jar" />
@@ -907,7 +904,8 @@
         <delete file="${distro.temp.dir}/ofbiz/lib/common/mm.mysql-2.0.14-bin.jar" />
         <delete file="${distro.temp.dir}/ofbiz/lib/common/jms_1.0.2a.jar" />
         <delete file="${distro.temp.dir}/ofbiz/lib/common/ots-jts_1.0.jar" />
-        <delete file="${distro.temp.dir}/ofbiz/lib/common/tyrex-1.0.jar" />
+        <delete file="${distro.temp.dir}/ofbiz/lib/tyrex/castor-0.9.3.9.jar" />
+        <delete file="${distro.temp.dir}/ofbiz/lib/tyrex/tyrex-1.0.jar" />
         
         <!-- okay, build the archive -->
         <delete file="../ofbiz-apps.tgz" />

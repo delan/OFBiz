@@ -11,13 +11,11 @@ access. For a detailed description see the core/docs/entityconfig.html file.
     <resource-loader name="mainurl" class="org.ofbiz.core.config.UrlLoader"/>
             
     <!-- the transaction factory class to use, one is needed for each way of getting JTA interfaces -->
-    
     <!-- Use this one for JOTM -->
-	<transaction-factory class="org.ofbiz.core.entity.transaction.JotmFactory"/>
-	
+    <transaction-factory class="org.ofbiz.core.entity.transaction.JotmFactory"/>
     <!-- Use this one for Tyrex -->
     <!-- <transaction-factory class="org.ofbiz.core.entity.transaction.TyrexFactory"/> -->
-
+    
     <!-- Use this one for JNDI -->
     <!-- NOTE: to use the JndiFactory you must specify the necessary JNDI properties -->    
     <!--
@@ -89,20 +87,14 @@ access. For a detailed description see the core/docs/entityconfig.html file.
             join-style="theta-oracle">
         <sql-load-path path="commonapp/db" prepend-env="ofbiz.home"/>
         <sql-load-path path="ecommerce/etc" prepend-env="ofbiz.home"/>
-        <jotm-jdbc
+        <inline-jdbc
                 jdbc-driver="org.hsqldb.jdbcDriver"
                 jdbc-uri="jdbc:hsqldb:../../data/ofbiz"
                 jdbc-username="sa"
                 jdbc-password=""
                 isolation-level="ReadUncommitted"
                 pool-minsize="2"
-                pool-maxsize="20"/>        
-        <inline-jdbc
-                jdbc-driver="org.hsqldb.jdbcDriver"
-                jdbc-uri="jdbc:hsqldb:../../data/ofbiz"
-                jdbc-username="sa"
-                jdbc-password=""
-                isolation-level="ReadUncommitted"/>
+                pool-maxsize="20"/>
         <!-- <jndi-jdbc jndi-server-name="localjndi" jndi-name="java:/HsqlDataSource" isolation-level="ReadUncommitted"/> -->
     </datasource>
 
@@ -148,7 +140,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
             join-style="ansi">
         <sql-load-path path="commonapp/db" prepend-env="ofbiz.home"/>
         <sql-load-path path="ecommerce/etc" prepend-env="ofbiz.home"/>
-        <jotm-jdbc
+        <inline-jdbc
                 jdbc-driver="org.postgresql.Driver"
                 jdbc-uri="jdbc:postgresql://127.0.0.1/ofbiz"
                 jdbc-username="ofbiz"
@@ -156,12 +148,6 @@ access. For a detailed description see the core/docs/entityconfig.html file.
                 isolation-level="ReadCommitted"
                 pool-minsize="2"
                 pool-maxsize="20"/>                
-        <inline-jdbc
-                jdbc-driver="org.postgresql.Driver"
-                jdbc-uri="jdbc:postgresql://127.0.0.1/ofbiz"
-                jdbc-username="ofbiz"
-                jdbc-password="ofbiz"
-                isolation-level="ReadCommitted"/>
         <jndi-jdbc jndi-server-name="default" jndi-name="java:comp/env/jdbc/localpostgres" isolation-level="ReadCommitted"/>
         <!--<jndi-jdbc jndi-server-name="default" jndi-name="comp/env/jdbc/xa/localpostgres" isolation-level="ReadCommitted"/> --><!-- Orion Style JNDI name -->
         <!-- <jndi-jdbc jndi-server-name="localweblogic" jndi-name="PostgresDataSource"/> --> <!-- Weblogic Style JNDI name -->
@@ -197,7 +183,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
             join-style="theta-oracle">
         <sql-load-path path="commonapp/db" prepend-env="ofbiz.home"/>
         <sql-load-path path="ecommerce/etc" prepend-env="ofbiz.home"/>
-        <jotm-jdbc
+        <inline-jdbc
                 jdbc-driver="com.sap.dbtech.jdbc.DriverSapDB"
                 jdbc-uri="jdbc:sapdb://localhost/OFBIZ"
                 jdbc-username="ofbiz"
@@ -205,13 +191,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
                 isolation-level="ReadCommitted"
                 pool-minsize="2"
                 pool-maxsize="20"/>     
-        <inline-jdbc
-                jdbc-driver="com.sap.dbtech.jdbc.DriverSapDB"
-                jdbc-uri="jdbc:sapdb://localhost/OFBIZ"
-                jdbc-username="ofbiz"
-                jdbc-password="ofbiz"
-                isolation-level="ReadCommitted"/>
-        <!-- <jndi-jdbc jndi-server-name="default" jndi-name="comp/env/jdbc/xa/localsapdb" isolation-level="ReadCommitted"/> --> <!-- Orion Style JNDI name -->
+        <jndi-jdbc jndi-server-name="default" jndi-name="comp/env/jdbc/xa/localsapdb" isolation-level="ReadCommitted"/> <!-- Orion Style JNDI name -->
         <!-- <jndi-jdbc jndi-server-name="localweblogic" jndi-name="SapDBDataSource"/> --> <!-- Weblogic Style JNDI name -->
         <!-- <jndi-jdbc jndi-server-name="default" jndi-name="jdbc/localsapdb" isolation-level="ReadCommitted"/> --> <!-- JRun4 Style JNDI name -->
         <!-- <tyrex-dataSource dataSource-name="localsapdb" isolation-level="ReadCommitted"/> -->
