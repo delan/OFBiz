@@ -24,7 +24,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author David E. Jones (jonesde@ofbiz.org)
- *@created    Fri Sep 28 19:34:13 MDT 2001
+ *@created    Tue Oct 02 15:22:50 MDT 2001
  *@version    1.0
  */
 -->
@@ -3328,6 +3328,21 @@
         <key-map field-name="engagementItemSeqId" rel-field-name="orderItemSeqId" />
       </relation>
     </entity>	
+    <entity entity-name="SalesTaxLookup" 
+            package-name="org.ofbiz.commonapp.order.order"
+            title="Sales Tax Lookup Entity">
+      <field name="salesTaxLookupId" type="id-ne"></field>
+      <field name="geoId" type="id"></field>
+      <field name="productCategoryId" type="id"></field>
+      <field name="salesTaxPercentage" type="floating-point"></field>	
+      <prim-key field="salesTaxLookupId" />
+      <relation type="one" rel-entity-name="Geo">
+        <key-map field-name="geoId" />
+      </relation>
+      <relation type="one" rel-entity-name="ProductCategory">
+        <key-map field-name="productCategoryId" />
+      </relation>
+    </entity>	
     <entity entity-name="WorkOrderItemFulfillment" 
             package-name="org.ofbiz.commonapp.order.order"
             title="Work Order Item Fulfillment Entity">
@@ -5054,6 +5069,9 @@
       </relation>
       <relation type="many" title="Parent" rel-entity-name="ProductCategoryRollup">
         <key-map field-name="productCategoryId" rel-field-name="parentProductCategoryId" />
+      </relation>
+      <relation type="many" rel-entity-name="SalesTaxLookup">
+        <key-map field-name="productCategoryId" />
       </relation>
     </entity>	
     <entity entity-name="ProductCategoryAttribute" 
