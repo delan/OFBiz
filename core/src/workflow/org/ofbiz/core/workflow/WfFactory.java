@@ -151,7 +151,7 @@ public class WfFactory {
         if (pkg == null) throw new WfException("Workflow package id cannot be null.");
         if (pid == null) throw new WfException("Workflow process id cannot be null");
 
-        String mapKey = del.getDelegatorName() + ":" + pkg + ":" + pid;
+        String mapKey = del.getDelegatorName() + ":" + pkg + ":" + pkver + ":" + pid + ":" + pver;         
         WfProcessMgr mgr = null;
 
         if (!manager.containsKey(mapKey)) {
