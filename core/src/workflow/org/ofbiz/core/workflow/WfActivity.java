@@ -37,57 +37,65 @@ import java.util.Map;
  */
 
 public interface WfActivity extends WfExecutionObject {
-  
-  /**
-   * @throws WfException
-   * @return
-   */
-  public int howManyAssignment() throws WfException;
-  
-  /**
-   * @throws WfException
-   * @return
-   */
-  public Iterator getIteratorAssignment() throws WfException;
-  
-  /**
-   * @param maxNumber
-   * @throws WfException
-   * @return  List of WfAssignment objects.
-   */
-  public List getSequenceAssignment(int maxNumber) throws WfException;
-  
-  /**
-   * @param member
-   * @throws WfException
-   * @return
-   */
-  public boolean isMemberOfAssignment(WfAssignment member) throws WfException;
-  
-  /**
-   * @throws WfException
-   * @return
-   */
-  public WfProcess container() throws WfException;
-  
-  /**
-   * @throws WfException
-   * @throws ResultNotAvailable
-   * @return
-   */
-  public Map result() throws WfException, ResultNotAvailable;
-  
-  /**
-   * @param result
-   * @throws WfException
-   * @throws InvalidData
-   */
-  public void setResult(Map result) throws WfException, InvalidData;
-  
-  /**
-   * @throws WfException
-   * @throws CannotComplete
-   */
-  public void complete() throws WfException, CannotComplete;
-  
+    
+    /**
+     * @throws WfException
+     * @return
+     */
+    public int howManyAssignment() throws WfException;
+    
+    /**
+     * @throws WfException
+     * @return
+     */
+    public Iterator getIteratorAssignment() throws WfException;
+    
+    /**
+     * @param maxNumber
+     * @throws WfException
+     * @return  List of WfAssignment objects.
+     */
+    public List getSequenceAssignment(int maxNumber) throws WfException;
+    
+    /**
+     * @param member
+     * @throws WfException
+     * @return
+     */
+    public boolean isMemberOfAssignment(WfAssignment member) throws WfException;
+    
+    /**
+     * @throws WfException
+     * @return
+     */
+    public WfProcess container() throws WfException;
+    
+    /**
+     * @throws WfException
+     * @throws ResultNotAvailable
+     * @return
+     */
+    public Map result() throws WfException, ResultNotAvailable;
+    
+    /**
+     * @param result
+     * @throws WfException
+     * @throws InvalidData
+     */
+    public void setResult(Map result) throws WfException, InvalidData;
+    
+    /**
+     * @throws WfException
+     * @throws CannotComplete
+     */
+    public void complete() throws WfException, CannotComplete;
+    
+    /**
+     * Activates this activity.
+     * @throws WfException
+     * @throws CannotStart
+     * @throws AlreadyRunning
+     */
+    public void activate() throws WfException, CannotStart, AlreadyRunning;
+    
 } // interface WfActivity

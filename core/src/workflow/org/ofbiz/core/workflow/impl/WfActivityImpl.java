@@ -52,10 +52,23 @@ implements WfActivity
      * Creates new WfProcessImpl
      * @param valueObject The GenericValue object of this WfActivity.   
      */
-    public WfActivityImpl(GenericValue valueObject) {
+    public WfActivityImpl(GenericValue valueObject, WfProcess process) throws WfException {
         super(valueObject);
+        this.process = process;
         result = new HashMap();
         assignments = new ArrayList();
+        changeState("open.not_running.not_started");
+    }
+    
+    /** 
+     * Activates this activity.
+     * @throws WfException
+     * @throws CannotStart
+     * @throws AlreadyRunning
+     */
+    public void activate() throws WfException, CannotStart, AlreadyRunning {
+        changeState("open.running");
+        // implement me
     }
 
     /**
@@ -64,6 +77,8 @@ implements WfActivity
      * @throws CannotComplete Cannot complete the activity
      */
     public void complete() throws WfException, CannotComplete {
+        changeState("closed.complete");
+        // implement me
     }
     
     /**

@@ -40,12 +40,18 @@ public class WfFactory {
     // A cache of WfProcessMgr implementations
     private static Map managers = new HashMap();
     
-    /** Creates a new {@link WfActivity} instance.
-     * @throws WfException
+    /** Creates a new {@link WfActivity} instance. 
+     * @param value GenericValue object defining this activity.
+     * @param proc The WfProcess which this activity belongs.    
      * @return An instance of the WfActivify Interface
+     * @throws WfException
      */
-    public static WfActivity newWfActivity(GenericValue value) {
-        return new WfActivityImpl(value);
+    public static WfActivity newWfActivity(GenericValue value, WfProcess proc) throws WfException {
+        if ( value == null )
+            throw new WfException("GenericValue object cannot be null");
+        if ( proc == null )
+            throw new WfException("WfProcess cannot be null");
+        return new WfActivityImpl(value,proc);
     }
     
     
@@ -53,17 +59,27 @@ public class WfFactory {
      * @throws WfException
      * @return An instance of the WfAssignment Interface
      */
-    public static WfAssignment newWfAssignment(WfActivity activity, WfResource resource) {
+    public static WfAssignment newWfAssignment(WfActivity activity, WfResource resource) throws WfException {
+        if ( activity == null )
+            throw new WfException("WfActivity cannot be null");
+        if ( resource == null )
+            throw new WfException("WfResource cannot be null");
         return new WfAssignmentImpl(activity,resource);
     }
     
     
     /** Creates a new {@link WfProcess} instance.
-     * @throws WfException
+     * @param value The GenericValue object for the process definition
+     * @param mgr The WfProcessMgr which is managing this process.
      * @return An instance of the WfProcess Interface.
+     * @throws WfException     
      */
-    public static WfProcess newWfProcess(GenericValue value) {
-        return new WfProcessImpl(value);
+    public static WfProcess newWfProcess(GenericValue value, WfProcessMgr mgr) throws WfException {
+        if ( value == null )
+            throw new WfException("Process definition value object cannot be null");
+        if ( mgr == null )
+            throw new WfException("WfProcessMgr cannot be null");
+        return new WfProcessImpl(value,mgr);
     }
     
     
@@ -74,6 +90,11 @@ public class WfFactory {
      * @return An instance of the WfProcessMgr Interface.
      */
     public static WfProcessMgr newWfProcessMgr(GenericDelegator del, String pid) throws WfException {
+        if ( del == null )
+            throw new WfException("Delegator cannot be null");
+        if ( pid == null )
+            throw new WfException("Workflow process id cannot be null");
+        
         StringBuffer buf = new StringBuffer();
         buf.append(pid);
         buf.append(":");
@@ -92,7 +113,7 @@ public class WfFactory {
      * @throws WfException
      * @return An instance of the WfRequester Interface.
      */
-    public static WfRequester newWfRequester()  {
+    public static WfRequester newWfRequester() throws WfException {
         return new WfRequesterImpl();
     }
     
@@ -100,7 +121,9 @@ public class WfFactory {
      * @throws WfException
      * @return An instance of the WfResource Interface.
      */
-    public static WfResource newWfResource(GenericValue value) {
+    public static WfResource newWfResource(GenericValue value) throws WfException {
+        if ( value == null )
+            throw new WfException("Value object for WfResource definition cannot be null");
         return new WfResourceImpl(value);
     }
 }

@@ -402,7 +402,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
    */
   public ServiceDispatcher getDispatcher() throws WfException {
       if ( dispatcher == null )
-          throw new WfException("No dispacher set.");
+          throw new WfException("No dispacher set");
       return dispatcher;
   }
   

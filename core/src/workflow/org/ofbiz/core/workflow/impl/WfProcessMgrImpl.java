@@ -39,43 +39,43 @@ import org.ofbiz.core.workflow.*;
  */
 
 public class WfProcessMgrImpl implements WfProcessMgr {
-       
-    protected GenericValue processDef;            
+    
+    protected GenericValue processDef;
     protected String state;        // will probably move to a runtime entity for the manager
     protected List processList; // will probably be a related entity to the runtime entity
     
-    /** Creates new WfProcessMgrImpl 
+    /** Creates new WfProcessMgrImpl
      * @param delegator The GenericDelegator to use for the process definitions.
-     * @param processId The unique key of the process definition.     
+     * @param processId The unique key of the process definition.
      * @throws WfException
      */
-    public WfProcessMgrImpl(GenericDelegator delegator, String processId) throws WfException {         
+    public WfProcessMgrImpl(GenericDelegator delegator, String processId) throws WfException {
         try {
             Collection processes = delegator.findByAnd("WorkflowProcess",UtilMisc.toMap("executionObjectId",processId));
             if ( processes.size() > 1 )
-                throw new WfException("Unique processId does not exist. Entity value error.");
+                throw new WfException("Unique processId does not exist. Entity value error");
             if ( processes.size() == 0 )
-                throw new WfException("No process definition found for the specified processId.");
+                throw new WfException("No process definition found for the specified processId");
             processDef = (GenericValue) processes.iterator().next();
         }
         catch ( GenericEntityException e ) {
-            throw new WfException("Problems getting the process definition from the WorkflowProcess entity.");
+            throw new WfException("Problems getting the process definition from the WorkflowProcess entity");
         }
-                        
+        
         processList = new ArrayList();
         state = "enabled";
     }
-
+    
     /**
      * @param newState
      * @throws WfException
      * @throws TransitionNotAllowed
      */
-    public void setProcessMgrState(String newState) throws WfException, 
+    public void setProcessMgrState(String newState) throws WfException,
     TransitionNotAllowed {
         if ( !newState.equals("enabled") || !newState.equals("disabled") )
             throw new TransitionNotAllowed();
-        this.state = newState;        
+        this.state = newState;
     }
     
     /**
@@ -98,24 +98,24 @@ public class WfProcessMgrImpl implements WfProcessMgr {
      * @throws RequesterRequired
      * @return WfProcess created
      */
-    public WfProcess createProcess(WfRequester requester) 
+    public WfProcess createProcess(WfRequester requester)
     throws WfException, NotEnabled, InvalidRequester, RequesterRequired {
         if ( state.equals("disabled") )
             throw new NotEnabled();
         
         if (requester == null)
             throw new RequesterRequired();
-               
+        
         // test if the requestor is OK: how?
         String key = null;  // work on this...
-        WfProcess process = WfFactory.newWfProcess(processDef); 
+        WfProcess process = WfFactory.newWfProcess(processDef,this);
         
         try {
             process.setRequester(requester);
-        } catch (CannotChangeRequester ccr) {
-            throw new WfException(ccr.getMessage(),ccr); 
         }
-        
+        catch (CannotChangeRequester ccr) {
+            throw new WfException(ccr.getMessage(),ccr);
+        }
         return process;
     }
     

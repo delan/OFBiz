@@ -39,8 +39,8 @@ import org.ofbiz.core.workflow.*;
 public class WfProcessImpl extends WfExecutionObjectImpl
 implements WfProcess {
 
-    // Attribute instance 'requestor'
-    private WfRequester requestor;
+    // Attribute instance 'requester'
+    private WfRequester requester;
     
     // Attribute instance 'steps'
     private List steps;
@@ -55,10 +55,13 @@ implements WfProcess {
      * Creates new WfProcessImpl
      * @param valueObject The GenericValue object of this WfProcess     
      */
-    public WfProcessImpl(GenericValue valueObject) {
+    public WfProcessImpl(GenericValue valueObject, WfProcessMgr manager) throws WfException {
         super(valueObject);
+        this.manager = manager;
+        this.requester = null;
         steps = new ArrayList();
         result = new HashMap();
+        changeState("open.not_running.not_started");
     }
 
     /**
@@ -69,7 +72,7 @@ implements WfProcess {
      */
     public void setRequester(WfRequester newValue) throws WfException, 
     CannotChangeRequester { 
-        requestor = newValue; 
+        requester = newValue; 
     }
     
     /**
@@ -124,7 +127,7 @@ implements WfProcess {
      * @return WfRequestor of this process.
      */
     public WfRequester requester() throws WfException {
-        return requestor;
+        return requester;
     }
     
     /**

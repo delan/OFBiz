@@ -53,16 +53,16 @@ public class WfRequesterImpl implements WfRequester {
      */
     public void registerProcess(WfProcess process, Map context, GenericRequester requester) throws WfException {
         if ( process == null )
-            throw new WfException("Process cannot be null.");
+            throw new WfException("Process cannot be null");
         if ( context == null )
-            throw new WfException("Context should not be null.");
+            throw new WfException("Context should not be null");
         
         performers.put(process,requester);
         WfProcessMgr mgr = process.manager();
         
         // Validate the process context w/ what was passed.
         if ( !ModelService.validate(mgr.contextSignature(), context) )
-            throw new WfException("Context passed does not validate against defined signature.");
+            throw new WfException("Context passed does not validate against defined signature");
         
         // Set the context w/ the process
         process.setProcessContext(context);
@@ -72,10 +72,10 @@ public class WfRequesterImpl implements WfRequester {
             process.start();
         }
         catch ( CannotStart cs ) {
-            throw new WfException("Cannot start process.",cs);
+            throw new WfException("Cannot start process",cs);
         }
         catch ( AlreadyRunning ar ) {
-            throw new WfException("Process already running.",ar);
+            throw new WfException("Process already running",ar);
         }
     }
     
@@ -131,15 +131,15 @@ public class WfRequesterImpl implements WfRequester {
             process = (WfProcess) event.source();
         }
         catch ( SourceNotAvailable sna ) {
-            throw new InvalidPerformer("Could not get the performer.",sna);
+            throw new InvalidPerformer("Could not get the performer",sna);
         }
         catch ( ClassCastException cce ) {
-            throw new InvalidPerformer("Not a valid process object.",cce);
+            throw new InvalidPerformer("Not a valid process object",cce);
         }
         if ( process == null )
-            throw new InvalidPerformer("No performer specified.");
+            throw new InvalidPerformer("No performer specified");
         if ( !performers.containsKey(process) )
-            throw new InvalidPerformer("Performer not assigned to this requester.");
+            throw new InvalidPerformer("Performer not assigned to this requester");
         
         
         // Implement me
