@@ -123,6 +123,13 @@
         default-tooltip-style="tabletext" default-widget-style="inputBox"
         target="addDataCategory" title="" type="single">
         <auto-fields-service service-name="createDataCategory"/>
+        <field name="parentCategoryId">
+            <drop-down allow-empty="true">
+                <list-options list-name="dataCategoryList" 
+                    key-name="dataCategoryId"  description="${categoryName}"
+                    />
+            </drop-down>
+        </field>
         <field name="submitButton" title="Add" widget-style="standardSubmit">
             <submit button-type="button"/>
         </field>
@@ -136,6 +143,13 @@
         <auto-fields-service service-name="updateDataCategory"/>
         <field name="dataCategoryId" title="DataCategoryId" widget-style="buttontext">
             <display/>
+        </field>
+        <field name="parentCategoryId">
+            <drop-down allow-empty="true">
+                <list-options list-name="dataCategoryList" 
+                    key-name="dataCategoryId"  description="${categoryName}"
+                    />
+            </drop-down>
         </field>
         <field name="submitButton" title="Update" widget-style="standardSubmit">
             <submit button-type="button"/>
@@ -152,6 +166,12 @@
         default-tooltip-style="tabletext" default-widget-style="inputBox"
         target="addFileExtension" title="" type="single">
         <auto-fields-service service-name="createFileExtension"/>
+        <field name="mimeTypeId" title="" >
+            <drop-down allow-empty="false">
+                <entity-options description="${description}"
+                    entity-name="MimeType" key-field-name="mimeTypeId"/>
+            </drop-down>
+        </field>
         <field name="submitButton" title="Add" widget-style="standardSubmit">
             <submit button-type="button"/>
         </field>
@@ -165,6 +185,12 @@
         <auto-fields-service service-name="updateFileExtension"/>
         <field name="fileExtensionId" title="FileExtensionId" widget-style="buttontext">
             <display/>
+        </field>
+        <field name="mimeTypeId" title="" >
+            <drop-down allow-empty="false">
+                <entity-options description="${description}"
+                    entity-name="MimeType" key-field-name="mimeTypeId"/>
+            </drop-down>
         </field>
         <field name="submitButton" title="Update" widget-style="standardSubmit">
             <submit button-type="button"/>
