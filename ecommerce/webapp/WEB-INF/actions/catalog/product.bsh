@@ -65,7 +65,7 @@ if (productId != null) {
           
         productTemplate = product.getString("detailTemplate");
         if (productTemplate != null && productTemplate.length() > 0) {
-            detailTempalte = productTemplate;
+            detailTemplate = productTemplate;
         }
     }
 }
