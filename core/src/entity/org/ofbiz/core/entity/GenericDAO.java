@@ -2054,21 +2054,20 @@ public class GenericDAO {
                             //add the column
                             String errMsg = addColumn(entity, field);
                             if (errMsg != null && errMsg.length() > 0) {
-                                message = "Added column \"" + field.getColName() + "\" to table \"" + entity.getTableName() + "\"";
-                                Debug.logError(message, module);
-                                if (messages != null) messages.add(message);
-                            } else {
                                 message = "Could not add column \"" + field.getColName() + "\" to table \"" + entity.getTableName() + "\"";
                                 Debug.logError(message, module);
                                 if (messages != null) messages.add(message);
                                 Debug.logError(errMsg, module);
                                 if (messages != null) messages.add(errMsg);
+                            } else {
+                                message = "Added column \"" + field.getColName() + "\" to table \"" + entity.getTableName() + "\"";
+                                Debug.logError(message, module);
+                                if (messages != null) messages.add(message);
                             }
                         }
                     }
                 }
-            }
-            else {
+            } else {
                 String message = "Entity \"" + entity.getEntityName() + "\" with tableName \"" + entity.getTableName() + "\" has no corresponding table in the database";
                 Debug.logError(message, module);
                 if (messages != null)
@@ -2078,15 +2077,15 @@ public class GenericDAO {
                     //create the table
                     String errMsg = createTable(entity);
                     if (errMsg != null && errMsg.length() > 0) {
-                        message = "Created table \"" + entity.getTableName() + "\"";
-                        Debug.logError(message, module);
-                        if (messages != null) messages.add(message);
-                    } else {
                         message = "Could not create table \"" + entity.getTableName() + "\"";
                         Debug.logError(message, module);
                         if (messages != null) messages.add(message);
                         Debug.logError(errMsg, module);
                         if (messages != null) messages.add(errMsg);
+                    } else {
+                        message = "Created table \"" + entity.getTableName() + "\"";
+                        Debug.logError(message, module);
+                        if (messages != null) messages.add(message);
                     }
                 }
             }
