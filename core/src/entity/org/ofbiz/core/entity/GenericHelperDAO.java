@@ -134,10 +134,6 @@ public class GenericHelperDAO implements GenericHelper {
         return genericDAO.selectByAnd(modelEntity, fields, orderBy);
     }
 
-    public List findByLike(ModelEntity modelEntity, Map fields, List orderBy) throws GenericEntityException {
-        return genericDAO.selectByLike(modelEntity, fields, orderBy);
-    }
-
     /* tentatively removing by clause methods, unless there are really big complaints... because it is a kludge
     public List findByClause(ModelEntity modelEntity, List entityClauses, Map fields, List orderBy) throws GenericEntityException {
         return genericDAO.selectByClause(modelEntity, entityClauses, fields, orderBy);

@@ -81,8 +81,6 @@ public interface GenericHelper {
      */
     public List findByAnd(ModelEntity modelEntity, Map fields, List orderBy) throws GenericEntityException;
 
-    public List findByLike(ModelEntity modelEntity, Map fields, List orderBy) throws GenericEntityException;
-
     /* tentatively removing by clause methods, unless there are really big complaints... because it is a kludge
      * public List findByClause(ModelEntity modelEntity, List entityClauses, Map fields, List orderBy) throws GenericEntityException;
      */

@@ -894,13 +894,16 @@ public class GenericDelegator implements DelegatorInterface {
     }
 
     public List findByLike(String entityName, Map fields, List orderBy) throws GenericEntityException {
-        //TODO: add eca eval calls
-        ModelEntity modelEntity = getModelReader().getModelEntity(entityName);
-        GenericHelper helper = getEntityHelper(entityName);
-        List list = null;
-        list = helper.findByLike(modelEntity, fields, orderBy);
-        absorbList(list);
-        return list;
+        List likeExpressions = new LinkedList();
+        if (fields != null) {
+            Iterator fieldEntries = fields.entrySet().iterator();
+            while (fieldEntries.hasNext()) {
+                Map.Entry fieldEntry = (Map.Entry) fieldEntries.next();
+                likeExpressions.add(new EntityExpr((String) fieldEntry.getKey(), EntityOperator.LIKE, fieldEntry.getValue()));
+            }
+        }
+        EntityConditionList ecl = new EntityConditionList(likeExpressions, EntityOperator.AND);
+        return findByCondition(entityName, ecl, null, orderBy);
     }
 
 /* tentatively removing by clause methods, unless there are really big complaints... because it is a kludge
