@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.5 $
+ *@version    $Revision: 1.6 $
  *@since      2.1
 -->
 
@@ -30,11 +30,11 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <td valign="middle" align="left">
-            <div class="boxhead">&nbsp; ${requestAttributes.uiLabelMap.OrderItems}</div>
+            <div class="boxhead">&nbsp; ${requestAttributes.uiLabelMap.OrderOrderItems}</div>
           </td>
           <#if maySelectItems?default(false)>
             <td valign="middle" align="right" nowrap>
-              <a href='javascript:document.addOrderToCartForm.add_all.value="true";document.addOrderToCartForm.submit()' class="submenutext">${requestAttributes.uiLabelMap.OrderAddAlltoCart}</a><a href='javascript:document.addOrderToCartForm.add_all.value="false";document.addOrderToCartForm.submit()' class="submenutextright">${requestAttributes.uiLabelMap.OrderAddCheckedToCart}</a>
+              <a href='javascript:document.addCommonToCartForm.add_all.value="true";document.addCommonToCartForm.submit()' class="submenutext">${requestAttributes.uiLabelMap.EcommerceAddAlltoCart}</a><a href='javascript:document.addCommonToCartForm.add_all.value="false";document.addCommonToCartForm.submit()' class="submenutextright">${requestAttributes.uiLabelMap.EcommerceAddCheckedToCart}</a>
             </td>
           </#if>
         </tr>
@@ -48,7 +48,7 @@
           <td>
             <table width="100%" border="0" cellpadding="0">
               <tr align='left' valign='bottom'>
-                <td width="35%" align="left"><span class="tableheadtext"><b>${requestAttributes.uiLabelMap.OrderProduct}</b></span></td>               
+                <td width="35%" align="left"><span class="tableheadtext"><b>${requestAttributes.uiLabelMap.EcommerceProduct}</b></span></td>               
                 <#if maySelectItems?default(false)>
                 <td width="10%" align="right"><span class="tableheadtext"><b>${requestAttributes.uiLabelMap.OrderQtyOrdered}</b></span></td>
                 <td width="10%" align="right"><span class="tableheadtext"><b>${requestAttributes.uiLabelMap.OrderQtyShipped}</b></span></td>
@@ -58,9 +58,9 @@
                 <td width="10%" align="right">&nbsp;</td>
                 <td width="10%" align="right"><span class="tableheadtext"><b>${requestAttributes.uiLabelMap.OrderQtyOrdered}</b></span></td>
                 </#if>
-                <td width="10%" align="right"><span class="tableheadtext"><b>${requestAttributes.uiLabelMap.OrderUnitPrice}</b></span></td>
+                <td width="10%" align="right"><span class="tableheadtext"><b>${requestAttributes.uiLabelMap.EcommerceUnitPrice}</b></span></td>
                 <td width="10%" align="right"><span class="tableheadtext"><b>${requestAttributes.uiLabelMap.OrderAdjustments}</b></span></td>
-                <td width="10%" align="right"><span class="tableheadtext"><b>${requestAttributes.uiLabelMap.OrderSubtotal}</b></span></td>
+                <td width="10%" align="right"><span class="tableheadtext"><b>${requestAttributes.uiLabelMap.CommonSubtotal}</b></span></td>
                 <#if maySelectItems?default(false)>
                 <td width="5%" align="right">&nbsp;</td>
                 </#if>
@@ -158,7 +158,7 @@
 
               <tr><td colspan="10"><hr class='sepbar'></td></tr>
               <tr>
-                <td align="right" colspan="6"><div class="tabletext"><b>${requestAttributes.uiLabelMap.OrderSubtotal}</b></div></td>
+                <td align="right" colspan="6"><div class="tabletext"><b>${requestAttributes.uiLabelMap.CommonSubtotal}</b></div></td>
                 <td align="right" nowrap><div class="tabletext">${orderSubTotal?string.currency}</div></td>
               </tr>
               <#list headerAdjustmentsToShow as orderHeaderAdjustment>

@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -42,18 +42,18 @@
           <div class="tabletext">
             <a href='<@ofbizUrl>/product/<#if requestAttributes.categoryId?exists>~category_id=${requestAttributes.categoryId}/</#if>~product_id=${product.productId}</@ofbizUrl>' class='buttontext'>${product.productName?if_exists}</a>
           </div>
-          <div class="tabletext">${product.description?if_exists}<#if daysToShip?exists>&nbsp;-&nbsp;${uiLabelMap.CatalogUsuallyShipsIn} <b>${daysToShip}</b> ${uiLabelMap.CatalogDays}!</#if></div>
+          <div class="tabletext">${product.description?if_exists}<#if daysToShip?exists>&nbsp;-&nbsp;${uiLabelMap.ProductUsuallyShipsIn} <b>${daysToShip}</b> ${uiLabelMap.CommonDays}!</#if></div>
           <div class="tabletext">
             <nobr>
               <b>${product.productId?if_exists}</b>,
                 <#if price.listPrice?exists && price.price?exists && price.price?double < price.listPrice?double>
-                  ${uiLabelMap.CatalogListPrice}: <span class='basePrice'>${price.listPrice?string.currency}</span>
+                  ${uiLabelMap.ProductListPrice}: <span class='basePrice'>${price.listPrice?string.currency}</span>
                 </#if>                                            
                 <b>
                   <#if price.isSale>
-                    <span class='salePrice'>${uiLabelMap.CatalogOnSale}!</span>
+                    <span class='salePrice'>${uiLabelMap.EcommerceOnSale}!</span>
                   </#if>
-                  ${uiLabelMap.CatalogYourPrice}: <span class='<#if price.isSale>salePrice<#else>normalPrice</#if>'>${price.price?string.currency}</span>
+                  ${uiLabelMap.EcommerceYourPrice}: <span class='<#if price.isSale>salePrice<#else>normalPrice</#if>'>${price.price?string.currency}</span>
                 </b>
             </nobr>
           </div>
@@ -61,13 +61,13 @@
       <td valign=center align=right>
           <#-- check to see if introductionDate hasn't passed yet -->
           <#if product.introductionDate?exists && nowTimestamp.before(product.introductionDate)>
-            <div class='tabletext' style='color: red;'>${uiLabelMap.CatalogNotYetAvailable}</div>
+            <div class='tabletext' style='color: red;'>${uiLabelMap.ProductNotYetAvailable}</div>
           <#-- check to see if salesDiscontinuationDate has passed -->
           <#elseif product.salesDiscontinuationDate?exists && nowTimestamp.after(product.salesDiscontinuationDate)>
-            <div class='tabletext' style='color: red;'>${uiLabelMap.CatalogNoLongerAvailable}</div>          
+            <div class='tabletext' style='color: red;'>${uiLabelMap.ProductNoLongerAvailable}</div>          
           <#-- check to see if the product is a virtual product -->
           <#elseif product.isVirtual?exists && product.isVirtual == "Y">
-            <a href='<@ofbizUrl>/product?<#if requestAttributes.categoryId?exists>category_id=${requestAttributes.categoryId}&</#if>product_id=${product.productId}</@ofbizUrl>' class="buttontext"><nobr>[${uiLabelMap.CatalogChooseVariations}...]</nobr></a>                                                          
+            <a href='<@ofbizUrl>/product?<#if requestAttributes.categoryId?exists>category_id=${requestAttributes.categoryId}&</#if>product_id=${product.productId}</@ofbizUrl>' class="buttontext"><nobr>[${uiLabelMap.EcommerceChooseVariations}...]</nobr></a>                                                          
           <#else>
             <form method="POST" action="<@ofbizUrl>/additem<#if requestAttributes._CURRENT_VIEW_?exists>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="the${requestAttributes.formNamePrefix?if_exists}${requestAttributes.listIndex?if_exists}form" style='margin: 0;'>
               <input type='hidden' name='add_product_id' value='${product.productId}'>
@@ -77,7 +77,7 @@
               <#if requestParameters.VIEW_INDEX?exists><input type='hidden' name='VIEW_INDEX' value='${requestParameters.VIEW_INDEX}'></#if>
               <#if requestParameters.SEARCH_STRING?exists><input type='hidden' name='SEARCH_STRING' value='${requestParameters.SEARCH_STRING}'></#if>
               <#if requestParameters.SEARCH_CATEGORY_ID?exists><input type='hidden' name='SEARCH_CATEGORY_ID' value='${requestParameters.SEARCH_CATEGORY_ID}'></#if>                            
-              <br><a href="javascript:document.the${requestAttributes.formNamePrefix?if_exists}${requestAttributes.listIndex?if_exists}form.submit()" class="buttontext"><nobr>[${uiLabelMap.CatalogAddtoCart}]</nobr></a>
+              <br><a href="javascript:document.the${requestAttributes.formNamePrefix?if_exists}${requestAttributes.listIndex?if_exists}form.submit()" class="buttontext"><nobr>[${uiLabelMap.EcommerceAddtoCart}]</nobr></a>
             </form>
             
             <#if requestAttributes.productCategoryMember?exists>              
@@ -91,7 +91,7 @@
                   <#if requestParameters.VIEW_INDEX?exists><input type='hidden' name='VIEW_INDEX' value='${requestParameters.VIEW_INDEX}'></#if>
                   <#if requestParameters.SEARCH_STRING?exists><input type='hidden' name='SEARCH_STRING' value='${requestParameters.SEARCH_STRING}'></#if>
                   <#if requestParameters.SEARCH_CATEGORY_ID?exists><input type='hidden' name='SEARCH_CATEGORY_ID' value='${requestParameters.SEARCH_CATEGORY_ID}'></#if>                                              
-                  <a href="javascript:document.the${requestAttributes.formNamePrefix?if_exists}${requestAttributes.listIndex?if_exists}defaultform.submit()" class="buttontext"><nobr>[${uiLabelMap.CatalogAddDefault}(${prodCatMem.quantity?string.number}) ${uiLabelMap.CatalogToCart}]</nobr></a>
+                  <a href="javascript:document.the${requestAttributes.formNamePrefix?if_exists}${requestAttributes.listIndex?if_exists}defaultform.submit()" class="buttontext"><nobr>[${uiLabelMap.CommonAddDefault}(${prodCatMem.quantity?string.number}) ${uiLabelMap.EcommerceToCart}]</nobr></a>
                 </form>
               </#if>
             </#if>
@@ -100,5 +100,5 @@
     </tr>
   </table>
 <#else>
-&nbsp;${uiLabelMap.CatalogErrorProductNotFound}.<br>
+&nbsp;${uiLabelMap.ProductErrorProductNotFound}.<br>
 </#if>

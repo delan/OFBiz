@@ -66,12 +66,12 @@
         <call-map-processor in-map-name="parameters" out-map-name="userLoginContext">
             <simple-map-processor name="newUserLogin">
                 <process field="USERNAME"><copy to-field="userLoginId"/><not-empty>
-                <fail-property resource="EcommerceUiLabels" property="EcommerceUserLoginMissingError"/></not-empty></process>
+                <fail-property resource="EcommerceUiLabels" property="PartyUserLoginMissingError"/></not-empty></process>
                 <process field="PASSWORD"><copy to-field="currentPassword"/><not-empty>
-                <fail-property resource="EcommerceUiLabels" property="EcommercePasswordMissingError"/></not-empty></process>
+                <fail-property resource="EcommerceUiLabels" property="PartyPasswordMissing"/></not-empty></process>
                 <process field="CONFIRM_PASSWORD">
                     <compare-field operator="equals" field="PASSWORD">
-                    <fail-property resource="EcommerceUiLabels" property="EcommercePasswordMatchError"/></compare-field>
+                    <fail-property resource="EcommerceUiLabels" property="PartyPasswordMatchError"/></compare-field>
                     <!-- This is checked below in the checkNewPassword method in the bsh block: <not-empty><fail-message message="You must enter your password twice"/></not-empty> -->
                     <copy to-field="currentPasswordVerify"/>
                 </process>
@@ -104,14 +104,14 @@
         <call-map-processor in-map-name="parameters" out-map-name="personContext">
             <simple-map-processor name="newPerson">
                 <process field="USER_FIRST_NAME"><copy to-field="firstName"/><not-empty>
-                <fail-property resource="EcommerceUiLabels" property="EcommerceFirstNameMissingError"/></not-empty></process>
+                <fail-property resource="EcommerceUiLabels" property="PartyFirstNameMissing"/></not-empty></process>
                 <process field="USER_MIDDLE_NAME"><copy to-field="middleName"/></process>
                 <process field="USER_LAST_NAME"><copy to-field="lastName"/><not-empty>
-                <fail-property resource="EcommerceUiLabels" property="EcommerceLastNameMissingError"/></not-empty></process>
+                <fail-property resource="EcommerceUiLabels" property="PartyLastNameMissingError"/></not-empty></process>
                 <process field="USER_TITLE"><copy to-field="personalTitle"/></process>
                 <process field="USER_SUFFIX"><copy to-field="suffix"/></process>
                 <process field="USER_BIRTHDATE"><convert type="Date" to-field="birthDate">
-                <fail-property resource="EcommerceUiLabels" property="EcommerceBirthDateMissingError"/></convert></process>
+                <fail-property resource="EcommerceUiLabels" property="PartyBirthDateMissingError"/></convert></process>
                 <process field="USER_GENDER"><copy to-field="gender"/></process>
             </simple-map-processor>
         </call-map-processor>
@@ -135,15 +135,15 @@
                         <process field="roleTypeId"><copy/></process>
                         <process field="fullName"><copy to-field="toName"/></process>
                         <process field="CUSTOMER_ADDRESS1"><copy to-field="address1"/><not-empty>
-                        <fail-property resource="EcommerceUiLabels" property="EcommerceAddressLine1MissingError"/></not-empty></process>
+                        <fail-property resource="EcommerceUiLabels" property="PartyAddressLine1MissingError"/></not-empty></process>
                         <process field="CUSTOMER_ADDRESS2"><copy to-field="address2"/></process>
                         <process field="CUSTOMER_CITY"><copy to-field="city"/><not-empty>
-                        <fail-property resource="EcommerceUiLabels" property="EcommerceCityMissingError"/></not-empty></process>
+                        <fail-property resource="EcommerceUiLabels" property="PartyCityMissing"/></not-empty></process>
                         <process field="CUSTOMER_STATE"><copy to-field="stateProvinceGeoId"/></process>
                         <process field="CUSTOMER_POSTAL_CODE"><copy to-field="postalCode"/><not-empty>
-                        <fail-property resource="EcommerceUiLabels" property="EcommercePostalCodeMissingError"/></not-empty></process>
+                        <fail-property resource="EcommerceUiLabels" property="PartyZipCodeMissing"/></not-empty></process>
                         <process field="CUSTOMER_COUNTRY"><copy to-field="countryGeoId"/><not-empty>
-                        <fail-property resource="EcommerceUiLabels" property="EcommerceCountryMissingError"/></not-empty></process>
+                        <fail-property resource="EcommerceUiLabels" property="PartyCountryMissing"/></not-empty></process>
                         <process field="CUSTOMER_ADDRESS_ALLOW_SOL"><copy to-field="allowSolicitation"/></process>
                     </simple-map-processor>
                 </call-map-processor>
@@ -227,7 +227,7 @@
                             <simple-map-processor name="checkRequiredPhone">
                                 <process field="REQUIRED_PHONE">
                                     <not-empty>
-                                    <fail-property resource="EcommerceUiLabels" property="EcommerceContactTelephoneMissingError"/></not-empty>
+                                    <fail-property resource="EcommerceUiLabels" property="PartyContactTelephoneMissingError"/></not-empty>
                                 </process>
                             </simple-map-processor>
                         </call-map-processor>
@@ -252,7 +252,7 @@
                     <simple-map-processor name="checkRequiredEmail">
                         <process field="emailAddress">
                             <not-empty>
-                            <fail-property resource="EcommerceUiLabels" property="EcommerceEmailAddressMissingError"/></not-empty>
+                            <fail-property resource="EcommerceUiLabels" property="PartyEmailAddressMissingError"/></not-empty>
                         </process>
                     </simple-map-processor>
                </call-map-processor>
@@ -262,7 +262,7 @@
                     <simple-map-processor name="checkRequiredEmailFormat">
                         <process field="emailAddress">
                             <validate-method method="isEmail">
-                            <fail-property resource="EcommerceUiLabels" property="EcommerceValidEmailMissingError"/>
+                            <fail-property resource="EcommerceUiLabels" property="PartyEmailAddressNotFormattedCorrectly"/>
                             </validate-method>
                         </process>
                     </simple-map-processor>

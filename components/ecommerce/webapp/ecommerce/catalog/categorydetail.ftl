@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.1
 -->
 
@@ -39,10 +39,10 @@
             <#if requestParameters.VIEW_INDEX?exists><input type='hidden' name='VIEW_INDEX' value='${requestParameters.VIEW_INDEX}'></#if>
             <#if requestParameters.SEARCH_STRING?exists><input type='hidden' name='SEARCH_STRING' value='${requestParameters.SEARCH_STRING}'></#if>
             <#if requestParameters.SEARCH_CATEGORY_ID?exists><input type='hidden' name='SEARCH_CATEGORY_ID' value='${requestParameters.SEARCH_CATEGORY_ID}'></#if>                                     
-            <a href="javascript:document.thecategoryform.submit()" class="buttontext"><nobr>[${uiLabelMap.CatalogAddProductsUsingDefaultQuantities}]</nobr></a>
+            <a href="javascript:document.thecategoryform.submit()" class="buttontext"><nobr>[${uiLabelMap.ProductAddProductsUsingDefaultQuantities}]</nobr></a>
           </form>
         </#if>
-        <a href="<@ofbizUrl>/advancedsearch?SEARCH_CATEGORY_ID=${productCategory.productCategoryId}</@ofbizUrl>" class="buttontext">${uiLabelMap.CatalogSearchinCategory}</a>
+        <a href="<@ofbizUrl>/advancedsearch?SEARCH_CATEGORY_ID=${productCategory.productCategoryId}</@ofbizUrl>" class="buttontext">${uiLabelMap.ProductSearchinCategory}</a>
       </div>
     </td>
   </tr>
@@ -69,13 +69,13 @@
     <td align=right>
       <b>
         <#if 0 < viewIndex?int>
-          <a href="<@ofbizUrl>/category/~category_id=${productCategoryId}/~VIEW_SIZE=${viewSize}/~VIEW_INDEX=${viewIndex?int - 1}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CatalogPrevious}]</a> |
+          <a href="<@ofbizUrl>/category/~category_id=${productCategoryId}/~VIEW_SIZE=${viewSize}/~VIEW_INDEX=${viewIndex?int - 1}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonPrevious}]</a> |
         </#if>
         <#if 0 < listSize?int>
           <span class="tabletext">${lowIndex} - ${highIndex} of ${listSize}</span>
         </#if>
         <#if highIndex?int < listSize?int>
-          | <a href="<@ofbizUrl>/category/~category_id=${productCategoryId}/~VIEW_SIZE=${viewSize}/~VIEW_INDEX=${viewIndex?int + 1}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CatalogNext}]</a> |
+          | <a href="<@ofbizUrl>/category/~category_id=${productCategoryId}/~VIEW_SIZE=${viewSize}/~VIEW_INDEX=${viewIndex?int + 1}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonNext}]</a> |
         </#if>
       </b>
     </td>
@@ -111,13 +111,13 @@
     <td align=right>
       <b>
         <#if 0 < viewIndex?int>
-          <a href="<@ofbizUrl>/category?category_id=${productCategoryId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex?int - 1}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CatalogPrevious}]</a> |
+          <a href="<@ofbizUrl>/category?category_id=${productCategoryId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex?int - 1}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonPrevious}]</a> |
         </#if>
         <#if 0 < listSize?int>
           <span class="tabletext">${lowIndex} - ${highIndex} of ${listSize}</span>
         </#if>
         <#if highIndex?int < listSize?int>
-          | <a href="<@ofbizUrl>/category?category_id=${productCategoryId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex?int + 1}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CatalogNext}]</a> |
+          | <a href="<@ofbizUrl>/category?category_id=${productCategoryId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex?int + 1}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonNext}]</a> |
         </#if>
       </b>
     </td>
@@ -131,7 +131,7 @@
   </tr>
   <tr>
     <td>
-      <div class='tabletext'>${uiLabelMap.CatalogNoProductsinThisCategory}.</DIV>
+      <div class='tabletext'>${uiLabelMap.ProductNoProductsInThisCategory}.</DIV>
     </td>
   </tr>
 </table>

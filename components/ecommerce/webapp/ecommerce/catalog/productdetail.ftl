@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.6 $
+ *@version    $Revision: 1.7 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -51,11 +51,11 @@ ${requestAttributes.virtualJavaScript?if_exists}
     <tr>
       <td colspan="2" align="right">
         <#if requestAttributes.previousProductId?exists>
-          <a href='<@ofbizUrl>/product/~category_id=${requestAttributes.categoryId?if_exists}/~product_id=${requestAttributes.previousProductId?if_exists}</@ofbizUrl>' class="buttontext">[${uiLabelMap.CatalogPrevious}]</a>&nbsp;|&nbsp;
+          <a href='<@ofbizUrl>/product/~category_id=${requestAttributes.categoryId?if_exists}/~product_id=${requestAttributes.previousProductId?if_exists}</@ofbizUrl>' class="buttontext">[${uiLabelMap.CommonPrevious}]</a>&nbsp;|&nbsp;
         </#if>
         <a href="<@ofbizUrl>/category/~category_id=${requestAttributes.categoryId?if_exists}</@ofbizUrl>" class="buttontext">${requestAttributes.category.description?if_exists}</a>
         <#if requestAttributes.nextProductId?exists>
-          &nbsp;|&nbsp;<a href='<@ofbizUrl>/product/~category_id=${requestAttributes.categoryId?if_exists}/~product_id=${requestAttributes.nextProductId?if_exists}</@ofbizUrl>' class="buttontext">[${uiLabelMap.CatalogNext}]</a>
+          &nbsp;|&nbsp;<a href='<@ofbizUrl>/product/~category_id=${requestAttributes.categoryId?if_exists}/~product_id=${requestAttributes.nextProductId?if_exists}</@ofbizUrl>' class="buttontext">[${uiLabelMap.CommonNext}]</a>
         </#if>
       </td>
     </tr>
@@ -80,37 +80,37 @@ ${requestAttributes.virtualJavaScript?if_exists}
               - if isSale show price with salePrice style and print "On Sale!"
       -->
       <#if price.listPrice?exists && price.price?exists && price.price?double < price.listPrice?double>
-        <div class="tabletext">${uiLabelMap.CatalogListPrice}: <span class='basePrice'>${price.listPrice?string.currency}</span></div>
+        <div class="tabletext">${uiLabelMap.ProductListPrice}: <span class='basePrice'>${price.listPrice?string.currency}</span></div>
       </#if>
       <#if price.listPrice?exists && price.basePrice?exists && price.price?exists && price.price?double < price.defaultPrice?double && price.defaultPrice?double < price.listPrice?double>
-        <div class="tabletext">${uiLabelMap.CatalogRegularPrice}: <span class='basePrice'>${price.defaultPrice?string.currency}</span></div>
+        <div class="tabletext">${uiLabelMap.ProductRegularPrice}: <span class='basePrice'>${price.defaultPrice?string.currency}</span></div>
       </#if>     
       <div class="tabletext">
         <b>
           <#if price.isSale>
-            <span class='salePrice'>${uiLabelMap.CatalogOnSale}!</span>
+            <span class='salePrice'>${uiLabelMap.EcommerceOnSale}!</span>
             <#assign priceStyle = "salePrice">
           <#else>
             <#assign priceStyle = "regularPrice">
           </#if>
-            ${uiLabelMap.CatalogYourPrice}: <span class='${priceStyle}'>${price.price?string.currency}</span>
+            ${uiLabelMap.EcommerceYourPrice}: <span class='${priceStyle}'>${price.price?string.currency}</span>
         </b>
       </div>
       
       <#-- Included quantities/pieces -->
       <#if product.quantityIncluded?exists && product.quantityIncluded?double != 0>     
-        <div class="tabletext">${uiLabelMap.CatalogIncludes}:
+        <div class="tabletext">${uiLabelMap.EcommerceIncludes}:
           ${product.quantityIncluded?if_exists}
           ${product.quantityUomId?if_exists}
         </div>
       </#if>
       <#if product.piecesIncluded?exists && product.piecesIncluded?long != 0>
-        <div class="tabletext">${uiLabelMap.CatalogPieces}:
+        <div class="tabletext">${uiLabelMap.EcommercePieces}:
           ${product.piecesIncluded}
         </div>
       </#if>
       <#if daysToShip?exists>
-        <div class="tabletext"><b>${uiLabelMap.CatalogUsuallyShipsIn} <font color='red'>${daysToShip}</font> ${uiLabelMap.CatalogDays}!<b></div>
+        <div class="tabletext"><b>${uiLabelMap.ProductUsuallyShipsIn} <font color='red'>${daysToShip}</font> ${uiLabelMap.CommonDays}!<b></div>
       </#if>
                 
       <form method="POST" action="<@ofbizUrl>/additem<#if requestAttributes._CURRENT_VIEW_?exists>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="addform" style='margin: 0;'>
@@ -131,7 +131,7 @@ ${requestAttributes.virtualJavaScript?if_exists}
           <#else>
             <input type='hidden' name="product_id" value='${product.productId}'>
             <input type='hidden' name="add_product_id" value='NULL'>
-            <div class='tabletext'><b>${uiLabelMap.CatalogItemOutofStock}.</b></div>
+            <div class='tabletext'><b>${uiLabelMap.ProductItemOutofStock}.</b></div>
             <#assign inStock = false>
           </#if>
         <#else>          
@@ -139,7 +139,7 @@ ${requestAttributes.virtualJavaScript?if_exists}
           <input type='hidden' name="add_product_id" value='${product.productId}'>
           <#if !Static["org.ofbiz.product.store.ProductStoreWorker"].isStoreInventoryAvailable(request, product.productId?string, 1.0?double)>
             <#if Static["org.ofbiz.product.store.ProductStoreWorker"].isStoreInventoryRequired(request, product)> 
-              <div class='tabletext'><b>${uiLabelMap.CatalogItemOutofStock}.</b></div>
+              <div class='tabletext'><b>${uiLabelMap.ProductItemOutofStock}.</b></div>
               <#assign inStock = false>
             <#else>
               <div class='tabletext'><b>${product.inventoryMessage?if_exists}</b></div>
@@ -151,14 +151,14 @@ ${requestAttributes.virtualJavaScript?if_exists}
         
         <#-- check to see if introductionDate hasn't passed yet -->
         <#if product.introductionDate?exists && nowTimestamp.before(product.introductionDate)>
-          <div class='tabletext' style='color: red;'>${uiLabelMap.CatalogProductNotYetMadeAvailable}.</div>
+          <div class='tabletext' style='color: red;'>${uiLabelMap.ProductProductNotYetMadeAvailable}.</div>
         <#-- check to see if salesDiscontinuationDate has passed -->
         <#elseif product.salesDiscontinuationDate?exists && nowTimestamp.after(product.salesDiscontinuationDate)>
-          <div class='tabletext' style='color: red;'>${uiLabelMap.CatalogProductNoLongerAvailable}.</div>
+          <div class='tabletext' style='color: red;'>${uiLabelMap.ProductProductNoLongerAvailable}.</div>
         <#-- check to see if the product requires inventory check and has inventory -->
         <#else>        
           <#if inStock>
-            <a href="javascript:addItem()" class="buttontext"><nobr>[${uiLabelMap.CatalogAddtoCart}]</nobr></a>&nbsp;
+            <a href="javascript:addItem()" class="buttontext"><nobr>[${uiLabelMap.EcommerceAddtoCart}]</nobr></a>&nbsp;
             <input type="text" class="inputBox" size="5" name="quantity" value="1">
           </#if>
           <#if requestParameters.category_id?exists>
@@ -178,7 +178,7 @@ ${requestAttributes.virtualJavaScript?if_exists}
           </select>
           &nbsp;
           <input type="text" size="5" class="inputBox" name="quantity" value="1">
-          <a href="javascript:document.addToShoppingList.submit();" class="buttontext">[${uiLabelMap.CatalogAddtoShoppingList}]</a>
+          <a href="javascript:document.addToShoppingList.submit();" class="buttontext">[${uiLabelMap.EcommerceAddtoShoppingList}]</a>
         </form>
       </#if>
        
@@ -229,7 +229,7 @@ ${requestAttributes.virtualJavaScript?if_exists}
   <#-- Product Reviews -->
   <tr>
     <td colspan="2">
-      <div class="tableheadtext">${uiLabelMap.CatalogCustomerReviews}:</div>
+      <div class="tableheadtext">${uiLabelMap.EcommerceCustomerReviews}:</div>
     </td>
   </tr> 
   <tr><td colspan="2"><hr class='sepbar'></td></tr>
@@ -242,13 +242,13 @@ ${requestAttributes.virtualJavaScript?if_exists}
           <table border="0" width="100%" cellpadding="0" cellspacing='0'>
             <tr>              
               <td>
-                <div class="tabletext"><b>${uiLabelMap.CatalogBy}: </b><#if productReview.postedAnonymous?default("N") == "Y">${uiLabelMap.CatalogAnonymous}<#else>${postedPerson.firstName} ${postedPerson.lastName}</#if></div>
+                <div class="tabletext"><b>${uiLabelMap.CommonBy}: </b><#if productReview.postedAnonymous?default("N") == "Y">${uiLabelMap.EcommerceAnonymous}<#else>${postedPerson.firstName} ${postedPerson.lastName}</#if></div>
               </td>
               <td>
-                <div class="tabletext"><b>${uiLabelMap.CatalogOn}: </b>${productReview.postedDateTime?if_exists}</div>
+                <div class="tabletext"><b>${uiLabelMap.CommonOn}: </b>${productReview.postedDateTime?if_exists}</div>
               </td>
               <td>
-                <div class="tabletext"><b>${uiLabelMap.CatalogRanking}: </b>${productReview.productRating?if_exists?string}</div>
+                <div class="tabletext"><b>${uiLabelMap.EcommerceRanking}: </b>${productReview.productRating?if_exists?string}</div>
               </td>
             </tr>
             <tr>
@@ -274,7 +274,7 @@ ${requestAttributes.virtualJavaScript?if_exists}
   <#else>
     <tr>
       <td colspan="2">
-        <div class="tabletext">${uiLabelMap.CatalogProductNotReviewedYet}.</div>
+        <div class="tabletext">${uiLabelMap.ProductProductNotReviewedYet}.</div>
       </td>
     </tr>
     <tr>

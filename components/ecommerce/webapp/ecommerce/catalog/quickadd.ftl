@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      2.1
 -->
 
@@ -44,7 +44,7 @@
               </#if>
             </#list>
           </select>
-          <div><a href="javascript:document.choosequickaddform.submit()" class="buttontext">${uiLabelMap.CatalogChooseQuickAddCategory}</a></div>
+          <div><a href="javascript:document.choosequickaddform.submit()" class="buttontext">${uiLabelMap.ProductChooseQuickAddCategory}</a></div>
         </form>
       </td>
     </tr>
@@ -70,7 +70,7 @@
   <form method="post" action="<@ofbizUrl>/addtocartbulk</@ofbizUrl>" name="bulkaddform" style='margin: 0;'>
     <input type='hidden' name='category_id' value='${categoryId}'>
     <div class="tabletext" align="right">
-      <a href="javascript:document.bulkaddform.submit()" class="buttontext"><nobr>[${uiLabelMap.CatalogAddAlltoCart}]</nobr></a>
+      <a href="javascript:document.bulkaddform.submit()" class="buttontext"><nobr>[${uiLabelMap.EcommerceAddAlltoCart}]</nobr></a>
     </div>     
     <table border='1' width='100%' cellpadding='2' cellspacing='0'>      
       <#list productCategoryMembers as productCategoryMember>
@@ -82,7 +82,7 @@
       </#list> 
     </table>
     <div class="tabletext" align="right">
-      <a href="javascript:document.bulkaddform.submit()" class="buttontext"><nobr>[${uiLabelMap.CatalogAddAlltoCart}]</nobr></a>
+      <a href="javascript:document.bulkaddform.submit()" class="buttontext"><nobr>[${uiLabelMap.EcommerceAddAlltoCart}]</nobr></a>
     </div>      
   </form>
   </center>
@@ -91,7 +91,7 @@
     <tr><td colspan="2"><hr class='sepbar'></td></tr>
     <tr>
       <td>
-        <div class='tabletext'>${uiLabelMap.CatalogNoProductsInThisCategory}.</div>
+        <div class='tabletext'>${uiLabelMap.ProductNoProductsInThisCategory}.</div>
       </td>
     </tr>
   </table>

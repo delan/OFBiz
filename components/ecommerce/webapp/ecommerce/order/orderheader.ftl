@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.6 $
+ *@version    $Revision: 1.7 $
  *@since      2.1
 -->
 
@@ -35,7 +35,7 @@
             <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
               <tr>
                 <td valign="middle" align="left">
-                  <div class="boxhead">&nbsp;${requestAttributes.uiLabelMap.OrderOrder}&nbsp;<#if orderHeader?has_content>#<a href="<@ofbizUrl>/orderstatus?order_id=${orderHeader.orderId}</@ofbizUrl>" class="lightbuttontext">${orderHeader.orderId}</a>&nbsp;</#if>${requestAttributes.uiLabelMap.OrderInformation}</div>
+                  <div class="boxhead">&nbsp;${requestAttributes.uiLabelMap.OrderOrder}&nbsp;<#if orderHeader?has_content>#<a href="<@ofbizUrl>/orderstatus?order_id=${orderHeader.orderId}</@ofbizUrl>" class="lightbuttontext">${orderHeader.orderId}</a>&nbsp;</#if>${requestAttributes.uiLabelMap.CommonInformation}</div>
                 </td>
                 <#if maySelectItems?default(false) && returnLink?default("N") == "Y">
                   <td valign="middle" align="right" nowrap>
@@ -56,7 +56,7 @@
                     <#if placingCustomerPerson?has_content>
                       <tr>
                         <td align="right" valign="top" width="15%">
-                          <div class="tabletext">&nbsp;<b>${requestAttributes.uiLabelMap.CustomerName}</b></div>
+                          <div class="tabletext">&nbsp;<b>${requestAttributes.uiLabelMap.PartyName}</b></div>
                         </td>
                         <td width="5">&nbsp;</td>
                         <td align="left" valign="top" width="80%">
@@ -72,7 +72,7 @@
                     <#-- order status information -->
                     <tr>
                       <td align="right" valign="top" width="15%">
-                        <div class="tabletext">&nbsp;<b>${requestAttributes.uiLabelMap.OrderStatus}</b></div>
+                        <div class="tabletext">&nbsp;<b>${requestAttributes.uiLabelMap.CommonStatus}</b></div>
                       </td>
                       <td width="5">&nbsp;</td>
                       <td align="left" valign="top" width="80%">
@@ -88,7 +88,7 @@
                       <tr><td colspan="7"><hr class='sepbar'></td></tr>
                       <tr>
                         <td align="right" valign="top" width="15%">
-                          <div class="tabletext">&nbsp;<b>${requestAttributes.uiLabelMap.OrderDate}</b></div>
+                          <div class="tabletext">&nbsp;<b>${requestAttributes.uiLabelMap.CommonDate}</b></div>
                         </td>
                         <td width="5">&nbsp;</td>
                         <td align="left" valign="top" width="80%">
@@ -125,7 +125,7 @@
             <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
               <tr>
                 <td valign="middle" align="left">
-                  <div class="boxhead">&nbsp;${requestAttributes.uiLabelMap.OrderPaymentInformation}</div>
+                  <div class="boxhead">&nbsp;${requestAttributes.uiLabelMap.AccountingPaymentInformation}</div>
                 </td>
               </tr>
             </table>
@@ -142,12 +142,12 @@
                       <tr>
                         <#if paymentMethodType.paymentMethodTypeId == "EXT_OFFLINE">
                           <td colspan="3" valign="top">
-                            <div class="tabletext" align="center"><b>${requestAttributes.uiLabelMap.OrderOfflinePayment}</b></div>                            
+                            <div class="tabletext" align="center"><b>${requestAttributes.uiLabelMap.AccountingOfflinePayment}</b></div>                            
                             <#if orderHeader?has_content && paymentAddress?has_content> 
                               <div class="tabletext" align="center"><hr class="sepbar"></div>
                               <div class="tabletext" align="center"><b>${requestAttributes.uiLabelMap.OrderSendPaymentTo}:</b></div>
                               <#if paymentAddress.toName?has_content><div class="tabletext" align="center">${paymentAddress.toName}</div></#if>
-                              <#if paymentAddress.attnName?has_content><div class="tabletext" align="center"><b>${requestAttributes.uiLabelMap.OrderAttn}:</b> ${paymentAddress.attnName}</div></#if>
+                              <#if paymentAddress.attnName?has_content><div class="tabletext" align="center"><b>${requestAttributes.uiLabelMap.PartyAddrAttnName}:</b> ${paymentAddress.attnName}</div></#if>
                               <div class="tabletext" align="center">${paymentAddress.address1}</div>
                               <#if paymentAddress.address2?has_content><div class="tabletext" align="center">${paymentAddress.address2}</div></#if>                            
                               <div class="tabletext" align="center">${paymentAddress.city}<#if paymentAddress.stateProvinceGeoId?has_content>, ${paymentAddress.stateProvinceGeoId}</#if> ${paymentAddress.postalCode?if_exists}
@@ -159,7 +159,7 @@
                         <#else>
                           <#assign outputted = true>
                           <td colspan="3" valign="top">
-                            <div class="tabletext" align="center"><b>${requestAttributes.uiLabelMap.OrderPaymentVia} ${paymentMethodType.description}</b></div>
+                            <div class="tabletext" align="center"><b>${requestAttributes.uiLabelMap.AccountingPaymentVia} ${paymentMethodType.description}</b></div>
                           </td>
                         </#if>
                       </tr>
@@ -170,7 +170,7 @@
                       <#if creditCard?has_content>
                         <tr>
                           <td align="right" valign="top" width="15%">
-                            <div class="tabletext">&nbsp;<b>${requestAttributes.uiLabelMap.OrderCreditCard}</b></div>
+                            <div class="tabletext">&nbsp;<b>${requestAttributes.uiLabelMap.AccountingCreditCard}</b></div>
                           </td>
                           <td width="5">&nbsp;</td>
                           <td align="left" valign="top" width="80%">
@@ -185,15 +185,15 @@
                       <#elseif eftAccount?has_content>
                         <tr>
                           <td align="right" valign="top" width="15%">
-                            <div class="tabletext">&nbsp;<b>${requestAttributes.uiLabelMap.OrderEFTAccount}</b></div>
+                            <div class="tabletext">&nbsp;<b>${requestAttributes.uiLabelMap.AccountingEftAccount}</b></div>
                           </td>
                           <td width="5">&nbsp;</td>
                           <td align="left" valign="top" width="80%">
                             <div class="tabletext">
                               ${eftAccount.nameOnAccount?if_exists}<br>
                               <#if eftAccount.companyNameOnAccount?has_content>${eftAccount.companyNameOnAccount}<br></#if>
-                              ${requestAttributes.uiLabelMap.OrderBank}: ${eftAccount.bankName}, ${eftAccount.routingNumber}<br>
-                              ${requestAttributes.uiLabelMap.OrderAccount} #: ${eftAccount.accountNumber}
+                              ${requestAttributes.uiLabelMap.AccountingBank}: ${eftAccount.bankName}, ${eftAccount.routingNumber}<br>
+                              ${requestAttributes.uiLabelMap.AccountingAccount} #: ${eftAccount.accountNumber}
                             </div>
                           </td>
                         </tr>
@@ -207,7 +207,7 @@
                       <#assign outputted = true>
                       <tr>
                         <td align="right" valign="top" width="15%">
-                          <div class="tabletext">&nbsp;<b>${requestAttributes.uiLabelMap.OrderBillingAccount}</b></div>
+                          <div class="tabletext">&nbsp;<b>${requestAttributes.uiLabelMap.AccountingBillingAccount}</b></div>
                         </td>
                         <td width="5">&nbsp;</td>
                         <td align="left" valign="top" width="80%">
@@ -271,8 +271,8 @@
                         <td width="5">&nbsp;</td>
                         <td align="left" valign="top" width="80%">
                           <div class="tabletext">
-                            <#if shippingAddress.toName?has_content><b>${requestAttributes.uiLabelMap.OrderTo}:</b> ${shippingAddress.toName}<br></#if>
-                            <#if shippingAddress.attnName?has_content><b>${requestAttributes.uiLabelMap.OrderAttn}:</b> ${shippingAddress.attnName}<br></#if>
+                            <#if shippingAddress.toName?has_content><b>${requestAttributes.uiLabelMap.CommonTo}:</b> ${shippingAddress.toName}<br></#if>
+                            <#if shippingAddress.attnName?has_content><b>${requestAttributes.uiLabelMap.PartyAddrAttnName}:</b> ${shippingAddress.attnName}<br></#if>
                             ${shippingAddress.address1}<br>
                             <#if shippingAddress.address2?has_content>${shippingAddress.address2}<br></#if>                            
                             ${shippingAddress.city}<#if shippingAddress.stateProvinceGeoId?has_content>, ${shippingAddress.stateProvinceGeoId} </#if>
@@ -292,7 +292,7 @@
                         <div class="tabletext">
                           <#if carrierPartyId?exists && carrierPartyId != "_NA_">${carrierPartyId?if_exists}</#if>
                           ${shipMethDescription?if_exists}
-                          <#if shippingAccount?exists><br>${requestAttributes.uiLabelMap.OrderUseAccount}: ${shippingAccount}</#if>
+                          <#if shippingAccount?exists><br>${requestAttributes.uiLabelMap.AccountingUseAccount}: ${shippingAccount}</#if>
                         </div>
                       </td>
                     </tr>

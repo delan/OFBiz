@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -28,5 +28,5 @@
   ${pages.get(requestAttributes.detailTemplate)}
 <#else>
   <#assign productId = requestAttributes.productId?if_exists>
-  <center><div class='head2'>${uiLabelMap.CatalogProductNotFound} ${productId?if_exists}!</div></center>
+  <center><div class='head2'>${uiLabelMap.ProductProductNotFound} ${productId?if_exists}!</div></center>
 </#if>

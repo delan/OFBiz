@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      3.0
 -->
 <@assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -35,7 +35,7 @@
           </td>
           <#if maySelectItems?default(false)>
             <td valign="middle" align="right" nowrap>
-              <a href='javascript:document.addOrderToCartForm.add_all.value="true";document.addOrderToCartForm.submit()' class="submenutext">${uiLabelMap.OrderAddAlltoCart}</a><a href='javascript:document.addOrderToCartForm.add_all.value="false";document.addOrderToCartForm.submit()' class="submenutextright">${uiLabelMap.OrderAddCheckedToCart}</a>
+              <a href='javascript:document.addCommonToCartForm.add_all.value="true";document.addCommonToCartForm.submit()' class="submenutext">${uiLabelMap.EcommerceAddAlltoCart}</a><a href='javascript:document.addCommonToCartForm.add_all.value="false";document.addCommonToCartForm.submit()' class="submenutextright">${uiLabelMap.EcommerceAddCheckedToCart}</a>
             </td>
           </#if>
         </tr>
@@ -58,14 +58,14 @@
     <tr>
       <td colspan="5"><div class="head3">${uiLabelMap.OrderReturnItemsFromOrder} #<a href="<@ofbizUrl>/orderstatus?order_id=${orderId}</@ofbizUrl>" class="buttontext">${orderId}</div></td>
       <td align="right">
-        <span class="tableheadtext">${uiLabelMap.OrderSelectAll}</span>&nbsp;
+        <span class="tableheadtext">${uiLabelMap.CommonSelectAll}</span>&nbsp;
         <input type="checkbox" name="selectAll" value="Y" onclick="javascript:toggleAll(this);">
       </td>      
     </tr>
     <tr>
-      <td><div class="tableheadtext">${uiLabelMap.OrderDescription}</div></td>
-      <td><div class="tableheadtext">${uiLabelMap.OrderQuantity}</div></td>
-      <td><div class="tableheadtext">${uiLabelMap.OrderPrice}</div></td>
+      <td><div class="tableheadtext">${uiLabelMap.CommonDescription}</div></td>
+      <td><div class="tableheadtext">${uiLabelMap.CommonQuantity}</div></td>
+      <td><div class="tableheadtext">${uiLabelMap.EcommercePrice}</div></td>
       <td><div class="tableheadtext">${uiLabelMap.OrderReason}</div></td>
       <td><div class="tableheadtext">${uiLabelMap.OrderRequestedResponse}</div></td>
       <td>&nbsp;</td>  
@@ -144,15 +144,15 @@
                 </td>
                 <td align="left" width="99%" valign="top" nowrap>
                   <div class="tabletext">
-                    <#if shippingAddress.toName?has_content><b>${uiLabelMap.OrderTo}:</b>&nbsp;${shippingAddress.toName}<br></#if>
-                    <#if shippingAddress.attnName?has_content><b>${uiLabelMap.OrderAttn}:</b>&nbsp;${shippingAddress.attnName}<br></#if>
+                    <#if shippingAddress.toName?has_content><b>${uiLabelMap.CommonTo}:</b>&nbsp;${shippingAddress.toName}<br></#if>
+                    <#if shippingAddress.attnName?has_content><b>${uiLabelMap.PartyAddrAttnName}:</b>&nbsp;${shippingAddress.attnName}<br></#if>
                     <#if shippingAddress.address1?has_content>${shippingAddress.address1}<br></#if>
                     <#if shippingAddress.address2?has_content>${shippingAddress.address2}<br></#if>
                     <#if shippingAddress.city?has_content>${shippingAddress.city}</#if>
                     <#if shippingAddress.stateProvinceGeoId?has_content><br>${shippingAddress.stateProvinceGeoId}</#if>
                     <#if shippingAddress.postalCode?has_content><br>${shippingAddress.postalCode}</#if>
                     <#if shippingAddress.countryGeoId?has_content><br>${shippingAddress.countryGeoId}</#if>                                                            
-                    <a href="<@ofbizUrl>/editcontactmech?DONE_PAGE=checkoutoptions&contactMechId=${shippingAddress.contactMechId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.OrderUpdate}]</a>
+                    <a href="<@ofbizUrl>/editcontactmech?DONE_PAGE=checkoutoptions&contactMechId=${shippingAddress.contactMechId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonUpdate}]</a>
                   </div>
                 </td>
               </tr>
