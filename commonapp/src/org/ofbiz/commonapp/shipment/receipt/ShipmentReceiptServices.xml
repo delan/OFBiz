@@ -67,5 +67,15 @@
         <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
         <find-by-primary-key entity-name="ShipmentReceiptRole" map-name="lookupPKMap" value-name="lookedUpValue"/>
         <remove-value value-name="lookedUpValue"/>
-    </simple-method>      
+    </simple-method>   
+    
+    <simple-method method-name="prepareInventoryReceipt" short-description="Prepare Inventory Receipt">
+		<check-permission permission="FACILITY" action="_CREATE"><fail-message message="Security Error: to run prepareInventoryReceipt you must have the FACILITY_CREATE or FACILITY_ADMIN permission"/></check-permission>
+        <check-errors/>
+        
+        <if-compare value="NON_SERIAL_INV_ITEM" operator="equals" field-name="inventoryItemTypeId" map-name="parameters">
+        	<field-to-result field-name="quantityAccepted" map-name="parameters" result-name="quantityOnHand"/>
+        	<field-to-result field-name="quantityAccepted" map-name="parameters" result-name="availableToPromise"/>
+        </if-compare>
+	</simple-method>       
 </simple-methods>

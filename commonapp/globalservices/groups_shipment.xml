@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE service-group PUBLIC "-//OFBiz//DTD Service Group Config//EN" "http://www.ofbiz.org/dtds/service-group.dtd">
+
+<service-group>	
+	<group name="receiveInventoryProduct" send-mode="all">
+		<service name="prepareInventoryReceipt" mode="sync" result-to-context="true"/>
+		<service name="createInventoryItem" mode="sync" result-to-context="true"/>
+		<service name="createShipmentReceipt" mode="sync"/>
+	</group>
+</service-group>
