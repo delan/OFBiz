@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -207,9 +207,7 @@ if (orderHeader != null) {
     osisFields = UtilMisc.toList("shipGroupSeqId", "shipmentId", "shipmentRouteSegmentId", "carrierPartyId", "shipmentMethodTypeId");
     osisFields.add("shipmentPackageSeqId"); osisFields.add("trackingCode"); osisFields.add("boxNumber");
     osisFindOptions = new EntityFindOptions(); osisFindOptions.setDistinct(true);
-    osisEli = delegator.findListIteratorByCondition("OrderShipmentInfoSummary", osisCond, null, osisFields, osisOrder, osisFindOptions);
-    orderShipmentInfoSummaryList = osisEli.getCompleteList();
-    osisEli.close();
+    orderShipmentInfoSummaryList = delegator.findByCondition("OrderShipmentInfoSummary", osisCond, null, osisFields, osisOrder, osisFindOptions);
     context.put("orderShipmentInfoSummaryList", orderShipmentInfoSummaryList);
 
     customerPoNumber = null;
@@ -245,7 +243,6 @@ if (assignPartyId != null) paramString = paramString + "&partyId=" + assignParty
 if (assignRoleTypeId != null) paramString = paramString + "&roleTypeId=" + assignRoleTypeId;
 if (fromDate != null) paramString = paramString + "&fromDate=" + fromDate;
 context.put("paramString", paramString);
-
 
 workEffortStatus = null;
 if (workEffortId != null && assignPartyId != null && assignRoleTypeId != null && fromDate != null) {
