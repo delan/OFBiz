@@ -33,7 +33,7 @@
                 <!-- <set field="titleProperty" value=""/> -->
             </actions>
             <widgets>
-                <decorator-screen name="main" location="component://order/widget/ordermgr/ReportScreens.xml">
+                <decorator-screen name="main" location="component://order/widget/ordermgr/CommonScreens.xml">
                     <decorator-section name="body">
                         <container>
                             <label style="head1" text="Order Reports"/>
@@ -55,7 +55,27 @@
         <section>
             <actions>
                 <set field="title" value="Order Purchase Report Payment"/>
-                <!-- <set field="titleProperty" value=""/> -->
+                <entity-condition entity-name="OrderPurchasePaymentSummary" list-name="orderPurchasePaymentSummaryList">
+                    <condition-list combine="and">
+                        <condition-expr field-name="productStoreId" operator="equals" env-name="parameters.productStoreId" ignore-if-empty="true"/>
+                        <condition-expr field-name="originFacilityId" operator="equals" env-name="parameters.originFacilityId" ignore-if-empty="true"/>
+                        <condition-expr field-name="terminalId" operator="equals" env-name="parameters.terminalId" ignore-if-empty="true"/>
+                        <condition-expr field-name="statusId" operator="equals" env-name="parameters.statusId" ignore-if-empty="true"/>
+                        <condition-expr field-name="orderDate" operator="greater-equals" env-name="parameters.fromOrderDate" ignore-if-null="true"/>
+                        <condition-expr field-name="orderDate" operator="less" env-name="parameters.thruOrderDate" ignore-if-null="true"/>
+                    </condition-list>
+                    <select-field field-name="productStoreId"/>
+                    <select-field field-name="originFacilityId"/>
+                    <select-field field-name="terminalId"/>
+                    <select-field field-name="statusId"/>
+                    <select-field field-name="paymentMethodTypeId"/>
+                    <select-field field-name="description"/>
+                    <select-field field-name="maxAmount"/>
+                    <order-by field-name="productStoreId"/>
+                    <order-by field-name="originFacilityId"/>
+                    <order-by field-name="terminalId"/>
+                    <order-by field-name="paymentMethodTypeId"/>
+                </entity-condition>
             </actions>
             <widgets>
                 <platform-specific>
@@ -69,12 +89,14 @@
         <section>
             <actions>
                 <set field="title" value="Order Purchase Report Product"/>
-                <!-- <set field="titleProperty" value=""/> -->
                 <entity-condition entity-name="OrderPurchaseProductSummary" list-name="orderPurchaseProductSummaryList">
                     <condition-list combine="and">
-                        <condition-expr field-name="originFacilityId" operator="equals" env-name="parameters.originFacilityId" ignore-if-null="true"/>
-                        <condition-expr field-name="orderDate" operator="greater-equals" env-name="fromOrderDate" ignore-if-null="true"/>
-                        <condition-expr field-name="orderDate" operator="less" env-name="thruOrderDate" ignore-if-null="true"/>
+                        <condition-expr field-name="productStoreId" operator="equals" env-name="parameters.productStoreId" ignore-if-empty="true"/>
+                        <condition-expr field-name="originFacilityId" operator="equals" env-name="parameters.originFacilityId" ignore-if-empty="true"/>
+                        <condition-expr field-name="terminalId" operator="equals" env-name="parameters.terminalId" ignore-if-empty="true"/>
+                        <condition-expr field-name="statusId" operator="equals" env-name="parameters.statusId" ignore-if-empty="true"/>
+                        <condition-expr field-name="orderDate" operator="greater-equals" env-name="parameters.fromOrderDate" ignore-if-null="true"/>
+                        <condition-expr field-name="orderDate" operator="less" env-name="parameters.thruOrderDate" ignore-if-null="true"/>
                     </condition-list>
                     <select-field field-name="productStoreId"/>
                     <select-field field-name="originFacilityId"/>
