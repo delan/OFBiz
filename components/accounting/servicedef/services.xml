@@ -740,24 +740,46 @@
         <implements service="paymentRefundInterface"/>
     </service>
 
-    <!-- RiTA Implementations -->
-    <service name="ritaCCAuth" engine="java"
+    <!-- RiTA (Local) Implementations -->
+    <service name="ritaCCAuth" engine="java" export="true"
             location="org.ofbiz.accounting.thirdparty.gosoftware.RitaServices" invoke="ccAuth">
         <description>RiTA Credit Card Pre-Authorization/Sale</description>
         <implements service="ccAuthInterface"/>
     </service>
-    <service name="ritaCCCapture" engine="java"
+    <service name="ritaCCCapture" engine="java" export="true"
             location="org.ofbiz.accounting.thirdparty.gosoftware.RitaServices" invoke="ccCapture">
         <description>RiTA Credit Card Post-Authorization</description>
         <implements service="ccCaptureInterface"/>
     </service>
-    <service name="ritaCCRelease" engine="java"
+    <service name="ritaCCRelease" engine="java" export="true"
             location="org.ofbiz.accounting.thirdparty.gosoftware.RitaServices" invoke="ccRelease">
         <description>RiTA Credit Card Void</description>
         <implements service="paymentReleaseInterface"/>
     </service>
-    <service name="ritaCCRefund" engine="java"
+    <service name="ritaCCRefund" engine="java" export="true"
             location="org.ofbiz.accounting.thirdparty.gosoftware.RitaServices" invoke="ccRefund">
+        <description>RiTA Credit Card Refund</description>
+        <implements service="paymentRefundInterface"/>
+    </service>
+
+    <!-- RiTA (Remote) Implementations -->
+    <service name="ritaCCAuthRemote" engine="rmi"
+            location="rita-rmi" invoke="ritaCCAuth">
+        <description>RiTA Credit Card Pre-Authorization/Sale</description>
+        <implements service="ccAuthInterface"/>
+    </service>
+    <service name="ritaCCCaptureRemote" engine="rmi"
+            location="rita-rmi" invoke="ritaCCCapture">
+        <description>RiTA Credit Card Post-Authorization</description>
+        <implements service="ccCaptureInterface"/>
+    </service>
+    <service name="ritaCCReleaseRemote" engine="rmi"
+            location="rita-rmi" invoke="ritaCCRelease">
+        <description>RiTA Credit Card Void</description>
+        <implements service="paymentReleaseInterface"/>
+    </service>
+    <service name="ritaCCRefundRemote" engine="rmi"
+            location="rita-rmi" invoke="ritaCCRefund">
         <description>RiTA Credit Card Refund</description>
         <implements service="paymentRefundInterface"/>
     </service>
