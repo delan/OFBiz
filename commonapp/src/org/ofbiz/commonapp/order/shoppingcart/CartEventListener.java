@@ -1,0 +1,114 @@
+/*
+ * $Id$
+ *
+ *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
+package org.ofbiz.commonapp.order.shoppingcart;
+
+
+import java.net.*;
+import java.sql.*;
+import java.util.*;
+import javax.servlet.http.*;
+
+import org.ofbiz.core.entity.*;
+import org.ofbiz.core.security.*;
+import org.ofbiz.core.util.*;
+import org.ofbiz.core.stats.*;
+
+
+/**
+ * HttpSessionListener that saves information about abandoned carts
+ *
+ *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ *@created    2 October 2002
+ *@version    1.0
+ */
+public class CartEventListener implements HttpSessionListener {
+    // Debug module name
+    public static final String module = CartEventListener.class.getName();
+
+    public CartEventListener() {}
+
+    public void sessionCreated(HttpSessionEvent event) {
+        //for this one do nothing when the session is created...
+        //HttpSession session = event.getSession();
+    }
+
+    public void sessionDestroyed(HttpSessionEvent event) {
+        HttpSession session = event.getSession();
+        //passing null for the delegator here because we don't want it to create a cart if none exists
+        ShoppingCart cart = ShoppingCartEvents.getCartObject(session, null);
+        if (cart == null) {
+            Debug.logInfo("No cart to save, doing nothing.");
+            return;
+        }
+        
+        String delegatorName = (String) session.getAttribute("delegatorName");
+        GenericDelegator delegator = null;
+        if (UtilValidate.isNotEmpty(delegatorName)) {
+            delegator = GenericDelegator.getGenericDelegator(delegatorName);
+        }
+        if (delegator == null) {
+            Debug.logError("Could not find delegator with delegatorName in session, not saving abandoned cart info.", module);
+            return;
+        }
+        
+        GenericValue visit = VisitHandler.getVisit(session);
+        if (visit == null) {
+            Debug.logError("Could not get the current visit, not saving abandoned cart info.", module);
+            return;
+        }
+        
+        Debug.logInfo("Saving abandoned cart", module);
+        try {
+            boolean beganTransaction = TransactionUtil.begin();
+            try {
+                Iterator cartItems = cart.iterator();
+                int seqId = 1;
+                while (cartItems.hasNext()) {
+                    ShoppingCartItem cartItem = (ShoppingCartItem) cartItems.next();
+                    GenericValue cartAbandonedLine = delegator.makeValue("CartAbandonedLine", null);
+
+                    cartAbandonedLine.set("visitId", visit.get("visitId"));
+                    cartAbandonedLine.set("cartAbandonedLineSeqId", new Integer(seqId));
+                    cartAbandonedLine.set("productId", cartItem.getProductId());
+                    cartAbandonedLine.set("prodCatalogId", cartItem.getProdCatalogId());
+                    cartAbandonedLine.set("quantity", new Double(cartItem.getQuantity()));
+                    cartAbandonedLine.set("unitPrice", new Double(cartItem.getBasePrice()));
+                    cartAbandonedLine.set("totalWithAdjustments", new Double(cartItem.getItemSubTotal()));
+                    //not doing pre-reservations now, so this is always N
+                    cartAbandonedLine.set("wasReserved", "N");
+                    cartAbandonedLine.create();
+
+                    seqId++;
+                }
+                TransactionUtil.commit(beganTransaction);
+            } catch (GenericEntityException e) {
+                Debug.logError(e, "An entity engine error occured while saving abandoned cart information");
+                TransactionUtil.rollback(beganTransaction);
+            }
+        } catch (GenericTransactionException e) {
+            Debug.logError(e, "A transaction error occured while saving abandoned cart information");
+        }
+    }
+}

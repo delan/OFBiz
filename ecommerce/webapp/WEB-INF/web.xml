@@ -73,6 +73,9 @@
   <!-- NOTE: not all app servers support mounting implementations of the HttpSessionActivationListener interface -->
   <!-- <listener><listener-class>org.ofbiz.core.control.ControlActivationEventListener</listener-class></listener> -->
   
+  <!-- this listener will save any abandoned cart info -->
+  <listener><listener-class>org.ofbiz.commonapp.order.shoppingcart.CartEventListener</listener-class></listener>
+  
   <servlet>
     <servlet-name>ControlServlet</servlet-name>
     <display-name>ControlServlet</display-name>
