@@ -40,8 +40,8 @@ public class HttpClient {
     private boolean lineFeed = true;
     private Map parameters = null;
     private Map headers = null;
-    private URL requestUrl;
-    private URLConnection con;
+    private URL requestUrl = null;
+    private URLConnection con = null;
 
     /** Creates an empty HttpClient object. */
     public HttpClient() {}

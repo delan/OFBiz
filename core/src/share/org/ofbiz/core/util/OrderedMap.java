@@ -1,7 +1,8 @@
 /*
  * $Id$
  *
- *  Copyright (c) 2002 The Open For Business Project (www.ofbiz.org)
+ *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
+ *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
  *  to deal in the Software without restriction, including without limitation
@@ -20,46 +21,30 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
 package org.ofbiz.core.util;
 
-
 import java.util.*;
-
 
 /**
  * OrderedMap - HashMap backed by a linked list.
  *
  * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
- * @version    1.0
- * @created    April 5, 2002
+ * @version    $Revision$
+ * @since      2.0
  */
 public class OrderedMap extends HashMap {
 
     private List orderedKeys = new LinkedList();
 
     /**
-     * Returns a set view of the keys contained in this map.  Unlike a HashMap
-     * the set is NOT backed by the map, so changes to the map are NOT reflected
-     * in the set, and vice-versa.
-     *
-     * @return a set view of the keys contained in this map.
-     */
+     * @see java.util.Map#keySet()
+     */   
     public Set keySet() {
         return new OrderedSet(orderedKeys);
     }
-
+ 
     /**
-     * Associates the specified value with the specified key in this map.
-     * If the map previously contained a mapping for this key, the old
-     * value is replaced.
-     *
-     * @param key key with which the specified value is to be associated.
-     * @param value value to be associated with the specified key.
-     * @return previous value associated with specified key, or <tt>null</tt>
-     *	       if there was no mapping for key.  A <tt>null</tt> return can
-     *	       also indicate that the HashMap previously associated
-     *	       <tt>null</tt> with the specified key.
+     * @see java.util.Map#put(java.lang.Object, java.lang.Object)
      */
     public Object put(Object key, Object value) {
         if (!orderedKeys.contains(key))
@@ -68,26 +53,19 @@ public class OrderedMap extends HashMap {
     }
 
     /**
-     * Removes all mappings from this map.
-     */
+     * @see java.util.Map#clear()
+     */   
     public void clear() {
         super.clear();
         orderedKeys.clear();
     }
-
+   
     /**
-     * Removes the mapping for this key from this map if present.
-     *
-     * @param key key whose mapping is to be removed from the map.
-     * @return previous value associated with specified key, or <tt>null</tt>
-     *	       if there was no mapping for key.  A <tt>null</tt> return can
-     *	       also indicate that the map previously associated <tt>null</tt>
-     *	       with the specified key.
+     * @see java.util.Map#remove(java.lang.Object)
      */
     public Object remove(Object key) {
         if (orderedKeys.contains(key))
             orderedKeys.remove(key);
         return super.remove(key);
     }
-
 }

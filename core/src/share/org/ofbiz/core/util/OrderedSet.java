@@ -1,7 +1,8 @@
 /*
  * $Id$
  *
- *  Copyright (c) 2002 The Open For Business Project (www.ofbiz.org)
+ *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
+ *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
  *  to deal in the Software without restriction, including without limitation
@@ -20,19 +21,16 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
 package org.ofbiz.core.util;
 
-
 import java.util.*;
-
 
 /**
  * OrderedSet - Set interface wrapper around a LinkedList
  *
  * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
- * @version    1.0
- * @created    April 5, 2002
+ * @version    $Revision$
+ * @since      2.0
  */
 public class OrderedSet extends AbstractSet {
 
@@ -61,29 +59,21 @@ public class OrderedSet extends AbstractSet {
     }
 
     /**
-     * Returns an iterator over the elements in this set.
-     *
-     * @return an iterator over the elements in this set.
-     */
+     * @see java.util.Collection#iterator()
+     */  
     public Iterator iterator() {
         return backedList.iterator();
     }
 
     /**
-     * Returns the number of elements in this set.
-     *
-     * @return the number of elements in this set.
+     * @see java.util.Collection#size()
      */
     public int size() {
         return backedList.size();
     }
 
     /**
-     * Appends the specified element to the end of this set.
-
-     * @param obj element to be appended to this set.
-     * @return <tt>true</tt> if this set did not already
-     * contain the specified element.
+     * @see java.util.Collection#add(java.lang.Object)
      */
     public boolean add(Object obj) {
         int index = backedList.indexOf(obj);
