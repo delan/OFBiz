@@ -23,7 +23,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.2
  -->
 <simple-methods>
@@ -205,9 +205,11 @@
     </simple-method>
 	
     <simple-method method-name="getPicklistData" short-description="Get Picklist Data">
-    	<!-- 
+    	<!--
     		Parameters:
-    			orderHeaderList: List of OrderHeaders to create a picklist for
+    			facilityId
+    			shipmentMethodTypeId
+    			maxNumberOfOrders
     		Returns:
     			inventoryItemInfoList: List of Maps with inventoryItem, facilityLocation, orderItems, product, statusItem, quantity
     			orderHeaderInfoList: List of Maps with orderHeader and orderItemInfoList which is List of Maps with orderItem, product and orderItemInventoryResList
@@ -227,8 +229,28 @@
         <call-service service-name="findOrdersToPickMove" in-map-name="findOrdersToPickMoveMap">
         	<result-to-field result-name="pickMoveByShipmentMethodInfoList"/>
         </call-service>
-        
+
+		<!-- if maxNumberOfOrders is passed, get at most that many orders and go over them -->
+		<calculate field-name="numberSoFar" type="Long"><number value="0"/></calculate>
         <iterate entry-name="pickMoveByShipmentMethodInfo" list-name="pickMoveByShipmentMethodInfoList">
+        	<if>
+        		<condition>
+        			<or>
+        				<if-empty field-name="parameters.maxNumberOfOrders"/>
+        				<if-compare-field field-name="numberSoFar" operator="less" to-field-name="parameters.maxNumberOfOrders"></if-compare-field>
+        			</or>
+        		</condition>
+        		<then>
+        			<field-to-list field-name="pickMoveByShipmentMethodInfo" list-name="limitedPickMoveByShipmentMethodInfoList"/>
+        		</then>
+        	</if>
+        	
+        	<calculate field-name="numberSoFar" type="Long">
+        		<calcop field-name="numberSoFar" operator="add"><number value="1"/></calcop>
+        	</calculate>
+        </iterate>
+        
+        <iterate entry-name="pickMoveByShipmentMethodInfo" list-name="limitedPickMoveByShipmentMethodInfoList">
         	<iterate entry-name="orderReadyToPickInfo" list-name="pickMoveByShipmentMethodInfo.orderReadyToPickInfoList">
                 <iterate entry-name="orderItem" list-name="orderReadyToPickInfo.orderItemList">
                     <if-compare value="ITEM_APPROVED" operator="equals" field-name="orderItem.statusId">
