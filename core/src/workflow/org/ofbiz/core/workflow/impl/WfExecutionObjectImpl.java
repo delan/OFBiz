@@ -7,7 +7,7 @@ package org.ofbiz.core.workflow.impl;
 import java.util.*;
 import java.sql.Timestamp;
 import org.ofbiz.core.entity.*;
-import org.ofbiz.core.serialize.*;
+import org.ofbiz.core.service.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.workflow.*;
 
@@ -47,7 +47,8 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
         
     // Attributes of this object
     protected Map context;               
-    protected List history;        
+    protected List history;       
+    protected LocalDispatcher dispatcher;
     
     /**
      * Creates new WfExecutionObjectImpl
@@ -57,41 +58,14 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
         // set the value object
         this.valueObject = valueObject;                
         
-        // set the history
-        history = new ArrayList();
+        // set the local dispatcher
+        dispatcher = null;
         
-        // set the context
-        String contextXML = null;
-        try {
-            runtimeData = valueObject.getRelatedOne("RuntimeData");
-            if ( runtimeData != null )
-                contextXML = runtimeData.getString("runtimeInfo");           
-        }
-        catch ( GenericEntityException e ) {
-            runtimeData = null;
-            context = null;
-            e.printStackTrace();            
-        }
-        if ( contextXML != null ) {
-            try {
-                Map ctxMap = (Map) XmlSerializer.deserialize(contextXML,valueObject.getDelegator());
-                setProcessContext(ctxMap);                
-            }
-            catch ( WfException e ) {
-                context = null;
-                e.printStackTrace();
-            }
-            catch ( GeneralException e ) {
-                context = null;
-                e.printStackTrace();
-            }
-            catch ( Exception e ) {
-                context = null;
-                e.printStackTrace();
-            }
-        }
-        else 
-            context = null;
+        // set the history
+        history = null;
+        
+        // set the context              
+        context = null;
         
         // set the state
         try {
@@ -409,7 +383,36 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
     public void suspend() throws WfException, CannotSuspend, NotRunning,
     AlreadySuspended {
     }        
-    
+
+  /**
+   * Returns the delegator being used by this workflow
+   * @return GenericDelegator used for this workflow
+   * @throws WfException
+   */
+  public GenericDelegator getDelegator() throws WfException {      
+          return valueObject.getDelegator();
+  }
+  
+  /**
+   * Returns the workflow local dispatcher
+   * @return LocalDispatcher for this workflow
+   * @throws WfException
+   */
+  public LocalDispatcher getDispatcher() throws WfException {
+      if ( dispatcher == null )
+          throw new WfException("No dispacher set.");
+      return dispatcher;
+  }
+  
+  /**
+   * Sets the LocalDispatcher for this workflow
+   * @param dispatcher The LocalDispatcher to be used with this workflow
+   * @throws WfException
+   */
+  public void setDispatcher(LocalDispatcher dispatcher) throws WfException {
+      this.dispatcher = dispatcher;
+  }
+  
     /** 
      * Returns the type of execution object
      * @return String name of this execution object type
