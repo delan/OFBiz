@@ -20,13 +20,13 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.2
 -->
 
 <#if hasPermission>
 
-<div class="head1">Product Catalogs List</div>
+<div class="head1">WebSite List</div>
 <div><a href="<@ofbizUrl>/EditWebSite</@ofbizUrl>" class="buttontext">[Create New WebSite]</a></div>
 <br>
 <table border="1" cellpadding="2" cellspacing="0">
