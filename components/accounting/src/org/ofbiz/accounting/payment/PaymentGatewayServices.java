@@ -1008,9 +1008,13 @@ public class PaymentGatewayServices {
         GenericDelegator delegator = dctx.getDelegator();
         GenericValue paymentPreference = (GenericValue) context.get("orderPaymentPreference");
         Boolean authResult = (Boolean) context.get("authResult");
+        String authType = (String) context.get("serviceTypeEnum");
 
         // type of auth this was can be determined by the previous status
-        String authType = paymentPreference.getString("statusId").equals("PAYMENT_NOT_AUTH") ? AUTH_SERVICE_TYPE : REAUTH_SERVICE_TYPE;
+        if (UtilValidate.isEmpty(authType)) {
+            authType = paymentPreference.getString("statusId").equals("PAYMENT_NOT_AUTH") ?
+                    AUTH_SERVICE_TYPE : REAUTH_SERVICE_TYPE;
+        }
 
         // create the PaymentGatewayResponse
         String responseId = delegator.getNextSeqId("PaymentGatewayResponse");
@@ -1196,17 +1200,22 @@ public class PaymentGatewayServices {
         String invoiceId = (String) context.get("invoiceId");
         String payTo = (String) context.get("payToPartyId");
         Double amount = (Double) context.get("captureAmount");
+        String serviceType = (String) context.get("serviceTypeEnum");
         Debug.logInfo("Invoice ID: " + invoiceId, module);
 
-        if (payTo == null)
+        if (UtilValidate.isEmpty(payTo)) {
             payTo = "Company";
-
-        String serviceType = isFromAuth.booleanValue() ? "AUTH" : CAPTURE_SERVICE_TYPE;
-        if (serviceType.equals("AUTH")) {
-            serviceType = paymentPreference.getString("statusId").equals("PAYMENT_NOT_AUTH") ? AUTH_SERVICE_TYPE : REAUTH_SERVICE_TYPE;
         }
 
-            // create the PaymentGatewayResponse record
+        if (UtilValidate.isEmpty(serviceType)) {
+            serviceType = isFromAuth.booleanValue() ? "AUTH" : CAPTURE_SERVICE_TYPE;
+            if (serviceType.equals("AUTH")) {
+                serviceType = paymentPreference.getString("statusId").equals("PAYMENT_NOT_AUTH") ?
+                        AUTH_SERVICE_TYPE : REAUTH_SERVICE_TYPE;
+            }
+        }
+
+        // create the PaymentGatewayResponse record
         String responseId = delegator.getNextSeqId("PaymentGatewayResponse");
         GenericValue response = delegator.makeValue("PaymentGatewayResponse", null);
         response.set("paymentGatewayResponseId", responseId);

@@ -448,7 +448,7 @@
         <attribute name="orderPaymentPreference" type="GenericValue" mode="IN" optional="false"/>
         <attribute name="processAmount" type="Double" mode="IN" optional="false"/>
         <attribute name="authResult" type="Boolean" mode="IN" optional="true"/>
-        <attribute name="captureResult" type="Boolean" mode="IN" optional="true"/>
+        <attribute name="serviceTypeEnum" type="String" mode="IN" optional="true"/>
         <attribute name="authCode" type="String" mode="IN" optional="true"/>
         <attribute name="authRefNum" type="String" mode="IN" optional="false"/>
         <attribute name="authFlag" type="String" mode="IN" optional="true"/>
@@ -463,6 +463,7 @@
             location="org.ofbiz.accounting.payment.PaymentGatewayServices" invoke="processCaptureResult" auth="true">
         <description>Process the payment capture result(s)</description>
         <attribute name="orderPaymentPreference" type="GenericValue" mode="IN" optional="false"/>
+        <attribute name="serviceTypeEnum" type="String" mode="IN" optional="true"/>
         <attribute name="isFromAuth" type="Boolean" mode="IN" optional="false"/>
         <attribute name="payToPartyId" type="String" mode="IN" optional="true"/>
         <attribute name="captureAmount" type="Double" mode="IN" optional="false"/>
