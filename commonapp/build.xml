@@ -25,9 +25,8 @@
 -->
 <project basedir="." default="war" name="Open For Business CommonApp Component">
 
-
     <!-- ================================================================== -->
-    <!-- Initialization of all property settings                            -->
+    <!-- Initialization of all property settings                                                                                                                         -->
     <!-- ================================================================== -->
 
     <target name="init-properties">
@@ -71,9 +70,8 @@
         </path>
     </target>
 
-
     <!-- ================================================================== -->
-    <!-- Removes all created files and directories                          -->
+    <!-- Removes all created files and directories                                                                                                                 -->
     <!-- ================================================================== -->
 
     <target depends="clean-lib" name="clean">
@@ -93,9 +91,8 @@
         <mkdir dir="${doc.dir}/api"/>
     </target>
 
-
     <!-- ================================================================== -->
-    <!-- Makes sure the needed directory structure is in place              -->
+    <!-- Makes sure the needed directory structure is in place                                                                                            -->
     <!-- ================================================================== -->
 
     <target name="prepare" depends="clean-lib, init">
@@ -110,9 +107,8 @@
         <mkdir dir="${walib.dir}"/>
     </target>
 
-
     <!-- ================================================================== -->
-    <!-- Compilation of the common application components                   -->
+    <!-- Compilation of the common application components                                                                                                -->
     <!-- ================================================================== -->
 
     <target depends="prepare" name="classes">
@@ -127,7 +123,7 @@
         
         <!-- also copy all .xml, .bsh & .logic files to classpath directory -->
         <copy todir="${build.dir}/jar">
-            <fileset dir="${src.dir}" includes="**/*.properties,**/*.xml,**/*.bsh,**/*.logic"/>
+            <fileset dir="${src.dir}" includes="**/*.properties,**/*.xml,**/*.bsh,**/*.logic,**/*.js,**/*.jacl,**/*.py"/>
         </copy>
     </target>
 
@@ -140,7 +136,7 @@
     </target>
 
     <!-- ================================================================== -->
-    <!-- Build the WARs                                                     -->
+    <!-- Build the WARs                                                                                                                                                         -->
     <!-- ================================================================== -->
 
     <target depends="jar-deploy,prepare" name="war">
@@ -149,8 +145,9 @@
 
 
     <!-- ================================================================== -->
-    <!-- Build the EJB jar and EAR                                          -->
+    <!-- Build the EJB jar and EAR                                                                                                                                         -->
     <!-- ================================================================== -->
+    
     <target depends="jar,war" name="meta-info">
         <copy file="${etc.dir}/ejb-jar.xml" tofile="${build.dir}/ejb/META-INF/ejb-jar.xml"/>
         <copy file="${etc.dir}/jboss.xml" tofile="${build.dir}/ejb/META-INF/jboss.xml"/>
@@ -167,7 +164,7 @@
     </target>
 
     <!-- ================================================================== -->
-    <!-- Build JavaDoc                                                      -->
+    <!-- Build JavaDoc                                                                                                                                                           -->
     <!-- ================================================================== -->
 
     <target name="docs" depends="prepare-docs">
@@ -176,9 +173,8 @@
                  Windowtitle="Open for Business - Commonapp API"/>
     </target>
 
-
     <!-- ================================================================== -->
-    <!-- Generates a GZip'ed tar source distribution                        -->
+    <!-- Generates a GZip'ed tar source distribution                                                                                                             -->
     <!-- ================================================================== -->
 
     <target depends="prepare" name="pkg-dist">
