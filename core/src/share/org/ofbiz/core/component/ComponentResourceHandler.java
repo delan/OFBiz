@@ -78,8 +78,7 @@ public class ComponentResourceHandler implements ResourceHandler {
     }
 
     public InputStream getStream() throws GenericConfigException {
-        // TODO: implement this
-        return null;
+        return ComponentConfig.getStream(componentName, loaderName, location);
     }
 
     public boolean isFileResource() throws GenericConfigException {
@@ -87,8 +86,7 @@ public class ComponentResourceHandler implements ResourceHandler {
     }
 
     public String getFullLocation() throws GenericConfigException {
-        // TODO: implement this
-        return null;
+        return ComponentConfig.getFullLocation(componentName, loaderName, location);
     }
 
     public boolean equals(Object obj) {
