@@ -32,7 +32,7 @@
 <%@ page import="org.ofbiz.base.util.*, org.ofbiz.content.webapp.pseudotag.*" %>
 <%@ page import="org.ofbiz.entity.*" %>
 <jsp:useBean id="delegator" type="org.ofbiz.entity.GenericDelegator" scope="request" />
-<%String previousParams = (String) session.getAttribute(SiteDefs.PREVIOUS_PARAMS);%>
+<%String previousParams = (String) session.getAttribute("_PREVIOUS_PARAMS_");%>
 <%String fontColor = "Black";%>
 
 <p class="head1">Create New Customer</p>

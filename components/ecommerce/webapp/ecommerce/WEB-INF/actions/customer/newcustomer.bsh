@@ -23,10 +23,10 @@
  *@version    1.0
  */
 
-import org.ofbiz.base.util.SiteDefs;
+;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilMisc;
-import org.ofbiz.commonapp.product.store.ProductStoreWorker;
+import org.ofbiz.product.store.ProductStoreWorker;
 
 delegator = request.getAttribute("delegator");
 productStore = ProductStoreWorker.getProductStore(request);
@@ -49,7 +49,7 @@ if ( request.getParameter( "CUSTOMER_STATE" ) != null ) {
 		context.put("selectedStateName", geoValue.get("geoName") );
 }
 
-previousParams = session.getAttribute(SiteDefs.PREVIOUS_PARAMS);
+previousParams = session.getAttribute("_PREVIOUS_PARAMS_");
 if (previousParams != null && previousParams.length() > 0) {
     previousParams = "?" + previousParams;
 } else {

@@ -1,5 +1,5 @@
 /*
- * $Id: PartyServices.java,v 1.1 2003/08/17 17:57:35 ajzeneski Exp $
+ * $Id: PartyServices.java,v 1.2 2003/08/20 01:18:29 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002, 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -55,13 +55,13 @@ import org.ofbiz.service.ServiceUtil;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class PartyServices {
 
     public static final String module = PartyServices.class.getName();
-    public static final String resource = "org.ofbiz.commonapp.party.party.PackageMessages";
+    public static final String resource = "org.ofbiz.party.party.PackageMessages";
     
     /**
      * Deletes a Party.

@@ -5,7 +5,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 </head>
 
-<% String errorMsg = (String) request.getAttribute(SiteDefs.ERROR_MESSAGE); %>
+<% String errorMsg = (String) request.getAttribute("_ERROR_MESSAGE_"); %>
 
 <body bgcolor="#FFFFFF">
 <div align="center">

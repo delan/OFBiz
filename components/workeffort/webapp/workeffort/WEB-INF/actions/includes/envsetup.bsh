@@ -20,36 +20,36 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.2
  */
 
 import java.util.*;
 import org.ofbiz.entity.*;
 import org.ofbiz.base.util.*;
-import org.ofbiz.commonapp.security.login.*;
-import org.ofbiz.commonapp.common.*;
+import org.ofbiz.securityext.login.*;
+import org.ofbiz.common.*;
 
-userLogin = session.getAttribute(SiteDefs.USER_LOGIN);
+userLogin = session.getAttribute("userLogin");
 if (userLogin != null) request.setAttribute("userLogin", userLogin);
 
-person = session.getAttribute(SiteDefs.PERSON);
-partyGroup = session.getAttribute(SiteDefs.PARTY_GROUP);
+person = session.getAttribute("_PERSON_");
+partyGroup = session.getAttribute("_PARTY_GROUP_");
 if (person == null) {
     person = userLogin == null ? null : userLogin.getRelatedOne("Person");
-    if (person != null) session.setAttribute(SiteDefs.PERSON, person);
+    if (person != null) session.setAttribute("_PERSON_", person);
 }
 if (person != null) {
     request.setAttribute("person", person);
 } else if (partyGroup == null) {
     person = userLogin == null ? null : userLogin.getRelatedOne("PartyGroup");
-    if (partyGroup != null) session.setAttribute(SiteDefs.PARTY_GROUP, partyGroup);
+    if (partyGroup != null) session.setAttribute("_PARTY_GROUP_", partyGroup);
 }
 if (partyGroup != null) request.setAttribute("partyGroup", partyGroup);
 
-controlPath = request.getAttribute(SiteDefs.CONTROL_PATH);
-contextRoot = request.getAttribute(SiteDefs.CONTEXT_ROOT);
-serverRoot = request.getAttribute(SiteDefs.SERVER_ROOT_URL);
+controlPath = request.getAttribute("_CONTROL_PATH_");
+contextRoot = request.getAttribute("_CONTEXT_ROOT_");
+serverRoot = request.getAttribute("_SERVER_ROOT_URL_");
 
 layoutSettings = new HashMap();
 request.setAttribute("layoutSettings", layoutSettings);
@@ -67,19 +67,19 @@ externalKeyParam = externalLoginKey == null ? "" : "&externalLoginKey=" + extern
 request.setAttribute("externalKeyParam", externalKeyParam);
 request.setAttribute("activeApp", "workeffortmgr");
 
-eventMsgReq = request.getAttribute(SiteDefs.EVENT_MESSAGE);
-errorMsgReq = request.getAttribute(SiteDefs.ERROR_MESSAGE);
-errorMsgSes = session.getAttribute(SiteDefs.ERROR_MESSAGE);
+eventMsgReq = request.getAttribute("_EVENT_MESSAGE_");
+errorMsgReq = request.getAttribute("_ERROR_MESSAGE_");
+errorMsgSes = session.getAttribute("_ERROR_MESSAGE_");
 
 if (eventMsgReq != null) {
     request.setAttribute("eventMsgReq", UtilFormatOut.replaceString(eventMsgReq, "\n", "<br>"));
-    request.removeAttribute(SiteDefs.EVENT_MESSAGE);
+    request.removeAttribute("_EVENT_MESSAGE_");
 }
 if (errorMsgReq != null) {
     request.setAttribute("errorMsgReq", UtilFormatOut.replaceString(errorMsgReq, "\n", "<br>"));
-    request.removeAttribute(SiteDefs.ERROR_MESSAGE);
+    request.removeAttribute("_ERROR_MESSAGE_");
 }
 if (errorMsgSes != null) {
     request.setAttribute("errorMsgSes", UtilFormatOut.replaceString(errorMsgSes, "\n", "<br>"));
-    session.removeAttribute(SiteDefs.ERROR_MESSAGE);
+    session.removeAttribute("_ERROR_MESSAGE_");
 }

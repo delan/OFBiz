@@ -31,7 +31,7 @@
 
 <jsp:useBean id="security" type="org.ofbiz.security.Security" scope="request" />
 <jsp:useBean id="delegator" type="org.ofbiz.entity.GenericDelegator" scope="request" />
-<%String controlPath=(String)request.getAttribute(SiteDefs.CONTROL_PATH);%>
+<%String controlPath=(String)request.getAttribute("_CONTROL_PATH_");%>
 
 <%
 if(security.hasPermission("ENTITY_MAINT", session)) {
@@ -58,11 +58,11 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
 <H3>Check/Update Database</H3>
 
 <form method=post action='<%=response.encodeURL(controlPath + "/view/checkdb")%>'>
-  Group Name: <INPUT type=text class='inputBox' name='groupName' value='<%=groupName!=null?groupName:"org.ofbiz.commonapp"%>' size='60'>
+  Group Name: <INPUT type=text class='inputBox' name='groupName' value='<%=groupName!=null?groupName:"org.ofbiz"%>' size='60'>
   <INPUT type=submit value='Check Only'>
 </form>
 <form method=post action='<%=response.encodeURL(controlPath + "/view/checkdb?addMissing=true")%>'>
-  Group Name: <INPUT type=text class='inputBox' name='groupName' value='<%=groupName!=null?groupName:"org.ofbiz.commonapp"%>' size='60'>
+  Group Name: <INPUT type=text class='inputBox' name='groupName' value='<%=groupName!=null?groupName:"org.ofbiz"%>' size='60'>
   <INPUT type=submit value='Check and Add Missing'>
 </form>
 

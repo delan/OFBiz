@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.1
 -->
 
@@ -234,8 +234,8 @@ function addToList() {
                       <#-- only applies to sales orders, not purchase orders
                       <#-- if inventory is not required check to see if it is out of stock and needs to have a message shown about that... -->
                       <#assign itemProduct = cartLine.getProduct()>
-                      <#assign isStoreInventoryRequired = Static["org.ofbiz.commonapp.product.store.ProductStoreWorker"].isStoreInventoryRequired(request, itemProduct)>
-                      <#assign isStoreInventoryAvailable = Static["org.ofbiz.commonapp.product.store.ProductStoreWorker"].isStoreInventoryAvailable(request, cartLine.getProductId(), cartLine.getQuantity())>
+                      <#assign isStoreInventoryRequired = Static["org.ofbiz.product.store.ProductStoreWorker"].isStoreInventoryRequired(request, itemProduct)>
+                      <#assign isStoreInventoryAvailable = Static["org.ofbiz.product.store.ProductStoreWorker"].isStoreInventoryAvailable(request, cartLine.getProductId(), cartLine.getQuantity())>
                       <#if !isStoreInventoryRequired && !isStoreInventoryAvailable && itemProduct.inventoryMessage?has_content>
                           <b>(${itemProduct.inventoryMessage})</b>
                       </#if>                                          
@@ -281,7 +281,7 @@ function addToList() {
               <#assign adjustmentType = cartAdjustment.getRelatedOneCache("OrderAdjustmentType")>
               <tr>
                 <td colspan="4" nowrap align="right"><div class='tabletext'><i>Adjustment</i> - ${adjustmentType.description?if_exists}:</div></td>
-                <td nowrap align="right"><div class='tabletext'>${Static["org.ofbiz.commonapp.order.order.OrderReadHelper"].calcOrderAdjustment(cartAdjustment, shoppingCart.getSubTotal())?string.currency}</div></td>
+                <td nowrap align="right"><div class='tabletext'>${Static["org.ofbiz.order.order.OrderReadHelper"].calcOrderAdjustment(cartAdjustment, shoppingCart.getSubTotal())?string.currency}</div></td>
                 <td>&nbsp;</td>
               </tr>
             </#list>

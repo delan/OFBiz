@@ -3,7 +3,7 @@ import org.ofbiz.core.security.*;
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.service.*;
-import org.ofbiz.commonapp.workeffort.workeffort.*;
+import org.ofbiz.workeffort.workeffort.*;
 
 delegator = request.getAttribute("delegator");
 

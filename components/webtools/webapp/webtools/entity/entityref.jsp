@@ -29,7 +29,7 @@
 <HEAD>
 <TITLE>Entity Reference Chart</TITLE>
 </HEAD>
-<%String controlPath=(String)request.getAttribute(SiteDefs.CONTROL_PATH);%>
+<%String controlPath=(String)request.getAttribute("_CONTROL_PATH_");%>
 <%
 	String list = controlPath + "/view/entityref_list";
 	String main = controlPath + "/view/entityref_main";

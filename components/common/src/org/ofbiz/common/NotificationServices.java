@@ -1,5 +1,5 @@
 /*
- * $Id: NotificationServices.java,v 1.1 2003/08/17 10:12:40 jonesde Exp $
+ * $Id: NotificationServices.java,v 1.2 2003/08/20 01:16:16 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -69,7 +69,7 @@ import freemarker.template.TemplateHashModel;
  * <blockquote>
  * <pre>
  *     &lt;service name="sendPoPickupNotification" engine="java"
- *             location="org.ofbiz.commonapp.common.NotificationServices" invoke="sendNotification"&gt;
+ *             location="org.ofbiz.common.NotificationServices" invoke="sendNotification"&gt;
  *         &lt;description&gt;Sends notification based on a message template&lt;/description&gt;
  *         &lt;implements service="sendNotificationInterface"/&gt;
  *         &lt;attribute name="orderId" type="String" mode="IN" optional="false"/&gt;
@@ -106,7 +106,7 @@ import freemarker.template.TemplateHashModel;
  *
  * @author     <a href="mailto:tristana@twibble.org">Tristan Austin</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.2
  */
 public class NotificationServices {

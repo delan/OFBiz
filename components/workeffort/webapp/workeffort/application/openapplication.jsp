@@ -24,7 +24,7 @@
  *@version    1.0
 --%>
 <%@ page import="java.util.*" %>
-<%@ page import="org.ofbiz.commonapp.workeffort.workeffort.*" %>
+<%@ page import="org.ofbiz.workeffort.workeffort.*" %>
 <%  WorkEffortWorker.getWorkEffort(pageContext, "workEffortId", "workEffort", "partyAssigns", "canView", "tryEntity", "currentStatusItem");
     String applicationId=WorkEffortApplication.getApplicationId(pageContext,"partyAssigns");
     WorkEffortApplication.getApplication(pageContext, "workEffort",null,null, null,"applicationContext");

@@ -20,11 +20,11 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.1
  */
 
-import org.ofbiz.commonapp.product.catalog.*;
+import org.ofbiz.product.catalog.*;
 
 reorderProductResults = CatalogWorker.getQuickReorderProducts(request);
 context.put("reorderProducts", reorderProductResults.get("products"));

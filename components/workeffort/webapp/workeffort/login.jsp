@@ -31,7 +31,7 @@
 
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 <%@ page import="org.ofbiz.base.util.*, org.ofbiz.content.webapp.pseudotag.*" %>
-<%String previousParams=(String)session.getAttribute(SiteDefs.PREVIOUS_PARAMS);%>
+<%String previousParams=(String)session.getAttribute("_PREVIOUS_PARAMS_");%>
 
 <br>
 <div class="head1">Log&nbsp;In</div>

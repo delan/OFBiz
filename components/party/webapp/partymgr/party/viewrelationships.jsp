@@ -30,8 +30,8 @@
 <%@ page import="java.util.*" %>
 <%@ page import="org.ofbiz.base.util.*, org.ofbiz.content.webapp.pseudotag.*" %>
 <%@ page import="org.ofbiz.entity.*" %>
-<%@ page import="org.ofbiz.commonapp.party.contact.*, org.ofbiz.commonapp.party.party.*" %>
-<%@ page import="org.ofbiz.commonapp.accounting.payment.*" %>
+<%@ page import="org.ofbiz.party.contact.*, org.ofbiz.party.party.*" %>
+<%@ page import="org.ofbiz.accounting.payment.*" %>
 <jsp:useBean id="delegator" type="org.ofbiz.entity.GenericDelegator" scope="request" />
 <jsp:useBean id="security" type="org.ofbiz.security.Security" scope="request" />
 

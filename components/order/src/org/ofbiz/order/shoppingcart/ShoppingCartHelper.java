@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCartHelper.java,v 1.1 2003/08/18 17:03:09 ajzeneski Exp $
+ * $Id: ShoppingCartHelper.java,v 1.2 2003/08/20 01:18:13 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -45,13 +45,13 @@ import org.ofbiz.service.ServiceUtil;
 
 /**
  * A facade over the 
- * {@link org.ofbiz.commonapp.order.shoppingcart.ShoppingCart ShoppingCart}
+ * {@link org.ofbiz.order.shoppingcart.ShoppingCart ShoppingCart}
  * providing catalog and product services to simplify the interaction
  * with the cart directly. 
  *
  * @author     <a href="mailto:tristana@twibble.org">Tristan Austin</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class ShoppingCartHelper {

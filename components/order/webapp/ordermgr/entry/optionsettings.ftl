@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.2
 -->
 
@@ -59,7 +59,7 @@
                   <td valign="top">                            
                     <div class='tabletext'>
                        <#if cart.getShippingContactMechId()?exists>
-                         <#assign shippingEstMap = Static["org.ofbiz.commonapp.shipment.shipment.ShippingEvents"].getShipEstimate(delegator, cart, shippingMethod)>
+                         <#assign shippingEstMap = Static["org.ofbiz.shipment.shipment.ShippingEvents"].getShipEstimate(delegator, cart, shippingMethod)>
                          <#if shippingEstMap?has_content && shippingEstMap.shippingTotal?exists>
                            <#assign shippingEstimate = " - " + shippingEstMap.shippingTotal?string.currency>                                  
                          </#if>                              

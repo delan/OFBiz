@@ -36,7 +36,7 @@
 <%if(security.hasEntityPermission("SECURITY", "_VIEW", session)) {%>
 <%
     boolean tryEntity = true;
-    if(request.getAttribute(SiteDefs.ERROR_MESSAGE) != null) tryEntity = false;
+    if(request.getAttribute("_ERROR_MESSAGE_") != null) tryEntity = false;
 
     String groupId = request.getParameter("groupId");
     if (UtilValidate.isEmpty(groupId) && UtilValidate.isNotEmpty((String) request.getAttribute("groupId"))) {

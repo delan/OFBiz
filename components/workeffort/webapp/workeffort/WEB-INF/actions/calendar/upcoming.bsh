@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Johan Isacsson
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.2
  */
 
@@ -30,7 +30,7 @@ import org.ofbiz.security.*;
 import org.ofbiz.entity.*;
 import org.ofbiz.base.util.*;
 import org.ofbiz.content.webapp.pseudotag.*;
-import org.ofbiz.commonapp.workeffort.workeffort.*;
+import org.ofbiz.workeffort.workeffort.*;
 
 dispatcher = request.getAttribute("dispatcher");
 Map serviceCtx = UtilMisc.toMap("userLogin",context.getSession().getAttribute("userLogin"),"startDay",UtilDateTime.nowTimestamp(),"numDays",new Integer(7));

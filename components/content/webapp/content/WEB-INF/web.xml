@@ -70,7 +70,7 @@
     </filter-mapping>
 
     <listener><listener-class>org.ofbiz.content.webapp.control.ControlEventListener</listener-class></listener>
-    <listener><listener-class>org.ofbiz.commonapp.security.login.LoginEventListener</listener-class></listener>
+    <listener><listener-class>org.ofbiz.securityext.login.LoginEventListener</listener-class></listener>
     <!-- NOTE: not all app servers support mounting implementations of the HttpSessionActivationListener interface -->
     <!-- <listener><listener-class>org.ofbiz.content.webapp.control.ControlActivationEventListener</listener-class></listener> -->
   

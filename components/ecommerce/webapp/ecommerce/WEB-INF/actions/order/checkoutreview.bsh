@@ -20,21 +20,21 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.1
 */
 
 import java.lang.*;
 import org.ofbiz.base.util.*;
 import org.ofbiz.entity.*;
-import org.ofbiz.commonapp.accounting.payment.*;
-import org.ofbiz.commonapp.order.order.*;
-import org.ofbiz.commonapp.party.contact.*;
-import org.ofbiz.commonapp.product.catalog.*;
+import org.ofbiz.accounting.payment.*;
+import org.ofbiz.order.order.*;
+import org.ofbiz.party.contact.*;
+import org.ofbiz.product.catalog.*;
 
 delegator = request.getAttribute("delegator");
 userLogin = session.getAttribute("userLogin");
-cart = session.getAttribute(SiteDefs.SHOPPING_CART);
+cart = session.getAttribute("shoppingCart");
 context.put("cart", cart);
 
 orderAdjustments = cart.makeAllAdjustments();

@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.2
 -->
 
@@ -171,7 +171,7 @@ function removeSelected() {
       <#assign orderHeader = orderItem.getRelatedOne("OrderHeader")>
       <#assign itemCount = orderItem.quantity>
       <#assign itemPrice = orderItem.unitPrice>
-      <#assign orh = Static["org.ofbiz.commonapp.order.order.OrderReadHelper"].getHelper(orderHeader)>
+      <#assign orh = Static["org.ofbiz.order.order.OrderReadHelper"].getHelper(orderHeader)>
       <#assign totalItemTax = orh.getOrderItemTax(orderItem)>
       <#assign itemUnitTax = totalItemTax / itemCount>
       <#assign itemPriceWithTax = itemPrice + itemUnitTax>

@@ -46,7 +46,7 @@
     if (userUserLogin != null) pageContext.setAttribute("userUserLogin", userUserLogin);
 
     boolean tryEntity = true;
-    if(request.getAttribute(SiteDefs.ERROR_MESSAGE) != null) tryEntity = false;
+    if(request.getAttribute("_ERROR_MESSAGE_") != null) tryEntity = false;
     pageContext.setAttribute("tryEntity", new Boolean(tryEntity));
 
     String donePage = request.getParameter("DONE_PAGE");

@@ -20,13 +20,13 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.1
 */
 
 import org.ofbiz.base.util.*;
-import org.ofbiz.commonapp.product.catalog.*;
-import org.ofbiz.commonapp.product.feature.*;
+import org.ofbiz.product.catalog.*;
+import org.ofbiz.product.feature.*;
 
 delegator = request.getAttribute("delegator");
 

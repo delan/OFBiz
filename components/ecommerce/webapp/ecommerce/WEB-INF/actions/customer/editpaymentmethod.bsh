@@ -24,10 +24,10 @@
  */
 
 import java.util.HashMap;
-import org.ofbiz.base.util.SiteDefs;
+;
 import org.ofbiz.base.util.UtilHttp;
-import org.ofbiz.commonapp.accounting.payment.PaymentWorker;
-import org.ofbiz.commonapp.party.contact.ContactMechWorker;
+import org.ofbiz.accounting.payment.PaymentWorker;
+import org.ofbiz.party.contact.ContactMechWorker;
 
 userLogin = session.getAttribute("userLogin");
 security = request.getAttribute("security");

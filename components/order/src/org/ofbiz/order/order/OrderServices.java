@@ -1,5 +1,5 @@
 /*
- * $Id: OrderServices.java,v 1.1 2003/08/18 17:03:08 ajzeneski Exp $
+ * $Id: OrderServices.java,v 1.2 2003/08/20 01:18:13 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -70,14 +70,14 @@ import org.ofbiz.workflow.WfUtil;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 
 public class OrderServices {
 
     public static final String module = OrderServices.class.getName();
-    public static final String resource = "org.ofbiz.commonapp.order.order.PackageMessages";
+    public static final String resource = "org.ofbiz.order.order.PackageMessages";
 
     /** Service for creating a new order */
     public static Map createOrder(DispatchContext ctx, Map context) {

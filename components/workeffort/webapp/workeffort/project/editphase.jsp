@@ -30,8 +30,8 @@
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 <jsp:useBean id="delegator" type="org.ofbiz.entity.GenericDelegator" scope="request" />
 
-<%@ page import="org.ofbiz.commonapp.workeffort.workeffort.*" %>
-<%@ page import="org.ofbiz.commonapp.common.status.*" %>
+<%@ page import="org.ofbiz.workeffort.workeffort.*" %>
+<%@ page import="org.ofbiz.common.status.*" %>
 <%WorkEffortWorker.getWorkEffort(pageContext, "workEffortId", "workEffort", "partyAssigns", "canView", "tryEntity", "currentStatusItem");%>
 <%StatusWorker.getStatusItems(pageContext, "taskStatusItems", "WORKFLOW_STATUS");%>
 

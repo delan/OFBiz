@@ -30,7 +30,7 @@
     <preprocessor>
     	<!-- Events to run on every request before security (chains exempt) -->
     	<!-- <event type="java" path="org.ofbiz.content.webapp.event.TestEvent" invoke="test"/> -->
-    	<event type="java" path="org.ofbiz.commonapp.security.login.LoginEvents" invoke="checkExternalLoginKey"/>
+    	<event type="java" path="org.ofbiz.securityext.login.LoginEvents" invoke="checkExternalLoginKey"/>
     </preprocessor>
     <postprocessor>
     	<!-- Events to run on every request after all other processing (chains exempt) -->
@@ -41,21 +41,21 @@
     <request-map uri="checkLogin" edit="false">
         <description>Verify a user is logged in.</description>
         <security https="false" auth="false"/>
-        <event type="java" path="org.ofbiz.commonapp.security.login.LoginEvents" invoke="checkLogin" />
+        <event type="java" path="org.ofbiz.securityext.login.LoginEvents" invoke="checkLogin" />
         <response name="success" type="view" value="main" />
         <response name="error" type="view" value="login" />
     </request-map>
 
     <request-map uri="login">
         <security https="true" auth="false"/>
-        <event type="java" path="org.ofbiz.commonapp.security.login.LoginEvents" invoke="login"/>
+        <event type="java" path="org.ofbiz.securityext.login.LoginEvents" invoke="login"/>
         <response name="success" type="view" value="main"/>
         <response name="error" type="view" value="login"/>
     </request-map>
 
     <request-map uri="logout">
         <security https="true" auth="true"/>
-        <event type="java" path="org.ofbiz.commonapp.security.login.LoginEvents" invoke="logout"/>
+        <event type="java" path="org.ofbiz.securityext.login.LoginEvents" invoke="logout"/>
         <response name="success" type="request" value="checkLogin"/>
         <response name="error" type="view" value="main"/>
     </request-map>
@@ -218,22 +218,22 @@
         <response name="success" type="view" value="orderentry"/>
     </request-map>
     <request-map uri="additem">
-        <event type="java" path="org.ofbiz.commonapp.order.shoppingcart.ShoppingCartEvents" invoke="addToCart"/>
+        <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="addToCart"/>
         <response name="success" type="view" value="orderentry"/>
         <response name="error" type="view" value="orderentry"/>
     </request-map>    
     <request-map uri="addseperator">
-        <event type="java" path="org.ofbiz.commonapp.order.shoppingcart.ShoppingCartEvents" invoke="addSeparator"/>
+        <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="addSeparator"/>
         <response name="success" type="view" value="orderentry"/>
         <response name="error" type="view" value="orderentry"/>
     </request-map>
     <request-map uri="modifycart">
-        <event type="java" path="org.ofbiz.commonapp.order.shoppingcart.ShoppingCartEvents" invoke="modifyCart"/>
+        <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="modifyCart"/>
         <response name="success" type="view" value="orderentry"/>
         <response name="error" type="view" value="orderentry"/>
     </request-map>
     <request-map uri="emptycart">
-        <event type="java" path="org.ofbiz.commonapp.order.shoppingcart.ShoppingCartEvents" invoke="destroyCart"/>
+        <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="destroyCart"/>
         <response name="success" type="view" value="orderentry"/>
         <response name="error" type="view" value="orderentry"/>
     </request-map>   
@@ -251,7 +251,7 @@
     </request-map>  
     <request-map uri="finalizeOrder">
     	<security https="true" auth="true"/>
-    	<event type="java" path="org.ofbiz.commonapp.order.shoppingcart.CheckOutEvents" invoke="finalizeOrderEntry"/>
+    	<event type="java" path="org.ofbiz.order.shoppingcart.CheckOutEvents" invoke="finalizeOrderEntry"/>
     	<response name="customer" type="view" value="custsetting"/>
     	<response name="shipping" type="view" value="shipsetting"/>
     	<response name="options" type="view" value="optionsetting"/>
@@ -262,13 +262,13 @@
     
     <request-map uri="calcShipping">
         <security direct-request="false"/>
-        <event type="java" path="org.ofbiz.commonapp.shipment.shipment.ShippingEvents" invoke="getShipEstimate"/>
+        <event type="java" path="org.ofbiz.shipment.shipment.ShippingEvents" invoke="getShipEstimate"/>
         <response name="success" type="request" value="calcTax"/>
         <response name="error" type="view" value="orderentry"/>
     </request-map>
     <request-map uri="calcTax">
         <security direct-request="false"/>
-        <event type="java" path="org.ofbiz.commonapp.order.shoppingcart.CheckOutEvents" invoke="calcTax"/>
+        <event type="java" path="org.ofbiz.order.shoppingcart.CheckOutEvents" invoke="calcTax"/>
         <response name="success" type="view" value="confirm"/>
         <response name="error" type="view" value="orderentry"/>
     </request-map>
@@ -345,7 +345,7 @@
     </request-map>        
     <request-map uri="processorder">
         <security https="true" auth="true"/>
-        <event type="java" path="org.ofbiz.commonapp.order.shoppingcart.CheckOutEvents" invoke="createOrder"/>      
+        <event type="java" path="org.ofbiz.order.shoppingcart.CheckOutEvents" invoke="createOrder"/>      
         <response name="sales_order" type="request" value="checkBlackList"/>
         <response name="work_order" type="request" value="checkBlackList"/>
         <response name="purchase_order" type="request" value="clearcart"/>
@@ -353,14 +353,14 @@
     </request-map>
     <request-map uri="checkBlackList">
         <security direct-request="false"/>
-        <event type="java" path="org.ofbiz.commonapp.order.shoppingcart.CheckOutEvents" invoke="checkOrderBlacklist"/>
+        <event type="java" path="org.ofbiz.order.shoppingcart.CheckOutEvents" invoke="checkOrderBlacklist"/>
         <response name="success" type="request" value="processpayment"/>
         <response name="failed" type="view" value="confirm"/>
         <response name="error" type="view" value="confirm"/>
     </request-map>    
     <request-map uri="processpayment">
         <security direct-request="false"/>
-        <event type="java" path="org.ofbiz.commonapp.order.shoppingcart.CheckOutEvents" invoke="processPayment"/>
+        <event type="java" path="org.ofbiz.order.shoppingcart.CheckOutEvents" invoke="processPayment"/>
         <response name="success" type="request" value="processOfflinePayment"/>
         <response name="fail" type="view" value="confirm"/>
         <response name="error" type="view" value="confirm"/>
@@ -374,7 +374,7 @@
     </request-map>    
     <request-map uri="clearcart">
         <security https="true" auth="true"/>
-        <event type="java" path="org.ofbiz.commonapp.order.shoppingcart.ShoppingCartEvents" invoke="destroyCart"/>
+        <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="destroyCart"/>
         <response name="success" type="request" value="emailorder"/>
         <response name="error" type="view" value="confirm"/>
     </request-map> 

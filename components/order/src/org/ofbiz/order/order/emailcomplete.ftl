@@ -20,11 +20,11 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.2
 -->
 
-<#assign localOrderReadHelper = Static["org.ofbiz.commonapp.order.order.OrderReadHelper"].getHelper(orderHeader)>
+<#assign localOrderReadHelper = Static["org.ofbiz.order.order.OrderReadHelper"].getHelper(orderHeader)>
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">

@@ -21,7 +21,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski 
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.0
 --%>
 
@@ -52,7 +52,7 @@
             if (lookupPartyType != null) pageContext.setAttribute("lookupPartyType", lookupPartyType);
 
             boolean tryEntity = true;
-            if(request.getAttribute(SiteDefs.ERROR_MESSAGE) != null) tryEntity = false;
+            if(request.getAttribute("_ERROR_MESSAGE_") != null) tryEntity = false;
             if(lookupGroup == null)
                tryEntity = false;
             pageContext.setAttribute("tryEntity", new Boolean(tryEntity));

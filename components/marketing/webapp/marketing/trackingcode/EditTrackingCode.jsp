@@ -33,7 +33,7 @@
 <%if(security.hasEntityPermission("MARKETING", "_VIEW", session)) {%>
 <%
     boolean tryEntity = true;
-    if(request.getAttribute(SiteDefs.ERROR_MESSAGE) != null) tryEntity = false;
+    if(request.getAttribute("_ERROR_MESSAGE_") != null) tryEntity = false;
 
     String trackingCodeId = request.getParameter("trackingCodeId");
     if (UtilValidate.isEmpty(trackingCodeId) && UtilValidate.isNotEmpty((String) request.getAttribute("trackingCodeId"))) {

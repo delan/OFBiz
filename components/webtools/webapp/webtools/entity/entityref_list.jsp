@@ -30,7 +30,7 @@
 
 <jsp:useBean id="security" type="org.ofbiz.security.Security" scope="request" />
 <jsp:useBean id="delegator" type="org.ofbiz.entity.GenericDelegator" scope="request" />
-<%String controlPath=(String)request.getAttribute(SiteDefs.CONTROL_PATH);%>
+<%String controlPath=(String)request.getAttribute("_CONTROL_PATH_");%>
 
 <% 
 if(security.hasPermission("ENTITY_MAINT", session)) {

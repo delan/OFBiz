@@ -250,7 +250,7 @@ A.listtext:hover {color:red;}
 <hr>
 <FORM method=POST action='<ofbiz:url>/view/EditEntity?event=addEntity</ofbiz:url>' style='margin: 0;'>
   Entity Name (Java style): <INPUT type=TEXT class='inputBox' size='60' name='entityName'><br>
-  Entity Group: <INPUT type=TEXT size='60' class='inputBox' name='entityGroup' value='org.ofbiz.commonapp'>
+  Entity Group: <INPUT type=TEXT size='60' class='inputBox' name='entityGroup' value='org.ofbiz'>
   <INPUT type=SUBMIT value='Create Entity'>
 </FORM>
 <hr>
