@@ -1,5 +1,4 @@
-<!DOCTYPE forms PUBLIC "-//OFBiz//DTD OFBiz Form Widget//EN" "http://www.ofbiz.org/dtds/widget-form.dtd">
-
+<?xml version="1.0" encoding="UTF-8" ?>
 <!--
  *  Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -22,8 +21,8 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -->
 
-<forms>
-
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-form.xsd">
     <!-- list all assets in a tabular format -->
     <form name="ListFixedAssets" type="list"  list-name="fixedAssets" 
          default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">

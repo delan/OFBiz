@@ -1,5 +1,4 @@
-<!DOCTYPE forms PUBLIC "-//OFBiz//DTD OFBiz Form Widget//EN" "http://www.ofbiz.org/dtds/widget-form.dtd">
-
+<?xml version="1.0" encoding="UTF-8" ?>
 <!--
  *  Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -26,8 +25,8 @@
  *@since      3.1
 -->
 
-<forms>
-
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-form.xsd">
     <form name="lookupPartyForm" default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox" target="lookupParty" title="" type="single">
         <!--
         <auto-fields-service service-name="lookupRoutingTask" default-field-type="hidden"/>

@@ -1,4 +1,4 @@
-<!DOCTYPE forms PUBLIC "-//OFBiz//DTD OFBiz Form Widget//EN" "http://www.ofbiz.org/dtds/widget-form.dtd">
+<?xml version="1.0" encoding="UTF-8" ?>
 <!--
  *  Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -24,8 +24,8 @@
  *@since      3.0
 -->
 
-<forms>
-
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-form.xsd">
     <form name="findProductionRun" 
             default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox"
             target="FindProductionRun" title="" type="single">

@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE forms PUBLIC "-//OFBiz//DTD OFBiz Form Widget//EN" "http://www.ofbiz.org/dtds/widget-form.dtd">
 <!--
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -26,7 +25,8 @@
  *@since      3.0
 -->
 
-<forms>
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-form.xsd">
     <form name="ListRoutingTaskAssoc" type="list" 
             target="EditRoutingTaskAssoc" title="" list-name="allRoutingTasks"
             default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext"

@@ -1,6 +1,4 @@
-
-<!DOCTYPE forms PUBLIC "-//OFBiz//DTD OFBiz Form Widget//EN" "http://www.ofbiz.org/dtds/widget-form.dtd">
-
+<?xml version="1.0" encoding="UTF-8" ?>
 <!--
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -23,17 +21,18 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -->
 
-<forms>
-        <form name="ListFacilityInventoryByProduct" type="list" 
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-form.xsd">
+    <form name="ListFacilityInventoryByProduct" type="list" 
             target="" title="" list-name="inventoryByProduct"
             default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
-            <field name="productId" widget-style="buttontext">
-                <hyperlink target="/catalog/control/EditProduct?productId=${productId}" target-type="inter-app" description="${productId}" />
-            </field>
-            <field name="minimumStock"><display/></field>
-            <field name="reorderQuantity"><display/></field>
-            <field name="daysToShip"><display/></field>
-            <field name="totalAvailableToPromise"><display/></field>
-            <field name="totalQuantityOnHand"><display/></field>
-        </form>
+        <field name="productId" widget-style="buttontext">
+            <hyperlink target="/catalog/control/EditProduct?productId=${productId}" target-type="inter-app" description="${productId}" />
+        </field>
+        <field name="minimumStock"><display/></field>
+        <field name="reorderQuantity"><display/></field>
+        <field name="daysToShip"><display/></field>
+        <field name="totalAvailableToPromise"><display/></field>
+        <field name="totalQuantityOnHand"><display/></field>
+    </form>
 </forms>
