@@ -39,6 +39,7 @@ import org.ofbiz.core.rules.parse.tokens.*;
  *     functor      = '.' | LowercaseWord | QuotedString;
  *     term         = structure | Num | list | variable;
  *     variable     = UppercaseWord | '_';
+ *     factor       = '(' expression ')' | Num | variable;
  * </old>
  *
  *     axiom        = structure (ruleDef | Empty);
@@ -59,7 +60,7 @@ import org.ofbiz.core.rules.parse.tokens.*;
  *     operator     = '<' | '>' | '=' | "<=" | ">=" | "!=" ;
  *     expression   = phrase ('+' phrase | '-' phrase)*;
  *     phrase       = factor ('*' factor | '/' factor)*;
- *     factor       = '(' expression ')' | Num | variable;
+ *     factor       = '(' expression ')' | Num | QuotedString | variable;
  * <br>
  *     list         = '[' (listContents | Empty) ']';
  *     listContents = commaList(term) listTail;
@@ -266,7 +267,7 @@ public class LogikusParser {
     /**
      * Return a parser that recognizes the grammar:
      *
-     *    factor = '(' expression ')' | Num | variable;
+     *    factor = '(' expression ')' | Num | QuotedString | variable;
      */
     protected Parser factor() {
         Alternation a = new Alternation("factor");
@@ -276,6 +277,7 @@ public class LogikusParser {
         s.add(new Symbol(')').discard());
         a.add(s);
         a.add(num());
+        a.add(string());
         a.add(variable());
         return a;
     }
