@@ -25,7 +25,7 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
- *  $Id: widget-form.dtd,v 1.3 2003/12/05 22:08:16 byersa Exp $
+ *  $Id: widget-form.dtd,v 1.4 2004/02/21 23:58:04 jonesde Exp $
 -->
 
 <!ENTITY % AllFields "display | hyperlink | lookup | text | textarea | date-time | drop-down | check | radio | submit | reset | hidden | ignored | file | text-find | date-find | range-find">
@@ -73,14 +73,14 @@
 <!ATTLIST auto-fields-service
     service-name CDATA #REQUIRED
     map-name CDATA #IMPLIED
-    default-field-type ( edit | find | display ) "edit"
+    default-field-type ( edit | find | display | hidden ) "edit"
 >
 
 <!ELEMENT auto-fields-entity EMPTY>
 <!ATTLIST auto-fields-entity
     entity-name CDATA #REQUIRED
     map-name CDATA #IMPLIED
-    default-field-type ( edit | find | display ) "edit"
+    default-field-type ( edit | find | display | hidden ) "edit"
 >
 
 <!--
