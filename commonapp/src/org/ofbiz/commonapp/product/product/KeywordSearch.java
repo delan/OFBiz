@@ -34,9 +34,9 @@ import org.ofbiz.core.util.*;
  *  Does a product search by keyword using the PRODUCT_KEYWORD table.
  *  <br>Special thanks to Glen Thorne and the Weblogic Commerce Server for ideas.
  *
- *@author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- *@version 1.0
- *@created Sep 4, 2001
+ * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ * @version    $Revision$
+ * @since      2.1
  */
 public class KeywordSearch {
 
@@ -57,7 +57,7 @@ public class KeywordSearch {
      *@param anyPrefix If true use a wildcard to allow any prefix to each keyword
      *@param anySuffix If true use a wildcard to allow any suffix to each keyword
      *@param intraKeywordOperator The operator to use inbetween the keywords, usually "AND" or "OR"
-     *@return Collection of productId Strings
+     *@return ArrayList of productId Strings
      */
     public static ArrayList productsByKeywords(String keywordsString, GenericDelegator delegator, String categoryId, String visitId, boolean anyPrefix, boolean anySuffix, String intraKeywordOperator) {
         if (delegator == null) {
