@@ -47,9 +47,8 @@ public class GenericHelperDAO implements GenericHelper {
    */
   public GenericValue create(GenericValue value) throws GenericEntityException {
     if(value == null) { return null; }
-    GenericValue newValue = new GenericValue(value);
-    genericDAO.insert(newValue);
-    return newValue;
+    genericDAO.insert(value);
+    return value;
   }
   
   /** Creates a Entity in the form of a GenericValue and write it to the database

@@ -211,11 +211,14 @@ public class GenericDAO {
     GenericPK tempPK = entity.getPrimaryKey();
     try { 
       select(tempPK);
-      singleUpdate(entity, entity.getModelEntity(), entity.getModelEntity().nopks, connection);
     }
-    catch(GenericEntityException e) {
+    catch(GenericEntityNotFoundException e) {
+      //select failed, does not exist, insert
       singleInsert(entity, entity.getModelEntity(), entity.getModelEntity().fields, connection);
+      return;
     }
+    //select did not fail, so exists, update
+    singleUpdate(entity, entity.getModelEntity(), entity.getModelEntity().nopks, connection);
   }
   
 /* ====================================================================== */

@@ -252,9 +252,9 @@ public class GenericDelegator {
    */
   public GenericValue create(GenericValue value) throws GenericEntityException {
     GenericHelper helper = getEntityHelper(value.getModelEntity());
-    GenericValue newValue = helper.create(value);
-    if(newValue != null) newValue.delegator = this;
-    return newValue;
+    value = helper.create(value);
+    if(value != null) value.delegator = this;
+    return value;
   }
   
   /** Creates a Entity in the form of a GenericValue and write it to the database
