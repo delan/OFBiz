@@ -47,12 +47,6 @@
     <entity-group group="org.ofbiz" entity="TechDataCalendarExcWeek" />
 
   <!-- ========================================================= -->
-  <!-- org.ofbiz.manufacturing.jobshopmgt -->
-  <!-- ========================================================= -->
-    <entity-group group="org.ofbiz" entity="WorkEffortAndGoods" />
-    <entity-group group="org.ofbiz" entity="WorkEffortAndInventoryAssign" />
-    <entity-group group="org.ofbiz" entity="WorkEffortAndInventoryProduced" />
-  <!-- ========================================================= -->
   <!-- org.ofbiz.manufacturing.mrp -->
   <!-- ========================================================= -->
 

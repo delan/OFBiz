@@ -229,23 +229,5 @@
             </if-compare>
         </if-compare>
     </simple-method>
-    
-    <!-- WorkEffort services -->
-    <simple-method method-name="createWorkEffortInventoryAssign" short-description="Create WorkEffortInventoryAssign">
-        <!-- TODO: update if exists -->
-        <check-permission permission="MANUFACTURING" action="_CREATE">
-            <fail-message message="Security Error: to run createWorkEffortInventoryAssign you must have the MANUFACTURING_CREATE or MANUFACTURING_ADMIN permission"/>
-        </check-permission>
-        <string-to-field string="Create WorkEffortInventoryAssign" field-name="operationName"/>
-        <!-- 
-        <call-simple-method method-name="checkCanChangeShipmentStatusPacked" xml-resource="org/ofbiz/shipment/shipment/ShipmentServices.xml"/>
-        <check-errors/>
-        -->
-        <make-value value-name="newEntity" entity-name="WorkEffortInventoryAssign"/>
-        <set-pk-fields map-name="parameters" value-name="newEntity"/>
-        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
-        <create-value value-name="newEntity"/>
-    </simple-method>
-
 </simple-methods>
 
