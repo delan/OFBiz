@@ -23,14 +23,13 @@
  * @version 1.0
 --%>
 
-<%@ include file="/includes/envsetup.jsp" %>
-<%@ include file="/includes/header.jsp" %>
-<%@ include file="/includes/onecolumn.jsp" %> 
-
-<%@ page import="java.net.*" %>
-<%@ page import="org.ofbiz.core.util.*" %>
+<%@ page import="java.util.*, java.net.*" %>
+<%@ page import="org.ofbiz.core.security.*, org.ofbiz.core.util.*, org.ofbiz.core.pseudotag.*" %>
 <%@ page import="org.ofbiz.core.datafile.*" %>
 
+<%@ taglib uri="ofbizTags" prefix="ofbiz" %>
+
+<jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="request" />
 <%
   List messages = new LinkedList();
 
@@ -131,6 +130,3 @@
   <hr>
   <div>You do not have permission to use this page (DATAFILE_MAINT needed)</div>
 <%}%>
-
-<%@ include file="/includes/onecolumnclose.jsp" %> 
-<%@ include file="/includes/footer.jsp" %>

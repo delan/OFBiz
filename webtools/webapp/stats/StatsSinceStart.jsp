@@ -28,13 +28,12 @@
  */
 %> 
 
-<%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.stats.*" %>
-<%@ page import="java.util.*" %>
+<%@ page import="java.util.*, java.net.*" %>
+<%@ page import="org.ofbiz.core.security.*, org.ofbiz.core.entity.*, org.ofbiz.core.util.*, org.ofbiz.core.pseudotag.*" %>
+<%@ page import="org.ofbiz.core.stats.*" %>
 
-<%pageContext.setAttribute("PageName", "Server Stats Since Start");%>
-<%@ include file="/includes/envsetup.jsp" %>
-<%@ include file="/includes/header.jsp" %>
-<%@ include file="/includes/onecolumn.jsp" %> 
+<%@ taglib uri="ofbizTags" prefix="ofbiz" %>
+<jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="request" />
 
 <%
     if ("true".equals(request.getParameter("clear"))) {
@@ -188,6 +187,3 @@
 <%}else{%>
   <h3>You do not have permission to view this page (SERVER_STATS_VIEW needed).</h3>
 <%}%>
-
-<%@ include file="/includes/onecolumnclose.jsp" %>
-<%@ include file="/includes/footer.jsp" %>

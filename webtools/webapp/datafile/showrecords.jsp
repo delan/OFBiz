@@ -23,10 +23,6 @@
  * @version 1.0
 --%>
 
-<%@ page import="java.util.*" %>
-<%@ page import="org.ofbiz.core.util.*" %>
-<%@ page import="org.ofbiz.core.datafile.*" %>
-
 <%List records = (List)request.getAttribute("CUR_RECORD_LIST");%>
 <%
   for(int r=0; r<records.size(); r++) {
