@@ -1,5 +1,5 @@
 /*
- * $Id: ComponentContainer.java,v 1.9 2003/08/20 02:33:13 ajzeneski Exp $
+ * $Id: ComponentContainer.java,v 1.10 2003/08/20 02:46:13 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -24,12 +24,17 @@
  */
 package org.ofbiz.base.container;
 
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.io.IOException;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
-import org.ofbiz.base.component.*;
-import org.ofbiz.base.start.*;
-import org.ofbiz.base.util.*;
+import org.ofbiz.base.component.ComponentConfig;
+import org.ofbiz.base.component.ComponentException;
+import org.ofbiz.base.component.ComponentLoaderConfig;
+import org.ofbiz.base.start.Classpath;
+import org.ofbiz.base.util.Debug;
 
 /**
  * ComponentContainer - StartupContainer implementation for Components
@@ -40,7 +45,7 @@ import org.ofbiz.base.util.*;
  * </pre>
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
-  *@version    $Revision: 1.9 $
+  *@version    $Revision: 1.10 $
  * @since      3.0
  */
 public class ComponentContainer implements Container {
@@ -112,8 +117,9 @@ public class ComponentContainer implements Container {
         }
 
         // set the new classloader on the current thread
+        System.setProperty("java.class.path", classPath.toString());
         ClassLoader cl = classPath.getClassLoader();
-        Thread.currentThread().setContextClassLoader(cl);
+        Thread.currentThread().setContextClassLoader(cl);        
         
         return true;
     }
