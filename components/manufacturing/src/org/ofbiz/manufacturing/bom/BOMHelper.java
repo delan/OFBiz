@@ -97,7 +97,7 @@ public class BOMHelper {
         // If the date is null, set it to today.
         if (inDate == null) inDate = new Date();
         if (productIdKeys == null) {
-            ItemConfigurationTree tree = new ItemConfigurationTree(productIdKey, bomType, inDate, delegator, dispatcher);
+            BOMTree tree = new BOMTree(productIdKey, bomType, inDate, delegator, dispatcher);
             productIdKeys = tree.getAllProductsId();
             productIdKeys.add(productIdKey);
         }

@@ -513,7 +513,7 @@ public class MrpServices {
         if (listComponent != null && listComponent.size() >0) {
             Iterator listComponentIter = listComponent.iterator();
             while (listComponentIter.hasNext()) {
-                ItemConfigurationNode node = (ItemConfigurationNode) listComponentIter.next();
+                BOMNode node = (BOMNode) listComponentIter.next();
                 GenericValue productComponent = node.getProductAssoc();
                 // read the startDate for the component
                 String routingTask = node.getProductAssoc().getString("routingWorkEffortId");
@@ -705,7 +705,7 @@ public class MrpServices {
                             routing = null;
                         }
                         if (components != null && components.size() > 0) {
-                            ItemConfigurationNode node = ((ItemConfigurationNode)components.get(0)).getParentNode();
+                            BOMNode node = ((BOMNode)components.get(0)).getParentNode();
                             isbuild = node.isManufactured();
                         } else {
                             isbuild = false;
