@@ -1,5 +1,5 @@
 /*
- * $Id: ModelScreen.java,v 1.4 2004/07/11 07:24:52 jonesde Exp $
+ * $Id: ModelScreen.java,v 1.5 2004/07/15 22:25:00 jonesde Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -36,7 +36,7 @@ import org.w3c.dom.Element;
  * Widget Library - Screen model class
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      3.1
  */
 public class ModelScreen {
@@ -82,10 +82,11 @@ public class ModelScreen {
      *
      * @param writer The Writer that the screen text will be written to
      * @param context Map containing the screen context; the following are
-     *   reserved words in this context: parameters (Map), isError (Boolean),
-     *   itemIndex (Integer, for lists only, otherwise null), bshInterpreter,
-     *   screenName (String, optional alternate name for screen, defaults to the
-     *   value of the name attribute)
+     *   reserved words in this context:
+     *    - formStringRenderer
+     *    - request (special case, only in HTML contexts, etc) 
+     *    - response (special case, only in HTML contexts, etc)
+     *    - sectionMap (used for decorators to reference the sections to be decorated) 
      * @param screenStringRenderer An implementation of the ScreenStringRenderer
      *   interface that is responsible for the actual text generation for
      *   different screen elements; implementing your own makes it possible to

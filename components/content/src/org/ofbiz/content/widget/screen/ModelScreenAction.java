@@ -1,5 +1,5 @@
 /*
- * $Id: ModelScreenAction.java,v 1.3 2004/07/15 02:11:58 jonesde Exp $
+ * $Id: ModelScreenAction.java,v 1.4 2004/07/15 22:25:00 jonesde Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -36,8 +36,10 @@ import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.base.util.collections.FlexibleMapAccessor;
-import org.ofbiz.base.util.collections.OrderedMap;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
+import org.ofbiz.entity.finder.ByAndFinder;
+import org.ofbiz.entity.finder.ByConditionFinder;
+import org.ofbiz.entity.finder.PrimaryKeyFinder;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.ModelService;
 import org.w3c.dom.Element;
@@ -46,7 +48,7 @@ import org.w3c.dom.Element;
  * Widget Library - Screen model class
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      3.1
  */
 public abstract class ModelScreenAction {
@@ -74,11 +76,13 @@ public abstract class ModelScreenAction {
             } else if ("service".equals(actionElement.getNodeName())) {
                 actions.add(new Service(modelScreen, actionElement));
             } else if ("entity-one".equals(actionElement.getNodeName())) {
-                // TODO: implement this
+                actions.add(new EntityOne(modelScreen, actionElement));
             } else if ("entity-and".equals(actionElement.getNodeName())) {
-                // TODO: implement this
+                actions.add(new EntityAnd(modelScreen, actionElement));
             } else if ("entity-condition".equals(actionElement.getNodeName())) {
-                // TODO: implement this
+                actions.add(new EntityCondition(modelScreen, actionElement));
+            } else {
+                throw new IllegalArgumentException("Action element not supported with name: " + actionElement.getNodeName());
             }
         }
         
@@ -141,16 +145,16 @@ public abstract class ModelScreenAction {
     }
 
     public static class Service extends ModelScreenAction {
-        protected FlexibleStringExpander serviceName;
-        protected FlexibleMapAccessor resultMapName;
-        protected FlexibleStringExpander autoFieldMap;
+        protected FlexibleStringExpander serviceNameExdr;
+        protected FlexibleMapAccessor resultMapNameAcsr;
+        protected FlexibleStringExpander autoFieldMapExdr;
         protected Map fieldMap;
         
         public Service(ModelScreen modelScreen, Element setElement) {
             super (modelScreen, setElement);
-            this.serviceName = new FlexibleStringExpander(setElement.getAttribute("service-name"));
-            this.resultMapName = UtilValidate.isNotEmpty(setElement.getAttribute("result-map-name")) ? new FlexibleMapAccessor(setElement.getAttribute("result-map-name")) : null;
-            this.autoFieldMap = new FlexibleStringExpander(setElement.getAttribute("auto-field-map"));
+            this.serviceNameExdr = new FlexibleStringExpander(setElement.getAttribute("service-name"));
+            this.resultMapNameAcsr = UtilValidate.isNotEmpty(setElement.getAttribute("result-map-name")) ? new FlexibleMapAccessor(setElement.getAttribute("result-map-name")) : null;
+            this.autoFieldMapExdr = new FlexibleStringExpander(setElement.getAttribute("auto-field-map"));
             
             List fieldMapElementList = UtilXml.childElementList(setElement, "field-map");
             if (fieldMapElementList.size() > 0) {
@@ -167,12 +171,12 @@ public abstract class ModelScreenAction {
         }
         
         public void runAction(Map context) {
-            String serviceNameExpanded = this.serviceName.expandString(context);
+            String serviceNameExpanded = this.serviceNameExdr.expandString(context);
             if (UtilValidate.isEmpty(serviceNameExpanded)) {
-                throw new IllegalArgumentException("Service name was empty, expanded from: " + this.serviceName.getOriginal());
+                throw new IllegalArgumentException("Service name was empty, expanded from: " + this.serviceNameExdr.getOriginal());
             }
             
-            String autoFieldMapString = this.autoFieldMap.expandString(context);
+            String autoFieldMapString = this.autoFieldMapExdr.expandString(context);
             boolean autoFieldMapBool = !"false".equals(autoFieldMapString);
             
             try {
@@ -195,13 +199,70 @@ public abstract class ModelScreenAction {
                 
                 Map result = this.modelScreen.getDispacher().runSync(serviceNameExpanded, serviceContext);
                 
-                if (this.resultMapName != null) {
-                    this.resultMapName.put(context, result);
+                if (this.resultMapNameAcsr != null) {
+                    this.resultMapNameAcsr.put(context, result);
                 } else {
                     context.putAll(result);
                 }
             } catch (GenericServiceException e) {
                 String errMsg = "Error calling service with name " + serviceNameExpanded + ": " + e.toString();
+                Debug.logError(e, errMsg, module);
+                throw new IllegalArgumentException(errMsg);
+            }
+        }
+    }
+
+    public static class EntityOne extends ModelScreenAction {
+        protected PrimaryKeyFinder finder;
+        
+        public EntityOne(ModelScreen modelScreen, Element entityOneElement) {
+            super (modelScreen, entityOneElement);
+            finder = new PrimaryKeyFinder(entityOneElement);
+        }
+        
+        public void runAction(Map context) {
+            try {
+                finder.runFind(context, this.modelScreen.getDelegator());
+            } catch (GeneralException e) {
+                String errMsg = "Error doing entity query by condition: " + e.toString();
+                Debug.logError(e, errMsg, module);
+                throw new IllegalArgumentException(errMsg);
+            }
+        }
+    }
+
+    public static class EntityAnd extends ModelScreenAction {
+        protected ByAndFinder finder;
+        
+        public EntityAnd(ModelScreen modelScreen, Element entityAndElement) {
+            super (modelScreen, entityAndElement);
+            finder = new ByAndFinder(entityAndElement);
+        }
+        
+        public void runAction(Map context) {
+            try {
+                finder.runFind(context, this.modelScreen.getDelegator());
+            } catch (GeneralException e) {
+                String errMsg = "Error doing entity query by condition: " + e.toString();
+                Debug.logError(e, errMsg, module);
+                throw new IllegalArgumentException(errMsg);
+            }
+        }
+    }
+
+    public static class EntityCondition extends ModelScreenAction {
+        ByConditionFinder finder;
+        
+        public EntityCondition(ModelScreen modelScreen, Element entityConditionElement) {
+            super (modelScreen, entityConditionElement);
+            finder = new ByConditionFinder(entityConditionElement);
+        }
+        
+        public void runAction(Map context) {
+            try {
+                finder.runFind(context, this.modelScreen.getDelegator());
+            } catch (GeneralException e) {
+                String errMsg = "Error doing entity query by condition: " + e.toString();
                 Debug.logError(e, errMsg, module);
                 throw new IllegalArgumentException(errMsg);
             }

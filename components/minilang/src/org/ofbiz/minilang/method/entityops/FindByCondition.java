@@ -1,5 +1,5 @@
 /*
- * $Id: FindByCondition.java,v 1.2 2004/07/10 13:54:12 jonesde Exp $
+ * $Id: FindByCondition.java,v 1.3 2004/07/15 22:25:01 jonesde Exp $
  *
  *  Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -26,7 +26,7 @@ package org.ofbiz.minilang.method.entityops;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.entity.GenericDelegator;
-import org.ofbiz.entity.util.ByConditionFinder;
+import org.ofbiz.entity.finder.ByConditionFinder;
 import org.ofbiz.minilang.SimpleMethod;
 import org.ofbiz.minilang.method.MethodContext;
 import org.ofbiz.minilang.method.MethodOperation;
@@ -36,7 +36,7 @@ import org.w3c.dom.Element;
  * Uses the delegator to find entity values by a condition
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      3.1
  */
 public class FindByCondition extends MethodOperation {
