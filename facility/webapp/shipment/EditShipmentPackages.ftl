@@ -95,6 +95,9 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
     </tr>
     <#list shipmentPackageRouteSegs as shipmentPackageRouteSeg>
         <form action="<@ofbizUrl>/updateShipmentPackageRouteSeg</@ofbizUrl>" name="updateShipmentPackageRouteSegForm${shipmentPackageData_index}${shipmentPackageRouteSeg_index}">
+        <input type="hidden" name="shipmentId" value="${shipmentId}"/>
+        <input type="hidden" name="shipmentRouteSegmentId" value="${shipmentPackageRouteSeg.shipmentRouteSegmentId}"/>
+        <input type="hidden" name="shipmentPackageSeqId" value="${shipmentPackageRouteSeg.shipmentPackageSeqId}"/>
         <tr>
             <td><div class="tabletext">&nbsp;</div></td>
             <td><div class="tabletext">RouteSegment:${shipmentPackageRouteSeg.shipmentRouteSegmentId}</div></td>
@@ -111,7 +114,7 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
         <input type="hidden" name="shipmentPackageSeqId" value="${shipmentPackage.shipmentPackageSeqId}"/>
         <td><div class="tabletext">&nbsp;</div></td>
         <td>
-            <div class="tabletext">Add to Route Segment:
+            <div class="tabletext">Add Route Segment Info:
             <select name="shipmentRouteSegmentId" class="selectBox">
                 <#list shipmentRouteSegments as shipmentRouteSegment>
                     <option>${shipmentRouteSegment.shipmentRouteSegmentId}</option>
