@@ -64,32 +64,32 @@ public class JasperReportsPdfViewHandler implements ViewHandler {
         }
 
         request.setAttribute(SiteDefs.FORWARDED_FROM_CONTROL_SERVLET, new Boolean(true));
-
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
-
         if (delegator == null) {
             throw new ViewHandlerException("The delegator object was null, how did that happen?");
         }
 
         try {
-            String datasourceName = delegator.getEntityHelperName(info);
             InputStream is = context.getResourceAsStream(page);
-            Map parameters = UtilHttp.getParameterMap(request);
-
             JasperReport report = JasperCompileManager.compileReport(is);
-
             response.setContentType("application/pdf");
 
-            PipedOutputStream fillToPrintOutputStream = new PipedOutputStream();
-            PipedInputStream fillToPrintInputStream = new PipedInputStream(fillToPrintOutputStream);
-            // JasperFillManager.fillReportToStream(report, fillToPrintOutputStream, parameters, ConnectionFactory.getConnection(datasourceName));
-            // JasperPrintManager.printReportToPdfStream(fillToPrintInputStream, response.getOutputStream());
+            Map parameters = (Map) request.getAttribute("jrParameters");
+            if (parameters == null) {
+                parameters = UtilHttp.getParameterMap(request);
+            }
 
+            JRDataSource jrDataSource = (JRDataSource) request.getAttribute("jrDataSource");
             JasperPrint jp = null;
-            if (datasourceName != null && datasourceName.length() > 0) {
-                jp = JasperManager.fillReport(report, parameters, ConnectionFactory.getConnection(datasourceName));
+            if (jrDataSource == null) {
+                String datasourceName = delegator.getEntityHelperName(info);
+                if (datasourceName != null && datasourceName.length() > 0) {
+                    jp = JasperManager.fillReport(report, parameters, ConnectionFactory.getConnection(datasourceName));
+                } else {
+                    jp = JasperManager.fillReport(report, parameters, new JREmptyDataSource());
+                }
             } else {
-                jp = JasperManager.fillReport(report, parameters, new JREmptyDataSource());
+                jp = JasperManager.fillReport(report, parameters, jrDataSource);
             }
 
             if (jp.getPages().size() < 1) {
@@ -97,7 +97,7 @@ public class JasperReportsPdfViewHandler implements ViewHandler {
             }
             JasperManager.printReportToPdfStream(jp, response.getOutputStream());
         } catch (IOException ie) {
-            throw new ViewHandlerException("IO Error in region", ie);
+            throw new ViewHandlerException("IO Error in report", ie);
         } catch (java.sql.SQLException e) {
             throw new ViewHandlerException("Database error while running report", e);
         } catch (Exception e) {
