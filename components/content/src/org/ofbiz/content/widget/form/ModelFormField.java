@@ -1615,6 +1615,7 @@ public class ModelFormField {
         protected String targetType;
         protected FlexibleStringExpander target;
         protected FlexibleStringExpander description;
+        protected FlexibleStringExpander targetWindowExdr;
 
         protected HyperlinkField() {
             super();
@@ -1635,6 +1636,7 @@ public class ModelFormField {
             this.setTarget(element.getAttribute("target"));
             this.alsoHidden = !"false".equals(element.getAttribute("also-hidden"));
             this.targetType = element.getAttribute("target-type");
+            this.targetWindowExdr = new FlexibleStringExpander(element.getAttribute("target-window"));
         }
 
         public void renderFieldString(StringBuffer buffer, Map context, FormStringRenderer formStringRenderer) {
@@ -1659,6 +1661,11 @@ public class ModelFormField {
             }
         }
 
+        public String getTargetWindow(Map context) {
+        	String targetWindow = this.targetWindowExdr.expandString(context);
+        	return targetWindow;
+        }
+        
         /**
          * @return
          */
@@ -1708,6 +1715,7 @@ public class ModelFormField {
         protected String targetType;
         protected FlexibleStringExpander target;
         protected FlexibleStringExpander description;
+        protected FlexibleStringExpander targetWindowExdr;
 
         public SubHyperlink(Element element) {
             this.setDescription(element.getAttribute("description"));
@@ -1715,6 +1723,7 @@ public class ModelFormField {
             this.setUseWhen(element.getAttribute("use-when"));
             this.linkStyle = element.getAttribute("link-style");
             this.targetType = element.getAttribute("target-type");
+            this.targetWindowExdr = new FlexibleStringExpander(element.getAttribute("target-window"));
         }
 
         /**
@@ -1746,6 +1755,11 @@ public class ModelFormField {
             }
         }
 
+        public String getTargetWindow(Map context) {
+        	String targetWindow = this.targetWindowExdr.expandString(context);
+        	return targetWindow;
+        }
+        
         /**
          * @return
          */

@@ -184,6 +184,7 @@
     target-type ( intra-app | inter-app | content | plain ) "intra-app"
     target CDATA #REQUIRED
     description CDATA #IMPLIED
+    target-window CDATA #IMPLIED
 >
 
 <!ELEMENT sub-hyperlink EMPTY>
@@ -193,6 +194,7 @@
     target-type ( intra-app | inter-app | content | plain ) "intra-app"
     target CDATA #REQUIRED
     description CDATA #IMPLIED
+    target-window CDATA #IMPLIED
 >
 
 <!ELEMENT text ( sub-hyperlink? )>

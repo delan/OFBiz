@@ -136,7 +136,8 @@ public class HtmlFormRenderer implements FormStringRenderer {
             modelFormField.getWidgetStyle(),
             hyperlinkField.getTargetType(),
             hyperlinkField.getTarget(context),
-            hyperlinkField.getDescription(context));
+            hyperlinkField.getDescription(context),
+            hyperlinkField.getTargetWindow(context));
         this.appendTooltip(buffer, context, modelFormField);
         this.appendWhitespace(buffer);
     }
@@ -152,14 +153,15 @@ public class HtmlFormRenderer implements FormStringRenderer {
                 subHyperlink.getLinkStyle(),
                 subHyperlink.getTargetType(),
                 subHyperlink.getTarget(context),
-                subHyperlink.getDescription(context));
+                subHyperlink.getDescription(context),
+                subHyperlink.getTargetWindow(context));
         }
     }
 
-    public void makeHyperlinkString(StringBuffer buffer, String linkStyle, String targetType, String target, String description) {
+    public void makeHyperlinkString(StringBuffer buffer, String linkStyle, String targetType, String target, String description, String targetWindow) {
 
         Map context = null;
-        WidgetWorker.makeHyperlinkString(buffer, linkStyle, targetType, target, description, this.request, this.response, context);
+        WidgetWorker.makeHyperlinkString(buffer, linkStyle, targetType, target, description, this.request, this.response, context, targetWindow);
     }
 
     /* (non-Javadoc)

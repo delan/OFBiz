@@ -79,7 +79,7 @@ public class WidgetWorker {
         buffer.append(location);
     }
 
-    public static void makeHyperlinkString(StringBuffer buffer, String linkStyle, String targetType, String target, String description, HttpServletRequest request, HttpServletResponse response, Map context) {
+    public static void makeHyperlinkString(StringBuffer buffer, String linkStyle, String targetType, String target, String description, HttpServletRequest request, HttpServletResponse response, Map context, String targetWindow) {
         buffer.append("<a");
 
         if (UtilValidate.isNotEmpty(linkStyle)) {
@@ -93,6 +93,13 @@ public class WidgetWorker {
         WidgetWorker.buildHyperlinkUrl(buffer, target, targetType, request, response, context);
 
         buffer.append("\"");
+        
+        if (UtilValidate.isNotEmpty(targetWindow)) {
+            buffer.append(" target=\"");
+            buffer.append(targetWindow);
+            buffer.append("\"");
+        }
+
 
         buffer.append('>');
 
