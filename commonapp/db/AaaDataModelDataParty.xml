@@ -139,7 +139,7 @@
   <RoleType description="Order Clerk" hasTable="N" parentTypeId="EMPLOYEE" roleTypeId="ORDER_CLERK"/>
   <RoleType description="Other Internal" hasTable="N" parentTypeId="INTERNAL_ORGANIZATIO" roleTypeId="OTHER_INTERNAL_ORGAN"/>
   <RoleType description="Other Organization Unit" hasTable="N" parentTypeId="ORGANIZATION_UNIT" roleTypeId="OTHER_ORGANIZATION_U"/>
-  <RoleType description="Packer" hasTable="N" parentTypeId="PERSON_ROLE" roleTypeId="PACKER"/>
+  <RoleType description="Packer" hasTable="N" parentTypeId="EMPLOYEE" roleTypeId="PACKER"/>
   <RoleType description="Receiver" hasTable="N" parentTypeId="EMPLOYEE" roleTypeId="RECEIVER"/>
   <RoleType description="Stocker" hasTable="N" parentTypeId="EMPLOYEE" roleTypeId="STOCKER"/>
   <RoleType description="Subsidiary" hasTable="N" parentTypeId="ORGANIZATION_UNIT" roleTypeId="SUBSIDIARY"/>
