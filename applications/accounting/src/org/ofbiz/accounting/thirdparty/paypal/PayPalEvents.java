@@ -48,6 +48,7 @@ import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
+import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -261,73 +262,76 @@ public class PayPalEvents {
                                
         // get the orderId
         String orderId = request.getParameter("invoice");
-        
-        // get the order header
-        GenericValue orderHeader = null;
-        try {
-            orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
-        } catch (GenericEntityException e) {
-            Debug.logError(e, "Cannot get the order header for order: " + orderId, module);
-            request.setAttribute("_ERROR_MESSAGE_", "<li>Problems getting order header.");
-            return "error";
-        }
-                        
-        // get payment data
-        String paymentCurrency = request.getParameter("mc_currency");
-        String paymentAmount = request.getParameter("mc_gross");
-        String paymentFee = request.getParameter("mc_fee");
-        String transactionId = request.getParameter("txn_id");
-                
-        // get the transaction status
-        String paymentStatus = request.getParameter("payment_status");        
-        
-        // attempt to start a transaction
-        boolean beganTransaction = false;
-        try {
-            beganTransaction = TransactionUtil.begin();
-        } catch (GenericTransactionException gte) {
-            Debug.logError(gte, "Unable to begin transaction", module);
-        }                        
-                
-        boolean okay = false;        
-        if (paymentStatus.equals("Completed")) {
-            okay = OrderChangeHelper.approveOrder(dispatcher, userLogin, orderId);            
-        } else if (paymentStatus.equals("Failed") || paymentStatus.equals("Denied")) {
-            okay = OrderChangeHelper.cancelOrder(dispatcher, userLogin, orderId);            
-        }
-        
-        if (okay) {                                     
-            // set the payment preference
-            okay = setPaymentPreferences(delegator, orderId, request);        
-        }
-        
-        if (okay) {                
+        if (UtilValidate.isNotEmpty(orderId)) {
+            // get the order header
+            GenericValue orderHeader = null;
             try {
-                TransactionUtil.commit(beganTransaction);
+                orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
+            } catch (GenericEntityException e) {
+                Debug.logError(e, "Cannot get the order header for order: " + orderId, module);
+                request.setAttribute("_ERROR_MESSAGE_", "<li>Problems getting order header.");
+                return "error";
+            }
+
+            // get payment data
+            String paymentCurrency = request.getParameter("mc_currency");
+            String paymentAmount = request.getParameter("mc_gross");
+            String paymentFee = request.getParameter("mc_fee");
+            String transactionId = request.getParameter("txn_id");
+
+            // get the transaction status
+            String paymentStatus = request.getParameter("payment_status");
+
+            // attempt to start a transaction
+            boolean beganTransaction = false;
+            try {
+                beganTransaction = TransactionUtil.begin();
             } catch (GenericTransactionException gte) {
-                Debug.logError(gte, "Unable to commit transaction", module);
+                Debug.logError(gte, "Unable to begin transaction", module);
+            }
+
+            boolean okay = false;
+            if (paymentStatus.equals("Completed")) {
+                okay = OrderChangeHelper.approveOrder(dispatcher, userLogin, orderId);
+            } else if (paymentStatus.equals("Failed") || paymentStatus.equals("Denied")) {
+                okay = OrderChangeHelper.cancelOrder(dispatcher, userLogin, orderId);
+            }
+
+            if (okay) {
+                // set the payment preference
+                okay = setPaymentPreferences(delegator, orderId, request);
+            }
+
+            if (okay) {
+                try {
+                    TransactionUtil.commit(beganTransaction);
+                } catch (GenericTransactionException gte) {
+                    Debug.logError(gte, "Unable to commit transaction", module);
+                }
+            } else {
+                try {
+                    TransactionUtil.rollback(beganTransaction);
+                } catch (GenericTransactionException gte) {
+                    Debug.logError(gte, "Unable to rollback transaction", module);
+                }
+            }
+
+            if (okay) {
+                // attempt to release the offline hold on the order (workflow)
+                OrderChangeHelper.releaseInitialOrderHold(dispatcher, orderId);
+
+                // call the email confirm service
+                Map emailContext = UtilMisc.toMap("orderId", orderId);
+                try {
+                    Map emailResult = dispatcher.runSync("sendOrderConfirmation", emailContext);
+                } catch (GenericServiceException e) {
+                    Debug.logError(e, "Problems sending email confirmation", module);
+                }
             }
         } else {
-            try {
-                TransactionUtil.rollback(beganTransaction);
-            } catch (GenericTransactionException gte) {
-                Debug.logError(gte, "Unable to rollback transaction", module);
-            }
+            Debug.logWarning("PayPal IPN Callback passed in an empty orderId!", module);
         }
-                
-        if (okay) {
-            // attempt to release the offline hold on the order (workflow)            
-            OrderChangeHelper.releaseInitialOrderHold(dispatcher, orderId);   
-            
-            // call the email confirm service
-            Map emailContext = UtilMisc.toMap("orderId", orderId);
-            try {
-                Map emailResult = dispatcher.runSync("sendOrderConfirmation", emailContext);
-            } catch (GenericServiceException e) {
-                Debug.logError(e, "Problems sending email confirmation", module);
-            }                        
-        }                 
-                                
+
         return "success";
     }
         
