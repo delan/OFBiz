@@ -54,6 +54,9 @@ public class DatabaseUtil {
 
     protected Connection getConnection() throws SQLException, GenericEntityException {
         Connection connection = ConnectionFactory.getConnection(helperName);
+        if (connection == null) {
+            throw new GenericEntityException("No connection available for helper named [" + helperName + "]");
+        }
         connection.setAutoCommit(true);
         return connection;
     }
@@ -634,7 +637,7 @@ public class DatabaseUtil {
         return dbData;
     }
 
-    public void printDbMiscData(DatabaseMetaData dbData) {
+    public void printDbMiscData(DatabaseMetaData dbData, Connection con) {
         if (dbData == null) {
             return;
         }
@@ -652,6 +655,7 @@ public class DatabaseUtil {
             try {
                 Debug.logInfo("Database Driver Name is " + dbData.getDriverName(), module);
                 Debug.logInfo("Database Driver Version is " + dbData.getDriverVersion(), module);
+                Debug.logInfo("Database Driver JDBC Version is " + dbData.getJDBCMajorVersion() + "." + dbData.getJDBCMinorVersion(), module);
             } catch (SQLException sqle) {
                 Debug.logWarning("Unable to get Driver name & version information", module);
             }
@@ -666,6 +670,10 @@ public class DatabaseUtil {
                 Debug.logInfo("- isolation ReadUncommitted[" + dbData.supportsTransactionIsolationLevel(Connection.TRANSACTION_READ_UNCOMMITTED) + "]", module);
                 Debug.logInfo("- isolation RepeatableRead [" + dbData.supportsTransactionIsolationLevel(Connection.TRANSACTION_REPEATABLE_READ) + "]", module);
                 Debug.logInfo("- isolation Serializable   [" + dbData.supportsTransactionIsolationLevel(Connection.TRANSACTION_SERIALIZABLE) + "]", module);
+                Debug.logInfo("- default fetchsize        [" + con.createStatement().getFetchSize() + "]", module);
+                Debug.logInfo("- forward only type        [" + dbData.supportsResultSetType(ResultSet.TYPE_FORWARD_ONLY) + "]", module);
+                Debug.logInfo("- scroll sensitive type    [" + dbData.supportsResultSetType(ResultSet.TYPE_SCROLL_SENSITIVE) + "]", module);
+                Debug.logInfo("- scroll insensitive type  [" + dbData.supportsResultSetType(ResultSet.TYPE_SCROLL_INSENSITIVE) + "]", module);
                 Debug.logInfo("- is case sensitive        [" + dbData.supportsMixedCaseIdentifiers() + "]", module);
                 Debug.logInfo("- stores LowerCase         [" + dbData.storesLowerCaseIdentifiers() + "]", module);
                 Debug.logInfo("- stores MixedCase         [" + dbData.storesMixedCaseIdentifiers() + "]", module);
@@ -726,7 +734,7 @@ public class DatabaseUtil {
             return null;
         }
 
-        printDbMiscData(dbData);
+        printDbMiscData(dbData, connection);
         if (Debug.infoOn()) Debug.logInfo("Getting Table Info From Database", module);
 
         // get ALL tables from this database
