@@ -233,6 +233,10 @@
         <response name="success" type="request-redirect" value="orderview"/>
         <response name="error" type="request-redirect" value="orderview"/>
     </request-map>
+    <request-map uri="viewimage">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="viewimage"/>
+    </request-map>
 
     <!-- Order Note Requests -->
     <request-map uri="createnewnote">
@@ -738,7 +742,8 @@
     <view-map name="createnewnote" type="screen" page="component://order/widget/ordermgr/OrderViewScreens.xml#OrderNewNote"/>
     <view-map name="receivepayment" type="screen" page="component://order/widget/ordermgr/OrderViewScreens.xml#OrderReceivePayment"/>
     <view-map name="ordertasklist" type="screen" page="component://order/widget/ordermgr/OrderTaskScreens.xml#OrderTaskList"/>
-
+    <view-map name="viewimage" type="screen" page="component://order/widget/ordermgr/OrderViewScreens.xml#ViewImage"/>
+    
     <view-map name="orderentry" type="jpublish" page="/entry/orderentry.ftl"/>
     <view-map name="checkinits" type="jpublish" page="/entry/checkinits.ftl"/>
     <view-map name="orderagreements" type="jpublish" page="/entry/orderagreements.ftl"/>

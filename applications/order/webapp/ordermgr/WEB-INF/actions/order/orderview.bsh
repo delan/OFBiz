@@ -235,6 +235,9 @@ if (orderHeader != null) {
 
     cmvm = ContactMechWorker.getOrderContactMechValueMaps(delegator, orderId);
     context.put("orderContactMechValueMaps", cmvm);
+
+    orderContentWrapper = OrderContentWrapper.makeOrderContentWrapper(orderHeader, request);
+    context.put("orderContentWrapper", orderContentWrapper);
 }
 
 paramString = "";

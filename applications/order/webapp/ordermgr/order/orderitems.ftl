@@ -65,6 +65,7 @@
                 <tr><td><font color="red">${uiLabelMap.checkhelper.sales_order_lines_lookup_failed}</font></td></tr>
               <#else>
                 <#list orderItemList as orderItem>
+                  <#assign orderItemContentWrapper = Static["org.ofbiz.order.order.OrderContentWrapper"].makeOrderContentWrapper(orderItem, request)>
                   <tr><td colspan="8"><hr class="sepbar"></td></tr>
                   <tr>
                     <#assign orderItemType = orderItem.getRelatedOne("OrderItemType")?if_exists>
@@ -88,6 +89,9 @@
                           <div class="tabletext">
                             <a href="/catalog/control/EditProduct?productId=${productId}" class="buttontext" target="_blank">[${uiLabelMap.ProductCatalog}]</a>
                             <a href="/ecommerce/control/product?product_id=${productId}" class="buttontext" target="_blank">[${uiLabelMap.EcommerceEcommerce}]</a>
+                            <#if orderItemContentWrapper.get("IMAGE_URL")?has_content>
+                              <a href="<@ofbizUrl>/viewimage?orderId=${orderId}&orderItemSeqId=${orderItem.orderItemSeqId}&orderContentTypeId=IMAGE_URL</@ofbizUrl>" target="_orderImage" class="buttontext">[${uiLabelMap.OrderViewImage}]</a>
+                            </#if>
                           </div>
                         </#if>
                       </td>
