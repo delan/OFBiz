@@ -44,7 +44,7 @@ import javax.servlet.http.HttpSession;
  * LayoutEvents Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.7 $
+ * @version    $Revision: 1.8 $
  * @since      3.0
  *
  * 
@@ -430,6 +430,8 @@ public class LayoutEvents {
             Map paramMap = UtilHttp.getParameterMap(request);
             String contentIdTo = (String)paramMap.get("contentIdTo");
             String mapKey = (String)paramMap.get("mapKey");
+            Debug.logInfo("in createSubContent, contentIdTo:" + contentIdTo, module);
+            Debug.logInfo("in createSubContent, mapKey:" + mapKey, module);
             Map context = new HashMap();
             List errorMessages = null;
             Locale loc = (Locale)request.getSession().getServletContext().getAttribute("locale");
@@ -460,8 +462,10 @@ public class LayoutEvents {
             if (UtilValidate.isNotEmpty(contentPurposeTypeId))
                 context.put("contentPurposeList", UtilMisc.toList(contentPurposeTypeId));
             context.put("contentIdTo", paramMap.get("contentIdTo"));
+            context.put("mapKey", paramMap.get("mapKey"));
             context.put("textData", paramMap.get("textData"));
             context.put("contentAssocTypeId", "SUB_CONTENT");
+            Debug.logInfo("in createSubContent, context:" + context, module);
             Map result = dispatcher.runSync("persistContentAndAssoc", context);
             boolean isError = ModelService.RESPOND_ERROR.equals(result.get(ModelService.RESPONSE_MESSAGE));
             if (isError) {
