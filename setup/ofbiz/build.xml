@@ -205,7 +205,6 @@
     <target name="clean" depends="sub-clean,catalina-clean">
         <delete>
             <fileset dir="logs" includes="*"/>
-            <fileset dir="." includes="ofbiz.log*"/>
         </delete>
     </target>
 
