@@ -162,13 +162,13 @@ public class PaymentGatewayServices {
                 // call the authPayment method
                 Map processorResult = authPayment(dispatcher, userLogin, orh, paymentPref, totalRemaining, reAuth);
 
-                // get the customer messages
-                if (processorResult.get("customerRespMsgs") != null) {
-                    messages.addAll((List) processorResult.get("customerRespMsgs"));
-                }
-
                 // handle the response
                 if (processorResult != null) {
+                    // get the customer messages
+                    if (processorResult.get("customerRespMsgs") != null) {
+                        messages.addAll((List) processorResult.get("customerRespMsgs"));
+                    }
+
                     // not null result means either an approval or decline; null would mean error
                     Double thisAmount = (Double) processorResult.get("processAmount");
 
