@@ -101,15 +101,16 @@ public class ControlServlet extends HttpServlet {
             }
             Debug.logVerbose("--- End Request Headers: ---", module);
         }
-        if (Debug.verboseOn()) {
-            Debug.logVerbose("--- Start Request Parameters: ---", module);
-            Enumeration paramNames = request.getParameterNames();
-            while (paramNames.hasMoreElements()) {
-                String paramName = (String) paramNames.nextElement();
-                Debug.logVerbose(paramName + ":" + request.getParameter(paramName), module);
-            }
-            Debug.logVerbose("--- End Request Parameters: ---", module);
+
+        //NOTE: This is not within an if block for verboseOn because it fixes a problem
+        //  with funny characters in the parameters that can seriously mess things up, weird but true...
+        Debug.logVerbose("--- Start Request Parameters: ---", module);
+        Enumeration paramNames = request.getParameterNames();
+        while (paramNames.hasMoreElements()) {
+            String paramName = (String) paramNames.nextElement();
+            Debug.logVerbose(paramName + ":" + request.getParameter(paramName), module);
         }
+        Debug.logVerbose("--- End Request Parameters: ---", module);
         
         GenericValue userLogin = (GenericValue) request.getSession().getAttribute(SiteDefs.USER_LOGIN);
 
