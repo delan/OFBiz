@@ -41,6 +41,7 @@ import javax.swing.JDialog;
 import javax.swing.JRootPane;
 
 import net.xoetrope.swing.XButton;
+import net.xoetrope.swing.XEdit;
 import net.xoetrope.xui.XPage;
 import net.xoetrope.xui.XResourceManager;
 
@@ -64,6 +65,7 @@ public class PosDialog {
     protected Component parent = null;
 
     protected JDialog dialog = null;
+    protected XEdit output = null;
     protected XPage page = null;
     protected boolean modal = true;
     protected int padding = 0;
@@ -104,6 +106,9 @@ public class PosDialog {
         dialog.setUndecorated(true);
         dialog.setSize(page.getSize());
         dialog.getRootPane().setWindowDecorationStyle(JRootPane.PLAIN_DIALOG);
+
+        // find the output edit object
+        this.output = (XEdit) page.findComponent("dialog_output");
 
         // set the components
         Component[] coms = page.getComponents();
@@ -164,6 +169,12 @@ public class PosDialog {
         dialog.requestFocus();
         dialog.repaint();
         dialog.setVisible(true);
+    }
+
+    public void setText(String text) {
+        if (this.output != null) {
+            this.output.setText(text);
+        }
     }
 
     public String getName() {
