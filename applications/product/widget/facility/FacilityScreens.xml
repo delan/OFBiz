@@ -83,6 +83,15 @@
                 <service service-name="findOrdersToPickMove">
                     <field-map env-name="facilityId"/>
                 </service>
+
+                <entity-condition entity-name="Picklist" list-name="picklistActiveList">
+                    <condition-list combine="and">
+                        <condition-expr field-name="facilityId" operator="equals" env-name="parameters.facilityId"/>
+                        <condition-expr field-name="statusId" operator="not-equals" value="PICKLIST_PICKED"/>
+                        <condition-expr field-name="statusId" operator="not-equals" value="PICKLIST_CANCELLED"/>
+                    </condition-list>
+                    <order-by field-name="picklistDate"/>
+                </entity-condition>
             </actions>
             <widgets>
                 <decorator-screen name="CommonFacilityDecorator">
@@ -110,7 +119,6 @@
                 <entity-condition entity-name="PartyRoleAndPartyDetail" list-name="partyRoleAndPartyDetailList" use-cache="true">
                     <condition-expr field-name="roleTypeId" value="PICKER"/>
                 </entity-condition>
-
                 <entity-condition entity-name="Picklist" list-name="picklistActiveList">
                     <condition-list combine="and">
                         <condition-expr field-name="facilityId" operator="equals" env-name="parameters.facilityId"/>
@@ -128,6 +136,55 @@
                         </platform-specific>
                     </decorator-section>
                 </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="PickMoveStock">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitlePickingMoveStock"/>
+                <set field="headerItem" value="facility"/>
+                <set field="tabButtonItem" value="PicklistOptions"/>
+
+                <set field="facilityId" from-field="parameters.facilityId"/>
+                <service service-name="findStockMovesNeeded">
+                    <field-map env-name="facilityId"/>
+                </service>
+                <set field="oiirWarningMessageList" from-field="warningMessageList"/>
+                <service service-name="findStockMovesRecommended">
+                    <field-map env-name="facilityId"/>
+                    <field-map env-name="stockMoveHandled"/>
+                </service>
+                <set field="pflWarningMessageList" from-field="warningMessageList"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonFacilityDecorator">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <html><html-template location="component://product/webapp/facility/facility/PickMoveStock.ftl"/></html>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="PicklistReport.fo">
+        <section>
+            <actions>
+                <!-- base/top/specific map first, then more common map added for shared labels --> 
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+
+                <set field="picklistId" from-field="parameters.picklistId"/>
+                <service service-name="getPickAndPackReportInfo">
+                    <field-map env-name="picklistId"/>
+                </service>
+            </actions>
+            <widgets>
+                <platform-specific>
+                    <html><html-template location="component://product/webapp/facility/facility/Picklist.fo.ftl"/></html>
+                </platform-specific>
             </widgets>
         </section>
     </screen>

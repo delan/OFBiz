@@ -25,12 +25,6 @@
  *@since          3.0
 -->
 
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
-
-<#if security.hasEntityPermission("FACILITY", "_VIEW", session)>
-
-${pages.get("/facility/FacilityTabBar.ftl")}
-
 <div class="screenlet">
     <div class="screenlet-header">
         <div class="simple-right-half">
@@ -127,7 +121,3 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
         </form>
     </div>
 </div>
-
-<#else>
-    <h3>${uiLabelMap.ProductFacilityViewPermissionError}</h3>
-</#if>
