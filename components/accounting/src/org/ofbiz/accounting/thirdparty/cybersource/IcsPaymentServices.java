@@ -1,5 +1,5 @@
 /*
- * $Id: IcsPaymentServices.java,v 1.4 2003/11/03 18:04:40 ajzeneski Exp $
+ * $Id: IcsPaymentServices.java,v 1.5 2003/11/28 18:01:19 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -31,10 +31,7 @@ import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.GenericEntityException;
-import org.ofbiz.base.util.UtilProperties;
-import org.ofbiz.base.util.StringUtil;
-import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.SSLUtil;
+import org.ofbiz.base.util.*;
 import org.ofbiz.accounting.payment.PaymentGatewayServices;
 
 import com.cybersource.ws.client.axis.basic.Client;
@@ -45,7 +42,7 @@ import com.cybersource.ws.client.axis.AxisFaultException;
  * CyberSource WS Integration Services
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      3.0
  */
 public class IcsPaymentServices {
@@ -211,7 +208,8 @@ public class IcsPaymentServices {
 
         String keysPath = UtilProperties.getPropertyValue(configString, "payment.cybersource.keysDir");
         String keysFile = UtilProperties.getPropertyValue(configString, "payment.cybersource.keysFile");
-        String demo = UtilProperties.getPropertyValue(configString, "payment.cybersource.demo", "false");
+        String demo = UtilProperties.getPropertyValue(configString, "payment.cybersource.demo", "N");
+        demo = "Y".equalsIgnoreCase(demo) ? "true" : "false";
 
         // create some properties for CS Client
         Properties props = new Properties();
@@ -236,6 +234,7 @@ public class IcsPaymentServices {
         request.put("merchantReferenceCode", orderId);         // set the order ref number
         appendFullBillingInfo(request, context);               // add in all address info
         appendItemLineInfo(request, context, "processAmount"); // add in the item info
+        appendAvsRules(request, context);                      // add in the AVS flags and decline codes
         return request;
     }
 
@@ -317,6 +316,40 @@ public class IcsPaymentServices {
         appendFullBillingInfo(request, context);               // add in all address info
         appendItemLineInfo(request, context, "creditAmount");  // add in the item info
         return request;
+    }
+
+    private static void appendAvsRules(Map request, Map context) {
+        String configString = (String) context.get("paymentConfig");
+        if (configString == null) {
+            configString = "payment.properties";
+        }
+        String avsCodes = UtilProperties.getPropertyValue(configString, "payment.cybersource.avsDeclineCodes", null);
+
+        GenericValue person = (GenericValue) context.get("contactPerson");
+        if (person != null) {
+            GenericValue avsOverride = null;
+
+            try {
+                avsOverride = person.getDelegator().findByPrimaryKey("PartyIcsAvsOverride",
+                        UtilMisc.toMap("partyId", person.getString("partyId")));
+            } catch (GenericEntityException e) {
+                Debug.logError(e, module);
+            }
+            if (avsOverride != null && avsOverride.get("avsDeclineString") != null) {
+                String overrideString = avsOverride.getString("avsDeclineString");
+                if (overrideString != null && overrideString.length() > 0) {
+                    avsCodes = overrideString;
+                }
+            }
+        }
+
+        if (avsCodes != null && avsCodes.length() > 0) {
+            request.put("businessRules_declineAVSFlags", avsCodes);
+        }
+
+        String avsIgnore = UtilProperties.getPropertyValue(configString, "payment.cybersource.avsDeclineCodes", "N");
+        avsIgnore = "Y".equalsIgnoreCase(avsIgnore) ? "true" : "false";
+        request.put("businessRules_ignoreAVS", avsIgnore);
     }
 
     private static void appendFullBillingInfo(Map request, Map context) {
