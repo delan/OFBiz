@@ -217,7 +217,7 @@
         <field name="productId" map-name="product"><hidden/></field>
         <field name="productContentTypeId" widget-style="selectBox">
             <drop-down>
-                <entity-options entity-name="ProductContentType" description="${description} [${productContentTypeId}]">
+                <entity-options entity-name="ProductContentType" description="${description}">
                     <entity-order-by field-name="description"/>
                 </entity-options>
             </drop-down>
@@ -237,7 +237,7 @@
         </field>
         <field name="productContentTypeId" widget-style="selectBox">
             <drop-down>
-                <entity-options entity-name="ProductContentType" description="${description} [${productContentTypeId}]">
+                <entity-options entity-name="ProductContentType" description="${description}">
                     <entity-order-by field-name="description"/>
                 </entity-options>
             </drop-down>
