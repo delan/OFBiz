@@ -1,5 +1,5 @@
 /*
- * $Id: PaymentGatewayServices.java,v 1.14 2003/10/22 23:03:39 ajzeneski Exp $
+ * $Id: PaymentGatewayServices.java,v 1.15 2003/10/25 20:52:35 ajzeneski Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -59,7 +59,7 @@ import org.ofbiz.service.ServiceUtil;
  * PaymentGatewayServices
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.14 $
+ * @version    $Revision: 1.15 $
  * @since      2.0
  */
 public class PaymentGatewayServices {
@@ -74,7 +74,7 @@ public class PaymentGatewayServices {
 
     /**
      * Processes payments through service calls to the defined processing service for the ProductStore/PaymentMethodType
-     * @returns APPROVED|FAILED|ERROR for complete processing of ALL payment methods.
+     * @return APPROVED|FAILED|ERROR for complete processing of ALL payment methods.
      */
     public static Map authOrderPayments(DispatchContext dctx, Map context) {
         GenericDelegator delegator = dctx.getDelegator();
@@ -520,7 +520,7 @@ public class PaymentGatewayServices {
 
     /**
      * Captures payments through service calls to the defined processing service for the ProductStore/PaymentMethodType
-     * @returns COMPLETE|FAILED|ERROR for complete processing of ALL payment methods.
+     * @return COMPLETE|FAILED|ERROR for complete processing of ALL payment methods.
      */
     public static Map capturePaymentsByInvoice(DispatchContext dctx, Map context) {
         GenericDelegator delegator = dctx.getDelegator();
