@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -159,18 +159,6 @@ public class GenericHelperDAO implements GenericHelper {
 
     /** Finds GenericValues by the conditions specified in the EntityCondition object, the the EntityCondition javadoc for more details.
      *@param modelEntity The ModelEntity of the Entity as defined in the entity XML file
-     *@param entityCondition The EntityCondition object that specifies how to constrain this query
-     *@param fieldsToSelect The fields of the named entity to get from the database; if empty or null all fields will be retreived
-     *@param orderBy The fields of the named entity to order the query by; optionally add a " ASC" for ascending or " DESC" for descending
-     *@return List of GenericValue objects representing the result
-     */
-    public List findByCondition(ModelEntity modelEntity, EntityCondition entityCondition,
-        Collection fieldsToSelect, List orderBy) throws GenericEntityException {
-        return genericDAO.selectByCondition(modelEntity, entityCondition, fieldsToSelect, orderBy);
-    }
-
-    /** Finds GenericValues by the conditions specified in the EntityCondition object, the the EntityCondition javadoc for more details.
-     *@param modelEntity The ModelEntity of the Entity as defined in the entity XML file
      *@param whereEntityCondition The EntityCondition object that specifies how to constrain this query before any groupings are done (if this is a view entity with group-by aliases)
      *@param havingEntityCondition The EntityCondition object that specifies how to constrain this query after any groupings are done (if this is a view entity with group-by aliases)
      *@param fieldsToSelect The fields of the named entity to get from the database; if empty or null all fields will be retreived
@@ -182,8 +170,7 @@ public class GenericHelperDAO implements GenericHelper {
     public EntityListIterator findListIteratorByCondition(ModelEntity modelEntity, EntityCondition whereEntityCondition,
         EntityCondition havingEntityCondition, Collection fieldsToSelect, List orderBy, EntityFindOptions findOptions)
         throws GenericEntityException {
-        return genericDAO.selectListIteratorByCondition(modelEntity, whereEntityCondition, havingEntityCondition, fieldsToSelect,
-                orderBy, findOptions);
+        return genericDAO.selectListIteratorByCondition(modelEntity, whereEntityCondition, havingEntityCondition, fieldsToSelect, orderBy, findOptions);
     }
 
     public List findByMultiRelation(GenericValue value, ModelRelation modelRelationOne, ModelEntity modelEntityOne,

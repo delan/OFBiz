@@ -101,16 +101,6 @@ public interface GenericHelper {
      */
     public List findByOr(ModelEntity modelEntity, Map fields, List orderBy) throws GenericEntityException;
 
-    /** Finds GenericValues by the conditions specified in the EntityCondition object, the the EntityCondition javadoc for more details.
-     *@param modelEntity The ModelEntity of the Entity as defined in the entity XML file
-     *@param entityCondition The EntityCondition object that specifies how to constrain this query
-     *@param fieldsToSelect The fields of the named entity to get from the database; if empty or null all fields will be retreived
-     *@param orderBy The fields of the named entity to order the query by; optionally add a " ASC" for ascending or " DESC" for descending
-     *@return List of GenericValue objects representing the result
-     */
-    public List findByCondition(ModelEntity modelEntity, EntityCondition entityCondition,
-        Collection fieldsToSelect, List orderBy) throws GenericEntityException;
-
     public List findByMultiRelation(GenericValue value, ModelRelation modelRelationOne, ModelEntity modelEntityOne,
         ModelRelation modelRelationTwo, ModelEntity modelEntityTwo, List orderBy) throws GenericEntityException;
 
