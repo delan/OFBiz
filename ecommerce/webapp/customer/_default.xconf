@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <page>
-    <template>/templates/main_lr.ftl</template>
+    <template>/templates/main.ftl</template>
     <property name="title">Welcome</property>
 
-    <generator name="jsp" />
+    <generator name="ofbiz-freemarker" />
     <pageEditor>OfbizOrderEditor</pageEditor>
 </page>
