@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -22,9 +22,7 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-
 package org.ofbiz.core.security;
-
 
 import java.util.*;
 import javax.servlet.http.*;
@@ -33,14 +31,13 @@ import javax.servlet.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.entity.*;
 
-
 /**
  * Security handler: This class is an abstract implementation for all commononly used security aspects.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:hermanns@aixcept.de">Rainer Hermanns</a>
- * @created    May 21, 2001
- * @version    1.0
+ * @version    $Revision$
+ * @since      2.0
  */
 public abstract class Security {
 
