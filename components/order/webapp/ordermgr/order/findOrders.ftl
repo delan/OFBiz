@@ -20,26 +20,30 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.5 $
+ *@version    $Revision: 1.6 $
  *@since      2.2
 -->
 
 <script language="JavaScript">
 <!-- //
-function lookupOrders() {
+function lookupOrders(click) {
     orderIdValue = document.lookuporder.order_id.value;
     if (orderIdValue.length > 1) {
         document.lookuporder.action = "<@ofbizUrl>/orderview</@ofbizUrl>";
     } else {
         document.lookuporder.action = "<@ofbizUrl>/findorders</@ofbizUrl>";
     }
-    document.lookuporder.submit();
+
+    if (click) {
+        document.lookuporder.submit();
+    }
+    return true;
 }
 // -->
 </script>
 
 <#if security.hasEntityPermission("ORDERMGR", "_VIEW", session)>
-<form method='post' name="lookuporder" action="<@ofbizUrl>/findorders</@ofbizUrl>">
+<form method='post' name="lookuporder" action="<@ofbizUrl>/findorders</@ofbizUrl>" onsubmit="javascript:lookupOrders();">
 <input type='hidden' name='lookupFlag' value='Y'>
 <input type='hidden' name='hideFields' value='Y'>
 <table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
@@ -54,7 +58,7 @@ function lookupOrders() {
                 <a href="<@ofbizUrl>/findorders?hideFields=N${paramList}</@ofbizUrl>" class="submenutextright">Show Lookup Fields</a>
               <#else>
                 <#if orderHeaderList?exists><a href="<@ofbizUrl>/findorders?hideFields=Y${paramList}</@ofbizUrl>" class="submenutext">Hide Fields</a></#if>
-                <a href="javascript:lookupOrders();" class="submenutext">Lookup Order(s)</a>
+                <a href="javascript:void();" onclick="javascript:lookupOrders(true);" class="submenutext">Lookup Order(s)</a>
                 <a href="/partymgr/control/findparty?externalLoginKey=${requestAttributes.externalLoginKey?if_exists}" class="submenutextright">Lookup Party</a>
               </#if>
             </div>
@@ -213,7 +217,7 @@ function lookupOrders() {
     </td>
   </tr>
 </table>
-<input type="image" src="/images/spacer.gif" onClick="javascript:lookupOrders();">
+<input type="image" src="/images/spacer.gif" onClick="javascript:lookupOrders(true);">
 </form>
 <script language="JavaScript">
 <!--//
