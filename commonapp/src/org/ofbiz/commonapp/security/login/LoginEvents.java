@@ -171,6 +171,7 @@ public class LoginEvents {
             GenericValue userLogin = (GenericValue) result.get("userLogin");
             if (userLogin != null) {
                 session.setAttribute(SiteDefs.USER_LOGIN, userLogin);
+                //let the visit know who the user is
                 VisitHandler.setUserLogin(session, userLogin, false);
             }
         } else {
@@ -181,6 +182,7 @@ public class LoginEvents {
         }
         
         request.setAttribute(SiteDefs.LOGIN_PASSED, "TRUE");
+        //make sure the autoUserLogin is set to the same and that the client cookie has the correct userLoginId
         return autoLoginSet(request, response);
     }
     
@@ -196,10 +198,11 @@ public class LoginEvents {
     public static String logout(HttpServletRequest request, HttpServletResponse response) throws java.io.IOException {
         //invalidate the security group list cache
         GenericValue userLogin = (GenericValue) request.getSession().getAttribute(SiteDefs.USER_LOGIN);
-        Security sec = (Security)request.getAttribute("security");
+        Security security = (Security)request.getAttribute("security");
         
-        if(sec != null && userLogin != null)
-            sec.userLoginSecurityGroupByUserLoginId.remove(userLogin.getString("userLoginId"));
+        if(security != null && userLogin != null) {
+            security.userLoginSecurityGroupByUserLoginId.remove(userLogin.getString("userLoginId"));
+        }
         
         //this is a setting we don't want to lose, although it would be good to have a more general solution here...
         String currCatalog = (String) request.getSession().getAttribute("CURRENT_CATALOG_ID");
@@ -208,8 +211,9 @@ public class LoginEvents {
         if(currCatalog != null) {
             request.getSession().setAttribute("CURRENT_CATALOG_ID", currCatalog);
         }
-        if (request.getAttribute("_AUTO_LOGIN_LOGOUT_") == null)
+        if (request.getAttribute("_AUTO_LOGIN_LOGOUT_") == null) {
             return autoLoginCheck(request, response);
+        }
         return "success";
     }
     
@@ -412,21 +416,29 @@ public class LoginEvents {
         }
         return "success";
     }
-
-    public static String autoLoginCheck(HttpServletRequest request, HttpServletResponse response) {
-        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
-        HttpSession session = request.getSession();
+    
+    protected static String getAutoLoginCookieName(HttpServletRequest request) {
+        return UtilMisc.getApplicationName(request) + ".autoUserLoginId";
+    }
+    
+    public static String getAutoUserLoginId(HttpServletRequest request) {
         String autoUserLoginId = null;
-        Cookie[] cookie = request.getCookies();
-        if (cookie != null) {
-            for (int i = 0; i < cookie.length; i++) {
-                if (cookie[i].getName().equals("autoUserLoginId")) {
-                    autoUserLoginId = cookie[i].getValue();
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (int i = 0; i < cookies.length; i++) {
+                if (cookies[i].getName().equals(getAutoLoginCookieName(request))) {
+                    autoUserLoginId = cookies[i].getValue();
                     break;
                 }
             }
         }
-        return autoLoginCheck(delegator, session, autoUserLoginId);
+        return autoUserLoginId;
+    }
+
+    public static String autoLoginCheck(HttpServletRequest request, HttpServletResponse response) {
+        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
+        HttpSession session = request.getSession();
+        return autoLoginCheck(delegator, session, getAutoUserLoginId(request));
     }
 
     private static String autoLoginCheck(GenericDelegator delegator, HttpSession session, String autoUserLoginId) {
@@ -438,10 +450,11 @@ public class LoginEvents {
                 GenericValue group = delegator.findByPrimaryKey("PartyGroup", UtilMisc.toMap("partyId", autoUserLogin.getString("partyId")));
 
                 session.setAttribute("autoUserLogin", autoUserLogin);
-                if (person != null)
-                    session.setAttribute("autoName", person.getString("firstName"));
-                else if (group != null)
+                if (person != null) {
+                    session.setAttribute("autoName", person.getString("firstName") + " " + person.getString("lastName"));
+                } else if (group != null) {
                     session.setAttribute("autoName", group.getString("groupName"));
+                }
             } catch (GenericEntityException e) {
                 Debug.logError(e, "Cannot get autoUserLogin information: " + e.getMessage());
             }
@@ -453,7 +466,7 @@ public class LoginEvents {
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
         HttpSession session = request.getSession();
         GenericValue userLogin = (GenericValue) session.getAttribute(SiteDefs.USER_LOGIN);
-        Cookie autoLoginCookie = new Cookie("autoUserLoginId", userLogin.getString("userLoginId"));
+        Cookie autoLoginCookie = new Cookie(getAutoLoginCookieName(request), userLogin.getString("userLoginId"));
         autoLoginCookie.setMaxAge(60*60*24*365);
         response.addCookie(autoLoginCookie);
         return autoLoginCheck(delegator, session, userLogin.getString("userLoginId"));
@@ -464,7 +477,7 @@ public class LoginEvents {
         GenericValue userLogin = (GenericValue) session.getAttribute("autoUserLogin");
         // remove the cookie
         if (userLogin != null) {
-            Cookie autoLoginCookie = new Cookie("autoUserLoginId", userLogin.getString("userLoginId"));
+            Cookie autoLoginCookie = new Cookie(getAutoLoginCookieName(request), userLogin.getString("userLoginId"));
             autoLoginCookie.setMaxAge(0);
             response.addCookie(autoLoginCookie);
         }
@@ -478,5 +491,4 @@ public class LoginEvents {
         }
         return "success";
     }
-
 }
