@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-<!--  $Id: config_deploy_maint.html,v 1.3 2004/04/25 14:12:30 dengkane Exp $ -->
+<!--  $Id: config_deploy_maint.html,v 1.4 2004/04/28 11:11:08 dengkane Exp $ -->
   <title>The Open For Business Project: General Setup</title>
 </head>
 <body>
@@ -669,6 +669,54 @@ file, current settings are as follows:<br>
 <pre>owner.content.id=CONTENT_ROOT<br>img.request=/content/control/img/<br>img.request.param.name=imgId<br>#baseUrl=http://localhost:8080<br>disable.ftl.template.cache=true<br>permissionRecorderOn=true<br></pre>
 <br>
 You can modify these settings according to your needs.<br>
+<br>
+<br>
+<span style="font-weight: bold;">Cache Settings &amp; Analysis</span><br>
+<br>
+<span style="font-weight: bold;">cache.properties</span><br>
+<br>
+Cache handling is very important for software production running
+environments. <br>
+<br>
+The cache.properties file contains cache setting used by UtilCache
+class. Default cache parameters can be passed in when a cache is
+created but if cache parameters exist in this file for the given cache
+name then they will be loaded from the cache.properties file.<br>
+<br>
+There are three optional properties in this file for each named cache:
+{cache-name}.maxSize (whole number), {cache-name}.expireTime (whole
+number) and {cache-name}.useSoftReference (true of false). The maxSize
+property specifies the maximum number of entries in the cache, but does
+nothing with respect to the size of each cache entry. The expireTime
+property specifies how long in milliseconds each cache entry will be
+valid. If either value is 0 the feature will be disabled, i.e.
+unlimited cache size or no expire time.<br>
+<br>
+The useSoftReference property is used to specify, true or false,
+whether soft references should be used for cache entries.Soft
+references help keep large caches from taking too much memory by
+allowing the garbage collector to clear these entries when more memory
+is needed.<br>
+<br>
+If the values are not specified and are not passed to the UtilCache
+constructor, the values in the default.maxSize, default.expireTime and
+default.useSoftReference properties will be used.<br>
+<br>
+There are some development mode cache settings...<br>
+<br>
+<pre># Development Mode - comment to cache BSH scripts, etc<br>minilang.SimpleMethodsDirect.expireTime=1<br>minilang.SimpleMethodsResource.expireTime=1<br>minilang.SimpleMethodsURL.expireTime=1<br>script.BshBsfParsedCache.expireTime=1<br>webapp.BsfEvents.expireTime=1<br>webapp.JasperReportsCompiled.expireTime=1<br>widget.form.webappResource.expireTime=1<br></pre>
+<br>
+<br>
+These settings are used to help you develop applications. OFBiz will
+reload BSH scripts or other resources every time you use in your
+applications if you set as above, it can avoid restarting OFBiz every
+time you modified a BSH or other scripts, save your time.You should
+comment the above lines if you want to run OFBiz applications under
+production environments. <br>
+<br>
+<br>
+<span style="font-weight: bold;">WebTools Cache UI</span><br>
+<br>
 <br>
 <hr style="width: 100%; height: 2px;">
 <h3><a name="Restarting_versus_Run-time_Changable"></a>Restarting
