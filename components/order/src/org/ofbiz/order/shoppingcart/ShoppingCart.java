@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCart.java,v 1.24 2003/11/21 06:18:59 ajzeneski Exp $
+ * $Id: ShoppingCart.java,v 1.25 2003/11/21 19:08:10 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -42,7 +42,7 @@ import org.ofbiz.service.LocalDispatcher;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.24 $
+ * @version    $Revision: 1.25 $
  * @since      2.0
  */
 public class ShoppingCart implements java.io.Serializable {
@@ -1323,18 +1323,20 @@ public class ShoppingCart implements java.io.Serializable {
         while (itemIter.hasNext()) {
             ShoppingCartItem item = (ShoppingCartItem) itemIter.next();
             List responses = (List) item.getAttribute("surveyResponses");
-            Iterator ri = responses.iterator();
-            while (ri.hasNext()) {
-                String responseId = (String) ri.next();
-                GenericValue response = null;
-                try {
-                    response = delegator.findByPrimaryKey("SurveyResponse", UtilMisc.toMap("surveyResponseId", responseId));
-                } catch (GenericEntityException e) {
-                    Debug.logError(e, "Unable to obtain SurveyResponse record for ID : " + responseId, module);
-                }
-                if (response != null) {
-                    response.set("orderItemSeqId", item.getOrderItemSeqId());
-                    allInfos.add(response);
+            if (responses != null) {
+                Iterator ri = responses.iterator();
+                while (ri.hasNext()) {
+                    String responseId = (String) ri.next();
+                    GenericValue response = null;
+                    try {
+                        response = delegator.findByPrimaryKey("SurveyResponse", UtilMisc.toMap("surveyResponseId", responseId));
+                    } catch (GenericEntityException e) {
+                        Debug.logError(e, "Unable to obtain SurveyResponse record for ID : " + responseId, module);
+                    }
+                    if (response != null) {
+                        response.set("orderItemSeqId", item.getOrderItemSeqId());
+                        allInfos.add(response);
+                    }
                 }
             }
         }

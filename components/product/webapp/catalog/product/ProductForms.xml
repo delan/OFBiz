@@ -91,7 +91,7 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field position="1" name="height"><text size="10" maxlength="20"/></field>
+        <field position="1" title="Height" name="productHeight"><text size="10" maxlength="20"/></field>
         <field position="2" name="heightUomId">
             <drop-down allow-empty="true">
                 <entity-options entity-name="Uom" key-field-name="uomId" description="${description} [${abbreviation}]">
@@ -100,7 +100,7 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field position="1" name="width"><text size="10" maxlength="20"/></field>
+        <field position="1" title="Width" name="productWidth"><text size="10" maxlength="20"/></field>
         <field position="2" name="widthUomId">
             <drop-down allow-empty="true">
                 <entity-options entity-name="Uom" key-field-name="uomId" description="${description} [${abbreviation}]">
@@ -109,7 +109,7 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field position="1" name="depth"><text size="10" maxlength="20"/></field>
+        <field position="1" title="Depth" name="productDepth"><text size="10" maxlength="20"/></field>
         <field position="2" name="depthUomId">
             <drop-down allow-empty="true">
                 <entity-options entity-name="Uom" key-field-name="uomId" description="${description} [${abbreviation}]">
