@@ -23,7 +23,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
  *  OFBiz Containers
- *  $Id: install-containers.xml,v 1.2 2004/06/25 21:52:42 ajzeneski Exp $
+ *  $Id: install-containers.xml,v 1.3 2004/06/25 22:06:19 ajzeneski Exp $
 -->
 
 <ofbiz-containers>
@@ -35,19 +35,7 @@
 
     <!-- load JNDI/JOTM -->
     <container name="jotm-container" class="org.ofbiz.jotm.container.JotmContainer"/>
-
-    <!-- RMI Service Dispatcher -->
-    <!--
-    <container name="rmi-dispatcher" class="org.ofbiz.service.rmi.RmiServiceContainer">
-        <property name="bound-name" value="RMIDispatcher"/>
-        <property name="bound-host" value="127.0.0.1"/>
-        <property name="bound-port" value="1099"/>
-        <property name="delegator-name" value="default"/>
-        <property name="client-factory" value="org.ofbiz.service.rmi.socket.CompressionClientSocketFactory"/>
-        <property name="server-factory" value="org.ofbiz.service.rmi.socket.CompressionServerSocketFactory"/>
-    </container>
-    -->
-    
+        
     <!-- load the data load container, runs the entity data load stuff -->
     <container name="dataload-container" class="org.ofbiz.entityext.data.EntityDataLoadContainer">
         <property name="delegator-name" value="default"/>
