@@ -915,6 +915,8 @@
       <field name="availableToPromiseDiff" type="floating-point"></field>
       <field name="orderId" type="id"></field>
       <field name="orderItemSeqId" type="id"></field>
+      <field name="shipmentId" type="id"></field>
+      <field name="shipmentItemSeqId" type="id"></field>
       <field name="workEffortId" type="id"></field>
       <field name="itemIssuanceId" type="id"></field>
       <field name="receiptId" type="id"></field>
