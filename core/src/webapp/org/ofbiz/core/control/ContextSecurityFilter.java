@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2001/11/14 03:47:55  azeneski
+ * Updated filter to use StringUtil.split
+ *
  * Revision 1.2  2001/11/14 03:11:59  azeneski
  * Filter now allows for /path or /path/subdir/file.jsp or /path/subdir/*
  *
@@ -75,7 +78,9 @@ public class ContextSecurityFilter implements Filter {
         }
         
         String requestInfo = httpRequest.getServletPath();
-        requestInfo = requestInfo.substring(0,requestInfo.lastIndexOf("/")) + "/*";
+        if(requestInfo.lastIndexOf("/") >= 0) {
+          requestInfo = requestInfo.substring(0,requestInfo.lastIndexOf("/")) + "/*";
+        }
         
         StringBuffer contextUriBuffer = new StringBuffer();
         if ( httpRequest.getContextPath() != null )
