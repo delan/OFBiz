@@ -53,6 +53,7 @@
 <a href="<ofbiz:url>/EditProductPromo</ofbiz:url>" class="buttontext">[New ProductPromo]</a>
 <%if(productPromoId != null && productPromoId.length() > 0){%>
   <a href="<ofbiz:url>/EditProductPromo?productPromoId=<%=productPromoId%></ofbiz:url>" class="buttontextdisabled">[Promo]</a>
+  <a href="<ofbiz:url>/EditProductPromoRules?productPromoId=<%=productPromoId%></ofbiz:url>" class="buttontext">[Rules]</a>
   <a href="<ofbiz:url>/EditProductPromoCatalogs?productPromoId=<%=productPromoId%></ofbiz:url>" class="buttontext">[Catalogs]</a>
 <%}%>
 <div class="head1">Edit ProductPromo with ID "<%=UtilFormatOut.checkNull(productPromoId)%>"</div>

@@ -38,51 +38,50 @@
     boolean tryEntity = true;
     if (request.getAttribute(SiteDefs.ERROR_MESSAGE) != null) tryEntity = false;
 
-    String prodCatalogId = request.getParameter("prodCatalogId");
-    GenericValue prodCatalog = delegator.findByPrimaryKey("ProdCatalog", UtilMisc.toMap("prodCatalogId", prodCatalogId));
-    if (prodCatalog == null) tryEntity = false;
-    Collection prodCatalogPromoAppls = prodCatalog.getRelated("ProdCatalogPromoAppl", null, UtilMisc.toList("sequenceNum", "productPromoId"));
+    String productPromoId = request.getParameter("productPromoId");
+    GenericValue productPromo = delegator.findByPrimaryKey("ProductPromo", UtilMisc.toMap("productPromoId", productPromoId));
+    if (productPromo == null) tryEntity = false;
+    Collection prodCatalogPromoAppls = productPromo.getRelated("ProdCatalogPromoAppl", null, UtilMisc.toList("sequenceNum", "productPromoId"));
     if (prodCatalogPromoAppls != null) pageContext.setAttribute("prodCatalogPromoAppls", prodCatalogPromoAppls);
 
-    Collection productPromos = delegator.findAll("ProductPromo", UtilMisc.toList("promoName"));
-    if (productPromos != null) pageContext.setAttribute("productPromos", productPromos);
+    Collection prodCatalogs = delegator.findAll("ProdCatalog", UtilMisc.toList("catalogName"));
+    if (prodCatalogs != null) pageContext.setAttribute("prodCatalogs", prodCatalogs);
 
     if ("true".equalsIgnoreCase((String)request.getParameter("tryEntity"))) tryEntity = true;
 %>
 <br>
 
-<a href="<ofbiz:url>/EditProdCatalog</ofbiz:url>" class="buttontext">[New ProdCatalog]</a>
-<%if(prodCatalogId != null && prodCatalogId.length() > 0){%>
-  <a href="<ofbiz:url>/EditProdCatalog?prodCatalogId=<%=prodCatalogId%></ofbiz:url>" class="buttontext">[Catalog]</a>
-  <a href="<ofbiz:url>/EditProdCatalogWebSites?prodCatalogId=<%=prodCatalogId%></ofbiz:url>" class="buttontext">[WebSites]</a>
-  <a href="<ofbiz:url>/EditProdCatalogCategories?prodCatalogId=<%=prodCatalogId%></ofbiz:url>" class="buttontext">[Categories]</a>
-  <a href="<ofbiz:url>/EditProdCatalogPromos?prodCatalogId=<%=prodCatalogId%></ofbiz:url>" class="buttontextdisabled">[Promotions]</a>
+<a href="<ofbiz:url>/EditProductPromo</ofbiz:url>" class="buttontext">[New ProductPromo]</a>
+<%if(productPromoId != null && productPromoId.length() > 0){%>
+  <a href="<ofbiz:url>/EditProductPromo?productPromoId=<%=productPromoId%></ofbiz:url>" class="buttontext">[Promo]</a>
+  <a href="<ofbiz:url>/EditProductPromoRules?productPromoId=<%=productPromoId%></ofbiz:url>" class="buttontext">[Rules]</a>
+  <a href="<ofbiz:url>/EditProductPromoCatalogs?productPromoId=<%=productPromoId%></ofbiz:url>" class="buttontextdisabled">[Catalogs]</a>
 <%}%>
 
-<div class="head1">Promotions for Product Catalog
-  <%=UtilFormatOut.ifNotEmpty(prodCatalog==null?null:prodCatalog.getString("catalogName"),"\"","\"")%> 
-  with ID "<%=UtilFormatOut.checkNull(prodCatalogId)%>"</div>
+<div class="head1">Product Catalogs for Promotion
+  <%=UtilFormatOut.ifNotEmpty(productPromo==null?null:productPromo.getString("promoName"),"\"","\"")%> 
+  with ID "<%=UtilFormatOut.checkNull(productPromoId)%>"</div>
 
 <br>
 <br>
-<%if(prodCatalogId!=null && prodCatalog!=null){%>
+<%if(productPromoId!=null && productPromo!=null){%>
 
 <table border="1" width="100%" cellpadding='2' cellspacing='0'>
   <tr>
-    <td><div class="tabletext"><b>Promo&nbsp;ID</b></div></td>
-    <td><div class="tabletext"><b>Promo&nbsp;Name</b></div></td>
+    <td><div class="tabletext"><b>Catalog ID</b></div></td>
+    <td><div class="tabletext"><b>Catalog Name</b></div></td>
     <td><div class="tabletext"><b>From&nbsp;Date&nbsp;&amp;&nbsp;Time</b></div></td>
     <td align="center"><div class="tabletext"><b>Thru&nbsp;Date&nbsp;&amp;&nbsp;Time,&nbsp;Sequence</b></div></td>
     <td><div class="tabletext"><b>&nbsp;</b></div></td>
   </tr>
 <ofbiz:iterator name="prodCatalogPromoAppl" property="prodCatalogPromoAppls">
-  <%GenericValue productPromo = prodCatalogPromoAppl.getRelatedOne("ProductPromo");%>
+  <%GenericValue prodCatalog = prodCatalogPromoAppl.getRelatedOne("ProdCatalog");%>
   <tr valign="middle">
-    <td><a href='<ofbiz:url>/EditProductPromo?productPromoId=<ofbiz:inputvalue entityAttr="prodCatalogPromoAppl" field="productPromoId"/></ofbiz:url>' class="buttontext"><ofbiz:inputvalue entityAttr="prodCatalogPromoAppl" field="productPromoId"/></a></td>
-    <td><%if (productPromo!=null) {%><a href='<ofbiz:url>/EditProductPromo?productPromoId=<ofbiz:inputvalue entityAttr="prodCatalogPromoAppl" field="productPromoId"/></ofbiz:url>' class="buttontext"><%=productPromo.getString("promoName")%></a><%}%>&nbsp;</td>
+    <td><a href='<ofbiz:url>/EditProdCatalog?prodCatalogId=<ofbiz:inputvalue entityAttr="prodCatalogPromoAppl" field="prodCatalogId"/></ofbiz:url>' class="buttontext"><ofbiz:inputvalue entityAttr="prodCatalogPromoAppl" field="prodCatalogId"/></a></td>
+    <td><%if (productPromo!=null) {%><a href='<ofbiz:url>/EditProdCatalog?prodCatalogId=<ofbiz:inputvalue entityAttr="prodCatalogPromoAppl" field="prodCatalogId"/></ofbiz:url>' class="buttontext"><%=prodCatalog.getString("catalogName")%></a><%}%>&nbsp;</td>
     <td><div class='tabletext'><ofbiz:inputvalue entityAttr="prodCatalogPromoAppl" field="fromDate"/></div></td>
     <td align="center">
-        <FORM method=POST action='<ofbiz:url>/updateProductPromoToProdCatalog</ofbiz:url>'>
+        <FORM method=POST action='<ofbiz:url>/promo_updateProductPromoToProdCatalog</ofbiz:url>'>
             <input type=hidden <ofbiz:inputvalue entityAttr="prodCatalogPromoAppl" field="prodCatalogId" fullattrs="true"/>>
             <input type=hidden <ofbiz:inputvalue entityAttr="prodCatalogPromoAppl" field="productPromoId" fullattrs="true"/>>
             <input type=hidden <ofbiz:inputvalue entityAttr="prodCatalogPromoAppl" field="fromDate" fullattrs="true"/>>
@@ -92,22 +91,22 @@
         </FORM>
     </td>
     <td align="center">
-      <a href='<ofbiz:url>/removeProductPromoFromProdCatalog?prodCatalogId=<ofbiz:entityfield attribute="prodCatalogPromoAppl" field="prodCatalogId"/>&productPromoId=<ofbiz:entityfield attribute="prodCatalogPromoAppl" field="productPromoId"/>&fromDate=<%=UtilFormatOut.encodeQueryValue(prodCatalogPromoAppl.getTimestamp("fromDate").toString())%></ofbiz:url>' class="buttontext">
+      <a href='<ofbiz:url>/promo_removeProductPromoFromProdCatalog?prodCatalogId=<ofbiz:entityfield attribute="prodCatalogPromoAppl" field="prodCatalogId"/>&productPromoId=<ofbiz:entityfield attribute="prodCatalogPromoAppl" field="productPromoId"/>&fromDate=<%=UtilFormatOut.encodeQueryValue(prodCatalogPromoAppl.getTimestamp("fromDate").toString())%></ofbiz:url>' class="buttontext">
       [Delete]</a>
     </td>
   </tr>
 </ofbiz:iterator>
 </table>
 <br>
-<form method="POST" action="<ofbiz:url>/addProductPromoToProdCatalog</ofbiz:url>" style='margin: 0;'>
-  <input type="hidden" name="prodCatalogId" value="<%=prodCatalogId%>">
+<form method="POST" action="<ofbiz:url>/promo_addProductPromoToProdCatalog</ofbiz:url>" style='margin: 0;'>
+  <input type="hidden" name="productPromoId" value="<%=productPromoId%>">
   <input type="hidden" name="tryEntity" value="true">
 
-  <div class='head2'>Add Catalog Promo (select Promo, enter optional From Date):</div>
+  <div class='head2'>Add Catalog Promo (select Catalog, enter optional From Date):</div>
   <br>
-  <select name="productPromoId">
-  <ofbiz:iterator name="productPromo" property="productPromos">
-    <option value='<ofbiz:entityfield attribute="productPromo" field="productPromoId"/>'><ofbiz:entityfield attribute="productPromo" field="promoName"/> [<ofbiz:entityfield attribute="productPromo" field="productPromoId"/>]</option>
+  <select name="prodCatalogId">
+  <ofbiz:iterator name="prodCatalog" property="prodCatalogs">
+    <option value='<ofbiz:entityfield attribute="prodCatalog" field="prodCatalogId"/>'><ofbiz:entityfield attribute="prodCatalog" field="catalogName"/> [<ofbiz:entityfield attribute="prodCatalog" field="prodCatalogId"/>]</option>
   </ofbiz:iterator>
   </select>
   <input type=text size='20' name='fromDate'>

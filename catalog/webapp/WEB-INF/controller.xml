@@ -454,6 +454,27 @@
     	<response name="success" type="view" value="EditProductPromo"/>
     	<response name="error" type="view" value="EditProductPromo"/>
     </request-map>
+
+    <!-- ================ ProductPromo Catalogs Requests ================= -->
+    <request-map uri="EditProductPromoCatalogs"><security https="true" auth="true"/>
+    	<response name="success" type="view" value="EditProductPromoCatalogs"/>
+    </request-map>
+    <request-map uri="promo_addProductPromoToProdCatalog"><security https="true" auth="true"/>
+        <event type="service" path="" invoke="addProductPromoToProdCatalog"/>
+    	<response name="success" type="view" value="EditProductPromoCatalogs"/>
+    	<response name="error" type="view" value="EditProductPromoCatalogs"/>
+    </request-map>
+    <request-map uri="promo_updateProductPromoToProdCatalog"><security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateProductPromoToProdCatalog"/>
+    	<response name="success" type="view" value="EditProductPromoCatalogs"/>
+    	<response name="error" type="view" value="EditProductPromoCatalogs"/>
+    </request-map>
+    <request-map uri="promo_removeProductPromoFromProdCatalog"><security https="true" auth="true"/>
+        <event type="service" path="" invoke="removeProductPromoFromProdCatalog"/>
+    	<response name="success" type="view" value="EditProductPromoCatalogs"/>
+    	<response name="error" type="view" value="EditProductPromoCatalogs"/>
+    </request-map>
+
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
@@ -497,5 +518,6 @@
     
     <view-map name="FindProductPromo" type="region"/>
     <view-map name="EditProductPromo" type="region"/>
+    <view-map name="EditProductPromoCatalogs" type="region"/>
     <!-- end of view mappings -->
 </site-conf>
