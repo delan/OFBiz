@@ -66,9 +66,11 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
             throw new WfException(e.getMessage(),e);
         }
         
-        WfResource resource = WfFactory.newWfResource(performer);
-        WfAssignment assign = WfFactory.newWfAssignment(this,resource);
-        assignments.add(assign);
+        if ( performer != null ) {
+            WfResource resource = WfFactory.newWfResource(performer);
+            WfAssignment assign = WfFactory.newWfAssignment(this,resource);
+            assignments.add(assign);
+        }
     }
     
     /**
@@ -136,7 +138,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
      * @throws InvalidData Data is invalid
      */
     public void setResult(Map newResult) throws WfException, InvalidData {
-        result.putAll(newResult);
+        result.putAll(newResult);  // Add the result to the existing result or update existing keys
         try {
             GenericValue runtimeData = null;
             if ( dataObject.get("resultDataId") == null ) {
@@ -214,7 +216,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
         // implement me
     }
     
-    // Starts or activates this activity
+    // Starts or activates this automatic activity
     private void startActivity() throws WfException, CannotStart {
         try {
             changeState("open.running");
@@ -244,7 +246,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
             throw new WfException("Illegal activity type");
     }
     
-    // Runs a TOOL activity
+    // Runs a TOOL activity - there can be 0..n
     private void runTool() throws WfException {
         Collection tools = null;
         try {
@@ -254,7 +256,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
             throw new WfException(e.getMessage(),e);
         }
         if ( tools == null )
-            return;
+            this.complete();  // Null tools mean nothing to do (same as route?)
         
         List waiters = new ArrayList();
         Iterator i = tools.iterator();
@@ -266,9 +268,9 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
         }
         
         while ( waiters.size() > 0 ) {
-            i = waiters.iterator();
-            while ( i.hasNext() ) {
-                GenericResultWaiter thw = (GenericResultWaiter) i.next();
+            Iterator wi = waiters.iterator();
+            while ( wi.hasNext() ) {
+                GenericResultWaiter thw = (GenericResultWaiter) wi.next();
                 if ( thw.isCompleted() ) {
                     try {
                         this.setResult(thw.getResult());

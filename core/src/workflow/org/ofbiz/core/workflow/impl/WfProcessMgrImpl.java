@@ -40,9 +40,11 @@ import org.ofbiz.core.workflow.*;
 
 public class WfProcessMgrImpl implements WfProcessMgr {
     
-    protected GenericValue processDef;
+    protected GenericValue processDef;    
     protected String state;        // will probably move to a runtime entity for the manager
-    protected List processList; // will probably be a related entity to the runtime entity
+    protected List processList; // will probably be a related entity to the runtime entity    
+    protected Map contextSignature;
+    protected Map resultSignature;
     
     /** Creates new WfProcessMgrImpl
      * @param delegator The GenericDelegator to use for the process definitions.
@@ -62,7 +64,8 @@ public class WfProcessMgrImpl implements WfProcessMgr {
         catch ( GenericEntityException e ) {
             throw new WfException("Problems getting the process definition from the WorkflowProcess entity");
         }
-        
+                
+        buildSignatures();        
         processList = new ArrayList();
         state = "enabled";
     }
@@ -125,7 +128,7 @@ public class WfProcessMgrImpl implements WfProcessMgr {
      * @return
      */
     public Map contextSignature() throws WfException {
-        return new HashMap();
+        return this.contextSignature;
     }
     
     /**
@@ -182,7 +185,7 @@ public class WfProcessMgrImpl implements WfProcessMgr {
      * @return
      */
     public Map resultSignature() throws WfException {
-        return new HashMap();
+        return this.resultSignature;
     }
     
     /**
@@ -202,4 +205,45 @@ public class WfProcessMgrImpl implements WfProcessMgr {
         return processList.iterator();
     }
     
+    // Constructs the context/result signatures from the formalParameters
+    private void buildSignatures() throws WfException {
+        contextSignature = new HashMap();
+        resultSignature = new HashMap();
+        Collection params = null;
+        try {
+            params = processDef.getRelated("WorkflowFormalParamsView");
+        }
+        catch ( GenericEntityException e ) {
+            throw new WfException(e.getMessage(),e);
+        }
+        if ( params == null )
+            return;
+        
+        Iterator i = params.iterator();
+        while ( i.hasNext() ) {
+            GenericValue param = (GenericValue) i.next();
+            String name = param.getString("formalParamId");
+            String mode = param.getString("modeEnumId");
+            String type = param.getString("dataTypeEnumId");
+            if ( mode.equals("WPM_IN") || mode.equals("WPM_INOUT") )
+                contextSignature.put(name,getJavaType(type));
+            else if ( mode.equals("WPM_OUT") || mode.equals("WPM_INOUT") )
+                resultSignature.put(name,getJavaType(type));
+        }                                    
+    }
+     
+    // Gets the Java type from a XPDL datatype
+    private String getJavaType(String xpdlType) {
+        Map typeMap = new HashMap();
+        typeMap.put("WDT_BOOLEAN","java.lang.Boolean");
+        typeMap.put("WDT_STRING","java.lang.String");
+        typeMap.put("WDT_INTEGER","java.lang.Integer");
+        typeMap.put("WDT_FLOAT","java.lang.Double");
+        typeMap.put("WDT_DATETIME","java.sql.Timestamp");
+        typeMap.put("WDT_LIST","java.util.List");
+        if ( typeMap.containsKey(xpdlType) )
+            return (String) typeMap.get(xpdlType);
+        else
+            return "java.lang.Object";
+    }
 }
