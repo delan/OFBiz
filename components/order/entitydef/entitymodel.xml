@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.26 $
+ * @version    $Revision: 1.27 $
  */
 -->
 
@@ -44,6 +44,7 @@
   <!-- ======================== Data Model ===================== -->
   <!-- The modules in this file are as follows:                  -->
   <!--  - org.ofbiz.order.order -->
+  <!--  - org.ofbiz.order.picklist -->
   <!--  - org.ofbiz.order.quote -->
   <!--  - org.ofbiz.order.request -->
   <!--  - org.ofbiz.order.shoppingcart -->
@@ -1534,6 +1535,63 @@
       <prim-key field="city"/>
       <prim-key field="county"/>
       <prim-key field="fromDate"/>
+    </entity>
+
+  <!-- ========================================================= -->
+  <!-- org.ofbiz.order.picklist -->
+  <!-- ========================================================= -->
+
+    <entity entity-name="Picklist"
+            package-name="org.ofbiz.order.picklist"
+            title="Picklist Entity">
+      <field name="picklistId" type="id-ne"></field>
+      <field name="createdDate" type="date-time"></field>
+      <field name="description" type="description"></field>
+      <prim-key field="picklistId"/>
+    </entity>
+    <entity entity-name="PicklistBin"
+            package-name="org.ofbiz.order.picklist"
+            title="Picklist Entity">
+      <!-- The PicklistBin has its own ID to make it easy to put on the pack sheet of the picklist as a barcode, also so it can be moved to another picklist or bin location if necessary -->
+      <field name="picklistBinId" type="id-ne"></field>
+      <field name="picklistId" type="id-ne"></field>
+      <field name="binLocationNumber" type="numeric"></field>
+      <prim-key field="picklistBinId"/>
+      <relation type="one" fk-name="PCKLST_BIN_PKLT" rel-entity-name="Picklist">
+        <key-map field-name="picklistId"/>
+      </relation>
+    </entity>
+    <entity entity-name="PicklistItem"
+            package-name="org.ofbiz.order.picklist"
+            title="Picklist Entity">
+      <field name="picklistBinId" type="id-ne"></field>
+      <field name="orderId" type="id-ne"></field>
+      <field name="orderItemSeqId" type="id-ne"></field>
+      <field name="inventoryItemId" type="id-ne"></field>
+      <field name="quantity" type="floating-point"></field>
+      <prim-key field="picklistBinId"/>
+      <prim-key field="orderId"/>
+      <prim-key field="orderItemSeqId"/>
+      <prim-key field="inventoryItemId"/>
+      <relation type="one" fk-name="PCKLST_ITM_BIN" rel-entity-name="PicklistBin">
+        <key-map field-name="picklistBinId"/>
+      </relation>
+      <relation type="one" fk-name="PCKLST_ITM_ODIT" rel-entity-name="OrderItem">
+        <key-map field-name="orderId"/>
+        <key-map field-name="orderItemSeqId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="OrderHeader">
+        <key-map field-name="orderId"/>
+      </relation>
+      <relation type="one" fk-name="PCKLST_ITM_INV" rel-entity-name="InventoryItem">
+        <key-map field-name="inventoryItemId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="OrderItemInventoryRes">
+      	<!-- This is a nofk so that the OrderItemInventoryRes can be removed -->
+        <key-map field-name="orderId"/>
+        <key-map field-name="orderItemSeqId"/>
+        <key-map field-name="inventoryItemId"/>
+      </relation>
     </entity>
 
   <!-- ========================================================= -->
