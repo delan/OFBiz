@@ -1,5 +1,5 @@
 /*
- * $Id: JREntityListIteratorDataSource.java,v 1.2 2003/09/14 05:36:47 jonesde Exp $
+ * $Id: JREntityListIteratorDataSource.java,v 1.3 2004/05/21 06:39:09 jonesde Exp $
  *
  * Copyright (c) 2002-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -38,7 +38,7 @@ import dori.jasper.engine.JRField;
  * 
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author <a href="mailto:gielen@aixcept.de">Rene Gielen</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class JREntityListIteratorDataSource implements JRDataSource {
     
@@ -82,7 +82,11 @@ public class JREntityListIteratorDataSource implements JRDataSource {
             try {
                 value = this.currentEntity.get(jrField.getName());
             } catch (IllegalArgumentException e) {
-                throw new JRException("The specified field name [" + jrField.getName() + "] is not a valid field-name for the entity: " + this.currentEntity.getEntityName(), e);
+                try {
+                    value = this.currentEntity.get(org.ofbiz.entity.model.ModelUtil.dbNameToVarName(jrField.getName()));
+                }  catch (IllegalArgumentException ex) {
+                    throw new JRException("The specified field name [" + jrField.getName() + "] is not a valid field-name for the entity: " + this.currentEntity.getEntityName(), e);
+                }
             }
         }
         return value;
