@@ -244,7 +244,7 @@ public class RequestHandler implements Serializable {
         if (Debug.verboseOn()) Debug.logVerbose("[Response Qualified]: " + eventReturn, module);
 
         // Set the next view
-        if (eventReturn != null) nextView = eventReturn;
+        if (eventReturn != null && !"success".equals(eventReturnString)) nextView = eventReturn;
         if (Debug.verboseOn()) Debug.logVerbose("[Event Response Mapping]: " + nextView, module);
 
         // get the previous request info
