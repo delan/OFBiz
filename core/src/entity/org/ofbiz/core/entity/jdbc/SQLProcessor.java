@@ -162,7 +162,7 @@ public class SQLProcessor {
         if (_rs != null) {
             try {
                 _rs.close();
-                Debug.logVerbose("SQLProcessor: result close()", module);
+                Debug.logVerbose("SQLProcessor: result close() _manualTX=" + _manualTX, module);
             } catch (SQLException sqle) {
                 Debug.logWarning(sqle.getMessage(), module);
             }
@@ -173,7 +173,7 @@ public class SQLProcessor {
         if (_ps != null) {
             try {
                 _ps.close();
-                Debug.logVerbose("SQLProcessor: preparedStatement close()", module);
+                Debug.logVerbose("SQLProcessor: preparedStatement close() _manualTX=" + _manualTX, module);
             } catch (SQLException sqle) {
                 Debug.logWarning(sqle.getMessage(), module);
             }
@@ -184,7 +184,7 @@ public class SQLProcessor {
         if (_stmt != null) {
             try {
                 _stmt.close();
-                Debug.logVerbose("SQLProcessor: statement close()", module);
+                Debug.logVerbose("SQLProcessor: statement close() _manualTX=" + _manualTX, module);
             } catch (SQLException sqle) {
                 Debug.logWarning(sqle.getMessage(), module);
             }
@@ -195,7 +195,7 @@ public class SQLProcessor {
         if ((_connection != null) && (_bDeleteConnection == true)) {
             try {
                 _connection.close();
-                Debug.logVerbose("SQLProcessor: connection close()", module);
+                Debug.logVerbose("SQLProcessor: connection close() _manualTX=" + _manualTX, module);
             } catch (SQLException sqle) {
                 Debug.logWarning(sqle.getMessage(), module);
             }
