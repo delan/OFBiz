@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE simple-methods PUBLIC "-//OFBiz//DTD Simple Methods//EN" "http://www.ofbiz.org/dtds/simple-methods.dtd">
+
+<!--
+ *  Copyright (c) 2002 The Open For Business Project and repective authors.
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * @author    <a href="mailto:jaz@jflow.com">Andy Zeneski</a>
+ * @version   1.0
+ * Created    May 21, 2002
+ -->
+
+<simple-methods>
+    <simple-method method-name="tellAFriend" short-description="Tell A Friend" login-required="false">
+        <call-map-processor in-map-name="parameters" out-map-name="serviceContext">
+            <simple-map-processor name="tellAFriendEmail">
+                <process field="sendTo">
+                    <validate-method method="isEmail">
+                        <fail-message message="To E-mail address not formatted correctly, must be like: name@domain"/>
+                    </validate-method>
+                    <copy/>
+                </process>
+                <process field="sendFrom">
+                    <validate-method method="isEmail">
+                        <fail-message message="From E-mail address not formatted correctly, must be like: name@domain"/>
+                    </validate-method>
+                    <copy/>
+                </process>
+                <make-in-string field="subject"><constant>Check this out at some store</constant></make-in-string>
+                <make-in-string field="body">
+                    <constant><![CDATA[
+                    ]]></constant>
+                    <in-field field="comments"/>
+                    <constant><![CDATA[
+                    ]]></constant>
+                    <constant>http://change me/ecommerce/control/product?product_id=</constant>
+                    <in-field field="product_id"/>
+                </make-in-string>
+            </simple-map-processor>
+        </call-map-processor>
+        <webapp-property-to-field resource="ecommerce.properties" property="smtp.relay.host" map-name="serviceContext" field-name="sendVia"/>
+        <check-errors/>
+        <call-service service-name="sendMail" in-map-name="serviceContext"/>
+    </simple-method>
+</simple-methods>
