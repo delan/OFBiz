@@ -24,7 +24,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author David E. Jones (jonesde@ofbiz.org)
- *@created    Tue Sep 25 07:36:03 MDT 2001
+ *@created    Wed Sep 26 08:43:00 MDT 2001
  *@version    1.0
  */
 -->
@@ -4794,7 +4794,8 @@
       <prim-key field="partyIdFrom" />	
       <prim-key field="partyIdTo" />	
       <prim-key field="roleTypeIdFrom" />	
-      <prim-key field="roleTypeIdTo" />
+      <prim-key field="roleTypeIdTo" />	
+      <prim-key field="fromDate" />
       <relation type="one" title="From" rel-entity-name="Party">
         <key-map field-name="partyIdFrom" rel-field-name="partyId" />
       </relation>
