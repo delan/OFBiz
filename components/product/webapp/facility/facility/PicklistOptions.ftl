@@ -21,7 +21,7 @@
  *
  *@author         David E. Jones (jonesde@ofbiz.org)
  *@author         Andy Zeneski (jaz@ofbiz.org)
- *@version        $Revision: 1.5 $
+ *@version        $Revision: 1.6 $
  *@since            2.2
 -->
 
@@ -36,7 +36,8 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
                 <tr>
                     <td><div class="boxhead">Find Orders to Pick</div></td>
                     <td align="right">
-                        <a href="<@ofbizUrl>/PickStarted?facilityId=${facilityId?if_exists}</@ofbizUrl>" class="submenutext">View Picks Started</a>
+                        <a href="<@ofbizUrl>/PickStarted?facilityId=${facilityId?if_exists}</@ofbizUrl>" class="submenutext">Picks In Progress</a>
+                        <a href="<@ofbizUrl>/PickMoveStock?facilityId=${facilityId?if_exists}</@ofbizUrl>" class="submenutext">Stock Moves</a>
                     </td>
                 </tr>
             </table>
@@ -48,7 +49,6 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
                                 <td><div class="tableheadtext">Shipment Method</div></td>
                                 <td><div class="tableheadtext">Ready To Pick</div></td>
                                 <td><div class="tableheadtext">Need Stock Move</div></td>
-                                <td><div class="tableheadtext">&nbsp;</div></td>
                                 <td><div class="tableheadtext">&nbsp;</div></td>
                             </tr>
                             <#if pickMoveByShipmentMethodInfoList?has_content>
@@ -73,18 +73,9 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
                                                         <input type="hidden" name="facilityId" value="${facilityId}"/>
                                                         <input type="hidden" name="shipmentMethodTypeId" value="${shipmentMethodType.shipmentMethodTypeId}"/>
                                                         Pick First:<input type="text" size="4" name="maxNumberOfOrders" value="20" class="inputBox"/>
-                                                        <br><input type="checkbox" name="setPickStartedDate" value="Y" class="checkBox"/>Flag Picking Started?
-                                                        <br><input type="submit" value="Pick" class="smallSubmit"/>
+                                                        <input type="checkbox" name="setPickStartedDate" value="Y" class="checkBox"/>Flag Picking Started?
+                                                        <input type="submit" value="Pick" class="smallSubmit"/>
                                                     </form>
-                                                <#else>
-                                                    &nbsp;
-                                                </#if>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="tabletext">
-                                                <#if orderNeedsStockMoveInfoList?has_content>
-                                                    TODO: Do stock move
                                                 <#else>
                                                     &nbsp;
                                                 </#if>
@@ -101,15 +92,14 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
                                             <form method="POST" action="<@ofbizUrl>/Picklist</@ofbizUrl>">
                                                 <input type="hidden" name="facilityId" value="${facilityId}"/>
                                                 Pick First:<input type="text" size="4" name="maxNumberOfOrders" value="20" class="inputBox"/>
-                                                <br><input type="checkbox" name="setPickStartedDate" value="Y" class="checkBox"/>Flag Picking Started?
-                                                <br><input type="submit" value="Pick" class="smallSubmit"/>
+                                                <input type="checkbox" name="setPickStartedDate" value="Y" class="checkBox"/>Flag Picking Started?
+                                                <input type="submit" value="Pick" class="smallSubmit"/>
                                         </form>
                                         </div>
                                     </td>
-                                    <td><div class="tabletext">TODO: Do all stock moves</div></td>
                                 </tr>
                             <#else>
-                                <tr><td colspan="5"><div class="head3">No orders are ready to pick and no stock moves needed.</div></td></tr>
+                                <tr><td colspan="4"><div class="head3">No orders are ready to pick and no stock moves needed.</div></td></tr>
                             </#if>
                         </table>
                     </td>

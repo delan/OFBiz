@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones
  *@author     Brad Steiner
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.2
 -->
 
@@ -73,6 +73,8 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
         </tr>
         <#list facilityInventoryItems[lowIndex..highIndex] as inventoryItem>
         <#assign curInventoryItemType = inventoryItem.getRelatedOne("InventoryItemType")>
+        <#assign facilityLocation = inventoryItem.getRelatedOne("FacilityLocation")?if_exists>
+        <#assign facilityLocationTypeEnum = (facilityLocation.getRelatedOneCache("TypeEnumeration"))?if_exists>
         <#assign isQuantity = false>
         <#if (inventoryItem.quantityOnHand)?exists && (!(inventoryItem.serialNumber)?exists || (inventoryItem.serialNumber.length() == 0))><#assign isQuantity=true></#if>
         <tr valign="middle">
@@ -83,7 +85,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
             <td><div class="tabletext">&nbsp;${(inventoryItem.expireDate)?if_exists}</div></td>
             <td><a href="/catalog/control/EditProduct?productId=${(inventoryItem.productId)?if_exists}&externalLoginKey=${requestAttributes.externalLoginKey?if_exists}" class="buttontext">
                 ${(inventoryItem.productId)?if_exists}</a></td>
-            <td><div class="tabletext">&nbsp;<a href="<@ofbizUrl>/EditFacilityLocation?facilityId=${facilityId}&locationSeqId=${(inventoryItem.locationSeqId)?if_exists}</@ofbizUrl>" class="buttontext">${(inventoryItem.locationSeqId)?if_exists}</a></div></td>
+            <td><div class="tabletext">&nbsp;<a href="<@ofbizUrl>/EditFacilityLocation?facilityId=${facilityId}&locationSeqId=${(inventoryItem.locationSeqId)?if_exists}</@ofbizUrl>" class="buttontext"><#if facilityLocation?exists>${facilityLocation.areaId?if_exists}:${facilityLocation.aisleId?if_exists}:${facilityLocation.sectionId?if_exists}:${facilityLocation.levelId?if_exists}:${facilityLocation.positionId?if_exists}</#if><#if facilityLocationTypeEnum?has_content>(${facilityLocationTypeEnum.description})</#if>[${(inventoryItem.locationSeqId)?if_exists}]</a></div></td>
             <td><div class="tabletext">&nbsp;${(inventoryItem.lotId)?if_exists}</div></td>
             <td><div class="tabletext">&nbsp;${(inventoryItem.binNumber)?if_exists}</div></td>   
             <#if (inventoryItem.inventoryItemTypeId)?exists && (inventoryItem.inventoryItemTypeId.equals("NON_SERIAL_INV_ITEM"))>
