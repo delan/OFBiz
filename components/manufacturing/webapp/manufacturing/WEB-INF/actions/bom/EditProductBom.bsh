@@ -22,7 +22,7 @@
  *@author     David E. Jones
  *@author     Brad Steiner
  *@author     Jacopo Cappellato (tiz@sastau.it)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.2
  */
 
@@ -50,18 +50,18 @@ context.put("nowTimestampString", nowTimestampString);
 boolean useValues = true;
 if (request.getAttribute("_ERROR_MESSAGE_") != null) useValues = false;
 
-String productId = request.getParameter("PRODUCT_ID");
+String productId = request.getParameter("productId");
 if (productId != null) context.put("productId", productId);
 
-String productIdTo = request.getParameter("PRODUCT_ID_TO");
+String productIdTo = request.getParameter("productIdTo");
 String updateMode = request.getParameter("UPDATE_MODE");
 
 if (productIdTo != null) context.put("productIdTo", productIdTo);
 
-String productAssocTypeId = request.getParameter("PRODUCT_ASSOC_TYPE_ID");
+String productAssocTypeId = request.getParameter("productAssocTypeId");
 if (productAssocTypeId != null) context.put("productAssocTypeId", productAssocTypeId);
 
-String fromDateStr = request.getParameter("FROM_DATE");
+String fromDateStr = request.getParameter("fromDate");
 
 Timestamp fromDate = null;
 if (fromDateStr != null && fromDateStr.length() > 0) fromDate = Timestamp.valueOf(fromDateStr);
@@ -84,11 +84,8 @@ if("true".equalsIgnoreCase((String)request.getParameter("useValues"))) useValues
 if(productAssoc == null) useValues = false;
 
 context.put("useValues", useValues);
-boolean isCreate = true;
-context.put("isCreate", isCreate);
 
 Collection assocTypes = delegator.findByAnd("ProductAssocType", UtilMisc.toMap("parentTypeId", "PRODUCT_COMPONENT"), UtilMisc.toList("productAssocTypeId", "description"));
-//Collection assocTypes = delegator.findAll("ProductAssocType");
 context.put("assocTypes", assocTypes);
 
 if (product != null) {
