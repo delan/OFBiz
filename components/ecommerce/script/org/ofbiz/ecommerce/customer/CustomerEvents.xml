@@ -374,12 +374,14 @@
         </if-not-empty>
 
         <!-- email address -->
-        <call-service service-name="createPartyEmailAddress" in-map-name="emailContext">
-            <result-to-field result-name="contactMechId" map-name="emailPurposeContext"/>
-        </call-service>
-        <field-to-field field-name="partyId" map-name="tempMap" to-map-name="emailPurposeContext"/>
-        <string-to-field string="PRIMARY_EMAIL" field-name="contactMechPurposeTypeId" map-name="emailPurposeContext"/>
-        <call-service service-name="createPartyContactMechPurpose" in-map-name="emailPurposeContext"/>
+        <if-not-empty field-name="emailAddress" map-name="emailContext">
+            <call-service service-name="createPartyEmailAddress" in-map-name="emailContext">
+                <result-to-field result-name="contactMechId" map-name="emailPurposeContext"/>
+            </call-service>
+            <field-to-field field-name="partyId" map-name="tempMap" to-map-name="emailPurposeContext"/>
+            <string-to-field string="PRIMARY_EMAIL" field-name="contactMechPurposeTypeId" map-name="emailPurposeContext"/>
+            <call-service service-name="createPartyContactMechPurpose" in-map-name="emailPurposeContext"/>
+        </if-not-empty>
 
         <!-- now finished, log in the user... -->
         <if-compare field-name="allowPassword" operator="equals" value="Y">
@@ -388,6 +390,30 @@
                 org.ofbiz.securityext.login.LoginEvents.autoLoginSet(request, response);
             ]]></call-bsh>
         </if-compare>
+
+        <!-- send off the registration email -->
+        <if-not-empty field-name="emailAddress" map-name="emailContext">
+            <field-to-field field-name="productStoreId" map-name="parameters" to-map-name="storeEmailLookup"/>
+            <string-to-field string="PRDS_CUST_REGISTER" field-name="emailType" map-name="storeEmailLookup"/>
+            <find-by-primary-key map-name="storeEmailLookup" entity-name="ProductStoreEmailSetting"  value-name="storeEmail"/>
+            <if-not-empty field-name="templatePath" map-name="storeEmail">
+                <!-- prepare the email context -->
+                <get-related-one value-name="createdUserLogin" relation-name="Person" to-value-name="personObj"/>
+                <env-to-field env-name="createdUserLogin" field-name="userLogin" map-name="emailCtx"/>
+                <env-to-field env-name="personObj" field-name="person" map-name="emailCtx"/>
+                <!-- prepare the notification service context -->
+                <field-to-field field-name="emailAddress" map-name="emailContext" to-field-name="sendTo" to-map-name="notifyCtx"/>
+                <field-to-field field-name="subject" map-name="storeEmail" to-field-name="subject" to-map-name="notifyCtx"/>
+                <field-to-field field-name="fromAddress" map-name="storeEmail" to-field-name="sendFrom" to-map-name="notifyCtx"/>
+                <field-to-field field-name="ccAddress" map-name="storeEmail" to-field-name="sendCc" to-map-name="notifyCtx"/>
+                <field-to-field field-name="bccAddress" map-name="storeEmail" to-field-name="sendBcc" to-map-name="notifyCtx"/>
+                <field-to-field field-name="contentType" map-name="storeEmail" to-field-name="contentType" to-map-name="notifyCtx"/>
+                <field-to-field field-name="templatePath" map-name="storeEmail" to-field-name="templateName" to-map-name="notifyCtx"/>
+                <env-to-field env-name="emailCtx" field-name="templateData" map-name="notifyCtx"/>
+                <!-- call the service async -->
+                <call-service-asynch service-name="sendGenericNotificationEmail" in-map-name="notifyCtx" include-user-login="true"/>
+            </if-not-empty>
+        </if-not-empty>
 
         <!-- tell the control servlet that we just logged in the user... -->
         <string-to-field string="TRUE" field-name="_LOGIN_PASSED_"/>
