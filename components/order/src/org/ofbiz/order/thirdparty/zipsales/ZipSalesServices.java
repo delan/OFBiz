@@ -1,5 +1,5 @@
 /*
- * $Id: ZipSalesServices.java,v 1.16 2004/02/13 21:07:22 ajzeneski Exp $
+ * $Id: ZipSalesServices.java,v 1.17 2004/02/17 17:50:59 ajzeneski Exp $
  *
  *  Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -51,7 +51,7 @@ import java.io.File;
  * Zip-Sales Database Services
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.16 $
+ * @version    $Revision: 1.17 $
  * @since      3.0
  */
 public class ZipSalesServices {
@@ -431,7 +431,7 @@ public class ZipSalesServices {
                                     break;
                                 case 'L' :
                                     // SHIPPING ORIGINATES OR TERMINATES IN DIFFERENT STATES
-                                    qualify = false; // not determined at order time, no way to know
+                                    qualify = true; // not determined at order time, no way to know
                                     break;
                                 case 'M' :
                                     // PROOF OF VENDOR ACTING AS SHIPPING AGENT FOR PURCHASER
