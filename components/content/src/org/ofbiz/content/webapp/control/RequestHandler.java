@@ -1,5 +1,5 @@
 /*
- * $Id: RequestHandler.java,v 1.9 2003/12/07 04:33:13 ajzeneski Exp $
+ * $Id: RequestHandler.java,v 1.10 2003/12/09 17:35:10 ajzeneski Exp $
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -62,7 +62,7 @@ import org.ofbiz.entity.GenericValue;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     Dustin Caldwell
- * @version    $Revision: 1.9 $
+ * @version    $Revision: 1.10 $
  * @since      2.0
  */
 public class RequestHandler implements Serializable {
@@ -508,9 +508,9 @@ public class RequestHandler implements Serializable {
         try {
             if (Debug.verboseOn()) Debug.logVerbose("Rendering view [" + nextPage + "] of type [" + viewType + "]", module);
             ViewHandler vh = viewFactory.getViewHandler(viewType);
-            Debug.log("Obtained View Handler : " + vh, module);
+            //Debug.log("Obtained View Handler : " + vh, module);
             vh.render(view, nextPage, requestManager.getViewInfo(view), contentType, charset, req, resp);
-            Debug.log("Rendered View : " + view + " : " + vh, module);
+            //Debug.log("Rendered View : " + view + " : " + vh, module);
         } catch (ViewHandlerException e) {
             Throwable throwable = e.getNested() != null ? e.getNested() : e;
 

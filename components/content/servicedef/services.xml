@@ -988,6 +988,11 @@
         <override name="surveyId" optional="false"/>
     </service>
 
+    <service name="surveyResponseProcessInterface" engine="interface" location="" invoke="">
+        <description>Interface for Survey Response Processing services defined on the Survey</description>
+        <attribute name="surveyResponseId" type="String" mode="IN" optional="false"/>
+    </service>
+
     <!-- Util -->
     <service name="findAssocContent" engine="simple"
         location="org/ofbiz/content/content/ContentServices.xml" invoke="findAssocContent" auth="true">

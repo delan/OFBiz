@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.25 $
+ * @version    $Revision: 1.26 $
  */
 -->
 
@@ -1117,6 +1117,7 @@
       <field name="surveyName" type="name"/>
       <field name="description" type="description"/>
       <field name="comments" type="comment"/>
+      <field name="responseService" type="long-varchar"/>
       <field name="isAnonymous" type="indicator"/>
       <field name="allowMultiple" type="indicator"/>
       <field name="allowUpdate" type="indicator"/>
