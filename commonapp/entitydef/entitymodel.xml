@@ -24,7 +24,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author David E. Jones (jonesde@ofbiz.org)
- *@created    Thu Sep 27 10:23:20 MDT 2001
+ *@created    Thu Sep 27 16:02:05 PDT 2001
  *@version    1.0
  */
 -->
@@ -72,8 +72,6 @@
 	name CDATA #REQUIRED >
     <!-- ==================== Children of relation ====================== -->
     <!-- specifies whether or not the relation is a dependent one; ie if the related entity can exist without the main entity -->
-    <!ATTLIST relation
-	dependent ( true | false ) "false" >
     <!ATTLIST relation
 	type ( one | many ) #REQUIRED >
     <!ATTLIST relation
@@ -489,7 +487,7 @@
       <field name="comment" type="comment"></field>	
       <prim-key field="partyId" />	
       <prim-key field="fixedAssetId" />	
-      <prim-key field="statusId" />
+      <prim-key field="statusId" />	
       <prim-key field="fromDate" />
     </entity>
 
@@ -864,7 +862,7 @@
       <field name="thruDate" type="date-time"></field>
       <field name="allocationPercentage" type="floating-point"></field>	
       <prim-key field="generalLedgerAccountId" />	
-      <prim-key field="budgetItemTypeId" />
+      <prim-key field="budgetItemTypeId" />	
       <prim-key field="fromDate" />
     </entity>	
     <entity entity-name="InternalAcctgTrans" 
@@ -891,7 +889,7 @@
       <field name="thruDate" type="date-time"></field>	
       <prim-key field="generalLedgerAccountId" />	
       <prim-key field="partyId" />	
-      <prim-key field="roleTypeId" />
+      <prim-key field="roleTypeId" />	
       <prim-key field="fromDate" />
     </entity>	
     <entity entity-name="SalesAcctgTrans" 
@@ -947,7 +945,7 @@
       <field name="thruDate" type="date-time"></field>	
       <prim-key field="billingAccountId" />	
       <prim-key field="partyId" />	
-      <prim-key field="roleTypeId" />
+      <prim-key field="roleTypeId" />	
       <prim-key field="fromDate" />
       <relation type="one" rel-entity-name="BillingAccount">
         <key-map field-name="billingAccountId" />
@@ -1023,7 +1021,7 @@
       <field name="thruDate" type="date-time"></field>	
       <prim-key field="finAccountId" />	
       <prim-key field="partyId" />	
-      <prim-key field="roleTypeId" />
+      <prim-key field="roleTypeId" />	
       <prim-key field="fromDate" />
     </entity>	
     <entity entity-name="FinAccountTrans" 
@@ -1571,7 +1569,7 @@
       <field name="thruDate" type="date-time"></field>	
       <prim-key field="contentId" />	
       <prim-key field="dataObjectId" />	
-      <prim-key field="seqId" />
+      <prim-key field="seqId" />	
       <prim-key field="fromDate" />
       <relation type="one" rel-entity-name="Content">
         <key-map field-name="contentId" />
@@ -1591,7 +1589,7 @@
       <field name="thruDate" type="date-time"></field>	
       <prim-key field="contentId" />	
       <prim-key field="partyId" />	
-      <prim-key field="roleTypeId" />
+      <prim-key field="roleTypeId" />	
       <prim-key field="fromDate" />
     </entity>	
     <entity entity-name="ContentType" 
@@ -2242,7 +2240,7 @@
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>	
       <prim-key field="partyId" />	
-      <prim-key field="partyQualTypeId" />
+      <prim-key field="partyQualTypeId" />	
       <prim-key field="fromDate" />
       <relation type="one" rel-entity-name="PartyQualType">
         <key-map field-name="partyQualTypeId" />
@@ -2347,7 +2345,7 @@
       <field name="communicationDate" type="date-time"></field>
       <field name="comment" type="comment"></field>	
       <prim-key field="partyId" />	
-      <prim-key field="roleTypeId" />
+      <prim-key field="roleTypeId" />	
       <prim-key field="fromDate" />
     </entity>	
     <entity entity-name="PerformanceReviewItem" 
@@ -2373,7 +2371,7 @@
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>	
       <prim-key field="partyId" />	
-      <prim-key field="trainingClassTypeId" />
+      <prim-key field="trainingClassTypeId" />	
       <prim-key field="fromDate" />
     </entity>	
     <entity entity-name="ResponsibilityType" 
@@ -2435,7 +2433,7 @@
       <prim-key field="roleTypeIdFrom" />	
       <prim-key field="roleTypeIdTo" />	
       <prim-key field="partyIdFrom" />	
-      <prim-key field="partyIdTo" />
+      <prim-key field="partyIdTo" />	
       <prim-key field="fromDate" />
     </entity>	
     <entity entity-name="EmploymentApp" 
@@ -2475,7 +2473,7 @@
       <prim-key field="roleTypeIdTo" />	
       <prim-key field="partyIdFrom" />	
       <prim-key field="partyIdTo" />	
-      <prim-key field="benefitTypeId" />
+      <prim-key field="benefitTypeId" />	
       <prim-key field="fromDate" />
     </entity>	
     <entity entity-name="PayCheck" 
@@ -2511,7 +2509,7 @@
       <prim-key field="roleTypeIdFrom" />	
       <prim-key field="roleTypeIdTo" />	
       <prim-key field="partyIdFrom" />	
-      <prim-key field="partyIdTo" />
+      <prim-key field="partyIdTo" />	
       <prim-key field="fromDate" />
     </entity>	
     <entity entity-name="PayrollPreference" 
@@ -2619,7 +2617,7 @@
       <field name="thruDate" type="date-time"></field>
       <field name="comment" type="comment"></field>	
       <prim-key field="positionId" />	
-      <prim-key field="partyId" />
+      <prim-key field="partyId" />	
       <prim-key field="fromDate" />
     </entity>	
     <entity entity-name="EmplPositionReportingStruct" 
@@ -2632,7 +2630,7 @@
       <field name="comment" type="comment"></field>
       <field name="primaryFlag" type="indicator"></field>	
       <prim-key field="positionIdReportingTo" />	
-      <prim-key field="positionIdManagedBy" />
+      <prim-key field="positionIdManagedBy" />	
       <prim-key field="fromDate" />
     </entity>	
     <entity entity-name="EmplPositionResponsibility" 
@@ -2644,7 +2642,7 @@
       <field name="thruDate" type="date-time"></field>
       <field name="comment" type="comment"></field>	
       <prim-key field="positionId" />	
-      <prim-key field="responsibilityTypeId" />
+      <prim-key field="responsibilityTypeId" />	
       <prim-key field="fromDate" />
     </entity>	
     <entity entity-name="EmplPositionType" 
@@ -2665,7 +2663,7 @@
       <field name="thruDate" type="date-time"></field>
       <field name="standardHoursPerWeek" type="floating-point"></field>	
       <prim-key field="positionTypeId" />	
-      <prim-key field="positionClassTypeId" />
+      <prim-key field="positionClassTypeId" />	
       <prim-key field="fromDate" />
     </entity>	
     <entity entity-name="ValidResponsibility" 
@@ -2677,7 +2675,7 @@
       <field name="thruDate" type="date-time"></field>
       <field name="comment" type="comment"></field>	
       <prim-key field="positionTypeId" />	
-      <prim-key field="responsibilityTypeId" />
+      <prim-key field="responsibilityTypeId" />	
       <prim-key field="fromDate" />
     </entity>
 
@@ -2822,7 +2820,7 @@
       <relation type="many" rel-entity-name="OrderAdjustment">
         <key-map field-name="orderId" />
       </relation>
-      <relation type="many" dependent="true" rel-entity-name="OrderItem">
+      <relation type="many" rel-entity-name="OrderItem">
         <key-map field-name="orderId" />
       </relation>
       <relation type="many" rel-entity-name="OrderContactMech">
@@ -3718,7 +3716,7 @@
       <field name="thruDate" type="date-time"></field>	
       <prim-key field="requirementId" />	
       <prim-key field="partyId" />	
-      <prim-key field="roleTypeId" />
+      <prim-key field="roleTypeId" />	
       <prim-key field="fromDate" />
     </entity>	
     <entity entity-name="RequirementStatus" 
@@ -4509,7 +4507,7 @@
       <field name="extension" type="very-short"></field>
       <field name="comment" type="comment"></field>	
       <prim-key field="partyId" />	
-      <prim-key field="contactMechId" />
+      <prim-key field="contactMechId" />	
       <prim-key field="fromDate" />
       <relation type="one" rel-entity-name="Party">
         <key-map field-name="partyId" />
@@ -4539,7 +4537,7 @@
       <field name="thruDate" type="date-time"></field>	
       <prim-key field="partyId" />	
       <prim-key field="contactMechId" />	
-      <prim-key field="contactMechPurposeTypeId" />
+      <prim-key field="contactMechPurposeTypeId" />	
       <prim-key field="fromDate" />
       <relation type="one" rel-entity-name="PartyContactMech">
         <key-map field-name="partyId" />
@@ -4754,7 +4752,7 @@
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>	
       <prim-key field="partyId" />	
-      <prim-key field="partyTypeId" />
+      <prim-key field="partyTypeId" />	
       <prim-key field="fromDate" />
       <relation type="one" rel-entity-name="Party">
         <key-map field-name="partyId" />
@@ -5126,7 +5124,7 @@
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>	
       <prim-key field="productCategoryId" />	
-      <prim-key field="productCategoryTypeId" />
+      <prim-key field="productCategoryTypeId" />	
       <prim-key field="fromDate" />
       <relation type="one" rel-entity-name="ProductCategory">
         <key-map field-name="productCategoryId" />
@@ -5150,7 +5148,7 @@
       <field name="thruDate" type="date-time"></field>
       <field name="comment" type="comment"></field>	
       <prim-key field="productCategoryId" />	
-      <prim-key field="productId" />
+      <prim-key field="productId" />	
       <prim-key field="fromDate" />
       <relation type="one" rel-entity-name="Product">
         <key-map field-name="productId" />
@@ -5376,7 +5374,7 @@
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>	
       <prim-key field="productId" />	
-      <prim-key field="productFeatureId" />
+      <prim-key field="productFeatureId" />	
       <prim-key field="fromDate" />
       <relation type="one" rel-entity-name="ProductFeatureApplType">
         <key-map field-name="productFeatureApplTypeId" />
@@ -5966,7 +5964,7 @@
       <field name="instruction" type="long-varchar"></field>	
       <prim-key field="productId" />	
       <prim-key field="productIdTo" />	
-      <prim-key field="productAssocTypeId" />
+      <prim-key field="productAssocTypeId" />	
       <prim-key field="fromDate" />
       <relation type="one" rel-entity-name="ProductAssocType">
         <key-map field-name="productAssocTypeId" />
@@ -6019,7 +6017,7 @@
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>	
       <prim-key field="productId" />	
-      <prim-key field="productTypeId" />
+      <prim-key field="productTypeId" />	
       <prim-key field="fromDate" />
       <relation type="one" rel-entity-name="Product">
         <key-map field-name="productId" />
@@ -6271,7 +6269,7 @@
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>	
       <prim-key field="productCategoryId" />	
-      <prim-key field="partyTypeId" />
+      <prim-key field="partyTypeId" />	
       <prim-key field="fromDate" />
       <relation type="one" rel-entity-name="ProductCategory">
         <key-map field-name="productCategoryId" />
@@ -6330,7 +6328,6 @@
       <field name="comment" type="comment"></field>	
       <prim-key field="productId" />	
       <prim-key field="partyId" />
-      <prim-key field="fromDate" />
       <relation type="one" rel-entity-name="Product">
         <key-map field-name="productId" />
       </relation>
@@ -6790,7 +6787,7 @@
       <field name="thruDate" type="date-time"></field>
       <field name="rate" type="currency-amount"></field>	
       <prim-key field="partyId" />	
-      <prim-key field="rateTypeId" />
+      <prim-key field="rateTypeId" />	
       <prim-key field="fromDate" />
     </entity>	
     <entity entity-name="RateType" 
@@ -6860,7 +6857,7 @@
       <prim-key field="workEffortId" />	
       <prim-key field="rateTypeId" />	
       <prim-key field="partyId" />	
-      <prim-key field="roleTypeId" />
+      <prim-key field="roleTypeId" />	
       <prim-key field="fromDate" />
     </entity>
 
@@ -7128,7 +7125,7 @@
       <field name="allocatedCost" type="currency-amount"></field>
       <field name="comment" type="comment"></field>	
       <prim-key field="workEffortId" />	
-      <prim-key field="fixedAssetId" />
+      <prim-key field="fixedAssetId" />	
       <prim-key field="fromDate" />
     </entity>	
     <entity entity-name="WorkEffortFixedAssetStd" 
@@ -7181,7 +7178,7 @@
       <field name="comment" type="comment"></field>	
       <prim-key field="workEffortId" />	
       <prim-key field="partyId" />	
-      <prim-key field="roleTypeId" />
+      <prim-key field="roleTypeId" />	
       <prim-key field="fromDate" />
     </entity>	
     <entity entity-name="WorkEffortSkillStandard" 
