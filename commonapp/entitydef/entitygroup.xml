@@ -115,6 +115,7 @@
   <!-- ========================================================= -->
 
     <entity-group group="org.ofbiz.commonapp" entity="BillingAccount" />
+    <entity-group group="org.ofbiz.commonapp" entity="BillingAccountAndRole" />
     <entity-group group="org.ofbiz.commonapp" entity="BillingAccountRole" />
     <entity-group group="org.ofbiz.commonapp" entity="BillingAccountTerm" />
     <entity-group group="org.ofbiz.commonapp" entity="BillingAccountTermAttr" />

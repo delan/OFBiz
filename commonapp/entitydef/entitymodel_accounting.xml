@@ -1451,6 +1451,54 @@
         <key-map field-name="contactMechId"/>
       </relation>
     </entity>
+    <view-entity entity-name="BillingAccountAndRole"
+            package-name="org.ofbiz.commonapp.accounting.payment"
+            title="Billing Account and Role Entity"
+            never-cache="true">
+      <member-entity entity-alias="BA" entity-name="BillingAccount"/>
+      <member-entity entity-alias="BR" entity-name="BillingAccountRole"/>
+      <alias entity-alias="BA" name="billingAccountId" group-by="true"/>
+      <alias entity-alias="BA" name="accountLimit"/>
+      <alias entity-alias="BA" name="contactMechId"/>
+      <alias entity-alias="BA" name="accountFromDate" field="fromDate"/>
+      <alias entity-alias="BA" name="accountThruDate" field="thruDate"/>
+      <alias entity-alias="BA" name="description"/>
+      <alias entity-alias="BR" name="partyId"/>
+      <alias entity-alias="BR" name="roleTypeId"/>
+      <alias entity-alias="BR" name="fromDate"/>
+      <alias entity-alias="BR" name="thruDate"/>
+      <view-link entity-alias="BA" rel-entity-alias="BR">
+        <key-map field-name="billingAccountId"/>
+      </view-link>
+      <relation type="many" rel-entity-name="OrderHeader">
+        <key-map field-name="billingAccountId"/>
+      </relation>
+      <relation type="many" rel-entity-name="BillingAccountRole">
+        <key-map field-name="billingAccountId"/>
+      </relation>
+      <relation type="many" rel-entity-name="Invoice">
+        <key-map field-name="billingAccountId"/>
+      </relation>
+      <relation type="many" rel-entity-name="PaymentApplication">
+        <key-map field-name="billingAccountId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="ContactMech">
+        <key-map field-name="contactMechId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="PostalAddress">
+        <key-map field-name="contactMechId"/>
+      </relation>      
+      <relation type="one-nofk" rel-entity-name="Party">
+        <key-map field-name="partyId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="RoleType">
+        <key-map field-name="roleTypeId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="PartyRole">
+        <key-map field-name="partyId"/>
+        <key-map field-name="roleTypeId"/>
+      </relation>              
+    </view-entity>
     <entity entity-name="BillingAccountRole"
             package-name="org.ofbiz.commonapp.accounting.payment"
             title="Billing Account Role Entity">
