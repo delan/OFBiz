@@ -870,38 +870,110 @@ public class CheckOutEvents {
         cart.clear();
         session.invalidate();
         return "success";
-    }      
+    }   
     
+    public static String initiateOrderWorkflow(HttpServletRequest request, HttpServletResponse response) {
+        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
+        LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+        String orderId = (String) request.getAttribute("order_id");
+        GenericValue orderHeader = null;
+        try {
+            orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));  
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Problems getting order header", module);
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>Problems getting order header. WF not started!");
+            return "error";
+        }
+        if (orderHeader != null) {
+            try {
+                dispatcher.runAsync("processOrder", UtilMisc.toMap("orderId", orderId, "orderStatusId", orderHeader.getString("statusId")));
+            } catch (GenericServiceException e) {
+                Debug.logError(e, "Cannot invoke processing workflow", module);
+                request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>Problems starting order WF!");
+                return "error";
+            }
+        }
+        return "success";
+    }       
+            
     public static String finalizeOrderEntry(HttpServletRequest request, HttpServletResponse response) {        
         ShoppingCart cart = (ShoppingCart) request.getSession().getAttribute(SiteDefs.SHOPPING_CART);
-        String requireShipping = request.getParameter("finalizeReqShipInfo");
-        String requirePayment = request.getParameter("finalizeReqPayInfo");
+                                         
+        // get the mode
+        String mode = request.getParameter("finalizeMode");
         
-        // set some fields
-        String shippingContactMechId = request.getParameter("shipping_contact_mech_id");
-        String checkOutPaymentId = request.getParameter("checkOutPaymentId");
-        
-        if (shippingContactMechId == null)
-            shippingContactMechId = (String) request.getAttribute("contactMechId");
-        if (checkOutPaymentId == null)  
-            checkOutPaymentId = (String) request.getAttribute("paymentMethodId");
-        
-        // set the shipping method if we have one
-        if (UtilValidate.isNotEmpty(shippingContactMechId)) 
-            cart.setShippingContactMechId(shippingContactMechId);
-            
-        // set the payment method(s) if we have some -- change this to accept multiple
-        if (UtilValidate.isNotEmpty(checkOutPaymentId)) {
-            // clear out the old payments
-            cart.clearPaymentMethodTypeIds();
-            cart.clearPaymentMethodIds();
-            // all payment method ids will be numeric, type ids will start with letter
-            if (Character.isLetter(checkOutPaymentId.charAt(0))) {
-                cart.addPaymentMethodTypeId(checkOutPaymentId);
-            } else {
-                cart.addPaymentMethodId(checkOutPaymentId);
+        // set the shipping method
+        if (mode != null && mode.equals("ship")) {
+            String shippingContactMechId = request.getParameter("shipping_contact_mech_id");
+            if (shippingContactMechId == null) {
+                shippingContactMechId = (String) request.getAttribute("contactMechId");                
             }
-        }            
+            if (UtilValidate.isNotEmpty(shippingContactMechId)) {
+                cart.setShippingContactMechId(shippingContactMechId);
+            } else {
+                request.setAttribute(SiteDefs.ERROR_MESSAGE, "Please enter a shipping address");
+                return "error";
+            }                
+        }
+            
+        // set the options
+        if (mode != null && mode.equals("options")) {            
+            String shippingMethod = request.getParameter("shipping_method");                               
+            String shippingInstructions = request.getParameter("shipping_instructions");        
+            String maySplit = request.getParameter("may_split");
+            String giftMessage = request.getParameter("gift_message");
+            String isGift = request.getParameter("is_gift");
+            if (UtilValidate.isNotEmpty(shippingMethod)) {
+                int delimiterPos = shippingMethod.indexOf('@');
+                String shipmentMethodTypeId = null;
+                String carrierPartyId = null;
+
+                if (delimiterPos > 0) {
+                    shipmentMethodTypeId = shippingMethod.substring(0, delimiterPos);
+                    carrierPartyId = shippingMethod.substring(delimiterPos + 1);
+                }
+
+                cart.setShipmentMethodTypeId(shipmentMethodTypeId);
+                cart.setCarrierPartyId(carrierPartyId);
+            } else {
+                request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>Please Select a Shipping Method");
+            }  
+            cart.setShippingInstructions(shippingInstructions);  
+            cart.setGiftMessage(giftMessage);  
+            cart.setMaySplit(Boolean.valueOf(maySplit)); 
+            cart.setIsGift(Boolean.valueOf(isGift));                  
+        }
+        
+        // payment option; if offline we skip the payment screen
+        if (mode != null && mode.equals("payoption")) {
+            String methodType = request.getParameter("paymentMethodType");
+            if (methodType != null && methodType.equals("offline")) {
+                cart.clearPaymentMethodTypeIds();
+                cart.clearPaymentMethodIds();
+                cart.addPaymentMethodTypeId("OFFLINE");
+            }                            
+        }
+        
+        // set the payment
+        if (mode != null && mode.equals("payment")) {
+            String checkOutPaymentId = request.getParameter("checkOutPaymentId");                            
+            if (checkOutPaymentId == null)  
+                checkOutPaymentId = (String) request.getAttribute("paymentMethodId");                                               
+            if (UtilValidate.isNotEmpty(checkOutPaymentId)) {
+                // clear out the old payments
+                cart.clearPaymentMethodTypeIds();
+                cart.clearPaymentMethodIds();
+                // all payment method ids will be numeric, type ids will start with letter
+                if (Character.isLetter(checkOutPaymentId.charAt(0))) {
+                    cart.addPaymentMethodTypeId(checkOutPaymentId);
+                } else {
+                    cart.addPaymentMethodId(checkOutPaymentId);
+                }
+            }
+        }  
+        
+        String requireShipping = request.getParameter("finalizeReqShipInfo");
+        String requirePayment = request.getParameter("finalizeReqPayInfo");                         
                                 
         if (requireShipping == null)
             requireShipping = "true";
@@ -911,16 +983,22 @@ public class CheckOutEvents {
         String shipContactMechId = cart.getShippingContactMechId();
         String shipmentMethodTypeId = cart.getShipmentMethodTypeId();
         List paymentMethodIds = cart.getPaymentMethodIds();
+        List paymentMethodTypeIds = cart.getPaymentMethodTypeIds();
         
-        if (shipContactMechId == null && requireShipping.equalsIgnoreCase("true"))
+        if (requireShipping.equalsIgnoreCase("true") && shipContactMechId == null)
             return "shipping";
          
         if (shipmentMethodTypeId == null)   
             return "options";
-            
-        if (requirePayment.equalsIgnoreCase("true") && (paymentMethodIds == null || paymentMethodIds.size() == 0))
-            return "payment";
-                
+        
+        if (requirePayment.equalsIgnoreCase("true")) {
+            if (paymentMethodIds == null || paymentMethodIds.size() == 0) {
+                if (paymentMethodTypeIds == null || paymentMethodTypeIds.size() == 0) {
+                    return "payment";
+                }
+            }
+        }
+                        
         return "success";
     }
             
