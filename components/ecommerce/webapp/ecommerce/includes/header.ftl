@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.1
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
@@ -29,7 +29,7 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>${productStore.storeName?if_exists}: ${page.title?if_exists}</title>
+    <title>${(productStore.storeName)?if_exists}: ${page.title?if_exists}</title>
     <link rel='stylesheet' href='<@ofbizContentUrl>${productStore.styleSheet?default('/images/maincss.css')}</@ofbizContentUrl>' type='text/css'>
 
     <#-- Append CSS for catalog -->
