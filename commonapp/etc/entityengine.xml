@@ -57,6 +57,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
     <field-type name="postgres72" loader="mainfile" location="fieldtypepostgres72.xml"/>
     <field-type name="oracle" loader="mainfile" location="fieldtypeoracle.xml"/>
     <field-type name="sapdb" loader="mainfile" location="fieldtypesapdb.xml"/>
+    <field-type name="sybase" loader="mainfile" location="fieldtypesybase.xml"/>
 
     <!--
     For DAO/JDBC Helper: Tries:
