@@ -293,7 +293,7 @@ public class ModelServiceReader {
         service.requireNewTransaction = !"false".equalsIgnoreCase(serviceElement.getAttribute("require-new-transaction"));
         
         // get the timeout and convert to int       
-        String timeoutStr = UtilXml.checkEmpty(serviceElement.getAttribute("transactionTimeout"));
+        String timeoutStr = UtilXml.checkEmpty(serviceElement.getAttribute("transaction-timout"));
         if (timeoutStr == null || timeoutStr.length() == 0) {
             timeoutStr = "0";
         }
