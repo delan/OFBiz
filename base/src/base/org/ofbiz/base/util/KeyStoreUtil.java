@@ -1,5 +1,5 @@
 /*
- * $Id: KeyStoreUtil.java,v 1.5 2003/11/25 06:05:35 jonesde Exp $
+ * $Id: KeyStoreUtil.java,v 1.6 2003/12/04 18:39:14 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -59,7 +59,7 @@ import javax.crypto.spec.DHParameterSpec;
  * KeyStoreUtil - Utilities for getting KeyManagers and TrustManagers
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      3.0
  */
 public class KeyStoreUtil {
@@ -74,6 +74,10 @@ public class KeyStoreUtil {
         return UtilProperties.getPropertyValue("jsse.properties", "ofbiz.keyStore.password", null);
     }
 
+    public static String getKeyStoreType() {
+        return UtilProperties.getPropertyValue("jsse.properties", "ofbiz.keyStore.type", "jks");
+    }
+
     public static String getTrustStoreFileName() {
         return UtilProperties.getPropertyValue("jsse.properties", "ofbiz.trustStore", null);
     }
@@ -82,12 +86,16 @@ public class KeyStoreUtil {
         return UtilProperties.getPropertyValue("jsse.properties", "ofbiz.trustStore.password", null);
     }
 
+    public static String getTrustStoreType() {
+        return UtilProperties.getPropertyValue("jsse.properties", "ofbiz.trustStore.type", "jks");
+    }
+
     public static KeyStore getKeyStore() throws IOException, GeneralSecurityException {
         if (getKeyStoreFileName() != null && !keyStoreExists(getKeyStoreFileName())) {
             return null;
         }
         FileInputStream fis = new FileInputStream(getKeyStoreFileName());
-        KeyStore ks = KeyStore.getInstance("jks");
+        KeyStore ks = KeyStore.getInstance(getKeyStoreType());
         ks.load(fis, getKeyStorePassword().toCharArray());
         fis.close();
         return ks;
@@ -102,7 +110,7 @@ public class KeyStoreUtil {
             return null;
         }
         FileInputStream fis = new FileInputStream(getTrustStoreFileName());
-        KeyStore ks = KeyStore.getInstance("jks");
+        KeyStore ks = KeyStore.getInstance(getTrustStoreType());
         ks.load(fis, getTrustStorePassword().toCharArray());
         fis.close();
         return ks;
