@@ -21,12 +21,13 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package org.ofbiz.core.entity;
+package org.ofbiz.core.entity.transaction;
 
 import java.util.*;
 import java.sql.*;
 import org.w3c.dom.Element;
 
+import org.ofbiz.core.entity.*;
 import org.ofbiz.core.util.*;
 
 // For Tyrex 0.9.8.5

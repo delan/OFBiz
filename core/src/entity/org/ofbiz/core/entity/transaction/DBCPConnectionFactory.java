@@ -21,15 +21,16 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
-package org.ofbiz.core.entity;
+package org.ofbiz.core.entity.transaction;
 
 import java.util.*;
 import java.sql.*;
 import javax.sql.*;
 import org.w3c.dom.Element;
 
+import org.ofbiz.core.entity.*;
 import org.ofbiz.core.util.*;
+
 import org.apache.commons.dbcp.DriverManagerConnectionFactory;
 import org.apache.commons.dbcp.PoolableConnectionFactory;
 import org.apache.commons.dbcp.PoolingDataSource;
@@ -96,9 +97,7 @@ public class DBCPConnectionFactory {
 
                 return dataSource.getConnection();
             }
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             String errorMsg = "Error getting datasource via DBCP.";
             Debug.logError(e, errorMsg);
         }
@@ -106,6 +105,3 @@ public class DBCPConnectionFactory {
         return null;
     }
 }
-
-
-

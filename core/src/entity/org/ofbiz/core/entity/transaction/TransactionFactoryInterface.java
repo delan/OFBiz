@@ -26,7 +26,10 @@ package org.ofbiz.core.entity.transaction;
 
 
 import javax.transaction.*;
+import java.sql.*;
+import org.w3c.dom.Element;
 
+import org.ofbiz.core.entity.*;
 
 /**
  * TyrexTransactionFactory - central source for Tyrex JTA objects
@@ -40,4 +43,8 @@ public interface TransactionFactoryInterface {
     public TransactionManager getTransactionManager();
 
     public UserTransaction getUserTransaction();
+    
+    public String getTxMgrName();
+    
+    public Connection getConnection(String helperName) throws SQLException, GenericEntityException;
 }

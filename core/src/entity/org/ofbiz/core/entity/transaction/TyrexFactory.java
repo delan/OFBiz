@@ -24,9 +24,13 @@
 package org.ofbiz.core.entity.transaction;
 
 import java.net.*;
+import java.sql.*;
 import javax.sql.*;
 import javax.transaction.*;
+import org.w3c.dom.Element;
 
+import org.ofbiz.core.entity.*;
+import org.ofbiz.core.entity.config.*;
 import org.ofbiz.core.util.*;
 
 import tyrex.tm.*;
@@ -128,6 +132,68 @@ public class TyrexFactory implements TransactionFactoryInterface {
             return td.getUserTransaction();
         } else {
             Debug.logWarning("No Tyrex TransactionDomain, not returning UserTransaction");
+            return null;
+        }
+    }
+    
+    public String getTxMgrName() {
+        return "tyrex";
+    }
+    
+    public Connection getConnection(String helperName) throws SQLException, GenericEntityException {
+        EntityConfigUtil.DatasourceInfo datasourceInfo = EntityConfigUtil.getDatasourceInfo(helperName);
+
+        if (datasourceInfo.inlineJdbcElement != null) {
+            // Use JOTM (enhydra-jdbc.jar) connection pooling
+            try {
+                Connection con = TyrexConnectionFactory.getConnection(helperName, datasourceInfo.inlineJdbcElement);
+                if (con != null) return con;
+            } catch (Exception ex) {
+                Debug.logError(ex, "Tyrex is the configured transaction manager but there was an error getting a database Connection through Tyrex for the " + helperName + " datasource. Please check your configuration, class path, etc.");
+            }
+        
+            Connection otherCon = ConnectionFactory.tryGenericConnectionSources(helperName, datasourceInfo.inlineJdbcElement);
+            return otherCon;
+        } else if (datasourceInfo.tyrexDataSourceElement != null) {
+            Element tyrexDataSourceElement = datasourceInfo.tyrexDataSourceElement;
+            String dataSourceName = tyrexDataSourceElement.getAttribute("dataSource-name");
+
+            if (UtilValidate.isEmpty(dataSourceName)) {
+                Debug.logError("dataSource-name not set for tyrex-dataSource element in the " + helperName + " data-source definition");
+            } else {
+                DataSource tyrexDataSource = TyrexFactory.getDataSource(dataSourceName);
+
+                if (tyrexDataSource == null) {
+                    Debug.logError("Got a null data source for dataSource-name " + dataSourceName + " for tyrex-dataSource element in the " + helperName + " data-source definition; trying other sources");
+                } else {
+                    Connection con = tyrexDataSource.getConnection();
+
+                    if (con != null) {
+                        /* NOTE: This code causes problems because settting the transaction isolation level after a transaction has started is a no-no
+                         * The question is: how should we do this?
+                         String isolationLevel = tyrexDataSourceElement.getAttribute("isolation-level");
+                         if (isolationLevel != null && isolationLevel.length() > 0) {
+                         if ("Serializable".equals(isolationLevel)) {
+                         con.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
+                         } else if ("RepeatableRead".equals(isolationLevel)) {
+                         con.setTransactionIsolation(Connection.TRANSACTION_REPEATABLE_READ);
+                         } else if ("ReadUncommitted".equals(isolationLevel)) {
+                         con.setTransactionIsolation(Connection.TRANSACTION_READ_UNCOMMITTED);
+                         } else if ("ReadCommitted".equals(isolationLevel)) {
+                         con.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
+                         } else if ("None".equals(isolationLevel)) {
+                         con.setTransactionIsolation(Connection.TRANSACTION_NONE);
+                         }
+                         }
+                         */
+                        return con;
+                    }
+                }
+            }
+            Connection otherCon = ConnectionFactory.tryGenericConnectionSources(helperName, datasourceInfo.inlineJdbcElement);
+            return otherCon;
+        } else {
+            Debug.logError("Tyrex is the configured transaction manager but no inline-jdbc or tyrex-dataSource element was specified in the " + helperName + " datasource. Please check your configuration");
             return null;
         }
     }

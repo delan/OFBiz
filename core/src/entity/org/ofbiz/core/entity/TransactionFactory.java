@@ -24,6 +24,7 @@
 package org.ofbiz.core.entity;
 
 import javax.transaction.*;
+import java.sql.*;
 
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.entity.config.*;
@@ -88,5 +89,13 @@ public class TransactionFactory {
 
     public static UserTransaction getUserTransaction() {
         return getTransactionFactory().getUserTransaction();
+    }
+
+    public static String getTxMgrName() {
+        return getTransactionFactory().getTxMgrName();
+    }
+
+    public static Connection getConnection(String helperName) throws SQLException, GenericEntityException {
+        return getTransactionFactory().getConnection(helperName);
     }
 }

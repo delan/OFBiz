@@ -22,13 +22,14 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-package org.ofbiz.core.entity;
+package org.ofbiz.core.entity.transaction;
 
 import java.util.*;
 import java.sql.*;
 import javax.sql.*;
 import org.w3c.dom.Element;
 
+import org.ofbiz.core.entity.*;
 import org.ofbiz.core.util.*;
 
 import org.enhydra.jdbc.pool.StandardXAPoolDataSource;

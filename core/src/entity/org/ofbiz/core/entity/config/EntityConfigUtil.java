@@ -318,11 +318,10 @@ public class EntityConfigUtil {
         public static final int TYPE_INLINE_JDBC = 2;
         public static final int TYPE_TYREX_DATA_SOURCE = 3;
         public static final int TYPE_OTHER = 4;
-        public static final int TYPE_DBCP_JDBC = 5;
-        public static final int TYPE_JOTM_JDBC = 6;
                 
-        public int datasourceType;
-        public Element datasourceTypeElement;
+        public Element jndiJdbcElement;
+        public Element tyrexDataSourceElement;
+        public Element inlineJdbcElement;
 
         public boolean checkOnStart = true;
         public boolean addMissingOnStart = false;
@@ -384,31 +383,9 @@ public class EntityConfigUtil {
             if (fkStyle == null || fkStyle.length() == 0) fkStyle = "name_constraint";
             if (joinStyle == null || joinStyle.length() == 0) joinStyle = "ansi";
 
-            Element jndiJdbcElement = UtilXml.firstChildElement(datasourceElement, "jndi-jdbc");
-            Element tyrexDataSourceElement = UtilXml.firstChildElement(datasourceElement, "tyrex-dataSource");
-            Element inlineJdbcElement = UtilXml.firstChildElement(datasourceElement, "inline-jdbc");
-            Element dbcpJdbcElement = UtilXml.firstChildElement(datasourceElement, "dbcp-jdbc");
-            Element jotmJdbcElement = UtilXml.firstChildElement(datasourceElement, "jotm-jdbc");
-
-            if (jndiJdbcElement != null) {
-                datasourceType = DatasourceInfo.TYPE_JNDI_JDBC;
-                datasourceTypeElement = jndiJdbcElement;
-            } else if (jotmJdbcElement != null) {
-                datasourceType = DatasourceInfo.TYPE_JOTM_JDBC;
-                datasourceTypeElement = jotmJdbcElement;                
-            } else if (tyrexDataSourceElement != null) {
-                datasourceType = DatasourceInfo.TYPE_TYREX_DATA_SOURCE;
-                datasourceTypeElement = tyrexDataSourceElement;                
-            } else if (inlineJdbcElement != null) {
-                datasourceType = DatasourceInfo.TYPE_INLINE_JDBC;
-                datasourceTypeElement = inlineJdbcElement;
-            } else if (dbcpJdbcElement != null) {
-                datasourceType = DatasourceInfo.TYPE_DBCP_JDBC;
-                datasourceTypeElement = dbcpJdbcElement;            
-            } else {
-                datasourceType = DatasourceInfo.TYPE_OTHER;
-                datasourceTypeElement = null;
-            }
+            jndiJdbcElement = UtilXml.firstChildElement(datasourceElement, "jndi-jdbc");
+            tyrexDataSourceElement = UtilXml.firstChildElement(datasourceElement, "tyrex-dataSource");
+            inlineJdbcElement = UtilXml.firstChildElement(datasourceElement, "inline-jdbc");
         }
     }
 }

@@ -27,7 +27,11 @@ package org.ofbiz.core.entity.transaction;
 import javax.naming.NamingException;
 import javax.transaction.TransactionManager;
 import javax.transaction.UserTransaction;
+import java.sql.*;
+import org.w3c.dom.Element;
 
+import org.ofbiz.core.entity.*;
+import org.ofbiz.core.entity.config.*;
 import org.ofbiz.core.util.*;
 
 import org.objectweb.jotm.Jotm;
@@ -78,4 +82,28 @@ public class JotmFactory implements TransactionFactoryInterface {
             return null;
         }
     }                
+    
+    public String getTxMgrName() {
+        return "jotm";
+    }
+    
+    public Connection getConnection(String helperName) throws SQLException, GenericEntityException {
+        EntityConfigUtil.DatasourceInfo datasourceInfo = EntityConfigUtil.getDatasourceInfo(helperName);
+
+        if (datasourceInfo.inlineJdbcElement != null) {
+            // Use JOTM (enhydra-jdbc.jar) connection pooling
+            try {
+                Connection con = JotmConnectionFactory.getConnection(helperName, datasourceInfo.inlineJdbcElement);
+                if (con != null) return con;
+            } catch (Exception ex) {
+                Debug.logError(ex, "JOTM is the configured transaction manager but there was an error getting a database Connection through JOTM for the " + helperName + " datasource. Please check your configuration, class path, etc.");
+            }
+        
+            Connection otherCon = ConnectionFactory.tryGenericConnectionSources(helperName, datasourceInfo.inlineJdbcElement);
+            return otherCon;
+        } else {
+            Debug.logError("JOTM is the configured transaction manager but no inline-jdbc element was specified in the " + helperName + " datasource. Please check your configuration");
+            return null;
+        }
+    }
 }
