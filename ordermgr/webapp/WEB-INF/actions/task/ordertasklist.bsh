@@ -46,7 +46,12 @@ if (sort != null) {
     }
 }
 
-partyTasks = delegator.findByAnd("OrderTaskList", UtilMisc.toMap("statusId", "CAL_ACCEPTED", "wepaPartyId", userLogin.getString("partyId")), sortOrder);
+partyBase = UtilMisc.toList(new EntityExpr("statusId", EntityOperator.EQUALS, "CAL_ACCEPTED"), new EntityExpr("wepaPartyId", EntityOperator.EQUALS, userLogin.getString("partyId")));
+partyRole = UtilMisc.toList(new EntityExpr("orderRoleTypeId", EntityOperator.EQUALS, "PLACING_CUSTOMER"), new EntityExpr("orderRoleTypeId", EntityOperator.EQUALS, null));
+partyExpr = UtilMisc.toList(new EntityExprList(partyBase, EntityOperator.AND), new EntityExprList(partyRole, EntityOperator.OR));
+partyCond = new EntityConditionList(partyExpr, EntityOperator.AND);
+partyTasks = delegator.findByCondition("OrderTaskList", partyCond, null, sortOrder);
+
 if (partyTasks != null) partyTasks = EntityUtil.filterByDate(partyTasks);
 context.put("partyTasks", partyTasks);
 
@@ -61,10 +66,10 @@ while (pri.hasNext()) {
     if (!partyRole.getString("roleTypeId").equals("_NA_"))
         pRolesList.add(new EntityExpr("roleTypeId", EntityOperator.EQUALS, partyRole.getString("roleTypeId")));
 }
-                
-//baseList = UtilMisc.toList(new EntityExpr("orderRoleTypeId", EntityOperator.EQUALS, "PLACING_CUSTOMER"), new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "CAL_COMPLETED"), new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "CAL_DELEGATED"));
+
+custList = UtilMisc.toList(new EntityExpr("orderRoleTypeId", EntityOperator.EQUALS, "PLACING_CUSTOMER"), new EntityExpr("orderRoleTypeId", EntityOperator.EQUALS, null));
 baseList = UtilMisc.toList(new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "CAL_COMPLETED"), new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "CAL_DELEGATED"));
-expressions = UtilMisc.toList(new EntityExprList(pRolesList, EntityOperator.OR), new EntityExprList(baseList, EntityOperator.AND));
+expressions = UtilMisc.toList(new EntityExprList(custList, EntityOperator.OR), new EntityExprList(pRolesList, EntityOperator.OR), new EntityExprList(baseList, EntityOperator.AND));
 conditions = new EntityConditionList(expressions, EntityOperator.AND);
     
 // invoke the query
@@ -78,5 +83,4 @@ context.put("now", UtilDateTime.nowTimestamp());
 // purchase order schedule
 poList = delegator.findByAnd("OrderHeaderAndRoles", UtilMisc.toMap("partyId", userLogin.get("partyId"), "orderTypeId", "PURCHASE_ORDER"));
 context.put("poList", poList);
-
 
