@@ -20,14 +20,14 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.1
 -->
-
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#if productCategory?has_content>
   ${pages.get(detailTemplate)}
 <#else>  
-  <center><div class='head2'>Category not found for Category ID ${requestParameters.category_id?if_exists}!</div></center>
+  <center><div class='head2'>${uiLabelMap.ProductCategoryNotFoundforCategoryID} ${requestParameters.category_id?if_exists}!</div></center>
 </#if>
 
 

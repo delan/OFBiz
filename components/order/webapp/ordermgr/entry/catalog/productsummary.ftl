@@ -20,40 +20,44 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      2.1
 -->
-
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#if requestAttributes.product?exists>
-  <#-- variable setup -->
-  <#assign product = requestAttributes.product>
-  <#assign price = requestAttributes.priceMap>
-  <#assign smallImageUrl = product.smallImageUrl?if_exists> 
-  <#-- end variable setup -->
-            
-  <table border="0" width='100%' cellpadding='0' cellspacing='0'>
+<#-- variable setup -->
+<#assign product = requestAttributes.product>
+<#assign price = requestAttributes.priceMap>
+<#assign targetRequestName = "product">
+<#if requestAttributes.targetRequestName?has_content>
+    <#assign targetRequestName = requestAttributes.targetRequestName>
+</#if>
+<#assign smallImageUrl = product.smallImageUrl?if_exists>
+<#-- end variable setup -->
+
+  <table border="0" width="100%" cellpadding="0" cellspacing="0">
     <tr>
-      <td valign="top">    
-          <a href='<@ofbizUrl>/product/<#if requestAttributes.categoryId?exists>~category_id=${requestAttributes.categoryId}/</#if>~product_id=${product.productId}</@ofbizUrl>'>
-            <img src='<@ofbizContentUrl>${requestAttributes.contentPathPrefix?if_exists}${product.smallImageUrl?default("/images/defaultImage.jpg")}</@ofbizContentUrl>' align="left" height="50" class='imageborder' border='0'> 
+      <td valign="top">
+          <a href="<@ofbizUrl>/${targetRequestName}/<#if requestAttributes.categoryId?exists>~category_id=${requestAttributes.categoryId}/</#if>~product_id=${product.productId}</@ofbizUrl>">
+            <img src="<@ofbizContentUrl>${requestAttributes.contentPathPrefix?if_exists}${product.smallImageUrl?default("/images/defaultImage.jpg")}</@ofbizContentUrl>" align="left" height="50" class="imageborder" border="0">
           </a>
       </td>
       <td align="left" valign="top" width="100%">
           <div class="tabletext">
-            <a href='<@ofbizUrl>/product/<#if requestAttributes.categoryId?exists>~category_id=${requestAttributes.categoryId}/</#if>~product_id=${product.productId}</@ofbizUrl>' class='buttontext'>${product.productName?if_exists}</a>
+            <a href="<@ofbizUrl>/${targetRequestName}/<#if requestAttributes.categoryId?exists>~category_id=${requestAttributes.categoryId}/</#if>~product_id=${product.productId}</@ofbizUrl>" class="buttontext">${product.productName?if_exists}</a>
           </div>
-          <div class="tabletext">${product.description?if_exists}<#if daysToShip?exists>&nbsp;-&nbsp;Usually Ships In <b>${daysToShip}</b> Days!</#if></div>
+          <div class="tabletext">${product.description?if_exists}<#if daysToShip?exists>&nbsp;-&nbsp;${uiLabelMap.ProductUsuallyShipsIn} <b>${daysToShip}</b> ${uiLabelMap.CommonDays}!</#if></div>
           <div class="tabletext">
             <nobr>
               <b>${product.productId?if_exists}</b>,
                 <#if price.listPrice?exists && price.price?exists && price.price?double < price.listPrice?double>
-                  List price: <span class='basePrice'>${price.listPrice?string.currency}</span>
-                </#if>                                            
+                  ${uiLabelMap.ProductListPrice}: <span class="basePrice"><@ofbizCurrency amount=price.listPrice isoCode=price.currencyUsed/></span>
+                </#if>
                 <b>
                   <#if price.isSale>
-                    <span class='salePrice'>On Sale!</span>
+                    <span class="salePrice">${uiLabelMap.EcommerceOnSale}!</span>
                   </#if>
-                  Your price: <span class='<#if price.isSale>salePrice<#else>normalPrice</#if>'>${price.price?string.currency}</span>
+                  ${uiLabelMap.EcommerceYourPrice}: <span class="<#if price.isSale>salePrice<#else>normalPrice</#if>"><@ofbizCurrency amount=price.price isoCode=price.currencyUsed/></span>
                 </b>
             </nobr>
           </div>
@@ -61,37 +65,37 @@
       <td valign=center align=right>
           <#-- check to see if introductionDate hasn't passed yet -->
           <#if product.introductionDate?exists && nowTimestamp.before(product.introductionDate)>
-            <div class='tabletext' style='color: red;'>Not Yet Available</div>
+            <div class="tabletext" style="color: red;">${uiLabelMap.ProductNotYetAvailable}</div>
           <#-- check to see if salesDiscontinuationDate has passed -->
           <#elseif product.salesDiscontinuationDate?exists && nowTimestamp.after(product.salesDiscontinuationDate)>
-            <div class='tabletext' style='color: red;'>No Longer Available</div>          
+            <div class="tabletext" style="color: red;">${uiLabelMap.ProductNoLongerAvailable}</div>
           <#-- check to see if the product is a virtual product -->
           <#elseif product.isVirtual?exists && product.isVirtual == "Y">
-            <a href='<@ofbizUrl>/product?<#if requestAttributes.categoryId?exists>category_id=${requestAttributes.categoryId}&</#if>product_id=${product.productId}</@ofbizUrl>' class="buttontext"><nobr>[Choose Variation...]</nobr></a>                                                          
+            <a href="<@ofbizUrl>/product?<#if requestAttributes.categoryId?exists>category_id=${requestAttributes.categoryId}&</#if>product_id=${product.productId}</@ofbizUrl>" class="buttontext"><nobr>[${uiLabelMap.EcommerceChooseVariations}...]</nobr></a>
           <#else>
-            <form method="POST" action="<@ofbizUrl>/additem</@ofbizUrl>" name="the${requestAttributes.formNamePrefix?if_exists}${requestAttributes.listIndex?if_exists}form" style='margin: 0;'>
-              <input type='hidden' name='add_product_id' value='${product.productId}'>
-              <input type="text" class='inputBox' size="5" name="quantity" value="1">              
-              <#if requestParameters.product_id?exists><input type='hidden' name='product_id' value='${requestParameters.product_id}'></#if>
-              <#if requestParameters.category_id?exists><input type='hidden' name='category_id' value='${requestParameters.category_id}'></#if>
-              <#if requestParameters.VIEW_INDEX?exists><input type='hidden' name='VIEW_INDEX' value='${requestParameters.VIEW_INDEX}'></#if>
-              <#if requestParameters.VIEW_SIZE?exists><input type='hidden' name='VIEW_SIZE' value='${requestParameters.VIEW_SIZE}'></#if>
-              <input type='hidden' name='clearSearch' value='N'>
-              <br><a href="javascript:document.the${requestAttributes.formNamePrefix?if_exists}${requestAttributes.listIndex?if_exists}form.submit()" class="buttontext"><nobr>[Add to Cart]</nobr></a>
+            <form method="POST" action="<@ofbizUrl>/additem<#if requestAttributes._CURRENT_VIEW_?exists>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="the${requestAttributes.formNamePrefix?if_exists}${requestAttributes.listIndex?if_exists}form" style="margin: 0;">
+              <input type="hidden" name="add_product_id" value="${product.productId}">
+              <input type="text" class="inputBox" size="5" name="quantity" value="1">
+              <#if requestParameters.product_id?has_content><input type="hidden" name="product_id" value="${requestParameters.product_id}"></#if>
+              <#if requestParameters.category_id?has_content><input type="hidden" name="category_id" value="${requestParameters.category_id}"></#if>
+              <#if requestParameters.VIEW_INDEX?has_content><input type="hidden" name="VIEW_INDEX" value="${requestParameters.VIEW_INDEX}"></#if>
+              <#if requestParameters.VIEW_SIZE?has_content><input type="hidden" name="VIEW_SIZE" value="${requestParameters.VIEW_SIZE}"></#if>
+              <input type="hidden" name="clearSearch" value="N">
+              <br><a href="javascript:document.the${requestAttributes.formNamePrefix?if_exists}${requestAttributes.listIndex?if_exists}form.submit()" class="buttontext"><nobr>[${uiLabelMap.EcommerceAddtoCart}]</nobr></a>
             </form>
             
             <#if requestAttributes.productCategoryMember?exists>
-			  <#assign prodCatMem = requestAttributes.productCategoryMember>
-			  <#if prodCatMem?exists && prodCatMem.quantity?exists && 0.00 < prodCatMem.quantity?double>
-                <form method="POST" action="<@ofbizUrl>/additem</@ofbizUrl>" name="the${requestAttributes.formNamePrefix?if_exists}${requestAttributes.listIndex?if_exists}defaultform" style='margin: 0;'>
-                  <input type='hidden' name='add_product_id' value='${prodCatMem.productId?if_exists}'>
-                  <input type='hidden' name="quantity" value='${prodCatMem.quantity?if_exists}'>                  
-                  <#if requestParameters.product_id?exists><input type='hidden' name='product_id' value='${requestParameters.product_id}'></#if>
-                  <#if requestParameters.category_id?exists><input type='hidden' name='category_id' value='${requestParameters.category_id}'></#if>
-                  <#if requestParameters.VIEW_INDEX?exists><input type='hidden' name='VIEW_INDEX' value='${requestParameters.VIEW_INDEX}'></#if>
-                  <#if requestParameters.VIEW_SIZE?exists><input type='hidden' name='VIEW_SIZE' value='${requestParameters.VIEW_SIZE}'></#if>
-                  <input type='hidden' name='clearSearch' value='N'>
-                  <a href="javascript:document.the${requestAttributes.formNamePrefix?if_exists}${requestAttributes.listIndex?if_exists}defaultform.submit()" class="buttontext"><nobr>[Add Default(${productCategoryMember.quantity?string.number}) to Cart]</nobr></a>
+                <#assign prodCatMem = requestAttributes.productCategoryMember>
+                <#if prodCatMem?exists && prodCatMem.quantity?exists && 0.00 < prodCatMem.quantity?double>
+                <form method="POST" action="<@ofbizUrl>/additem<#if requestAttributes._CURRENT_VIEW_?exists>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="the${requestAttributes.formNamePrefix?if_exists}${requestAttributes.listIndex?if_exists}defaultform" style="margin: 0;">
+                  <input type="hidden" name="add_product_id" value="${prodCatMem.productId?if_exists}">
+                  <input type="hidden" name="quantity" value="${prodCatMem.quantity?if_exists}">
+                  <#if requestParameters.product_id?has_content><input type="hidden" name="product_id" value="${requestParameters.product_id}"></#if>
+                  <#if requestParameters.category_id?has_content><input type="hidden" name="category_id" value="${requestParameters.category_id}"></#if>
+                  <#if requestParameters.VIEW_INDEX?has_content><input type="hidden" name="VIEW_INDEX" value="${requestParameters.VIEW_INDEX}"></#if>
+                  <#if requestParameters.VIEW_SIZE?has_content><input type="hidden" name="VIEW_SIZE" value="${requestParameters.VIEW_SIZE}"></#if>
+                  <input type="hidden" name="clearSearch" value="N">
+                  <a href="javascript:document.the${requestAttributes.formNamePrefix?if_exists}${requestAttributes.listIndex?if_exists}defaultform.submit()" class="buttontext"><nobr>[${uiLabelMap.CommonAddDefault}(${prodCatMem.quantity?string.number}) ${uiLabelMap.EcommerceToCart}]</nobr></a>
                 </form>
               </#if>
             </#if>
@@ -100,5 +104,5 @@
     </tr>
   </table>
 <#else>
-&nbsp;ERROR: Product not found.<br>
+&nbsp;${uiLabelMap.ProductErrorProductNotFound}.<br>
 </#if>

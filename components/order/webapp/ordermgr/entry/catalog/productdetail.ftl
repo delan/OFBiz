@@ -1,29 +1,29 @@
 <#--
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
- *  Permission is hereby granted, free of charge, to any person obtaining a 
- *  copy of this software and associated documentation files (the "Software"), 
- *  to deal in the Software without restriction, including without limitation 
- *  the rights to use, copy, modify, merge, publish, distribute, sublicense, 
- *  and/or sell copies of the Software, and to permit persons to whom the 
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
  *  Software is furnished to do so, subject to the following conditions:
  *
- *  The above copyright notice and this permission notice shall be included 
+ *  The above copyright notice and this permission notice shall be included
  *  in all copies or substantial portions of the Software.
  *
- *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
- *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
- *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
- *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.4 $
+ *@version    $Revision: 1.5 $
  *@since      2.1
 -->
-
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#-- variable setup -->
 <#assign product = requestAttributes.product?if_exists>
 <#assign price = requestAttributes.priceMap?if_exists>
@@ -51,18 +51,18 @@ ${requestAttributes.virtualJavaScript?if_exists}
     <tr>
       <td colspan="2" align="right">
         <#if requestAttributes.previousProductId?exists>
-          <a href='<@ofbizUrl>/product/~category_id=${requestAttributes.categoryId?if_exists}/~product_id=${requestAttributes.previousProductId?if_exists}</@ofbizUrl>' class="buttontext">[Previous]</a>&nbsp;|&nbsp;
+          <a href='<@ofbizUrl>/product/~category_id=${requestAttributes.categoryId?if_exists}/~product_id=${requestAttributes.previousProductId?if_exists}</@ofbizUrl>' class="buttontext">[${uiLabelMap.CommonPrevious}]</a>&nbsp;|&nbsp;
         </#if>
         <a href="<@ofbizUrl>/category/~category_id=${requestAttributes.categoryId?if_exists}</@ofbizUrl>" class="buttontext">${requestAttributes.category.description?if_exists}</a>
         <#if requestAttributes.nextProductId?exists>
-          &nbsp;|&nbsp;<a href='<@ofbizUrl>/product/~category_id=${requestAttributes.categoryId?if_exists}/~product_id=${requestAttributes.nextProductId?if_exists}</@ofbizUrl>' class="buttontext">[Next]</a>
+          &nbsp;|&nbsp;<a href='<@ofbizUrl>/product/~category_id=${requestAttributes.categoryId?if_exists}/~product_id=${requestAttributes.nextProductId?if_exists}</@ofbizUrl>' class="buttontext">[${uiLabelMap.CommonNext}]</a>
         </#if>
       </td>
     </tr>
   </#if>
-  
+
   <tr><td colspan="2"><hr class='sepbar'></td></tr>
-  
+
   <#-- Product image/name/price -->
   <tr>
     <td align="left" valign="top" width="0">
@@ -76,51 +76,52 @@ ${requestAttributes.virtualJavaScript?if_exists}
       <#if product.productId?has_content>
         <div class="tabletext"><b>${product.productId}</b> <a href="/catalog/control/EditProduct?productId=${product.productId}&externalLoginKey=${requestAttributes.externalLoginKey?if_exists}" class="buttontext">[Edit&nbsp;Product]</a></div>
       </#if>
+
       <#-- for prices:
               - if price < listPrice, show
               - if price < defaultPrice and defaultPrice < listPrice, show default
               - if isSale show price with salePrice style and print "On Sale!"
       -->
       <#if price.listPrice?exists && price.price?exists && price.price?double < price.listPrice?double>
-        <div class="tabletext">List price: <span class='basePrice'>${price.listPrice?string.currency}</span></div>
+        <div class="tabletext">${uiLabelMap.ProductListPrice}: <span class='basePrice'><@ofbizCurrency amount=price.listPrice isoCode=price.currencyUsed/></span></div>
       </#if>
       <#if price.listPrice?exists && price.basePrice?exists && price.price?exists && price.price?double < price.defaultPrice?double && price.defaultPrice?double < price.listPrice?double>
-        <div class="tabletext">Regular price: <span class='basePrice'>${price.defaultPrice?string.currency}</span></div>
-      </#if>     
+        <div class="tabletext">${uiLabelMap.ProductRegularPrice}: <span class='basePrice'><@ofbizCurrency amount=price.defaultPrice isoCode=price.currencyUsed/></span></div>
+      </#if>
       <div class="tabletext">
         <b>
           <#if price.isSale>
-            <span class='salePrice'>On Sale!</span>
+            <span class='salePrice'>${uiLabelMap.EcommerceOnSale}!</span>
             <#assign priceStyle = "salePrice">
           <#else>
             <#assign priceStyle = "regularPrice">
           </#if>
-            Your price: <span class='${priceStyle}'>${price.price?string.currency}</span>
+            ${uiLabelMap.EcommerceYourPrice}: <span class='${priceStyle}'><@ofbizCurrency amount=price.price isoCode=price.currencyUsed/></span>
         </b>
       </div>
-      
+
       <#-- Included quantities/pieces -->
-      <#if product.quantityIncluded?exists && product.quantityIncluded?double != 0>     
-        <div class="tabletext">Includes:
+      <#if product.quantityIncluded?exists && product.quantityIncluded?double != 0>
+        <div class="tabletext">${uiLabelMap.EcommerceIncludes}:
           ${product.quantityIncluded?if_exists}
           ${product.quantityUomId?if_exists}
         </div>
       </#if>
       <#if product.piecesIncluded?exists && product.piecesIncluded?long != 0>
-        <div class="tabletext">Pieces:
+        <div class="tabletext">${uiLabelMap.EcommercePieces}:
           ${product.piecesIncluded}
         </div>
       </#if>
-                
+
       <form method="POST" action="<@ofbizUrl>/additem<#if requestAttributes._CURRENT_VIEW_?exists>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="addform" style='margin: 0;'>
-        <#assign inStock = true>     
+        <#assign inStock = true>
         <#-- Variant Selection -->
         <#if product.isVirtual?exists && product.isVirtual?upper_case == "Y">
           <#if requestAttributes.variantTree?exists && 0 < requestAttributes.variantTree.size()>
             <p>&nbsp;</p>
             <#list requestAttributes.featureSet as currentType>
               <div class="tabletext">
-                <select name="${currentType}" onChange="getList(this.name, this.options[this.selectedIndex].value)">
+                <select name="${currentType}" class="selectBox" onChange="getList(this.name, this.options[this.selectedIndex].value)">
                   <option>${requestAttributes.featureTypes.get(currentType)}</option>
                 </select>
               </div>
@@ -130,15 +131,15 @@ ${requestAttributes.virtualJavaScript?if_exists}
           <#else>
             <input type='hidden' name="product_id" value='${product.productId}'>
             <input type='hidden' name="add_product_id" value='NULL'>
-            <div class='tabletext'><b>This item is out of stock.</b></div>
+            <div class='tabletext'><b>${uiLabelMap.ProductItemOutofStock}.</b></div>
             <#assign inStock = false>
           </#if>
-        <#else>          
+        <#else>
           <input type='hidden' name="product_id" value='${product.productId}'>
           <input type='hidden' name="add_product_id" value='${product.productId}'>
           <#if !Static["org.ofbiz.product.store.ProductStoreWorker"].isStoreInventoryAvailable(request, product.productId?string, 1.0?double)>
-            <#if Static["org.ofbiz.product.store.ProductStoreWorker"].isStoreInventoryRequired(request, product)> 
-              <div class='tabletext'><b>This item is out of stock.</b></div>
+            <#if Static["org.ofbiz.product.store.ProductStoreWorker"].isStoreInventoryRequired(request, product)>
+              <div class='tabletext'><b>${uiLabelMap.ProductItemOutofStock}.</b></div>
               <#assign inStock = false>
             <#else>
               <div class='tabletext'><b>${product.inventoryMessage?if_exists}</b></div>
@@ -147,17 +148,17 @@ ${requestAttributes.virtualJavaScript?if_exists}
         </#if>
 
         <p>&nbsp;</p>
-        
+
         <#-- check to see if introductionDate hasn't passed yet -->
         <#if product.introductionDate?exists && nowTimestamp.before(product.introductionDate)>
-          <div class='tabletext' style='color: red;'>This product has not yet been made available for sale.</div>
+          <div class='tabletext' style='color: red;'>${uiLabelMap.ProductProductNotYetMadeAvailable}.</div>
         <#-- check to see if salesDiscontinuationDate has passed -->
         <#elseif product.salesDiscontinuationDate?exists && nowTimestamp.after(product.salesDiscontinuationDate)>
-          <div class='tabletext' style='color: red;'>This product is no longer available for sale.</div>
+          <div class='tabletext' style='color: red;'>${uiLabelMap.ProductProductNoLongerAvailable}.</div>
         <#-- check to see if the product requires inventory check and has inventory -->
-        <#else>        
+        <#else>
           <#if inStock>
-            <a href="javascript:addItem()" class="buttontext"><nobr>[Add to Cart]</nobr></a>&nbsp;
+            <a href="javascript:addItem()" class="buttontext"><nobr>[${uiLabelMap.EcommerceAddtoCart}]</nobr></a>&nbsp;
             <input type="text" class="inputBox" size="5" name="quantity" value="1">
           </#if>
           <#if requestParameters.category_id?exists>
@@ -165,7 +166,7 @@ ${requestAttributes.virtualJavaScript?if_exists}
           </#if>
         </#if>
       </form>
-      
+
       <#if shoppingLists?has_content>
         <hr class="sepbar">
         <form name="addToShoppingList" method="post" action="<@ofbizUrl>/addItemToShoppingList</@ofbizUrl>">
@@ -177,15 +178,15 @@ ${requestAttributes.virtualJavaScript?if_exists}
           </select>
           &nbsp;
           <input type="text" size="5" class="inputBox" name="quantity" value="1">
-          <a href="javascript:document.addToShoppingList.submit();" class="buttontext">[Add To Shopping List]</a>
+          <a href="javascript:document.addToShoppingList.submit();" class="buttontext">[${uiLabelMap.EcommerceAddtoShoppingList}]</a>
         </form>
       </#if>
-       
+
       <#-- Prefill first select box (virtual products only) -->
       <#if requestAttributes.variantTree?exists && 0 < requestAttributes.variantTree.size()>
         <script language="JavaScript">eval("list" + "${requestAttributes.featureOrderFirst}" + "()");</script>
       </#if>
-                
+
       <#-- Swatches (virtual products only) -->
       <#if requestAttributes.variantSample?exists && 0 < requestAttributes.variantSample.size()>
         <#assign imageKeys = requestAttributes.variantSample.keySet()>
@@ -193,13 +194,13 @@ ${requestAttributes.virtualJavaScript?if_exists}
         <p>&nbsp;</p>
         <table cellspacing="0" cellpadding="0">
           <tr>
-            <#assign indexer = 0>              
+            <#assign indexer = 0>
             <#list imageKeys as key>
-              <#assign product = imageMap.get(key)>
-              <#assign imageUrl = product.smallImageUrl?if_exists>       
-              <#if product?exists && product.smallImageUrl?exists>                  
+              <#assign swatchProduct = imageMap.get(key)>
+              <#assign imageUrl = swatchProduct.smallImageUrl?if_exists>
+              <#if swatchProduct?exists && swatchProduct.smallImageUrl?exists>
                 <td align="center" valign="bottom">
-                  <a href="#"><img src="<@ofbizContentUrl>${requestAttributes.contentPathPrefix?if_exists}${product.smallImageUrl}</@ofbizContentUrl>" border="0" width="60" height="60" onclick="javascript:getList('${requestAttributes.featureOrderFirst}','${indexer}',1);"></a>
+                  <a href="#"><img src="<@ofbizContentUrl>${requestAttributes.contentPathPrefix?if_exists}${swatchProduct.smallImageUrl}</@ofbizContentUrl>" border="0" width="60" height="60" onclick="javascript:getList('${requestAttributes.featureOrderFirst}','${indexer}',1);"></a>
                   <br>
                   <a href="#" class="buttontext" onclick="javascript:getList('${requestAttributes.featureOrderFirst}','${indexer}',1);">${key}</a>
                 </td>
@@ -207,30 +208,30 @@ ${requestAttributes.virtualJavaScript?if_exists}
               </#if>
             </#list>
           </tr>
-        </table>        
-      </#if>    
+        </table>
+      </#if>
     </td>
   </tr>
-  
+
   <tr><td colspan="2"><hr class='sepbar'></td></tr>
-  
+
   <#-- Long description of product -->
   <tr>
     <td colspan="2">
       <div class="tabletext">${product.longDescription?if_exists}</div>
     </td>
   </tr>
-  
+
   <tr><td colspan="2"><hr class='sepbar'></td></tr>
-  
+
   <#-- Any attributes/etc may go here -->
-  
+
   <#-- Product Reviews -->
   <tr>
     <td colspan="2">
-      <div class="tableheadtext">Customer Reviews:</div>
+      <div class="tableheadtext">${uiLabelMap.EcommerceCustomerReviews}:</div>
     </td>
-  </tr> 
+  </tr>
   <tr><td colspan="2"><hr class='sepbar'></td></tr>
   <#if requestAttributes.productReviews?has_content>
     <#list requestAttributes.productReviews as productReview>
@@ -239,15 +240,15 @@ ${requestAttributes.virtualJavaScript?if_exists}
       <tr>
         <td colspan="2">
           <table border="0" width="100%" cellpadding="0" cellspacing='0'>
-            <tr>              
+            <tr>
               <td>
-                <div class="tabletext"><b>By: </b><#if productReview.postedAnonymous?default("N") == "Y">Anonymous<#else>${postedPerson.firstName} ${postedPerson.lastName}</#if></div>
+                <div class="tabletext"><b>${uiLabelMap.CommonBy}: </b><#if productReview.postedAnonymous?default("N") == "Y">${uiLabelMap.EcommerceAnonymous}<#else>${postedPerson.firstName} ${postedPerson.lastName}</#if></div>
               </td>
               <td>
-                <div class="tabletext"><b>On: </b>${productReview.postedDateTime?if_exists}</div>
+                <div class="tabletext"><b>${uiLabelMap.CommonOn}: </b>${productReview.postedDateTime?if_exists}</div>
               </td>
               <td>
-                <div class="tabletext"><b>Ranking: </b>${productReview.productRating?if_exists?string}</div>
+                <div class="tabletext"><b>${uiLabelMap.EcommerceRanking}: </b>${productReview.productRating?if_exists?string}</div>
               </td>
             </tr>
             <tr>
@@ -267,29 +268,29 @@ ${requestAttributes.virtualJavaScript?if_exists}
     </#list>
     <tr>
       <td colspan="2">
-        <a href="<@ofbizUrl>/reviewProduct?category_id=${requestAttributes.categoryId?if_exists}&product_id=${product.productId}</@ofbizUrl>" class="buttontext">Review This Product!</a>      
+        <a href="<@ofbizUrl>/reviewProduct?category_id=${requestAttributes.categoryId?if_exists}&product_id=${product.productId}</@ofbizUrl>" class="buttontext">Review This Product!</a>
       </td>
-    </tr>    
+    </tr>
   <#else>
     <tr>
       <td colspan="2">
-        <div class="tabletext">This product hasn't been reviewed yet.</div>
+        <div class="tabletext">${uiLabelMap.ProductProductNotReviewedYet}.</div>
       </td>
     </tr>
     <tr>
       <td colspan="2">
-        <a href="<@ofbizUrl>/reviewProduct?category_id=${requestAttributes.categoryId?if_exists}&product_id=${product.productId}</@ofbizUrl>" class="buttontext">Be The First To Review This Product!</a>      
+        <a href="<@ofbizUrl>/reviewProduct?category_id=${requestAttributes.categoryId?if_exists}&product_id=${product.productId}</@ofbizUrl>" class="buttontext">Be The First To Review This Product!</a>
       </td>
-    </tr>       
-  </#if>  
+    </tr>
+  </#if>
 </table>
 
 <#-- Upgrades/Up-Sell/Cross-Sell -->
-<#macro associated assocProducts beforeName showName afterName formNamePrefix>
+  <#macro associated assocProducts beforeName showName afterName formNamePrefix >
   <#if assocProducts?has_content>
-    <tr><td>&nbsp;</td></tr> 
+    <tr><td>&nbsp;</td></tr>
     <tr><td colspan="2"><div class="head2">${beforeName?if_exists}<#if showName == "Y">${productValue.productName}</#if>${afterName?if_exists}</div></td></tr>
-    <tr><td><hr class='sepbar'></td></tr>    
+    <tr><td><hr class='sepbar'></td></tr>
     <#list assocProducts as productAssoc>
       <tr><td>
         <div class="tabletext">
@@ -298,7 +299,7 @@ ${requestAttributes.virtualJavaScript?if_exists}
           </a>
           - <b>${productAssoc.reason?if_exists}</b>
         </div>
-      </td></tr>      
+      </td></tr>
       ${setRequestAttribute("optProductId", productAssoc.productIdTo)}
       ${setRequestAttribute("listIndex", listIndex)}
       ${setRequestAttribute("formNamePrefix", formNamePrefix)}
@@ -309,9 +310,9 @@ ${requestAttributes.virtualJavaScript?if_exists}
       </tr>
       <#local listIndex = listIndex + 1>
       <tr><td><hr class='sepbar'></td></tr>
-    </#list>           
+    </#list>
     ${setRequestAttribute("optProductId", "")}
-  </#if>      
+  </#if>
 </#macro>
 <#assign productValue = product>
 <#assign listIndex = 1>
