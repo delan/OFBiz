@@ -44,8 +44,8 @@
   String creditCardId = request.getParameter("CREDIT_CARD_ID");
   if(creditCardId == null) creditCardId = (String)request.getAttribute("CREDIT_CARD_ID");
 
-  Iterator partyContactMechIterator = UtilMisc.toIterator(helper.findByAnd("PartyContactMech", UtilMisc.toMap("partyId", userLogin.get("partyId")), null));
-  GenericValue creditCard = helper.findByPrimaryKey("CreditCardInfo", UtilMisc.toMap("creditCardId", creditCardId));
+  Iterator partyContactMechIterator = UtilMisc.toIterator(delegator.findByAnd("PartyContactMech", UtilMisc.toMap("partyId", userLogin.get("partyId")), null));
+  GenericValue creditCard = delegator.findByPrimaryKey("CreditCardInfo", UtilMisc.toMap("creditCardId", creditCardId));
 %>
 
 <%if(!security.hasPermission("USER_ADMIN", session) && creditCard != null && 
@@ -163,7 +163,7 @@
         --%>
         <table width="100%" border="0" cellpadding="1">
         <%String curContactMechId = UtilFormatOut.checkNull(useValues?creditCard.getString("contactMechId"):request.getParameter("CC_CONTACT_MECH_ID"));%>
-        <%GenericValue curPartyContactMech = helper.findByPrimaryKey("PartyContactMech", UtilMisc.toMap("partyId", userLogin.get("partyId"), "contactMechId", curContactMechId));%>
+        <%GenericValue curPartyContactMech = delegator.findByPrimaryKey("PartyContactMech", UtilMisc.toMap("partyId", userLogin.get("partyId"), "contactMechId", curContactMechId));%>
         <%GenericValue curContactMech = curPartyContactMech!=null?curPartyContactMech.getRelatedOne("ContactMech"):null;%>
         <%GenericValue curPostalAddress = curContactMech!=null?curContactMech.getRelatedOne("PostalAddress"):null;%>
         <%if(curPostalAddress != null){%>

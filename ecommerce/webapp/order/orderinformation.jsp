@@ -261,7 +261,7 @@
           <div class="tabletext">
           <%=UtilFormatOut.checkNull(carrierPartyId)%> 
           <%String shipMethDescription = "";%>
-          <%GenericValue shipmentMethodType = helper.findByPrimaryKey("ShipmentMethodType", UtilMisc.toMap("shipmentMethodTypeId", shipmentMethodTypeId));%>
+          <%GenericValue shipmentMethodType = delegator.findByPrimaryKey("ShipmentMethodType", UtilMisc.toMap("shipmentMethodTypeId", shipmentMethodTypeId));%>
           <%if(shipmentMethodType != null) shipMethDescription = shipmentMethodType.getString("description");%>
           <%=UtilFormatOut.checkNull(shipMethDescription)%>
           <%--=UtilFormatOut.ifNotEmpty(shippingAccount, "<br>Use Account: ", "")--%>

@@ -49,7 +49,7 @@
 <table width="100%" border="0" cellpadding='0' cellspacing='0'>
   <tr valign="top" align="left">
     <td height='100%'>
-<% pageContext.setAttribute("carrierShipmentMethodList", helper.findAllCache("CarrierShipmentMethod", null)); %>
+<% pageContext.setAttribute("carrierShipmentMethodList", delegator.findAllCache("CarrierShipmentMethod", null)); %>
 <TABLE border=0 width='100%' cellpadding=1 cellspacing=0 bgcolor='black'>
   <TR>
     <TD width='100%'>
@@ -181,7 +181,7 @@
 <%-- ======================================================================== --%>
 <%-- ======================================================================== --%>
 <td height='100%'>
-<% pageContext.setAttribute("shippingPartyContactPurposeList", helper.findByAnd("PartyContactMechPurpose", UtilMisc.toMap(
+<% pageContext.setAttribute("shippingPartyContactPurposeList", delegator.findByAnd("PartyContactMechPurpose", UtilMisc.toMap(
         "partyId", userLogin.getString("partyId"),
         "contactMechPurposeTypeId", "SHIPPING_LOCATION"), null)); %>  
 <TABLE border=0 width='100%' cellpadding=1 cellspacing=0 bgcolor='black' style='height: 100%;'>
@@ -307,7 +307,7 @@
    <h3>There are no credit cards on file.</h3>
 </ofbiz:unless>
 
-<% pageContext.setAttribute("billingAccountRoleList", helper.findByAnd("BillingAccountRole", UtilMisc.toMap(
+<% pageContext.setAttribute("billingAccountRoleList", delegator.findByAnd("BillingAccountRole", UtilMisc.toMap(
         "partyId", userLogin.getString("partyId"),
         "roleTypeId", "BILL_TO_CUSTOMER"), null)); %>  
 

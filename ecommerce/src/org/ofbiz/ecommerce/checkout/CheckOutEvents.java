@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.15  2001/09/19 00:24:13  jonesde
+ * Updates related to moving server root from session to request; added error messages.
+ *
  * Revision 1.14  2001/09/18 22:31:48  jonesde
  * Cleaned up messages, fixed a few small bugs.
  *
@@ -180,57 +183,65 @@ public class CheckOutEvents {
         GenericValue userLogin = (GenericValue)request.getSession().getAttribute(SiteDefs.USER_LOGIN);
         StringBuffer errorMessage = new StringBuffer();
         if (cart != null && cart.size() > 0) {
-            GenericHelper helper = userLogin.getHelper();
-            String orderId = helper.getNextSeqId("OrderHeader").toString();
-            GenericValue order = helper.makeValue("OrderHeader", UtilMisc.toMap("orderId", orderId, "orderTypeId", "SALES_ORDER", "orderDate", UtilDateTime.nowTimestamp(), "entryDate", UtilDateTime.nowTimestamp(), "statusId", "Ordered", "shippingInstructions", cart.getShippingInstructions())); 
+            GenericDelegator delegator = userLogin.getDelegator();
+            String orderId = delegator.getNextSeqId("OrderHeader").toString();
+            GenericValue order = delegator.makeValue("OrderHeader", UtilMisc.toMap("orderId", orderId, "orderTypeId", "SALES_ORDER", "orderDate", UtilDateTime.nowTimestamp(), "entryDate", UtilDateTime.nowTimestamp(), "statusId", "Ordered", "shippingInstructions", cart.getShippingInstructions())); 
             order.set("billingAccountId", cart.getBillingAccountId());
             if (cart.getCartDiscount() != 0.0) {
-                order.preStoreOther(helper.makeValue("OrderAdjustment", UtilMisc.toMap( "orderAdjustmentId", helper.getNextSeqId("OrderAdjustment").toString(), "orderAdjustmentTypeId", "DISCOUNT_ADJUSTMENT", "orderId", orderId, "orderItemSeqId", "NA", "percentage", new Double(cart.getCartDiscount()))));
+                order.preStoreOther(delegator.makeValue("OrderAdjustment", UtilMisc.toMap( "orderAdjustmentId", delegator.getNextSeqId("OrderAdjustment").toString(), "orderAdjustmentTypeId", "DISCOUNT_ADJUSTMENT", "orderId", orderId, "orderItemSeqId", "NA", "percentage", new Double(cart.getCartDiscount()))));
             }
-            order.preStoreOther(helper.makeValue("OrderAdjustment", UtilMisc.toMap("orderAdjustmentId", helper.getNextSeqId("OrderAdjustment").toString(), "orderAdjustmentTypeId", "SHIPPING_CHARGES", "orderId", orderId, "orderItemSeqId", null, "amount", new Double(cart.getShipping()))));
-            order.preStoreOther(helper.makeValue("OrderAdjustment", UtilMisc.toMap("orderAdjustmentId", helper.getNextSeqId("OrderAdjustment").toString(), "orderAdjustmentTypeId", "SALES_TAX", "orderId", orderId, "orderItemSeqId", null, "amount", new Double(cart.getSalesTax()))));
-            order.preStoreOther(helper.makeValue("OrderContactMech", UtilMisc.toMap( "contactMechId", cart.getShippingContactMechId(), "contactMechPurposeTypeId", "SHIPPING_LOCATION", "orderId", orderId)));
+            order.preStoreOther(delegator.makeValue("OrderAdjustment", UtilMisc.toMap("orderAdjustmentId", delegator.getNextSeqId("OrderAdjustment").toString(), "orderAdjustmentTypeId", "SHIPPING_CHARGES", "orderId", orderId, "orderItemSeqId", null, "amount", new Double(cart.getShipping()))));
+            order.preStoreOther(delegator.makeValue("OrderAdjustment", UtilMisc.toMap("orderAdjustmentId", delegator.getNextSeqId("OrderAdjustment").toString(), "orderAdjustmentTypeId", "SALES_TAX", "orderId", orderId, "orderItemSeqId", null, "amount", new Double(cart.getSalesTax()))));
+            order.preStoreOther(delegator.makeValue("OrderContactMech", UtilMisc.toMap( "contactMechId", cart.getShippingContactMechId(), "contactMechPurposeTypeId", "SHIPPING_LOCATION", "orderId", orderId)));
             
-            String shipmentId = helper.getNextSeqId("Shipment").toString();
-            GenericValue orderShipmentPreference = helper.makeValue("OrderShipmentPreference", UtilMisc.toMap("orderId", orderId, "orderItemSeqId", DataModelConstants.SEQ_ID_NA, "shipmentMethodTypeId", cart.getShipmentMethodTypeId(), "carrierPartyId", cart.getCarrierPartyId(), "carrierRoleTypeId", "CARRIER" /* XXX */, "shippingInstructions", cart.getShippingInstructions()));
+            String shipmentId = delegator.getNextSeqId("Shipment").toString();
+            GenericValue orderShipmentPreference = delegator.makeValue("OrderShipmentPreference", UtilMisc.toMap("orderId", orderId, "orderItemSeqId", DataModelConstants.SEQ_ID_NA, "shipmentMethodTypeId", cart.getShipmentMethodTypeId(), "carrierPartyId", cart.getCarrierPartyId(), "carrierRoleTypeId", "CARRIER" /* XXX */, "shippingInstructions", cart.getShippingInstructions()));
             orderShipmentPreference.set("maySplit", cart.getMaySplit());
             order.preStoreOther(orderShipmentPreference);
 
-            order.preStoreOthers(cart.makeOrderItems(helper, orderId));
+            order.preStoreOthers(cart.makeOrderItems(delegator, orderId));
 
             final String[] USER_ORDER_ROLE_TYPES = {"END_USER_CUSTOMER", "SHIP_TO_CUSTOMER", 
                     "BILL_TO_CUSTOMER", "PLACING_CUSTOMER"};
             for (int i = 0; i < USER_ORDER_ROLE_TYPES.length; i++) {
-                order.preStoreOther(helper.makeValue("OrderRole", UtilMisc.toMap(
+                order.preStoreOther(delegator.makeValue("OrderRole", UtilMisc.toMap(
                         "orderId", orderId,
                         "partyId", userLogin.get("partyId"),
                         "roleTypeId", USER_ORDER_ROLE_TYPES[i])));
             }
                  
-            order.preStoreOther(helper.makeValue("OrderStatus", UtilMisc.toMap("orderStatusId", helper.getNextSeqId("OrderStatus").toString(), "statusId", "Requested", "orderId", orderId, "statusDatetime", UtilDateTime.nowTimestamp())));
+            order.preStoreOther(delegator.makeValue("OrderStatus", UtilMisc.toMap("orderStatusId", delegator.getNextSeqId("OrderStatus").toString(), "statusId", "Requested", "orderId", orderId, "statusDatetime", UtilDateTime.nowTimestamp())));
 
             String creditCardId = cart.getCreditCardId();
             if (creditCardId != null) {
-                order.preStoreOther(helper.makeValue("OrderPaymentPreference", UtilMisc.toMap("orderPaymentPreferenceId", helper.getNextSeqId("OrderPaymentPref").toString(), "orderId", orderId, "paymentMethodTypeId", "CREDIT_CARD", "paymentInfoId", creditCardId)));
+                order.preStoreOther(delegator.makeValue("OrderPaymentPreference", UtilMisc.toMap("orderPaymentPreferenceId", delegator.getNextSeqId("OrderPaymentPref").toString(), "orderId", orderId, "paymentMethodTypeId", "CREDIT_CARD", "paymentInfoId", creditCardId)));
             } else {
                 //XXX CASH should not be assumed!!
-                order.preStoreOther(helper.makeValue("OrderPaymentPreference", UtilMisc.toMap("orderPaymentPreferenceId", helper.getNextSeqId("OrderPaymentPref").toString(), "orderId", orderId, "paymentMethodTypeId", "CASH", "paymentInfoId", creditCardId)));
+                order.preStoreOther(delegator.makeValue("OrderPaymentPreference", UtilMisc.toMap("orderPaymentPreferenceId", delegator.getNextSeqId("OrderPaymentPref").toString(), "orderId", orderId, "paymentMethodTypeId", "CASH", "paymentInfoId", creditCardId)));
             }
             
-            helper.create(order);
+            try {
+              delegator.create(order);
+              cart.clear();
+
+              request.setAttribute("order_id", orderId);
+              request.setAttribute("orderAdditionalEmails", cart.getOrderAdditionalEmails());
+            }
+            catch(GenericEntityException e) {
+              Debug.logWarning(e.getMessage());
+              errorMessage.append("<li>ERROR: Could not create order (write error: " + e.getMessage() + ").");
+            }
             
-            cart.clear();
-                    
-            request.setAttribute("order_id", orderId);
-            request.setAttribute("orderAdditionalEmails", cart.getOrderAdditionalEmails());
-        } else {
+        } 
+        else {
             errorMessage.append("<li>There are no items in the cart.");
         }
         
         if ( errorMessage.length() > 0 ) {
             request.setAttribute(SiteDefs.ERROR_MESSAGE,errorMessage.toString());
             return "error";
-        } else {            
+        } 
+        else {            
             return "success";
         }
     }
@@ -273,10 +284,15 @@ public class CheckOutEvents {
             final String ORDER_CC = UtilProperties.getPropertyValue("ecommerce", "order.confirmation.email.cc");
             GenericValue userLogin = (GenericValue)request.getSession().getAttribute(SiteDefs.USER_LOGIN);
             StringBuffer emails = new StringBuffer((String) request.getAttribute("orderAdditionalEmails"));
-            Iterator emailIter = ContactHelper.getContactMech(userLogin.getRelatedOne("Party"), "EMAIL_ADDRESS", false).iterator();
-            while (emailIter.hasNext()) {
-                GenericValue email = (GenericValue) emailIter.next();
-                emails.append(emails.length() > 0 ? "," : "").append(email.getString("infoString"));
+            GenericValue party = null;
+            try { party = userLogin.getRelatedOne("Party"); }
+            catch(GenericEntityException e) { Debug.logWarning(e.getMessage()); party = null; }
+            if(party != null) {            
+              Iterator emailIter = UtilMisc.toIterator(ContactHelper.getContactMech(party, "EMAIL_ADDRESS", false));
+              while(emailIter != null && emailIter.hasNext()) {
+                  GenericValue email = (GenericValue) emailIter.next();
+                  emails.append(emails.length() > 0 ? "," : "").append(email.getString("infoString"));
+              }
             }
 
             String content = (String) request.getAttribute("confirmorder");

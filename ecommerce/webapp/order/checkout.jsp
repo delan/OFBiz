@@ -49,10 +49,10 @@
 <%pageContext.setAttribute("cart", cart);%>
 <ofbiz:if name="cart" size="0">
 <%
-  GenericValue shippingAddress = cart.getShippingAddress(helper);
-  GenericValue creditCardInfo = cart.getCreditCardInfo(helper);
-  GenericValue billingAddress = cart.getBillingAddress(helper);
-  GenericValue billingAccount = cart.getBillingAccountId() != null ? helper.findByPrimaryKey("BillingAccount", UtilMisc.toMap("billingAccountId", cart.getBillingAccountId())) : null;
+  GenericValue shippingAddress = cart.getShippingAddress(delegator);
+  GenericValue creditCardInfo = cart.getCreditCardInfo(delegator);
+  GenericValue billingAddress = cart.getBillingAddress(delegator);
+  GenericValue billingAccount = cart.getBillingAccountId() != null ? delegator.findByPrimaryKey("BillingAccount", UtilMisc.toMap("billingAccountId", cart.getBillingAccountId())) : null;
 
   String shippingInstructions = cart.getShippingInstructions();
   String customerPoNumber = cart.getPoNumber();
@@ -61,7 +61,7 @@
   Boolean maySplit = cart.getMaySplit();
 //  if (creditCardInfo == null) {
 
-  Collection orderItemList = cart.makeOrderItems(helper, null);
+  Collection orderItemList = cart.makeOrderItems(delegator, null);
   Iterator orderAdjustmentIterator = cart.getAdjustments().iterator();
 %>
 

@@ -47,7 +47,7 @@
   Iterator statusIterator = null;
   Iterator methodIterator = null;
 
-  Collection orderRoleCollection = helper.findByAnd("OrderRole", 
+  Collection orderRoleCollection = delegator.findByAnd("OrderRole", 
           UtilMisc.toMap("partyId", userLogin.get("partyId"), "roleTypeId", "PLACING_CUSTOMER"), null);
   Collection orderHeaderList = new ArrayList(orderRoleCollection.size());
   Iterator orderRoleIter = orderRoleCollection.iterator();

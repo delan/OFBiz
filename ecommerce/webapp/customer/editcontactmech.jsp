@@ -44,8 +44,8 @@
   String contactMechId = request.getParameter("CONTACT_MECH_ID");
   if(contactMechId == null || request.getParameter("UPDATE_MODE") != null) contactMechId = (String)request.getAttribute("CONTACT_MECH_ID");
 
-  GenericValue partyContactMech = helper.findByPrimaryKey("PartyContactMech", UtilMisc.toMap("partyId", userLogin.get("partyId"), "contactMechId", contactMechId));
-  GenericValue contactMech = helper.findByPrimaryKey("ContactMech", UtilMisc.toMap("contactMechId", contactMechId));
+  GenericValue partyContactMech = delegator.findByPrimaryKey("PartyContactMech", UtilMisc.toMap("partyId", userLogin.get("partyId"), "contactMechId", contactMechId));
+  GenericValue contactMech = delegator.findByPrimaryKey("ContactMech", UtilMisc.toMap("contactMechId", contactMechId));
   String contactMechTypeId = null;
   if(contactMech != null) contactMechTypeId = contactMech.getString("contactMechTypeId");
 %>
@@ -64,7 +64,7 @@
           <td width="26%"><div class="tabletext">Select Contact Type:</div></td>
           <td width="74%">
             <select name="CONTACT_MECH_TYPE_ID">
-              <%Iterator contactMechTypes = UtilMisc.toIterator(helper.findByAnd("ContactMechType", null, null));%>
+              <%Iterator contactMechTypes = UtilMisc.toIterator(delegator.findByAnd("ContactMechType", null, null));%>
               <%while(contactMechTypes != null && contactMechTypes.hasNext()){%>
                 <%GenericValue contactMechType = (GenericValue)contactMechTypes.next();%>
                 <option value='<%=contactMechType.getString("contactMechTypeId")%>'><%=contactMechType.getString("description")%></option>
@@ -86,7 +86,7 @@
       <p class="head1">Create New Contact Information</p>
       <%String cmNewPurposeTypeId = request.getParameter("CM_NEW_PURPOSE_TYPE_ID");%>
       <%if(cmNewPurposeTypeId != null){%>
-        <%GenericValue contactMechPurposeType = helper.findByPrimaryKey("ContactMechPurposeType", UtilMisc.toMap("contactMechPurposeTypeId", cmNewPurposeTypeId));%>
+        <%GenericValue contactMechPurposeType = delegator.findByPrimaryKey("ContactMechPurposeType", UtilMisc.toMap("contactMechPurposeTypeId", cmNewPurposeTypeId));%>
         <%if(contactMechPurposeType != null){%>
         (Note: this new contact information will have the purpose <b>"<%=UtilFormatOut.checkNull(contactMechPurposeType.getString("description"))%>"</b>)
         <%}else{ cmNewPurposeTypeId = null; }%>
@@ -120,7 +120,7 @@
                   </tr>
                 <%}%>
               <%}%>
-              <%Iterator purposeTypes = UtilMisc.toIterator(helper.findByAnd("ContactMechTypePurpose", UtilMisc.toMap("contactMechTypeId", contactMechTypeId), null));%>
+              <%Iterator purposeTypes = UtilMisc.toIterator(delegator.findByAnd("ContactMechTypePurpose", UtilMisc.toMap("contactMechTypeId", contactMechTypeId), null));%>
               <%if(purposeTypes != null && purposeTypes.hasNext()){%>
               <tr>
                 <form method=POST action='<ofbiz:url><%="/createpartycontactmechpurpose?CONTACT_MECH_ID=" + contactMechId + "&DONE_PAGE=" + donePage%></ofbiz:url>' name='newpurposeform'>
@@ -233,7 +233,7 @@
       </td>
     </tr>
   <%}else{%>
-    <%GenericValue curContactMechType = helper.findByPrimaryKey("ContactMechType", UtilMisc.toMap("contactMechTypeId", contactMechTypeId));%>
+    <%GenericValue curContactMechType = delegator.findByPrimaryKey("ContactMechType", UtilMisc.toMap("contactMechTypeId", contactMechTypeId));%>
     <tr>
       <td width="26%"><div class="tabletext"><%=curContactMechType.getString("description")%></div></td>
       <td width="74%">

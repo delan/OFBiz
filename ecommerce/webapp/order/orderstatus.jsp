@@ -51,10 +51,10 @@
   GenericValue orderHeader = null;
 
   if(orderId != null && orderId.length() > 0) {
-    orderHeader = helper.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
+    orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
     if (orderHeader != null) {
         //check ownership
-        GenericValue orderRole = helper.findByPrimaryKey("OrderRole", UtilMisc.toMap("orderId", orderId, "partyId", userLogin.getString("partyId"), "roleTypeId", "PLACING_CUSTOMER"));
+        GenericValue orderRole = delegator.findByPrimaryKey("OrderRole", UtilMisc.toMap("orderId", orderId, "partyId", userLogin.getString("partyId"), "roleTypeId", "PLACING_CUSTOMER"));
         if (orderRole == null) {
             pageContext.removeAttribute("orderHeader");
         }

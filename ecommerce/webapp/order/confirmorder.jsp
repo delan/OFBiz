@@ -124,7 +124,7 @@
 <%String serverRoot = (String)request.getAttribute(SiteDefs.SERVER_ROOT_URL);%>
 
 <jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="application" />
-<jsp:useBean id="helper" type="org.ofbiz.core.entity.GenericHelper" scope="application" />
+<jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="application" />
 <% 
    final String ORDER_SECURITY_CODE = UtilProperties.getPropertyValue("ecommerce", "order.confirmation.securityCode");
    String securityCode = request.getParameter("security_code");
@@ -143,7 +143,7 @@
   GenericValue orderHeader = null;
 
   if(UtilValidate.isNotEmpty(orderId)) {
-    orderHeader = helper.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
+    orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
   }%>
 <%if (orderHeader != null) pageContext.setAttribute("orderHeader", orderHeader);%>
 <ofbiz:if name="orderHeader">

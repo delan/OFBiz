@@ -5,10 +5,10 @@
 <%@ page import="org.ofbiz.core.util.*" %>
 <%@ page import="java.util.*" %>
 
-<jsp:useBean id="helper" type="org.ofbiz.core.entity.GenericHelper" scope="application" />
+<jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="application" />
 
 <%
-  Iterator prods = UtilMisc.toIterator(helper.findByAnd("Product", null, null));
+  Iterator prods = UtilMisc.toIterator(delegator.findByAnd("Product", null, null));
   while(prods.hasNext())
   {
     GenericValue prod1 = (GenericValue)prods.next();
@@ -27,8 +27,8 @@
     for(int cat=1; cat<=400; cat++)
     {
       String parentId = cat<=20?"CATALOG1":"" + (cat/20);
-      helper.create("ProductCategory", UtilMisc.toMap("productCategoryId", "" + cat, "primaryParentCategoryId", parentId, "description", "Category " + cat));
-      helper.create("ProductCategoryRollup", UtilMisc.toMap("productCategoryId", "" + cat, "parentProductCategoryId", parentId));
+      delegator.create("ProductCategory", UtilMisc.toMap("productCategoryId", "" + cat, "primaryParentCategoryId", parentId, "description", "Category " + cat));
+      delegator.create("ProductCategoryRollup", UtilMisc.toMap("productCategoryId", "" + cat, "parentProductCategoryId", parentId));
       for(int prod=1; prod<=50; prod++)
       {
         String desc = "Cool Description";
@@ -42,9 +42,9 @@
           longDesc += (" " + longWordBag[wordNum]);
         }
         Double price = new Double(2.99 + prod);
-        GenericValue product = helper.create("Product", UtilMisc.toMap("productId", "" + (cat*100 + prod), "primaryProductCategoryId", "" + (cat), "name", "Product " + "" + (cat*100 + prod), "description", desc, "longDescription", longDesc, "defaultPrice", price));
+        GenericValue product = delegator.create("Product", UtilMisc.toMap("productId", "" + (cat*100 + prod), "primaryProductCategoryId", "" + (cat), "name", "Product " + "" + (cat*100 + prod), "description", desc, "longDescription", longDesc, "defaultPrice", price));
         KeywordSearch.induceKeywords(product);
-        helper.create("ProductCategoryMember", UtilMisc.toMap("productId", "" + (cat*100 + prod), "productCategoryId", "" + (cat)));
+        delegator.create("ProductCategoryMember", UtilMisc.toMap("productId", "" + (cat*100 + prod), "productCategoryId", "" + (cat)));
       }
     }
 %>Created lots of products and categories and keywords.<%

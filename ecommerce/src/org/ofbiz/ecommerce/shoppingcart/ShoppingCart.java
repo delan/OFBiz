@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.11  2001/09/17 16:00:40  jonesde
+ * Removed automatic shipping charges on cart add/remove; should be calced AFTER shipping method selected, etc.
+ *
  * Revision 1.10  2001/09/14 20:05:54  epabst
  * keep the name (not the description w/o the name)
  *
@@ -175,7 +178,7 @@ public class ShoppingCart {
   }
   
   /** Returns an collection of order items. */
-  public Collection makeOrderItems(GenericHelper helper, String orderId) {
+  public Collection makeOrderItems(GenericDelegator delegator, String orderId) {
     synchronized(cartLines) {
       Collection result = new ArrayList(cartLines.size());
       Iterator itemIter = cartLines.iterator();
@@ -183,7 +186,7 @@ public class ShoppingCart {
       while (itemIter.hasNext()) {
         ShoppingCartItem item = (ShoppingCartItem) itemIter.next();
         String orderItemSeqId = String.valueOf(seqId++);
-        GenericValue orderItem = helper.makeValue("OrderItem", UtilMisc.toMap(
+        GenericValue orderItem = delegator.makeValue("OrderItem", UtilMisc.toMap(
         "orderId", orderId,
         "orderItemSeqId", orderItemSeqId,
         "orderItemTypeId", "SALES_ORDER_ITEM",
@@ -342,28 +345,28 @@ public class ShoppingCart {
     return orderAdditionalEmails;
   }
   
-  public GenericValue getCreditCardInfo(GenericHelper helper) {
+  public GenericValue getCreditCardInfo(GenericDelegator delegator) {
     if (this.creditCardId != null) {
-      return helper.findByPrimaryKey("CreditCardInfo", UtilMisc.toMap(
-      "creditCardId", creditCardId));
+      try { return delegator.findByPrimaryKey("CreditCardInfo", UtilMisc.toMap("creditCardId", creditCardId)); }
+      catch(GenericEntityException e) { Debug.logWarning(e.getMessage()); return null; }
     } else {
       return null;
     }
   }
   
-  public GenericValue getShippingAddress(GenericHelper helper) {
+  public GenericValue getShippingAddress(GenericDelegator delegator) {
     if (this.shippingContactMechId != null) {
-      return helper.findByPrimaryKey("PostalAddress", UtilMisc.toMap(
-      "contactMechId", shippingContactMechId));
+      try { return delegator.findByPrimaryKey("PostalAddress", UtilMisc.toMap("contactMechId", shippingContactMechId)); }
+      catch(GenericEntityException e) { Debug.logWarning(e.getMessage()); return null; }      
     } else {
       return null;
     }
   }
   
-  public GenericValue getBillingAddress(GenericHelper helper) {
+  public GenericValue getBillingAddress(GenericDelegator delegator) {
     if (this.billingAccountId != null) {
-      return helper.findByPrimaryKey("PostalAddress", UtilMisc.toMap(
-      "contactMechId", billingAccountId));
+      try { return delegator.findByPrimaryKey("PostalAddress", UtilMisc.toMap("contactMechId", billingAccountId)); }
+      catch(GenericEntityException e) { Debug.logWarning(e.getMessage()); return null; }
     } else {
       return null;
     }
