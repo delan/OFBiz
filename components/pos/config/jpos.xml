@@ -8,7 +8,6 @@
         <jpos category="Scanner" version="1.8"/>
         <product description="Generic Keyboard Wedge Scanner" name="KybScanner" url="www.ofbiz.org"/>
         <!--Other non JavaPOS required property (mostly vendor properties and bus specific properties i.e. RS232 )-->
-        <prop name="ScannerButtonSim" type="String" value="menuPlu"/>
         <prop name="BarcodeTypePosition" type="String" value="Prefix"/>
         <prop name="CodeType:CODE11" type="String" value="M"/>
         <prop name="CodeType:CODE39" type="String" value="A"/>
@@ -29,6 +28,6 @@
         <vendor name="The Open For Business Project" url="http://www.ofbiz.org"/>
         <jpos category="MSR" version="1.8"/>
         <product description="Generic Keyboard Wedge Msr" name="KybMsr" url="www.ofbiz.org"/>
-        <!--Other non JavaPOS required property (mostly vendor properties and bus specific properties i.e. RS232 )-->        
+        <!--Other non JavaPOS required property (mostly vendor properties and bus specific properties i.e. RS232 )-->
     </JposEntry>
 </JposEntries>
