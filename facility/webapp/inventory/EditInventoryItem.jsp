@@ -184,7 +184,7 @@
       <tr>
         <td align=right><div class="tabletext">Date Received</div></td>
         <td>&nbsp;</td>
-        <td><input type="text" size="22" <ofbiz:inputvalue entityAttr="inventoryItem" field="dateReceived" fullattrs="true"/> style='font-size: x-small;'></td>
+        <td><input type="text" size="22" <ofbiz:inputvalue entityAttr="inventoryItem" field="datetimeReceived" fullattrs="true"/> style='font-size: x-small;'></td>
       </tr>
       <tr>
         <td align=right><div class="tabletext">Expire Date</div></td>

@@ -108,5 +108,10 @@
     <define id='TransferInventoryItem' region='MAIN_REGION'>
         <put section='title'>Transfer Inventory Item</put>
         <put section='content' content='/inventory/TransferInventoryItem.jsp'/>
-    </define>                
+    </define>   
+    
+    <define id='ReceiveInventory' region='MAIN_REGION'>
+    	<put section='title'>Receive Inventory</put>
+    	<put section='content' content='/inventory/ReceiveInventory.jsp'/>
+    </define>
 </regions>

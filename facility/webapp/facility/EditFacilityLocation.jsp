@@ -71,6 +71,7 @@
     <a href="<ofbiz:url>/FindFacilityLocations?facilityId=<%=facilityId%></ofbiz:url>" class="tabButton">Locations</a>
     <a href="<ofbiz:url>/EditFacilityRoles?facilityId=<%=facilityId%></ofbiz:url>" class="tabButton">Roles</a>
     <a href="<ofbiz:url>/EditFacilityInventoryItems?facilityId=<%=facilityId%></ofbiz:url>" class="tabButton">Inventory&nbsp;Items</a>
+    <a href="<ofbiz:url>/ReceiveInventory?facilityId=<%=facilityId%></ofbiz:url>" class="tabButton">Inventory&nbsp;Receive</a>
     <a href="<ofbiz:url>/FindFacilityTransfers?facilityId=<%=facilityId%></ofbiz:url>" class="tabButton">Inventory&nbsp;Xfers</a>
   </div>
 <%}%>

@@ -113,6 +113,7 @@
     <a href="<ofbiz:url>/FindFacilityLocations?facilityId=<%=facilityId%></ofbiz:url>" class="tabButton">Locations</a>
     <a href="<ofbiz:url>/EditFacilityRoles?facilityId=<%=facilityId%></ofbiz:url>" class="tabButton">Roles</a>
     <a href="<ofbiz:url>/EditFacilityInventoryItems?facilityId=<%=facilityId%></ofbiz:url>" class="tabButton">Inventory&nbsp;Items</a>
+    <a href="<ofbiz:url>/ReceiveInventory?facilityId=<%=facilityId%></ofbiz:url>" class="tabButton">Inventory&nbsp;Receive</a>
     <a href="<ofbiz:url>/FindFacilityTransfers?facilityId=<%=facilityId%></ofbiz:url>" class="tabButtonSelected">Inventory&nbsp;Xfers</a>
   </div>
 <%}%>
@@ -127,7 +128,7 @@
 	<table border='0' cellpadding='2' cellspacing='0'>
       <tr>
         <td width="25%" align='right'><div class="tabletext">Inventory Item ID</div></td>
-        <td>&nbsp;</td>
+        <td width='6%'>&nbsp;</td>
         <td width="25%">
           <input type="text" name="inventoryItemId" size="20" maxlength="20">
           <input type="hidden" name="facilityId" value="<%=facilityId%>">
@@ -155,35 +156,39 @@
       <input type="hidden" name="facilityId" value="<%=facilityId%>">
       <input type="hidden" <ofbiz:inputvalue entityAttr="inventoryItem" field="locationSeqId" fullattrs="true"/>>
       <tr>
-        <td align=right><div class="tabletext">InventoryItem ID</div></td>
-        <td>&nbsp;</td>
-        <td>
+        <td width='14%'>&nbsp;</td>
+        <td width='6%'align='right'><div class="tabletext">InventoryItem ID</div></td>
+        <td width='6%'>&nbsp;</td>
+        <td width='74%'>
           <b><%=inventoryItemId%></b>
         </td>
       </tr>
 
       <tr>
-        <td align=right><div class="tabletext">InventoryItem Type Id</div></td>
-        <td>&nbsp;</td>
-        <td> 
+        <td width='14%'>&nbsp;</td>
+        <td width='6%' align='right' nowrap><div class="tabletext">InventoryItem Type Id</div></td>
+        <td width='6%'>&nbsp;</td>
+        <td width='74%' 
           <ofbiz:if name="inventoryItemType">                   
             <div class="tabletext"><ofbiz:inputvalue entityAttr="inventoryItemType" field="description"/></div>
           </ofbiz:if>
         </td>
       </tr>
       <tr>
-        <td align=right><div class="tabletext">Product Id</div></td>
-        <td>&nbsp;</td>
-        <td>            
+        <td width='14%'>&nbsp;</td>
+        <td width='6%' align='right' nowrap><div class="tabletext">Product Id</div></td>
+        <td width='6%'>&nbsp;</td>
+        <td width='74%'            
             <%if (inventoryItem != null && UtilValidate.isNotEmpty(inventoryItem.getString("productId"))) {%>
                 <a href='/catalog/control/EditProduct?productId=<ofbiz:inputvalue entityAttr="inventoryItem" field="productId"/>' class='buttontext'><ofbiz:inputvalue entityAttr="inventoryItem" field="productId"/></a>
             <%}%>
         </td>
       </tr>    
       <tr>
-        <td align=right><div class="tabletext">Status</div></td>
-        <td>&nbsp;</td>
-        <td>
+        <td width='14%'>&nbsp;</td>
+        <td width='6%' align='right' nowrap><div class="tabletext">Status</div></td>
+        <td width='6%'>&nbsp;</td>
+        <td width='74%'
 		  <%if (inventoryStatus != null) {%>
             <div class="tabletext"><ofbiz:inputvalue entityAttr="inventoryStatus" field="description"/></div>
           <%} else {%>
@@ -193,9 +198,10 @@
       </tr>     
       
       <tr>
-        <td align=right><div class="tabletext">Comments</div></td>
-        <td>&nbsp;</td>
-        <td>
+        <td width='14%'>&nbsp;</td>
+        <td width='6%' align='right' nowrap><div class="tabletext">Comments</div></td>
+        <td width='6%'>&nbsp;</td>
+        <td width='74%'
           <% if (inventoryItem.get("comments") != null) { %>
             <div class="tabletext"><ofbiz:inputvalue entityAttr="inventoryItem" field="comments"/></td></div>
           <%} else {%>
@@ -205,27 +211,30 @@
       </tr>
     
       <tr>
-        <td align=right><div class="tabletext">Serial# | ATP/QOH</div></td>
-        <td>&nbsp;</td>
+        <td width='14%'>&nbsp;</td>
+        <td width='6%' align='right' nowrap><div class="tabletext">Serial# | ATP/QOH</div></td>
+        <td width='6%'>&nbsp;</td>
         <%if (inventoryItem != null && "NON_SERIAL_INV_ITEM".equals(inventoryItem.getString("inventoryItemTypeId"))) {%>
-        <td>
+        <td width='74%'
             <div class="tabletext"><ofbiz:inputvalue entityAttr="inventoryItem" field="availableToPromise"/>&nbsp;
             /&nbsp;<ofbiz:inputvalue entityAttr="inventoryItem" field="quantityOnHand"/></div>
         </td>      
         <%} else if (inventoryItem != null && "SERIALIZED_INV_ITEM".equals(inventoryItem.getString("inventoryItemTypeId"))) {%>             
-        <td><div class="tabletext"><ofbiz:inputvalue entityAttr="inventoryItem" field="serialNumber"/></div></td>      
+        <td width='74%'<div class="tabletext"><ofbiz:inputvalue entityAttr="inventoryItem" field="serialNumber"/></div></td>      
         <%} else if (inventoryItem != null) {%>            
-        <td><div class='tabletext' style='color: red;'>Error: type <ofbiz:entityfield attribute="inventoryItem" field="inventoryItemTypeId"/> unknown; specify a type.</div></td>
+        <td width='74%'<div class='tabletext' style='color: red;'>Error: type <ofbiz:entityfield attribute="inventoryItem" field="inventoryItemTypeId"/> unknown; specify a type.</div></td>
       </tr>
     <%}%>
 
       <tr>
+        <td width='14%'>&nbsp;</td>    
         <td colspan="3"><hr class="sepbar"></td>
       </tr>
       <tr>
-        <td align=right><div class="tabletext">Transfer Status</div></td>
-        <td>&nbsp;</td>
-        <td>
+        <td width='14%'>&nbsp;</td>
+        <td width='6%' align='right' nowrap><div class="tabletext">Transfer Status</div></td>
+        <td width='6%'>&nbsp;</td>
+        <td width='74%'
           <select name="statusId" style='font-size: x-small;'>
             <%GenericValue curStatusItem = inventoryTransfer == null ? null : inventoryTransfer.getRelatedOneCache("StatusItem");%>
             <option value='<ofbiz:inputvalue entityAttr="inventoryTransfer" field="statusId"/>'><%if (curStatusItem != null) {%><%=curStatusItem.getString("description")%><%} else {%><ofbiz:entityfield attribute="inventoryTransfer" field="statusId" prefix="[" suffix="]"/><%}%></option>
@@ -237,18 +246,20 @@
         </td>        
       </tr>
       <tr>
-        <td align=right><div class="tabletext">Transfer Send Date</div></td>
-        <td>&nbsp;</td>
-        <td>
+        <td width='14%'>&nbsp;</td>
+        <td width='6%' align='right' nowrap><div class="tabletext">Transfer Send Date</div></td>
+        <td width='6%'>&nbsp;</td>
+        <td width='74%'
           <input type="text" <ofbiz:inputvalue entityAttr="inventoryTransfer" field="sendDate" fullattrs="true"/> size="22" style='font-size: x-small;'>
           <a href='#' onclick='setNow("sendDate")' class='buttontext'>[Now]</a>
         </td>
       </tr>
       <% if (inventoryTransfer == null) { %>
       <tr>
-        <td align=right><div class="tabletext">To Facility/Container</div></td>
-        <td>&nbsp;</td>
-        <td>
+        <td width='14%'>&nbsp;</td>
+        <td width='6%' align='right' nowrap><div class="tabletext">To Facility/Container</div></td>
+        <td width='6%'>&nbsp;</td>
+        <td width='74%'
           <span class='tabletext'>Select a Facility:</span>
           <select name="facilityIdTo" style='font-size: x-small;'>           
             <ofbiz:iterator name="nextFacility" property="facilities">
@@ -261,23 +272,26 @@
         </td>
       </tr>
       <tr>
-        <td align=right><div class="tabletext">To Location</div></td>
-        <td>&nbsp;</td>
-        <td>
+        <td width='14%'>&nbsp;</td>
+        <td width='6%' align='right' nowrap><div class="tabletext">To Location</div></td>
+        <td width='6%'>&nbsp;</td>
+        <td width='74%'
           <input type="text" size="20" name="locationSeqIdTo" value='<ofbiz:inputvalue entityAttr="inventoryTransfer" field="locationSeqIdTo"/>' maxlength="20" style='font-size: x-small;'>
         </td>
       </tr>      
       <tr>
-        <td align=right><div class="tabletext">Comments</div></td>
-        <td>&nbsp;</td>
-        <td>
+        <td width='14%'>&nbsp;</td>
+        <td width='6%' align='right' nowrap><div class="tabletext">Comments</div></td>
+        <td width='6%'>&nbsp;</td>
+        <td width='74%'
           <input type="text" name="comments" size="60" maxlength="250" style='font-size: x-small;'>
         </td>
       </tr>  
       <tr>
-        <td align=right><div class="tabletext">Quantity To Transfer</div></td>
-        <td>&nbsp;</td>
-        <td>
+        <td width='14%'>&nbsp;</td>
+        <td width='6%' align='right' nowrap><div class="tabletext">Quantity To Transfer</div></td>
+        <td width='6%'>&nbsp;</td>
+        <td width='74%'
           <%if (inventoryItem != null && "NON_SERIAL_INV_ITEM".equals(inventoryItem.getString("inventoryItemTypeId"))) {%>
             <input type=text size='5' name='xferQty' value='<ofbiz:inputvalue entityAttr="inventoryItem" field="availableToPromise"/>' style='font-size: x-small;'>
           <%} else if (inventoryItem != null && "SERIALIZED_INV_ITEM".equals(inventoryItem.getString("inventoryItemTypeId"))) {%>
@@ -290,30 +304,34 @@
       </tr>
       <% } else { %>
       <tr>
-        <td align=right><div class="tabletext">Transfer Receive Date</div></td>
-        <td>&nbsp;</td>
-        <td>
+        <td width='14%'>&nbsp;</td>
+        <td width='6%' align='right' nowrap><div class="tabletext">Transfer Receive Date</div></td>
+        <td width='6%'>&nbsp;</td>
+        <td width='74%'
           <input type="text" <ofbiz:inputvalue entityAttr="inventoryTransfer" field="receiveDate" fullattrs="true"/> size="22" style='font-size: x-small;'>
           <a href='#' onclick='setNow("receiveDate")' class='buttontext'>[Now]</a>
         </td>
       </tr>
       <tr>
-        <td align=right><div class="tabletext">To Facility/Container</div></td>
-        <td>&nbsp;</td>
+        <td width='14%'>&nbsp;</td>
+        <td width='6%' align='right' nowrap><div class="tabletext">To Facility/Container</div></td>
+        <td width='6%'>&nbsp;</td>
         <% GenericValue fac = delegator.findByPrimaryKey("Facility", UtilMisc.toMap("facilityId", inventoryTransfer.getString("facilityIdTo"))); %>
-        <td><div class="tabletext"><%=UtilFormatOut.checkNull(fac.getString("facilityName"))%></div></td>
+        <td width='74%'<div class="tabletext"><%=UtilFormatOut.checkNull(fac.getString("facilityName"))%></div></td>
       </tr>
       <tr>
-        <td align=right><div class="tabletext">To Location</div></td>
-        <td>&nbsp;</td>
-        <td>
+        <td width='14%'>&nbsp;</td>
+        <td width='6%' align='right' nowrap><div class="tabletext">To Location</div></td>
+        <td width='6%'>&nbsp;</td>
+        <td width='74%'
           <input type="text" size="20" name="locationSeqIdTo" value='<ofbiz:inputvalue entityAttr="inventoryTransfer" field="locationSeqIdTo"/>' maxlength="20" style='font-size: x-small;'>
         </td>
       </tr>  
       <tr>
-        <td align=right><div class="tabletext">Comments</div></td>
-        <td>&nbsp;</td>
-        <td>
+        <td width='14%'>&nbsp;</td>
+        <td width='6%' align='right' nowrap><div class="tabletext">Comments</div></td>
+        <td width='6%'>&nbsp;</td>
+        <td width='74%'
           <input type="text" name="comments" value='<ofbiz:inputvalue entityAttr="inventoryTransfer" field="comments"/>' size="60" maxlength="250" style='font-size: x-small;'>
         </td>
       </tr>      

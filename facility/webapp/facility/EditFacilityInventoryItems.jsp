@@ -74,6 +74,7 @@
     <a href="<ofbiz:url>/FindFacilityLocations?facilityId=<%=facilityId%></ofbiz:url>" class="tabButton">Locations</a>
     <a href="<ofbiz:url>/EditFacilityRoles?facilityId=<%=facilityId%></ofbiz:url>" class="tabButton">Roles</a>
     <a href="<ofbiz:url>/EditFacilityInventoryItems?facilityId=<%=facilityId%></ofbiz:url>" class="tabButtonSelected">Inventory&nbsp;Items</a>
+	<a href="<ofbiz:url>/ReceiveInventory?facilityId=<%=facilityId%></ofbiz:url>" class="tabButton">Inventory&nbsp;Receive</a>
     <a href="<ofbiz:url>/FindFacilityTransfers?facilityId=<%=facilityId%></ofbiz:url>" class="tabButton">Inventory&nbsp;Xfers</a>
   </div>
 <%}%>
@@ -128,7 +129,7 @@
     <td><div class='tabletext'>&nbsp;<a href='<ofbiz:url>/EditInventoryItem?inventoryItemId=<ofbiz:entityfield attribute="inventoryItem" field="inventoryItemId"/>&facilityId=<%=facilityId%></ofbiz:url>' class='buttontext'><ofbiz:inputvalue entityAttr="inventoryItem" field="inventoryItemId"/></a></div></td>
     <td><div class='tabletext'>&nbsp;<ofbiz:inputvalue entityAttr="curInventoryItemType" field="description"/></div></td>
     <td><div class='tabletext'>&nbsp;<ofbiz:inputvalue entityAttr="inventoryItem" field="statusId"/></div></td>
-    <td><div class='tabletext'>&nbsp;<ofbiz:inputvalue entityAttr="inventoryItem" field="dateReceived"/></div></td>
+    <td><div class='tabletext'>&nbsp;<ofbiz:inputvalue entityAttr="inventoryItem" field="datetimeReceived"/></div></td>
     <td><div class='tabletext'>&nbsp;<ofbiz:inputvalue entityAttr="inventoryItem" field="expireDate"/></div></td>
     <td><a href='/catalog/control/EditProduct?productId=<ofbiz:entityfield attribute="inventoryItem" field="productId"/>' class='buttontext'>
         <ofbiz:entityfield attribute="inventoryItem" field="productId"/></a></td>
@@ -149,15 +150,15 @@
         <td>&nbsp;</td>
     <%}%>
     <td>
-      <a href='<ofbiz:url>/EditInventoryItem?inventoryItemId=<ofbiz:inputvalue entityAttr="inventoryItem" field="inventoryItemId"/>&facilityId=<%=facilityId%></ofbiz:url>' class="buttontext">
+      <a href='<ofbiz:url>/EditInventoryItem?facilityId=<%=facilityId%>&inventoryItemId=<ofbiz:inputvalue entityAttr="inventoryItem" field="inventoryItemId"/>&facilityId=<%=facilityId%></ofbiz:url>' class="buttontext">
       [Edit]</a>
     </td>
     <td>
-      <a href='<ofbiz:url>/TransferInventoryItem?inventoryItemId=<ofbiz:inputvalue entityAttr="inventoryItem" field="inventoryItemId"/>&facilityId=<%=facilityId%></ofbiz:url>' class="buttontext">
+      <a href='<ofbiz:url>/TransferInventoryItem?facilityId=<%=facilityId%>&inventoryItemId=<ofbiz:inputvalue entityAttr="inventoryItem" field="inventoryItemId"/>&facilityId=<%=facilityId%></ofbiz:url>' class="buttontext">
       [Transfer]</a>
     </td>
     <td>
-      <a href='<ofbiz:url>/DeleteFacilityInventoryItem?inventoryItemId=<ofbiz:inputvalue entityAttr="inventoryItem" field="inventoryItemId"/></ofbiz:url>' class="buttontext">
+      <a href='<ofbiz:url>/DeleteFacilityInventoryItem?facilityId=<%=facilityId%>&inventoryItemId=<ofbiz:inputvalue entityAttr="inventoryItem" field="inventoryItemId"/></ofbiz:url>' class="buttontext">
       [Delete]</a>
     </td>
   </tr>
