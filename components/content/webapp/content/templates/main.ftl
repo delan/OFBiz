@@ -22,7 +22,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Al Byers (byersa@automationgroups.com)
- *@version    $Revision: 1.11 $
+ *@version    $Revision: 1.12 $
  *@since      3.0
 -->
 
@@ -37,9 +37,11 @@
     <link rel='stylesheet' href='<@ofbizContentUrl>/images/tabstyles.css</@ofbizContentUrl>' type='text/css'>    
     <link rel='stylesheet' href='<@ofbizContentUrl>/content/images/wrap.css</@ofbizContentUrl>' type='text/css'>    
 <#assign primaryHTMLField= page.getProperty("primaryHTMLField")?if_exists />
+<#if (dynamicPrimaryHTMLField?exists)>
+<#assign primaryHTMLField= dynamicPrimaryHTMLField />
+</#if>
 <#assign secondaryHTMLField= page.getProperty("secondaryHTMLField")?if_exists />
-<#if (primaryHTMLField?exists && (primaryHTMLField?length >0))
-       || (dynamicPrimaryHTMLField?exists && (dynamicPrimaryHTMLField?length >0)) >
+<#if (primaryHTMLField?exists && (primaryHTMLField?length >0))>
     <script type="text/javascript" language="javascript"> 
       _editor_url = "/content/images/htmlarea/"; // omit the final slash 
     </script> 
@@ -71,11 +73,9 @@
         var editor = null;
         var summary = null;
         function initEditor() {
-        <#if primaryHTMLField?exists>
-            primaryHTMLArea = new HTMLArea("${primaryHTMLField}"); primaryHTMLArea.generate();
-        </#if>
+        primaryHTMLArea = new HTMLArea("${primaryHTMLField}"); primaryHTMLArea.generate();
         <#if secondaryHTMLField?exists>
-            secondaryHTMLArea = new HTMLArea("${secondaryHTMLField}"); secondaryHTMLArea.generate();
+        secondaryHTMLArea = new HTMLArea("${secondaryHTMLField}"); secondaryHTMLArea.generate();
         </#if>
         }
     </script>
