@@ -36,6 +36,8 @@
     login-required ( true | false ) "true"
     request-name CDATA "_request_"
     response-code-name CDATA "_response_code_"
+    error-message-name CDATA "_error_message_"
+    event-message-name CDATA "_event_message_"
 >
 
 <!ELEMENT parameter-map EMPTY>
@@ -52,7 +54,7 @@
 
 <!ELEMENT check-errors ( error-prefix?, error-suffix?, message-prefix?, message-suffix? )>
 <!ATTLIST check-errors
-    response-code CDATA "error"
+    error-code CDATA "error"
     error-list-name CDATA "_error_list_"
 >
 
@@ -61,7 +63,8 @@
     service-name CDATA #REQUIRED
     in-map-name CDATA #REQUIRED
     include-user-login ( true | false ) "true"
-    response-code CDATA "error"
+    error-code CDATA "error"
+    success-code CDATA "success"
 >
 
 <!ELEMENT error-prefix (#PCDATA)>

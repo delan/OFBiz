@@ -7,6 +7,7 @@ import javax.servlet.http.*;
 
 import org.w3c.dom.*;
 import org.ofbiz.core.util.*;
+import org.ofbiz.core.service.*;
 
 /**
  * <p><b>Title:</b> SimpleEvent Mini Language
@@ -38,25 +39,25 @@ import org.ofbiz.core.util.*;
 public class SimpleEvent {
     protected static UtilCache simpleEventsCache = new UtilCache("SimpleEvents", 0, 0);
     
-    public static void runSimpleEvent(String xmlResource, String eventName, HttpServletRequest request) throws MiniLangException {
-        runSimpleEvent(xmlResource, eventName, request, null);
+    public static String runSimpleEvent(String xmlResource, String eventName, HttpServletRequest request) throws MiniLangException {
+        return runSimpleEvent(xmlResource, eventName, request, null);
     }
 
-    public static void runSimpleEvent(String xmlResource, String eventName, HttpServletRequest request, ClassLoader loader) throws MiniLangException {
+    public static String runSimpleEvent(String xmlResource, String eventName, HttpServletRequest request, ClassLoader loader) throws MiniLangException {
         URL xmlURL = UtilURL.fromResource(xmlResource, loader);
         if (xmlURL == null) {
             throw new MiniLangException("Could not find SimpleEvent XML document in resource: " + xmlResource);
         }
                     
-        runSimpleEvent(xmlURL, eventName, request, loader);
+        return runSimpleEvent(xmlURL, eventName, request, loader);
     }
 
-    public static void runSimpleEvent(URL xmlURL, String eventName, HttpServletRequest request, ClassLoader loader) throws MiniLangException {
+    public static String runSimpleEvent(URL xmlURL, String eventName, HttpServletRequest request, ClassLoader loader) throws MiniLangException {
         if (loader == null)
             loader = Thread.currentThread().getContextClassLoader();
         
         SimpleEvent simpleEvent = getSimpleEvent(xmlURL, eventName);
-        simpleEvent.exec(request, loader);
+        return simpleEvent.exec(request, loader);
     }
 
     protected static SimpleEvent getSimpleEvent(URL xmlURL, String eventName) throws MiniLangException {
@@ -101,25 +102,39 @@ public class SimpleEvent {
         
         return (SimpleEvent) simpleEvents.get(eventName);
     }
-    
+
+    // Member fields begin here...
     List eventOperations = new LinkedList();
     String eventName;
     String shortDescription;
     String requestName;
     String responseCodeName;
+    String errorMessageName;
+    String eventMessageName;
+    
     boolean loginRequired = true;
 
     public SimpleEvent(Element simpleEventElement) {
         eventName = simpleEventElement.getAttribute("event-name");
         shortDescription = simpleEventElement.getAttribute("short-description");
+
         requestName = simpleEventElement.getAttribute("request-name");
         if(requestName == null || requestName.length() == 0)
             requestName = "_request_";
+
         responseCodeName = simpleEventElement.getAttribute("response-code-name");
         if(responseCodeName == null || responseCodeName.length() == 0)
             responseCodeName = "_response_code_";
         
-        this.loginRequired = !"false".equals(simpleEventElement.getAttribute("login-required"));
+        errorMessageName = simpleEventElement.getAttribute("error-message-name");
+        if(errorMessageName == null || errorMessageName.length() == 0)
+            errorMessageName = "_error_message_";
+        
+        eventMessageName = simpleEventElement.getAttribute("event-message-name");
+        if(eventMessageName == null || eventMessageName.length() == 0)
+            eventMessageName = "_event_message_";
+        
+        loginRequired = !"false".equals(simpleEventElement.getAttribute("login-required"));
         
         readOperations(simpleEventElement);
     }
@@ -128,7 +143,7 @@ public class SimpleEvent {
         return eventName;
     }
 
-    public void exec(HttpServletRequest request, ClassLoader loader) {
+    public String exec(HttpServletRequest request, ClassLoader loader) {
         Map env = new HashMap();
         env.put(requestName, request);
         
@@ -138,6 +153,23 @@ public class SimpleEvent {
             if (!eventOperation.exec(env, request, loader))
                 break;
         }
+        
+        String errorMsg = (String) env.get(errorMessageName);
+        if (errorMsg != null && errorMsg.length() > 0) {
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, errorMsg);
+        }
+        
+        String eventMsg = (String) env.get(eventMessageName);
+        if (eventMsg != null && eventMsg.length() > 0) {
+            request.setAttribute(SiteDefs.EVENT_MESSAGE, eventMsg);
+        }
+
+        String response = (String) env.get(responseCodeName);
+        if (response == null || response.length() == 0) {
+            Debug.logWarning("[SimpleEvent.exec] No response code string found, assuming success");
+            response = "success";
+        }
+        return response;
     }
 
     void readOperations(Element simpleEventElement) {
@@ -231,6 +263,11 @@ public class SimpleEvent {
                 env.put(outMapName, outMap);
             }
             
+            try {
+                org.ofbiz.core.minilang.SimpleMapProcessor.runSimpleMapProcessor(xmlResource, inMap, outMap, messages, request.getLocale());
+            } catch (MiniLangException e) {
+                messages.add("Error running SimpleMapProcessor in XML file \"" + xmlResource + "\": " + e.toString());
+            }
             
             return true;
         }
@@ -239,44 +276,132 @@ public class SimpleEvent {
     /** An event operation that checks a message list and may introduce a return code and stop the event */
     public static class CheckErrors extends EventOperation {
         String errorListName;
-        String responseCode;
+        String errorCode;
+        
+        FlexibleMessage errorPrefix;
+        FlexibleMessage errorSuffix;
+        FlexibleMessage messagePrefix;
+        FlexibleMessage messageSuffix;
         
         public CheckErrors(Element element, SimpleEvent simpleEvent) {
             super(element, simpleEvent);
-            responseCode = element.getAttribute("response-code");
-            if (responseCode == null || responseCode.length() == 0)
-                responseCode = "error";
+            errorCode = element.getAttribute("error-code");
+            if (errorCode == null || errorCode.length() == 0)
+                errorCode = "error";
             errorListName = element.getAttribute("error-list-name");
             if (errorListName == null || errorListName.length() == 0)
                 errorListName = "_error_list_";
+
+            errorPrefix = new FlexibleMessage(UtilXml.firstChildElement(element, "error-prefix"));
+            errorSuffix = new FlexibleMessage(UtilXml.firstChildElement(element, "error-suffix"));
+            messagePrefix = new FlexibleMessage(UtilXml.firstChildElement(element, "message-prefix"));
+            messageSuffix = new FlexibleMessage(UtilXml.firstChildElement(element, "message-suffix"));
         }
         
         public boolean exec(Map env, HttpServletRequest request, ClassLoader loader) {
             List messages = (List) env.get(errorListName);
             if (messages != null && messages.size() > 0) {
-                //String errMsg = "<b>The following errors occured:</b><br><ul>" + ServiceUtil.makeMessageList(messages, "<li>", "</li>") + "</ul>";
-                //request.setAttribute(SiteDefs.ERROR_MESSAGE, errMsg);
+                String errMsg = errorPrefix.getMessage(loader) + 
+                        ServiceUtil.makeMessageList(messages, messagePrefix.getMessage(loader), messageSuffix.getMessage(loader)) + 
+                        errorSuffix.getMessage(loader);
+                env.put(simpleEvent.errorMessageName, errMsg);
                 
-                env.put(simpleEvent.responseCodeName, responseCode);
+                env.put(simpleEvent.responseCodeName, errorCode);
                 return false;
             }
             
             return true;
         }
     }
-    
+
     /** An event operation that creates a local map from the request parameters */
     public static class Service extends EventOperation {
-        String mapName;
+        String serviceName;
+        String inMapName;
+        boolean includeUserLogin = true;
+        String errorCode;
+        String successCode;
+        
+        FlexibleMessage errorPrefix;
+        FlexibleMessage errorSuffix;
+        FlexibleMessage successPrefix;
+        FlexibleMessage successSuffix;
+        FlexibleMessage messagePrefix;
+        FlexibleMessage messageSuffix;
+        FlexibleMessage defaultMessage;
         
         public Service(Element element, SimpleEvent simpleEvent) {
             super(element, simpleEvent);
-            this.mapName = element.getAttribute("map-name");
+            serviceName = element.getAttribute("service-name");
+            inMapName = element.getAttribute("in-map-name");
+            includeUserLogin = !"false".equals(element.getAttribute("include-user-login"));
+            errorCode = element.getAttribute("error-code");
+            if (errorCode == null || errorCode.length() == 0)
+                errorCode = "error";
+            
+            successCode = element.getAttribute("success-code");
+            if (successCode == null || successCode.length() == 0)
+                successCode = "success";
+
+            errorPrefix = new FlexibleMessage(UtilXml.firstChildElement(element, "error-prefix"));
+            errorSuffix = new FlexibleMessage(UtilXml.firstChildElement(element, "error-suffix"));
+            successPrefix = new FlexibleMessage(UtilXml.firstChildElement(element, "success-prefix"));
+            successSuffix = new FlexibleMessage(UtilXml.firstChildElement(element, "success-suffix"));
+            messagePrefix = new FlexibleMessage(UtilXml.firstChildElement(element, "message-prefix"));
+            messageSuffix = new FlexibleMessage(UtilXml.firstChildElement(element, "message-suffix"));
+            defaultMessage = new FlexibleMessage(UtilXml.firstChildElement(element, "default-message"));
         }
         
         public boolean exec(Map env, HttpServletRequest request, ClassLoader loader) {
-            env.put(mapName, UtilMisc.getParameterMap(request));
-            return true;
+            LocalDispatcher dispatcher = (LocalDispatcher) request.getSession().getServletContext().getAttribute("dispatcher");
+            
+            Map inMap = (Map) env.get(inMapName);
+            if (inMap == null) {
+                inMap = new HashMap();
+                env.put(inMapName, inMap);
+            }
+            
+            // invoke the service
+            Map result = null;
+            try {
+                result = dispatcher.runSync(serviceName, inMap);
+            } catch (GenericServiceException e) {
+                Debug.logError(e);
+                env.put(simpleEvent.errorMessageName, "ERROR: Could not complete " + simpleEvent.shortDescription + " process (problem invoking the " + serviceName + " service: " + e.getMessage() + ")");
+                env.put(simpleEvent.responseCodeName, errorCode);
+                return false;
+            }
+
+            String errorPrefixStr = errorPrefix.getMessage(loader);
+            String errorSuffixStr = errorSuffix.getMessage(loader);
+            String successPrefixStr = successPrefix.getMessage(loader);
+            String successSuffixStr = successSuffix.getMessage(loader);
+            String messagePrefixStr = messagePrefix.getMessage(loader);
+            String messageSuffixStr = messageSuffix.getMessage(loader);
+
+            String errorMessage = ServiceUtil.makeErrorMessage(result, messagePrefixStr, messageSuffixStr, errorPrefixStr, errorSuffixStr);
+            if (UtilValidate.isNotEmpty(errorMessage))
+                env.put(simpleEvent.errorMessageName, errorMessage);
+
+            String successMessage = ServiceUtil.makeSuccessMessage(result, messagePrefixStr, messageSuffixStr, successPrefixStr, successSuffixStr);
+            if (UtilValidate.isNotEmpty(successMessage))
+                env.put(simpleEvent.eventMessageName, successMessage);
+
+            String defaultMessageStr = defaultMessage.getMessage(loader);
+            if (UtilValidate.isEmpty(errorMessage) && UtilValidate.isEmpty(successMessage) && UtilValidate.isNotEmpty(defaultMessageStr))
+                env.put(simpleEvent.eventMessageName, defaultMessageStr);
+
+            //TODO: what to do about moving stuff from the result to request attributes?
+            //request.setAttribute("workEffortId", result.get("workEffortId"));
+
+            // handle the result
+            String responseCode = result.containsKey(ModelService.RESPONSE_MESSAGE) ? (String)result.get(ModelService.RESPONSE_MESSAGE) : successCode;
+            env.put(simpleEvent.responseCodeName, responseCode);
+
+            if (successCode.equals(responseCode))
+                return true;
+            else
+                return false;
         }
     }
     
@@ -288,12 +413,12 @@ public class SimpleEvent {
 
         public FlexibleMessage(Element element) {
             if (element.getAttribute("resource") != null) {
-                this.propertyResource = element.getAttribute("resource");
-                this.message = element.getAttribute("property");
-                this.isProperty = true;
+                propertyResource = element.getAttribute("resource");
+                message = element.getAttribute("property");
+                isProperty = true;
             } else if (UtilXml.elementValue(element) != null) {
-                this.message = UtilXml.elementValue(element);
-                this.isProperty = false;
+                message = UtilXml.elementValue(element);
+                isProperty = false;
             }
         }
 
