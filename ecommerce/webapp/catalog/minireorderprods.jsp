@@ -24,7 +24,7 @@
         <table width='100%' border='0' cellpadding='<%EntityField.run("layoutSettings", "boxBottomPadding", pageContext);%>' cellspacing='0' bgcolor='<%EntityField.run("layoutSettings", "boxBottomColor", pageContext);%>'>
           <tr>
             <td>
-                <table width='100%' CELLSPACING="0" CELLPADDING="4" BORDER="0">
+                <table width='100%' cellspacing="0" cellpadding="2" border="0">
                   <%int miniReorderListIndex = 1;%>
                   <!-- random complementary products -->
                   <ofbiz:iterator name="miniProduct" property="miniReorderProducts">

@@ -116,7 +116,7 @@
 </table>
 
 <center>
-    <table width='100%'>
+    <table width='100%' border='0' cellpadding='0' cellspacing='0'>
         <%ArrayList productCategoryMembers = (ArrayList) pageContext.getAttribute("productCategoryMembers");%>
         <%for (int listIndex = (lowIndex.intValue() - 1); listIndex < highIndex.intValue(); listIndex++) {%>
             <%GenericValue productCategoryMember = (GenericValue) productCategoryMembers.get(listIndex);%>

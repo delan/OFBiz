@@ -14,18 +14,12 @@
 
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
  <tr>
-  <td width='150' valign=top align=left>
-    <region:render section='leftbar'/>
-  </td>
-  <td width='5'>&nbsp;&nbsp;&nbsp;</td>
+  <region:render section='leftbar'/>
   <td width='100%' valign=top align=left>
     <region:render section='error'/>
     <region:render section='content'/>
   </td>
-  <td width='5'>&nbsp;&nbsp;&nbsp;</td>
-  <td width='150' valign=top align=right>
-    <region:render section='rightbar'/>
-  </td>
+  <region:render section='rightbar'/>
  </tr>
 </table>
 
