@@ -5,5 +5,9 @@
     <eca service="createShipmentReceipt" event="commit">
         <condition field-name="returnId" operator="is-not-empty"/>
         <action service="updateReturnStatusFromReceipt" mode="sync"/>
-    </eca>   
+    </eca>
+    <eca service="createShipmentReceipt" event="commit">
+        <condition field-name="orderId" operator="is-not-empty"/>
+        <action service="updateOrderStatusFromReceipt" mode="sync"/>
+    </eca>
 </service-eca>
