@@ -233,18 +233,18 @@
         <!-- Check for required E-Mail -->
         <if-compare field-name="require_email" operator="equals" value="true">
             <if-empty field-name="emailAddress" map-name="emailContext">
-                <call-map-processor in-map-name="parameters" out-map-name="dummymap">
+                <call-map-processor in-map-name="emailContext" out-map-name="dummymap">
                     <simple-map-processor name="checkRequiredEmail">
-                        <process field="CUSTOMER_EMAIL">
+                        <process field="emailAddress">
                             <not-empty><fail-message message="E-mail address is missing"/></not-empty>
                         </process>
                     </simple-map-processor>
                </call-map-processor>
            </if-empty>
            <if-not-empty field-name="emailAddress" map-name="emailContext">
-                <call-map-processor in-map-name="parameters" out-map-name="dummymap">
+                <call-map-processor in-map-name="emailContext" out-map-name="dummymap">
                     <simple-map-processor name="checkRequiredEmailFormat">
-                        <process field="CUSTOMER_EMAIL">
+                        <process field="emailAddress">
                             <validate-method method="isEmail">
                                 <fail-message message="E-mail address not formatted correctly, must be like: name@domain"/>
                             </validate-method>
