@@ -21,7 +21,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *  This is the Open for Business Base Build Script.
- *  $Id: build.xml,v 1.11 2004/03/31 16:41:53 ajzeneski Exp $
+ *  $Id: build.xml,v 1.12 2004/05/22 22:43:27 ajzeneski Exp $
 -->
 
 <project name="OFBiz - Base" default="jar" basedir=".">
@@ -42,7 +42,7 @@
     <target name="classpath">		        
         <path id="local.class.path">
             <fileset dir="${lib.dir}" includes="*.jar"/>
-            <fileset dir="${lib.dir}/logging" includes="*.jar"/>
+            <fileset dir="${lib.dir}/commons" includes="*.jar"/>
             <fileset dir="${lib.dir}/scripting" includes="*.jar"/>
         </path>
     </target>
