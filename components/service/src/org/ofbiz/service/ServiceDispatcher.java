@@ -1,5 +1,5 @@
 /*
- * $Id: ServiceDispatcher.java,v 1.9 2003/11/13 21:22:47 ajzeneski Exp $
+ * $Id: ServiceDispatcher.java,v 1.10 2003/11/19 20:42:46 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -55,7 +55,7 @@ import org.ofbiz.service.job.JobManager;
  * Global Service Dispatcher
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.9 $
+ * @version    $Revision: 1.10 $
  * @since      2.0
  */
 public class ServiceDispatcher {
@@ -225,7 +225,7 @@ public class ServiceDispatcher {
             Object userLogin = context.get("userLogin");
 
             if (service.auth && userLogin == null) {
-                throw new ServiceAuthException("User authorization is required for this service : " + service.name);
+                throw new ServiceAuthException("User authorization is required for this service : " + service.name + " [" + service + "]");
             }
 
             // setup the engine
@@ -239,7 +239,7 @@ public class ServiceDispatcher {
                 try {
                     service.validate(context, ModelService.IN_PARAM);
                 } catch (ServiceValidationException e) {
-                    throw new GenericServiceException("Context (in runSync : " + service.name + ") does not match expected requirements: ", e);
+                    throw new GenericServiceException("Context (in runSync : " + service.name + ") does not match expected requirements" + " [" + service + "]", e);
                 }
             }
 
@@ -264,7 +264,7 @@ public class ServiceDispatcher {
                 try {
                     service.validate(result, ModelService.OUT_PARAM);
                 } catch (ServiceValidationException e) {
-                    throw new GenericServiceException("Result (in runSync : " + service.name + ") does not match expected requirements: ", e);
+                    throw new GenericServiceException("Result (in runSync : " + service.name + ") does not match expected requirements" + " [" + service + "]", e);
                 }
             }
 
@@ -320,7 +320,7 @@ public class ServiceDispatcher {
                 Debug.logError(te, "Cannot rollback transaction", module);
             }
             checkDebug(service, 0, debugging);
-            throw new GenericServiceException("Service [" + service.name + "] Failed: " , t);
+            throw new GenericServiceException("Service [" + service.name + "] Failed" + " [" + service + "]" , t);
         }
     }
 
@@ -391,7 +391,7 @@ public class ServiceDispatcher {
             Object userLogin = context.get("userLogin");
 
             if (service.auth && userLogin == null)
-                throw new ServiceAuthException("User authorization is required for this service : " + service.name);
+                throw new ServiceAuthException("User authorization is required for this service : " + service.name + " [" + service + "]");
 
             // setup the engine
             GenericEngine engine = getGenericEngine(service.engineName);
@@ -404,7 +404,7 @@ public class ServiceDispatcher {
                 try {
                     service.validate(context, ModelService.IN_PARAM);
                 } catch (ServiceValidationException e) {
-                    throw new GenericServiceException("Context (in runSync : " + service.name + ") does not match expected requirements: ", e);
+                    throw new GenericServiceException("Context (in runSync : " + service.name + ") does not match expected requirements" + " [" + service + "]", e);
                 }
             }
 
@@ -450,7 +450,7 @@ public class ServiceDispatcher {
                 Debug.logError(te, "Cannot rollback transaction", module);
             }
             checkDebug(service, 0, debugging);
-            throw new GenericServiceException("Service [" + service.name + "] Failed: ", t);
+            throw new GenericServiceException("Service [" + service.name + "] Failed" + " [" + service + "]" , t);
         }
     }
 
@@ -519,7 +519,7 @@ public class ServiceDispatcher {
             Object userLogin = context.get("userLogin");
 
             if (service.auth && userLogin == null)
-                throw new ServiceAuthException("User authorization is required for this service : " + service.name);
+                throw new ServiceAuthException("User authorization is required for this service : " + service.name + " [" + service + "]");
 
             // setup the engine
             GenericEngine engine = getGenericEngine(service.engineName);
@@ -532,7 +532,7 @@ public class ServiceDispatcher {
                 try {
                     service.validate(context, ModelService.IN_PARAM);
                 } catch (ServiceValidationException e) {
-                    throw new GenericServiceException("Context (in runAsync : " + service.name + ") does not match expected requirements: ", e);
+                    throw new GenericServiceException("Context (in runAsync : " + service.name + ") does not match expected requirements" + " [" + service + "]", e);
                 }
             }
 
@@ -575,7 +575,7 @@ public class ServiceDispatcher {
                 Debug.logError(te, "Cannot rollback transaction", module);
             }
             checkDebug(service, 0, debugging);
-            throw new GenericServiceException("Service [" + service.name + "] Failed: ", t);
+            throw new GenericServiceException("Service [" + service.name + "] Failed" + " [" + service + "]" , t);
         }
     }
 
