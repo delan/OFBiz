@@ -67,6 +67,7 @@
     list-iterator-name CDATA #IMPLIED
     view-size CDATA #IMPLIED
     paginate ( true | false ) "true" 
+    row-count CDATA #IMPLIED
 >
 
 <!ELEMENT alt-target EMPTY>
