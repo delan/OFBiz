@@ -328,11 +328,12 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="RunningMrp"/>
     </request-map>
-<!--    <request-map uri="RunningMrpGo">
-        <event type="service" invoke="runningMrp"/>
+    <request-map uri="RunningMrpGo">
         <security https="true" auth="true"/>
+        <event type="service" invoke="runningMrp"/>
         <response name="success" type="view" value="RunningMrp"/>
-    </request-map> -->
+        <response name="error" type="view" value="RunningMrp"/>
+    </request-map>
 
     <request-map uri="EditProductManufacturingRules">
         <security https="true" auth="true"/>
