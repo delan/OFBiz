@@ -174,39 +174,10 @@ function setButtons()
          break;
      }
    }
-   /*
-   if (!gecko) {
-   var newcut = getEditDocument().queryCommandEnabled("cut");   
-   if (cut != newcut) {
-     cut = newcut;
-     if (cut)
-       document.getElementById("cut").src = "cut.gif";
-     else
-       document.getElementById("cut").src = "cutdisabled.gif";
-   }
-   var newcopy = getEditDocument().queryCommandEnabled("copy");   
-   if (copy != newcopy) {
-     copy = newcopy;
-     if (copy)
-       document.getElementById("copy").src = "copy.gif";
-     else
-       document.getElementById("copy").src = "copydisabled.gif";
-   }
-   var newpaste = getEditDocument().queryCommandEnabled("paste");   
-   if (paste != newpaste) {
-     paste = newpaste;
-     if (paste)
-       document.getElementById("paste").src = "paste.gif";
-     else
-       document.getElementById("paste").src = "pastedisabled.gif";
-   }
-   }
-   */
-
 	// Change the class dropdown if we can.
 	
-	if ( !gecko )
-	{
+	//if ( !gecko )
+	//{
 		var nearestClassElem = findAncestorFromSelection( null, "class" );
 		if ( nearestClassElem )
 		{
@@ -229,7 +200,7 @@ function setButtons()
 		{
 			selectComboBoxValue( "classname", "(none)", "(none)", "Style" );
 		}
-	}
+	//}
 }
 
 function isBlockElement( element )
@@ -250,7 +221,7 @@ function populateClassDropdown()
 		for ( var i = 0; i < paragraphStyles.length; i++ )
 		{
 			classCombo.options[classCombo.options.length] =
-				new Option( "  " + paragraphStyles[i], "p " + paragraphStyles[i] );
+				new Option( "- " + paragraphStyles[i], "p " + paragraphStyles[i] );
 		}
 	}
 	
@@ -260,7 +231,7 @@ function populateClassDropdown()
 		for ( var i = 0; i < characterStyles.length; i++ )
 		{
 			classCombo.options[classCombo.options.length] =
-				new Option( "  " + characterStyles[i], "c " + characterStyles[i] );
+				new Option( "- " + characterStyles[i], "c " + characterStyles[i] );
 		}
 	}
 }
@@ -291,7 +262,7 @@ function selectComboBoxValue( comboBoxName, text, value, sectionText )
 				foundItem = true;
 				break;
 			}
-			if ( comboBox.options[i].text.substring( 0, 1 ) != ' ' )
+			if ( comboBox.options[i].text.substring( 0, 2 ) != "- " )
 			{
 				lastItemInSection = i - 1;
 				break;
@@ -308,6 +279,7 @@ function selectComboBoxValue( comboBoxName, text, value, sectionText )
 	
 	if ( !foundItem )
 	{
+		/*
 		if ( lastItemInSection < 0 )
 		{
 			lastItemInSection = numoptions - 1;
@@ -321,6 +293,17 @@ function selectComboBoxValue( comboBoxName, text, value, sectionText )
 		{
 			// Do nothing for now...
 			//alert( "Could not find section with title '" + sectionText + "'" );
+		}
+		*/
+		if ( sectionText == "Paragraph Styles" )
+		{
+			paragraphStyles[paragraphStyles.length] = value.substring( 2 );
+			populateClassDropdown();
+		}
+		else if ( sectionText == "Character Styles" )
+		{
+			characterStyles[characterStyles.length] = value.substring( 2 );
+			populateClassDropdown();
 		}
 	}
 	
@@ -502,7 +485,7 @@ function selectColor( color )
 	getEditWindow().focus();
 
 	//FIXME: for some reason we end up the the start of the document in IE
-	getEditDocument().execCommand(this.command,false, color);
+	getEditDocument().execCommand(command,true, color);
 	
 	getEditWindow().focus();
 	
@@ -557,7 +540,7 @@ function findAncestorFromSelection( elementName, attributeName )
 	if ( gecko )
 	{
 		return findAncestor(
-			selection.commonAncestorContainer, // findNearestElementAncestor( selection.commonAncestorContainer ),
+			findNearestElementAncestor( selection.commonAncestorContainer ),
 			elementName, attributeName );
 	}
 	else
@@ -584,18 +567,27 @@ function findAncestor( element, elementName, attributeName )
 	{
 		found = false;
 	}
+	
 	// In IE 5.5, Element.getAttribute( attrName ) does not work.
 	
-	if ( found && attributeName &&
-		( !element.attributes[attributeName] ||
-			!element.attributes[attributeName].nodeValue ) )
-	{
-		found = false;
-	}
 	/*
-	if ( found && attributeName && ( !element.getAttribute( attributeName ) ) )
+	if ( gecko )
 	{
-		found = false;
+		if ( found && attributeName && ( !element.getAttribute( attributeName ) ) )
+		{
+			found = false;
+		}
+	}
+	else
+	{
+	*/
+		if ( found && attributeName &&
+			( !element.attributes[attributeName] ||
+				!element.attributes[attributeName].nodeValue ) )
+		{
+			found = false;
+		}
+	/*
 	}
 	*/
 
@@ -625,11 +617,10 @@ function findAncestor( element, elementName, attributeName )
 function findNearestElementAncestor( node )
 {
 	var parent = node;
-	while ( parent != null && !( parent instanceof Element ) )
+	while ( parent != null && !( parent.nodeType == 1 ) ) // element
 	{
 		parent = parent.parentNode;
 	}
-	alert( "parent = " + parent );
 	return parent;
 }
 
@@ -688,19 +679,25 @@ function findDescendantsOfElement( element, elementName, attributeName, nodeList
 	{
 		found = false;
 	}
+	
 	// In IE 5.5, Element.getAttribute( attrName ) does not work.
-	if ( found && attributeName &&
-		( !element.attributes[attributeName] ||
-			!element.attributes[attributeName].nodeValue ) )
+	
+	if ( gecko )
 	{
-		found = false;
+		if ( found && attributeName && ( !element.getAttribute( attributeName ) ) )
+		{
+			found = false;
+		}
 	}
-	/*
-	if ( found && attributeName && ( !element.getAttribute( attributeName ) ) )
+	else
 	{
-		found = false;
+		if ( found && attributeName &&
+			( !element.attributes[attributeName] ||
+				!element.attributes[attributeName].nodeValue ) )
+		{
+			found = false;
+		}
 	}
-	*/
 	
 	if ( found )
 	{
@@ -724,7 +721,7 @@ function checkRange()
    	}
    	else
    	{
-   		return getEditDocument().createRange();
+   		return getEditWindow().getSelection().getRangeAt( 0 );
 	}
 }
 
@@ -784,7 +781,7 @@ function tbclick()
   if ((this.id == "forecolor") || (this.id == "backcolor")) {
   	
   	checkRange();
-    parent.command = this.id;
+    command = this.id;
     buttonElement = document.getElementById(this.id);
     document.getElementById("colorpalette").style.left = getOffsetLeft(buttonElement);
     document.getElementById("colorpalette").style.top = getOffsetTop(buttonElement) + buttonElement.offsetHeight;
@@ -981,7 +978,14 @@ function applyParagraphClassToSelection( className )
 	else
 	{
 		//alert( "Found <" + container.nodeName + ">" );
-		container.className = className; // I hope this works in both browsers...
+		if ( gecko )
+		{
+			container.setAttribute( "class", className );
+		}
+		else
+		{
+			container.className = className;
+		}
 	}
 }
 
@@ -1010,7 +1014,7 @@ function applyCharacterClassToSelection( className )
 		// start and end points to be in different containers.
 	
 		var fragment = selection.extractContents();
-		spanElem.appendChild( fragment );
+		spanElem.appendChild( fragment.cloneNode( true ) ); // FIXME: cloning doesn't seem like it should be necessary
 		selection.insertNode( spanElem );
 	}
 	else

@@ -2,7 +2,7 @@ importPackage( Packages.java.util );
 importPackage( Packages.java.lang );
 importPackage( Packages.com.wspublisher.accounts );
 
-System.out.println("Test");
+//System.out.println("Test");
 var account = request.getParameter("accountname");
 var password = request.getParameter("password");
 if ( account != null ) 

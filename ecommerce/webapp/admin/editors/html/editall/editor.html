@@ -70,6 +70,7 @@ function Start() {
 	getEditDocument().write( "</body></html>" );
 		getEditDocument().close();
 	
+	addEvent(getEditDocument(),"mousedown", function() { getEditWindow().focus(); }, true);	
 	
 	if ( gecko )
 	{
@@ -88,7 +89,7 @@ function Start() {
 
 <body bgcolor="#D4D0C8" onload="Start()" leftmargin="0" topmargin="0" leftmargin="0"  marginwidth="0" marginheight="0" >
 
-<table  id="toolbar1" border="0" cellpadding="4" cellspacing="0"  style="visibility: visible;">
+<table   id="toolbar1" border="0" cellpadding="4" cellspacing="0"  style="visibility: visible;">
 <tbody><tr>
 <td>
 <div class="imagebuttonClick" id="save"><img class="image" src="newedit_files/saveas.gif" alt="Save" title="Save" style="left: 1px; top: 1px;"></div>
@@ -109,17 +110,17 @@ function Start() {
 </select>
 -->
 <!-- And similarly, the disabled attribute works in Mozilla but not IE. -->
-<select id="classname" onchange="Select(this.id);">
+<select   id="classname" onchange="Select(this.id);">
 </select>
 </td>
 <td>
-<select id="formatblock" onchange="Select(this.id);"><option value="Paragraph">Paragraph</option><option value="Normal">Normal</option><option value="Heading 1">Heading 1 </option><option value="Heading 2">Heading 2 </option><option value="Heading 3">Heading 3 </option><option value="Heading 4">Heading 4 </option><option value="Heading 5">Heading 5 </option><option value="Heading 6">Heading 6 </option><option value="Address">Address </option><option value="Formatted">Formatted </option></select>
+<select style="display: none;" id="formatblock" onchange="Select(this.id);"><option value="Paragraph">Paragraph</option><option value="Normal">Normal</option><option value="Heading 1">Heading 1 </option><option value="Heading 2">Heading 2 </option><option value="Heading 3">Heading 3 </option><option value="Heading 4">Heading 4 </option><option value="Heading 5">Heading 5 </option><option value="Heading 6">Heading 6 </option><option value="Address">Address </option><option value="Formatted">Formatted </option></select>
 </td>
 <td>
-<select id="fontname" onchange="Select(this.id);"><option value="Font">Font</option><option value="Arial">Arial</option><option value="Courier">Courier</option><option value="Times New Roman">Times New Roman</option></select>
+<select  id="fontname" onchange="Select(this.id);"><option value="Font">Font</option><option value="Arial">Arial</option><option value="Courier">Courier</option><option value="Times New Roman">Times New Roman</option></select>
 </td>
 <td>
-<select unselectable="on" id="fontsize" onchange="Select(this.id);"><option value="Size">Size</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option></select>
+<select  id="fontsize" onchange="Select(this.id);"><option value="Size">Size</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option></select>
 </td>
 <td>
 <div class="imagebutton" id="bold"><img class="image" src="newedit_files/bold.gif" alt="Bold" title="Bold" style="left: 1px; top: 1px;"></div>
@@ -140,13 +141,15 @@ function Start() {
 </td>
 <td>
 <div class="imagebutton" id="justifyright"><img class="image" src="newedit_files/justifyright.gif" alt="Align Right" title="Align Right"></div>
+</td>
+<!--
 <td>
-
 <div class="imagebuttonClick" id="forecolor"><img class="image" src="newedit_files/forecolor.gif" alt="Text Color" title="Text Color" style="left: 1px; top: 1px;"></div>
 </td>
 <td>
 <div class="imagebuttonClick" id="backcolor"><img class="image" src="newedit_files/backcolor.gif" alt="Background Color" title="Background Color" style="left: 1px; top: 1px;"></div>
 </td>
+-->
 <td>
 </td>
 <td>
@@ -164,7 +167,9 @@ function Start() {
 <td>
 <div class="imagebuttonClick" id="indent"><img class="image" src="newedit_files/indent.gif" alt="Indent" title="Indent"></div>
 </td>
-
+<td>
+<div class="imagebuttonClick" id="removeformat"><img class="image" src="newedit_files/clearformat.gif" alt="Clear Format" title="Clear Format" style="left: 1px; top: 1px;"></div>
+</td>
 
 <!--
 <td>
@@ -197,11 +202,12 @@ function Start() {
 
 <div class="imagebuttonClick" id="createlink"><img class="image" src="newedit_files/link.gif" alt="Insert Link" title="Insert Link" style="left: 1px; top: 1px;"></div>
 
+<div class="imagebuttonClick" id="unlink"><img class="image" src="newedit_files/removelink.gif" alt="Remove Link" title="Remove Link" style="left: 1px; top: 1px;"></div>
 
 </td>
 
 <td>
-<iframe  id="editbox" name="editbox" width="100%" height="100%"></iframe>
+<iframe  id="editbox" name="editbox" width="100%" height="100%" ></iframe>
 </td>
 </tr>
 </table>

@@ -2,5 +2,6 @@
 
 <page>
 	<page-action>copyPage</page-action>
+	<page-action>./jumpToPage.js</page-action>
 	<property name="editable">false</property>
 </page>
