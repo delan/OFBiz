@@ -42,7 +42,9 @@ public class GenericHelperDAO implements GenericHelper
   public GenericValue create(String entityName, Map fields)
   {
     if(entityName == null || fields == null) { return null; }
-    GenericValue genericValue = null;
+    GenericValue genericValue = new GenericValue(entityName, fields);
+    if(!genericDAO.insert(genericValue)) return null;
+    genericValue.helper = this;
     return genericValue;
   }
 
@@ -52,8 +54,9 @@ public class GenericHelperDAO implements GenericHelper
   public GenericValue create(GenericValue value)
   {
     if(value == null) { return null; }
-    GenericValue genericValue = null;
-    return genericValue;
+    if(!genericDAO.insert(value)) return null;
+    value.helper = this;
+    return value;
   }
 
   /** Creates a Entity in the form of a GenericValue and write it to the database
@@ -62,7 +65,9 @@ public class GenericHelperDAO implements GenericHelper
   public GenericValue create(GenericPK primaryKey)
   {
     if(primaryKey == null) { return null; }
-    GenericValue genericValue = null;
+    GenericValue genericValue = new GenericValue(primaryKey);
+    if(!genericDAO.insert(genericValue)) return null;
+    genericValue.helper = this;
     return genericValue;
   }
 
@@ -73,7 +78,9 @@ public class GenericHelperDAO implements GenericHelper
   public GenericValue findByPrimaryKey(GenericPK primaryKey)
   {
     if(primaryKey == null) { return null; }
-    GenericValue genericValue = null;
+    GenericValue genericValue = new GenericValue(primaryKey);
+    if(!genericDAO.select(genericValue)) return null;
+    genericValue.helper = this;
     return genericValue;
   }
 
@@ -100,6 +107,7 @@ public class GenericHelperDAO implements GenericHelper
   public Collection findAll(String entityName, List orderBy)
   {
     Collection collection = null;
+    collection = genericDAO.selectByAnd(entityName, null, orderBy);
     return collection;
   }
 
@@ -112,6 +120,7 @@ public class GenericHelperDAO implements GenericHelper
   public Collection findByAnd(String entityName, Map fields, List orderBy)
   {
     Collection collection = null;
+    collection = genericDAO.selectByAnd(entityName, fields, orderBy);
     return collection;
   }
   
@@ -142,5 +151,8 @@ public class GenericHelperDAO implements GenericHelper
    */
   public void store(GenericValue value)
   {
+    if(value == null) { return; }
+    if(!genericDAO.update(value)) Debug.logError("[GenericHelperDAO.store] Could not store GenericValue: " + value.toString());
+    value.helper = this;
   }
 }

@@ -33,7 +33,7 @@ import org.ofbiz.core.entity.model.*;
  */
 public class GenericValue extends GenericEntity
 {
-  public GenericHelper helper = null;
+  public transient GenericHelper helper = null;
   
   /** Creates new GenericValue */
   public GenericValue(String entityName) { super(entityName); }
@@ -43,8 +43,6 @@ public class GenericValue extends GenericEntity
   public GenericValue(GenericValue value) { super(value); }
   /** Creates new GenericValue from existing GenericValue */
   public GenericValue(GenericPK primaryKey) { super(primaryKey); }
-  
-  public GenericPK getPrimaryKey() { return new GenericPK(entityName, this.getFields(this.getModelEntity().pks)); }
   
   public void store() { helper.store(this); }
   public void remove() { helper.removeByPrimaryKey(getPrimaryKey()); }

@@ -41,6 +41,8 @@ public class GenericEntity implements Serializable
   public boolean modified = false;
 
   /** Creates new GenericEntity */
+  public GenericEntity() { this.entityName = null; this.fields = null; }
+  /** Creates new GenericEntity */
   public GenericEntity(String entityName) { this.entityName = entityName; this.fields = new HashMap(); }
   /** Creates new GenericEntity from existing Map */
   public GenericEntity(String entityName, Map fields) { this.entityName = entityName; this.fields = new HashMap(fields); }
@@ -66,7 +68,31 @@ public class GenericEntity implements Serializable
   public Float getFloat(String name) { return (Float)fields.get(name); }
   public Double getDouble(String name) { return (Double)fields.get(name); }
   
-  /** Returns key/value pairs of entity fields
+  public GenericPK getPrimaryKey() 
+  { 
+    Collection pkNames = new LinkedList();
+    Iterator iter = this.getModelEntity().pks.iterator();
+    while(iter != null && iter.hasNext())
+    {
+      ModelField curField = (ModelField)iter.next();
+      pkNames.add(curField.name);
+    }
+    return new GenericPK(entityName, this.getFields(pkNames));
+  }
+  public void setNonPKFields(Map fields)
+  {
+    //make a copy of the fields, remove the primary keys, set the rest
+    Map keyValuePairs = new HashMap(fields);
+    Iterator iter = this.getModelEntity().pks.iterator();
+    while(iter != null && iter.hasNext())
+    {
+      ModelField curField = (ModelField)iter.next();
+      keyValuePairs.remove(curField.name);
+    }
+    this.setFields(keyValuePairs);
+  }
+  
+  /** Returns keys of entity fields
    * @return java.util.Collection
    */
   public Collection getAllKeys() { return fields.keySet(); }
@@ -104,8 +130,8 @@ public class GenericEntity implements Serializable
     {
       anEntry = (Map.Entry)entries.next();
       this.fields.put(anEntry.getKey(), anEntry.getValue());
+      modified = true;
     }
-    modified = true;
   }
 
   /** Determines the equality of two GenericEntity objects, overrides the default equals
