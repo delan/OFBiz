@@ -24,7 +24,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.10 $
+ * @version    $Revision: 1.11 $
  * @since      2.2
 -->
 <simple-methods>
@@ -984,6 +984,17 @@
             </if-not-empty>
         </if-empty>
 
+        <!-- lookup all the approved items -->
+        <string-to-field field-name="statusId" map-name="itemLookupMap" string="ITEM_APPROVED"/>
+        <field-to-field field-name="orderId" map-name="orderHeader" to-map-name="itemLookupMap"/>
+        <find-by-and entity-name="OrderItem" map-name="itemLookupMap" list-name="orderItems"/>
+
+        <!-- make sure we have something to ship -->
+        <if-empty field-name="orderItems">
+            <add-error><fail-message message="No items available to ship at this time"/></add-error>
+            <check-errors/>
+        </if-empty>
+
         <!-- we are all good to go; create the shipment -->
         <if-not-empty field-name="originFacilityId" map-name="parameters">
             <field-to-field field-name="originFacilityId" map-name="parameters" to-field-name="originFacilityId" to-map-name="shipmentContext"/>
@@ -994,10 +1005,8 @@
             <result-to-field result-name="shipmentId" field-name="shipmentId" map-name="shipmentLookupMap"/>
         </call-service>
         <find-by-primary-key entity-name="Shipment" map-name="shipmentLookupMap" value-name="shipment"/>
+
         <!-- issue all order items that are in approved status -->
-        <string-to-field field-name="statusId" map-name="itemLookupMap" string="ITEM_APPROVED"/>
-        <field-to-field field-name="orderId" map-name="orderHeader" to-map-name="itemLookupMap"/>
-        <find-by-and entity-name="OrderItem" map-name="itemLookupMap" list-name="orderItems"/>
         <iterate list-name="orderItems" entry-name="orderItem">
             <get-related value-name="orderItem" relation-name="OrderItemInventoryRes" list-name="itemReses"/>
             <iterate list-name="itemReses" entry-name="itemRes">
@@ -1065,10 +1074,16 @@
 			</call-class-method>
 			<field-to-list field-name="orderItemInventoryResFacilityIds" list-name="orderItemInventoryResFacilityIds"/>
 
-			<!-- issue all order items that are in approved status -->
+			<!-- lookup all the approved items -->
 			<string-to-field field-name="statusId" map-name="itemLookupMap" string="ITEM_APPROVED"/>
 			<field-to-field field-name="orderId" map-name="orderHeader" to-map-name="itemLookupMap"/>
 			<find-by-and entity-name="OrderItem" map-name="itemLookupMap" list-name="orderItems"/>
+
+            <!-- make sure we have something to ship -->
+            <if-empty field-name="orderItems">
+                <add-error><fail-message message="No items available to ship at this time"/></add-error>
+                <check-errors/>
+            </if-empty>
 
 			<!-- traverse facilities, instantiate shipment for each -->
 			<iterate list-name="orderItemInventoryResFacilityIds" entry-name="orderItemInventoryResFacilityId">
@@ -1161,6 +1176,15 @@
             </if-not-empty>
         </if-empty>
 
+        <!-- make sure we have items to issue -->
+        <if-empty field-name="itemShipList" map-name="parameters">
+            <add-error><fail-message message="No items available to ship at this time"/></add-error>
+            <check-errors/>
+        </if-empty>
+
+        <!-- move the itemMap to the envrironment -->
+        <field-to-env field-name="itemShipList" map-name="parameters" env-name="itemMapList"/>
+
         <!-- we are all good to go; create the shipment -->
         <if-not-empty field-name="originFacilityId" map-name="parameters">
             <field-to-field field-name="originFacilityId" map-name="parameters" to-field-name="originFacilityId" to-map-name="shipmentContext"/>
@@ -1171,9 +1195,6 @@
             <result-to-field result-name="shipmentId" field-name="shipmentId" map-name="shipmentLookupMap"/>
         </call-service>
         <find-by-primary-key entity-name="Shipment" map-name="shipmentLookupMap" value-name="shipment"/>
-
-        <!-- move the itemMap to the envrironment -->
-        <field-to-env field-name="itemShipList" map-name="parameters" env-name="itemMapList"/>
 
         <!-- issue the passed in order items -->
         <log level="verbose" message="ShipMap List : ${itemMapList}  /  ${parameters.itemShipList}"/>
