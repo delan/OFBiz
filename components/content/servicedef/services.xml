@@ -825,7 +825,9 @@
         invoke="removeFile"
         auth="true">
         <description>Remove File</description>
+        <!--
         <auto-attributes include="pk" mode="IN" optional="false"/>
+        -->
         <attribute mode="IN" name="rootDir" optional="true" type="String"/>
     </service>
 
