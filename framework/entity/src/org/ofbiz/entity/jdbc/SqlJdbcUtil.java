@@ -33,12 +33,13 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Clob;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+
+import javolution.util.FastMap;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.ObjectType;
@@ -232,13 +233,12 @@ public class SqlJdbcUtil {
 
     /** Makes a WHERE clause String with "<col name>=?" if not null or "<col name> IS null" if null, all AND separated */
     public static String makeWhereStringFromFields(List modelFields, Map fields, String operator, List entityConditionParams) {
-        StringBuffer returnString = new StringBuffer("");
-
         if (modelFields.size() < 1) {
             return "";
         }
-        Iterator iter = modelFields.iterator();
 
+        StringBuffer returnString = new StringBuffer("");
+        Iterator iter = modelFields.iterator();
         while (iter.hasNext()) {
             Object item = iter.next();
             Object name = null;
@@ -251,8 +251,8 @@ public class SqlJdbcUtil {
                 returnString.append(item);
                 name = item;
             }
-            Object fieldValue = fields.get(name);
 
+            Object fieldValue = fields.get(name);
             if (fieldValue != null) {
                 returnString.append('=');
                 addValue(returnString, modelField, fieldValue, entityConditionParams);
@@ -384,14 +384,16 @@ public class SqlJdbcUtil {
     public static String makeViewTable(ModelEntity modelEntity, DatasourceInfo datasourceInfo) throws GenericEntityException {
         if (modelEntity instanceof ModelViewEntity) {
             StringBuffer sql = new StringBuffer("(SELECT ");
-            List fields = modelEntity.getFieldsCopy();
-            if (fields.size() > 0) {
-                String colname = ((ModelField) fields.get(0)).getColName();
+            Iterator fieldsIter = modelEntity.getFieldsIterator();
+            if (fieldsIter.hasNext()) {
+                ModelField curField = (ModelField) fieldsIter.next();
+                String colname = curField.getColName();
                 sql.append(colname);
                 sql.append(" AS ");
                 sql.append(filterColName(colname));
-                for (int i = 1; i < fields.size(); i++) {
-                    colname = ((ModelField) fields.get(i)).getColName();
+                while (fieldsIter.hasNext()) {
+                    curField = (ModelField) fieldsIter.next();
+                    colname = curField.getColName();
                     sql.append(", ");
                     sql.append(colname);
                     sql.append(" AS ");
@@ -436,8 +438,9 @@ public class SqlJdbcUtil {
      * @throws GenericEntityException
      */
     public static void setValues(SQLProcessor sqlP, List list, GenericEntity entity, ModelFieldTypeReader modelFieldTypeReader) throws GenericEntityException {
-        for (int i = 0; i < list.size(); i++) {
-            ModelField curField = (ModelField) list.get(i);
+        Iterator fieldIter = list.iterator();
+        while (fieldIter.hasNext()) {
+            ModelField curField = (ModelField) fieldIter.next();
             setValue(sqlP, curField, entity, modelFieldTypeReader);
         }
     }
@@ -453,10 +456,9 @@ public class SqlJdbcUtil {
      * @throws GenericEntityException
      */
     public static void setValuesWhereClause(SQLProcessor sqlP, List list, GenericValue dummyValue, ModelFieldTypeReader modelFieldTypeReader) throws GenericEntityException {
-
-        for (int i = 0; i < list.size(); i++) {
-            ModelField curField = (ModelField) list.get(i);
-
+        Iterator fieldIter = list.iterator();
+        while (fieldIter.hasNext()) {
+            ModelField curField = (ModelField) fieldIter.next();
             // for where clause variables only setValue if not null...
             if (dummyValue.get(curField.getName()) != null) {
                 setValue(sqlP, curField, dummyValue, modelFieldTypeReader);
@@ -475,8 +477,9 @@ public class SqlJdbcUtil {
      * @throws GenericEntityException
      */
     public static void setPkValues(SQLProcessor sqlP, ModelEntity modelEntity, GenericEntity entity, ModelFieldTypeReader modelFieldTypeReader) throws GenericEntityException {
-        for (int j = 0; j < modelEntity.getPksSize(); j++) {
-            ModelField curField = modelEntity.getPk(j);
+        Iterator pksIter = modelEntity.getPksIterator();
+        while (pksIter.hasNext()) {
+            ModelField curField = (ModelField) pksIter.next();
 
             // for where clause variables only setValue if not null...
             if (entity.dangerousGetNoCheckButFast(curField) != null) {
@@ -760,7 +763,7 @@ public class SqlJdbcUtil {
         }
     }
 
-    protected static Map fieldTypeMap = new HashMap();
+    protected static Map fieldTypeMap = FastMap.newInstance();
     static {
         fieldTypeMap.put("java.lang.String", new Integer(1));
         fieldTypeMap.put("String", new Integer(1));

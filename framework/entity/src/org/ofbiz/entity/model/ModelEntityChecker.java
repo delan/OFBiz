@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -24,11 +24,12 @@
 package org.ofbiz.entity.model;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
+
+import javolution.util.FastMap;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilValidate;
@@ -52,7 +53,7 @@ public class ModelEntityChecker {
         TreeSet reservedWords = new TreeSet();
         initReservedWords(reservedWords);
 
-        Map packages = new HashMap();
+        Map packages = FastMap.newInstance();
         TreeSet packageNames = new TreeSet();
         TreeSet tableNames = new TreeSet();
 
@@ -107,8 +108,9 @@ public class ModelEntityChecker {
                         warningList.add("[TableNameRW] Table name [" + entity.getPlainTableName() + "] of entity " + entity.getEntityName() + " is a reserved word.");
                 }
                 TreeSet ufields = new TreeSet();
-                for (int y = 0; y < entity.getFieldsSize(); y++) {
-                    ModelField field = entity.getField(y);
+                Iterator fieldIter = entity.getFieldsIterator();
+                while (fieldIter.hasNext()) {
+                    ModelField field = (ModelField) fieldIter.next();
                     ModelFieldType type = delegator.getEntityFieldType(entity,field.getType());
 
                     if (ufields.contains(field.getName())) {
@@ -226,8 +228,9 @@ public class ModelEntityChecker {
                                                         + " does not match the number of keymaps (" + relation.getKeyMapsSize()
                                                         + ") for relation of type one \"" + relation.getTitle() + relation.getRelEntityName()
                                                         + "\" of entity " + entity.getEntityName() + ".");
-                                for (int repks = 0; repks < relatedEntity.getPksSize(); repks++) {
-                                    ModelField pk = relatedEntity.getPk(repks);
+                                Iterator pksIter = relatedEntity.getPksIterator();
+                                while (pksIter.hasNext()) {
+                                    ModelField pk = (ModelField) pksIter.next();
                                     if (relation.findKeyMapByRelated(pk.getName()) == null) {
                                         warningList.add("[RelationOneRelatedPrimaryKeyMissing] The primary key \"" + pk.getName()
                                                         + "\" of related entity " + relation.getRelEntityName()

@@ -145,14 +145,16 @@ public class ModelTree {
     }
 
     public void setDefaultEntityName(String name) {
-     
         String nm = name;
-        if (UtilValidate.isEmpty(nm))
+        if (UtilValidate.isEmpty(nm)) {
             nm = "Content";
+        }
         this.defaultEntityName = nm;
         ModelEntity modelEntity = delegator.getModelEntity(this.defaultEntityName);
-        ModelField modelField = modelEntity.getPk(0);
-        this.defaultPkName = modelField.getName();
+        if (modelEntity.getPksSize() == 1) {
+            ModelField modelField = modelEntity.getOnlyPk();
+            this.defaultPkName = modelField.getName();
+        }
     }
     
     public String getDefaultEntityName() {
@@ -671,12 +673,15 @@ public class ModelTree {
         }
         
         public void setEntityName(String name) {
-         
             this.entityName = name;
             if (UtilValidate.isNotEmpty(this.entityName)) {
                 ModelEntity modelEntity = modelTree.delegator.getModelEntity(this.entityName);
-                ModelField modelField = modelEntity.getPk(0);
-                this.pkName = modelField.getName();
+                if (modelEntity.getPksSize() == 1) {
+                    ModelField modelField = modelEntity.getOnlyPk();
+                    this.pkName = modelField.getName();
+                } else {
+                    // TODO: what to do here?
+                }
             }
         }
         

@@ -31,11 +31,11 @@ import java.io.Reader;
 import java.io.StringWriter;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javolution.lang.Text;
+import javolution.util.FastMap;
 import javolution.xml.sax.Attributes;
 import javolution.xml.sax.RealtimeParser;
 
@@ -292,7 +292,7 @@ public class EntitySaxReader implements javolution.xml.sax.ContentHandler, Error
                     Template template = new Template("FMImportFilter", templateReader, config);
                     NodeModel nodeModel = NodeModel.wrap(this.rootNodeForTemplate);
                         
-                    Map context = new HashMap();
+                    Map context = FastMap.newInstance();
                     BeansWrapper wrapper = BeansWrapper.getDefaultInstance();
                     TemplateHashModel staticModels = wrapper.getStaticModels();
                     context.put("Static", staticModels);
@@ -352,7 +352,7 @@ public class EntitySaxReader implements javolution.xml.sax.ContentHandler, Error
                 // before we write currentValue check to see if PK is there, if not and it is one field, generate it from a sequence using the entity name
                 if (!currentValue.containsPrimaryKey()) {
                     if (currentValue.getModelEntity().getPksSize() == 1) {
-                        ModelField modelField = currentValue.getModelEntity().getPk(0);
+                        ModelField modelField = currentValue.getModelEntity().getOnlyPk();
                         String newSeq = delegator.getNextSeqId(currentValue.getEntityName());
                         currentValue.setString(modelField.getName(), newSeq);
                     } else {

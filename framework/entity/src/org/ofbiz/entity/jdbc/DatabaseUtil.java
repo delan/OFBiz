@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -23,13 +23,37 @@
  */
 package org.ofbiz.entity.jdbc;
 
-import java.sql.*;
-import java.util.*;
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
-import org.ofbiz.base.util.*;
-import org.ofbiz.entity.*;
-import org.ofbiz.entity.config.*;
-import org.ofbiz.entity.model.*;
+import javolution.util.FastList;
+import javolution.util.FastMap;
+
+import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilTimer;
+import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.entity.GenericEntityException;
+import org.ofbiz.entity.config.DatasourceInfo;
+import org.ofbiz.entity.config.EntityConfigUtil;
+import org.ofbiz.entity.model.ModelEntity;
+import org.ofbiz.entity.model.ModelField;
+import org.ofbiz.entity.model.ModelFieldType;
+import org.ofbiz.entity.model.ModelFieldTypeReader;
+import org.ofbiz.entity.model.ModelIndex;
+import org.ofbiz.entity.model.ModelKeyMap;
+import org.ofbiz.entity.model.ModelRelation;
+import org.ofbiz.entity.model.ModelViewEntity;
 
 /**
  * Utilities for Entity Database Maintenance
@@ -117,7 +141,7 @@ public class DatabaseUtil {
         Iterator modelEntityIter = modelEntityList.iterator();
         int curEnt = 0;
         int totalEnt = modelEntityList.size();
-        List entitiesAdded = new LinkedList();
+        List entitiesAdded = FastList.newInstance();
         while (modelEntityIter.hasNext()) {
             curEnt++;
             ModelEntity entity = (ModelEntity) modelEntityIter.next();
@@ -141,9 +165,10 @@ public class DatabaseUtil {
                 tableNames.remove(entity.getTableName(datasourceInfo));
 
                 if (colInfo != null) {
-                    Map fieldColNames = new HashMap();
-                    for (int fnum = 0; fnum < entity.getFieldsSize(); fnum++) {
-                        ModelField field = entity.getField(fnum);
+                    Map fieldColNames = FastMap.newInstance();
+                    Iterator fieldIter = entity.getFieldsIterator();
+                    while (fieldIter.hasNext()) {
+                        ModelField field = (ModelField) fieldIter.next();
                         fieldColNames.put(field.getColName(), field);
                     }
 
@@ -315,51 +340,39 @@ public class DatabaseUtil {
 
         // for each newly added table, add fk indices
         if (datasourceInfo.useFkIndices) {
+            int totalFkIndices = 0;
             Iterator eaIter = entitiesAdded.iterator();
             while (eaIter.hasNext()) {
                 ModelEntity curEntity = (ModelEntity) eaIter.next();
                 if (curEntity.getRelationsOneSize() > 0) {
-                    String indErrMsg = this.createForeignKeyIndices(curEntity, datasourceInfo.constraintNameClipLength);
-                    if (indErrMsg != null && indErrMsg.length() > 0) {
-                        String message = "Could not create foreign key indices for entity \"" + curEntity.getEntityName() + "\": " + indErrMsg;
-                        Debug.logError(message, module);
-                        if (messages != null) messages.add(message);
-                    } else {
-                        String message = "Created foreign key indices for entity \"" + curEntity.getEntityName() + "\"";
-                        Debug.logImportant(message, module);
-                        if (messages != null) messages.add(message);
-                    }
+                    totalFkIndices += this.createForeignKeyIndices(curEntity, datasourceInfo.constraintNameClipLength, messages);
                 }
             }
+            if (totalFkIndices > 0) Debug.logImportant("==== TOTAL Foreign Key Indices Created: " + totalFkIndices, module);
         }
 
         // for each newly added table, add fks
         if (datasourceInfo.useFks) {
+            int totalFks = 0;
             Iterator eaIter = entitiesAdded.iterator();
             while (eaIter.hasNext()) {
                 ModelEntity curEntity = (ModelEntity) eaIter.next();
-                this.createForeignKeys(curEntity, modelEntities, datasourceInfo.constraintNameClipLength, datasourceInfo.fkStyle, datasourceInfo.useFkInitiallyDeferred, messages);
+                totalFks += this.createForeignKeys(curEntity, modelEntities, datasourceInfo.constraintNameClipLength, datasourceInfo.fkStyle, datasourceInfo.useFkInitiallyDeferred, messages);
             }
+            if (totalFks > 0) Debug.logImportant("==== TOTAL Foreign Keys Created: " + totalFks, module);
         }
 
         // for each newly added table, add declared indexes
         if (datasourceInfo.useIndices) {
+            int totalDis = 0;
             Iterator eaIter = entitiesAdded.iterator();
             while (eaIter.hasNext()) {
                 ModelEntity curEntity = (ModelEntity) eaIter.next();
                 if (curEntity.getIndexesSize() > 0) {
-                    String indErrMsg = this.createDeclaredIndices(curEntity);
-                    if (indErrMsg != null && indErrMsg.length() > 0) {
-                        String message = "Could not create declared indices for entity \"" + curEntity.getEntityName() + "\": " + indErrMsg;
-                        Debug.logError(message, module);
-                        if (messages != null) messages.add(message);
-                    } else {
-                        String message = "Created declared indices for entity \"" + curEntity.getEntityName() + "\"";
-                        Debug.logImportant(message, module);
-                        if (messages != null) messages.add(message);
-                    }
+                    totalDis += this.createDeclaredIndices(curEntity, messages);
                 }
             }
+            if (totalDis > 0) Debug.logImportant("==== TOTAL Declared Indices Created: " + totalDis, module);
         }
         
         // make sure each one-relation has an FK
@@ -494,16 +507,7 @@ public class DatabaseUtil {
 
                     if (tableIndexList == null) {
                         // evidently no indexes in the database for this table, do the create all
-                        String indErrMsg = this.createForeignKeyIndices(entity, datasourceInfo.constraintNameClipLength);
-                        if (indErrMsg != null && indErrMsg.length() > 0) {
-                            String message = "Could not create foreign key indices for entity \"" + entity.getEntityName() + "\": " + indErrMsg;
-                            Debug.logError(message, module);
-                            if (messages != null) messages.add(message);
-                        } else {
-                            String message = "Created foreign key indices for entity \"" + entity.getEntityName() + "\"";
-                            Debug.logImportant(message, module);
-                            if (messages != null) messages.add(message);
-                        }
+                        this.createForeignKeyIndices(entity, datasourceInfo.constraintNameClipLength, messages);
                     } else {
                         // go through each relation to see if an FK already exists
                         boolean createdConstraints = false;
@@ -570,7 +574,7 @@ public class DatabaseUtil {
         // go through each table and make a ModelEntity object, add to list
         // for each entity make corresponding ModelField objects
         // then print out XML for the entities/fields
-        List newEntList = new LinkedList();
+        List newEntList = FastList.newInstance();
         
         boolean isCaseSensitive = false;
         DatabaseMetaData dbData = this.getDatabaseMetaData(null, messages);
@@ -835,7 +839,7 @@ public class DatabaseUtil {
     public Map getColumnInfo(Set tableNames, Collection messages) {
         // if there are no tableNames, don't even try to get the columns
         if (tableNames.size() == 0) {
-            return new HashMap();
+            return FastMap.newInstance();
         }
 
         Connection connection = null;
@@ -873,7 +877,7 @@ public class DatabaseUtil {
 
         if (Debug.infoOn()) Debug.logInfo("Getting Column Info From Database", module);
 
-        Map colInfo = new HashMap();
+        Map colInfo = FastMap.newInstance();
         String lookupSchemaName = null;
         try {
             if (dbData.supportsSchemasInTableDefinitions()) {
@@ -1016,7 +1020,7 @@ public class DatabaseUtil {
 
         if (Debug.infoOn()) Debug.logInfo("Getting Foreign Key (Reference) Info From Database", module);
 
-        Map refInfo = new HashMap();
+        Map refInfo = FastMap.newInstance();
 
         try {
             // ResultSet rsCols = dbData.getCrossReference(null, null, null, null, null, null);
@@ -1081,7 +1085,7 @@ public class DatabaseUtil {
 
                     Map tableRefInfo = (Map) refInfo.get(rcInfo.fkTableName);
                     if (tableRefInfo == null) {
-                        tableRefInfo = new HashMap();
+                        tableRefInfo = FastMap.newInstance();
                         refInfo.put(rcInfo.fkTableName, tableRefInfo);
                         if (Debug.verboseOn()) Debug.logVerbose("Adding new Map for table: " + rcInfo.fkTableName, module);
                     }
@@ -1169,7 +1173,7 @@ public class DatabaseUtil {
 
         if (Debug.infoOn()) Debug.logInfo("Getting Index Info From Database", module);
 
-        Map indexInfo = new HashMap();
+        Map indexInfo = FastMap.newInstance();
         try {
             int totalIndices = 0;
             Iterator tableNamesIter = tableNames.iterator();
@@ -1286,10 +1290,10 @@ public class DatabaseUtil {
         StringBuffer sqlBuf = new StringBuffer("CREATE TABLE ");
         sqlBuf.append(entity.getTableName(datasourceInfo));
         sqlBuf.append(" (");
-        for (int i = 0; i < entity.getFieldsSize(); i++) {
-            ModelField field = entity.getField(i);
+        Iterator fieldIter = entity.getFieldsIterator();
+        while (fieldIter.hasNext()) {
+            ModelField field = (ModelField) fieldIter.next();
             ModelFieldType type = modelFieldTypeReader.getModelFieldType(field.getType());
-
             if (type == null) {
                 return "Field type [" + type + "] not found for field [" + field.getName() + "] of entity [" + entity.getEntityName() + "], not creating table.";
             }
@@ -1323,13 +1327,10 @@ public class DatabaseUtil {
 
             // go through the relationships to see if any foreign keys need to be added
             Iterator relationsIter = entity.getRelationsIterator();
-
             while (relationsIter.hasNext()) {
                 ModelRelation modelRelation = (ModelRelation) relationsIter.next();
-
                 if ("one".equals(modelRelation.getType())) {
                     ModelEntity relModelEntity = (ModelEntity) modelEntities.get(modelRelation.getRelEntityName());
-
                     if (relModelEntity == null) {
                         Debug.logError("Error adding foreign key: ModelEntity was null for related entity name " + modelRelation.getRelEntityName(), module);
                         continue;
@@ -1751,32 +1752,29 @@ public class DatabaseUtil {
     }
 
     /* ====================================================================== */
-    public void createForeignKeys(ModelEntity entity, Map modelEntities, List messages) {
-        this.createForeignKeys(entity, modelEntities, datasourceInfo.constraintNameClipLength, datasourceInfo.fkStyle, datasourceInfo.useFkInitiallyDeferred, messages);
+    public int createForeignKeys(ModelEntity entity, Map modelEntities, List messages) {
+        return this.createForeignKeys(entity, modelEntities, datasourceInfo.constraintNameClipLength, datasourceInfo.fkStyle, datasourceInfo.useFkInitiallyDeferred, messages);
     }
-    public void createForeignKeys(ModelEntity entity, Map modelEntities, int constraintNameClipLength, String fkStyle, boolean useFkInitiallyDeferred, List messages) {
+    public int createForeignKeys(ModelEntity entity, Map modelEntities, int constraintNameClipLength, String fkStyle, boolean useFkInitiallyDeferred, List messages) {
         if (entity == null) {
             String errMsg = "ModelEntity was null and is required to create foreign keys for a table";
             Debug.logError(errMsg, module);
             if (messages != null) messages.add(errMsg);
-            return;
+            return 0;
         }
         if (entity instanceof ModelViewEntity) {
             //String errMsg = "ERROR: Cannot create foreign keys for a view entity";
             //Debug.logError(errMsg, module);
             //if (messages != null) messages.add(errMsg);
-            return;
+            return 0;
         }
-
-        String message = "Creating foreign keys for entity \"" + entity.getEntityName() + "\"";
-        Debug.logImportant(message, module);
-        if (messages != null) messages.add(message);
+        
+        int fksCreated = 0;
         
         // go through the relationships to see if any foreign keys need to be added
         Iterator relationsIter = entity.getRelationsIterator();
         while (relationsIter.hasNext()) {
             ModelRelation modelRelation = (ModelRelation) relationsIter.next();
-
             if ("one".equals(modelRelation.getType())) {
                 ModelEntity relModelEntity = (ModelEntity) modelEntities.get(modelRelation.getRelEntityName());
 
@@ -1797,9 +1795,20 @@ public class DatabaseUtil {
                 if (retMsg != null && retMsg.length() > 0) {
                     Debug.logError(retMsg, module);
                     if (messages != null) messages.add(retMsg);
+                    continue;
                 }
+                
+                fksCreated++;
             }
         }
+
+        if (fksCreated > 0) {
+            String message = "Created " + fksCreated + " foreign keys for entity \"" + entity.getEntityName() + "\"";
+            Debug.logImportant(message, module);
+            if (messages != null) messages.add(message);
+        }
+        
+        return fksCreated;
     }
 
     public String createForeignKey(ModelEntity entity, ModelRelation modelRelation, ModelEntity relModelEntity, int constraintNameClipLength, String fkStyle, boolean useFkInitiallyDeferred) {
@@ -2184,43 +2193,43 @@ public class DatabaseUtil {
 
     /* ====================================================================== */
     /* ====================================================================== */
-    public void createDeclaredIndices(ModelEntity entity, List messages) {
-        if (messages == null) messages = new ArrayList();
-        String err = createDeclaredIndices(entity);
-        if (!UtilValidate.isEmpty(err)) {
-            messages.add(err);
-        }
-    }
-
-    public String createDeclaredIndices(ModelEntity entity) {
+    public int createDeclaredIndices(ModelEntity entity, List messages) {
         if (entity == null) {
-            return "ModelEntity was null and is required to create declared indices for a table";
+            String message = "ERROR: ModelEntity was null and is required to create declared indices for a table";
+            Debug.logError(message, module);
+            if (messages != null) messages.add(message);
+            return 0;
         }
         if (entity instanceof ModelViewEntity) {
-            return "ERROR: Cannot create declared indices for a view entity";
+            String message = "WARNING: Cannot create declared indices for a view entity";
+            Debug.logWarning(message, module);
+            if (messages != null) messages.add(message);
+            return 0;
         }
 
-        StringBuffer retMsgsBuffer = new StringBuffer();
-
+        int dinsCreated = 0;
+        
         // go through the indexes to see if any need to be added
         Iterator indexesIter = entity.getIndexesIterator();
         while (indexesIter.hasNext()) {
             ModelIndex modelIndex = (ModelIndex) indexesIter.next();
 
             String retMsg = createDeclaredIndex(entity, modelIndex);
-
             if (retMsg != null && retMsg.length() > 0) {
-                if (retMsgsBuffer.length() > 0) {
-                    retMsgsBuffer.append("\n");
-                }
-                retMsgsBuffer.append(retMsg);
+                String message = "Could not create declared indices for entity \"" + entity.getEntityName() + "\": " + retMsg;
+                Debug.logError(message, module);
+                if (messages != null) messages.add(message);
+                continue;
             }
+            dinsCreated++;
         }
-        if (retMsgsBuffer.length() > 0) {
-            return retMsgsBuffer.toString();
-        } else {
-            return null;
+        
+        if (dinsCreated > 0) {
+            String message = "Created " + dinsCreated + " declared indices for entity \"" + entity.getEntityName() + "\"";
+            Debug.logImportant(message, module);
+            if (messages != null) messages.add(message);
         }
+        return dinsCreated;
     }
 
     public String createDeclaredIndex(ModelEntity entity, ModelIndex modelIndex) {
@@ -2379,45 +2388,48 @@ public class DatabaseUtil {
     /* ====================================================================== */
 
     /* ====================================================================== */
-    public void createForeignKeyIndices(ModelEntity entity, List messages) {
-        if (messages == null) messages = new ArrayList();
-        String err = createForeignKeyIndices(entity, datasourceInfo.constraintNameClipLength);
-        if (!UtilValidate.isEmpty(err)) {
-            messages.add(err);
-        }
+    public int createForeignKeyIndices(ModelEntity entity, List messages) {
+        return createForeignKeyIndices(entity, datasourceInfo.constraintNameClipLength, messages);
     }
 
-    public String createForeignKeyIndices(ModelEntity entity, int constraintNameClipLength) {
+    public int createForeignKeyIndices(ModelEntity entity, int constraintNameClipLength, List messages) {
         if (entity == null) {
-            return "ModelEntity was null and is required to create foreign keys indices for a table";
+            String message = "ERROR: ModelEntity was null and is required to create foreign keys indices for a table";
+            Debug.logError(message, module);
+            if (messages != null) messages.add(message);
+            return 0;
         }
         if (entity instanceof ModelViewEntity) {
-            return "ERROR: Cannot create foreign keys indices for a view entity";
+            String message = "WARNING: Cannot create foreign keys indices for a view entity";
+            Debug.logWarning(message, module);
+            if (messages != null) messages.add(message);
+            return 0;
         }
 
-        StringBuffer retMsgsBuffer = new StringBuffer();
-
+        int fkisCreated = 0;
+        
         // go through the relationships to see if any foreign keys need to be added
         Iterator relationsIter = entity.getRelationsIterator();
         while (relationsIter.hasNext()) {
             ModelRelation modelRelation = (ModelRelation) relationsIter.next();
-
             if ("one".equals(modelRelation.getType())) {
                 String retMsg = createForeignKeyIndex(entity, modelRelation, constraintNameClipLength);
-
                 if (retMsg != null && retMsg.length() > 0) {
-                    if (retMsgsBuffer.length() > 0) {
-                        retMsgsBuffer.append("\n");
-                    }
-                    retMsgsBuffer.append(retMsg);
+                    String message = "Could not create foreign key indices for entity \"" + entity.getEntityName() + "\": " + retMsg;
+                    Debug.logError(message, module);
+                    if (messages != null) messages.add(message);
+                    continue;
                 }
+                fkisCreated++;
             }
         }
-        if (retMsgsBuffer.length() > 0) {
-            return retMsgsBuffer.toString();
-        } else {
-            return null;
+        
+        if (fkisCreated > 0) {
+            String message = "Created " + fkisCreated + " foreign key indices for entity \"" + entity.getEntityName() + "\"";
+            Debug.logImportant(message, module);
+            if (messages != null) messages.add(message);
         }
+        return fkisCreated;
     }
 
     public String createForeignKeyIndex(ModelEntity entity, ModelRelation modelRelation, int constraintNameClipLength) {

@@ -25,15 +25,16 @@ package org.ofbiz.widget.screen;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
+
+import javolution.util.FastList;
+import javolution.util.FastMap;
 
 import org.ofbiz.base.util.BshUtil;
 import org.ofbiz.base.util.Debug;
@@ -75,7 +76,7 @@ public abstract class ModelScreenAction {
     public abstract void runAction(Map context) throws GeneralException;
     
     public static List readSubActions(ModelScreen modelScreen, Element parentElement) {
-        List actions = new LinkedList();
+        List actions = FastList.newInstance();
         
         List actionElementList = UtilXml.childElementList(parentElement);
         Iterator actionElementIter = actionElementList.iterator();
@@ -404,7 +405,7 @@ public abstract class ModelScreenAction {
             
             List fieldMapElementList = UtilXml.childElementList(serviceElement, "field-map");
             if (fieldMapElementList.size() > 0) {
-                this.fieldMap = new HashMap();
+                this.fieldMap = FastMap.newInstance();
                 Iterator fieldMapElementIter = fieldMapElementList.iterator();
                 while (fieldMapElementIter.hasNext()) {
                     Element fieldMapElement = (Element) fieldMapElementIter.next();
@@ -430,7 +431,7 @@ public abstract class ModelScreenAction {
                 if (autoFieldMapBool) {
                     serviceContext = this.modelScreen.getDispatcher(context).getDispatchContext().makeValidContext(serviceNameExpanded, ModelService.IN_PARAM, context);
                 } else {
-                    serviceContext = new HashMap();
+                    serviceContext = FastMap.newInstance();
                 }
                 
                 if (this.fieldMap != null) {
@@ -515,4 +516,3 @@ public abstract class ModelScreenAction {
         }
     }
 }
-

@@ -1,7 +1,7 @@
 /* 
  * $Id$
  *
- * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -27,13 +27,14 @@ package org.ofbiz.service;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.LinkedList;
 import javax.xml.parsers.ParserConfigurationException;
+
+import javolution.util.FastList;
+import javolution.util.FastMap;
 
 import org.ofbiz.base.config.GenericConfigException;
 import org.ofbiz.base.config.ResourceHandler;
@@ -139,7 +140,7 @@ public class ModelServiceReader {
             synchronized (ModelServiceReader.class) {
                 // must check if null again as one of the blocked threads can still enter
                 if (modelServices == null) { // now it's safe
-                    modelServices = new HashMap();
+                    modelServices = FastMap.newInstance();
 
                     UtilTimer utilTimer = new UtilTimer();
 
@@ -334,7 +335,7 @@ public class ModelServiceReader {
         service.description = getCDATADef(serviceElement, "description");
         service.nameSpace = getCDATADef(serviceElement, "namespace");  
               
-        service.contextInfo = new HashMap();
+        service.contextInfo = FastMap.newInstance();
         this.createPermGroups(serviceElement, service);
         this.createImplDefs(serviceElement, service);
         this.createAutoAttrDefs(serviceElement, service);
@@ -664,7 +665,7 @@ public class ModelServiceReader {
         List validateElements = UtilXml.childElementList(attribute, "type-validate");
         if (validateElements != null && validateElements.size() > 0) {
             // always clear out old ones; never append
-            param.validators = new LinkedList();
+            param.validators = FastList.newInstance();
 
             Iterator i = validateElements.iterator();
             Element validate = (Element) i.next();
