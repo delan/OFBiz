@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCartItem.java,v 1.16 2003/11/23 02:22:26 jonesde Exp $
+ * $Id: ShoppingCartItem.java,v 1.17 2003/11/25 09:48:04 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -47,7 +47,7 @@ import org.ofbiz.service.ModelService;
  *
  * @author     <a href="mailto:jaz@ofbiz.org.com">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.16 $
+ * @version    $Revision: 1.17 $
  * @since      2.0
  */
 public class ShoppingCartItem implements java.io.Serializable {
@@ -362,8 +362,6 @@ public class ShoppingCartItem implements java.io.Serializable {
         }
 
         // set quantity before promos so order total, etc will be updated
-        double oldQuantity = this.quantity;
-
         this.quantity = quantity;
         this.updatePrice(dispatcher, cart);
 
@@ -537,15 +535,15 @@ public class ShoppingCartItem implements java.io.Serializable {
 
     /** Returns the item type description. */
     public String getItemTypeDescription() {
-        GenericValue itemType = null;
+        GenericValue orderItemType = null;
         try {
-            GenericDelegator delegator = this.getDelegator();
-            itemType = this.getDelegator().findByPrimaryKeyCache("OrderItemType", UtilMisc.toMap("orderItemTypeId", this.getItemType()));
+            orderItemType = this.getDelegator().findByPrimaryKeyCache("OrderItemType", UtilMisc.toMap("orderItemTypeId", this.getItemType()));
         } catch (GenericEntityException e) {
             Debug.logWarning(e, "Problems getting OrderItemType for: " + this.getItemType(), module);
         }
-        if (itemType != null)
-            return itemType.getString("description");
+        if (itemType != null) {
+            return orderItemType.getString("description");
+        }
         return null;
     }
 
@@ -733,12 +731,12 @@ public class ShoppingCartItem implements java.io.Serializable {
         return OrderReadHelper.calcItemAdjustments(new Double(quantity), new Double(getBasePrice()), this.getAdjustments(), false, false, true, false, false);
     }
 
-    public void addAllProductFeatureAndAppls(Map additionalProductFeatureAndAppls) {
-        if (additionalProductFeatureAndAppls == null) return;
-        Iterator additionalProductFeatureAndApplsIter = additionalProductFeatureAndAppls.values().iterator();
+    public void addAllProductFeatureAndAppls(Map productFeatureAndApplsToAdd) {
+        if (productFeatureAndApplsToAdd == null) return;
+        Iterator productFeatureAndApplsToAddIter = productFeatureAndApplsToAdd.values().iterator();
 
-        while (additionalProductFeatureAndApplsIter.hasNext()) {
-            GenericValue additionalProductFeatureAndAppl = (GenericValue) additionalProductFeatureAndApplsIter.next();
+        while (productFeatureAndApplsToAddIter.hasNext()) {
+            GenericValue additionalProductFeatureAndAppl = (GenericValue) productFeatureAndApplsToAddIter.next();
 
             this.putAdditionalProductFeatureAndAppl(additionalProductFeatureAndAppl);
         }
@@ -1058,6 +1056,15 @@ public class ShoppingCartItem implements java.io.Serializable {
             throw new RuntimeException("Entity Engine error getting Parent Product (" + e.getMessage() + ")");
         }
         return this._parentProduct;
+    }
+    
+    public String getParentProductId() {
+        GenericValue parentProduct = this.getParentProduct();
+        if (parentProduct != null) {
+            return parentProduct.getString("productId");
+        } else {
+            return null;
+        }
     }
 
     public GenericDelegator getDelegator() {
