@@ -34,6 +34,12 @@
   <SecurityPermission description="Permission to do Delete operations in the Order Manager." permissionId="ORDERMGR_DELETE"/>
   <SecurityPermission description="Permission to do ALL operations in the Order Manager." permissionId="ORDERMGR_ADMIN"/>
 
+  <SecurityPermission description="Permission to do View operations in the Security Management Screens." permissionId="SECURITY_VIEW"/>
+  <SecurityPermission description="Permission to do Create operations in the Security Management Screens." permissionId="SECURITY_CREATE"/>
+  <SecurityPermission description="Permission to do Update operations in the Security Management Screens." permissionId="SECURITY_UPDATE"/>
+  <SecurityPermission description="Permission to do Delete operations in the Security Management Screens." permissionId="SECURITY_DELETE"/>
+  <SecurityPermission description="Permission to do ALL operations in the Security Management Screens." permissionId="SECURITY_ADMIN"/>
+
   <SecurityPermission description="Permission to do View operations in the Work Effort Manager." permissionId="WORKEFFORTMGR_VIEW"/>
   <SecurityPermission description="Permission to do Create operations in the Work Effort Manager." permissionId="WORKEFFORTMGR_CREATE"/>
   <SecurityPermission description="Permission to do Update operations in the Work Effort Manager." permissionId="WORKEFFORTMGR_UPDATE"/>
@@ -50,16 +56,6 @@
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="ENTITY_MAINT"/>
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="RULES_MAINT"/>
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="WORKFLOW_MAINT"/>
-  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="ORDERMGR_CREATE"/>
-  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="ORDERMGR_DELETE"/>
-  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="ORDERMGR_UPDATE"/>
-  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="ORDERMGR_VIEW"/>
-  <SecurityGroupPermission groupId="FULLADMIN" permissionId="ORDERMGR_ADMIN"/>
-  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="PARTYMGR_CREATE"/>
-  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="PARTYMGR_DELETE"/>
-  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="PARTYMGR_UPDATE"/>
-  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="PARTYMGR_VIEW"/>
-  <SecurityGroupPermission groupId="FULLADMIN" permissionId="PARTYMGR_ADMIN"/>
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="UTIL_CACHE_EDIT"/>
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="UTIL_CACHE_VIEW"/>
   <SecurityGroupPermission groupId="FULLADMIN" permissionId="SERVER_STATS_VIEW"/>
@@ -69,6 +65,25 @@
   <SecurityGroupPermission groupId="FULLADMIN" permissionId="WORKFLOW_MAINT"/>
   <SecurityGroupPermission groupId="FULLADMIN" permissionId="UTIL_CACHE_EDIT"/>
   <SecurityGroupPermission groupId="FULLADMIN" permissionId="UTIL_CACHE_VIEW"/>
+
+  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="PARTYMGR_CREATE"/>
+  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="PARTYMGR_DELETE"/>
+  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="PARTYMGR_UPDATE"/>
+  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="PARTYMGR_VIEW"/>
+  <SecurityGroupPermission groupId="FULLADMIN" permissionId="PARTYMGR_ADMIN"/>
+
+  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="ORDERMGR_CREATE"/>
+  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="ORDERMGR_DELETE"/>
+  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="ORDERMGR_UPDATE"/>
+  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="ORDERMGR_VIEW"/>
+  <SecurityGroupPermission groupId="FULLADMIN" permissionId="ORDERMGR_ADMIN"/>
+
+  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="SECURITY_CREATE"/>
+  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="SECURITY_DELETE"/>
+  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="SECURITY_UPDATE"/>
+  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="SECURITY_VIEW"/>
+  <SecurityGroupPermission groupId="FULLADMIN" permissionId="SECURITY_ADMIN"/>
+
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="WORKEFFORTMGR_CREATE"/>
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="WORKEFFORTMGR_DELETE"/>
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="WORKEFFORTMGR_UPDATE"/>
@@ -80,4 +95,3 @@
   <UserLoginSecurityGroup groupId="FULLADMIN" userLoginId="admin" fromDate="2001-01-01 12:00:00.0"/>
   <UserLoginSecurityGroup groupId="FLEXADMIN" userLoginId="flexadmin" fromDate="2001-01-01 12:00:00.0"/>
 </entity-engine-xml>
-
