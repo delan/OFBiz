@@ -33,8 +33,8 @@
 
 
 <%@ page import="org.ofbiz.commonapp.workeffort.workeffort.*" %>
+<%@ page import="org.ofbiz.commonapp.common.status.*" %>
 <%WorkEffortWorker.getWorkEffort(pageContext, "workEffortId", "workEffort", "partyAssigns", "canView", "tryEntity", "currentStatusItem");%>
-<%WorkEffortWorker.getTaskStatusItems(pageContext, "taskStatusItems");%>
 <%
     //if this was an update on a party assignment, set tryEntity to true
     if (request.getParameter("partyId") != null || request.getParameter("roleTypeId") != null) {
@@ -179,9 +179,6 @@
 </TABLE>
 
 <%-- ===================================================================== --%>
-      <field name="comments" type="comment"></field>
-      <field name="mustRsvp" type="indicator"></field>
-      <field name="expectationEnumId" type="id"></field>	
 <ofbiz:if name="partyAssigns" size="0">
     <BR>
     <TABLE border=0 width='100%' cellpadding='<%=boxBorderWidth%>' cellspacing=0 bgcolor='<%=boxBorderColor%>'>
@@ -216,6 +213,8 @@
                         pageContext.setAttribute("assignTryEntity", new Boolean(false));
                     }
                   %>
+                  <%String statusId = workEffortPartyAssignment.getString("statusId");%>
+                  <%StatusWorker.getStatusValidChangeToDetails(pageContext, "taskStatusDetails", statusId);%>
                   <form action="<ofbiz:url>/updateactivityassign</ofbiz:url>" method=POST style='margin: 0;'>
                   <table border='0' cellpadding='2' cellspacing='0'>
                     <input type='hidden' name='UPDATE_MODE' value='UPDATE'>
@@ -250,10 +249,12 @@
                       <td>&nbsp;</td>
                       <td width='74%'>
                         <SELECT name='statusId'>
-                          <OPTION value='<ofbiz:entityfield field="statusId" attribute="workEffortPartyAssignment" default="CAL_NEEDS_ACTION"/>'><ofbiz:entityfield field="statusId" attribute="workEffortPartyAssignment"/></OPTION>
+                          <%GenericValue wepaStatusItem = delegator.findByPrimaryKeyCache("StatusItem", UtilMisc.toMap("statusId", statusId));%>
+                          <%pageContext.setAttribute("wepaStatusItem", wepaStatusItem);%>
+                          <OPTION value='<ofbiz:entityfield field="statusId" attribute="wepaStatusItem" default="CAL_SENT"/>'><ofbiz:entityfield field="description" attribute="wepaStatusItem"/></OPTION>
                           <OPTION value=''>--</OPTION>
-                          <ofbiz:iterator name="statusItem" property="taskStatusItems">
-                            <OPTION value='<ofbiz:entityfield field="statusId" attribute="statusItem"/>'><ofbiz:entityfield field="description" attribute="statusItem"/></OPTION>
+                          <ofbiz:iterator name="statusValidChangeToDetail" property="taskStatusDetails">
+                            <OPTION value='<ofbiz:entityfield field="statusIdTo" attribute="statusValidChangeToDetail"/>'><ofbiz:entityfield field="description" attribute="statusValidChangeToDetail"/> (<ofbiz:entityfield field="transitionName" attribute="statusValidChangeToDetail"/>)</OPTION>
                           </ofbiz:iterator>
                         </SELECT>
                         <ofbiz:if name="workEffort">
