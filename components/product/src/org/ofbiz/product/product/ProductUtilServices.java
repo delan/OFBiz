@@ -1,5 +1,5 @@
 /*
- * $Id: ProductUtilServices.java,v 1.22 2004/01/28 04:02:06 jonesde Exp $
+ * $Id: ProductUtilServices.java,v 1.23 2004/01/28 04:12:59 jonesde Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -60,7 +60,7 @@ import org.ofbiz.service.ServiceUtil;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.22 $
+ * @version    $Revision: 1.23 $
  * @since      2.0
  */
 public class ProductUtilServices {
@@ -343,6 +343,10 @@ public class ProductUtilServices {
             if (removeOld) {
                 // remove the productAssoc before getting down so it isn't copied over...
                 productAssoc.remove();
+            } else {
+                // don't remove, just expire to avoid running again in the future
+                productAssoc.set("thruDate", nowTimestamp);
+                productAssoc.store();
             }
             String variantProductId = productAssoc.getString("productIdTo");
             
