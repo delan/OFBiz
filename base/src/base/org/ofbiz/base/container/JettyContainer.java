@@ -1,5 +1,5 @@
 /*
- * $Id: JettyContainer.java,v 1.7 2003/08/18 01:00:23 ajzeneski Exp $
+ * $Id: JettyContainer.java,v 1.8 2003/08/19 21:14:26 jonesde Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -44,7 +44,6 @@ import org.mortbay.util.LogSink;
 import org.mortbay.util.MultiException;
 import org.mortbay.util.ThreadedServer;
 import org.ofbiz.base.component.ComponentConfig;
-import org.ofbiz.base.component.ComponentException;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilURL;
 
@@ -53,7 +52,7 @@ import org.ofbiz.base.util.UtilURL;
  * This container depends on the ComponentContainer as well.
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
-  *@version    $Revision: 1.7 $
+  *@version    $Revision: 1.8 $
  * @since      2.2
  */
 public class JettyContainer implements Container {
@@ -281,7 +280,7 @@ public class JettyContainer implements Container {
     }  
     
     /**
-     * @see org.ofbiz.core.start.StartupContainer#start(java.lang.String)
+     * @see org.ofbiz.base.start.StartupContainer#start(java.lang.String)
      */
     public boolean start(String configFile) throws ContainerException {        
         // start the server(s)
@@ -301,7 +300,7 @@ public class JettyContainer implements Container {
     }
         
     /**
-     * @see org.ofbiz.core.start.StartupContainer#stop()
+     * @see org.ofbiz.base.start.StartupContainer#stop()
      */
     public void stop() throws ContainerException {
         if (servers != null) {

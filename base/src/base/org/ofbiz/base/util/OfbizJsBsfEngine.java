@@ -1,5 +1,5 @@
 /*
- * $Id: OfbizJsBsfEngine.java,v 1.1 2003/08/17 03:43:24 ajzeneski Exp $
+ * $Id: OfbizJsBsfEngine.java,v 1.2 2003/08/19 21:14:51 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -38,8 +38,6 @@ import org.mozilla.javascript.ImporterTopLevel;
 import com.ibm.bsf.*;
 import com.ibm.bsf.util.BSFEngineImpl;
 import com.ibm.bsf.util.BSFFunctions;
-
-//import org.ofbiz.core.util.*;
 
 /**
  * This is the interface to Netscape's Rhino (JavaScript) from the
