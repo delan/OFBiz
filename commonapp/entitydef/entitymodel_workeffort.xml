@@ -133,8 +133,9 @@
     <entity entity-name="WorkflowActivity" 
             package-name="org.ofbiz.commonapp.workeffort.definition"
             title="Workflow Activity Entity">
-      <field name="executionObjectId" type="id-ne"></field>
-      <field name="processId" type="id"></field>
+      <field name="packageId" type="id-ne"></field>
+      <field name="processId" type="id-ne"></field>
+      <field name="activityId" type="id-ne"></field>
       <field name="objectName" type="name"></field>
       <field name="objectPriority" type="numeric"></field>
       <field name="objectState" type="name"></field>
@@ -150,10 +151,9 @@
       <field name="duration" type="floating-point"></field>
       <field name="workingTime" type="floating-point"></field>
       <field name="waitingTime" type="floating-point"></field>	
-      <prim-key field="executionObjectId" />
-      <relation type="one" rel-entity-name="WorkflowProcess">
-        <key-map field-name="processId" rel-field-name="executionObjectId" />
-      </relation>
+      <prim-key field="packageId" />	
+      <prim-key field="processId" />	
+      <prim-key field="activityId" />
       <relation type="one" title="StartMode" rel-entity-name="Enumeration">
         <key-map field-name="startModeEnumId" rel-field-name="enumId" />
       </relation>
@@ -180,6 +180,9 @@
       </relation>
       <relation type="many" title="Performer" rel-entity-name="WorkflowParticipantsView">
         <key-map field-name="performerParticipantId" rel-field-name="participantId" />
+      </relation>
+      <relation type="one" rel-entity-name="WorkflowProcess">
+        <key-map field-name="processId" />
       </relation>
     </entity>
     <entity entity-name="WorkflowApplication" 
@@ -312,8 +315,8 @@
     <view-entity entity-name="WorkflowDataFieldsView" 
             package-name="org.ofbiz.commonapp.workeffort.definition"
             title="Workflow Data Fields View Entity">	
-      <member-entity entity-alias="WDFL" entity-name="WorkflowDataFieldList" />	
-      <member-entity entity-alias="WDF" entity-name="WorkflowDataField" />
+      <member-entity entity-alias="WDF" entity-name="WorkflowDataField" />	
+      <member-entity entity-alias="WDFL" entity-name="WorkflowDataFieldList" />
       <alias entity-alias="WDF" name="dataFieldId" prim-key="true" />
       <alias entity-alias="WDF" name="dataFieldName" />
       <alias entity-alias="WDF" name="description" />
@@ -628,8 +631,8 @@
     <entity entity-name="WorkflowProcess" 
             package-name="org.ofbiz.commonapp.workeffort.definition"
             title="Workflow Process Entity">
-      <field name="executionObjectId" type="id-ne"></field>
-      <field name="packageId" type="id"></field>
+      <field name="packageId" type="id-ne"></field>
+      <field name="processId" type="id-ne"></field>
       <field name="objectName" type="name"></field>
       <field name="objectPriority" type="numeric"></field>
       <field name="objectState" type="name"></field>
@@ -655,12 +658,13 @@
       <field name="duration" type="floating-point"></field>
       <field name="workingTime" type="floating-point"></field>
       <field name="waitingTime" type="floating-point"></field>	
-      <prim-key field="executionObjectId" />
+      <prim-key field="packageId" />	
+      <prim-key field="processId" />
       <relation type="one" rel-entity-name="WorkflowPackage">
         <key-map field-name="packageId" />
       </relation>
       <relation type="many" rel-entity-name="WorkflowActivity">
-        <key-map field-name="executionObjectId" rel-field-name="processId" />
+        <key-map field-name="processId" />
       </relation>
       <relation type="many" rel-entity-name="WorkflowTransition">
         <key-map field-name="executionObjectId" rel-field-name="processId" />
