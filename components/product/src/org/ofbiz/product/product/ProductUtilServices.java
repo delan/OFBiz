@@ -1,5 +1,5 @@
 /*
- * $Id: ProductUtilServices.java,v 1.4 2004/01/27 06:16:10 jonesde Exp $
+ * $Id: ProductUtilServices.java,v 1.5 2004/01/27 06:35:18 jonesde Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -58,7 +58,7 @@ import org.ofbiz.service.ServiceUtil;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.0
  */
 public class ProductUtilServices {
@@ -384,6 +384,34 @@ public class ProductUtilServices {
         return ServiceUtil.returnSuccess();
     }
 
+    public static Map clearAllVirtualProductImageNames(DispatchContext dctx, Map context) {
+        GenericDelegator delegator = dctx.getDelegator();
+        
+        try {
+            EntityListIterator eli = delegator.findListIteratorByCondition("Product", new EntityExpr("isVirtual", EntityOperator.EQUALS, "Y"), null, null);
+            GenericValue product = null;
+            int numSoFar = 0;
+            while ((product = (GenericValue) eli.next()) != null) {
+                product.set("smallImageUrl", null);
+                product.set("mediumImageUrl", null);
+                product.set("largeImageUrl", null);
+                product.set("detailImageUrl", null);
+                product.store();
+                numSoFar++;
+                if (numSoFar % 500 == 0) {
+                    Debug.logInfo("Image URLs cleared for " + numSoFar + " products.", module);
+                }
+            }
+            Debug.logInfo("Completed - Image URLs set for " + numSoFar + " products.", module);
+        } catch (GenericEntityException e) {
+            String errMsg = "Entity error running salesDiscontinuationDate: " + e.toString();
+            Debug.logError(e, errMsg, module);
+            return ServiceUtil.returnError(errMsg);
+        }
+        
+        return ServiceUtil.returnSuccess();
+    }
+        
     // set category descriptions from longDescriptions
     /*
 allCategories = delegator.findAll("ProductCategory");
