@@ -32,6 +32,7 @@
         <attribute name="billingAccount" type="GenericValue" mode="OUT" optional="true"/>
         <attribute name="paymentMethods" type="List" mode="OUT" optional="true"/>
         <attribute name="paymentMethodType" type="GenericValue" mode="OUT" optional="true"/>
+        <attribute name="orderShipmentInfoSummaryList" type="List" mode="OUT" optional="true"/>
         <attribute name="creditCard" type="GenericValue" mode="OUT" optional="true"/>
         <attribute name="formattedCardNumber" type="String" mode="OUT" optional="true"/>
         <attribute name="eftAccount" type="GenericValue" mode="OUT" optional="true"/>
