@@ -978,6 +978,97 @@
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>    
 
+    <!-- Facility ContactMech services -->  
+    <service name="createFacilityContactMech" engine="simple" debug="true"
+            location="org/ofbiz/commonapp/product/storage/FacilityContactMechServices.xml" invoke="createFacilityContactMech" auth="true">
+        <description>Create a FacilityContactMech</description>        
+        <auto-attributes entity-name="ContactMech" include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes entity-name="FacilityContactMech" include="all" mode="IN" optional="true"/>
+        <attribute name="contactMechPurposeTypeId" type="String" mode="IN" optional="true"/>
+        <attribute name="contactMechId" type="String" mode="INOUT" optional="true"/>
+    </service>           
+    <service name="updateFacilityContactMech" engine="simple"
+            location="org/ofbiz/commonapp/product/storage/FacilityContactMechServices.xml" invoke="updateFacilityContactMech" auth="true">
+        <description>Update a FacilityContactMech</description>
+        <auto-attributes entity-name="FacilityContactMech" include="all" mode="IN" optional="true"/>
+        <attribute name="contactMechId" type="String" mode="INOUT" optional="false"/>                
+        <attribute name="contactMechTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="infoString" type="String" mode="IN" optional="true"/>
+        <attribute name="newContactMechId" type="String" mode="IN" optional="true"/>
+    </service>     
+    <service name="deleteFacilityContactMech" engine="simple"
+            location="org/ofbiz/commonapp/product/storage/FacilityContactMechServices.xml" invoke="deleteFacilityContactMech" auth="true">
+        <description>Delete a FacilityContactMech</description>
+        <attribute name="partyId" type="String" mode="IN" optional="false"/>
+        <attribute name="contactMechId" type="String" mode="IN" optional="false"/>
+    </service>    
+    <service name="createFacilityPostalAddress" engine="simple"
+            location="org/ofbiz/commonapp/product/storage/FacilityContactMechServices.xml" invoke="createFacilityPostalAddress" auth="true">
+        <description>Create a Postal Address</description>
+        <auto-attributes entity-name="FacilityContactMech" include="all" mode="IN" optional="true"/>         
+        <auto-attributes entity-name="PostalAddress" include="nonpk" mode="IN" optional="true"/>
+        <attribute name="paymentMethodId" type="String" mode="IN" optional="true"/>
+        <attribute name="contactMechPurposeTypeId" type="String" mode="IN" optional="true"/>
+        <attribute name="contactMechId" type="String" mode="OUT" optional="false"/>
+        <override name="address1" optional="false"/>
+        <override name="city" optional="false"/>
+        <override name="postalCode" optional="true"/>                
+    </service>    
+    <service name="updateFacilityPostalAddress" engine="simple"
+            location="org/ofbiz/commonapp/product/storage/FacilityContactMechServices.xml" invoke="updateFacilityPostalAddress" auth="true">
+        <description>Update a Postal Address</description>        
+        <auto-attributes entity-name="FacilityContactMech" include="all" mode="IN" optional="true"/>
+        <auto-attributes entity-name="PostalAddress" include="nonpk" mode="IN" optional="true"/>
+        <attribute name="contactMechId" type="String" mode="INOUT" optional="false"/>
+        <attribute name="directions" type="String" mode="IN" optional="true"/>
+    </service>   
+    <service name="createFacilityTelecomNumber" engine="simple"
+            location="org/ofbiz/commonapp/product/storage/FacilityContactMechServices.xml" invoke="createFacilityTelecomNumber" auth="true">
+        <description>Create a Telecommunications Number</description>
+        <auto-attributes entity-name="FacilityContactMech" include="all" mode="IN" optional="true"/>        
+        <auto-attributes entity-name="TelecomNumber" include="nonpk" mode="IN" optional="true"/>
+        <attribute name="contactMechPurposeTypeId" type="String" mode="IN" optional="true"/>
+        <attribute name="contactMechId" type="String" mode="OUT" optional="false"/>
+    </service>    
+    <service name="updateFacilityTelecomNumber" engine="simple"
+            location="org/ofbiz/commonapp/product/storage/FacilityContactMechServices.xml" invoke="updateFacilityTelecomNumber" auth="true">
+        <description>Update a Telecommunications Number</description>        
+        <auto-attributes entity-name="FacilityContactMech" include="all" mode="IN" optional="true"/>  
+        <auto-attributes entity-name="PostalAddress" include="nonpk" mode="IN" optional="true"/>
+        <attribute name="contactMechId" type="String" mode="INOUT" optional="false"/>   
+    </service>    
+    <service name="createFacilityEmailAddress" engine="simple"
+            location="org/ofbiz/commonapp/product/storage/FacilityContactMechServices.xml" invoke="createFacilityEmailAddress" auth="true">
+        <description>Create an Email Address</description>        
+        <auto-attributes entity-name="ContactMech" include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes entity-name="FacilityContactMech" include="all" mode="IN" optional="true"/>
+        <attribute name="contactMechPurposeTypeId" type="String" mode="IN" optional="true"/>
+        <attribute name="contactMechId" type="String" mode="INOUT" optional="true"/>
+        <attribute name="emailAddress" type="String" mode="IN" optional="false"/>  
+    </service>        
+    <service name="updateFacilityEmailAddress" engine="simple"
+            location="org/ofbiz/commonapp/product/storage/FacilityContactMechServices.xml" invoke="updateFacilityEmailAddress" auth="true">
+        <description>Update an Email Address</description>
+        <auto-attributes entity-name="FacilityContactMech" include="all" mode="IN" optional="true"/>
+        <attribute name="contactMechId" type="String" mode="INOUT" optional="false"/>
+        <attribute name="emailAddress" type="String" mode="IN" optional="false"/>        
+    </service>
+    
+    <service name="createFacilityContactMechPurpose" engine="simple"
+            location="org/ofbiz/commonapp/product/storage/FacilityContactMechServices.xml" invoke="createFacilityContactMechPurpose">
+        <description>Create a purpose for facility contact mech</description>
+        <auto-attributes entity-name="FacilityContactMechPurpose" include="pk" mode="IN" optional="false">
+            <exclude field-name="fromDate"/>
+        </auto-attributes>
+        <attribute name="fromDate" type="Timestamp" mode="OUT" optional="false"/>
+    </service>
+    <service name="deleteFacilityContactMechPurpose" engine="simple"
+            location="org/ofbiz/commonapp/product/storage/FacilityContactMechServices.xml" invoke="createFacilityContactMechPurpose">
+        <description>Delete a purpose for facility contact mech</description>
+        <auto-attributes entity-name="FacilityContactMechPurpose" include="pk" mode="IN" optional="false"/>
+    </service>    
+
+<!-- end cm -->
     <service name="addContactMechToFacility" engine="simple"
                 location="org/ofbiz/commonapp/product/storage/StorageServices.xml" invoke="addContactMechToFacility" auth="true">
         <description>Add ContactMech To Facility</description>
