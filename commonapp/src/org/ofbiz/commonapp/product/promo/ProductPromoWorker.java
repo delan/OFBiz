@@ -105,19 +105,22 @@ public class ProductPromoWorker {
                 Iterator productPromoRules = UtilMisc.toIterator(productPromo.getRelatedCache("ProductPromoRule", null, UtilMisc.toList("productPromoActionSeqId")));
                 while (productPromoRules != null && productPromoRules.hasNext()) {
                     GenericValue productPromoRule = (GenericValue) productPromoRules.next();
-                    
-                    boolean performActions = true;
+
+                    //by default we start with whatever apply is because:
+                    // if apply then performActions when no conditions are false, so default to true
+                    // if !apply then performActions when no contitions are true, so default to false
+                    boolean performActions = apply;
                     //loop through conditions for rule, if any false, set allConditionsTrue to false
                     Iterator productPromoConds = UtilMisc.toIterator(productPromoRule.getRelatedCache("ProductPromoCond", null, UtilMisc.toList("productPromoCondSeqId")));
                     while (productPromoConds != null && productPromoConds.hasNext()) {
                         GenericValue productPromoCond = (GenericValue) productPromoConds.next();
                         
                         boolean condResult = checkCondition(productPromoCond, cart, cartItem, oldQuantity, delegator);
-                        //if apply, a false condition will cause it to not perform the action
-                        //if unapply, a true condition will cause it to not perform the action
-                        //so, if apply != condResult (ie true/false or false/true) then don't perform actions
-                        if (apply != condResult) {
-                            performActions = false;
+                        //if apply, any false condition will cause it to NOT perform the action
+                        //if !apply, any false condition will cause it to PERFORM the action
+                        //so, if a condition is found to be false then performActions = !apply
+                        if (condResult == false) {
+                            performActions = !apply;
                             break;
                         }
                     }
@@ -129,6 +132,7 @@ public class ProductPromoWorker {
                         Iterator productPromoActions = UtilMisc.toIterator(productPromoRule.getRelatedCache("ProductPromoAction", null, UtilMisc.toList("productPromoActionSeqId")));
                         while (productPromoActions != null && productPromoActions.hasNext()) {
                             GenericValue productPromoAction = (GenericValue) productPromoActions.next();
+                            Debug.logInfo("Doing action: " + productPromoAction);
                             
                             try {
                                 performAction(apply, productPromoAction, cart, cartItem, oldQuantity, prodCatalogId, delegator, dispatcher);
@@ -240,9 +244,10 @@ public class ProductPromoWorker {
                     //before clearing it, set it to a non-promo so that the setQuantity won't throw an exception
                     ShoppingCartItem cartItemToRemove = cart.findCartItem(itemLoc.intValue());
                     cartItemToRemove.setIsPromo(false);
+                    Debug.logInfo("About to remove cart item at location " + itemLoc.intValue());
                     cart.removeCartItem(itemLoc.intValue(), dispatcher);
                 } else {
-                    Debug.logInfo("Could not find cart item for the action " + productPromoAction);
+                    if (Debug.verboseOn()) Debug.logVerbose("Could not find cart item for the action " + productPromoAction);
                 }
             }
         } else if ("PROMO_FREE_SHIPPING".equals(productPromoAction.getString("productPromoActionTypeId"))) {
@@ -333,6 +338,7 @@ public class ProductPromoWorker {
     }
     
     public static void doOrderPromoAction(boolean apply, GenericValue productPromoAction, ShoppingCart cart, String quantityField, GenericDelegator delegator) {
+        Debug.logInfo("Starting doOrderPromoAction: apply=" + apply + ", productPromoAction=" + productPromoAction);
         if (apply) {
             Integer adjLoc = findAdjustment(productPromoAction, (List) cart.getAdjustments());
             if (adjLoc != null) {
@@ -354,6 +360,7 @@ public class ProductPromoWorker {
             cart.addAdjustment(orderAdjustment);
         } else {
             Integer adjLoc = findAdjustment(productPromoAction, (List) cart.getAdjustments());
+            Debug.logInfo("Finding adjustment, adjLoc=" + adjLoc);
             if (adjLoc != null) {
                 cart.removeAdjustment(adjLoc.intValue());
             }
