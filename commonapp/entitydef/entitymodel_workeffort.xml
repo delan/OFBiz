@@ -39,7 +39,7 @@
     <!ELEMENT author ( #PCDATA  )>
     <!ELEMENT version ( #PCDATA  )>
     <!ELEMENT entity ( description?, field+, prim-key*, relation* )>
-    <!ELEMENT view-entity ( description?, member-entity+, alias+, alias-prim-key*, view-link+, relation* )>
+    <!ELEMENT view-entity ( description?, member-entity+, alias+, view-link+, relation* )>
     <!-- ================== Children of entity ===================== -->
     <!-- see the children of entitymodel section for description, etc. -->
     <!ATTLIST entity
@@ -75,10 +75,8 @@
     <!ATTLIST alias
 	entity-alias CDATA #REQUIRED
 	name CDATA #REQUIRED
-	field CDATA #IMPLIED >
-    <!ELEMENT alias-prim-key EMPTY>
-    <!ATTLIST alias-prim-key
-	name CDATA #REQUIRED >
+	field CDATA #IMPLIED 
+        prim-key ( true | false ) "false" >
     <!ELEMENT view-link ( key-map+ )>
     <!ATTLIST view-link
 	entity-alias CDATA #REQUIRED
@@ -1066,7 +1064,7 @@
             title="Work Effort And Party Assignment Entity">
       <member-entity entity-alias="WE" entity-name="WorkEffort"/>
       <member-entity entity-alias="WEPA" entity-name="WorkEffortPartyAssignment"/>
-      <alias entity-alias="WE" name="workEffortId"/>
+      <alias entity-alias="WE" name="workEffortId" prim-key="true"/>
       <alias entity-alias="WE" name="workEffortTypeId"/>
       <alias entity-alias="WE" name="currentStatusId"/>
       <alias entity-alias="WE" name="lastStatusUpdate"/>
@@ -1100,19 +1098,15 @@
       <alias entity-alias="WE" name="contextDataId"/>
       <alias entity-alias="WE" name="resultDataId"/>
       <alias entity-alias="WE" name="noteId"/>	
-      <alias entity-alias="WEPA" name="partyId"/>
-      <alias entity-alias="WEPA" name="roleTypeId"/>
-      <alias entity-alias="WEPA" name="fromDate"/>
+      <alias entity-alias="WEPA" name="partyId" prim-key="true"/>
+      <alias entity-alias="WEPA" name="roleTypeId" prim-key="true"/>
+      <alias entity-alias="WEPA" name="fromDate" prim-key="true"/>
       <alias entity-alias="WEPA" name="thruDate"/>
       <alias entity-alias="WEPA" name="partyAssignFacilityId" field="facilityId"/>
       <alias entity-alias="WEPA" name="statusId"/>
       <alias entity-alias="WEPA" name="comments"/>
       <alias entity-alias="WEPA" name="mustRsvp"/>
       <alias entity-alias="WEPA" name="expectationEnumId"/>
-      <alias-prim-key name="workEffortId" />	
-      <alias-prim-key name="partyId" />	
-      <alias-prim-key name="roleTypeId" />	
-      <alias-prim-key name="fromDate" />
       <view-link entity-alias="WE" rel-entity-alias="WEPA">
         <key-map field-name="workEffortId"/>
       </view-link>

@@ -684,6 +684,7 @@
     <entity-group group="org.ofbiz.commonapp" entity="Deliverable" />	
     <entity-group group="org.ofbiz.commonapp" entity="DeliverableType" />	
     <entity-group group="org.ofbiz.commonapp" entity="WorkEffort" />	
+    <entity-group group="org.ofbiz.commonapp" entity="WorkEffortAndPartyAssign" />	
     <entity-group group="org.ofbiz.commonapp" entity="WorkEffortAssoc" />	
     <entity-group group="org.ofbiz.commonapp" entity="WorkEffortAssocAttribute" />	
     <entity-group group="org.ofbiz.commonapp" entity="WorkEffortAssocType" />	
