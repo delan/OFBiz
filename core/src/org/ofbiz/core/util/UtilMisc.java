@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.4  2001/09/04 16:43:47  jonesde
+ * Added toList convenience methods
+ *
  * Revision 1.3  2001/08/22 00:58:56  azeneski
  * Added utility to get a Map of the request object's parameters. (like 2.3 api)
  *
@@ -181,6 +184,14 @@ public class UtilMisc
     list.add(obj1); list.add(obj2); list.add(obj3); list.add(obj4);
     list.add(obj5); list.add(obj6);
     return list;
+  }
+  
+  public static List toList(Collection collection) {
+      if (collection instanceof List) {
+          return (List) collection;
+      } else {
+          return new ArrayList(collection);
+      }
   }
   
   /** Create a map from an HttpServletRequest object
