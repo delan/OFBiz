@@ -1,5 +1,5 @@
 /*
- * ItemConfigurationTree.java
+ * BOMTree.java
  *
  * Created on 1 ottobre 2003, 17.16
  */
@@ -26,7 +26,7 @@ import org.ofbiz.service.ServiceUtil;
 
 
     /** It represents an (in-memory) bill of materials (in which each
-     * component is an ItemConfigurationNode)
+     * component is an BOMNode)
      * Useful for tree traversal (breakdown, explosion, implosion).
      * @author <a href="mailto:tiz@sastau.it">Jacopo Cappellato</a>
      */    
@@ -37,12 +37,12 @@ public class ItemConfigurationTree {
     public static final int EXPLOSION_MANUFACTURING = 2;
     public static final int IMPLOSION = 3;
     
-    ItemConfigurationNode root;
+    BOMNode root;
     double rootQuantity;
     Date inDate;
     String bomTypeId;
 
-    /** Creates a new instance of ItemConfigurationTree by reading downward
+    /** Creates a new instance of BOMTree by reading downward
      * the productId's bill of materials (explosion).
      * If virtual products are found, it tries to configure them by running
      * the Product Configurator.
@@ -54,11 +54,11 @@ public class ItemConfigurationTree {
      * @throws GenericEntityException If a db problem occurs.
      *
      */
-    public ItemConfigurationTree(String productId, String bomTypeId, Date inDate, GenericDelegator delegator, LocalDispatcher dispatcher) throws GenericEntityException {
+    public BOMTree(String productId, String bomTypeId, Date inDate, GenericDelegator delegator, LocalDispatcher dispatcher) throws GenericEntityException {
         this(productId, bomTypeId, inDate, EXPLOSION, delegator, dispatcher);
     }
     
-    /** Creates a new instance of ItemConfigurationTree by reading
+    /** Creates a new instance of BOMTree by reading
      * the productId's bill of materials (upward or downward).
      * If virtual products are found, it tries to configure them by running
      * the Product Configurator.
@@ -75,7 +75,7 @@ public class ItemConfigurationTree {
      * @throws GenericEntityException If a db problem occurs.
      *
      */
-    public ItemConfigurationTree(String productId, String bomTypeId, Date inDate, int type, GenericDelegator delegator, LocalDispatcher dispatcher) throws GenericEntityException {
+    public BOMTree(String productId, String bomTypeId, Date inDate, int type, GenericDelegator delegator, LocalDispatcher dispatcher) throws GenericEntityException {
         // If the parameters are not valid, return.
         if (productId == null || bomTypeId == null || delegator == null || dispatcher == null) return;
         // If the date is null, set it to today.
@@ -103,7 +103,7 @@ public class ItemConfigurationTree {
                                             UtilMisc.toMap("productId", 
                                             (manufacturedAsProduct != null? manufacturedAsProduct.getString("productIdTo"): productId)));
         if (product == null) return;
-        ItemConfigurationNode originalNode = new ItemConfigurationNode(product);
+        BOMNode originalNode = new BOMNode(product);
         // If the product hasn't a bill of materials we try to retrieve
         // the bill of materials of its virtual product (if the current
         // product is variant).
@@ -125,7 +125,7 @@ public class ItemConfigurationTree {
         }
         if (product == null) return;
         try {
-            root = new ItemConfigurationNode(product);
+            root = new BOMNode(product);
             root.setProductForRules(productIdForRules);
             root.setSubstitutedNode(originalNode);
             if (type == IMPLOSION) {
@@ -192,7 +192,7 @@ public class ItemConfigurationTree {
      * @return Value of property root.
      *
      */
-    public ItemConfigurationNode getRoot() {
+    public BOMNode getRoot() {
         return root;
     }    
     
@@ -272,7 +272,7 @@ public class ItemConfigurationTree {
         ArrayList productsId = new ArrayList();
         print(nodeArr);
         for (int i = 0; i < nodeArr.size(); i++) {
-            productsId.add(((ItemConfigurationNode)nodeArr.get(i)).getProduct().getString("productId"));
+            productsId.add(((BOMNode)nodeArr.get(i)).getProduct().getString("productId"));
         }
         return productsId;
     }
