@@ -30,15 +30,16 @@ import org.ofbiz.security.Security;
 import java.util.List;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.io.Serializable;
 
 /**
  * Service Permission Group Model Class
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      3.0
  */
-public class ModelPermGroup {
+public class ModelPermGroup implements Serializable {
 
     public static final String module = ModelPermGroup.class.getName();
 

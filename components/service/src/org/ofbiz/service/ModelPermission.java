@@ -33,15 +33,16 @@ import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.Debug;
 
 import java.util.List;
+import java.io.Serializable;
 
 /**
  * Service Permission Model Class
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      3.0
  */
-public class ModelPermission {
+public class ModelPermission implements Serializable {
 
     public static final String module = ModelPermission.class.getName();
 
