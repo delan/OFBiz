@@ -56,8 +56,7 @@ public class Start implements Runnable {
     public void run() {        
         while(serverRunning) {
             try {            
-            Socket clientSocket = serverSocket.accept();
-            System.out.println("Got connection from: " + clientSocket.getPort());
+            Socket clientSocket = serverSocket.accept();            
             processClientRequest(clientSocket);
             clientSocket.close();                      
             } catch (IOException e) {
@@ -71,23 +70,24 @@ public class Start implements Runnable {
         BufferedReader reader = null;
         BufferedWriter writer = null;
         
-        reader = new BufferedReader(new InputStreamReader(client.getInputStream()));
-        System.out.println("Reading line");
+        reader = new BufferedReader(new InputStreamReader(client.getInputStream()));      
         String request = reader.readLine();        
         
         writer = new BufferedWriter(new OutputStreamWriter(client.getOutputStream()));
-        writer.write(processRequest(request));
+        writer.write(processRequest(request, client));
         writer.flush();        
     }
     
-    private String processRequest(String request) {
+    private String processRequest(String request, Socket client) {
         String key = request.substring(0, request.indexOf(':'));
         String command = request.substring(request.indexOf(':')+1);       
         if (!key.equals(conf.adminKey)) {        
             return "FAIL";
         } else {
-            if (command.equals("SHUTDOWN")) 
-                serverRunning = false;        
+            if (command.equals("SHUTDOWN")) {                             
+                serverRunning = false;
+                System.out.println("Shutdown initiated from: " + client.getInetAddress().getHostAddress() + ":" + client.getPort());        
+            }
             return "OK";
         }
     }
@@ -106,7 +106,7 @@ public class Start implements Runnable {
         System.out.println("java.version...: " + conf.javaVersion);
         System.out.println("ofbiz.home.....: " + conf.ofbizHome);        
         System.out.println("server.class...: " + conf.serverClass);
-        System.out.println("config.file....: " + conf.configFile);
+        System.out.println("config.file....: " + conf.configFile);        
         System.out.println("");                       
         
         System.setProperty("java.class.path", classPath.toString());
@@ -270,9 +270,18 @@ class Configuration {
         if (javaHome == null)
             javaHome = props.getProperty("java.home");
         
+        // get a full path
+        if (ofbizHome.equals(".")) {        
+            ofbizHome = System.getProperty("user.dir");
+            ofbizHome = ofbizHome.replace('\\', '/');
+        }
+        
         System.setProperty("ofbiz.home", ofbizHome);
         System.setProperty("jetty.home", jettyHome);
         System.setProperty("java.home", javaHome);
+        
+        // set the property to tell Log4J to use debug.properties
+        System.setProperty("log4j.configuration", "file:/" + ofbizHome + "/commonapp/etc/debug.properties");
         
         // set the property to tell Jetty to use 2.4 SessionListeners
         System.setProperty("org.mortbay.jetty.servlet.AbstractSessionManager.24SessionDestroyed", "true");
