@@ -22,7 +22,7 @@
  *@author     David E. Jones
  *@author     Brad Steiner
  *@author     thierry.grauss@etu.univ-tours.fr (migration to uiLabelMap)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.2
 -->
 
@@ -32,7 +32,7 @@
 
 ${pages.get("/facility/FacilityTabBar.ftl")}
     
-    <div class="head1">${uiLabelMap.ProductRoleFor} <span class="head2"><#if facility?exists>${(facility.facilityName)?if_exists}</#if> [${uiLabelMap.CommonId}:${facilityId?if_exists}]</span></div>
+    <div class="head1">${uiLabelMap.PartyRoleFor} <span class="head2"><#if facility?exists>${(facility.facilityName)?if_exists}</#if> [${uiLabelMap.CommonId}:${facilityId?if_exists}]</span></div>
     <a href="<@ofbizUrl>/EditFacility</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewFacility}]</a>
     <p>
     
@@ -40,7 +40,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
     <table border="1" cellpadding="2" cellspacing="0">
     <tr>
         <td><div class="tabletext"><b>${uiLabelMap.PartyPartyId}</b></div></td>
-        <td><div class="tabletext"><b>${uiLabelMap.ProductRoleType}</b></div></td>  
+        <td><div class="tabletext"><b>${uiLabelMap.PartyRoleType}</b></div></td>  
         <td><div class="tabletext"><b>&nbsp;</b></div></td>
     </tr>
     
@@ -63,7 +63,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
     <div class="head2">${uiLabelMap.ProductAddFacilityPartyRole}:</div>
     <div class="tabletext">
         ${uiLabelMap.PartyPartyId}: <input type="text" class="inputBox" size="20" name="partyId">
-        ${uiLabelMap.ProductRoleType}:
+        ${uiLabelMap.PartyRoleType}:
         <select name="roleTypeId" class="selectBox"><option></option>
         <#list roles as role>
             <option value="${(role.roleTypeId)?if_exists}">${(role.description)?if_exists}</option>

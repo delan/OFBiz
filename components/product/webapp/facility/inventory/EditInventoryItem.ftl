@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Revision: 1.6 $
+ *@version    $Revision: 1.7 $
  *@since      2.2
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -81,7 +81,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
         </td>
       </tr>
       <tr>
-        <td align=right><div class="tabletext">${uiLabelMap.ProductPartyId}</div></td>
+        <td align=right><div class="tabletext">${uiLabelMap.PartyPartyId}</div></td>
         <td>&nbsp;</td>
         <td><input type="text" name="partyId" value="${inventoryItemData.partyId?if_exists}" size="20" maxlength="20" class="inputBox"></td>
       </tr>

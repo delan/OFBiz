@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Catherine Heintz (catherine.heintz@nereide.biz)
- *@version    $Revision: 1.6 $
+ *@version    $Revision: 1.7 $
  *@since      2.1
 -->
 
@@ -42,7 +42,7 @@ ${pages.get("/category/CategoryTabBar.ftl")}
         <table border="1" width="100%" cellpadding="2" cellspacing="0">
         <tr>
         <td><div class="tabletext"><b>${uiLabelMap.PartyPartyId}</b></div></td>
-        <td><div class="tabletext"><b>${uiLabelMap.ProductRole}</b></div></td>
+        <td><div class="tabletext"><b>${uiLabelMap.PartyRole}</b></div></td>
         <td><div class="tabletext"><b>${uiLabelMap.CommonFromDateTime}</b></div></td>
         <td align="center"><div class="tabletext"><b>${uiLabelMap.CommonThruDateTime}</b></div></td>
         <td><div class="tabletext"><b>&nbsp;</b></div></td>

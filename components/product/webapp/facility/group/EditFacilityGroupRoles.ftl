@@ -22,7 +22,7 @@
  *@author     David E. Jones
  *@author     Brad Steiner
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.2
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -30,15 +30,15 @@
 
 ${pages.get("/group/FacilityGroupTabBar.ftl")}
 
-<div class="head1">${uiLabelMap.ProductRoles} <span class="head2">${uiLabelMap.CommonFor} "${(facilityGroup.facilityGroupName)?if_exists}" [${uiLabelMap.CommonId} :${facilityGroupId?if_exists}]</span></div>
+<div class="head1">${uiLabelMap.PartyRoles} <span class="head2">${uiLabelMap.CommonFor} "${(facilityGroup.facilityGroupName)?if_exists}" [${uiLabelMap.CommonId} :${facilityGroupId?if_exists}]</span></div>
 <a href="<@ofbizUrl>/EditFacilityGroup</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewGroup}]</a>
 <br>
 <br>
 
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
-    <td><div class="tabletext"><b>${uiLabelMap.ProductPartyId}</b></div></td>
-    <td><div class="tabletext"><b>${uiLabelMap.ProductRoleType}</b></div></td>  
+    <td><div class="tabletext"><b>${uiLabelMap.PartyPartyId}</b></div></td>
+    <td><div class="tabletext"><b>${uiLabelMap.PartyRoleType}</b></div></td>  
     <td><div class="tabletext"><b>&nbsp;</b></div></td>
   </tr>
 
@@ -60,8 +60,8 @@ ${pages.get("/group/FacilityGroupTabBar.ftl")}
   <input type="hidden" name="facilityGroupId" value="${facilityGroupId}">  
   <div class="head2">${uiLabelMap.ProductAddFacilityGroupPartyRole} :</div>
   <div class="tabletext">
-    ${uiLabelMap.ProductPartyId} : <input type="text" class="inputBox" size="20" name="partyId">
-    ${uiLabelMap.ProductRoleType} :
+    ${uiLabelMap.PartyPartyId} : <input type="text" class="inputBox" size="20" name="partyId">
+    ${uiLabelMap.PartyRoleType} :
     <select name="roleTypeId" class="selectBox"><option></option>
       <#list roles as role>
         <option value="${role.roleTypeId}">${role.description}</option>

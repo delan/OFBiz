@@ -23,7 +23,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.0
 -->
 
@@ -448,10 +448,10 @@
         <else>
             <make-value value-name="newEntity" entity-name="WorkEffortAssoc"/>  
             <set-pk-fields map-name="parameters" value-name="newEntity"/>  
+            <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
             <if-empty field-name="sequenceNum" map-name="newEntity">
                 <calculate field-name="sequenceNum" map-name="newEntity" type="Long"><number value="0"/></calculate>
-	     </if-empty>        
-            <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+            </if-empty>        
             <create-value value-name="newEntity"/>
         </else>
         </if-not-empty>

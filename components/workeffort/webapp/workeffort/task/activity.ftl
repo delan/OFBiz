@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     Eric.Barbier@nereide.biz (migration to uiLabelMap)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.2
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -85,7 +85,7 @@
                     <td width='74%'><input type='text' class='inputBox' size='60' maxlength='255' name="locationDesc" value="${workEffort.locationDesc?if_exists}"></td>
                   </tr>
                   <tr>
-                    <td width='26%' align='right'><div class='tabletext'>${uiLabelMap.WorkEffortDescription}</div></td>
+                    <td width='26%' align='right'><div class='tabletext'>${uiLabelMap.CommonDescription}</div></td>
                     <td>&nbsp;</td>
                     <td width='74%'>
                       <textarea class="textAreaBox" name='description' cols='50' rows='4'>${workEffort.description?if_exists}</textarea>
@@ -102,7 +102,7 @@
                     </td>
                   </tr>
                   <tr>
-                    <td width='26%' align='right'><div class='tabletext'>${uiLabelMap.WorkEffortEndDateTime}</div></td>
+                    <td width='26%' align='right'><div class='tabletext'>${uiLabelMap.CommonEndDateTime}</div></td>
                     <td>&nbsp;</td>
                     <td width='74%'>
                       <input type='text' class='inputBox' size='30' maxlength='30' name="estimatedCompletionDate" value="${workEffort.estimatedCompletionDate?if_exists?string}">

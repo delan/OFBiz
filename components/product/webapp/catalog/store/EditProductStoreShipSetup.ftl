@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Revision: 1.11 $
+ *@version    $Revision: 1.12 $
  *@since      2.2
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -85,8 +85,8 @@ function setAssocFields(select) {
         <td nowrap><div class="tableheadtext">${uiLabelMap.ProductEstimateId}</div></td>
         <td nowrap><div class="tableheadtext">${uiLabelMap.ProductMethod}</div></td>
         <td nowrap><div class="tableheadtext">${uiLabelMap.CommonTo}</div></td>
-        <td nowrap><div class="tableheadtext">${uiLabelMap.ProductParty}</div></td>
-        <td nowrap><div class="tableheadtext">${uiLabelMap.ProductRole}</div></td>
+        <td nowrap><div class="tableheadtext">${uiLabelMap.PartyParty}</div></td>
+        <td nowrap><div class="tableheadtext">${uiLabelMap.PartyRole}</div></td>
         <td nowrap><div class="tableheadtext">${uiLabelMap.ProductBase}%</div></td>
         <td nowrap><div class="tableheadtext">${uiLabelMap.ProductBasePrc}</div></td>
         <td nowrap><div class="tableheadtext">${uiLabelMap.ProductItemPrc}</div></td>
@@ -136,12 +136,12 @@ function setAssocFields(select) {
           <td>&nbsp;</td>
         </tr>
         <tr>
-          <td align='right'><span class="tableheadtext">${uiLabelMap.ProductParty}</span></td>
+          <td align='right'><span class="tableheadtext">${uiLabelMap.PartyParty}</span></td>
           <td><span class="tabletext">${estimate.partyId?default("All")}</span></td>
           <td>&nbsp;</td>
         </tr>
         <tr>
-          <td align='right'><span class="tableheadtext">${uiLabelMap.ProductRole}</span></td>
+          <td align='right'><span class="tableheadtext">${uiLabelMap.PartyRole}</span></td>
           <td><span class="tabletext">${estimate.roleTypeId?default("All")}</span></td>
           <td>&nbsp;</td>
         </tr>
@@ -321,12 +321,12 @@ function setAssocFields(select) {
           <td>&nbsp;</td>
         </tr>
         <tr>
-          <td align='right'><span class="tableheadtext">${uiLabelMap.ProductParty}</span></td>
+          <td align='right'><span class="tableheadtext">${uiLabelMap.PartyParty}</span></td>
           <td><input type="text" class="inputBox" name="partyId" size="6"></td>
           <td>&nbsp;</td>
         </tr>
         <tr>
-          <td align='right'><span class="tableheadtext">${uiLabelMap.ProductRole}</span></td>
+          <td align='right'><span class="tableheadtext">${uiLabelMap.PartyRole}</span></td>
           <td><input type="text" class="inputBox" name="roleTyeId" size="6"></td>
           <td>&nbsp;</td>
         </tr>
@@ -490,7 +490,7 @@ function setAssocFields(select) {
     <table border="1" cellpadding="2" cellspacing="0" width="100%">
       <tr>
         <td><span class="tableheadtext">${uiLabelMap.ProductMethodType}</span></td>
-        <td><span class="tableheadtext">${uiLabelMap.ProductParty}</span></td>
+        <td><span class="tableheadtext">${uiLabelMap.PartyParty}</span></td>
         <td><span class="tableheadtext">Min Sz</span></td>
         <td><span class="tableheadtext">Max Sz</span></td>
         <td><span class="tableheadtext">Min Wt</span></td>
@@ -806,7 +806,7 @@ function setAssocFields(select) {
           </td>
         </tr>
         <tr>
-          <td align="right"><span class="tableheadtext">${uiLabelMap.ProductRoleType}</span></td>
+          <td align="right"><span class="tableheadtext">${uiLabelMap.PartyRoleType}</span></td>
           <td>
             <#if carrierShipmentMethod?has_content>
               <input type="hidden" name="roleTypeId" value="${carrierShipmentMethod.roleTypeId}">
@@ -821,7 +821,7 @@ function setAssocFields(select) {
           </td>
         </tr>
         <tr>
-          <td align="right"><span class="tableheadtext">${uiLabelMap.ProductParty}</span></td>
+          <td align="right"><span class="tableheadtext">${uiLabelMap.PartyParty}</span></td>
           <td>
             <#if carrierShipmentMethod?has_content>
               <input type="hidden" name="partyId" value="${carrierShipmentMethod.partyId}">

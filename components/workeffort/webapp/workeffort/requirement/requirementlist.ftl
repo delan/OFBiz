@@ -22,7 +22,7 @@
  *
  *@author     Johan Isacsson (conversion of jsp created by Andy Zeneski)
  *@author     Eric.Barbier@nereide.biz (migration to uiLabelMap) 
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -51,7 +51,7 @@
               <TABLE width='100%' cellpadding='2' cellspacing='0' border='0'>
                 <TR>
                   <TD><DIV class='tabletext'><b>${uiLabelMap.WorkEffortRequirementType}</b></DIV></TD>
-                  <TD><DIV class='tabletext'><b>${uiLabelMap.WorkEffortDescription}</b></DIV></TD>
+                  <TD><DIV class='tabletext'><b>${uiLabelMap.CommonDescription}</b></DIV></TD>
                   <TD><DIV class='tabletext'><b>${uiLabelMap.WorkEffortRequiredBy}</b></DIV></TD>
                   <TD><DIV class='tabletext'><b>${uiLabelMap.WorkEffortEstmatedBudget}</b></DIV></TD>
                   <TD align=right><DIV class='tabletext'><b>${uiLabelMap.WorkEffortViewTasksEdit}</b></DIV></TD>
