@@ -140,7 +140,7 @@ public class SimpleMethod {
     // Member fields begin here...
     List methodOperations = new LinkedList();
     String methodName;
-    public String shortDescription;
+    String shortDescription;
     String defaultErrorCode;
     String defaultSuccessCode;
 
@@ -148,9 +148,9 @@ public class SimpleMethod {
 
     // event fields
     String eventRequestName;
-    public String eventResponseCodeName;
-    public String eventErrorMessageName;
-    public String eventEventMessageName;
+    String eventResponseCodeName;
+    String eventErrorMessageName;
+    String eventEventMessageName;
 
     // service fields
     String serviceResponseMessageName;
@@ -212,10 +212,30 @@ public class SimpleMethod {
         readOperations(simpleMethodElement);
     }
 
-    public String getMethodName() {
-        return methodName;
-    }
+    public String getMethodName() { return this.methodName; }
+    public String getShortDescription() { return this.shortDescription; }
+    public String getDefaultErrorCode() { return this.defaultErrorCode; }
+    public String getDefaultSuccessCode() { return this.defaultSuccessCode; }
 
+    public String getParameterMapName() { return this.parameterMapName; }
+
+    // event fields
+    public String getEventRequestName() { return this.eventRequestName; }
+    public String getEventResponseCodeName() { return this.eventResponseCodeName; }
+    public String getEventErrorMessageName() { return this.eventErrorMessageName; }
+    public String getEventEventMessageName() { return this.eventEventMessageName; }
+
+    // service fields
+    public String getServiceResponseMessageName() { return this.serviceResponseMessageName; }
+    public String getServiceErrorMessageName() { return this.serviceErrorMessageName; }
+    public String getServiceErrorMessageListName() { return this.serviceErrorMessageListName; }
+    public String getServiceSuccessMessageName() { return this.serviceSuccessMessageName; }
+    public String getServiceSuccessMessageListName() { return this.serviceSuccessMessageListName; }
+
+    public boolean getLoginRequired() { return this.loginRequired; }
+    public boolean getUseTransaction() { return this.useTransaction; }
+
+    /** Execute the Simple Method operations */
     public String exec(MethodContext methodContext) {
         methodContext.putEnv(parameterMapName, methodContext.getParameters());
 

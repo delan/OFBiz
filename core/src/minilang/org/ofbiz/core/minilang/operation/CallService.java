@@ -177,8 +177,14 @@ public class CallService extends MethodOperation {
             result = methodContext.getDispatcher().runSync(serviceName, inMap);
         } catch (GenericServiceException e) {
             Debug.logError(e);
-            methodContext.putEnv(simpleMethod.eventErrorMessageName, "ERROR: Could not complete " + simpleMethod.shortDescription + " process (problem invoking the " + serviceName + " service: " + e.getMessage() + ")");
-            methodContext.putEnv(simpleMethod.eventResponseCodeName, errorCode);
+            String errMsg = "ERROR: Could not complete the " + simpleMethod.getShortDescription() + " process [problem invoking the " + serviceName + " service: " + e.getMessage() + "]";
+            if (methodContext.getMethodType() == MethodContext.EVENT) {
+                methodContext.putEnv(simpleMethod.getEventErrorMessageName(), errMsg);
+                methodContext.putEnv(simpleMethod.getEventResponseCodeName(), errorCode);
+            } else if (methodContext.getMethodType() == MethodContext.SERVICE) {
+                methodContext.putEnv(simpleMethod.getServiceErrorMessageName(), errMsg);
+                methodContext.putEnv(simpleMethod.getServiceResponseMessageName(), errorCode);
+            }
             return false;
         }
 
@@ -244,20 +250,39 @@ public class CallService extends MethodOperation {
         String messageSuffixStr = messageSuffix.getMessage(methodContext.getLoader());
 
         String errorMessage = ServiceUtil.makeErrorMessage(result, messagePrefixStr, messageSuffixStr, errorPrefixStr, errorSuffixStr);
-        if (UtilValidate.isNotEmpty(errorMessage))
-            methodContext.putEnv(simpleMethod.eventErrorMessageName, errorMessage);
+        if (UtilValidate.isNotEmpty(errorMessage)) {
+            if (methodContext.getMethodType() == MethodContext.EVENT) {
+                methodContext.putEnv(simpleMethod.getEventErrorMessageName(), errorMessage);
+            } else if (methodContext.getMethodType() == MethodContext.SERVICE) {
+                methodContext.putEnv(simpleMethod.getServiceErrorMessageName(), errorMessage);
+            }
+        }
 
         String successMessage = ServiceUtil.makeSuccessMessage(result, messagePrefixStr, messageSuffixStr, successPrefixStr, successSuffixStr);
-        if (UtilValidate.isNotEmpty(successMessage))
-            methodContext.putEnv(simpleMethod.eventEventMessageName, successMessage);
+        if (UtilValidate.isNotEmpty(successMessage)) {
+            if (methodContext.getMethodType() == MethodContext.EVENT) {
+                methodContext.putEnv(simpleMethod.getEventEventMessageName(), successMessage);
+            } else if (methodContext.getMethodType() == MethodContext.SERVICE) {
+                methodContext.putEnv(simpleMethod.getServiceSuccessMessageName(), successMessage);
+            }
+        }
 
         String defaultMessageStr = defaultMessage.getMessage(methodContext.getLoader());
-        if (UtilValidate.isEmpty(errorMessage) && UtilValidate.isEmpty(successMessage) && UtilValidate.isNotEmpty(defaultMessageStr))
-            methodContext.putEnv(simpleMethod.eventEventMessageName, defaultMessageStr);
+        if (UtilValidate.isEmpty(errorMessage) && UtilValidate.isEmpty(successMessage) && UtilValidate.isNotEmpty(defaultMessageStr)) {
+            if (methodContext.getMethodType() == MethodContext.EVENT) {
+                methodContext.putEnv(simpleMethod.getEventEventMessageName(), defaultMessageStr);
+            } else if (methodContext.getMethodType() == MethodContext.SERVICE) {
+                methodContext.putEnv(simpleMethod.getServiceSuccessMessageName(), defaultMessageStr);
+            }
+        }
 
         // handle the result
         String responseCode = result.containsKey(ModelService.RESPONSE_MESSAGE) ? (String) result.get(ModelService.RESPONSE_MESSAGE) : successCode;
-        methodContext.putEnv(simpleMethod.eventResponseCodeName, responseCode);
+        if (methodContext.getMethodType() == MethodContext.EVENT) {
+            methodContext.putEnv(simpleMethod.getEventResponseCodeName(), responseCode);
+        } else if (methodContext.getMethodType() == MethodContext.SERVICE) {
+            methodContext.putEnv(simpleMethod.getServiceResponseMessageName(), responseCode);
+        }
 
         if (successCode.equals(responseCode)) {
             return true;

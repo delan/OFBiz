@@ -68,13 +68,21 @@ public class CheckErrors extends MethodOperation {
     public boolean exec(MethodContext methodContext) {
         List messages = (List) methodContext.getEnv(errorListName);
         if (messages != null && messages.size() > 0) {
-            String errMsg = errorPrefix.getMessage(methodContext.getLoader()) +
-                    ServiceUtil.makeMessageList(messages, messagePrefix.getMessage(methodContext.getLoader()), messageSuffix.getMessage(methodContext.getLoader())) +
-                    errorSuffix.getMessage(methodContext.getLoader());
-            methodContext.putEnv(simpleMethod.eventErrorMessageName, errMsg);
+            if (methodContext.getMethodType() == MethodContext.EVENT) {
+                String errMsg = errorPrefix.getMessage(methodContext.getLoader()) +
+                        ServiceUtil.makeMessageList(messages, messagePrefix.getMessage(methodContext.getLoader()), messageSuffix.getMessage(methodContext.getLoader())) +
+                        errorSuffix.getMessage(methodContext.getLoader());
+                methodContext.putEnv(simpleMethod.getEventErrorMessageName(), errMsg);
 
-            methodContext.putEnv(simpleMethod.eventResponseCodeName, errorCode);
-            return false;
+                methodContext.putEnv(simpleMethod.getEventResponseCodeName(), errorCode);
+                return false;
+            } else if (methodContext.getMethodType() == MethodContext.SERVICE) {
+                methodContext.putEnv(simpleMethod.getServiceErrorMessageListName(), messages);
+                methodContext.putEnv(simpleMethod.getServiceResponseMessageName(), errorCode);
+                return false;
+            } else {
+                return false;
+            }
         }
 
         return true;
