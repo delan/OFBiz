@@ -34,9 +34,9 @@ import org.ofbiz.core.util.*;
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *@author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
- *@created    November 28, 2001
- *@version    1.0
+ * @author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
+ * @created    November 28, 2001
+ * @version    1.0
  */
 public final class BeanShellEngine extends GenericAsyncEngine {
 
