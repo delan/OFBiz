@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.6  2001/09/06 14:46:30  epabst
+ * avoid exception in common case
+ *
  * Revision 1.5  2001/08/31 17:44:04  epabst
  * added shopping cart code
  *
@@ -159,12 +162,14 @@ public class ShoppingCartEvents {
             }
         } else {
             noItems = true;
-            for (int i = 0; i < itemIds.length; i++) {
-                String orderItemSeqId = itemIds[i];
-                GenericValue orderItem = helper.findByPrimaryKey("OrderItem", UtilMisc.toMap("orderId", orderId, "orderItemSeqId", orderItemSeqId));
-                cart.addOrIncreaseItem(orderItem.getRelatedOne("Product"), orderItem.getDouble("quantity").doubleValue(), null);
-                noItems = false;
-            }
+            if (itemIds != null) {
+                for (int i = 0; i < itemIds.length; i++) {
+                    String orderItemSeqId = itemIds[i];
+                    GenericValue orderItem = helper.findByPrimaryKey("OrderItem", UtilMisc.toMap("orderId", orderId, "orderItemSeqId", orderItemSeqId));
+                    cart.addOrIncreaseItem(orderItem.getRelatedOne("Product"), orderItem.getDouble("quantity").doubleValue(), null);
+                    noItems = false;
+                }
+            }//else no items
         }
         
         if (noItems) {
