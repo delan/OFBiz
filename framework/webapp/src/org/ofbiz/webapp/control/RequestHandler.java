@@ -28,7 +28,6 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -171,7 +170,7 @@ public class RequestHandler implements Serializable {
                 Iterator i = preProcEvents.iterator();
 
                 while (i.hasNext()) {
-                    Map eventMap = (HashMap) i.next();
+                    Map eventMap = (Map) i.next();
                     String eType = (String) eventMap.get(ConfigXMLReader.EVENT_TYPE);
                     String ePath = (String) eventMap.get(ConfigXMLReader.EVENT_PATH);
                     String eMeth = (String) eventMap.get(ConfigXMLReader.EVENT_METHOD);
@@ -312,7 +311,7 @@ public class RequestHandler implements Serializable {
                 Iterator i = postProcEvents.iterator();
 
                 while (i.hasNext()) {
-                    Map eventMap = (HashMap) i.next();
+                    Map eventMap = (Map) i.next();
                     String eType = (String) eventMap.get(ConfigXMLReader.EVENT_TYPE);
                     String ePath = (String) eventMap.get(ConfigXMLReader.EVENT_PATH);
                     String eMeth = (String) eventMap.get(ConfigXMLReader.EVENT_METHOD);
