@@ -46,6 +46,14 @@ public class LocalDispatcher {
     protected ServiceDispatcher dispatcher;
     protected String name;
 
+    public LocalDispatcher(DispatchContext ctx, ServiceDispatcher dispatcher) {
+        this.name = ctx.getName();
+        this.dispatcher = dispatcher;
+        this.ctx = ctx;
+        ctx.setDispatcher(this);
+        dispatcher.register(name, ctx);
+    }
+
     public LocalDispatcher(String name, GenericDelegator delegator, Collection readerURLs) {
         this(name, delegator, readerURLs, null);
     }
@@ -71,8 +79,8 @@ public class LocalDispatcher {
             throw new IllegalArgumentException("The name of a LocalDispatcher cannot be a null or empty String");
         this.name = name;
         this.ctx = ctx;
+        this.dispatcher = ServiceDispatcher.getInstance(name, ctx, delegator);
         ctx.setDispatcher(this);
-        dispatcher = ServiceDispatcher.getInstance(name, ctx, delegator);
         if (Debug.infoOn()) Debug.logInfo("[LocalDispatcher] : Created Dispatcher for: " + name);
     }
 
