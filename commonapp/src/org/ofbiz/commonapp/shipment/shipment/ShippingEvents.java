@@ -23,6 +23,8 @@
  */
 package org.ofbiz.commonapp.shipment.shipment;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.net.*;
 import java.util.*;
 
@@ -281,6 +283,52 @@ public class ShippingEvents {
         cart.addAdjustment(orderAdjustment);
 
         return "success";
+    }
+
+    public static String viewShipmentPackageRouteSegLabelImage(HttpServletRequest request, HttpServletResponse response) {
+        
+        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
+        
+        String shipmentId = request.getParameter("shipmentId");
+        String shipmentRouteSegmentId = request.getParameter("shipmentRouteSegmentId");
+        String shipmentPackageSeqId = request.getParameter("shipmentPackageSeqId");
+        
+        GenericValue shipmentPackageRouteSeg = null;
+        try {
+            shipmentPackageRouteSeg = delegator.findByPrimaryKey("ShipmentPackageRouteSeg", UtilMisc.toMap("shipmentId", shipmentId, "shipmentRouteSegmentId", shipmentRouteSegmentId, "shipmentPackageSeqId", shipmentPackageSeqId));
+        } catch (GenericEntityException e) {
+            String errorMsg = "Error looking up ShipmentPackageRouteSeg: " + e.toString();
+            Debug.logError(e, errorMsg);
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, errorMsg);
+            return "error";
+        }
+        
+        if (shipmentPackageRouteSeg == null) {
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "Could not find ShipmentPackageRouteSeg where shipmentId=[" + shipmentId + "], shipmentRouteSegmentId=[" + shipmentRouteSegmentId + "], shipmentPackageSeqId=[" + shipmentPackageSeqId + "]");
+            return "error";
+        }
+        
+        ByteWrapper byteWrapper = (ByteWrapper) shipmentPackageRouteSeg.get("labelImage");
+        if (byteWrapper == null) {
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "The ShipmentPackageRouteSeg was found where shipmentId=[" + shipmentId + "], shipmentRouteSegmentId=[" + shipmentRouteSegmentId + "], shipmentPackageSeqId=[" + shipmentPackageSeqId + "], but there was no labelImage on the value.");
+            return "error";
+        }
+        
+        try {
+            // could set the content type, etc; but what to set it to?
+            
+            OutputStream outputStream = response.getOutputStream();
+            outputStream.write(byteWrapper.getBytes());
+            outputStream.flush();
+            outputStream.close();
+
+            return "success";
+        } catch (IOException e) {
+            String errorMsg = "Error writing labelImage to OutputStream: " + e.toString();
+            Debug.logError(e, errorMsg);
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, errorMsg);
+            return "error";
+        }
     }
 
     /*
