@@ -238,9 +238,9 @@ public class PosTransaction {
         }
         Debug.log("AuthTrans - " + authTrans, module);
 
-        if ("PAYMENT_METHOD_TYPE".equals(infValue.getEntityName())) {
+        if ("PaymentMethodType".equals(infValue.getEntityName())) {
             payInfo.put("description", infValue.getString("description"));
-            payInfo.put("infoString", "");
+            payInfo.put("payInfo", infValue.getString("description"));
             payInfo.put("amount", UtilFormatOut.formatPrice(inf.amount));
         } else {
             String paymentMethodTypeId = infValue.getString("paymentMethodTypeId");
@@ -273,7 +273,7 @@ public class PosTransaction {
 
                 String expDate = cc.getString("expireDate");
                 String infoString = cardStr + " " + expDate;
-                payInfo.put("cardInfo", infoString);
+                payInfo.put("payInfo", infoString);
                 payInfo.putAll(cc);
 
 

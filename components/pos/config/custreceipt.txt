@@ -23,7 +23,7 @@ ${description} ${basePrice}
                              TOTAL: ${grandTotal}
 
 [BEGIN PAY LOOP]
-${cardInfo}: ${amount}
+${payInfo}: ${amount}
 ${nameOnCard}
 ${authInfoString}
 [END PAY LOOP]
