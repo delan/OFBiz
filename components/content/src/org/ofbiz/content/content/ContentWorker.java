@@ -1,5 +1,5 @@
 /*
- * $Id: ContentWorker.java,v 1.39 2004/07/29 21:59:07 byersa Exp $
+ * $Id: ContentWorker.java,v 1.40 2004/08/11 21:05:13 byersa Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -68,7 +68,7 @@ import bsh.EvalError;
  * ContentWorker Class
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.39 $
+ * @version $Revision: 1.40 $
  * @since 2.2
  * 
  *  
@@ -465,6 +465,9 @@ public class ContentWorker {
 
         GenericDelegator delegator = currentContent.getDelegator();
         List assocList = getAssociations(currentContent, linkDir, assocTypes, fromDate, thruDate);
+        if (Debug.infoOn()) Debug.logInfo("assocList:" + assocList, "");
+        if (assocList == null || assocList.size() == 0)
+            return assocList;
 
         List contentList = new ArrayList();
         String contentIdName = "contentId";
@@ -828,18 +831,18 @@ public class ContentWorker {
         return view;
     }
 
-    public static GenericValue getSubContentCache(GenericDelegator delegator, String contentId, String mapKey, String subContentId, GenericValue userLogin, List assocTypes, Timestamp fromDate, Boolean nullThruDatesOnly, String contentAssocPredicateId) throws GenericEntityException, MiniLangException, GeneralException {
+    public static GenericValue getSubContentCache(GenericDelegator delegator, String contentId, String mapKey, String subContentId, GenericValue userLogin, List assocTypes, Timestamp fromDate, Boolean nullThruDatesOnly, String contentAssocPredicateId) throws GenericEntityException {
         //GenericValue content = null;
         GenericValue view = null;
         if (UtilValidate.isEmpty(subContentId)) {
-            view = getSubContent(delegator, contentId, mapKey, userLogin, assocTypes, fromDate, nullThruDatesOnly, contentAssocPredicateId);
+            view = getSubContentCache(delegator, contentId, mapKey, userLogin, assocTypes, fromDate, nullThruDatesOnly, contentAssocPredicateId);
         } else {
             view = getContentCache(delegator, subContentId);
         }
         return view;
     }
 
-    public static GenericValue getSubContent(GenericDelegator delegator, String contentId, String mapKey,  GenericValue userLogin, List assocTypes, Timestamp fromDate, Boolean nullThruDatesOnly, String contentAssocPredicateId) throws GenericEntityException, MiniLangException, GeneralException {
+    public static GenericValue getSubContentCache(GenericDelegator delegator, String contentId, String mapKey,  GenericValue userLogin, List assocTypes, Timestamp fromDate, Boolean nullThruDatesOnly, String contentAssocPredicateId) throws GenericEntityException {
         //GenericValue content = null;
         GenericValue view = null;
         if (contentId == null) {
@@ -847,7 +850,11 @@ public class ContentWorker {
         }
         Map results = null;
         List contentTypes = null;
-        results = ContentServicesComplex.getAssocAndContentAndDataResourceCacheMethod(delegator, contentId, mapKey, "From", fromDate, null, assocTypes, contentTypes, nullThruDatesOnly, contentAssocPredicateId);
+        try {
+            results = ContentServicesComplex.getAssocAndContentAndDataResourceCacheMethod(delegator, contentId, mapKey, "From", fromDate, null, assocTypes, contentTypes, nullThruDatesOnly, contentAssocPredicateId);
+        } catch(MiniLangException e) {
+            throw new RuntimeException(e.getMessage());
+        }
         List entityList = (List) results.get("entityList");
         if (entityList == null || entityList.size() == 0) {
             //throw new IOException("No subcontent found.");
@@ -894,8 +901,9 @@ public class ContentWorker {
         Map results = new HashMap();
         //GenericValue content = null;
         if (subContentDataResourceView == null) {
-            subContentDataResourceView = ContentWorker.getSubContent(delegator, contentId, mapKey, subContentId, userLogin, null, fromDate);
+            subContentDataResourceView = getSubContentCache(delegator, contentId, mapKey, subContentId, userLogin, null, fromDate, new Boolean(false), null);
         }
+
         results.put("view", subContentDataResourceView);
         if (subContentDataResourceView == null) {
             //throw new IOException("SubContentDataResourceView is null.");
@@ -915,6 +923,14 @@ public class ContentWorker {
         return results;
     }
 
+    public static String renderSubContentAsTextCache(GenericDelegator delegator, String contentId,  String mapKey,  GenericValue subContentDataResourceView, 
+            Map templateRoot, Locale locale, String mimeTypeId, GenericValue userLogin, Timestamp fromDate) throws GeneralException, IOException {
+        Boolean nullThruDatesOnly = new Boolean(false);
+        Writer outWriter = new StringWriter();
+        Map map = renderSubContentAsTextCache(delegator, contentId, outWriter, mapKey, subContentDataResourceView, templateRoot, locale, mimeTypeId, userLogin, fromDate, nullThruDatesOnly);
+        return outWriter.toString();
+    }
+
     public static Map renderSubContentAsTextCache(GenericDelegator delegator, String contentId, Writer out, String mapKey,  GenericValue subContentDataResourceView, 
             Map templateRoot, Locale locale, String mimeTypeId, GenericValue userLogin, Timestamp fromDate) throws GeneralException, IOException {
         Boolean nullThruDatesOnly = new Boolean(false);
@@ -930,8 +946,12 @@ public class ContentWorker {
         Map results = new HashMap();
         //GenericValue content = null;
         if (subContentDataResourceView == null) {
-                String contentAssocPredicateId = null;
-                subContentDataResourceView = ContentWorker.getSubContent(delegator, contentId, mapKey, userLogin, null, fromDate, nullThruDatesOnly, contentAssocPredicateId );
+            String contentAssocPredicateId = null;
+            try {
+                subContentDataResourceView = getSubContentCache(delegator, contentId, mapKey, userLogin, null, fromDate, nullThruDatesOnly, contentAssocPredicateId );
+            } catch(GenericEntityException e) {
+                throw new GeneralException(e.getMessage());
+            }
         }
         results.put("view", subContentDataResourceView);
         if (subContentDataResourceView == null) {

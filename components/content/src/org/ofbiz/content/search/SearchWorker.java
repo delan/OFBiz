@@ -1,5 +1,5 @@
 /*
- * $Id: SearchWorker.java,v 1.8 2004/08/11 17:16:39 byersa Exp $
+ * $Id: SearchWorker.java,v 1.9 2004/08/11 21:05:13 byersa Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -50,7 +50,7 @@ import org.ofbiz.content.content.ContentWorker;
  * SearchWorker Class
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a> Hacked from Lucene demo file
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  * @since 3.1
  * 
  *  
@@ -63,6 +63,7 @@ public class SearchWorker {
 
             Map results = new HashMap();
             GenericValue content = delegator.makeValue("Content", UtilMisc.toMap("contentId", siteId));
+                if (Debug.infoOn()) Debug.logInfo("in indexTree, siteId:" + siteId + " content:" + content, module);
             List siteList = ContentWorker.getAssociatedContent(content, "From", UtilMisc.toList("SUBSITE"), null, UtilDateTime.nowTimestamp().toString(), null);
 	  	//if (Debug.infoOn()) Debug.logInfo("in indexTree, siteList:" + siteList, module);
             Iterator iter = siteList.iterator();
