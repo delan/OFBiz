@@ -192,7 +192,7 @@
           <td valign=top>
 
 <table width="100%" border="0" cellpadding="4" cellspacing="0">
-  <tr><td colspan="2"><a href="<ofbiz:url>/editcontactmech?CONTACT_MECH_TYPE_ID=POSTAL_ADDRESS&CM_NEW_PURPOSE_TYPE_ID=SHIPPING_LOCATION&DONE_PAGE=checkoutoptions</ofbiz:url>" class="buttontext">[Add New Address]</a></td></tr>
+  <tr><td colspan="2"><a href="<ofbiz:url>/editcontactmech?preContactMechTypeId=POSTAL_ADDRESS&contactMechPurposeTypeId=SHIPPING_LOCATION&DONE_PAGE=checkoutoptions</ofbiz:url>" class="buttontext">[Add New Address]</a></td></tr>
  <ofbiz:if name="shippingContactMechList" size="0">
     <tr><td colspan="2"><hr class='sepbar'></td></tr>
     <ofbiz:iterator name="shippingContactMech" property="shippingContactMechList">
