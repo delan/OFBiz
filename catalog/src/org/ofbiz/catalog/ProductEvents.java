@@ -105,6 +105,8 @@ public class ProductEvents {
         String smallImageUrl = request.getParameter("SMALL_IMAGE_URL");
         String largeImageUrl = request.getParameter("LARGE_IMAGE_URL");
 
+        String listPriceStr = request.getParameter("LIST_PRICE");
+        Double listPrice = null;
         String defaultPriceStr = request.getParameter("DEFAULT_PRICE");
         Double defaultPrice = null;
 
@@ -141,6 +143,13 @@ public class ProductEvents {
             }
         }
 
+        if (UtilValidate.isNotEmpty(listPriceStr)) {
+            try {
+                listPrice = Double.valueOf(listPriceStr);
+            } catch (Exception e) {
+                errMsg += "<li>Default Price is not a valid number.";
+            }
+        }
         if (UtilValidate.isNotEmpty(defaultPriceStr)) {
             try {
                 defaultPrice = Double.valueOf(defaultPriceStr);
@@ -602,6 +611,70 @@ public class ProductEvents {
             } catch (GenericEntityException e) {
                 request.setAttribute(SiteDefs.ERROR_MESSAGE, "Could not update product association (write error)");
                 Debug.logWarning("[ProductEvents.updateProductAssoc] Could not update product association (write error); message: " + e.getMessage());
+                return "error";
+            }
+        } else {
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "Specified update mode: \"" + updateMode + "\" is not supported.");
+            return "error";
+        }
+
+        return "success";
+    }
+
+    public static String updateAttribute(HttpServletRequest request, HttpServletResponse response) {
+        String errMsg = "";
+        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
+        Security security = (Security) request.getAttribute("security");
+
+        String updateMode = request.getParameter("UPDATE_MODE");
+        if (updateMode == null || updateMode.length() <= 0) {
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "Update Mode was not specified, but is required.");
+            Debug.logWarning("[CategoryEvents.updateCategory] Update Mode was not specified, but is required");
+            return "error";
+        }
+
+        //check permissions before moving on...
+        if (!security.hasEntityPermission("CATALOG", "_" + updateMode, request.getSession())) {
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "You do not have sufficient permissions to "+ updateMode + " CATALOG (CATALOG_" + updateMode + " or CATALOG_ADMIN needed).");
+            return "error";
+        }
+
+        String productId = request.getParameter("PRODUCT_ID");
+        String attrName = request.getParameter("ATTRIBUTE_NAME");
+        String attrValue = request.getParameter("ATTRIBUTE_VALUE");
+        String attrType = request.getParameter("ATTRIBUTE_TYPE");
+
+        if (!UtilValidate.isNotEmpty(productId))
+            errMsg += "<li>Product ID is missing.";
+        if (!UtilValidate.isNotEmpty(productId))
+            errMsg += "<li>Attribute name is missing.";
+        if (errMsg.length() > 0) {
+            errMsg = "<b>The following errors occured:</b><br><ul>" + errMsg + "</ul>";
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, errMsg);
+            return "error";
+        }
+
+        Collection toBeStored = new LinkedList();
+        GenericValue attribute = delegator.makeValue("ProductAttribute", null);
+        toBeStored.add(attribute);
+        attribute.set("productId", productId);
+        attribute.set("attrName", attrName);
+        attribute.set("attrValue", attrValue);
+        attribute.set("attrType", attrType);
+
+        if (updateMode.equals("CREATE")) {
+            try {
+                delegator.storeAll(toBeStored);
+            } catch (GenericEntityException e) {
+                request.setAttribute(SiteDefs.ERROR_MESSAGE, "Could not create attribute (write error)");
+                return "error";
+            }
+        } else if (updateMode.equals("UPDATE")) {
+            try {
+                delegator.storeAll(toBeStored);
+            } catch (GenericEntityException e) {
+                request.setAttribute(SiteDefs.ERROR_MESSAGE, "Could not update attribute (write error)");
+                Debug.logWarning("[ProductEvents.updateAttribute] Could not update attribute (write error); message: " + e.getMessage());
                 return "error";
             }
         } else {

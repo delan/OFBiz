@@ -5,7 +5,7 @@
     <description>Catalog Module Site Configuration File</description>
     <owner>The Open For Business Project (c) 2001 </owner>
     <errorpage>/error/error.jsp</errorpage>
-    
+
     <handler name="java" type="request" class="org.ofbiz.core.event.JavaEventHandler"/>
     <handler name="soap" type="request" class="org.ofbiz.core.event.SOAPEventHandler"/>
     <handler name="service" type="request" class="org.ofbiz.core.event.ServiceEventHandler"/>
@@ -13,7 +13,7 @@
 
     <handler name="region" type="view" class="org.ofbiz.core.view.RegionViewHandler"/>
     <handler name="velocity" type="view" class="org.ofbiz.core.view.VelocityViewHandler"/>
-    
+
     <preprocessor>
     	<!-- Events to run on every request before security (chains exempt) -->
     	<!-- <event type="java" path="org.ofbiz.core.event.TestEvent" invoke="test"/> -->
@@ -78,26 +78,26 @@
     	<security https="true" auth="true"/>
     	<response name="success" type="view" value="keywordsearch"/>
     </request-map>
-    
+
     <request-map uri="ChooseTopCategory">
     	<security https="true" auth="true"/>
     	<response name="success" type="view" value="ChooseTopCategory"/>
     </request-map>
-    
+
     <request-map uri="EditCategory">
     	<security https="true" auth="true"/>
     	<response name="success" type="view" value="EditCategory"/>
     </request-map>
-    
+
     <request-map uri="UpdateCategory">
     	<security https="true" auth="true"/>
     	<event type="java" path="org.ofbiz.catalog.CategoryEvents" invoke="updateCategory"/>
         <response name="success" type="view" value="EditCategory"/>
         <response name="error" type="view" value="EditCategory"/>
     </request-map>
-    
+
     <request-map uri="UpdateProductCategoryRollup">
-    	<security https="true" auth="true"/>        
+    	<security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.catalog.CategoryEvents" invoke="updateProductCategoryRollup"/>
         <response name="success" type="view" value="EditCategory"/>
         <response name="error" type="view" value="EditCategory"/>
@@ -107,36 +107,47 @@
     	<security https="true" auth="true"/>
     	<response name="success" type="view" value="EditProduct"/>
     </request-map>
-    
+
     <request-map uri="UpdateProduct">
     	<security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.catalog.ProductEvents" invoke="updateProduct"/>
         <response name="success" type="view" value="EditProduct"/>
         <response name="error" type="view" value="EditProduct"/>
     </request-map>
-    
+
     <request-map uri="EditProductCategories">
     	<security https="true" auth="true"/>
     	<response name="success" type="view" value="EditProductCategories"/>
     </request-map>
-    
+
+    <request-map uri="EditCategoryProducts">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="EditCategoryProducts"/>
+    </request-map>
+
     <request-map uri="UpdateProductCategoryMember"><security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.catalog.CategoryEvents" invoke="updateProductCategoryMember"/>
         <response name="success" type="view" value="EditProductCategories"/>
         <response name="error" type="view" value="EditProductCategories"/>
     </request-map>
 
+    <request-map uri="UpdateCategoryProductMember"><security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.catalog.CategoryEvents" invoke="updateProductCategoryMember"/>
+        <response name="success" type="view" value="EditCategoryProducts"/>
+        <response name="error" type="view" value="EditCategoryProducts"/>
+    </request-map>
+
     <request-map uri="EditProductKeyword"><security https="true" auth="true"/>
     	<response name="success" type="view" value="EditProductKeyword"/>
     </request-map>
-    
+
     <request-map uri="UpdateProductKeyword">
     	<security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.catalog.ProductEvents" invoke="updateProductKeyword"/>
         <response name="success" type="view" value="EditProductKeyword"/>
         <response name="error" type="view" value="EditProductKeyword"/>
     </request-map>
-    
+
     <request-map uri="UpdateProductKeywords">
     	<security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.catalog.ProductEvents" invoke="updateProductKeywords"/>
@@ -163,13 +174,22 @@
     <request-map uri="EditProductAssoc"><security https="true" auth="true"/>
     	<response name="success" type="view" value="EditProductAssoc"/>
     </request-map>
-    
+   <request-map uri="EditProductAttributes"><security https="true" auth="true"/>
+    	<response name="success" type="view" value="EditProductAttributes"/>
+    </request-map>
+
     <request-map uri="UpdateProductAssoc"><security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.catalog.ProductEvents" invoke="updateProductAssoc"/>
     	<response name="success" type="view" value="EditProductAssoc"/>
         <response name="error" type="view" value="EditProductAssoc"/>
     </request-map>
-    
+
+    <request-map uri="UpdateProductAttribute"><security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.catalog.ProductEvents" invoke="updateAttribute"/>
+    	<response name="success" type="view" value="EditProductAttributes"/>
+        <response name="error" type="view" value="EditProductAttributes"/>
+    </request-map>
+
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
@@ -182,7 +202,9 @@
     <view-map name="ChooseTopCategory" type="region"/>
     <view-map name="EditCategory" type="region"/>
     <view-map name="EditProduct" type="region"/>
+    <view-map name="EditProductAttributes" type="region"/>
     <view-map name="EditProductCategories" type="region"/>
+    <view-map name="EditCategoryProducts" type="region"/>
     <view-map name="EditProductKeyword" type="region"/>
     <view-map name="EditProductAssoc" type="region"/>
     <view-map name="UploadImage" type="region"/>

@@ -14,7 +14,7 @@
     <define id='LEFTBAR_REGION' template='/templates/leftbar_template.jsp'>
         <put section='first' content='/find/keywordsearchbox.jsp'/>
         <put section='second' content='/find/sidedeepcategory.jsp'/>
-        <put section='third' content='/find/miniproductlist.jsp'/>
+        <!--<put section='third' content='/find/miniproductlist.jsp'/>-->
     </define>
 
     <define id='RIGHTBAR_REGION' template='/templates/rightbar_template.jsp'>
@@ -72,6 +72,10 @@
         <put section='title'>Edit Product Categories Page</put>
         <put section='content' content='/EditProductCategories.jsp'/>
     </define>
+    <define id='EditCategoryProducts' region='LEFT_ONLY_REGION'>
+        <put section='title'>Edit Category Products Page</put>
+        <put section='content' content='/EditCategoryProducts.jsp'/>
+    </define>
     <define id='EditProductKeyword' region='LEFT_ONLY_REGION'>
         <put section='title'>Edit Product Keyword Page</put>
         <put section='content' content='/EditProductKeyword.jsp'/>
@@ -79,6 +83,10 @@
     <define id='EditProductAssoc' region='LEFT_ONLY_REGION'>
         <put section='title'>Edit Product Associations Page</put>
         <put section='content' content='/EditProductAssoc.jsp'/>
+    </define>
+    <define id='EditProductAttributes' region='LEFT_ONLY_REGION'>
+        <put section='title'>Edit Product Associations Page</put>
+        <put section='content' content='/EditProductAttributes.jsp'/>
     </define>
 
     <define id='UploadImage' region='MAIN_REGION'>

@@ -60,13 +60,13 @@
   with ID "<%=UtilFormatOut.checkNull(productId)%>"</div>
 
 <a href="<ofbiz:url>/EditProduct</ofbiz:url>" class="buttontext">[Create New Product]</a>
-<%-- <%if(product != null){%><a href="<ofbiz:url>UpdateProduct?UPDATE_MODE=DELETE&PRODUCT_ID=<%=product.getSku()%></ofbiz:url>" class="buttontext">[Delete this Product]</a><%}%> --%>
 <%if(productId != null && productId.length() > 0){%>
   <a href="/ecommerce/control/product?product_id=<%=productId%>" class='buttontext' target='_blank'>[View Product Page]</a>
   <a href="<ofbiz:url>/EditProduct?PRODUCT_ID=<%=productId%></ofbiz:url>" class="buttontext">[Edit Product]</a>
   <a href="<ofbiz:url>/EditProductCategories?PRODUCT_ID=<%=productId%></ofbiz:url>" class="buttontext">[Edit Category Members]</a>
   <a href="<ofbiz:url>/EditProductKeyword?PRODUCT_ID=<%=productId%></ofbiz:url>" class="buttontext">[Edit Keywords]</a>
   <a href="<ofbiz:url>/EditProductAssoc?PRODUCT_ID=<%=productId%></ofbiz:url>" class="buttontext">[Edit Associations]</a>
+  <a href="<ofbiz:url>/EditProductAttributes?PRODUCT_ID=<%=productId%></ofbiz:url>" class="buttontext">[Edit Attributes]</a>
 <%}%>
 <br>
 <br>
@@ -74,12 +74,12 @@
 <%if(productId!=null && product!=null){%>
 <p class="head2">Product-Category Member Maintenance</p>
 
-<table border="1" cellpadding='2' cellspacing='0'>
+<table border="1" width="100%" cellpadding='2' cellspacing='0'>
   <tr>
     <td><div class="tabletext"><b>Category ID</b></div></td>
     <td><div class="tabletext"><b>Description</b></div></td>
     <td><div class="tabletext"><b>From&nbsp;Date&nbsp;&amp;&nbsp;Time</b></div></td>
-    <td><div class="tabletext"><b>Thru&nbsp;Date&nbsp;&amp;&nbsp;Time,&nbsp;Sequence&nbsp;&amp;&nbsp;Quantity</b></div></td>
+    <td align="center"><div class="tabletext"><b>Thru&nbsp;Date&nbsp;&amp;&nbsp;Time,&nbsp;Sequence&nbsp;&amp;&nbsp;Quantity</b></div></td>
     <td><div class="tabletext"><b>&nbsp;</b></div></td>
   </tr>
 <ofbiz:iterator name="productCategoryMember" property="productCategoryMembers">
@@ -88,9 +88,9 @@
     <td><a href='<ofbiz:url>/EditCategory?PRODUCT_CATEGORY_ID=<ofbiz:entityfield attribute="productCategoryMember" field="productCategoryId"/></ofbiz:url>' class="buttontext"><ofbiz:entityfield attribute="productCategoryMember" field="productCategoryId"/></a></td>
     <td><%if (category!=null) {%><a href='<ofbiz:url>/EditCategory?PRODUCT_CATEGORY_ID=<ofbiz:entityfield attribute="productCategoryMember" field="productCategoryId"/></ofbiz:url>' class="buttontext"><%=category.getString("description")%></a><%}%>&nbsp;</td>
     <td><div class='tabletext'><ofbiz:entityfield attribute="productCategoryMember" field="fromDate"/></div></td>
-    <td>
+    <td align="center">
         <FORM method=POST action='<ofbiz:url>/UpdateProductCategoryMember?UPDATE_MODE=UPDATE</ofbiz:url>'>
-            <input type=hidden name='PRODUCT_ID' value='<%=productId%>'>
+            <input type=hidden name='PRODUCT_ID' value='<ofbiz:entityfield attribute="productCategoryMember" field="productId"/>'>
             <input type=hidden name='PRODUCT_CATEGORY_ID' value='<ofbiz:entityfield attribute="productCategoryMember" field="productCategoryId"/>'>
             <input type=hidden name='FROM_DATE' value='<ofbiz:inputvalue entityAttr="productCategoryMember" field="fromDate"/>'>
             <input type=text size='20' name='THRU_DATE' value='<ofbiz:inputvalue entityAttr="productCategoryMember" field="thruDate"/>'>
@@ -99,8 +99,8 @@
             <INPUT type=submit value='Update'>
         </FORM>
     </td>
-    <td>
-      <a href='<ofbiz:url>/UpdateProductCategoryMember?UPDATE_MODE=DELETE&PRODUCT_ID=<%=productId%>&PRODUCT_CATEGORY_ID=<ofbiz:entityfield attribute="productCategoryMember" field="productCategoryId"/>&FROM_DATE=<%=UtilFormatOut.encodeQueryValue(productCategoryMember.getTimestamp("fromDate").toString())%></ofbiz:url>' class="buttontext">
+    <td align="center">
+      <a href='<ofbiz:url>/UpdateProductCategoryMember?UPDATE_MODE=DELETE&PRODUCT_ID=<ofbiz:entityfield attribute="productCategoryMember" field="productId"/>&PRODUCT_CATEGORY_ID=<ofbiz:entityfield attribute="productCategoryMember" field="productCategoryId"/>&FROM_DATE=<%=UtilFormatOut.encodeQueryValue(productCategoryMember.getTimestamp("fromDate").toString())%></ofbiz:url>' class="buttontext">
       [Delete]</a>
     </td>
   </tr>
@@ -123,14 +123,14 @@
 </form>
 <%}%>
 <br>
-<a href="<ofbiz:url>EditProduct</ofbiz:url>" class="buttontext">[Create New Product]</a>
-<%-- <%if(product != null){%><a href="<ofbiz:url>UpdateProduct?UPDATE_MODE=DELETE&PRODUCT_ID=<%=product.getSku()%></ofbiz:url>" class="buttontext">[Delete this Product]</a><%}%> --%>
+<a href="<ofbiz:url>/EditProduct</ofbiz:url>" class="buttontext">[Create New Product]</a>
 <%if(productId != null && productId.length() > 0){%>
   <a href="/ecommerce/control/product?product_id=<%=productId%>" class='buttontext' target='_blank'>[View Product Page]</a>
   <a href="<ofbiz:url>/EditProduct?PRODUCT_ID=<%=productId%></ofbiz:url>" class="buttontext">[Edit Product]</a>
   <a href="<ofbiz:url>/EditProductCategories?PRODUCT_ID=<%=productId%></ofbiz:url>" class="buttontext">[Edit Category Members]</a>
   <a href="<ofbiz:url>/EditProductKeyword?PRODUCT_ID=<%=productId%></ofbiz:url>" class="buttontext">[Edit Keywords]</a>
   <a href="<ofbiz:url>/EditProductAssoc?PRODUCT_ID=<%=productId%></ofbiz:url>" class="buttontext">[Edit Associations]</a>
+  <a href="<ofbiz:url>/EditProductAttributes?PRODUCT_ID=<%=productId%></ofbiz:url>" class="buttontext">[Edit Attributes]</a>
 <%}%>
 <br>
 

@@ -173,7 +173,11 @@ public class CategoryEvents {
             return "error";
         }
 
+
+        Debug.logInfo("Update mode: " + updateMode);
+
         if (updateMode.equals("CREATE")) {
+            Debug.logInfo("Create mode was found.");
             GenericValue dummyValue = null;
             try {
                 Collection dummyCol = EntityUtil.filterByDate(
@@ -188,6 +192,8 @@ public class CategoryEvents {
                 return "error";
             }
 
+            Debug.logInfo("Didn't find any existing adding new.");
+
             GenericValue productCategoryMember = null;
             try {
                 productCategoryMember = delegator.create("ProductCategoryMember",
@@ -201,6 +207,7 @@ public class CategoryEvents {
                 request.setAttribute(SiteDefs.ERROR_MESSAGE, "Could not create product-category entry (write error)");
                 return "error";
             }
+            Debug.logInfo("Wrote new member.");
         } else if (updateMode.equals("UPDATE")) {
             String fromDateStr = request.getParameter("FROM_DATE");
             Timestamp fromDate = null;
@@ -232,10 +239,10 @@ public class CategoryEvents {
             }
             
             String quantityStr = request.getParameter("QUANTITY");
-            Long quantity = null;
+            Double quantity = null;
             try {
                 if (UtilValidate.isNotEmpty(quantityStr))
-                    quantity = Long.valueOf(quantityStr);
+                    quantity = Double.valueOf(quantityStr);
             } catch (Exception e) {
                 request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>ERROR: Could not update product-category entry, quantity number \"" + quantityStr + "\" was not valid.");
                 return "error";

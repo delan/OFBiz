@@ -59,6 +59,8 @@
 <a href="<ofbiz:url>/EditCategory</ofbiz:url>" class="buttontext">[Create New Category]</a>
 <%if(productCategoryId != null && productCategoryId.length() > 0) {%>
   <a href="/ecommerce/control/category?category_id=<%=productCategoryId%>" class="buttontext" target='_blank'>[View Category Page]</a>
+  <a href="<ofbiz:url>/EditCategory?PRODUCT_CATEGORY_ID=<%=productCategoryId%></ofbiz:url>" class="buttontext">[Edit Category]</a>
+  <a href="<ofbiz:url>/EditCategoryProducts?PRODUCT_CATEGORY_ID=<%=productCategoryId%></ofbiz:url>" class="buttontext">[Edit Category Members]</a>
 <%}%>
 <form action="<ofbiz:url>/UpdateCategory</ofbiz:url>" method=POST style='margin: 0;'>
 <table border='0' cellpadding='2' cellspacing='0'>
@@ -127,11 +129,11 @@
           <option selected value='<%=primaryParentCategory.getString("productCategoryId")%>'><%=primaryParentCategory.getString("description")%> [<%=primaryParentCategory.getString("productCategoryId")%>]</option>
         <%}%>
         <option value=''>&nbsp;</option>
-        <%Iterator categoryIter = UtilMisc.toIterator(categoryCol);%>
+        <%Iterator categoryIter = categoryCol.iterator();%>
         <%while(categoryIter != null && categoryIter.hasNext()) {%>
           <%GenericValue nextCategory=(GenericValue)categoryIter.next();%>
-          <%if((productCategoryId != null) && (nextCategory != null)) {%>
-            <%if(!productCategoryId.equals(nextCategory.getString("productCategoryId"))){%>
+          <%if(nextCategory != null) {%>
+            <%if(productCategoryId == null || !productCategoryId.equals(nextCategory.getString("productCategoryId"))){%>
               <option value='<%=nextCategory.getString("productCategoryId")%>'><%=nextCategory.getString("description")%> [<%=nextCategory.getString("productCategoryId")%>]</option>
             <%}%>
           <%}%>
@@ -148,7 +150,9 @@
 </form>
 <a href="<ofbiz:url>/EditCategory</ofbiz:url>" class="buttontext">[Create New Category]</a>
 <%if(productCategoryId != null && productCategoryId.length() > 0) {%>
-  <a href="/ecommerce/control/category?category_id=<%=productCategoryId%>" class="buttontext">[View Category Page]</a>
+  <a href="/ecommerce/control/category?category_id=<%=productCategoryId%>" class="buttontext" target='_blank'>[View Category Page]</a>
+  <a href="<ofbiz:url>/EditCategory?PRODUCT_CATEGORY_ID=<%=productCategoryId%></ofbiz:url>" class="buttontext">[Edit Category]</a>
+  <a href="<ofbiz:url>/EditCategoryProducts?PRODUCT_CATEGORY_ID=<%=productCategoryId%></ofbiz:url>" class="buttontext">[Edit Category Members]</a>
 <%}%>
 <br>
 
