@@ -157,7 +157,7 @@ public class OrderReadHelper {
         Set orderStatusIdSet = new HashSet();
         Iterator orderStatusIter = orderStatusList.iterator();
         while (orderStatusIter.hasNext()) {
-            orderStatusIdSet.add(((GenericValue) orderStatusIter.next()).getString("statusId"));
+            orderStatusIdSet.add(((GenericValue) orderStatusIter.next()).getString("statusCode"));
         }
         Iterator orderStatusIdIter = orderStatusIdSet.iterator();
         String orderStatusIds;
