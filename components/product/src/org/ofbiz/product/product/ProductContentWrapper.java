@@ -1,5 +1,5 @@
 /*
- * $Id: ProductContentWrapper.java,v 1.4 2003/12/21 03:02:57 jonesde Exp $
+ * $Id: ProductContentWrapper.java,v 1.5 2003/12/21 11:53:05 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -32,12 +32,12 @@ import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.content.content.ContentWorker;
 import org.ofbiz.entity.GenericDelegator;
-import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.model.ModelEntity;
 import org.ofbiz.entity.model.ModelUtil;
@@ -47,7 +47,7 @@ import org.ofbiz.entity.util.EntityUtil;
  * Product Content Worker: gets product content to display
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      3.0
  */
 public class ProductContentWrapper {
@@ -93,7 +93,7 @@ public class ProductContentWrapper {
             } else {
                 return null;
             }
-        } catch (GenericEntityException e) {
+        } catch (GeneralException e) {
             Debug.logError(e, "Error rendering ProductContent, inserting empty String", module);
             return product.getString(candidateFieldName);
         } catch (IOException e) {
@@ -102,7 +102,7 @@ public class ProductContentWrapper {
         }
     }
     
-    public static void getProductContentAsText(String productId, GenericValue product, String productContentTypeId, Locale locale, String mimeTypeId, GenericDelegator delegator, Writer outWriter) throws GenericEntityException, IOException {
+    public static void getProductContentAsText(String productId, GenericValue product, String productContentTypeId, Locale locale, String mimeTypeId, GenericDelegator delegator, Writer outWriter) throws GeneralException, IOException {
         if (productId == null && product != null) {
             productId = product.getString("productId");
         }

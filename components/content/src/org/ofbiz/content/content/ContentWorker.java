@@ -1,5 +1,5 @@
 /*
- * $Id: ContentWorker.java,v 1.9 2003/12/21 10:32:54 jonesde Exp $
+ * $Id: ContentWorker.java,v 1.10 2003/12/21 11:53:05 jonesde Exp $
  * 
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  * 
@@ -16,23 +16,24 @@
  */
 package org.ofbiz.content.content;
 
+import java.io.IOException;
+import java.io.Writer;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Locale;
-import java.io.IOException;
-import java.io.Writer;
+import java.util.Map;
 
 import org.ofbiz.base.util.BshUtil;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.FlexibleStringExpander;
+import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
-import org.ofbiz.service.ServiceUtil;
+import org.ofbiz.content.data.DataResourceWorker;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -40,11 +41,10 @@ import org.ofbiz.entity.condition.EntityConditionList;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityUtil;
+import org.ofbiz.minilang.MiniLangException;
+import org.ofbiz.minilang.SimpleMapProcessor;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
-import org.ofbiz.content.data.DataResourceWorker;
-import org.ofbiz.minilang.SimpleMapProcessor;
-import org.ofbiz.minilang.MiniLangException;
 
 import bsh.EvalError;
 import freemarker.template.SimpleHash;
@@ -53,7 +53,7 @@ import freemarker.template.SimpleHash;
  * ContentWorker Class
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  * @since 2.2
  * 
  *  
@@ -62,7 +62,7 @@ public class ContentWorker {
 
     public static final String module = ContentWorker.class.getName();
 
-    public static GenericValue findAlternateLocaleContent(GenericDelegator delegator, GenericValue view, Locale locale) throws IOException {
+    public static GenericValue findAlternateLocaleContent(GenericDelegator delegator, GenericValue view, Locale locale) {
         GenericValue contentAssocDataResourceViewFrom = view;
         if (locale == null) {
             return contentAssocDataResourceViewFrom;
@@ -529,7 +529,7 @@ public class ContentWorker {
     }
 
     public static Map renderSubContentAsText(GenericDelegator delegator, String contentId, Writer out, String mapKey, String subContentId, GenericValue subContentDataResourceView, 
-            SimpleHash templateContext, Locale locale, String mimeTypeId, GenericValue userLogin, Timestamp fromDate) throws IOException {
+            SimpleHash templateContext, Locale locale, String mimeTypeId, GenericValue userLogin, Timestamp fromDate) throws GeneralException, IOException {
 
         //Map context = (Map) FreeMarkerWorker.get(templateContext, "context");
         //if (Debug.infoOn()) Debug.logInfo(" in renderSubContentAsText, mimeTypeId:" + mimeTypeId, module);
@@ -558,7 +558,7 @@ public class ContentWorker {
         return results;
     }
 
-    public static Map renderContentAsText(GenericDelegator delegator, String contentId, Writer out, SimpleHash templateContext, GenericValue view, Locale locale, String mimeTypeId) throws IOException {
+    public static Map renderContentAsText(GenericDelegator delegator, String contentId, Writer out, SimpleHash templateContext, GenericValue view, Locale locale, String mimeTypeId) throws GeneralException, IOException {
         //Map context = (Map) FreeMarkerWorker.get(templateContext, "context");
         //if (Debug.infoOn()) Debug.logInfo(" in renderContentAsText, mimeTypeId:" + mimeTypeId, module);
         Map results = new HashMap();
@@ -608,11 +608,12 @@ public class ContentWorker {
             templateContext = new SimpleHash();
         }
 
-        try {
+        // TODO: what should we REALLY do here? looks like there is no decision between Java and Service style error handling...
+        //try {
             DataResourceWorker.renderDataResourceAsHtml(delegator, dataResourceId, out, templateContext, view, locale, mimeTypeId);
-        } catch (IOException e) {
-            return ServiceUtil.returnError(e.getMessage());
-        }
+        //} catch (IOException e) {
+        //    return ServiceUtil.returnError(e.getMessage());
+        //}
 
         return results;
     }

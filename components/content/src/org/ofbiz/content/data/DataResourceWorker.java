@@ -1,5 +1,5 @@
 /*
- * $Id: DataResourceWorker.java,v 1.10 2003/12/21 10:32:54 jonesde Exp $
+ * $Id: DataResourceWorker.java,v 1.11 2003/12/21 11:53:05 jonesde Exp $
  * 
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  * 
@@ -30,6 +30,7 @@ import org.apache.commons.fileupload.DiskFileUpload;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
@@ -38,7 +39,6 @@ import org.ofbiz.content.webapp.ftl.FreeMarkerWorker;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
-import org.ofbiz.minilang.MiniLangException;
 import org.ofbiz.minilang.SimpleMapProcessor;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
@@ -54,7 +54,7 @@ import freemarker.template.TemplateHashModel;
  * DataResourceWorker Class
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  * @since 3.0
  * 
  *  
@@ -288,7 +288,7 @@ public class DataResourceWorker {
         return imageType;
     }
 
-    public static void renderDataResourceAsHtml(GenericDelegator delegator, String dataResourceId, Writer out, SimpleHash templateContext, GenericValue view, Locale locale, String mimeTypeId) throws IOException {
+    public static void renderDataResourceAsHtml(GenericDelegator delegator, String dataResourceId, Writer out, SimpleHash templateContext, GenericValue view, Locale locale, String mimeTypeId) throws GeneralException, IOException {
         Map context = (Map) FreeMarkerWorker.get(templateContext, "context");
         if (context == null) {
             context = new HashMap();
@@ -306,11 +306,7 @@ public class DataResourceWorker {
             Map dataResourceMap = new HashMap();
             String entityName = view.getEntityName();
             if (entityName != null && !entityName.equals("DataResource")) {
-                try {
-                    SimpleMapProcessor.runSimpleMapProcessor("org/ofbiz/content/ContentManagementMapProcessors.xml", "dataResourceIn", view, dataResourceMap, new ArrayList(), locale);
-                } catch (MiniLangException e) {
-                    throw new IOException("[MiniLang]" + e.getMessage());
-                }
+                SimpleMapProcessor.runSimpleMapProcessor("org/ofbiz/content/ContentManagementMapProcessors.xml", "dataResourceIn", view, dataResourceMap, new ArrayList(), locale);
             }
             //if (Debug.infoOn()) Debug.logInfo("in renderDAtaResource(work), dataResourceMap:" + dataResourceMap, "");
             dataResource = delegator.makeValue("DataResource", dataResourceMap);
@@ -321,16 +317,12 @@ public class DataResourceWorker {
 
         if (dataResource == null || dataResource.isEmpty()) {
             if (dataResourceId == null) {
-                throw new IOException("DataResourceId is null");
+                throw new GeneralException("DataResourceId is null");
             }
-            try {
-                dataResource = delegator.findByPrimaryKey("DataResource", UtilMisc.toMap("dataResourceId", dataResourceId));
-            } catch (GenericEntityException e) {
-                throw new IOException(e.getMessage());
-            }
+            dataResource = delegator.findByPrimaryKey("DataResource", UtilMisc.toMap("dataResourceId", dataResourceId));
         }
         if (dataResource == null || dataResource.isEmpty()) {
-            throw new IOException("DataResource not found with id=" + dataResourceId);
+            throw new GeneralException("DataResource not found with id=" + dataResourceId);
         }
 
         String dataResourceTypeId = (String) dataResource.get("dataResourceTypeId");
@@ -361,7 +353,7 @@ public class DataResourceWorker {
                 try {
                     config.setSetting("datetime_format", "yyyy-MM-dd HH:mm:ss.SSS");
                 } catch (TemplateException e) {
-                    throw new IOException(e.getMessage());
+                    throw new GeneralException("Error setting datetime_format", e);
                 }
 
                 BeansWrapper wrapper = BeansWrapper.getDefaultInstance();
@@ -394,17 +386,12 @@ public class DataResourceWorker {
                 if (Debug.infoOn()) Debug.logInfo(" in renderDataResourceAsHtml, calling template.process", module);
                 template.process(templateContext, out);
             } catch (TemplateException e) {
-                throw new IOException(e.getMessage());
+                throw new GeneralException("Error processing template", e);
             }
 
         } else if (dataResourceTypeId.equals("ELECTRONIC_TEXT")) {
-
-            try {
-                GenericValue electronicText = delegator.findByPrimaryKey("ElectronicText", UtilMisc.toMap("dataResourceId", dataResourceId));
-                text = (String) electronicText.get("textData");
-            } catch (GenericEntityException e) {
-                throw new IOException(e.getMessage());
-            }
+            GenericValue electronicText = delegator.findByPrimaryKey("ElectronicText", UtilMisc.toMap("dataResourceId", dataResourceId));
+            text = (String) electronicText.get("textData");
             out.write(text);
         } else if (dataResourceTypeId.equals("IMAGE_OBJECT")) {
             if (Debug.infoOn()) Debug.logInfo(" in renderDataResourceAsHtml(IMAGE), mimeTypeId:" + mimeTypeId, module);
@@ -417,7 +404,7 @@ public class DataResourceWorker {
                 String url = requestName + "?" + requestParamName + "=" + dataResourceId;
                 if (Debug.infoOn()) Debug.logInfo(" in renderDataResourceAsHtml(IMAGE), url:" + url, module);
                 if (UtilValidate.isEmpty(url)) {
-                    throw new IOException("Image url object is null.");
+                    throw new GeneralException("Image url object is null for image object");
                 }
                 String prefix = buildRequestPrefix(delegator, locale, webSiteId, https);
                 if (Debug.infoOn()) Debug.logInfo(" in renderDataResourceAsHtml(IMAGE), prefix:" + prefix, module);
@@ -475,7 +462,7 @@ public class DataResourceWorker {
         return;
     }
 
-    public static void renderDataResourceAsText(GenericDelegator delegator, String dataResourceId, Writer out, SimpleHash templateContext, GenericValue view, Locale locale, String mimeTypeId) throws IOException {
+    public static void renderDataResourceAsText(GenericDelegator delegator, String dataResourceId, Writer out, SimpleHash templateContext, GenericValue view, Locale locale, String mimeTypeId) throws GeneralException, IOException {
         Map context = (Map) FreeMarkerWorker.get(templateContext, "context");
         if (context == null) {
             context = new HashMap();
@@ -492,17 +479,7 @@ public class DataResourceWorker {
             Map dataResourceMap = new HashMap();
             String entityName = view.getEntityName();
             if (entityName != null && !entityName.equals("DataResource")) {
-                try {
-                    SimpleMapProcessor.runSimpleMapProcessor(
-                        "org/ofbiz/content/ContentManagementMapProcessors.xml",
-                        "dataResourceIn",
-                        view,
-                        dataResourceMap,
-                        new ArrayList(),
-                        locale);
-                } catch (MiniLangException e) {
-                    throw new IOException("[MiniLang]" + e.getMessage());
-                }
+                SimpleMapProcessor.runSimpleMapProcessor("org/ofbiz/content/ContentManagementMapProcessors.xml", "dataResourceIn", view, dataResourceMap, new ArrayList(), locale);
             }
             //if (Debug.infoOn()) Debug.logInfo("in renderDAtaResource(work), dataResourceMap:" + dataResourceMap, "");
             dataResource = delegator.makeValue("DataResource", dataResourceMap);
@@ -513,16 +490,12 @@ public class DataResourceWorker {
 
         if (dataResource == null || dataResource.isEmpty()) {
             if (dataResourceId == null) {
-                throw new IOException("DataResourceId is null");
+                throw new GeneralException("DataResourceId is null");
             }
-            try {
-                dataResource = delegator.findByPrimaryKey("DataResource", UtilMisc.toMap("dataResourceId", dataResourceId));
-            } catch (GenericEntityException e) {
-                throw new IOException(e.getMessage());
-            }
+            dataResource = delegator.findByPrimaryKey("DataResource", UtilMisc.toMap("dataResourceId", dataResourceId));
         }
         if (dataResource == null || dataResource.isEmpty()) {
-            throw new IOException("DataResource not found with id=" + dataResourceId);
+            throw new GeneralException("DataResource not found with id=" + dataResourceId);
         }
 
         String dataResourceTypeId = (String) dataResource.get("dataResourceTypeId");
@@ -552,7 +525,7 @@ public class DataResourceWorker {
                 try {
                     config.setSetting("datetime_format", "yyyy-MM-dd HH:mm:ss.SSS");
                 } catch (TemplateException e) {
-                    throw new IOException(e.getMessage());
+                    throw new GeneralException("Error setting datetime format", e);
                 }
 
                 BeansWrapper wrapper = BeansWrapper.getDefaultInstance();
@@ -575,14 +548,9 @@ public class DataResourceWorker {
             if (Debug.infoOn()) Debug.logInfo(" in renderDataResourceAsHtml, subContentId3:" + subContentId3, module);
             //if (Debug.infoOn()) Debug.logInfo(" in renderDataResourceAsHtml, sOut:" + sOut.toString(), module);
             out.write(sOut.toString());
-
         } else if (dataResourceTypeId.equals("ELECTRONIC_TEXT")) {
-            try {
-                GenericValue electronicText = delegator.findByPrimaryKey("ElectronicText", UtilMisc.toMap("dataResourceId", dataResourceId));
-                text = (String) electronicText.get("textData");
-            } catch (GenericEntityException e) {
-                throw new IOException(e.getMessage());
-            }
+            GenericValue electronicText = delegator.findByPrimaryKey("ElectronicText", UtilMisc.toMap("dataResourceId", dataResourceId));
+            text = (String) electronicText.get("textData");
             out.write(text);
         } else if (dataResourceTypeId.equals("IMAGE_OBJECT")) {
             if (Debug.infoOn()) Debug.logInfo(" in renderDataResourceAsHtml(IMAGE), mimeTypeId:" + mimeTypeId, module);
@@ -627,17 +595,18 @@ public class DataResourceWorker {
         return;
     }
 
-    public static void renderFile(String dataResourceTypeId, String objectInfo, String rootDir, Writer out) throws IOException {
+    public static void renderFile(String dataResourceTypeId, String objectInfo, String rootDir, Writer out) throws GeneralException, IOException {
         if (dataResourceTypeId.equals("LOCAL_FILE")) {
             File file = new File(objectInfo);
             if (!file.isAbsolute()) {
-                throw new IOException("File (" + objectInfo + ") is not absolute");
+                throw new GeneralException("File (" + objectInfo + ") is not absolute");
             }
             int c;
             if (Debug.infoOn()) Debug.logInfo(" in renderDataResourceAsHtml(LOCAL), file:" + file, module);
             FileReader in = new FileReader(file);
-            while ((c = in.read()) != -1)
+            while ((c = in.read()) != -1) {
                 out.write(c);
+            }
         } else if (dataResourceTypeId.equals("OFBIZ_FILE")) {
             String prefix = System.getProperty("ofbiz.home");
             String sep = "";
@@ -663,9 +632,9 @@ public class DataResourceWorker {
                 in = new FileReader(file);
             } catch (FileNotFoundException e) {
                 if (Debug.infoOn()) Debug.logInfo(" in renderDataResourceAsHtml(CONTEXT_FILE), in FNFexception:" + e.getMessage(), module);
-                throw new IOException(e.getMessage());
+                throw new GeneralException("Could not find context file to render", e);
             } catch (Exception e) {
-                if (Debug.infoOn()) Debug.logInfo(" in renderDataResourceAsHtml(CONTEXT_FILE), in exception:" + e.getMessage(), module);
+                Debug.logError(" in renderDataResourceAsHtml(CONTEXT_FILE), got exception:" + e.getMessage(), module);
             }
             if (Debug.infoOn()) Debug.logInfo(" in renderDataResourceAsHtml(CONTEXT_FILE), after FileReader:", module);
             while ((c = in.read()) != -1) {

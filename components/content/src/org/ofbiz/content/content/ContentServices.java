@@ -1,5 +1,5 @@
 /*
- * $Id: ContentServices.java,v 1.11 2003/12/21 06:11:27 jonesde Exp $
+ * $Id: ContentServices.java,v 1.12 2003/12/21 11:53:05 jonesde Exp $
  * 
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  * 
@@ -27,6 +27,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
@@ -48,7 +49,7 @@ import freemarker.template.SimpleHash;
  * ContentServices Class
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  * @since 2.2
  * 
  *  
@@ -594,9 +595,12 @@ public class ContentServices {
         }
 
         try {
-            results = ContentWorker.renderSubContentAsText(delegator, contentId, out, mapKey, subContentId, subContentDataResourceView,
-                    templateContext, locale, mimeTypeId, userLogin, fromDate);
+            results = ContentWorker.renderSubContentAsText(delegator, contentId, out, mapKey, subContentId, subContentDataResourceView, templateContext, locale, mimeTypeId, userLogin, fromDate);
+        } catch (GeneralException e) {
+            Debug.logError(e, "Error rendering sub-content text", module);
+            return ServiceUtil.returnError(e.toString());
         } catch (IOException e) {
+            Debug.logError(e, "Error rendering sub-content text", module);
             return ServiceUtil.returnError(e.toString());
         }
         return results;
@@ -632,9 +636,13 @@ public class ContentServices {
 
         GenericValue view = null;
         try {
-            results = ContentWorker.renderContentAsText(delegator, contentId, out, templateContext, view, locale, mimeTypeId);
+             results = ContentWorker.renderContentAsText(delegator, contentId, out, templateContext, view, locale, mimeTypeId);
+        } catch (GeneralException e) {
+            Debug.logError(e, "Error rendering sub-content text", module);
+            return ServiceUtil.returnError(e.toString());
         } catch (IOException e) {
-            return ServiceUtil.returnError(e.getMessage());
+            Debug.logError(e, "Error rendering sub-content text", module);
+            return ServiceUtil.returnError(e.toString());
         }
         return results;
     }

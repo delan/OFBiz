@@ -12,6 +12,7 @@ import java.io.FileWriter;
 import java.io.File;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
@@ -31,7 +32,7 @@ import freemarker.template.SimpleHash;
  * DataServices Class
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  * @since 3.0
  * 
  *  
@@ -184,14 +185,14 @@ public class DataServices {
         //Debug.logInfo("in create FileMethod permissionStatus:" + permissionStatus, module);
         if (permissionStatus != null && permissionStatus.equalsIgnoreCase("granted")) {
             GenericValue dataResource = (GenericValue) context.get("dataResource");
-            String dataResourceId = (String) dataResource.get("dataResourceId");
+            //String dataResourceId = (String) dataResource.get("dataResourceId");
             String dataResourceTypeId = (String) dataResource.get("dataResourceTypeId");
             String objectInfo = (String) dataResource.get("objectInfo");
             String textData = (String) context.get("textData");
             String prefix = "";
             File file = null;
             if (textData != null && textData.length() > 0) {
-                String fileName = "";
+                //String fileName = "";
                 String sep = "";
                 try {
                     if (UtilValidate.isEmpty(dataResourceTypeId) || dataResourceTypeId.equals("LOCAL_FILE")) {
@@ -280,7 +281,7 @@ public class DataServices {
         GenericDelegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         GenericValue dataResource = null;
-        Locale locale = (Locale) context.get("locale");
+        //Locale locale = (Locale) context.get("locale");
         String permissionStatus = DataResourceWorker.callDataResourcePermissionCheck(delegator, dispatcher, context);
         if (permissionStatus != null && permissionStatus.equalsIgnoreCase("granted")) {
             GenericValue userLogin = (GenericValue) context.get("userLogin");
@@ -328,7 +329,7 @@ public class DataServices {
         GenericDelegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         GenericValue electronicText = null;
-        Locale locale = (Locale) context.get("locale");
+        //Locale locale = (Locale) context.get("locale");
         String permissionStatus = DataResourceWorker.callDataResourcePermissionCheck(delegator, dispatcher, context);
         if (permissionStatus != null && permissionStatus.equalsIgnoreCase("granted")) {
             String dataResourceId = (String) context.get("dataResourceId");
@@ -370,12 +371,12 @@ public class DataServices {
         HashMap result = new HashMap();
         GenericDelegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
-        GenericValue fileText = null;
-        Locale locale = (Locale) context.get("locale");
+        //GenericValue fileText = null;
+        //Locale locale = (Locale) context.get("locale");
         String permissionStatus = DataResourceWorker.callDataResourcePermissionCheck(delegator, dispatcher, context);
         if (permissionStatus != null && permissionStatus.equalsIgnoreCase("granted")) {
             GenericValue dataResource = (GenericValue) context.get("dataResource");
-            String dataResourceId = (String) dataResource.get("dataResourceId");
+            //String dataResourceId = (String) dataResource.get("dataResourceId");
             String dataResourceTypeId = (String) dataResource.get("dataResourceTypeId");
             String objectInfo = (String) dataResource.get("objectInfo");
             String textData = (String) context.get("textData");
@@ -421,14 +422,13 @@ public class DataServices {
         return result;
     }
 
-    public static void renderDataResourceAsText(DispatchContext dctx, Map context) throws IOException {
-
-        Map results = new HashMap();
+    public static void renderDataResourceAsText(DispatchContext dctx, Map context) throws GeneralException, IOException {
+        //Map results = new HashMap();
         GenericDelegator delegator = dctx.getDelegator();
-        LocalDispatcher dispatcher = dctx.getDispatcher();
+        //LocalDispatcher dispatcher = dctx.getDispatcher();
         Writer out = (Writer) context.get("outWriter");
         SimpleHash templateContext = (SimpleHash) context.get("templateContext");
-        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        //GenericValue userLogin = (GenericValue) context.get("userLogin");
         String dataResourceId = (String) context.get("dataResourceId");
         if (templateContext != null && UtilValidate.isEmpty(dataResourceId)) {
             dataResourceId = (String) FreeMarkerWorker.get(templateContext, "dataResourceId");
@@ -440,23 +440,22 @@ public class DataServices {
 
         Locale locale = (Locale) context.get("locale");
 
-        if (templateContext == null)
+        if (templateContext == null) {
             templateContext = new SimpleHash();
+        }
 
         GenericValue view = (GenericValue) context.get("subContentDataResourceView");
         DataResourceWorker.renderDataResourceAsText(delegator, dataResourceId, out, templateContext, view, locale, mimeTypeId);
         return;
-
     }
 
-    public static void renderDataResourceAsHtml(DispatchContext dctx, Map context) throws IOException {
-
-        Map results = new HashMap();
+    public static void renderDataResourceAsHtml(DispatchContext dctx, Map context) throws GeneralException, IOException {
+        //Map results = new HashMap();
         GenericDelegator delegator = dctx.getDelegator();
-        LocalDispatcher dispatcher = dctx.getDispatcher();
+        //LocalDispatcher dispatcher = dctx.getDispatcher();
         Writer out = (Writer) context.get("outWriter");
         SimpleHash templateContext = (SimpleHash) context.get("templateContext");
-        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        //GenericValue userLogin = (GenericValue) context.get("userLogin");
         String dataResourceId = (String) context.get("dataResourceId");
         if (templateContext != null && UtilValidate.isEmpty(dataResourceId)) {
             dataResourceId = (String) FreeMarkerWorker.get(templateContext, "dataResourceId");
@@ -468,13 +467,12 @@ public class DataServices {
 
         Locale locale = (Locale) context.get("locale");
 
-        if (templateContext == null)
+        if (templateContext == null) {
             templateContext = new SimpleHash();
+        }
 
         GenericValue view = (GenericValue) context.get("subContentDataResourceView");
         DataResourceWorker.renderDataResourceAsHtml(delegator, dataResourceId, out, templateContext, view, locale, mimeTypeId);
         return;
-
     }
-
 }
