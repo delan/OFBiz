@@ -1,5 +1,5 @@
 /*
- * $Id: EntitySyncServices.java,v 1.11 2003/12/12 07:47:24 jonesde Exp $
+ * $Id: EntitySyncServices.java,v 1.12 2003/12/13 07:12:27 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -64,7 +64,7 @@ import org.xml.sax.SAXException;
  * Entity Engine Sync Services
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
- * @version    $Revision: 1.11 $
+ * @version    $Revision: 1.12 $
  * @since      3.0
  */
 public class EntitySyncServices {
@@ -486,7 +486,7 @@ public class EntitySyncServices {
         
         try {
             // find the largest keepRemoveInfoHours value on an EntitySyncRemove and kill everything before that, if none found default to 10 days (240 hours)
-            double keepRemoveInfoHours = 240;
+            double keepRemoveInfoHours = 24;
             
             List entitySyncRemoveList = delegator.findAll("EntitySync");
             Iterator entitySyncRemoveIter = entitySyncRemoveList.iterator();
