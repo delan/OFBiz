@@ -1115,6 +1115,9 @@
       <relation type="many" rel-entity-name="WebSiteRole">
         <key-map field-name="webSiteId"/>
       </relation>
+      <relation type="many" rel-entity-name="WebSiteCatalog">
+        <key-map field-name="webSiteId"/>
+      </relation>
     </entity>
     <entity entity-name="WebSitePaymentSetting"
             package-name="org.ofbiz.commonapp.content.website"
