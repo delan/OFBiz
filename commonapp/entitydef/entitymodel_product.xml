@@ -233,7 +233,7 @@
       <relation type="many" rel-entity-name="ProdCatalogCategory">
         <key-map field-name="productCategoryId"/>
       </relation>
-      <relation type="many" rel-entity-name="OrganizationGlAccount">
+      <relation type="many" rel-entity-name="PartyGlAccount">
         <key-map field-name="productCategoryId"/>
       </relation>
       <relation type="many" rel-entity-name="PartyNeed">
@@ -1151,7 +1151,7 @@
       <relation type="many" rel-entity-name="InvoiceItem">
         <key-map field-name="productId"/>
       </relation>
-      <relation type="many" rel-entity-name="OrganizationGlAccount">
+      <relation type="many" rel-entity-name="PartyGlAccount">
         <key-map field-name="productId"/>
       </relation>
       <relation type="many" rel-entity-name="AgreementProductApplic">

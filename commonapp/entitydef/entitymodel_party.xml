@@ -133,7 +133,7 @@
       <relation type="many" rel-entity-name="AgreementProductApplic">
         <key-map field-name="agreementId"/>
       </relation>
-      <relation type="many" rel-entity-name="AgreementOrganizationApplic">
+      <relation type="many" rel-entity-name="AgreementPartyApplic">
         <key-map field-name="agreementId"/>
       </relation>
       <relation type="many" rel-entity-name="AgreementRole">
@@ -208,7 +208,7 @@
         <key-map field-name="agreementId"/>
         <key-map field-name="agreementItemSeqId"/>
       </relation>
-      <relation type="many" rel-entity-name="AgreementOrganizationApplic">
+      <relation type="many" rel-entity-name="AgreementPartyApplic">
         <key-map field-name="agreementId"/>
         <key-map field-name="agreementItemSeqId"/>
       </relation>
@@ -277,23 +277,23 @@
         <key-map field-name="agreementItemTypeId"/>
       </relation>
     </entity>
-    <entity entity-name="AgreementOrganizationApplic"
+    <entity entity-name="AgreementPartyApplic"
             package-name="org.ofbiz.commonapp.party.agreement"
-            title="Agreement Organizational Applicability Entity">
+            title="Agreement Party Applicability Entity">
       <field name="agreementId" type="id-ne"></field>
       <field name="agreementItemSeqId" type="id-ne"></field>
       <field name="partyId" type="id-ne"></field>
       <prim-key field="agreementId"/>
       <prim-key field="agreementItemSeqId"/>
       <prim-key field="partyId"/>
-      <relation type="one" fk-name="AGRMNT_ORGA_AGR" rel-entity-name="Agreement">
+      <relation type="one" fk-name="AGRMNT_PTYA_AGR" rel-entity-name="Agreement">
         <key-map field-name="agreementId"/>
       </relation>
-      <relation type="one" fk-name="AGRMNT_ORGA_AITM" rel-entity-name="AgreementItem">
+      <relation type="one" fk-name="AGRMNT_PTYA_AITM" rel-entity-name="AgreementItem">
         <key-map field-name="agreementId"/>
         <key-map field-name="agreementItemSeqId"/>
       </relation>
-      <relation type="one" fk-name="AGRMNT_ORGA_PTY" rel-entity-name="Party">
+      <relation type="one" fk-name="AGRMNT_PTYA_PTY" rel-entity-name="Party">
         <key-map field-name="partyId"/>
       </relation>
     </entity>
@@ -1159,10 +1159,10 @@
       <relation type="many" rel-entity-name="FinAccountTrans">
         <key-map field-name="partyId"/>
       </relation>
-      <relation type="many" rel-entity-name="OrganizationGlAccount">
+      <relation type="many" rel-entity-name="PartyGlAccount">
         <key-map field-name="partyId"/>
       </relation>
-      <relation type="many" rel-entity-name="AgreementOrganizationApplic">
+      <relation type="many" rel-entity-name="AgreementPartyApplic">
         <key-map field-name="partyId"/>
       </relation>
       <relation type="many" rel-entity-name="AgreementRole">
@@ -1679,7 +1679,7 @@
         <key-map field-name="partyId"/>
         <key-map field-name="roleTypeId"/>
       </relation>
-      <relation type="many" rel-entity-name="OrganizationGlAccount">
+      <relation type="many" rel-entity-name="PartyGlAccount">
         <key-map field-name="partyId"/>
         <key-map field-name="roleTypeId"/>
       </relation>

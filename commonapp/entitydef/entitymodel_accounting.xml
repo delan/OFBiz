@@ -1100,7 +1100,7 @@
       <relation type="many" rel-entity-name="GeneralLedgerBudgetXref">
         <key-map field-name="generalLedgerAccountId"/>
       </relation>
-      <relation type="many" rel-entity-name="OrganizationGlAccount">
+      <relation type="many" rel-entity-name="PartyGlAccount">
         <key-map field-name="generalLedgerAccountId"/>
       </relation>
     </entity>
@@ -1132,9 +1132,9 @@
         <key-map field-name="budgetItemTypeId"/>
       </relation>
     </entity>
-    <entity entity-name="OrganizationGlAccount"
+    <entity entity-name="PartyGlAccount"
             package-name="org.ofbiz.commonapp.accounting.ledger"
-            title="Organization GL Account Entity">
+            title="Party GL Account Entity">
       <field name="generalLedgerAccountId" type="id-ne"></field>
       <field name="partyId" type="id-ne"></field>
       <field name="roleTypeId" type="id-ne"></field>
@@ -1146,23 +1146,23 @@
       <prim-key field="partyId"/>
       <prim-key field="roleTypeId"/>
       <prim-key field="fromDate"/>
-      <relation type="one" fk-name="ORG_GLACCT_GLA" rel-entity-name="GeneralLedgerAccount">
+      <relation type="one" fk-name="PTY_GLACCT_GLA" rel-entity-name="GeneralLedgerAccount">
         <key-map field-name="generalLedgerAccountId"/>
       </relation>
-      <relation type="one" fk-name="ORG_GLACCT_PARTY" rel-entity-name="Party">
+      <relation type="one" fk-name="PTY_GLACCT_PARTY" rel-entity-name="Party">
         <key-map field-name="partyId"/>
       </relation>
       <relation type="one-nofk" rel-entity-name="RoleType">
         <key-map field-name="roleTypeId"/>
       </relation>
-      <relation type="one" fk-name="ORG_GLACCT_PTRLE" rel-entity-name="PartyRole">
+      <relation type="one" fk-name="PTY_GLACCT_PTRLE" rel-entity-name="PartyRole">
         <key-map field-name="partyId"/>
         <key-map field-name="roleTypeId"/>
       </relation>
-      <relation type="one" fk-name="ORG_GLACCT_PROD" rel-entity-name="Product">
+      <relation type="one" fk-name="PTY_GLACCT_PROD" rel-entity-name="Product">
         <key-map field-name="productId"/>
       </relation>
-      <relation type="one" fk-name="ORG_GLACCT_PRCAT" rel-entity-name="ProductCategory">
+      <relation type="one" fk-name="PTY_GLACCT_PRCAT" rel-entity-name="ProductCategory">
         <key-map field-name="productCategoryId"/>
       </relation>
     </entity>

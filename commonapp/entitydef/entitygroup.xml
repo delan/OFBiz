@@ -96,7 +96,7 @@
     <entity-group group="org.ofbiz.commonapp" entity="GeneralLedgerAccount" />	
     <entity-group group="org.ofbiz.commonapp" entity="GeneralLedgerAccountType" />	
     <entity-group group="org.ofbiz.commonapp" entity="GeneralLedgerBudgetXref" />	
-    <entity-group group="org.ofbiz.commonapp" entity="OrganizationGlAccount" />
+    <entity-group group="org.ofbiz.commonapp" entity="PartyGlAccount" />
 
   <!-- ========================================================= -->
   <!-- org.ofbiz.commonapp.accounting.payment -->
@@ -413,7 +413,7 @@
     <entity-group group="org.ofbiz.commonapp" entity="AgreementItemAttribute" />	
     <entity-group group="org.ofbiz.commonapp" entity="AgreementItemType" />	
     <entity-group group="org.ofbiz.commonapp" entity="AgreementItemTypeAttr" />	
-    <entity-group group="org.ofbiz.commonapp" entity="AgreementOrganizationApplic" />	
+    <entity-group group="org.ofbiz.commonapp" entity="AgreementPartyApplic" />	
     <entity-group group="org.ofbiz.commonapp" entity="AgreementProductApplic" />	
     <entity-group group="org.ofbiz.commonapp" entity="AgreementRole" />	
     <entity-group group="org.ofbiz.commonapp" entity="AgreementTerm" />	
