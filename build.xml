@@ -22,7 +22,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *  This is the Open for Business Main build script.
- *  $Id: build.xml,v 1.17 2003/08/20 07:00:36 ajzeneski Exp $
+ *  $Id: build.xml,v 1.18 2003/08/20 09:53:23 jonesde Exp $
 -->
 
 <project name="OFBiz Main Build" default="build" basedir=".">
@@ -51,43 +51,43 @@
         <echo message="[clean]"/>
         <echo message="[clean] ========================================="/>
         <echo message="[clean] ========== Cleaning base tools =========="/>
-        <echo message="[clean] ========================================="/>        
+        <echo message="[clean] ========================================="/>
         <ant dir="base" target="clean" inheritAll="false"/>
-               
+
         <echo message="[clean]"/>
-        <echo message="[clean] ==============================================="/>
-        <echo message="[clean] ========== Cleaning entity component =========="/>
-        <echo message="[clean] ==============================================="/>                
+        <echo message="[clean] ================================================="/>
+        <echo message="[clean] ========== Cleaning entity component ============"/>
+        <echo message="[clean] ================================================="/>
         <ant dir="components/entity" target="clean" inheritAll="false"/>
         
         <echo message="[clean]"/>
         <echo message="[clean] ================================================="/>
         <echo message="[clean] ========== Cleaning security component =========="/>
-        <echo message="[clean] ================================================="/>                
+        <echo message="[clean] ================================================="/>
         <ant dir="components/security" target="clean" inheritAll="false"/>
         
         <echo message="[clean]"/>
-        <echo message="[clean] ================================================"/>
-        <echo message="[clean] ========== Cleaning service component =========="/>
-        <echo message="[clean] ================================================"/>                
+        <echo message="[clean] ================================================="/>
+        <echo message="[clean] ========== Cleaning service component ==========="/>
+        <echo message="[clean] ================================================="/>
         <ant dir="components/service" target="clean" inheritAll="false"/>
         
         <echo message="[clean]"/>
-        <echo message="[clean] ==============================================="/>
-        <echo message="[clean] ========== Cleaning entityext component ======="/>
-        <echo message="[clean] ==============================================="/>                
+        <echo message="[clean] ================================================="/>
+        <echo message="[clean] ========== Cleaning entityext component ========="/>
+        <echo message="[clean] ================================================="/>
         <ant dir="components/entityext" target="clean" inheritAll="false"/>
         
         <echo message="[clean]"/>
         <echo message="[clean] ================================================="/>
         <echo message="[clean] ========== Cleaning datafile component =========="/>
-        <echo message="[clean] ================================================="/>                
+        <echo message="[clean] ================================================="/>
         <ant dir="components/datafile" target="clean" inheritAll="false"/>
         
         <echo message="[clean]"/>
         <echo message="[clean] ================================================="/>
-        <echo message="[clean] ========== Cleaning rules component =========="/>
-        <echo message="[clean] ================================================="/>                
+        <echo message="[clean] ========== Cleaning rules component ============="/>
+        <echo message="[clean] ================================================="/>
         <ant dir="components/rules" target="clean" inheritAll="false"/>
         
         <echo message="[clean]"/>
@@ -115,57 +115,57 @@
         <ant dir="components/content" target="clean" inheritAll="false"/>                                      
 
         <echo message="[clean]"/>
-        <echo message="[clean] =============================================="/>
-        <echo message="[clean] ========== Cleaning party component =========="/>
-        <echo message="[clean] =============================================="/>                
+        <echo message="[clean] ================================================="/>
+        <echo message="[clean] ========== Cleaning party component ============="/>
+        <echo message="[clean] ================================================="/>
         <ant dir="components/party" target="clean" inheritAll="false"/>
         
         <echo message="[clean]"/>
         <echo message="[clean] ================================================="/>
         <echo message="[clean] ========== Cleaning workeffort component ========"/>
-        <echo message="[clean] ==========-======================================"/>                
+        <echo message="[clean] ==========-======================================"/>
         <ant dir="components/workeffort" target="clean" inheritAll="false"/>
                                                              
         <echo message="[clean]"/>
-        <echo message="[clean] ================================================"/>
-        <echo message="[clean] ========== Cleaning product component =========="/>
-        <echo message="[clean] ================================================"/>                
+        <echo message="[clean] ================================================="/>
+        <echo message="[clean] ========== Cleaning product component ==========="/>
+        <echo message="[clean] ================================================="/>
         <ant dir="components/product" target="clean" inheritAll="false"/>
 
         <echo message="[clean]"/>
-        <echo message="[clean] =================================================="/>
-        <echo message="[clean] ========== Cleaning marketing component =========="/>
-        <echo message="[clean] ==========-======================================="/>                
+        <echo message="[clean] ================================================="/>
+        <echo message="[clean] ========== Cleaning marketing component ========="/>
+        <echo message="[clean] ==========-======================================"/>
         <ant dir="components/marketing" target="clean" inheritAll="false"/>
         
         <echo message="[clean]"/>
-        <echo message="[clean] =============================================="/>
-        <echo message="[clean] ========== Cleaning order component =========="/>
-        <echo message="[clean] ==========-==================================="/>                
+        <echo message="[clean] ================================================="/>
+        <echo message="[clean] ========== Cleaning order component ============="/>
+        <echo message="[clean] ==========-======================================"/>
         <ant dir="components/order" target="clean" inheritAll="false"/>
         
         <echo message="[clean]"/>
-        <echo message="[clean] ==================================================="/>
-        <echo message="[clean] ========== Cleaning accounting component =========="/>
-        <echo message="[clean] ==========-========================================"/>                
+        <echo message="[clean] ================================================="/>
+        <echo message="[clean] ========== Cleaning accounting component ========"/>
+        <echo message="[clean] ==========-======================================"/>
         <ant dir="components/accounting" target="clean" inheritAll="false"/>
         
         <echo message="[clean]"/>
-        <echo message="[clean] =================================================="/>
-        <echo message="[clean] ========== Cleaning ecommerce component =========="/>
-        <echo message="[clean] ==========-======================================="/>                
+        <echo message="[clean] ================================================="/>
+        <echo message="[clean] ========== Cleaning ecommerce component ========="/>
+        <echo message="[clean] ==========-======================================"/>
         <ant dir="components/ecommerce" target="clean" inheritAll="false"/>        
         
         <echo message="[clean]"/>
-        <echo message="[clean] ===================================================="/>
-        <echo message="[clean] ========== Cleaning securityext component =========="/>
-        <echo message="[clean] ===================================================="/>                
+        <echo message="[clean] ================================================="/>
+        <echo message="[clean] ========== Cleaning securityext component ======="/>
+        <echo message="[clean] ================================================="/>
         <ant dir="components/securityext" target="clean" inheritAll="false"/>              
                         
         <echo message="[clean]"/>
-        <echo message="[clean] ===================================================="/>
-        <echo message="[clean] ========== Cleaning webtools component ============="/>
-        <echo message="[clean] ===================================================="/>                
+        <echo message="[clean] ================================================="/>
+        <echo message="[clean] ========== Cleaning webtools component =========="/>
+        <echo message="[clean] ================================================="/>
         <ant dir="components/webtools" target="clean" inheritAll="false"/>              
                         
         <delete file="ofbiz.jar"/>
@@ -182,6 +182,10 @@
 
     <target name="build" depends="ofbiz-init">
         <echo message="[build] ========== Start Building (Compile) =========="/>
+        
+        <!-- make sure the data and logs directories exist, since they aren't in CVS -->
+        <mkdir dir="data"/>
+        <mkdir dir="logs"/>
         
         <echo message="[build]"/>
         <echo message="[build] ========================================="/>
