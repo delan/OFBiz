@@ -1,5 +1,5 @@
 /*
- * $Id: ProductEvents.java,v 1.7 2004/01/22 00:41:20 jonesde Exp $
+ * $Id: ProductEvents.java,v 1.8 2004/01/22 00:45:26 jonesde Exp $
  * 
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  * 
@@ -47,7 +47,7 @@ import org.ofbiz.service.LocalDispatcher;
  * Product Information Related Events
  * 
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  * @since 2.0
  */
 public class ProductEvents {
@@ -264,8 +264,13 @@ public class ProductEvents {
             condition = new EntityExpr("autoCreateKeywords", EntityOperator.NOT_EQUAL, "N");
         }
         
+        
         EntityListIterator entityListIterator = null;
         try {
+            if (Debug.infoOn()) {
+                long count = delegator.findCountByCondition("Product", condition, null);
+                Debug.logInfo("========== Found " + count + " products to index ==========", module);
+            }
             entityListIterator = delegator.findListIteratorByCondition("Product", condition, null, null);
         } catch (GenericEntityException gee) {
             Debug.logWarning(gee, gee.getMessage(), module);
