@@ -21,14 +21,15 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
  *  OFBiz Components
- *  $Id$
+ *  $Id: component-load.xml 4518 2005-02-20 11:48:00Z jonesde $
 -->
 
 <component-loader xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/component-loader.xsd">
-    <load-components parent-directory="${ofbiz.home}/framework"/> 
-    <load-components parent-directory="${ofbiz.home}/applications"/>
-    <load-components parent-directory="${ofbiz.home}/specialized"/>
-    <load-components parent-directory="${ofbiz.home}/hot-deploy"/>
-    <load-component component-location="${ofbiz.home}/website"/>
+
+<!--
+    <load-component component-location="${ofbiz.home}/specialized/community"/>
+    <load-component component-location="${ofbiz.home}/specialized/opentravelsystem"/>
+    <load-component component-location="${ofbiz.home}/specialized/wholesale"/>
+-->
 </component-loader>
