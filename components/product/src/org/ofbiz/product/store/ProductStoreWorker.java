@@ -53,7 +53,7 @@ import org.ofbiz.service.LocalDispatcher;
  * ProductStoreWorker - Worker class for store related functionality
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class ProductStoreWorker {
@@ -658,6 +658,97 @@ public class ProductStoreWorker {
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         return isStoreInventoryAvailable(productStoreId, productId, quantity, delegator, dispatcher);
+    }
+
+    public static boolean isStoreInventoryAvailable(ServletRequest request, ProductConfigWrapper productConfig, double quantity) {
+        GenericValue productStore = getProductStore(request);
+
+        if (productStore == null) {
+            Debug.logWarning("No ProductStore found, return false for inventory check", module);
+            return false;
+        }
+
+        String productStoreId = productStore.getString("productStoreId");
+        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
+        LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+        return isStoreInventoryAvailable(productStoreId, productConfig, quantity, delegator, dispatcher);
+    }
+
+    /** check inventory availability for the given catalog, product, quantity, etc */
+    public static boolean isStoreInventoryAvailable(String productStoreId, ProductConfigWrapper productConfig, double quantity, GenericDelegator delegator, LocalDispatcher dispatcher) {
+        GenericValue productStore = getProductStore(productStoreId, delegator);
+
+        if (productStore == null) {
+            Debug.logWarning("No ProductStore found with id " + productStoreId + ", returning false for inventory available check", module);
+            return false;
+        }
+
+        // if prodCatalog is set to not check inventory break here
+        if ("N".equals(productStore.getString("checkInventory"))) {
+            // note: if not set, defaults to yes, check inventory
+            if (Debug.verboseOn()) Debug.logVerbose("ProductStore with id " + productStoreId + ", is set to NOT check inventory, returning true for inventory available check", module);
+            return true;
+        }
+        boolean isInventoryAvailable = false;
+
+        if ("Y".equals(productStore.getString("oneInventoryFacility"))) {
+            String inventoryFacilityId = productStore.getString("inventoryFacilityId");
+
+            if (UtilValidate.isEmpty(inventoryFacilityId)) {
+                Debug.logWarning("ProductStore with id " + productStoreId + " has Y for oneInventoryFacility but inventoryFacilityId is empty, returning false for inventory check", module);
+                return false;
+            }
+
+            try {
+                isInventoryAvailable = ProductWorker.isProductInventoryAvailableByFacility(productConfig, inventoryFacilityId, quantity, dispatcher);
+            } catch (GenericServiceException e) {
+                Debug.logWarning(e, "Error invoking isProductInventoryAvailableByFacility in isCatalogInventoryAvailable", module);
+                return false;
+            }
+            return isInventoryAvailable;
+            
+        } else {
+            GenericValue product = productConfig.getProduct();;
+            List productFacilities = null;
+
+            try {
+                productFacilities = delegator.getRelatedCache("ProductFacility", product);
+            } catch (GenericEntityException e) {
+                Debug.logWarning(e, "Error invoking getRelatedCache in isCatalogInventoryAvailable", module);
+                return false;
+            }
+
+            if (productFacilities != null && productFacilities.size() > 0) {
+                Iterator pfIter = productFacilities.iterator();
+
+                while (pfIter.hasNext()) {
+                    try {
+                        GenericValue pfValue = (GenericValue) pfIter.next();
+
+                        isInventoryAvailable = ProductWorker.isProductInventoryAvailableByFacility(productConfig, pfValue.getString("facilityId"), quantity, dispatcher);
+                        if (isInventoryAvailable == true) {
+                            return isInventoryAvailable;
+                        }
+                    } catch (GenericServiceException e) {
+                        Debug.logWarning(e, "Error invoking isProductInventoryAvailableByFacility in isCatalogInventoryAvailable", module);
+                        return false;
+                    }
+                }
+            }
+            return false;
+
+            /* TODO: must entire quantity be available in one location?
+             *  Right now the answer is yes, it only succeeds if one facility has sufficient inventory for the order.
+             *  When we get into splitting options it is much more complicated. There are various options like: 
+             *  - allow split between facilities
+             *  - in split order facilities by highest quantities
+             *  - in split order facilities by lowest quantities
+             *  - in split order facilities by order in database, ie sequence numbers on facility-store join table
+             *  - in split order facilities by nearest locations to customer (not an easy one there...)
+             */
+
+            // loop through all facilities attached to this catalog and check for individual or cumulative sufficient inventory
+        }
     }
 
     /** tries to reserve the specified quantity, if fails returns quantity that it could not reserve or zero if there was an error, otherwise returns null */

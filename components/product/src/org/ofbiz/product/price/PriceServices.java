@@ -50,7 +50,7 @@ import org.ofbiz.service.ServiceUtil;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class PriceServices {
@@ -186,6 +186,12 @@ public class PriceServices {
             if (Debug.infoOn()) Debug.logInfo("There is more than one MAXIMUM_PRICE with the currencyUomId " + currencyUomId + " and productId " + productId + ", using the latest found with price: " + maximumPriceValue.getDouble("price"), module);
         }
 
+        List componentPrices = EntityUtil.filterByAnd(productPrices, UtilMisc.toMap("productPriceTypeId", "COMPONENT_PRICE"));
+        GenericValue componentPriceValue = EntityUtil.getFirst(componentPrices);
+        if (componentPrices != null && componentPrices.size() > 1) {
+            if (Debug.infoOn()) Debug.logInfo("There is more than one COMPONENT_PRICE with the currencyUomId " + currencyUomId + " and productId " + productId + ", using the latest found with price: " + componentPriceValue.getDouble("price"), module);
+        }
+
         // if any of these prices is missing and this product is a variant, default to the corresponding price on the virtual product
         if (virtualProductPrices != null && virtualProductPrices.size() > 0) {
             if (listPriceValue == null) {
@@ -228,6 +234,13 @@ public class PriceServices {
                 maximumPriceValue = EntityUtil.getFirst(virtualTempPrices);
                 if (virtualTempPrices != null && virtualTempPrices.size() > 1) {
                     if (Debug.infoOn()) Debug.logInfo("There is more than one MAXIMUM_PRICE with the currencyUomId " + currencyUomId + " and productId " + virtualProductId + ", using the latest found with price: " + maximumPriceValue.getDouble("price"), module);
+                }
+            }
+            if (componentPriceValue == null) {
+                List virtualTempPrices = EntityUtil.filterByAnd(virtualProductPrices, UtilMisc.toMap("productPriceTypeId", "COMPONENT_PRICE"));
+                componentPriceValue = EntityUtil.getFirst(virtualTempPrices);
+                if (virtualTempPrices != null && virtualTempPrices.size() > 1) {
+                    if (Debug.infoOn()) Debug.logInfo("There is more than one COMPONENT_PRICE with the currencyUomId " + currencyUomId + " and productId " + virtualProductId + ", using the latest found with price: " + componentPriceValue.getDouble("price"), module);
                 }
             }
         }
@@ -318,6 +331,13 @@ public class PriceServices {
     	                        maximumPriceValue = EntityUtil.getFirst(virtualTempPrices);
     	                        if (virtualTempPrices != null && virtualTempPrices.size() > 1) {
     	                            if (Debug.infoOn()) Debug.logInfo("There is more than one MAXIMUM_PRICE with the currencyUomId " + currencyUomId + " and productId " + variantProductId + ", using the latest found with price: " + maximumPriceValue.getDouble("price"), module);
+    	                        }
+    	                    }
+    	                    if (componentPriceValue == null) {
+    	                        List virtualTempPrices = EntityUtil.filterByAnd(variantProductPrices, UtilMisc.toMap("productPriceTypeId", "COMPONENT_PRICE"));
+    	                        componentPriceValue = EntityUtil.getFirst(virtualTempPrices);
+    	                        if (virtualTempPrices != null && virtualTempPrices.size() > 1) {
+    	                            if (Debug.infoOn()) Debug.logInfo("There is more than one COMPONENT_PRICE with the currencyUomId " + currencyUomId + " and productId " + variantProductId + ", using the latest found with price: " + componentPriceValue.getDouble("price"), module);
     	                        }
     	                    }
         	        		}
@@ -762,6 +782,7 @@ public class PriceServices {
             }
         }
 
+        result.put("componentPrice", componentPriceValue != null ? componentPriceValue.getDouble("price") : null);
         result.put("competitivePrice", competitivePriceValue != null ? competitivePriceValue.getDouble("price") : null);
         result.put("orderItemPriceInfos", orderItemPriceInfos);
         result.put("isSale", new Boolean(isSale));

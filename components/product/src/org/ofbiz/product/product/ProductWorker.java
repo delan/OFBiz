@@ -43,6 +43,8 @@ import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
+import org.ofbiz.product.config.ProductConfigWrapper;
+import org.ofbiz.product.config.ProductConfigWrapper.ConfigOption;
 
 /**
  * Product Worker class to reduce code in JSPs.
@@ -168,6 +170,37 @@ public class ProductWorker {
             if (Debug.infoOn()) Debug.logInfo("Returning false because there is insufficient inventory available in facility with id " + inventoryFacilityId + " for product id " + productId + "; desired quantity is " + quantity + ", available quantity is " + availableToPromise, module);
             return false;
         }
+    }
+
+    /** 
+     * Invokes the getInventoryAvailableByFacility service, returns true if specified quantity is available for all the selected components, else false.
+     * Also, set the available flag for all the product configuration's options.
+     **/
+    public static boolean isProductInventoryAvailableByFacility(ProductConfigWrapper productConfig, String inventoryFacilityId, double quantity, LocalDispatcher dispatcher) throws GenericServiceException {
+        boolean available = true;
+        List options = productConfig.getSelectedOptions();
+        Iterator optionsIt = options.iterator();
+        while (optionsIt.hasNext()) {
+            ConfigOption ci = (ConfigOption)optionsIt.next();
+            List products = ci.getComponents();
+            Iterator productsIt = products.iterator();
+            while (productsIt.hasNext()) {
+                GenericValue product = (GenericValue)productsIt.next();
+                String productId = product.getString("productId");
+                Double cmpQuantity = product.getDouble("quantity");
+                double neededQty = 1.0;
+                if (cmpQuantity != null) {
+                    neededQty = quantity * cmpQuantity.doubleValue();
+                }
+                if (!isProductInventoryAvailableByFacility(productId, inventoryFacilityId, neededQty, dispatcher)) {
+                    ci.setAvailable(false);
+                }
+            }
+            if (!ci.isAvailable()) {
+                available = false;
+            }
+        }
+        return available;
     }
 
     /** invokes the reserveProductInventoryByFacility service, returns quantity not reserved, 0 on error, null on success **/

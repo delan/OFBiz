@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      3.0
 -->
 
@@ -65,7 +65,7 @@
 
     <#if configOptionId?has_content>
       <div class="head2">Edit Config Option:</div>
-      <a href="<@ofbizUrl>/EditProductConfigOptions?configItemId=${requestParameters.configItemId}</@ofbizUrl>" class="buttontext">[New Option]</a>
+      <a href="<@ofbizUrl>/EditProductConfigOptions?configItemId=${requestParameters.configItemId}#edit</@ofbizUrl>" class="buttontext">[New Option]</a>
     <#else>
       <div class="head2">Create New Config Option</div>
     </#if>
@@ -93,8 +93,8 @@
           <td><div class="tabletext">${component.sequenceNum?if_exists}</div></td>
           <td><div class="tabletext">${component.productId?if_exists} - ${product.description?if_exists}</div></td>
           <td><div class="tabletext">${component.quantity?if_exists}</div></td>
-          <td><a href="<@ofbizUrl>/EditProductConfigOptions?configItemId=${requestParameters.configItemId}&configOptionId=${component.configOptionId}&productId=${component.productId}</@ofbizUrl>" class="buttontext">[Edit]</a>
-          <td><a href="<@ofbizUrl>/deleteProductConfigProduct?configItemId=${requestParameters.configItemId}&configOptionId=${component.configOptionId}&productId=${component.productId}</@ofbizUrl>" class="buttontext">[Remove]</a>
+          <td><a href="<@ofbizUrl>/EditProductConfigOptions?configItemId=${requestParameters.configItemId}&configOptionId=${component.configOptionId}&productId=${component.productId}#edit</@ofbizUrl>" class="buttontext">[Edit]</a>
+          <td><a href="<@ofbizUrl>/deleteProductConfigProduct?configItemId=${requestParameters.configItemId}&configOptionId=${component.configOptionId}&productId=${component.productId}#edit</@ofbizUrl>" class="buttontext">[Remove]</a>
         </tr>
       </#list>
     </table>
