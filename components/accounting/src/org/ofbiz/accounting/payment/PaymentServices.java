@@ -1,5 +1,5 @@
 /*
- * $Id: PaymentServices.java,v 1.7 2004/06/25 23:23:33 ajzeneski Exp $
+ * $Id: PaymentServices.java,v 1.8 2004/06/27 03:29:48 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -47,7 +47,7 @@ import org.ofbiz.service.ServiceUtil;
  * Services for Payment maintenance
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.7 $
+ * @version    $Revision: 1.8 $
  * @since      2.0
  */
 public class PaymentServices {
@@ -177,9 +177,12 @@ public class PaymentServices {
         newPm.set("partyId", partyId);
         newPm.set("fromDate", (context.get("fromDate") != null ? context.get("fromDate") : now));
         newPm.set("thruDate", context.get("thruDate"));
-        newCc.set("firstNameOnCard", context.get("firstNameOnCard"));
-        newCc.set("lastNameOnCard", context.get("lastNameOnCard"));
         newCc.set("companyNameOnCard", context.get("companyNameOnCard"));
+        newCc.set("titleOnCard", context.get("titleOnCard"));
+        newCc.set("firstNameOnCard", context.get("firstNameOnCard"));
+        newCc.set("middleNameOnCard", context.get("middleNameOnCard"));
+        newCc.set("lastNameOnCard", context.get("lastNameOnCard"));
+        newCc.set("suffixOnCard", context.get("suffixOnCard"));
         newCc.set("cardType", context.get("cardType"));
         newCc.set("cardNumber", context.get("cardNumber"));
         newCc.set("expireDate", context.get("expireDate"));
@@ -350,9 +353,13 @@ public class PaymentServices {
         newPm.set("partyId", partyId);
         newPm.set("fromDate", context.get("fromDate"), false);
         newPm.set("thruDate", context.get("thruDate"));
-        newCc.set("firstNameOnCard", context.get("firstNameOnCard"));
-        newCc.set("lastNameOnCard", context.get("lastNameOnCard"));
         newCc.set("companyNameOnCard", context.get("companyNameOnCard"));
+        newCc.set("titleOnCard", context.get("titleOnCard"));
+        newCc.set("firstNameOnCard", context.get("firstNameOnCard"));
+        newCc.set("middleNameOnCard", context.get("middleNameOnCard"));
+        newCc.set("lastNameOnCard", context.get("lastNameOnCard"));
+        newCc.set("suffixOnCard", context.get("suffixOnCard"));
+
         newCc.set("cardType", context.get("cardType"));
         newCc.set("cardNumber", context.get("cardNumber"));
         newCc.set("expireDate", context.get("expireDate"));

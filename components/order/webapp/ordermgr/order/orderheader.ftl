@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.21 $
+ *@version    $Revision: 1.22 $
  *@since      2.2
 -->
 
@@ -184,8 +184,14 @@
                               <#assign oppStatusItem = orderPaymentPreference.getRelatedOne("StatusItem")>
                               <div class="tabletext">
                                 <#if creditCard?has_content>
-                                  ${creditCard.firstNameOnCard?if_exists} ${creditCard.lastNameOnCard?if_exists}<br>
                                   <#if creditCard.companyNameOnCard?exists>${creditCard.companyNameOnCard}<br></#if>
+                                  <#if creditCard.titleOnCard?has_content>${creditCard.titleOnCard}&nbsp</#if>
+                                  ${creditCard.firstNameOnCard}&nbsp;
+                                  <#if creditCard.middleNameOnCard?has_content>${creditCard.middleNameOnCard}&nbsp</#if>
+                                  ${creditCard.lastNameOnCard}
+                                  <#if creditCard.suffixOnCard?has_content>&nbsp;${creditCard.suffixOnCard}</#if>
+                                  <br>                                  
+
                                   <#if security.hasEntityPermission("PAY_INFO", "_VIEW", session)>
                                     ${creditCard.cardType}
                                     ${creditCard.cardNumber}

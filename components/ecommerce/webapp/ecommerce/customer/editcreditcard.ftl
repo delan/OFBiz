@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org) 
- *@version    $Revision: 1.7 $
+ *@version    $Revision: 1.8 $
  *@since      2.1
 -->
 
@@ -45,21 +45,63 @@
     </#if>
 
     <tr>
-      <td width="26%" align=right valign=top><div class="tabletext">${uiLabelMap.AccountingNameOnCard}</div></td>
-      <td width="5">&nbsp;</td>
-      <td width="74%">        
-        <input type="text" class="inputBox" size="15" maxlength="60" name="firstNameOnCard" value="${(creditCardData.firstNameOnCard)?if_exists}">
-        &nbsp;
-        <input type="text" class="inputBox" size="15" maxlength="60" name="lastNameOnCard" value="${(creditCardData.lastNameOnCard)?if_exists}">
-      *</td>
-    </tr>
-    <tr>
       <td width="26%" align=right valign=top><div class="tabletext">${uiLabelMap.AccountingCompanyNameOnCard}</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
         <input type="text" class='inputBox' size="30" maxlength="60" name="companyNameOnCard" value="${creditCardData.companyNameOnCard?if_exists}">
       </td>
     </tr>
+    <tr>
+      <td width="26%" align=right valign=top><div class="tabletext">Prefix on Card</div></td>
+      <td width="5">&nbsp;</td>
+      <td width="74%">
+        <select name="titleOnCard" class="selectBox">
+          <option value="">Select One</option>
+          <option<#if (creditCardData.titleOnCard?default("") == "Mr.")> checked</#if>>Mr.</option>
+          <option<#if (creditCardData.titleOnCard?default("") == "Mrs.")> checked</#if>>Mrs.</option>
+          <option<#if (creditCardData.titleOnCard?default("") == "Ms.")> checked</#if>>Ms.</option>
+          <option<#if (creditCardData.titleOnCard?default("") == "Dr.")> checked</#if>>Dr.</option>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <td width="26%" align=right valign=top><div class="tabletext">First Name on Card</div></td>
+      <td width="5">&nbsp;</td>
+      <td width="74%">
+        <input type="text" class="inputBox" size="20" maxlength="60" name="firstNameOnCard" value="${(creditCardData.firstNameOnCard)?if_exists}">
+      *</td>
+    </tr>
+    <tr>
+      <td width="26%" align=right valign=top><div class="tabletext">Middle Name on Card</div></td>
+      <td width="5">&nbsp;</td>
+      <td width="74%">
+        <input type="text" class="inputBox" size="15" maxlength="60" name="middleNameOnCard" value="${(creditCardData.middleNameOnCard)?if_exists}">
+      </td>
+    </tr>
+    <tr>
+      <td width="26%" align=right valign=top><div class="tabletext">Last Name on Card</div></td>
+      <td width="5">&nbsp;</td>
+      <td width="74%">
+        <input type="text" class="inputBox" size="20" maxlength="60" name="lastNameOnCard" value="${(creditCardData.lastNameOnCard)?if_exists}">
+      *</td>
+    </tr>
+    <tr>
+      <td width="26%" align=right valign=top><div class="tabletext">Suffix on Card</div></td>
+      <td width="5">&nbsp;</td>
+      <td width="74%">
+        <select name="suffixOnCard" class="selectBox">
+          <option value="">Select One</option>
+          <option<#if (creditCardData.suffixOnCard?default("") == "Jr.")> checked</#if>>Jr.</option>
+          <option<#if (creditCardData.suffixOnCard?default("") == "Sr.")> checked</#if>>Sr.</option>
+          <option<#if (creditCardData.suffixOnCard?default("") == "I")> checked</#if>>I</option>
+          <option<#if (creditCardData.suffixOnCard?default("") == "II")> checked</#if>>II</option>
+          <option<#if (creditCardData.suffixOnCard?default("") == "III")> checked</#if>>III</option>
+          <option<#if (creditCardData.suffixOnCard?default("") == "IV")> checked</#if>>IV</option>
+          <option<#if (creditCardData.suffixOnCard?default("") == "V")> checked</#if>>V</option>
+        </select>
+      </td>
+    </tr>
+
     <tr>
       <td width="26%" align=right valign=top><div class="tabletext">${uiLabelMap.AccountingCardType}</div></td>
       <td width="5">&nbsp;</td>

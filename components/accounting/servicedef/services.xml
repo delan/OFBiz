@@ -177,7 +177,7 @@
         <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
         <!-- these two will be assembled into a expireDate by buildCcExpireDate on an ECA if needed -->
         <attribute name="expMonth" type="String" mode="IN" optional="true"/>
-        <attribute name="expYear" type="String" mode="IN" optional="true"/>
+        <attribute name="expYear" type="String" mode="IN" optional="true"/>     
         <override name="firstNameOnCard" optional="false"/>
         <override name="lastNameOnCard" optional="false"/>
         <override name="cardType" optional="false"/>
@@ -338,8 +338,12 @@
         <attribute name="paymentMethodTypeId" type="String" mode="IN" optional="false"/>
         <attribute name="productStoreId" type="String" mode="IN" optional="false"/>
         <attribute name="transactionType" type="String" mode="IN" optional="false"/>
+        <attribute name="companyNameOnCard" type="String" mode="IN" optional="true"/>
+        <attribute name="titleOnCard" type="String" mode="IN" optional="true"/>
         <attribute name="firstNameOnCard" type="String" mode="IN" optional="false"/>
+        <attribute name="middleNameOnCard" type="String" mode="IN" optional="true"/>
         <attribute name="lastNameOnCard" type="String" mode="IN" optional="false"/>
+        <attribute name="suffixOnCard" type="String" mode="IN" optional="true"/>
         <attribute name="cardType" type="String" mode="IN" optional="false"/>
         <attribute name="cardNumber" type="String" mode="IN" optional="false"/>
         <attribute name="cardSecurityCode" type="String" mode="IN" optional="true"/>
