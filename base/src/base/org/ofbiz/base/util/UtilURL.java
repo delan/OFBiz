@@ -119,7 +119,7 @@ public class UtilURL {
             return null;
         }
         String newFilename = ofbizHome;
-        if (!newFilename.endsWith("/") && !newFilename.startsWith("/")) {
+        if (!newFilename.endsWith("/") && !filename.startsWith("/")) {
             newFilename = newFilename + "/";
         }
         newFilename = newFilename + filename;
