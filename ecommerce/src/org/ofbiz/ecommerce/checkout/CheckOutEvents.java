@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.4  2001/09/11 17:27:14  epabst
+ * updated order process to be more complete
+ *
  * Revision 1.3  2001/09/10 21:56:22  epabst
  * updated/improved
  *
@@ -65,7 +68,7 @@ public class CheckOutEvents {
         if (cart != null && cart.size() > 0) {
             String shippingMethod = request.getParameter("shipping_method");
             String shippingContactMechId = request.getParameter("shipping_contact_mech_id");
-            String paymentCode = request.getParameter("payment_code");
+            String paymentCode = UtilFormatOut.checkNull(request.getParameter("payment_code"));
             String correspondingPoId = request.getParameter("corresponding_po_id");
             String shippingInstructions = request.getParameter("shipping_instructions");
             String orderAdditionalEmails = request.getParameter("order_additional_emails");
@@ -75,7 +78,7 @@ public class CheckOutEvents {
             cart.setOrderAdditionalEmails(orderAdditionalEmails);
 
             cart.setShippingContactMechId(shippingContactMechId);
-            if (paymentCode.startsWith("ccard:")) {
+            if(paymentCode.startsWith("ccard:")) {
                 cart.setCreditCardId(paymentCode.substring(6));
             } else if (paymentCode.startsWith("billing:")) {
                 cart.setBillingAccountId(paymentCode.substring(8));
@@ -116,8 +119,13 @@ public class CheckOutEvents {
             
             String shippingMethod = cart.getShippingMethod();
             int delimiterPos = shippingMethod.indexOf('@');
-            String shipmentMethodTypeId = shippingMethod.substring(0, delimiterPos);
-            String carrierPartyId = shippingMethod.substring(delimiterPos+1);
+            String shipmentMethodTypeId = "";
+            String carrierPartyId = "";
+            if(delimiterPos > 0) {
+              shipmentMethodTypeId = shippingMethod.substring(0, delimiterPos);
+              carrierPartyId = shippingMethod.substring(delimiterPos+1);
+            }
+            
             String shipmentId = helper.getNextSeqId("Shipment").toString();
             order.preStoreOther(helper.makeValue("OrderShipmentPreference", UtilMisc.toMap("orderId", orderId, "orderItemSeqId", DataModelConstants.SEQ_ID_NA, "shipmentMethodTypeId", shipmentMethodTypeId, "carrierPartyId", carrierPartyId, "carrierRoleTypeId", "CARRIER" /*XXX*/, "shippingInstructions", cart.getShippingInstructions())));
 

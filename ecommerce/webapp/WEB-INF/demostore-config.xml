@@ -89,7 +89,7 @@
       <event-path>org.ofbiz.ecommerce.shoppingcart.ShoppingCartEvents</event-path>
       <event-invoke>emptyCart</event-invoke>
       <success>view:showcart</success>
-      <error>view:error</error>
+      <error>view:showcart</error>
     </request-map>		
     <request-map><uri>checkoutoptions</uri><secure>true</secure><auth>true</auth><success>view:checkoutoptions</success></request-map>
     <request-map>
@@ -98,7 +98,7 @@
       <event-path>org.ofbiz.ecommerce.checkout.CheckOutEvents</event-path>
       <event-invoke>setCheckOutOptions</event-invoke> 
       <success>view:checkout</success>
-      <error>view:error</error>
+      <error>view:checkout</error>
     </request-map>		
     <request-map>
       <uri>createorder</uri><secure>true</secure><auth>true</auth>
@@ -106,7 +106,7 @@
       <event-path>org.ofbiz.ecommerce.checkout.CheckOutEvents</event-path>
       <event-invoke>createOrder</event-invoke> 
       <success>request:renderconfirmorder</success>
-      <error>view:error</error>
+      <error>view:checkout</error>
     </request-map>		
     <request-map>
       <uri>renderconfirmorder</uri><secure>true</secure><auth>true</auth>
@@ -114,17 +114,18 @@
       <event-path>org.ofbiz.ecommerce.checkout.CheckOutEvents</event-path>
       <event-invoke>renderConfirmOrder</event-invoke> 
       <success>request:emailorder</success>
-      <error>view:error</error>
+      <error>view:checkout</error>
     </request-map>		
-    <request-map><uri>confirmorder</uri><success>view:confirmorder</success></request-map>		
+    <request-map><uri>confirmorder</uri><secure>false</secure><auth>false</auth><success>view:confirmorder</success></request-map>		
     <request-map>
       <uri>emailorder</uri><secure>true</secure><auth>true</auth>
       <event-type>java</event-type>
       <event-path>org.ofbiz.ecommerce.checkout.CheckOutEvents</event-path>
       <event-invoke>emailOrder</event-invoke> 
       <success>view:showconfirmorder</success>
-      <error>view:error</error>
+      <error>view:checkout</error>
     </request-map>		
+
     <request-map><uri>catalog</uri><success>view:catalog</success></request-map>
     <request-map><uri>category</uri><success>view:category</success></request-map>
     <request-map><uri>product</uri><success>view:product</success></request-map>	
