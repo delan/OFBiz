@@ -1,15 +1,5 @@
 /*
- * $Id$
- * $Log$
- * Revision 1.4  2001/11/03 01:38:25  azeneski
- * Renamed runTime to runtime.
- *
- * Revision 1.3  2001/11/03 00:19:35  azeneski
- * Changed the compareTo to not change the runtime of a job.
- *
- * Revision 1.2  2001/11/02 23:11:14  azeneski
- * Some non-functional services implementation.
- *
+ * $Id$ 
  */
 
 package org.ofbiz.core.scheduler;

@@ -71,7 +71,7 @@ public class ControlServlet extends HttpServlet {
         // initialize security
         getSecurity();
         // initialize the services dispatcher
-        //getDispatcher();        
+        getDispatcher();        
     }
     
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

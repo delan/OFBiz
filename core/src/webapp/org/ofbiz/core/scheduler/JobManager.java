@@ -1,18 +1,5 @@
 /*
- * $Id$
- * $Log$
- * Revision 1.7  2001/11/08 15:25:05  azeneski
- * Started working the scheduler to use the recurrence classes.
- *
- * Revision 1.6  2001/11/05 15:57:21  azeneski
- * reworking scheduler to use XAPIA's CSA Specification for rule grammer
- *
- * Revision 1.5  2001/11/03 00:19:35  azeneski
- * Changed the compareTo to not change the runTime of a job.
- *
- * Revision 1.4  2001/11/02 23:11:14  azeneski
- * Some non-functional services implementation.
- *
+ * $Id$ 
  */
 
 package org.ofbiz.core.scheduler;
@@ -67,13 +54,17 @@ public class JobManager {
     public void loadJobs() {        
         // Get all scheduled jobs from the database.
         Collection jobList = null;
+        Debug.logInfo("[JobScheduler.loadJobs] : loading jobs...");
         try {
             jobList = delegator.findAll("JobSandbox");
         }
-        catch ( GenericEntityException e ) {
-            e.printStackTrace();
+        catch ( NullPointerException npe ) {
+            Debug.logError(npe,"[JobManager.loadJobs] : null pointer from delegator");
         }
-        if ( jobList != null ) {
+        catch ( GenericEntityException e ) {
+            Debug.logError(e,"[JobManager.loadJobs] : Cannot get JobSandbox entities");            
+        }        
+        if ( jobList != null ) {            
             Iterator i = jobList.iterator();
             while ( i.hasNext() ) {
                 // Add the job.
@@ -82,10 +73,10 @@ public class JobManager {
                     Job thisJob = addJob((GenericValue)i.next(),null); // fix the context
                 }
                 catch ( JobSchedulerException e ) {
-                    e.printStackTrace();
+                    Debug.logError(e,"[JobManager.loadJobs] : Cannot add job to queue.");
                 }
             }
-        }
+        }        
     }
     
     /** Create a Job object and add to the queue. */
