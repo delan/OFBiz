@@ -24,15 +24,10 @@
  */
 package org.ofbiz.core.entity;
 
+import java.util. *;
+
 import org.ofbiz.core.entity.model.*;
 import org.ofbiz.core.util.*;
-import org.xml.sax.SAXException;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-
-import javax.xml.parsers.ParserConfigurationException;
-import java.util.*;
-import java.net.URL;
 
 /**
  * Delegator Interface
@@ -42,6 +37,7 @@ import java.net.URL;
  * @since      2.0
  */
 public interface DelegatorInterface {
+    
     String getDelegatorName();
 
     ModelReader getModelReader();
@@ -240,15 +236,6 @@ public interface DelegatorInterface {
     void putInAndCache(String entityName, Map fields, List values);
 
     void putInAndCache(ModelEntity entity, Map fields, List values);
-
-    // ======= XML Related Methods ========
-    List readXmlDocument(URL url) throws SAXException, ParserConfigurationException, java.io.IOException;
-
-    List makeValues(Document document);
-
-    GenericPK makePK(Element element);
-
-    GenericValue makeValue(Element element);
 
     Long getNextSeqId(String seqName);
 
