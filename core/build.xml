@@ -138,6 +138,7 @@
         <!-- also put the DTDs in this jar file... -->
         <copy todir="${build.dir}/share">
             <fileset dir="${doc.dir}/xmldefs/ofbiz" includes="*.dtd" />
+            <fileset dir="${doc.dir}/xmldefs/wfmc" includes="*.dtd" />
             <fileset dir="${src.dir}" includes="**/*.properties,**/*.xml,**/*.bsh,**/*.logic" />
         </copy>
 		
