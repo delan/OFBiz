@@ -13,7 +13,6 @@
 <%@ include file="/includes/onecolumn.jsp" %>
 <%@ include file="/includes/datepicker.js" %>
 
-<%String controlPath=(String)request.getAttribute(SiteDefs.CONTROL_PATH);%>
 <%
   String bColorA1 = "#BBBBFF";
   String bColorA2 = "#EEEEFF";
@@ -47,8 +46,6 @@
   }
 
   Iterator statusIterator = null;
-
-  GenericValue userLogin = (GenericValue)session.getAttribute(SiteDefs.USER_LOGIN);
 %>
 
 <%

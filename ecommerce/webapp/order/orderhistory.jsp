@@ -13,10 +13,6 @@
 <%@ include file="/includes/header.jsp" %>
 <%@ include file="/includes/onecolumn.jsp" %>
 
-<%String controlPath=(String)request.getAttribute(SiteDefs.CONTROL_PATH);%>
-<%
-  GenericValue userLogin = (GenericValue)session.getAttribute(SiteDefs.USER_LOGIN);
-%>
 <p class="head1">Order History</p>
 <%
   Iterator statusIterator = null;

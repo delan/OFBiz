@@ -28,21 +28,17 @@
  */
 %>
 
-<%@ page import="org.ofbiz.core.util.*" %>
-
-<% pageContext.setAttribute("PageName", "login"); %>
-<%String controlPath=(String)request.getAttribute(SiteDefs.CONTROL_PATH);%>
-<%String previousParams=(String)session.getAttribute(SiteDefs.PREVIOUS_PARAMS);%>
-
+<%pageContext.setAttribute("PageName", "newuser");%>
 <%@ include file="/includes/header.jsp" %>
 <%@ include file="/includes/onecolumn.jsp" %>
+<%String previousParams=(String)session.getAttribute(SiteDefs.PREVIOUS_PARAMS);%>
+<%String loginFormUrl=controlPath + "/login"; if(previousParams != null) loginFormUrl=loginFormUrl + "?" + previousParams;%>
 
 <br>
-<h2 style=margin:0;>Log In</h2>
+<h2 style='margin: 0;'>Log In</h2>
 
 <table border="1" cellpadding="3" cellspacing="0">
   <tr>
-    <%String loginFormUrl=controlPath + "/login"; if(previousParams != null) loginUrl=loginUrl + "?" + previousParams;%>
     <form method="POST" action="<%=response.encodeURL(loginFormUrl)%>" name="loginform">
       <td><b>Registered&nbsp;User</b></td>
       <td> 
@@ -54,10 +50,10 @@
     </form>
   </tr>
   <tr>
-    <form method="POST" action="<%=response.encodeURL("person/RequestPerson.jsp")%>">
+    <form method="POST" action="<%=response.encodeURL(controlPath + "/newcustomer")%>">
       <td><b>New&nbsp;User</b></td>
       <td>You may create a new account here:</td>
-      <td><input type="submit" value="Create" disabled></td>
+      <td><input type="submit" value="Create"></td>
     </form>
   </tr>
 </table>
