@@ -31,10 +31,11 @@
 <jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" />
 
 <%@ page import="org.ofbiz.commonapp.workeffort.workeffort.*" %>
-<%WorkEffortWorker.getWorkEffortAssignedTasks(pageContext, "tasks");%>
-<%WorkEffortWorker.getWorkEffortAssignedActivities(pageContext, "activities");%>
-<%WorkEffortWorker.getWorkEffortAssignedActivitiesByRole(pageContext, "roleActivities");%>
-<%WorkEffortWorker.getWorkEffortAssignedActivitiesByGroup(pageContext, "groupActivities");%>
+
+<ofbiz:service name="getWorkEffortAssignedTasks"></ofbiz:service>
+<ofbiz:service name="getWorkEffortAssignedActivities"></ofbiz:service>
+<ofbiz:service name="getWorkEffortAssignedActivitiesByRole"></ofbiz:service>
+<ofbiz:service name="getWorkEffortAssignedActivitiesByGroup"></ofbiz:service>
 
 <BR>
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
