@@ -41,7 +41,7 @@
     open-depth CDATA "0"
 >
 
-<!ELEMENT node ( (entity-one | service ), (include-screen | label | link )?, sub-node* )>
+<!ELEMENT node ( (entity-one | service | script ), (include-screen | label | link )?, sub-node* )>
 <!ATTLIST node
     name CDATA #REQUIRED
     wrap-style CDATA #REQUIRED
@@ -88,7 +88,7 @@
     >
 
 
-<!ELEMENT sub-node ( (entity-and |  service | entity-condition ), out-field-map*)>
+<!ELEMENT sub-node ( (entity-and |  service | entity-condition | script ), out-field-map*)>
 <!ATTLIST sub-node
     node-name CDATA #REQUIRED
 >
