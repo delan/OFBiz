@@ -549,7 +549,7 @@ public class GenericDAO {
 
         EntityListIterator entityListIterator = null;
         try {
-            entityListIterator = selectListIteratorByCondition(modelEntity, entityCondition, null, orderBy, true, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY, false);
+            entityListIterator = selectListIteratorByCondition(modelEntity, entityCondition, null, null, orderBy, new EntityFindOptions());
             return entityListIterator.getCompleteCollection();
         } finally {
             if (entityListIterator != null) {
@@ -570,7 +570,7 @@ public class GenericDAO {
 
         EntityListIterator entityListIterator = null;
         try {
-            entityListIterator = selectListIteratorByCondition(modelEntity, entityCondition, null, orderBy, true, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY, false);
+            entityListIterator = selectListIteratorByCondition(modelEntity, entityCondition, null, null, orderBy, new EntityFindOptions());
             return entityListIterator.getCompleteCollection();
         } finally {
             if (entityListIterator != null) {
@@ -590,7 +590,7 @@ public class GenericDAO {
         EntityCondition entityCondition = new EntityExprList(expressions, EntityOperator.AND);
         EntityListIterator entityListIterator = null;
         try {
-            entityListIterator = selectListIteratorByCondition(modelEntity, entityCondition, null, orderBy, true, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY, false);
+            entityListIterator = selectListIteratorByCondition(modelEntity, entityCondition, null, null, orderBy, new EntityFindOptions());
             return entityListIterator.getCompleteCollection();
         } finally {
             if (entityListIterator != null) {
@@ -610,7 +610,7 @@ public class GenericDAO {
         EntityCondition entityCondition = new EntityExprList(expressions, EntityOperator.OR);
         EntityListIterator entityListIterator = null;
         try {
-            entityListIterator = selectListIteratorByCondition(modelEntity, entityCondition, null, orderBy, true, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY, false);
+            entityListIterator = selectListIteratorByCondition(modelEntity, entityCondition, null, null, orderBy, new EntityFindOptions());
             return entityListIterator.getCompleteCollection();
         } finally {
             if (entityListIterator != null) {
@@ -942,7 +942,7 @@ public class GenericDAO {
     public Collection selectByCondition(ModelEntity modelEntity, EntityCondition entityCondition, Collection fieldsToSelect, List orderBy) throws GenericEntityException {
         EntityListIterator entityListIterator = null;
         try {
-            entityListIterator = selectListIteratorByCondition(modelEntity, entityCondition, fieldsToSelect, orderBy, true, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY, false);
+            entityListIterator = selectListIteratorByCondition(modelEntity, entityCondition, null, fieldsToSelect, orderBy, new EntityFindOptions());
             return entityListIterator.getCompleteCollection();
         } finally {
             if (entityListIterator != null) {
@@ -953,24 +953,17 @@ public class GenericDAO {
     
     /** Finds GenericValues by the conditions specified in the EntityCondition object, the the EntityCondition javadoc for more details.
      *@param modelEntity The ModelEntity of the Entity as defined in the entity XML file
-     *@param entityCondition The EntityCondition object that specifies how to constrain this query
+     *@param whereEntityCondition The EntityCondition object that specifies how to constrain this query before any groupings are done (if this is a view entity with group-by aliases)
+     *@param havingEntityCondition The EntityCondition object that specifies how to constrain this query after any groupings are done (if this is a view entity with group-by aliases)
      *@param fieldsToSelect The fields of the named entity to get from the database; if empty or null all fields will be retreived
      *@param orderBy The fields of the named entity to order the query by; optionally add a " ASC" for ascending or " DESC" for descending
-     *@param specifyTypeAndConcur If true the following two parameters (resultSetType and resultSetConcurrency) will be used to specify 
-     *      how the results will be used; if false the default values for the JDBC driver will be used
-     *@param resultSetType Specified how the ResultSet will be traversed. Available values: ResultSet.TYPE_FORWARD_ONLY, 
-     *      ResultSet.TYPE_SCROLL_INSENSITIVE or ResultSet.TYPE_SCROLL_SENSITIVE. See the java.sql.ResultSet JavaDoc for 
-     *      more information. If you want it to be fast, use the common default: ResultSet.TYPE_FORWARD_ONLY.
-     *@param resultSetConcurrency Specifies whether or not the ResultSet can be updated. Available values: 
-     *      ResultSet.CONCUR_READ_ONLY or ResultSet.CONCUR_UPDATABLE. Should pretty much always be 
-     *      ResultSet.CONCUR_READ_ONLY with the Entity Engine.
-     *@param distinct Specifies whether the values returned should be filtered to remove duplicate values.
+     *@param findOptions An instance of EntityFindOptions that specifies advanced query options. See the EntityFindOptions JavaDoc for more details.
      *@return EntityListIterator representing the result of the query: NOTE THAT THIS MUST BE CLOSED WHEN YOU ARE 
      *      DONE WITH IT, AND DON'T LEAVE IT OPEN TOO LONG BEACUSE IT WILL MAINTAIN A DATABASE CONNECTION.
      */
-    public EntityListIterator selectListIteratorByCondition(ModelEntity modelEntity, EntityCondition entityCondition, 
-            Collection fieldsToSelect, List orderBy, boolean specifyTypeAndConcur, int resultSetType, 
-            int resultSetConcurrency, boolean distinct) throws GenericEntityException {
+    public EntityListIterator selectListIteratorByCondition(ModelEntity modelEntity, EntityCondition whereEntityCondition, 
+            EntityCondition havingEntityCondition, Collection fieldsToSelect, List orderBy, EntityFindOptions findOptions) 
+            throws GenericEntityException {
         if (modelEntity == null) {
             return null;
         }
@@ -979,7 +972,7 @@ public class GenericDAO {
         
         if (verboseOn) {
             //put this inside an if statement so that we don't have to generate the string when not used...
-            Debug.logVerbose("Doing selectListIteratorByCondition with entityCondition: " + entityCondition);
+            Debug.logVerbose("Doing selectListIteratorByCondition with whereEntityCondition: " + whereEntityCondition);
         }
         
         //make two ArrayLists of fields, one for fields to select and the other for where clause fields (to find by)
@@ -1005,7 +998,7 @@ public class GenericDAO {
         
         GenericValue dummyValue = new GenericValue(modelEntity);
         StringBuffer sqlBuffer = new StringBuffer("SELECT ");
-        if (distinct) {
+        if (findOptions.getDistinct()) {
             sqlBuffer.append("DISTINCT ");
         }
         
@@ -1015,13 +1008,15 @@ public class GenericDAO {
             sqlBuffer.append("*");
         }
         
+        //FROM clause
         sqlBuffer.append(SqlJdbcUtil.makeFromClause(modelEntity));
         
+        //WHERE clause
         StringBuffer whereString = new StringBuffer();
         String entityCondWhereString = "";
-        List entityConditionParams = new LinkedList();
-        if (entityCondition != null) {
-            entityCondWhereString = entityCondition.makeWhereString(modelEntity, entityConditionParams);
+        List whereEntityConditionParams = new LinkedList();
+        if (whereEntityCondition != null) {
+            entityCondWhereString = whereEntityCondition.makeWhereString(modelEntity, whereEntityConditionParams);
         }
         
         String viewClause = SqlJdbcUtil.makeViewWhereClause(modelEntity);
@@ -1042,20 +1037,44 @@ public class GenericDAO {
             sqlBuffer.append(whereString.toString());
         }
 
+        //GROUP BY clause - TODO...
+        
+        //HAVING clause
+        String entityCondHavingString = "";
+        List havingEntityConditionParams = new LinkedList();
+        if (havingEntityCondition != null) {
+            entityCondHavingString = havingEntityCondition.makeWhereString(modelEntity, havingEntityConditionParams);
+        }
+        if (entityCondHavingString.length() > 0) {
+            sqlBuffer.append(" HAVING ");
+            sqlBuffer.append(entityCondHavingString);
+        }
+        
+        //ORDER BY clause
         sqlBuffer.append(SqlJdbcUtil.makeOrderByClause(modelEntity, orderBy));
         String sql = sqlBuffer.toString();
         
         SQLProcessor sqlP = new SQLProcessor(helperName);
-        sqlP.prepareStatement(sql, specifyTypeAndConcur, resultSetType, resultSetConcurrency);
+        sqlP.prepareStatement(sql, findOptions.getSpecifyTypeAndConcur(), findOptions.getResultSetType(), findOptions.getResultSetConcurrency());
         if (verboseOn) {
             //put this inside an if statement so that we don't have to generate the string when not used...
-            Debug.logVerbose("Setting the entityConditionParams: " + entityConditionParams);
+            Debug.logVerbose("Setting the whereEntityConditionParams: " + whereEntityConditionParams);
         }
-        //set all of the values from the EntityCondition
-        Iterator entityConditionParamsIter = entityConditionParams.iterator();
-        while (entityConditionParamsIter.hasNext()) {
-            EntityConditionParam entityConditionParam = (EntityConditionParam) entityConditionParamsIter.next();
-            SqlJdbcUtil.setValue(sqlP, entityConditionParam.getModelField(), modelEntity.getEntityName(), entityConditionParam.getFieldValue(), modelFieldTypeReader);
+        //set all of the values from the Where EntityCondition
+        Iterator whereEntityConditionParamsIter = whereEntityConditionParams.iterator();
+        while (whereEntityConditionParamsIter.hasNext()) {
+            EntityConditionParam whereEntityConditionParam = (EntityConditionParam) whereEntityConditionParamsIter.next();
+            SqlJdbcUtil.setValue(sqlP, whereEntityConditionParam.getModelField(), modelEntity.getEntityName(), whereEntityConditionParam.getFieldValue(), modelFieldTypeReader);
+        }
+        if (verboseOn) {
+            //put this inside an if statement so that we don't have to generate the string when not used...
+            Debug.logVerbose("Setting the havingEntityConditionParams: " + havingEntityConditionParams);
+        }
+        //set all of the values from the Having EntityCondition
+        Iterator havingEntityConditionParamsIter = havingEntityConditionParams.iterator();
+        while (havingEntityConditionParamsIter.hasNext()) {
+            EntityConditionParam havingEntityConditionParam = (EntityConditionParam) havingEntityConditionParamsIter.next();
+            SqlJdbcUtil.setValue(sqlP, havingEntityConditionParam.getModelField(), modelEntity.getEntityName(), havingEntityConditionParam.getFieldValue(), modelFieldTypeReader);
         }
         
         sqlP.executeQuery();
