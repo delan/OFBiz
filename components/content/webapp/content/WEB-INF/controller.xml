@@ -969,6 +969,12 @@
         <response name="success" type="view" value="EditSurveyQuestions"/>
         <response name="error" type="view" value="EditSurveyQuestions"/>
     </request-map>
+    <request-map uri="createSurveyQuestionAppl">
+        <security auth="true" https="true"/>
+        <event invoke="createSurveyQuestionAppl" type="service"/>
+        <response name="success" type="view" value="EditSurveyQuestions"/>
+        <response name="error" type="view" value="EditSurveyQuestions"/>
+    </request-map>
     <request-map uri="updateSurveyQuestionAppl">
         <security auth="true" https="true"/>
         <event invoke="updateSurveyQuestionAppl" type="service"/>

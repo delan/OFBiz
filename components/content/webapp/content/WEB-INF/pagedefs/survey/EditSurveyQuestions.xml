@@ -2,7 +2,7 @@
 <page>
     <template>main</template>
     <property name="title">Edit Survey Question</property>
-    <property name="headerItem">Survey Question</property>
+    <property name="headerItem">Survey</property>
     <property name="tabButtonItem">EditSurveyQuestions</property>
     <page-action name="/survey/EditSurveyQuestions.bsh"/>
 </page>

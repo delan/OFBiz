@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.5 $
+ *@version    $Revision: 1.6 $
  *@since      3.0
 -->
 
@@ -66,16 +66,76 @@
           </td>
           <td><input type="text" name="sequenceNum" size="5" class="textBox" value="${question.sequenceNum?if_exists}">
           <td><input type="submit" value="Update">
-          <td><a href="<@ofbizUrl>/EditSurveyQuestions?surveyId=${requestParameters.surveyId}&surveyQuestionId=${question.surveyQuestionId}</@ofbizUrl>" class="buttontext">[Edit]</a>
+          <td><a href="<@ofbizUrl>/EditSurveyQuestions?surveyId=${requestParameters.surveyId}&surveyQuestionId=${question.surveyQuestionId}#edit</@ofbizUrl>" class="buttontext">[Edit]</a>
           <td><a href="<@ofbizUrl>/removeSurveyQuestionAppl?surveyId=${question.surveyId}&surveyQuestionId=${question.surveyQuestionId}&fromDate=${question.fromDate}</@ofbizUrl>" class="buttontext">[Remove]</a>
         </tr>
       </form>
     </#list>
   </table>
   <br>
+  <#-- apply question from category -->
+  <#if surveyQuestionCategory?has_content>
+    <hr class="sepbar">
+    <a name="appl">
+    <div class="head1">Apply Question From Category - <span class="head2">${surveyQuestionCategory.description?if_exists} [${surveyQuestionCategory.surveyQuestionCategoryId}]</div>
+    <br><br>
+    <table border="1" cellpadding='2' cellspacing='0'>
+      <tr>
+        <td><div class="tableheadtext">ID</div></td>
+        <td><div class="tableheadtext">Description</div></td>
+        <td><div class="tableheadtext">Type</div></td>
+        <td><div class="tableheadtext">Question</div></td>
+        <td><div class="tableheadtext">Required</div></td>
+        <td><div class="tableheadtext">Seq #</div></td>
+        <td><div class="tableheadtext">&nbsp;</div></td>
+      </tr>
 
+      <#list categoryQuestions as question>
+        <#assign questionType = question.getRelatedOne("SurveyQuestionType")>
+        <form method="post" action="<@ofbizUrl>/createSurveyQuestionAppl#apply</@ofbizUrl>">
+          <input type="hidden" name="surveyId" value="${requestParameters.surveyId}">
+          <input type="hidden" name="surveyQuestionId" value="${question.surveyQuestionId}">
+          <input type="hidden" name="surveyQuestionCategoryId" value="${requestParameters.surveyQuestionCategoryId}">
+          <tr valign="middle">
+            <td><a href="<@ofbizUrl>/EditSurveyQuestions?surveyId=${requestParameters.surveyId}&surveyQuestionId=${question.surveyQuestionId}&surveyQuestionCategoryId=${requestParameters.surveyQuestionCategoryId}#edit</@ofbizUrl>" class="buttontext">${question.surveyQuestionId}</a></td>
+            <td><div class="tabletext">${question.description?if_exists}</div></td>
+            <td><div class="tabletext">${questionType.description}</div></td>
+            <td><div class="tabletext">${question.question?if_exists}</div></td>
+            <td>
+              <select name="requiredField" class="selectBox">
+                <option>N</option>
+                <option>Y</option>
+              </select>
+            </td>
+            <td><input type="text" name="sequenceNum" size="5" class="textBox">
+            <td><input type="submit" value="Apply">
+          </tr>
+        </form>
+      </#list>
+    </table>
+    <br>
+  </#if>
+
+  <hr class="sepbar">
+  <div class="head2">Apply Question(s) From Category</div>
+  <br>
+  <form method="post" action="<@ofbizUrl>/EditSurveyQuestions#apply</@ofbizUrl>">
+    <input type="hidden" name="surveyId" value="${requestParameters.surveyId}">
+    <select name="surveyQuestionCategoryId" class="selectBox">
+      <#list questionCategories as category>
+        <option value="${category.surveyQuestionCategoryId}">${category.description?default("??")} [${category.surveyQuestionCategoryId}]</option>
+      </#list>
+    </select>
+    &nbsp;
+    <input type="submit" value="Apply">
+  </form>
+  <br>
+
+  <hr class="sepbar">
+  <a name="edit">
+  <#-- new question / category -->
   <#if requestParameters.newCategory?default("N") == "Y">
-    <div class="head2">Create Question Category:</div>
+    <div class="head2">Create Question Category</div>
     <a href="<@ofbizUrl>/EditSurveyQuestions?surveyId=${requestParameters.surveyId}</@ofbizUrl>" class="buttontext">[New Question]</a>
     <br><br>
     ${createSurveyQuestionCategoryWrapper.renderFormString()}
@@ -84,7 +144,7 @@
       <div class="head2">Edit Question:</div>
       <a href="<@ofbizUrl>/EditSurveyQuestions?surveyId=${requestParameters.surveyId}</@ofbizUrl>" class="buttontext">[New Question]</a>
     <#else>
-      <div class="head2">Create New Question:</div>
+      <div class="head2">Create New Question</div>
     </#if>
     <a href="<@ofbizUrl>/EditSurveyQuestions?surveyId=${requestParameters.surveyId}&newCategory=Y</@ofbizUrl>" class="buttontext">[New Question Category]</a>
     <br><br>
