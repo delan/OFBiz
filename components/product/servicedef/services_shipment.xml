@@ -66,6 +66,7 @@
             location="org/ofbiz/shipment/shipment/ShipmentServices.xml" invoke="quickShipOrderByItem" auth="true">
         <description>Quick Ships An Order By Item</description>
         <attribute name="orderId" type="String" mode="IN" optional="false"/>
+        <attribute name="shipGroupSeqId" type="String" mode="IN" optional="false"/>
         <attribute name="itemShipList" type="List" mode="IN" optional="false"/>
         <attribute name="originFacilityId" type="String" mode="IN" optional="true"/>
         <attribute name="setPackedOnly" type="String" mode="IN" optional="true"/>

@@ -1167,22 +1167,27 @@
         <check-errors/>
     </simple-method>   
 
-    <!-- quick ship order using multiple packages per tracking number -->
-    <!-- The input list contains a Map with four keys: orderItemSeqId, inventoryItemId, qtyShipped, trackingNum -->
     <simple-method method-name="quickShipOrderByItem" short-description="Quick ships order based on item list">
+        <!-- quick ship order using multiple packages per tracking number -->
+        <!-- Parameters coming in: orderId, shipGroupSeqId,itemShipList, originFacilityId, setPackedOnly -->
+        <!-- The input list contains Maps with four keys: orderItemSeqId, inventoryItemId, qtyShipped, trackingNum -->
+        <!-- Parameters going out: shipmentId -->
+        
         <!-- first get the order header; make sure we have a product store -->
-        <field-to-field field-name="orderId" map-name="parameters" to-map-name="ohpkmap"/>
-        <find-by-primary-key entity-name="OrderHeader" map-name="ohpkmap" value-name="orderHeader"/>
-        <if-empty field-name="originFacilityId" map-name="parameters">
-            <if-empty field-name="productStoreId" map-name="orderHeader">
+        <entity-one entity-name="OrderHeader" value-name="orderHeader"/>
+
+        <if-empty field-name="parameters.originFacilityId">
+            <if-empty field-name="orderHeader.productStoreId">
                 <!-- no store cannot use quick ship; throw error -->
                 <add-error><fail-message message="No ProductStore associated with order; cannot use Quick Ship"/></add-error>
                 <check-errors/>
             </if-empty>
-            <if-not-empty field-name="productStoreId" map-name="orderHeader">
+            <if-not-empty field-name="orderHeader.productStoreId">
                 <!-- get the product store entity -->
-                <field-to-field field-name="productStoreId" map-name="orderHeader" to-map-name="storeLookup"/>
-                <find-by-primary-key entity-name="ProductStore" map-name="storeLookup" value-name="productStore"/>
+                <entity-one entity-name="ProductStore" value-name="productStore">
+                    <field-map field-name="productStoreId" env-name="orderHeader.productStoreId"/>
+                </entity-one>
+                
                 <if-compare field-name="reserveInventory" map-name="productStore" operator="not-equals" value="Y">
                     <!-- no reservations; no shipment; cannot use quick ship -->
                     <add-error><fail-message message="ProductStore [${productStore.productStoreID}] does not reserve inventory; cannot use Quick Ship"/></add-error>
@@ -1190,13 +1195,12 @@
                 <if-compare field-name="oneInventoryFacility" map-name="productStore" operator="not-equals" value="Y">
                     <!-- if we allow multiple facilities we cannot use quick ship; throw error -->
                     <add-error><fail-message message="ProductStore [${productStore.productStoreId}] allows multiple facilities; cannot use Quick Ship"/></add-error>
-                    <check-errors/>
                 </if-compare>
                 <if-empty field-name="inventoryFacilityId" map-name="productStore">
                     <!-- if no inventoryFacility is defined we cannot use quick ship; throw error -->
                     <add-error><fail-message message="No inventory facility associated with ProductStore [${productStore.productStoreId}]; cannot use Quick Ship"/></add-error>
-                    <check-errors/>
                 </if-empty>
+                <check-errors/>
             </if-not-empty>
         </if-empty>
 
@@ -1210,13 +1214,14 @@
         <field-to-env field-name="itemShipList" map-name="parameters" env-name="itemMapList"/>
 
         <!-- we are all good to go; create the shipment -->
-        <if-not-empty field-name="originFacilityId" map-name="parameters">
-            <field-to-field field-name="originFacilityId" map-name="parameters" to-map-name="shipmentContext"/>
+        <if-not-empty field-name="parameters.originFacilityId">
+            <env-to-env env-name="parameters.originFacilityId" to-env-name="shipmentContext.originFacilityId"/>
         </if-not-empty>
-        <field-to-field field-name="orderHeader.orderId" to-field-name="shipmentContext.primaryOrderId"/>
+        <env-to-env env-name="parameters.orderId" to-env-name="shipmentContext.primaryOrderId"/>
+        <env-to-env env-name="parameters.shipGroupSeqId" to-env-name="shipmentContext.primaryShipGroupSeqId"/>
         <string-to-field string="SHIPMENT_INPUT" field-name="shipmentContext.statusId"/>
         <call-service service-name="createShipment" in-map-name="shipmentContext">
-            <result-to-field result-name="shipmentId" field-name="shipmentId" map-name="shipmentLookupMap"/>
+            <result-to-field result-name="shipmentId" field-name="shipmentLookupMap.shipmentId"/>
         </call-service>
         <find-by-primary-key entity-name="Shipment" map-name="shipmentLookupMap" value-name="shipment"/>
 
@@ -1224,29 +1229,33 @@
         <log level="verbose" message="ShipMap List : ${itemMapList}  /  ${parameters.itemShipList}"/>
         <iterate list-name="itemMapList" entry-name="itemMap">
             <log level="verbose" message="Item Map : ${itemMap}"/>
-            <field-to-field field-name="shipmentId" map-name="shipment" to-map-name="issueContext"/>
-            <field-to-field field-name="orderId" map-name="orderHeader" to-map-name="issueContext"/>
-            <field-to-field field-name="orderItemSeqId" map-name="itemMap" to-map-name="issueContext"/>
-            <field-to-field field-name="shipGroupSeqId" map-name="itemMap" to-map-name="issueContext"/>
-            <field-to-field field-name="inventoryItemId" map-name="itemMap" to-map-name="issueContext"/>
-            <field-to-field field-name="qtyShipped" map-name="itemMap" to-field-name="quantity" to-map-name="issueContext"/>
-            <call-service service-name="issueOrderItemShipGrpInvResToShipment" in-map-name="issueContext">
-                <result-to-field result-name="itemIssuanceId" field-name="itemIssuanceId" map-name="itemMap"/>
-            </call-service>
             <clear-field field-name="issueContext"/>
+            <field-to-field field-name="shipmentId" map-name="shipment" to-map-name="issueContext"/>
+            <field-to-field field-name="orderId" map-name="parameters" to-map-name="issueContext"/>
+            <field-to-field field-name="shipGroupSeqId" map-name="parameters" to-map-name="issueContext"/>
+            <field-to-field field-name="orderItemSeqId" map-name="itemMap" to-map-name="issueContext"/>
+            <field-to-field field-name="inventoryItemId" map-name="itemMap" to-map-name="issueContext"/>
+            <field-to-field field-name="itemMap.qtyShipped" to-field-name="issueContext.quantity"/>
+            <call-service service-name="issueOrderItemShipGrpInvResToShipment" in-map-name="issueContext">
+                <result-to-field result-name="itemIssuanceId" field-name="itemMap.itemIssuanceId"/>
+            </call-service>
         </iterate>
 
         <!-- place all issued items into a unique package per tracking num -->
         <iterate list-name="itemMapList" entry-name="itemMap">
             <log level="info" message="QuickShipOrderByItem grouping by tracking number : ${itemMap.trackingNum}"/>
-            <field-to-field field-name="itemIssuanceId" map-name="itemMap" to-map-name="issuanceLookup"/>
-            <find-by-primary-key entity-name="ItemIssuance" map-name="issuanceLookup" value-name="itemIssuance"/>
-            <field-to-field field-name="${itemMap.trackingNum}" map-name="packageMap" to-field-name="shipmentPackageSeqId" to-map-name="shipItemContext"/>
-            <if-empty field-name="shipmentPackageSeqId" map-name="shipItemContext">
-                <string-to-field field-name="shipmentPackageSeqId" map-name="shipItemContext" string="New"/>
+
+            <entity-one entity-name="ItemIssuance" value-name="itemIssuance">
+                <field-map field-name="itemIssuanceId" env-name="itemMap.itemIssuanceId"/>
+            </entity-one>
+
+            <field-to-field field-name="packageMap.${itemMap.trackingNum}" to-field-name="shipItemContext.shipmentPackageSeqId"/>
+            <if-empty field-name="shipItemContext.shipmentPackageSeqId">
+                <string-to-field string="New" field-name="shipItemContext.shipmentPackageSeqId"/>
             </if-empty>
             <log level="info" message="Package SeqID : ${shipItemContext.shipmentPackageSeqId}"/>
 
+            <clear-field field-name="shipItemContext"/>
             <field-to-field field-name="shipmentId" map-name="itemIssuance" to-map-name="shipItemContext"/>
             <field-to-field field-name="shipmentItemSeqId" map-name="itemIssuance" to-map-name="shipItemContext"/>
             <field-to-field field-name="quantity" map-name="itemIssuance" to-map-name="shipItemContext"/>
@@ -1256,34 +1265,36 @@
             </call-service>
 
             <if-not-empty field-name="shipmentPackageSeqId" map-name="routeSegLookup">
-                <field-to-field field-name="shipmentId" map-name="itemIssuance" to-map-name="routeSegLookup"/>
+                <env-to-env env-name="itemIssuance.shipmentId" to-env-name="routeSegLookup.shipmentId"/>
                 <!-- quick ship orders should only have one route segment -->
-                <string-to-field string="00001" field-name="shipmentRouteSegmentId" map-name="routeSegLookup"/>
-
+                <string-to-field string="00001" field-name="routeSegLookup.shipmentRouteSegmentId"/>
                 <find-by-primary-key entity-name="ShipmentPackageRouteSeg" map-name="routeSegLookup" value-name="packageRouteSegment"/>
+                
                 <if-not-empty field-name="packageRouteSegment">
                     <field-to-field field-name="trackingNum" map-name="itemMap" to-field-name="trackingCode" to-map-name="packageRouteSegment"/>
                     <store-value value-name="packageRouteSegment"/>
                 </if-not-empty>
                 <if-empty field-name="packageRouteSegment">
-                    <log level="warning" message="No route segment found : ${routeSeqLookup}"/>
+                    <log level="warning" message="No route segment found : ${routeSegLookup}"/>
                 </if-empty>
             </if-not-empty>
-            <if-empty field-name="shipmentPackageSeqId" map-name="routeSegLookup">
+            <if-empty field-name="routeSegLookup.shipmentPackageSeqId">
                 <log level="warning" message="No shipment package ID found; cannot update RouteSegment"/>                 
             </if-empty>
         </iterate>
 
         <!-- update the shipment status to packed -->
         <field-to-field field-name="shipmentId" map-name="shipment" to-map-name="packedContext"/>
-        <string-to-field field-name="statusId" map-name="packedContext" string="SHIPMENT_PACKED"/>
+        <string-to-field string="SHIPMENT_PACKED" field-name="packedContext.statusId"/>
         <call-service service-name="updateShipment" in-map-name="packedContext"/>
+
         <!-- update the shipment status to shipped -->
-        <if-empty map-name="parameters" field-name="setPackedOnly">
+        <if-empty field-name="parameters.setPackedOnly">
             <field-to-field field-name="shipmentId" map-name="shipment" to-map-name="packedContext"/>
-            <string-to-field field-name="statusId" map-name="packedContext" string="SHIPMENT_SHIPPED"/>
+            <string-to-field string="SHIPMENT_SHIPPED" field-name="packedContext.statusId"/>
             <call-service service-name="updateShipment" in-map-name="packedContext"/>
         </if-empty>
+
         <field-to-result field-name="shipment.shipmentId" result-name="shipmentId"/>
     </simple-method>
     
