@@ -130,8 +130,10 @@ if ("FULFILLMENT_EMAIL".equals(productContentTypeId)) {
         downloadDr = content.getRelatedOne("DataResource");
         if (subjectDr != null) {
             download = downloadDr.getRelatedOne("OtherDataResource");
-            downloadData.put("file", download.get("dataResourceContent"));
-            downloadData.put("fileDataResourceId", download.get("dataResourceId"));
+            if (download != null) {
+                downloadData.put("file", download.get("dataResourceContent"));
+                downloadData.put("fileDataResourceId", download.get("dataResourceId"));
+            }
         }
     }
     updateProductContentWrapper = new HtmlFormWrapper("/product/ProductForms.xml", "EditProductContentDownload", request, response);
