@@ -47,8 +47,11 @@ import org.ofbiz.core.util.UtilMisc;
 import org.ofbiz.core.util.UtilProperties;
 import org.ofbiz.core.util.UtilURL;
 
+import freemarker.ext.beans.BeansWrapper;
+import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
+import freemarker.template.TemplateHashModel;
 
 /**
  * Provides generic services related to preparing and
@@ -127,33 +130,32 @@ public class NotificationServices {
      * @return A Map with the service response messages in it
      */
     public static Map sendNotification(DispatchContext ctx, Map context) {
-        LocalDispatcher dispatcher = ctx.getDispatcher();
-        Map emailContext = new HashMap();
-        String body;
-        Map bodyResult;
-        Map result;
-
-        try {
-            //See whether the optional 'body' attribute was specified or needs to be processed
-            if (context.containsKey("body")) {
-                body = (String)context.get("body");
-                bodyResult = null;
-            } else {
-                //Prepare the body of the notification email            
-                bodyResult = prepareNotification(ctx, context);
+        LocalDispatcher dispatcher = ctx.getDispatcher();                      
+        Map result = null;
                 
-                //Ensure the body was generated successfully                
+        try {
+            // see whether the optional 'body' attribute was specified or needs to be processed
+            // nulls are handled the same as not specified
+            String body = (String) context.get("body");            
+            
+            if (body == null) {                                        
+                // prepare the body of the notification email                         
+                Map bodyResult = prepareNotification(ctx, context);
+                
+                // ensure the body was generated successfully                
                 if (bodyResult.get(ModelService.RESPONSE_MESSAGE).equals(ModelService.RESPOND_SUCCESS)) {
-                    body = (String)bodyResult.get("body");
+                    body = (String) bodyResult.get("body");
                 } else {
-                    //Otherwise just return the body process error
+                    // otherwise just report the error
+                    Debug.logError("prepareNotification failed: " + bodyResult.get(ModelService.ERROR_MESSAGE), module);
                     body = null;
                 }
             }
             
-            //Verify a body was established, if it's null, the result will already indicate why
+            // make sure we have a valid body before sending
             if (body != null) {
-                //Retain only the required attributes for the sendMail service
+                // retain only the required attributes for the sendMail service
+                Map emailContext = new HashMap();
                 emailContext.put("sendTo", context.get("sendTo"));
                 emailContext.put("body", body);
                 emailContext.put("sendCc", context.get("sendCc"));
@@ -164,12 +166,11 @@ public class NotificationServices {
                 emailContext.put("sendType", context.get("sendType"));
                 emailContext.put("contentType", context.get("contentType"));
     
-                //Pass on to the sendMail service 
-                result = dispatcher.runSync("sendMail", emailContext);
-            } else  if (bodyResult != null) {
-                result = bodyResult;
+                // pass on to the sendMail service                 
+                result = dispatcher.runSync("sendMail", emailContext);            
             } else {
-                result = ServiceUtil.returnError("The body was explicitly passed in but must have been null");
+                Debug.logError("Invalid email body; null is not allowed", module);
+                result = ServiceUtil.returnError("Invalid email body; null is not allowed");
             }
         } catch (GenericServiceException serviceException) {
             Debug.logError(serviceException, "Error sending email", module);
@@ -197,33 +198,44 @@ public class NotificationServices {
     public static Map prepareNotification(DispatchContext ctx, Map context) {
         GenericDelegator delegator = ctx.getDelegator();
         String templateName = (String) context.get("templateName");
+        Map templateData = (Map) context.get("templateData");
         String webSiteId = (String) context.get("webSiteId");
-        
-        InputStreamReader templateReader;
-        String notificationBody;
-        Map result;
-        URL templateUrl;
-        Template templateProcessor;
-        Writer writer;
-
+                        
+        Map result = null;                               
+        if (templateData == null) {
+            templateData = new HashMap();
+        }
+               
         try {
-            //Ensure the baseURl is defined
-            setBaseUrl(delegator, webSiteId, context);
+            // ensure the baseURl is defined
+            setBaseUrl(delegator, webSiteId, templateData);
+                                   
+            // initialize the template reader and processor
+            URL templateUrl = UtilURL.fromResource(templateName);
             
-            //Initialize the template reader and processor
-            templateUrl = UtilURL.fromResource(templateName);
-            templateReader = new InputStreamReader(templateUrl.openStream());
-            templateProcessor = new Template(templateUrl.toExternalForm(), templateReader);
-
-            //Process the template with the given context and write
-            //the email body to the String buffer
-            writer = new StringWriter();
-            templateProcessor.process(context, writer);
-
-            //Extract the newly created body for the notification email
-            notificationBody = writer.toString();
+            if (templateUrl == null) {
+                Debug.logError("Problem getting the template URL: " + templateName + " not found", module);
+                return ServiceUtil.returnError("Problem finding template; see logs");
+            }
+                                    
+            Configuration config = Configuration.getDefaultConfiguration();
+            config.setObjectWrapper(BeansWrapper.getDefaultInstance());
+            BeansWrapper wrapper = BeansWrapper.getDefaultInstance();
+            TemplateHashModel staticModels = wrapper.getStaticModels();
+            templateData.put("Static", staticModels);
             
-            //Generate the successfull reponse
+            InputStreamReader templateReader = new InputStreamReader(templateUrl.openStream());
+            Template template = new Template(templateUrl.toExternalForm(), templateReader, config);            
+                        
+            // process the template with the given data and write
+            // the email body to the String buffer
+            Writer writer = new StringWriter();
+            template.process(templateData, writer);
+
+            // extract the newly created body for the notification email
+            String notificationBody = writer.toString();            
+            
+            // generate the successfull reponse
             result = ServiceUtil.returnSuccess("Message body generated successfully");
             result.put("body", notificationBody);
         } catch (IOException ie) {
