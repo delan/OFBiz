@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Revision: 1.8 $
+ *@version    $Revision: 1.9 $
  *@since      2.2
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -491,13 +491,14 @@ function setAssocFields(select) {
       <tr>
         <td><span class="tableheadtext">${uiLabelMap.ProductMethodType}</span></td>
         <td><span class="tableheadtext">${uiLabelMap.ProductParty}</span></td>
-        <td><span class="tableheadtext">${uiLabelMap.ProductRole}</span></td>
         <td><span class="tableheadtext">Min Sz</span></td>
         <td><span class="tableheadtext">Max Sz</span></td>
         <td><span class="tableheadtext">Min Wt</span></td>
         <td><span class="tableheadtext">Max Wt</span></td>
-        <td><span class="tableheadtext">USPS</span></td>
-        <td><span class="tableheadtext">Co</span></td>
+        <td><span class="tableheadtext">Allow USPS</span></td>
+        <td><span class="tableheadtext">Req USPS</span></td>
+        <td><span class="tableheadtext">Allow Co</span></td>
+        <td><span class="tableheadtext">Req Co</span></td>
         <td><span class="tableheadtext">Inc Geo</span></td>
         <td><span class="tableheadtext">Exc Geo</span></td>
         <td><span class="tableheadtext">Inc Feature</span></td>
@@ -519,13 +520,14 @@ function setAssocFields(select) {
             <tr>
               <td><span class="tabletext">${meth.description}</span></td>
               <td><span class="tabletext">${meth.partyId}</span></td>
-              <td><span class="tabletext">${meth.roleTypeId}</span></td>
               <td><span class="tabletext">${meth.minSize?if_exists}</span></td>
               <td><span class="tabletext">${meth.maxSize?if_exists}</span></td>
               <td><span class="tabletext">${meth.minWeight?if_exists}</span></td>
               <td><span class="tabletext">${meth.maxWeight?if_exists}</span></td>
               <td><span class="tabletext">${meth.allowUspsAddr?default("N")}</span></td>
+              <td><span class="tabletext">${meth.requireUspsAddr?default("N")}</span></td>
               <td><span class="tabletext">${meth.allowCompanyAddr?default("N")}</span></td>
+              <td><span class="tabletext">${meth.requireCompanyAddr?default("N")}</span></td>
               <td><span class="tabletext">${meth.includeGeoId?if_exists}</span></td>
               <td><span class="tabletext">${meth.excludeGeoId?if_exists}</span></td>
               <td><span class="tabletext">${meth.includeFeatureGroup?if_exists}</span></td>
@@ -600,9 +602,27 @@ function setAssocFields(select) {
           </td>
         </tr>
         <tr>
+          <td align="right"><span class="tableheadtext">Require USPS Addr (PO Box, RR, etc)</span></td>
+          <td>
+            <select name="requireUspsAddr" class="selectBox">
+              <option>N</option>
+              <option>Y</option>
+            </select>
+          </td>
+        </tr>
+        <tr>
           <td align="right"><span class="tableheadtext">Allow Company Addr</span></td>
           <td>
             <select name="allowCompanyAddr" class="selectBox">
+              <option>N</option>
+              <option>Y</option>
+            </select>
+          </td>
+        </tr>
+        <tr>
+          <td align="right"><span class="tableheadtext">Require Company Addr</span></td>
+          <td>
+            <select name="requireCompanyAddr" class="selectBox">
               <option>N</option>
               <option>Y</option>
             </select>

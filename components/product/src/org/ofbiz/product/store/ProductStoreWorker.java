@@ -1,5 +1,5 @@
 /*
- * $Id: ProductStoreWorker.java,v 1.10 2003/11/20 21:13:26 ajzeneski Exp $
+ * $Id: ProductStoreWorker.java,v 1.11 2003/11/20 23:08:22 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -40,12 +40,14 @@ import org.ofbiz.product.catalog.CatalogWorker;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
+import org.ofbiz.common.geo.GeoWorker;
+import org.ofbiz.party.contact.ContactMechWorker;
 
 /**
  * ProductStoreWorker - Worker class for store related functionality
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.10 $
+ * @version    $Revision: 1.11 $
  * @since      2.0
  */
 public class ProductStoreWorker {
@@ -113,7 +115,7 @@ public class ProductStoreWorker {
         return storePayment;
     }
 
-    public static List getAvailableStoreShippingMethods(GenericDelegator delegator, String productStoreId, Map featureIdMap, double weight) {
+    public static List getAvailableStoreShippingMethods(GenericDelegator delegator, String productStoreId, GenericValue shippingAddress, List itemSizes, Map featureIdMap, double weight) {
         if (featureIdMap == null) {
             featureIdMap = new HashMap();
         }
@@ -145,7 +147,104 @@ public class ProductStoreWorker {
                     continue;
                 }
 
-                // now check the features
+                // test product sizes
+                Double minSize = method.getDouble("minSize");
+                Double maxSize = method.getDouble("maxSize");
+                if (minSize != null && minSize.doubleValue() > 0) {
+                    boolean allMatch = false;
+                    if (itemSizes != null) {
+                        allMatch = true;
+                        Iterator isi = itemSizes.iterator();
+                        while (isi.hasNext()) {
+                            Double size = (Double) isi.next();
+                            if (size.doubleValue() < minSize.doubleValue()) {
+                                allMatch = false;
+                            }
+                        }
+                    }
+                    if (!allMatch) {
+                        returnShippingMethods.remove(method);
+                        continue;
+                    }
+                }
+                if (maxSize != null && maxSize.doubleValue() > 0) {
+                    boolean allMatch = false;
+                    if (itemSizes != null) {
+                        allMatch = true;
+                        Iterator isi = itemSizes.iterator();
+                        while (isi.hasNext()) {
+                            Double size = (Double) isi.next();
+                            if (size.doubleValue() > maxSize.doubleValue()) {
+                                allMatch = false;
+                            }
+                        }
+                    }
+                    if (!allMatch) {
+                        returnShippingMethods.remove(method);
+                        continue;
+                    }
+                }
+
+                // check USPS address
+                String allowUspsAddr = method.getString("allowUspsAddr");
+                String requireUspsAddr = method.getString("requireUspsAddr");
+                boolean isUspsAddress = ContactMechWorker.isUspsAddress(shippingAddress);
+                if ("N".equals(allowUspsAddr) && isUspsAddress) {
+                    returnShippingMethods.remove(method);
+                    continue;
+                }
+                if ("Y".equals(requireUspsAddr) && !isUspsAddress) {
+                    returnShippingMethods.remove(method);
+                    continue;
+                }
+
+                // check company address
+                String companyPartyId = method.getString("companyPartyId");
+                String allowCompanyAddr = method.getString("allowUspsAddr");
+                String requireCompanyAddr = method.getString("requireCompanyAddr");
+                if (companyPartyId != null && companyPartyId.length() > 0) {
+                    boolean isCompanyAddress = ContactMechWorker.isCompanyAddress(shippingAddress, companyPartyId);
+                    if ("N".equals(allowCompanyAddr) && isCompanyAddress) {
+                        returnShippingMethods.remove(method);
+                        continue;
+                    }
+                    if ("Y".equals(requireCompanyAddr) && !isCompanyAddress) {
+                        returnShippingMethods.remove(method);
+                        continue;
+                    }
+                }
+
+                // check the geos
+                String includeGeoId = method.getString("includeGeoId");
+                String excludeGeoId = method.getString("excludeGeoId");
+                if ((includeGeoId != null && includeGeoId.length() > 0) || (excludeGeoId != null && excludeGeoId.length() > 0)) {
+                    if (shippingAddress == null) {
+                        returnShippingMethods.remove(method);
+                        continue;
+                    }
+                }
+                if (includeGeoId != null && includeGeoId.length() > 0) {
+                    List includeGeoGroup = GeoWorker.expandGeoGroup(includeGeoId, delegator);
+                    if (!GeoWorker.containsGeo(includeGeoGroup, shippingAddress.getString("countryGeoId"), delegator) &&
+                            !GeoWorker.containsGeo(includeGeoGroup, shippingAddress.getString("stateProvinceGeoId"), delegator) &&
+                            !GeoWorker.containsGeo(includeGeoGroup, shippingAddress.getString("postalCodeGeoId"), delegator)) {
+                        // not in required included geos
+                        returnShippingMethods.remove(method);
+                        continue;
+                    }
+                }
+                if (excludeGeoId != null && excludeGeoId.length() > 0) {
+                    List excludeGeoGroup = GeoWorker.expandGeoGroup(excludeGeoId, delegator);
+                    if (GeoWorker.containsGeo(excludeGeoGroup, shippingAddress.getString("countryGeoId"), delegator) ||
+                            GeoWorker.containsGeo(excludeGeoGroup, shippingAddress.getString("stateProvinceGeoId"), delegator) ||
+                            GeoWorker.containsGeo(excludeGeoGroup, shippingAddress.getString("postalCodeGeoId"), delegator)) {
+                        // in excluded geos
+                        returnShippingMethods.remove(method);
+                        continue;
+                    }
+                }
+
+                // check the features
                 String includeFeatures = method.getString("includeFeatureGroup");
                 String excludeFeatures = method.getString("excludeFeatureGroup");
                 if (includeFeatures != null && includeFeatures.length() > 0) {
