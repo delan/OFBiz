@@ -299,14 +299,18 @@ public abstract class ModelScreenWidget {
                 if (!(context instanceof MapStack)) {
                     context = new MapStack(context);
                 }
+                
                 ((MapStack) context).push();
+                
                 // build the widgetpath
-        		List widgetTrail = (List)context.get("_WIDGETTRAIL_");
-        		if (widgetTrail == null)
-        		    widgetTrail = new ArrayList();
-        		String thisName = nameExdr.expandString(context);
-        		widgetTrail.add(thisName);
-        		context.put("_WIDGETTRAIL_", widgetTrail);
+                List widgetTrail = (List) context.get("_WIDGETTRAIL_");
+                if (widgetTrail == null) {
+                    widgetTrail = new ArrayList();
+                }
+                
+                String thisName = nameExdr.expandString(context);
+                widgetTrail.add(thisName);
+                context.put("_WIDGETTRAIL_", widgetTrail);
             }
             
             // dont need the renderer here, will just pass this on down to another screen call; screenStringRenderer.renderContainerBegin(writer, context, this);
@@ -342,6 +346,10 @@ public abstract class ModelScreenWidget {
                 }
             }
             modelScreen.renderScreenString(writer, context, screenStringRenderer);
+
+            if (protectScope) {
+                ((MapStack) context).pop();
+            }
         }
         
         public String getName(Map context) {
@@ -422,6 +430,8 @@ public abstract class ModelScreenWidget {
                 }
             }
             modelScreen.renderScreenString(writer, context, screenStringRenderer);
+
+            contextMs.pop();
         }
 
         public String getName(Map context) {
@@ -567,7 +577,7 @@ public abstract class ModelScreenWidget {
                 throw new IllegalArgumentException("Could not find a formStringRenderer in the context, and could not find HTTP request/response objects need to create one.");
             }
             
-                //Debug.logInfo("before renderFormString, context:" + context, module);
+            //Debug.logInfo("before renderFormString, context:" + context, module);
             StringBuffer renderBuffer = new StringBuffer();
             modelForm.renderFormString(renderBuffer, context, formStringRenderer);
             try {
@@ -576,6 +586,10 @@ public abstract class ModelScreenWidget {
                 String errMsg = "Error rendering included form named [" + name + "] at location [" + location + "]: " + e.toString();
                 Debug.logError(e, errMsg, module);
                 throw new RuntimeException(errMsg);
+            }
+
+            if (protectScope) {
+                ((MapStack) context).pop();
             }
         }
         
@@ -661,6 +675,10 @@ public abstract class ModelScreenWidget {
                 String errMsg = "Error rendering included tree named [" + name + "] at location [" + location + "]: " + e.toString();
                 Debug.logError(e, errMsg, module);
                 throw new RuntimeException(errMsg);
+            }
+
+            if (protectScope) {
+                ((MapStack) context).pop();
             }
         }
         
