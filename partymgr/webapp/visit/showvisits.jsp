@@ -45,12 +45,12 @@
 	if (sort != null) sortList.add(0, sort);
 	
 	if (partyId != null) {
-		visitListIt = delegator.findListIteratorByCondition("Visit", new EntityExpr("partyId", EntityOperator.EQUALS, partyId), null, sortList);	
+		visitListIt = delegator.findListIteratorByCondition("Visit", new EntityExpr("partyId", EntityOperator.EQUALS, partyId), null, null, sortList, new EntityFindOptions(true, EntityFindOptions.TYPE_SCROLL_INSENSITIVE, EntityFindOptions.CONCUR_READ_ONLY, true));	
 	} else if (showAll.equalsIgnoreCase("true")) {
-		visitListIt = delegator.findListIteratorByCondition("Visit", null, null, sortList);
+		visitListIt = delegator.findListIteratorByCondition("Visit", null, null, null, sortList, new EntityFindOptions(true, EntityFindOptions.TYPE_SCROLL_INSENSITIVE, EntityFindOptions.CONCUR_READ_ONLY, true));
 	} else {
 		// show active visits		
-		visitListIt = delegator.findListIteratorByCondition("Visit", new EntityExpr("thruDate", EntityOperator.EQUALS, null), null, sortList);		
+		visitListIt = delegator.findListIteratorByCondition("Visit", new EntityExpr("thruDate", EntityOperator.EQUALS, null), null, null, sortList, new EntityFindOptions(true, EntityFindOptions.TYPE_SCROLL_INSENSITIVE, EntityFindOptions.CONCUR_READ_ONLY, true));	
 	}
 
 	String rowClass = "";
@@ -72,27 +72,16 @@
         viewSize = 20;
     }
     
-    List visitList = new LinkedList();
-    for (int i = 0; i <= ((viewIndex + 1) * viewSize) + 1; i++) {
-    	if (i < viewIndex) {
-    		continue;
-    	} else {
-	    	Object ob = visitListIt.next();
-    		if (ob != null) {
-    			visitList.add(ob);
-	    	} else {
-    			break;
-    		}
-    	}
-    }
-    	  	
+    lowIndex = viewIndex * viewSize;
+    highIndex = (viewIndex + 1) * viewSize;
+            
+    List visitList = visitListIt.getPartialList(1, highIndex + 1);
 	if (visitList != null) pageContext.setAttribute("visitList", visitList);
     
     if (visitList != null) {
     	listSize = visitList.size();
     }
-    lowIndex = viewIndex * viewSize;
-    highIndex = (viewIndex + 1) * viewSize;
+
     if (listSize < highIndex) {
         highIndex = listSize;
     }	
