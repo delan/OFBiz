@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCart.java,v 1.28 2003/11/24 20:04:20 ajzeneski Exp $
+ * $Id: ShoppingCart.java,v 1.29 2003/11/25 12:41:26 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -33,6 +33,7 @@ import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericPK;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.order.order.OrderReadHelper;
+import org.ofbiz.order.shoppingcart.product.ProductPromoWorker;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.product.store.ProductStoreWorker;
 
@@ -43,7 +44,7 @@ import org.ofbiz.product.store.ProductStoreWorker;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.28 $
+ * @version    $Revision: 1.29 $
  * @since      2.0
  */
 public class ShoppingCart implements java.io.Serializable {
@@ -199,7 +200,7 @@ public class ShoppingCart implements java.io.Serializable {
         }
 
         // Add the new item to the shopping cart if it wasn't found.
-        return this.addItem(0, ShoppingCartItem.makeItem(new Integer(0), getDelegator(), productId, selectedAmount, quantity, features, attributes, prodCatalogId, dispatcher, this));
+        return this.addItem(0, ShoppingCartItem.makeItem(new Integer(0), this.getDelegator(), productId, selectedAmount, quantity, features, attributes, prodCatalogId, dispatcher, this));
     }
     public int addOrIncreaseItem(String productId, double quantity, Map features, Map attributes, String prodCatalogId, LocalDispatcher dispatcher) throws CartItemModifyException {
         return addOrIncreaseItem(productId, 0.00, quantity, features, attributes, prodCatalogId, dispatcher);
@@ -209,8 +210,8 @@ public class ShoppingCart implements java.io.Serializable {
      * @return the new item index
      * @throws CartItemModifyException
      */
-    public int addNonProductItem(GenericDelegator delegator, String itemType, String description, String categoryId, double price, double quantity, Map attributes, String prodCatalogId, LocalDispatcher dispatcher) throws CartItemModifyException {
-        return this.addItem(0, ShoppingCartItem.makeItem(new Integer(0), delegator, itemType, description, categoryId, price, 0.00, quantity, attributes, prodCatalogId, dispatcher, this, true));
+    public int addNonProductItem(String itemType, String description, String categoryId, double price, double quantity, Map attributes, String prodCatalogId, LocalDispatcher dispatcher) throws CartItemModifyException {
+        return this.addItem(0, ShoppingCartItem.makeItem(new Integer(0), this.getDelegator(), itemType, description, categoryId, price, 0.00, quantity, attributes, prodCatalogId, dispatcher, this, true));
     }
 
     /** Add an item to the shopping cart. */
@@ -376,9 +377,9 @@ public class ShoppingCart implements java.io.Serializable {
             if (createdDate == null) {
                 return null;
             }
-            long diffMillis = nowTimestamp.getTime() - createdDate.getTime();
+            double diffMillis = nowTimestamp.getTime() - createdDate.getTime();
             // millis per day: 1000.0 * 60.0 * 60.0 * 24.0 = 86400000.0
-            return new Double(((double) diffMillis) / 86400000.0);
+            return new Double((diffMillis) / 86400000.0);
         } catch (GenericEntityException e) {
             Debug.logError(e, "Error looking up party when getting createdDate", module);
             return null;
@@ -535,14 +536,14 @@ public class ShoppingCart implements java.io.Serializable {
     }
 
     /** Returns a list of PaymentMethod value objects selected in the cart. */
-    public List getSelectedPaymentMethods(GenericDelegator delegator) {
+    public List getSelectedPaymentMethods() {
         List ids = getPaymentMethodIds();
         List methods = new ArrayList();
         try {
             Iterator i = ids.iterator();
             while (i.hasNext()) {
                 String id = (String) i.next();
-                GenericValue paymentMethod = delegator.findByPrimaryKey("PaymentMethod", UtilMisc.toMap("paymentMethodId", id));
+                GenericValue paymentMethod = this.getDelegator().findByPrimaryKeyCache("PaymentMethod", UtilMisc.toMap("paymentMethodId", id));
                 methods.add(paymentMethod);
             }
         } catch (GenericEntityException e) {
@@ -1050,8 +1051,19 @@ public class ShoppingCart implements java.io.Serializable {
         return useCount;
     }
 
-    public void addProductPromoCode(String productPromoCodeId) {
-        this.productPromoCodes.add(productPromoCodeId);
+    /** Adds a promotion code to the cart, checking if it is valid. If it is valid this will return null, otherwise it will return a message stating why it was not valid 
+     * @param productPromoCodeId The promotion code to check and add
+     * @return String that is null if valid, and added to cart, or an error message of the code was not valid and not added to the cart. 
+     */
+    public String addProductPromoCode(String productPromoCodeId) {
+        // if the promo code requires it make sure the code is valid
+        String checkResult = ProductPromoWorker.checkCanUsePromoCode(productPromoCodeId, this.getUserLogin(), this.getDelegator());
+        if (checkResult == null) {
+            this.productPromoCodes.add(productPromoCodeId);
+            return null;
+        } else {
+            return checkResult;
+        }
     }
 
     public Set getProductPromoCodesEntered() {
@@ -1270,8 +1282,7 @@ public class ShoppingCart implements java.io.Serializable {
         }
 
         // next create the payment types (offline payments?)
-        List paymentMethodTypeIds = this.getPaymentMethodTypeIds();
-        Iterator pti = paymentMethodTypeIds.iterator();
+        Iterator pti = this.getPaymentMethodTypeIds().iterator();
         while (pti.hasNext()) {
             String paymentMethodTypeId = (String) pti.next();
             GenericValue p = delegator.makeValue("OrderPaymentPreference", new HashMap());

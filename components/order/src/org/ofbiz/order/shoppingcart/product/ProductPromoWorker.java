@@ -1,5 +1,5 @@
 /*
- * $Id: ProductPromoWorker.java,v 1.20 2003/11/25 09:48:04 jonesde Exp $
+ * $Id: ProductPromoWorker.java,v 1.21 2003/11/25 12:41:26 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -37,6 +37,7 @@ import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.condition.EntityConditionList;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityUtil;
@@ -53,7 +54,7 @@ import org.ofbiz.service.LocalDispatcher;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.20 $
+ * @version    $Revision: 1.21 $
  * @since      2.0
  */
 public class ProductPromoWorker {
@@ -280,6 +281,54 @@ public class ProductPromoWorker {
         }
 
         return codeUseLimit;
+    }
+    
+    public static String checkCanUsePromoCode(String productPromoCodeId, GenericValue userLogin, GenericDelegator delegator) {
+        try {
+            GenericValue productPromoCode = delegator.findByPrimaryKey("ProductPromoCode", UtilMisc.toMap("productPromoCodeId", productPromoCodeId));
+            if (productPromoCode == null) {
+                return "The promotion code [" + productPromoCodeId + "] is not valid.";
+            }
+            
+            if ("Y".equals(productPromoCode.getString("requireEmailOrParty"))) {
+                boolean hasEmailOrParty = false;
+                
+                if (userLogin != null) {
+                    // check partyId
+                    String partyId = userLogin.getString("partyId");
+                    if (UtilValidate.isNotEmpty(partyId)) {
+                        if (delegator.findByPrimaryKey("ProductPromoCodeParty", UtilMisc.toMap("productPromoCodeId", productPromoCodeId, "partyId", partyId)) != null) {
+                            // found party associated with the code, looks good...
+                            return null;
+                        }
+                        
+                        // check email address in ProductPromoCodeEmail
+                        Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
+                        List validEmailCondList = new ArrayList();
+                        validEmailCondList.add(new EntityExpr("partyId", EntityOperator.EQUALS, partyId));
+                        validEmailCondList.add(new EntityExpr("productPromoCodeId", EntityOperator.EQUALS, productPromoCodeId));
+                        validEmailCondList.add(new EntityExpr("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, nowTimestamp));
+                        validEmailCondList.add(new EntityExpr(new EntityExpr("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, nowTimestamp), 
+                                EntityOperator.OR, new EntityExpr("thruDate", EntityOperator.EQUALS, null)));
+                        EntityCondition validEmailCondition = new EntityConditionList(validEmailCondList, EntityOperator.AND);
+                        long validEmailCount = delegator.findCountByCondition("ProductPromoCodeEmailParty", validEmailCondition, null);
+                        if (validEmailCount > 0) {
+                            // there was an email in the list, looks good... 
+                            return null;
+                        }
+                    }
+                }
+                
+                if (!hasEmailOrParty) {
+                    return "This promotion code [" + productPromoCodeId + "] requires you to be associated with it by account or email address and you are not associated with it.";
+                }
+            }
+            
+            return null;
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Error looking up ProductPromoCode", module);
+            return "Error looking up code [" + productPromoCodeId + "]:" + e.toString();
+        }
     }
 
     protected static boolean runProductPromoRules(ShoppingCart cart, boolean cartChanged, long useLimit, boolean requireCode, String productPromoCodeId, Long codeUseLimit,
