@@ -44,7 +44,7 @@ import org.ofbiz.accounting.payment.PaymentGatewayServices;
 /**
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      3.2
  */
 public class RitaServices {
@@ -53,9 +53,9 @@ public class RitaServices {
 
     public static Map ccAuth(DispatchContext dctx, Map context) {
         Properties props = buildPccProperties(context);
-        RitaApi api = getApi(props);
+        RitaApi api = getApi(props, "CREDIT");
         if (api == null) {
-            return ServiceUtil.returnError("PCCharge is not configured properly");
+            return ServiceUtil.returnError("RiTA is not configured properly");
         }
 
         try {
@@ -81,6 +81,7 @@ public class RitaServices {
         // send the transaction
         RitaApi out = null;
         try {
+            Debug.log("Sending request to RiTA", module);
             out = api.send();
         } catch (IOException e) {
             Debug.logError(e, module);
@@ -117,9 +118,8 @@ public class RitaServices {
             result.put("avsCode", out.get(RitaApi.AVS_CODE));
 
             if (!passed) {
-                String respMsg = out.get(RitaApi.RESULT) + " / " + out.get(RitaApi.AUTH_CODE);
-                String refNum = out.get(RitaApi.INTRN_SEQ_NUM);
-                result.put("customerRespMsgs", UtilMisc.toList(respMsg, refNum));
+                String respMsg = out.get(RitaApi.RESULT) + " / " + out.get(RitaApi.INTRN_SEQ_NUM);                
+                result.put("customerRespMsgs", UtilMisc.toList(respMsg));
             }
 
             if (result.get("captureResult") != null) {
@@ -132,7 +132,7 @@ public class RitaServices {
             return result;
 
         } else {
-            return ServiceUtil.returnError("Receive a null result from PcCharge");
+            return ServiceUtil.returnError("Receive a null result from RiTA");
         }
     }
 
@@ -152,7 +152,7 @@ public class RitaServices {
 
         // setup the PCCharge Interface
         Properties props = buildPccProperties(context);
-        RitaApi api = getApi(props);
+        RitaApi api = getApi(props, "CREDIT");
         if (api == null) {
             return ServiceUtil.returnError("PCCharge is not configured properly");
         }
@@ -188,7 +188,7 @@ public class RitaServices {
 
             return result;
         } else {
-            return ServiceUtil.returnError("Receive a null result from PcCharge");
+            return ServiceUtil.returnError("Receive a null result from RiTA");
         }
     }
 
@@ -208,7 +208,7 @@ public class RitaServices {
 
         // setup the PCCharge Interface
         Properties props = buildPccProperties(context);
-        RitaApi api = getApi(props);
+        RitaApi api = getApi(props, "CREDIT");
         if (api == null) {
             return ServiceUtil.returnError("PCCharge is not configured properly");
         }
@@ -249,7 +249,7 @@ public class RitaServices {
 
             return result;
         } else {
-            return ServiceUtil.returnError("Receive a null result from PcCharge");
+            return ServiceUtil.returnError("Receive a null result from RiTA");
         }
     }
 
@@ -269,7 +269,7 @@ public class RitaServices {
 
         // setup the PCCharge Interface
         Properties props = buildPccProperties(context);
-        RitaApi api = getApi(props);
+        RitaApi api = getApi(props, "CREDIT");
         if (api == null) {
             return ServiceUtil.returnError("PCCharge is not configured properly");
         }
@@ -305,7 +305,7 @@ public class RitaServices {
 
             return result;
         } else {
-            return ServiceUtil.returnError("Receive a null result from PcCharge");
+            return ServiceUtil.returnError("Receive a null result from RiTA");
         }
     }
 
@@ -390,7 +390,14 @@ public class RitaServices {
         api.set(RitaApi.USER_ID, props.getProperty("userID"));
         api.set(RitaApi.USER_PW, props.getProperty("userPW"));
         api.set(RitaApi.FORCE_FLAG, props.getProperty("forceTx"));
-        api.set(RitaApi.FUNCTION_TYPE, props.getProperty("PAYMENT")); // this may change when we implement other types
+
+        return api;
+    }
+
+    private static RitaApi getApi(Properties props, String paymentType) {
+        RitaApi api = getApi(props);
+        api.set(RitaApi.FUNCTION_TYPE, "PAYMENT");
+        api.set(RitaApi.PAYMENT_TYPE, paymentType);
         return api;
     }
 

@@ -740,6 +740,28 @@
         <implements service="paymentRefundInterface"/>
     </service>
 
+    <!-- RiTA Implementations -->
+    <service name="ritaCCAuth" engine="java"
+            location="org.ofbiz.accounting.thirdparty.gosoftware.RitaServices" invoke="ccAuth">
+        <description>RiTA Credit Card Pre-Authorization/Sale</description>
+        <implements service="ccAuthInterface"/>
+    </service>
+    <service name="ritaCCCapture" engine="java"
+            location="org.ofbiz.accounting.thirdparty.gosoftware.RitaServices" invoke="ccCapture">
+        <description>RiTA Credit Card Post-Authorization</description>
+        <implements service="ccCaptureInterface"/>
+    </service>
+    <service name="ritaCCRelease" engine="java"
+            location="org.ofbiz.accounting.thirdparty.gosoftware.RitaServices" invoke="ccRelease">
+        <description>RiTA Credit Card Void</description>
+        <implements service="paymentReleaseInterface"/>
+    </service>
+    <service name="ritaCCRefund" engine="java"
+            location="org.ofbiz.accounting.thirdparty.gosoftware.RitaServices" invoke="ccRefund">
+        <description>RiTA Credit Card Refund</description>
+        <implements service="paymentRefundInterface"/>
+    </service>
+
     <!-- ClearCommerce Implementations -->
     <service name="clearCommerceCCAuth" engine="java"
             location="org.ofbiz.accounting.thirdparty.clearcommerce.CCPaymentServices" invoke="ccAuth">
