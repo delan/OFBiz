@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.9 $
+ *@version    $Revision: 1.10 $
  *@since      2.2
 */
 
@@ -260,8 +260,10 @@ if (lookupFlag != null) {
     if (lookupErrorMessage == null && mainCond != null) {
         // field we need to select; will be used to set distinct
         List fieldsToSelect = UtilMisc.toList("orderId", "orderTypeId", "orderDate", "grandTotal", "statusId");
-        if ("OrderHeaderAndRoles".equals(entityName)) {
+        if (partyId != null) {
             fieldsToSelect.add("partyId");
+        }
+        if (!"ANY".equals(roleType)) {
             fieldsToSelect.add("roleTypeId");
         }
 
