@@ -19,6 +19,7 @@
   <%if(security.hasEntityPermission("PARTYMGR", "_CREATE", session)) {%>
   <div class="col"><a href="<ofbiz:url>/newcustomer</ofbiz:url>" class="headerButtonLeft">New&nbsp;Customer</a></div>
   <%}%>
+  <div class="col"><a href="<ofbiz:url>/showvisits</ofbiz:url>" class="headerButtonLeft">Visits</a></div>
   <%if(security.hasEntityPermission("SECURITY", "_VIEW", session)) {%>
   <div class="col"><a href="<ofbiz:url>/FindSecurityGroup</ofbiz:url>" class="headerButtonLeft">Security</a></div>
   <%}%>    

@@ -452,7 +452,15 @@
         <response name="success" type="view" value="viewrelationships"/>
         <response name="error" type="view" value="viewrelationships"/>
     </request-map>
-
+    
+    <request-map uri="showvisits">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="showvisits"/>
+    </request-map>
+    <request-map uri="visitdetail">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="visitdetail"/>
+    </request-map>    
 
     <!-- end of request mappings -->
 
@@ -482,5 +490,8 @@
     <view-map name="EditSecurityGroup" type="region"/>
     <view-map name="EditSecurityGroupPermissions" type="region"/>
     <view-map name="EditSecurityGroupUserLogins" type="region"/>
+    
+    <view-map name="showvisits" type="region"/>
+    <view-map name="visitdetail" type="region"/>
     <!-- end of view mappings -->
 </site-conf>

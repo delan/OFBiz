@@ -138,4 +138,13 @@
         <put section='title'>Edit SecurityGroup UserLogins</put>
         <put section='content' content='/security/EditSecurityGroupUserLogins.jsp'/>
     </define>
+    
+    <define id='showvisits' region='MAIN_REGION'>
+        <put section='title'>Visit List</put>
+        <put section='content' content='/visit/showvisits.jsp'/>
+    </define>    
+    <define id='visitdetail' region='MAIN_REGION'>
+        <put section='title'>Visit Detail</put>
+        <put section='content' content='/visit/visitdetail.jsp'/>
+    </define>    
 </regions>
