@@ -817,7 +817,7 @@ public class GenericDAO {
                 ModelField field = (ModelField) modelEntity.getField((String) expr.getLhs());
                 if (field != null) {
                     whereFields.add(field);
-                    whereString.append(field.getColName() + expr.getOperator().getCode());
+                    whereString.append(field.getColName() + expr.getOperator());
                     if (i < expressions.size() - 1)
                         whereString.append(" ? AND ");
                     else
@@ -940,7 +940,7 @@ public class GenericDAO {
                 ModelField field = (ModelField) modelEntity.getField((String) expr.getLhs());
                 if (field != null) {
                     whereFields.add(field);
-                    whereString.append(field.getColName() + expr.getOperator().getCode());
+                    whereString.append(field.getColName() + expr.getOperator());
                     if (i < expressions.size() - 1)
                         whereString.append(" ? OR ");
                     else
@@ -1153,8 +1153,8 @@ public class GenericDAO {
         //each iteration defines one relationship for the query.
         for (int i = 0; i < entityClauses.size(); i++) {
             EntityClause entityClause = (EntityClause) entityClauses.get(i);
-            String interFieldOperation = entityClause.getInterFieldOperation().getCode();
-            String intraFieldOperation = entityClause.getIntraFieldOperation().getCode();
+            String interFieldOperation = entityClause.getInterFieldOperation().toString();
+            String intraFieldOperation = entityClause.getIntraFieldOperation().toString();
 
             firstModelEntity = entityClause.getFirstModelEntity();
             if (!whereTables.contains(firstModelEntity.getTableName())) {

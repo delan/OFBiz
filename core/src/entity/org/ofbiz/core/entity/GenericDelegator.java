@@ -29,6 +29,7 @@ import java.net.*;
 
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.entity.model.*;
+import org.ofbiz.core.entity.config.*;
 
 import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
@@ -77,17 +78,22 @@ public class GenericDelegator {
                 //must check if null again as one of the blocked threads can still enter
                 delegator = (GenericDelegator) delegatorCache.get(delegatorName);
                 if (delegator == null) {
-                    delegator = new GenericDelegator(delegatorName);
-                    delegatorCache.put(delegatorName, delegator);
+                    try {
+                        delegator = new GenericDelegator(delegatorName);
+                    } catch (GenericEntityException e) {
+                        Debug.logError(e, "Error creating delegator");
+                    }
+                    if (delegator != null) {
+                        delegatorCache.put(delegatorName, delegator);
+                    }
                 }
             }
         }
         return delegator;
     }
 
-    public GenericDelegator(String delegatorName) {
-        Debug.logInfo("[GenericDelegator.GenericDelegator] Creating new Delegator with name \"" +
-                      delegatorName + "\".", module);
+    public GenericDelegator(String delegatorName) throws GenericEntityException {
+        Debug.logInfo("Creating new Delegator with name \"" + delegatorName + "\".", module);
 
         this.delegatorName = delegatorName;
         if (keepLocalReaders) {
@@ -104,15 +110,13 @@ public class GenericDelegator {
         while (groups != null && groups.hasNext()) {
             String groupName = (String) groups.next();
             String helperName = this.getGroupHelperName(groupName);
-            Debug.logInfo("[GenericDelegator.GenericDelegator] Delegator \"" + delegatorName +
-                          "\" initializing helper \"" + helperName + "\" for entity group \"" +
-                          groupName + "\".", module);
+            Debug.logInfo("Delegator \"" + delegatorName + "\" initializing helper \"" + 
+                    helperName + "\" for entity group \"" + groupName + "\".", module);
             TreeSet helpersDone = new TreeSet();
             if (helperName != null && helperName.length() > 0) {
                 //make sure each helper is only loaded once
                 if (helpersDone.contains(helperName)) {
-                    Debug.logInfo("[GenericDelegator.GenericDelegator] Helper \"" + helperName +
-                                  "\" alread initialized, not re-initializing.", module);
+                    Debug.logInfo("Helper \"" + helperName + "\" alread initialized, not re-initializing.", module);
                     continue;
                 }
                 helpersDone.add(helperName);
@@ -120,10 +124,19 @@ public class GenericDelegator {
                 ModelFieldTypeReader modelFieldTypeReader = ModelFieldTypeReader.getModelFieldTypeReader(helperName);
                 //get the helper and if configured, do the datasource check
                 GenericHelper helper = GenericHelperFactory.getHelper(helperName);
-                if (UtilProperties.propertyValueEqualsIgnoreCase("entityengine", helperName + ".datasource.check.on.start", "true")) {
-                    boolean addMissing = UtilProperties.propertyValueEqualsIgnoreCase("entityengine", helperName +                                                                                      ".datasource.add.missing.on.start", "true");
-                    Debug.logInfo("[GenericDelegator.GenericDelegator] Doing database check as requested " +
-                                  "in entityengine.properties with addMissing=" + addMissing, module);
+                
+                Element rootElement = EntityConfigUtil.getXmlRootElement();
+                Element datasourceElement = UtilXml.firstChildElement(rootElement, "datasource", "name", helperName);
+                boolean checkOnStart = true;
+                boolean addMissing = false;
+                if (datasourceElement == null) {
+                    Debug.logWarning("datasource def not found with name " + helperName + ", using defaults for check-on-start (true) and add-missing-on-start (false)");
+                    checkOnStart = !"false".equals(datasourceElement.getAttribute("check-on-start"));
+                    addMissing = "true".equals(datasourceElement.getAttribute("add-missing-on-start"));
+                }
+
+                if (checkOnStart) {
+                    Debug.logInfo("Doing database check as requested in entityengine.properties with addMissing=" + addMissing, module);
                     try {
                         helper.checkDataSource(this.getModelEntityMapByGroup(groupName), null, addMissing);
                     } catch (GenericEntityException e) {
@@ -145,10 +158,16 @@ public class GenericDelegator {
      *@return ModelReader that corresponds to this delegator
      */
     public ModelReader getModelReader() {
-        if (keepLocalReaders)
+        if (keepLocalReaders) {
             return this.modelReader;
-        else
-            return ModelReader.getModelReader(delegatorName);
+        } else {
+            try {
+                return ModelReader.getModelReader(delegatorName);
+            } catch (GenericEntityException e) {
+                Debug.logWarning(e);
+                return null;
+            }
+        }
     }
 
     /** Gets the instance of ModelGroupReader that corresponds to this delegator
@@ -166,7 +185,12 @@ public class GenericDelegator {
      *@return ModelEntity that corresponds to this delegator and the specified entityName
      */
     public ModelEntity getModelEntity(String entityName) {
-        return getModelReader().getModelEntity(entityName);
+        try {
+            return getModelReader().getModelEntity(entityName);
+        } catch (GenericEntityException e) {
+            Debug.logWarning(e);
+            return null;
+        }
     }
 
     /** Gets the helper name that corresponds to this delegator and the specified entityName
@@ -219,7 +243,26 @@ public class GenericDelegator {
      *@return String with the helper name that corresponds to this delegator and the specified entityName
      */
     public String getGroupHelperName(String groupName) {
-        return UtilProperties.getPropertyValue("entityengine", delegatorName + ".group." + groupName);
+        Element rootElement = null;
+        try {
+            rootElement = EntityConfigUtil.getXmlRootElement();
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Error getting group helper name");
+            return null;
+        }
+
+        Element delegatorElement = UtilXml.firstChildElement(rootElement, "delegator", "name", delegatorName);
+        if (delegatorElement == null) {
+            Debug.logWarning("Delegator def not found with name " + delegatorName);
+            return null;
+        }
+        Element goupMapElement = UtilXml.firstChildElement(delegatorElement, "group-map", "group-name", groupName);
+        if (goupMapElement == null) {
+            Debug.logWarning("Group-map def not found with name " + groupName + " in delegator with name " + delegatorName);
+            return null;
+        }
+
+        return goupMapElement.getAttribute("datasource-name");
     }
 
     /** Gets the helper name that corresponds to this delegator and the specified entityName
@@ -292,7 +335,12 @@ public class GenericDelegator {
 
     /** Creates a Entity in the form of a GenericValue without persisting it */
     public GenericValue makeValue(String entityName, Map fields) {
-        ModelEntity entity = getModelReader().getModelEntity(entityName);
+        ModelEntity entity = null;
+        try {
+            entity = getModelReader().getModelEntity(entityName);
+        } catch (GenericEntityException e) {
+            Debug.logWarning(e);
+        }
         if (entity == null)
             throw new IllegalArgumentException("[GenericDelegator.makeValue] could not find entity for entityName: " + entityName);
         GenericValue value = new GenericValue(entity, fields);
@@ -302,7 +350,12 @@ public class GenericDelegator {
 
     /** Creates a Primary Key in the form of a GenericPK without persisting it */
     public GenericPK makePK(String entityName, Map fields) {
-        ModelEntity entity = getModelReader().getModelEntity(entityName);
+        ModelEntity entity = null;
+        try {
+            entity = getModelReader().getModelEntity(entityName);
+        } catch (GenericEntityException e) {
+            Debug.logWarning(e);
+        }
         if (entity == null)
             throw new IllegalArgumentException("[GenericDelegator.makePK] could not find entity for entityName: " + entityName);
         GenericPK pk = new GenericPK(entity, fields);
@@ -317,7 +370,13 @@ public class GenericDelegator {
         if (entityName == null || fields == null) {
             return null;
         }
-        GenericValue genericValue = new GenericValue(getModelReader().getModelEntity(entityName), fields);
+        ModelEntity entity = null;
+        try {
+            entity = getModelReader().getModelEntity(entityName);
+        } catch (GenericEntityException e) {
+            Debug.logWarning(e);
+        }
+        GenericValue genericValue = new GenericValue(entity, fields);
         return this.create(genericValue);
     }
 
@@ -1068,7 +1127,12 @@ public class GenericDelegator {
      *@return The GenericValue corresponding to the primaryKey
      */
     public void clearCacheLine(String entityName, Map fields) {
-        ModelEntity entity = getModelReader().getModelEntity(entityName);
+        ModelEntity entity = null;
+        try {
+            entity = getModelReader().getModelEntity(entityName);
+        } catch (GenericEntityException e) {
+            Debug.logWarning(e);
+        }
         if (entity == null)
             throw new IllegalArgumentException("[GenericDelegator.clearCacheLine] could not find entity for entityName: " + entityName);
 
@@ -1140,7 +1204,13 @@ public class GenericDelegator {
     public Collection getFromAndCache(String entityName, Map fields) {
         if (entityName == null || fields == null)
             return null;
-        GenericPK tempPK = new GenericPK(getModelReader().getModelEntity(entityName), fields);
+        ModelEntity entity = null;
+        try {
+            entity = getModelReader().getModelEntity(entityName);
+        } catch (GenericEntityException e) {
+            Debug.logWarning(e);
+        }
+        GenericPK tempPK = new GenericPK(entity, fields);
         if (tempPK == null)
             return null;
         return (Collection) andCache.get(tempPK);
@@ -1171,7 +1241,13 @@ public class GenericDelegator {
     public void putInAndCache(String entityName, Map fields, Collection values) {
         if (entityName == null || fields == null || values == null)
             return;
-        GenericPK tempPK = new GenericPK(getModelReader().getModelEntity(entityName), fields);
+        ModelEntity entity = null;
+        try {
+            entity = getModelReader().getModelEntity(entityName);
+        } catch (GenericEntityException e) {
+            Debug.logWarning(e);
+        }
+        GenericPK tempPK = new GenericPK(entity, fields);
         if (tempPK == null)
             return;
         andCache.put(tempPK, values);

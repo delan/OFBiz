@@ -27,8 +27,11 @@ package org.ofbiz.core.entity;
 import java.util.*;
 import javax.naming.Context;
 import javax.naming.InitialContext;
+import java.net.URL;
+import org.w3c.dom.*;
 
 import org.ofbiz.core.util.*;
+import org.ofbiz.core.entity.config.*;
 
 /**
  * JNDIContextFactory - central source for JNDI Contexts by helper name
@@ -43,20 +46,26 @@ public class JNDIContextFactory {
     /** Return the initial context according to the entityengine.properties parameters that correspond to the given prefix
      * @return the JNDI initial context
      */
-    public static InitialContext getInitialContext(String prefix) {
-        InitialContext ic = (InitialContext) contexts.get(prefix);
+    public static InitialContext getInitialContext(String jndiServerName) throws GenericEntityConfException {
+        InitialContext ic = (InitialContext) contexts.get(jndiServerName);
         
         if (ic == null) {
             synchronized (JNDIContextFactory.class) {
-                ic = (InitialContext) contexts.get(prefix);
+                ic = (InitialContext) contexts.get(jndiServerName);
 
                 if (ic == null) {
-                    String providerUrl = UtilProperties.getPropertyValue("entityengine", prefix + ".context.provider.url");
-                    String contextFactory = UtilProperties.getPropertyValue("entityengine", prefix + ".initial.context.factory");
-                    String pkgPrefix = UtilProperties.getPropertyValue("entityengine", prefix + ".url.pkg.prefixes");
+                    Element rootElement = EntityConfigUtil.getXmlRootElement();
+                    Element jndiServerElement = UtilXml.firstChildElement(rootElement, "jndi-server", "name", jndiServerName);
+                    if (jndiServerElement == null) {
+                        throw new GenericEntityConfException("ERROR: no jndi-server definition was found with the name " + jndiServerName + " in entityengine.xml");
+                    }
+                    
+                    String providerUrl = jndiServerElement.getAttribute("context-provider-url");
+                    String contextFactory = jndiServerElement.getAttribute("initial-context-factory");
+                    String pkgPrefix = jndiServerElement.getAttribute("url-pkg-prefixes");
 
-                    String secPrincipal = UtilProperties.getPropertyValue("entityengine", prefix + ".security.principal");
-                    String secCred = UtilProperties.getPropertyValue("entityengine", prefix + ".security.credentials");
+                    String secPrincipal = jndiServerElement.getAttribute("security-principal");
+                    String secCred = jndiServerElement.getAttribute("security-credentials");
 
                     try {
                         if (providerUrl == null || providerUrl.length() == 0) {
@@ -76,11 +85,11 @@ public class JNDIContextFactory {
                             ic = new InitialContext(h);
                         }
                     } catch (Exception e) {
-                        Debug.logError(e);
+                        throw new GenericEntityConfException("Error getting JNDI initial context for server name " + jndiServerName, e);
                     }
 
                     if (ic != null) {
-                        contexts.put(prefix, ic);
+                        contexts.put(jndiServerName, ic);
                     }
                 }
             }

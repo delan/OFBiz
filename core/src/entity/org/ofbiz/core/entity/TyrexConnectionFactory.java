@@ -28,6 +28,7 @@ import java.util.*;
 import java.sql.*;
 import javax.sql.*;
 import javax.naming.*;
+import org.w3c.dom.Element;
 
 import org.ofbiz.core.util.*;
 
@@ -48,7 +49,7 @@ public class TyrexConnectionFactory {
 
     static UtilCache dsCache = new UtilCache("TyrexDataSources", 0, 0);
 
-    public static Connection getConnection(String helperName) throws SQLException, GenericEntityException {
+    public static Connection getConnection(String helperName, Element inlineJdbcElement) throws SQLException, GenericEntityException {
         boolean usingTyrex = true;
 
         if (usingTyrex) {
@@ -68,13 +69,13 @@ public class TyrexConnectionFactory {
                 }
 
                 ds = new EnabledDataSource();
-                ds.setDriverClassName(UtilProperties.getPropertyValue("entityengine", helperName + ".jdbc.driver"));
-                ds.setDriverName(UtilProperties.getPropertyValue("entityengine", helperName + ".jdbc.uri"));
-                ds.setUser(UtilProperties.getPropertyValue("entityengine", helperName + ".jdbc.username"));
-                ds.setPassword(UtilProperties.getPropertyValue("entityengine", helperName + ".jdbc.password"));
+                ds.setDriverClassName(inlineJdbcElement.getAttribute("jdbc-driver"));
+                ds.setDriverName(inlineJdbcElement.getAttribute("jdbc-uri"));
+                ds.setUser(inlineJdbcElement.getAttribute("jdbc-username"));
+                ds.setPassword(inlineJdbcElement.getAttribute("jdbc-password"));
                 ds.setDescription(helperName);
 
-                String transIso = UtilProperties.getPropertyValue("entityengine", helperName + ".isolation.level");
+                String transIso = inlineJdbcElement.getAttribute("isolation-level");
                 if (transIso != null && transIso.length() > 0)
                     ds.setIsolationLevel(transIso);
 

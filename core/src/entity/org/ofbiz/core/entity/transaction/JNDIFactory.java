@@ -26,8 +26,10 @@ package org.ofbiz.core.entity.transaction;
 
 import javax.naming.*;
 import javax.transaction.*;
+import org.w3c.dom.Element;
 
 import org.ofbiz.core.entity.*;
+import org.ofbiz.core.entity.config.*;
 import org.ofbiz.core.util.*;
 
 /**
@@ -49,21 +51,35 @@ public class JNDIFactory implements TransactionFactoryInterface {
             synchronized (JNDIFactory.class) {
                 //try again inside the synch just in case someone when through while we were waiting
                 if (transactionManager == null) {
-                    String jndiName = UtilProperties.getPropertyValue("entityengine", "transaction.factory.TransactionManager.jndi.name");
-                    if (jndiName != null && jndiName.length() > 0) {
-                        //Debug.logVerbose("[JNDIFactory.getTransactionManager] Trying JNDI name " + jndiName, module);
+                    try {
+                        Element rootElement = EntityConfigUtil.getXmlRootElement();
+                        Element transactionFactoryElement = UtilXml.firstChildElement(rootElement, "transaction-factory");
+                        if (transactionFactoryElement == null) {
+                            throw new GenericEntityConfException("ERROR: no transaction-factory definition was found in entityengine.xml");
+                        }
+                        
+                        Element txMgrElement = UtilXml.firstChildElement(transactionFactoryElement, "transaction-manager-jndi");
+                        
+                        String jndiName = txMgrElement.getAttribute("jndi-name");
+                        String jndiServerName = txMgrElement.getAttribute("jndi-server-name");
+                        if (jndiName != null && jndiName.length() > 0) {
+                            //Debug.logVerbose("[JNDIFactory.getTransactionManager] Trying JNDI name " + jndiName, module);
 
-                        try {
-                            InitialContext ic = JNDIContextFactory.getInitialContext("transaction.factory");
-                            if (ic != null) {
-                                transactionManager = (TransactionManager) ic.lookup(jndiName);
+                            try {
+                                InitialContext ic = JNDIContextFactory.getInitialContext(jndiServerName);
+                                if (ic != null) {
+                                    transactionManager = (TransactionManager) ic.lookup(jndiName);
+                                }
+                            } catch (NamingException ne) {
+                                transactionManager = null;
                             }
-                        } catch (NamingException ne) {
-                            transactionManager = null;
+                            if (transactionManager == null) {
+                                Debug.logWarning("[JNDIFactory.getTransactionManager] Failed to find TransactionManager named " + jndiName + " in JNDI.", module);
+                            }
                         }
-                        if (transactionManager == null) {
-                            Debug.logWarning("[JNDIFactory.getTransactionManager] Failed to find TransactionManager named " + jndiName + " in JNDI.", module);
-                        }
+                    } catch (GenericEntityException e) {
+                        Debug.logError(e);
+                        transactionManager = null;
                     }
                 }
             }
@@ -76,21 +92,35 @@ public class JNDIFactory implements TransactionFactoryInterface {
             synchronized (JNDIFactory.class) {
                 //try again inside the synch just in case someone when through while we were waiting
                 if (userTransaction == null) {
-                    String jndiName = UtilProperties.getPropertyValue("entityengine", "transaction.factory.UserTransaction.jndi.name");
-                    if (jndiName != null && jndiName.length() > 0) {
-                        //Debug.logVerbose("[JNDIFactory.getTransactionManager] Trying JNDI name " + jndiName, module);
+                    try {
+                        Element rootElement = EntityConfigUtil.getXmlRootElement();
+                        Element transactionFactoryElement = UtilXml.firstChildElement(rootElement, "transaction-factory");
+                        if (transactionFactoryElement == null) {
+                            throw new GenericEntityConfException("ERROR: no transaction-factory definition was found in entityengine.xml");
+                        }
+                        
+                        Element userTxElement = UtilXml.firstChildElement(transactionFactoryElement, "user-transaction-jndi");
+                        
+                        String jndiName = userTxElement.getAttribute("jndi-name");
+                        String jndiServerName = userTxElement.getAttribute("jndi-server-name");
+                        if (jndiName != null && jndiName.length() > 0) {
+                            //Debug.logVerbose("[JNDIFactory.getTransactionManager] Trying JNDI name " + jndiName, module);
 
-                        try {
-                            InitialContext ic = JNDIContextFactory.getInitialContext("transaction.factory");
-                            if (ic != null) {
-                                userTransaction = (UserTransaction) ic.lookup(jndiName);
+                            try {
+                                InitialContext ic = JNDIContextFactory.getInitialContext(jndiServerName);
+                                if (ic != null) {
+                                    userTransaction = (UserTransaction) ic.lookup(jndiName);
+                                }
+                            } catch (NamingException ne) {
+                                userTransaction = null;
                             }
-                        } catch (NamingException ne) {
-                            userTransaction = null;
+                            if (userTransaction == null) {
+                                Debug.logWarning("[JNDIFactory.getUserTransaction] Failed to find UserTransaction named " + jndiName + " in JNDI.", module);
+                            }
                         }
-                        if (userTransaction == null) {
-                            Debug.logWarning("[JNDIFactory.getUserTransaction] Failed to find UserTransaction named " + jndiName + " in JNDI.", module);
-                        }
+                    } catch (GenericEntityException e) {
+                        Debug.logError(e);
+                        transactionManager = null;
                     }
                 }
             }

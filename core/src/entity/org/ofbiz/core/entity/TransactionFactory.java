@@ -1,17 +1,8 @@
-
-package org.ofbiz.core.entity;
-
-import java.util.*;
-import javax.naming.*;
-import javax.transaction.*;
-
-import org.ofbiz.core.util.*;
-import org.ofbiz.core.entity.transaction.TransactionFactoryInterface;
-
-/**
- * <p><b>Title:</b> TransactionFactory.java
- * <p><b>Description:</b> TransactionFactory - central source for JTA objects
- * <p>Copyright (c) 2001 The Open For Business Project and repected authors.
+/*
+ * $Id$
+ *
+ * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ *
  * <p>Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
  *  to deal in the Software without restriction, including without limitation
@@ -29,10 +20,25 @@ import org.ofbiz.core.entity.transaction.TransactionFactoryInterface;
  *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
+package org.ofbiz.core.entity;
+
+import java.util.*;
+import javax.naming.*;
+import javax.transaction.*;
+import org.w3c.dom.*;
+
+import org.ofbiz.core.util.*;
+import org.ofbiz.core.entity.config.*;
+import org.ofbiz.core.entity.transaction.TransactionFactoryInterface;
+
+/**
+ * TransactionFactory - central source for JTA objects
  *
- * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version 1.0
- * Created on July 1, 2001, 5:03 PM
+ * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ * @version    1.0
+ * @created    December 2001
  */
 public class TransactionFactory {
 
@@ -44,7 +50,13 @@ public class TransactionFactory {
                 //must check if null again as one of the blocked threads can still enter
                 if (transactionFactory == null) {
                     try {
-                        String className = UtilProperties.getPropertyValue("entityengine", "transaction.factory.class", "org.ofbiz.core.entity.transaction.TyrexFactory");
+                        Element rootElement = EntityConfigUtil.getXmlRootElement();
+                        Element transactionFactoryElement = UtilXml.firstChildElement(rootElement, "transaction-factory");
+                        if (transactionFactoryElement == null) {
+                            throw new GenericEntityConfException("ERROR: no transaction-factory definition was found in entityengine.xml");
+                        }
+
+                        String className = transactionFactoryElement.getAttribute("class");
                         Class tfClass = null;
                         if (className != null && className.length() > 0) {
                             try {
@@ -67,6 +79,9 @@ public class TransactionFactory {
                     } catch (SecurityException e) {
                         Debug.logError(e);
                         throw new IllegalStateException("Error loading TransactionFactory class: " + e.getMessage());
+                    } catch (GenericEntityException e) {
+                        Debug.logError(e);
+                        throw new IllegalStateException("Error loading TransactionFactory class: " + e.getMessage());
                     }
                 }
             }
@@ -82,4 +97,3 @@ public class TransactionFactory {
         return getTransactionFactory().getUserTransaction();
     }
 }
-

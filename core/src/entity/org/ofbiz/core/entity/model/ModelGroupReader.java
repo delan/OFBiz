@@ -43,6 +43,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import org.ofbiz.core.util.*;
+import org.ofbiz.core.entity.*;
+import org.ofbiz.core.entity.config.*;
 
 /**
  * Generic Entity - Entity Group Definition Reader
@@ -60,10 +62,19 @@ public class ModelGroupReader {
     private Set groupNames = null;
 
     public String modelName;
-    public String entityGroupFileName;
+    public ResourceHandler entityGroupResourceHandler;
 
     public static ModelGroupReader getModelGroupReader(String delegatorName) {
-        String tempModelName = UtilProperties.getPropertyValue("entityengine", delegatorName + ".model.group.reader");
+        Element rootElement = null;
+        try {
+            rootElement = EntityConfigUtil.getXmlRootElement();
+        } catch (GenericEntityException e) {
+            Debug.logError(e);
+            throw new IllegalStateException("Error loading entityengine.xml file: " + e.toString());
+        }
+        Element delegatorElement = UtilXml.firstChildElement(rootElement, "delegator", "name", delegatorName);
+
+        String tempModelName = delegatorElement.getAttribute("entity-group-reader");
         ModelGroupReader reader = (ModelGroupReader) readers.get(tempModelName);
         if (reader == null) //don't want to block here
         {
@@ -81,7 +92,16 @@ public class ModelGroupReader {
 
     public ModelGroupReader(String modelName) {
         this.modelName = modelName;
-        entityGroupFileName = UtilProperties.getPropertyValue("entityengine", modelName + ".xml.group");
+        Element rootElement = null;
+        try {
+            rootElement = EntityConfigUtil.getXmlRootElement();
+        } catch (GenericEntityException e) {
+            Debug.logError(e);
+            throw new IllegalStateException("Error loading entityengine.xml file: " + e.toString());
+        }
+        Element groupReaderElement = UtilXml.firstChildElement(rootElement, "entity-group-reader", "name", modelName);
+
+        entityGroupResourceHandler = new ResourceHandler(groupReaderElement);
 
         //preload caches...
         getGroupCache();
@@ -99,7 +119,13 @@ public class ModelGroupReader {
 
                     UtilTimer utilTimer = new UtilTimer();
                     //utilTimer.timerString("[ModelGroupReader.getGroupCache] Before getDocument");
-                    Document document = getDocument(entityGroupFileName);
+                    
+                    Document document = null;
+                    try {
+                        document = entityGroupResourceHandler.getDocument();
+                    } catch (GenericEntityException e) {
+                        Debug.logError(e, "Error loading entity group model");
+                    }
                     if (document == null) {
                         groupCache = null;
                         return null;

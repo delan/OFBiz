@@ -24,7 +24,10 @@
 
 package org.ofbiz.core.entity;
 
+import org.w3c.dom.Element;
+
 import org.ofbiz.core.util.*;
+import org.ofbiz.core.entity.config.*;
 
 /**
  * Generic Entity Helper Factory Class
@@ -46,7 +49,10 @@ public class GenericHelperFactory {
                 helper = (GenericHelper) helperCache.get(helperName);
                 if (helper == null) {
                     try {
-                        String helperClassName = UtilProperties.getPropertyValue("entityengine", helperName + ".helper.class", "org.ofbiz.core.entity.GenericHelperDAO");
+                        Element rootElement = EntityConfigUtil.getXmlRootElement();
+                        Element datasourceElement = UtilXml.firstChildElement(rootElement, "datasource", "name", helperName);
+                        
+                        String helperClassName = datasourceElement.getAttribute("helper-class");
                         Class helperClass = null;
                         if (helperClassName != null && helperClassName.length() > 0) {
                             try {
@@ -86,7 +92,10 @@ public class GenericHelperFactory {
                             helperCache.put(helperName, helper);
                     } catch (SecurityException e) {
                         Debug.logError(e);
-                        throw new IllegalStateException("Error loading GenericHelper class: " + e.getMessage());
+                        throw new IllegalStateException("Error loading GenericHelper class: " + e.toString());
+                    } catch (GenericEntityException e) {
+                        Debug.logError(e);
+                        throw new IllegalStateException("Error loading GenericHelper class: " + e.toString());
                     }
                 }
             }

@@ -43,6 +43,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import org.ofbiz.core.util.*;
+import org.ofbiz.core.entity.*;
+import org.ofbiz.core.entity.config.*;
 
 /**
  * Generic Entity - Field Type Definition Reader
@@ -64,11 +66,20 @@ public class ModelFieldTypeReader {
     public int numRelations = 0;
 
     public String modelName;
-    public String fieldTypeFileName;
+    public ResourceHandler fieldTypeResourceHandler;
     public String entityFileName;
 
     public static ModelFieldTypeReader getModelFieldTypeReader(String helperName) {
-        String tempModelName = UtilProperties.getPropertyValue("entityengine", helperName + ".field.type.reader");
+        Element rootElement = null;
+        try {
+            rootElement = EntityConfigUtil.getXmlRootElement();
+        } catch (GenericEntityException e) {
+            Debug.logError(e);
+            throw new IllegalStateException("Error loading entityengine.xml file: " + e.toString());
+        }
+        Element datasourceElement = UtilXml.firstChildElement(rootElement, "datasource", "name", helperName);
+
+        String tempModelName = datasourceElement.getAttribute("field-type-name");
         ModelFieldTypeReader reader = (ModelFieldTypeReader) readers.get(tempModelName);
         if (reader == null) //don't want to block here
         {
@@ -86,7 +97,16 @@ public class ModelFieldTypeReader {
 
     public ModelFieldTypeReader(String modelName) {
         this.modelName = modelName;
-        fieldTypeFileName = UtilProperties.getPropertyValue("entityengine", modelName + ".xml.field.type");
+        Element rootElement = null;
+        try {
+            rootElement = EntityConfigUtil.getXmlRootElement();
+        } catch (GenericEntityException e) {
+            Debug.logError(e);
+            throw new IllegalStateException("Error loading entityengine.xml file: " + e.toString());
+        }
+        Element fieldTypeElement = UtilXml.firstChildElement(rootElement, "field-type", "name", modelName);
+
+        fieldTypeResourceHandler = new ResourceHandler(fieldTypeElement);
 
         //preload caches...
         getFieldTypeCache();
@@ -103,7 +123,13 @@ public class ModelFieldTypeReader {
 
                     UtilTimer utilTimer = new UtilTimer();
                     //utilTimer.timerString("Before getDocument");
-                    Document document = getDocument(fieldTypeFileName);
+
+                    Document document = null;
+                    try {
+                        document = fieldTypeResourceHandler.getDocument();
+                    } catch (GenericEntityException e) {
+                        Debug.logError(e, "Error loading field type file");
+                    }
                     if (document == null) {
                         fieldTypeCache = null;
                         return null;

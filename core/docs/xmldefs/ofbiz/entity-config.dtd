@@ -106,8 +106,8 @@
     name CDATA #REQUIRED
     helper-class CDATA #REQUIRED
     field-type-name CDATA #REQUIRED
-    datasource-check-on-start ( true | false ) #REQUIRED
-    datasource-add-missing-on-start ( true | false ) #REQUIRED
+    check-on-start ( true | false ) "true"
+    add-missing-on-start ( true | false ) "false"
 >
     <!ELEMENT sql-load-path EMPTY>
     <!ATTLIST sql-load-path

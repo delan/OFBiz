@@ -43,6 +43,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import org.ofbiz.core.util.*;
+import org.ofbiz.core.entity.*;
+import org.ofbiz.core.entity.config.*;
 
 /**
  * Generic Entity - Entity Definition Reader
@@ -68,15 +70,18 @@ public class ModelReader {
     protected String modelName;
 
     /** collection of filenames for entity definitions */
-    protected Collection entityFileNames;
+    protected Collection entityResourceHandlers;
 
-    /** contains a collection of entity names for each filename, populated as they are loaded */
-    protected Map fileNameEntities;
-    /** for each entity contains a map to the filename that the entity came from */
-    protected Map entityFile;
+    /** contains a collection of entity names for each ResourceHandler, populated as they are loaded */
+    protected Map resourceHandlerEntities;
+    /** for each entity contains a map to the ResourceHandler that the entity came from */
+    protected Map entityResourceHandlerMap;
 
-    public static ModelReader getModelReader(String delegatorName) {
-        String tempModelName = UtilProperties.getPropertyValue("entityengine", delegatorName + ".model.reader");
+    public static ModelReader getModelReader(String delegatorName) throws GenericEntityException {
+        Element rootElement = EntityConfigUtil.getXmlRootElement();
+        Element delegatorElement = UtilXml.firstChildElement(rootElement, "delegator", "name", delegatorName);
+        String tempModelName = delegatorElement.getAttribute("entity-model-reader");
+        
         ModelReader reader = (ModelReader) readers.get(tempModelName);
         if (reader == null) { //don't want to block here
             synchronized (ModelReader.class) {
@@ -84,6 +89,8 @@ public class ModelReader {
                 reader = (ModelReader) readers.get(tempModelName);
                 if (reader == null) {
                     reader = new ModelReader(tempModelName);
+                    //preload caches...
+                    reader.getEntityCache();
                     readers.put(tempModelName, reader);
                 }
             }
@@ -91,36 +98,25 @@ public class ModelReader {
         return reader;
     }
 
-    public ModelReader(String modelName) {
+    public ModelReader(String modelName) throws GenericEntityException {
         this.modelName = modelName;
-        entityFileNames = new LinkedList();
-        fileNameEntities = new HashMap();
-        entityFile = new HashMap();
+        entityResourceHandlers = new LinkedList();
+        resourceHandlerEntities = new HashMap();
+        entityResourceHandlerMap = new HashMap();
 
-        String wholeFileNamesStr = UtilProperties.getPropertyValue("entityengine", modelName + ".xml.entity");
-        String fileNamesStr = wholeFileNamesStr;
-        fileNamesStr.trim();
+        Element rootElement = EntityConfigUtil.getXmlRootElement();
+        Element modelElement = UtilXml.firstChildElement(rootElement, "entity-model-reader", "name", modelName);
+        List resourceElements = UtilXml.childElementList(modelElement, "resource");
 
-        while (fileNamesStr.indexOf(';') > 0) {
-            String tempFileName = fileNamesStr.substring(0, fileNamesStr.indexOf(';'));
-            tempFileName.trim();
-            if (entityFileNames.contains(tempFileName)) {
-                Debug.logWarning("WARNING: Entity filename " + tempFileName + " is listed more than once in the " +
-                                 "entity file list: " + wholeFileNamesStr, module);
-            }
-            entityFileNames.add(tempFileName);
-            fileNamesStr = fileNamesStr.substring(fileNamesStr.indexOf(';') + 1);
-            fileNamesStr.trim();
+        Iterator resIter = resourceElements.iterator();
+        while (resIter.hasNext()) {
+            Element resourceElement = (Element) resIter.next();
+            ResourceHandler handler = new ResourceHandler(resourceElement);
+            entityResourceHandlers.add(handler);
         }
-        if (fileNamesStr.length() > 0) {
-            entityFileNames.add(fileNamesStr);
-        }
-
-        //preload caches...
-        getEntityCache();
     }
 
-    public Map getEntityCache() {
+    public Map getEntityCache() throws GenericEntityException {
         if (entityCache == null) { //don't want to block here
             synchronized (ModelReader.class) {
                 //must check if null again as one of the blocked threads can still enter
@@ -135,13 +131,14 @@ public class ModelReader {
 
                     UtilTimer utilTimer = new UtilTimer();
 
-                    Iterator fnIter = entityFileNames.iterator();
-                    while (fnIter.hasNext()) {
-                        String entityFileName = (String) fnIter.next();
+                    Iterator rhIter = entityResourceHandlers.iterator();
+                    while (rhIter.hasNext()) {
+                        ResourceHandler entityResourceHandler = (ResourceHandler) rhIter.next();
 
                         //utilTimer.timerString("Before getDocument in file " + entityFileName);
-                        Document document = getDocument(entityFileName);
+                        Document document = entityResourceHandler.getDocument();
                         if (document == null) {
+                            Debug.logError("Could not get document for " + entityResourceHandler.toString());
                             entityCache = null;
                             return null;
                         }
@@ -149,7 +146,7 @@ public class ModelReader {
                         Hashtable docElementValues = null;
                         docElementValues = new Hashtable();
 
-                        //utilTimer.timerString("Before getDocumentElement in file " + entityFileName);
+                        //utilTimer.timerString("Before getDocumentElement in " + entityResourceHandler.toString());
                         Element docElement = document.getDocumentElement();
                         if (docElement == null) {
                             entityCache = null;
@@ -160,7 +157,7 @@ public class ModelReader {
 
                         int i = 0;
                         if (curChild != null) {
-                            utilTimer.timerString("Before start of entity loop in file " + entityFileName);
+                            utilTimer.timerString("Before start of entity loop in " + entityResourceHandler.toString());
                             do {
                                 boolean isEntity = "entity".equals(curChild.getNodeName());
                                 boolean isViewEntity = "view-entity".equals(curChild.getNodeName());
@@ -169,26 +166,26 @@ public class ModelReader {
                                     Element curEntity = (Element) curChild;
                                     String entityName = UtilXml.checkEmpty(curEntity.getAttribute("entity-name"));
 
-                                    //add entityName to appropriate fileNameEntities collection
-                                    Collection fileEntityNames = (Collection) fileNameEntities.get(entityFileName);
-                                    if (fileEntityNames == null) {
-                                        fileEntityNames = new LinkedList();
-                                        fileNameEntities.put(entityFileName, fileEntityNames);
+                                    //add entityName to appropriate resourceHandlerEntities collection
+                                    Collection resourceHandlerEntityNames = (Collection) resourceHandlerEntities.get(entityResourceHandler);
+                                    if (resourceHandlerEntityNames == null) {
+                                        resourceHandlerEntityNames = new LinkedList();
+                                        resourceHandlerEntities.put(entityResourceHandler, resourceHandlerEntityNames);
                                     }
-                                    fileEntityNames.add(entityName);
+                                    resourceHandlerEntityNames.add(entityName);
 
                                     //check to see if entity with same name has already been read
                                     if (entityCache.containsKey(entityName)) {
                                         Debug.logWarning("WARNING: Entity " + entityName +
                                                          " is defined more than once, most recent will over-write " +
                                                          "previous definition(s)", module);
-                                        Debug.logWarning("WARNING: Entity " + entityName + " was found in file " +
-                                                         entityFileName + ", but was already defined in file " +
-                                                         (String) entityFile.get(entityName), module);
+                                        Debug.logWarning("WARNING: Entity " + entityName + " was found in " +
+                                                         entityResourceHandler + ", but was already defined in " +
+                                                         entityResourceHandlerMap.get(entityName).toString(), module);
                                     }
 
-                                    //add entityName, entityFileName pair to entityFile map
-                                    entityFile.put(entityName, entityFileName);
+                                    //add entityName, entityFileName pair to entityResourceHandlerMap map
+                                    entityResourceHandlerMap.put(entityName, entityResourceHandler);
 
                                     //utilTimer.timerString("  After entityEntityName -- " + i + " --");
                                     //ModelEntity entity = createModelEntity(curEntity, docElement, utilTimer, docElementValues);
@@ -221,7 +218,7 @@ public class ModelReader {
                         } else {
                             Debug.logWarning("No child nodes found.", module);
                         }
-                        utilTimer.timerString("Finished file " + entityFileName + " - Total Entities: " + i + " FINISHED");
+                        utilTimer.timerString("Finished " + entityResourceHandler.toString() + " - Total Entities: " + i + " FINISHED");
                     }
 
                     //do a pass on all of the view entities now that all of the entities have
@@ -239,51 +236,51 @@ public class ModelReader {
         return entityCache;
     }
 
-    /** rebuilds the fileNameEntities Map of Collections based on the current
-     *  entityFile Map, must be done whenever a manual change is made to the
-     *  entityFile Map after the initial load to make them consistent again.
+    /** rebuilds the resourceHandlerEntities Map of Collections based on the current
+     *  entityResourceHandlerMap Map, must be done whenever a manual change is made to the
+     *  entityResourceHandlerMap Map after the initial load to make them consistent again.
      */
-    public void rebuildFileNameEntities() {
-        fileNameEntities = new HashMap();
-        Iterator entityFileIter = entityFile.entrySet().iterator();
-        while (entityFileIter.hasNext()) {
-            Map.Entry entry = (Map.Entry) entityFileIter.next();
-            //add entityName to appropriate fileNameEntities collection
-            Collection fileEntityNames = (Collection) fileNameEntities.get(entry.getValue());
-            if (fileEntityNames == null) {
-                fileEntityNames = new LinkedList();
-                fileNameEntities.put(entry.getValue(), fileEntityNames);
+    public void rebuildResourceHandlerEntities() {
+        resourceHandlerEntities = new HashMap();
+        Iterator entityResourceIter = entityResourceHandlerMap.entrySet().iterator();
+        while (entityResourceIter.hasNext()) {
+            Map.Entry entry = (Map.Entry) entityResourceIter.next();
+            //add entityName to appropriate resourceHandlerEntities collection
+            Collection resourceHandlerEntityNames = (Collection) resourceHandlerEntities.get(entry.getValue());
+            if (resourceHandlerEntityNames == null) {
+                resourceHandlerEntityNames = new LinkedList();
+                resourceHandlerEntities.put(entry.getValue(), resourceHandlerEntityNames);
             }
-            fileEntityNames.add(entry.getKey());
+            resourceHandlerEntityNames.add(entry.getKey());
         }
     }
     
-    public Iterator getFileNameEntitiesKeyIterator() {
-        if (fileNameEntities == null) return null;
-        return fileNameEntities.keySet().iterator();
+    public Iterator getResourceHandlerEntitiesKeyIterator() {
+        if (resourceHandlerEntities == null) return null;
+        return resourceHandlerEntities.keySet().iterator();
     }
 
-    public Collection getFileNameEntities(String entityFileName) {
-        if (fileNameEntities == null) return null;
-        return (Collection) fileNameEntities.get(entityFileName);
+    public Collection getResourceHandlerEntities(String entityFileName) {
+        if (resourceHandlerEntities == null) return null;
+        return (Collection) resourceHandlerEntities.get(entityFileName);
     }
 
     public void addEntityToFile(String entityName, String filename) {
-        entityFile.put(entityName, filename);
+        entityResourceHandlerMap.put(entityName, filename);
     }
     
-    public String getEntityFileName(String entityName) {
-        return (String) entityFile.get(entityName);
+    public ResourceHandler getEntityResourceHandler(String entityName) {
+        return (ResourceHandler) entityResourceHandlerMap.get(entityName);
     }
     
     /** Gets an Entity object based on a definition from the specified XML Entity descriptor file.
      * @param entityName The entityName of the Entity definition to use.
      * @return An Entity object describing the specified entity of the specified descriptor file.
      */
-    public ModelEntity getModelEntity(String entityName) {
+    public ModelEntity getModelEntity(String entityName) throws GenericEntityException {
         Map ec = getEntityCache();
         if (ec == null) {
-            throw new java.lang.IllegalStateException("ERROR: Unable to load Entity Cache");
+            throw new GenericEntityConfException("ERROR: Unable to load Entity Cache");
         }
         return (ModelEntity) ec.get(entityName);
     }
@@ -291,7 +288,7 @@ public class ModelReader {
     /** Creates a Iterator with the entityName of each Entity defined in the specified XML Entity Descriptor file.
      * @return A Iterator of entityName Strings
      */
-    public Iterator getEntityNamesIterator() {
+    public Iterator getEntityNamesIterator() throws GenericEntityException {
         Collection collection = getEntityNames();
         if (collection != null) {
             return collection.iterator();
@@ -303,17 +300,17 @@ public class ModelReader {
     /** Creates a Collection with the entityName of each Entity defined in the specified XML Entity Descriptor file.
      * @return A Collection of entityName Strings
      */
-    public Collection getEntityNames() {
+    public Collection getEntityNames() throws GenericEntityException {
         Map ec = getEntityCache();
         if (ec == null) {
-            throw new java.lang.IllegalStateException("ERROR: Unable to load Entity Cache");
+            throw new GenericEntityConfException("ERROR: Unable to load Entity Cache");
         }
         return ec.keySet();
     }
 
     ModelEntity createModelEntity(Element entityElement, Element docElement, UtilTimer utilTimer, Hashtable docElementValues) {
         if (entityElement == null) return null;
-        numEntities++;
+        this.numEntities++;
         ModelEntity entity = new ModelEntity(this, entityElement, docElement, utilTimer, docElementValues);
 
         return entity;
@@ -321,14 +318,14 @@ public class ModelReader {
 
     ModelEntity createModelViewEntity(Element entityElement, Element docElement, UtilTimer utilTimer, Hashtable docElementValues) {
         if (entityElement == null) return null;
-        numViewEntities++;
+        this.numViewEntities++;
         ModelViewEntity entity = new ModelViewEntity(this, entityElement, docElement, utilTimer, docElementValues);
 
         return entity;
     }
 
     public ModelRelation createRelation(ModelEntity entity, Element relationElement) {
-        numRelations++;
+        this.numRelations++;
         ModelRelation relation = new ModelRelation(entity, relationElement);
 
         return relation;
@@ -349,27 +346,23 @@ public class ModelReader {
             return null;
         }
 
-        numFields++;
+        this.numFields++;
         ModelField field = new ModelField(fieldElement);
 
         return field;
     }
 
-    protected Document getDocument(String filename) {
+    protected Document getDocument(String filename) throws GenericEntityConfException {
         if (filename == null) return null;
         Document document = null;
         try {
             document = UtilXml.readXmlDocument(UtilURL.fromFilename(filename));
-        } catch (SAXException sxe) {
-            // Error generated during parsing)
-            Exception x = sxe;
-            if (sxe.getException() != null) x = sxe.getException();
-            x.printStackTrace();
-        } catch (ParserConfigurationException pce) {
-            // Parser with specified options can't be built
-            pce.printStackTrace();
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
+        } catch (SAXException e) {
+            throw new GenericEntityConfException("Error reading entity model XML file " + filename, e);
+        } catch (ParserConfigurationException e) {
+            throw new GenericEntityConfException("Error reading entity model XML file " + filename, e);
+        } catch (IOException e) {
+            throw new GenericEntityConfException("Error reading entity model XML file " + filename, e);
         }
 
         return document;

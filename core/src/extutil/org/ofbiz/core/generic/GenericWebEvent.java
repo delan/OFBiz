@@ -76,7 +76,12 @@ public class GenericWebEvent {
         }
 
         ModelReader reader = delegator.getModelReader();
-        ModelEntity entity = reader.getModelEntity(entityName);
+        ModelEntity entity = null;
+        try {
+            entity = reader.getModelEntity(entityName);
+        } catch (GenericEntityException e) {
+            Debug.logError(e);
+        }
 
         String updateMode = request.getParameter("UPDATE_MODE");
         if (updateMode == null || updateMode.length() <= 0) {

@@ -62,7 +62,7 @@ import org.apache.xml.serialize.*;
 public class UtilXml {
 
     public static final String module = UtilXml.class.getName();
-
+    
     public static String writeXmlDocument(Document document) throws java.io.IOException {
         if (document == null) {
             Debug.logWarning("[UtilXml.writeXmlDocument] Document was null, doing nothing", module);
@@ -257,6 +257,28 @@ public class UtilXml {
                         childElementName.equals(node.getNodeName()))) {
                     Element childElement = (Element) node;
                     return childElement;
+                }
+            } while ((node = node.getNextSibling()) != null);
+        }
+        return null;
+    }
+
+    /** Return the first child Element with the given name; if name is null
+     * returns the first element. */
+    public static Element firstChildElement(Element element, String childElementName, String attrName, String attrValue) {
+        if (element == null) return null;
+        //get the first element with the given name
+        Node node = element.getFirstChild();
+        if (node != null) {
+            do {
+                if (node.getNodeType() == Node.ELEMENT_NODE && (childElementName == null ||
+                        childElementName.equals(node.getNodeName()))) {
+                    Element childElement = (Element) node;
+                    
+                    String value = childElement.getAttribute(attrName);
+                    if (value != null && value.equals(attrValue)) {
+                        return childElement;
+                    }
                 }
             } while ((node = node.getNextSibling()) != null);
         }

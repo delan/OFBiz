@@ -52,7 +52,7 @@ public class EntityOperator {
         codeString = code;
     }
 
-    public String getCode() {
+    public String toString() {
         return codeString;
     }
 }

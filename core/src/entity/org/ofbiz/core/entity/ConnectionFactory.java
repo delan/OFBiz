@@ -29,8 +29,10 @@ import java.util.*;
 import java.sql.*;
 import javax.sql.*;
 import javax.naming.*;
+import org.w3c.dom.Element;
 
 import org.ofbiz.core.util.*;
+import org.ofbiz.core.entity.config.*;
 
 /**
  * ConnectionFactory - central source for JDBC connections
@@ -48,8 +50,14 @@ public class ConnectionFactory {
     public static Connection getConnection(String helperName) throws SQLException, GenericEntityException {
         //Debug.logVerbose("Getting a connection", module);
         
-        String jndiName = UtilProperties.getPropertyValue("entityengine", helperName + ".jdbc.jndi.name");
-        if (jndiName != null && jndiName.length() > 0) {
+        Element rootElement = EntityConfigUtil.getXmlRootElement();
+        Element datasourceElement = UtilXml.firstChildElement(rootElement, "datasource", "name", helperName);
+        Element jndiJdbcElement = UtilXml.firstChildElement(datasourceElement, "jndi-jdbc");
+        
+        if (jndiJdbcElement != null) {
+            String jndiName = jndiJdbcElement.getAttribute("jndi-name");
+            String jndiServerName = jndiJdbcElement.getAttribute("jndi-server-name");
+            
             //Debug.logVerbose("Trying JNDI name " + jndiName, module);
             Object ds;
             ds = dsCache.get(jndiName);
@@ -78,7 +86,7 @@ public class ConnectionFactory {
 
                 try {
                     Debug.logInfo("Doing JNDI lookup for name " + jndiName, module);
-                    InitialContext ic = JNDIContextFactory.getInitialContext(helperName);
+                    InitialContext ic = JNDIContextFactory.getInitialContext(jndiServerName);
                     if (ic != null)
                         ds = ic.lookup(jndiName);
                     if (ds != null) {
@@ -103,6 +111,7 @@ public class ConnectionFactory {
             }
         }
 
+        Element inlineJdbcElement = UtilXml.firstChildElement(datasourceElement, "inline-jdbc");
         //If JNDI sources are not specified, or found, try Tyrex
         try {
             // For Tyrex 0.9.8.5
@@ -111,14 +120,15 @@ public class ConnectionFactory {
             //Class.forName("tyrex.jdbc.xa.EnabledDataSource").newInstance();
             //Debug.logInfo("Found Tyrex Driver...");
 
-            Connection con = TyrexConnectionFactory.getConnection(helperName);
+            Connection con = TyrexConnectionFactory.getConnection(helperName, inlineJdbcElement);
             if (con != null)
                 return con;
         } catch (Exception ex) {
+            Debug.logWarning(ex, "There was an error loading Tyrex, this may not be a serious problem, but you probably want to know anyway.");
         }
 
         // Default to plain JDBC.
-        String driverClassName = UtilProperties.getPropertyValue("entityengine", helperName + ".jdbc.driver");
+        String driverClassName = inlineJdbcElement.getAttribute("jdbc-driver");
         if (driverClassName != null && driverClassName.length() > 0) {
             try {
                 Class.forName(driverClassName);
@@ -127,9 +137,8 @@ public class ConnectionFactory {
                 Debug.logWarning(cnfe);
                 return null;
             }
-            return DriverManager.getConnection(UtilProperties.getPropertyValue("entityengine", helperName + ".jdbc.uri"),
-                                               UtilProperties.getPropertyValue("entityengine", helperName + ".jdbc.username"),
-                                               UtilProperties.getPropertyValue("entityengine", helperName + ".jdbc.password"));
+            return DriverManager.getConnection(inlineJdbcElement.getAttribute("jdbc-uri"),
+                    inlineJdbcElement.getAttribute("jdbc-username"), inlineJdbcElement.getAttribute("jdbc-password"));
         }
 
         Debug.log("******* ERROR: No database connection found for helperName \"" + helperName + "\"", module);
