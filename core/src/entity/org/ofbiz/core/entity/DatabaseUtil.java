@@ -399,7 +399,7 @@ public class DatabaseUtil {
                 
                 //get existing FK map for this table
                 Map rcInfoMap = (Map) refTableInfoMap.get(entity.getTableName());
-                Debug.logVerbose("Got ref info for table " + entity.getTableName() + ": " + rcInfoMap);
+                //Debug.logVerbose("Got ref info for table " + entity.getTableName() + ": " + rcInfoMap);
                 
                 //go through each relation to see if an FK already exists
                 Iterator relations = entity.getRelationsIterator();
@@ -808,59 +808,69 @@ public class DatabaseUtil {
 
         try {
             ResultSet rsCols = dbData.getImportedKeys(null, null, null);
-
+            
             int totalFkRefs = 0;
-            while (rsCols.next()) {
-                try {
-                    ReferenceCheckInfo rcInfo = new ReferenceCheckInfo();
+            
+            //Iterator tableNamesIter = tableNames.iterator();
+            //while (tableNamesIter.hasNext()) {
+            //    String tableName = (String) tableNamesIter.next();
+            //    ResultSet rsCols = dbData.getImportedKeys(null, null, tableName);
+            //    Debug.logVerbose("Getting imported keys for table " + tableName);
 
-                    rcInfo.pkTableName = rsCols.getString("PKTABLE_NAME");
-                    rcInfo.pkTableName = (rcInfo.pkTableName == null) ? null : rcInfo.pkTableName.toUpperCase();
-                    rcInfo.pkColumnName = rsCols.getString("PKCOLUMN_NAME");
-                    rcInfo.pkColumnName = (rcInfo.pkColumnName == null) ? null : rcInfo.pkColumnName.toUpperCase();
-                    
-                    rcInfo.fkTableName = rsCols.getString("FKTABLE_NAME");
-                    rcInfo.fkTableName = (rcInfo.fkTableName == null) ? null : rcInfo.fkTableName.toUpperCase();
-                    //ignore the column info if the FK table name is not in the list we are concerned with
-                    if (!tableNames.contains(rcInfo.fkTableName))
+                while (rsCols.next()) {
+                    try {
+                        ReferenceCheckInfo rcInfo = new ReferenceCheckInfo();
+
+                        rcInfo.pkTableName = rsCols.getString("PKTABLE_NAME");
+                        rcInfo.pkTableName = (rcInfo.pkTableName == null) ? null : rcInfo.pkTableName.toUpperCase();
+                        rcInfo.pkColumnName = rsCols.getString("PKCOLUMN_NAME");
+                        rcInfo.pkColumnName = (rcInfo.pkColumnName == null) ? null : rcInfo.pkColumnName.toUpperCase();
+
+                        rcInfo.fkTableName = rsCols.getString("FKTABLE_NAME");
+                        rcInfo.fkTableName = (rcInfo.fkTableName == null) ? null : rcInfo.fkTableName.toUpperCase();
+                        //ignore the column info if the FK table name is not in the list we are concerned with
+                        if (!tableNames.contains(rcInfo.fkTableName))
+                            continue;
+                        rcInfo.fkColumnName = rsCols.getString("FKCOLUMN_NAME");
+                        rcInfo.fkColumnName = (rcInfo.fkColumnName == null) ? null : rcInfo.fkColumnName.toUpperCase();
+
+                        rcInfo.fkName = rsCols.getString("FK_NAME");
+                        rcInfo.fkName = (rcInfo.fkName == null) ? null : rcInfo.fkName.toUpperCase();
+
+                        Debug.logVerbose("Got: " + rcInfo.toString());
+
+                        Map tableRefInfo = (Map) refInfo.get(rcInfo.fkTableName);
+
+                        if (tableRefInfo == null) {
+                            tableRefInfo = new HashMap();
+                            refInfo.put(rcInfo.fkTableName, tableRefInfo);
+                            Debug.logVerbose("Adding new Map for table: " + rcInfo.fkTableName);
+                        }
+                        if (!tableRefInfo.containsKey(rcInfo.fkName)) totalFkRefs++;
+                        tableRefInfo.put(rcInfo.fkName, rcInfo);
+                    } catch (SQLException sqle) {
+                        String message = "Error getting column info for column. Error was:" + sqle.toString();
+
+                        Debug.logError(message, module);
+                        if (messages != null)
+                            messages.add(message);
                         continue;
-                    rcInfo.fkColumnName = rsCols.getString("FKCOLUMN_NAME");
-                    rcInfo.fkColumnName = (rcInfo.fkColumnName == null) ? null : rcInfo.fkColumnName.toUpperCase();
-                    
-                    rcInfo.fkName = rsCols.getString("FK_NAME");
-                    rcInfo.fkName = (rcInfo.fkName == null) ? null : rcInfo.fkName.toUpperCase();
-
-                    Debug.logVerbose("Got: " + rcInfo.toString());
-                    
-                    Map tableRefInfo = (Map) refInfo.get(rcInfo.fkTableName);
-
-                    if (tableRefInfo == null) {
-                        tableRefInfo = new HashMap();
-                        refInfo.put(rcInfo.fkTableName, tableRefInfo);
-                        Debug.logVerbose("Adding new Map for table: " + rcInfo.fkTableName);
                     }
-                    if (!tableRefInfo.containsKey(rcInfo.fkName)) totalFkRefs++;
-                    tableRefInfo.put(rcInfo.fkName, rcInfo);
+                }
+
+                //Debug.logInfo("There are " + totalFkRefs + " in the database");
+                try {
+                    rsCols.close();
                 } catch (SQLException sqle) {
-                    String message = "Error getting column info for column. Error was:" + sqle.toString();
+                    String message = "Unable to close ResultSet for column list, continuing anyway... Error was:" + sqle.toString();
 
                     Debug.logError(message, module);
                     if (messages != null)
                         messages.add(message);
-                    continue;
                 }
-            }
-            Debug.logInfo("There are " + totalFkRefs + " in the database");
+            //}
+            Debug.logInfo("There are " + totalFkRefs + " foreign key refs in the database");
             
-            try {
-                rsCols.close();
-            } catch (SQLException sqle) {
-                String message = "Unable to close ResultSet for column list, continuing anyway... Error was:" + sqle.toString();
-
-                Debug.logError(message, module);
-                if (messages != null)
-                    messages.add(message);
-            }
         } catch (SQLException sqle) {
             String message = "Error getting column meta data for Error was:" + sqle.toString() + ". Not checking columns.";
 
@@ -1090,7 +1100,7 @@ public class DatabaseUtil {
         sqlBuf.append(" ADD ");
         sqlBuf.append(makeFkConstraintClause(entity, modelRelation, relModelEntity));
     
-        Debug.logVerbose("[createTable] sql=" + sqlBuf.toString());
+        //Debug.logVerbose("[createForeignKey] sql=" + sqlBuf.toString());
         try {
             stmt = connection.createStatement();
             stmt.executeUpdate(sqlBuf.toString());
