@@ -1022,6 +1022,7 @@ public class OrderServices {
         subjectString = FlexibleStringExpander.expandString(subjectString, orderEmailData);
         
         result.put("templateName", ofbizHome + webSiteEmail.get("templatePath"));
+        result.put("emailType", emailType);
         result.put("subject", subjectString);
         result.put("sendFrom", webSiteEmail.get("fromAddress"));        
         result.put("sendCc", webSiteEmail.get("ccAddress"));
