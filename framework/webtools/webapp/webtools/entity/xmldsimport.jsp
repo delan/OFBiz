@@ -115,7 +115,7 @@
         }
         
         StringWriter outWriter = new StringWriter();
-        Configuration conf = org.ofbiz.webapp.ftl.FreeMarkerWorker.makeDefaultOfbizConfig();
+        Configuration conf = org.ofbiz.base.util.template.FreeMarkerWorker.makeDefaultOfbizConfig();
         
         Template template = null;
         try {
@@ -187,7 +187,7 @@
         }
         
         StringWriter outWriter = new StringWriter();
-        Configuration conf = org.ofbiz.webapp.ftl.FreeMarkerWorker.makeDefaultOfbizConfig();
+        Configuration conf = org.ofbiz.base.util.template.FreeMarkerWorker.makeDefaultOfbizConfig();
         
         Template template = null;
         try {
