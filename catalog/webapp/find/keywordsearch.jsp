@@ -1,7 +1,4 @@
-<%
-/**
- *  Title: Keyword Search Page
- *  Description: None
+<%--
  *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
@@ -25,15 +22,16 @@
  *@author     David E. Jones
  *@created    May 22 2001
  *@version    1.0
- */
-%>
+--%>
 
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 <%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.entity.*" %>
 <%@ page import="org.ofbiz.commonapp.product.product.*"%>
 
 <%String searchCategoryId = request.getParameter("SEARCH_CATEGORY_ID");%>
-<%ProductWorker.getKeywordSearchProducts(pageContext, "", searchCategoryId);%>
+<%String searchOperator = request.getParameter("SEARCH_OPERATOR");%>
+<%if (!"AND".equalsIgnoreCase(searchOperator) && !"OR".equalsIgnoreCase(searchOperator)) { searchOperator = "OR"; }%>
+<%ProductWorker.getKeywordSearchProducts(pageContext, "", searchCategoryId, true, true, searchOperator);%>
 <ofbiz:object name="viewIndex" property="viewIndex" type='java.lang.Integer' />
 <ofbiz:object name="viewSize" property="viewSize" type='java.lang.Integer' />
 <ofbiz:object name="lowIndex" property="lowIndex" type='java.lang.Integer' />
@@ -42,7 +40,11 @@
 <ofbiz:object name="keywordString" property="keywordString" type='java.lang.String' />
 
 <br>
-<div class='head1'>Search Results for "<%=UtilFormatOut.checkNull((String)pageContext.getAttribute("keywordString"))%>" in Category with id "<%=UtilFormatOut.checkNull(searchCategoryId)%>"</div>
+<div class='head1'>
+    Search Results for "<%=UtilFormatOut.checkNull((String)pageContext.getAttribute("keywordString"))%>" 
+    in Category with id "<%=UtilFormatOut.checkNull(searchCategoryId)%>"
+    where <%="OR".equalsIgnoreCase(searchOperator)?"any keyword":"all keywords"%> matched.
+</div>
 
 <ofbiz:unless name="searchProductList">
   <br><div class='head2'>&nbsp;No results found.</div>

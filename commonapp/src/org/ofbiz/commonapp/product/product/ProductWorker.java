@@ -88,7 +88,7 @@ public class ProductWorker {
      *@param categoryId The keyword search group name for this search
      */
     public static void getKeywordSearchProducts(PageContext pageContext, String attributePrefix, String categoryId) {
-        getKeywordSearchProducts(pageContext, attributePrefix, categoryId, false, false, "AND");
+        getKeywordSearchProducts(pageContext, attributePrefix, categoryId, false, false, "OR");
     }
     
     /**
@@ -103,8 +103,9 @@ public class ProductWorker {
     public static void getKeywordSearchProducts(PageContext pageContext, String attributePrefix, String categoryId, boolean anyPrefix, boolean anySuffix, String intraKeywordOperator) {
         GenericDelegator delegator = (GenericDelegator) pageContext.getRequest().getAttribute("delegator");
 
-        if (UtilValidate.isEmpty(intraKeywordOperator)) {
-            intraKeywordOperator = "AND";
+        if (intraKeywordOperator == null || (!"AND".equalsIgnoreCase(intraKeywordOperator) && !"OR".equalsIgnoreCase(intraKeywordOperator))) {
+            Debug.logWarning("intraKeywordOperator [" + intraKeywordOperator + "] was not valid, defaulting to OR");
+            intraKeywordOperator = "OR";
         }
         
         int viewIndex = 0;
@@ -123,7 +124,7 @@ public class ProductWorker {
 
         if (categoryId == null) categoryId = "";
         String keywordString = pageContext.getRequest().getParameter("SEARCH_STRING");
-        String curFindString = "KeywordSearch:" + keywordString + "::" + categoryId;
+        String curFindString = "KeywordSearch:" + keywordString + "::" + categoryId + "::" + anyPrefix + "::" + anySuffix + "::" + intraKeywordOperator;
 
         ArrayList productIds = (ArrayList) pageContext.getSession().getAttribute("CACHE_SEARCH_RESULTS");
         String resultArrayName = (String) pageContext.getSession().getAttribute("CACHE_SEARCH_RESULTS_NAME");
@@ -143,6 +144,9 @@ public class ProductWorker {
             if (productIds != null) {
                 pageContext.getSession().setAttribute("CACHE_SEARCH_RESULTS", productIds);
                 pageContext.getSession().setAttribute("CACHE_SEARCH_RESULTS_NAME", curFindString);
+            } else {
+                pageContext.getSession().removeAttribute("CACHE_SEARCH_RESULTS");
+                pageContext.getSession().removeAttribute("CACHE_SEARCH_RESULTS_NAME");
             }
         }
 
