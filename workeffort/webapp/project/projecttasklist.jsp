@@ -128,7 +128,7 @@
                 <TR><TD colspan='7'><HR class='sepbar'></TD></TR>
                 <ofbiz:iterator name="workEffort" property="phases">
                   <TR>
-                    <td class='tabletext'><b>Phase</b></td>
+                    <td valign=top class='tabletext'><b>Phase</b></td>
                     <TD valign=top><DIV class='tabletext'><b><ofbiz:entityfield attribute="workEffort" field="workEffortName"/></b></div></TD>
                     <TD valign=top><DIV class='tabletext'><b><ofbiz:entityfield attribute="workEffort" field="description"/></b></div></TD>
                     <TD valign=top><DIV class='tabletext'><b><%=UtilDateTime.toDateTimeString(workEffort.getTimestamp("estimatedStartDate"))%></b></DIV></TD>
