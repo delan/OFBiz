@@ -40,7 +40,7 @@
 <%
   Collection orderHeaderList = null;
   String listStatusId = request.getParameter("listStatusId");
-  if (listStatusId == null || listStatusId.length() == 0) listStatusId = "ORDERED";
+  if (listStatusId == null || listStatusId.length() == 0) listStatusId = "ORDER_ORDERED";
   String partyId = request.getParameter("partyId");
   if (partyId != null) {
       Debug.logInfo("Getting order by party.");
