@@ -1,5 +1,5 @@
 /*
- * $Id: IcsPaymentServices.java,v 1.5 2003/11/28 18:01:19 ajzeneski Exp $
+ * $Id: IcsPaymentServices.java,v 1.6 2003/12/03 21:53:18 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -42,7 +42,7 @@ import com.cybersource.ws.client.axis.AxisFaultException;
  * CyberSource WS Integration Services
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      3.0
  */
 public class IcsPaymentServices {
@@ -147,7 +147,7 @@ public class IcsPaymentServices {
         GenericValue orderPaymentPreference = (GenericValue) context.get("orderPaymentPreference");
         GenericValue authTransaction = PaymentGatewayServices.getAuthTransaction(orderPaymentPreference);
         if (authTransaction == null) {
-            return ServiceUtil.returnError("No authorization transaction found for the OrderPaymentPreference; cannot release");
+            return ServiceUtil.returnError("No authorization transaction found for the OrderPaymentPreference; cannot refund");
         }
 
         // generate the request/properties
