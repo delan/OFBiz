@@ -1,5 +1,5 @@
 /*
- * $Id: OrderedMap.java,v 1.1 2004/07/01 07:57:54 jonesde Exp $
+ * $Id: OrderedMap.java,v 1.2 2004/07/18 17:47:42 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -35,7 +35,7 @@ import java.util.Set;
  * OrderedMap - HashMap backed by a linked list.
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class OrderedMap extends HashMap {
@@ -48,7 +48,14 @@ public class OrderedMap extends HashMap {
     public Set keySet() {
         return new OrderedSet(orderedKeys);
     }
- 
+
+    /**
+     * @return List a copy of the ordered keys list which backs this map
+     */
+    public List getOrderedKeys() {
+        return new LinkedList(this.orderedKeys);
+    }
+
     /**
      * @see java.util.Map#put(java.lang.Object, java.lang.Object)
      */
