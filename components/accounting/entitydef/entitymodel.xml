@@ -1373,7 +1373,7 @@
             title="Credit Card Information Entity">
       <field name="paymentMethodId" type="id-ne"></field>
       <field name="cardType" type="short-varchar"></field>
-      <field name="cardNumber" type="credit-card-number"></field>
+      <field name="cardNumber" type="credit-card-number" encrypt="true"></field>
       <field name="expireDate" type="credit-card-date"></field>
       <field name="companyNameOnCard" type="name"></field>
       <field name="titleOnCard" type="name"></field>
@@ -1422,7 +1422,7 @@
       <field name="bankName" type="name"></field>
       <field name="routingNumber" type="short-varchar"></field>
       <field name="accountType" type="short-varchar"></field>
-      <field name="accountNumber" type="short-varchar"></field>
+      <field name="accountNumber" type="long-varchar" encrypt="true"></field>
       <field name="nameOnAccount" type="name"></field>
       <field name="companyNameOnAccount" type="name"></field>
       <field name="contactMechId" type="id-ne"></field>
@@ -1596,8 +1596,8 @@
             package-name="org.ofbiz.accounting.payment"
             title="Gift Card Information Entity">
       <field name="paymentMethodId" type="id-ne"></field>
-      <field name="cardNumber" type="short-varchar"></field>
-      <field name="pinNumber" type="short-varchar"></field>
+      <field name="cardNumber" type="long-varchar" encrypt="true"></field>
+      <field name="pinNumber" type="long-varchar" encrypt="true"></field>
       <field name="expireDate" type="credit-card-date"></field>
       <field name="contactMechId" type="id-ne"></field>
       <prim-key field="paymentMethodId"/>
