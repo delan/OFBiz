@@ -30,6 +30,7 @@ import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.pos.PosTransaction;
 import org.ofbiz.pos.component.Input;
 import org.ofbiz.pos.component.Output;
+import org.ofbiz.pos.component.Journal;
 import org.ofbiz.pos.screen.PosScreen;
 
 /**
@@ -234,12 +235,61 @@ public class PaymentEvents {
         pos.refresh();
     }
 
-    public static void clearAllPayments(PosScreen pos) {
+    public static void clearPayment(PosScreen pos) {
         PosTransaction trans = PosTransaction.getCurrentTx(pos.getSession());
-        trans.clearPayments();
+        Journal journal = pos.getJournal();
+        String sku = journal.getSelectedSku();
+        String idx = journal.getSelectedIdx();
+        if (UtilValidate.isNotEmpty(idx) && UtilValidate.isEmpty(sku)) {
+            int index = -1;
+            try {
+                index = Integer.parseInt(idx);
+            } catch (Exception e) {
+            }
+            if (index > -1) {
+                trans.clearPayment(index);
+            }
+        }
+        pos.getInput().clearFunction("GIFTCARD");
         pos.getInput().clearFunction("CREDIT");
         pos.getInput().clearFunction("CHECK");
         pos.refresh();
+    }
+
+    public static void clearAllPayments(PosScreen pos) {
+        PosTransaction trans = PosTransaction.getCurrentTx(pos.getSession());
+        trans.clearPayments();
+        pos.getInput().clearFunction("GIFTCARD");
+        pos.getInput().clearFunction("CREDIT");
+        pos.getInput().clearFunction("CHECK");
+        pos.refresh();
+    }
+
+    public static void setRefNum(PosScreen pos) {
+        PosTransaction trans = PosTransaction.getCurrentTx(pos.getSession());
+        Journal journal = pos.getJournal();
+        String sku = journal.getSelectedSku();
+        String idx = journal.getSelectedIdx();
+
+        if (UtilValidate.isNotEmpty(idx) && UtilValidate.isEmpty(sku)) {
+            String refNum = pos.getInput().value();
+            if (UtilValidate.isEmpty(refNum)) {
+                pos.getOutput().print(Output.REFNUM);
+                pos.getInput().setFunction("REFNUM");
+            } else {
+                int index = -1;
+                try {
+                    index = Integer.parseInt(idx);
+                } catch (Exception e) {
+                }
+                if (index > -1) {
+                    trans.setPaymentRefNum(index, refNum);
+                    pos.refresh();
+                }
+            }
+        } else {
+            pos.refresh();
+        }
     }
 
     public static void processSale(PosScreen pos) {

@@ -324,6 +324,11 @@ public class PosTransaction {
         cart.clearPayments();
     }
 
+    public void clearPayment(int index) {
+        trace("removing payment", "" + index);
+        cart.clearPayment(index);
+    }
+
     public int selectedPayments() {
         return cart.selectedPayments();
     }
