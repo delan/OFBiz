@@ -51,11 +51,11 @@ import org.w3c.dom.Element;
  * Widget Library - Screen model condition class
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      3.1
  */
 public class ModelScreenCondition {
-    public static final String module = ModelScreenAction.class.getName();
+    public static final String module = ModelScreenCondition.class.getName();
 
     protected ModelScreen modelScreen;
     protected ScreenCondition rootCondition;

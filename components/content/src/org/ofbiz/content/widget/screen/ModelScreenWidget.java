@@ -63,7 +63,7 @@ import org.xml.sax.SAXException;
  * Widget Library - Screen model class
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      3.1
  */
 public abstract class ModelScreenWidget {
@@ -97,11 +97,11 @@ public abstract class ModelScreenWidget {
                 subWidgets.add(new DecoratorSectionInclude(modelScreen, subElement));
             } else if ("label".equals(subElement.getNodeName())) {
                 subWidgets.add(new Label(modelScreen, subElement));
-            } else if ("form".equals(subElement.getNodeName())) {
+            } else if ("include-form".equals(subElement.getNodeName())) {
                 subWidgets.add(new Form(modelScreen, subElement));
-            } else if ("menu".equals(subElement.getNodeName())) {
+            } else if ("include-menu".equals(subElement.getNodeName())) {
                 subWidgets.add(new Menu(modelScreen, subElement));
-            } else if ("tree".equals(subElement.getNodeName())) {
+            } else if ("include-tree".equals(subElement.getNodeName())) {
                 subWidgets.add(new Tree(modelScreen, subElement));
             } else if ("content".equals(subElement.getNodeName())) {
                 subWidgets.add(new Content(modelScreen, subElement));
