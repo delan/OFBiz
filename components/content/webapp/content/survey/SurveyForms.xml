@@ -41,10 +41,10 @@
         <field name="submitButton" title="Update" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="EditSurveyQuestions" type="list" 
-        target="updateSurveyQuestion" title="" default-map-name="surveyQuestion" list-name="surveyQuestionList" list-entry-name="surveyQuestion"
+        target="updateSurveyQuestion" title="" list-name="surveyQuestionList" list-entry-name="surveyQuestion"
         default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
         
-        <auto-fields-service service-name="updateSurveyQuestion"/>
+        <auto-fields-service service-name="updateSurveyQuestion" map-name="surveyQuestion"/>
 
         <field name="surveyId"><hidden/></field>
         <field name="surveyQuestionSeqId" title="Question #"><display/></field>
