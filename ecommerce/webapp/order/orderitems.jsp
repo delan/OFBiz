@@ -3,8 +3,6 @@
 // NOTE: This page is meant to be included, not called independently
 
 /**
- *  Title: Order Information
- *  Description: None
  *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
@@ -31,7 +29,6 @@
  *@version    1.0
  */
 %>
-<%double total = 0.0;%>
 
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
@@ -62,7 +59,7 @@
                   <th width="5%" align="right">Quantity</th>
                   <th width="10%" align="right">Unit Price</th>
                   <th width="10%" align="right">Adjustments</th>
-                  <th width="10%" align="right">Total</th>
+                  <th width="10%" align="right">Subtotal</th>
                 </tr>
              <%if (orderItems != null) pageContext.setAttribute("orderItems", orderItems);%>
              <ofbiz:iterator name="orderItem" property="orderItems">
@@ -110,17 +107,31 @@
 
                 <tr>
                     <td align="right" colspan="4"><div class="tabletext"><b>Subtotal</b></div></td>
-                    <td align="right" nowrap><div class="tabletext"><%=UtilFormatOut.formatPrice(OrderReadHelper.getOrderItemsSubTotal(orderItems, orderAdjustments))%></div></td>
+                    <td align="right" nowrap><div class="tabletext"><%=UtilFormatOut.formatPrice(orderSubTotal)%></div></td>
                 </tr>
 
-                <%if (orderHeaderAdjustments != null) pageContext.setAttribute("orderHeaderAdjustments", orderHeaderAdjustments);%>
-                <ofbiz:iterator name="orderHeaderAdjustment" property="orderHeaderAdjustments">
+                <%Collection headerAdjustmentsToShow = OrderReadHelper.filterOrderAdjustments(orderHeaderAdjustments, true, false, false);%>
+                <%if (headerAdjustmentsToShow != null) pageContext.setAttribute("headerAdjustmentsToShow", headerAdjustmentsToShow);%>
+                <ofbiz:iterator name="orderHeaderAdjustment" property="headerAdjustmentsToShow">
                     <%GenericValue adjustmentType = orderHeaderAdjustment.getRelatedOneCache("OrderAdjustmentType");%>
                     <tr>
                         <td align="right" colspan="4"><div class="tabletext"><b><%=adjustmentType.getString("description")%></b></div></td>
                         <td align="right" nowrap><div class="tabletext"><%=UtilFormatOut.formatPrice(OrderReadHelper.calcOrderAdjustment(orderHeaderAdjustment, orderSubTotal))%></div></td>
                     </tr>
                 </ofbiz:iterator>
+                <%-- do tax and shipping separate so that we can total up the line item adjustments and the order header adjustments --%>
+                <%double shippingAmount = OrderReadHelper.getOrderItemsAdjustments(orderItems, orderAdjustments, false, false, true);%>
+                <%shippingAmount += OrderReadHelper.calcOrderAdjustments(orderHeaderAdjustments, orderSubTotal, false, false, true);%>
+                <tr>
+                    <td align="right" colspan="4"><div class="tabletext"><b>Shipping and Handling</b></div></td>
+                    <td align="right" nowrap><div class="tabletext"><%=UtilFormatOut.formatPrice(shippingAmount)%></div></td>
+                </tr>
+                <%double taxAmount = OrderReadHelper.getOrderItemsAdjustments(orderItems, orderAdjustments, false, true, false);%>
+                <%taxAmount += OrderReadHelper.calcOrderAdjustments(orderHeaderAdjustments, orderSubTotal, false, true, false);%>
+                <tr>
+                    <td align="right" colspan="4"><div class="tabletext"><b>Sales Tax</b></div></td>
+                    <td align="right" nowrap><div class="tabletext"><%=UtilFormatOut.formatPrice(taxAmount)%></div></td>
+                </tr>
                 <tr><td colspan=2></td><td colspan="8"><hr class='sepbar'></td></tr>
                 <tr>
                     <td align="right" colspan="4"><div class="tabletext"><b>Total Due</b></div></td>
