@@ -194,7 +194,8 @@ public class OrderServices {
                         continue;
                     }
                 } else if (!isCatalogInventoryAvailable) {
-                    productOutOfStock.add(product.getString("productId"));
+                    productOutOfStock.add(currentProductId);
+                    Debug.log("Added item: " + currentProductId + " to OOS list", module);
                 }
             }
         }
@@ -215,7 +216,7 @@ public class OrderServices {
         String billingAccountId = (String) context.get("billingAccountId");       
         GenericValue order = delegator.makeValue("OrderHeader",
                 UtilMisc.toMap("orderId", orderId, "orderTypeId", orderTypeId,
-                    "orderDate", UtilDateTime.nowTimestamp(), "entryDate", UtilDateTime.nowTimestamp(),
+                    "orderDate", nowTimestamp, "entryDate", nowTimestamp,
                     "statusId", initialStatus, "billingAccountId", billingAccountId));
 
         if (context.get("currencyUom") != null) {
@@ -250,7 +251,15 @@ public class OrderServices {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
             result.put(ModelService.ERROR_MESSAGE, "Order creation failed; please notify customer service.");
             return result;
-        }            
+        }
+        
+        // create the order status record
+        String orderStatusSeqId = delegator.getNextSeqId("OrderStatus").toString();
+        GenericValue orderStatus = delegator.makeValue("OrderStatus", UtilMisc.toMap("orderStatusId", orderStatusSeqId));
+        orderStatus.set("orderId", orderId);
+        orderStatus.set("statusId", order.getString("statusId"));
+        orderStatus.set("statusDatetime", nowTimestamp);
+        toBeStored.add(orderStatus);    
 
         // set the orderId on all adjustments; this list will include order and item adjustments...
         List orderAdjustments = (List) context.get("orderAdjustments");
@@ -326,6 +335,15 @@ public class OrderServices {
                 orderItem.set("statusId", "ITEM_BACKORDERED");
             }
             toBeStored.add(orderItem);
+            
+            // create the item status record
+            String itemStatusId = delegator.getNextSeqId("OrderStatus").toString();
+            GenericValue itemStatus = delegator.makeValue("OrderStatus", UtilMisc.toMap("orderStatusId", itemStatusId));
+            itemStatus.put("statusId", orderItem.get("statusId"));
+            itemStatus.put("orderId", orderId);
+            itemStatus.put("orderItemSeqId", orderItem.get("orderItemSeqId"));
+            itemStatus.put("statusDatetime", nowTimestamp);
+            toBeStored.add(itemStatus);
         }
 
         // set the item price info; NOTE: this must be after the orderItems are stored for referential integrity
@@ -400,12 +418,7 @@ public class OrderServices {
             }
             
         }
-
-        // set the order status
-        toBeStored.add(delegator.makeValue("OrderStatus",
-                UtilMisc.toMap("orderStatusId", delegator.getNextSeqId("OrderStatus").toString(),
-                    "statusId", "ORDER_ORDERED", "orderId", orderId, "statusDatetime", UtilDateTime.nowTimestamp())));
-
+     
         // set the order payment preferences
         List paymentPreferences = (List) context.get("orderPaymentPreferences");
         if (paymentPreferences != null && paymentPreferences.size() > 0) {

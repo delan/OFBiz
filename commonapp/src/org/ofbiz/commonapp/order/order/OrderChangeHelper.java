@@ -50,7 +50,7 @@ public class OrderChangeHelper {
         final String ITEM_STATUS = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.item.payment.approved.status", "ITEM_APPROVED");
         
         try {
-            OrderChangeHelper.orderStatusChanges(dispatcher, userLogin, orderId, HEADER_STATUS, ITEM_STATUS);                                                                                                                                       
+            OrderChangeHelper.orderStatusChanges(dispatcher, userLogin, orderId, HEADER_STATUS, "ITEM_ORDERED", ITEM_STATUS);                                                                                                                                       
         } catch (GenericServiceException e) {
             Debug.logError(e, "Service invocation error, status changes were not updated for order #" + orderId, module);
             return false;
@@ -64,7 +64,7 @@ public class OrderChangeHelper {
         final String ITEM_STATUS = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.item.payment.declined.status", "ITEM_REJECTED");
         
         try {
-            OrderChangeHelper.orderStatusChanges(dispatcher, userLogin, orderId, HEADER_STATUS, ITEM_STATUS);
+            OrderChangeHelper.orderStatusChanges(dispatcher, userLogin, orderId, HEADER_STATUS, null, ITEM_STATUS);
             OrderChangeHelper.cancelInventoryReservations(dispatcher, userLogin, orderId);                                                                                                                    
         } catch (GenericServiceException e) {
             Debug.logError(e, "Service invocation error, status changes were not updated for order #" + orderId, module);
@@ -79,7 +79,7 @@ public class OrderChangeHelper {
         final String ITEM_STATUS = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.item.payment.cancelled.status", "ITEM_REJECTED");
         
         try {
-            OrderChangeHelper.orderStatusChanges(dispatcher, userLogin, orderId, HEADER_STATUS, ITEM_STATUS);
+            OrderChangeHelper.orderStatusChanges(dispatcher, userLogin, orderId, HEADER_STATUS, null, ITEM_STATUS);
             OrderChangeHelper.cancelInventoryReservations(dispatcher, userLogin, orderId);                                                                                                                    
         } catch (GenericServiceException e) {
             Debug.logError(e, "Service invocation error, status changes were not updated for order #" + orderId, module);
@@ -88,16 +88,19 @@ public class OrderChangeHelper {
         return true;
     }  
     
-    public static void orderStatusChanges(LocalDispatcher dispatcher, GenericValue userLogin, String orderId, String orderStatusId, String itemStatusId) throws GenericServiceException {                             
+    public static void orderStatusChanges(LocalDispatcher dispatcher, GenericValue userLogin, String orderId, String orderStatus, String fromItemStatus, String toItemStatus) throws GenericServiceException {                             
         // set the status on the order header
-        Map statusFields = UtilMisc.toMap("orderId", orderId, "statusId", orderStatusId, "userLogin", userLogin);
+        Map statusFields = UtilMisc.toMap("orderId", orderId, "statusId", orderStatus, "userLogin", userLogin);
         Map statusResult = dispatcher.runSync("changeOrderStatus", statusFields);                               
         if (statusResult.containsKey(ModelService.ERROR_MESSAGE)) {
             Debug.logError("Problems adjusting order header status for order #" + orderId, module);                            
         }
                         
         // set the status on the order item(s)
-        Map itemStatusFields = UtilMisc.toMap("orderId", orderId, "statusId", itemStatusId, "userLogin", userLogin);
+        Map itemStatusFields = UtilMisc.toMap("orderId", orderId, "statusId", toItemStatus, "userLogin", userLogin);
+        if (fromItemStatus != null) {
+            itemStatusFields.put("fromStatusId", fromItemStatus);
+        }
         Map itemStatusResult = dispatcher.runSync("changeOrderItemStatus", itemStatusFields);                        
         if (itemStatusResult.containsKey(ModelService.ERROR_MESSAGE)) {
             Debug.logError("Problems adjusting order item status for order #" + orderId, module);
