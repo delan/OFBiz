@@ -89,16 +89,16 @@
               <%if(curProdCatalogId != null && curProdCatalogId.equals(prodCatalog.getString("prodCatalogId"))) {%>
                 <%Collection prodCatalogCategories = prodCatalog.getRelatedCache("ProdCatalogCategory", null, UtilMisc.toList("prodCatalogCategoryTypeId", "sequenceNum", "productCategoryId"));%>
                 <%if (prodCatalogCategories != null) pageContext.setAttribute("prodCatalogCategories", prodCatalogCategories);%>
-                <div style='text-indent: -10px;'><a href="<ofbiz:url>/EditProdCatalog?prodCatalogId=<%=prodCatalog.getString("prodCatalogId")%></ofbiz:url>" class='buttontext'>-&nbsp;<%=UtilFormatOut.checkNull(prodCatalog.getString("catalogName"))%></a></div>
+                <div class='browsecategorytext'>-&nbsp;<a href="<ofbiz:url>/EditProdCatalog?prodCatalogId=<%=prodCatalog.getString("prodCatalogId")%></ofbiz:url>" class='browsecategorybutton'><%=UtilFormatOut.checkNull(prodCatalog.getString("catalogName"))%></a></div>
                 <%-- <div class='tabletext' style='text-indent: -10px;'><b>-&nbsp;<%=currentTopCategory.getString("description")%> [<%=currentTopCategory.getString("productCategoryId")%>]</b></div> --%>
                   <div style='margin-left: 10px;'>
                     <ofbiz:iterator name="prodCatalogCategory" property="prodCatalogCategories">
                       <%GenericValue productCategory = prodCatalogCategory.getRelatedOneCache("ProductCategory");%>
-                      <div style='text-indent: -10px;'><a href='<ofbiz:url>/EditCategory?CATALOG_TOP_CATEGORY=<ofbiz:entityfield attribute="prodCatalogCategory" field="productCategoryId"/>&productCategoryId=<ofbiz:inputvalue entityAttr="prodCatalogCategory" field="productCategoryId"/></ofbiz:url>' class="buttontext">-&nbsp;<%if (productCategory!=null) {%><%=productCategory.getString("description")%><%}%><%-- [<ofbiz:inputvalue entityAttr="prodCatalogCategory" field="productCategoryId"/>]--%></a></div>
+                      <div class='browsecategorytext'>-&nbsp;<a href='<ofbiz:url>/EditCategory?CATALOG_TOP_CATEGORY=<ofbiz:entityfield attribute="prodCatalogCategory" field="productCategoryId"/>&productCategoryId=<ofbiz:inputvalue entityAttr="prodCatalogCategory" field="productCategoryId"/></ofbiz:url>' class="browsecategorybutton"><%if (productCategory!=null) {%><%=productCategory.getString("description")%><%}%><%-- [<ofbiz:inputvalue entityAttr="prodCatalogCategory" field="productCategoryId"/>]--%></a></div>
                     </ofbiz:iterator>
                   </div>
               <%}else{%>
-                <div style='text-indent: -10px;'><a href="<ofbiz:url>/EditProdCatalog?prodCatalogId=<%=prodCatalog.getString("prodCatalogId")%></ofbiz:url>" class='buttontext'>-&nbsp;<%=UtilFormatOut.checkNull(prodCatalog.getString("catalogName"))%></a></div>
+                <div class='browsecategorytext'>-&nbsp;<a href="<ofbiz:url>/EditProdCatalog?prodCatalogId=<%=prodCatalog.getString("prodCatalogId")%></ofbiz:url>" class='browsecategorybutton'><%=UtilFormatOut.checkNull(prodCatalog.getString("catalogName"))%></a></div>
               <%}%>
               </ofbiz:iterator>
             </div>
