@@ -104,10 +104,10 @@ public class WfAssignmentImpl implements WfAssignment {
                 throw new WfException(e.getMessage(), e);
             }
             if (value == null)
-                throw new WfException("Could not create the assignement!");
+                throw new WfException("Could not create the assignement");
         }
         if (value == null)
-            throw new WfException("Not a valid assignment");
+            throw new WfException("No existing assignment found or create failed");
     }
    
     /**
@@ -132,7 +132,7 @@ public class WfAssignmentImpl implements WfAssignment {
                 }
                 // we cannot accept if the activity is running, with active assignments
                 if (!allDelegated) {
-                    throw new WfException("Cannot accept. Activity already running with active assignments.");
+                    throw new WfException("Cannot accept; Activity already running with active assignments");
                 }
             } else {
                 // activity not running, auto change all assignments to delegated status
@@ -270,7 +270,7 @@ public class WfAssignmentImpl implements WfAssignment {
             throw new WfException(e.getMessage(), e);
         }
         if (value == null)
-            throw new WfException("Invalid assignment runtime entity");
+            throw new WfException("Invalid assignment; no runtime entity");
         return value;
     }
     
