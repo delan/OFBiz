@@ -575,6 +575,173 @@ public class ContactMechWorker {
             Debug.logWarning(e);
         }
     }
+    
+    public static void getFacilityContactMechAndRelated(ServletRequest request, String facilityId, Map target) {
+        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
+
+        boolean tryEntity = true;
+        if (request.getAttribute(SiteDefs.ERROR_MESSAGE) != null) tryEntity = false;
+        if ("true".equals(request.getParameter("tryEntity"))) tryEntity = true;
+
+        String donePage = request.getParameter("DONE_PAGE");
+        if (donePage == null) donePage = (String) request.getAttribute("DONE_PAGE");
+        if (donePage == null || donePage.length() <= 0) donePage = "viewprofile";
+        target.put("donePage", donePage);
+
+        String contactMechTypeId = request.getParameter("preContactMechTypeId");
+
+        if (contactMechTypeId == null) contactMechTypeId = (String) request.getAttribute("preContactMechTypeId");
+        if (contactMechTypeId != null)
+            tryEntity = false;
+
+        String contactMechId = request.getParameter("contactMechId");
+
+        if (request.getAttribute("contactMechId") != null)
+            contactMechId = (String) request.getAttribute("contactMechId");
+
+        GenericValue contactMech = null;
+
+        if (contactMechId != null) {
+            target.put("contactMechId", contactMechId);
+
+            // try to find a PartyContactMech with a valid date range
+            List facilityContactMechs = null;
+
+            try {
+                facilityContactMechs = EntityUtil.filterByDate(delegator.findByAnd("FacilityContactMech", UtilMisc.toMap("facilityId", facilityId, "contactMechId", contactMechId)), true);
+            } catch (GenericEntityException e) {
+                Debug.logWarning(e);
+            }
+
+            GenericValue facilityContactMech = EntityUtil.getFirst(facilityContactMechs);
+
+            if (facilityContactMech != null) {
+                target.put("facilityContactMech", facilityContactMech);
+
+                Collection facilityContactMechPurposes = null;
+
+                try {
+                    facilityContactMechPurposes = EntityUtil.filterByDate(facilityContactMech.getRelated("FacilityContactMechPurpose"), true);
+                } catch (GenericEntityException e) {
+                    Debug.logWarning(e);
+                }
+                if (facilityContactMechPurposes != null && facilityContactMechPurposes.size() > 0)
+                    target.put("facilityContactMechPurposes", facilityContactMechPurposes);
+            }
+
+            try {
+                contactMech = delegator.findByPrimaryKey("ContactMech", UtilMisc.toMap("contactMechId", contactMechId));
+            } catch (GenericEntityException e) {
+                Debug.logWarning(e);
+            }
+
+            if (contactMech != null) {
+                target.put("contactMech", contactMech);
+                contactMechTypeId = contactMech.getString("contactMechTypeId");
+            }
+        }
+
+        if (contactMechTypeId != null) {
+            target.put("contactMechTypeId", contactMechTypeId);
+
+            try {
+                GenericValue contactMechType = delegator.findByPrimaryKey("ContactMechType", UtilMisc.toMap("contactMechTypeId", contactMechTypeId));
+
+                if (contactMechType != null)
+                    target.put("contactMechType", contactMechType);
+            } catch (GenericEntityException e) {
+                Debug.logWarning(e);
+            }
+
+            Collection purposeTypes = new LinkedList();
+            Iterator typePurposes = null;
+
+            try {
+                typePurposes = UtilMisc.toIterator(delegator.findByAnd("ContactMechTypePurpose", UtilMisc.toMap("contactMechTypeId", contactMechTypeId)));
+            } catch (GenericEntityException e) {
+                Debug.logWarning(e);
+            }
+            while (typePurposes != null && typePurposes.hasNext()) {
+                GenericValue contactMechTypePurpose = (GenericValue) typePurposes.next();
+                GenericValue contactMechPurposeType = null;
+
+                try {
+                    contactMechPurposeType = contactMechTypePurpose.getRelatedOne("ContactMechPurposeType");
+                } catch (GenericEntityException e) {
+                    Debug.logWarning(e);
+                }
+                if (contactMechPurposeType != null) {
+                    purposeTypes.add(contactMechPurposeType);
+                }
+            }
+            if (purposeTypes.size() > 0)
+                target.put("purposeTypes", purposeTypes);
+        }
+
+        String requestName;
+
+        if (contactMech == null) {
+            // create
+            if ("POSTAL_ADDRESS".equals(contactMechTypeId)) {
+                if (request.getParameter("contactMechPurposeTypeId") != null || request.getAttribute("contactMechPurposeTypeId") != null) {
+                    requestName = "createPostalAddressAndPurpose";
+                } else {
+                    requestName = "createPostalAddress";
+                }
+            } else if ("TELECOM_NUMBER".equals(contactMechTypeId)) {
+                requestName = "createTelecomNumber";
+            } else if ("EMAIL_ADDRESS".equals(contactMechTypeId)) {
+                requestName = "createEmailAddress";
+            } else {
+                requestName = "createContactMech";
+            }
+        } else {
+            // update
+            if ("POSTAL_ADDRESS".equals(contactMechTypeId)) {
+                requestName = "updatePostalAddress";
+            } else if ("TELECOM_NUMBER".equals(contactMechTypeId)) {
+                requestName = "updateTelecomNumber";
+            } else if ("EMAIL_ADDRESS".equals(contactMechTypeId)) {
+                requestName = "updateEmailAddress";
+            } else {
+                requestName = "updateContactMech";
+            }
+        }
+        target.put("requestName", requestName);
+
+        if ("POSTAL_ADDRESS".equals(contactMechTypeId)) {
+            GenericValue postalAddress = null;
+
+            try {
+                if (contactMech != null) postalAddress = contactMech.getRelatedOne("PostalAddress");
+            } catch (GenericEntityException e) {
+                Debug.logWarning(e);
+            }
+            if (postalAddress != null) target.put("postalAddress", postalAddress);
+        } else if ("TELECOM_NUMBER".equals(contactMechTypeId)) {
+            GenericValue telecomNumber = null;
+
+            try {
+                if (contactMech != null) telecomNumber = contactMech.getRelatedOne("TelecomNumber");
+            } catch (GenericEntityException e) {
+                Debug.logWarning(e);
+            }
+            if (telecomNumber != null) target.put("telecomNumber", telecomNumber);
+        }
+
+        if ("true".equals(request.getParameter("useValues"))) tryEntity = true;
+        target.put("tryEntity", new Boolean(tryEntity));
+
+        try {
+            Collection contactMechTypes = delegator.findAllCache("ContactMechType", null);
+
+            if (contactMechTypes != null) {
+                target.put("contactMechTypes", contactMechTypes);
+            }
+        } catch (GenericEntityException e) {
+            Debug.logWarning(e);
+        }
+    }    
 
     /** TO BE REMOVED (DEJ 20030221): This method was for use in a JSP and when they are removed this can be removed as well rather than being maintained, should be removed when eCommerce and party mgr and possible other places are converted to FTL */
     public static void getPartyPostalAddresses(PageContext pageContext, String partyId, String curContactMechId, String postalAddressInfosAttr) {
