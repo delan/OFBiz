@@ -50,13 +50,10 @@ public class TransactionFactory {
                 //must check if null again as one of the blocked threads can still enter
                 if (transactionFactory == null) {
                     try {
-                        Element rootElement = EntityConfigUtil.getXmlRootElement();
-                        Element transactionFactoryElement = UtilXml.firstChildElement(rootElement, "transaction-factory");
-                        if (transactionFactoryElement == null) {
-                            throw new GenericEntityConfException("ERROR: no transaction-factory definition was found in entityengine.xml");
+                        String className = EntityConfigUtil.getTxFactoryClass();
+                        if (className == null) {
+                            throw new IllegalStateException("Could not find transaction factory class name definition");
                         }
-
-                        String className = transactionFactoryElement.getAttribute("class");
                         Class tfClass = null;
                         if (className != null && className.length() > 0) {
                             try {
@@ -77,9 +74,6 @@ public class TransactionFactory {
                             throw new IllegalStateException("Error loading TransactionFactory class \"" + className + "\": " + e.getMessage());
                         }
                     } catch (SecurityException e) {
-                        Debug.logError(e);
-                        throw new IllegalStateException("Error loading TransactionFactory class: " + e.getMessage());
-                    } catch (GenericEntityException e) {
                         Debug.logError(e);
                         throw new IllegalStateException("Error loading TransactionFactory class: " + e.getMessage());
                     }

@@ -49,10 +49,11 @@ public class GenericHelperFactory {
                 helper = (GenericHelper) helperCache.get(helperName);
                 if (helper == null) {
                     try {
-                        Element rootElement = EntityConfigUtil.getXmlRootElement();
-                        Element datasourceElement = UtilXml.firstChildElement(rootElement, "datasource", "name", helperName);
-                        
-                        String helperClassName = datasourceElement.getAttribute("helper-class");
+                        EntityConfigUtil.DatasourceInfo datasourceInfo = EntityConfigUtil.getDatasourceInfo(helperName);
+                        if (datasourceInfo == null) {
+                            throw new IllegalStateException("Could not find datasource definition with name " + helperName);
+                        }
+                        String helperClassName = datasourceInfo.helperClass;
                         Class helperClass = null;
                         if (helperClassName != null && helperClassName.length() > 0) {
                             try {
@@ -91,9 +92,6 @@ public class GenericHelperFactory {
                         if (helper != null)
                             helperCache.put(helperName, helper);
                     } catch (SecurityException e) {
-                        Debug.logError(e);
-                        throw new IllegalStateException("Error loading GenericHelper class: " + e.toString());
-                    } catch (GenericEntityException e) {
                         Debug.logError(e);
                         throw new IllegalStateException("Error loading GenericHelper class: " + e.toString());
                     }

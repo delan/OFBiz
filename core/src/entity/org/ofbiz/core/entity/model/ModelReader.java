@@ -75,15 +75,12 @@ public class ModelReader {
     protected Map entityResourceHandlerMap;
 
     public static ModelReader getModelReader(String delegatorName) throws GenericEntityException {
-        Element rootElement = EntityConfigUtil.getXmlRootElement();
-        Element delegatorElement = UtilXml.firstChildElement(rootElement, "delegator", "name", delegatorName);
-
-        if (delegatorElement == null) {
+        EntityConfigUtil.DelegatorInfo delegatorInfo = EntityConfigUtil.getDelegatorInfo(delegatorName);
+        if (delegatorInfo == null) {
             throw new GenericEntityConfException("Could not find a delegator with the name " + delegatorName);
         }
 
-        String tempModelName = delegatorElement.getAttribute("entity-model-reader");
-
+        String tempModelName = delegatorInfo.entityModelReader;
         ModelReader reader = (ModelReader) readers.get(tempModelName);
 
         if (reader == null) { //don't want to block here
@@ -107,17 +104,13 @@ public class ModelReader {
         resourceHandlerEntities = new HashMap();
         entityResourceHandlerMap = new HashMap();
 
-        Element rootElement = EntityConfigUtil.getXmlRootElement();
-        Element modelElement = UtilXml.firstChildElement(rootElement, "entity-model-reader", "name", modelName);
-
-        if (modelElement == null) {
+        EntityConfigUtil.EntityModelReaderInfo entityModelReaderInfo = EntityConfigUtil.getEntityModelReaderInfo(modelName);
+        if (entityModelReaderInfo == null) {
             throw new GenericEntityConfException("Cound not find an entity-model-reader with the name " + modelName);
         }
 
-        List resourceElements = UtilXml.childElementList(modelElement, "resource");
-
+        List resourceElements = entityModelReaderInfo.resourceElements;
         Iterator resIter = resourceElements.iterator();
-
         while (resIter.hasNext()) {
             Element resourceElement = (Element) resIter.next();
             ResourceHandler handler = new ResourceHandler(EntityConfigUtil.ENTITY_ENGINE_XML_FILENAME, resourceElement);

@@ -73,17 +73,8 @@ public class ModelFieldTypeReader {
     public String entityFileName;
 
     public static ModelFieldTypeReader getModelFieldTypeReader(String helperName) {
-        Element rootElement = null;
-
-        try {
-            rootElement = EntityConfigUtil.getXmlRootElement();
-        } catch (GenericEntityException e) {
-            Debug.logError(e);
-            throw new IllegalStateException("Error loading entityengine.xml file: " + e.toString());
-        }
-        Element datasourceElement = UtilXml.firstChildElement(rootElement, "datasource", "name", helperName);
-
-        String tempModelName = datasourceElement.getAttribute("field-type-name");
+        EntityConfigUtil.DatasourceInfo datasourceInfo = EntityConfigUtil.getDatasourceInfo(helperName);
+        String tempModelName = datasourceInfo.fieldTypeName;
         ModelFieldTypeReader reader = (ModelFieldTypeReader) readers.get(tempModelName);
 
         if (reader == null) //don't want to block here
@@ -102,21 +93,11 @@ public class ModelFieldTypeReader {
 
     public ModelFieldTypeReader(String modelName) {
         this.modelName = modelName;
-        Element rootElement = null;
-
-        try {
-            rootElement = EntityConfigUtil.getXmlRootElement();
-        } catch (GenericEntityException e) {
-            Debug.logError(e);
-            throw new IllegalStateException("Error loading entityengine.xml file: " + e.toString());
-        }
-        Element fieldTypeElement = UtilXml.firstChildElement(rootElement, "field-type", "name", modelName);
-
-        if (fieldTypeElement == null) {
+        EntityConfigUtil.FieldTypeInfo fieldTypeInfo = EntityConfigUtil.getFieldTypeInfo(modelName);
+        if (fieldTypeInfo == null) {
             throw new IllegalStateException("Could not find a field-type definition with name \"" + modelName + "\"");
         }
-        
-        fieldTypeResourceHandler = new ResourceHandler(EntityConfigUtil.ENTITY_ENGINE_XML_FILENAME, fieldTypeElement);
+        fieldTypeResourceHandler = new ResourceHandler(EntityConfigUtil.ENTITY_ENGINE_XML_FILENAME, fieldTypeInfo.resourceElement);
 
         //preload caches...
         getFieldTypeCache();

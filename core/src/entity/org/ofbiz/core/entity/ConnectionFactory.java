@@ -49,30 +49,17 @@ public class ConnectionFactory {
 
     public static Connection getConnection(String helperName) throws SQLException, GenericEntityException {
         //Debug.logVerbose("Getting a connection", module);
+    
+        EntityConfigUtil.DatasourceInfo datasourceInfo = EntityConfigUtil.getDatasourceInfo(helperName);
         
-        Element rootElement = EntityConfigUtil.getXmlRootElement();
-        Element datasourceElement = UtilXml.firstChildElement(rootElement, "datasource", "name", helperName);
-        Element jndiJdbcElement = UtilXml.firstChildElement(datasourceElement, "jndi-jdbc");
-        
-        if (jndiJdbcElement != null) {
-            String jndiName = jndiJdbcElement.getAttribute("jndi-name");
-            String jndiServerName = jndiJdbcElement.getAttribute("jndi-server-name");
-            
-            //Debug.logVerbose("Trying JNDI name " + jndiName, module);
-            Object ds;
-            ds = dsCache.get(jndiName);
-            if (ds != null) {
-                if (ds instanceof XADataSource) {
-                    XADataSource xads = (XADataSource) ds;
-                    return TransactionUtil.enlistConnection(xads.getXAConnection());
-                } else {
-                    DataSource nds = (DataSource) ds;
-                    return nds.getConnection();
-                }
-            }
+        switch (datasourceInfo.datasourceType) {
+            case EntityConfigUtil.DatasourceInfo.TYPE_JNDI_JDBC:
+                Element jndiJdbcElement = datasourceInfo.datasourceTypeElement;
+                String jndiName = jndiJdbcElement.getAttribute("jndi-name");
+                String jndiServerName = jndiJdbcElement.getAttribute("jndi-server-name");
 
-            synchronized (ConnectionFactory.class) {
-                //try again inside the synch just in case someone when through while we were waiting
+                //Debug.logVerbose("Trying JNDI name " + jndiName, module);
+                Object ds;
                 ds = dsCache.get(jndiName);
                 if (ds != null) {
                     if (ds instanceof XADataSource) {
@@ -84,28 +71,80 @@ public class ConnectionFactory {
                     }
                 }
 
-                try {
-                    Debug.logInfo("Doing JNDI lookup for name " + jndiName, module);
-                    InitialContext ic = JNDIContextFactory.getInitialContext(jndiServerName);
-                    if (ic != null)
-                        ds = ic.lookup(jndiName);
+                synchronized (ConnectionFactory.class) {
+                    //try again inside the synch just in case someone when through while we were waiting
+                    ds = dsCache.get(jndiName);
                     if (ds != null) {
-                        dsCache.put(jndiName, ds);
-                        Connection con = null;
                         if (ds instanceof XADataSource) {
-                            Debug.logInfo("Got XADataSource for name " + jndiName, module);
                             XADataSource xads = (XADataSource) ds;
-                            XAConnection xac = xads.getXAConnection();
-                            con = TransactionUtil.enlistConnection(xac);
+                            return TransactionUtil.enlistConnection(xads.getXAConnection());
                         } else {
-                            Debug.logInfo("Got DataSource for name " + jndiName, module);
                             DataSource nds = (DataSource) ds;
-                            con = nds.getConnection();
+                            return nds.getConnection();
                         }
+                    }
+
+                    try {
+                        Debug.logInfo("Doing JNDI lookup for name " + jndiName, module);
+                        InitialContext ic = JNDIContextFactory.getInitialContext(jndiServerName);
+                        if (ic != null)
+                            ds = ic.lookup(jndiName);
+                        if (ds != null) {
+                            dsCache.put(jndiName, ds);
+                            Connection con = null;
+                            if (ds instanceof XADataSource) {
+                                Debug.logInfo("Got XADataSource for name " + jndiName, module);
+                                XADataSource xads = (XADataSource) ds;
+                                XAConnection xac = xads.getXAConnection();
+                                con = TransactionUtil.enlistConnection(xac);
+                            } else {
+                                Debug.logInfo("Got DataSource for name " + jndiName, module);
+                                DataSource nds = (DataSource) ds;
+                                con = nds.getConnection();
+                            }
+
+                            /* NOTE: This code causes problems because settting the transaction isolation level after a transaction has started is a no-no
+                             * The question is: how should we do this?
+                            String isolationLevel = jndiJdbcElement.getAttribute("isolation-level");
+                            if (con != null && isolationLevel != null && isolationLevel.length() > 0) {
+                                if ("Serializable".equals(isolationLevel)) {
+                                    con.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
+                                } else if ("RepeatableRead".equals(isolationLevel)) {
+                                    con.setTransactionIsolation(Connection.TRANSACTION_REPEATABLE_READ);
+                                } else if ("ReadUncommitted".equals(isolationLevel)) {
+                                    con.setTransactionIsolation(Connection.TRANSACTION_READ_UNCOMMITTED);
+                                } else if ("ReadCommitted".equals(isolationLevel)) {
+                                    con.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
+                                } else if ("None".equals(isolationLevel)) {
+                                    con.setTransactionIsolation(Connection.TRANSACTION_NONE);
+                                }
+                            }
+                             */
+
+                            //if (con != null) Debug.logInfo("[ConnectionFactory.getConnection] Got JNDI connection with catalog: " + con.getCatalog());
+                            return con;
+                        }
+                    } catch (NamingException ne) {
+                        Debug.logVerbose("[ConnectionFactory.getConnection] Failed to find DataSource named " + jndiName + " in JNDI. Trying normal database.", module);
+                    }
+                }
+                
+                break;
+            case EntityConfigUtil.DatasourceInfo.TYPE_TYREX_DATA_SOURCE:
+                Element tyrexDataSourceElement = datasourceInfo.datasourceTypeElement;
+                String dataSourceName = tyrexDataSourceElement.getAttribute("dataSource-name");
+                if (UtilValidate.isEmpty(dataSourceName)) {
+                    Debug.logError("dataSource-name not set for tyrex-dataSource element in the " + helperName + " data-source definition");
+                } else {
+                    DataSource tyrexDataSource = TyrexFactory.getDataSource(dataSourceName);
+                    if (tyrexDataSource == null) {
+                        Debug.logError("Got a null data source for dataSource-name " + dataSourceName + " for tyrex-dataSource element in the " + helperName + " data-source definition");
+                    } else {
+                        Connection con = tyrexDataSource.getConnection();
 
                         /* NOTE: This code causes problems because settting the transaction isolation level after a transaction has started is a no-no
                          * The question is: how should we do this?
-                        String isolationLevel = jndiJdbcElement.getAttribute("isolation-level");
+                        String isolationLevel = tyrexDataSourceElement.getAttribute("isolation-level");
                         if (con != null && isolationLevel != null && isolationLevel.length() > 0) {
                             if ("Serializable".equals(isolationLevel)) {
                                 con.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
@@ -120,85 +159,47 @@ public class ConnectionFactory {
                             }
                         }
                          */
-                        
-                        //if (con != null) Debug.logInfo("[ConnectionFactory.getConnection] Got JNDI connection with catalog: " + con.getCatalog());
                         return con;
                     }
-                } catch (NamingException ne) {
-                    Debug.logVerbose("[ConnectionFactory.getConnection] Failed to find DataSource named " + jndiName + " in JNDI. Trying normal database.", module);
                 }
-            }
-        }
-
-        //see if there is a tyrex-dataSource configured
-        Element tyrexDataSourceElement = UtilXml.firstChildElement(datasourceElement, "tyrex-dataSource");
-        if (tyrexDataSourceElement != null) {
-            String dataSourceName = tyrexDataSourceElement.getAttribute("dataSource-name");
-            if (UtilValidate.isEmpty(dataSourceName)) {
-                Debug.logError("dataSource-name not set for tyrex-dataSource element in the " + helperName + " data-source definition");
-            } else {
-                DataSource tyrexDataSource = TyrexFactory.getDataSource(dataSourceName);
-                if (tyrexDataSource == null) {
-                    Debug.logError("Got a null data source for dataSource-name " + dataSourceName + " for tyrex-dataSource element in the " + helperName + " data-source definition");
-                } else {
-                    Connection con = tyrexDataSource.getConnection();
-
-                    /* NOTE: This code causes problems because settting the transaction isolation level after a transaction has started is a no-no
-                     * The question is: how should we do this?
-                    String isolationLevel = tyrexDataSourceElement.getAttribute("isolation-level");
-                    if (con != null && isolationLevel != null && isolationLevel.length() > 0) {
-                        if ("Serializable".equals(isolationLevel)) {
-                            con.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
-                        } else if ("RepeatableRead".equals(isolationLevel)) {
-                            con.setTransactionIsolation(Connection.TRANSACTION_REPEATABLE_READ);
-                        } else if ("ReadUncommitted".equals(isolationLevel)) {
-                            con.setTransactionIsolation(Connection.TRANSACTION_READ_UNCOMMITTED);
-                        } else if ("ReadCommitted".equals(isolationLevel)) {
-                            con.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
-                        } else if ("None".equals(isolationLevel)) {
-                            con.setTransactionIsolation(Connection.TRANSACTION_NONE);
-                        }
-                    }
-                     */
-                    return con;
-                }
-            }
-        }
-        
-        Element inlineJdbcElement = UtilXml.firstChildElement(datasourceElement, "inline-jdbc");
-        if (inlineJdbcElement != null) {
-            //If JNDI sources are not specified, or found, try Tyrex
-            try {
-                // For Tyrex 0.9.8.5
-                Class.forName("tyrex.resource.jdbc.xa.EnabledDataSource").newInstance();
-                // For Tyrex 0.9.7.0
-                //Class.forName("tyrex.jdbc.xa.EnabledDataSource").newInstance();
-                //Debug.logInfo("Found Tyrex Driver...");
-
-                Connection con = TyrexConnectionFactory.getConnection(helperName, inlineJdbcElement);
-                if (con != null)
-                    return con;
-            } catch (Exception ex) {
-                Debug.logWarning(ex, "There was an error loading Tyrex, this may not be a serious problem, but you probably want to know anyway. Will continue with probably very slow manual JDBC load.");
-            }
-
-            // Default to plain JDBC.
-            String driverClassName = inlineJdbcElement.getAttribute("jdbc-driver");
-            if (driverClassName != null && driverClassName.length() > 0) {
+                
+                break;
+            case EntityConfigUtil.DatasourceInfo.TYPE_INLINE_JDBC:
+                Element inlineJdbcElement = datasourceInfo.datasourceTypeElement;
+                //If JNDI sources are not specified, or found, try Tyrex
                 try {
-                    Class.forName(driverClassName);
-                } catch (ClassNotFoundException cnfe) {
-                    Debug.logWarning("Could not find JDBC driver class named " + driverClassName + ".\n");
-                    Debug.logWarning(cnfe);
-                    return null;
-                }
-                return DriverManager.getConnection(inlineJdbcElement.getAttribute("jdbc-uri"),
-                        inlineJdbcElement.getAttribute("jdbc-username"), inlineJdbcElement.getAttribute("jdbc-password"));
-            }
-        } else {
-            Debug.logError("Cannot find JDBC definition, no inline-jdbc element found for helperName \"" + helperName + "\"", module);
-        }
+                    // For Tyrex 0.9.8.5
+                    Class.forName("tyrex.resource.jdbc.xa.EnabledDataSource").newInstance();
+                    // For Tyrex 0.9.7.0
+                    //Class.forName("tyrex.jdbc.xa.EnabledDataSource").newInstance();
+                    //Debug.logInfo("Found Tyrex Driver...");
 
+                    Connection con = TyrexConnectionFactory.getConnection(helperName, inlineJdbcElement);
+                    if (con != null)
+                        return con;
+                } catch (Exception ex) {
+                    Debug.logWarning(ex, "There was an error loading Tyrex, this may not be a serious problem, but you probably want to know anyway. Will continue with probably very slow manual JDBC load.");
+                }
+
+                // Default to plain JDBC.
+                String driverClassName = inlineJdbcElement.getAttribute("jdbc-driver");
+                if (driverClassName != null && driverClassName.length() > 0) {
+                    try {
+                        Class.forName(driverClassName);
+                    } catch (ClassNotFoundException cnfe) {
+                        Debug.logWarning("Could not find JDBC driver class named " + driverClassName + ".\n");
+                        Debug.logWarning(cnfe);
+                        return null;
+                    }
+                    return DriverManager.getConnection(inlineJdbcElement.getAttribute("jdbc-uri"),
+                            inlineJdbcElement.getAttribute("jdbc-username"), inlineJdbcElement.getAttribute("jdbc-password"));
+                }
+                
+                break;
+            case EntityConfigUtil.DatasourceInfo.TYPE_OTHER:
+                Debug.logError("Cannot find JDBC definition, no know element found for helperName \"" + helperName + "\"", module);
+                break;
+        }
         Debug.logError("******* ERROR: No database connection found for helperName \"" + helperName + "\"", module);
         return null;
     }

@@ -54,18 +54,8 @@ public class JNDIFactory implements TransactionFactoryInterface {
                 //try again inside the synch just in case someone when through while we were waiting
                 if (transactionManager == null) {
                     try {
-                        Element rootElement = EntityConfigUtil.getXmlRootElement();
-                        Element transactionFactoryElement = UtilXml.firstChildElement(rootElement, "transaction-factory");
-
-                        if (transactionFactoryElement == null) {
-                            throw new GenericEntityConfException("ERROR: no transaction-factory definition was found in entityengine.xml");
-                        }
-
-                        Element txMgrElement = UtilXml.firstChildElement(transactionFactoryElement, "transaction-manager-jndi");
-
-                        String jndiName = txMgrElement.getAttribute("jndi-name");
-                        String jndiServerName = txMgrElement.getAttribute("jndi-server-name");
-
+                        String jndiName = EntityConfigUtil.getTxFactoryTxMgrJndiName();
+                        String jndiServerName = EntityConfigUtil.getTxFactoryTxMgrJndiServerName();
                         if (jndiName != null && jndiName.length() > 0) {
                             //Debug.logVerbose("[JNDIFactory.getTransactionManager] Trying JNDI name " + jndiName, module);
 
@@ -98,18 +88,8 @@ public class JNDIFactory implements TransactionFactoryInterface {
                 //try again inside the synch just in case someone when through while we were waiting
                 if (userTransaction == null) {
                     try {
-                        Element rootElement = EntityConfigUtil.getXmlRootElement();
-                        Element transactionFactoryElement = UtilXml.firstChildElement(rootElement, "transaction-factory");
-
-                        if (transactionFactoryElement == null) {
-                            throw new GenericEntityConfException("ERROR: no transaction-factory definition was found in entityengine.xml");
-                        }
-
-                        Element userTxElement = UtilXml.firstChildElement(transactionFactoryElement, "user-transaction-jndi");
-
-                        String jndiName = userTxElement.getAttribute("jndi-name");
-                        String jndiServerName = userTxElement.getAttribute("jndi-server-name");
-
+                        String jndiName = EntityConfigUtil.getTxFactoryUserTxJndiName();
+                        String jndiServerName = EntityConfigUtil.getTxFactoryUserTxJndiServerName();
                         if (jndiName != null && jndiName.length() > 0) {
                             //Debug.logVerbose("[JNDIFactory.getTransactionManager] Trying JNDI name " + jndiName, module);
 

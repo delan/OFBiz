@@ -55,6 +55,7 @@ public class GenericDelegator {
      * but the delegator will always be the same object for the given name */
     protected static Map delegatorCache = new HashMap();
     protected String delegatorName;
+    protected EntityConfigUtil.DelegatorInfo delegatorInfo = null;
 
     /** set this to true for better performance; set to false to be able to reload definitions at runtime throught the cache manager */
     public static final boolean keepLocalReaders = true;
@@ -126,21 +127,12 @@ public class GenericDelegator {
                 //get the helper and if configured, do the datasource check
                 GenericHelper helper = GenericHelperFactory.getHelper(helperName);
                 
-                Element rootElement = EntityConfigUtil.getXmlRootElement();
-                Element datasourceElement = UtilXml.firstChildElement(rootElement, "datasource", "name", helperName);
-                boolean checkOnStart = true;
-                boolean addMissing = false;
-                if (datasourceElement == null) {
-                    Debug.logWarning("datasource def not found with name " + helperName + ", using defaults for check-on-start (true) and add-missing-on-start (false)", module);
-                } else {
-                    checkOnStart = !"false".equals(datasourceElement.getAttribute("check-on-start"));
-                    addMissing = "true".equals(datasourceElement.getAttribute("add-missing-on-start"));
-                }
+                EntityConfigUtil.DatasourceInfo datasourceInfo = EntityConfigUtil.getDatasourceInfo(helperName);
 
-                if (checkOnStart) {
-                    Debug.logInfo("Doing database check as requested in entityengine.xml with addMissing=" + addMissing, module);
+                if (datasourceInfo.checkOnStart) {
+                    Debug.logInfo("Doing database check as requested in entityengine.xml with addMissing=" + datasourceInfo.addMissingOnStart, module);
                     try {
-                        helper.checkDataSource(this.getModelEntityMapByGroup(groupName), null, addMissing);
+                        helper.checkDataSource(this.getModelEntityMapByGroup(groupName), null, datasourceInfo.addMissingOnStart);
                     } catch (GenericEntityException e) {
                         Debug.logWarning(e.getMessage(), module);
                     }
@@ -154,6 +146,13 @@ public class GenericDelegator {
      */
     public String getDelegatorName() {
         return this.delegatorName;
+    }
+    
+    protected EntityConfigUtil.DelegatorInfo getDelegatorInfo() {
+        if (delegatorInfo == null) {
+            delegatorInfo = EntityConfigUtil.getDelegatorInfo(this.delegatorName);
+        }
+        return delegatorInfo;
     }
 
     /** Gets the instance of ModelReader that corresponds to this delegator
@@ -251,26 +250,8 @@ public class GenericDelegator {
      *@return String with the helper name that corresponds to this delegator and the specified entityName
      */
     public String getGroupHelperName(String groupName) {
-        Element rootElement = null;
-        try {
-            rootElement = EntityConfigUtil.getXmlRootElement();
-        } catch (GenericEntityException e) {
-            Debug.logError(e, "Error getting group helper name", module);
-            return null;
-        }
-
-        Element delegatorElement = UtilXml.firstChildElement(rootElement, "delegator", "name", delegatorName);
-        if (delegatorElement == null) {
-            Debug.logWarning("Delegator def not found with name " + delegatorName, module);
-            return null;
-        }
-        Element goupMapElement = UtilXml.firstChildElement(delegatorElement, "group-map", "group-name", groupName);
-        if (goupMapElement == null) {
-            Debug.logWarning("No entity group definition found with name " + groupName + " in delegator with name " + delegatorName, module);
-            return null;
-        }
-
-        return goupMapElement.getAttribute("datasource-name");
+        EntityConfigUtil.DelegatorInfo delegatorInfo = this.getDelegatorInfo();
+        return (String) delegatorInfo.groupMap.get(groupName);
     }
 
     /** Gets the helper name that corresponds to this delegator and the specified entityName

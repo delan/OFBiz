@@ -65,77 +65,8 @@ public class DatabaseUtil {
     
     public void checkDb(Map modelEntities, Collection messages, boolean addMissing) {
         
-        //First get a bunch of configuration options...
-        Element rootElement = null;
-        Element datasourceElement = null;
+        EntityConfigUtil.DatasourceInfo datasourceInfo = EntityConfigUtil.getDatasourceInfo(helperName);
 
-        try {
-            rootElement = EntityConfigUtil.getXmlRootElement();
-            datasourceElement = UtilXml.firstChildElement(rootElement, "datasource", "name", helperName);
-        } catch (GenericEntityConfException e) {
-            Debug.logError(e, "Error loading entity config XML file");
-        }
-
-        boolean useFks = true;
-        if (datasourceElement == null) {
-            Debug.logWarning("datasource def not found with name " + helperName + ", using default for use-foreign-keys (true)");
-        } else {
-            //anything but false is true
-            useFks = !"false".equals(datasourceElement.getAttribute("use-foreign-keys"));
-        }
-        
-        boolean useFkIndices = true;
-        if (datasourceElement == null) {
-            Debug.logWarning("datasource def not found with name " + helperName + ", using default use-foreign-key-indices (true)");
-        } else {
-            //anything but false is true
-            useFkIndices = !"false".equals(datasourceElement.getAttribute("use-foreign-key-indices"));
-        }
-        
-        boolean checkForeignKeysOnStart = false;
-        if (datasourceElement == null) {
-            Debug.logWarning("datasource def not found with name " + helperName + ", using default for check-fks-on-start (false)");
-        } else {
-            //anything but true is false
-            checkForeignKeysOnStart = "true".equals(datasourceElement.getAttribute("check-fks-on-start"));
-        }
-        
-        boolean checkFkIndicesOnStart = false;
-        if (datasourceElement == null) {
-            Debug.logWarning("datasource def not found with name " + helperName + ", using default for check-fk-indices-on-start (false)");
-        } else {
-            //anything but true is false
-            checkFkIndicesOnStart = "true".equals(datasourceElement.getAttribute("check-fk-indices-on-start"));
-        }
-        
-        boolean usePkConstraintNames = true;
-        if (datasourceElement == null) {
-            Debug.logWarning("datasource def not found with name " + helperName + ", using default for use-pk-constraint-names (true)");
-        } else {
-            //anything but false is true
-            usePkConstraintNames = !"false".equals(datasourceElement.getAttribute("use-pk-constraint-names"));
-        }
-        
-        int constraintNameClipLength = 30;
-        if (datasourceElement == null) {
-            Debug.logWarning("datasource def not found with name " + helperName + ", using default for constraint-name-clip-length (30)");
-        } else {
-            try {
-                constraintNameClipLength = Integer.parseInt(datasourceElement.getAttribute("constraint-name-clip-length"));
-            } catch (Exception e) {
-                Debug.logError("Could not parse constraint-name-clip-length value for datasource with name " + helperName + ", using default value of 30");
-            }
-        }
-
-        String fkStyle = null;
-        if (datasourceElement == null) {
-            Debug.logWarning("datasource def not found with name " + helperName + ", using default for fk-style (name_constraint)");
-        } else {
-            fkStyle = datasourceElement.getAttribute("fk-style");
-        }
-        if (fkStyle == null || fkStyle.length() == 0) {
-            fkStyle = "name_constraint";
-        }
         
         UtilTimer timer = new UtilTimer();
         timer.timerString("Start - Before Get Database Meta Data");
@@ -378,7 +309,7 @@ public class DatabaseUtil {
                 
                 if (addMissing) {
                     //create the table
-                    String errMsg = createTable(entity, modelEntities, false, usePkConstraintNames, constraintNameClipLength, fkStyle);
+                    String errMsg = createTable(entity, modelEntities, false, datasourceInfo.usePkConstraintNames, datasourceInfo.constraintNameClipLength, datasourceInfo.fkStyle);
 
                     if (errMsg != null && errMsg.length() > 0) {
                         message = "Could not create table \"" + entity.getTableName() + "\"";
@@ -411,12 +342,12 @@ public class DatabaseUtil {
         }
 
         // for each newly added table, add fks
-        if (useFks) {
+        if (datasourceInfo.useFks) {
             Iterator eaIter = entitiesAdded.iterator();
 
             while (eaIter.hasNext()) {
                 ModelEntity curEntity = (ModelEntity) eaIter.next();
-                String errMsg = this.createForeignKeys(curEntity, modelEntities, constraintNameClipLength, fkStyle);
+                String errMsg = this.createForeignKeys(curEntity, modelEntities, datasourceInfo.constraintNameClipLength, datasourceInfo.fkStyle);
 
                 if (errMsg != null && errMsg.length() > 0) {
                     String message = "Could not create foreign keys for entity \"" + curEntity.getEntityName() + "\"";
@@ -434,12 +365,12 @@ public class DatabaseUtil {
             }
         }
         // for each newly added table, add fks
-        if (useFkIndices) {
+        if (datasourceInfo.useFkIndices) {
             Iterator eaIter = entitiesAdded.iterator();
 
             while (eaIter.hasNext()) {
                 ModelEntity curEntity = (ModelEntity) eaIter.next();
-                String indErrMsg = this.createForeignKeyIndices(curEntity, constraintNameClipLength);
+                String indErrMsg = this.createForeignKeyIndices(curEntity, datasourceInfo.constraintNameClipLength);
 
                 if (indErrMsg != null && indErrMsg.length() > 0) {
                     String message = "Could not create foreign key indices for entity \"" + curEntity.getEntityName() + "\"";
@@ -458,7 +389,7 @@ public class DatabaseUtil {
         }
         
         //make sure each one-relation has an FK
-        if (useFks && checkForeignKeysOnStart) {
+        if (datasourceInfo.useFks && datasourceInfo.checkForeignKeysOnStart) {
             //NOTE: This ISN'T working for Postgres or MySQL, who knows about others, may be from JDBC driver bugs...
             int numFksCreated = 0;
             //TODO: check each key-map to make sure it exists in the FK, if any differences warn and then remove FK and recreate it
@@ -500,7 +431,7 @@ public class DatabaseUtil {
 
                         ModelEntity relModelEntity = (ModelEntity) modelEntities.get(modelRelation.getRelEntityName());
 
-                        String relConstraintName = makeFkConstraintName(modelRelation, constraintNameClipLength);
+                        String relConstraintName = makeFkConstraintName(modelRelation, datasourceInfo.constraintNameClipLength);
                         ReferenceCheckInfo rcInfo = null;
                         if (rcInfoMap != null) {
                             rcInfo = (ReferenceCheckInfo) rcInfoMap.get(relConstraintName);
@@ -511,7 +442,7 @@ public class DatabaseUtil {
                         } else {
                             //if not, create one
                             Debug.logVerbose("No Foreign Key Constraint " + relConstraintName + " found in entity " + entityName);
-                            String errMsg = createForeignKey(entity, modelRelation, relModelEntity, constraintNameClipLength, fkStyle);
+                            String errMsg = createForeignKey(entity, modelRelation, relModelEntity, datasourceInfo.constraintNameClipLength, datasourceInfo.fkStyle);
                             if (errMsg != null && errMsg.length() > 0) {
                                 String message = "Could not create foreign key " + relConstraintName + " for entity \"" + entity.getEntityName() + "\"";
 
@@ -550,7 +481,7 @@ public class DatabaseUtil {
         }
         
         //make sure each one-relation has an index
-        if (useFkIndices && checkFkIndicesOnStart) {
+        if (datasourceInfo.useFkIndices && datasourceInfo.checkFkIndicesOnStart) {
             int numIndicesCreated = 0;
             //TODO: check each key-map to make sure it exists in the index, if any differences warn and then remove the index and recreate it
             
@@ -582,7 +513,7 @@ public class DatabaseUtil {
                     
                     if (tableIndexList == null) {
                         //evidently no indexes in the database for this table, do the create all
-                        String indErrMsg = this.createForeignKeyIndices(entity, constraintNameClipLength);
+                        String indErrMsg = this.createForeignKeyIndices(entity, datasourceInfo.constraintNameClipLength);
                         if (indErrMsg != null && indErrMsg.length() > 0) {
                             String message = "Could not create foreign key indices for entity \"" + entity.getEntityName() + "\"";
 
@@ -606,14 +537,14 @@ public class DatabaseUtil {
                                 continue;
                             }
 
-                            String relConstraintName = makeFkConstraintName(modelRelation, constraintNameClipLength);
+                            String relConstraintName = makeFkConstraintName(modelRelation, datasourceInfo.constraintNameClipLength);
 
                             if (tableIndexList.contains(relConstraintName)) {
                                 tableIndexList.remove(relConstraintName);
                             } else {
                                 //if not, create one
                                 Debug.logVerbose("No Index " + relConstraintName + " found for entity " + entityName);
-                                String errMsg = createForeignKeyIndex(entity, modelRelation, constraintNameClipLength);
+                                String errMsg = createForeignKeyIndex(entity, modelRelation, datasourceInfo.constraintNameClipLength);
                                 if (errMsg != null && errMsg.length() > 0) {
                                     String message = "Could not create foreign key index " + relConstraintName + " for entity \"" + entity.getEntityName() + "\"";
 

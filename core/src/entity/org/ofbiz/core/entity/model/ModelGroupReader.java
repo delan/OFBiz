@@ -68,10 +68,12 @@ public class ModelGroupReader {
     public ResourceHandler entityGroupResourceHandler;
 
     public static ModelGroupReader getModelGroupReader(String delegatorName) throws GenericEntityConfException {
-        Element rootElement = EntityConfigUtil.getXmlRootElement();
-        Element delegatorElement = UtilXml.firstChildElement(rootElement, "delegator", "name", delegatorName);
+        EntityConfigUtil.DelegatorInfo delegatorInfo = EntityConfigUtil.getDelegatorInfo(delegatorName);
+        if (delegatorInfo == null) {
+            throw new GenericEntityConfException("Could not find a delegator with the name " + delegatorName);
+        }
 
-        String tempModelName = delegatorElement.getAttribute("entity-group-reader");
+        String tempModelName = delegatorInfo.entityGroupReader;
         ModelGroupReader reader = (ModelGroupReader) readers.get(tempModelName);
 
         if (reader == null) { //don't want to block here
@@ -89,9 +91,11 @@ public class ModelGroupReader {
 
     public ModelGroupReader(String modelName) throws GenericEntityConfException {
         this.modelName = modelName;
-        Element rootElement = EntityConfigUtil.getXmlRootElement();
-        Element groupReaderElement = UtilXml.firstChildElement(rootElement, "entity-group-reader", "name", modelName);
-        entityGroupResourceHandler = new ResourceHandler(EntityConfigUtil.ENTITY_ENGINE_XML_FILENAME, groupReaderElement);
+        EntityConfigUtil.EntityGroupReaderInfo entityGroupReaderInfo = EntityConfigUtil.getEntityGroupReaderInfo(modelName);
+        if (entityGroupReaderInfo == null) {
+            throw new GenericEntityConfException("Cound not find an entity-group-reader with the name " + modelName);
+        }
+        entityGroupResourceHandler = new ResourceHandler(EntityConfigUtil.ENTITY_ENGINE_XML_FILENAME, entityGroupReaderInfo.resourceElement);
 
         //preload caches...
         getGroupCache();

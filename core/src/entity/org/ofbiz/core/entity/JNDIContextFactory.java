@@ -54,33 +54,25 @@ public class JNDIContextFactory {
                 ic = (InitialContext) contexts.get(jndiServerName);
 
                 if (ic == null) {
-                    Element rootElement = EntityConfigUtil.getXmlRootElement();
-                    Element jndiServerElement = UtilXml.firstChildElement(rootElement, "jndi-server", "name", jndiServerName);
-                    if (jndiServerElement == null) {
+                    EntityConfigUtil.JndiServerInfo jndiServerInfo = EntityConfigUtil.getJndiServerInfo(jndiServerName);
+                    if (jndiServerInfo == null) {
                         throw new GenericEntityConfException("ERROR: no jndi-server definition was found with the name " + jndiServerName + " in entityengine.xml");
                     }
                     
-                    String providerUrl = jndiServerElement.getAttribute("context-provider-url");
-                    String contextFactory = jndiServerElement.getAttribute("initial-context-factory");
-                    String pkgPrefix = jndiServerElement.getAttribute("url-pkg-prefixes");
-
-                    String secPrincipal = jndiServerElement.getAttribute("security-principal");
-                    String secCred = jndiServerElement.getAttribute("security-credentials");
-
                     try {
-                        if (providerUrl == null || providerUrl.length() == 0) {
+                        if (UtilValidate.isEmpty(jndiServerInfo.contextProviderUrl)) {
                             ic = new InitialContext();
                         } else {
                             Hashtable h = new Hashtable();
-                            h.put(Context.INITIAL_CONTEXT_FACTORY, contextFactory);
-                            h.put(Context.PROVIDER_URL, providerUrl);
-                            if (pkgPrefix != null && pkgPrefix.length() > 0)
-                                h.put(Context.URL_PKG_PREFIXES, pkgPrefix);
+                            h.put(Context.INITIAL_CONTEXT_FACTORY, jndiServerInfo.initialContextFactory);
+                            h.put(Context.PROVIDER_URL, jndiServerInfo.contextProviderUrl);
+                            if (jndiServerInfo.urlPkgPrefixes != null && jndiServerInfo.urlPkgPrefixes.length() > 0)
+                                h.put(Context.URL_PKG_PREFIXES, jndiServerInfo.urlPkgPrefixes);
 
-                            if (secPrincipal != null && secPrincipal.length() > 0)
-                                h.put(Context.SECURITY_PRINCIPAL, secPrincipal);
-                            if (secCred != null && secCred.length() > 0)
-                                h.put(Context.SECURITY_CREDENTIALS, secCred);
+                            if (jndiServerInfo.securityPrincipal != null && jndiServerInfo.securityPrincipal.length() > 0)
+                                h.put(Context.SECURITY_PRINCIPAL, jndiServerInfo.securityPrincipal);
+                            if (jndiServerInfo.securityCredentials != null && jndiServerInfo.securityCredentials.length() > 0)
+                                h.put(Context.SECURITY_CREDENTIALS, jndiServerInfo.securityCredentials);
 
                             ic = new InitialContext(h);
                         }
