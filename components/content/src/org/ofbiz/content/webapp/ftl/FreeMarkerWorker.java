@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright (c) 2002-2004 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2002-2005 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -24,6 +24,7 @@
  */
 package org.ofbiz.content.webapp.ftl;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -124,11 +125,22 @@ public class FreeMarkerWorker {
                     }
                     Reader locationReader = new InputStreamReader(locationUrl.openStream());
                     
-                    Configuration config = makeDefaultOfbizConfig();
-                    String locationString = locationUrl.getPath();
-                    //Debug.logInfo("FreeMarker render: locationString=" + locationString, module);
-                    //DEJ20050104 Don't know what to do here, FreeMarker does some funky stuff when loading includes and can't find a way to make it happy...
-                    template = new Template(locationString, locationReader, config);            
+                    String locationProtocol = locationUrl.getProtocol();
+                    String filename = null;
+                    Configuration config = null;
+                    if ("file".equals(locationProtocol)) {
+                        String locationFile = locationUrl.getFile();
+                        int lastSlash = locationFile.lastIndexOf("/");
+                        String locationDir = locationFile.substring(0, lastSlash);
+                        filename = locationFile.substring(lastSlash + 1);
+                        if (Debug.verboseOn()) Debug.logVerbose("FreeMarker render: filename=" + filename + ", locationDir=" + locationDir, module);
+                        //DEJ20050104 Don't know what to do here, FreeMarker does some funky stuff when loading includes and can't find a way to make it happy...
+                        config = makeSingleUseOfbizFtlConfig(locationDir);
+                    } else {
+                        filename = locationUrl.toExternalForm();
+                        config = makeDefaultOfbizConfig();
+                    }
+                    template = new Template(filename, locationReader, config);            
                     
                     cachedTemplates.put(location, template);
                 }
@@ -206,12 +218,41 @@ public class FreeMarkerWorker {
         context.put("renderSubContentAsText", renderSubContentAsText);
         context.put("renderContentAsText", renderContentAsText);
     }
-    
+
+    private static Configuration defaultOfbizConfig = null;
     public static Configuration makeDefaultOfbizConfig() throws TemplateException, IOException {
-        Configuration config = Configuration.getDefaultConfiguration();            
+        if (defaultOfbizConfig == null) {
+            synchronized (FreeMarkerWorker.class) {
+                if (defaultOfbizConfig == null) {
+                    Configuration config = new Configuration();            
+                    config.setObjectWrapper(BeansWrapper.getDefaultInstance());
+                    config.setSetting("datetime_format", "yyyy-MM-dd HH:mm:ss.SSS");
+                    defaultOfbizConfig = config;
+                }
+            }
+        }
+        return defaultOfbizConfig;
+    }
+    
+    public static Configuration makeSingleUseOfbizFtlConfig(String locationDir) throws TemplateException, IOException {
+        Configuration config = new Configuration();            
         config.setObjectWrapper(BeansWrapper.getDefaultInstance());
         config.setSetting("datetime_format", "yyyy-MM-dd HH:mm:ss.SSS");
-        //config.setDirectoryForTemplateLoading(new File("/"));
+        if (locationDir != null) {
+            File locationDirFile = new File(locationDir);
+            if (locationDirFile != null) {
+                if (locationDirFile.isFile()) {
+                    /* maybe best not to do this, maybe best to throw an exception
+                    String realDir = locationDir.substring(0, locationDir.lastIndexOf("/"));
+                    locationDirFile = new File(realDir);
+                    */
+                    throw new IllegalArgumentException("Could not create FTL Configuration object because locationDir is a file: " + locationDir);
+                }
+                if (locationDirFile != null && locationDirFile.isDirectory()) {
+                    config.setDirectoryForTemplateLoading(locationDirFile);
+                }
+            }
+        }
         return config;
     }
     
@@ -638,9 +679,12 @@ public class FreeMarkerWorker {
     }
 
     public static void getSiteParameters(HttpServletRequest request, Map ctx) {
-
-        if (request == null) 
+        if (request == null) {
             return;
+        }
+        if (ctx == null) {
+            throw new IllegalArgumentException("Error in getSiteParameters, context/ctx cannot be null");
+        }
         ServletContext servletContext = request.getSession().getServletContext();
         String rootDir = (String)ctx.get("rootDir");
         String webSiteId = (String)ctx.get("webSiteId");

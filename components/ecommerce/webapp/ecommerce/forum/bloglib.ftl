@@ -1,10 +1,7 @@
 
 <#macro renderBlog contentId="" targetPurpose="" stdWrapId="">
-<#assign contentIdx = contentId?if_exists />
-<#if (!contentIdx?exists || contentIdx?length == 0)>
-    <#assign contentIdx = page.contentIdx?if_exists />
-    <#if (!contentIdx?exists || contentIdx?length == 0)>
-    </#if>
+<#if contentId?has_content>
+    <#assign contentIdx = contentId/>
 </#if>
 <#assign viewIdx = "" />
 <#if requestParameters.viewIndex?has_content>
@@ -83,7 +80,7 @@
 </table>
 <table width="100%" border="0" class="summary">
 <#assign targOp="HAS_USER_ROLE"/>
-<#assign pageTargOp=page.getProperty("targetOperation")?if_exists/>
+<#assign pageTargOp=targetOperation?if_exists/>
 <#if pageTargOp?has_content>
     <#assign targOp=pageTargOp/>
 </#if>

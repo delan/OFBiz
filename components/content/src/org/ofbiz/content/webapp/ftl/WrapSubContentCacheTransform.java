@@ -75,7 +75,13 @@ public class WrapSubContentCacheTransform implements TemplateTransformModel {
     public Writer getWriter(final Writer out, Map args) {
         final StringBuffer buf = new StringBuffer();
         final Environment env = Environment.getCurrentEnvironment();
-        final Map templateCtx = (Map) FreeMarkerWorker.getWrappedObject("context", env);
+        Map envContext = (Map) FreeMarkerWorker.getWrappedObject("context", env);
+        final Map templateCtx;
+        if (envContext == null) {
+            templateCtx = FreeMarkerWorker.createEnvironmentMap(env);
+        } else {
+            templateCtx = envContext;
+        }
         final GenericDelegator delegator = (GenericDelegator) FreeMarkerWorker.getWrappedObject("delegator", env);
         final HttpServletRequest request = (HttpServletRequest) FreeMarkerWorker.getWrappedObject("request", env);
         FreeMarkerWorker.getSiteParameters(request, templateCtx);
