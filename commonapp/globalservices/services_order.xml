@@ -196,7 +196,12 @@
         <description>Update a ReturnItem</description>
         <implements service="returnItemInterface"/>
         <attribute entity-name="ReturnItem" name="returnItemSeqId" type="String" mode="IN" optional="false"/>
-    </service>    
+    </service>
+    <service name="removeReturnItem" engine="simple"   
+            location="org/ofbiz/commonapp/order/order/OrderReturnServices.xml" invoke="removeReturnItem">
+        <description>Remove a ReturnItem</description>
+        <auto-attributes entity-name="ReturnItem" include="pk" mode="IN" optional="false"/>
+    </service>
     
     <!-- Tax Services -->
     <service name="calcTax" engine="java"

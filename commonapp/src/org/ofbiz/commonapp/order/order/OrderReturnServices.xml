@@ -101,4 +101,14 @@
         <set-nonpk-fields map-name="parameters" value-name="returnItem"/>
         <store-value value-name="returnItem"/>       	
     </simple-method>
+    <simple-method method-name="removeReturnItem" short-description="Remove Return Item">
+        <check-permission permission="ORDERMGR" action="_DELETE"><fail-message message="Security Error: to run removeReturnItem you must have the ORDERMGR_DELETE or ORDERMGR_ADMIN permission"/></check-permission>
+        <check-errors/>
+        
+        <field-to-field field-name="returnId" map-name="parameters" to-map-name="lookupPKMap"/>
+        <field-to-field field-name="returnItemSeqId" map-name="parameters" to-map-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="ReturnItem" map-name="lookupPKMap" value-name="returnItem"/>
+                
+        <remove-value value-name="returnItem"/>       	
+    </simple-method>
 </simple-methods>
