@@ -26,7 +26,7 @@
  *
  *@author     Jacopo Cappellato (tiz@sastau.it)
  *@author     Olivier.Heintz@nereide.biz
- *@version    $Rev:$
+ *@version    $Rev$
  */
 -->
 
@@ -46,7 +46,14 @@
     <entity-group group="org.ofbiz" entity="TechDataCalendarExcDay" />
     <entity-group group="org.ofbiz" entity="TechDataCalendarExcWeek" />
 
- <!-- ========================================================= -->
+  <!-- ========================================================= -->
+  <!-- org.ofbiz.manufacturing.jobshopmgt -->
+  <!-- ========================================================= -->
+    <entity-group group="org.ofbiz" entity="WorkEffortAndGoods" />
+    <entity-group group="org.ofbiz" entity="WorkEffortInventoryAssign" />
+    <entity-group group="org.ofbiz" entity="WorkEffortInventoryProduced" />
+    <entity-group group="org.ofbiz" entity="OrderHeaderAndItems2" />
+  <!-- ========================================================= -->
   <!-- org.ofbiz.manufacturing.mrp -->
   <!-- ========================================================= -->
 
