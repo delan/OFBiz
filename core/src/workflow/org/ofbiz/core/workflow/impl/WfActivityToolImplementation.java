@@ -75,16 +75,17 @@ public class WfActivityToolImplementation extends WfActivityAbstractImplementati
             String toolId = thisTool.getString("toolId");
             String params = thisTool.getString("actualParameters");
             String toolTypeEnumId = thisTool.getString("toolTypeEnumId");
+            
             //Linea agregada por Oswin Ondarza
             allParams = allParams + "," + params;
             String extend = thisTool.getString("extendedAttributes");
-            Map extendedAttr = StringUtil.strToMap(extend);
+            
+            Map extendedAttr = StringUtil.strToMap(extend);            
             if (extendedAttr != null && extendedAttr.containsKey("serviceName"))
                 serviceName = (String) extendedAttr.get("serviceName");
-            serviceName =
-                serviceName != null
-                    ? serviceName
-                    : (toolTypeEnumId.equals("WTT_APPLICATION") ? "wfActivateApplication" : toolId);
+                
+            serviceName = serviceName != null ? serviceName : (toolTypeEnumId.equals("WTT_APPLICATION") ? 
+                    "wfActivateApplication" : toolId);                                                       
             waiters.add(runService(serviceName, params, extend));
         }
 
@@ -93,6 +94,7 @@ public class WfActivityToolImplementation extends WfActivityAbstractImplementati
             Collection remove = new ArrayList();
             while (wi.hasNext()) {
                 GenericResultWaiter thw = (GenericResultWaiter) wi.next();
+                
                 if (thw.isCompleted()) {
                     Map thwResult = thw.getResult();
                     if (thwResult != null && thwResult.containsKey(ModelService.RESPONSE_MESSAGE)) {
@@ -102,6 +104,7 @@ public class WfActivityToolImplementation extends WfActivityAbstractImplementati
                         }
                         thwResult.remove(ModelService.RESPONSE_MESSAGE);
                     }
+                    
                     Debug.logVerbose("Service finished.", module);
                     try {
                         if (thwResult != null)
@@ -114,6 +117,7 @@ public class WfActivityToolImplementation extends WfActivityAbstractImplementati
             }
             waiters.removeAll(remove);
         }
+        
         setComplete(true);
     }
 
@@ -137,6 +141,7 @@ public class WfActivityToolImplementation extends WfActivityAbstractImplementati
                 }
             }
         }
+        
         this.setResult(newResult);
     }
 }
