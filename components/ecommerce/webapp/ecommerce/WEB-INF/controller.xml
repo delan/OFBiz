@@ -313,6 +313,17 @@
         <response name="payment" type="view" value="billsetting"/>
         <response name="paysplit" type="view" value="checkoutpayment"/>
         <response name="sales" type="request" value="calcShipping"/>
+        <response name="error" type="request" value="finalizeOrderError"/>
+    </request-map>
+    <request-map uri="finalizeOrderError">
+        <security direct-request="false"/>
+        <event type="java" path="org.ofbiz.order.shoppingcart.CheckOutEvents" invoke="finalizeOrderEntryError"/>
+        <response name="customer" type="view" value="custsetting"/>
+        <response name="shipping" type="view" value="shipsetting"/>
+        <response name="options" type="view" value="optionsetting"/>
+        <response name="payment" type="view" value="billsetting"/>
+        <response name="paysplit" type="view" value="checkoutpayment"/>
+        <response name="sales" type="request" value="calcShipping"/>
         <response name="error" type="view" value="showcart"/>
     </request-map>
     <!-- end of anonymous checkout requests -->
@@ -324,6 +335,17 @@
       <response name="shippingoptions" type="view" value="checkoutshippingoptions"/>
       <response name="payment" type="view" value="checkoutpayment"/>
       <response name="confirm" type="request" value="calcShipping"/>
+      <response name="success" type="view" value="checkoutshippingaddress"/>
+      <response name="error" type="request" value="checkouterror"/>
+    </request-map>
+    <request-map uri="checkouterror">
+      <security https="true" auth="true"/>
+      <event type="java" path="org.ofbiz.order.shoppingcart.CheckOutEvents" invoke="setCheckOutError"/>
+      <response name="shippingaddress" type="view" value="checkoutshippingaddress"/>
+      <response name="shippingoptions" type="view" value="checkoutshippingoptions"/>
+      <response name="payment" type="view" value="checkoutpayment"/>
+      <response name="confirm" type="request" value="calcShipping"/>
+      <response name="quick" type="view" value="quickcheckout"/>
       <response name="error" type="view" value="checkoutshippingaddress"/>
       <response name="success" type="view" value="checkoutshippingaddress"/>
     </request-map>
@@ -346,35 +368,35 @@
         <security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.order.shoppingcart.CheckOutEvents" invoke="setPartialCheckOutOptions"/>
         <response name="success" type="view" value="checkoutoptions"/>
-        <response name="error" type="view" value="checkoutoptions"/>
+        <response name="error" type="request" value="checkouterror"/>
     </request-map>
 
     <request-map uri="setOptions">
         <security https="true" auth="true" direct-request="false"/>
         <event type="java" path="org.ofbiz.order.shoppingcart.CheckOutEvents" invoke="setCheckOutOptions"/>
         <response name="success" type="request" value="calcShipping"/>
-        <response name="error" type="view" value="quickcheckout"/>
+        <response name="error" type="request" value="checkouterror"/>
     </request-map>
 
     <request-map uri="calcShipping">
         <security direct-request="false"/>
         <event type="java" path="org.ofbiz.order.shoppingcart.shipping.ShippingEvents" invoke="getShipEstimate"/>
         <response name="success" type="request" value="calcTax"/>
-        <response name="error" type="view" value="checkoutoptions"/>
+        <response name="error" type="request" value="checkouterror"/>
     </request-map>
 
     <request-map uri="calcTax">
         <security direct-request="false"/>
         <event type="java" path="org.ofbiz.order.shoppingcart.CheckOutEvents" invoke="calcTax"/>
         <response name="success" type="request" value="validatePaymentMethods"/>
-        <response name="error" type="view" value="checkoutoptions"/>
+        <response name="error" type="request" value="checkouterror"/>
     </request-map>
 
     <request-map uri="validatePaymentMethods">
         <security direct-request="false"/>
         <event type="java" path="org.ofbiz.order.shoppingcart.CheckOutEvents" invoke="checkPaymentMethods"/>
         <response name="success" type="view" value="checkout"/>
-        <response name="error" type="view" value="checkoutoptions"/>
+        <response name="error" type="request" value="checkouterror"/>
     </request-map>
 
     <request-map uri="checkBlacklist">
