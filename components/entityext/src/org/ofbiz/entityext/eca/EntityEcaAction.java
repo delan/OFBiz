@@ -80,7 +80,7 @@ public class EntityEcaAction {
                 actionContext.put(valueAttr, value);
             }
             
-            Debug.logInfo("Running Entity ECA action service " + this.serviceName + " triggered by entity: " + value.getEntityName(), module);
+            //Debug.logInfo("Running Entity ECA action service " + this.serviceName + " triggered by entity: " + value.getEntityName(), module);
             //Debug.logInfo("Running Entity ECA action service " + this.serviceName + "; value=" + value + "; actionContext=" + actionContext, module);
         
             LocalDispatcher dispatcher = dctx.getDispatcher();

@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright (c) 2002-2003 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2002-2004 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -41,7 +41,7 @@ import org.w3c.dom.Element;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.1
  */
 public class EntityEcaRule {
@@ -114,6 +114,7 @@ public class EntityEcaRule {
                 // in order to enable OR logic without multiple calls to the given service, 
                 //only execute a given service name once per service call phase 
                 if (!actionsRun.contains(ea.serviceName)) {
+                    if (Debug.infoOn()) Debug.logInfo("Running Entity ECA Service: " + ea.serviceName + ", triggered by rule on Entity: " + value.getEntityName(), module);
                     ea.runAction(dctx, value);
                     actionsRun.add(ea.serviceName);
                 }
