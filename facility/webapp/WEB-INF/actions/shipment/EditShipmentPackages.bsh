@@ -36,16 +36,16 @@ shipment = delegator.findByPrimaryKey("Shipment", UtilMisc.toMap("shipmentId", s
 shipmentPackages = shipment.getRelated("ShipmentPackage", null, UtilMisc.toList("shipmentPackageSeqId"));
 shipmentPackageDatas = new LinkedList();
 if (shipmentPackages != null && shipmentPackages.size() > 0) {
-	shipmentPackageIter = shipmentPackages.iterator();
-	while (shipmentPackageIter.hasNext()) {
-	    shipmentPackage = shipmentPackageIter.next();
-	    shipmentPackageData = new HashMap();
-	    shipmentPackageData.put("shipmentPackage", shipmentPackage);
-	    shipmentPackageData.put("shipmentPackageContents", shipmentPackage.getRelated("ShipmentPackageContent"));
-	    shipmentPackageData.put("shipmentPackageRouteSegs", shipmentPackage.getRelated("ShipmentPackageRouteSeg"));
-	    shipmentPackageData.put("weightUom", shipmentPackage.getRelatedOne("WeightUom"));
-	    shipmentPackageDatas.add(shipmentPackageData);
-	}
+    shipmentPackageIter = shipmentPackages.iterator();
+    while (shipmentPackageIter.hasNext()) {
+        shipmentPackage = shipmentPackageIter.next();
+        shipmentPackageData = new HashMap();
+        shipmentPackageData.put("shipmentPackage", shipmentPackage);
+        shipmentPackageData.put("shipmentPackageContents", shipmentPackage.getRelated("ShipmentPackageContent"));
+        shipmentPackageData.put("shipmentPackageRouteSegs", shipmentPackage.getRelated("ShipmentPackageRouteSeg"));
+        shipmentPackageData.put("weightUom", shipmentPackage.getRelatedOne("WeightUom"));
+        shipmentPackageDatas.add(shipmentPackageData);
+    }
 }
 
 shipmentItems = shipment.getRelated("ShipmentItem", null, UtilMisc.toList("shipmentItemSeqId"));
