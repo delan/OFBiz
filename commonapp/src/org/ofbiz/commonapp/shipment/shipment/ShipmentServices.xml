@@ -140,9 +140,15 @@
         <set-pk-fields map-name="parameters" value-name="newEntity"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
 
+		<if-compare value="New" operator="equals" field-name="shipmentPackageSeqId" map-name="newEntity">
+			<clear-field field-name="shipmentPackageSeqId" map-name="newEntity"/>
+		</if-compare>
+
         <!-- if no shipmentPackageSeqId, generate one based on existing items, ie one greater than the current higher number -->
         <make-next-seq-id value-name="newEntity" seq-field-name="shipmentPackageSeqId"/>
         <field-to-result field-name="shipmentPackageSeqId" map-name="newEntity" result-name="shipmentPackageSeqId"/>
+        
+        <now-timestamp-to-env env-name="newEntity.dateCreated"/>
         
         <create-value value-name="newEntity"/>
     </simple-method>

@@ -52,7 +52,7 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
 	<#list itemIssuances as itemIssuance>
 		<tr>
 			<td><div class="tabletext">&nbsp;</div></td>
-			<td><div class="tabletext"><a href="/ordermgr/control/vieworder?order_id=${itemIssuance.orderId?if_exists}" class="buttontext">${itemIssuance.orderId?if_exists}</a>:${itemIssuance.orderItemSeqId?if_exists}</div></td>
+			<td><div class="tabletext">OrderItem:<a href="/ordermgr/control/vieworder?order_id=${itemIssuance.orderId?if_exists}" class="buttontext">${itemIssuance.orderId?if_exists}</a>:${itemIssuance.orderItemSeqId?if_exists}</div></td>
 			<td><div class="tabletext"><a href="<@ofbizUrl>/EditInventoryItem?inventoryItemId=${itemIssuance.inventoryItemId?if_exists}</@ofbizUrl>" class="buttontext">${itemIssuance.inventoryItemId?if_exists}</a></div></td>
 			<td><div class="tabletext">${itemIssuance.quantity?if_exists}</div></td>
 			<td><div class="tabletext">${itemIssuance.issuedDateTime?if_exists}</div></td>
@@ -63,11 +63,9 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
 	<#list shipmentPackageContents as shipmentPackageContent>
 		<tr>
 			<td><div class="tabletext">&nbsp;</div></td>
-			<td><div class="tabletext">&nbsp;</div></td>
-			<td><div class="tabletext">${shipmentPackageContent.shipmentPackageSeqId}</div></td>
+			<td colspan="2"><div class="tabletext">Package:${shipmentPackageContent.shipmentPackageSeqId}</div></td>
 			<td><div class="tabletext">${shipmentPackageContent.quantity?if_exists}</div></td>
-			<td><div class="tabletext">&nbsp;</div></td>
-			<td><div class="tabletext">&nbsp;</div></td>
+			<td colspan="2"><div class="tabletext">&nbsp;</div></td>
 			<td><div class="tabletext"><a href="<@ofbizUrl>/deleteShipmentItemPackageContent?shipmentId=${shipmentId}&shipmentItemSeqId=${shipmentPackageContent.shipmentItemSeqId}&shipmentPackageSeqId=${shipmentPackageContent.shipmentPackageSeqId}</@ofbizUrl>" class="buttontext">Delete</a></div></td>
 		</tr>
 	</#list>
@@ -77,7 +75,7 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
 		<input type="hidden" name="shipmentItemSeqId" value="${shipmentItem.shipmentItemSeqId}"/>
 		<td><div class="tabletext">&nbsp;</div></td>
 		<td colspan="2">
-			<div class="tabletext">Package:
+			<div class="tabletext">Add to Package:
 			<select name="shipmentPackageSeqId" class="selectBox">
 				<#list shipmentPackages as shipmentPackage>
 					<option>${shipmentPackage.shipmentPackageSeqId}</option>
@@ -86,7 +84,7 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
 			</select>
 			</div>
 		</td>
-		<td><div class="tabletext">Quantity:<input name="quantity" size="5" value="0"/></div></td>
+		<td><div class="tabletext"><input name="quantity" size="5" value="0"/></div></td>
 		<td colspan="2"><div class="tabletext">&nbsp;</div></td>
 		<td><a href="javascript:document.createShipmentPackageContentForm${shipmentItemData_index}.submit()" class="buttontext">Add</a></td>
 		</form>
@@ -97,7 +95,7 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
 	<input type="hidden" name="shipmentId" value="${shipmentId}"/>
 	<td><div class="tabletext">New Item:</div></td>
 	<td colspan="2"><div class="tabletext">ProductID:<input name="productId" size="15" maxlength="20"/></div></td>
-	<td><div class="tabletext">Quantity:<input name="quantity" size="5" value="0"/></div></td>
+	<td><div class="tabletext"><input name="quantity" size="5" value="0"/></div></td>
 	<td colspan="2"><div class="tabletext">Description:<input name="shipmentContentDescription" size="30" maxlength="255"/></div></td>
 	<td><a href="javascript:document.createShipmentItemForm.submit()" class="buttontext">Create</a></td>
 	</form>

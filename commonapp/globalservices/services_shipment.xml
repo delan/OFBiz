@@ -60,7 +60,9 @@
             location="org/ofbiz/commonapp/shipment/shipment/ShipmentServices.xml" invoke="createShipmentPackage" auth="true">
         <description>Create ShipmentPackage</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
-        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true">
+        	<exclude field-name="dateCreated"/>
+        </auto-attributes>
         <override name="shipmentPackageSeqId" mode="INOUT" optional="true"/>
     </service>
     <service name="updateShipmentPackage" default-entity-name="ShipmentPackage" engine="simple"

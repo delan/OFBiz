@@ -138,7 +138,7 @@ context.put("shipmentTypes", shipmentTypes);
 facilities = delegator.findAll("Facility", UtilMisc.toList("facilityName"));
 context.put("facilities", facilities);
 
-shipmentStatuses = delegator.findByAnd("StatusItem", UtilMisc.toMap("statusTypeId", "SHIPMENT_STATUS"), UtilMisc.toList("description"));
+shipmentStatuses = delegator.findByAnd("StatusItem", UtilMisc.toMap("statusTypeId", "SHIPMENT_STATUS"), UtilMisc.toList("sequenceId"));
 context.put("shipmentStatuses", shipmentStatuses);
 
 // create the fromDate for calendar
