@@ -135,14 +135,19 @@
                       <tr>
                         <#if paymentMethodType.paymentMethodTypeId == "EXT_OFFLINE">
                           <td colspan="3" valign="top">
-                            <div class="tabletext" align="center"><b>Offline Payment</b></div>
-                            <ofbiz:if name="orderHeader">
-                              <div class="tabletext" align="center">Please Send Payment To:</div>
-                              <div class="tabletext" align="center">Company XYZ Inc.</div>
-                              <div class="tabletext" align="center">99 Open Ave</div>
-                              <div class="tabletext" align="center">Somewhere, OS 11111</div>
+                            <div class="tabletext" align="center"><b>Offline Payment</b></div>                            
+                            <#if orderHeader?has_content && paymentAddress?has_content> 
+                              <div class="tabletext" align="center"><hr class="sepbar"></div>
+                              <div class="tabletext" align="center"><b>Please Send Payment To:</b></div>
+                              <#if paymentAddress.toName?has_content><div class="tabletext" align="center">${paymentAddress.toName}</div></#if>
+                              <#if paymentAddress.attnName?has_content><div class="tabletext" align="center"><b>Attn:</b> ${paymentAddress.attnName}</div></#if>
+                              <div class="tabletext" align="center">${paymentAddress.address1}</div>
+                              <#if paymentAddress.address2?has_content><div class="tabletext" align="center">${paymentAddress.address2}</div></#if>                            
+                              <div class="tabletext" align="center">${paymentAddress.city}<#if paymentAddress.stateProvinceGeoId?has_content>, ${paymentAddress.stateProvinceGeoId}</#if> ${paymentAddress.postalCode}
+                              <div class="tabletext" align="center">${paymentAddress.countryGeoId}</div>                                                                                                                
+                              <div class="tabletext" align="center"><hr class="sepbar"></div>
                               <div class="tabletext" align="center"><b>Be sure to include your order #</b></div>
-                            </ofbiz:if>                            
+                            </#if>                         
                           </td>                  
                         <#else>
                           <#assign outputted = true>

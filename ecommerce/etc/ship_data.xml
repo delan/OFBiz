@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity-engine-xml>
   <Party partyId="UPS"/>
-  <PartyRole partyId="UPS" roleTypeId="CARRIER"/>
   <Party partyId="Company"/>
+  <PartyRole partyId="UPS" roleTypeId="CARRIER"/>  
   <PartyRole partyId="Company" roleTypeId="CARRIER"/>
   <PartyRole partyId="_NA_" roleTypeId="CARRIER"/>
   <CarrierShipmentMethod partyId="UPS" roleTypeId="CARRIER" shipmentMethodTypeId="GROUND" display="Y" sequenceNumber="3"/>

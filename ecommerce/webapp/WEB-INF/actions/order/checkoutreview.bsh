@@ -27,8 +27,10 @@
 import java.lang.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.entity.*;
+import org.ofbiz.commonapp.accounting.payment.*;
 import org.ofbiz.commonapp.order.order.*;
 import org.ofbiz.commonapp.party.contact.*;
+import org.ofbiz.commonapp.product.catalog.*;
 
 delegator = request.getAttribute("delegator");
 userLogin = session.getAttribute("userLogin");
@@ -73,7 +75,11 @@ if (paymentMethodTypeIds != null && paymentMethodTypeIds.size() > 0) {
     paymentMethodTypeId = paymentMethodTypeIds.get(0);
     paymentMethodType = delegator.findByPrimaryKey("PaymentMethodType", UtilMisc.toMap("paymentMethodTypeId", paymentMethodTypeId));
     context.put("paymentMethodType", paymentMethodType);
-}   
+}  
+
+webSiteId = CatalogWorker.getWebSiteId(request);
+paymentAddress =  PaymentWorker.getPaymentAddress(delegator, webSiteId, paymentMethodTypeId);
+if (paymentAddress != null) context.put("paymentAddress", paymentAddress);
 
 billingAddress = null;
 if (paymentMethod != null) {
