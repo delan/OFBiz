@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.24 $
+ *@version    $Revision: 1.25 $
  *@since      2.2
 -->
 
@@ -550,7 +550,9 @@
                           <div class="tabletext">
                             <#if maySplit?upper_case == "N">
                                 Please wait until the entire order is ready before shipping.
-                                <#if orderHeader.statusId != "ORDER_COMPLETED" && orderHeader.statusId != "ORDER_CANCELLED"><a href="<@ofbizUrl>/allowordersplit?orderId=${orderId}&${paramString}</@ofbizUrl>" class="buttontext">[Allow&nbsp;Split]</a></#if>
+                                <#if security.hasEntityPermission("ORDERMGR", "_UPDATE", session)>
+                                  <#if orderHeader.statusId != "ORDER_COMPLETED" && orderHeader.statusId != "ORDER_CANCELLED"><a href="<@ofbizUrl>/allowordersplit?orderId=${orderId}&${paramString}</@ofbizUrl>" class="buttontext">[Allow&nbsp;Split]</a></#if>
+                                </#if>
                             <#else>
                                 Please ship items I ordered as they become available (may incur additional shipping charges).
                             </#if>
