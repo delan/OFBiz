@@ -24,21 +24,44 @@
  */
 package org.ofbiz.commonapp.thirdparty.worldpay;
 
-import java.io.*;
-import java.net.*;
-import java.util.*;
+import java.io.IOException;
+import java.io.Writer;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpSession;
 
-import org.ofbiz.core.entity.*;
-import org.ofbiz.core.service.*;
-import org.ofbiz.core.util.*;
-import org.ofbiz.commonapp.order.order.*;
-import org.ofbiz.commonapp.order.shoppingcart.*;
+import org.ofbiz.commonapp.order.order.OrderChangeHelper;
+import org.ofbiz.commonapp.order.order.OrderServices;
+import org.ofbiz.commonapp.order.shoppingcart.CheckOutEvents;
+import org.ofbiz.core.control.JPublishWrapper;
+import org.ofbiz.core.entity.GenericDelegator;
+import org.ofbiz.core.entity.GenericEntityException;
+import org.ofbiz.core.entity.GenericTransactionException;
+import org.ofbiz.core.entity.GenericValue;
+import org.ofbiz.core.entity.TransactionUtil;
+import org.ofbiz.core.service.DispatchContext;
+import org.ofbiz.core.service.LocalDispatcher;
+import org.ofbiz.core.service.ServiceDispatcher;
+import org.ofbiz.core.util.Debug;
+import org.ofbiz.core.util.GeneralException;
+import org.ofbiz.core.util.SiteDefs;
+import org.ofbiz.core.util.StringUtil;
+import org.ofbiz.core.util.UtilMisc;
 
-import com.worldpay.select.*;
-import com.worldpay.select.merchant.*;
+import com.worldpay.select.SelectDefs;
+import com.worldpay.select.merchant.SelectServlet;
+import com.worldpay.select.merchant.SelectServletRequest;
+import com.worldpay.select.merchant.SelectServletResponse;
 
 /**
  * WorldPay Select Pro Response Servlet
@@ -64,9 +87,7 @@ public class SelectRespServlet extends SelectServlet implements SelectDefs {
         
         // get the ServletContext
         ServletContext context = (ServletContext) request.getAttribute("servletContext");
-        if (context != null) {
-            Debug.logInfo("Got ServletContext named: " + context.getServletContextName(), module);
-        }
+        JPublishWrapper jp = (JPublishWrapper) context.getAttribute("jpublishWrapper");        
         
         // get the delegator
         GenericDelegator delegator = GenericDelegator.getGenericDelegator(delegatorName);
@@ -201,8 +222,13 @@ public class SelectRespServlet extends SelectServlet implements SelectDefs {
         ServletOutputStream out = response.getOutputStream();  
         if (confirmUrl != null) {                                    
             // render the thank-you / confirm page
-            Writer writer = OrderServices.prepareOrderConfirm(delegator, orderId, confirmUrl, localLocale);
-            out.println(writer.toString()); 
+            String content = null;
+            try {
+                content = jp.render(confirmTemplate, request, response);
+            } catch (GeneralException e) {
+                Debug.logError(e, "Trouble rendering confirm page", module);
+            }            
+            out.println(content); 
         } else {
             out.println("Error getting content");
         }                                                 

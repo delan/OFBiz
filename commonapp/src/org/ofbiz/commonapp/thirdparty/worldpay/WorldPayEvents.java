@@ -179,31 +179,13 @@ public class WorldPayEvents {
         String testMode = UtilProperties.getPropertyValue(configString, "payment.worldpay.testMode", "100");
         String fixContact = UtilProperties.getPropertyValue(configString, "payment.worldpay.fixContact", "N");
         String hideContact = UtilProperties.getPropertyValue(configString, "payment.worldpay.hideContact", "N");
-        String confirmPath = UtilProperties.getPropertyValue(configString, "payment.worldpay.confirmTemplate", "");
+        String confirmTemplate = UtilProperties.getPropertyValue(configString, "payment.worldpay.confirmTemplate", "");
         String timeout = UtilProperties.getPropertyValue(configString, "payment.worldpay.timeout", "0");
         String company = UtilProperties.getPropertyValue(configString, "payment.general.company", "");
-        String defCur = UtilProperties.getPropertyValue(configString, "payment.general.defaultCurrency", "USD");
-        
-        String notifyEmailTemplate = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.notification.email.template");
-        String confirmEmailTemplate = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.confirmation.email.template");
-        URL notifyEmailUrl = null;
-        URL confirmEmailUrl = null;
-        try {
-            notifyEmailUrl = application.getResource(notifyEmailTemplate);
-            confirmEmailUrl = application.getResource(confirmEmailTemplate);
-        } catch (MalformedURLException e) {
-            Debug.logWarning(e, "Cannot get email templates", module);
-        }
-        
-        // confirm template
-        String confirmTemplate = null;
-        try {
-            URL confirmTemplateUrl = application.getResource(confirmPath);
-            confirmTemplate = confirmTemplateUrl.toExternalForm();
-        } catch (MalformedURLException e) {
-            Debug.logError(e, "Problems getting the confirm template URL", module);            
-        }
-        
+        String defCur = UtilProperties.getPropertyValue(configString, "payment.general.defaultCurrency", "USD");        
+        String notifyEmail = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.notification.email.template");
+        String confirmEmail = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.confirmation.email.template");
+                           
         // order description
         String description = "Order #" + orderId;
         if (company != null && company.length() > 0)
@@ -323,8 +305,8 @@ public class WorldPayEvents {
         linkParms.setValue("M_delegatorName", delegator.getDelegatorName());        
         linkParms.setValue("M_webSiteId", webSiteId);        
         linkParms.setValue("M_localLocale", UtilHttp.getLocale(request).toString());
-        linkParms.setValue("M_notifyEmail", notifyEmailUrl != null ? notifyEmailUrl.toExternalForm() : "");
-        linkParms.setValue("M_confirmEmail", confirmEmailUrl != null ? confirmEmailUrl.toExternalForm() : "");
+        linkParms.setValue("M_notifyEmail", notifyEmail != null ? notifyEmail : "");
+        linkParms.setValue("M_confirmEmail", confirmEmail != null ? confirmEmail : "");
         linkParms.setValue("M_confirmTemplate", confirmTemplate != null ? confirmTemplate : "");
                     
         // redirect to worldpay
