@@ -27,7 +27,10 @@
       <ExtendedAttributes>
         <ExtendedAttribute Name="partyId" Value="admin"/>
       </ExtendedAttributes>
-    </Participant>   
+    </Participant>
+    <Participant Id="ORDER_CLERK" Name="Clerk Role">
+      <ParticipantType Type="ROLE"/>      
+    </Participant>         
     <Participant Id="user" Name="First Participant">
       <ParticipantType Type="RESOURCE"/>
       <Description>None</Description>
@@ -268,7 +271,7 @@
 		  <Implementation>
 		    <No/>
 		  </Implementation>
-          <Performer>all</Performer>
+          <Performer>ORDER_CLERK</Performer>
           <!-- <Performer>??? - assigned at run time</Performer> -->
 
 		  <StartMode>
