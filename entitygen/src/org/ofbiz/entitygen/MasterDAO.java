@@ -1,5 +1,6 @@
 package org.ofbiz.entitygen;
 
+import java.lang.reflect.*;
 import java.sql.*;
 import java.util.*;
 import org.ofbiz.core.util.*;
@@ -43,15 +44,19 @@ public class MasterDAO
     DefReader.loadAllEntities(fileName);
   }
   
-  public static Entity getEntity(Object value)
+  public static EgEntity getEgEntity(Class valueClass)
   {
-    String entityName = value.getClass().getName();
-    return DefReader.getEntity(fileName, entityName);
+    String entityName = valueClass.getName();
+    entityName = entityName.substring(entityName.lastIndexOf('.')+1, entityName.length());
+    Debug.logInfo("MasterDAO.getEgEntity for entityName: " + entityName);
+    return DefReader.getEgEntity(fileName, entityName);
   }
   
   public static boolean insert(Object value)
   {
-    Entity entity = getEntity(value);
+    Class valueClass = value.getClass();
+    EgEntity entity = getEgEntity(valueClass);
+    if(entity == null) return false;
 /*    
     if(value == null || value.<%=entity.pkNameString(" == null || value."," == null")%>) {
       Debug.logWarning("ERROR [MasterDAO.insert]: Cannot insert Object: required primary key field(s) missing.");
@@ -64,21 +69,18 @@ public class MasterDAO
     catch (SQLException sqle) { Debug.logWarning("ERROR [MasterDAO.insert]: Unable to esablish a connection with the database... Error was:\n"); Debug.logWarning(sqle); }
     
     String sql = "INSERT INTO " + entity.tableName + " (" + entity.colNameString(entity.fields) + ") VALUES (" + entity.fieldsStringList(entity.fields, "?", ", ") + ")";
-    try {
+    try 
+    {
       ps = connection.prepareStatement(sql);
-/*
-    <%for(i=0;i<entity.fields.size();i++){Field curField=(Field)entity.fields.elementAt(i);%><%if(curField.javaType.compareTo("java.lang.String") == 0 || curField.javaType.compareTo("String") == 0){%>
-      ps.setString(<%=i+1%>, value.<%=curField.fieldName%>);<%}else if(curField.javaType.indexOf("Timestamp") >= 0){%>
-      ps.setTimestamp(<%=i+1%>, value.<%=curField.fieldName%>);<%}else if(curField.javaType.equals("java.sql.Time") || curField.javaType.equals("Time")){%>
-      ps.setTime(<%=i+1%>, value.<%=curField.fieldName%>);<%}else if(curField.javaType.equals("java.sql.Date") || curField.javaType.equals("Date")){%>
-      ps.setDate(<%=i+1%>, value.<%=curField.fieldName%>);<%}else if(curField.javaType.equals("java.lang.Integer") || curField.javaType.equals("Integer")){%>
-      if(value.<%=curField.fieldName%> != null) ps.setInt(<%=i+1%>, value.<%=curField.fieldName%>.intValue()); else ps.setNull(<%=i+1%>, Types.NULL);<%}else if(curField.javaType.equals("java.lang.Long") || curField.javaType.equals("Long")){%>
-      if(value.<%=curField.fieldName%> != null) ps.setLong(<%=i+1%>, value.<%=curField.fieldName%>.longValue()); else ps.setNull(<%=i+1%>, Types.NULL);<%}else if(curField.javaType.equals("java.lang.Float") || curField.javaType.equals("Float")){%>
-      if(value.<%=curField.fieldName%> != null) ps.setFloat(<%=i+1%>, value.<%=curField.fieldName%>.floatValue()); else ps.setNull(<%=i+1%>, Types.NULL);<%}else if(curField.javaType.equals("java.lang.Double") || curField.javaType.equals("Double")){%>
-      if(value.<%=curField.fieldName%> != null) ps.setDouble(<%=i+1%>, value.<%=curField.fieldName%>.doubleValue()); else ps.setNull(<%=i+1%>, Types.NULL);<%}%><%}%>
-*/
+
+      for(int i=0;i<entity.fields.size();i++)
+      { 
+        EgField curField=(EgField)entity.fields.elementAt(i);
+        setValue(ps, i+1, curField, value);
+      }
+
       ps.executeUpdate();
-      //value.modified = false;
+      try { valueClass.getField("modified").setBoolean(value, false); } catch(Exception e) { Debug.logWarning("MasterDAO: could not set " + valueClass.getName() + ".modified."); }
     } catch (SQLException sqle) {
       Debug.logWarning("ERROR [MasterDAO.insert]: SQL Exception while executing the following:\n" + sql + "\nError was:\n");
       Debug.logWarning(sqle);
@@ -92,8 +94,9 @@ public class MasterDAO
 
   public static boolean update(Object value)
   {
-    Entity entity = getEntity(value);
-    Vector nopks = new Vector(entity.fields); for(int ind=0;ind<entity.pks.size();ind++){ nopks.removeElement(entity.pks.elementAt(ind)); }
+    Class valueClass = value.getClass();
+    EgEntity entity = getEgEntity(valueClass);
+    if(entity == null) return false;
 /*
     if(value == null || value.<%=entity.pkNameString(" == null || value."," == null")%>) {
       Debug.logWarning("ERROR [MasterDAO.update]: Cannot update Object: required primary key field(s) missing.");
@@ -105,31 +108,23 @@ public class MasterDAO
     try { connection = getConnection(); } 
     catch (SQLException sqle) { Debug.logWarning("ERROR [MasterDAO.update]: Unable to esablish a connection with the database... Error was:\n"); Debug.logWarning(sqle); }
 
-    String sql = "UPDATE " + entity.tableName + " SET " + entity.colNameString(nopks, "=?, ", "=?") + " WHERE " + entity.colNameString(entity.pks, "=? AND ", "=?") + "";
+    String sql = "UPDATE " + entity.tableName + " SET " + entity.colNameString(entity.nopks, "=?, ", "=?") + " WHERE " + entity.colNameString(entity.pks, "=? AND ", "=?") + "";
     try {
       ps = connection.prepareStatement(sql);
-/*
-    <%for(i=0;i<nopks.size();i++){Field curField=(Field)nopks.elementAt(i);%><%if(curField.javaType.compareTo("java.lang.String") == 0 || curField.javaType.compareTo("String") == 0){%>
-      ps.setString(<%=i+1%>, value.<%=curField.fieldName%>);<%}else if(curField.javaType.indexOf("Timestamp") >= 0){%>
-      ps.setTimestamp(<%=i+1%>, value.<%=curField.fieldName%>);<%}else if(curField.javaType.equals("java.sql.Time") || curField.javaType.equals("Time")){%>
-      ps.setTime(<%=i+1%>, value.<%=curField.fieldName%>);<%}else if(curField.javaType.equals("java.sql.Date") || curField.javaType.equals("Date")){%>
-      ps.setDate(<%=i+1%>, value.<%=curField.fieldName%>);<%}else if(curField.javaType.equals("java.lang.Integer") || curField.javaType.equals("Integer")){%>
-      if(value.<%=curField.fieldName%> != null) ps.setInt(<%=i+1%>, value.<%=curField.fieldName%>.intValue()); else ps.setNull(<%=i+1%>, Types.NULL);<%}else if(curField.javaType.equals("java.lang.Long") || curField.javaType.equals("Long")){%>
-      if(value.<%=curField.fieldName%> != null) ps.setLong(<%=i+1%>, value.<%=curField.fieldName%>.longValue()); else ps.setNull(<%=i+1%>, Types.NULL);<%}else if(curField.javaType.equals("java.lang.Float") || curField.javaType.equals("Float")){%>
-      if(value.<%=curField.fieldName%> != null) ps.setFloat(<%=i+1%>, value.<%=curField.fieldName%>.floatValue()); else ps.setNull(<%=i+1%>, Types.NULL);<%}else if(curField.javaType.equals("java.lang.Double") || curField.javaType.equals("Double")){%>
-      if(value.<%=curField.fieldName%> != null) ps.setDouble(<%=i+1%>, value.<%=curField.fieldName%>.doubleValue()); else ps.setNull(<%=i+1%>, Types.NULL);<%}%><%}%>
-    <%for(i=0;i<entity.pks.size();i++){Field curField=(Field)entity.pks.elementAt(i);%><%if(curField.javaType.compareTo("java.lang.String") == 0 || curField.javaType.compareTo("String") == 0){%>
-      ps.setString(<%=i+1+nopks.size()%>, value.<%=curField.fieldName%>);<%}else if(curField.javaType.indexOf("Timestamp") >= 0){%>
-      ps.setTimestamp(<%=i+1+nopks.size()%>, value.<%=curField.fieldName%>);<%}else if(curField.javaType.equals("java.sql.Time") || curField.javaType.equals("Time")){%>
-      ps.setTime(<%=i+1+nopks.size()%>, value.<%=curField.fieldName%>);<%}else if(curField.javaType.equals("java.sql.Date") || curField.javaType.equals("Date")){%>
-      ps.setDate(<%=i+1+nopks.size()%>, value.<%=curField.fieldName%>);<%}else if(curField.javaType.equals("java.lang.Integer") || curField.javaType.equals("Integer")){%>
-      if(value.<%=curField.fieldName%> != null) ps.setInt(<%=i+1+nopks.size()%>, value.<%=curField.fieldName%>.intValue()); else ps.setNull(<%=i+1+nopks.size()%>, Types.NULL);<%}else if(curField.javaType.equals("java.lang.Long") || curField.javaType.equals("Long")){%>
-      if(value.<%=curField.fieldName%> != null) ps.setLong(<%=i+1+nopks.size()%>, value.<%=curField.fieldName%>.longValue()); else ps.setNull(<%=i+1+nopks.size()%>, Types.NULL);<%}else if(curField.javaType.equals("java.lang.Float") || curField.javaType.equals("Float")){%>
-      if(value.<%=curField.fieldName%> != null) ps.setFloat(<%=i+1+nopks.size()%>, value.<%=curField.fieldName%>.floatValue()); else ps.setNull(<%=i+1+nopks.size()%>, Types.NULL);<%}else if(curField.javaType.equals("java.lang.Double") || curField.javaType.equals("Double")){%>
-      if(value.<%=curField.fieldName%> != null) ps.setDouble(<%=i+1+nopks.size()%>, value.<%=curField.fieldName%>.doubleValue()); else ps.setNull(<%=i+1+nopks.size()%>, Types.NULL);<%}%><%}%>
-*/
+
+      for(int i=0;i<entity.nopks.size();i++)
+      {
+        EgField curField=(EgField)entity.nopks.elementAt(i);
+        setValue(ps, i+1, curField, value);
+      }
+      for(int j=0;j<entity.pks.size();j++)
+      {
+        EgField curField=(EgField)entity.pks.elementAt(j);
+        setValue(ps, j+1, curField, value);
+      }
+
       ps.executeUpdate();
-      //value.modified = false;
+      try { valueClass.getField("modified").setBoolean(value, false); } catch(Exception e) { Debug.logWarning("MasterDAO: could not set " + valueClass.getName() + ".modified."); }
     } catch (SQLException sqle) {
       Debug.logWarning("ERROR [MasterDAO.update]: SQL Exception while executing the following:\n" + sql + "\nError was:\n");
       Debug.logWarning(sqle);
@@ -143,8 +138,9 @@ public class MasterDAO
 
   public static boolean select(Object value)
   {
-    Entity entity = getEntity(value);
-    Vector nopks = new Vector(entity.fields); for(int ind=0;ind<entity.pks.size();ind++){ nopks.removeElement(entity.pks.elementAt(ind)); }
+    Class valueClass = value.getClass();
+    EgEntity entity = getEgEntity(valueClass);
+    if(entity == null) return false;
 /*
     if(value == null || value.<%=entity.pkNameString(" == null || value."," == null")%>) {
       Debug.logWarning("ERROR [MasterDAO.select]: Cannot select Object: required primary key field(s) missing.");
@@ -157,36 +153,27 @@ public class MasterDAO
     try { connection = getConnection(); } 
     catch (SQLException sqle) { Debug.logWarning("ERROR [MasterDAO.select]: Unable to esablish a connection with the database... Error was:\n"); Debug.logWarning(sqle); }
     
-    String sql = "SELECT " + entity.colNameString(nopks, ", ", "") + " FROM " + entity.tableName + " WHERE " + entity.colNameString(entity.pks, "=? AND ", "=?") + "";
+    String sql = "SELECT " + entity.colNameString(entity.nopks, ", ", "") + " FROM " + entity.tableName + " WHERE " + entity.colNameString(entity.pks, "=? AND ", "=?") + "";
     try {
       ps = connection.prepareStatement(sql);
-/*
-    <%for(i=0;i<entity.pks.size();i++){Field curField=(Field)entity.pks.elementAt(i);%><%if(curField.javaType.compareTo("java.lang.String") == 0 || curField.javaType.compareTo("String") == 0){%>
-      ps.setString(<%=i+1%>, value.<%=curField.fieldName%>);<%}else if(curField.javaType.indexOf("Timestamp") >= 0){%>
-      ps.setTimestamp(<%=i+1%>, value.<%=curField.fieldName%>);<%}else if(curField.javaType.equals("java.sql.Time") || curField.javaType.equals("Time")){%>
-      ps.setTime(<%=i+1%>, value.<%=curField.fieldName%>);<%}else if(curField.javaType.equals("java.sql.Date") || curField.javaType.equals("Date")){%>
-      ps.setDate(<%=i+1%>, value.<%=curField.fieldName%>);<%}else if(curField.javaType.equals("java.lang.Integer") || curField.javaType.equals("Integer")){%>
-      if(value.<%=curField.fieldName%> != null) ps.setInt(<%=i+1%>, value.<%=curField.fieldName%>.intValue()); else ps.setNull(<%=i+1%>, Types.NULL);<%}else if(curField.javaType.equals("java.lang.Long") || curField.javaType.equals("Long")){%>
-      if(value.<%=curField.fieldName%> != null) ps.setLong(<%=i+1%>, value.<%=curField.fieldName%>.longValue()); else ps.setNull(<%=i+1%>, Types.NULL);<%}else if(curField.javaType.equals("java.lang.Float") || curField.javaType.equals("Float")){%>
-      if(value.<%=curField.fieldName%> != null) ps.setFloat(<%=i+1%>, value.<%=curField.fieldName%>.floatValue()); else ps.setNull(<%=i+1%>, Types.NULL);<%}else if(curField.javaType.equals("java.lang.Double") || curField.javaType.equals("Double")){%>
-      if(value.<%=curField.fieldName%> != null) ps.setDouble(<%=i+1%>, value.<%=curField.fieldName%>.doubleValue()); else ps.setNull(<%=i+1%>, Types.NULL);<%}%><%}%>
-*/
+      
+      for(int i=0;i<entity.pks.size();i++)
+      {
+        EgField curField=(EgField)entity.pks.elementAt(i);
+        setValue(ps, i+1, curField, value);
+      }
+
       rs = ps.executeQuery();
       
       if(rs.next())
       {
-/*
-      <%for(i=0;i<nopks.size();i++){Field curField=(Field)nopks.elementAt(i);%><%if(curField.javaType.compareTo("java.lang.String") == 0 || curField.javaType.compareTo("String") == 0){%>
-        value.<%=curField.fieldName%> = rs.getString("<%=curField.columnName%>");<%}else if(curField.javaType.indexOf("Timestamp") >= 0){%>
-        value.<%=curField.fieldName%> = rs.getTimestamp("<%=curField.columnName%>");<%}else if(curField.javaType.equals("java.sql.Time") || curField.javaType.equals("Time")){%>
-        value.<%=curField.fieldName%> = rs.getTime("<%=curField.columnName%>");<%}else if(curField.javaType.equals("java.sql.Date") || curField.javaType.equals("Date")){%>
-        value.<%=curField.fieldName%> = rs.getDate("<%=curField.columnName%>");<%}else if(curField.javaType.equals("java.lang.Integer") || curField.javaType.equals("Integer")){%>
-        if(rs.getObject("<%=curField.columnName%>") == null) value.<%=curField.fieldName%> = null; else value.<%=curField.fieldName%> = new Integer(rs.getInt("<%=curField.columnName%>"));<%}else if(curField.javaType.equals("java.lang.Long") || curField.javaType.equals("Long")){%>
-        if(rs.getObject("<%=curField.columnName%>") == null) value.<%=curField.fieldName%> = null; else value.<%=curField.fieldName%> = new Long(rs.getLong("<%=curField.columnName%>"));<%}else if(curField.javaType.equals("java.lang.Float") || curField.javaType.equals("Float")){%>
-        if(rs.getObject("<%=curField.columnName%>") == null) value.<%=curField.fieldName%> = null; else value.<%=curField.fieldName%> = new Float(rs.getFloat("<%=curField.columnName%>"));<%}else if(curField.javaType.equals("java.lang.Double") || curField.javaType.equals("Double")){%>
-        if(rs.getObject("<%=curField.columnName%>") == null) value.<%=curField.fieldName%> = null; else value.<%=curField.fieldName%> = new Double(rs.getDouble("<%=curField.columnName%>"));<%}%><%}%>
-*/
-        //value.modified = false;
+        for(int j=0;j<entity.nopks.size();j++)
+        {
+          EgField curField=(EgField)entity.nopks.elementAt(j);
+          getValue(rs, curField, value);
+        }
+
+        try { valueClass.getField("modified").setBoolean(value, false); } catch(Exception e) { Debug.logWarning("MasterDAO: could not set " + valueClass.getName() + ".modified."); }
       } else {
         Debug.logWarning("ERROR [MasterDAO.select]: select failed, result set was empty.");
         return false;
@@ -205,7 +192,9 @@ public class MasterDAO
     
   public static boolean delete(Object value)
   {
-    Entity entity = getEntity(value);
+    Class valueClass = value.getClass();
+    EgEntity entity = getEgEntity(valueClass);
+    if(entity == null) return false;
 /*
     if(value == null || value.<%=entity.pkNameString(" == null || value."," == null")%>) {
       Debug.logWarning("ERROR [MasterDAO.delete]: Cannot delete Object: required primary key field(s) missing.");
@@ -220,19 +209,15 @@ public class MasterDAO
     String sql = "DELETE FROM " + entity.tableName + " WHERE " + entity.colNameString(entity.pks, "=? AND ", "=?") + "";
     try {
       ps = connection.prepareStatement(sql);
-/*
-    <%for(i=0;i<entity.pks.size();i++){Field curField=(Field)entity.pks.elementAt(i);%><%if(curField.javaType.compareTo("java.lang.String") == 0 || curField.javaType.compareTo("String") == 0){%>
-      ps.setString(<%=i+1%>, value.<%=curField.fieldName%>);<%}else if(curField.javaType.indexOf("Timestamp") >= 0){%>
-      ps.setTimestamp(<%=i+1%>, value.<%=curField.fieldName%>);<%}else if(curField.javaType.equals("java.sql.Time") || curField.javaType.equals("Time")){%>
-      ps.setTime(<%=i+1%>, value.<%=curField.fieldName%>);<%}else if(curField.javaType.equals("java.sql.Date") || curField.javaType.equals("Date")){%>
-      ps.setDate(<%=i+1%>, value.<%=curField.fieldName%>);<%}else if(curField.javaType.equals("java.lang.Integer") || curField.javaType.equals("Integer")){%>
-      if(value.<%=curField.fieldName%> != null) ps.setInt(<%=i+1%>, value.<%=curField.fieldName%>.intValue()); else ps.setNull(<%=i+1%>, Types.NULL);<%}else if(curField.javaType.equals("java.lang.Long") || curField.javaType.equals("Long")){%>
-      if(value.<%=curField.fieldName%> != null) ps.setLong(<%=i+1%>, value.<%=curField.fieldName%>.longValue()); else ps.setNull(<%=i+1%>, Types.NULL);<%}else if(curField.javaType.equals("java.lang.Float") || curField.javaType.equals("Float")){%>
-      if(value.<%=curField.fieldName%> != null) ps.setFloat(<%=i+1%>, value.<%=curField.fieldName%>.floatValue()); else ps.setNull(<%=i+1%>, Types.NULL);<%}else if(curField.javaType.equals("java.lang.Double") || curField.javaType.equals("Double")){%>
-      if(value.<%=curField.fieldName%> != null) ps.setDouble(<%=i+1%>, value.<%=curField.fieldName%>.doubleValue()); else ps.setNull(<%=i+1%>, Types.NULL);<%}%><%}%>
-*/
+
+      for(int i=0;i<entity.pks.size();i++)
+      {
+        EgField curField=(EgField)entity.pks.elementAt(i);
+        setValue(ps, i+1, curField, value);
+      }
+
       ps.executeUpdate();
-      //value.modified = true;
+      try { valueClass.getField("modified").setBoolean(value, true); } catch(Exception e) { Debug.logWarning("MasterDAO: could not set " + valueClass.getName() + ".modified."); }
     } catch (SQLException sqle) {
       Debug.logWarning("ERROR [MasterDAO.delete]: SQL Exception while executing the following:\n" + sql + "\nError was:\n");
       Debug.logWarning(sqle);
@@ -242,5 +227,123 @@ public class MasterDAO
       try { if (connection != null) connection.close(); } catch (SQLException sqle) { }
     }    
     return true;
-  }  
+  }
+  
+  public static void getValue(ResultSet rs, EgField curField, Object value) throws SQLException
+  {
+    Class valueClass = value.getClass();
+    Field field = null;
+    try { field = valueClass.getField(curField.fieldName); }
+    catch(NoSuchFieldException e) { 
+      Debug.logError("MasterDAO.getValue: field " + valueClass.getName() + "." + curField.fieldName + " not found; cannot set result.");
+      return;
+    }
+    catch(SecurityException e) {
+      Debug.logError("MasterDAO.getValue: security exception while getting field " + valueClass.getName() + "." + curField.fieldName + "; cannot set result.");
+      return;
+    }
+    
+    String fieldType = field.getType().getName();
+    if(!fieldType.equals(curField.javaType) && fieldType.indexOf(curField.javaType) < 0)
+    {
+      Debug.logWarning("MasterDAO.getValue: type of field " + valueClass.getName() + "." + curField.fieldName + " is " + fieldType + ", was expecting " + curField.javaType + "; this may indicate an error in the configuration or in the class, and may result in an SQL-Java data conversion error. Will use the real field type: " + fieldType + ", not the definition.");
+    }
+
+    try 
+    {
+      if(fieldType.equals("java.lang.String") || fieldType.equals("String"))
+        field.set(value, rs.getString(curField.columnName));
+      else if(fieldType.equals("java.sql.Timestamp") || fieldType.equals("Timestamp"))
+        field.set(value, rs.getTimestamp(curField.columnName));
+      else if(fieldType.equals("java.sql.Time") || fieldType.equals("Time"))
+        field.set(value, rs.getTime(curField.columnName));
+      else if(fieldType.equals("java.sql.Date") || fieldType.equals("Date"))
+        field.set(value, rs.getDate(curField.columnName));
+      else if(fieldType.equals("java.lang.Integer") || fieldType.equals("Integer"))
+      {
+        if(rs.getObject(curField.columnName) == null) field.set(value, null);
+        else field.set(value, new Integer(rs.getInt(curField.columnName)));
+      }
+      else if(fieldType.equals("java.lang.Long") || fieldType.equals("Long"))
+      {
+        if(rs.getObject(curField.columnName) == null) field.set(value, null);
+        else field.set(value, new Long(rs.getLong(curField.columnName)));
+      }
+      else if(fieldType.equals("java.lang.Float") || fieldType.equals("Float"))
+      {
+        if(rs.getObject(curField.columnName) == null) field.set(value, null);
+        else field.set(value, new Float(rs.getFloat(curField.columnName)));
+      }
+      else if(fieldType.equals("java.lang.Double") || fieldType.equals("Double"))
+      {
+        if(rs.getObject(curField.columnName) == null) field.set(value, null);
+        else field.set(value, new Double(rs.getDouble(curField.columnName)));
+      }
+    }
+    catch(IllegalAccessException e) {
+      Debug.logError("MasterDAO.setValue: illegal access exception while setting field " + valueClass.getName() + "." + curField.fieldName + "; cannot set result.");
+      return;
+    }
+  }
+
+  public static void setValue(PreparedStatement ps, int ind, EgField curField, Object value) throws SQLException
+  {
+    Class valueClass = value.getClass();
+    Field field = null;
+    try { field = valueClass.getField(curField.fieldName); }
+    catch(NoSuchFieldException e) { 
+      Debug.logError("MasterDAO.setValue: field " + valueClass.getName() + "." + curField.fieldName + " not found; setting indexed parameter to null. This will result in an error if the corresponding column does not exist in the table.");
+      ps.setNull(ind, Types.NULL); 
+      return;
+    }
+    catch(SecurityException e) {
+      Debug.logError("MasterDAO.setValue: security exception while getting field " + valueClass.getName() + "." + curField.fieldName + "; setting indexed parameter to null.");
+      ps.setNull(ind, Types.NULL); 
+      return;
+    }
+    
+    String fieldType = field.getType().getName();
+    if(!fieldType.equals(curField.javaType) && fieldType.indexOf(curField.javaType) < 0)
+    {
+      Debug.logWarning("MasterDAO.setValue: type of field " + valueClass.getName() + "." + curField.fieldName + " is " + fieldType + ", was expecting " + curField.javaType + "; this may indicate an error in the configuration or in the class, and may result in an SQL-Java data conversion error. Will use the real field type: " + fieldType + ", not the definition.");
+    }
+    
+    try
+    {
+      if(fieldType.equals("java.lang.String") || fieldType.equals("String"))
+        ps.setString(ind, (String)field.get(value));
+      else if(fieldType.equals("java.sql.Timestamp") || fieldType.equals("Timestamp"))
+        ps.setTimestamp(ind, (java.sql.Timestamp)field.get(value));
+      else if(fieldType.equals("java.sql.Time") || fieldType.equals("Time"))
+        ps.setTime(ind, (java.sql.Time)field.get(value));
+      else if(fieldType.equals("java.sql.Date") || fieldType.equals("Date"))
+        ps.setDate(ind, (java.sql.Date)field.get(value));
+      else if(fieldType.equals("java.lang.Integer") || fieldType.equals("Integer"))
+      {
+        if(field.get(value) != null) ps.setInt(ind, ((java.lang.Integer)field.get(value)).intValue()); 
+        else ps.setNull(ind, Types.NULL);
+      }
+      else if(fieldType.equals("java.lang.Long") || fieldType.equals("Long"))
+      {
+        if(field.get(value) != null) ps.setLong(ind, ((java.lang.Long)field.get(value)).longValue()); 
+        else ps.setNull(ind, Types.NULL);
+      }
+      else if(fieldType.equals("java.lang.Float") || fieldType.equals("Float"))
+      {
+        if(field.get(value) != null) ps.setFloat(ind, ((java.lang.Float)field.get(value)).floatValue()); 
+        else ps.setNull(ind, Types.NULL);
+      }
+      else if(fieldType.equals("java.lang.Double") || fieldType.equals("Double"))
+      {
+        if(field.get(value) != null) ps.setDouble(ind, ((java.lang.Double)field.get(value)).doubleValue()); 
+        else ps.setNull(ind, Types.NULL);
+      }
+      else ps.setNull(ind, Types.NULL);
+    }
+    catch(IllegalAccessException e) {
+      Debug.logError("MasterDAO.setValue: illegal access exception while getting field " + valueClass.getName() + "." + curField.fieldName + "; setting indexed parameter to null.");
+      ps.setNull(ind, Types.NULL); 
+      return;
+    }
+  }
 }
