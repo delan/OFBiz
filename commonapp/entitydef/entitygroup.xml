@@ -598,6 +598,7 @@
     <entity-group group="org.ofbiz.commonapp" entity="InventoryItemType" />
     <entity-group group="org.ofbiz.commonapp" entity="InventoryItemTypeAttr" />
     <entity-group group="org.ofbiz.commonapp" entity="InventoryItemVariance" />
+    <entity-group group="org.ofbiz.commonapp" entity="InventoryTransfer" />
     <entity-group group="org.ofbiz.commonapp" entity="Lot" />
     <entity-group group="org.ofbiz.commonapp" entity="PhysicalInventory" />
     <entity-group group="org.ofbiz.commonapp" entity="VarianceReason" />

@@ -102,6 +102,7 @@
   <ProductCategoryType description="Quick Add" hasTable="N" parentTypeId="" productCategoryTypeId="QUICKADD_CATEGORY"/>
   <ProductCategoryType description="Search" hasTable="N" parentTypeId="" productCategoryTypeId="SEARCH_CATEGORY"/>
   <ProductCategoryType description="Usage" hasTable="N" parentTypeId="" productCategoryTypeId="USAGE_CATEGORY"/>
+  <ProductCategoryType description="Mix and Match" hasTable="N" parentTypeId="" productCategoryTypeId="MIXMATCH_CATEGORY"/>
 
   <ProductFeatureApplType description="Optional" hasTable="N" parentTypeId="" productFeatureApplTypeId="OPTIONAL_FEATURE"/>
   <ProductFeatureApplType description="Required" hasTable="N" parentTypeId="" productFeatureApplTypeId="REQUIRED_FEATURE"/>
@@ -170,4 +171,11 @@
   <StatusValidChange condition="" statusId="INV_PROMISED" statusIdTo="INV_AVAILABLE" transitionName="Cancel Promise"/>
   <StatusValidChange condition="" statusId="INV_PROMISED" statusIdTo="INV_DELIVERED" transitionName="Deliver"/>
   <StatusValidChange condition="" statusId="INV_DELIVERED" statusIdTo="INV_AVAILABLE" transitionName="Return"/>
+
+  <!-- inventory transfer status -->
+  <StatusType description="Inventory Transfer" hasTable="N" parentTypeId="" statusTypeId="INVENTORY_XFER_STTS"/>
+  <StatusItem description="Requested" sequenceId="01" statusCode="REQUESTED" statusId="IXF_REQUESTED" statusTypeId="INVENTORY_XFER_STTS"/>
+  <StatusItem description="Scheduled" sequenceId="02" statusCode="SCHEDULED" statusId="IXF_SCHEDULED" statusTypeId="INVENTORY_XFER_STTS"/>
+  <StatusItem description="En-Route" sequenceId="03" statusCode="EN_ROUTE" statusId="IXF_EN_ROUTE" statusTypeId="INVENTORY_XFER_STTS"/>
+  <StatusItem description="Complete" sequenceId="04" statusCode="COMPLETE" statusId="IXF_COMPLETE" statusTypeId="INVENTORY_XFER_STTS"/>
 </entity-engine-xml>

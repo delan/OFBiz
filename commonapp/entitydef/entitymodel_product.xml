@@ -862,6 +862,53 @@
         <key-map field-name="physicalInventoryId"/>
       </relation>
     </entity>
+    <entity entity-name="InventoryTransfer"
+            package-name="org.ofbiz.commonapp.product.inventory"
+            title="Inventory Transfer Entity">
+      <field name="inventoryTransferId" type="id-ne"></field>
+      <field name="statusId" type="id-ne"></field>
+      <field name="inventoryItemId" type="id-ne"></field>
+      <field name="facilityId" type="id"></field>
+      <field name="locationSeqId" type="id"></field>
+      <field name="containerId" type="id"></field>
+      <field name="facilityIdTo" type="id"></field>
+      <field name="locationSeqIdTo" type="id"></field>
+      <field name="containerIdTo" type="id"></field>
+      <field name="itemIssuanceId" type="id"></field>
+      <field name="sendDate" type="date-time"></field>
+      <field name="receiveDate" type="date-time"></field>
+      <field name="comments" type="comment"></field>
+      <prim-key field="inventoryTransferId"/>
+      <relation type="one" fk-name="INV_XFER_ITEM" rel-entity-name="InventoryItem">
+        <key-map field-name="inventoryItemId"/>
+      </relation>
+      <relation type="one" fk-name="INV_XFER_STTS" rel-entity-name="StatusItem">
+        <key-map field-name="statusId"/>
+      </relation>
+      <relation type="one" fk-name="INV_XFER_FAC" rel-entity-name="Facility">
+        <key-map field-name="facilityId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="FacilityLocation">
+        <key-map field-name="facilityId"/>
+        <key-map field-name="locationSeqId"/>
+      </relation>
+      <relation type="one" fk-name="INV_XFER_CONT" rel-entity-name="Container">
+        <key-map field-name="containerId"/>
+      </relation>
+      <relation type="one" fk-name="INV_XFER_TFAC" title="To" rel-entity-name="Facility">
+        <key-map field-name="facilityIdTo" rel-field-name="facilityId"/>
+      </relation>
+      <relation type="one-nofk" title="To" rel-entity-name="FacilityLocation">
+        <key-map field-name="facilityIdTo" rel-field-name="facilityId"/>
+        <key-map field-name="locationSeqIdTo" rel-field-name="locationSeqId"/>
+      </relation>
+      <relation type="one" fk-name="INV_XFER_TCNT" title="To" rel-entity-name="Container">
+        <key-map field-name="containerIdTo" rel-field-name="containerId"/>
+      </relation>
+      <relation type="one" fk-name="INV_XFER_ISSU" rel-entity-name="ItemIssuance">
+        <key-map field-name="itemIssuanceId"/>
+      </relation>
+    </entity>
     <entity entity-name="Lot"
             package-name="org.ofbiz.commonapp.product.inventory"
             title="Lot Entity">
