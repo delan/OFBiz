@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.30 $
+ * @version    $Revision: 1.31 $
  */
 -->
 
@@ -1700,6 +1700,7 @@
       <alias entity-alias="PY" name="effectiveDate"/>
       <alias entity-alias="PY" name="paymentRefNum"/>
       <alias entity-alias="PY" name="amount"/>
+      <alias entity-alias="PY" name="currencyUomId"/>
       <alias entity-alias="PY" name="comments"/>
       <alias entity-alias="PY" name="finAccountTransId"/>
       <alias entity-alias="PA" name="invoiceId"/>
