@@ -10,6 +10,7 @@ Founders and Lead Architects: David E. Jones &amp; Andy Zeneski<br>
 <hr>
 <h3>Table of Contents</h3>
 <ul>
+  <li><a href="#Release 2.0 Alpha 2">Release 2.0 Alpha 2 - February 11, 2002</a> 
   <li><a href="#Release 2.0 Alpha 1">Release 2.0 Alpha 1 - January 16, 2002</a> 
   <li><a href="#Release 1.0 Beta 1">Release 1.0 Beta 1 - October 29, 2001</a> 
   <li><a href="#Release 2001.09.29">Release 2001.09.29</a> 
@@ -19,6 +20,42 @@ Founders and Lead Architects: David E. Jones &amp; Andy Zeneski<br>
   <li><a href="#Release 2001.06.01">Release 2001.06.01</a>
   <li><a href="#Release 2001.05.28">Release 2001.05.28</a>
   <li><a href="#Release 2001.05.24">Release 2001.05.24</a>
+</ul>
+
+<hr>
+<h3><a name="Release 2.0 Alpha 2">Release 2.0 Alpha 2 - February 11, 2002</a></h3>
+<hr>
+<h4>Overview</h4>
+<p>This release includes many cleanups and adds the capability of running on
+various J2EE app servers including Tomcat4, Jetty4, JBoss, Resin, Orion, and 
+Weblogic. Some profiling has been done on this release and changes were made
+that result in a performance increase of many time. On Orion, the fastest
+container that we've tested, we got a volume of 400 dynamic catalog browse pages per
+second on a PIII 1Ghz with 20 continuous threads hitting the machine. Caucho Resin was
+the second fastest (the two being far faster than the rest tested) and came in
+close behind.</p>
+
+<p>A number of cleanups and refactorings have also been done. The profile code
+in the eCommerce package is now uses the new Party module services through the
+SimpleEvent and SimpleMapProcessor Mini-Languages. Other components are moving
+in this direction.</p>
+
+<p>In addition to the cleanups, performance increase, and deployment options a 
+number of new features are included in this release in the Catalog Manager and
+eCommerce applications and various parts of the core framework. The Control
+Servlet also now gathers statistics about resource hits and response times.
+Logging is now done through Log4J and is more granular than before with more
+useful and less verbose (unless verbose is turned on) logging has been adopted
+in many parts of OFBiz.</p>
+
+<h4>Tasks Completed</h4>
+<p>A number of tasks have been planned and completed for this release, in addition
+to the many smaller refinements and changes that have been done. These tasks include:</p>
+<ul>
+<li><b>Core Subproject</b>
+  <ul>
+  <li>41462 - Have GenericEntity Implement Comparable & Cloneable
+  </ul>
 </ul>
 
 <hr>
