@@ -1,211 +1,245 @@
 /*
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
- *  Permission is hereby granted, free of charge, to any person obtaining a 
- *  copy of this software and associated documentation files (the "Software"), 
- *  to deal in the Software without restriction, including without limitation 
- *  the rights to use, copy, modify, merge, publish, distribute, sublicense, 
- *  and/or sell copies of the Software, and to permit persons to whom the 
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
  *  Software is furnished to do so, subject to the following conditions:
  *
- *  The above copyright notice and this permission notice shall be included 
+ *  The above copyright notice and this permission notice shall be included
  *  in all copies or substantial portions of the Software.
  *
- *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
- *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
- *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
- *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *@author     Johan Isacsson
- *@author     Andy Zeneski
- *@author     David E. Jones
- *@version    $Revision: 1.4 $
- *@since      2.2
+ *@author     Andy Zeneski (jaz@ofbiz.org)
+ *@version    $Revision: 1.5 $
+ *@since      3.0
  */
 
 import java.util.*;
+import java.sql.Timestamp;
+import org.ofbiz.base.util.*;
 import org.ofbiz.entity.*;
 import org.ofbiz.entity.util.*;
-import org.ofbiz.base.util.*;
+import org.ofbiz.entity.condition.*;
 import org.ofbiz.securityext.login.*;
 import org.ofbiz.common.*;
 
-String externalLoginKey = LoginEvents.getExternalLoginKey(request);
-String externalKeyParam = externalLoginKey == null ? "" : "&externalLoginKey=" + externalLoginKey;
-context.put("externalKeyParam",externalKeyParam);
-
 delegator = request.getAttribute("delegator");
 
-String firstName = request.getParameter("first_name");
-String lastName = request.getParameter("last_name");
-String groupName = request.getParameter("group_name");
-String email = request.getParameter("email");
-String userLoginId = request.getParameter("userlogin_id");
+externalLoginKey = LoginEvents.getExternalLoginKey(request);
+externalKeyParam = externalLoginKey == null ? "" : "&externalLoginKey=" + externalLoginKey;
+context.put("externalKeyParam",externalKeyParam);
 
-boolean findAll = false;
-String searchString = "";
-if (firstName != null || lastName != null) {
-    searchString += "first_name=" + firstName + "&last_name=" + lastName;
-}
-if (groupName != null) {
-    if (searchString.length() > 0) searchString += "&";
-    searchString += "group_name=" + groupName;
-}
-if (email != null) {
-    if (searchString.length() > 0) searchString += "&";
-    searchString += "email=" + email;
-}
-if (userLoginId != null) {
-    if (searchString.length() > 0) searchString += "&";
-    searchString += "userlogin_id=" + userLoginId;
-}
-if (request.getParameter("findAll") != null) {
-    String findAllParties = request.getParameter("findAll");
-    if (findAllParties != null && findAllParties.equalsIgnoreCase("true"))
-        findAll = true;
-    if (searchString.length() > 0) searchString += "&";
-    searchString += "findAll=" + request.getParameter("findAll");
+// get the role types
+roleTypes = delegator.findAll("RoleType", UtilMisc.toList("description"));
+context.put("roleTypes", roleTypes);
+
+// current role type
+currentRoleTypeId = request.getParameter("roleTypeId");
+if (currentRoleTypeId != null && currentRoleTypeId.length() > 0) {
+    currentRole = delegator.findByPrimaryKeyCache("RoleType", UtilMisc.toMap("roleTypeId", currentRoleTypeId));
+    context.put("currentRole", currentRole);
 }
 
-Collection parties = null;
+// current state
+currentStateGeoId = request.getParameter("stateProvinceGeoId");
+if (currentStateGeoId != null && currentStateGeoId.length() > 0) {
+    currentStateGeo = delegator.findByPrimaryKeyCache("Geo", UtilMisc.toMap("geoId", currentStateGeoId));
+    context.put("currentStateGeo", currentStateGeo);
+}
 
-//cache by the search string
-session = request.getSession(true);
-
-String lastSearchString = (String) session.getAttribute("LAST_SEARCH_STRING");
-Collection lastParties = (Collection) session.getAttribute("LAST_SEARCH_VALUES");
-
-if (lastParties != null && searchString.equals(lastSearchString)) {
-    parties = lastParties;
-    context.put("parties", parties);    
-} else {
-    
-    Iterator partyIter = null;
-      
-    if (findAll) {
-        parties = delegator.findAll("Party");
-        partyIter = parties.iterator();        
-    } else {
-        
-        dispatcher = request.getAttribute("dispatcher");
-        Map serviceCtx = null;
-        String serviceName = null;
-        
-        if(firstName != null || lastName != null) {
-            serviceName = "getPartyFromName";
-            serviceCtx = UtilMisc.toMap("firstName", firstName, "lastName", lastName);
-        } else if(groupName != null) {
-            serviceName = "getPartyFromGroupName";
-            serviceCtx = UtilMisc.toMap("groupName", groupName);
-        } else if(email != null) {
-            serviceName = "getPartyFromEmail";
-            serviceCtx = UtilMisc.toMap("email", email);
-        } else if(userLoginId != null) {
-            serviceName = "getPartyFromUserLogin";
-            serviceCtx = UtilMisc.toMap("userLoginId", userLoginId);
-        }
-        
-        if(serviceName != null) {        
-            Map result = dispatcher.runSync(serviceName, serviceCtx);
-            parties = (Collection) result.get("parties");            
-        }
-        
-        if (parties != null) {
-            session.setAttribute("LAST_SEARCH_STRING", searchString);            
-            partyIter = parties.iterator();
-        }
-        
-        
-    }
-    
-    List partyList = new LinkedList();
-    if(partyIter != null) { 
-        GenericValue party = null; 
-        while (partyIter.hasNext()) {
-            Map serviceMap = null;
-            if(findAll)
-                party = (GenericValue) partyIter.next();
-            else {                
-                serviceMap = (Map) partyIter.next();
-                party = (GenericValue) serviceMap.get("party");
-            }
-               
-            if(party == null) continue;
-          
-            
-            GenericValue curPartyType = party.getRelatedOneCache("PartyType");
-            GenericValue partyPersonType = delegator.findByPrimaryKeyCache("PartyType", UtilMisc.toMap("partyTypeId", "PERSON"));
-            
-            GenericValue person = null;
-            GenericValue partyGroup = null;
-            
-            
-            
-            if (EntityTypeUtil.isType(curPartyType, partyPersonType)) {
-                if(firstName != null || lastName != null)  person = (GenericValue) serviceMap.get("person"); 
-                else person = party.getRelatedOne("Person");
-            } else {
-                GenericValue partyGroupType = delegator.findByPrimaryKeyCache("PartyType", UtilMisc.toMap("partyTypeId", "PARTY_GROUP"));
-                if (EntityTypeUtil.isType(curPartyType, partyGroupType)) {
-                    partyGroup = party.getRelatedOne("PartyGroup");
-                }
-            }
-             
-            List userLogins = null;
-            if (party != null) {
-                userLogins = (List) delegator.findByAnd("UserLogin", UtilMisc.toMap("partyId", party.getString("partyId")));
-            }
-            StringBuffer sb = new StringBuffer();
-            Iterator uli = UtilMisc.toIterator(userLogins);
-            while (uli != null && uli.hasNext()) {
-                GenericValue curUserLogin = (GenericValue) uli.next();
-                sb.append(curUserLogin.getString("userLoginId"));
-                if (uli.hasNext()) {
-                    sb.append(", ");
-                }
-            }
-            String userLoginString = sb.toString();
-                           
-            partyList.add(UtilMisc.toMap("party", party, "person", person, "group", partyGroup, "userLogins", userLoginString));
-        }
-    }            
-    context.put("parties", partyList); 
-    session.setAttribute("LAST_SEARCH_VALUES", partyList); 
-    
-}  
-  
-int viewIndex = 0;
-int viewSize = 10;
-int highIndex = 0;
-int lowIndex = 0;
-int listSize = 0;
-
+// set the page parameters
+viewIndex = 1;
 try {
     viewIndex = Integer.valueOf((String) request.getParameter("VIEW_INDEX")).intValue();
 } catch (Exception e) {
-    viewIndex = 0;
+    viewIndex = 1;
 }
+context.put("viewIndex", viewIndex);
+
+viewSize = 20;
 try {
     viewSize = Integer.valueOf((String) request.getParameter("VIEW_SIZE")).intValue();
 } catch (Exception e) {
-    viewSize = 10;
+    viewSize = 20;
 }
-if (parties != null) {
-    listSize = parties.size();
-}
-lowIndex = viewIndex * viewSize;
-highIndex = (viewIndex + 1) * viewSize;
-if (listSize < highIndex) {
-    highIndex = listSize;
+context.put("viewSize", viewSize);
+
+// get the lookup flag
+lookupFlag = request.getParameter("lookupFlag");
+
+// blank param list
+paramList = "";
+
+partyList = null;
+partyListSize = 0;
+lowIndex = 0;
+highIndex = 0;
+
+if (lookupFlag != null && lookupFlag.equalsIgnoreCase("Y")) {
+    showAll = request.getParameter("showAll") != null ? request.getParameter("showAll") : "N";
+    extInfo = request.getParameter("extInfo");
+    paramList = paramList + "&lookupFlag=" + lookupFlag + "&showAll=" + showAll + "&extInfo=" + extInfo;
+
+    // the lookup entity name
+    entityName = "PartySearchView";
+    lookupErrorMessage = null;
+
+    // define the main condition & expression list
+    andExprs = new ArrayList();
+    mainCond = null;
+
+    // check for a partyId (happens in some browsers)
+    partyId = request.getParameter("partyId");
+    if (partyId != null && partyId.length() > 0) {
+        paramList = paramList + "&partyId=" + partyId;
+        andExprs.add(new EntityExpr("partyId", EntityOperator.EQUALS, partyId));
+    }
+
+    // filter on user login
+    userLoginId = request.getParameter("userLoginId");
+    if (userLoginId != null && userLoginId.length() > 0) {
+        paramList = paramList + "&userLoginId=" + userLoginId;
+        andExprs.add(new EntityExpr("userLoginId", true, EntityOperator.LIKE, "%"+userLoginId+"%", true));
+    }
+
+    // filter on address1
+    address1 = request.getParameter("address1");
+    if (address1 != null && address1.length() > 0) {
+        paramList = paramList + "&address1=" + address1;
+        andExprs.add(new EntityExpr("address1", true, EntityOperator.LIKE, "%"+address1+"%", true));
+    }
+
+    // filter on address2
+    address2 = request.getParameter("address2");
+    if (address2 != null && address2.length() > 0) {
+        paramList = paramList + "&address2=" + address2;
+        andExprs.add(new EntityExpr("address2", true, EntityOperator.LIKE, "%"+address2+"%", true));
+    }
+
+    // filter on city
+    city = request.getParameter("city");
+    if (city != null && city.length() > 0) {
+        paramList = paramList + "&city=" + city;
+        andExprs.add(new EntityExpr("city", true, EntityOperator.LIKE, "%"+city+"%", true));
+    }
+
+    // filter on state geo
+    stateGeo = request.getParameter("stateProvinceGeoId");
+    if (stateGeo != null && !"ANY".equals(stateGeo)) {
+        paramList = paramList + "&stateGeo=" + stateGeo;
+        andExprs.add(new EntityExpr("stateProvinceGeoId", EntityOperator.EQUALS, stateGeo));
+    }
+
+    // filter on postal code
+    postalCode = request.getParameter("postalCode");
+    if (postalCode != null && postalCode.length() > 0) {
+        paramList = paramList + "&postalCode=" + postalCode;
+        andExprs.add(new EntityExpr("postalCode", true, EntityOperator.LIKE, "%"+postalCode+"%", true));
+    }
+
+    // filter on infoString
+    infoString = request.getParameter("infoString");
+    if (infoString != null && infoString.length() > 0) {
+        paramList = paramList + "&infoString=" + infoString;
+        andExprs.add(new EntityExpr("infoString", true, EntityOperator.LIKE, "%"+infoString+"%", true));
+    }
+
+    // filter on countryCode
+    countryCode = request.getParameter("countryCode");
+    if (countryCode != null && countryCode.length() > 0) {
+        paramList = paramList + "&countryCode=" + countryCode;
+        andExprs.add(new EntityExpr("countryCode", true, EntityOperator.LIKE, "%"+countryCode+"%", true));
+    }
+
+    // filter on areaCode
+    areaCode = request.getParameter("areaCode");
+    if (areaCode != null && areaCode.length() > 0) {
+        paramList = paramList + "&areaCode=" + areaCode;
+        andExprs.add(new EntityExpr("areaCode", true, EntityOperator.LIKE, "%"+areaCode+"%", true));
+    }
+
+    // filter on contact number
+    contactNumber = request.getParameter("contactNumber");
+    if (contactNumber != null && contactNumber.length() > 0) {
+        paramList = paramList + "&contactNumber=" + contactNumber;
+        andExprs.add(new EntityExpr("contactNumber", true, EntityOperator.LIKE, "%"+contactNumber+"%", true));
+    }
+
+    // filter on role member
+    roleType = request.getParameter("roleTypeId");
+    if (roleType != null && !"ANY".equals(roleType)) {
+        paramList = paramList + "&roleTypeId=" + roleType;
+        andExprs.add(new EntityExpr("roleTypeId", EntityOperator.EQUALS, roleType));
+    }
+
+    // build the main condition
+    if (andExprs.size() > 0 || showAll.equalsIgnoreCase("Y")) mainCond = new EntityConditionList(andExprs, EntityOperator.AND);
+
+    // do the lookup
+    if (lookupErrorMessage == null && mainCond != null) {
+        // fields we need to select; will be used to set distinct
+        List fieldsToSelect = new ArrayList();
+        fieldsToSelect.add("partyId");
+        fieldsToSelect.add("firstName");
+        fieldsToSelect.add("lastName");
+        fieldsToSelect.add("groupName");
+        fieldsToSelect.add("partyTypeId");
+        fieldsToSelect.add("postalCode");
+        fieldsToSelect.add("userLoginId");
+
+        // sorting by return entry date newest first
+        List orderBy = UtilMisc.toList("lastName", "firstName", "groupName");
+
+        // set distinct on so we only get one row per order
+        EntityFindOptions findOpts = new EntityFindOptions(true, EntityFindOptions.TYPE_SCROLL_INSENSITIVE, EntityFindOptions.CONCUR_READ_ONLY, true);
+
+        // using list iterator
+        EntityListIterator pli = delegator.findListIteratorByCondition(entityName, mainCond, null, fieldsToSelect, orderBy, findOpts);
+
+        // get the indexes for the partial list
+        lowIndex = (((viewIndex - 1) * viewSize) + 1);
+        highIndex = viewIndex * viewSize;
+
+        // attempt to get the full size
+        pli.last();
+        partyListSize = pli.currentIndex();
+        if (highIndex > partyListSize) {
+            highIndex = partyListSize;
+        }
+
+        // get the partial list for this page
+        pli.first();
+        if (partyListSize > 0) {
+            partyList = pli.getPartialList(lowIndex, viewSize);
+        } else {
+            partyList = new ArrayList();
+        }
+
+        // close the list iterator
+        pli.close();
+    } else {
+        partyList = new ArrayList();
+        partyListSize = 0;
+    }
+
+    context.put("partyList", partyList);
+    context.put("partyListSize", partyListSize);
+
+    if (lookupErrorMessage != null) {
+        context.put("lookupErrorMessage", lookupErrorMessage);
+    }
 }
 
-context.put("viewIndex", new Integer(viewIndex));
-context.put("viewSize", new Integer(viewSize));
-context.put("highIndex", new Integer(highIndex));
-context.put("lowIndex", new Integer(lowIndex));
-context.put("searchString", searchString);
-context.put("listSize", new Integer(listSize));
-
+context.put("paramList", paramList);
+context.put("highIndex", highIndex);
+context.put("lowIndex", lowIndex);

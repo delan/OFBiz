@@ -26,7 +26,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  */
 -->
 
@@ -112,6 +112,7 @@
     <entity-group group="org.ofbiz" entity="PartyRelationshipType" />
     <entity-group group="org.ofbiz" entity="PartyRole" />
     <entity-group group="org.ofbiz" entity="PartyRoleAndPerson" />
+    <entity-group group="org.ofbiz" entity="PartySearchView" />
     <entity-group group="org.ofbiz" entity="PartyType" />
     <entity-group group="org.ofbiz" entity="PartyTypeAttr" />
     <entity-group group="org.ofbiz" entity="Person" />
