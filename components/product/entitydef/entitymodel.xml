@@ -1702,7 +1702,9 @@
       <field name="purchaseFromDate" type="date-time"></field>
       <field name="purchaseThruDate" type="date-time"></field>
       <field name="useCountLimit" type="numeric"></field>
-      <field name="useDaysLimit" type="floating-point"></field>
+      <field name="useTime" type="numeric"></field>
+      <field name="useTimeUomId" type="id"></field>
+      <field name="useRoleTypeId" type="id"></field>
       <prim-key field="contentId"/>
       <prim-key field="productId"/>
       <prim-key field="productContentTypeId"/>
@@ -1715,6 +1717,12 @@
       </relation>
       <relation type="one" fk-name="PROD_CNT_TYPE" rel-entity-name="ProductContentType">
         <key-map field-name="productContentTypeId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_CNT_URT" title="Use" rel-entity-name="RoleType">
+        <key-map field-name="useRoleTypeId" rel-field-name="roleTypeId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_CNT_URT" title="UseTime" rel-entity-name="Uom">
+        <key-map field-name="useTimeUomId" rel-field-name="uomId"/>
       </relation>
     </entity>
     <view-entity entity-name="ProductContentAndInfo"

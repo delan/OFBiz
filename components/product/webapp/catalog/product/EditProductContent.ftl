@@ -72,7 +72,9 @@ ${pages.get("/product/ProductTabBar.ftl")}
             <td>${uiLabelMap.ProductPurchaseFrom}</td>
             <td>${uiLabelMap.ProductPurchaseThru}</td>
             <td>${uiLabelMap.ProductUseCount}</td>
-            <td>${uiLabelMap.ProductUseDays}</td>
+            <td>Use Time</td>
+            <td>Use Time UOM</td>
+            <td>Use Role</td>
             <td>&nbsp;</td>
         </tr>
         <#list productContentList as entry>
@@ -86,7 +88,9 @@ ${pages.get("/product/ProductTabBar.ftl")}
                 <td>${productContent.purchaseFromDate?default("N/A")}</td>
                 <td>${productContent.purchaseThruDate?default("N/A")}</td>
                 <td>${productContent.useCountLimit?default("N/A")}</td>
-                <td>${productContent.useDaysLimit?default("N/A")}</td>
+                <td>${productContent.useTime?default("N/A")}</td>
+                <td>${productContent.useTimeUomId?default("N/A")}</td>
+                <td>${productContent.useRoleTypeId?default("N/A")}</td>
                 <td><a href="<@ofbizUrl>/removeContentFromProduct?productId=${productContent.productId}&amp;contentId=${productContent.contentId}&amp;productContentTypeId=${productContent.productContentTypeId}&amp;fromDate=${productContent.fromDate}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonDelete}]</a></td>
                 <td><a href="/content/control/EditContent?contentId=${productContent.contentId}&externalLoginKey=${requestAttributes.externalLoginKey?if_exists}" class="buttontext">[${uiLabelMap.ProductEditContent} ${entry.content.contentId}]</td>
              </tr>
