@@ -74,7 +74,7 @@
                 <tr>
                   <td width='26%' align=right><div class='tabletext'>Event Name</div></td>
                   <td>&nbsp;</td>
-                  <td width='74%'><input type='text' size='30' maxlength='30' name="workEffortName" value='${(workEffort.workEffortName)?if_exists}'></td>
+                  <td width='74%'><input type='text' class='inputBox' size='30' maxlength='30' name="workEffortName" value='${(workEffort.workEffortName)?if_exists}'></td>
                 </tr>
                 <tr>
                   <td width='26%' align=right><div class='tabletext'>Priority</div></td>
