@@ -45,3 +45,35 @@ function removeSelected() {
     cform.removeSelected.value = true;
     cform.submit();
 }
+
+// popup windows functions
+
+function popUp(url, name, height, width) {
+    popupWindow = window.open(url, name, 'location=no,scrollbars,width=' + width + ',height=' + height);
+}
+function popUpSmall(url, name) {
+    popUp(url, name, '300', '450');
+}
+
+// hidden div functions
+
+function getStyleObject(objectId) {
+    if (document.getElementById && document.getElementById(objectId)) {
+        return document.getElementById(objectId).style;
+    } else if (document.all && document.all(objectId)) {
+        return document.all(objectId).style;
+    } else if (document.layers && document.layers[objectId]) {
+        return document.layers[objectId];
+    } else {
+        return false;
+    }
+}
+function changeObjectVisibility(objectId, newVisibility) {
+    var styleObject = getStyleObject(objectId);
+    if (styleObject) {
+        styleObject.visibility = newVisibility;
+        return true;
+    } else {
+        return false;
+    }
+}
