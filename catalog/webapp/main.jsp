@@ -34,7 +34,7 @@
 <% pageContext.setAttribute("PageName", "Main Page"); %> 
 
 <%@ include file="/includes/header.jsp" %>
-<%@ include file="/includes/onecolumn.jsp" %>
+<%@ include file="/includes/leftcolumn.jsp" %>
 <BR>
 <TABLE border=0 width='100%' cellpadding='<%=boxBorderWidth%>' cellspacing=0 bgcolor='<%=boxBorderColor%>'>
   <TR>
@@ -59,16 +59,21 @@
 <%}%>
 <BR>
 <%if(security.hasEntityPermission("CATALOG", "_VIEW", session)) {%>
-  <A href='<ofbiz:url>/EditCategory</ofbiz:url>' class='buttontext'>Create New Category</A>
-  <FORM method=POST action='<ofbiz:url>/EditCategory</ofbiz:url>' style='margin-top: 0;'>
+  <DIV class='tabletext'>Edit Category with Category ID:</DIV>
+  <FORM method=POST action='<ofbiz:url>/EditCategory</ofbiz:url>' style='margin: 0;'>
     <INPUT type=text size='20' maxlength='20' name='PRODUCT_CATEGORY_ID' value=''>
     <INPUT type=submit value='Edit Category'>
   </FORM>
-  <A href='<ofbiz:url>/EditProduct</ofbiz:url>' class='buttontext'>Create New Product</A>
+  <DIV class='tabletext'>OR: <A href='<ofbiz:url>/EditCategory</ofbiz:url>' class='buttontext'>Create New Category</A></DIV>
+<BR>
+  <DIV class='tabletext'>Edit Product with Product ID:</DIV>
   <FORM method=POST action='<ofbiz:url>/EditProduct</ofbiz:url>' style='margin: 0;'>
     <INPUT type=text size='20' maxlength='20' name='PRODUCT_ID' value=''>
     <INPUT type=submit value='Edit Product'>
   </FORM>
+  <DIV class='tabletext'>OR: <A href='<ofbiz:url>/EditProduct</ofbiz:url>' class='buttontext'>Create New Product</A></DIV>
+<BR>
+<BR>
   <A href='<ofbiz:url>/UpdateAllKeywords</ofbiz:url>' class='buttontext'>Auto-Create Keywords for All Products</A>
 <BR><BR>
 <%}%>

@@ -41,4 +41,7 @@
  .headerCenter { PADDING-RIGHT:10px; PADDING-LEFT:10px; font-size: 10pt; font-weight: bold; COLOR: #000000; }
  .headerCompanyName { margin: 0; font-size: 24pt; font-weight: bold; color: white; white-space: nowrap; }
  .headerCompanySubtitle { margin: 0; font-size: 8pt; color: white; white-space: nowrap; }
+
+ HR.sepbar { height: 1px; background-color: #999999; border-width: 0; }
+
 </style>

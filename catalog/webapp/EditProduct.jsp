@@ -31,7 +31,7 @@
 <%pageContext.setAttribute("PageName", "Edit Product");%>
 
 <%@ include file="/includes/header.jsp" %>
-<%@ include file="/includes/onecolumn.jsp" %>
+<%@ include file="/includes/leftcolumn.jsp" %>
 
 <%if(security.hasEntityPermission("CATALOG", "_VIEW", session)) {%>
 <%
