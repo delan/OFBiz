@@ -49,7 +49,7 @@ import org.ofbiz.service.ModelService;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class ProductWorker {
@@ -149,7 +149,7 @@ public class ProductWorker {
             Map result = dispatcher.runSync("getInventoryAvailableByFacility",
                                             UtilMisc.toMap("productId", productId, "facilityId", inventoryFacilityId));
 
-            availableToPromise = (Double) result.get("availableToPromise");
+            availableToPromise = (Double) result.get("availableToPromiseTotal");
 
             if (availableToPromise == null) {
                 Debug.logWarning("The getInventoryAvailableByFacility service returned a null availableToPromise, the error message was:\n" + result.get(ModelService.ERROR_MESSAGE), module);

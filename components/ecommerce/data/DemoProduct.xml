@@ -357,23 +357,45 @@
     <ProductFacilityLocation productId="WG-5569" facilityId="WebStoreWarehouse" locationSeqId="TLTLTLLL04" minimumStock="5" moveQuantity="20"/>
 
     <!-- some default invnetory quantities, things are a bit underutilized without these... -->
-    <InventoryItem availableToPromise="500" quantityOnHand="500" facilityId="WebStoreWarehouse" locationSeqId="TLTLTLUL01" inventoryItemId="9000" inventoryItemTypeId="NON_SERIAL_INV_ITEM" productId="GZ-2644"/>
-    <InventoryItem availableToPromise="5" quantityOnHand="5" facilityId="WebStoreWarehouse" locationSeqId="TLTLTLLL01" inventoryItemId="9001" inventoryItemTypeId="NON_SERIAL_INV_ITEM" productId="GZ-2644"/>
-    <InventoryItem availableToPromise="15" quantityOnHand="15" facilityId="WebStoreWarehouse" locationSeqId="TLTLTLUL02" inventoryItemId="9002" inventoryItemTypeId="NON_SERIAL_INV_ITEM" productId="GZ-8544"/>
-    <InventoryItem availableToPromise="3" quantityOnHand="3" facilityId="WebStoreWarehouse" locationSeqId="TLTLTLLL02" inventoryItemId="9003" inventoryItemTypeId="NON_SERIAL_INV_ITEM" productId="GZ-8544"/>
-    <InventoryItem availableToPromise="50" quantityOnHand="50" facilityId="WebStoreWarehouse" locationSeqId="TLTLTLUL03" inventoryItemId="9004" inventoryItemTypeId="NON_SERIAL_INV_ITEM" productId="WG-1111"/>
-    <InventoryItem availableToPromise="5" quantityOnHand="5" facilityId="WebStoreWarehouse" locationSeqId="TLTLTLLL03" inventoryItemId="9005" inventoryItemTypeId="NON_SERIAL_INV_ITEM" productId="WG-1111"/>
+    <InventoryItem facilityId="WebStoreWarehouse" locationSeqId="TLTLTLUL01" 
+        inventoryItemId="9000" inventoryItemTypeId="NON_SERIAL_INV_ITEM" productId="GZ-2644"/>
+    <InventoryItemDetail inventoryItemId="9000" inventoryItemDetailSeqId="0001" availableToPromiseDiff="500" quantityOnHandDiff="500"/>
+    <InventoryItem facilityId="WebStoreWarehouse" locationSeqId="TLTLTLLL01" 
+        inventoryItemId="9001" inventoryItemTypeId="NON_SERIAL_INV_ITEM" productId="GZ-2644"/>
+    <InventoryItemDetail inventoryItemId="9001" inventoryItemDetailSeqId="0001" availableToPromiseDiff="5" quantityOnHandDiff="5"/>
+    <InventoryItem facilityId="WebStoreWarehouse" locationSeqId="TLTLTLUL02" 
+        inventoryItemId="9002" inventoryItemTypeId="NON_SERIAL_INV_ITEM" productId="GZ-8544"/>
+    <InventoryItemDetail inventoryItemId="9002" inventoryItemDetailSeqId="0001" availableToPromiseDiff="15" quantityOnHandDiff="15"/>
+    <InventoryItem facilityId="WebStoreWarehouse" locationSeqId="TLTLTLLL02" 
+        inventoryItemId="9003" inventoryItemTypeId="NON_SERIAL_INV_ITEM" productId="GZ-8544"/>
+    <InventoryItemDetail inventoryItemId="9003" inventoryItemDetailSeqId="0001" availableToPromiseDiff="3" quantityOnHandDiff="3"/>
+    <InventoryItem facilityId="WebStoreWarehouse" locationSeqId="TLTLTLUL03" 
+        inventoryItemId="9004" inventoryItemTypeId="NON_SERIAL_INV_ITEM" productId="WG-1111"/>
+    <InventoryItemDetail inventoryItemId="9004" inventoryItemDetailSeqId="0001" availableToPromiseDiff="50" quantityOnHandDiff="50"/>
+    <InventoryItem facilityId="WebStoreWarehouse" locationSeqId="TLTLTLLL03" 
+        inventoryItemId="9005" inventoryItemTypeId="NON_SERIAL_INV_ITEM" productId="WG-1111"/>
+    <InventoryItemDetail inventoryItemId="9005" inventoryItemDetailSeqId="0001" availableToPromiseDiff="5" quantityOnHandDiff="5"/>
+    <InventoryItem facilityId="WebStoreWarehouse" locationSeqId="TLTLTLUL04" 
+        inventoryItemId="9006" inventoryItemTypeId="NON_SERIAL_INV_ITEM" productId="WG-5569"/>
+    <InventoryItemDetail inventoryItemId="9006" inventoryItemDetailSeqId="0001" availableToPromiseDiff="10" quantityOnHandDiff="10"/>
 
-    <InventoryItem availableToPromise="10" quantityOnHand="10" facilityId="WebStoreWarehouse" locationSeqId="TLTLTLUL04" inventoryItemId="9006" inventoryItemTypeId="NON_SERIAL_INV_ITEM" productId="WG-5569"/>
-    <InventoryItem availableToPromise="10" quantityOnHand="10" facilityId="WebStoreWarehouse" inventoryItemId="9010" inventoryItemTypeId="NON_SERIAL_INV_ITEM" productId="WG-9943-B3"/>
-    <InventoryItem availableToPromise="10" quantityOnHand="10" facilityId="WebStoreWarehouse" inventoryItemId="9011" inventoryItemTypeId="NON_SERIAL_INV_ITEM" productId="WG-9943-B4"/>
-    <InventoryItem availableToPromise="10" quantityOnHand="10" facilityId="WebStoreWarehouse" inventoryItemId="9012" inventoryItemTypeId="NON_SERIAL_INV_ITEM" productId="WG-9943-S3"/>
-    <InventoryItem availableToPromise="10" quantityOnHand="10" facilityId="WebStoreWarehouse" inventoryItemId="9013" inventoryItemTypeId="NON_SERIAL_INV_ITEM" productId="WG-9943-S4"/>
+    <InventoryItem facilityId="WebStoreWarehouse" inventoryItemId="9010" inventoryItemTypeId="NON_SERIAL_INV_ITEM" productId="WG-9943-B3"/>
+    <InventoryItemDetail inventoryItemId="9010" inventoryItemDetailSeqId="0001" availableToPromiseDiff="10" quantityOnHandDiff="10"/>
+    <InventoryItem facilityId="WebStoreWarehouse" inventoryItemId="9011" inventoryItemTypeId="NON_SERIAL_INV_ITEM" productId="WG-9943-B4"/>
+    <InventoryItemDetail inventoryItemId="9011" inventoryItemDetailSeqId="0001" availableToPromiseDiff="10" quantityOnHandDiff="10"/>
+    <InventoryItem facilityId="WebStoreWarehouse" inventoryItemId="9012" inventoryItemTypeId="NON_SERIAL_INV_ITEM" productId="WG-9943-S3"/>
+    <InventoryItemDetail inventoryItemId="9012" inventoryItemDetailSeqId="0001" availableToPromiseDiff="10" quantityOnHandDiff="10"/>
+    <InventoryItem facilityId="WebStoreWarehouse" inventoryItemId="9013" inventoryItemTypeId="NON_SERIAL_INV_ITEM" productId="WG-9943-S4"/>
+    <InventoryItemDetail inventoryItemId="9013" inventoryItemDetailSeqId="0001" availableToPromiseDiff="10" quantityOnHandDiff="10"/>
 
-    <InventoryItem availableToPromise="8" quantityOnHand="8" facilityId="WebStoreWarehouse" inventoryItemId="9021" inventoryItemTypeId="NON_SERIAL_INV_ITEM" productId="GZ-1006-1"/>
-    <InventoryItem availableToPromise="8" quantityOnHand="8" facilityId="WebStoreWarehouse" inventoryItemId="9022" inventoryItemTypeId="NON_SERIAL_INV_ITEM" productId="GZ-1006-2"/>
-    <InventoryItem availableToPromise="8" quantityOnHand="8" facilityId="WebStoreWarehouse" inventoryItemId="9023" inventoryItemTypeId="NON_SERIAL_INV_ITEM" productId="GZ-1006-3"/>
-    <InventoryItem availableToPromise="8" quantityOnHand="8" facilityId="WebStoreWarehouse" inventoryItemId="9024" inventoryItemTypeId="NON_SERIAL_INV_ITEM" productId="GZ-1006-4"/>
+    <InventoryItem facilityId="WebStoreWarehouse" inventoryItemId="9021" inventoryItemTypeId="NON_SERIAL_INV_ITEM" productId="GZ-1006-1"/>
+    <InventoryItemDetail inventoryItemId="9021" inventoryItemDetailSeqId="0001" availableToPromiseDiff="8" quantityOnHandDiff="8"/>
+    <InventoryItem facilityId="WebStoreWarehouse" inventoryItemId="9022" inventoryItemTypeId="NON_SERIAL_INV_ITEM" productId="GZ-1006-2"/>
+    <InventoryItemDetail inventoryItemId="9022" inventoryItemDetailSeqId="0001" availableToPromiseDiff="8" quantityOnHandDiff="8"/>
+    <InventoryItem facilityId="WebStoreWarehouse" inventoryItemId="9023" inventoryItemTypeId="NON_SERIAL_INV_ITEM" productId="GZ-1006-3"/>
+    <InventoryItemDetail inventoryItemId="9023" inventoryItemDetailSeqId="0001" availableToPromiseDiff="8" quantityOnHandDiff="8"/>
+    <InventoryItem facilityId="WebStoreWarehouse" inventoryItemId="9024" inventoryItemTypeId="NON_SERIAL_INV_ITEM" productId="GZ-1006-4"/>
+    <InventoryItemDetail inventoryItemId="9024" inventoryItemDetailSeqId="0001" availableToPromiseDiff="8" quantityOnHandDiff="8"/>
 
     <!-- Some additional test promotions -->
     <!-- GWP example on >$100 purchase -->

@@ -24,7 +24,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.2
 -->
 <simple-methods>
@@ -197,8 +197,8 @@
         <!-- decrement quantity still reserved -->
         <calculate field-name="quantity" map-name="orderItemInventoryRes">
             <calcop operator="subtract">
-                <calcop operator="get" field-name="quantity" map-name="orderItemInventoryRes"/>
-                <calcop operator="get" field-name="quantity" map-name="parameters"/>
+                <calcop operator="get" field-name="orderItemInventoryRes.quantity"/>
+                <calcop operator="get" field-name="parameters.quantity"/>
             </calcop>
         </calculate>
         <if-compare value="0" operator="equals" field-name="quantity" map-name="orderItemInventoryRes" type="Double">
@@ -218,13 +218,17 @@
         </if-compare>
         
         <!-- Decrement InventoryItem quantityOnHand -->
-        <calculate field-name="quantityOnHand" map-name="inventoryItem">
-            <calcop operator="subtract">
-                <calcop operator="get" field-name="quantityOnHand" map-name="inventoryItem"/>
-                <calcop operator="get" field-name="quantity" map-name="parameters"/>
-            </calcop>
+        <!-- instead of updating InventoryItem, add an InventoryItemDetail -->
+        <env-to-env env-name="inventoryItem.inventoryItemId" to-env-name="createDetailMap.inventoryItemId"/>
+        <env-to-env env-name="orderItem.orderId" to-env-name="createDetailMap.orderId"/>
+        <env-to-env env-name="orderItem.orderItemSeqId" to-env-name="createDetailMap.orderItemSeqId"/>
+        <env-to-env env-name="shipmentItem.shipmentId" to-env-name="createDetailMap.shipmentId"/>
+        <env-to-env env-name="shipmentItem.shipmentItemSeqId" to-env-name="createDetailMap.shipmentItemSeqId"/>
+        <calculate field-name="createDetailMap.quantityOnHandDiff" type="Double">
+            <calcop field-name="parameters.quantity" operator="negative"/>
         </calculate>
-        <store-value value-name="inventoryItem"/>
+        <call-service service-name="createInventoryItemDetail" in-map-name="createDetailMap"/>
+        <clear-field field-name="createDetailMap"/>
     </simple-method>
 
     <!-- some inline methods for the issuance process -->

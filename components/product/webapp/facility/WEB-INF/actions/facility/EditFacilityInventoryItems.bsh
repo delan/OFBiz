@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      3.0
  */
 
@@ -46,7 +46,7 @@ if (facility != null) context.put("facility", facility);
 
 Collection facilityInventoryItems = delegator.findByAnd("InventoryItem", 
         UtilMisc.toMap("facilityId", facilityId), 
-        UtilMisc.toList("statusId", "quantityOnHand", "serialNumber"));
+        UtilMisc.toList("statusId", "quantityOnHandTotal", "serialNumber"));
 if (facilityInventoryItems != null) context.put("facilityInventoryItems", facilityInventoryItems);
 
 int viewIndex = 0;

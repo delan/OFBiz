@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Jacopo Cappellato (tiz@sastau.it)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      3.0
  */
 
@@ -61,8 +61,8 @@ while (prodsIt.hasNext()) {
     oneInventory.put("minimumStock", oneProd.getString("minimumStock"));
     oneInventory.put("reorderQuantity", oneProd.getString("reorderQuantity"));
     oneInventory.put("daysToShip", oneProd.getString("daysToShip"));
-    oneInventory.put("totalQuantityOnHand", resultOutput.get("quantityOnHand"));
-    oneInventory.put("totalAvailableToPromise", resultOutput.get("availableToPromise"));
+    oneInventory.put("totalQuantityOnHand", resultOutput.get("quantityOnHandTotal"));
+    oneInventory.put("totalAvailableToPromise", resultOutput.get("availableToPromiseTotal"));
     rows.add(oneInventory);
 }
 

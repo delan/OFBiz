@@ -24,7 +24,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     thierry.grauss@etu.univ-tours.fr (migration to uiLabelMap)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      3.0
 -->
 
@@ -242,7 +242,7 @@
             <#assign inventoryItem = insufficientQoh.inventoryItem>
             <#assign quantityNeeded = insufficientQoh.quantityNeeded>
             <fo:block font-size="10pt">
-                  Inventory item with ID [${inventoryItem.inventoryItemId}] has ${inventoryItem.quantityOnHand?if_exists} on hand but needs ${quantityNeeded} for a full pick.
+                  Inventory item with ID [${inventoryItem.inventoryItemId}] has ${inventoryItem.quantityOnHandTotal?if_exists} on hand but needs ${quantityNeeded} for a full pick.
             </fo:block>
             <#-- toggle the row color -->
             <#if rowColor == "white">

@@ -270,7 +270,7 @@
             location="org.ofbiz.manufacturing.mrp.MrpServices" invoke="findProductMrpQoh" auth="true">
         <description>Find the quantity on hand of products for the MRP</description>
         <attribute name="productId" type="String" mode="IN" optional="false"/>
-        <attribute name="quantityOnHand" type="Double" mode="OUT" optional="false"/>
+        <attribute name="quantityOnHandTotal" type="Double" mode="OUT" optional="false"/>
     </service>
     
     <service name="createInventoryEventPlanned" engine="java"

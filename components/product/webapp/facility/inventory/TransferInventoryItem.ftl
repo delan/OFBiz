@@ -22,7 +22,7 @@
  *@author     David E. Jones
  *@author     Brad Steiner
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      2.2
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -131,8 +131,8 @@
             <td width="6%">&nbsp;</td>
             <#if inventoryItem?exists && inventoryItem.inventoryItemTypeId.equals("NON_SERIAL_INV_ITEM")>
                 <td width="74%">
-                    <div class="tabletext">${(inventoryItem.availableToPromise)?if_exists}&nbsp;
-                    /&nbsp;${(inventoryItem.quantityOnHand)?if_exists}</div>
+                    <div class="tabletext">${(inventoryItem.availableToPromiseTotal)?if_exists}&nbsp;
+                    /&nbsp;${(inventoryItem.quantityOnHandTotal)?if_exists}</div>
                 </td>
             <#elseif inventoryItem?exists && inventoryItem.inventoryItemTypeId.equals("SERIALIZED_INV_ITEM")>
                 <td width="74%"><div class="tabletext">${(inventoryItem.serialNumber)?if_exists}</div></td>

@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      2.2
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -192,12 +192,8 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
         <td align=right><div class="tabletext">${uiLabelMap.ProductAvailablePromiseQuantityHand}</div></td>
         <td>&nbsp;</td>
         <td>
-        	<div class="tabletext">${inventoryItemData.availableToPromise?if_exists} / ${inventoryItemData.quantityOnHand?if_exists}</div>
+        	<div class="tabletext">${inventoryItemData.availableToPromiseTotal?if_exists} / ${inventoryItemData.quantityOnHandTotal?if_exists}</div>
         	<div class="tabletext">${uiLabelMap.ProductPhysicalInventoryVariance}</div>
-        	<#-- The OLD, more dangerous, and less controlled/tracked way
-            <input type=text size="5" name="availableToPromise" value="${inventoryItemData.availableToPromise?if_exists}" class="inputBox">
-            / <input type=text size="5" name="quantityOnHand" value="${inventoryItemData.quantityOnHand?if_exists}" class="inputBox">
-            -->
         </td>
       </tr>
     <#elseif "SERIALIZED_INV_ITEM" == (inventoryItem.inventoryItemTypeId)?if_exists>

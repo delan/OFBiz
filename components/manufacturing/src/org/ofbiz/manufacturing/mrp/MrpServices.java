@@ -59,7 +59,7 @@ import org.ofbiz.service.GenericServiceException;
  * Services for running MRP
  *
  * @author     <a href=mailto:thierry.grauss@etu.univ-tours.fr">Thierry GRAUSS</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      0.1
  */
 public class MrpServices {
@@ -265,8 +265,8 @@ public class MrpServices {
                         totalAvailableToPromise += 1;
                     }
                 } else if ("NON_SERIAL_INV_ITEM".equals(productInventoryItem.getString("inventoryItemTypeId"))) {
-                    if (productInventoryItem.get("availableToPromise") != null) {
-                        totalAvailableToPromise += productInventoryItem.getDouble("availableToPromise").doubleValue();
+                    if (productInventoryItem.get("availableToPromiseTotal") != null) {
+                        totalAvailableToPromise += productInventoryItem.getDouble("availableToPromiseTotal").doubleValue();
                     }
                 }
             }

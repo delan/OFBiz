@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     thierry.grauss@etu.univ-tours.fr (migration to uiLabelMap)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      2.2
 -->
 
@@ -147,10 +147,10 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
                   <#--
                   <#if inventoryItem.inventoryItemTypeId == "NON_SERIAL_INV_ITEM">
                     <td valign="top">
-                      <div class="tabletext">${inventoryItem.quantityOnHand?if_exists}</div>
+                      <div class="tabletext">${inventoryItem.quantityOnHandTotal?if_exists}</div>
                     </td>
                     <td valign="top">
-                      <div class="tabletext">${inventoryItem.availableToPromise?if_exists}</div>
+                      <div class="tabletext">${inventoryItem.availableToPromiseTotal?if_exists}</div>
                     </td>
                   <#else>
                     <td colspan="2" valign="top">

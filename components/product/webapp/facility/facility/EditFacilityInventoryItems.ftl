@@ -22,7 +22,7 @@
  *@author     David E. Jones
  *@author     Brad Steiner
  *@author     thierry.grauss@etu.univ-tours.fr (migration to uiLabelMap)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      2.2
 -->
 
@@ -80,7 +80,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
         <#assign facilityLocation = inventoryItem.getRelatedOne("FacilityLocation")?if_exists>
         <#assign facilityLocationTypeEnum = (facilityLocation.getRelatedOneCache("TypeEnumeration"))?if_exists>
         <#assign isQuantity = false>
-        <#if (inventoryItem.quantityOnHand)?exists && (!(inventoryItem.serialNumber)?exists || (inventoryItem.serialNumber.length() == 0))><#assign isQuantity=true></#if>
+        <#if (inventoryItem.quantityOnHandTotal)?exists && (!(inventoryItem.serialNumber)?exists || (inventoryItem.serialNumber.length() == 0))><#assign isQuantity=true></#if>
         <tr valign="middle">
             <td><div class="tabletext">&nbsp;<a href="<@ofbizUrl>/EditInventoryItem?inventoryItemId=${(inventoryItem.inventoryItemId)?if_exists}&facilityId=${facilityId}</@ofbizUrl>" class="buttontext">${(inventoryItem.inventoryItemId)?if_exists}</a></div></td>
             <td><div class="tabletext">&nbsp;${(curInventoryItemType.description)?if_exists}</div></td>
@@ -93,13 +93,13 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
             <td><div class="tabletext">&nbsp;${(inventoryItem.binNumber)?if_exists}</div></td>
             <#if (inventoryItem.inventoryItemTypeId)?exists && (inventoryItem.inventoryItemTypeId.equals("NON_SERIAL_INV_ITEM"))>
                 <td>
-                    <div class="tabletext">${(inventoryItem.availableToPromise)?if_exists}
-                    / ${(inventoryItem.quantityOnHand)?if_exists}</div>
+                    <div class="tabletext">${(inventoryItem.availableToPromiseTotal)?if_exists}
+                    / ${(inventoryItem.quantityOnHandTotal)?if_exists}</div>
                 </td>
             <#elseif (inventoryItem.inventoryItemTypeId)?exists && inventoryItem.inventoryItemTypeId.equals("SERIALIZED_INV_ITEM")>
                     <td><div class="tabletext">&nbsp;${(inventoryItem.serialNumber)?if_exists}</div></td>
             <#else>
-                <td><div class="tabletext" style="color: red;">Error: type ${(inventoryItem.inventoryItemTypeId)?if_exists} unknown, serialNumber (${(inventoryItem.serialNumber)?if_exists}) AND quantityOnHand (${(inventoryItem.quantityOnHand)?if_exists}) specified</div></td>
+                <td><div class="tabletext" style="color: red;">Error: type ${(inventoryItem.inventoryItemTypeId)?if_exists} unknown, serialNumber (${(inventoryItem.serialNumber)?if_exists}) AND quantityOnHand (${(inventoryItem.quantityOnHandTotal)?if_exists}) specified</div></td>
                 <td>&nbsp;</td>
             </#if>
             <td>

@@ -679,20 +679,51 @@
                 location="org/ofbiz/product/inventory/InventoryServices.xml" invoke="createInventoryItem" auth="true">
         <description>Create an InventoryItem</description>
         <auto-attributes include="pk" mode="OUT" optional="false"/>
-        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true">
+            <exclude field-name="availableToPromiseTotal"/>
+            <exclude field-name="quantityOnHandTotal"/>
+        </auto-attributes>
         <override name="inventoryItemTypeId" optional="false"/>
         <override name="productId" optional="false"/>
     </service>
+    <service name="createInventoryItemCheckSetAtpQoh" engine="simple"
+                location="org/ofbiz/product/inventory/InventoryServices.xml" invoke="createInventoryItemCheckSetAtpQoh" auth="false">
+        <description>
+        </description>
+        <attribute name="inventoryItemId" type="String" mode="IN" optional="false"/>
+        <attribute name="availableToPromiseTotal" type="Double" mode="IN" optional="true"/>
+        <attribute name="quantityOnHandTotal" type="Double" mode="IN" optional="true"/>
+    </service>
+    
     <service name="updateInventoryItem" default-entity-name="InventoryItem" engine="simple"
                 location="org/ofbiz/product/inventory/InventoryServices.xml" invoke="updateInventoryItem" auth="true">
         <description>Update an InventoryItem</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
-        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true">
+            <exclude field-name="availableToPromiseTotal"/>
+            <exclude field-name="quantityOnHandTotal"/>
+        </auto-attributes>
     </service>
     <service name="checkProductInventoryDiscontinuation" engine="simple"
                 location="org/ofbiz/product/inventory/InventoryServices.xml" invoke="checkProductInventoryDiscontinuation" auth="false">
         <description>Check Product Inventory Discontinuation</description>
         <attribute name="productId" mode="IN" optional="false" type="String"/>
+    </service>
+
+    <service name="createInventoryItemDetail" default-entity-name="InventoryItemDetail" engine="simple"
+                location="org/ofbiz/product/inventory/InventoryServices.xml" invoke="createInventoryItemDetail" auth="true">
+        <description>Create an createInventoryItemDetail - note that the quantityOnHand and availableToPromise are relative (positive or negative) and will be added to the corresponding value on the given InventoryItem</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <override name="inventoryItemDetailSeqId" mode="OUT"/>
+    </service>
+    <service name="updateInventoryItemFromDetail" default-entity-name="InventoryItemDetail" engine="simple"
+                location="org/ofbiz/product/inventory/InventoryServices.xml" invoke="updateInventoryItemFromDetail" auth="false">
+        <description>
+            Sums all availableToPromiseDiff and quantityOnHandDiff elements for the inventoryItemId and sets the availableToPromise and quantityOnHand fields on the corresponding InventoryItem.
+            Meant to be run as an Entity ECA triggered on any modify operation on the InventoryItemDetail entity.
+        </description>
+        <attribute name="inventoryItemId" type="String" mode="IN" optional="false"/>
     </service>
 
     <service name="createInventoryItemVariance" default-entity-name="InventoryItemVariance" engine="simple"
@@ -734,24 +765,24 @@
                 location="org/ofbiz/product/inventory/InventoryServices.xml" invoke="getProductInventoryAvailable" auth="false">
         <description>Get Inventory Availability for a Product</description>
         <attribute name="productId" type="String" mode="IN" optional="false"/>
-        <attribute name="quantityOnHand" type="Double" mode="OUT" optional="false"/>
-        <attribute name="availableToPromise" type="Double" mode="OUT" optional="false"/>
+        <attribute name="quantityOnHandTotal" type="Double" mode="OUT" optional="false"/>
+        <attribute name="availableToPromiseTotal" type="Double" mode="OUT" optional="false"/>
     </service>
     <service name="getInventoryAvailableByFacility" engine="simple"
                 location="org/ofbiz/product/inventory/InventoryServices.xml" invoke="getProductInventoryAvailable" auth="false">
         <description>Get Inventory Availability for a Product constrained by a facilityId</description>
         <attribute name="productId" type="String" mode="IN" optional="false"/>
         <attribute name="facilityId" type="String" mode="IN" optional="false"/>
-        <attribute name="quantityOnHand" type="Double" mode="OUT" optional="false"/>
-        <attribute name="availableToPromise" type="Double" mode="OUT" optional="false"/>
+        <attribute name="quantityOnHandTotal" type="Double" mode="OUT" optional="false"/>
+        <attribute name="availableToPromiseTotal" type="Double" mode="OUT" optional="false"/>
     </service>
     <service name="getInventoryAvailableByContainer" engine="simple"
                 location="org/ofbiz/product/inventory/InventoryServices.xml" invoke="getProductInventoryAvailable" auth="false">
         <description>Get Inventory Availability for a Product constrained by a containerId</description>
         <attribute name="productId" type="String" mode="IN" optional="false"/>
         <attribute name="containerId" type="String" mode="IN" optional="false"/>
-        <attribute name="quantityOnHand" type="Double" mode="OUT" optional="false"/>
-        <attribute name="availableToPromise" type="Double" mode="OUT" optional="false"/>
+        <attribute name="quantityOnHandTotal" type="Double" mode="OUT" optional="false"/>
+        <attribute name="availableToPromiseTotal" type="Double" mode="OUT" optional="false"/>
     </service>
 
     <service name="checkInventoryAvailability" engine="java"
