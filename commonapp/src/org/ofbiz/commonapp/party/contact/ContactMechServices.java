@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.7  2002/02/24 08:26:57  jonesde
+ * Added roleTypeId to create/update of the various contact mech types, better than assuming CUSTOMER for all cases
+ *
  * Revision 1.6  2002/01/24 05:13:03  jonesde
  * Fixed little bug with not setting the partyId on the credit card info update
  *
@@ -629,7 +632,7 @@ public class ContactMechServices {
         Map newContext = new HashMap(context);
         newContext.put("infoString", newContext.get("emailAddress"));
         newContext.remove("emailAddress");
-        newContext.put("contactMechTypeId", newContext.get("EMAIL_ADDRESS"));
+        newContext.put("contactMechTypeId", "EMAIL_ADDRESS");
         
         return createContactMech(ctx, newContext);
     }
