@@ -128,7 +128,7 @@
         <if-compare field-name="order.orderTypeId" operator="equals" value="SALES_ORDER">
             <entity-one entity-name="Product" auto-field-map="true" value-name="product"/>
             <field-to-field field-name="product.requirementMethodEnumId" to-field-name="requirementMethodId"/>
-            <if-empty field-name="requirementMethodEnumId">
+            <if-empty field-name="requirementMethodId">
                 <entity-one entity-name="ProductStore" value-name="productStore">
                     <field-map env-name="order.productStoreId" field-name="productStoreId"/>
                 </entity-one>
