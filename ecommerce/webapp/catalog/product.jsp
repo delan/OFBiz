@@ -33,6 +33,8 @@
                 <ofbiz:param name='featureOrder' attribute='featureSet'/>
             </ofbiz:service>
  
+            <ofbiz:if name="variantTree" size="0">
+
             <%
               featureOrder = new LinkedList((Collection) pageContext.getAttribute("featureSet"));
               Map variantTree = (Map) pageContext.getAttribute("variantTree");
@@ -144,22 +146,24 @@
                    return -1;
                 }
     
-                function getList(name, value) {
-                    currentOrderIndex = findIndex(name);
-                    /*
-                    if (OPT.length == 1) {
-                        value = document.forms["addform"].elements[name].options[(value*1)+1].value;
-                    }
-                    */
-                    if (currentOrderIndex < 0 || value == "")
+                function getList(name, value, src) {
+                    currentOrderIndex = findIndex(name);                    
+                    if (src == 1 && OPT.length == 1) {
+                        value2 = document.forms["addform"].elements[name].options[(value*1)+1].value;
+                    }                    
+                    if (currentOrderIndex < 0 || value == "")                      
                         return;
-                    if (currentOrderIndex < (OPT.length - 1)) {
+                    if (currentOrderIndex < (OPT.length - 1) || OPT.length == 1) {                        
                         if (IMG[value] != null) {
                             document.images['mainImage'].src = IMG[value];
                             document.addform.<%=topLevelName%>.selectedIndex = (value*1)+1;
                         }
-                        eval("list" + OPT[currentOrderIndex+1] + value + "()");
-                        document.addform.add_product_id.value = 'NULL';
+                        if (OPT.length != 1) {
+                            eval("list" + OPT[currentOrderIndex+1] + value + "()");                        
+                            document.addform.add_product_id.value = 'NULL';
+                        } else {
+                            document.addform.add_product_id.value = value2;
+                        }
                     } else {
                         document.addform.add_product_id.value = value;
                     }
@@ -167,6 +171,7 @@
 
             //-->
             </script>
+            </ofbiz:if>
         </ofbiz:if>
     <%}%>
     <%-- ====================================================== --%>
@@ -221,7 +226,7 @@
           <%-- ================= --%>
           <%-- Variant Selection --%>
           <%-- ================= --%>
-          <ofbiz:if name="featureSet" size="0">            
+          <ofbiz:if name="variantTree" size="0">            
             <ofbiz:iterator name="currentType" property="featureSet" type="java.lang.String">
               <%Debug.logInfo("CurrentType: " + currentType);%>
               <div class="tabletext">
@@ -233,7 +238,7 @@
               <input type='hidden' name="product_id" value='<ofbiz:entityfield attribute="product" field="productId"/>'>
               <input type='hidden' name="add_product_id" value='NULL'>
           </ofbiz:if>
-          <ofbiz:unless name="featureSet" size="0">
+          <ofbiz:unless name="variantTree" size="0">
             <input type='hidden' name="product_id" value='<ofbiz:entityfield attribute="product" field="productId"/>'>
             <input type='hidden' name="add_product_id" value='<ofbiz:entityfield attribute="product" field="productId"/>'>
           </ofbiz:unless>
@@ -251,7 +256,7 @@
         <%-- =========================== --%>
         <%-- Prefill The First Top Level --%>
         <%-- =========================== --%>
-        <ofbiz:if name="featureSet" size="0">
+        <ofbiz:if name="variantTree" size="0">
           <script language="JavaScript">eval("list" + "<%=featureOrder.get(0)%>" + "()");</script>
         </ofbiz:if>
                 
@@ -271,7 +276,7 @@
               <%if (imageUrl != null && imageUrl.length() > 0){%>
                 <td>
                   <table cellspacing="0" cellpadding="0">
-                    <tr><td><a href="#"><img src="<%=imageUrl%>" border="0" width="60" height="60" onclick="javascript:getList('<%=featureOrder.get(0)%>','<%=ii%>');"></a></td></tr>
+                    <tr><td><a href="#"><img src="<%=imageUrl%>" border="0" width="60" height="60" onclick="javascript:getList('<%=featureOrder.get(0)%>','<%=ii%>',1);"></a></td></tr>
                     <tr><td align="center" valign="top"><span class="tabletext"><%=featureDescription%></span></td></tr>
                   </table>
                 </td>
