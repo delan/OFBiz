@@ -50,6 +50,7 @@
   <SecurityPermission description="View a UtilDebug instance." permissionId="UTIL_CACHE_VIEW"/>
   <SecurityPermission description="Edit a UtilDebug instance." permissionId="UTIL_CACHE_EDIT"/>
   <SecurityPermission description="Permission to invoke any service remotely." permissionId="SERVICE_INVOKE_ANY"/>
+  <SecurityPermission description="Manual Payment Transaction." permissionId="MANUAL_PAYMENT"/>
 
   <SecurityPermission description="View with the Entity Data Maintenance pages." permissionId="ENTITY_DATA_VIEW"/>
   <SecurityPermission description="Create with the Entity Data Maintenance pages." permissionId="ENTITY_DATA_CREATE"/>
@@ -172,6 +173,7 @@
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="UTIL_DEBUG_EDIT"/>
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="UTIL_DEBUG_VIEW"/>
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="SERVICE_INVOKE_ANY"/>
+  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="MANUAL_PAYMENT"/>
 
   <SecurityGroupPermission groupId="FULLADMIN" permissionId="SERVER_STATS_VIEW"/>
   <SecurityGroupPermission groupId="FULLADMIN" permissionId="SEND_CONTROL_APPLET"/>
@@ -188,6 +190,7 @@
   <SecurityGroupPermission groupId="FULLADMIN" permissionId="UTIL_DEBUG_EDIT"/>
   <SecurityGroupPermission groupId="FULLADMIN" permissionId="UTIL_DEBUG_VIEW"/>
   <SecurityGroupPermission groupId="FULLADMIN" permissionId="SERVICE_INVOKE_ANY"/>
+  <SecurityGroupPermission groupId="FULLADMIN" permissionId="MANUAL_PAYMENT"/>
 
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="ENTITY_DATA_CREATE"/>
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="ENTITY_DATA_DELETE"/>
