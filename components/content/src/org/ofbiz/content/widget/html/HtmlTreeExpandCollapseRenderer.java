@@ -1,5 +1,5 @@
 /*
- * $Id: HtmlTreeExpandCollapseRenderer.java,v 1.4 2004/08/09 23:52:21 jonesde Exp $
+ * $Id: HtmlTreeExpandCollapseRenderer.java,v 1.5 2004/08/12 18:05:14 byersa Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -40,7 +40,7 @@ import org.ofbiz.content.widget.tree.ModelTree;
  * Widget Library - HTML Form Renderer implementation
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      3.1
  */
 public class HtmlTreeExpandCollapseRenderer extends HtmlTreeRenderer {
@@ -54,10 +54,21 @@ public class HtmlTreeExpandCollapseRenderer extends HtmlTreeRenderer {
 
     public void renderNodeBegin(Writer writer, Map context, ModelTree.ModelNode node, int depth, boolean isLast) throws IOException {
 
+        context.put("depth", Integer.toString(depth));
+        /*
         StringBuffer sb = new StringBuffer();
         for (int i=0; i<depth; i++)
             sb.append("-");
         writer.write(sb.toString());
+        */
+        writer.write("<div");
+        String style = node.getWrapStyle(context);
+        if (UtilValidate.isNotEmpty(style)) {
+            writer.write(" class=\"");
+            writer.write(style);
+            writer.write("\"");
+        }
+        writer.write(">");
 
         String contentId = (String)context.get("contentId");
         if (targetNodeTrail == null) {
@@ -72,6 +83,8 @@ public class HtmlTreeExpandCollapseRenderer extends HtmlTreeRenderer {
         }
         boolean hasChildren = node.hasChildren(context);
             Debug.logInfo("HtmlTreeExpandCollapseRenderer, hasChildren(1):" + hasChildren, module);
+
+        // check to see if this node needs to be expanded.
         if (hasChildren) {
             Debug.logInfo("HtmlTreeExpandCollapseRenderer, targetNodeTrail(1):" + targetNodeTrail, module);
             Debug.logInfo("HtmlTreeExpandCollapseRenderer, currentNodeTrail(1):" + currentNodeTrail, module);
@@ -99,14 +112,14 @@ public class HtmlTreeExpandCollapseRenderer extends HtmlTreeRenderer {
                 currentNodeTrailCsv = StringUtil.join(currentNodeTrail, ",");
                 context.put("currentNodeTrailCsv", currentNodeTrailCsv);
                 expandCollapseImage.setSrc("/images/expand.gif");
-                expandCollapseLink.setTarget("/ViewOutline?contentId=${rootContentId}&targetNodeTrailCsv=${currentNodeTrailCsv}");
+                expandCollapseLink.setTarget("/ViewOutline?docRootContentId=${docRootContentId}&targetNodeTrailCsv=${currentNodeTrailCsv}");
             } else {
                 context.put("processChildren", new Boolean(true));
                 //expandCollapseLink.setText("&nbsp;-&nbsp;");
                 currentNodeTrailCsv = StringUtil.join(currentNodeTrail, ",");
                 context.put("currentNodeTrailCsv", currentNodeTrailCsv);
                 expandCollapseImage.setSrc("/images/collapse.gif");
-                expandCollapseLink.setTarget("/ViewOutline?contentId=${rootContentId}&targetNodeTrailCsv=${currentNodeTrailCsv}");
+                expandCollapseLink.setTarget("/ViewOutline?docRootContentId=${docRootContentId}&targetNodeTrailCsv=${currentNodeTrailCsv}");
                 // add it so it can be remove in renderNodeEnd
                 currentNodeTrail.add(contentId);
             }
@@ -122,6 +135,7 @@ public class HtmlTreeExpandCollapseRenderer extends HtmlTreeRenderer {
 
     public void renderNodeEnd(Writer writer, Map context, ModelTree.ModelNode node) throws IOException {
         currentNodeTrail.remove(currentNodeTrail.size() - 1);
+        writer.write("</div>");
         return;
     }
 

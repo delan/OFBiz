@@ -33,13 +33,17 @@ import org.ofbiz.minilang.SimpleMapProcessor;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
+import org.ofbiz.service.GenericServiceException;
+import org.ofbiz.service.ServiceAuthException;
+import org.ofbiz.minilang.SimpleMapProcessor;
+import org.ofbiz.minilang.MiniLangException;
 
 
 /**
  * UploadContentAndImage Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.14 $
+ * @version    $Revision: 1.15 $
  * @since      2.2
  *
  * Services for granting operation permissions on Content entities in a data-driven manner.
@@ -465,15 +469,37 @@ public class UploadContentAndImage {
             //contentAssocDataResourceViewFrom.setAllFields(ftlContext2, true, null, null);
             //ftlContext.putAll(ftlContext2);             
             if (Debug.infoOn()) Debug.logInfo("[UploadContentStuff]ftlContext:" + ftlContext, module);
-            Map ftlResults = dispatcher.runSync("persistContentAndAssoc", ftlContext);
+            Map ftlResults = null;
+            try {
+                ftlResults = dispatcher.runSync("persistContentAndAssoc", ftlContext);
+            } catch(ServiceAuthException e) {
+                String msg = e.getMessage();
+                request.setAttribute("_ERROR_MESSAGE_", msg);
+                List errorMsgList = (List)request.getAttribute("_EVENT_MESSAGE_LIST_");
+                if (Debug.infoOn()) Debug.logInfo("[UploadContentStuff]errorMsgList:" + errorMsgList, module);
+                if (Debug.infoOn()) Debug.logInfo("[UploadContentStuff]msg:" + msg, module);
+                if (errorMsgList == null) {
+                    errorMsgList = new ArrayList();
+                    request.setAttribute("errorMessageList", errorMsgList);
+                }
+                errorMsgList.add(msg);
+                return "error";
+            }
             boolean isError = ModelService.RESPOND_ERROR.equals(ftlResults.get(ModelService.RESPONSE_MESSAGE));
             if (isError) {
-                request.setAttribute("_ERROR_MESSAGE_", ftlResults.get(ModelService.ERROR_MESSAGE));
+                String msg = (String)ftlResults.get(ModelService.ERROR_MESSAGE);
+                request.setAttribute("_ERROR_MESSAGE_", msg);
+                List errorMsgList = (List)request.getAttribute("_EVENT_MESSAGE_LIST_");
+                if (errorMsgList == null) {
+                    errorMsgList = new ArrayList();
+                    request.setAttribute("errorMessageList", errorMsgList);
+                }
+                errorMsgList.add(msg);
                 return "error";
             }
             String returnedContentId = (String)ftlResults.get("contentId");
             if (Debug.infoOn()) Debug.logInfo("returnedContentId:" + returnedContentId, module);
-            request.setAttribute("contentId", returnedContentId);
+            //request.setAttribute("contentId", returnedContentId);
             return "success";
     }
 

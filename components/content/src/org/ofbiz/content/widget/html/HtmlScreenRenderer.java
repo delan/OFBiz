@@ -1,5 +1,5 @@
 /*
- * $Id: HtmlScreenRenderer.java,v 1.4 2004/08/09 23:52:21 jonesde Exp $
+ * $Id: HtmlScreenRenderer.java,v 1.5 2004/08/12 18:05:14 byersa Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -26,6 +26,8 @@ package org.ofbiz.content.widget.html;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Map;
+import java.util.Locale;
+import java.sql.Timestamp;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -35,18 +37,35 @@ import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.content.webapp.control.RequestHandler;
 import org.ofbiz.content.webapp.taglib.ContentUrlTag;
 import org.ofbiz.content.widget.screen.ModelScreenWidget;
+import org.ofbiz.content.widget.screen.ModelScreenWidget.Link;
 import org.ofbiz.content.widget.screen.ScreenStringRenderer;
+import org.ofbiz.content.content.ContentWorker;
+import org.ofbiz.entity.GenericDelegator;
+import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.GenericEntityException;
+import org.ofbiz.base.util.GeneralException;
+import org.ofbiz.base.util.UtilDateTime;
+import org.ofbiz.base.util.Debug;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpSession;
+import org.ofbiz.content.webapp.taglib.ContentUrlTag;
+import org.ofbiz.content.webapp.control.RequestHandler;
+import org.ofbiz.base.util.string.FlexibleStringExpander;
 
 /**
  * Widget Library - HTML Form Renderer implementation
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      3.1
  */
 public class HtmlScreenRenderer implements ScreenStringRenderer {
 
     public HtmlScreenRenderer() {}
+    public static final String module = HtmlScreenRenderer.class.getName();
 
     public void renderSectionBegin(Writer writer, Map context, ModelScreenWidget.Section section) throws IOException {
         // do nothing, this is just a place holder container for HTML
@@ -82,6 +101,7 @@ public class HtmlScreenRenderer implements ScreenStringRenderer {
 
     public void renderLabel(Writer writer, Map context, ModelScreenWidget.Label label) throws IOException {
         // open tag
+                Debug.logInfo("renderLabel, depth:" + context.get("depth"), module);
         writer.write("<span");
         String id = label.getId(context);
         if (UtilValidate.isNotEmpty(id)) {
@@ -119,6 +139,12 @@ public class HtmlScreenRenderer implements ScreenStringRenderer {
         if (UtilValidate.isNotEmpty(style)) {
             writer.write(" class=\"");
             writer.write(style);
+            writer.write("\"");
+        }
+        String targetWindow = link.getTargetWindow(context);
+        if (UtilValidate.isNotEmpty(targetWindow)) {
+            writer.write(" target=\"");
+            writer.write(targetWindow);
             writer.write("\"");
         }
         String target = link.getTarget(context);
@@ -238,6 +264,177 @@ public class HtmlScreenRenderer implements ScreenStringRenderer {
         
         
         appendWhitespace(writer);
+    }
+
+    public void renderContentBegin(Writer writer, Map context, ModelScreenWidget.Content content) throws IOException {
+
+        String editRequest = (String)context.get("directEditRequest");
+                Debug.logInfo("directEditRequest:" + editRequest, module);
+        if (UtilValidate.isNotEmpty(editRequest)) {
+            writer.write("<div");
+    
+            writer.write(" class=\"editWrapper\">");
+
+            appendWhitespace(writer);
+        }
+    }
+
+    public void renderContentBody(Writer writer, Map context, ModelScreenWidget.Content content) throws IOException {
+            Locale locale = Locale.getDefault();
+            Boolean nullThruDatesOnly = new Boolean(false);
+            String mimeTypeId = "text/html";
+            Map map = null;
+            String expandedContentId = content.getContentId(context);
+            String renderedContent = null;
+            GenericDelegator delegator = (GenericDelegator) context.get("delegator");
+                Debug.logInfo("expandedContentId:" + expandedContentId, module);
+            try {
+                renderedContent = ContentWorker.renderContentAsTextCache(delegator, expandedContentId, map, null, locale, mimeTypeId);
+                if (UtilValidate.isEmpty(renderedContent)) {
+                    String editRequest = (String)context.get("directEditRequest");
+                    if (UtilValidate.isNotEmpty(editRequest)) {
+                        ContentWorker.renderContentAsTextCache(delegator, "NOCONTENTFOUND", writer, map, null, locale, mimeTypeId);
+                    }
+                } else {
+                    writer.write(renderedContent);
+                }
+
+            } catch(GeneralException e) {
+                String errMsg = "Error rendering included content with id [" + expandedContentId + "] : " + e.toString();
+                Debug.logError(e, errMsg, module);
+                //throw new RuntimeException(errMsg);
+            } catch(IOException e2) {
+                String errMsg = "Error rendering included content with id [" + expandedContentId + "] : " + e2.toString();
+                Debug.logError(e2, errMsg, module);
+                //throw new RuntimeException(errMsg);
+            }
+    }
+
+    public void renderContentEnd(Writer writer, Map context, ModelScreenWidget.Content content) throws IOException {
+
+                Debug.logInfo("renderContentEnd, context:" + context, module);
+        String editRequest = (String)context.get("directEditRequest");
+        String editRequestWithParams = editRequest + "?contentId=${currentValue.contentId}&drDataResourceId=${currentValue.drDataResourceId}&directEditRequest=${directEditRequest}&indirectEditRequest=${indirectEditRequest}&caContentIdTo=${currentValue.caContentIdTo}&caFromDate=${currentValue.caFromDate}&caContentAssocTypeId=${currentValue.caContentAssocTypeId}";
+        FlexibleStringExpander editRequestExdr = new FlexibleStringExpander(editRequestWithParams);
+        if (UtilValidate.isNotEmpty(editRequest)) {
+            String contentId = content.getContentId(context);
+            String editMode = "Edit";
+            String target = editRequestExdr.expandString(context);
+            /*
+            if (UtilValidate.isEmpty(contentId))
+                editMode = "Add";
+            if (editMode.equals("Edit")) {
+                target = editRequest + editMode + "?contentId=" + contentId;
+            } else {
+                target = editRequest + editMode;
+            }
+                */
+            HttpServletResponse response = (HttpServletResponse) context.get("response");
+            HttpServletRequest request = (HttpServletRequest) context.get("request");
+            if (request != null && response != null) {
+                ServletContext ctx = (ServletContext) request.getAttribute("servletContext");
+                RequestHandler rh = (RequestHandler) ctx.getAttribute("_REQUEST_HANDLER_");
+                String urlString = rh.makeLink(request, response, target, false, false, false);
+                String linkString = "<a href=\"" + urlString + "\">" + editMode + "</a>";
+                writer.write(linkString);
+            }
+            writer.write("</div>");
+            appendWhitespace(writer);
+        }
+    }
+
+
+    public void renderSubContentBegin(Writer writer, Map context, ModelScreenWidget.SubContent content) throws IOException {
+
+        String editRequest = (String)context.get("indirectEditRequest");
+        if (UtilValidate.isNotEmpty(editRequest)) {
+            writer.write("<div");
+            writer.write(" class=\"editWrapper\">");
+    
+            writer.write(">");
+            appendWhitespace(writer);
+        }
+    }
+
+    public void renderSubContentBody(Writer writer, Map context, ModelScreenWidget.SubContent content) throws IOException {
+            Locale locale = Locale.getDefault();
+            Boolean nullThruDatesOnly = new Boolean(false);
+            String mimeTypeId = "text/html";
+            Map map = null;
+            String expandedContentId = content.getContentId(context);
+            String expandedAssocName = content.getAssocName(context);
+            String renderedContent = null;
+            GenericDelegator delegator = (GenericDelegator) context.get("delegator");
+            Timestamp fromDate = UtilDateTime.nowTimestamp();
+            HttpServletRequest request = (HttpServletRequest) context.get("request");
+            GenericValue userLogin = null;
+            if (request != null) {
+                HttpSession session = request.getSession();
+                userLogin = (GenericValue)session.getAttribute("userLogin");
+            }
+                Debug.logInfo("expandedContentId:" + expandedContentId, module);
+            try {
+                renderedContent = ContentWorker.renderSubContentAsTextCache(delegator, expandedContentId, expandedAssocName, null, map, locale, mimeTypeId, userLogin, fromDate);
+                if (UtilValidate.isEmpty(renderedContent)) {
+                    String editRequest = (String)context.get("indirectEditRequest");
+                    if (UtilValidate.isNotEmpty(editRequest)) {
+                        ContentWorker.renderContentAsTextCache(delegator, "NOCONTENTFOUND", writer, map, null, locale, mimeTypeId);
+                    }
+                } else {
+                    writer.write(renderedContent);
+                }
+
+            } catch(GeneralException e) {
+                String errMsg = "Error rendering included content with id [" + expandedContentId + "] : " + e.toString();
+                Debug.logError(e, errMsg, module);
+                //throw new RuntimeException(errMsg);
+            } catch(IOException e2) {
+                String errMsg = "Error rendering included content with id [" + expandedContentId + "] : " + e2.toString();
+                Debug.logError(e2, errMsg, module);
+                //throw new RuntimeException(errMsg);
+            }
+    }
+
+    public void renderSubContentEnd(Writer writer, Map context, ModelScreenWidget.SubContent content) throws IOException {
+
+        String editRequest = (String)context.get("indirectEditRequest");
+        String editRequestWithParams = editRequest + "?contentId=${currentValue.contentId}&drDataResourceId=${currentValue.drDataResourceId}&directEditRequest=${directEditRequest}&indirectEditRequest=${indirectEditRequest}&caContentIdTo=${currentValue.caContentIdTo}&caFromDate=${currentValue.caFromDate}&caContentAssocTypeId=${currentValue.caContentAssocTypeId}";
+        FlexibleStringExpander editRequestExdr = new FlexibleStringExpander(editRequestWithParams);
+        if (UtilValidate.isNotEmpty(editRequest)) {
+            HttpServletResponse response = (HttpServletResponse) context.get("response");
+            HttpServletRequest request = (HttpServletRequest) context.get("request");
+            if (request != null && response != null) {
+                HttpSession session = request.getSession();
+                GenericValue userLogin = (GenericValue)session.getAttribute("userLogin");
+                GenericDelegator delegator = (GenericDelegator)request.getAttribute("delegator");
+                String contentIdTo = content.getContentId(context);
+                String mapKey = content.getAssocName(context);
+                GenericValue view = null;
+                try {
+                    view = ContentWorker.getSubContentCache(delegator, contentIdTo, mapKey, userLogin, null, UtilDateTime.nowTimestamp(), new Boolean(false), null);
+                } catch(GenericEntityException e) {
+                    throw new IOException("Originally a GenericEntityException. " + e.getMessage());
+                }
+                String editMode = "Edit";
+                String target = editRequestExdr.expandString(context);
+                /*
+                if (UtilValidate.isEmpty(contentIdTo))
+                    editMode = "Add";
+                if (editMode.equals("Edit")) {
+                    target = editRequest + editMode + "?contentIdTo=" + contentIdTo;
+                } else {
+                    target = editRequest + editMode;
+                }
+                */
+                ServletContext ctx = (ServletContext) request.getAttribute("servletContext");
+                RequestHandler rh = (RequestHandler) ctx.getAttribute("_REQUEST_HANDLER_");
+                String urlString = rh.makeLink(request, response, target, false, false, false);
+                String linkString = "<a href=\"" + urlString + "\">" + editMode + "</a>";
+                writer.write(linkString);
+            }
+            writer.write("</div>");
+            appendWhitespace(writer);
+        }
     }
 
 

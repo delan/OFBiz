@@ -14,6 +14,7 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.minilang.MiniLangException;
 import org.ofbiz.content.content.ContentServices;
 import org.ofbiz.content.content.ContentWorker;
 import org.ofbiz.content.data.DataServices;
@@ -34,7 +35,7 @@ import org.ofbiz.service.ServiceUtil;
  * ContentManagementServices Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.20 $
+ * @version    $Revision: 1.21 $
  * @since      3.0
  *
  * 
@@ -64,10 +65,9 @@ public class ContentManagementServices {
         GenericValue view = null;
 
         try {
-            view = ContentWorker.getSubContent( delegator, 
-                          contentId, mapKey, subContentId, userLogin, assocTypes, fromDate);
+            view = ContentWorker.getSubContentCache( delegator, contentId, mapKey, subContentId, userLogin, assocTypes, fromDate, new Boolean(false), null);
             content = ContentWorker.getContentFromView(view);
-        } catch(IOException e) {
+        } catch(GenericEntityException e) {
             return ServiceUtil.returnError(e.getMessage());
         }
         results.put("view", view);

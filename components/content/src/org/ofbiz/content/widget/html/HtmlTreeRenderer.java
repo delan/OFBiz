@@ -1,5 +1,5 @@
 /*
- * $Id: HtmlTreeRenderer.java,v 1.4 2004/08/09 23:52:21 jonesde Exp $
+ * $Id: HtmlTreeRenderer.java,v 1.5 2004/08/12 18:05:14 byersa Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -27,6 +27,15 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.Map;
 
+import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.content.widget.tree.ModelTree;
+import org.ofbiz.content.widget.tree.TreeStringRenderer;
+import org.ofbiz.content.widget.screen.ScreenStringRenderer;
+import org.ofbiz.content.widget.screen.ModelScreen;
+import org.ofbiz.content.widget.screen.ModelScreen.ScreenRenderer;
+import org.ofbiz.content.widget.html.HtmlScreenRenderer;
+
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -44,24 +53,40 @@ import org.ofbiz.content.widget.tree.TreeStringRenderer;
  * Widget Library - HTML Form Renderer implementation
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      3.1
  */
 public class HtmlTreeRenderer implements TreeStringRenderer {
 
     ScreenStringRenderer screenStringRenderer = null;
+    public static final String module = HtmlTreeRenderer.class.getName(); 
 
     public HtmlTreeRenderer() {}
 
     public void renderNodeBegin(Writer writer, Map context, ModelTree.ModelNode node, int depth, boolean isLast) throws IOException {
+
+        context.put("depth", Integer.toString(depth));
+        /*
         StringBuffer sb = new StringBuffer();
         for (int i=0; i<depth; i++)
             sb.append("&nbsp;&nbsp;");
         writer.write(sb.toString());
+        */
+        writer.write("<div");
+        String style = node.getWrapStyle(context);
+        if (UtilValidate.isNotEmpty(style)) {
+            writer.write(" class=\"");
+            writer.write(style);
+            writer.write("\"");
+        }
+        writer.write(">");
+        // in early implementations, this next line retrieves the children
+        boolean hasChildren = node.hasChildren(context);
         return;
     }
 
     public void renderNodeEnd(Writer writer, Map context, ModelTree.ModelNode node) throws IOException {
+        writer.write("</div>");
         return;
     }
 
@@ -105,6 +130,12 @@ public class HtmlTreeRenderer implements TreeStringRenderer {
         if (UtilValidate.isNotEmpty(style)) {
             writer.write(" class=\"");
             writer.write(style);
+            writer.write("\"");
+        }
+        String targetWindow = link.getTargetWindow(context);
+        if (UtilValidate.isNotEmpty(targetWindow)) {
+            writer.write(" target=\"");
+            writer.write(targetWindow);
             writer.write("\"");
         }
         String target = link.getTarget(context);

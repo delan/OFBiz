@@ -1,5 +1,5 @@
 /*
- * $Id: ScreenStringRenderer.java,v 1.7 2004/07/27 20:29:40 byersa Exp $
+ * $Id: ScreenStringRenderer.java,v 1.8 2004/08/12 18:05:14 byersa Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -32,7 +32,7 @@ import java.util.Map;
  * Widget Library - Screen String Renderer interface
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.7 $
+ * @version    $Revision: 1.8 $
  * @since      3.1
  */
 public interface ScreenStringRenderer {
@@ -40,6 +40,12 @@ public interface ScreenStringRenderer {
     public void renderSectionEnd(Writer writer, Map context, ModelScreenWidget.Section section) throws IOException;
     public void renderContainerBegin(Writer writer, Map context, ModelScreenWidget.Container container) throws IOException;
     public void renderContainerEnd(Writer writer, Map context, ModelScreenWidget.Container container) throws IOException;
+    public void renderContentBegin(Writer writer, Map context, ModelScreenWidget.Content content) throws IOException;
+    public void renderContentBody(Writer writer, Map context, ModelScreenWidget.Content content) throws IOException;
+    public void renderContentEnd(Writer writer, Map context, ModelScreenWidget.Content content) throws IOException;
+    public void renderSubContentBegin(Writer writer, Map context, ModelScreenWidget.SubContent content) throws IOException;
+    public void renderSubContentBody(Writer writer, Map context, ModelScreenWidget.SubContent content) throws IOException;
+    public void renderSubContentEnd(Writer writer, Map context, ModelScreenWidget.SubContent content) throws IOException;
 
     public void renderLabel(Writer writer, Map context, ModelScreenWidget.Label label) throws IOException;
     public void renderLink(Writer writer, Map context, ModelScreenWidget.Link link) throws IOException;
