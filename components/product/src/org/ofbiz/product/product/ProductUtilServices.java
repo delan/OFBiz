@@ -1,5 +1,5 @@
 /*
- * $Id: ProductUtilServices.java,v 1.14 2004/01/27 17:48:02 jonesde Exp $
+ * $Id: ProductUtilServices.java,v 1.15 2004/01/27 20:41:07 jonesde Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -58,7 +58,7 @@ import org.ofbiz.service.ServiceUtil;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.14 $
+ * @version    $Revision: 1.15 $
  * @since      2.0
  */
 public class ProductUtilServices {
@@ -101,7 +101,8 @@ public class ProductUtilServices {
                     }
                 }
             }
-
+            eliOne.close();
+            
             // get all non-discontinued virtuals, see if all variant ProductAssocs are expired, if discontinue
             EntityCondition condition = new EntityConditionList(UtilMisc.toList(
                     new EntityExpr("isVirtual", EntityOperator.EQUALS, "Y"),
@@ -122,6 +123,7 @@ public class ProductUtilServices {
                     }
                 }
             }
+            eli.close();
         } catch (GenericEntityException e) {
             String errMsg = "Entity error running discVirtualsWithDiscVariants: " + e.toString();
             Debug.logError(e, errMsg, module);
@@ -160,6 +162,7 @@ public class ProductUtilServices {
                     }
                 }
             }
+            eli.close();
             Debug.logInfo("Completed - Removed category members for " + numSoFar + " sales discontinued products.", module);
         } catch (GenericEntityException e) {
             String errMsg = "Entity error running removeCategoryMembersOfDiscProducts: " + e.toString();
@@ -207,6 +210,7 @@ public class ProductUtilServices {
                     }
                 }
             }
+            eli.close();
             Debug.logInfo("Completed - Removed category members for " + numSoFar + " products with duplicate category members.", module);
         } catch (GenericEntityException e) {
             String errMsg = "Entity error running removeDuplicateOpenEndedCategoryMembers: " + e.toString();
@@ -242,6 +246,7 @@ public class ProductUtilServices {
                     ), EntityOperator.AND);
             EntityCondition havingCond = new EntityExpr("productIdToCount", EntityOperator.EQUALS, new Long(1));
             EntityListIterator eliOne = delegator.findListIteratorByCondition(dve, condition, havingCond, UtilMisc.toList("productId", "productIdToCount"), null, null);
+
             GenericValue value = null;
             int numWithOneOnly = 0;
             while ((value = (GenericValue) eliOne.next()) != null) {
@@ -300,6 +305,7 @@ public class ProductUtilServices {
                     }
                 }
             }
+            eliOne.close();
             
             EntityCondition conditionWithDates = new EntityConditionList(UtilMisc.toList(
                     new EntityExpr("productAssocTypeId", EntityOperator.EQUALS, "PRODUCT_VARIANT"),
@@ -358,6 +364,7 @@ public class ProductUtilServices {
                     }
                 }
             }
+            eliMulti.close();
             
             Debug.logInfo("Found virtual products with one valid variant: " + numWithOneValid + ", with one variant only: " + numWithOneOnly, module);
         } catch (GenericEntityException e) {
@@ -446,6 +453,7 @@ public class ProductUtilServices {
                     Debug.logInfo("Image URLs set for " + numSoFar + " products.", module);
                 }
             }
+            eli.close();
             Debug.logInfo("Completed - Image URLs set for " + numSoFar + " products.", module);
         } catch (GenericEntityException e) {
             String errMsg = "Entity error running setAllProductImageNames: " + e.toString();
@@ -474,6 +482,7 @@ public class ProductUtilServices {
                     Debug.logInfo("Image URLs cleared for " + numSoFar + " products.", module);
                 }
             }
+            eli.close();
             Debug.logInfo("Completed - Image URLs set for " + numSoFar + " products.", module);
         } catch (GenericEntityException e) {
             String errMsg = "Entity error running clearAllVirtualProductImageNames: " + e.toString();
