@@ -34,6 +34,8 @@
 <%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.entity.*" %>
 <jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" />
 
+<%if(security.hasEntityPermission("PARTYMGR", "_VIEW", session)) {%>
+
 <%
     String create = request.getParameter("create_new");
     String partyId = null;
@@ -74,7 +76,7 @@
 <input type="hidden" name="partyId" value="<%=partyId%>">
 <% } %>
 
-&nbsp;<a href='<ofbiz:url>/authview/<ofbiz:print attribute="donePage"/></ofbiz:url>' class="buttontext">[Done/Cancel]</a>
+&nbsp;<a href='<ofbiz:url>/authview/<ofbiz:print attribute="donePage"/></ofbiz:url>' class="buttontext">[Go&nbsp;Back]</a>
 &nbsp;<a href="javascript:document.editpersonform.submit()" class="buttontext">[Save]</a>
 
 <table width="90%" border="0" cellpadding="2" cellspacing="0">
@@ -191,5 +193,8 @@
 </table>
 </form>
 
-&nbsp;<a href='<ofbiz:url>/authview/<ofbiz:print attribute="donePage"/></ofbiz:url>' class="buttontext">[Done/Cancel]</a>
+&nbsp;<a href='<ofbiz:url>/authview/<ofbiz:print attribute="donePage"/></ofbiz:url>' class="buttontext">[Go&nbsp;Back]</a>
 &nbsp;<a href="javascript:document.editpersonform.submit()" class="buttontext">[Save]</a>
+<%}else{%>
+  <h3>You do not have permission to view this page. ("PARTYMGR_VIEW" or "PARTYMGR_ADMIN" needed)</h3>
+<%}%>

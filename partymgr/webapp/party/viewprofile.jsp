@@ -37,6 +37,8 @@
 <%@ page import="org.ofbiz.commonapp.accounting.payment.*" %>
 <jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" />
 
+<%if(security.hasEntityPermission("PARTYMGR", "_VIEW", session)) {%>
+
 <%
     String partyId = request.getParameter("party_id");
     if (partyId == null) partyId = (String) request.getAttribute("partyId");
@@ -285,11 +287,13 @@
           <td valign="middle" align="left">
             <div class="boxhead">&nbsp;Payment Method Information</div>
           </td>
-          <td valign="middle" align="right">
-            <a href="<ofbiz:url>/editcreditcard</ofbiz:url>" class="lightbuttontext">
-            [Create New Credit Card]</a>&nbsp;
-            <a href="<ofbiz:url>/editeftaccount</ofbiz:url>" class="lightbuttontext">
-            [Create New EFT Account]</a>&nbsp;&nbsp;
+          <td valign="middle" align="right">&nbsp;
+              <%if (security.hasEntityPermission("PAY_INFO", "_CREATE", session)) {%>
+                <a href="<ofbiz:url>/editcreditcard</ofbiz:url>" class="lightbuttontext">
+                [Create New Credit Card]</a>&nbsp;
+                <a href="<ofbiz:url>/editeftaccount</ofbiz:url>" class="lightbuttontext">
+                [Create New EFT Account]</a>&nbsp;&nbsp;
+              <%}%>
           </td>
         </tr>
       </table>
@@ -312,7 +316,14 @@
                                   <td width="90%" valign="top">
                                     <div class="tabletext">
                                       <b>
-                                        Credit Card: <%entityField.run("creditCard", "nameOnCard");%> - <%=ContactHelper.formatCreditCard((GenericValue) pageContext.getAttribute("creditCard"))%>
+                                        Credit Card: <%entityField.run("creditCard", "nameOnCard");%> - 
+                                        <%if (security.hasEntityPermission("PAY_INFO", "_VIEW", session)) {%>
+                                            <%EntityField.run("creditCard", "cardType", pageContext);%>
+                                            <%EntityField.run("creditCard", "cardNumber", pageContext);%>
+                                            <%EntityField.run("creditCard", "expireDate", pageContext);%>
+                                        <%} else {%>
+                                            <%=ContactHelper.formatCreditCard((GenericValue) pageContext.getAttribute("creditCard"))%>
+                                        <%}%>
                                       </b>
                                       (Updated:&nbsp;<%entityField.run("paymentMethod", "fromDate");%>)
                                       <%entityField.run("paymentMethod", "thruDate", "(Delete:&nbsp;", ")");%>
@@ -470,4 +481,6 @@
 <ofbiz:unless name="party">
     No party found with the partyId of: <%=partyId%>
 </ofbiz:unless>
-
+<%}else{%>
+  <h3>You do not have permission to view this page. ("PARTYMGR_VIEW" or "PARTYMGR_ADMIN" needed)</h3>
+<%}%>

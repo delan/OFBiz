@@ -36,6 +36,8 @@
 
 <jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" />
 
+<%if(security.hasEntityPermission("PARTYMGR", "_VIEW", session)) {%>
+
 <%
         String userLoginId = request.getParameter("userlogin_id");
         if (userLoginId == null) userLoginId = (String) request.getSession().getAttribute("userLoginId");
@@ -53,7 +55,7 @@
 %>
   <p class="head1">Edit UserLogin</p>
 
-    &nbsp;<a href="<ofbiz:url>/authview/<%=donePage%></ofbiz:url>" class="buttontext">[Done/Cancel]</a>
+    &nbsp;<a href="<ofbiz:url>/authview/<%=donePage%></ofbiz:url>" class="buttontext">[Go&nbsp;Back]</a>
     &nbsp;<a href="javascript:document.changepasswordform.submit()" class="buttontext">[Save]</a>
 
   <form method="post" action="<ofbiz:url>/updateLogin/<%=donePage%></ofbiz:url>" name="changepasswordform">
@@ -93,5 +95,8 @@
   </table>
   </form>
 
-    &nbsp;<a href="<ofbiz:url>/authview/<%=donePage%></ofbiz:url>" class="buttontext">[Done/Cancel]</a>
+    &nbsp;<a href="<ofbiz:url>/authview/<%=donePage%></ofbiz:url>" class="buttontext">[Go&nbsp;Back]</a>
     &nbsp;<a href="javascript:document.changepasswordform.submit()" class="buttontext">[Save]</a>
+<%}else{%>
+  <h3>You do not have permission to view this page. ("PARTYMGR_VIEW" or "PARTYMGR_ADMIN" needed)</h3>
+<%}%>

@@ -5,6 +5,8 @@
 <%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.pseudotag.*" %>
 <%@ page import="org.ofbiz.core.entity.*" %>
 
+<%if(security.hasEntityPermission("PARTYMGR", "_VIEW", session)) {%>
+
 <%
     String partyId = request.getParameter("party_id");
     if (partyId == null) partyId = (String) request.getSession().getAttribute("partyId");
@@ -19,7 +21,7 @@
 %>
   <p class="head1">Create UserLogin</p>
 
-    &nbsp;<a href="<ofbiz:url>/authview/<%=donePage%></ofbiz:url>" class="buttontext">[Done/Cancel]</a>
+    &nbsp;<a href="<ofbiz:url>/authview/<%=donePage%></ofbiz:url>" class="buttontext">[Go&nbsp;Back]</a>
     &nbsp;<a href="javascript:document.changepasswordform.submit()" class="buttontext">[Save]</a>
 
   <form method="post" action="<ofbiz:url>/createuserlogin/<%=donePage%></ofbiz:url>" name="createloginform">
@@ -51,5 +53,8 @@
   </table>
   </form>
 
-    &nbsp;<a href="<ofbiz:url>/authview/<%=donePage%></ofbiz:url>" class="buttontext">[Done/Cancel]</a>
+    &nbsp;<a href="<ofbiz:url>/authview/<%=donePage%></ofbiz:url>" class="buttontext">[Go&nbsp;Back]</a>
     &nbsp;<a href="javascript:document.createloginform.submit()" class="buttontext">[Save]</a>
+<%}else{%>
+  <h3>You do not have permission to view this page. ("PARTYMGR_VIEW" or "PARTYMGR_ADMIN" needed)</h3>
+<%}%>

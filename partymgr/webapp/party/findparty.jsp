@@ -5,6 +5,8 @@
 <%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.pseudotag.*" %>
 <%@ page import="org.ofbiz.core.entity.*" %>
 
+<%if(security.hasEntityPermission("PARTYMGR", "_VIEW", session)) {%>
+
 <ofbiz:if name="first_name">
   <ofbiz:service name="getPartyFromName">
     <ofbiz:param name="firstName" attribute="first_name"/>
@@ -138,3 +140,6 @@
     </TD>
   </TR>
 </TABLE>
+<%}else{%>
+  <h3>You do not have permission to view this page. ("PARTYMGR_VIEW" or "PARTYMGR_ADMIN" needed)</h3>
+<%}%>
