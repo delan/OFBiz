@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.10  2001/09/05 16:52:44  jonesde
+ * Changed get related products to use ProductCategoryMember instead of Product.primaryProductCategoryId
+ *
  * Revision 1.9  2001/09/05 16:34:06  jonesde
  * Added result set prev/next in cateogry
  *
@@ -90,31 +93,25 @@ public class CatalogHelper {
     public static void getRelatedCategories(PageContext pageContext, String attributeName, String parentId) {
         ArrayList categories = new ArrayList();
         ServletRequest request = pageContext.getRequest();
+        String requestId = null;
         
-        if ( parentId == null ) {
-            if ( request.getParameter("catalog_id") != null )
-                parentId = request.getParameter("catalog_id");
-            else if ( request.getParameter("CATALOG_ID") != null )
-                parentId = request.getParameter("CATALOG_ID");
-            else if ( request.getParameter("category_id") != null )
-                parentId = request.getParameter("category_id");
-            else if ( request.getParameter("CATEGORY_ID") != null )
-                parentId = request.getParameter("CATEGORY_ID");
-        }
-        
-        if ( parentId == null )
+        requestId = UtilFormatOut.checkNull(request.getParameter("catalog_id"), request.getParameter("CATALOG_ID"),
+                                             request.getParameter("category_id"), request.getParameter("CATEGORY_ID"));         
+        if ( parentId == null && requestId.equals("") )
             return;
+        if ( parentId == null )
+            parentId = requestId;
+        
+        Debug.logInfo("ParentID: " + parentId);
+        Debug.logInfo("RequestID: " + requestId);
+        if ( parentId.equals(requestId) )
+                setTrail(pageContext,parentId);
         
         GenericHelper helper = (GenericHelper)pageContext.getServletContext().getAttribute("helper");
-        GenericValue requestedCategory = helper.findByPrimaryKey("ProductCategory",UtilMisc.toMap("productCategoryId",parentId));
-        if ( requestedCategory.getString("primaryParentCategoryId") != null )
-            setTrail(pageContext,parentId,false);
-        else
-            setTrail(pageContext,parentId,true);
         Collection rollups = helper.findByAnd("ProductCategoryRollup",UtilMisc.toMap("parentProductCategoryId",parentId),null);
         Debug.log("Got rollups...");
         if ( rollups != null && rollups.size() > 0 ) {
-            Debug.log("Rollup size: " + rollups.size());
+            Debug.log("Rollup size: " + rollups.size());            
             Iterator ri = rollups.iterator();
             while ( ri.hasNext() ) {
                 GenericValue parent = (GenericValue) ri.next();
@@ -212,14 +209,10 @@ public class CatalogHelper {
     public static void getProduct(PageContext pageContext, String attributeName, String productId) {
         ServletRequest request = pageContext.getRequest();
         
-        if ( productId == null ) {
-            if ( request.getParameter("product_id") != null )
-                productId = request.getParameter("product_id");
-            else if ( request.getParameter("PRODUCT_ID") != null )
-                productId = request.getParameter("PRODUCT_ID");
-        }
-        
-        if ( productId == null )
+        if ( productId == null ) 
+            productId = UtilFormatOut.checkNull(request.getParameter("product_id"),request.getParameter("PRODUCT_ID"));
+                    
+        if ( productId.equals("") )
             return;
         
         GenericValue product = null;
@@ -291,44 +284,45 @@ public class CatalogHelper {
         if(products.size() > 0) pageContext.setAttribute(attributePrefix + "searchProductList",products);
     }
     
-    public static void setTrail(PageContext pageContext, String currentCategory, boolean topLevel) {
+    public static void setTrail(PageContext pageContext, String currentCategory) {
         ServletRequest request = pageContext.getRequest();
         HttpSession session = pageContext.getSession();
         String previousCategory = request.getParameter("pcategory");
         ArrayList crumb = null;
         
-        if ( !topLevel ) {
-            if ( previousCategory != null )
-                crumb = (ArrayList) session.getAttribute("_BREAD_CRUMB_TRAIL_");
-            
-            if ( crumb == null )
-                crumb = new ArrayList();
-            
-            if ( crumb.contains(currentCategory) ) {
-                Debug.logInfo("Category already set. Aborting.");
-                return;
-            }
-            
-            if ( crumb.contains(previousCategory) ) {
-                int index = crumb.indexOf(previousCategory);
-                if ( index < (crumb.size() - 1) ) {
-                    for ( int i = crumb.size() -1; i > index; i-- ) {
-                        crumb.remove(i);
-                    }
-                }
-            }
-            
-            crumb.add(currentCategory);
-        }
-        else {
+        Debug.logInfo("SetTrail Called.");
+        
+        if ( previousCategory != null )                    
+            crumb = (ArrayList) session.getAttribute("_BREAD_CRUMB_TRAIL_");
+        else 
+            previousCategory = "TOP";
+                
+        if ( crumb == null )
             crumb = new ArrayList();
-            Debug.logInfo("Created new crumb, added category.");
-            crumb.add(currentCategory);
+        
+        if ( !crumb.contains(previousCategory) ) {
+            crumb = new ArrayList();
+            crumb.add(previousCategory);
+            Debug.logInfo("Added previousCategory.");
         }
         
+        if ( crumb.contains(currentCategory) ) {
+            Debug.logInfo("Category already set. Aborting.");
+            return;
+        }
+        
+        int index = crumb.indexOf(previousCategory);
+        if ( index < (crumb.size() - 1) ) {
+            for ( int i = crumb.size() -1; i > index; i-- ) {
+                crumb.remove(i);
+                Debug.logInfo("Removed Index: " + i);
+            }
+        }
+                
+        crumb.add(currentCategory);
         session.setAttribute("_BREAD_CRUMB_TRAIL_",crumb);
     }
-               
+    
     public static Collection getTrail(PageContext pageContext) {
         HttpSession session = pageContext.getSession();
         ArrayList crumb = (ArrayList) session.getAttribute("_BREAD_CRUMB_TRAIL_");
