@@ -105,6 +105,7 @@
   <!-- ========================================================= -->
   <!-- ======================== Data Model ===================== -->
   <!-- The modules in this file are as follows:                  -->
+  <!--  -  -->
   <!--  - org.ofbiz.commonapp.workeffort.definition -->
   <!--  - org.ofbiz.commonapp.workeffort.scheduler -->
   <!--  - org.ofbiz.commonapp.workeffort.timesheet -->
@@ -479,6 +480,28 @@
       <relation type="many" rel-entity-name="WorkEffort">
         <key-map field-name="recurrenceInfoId" />
       </relation>
+    </entity>	
+    <entity entity-name="RecurrenceRule" 
+            package-name="org.ofbiz.commonapp.workeffort.scheduler"
+            title="Recurrence Rule Entity">
+      <field name="recurrenceRuleId" type="id-ne"></field>
+      <field name="startDateTime" type="date-time"></field>
+      <field name="endDateTime" type="date-time"></field>
+      <field name="count" type="numeric"></field>
+      <field name="interval" type="numeric"></field>
+      <field name="frequency" type="short-varchar"></field>
+      <field name="bySecond" type="long-varchar"></field>
+      <field name="byMinute" type="long-varchar"></field>
+      <field name="byHour" type="long-varchar"></field>
+      <field name="byDay" type="long-varchar"></field>
+      <field name="byMonthDay" type="long-varchar"></field>
+      <field name="byYearDay" type="long-varchar"></field>
+      <field name="byWeekNo" type="long-varchar"></field>
+      <field name="byMonth" type="long-varchar"></field>
+      <field name="bySetPos" type="long-varchar"></field>
+      <field name="weekStart" type="short-varchar"></field>
+      <field name="xName" type="comment"></field>	
+      <prim-key field="recurrenceRuleId" />
     </entity>	
     <entity entity-name="RuntimeData" 
             package-name="org.ofbiz.commonapp.workeffort.scheduler"
