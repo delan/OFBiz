@@ -262,9 +262,12 @@
   <ProductAssocType description="Marketing Package Component" hasTable="N" parentTypeId="" productAssocTypeId="MARKETING_PACKAGE"/>
   <ProductAssocType description="Actual Product Component" hasTable="N" parentTypeId="" productAssocTypeId="PRODUCT_COMPONENT"/>
   <ProductAssocType description="Equivalent or Substitute" hasTable="N" parentTypeId="" productAssocTypeId="PRODUCT_SUBSTITUTE"/>
-  <ProductCategoryType description="" hasTable="N" parentTypeId="" productCategoryTypeId="PRODUCT_INDUSTRY_CAT"/>
-  <ProductCategoryType description="" hasTable="N" parentTypeId="" productCategoryTypeId="PRODUCT_MATERIALS_CA"/>
-  <ProductCategoryType description="" hasTable="N" parentTypeId="" productCategoryTypeId="PRODUCT_USAGE_CATEGO"/>
+  <ProductCategoryType description="Catalog" hasTable="N" parentTypeId="" productCategoryTypeId="CATALOG_CATEGORY"/>
+  <ProductCategoryType description="Industry" hasTable="N" parentTypeId="" productCategoryTypeId="INDUSTRY_CATEGORY"/>
+  <ProductCategoryType description="Materials" hasTable="N" parentTypeId="" productCategoryTypeId="MATERIALS_CATEGORY"/>
+  <ProductCategoryType description="Quick Add" hasTable="N" parentTypeId="" productCategoryTypeId="QUICKADD_CATEGORY"/>
+  <ProductCategoryType description="Search" hasTable="N" parentTypeId="" productCategoryTypeId="SEARCH_CATEGORY"/>
+  <ProductCategoryType description="Usage" hasTable="N" parentTypeId="" productCategoryTypeId="USAGE_CATEGORY"/>
   <ProductFeatureApplType description="" hasTable="N" parentTypeId="" productFeatureApplTypeId="OPTIONAL_FEATURE"/>
   <ProductFeatureApplType description="" hasTable="N" parentTypeId="" productFeatureApplTypeId="REQUIRED_FEATURE"/>
   <ProductFeatureApplType description="" hasTable="N" parentTypeId="" productFeatureApplTypeId="SELECTABLE_FEATURE"/>
@@ -280,11 +283,11 @@
   <ProductFeatureType description="" hasTable="N" parentTypeId="" productFeatureTypeId="SIZE"/>
   <ProductFeatureType description="" hasTable="N" parentTypeId="" productFeatureTypeId="SOFTWARE_FEATURE"/>
   <ProductFeatureType description="" hasTable="N" parentTypeId="" productFeatureTypeId="DIMENSION"/>
-  <ProductType description="" hasTable="N" parentTypeId="NONE" productTypeId="SERVICE"/>
-  <ProductType description="" hasTable="N" parentTypeId="NONE" productTypeId="GOOD"/>
-  <ProductType description="" hasTable="N" parentTypeId="GOOD" productTypeId="RAW_MATERIAL"/>
-  <ProductType description="" hasTable="N" parentTypeId="GOOD" productTypeId="SUBASSEMBLY"/>
-  <ProductType description="" hasTable="N" parentTypeId="GOOD" productTypeId="FINISHED_GOOD"/>
+  <ProductType description="Service" hasTable="N" parentTypeId="NONE" productTypeId="SERVICE"/>
+  <ProductType description="Good" hasTable="N" parentTypeId="NONE" productTypeId="GOOD"/>
+  <ProductType description="Raw Material" hasTable="N" parentTypeId="GOOD" productTypeId="RAW_MATERIAL"/>
+  <ProductType description="Subassembly" hasTable="N" parentTypeId="GOOD" productTypeId="SUBASSEMBLY"/>
+  <ProductType description="Finished Good" hasTable="N" parentTypeId="GOOD" productTypeId="FINISHED_GOOD"/>
   <QuantityBreakType description="Price Component Quantity Break" quantityBreakTypeId="QUANTITY"/>
   <QuantityBreakType description="Price Component Order Value Break" quantityBreakTypeId="ORDER_VALUE"/>
   <QuantityBreakType description="Shipping Weight Break" quantityBreakTypeId="SHIP_WEIGHT"/>
