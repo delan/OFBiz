@@ -46,12 +46,6 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
 
     protected String process = null;
 
-    /**
-     * Create a new WfActivityImpl
-     * @param value GenericValue object of the WorkflowActivity entity
-     * @param process The WorkEffort ID of the parent process
-     * @throws WfException
-     */
     public WfActivityImpl(GenericValue value, String process) throws WfException {
         super(value, process);
         this.process = process;
@@ -298,10 +292,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
     }
 
     /**
-     * Activates this activity.
-     * @throws WfException
-     * @throws CannotStart
-     * @throws AlreadyRunning
+     * @see org.ofbiz.core.workflow.WfActivity#activate()
      */
     public void activate() throws WfException, CannotStart, AlreadyRunning {
         // make sure we aren't already running
@@ -327,9 +318,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
     }
 
     /**
-     * Complete this activity.
-     * @throws WfException General workflow exception.
-     * @throws CannotComplete Cannot complete the activity
+     * @see org.ofbiz.core.workflow.WfActivity#complete()
      */
     public void complete() throws WfException, CannotComplete {
         // check to make sure all assignements are complete
@@ -355,31 +344,36 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
 
         container().activityComplete(this);
     }
+    
+    /**
+     * @see org.ofbiz.core.workflow.WfExecutionObject#resume()
+     */
+    public void resume() throws WfException, CannotResume, NotRunning, NotSuspended {
+        super.resume();
+        try {        
+            Debug.logVerbose("Checking to see if we can complete the activity", module);    
+            this.checkComplete();
+        } catch (CannotComplete e) {
+            throw new CannotResume("Attempt to complete activity failed", e);
+        } 
+    }
 
     /**
-     * Check if a specific assignment is a member of this activity.
-     * @param member Assignment object.
-     * @throws WfException General workflow exception.
-     * @return true if the assignment is a member of this activity.
+     * @see org.ofbiz.core.workflow.WfActivity#isMemberOfAssignment(org.ofbiz.core.workflow.WfAssignment)
      */
     public boolean isMemberOfAssignment(WfAssignment member) throws WfException {
         return getAssignments().contains(member);
     }
 
     /**
-     * Getter for the process of this activity.
-     * @throws WfException General workflow exception.
-     * @return WfProcess Process to which this activity belong.
-     */
+     * @see org.ofbiz.core.workflow.WfActivity#container()
+     */    
     public WfProcess container() throws WfException {
         return WfFactory.getWfProcess(delegator, process);
     }
-
+   
     /**
-     * Assign Result for this activity.
-     * @param newResult New result.
-     * @throws WfException General workflow exception.
-     * @throws InvalidData Data is invalid
+     * @see org.ofbiz.core.workflow.WfActivity#setResult(java.util.Map)
      */
     public void setResult(Map newResult) throws WfException, InvalidData {
         if (newResult != null && newResult.size() > 0) {
@@ -394,19 +388,14 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
     }
 
     /**
-     * Retrieve amount of Assignment objects.
-     * @throws WfException General workflow exception.
-     * @return Amount of current assignments.
+     * @see org.ofbiz.core.workflow.WfActivity#howManyAssignment()
      */
     public int howManyAssignment() throws WfException {
         return getAssignments().size();
     }
 
     /**
-     * Retrieve the Result map of this activity.
-     * @throws WfException General workflow exception.
-     * @throws ResultNotAvailable No result is available.
-     * @return Map of results from this activity
+     * @see org.ofbiz.core.workflow.WfActivity#result()
      */
     public Map result() throws WfException, ResultNotAvailable {
         // Get the results from the signature.
@@ -428,10 +417,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
     }
 
     /**
-     * Retrieve all assignments of this activity.
-     * @param maxNumber the high limit of number of assignment in result set (0 for all).
-     * @throws WfException General workflow exception.
-     * @return  List of WfAssignment objects.
+     * @see org.ofbiz.core.workflow.WfActivity#getSequenceAssignment(int)
      */
     public List getSequenceAssignment(int maxNumber) throws WfException {
         if (maxNumber > 0)
@@ -440,14 +426,15 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
     }
 
     /**
-     * Retrieve the Iterator of Assignments objects.
-     * @throws WfException General workflow exception.
-     * @return Assignment Iterator.
+     * @see org.ofbiz.core.workflow.WfActivity#getIteratorAssignment()
      */
     public Iterator getIteratorAssignment() throws WfException {
         return getAssignments().iterator();
     }
 
+    /**
+     * @see org.ofbiz.core.workflow.impl.WfExecutionObjectImpl#executionObjectType()
+     */
     public String executionObjectType() {
         return "WfActivity";
     }
@@ -461,12 +448,14 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
 
         // Default mode is MANUAL -- only finish if we are automatic
         if (mode.equals("WAM_AUTOMATIC")) {
-            // set the status of the assignments
-            Iterator i = getIteratorAssignment();
-
-            while (i.hasNext())
-                 ((WfAssignment) i.next()).changeStatus("CAL_COMPLETED");
-            this.complete();
+            // check and make sure we are not suspended
+            if (state().equals("open.running")) {
+                // set the status of the assignments
+                Iterator i = getIteratorAssignment();
+                while (i.hasNext())
+                    ((WfAssignment) i.next()).changeStatus("CAL_COMPLETED");
+                this.complete();
+            }
         }
     }
 

@@ -10,7 +10,7 @@
     <service name="processOrder" engine="workflow" location="org.ofbiz.commonapp.order.order" invoke="ProcessOrder">
         <description>Service for testing the workflow engine</description>
         <attribute name="orderId" type="String" mode="IN" optional="false"/>         
-        <attribute name="orderStatusId" type="String" mode="OUT"/>
+        <attribute name="orderStatusId" type="String" mode="INOUT" optional="false"/>
     </service>
 
     <service name="storeOrder" engine="java" validate="true" auth="true"

@@ -34,6 +34,24 @@
         <description>Attempt to initiate a workflow activity</description>
         <attribute name="workEffortId" type="String" mode="IN"/>
     </service>
+    
+    <service name="wfCancelWorkflow" engine="java"
+    		location="org.ofbiz.core.workflow.WorkflowServices" invoke="cancelWorkflow">
+    	<description>Abort a workflow process</description>
+    	<attribute name="workEffortId" type="String" mode="IN"/>
+    </service>
+    
+    <service name="wfSuspendActivity" engine="java"
+    		location="org.ofbiz.core.workflow.WorkflowServices" invoke="suspendActivity">
+    	<description>Suspend a workflow activity</description>
+    	<attribute name="workEffortId" type="String" mode="IN"/>
+    </service>
+    
+    <service name="wfResumeActivity" engine="java"
+    		location="org.ofbiz.core.workflow.WorkflowServices" invoke="resumeActivity">
+    	<description>Resume a suspended activity</description>
+    	<attribute name="workEffortId" type="String" mode="IN"/>
+    </service>        
 
     <service name="wfChangeActivityState" engine="java"
             location="org.ofbiz.core.workflow.WorkflowServices" invoke="changeActivityState">

@@ -55,11 +55,6 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
     protected GenericDelegator delegator = null;
     protected List history = null;
 
-    /**
-     * Creates a new WfExecutionObjectImpl
-     * @param valueObject The GenericValue object for the definition entity
-     * @param parentId WorkEffort ID of the parent runtime object (null for process)
-     */
     public WfExecutionObjectImpl(GenericValue valueObject, String parentId) throws WfException {
         this.packageId = valueObject.getString("packageId");
         this.packageVersion = valueObject.getString("packageVersion");

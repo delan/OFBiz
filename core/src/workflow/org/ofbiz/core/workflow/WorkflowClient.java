@@ -199,7 +199,7 @@ public class WorkflowClient {
 
         if (Debug.verboseOn()) Debug.logVerbose("Starting activity: " + activity.name(), module);
         if (activityRunning(activity))
-            throw new WfException("Activity is already running.");
+            throw new WfException("Activity is already running");
             
         Job job = new StartActivityJob(activity);
 
@@ -231,7 +231,37 @@ public class WorkflowClient {
             throw new WfException(e.getMessage(), e);
         }
     }
+    
+    /**
+     * Suspend an activity
+     * @param workEffortId The WorkEffort entity key for the activity object
+     * @throws WfException
+     */
+    public void suspend(String workEffortId) throws WfException {
+        WfActivity activity = WfFactory.getWfActivity(context.getDelegator(), workEffortId);
+        
+        if (Debug.verboseOn()) Debug.logVerbose("Suspending activity: " + activity.name(), module);
+        if (!activityRunning(activity))
+            throw new WfException("Activity is not running");
+            
+        activity.suspend();
+    }        
+       
+    /**
+     * Resume an activity
+     * @param workEffortId The WorkEffort entity key for the activity object
+     * @throws WfException
+     */
+    public void resume(String workEffortId) throws WfException {
+        WfActivity activity = WfFactory.getWfActivity(context.getDelegator(), workEffortId);
 
+        if (Debug.verboseOn()) Debug.logVerbose("Resuming activity: " + activity.name(), module);
+        if (!activityRunning(activity))
+            throw new WfException("Activity is not running");
+
+        activity.resume();
+    }
+                
     /**
      * Append data to the execution object's process context.
      * @param workEffortId The WorkEffort entity key for the execution object.

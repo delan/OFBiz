@@ -51,12 +51,35 @@ public class WorkflowServices {
         GenericDelegator delegator = ctx.getDelegator();
         Security security = ctx.getSecurity();
         String workEffortId = (String) context.get("workEffortId");
-
+        
+        // if we passed in an activity id, lets get the process id instead
+        try {
+            GenericValue testObject = delegator.findByPrimaryKey("WorkEffort", UtilMisc.toMap("workEffortId", workEffortId));
+            if (testObject == null) {
+                result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+                result.put(ModelService.ERROR_MESSAGE, "Not a valid workflow runtime identifier");
+                return result;
+            } else if (testObject.get("workEffortTypeId") != null && testObject.getString("workEffortTypeId").equals("WORK_FLOW")) {
+                // we are a valid process - do nothing
+            } else if (testObject.get("workEffortTypeId") != null && testObject.getString("workEffortTypeId").equals("ACTIVITY")) {
+                // we are a valid activitiy; get the process id
+                workEffortId = testObject.getString("workEffortParentId");
+            } else {
+                result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+                result.put(ModelService.ERROR_MESSAGE, "Not a valid workflow runtime identifier");
+                return result;
+            }
+        } catch (GenericEntityException e) {
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, "Problems looking up runtime object; invalid id");
+            return result;
+        }   
+                                
         GenericValue userLogin = (GenericValue) context.get("userLogin");
 
         if (!hasPermission(security, workEffortId, userLogin)) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-            result.put(ModelService.ERROR_MESSAGE, "You do not have permission to access this workdlow");
+            result.put(ModelService.ERROR_MESSAGE, "You do not have permission to access this workflow");
             return result;
         }
         try {
@@ -69,6 +92,58 @@ public class WorkflowServices {
         }
         return result;
     }
+    
+    /** Suspend activity */  
+    public static Map suspendActivity(DispatchContext ctx, Map context) {
+        Map result = new HashMap();
+        GenericDelegator delegator = ctx.getDelegator();
+        Security security = ctx.getSecurity();
+        String workEffortId = (String) context.get("workEffortId");       
+
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+
+        if (!hasPermission(security, workEffortId, userLogin)) {
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, "You do not have permission to access this activity");
+            return result;
+        }
+        try {
+            WorkflowClient client = WfFactory.getClient(ctx);
+            client.suspend(workEffortId);
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
+        } catch (WfException we) {
+            we.printStackTrace();
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, we.getMessage());
+        }
+        return result;
+    }
+    
+    /** Resume activity */
+    public static Map resumeActivity(DispatchContext ctx, Map context) {
+        Map result = new HashMap();
+        GenericDelegator delegator = ctx.getDelegator();
+        Security security = ctx.getSecurity();
+        String workEffortId = (String) context.get("workEffortId");
+
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+
+        if (!hasPermission(security, workEffortId, userLogin)) {
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, "You do not have permission to access this activity");
+            return result;
+        }
+        try {
+            WorkflowClient client = WfFactory.getClient(ctx);
+            client.resume(workEffortId);
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
+        } catch (WfException we) {
+            we.printStackTrace();
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, we.getMessage());
+        }
+        return result;
+    }    
 
     /** Change the state of an activity */
     public static Map changeActivityState(DispatchContext ctx, Map context) {
