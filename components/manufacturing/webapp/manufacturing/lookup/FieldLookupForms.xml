@@ -44,7 +44,7 @@
     </form>
 
     <form name="listLookupRouting" 
-        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="display"
+        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="tabletext"
         list-name="entityList" paginate-target="LookupRouting" 
         title="" type="list">
         <actions>
@@ -85,7 +85,7 @@
     </form>
 
     <form name="listLookupRoutingTask" 
-        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="display"
+        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="tabletext"
         list-name="entityList" paginate-target="LookupRoutingTask" 
         title="" type="list">
         <actions>
