@@ -26,6 +26,7 @@ package org.ofbiz.content.widget.html;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Map;
+import java.util.List;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -64,7 +65,7 @@ public class HtmlTreeRenderer implements TreeStringRenderer {
         return buf.toString();
     }
 
-    public void renderNodeBegin(Writer writer, Map context, ModelTree.ModelNode node, int depth, boolean isLast) throws IOException {
+    public void renderNodeBegin(Writer writer, Map context, ModelTree.ModelNode node, int depth, boolean isLast, List subNodeValues) throws IOException {
 
     	String pathString = buildPathString(node.getModelTree(), depth);
         context.put("nodePathString", pathString);
@@ -85,7 +86,7 @@ public class HtmlTreeRenderer implements TreeStringRenderer {
         }
         writer.write(">");
         // in early implementations, this next line retrieves the children
-        boolean hasChildren = node.hasChildren(context);
+        boolean hasChildren = node.hasChildren(context, subNodeValues);
         return;
     }
 

@@ -51,6 +51,8 @@ import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityListIterator;
+import org.ofbiz.entity.model.ModelEntity;
+import org.ofbiz.entity.model.ModelField;
 import org.ofbiz.service.LocalDispatcher;
 
 import org.w3c.dom.Element;
@@ -83,6 +85,8 @@ public class ModelTree {
     protected List currentNodeTrail;
     protected int openDepth;
     protected int [] nodeIndices = new int[20];
+    protected String entityName;
+    protected String pkName;
     
 // ===== CONSTRUCTORS =====
     /** Default Constructor */
@@ -98,6 +102,7 @@ public class ModelTree {
         this.trailNameExdr = new FlexibleStringExpander(UtilFormatOut.checkEmpty(treeElement.getAttribute("trail-name"), "trail"));
         this.delegator = delegator;
         this.dispatcher = dispatcher;
+        setEntityName( treeElement.getAttribute("entity-name") );
         try {
         	openDepth = Integer.parseInt(treeElement.getAttribute("open-depth"));
         } catch(NumberFormatException e) {
@@ -124,6 +129,25 @@ public class ModelTree {
         return name;
     }
 
+    public void setEntityName(String name) {
+     
+        String nm = name;
+        if (UtilValidate.isEmpty(nm))
+            nm = "Content";
+        this.entityName = nm;
+        ModelEntity modelEntity = delegator.getModelEntity(this.entityName);
+        ModelField modelField = modelEntity.getPk(0);
+        this.pkName = modelField.getName();
+    }
+    
+    public String getEntityName() {
+    	return this.entityName;
+    }
+    
+    public String getPkName() {
+    	return this.pkName;
+    }
+    
     public String getRootNodeName() {
         return rootNodeName;
     }
@@ -203,6 +227,7 @@ public class ModelTree {
                 throw new RuntimeException("Tree 'trail' value is empty.");
             
             context.put("rootEntityId", trail.get(0));
+            context.put(pkName, trail.get(0));
             context.put("trail", trail);
         }
         StringWriter writer = new StringWriter();
@@ -250,7 +275,7 @@ public class ModelTree {
         protected List actions = new ArrayList();
         protected String name;
         protected ModelTree modelTree;
-        protected List subNodeValues = new ArrayList();
+        //protected List subNodeValues;
         protected String expandCollapseStyle;
         protected FlexibleStringExpander wrapStyleExdr;
 
@@ -319,16 +344,17 @@ public class ModelTree {
     
         public void renderNodeString(Writer writer, Map context, TreeStringRenderer treeStringRenderer, int depth, boolean isLast) throws IOException {
 
-            subNodeValues = new ArrayList();
-            if (Debug.infoOn()) Debug.logInfo(" renderNodeString, contentId:" + context.get("contentId"), module);
+        	List subNodeValues = new ArrayList();
+            //context.put("subNodeValues",  new ArrayList());
+            if (Debug.infoOn()) Debug.logInfo(" renderNodeString, " + modelTree.getPkName() + " :" + context.get(modelTree.getPkName()), module);
             context.put("processChildren", new Boolean(true));
             // this action will usually obtain the "current" entity
             ModelTreeAction.runSubActions(this.actions, context);
-            String contentId = (String)context.get("contentId");
-            modelTree.currentNodeTrail.add(contentId);
+            String id = (String)context.get(modelTree.getPkName());
+            modelTree.currentNodeTrail.add(id);
             String currentNodeTrailPiped = StringUtil.join(modelTree.currentNodeTrail,"|");
             context.put("currentNodeTrailPiped", currentNodeTrailPiped);
-            treeStringRenderer.renderNodeBegin( writer, context, this, depth, isLast);
+            treeStringRenderer.renderNodeBegin( writer, context, this, depth, isLast, subNodeValues);
                     //if (Debug.infoOn()) Debug.logInfo(" context:" + context.entrySet(), module);
          
             try {
@@ -347,8 +373,8 @@ public class ModelTree {
                 Boolean processChildren = (Boolean)context.get("processChildren");
                     if (Debug.infoOn()) Debug.logInfo(" processChildren:" + processChildren, module);
                 if (processChildren.booleanValue()) {
-                    List vals = getChildren(context);
-                    Iterator nodeIter = vals.iterator();
+                    getChildren(context, subNodeValues);
+                    Iterator nodeIter = subNodeValues.iterator();
                     int nodeIndex = -1;
                     while (nodeIter.hasNext()) {
                         nodeIndex++;	
@@ -360,7 +386,6 @@ public class ModelTree {
                         //if (Debug.infoOn()) Debug.logInfo(" pk:" + pk, module);
                         Map newContext = ((MapStack) context).standAloneChildStack();
                         newContext.putAll(val);
-                        if (Debug.infoOn()) Debug.logInfo(" newContext.contentId:" + newContext.get("contentId"), module);
                         boolean lastNode = !nodeIter.hasNext(); 
                         node.renderNodeString(writer, newContext, treeStringRenderer, depth + 1, lastNode);
                     }
@@ -384,29 +409,37 @@ public class ModelTree {
             modelTree.currentNodeTrail.remove(modelTree.currentNodeTrail.size() - 1);
         }
 
-        public boolean hasChildren(Map context) {
+        public boolean hasChildren(Map context, List subNodeValues) {
 
              boolean hasChildren = false;
              Long nodeCount = null;
        		Object obj = context.get("childBranchCount");
        		if (obj != null)
                 nodeCount = (Long)obj;
-             if (nodeCount == null) {
-                 GenericDelegator delegator = (GenericDelegator)context.get("delegator");
-                 String contentId = (String)context.get("contentId");
-                 if (UtilValidate.isNotEmpty(contentId)) {
+             String entName = modelTree.getEntityName();
+             GenericDelegator delegator = modelTree.getDelegator();
+             ModelEntity modelEntity = delegator.getModelEntity(entName);
+             ModelField modelField = modelEntity.getField("childBranchCount"); 
+             if (nodeCount == null && modelField != null) {
+                 String id = (String)context.get(modelTree.getPkName());
+                 if (UtilValidate.isNotEmpty(id)) {
                  	try {
-                 		int leafCount = ContentManagementWorker.updateStatsTopDown(delegator, contentId, UtilMisc.toList("SUB_CONTENT"));
-                 		GenericValue content = delegator.findByPrimaryKeyCache("Content", UtilMisc.toMap("contentId", contentId));
-                 		obj = content.get("childBranchCount");
+                 		int leafCount = ContentManagementWorker.updateStatsTopDown(delegator, id, UtilMisc.toList("SUB_CONTENT"));
+                 		GenericValue entity = delegator.findByPrimaryKeyCache(entName, UtilMisc.toMap(modelTree.getPkName(), id));
+                 		obj = entity.get("childBranchCount");
                         if (obj != null)
                             nodeCount = (Long)obj;
                  	} catch(GenericEntityException e) {
-                 		Debug.logError(e, module);
+                 		Debug.logError(e, module); 
                 		throw new RuntimeException(e.getMessage());
                  	}
                  }
+             } else if (nodeCount == null ) {
+             	getChildren(context, subNodeValues);
+                if (subNodeValues != null )
+                    nodeCount = new Long(subNodeValues.size());
              }
+             
              if (nodeCount != null && nodeCount.intValue() > 0) 
              	hasChildren = true;
                 
@@ -414,8 +447,11 @@ public class ModelTree {
              return hasChildren;
         }
 
-        public List getChildren(Map context) {
+        public void getChildren(Map context, List subNodeValues) {
       
+        	if (subNodeValues != null && subNodeValues.size() > 0) {
+        		return;
+            } else {
              Iterator nodeIter = subNodeList.iterator();
              while (nodeIter.hasNext()) {
                  ModelSubNode subNode = (ModelSubNode)nodeIter.next();
@@ -441,7 +477,8 @@ public class ModelTree {
                  }
                  
              }
-            return new ArrayList(subNodeValues);
+             return;
+            }
         }
 
         public String getName() {

@@ -51,7 +51,7 @@ public class HtmlTreeExpandCollapseRenderer extends HtmlTreeRenderer {
 
     public HtmlTreeExpandCollapseRenderer() {}
 
-    public void renderNodeBegin(Writer writer, Map context, ModelTree.ModelNode node, int depth, boolean isLast) throws IOException {
+    public void renderNodeBegin(Writer writer, Map context, ModelTree.ModelNode node, int depth, boolean isLast, List subNodeValues) throws IOException {
 
     	String pathString = buildPathString(node.getModelTree(), depth);
         context.put("nodePathString", pathString);
@@ -71,7 +71,8 @@ public class HtmlTreeExpandCollapseRenderer extends HtmlTreeRenderer {
         }
         writer.write(">");
 
-        String contentId = (String)context.get("contentId");
+        String pkName = node.getModelTree().getPkName();
+        String entityId = (String)context.get(pkName);
         /*
         if (targetNodeTrail == null) {
             targetNodeTrail = node.getModelTree().getTrailList();
@@ -80,7 +81,7 @@ public class HtmlTreeExpandCollapseRenderer extends HtmlTreeRenderer {
             currentNodeTrail = new ArrayList();
         }
         */
-        boolean hasChildren = node.hasChildren(context);
+        boolean hasChildren = node.hasChildren(context, subNodeValues);
             Debug.logInfo("HtmlTreeExpandCollapseRenderer, hasChildren(1):" + hasChildren, module);
 
         // check to see if this node needs to be expanded.
@@ -104,7 +105,7 @@ public class HtmlTreeExpandCollapseRenderer extends HtmlTreeRenderer {
             List currentNodeTrail = node.getModelTree().getCurrentNodeTrail();
     
             int openDepth = node.getModelTree().getOpenDepth();
-            if ((depth > openDepth) && (targetContentId == null || !targetContentId.equals(contentId))) {
+            if ((depth > openDepth) && (targetContentId == null || !targetContentId.equals(entityId))) {
                 context.put("processChildren", new Boolean(false));
                 //expandCollapseLink.setText("&nbsp;+&nbsp;");
                 currentNodeTrailPiped = StringUtil.join(currentNodeTrail, "|");
@@ -121,6 +122,8 @@ public class HtmlTreeExpandCollapseRenderer extends HtmlTreeRenderer {
                 //expandCollapseLink.setText("&nbsp;-&nbsp;");
                 String lastContentId = (String)currentNodeTrail.remove(currentNodeTrail.size() - 1);
                 currentNodeTrailPiped = StringUtil.join(currentNodeTrail, "|");
+                if (currentNodeTrailPiped == null)
+                    currentNodeTrailPiped = "";
                 context.put("currentNodeTrailPiped", currentNodeTrailPiped);
                 //context.put("currentNodeTrailCsv", currentNodeTrailCsv);
                 expandCollapseImage.setSrc("/images/collapse.gif");
