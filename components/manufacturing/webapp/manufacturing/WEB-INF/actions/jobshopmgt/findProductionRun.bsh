@@ -27,7 +27,7 @@
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
  * copy from content component  actions/includes/findprep.bsh 1.8 
  * @author     Olivier.Heintz@nereide.biz
- * @version    $Revision: 1.1 $
+ * @version    $Rev:$
  * @since      3.0
 
  * Calls Find on a dynamiqueView  to return an EntityListIterator of the

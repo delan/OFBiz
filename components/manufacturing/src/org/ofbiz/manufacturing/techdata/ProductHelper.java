@@ -1,8 +1,8 @@
 /*
- * $Id: ProductHelper.java,v 1.2 2004/05/09 21:29:10 holivier Exp $
+ * $Id$
  *
  * Copyright (c)  2003, 2004 The Open For Business Project - www.ofbiz.org
- * Copyright (c)  2003, 2004 École Polytechnique de l'Université de Tours, Département Informatique - www.univ-tours.fr
+ * Copyright (c)  2003, 2004 ï¿½cole Polytechnique de l'Universitï¿½ de Tours, Dï¿½partement Informatique - www.univ-tours.fr
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -69,7 +69,7 @@ import org.ofbiz.service.GenericServiceException;
  * @author     <a href="mailto:olivier.heintz@nereide.biz">Olivier Heintz</a>
  * @author     <a href="mailto:nicolas@librenberry.net">Nicolas MALIN</a>
  * @author     <a href=mailto:tgrauss@free.fr">Thierry GRAUSS</a>
- * @version    $Revision: 1.2 $
+ * @version    $Rev:$
  * @since      3.0
  */
 public class ProductHelper {

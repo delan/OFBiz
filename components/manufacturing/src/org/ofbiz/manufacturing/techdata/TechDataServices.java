@@ -1,5 +1,5 @@
 /*
- * $Id: TechDataServices.java,v 1.7 2004/05/09 21:29:10 holivier Exp $
+ * $Id$
  *
  * Copyright (c) 2003, 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -56,7 +56,7 @@ import org.ofbiz.service.ServiceUtil;
  * TechDataServices - TechData related Services
  *
  * @author     <a href="mailto:olivier.heintz@nereide.biz">Olivier Heintz</a>
- * @version    $Revision: 1.7 $
+ * @version    $Rev:$
  * @since      3.0
  */
 public class TechDataServices {

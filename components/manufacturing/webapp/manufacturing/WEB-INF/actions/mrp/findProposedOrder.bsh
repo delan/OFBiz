@@ -25,7 +25,7 @@
  * copy from content component  actions/includes/findprep.bsh 1.8 
  * @author     Olivier.Heintz@nereide.biz
  * @author     Nicolas.Malin@librenberry.net	
- * @version    $Revision: 0.1 $
+ * @version    $Rev:$
  * @since      3.0
  *
  * This script is a special version of includes/pagelistprep that
@@ -84,7 +84,7 @@ String showListIfSelection = page.getProperty("showListIfSelection");
 Debug.logInfo("avant test","");
 if (UtilValidate.isEmpty(showListIfSelection) || showListIfSelection.equals("Y") || (UtilValidate.isNotEmpty(hideSearch) && hideSearch.equals("Y"))) {
     context.put("showList", "Y");
-    Debug.logInfo("aprés test","");
+    Debug.logInfo("aprï¿½s test","");
 
      // create the dynamic view entity
     DynamicViewEntity dynamicView = new DynamicViewEntity();

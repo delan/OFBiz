@@ -1,5 +1,5 @@
 /*
- * $Id: ProductionRun.java,v 1.1 2004/05/09 21:13:59 holivier Exp $
+ * $Id$
  *
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
@@ -54,7 +54,7 @@ import org.ofbiz.service.GenericServiceException;
  * 	this object is used to find or updated an existing ProductionRun.
  *
  * @author     <a href="mailto:olivier.heintz@nereide.biz">Olivier Heintz</a>
- * @version    $Revision: 1.1 $
+ * @version    $Rev:$
  * @since      3.0
  */
 public class ProductionRun {

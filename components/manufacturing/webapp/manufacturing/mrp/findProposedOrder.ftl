@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Malin Nicolas (nicolas@ptimalin.net)
- *@version    $Revision: 0.1 $
+ *@version    $Rev:$
  *@since      3.0
 -->
 

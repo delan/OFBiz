@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Olivier Heintz (olivier.heintz@nereide.biz)
- *@version    $Revision: 1.3 $
+ *@version    $Rev:$
  *@since      3.0
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>

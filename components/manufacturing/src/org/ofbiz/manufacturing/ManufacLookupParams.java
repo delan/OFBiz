@@ -1,5 +1,5 @@
 /*
- * $Id: ManufacLookupParams.java,v 1.1 2004/07/29 17:41:26 ajzeneski Exp $
+ * $Id$
  *
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -37,7 +37,7 @@ import org.ofbiz.base.util.UtilMisc;
  * Product Information Related Events
  *
  * @author     <a href="mailto:holivier@nereide.biz">Olivier Heintz</a>
- * @version    $Revision: 1.1 $
+ * @version    $Rev:$
  * @since      3.0
  */
 public class ManufacLookupParams {
