@@ -1,5 +1,5 @@
 /*
- * $Id: ProductServices.java,v 1.1 2003/08/17 18:04:22 ajzeneski Exp $
+ * $Id: ProductServices.java,v 1.2 2003/08/26 13:54:19 jonesde Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -51,7 +51,7 @@ import org.ofbiz.service.ModelService;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class ProductServices {
@@ -526,7 +526,8 @@ public class ProductServices {
 
         // no groups; no tree
         if (group.size() == 0) {
-            throw new IllegalStateException("Cannot create tree from group list; error on '" + orderKey + "'");
+            return group;
+            //throw new IllegalStateException("Cannot create tree from group list; error on '" + orderKey + "'");
         }
 
         if (index + 1 == order.size()) {
@@ -535,16 +536,17 @@ public class ProductServices {
 
         // loop through the keysets and get the sub-groups
         Iterator groupIterator = group.keySet().iterator();
-
         while (groupIterator.hasNext()) {
             Object key = groupIterator.next();
             List itemList = (List) group.get(key);
 
-            if (itemList == null || itemList.size() == 0)
-                throw new IllegalStateException("Cannot create tree from an empty list; error on '" + key + "'");
-            Map subGroup = makeGroup(delegator, featureList, itemList, order, index + 1);
-
-            group.put(key, subGroup);
+            if (itemList != null && itemList.size() > 0) {
+                Map subGroup = makeGroup(delegator, featureList, itemList, order, index + 1);
+                group.put(key, subGroup);
+            } else {
+                // do nothing, ie put nothing in the Map
+                // throw new IllegalStateException("Cannot create tree from an empty list; error on '" + key + "'");
+            }
         }
         return group;
     }
