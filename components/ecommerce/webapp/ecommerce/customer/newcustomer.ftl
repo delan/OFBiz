@@ -340,7 +340,7 @@
     </TD>
   </TR>
 </TABLE>
-
+<input type="image" src="/images/spacer.gif" onClick="javascript:document.newuserform.submit();">
 </form>
 
 <br><div class="commentary">Fields marked with (*) are required.</div>
