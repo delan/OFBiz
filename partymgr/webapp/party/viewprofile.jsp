@@ -456,7 +456,7 @@
             <div class="boxhead">&nbsp;Member Roles</div>
           </td>
           <td valign="middle" align="right">&nbsp;
-            <select name="roleTypeId">
+            <select name="roleTypeId" style="font-size: x-small;">
               <ofbiz:iterator name="role" property="roles">
                  <option value='<ofbiz:entityfield attribute="role" field="roleTypeId"/>'><ofbiz:entityfield attribute="role" field="description"/> [<ofbiz:entityfield attribute="role" field="roleTypeId"/>]</option>
               </ofbiz:iterator>
