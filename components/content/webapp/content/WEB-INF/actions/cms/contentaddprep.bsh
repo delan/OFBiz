@@ -1,5 +1,5 @@
 /*
- * $Id: contentaddprep.bsh,v 1.1 2004/06/06 07:28:59 byersa Exp $
+ * $Id: contentaddprep.bsh,v 1.2 2004/06/07 21:50:04 byersa Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -53,7 +53,7 @@ import javax.servlet.http.*;
 /**
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.0
 
  */
@@ -65,14 +65,15 @@ singleWrapper.putInContext("contentPurposeTypeId", page.getProperty("contentPurp
 singleWrapper.putInContext("contentAssocTypeId", page.getProperty("contentAssocTypeId"));
 servletContext = session.getServletContext();
 String rootPubPt = (String) servletContext.getAttribute("webSiteId");
-pubPt = context.get("pubPt");
-singleWrapper.putInContext("contentIdTo", pubPt);
+//pubPt = context.get("pubPt");
+//singleWrapper.putInContext("contentIdTo", pubPt);
 //singleWrapper.putInContext("ownerContentId", pubPt);
 summaryDataResourceTypeId = page.getProperty("summaryDataResourceTypeId");
 singleWrapper.putInContext("summaryDataResourceTypeId", summaryDataResourceTypeId);
 singleWrapper.putInContext("targetOperation", "CONTENT_CREATE");
 singleWrapper.putInContext("contentTypeId", "DOCUMENT");
 
+/*
 siteAncestorList = new ArrayList();
 idList = new ArrayList();
 ContentWorker.getContentAncestry(delegator, pubPt, "SUBSITE", "To", idList);
@@ -86,4 +87,5 @@ for (int i=1; i<idList.size(); i++) {
 }
 context.put("siteAncestorList", siteAncestorList);
 //Debug.logInfo("in viewprep, siteAncestorList:" + siteAncestorList,"");
+*/
 

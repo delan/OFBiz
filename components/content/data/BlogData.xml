@@ -72,7 +72,8 @@
 	<StatusType statusTypeId="_NA_" description="Not Applicable"/>
 	<StatusItem statusId="BLOG_PUBLISHED" statusTypeId="PUBLISH_STATUS" statusCode="PUBLISHED" sequenceId="20" description="Published" />
 	<StatusItem statusId="BLOG_DRAFT" statusTypeId="PUBLISH_STATUS" statusCode="DRAFT" sequenceId="10" description="Draft" />
-	<StatusItem statusId="BLOG_SUBMITTED" statusTypeId="PUBLISH_STATUS" statusCode="SUBMITTED" sequenceId="15" description="Draft" />
+	<StatusItem statusId="BLOG_SUBMITTED" statusTypeId="PUBLISH_STATUS" statusCode="SUBMITTED" sequenceId="15" description="Submitted" />
+	<StatusItem statusId="BLOG_REJECTED" statusTypeId="PUBLISH_STATUS" statusCode="REJECTED" sequenceId="4" description="Rejected" />
 	<StatusItem statusId="_NA_" statusTypeId="_NA_" statusCode="_NA_" sequenceId="00" description="Not Applicable" />
 	<EnumerationType enumTypeId="SUBSCRIPTION_TYPE" description="Subscription Level"/>
 	<EnumerationType enumTypeId="_NA_" description="Not Applicable"/>
