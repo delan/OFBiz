@@ -1021,7 +1021,8 @@
       <field name="recurrenceInfoId" type="id"></field>
       <field name="contextDataId" type="id"></field>
       <field name="resultDataId" type="id"></field>
-      <field name="noteId" type="id"></field>	
+      <field name="noteId" type="id"></field>
+      <field name="serviceLoaderName" type="name"></field>	
       <prim-key field="workEffortId" />
       <relation type="one" rel-entity-name="WorkEffortType">
         <key-map field-name="workEffortTypeId" />
