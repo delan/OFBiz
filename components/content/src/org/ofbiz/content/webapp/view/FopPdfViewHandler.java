@@ -1,5 +1,5 @@
 /*
- * $Id: FopPdfViewHandler.java,v 1.2 2003/09/08 17:26:53 ajzeneski Exp $
+ * $Id: FopPdfViewHandler.java,v 1.3 2003/09/08 20:42:12 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -32,7 +32,10 @@ import java.io.Writer;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.avalon.framework.logger.Log4JLogger;
+import org.apache.avalon.framework.logger.Logger;
 import org.apache.fop.apps.Driver;
+import org.apache.fop.messaging.MessageHandler;
 import org.apache.fop.tools.DocumentInputSource;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilXml;
@@ -44,7 +47,7 @@ import org.xml.sax.InputSource;
  * This handler will use JPublish to generate the XSL-FO
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      3.0
  */
 public class FopPdfViewHandler extends JPublishViewHandler {
@@ -65,11 +68,16 @@ public class FopPdfViewHandler extends JPublishViewHandler {
         if (Debug.verboseOn()) {
             Debug.logVerbose("XSL-FO : " + writer.toString(), module);
         }
-                  
+        
+        // configure logging for the FOP
+        Logger logger = new Log4JLogger(Debug.getLogger(module));
+        MessageHandler.setScreenLogger(logger);        
+                          
         // load the FOP driver
         Driver driver = new Driver();
         driver.setRenderer(Driver.RENDER_PDF);
-                
+        driver.setLogger(logger);
+                                        
         // read the XSL-FO XML Document
         Document xslfo = null;
         try {
