@@ -1,5 +1,5 @@
 /*
- * $Id: CheckOutHelper.java,v 1.21 2004/05/11 12:40:14 jonesde Exp $
+ * $Id: CheckOutHelper.java,v 1.22 2004/06/06 02:44:17 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -64,7 +64,7 @@ import org.ofbiz.service.ServiceUtil;
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:tristana@twibble.org">Tristan Austin</a>
- * @version    $Revision: 1.21 $
+ * @version    $Revision: 1.22 $
  * @since      2.0
  */
 public class CheckOutHelper {
@@ -458,14 +458,14 @@ public class CheckOutHelper {
         } catch (GenericServiceException e) {
             String service = e.getMessage();
             Map messageMap = UtilMisc.toMap("service", service);
-            String errMsg = UtilProperties.getMessage(resource,"checkhelper.could_not_create_order_invoking_service", messageMap, (cart != null ? cart.getLocale() : Locale.getDefault()));
+            String errMsg = UtilProperties.getMessage(resource, "checkhelper.could_not_create_order_invoking_service", messageMap, (cart != null ? cart.getLocale() : Locale.getDefault()));
             Debug.logError(e, errMsg, module);
             return ServiceUtil.returnError(errMsg);
         }
 
         // check for error message(s)
         if (ServiceUtil.isError(storeResult)) {
-            String errMsg = UtilProperties.getMessage(resource,"checkhelper.did_not_complete_order_following_occurred", (cart != null ? cart.getLocale() : Locale.getDefault()));
+            String errMsg = UtilProperties.getMessage(resource, "checkhelper.did_not_complete_order_following_occurred", (cart != null ? cart.getLocale() : Locale.getDefault()));
             return ServiceUtil.returnError(errMsg);
         }
 
