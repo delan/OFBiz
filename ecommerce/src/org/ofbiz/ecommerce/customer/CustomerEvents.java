@@ -1,6 +1,11 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.24  2001/09/25 15:02:14  epabst
+ * when adding an EMAIL_ADDRESS, if no PRIMARY_EMAIL is currently
+ * set, it is automatically set to be the PRIMARY_EMAIL address.  If it is set, the
+ * EMAIL_ADDRESS is automatically set to be an OTHER_EMAIL address.
+ *
  * Revision 1.23  2001/09/25 14:42:12  epabst
  * added password hint
  * added getCurrentPartyContactMechList helper method
@@ -85,6 +90,7 @@ import java.sql.*;
 
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.entity.*;
+import org.ofbiz.commonapp.party.contact.ContactHelper;
 
 /**
  * <p><b>Title:</b> CustomerEvents.java
@@ -380,7 +386,7 @@ public class CustomerEvents {
         String cmPurposeTypeId;
         try {
             GenericValue party = userLogin.getRelatedOne("Party");
-            if (UtilValidate.isEmpty(getCurrentPartyContactMechList(party, "PRIMARY_EMAIL"))) {
+            if (UtilValidate.isEmpty(ContactHelper.getContactMech(party, "PRIMARY_EMAIL", null, false))) {
                 cmPurposeTypeId = "PRIMARY_EMAIL";
             } else {
                 cmPurposeTypeId = "OTHER_EMAIL";
@@ -595,36 +601,6 @@ public class CustomerEvents {
     request.setAttribute("EVENT_MESSAGE", "Contact Information Updated.");
     return "success";
   }
-
-  private static Collection getCurrentPartyContactMechList(GenericValue party, String contactMechPurposeTypeId) {
-    GenericDelegator delegator = party.getDelegator();
-    Iterator partyContactMechPurposeIter = null;
-    try {
-        partyContactMechPurposeIter = delegator.findByAnd("PartyContactMechPurpose", UtilMisc.toMap("partyId", party.getString("partyId"), "contactMechPurposeTypeId", contactMechPurposeTypeId), null).iterator();
-    } catch (GenericEntityException gee) {
-        Debug.logWarning(gee);
-        return Collections.EMPTY_LIST;
-    }
-    Collection result = new ArrayList();
-    java.util.Date now = new java.util.Date();
-    while(partyContactMechPurposeIter.hasNext()) {
-        GenericValue partyContactMechPurpose = (GenericValue)partyContactMechPurposeIter.next();
-        if(partyContactMechPurpose.get("thruDate") == null || partyContactMechPurpose.getTimestamp("thruDate").after(now)){
-            try {
-                GenericValue partyContactMech = partyContactMechPurpose.getRelatedOne("PartyContactMech");
-                if(partyContactMech.get("thruDate") == null || partyContactMech.getTimestamp("thruDate").after(now)) {
-                    result.add(partyContactMech);
-                }
-            } catch (GenericEntityException gee) {
-                Debug.logWarning(gee);
-            }
-        }
-    }
-    return result;
-  }
-  
-  
-  
   
   /** Creates a PartyContactMechPurpose given the parameters in the request object
    *@param request The HTTPRequest object for the current request
@@ -1062,6 +1038,122 @@ public class CustomerEvents {
     return "success";
   }
   
+  /** The user forgot his/her password.  This will either call showPasswordHint or emailPassword.
+   *@param request The HTTPRequest object for the current request
+   *@param response The HTTPResponse object for the current request
+   *@return String specifying the exit status of this event
+   */
+  public static String forgotPassword(HttpServletRequest request, HttpServletResponse response) {
+    if (UtilValidate.isNotEmpty(request.getParameter("GET_PASSWORD_HINT"))) {
+        return showPasswordHint(request, response);
+    } else {
+        return emailPassword(request, response);
+    }
+  }
+  
+  /** Show the password hint for the userLoginId specified in the request object.
+   *@param request The HTTPRequest object for the current request
+   *@param response The HTTPResponse object for the current request
+   *@return String specifying the exit status of this event
+   */
+  public static String showPasswordHint(HttpServletRequest request, HttpServletResponse response) {
+    GenericDelegator delegator = (GenericDelegator)request.getAttribute("delegator");
+    
+    String userLoginId = request.getParameter("USERNAME");
+    
+    if(!UtilValidate.isNotEmpty(userLoginId)) {
+      //the password was incomplete
+      request.setAttribute("ERROR_MESSAGE", "<li>The Username was empty, please re-enter.");
+      return "error";
+    }
+    
+    GenericValue supposedUserLogin = null;
+    try {
+        supposedUserLogin = delegator.findByPrimaryKey("UserLogin", UtilMisc.toMap("userLoginId", userLoginId));
+    } catch (GenericEntityException gee) { Debug.logWarning(gee); }
+    if (supposedUserLogin == null) {
+        //the Username was not found
+        request.setAttribute("ERROR_MESSAGE", "<li>The Username was not found, please re-enter.");
+        return "error";
+    }
+
+    String passwordHint = supposedUserLogin .getString("passwordHint");
+    if (!UtilValidate.isNotEmpty(passwordHint)) {
+        //the Username was not found
+        request.setAttribute("ERROR_MESSAGE", "<li>No password hint was specified, try having the password emailed instead.");
+        return "error";
+    }
+
+    request.setAttribute("EVENT_MESSAGE", "The Password Hint is: " + passwordHint);
+    return "success";
+  }
+  
+  /** Email the password for the userLoginId specified in the request object.
+   *@param request The HTTPRequest object for the current request
+   *@param response The HTTPResponse object for the current request
+   *@return String specifying the exit status of this event
+   */
+  public static String emailPassword(HttpServletRequest request, HttpServletResponse response) {
+    GenericDelegator delegator = (GenericDelegator)request.getAttribute("delegator");
+    
+    String userLoginId = request.getParameter("USERNAME");
+    
+    if(!UtilValidate.isNotEmpty(userLoginId)) {
+      //the password was incomplete
+      request.setAttribute("ERROR_MESSAGE", "<li>The Username was empty, please re-enter.");
+      return "error";
+    }
+    
+    GenericValue supposedUserLogin = null;
+    try {
+        supposedUserLogin = delegator.findByPrimaryKey("UserLogin", UtilMisc.toMap("userLoginId", userLoginId));
+    } catch (GenericEntityException gee) { Debug.logWarning(gee); }
+    if (supposedUserLogin == null) {
+        //the Username was not found
+        request.setAttribute("ERROR_MESSAGE", "<li>The Username was not found, please re-enter.");
+        return "error";
+    }
+
+    StringBuffer emails = new StringBuffer();
+    GenericValue party = null;
+    try { party = supposedUserLogin.getRelatedOne("Party"); }
+    catch(GenericEntityException e) { Debug.logWarning(e.getMessage()); party = null; }
+    if(party != null) {
+        Iterator emailIter = UtilMisc.toIterator(ContactHelper.getContactMech(party, "PRIMARY_EMAIL", "EMAIL_ADDRESS", false));
+        while(emailIter != null && emailIter.hasNext()) {
+            GenericValue email = (GenericValue) emailIter.next();
+            emails.append(emails.length() > 0 ? "," : "").append(email.getString("infoString"));
+        }
+    }
+
+    if (!UtilValidate.isNotEmpty(emails.toString())) {
+        //the Username was not found
+        request.setAttribute("ERROR_MESSAGE", "<li>No Primary Email Address has been set, please contact ustomer service.");
+        return "error";
+    }
+    
+    final String SMTP_SERVER = UtilProperties.getPropertyValue("ecommerce", "smtp.relay.host");
+    final String LOCAL_MACHINE = UtilProperties.getPropertyValue("ecommerce", "smtp.local.machine");
+    final String PASSWORD_SENDER_EMAIL = UtilProperties.getPropertyValue("ecommerce", "password.send.email");
+
+    String content = "Username: " + userLoginId + "\nPassword: " + UtilFormatOut.checkNull(supposedUserLogin.getString("currentPassword"));
+    try {
+        SendMailSMTP mail = new SendMailSMTP(SMTP_SERVER, PASSWORD_SENDER_EMAIL, emails.toString(), content);
+        mail.setLocalMachine(LOCAL_MACHINE);
+        mail.setSubject(SiteDefs.SITE_NAME + " Password Reminder");
+        //mail.setExtraHeader("MIME-Version: 1.0\nContent-type: text/html; charset=us-ascii\n");
+        mail.setMessage(content);
+        mail.send();
+    } catch (java.io.IOException e) {
+        Debug.logWarning(e);
+        request.setAttribute(SiteDefs.ERROR_MESSAGE, "error occurred: unable to email password.  Please try again later or contact customer service.");
+        return "error";
+    }
+    
+    request.setAttribute("EVENT_MESSAGE", "Your password has been sent to you.  Please check your Email.");
+    return "success";
+  }
+
   /**
    * Will not persist the password - just set the attribute
    *
