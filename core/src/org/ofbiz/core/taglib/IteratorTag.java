@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2001/09/10 21:41:29  epabst
+ * made the iterator tag check for the property object being an Iterator already
+ *
  * Revision 1.2  2001/08/06 00:45:09  azeneski
  * minor adjustments to tag files. added new format tag.
  *
@@ -86,7 +89,7 @@ public class IteratorTag extends BodyTagSupport {
     }
     
     public Iterator getIterator() {
-        return iterator;
+        return this.iterator;
     }
     
     public String getType() {
@@ -130,16 +133,16 @@ public class IteratorTag extends BodyTagSupport {
     
     private boolean defineIterator() {
         //clear the iterator, after this it may be set directly
-        iterator = null;
+        Iterator newIterator = null;
         Collection thisCollection = null;
         if ( property != null ) {
             Debug.log("Getting iterator from property: " + property);
             Object propertyObject = pageContext.findAttribute(property);
             if (propertyObject instanceof Iterator) {
-                iterator = (Iterator) propertyObject;
+                newIterator = (Iterator) propertyObject;
             } else {
                 //if ClassCastException, it should indicate looking for a Collection
-                thisCollection = (Collection) pageContext.findAttribute(property);
+                thisCollection = (Collection) propertyObject;
             }
         } 
         else {
@@ -155,8 +158,8 @@ public class IteratorTag extends BodyTagSupport {
                     for ( int i = 0; i <m.length; i++ ) {
                         if ( m[i].getName().equals("iterator") ) {
                             Debug.log("Found iterator method. Using it.");
-                            iterator = (Iterator) m[i].invoke(objectTag.getObject(),null);
-                            return true;
+                            newIterator = (Iterator) m[i].invoke(objectTag.getObject(),null);
+                            break;
                         }
                     }
                 }
@@ -166,25 +169,34 @@ public class IteratorTag extends BodyTagSupport {
             }
         }
         
-        if (iterator == null) {
+        if (newIterator == null) {
             if ( thisCollection == null || thisCollection.size() < 1 )
                 return false;
 
-            iterator = thisCollection.iterator();
+            newIterator = thisCollection.iterator();
             Debug.log("Got iterator.");
-        }//else already set
+        } else {//already set
+            Debug.log("iterator already set.");
+        }
+        this.iterator = newIterator;
         return true;
     }
     
     private boolean defineElement() {
         element = null;
         pageContext.removeAttribute(name);
-        if ( iterator.hasNext() )
-            element = iterator.next();
+        if ( this.iterator.hasNext() ) {
+            element = this.iterator.next();
+            Debug.log("iterator has another object: " + element);
+        } else {
+            Debug.log("iterator has no more objects");
+        }
         if ( element != null ) {
+            Debug.log("set attribute " + name + " to be " + element + " as next value from iterator");
             pageContext.setAttribute(name,element);
             return true;
         }
+        Debug.log("no more iterations; element = " + element);
         return false;        
     }
 }
