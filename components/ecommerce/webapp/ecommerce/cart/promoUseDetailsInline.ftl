@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      3.0
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -44,8 +44,15 @@
             <td width="50%" valign="top">
                 <div class="tableheadtext">${uiLabelMap.EcommercePromotionsApplied}:</div>
                 <#list shoppingCart.getProductPromoUseInfoIter() as productPromoUseInfo>
-                    <#-- TODO: when promo pretty print is done show promo short description here -->
-                    <div class="tabletext">${uiLabelMap.EcommercePromotion} <a href="<@ofbizUrl>/showPromotionDetails?productPromoId=${productPromoUseInfo.productPromoId?if_exists}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonDetails}]</a><#if productPromoUseInfo.productPromoCodeId?has_content> - with Code [${productPromoUseInfo.productPromoCodeId}]</#if></div>
+                    <div class="tabletext">
+	                    <#-- TODO: when promo pretty print is done show promo short description here -->
+                    	${uiLabelMap.EcommercePromotion} <a href="<@ofbizUrl>/showPromotionDetails?productPromoId=${productPromoUseInfo.productPromoId?if_exists}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonDetails}]</a>
+	                    <#if productPromoUseInfo.productPromoCodeId?has_content> - with Code [${productPromoUseInfo.productPromoCodeId}]</#if>
+    	                <#if (productPromoUseInfo.totalDiscountAmount != 0)> - Total Value <@ofbizCurrency amount=(-1*productPromoUseInfo.totalDiscountAmount) isoCode=shoppingCart.getCurrency()/></#if>
+    	            </div>
+                    <#if (productPromoUseInfo.quantityLeftInActions > 0)>
+                    	<div class="tabletext">- Could be used for ${productPromoUseInfo.quantityLeftInActions} more discounted item<#if (productPromoUseInfo.quantityLeftInActions > 1)>s</#if> if added to your cart.</div>
+                    </#if>
                 </#list>
             </td>
             <td width="50%" valign="top" style="border-left: 1px solid grey">
