@@ -13,7 +13,7 @@
     <handler name="service-multi" type="request" class="org.ofbiz.content.webapp.event.ServiceMultiEventHandler"/>
     <handler name="simple" type="request" class="org.ofbiz.content.webapp.event.SimpleEventHandler"/>
 
-    <handler name="jsp" type="view" class="org.ofbiz.content.webapp.view.JspViewHandler"/>    
+    <handler name="jsp" type="view" class="org.ofbiz.content.webapp.view.JspViewHandler"/>
     <handler name="ftl" type="view" class="org.ofbiz.content.webapp.ftl.FreeMarkerViewHandler"/>
     <handler name="http" type="view" class="org.ofbiz.content.webapp.view.HttpViewHandler"/>
     <handler name="jpublish" type="view" class="org.ofbiz.content.webapp.view.JPublishViewHandler"/>
@@ -186,7 +186,7 @@
         <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="addToCart"/>
         <response name="success" type="view" value="showcart"/>
         <response name="survey" type="view" value="survey"/>
-        <response name="viewcart" type="view" value="showcart"/>
+        <response name="viewcart" type="request-redirect" value="showcart"/>
         <response name="error" type="view" value="showcart"/>
     </request-map>
 
