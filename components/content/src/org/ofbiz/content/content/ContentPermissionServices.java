@@ -1055,6 +1055,7 @@ public class ContentPermissionServices {
         Security security = dctx.getSecurity();
         GenericDelegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
+        Boolean bDisplayFailCond = (Boolean)context.get("displayFailCond");
         String contentIdFrom = (String) context.get("contentIdFrom");
         String contentIdTo = (String) context.get("contentIdTo");
         GenericValue userLogin = (GenericValue) context.get("userLogin"); 
@@ -1091,6 +1092,7 @@ public class ContentPermissionServices {
             serviceInMap.put("targetOperationList", UtilMisc.toList("CONTENT_LINK_TO"));
             serviceInMap.put("contentPurposeList", relatedPurposes);
             serviceInMap.put("currentContent", contentTo);
+            serviceInMap.put("displayFailCond", bDisplayFailCond);
 
             try {
                 permResults = dispatcher.runSync("checkContentPermission", serviceInMap);
@@ -1098,7 +1100,13 @@ public class ContentPermissionServices {
                 Debug.logError(e, "Problem checking permissions", "ContentServices");
             }
             permissionStatus = (String)permResults.get("permissionStatus");
-            if(permissionStatus == null || !permissionStatus.equals("granted") ) return results;
+            if(permissionStatus == null || !permissionStatus.equals("granted") ) {
+                if (bDisplayFailCond != null && bDisplayFailCond.booleanValue()) {
+                     String errMsg = (String)permResults.get(ModelService.ERROR_MESSAGE);
+                     results.put(ModelService.ERROR_MESSAGE, errMsg);
+                }
+                return results;
+            }
             serviceInMap.put("currentContent", contentFrom);
             serviceInMap.put("targetOperationList", UtilMisc.toList("CONTENT_LINK_FROM"));
             try {
@@ -1109,6 +1117,11 @@ public class ContentPermissionServices {
             permissionStatus = (String)permResults.get("permissionStatus");
             if(permissionStatus != null && permissionStatus.equals("granted") ) {
                 results.put("permissionStatus", "granted");   
+            } else {
+                if (bDisplayFailCond != null && bDisplayFailCond.booleanValue()) {
+                     String errMsg = (String)permResults.get(ModelService.ERROR_MESSAGE);
+                     results.put(ModelService.ERROR_MESSAGE, errMsg);
+                }
             }
         } else {
             results.put("permissionStatus", "granted");   

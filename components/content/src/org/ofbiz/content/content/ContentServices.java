@@ -445,6 +445,7 @@ public class ContentServices {
         serviceInMap.put("statusId", context.get("statusId"));
         serviceInMap.put("privilegeEnumId", context.get("privilegeEnumId"));
         serviceInMap.put("roleTypeList", context.get("roleTypeList"));
+        serviceInMap.put("displayFailCond", context.get("displayFailCond"));
 
         Map permResults = null;
         permResults = dispatcher.runSync("checkAssocPermission", serviceInMap);
@@ -453,8 +454,9 @@ public class ContentServices {
         if (permissionStatus != null && permissionStatus.equals("granted")) {
             contentAssoc.create();
         } else {
-            String errorMsg = ContentWorker.prepPermissionErrorMsg(permResults);
-            return ServiceUtil.returnError(errorMsg);
+            String errorMsg = (String)permResults.get(ModelService.ERROR_MESSAGE);
+            result.put(ModelService.ERROR_MESSAGE, errorMsg);
+            return ServiceUtil.returnFailure(errorMsg);
         }
 
         result.put("contentIdTo", contentIdTo);
