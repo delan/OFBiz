@@ -57,10 +57,11 @@ public class ScreenRenderer {
      * @throws SAXException
      * @throws ParserConfigurationException
      */
-    public void render(String combinedName) throws IOException, SAXException, ParserConfigurationException {
+    public String render(String combinedName) throws IOException, SAXException, ParserConfigurationException {
         String resourceName = ScreenFactory.getResourceNameFromCombined(combinedName);
         String screenName = ScreenFactory.getScreenNameFromCombined(combinedName);
         this.render(resourceName, screenName);
+        return "";
     }
 
     /**
@@ -72,9 +73,10 @@ public class ScreenRenderer {
      * @throws SAXException
      * @throws ParserConfigurationException
      */
-    public void render(String resourceName, String screenName) throws IOException, SAXException, ParserConfigurationException {
+    public String render(String resourceName, String screenName) throws IOException, SAXException, ParserConfigurationException {
         ModelScreen modelScreen = ScreenFactory.getScreenFromLocation(resourceName, screenName);
         modelScreen.renderScreenString(writer, context, screenStringRenderer);
+        return "";
     }
 
     public ScreenStringRenderer getScreenStringRenderer() {
