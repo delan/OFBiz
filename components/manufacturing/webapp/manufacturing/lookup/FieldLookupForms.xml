@@ -22,29 +22,26 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *@author     Olivier.Heintz@nereide.biz
- *@version    $Revision: 1.4 $
+ *@version    $Revision: 1.5 $
  *@since      3.0
 -->
 
 <forms>
+
     <form name="lookupRouting" 
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox"
         target="LookupRouting" title="" type="single">
-		<auto-fields-service service-name="lookupRoutingTask" default-field-type="find"/>
+	<auto-fields-service service-name="lookupRoutingTask" default-field-type="hidden"/>
+	<field name="workEffortName"><text-find value="equals"/></field>
         <field name="workEffortTypeId"><hidden value="ROUTING"/></field>
-        <field name="fixedAssetId" ><ignored/>
- <!--           <drop-down>
-                <option key="" description=""/>
-                <entity-options entity-name="FixedAsset" description="${fixedAssetName}">
-                    <entity-constraint name="fixedAssetTypeId" value="GROUP_EQUIPMENT"/>
-                </entity-options>
-             </drop-down>  -->
-        </field>
+        <field name="fixedAssetId"><hidden value=""/>
+        </field> 
         <field name="fixedAssetId_op"><hidden value="equals"/></field>
         <field name="submitButton" title="${uiLabelMap.CommonLookup}" widget-style="standardSubmit">
             <submit button-type="button"/>
         </field>
     </form>
+
     <form name="listLookupRouting" 
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="display"
         list-name="entityList" paginate-target="/GenericLookup" 
@@ -56,6 +53,7 @@
         <field name="description" title="${uiLabelMap.CommonDescription}"><display/></field>
         <field name="quantityToProduce" title="${uiLabelMap.ManufacturingQuantityMinimum}"><display/></field>
     </form>
+
     <form name="lookupRoutingTask" 
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox"
         target="LookupRoutingTask" title="" type="single">
@@ -74,6 +72,7 @@
             <submit button-type="button"/>
         </field>
     </form>
+
     <form name="listLookupRoutingTask" 
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="display"
         list-name="entityList" paginate-target="/GenericLookup" 
@@ -86,6 +85,7 @@
         <field name="estimatedSetupMillis" title="${uiLabelMap.ManufacturingTaskEstimatedSetupMillis}"><display/></field>
         <field name="estimatedMilliSeconds" title="${uiLabelMap.ManufacturingTaskEstimatedMilliSeconds}"><display/></field>
     </form>
+
     <form name="lookupProduct" 
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox"
         target="LookupProduct" title="" type="single">
@@ -107,6 +107,7 @@
             <submit button-type="button"/>
         </field>
     </form>
+
     <form name="listLookupProduct" 
         default-title-style="tableheadtext"  default-tooltip-style="tabletext" default-widget-style="display"
         list-name="entityList" paginate-target="/GenericLookup" 
