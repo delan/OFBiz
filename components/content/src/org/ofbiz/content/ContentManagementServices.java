@@ -1285,6 +1285,7 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
         GenericDelegator delegator = dctx.getDelegator();
 		
 			String contentId = (String)context.get("contentId");
+			String contentAssocTypeId = (String)context.get("contentAssocTypeId");
             
             try {
                 	GenericValue content = delegator.findByPrimaryKeyCache("Content", UtilMisc.toMap("contentId", contentId));
@@ -1298,7 +1299,7 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
                 int changeLeafCount = leafCount.intValue() + 1;
                 int changeBranchCount = 1;
                 
-                ContentManagementWorker.updateStatsBottomUp(delegator, contentId, UtilMisc.toList("SUB_CONTENT", "PUBLISH_LINK"), changeBranchCount, changeLeafCount);
+                ContentManagementWorker.updateStatsBottomUp(delegator, contentId, UtilMisc.toList(contentAssocTypeId), changeBranchCount, changeLeafCount);
             } catch(GenericEntityException e) {
                     return ServiceUtil.returnError(e.getMessage());
             }
@@ -1310,6 +1311,7 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
         GenericDelegator delegator = dctx.getDelegator();
 		
 			String contentId = (String)context.get("contentId");
+			String contentAssocTypeId = (String)context.get("contentAssocTypeId");
             
             try {
                 	GenericValue content = delegator.findByPrimaryKeyCache("Content", UtilMisc.toMap("contentId", contentId));
@@ -1323,7 +1325,7 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
                 int changeLeafCount = -1 * leafCount.intValue() - 1;
                 int changeBranchCount = -1;
                 
-                ContentManagementWorker.updateStatsBottomUp(delegator, contentId, UtilMisc.toList("SUB_CONTENT", "PUBLISH_LINK"), changeBranchCount, changeLeafCount);
+                ContentManagementWorker.updateStatsBottomUp(delegator, contentId, UtilMisc.toList(contentAssocTypeId), changeBranchCount, changeLeafCount);
             } catch(GenericEntityException e) {
                     return ServiceUtil.returnError(e.getMessage());
             }
@@ -1335,10 +1337,11 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
         GenericDelegator delegator = dctx.getDelegator();
 		
 			String contentId = (String)context.get("contentId");
+			String contentAssocTypeId = (String)context.get("contentAssocTypeId");
             
             try {
                 
-                ContentManagementWorker.updateStatsTopDown(delegator, contentId, UtilMisc.toList("SUB_CONTENT", "PUBLISH_LINK"));
+                ContentManagementWorker.updateStatsTopDown(delegator, contentId, UtilMisc.toList(contentAssocTypeId));
             } catch(GenericEntityException e) {
                     return ServiceUtil.returnError(e.getMessage());
             }
