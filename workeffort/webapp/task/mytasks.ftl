@@ -135,7 +135,7 @@
                     <#list roleActivities as workEffort>
                       <tr>
                         <td><div class='tabletext'>${(workEffort.estimatedStartDate.toString())?if_exists}</div></td>
-                        <td><div class='tabletext'>${workEffort.priority}</div></td>
+                        <td><div class='tabletext'>${workEffort.priority?if_exists}</div></td>
                         <td><div class='tabletext'>${(delegator.findByPrimaryKeyCache("StatusItem", UtilMisc.toMap("statusId", workEffort.getString("currentStatusId"))).description)?if_exists}</div></td>
                         <td><div class='tabletext'>${(delegator.findByPrimaryKeyCache("StatusItem", UtilMisc.toMap("statusId", workEffort.getString("statusId"))).description)?if_exists}</div></td>
                         <#-- <td><div class='tabletext'>${workEffort.partyId}</div></td> -->
