@@ -78,6 +78,8 @@ public class ShippingEvents {
         try {
             Map fields = UtilMisc.toMap("shipmentMethodTypeId", shipmentMethodTypeId, "carrierPartyId", carrierPartyId, "carrierRoleTypeId", "CARRIER");
             estimates = delegator.findByAnd("ShipmentCostEstimate", fields);
+            Debug.logVerbose("Estimate fields: " + fields);
+            Debug.logVerbose("Estimate(s): " + estimates);
         }
         catch ( GenericEntityException e ) {
             Debug.logError("[ShippingEvents.getShipEstimate] Cannot get shipping estimates.");
