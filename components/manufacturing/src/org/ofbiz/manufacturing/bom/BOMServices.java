@@ -1,5 +1,5 @@
 /*
- * $Id: BOMServices.java,v 1.7 2004/05/12 10:35:05 jacopo Exp $
+ * $Id: BOMServices.java,v 1.8 2004/05/14 16:35:11 jacopo Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -151,7 +151,7 @@ public class BOMServices {
                 tree.print(products, llc.intValue());
                 for (int i = 0; i < products.size(); i++) {
                     ItemConfigurationNode oneNode = (ItemConfigurationNode)products.get(i);
-                    GenericValue oneProduct = oneNode.getPart();
+                    GenericValue oneProduct = oneNode.getProduct();
                     if (oneProduct.getInteger("billOfMaterialLevel").intValue() < oneNode.getDepth()) {
                         oneProduct.set("billOfMaterialLevel", new Integer(oneNode.getDepth()));
                         oneProduct.store();
@@ -289,6 +289,97 @@ public class BOMServices {
 
         result.put("tree", tree);
 
+        return result;
+    }
+
+    /** It reads the product's bill of materials,
+     * if necessary configures it, and it returns its (possibly configured) components in
+     * a List of {@link ItemConfigurationNode}).
+     * @param dctx
+     * @param context
+     * @return
+     */    
+    public static Map getManufacturingComponents(DispatchContext dctx, Map context) {
+
+        Map result = new HashMap();
+        Security security = dctx.getSecurity();
+        GenericDelegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        String productId = (String) context.get("productId");
+        Double quantity = (Double) context.get("quantity");
+        String fromDateStr = (String) context.get("fromDate");
+        
+        if (quantity == null) {
+            quantity = new Double(1);
+        }
+        Date fromDate = null;
+        if (UtilValidate.isNotEmpty(fromDateStr)) {
+            try {
+                fromDate = Timestamp.valueOf(fromDateStr);
+            } catch (Exception e) {
+            }
+        }
+        if (fromDate == null) {
+            fromDate = new Date();
+        }
+        
+        ItemConfigurationTree tree = null;
+        ArrayList components = new ArrayList();
+        try {
+            tree = new ItemConfigurationTree(productId, "MANUF_COMPONENT", fromDate, ItemConfigurationTree.EXPLOSION_SINGLE_LEVEL, delegator, dispatcher);
+            tree.setRootQuantity(quantity.doubleValue());
+            tree.print(components);
+            if (components.size() > 0) components.remove(0);
+        } catch(GenericEntityException gee) {
+            return ServiceUtil.returnError("Error creating bill of materials tree: " + gee.getMessage());
+        }
+
+        result.put("workEffortId", "???");
+        result.put("components", components);
+
+        return result;
+    }
+
+    public static Map createProductionRunsForOrder(DispatchContext dctx, Map context) {
+
+        Map result = new HashMap();
+        Security security = dctx.getSecurity();
+        GenericDelegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        String productId = (String) context.get("productId");
+        Double quantity = (Double) context.get("quantity");
+        String fromDateStr = (String) context.get("fromDate");
+        String orderId = (String) context.get("orderId");
+        String orderItemSeqId = (String) context.get("orderItemSeqId");
+        String shipmentId = (String) context.get("shipmentId");
+        GenericValue userLogin = (GenericValue)context.get("userLogin");
+        
+        if (quantity == null) {
+            quantity = new Double(1);
+        }
+        Date fromDate = null;
+        if (UtilValidate.isNotEmpty(fromDateStr)) {
+            try {
+                fromDate = Timestamp.valueOf(fromDateStr);
+            } catch (Exception e) {
+            }
+        }
+        if (fromDate == null) {
+            fromDate = new Date();
+        }
+        
+        ItemConfigurationTree tree = null;
+        ArrayList components = new ArrayList();
+        ArrayList productionRuns = new ArrayList();
+        try {
+            tree = new ItemConfigurationTree(productId, "MANUF_COMPONENT", fromDate, ItemConfigurationTree.EXPLOSION_MANUFACTURING, delegator, dispatcher);
+            tree.setRootQuantity(quantity.doubleValue());
+            tree.print(components);
+            tree.createManufacturingOrders(orderId, orderItemSeqId, shipmentId, fromDate, delegator, dispatcher, userLogin);
+        } catch(GenericEntityException gee) {
+            return ServiceUtil.returnError("Error creating bill of materials tree: " + gee.getMessage());
+        }
+        result.put("productionRuns" , productionRuns);
         return result;
     }
 
