@@ -254,6 +254,9 @@
   <SecurityGroupPermission groupId="ORDERENTRY" permissionId="PARTYMGR_CREATE"/>
   <SecurityGroupPermission groupId="ORDERENTRY" permissionId="PARTYMGR_UPDATE"/>
   <SecurityGroupPermission groupId="ORDERENTRY" permissionId="PARTYMGR_NOTE"/>
+  <SecurityGroupPermission groupId="ORDERENTRY" permissionId="PAY_INFO_VIEW"/>
+  <SecurityGroupPermission groupId="ORDERENTRY" permissionId="PAY_INFO_UPDATE"/>
+  <SecurityGroupPermission groupId="ORDERENTRY" permissionId="PAY_INFO_CREATE"/>
   <SecurityGroupPermission groupId="ORDERENTRY" permissionId="CATALOG_VIEW"/>
   
   <SecurityGroupPermission groupId="CATALOGADMIN" permissionId="CATALOG_ADMIN"/>  
