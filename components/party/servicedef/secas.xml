@@ -14,29 +14,29 @@
 
     <!-- before running the createPartyRelationship service, make sure the party is in the _NA_ role if that is the desired roleTypeId for From or To -->
     <eca service="createPartyRelationship" event="invoke">
-    	<condition field-name="roleTypeIdFrom" operator="equals" value="_NA_"/>
+        <condition field-name="roleTypeIdFrom" operator="equals" value="_NA_"/>
         <action service="ensureNaPartyRoleFrom" mode="sync"/>
     </eca>
     <eca service="createPartyRelationship" event="invoke">
-    	<condition field-name="roleTypeIdTo" operator="equals" value="_NA_"/>
+        <condition field-name="roleTypeIdTo" operator="equals" value="_NA_"/>
         <action service="ensureNaPartyRoleTo" mode="sync"/>
     </eca>
     
     <!-- party contact mech service ECAs -->
     <eca service="createPartyContactMech" event="commit">
-    	<condition field-name="contactMechPurposeTypeId" operator="is-not-empty"/>
-    	<action service="createPartyContactMechPurpose" mode="sync"/>
+        <condition field-name="contactMechPurposeTypeId" operator="is-not-empty"/>
+        <action service="createPartyContactMechPurpose" mode="sync"/>
     </eca>    
     <eca service="createPartyPostalAddress" event="commit">
-    	<condition field-name="contactMechPurposeTypeId" operator="is-not-empty"/>
-    	<action service="createPartyContactMechPurpose" mode="sync"/>
+        <condition field-name="contactMechPurposeTypeId" operator="is-not-empty"/>
+        <action service="createPartyContactMechPurpose" mode="sync"/>
     </eca>
     <eca service="createPartyEmailAddress" event="commit">
-    	<condition field-name="contactMechPurposeTypeId" operator="is-not-empty"/>
-    	<action service="createPartyContactMechPurpose" mode="sync"/>
+        <condition field-name="contactMechPurposeTypeId" operator="is-not-empty"/>
+        <action service="createPartyContactMechPurpose" mode="sync"/>
     </eca>        
     <eca service="createPartyTelecomNumber" event="commit">
-    	<condition field-name="contactMechPurposeTypeId" operator="is-not-empty"/>
-    	<action service="createPartyContactMechPurpose" mode="sync"/>
+        <condition field-name="contactMechPurposeTypeId" operator="is-not-empty"/>
+        <action service="createPartyContactMechPurpose" mode="sync"/>
     </eca>
 </service-eca>

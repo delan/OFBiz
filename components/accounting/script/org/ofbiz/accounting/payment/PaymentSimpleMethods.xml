@@ -26,7 +26,7 @@
  * @author     Andy Zeneski (jaz@ofbiz.org)
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Olivier Heintz (olivier.heintz@nereide.biz)
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
 -->
 
@@ -244,6 +244,7 @@
         <iterate entry-name="creditCard" list-name="creditCards">
             <set-service-fields service-name="updateCreditCard" map-name="creditCard" to-map-name="uccMap"/>
             <field-to-field field-name="newContactMechId" map-name="parameters" to-field-name="contactMechId" to-map-name="uccMap"/>
+            <field-to-field field-name="partyId" map-name="parameters" to-field-name="partyId" to-map-name="uccMap"/>
             <!-- use the service so it will expire the old card and create a new one; don't break on error since this is a background process, just get whatever we can done... -->
             <call-service service-name="updateCreditCard" in-map-name="uccMap" break-on-error="false"/>
         </iterate>
@@ -252,6 +253,7 @@
         <iterate entry-name="eftAccount" list-name="eftAccounts">
             <map-to-map map-name="eftAccount" to-map-name="ueaMap"/>
             <field-to-field field-name="newContactMechId" map-name="parameters" to-field-name="contactMechId" to-map-name="ueaMap"/>
+            <field-to-field field-name="partyId" map-name="parameters" to-field-name="partyId" to-map-name="ueaMap"/>
             <!-- use the service so it will expire the old account and create a new one; don't break on error since this is a background process, just get whatever we can done... -->
             <call-service service-name="updateEftAccount" in-map-name="ueaMap" break-on-error="false"/>
         </iterate>

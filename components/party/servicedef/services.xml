@@ -247,7 +247,7 @@
         <attribute name="contactMechId" type="String" mode="INOUT" optional="false"/>
         <attribute name="directions" type="String" mode="IN" optional="true"/> <!-- ?? -->
         <attribute name="newContactMechId" type="String" mode="OUT" optional="false"/>
-        <!-- <attribute name="paymentMethodId" type="String" mode="IN" optional="true"/> don't think we need this, using technique to find all that need to be updated -->
+        <attribute name="partyId" type="String" mode="IN" optional="true"/>
     </service>
     <service name="updatePartyPostalAddress" engine="simple"
             location="org/ofbiz/party/contact/PartyContactMechServices.xml" invoke="updatePartyPostalAddress" auth="true">
@@ -256,7 +256,6 @@
         <auto-attributes entity-name="PostalAddress" include="nonpk" mode="IN" optional="true"/>
         <attribute name="contactMechId" type="String" mode="INOUT" optional="false"/>
         <attribute name="directions" type="String" mode="IN" optional="true"/> <!-- ?? -->
-        <!-- <attribute name="paymentMethodId" type="String" mode="IN" optional="true"/> don't think we need this, using technique to find all that need to be updated -->
     </service>
     <service name="createTelecomNumber" engine="simple"
             location="org/ofbiz/party/contact/ContactMechServices.xml" invoke="createTelecomNumber" auth="true">
