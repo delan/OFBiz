@@ -226,7 +226,7 @@ public class IteratorTag extends BodyTagSupport {
 
     private boolean defineElement() {
         element = null;
-        pageContext.removeAttribute(name);
+        pageContext.removeAttribute(name, PageContext.PAGE_SCOPE);
         boolean verboseOn = Debug.verboseOn();
 
         if (this.iterator.hasNext()) {
