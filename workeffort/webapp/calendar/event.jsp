@@ -69,11 +69,11 @@
               <table border='0' cellpadding='2' cellspacing='0'>
                 <ofbiz:if name="workEffort">
                   <input type='hidden' name='UPDATE_MODE' value='UPDATE'>
-                  <input type='hidden' name='WORK_EFFORT_ID' value='<ofbiz:print attribute="workEffortId"/>'>
+                  <input type='hidden' name='workEffortId' value='<ofbiz:print attribute="workEffortId"/>'>
                 </ofbiz:if>
                 <ofbiz:unless name="workEffort">
                   <input type='hidden' name='UPDATE_MODE' value='CREATE'>
-                  <input type='hidden' name='WORK_EFFORT_TYPE_ID' value='EVENT'>
+                  <input type='hidden' name='workEffortTypeId' value='EVENT'>
                   <ofbiz:if name="workEffortId">
                     <DIV class='tabletext'>ERROR: Could not find Event with ID "<ofbiz:print attribute="workEffortId"/>"</DIV>
                   </ofbiz:if>
@@ -82,14 +82,14 @@
                 <tr>
                   <td width='26%' align=right><div class='tabletext'>Event Name</div></td>
                   <td>&nbsp;</td>
-                  <td width='74%'><input type='text' size='30' maxlength='30' name='WORK_EFFORT_NAME' value='<ofbiz:inputvalue field="workEffortName" param="WORK_EFFORT_NAME" entityAttr="workEffort" tryEntityAttr="tryEntity"/>'></td>
+                  <td width='74%'><input type='text' size='30' maxlength='30' name='workEffortName' value='<ofbiz:inputvalue field="workEffortName" param="workEffortName" entityAttr="workEffort" tryEntityAttr="tryEntity"/>'></td>
                 </tr>
                 <tr>
                   <td width='26%' align=right><div class='tabletext'>Priority</div></td>
                   <td>&nbsp;</td>
                   <td width='74%'>
-                    <SELECT name='PRIORITY'>
-                      <OPTION><ofbiz:inputvalue field="priority" param="PRIORITY" entityAttr="workEffort" tryEntityAttr="tryEntity"/></OPTION>
+                    <SELECT name='priority'>
+                      <OPTION><ofbiz:inputvalue field="priority" param="priority" entityAttr="workEffort" tryEntityAttr="tryEntity"/></OPTION>
                       <OPTION value=''>--</OPTION>
                       <OPTION>1</OPTION> <OPTION>2</OPTION> <OPTION>3</OPTION>
                       <OPTION>4</OPTION> <OPTION>5</OPTION> <OPTION>6</OPTION>
@@ -101,7 +101,7 @@
                   <td width='26%' align=right><div class='tabletext'>Event Status</div></td>
                   <td>&nbsp;</td>
                   <td width='74%'>
-                    <SELECT name='CURRENT_STATUS_ID'>
+                    <SELECT name='currentStatusId'>
                       <OPTION value='<ofbiz:entityfield field="statusId" attribute="currentStatusItem" default="CAL_TENTATIVE"/>'><ofbiz:entityfield field="description" attribute="currentStatusItem"/></OPTION>
                       <OPTION value=''>--</OPTION>
                       <ofbiz:iterator name="statusItem" property="eventStatusItems">
@@ -117,23 +117,23 @@
                 <tr>
                   <td width='26%' align=right><div class='tabletext'>Location</div></td>
                   <td>&nbsp;</td>
-                  <td width='74%'><input type='text' size='60' maxlength='255' name='LOCATION_DESC' value='<ofbiz:inputvalue field="locationDesc" param="LOCATION_DESC" entityAttr="workEffort" tryEntityAttr="tryEntity"/>'></td>
+                  <td width='74%'><input type='text' size='60' maxlength='255' name='locationDesc' value='<ofbiz:inputvalue field="locationDesc" param="locationDesc" entityAttr="workEffort" tryEntityAttr="tryEntity"/>'></td>
                 </tr>
                 <tr>
                   <td width='26%' align=right><div class='tabletext'>Description</div></td>
                   <td>&nbsp;</td>
-                  <td width='74%'><TEXTAREA name='DESCRIPTION' cols='50' rows='4'><ofbiz:inputvalue field="description" param="DESCRIPTION" entityAttr="workEffort" tryEntityAttr="tryEntity"/></TEXTAREA>
+                  <td width='74%'><TEXTAREA name='description' cols='50' rows='4'><ofbiz:inputvalue field="description" param="description" entityAttr="workEffort" tryEntityAttr="tryEntity"/></TEXTAREA>
                 </tr>
 
                 <tr>
                   <td width='26%' align=right><div class='tabletext'>Start Date/Time</div></td>
                   <td>&nbsp;</td>
-                  <td width='74%'><input type='text' size='30' maxlength='30' name='ESTIMATED_START_DATE' value='<ofbiz:inputvalue field="estimatedStartDate" param="ESTIMATED_START_DATE" entityAttr="workEffort" tryEntityAttr="tryEntity"/>'><span class='tabletext'>(YYYY-MM-DD hh:mm:ss)</span></td>
+                  <td width='74%'><input type='text' size='30' maxlength='30' name='estimatedStartDate' value='<ofbiz:inputvalue field="estimatedStartDate" param="estimatedStartDate" entityAttr="workEffort" tryEntityAttr="tryEntity"/>'><span class='tabletext'>(YYYY-MM-DD hh:mm:ss)</span></td>
                 </tr>
                 <tr>
                   <td width='26%' align=right><div class='tabletext'>End Date/Time</div></td>
                   <td>&nbsp;</td>
-                  <td width='74%'><input type='text' size='30' maxlength='30' name='ESTIMATED_COMPLETION_DATE' value='<ofbiz:inputvalue field="estimatedCompletionDate" param="ESTIMATED_COMPLETION_DATE" entityAttr="workEffort" tryEntityAttr="tryEntity"/>'><span class='tabletext'>(YYYY-MM-DD hh:mm:ss)</span></td>
+                  <td width='74%'><input type='text' size='30' maxlength='30' name='estimatedCompletionDate' value='<ofbiz:inputvalue field="estimatedCompletionDate" param="estimatedCompletionDate" entityAttr="workEffort" tryEntityAttr="tryEntity"/>'><span class='tabletext'>(YYYY-MM-DD hh:mm:ss)</span></td>
                 </tr>
 
                 <ofbiz:if name="workEffort">

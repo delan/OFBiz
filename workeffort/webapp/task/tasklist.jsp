@@ -83,9 +83,9 @@
                     <%if (statusItem != null) pageContext.setAttribute("statusItem", statusItem);%>
                     <TD><DIV class='tabletext'><ofbiz:entityfield attribute="currentStatusItem" field="description"/></DIV></TD>
                     <TD><DIV class='tabletext'><ofbiz:entityfield attribute="statusItem" field="description"/></DIV></TD>
-                    <TD><A class='buttontext' href='<ofbiz:url>/activity?WORK_EFFORT_ID=<ofbiz:entityfield attribute="workEffort" field="workEffortId"/></ofbiz:url>'>
+                    <TD><A class='buttontext' href='<ofbiz:url>/activity?workEffortId=<ofbiz:entityfield attribute="workEffort" field="workEffortId"/></ofbiz:url>'>
                         <ofbiz:entityfield attribute="workEffort" field="workEffortName"/></a></DIV></TD>
-                    <TD align=right><A class='buttontext' href='<ofbiz:url>/activity?WORK_EFFORT_ID=<ofbiz:entityfield attribute="workEffort" field="workEffortId"/></ofbiz:url>'>
+                    <TD align=right><A class='buttontext' href='<ofbiz:url>/activity?workEffortId=<ofbiz:entityfield attribute="workEffort" field="workEffortId"/></ofbiz:url>'>
                         Edit&nbsp;[<ofbiz:entityfield attribute="workEffort" field="workEffortId"/>]</a></DIV></TD>
                   </TR>
                 </ofbiz:iterator>
@@ -117,9 +117,9 @@
                     <%GenericValue currentStatusItem = delegator.findByPrimaryKeyCache("StatusItem", UtilMisc.toMap("statusId", workEffort.getString("currentStatusId")));%>
                     <%if (currentStatusItem != null) pageContext.setAttribute("currentStatusItem", currentStatusItem);%>
                     <TD><DIV class='tabletext'><ofbiz:entityfield attribute="currentStatusItem" field="description"/></DIV></TD>
-                    <TD><A class='buttontext' href='<ofbiz:url>/task?WORK_EFFORT_ID=<ofbiz:entityfield attribute="workEffort" field="workEffortId"/></ofbiz:url>'>
+                    <TD><A class='buttontext' href='<ofbiz:url>/task?workEffortId=<ofbiz:entityfield attribute="workEffort" field="workEffortId"/></ofbiz:url>'>
                         <ofbiz:entityfield attribute="workEffort" field="workEffortName"/></a></DIV></TD>
-                    <TD align=right width='1%'><A class='buttontext' href='<ofbiz:url>/activity?WORK_EFFORT_ID=<ofbiz:entityfield attribute="workEffort" field="workEffortId"/></ofbiz:url>'>
+                    <TD align=right width='1%'><A class='buttontext' href='<ofbiz:url>/activity?workEffortId=<ofbiz:entityfield attribute="workEffort" field="workEffortId"/></ofbiz:url>'>
                         Edit&nbsp;[<ofbiz:entityfield attribute="workEffort" field="workEffortId"/>]</a></DIV></TD>
                   </TR>
                 </ofbiz:iterator>

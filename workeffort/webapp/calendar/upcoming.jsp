@@ -74,7 +74,7 @@
                     <TR>
                       <TD><DIV class='tabletext'><ofbiz:entityfield attribute="workEffort" field="estimatedStartDate"/></DIV></TD>
                       <TD><DIV class='tabletext'><ofbiz:entityfield attribute="workEffort" field="estimatedCompletionDate"/></DIV></TD>
-                      <TD><A class='buttontext' href='<ofbiz:url>/event?WORK_EFFORT_ID=<ofbiz:entityfield attribute="workEffort" field="workEffortId"/></ofbiz:url>'>
+                      <TD><A class='buttontext' href='<ofbiz:url>/event?workEffortId=<ofbiz:entityfield attribute="workEffort" field="workEffortId"/></ofbiz:url>'>
                           <ofbiz:entityfield attribute="workEffort" field="workEffortName"/></a></DIV></TD>
                     </TR>
                   </ofbiz:iterator>

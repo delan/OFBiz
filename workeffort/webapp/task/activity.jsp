@@ -76,19 +76,19 @@
               <table border='0' cellpadding='2' cellspacing='0'>
                 <ofbiz:if name="workEffort">
                   <input type='hidden' name='UPDATE_MODE' value='UPDATE'>
-                  <input type='hidden' name='WORK_EFFORT_ID' value='<ofbiz:print attribute="workEffortId"/>'>
+                  <input type='hidden' name='workEffortId' value='<ofbiz:print attribute="workEffortId"/>'>
 
                 <tr>
                   <td width='26%' align=right><div class='tabletext'>Activity Name</div></td>
                   <td>&nbsp;</td>
-                  <td width='74%'><input type='text' size='30' maxlength='30' name='WORK_EFFORT_NAME' value='<ofbiz:inputvalue field="workEffortName" param="WORK_EFFORT_NAME" entityAttr="workEffort" tryEntityAttr="tryEntity"/>'></td>
+                  <td width='74%'><input type='text' size='30' maxlength='30' name='workEffortName' value='<ofbiz:inputvalue field="workEffortName" param="workEffortName" entityAttr="workEffort" tryEntityAttr="tryEntity"/>'></td>
                 </tr>
                 <tr>
                   <td width='26%' align=right><div class='tabletext'>Priority</div></td>
                   <td>&nbsp;</td>
                   <td width='74%'>
-                    <SELECT name='PRIORITY'>
-                      <OPTION><ofbiz:inputvalue field="priority" param="PRIORITY" entityAttr="workEffort" tryEntityAttr="tryEntity"/></OPTION>
+                    <SELECT name='priority'>
+                      <OPTION><ofbiz:inputvalue field="priority" param="priority" entityAttr="workEffort" tryEntityAttr="tryEntity"/></OPTION>
                       <OPTION value=''>--</OPTION>
                       <OPTION>1</OPTION> <OPTION>2</OPTION> <OPTION>3</OPTION>
                       <OPTION>4</OPTION> <OPTION>5</OPTION> <OPTION>6</OPTION>
@@ -100,7 +100,7 @@
                   <td width='26%' align=right><div class='tabletext'>Activity Status</div></td>
                   <td>&nbsp;</td>
                   <td width='74%'>
-                    <input type='hidden' name='CURRENT_STATUS_ID' value='<ofbiz:entityfield field="currentStatusId" attribute="workEffort"/>'>
+                    <input type='hidden' name='currentStatusId' value='<ofbiz:entityfield field="currentStatusId" attribute="workEffort"/>'>
                     <span class='tabletext'><ofbiz:entityfield field="description" attribute="currentStatusItem"/></span>
                     <span class='tabletext'> - Last Updated: <ofbiz:entityfield field="lastStatusUpdate" attribute="workEffort"/></span>
                   </td>
@@ -109,23 +109,23 @@
                 <tr>
                   <td width='26%' align=right><div class='tabletext'>Location</div></td>
                   <td>&nbsp;</td>
-                  <td width='74%'><input type='text' size='60' maxlength='255' name='LOCATION_DESC' value='<ofbiz:inputvalue field="locationDesc" param="LOCATION_DESC" entityAttr="workEffort" tryEntityAttr="tryEntity"/>'></td>
+                  <td width='74%'><input type='text' size='60' maxlength='255' name='locationDesc' value='<ofbiz:inputvalue field="locationDesc" param="locationDesc" entityAttr="workEffort" tryEntityAttr="tryEntity"/>'></td>
                 </tr>
                 <tr>
                   <td width='26%' align=right><div class='tabletext'>Description</div></td>
                   <td>&nbsp;</td>
-                  <td width='74%'><TEXTAREA name='DESCRIPTION' cols='50' rows='4'><ofbiz:inputvalue field="description" param="DESCRIPTION" entityAttr="workEffort" tryEntityAttr="tryEntity"/></TEXTAREA>
+                  <td width='74%'><TEXTAREA name='description' cols='50' rows='4'><ofbiz:inputvalue field="description" param="description" entityAttr="workEffort" tryEntityAttr="tryEntity"/></TEXTAREA>
                 </tr>
 
                 <tr>
                   <td width='26%' align=right><div class='tabletext'>Start Date/Time</div></td>
                   <td>&nbsp;</td>
-                  <td width='74%'><input type='text' size='30' maxlength='30' name='ESTIMATED_START_DATE' value='<ofbiz:inputvalue field="estimatedStartDate" param="ESTIMATED_START_DATE" entityAttr="workEffort" tryEntityAttr="tryEntity"/>'><span class='tabletext'>(YYYY-MM-DD hh:mm:ss)</span></td>
+                  <td width='74%'><input type='text' size='30' maxlength='30' name='estimatedStartDate' value='<ofbiz:inputvalue field="estimatedStartDate" param="estimatedStartDate" entityAttr="workEffort" tryEntityAttr="tryEntity"/>'><span class='tabletext'>(YYYY-MM-DD hh:mm:ss)</span></td>
                 </tr>
                 <tr>
                   <td width='26%' align=right><div class='tabletext'>End Date/Time</div></td>
                   <td>&nbsp;</td>
-                  <td width='74%'><input type='text' size='30' maxlength='30' name='ESTIMATED_COMPLETION_DATE' value='<ofbiz:inputvalue field="estimatedCompletionDate" param="ESTIMATED_COMPLETION_DATE" entityAttr="workEffort" tryEntityAttr="tryEntity"/>'><span class='tabletext'>(YYYY-MM-DD hh:mm:ss)</span></td>
+                  <td width='74%'><input type='text' size='30' maxlength='30' name='estimatedCompletionDate' value='<ofbiz:inputvalue field="estimatedCompletionDate" param="estimatedCompletionDate" entityAttr="workEffort" tryEntityAttr="tryEntity"/>'><span class='tabletext'>(YYYY-MM-DD hh:mm:ss)</span></td>
                 </tr>
 
                   <tr>
@@ -205,7 +205,7 @@
                   <%
                     //if there was an error message and the current PK equals the parameter PK, set assignTryEntity to false
                     pageContext.setAttribute("assignTryEntity", new Boolean(true));
-                    if ((request.getAttribute("ERROR_MESSAGE") != null || request.getAttribute(SiteDefs.ERROR_MESSAGE) != null) &&
+                    if (request.getAttribute(SiteDefs.ERROR_MESSAGE) != null &&
                         workEffortPartyAssignment.getString("workEffortId").equals(request.getParameter("workEffortId")) && 
                         workEffortPartyAssignment.getString("partyId").equals(request.getParameter("partyId")) && 
                         workEffortPartyAssignment.getString("roleTypeId").equals(request.getParameter("roleTypeId")) && 
@@ -218,7 +218,6 @@
                   <form action="<ofbiz:url>/updateactivityassign</ofbiz:url>" method=POST style='margin: 0;'>
                   <table border='0' cellpadding='2' cellspacing='0'>
                     <input type='hidden' name='UPDATE_MODE' value='UPDATE'>
-                    <input type='hidden' name='WORK_EFFORT_ID' value='<ofbiz:print attribute="workEffortId"/>'>
                     <input type='hidden' name='workEffortId' value='<ofbiz:print attribute="workEffortId"/>'>
                     <input type='hidden' name='partyId' value='<ofbiz:entityfield field="partyId" attribute="workEffortPartyAssignment"/>'>
                     <input type='hidden' name='roleTypeId' value='<ofbiz:entityfield field="roleTypeId" attribute="workEffortPartyAssignment"/>'>
