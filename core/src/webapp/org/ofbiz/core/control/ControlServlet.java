@@ -93,22 +93,22 @@ public class ControlServlet extends HttpServlet {
         }
 
         if (Debug.verboseOn()) {
-            Debug.logVerbose("--- Start Request Headers: ---");
+            Debug.logVerbose("--- Start Request Headers: ---", module);
             Enumeration headerNames = request.getHeaderNames();
             while (headerNames.hasMoreElements()) {
                 String headerName = (String) headerNames.nextElement();
-                Debug.logVerbose(headerName + ":" + request.getHeader(headerName));
+                Debug.logVerbose(headerName + ":" + request.getHeader(headerName), module);
             }
-            Debug.logVerbose("--- End Request Headers: ---");
+            Debug.logVerbose("--- End Request Headers: ---", module);
         }
         if (Debug.verboseOn()) {
-            Debug.logVerbose("--- Start Request Parameters: ---");
+            Debug.logVerbose("--- Start Request Parameters: ---", module);
             Enumeration paramNames = request.getParameterNames();
             while (paramNames.hasMoreElements()) {
                 String paramName = (String) paramNames.nextElement();
-                Debug.logVerbose(paramName + ":" + request.getParameter(paramName));
+                Debug.logVerbose(paramName + ":" + request.getParameter(paramName), module);
             }
-            Debug.logVerbose("--- End Request Parameters: ---");
+            Debug.logVerbose("--- End Request Parameters: ---", module);
         }
         
         GenericValue userLogin = (GenericValue) request.getSession().getAttribute(SiteDefs.USER_LOGIN);
