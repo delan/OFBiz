@@ -119,4 +119,10 @@
         <put section='title'>Payment Processor Setup</put>
         <put section='content' content='/setup/paysetup.jsp'/>
     </define>
+    
+    <!-- Order Reports Pages -->
+    <define id='orderreportlist' region='MAIN_REGION'>
+        <put section='title'>Order Reports</put>
+        <put section='content' content='/reports/reportlist.jsp'/>
+    </define>
 </regions>

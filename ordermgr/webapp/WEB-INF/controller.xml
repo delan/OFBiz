@@ -13,6 +13,7 @@
 
     <handler name="region" type="view" class="org.ofbiz.core.view.RegionViewHandler"/>
     <handler name="velocity" type="view" class="org.ofbiz.core.view.VelocityViewHandler"/>
+    <handler name="jasperpdf" type="view" class="org.ofbiz.core.view.JasperReportsPdfViewHandler"/>
 
     <preprocessor>
     	<!-- Events to run on every request before security (chains exempt) -->
@@ -353,7 +354,26 @@
         <response name="success" type="view" value="taxsetup"/>
         <response name="error" type="view" value="taxsetup"/>
     </request-map>
+
+    <!-- Order Reports Requests -->
+    <request-map uri="orderreport.pdf">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="orderreport"/>
+    </request-map>
+    <request-map uri="orderreportjasper.pdf">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="orderreportjasper"/>
+    </request-map>
+    <request-map uri="orderitemreportjasper.pdf">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="orderitemreportjasper"/>
+    </request-map>
+    <request-map uri="orderreportlist">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="orderreportlist"/>
+    </request-map>
     
+        
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
@@ -381,5 +401,10 @@
     <view-map name="paysetup" type="region"/>
     
     <view-map name="wfOrderNotify" page="/notifications/pendingOrderNotify.jsp"/>
+    
+    <view-map name="orderreportlist" type="region"/>
+    <view-map name="orderreport" page="/reports/orderreport.jsp" content-type="application/pdf" encoding="none"/>
+    <view-map name="orderreportjasper" page="/reports/orderreport.jasper" type="jasperpdf" content-type="application/pdf" encoding="none"/>
+    <view-map name="orderitemreportjasper" page="/reports/orderitemreport.jasper" type="jasperpdf" content-type="application/pdf" encoding="none"/>
     <!-- end of view mappings -->
 </site-conf>

@@ -55,6 +55,8 @@
 		  <td class="headerButtonLeft"><a href="<ofbiz:url>/salesentry</ofbiz:url>" class="headerbuttontext">Sale&nbsp;Entry</a></td>
 		  <!--<td class="headerButtonLeft"><a href="#" class="headerbuttontext">Purchase&nbsp;Entry</a></td>-->
           <%}%>
+
+          <td class="headerButtonLeft"><a href="<ofbiz:url>/orderreportlist</ofbiz:url>" class="headerbuttontext">Order&nbsp;Reports</a></td>
          
           <td width="90%" align='center' class='headerCenter'>&nbsp;</td>
 
