@@ -6,7 +6,7 @@
 <%@ include file="/includes/leftcolumn.jsp" %> 
 
 <ofbiz:object name="cart" property="_SHOPPING_CART_" type="org.ofbiz.ecommerce.shoppingcart.ShoppingCart" />  
-<%if(cart != null) {%>
+<%if(cart != null && cart.size() > 0) {%>
   <%pageContext.setAttribute("cartIter", cart.iterator());%>
   <%org.ofbiz.ecommerce.catalog.CatalogHelper.getRandomCartProductAssoc(pageContext, "associatedProducts");%>
 <%}%>
@@ -69,7 +69,7 @@
             <div class='lightbuttontextdisabled'>
               <a href="<ofbiz:url>/main</ofbiz:url>" class="lightbuttontext">[Continue&nbsp;Shopping]</a>
               <a href="javascript:document.cartform.submit()" class="lightbuttontext">[Recalculate&nbsp;Cart]</a>
-              <%if(microCart != null && microCart.size() > 0){%>
+              <%if(cart != null && cart.size() > 0){%>
                 <a href="<ofbiz:url>/emptycart</ofbiz:url>" class="lightbuttontext">[Empty&nbsp;Cart]</a>
                 <a href="<ofbiz:url>/checkoutoptions</ofbiz:url>" class="lightbuttontext">[Checkout]</a>
               <%}else{%>
@@ -86,7 +86,7 @@
       <table width="100%" border="0" cellpadding='<%=boxBottomPadding%>' cellspacing='0' bgcolor='<%=boxBottomColor%>'>
         <tr>
           <td>
-<ofbiz:if name="_SHOPPING_CART_">
+  <ofbiz:if name="cartIter">
     <FORM METHOD="POST" ACTION="<ofbiz:url>/modifycart</ofbiz:url>" name='cartform' style='margin: 0;'>
       <table width='100%' CELLSPACING="0" CELLPADDING="4" BORDER="0">
         <TR> 
@@ -134,8 +134,8 @@
         <input type="submit" value="Update Cart">
       </CENTER>
 --%>
-</ofbiz:if>
-<ofbiz:unless name="_SHOPPING_CART_">
+  </ofbiz:if>
+<ofbiz:unless name="cartIter">
   <div class='head2'>Your shopping cart is empty.</div>
 </ofbiz:unless>
           </td>
