@@ -83,6 +83,8 @@
       <field name="runStatusId" type="id-ne"></field>
       <field name="lastSuccessfulSynchTime" type="date-time"></field>
       <field name="lastHistoryStartDate" type="date-time"></field>
+      <field name="preOfflineSynchTime" type="date-time"></field>
+      <field name="offlineSyncSplitMillis" type="numeric"></field>
       <field name="syncSplitMillis" type="numeric"></field>
       <field name="syncEndBufferMillis" type="numeric"></field>
       <field name="maxRunningNoUpdateMillis" type="numeric"></field>
@@ -118,6 +120,7 @@
       <field name="toStoreNotUpdated" type="numeric"></field>
       <field name="toRemoveDeleted" type="numeric"></field>
       <field name="toRemoveAlreadyDeleted" type="numeric"></field>
+      <field name="totalRowsExported" type="numeric"></field>
       <field name="totalRowsToCreate" type="numeric"></field>
       <field name="totalRowsToStore" type="numeric"></field>
       <field name="totalRowsToRemove" type="numeric"></field>

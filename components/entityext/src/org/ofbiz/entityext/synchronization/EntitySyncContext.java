@@ -34,7 +34,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.ofbiz.base.util.Debug;
@@ -53,6 +52,8 @@ import org.ofbiz.entity.model.ModelEntity;
 import org.ofbiz.entity.model.ModelViewEntity;
 import org.ofbiz.entity.serialize.SerializeException;
 import org.ofbiz.entity.serialize.XmlSerializer;
+import org.ofbiz.entity.transaction.GenericTransactionException;
+import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GeneralServiceException;
@@ -60,12 +61,14 @@ import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
+
 import org.xml.sax.SAXException;
 
 /**
  * Entity Engine Sync Services
  *
- * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
+ * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @version    $Rev$
  * @since      3.0
  */
@@ -75,7 +78,10 @@ public class EntitySyncContext {
     
     // set default split to 10 seconds, ie try not to get too much data moving over at once
     public static final long defaultSyncSplitMillis = 10000;
-    
+
+    // default offline split is 30 minutes
+    public static final long defaultOfflineSyncSplitMillis = 1800000;
+
     // default to 5 minutes
     public static final long defaultSyncEndBufferMillis = 300000;
 
@@ -87,7 +93,8 @@ public class EntitySyncContext {
     public Map context;
 
     public GenericValue userLogin;
-    
+    public boolean isOfflineSync = false;
+
     public String entitySyncId;
     public GenericValue entitySync;
 
@@ -95,6 +102,7 @@ public class EntitySyncContext {
     public String targetDelegatorName;
     
     public Timestamp syncEndStamp;
+    public long offlineSyncSplitMillis = defaultOfflineSyncSplitMillis;
     public long syncSplitMillis = defaultSyncSplitMillis;
     public long syncEndBufferMillis = defaultSyncEndBufferMillis;
     public long maxRunningNoUpdateMillis = defaultMaxRunningNoUpdateMillis;
@@ -126,7 +134,8 @@ public class EntitySyncContext {
     long toStoreNotUpdated = 0;
     long toRemoveDeleted = 0;
     long toRemoveAlreadyDeleted = 0;
-    
+
+    long totalRowsExported = 0;
     long totalRowsToCreate = 0;
     long totalRowsToStore = 0;
     long totalRowsToRemove = 0;
@@ -157,6 +166,13 @@ public class EntitySyncContext {
         this.entitySyncId = (String) context.get("entitySyncId");
         Debug.logInfo("Creating EntitySyncContext with entitySyncId=" + entitySyncId, module);
 
+        boolean beganTransaction = false;
+        try {
+            beganTransaction = TransactionUtil.begin(7200);
+        } catch (GenericTransactionException e) {
+            throw new SyncDataErrorException("Unable to begin JTA transaction", e);
+        }
+
         try {
             this.entitySync = delegator.findByPrimaryKey("EntitySync", UtilMisc.toMap("entitySyncId", this.entitySyncId));
             if (this.entitySync == null) {
@@ -169,7 +185,8 @@ public class EntitySyncContext {
             // make the last time to sync X minutes before the current time so that if this machines clock is up to that amount of time 
             //ahead of another machine writing to the DB it will still work fine and not lose any data
             syncEndStamp = new Timestamp(System.currentTimeMillis() - syncEndBufferMillis);
-            
+
+            this.offlineSyncSplitMillis = getOfflineSyncSplitMillis(entitySync);
             this.syncSplitMillis = getSyncSplitMillis(entitySync);
             this.syncEndBufferMillis = getSyncEndBufferMillis(entitySync);
             this.maxRunningNoUpdateMillis = getMaxRunningNoUpdateMillis(entitySync);
@@ -185,7 +202,18 @@ public class EntitySyncContext {
             // this is mostly for the pull side... will always be null for at the beginning of a push process, to be filled in later
             this.startDate = (Timestamp) context.get("startDate");
         } catch (GenericEntityException e) {
+            try {
+                TransactionUtil.rollback(beganTransaction);
+            } catch (GenericTransactionException e2) {
+                Debug.logWarning(e2, "Unable to call rollback()", module);
+            }
             throw new SyncDataErrorException("Error initializing EntitySync Context", e);
+        }
+
+        try {
+            TransactionUtil.commit(beganTransaction);
+        } catch (GenericTransactionException e) {
+            throw new SyncDataErrorException("Unable to commit transaction", e);
         }
     }
     
@@ -196,7 +224,9 @@ public class EntitySyncContext {
      * @return boolean representing if the EntitySync should be considered running
      */
     public boolean isEntitySyncRunning() {
-        boolean isInRunning = "ESR_RUNNING".equals(this.entitySync.getString("runStatusId"));
+        boolean isInRunning = ("ESR_RUNNING".equals(this.entitySync.getString("runStatusId")) ||
+                "ESR_PENDING".equals(this.entitySync.getString("runStatusId")));
+
         if (!isInRunning) {
             return false;
         }
@@ -226,7 +256,8 @@ public class EntitySyncContext {
     }
     
     protected Timestamp getNextRunEndTime() {
-        Timestamp nextRunEndTime = new Timestamp(this.currentRunStartTime.getTime() + syncSplitMillis);
+        long syncSplit = this.isOfflineSync ? offlineSyncSplitMillis : syncSplitMillis;
+        Timestamp nextRunEndTime = new Timestamp(this.currentRunStartTime.getTime() + syncSplit);
         if (nextRunEndTime.after(this.syncEndStamp)) {
             nextRunEndTime = this.syncEndStamp;
         }
@@ -250,7 +281,16 @@ public class EntitySyncContext {
         }
         return splitMillis;
     }
-    
+
+    protected static long getOfflineSyncSplitMillis(GenericValue entitySync) {
+        long splitMillis = defaultOfflineSyncSplitMillis;
+        Long syncSplitMillis = entitySync.getLong("offlineSyncSplitMillis");
+        if (syncSplitMillis != null) {
+            splitMillis = syncSplitMillis.longValue();
+        }
+        return splitMillis;
+    }
+
     protected static long getSyncEndBufferMillis(GenericValue entitySync) {
         long syncEndBufferMillis = defaultSyncEndBufferMillis;
         Long syncEndBufferMillisLong = entitySync.getLong("syncEndBufferMillis");
@@ -309,7 +349,14 @@ public class EntitySyncContext {
                 entitiesSkippedForKnownNext++;
                 continue;
             }
-            
+
+            boolean beganTransaction = false;
+            try {
+                beganTransaction = TransactionUtil.begin(7200);
+            } catch (GenericTransactionException e) {
+                throw new SyncDataErrorException("Unable to begin JTA transaction", e);
+            }
+
             try {
                 // get the values created within the current time range
                 EntityCondition findValCondition = new EntityConditionList(UtilMisc.toList(
@@ -367,12 +414,28 @@ public class EntitySyncContext {
                     }
                 }
             } catch (GenericEntityException e) {
+                try {
+                    TransactionUtil.rollback(beganTransaction);
+                } catch (GenericTransactionException e2) {
+                    Debug.logWarning(e2, "Unable to call rollback()", module);
+                }
                 throw new SyncDataErrorException("Error getting values to create from the datasource", e);
             } catch (Throwable t) {
+                try {
+                    TransactionUtil.rollback(beganTransaction);
+                } catch (GenericTransactionException e2) {
+                    Debug.logWarning(e2, "Unable to call rollback()", module);
+                }
                 throw new SyncDataErrorException("Caught runtime error while getting values to create", t);
             }
+
+            try {
+                TransactionUtil.commit(beganTransaction);
+            } catch (GenericTransactionException e) {
+                throw new SyncDataErrorException("Commit transaction failed", e);
+            }
         }
-        
+
         if (entitiesSkippedForKnownNext > 0) {
             if (Debug.infoOn()) Debug.logInfo("In assembleValuesToCreate skipped [" + entitiesSkippedForKnownNext + "/" + entityModelToUseList + "] entities for the time period ending at [" + currentRunEndTime + "] because of next known create times", module);
         }
@@ -422,7 +485,14 @@ public class EntitySyncContext {
                 entitiesSkippedForKnownNext++;
                 continue;
             }
-            
+
+            boolean beganTransaction = false;
+            try {
+                beganTransaction = TransactionUtil.begin(7200);
+            } catch (GenericTransactionException e) {
+                throw new SyncDataErrorException("Unable to begin JTA transaction", e);
+            }
+
             try {
                 // get all values that were updated, but NOT created in the current time range; if no info on created stamp, that's okay we'll include it here because it won't have been included in the valuesToCreate list
                 EntityCondition createdBeforeStartCond = new EntityExpr(
@@ -488,9 +558,25 @@ public class EntitySyncContext {
                     }
                 }
             } catch (GenericEntityException e) {
+                try {
+                    TransactionUtil.rollback(beganTransaction);
+                } catch (GenericTransactionException e2) {
+                    Debug.logWarning(e2, "Unable to call rollback()", module);
+                }
                 throw new SyncDataErrorException("Error getting values to store from the datasource", e);
             } catch (Throwable t) {
+                try {
+                    TransactionUtil.rollback(beganTransaction);
+                } catch (GenericTransactionException e2) {
+                    Debug.logWarning(e2, "Unable to call rollback()", module);
+                }
                 throw new SyncDataErrorException("Caught runtime error while getting values to store", t);
+            }
+
+            try {
+                TransactionUtil.commit(beganTransaction);
+            } catch (GenericTransactionException e) {
+                throw new SyncDataErrorException("Commit transaction failed", e);
             }
         }
 
@@ -528,7 +614,14 @@ public class EntitySyncContext {
         }
 
         //Debug.logInfo("Getting keys to remove; currentRunStartTime=" + currentRunStartTime + ", currentRunEndTime=" + currentRunEndTime, module);
-        
+
+        boolean beganTransaction = false;
+        try {
+            beganTransaction = TransactionUtil.begin(7200);
+        } catch (GenericTransactionException e) {
+            throw new SyncDataErrorException("Unable to begin JTA transaction", e);
+        }
+
         try {
             // find all instances of this entity with the STAMP_TX_FIELD != null, sort ascending to get lowest/oldest value first, then grab first and consider as candidate currentRunStartTime
             EntityCondition findValCondition = new EntityConditionList(UtilMisc.toList(
@@ -587,9 +680,25 @@ public class EntitySyncContext {
                 }
             }
         } catch (GenericEntityException e) {
+            try {
+                TransactionUtil.rollback(beganTransaction);
+            } catch (GenericTransactionException e2) {
+                Debug.logWarning(e2, "Unable to call rollback()", module);
+            }
             throw new SyncDataErrorException("Error getting keys to remove from the datasource", e);
         } catch (Throwable t) {
+            try {
+                TransactionUtil.rollback(beganTransaction);
+            } catch (GenericTransactionException e2) {
+                Debug.logWarning(e2, "Unable to call rollback()", module);
+            }
             throw new SyncDataErrorException("Caught runtime error while getting keys to remove", t);
+        }
+
+        try {
+            TransactionUtil.commit(beganTransaction);
+        } catch (GenericTransactionException e) {
+            throw new SyncDataErrorException("Commit transaction failed", e);
         }
 
         // TEST SECTION: leave false for normal use
@@ -660,6 +769,7 @@ public class EntitySyncContext {
             updateHistoryMap.put("runningTimeMillis", new Long(runningTimeMillis));
             updateHistoryMap.put("totalStoreCalls", new Long(totalStoreCalls));
             updateHistoryMap.put("totalSplits", new Long(totalSplits));
+            updateHistoryMap.put("totalRowsExported", new Long(totalRowsExported));
             updateHistoryMap.put("totalRowsToCreate", new Long(totalRowsToCreate));
             updateHistoryMap.put("totalRowsToStore", new Long(totalRowsToStore));
             updateHistoryMap.put("totalRowsToRemove", new Long(totalRowsToRemove));
@@ -686,10 +796,15 @@ public class EntitySyncContext {
     }
     
     public void saveFinalSyncResults() throws SyncDataErrorException, SyncServiceErrorException {
+        String newStatusId = "ESR_COMPLETE";
+        if (this.isOfflineSync && totalRowsExported > 0) {
+            newStatusId = "ESR_PENDING";
+        }
+
         // the lastSuccessfulSynchTime on EntitySync will already be set, so just set status as completed
         String esErrMsg = "Could not mark Entity Sync as complete, but all synchronization was successful";
         try {
-            Map completeEntitySyncRes = dispatcher.runSync("updateEntitySyncRunning", UtilMisc.toMap("entitySyncId", entitySyncId, "runStatusId", "ESR_COMPLETE", "userLogin", userLogin));
+            Map completeEntitySyncRes = dispatcher.runSync("updateEntitySyncRunning", UtilMisc.toMap("entitySyncId", entitySyncId, "runStatusId", newStatusId, "userLogin", userLogin));
             if (ServiceUtil.isError(completeEntitySyncRes)) {
                 // what to do here? try again?
                 throw new SyncDataErrorException(esErrMsg, null, null, completeEntitySyncRes, null);
@@ -857,7 +972,6 @@ public class EntitySyncContext {
     }
 
     // ======================== PUSH Methods ========================
-    // ======================== PUSH Methods ========================
     public void runPushStartRunning() throws SyncDataErrorException, SyncServiceErrorException, SyncAbortException {
         if (UtilValidate.isEmpty(targetServiceName)) {
             throw new SyncAbortException("Not running EntitySync [" + entitySyncId + "], no targetServiceName is specified, where do we send the data?");
@@ -884,11 +998,12 @@ public class EntitySyncContext {
         this.createInitialHistory();
     }
     
-    public void setTotalRowCounts(ArrayList valuesToCreate, ArrayList valuesToStore, List keysToRemove) {
+    public long setTotalRowCounts(ArrayList valuesToCreate, ArrayList valuesToStore, List keysToRemove) {
         this.totalRowsToCreate = valuesToCreate.size();
         this.totalRowsToStore = valuesToStore.size();
         this.totalRowsToRemove = keysToRemove.size();
         this.totalRowsPerSplit = this.totalRowsToCreate + this.totalRowsToStore + this.totalRowsToRemove;
+        return this.totalRowsPerSplit;
     }
     
     public void runPushSendData(ArrayList valuesToCreate, ArrayList valuesToStore, List keysToRemove) throws SyncOtherErrorException, SyncServiceErrorException {
@@ -1002,6 +1117,37 @@ public class EntitySyncContext {
 
             this.saveResultsReportedFromDataStore();
         }
+    }
+
+    // ======================== OFFLINE Methods ========================
+    public void runOfflineStartRunning() throws SyncDataErrorException, SyncServiceErrorException, SyncAbortException {
+        // check to see if this sync is already running, if so return error
+        if (this.isEntitySyncRunning()) {
+            throw new SyncAbortException("Not running EntitySync [" + entitySyncId + "], an instance is already running.");
+        }
+
+        // flag this context as offline
+        this.isOfflineSync = true;
+
+        String markErrorMsg = "Could not start Entity Sync service, could not mark as running";
+        try {
+            // not running, get started NOW
+            // set running status on entity sync, run in its own tx
+            Map startEntitySyncRes = dispatcher.runSync("updateEntitySyncRunning", UtilMisc.toMap("entitySyncId", entitySyncId, "runStatusId", "ESR_RUNNING", "preOfflineSynchTime", this.lastSuccessfulSynchTime, "userLogin", userLogin));
+            if (ModelService.RESPOND_ERROR.equals(startEntitySyncRes.get(ModelService.RESPONSE_MESSAGE))) {
+                throw new SyncDataErrorException(markErrorMsg, null, null, startEntitySyncRes, null);
+            }
+        } catch (GenericServiceException e) {
+            throw new SyncServiceErrorException(markErrorMsg, e);
+        }
+
+        // finally create the initial history record
+        this.createInitialHistory();
+    }
+
+    public void runSaveOfflineSyncInfo(long rowsInSplit) throws SyncDataErrorException, SyncServiceErrorException, SyncAbortException {
+        this.totalRowsExported += rowsInSplit;
+        this.saveResultsReportedFromDataStore();
     }
 
     /** This class signifies an abort condition, so the state and such of the EntitySync value in the datasource should not be changed */
