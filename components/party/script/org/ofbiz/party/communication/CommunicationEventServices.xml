@@ -24,7 +24,7 @@
  *
  * @author     Andy Zeneski (jaz@ofbiz.org)
  * @author     Olivier.Heintz@nereide.biz 
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.2
 -->
 
@@ -43,6 +43,10 @@
                 </check-permission>
             </then>
         </if>
+
+        <if-empty map-name="parameters" field-name="statusId">
+            <string-to-field string="COM_ENTERED" field-name="statusId" map-name="parameters"/>     
+        </if-empty>
 
 		<make-value value-name="newEntity" entity-name="CommunicationEvent"/>
 		<set-nonpk-fields map-name="parameters" value-name="newEntity"/>
