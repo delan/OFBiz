@@ -36,7 +36,7 @@
     </eca>
     <eca service="sendOrderNotification" event="commit">
     	<action service="createOrderNotificationLog" mode="sync"/>
-    </eca>    
+    </eca>
     
     <!-- Return ECAs -->
     <eca service="updateReturnStatusFromReceipt" event="commit">
