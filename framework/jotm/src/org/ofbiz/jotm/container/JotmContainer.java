@@ -72,7 +72,7 @@ public class JotmContainer implements Container {
         }
 
         // locate the JNDI (carol) configuration file
-        String carolPropName = ContainerConfig.getPropertyValue(cc, "jndi-config", "rmi.properties");
+        String carolPropName = ContainerConfig.getPropertyValue(cc, "jndi-config", "iiop.properties");
 
         // load the properties file
         Properties carolProps = UtilProperties.getProperties(carolPropName);
