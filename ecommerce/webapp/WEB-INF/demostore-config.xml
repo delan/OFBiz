@@ -124,7 +124,7 @@
       <success>request:emailorder</success>
       <error>view:checkout</error>
     </request-map>		
-    <request-map><uri>confirmorder</uri><secure>true</secure><auth>true</auth><success>view:confirmorder</success></request-map>		
+    <request-map><uri>confirmorder</uri><secure>false</secure><auth>false</auth><success>view:confirmorder</success></request-map>		
     <request-map>
       <uri>emailorder</uri><secure>true</secure><auth>true</auth>
       <event-type>java</event-type>
