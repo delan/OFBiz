@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     Eric.Barbier@nereide.biz (migration to uiLabelMap)
- *@version    $Revision: 1.4 $
+ *@version    $Revision: 1.5 $
  *@since      2.2
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -54,7 +54,7 @@
     <td><div class="tabletext">${payment.billingAccountId?default("N/A")}</div></td>
     <td><div class="tabletext">${payment.effectiveDate?string?if_exists}</div></td>
     <td><div class="tabletext">${payment.paymentRefNum?if_exists}</div></td>
-    <td align="right"><div class="tabletext">${payment.amount?string.currency}</div></td>
+    <td align="right"><div class="tabletext"><@ofbizCurrency amount=payment.amountApplied isoCode=payment.currencyUomId?if_exists/> of <@ofbizCurrency amount=payment.amount isoCode=payment.currencyUomId?if_exists/></div></td>
   </tr>
   </#list>
 </table>

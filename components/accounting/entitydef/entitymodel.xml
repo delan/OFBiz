@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.29 $
+ * @version    $Revision: 1.30 $
  */
 -->
 
@@ -1627,6 +1627,7 @@
       <field name="effectiveDate" type="date-time"></field>
       <field name="paymentRefNum" type="short-varchar"></field>
       <field name="amount" type="currency-amount"></field>
+      <field name="currencyUomId" type="id"></field>
       <field name="comments" type="comment"></field>
       <field name="finAccountTransId" type="id"></field>
       <prim-key field="paymentId"/>
@@ -1641,6 +1642,9 @@
       </relation>
       <relation type="one" fk-name="PAYMENT_PMETH" rel-entity-name="PaymentMethod">
         <key-map field-name="paymentMethodId"/>
+      </relation>
+      <relation type="one" fk-name="PAYMENT_CUOM" rel-entity-name="Uom">
+        <key-map field-name="currencyUomId" rel-field-name="uomId"/>
       </relation>
       <relation type="one-nofk" rel-entity-name="CreditCard">
         <key-map field-name="paymentMethodId"/>
