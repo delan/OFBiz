@@ -20,13 +20,13 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      3.0
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
 
 <#if productPromo?has_content>
-  <table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
+  <table border="0" cellspacing="0" cellpadding="0" class="boxoutside">
     <tr>
       <td width="100%">
         <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
