@@ -1,5 +1,5 @@
 /*
- * $Id: CheckOutEvents.java,v 1.32 2004/06/28 20:17:59 ajzeneski Exp $
+ * $Id: CheckOutEvents.java,v 1.33 2004/07/19 02:41:37 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -62,7 +62,7 @@ import org.ofbiz.service.ServiceUtil;
  * @author <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author <a href="mailto:tristana@twibble.org">Tristan Austin</a>
- * @version $Revision: 1.32 $
+ * @version $Revision: 1.33 $
  * @since 2.0
  */
 public class CheckOutEvents {
@@ -273,7 +273,7 @@ public class CheckOutEvents {
             Iterator i = paymentMethods.iterator();
             while (i.hasNext()) {
                 String paymentMethodId = (String) i.next();
-                Double paymentAmount = cart.getPaymentMethodAmount(paymentMethodId);
+                Double paymentAmount = cart.getPaymentAmount(paymentMethodId);
                 if (paymentAmount == null || paymentAmount.doubleValue() == 0) {
                     nullPaymentIds.add(paymentMethodId);
                 }
@@ -281,18 +281,20 @@ public class CheckOutEvents {
             Iterator npi = nullPaymentIds.iterator();
             while (npi.hasNext()) {
                 String paymentMethodId = (String) npi.next();
+                Double paymentTotal = cart.getPaymentTotal();
+                double selectedPaymentTotal = paymentTotal != null ? paymentTotal.doubleValue() : 0.00;
                 double requiredAmount = cart.getGrandTotal() - cart.getBillingAccountAmount();
-                double selectedPaymentTotal = cart.getSelectedPaymentMethodsTotal();
                 double nullAmount = requiredAmount - selectedPaymentTotal;
                 if (nullAmount > 0) {
-                    cart.setPaymentMethodAmount(paymentMethodId, new Double(nullAmount));
+                    cart.addPaymentAmount(paymentMethodId, nullAmount);
                 }
             }
         }
 
         // verify the selected payment method amounts will cover the total
+        Double paymentTotal = cart.getPaymentTotal();
+        double selectedPaymentTotal = paymentTotal != null ? paymentTotal.doubleValue() : 0.00;
         double requiredAmount = cart.getGrandTotal() - cart.getBillingAccountAmount();
-        double selectedPaymentTotal = cart.getSelectedPaymentMethodsTotal();
         if (paymentMethods != null && paymentMethods.size() > 0 && requiredAmount > selectedPaymentTotal) {
             Debug.logError("Required Amount : " + requiredAmount + " / Selected Amount : " + selectedPaymentTotal, module);
             errMsg = UtilProperties.getMessage(resource, "checkevents.payment_not_cover_this_order", (cart != null ? cart.getLocale() : Locale.getDefault()));
@@ -370,11 +372,11 @@ public class CheckOutEvents {
             }
 
             // get the bill-up to amount
-            Double billUpTo = cart.getPaymentMethodAmount(gc.getString("paymentMethodId"));
+            Double billUpTo = cart.getPaymentAmount(gc.getString("paymentMethodId"));
 
             // null bill-up to means use the full balance || update the bill-up to with the balance
             if (billUpTo == null || billUpTo.doubleValue() == 0 || gcBalance < billUpTo.doubleValue()) {
-                cart.setPaymentMethodAmount(gc.getString("paymentMethodId"), new Double(gcBalance));
+                cart.addPaymentAmount(gc.getString("paymentMethodId"), new Double(gcBalance));
             }
         }
     }

@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.10 $
+ *@version    $Revision: 1.11 $
  *@since      3.0
 -->
 
@@ -178,7 +178,7 @@ function toggleBillingAccount(box) {
 
                           <tr>
                             <td width="1%" nowrap>
-                              <input type="checkbox" name="checkOutPaymentId" value="${paymentMethod.paymentMethodId}" <#if cart.isPaymentMethodSelected(paymentMethod.paymentMethodId)>checked</#if>>
+                              <input type="checkbox" name="checkOutPaymentId" value="${paymentMethod.paymentMethodId}" <#if cart.isPaymentSelected(paymentMethod.paymentMethodId)>checked</#if>>
                             </td>
                             <td width="1%" nowrap>
                               <span class="tabletext">${uiLabelMap.AccountingGift}:&nbsp;${giftCardNumber}</span>
@@ -189,7 +189,7 @@ function toggleBillingAccount(box) {
                             <td>
                               &nbsp;
                               <span class="tabletext">
-                                <b>${uiLabelMap.OrderBillUpTo}:</b> <input type="text" size="5" class="inputBox" name="amount_${paymentMethod.paymentMethodId}" value="<#if (cart.getPaymentMethodAmount(paymentMethod.paymentMethodId) > 0)>${cart.getPaymentMethodAmount(paymentMethod.paymentMethodId)?double?string("##0.00")}</#if>">
+                                <b>${uiLabelMap.OrderBillUpTo}:</b> <input type="text" size="5" class="inputBox" name="amount_${paymentMethod.paymentMethodId}" value="<#if (cart.getPaymentAmount(paymentMethod.paymentMethodId)?default(0) > 0)>${cart.getPaymentAmount(paymentMethod.paymentMethodId)?double?string("##0.00")}</#if>">
                               </span>
                             </td>
                           </tr>
@@ -197,7 +197,7 @@ function toggleBillingAccount(box) {
                           <#assign creditCard = paymentMethod.getRelatedOne("CreditCard")>
                           <tr>
                             <td width="1%" nowrap>
-                              <input type="checkbox" name="checkOutPaymentId" value="${paymentMethod.paymentMethodId}" <#if cart.isPaymentMethodSelected(paymentMethod.paymentMethodId)>checked</#if>>
+                              <input type="checkbox" name="checkOutPaymentId" value="${paymentMethod.paymentMethodId}" <#if cart.isPaymentSelected(paymentMethod.paymentMethodId)>checked</#if>>
                             </td>
                             <td width="1%" nowrap>
                               <span class="tabletext">CC:&nbsp;${Static["org.ofbiz.party.contact.ContactHelper"].formatCreditCard(creditCard)}</span>
@@ -208,7 +208,7 @@ function toggleBillingAccount(box) {
                             <td>
                               &nbsp;
                               <span class="tabletext">
-                                <b>${uiLabelMap.OrderBillUpTo}:</b> <input type="text" size="5" class="inputBox" name="amount_${paymentMethod.paymentMethodId}" value="<#if (cart.getPaymentMethodAmount(paymentMethod.paymentMethodId) > 0)>${cart.getPaymentMethodAmount(paymentMethod.paymentMethodId)?double?string("##0.00")}</#if>">
+                                <b>${uiLabelMap.OrderBillUpTo}:</b> <input type="text" size="5" class="inputBox" name="amount_${paymentMethod.paymentMethodId}" value="<#if (cart.getPaymentAmount(paymentMethod.paymentMethodId)?default(0) > 0)>${cart.getPaymentAmount(paymentMethod.paymentMethodId)?double?string("##0.00")}</#if>">
                               </span>
                             </td>
                           </tr>

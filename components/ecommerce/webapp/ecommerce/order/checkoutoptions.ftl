@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.18 $
+ *@version    $Revision: 1.19 $
  *@since      2.1
 -->
 
@@ -364,7 +364,7 @@ function toggleBillingAccount(box) {
                           <#assign creditCard = paymentMethod.getRelatedOne("CreditCard")>
                           <tr>
                             <td width="1%" nowrap>
-                              <input type="radio" name="checkOutPaymentId" value="${paymentMethod.paymentMethodId}" <#if cart.isPaymentMethodSelected(paymentMethod.paymentMethodId)>checked</#if>>
+                              <input type="radio" name="checkOutPaymentId" value="${paymentMethod.paymentMethodId}" <#if cart.isPaymentSelected(paymentMethod.paymentMethodId)>checked</#if>>
                             </td>
                             <td width="50%" nowrap>
                               <span class="tabletext">CC:&nbsp;${Static["org.ofbiz.party.contact.ContactHelper"].formatCreditCard(creditCard)}</span>
@@ -375,7 +375,7 @@ function toggleBillingAccount(box) {
                           <#assign eftAccount = paymentMethod.getRelatedOne("EftAccount")>
                           <tr>
                             <td width="1%" nowrap>
-                              <input type="radio" name="checkOutPaymentId" value="${paymentMethod.paymentMethodId}" <#if cart.isPaymentMethodSelected(paymentMethod.paymentMethodId)>checked</#if>>
+                              <input type="radio" name="checkOutPaymentId" value="${paymentMethod.paymentMethodId}" <#if cart.isPaymentSelected(paymentMethod.paymentMethodId)>checked</#if>>
                             </td>
                             <td width="50%" nowrap>
                               <span class="tabletext">EFT:&nbsp;${eftAccount.bankName?if_exists}: ${eftAccount.accountNumber?if_exists}</span>
@@ -403,7 +403,7 @@ function toggleBillingAccount(box) {
 
                           <tr>
                             <td width="1%" nowrap>
-                              <input type="radio" name="checkOutPaymentId" value="${paymentMethod.paymentMethodId}" <#if cart.isPaymentMethodSelected(paymentMethod.paymentMethodId)>checked</#if>>
+                              <input type="radio" name="checkOutPaymentId" value="${paymentMethod.paymentMethodId}" <#if cart.isPaymentSelected(paymentMethod.paymentMethodId)>checked</#if>>
                             </td>
                             <td width="50%" nowrap>
                               <span class="tabletext">${uiLabelMap.AccountingGift}:&nbsp;${giftCardNumber}</span>
