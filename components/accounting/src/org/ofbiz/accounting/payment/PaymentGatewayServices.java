@@ -1,5 +1,5 @@
 /*
- * $Id: PaymentGatewayServices.java,v 1.32 2004/05/25 18:40:59 ajzeneski Exp $
+ * $Id: PaymentGatewayServices.java,v 1.33 2004/06/02 16:41:15 ajzeneski Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -69,7 +69,7 @@ import org.ofbiz.security.Security;
  * PaymentGatewayServices
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.32 $
+ * @version    $Revision: 1.33 $
  * @since      2.0
  */
 public class PaymentGatewayServices {
@@ -1327,7 +1327,11 @@ public class PaymentGatewayServices {
 
         // check to see if there was a processor failure
         String authResp = (String) serviceResult.get("processResult");
-        if (authResp == null || "ERROR".equals(authResp)) {
+        if (authResp == null) {
+            authResp = "ERROR";
+        }
+
+        if ("ERROR".equals(authResp)) {
             Debug.logWarning("The payment processor had a failure in processing, will not modify any status", module);
         } else {
             if ("FAILED".equals(authResp)) {

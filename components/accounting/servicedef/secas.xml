@@ -54,4 +54,9 @@
     <eca service="authOrderPayments" event="global-rollback">
         <action service="releaseOrderPayments" mode="sync"/>
     </eca>
+
+    <eca service="retryFailedOrderAuth" event="commit">
+        <condition field-name="processResult" operator="not-equals" value="ERROR"/>
+        <action service="sendOrderPayRetryNotification" mode="async" persist="true"/>
+    </eca>
 </service-eca>
