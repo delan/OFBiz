@@ -1,6 +1,10 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2001/08/28 02:24:34  azeneski
+ * Updated shopping cart to use store a reference to the product entity, rather then individual attributes.
+ * Worked on the equals() method in ShoppingCartItem.java. Might be fixed now.
+ *
  * Revision 1.1.1.1  2001/08/24 01:01:42  azeneski
  * Initial Import
  *
@@ -13,6 +17,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Collection;
 import java.util.Iterator;
+
+import org.ofbiz.core.util.Debug;
 
 /**
  * <p><b>Title:</b> ShoppingCart.java
@@ -62,6 +68,30 @@ public class ShoppingCart {
         cartDiscountString = "";
     }
     
+    /** Add an item to the shopping cart, or if already there, increase the quantity. 
+     *  @return the new/increased item index
+     */
+    public int addOrIncreaseItem(org.ofbiz.core.entity.GenericValue product, double quantity, HashMap attributes) {
+    // create a new shopping cart item.
+        ShoppingCartItem newItem = new ShoppingCartItem(product,quantity,attributes);
+        Debug.log("New item created: " + newItem.getProductId());
+        
+        // Check for existing cart item.
+        Debug.log("Cart size: " + this.size());
+        for (int i = 0; i < this.cartLines.size(); i++) {
+            ShoppingCartItem sci = (ShoppingCartItem) cartLines.get(i);
+            Debug.log("Comparing to item: " + sci.getProductId());
+            if ( sci.equals(newItem) ) {
+                Debug.log("Found a match, updating quantity.");
+                sci.setQuantity(sci.getQuantity() + quantity);
+                return i;
+            }
+        }
+                        
+        // Add the item to the shopping cart if it wasn't found.
+        return this.addItem(0,newItem);
+    }
+
     /** Add an item to the shopping cart. */
     public int addItem(org.ofbiz.core.entity.GenericValue product, double quantity, HashMap attributes) {
         cartLines.add(new ShoppingCartItem(product,quantity,attributes));
