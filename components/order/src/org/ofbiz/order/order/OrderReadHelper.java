@@ -749,20 +749,18 @@ public class OrderReadHelper {
             if (ProductWorker.shippingApplies(product)) {
                 Double weight = product.getDouble("weight");
                 String isVariant = product.getString("isVariant");
-                if (weight == null && isVariant != null && "Y".equals(isVariant)) {
+                if (weight == null && "Y".equals(isVariant)) {
                     // get the virtual product and check its weight
-                    GenericValue virtual = null;
                     try {
-                        List virtuals = delegator.findByAnd("ProductAssoc", UtilMisc.toMap("productIdTo", product.getString("productId"), "productAssocTypeId", "PRODUCT_VARIENT"), UtilMisc.toList("-fromDate"));
-                        if (virtuals != null) {
-                            virtuals = EntityUtil.filterByDate(virtuals);
+                        String virtualId = ProductWorker.getVariantVirtualId(product);
+                        if (UtilValidate.isNotEmpty(virtualId)) {
+                            GenericValue virtual = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", virtualId));
+                            if (virtual != null) {
+                                weight = virtual.getDouble("weight");
+                            }
                         }
-                        virtual = EntityUtil.getFirst(virtuals);
                     } catch (GenericEntityException e) {
                         Debug.logError(e, "Problem getting virtual product");
-                    }
-                    if (virtual != null) {
-                        weight = virtual.getDouble("weight");
                     }
                 }
 
@@ -806,22 +804,20 @@ public class OrderReadHelper {
                 Double width = product.getDouble("shippingWidth");
                 Double depth = product.getDouble("shippingDepth");
                 String isVariant = product.getString("isVariant");
-                if (height == null && width == null && depth == null && isVariant != null && "Y".equals(isVariant)) {
+                if ((height == null || width == null || depth == null) && "Y".equals(isVariant)) {
                     // get the virtual product and check its values
-                    GenericValue virtual = null;
                     try {
-                        List virtuals = delegator.findByAnd("ProductAssoc", UtilMisc.toMap("productIdTo", product.getString("productId"), "productAssocTypeId", "PRODUCT_VARIENT"), UtilMisc.toList("-fromDate"));
-                        if (virtuals != null) {
-                            virtuals = EntityUtil.filterByDate(virtuals);
+                        String virtualId = ProductWorker.getVariantVirtualId(product);
+                        if (UtilValidate.isNotEmpty(virtualId)) {
+                            GenericValue virtual = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", virtualId));
+                            if (virtual != null) {
+                                if (height == null) height = virtual.getDouble("shippingHeight");
+                                if (width == null) width = virtual.getDouble("shippingWidth");
+                                if (depth == null) depth = virtual.getDouble("shippingDepth");
+                            }
                         }
-                        virtual = EntityUtil.getFirst(virtuals);
                     } catch (GenericEntityException e) {
                         Debug.logError(e, "Problem getting virtual product");
-                    }
-                    if (virtual != null) {
-                        height = virtual.getDouble("shippingHeight");
-                        width = virtual.getDouble("shippingWidth");
-                        depth = virtual.getDouble("shippingDepth");
                     }
                 }
 
