@@ -843,7 +843,7 @@ public class ShoppingCart implements java.io.Serializable {
                 GenericValue orderItem = getDelegator().makeValue("OrderItem", null);
 
                 orderItem.set("orderItemSeqId", orderItemSeqId);
-                //orderItem.set("orderItemTypeId", "SALES_ORDER_ITEM");
+                orderItem.set("orderItemTypeId", item.getItemType());
                 orderItem.set("productId", item.getProductId());
                 orderItem.set("quantity", new Double(item.getQuantity()));
                 orderItem.set("unitPrice", new Double(item.getBasePrice()));

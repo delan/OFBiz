@@ -67,8 +67,10 @@ public class ShoppingCartItem implements java.io.Serializable {
     private String prodCatalogId = null;
     private String webSiteId = null;
     private String productId = null;
+    private String itemType = null;
     private String itemComment = null;
-    private String itemDescription = null;
+    private String itemName = null;         // special field for non-product items
+    private String itemDescription = null;  // special field for non-product items
     private double quantity = 0.0;
     private double basePrice = 0.0;
     private double listPrice = 0.0;
@@ -112,7 +114,7 @@ public class ShoppingCartItem implements java.io.Serializable {
 
             Debug.logWarning(excMsg);
             throw new CartItemModifyException(excMsg);
-        }
+        }        
 
         return makeItem(cartLocation, product, quantity, additionalProductFeatureAndAppls, attributes, prodCatalogId, dispatcher, cart);
     }
@@ -178,7 +180,9 @@ public class ShoppingCartItem implements java.io.Serializable {
         this.delegatorName = delegator.getDelegatorName();
         this.prodCatalogId = getProdCatalogId();
         this.productId = item.getProductId();
+        this.itemType = item.getItemType();
         this.itemComment = item.getItemComment();
+        this.itemDescription = item.getItemDescription();
         this.quantity = item.getQuantity();
         this.basePrice = item.getBasePrice();
         this.listPrice = item.getListPrice();
@@ -200,6 +204,7 @@ public class ShoppingCartItem implements java.io.Serializable {
     protected ShoppingCartItem(GenericValue product, Map additionalProductFeatureAndAppls, Map attributes, String prodCatalogId, String webSiteId) {
         this._product = product;
         this.productId = _product.getString("productId");
+        this.itemType = "PRODUCT_ORDER_ITEM";
         this.prodCatalogId = prodCatalogId;
         this.webSiteId = webSiteId;
         this.itemComment = null;
@@ -208,6 +213,15 @@ public class ShoppingCartItem implements java.io.Serializable {
         this.delegatorName = _product.getDelegator().getDelegatorName();
         this.orderShipmentPreference = delegator.makeValue("OrderShipmentPreference", null);
         this.addAllProductFeatureAndAppls(additionalProductFeatureAndAppls);
+    }
+    
+    /** Creates new ShopingCartItem object. */
+    protected ShoppingCartItem(String itemTypeId, String description, Map attributes, String prodCatalogId, String webSiteId) {      
+        this.itemType = itemTypeId;
+        this.itemDescription = description;
+        this.attributes = attributes;
+        this.prodCatalogId = prodCatalogId;
+        this.webSiteId = webSiteId;
     }
 
     public String getProdCatalogId() {
@@ -239,7 +253,7 @@ public class ShoppingCartItem implements java.io.Serializable {
         }
 
         // check inventory if new quantity is greater than old quantity; don't worry about inventory getting pulled out from under, that will be handled at checkout time
-        if (quantity > this.quantity) {
+        if (_product != null && quantity > this.quantity) {
             if (org.ofbiz.commonapp.product.catalog.CatalogWorker.isCatalogInventoryRequired(this.prodCatalogId, this.getProduct(), this.getDelegator())) {
                 if (!org.ofbiz.commonapp.product.catalog.CatalogWorker.isCatalogInventoryAvailable(this.prodCatalogId, productId, quantity, getDelegator(), dispatcher)) {
                     String excMsg = "Sorry, we do not have enough (you tried " + UtilFormatOut.formatQuantity(quantity) + ") of the product " + this.getName() + " (product ID: " + productId + ") in stock, not adding to cart. Please try a lower quantity, try again later, or call customer service for more information.";
@@ -264,30 +278,32 @@ public class ShoppingCartItem implements java.io.Serializable {
 
     public void updatePrice(LocalDispatcher dispatcher, ShoppingCart cart) throws CartItemModifyException {
         // set basePrice using the calculateProductPrice service
-        try {
-            Map priceContext = new HashMap();
+        if (_product != null) {        
+            try {
+                Map priceContext = new HashMap();
+                
+                priceContext.put("currencyUomId", cart.getCurrency());
+                priceContext.put("product", this.getProduct());
+                priceContext.put("prodCatalogId", prodCatalogId);
+                priceContext.put("webSiteId", webSiteId);            
+                
+                String partyId = cart.getPartyId();
+                if (partyId != null)
+                	priceContext.put("partyId", partyId);
+                
+                priceContext.put("quantity", new Double(this.getQuantity()));
+                Map priceResult = dispatcher.runSync("calculateProductPrice", priceContext);
             
-            priceContext.put("currencyUomId", cart.getCurrency());
-            priceContext.put("product", this.getProduct());
-            priceContext.put("prodCatalogId", prodCatalogId);
-            priceContext.put("webSiteId", webSiteId);            
+                if (ModelService.RESPOND_ERROR.equals(priceResult.get(ModelService.RESPONSE_MESSAGE))) {
+                    throw new CartItemModifyException("There was an error while calculating the price: " + priceResult.get(ModelService.ERROR_MESSAGE));
+                }
             
-            String partyId = cart.getPartyId();
-            if (partyId != null)
-            	priceContext.put("partyId", partyId);
-            
-            priceContext.put("quantity", new Double(this.getQuantity()));
-            Map priceResult = dispatcher.runSync("calculateProductPrice", priceContext);
-        
-            if (ModelService.RESPOND_ERROR.equals(priceResult.get(ModelService.RESPONSE_MESSAGE))) {
-                throw new CartItemModifyException("There was an error while calculating the price: " + priceResult.get(ModelService.ERROR_MESSAGE));
+                if (priceResult.get("price") != null) this.basePrice = ((Double) priceResult.get("price")).doubleValue();
+                if (priceResult.get("listPrice") != null) this.listPrice = ((Double) priceResult.get("listPrice")).doubleValue();
+                this.orderItemPriceInfos = (List) priceResult.get("orderItemPriceInfos");
+            } catch (GenericServiceException e) {
+                throw new CartItemModifyException("There was an error while calculating the price", e);
             }
-        
-            if (priceResult.get("price") != null) this.basePrice = ((Double) priceResult.get("price")).doubleValue();
-            if (priceResult.get("listPrice") != null) this.listPrice = ((Double) priceResult.get("listPrice")).doubleValue();
-            this.orderItemPriceInfos = (List) priceResult.get("orderItemPriceInfos");
-        } catch (GenericServiceException e) {
-            throw new CartItemModifyException("There was an error while calculating the price", e);
         }
     }      
            
@@ -296,6 +312,21 @@ public class ShoppingCartItem implements java.io.Serializable {
         return quantity;
     }
 
+    /** Sets the item description. */
+    public void setItemDescription(String description) {
+        this.itemDescription = description;        
+    }
+    
+    /** Sets the item name. */
+    public void setItemName(String name) {
+        this.itemName = name;
+    }
+    
+    /** Returns the item name (special field for non-product items). */
+    public String getItemName() {
+        return itemName;
+    }
+    
     /** Sets the item comment. */
     public void setItemComment(String itemComment) {
         this.itemComment = itemComment;
@@ -304,6 +335,21 @@ public class ShoppingCartItem implements java.io.Serializable {
     /** Returns the item's comment. */
     public String getItemComment() {
         return itemComment;
+    }
+        
+    /** Returns the item description (special field for non-product items). */
+    public String getItemDescription() {
+       return itemDescription;
+    }
+    
+    /** Sets the item type. */
+    public void setItemType(String itemType) {
+        this.itemType = itemType;
+    }
+    
+    /** Returns the item type. */
+    public String getItemType() {
+        return itemType;
     }
 
     public void setOrderItemSeqId(String orderItemSeqId) {
