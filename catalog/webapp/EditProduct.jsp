@@ -32,6 +32,7 @@
 
 <%@ include file="/includes/envsetup.jsp" %>
 <%@ include file="/includes/header.jsp" %>
+<table cellpadding=0 cellspacing=0 border=0 width="100%"><tr><td>&nbsp;&nbsp;</td><td>
 <%@ include file="/includes/leftcolumn.jsp" %>
 
 <%if(security.hasEntityPermission("CATALOG", "_VIEW", session)) {%>
@@ -78,7 +79,7 @@
       <td align=right><div class="tabletext">Product ID</div></td>
       <td>&nbsp;</td>
       <td>
-        <input type="text" name="PRODUCT_ID" size="20" maxlength="40" value="<%=productId%>">
+        <input type="text" name="PRODUCT_ID" size="20" maxlength="20" value="<%=productId%>">
       </td>
     </tr>
   <%}else{%>
@@ -87,7 +88,7 @@
       <td align=right><div class="tabletext">Product ID</div></td>
       <td>&nbsp;</td>
       <td>
-        <input type="text" name="PRODUCT_ID" size="20" maxlength="40" value="">
+        <input type="text" name="PRODUCT_ID" size="20" maxlength="20" value="">
       </td>
     </tr>
   <%}%>
@@ -165,13 +166,13 @@
     <%fieldName = "description";%><%paramName = "DESCRIPTION";%>    
     <td width="26%" align=right><div class="tabletext">Description</div></td>
     <td>&nbsp;</td>
-    <td width="74%"><input type="text" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(useValues?product.getString(fieldName):request.getParameter(paramName))%>" size="80" maxlength="255"></td>
+    <td width="74%"><textarea cols="60" rows="4" name="<%=paramName%>" maxlength="255"><%=UtilFormatOut.checkNull(useValues?product.getString(fieldName):request.getParameter(paramName))%></textarea></td>
   </tr>
   <tr>
     <%fieldName = "longDescription";%><%paramName = "LONG_DESCRIPTION";%>    
     <td width="26%" align=right valign=top><div class="tabletext">Long Description</div></td>
     <td>&nbsp;</td>
-    <td width="74%"><textarea cols="60" rows="3" name="<%=paramName%>" maxlength="2000"><%=UtilFormatOut.checkNull(useValues?product.getString(fieldName):request.getParameter(paramName))%></textarea></td>
+    <td width="74%"><textarea cols="60" rows="6" name="<%=paramName%>" maxlength="2000"><%=UtilFormatOut.checkNull(useValues?product.getString(fieldName):request.getParameter(paramName))%></textarea></td>
   </tr>
 
   <tr>
@@ -275,4 +276,5 @@
 <%}%>
 
 <%@ include file="/includes/onecolumnclose.jsp" %>
+</td><td>&nbsp;&nbsp;</td></tr></table>
 <%@ include file="/includes/footer.jsp" %>

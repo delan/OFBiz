@@ -146,6 +146,10 @@
     	<security https="true" auth="true"/>
     	<response name="success" type="view" value="UploadImage"/>
     </request-map>
+    <request-map uri="UploadCategoryImage">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="UploadCategoryImage"/>
+    </request-map>
 
     <request-map uri="EditProductAssoc"><security https="true" auth="true"/>
     	<response name="success" type="view" value="EditProductAssoc"/>
@@ -172,6 +176,7 @@
     <view-map name="EditProductKeyword" page="/EditProductKeyword.jsp"/>
     <view-map name="EditProductAssoc" page="/EditProductAssoc.jsp"/>
     <view-map name="UploadImage" page="/UploadImage.jsp"/>
+    <view-map name="UploadCategoryImage" page="/UploadCategoryImage.jsp"/>
     <!-- end of view mappings -->
 </site-conf>
 

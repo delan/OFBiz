@@ -32,6 +32,7 @@
 
 <%@ include file="/includes/envsetup.jsp" %>
 <%@ include file="/includes/header.jsp" %>
+<table cellpadding=0 cellspacing=0 border=0 width="100%"><tr><td>&nbsp;&nbsp;</td><td>
 <%@ include file="/includes/leftcolumn.jsp" %>
 
 <%if(security.hasEntityPermission("CATALOG", "_VIEW", request.getSession())) {%>
@@ -110,7 +111,10 @@
     <%fieldName = "categoryImageUrl";%><%paramName = "CATEGORY_IMAGE_URL";%>    
     <td width="26%" align=right><div class="tabletext">Category Image URL</div></td>
     <td>&nbsp;</td>
-    <td width="74%"><input type="text" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(useValues?category.getString(fieldName):request.getParameter(paramName))%>" size="80" maxlength="255"></td>
+    <td width="74%">
+      <input type="text" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(useValues?category.getString(fieldName):request.getParameter(paramName))%>" size="80" maxlength="255">
+      <%if(productCategoryId != null && productCategoryId.length() > 0) {%><p><a href="<ofbiz:url>/UploadCategoryImage?PRODUCT_CATEGORY_ID=<%=productCategoryId%></ofbiz:url>" class="buttontext">[Upload Image]</a><%}%>
+    </td>
   </tr>
 
   <tr>
@@ -125,7 +129,11 @@
         <%Iterator categoryIter = UtilMisc.toIterator(categoryCol);%>
         <%while(categoryIter != null && categoryIter.hasNext()) {%>
           <%GenericValue nextCategory=(GenericValue)categoryIter.next();%>
-          <option value='<%=nextCategory.getString("productCategoryId")%>'><%=nextCategory.getString("description")%> [<%=nextCategory.getString("productCategoryId")%>]</option>
+          <%if((productCategoryId != null) && (nextCategory != null)) {%>
+            <%if(!productCategoryId.equals(nextCategory.getString("productCategoryId"))){%>
+              <option value='<%=nextCategory.getString("productCategoryId")%>'><%=nextCategory.getString("description")%> [<%=nextCategory.getString("productCategoryId")%>]</option>
+            <%}%>
+          <%}%>
         <%}%>
       </select>
     </td>
@@ -184,7 +192,9 @@
     <%Iterator pit = UtilMisc.toIterator(categoryCol);%>
     <%while(pit != null && pit.hasNext()) {%>
       <%GenericValue curCategory = (GenericValue)pit.next();%>
+        <%if(!productCategoryId.equals(curCategory.getString("productCategoryId"))){%>
       <option value="<%=curCategory.getString("productCategoryId")%>"><%=curCategory.getString("description")%> [<%=curCategory.getString("productCategoryId")%>]</option>
+        <%}%>
     <%}%>
     </select>
   <input type="submit" value="Add">
@@ -229,7 +239,9 @@
     <%Iterator cit = UtilMisc.toIterator(categoryCol);%>
     <%while(cit != null && cit.hasNext()) {%>
       <%GenericValue curCategory = (GenericValue)cit.next();%>
-      <option value="<%=curCategory.getString("productCategoryId")%>"><%=curCategory.getString("description")%> [<%=curCategory.getString("productCategoryId")%>]</option>
+      <%if(!productCategoryId.equals(curCategory.getString("productCategoryId"))){%>
+        <option value="<%=curCategory.getString("productCategoryId")%>"><%=curCategory.getString("description")%> [<%=curCategory.getString("productCategoryId")%>]</option>
+      <%}%>
     <%}%>
     </select>
   <input type="submit" value="Add">
@@ -241,4 +253,5 @@
 <%}%>
 
 <%@ include file="/includes/onecolumnclose.jsp" %>
+</td><td>&nbsp;&nbsp;</td></tr></table>
 <%@ include file="/includes/footer.jsp" %>

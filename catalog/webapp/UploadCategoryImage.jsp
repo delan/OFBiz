@@ -1,7 +1,6 @@
-
 <%
 /**
- *  Title: Upload Image Page
+ *  Title: Upload Category Image Page
  *  Description: None
  *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
@@ -32,11 +31,10 @@
 <%@ page import="java.io.*" %>
 <%@ page import="org.ofbiz.core.util.*" %>
 
-<%pageContext.setAttribute("PageName", "Upload Image");%>
+<%pageContext.setAttribute("PageName", "Upload Category Image");%>
 
 <%@ include file="/includes/envsetup.jsp" %>
 <%@ include file="/includes/header.jsp" %>
-<table cellpadding=0 cellspacing=0 border=0 width="100%"><tr><td>&nbsp;&nbsp;</td><td>
 <%@ include file="/includes/onecolumn.jsp" %>
 
 <%if(security.hasEntityPermission("CATALOG", "_VIEW", request.getSession())) {%>
@@ -44,15 +42,15 @@
   String fileType = request.getParameter("upload_file_type");
   if(fileType == null || fileType.length() <= 0) fileType="small";
 
-  String productId = request.getParameter("PRODUCT_ID");
-  GenericValue product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
-  if(product != null) {
+  String productCategoryId = request.getParameter("PRODUCT_CATEGORY_ID");
+  GenericValue productCategory = delegator.findByPrimaryKey("ProductCategory", UtilMisc.toMap("productCategoryId", productCategoryId));
+  if(productCategory != null) {
 %>
     <%
       String contentType = request.getContentType();
       if(contentType != null && contentType.indexOf("boundary=") > 0)
       {
-        String fileName = "/images/catalog/" + productId + "." + fileType + ".";
+        String fileName = "/images/catalog/category/" + productCategoryId + "." + fileType + ".";
         String imageUrl = null;
     %>
       <p>Filename: <%=fileName%>
@@ -62,9 +60,9 @@
       <%-- <p><%=request.getInputStream()%> --%>
     <%
 //===============================================================================
-        String name = productId + "." + fileType;
+        String name = productCategoryId + "." + fileType;
         String dir = UtilProperties.getPropertyValue(application.getResource("/WEB-INF/ecommerce.properties"), 
-            "image.server.path") + "/catalog";
+            "image.server.path") + "/catalog/category";
         String characterEncoding = request.getCharacterEncoding();
 
         int i1;
@@ -83,7 +81,6 @@
 
         String s6 = null;
         String fileNameToUse = "";
-
         long l = 0L;
         String idString; // = getId();
         synchronized(SessionIdLock)
@@ -104,16 +101,16 @@
 
         out.print("<p>The file on you computer: <b>" + clientFileName + "</b>");
 
-        fileNameToUse = clientFileName;
+        //fileNameToUse = clientFileName;
         if(clientFileName.lastIndexOf(".") > 0) name = name + clientFileName.substring(clientFileName.indexOf("."));
         else name = name + ".jpg";
 
         fileNameToUse = name;
         out.print("<p>server file name: <b>" + fileNameToUse + "</b>");
         out.print("<p>server directory: <b>" + dir + "</b>");
-        imageUrl = "/images/catalog/" + java.net.URLEncoder.encode(fileNameToUse);
+        imageUrl = "/images/catalog/category/" + java.net.URLEncoder.encode(fileNameToUse);
         out.print("<p>The URL of your uploaded file: <b><a href=\"" + imageUrl + "\">" + imageUrl + "</a></b>");
-          
+
             try
             {
                 File file = new File(dir, idString);
@@ -124,37 +121,25 @@
                     {
                         file1.delete();
                     }
-                    catch(Exception _ex) { 
-                        System.out.println("error deleting existing file (not neccessarily a problem)");
-                    }
+                    catch(Exception _ex) { }
                     file.renameTo(file1);
                 }
             }
-            catch(Exception _ex) { 
-                _ex.printStackTrace();
-            }
+            catch(Exception _ex) { }
 
         if(imageUrl != null && imageUrl.length() > 0)
         {
-          if(fileType.compareTo("large") == 0)
-          {
-            out.print("<p>Setting <b>large</b> image url to <b>\"" + imageUrl + "\"</b>");
-            product.set("largeImageUrl", imageUrl);
-          }
-          else
-          {
-            out.print("<p>Setting <b>small</b> image url to <b>\"" + imageUrl + "\"</b>");
-            product.set("smallImageUrl", imageUrl);
-          }
-          product.store();
+          out.print("<p>Setting category image url to <b>\"" + imageUrl + "\"</b>");
+          productCategory.set("categoryImageUrl", imageUrl);
+          productCategory.store();
           //refresh cache value if necessary HERE
         }
     %>
     <hr>
-    <a href="<ofbiz:url>/EditProduct?PRODUCT_ID=<%=productId%></ofbiz:url>" class="buttontext">[Return to Edit Product]</a>
+    <a href="<ofbiz:url>/EditCategory?PRODUCT_CATEGORY_ID=<%=productCategoryId%></ofbiz:url>" class="buttontext">[Return to Edit Category]</a>
   <%}%>
-    <form method="POST" enctype="multipart/form-data" action="<ofbiz:url>/UploadImage?PRODUCT_ID=<%=productId%>&upload_file_type=<%=fileType%></ofbiz:url>">
-    Upload a <b><%=fileType%></b> image for the product with the ID: "<b><%=productId%></b>" and Name "<b><%=product.getString("productName")%></b>".
+    <form method="POST" enctype="multipart/form-data" action="<ofbiz:url>/UploadCategoryImage?PRODUCT_CATEGORY_ID=<%=productCategoryId%>&upload_file_type=<%=fileType%></ofbiz:url>">
+    Upload an image for the category with the ID: "<b><%=productCategoryId%></b>" and Description "<b><%=productCategory.getString("description")%></b>".
     <br>
     Enter local file name to upload:
     <br>
@@ -163,12 +148,11 @@
     <input type="submit" value="Upload Now">
     </form>
   <%}else{%>
-    <h3>ERROR: No product id was passed.</h3>
+    <h3>ERROR: No category id was passed.</h3>
   <%}%>
 <%}else{%>
   <h3>You do not have permission to view this page.  ("CATALOG_VIEW" or "CATALOG_ADMIN" needed)</h3>
 <%}%>
 
 <%@ include file="/includes/onecolumnclose.jsp" %>
-</td><td>&nbsp;&nbsp;</td></tr></table>
 <%@ include file="/includes/footer.jsp" %>
