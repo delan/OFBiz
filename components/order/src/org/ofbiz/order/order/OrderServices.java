@@ -1628,6 +1628,7 @@ public class OrderServices {
 
             successResult.put("needsInventoryIssuance", orderHeader.get("needsInventoryIssuance"));
             successResult.put("grandTotal", orderHeader.get("grandTotal"));
+            successResult.put("orderTypeId", orderHeader.get("orderTypeId"));
             //Debug.logInfo("For setOrderStatus orderHeader is " + orderHeader, module);
         } catch (GenericEntityException e) {
             return ServiceUtil.returnError("ERROR: Could not change order status (" + e.getMessage() + ").");

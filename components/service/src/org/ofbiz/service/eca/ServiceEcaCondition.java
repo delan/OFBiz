@@ -102,7 +102,7 @@ public class ServiceEcaCondition implements java.io.Serializable {
             if (context.containsKey(lhsValueName)) {
                 lhsValue = context.get(lhsValueName);
             } else {
-                Debug.logInfo("From Field (" + lhsValueName + ") is not found in context for " + serviceName + ", defaulting to null.", module);
+                Debug.logWarning("From Field (" + lhsValueName + ") is not found in context for " + serviceName + ", defaulting to null.", module);
             }
         }
 
