@@ -259,7 +259,7 @@ function setAlternateGwp(field) {
 
                     <#-- if inventory is not required check to see if it is out of stock and needs to have a message shown about that... -->
                     <#assign itemProduct = cartLine.getProduct()>
-                    <#assign isStoreInventoryNotRequiredAndNotAvailable = Static["org.ofbiz.product.store.ProductStoreWorker"].isStoreInventoryNotRequiredAndNotAvailable(request, itemProduct, cartLine.getQuantity())>
+                    <#assign isStoreInventoryNotRequiredAndNotAvailable = Static["org.ofbiz.product.store.ProductStoreWorker"].isStoreInventoryRequiredAndAvailable(request, itemProduct, cartLine.getQuantity(), false, false)>
                     <#if isStoreInventoryNotRequiredAndNotAvailable && itemProduct.inventoryMessage?has_content>
                         <b>(${itemProduct.inventoryMessage})</b>
                     </#if>
