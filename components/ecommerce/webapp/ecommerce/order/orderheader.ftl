@@ -338,10 +338,10 @@
                   <#assign groupIdx = 0>
                   <#list orderItemShipGroups as shipGroup>
                     <#if orderHeader?has_content>
-                      <#assign shippingAddress = shipGroup.getRelatedOne("PostalAddress")>
-                      <#assign groupNumber = shipGroup.shipGroupSeqId>
+                      <#assign shippingAddress = shipGroup.getRelatedOne("PostalAddress")?if_exists>
+                      <#assign groupNumber = shipGroup.shipGroupSeqId?if_exists>
                     <#else>
-                      <#assign shippingAddress = cart.getShippingAddress(groupIdx)>
+                      <#assign shippingAddress = cart.getShippingAddress(groupIdx)?if_exists>
                       <#assign groupNumber = groupIdx + 1>
                     </#if>
 
@@ -377,12 +377,12 @@
                             <#assign shipmentMethodType = shipGroup.getRelatedOne("ShipmentMethodType")?if_exists>
                             <#assign carrierPartyId = shipGroup.carrierPartyId?if_exists>
                           <#else>
-                            <#assign shipmentMethodType = cart.getShipmentMethodType(groupIdx)>
-                            <#assign carrierPartyId = cart.getCarrierPartyId(groupIdx)>
+                            <#assign shipmentMethodType = cart.getShipmentMethodType(groupIdx)?if_exists>
+                            <#assign carrierPartyId = cart.getCarrierPartyId(groupIdx)?if_exists>
                           </#if>
 
                           <#if carrierPartyId?exists && carrierPartyId != "_NA_">${carrierPartyId?if_exists}</#if>
-                          ${(shipmentMethodType.description)?if_exists}
+                          ${(shipmentMethodType.description)?default("N/A")}
                           <#if shippingAccount?exists><br>${uiLabelMap.AccountingUseAccount}: ${shippingAccount}</#if>
                         </div>
                       </td>

@@ -109,7 +109,10 @@ function setAlternateGwp(field) {
 </script>
 <#assign fixedAssetExist = shoppingCart.containAnyWorkEffortCartItems()/> <#-- change display format when rental items exist in the shoppingcart -->
 
-<table border="0" cellspacing="0" cellpadding="0" class="boxoutside">
+<table border="0" cellspacing="0" cellpadding="0">
+<tr><td>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxoutside">
   <tr>
     <td width="100%">
       <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
@@ -147,14 +150,16 @@ function setAlternateGwp(field) {
     </td>
   </tr>
 </table>
+</td></tr>
 
 <script language="JavaScript">
 <!--
   document.quickaddform.add_product_id.focus();
 //-->
 </script>
+<tr><td>
 <br/>
-<table border="0" cellspacing="0" cellpadding="0" class="boxoutside">
+<table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxoutside">
   <tr>
     <td width="100%">
       <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
@@ -436,9 +441,11 @@ function setAlternateGwp(field) {
   </tr>
 <#-- Copy link bar to bottom to include a link bar at the bottom too -->
 </table>
+</td></tr>
 
+<tr><td>
   <br/>
-  <table border="0" cellspacing="0" cellpadding="0" class="boxoutside">
+  <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxoutside">
     <tr>
       <td width="100%">
         <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
@@ -475,8 +482,10 @@ function setAlternateGwp(field) {
       </td>
     </tr>
   </table>
+</tr></td>
 
 <#if showPromoText?exists && showPromoText>
+  <tr><td>
   <br/>
   <table border="0" cellspacing="0" cellpadding="0" class="boxoutside">
     <tr>
@@ -521,9 +530,11 @@ function setAlternateGwp(field) {
       </td>
     </tr>
   </table>
+</td></tr>
 </#if>
 
 <#if associatedProducts?has_content>
+  <tr><td>
   <br/>
   <table border="0" cellspacing="0" cellpadding="0" class="boxoutside">
     <tr>
@@ -564,9 +575,15 @@ function setAlternateGwp(field) {
       </td>
     </tr>
   </table>
+</td></tr>
 </#if>
 
 <#if (shoppingCartSize?default(0) > 0)>
+  <tr><td>
   <br/>
   ${screens.render("component://ecommerce/widget/CartScreens.xml#promoUseDetailsInline")}
+  </td></tr>
 </#if>
+
+</td></tr>
+</table>

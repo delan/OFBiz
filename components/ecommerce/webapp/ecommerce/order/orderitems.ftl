@@ -187,11 +187,11 @@
                 <#assign orderItemShipGroupAssocs = orderItem.getRelated("OrderItemShipGroupAssoc")?if_exists>
                 <#if orderItemShipGroupAssocs?has_content>
                   <#list orderItemShipGroupAssocs as shipGroupAssoc>
-                    <#assign shipGroup = shipGroupAssoc.getRelatedOne("OrderItemShipGroup")>
-                    <#assign shipGroupAddress = shipGroup.getRelatedOne("PostalAddress")>
+                    <#assign shipGroup = shipGroupAssoc.getRelatedOne("OrderItemShipGroup")?if_exists>
+                    <#assign shipGroupAddress = (shipGroup.getRelatedOne("PostalAddress"))?if_exists>
                     <tr>
                       <td align="right">
-                        <div class="tabletext" style="font-size: xx-small;"><b><i>Ship Group</i>:</b> [${shipGroup.shipGroupSeqId}] ${shipGroupAddress.address1}</div>
+                        <div class="tabletext" style="font-size: xx-small;"><b><i>Ship Group</i>:</b> [${shipGroup.shipGroupSeqId}] ${shipGroupAddress.address1?default("N/A")}</div>
                       </td>
                       <td align="right">
                         <div class="tabletext" style="font-size: xx-small;">${shipGroupAssoc.quantity?string.number}</div>
