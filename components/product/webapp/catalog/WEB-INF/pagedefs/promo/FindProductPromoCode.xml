@@ -2,7 +2,7 @@
 <page>
     <template>main</template>
     <property name="title">Find Product Promotion Code</property>
-    <!-- <property name="titleProperty"></property> -->
+    <property name="titleProperty">PageTitleFindProductPromotionCode</property>
     <property name="leftbar">/templates/leftbar.ftl</property>
     <property name="headerItem">promos</property>
     <property name="tabButtonItem">FindProductPromoCode</property>

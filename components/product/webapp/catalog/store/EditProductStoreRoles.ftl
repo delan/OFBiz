@@ -20,28 +20,30 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
+ *@version    $Revision: 1.2 $
  *@since      2.2
 -->
-
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#if hasPermission>
+
   ${pages.get("/store/ProductStoreTabBar.ftl")}
-  <div class="head1">Product Store Roles <span class='head2'><#if (productStore.storeName)?has_content>"${productStore.storeName}"</#if> [ID:${productStoreId?if_exists}]</span></div>
-  <a href="<@ofbizUrl>/EditProductStore</@ofbizUrl>" class="buttontext">[New Product Store]</a>
+  <div class="head1">${uiLabelMap.ProductProductStoreRoles} <span class='head2'><#if (productStore.storeName)?has_content>"${productStore.storeName}"</#if> [${uiLabelMap.CommonId}:${productStoreId?if_exists}]</span></div>
+  <a href="<@ofbizUrl>/EditProductStore</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewProductStore}]</a>
   <#if !requestParameters.showAll?exists>
-    <a href="<@ofbizUrl>/EditProductStoreRoles?productStoreId=${productStoreId}&showAll=Y</@ofbizUrl>" class="buttontext">[Show All]</a>
+    <a href="<@ofbizUrl>/EditProductStoreRoles?productStoreId=${productStoreId}&showAll=Y</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductShowAll}]</a>
   <#else>
-    <a href="<@ofbizUrl>/EditProductStoreRoles?productStoreId=${productStoreId}</@ofbizUrl>" class="buttontext">[Show Active]</a>
+    <a href="<@ofbizUrl>/EditProductStoreRoles?productStoreId=${productStoreId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductShowActive}]</a>
   </#if>
   <br>
   <br> 
   
   <table border="1" cellpadding="2" cellspacing="0" width="100%">
     <tr>
-      <td><span class="tableheadtext">Party</span></td>
-      <td><span class="tableheadtext">Role</span></td>
-      <td><span class="tableheadtext">From Date</span></td>
-      <td><span class="tableheadtext">Thru Date</span></td>
+      <td><span class="tableheadtext">${uiLabelMap.ProductParty}</span></td>
+      <td><span class="tableheadtext">${uiLabelMap.ProductRole}</span></td>
+      <td><span class="tableheadtext">${uiLabelMap.CommonFromDate}</span></td>
+      <td><span class="tableheadtext">${uiLabelMap.CommonThruDate}</span></td>
       <td>&nbsp;</td>
     </tr>
     <#if productStoreRoles?has_content>
@@ -56,7 +58,7 @@
             <td>&nbsp;</td>
           <#else>
             <td align="center">
-              <a href="<@ofbizUrl>/storeRemoveRole?productStoreId=${productStoreId}&partyId=${role.partyId}&roleTypeId=${role.roleTypeId}&fromDate=${role.fromDate}</@ofbizUrl>" class="buttontext">[Delete]</a>
+              <a href="<@ofbizUrl>/storeRemoveRole?productStoreId=${productStoreId}&partyId=${role.partyId}&roleTypeId=${role.roleTypeId}&fromDate=${role.fromDate}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonDelete}]</a>
             </td>
           </#if>
         </tr>
@@ -65,12 +67,12 @@
   </table>
   
   <br>
-  <div class="head2">Create ProductStoreRole:</div>
+  <div class="head2">${uiLabelMap.ProductCreateProductStoreRole}:</div>
   <form name="addRole" action="<@ofbizUrl>/storeCreateRole</@ofbizUrl>" method="post">
     <input type="hidden" name="productStoreId" value="${productStoreId}">
     <table cellspacing="2" cellpadding="2">
       <tr>
-        <td><span class="tableheadtext">Role Type</span></td>
+        <td><span class="tableheadtext">${uiLabelMap.ProductRoleType}</span></td>
         <td>
           <select class="selectBox" name="roleTypeId">
             <#list roleTypes as roleType>
@@ -80,11 +82,11 @@
         </td>
       </tr>
       <tr>
-        <td><span class="tableheadtext">Party</span></td>
+        <td><span class="tableheadtext">${uiLabelMap.ProductParty}</span></td>
         <td><input type="text" class="inputBox" name="partyId" size="20"></td>
       </tr>
       <tr>
-        <td><span class="tableheadtext">From Date</span></td>
+        <td><span class="tableheadtext">${uiLabelMap.CommonFromDate}</span></td>
         <td>
           <input type="text" class="inputBox" name="fromDate" size="25">
           <a href="javascript:call_cal(document.addRole.fromDate, null);"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>                   
@@ -92,10 +94,10 @@
       </tr>
       <tr>
         <td>&nbsp;</td>
-        <td><input type="submit" class="smallSubmit" value="Add"></td>
+        <td><input type="submit" class="smallSubmit" value="${uiLabelMap.CommonAdd}"></td>
       </tr>
     </table>
   </form>
 <#else>
-  <h3>You do not have permission to view this page. ("CATALOG_VIEW" or "CATALOG_ADMIN" needed)</h3>
+  <h3>${uiLabelMap.ProductViewPermissionError}</h3>
 </#if>

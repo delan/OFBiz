@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Brad Steiner (bsteiner@thehungersite.com)
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      2.2
 -->
 
@@ -47,10 +47,10 @@ ${pages.get("/product/ProductTabBar.ftl")}
         <#list productFacilityLocations as productFacilityLocation>
 	        <#assign facility = productFacilityLocation.getRelatedOneCache("Facility")>
 	        <#assign facilityLocation = productFacilityLocation.getRelatedOne("FacilityLocation")?if_exists>
-	        <#assign facilityLocationTypeEnum = (facilityLocation.getRelatedOneCache("TypeEnumeration"))?if_exists>
+        	<#assign facilityLocationTypeEnum = (facilityLocation.getRelatedOneCache("TypeEnumeration"))?if_exists>
 	        <tr valign="middle">
 	            <td><div class="tabletext"><#if facility?exists>${facility.facilityName}<#else>[${productFacilityLocation.facilityId}]</#if></div></td>
-	            <td><div class="tabletext"><#if facilityLocation?exists>${facilityLocation.areaId?if_exists}:${facilityLocation.aisleId?if_exists}:${facilityLocation.sectionId?if_exists}:${facilityLocation.levelId?if_exists}:${facilityLocation.positionId?if_exists}</#if><#if facilityLocationTypeEnum?exists>(${facilityLocationTypeEnum.description})</#if>[${productFacilityLocation.locationSeqId}]</div></td>
+	            <td><div class="tabletext"><#if facilityLocation?exists>${facilityLocation.areaId?if_exists}:${facilityLocation.aisleId?if_exists}:${facilityLocation.sectionId?if_exists}:${facilityLocation.levelId?if_exists}:${facilityLocation.positionId?if_exists}</#if><#if facilityLocationTypeEnum?has_content>(${facilityLocationTypeEnum.description})</#if>[${productFacilityLocation.locationSeqId}]</div></td>
 	            <td align="center">
 	                <FORM method=POST action="<@ofbizUrl>/updateProductFacilityLocation</@ofbizUrl>" name="lineForm${productFacilityLocation_index}">
 	                    <input type="hidden" name="productId" value="${(productFacilityLocation.productId)?if_exists}">
