@@ -81,18 +81,22 @@
   }
 
   GenericValue shipmentPreference = null;
-  Boolean maySplit = null;
   String carrierPartyId = null;
   String shipmentMethodTypeId = null;
   String shippingInstructions = null;
+  Boolean maySplit = null;
+  String giftMessage = null;
+  Boolean isGift = null;
 
   Iterator orderShipmentPreferences = UtilMisc.toIterator(orderHeader.getRelated("OrderShipmentPreference"));
   if(orderShipmentPreferences != null && orderShipmentPreferences.hasNext()) {
     shipmentPreference = (GenericValue)orderShipmentPreferences.next();
-    maySplit = shipmentPreference.getBoolean("maySplit");
     carrierPartyId = shipmentPreference.getString("carrierPartyId");
     shipmentMethodTypeId = shipmentPreference.getString("shipmentMethodTypeId");
     shippingInstructions = shipmentPreference.getString("shippingInstructions");
+    maySplit = shipmentPreference.getBoolean("maySplit");
+    giftMessage = shipmentPreference.getString("giftMessage");
+    isGift = shipmentPreference.getBoolean("isGift");
   }
 
   String customerPoNumber = null;

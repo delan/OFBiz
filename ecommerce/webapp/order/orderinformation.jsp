@@ -44,6 +44,7 @@
     <%--if (billingAddress != null) pageContext.setAttribute("billingAddress", billingAddress);--%>
     <%if (shippingAddress != null) pageContext.setAttribute("shippingAddress", shippingAddress);%>
     <%if (maySplit != null) pageContext.setAttribute("maySplit", maySplit);%>
+    <%if (isGift != null) pageContext.setAttribute("isGift", isGift);%>
     <%String shipMethDescription = "";%>
     <%GenericValue shipmentMethodType = delegator.findByPrimaryKey("ShipmentMethodType", UtilMisc.toMap("shipmentMethodTypeId", shipmentMethodTypeId));%>
     <%if(shipmentMethodType != null) shipMethDescription = shipmentMethodType.getString("description");%>
@@ -321,12 +322,8 @@
                   <td width="5">&nbsp;</td>
                   <td align="left" valign="top" width="80%">
                       <div class="tabletext">
-                      <ofbiz:unless name="maySplit">
-                      Please wait until the entire order is ready before shipping.
-                      </ofbiz:unless>
-                      <ofbiz:if name="maySplit">
-                      Please ship items I ordered as they become available (may incur additional shipping charges).    
-                      </ofbiz:if>
+                      <ofbiz:unless name="maySplit">Please wait until the entire order is ready before shipping.</ofbiz:unless>
+                      <ofbiz:if name="maySplit">Please ship items I ordered as they become available (may incur additional shipping charges).</ofbiz:if>
                       </div>
                   </td>
                 </tr>
@@ -337,9 +334,30 @@
                   </td>
                   <td width="5">&nbsp;</td>
                   <td align="left" valign="top" width="80%">
+                      <div class="tabletext"><%=UtilFormatOut.checkNull(shippingInstructions)%></div>
+                   </td>
+                </tr>
+                <tr><td colspan="7"><hr class='sepbar'></td></tr>
+                <tr>
+                  <td align="right" valign="top" width="15%">
+                    <div class="tabletext">&nbsp;<b>Gift?</b></div>
+                  </td>
+                  <td width="5">&nbsp;</td>
+                  <td align="left" valign="top" width="80%">
                       <div class="tabletext">
-                      <%=UtilFormatOut.checkNull(shippingInstructions)%>
+                      <ofbiz:unless name="isGift">This order is not a gift.</ofbiz:unless>
+                      <ofbiz:if name="isGift">This order is a gift.</ofbiz:if>
                       </div>
+                  </td>
+                </tr>
+                <tr><td colspan="7"><hr class='sepbar'></td></tr>
+                <tr>
+                  <td align="right" valign="top" width="15%">
+                    <div class="tabletext">&nbsp;<b>Gift Message</b></div>
+                  </td>
+                  <td width="5">&nbsp;</td>
+                  <td align="left" valign="top" width="80%">
+                      <div class="tabletext"><%=UtilFormatOut.checkNull(giftMessage)%></div>
                    </td>
                 </tr>
               </table>

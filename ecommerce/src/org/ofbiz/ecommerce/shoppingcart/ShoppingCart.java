@@ -48,6 +48,8 @@ public class ShoppingCart implements java.io.Serializable {
     private String shippingContactMechId;
     private String billingAccountId;
     private String shippingInstructions;
+    private String giftMessage;
+    private Boolean isGift;
     private Boolean maySplit;
     
     /** stored in the format of [shipment method type id]@[carrier party id] */
@@ -183,7 +185,6 @@ public class ShoppingCart implements java.io.Serializable {
     public Map makeCartMap(GenericDelegator delegator) {
         Map result = new HashMap();
         result.put("orderItems", makeOrderItems(delegator));
-        result.put("shippingInstructions",getShippingInstructions());
         result.put("billingAccountId",getBillingAccountId());
         result.put("cartDiscount", new Double(getCartDiscount()));
         
@@ -192,7 +193,10 @@ public class ShoppingCart implements java.io.Serializable {
         result.put("shippingContactMechId", getShippingContactMechId());
         result.put("shipmentMethodTypeId", getShipmentMethodTypeId());
         result.put("carrierPartyId", getCarrierPartyId());
+        result.put("shippingInstructions",getShippingInstructions());
         result.put("maySplit", getMaySplit());
+        result.put("giftMessage",getGiftMessage());
+        result.put("isGift", getIsGift());
         result.put("paymentMethodId", getPaymentMethodId());
         result.put("paymentMethod", getPaymentMethod(delegator));
         return result;
@@ -287,6 +291,14 @@ public class ShoppingCart implements java.io.Serializable {
         this.shippingInstructions = shippingInstructions;
     }
     
+    public void setGiftMessage(String giftMessage) {
+        this.giftMessage = giftMessage;
+    }
+    
+    public void setIsGift(Boolean isGift) {
+        this.isGift = isGift;
+    }
+    
     public void setMaySplit(Boolean maySplit) {
         this.maySplit = maySplit;
     }
@@ -352,6 +364,14 @@ public class ShoppingCart implements java.io.Serializable {
     /** Returns the shipping instructions. */
     public String getShippingInstructions() {
         return shippingInstructions;
+    }
+    
+    public String getGiftMessage() {
+        return giftMessage;
+    }
+    
+    public Boolean getIsGift() {
+        return isGift;
     }
     
     /** Returns Boolean.TRUE if the order may be shipped (null if unspecified) */

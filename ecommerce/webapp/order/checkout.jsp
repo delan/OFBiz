@@ -56,11 +56,13 @@
   GenericValue billingAddress = cart.getBillingAddress(delegator);
   GenericValue billingAccount = cart.getBillingAccountId() != null ? delegator.findByPrimaryKey("BillingAccount", UtilMisc.toMap("billingAccountId", cart.getBillingAccountId())) : null;
 
-  String shippingInstructions = cart.getShippingInstructions();
   String customerPoNumber = cart.getPoNumber();
   String carrierPartyId = cart.getCarrierPartyId();
   String shipmentMethodTypeId = cart.getShipmentMethodTypeId();
+  String shippingInstructions = cart.getShippingInstructions();
   Boolean maySplit = cart.getMaySplit();
+  String giftMessage = cart.getGiftMessage();
+  Boolean isGift = cart.getIsGift();
 //  if (creditCardInfo == null) {
 
   Collection orderItemList = cart.makeOrderItems(delegator);

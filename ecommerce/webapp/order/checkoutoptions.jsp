@@ -43,6 +43,7 @@
 <%if ((cart != null) && (cart.size() > 0)) pageContext.setAttribute("cart", cart);%>
 <ofbiz:if name="cart">
     <%if (cart.getMaySplit() != null) pageContext.setAttribute("maySplit", cart.getMaySplit());%>
+    <%if (cart.getIsGift() != null) pageContext.setAttribute("isGift", cart.getIsGift());%>
 </ofbiz:if>
 <%GenericValue party = userLogin.getRelatedOne("Party");%>
 <%pageContext.setAttribute("carrierShipmentMethodList", delegator.findAllCache("CarrierShipmentMethod", null)); %>
@@ -81,13 +82,8 @@
     <tr>
       <td width='1%' valign="top" >
         <%String shippingMethod = carrierShipmentMethod.getString("shipmentMethodTypeId") + "@" + carrierShipmentMethod.getString("partyId");%>
-        <input
-          <ofbiz:if name="cart">
-            <%=shippingMethod.equals(chosenShippingMethod) ? "CHECKED" : ""%>
-          </ofbiz:if>
-          type="radio" name="shipping_method"
-          value="<%=shippingMethod%>"
-        >
+        <input <ofbiz:if name="cart"><%=shippingMethod.equals(chosenShippingMethod) ? "CHECKED" : ""%></ofbiz:if>
+          type="radio" name="shipping_method" value="<%=shippingMethod%>">
       </td>
       <td valign="top">
         <%String shipMethDescription = ""; String shipParty = "";%>
@@ -116,7 +112,7 @@
     </tr>
     <tr>
       <td valign="top">
-        <input <ofbiz:if name="maySplit" value="false" type="Boolean">CHECKED</ofbiz:if> type="radio" name="may_split" value="false">
+        <input <ofbiz:unless name="maySplit" value="true" type="Boolean">CHECKED</ofbiz:unless> type="radio" name="may_split" value="false">
       </td>
       <td valign="top">
         <div class="tabletext">Please wait until the entire order is ready before shipping.</div>
@@ -138,8 +134,28 @@
     </tr>
     <tr>
       <td colspan="2">
-        <textarea cols="30" rows="5" name="shipping_instructions"><ofbiz:if name="cart"
-            ><%=UtilFormatOut.checkNull(cart.getShippingInstructions())%></ofbiz:if></textarea>
+        <textarea cols="30" rows="3" name="shipping_instructions"><ofbiz:if name="cart"><%=UtilFormatOut.checkNull(cart.getShippingInstructions())%></ofbiz:if></textarea>
+      </td>
+    </tr>
+    <tr><td colspan="2"><hr class='sepbar'></td></tr>
+    <tr>
+      <td colspan="2">
+        <div>
+            <span class="head2"><b>Is This a Gift?</b></span>
+            <input <ofbiz:if name="isGift" value="true" type="Boolean">CHECKED</ofbiz:if> type="radio" name="is_gift" value="true">Yes
+            <input <ofbiz:unless name="isGift" value="true" type="Boolean">CHECKED</ofbiz:unless> type="radio" name="is_gift" value="false">No
+        </div>
+      </td>
+    </tr>
+    <tr><td colspan="2"><hr class='sepbar'></td></tr>
+    <tr>
+      <td colspan="2">
+        <div class="head2"><b>Gift Message</b></div>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2">
+        <textarea cols="30" rows="3" name="gift_message"><ofbiz:if name="cart"><%=UtilFormatOut.checkNull(cart.getGiftMessage())%></ofbiz:if></textarea>
       </td>
     </tr>
     <tr><td colspan="2"><hr class='sepbar'></td></tr>

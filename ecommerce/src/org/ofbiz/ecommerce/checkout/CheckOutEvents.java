@@ -70,6 +70,8 @@ public class CheckOutEvents {
             String shippingInstructions = request.getParameter("shipping_instructions");
             String orderAdditionalEmails = request.getParameter("order_additional_emails");
             String maySplit = request.getParameter("may_split");
+            String giftMessage = request.getParameter("gift_message");
+            String isGift = request.getParameter("is_gift");
 
             if (UtilValidate.isNotEmpty(shippingMethod)) {
                 int delimiterPos = shippingMethod.indexOf('@');
@@ -91,6 +93,14 @@ public class CheckOutEvents {
             } else {
                 errorMessage.append("<li>Please Select a Splitting Preference");
             }
+            
+            cart.setGiftMessage(giftMessage);
+            if (UtilValidate.isNotEmpty(isGift)) {
+                cart.setIsGift(Boolean.valueOf(isGift));
+            } else {
+                errorMessage.append("<li>Please Specify Whether or Not This Order is a Gift");
+            }
+
             cart.setOrderAdditionalEmails(orderAdditionalEmails);
 
             if (UtilValidate.isNotEmpty(shippingContactMechId)) {
