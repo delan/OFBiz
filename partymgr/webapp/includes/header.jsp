@@ -9,7 +9,7 @@
 <%GenericValue userLogin = (GenericValue)session.getAttribute(SiteDefs.USER_LOGIN);%>
 <%String controlPath=(String)request.getAttribute(SiteDefs.CONTROL_PATH);%>
 
-<%String pageName = (String)pageContext.getAttribute("PageName"); %>
+<%String pageName = UtilFormatOut.checkNull((String)pageContext.getAttribute("PageName"));%>
 
 <%String companyName = "OFBiz: Party Manager";%>
 <%String companySubtitle = "Part of the Open For Business Family of Open Source Software";%>
@@ -66,7 +66,7 @@ function mClk(src){
         <tr>
           <%if(headerImageUrl != null && headerImageUrl.length() > 0) {%>
             <TD align=left width='1%'>
-              <IMG height='50' src='<%=headerImageUrl%>' alt='<%=UtilProperties.getPropertyValue("ecommerce", "company.name")%>'>
+              <IMG height='50' src='<%=headerImageUrl%>' alt='<%=companyName%>'>
             </TD>
           <%}%>
           <TD align=left width='90%'>
