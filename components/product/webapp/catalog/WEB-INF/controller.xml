@@ -1142,8 +1142,8 @@
     <request-map uri="createProductPromoCodeSet">
     	<security https="true" auth="true"/>
     	<event type="service" path="" invoke="createProductPromoCodeSet"/>
-    	<response name="success" type="view" value="EditProductPromoCode"/>
-        <response name="error" type="view" value="EditProductPromoCode"/>
+    	<response name="success" type="view" value="FindProductPromoCode"/>
+        <response name="error" type="view" value="FindProductPromoCode"/>
     </request-map>
 
     <!-- ================ Product Store Requests ============= -->
