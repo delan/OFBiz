@@ -1,5 +1,5 @@
 /*
- * $Id: ProductStoreWorker.java,v 1.28 2004/07/06 21:17:23 ajzeneski Exp $
+ * $Id: ProductStoreWorker.java,v 1.29 2004/07/19 15:47:34 ajzeneski Exp $
  *
  *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -53,7 +53,7 @@ import org.ofbiz.service.LocalDispatcher;
  * ProductStoreWorker - Worker class for store related functionality
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.28 $
+ * @version    $Revision: 1.29 $
  * @since      2.0
  */
 public class ProductStoreWorker {
@@ -61,6 +61,9 @@ public class ProductStoreWorker {
     public static final String module = ProductStoreWorker.class.getName();
 
     public static GenericValue getProductStore(String productStoreId, GenericDelegator delegator) {
+        if (productStoreId == null || delegator == null) {
+            return null;
+        }
         GenericValue productStore = null;
         try {
             productStore = delegator.findByPrimaryKeyCache("ProductStore", UtilMisc.toMap("productStoreId", productStoreId));

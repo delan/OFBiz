@@ -1,5 +1,5 @@
 /*
- * $Id: ProductEvents.java,v 1.14 2004/07/09 18:14:37 ajzeneski Exp $
+ * $Id: ProductEvents.java,v 1.15 2004/07/19 15:47:34 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -50,7 +50,7 @@ import org.ofbiz.service.LocalDispatcher;
  * Product Information Related Events
  *
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version $Revision: 1.14 $
+ * @version $Revision: 1.15 $
  * @since 2.0
  */
 public class ProductEvents {
@@ -687,19 +687,22 @@ public class ProductEvents {
             HttpSession session = request.getSession();
             GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
             if (userLogin != null) {
-                // initial currency
+                // user login currency
                 currencyStr = userLogin.getString("lastCurrencyUom");
-                if (currencyStr == null && productStore.get("defaultCurrencyUomId") != null) {
-                    currencyStr = productStore.getString("defaultCurrencyUomId");
-                }
-
-                // initial locale
+                // user login locale
                 localeStr = userLogin.getString("lastLocale");
-                if (localeStr == null && productStore.get("defaultLocaleString") != null) {
-                    localeStr = productStore.getString("defaultLocaleString");
-                }
             }
 
+            // if currency is not set, the store's default currency is used
+            if (currencyStr == null && productStore.get("defaultCurrencyUomId") != null) {
+                currencyStr = productStore.getString("defaultCurrencyUomId");
+            }
+
+            // if locale is not set, the store's default locale is used
+            if (localeStr == null && productStore.get("defaultLocaleString") != null) {
+                localeStr = productStore.getString("defaultLocaleString");
+            }
+            
             UtilHttp.setCurrencyUom(request, currencyStr);
             UtilHttp.setLocale(request, localeStr);
 
