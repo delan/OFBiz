@@ -216,7 +216,7 @@ public class UtilMisc {
     }
 
     /** This is meant to be very quick to create and use for small sized maps, perfect for how we usually use UtilMisc.toMap */
-    protected static class SimpleMap implements Map, java.io.Serializable {
+    public static class SimpleMap implements Map, java.io.Serializable {
         protected Map realMapIfNeeded = null;
         
         int sizeValue;

@@ -146,7 +146,9 @@ public class XmlSerializer {
             // - Maps -
             String elementName = null;
             //these ARE order sensitive; for instance Properties extends Hashtable, so if Hashtable were first we would lose the Properties part
-            if (object instanceof HashMap)
+            if (object instanceof UtilMisc.SimpleMap)
+                elementName = "map-HashMap";  // Simple map will work like a HashMap
+            else if (object instanceof HashMap)
                 elementName = "map-HashMap";
             else if (object instanceof Properties)
                 elementName = "map-Properties";

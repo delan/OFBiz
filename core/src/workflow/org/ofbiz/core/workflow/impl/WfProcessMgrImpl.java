@@ -221,10 +221,12 @@ public class WfProcessMgrImpl implements WfProcessMgr {
         try {
             Map fields = new HashMap();
             fields.put("packageId", processDef.getString("packageId"));
+            fields.put("packageVersion", processDef.getString("processVersion"));
             fields.put("processId", processDef.getString("processId"));
+            fields.put("processVersion", processDef.getString("processVersion"));
             fields.put("applicationId", "_NA_");
-            params = processDef.getDelegator().findByAnd("WorkflowFormalParam",
-                                                         fields);
+            params = processDef.getDelegator().findByAnd("WorkflowFormalParam",  fields);
+
         } catch (GenericEntityException e) {
             throw new WfException(e.getMessage(), e);
         }
