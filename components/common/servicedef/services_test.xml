@@ -12,6 +12,12 @@
         <attribute name="message" type="String" mode="IN" optional="true"/>
         <attribute name="resp" type="String" mode="OUT"/>
     </service>
+    <service name="blockingTestScv" engine="java" export="true" validate="false" require-new-transaction="true"
+            location="org.ofbiz.common.CommonServices" invoke="blockingTestService">
+        <description>Blocking Test service</description>
+        <attribute name="message" type="String" mode="IN" optional="true"/>
+        <attribute name="resp" type="String" mode="OUT"/>
+    </service>
     <service name="testRmi" engine="rmi" validate="false"
             location="rmi://localhost:1099/RMIDispatcher" invoke="testScv">
         <implements service="testScv"/>

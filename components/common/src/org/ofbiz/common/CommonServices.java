@@ -1,5 +1,5 @@
 /*
- * $Id: CommonServices.java,v 1.8 2003/12/12 16:16:58 ajzeneski Exp $
+ * $Id: CommonServices.java,v 1.9 2004/03/26 21:40:08 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -45,7 +45,7 @@ import org.ofbiz.service.ServiceXaWrapper;
  * Common Services
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.8 $
+ * @version    $Revision: 1.9 $
  * @since      2.0
  */
 public class CommonServices {
@@ -80,6 +80,15 @@ public class CommonServices {
 
         System.out.println("----- SVC: " + dctx.getName() + " -----");
         return response;
+    }
+
+    public static Map blockingTestService(DispatchContext dctx, Map context) {
+        System.out.println("-----SERVICE BLOCKING----- : 30 seconds");
+        try {
+            Thread.sleep(30000);
+        } catch (InterruptedException e) {
+        }
+        return CommonServices.testService(dctx, context);
     }
 
     public static Map testWorkflowCondition(DispatchContext dctx, Map context) {
