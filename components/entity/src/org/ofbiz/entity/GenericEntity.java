@@ -552,7 +552,12 @@ public class GenericEntity extends Observable implements Map, LocalizedMap, Seri
                 return fieldValue;
             }
         }
-        ResourceBundle bundle = UtilProperties.getResourceBundle(resource, locale);
+        ResourceBundle bundle = null;
+        try {
+            bundle = UtilProperties.getResourceBundle(resource, locale);
+        } catch (IllegalArgumentException e) {
+            bundle = null;
+        }
         if (bundle == null) {
             //Debug.logWarning("Tried to getResource value for field named " + name + " but no resource was found with the name " + resource + " in the locale " + locale, module);
             return fieldValue;
