@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCart.java,v 1.8 2003/10/16 03:05:06 ajzeneski Exp $
+ * $Id: ShoppingCart.java,v 1.9 2003/10/17 20:25:12 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -49,7 +49,7 @@ import org.ofbiz.service.LocalDispatcher;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.8 $
+ * @version    $Revision: 1.9 $
  * @since      2.0
  */
 public class ShoppingCart implements java.io.Serializable {
@@ -417,6 +417,24 @@ public class ShoppingCart implements java.io.Serializable {
     /** Returns set amount of the Payment Method. */
     public Double getPaymentMethodAmount(String paymentMethodId) {
         return (Double) this.paymentMethodAmounts.get(paymentMethodId);
+    }
+
+    /** Returns a list of PaymentMethod value objects selected in the cart. */
+    public List getSelectedPaymentMethods(GenericDelegator delegator) {
+        List ids = getPaymentMethodIds();
+        List methods = new ArrayList();
+        try {
+            Iterator i = ids.iterator();
+            while (i.hasNext()) {
+                String id = (String) i.next();
+                GenericValue paymentMethod = delegator.findByPrimaryKey("PaymentMethod", UtilMisc.toMap("paymentMethodId", id));
+                methods.add(paymentMethod);
+            }
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Unable to get selected payment methods from the database", module);
+            return null;
+        }
+        return methods;
     }
 
     /** Returns the Payment Method Ids. */

@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.5 $
+ *@version    $Revision: 1.6 $
  *@since      2.1
  */
 
@@ -72,4 +72,7 @@ locale = UtilHttp.getLocale(request);
 request.setAttribute("locale",locale);
 uiLabelMap = UtilProperties.getResourceBundleMap("EcommerceUiLabels", locale);
 request.setAttribute("uiLabelMap", uiLabelMap);
+
+Debug.log("Order Party ID: " + session.getAttribute("orderPartyId"));
+Debug.log("UserLogin : " + session.getAttribute("userLogin"));
 
