@@ -178,10 +178,10 @@
     <ProductFeatureCategory productFeatureCategoryId="8000" description="License Features"/>
     <ProductFeatureCategoryAppl productFeatureCategoryId="8000" productCategoryId="CATALOG1_SEARCH" fromDate="2001-05-13 12:00:00.0"/>
 
-    <ProductFeature productFeatureId="8000" productFeatureCategoryId="8000" productFeatureTypeId="TYPE" description="LGPL"/>
-    <ProductFeature productFeatureId="8001" productFeatureCategoryId="8000" productFeatureTypeId="TYPE" description="GPL"/>
-    <ProductFeature productFeatureId="8002" productFeatureCategoryId="8000" productFeatureTypeId="TYPE" description="BSD"/>
-    <ProductFeature productFeatureId="8003" productFeatureCategoryId="8000" productFeatureTypeId="TYPE" description="MIT"/>
+    <ProductFeature productFeatureId="8000" productFeatureCategoryId="8000" productFeatureTypeId="LICENSE" description="LGPL"/>
+    <ProductFeature productFeatureId="8001" productFeatureCategoryId="8000" productFeatureTypeId="LICENSE" description="GPL"/>
+    <ProductFeature productFeatureId="8002" productFeatureCategoryId="8000" productFeatureTypeId="LICENSE" description="BSD"/>
+    <ProductFeature productFeatureId="8003" productFeatureCategoryId="8000" productFeatureTypeId="LICENSE" description="MIT"/>
 
     <ProductFeatureCategory productFeatureCategoryId="9000" description="Widget Features"/>
     <ProductFeatureCategoryAppl productFeatureCategoryId="9000" productCategoryId="CATALOG1_SEARCH" fromDate="2001-05-13 12:00:00.0"/>

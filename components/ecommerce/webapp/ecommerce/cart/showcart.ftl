@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -101,6 +101,14 @@ function gwAll(e) {
 //-->
 </script>
 
+<script language="JavaScript">
+<!--
+function setAlternateGwp(field) {
+  window.location=field.value;
+};
+//-->
+</script>
+
 <table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
   <tr>
     <td width="100%">
@@ -157,7 +165,7 @@ function gwAll(e) {
             <div class="lightbuttontextdisabled">
               <#--<a href="<@ofbizUrl>/main</@ofbizUrl>" class="lightbuttontext">[${uiLabelMap.EcommerceContinueShopping}]</a>-->
               <#if (shoppingCartSize > 0)>
-                <a href="javascript:document.cartform.submit()" class="submenutext">${uiLabelMap.EcommerceRecalculateCart}</a><a href="<@ofbizUrl>/emptycart</@ofbizUrl>" class="submenutext">${uiLabelMap.EcommerceEmptyCart}</a><a href="javascript:removeSelected();" class="submenutextright">${uiLabelMap.EcommerceRemoveSelected}</a>
+                <a href="javascript:document.cartform.submit();" class="submenutext">${uiLabelMap.EcommerceRecalculateCart}</a><a href="<@ofbizUrl>/emptycart</@ofbizUrl>" class="submenutext">${uiLabelMap.EcommerceEmptyCart}</a><a href="javascript:removeSelected();" class="submenutextright">${uiLabelMap.EcommerceRemoveSelected}</a>
               <#else>
                 <span class="submenutextdisabled">${uiLabelMap.EcommerceRecalculateCart}</span><span class="submenutextdisabled">${uiLabelMap.EcommerceEmptyCart}</span><span class="submenutextrightdisabled">${uiLabelMap.EcommerceRemoveSelected}</span>
               </#if>
@@ -254,11 +262,19 @@ function gwAll(e) {
                 <#if (cartLine.getIsPromo() && cartLine.getAlternativeOptionProductIds()?has_content)>
                   <#-- Show alternate gifts if there are any... -->
                   <div class="tableheadtext">You may also choose one of the following for your gift:</div>
+                  <select name="dummyAlternateGwpSelect${cartLineIndex}" onChange="setAlternateGwp(this);">
+                  <option value="">- Choose Another Gift -</option>
                   <#list cartLine.getAlternativeOptionProductIds() as alternativeOptionProductId>
-                    <#assign alternativeOptionProduct = delegator.findByPrimaryKeyCache("Product", Static["org.ofbiz.base.util.UtilMisc"].toMap("productId", alternativeOptionProductId))>
-                    <#assign alternativeOptionName = Static["org.ofbiz.product.product.ProductContentWrapper"].getProductContentAsText(alternativeOptionProduct, "PRODUCT_NAME", requestAttributes.locale)?if_exists>
+                    <#assign alternativeOptionName = Static["org.ofbiz.product.product.ProductWorker"].getGwpAlternativeOptionName(delegator, alternativeOptionProductId, requestAttributes.locale)>
+                    <option value="<@ofbizUrl>setDesiredAlternateGwpProductId?alternateGwpProductId=${alternativeOptionProductId}&alternateGwpLine=${cartLineIndex}</@ofbizUrl>">${alternativeOptionName?default(alternativeOptionProductId)}</option>
+                  </#list>
+                  </select>
+                  <#-- this is the old way, it lists out the options and is not as nice as the drop-down
+                  <#list cartLine.getAlternativeOptionProductIds() as alternativeOptionProductId>
+                    <#assign alternativeOptionName = Static["org.ofbiz.product.product.ProductWorker"].getGwpAlternativeOptionName(delegator, alternativeOptionProductId, requestAttributes.locale)>
                     <div class="tabletext"><a href="<@ofbizUrl>/setDesiredAlternateGwpProductId?alternateGwpProductId=${alternativeOptionProductId}&alternateGwpLine=${cartLineIndex}</@ofbizUrl>" class="buttontext">Select: ${alternativeOptionName?default(alternativeOptionProductId)}</a></div>
                   </#list>
+                  -->
                 </#if>
             </td>
 
