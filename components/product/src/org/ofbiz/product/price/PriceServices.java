@@ -1,5 +1,5 @@
 /*
- * $Id: PriceServices.java,v 1.7 2004/02/26 07:14:33 jonesde Exp $
+ * $Id: PriceServices.java,v 1.8 2004/02/26 08:34:35 jonesde Exp $
  *
  *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -50,7 +50,7 @@ import org.ofbiz.service.ServiceUtil;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.7 $
+ * @version    $Revision: 1.8 $
  * @since      2.0
  */
 public class PriceServices {
@@ -249,10 +249,17 @@ public class PriceServices {
 	        			if (curDefaultPriceValue != null) {
 	        				Double curDefaultPrice = curDefaultPriceValue.getDouble("price");
 	        				if (curDefaultPrice.doubleValue() < minDefaultPrice) {
-	        					minDefaultPrice = curDefaultPrice.doubleValue();
-	        					variantProductPrices = curVariantPriceList;
-	        					variantProductId = curVariantProductId;
-	        					// Debug.logInfo("Found new lowest price " + minDefaultPrice + " for variant with ID " + variantProductId, module);
+	        					// check to see if the product is discontinued for sale before considering it the lowest price
+	        					GenericValue curVariantProduct = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", curVariantProductId));
+	        					if (curVariantProduct != null) {
+	        						Timestamp salesDiscontinuationDate = curVariantProduct.getTimestamp("salesDiscontinuationDate");
+	        						if (salesDiscontinuationDate == null || salesDiscontinuationDate.after(nowTimestamp)) {
+			        					minDefaultPrice = curDefaultPrice.doubleValue();
+			        					variantProductPrices = curVariantPriceList;
+			        					variantProductId = curVariantProductId;
+			        					// Debug.logInfo("Found new lowest price " + minDefaultPrice + " for variant with ID " + variantProductId, module);
+	        						}
+	        					}
 	        				}
 	        			}
 	        		}
