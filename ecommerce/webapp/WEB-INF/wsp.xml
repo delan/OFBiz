@@ -264,7 +264,7 @@
     <mime-type-map>
         <mime-type type="text/plain" extensions="txt"/>
         <mime-type type="text/css"   extensions="css"/>
-        <mime-type type="text/html"  extensions="htm,html,jsp"/>
+        <mime-type type="text/html"  extensions="htm,html,jsp,ftl"/>
         <mime-type type="text/xml"   extensions="xml,xconf"/>
         <mime-type type="text/xsl"   extensions="xsl"/>
         <mime-type type="image/gif"  extensions="gif"/>
