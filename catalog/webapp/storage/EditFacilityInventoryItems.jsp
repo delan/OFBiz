@@ -42,6 +42,31 @@
             UtilMisc.toMap("facilityId", facilityId), 
             UtilMisc.toList("statusId", "quantityOnHand", "serialNumber"));
     if (facilityInventoryItems != null) pageContext.setAttribute("facilityInventoryItems", facilityInventoryItems);
+
+    int viewIndex = 0;
+    int viewSize = 20;
+    int highIndex = 0;
+    int lowIndex = 0;
+    int listSize = 0;
+
+    try {
+        viewIndex = Integer.valueOf((String) pageContext.getRequest().getParameter("VIEW_INDEX")).intValue();
+    } catch (Exception e) {
+        viewIndex = 0;
+    }
+    try {
+        viewSize = Integer.valueOf((String) pageContext.getRequest().getParameter("VIEW_SIZE")).intValue();
+    } catch (Exception e) {
+        viewSize = 20;
+    }
+    if (facilityInventoryItems != null) {
+        listSize = facilityInventoryItems.size();
+    }
+    lowIndex = viewIndex * viewSize;
+    highIndex = (viewIndex + 1) * viewSize;
+    if (listSize < highIndex) {
+        highIndex = listSize;
+    }
 %>
 <br>
 
@@ -52,11 +77,30 @@
 <%}%>
 
 <div class="head1">Inventory Items for Facility with ID "<%=UtilFormatOut.checkNull(facilityId)%>"</div>
+<a href='<ofbiz:url>/EditInventoryItem?facilityId=<%=facilityId%></ofbiz:url>' class="buttontext">
+[Create New Inventory Item for this Facility]</a>
 
-<br>
-<br>
+<ofbiz:if name="facilityInventoryItems" size="0">
+  <table border="0" width="100%" cellpadding="2">
+    <tr>
+      <td align=right>
+        <b>
+        <%if (viewIndex > 0) {%>
+          <a href="<ofbiz:url><%="/EditFacilityInventoryItems?facilityId=" + facilityId + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex-1)%></ofbiz:url>" class="buttontext">[Previous]</a> |
+        <%}%>
+        <%if (listSize > 0) {%>
+          <%=lowIndex+1%> - <%=highIndex%> of <%=listSize%>
+        <%}%>
+        <%if (listSize > highIndex) {%>
+          | <a href="<ofbiz:url><%="/EditFacilityInventoryItems?facilityId=" + facilityId + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex+1)%></ofbiz:url>" class="buttontext">[Next]</a>
+        <%}%>
+        </b>
+      </td>
+    </tr>
+  </table>
+</ofbiz:if>
 <%if (facilityId != null){%>
-<table border="1" cellpadding='2' cellspacing='0'>
+<table border="1" cellpadding='2' cellspacing='0' width='100%'>
   <tr>
     <td><div class="tabletext"><b>Item&nbsp;ID</b></div></td>
     <td><div class="tabletext"><b>Item&nbsp;Type</b></div></td>
@@ -65,10 +109,10 @@
     <td><div class="tabletext"><b>Lot&nbsp;ID</b></div></td>
     <td><div class="tabletext"><b>BinNum</b></div></td>
     <td><div class="tabletext"><b>ATP/QOH or Serial#</b></div></td>
-    <td><div class="tabletext">&nbsp;</div></td>
-    <td><div class="tabletext">&nbsp;</div></td>
+    <td width='1%'><div class="tabletext">&nbsp;</div></td>
+    <td width='1%'><div class="tabletext">&nbsp;</div></td>
   </tr>
-<ofbiz:iterator name="inventoryItem" property="facilityInventoryItems">
+<ofbiz:iterator name="inventoryItem" property="facilityInventoryItems" offset="<%=lowIndex%>" limit="<%=viewSize%>">
   <%GenericValue curInventoryItemType = inventoryItem.getRelatedOne("InventoryItemType");%>
   <%if (curInventoryItemType != null) pageContext.setAttribute("curInventoryItemType", curInventoryItemType);%>
   <%boolean isQuantity = inventoryItem.get("quantityOnHand") != null && (inventoryItem.get("serialNumber") == null || inventoryItem.getString("serialNumber").length() == 0);%>
@@ -119,9 +163,26 @@
   </tr>
 </ofbiz:iterator>
 </table>
+<ofbiz:if name="facilityInventoryItems" size="0">
+  <table border="0" width="100%" cellpadding="2">
+    <tr>
+      <td align=right>
+        <b>
+        <%if (viewIndex > 0) {%>
+          <a href="<ofbiz:url><%="/EditFacilityInventoryItems?facilityId=" + facilityId + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex-1)%></ofbiz:url>" class="buttontext">[Previous]</a> |
+        <%}%>
+        <%if (listSize > 0) {%>
+          <%=lowIndex+1%> - <%=highIndex%> of <%=listSize%>
+        <%}%>
+        <%if (listSize > highIndex) {%>
+          | <a href="<ofbiz:url><%="/EditFacilityInventoryItems?facilityId=" + facilityId + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex+1)%></ofbiz:url>" class="buttontext">[Next]</a>
+        <%}%>
+        </b>
+      </td>
+    </tr>
+  </table>
+</ofbiz:if>
 <br>
-<a href='<ofbiz:url>/EditInventoryItem?facilityId=<%=facilityId%></ofbiz:url>' class="buttontext">
-[Create New Inventory Item for this Facility]</a>
 <%}%>
 <br>
 
