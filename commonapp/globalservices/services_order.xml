@@ -182,7 +182,7 @@
         <auto-attributes entity-name="ReturnItem" include="all" mode="IN" optional="false">
             <exclude field-name="returnItemSeqId"/>
         </auto-attributes>
-        <override name="returnReason" optional="true"/>
+        <override name="returnItemResponseId" optional="true"/>
         <override name="statusId" optional="true"/>
     </service>
     <service name="createReturnItem" engine="simple"
