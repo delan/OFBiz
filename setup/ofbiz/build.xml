@@ -46,7 +46,12 @@
         <property environment="env" />
         <property name="catalina.dir" value="${env.CATALINA_HOME}" />
 
-        <move file="${catalina.dir}/conf/server.xml" toFile="${catalina.dir}/conf/server.orig.xml" />
+        <!-- only backup server.xml if server.orig.xml does not exist -->
+        <condition property="catalina.server.orig.xml.needed">
+                <not><available file="${catalina.dir}/conf/server.orig.xml" type="file"/></not>
+        </condition>
+        <antcall target="catalina-serverxml-backup" />
+        
         <copy file="setup/catalina/conf/server.xml" toDir="${catalina.dir}/conf" />
 
         <copy file="setup/catalina/bin/ofbiz.sh" toDir="${catalina.dir}/bin" />
@@ -97,7 +102,12 @@
         <property environment="env" />
         <property name="catalina.dir" value="${env.CATALINA_HOME}" />
 
-        <move file="${catalina.dir}/conf/server.xml" toFile="${catalina.dir}/conf/server.orig.xml" />
+        <!-- only backup server.xml if server.orig.xml does not exist -->
+        <condition property="catalina.server.orig.xml.needed">
+                <not><available file="${catalina.dir}/conf/server.orig.xml" type="file"/></not>
+        </condition>
+        <antcall target="catalina-serverxml-backup" />
+        
         <copy file="setup/catalina41/conf/server.xml" toDir="${catalina.dir}/conf" />
 
         <copy file="setup/catalina41/bin/ofbiz.sh" toDir="${catalina.dir}/bin" />
@@ -140,9 +150,12 @@
         <copy file="lib/jasperreports/itext-0.92.jar" toDir="${catalina.dir}/shared/lib"/>
 
         <copy file="lib/weka/weka.jar" toDir="${catalina.dir}/shared/lib"/>
-
     </target>
 
+    <target name="catalina-serverxml-backup" depends="" if="catalina.server.orig.xml.needed">
+        <copy file="${catalina.dir}/conf/server.xml" toFile="${catalina.dir}/conf/server.orig.xml"/>
+    </target>
+    
     <!-- ================================================================== -->
     <!-- Initialization of all property settings                            -->
     <!-- ================================================================== -->
@@ -161,7 +174,10 @@
         
         <!-- This is for the distro: if the libs are not in the ofbiz/lib directory, copy from catalina -->
         <condition property="catalina.lib.needed">
-            <not><available file="lib/share" type="dir"/></not>
+            <and>
+                <not><available file="lib/share" type="dir"/></not>
+                <available file="../catalina" type="dir"/>
+            </and>
         </condition>
         <antcall target="catalina41-lib-copy" />
     </target>
@@ -661,7 +677,7 @@
         <copy file="lib/share/clutil.jar"                    toDir="${ext.dir}/lib/ext"/>
         <copy file="lib/share/wsdl4j.jar"                    toDir="${ext.dir}/lib/ext"/>
         <copy file="lib/share/jakarta-oro-2.0.6.jar"         toDir="${ext.dir}/lib/ext"/>
-        <copy file="lib/share/jakarta-poi-1.5.1-final.jar"         toDir="${ext.dir}/lib/ext"/>
+        <copy file="lib/share/jakarta-poi-1.5.1-final.jar"   toDir="${ext.dir}/lib/ext"/>
         <copy file="lib/share/velocity-1.3.jar"              toDir="${ext.dir}/lib/ext"/>
         <copy file="lib/share/velocity-dep-1.3.jar"          toDir="${ext.dir}/lib/ext"/>
         <copy file="lib/compile/jdbc2_0-stdext.jar"          toDir="${ext.dir}/lib/ext"/>
@@ -825,8 +841,13 @@
         <copy toDir="${distro.temp.dir}/catalina"><fileset dir="../catalina"/></copy>
         <copy toDir="${distro.temp.dir}/data"><fileset dir="../data"/></copy>
 
+        <copy toDir="${distro.temp.dir}/ofbiz"><fileset dir="${distro.temp.dir}/ofbiz/setup/ofbiz"/></copy>
+        
         <!-- don't want the CVS directories in there -->
         <delete><fileset dir="${distro.temp.dir}/ofbiz" includes="**/CVS" /></delete>
+
+        <!-- don't need the war file in there -->
+        <delete><fileset dir="${distro.temp.dir}/ofbiz" includes="**/*.war" /></delete>
 
         <!-- the build directories aren't really needed to run and can save some space -->
         <delete dir="${distro.temp.dir}/ofbiz/core/build" />
