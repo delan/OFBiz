@@ -206,6 +206,14 @@ public class UtilCache implements Serializable {
                 }
             } catch (Exception e) {}
             try {
+                String value = getPropertyParam(res, propNames, "maxInMemory");
+                Integer intValue = new Integer(value);
+
+                if (intValue != null) {
+                    maxInMemory = intValue.intValue();
+                }
+            } catch (Exception e) {}
+            try {
                 String value = getPropertyParam(res, propNames, "expireTime");
                 Long longValue = new Long(value);
 
@@ -213,12 +221,18 @@ public class UtilCache implements Serializable {
                     expireTime = longValue.longValue();
                 }
             } catch (Exception e) {}
-
             try {
                 String value = getPropertyParam(res, propNames, "useSoftReference");
 
                 if (value != null) {
                     useSoftReference = "true".equals(value);
+                }
+            } catch (Exception e) {}
+            try {
+                String value = getPropertyParam(res, propNames, "useFileSystemStore");
+
+                if (value != null) {
+                    useFileSystemStore = "true".equals(value);
                 }
             } catch (Exception e) {}
         }
