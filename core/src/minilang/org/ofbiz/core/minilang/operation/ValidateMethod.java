@@ -32,10 +32,7 @@ import java.lang.reflect.*;
 
 import org.w3c.dom.*;
 
-import org.ofbiz.core.entity.*;
 import org.ofbiz.core.util.*;
-import org.ofbiz.core.service.*;
-
 import org.ofbiz.core.minilang.*;
 
 /**

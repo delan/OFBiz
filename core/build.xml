@@ -103,10 +103,15 @@
 
     <target name="prepare" depends="clean-lib">
       <mkdir dir="${build.dir}" />
-      <mkdir dir="${build.dir}/ejb/META-INF" />
-      <mkdir dir="${build.dir}/webapp/META-INF" />
       <mkdir dir="${build.dir}/share/META-INF" />
+      <mkdir dir="${build.dir}/entity/META-INF" />
+      <mkdir dir="${build.dir}/service/META-INF" />
+      <mkdir dir="${build.dir}/extutil/META-INF" />
+      <mkdir dir="${build.dir}/webapp/META-INF" />
+
+      <mkdir dir="${build.dir}/ejb/META-INF" />
       <mkdir dir="${build.dir}/crypto/META-INF" />
+
       <mkdir dir="${build.dir}/workflow/META-INF" />
       <mkdir dir="${build.dir}/rules/META-INF" />
       <mkdir dir="${build.dir}/datafile/META-INF" />
@@ -137,25 +142,37 @@
             <fileset dir="${src.dir}" includes="**/*.properties,**/*.xml,**/*.bsh,**/*.logic" />
         </copy>
 		
-    	<javac debug="on" destdir="${build.dir}/webapp" classpath="${classpath}:${build.dir}/share">
+    	<javac debug="on" destdir="${build.dir}/entity" classpath="${classpath}:${build.dir}/share">
+    		<src path="${src.dir}/entity" /></javac>
+        <copy todir="${build.dir}/entity"><fileset dir="${src.dir}/entity" includes="**/*.properties,**/*.xml,**/*.bsh,**/*.logic" /></copy>
+
+    	<javac debug="on" destdir="${build.dir}/extutil" classpath="${classpath}:${build.dir}/share:${build.dir}/entity">
+    		<src path="${src.dir}/extutil" /></javac>
+        <copy todir="${build.dir}/extutil"><fileset dir="${src.dir}/extutil" includes="**/*.properties,**/*.xml,**/*.bsh,**/*.logic" /></copy>
+
+    	<javac debug="on" destdir="${build.dir}/service" classpath="${classpath}:${build.dir}/share:${build.dir}/entity:${build.dir}/extutil">
+    		<src path="${src.dir}/service" /></javac>
+        <copy todir="${build.dir}/service"><fileset dir="${src.dir}/service" includes="**/*.properties,**/*.xml,**/*.bsh,**/*.logic" /></copy>
+
+    	<javac debug="on" destdir="${build.dir}/webapp" classpath="${classpath}:${build.dir}/share:${build.dir}/entity:${build.dir}/service:${build.dir}/extutil">
     		<src path="${src.dir}/webapp" /></javac>
-        <copy todir="${build.dir}/webapp"><fileset dir="${src.dir}" includes="**/*.properties,**/*.xml,**/*.bsh,**/*.logic" /></copy>
+        <copy todir="${build.dir}/webapp"><fileset dir="${src.dir}/webapp" includes="**/*.properties,**/*.xml,**/*.bsh,**/*.logic" /></copy>
     	
-    	<javac debug="on" destdir="${build.dir}/workflow" classpath="${classpath}:${build.dir}/share">
+    	<javac debug="on" destdir="${build.dir}/workflow" classpath="${classpath}:${build.dir}/share:${build.dir}/entity:${build.dir}/service:${build.dir}/extutil">
             <src path="${src.dir}/workflow" /></javac>
-        <copy todir="${build.dir}/workflow"><fileset dir="${src.dir}" includes="**/*.properties,**/*.xml,**/*.bsh,**/*.logic" /></copy>
+        <copy todir="${build.dir}/workflow"><fileset dir="${src.dir}/workflow" includes="**/*.properties,**/*.xml,**/*.bsh,**/*.logic" /></copy>
 
     	<javac debug="on" destdir="${build.dir}/rules" classpath="${classpath}:${build.dir}/share">
             <src path="${src.dir}/rules" /></javac>
-        <copy todir="${build.dir}/rules"><fileset dir="${src.dir}" includes="**/*.properties,**/*.xml,**/*.bsh,**/*.logic" /></copy>
+        <copy todir="${build.dir}/rules"><fileset dir="${src.dir}/rules" includes="**/*.properties,**/*.xml,**/*.bsh,**/*.logic" /></copy>
 
     	<javac debug="on" destdir="${build.dir}/datafile" classpath="${classpath}:${build.dir}/share">
             <src path="${src.dir}/datafile" /></javac>
-        <copy todir="${build.dir}/datafile"><fileset dir="${src.dir}" includes="**/*.properties,**/*.xml,**/*.bsh,**/*.logic" /></copy>
+        <copy todir="${build.dir}/datafile"><fileset dir="${src.dir}/datafile" includes="**/*.properties,**/*.xml,**/*.bsh,**/*.logic" /></copy>
 
-    	<javac debug="on" destdir="${build.dir}/minilang" classpath="${classpath}:${build.dir}/share:${build.dir}/webapp">
+    	<javac debug="on" destdir="${build.dir}/minilang" classpath="${classpath}:${build.dir}/share:${build.dir}/entity:${build.dir}/service:${build.dir}/webapp">
             <src path="${src.dir}/minilang" /></javac>
-        <copy todir="${build.dir}/minilang"><fileset dir="${src.dir}" includes="**/*.properties,**/*.xml,**/*.bsh,**/*.logic" /></copy>
+        <copy todir="${build.dir}/minilang"><fileset dir="${src.dir}/minilang" includes="**/*.properties,**/*.xml,**/*.bsh,**/*.logic" /></copy>
 
 <!--
   	<javac destdir="${build.dir}/crypto" classpath="${classpath}:${build.dir}/share">
@@ -167,6 +184,9 @@
 
     <target name="jar" depends="classes">
         <jar jarfile="${lib.dir}/${name}-share.jar" basedir="${build.dir}/share" />
+        <jar jarfile="${lib.dir}/${name}-entity.jar" basedir="${build.dir}/entity" />
+        <jar jarfile="${lib.dir}/${name}-service.jar" basedir="${build.dir}/service" />
+        <jar jarfile="${lib.dir}/${name}-extutil.jar" basedir="${build.dir}/extutil" />
         <jar jarfile="${lib.dir}/${name}-webapp.jar" basedir="${build.dir}/webapp" />
         <jar jarfile="${lib.dir}/${name}-workflow.jar" basedir="${build.dir}/workflow" />
         <jar jarfile="${lib.dir}/${name}-rules.jar" basedir="${build.dir}/rules" />
@@ -209,6 +229,9 @@
         <javadoc packagenames="org.ofbiz.*" classpath="${classpath}"
             destdir="${doc.dir}/api">
             <sourcepath path="${src.dir}/share" />
+            <sourcepath path="${src.dir}/entity" />
+            <sourcepath path="${src.dir}/service" />
+            <sourcepath path="${src.dir}/extutil" />
             <sourcepath path="${src.dir}/webapp" />
             <sourcepath path="${src.dir}/workflow" />
             <sourcepath path="${src.dir}/rules" />

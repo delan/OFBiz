@@ -22,7 +22,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.ofbiz.core.entity;
+package org.ofbiz.core.generic;
 
 import java.rmi.*;
 import javax.servlet.*;
@@ -256,7 +256,7 @@ public class GenericWebEvent {
         if (updateMode.equals("CREATE")) {
             GenericValue value;
             try {
-                value = delegator.create(findByEntity.entityName, findByEntity.fields);
+                value = delegator.create(findByEntity.getEntityName(), findByEntity.getAllFields());
             } catch (GenericEntityException e) {
                 Debug.logWarning(e);
                 value = null;
@@ -266,7 +266,7 @@ public class GenericWebEvent {
                 return "error";
             }
         } else if (updateMode.equals("UPDATE")) {
-            GenericValue value = delegator.makeValue(findByEntity.entityName, findByEntity.fields);
+            GenericValue value = delegator.makeValue(findByEntity.getEntityName(), findByEntity.getAllFields());
             try {
                 value.store();
             } catch (GenericEntityException e) {

@@ -106,17 +106,17 @@
         <delete dir="${classes.dir}/org/ofbiz/commonapp" />
         
         <delete file="${lib.dir}/ofbcore-share.jar" />
-        <delete file="${lib.dir}/ofbcore-rules.jar" />
+        <delete file="${lib.dir}/ofbcore-entity.jar" />
+        <delete file="${lib.dir}/ofbcore-service.jar" />
+        <delete file="${lib.dir}/ofbcore-extutil.jar" />
         <delete file="${lib.dir}/ofbcore-workflow.jar" />
+        <delete file="${lib.dir}/ofbcore-rules.jar" />
+        <delete file="${lib.dir}/ofbcore-datafile.jar" />
+        <delete file="${lib.dir}/ofbcore-minilang.jar" />
+
         <delete file="${lib.dir}/commonapp.jar" />
 
         <delete file="${j2eedeploy.dir}/ofbcore-ejb.jar" />    
-
-        <delete file="${j2eedeploy.dir}/ecommerce-ext.war" />
-
-        <delete file="${j2eedeploy.dir}/catalog-ext.war" />
-        <delete file="${j2eedeploy.dir}/partymgr-ext.war" />
-        <delete file="${j2eedeploy.dir}/ordermgr-ext.war" />
     </target>
 
     <target name="ofbiz-clean" depends="ofbiz-init,sub-clean">
@@ -276,6 +276,9 @@
         <copy file="commonapp/etc/tyrexdomain.xml" toFile="${classes.dir}/tyrexdomain.xml" />
 
         <copy file="core/lib/ofbcore-share.jar" toFile="${lib.dir}/ofbcore-share.jar" />
+        <copy file="core/lib/ofbcore-entity.jar" toFile="${lib.dir}/ofbcore-entity.jar" />
+        <copy file="core/lib/ofbcore-service.jar" toFile="${lib.dir}/ofbcore-service.jar" />
+        <copy file="core/lib/ofbcore-extutil.jar" toFile="${lib.dir}/ofbcore-extutil.jar" />
         <copy file="core/lib/ofbcore-workflow.jar" toFile="${lib.dir}/ofbcore-workflow.jar" />
         <copy file="core/lib/ofbcore-rules.jar" toFile="${lib.dir}/ofbcore-rules.jar" />
         <copy file="core/lib/ofbcore-datafile.jar" toFile="${lib.dir}/ofbcore-datafile.jar" />

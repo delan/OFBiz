@@ -22,12 +22,11 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.ofbiz.core.util;
+package org.ofbiz.core.stats;
 
 import java.util.*;
 
 import org.ofbiz.core.entity.*;
-import org.ofbiz.core.service.*;
 import org.ofbiz.core.security.*;
 import org.ofbiz.core.util.*;
 
