@@ -36,7 +36,7 @@ import org.ofbiz.commonapp.order.order.*;
  * <p><b>Title:</b> ShoppingCartItem.java
  * <p><b>Description:</b> Shopping cart item object.
  *
- * @author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a> 
+ * @author     <a href="mailto:jaz@jflow.net.com">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @version    1.1
  * @created    August 4, 2001
@@ -44,9 +44,9 @@ import org.ofbiz.commonapp.order.order.*;
 public class ShoppingCartItem implements java.io.Serializable {
     
     private transient GenericDelegator delegator = null;
-    private String delegatorName = null;
-
     private transient GenericValue _product = null;
+
+    private String delegatorName = null;
     private String prodCatalogId = null;
     private String productId = null;
     private String itemComment = null;

@@ -39,6 +39,7 @@ import org.ofbiz.core.service.*;
  * PriceServices - Workers and Services class for product price related functionality
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ *@author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
  *@version    1.0
  *@created    June 6, 2002
  */
@@ -125,7 +126,7 @@ public class PriceServices {
         }
         productPrices = EntityUtil.filterByDate(productPrices, true);
        
-        // ===== get the prices we need: list, default, average cost, min, max =====
+        // ===== get the prices we need: list, default, average cost, promo, min, max =====
         List listPrices = EntityUtil.filterByAnd(productPrices, UtilMisc.toMap("productPriceTypeId", "LIST_PRICE"));
         GenericValue listPriceValue = EntityUtil.getFirst(listPrices);
         if (listPrices != null && listPrices.size() > 1) {
@@ -143,7 +144,13 @@ public class PriceServices {
         if (averageCosts != null && averageCosts.size() > 1) {
             Debug.logWarning("There is more than one AVERAGE_COST with the currencyUomId " + currencyUomId + " and productId " + productId + ", using the latest found with price: " + averageCostValue.getDouble("price"));
         }
-        
+
+        List promoPrices = EntityUtil.filterByAnd(productPrices, UtilMisc.toMap("productPriceTypeId", "PROMO_PRICE"));
+        GenericValue promoPriceValue = EntityUtil.getFirst(promoPrices);
+        if (averageCosts != null && averageCosts.size() > 1) {
+            Debug.logWarning("There is more than one PROMO_PRICE with the currencyUomId " + currencyUomId + " and productId " + productId + ", using the latest found with price: " + promoPriceValue.getDouble("price"));
+        }
+
         List minimumPrices = EntityUtil.filterByAnd(productPrices, UtilMisc.toMap("productPriceTypeId", "MINIMUM_PRICE"));
         GenericValue minimumPriceValue = EntityUtil.getFirst(minimumPrices);
         if (minimumPrices != null && minimumPrices.size() > 1) {
@@ -179,6 +186,13 @@ public class PriceServices {
                     Debug.logWarning("There is more than one AVERAGE_COST with the currencyUomId " + currencyUomId + " and productId " + virtualProductId + ", using the latest found with price: " + averageCostValue.getDouble("price"));
                 }
             }
+            if (promoPriceValue == null) {
+                List virtualTempPrices = EntityUtil.filterByAnd(virtualProductPrices, UtilMisc.toMap("productPriceTypeId", "PROMO_PRICE"));
+                promoPriceValue = EntityUtil.getFirst(virtualTempPrices);
+                if (virtualTempPrices != null && virtualTempPrices.size() > 1) {
+                    Debug.logWarning("There is more than one PROMO_PRICE with the currencyUomId " + currencyUomId + " and productId " + virtualProductId + ", using the latest found with price: " + promoPriceValue.getDouble("price"));
+                }
+            }
             if (minimumPriceValue == null) {
                 List virtualTempPrices = EntityUtil.filterByAnd(virtualProductPrices, UtilMisc.toMap("productPriceTypeId", "MINIMUM_PRICE"));
                 minimumPriceValue = EntityUtil.getFirst(virtualTempPrices);
@@ -194,7 +208,8 @@ public class PriceServices {
                 }
             }
         }
-        
+
+        double promoPrice = (promoPriceValue != null && promoPriceValue.get("price") != null) ? promoPriceValue.getDouble("price").doubleValue() : 0;
         double defaultPrice = (defaultPriceValue != null && defaultPriceValue.get("price") != null) ? defaultPriceValue.getDouble("price").doubleValue() : 0;
         Double listPriceDbl = listPriceValue != null ? listPriceValue.getDouble("price") : null;
         if (listPriceDbl == null) {
@@ -477,8 +492,19 @@ public class PriceServices {
                                     Debug.logError("ERROR: ProductPriceAction had null amount, using default price: " + defaultPrice + " for product with id " + productId, module);
                                     price = defaultPrice;
                                 }
+                            } else if ("PRICE_PFLAT".equals(productPriceAction.getString("productPriceActionTypeId"))) {
+                                //this one is a bit different too, break out of the loop because we now have our final price
+                                foundFlatOverride = true;
+                                price = promoPrice;
+                                if (productPriceAction.get("amount") != null) {
+                                    price += productPriceAction.getDouble("amount").doubleValue();
+                                }
+                                if (price == 0.00) {
+                                    Debug.logError("ERROR: PromoPrice and ProductPriceAction had null amount, using default price: " + defaultPrice + " for product with id " + productId, module);
+                                    price = defaultPrice;
+                                }
                             }
-                            
+
                             //add a orderItemPriceInfo element too, without orderId or orderItemId
                             StringBuffer priceInfoDescription = new StringBuffer();
                             priceInfoDescription.append(condsDescription.toString());

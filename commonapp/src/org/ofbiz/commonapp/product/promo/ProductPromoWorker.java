@@ -41,10 +41,13 @@ import org.ofbiz.commonapp.product.catalog.*;
  * ProductPromoWorker - Worker class for catalog/product promotion related functionality
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ *@author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
  *@version    1.0
  *@created    June 1, 2002
  */
 public class ProductPromoWorker {
+
+    public static final String module = ProductPromoWorker.class.getName();
 
     public static List getCatalogProductPromos(GenericDelegator delegator, ServletRequest request) {
         List productPromos = new LinkedList();
@@ -57,12 +60,45 @@ public class ProductPromoWorker {
                     while (prodCatalogPromoAppls != null && prodCatalogPromoAppls.hasNext()) {
                         GenericValue prodCatalogPromoAppl = (GenericValue) prodCatalogPromoAppls.next();
                         GenericValue productPromo = prodCatalogPromoAppl.getRelatedOneCache("ProductPromo");
+                        Collection productPromoRules = productPromo.getRelatedCache("ProductPromoRule", null, null);
+
+                        // get the ShoppingCart out of the session.
+                        HttpServletRequest req = null;
+                        ShoppingCart cart = null;
+                        try {
+                            req = (HttpServletRequest) request;
+                            cart = (ShoppingCart) req.getSession().getAttribute(SiteDefs.SHOPPING_CART);
+                        } catch (ClassCastException cce) {
+                            Debug.logInfo("Not a HttpServletRequest, no shopping cart found.", module);
+                        }
+
+                        boolean condResult = true;
+                        if (productPromoRules != null) {
+                            Iterator promoRulesItr = productPromoRules.iterator();
+                            while (condResult && promoRulesItr != null && promoRulesItr.hasNext()) {
+                                GenericValue promoRule = (GenericValue) promoRulesItr.next();
+                                Iterator productPromoConds = UtilMisc.toIterator(promoRule.getRelatedCache("ProductPromoCond", null, UtilMisc.toList("productPromoCondSeqId")));
+                                while (condResult && productPromoConds != null && productPromoConds.hasNext()) {
+                                    GenericValue productPromoCond = (GenericValue) productPromoConds.next();
+                                    // evaluate the party related conditions; so we don't show the promo if it doesn't apply.
+                                    if ("PPIP_PARTY_ID".equals(productPromoCond.getString("inputParamEnumId")))
+                                        condResult = checkCondition(prodCatalogId, productPromoCond, cart, null, 0, delegator);
+                                    else if ("PRIP_PARTY_GRP_MEM".equals(productPromoCond.getString("inputParamEnumId")))
+                                        condResult = checkCondition(prodCatalogId, productPromoCond, cart, null, 0, delegator);
+                                    else if ("PRIP_PARTY_CLASS".equals(productPromoCond.getString("inputParamEnumId")))
+                                        condResult = checkCondition(prodCatalogId, productPromoCond, cart, null, 0, delegator);
+                                    else if ("PPIP_ROLE_TYPE".equals(productPromoCond.getString("inputParamEnumId")))
+                                        condResult = checkCondition(prodCatalogId, productPromoCond, cart, null, 0, delegator);
+                                }
+                            }
+                            if (!condResult) productPromo = null;
+                        }
                         if (productPromo != null) productPromos.add(productPromo);
                     }
                 }
             }
         } catch (GenericEntityException e) {
-            Debug.logError(e);
+            Debug.logError(e, module);
         }
         return productPromos;
     }
@@ -73,22 +109,22 @@ public class ProductPromoWorker {
         
         if (cartItem.getQuantity() == oldQuantity) {
             //no change, just return
-            Debug.logInfo("Cart quantity did not change, not doing promos.");
+            Debug.logInfo("Cart quantity did not change, not doing promos.", module);
             return;
         }
         
         //if quantity increased, then apply, otherwise unapply
         boolean apply = oldQuantity < cartItem.getQuantity();
-        if (Debug.verboseOn()) Debug.logVerbose("Doing Promotions; apply=" + apply + ", oldQuantity=" + oldQuantity + ", newQuantity=" + cartItem.getQuantity() + ", productId=" + cartItem.getProductId()); 
+        if (Debug.verboseOn()) Debug.logVerbose("Doing Promotions; apply=" + apply + ", oldQuantity=" + oldQuantity + ", newQuantity=" + cartItem.getQuantity() + ", productId=" + cartItem.getProductId(), module);
         
         GenericValue prodCatalog = null;
         try {
             prodCatalog = delegator.findByPrimaryKeyCache("ProdCatalog", UtilMisc.toMap("prodCatalogId", prodCatalogId));
         } catch (GenericEntityException e) {
-            Debug.logError(e, "Error looking up prodCatalog with id " + prodCatalogId);
+            Debug.logError(e, "Error looking up prodCatalog with id " + prodCatalogId, module);
         }
         if (prodCatalog == null) {
-            Debug.logWarning("No prodCatalog found with id " + prodCatalogId + ", not doing promotions");
+            Debug.logWarning("No prodCatalog found with id " + prodCatalogId + ", not doing promotions", module);
             return;
         }
         
@@ -97,7 +133,7 @@ public class ProductPromoWorker {
             //loop through promotions and get a list of all of the rules...
             Collection prodCatalogPromoApplsCol = EntityUtil.filterByDate(prodCatalog.getRelatedCache("ProdCatalogPromoAppl", null, UtilMisc.toList("sequenceNum")), true);
             if (prodCatalogPromoApplsCol == null || prodCatalogPromoApplsCol.size() == 0) {
-                if (Debug.infoOn()) Debug.logInfo("Not doing promotions, none applied to prodCatalog with ID " + prodCatalogId);
+                if (Debug.infoOn()) Debug.logInfo("Not doing promotions, none applied to prodCatalog with ID " + prodCatalogId, module);
             }
             
             List allPromoRules = new LinkedList();
@@ -123,7 +159,7 @@ public class ProductPromoWorker {
 
                 numberOfIterations++;
                 if (numberOfIterations > maxIterations) {
-                    Debug.logError("ERROR: While calculating promotions the promotion rules where run more than " + maxIterations + " times, so the calculation has been ended. This should generally never happen unless you have bad rule definitions (or LOTS of promos/rules).");
+                    Debug.logError("ERROR: While calculating promotions the promotion rules where run more than " + maxIterations + " times, so the calculation has been ended. This should generally never happen unless you have bad rule definitions (or LOTS of promos/rules).", module);
                     break;
                 }
                 
@@ -159,7 +195,7 @@ public class ProductPromoWorker {
 
                     if (performActions) {
                         //perform all actions, either apply or unapply
-                        if (Debug.verboseOn()) Debug.logVerbose((apply ? "Performing" : "Un-performing") + " actions for rule " + productPromoRule + "; apply=" + apply);
+                        if (Debug.verboseOn()) Debug.logVerbose((apply ? "Performing" : "Un-performing") + " actions for rule " + productPromoRule + "; apply=" + apply, module);
                         /* This isn't necessary, just removing run rules from list: 
                         //rule done, add to list so it won't get done again
                         firedRules.add(productPromoRulePK);*/
@@ -170,7 +206,7 @@ public class ProductPromoWorker {
                         Iterator productPromoActions = UtilMisc.toIterator(productPromoRule.getRelatedCache("ProductPromoAction", null, UtilMisc.toList("productPromoActionSeqId")));
                         while (productPromoActions != null && productPromoActions.hasNext()) {
                             GenericValue productPromoAction = (GenericValue) productPromoActions.next();
-                            //Debug.logInfo("Doing action: " + productPromoAction);
+                            //Debug.logInfo("Doing action: " + productPromoAction, module);
 
                             try {
                                 boolean actionChangedCart = performAction(apply, productPromoAction, cart, cartItem, oldQuantity, prodCatalogId, delegator, dispatcher);
@@ -179,21 +215,26 @@ public class ProductPromoWorker {
                                     cartChanged = actionChangedCart;
                                 }
                             } catch (CartItemModifyException e) {
-                                Debug.logWarning("Possible error modifying the cart in perform promotion action: " + e.toString());
+                                Debug.logWarning("Possible error modifying the cart in perform promotion action: " + e.toString(), module);
                             }
                         }
                     }
                 }
             }
         } catch (NumberFormatException e) {
-            Debug.logError(e, "Number not formatted correctly in promotion rules, not completed...");
+            Debug.logError(e, "Number not formatted correctly in promotion rules, not completed...", module);
         } catch (GenericEntityException e) {
-            Debug.logError(e, "Error looking up promotion data while doing promotions");
+            Debug.logError(e, "Error looking up promotion data while doing promotions", module);
         }
     }
     
     public static boolean checkCondition(String prodCatalogId, GenericValue productPromoCond, ShoppingCart cart, ShoppingCartItem cartItem, double oldQuantity, GenericDelegator delegator) throws GenericEntityException {
-        if (Debug.verboseOn()) Debug.logVerbose("Checking promotion condition: " + productPromoCond);
+        GenericValue userLogin = null;
+        String partyId = null;
+        if (cart != null) userLogin = cart.getUserLogin();
+        if (userLogin != null && userLogin.get("partyId") != null)
+            partyId = userLogin.getString("partyId");
+        if (Debug.verboseOn()) Debug.logVerbose("Checking promotion condition: " + productPromoCond, module);
         int compare = 0;
         if ("PPIP_PRODUCT_ID".equals(productPromoCond.getString("inputParamEnumId"))) {
             compare = cartItem.getProductId().compareTo(productPromoCond.getString("condValue"));
@@ -206,13 +247,13 @@ public class ProductPromoWorker {
                 if (candidateProductId.equals(cartItem.getProductId())) {
                     compare = 0;
                 } else {
-                    //Debug.logInfo("Testing to see if productId \"" + candidateProductId + "\" is in the cart");
+                    //Debug.logInfo("Testing to see if productId \"" + candidateProductId + "\" is in the cart", module);
                     List productCartItems = cart.findAllCartItems(candidateProductId);
                     if (productCartItems.size() > 0) {
-                        //Debug.logInfo("Item with productId \"" + candidateProductId + "\" IS in the cart");
+                        //Debug.logInfo("Item with productId \"" + candidateProductId + "\" IS in the cart", module);
                         compare = 0;
                     } else {
-                        //Debug.logInfo("Item with productId \"" + candidateProductId + "\" IS NOT in the cart");
+                        //Debug.logInfo("Item with productId \"" + candidateProductId + "\" IS NOT in the cart", module);
                         compare = 1;
                     }
                 }
@@ -229,9 +270,33 @@ public class ProductPromoWorker {
             } else {
                 compare = 1;
             }
+        } else if ("PPIP_PARTY_ID".equals(productPromoCond.getString("inputParamEnumId"))) {
+            if (partyId != null) {
+                compare = partyId.compareTo(productPromoCond.getString("condValue"));
+            } else {
+                compare = 1;
+            }
+        /* These aren't supported yet, ie TODO
+        } else if ("PRIP_PARTY_GRP_MEM".equals(productPriceCond.getString("inputParamEnumId"))) {
+        } else if ("PRIP_PARTY_CLASS".equals(productPriceCond.getString("inputParamEnumId"))) {
+        */
+        } else if ("PPIP_ROLE_TYPE".equals(productPromoCond.getString("inputParamEnumId"))) {
+            if (partyId != null) {
+                //if a PartyRole exists for this partyId and the specified roleTypeId
+                GenericValue partyRole = delegator.findByPrimaryKeyCache("PartyRole",
+                        UtilMisc.toMap("partyId", partyId, "roleTypeId", productPromoCond.getString("condValue")));
+                // then 0 (equals), otherwise 1 (not equals)
+                if (partyRole != null) {
+                    compare = 0;
+                } else {
+                    compare = 1;
+                }
+            } else {
+                compare = 1;
+            }
         } else if ("PPIP_ORDER_TOTAL".equals(productPromoCond.getString("inputParamEnumId"))) {
             Double orderSubTotal = new Double(cart.getSubTotal());
-            if (Debug.verboseOn()) Debug.logVerbose("Doing order total compare: orderSubTotal=" + orderSubTotal);
+            if (Debug.verboseOn()) Debug.logVerbose("Doing order total compare: orderSubTotal=" + orderSubTotal, module);
             compare = orderSubTotal.compareTo(Double.valueOf(productPromoCond.getString("condValue")));
         } else if ("PPIP_QUANTITY_ADDED".equals(productPromoCond.getString("inputParamEnumId"))) {
             Double quantityAdded = new Double(cartItem.getQuantity() - oldQuantity);
@@ -239,11 +304,11 @@ public class ProductPromoWorker {
         } else if ("PPIP_NEW_PROD_QUANT".equals(productPromoCond.getString("inputParamEnumId"))) {
             compare = (new Double(cartItem.getQuantity())).compareTo(Double.valueOf(productPromoCond.getString("condValue")));
         } else {
-            Debug.logWarning("An un-supported productPromoCond input parameter (lhs) was used: " + productPromoCond.getString("inputParamEnumId") + ", returning false, ie check failed");
+            Debug.logWarning("An un-supported productPromoCond input parameter (lhs) was used: " + productPromoCond.getString("inputParamEnumId") + ", returning false, ie check failed", module);
             return false;
         }
         
-        if (Debug.verboseOn()) Debug.logVerbose("Condition compare done, compare=" + compare);
+        if (Debug.verboseOn()) Debug.logVerbose("Condition compare done, compare=" + compare, module);
 
         if ("PPC_EQ".equals(productPromoCond.getString("operatorEnumId"))) {
             if (compare == 0) return true;
@@ -258,7 +323,7 @@ public class ProductPromoWorker {
         } else if ("PPC_GTE".equals(productPromoCond.getString("operatorEnumId"))) {
             if (compare >= 0) return true;
         } else {
-            Debug.logWarning("An un-supported productPromoCond condition was used: " + productPromoCond.getString("operatorEnumId") + ", returning false, ie check failed");
+            Debug.logWarning("An un-supported productPromoCond condition was used: " + productPromoCond.getString("operatorEnumId") + ", returning false, ie check failed", module);
             return false;
         }
         return false;
@@ -270,7 +335,7 @@ public class ProductPromoWorker {
             if (apply) {
                 Integer itemLoc = findPromoItem(productPromoAction, cart);
                 if (itemLoc != null) {
-                    if (Debug.verboseOn()) Debug.logVerbose("Not adding promo item, already there; action: " + productPromoAction);
+                    if (Debug.verboseOn()) Debug.logVerbose("Not adding promo item, already there; action: " + productPromoAction, module);
                     return false;
                 }
 
@@ -295,7 +360,7 @@ public class ProductPromoWorker {
                 //set promo after create; note that to setQuantity we must clear this flag, setQuantity, then re-set the flag
                 gwpItem.setIsPromo(true);
                 gwpItem.addAdjustment(orderAdjustment);
-                if (Debug.verboseOn()) Debug.logVerbose("gwpItem adjustments: " + gwpItem.getAdjustments());
+                if (Debug.verboseOn()) Debug.logVerbose("gwpItem adjustments: " + gwpItem.getAdjustments(), module);
 
                 //ProductPromoWorker.doPromotions(prodCatalogId, cart, gwpItem, 0, delegator, dispatcher);
                 return true;
@@ -309,12 +374,12 @@ public class ProductPromoWorker {
                     //before clearing it, set it to a non-promo so that the setQuantity won't throw an exception
                     ShoppingCartItem cartItemToRemove = cart.findCartItem(itemLoc.intValue());
                     cartItemToRemove.setIsPromo(false);
-                    if (Debug.verboseOn()) Debug.logVerbose("About to remove cart item at location " + itemLoc.intValue());
+                    if (Debug.verboseOn()) Debug.logVerbose("About to remove cart item at location " + itemLoc.intValue(), module);
                     cart.removeCartItem(itemLoc.intValue(), dispatcher);
                     //ProductPromoWorker.doPromotions(prodCatalogId, cart, cartItem, oldQuantity, delegator, dispatcher);
                     return true;
                 } else {
-                    if (Debug.verboseOn()) Debug.logVerbose("Could not find cart item for the action " + productPromoAction);
+                    if (Debug.verboseOn()) Debug.logVerbose("Could not find cart item for the action " + productPromoAction, module);
                     return false;
                 }
             }
@@ -341,7 +406,7 @@ public class ProductPromoWorker {
         } else if ("PROMO_ORDER_AMOUNT".equals(productPromoAction.getString("productPromoActionTypeId"))) {
             return doOrderPromoAction(apply, productPromoAction, cart, "amount", delegator);
         } else {
-            Debug.logError("An un-supported productPromoActionType was used: " + productPromoAction.getString("productPromoActionTypeId") + ", not performing any action");
+            Debug.logError("An un-supported productPromoActionType was used: " + productPromoAction.getString("productPromoActionTypeId") + ", not performing any action", module);
             return false;
         }
     }
@@ -372,7 +437,7 @@ public class ProductPromoWorker {
         if (apply) {
             Integer adjLoc = findAdjustment(productPromoAction, (List) cartItem.getAdjustments());
             if (adjLoc != null) {
-                if (Debug.verboseOn()) Debug.logVerbose("Not adding promo adjustment, already there; action: " + productPromoAction);
+                if (Debug.verboseOn()) Debug.logVerbose("Not adding promo adjustment, already there; action: " + productPromoAction, module);
                 return false;
             }
             
@@ -392,7 +457,7 @@ public class ProductPromoWorker {
         } else {
             Integer adjLoc = findAdjustment(productPromoAction, (List) cartItem.getAdjustments());
             if (adjLoc != null) {
-                //Debug.logInfo("Found adjustment on cartItem for productId " + cartItem.getProductId() + "removing.");
+                //Debug.logInfo("Found adjustment on cartItem for productId " + cartItem.getProductId() + "removing.", module);
                 cartItem.removeAdjustment(adjLoc.intValue());
                 return true;
             } else {
@@ -402,11 +467,11 @@ public class ProductPromoWorker {
     }
     
     public static boolean doOrderPromoAction(boolean apply, GenericValue productPromoAction, ShoppingCart cart, String quantityField, GenericDelegator delegator) {
-        //Debug.logInfo("Starting doOrderPromoAction: apply=" + apply + ", productPromoAction=" + productPromoAction);
+        //Debug.logInfo("Starting doOrderPromoAction: apply=" + apply + ", productPromoAction=" + productPromoAction, module);
         if (apply) {
             Integer adjLoc = findAdjustment(productPromoAction, (List) cart.getAdjustments());
             if (adjLoc != null) {
-                if (Debug.infoOn()) Debug.logInfo("Not adding promo adjustment, already there; action: " + productPromoAction);
+                if (Debug.infoOn()) Debug.logInfo("Not adding promo adjustment, already there; action: " + productPromoAction, module);
                 return false;
             }
             
@@ -425,7 +490,7 @@ public class ProductPromoWorker {
             return true;
         } else {
             Integer adjLoc = findAdjustment(productPromoAction, (List) cart.getAdjustments());
-            //Debug.logInfo("Finding adjustment, adjLoc=" + adjLoc);
+            //Debug.logInfo("Finding adjustment, adjLoc=" + adjLoc, module);
             if (adjLoc != null) {
                 cart.removeAdjustment(adjLoc.intValue());
                 return true;

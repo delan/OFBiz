@@ -38,8 +38,8 @@ import com.Verisign.payment.PFProAPI;
  * PayflowPro - Verisign PayFlow Pro <=> OFBiz Service Module
  *
  * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
- * @created    Apr 12, 2002
- * @version    1.0
+ * @created    Sep 5, 2002
+ * @version    1.1
  */
 public class PayflowPro {
 
