@@ -1,5 +1,5 @@
 /*
- * $Id: EntitySaxReader.java,v 1.8 2004/05/07 15:23:59 ajzeneski Exp $
+ * $Id: EntitySaxReader.java,v 1.9 2004/05/07 15:52:00 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -48,7 +48,7 @@ import org.xml.sax.XMLReader;
  * SAX XML Parser Content Handler for Entity Engine XML files
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.8 $
+ * @version    $Revision: 1.9 $
  * @since      2.0
  */
 public class EntitySaxReader implements org.xml.sax.ContentHandler, ErrorHandler {
@@ -152,8 +152,11 @@ public class EntitySaxReader implements org.xml.sax.ContentHandler, ErrorHandler
 
         numberRead = 0;
         try {
-            boolean beganTransaction = TransactionUtil.begin(transactionTimeout);            
-            Debug.logImportant("Transaction Timeout set to " + transactionTimeout / 3600 + " hours (" + transactionTimeout + " seconds)", module);
+            boolean beganTransaction = false;
+            if (transactionTimeout > -1) {
+                beganTransaction = TransactionUtil.begin(transactionTimeout);
+                Debug.logImportant("Transaction Timeout set to " + transactionTimeout / 3600 + " hours (" + transactionTimeout + " seconds)", module);
+            }
             try {
                 reader.parse(new InputSource(is));
                 // make sure all of the values to write got written...
@@ -163,7 +166,7 @@ public class EntitySaxReader implements org.xml.sax.ContentHandler, ErrorHandler
                 }
                 TransactionUtil.commit(beganTransaction);
             } catch (Exception e) {
-                Debug.logError(e, "An error occurred saving the data, rolling back transaction", module);
+                Debug.logError(e, "An error occurred saving the data, rolling back transaction (" + beganTransaction + ")", module);
                 TransactionUtil.rollback(beganTransaction);
                 throw new SAXException("A transaction error occurred reading data", e);
             }
