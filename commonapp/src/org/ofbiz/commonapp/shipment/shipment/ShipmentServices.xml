@@ -31,7 +31,7 @@
     <!-- Shipment services -->
     <simple-method method-name="createShipment" short-description="Create Shipment">
         <check-permission permission="FACILITY" action="_CREATE">
-        	<fail-message message="Security Error: to run createShipment you must have the FACILITY_CREATE or FACILITY_ADMIN permission"/>
+            <fail-message message="Security Error: to run createShipment you must have the FACILITY_CREATE or FACILITY_ADMIN permission"/>
         </check-permission>
         <check-errors/>
 
@@ -43,18 +43,18 @@
         <env-to-field env-name="sequencedId" field-name="shipmentId" map-name="newEntity"/>
         
         <if-not-empty field-name="statusId" map-name="newEntity">
-        	<make-value entity-name="ShipmentStatus" value-name="newStatusValue"/>
-        	<field-to-field field-name="statusId" map-name="parameters" to-map-name="newStatusValue"/>
-        	<field-to-field field-name="shipmentId" map-name="parameters" to-map-name="newStatusValue"/>
-        	<now-timestamp-to-env env-name="newStatusValue.statusDate"/>
-        	<create-value value-name="newStatusValue"/>
+            <make-value entity-name="ShipmentStatus" value-name="newStatusValue"/>
+            <field-to-field field-name="statusId" map-name="parameters" to-map-name="newStatusValue"/>
+            <field-to-field field-name="shipmentId" map-name="parameters" to-map-name="newStatusValue"/>
+            <now-timestamp-to-env env-name="newStatusValue.statusDate"/>
+            <create-value value-name="newStatusValue"/>
         </if-not-empty>
         
         <create-value value-name="newEntity"/>
     </simple-method>
     <simple-method method-name="updateShipment" short-description="Update Shipment">
         <check-permission permission="FACILITY" action="_UPDATE">
-        	<fail-message message="Security Error: to run updateShipment you must have the FACILITY_UPDATE or FACILITY_ADMIN permission"/>
+            <fail-message message="Security Error: to run updateShipment you must have the FACILITY_UPDATE or FACILITY_ADMIN permission"/>
         </check-permission>
         <check-errors/>
 
@@ -63,11 +63,11 @@
         <find-by-primary-key entity-name="Shipment" map-name="lookupPKMap" value-name="lookedUpValue"/>
         
         <if-compare-field field-name="parameters.statusId" operator="not-equals" to-field-name="lookedUpValue.statusId">
-        	<make-value entity-name="ShipmentStatus" value-name="newStatusValue"/>
-        	<field-to-field field-name="statusId" map-name="parameters" to-map-name="newStatusValue"/>
-        	<field-to-field field-name="shipmentId" map-name="parameters" to-map-name="newStatusValue"/>
-        	<now-timestamp-to-env env-name="newStatusValue.statusDate"/>
-        	<create-value value-name="newStatusValue"/>
+            <make-value entity-name="ShipmentStatus" value-name="newStatusValue"/>
+            <field-to-field field-name="statusId" map-name="parameters" to-map-name="newStatusValue"/>
+            <field-to-field field-name="shipmentId" map-name="parameters" to-map-name="newStatusValue"/>
+            <now-timestamp-to-env env-name="newStatusValue.statusDate"/>
+            <create-value value-name="newStatusValue"/>
         </if-compare-field>
         
         <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
@@ -75,7 +75,7 @@
     </simple-method>
     <simple-method method-name="deleteShipment" short-description="Delete Shipment">
         <check-permission permission="FACILITY" action="_DELETE">
-        	<fail-message message="Security Error: to run deleteShipment you must have the FACILITY_DELETE or FACILITY_ADMIN permission"/>
+            <fail-message message="Security Error: to run deleteShipment you must have the FACILITY_DELETE or FACILITY_ADMIN permission"/>
         </check-permission>
         <check-errors/>
 
@@ -88,7 +88,7 @@
     <!-- ShipmentItem services -->
     <simple-method method-name="createShipmentItem" short-description="Create ShipmentItem">
         <check-permission permission="FACILITY" action="_CREATE">
-        	<fail-message message="Security Error: to run createShipmentItem you must have the FACILITY_CREATE or FACILITY_ADMIN permission"/>
+            <fail-message message="Security Error: to run createShipmentItem you must have the FACILITY_CREATE or FACILITY_ADMIN permission"/>
         </check-permission>
         <check-errors/>
 
@@ -96,15 +96,15 @@
         <set-pk-fields map-name="parameters" value-name="newEntity"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
 
-		<!-- if no shipmentItemSeqId, generate one based on existing items, ie one greater than the current higher number -->
-		<make-next-seq-id value-name="newEntity" seq-field-name="shipmentItemSeqId" numeric-padding="5" increment-by="1"/>
-		<field-to-result field-name="shipmentItemSeqId" map-name="newEntity" result-name="shipmentItemSeqId"/>
+        <!-- if no shipmentItemSeqId, generate one based on existing items, ie one greater than the current higher number -->
+        <make-next-seq-id value-name="newEntity" seq-field-name="shipmentItemSeqId" numeric-padding="5" increment-by="1"/>
+        <field-to-result field-name="shipmentItemSeqId" map-name="newEntity" result-name="shipmentItemSeqId"/>
         
         <create-value value-name="newEntity"/>
     </simple-method>
     <simple-method method-name="updateShipmentItem" short-description="Update ShipmentItem">
         <check-permission permission="FACILITY" action="_UPDATE">
-        	<fail-message message="Security Error: to run updateShipmentItem you must have the FACILITY_UPDATE or FACILITY_ADMIN permission"/>
+            <fail-message message="Security Error: to run updateShipmentItem you must have the FACILITY_UPDATE or FACILITY_ADMIN permission"/>
         </check-permission>
         <check-errors/>
 
@@ -116,7 +116,7 @@
     </simple-method>
     <simple-method method-name="deleteShipmentItem" short-description="Delete ShipmentItem">
         <check-permission permission="FACILITY" action="_DELETE">
-        	<fail-message message="Security Error: to run deleteShipmentItem you must have the FACILITY_DELETE or FACILITY_ADMIN permission"/>
+            <fail-message message="Security Error: to run deleteShipmentItem you must have the FACILITY_DELETE or FACILITY_ADMIN permission"/>
         </check-permission>
         <check-errors/>
 
@@ -129,7 +129,7 @@
     <!-- ShipmentPackage services -->
     <simple-method method-name="createShipmentPackage" short-description="Create ShipmentPackage">
         <check-permission permission="FACILITY" action="_CREATE">
-        	<fail-message message="Security Error: to run createShipmentPackage you must have the FACILITY_CREATE or FACILITY_ADMIN permission"/>
+            <fail-message message="Security Error: to run createShipmentPackage you must have the FACILITY_CREATE or FACILITY_ADMIN permission"/>
         </check-permission>
         <check-errors/>
 
@@ -137,15 +137,15 @@
         <set-pk-fields map-name="parameters" value-name="newEntity"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
 
-		<!-- if no shipmentPackageSeqId, generate one based on existing items, ie one greater than the current higher number -->
-		<make-next-seq-id value-name="newEntity" seq-field-name="shipmentPackageSeqId" numeric-padding="5" increment-by="1"/>
-		<field-to-result field-name="shipmentPackageSeqId" map-name="newEntity" result-name="shipmentPackageSeqId"/>
+        <!-- if no shipmentPackageSeqId, generate one based on existing items, ie one greater than the current higher number -->
+        <make-next-seq-id value-name="newEntity" seq-field-name="shipmentPackageSeqId" numeric-padding="5" increment-by="1"/>
+        <field-to-result field-name="shipmentPackageSeqId" map-name="newEntity" result-name="shipmentPackageSeqId"/>
         
         <create-value value-name="newEntity"/>
     </simple-method>
     <simple-method method-name="updateShipmentPackage" short-description="Update ShipmentPackage">
         <check-permission permission="FACILITY" action="_UPDATE">
-        	<fail-message message="Security Error: to run updateShipmentPackage you must have the FACILITY_UPDATE or FACILITY_ADMIN permission"/>
+            <fail-message message="Security Error: to run updateShipmentPackage you must have the FACILITY_UPDATE or FACILITY_ADMIN permission"/>
         </check-permission>
         <check-errors/>
 
@@ -157,7 +157,7 @@
     </simple-method>
     <simple-method method-name="deleteShipmentPackage" short-description="Delete ShipmentPackage">
         <check-permission permission="FACILITY" action="_DELETE">
-        	<fail-message message="Security Error: to run deleteShipmentPackage you must have the FACILITY_DELETE or FACILITY_ADMIN permission"/>
+            <fail-message message="Security Error: to run deleteShipmentPackage you must have the FACILITY_DELETE or FACILITY_ADMIN permission"/>
         </check-permission>
         <check-errors/>
 
@@ -170,7 +170,7 @@
     <!-- ShipmentPackageContent services -->
     <simple-method method-name="createShipmentPackageContent" short-description="Create ShipmentPackageContent">
         <check-permission permission="FACILITY" action="_CREATE">
-        	<fail-message message="Security Error: to run createShipmentPackageContent you must have the FACILITY_CREATE or FACILITY_ADMIN permission"/>
+            <fail-message message="Security Error: to run createShipmentPackageContent you must have the FACILITY_CREATE or FACILITY_ADMIN permission"/>
         </check-permission>
         <check-errors/>
 
@@ -182,7 +182,7 @@
     </simple-method>
     <simple-method method-name="updateShipmentPackageContent" short-description="Update ShipmentPackageContent">
         <check-permission permission="FACILITY" action="_UPDATE">
-        	<fail-message message="Security Error: to run updateShipmentPackageContent you must have the FACILITY_UPDATE or FACILITY_ADMIN permission"/>
+            <fail-message message="Security Error: to run updateShipmentPackageContent you must have the FACILITY_UPDATE or FACILITY_ADMIN permission"/>
         </check-permission>
         <check-errors/>
 
@@ -194,7 +194,7 @@
     </simple-method>
     <simple-method method-name="deleteShipmentPackageContent" short-description="Delete ShipmentPackageContent">
         <check-permission permission="FACILITY" action="_DELETE">
-        	<fail-message message="Security Error: to run deleteShipmentPackageContent you must have the FACILITY_DELETE or FACILITY_ADMIN permission"/>
+            <fail-message message="Security Error: to run deleteShipmentPackageContent you must have the FACILITY_DELETE or FACILITY_ADMIN permission"/>
         </check-permission>
         <check-errors/>
 
@@ -207,7 +207,7 @@
     <!-- ShipmentContactMech services -->
     <simple-method method-name="createShipmentContactMech" short-description="Create ShipmentContactMech">
         <check-permission permission="FACILITY" action="_CREATE">
-        	<fail-message message="Security Error: to run createShipmentContactMech you must have the FACILITY_CREATE or FACILITY_ADMIN permission"/>
+            <fail-message message="Security Error: to run createShipmentContactMech you must have the FACILITY_CREATE or FACILITY_ADMIN permission"/>
         </check-permission>
         <check-errors/>
 
@@ -219,7 +219,7 @@
     </simple-method>
     <simple-method method-name="updateShipmentContactMech" short-description="Update ShipmentContactMech">
         <check-permission permission="FACILITY" action="_UPDATE">
-        	<fail-message message="Security Error: to run updateShipmentContactMech you must have the FACILITY_UPDATE or FACILITY_ADMIN permission"/>
+            <fail-message message="Security Error: to run updateShipmentContactMech you must have the FACILITY_UPDATE or FACILITY_ADMIN permission"/>
         </check-permission>
         <check-errors/>
 
@@ -231,7 +231,7 @@
     </simple-method>
     <simple-method method-name="deleteShipmentContactMech" short-description="Delete ShipmentContactMech">
         <check-permission permission="FACILITY" action="_DELETE">
-        	<fail-message message="Security Error: to run deleteShipmentContactMech you must have the FACILITY_DELETE or FACILITY_ADMIN permission"/>
+            <fail-message message="Security Error: to run deleteShipmentContactMech you must have the FACILITY_DELETE or FACILITY_ADMIN permission"/>
         </check-permission>
         <check-errors/>
 
@@ -244,7 +244,7 @@
     <!-- ShipmentRouteSegment services -->
     <simple-method method-name="createShipmentRouteSegment" short-description="Create ShipmentRouteSegment">
         <check-permission permission="FACILITY" action="_CREATE">
-        	<fail-message message="Security Error: to run createShipmentRouteSegment you must have the FACILITY_CREATE or FACILITY_ADMIN permission"/>
+            <fail-message message="Security Error: to run createShipmentRouteSegment you must have the FACILITY_CREATE or FACILITY_ADMIN permission"/>
         </check-permission>
         <check-errors/>
 
@@ -252,15 +252,15 @@
         <set-pk-fields map-name="parameters" value-name="newEntity"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
 
-		<!-- if no shipmentRouteSegmentSeqId, generate one based on existing items, ie one greater than the current higher number -->
-		<make-next-seq-id value-name="newEntity" seq-field-name="shipmentRouteSegmentId" numeric-padding="5" increment-by="1"/>
-		<field-to-result field-name="shipmentRouteSegmentId" map-name="newEntity" result-name="shipmentRouteSegmentId"/>
+        <!-- if no shipmentRouteSegmentSeqId, generate one based on existing items, ie one greater than the current higher number -->
+        <make-next-seq-id value-name="newEntity" seq-field-name="shipmentRouteSegmentId" numeric-padding="5" increment-by="1"/>
+        <field-to-result field-name="shipmentRouteSegmentId" map-name="newEntity" result-name="shipmentRouteSegmentId"/>
         
         <create-value value-name="newEntity"/>
     </simple-method>
     <simple-method method-name="updateShipmentRouteSegment" short-description="Update ShipmentRouteSegment">
         <check-permission permission="FACILITY" action="_UPDATE">
-        	<fail-message message="Security Error: to run updateShipmentRouteSegment you must have the FACILITY_UPDATE or FACILITY_ADMIN permission"/>
+            <fail-message message="Security Error: to run updateShipmentRouteSegment you must have the FACILITY_UPDATE or FACILITY_ADMIN permission"/>
         </check-permission>
         <check-errors/>
 
@@ -272,7 +272,7 @@
     </simple-method>
     <simple-method method-name="deleteShipmentRouteSegment" short-description="Delete ShipmentRouteSegment">
         <check-permission permission="FACILITY" action="_DELETE">
-        	<fail-message message="Security Error: to run deleteShipmentRouteSegment you must have the FACILITY_DELETE or FACILITY_ADMIN permission"/>
+            <fail-message message="Security Error: to run deleteShipmentRouteSegment you must have the FACILITY_DELETE or FACILITY_ADMIN permission"/>
         </check-permission>
         <check-errors/>
 
