@@ -25,12 +25,12 @@
 
 <forms>
     <form name="EditProductSimpleTest" type="single" 
-        target="updateProduct" title="" default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+            target="updateProduct" title="" default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
         <auto-fields-service service-name="updateProduct" map-name="product"/>
     </form>
     <form name="EditProduct" type="single" 
-        target="updateProduct" title="" default-map-name="product"
-        default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+            target="updateProduct" title="" default-map-name="product"
+            default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
         
         <alt-target use-when="product==null" target="createProduct"/>
         
@@ -127,8 +127,8 @@
         </field>
     </form>
     <form name="AddProductCategoryMember" type="single" 
-        target="addProductToCategory" title="Add ProductCategoryMember (select Category, enter From Date):"
-        default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+            target="addProductToCategory" title="Add ProductCategoryMember (select Category, enter From Date):"
+            default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
         <auto-fields-service service-name="safeAddProductToCategory"/>
         <field name="productId" map-name="product"><hidden/></field>
         <field name="productCategoryId" widget-style="selectBox">
@@ -142,8 +142,8 @@
         <field name="submitButton" title="Add" widget-style="standardSubmit"><submit button-type="button"/></field>
     </form>
     <form name="UpdateProductCategoryMemeber" type="list" 
-        target="updateProductToCategory" title="" list-name="productCategoryMemberDatas"
-        default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+            target="updateProductToCategory" title="" list-name="productCategoryMemberDatas"
+            default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
         <!-- each entry in the list will be a Map with the entries: productCategoryMember and productCategory -->
         <auto-fields-service service-name="updateProductToCategory" map-name="productCategoryMember"/>
         <field name="productId"><hidden/></field>
@@ -159,5 +159,107 @@
             <hyperlink target="removeProductFromCategory?productId=${productCategoryMember.productId}&amp;productCategoryId=${productCategoryMember.productCategoryId}&amp;fromDate=${productCategoryMember.fromDate}"
                 description="[Delete]" also-hidden="false"/>
         </field>
+    </form>
+    <form name="AddProductContentAssoc" type="single"
+            target="addContentToProduct" title="Add ProductContent (select Content Id, enter From Date):"
+            default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        <auto-fields-entity entity-name="ProductContent"/>
+        <field name="productId" map-name="product"><hidden/></field>
+        <field name="productContentTypeId" widget-style="selectBox">
+            <drop-down>
+                <entity-options entity-name="ProductContentType" description="${description} [${productContentTypeId}]">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="description"><text size="40"/></field>
+        <field name="submitButton" title="Prepare create" widget-style="standardSubmit"><submit button-type="button"/></field>
+    </form>
+    <form name="UpdateProductContentAssoc" type="list"
+            target="updateContentToProduct" title="" list-name="productContentDatas"
+            default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        <!-- each entry in the list will be a Map with the entries: productContent and content -->
+        <auto-fields-service service-name="updateProductContent" map-name="productContent"/>
+        <field name="productId"><hidden/></field>
+        <field name="contentId" title="Content [ID]" widget-style="buttontext">
+            <hyperlink target="EditProductContentContent?productId=${productContent.productId}&amp;contentId=${productContent.contentId}"
+                description="${content.description} [${productContent.contentId}]"/>
+        </field>
+        <field name="productContentTypeId" widget-style="selectBox">
+            <drop-down>
+                <entity-options entity-name="ProductContentType" description="${description} [${productContentTypeId}]">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="submitButton" title="Update" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
+            <hyperlink target="removeContentFromProduct?productId=${productContent.productId}&amp;contentId=${productContent.contentId}&amp;productContentTypeId=${productContent.productContentTypeId}&amp;fromDate=${productContent.fromDate}"
+                description="[Delete]" also-hidden="false"/>
+        </field>
+    </form>
+    <form name="EditProductContentEmail" type="single"
+            target="updateEmailContentForProduct" title="Update Email Content for Product"
+            default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        <alt-target use-when="contentId==null" target="createEmailContentForProduct"/>
+        <field name="description" map-name="content"><text size="40"/></field>
+        <field name="subject" map-name="emailData"><text size="40"/></field>
+        <field name="plainBody" widget-style="textAreaBox"  map-name="emailData"><textarea cols="60" rows="7"/></field>
+        <field name="htmlBody" widget-style="textAreaBox"  map-name="emailData"><textarea cols="60" rows="7"/></field>
+        <auto-fields-entity entity-name="ProductContent" map-name="productContentData"/>
+        <field use-when="contentId == null" name="contentId" tooltip="Optional"><text maxlength="20"/></field>
+        <field use-when="contentId != null" name="contentId" tooltip="This cannot be changed without re-creating the product content association." map-name="productContentData" ><display/></field>
+        <field name="productId"><hidden/></field>
+        <field name="subjectDataResourceId" map-name="emailData"><hidden/></field>
+        <field name="plainBodyDataResourceId" map-name="emailData"><hidden/></field>
+        <field name="htmlBodyDataResourceId" map-name="emailData"><hidden/></field>
+        <field name="productContentTypeId"><hidden/></field>
+        <field use-when="contentId == null" name="submitButton" title="Create" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field use-when="contentId != null" name="submitButton" title="Update" widget-style="standardSubmit"><submit button-type="button"/></field>
+    </form>
+    <form name="EditProductContentDownload" type="single"
+            target="updateDownloadContentForProduct" title="Update Download Content for Product"
+            default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        <alt-target use-when="contentId==null" target="createDownloadContentForProduct"/>
+        <field name="description" map-name="content"><text size="40"/></field>
+        <auto-fields-entity entity-name="ProductContent" map-name="productContentData"/>
+        <field use-when="contentId == null" name="contentId" tooltip="Optional"><text maxlength="20"/></field>
+        <field use-when="contentId != null" name="contentId" tooltip="This cannot be changed without re-creating the product content association." map-name="productContentData" ><display/></field>
+        <field name="file" map-name="downloadData"><text size="40"/></field>
+        <field name="fileDataResourceId" map-name="downloadData"><hidden/></field>
+        <field name="productId"><hidden/></field>
+        <field name="productContentTypeId"><hidden/></field>
+        <field use-when="contentId == null" name="submitButton" title="Create" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field use-when="contentId != null" name="submitButton" title="Update" widget-style="standardSubmit"><submit button-type="button"/></field>
+    </form>
+    <form name="EditProductContentExternal" type="single"
+            target="updateExternalContentForProduct" title="Update External Content for Product"
+            default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        <alt-target use-when="contentId==null" target="createExternalContentForProduct"/>
+        <field name="description" map-name="content"><text size="40"/></field>
+        <field name="serviceName" map-name="content"><text size="40"/></field>
+        <auto-fields-entity entity-name="ProductContent" map-name="productContentData"/>
+        <field use-when="contentId == null" name="contentId" tooltip="Optional"><text maxlength="20"/></field>
+        <field use-when="contentId != null" name="contentId" tooltip="This cannot be changed without re-creating the product content association." map-name="productContentData" ><display/></field>
+        <field name="productId"><hidden/></field>
+        <field name="productContentTypeId"><hidden/></field>
+        <field use-when="contentId == null" name="submitButton" title="Create" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field use-when="contentId != null" name="submitButton" title="Update" widget-style="standardSubmit"><submit button-type="button"/></field>
+    </form>
+    <form name="EditProductContentSimpleText" type="single"
+            target="updateSimpleTextContentForProduct" title="Update Simple Text Content for Product"
+            default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        <alt-target use-when="contentId==null" target="createSimpleTextContentForProduct"/>
+        <field name="description" map-name="content"><text size="40"/></field>
+        <field name="localeString" map-name="content"><text size="40"/></field>
+        <auto-fields-entity entity-name="ProductContent" map-name="productContentData"/>
+        <field use-when="contentId == null" name="contentId" tooltip="Optional"><text maxlength="20"/></field>
+        <field use-when="contentId != null" name="contentId" tooltip="This cannot be changed without re-creating the product content association." map-name="productContentData" ><display/></field>
+        <field name="text" map-name="textData" widget-style="textAreaBox" ><textarea cols="60" rows="7"/></field>
+        <field name="textDataResourceId" map-name="textData"><hidden/></field>
+        <field name="productId"><hidden/></field>
+        <field name="productContentTypeId"><hidden/></field>
+        <field use-when="contentId == null" name="submitButton" title="Create" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field use-when="contentId != null" name="submitButton" title="Update" widget-style="standardSubmit"><submit button-type="button"/></field>
     </form>
 </forms>
