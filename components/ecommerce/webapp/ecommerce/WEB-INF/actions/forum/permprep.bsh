@@ -1,5 +1,5 @@
 /*
- * $Id: permprep.bsh,v 1.1 2004/06/06 08:02:52 jonesde Exp $
+ * $Id: permprep.bsh,v 1.2 2004/06/10 00:08:01 byersa Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -25,7 +25,7 @@
 /**
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.0
 
  * Does either a "simple" (does entity perm check) or complex
@@ -73,6 +73,7 @@ if (permissionType == null) permissionType = "simple";
 entityName		= page.getProperty("entityName");
 entityOperation		= page.getProperty("entityOperation");
 targetOperation		= page.getProperty("targetOperation");
+Debug.logInfo("in permprep, targetOperation(0):" + targetOperation, null);
 mode = paramMap.get("mode");
 Debug.logInfo("in permprep, contentId(0):" + request.getAttribute("contentId"),"");
 currentValue = (GenericValue)request.getAttribute("currentValue");

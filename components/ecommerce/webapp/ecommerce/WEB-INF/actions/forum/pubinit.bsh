@@ -1,5 +1,5 @@
 /*
- * $Id: pubinit.bsh,v 1.1 2004/06/06 08:02:52 jonesde Exp $
+ * $Id: pubinit.bsh,v 1.2 2004/06/10 00:08:01 byersa Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -54,7 +54,7 @@ import javax.servlet.http.*;
 /**
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.0
 
  */
@@ -77,31 +77,4 @@ session.setAttribute("forumId", forumId);
 request.setAttribute("forumId", forumId);
 
 
-/*
-// allPublishPointList is just the children of the rootForumId, not really "all" publish points
-allPublishPointList = session.getAttribute("allPublishPointList");
-if (allPublishPointList == null || allPublishPointList.size() == 0) {
-    allPublishPointList = ContentManagementWorker.getAllPublishPoints(delegator, rootForumId);
-    session.setAttribute("allPublishPointList", allPublishPointList );
-}
-
-// allPublishPointMap is a map of "all" forums
-Map allPublishPointMap = session.getAttribute("allPublishPoints");
-if (allPublishPointMap == null || allPublishPointMap.size() == 0) {
-    allPublishPointMap = new HashMap();
-    ContentManagementWorker.getAllPublishPointMap(delegator, rootForumId, allPublishPointMap);
-    session.setAttribute("allPublishPoints", allPublishPointMap );
-}
-currentPublishPointList = ContentManagementWorker.getAllPublishPoints(delegator, mainPubPt);
-
-context.put("allPublishPoints", new SimpleHash(allPublishPointMap));
-context.put("allPublishPointsNotFM", allPublishPointMap); // non-FreeMarker version 
-request.setAttribute("allPublishPoints", new SimpleHash(allPublishPointMap));
-request.setAttribute("allPublishPointsNotFM", allPublishPointMap); // non-FreeMarker version 
-
-context.put("currentPublishList", new SimpleSequence(currentPublishPointList));
-context.put("currentPublishListNotFM", currentPublishPointList); // non-FreeMarker version 
-request.setAttribute("currentPublishList", new SimpleSequence(currentPublishPointList));
-request.setAttribute("currentPublishListNotFM", currentPublishPointList); // non-FreeMarker version 
-*/
 

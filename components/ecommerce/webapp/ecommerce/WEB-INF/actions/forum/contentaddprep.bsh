@@ -1,5 +1,5 @@
 /*
- * $Id: contentaddprep.bsh,v 1.2 2004/06/07 19:44:16 jonesde Exp $
+ * $Id: contentaddprep.bsh,v 1.3 2004/06/10 00:08:01 byersa Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -53,7 +53,7 @@ import javax.servlet.http.*;
 /**
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      3.0
 
  */
@@ -91,10 +91,17 @@ contentPurpose = page.getProperty("contentPurpose");
 if (UtilValidate.isEmpty(contentPurpose))
     contentPurpose = "ARTICLE";
 singleWrapper.putInContext("contentPurpose", contentPurpose);
+singleWrapper.putInContext("forumId", contentIdTo);
 
-statusId = page.getProperty("statusId");
-if (UtilValidate.isEmpty(statusId))
-    statusId = "BLOG_DRAFT";
+forumContent = delegator.findByPrimaryKeyCache("Content", UtilMisc.toMap("contentId", contentIdTo));
+statusId = "BLOG_PUBLISHED";
+if (forumContent != null) {
+    statusId = forumContent.getString("statusId");
+    if (UtilValidate.isEmpty(statusId))
+        statusId = page.getProperty("statusId");
+    if (UtilValidate.isEmpty(statusId))
+        statusId = "BLOG_PUBLISHED";
+}
 singleWrapper.putInContext("statusId", statusId);
 
 siteAncestorList = new ArrayList();

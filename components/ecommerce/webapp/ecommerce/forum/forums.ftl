@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Al Byers (byersa@automationgroups.com)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      3.1
 -->
 <#assign forumRootId = "WebStore_FORUM" />
@@ -67,12 +67,12 @@
                        <tr>
                          <td >
                            <div class="browsecategorytext" style="margin-left: 10px">
-                             -&nbsp;<a href="<@ofbizUrl>/showforum?forumId=${context.subContentId}</@ofbizUrl>" class="browsecategorybutton">${context.content.contentName}</a>
+                             -&nbsp;<a href="<@ofbizUrl>/showforum?forumId=${subContentId}</@ofbizUrl>" class="browsecategorybutton">${content.contentName}</a>
                            </div>
                          </td >
-<@checkPermission mode="equals" entityOperation="_UPDATE" subContentId=context.content.contentId targetOperation="CONTENT_PUBLISH" contentPurposeList="ARTICLE">
+<@checkPermission mode="equals" entityOperation="_UPDATE" subContentId=content.contentId targetOperation="CONTENT_PUBLISH" contentPurposeList="ARTICLE">
     <td width="40px" valign="bottom">
-<a class="tabButton" style="height:14pt;" href="<@ofbizUrl>/mostrecent?forumId=${context.subContentId}</@ofbizUrl>" >Mod</a>
+<a class="tabButton" style="height:14pt;" href="<@ofbizUrl>/mostrecent?forumId=${subContentId}</@ofbizUrl>" >Mod</a>
     </td>
 </@checkPermission>
                        </tr>

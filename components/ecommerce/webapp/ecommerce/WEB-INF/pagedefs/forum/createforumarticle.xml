@@ -21,8 +21,11 @@
     <property name="requiredRoles">BLOG_AUTHOR|BLOG_EDITOR|BLOG_ADMIN|BLOG_PUBLISHER</property>    
     <property name="contentTypeId">DOCUMENT</property>    
     <property name="contentPurposeTypeId">ARTICLE</property>    
+    <!--
     <property name="statusId">BLOG_SUBMITTED</property>    
+    -->
     <property name="permissionType">complex</property>    
+    <content-action name="/forum/pubinit.bsh"/>
     <content-action name="/forum/nodetrailprep.bsh"/>
     <content-action name="/forum/permprep.bsh"/>
     <content-action name="/forum/htmlareaprep.bsh"/>
