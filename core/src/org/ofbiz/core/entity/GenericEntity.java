@@ -225,8 +225,16 @@ public class GenericEntity implements Serializable
     if(this.getClass().equals(obj.getClass()))
     {
       GenericEntity that = (GenericEntity)obj;
-      if(this.getEntityName() != null && !this.getEntityName().equals(that.getEntityName())) return false;
-      return this.fields.equals(that.fields);
+      if(this.getEntityName() != null && !this.getEntityName().equals(that.getEntityName())) {
+        //Debug.logInfo("[GenericEntity.equals] Not equal: This entityName \"" + this.getEntityName() + "\" is not equal to that entityName \"" + that.getEntityName() + "\"");
+        return false;
+      }
+      if(this.fields.equals(that.fields)) {
+        return true;
+      }
+      else {
+        //Debug.logInfo("[GenericEntity.equals] Not equal: Fields of this entity: \n" + this.toString() + "\n are not equal to fields of that entity:\n" + that.toString());
+      }
     }
     return false;
   }
