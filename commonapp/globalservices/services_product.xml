@@ -999,7 +999,7 @@
     <service name="deleteFacilityContactMech" engine="simple"
             location="org/ofbiz/commonapp/product/storage/FacilityContactMechServices.xml" invoke="deleteFacilityContactMech" auth="true">
         <description>Delete a FacilityContactMech</description>
-        <attribute name="partyId" type="String" mode="IN" optional="false"/>
+        <attribute name="facilityId" type="String" mode="IN" optional="false"/>
         <attribute name="contactMechId" type="String" mode="IN" optional="false"/>
     </service>    
     <service name="createFacilityPostalAddress" engine="simple"
