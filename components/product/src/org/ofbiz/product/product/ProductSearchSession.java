@@ -1,5 +1,5 @@
 /*
- * $Id: ProductSearchSession.java,v 1.7 2004/02/05 09:45:26 jonesde Exp $
+ * $Id: ProductSearchSession.java,v 1.8 2004/03/13 03:59:11 jonesde Exp $
  *
  *  Copyright (c) 2001 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -48,7 +48,7 @@ import org.ofbiz.product.store.ProductStoreWorker;
  *  Utility class with methods to prepare and perform ProductSearch operations in the content of an HttpSession
  *
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.7 $
+ * @version    $Revision: 1.8 $
  * @since      3.0
  */
 public class ProductSearchSession {
@@ -73,14 +73,16 @@ public class ProductSearchSession {
             // get a Set of all keywords in the search, if there are any...
             Set keywords = new HashSet();
             List constraintList = (List) session.getAttribute(PRODUCT_SEARCH_CONSTRAINT_LIST);
-            Iterator constraintIter = constraintList.iterator();
-            while (constraintIter.hasNext()) {
-                Object constraint = constraintIter.next();
-                if (constraint instanceof KeywordConstraint) {
-                    KeywordConstraint keywordConstraint = (KeywordConstraint) constraint;
-                    Set keywordSet = keywordConstraint.makeFullKeywordSet(delegator);
-                    if (keywordSet != null) keywords.addAll(keywordSet);
-                }
+            if (constraintList != null) {
+	            Iterator constraintIter = constraintList.iterator();
+	            while (constraintIter.hasNext()) {
+	                Object constraint = constraintIter.next();
+	                if (constraint instanceof KeywordConstraint) {
+	                    KeywordConstraint keywordConstraint = (KeywordConstraint) constraint;
+	                    Set keywordSet = keywordConstraint.makeFullKeywordSet(delegator);
+	                    if (keywordSet != null) keywords.addAll(keywordSet);
+	                }
+	            }
             }
 
             if (keywords.size() > 0) {
