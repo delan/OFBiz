@@ -101,7 +101,8 @@ public class RecurrenceRule {
     protected List byMonthList;
     protected List bySetPosList;
 
-    /** Creates a new RecurrenceRule object from a RecurrenceInfo entity.
+    /** 
+     * Creates a new RecurrenceRule object from a RecurrenceInfo entity.
      *@param rule GenericValue object defining this rule.
      */
     public RecurrenceRule(GenericValue rule) throws RecurrenceRuleException {
@@ -111,7 +112,8 @@ public class RecurrenceRule {
         init();
     }
 
-    /** Initializes the rules for this RecurrenceInfo object.
+    /** 
+     * Initializes the rules for this RecurrenceInfo object.
      *@throws RecurrenceRuleException
      */
     public void init() throws RecurrenceRuleException {
@@ -137,7 +139,8 @@ public class RecurrenceRule {
         bySetPosList = StringUtil.split(rule.getString("bySetPosList"), ",");
     }
 
-    /** Gets the current date/time.
+    /** 
+     * Gets the current date/time.
      *@return long Timestamp of the current date/time
      */
     private long now() {
@@ -165,7 +168,8 @@ public class RecurrenceRule {
         return false;
     }
 
-    /** Gets the end time of the recurrence rule or 0 if none.
+    /** 
+     * Gets the end time of the recurrence rule or 0 if none.
      *@return long The timestamp of the end time for this rule or 0 for none.
      */
     public long getEndTime() {
@@ -184,7 +188,8 @@ public class RecurrenceRule {
         return time;
     }
 
-    /** Get the number of times this recurrence will run.
+    /** 
+     * Get the number of times this recurrence will run.
      *@return long The number of time this recurrence will run.
      */
     public long getCount() {
@@ -193,14 +198,16 @@ public class RecurrenceRule {
         return 0;
     }
 
-    /** Returns the frequency name of the recurrence.
+    /** 
+     * Returns the frequency name of the recurrence.
      *@return String The name of this frequency.
      */
     public String getFrequencyName() {
         return rule.getString("frequency").toUpperCase();
     }
 
-    /** Returns the frequency of this recurrence.
+    /** 
+     * Returns the frequency of this recurrence.
      *@return int The reference value for the frequency
      */
     public int getFrequency() {
@@ -225,7 +232,8 @@ public class RecurrenceRule {
         return 0;
     }
 
-    /** Returns the interval of the frequency.
+    /** 
+     * Returns the interval of the frequency.
      *@return long Interval value
      */
     public long getInterval() {
@@ -234,7 +242,8 @@ public class RecurrenceRule {
         return rule.getLong("intervalNumber").longValue();
     }
 
-    /** Returns the interval of the frequency as an int.
+    /** 
+     * Returns the interval of the frequency as an int.
      *@return The interval of this frequency as an integer.
      */
     public int getIntervalInt() {
@@ -242,7 +251,8 @@ public class RecurrenceRule {
         return (int) getInterval();
     }
 
-    /** Returns the next recurrence of this rule.
+    /** 
+     * Returns the next recurrence of this rule.
      *@param startTime The time this recurrence first began.
      *@param fromTime The time to base the next recurrence on.
      *@param currentCount The total number of times the recurrence has run.
@@ -258,7 +268,7 @@ public class RecurrenceRule {
         if (getEndTime() <= RecurrenceUtil.now())
             return 0;
         // Test the recurrence limit.
-        if (currentCount >= getCount())
+        if (getCount() != -1 && currentCount >= getCount())
             return 0;
 
         boolean isSeeking = true;
@@ -280,7 +290,8 @@ public class RecurrenceRule {
         return nextRuntime;
     }
 
-    /** Tests the date to see if it falls within the rules
+    /** 
+     * Tests the date to see if it falls within the rules
      *@param The date object to test
      *@return True if the date is within the rules
      */
@@ -288,7 +299,8 @@ public class RecurrenceRule {
         return isValid(startDate.getTime(), date.getTime());
     }
 
-    /** Tests the date to see if it falls within the rules
+    /** 
+     * Tests the date to see if it falls within the rules
      *@param The date object to test
      *@return True if the date is within the rules
      */
@@ -305,7 +317,8 @@ public class RecurrenceRule {
         return false;
     }
 
-    /** Removes this rule from the persistant store.
+    /** 
+     * Removes this rule from the persistant store.
      *@throws RecurrenceRuleException
      */
     public void remove() throws RecurrenceRuleException {
