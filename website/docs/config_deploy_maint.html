@@ -1,0 +1,587 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<!--  $Id: config_deploy_maint.html,v 1.1 2004/04/23 08:44:37 dengkane Exp $ -->
+  <title>The Open For Business Project: General Setup</title>
+</head>
+<body>
+<h2 align="center">OFBiz Configuration, Deployment and Maintenance</h2>
+<br>
+Written By: Kane Deng<br>
+Email: <a href="mailto:kane@freebsd-uk.eu.org">kane@freebsd-uk.eu.org</a><br>
+Open For Business Site: <a href="http://www.ofbiz.org/">http://www.ofbiz.org</a>
+<br>
+<a href="http://sf.net/projects/ofbiz"> <img src="sflogo.php"
+ border="0" alt="SourceForge Logo"></a> <br>
+Founders and Lead Architects: David E. Jones &amp; Andy Zeneski <br>
+Last Updated: April 15, 2004<br>
+<h3 align="left"><a name="Table of Contents">Table of Contents</a></h3>
+<ol>
+  <li><a href="#Introduction">Introduction</a></li>
+  <li><a href="#Building_Blocks">Building Blocks</a></li>
+  <li><a href="#Setting_Up_a_Database">Setting Up a Database</a></li>
+  <li><a href="#Downloading_and_Installing_Java_-_java.sun.com">Downloading
+and Installing Java - java.sun.com</a></li>
+  <li><a href="#OFBiz">OFBiz</a><br>
+  </li>
+  <ol>
+    <li><a href="#Getting_OFBiz">Getting OFBiz</a> </li>
+    <li><a href="#Deploying__Configuring_OFBiz">Deploying &amp;
+Configuring OFBiz</a> </li>
+    <li><a href="#Database_Setup">Keeping Up With OFBiz</a> </li>
+  </ol>
+  <li><a href="#Restarting_versus_Run-time_Changable">Restarting versus
+Run-time Changable</a></li>
+  <li><a href="#The_OFBiz_WebTools">The OFBiz&nbsp; WebTools</a></li>
+  <li><a href="#Performance__Reliability">Performance &amp; Reliability</a></li>
+  <li><a href="#eCommerce_Specific">eCommerce Specific</a> <br>
+  </li>
+</ol>
+<hr>
+<h3><a name="Introduction">Introduction</a></h3>
+<hr>
+<p>This document describes the installation, configuration, and how to
+maintain OFBiz. You can install OFBiz from the start according to this
+document, and learn how to configure OFBiz, then learn how to maintain,
+and tune it for best performance. The first part will let you know some
+background knowledge necessary for learning OFBiz, and then will show
+you exactly how to use OFBiz.<br>
+</p>
+<br>
+<hr>
+<h3><a name="Building_Blocks">Building Blocks</a></h3>
+<hr>
+<h3>Operating System Recommendations</h3>
+<h4>Linux<br>
+</h4>
+<p>Linux is becoming more and more popular nowadays. Not only many
+advanced developers are using Linux, but also more and more web sites
+begin to use Linux. With over 10 years development, Linux has become
+strong enough for enterprise level platform. At the same time, Linux's
+X Windows desktop environments are becoming more and more easy to use.
+So using Linux as OFBiz's system platform is not a bad choice. Sun and
+IBM(two biggest Java advocates) both take supporting Java running on
+Linux as one of the biggest tasks. The Linux version is almost the
+first released when new Java version appears.</p>
+<h4>OS X</h4>
+<p>N/A <br>
+</p>
+<h4>Unix Varieties</h4>
+<p>Sun Solaris, FreeBSD, SCO Unix, HP Unix, etc. all belong to Unix
+varieties. It is sure that they are both very stable, and have been
+taken the role of Internet backbones for many years, Linux is just an
+elder brother compared with them. But they are not easy to use, and
+everyone has its own special usage and configuration. Don't worry, most
+of the administration tasks are the same. <br>
+</p>
+<p>There are many big companies are using them, in spite Linux is
+becoming more and more popular, big enterprises still trust commercial
+Unix more.<br>
+</p>
+<h4>Windows Server</h4>
+<p>For enterprise applications, Windows server&nbsp; belongs to
+low-level servers, and not very stable under high load. But it is
+enough for most of small-medium sized enterprise applications. Windows
+server is easy to learn, and easy to maintain. So many administrators
+love to use it, it can be used as development environment rather than
+production environment.<br>
+</p>
+<h3>Database Server Recommendations</h3>
+<h4>MySQL MaxDB (was SAP DB)<br>
+</h4>
+<p>Max DB (SAP DB) is another good open source
+and it deserves special mention. SAP decided to start making it easier
+for users to use commercial databases instead of their own and open
+sourced their
+database, SAP DB. While maybe not as good in some ways as Oracle or
+some other commercial DBs it
+has many development and production features and performs very well
+with a very complete and advanced feature set.<br>
+</p>
+<p>MaxDB is available under the MySQL AB "dual licensing" model. Under
+this model, users may choose to use MaxDB under GPL or under a
+commercial license.<br>
+</p>
+<p>Get MaxDB here:<br>
+</p>
+<p><a target="_blank" href="http://www.mysql.com/products/maxdb/">http://www.mysql.com/products/maxdb/</a><br>
+</p>
+<h4>Postgres</h4>
+<p>
+Postgres is a very full featured
+database with transaction support, foreign keys, stored procedures, et
+cetera.</p>
+<p>PostgreSQL is an object-relational database management system
+(ORDBMS), developed at the University of California at Berkeley
+Computer Science Department. Postgres pioneered many concepts that only
+became available in some commercial database systems much later.<br>
+</p>
+<p>Also, PostgreSQL can be extended by the user in many ways, for
+example by adding new data types, functions, operators, etc. <br>
+</p>
+<p>And because of the liberal license, PostgreSQL can be used,
+modified, and distributed by everyone free of charge for any purpose,
+be it private, commercial, or academic.<br>
+</p>
+<p>Get PostgreSQL here:<br>
+</p>
+<p><a target="_blank" href="http://www.postgresql.org/">http://www.postgresql.org/</a><br>
+</p>
+<p><br>
+</p>
+<h4>Oracle, Sybase, MS SQLServer, DB2, other commercial databases</h4>
+<p>Commercial databases are also supported. If you have database
+licenses for other
+needs, or have major in-house familiarity with and support for a
+certain commercial
+database, then there is no reason not to take advantage of that. OFBiz
+has been tested
+with Oracle, Sybase, SQL Server and others and should work fine with
+any database that has a JDBC driver.</p>
+<p>You can get more info on these databases from following sites:<br>
+</p>
+<p>Oracle:<br>
+<a target="_blank" href="http://www.oracle.com/">http://www.oracle.com/</a><br>
+</p>
+<p>Sybase:<br>
+<a target="_blank" href="http://www.sybase.com/">http://www.sybase.com/</a><br>
+</p>
+<p>DB2:<br>
+<a target="_blank" href="http://www.ibm.com/">http://www.ibm.com/</a><br>
+</p>
+<p>MS SQLServer<br>
+<a target="_blank" href="http://www.microsoft.com/">http://www.microsoft.com/</a><br>
+</p>
+<br>
+<h3>Application Server Recommendations</h3>
+<h4>Servlet &amp; JSP Container</h4>
+<h5>Jetty</h5>
+Jetty is a high quality 100% java HTTP Server and Servlet container.
+While Jetty can be used stand-alone, the project is not attempting to
+provide a full application server. Instead their approach is to develop
+Jetty as a component that can be used within other project/products to
+provide HTTP and/or servlets.<br>
+<br>
+From OFBiz 3.0, OFBiz begins to use Jetty as embeded HTTP Server,
+because Jetty is very easy to use. In previous versions, OFBiz
+developers had to maintain different deployment configurations for
+different servlet containers or J2EE servers, such as Jakarta Tomcat,
+Jetty, WebLogic, etc. This is a tedious job, and takes a lot time. From
+OFBiz 3.0, they will only think of Jetty, and they can devote all their
+efforts to the core and component development of OFBiz. But many people
+are using old OFBiz versions, such as 2.00 or 2.11, they don't know how
+to deploy OFBiz 3.0 on their servlet containers other than Jetty. <br>
+<br>
+OFBiz team will provide solutions for this problem, so just be a little
+patient : ). They can do good job.<br>
+<br>
+Get Jetty here:<br>
+<br>
+<a href="http://jetty.mortbay.org/jetty/project/index.html"
+ target="_blank">http://jetty.mortbay.org/jetty/project/index.html</a><br>
+<h5>Tomcat</h5>
+Tomcat is the servlet container that is used in the official Reference
+Implementation for the Java Servlet and JavaServer Pages technologies.
+The Java Servlet and JavaServer Pages specifications are developed by
+Sun under the Java Community Process. So maybe Tomcat complies with the
+Servlet and JSP standards the best. In theory, you can run your
+application on any other servlet containers if you can run it on Tomcat.<br>
+<br>
+Tomcat is released under the Apache Software License, and intended to
+be a collaboration of the best-of-breed developers from the world. <br>
+<br>
+You can configure Tomcat work with Apahce easily, because they both
+belongs to Apache.org, they can work together perfectly.<br>
+<br>
+Get Tomcat here:<br>
+<br>
+<a href="http://jakarta.apache.org/tomcat/index.html" target="_blank">http://jakarta.apache.org/tomcat/index.html</a><br>
+<br>
+<h5>Orion, Weblogic &amp; other commercial containers</h5>
+There are many commercial servlet/JSP containers too, such as Orion,
+Weblogic, WebSphere, etc. These products are all powerful, not only
+implements standards, but also their own special features, such as
+clustering, fail-over, etc. They often are expensive and charged per
+CPUs, but many big companies like to use them, because they can provide
+great services, not only the products. Service is one of the
+shortcomings of open-source projects, and is somewhat difficult to be
+accepted by the commercial world.<br>
+<br>
+But because of their own special features, it will be difficult to
+migrate onto others if you make full use of them. You will have to
+stick to use one if you choose it from the start.<br>
+<br>
+Lear more about Orion here:<br>
+<br>
+<a href="http://www.orionserver.com/" target="_blank">http://www.orionserver.com/</a><br>
+<br>
+and Weblogic here:<br>
+<br>
+<a href="http://www.bea.com/" target="_blank">http://www.bea.com/</a><br>
+<br>
+<h4>Transaction Manager</h4>
+<h5>JOTM</h5>
+JOTM is an open source transaction manager implemented in Java. For
+more than four years, JOTM has been the transaction manager of JOnAS, a
+J2EE server. It supports several transaction models and specifications
+providing transaction support for clients using a wide range of
+middleware platforms(J2EE, CORBA, Web Services).<br>
+<br>
+JOTM embeds open source projects, such as CAROL, for transaction
+context propagation on both RMI/JRMP and RMI/IIOP, and XAPool, and
+XA-compliant JDBC connection pool. JOTM is bundled with OFBiz
+now,&nbsp; Old OFBiz versions had been using Tyrex, it is said OFBiz
+team had run into many problems with Tyrex, so they choose JOTM.<br>
+<br>
+Since OFBiz only requires a Servlet container and a Transaction
+manager, using a full blown J2EE application can be too much overhead
+and at times difficult to configure. JOTM is easy to use, and simple to
+configure.<br>
+<br>
+Learn more about JOTM here:<br>
+<br>
+<a href="http://jotm.objectweb.org/" target="_blank">http://jotm.objectweb.org/</a><br>
+<br>
+<h5>Orion, Weblogic &amp; other commercial containers</h5>
+These commercial containers all provide their own transaction manager.
+Using these containers may be more convenient because they provide both
+servlet containers and transaction managers. Open source containers
+often don't provide their own transaction managers, so you must make
+use of other open source transaction managers in these containers, such
+as you use Tomcat with JOTM.<br>
+<br>
+<h4>Connection Pool</h4>
+<h5>Minerva</h5>
+<br>
+<h5>XAPool</h5>
+XAPool is an XA datasource connection pool: it implements
+javax.sql.XADataSource, and provides connection pooling facilities.
+XAPool allows to pool objects, JDBC connections and XA connections. It
+comes from Enhydra application server from Lutris. Now the project is
+hosted by the ObjectWeb consortium and managed by ExperLog.<br>
+<br>
+XAPool has been successfully tested with MySQL, PostgreSQL, Oracle, SAP
+DB, MS SQL and InstantDB databases. The classic pool offers common and
+useful operations:<br>
+<ul>
+  <li>lifetime of objects</li>
+  <li>a common log writer</li>
+  <li>a minimum size</li>
+  <li>a maximum size</li>
+  <li>the possibility to setup a way to wait for objects when all
+objects are used</li>
+  <li>an object check level to verify object before returning to user</li>
+  <li>a garbage collection option</li>
+  <li>a common PoolHelper object, to create, verify and destroy object</li>
+  <li>objects are linked to a generation of objects when they are
+created<br>
+  </li>
+</ul>
+<br>
+Learn more about XAPool here:<br>
+<a href="http://forge.objectweb.org/projects/xapool/" target="_blank">http://forge.objectweb.org/projects/xapool/</a><br>
+<h5>Orion, Weblogic &amp; other commercial containers</h5>
+These commercial containers all provide their own connection pools, and
+you can refer to their documentation for how to use.<br>
+<br>
+<h3>Server Farm &amp; Network Layout Recommendations</h3>
+<h4>Single Server - all in one</h4>
+If you download the complete OFBiz&nbsp; package, it is bundled with
+everything you need to run immediately. This package can be taken as
+all-in-one single server. Single Server is easy to use, and don't do
+many tedious configurations, so can be used as development environment.
+For production environment, it is not suitable, because its scalability
+is poor.<br>
+<h4>Separate Application &amp; Database Servers</h4>
+One good choice is to separate application server from database server.
+The database bundled with OFBiz is HSQL, which is a embed database
+engine and can't support high load, just for demonstration or
+development. For production environment, you can use MySQL or
+PostgreSQL, or other commercial databases mentioned above. You setup
+your database server first, then configure OFBiz running on one
+application server to access the database server.<br>
+<br>
+<h4>Independent Static Content Server Option</h4>
+For performance issues, you can run an independent static content
+server. There is a component named "content" in OFBiz, OFBiz put all
+static files, such as .html, .gif, and .css, etc. under this component.
+This way can let you re-use common static contents between different
+applications. Just do some configuration on application servers, let
+them point to the content server they will use.<br>
+<br>
+<h4>Load Balanced Application Server Farm Options</h4>
+<h5>IP Based Load Balancer</h5>
+<br>
+<h5>Session Aware Load Balancer</h5>
+<br>
+<h5>Application Server Specific Load Balancers</h5>
+This is to run your application on multiple application servers, and
+lower
+the load on single one. Load balancing will increase your application's
+high-availability, especially under mission critical environments. All
+application server will access the same database server.<br>
+<br>
+Tomcat 5 just added load balancing feature, and almost every commercial
+servlet containers all provide their own load-blancing mechanism. <br>
+<br>
+<h4>Load Balanced Database Options</h4>
+Load balanced database is an advanced topic. This is to run one
+database on multiple database servers. It is said that MySQL will
+provide such capability, and it will threaten the biggest commercial
+database providers, such as Oracle, DB2, etc. Most of the commercial
+database providers have such capability.<br>
+<br>
+Another choice is not database-based, but add a cluster handling on
+JDBC level. There is an open source project named "C-JDBC", which means
+clustered JDBC. It is interesting, C-JDBC is a database cluster
+middleware that allows any Java application (standalone application,
+servlet or EJB container, ...) to transparently access a cluster of
+databases through JDBC. C-JDBC provides a flexible architecture that
+allows you to achieve scalability, high availability and failover with
+your database tiers.<br>
+<br>
+You can learn more about C-JDBC here:<br>
+<a href="http://c-jdbc.objectweb.org/index.html" target="_blank">http://c-jdbc.objectweb.org/index.html</a><br>
+<br>
+<hr>
+<h3><a name="Setting_Up_a_Database">Setting Up a Database</a></h3>
+<hr>
+<p>You should set up a database server before using OFBiz. There is a
+embedded Hypersonic SQL database in OFBiz, you don't need to do any
+configuration to run OFBiz. Maybe you want to use MySQL or PostgreSQL,
+or other commercial databases, you should install first and create a
+database for OFBiz. <br>
+</p>
+<p>Every database has detailed documentation on how to use, and it is
+not difficult to manage a database. Here one thing you should remember,
+every database has their own JDBC driver, .jar files. OFBiz already
+bundle some JDBC drivers in it, but for reducing problems, you should
+replace the original JDBC driver with the driver released with the
+database.<br>
+</p>
+<p>JDBC drivers in OFBiz:<br>
+</p>
+<p><span style="font-weight: bold;">ofbiz/components/entity/lib/jdbc</span><br>
+</p>
+<hr>
+<h3><a name="Downloading_and_Installing_Java_-_java.sun.com">Downloading
+and Installing Java - java.sun.com</a></h3>
+Download Java at:<br>
+<br>
+<a href="http://java.sun.com/" target="_blank">http://java.sun.com/</a><br>
+<br>
+The installation is simple, but you should set JAVA_HOME after you
+install. This system environment parameter is very important, many
+applications will use it. You can set it in Control Panel if you are
+using Windows, and edit your .profile if your are using Unix. For
+convenience, you can add JAVA_HOME/bin to PATH too, this can ease you
+using Java.<br>
+<br>
+<hr>
+<h3><a name="OFBiz">OFBiz</a></h3>
+<hr>
+<h4><a name="Getting_OFBiz"></a>Getting OFBiz</h4>
+<hr style="width: 100%; height: 2px;">
+<h5>Download a Release</h5>
+You can download a release, which is best for demonstration,
+evaluation, low profile deployments.<br>
+<br>
+OFBiz comes and runs by default with Jetty for a Servlet/JSP
+container and
+JOTM for a transaction (JTA) manager. A patched version of Minerva
+(included in CVS)
+is the current preference for a transaction aware connection pool,
+though as
+other options are made available that may change.
+<p>OFBiz can also be configured to run in different containers, but
+there may
+be issues with certain quirks that other containers have, especially
+with
+servlet containers. We have always been able to find work-arounds for
+these,
+but they also seem to keep on appearing, so that is just something to
+watch for.</p>
+<p>We are not maintaining sample configurations in CVS any more because
+it became
+too difficult to keep up with changes in new versions for a dozen
+different app
+servers. We may eventually start this again if there is sufficient
+demand and
+corresponding contributions. If you are looking for a good commercial
+J2EE app
+server, Orion is a good place to start, but we recommend trying out
+Jetty and JOTM
+and see if they meet your needs.<br>
+</p>
+<p>Download OFBiz releases here:<br>
+</p>
+<p><a target="_blank"
+ href="https://ofbiz.dev.java.net/servlets/ProjectDocumentList?folderID=207">https://ofbiz.dev.java.net/servlets/ProjectDocumentList?folderID=207</a><br>
+<br>
+</p>
+<h5>Getting from CVS</h5>
+If you want to keep up with OFBiz's development or you are doing some
+customization on OFBiz, you can get it using CVS, then you can update
+using cvs at any time.<br>
+<br>
+If you are using command line CVS, you can get OFBiz using following
+commands:<br>
+<code>cvs -d :pserver:guest@cvs.dev.java.net:/cvs login</code><br>
+<br>
+press "Enter" if cvs prompt you for password, then using this command:<br>
+<br>
+<code>cvs -d :pserver:guestcvs.dev.java.net:/cvs checkout ofbiz</code><br>
+<br>
+If you are using WinCVS or other GUI cvs client, you should
+set CVSROOT parameter in Preferences, set as follows:<br>
+<br>
+&nbsp;<code>:guest:dengkane@cvs.dev.java.net:/cvs</code><br>
+<br>
+then you can login and check out OFBiz.
+<br>
+For more about how to use CVS, you can refer to this site:
+<a target="_blank" href="http://www.cvshome.org/">http://www.cvshome.org/</a><br>
+<h5>Building</h5>
+<br>
+You don't need to build if you download the OFBiz release, and
+you have to build if you get OFBiz with cvs. Before building you should
+download and install Ant, for more about Ant,<br>
+<br>
+<a href="http://ant.apache.org/" target="_blank">http://ant.apache.org/</a><br>
+<br>
+They have great documentation on how to install and use ant, you just
+install it according to their manuals.<br>
+<br>
+You can start to build OFBiz if your ant installation is ok, just goto
+the OFBiz directory in command line window, and key in "ant" command,
+Ant will build OFBiz immediately. The whole building process may last
+for several minutes, it depends on your computer.<br>
+<br>
+Your OFBiz is ready to go after you build it.<br>
+<br>
+<hr style="width: 100%; height: 2px;">
+<h4><a name="Deploying__Configuring_OFBiz"></a>Deploying &amp;
+Configuring OFBiz</h4>
+<hr style="width: 100%; height: 2px;">
+<h5>Database Configuration</h5>
+<span style="font-weight: bold;">jndiservers.xml</span><br>
+<br>
+jndiservers.xml is used to configure JNDI parameters. You must be
+familiar with jndi.properties if you have used JNDI. You can take
+jndiservers.xml as a collection of several jndi.peroperties, and you
+can define several JNDI servers in a single file and don't need to
+maintain multiple jndi.properties files. <br>
+<br>
+You can define your JNDI configurations in jndi.properties, OFBiz will
+take it as "default" configuration file. You can see this line in
+jndiservers.xml...<br>
+<br>
+<pre>    &lt;!-- this jndi-server has no parameters so the factory will use the default<br>        InitialContext constructor which gets these values from the jndi.properties file --&gt;<br>    &lt;jndi-server name="default"/&gt;<br></pre>
+It tells you if you are using "default" jndi-server, OFBiz will get
+parameters from jndi.properties.<br>
+<br>
+You can configure OFBiz get database transaction manager using JNDI,
+there are following lines in entityengine.xml...<br>
+<br>
+<pre>    &lt;!-- Use this one for JNDI --&gt;<br>    &lt;!-- NOTE: to use the JndiFactory you must specify the necessary JNDI properties --&gt;<br>    &lt;transaction-factory class="org.ofbiz.entity.transaction.JNDIFactory"&gt;<br>        &lt;user-transaction-jndi jndi-server-name="default" jndi-name="java:comp/UserTransaction"/&gt;<br>        &lt;transaction-manager-jndi jndi-server-name="default" jndi-name="java:comp/UserTransaction"/&gt;<br>    &lt;/transaction-factory&gt;<br></pre>
+<br>
+This is using the "default" JNDI server, it means you can define your
+JNDI parameters in jndi.properties. Certainly, you can modify the
+jndi-server-name to use other JNDI servers defined in jndiservers.xml,
+such as <br>
+<pre>    &lt;jndi-server name="OpenJMS"<br>            context-provider-url="rmi://127.0.0.1:1099/JndiServer"<br>            initial-context-factory="org.exolab.jms.jndi.rmi.RmiJndiInitialContextFactory"/&gt;<br><br>	&lt;!-- Note that in most cases this is not necessary or desired for Orion, the default above is easier/better --&gt;<br>    &lt;jndi-server name="localorion"<br>            context-provider-url="ormi://localhost/default"<br>            initial-context-factory="com.evermind.server.ApplicationClientInitialContextFactory"<br>            security-principal="admin"<br>            security-credentials="admin"/&gt;<br><br>	&lt;!-- Note that in most cases this is not necessary or desired for Weblogic, the default above is easier/better --&gt;<br>    &lt;jndi-server name="localweblogic" <br>            context-provider-url="t3://127.0.0.1:7001"<br>            initial-context-factory="weblogic.jndi.WLInitialContextFactory"<br>            url-pkg-prefixes=""<br>            security-principal=""<br>            security-credentials=""/&gt;<br></pre>
+<br>
+The above lines define OpenJMS, localorion, and localweblogic three
+JNDI servers.<br>
+<br>
+<br>
+<span style="font-weight: bold;">entityengine.xml</span><br>
+<p>Database setup is done in the entityengine.xml file,
+entityengine.xml is located in the <span style="font-weight: bold;">ofbiz/components/entity/config</span>
+directory. There are many
+options there which are described in the Entity Engine Configuration
+Guide.</p>
+<p>The OFBiz Apps archive comes with Hypersonic SQL, a Java database
+that
+runs in memory. This database is good for demonstration purposes
+because it is
+easy to setup and use. It is not meant to handle large data sets and
+does not
+provide the same performance or scalability that a major database would.<br>
+</p>
+<p>The default config in entityengine.xml is<br>
+</p>
+<pre>    &lt;delegator name="default" entity-model-reader="main" entity-group-reader="main" entity-eca-reader="main" distributed-cache-clear-enabled="false"&gt;<br>        &lt;group-map group-name="org.ofbiz" datasource-name="localhsql"/&gt;<br>    &lt;/delegator&gt;<br></pre>
+<p><br>
+</p>
+<p>the datasource "localhsql" is defined as following in
+entityengine.xml:<br>
+</p>
+<pre>    &lt;datasource name="localhsql"<br>            helper-class="org.ofbiz.entity.datasource.GenericHelperDAO"<br>            field-type-name="hsql"<br>            check-on-start="true"<br>            add-missing-on-start="true"<br>            check-indices-on-start="true"<br>            use-foreign-keys="true"<br>            use-foreign-key-indices="true"<br>            use-fk-initially-deferred="false"<br>            join-style="ansi-no-parenthesis"<br>            alias-view-columns="true"&gt;<br>        &lt;read-data reader-name="main"/&gt;<br>        &lt;inline-jdbc<br>                jdbc-driver="org.hsqldb.jdbcDriver"<br>                jdbc-uri="jdbc:hsqldb:data/ofbiz"<br>                jdbc-username="sa"<br>                jdbc-password=""<br>                isolation-level="ReadUncommitted"<br>                pool-minsize="2"<br>                pool-maxsize="20"/&gt;<br>        &lt;!-- &lt;jndi-jdbc jndi-server-name="localjndi" jndi-name="java:/HsqlDataSource" isolation-level="ReadUncommitted"/&gt; --&gt;<br>        &lt;!-- &lt;jndi-jdbc jndi-server-name="default" jndi-name="comp/env/jdbc/xa/localhsql" isolation-level="ReadUncommitted"/&gt; --&gt; <br>        &lt;!-- Orion Style JNDI name --&gt;<br>        &lt;!-- &lt;jndi-jdbc jndi-server-name="localjndi" jndi-name="localhsqlDataSource"/&gt; --&gt; &lt;!-- Weblogic Style JNDI name --&gt;<br>    &lt;/datasource&gt;<br></pre>
+<br>
+There are other datasource definitions in entityengine.xml too,
+includes HSQL, Cloudscape, MySQL, PostgreSQL, Oracle, SyBase, SAP DB,
+MS SQL, etc. You can change the datasource definition for different
+database type, and then modify the default delegator to use it, just
+same as using HSQL above. <br>
+<br>
+Eg. if you want to configure OFBiz to use MySQL, just modify following
+lines according to your MySQL server...<br>
+<br>
+<pre>    &lt;datasource name="localmysql"<br>            helper-class="org.ofbiz.entity.datasource.GenericHelperDAO"<br>            field-type-name="mysql"<br>            check-on-start="true"<br>            add-missing-on-start="true"<br>            use-foreign-keys="false"<br>            join-style="ansi-no-parenthesis"&gt;<br>        &lt;read-data reader-name="main"/&gt;<br>        &lt;inline-jdbc<br>                jdbc-driver="org.gjt.mm.mysql.Driver"<br>                jdbc-uri="jdbc:mysql://127.0.0.1/ofbiz?autoReconnect=true"<br>                jdbc-username="ofbiz"<br>                jdbc-password="ofbiz"<br>                isolation-level="ReadCommitted"/&gt;<br>        &lt;!-- &lt;jndi-jdbc jndi-server-name="localjndi" jndi-name="java:/MySqlDataSource" isolation-level="Serializable"/&gt; --&gt;<br>    &lt;/datasource&gt;<br></pre>
+<br>
+change the jdbc-uri, jdbc-username, and jdbc-password's values to suit
+your database. Then modify this line:<br>
+<br>
+<pre>    &lt;delegator name="default" entity-model-reader="main" entity-group-reader="main" entity-eca-reader="main" distributed-cache-clear-enabled="false"&gt;<br>        &lt;group-map group-name="org.ofbiz" datasource-name="localhsql"/&gt;<br>    &lt;/delegator&gt;<br></pre>
+<br>
+change datasource-name from "localhsql" to "localmysql".<br>
+<p>There is no need to run any SQL scripts to create the tables or
+populate them
+with the default data. The entity engine can create missing tables or
+fields
+when the server starts up and does so if the appropriate property is
+set in the
+entityengine.xml file. This is the file that configures the servers for
+the
+entity engine.</p>
+<p>For the table creation routine to work properly, the field types
+must be set
+up by specifying the corresponding fieldtypeXXX.xml (where XXX is the
+database
+name) file for the server in the entityengine.xml file. These
+fieldtypeXXX.xml
+files are located in the <b>ofbiz/components/entity/fieldtype</b>
+directory.</p>
+Default data can be loaded automatically once the server has been
+started by
+going to a JSP, which will be explained in
+the WebTools section.<br>
+<br>
+<hr style="width: 100%; height: 2px;">
+<h3><a name="Restarting_versus_Run-time_Changable"></a>Restarting
+versus Run-time Changable<br>
+</h3>
+<hr style="width: 100%; height: 2px;">
+<p><br>
+<br>
+</p>
+<hr style="width: 100%; height: 2px;">
+<h3><a name="The_OFBiz_WebTools"></a>The OFBiz WebTools</h3>
+<hr style="width: 100%; height: 2px;"><br>
+<br>
+<hr style="width: 100%; height: 2px;">
+<h3><a name="Performance__Reliability"></a>Performance &amp; Reliability</h3>
+<hr style="width: 100%; height: 2px;"><br>
+<br>
+<hr style="width: 100%; height: 2px;">
+<h3><a name="eCommerce_Specific"></a>eCommerce Specific</h3>
+<hr style="width: 100%; height: 2px;"><br>
+<br>
+<br>
+<br>
+<br>
+<p><br>
+</p>
+</body>
+</html>
