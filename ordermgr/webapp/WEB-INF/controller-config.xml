@@ -26,7 +26,7 @@
     <request-map uri="login">
       <security https="true" auth="false"/>
       <event type="java" path="org.ofbiz.core.security.WebEventSecurity" invoke="login"/>
-      <response name="success" type="request" value="updatedistributor"/>
+      <response name="success" type="view" value="main"/>
       <response name="error" type="view" value="login"/>
     </request-map>
 
@@ -41,21 +41,24 @@
 
     <!-- Request Mappings -->
     <request-map uri="view">
-        <security https="false" auth="false">
-        <response name="success" type="view" value="main">
-        <response name="error" type="view" value="error">
+        <security https="false" auth="false"/>
+        <response name="success" type="view" value="main"/>
+        <response name="error" type="view" value="error"/>
     </request-map>
+    
     <request-map uri="chain">
-        <event type="java" path="org.ofbiz.core.event.TestEvent" invoke="test">
-        <response name="success" type="request" value="/view">
-        <response name="error" type="view" value="error">
+        <event type="java" path="org.ofbiz.core.event.TestEvent" invoke="test"/>
+        <response name="success" type="request" value="view"/>
+        <response name="error" type="view" value="error"/>
     </request-map>
 
-    <request-map uri="main"><security https="false" auth="false"/><response name="success" type="view" value="main"/></request-map>
+    <request-map uri="main"><security https="false" auth="false"/>
+    	<response name="success" type="view" value="main"/>
+    </request-map>
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
-    <view-map name="error" page="/error/error.jsp">
-    <view-map name="main" page="/main.jsp">
+    <view-map name="error" page="/error/error.jsp"/>
+    <view-map name="main" page="/main.jsp"/>
     <!-- end of view mappings -->
 </site-conf>
