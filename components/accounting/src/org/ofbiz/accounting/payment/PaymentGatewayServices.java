@@ -529,6 +529,7 @@ public class PaymentGatewayServices {
             pgResponse.set("orderPaymentPreferenceId", paymentPref.get("orderPaymentPreferenceId"));
             pgResponse.set("paymentMethodTypeId", paymentPref.get("paymentMethodTypeId"));
             pgResponse.set("paymentMethodId", paymentPref.get("paymentMethodId"));
+            pgResponse.set("transCodeEnumId", "PGT_RELEASE");
 
             // set the auth info
             pgResponse.set("referenceNum", releaseResult.get("releaseRefNum"));
@@ -972,15 +973,16 @@ public class PaymentGatewayServices {
         Boolean authResult = (Boolean) result.get("authResult");
         Boolean captureResult = (Boolean) result.get("captureResult");
         boolean resultPassed = false;
-        boolean fromAuth = false;
+        String initialStatus = paymentPreference.getString("statusId");
+        String authServiceType = null;
 
         if (authResult != null) {
             processAuthResult(dctx, result, userLogin, paymentPreference);
             resultPassed = authResult.booleanValue();
-            fromAuth = true;
+            authServiceType = ("PAYMENT_NOT_AUTH".equals(initialStatus)) ? AUTH_SERVICE_TYPE : REAUTH_SERVICE_TYPE;;
         }
         if (captureResult != null) {
-            processCaptureResult(dctx, result, userLogin, paymentPreference, fromAuth);
+            processCaptureResult(dctx, result, userLogin, paymentPreference, authServiceType);
             if (!resultPassed)
                 resultPassed = captureResult.booleanValue();
         }
@@ -1014,7 +1016,7 @@ public class PaymentGatewayServices {
 
         // type of auth this was can be determined by the previous status
         if (UtilValidate.isEmpty(authType)) {
-            authType = paymentPreference.getString("statusId").equals("PAYMENT_NOT_AUTH") ?
+            authType = ("PAYMENT_NOT_AUTH".equals(paymentPreference.getString("statusId"))) ?
                     AUTH_SERVICE_TYPE : REAUTH_SERVICE_TYPE;
         }
 
@@ -1026,6 +1028,7 @@ public class PaymentGatewayServices {
         response.set("orderPaymentPreferenceId", paymentPreference.get("orderPaymentPreferenceId"));
         response.set("paymentMethodTypeId", paymentPreference.get("paymentMethodTypeId"));
         response.set("paymentMethodId", paymentPreference.get("paymentMethodId"));
+        response.set("transCodeEnumId", "PGT_AUTHORIZE");
 
         // set the avs/fraud result
         response.set("gatewayAvsResult", context.get("avsCode"));
@@ -1094,10 +1097,10 @@ public class PaymentGatewayServices {
     }
 
     private static void processCaptureResult(DispatchContext dctx, Map result, GenericValue userLogin, GenericValue paymentPreference) throws GeneralException {
-        processCaptureResult(dctx, result, userLogin, paymentPreference, false);
+        processCaptureResult(dctx, result, userLogin, paymentPreference, null);
     }
 
-    private static void processCaptureResult(DispatchContext dctx, Map result, GenericValue userLogin, GenericValue paymentPreference, boolean fromAuth) throws GeneralException {
+    private static void processCaptureResult(DispatchContext dctx, Map result, GenericValue userLogin, GenericValue paymentPreference, String authServiceType) throws GeneralException {
         LocalDispatcher dispatcher = dctx.getDispatcher();
         Boolean captureResult = (Boolean) result.get("captureResult");
         Double amount = null;
@@ -1115,7 +1118,7 @@ public class PaymentGatewayServices {
         if (result != null && captureResult.booleanValue()) {
             result.put("orderPaymentPreference", paymentPreference);
             result.put("userLogin", userLogin);
-            result.put("isFromAuth", new Boolean(fromAuth));
+            result.put("serviceTypeEnum", authServiceType);
 
             ModelService model = dctx.getModelService("processCaptureResult");
             Map context = model.makeValid(result, ModelService.IN_PARAM);
@@ -1198,7 +1201,6 @@ public class PaymentGatewayServices {
 
         GenericValue paymentPreference = (GenericValue) context.get("orderPaymentPreference");
         GenericValue userLogin = (GenericValue) context.get("userLogin");
-        Boolean isFromAuth = (Boolean) context.get("isFromAuth");
         String invoiceId = (String) context.get("invoiceId");
         String payTo = (String) context.get("payToPartyId");
         Double amount = (Double) context.get("captureAmount");
@@ -1210,11 +1212,7 @@ public class PaymentGatewayServices {
         }
 
         if (UtilValidate.isEmpty(serviceType)) {
-            serviceType = isFromAuth.booleanValue() ? "AUTH" : CAPTURE_SERVICE_TYPE;
-            if (serviceType.equals("AUTH")) {
-                serviceType = paymentPreference.getString("statusId").equals("PAYMENT_NOT_AUTH") ?
-                        AUTH_SERVICE_TYPE : REAUTH_SERVICE_TYPE;
-            }
+            serviceType = CAPTURE_SERVICE_TYPE;            
         }
 
         // create the PaymentGatewayResponse record
@@ -1225,6 +1223,7 @@ public class PaymentGatewayServices {
         response.set("orderPaymentPreferenceId", paymentPreference.get("orderPaymentPreferenceId"));
         response.set("paymentMethodTypeId", paymentPreference.get("paymentMethodTypeId"));
         response.set("paymentMethodId", paymentPreference.get("paymentMethodId"));
+        response.set("transCodeEnumId", "PGT_CAPTURE");
         if (context.get("authRefNum") != null) {
             response.set("subReference", context.get("authRefNum"));
         }
@@ -1405,6 +1404,7 @@ public class PaymentGatewayServices {
                 response.set("orderPaymentPreferenceId", paymentPref.get("orderPaymentPreferenceId"));
                 response.set("paymentMethodTypeId", paymentPref.get("paymentMethodTypeId"));
                 response.set("paymentMethodId", paymentPref.get("paymentMethodId"));
+                response.set("transCodeEnumId", "PGT_REFUND");
 
                 // set the capture info
                 response.set("amount", refundResponse.get("refundAmount"));
