@@ -78,7 +78,7 @@
     <td align="center" valign="center" bgcolor='white' width='100%'>
   <table width="100%" cellpadding="3" cellspacing="0" border="0">
     <tr>
-      <td width="15%">
+      <td width="30%">
         <div class="tabletext"><b>Date</b></div>
       </td>
       <td width="15%">
