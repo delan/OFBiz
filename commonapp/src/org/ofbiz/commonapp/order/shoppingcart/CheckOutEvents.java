@@ -231,9 +231,8 @@ public class CheckOutEvents {
         if (distributorId != null) context.put("distributorId", distributorId);
         if (affiliateId != null) context.put("affiliateId", affiliateId);
         
-        // check for an order via order mgr
-        String partyId = session.getAttribute("orderPartyId") != null ? 
-            (String) session.getAttribute("orderPartyId") : userLogin.getString("partyId");
+        // need the partyId; don't use userLogin in case of an order via order mgr
+        String partyId = cart.getPartyId();             
                
         context.put("grandTotal", grandTotal);
         context.put("userLogin", userLogin);
@@ -275,12 +274,12 @@ public class CheckOutEvents {
         
         // save the emails to the order                              
         List toBeStored = new LinkedList();
-        
+               
         GenericValue party = null;
         try {
-            party = userLogin.getRelatedOne("Party");
+            party = delegator.findByPrimaryKey("Party", UtilMisc.toMap("partyId", partyId));
         } catch (GenericEntityException e) {
-            Debug.logWarning(e, "Problems getting Party record from UserLogin", module);
+            Debug.logWarning(e, "Problems getting Party record", module);
             party = null;
         }
         
@@ -759,6 +758,14 @@ public class CheckOutEvents {
         // get the mode
         String mode = request.getParameter("finalizeMode");
         
+        // set the customer info
+        if (mode != null && mode.equals("cust")) {
+            String partyId = (String) request.getAttribute("partyId");
+            if (partyId != null) {
+                request.getSession().setAttribute("orderPartyId", partyId);
+            }
+        }
+        
         // set the shipping method
         if (mode != null && mode.equals("ship")) {
             String shippingContactMechId = request.getParameter("shipping_contact_mech_id");
@@ -803,10 +810,10 @@ public class CheckOutEvents {
         
         // payment option; if offline we skip the payment screen
         if (mode != null && mode.equals("payoption")) {
+            cart.clearPaymentMethodTypeIds();
+            cart.clearPaymentMethodIds();
             String methodType = request.getParameter("paymentMethodType");
-            if (methodType != null && methodType.equals("offline")) {
-                cart.clearPaymentMethodTypeIds();
-                cart.clearPaymentMethodIds();
+            if (methodType != null && methodType.equals("offline")) {                                
                 cart.addPaymentMethodTypeId("EXT_OFFLINE");
             }                            
         }
@@ -893,22 +900,29 @@ public class CheckOutEvents {
             }
         } 
         
+        String requireCustomer = request.getParameter("finalizeReqCustInfo");
         String requireShipping = request.getParameter("finalizeReqShipInfo");
         String requireOptions = request.getParameter("finalizeReqOptions");
-        String requirePayment = request.getParameter("finalizeReqPayInfo");                         
+        String requirePayment = request.getParameter("finalizeReqPayInfo");                               
                                 
+        if (requireCustomer == null)
+            requireCustomer = "true";           
         if (requireShipping == null)
             requireShipping = "true";
         if (requireOptions == null)
             requireOptions = "true";
         if (requirePayment == null)
-            requirePayment = "true";
+            requirePayment = "true";        
 
         String shipContactMechId = cart.getShippingContactMechId();
+        String customerPartyId = cart.getPartyId();
         String shipmentMethodTypeId = cart.getShipmentMethodTypeId();
         List paymentMethodIds = cart.getPaymentMethodIds();
         List paymentMethodTypeIds = cart.getPaymentMethodTypeIds();
         
+        if (requireCustomer.equalsIgnoreCase("true") && (customerPartyId == null || customerPartyId.equals("_NA_")))
+            return "customer";
+            
         if (requireShipping.equalsIgnoreCase("true") && shipContactMechId == null)
             return "shipping";
          
