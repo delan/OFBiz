@@ -24,6 +24,9 @@
 
 <!-- POS->PSS POS Terminal to Per Store Server -->
     <EntityGroup entityGroupId="5505" entityGroupName="POS: POS Terminal to Per Store Server"/>
+    <!-- org.ofbiz.party.party may be needed for order related information, like party roles or contact info etc -->
+    <EntityGroupEntry entityGroupId="5505" entityOrPackage="org.ofbiz.party.party" applEnumId="ESIA_INCLUDE"/>
+    <EntityGroupEntry entityGroupId="5505" entityOrPackage="org.ofbiz.party.contact" applEnumId="ESIA_INCLUDE"/>
     <!-- all order and related information, including payment, etc info -->
     <EntityGroupEntry entityGroupId="5505" entityOrPackage="org.ofbiz.order" applEnumId="ESIA_INCLUDE"/>
     <EntityGroupEntry entityGroupId="5505" entityOrPackage="org.ofbiz.accounting.invoice" applEnumId="ESIA_INCLUDE"/>
@@ -32,6 +35,9 @@
 
 <!-- PSS->MCS Per Store Server to Central Server -->
     <EntityGroup entityGroupId="5506" entityGroupName="POS: Per Store Server to Central Server"/>
+    <!-- org.ofbiz.party.party may be needed for order related information, like party roles or contact info etc -->
+    <EntityGroupEntry entityGroupId="5506" entityOrPackage="org.ofbiz.party.party" applEnumId="ESIA_INCLUDE"/>
+    <EntityGroupEntry entityGroupId="5506" entityOrPackage="org.ofbiz.party.contact" applEnumId="ESIA_INCLUDE"/>
     <!-- all order and related information, including payment, etc info -->
     <EntityGroupEntry entityGroupId="5506" entityOrPackage="org.ofbiz.order" applEnumId="ESIA_INCLUDE"/>
     <EntityGroupEntry entityGroupId="5506" entityOrPackage="org.ofbiz.accounting.invoice" applEnumId="ESIA_INCLUDE"/>
