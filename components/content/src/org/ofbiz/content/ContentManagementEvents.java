@@ -33,7 +33,7 @@ import org.ofbiz.service.ModelService;
  * ContentManagementEvents Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      3.0
  *
  * 
@@ -174,7 +174,7 @@ public class ContentManagementEvents {
             roleTypeList = StringUtil.split(roles, "|");
         }
         List targetOperationList = UtilMisc.toList("CONTENT_PUBLISH");
-        List contentPurposeList = UtilMisc.toList("ARTICLE");
+        List contentPurposeList = null; //UtilMisc.toList("ARTICLE");
         //if (Debug.infoOn()) Debug.logInfo("in updatePublishLinks, roles:" + roles +" roleTypeList:" + roleTypeList , module);
         String permittedAction = (String)paramMap.get("permittedAction"); // The content to be linked to one or more sites
         String permittedOperations = (String)paramMap.get("permittedOperations"); // The content to be linked to one or more sites
@@ -255,17 +255,7 @@ public class ContentManagementEvents {
                     if (!currentSubContentId.equals(origSubContentId)) {
                         // disable existing link
                         if (UtilValidate.isNotEmpty(origSubContentId) && origFromDate != null) {
-                            List oldActiveValues = delegator.findByAnd("ContentAssoc", UtilMisc.toMap("contentId", targContentId, "contentIdTo", origSubContentId, "contentAssocTypeId", "SUB_CONTENT", "thruDate", null));
-                            Iterator iterOldActive = oldActiveValues.iterator();
-                            while (iterOldActive.hasNext()) {
-                                GenericValue cAssoc = (GenericValue)iterOldActive.next();
-                                cAssoc.set("thruDate", nowTimestamp);
-                                cAssoc.store();
-                                //if (Debug.infoOn()) Debug.logInfo("in updatePublishLinks, deactivating:" + cAssoc , module);
-                            }
-                        }
-                        if (UtilValidate.isNotEmpty(origSubContentId) && origFromDate != null) {
-                            List oldActiveValues = delegator.findByAnd("ContentAssoc", UtilMisc.toMap("contentId", targContentId, "contentIdTo", contentId, "contentAssocTypeId", "SUB_CONTENT", "thruDate", null));
+                            List oldActiveValues = delegator.findByAnd("ContentAssoc", UtilMisc.toMap("contentId", targContentId, "contentIdTo", origSubContentId, "contentAssocTypeId", "PUBLISH_LINK", "thruDate", null));
                             Iterator iterOldActive = oldActiveValues.iterator();
                             while (iterOldActive.hasNext()) {
                                 GenericValue cAssoc = (GenericValue)iterOldActive.next();
@@ -278,7 +268,7 @@ public class ContentManagementEvents {
                         Map serviceIn = new HashMap();
                         serviceIn.put("userLogin", userLogin);
                         serviceIn.put("contentId", targContentId);
-                        serviceIn.put("contentAssocTypeId", "SUB_CONTENT");
+                        serviceIn.put("contentAssocTypeId", "PUBLISH_LINK");
                         serviceIn.put("fromDate", nowTimestamp);
                         serviceIn.put("contentIdTo", currentSubContentId);
                         serviceIn.put("roleTypeList", roleTypeList);
@@ -297,7 +287,7 @@ public class ContentManagementEvents {
                         serviceIn = new HashMap();
                         serviceIn.put("userLogin", userLogin);
                         serviceIn.put("contentId", targContentId);
-                        serviceIn.put("contentAssocTypeId", "SUB_CONTENT");
+                        serviceIn.put("contentAssocTypeId", "PUBLISH_LINK");
                         serviceIn.put("fromDate", nowTimestamp);
                         serviceIn.put("contentIdTo", contentId);
                         serviceIn.put("roleTypeList", roleTypeList);
@@ -321,14 +311,14 @@ public class ContentManagementEvents {
                     }
                 } else if ( UtilValidate.isNotEmpty(origSubContentId)) {
                     // if no current link is passed in, look to see if there is an existing link(s) that must be disabled
-                    List oldActiveValues = delegator.findByAnd("ContentAssoc", UtilMisc.toMap("contentId", targContentId, "contentIdTo", origSubContentId, "contentAssocTypeId", "SUB_CONTENT", "thruDate", null));
+                    List oldActiveValues = delegator.findByAnd("ContentAssoc", UtilMisc.toMap("contentId", targContentId, "contentIdTo", origSubContentId, "contentAssocTypeId", "PUBLISH_LINK", "thruDate", null));
                     Iterator iterOldActive = oldActiveValues.iterator();
                     while (iterOldActive.hasNext()) {
                         GenericValue cAssoc = (GenericValue)iterOldActive.next();
                         cAssoc.set("thruDate", nowTimestamp);
                         cAssoc.store();
                     }
-                    oldActiveValues = delegator.findByAnd("ContentAssoc", UtilMisc.toMap("contentId", targContentId, "contentIdTo", contentId, "contentAssocTypeId", "SUB_CONTENT", "thruDate", null));
+                    oldActiveValues = delegator.findByAnd("ContentAssoc", UtilMisc.toMap("contentId", targContentId, "contentIdTo", contentId, "contentAssocTypeId", "PUBLISH_LINK", "thruDate", null));
                     iterOldActive = oldActiveValues.iterator();
                     while (iterOldActive.hasNext()) {
                         GenericValue cAssoc = (GenericValue)iterOldActive.next();
