@@ -445,8 +445,15 @@ public class ShoppingCartEvents {
     /** Empty the shopping cart. */
     public static String clearCart(HttpServletRequest request, HttpServletResponse response) {
         ShoppingCart cart = getCartObject(request);
-
         cart.clear();
+        return "success";
+    }
+    
+    /** Totally wipe out the cart, removes all stored info. */
+    public static String destroyCart(HttpServletRequest request, HttpServletResponse response) {
+        HttpSession session = request.getSession();
+        clearCart(request, response);
+        session.removeAttribute(SiteDefs.SHOPPING_CART);
         return "success";
     }
 
