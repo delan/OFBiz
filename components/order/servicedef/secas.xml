@@ -10,8 +10,8 @@
     <eca service="changeOrderItemStatus" event="commit">
         <condition field-name="statusId" operator="equals" value="ITEM_CANCELLED"/>
         <action service="cancelOrderInventoryReservation" mode="sync"/>
-        <action service="resetGrandTotal" mode="sync"/>
         <action service="recalcShippingTotal" mode="sync"/>
+        <action service="resetGrandTotal" mode="sync"/>
         <action service="checkOrderItemStatus" mode="sync"/>
         <action service="sendOrderChangeNotification" mode="async"/>        
     </eca>
@@ -87,29 +87,35 @@
         <action service="processRefundReturn" mode="sync"/>
     </eca>
     <eca service="updateReturnHeader" event="commit">
-        <condition field-name="statusId" operator="equals" value="RETURN_COMPLETED"/>
-        <condition field-name="currentStatusId" operator="not-equals" value="RETURN_COMPLETED"/>
-        <action service="sendReturnCompleteNotification" mode="async" persist="true"/>
+        <action service="checkReturnComplete" mode="sync"/>
     </eca>
     <eca service="updateReturnHeader" event="commit">
         <condition field-name="statusId" operator="equals" value="RETURN_CANCELLED"/>
         <condition field-name="currentStatusId" operator="not-equals" value="RETURN_CANCELLED"/>
         <action service="sendReturnCancelNotification" mode="async" persist="true"/>
     </eca>
+
     <eca service="updateReturnStatusFromReceipt" event="commit">
-        <condition field-name="returnHeaderStatus" operator="equals" value="RETURN_RECEIVED"/>        
+        <condition field-name="returnHeaderStatus" operator="equals" value="RETURN_RECEIVED"/>
         <action service="processReplacementReturn" mode="sync"/>
         <action service="processCreditReturn" mode="sync"/>
         <action service="processRefundReturn" mode="sync"/>
     </eca>
-    <eca service="processReplacementReturn" event="return">
+
+    <eca service="processReplacementReturn" event="commit">
         <action service="checkReturnComplete" mode="sync"/>
     </eca>
-    <eca service="processCreditReturn" event="return">
+    <eca service="processCreditReturn" event="commit">
         <action service="checkReturnComplete" mode="sync"/>
     </eca>
-    <eca service="processRefundReturn" event="return">
+    <eca service="processRefundReturn" event="commit">
         <action service="checkReturnComplete" mode="sync"/>
+    </eca>
+
+    <eca service="checkReturnComplete" event="commit">
+        <condition field-name="statusId" operator="is-not-empty"/>
+        <condition field-name="statusId" operator="equals" value="RETURN_COMPLETED"/>
+        <action service="sendReturnCompleteNotification" mode="async" persist="true"/>
     </eca>
 
     <!-- ShoppingList ECAs -->
