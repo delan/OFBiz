@@ -1,5 +1,5 @@
 /*
- * $Id: EntityFindOptions.java,v 1.1 2003/08/17 04:56:26 jonesde Exp $
+ * $Id: EntityFindOptions.java,v 1.2 2003/10/11 19:04:22 ajzeneski Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -21,19 +21,16 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
 package org.ofbiz.entity.util;
 
-
 import java.sql.ResultSet;
-
 
 /**
  * Contains a number of variables used to select certain advanced finding options.
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- *@created    Aug 8, 2002
- *@version    1.0
+ *@version    $Revision: 1.2 $
+ *@since      2.0
  */
 public class EntityFindOptions implements java.io.Serializable {
 
@@ -72,46 +69,46 @@ public class EntityFindOptions implements java.io.Serializable {
         this.distinct = distinct;
     }
 
-    /** If true the following two parameters (resultSetType and resultSetConcurrency) will be used to specify 
+    /** If true the following two parameters (resultSetType and resultSetConcurrency) will be used to specify
      *      how the results will be used; if false the default values for the JDBC driver will be used
      */
     public boolean getSpecifyTypeAndConcur() {
         return specifyTypeAndConcur;
     }
 
-    /** If true the following two parameters (resultSetType and resultSetConcurrency) will be used to specify 
+    /** If true the following two parameters (resultSetType and resultSetConcurrency) will be used to specify
      *      how the results will be used; if false the default values for the JDBC driver will be used
      */
     public void setSpecifyTypeAndConcur(boolean specifyTypeAndConcur) {
         this.specifyTypeAndConcur = specifyTypeAndConcur;
     }
 
-    /** Specifies how the ResultSet will be traversed. Available values: ResultSet.TYPE_FORWARD_ONLY, 
-     *      ResultSet.TYPE_SCROLL_INSENSITIVE or ResultSet.TYPE_SCROLL_SENSITIVE. See the java.sql.ResultSet JavaDoc for 
+    /** Specifies how the ResultSet will be traversed. Available values: ResultSet.TYPE_FORWARD_ONLY,
+     *      ResultSet.TYPE_SCROLL_INSENSITIVE or ResultSet.TYPE_SCROLL_SENSITIVE. See the java.sql.ResultSet JavaDoc for
      *      more information. If you want it to be fast, use the common default: ResultSet.TYPE_FORWARD_ONLY.
      */
     public int getResultSetType() {
         return resultSetType;
     }
 
-    /** Specifies how the ResultSet will be traversed. Available values: ResultSet.TYPE_FORWARD_ONLY, 
-     *      ResultSet.TYPE_SCROLL_INSENSITIVE or ResultSet.TYPE_SCROLL_SENSITIVE. See the java.sql.ResultSet JavaDoc for 
+    /** Specifies how the ResultSet will be traversed. Available values: ResultSet.TYPE_FORWARD_ONLY,
+     *      ResultSet.TYPE_SCROLL_INSENSITIVE or ResultSet.TYPE_SCROLL_SENSITIVE. See the java.sql.ResultSet JavaDoc for
      *      more information. If you want it to be fast, use the common default: ResultSet.TYPE_FORWARD_ONLY.
      */
     public void setResultSetType(int resultSetType) {
         this.resultSetType = resultSetType;
     }
 
-    /** Specifies whether or not the ResultSet can be updated. Available values: 
-     *      ResultSet.CONCUR_READ_ONLY or ResultSet.CONCUR_UPDATABLE. Should pretty much always be 
+    /** Specifies whether or not the ResultSet can be updated. Available values:
+     *      ResultSet.CONCUR_READ_ONLY or ResultSet.CONCUR_UPDATABLE. Should pretty much always be
      *      ResultSet.CONCUR_READ_ONLY with the Entity Engine.
      */
     public int getResultSetConcurrency() {
         return resultSetConcurrency;
     }
 
-    /** Specifies whether or not the ResultSet can be updated. Available values: 
-     *      ResultSet.CONCUR_READ_ONLY or ResultSet.CONCUR_UPDATABLE. Should pretty much always be 
+    /** Specifies whether or not the ResultSet can be updated. Available values:
+     *      ResultSet.CONCUR_READ_ONLY or ResultSet.CONCUR_UPDATABLE. Should pretty much always be
      *      ResultSet.CONCUR_READ_ONLY with the Entity Engine.
      */
     public void setResultSetConcurrency(int resultSetConcurrency) {
