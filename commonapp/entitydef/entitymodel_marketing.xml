@@ -132,6 +132,7 @@
             title="Contact List Entity">
       <field name="contactListId" type="id-ne"></field>
       <field name="contactListTypeId" type="id-ne"></field>
+      <field name="contactListName" type="id-ne"></field>
       <field name="marketingCampaignId" type="id"></field>
       <field name="comments" type="comment"></field>
       <field name="description" type="description"></field>
