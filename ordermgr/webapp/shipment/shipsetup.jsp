@@ -138,8 +138,8 @@
               <td><div class="tabletext"><select name="shipMethod"><%= getShipMethodList(delegator) %></select></div></td>
               <td><div class="tabletext"><select name="fromGeo"><option value="">None</option><%= getGeoList(delegator) %></select></div></td>
               <td><div class="tabletext"><select name="toGeo"><option value="">None</option><%= getGeoList(delegator) %></select></div></td>
-              <td><div class="tabletext"><input type="text" name="party" size="6"></div></td>
-              <td><div class="tabletext"><input type="text" name="role" size="6"></div></td>
+              <td><div class="tabletext"><input type="text" name="partyId" size="6"></div></td>
+              <td><div class="tabletext"><input type="text" name="roleTyeId" size="6"></div></td>
             </tr>
           </table>
         </td>
