@@ -104,29 +104,25 @@
     longDescription="This giant widget is mobile. It will seat one person safely. The wheels will never rust or break. Quite a unique item."
     primaryProductCategoryId="202" productId="WG-9943-B3" productTypeId="FINISHED_GOOD" isVariant="Y"
     productName="Giant Widget B3" quantityIncluded="10.0" weight="22.0"/>
+  <!-- not adding prices for each variant because they inherit from the virtual
   <ProductPrice productId="WG-9943-B3" price="550.0" productPriceTypeId="LIST_PRICE" currencyUomId="USD" fromDate="2001-01-01 12:00:00.0"/>
   <ProductPrice productId="WG-9943-B3" price="549.99" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" fromDate="2001-01-01 12:00:00.0"/>
+  -->
     
   <Product description="Black Giant Widget with 4 Wheels"
     longDescription="This giant widget is mobile. It will seat one person safely. The wheels will never rust or break. Quite a unique item."
     primaryProductCategoryId="202" productId="WG-9943-B4" productTypeId="FINISHED_GOOD" isVariant="Y"
     productName="Giant Widget B4" quantityIncluded="10.0" weight="22.0"/>
-  <ProductPrice productId="WG-9943-B4" price="550.0" productPriceTypeId="LIST_PRICE" currencyUomId="USD" fromDate="2001-01-01 12:00:00.0"/>
-  <ProductPrice productId="WG-9943-B4" price="549.99" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" fromDate="2001-01-01 12:00:00.0"/>
     
   <Product description="Silver Giant Widget with 3 Wheels"
     longDescription="This giant widget is mobile. It will seat one person safely. The wheels will never rust or break. Quite a unique item."
     primaryProductCategoryId="202" productId="WG-9943-S3" productTypeId="FINISHED_GOOD" isVariant="Y"
     productName="Giant Widget S3" quantityIncluded="10.0" weight="22.0"/>
-  <ProductPrice productId="WG-9943-S3" price="550.0" productPriceTypeId="LIST_PRICE" currencyUomId="USD" fromDate="2001-01-01 12:00:00.0"/>
-  <ProductPrice productId="WG-9943-S3" price="549.99" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" fromDate="2001-01-01 12:00:00.0"/>
     
   <Product description="Silver Giant Widget with 4 Wheels"
     longDescription="This giant widget is mobile. It will seat one person safely. The wheels will never rust or break. Quite a unique item."
     primaryProductCategoryId="202" productId="WG-9943-S4" productTypeId="FINISHED_GOOD" isVariant="Y"
     productName="Giant Widget S4" quantityIncluded="10.0" weight="22.0"/>
-  <ProductPrice productId="WG-9943-S4" price="550.0" productPriceTypeId="LIST_PRICE" currencyUomId="USD" fromDate="2001-01-01 12:00:00.0"/>
-  <ProductPrice productId="WG-9943-S4" price="549.99" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" fromDate="2001-01-01 12:00:00.0"/>
     
   <ProductFeatureCategory productFeatureCategoryId="9000" description="Widget Features"/>
   
