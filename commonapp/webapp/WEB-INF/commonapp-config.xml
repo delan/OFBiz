@@ -159,6 +159,7 @@
     <view-map name="dataMySql" page="/entity/dataMySql.jsp"/>
     <view-map name="ModelWriter" page="/entity/ModelWriter.jsp"/>
     <view-map name="ModelGroupWriter" page="/entity/ModelGroupWriter.jsp"/>
+    <view-map name="ModelInduceFromDb" page="/entity/ModelInduceFromDb.jsp"/>
     <view-map name="EditEntity" page="/entity/EditEntity.jsp"/>
     <view-map name="checkdb" page="/entity/checkdb.jsp"/>
     <view-map name="xmldsdump" page="/entity/xmldsdump.jsp"/>
