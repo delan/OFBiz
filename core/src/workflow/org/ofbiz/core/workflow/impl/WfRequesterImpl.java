@@ -26,6 +26,7 @@ package org.ofbiz.core.workflow.impl;
 
 import java.util.*;
 
+import org.ofbiz.core.entity.*;
 import org.ofbiz.core.service.*;
 import org.ofbiz.core.workflow.*;
 
@@ -71,7 +72,21 @@ public class WfRequesterImpl implements WfRequester {
         // Set the context w/ the process        
         Map localContext = new HashMap(context);
         localContext.putAll(mgr.getInitialContext());
-        process.setProcessContext(localContext);       
+        process.setProcessContext(localContext);   
+        
+        // set the source reference id if one was passed
+        if (context.containsKey("sourceReferenceId")) {  
+            GenericValue processObj = process.getRuntimeObject();
+            if (processObj != null) {
+                try {
+                    processObj.set("sourceReferenceId", localContext.get("sourceReferenceId"));
+                    processObj.store();
+                } catch (GenericEntityException e) {
+                    throw new WfException("Cannot set sourceReferenceId on the process runtime object", e);
+                }
+            }
+        }
+                  
     }
 
     /**

@@ -112,6 +112,11 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
         dataMap.put("currentStatusId", getEntityStatus("open.not_running.not_started"));
         if (activityId != null)
             dataMap.put("workflowActivityId", activityId);
+        if (activityId != null && parentId != null) {
+            GenericValue parentWorkEffort = getWorkEffort(parentId);
+            if (parentWorkEffort != null && parentWorkEffort.get("sourceReferenceId") != null)
+                dataMap.put("sourceReferenceId", parentWorkEffort.getString("sourceReferenceId"));
+        }
 
         try {
             List lst = new ArrayList();
@@ -644,7 +649,17 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
         }
         return context;
     }
-
+    
+    private GenericValue getWorkEffort(String workEffortId) throws WfException {
+        GenericValue we = null;
+        try {
+            we = getDelegator().findByPrimaryKey("WorkEffort", UtilMisc.toMap("workEffortId", workEffortId));
+        } catch (GenericEntityException e) {
+            throw new WfException("Problem getting WorkEffort entity (" + workEffortId + ")", e);
+        }
+        return we;
+    }
+        
     /**
      * Evaluate a condition or expression using the current context
      * @param expression The expression to evaluate
