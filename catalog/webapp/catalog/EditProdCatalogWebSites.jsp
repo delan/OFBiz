@@ -33,6 +33,8 @@
 
 <%if (security.hasEntityPermission("CATALOG", "_VIEW", session)) {%>
 <%
+    String nowTimestampString = UtilDateTime.nowTimestamp().toString();
+
     boolean tryEntity = true;
     if (request.getAttribute(SiteDefs.ERROR_MESSAGE) != null) tryEntity = false;
 
@@ -77,7 +79,9 @@
     <td align="center"><div class="tabletext"><b>Thru&nbsp;Date&nbsp;&amp;&nbsp;Time,&nbsp;Sequence</b></div></td>
     <td><div class="tabletext"><b>&nbsp;</b></div></td>
   </tr>
+<%int line = 0;%>
 <ofbiz:iterator name="webSiteCatalog" property="webSiteCatalogs">
+  <%line++;%>
   <%GenericValue webSite = webSiteCatalog.getRelatedOne("WebSite");%>
   <tr valign="middle">
     <td><%--<a href='<ofbiz:url>/EditWebSite?webSiteId=<ofbiz:inputvalue entityAttr="webSiteCatalog" field="webSiteId"/></ofbiz:url>' class="buttontext">--%><div class='tabletext'><ofbiz:inputvalue entityAttr="webSiteCatalog" field="webSiteId"/></div><%--</a>--%></td>
@@ -88,11 +92,12 @@
     <td align="center">
         <%boolean hasExpired = false;%>
         <%if (webSiteCatalog.getTimestamp("thruDate") != null && UtilDateTime.nowTimestamp().after(webSiteCatalog.getTimestamp("thruDate"))) { hasExpired = true; }%>
-        <FORM method=POST action='<ofbiz:url>/updateProdCatalogToWebSite</ofbiz:url>'>
+        <FORM method=POST action='<ofbiz:url>/updateProdCatalogToWebSite</ofbiz:url>' name='lineForm<%=line%>'>
             <input type=hidden <ofbiz:inputvalue entityAttr="webSiteCatalog" field="prodCatalogId" fullattrs="true"/>>
             <input type=hidden <ofbiz:inputvalue entityAttr="webSiteCatalog" field="webSiteId" fullattrs="true"/>>
             <input type=hidden <ofbiz:inputvalue entityAttr="webSiteCatalog" field="fromDate" fullattrs="true"/>>
-            <input type=text size='20' <ofbiz:inputvalue entityAttr="webSiteCatalog" field="thruDate" fullattrs="true"/> class='inputBox' style='<%if (hasExpired) {%>color: red;<%}%>'>
+            <input type=text size='25' <ofbiz:inputvalue entityAttr="webSiteCatalog" field="thruDate" fullattrs="true"/> class='inputBox' style='<%if (hasExpired) {%>color: red;<%}%>'>
+            <a href="javascript:call_cal(document.lineForm<%=line%>.thruDate, '<%=nowTimestampString%>');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>
             <input type=text size='5' <ofbiz:inputvalue entityAttr="webSiteCatalog" field="sequenceNum" fullattrs="true"/> class='inputBox'>
             <INPUT type=submit value='Update' style='font-size: x-small;'>
         </FORM>
@@ -105,29 +110,32 @@
 </ofbiz:iterator>
 </table>
 <br>
-<form method="POST" action="<ofbiz:url>/addProdCatalogToWebSite</ofbiz:url>" style='margin: 0;'>
+<form method="POST" action="<ofbiz:url>/addProdCatalogToWebSite</ofbiz:url>" style='margin: 0;' name='addCatalogWebSiteForm'>
   <input type="hidden" name="prodCatalogId" value="<%=prodCatalogId%>">
   <input type="hidden" name="tryEntity" value="true">
 
-  <div class='head2'>Add Catalog WebSite (select WebSite, enter optional From Date):</div>
-  <br>
-  <select name="webSiteId" class='selectBox'>
-  <ofbiz:iterator name="webSite" property="webSites">
-    <option value='<ofbiz:entityfield attribute="webSite" field="webSiteId"/>'><ofbiz:entityfield attribute="webSite" field="siteName"/> [<ofbiz:entityfield attribute="webSite" field="webSiteId"/>]</option>
-  </ofbiz:iterator>
-  </select>
-  <input type=text size='20' name='fromDate' class='selectBox'>
-  <input type="submit" value="Add">
+  <div class='head2'>Add Catalog WebSite:</div>
+  <div class='tabletext'>
+    WebSite: <select name="webSiteId" class='selectBox'>
+    <ofbiz:iterator name="webSite" property="webSites">
+      <option value='<ofbiz:entityfield attribute="webSite" field="webSiteId"/>'><ofbiz:entityfield attribute="webSite" field="siteName"/> [<ofbiz:entityfield attribute="webSite" field="webSiteId"/>]</option>
+    </ofbiz:iterator>
+    </select>
+    From Date: <input type='text' size='25' name='fromDate' class='inputBox'>
+    <a href="javascript:call_cal(document.addCatalogWebSiteForm.fromDate, '<%=nowTimestampString%>');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>
+    <input type="submit" value="Add">
+  </div>
 </form>
 <br>
 <form method="POST" action="<ofbiz:url>/catalog_createWebSite</ofbiz:url>" style='margin: 0;'>
   <input type="hidden" name="prodCatalogId" value="<%=prodCatalogId%>">
   <input type="hidden" name="tryEntity" value="true">
   <div class='head2'>Add New WebSite:</div>
-  <br>
-  ID: <input type=text size='20' name='webSiteId' class='inputBox'>
-  Name: <input type=text size='30' name='siteName' class='inputBox'>
-  <input type="submit" value="Add">
+  <div class='tabletext'>
+    ID: <input type=text size='20' name='webSiteId' class='inputBox'>
+    Name: <input type=text size='30' name='siteName' class='inputBox'>
+    <input type="submit" value="Add">
+  </div>
 </form>
 <%}%>
 <br>
