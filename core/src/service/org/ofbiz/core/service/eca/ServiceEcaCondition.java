@@ -43,6 +43,8 @@ import org.w3c.dom.Element;
  * @since      2.0
  */
 public class ServiceEcaCondition {
+    
+    public static final String module = ServiceEcaCondition.class.getName();
 
     protected String lhsValueName, rhsValueName;
     protected String lhsMapName, rhsMapName;
@@ -81,7 +83,7 @@ public class ServiceEcaCondition {
             throw new GenericServiceException("Cannot have null Service, Context or DispatchContext!");
         }
 
-        if (Debug.verboseOn()) Debug.logVerbose(this.toString() + ", In the context: " + context);
+        if (Debug.verboseOn()) Debug.logVerbose(this.toString() + ", In the context: " + context, module);
 
         Object lhsValue = null;
         Object rhsValue = null;
@@ -91,7 +93,7 @@ public class ServiceEcaCondition {
                     Map envMap = (Map) context.get(lhsMapName);
                     lhsValue = envMap.get(lhsValueName);
                 } else {
-                    Debug.logWarning("From Map (" + lhsMapName + ") not found in context, defaulting to null.");
+                    Debug.logWarning("From Map (" + lhsMapName + ") not found in context, defaulting to null.", module);
                 }
             } catch (ClassCastException e) {
                 throw new GenericServiceException("From Map field [" + lhsMapName + "] is not a Map.", e);
@@ -100,7 +102,7 @@ public class ServiceEcaCondition {
             if (context.containsKey(lhsValueName)) {
                 lhsValue = context.get(lhsValueName);
             } else {
-                Debug.logInfo("From Field (" + lhsValueName + ") is not found in context, defaulting to null.");
+                Debug.logInfo("From Field (" + lhsValueName + ") is not found in context, defaulting to null.", module);
             }
         }
 
@@ -112,7 +114,7 @@ public class ServiceEcaCondition {
                     Map envMap = (Map) context.get(rhsMapName);
                     rhsValue = envMap.get(rhsValueName);
                 } else {
-                    Debug.logWarning("To Map (" + rhsMapName + ") not found in context, defaulting to null.");
+                    Debug.logWarning("To Map (" + rhsMapName + ") not found in context, defaulting to null.", module);
                 }
             } catch (ClassCastException e) {
                 throw new GenericServiceException("To Map field [" + rhsMapName + "] is not a Map.", e);
@@ -121,11 +123,11 @@ public class ServiceEcaCondition {
             if (context.containsKey(rhsValueName)) {
                 rhsValue = context.get(rhsValueName);
             } else {
-                Debug.logInfo("To Field (" + rhsValueName + ") is not found in context, defaulting to null.");
+                Debug.logInfo("To Field (" + rhsValueName + ") is not found in context, defaulting to null.", module);
             }
         }
 
-        if (Debug.verboseOn()) Debug.logVerbose("Comparing : " + lhsValue + " " + operator + " " + rhsValue);
+        if (Debug.verboseOn()) Debug.logVerbose("Comparing : " + lhsValue + " " + operator + " " + rhsValue, module);
 
         // evaluate the condition & invoke the action(s)
         List messages = new LinkedList();
@@ -135,13 +137,13 @@ public class ServiceEcaCondition {
         if (messages.size() > 0) {
             Iterator m = messages.iterator();
             while (m.hasNext()) {
-                Debug.logWarning((String) m.next());
+                Debug.logWarning((String) m.next(), module);
             }
         }
         if (cond != null) {
             return cond.booleanValue();
         } else {
-            Debug.logWarning("doRealCompare returned null, returning false");
+            Debug.logWarning("doRealCompare returned null, returning false", module);
             return false;
         }
     }

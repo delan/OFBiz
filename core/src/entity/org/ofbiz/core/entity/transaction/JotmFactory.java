@@ -96,13 +96,13 @@ public class JotmFactory implements TransactionFactoryInterface {
                 Connection con = JotmConnectionFactory.getConnection(helperName, datasourceInfo.inlineJdbcElement);
                 if (con != null) return con;
             } catch (Exception ex) {
-                Debug.logError(ex, "JOTM is the configured transaction manager but there was an error getting a database Connection through JOTM for the " + helperName + " datasource. Please check your configuration, class path, etc.");
+                Debug.logError(ex, "JOTM is the configured transaction manager but there was an error getting a database Connection through JOTM for the " + helperName + " datasource. Please check your configuration, class path, etc.", module);
             }
         
             Connection otherCon = ConnectionFactory.tryGenericConnectionSources(helperName, datasourceInfo.inlineJdbcElement);
             return otherCon;
         } else {
-            Debug.logError("JOTM is the configured transaction manager but no inline-jdbc element was specified in the " + helperName + " datasource. Please check your configuration");
+            Debug.logError("JOTM is the configured transaction manager but no inline-jdbc element was specified in the " + helperName + " datasource. Please check your configuration", module);
             return null;
         }
     }

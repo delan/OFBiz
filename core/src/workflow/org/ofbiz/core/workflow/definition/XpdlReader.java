@@ -268,9 +268,9 @@ public class XpdlReader {
                 for (int i = 0; i < message.length(); i++) {
                     lines.append("-");
                 }
-                Debug.logWarning(lines.toString());
+                Debug.logWarning(lines.toString(), module);
                 Debug.logWarning(message, module);
-                Debug.logWarning(lines.toString());
+                Debug.logWarning(lines.toString(), module);
                 return false;
             }
         } catch (GenericEntityException e) {

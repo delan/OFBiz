@@ -62,6 +62,8 @@ import org.ofbiz.core.util.UtilMisc;
  * @since      2.0
  */
 public abstract class GenericAsyncEngine implements GenericEngine {
+    
+    public static final String module = GenericAsyncEngine.class.getName();
 
     protected ServiceDispatcher dispatcher = null;
     
@@ -111,7 +113,7 @@ public abstract class GenericAsyncEngine implements GenericEngine {
             try {
                 parentTrans = tm.suspend();
             } catch (SystemException se) {
-                Debug.logError(se, "Cannot suspend transaction: " + se.getMessage());
+                Debug.logError(se, "Cannot suspend transaction: " + se.getMessage(), module);
             }
 
             String exceptionMessage = "Cannot begin asynchronous service.";

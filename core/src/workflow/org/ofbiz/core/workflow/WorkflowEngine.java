@@ -91,9 +91,9 @@ public class WorkflowEngine implements GenericEngine {
                 beganTransaction = TransactionUtil.begin();
                 //Debug.logInfo("Suspended transaction; began new: " + beganTransaction, module);
             } catch (SystemException se) {
-                Debug.logError(se, "Cannot suspend transaction: " + se.getMessage());
+                Debug.logError(se, "Cannot suspend transaction: " + se.getMessage(), module);
             } catch (GenericTransactionException e) {
-                Debug.logError(e, "Cannot begin nested transaction: " + e.getMessage());
+                Debug.logError(e, "Cannot begin nested transaction: " + e.getMessage(), module);
             }
             
             // Build the requester
@@ -104,7 +104,7 @@ public class WorkflowEngine implements GenericEngine {
                 try {
                     TransactionUtil.rollback(beganTransaction);
                 } catch (GenericTransactionException gte) {
-                    Debug.logError(gte, "Unable to rollback nested exception.");
+                    Debug.logError(gte, "Unable to rollback nested exception.", module);
                 }
                 throw new GenericServiceException(e.getMessage(), e);
             }
@@ -124,7 +124,7 @@ public class WorkflowEngine implements GenericEngine {
                 try {
                     TransactionUtil.rollback(beganTransaction);
                 } catch (GenericTransactionException gte) {
-                    Debug.logError(gte, "Unable to rollback nested exception.");
+                    Debug.logError(gte, "Unable to rollback nested exception.", module);
                 }
                 throw new GenericServiceException(e.getMessage(), e);
             } catch (Exception e) {
@@ -140,28 +140,28 @@ public class WorkflowEngine implements GenericEngine {
                 try {
                     TransactionUtil.rollback(beganTransaction);
                 } catch (GenericTransactionException gte) {
-                    Debug.logError(gte, "Unable to rollback nested exception.");
+                    Debug.logError(gte, "Unable to rollback nested exception.", module);
                 }
                 throw new GenericServiceException(ne.getMessage(), ne);
             } catch (InvalidRequester ir) {
                 try {
                     TransactionUtil.rollback(beganTransaction);
                 } catch (GenericTransactionException gte) {
-                    Debug.logError(gte, "Unable to rollback nested exception.");
+                    Debug.logError(gte, "Unable to rollback nested exception.", module);
                 }
                 throw new GenericServiceException(ir.getMessage(), ir);
             } catch (RequesterRequired rr) {
                 try {
                     TransactionUtil.rollback(beganTransaction);
                 } catch (GenericTransactionException gte) {
-                    Debug.logError(gte, "Unable to rollback nested exception.");
+                    Debug.logError(gte, "Unable to rollback nested exception.", module);
                 }
                 throw new GenericServiceException(rr.getMessage(), rr);
             } catch (WfException wfe) {
                 try {
                     TransactionUtil.rollback(beganTransaction);
                 } catch (GenericTransactionException gte) {
-                    Debug.logError(gte, "Unable to rollback nested exception.");
+                    Debug.logError(gte, "Unable to rollback nested exception.", module);
                 }
                 throw new GenericServiceException(wfe.getMessage(), wfe);
             } catch (Exception e) {
@@ -176,7 +176,7 @@ public class WorkflowEngine implements GenericEngine {
                 try {
                     TransactionUtil.rollback(beganTransaction);
                 } catch (GenericTransactionException gte) {
-                    Debug.logError(gte, "Unable to rollback nested exception.");
+                    Debug.logError(gte, "Unable to rollback nested exception.", module);
                 }
                 throw new GenericServiceException(e.getMessage(), e);
             }
@@ -197,7 +197,7 @@ public class WorkflowEngine implements GenericEngine {
                         try {
                             TransactionUtil.rollback(beganTransaction);
                         } catch (GenericTransactionException gte) {
-                            Debug.logError(gte, "Unable to rollback nested exception.");
+                            Debug.logError(gte, "Unable to rollback nested exception.", module);
                         }
                         throw new GenericServiceException("Cannot set ownership of workflow", e);
                     }
@@ -205,7 +205,7 @@ public class WorkflowEngine implements GenericEngine {
                     try {
                         TransactionUtil.rollback(beganTransaction);
                     } catch (GenericTransactionException gte) {
-                        Debug.logError(gte, "Unable to rollback nested exception.");
+                        Debug.logError(gte, "Unable to rollback nested exception.", module);
                     }
                     throw new GenericServiceException("Cannot get the workflow process runtime key");
                 }
@@ -229,7 +229,7 @@ public class WorkflowEngine implements GenericEngine {
                 try {
                     TransactionUtil.rollback(beganTransaction);
                 } catch (GenericTransactionException gte) {
-                    Debug.logError(gte, "Unable to rollback nested exception.");
+                    Debug.logError(gte, "Unable to rollback nested exception.", module);
                 }
                 throw new GenericServiceException(wfe.getMessage(), wfe);
             }
@@ -244,7 +244,7 @@ public class WorkflowEngine implements GenericEngine {
                     try {
                         TransactionUtil.rollback(beganTransaction);
                     } catch (GenericTransactionException gte) {
-                        Debug.logError(gte, "Unable to rollback nested exception.");
+                        Debug.logError(gte, "Unable to rollback nested exception.", module);
                     }
                     throw new GenericServiceException(wfe.getMessage(), wfe);
                 }
@@ -259,7 +259,7 @@ public class WorkflowEngine implements GenericEngine {
                 try {
                     TransactionUtil.rollback(beganTransaction);
                 } catch (GenericTransactionException gte) {
-                    Debug.logError(gte, "Unable to rollback nested exception.");
+                    Debug.logError(gte, "Unable to rollback nested exception.", module);
                 }
                 throw new GenericServiceException(je.getMessage(), je);
             }
@@ -267,7 +267,7 @@ public class WorkflowEngine implements GenericEngine {
             try {
                 TransactionUtil.commit(beganTransaction);
             } catch (GenericTransactionException e) {
-                Debug.logError(e, "Cannot commit nested transaction: " + e.getMessage());
+                Debug.logError(e, "Cannot commit nested transaction: " + e.getMessage(), module);
             }
         } finally {
             // Resume the parent transaction
@@ -321,9 +321,8 @@ class WorkflowRunner extends AbstractJob {
                 process.start(startActivityId);
             else
                 process.start();
-        } catch (Exception e) {
-            e.printStackTrace();
-            Debug.logError(e);
+        } catch (Exception e) {            
+            Debug.logError(e, module);
             if (requester != null)
                 requester.receiveResult(null);
         }

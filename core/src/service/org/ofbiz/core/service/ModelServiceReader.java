@@ -152,7 +152,7 @@ public class ModelServiceReader {
                         try {
                             document = handler.getDocument();
                         } catch (GenericConfigException e) {
-                            Debug.logError(e, "Error getting XML document from resource");
+                            Debug.logError(e, "Error getting XML document from resource", module);
                             return null;
                         }
                     }
@@ -224,10 +224,10 @@ public class ModelServiceReader {
                     }
                     if (this.isFromURL) {
                         utilTimer.timerString("Finished file " + readerURL + " - Total Services: " + i + " FINISHED");
-                        Debug.logImportant("Loaded " + i + " Service definitions from " + readerURL);
+                        Debug.logImportant("Loaded " + i + " Service definitions from " + readerURL, module);
                     } else {
                         utilTimer.timerString("Finished document in " + handler + " - Total Services: " + i + " FINISHED");
-                        Debug.logImportant("Loaded " + i + " Service definitions from " + handler.getLocation() + " in loader " + handler.getLoaderName());
+                        Debug.logImportant("Loaded " + i + " Service definitions from " + handler.getLocation() + " in loader " + handler.getLoaderName(), module);
                     }
                 }
             }
@@ -364,7 +364,7 @@ public class ModelServiceReader {
         if (entityName == null || entityName.length() == 0) {
             entityName = service.defaultEntityName;
             if (entityName == null || entityName.length() == 0) {
-                Debug.logWarning("Auto-Attribute does not specify an entity-name; not default-entity on service definition");
+                Debug.logWarning("Auto-Attribute does not specify an entity-name; not default-entity on service definition", module);
             }
         }
         
@@ -376,7 +376,7 @@ public class ModelServiceReader {
         // need a delegator for this
         GenericDelegator delegator = dctx.getDelegator();
         if (delegator == null) {
-            Debug.logWarning("Cannot use auto-attribute fields with a null delegator");
+            Debug.logWarning("Cannot use auto-attribute fields with a null delegator", module);
         }
         
         if (delegator != null && entityName != null) {

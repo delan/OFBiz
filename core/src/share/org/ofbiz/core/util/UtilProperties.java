@@ -37,6 +37,8 @@ import java.net.*;
  * @version    1.0
  */
 public class UtilProperties {
+    
+    public static final String module = UtilProperties.class.getName();
 
     /** An instance of the generic cache for storing the FlexibleProperties 
      *  corresponding to each properties file keyed by a String for the resource location.
@@ -125,11 +127,11 @@ public class UtilProperties {
                 properties = FlexibleProperties.makeFlexibleProperties(url);
                 resourceCache.put(resource, properties);
             } catch (MissingResourceException e) {
-                Debug.log(e.getMessage());
+                Debug.log(e.getMessage(), module);
             }
         }
         if (properties == null) {
-            Debug.log("[UtilProperties.getPropertyValue] could not find resource: " + resource);
+            Debug.log("[UtilProperties.getPropertyValue] could not find resource: " + resource, module);
             return "";
         }
 
@@ -138,7 +140,7 @@ public class UtilProperties {
         try {
             value = properties.getProperty(name);
         } catch (Exception e) {
-            Debug.log(e.getMessage());
+            Debug.log(e.getMessage(), module);
         }
         return value == null ? "" : value.trim();
     }
@@ -161,11 +163,11 @@ public class UtilProperties {
                 properties = FlexibleProperties.makeFlexibleProperties(url);
                 resourceCache.put(resource, properties);
             } catch (MissingResourceException e) {
-                Debug.log(e.getMessage());
+                Debug.log(e.getMessage(), module);
             }
         }
         if (properties == null) {
-            Debug.log("[UtilProperties.getProperties] could not find resource: " + resource);
+            Debug.log("[UtilProperties.getProperties] could not find resource: " + resource, module);
             return null;
         }
         return properties;
@@ -185,11 +187,11 @@ public class UtilProperties {
                 properties = FlexibleProperties.makeFlexibleProperties(url);
                 resourceCache.put(url, properties);
             } catch (MissingResourceException e) {
-                Debug.log(e.getMessage());
+                Debug.log(e.getMessage(), module);
             }
         }
         if (properties == null) {
-            Debug.log("[UtilProperties.getProperties] could not find resource: " + url);
+            Debug.log("[UtilProperties.getProperties] could not find resource: " + url, module);
             return null;
         }
         return properties;
@@ -265,11 +267,11 @@ public class UtilProperties {
                 properties = FlexibleProperties.makeFlexibleProperties(url);
                 urlCache.put(url, properties);
             } catch (MissingResourceException e) {
-                Debug.log(e.getMessage());
+                Debug.log(e.getMessage(), module);
             }
         }
         if (properties == null) {
-            Debug.log("[UtilProperties.getPropertyValue] could not find resource: " + url);
+            Debug.log("[UtilProperties.getPropertyValue] could not find resource: " + url, module);
             return null;
         }
 
@@ -278,7 +280,7 @@ public class UtilProperties {
         try {
             value = properties.getProperty(name);
         } catch (Exception e) {
-            Debug.log(e.getMessage());
+            Debug.log(e.getMessage(), module);
         }
         return value == null ? "" : value.trim();
     }
@@ -302,11 +304,11 @@ public class UtilProperties {
                 properties = FlexibleProperties.makeFlexibleProperties(url);
                 urlCache.put(url, properties);
             } catch (MissingResourceException e) {
-                Debug.log(e.getMessage());
+                Debug.log(e.getMessage(), module);
             }
         }
         if (properties == null) {
-            Debug.log("[UtilProperties.getPropertyValue] could not find resource: " + url);
+            Debug.log("[UtilProperties.getPropertyValue] could not find resource: " + url, module);
             return null;
         }
 
@@ -324,7 +326,7 @@ public class UtilProperties {
                 curIdx++;
             }
         } catch (Exception e) {
-            Debug.log(e.getMessage());
+            Debug.log(e.getMessage(), module);
         }
         return value == null ? "" : value.trim();
     }
@@ -355,7 +357,7 @@ public class UtilProperties {
         try {
             value = bundle.getString(name);
         } catch (Exception e) {
-            Debug.log(e.getMessage());
+            Debug.log(e.getMessage(), module);
         }
         return value == null ? "" : value.trim();
     }
@@ -419,12 +421,12 @@ public class UtilProperties {
                 bundle = ResourceBundle.getBundle(resource, locale);
                 bundleLocaleCache.put(resourceCacheKey, bundle);
             } catch (MissingResourceException e) {
-                Debug.log(e, "[UtilProperties.getPropertyValue] could not find resource: " + resource + " for locale " + locale.toString());
+                Debug.log(e, "[UtilProperties.getPropertyValue] could not find resource: " + resource + " for locale " + locale.toString(), module);
                 return null;
             }
         }
         if (bundle == null) {
-            Debug.log("[UtilProperties.getPropertyValue] could not find resource: " + resource + " for locale " + locale.toString());
+            Debug.log("[UtilProperties.getPropertyValue] could not find resource: " + resource + " for locale " + locale.toString(), module);
             return null;
         }
         
@@ -485,13 +487,13 @@ public class UtilProperties {
                     properties = FlexibleProperties.makeFlexibleProperties(url);
                 }
             } catch (MissingResourceException e) {
-                Debug.log(e.getMessage());
+                Debug.log(e.getMessage(), module);
             }
             resourceCache.put(resourceLocale, properties);
         }      
         
         if (properties == null)
-            Debug.logInfo("[UtilProperties.getProperties] could not find resource: " + resource + ", locale: " + locale);
+            Debug.logInfo("[UtilProperties.getProperties] could not find resource: " + resource + ", locale: " + locale, module);
 
         return properties;
     }

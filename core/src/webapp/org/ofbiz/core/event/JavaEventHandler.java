@@ -58,7 +58,7 @@ public class JavaEventHandler implements EventHandler {
                         ClassLoader loader = Thread.currentThread().getContextClassLoader();
                         eventClass = loader.loadClass(eventPath);
                     } catch (ClassNotFoundException e) {
-                        Debug.logError(e, "Error loading class with name: " + eventPath + ", will not be able to run event...");
+                        Debug.logError(e, "Error loading class with name: " + eventPath + ", will not be able to run event...", module);
                     }
                     if (eventClass != null) {
                         eventClassMap.put(eventPath, eventClass);

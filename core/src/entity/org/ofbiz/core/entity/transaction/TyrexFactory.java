@@ -44,6 +44,8 @@ import tyrex.resource.*;
  * @since      2.0
  */
 public class TyrexFactory implements TransactionFactoryInterface {
+    
+    public static final String module = TyrexFactory.class.getName();
 
     protected static TransactionDomain td = null;
     protected static String DOMAIN_NAME = "default";
@@ -63,29 +65,29 @@ public class TyrexFactory implements TransactionFactoryInterface {
                 if (url != null) {
                     td = TransactionDomain.createDomain(url.toString());
                 } else {
-                    Debug.logError("ERROR: Could not create Tyrex Transaction Domain (resource not found):" + resourceName);
+                    Debug.logError("ERROR: Could not create Tyrex Transaction Domain (resource not found):" + resourceName, module);
                 }
             } catch (tyrex.tm.DomainConfigurationException e) {
-                Debug.logError("Could not create Tyrex Transaction Domain (configuration):");
-                Debug.logError(e);
+                Debug.logError("Could not create Tyrex Transaction Domain (configuration):", module);
+                Debug.logError(e, module);
             }
 
             if (td != null) {
-                Debug.logImportant("Got TyrexDomain from classpath (NO tyrex.config file found)");
+                Debug.logImportant("Got TyrexDomain from classpath (NO tyrex.config file found)", module);
             }
         } else {
-            Debug.logImportant("Got TyrexDomain from tyrex.config location");
+            Debug.logImportant("Got TyrexDomain from tyrex.config location", module);
         }
 
         if (td != null) {
             try {
                 td.recover();
             } catch (tyrex.tm.RecoveryException e) {
-                Debug.logError("Could not complete recovery phase of Tyrex TransactionDomain creation");
-                Debug.logError(e);
+                Debug.logError("Could not complete recovery phase of Tyrex TransactionDomain creation", module);
+                Debug.logError(e, module);
             }
         } else {
-            Debug.logError("Could not get Tyrex TransactionDomain for domain " + DOMAIN_NAME);
+            Debug.logError("Could not get Tyrex TransactionDomain for domain " + DOMAIN_NAME, module);
         }
 
         /* For Tyrex version 0.9.7.0 * /
@@ -98,7 +100,7 @@ public class TyrexFactory implements TransactionFactoryInterface {
         if (td != null) {
             return td.getResources();
         } else {
-            Debug.logWarning("No Tyrex TransactionDomain, not returning resources");
+            Debug.logWarning("No Tyrex TransactionDomain, not returning resources", module);
             return null;
         }
     }
@@ -110,7 +112,7 @@ public class TyrexFactory implements TransactionFactoryInterface {
             try {
                 return (DataSource) resources.getResource(dsName);
             } catch (tyrex.resource.ResourceException e) {
-                Debug.logError(e, "Could not get tyrex dataSource resource with name " + dsName);
+                Debug.logError(e, "Could not get tyrex dataSource resource with name " + dsName, module);
                 return null;
             }
         } else {
@@ -122,7 +124,7 @@ public class TyrexFactory implements TransactionFactoryInterface {
         if (td != null) {
             return td.getTransactionManager();
         } else {
-            Debug.logWarning("No Tyrex TransactionDomain, not returning TransactionManager");
+            Debug.logWarning("No Tyrex TransactionDomain, not returning TransactionManager", module);
             return null;
         }
     }
@@ -131,7 +133,7 @@ public class TyrexFactory implements TransactionFactoryInterface {
         if (td != null) {
             return td.getUserTransaction();
         } else {
-            Debug.logWarning("No Tyrex TransactionDomain, not returning UserTransaction");
+            Debug.logWarning("No Tyrex TransactionDomain, not returning UserTransaction", module);
             return null;
         }
     }
@@ -149,7 +151,7 @@ public class TyrexFactory implements TransactionFactoryInterface {
                 Connection con = TyrexConnectionFactory.getConnection(helperName, datasourceInfo.inlineJdbcElement);
                 if (con != null) return con;
             } catch (Exception ex) {
-                Debug.logError(ex, "Tyrex is the configured transaction manager but there was an error getting a database Connection through Tyrex for the " + helperName + " datasource. Please check your configuration, class path, etc.");
+                Debug.logError(ex, "Tyrex is the configured transaction manager but there was an error getting a database Connection through Tyrex for the " + helperName + " datasource. Please check your configuration, class path, etc.", module);
             }
         
             Connection otherCon = ConnectionFactory.tryGenericConnectionSources(helperName, datasourceInfo.inlineJdbcElement);
@@ -159,12 +161,12 @@ public class TyrexFactory implements TransactionFactoryInterface {
             String dataSourceName = tyrexDataSourceElement.getAttribute("dataSource-name");
 
             if (UtilValidate.isEmpty(dataSourceName)) {
-                Debug.logError("dataSource-name not set for tyrex-dataSource element in the " + helperName + " data-source definition");
+                Debug.logError("dataSource-name not set for tyrex-dataSource element in the " + helperName + " data-source definition", module);
             } else {
                 DataSource tyrexDataSource = TyrexFactory.getDataSource(dataSourceName);
 
                 if (tyrexDataSource == null) {
-                    Debug.logError("Got a null data source for dataSource-name " + dataSourceName + " for tyrex-dataSource element in the " + helperName + " data-source definition; trying other sources");
+                    Debug.logError("Got a null data source for dataSource-name " + dataSourceName + " for tyrex-dataSource element in the " + helperName + " data-source definition; trying other sources", module);
                 } else {
                     Connection con = tyrexDataSource.getConnection();
 
@@ -193,7 +195,7 @@ public class TyrexFactory implements TransactionFactoryInterface {
             Connection otherCon = ConnectionFactory.tryGenericConnectionSources(helperName, datasourceInfo.inlineJdbcElement);
             return otherCon;
         } else {
-            Debug.logError("Tyrex is the configured transaction manager but no inline-jdbc or tyrex-dataSource element was specified in the " + helperName + " datasource. Please check your configuration");
+            Debug.logError("Tyrex is the configured transaction manager but no inline-jdbc or tyrex-dataSource element was specified in the " + helperName + " datasource. Please check your configuration", module);
             return null;
         }
     }

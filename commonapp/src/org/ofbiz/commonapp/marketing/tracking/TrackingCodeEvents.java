@@ -57,12 +57,12 @@ public class TrackingCodeEvents {
             try {
                 trackingCode = delegator.findByPrimaryKeyCache("TrackingCode", UtilMisc.toMap("trackingCodeId", trackingCodeId));
             } catch (GenericEntityException e) {
-                Debug.logError(e, "Error looking up TrackingCode with trackingCodeId [" + trackingCodeId + "], ignoring this trackingCodeId");
+                Debug.logError(e, "Error looking up TrackingCode with trackingCodeId [" + trackingCodeId + "], ignoring this trackingCodeId", module);
                 return "error";
             }
             
             if (trackingCode == null) {
-                Debug.logError("TrackingCode not found for trackingCodeId [" + trackingCodeId + "], ignoring this trackingCodeId.");
+                Debug.logError("TrackingCode not found for trackingCodeId [" + trackingCodeId + "], ignoring this trackingCodeId.", module);
                 //this return value will be ignored, but we'll designate this as an error anyway
                 return "error";
             }
@@ -94,7 +94,7 @@ public class TrackingCodeEvents {
             try {
                 trackingCode = delegator.findByPrimaryKeyCache("TrackingCode", UtilMisc.toMap("trackingCodeId", trackingCodeId));
             } catch (GenericEntityException e) {
-                Debug.logError(e, "Error looking up TrackingCode with trackingCodeId [" + trackingCodeId + "], ignoring this trackingCodeId");
+                Debug.logError(e, "Error looking up TrackingCode with trackingCodeId [" + trackingCodeId + "], ignoring this trackingCodeId", module);
                 return "error";
             }
             
@@ -110,7 +110,7 @@ public class TrackingCodeEvents {
                     try {
                         defaultTrackingCode = delegator.findByPrimaryKeyCache("TrackingCode", UtilMisc.toMap("trackingCodeId", dtc));
                     } catch (GenericEntityException e) {
-                        Debug.logError(e, "Error looking up Default values TrackingCode with trackingCodeId [" + dtc + "], not using the dtc value for new TrackingCode defaults");
+                        Debug.logError(e, "Error looking up Default values TrackingCode with trackingCodeId [" + dtc + "], not using the dtc value for new TrackingCode defaults", module);
                     }
                     
                     if (defaultTrackingCode != null) {
@@ -126,7 +126,7 @@ public class TrackingCodeEvents {
                         try {
                             trackingCode.create();
                         } catch (GenericEntityException e) {
-                            Debug.logError(e, "Error creating new Partner TrackingCode with trackingCodeId [" + trackingCodeId + "], ignoring this trackingCodeId");
+                            Debug.logError(e, "Error creating new Partner TrackingCode with trackingCodeId [" + trackingCodeId + "], ignoring this trackingCodeId", module);
                             return "error";
                         }
                     }
@@ -148,12 +148,12 @@ public class TrackingCodeEvents {
 
                     trackingCode.set("comments", "This TrackingCode has default values because no default TrackingCode could be found.");
                     
-                    Debug.logWarning("No default TrackingCode record was found, using a TrackingCode with hard coded default values: " + trackingCode);
+                    Debug.logWarning("No default TrackingCode record was found, using a TrackingCode with hard coded default values: " + trackingCode, module);
                     
                     try {
                         trackingCode.create();
                     } catch (GenericEntityException e) {
-                        Debug.logError(e, "Error creating new Partner TrackingCode with trackingCodeId [" + trackingCodeId + "], ignoring this trackingCodeId");
+                        Debug.logError(e, "Error creating new Partner TrackingCode with trackingCodeId [" + trackingCodeId + "], ignoring this trackingCodeId", module);
                         return "error";
                     }
                 }
@@ -172,18 +172,18 @@ public class TrackingCodeEvents {
         //check effective dates
         java.sql.Timestamp nowStamp = UtilDateTime.nowTimestamp();
         if (trackingCode.get("fromDate") != null && nowStamp.before(trackingCode.getTimestamp("fromDate"))) {
-            if (Debug.infoOn()) Debug.logInfo("The TrackingCode with ID [" + trackingCodeId + "] has not yet gone into effect, ignoring this trackingCodeId");
+            if (Debug.infoOn()) Debug.logInfo("The TrackingCode with ID [" + trackingCodeId + "] has not yet gone into effect, ignoring this trackingCodeId", module);
             return "success";
         }
         if (trackingCode.get("thruDate") != null && nowStamp.after(trackingCode.getTimestamp("thruDate"))) {
-            if (Debug.infoOn()) Debug.logInfo("The TrackingCode with ID [" + trackingCodeId + "] has expired, ignoring this trackingCodeId");
+            if (Debug.infoOn()) Debug.logInfo("The TrackingCode with ID [" + trackingCodeId + "] has expired, ignoring this trackingCodeId", module);
             return "success";
         }
         
         //persist that info by associating with the current visit
         GenericValue visit = VisitHandler.getVisit(request.getSession());
         if (visit == null) {
-            Debug.logWarning("Could not get visit, not associating trackingCode [" + trackingCodeId + "] with visit");
+            Debug.logWarning("Could not get visit, not associating trackingCode [" + trackingCodeId + "] with visit", module);
         } else {
             GenericValue trackingCodeVisit = delegator.makeValue("TrackingCodeVisit", 
                     UtilMisc.toMap("trackingCodeId", trackingCodeId, "visitId", visit.get("visitId"), 
@@ -191,7 +191,7 @@ public class TrackingCodeEvents {
             try {
                 trackingCodeVisit.create();
             } catch (GenericEntityException e) {
-                Debug.logError(e, "Error while saving TrackingCodeVisit");
+                Debug.logError(e, "Error while saving TrackingCodeVisit", module);
             }
         }
 
@@ -243,7 +243,7 @@ public class TrackingCodeEvents {
             try {
                 response.sendRedirect(redirectUrl);
             } catch (java.io.IOException e) {
-                Debug.logError(e, "Could not redirect as requested in the trackingCode to: " + redirectUrl);
+                Debug.logError(e, "Could not redirect as requested in the trackingCode to: " + redirectUrl, module);
             }
             return null;
         }
@@ -259,7 +259,7 @@ public class TrackingCodeEvents {
         java.sql.Timestamp nowStamp = UtilDateTime.nowTimestamp();
         GenericValue visit = VisitHandler.getVisit(request.getSession());
         if (visit == null) {
-            Debug.logWarning("Could not get visit, not checking trackingCode cookies to associate with visit");
+            Debug.logWarning("Could not get visit, not checking trackingCode cookies to associate with visit", module);
         } else {
             // loop through cookies and look for ones with a name that starts with TKCDT_ for trackable cookies
             Cookie[] cookies = request.getCookies();
@@ -272,23 +272,23 @@ public class TrackingCodeEvents {
                         try {
                             trackingCode = delegator.findByPrimaryKeyCache("TrackingCode", UtilMisc.toMap("trackingCodeId", trackingCodeId));
                         } catch (GenericEntityException e) {
-                            Debug.logError(e, "Error looking up TrackingCode with trackingCodeId [" + trackingCodeId + "], ignoring this trackingCodeId");
+                            Debug.logError(e, "Error looking up TrackingCode with trackingCodeId [" + trackingCodeId + "], ignoring this trackingCodeId", module);
                             continue;
                         }
 
                         if (trackingCode == null) {
-                            Debug.logError("TrackingCode not found for trackingCodeId [" + trackingCodeId + "], ignoring this trackingCodeId.");
+                            Debug.logError("TrackingCode not found for trackingCodeId [" + trackingCodeId + "], ignoring this trackingCodeId.", module);
                             //this return value will be ignored, but we'll designate this as an error anyway
                             continue;
                         }
 
                         //check effective dates
                         if (trackingCode.get("fromDate") != null && nowStamp.before(trackingCode.getTimestamp("fromDate"))) {
-                            if (Debug.infoOn()) Debug.logInfo("The TrackingCode with ID [" + trackingCodeId + "] has not yet gone into effect, ignoring this trackingCodeId");
+                            if (Debug.infoOn()) Debug.logInfo("The TrackingCode with ID [" + trackingCodeId + "] has not yet gone into effect, ignoring this trackingCodeId", module);
                             continue;
                         }
                         if (trackingCode.get("thruDate") != null && nowStamp.after(trackingCode.getTimestamp("thruDate"))) {
-                            if (Debug.infoOn()) Debug.logInfo("The TrackingCode with ID [" + trackingCodeId + "] has expired, ignoring this trackingCodeId");
+                            if (Debug.infoOn()) Debug.logInfo("The TrackingCode with ID [" + trackingCodeId + "] has expired, ignoring this trackingCodeId", module);
                             continue;
                         }
                         
@@ -300,7 +300,7 @@ public class TrackingCodeEvents {
                             //not doing this inside a transaction, want each one possible to go in
                             trackingCodeVisit.create();
                         } catch (GenericEntityException e) {
-                            Debug.logError(e, "Error while saving TrackingCodeVisit");
+                            Debug.logError(e, "Error while saving TrackingCodeVisit", module);
                             //don't return error, want to get as many as possible: return "error";
                         }
                     }
@@ -337,23 +337,23 @@ public class TrackingCodeEvents {
                     try {
                         trackingCode = delegator.findByPrimaryKeyCache("TrackingCode", UtilMisc.toMap("trackingCodeId", trackingCodeId));
                     } catch (GenericEntityException e) {
-                        Debug.logError(e, "Error looking up TrackingCode with trackingCodeId [" + trackingCodeId + "], ignoring this trackingCodeId");
+                        Debug.logError(e, "Error looking up TrackingCode with trackingCodeId [" + trackingCodeId + "], ignoring this trackingCodeId", module);
                         continue;
                     }
 
                     if (trackingCode == null) {
-                        Debug.logError("TrackingCode not found for trackingCodeId [" + trackingCodeId + "], ignoring this trackingCodeId.");
+                        Debug.logError("TrackingCode not found for trackingCodeId [" + trackingCodeId + "], ignoring this trackingCodeId.", module);
                         //this return value will be ignored, but we'll designate this as an error anyway
                         continue;
                     }
 
                     //check effective dates
                     if (trackingCode.get("fromDate") != null && nowStamp.before(trackingCode.getTimestamp("fromDate"))) {
-                        if (Debug.infoOn()) Debug.logInfo("The TrackingCode with ID [" + trackingCodeId + "] has not yet gone into effect, ignoring this trackingCodeId");
+                        if (Debug.infoOn()) Debug.logInfo("The TrackingCode with ID [" + trackingCodeId + "] has not yet gone into effect, ignoring this trackingCodeId", module);
                         continue;
                     }
                     if (trackingCode.get("thruDate") != null && nowStamp.after(trackingCode.getTimestamp("thruDate"))) {
-                        if (Debug.infoOn()) Debug.logInfo("The TrackingCode with ID [" + trackingCodeId + "] has expired, ignoring this trackingCodeId");
+                        if (Debug.infoOn()) Debug.logInfo("The TrackingCode with ID [" + trackingCodeId + "] has expired, ignoring this trackingCodeId", module);
                         continue;
                     }
                     
@@ -362,9 +362,9 @@ public class TrackingCodeEvents {
                     // note: using TKCDB_ only for length because both TKCDB_ and TKCDT_ are the same length
                     String cookieTrackingCodeTypeId = cookieName.substring("TKCDB_".length());
                     if (cookieTrackingCodeTypeId == null || cookieTrackingCodeTypeId.length() == 0) {
-                        Debug.logWarning("The trackingCodeTypeId as part of the cookie name was null or empty");
+                        Debug.logWarning("The trackingCodeTypeId as part of the cookie name was null or empty", module);
                     } else if (!cookieTrackingCodeTypeId.equals(trackingCode.getString("trackingCodeTypeId"))) {
-                        Debug.logWarning("The trackingCodeTypeId [" + cookieTrackingCodeTypeId + "] as part of the cookie name was equal to the current trackingCodeTypeId [" + trackingCode.getString("trackingCodeTypeId") + "] associated with the trackingCodeId [" + trackingCodeId + "]");
+                        Debug.logWarning("The trackingCodeTypeId [" + cookieTrackingCodeTypeId + "] as part of the cookie name was equal to the current trackingCodeTypeId [" + trackingCode.getString("trackingCodeTypeId") + "] associated with the trackingCodeId [" + trackingCodeId + "]", module);
                     }
                     
                     // this will have everything except the orderId set, that will be set by the createOrder service

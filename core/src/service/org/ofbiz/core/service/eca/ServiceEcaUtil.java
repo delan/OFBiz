@@ -90,7 +90,7 @@ public class ServiceEcaUtil {
         try {
             rootElement = handler.getDocument().getDocumentElement();
         } catch (GenericConfigException e) {
-            Debug.logError(e);
+            Debug.logError(e, module);
             return;
         }
 

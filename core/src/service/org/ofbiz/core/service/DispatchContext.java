@@ -298,14 +298,14 @@ public class DispatchContext implements Serializable {
 
     private Map addReader(URL readerURL) {
         if (readerURL == null) {
-            Debug.logError("Cannot add reader with a null reader URL");
+            Debug.logError("Cannot add reader with a null reader URL", module);
             return null;
         }
 
         ModelServiceReader reader = ModelServiceReader.getModelServiceReader(readerURL, this);
 
         if (reader == null) {
-            Debug.logError("Could not load the reader for the reader URL " + readerURL);
+            Debug.logError("Could not load the reader for the reader URL " + readerURL, module);
             return null;
         }
 
@@ -318,7 +318,7 @@ public class DispatchContext implements Serializable {
         ModelServiceReader reader = ModelServiceReader.getModelServiceReader(handler, this);
 
         if (reader == null) {
-            Debug.logError("Could not load the reader for " + handler);
+            Debug.logError("Could not load the reader for " + handler, module);
             return null;
         }
 
@@ -335,7 +335,7 @@ public class DispatchContext implements Serializable {
         try {
             rootElement = ServiceConfigUtil.getXmlRootElement();
         } catch (GenericConfigException e) {
-            Debug.logError(e, "Error getting Service Engine XML root element");
+            Debug.logError(e, "Error getting Service Engine XML root element", module);
             return null;
         }
 

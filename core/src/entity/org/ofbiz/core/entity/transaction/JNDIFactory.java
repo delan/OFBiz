@@ -81,7 +81,7 @@ public class JNDIFactory implements TransactionFactoryInterface {
                             }
                         }
                     } catch (GeneralException e) {
-                        Debug.logError(e);
+                        Debug.logError(e, module);
                         transactionManager = null;
                     }
                 }
@@ -117,7 +117,7 @@ public class JNDIFactory implements TransactionFactoryInterface {
                             }
                         }
                     } catch (GeneralException e) {
-                        Debug.logError(e);
+                        Debug.logError(e, module);
                         transactionManager = null;
                     }
                 }
@@ -140,7 +140,7 @@ public class JNDIFactory implements TransactionFactoryInterface {
             Connection con = getJndiConnection(jndiName, jndiServerName);
             if (con != null) return con;
         } else {
-            Debug.logError("JNDI loaded is the configured transaction manager but no jndi-jdbc element was specified in the " + helperName + " datasource. Please check your configuration; will try other sources");
+            Debug.logError("JNDI loaded is the configured transaction manager but no jndi-jdbc element was specified in the " + helperName + " datasource. Please check your configuration; will try other sources", module);
         }
         
         if (datasourceInfo.inlineJdbcElement != null) {

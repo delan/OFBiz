@@ -42,6 +42,8 @@ import org.ofbiz.core.util.*;
  * @since      2.0
  */
 public class CoreEvents {
+    
+    public static final String module = CoreEvents.class.getName();
 
     /**
      * Return success event. Used as a place holder for events.
@@ -234,7 +236,7 @@ public class CoreEvents {
         try {
             modelService = dispatcher.getDispatchContext().getModelService(serviceName);
         } catch (GenericServiceException e) {
-            Debug.logError(e, "Error looking up ModelService for serviceName [" + serviceName + "]");
+            Debug.logError(e, "Error looking up ModelService for serviceName [" + serviceName + "]", module);
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>Error looking up ModelService for serviceName [" + serviceName + "]: " + e.toString());
             return "error";
         }
@@ -408,7 +410,7 @@ public class CoreEvents {
         try {
             modelService = dispatcher.getDispatchContext().getModelService(serviceName);
         } catch (GenericServiceException e) {
-            Debug.logError(e, "Error looking up ModelService for serviceName [" + serviceName + "]");
+            Debug.logError(e, "Error looking up ModelService for serviceName [" + serviceName + "]", module);
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>Error looking up ModelService for serviceName [" + serviceName + "]: " + e.toString());
             return "error";
         }
@@ -422,7 +424,7 @@ public class CoreEvents {
             return "error";
         }
         
-        Debug.logInfo("Running service named [" + serviceName + "] from event with mode [" + mode + "]");
+        Debug.logInfo("Running service named [" + serviceName + "] from event with mode [" + mode + "]", module);
         
         // call the service via the ServiceEventHandler which 
         // adapts an event to a service.

@@ -20,14 +20,11 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
 package org.ofbiz.core.config;
-
 
 import java.util.*;
 import org.w3c.dom.*;
 import org.ofbiz.core.util.*;
-
 
 /**
  * <code>SecurityConfigUtil</code>
@@ -42,6 +39,8 @@ import org.ofbiz.core.util.*;
  * @version    $Revision$
  */
 public class SecurityConfigUtil {
+    
+    public static final String module = SecurityConfigUtil.class.getName();
 
     /** The security config filename */
     public static final String SECURITY_CONFIG_XML_FILENAME = "security.xml";
@@ -72,7 +71,7 @@ public class SecurityConfigUtil {
         try {
             initialize(getXmlRootElement());
         } catch (Exception e) {
-            Debug.logError(e, "Error loading Security config XML file " + SECURITY_CONFIG_XML_FILENAME);
+            Debug.logError(e, "Error loading Security config XML file " + SECURITY_CONFIG_XML_FILENAME, module);
         }
     }
 
@@ -93,7 +92,7 @@ public class SecurityConfigUtil {
             Element curElement = (Element) elementIter.next();
             SecurityConfigUtil.SecurityInfo securityInfo = new SecurityConfigUtil.SecurityInfo(curElement);
 
-            if (Debug.verboseOn()) Debug.logVerbose("LOADED SECURITY CONFIG FROM XML -  NAME: " + securityInfo.name + " ClassName: " + securityInfo.className);
+            if (Debug.verboseOn()) Debug.logVerbose("LOADED SECURITY CONFIG FROM XML -  NAME: " + securityInfo.name + " ClassName: " + securityInfo.className, module);
             SecurityConfigUtil.securityInfos.put(securityInfo.name, securityInfo);
         }
     }

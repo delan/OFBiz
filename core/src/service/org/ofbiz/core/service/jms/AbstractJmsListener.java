@@ -109,7 +109,7 @@ public abstract class AbstractJmsListener implements GenericMessageListener, Exc
         if (message instanceof MapMessage) {
             mapMessage = (MapMessage) message;
         } else {
-            Debug.logError("Received message is not a MapMessage!");
+            Debug.logError("Received message is not a MapMessage!", module);
             return;
         }
         runService(mapMessage);

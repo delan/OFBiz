@@ -42,6 +42,8 @@ import org.ofbiz.core.util.*;
  *@version    1.0
  */
 public abstract class ResourceLoader {
+    
+    public static final String module = ResourceLoader.class.getName();
     protected static UtilCache loaderCache = new UtilCache("resource.ResourceLoaders", 0, 0);
     protected static Map docSaveMap = new HashMap();
 
@@ -181,7 +183,7 @@ public abstract class ResourceLoader {
             String propValue = System.getProperty(envName);
             if (propValue == null) {
                 String errMsg = "The Java environment (-Dxxx=yyy) variable with name " + envName + " is not set, cannot load resource.";
-                Debug.logError(errMsg);
+                Debug.logError(errMsg, module);
                 throw new IllegalArgumentException(errMsg);
             }
             buf.append(propValue);

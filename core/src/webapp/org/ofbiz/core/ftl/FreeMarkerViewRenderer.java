@@ -88,7 +88,7 @@ public class FreeMarkerViewRenderer extends org.jpublish.view.freemarker.FreeMar
     }
 
     public void render(JPublishContext context, String path, Reader in, Writer out) throws IOException, ViewRenderException{
-        if (Debug.verboseOn()) Debug.logVerbose("render(" + path + ")");
+        if (Debug.verboseOn()) Debug.logVerbose("render(" + path + ")", module);
         try{
             Page page = (Page)context.get(JPublishContext.JPUBLISH_PAGE);
             Object viewContext = createViewContext(context, path);

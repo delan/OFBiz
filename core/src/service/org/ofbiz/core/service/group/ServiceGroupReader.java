@@ -73,7 +73,7 @@ public class ServiceGroupReader {
         try {
             rootElement = handler.getDocument().getDocumentElement();
         } catch (GenericConfigException e) {
-            Debug.logError(e);
+            Debug.logError(e, module);
             return;
         }
         List groupList = UtilXml.childElementList(rootElement, "group");

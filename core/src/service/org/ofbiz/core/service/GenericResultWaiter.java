@@ -121,7 +121,7 @@ public class GenericResultWaiter implements GenericRequester {
                 this.wait(milliseconds);
                 if (Debug.verboseOn()) Debug.logVerbose("Waiting...", module);
             } catch (java.lang.InterruptedException e) {
-                Debug.logError(e);
+                Debug.logError(e, module);
             }
         }
         return this.getResult();

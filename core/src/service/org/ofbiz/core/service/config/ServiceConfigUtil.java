@@ -39,6 +39,8 @@ import org.w3c.dom.Element;
  * @since      2.0
  */
 public class ServiceConfigUtil {
+    
+    public static final String module = ServiceConfigUtil.class.getName();    
     public static final String SERVICE_ENGINE_XML_FILENAME = "serviceengine.xml";
 
     public static Element getXmlRootElement() throws GenericConfigException {
@@ -55,7 +57,7 @@ public class ServiceConfigUtil {
         try {
             rootElement = ServiceConfigUtil.getXmlRootElement();
         } catch (GenericConfigException e) {
-            Debug.logError(e, "Error getting Service Engine XML root element");
+            Debug.logError(e, "Error getting Service Engine XML root element", module);
         }
         Element element = UtilXml.firstChildElement(rootElement, elementName);
 

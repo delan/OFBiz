@@ -41,6 +41,8 @@ import org.ofbiz.core.workflow.*;
  * @since      2.0
  */
 public class WorkflowServices {
+    
+    public static final String module = WorkflowServices.class.getName();
 
     // -------------------------------------------------------------------
     // Client 'Service' Methods
@@ -443,7 +445,7 @@ public class WorkflowServices {
      */
     public static boolean hasPermission(Security security, String workEffortId, GenericValue userLogin) {
         if (userLogin == null || workEffortId == null) {
-            Debug.logWarning("No UserLogin object or no Workeffort ID was passed.");
+            Debug.logWarning("No UserLogin object or no Workeffort ID was passed.", module);
             return false;
         }
         if (security.hasPermission("WORKFLOW_MAINT", userLogin)) {
@@ -466,7 +468,7 @@ public class WorkflowServices {
                 c = userLogin.getDelegator().findByAnd("WorkEffortAndPartyAssign", expr);
                 //Debug.logInfo("Found " + c.size() + " records.");
             } catch (GenericEntityException e) {
-                Debug.logWarning(e);
+                Debug.logWarning(e, module);
                 return false;
             }
             if (c.size() == 0) {
@@ -482,7 +484,7 @@ public class WorkflowServices {
                     c = userLogin.getDelegator().findByAnd("WorkEffortAndPartyAssign", expr);
                     //Debug.logInfo("Found " + c.size() + " records.");
                 } catch (GenericEntityException e) {
-                    Debug.logWarning(e);
+                    Debug.logWarning(e, module);
                     return false;
                 }
             }
@@ -510,7 +512,7 @@ public class WorkflowServices {
                 return getOwner(delegator, we.getString("workEffortParentId"));
             }
         } catch (GenericEntityException e) {
-            Debug.logWarning(e);
+            Debug.logWarning(e, module);
         }
         return null;
     }

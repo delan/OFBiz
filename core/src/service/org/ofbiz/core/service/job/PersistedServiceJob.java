@@ -111,7 +111,7 @@ public class PersistedServiceJob extends GenericServiceJob {
         try {
             job.store();
         } catch (GenericEntityException e) {
-            Debug.logError(e, "Cannot update the datasource");
+            Debug.logError(e, "Cannot update the datasource", module);
         }
     }
 

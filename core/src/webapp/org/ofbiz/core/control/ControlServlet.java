@@ -239,11 +239,11 @@ public class ControlServlet extends HttpServlet {
         } catch (RequestHandlerException e) {
             Throwable throwable = e.getNested() != null ? e.getNested() : e;
 
-            Debug.logError(throwable, "Error in request handler: ");
+            Debug.logError(throwable, "Error in request handler: ", module);
             request.setAttribute(SiteDefs.ERROR_MESSAGE, throwable.toString());
             errorPage = getRequestHandler().getDefaultErrorPage(request);
         } catch (Exception e) {
-            Debug.logError(e, "Error in request handler: ");
+            Debug.logError(e, "Error in request handler: ", module);
             request.setAttribute(SiteDefs.ERROR_MESSAGE, e.toString());
             errorPage = getRequestHandler().getDefaultErrorPage(request);
         }

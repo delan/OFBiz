@@ -426,10 +426,10 @@ public class RequestHandler implements Serializable {
         // so just get the target view name and use that
         String servletName = req.getServletPath().substring(1);
 
-        Debug.logInfo("servletName=" + servletName + ", view=" + view);
+        Debug.logInfo("servletName=" + servletName + ", view=" + view, module);
         if (view.startsWith(servletName + "/")) {
             view = view.substring(servletName.length() + 1);
-            Debug.logInfo("a manual control servlet request was received, removing control servlet path resulting in: view=" + view);
+            Debug.logInfo("a manual control servlet request was received, removing control servlet path resulting in: view=" + view, module);
         }
 
         if (Debug.verboseOn()) Debug.logVerbose("[Getting View Map]: " + view, module);
@@ -484,10 +484,10 @@ public class RequestHandler implements Serializable {
             resp.setContentType(contentType);
         }
 
-        if (Debug.verboseOn()) Debug.logVerbose("The ContentType for the " + view + " view is: " + contentType);
+        if (Debug.verboseOn()) Debug.logVerbose("The ContentType for the " + view + " view is: " + contentType, module);
         
         try {
-            if (Debug.verboseOn()) Debug.logVerbose("Rendering view [" + nextPage + "] of type [" + viewType + "]");
+            if (Debug.verboseOn()) Debug.logVerbose("Rendering view [" + nextPage + "] of type [" + viewType + "]", module);
             ViewHandler vh = viewFactory.getViewHandler(viewType);
             vh.render(view, nextPage, requestManager.getViewInfo(view), contentType, charset, req, resp);           
         } catch (ViewHandlerException e) {

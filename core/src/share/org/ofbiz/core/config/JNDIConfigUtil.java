@@ -37,7 +37,8 @@ import org.ofbiz.core.util.*;
  * @since      2.0
  */
 public class JNDIConfigUtil {
-
+    
+    public static final String module = JNDIConfigUtil.class.getName();
     public static final String JNDI_CONFIG_XML_FILENAME = "jndiservers.xml";
     protected static Map jndiServerInfos = new HashMap();
 
@@ -61,7 +62,7 @@ public class JNDIConfigUtil {
         try {
             initialize(getXmlRootElement());
         } catch (Exception e) {
-            Debug.logError(e, "Error loading JNDI config XML file " + JNDI_CONFIG_XML_FILENAME);
+            Debug.logError(e, "Error loading JNDI config XML file " + JNDI_CONFIG_XML_FILENAME, module);
         }
     }
     public static void initialize(Element rootElement) throws GenericConfigException {

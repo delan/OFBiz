@@ -45,11 +45,13 @@ import org.w3c.dom.Element;
  */
 public class ServiceEcaRule {
 
-    String serviceName;
-    String eventName;
-    boolean runOnError;
-    List conditions = new LinkedList();
-    List actions = new LinkedList();
+    public static final String module = ServiceEcaRule.class.getName();
+    
+    protected String serviceName = null;
+    protected String eventName = null;
+    protected boolean runOnError = false;
+    protected List conditions = new LinkedList();
+    protected List actions = new LinkedList();
 
     protected ServiceEcaRule() {}
 
@@ -72,7 +74,7 @@ public class ServiceEcaRule {
             conditions.add(new ServiceEcaCondition((Element) cfi.next(), false));
         }
 
-        if (Debug.verboseOn()) Debug.logVerbose("Conditions: " + conditions);
+        if (Debug.verboseOn()) Debug.logVerbose("Conditions: " + conditions, module);
 
         List actList = UtilXml.childElementList(eca, "action");
         Iterator ai = actList.iterator();
@@ -81,7 +83,7 @@ public class ServiceEcaRule {
             actions.add(new ServiceEcaAction((Element) ai.next()));
         }
 
-        if (Debug.verboseOn()) Debug.logVerbose("Actions: " + actions);
+        if (Debug.verboseOn()) Debug.logVerbose("Actions: " + actions, module);
     }
 
     public void eval(String serviceName, DispatchContext dctx, Map context, Map result, boolean isError, Set actionsRun) throws GenericServiceException {
@@ -95,11 +97,11 @@ public class ServiceEcaRule {
         while (c.hasNext()) {
             ServiceEcaCondition ec = (ServiceEcaCondition) c.next();
             if (!ec.eval(serviceName, dctx, context)) {
-                if (Debug.verboseOn()) Debug.logVerbose("Got false for condition: " + ec);
+                if (Debug.verboseOn()) Debug.logVerbose("Got false for condition: " + ec, module);
                 allCondTrue = false;
                 break;
             } else {
-                if (Debug.verboseOn()) Debug.logVerbose("Got true for condition: " + ec);
+                if (Debug.verboseOn()) Debug.logVerbose("Got true for condition: " + ec, module);
             }
         }
 
@@ -110,7 +112,7 @@ public class ServiceEcaRule {
                 // in order to enable OR logic without multiple calls to the given service, 
                 //only execute a given service name once per service call phase 
                 if (!actionsRun.contains(ea.serviceName)) {
-                    if (Debug.infoOn()) Debug.logInfo("Running ECA Service: " + ea.serviceName + ", triggered by rule on Service: " + serviceName);
+                    if (Debug.infoOn()) Debug.logInfo("Running ECA Service: " + ea.serviceName + ", triggered by rule on Service: " + serviceName, module);
                     ea.runAction(serviceName, dctx, context, result);
                     actionsRun.add(ea.serviceName);
                 }

@@ -37,9 +37,11 @@ import org.ofbiz.core.util.*;
  */
 public class TestEvent {
 
+    public static final String module = TestEvent.class.getName();
+    
     public static String test(HttpServletRequest request, HttpServletResponse response) {
         request.setAttribute("MESSAGE", "Test Event Ran Fine.");
-        Debug.log("Test Event Ran Fine.");
+        Debug.log("Test Event Ran Fine.", module);
         return "success";
     }
 
@@ -50,9 +52,9 @@ public class TestEvent {
             http.setHeader("Cookie", "name=value,value=name");
             http.setHeader("User-Agent", "Mozilla/4.0");
             http.setParameter("testId", "testing");
-            Debug.log(http.post());
+            Debug.log(http.post(), module);
         } catch (Exception e) {
-            Debug.log(e, "HttpClientException Caught.");
+            Debug.log(e, "HttpClientException Caught.", module);
         }
         return "success";
     }

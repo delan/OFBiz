@@ -38,6 +38,8 @@ import java.io.*;
  */
 public class FlexibleProperties extends Properties {
 
+    public static final String module = FlexibleProperties.class.getName();
+    
     private static final boolean truncateIfMissingDefault = false;
     private static final boolean doPropertyExpansionDefault = true;
 
@@ -96,7 +98,7 @@ public class FlexibleProperties extends Properties {
         try {
             load();
         } catch (IOException e) {
-            Debug.log(e);
+            Debug.log(e, module);
         }
     }
 
@@ -140,8 +142,7 @@ public class FlexibleProperties extends Properties {
         try {
             in = url.openStream();
         } catch (Exception urlex) {
-            Debug.log("[FlexibleProperties.load]: Couldn't find the URL: " + url);
-            Debug.log(urlex);
+            Debug.log(urlex, "[FlexibleProperties.load]: Couldn't find the URL: " + url, module);            
         }
 
         if (in == null) throw new IOException("Could not open resource URL " + url);
@@ -158,7 +159,7 @@ public class FlexibleProperties extends Properties {
     }
 
     public synchronized void reload() throws IOException {
-        Debug.log("Reloading the resource: " + url);
+        Debug.log("Reloading the resource: " + url, module);
         this.load();
     }
 
@@ -216,7 +217,7 @@ public class FlexibleProperties extends Properties {
                         keyToExpand = value.substring((start + 2), end);
                         nestedStart = keyToExpand.indexOf("${", (nestedStart + 2));
                     } else {
-                        Debug.log("[FlexibleProperties.interpolate] Malformed value: [" + value + "] " + "contained unbalanced start \"${\" and end \"}\" characters");
+                        Debug.log("[FlexibleProperties.interpolate] Malformed value: [" + value + "] " + "contained unbalanced start \"${\" and end \"}\" characters", module);
                         return value;
                     }
                 }
@@ -233,8 +234,8 @@ public class FlexibleProperties extends Properties {
                 }
                 if (beenThere.contains(keyToExpand)) {
                     beenThere.add(keyToExpand);
-                    Debug.log("[FlexibleProperties.interpolate] Recursion loop detected:  Property:[" + beenThere.get(0) + "] " + "included property: [" + keyToExpand + "]");
-                    Debug.log("[FlexibleProperties.interpolate] Recursion loop path:" + beenThere);
+                    Debug.log("[FlexibleProperties.interpolate] Recursion loop detected:  Property:[" + beenThere.get(0) + "] " + "included property: [" + keyToExpand + "]", module);
+                    Debug.log("[FlexibleProperties.interpolate] Recursion loop path:" + beenThere, module);
                     return value;
                 } else {
                     String expandValue = null;
@@ -243,7 +244,7 @@ public class FlexibleProperties extends Properties {
                         String envValue = System.getProperty(keyToExpand.substring(4));
 
                         if (envValue == null) {
-                            Debug.log("[FlexibleProperties.interpolate] ERROR: Could not find environment variable named: " + keyToExpand.substring(4));
+                            Debug.log("[FlexibleProperties.interpolate] ERROR: Could not find environment variable named: " + keyToExpand.substring(4), module);
                         } else {
                             expandValue = envValue;
                             // Debug.log("[FlexibleProperties.interpolate] Got expandValue from environment: " + expandValue);
@@ -277,7 +278,7 @@ public class FlexibleProperties extends Properties {
                     }
                 }
             } else {
-                Debug.log("[FlexibleProperties.interpolate] Value [" + value + "] starts but does end variable");
+                Debug.log("[FlexibleProperties.interpolate] Value [" + value + "] starts but does end variable", module);
                 return value;
             }
             start = value.indexOf("${", end);

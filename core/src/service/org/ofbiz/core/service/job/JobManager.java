@@ -212,7 +212,7 @@ public class JobManager {
         if (jp != null) {
             jp.stop();
             jp = null;
-            Debug.logInfo("JobManager: Stopped Scheduler Thread.");
+            Debug.logInfo("JobManager: Stopped Scheduler Thread.", module);
         }
     }
 
