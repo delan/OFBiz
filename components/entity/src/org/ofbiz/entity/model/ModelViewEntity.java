@@ -1,5 +1,5 @@
 /*
- * $Id: ModelViewEntity.java,v 1.7 2003/10/18 21:13:29 jonesde Exp $
+ * $Id: ModelViewEntity.java,v 1.8 2003/10/19 04:08:43 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -35,7 +35,7 @@ import org.ofbiz.entity.jdbc.*;
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:peterm@miraculum.com">Peter Moon</a>    
- * @version    $Revision: 1.7 $
+ * @version    $Revision: 1.8 $
  * @since      2.0
  */
 public class ModelViewEntity extends ModelEntity {
@@ -239,7 +239,7 @@ public class ModelViewEntity extends ModelEntity {
         }
 
         Iterator fldsIt = flds.iterator();
-        while(fldsIt.hasNext()) {
+        while (fldsIt.hasNext()) {
             ModelField field = (ModelField) fldsIt.next();
             returnString.append(field.colName);
             if (alias) {
@@ -255,7 +255,7 @@ public class ModelViewEntity extends ModelEntity {
 
         returnString.append(afterLast);
         return returnString.toString();
-    }    
+    }
 
     public ModelEntity getAliasedEntity(String entityAlias, ModelReader modelReader) {
         ModelMemberEntity modelMemberEntity = (ModelMemberEntity) this.memberModelMemberEntities.get(entityAlias);
@@ -380,7 +380,6 @@ public class ModelViewEntity extends ModelEntity {
                     Debug.logWarning("Specified alias function [" + alias.function + "] not valid; must be: min, max, sum, avg, count or count-distinct; using a column name with no function function", module);
                 }
             }
-            
         }
     }
 
@@ -543,8 +542,13 @@ public class ModelViewEntity extends ModelEntity {
             }
             this.groupBy = "true".equals(UtilXml.checkEmpty(aliasElement.getAttribute("group-by")));
             this.function = UtilXml.checkEmpty(aliasElement.getAttribute("function"));
+            
+            Element complexAliasElement = UtilXml.firstChildElement(aliasElement, "complex-alias");
+            if (complexAliasElement != null) {
+                complexAliasMember = new ComplexAlias(complexAliasElement);
+            }
         }
-
+        
         public ModelAlias(String entityAlias, String name, String field, String colAlias, Boolean isPk, Boolean groupBy, String function) {
             this.entityAlias = entityAlias;
             this.name = name;
@@ -620,6 +624,22 @@ public class ModelViewEntity extends ModelEntity {
             this.operator = operator;
         }
         
+        public ComplexAlias(Element complexAliasElement) {
+            this.operator = complexAliasElement.getAttribute("operator");
+            // handle all complex-alias and complex-alias-field sub-elements
+            List subElements = UtilXml.childElementList(complexAliasElement, null);
+            Iterator subElementIter = subElements.iterator();
+            while (subElementIter.hasNext()) {
+                Element subElement = (Element) subElementIter.next();
+                String nodeName = subElement.getNodeName();
+                if ("complex-alias".equals(nodeName)) {
+                    this.addComplexAliasMember(new ComplexAlias(subElement));
+                } else if ("complex-alias-field".equals(nodeName)) {
+                    this.addComplexAliasMember(new ComplexAliasField(subElement));
+                }
+            }
+        }
+        
         public void addComplexAliasMember(ComplexAliasMember complexAliasMember) {
             this.complexAliasMembers.add(complexAliasMember);
         }
@@ -655,7 +675,12 @@ public class ModelViewEntity extends ModelEntity {
             this.entityAlias = entityAlias;
             this.field = field;
         }
-        
+
+        public ComplexAliasField(Element complexAliasFieldElement) {
+            this.entityAlias = complexAliasFieldElement.getAttribute("entity-alias");
+            this.field = complexAliasFieldElement.getAttribute("field");
+        }
+
         public void makeAliasColName(StringBuffer colNameBuffer, StringBuffer fieldTypeBuffer, ModelViewEntity modelViewEntity, ModelReader modelReader) {
             ModelEntity modelEntity = modelViewEntity.getAliasedEntity(entityAlias, modelReader);
             ModelField modelField = modelViewEntity.getAliasedField(modelEntity, field, modelReader);
