@@ -26,7 +26,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.28 $
+ *@version    $Revision: 1.29 $
  */
 -->
 
@@ -95,6 +95,7 @@
     <entity-group group="org.ofbiz" entity="InventoryItem" />
     <entity-group group="org.ofbiz" entity="InventoryItemAndLocation" />
     <entity-group group="org.ofbiz" entity="InventoryItemAttribute" />
+    <entity-group group="org.ofbiz" entity="InventoryItemDetail" />
     <entity-group group="org.ofbiz" entity="InventoryItemStatus" />
     <entity-group group="org.ofbiz" entity="InventoryItemTempRes" />
     <entity-group group="org.ofbiz" entity="InventoryItemType" />

@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.100 $
+ * @version    $Revision: 1.101 $
  */
 -->
 
@@ -236,7 +236,6 @@
         <key-map field-name="attrName"/>
       </relation>
     </entity>
-    
     <entity entity-name="ProductCategoryContent"
             package-name="org.ofbiz.product.category"
             title="Product Category Data Object Entity">
@@ -903,6 +902,43 @@
       </relation>
       <relation type="many" rel-entity-name="InventoryItemTypeAttr">
         <key-map field-name="attrName"/>
+      </relation>
+    </entity>
+    <entity entity-name="InventoryItemDetail"
+            package-name="org.ofbiz.product.inventory"
+            title="Inventory Item Detail Entity">
+      <field name="inventoryItemId" type="id-ne"></field>
+      <field name="inventoryItemDetailSeqId" type="id-ne"></field>
+      <field name="quantityOnHandDiff" type="floating-point"></field>
+      <field name="availableToPromiseDiff" type="floating-point"></field>
+      <field name="orderId" type="id"></field>
+      <field name="orderItemSeqId" type="id"></field>
+      <field name="workEffortId" type="id"></field>
+      <field name="itemIssuanceId" type="id"></field>
+      <field name="receiptId" type="id"></field>
+      <prim-key field="inventoryItemId"/>
+      <prim-key field="inventoryItemDetailSeqId"/>
+      <relation type="one" fk-name="INV_ITDTL_WEFF" rel-entity-name="WorkEffort">
+        <key-map field-name="workEffortId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="OrderItemInventoryRes">
+        <key-map field-name="orderId"/>
+        <key-map field-name="orderItemSeqId"/>
+        <key-map field-name="inventoryItemId"/>
+      </relation>
+      <relation type="one" fk-name="INV_ITDTL_ITMIS" rel-entity-name="ItemIssuance">
+        <key-map field-name="itemIssuanceId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="WorkEffortInventoryAssign">
+        <key-map field-name="workEffortId"/>
+        <key-map field-name="inventoryItemId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="WorkEffortInventoryProduced">
+        <key-map field-name="workEffortId"/>
+        <key-map field-name="inventoryItemId"/>
+      </relation>
+      <relation type="one" fk-name="INV_ITDTL_SHRCT" rel-entity-name="ShipmentReceipt">
+        <key-map field-name="receiptId"/>
       </relation>
     </entity>
     <entity entity-name="InventoryItemStatus"
