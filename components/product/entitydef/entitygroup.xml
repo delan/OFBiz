@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE entitygroup PUBLIC "-//OFBiz//DTD Entity Group//EN" "http://www.ofbiz.org/dtds/entitygroup.dtd">
+<!--
+/**
+ *  Title: Entity Generator Group Definitions for the General Data Model
+ *  Description: None
+ *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ *@author     David E. Jones (jonesde@ofbiz.org)
+ *@author     Andy Zeneski (jaz@ofbiz.org)
+ *@version    $Revision: 1.1 $
+ */
+-->
+
+<entitygroup>
+
+  <!-- ========================================================= -->
+  <!-- org.ofbiz.product.catalog -->
+  <!-- ========================================================= -->
+
+    <entity-group group="org.ofbiz.commonapp" entity="ProdCatalog" />
+    <entity-group group="org.ofbiz.commonapp" entity="ProdCatalogCategory" />
+    <entity-group group="org.ofbiz.commonapp" entity="ProdCatalogCategoryType" />
+    <entity-group group="org.ofbiz.commonapp" entity="ProdCatalogInvFacility" />
+    <entity-group group="org.ofbiz.commonapp" entity="ProdCatalogRole" />
+
+  <!-- ========================================================= -->
+  <!-- org.ofbiz.product.category -->
+  <!-- ========================================================= -->
+
+    <entity-group group="org.ofbiz.commonapp" entity="ProductCategory" />
+    <entity-group group="org.ofbiz.commonapp" entity="ProductCategoryAndMember" />
+    <entity-group group="org.ofbiz.commonapp" entity="ProductCategoryAttribute" />
+    <entity-group group="org.ofbiz.commonapp" entity="ProductCategoryMember" />
+    <entity-group group="org.ofbiz.commonapp" entity="ProductCategoryMemberAndRole" />
+    <entity-group group="org.ofbiz.commonapp" entity="ProductCategoryRole" />
+    <entity-group group="org.ofbiz.commonapp" entity="ProductCategoryRollup" />
+    <entity-group group="org.ofbiz.commonapp" entity="ProductCategoryRollupAndRole" />
+    <entity-group group="org.ofbiz.commonapp" entity="ProductCategoryType" />
+    <entity-group group="org.ofbiz.commonapp" entity="ProductCategoryTypeAttr" />
+
+  <!-- ========================================================= -->
+  <!-- org.ofbiz.product.cost -->
+  <!-- ========================================================= -->
+
+    <entity-group group="org.ofbiz.commonapp" entity="CostComponent" />
+    <entity-group group="org.ofbiz.commonapp" entity="CostComponentAttribute" />
+    <entity-group group="org.ofbiz.commonapp" entity="CostComponentType" />
+    <entity-group group="org.ofbiz.commonapp" entity="CostComponentTypeAttr" />
+
+  <!-- ========================================================= -->
+  <!-- org.ofbiz.product.feature -->
+  <!-- ========================================================= -->
+
+    <entity-group group="org.ofbiz.commonapp" entity="ProductFeature" />
+    <entity-group group="org.ofbiz.commonapp" entity="ProductFeatureAndAppl" />
+    <entity-group group="org.ofbiz.commonapp" entity="ProductFeatureAppl" />
+    <entity-group group="org.ofbiz.commonapp" entity="ProductFeatureApplType" />
+    <entity-group group="org.ofbiz.commonapp" entity="ProductFeatureCategory" />
+    <entity-group group="org.ofbiz.commonapp" entity="ProductFeatureCategoryAppl" />
+    <entity-group group="org.ofbiz.commonapp" entity="ProductFeatureContent" />
+    <entity-group group="org.ofbiz.commonapp" entity="ProductFeatureIactn" />
+    <entity-group group="org.ofbiz.commonapp" entity="ProductFeatureIactnType" />
+    <entity-group group="org.ofbiz.commonapp" entity="ProductFeatureType" />
+
+  <!-- ========================================================= -->
+  <!-- org.ofbiz.product.inventory -->
+  <!-- ========================================================= -->
+
+    <entity-group group="org.ofbiz.commonapp" entity="InventoryItem" />
+    <entity-group group="org.ofbiz.commonapp" entity="InventoryItemAttribute" />
+    <entity-group group="org.ofbiz.commonapp" entity="InventoryItemStatus" />
+    <entity-group group="org.ofbiz.commonapp" entity="InventoryItemTempRes" />
+    <entity-group group="org.ofbiz.commonapp" entity="InventoryItemType" />
+    <entity-group group="org.ofbiz.commonapp" entity="InventoryItemTypeAttr" />
+    <entity-group group="org.ofbiz.commonapp" entity="InventoryItemVariance" />
+    <entity-group group="org.ofbiz.commonapp" entity="InventoryTransfer" />
+    <entity-group group="org.ofbiz.commonapp" entity="Lot" />
+    <entity-group group="org.ofbiz.commonapp" entity="PhysicalInventory" />
+    <entity-group group="org.ofbiz.commonapp" entity="ProductFacility" />
+    <entity-group group="org.ofbiz.commonapp" entity="VarianceReason" />
+
+  <!-- ========================================================= -->
+  <!-- org.ofbiz.product.price -->
+  <!-- ========================================================= -->
+
+    <entity-group group="org.ofbiz.commonapp" entity="ProductPrice" />
+    <entity-group group="org.ofbiz.commonapp" entity="ProductPriceAction" />
+    <entity-group group="org.ofbiz.commonapp" entity="ProductPriceActionType" />
+    <entity-group group="org.ofbiz.commonapp" entity="ProductPriceAutoNotice" />
+    <entity-group group="org.ofbiz.commonapp" entity="ProductPriceChange" />
+    <entity-group group="org.ofbiz.commonapp" entity="ProductPriceCond" />
+    <entity-group group="org.ofbiz.commonapp" entity="ProductPriceRule" />
+    <entity-group group="org.ofbiz.commonapp" entity="ProductPriceType" />
+    <entity-group group="org.ofbiz.commonapp" entity="QuantityBreak" />
+    <entity-group group="org.ofbiz.commonapp" entity="QuantityBreakType" />
+    <entity-group group="org.ofbiz.commonapp" entity="SaleType" />
+
+  <!-- ========================================================= -->
+  <!-- org.ofbiz.product.product -->
+  <!-- ========================================================= -->
+
+    <entity-group group="org.ofbiz.commonapp" entity="GoodIdentification" />
+    <entity-group group="org.ofbiz.commonapp" entity="GoodIdentificationType" />
+    <entity-group group="org.ofbiz.commonapp" entity="Product" />
+    <entity-group group="org.ofbiz.commonapp" entity="ProductAssoc" />
+    <entity-group group="org.ofbiz.commonapp" entity="ProductAssocType" />
+    <entity-group group="org.ofbiz.commonapp" entity="ProductAttribute" />
+    <entity-group group="org.ofbiz.commonapp" entity="ProductContent" />
+    <entity-group group="org.ofbiz.commonapp" entity="ProductGlAccount" />
+    <entity-group group="org.ofbiz.commonapp" entity="ProductGlAccountType" />
+    <entity-group group="org.ofbiz.commonapp" entity="ProductKeyword" />
+    <entity-group group="org.ofbiz.commonapp" entity="ProductKeywordResult" />
+    <entity-group group="org.ofbiz.commonapp" entity="ProductReview" />
+    <entity-group group="org.ofbiz.commonapp" entity="ProductType" />
+    <entity-group group="org.ofbiz.commonapp" entity="ProductTypeAttr" />
+    <entity-group group="org.ofbiz.commonapp" entity="ProductVirtualAndAssocPrices" />
+    <entity-group group="org.ofbiz.commonapp" entity="ProductVirtualAndVariantInfo" />
+
+  <!-- ========================================================= -->
+  <!-- org.ofbiz.product.promo -->
+  <!-- ========================================================= -->
+
+    <entity-group group="org.ofbiz.commonapp" entity="ProductPromo" />
+    <entity-group group="org.ofbiz.commonapp" entity="ProductPromoAction" />
+    <entity-group group="org.ofbiz.commonapp" entity="ProductPromoActionType" />
+    <entity-group group="org.ofbiz.commonapp" entity="ProductPromoCond" />
+    <entity-group group="org.ofbiz.commonapp" entity="ProductPromoRule" />
+    <entity-group group="org.ofbiz.commonapp" entity="ProductPromoUsage" />
+
+  <!-- ========================================================= -->
+  <!-- org.ofbiz.product.storage -->
+  <!-- ========================================================= -->
+
+    <entity-group group="org.ofbiz.commonapp" entity="Container" />
+    <entity-group group="org.ofbiz.commonapp" entity="ContainerType" />
+    <entity-group group="org.ofbiz.commonapp" entity="Facility" />
+    <entity-group group="org.ofbiz.commonapp" entity="FacilityAttribute" />
+    <entity-group group="org.ofbiz.commonapp" entity="FacilityCarrierShipment" />
+    <entity-group group="org.ofbiz.commonapp" entity="FacilityContactMech" />
+    <entity-group group="org.ofbiz.commonapp" entity="FacilityContactMechPurpose" />
+    <entity-group group="org.ofbiz.commonapp" entity="FacilityGroup" />
+    <entity-group group="org.ofbiz.commonapp" entity="FacilityGroupMember" />
+    <entity-group group="org.ofbiz.commonapp" entity="FacilityGroupRole" />
+    <entity-group group="org.ofbiz.commonapp" entity="FacilityGroupRollup" />
+    <entity-group group="org.ofbiz.commonapp" entity="FacilityGroupType" />
+    <entity-group group="org.ofbiz.commonapp" entity="FacilityLocation" />
+    <entity-group group="org.ofbiz.commonapp" entity="FacilityRole" />
+    <entity-group group="org.ofbiz.commonapp" entity="FacilityType" />
+    <entity-group group="org.ofbiz.commonapp" entity="FacilityTypeAttr" />
+
+  <!-- ========================================================= -->
+  <!-- org.ofbiz.product.store -->
+  <!-- ========================================================= -->
+
+    <entity-group group="org.ofbiz.commonapp" entity="ProductStore" />
+    <entity-group group="org.ofbiz.commonapp" entity="ProductStoreCatalog" />
+    <entity-group group="org.ofbiz.commonapp" entity="ProductStoreEmailSetting" />
+    <entity-group group="org.ofbiz.commonapp" entity="ProductStoreFacility" />
+    <entity-group group="org.ofbiz.commonapp" entity="ProductStoreFacilityByOrder" />
+    <entity-group group="org.ofbiz.commonapp" entity="ProductStorePaymentSetting" />
+    <entity-group group="org.ofbiz.commonapp" entity="ProductStorePromoAppl" />
+    <entity-group group="org.ofbiz.commonapp" entity="ProductStoreRole" />    
+    <entity-group group="org.ofbiz.commonapp" entity="ProductStoreShipmentMeth" />
+    <entity-group group="org.ofbiz.commonapp" entity="ProductStoreShipmentMethView" />
+
+  <!-- ========================================================= -->
+  <!-- org.ofbiz.product.supplier -->
+  <!-- ========================================================= -->
+
+    <entity-group group="org.ofbiz.commonapp" entity="MarketInterest" />
+    <entity-group group="org.ofbiz.commonapp" entity="ReorderGuideline" />
+    <entity-group group="org.ofbiz.commonapp" entity="SupplierPrefOrder" />
+    <entity-group group="org.ofbiz.commonapp" entity="SupplierProduct" />
+    <entity-group group="org.ofbiz.commonapp" entity="SupplierRatingType" />
+
+</entitygroup>
+
