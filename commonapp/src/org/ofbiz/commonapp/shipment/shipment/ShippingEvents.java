@@ -32,6 +32,8 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 
 import org.ofbiz.core.entity.*;
+import org.ofbiz.core.service.ModelService;
+import org.ofbiz.core.service.ServiceUtil;
 import org.ofbiz.core.util.*;
 import org.ofbiz.commonapp.order.shoppingcart.*;
 import org.ofbiz.commonapp.product.store.ProductStoreWorker;
@@ -50,30 +52,58 @@ public class ShippingEvents {
     public static String getShipEstimate(HttpServletRequest request, HttpServletResponse response) {
         ShoppingCart cart = (ShoppingCart) request.getSession().getAttribute(SiteDefs.SHOPPING_CART);
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
-                
+        Map result = getShipEstimate(delegator, cart, null);
+        ServiceUtil.getMessages(request, result, null, "<li>", "</li>", "<ul>", "</ul>", null, null);
+        if (result.get(ModelService.RESPONSE_MESSAGE).equals(ModelService.RESPOND_ERROR)) {
+            return "error";
+        }
+        
+        Double shippingTotal = (Double) result.get("shippingTotal");
+        // remove old shipping adjustments if there
+        cart.removeAdjustmentByType("SHIPPING_CHARGES");
+
+        // creat the new adjustment and add it to the cart
+        GenericValue orderAdjustment = delegator.makeValue("OrderAdjustment", UtilMisc.toMap("orderAdjustmentTypeId", "SHIPPING_CHARGES", "amount", shippingTotal));
+        cart.addAdjustment(orderAdjustment);        
+        
+        // all done
+        return "success";
+    }
+    public static Map getShipEstimate(GenericDelegator delegator, ShoppingCart cart, String shippingMethod) {
+        String standardError = "A problem occurred calculating shipping. Fees will be calculated offline.";
+        List errorMessageList = new ArrayList();                             
         StringBuffer errorMessage = new StringBuffer();
-
-        // String shippingMethod = request.getParameter("shipping_method");
-        // String shippingContactMechId = request.getParameter("shipping_contact_mech_id");
-        // if ( shippingMethod != null ) {
-        // int atSign = shippingMethod.indexOf('@');
-        // shipmentMethodTypeId = shippingMethod.substring(0,atSign);
-        // }
-        String shippingContactMechId = cart.getShippingContactMechId();
-        String shipmentMethodTypeId = cart.getShipmentMethodTypeId();
-        String carrierPartyId = cart.getCarrierPartyId();
-
+        
+        String shipmentMethodTypeId = null;
+        String carrierPartyId = null;
+        if (UtilValidate.isNotEmpty(shippingMethod)) {
+            int delimiterPos = shippingMethod.indexOf('@');                        
+            if (delimiterPos > 0) {
+                shipmentMethodTypeId = shippingMethod.substring(0, delimiterPos);
+                carrierPartyId = shippingMethod.substring(delimiterPos + 1);
+            }                      
+        } else {
+            shipmentMethodTypeId = cart.getShipmentMethodTypeId();
+            carrierPartyId = cart.getCarrierPartyId();            
+        }        
+                       
         if (shipmentMethodTypeId == null || carrierPartyId == null) {
             if (cart.getOrderType().equals("SALES_ORDER")) {
-                request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>Please Select a Shipping Method");
-                return "error";
+                errorMessageList.add("Please Select a Shipping Method.");
+                return ServiceUtil.returnError(errorMessageList);                
             } else {
-                return "success";
+                return ServiceUtil.returnSuccess();
             }
         }
         
-        // get the store
-        String productStoreId = ProductStoreWorker.getProductStoreId(request);
+        String shippingContactMechId = cart.getShippingContactMechId();
+        if (shippingContactMechId == null) {
+            errorMessageList.add("Please Select a Shipping Address.");
+            return ServiceUtil.returnError(errorMessageList);
+        }
+        
+        // get the store        
+        String productStoreId = cart.getProductStoreId();
 
         // Get the ShipmentCostEstimate(s)
         Collection estimates = null;
@@ -86,13 +116,13 @@ public class ShippingEvents {
             if (Debug.verboseOn()) Debug.logVerbose("Estimate(s): " + estimates, module);
         } catch (GenericEntityException e) {
             Debug.logError("[ShippingEvents.getShipEstimate] Cannot get shipping estimates.", module);
-            request.setAttribute(SiteDefs.ERROR_MESSAGE, "A problem occurred calculating shipping. Fees will be calculated offline.");
-            return "succes";
+            errorMessageList.add(standardError);           
+            return ServiceUtil.returnError(errorMessageList);
         }
         if (estimates == null || estimates.size() < 1) {
             Debug.logInfo("[ShippingEvents.getShipEstimate] No shipping estimate found.", module);
-            request.setAttribute(SiteDefs.ERROR_MESSAGE, "A problem occurred calculating shipping. Fees will be calculated offline.");
-            return "success";
+            errorMessageList.add(standardError);
+            return ServiceUtil.returnError(errorMessageList);            
         }
 
         if (Debug.infoOn()) Debug.logInfo("[ShippingEvents.getShipEstimate] Estimates begin size: " + estimates.size(), module);
@@ -104,8 +134,8 @@ public class ShippingEvents {
             shipAddress = delegator.findByPrimaryKey("PostalAddress", UtilMisc.toMap("contactMechId", shippingContactMechId));
         } catch (GenericEntityException e) {
             Debug.logError("[ShippingEvents.getShipEstimate] Cannot get shipping address entity.", module);
-            request.setAttribute(SiteDefs.ERROR_MESSAGE, "A problem occurred calculating shipping. Fees will be calculated offline.");
-            return "success";
+            errorMessageList.add(standardError);           
+            return ServiceUtil.returnError(errorMessageList);
         }
 
         // Get some needed data from the cart.
@@ -196,8 +226,8 @@ public class ShippingEvents {
 
         if (estimateList.size() < 1) {
             Debug.logInfo("[ShippingEvents.getShipEstimate] No shipping estimate found.", module);
-            request.setAttribute(SiteDefs.ERROR_MESSAGE, "A problem occurred calculating shipping. Fees will be calculated offline.");
-            return "success";
+            errorMessageList.add(standardError);           
+            return ServiceUtil.returnError(errorMessageList);
         }
 
         // Calculate priority based on available data.
@@ -274,16 +304,10 @@ public class ShippingEvents {
         double shippingTotal = weightAmount + quantityAmount + priceAmount + orderFlat + itemFlatAmount + orderPercentage;
 
         if (Debug.infoOn()) Debug.logInfo("[ShippingEvents.getShipEstimate] Setting shipping amount : " + shippingTotal, module);
-
-        // remove old shipping adjustments if there
-        cart.removeAdjustmentByType("SHIPPING_CHARGES");
-
-        GenericValue orderAdjustment = delegator.makeValue("OrderAdjustment",
-                UtilMisc.toMap("orderAdjustmentTypeId", "SHIPPING_CHARGES", "amount", new Double(shippingTotal)));
-
-        cart.addAdjustment(orderAdjustment);
-
-        return "success";
+        
+        Map responseResult = ServiceUtil.returnSuccess();
+        responseResult.put("shippingTotal", new Double(shippingTotal));
+        return responseResult;
     }
 
     public static String viewShipmentPackageRouteSegLabelImage(HttpServletRequest request, HttpServletResponse response) {
