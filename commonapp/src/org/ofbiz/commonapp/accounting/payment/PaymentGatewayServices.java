@@ -83,6 +83,7 @@ public class PaymentGatewayServices {
         if (Debug.verboseOn())
             Debug.logVerbose("Amount to charge is: " + amountToBill, module);
 
+        List responseMessages = new ArrayList();
         Iterator payments = paymentPrefs.iterator();
 
         while (payments.hasNext()) {
@@ -172,6 +173,12 @@ public class PaymentGatewayServices {
                 Debug.logError("Error occured on: " + serviceName + " => " + processContext, module);
                 continue;
             }
+            
+            // add the response message to the list
+            if (processorResult != null && processorResult.containsKey(ModelService.RESPONSE_MESSAGE))
+                responseMessages.add(processorResult.get(ModelService.RESPONSE_MESSAGE));
+            else if (processorResult != null)
+                responseMessages.add(ModelService.RESPOND_SUCCESS);
 
             try {
                 // pass the payTo partyId to the result processor; we just add it to the result context.
@@ -184,23 +191,36 @@ public class PaymentGatewayServices {
             }
         }
 
-        // we can determine if all was good if amountToBill is now zero.
-        if (amountToBill > 0) {
-            Debug.logError("Problem! Could not authorize funds for entire amount to bill. If multiple payment methods were used a partial payment may have been authorized. (" + orderId + ")", module);
-            //This error message doesn't make sense, ie it isn't really true: Debug.logError("Problem! Not all payment methods were approved. However, some where and partial payment as been accepted." + "(" + orderId + ")", module);
-            result.put("processResult", "FAILED");
+        // if all attempts failed then there is a processor problem.
+        boolean somePassed = false;
+        Iterator messageIterator = responseMessages.iterator();
+        while (!somePassed && messageIterator.hasNext()) {
+            String message = (String) messageIterator.next();
+            if (!message.equals(ModelService.RESPOND_ERROR))
+                somePassed = true;
         }
-
-        if (amountToBill == 0) {
-            if (Debug.verboseOn()) Debug.logVerbose("All payment methods were processed successfully. (" + orderId + ")", module);
-            result.put("processResult", "APPROVED");
+        if (!somePassed) {
+            Debug.logWarning("All payment attempts faild due to a processor error.", module);
+            return ServiceUtil.returnError("All payment attempts failed due to a processor error.");
+        } else {        
+            // we can determine if all was good if amountToBill is now zero.
+            if (amountToBill > 0) {
+                Debug.logError("Problem! Could not authorize funds for entire amount to bill. If multiple payment methods were used a partial payment may have been authorized. (" + orderId + ")", module);
+                //This error message doesn't make sense, ie it isn't really true: Debug.logError("Problem! Not all payment methods were approved. However, some where and partial payment as been accepted." + "(" + orderId + ")", module);
+                result.put("processResult", "FAILED");
+            }
+    
+            if (amountToBill == 0) {
+                if (Debug.verboseOn()) Debug.logVerbose("All payment methods were processed successfully. (" + orderId + ")", module);
+                result.put("processResult", "APPROVED");
+            }
+    
+            if (amountToBill < 0) {
+                Debug.logError("Something really wierd happened. We processed more then expected! (" + orderId + ")", module);
+                result.put("processResult", "ERROR");
+            }
+            result.put("orderId", orderId);
         }
-
-        if (amountToBill < 0) {
-            Debug.logError("Something really wierd happened. We processed more then expected! (" + orderId + ")", module);
-            result.put("processResult", "ERROR");
-        }
-        result.put("orderId", orderId);
         return result;
     }
 

@@ -559,6 +559,8 @@ public class CheckOutEvents {
         final String ITEM_APPROVE_STATUS = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.item.payment.approved.status", "ITEM_APPROVED");
         final String HEADER_DECLINE_STATUS = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.header.payment.declined.status", "ORDER_REJECTED");
         final String ITEM_DECLINE_STATUS = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.item.payment.declined.status", "ITEM_REJECTED");
+        final String HEADER_CANCELLED_STATUS = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.header.payment.cancelled.status", "ORDER_CANCELLED");
+        final String ITEM_CANCELLED_STATUS = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.item.payment.cancelled.status", "ITEM_CANCELLED");        
         final String DECLINE_MESSAGE = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.payment.declined.message", "Error! Set the declined message!");
 
         // Get the orderId from the cart.
@@ -599,7 +601,7 @@ public class CheckOutEvents {
                     try {
                         // set the status on the order header
                         statusResult = dispatcher.runSync("changeOrderStatus",
-                                    UtilMisc.toMap("orderId", orderId, "statusId", HEADER_DECLINE_STATUS));
+                                UtilMisc.toMap("orderId", orderId, "statusId", HEADER_DECLINE_STATUS));
                         if (statusResult.containsKey("errorMessage")) {
                             throw new GenericServiceException((String) statusResult.get("errorMessage"));
                         }
@@ -621,7 +623,7 @@ public class CheckOutEvents {
                                 }
                             }
                         }
-
+                        
                         // cancel inventory reservations
                         try {
                             Map cancelResult = dispatcher.runSync("cancelOrderInventoryReservation", UtilMisc.toMap("orderId", orderId, "userLogin", userLogin));
@@ -679,10 +681,52 @@ public class CheckOutEvents {
                 }
             } else {
                 // result returned null or service failed
-                request.setAttribute(SiteDefs.EVENT_MESSAGE, "<li>Problems with payment authorization. Your order has been saved and will be processed.");
+                request.setAttribute(SiteDefs.EVENT_MESSAGE, "<li>Problems with payment authorization. Please try again later.");                
+                if (Debug.verboseOn()) Debug.logVerbose("Payment auth failed due to processor trouble.", module);                    
+                
+                Map statusResult = null;
+                try {
+                    // set the status on the order header
+                    statusResult = dispatcher.runSync("changeOrderStatus",
+                            UtilMisc.toMap("orderId", orderId, "statusId", HEADER_CANCELLED_STATUS));
+                    if (statusResult.containsKey("errorMessage")) {
+                        throw new GenericServiceException((String) statusResult.get("errorMessage"));
+                    }
 
-                // even though the auth did not approve; we will handle this error as a success, but leave the order in the original status.
-                return true;
+                    // set the status on the order item(s)
+                    GenericValue orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
+                    if (orderHeader != null) {
+                        Collection orderItems = orderHeader.getRelated("OrderItem");
+
+                        if (orderItems != null && orderItems.size() > 0) {
+                            Iterator i = orderItems.iterator();
+
+                            while (i.hasNext()) {
+                                GenericValue v = (GenericValue) i.next();
+                                v.set("statusId", ITEM_CANCELLED_STATUS);
+                                v.store();
+                            }
+                        }
+                    }
+                        
+                    // cancel inventory reservations
+                    try {
+                        Map cancelResult = dispatcher.runSync("cancelOrderInventoryReservation", UtilMisc.toMap("orderId", orderId, "userLogin", userLogin));
+                        if (ModelService.RESPOND_ERROR.equals((String) cancelResult.get(ModelService.RESPONSE_MESSAGE))) {
+                            Debug.logError("cancelOrderInventoryReservation service failed for Order with ID [" + orderId + "] - " + ServiceUtil.makeErrorMessage(cancelResult, "", "\n", "", ""), module);
+                        }
+                    } catch (GenericServiceException e) {
+                        throw new GeneralException("Error in cancelOrderInventoryReservation for Order with ID [" + orderId + "]", e);
+                    }
+
+                    // null out the orderId for next pass.
+                    cart.setOrderId(null);
+                    return false;
+                } catch (GenericEntityException e) {
+                    throw new GeneralException("Problems adjusting item status (" + orderId + ")", e);
+                } catch (GenericServiceException e) {
+                    throw new GeneralException("Problems adjusting order status (" + orderId + ")", e);
+                }                
             }
         } else {
             // Handle NO payment gateway as a success.
