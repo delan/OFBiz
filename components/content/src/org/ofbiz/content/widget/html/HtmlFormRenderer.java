@@ -1514,7 +1514,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
 
         }
         if (listSize > 0) {
-            buffer.append("          <span class=\"tabletext\">" + lowIndex + " - " + highIndex + " of " + listSize + "</span> \n");
+            buffer.append("          <span class=\"tabletext\">" + (lowIndex + 1) + " - " + (lowIndex + actualPageSize) + " of " + listSize + "</span> \n");
         }
         if (highIndex < listSize) {
             buffer.append(" <a href=\"");

@@ -32,6 +32,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
+import java.lang.NumberFormatException;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -79,6 +80,7 @@ public class ModelTree {
     protected FlexibleStringExpander trailNameExdr;
     protected List trail = new ArrayList();
     protected List currentNodeTrail;
+    protected int openDepth;
     
 // ===== CONSTRUCTORS =====
     /** Default Constructor */
@@ -94,6 +96,11 @@ public class ModelTree {
         this.trailNameExdr = new FlexibleStringExpander(UtilFormatOut.checkEmpty(treeElement.getAttribute("trail-name"), "trail"));
         this.delegator = delegator;
         this.dispatcher = dispatcher;
+        try {
+        	openDepth = Integer.parseInt(treeElement.getAttribute("open-depth"));
+        } catch(NumberFormatException e) {
+        	openDepth = 0;
+        }
 
         List nodeElements = UtilXml.childElementList(treeElement, "node");
         Iterator nodeElementIter = nodeElements.iterator();
@@ -121,6 +128,10 @@ public class ModelTree {
 
     public String getWrapStyle(Map context) {
         return this.defaultWrapStyleExdr.expandString(context);
+    }
+    
+    public int getOpenDepth() {
+    	return openDepth;
     }
     
     public String getExpandCollapseRequest(Map context) {

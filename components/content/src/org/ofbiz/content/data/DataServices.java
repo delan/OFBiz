@@ -52,6 +52,8 @@ import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
+import org.ofbiz.entity.transaction.TransactionUtil;
+import org.ofbiz.entity.transaction.GenericTransactionException;
 
 /**
  * DataServices Class
@@ -370,6 +372,7 @@ public class DataServices {
     }
 
     public static Map updateDataResourceMethod(DispatchContext dctx, Map context) {
+
         Map result = new HashMap();
         GenericDelegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
@@ -395,9 +398,11 @@ public class DataServices {
             dataResource.setNonPKFields(context);
             dataResource.put("lastModifiedByUserLogin", lastModifiedByUserLogin);
             dataResource.put("lastModifiedDate", lastModifiedDate);
+
             try {
                 dataResource.store();
             } catch (GenericEntityException e) {
+                Debug.logError(e, module);
                 return ServiceUtil.returnError(e.getMessage());
             }
         } else {
@@ -485,6 +490,7 @@ public class DataServices {
             String dataResourceTypeId = (String) dataResource.get("dataResourceTypeId");
             String objectInfo = (String) dataResource.get("objectInfo");
             String textData = (String) context.get("textData");
+            ByteWrapper binData = (ByteWrapper) context.get("binData");
             String prefix = "";
             File file = null;
             String fileName = "";
