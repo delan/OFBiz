@@ -17,6 +17,7 @@
         <description>Creates order entities</description>
         <attribute name="partyId" type="String" mode="IN"/>
 		<attribute name="affiliateId" type="String" mode="IN" optional="true"/>
+        <attribute name="prodCatalogId" type="String" mode="IN" optional="false"/>
         <attribute name="distributorId" type="String" mode="IN" optional="true"/>
         <attribute name="orderItems" type="java.util.List" mode="IN"/>
         <attribute name="shippingInstructions" type="String" mode="IN"/>

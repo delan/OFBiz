@@ -94,7 +94,7 @@
         <clear-cache-line entity-name="InventoryItem" map-name="clearCacheMapThree"/>
     </simple-method>
 
-    <simple-method method-name="getProductInventoryAvailable" short-description="Get Inventory Available for a Product" login-required="false">
+    <simple-method method-name="getProductInventoryAvailable" short-description="Get Inventory Available for a Product" login-required="false" use-transaction="false">
         <!-- 
             this method can be called with some optional parameters: 
                 -facilityId
@@ -108,19 +108,20 @@
         <field-to-field field-name="facilityId" map-name="parameters" to-map-name="lookupFieldMap"/>
         <field-to-field field-name="containerId" map-name="parameters" to-map-name="lookupFieldMap"/>
         
-        <find-by-and entity-name="InventoryItem" map-name="lookupFieldMap" list-name="inventoryItems" use-cache="true"/>
+        <!-- we might get away with a cache here since real serious errors will occur during the reservation service... but only if we need the speed -->
+        <find-by-and entity-name="InventoryItem" map-name="lookupFieldMap" list-name="inventoryItems"/> <!-- use-cache="true" -->
         
         <call-bsh><![CDATA[ parameters.put("availableToPromise", new Double(0)); ]]></call-bsh>
         <iterate entry-name="inventoryItem" list-name="inventoryItems">
             <if-compare value="SERIALIZED_INV_ITEM" operator="equals" field-name="inventoryItemTypeId" map-name="inventoryItem">
                 <if-compare value="INV_AVAILABLE" operator="equals" field-name="statusId" map-name="inventoryItem">
-                    <call-bsh><![CDATA[ parameters.put("availableToPromise", new Double(((Double) parameters.get("availableToPromise")).doubleValue + 1.0)); ]]></call-bsh>
+                    <call-bsh><![CDATA[ parameters.put("availableToPromise", new Double(((Double) parameters.get("availableToPromise")).doubleValue() + 1.0)); ]]></call-bsh>
                 </if-compare>
             </if-compare>
             <if-compare value="NON_SERIAL_INV_ITEM" operator="equals" field-name="inventoryItemTypeId" map-name="inventoryItem">
                 <if-not-empty field-name="availableToPromise" map-name="inventoryItem">
                     <call-bsh><![CDATA[ 
-                        parameters.put("availableToPromise", new Double(((Double) parameters.get("availableToPromise")).doubleValue + ((Double) inventoryItem.get("availableToPromise")).doubleValue())); 
+                        parameters.put("availableToPromise", new Double(((Double) parameters.get("availableToPromise")).doubleValue() + ((Double) inventoryItem.get("availableToPromise")).doubleValue())); 
                     ]]></call-bsh>
                 </if-not-empty>
             </if-compare>
@@ -142,19 +143,19 @@
         <field-to-field field-name="facilityId" map-name="parameters" to-map-name="lookupFieldMap"/>
         <field-to-field field-name="containerId" map-name="parameters" to-map-name="lookupFieldMap"/>
         
-        <find-by-and entity-name="InventoryItem" map-name="lookupFieldMap" list-name="inventoryItems" use-cache="true"/>
+        <find-by-and entity-name="InventoryItem" map-name="lookupFieldMap" list-name="inventoryItems"/>
         
         <call-bsh><![CDATA[ parameters.put("quantityNotReserved", new Double(0)); ]]></call-bsh>
         <iterate entry-name="inventoryItem" list-name="inventoryItems">
             <if-compare value="SERIALIZED_INV_ITEM" operator="equals" field-name="inventoryItemTypeId" map-name="inventoryItem">
                 <if-compare value="INV_AVAILABLE" operator="equals" field-name="statusId" map-name="inventoryItem">
-                    <call-bsh><![CDATA[ parameters.put("availableToPromise", new Double(((Double) parameters.get("availableToPromise")).doubleValue + 1.0)); ]]></call-bsh>
+                    <call-bsh><![CDATA[ parameters.put("availableToPromise", new Double(((Double) parameters.get("availableToPromise")).doubleValue() + 1.0)); ]]></call-bsh>
                 </if-compare>
             </if-compare>
             <if-compare value="NON_SERIAL_INV_ITEM" operator="equals" field-name="inventoryItemTypeId" map-name="inventoryItem">
                 <if-not-empty field-name="availableToPromise" map-name="inventoryItem">
                     <call-bsh><![CDATA[ 
-                        parameters.put("availableToPromise", new Double(((Double) parameters.get("availableToPromise")).doubleValue + ((Double) inventoryItem.get("availableToPromise")).doubleValue())); 
+                        parameters.put("availableToPromise", new Double(((Double) parameters.get("availableToPromise")).doubleValue() + ((Double) inventoryItem.get("availableToPromise")).doubleValue())); 
                     ]]></call-bsh>
                 </if-not-empty>
             </if-compare>
@@ -167,7 +168,7 @@
         <find-by-primary-key entity-name="InventoryItem" map-name="lookupPKMap" value-name="inventoryItem"/>
         
         <call-bsh><![CDATA[ 
-            inventoryItem.put("availableToPromise", new Double(((Double) inventoryItem.get("availableToPromise")).doubleValue - ((Double) parameters.get("quantity")).doubleValue())); 
+            inventoryItem.put("availableToPromise", new Double(((Double) inventoryItem.get("availableToPromise")).doubleValue() - ((Double) parameters.get("quantity")).doubleValue())); 
         ]]></call-bsh>
         <store-value value-name="inventoryItem"/>
 

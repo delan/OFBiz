@@ -463,6 +463,27 @@
         <key-map field-name="contactMechPurposeTypeId"/>
       </relation>
     </entity>
+    <entity entity-name="OrderItemInventoryRes"
+            package-name="org.ofbiz.commonapp.order.order"
+            title="Order Item Inventory Reservation Entity">
+      <field name="orderId" type="id-ne"></field>
+      <field name="orderItemSeqId" type="id-ne"></field>
+      <field name="inventoryItemId" type="id-ne"></field>
+      <field name="quantity" type="floating-point"></field>
+      <prim-key field="orderId"/>
+      <prim-key field="orderItemSeqId"/>
+      <prim-key field="inventoryItemId"/>
+      <relation type="one" rel-entity-name="OrderHeader">
+        <key-map field-name="orderId"/>
+      </relation>
+      <relation type="one" rel-entity-name="OrderItem">
+        <key-map field-name="orderId"/>
+        <key-map field-name="orderItemSeqId"/>
+      </relation>
+      <relation type="one" rel-entity-name="InventoryItem">
+        <key-map field-name="inventoryItemId"/>
+      </relation>
+    </entity>
     <entity entity-name="OrderItemRole"
             package-name="org.ofbiz.commonapp.order.order"
             title="Order Item Role Entity">
@@ -743,6 +764,7 @@
             package-name="org.ofbiz.commonapp.order.order"
             title="Picklist Entity">
       <field name="picklistId" type="id-ne"></field>
+      <field name="orderId" type="id-ne"></field>
       <field name="dateCreated" type="date-time"></field>
       <prim-key field="picklistId"/>
       <relation type="many" rel-entity-name="PicklistItem">

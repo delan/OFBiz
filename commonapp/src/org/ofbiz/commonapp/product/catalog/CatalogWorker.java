@@ -79,16 +79,79 @@ public class CatalogWorker {
             
             //whew, finally here: now check to see if we got enough back...
             if (availableToPromise.doubleValue() > quantity) {
-                Debug.logInfo("Inventory IS available in facility with id " + inventoryFacilityId + "; desired quantity is " + quantity + ", available quantity is " + availableToPromise);
+                Debug.logInfo("Inventory IS available in facility with id " + inventoryFacilityId + " for product id " + productId + "; desired quantity is " + quantity + ", available quantity is " + availableToPromise);
                 return true;
             } else {
-                Debug.logInfo("Returning false because there is insufficient inventory available in facility with id " + inventoryFacilityId + "; desired quantity is " + quantity + ", available quantity is " + availableToPromise);
+                Debug.logInfo("Returning false because there is insufficient inventory available in facility with id " + inventoryFacilityId + " for product id " + productId + "; desired quantity is " + quantity + ", available quantity is " + availableToPromise);
                 return false;
             }
             
         } else {
             Debug.logWarning("Catalog with id " + prodCatalogId + " uses multiple inventory facilities, which is not yet implemented, return false for inventory check");
             return false;
+
+            //TODO: check multiple inventory locations
+            
+            //must entire quantity be available in one location?
+            
+            //loop through all facilities attached to this catalog and check for individual or cumulative sufficient inventory
+        }
+    }
+
+    /** tries to reserve the specified quantity, if fails returns quantity that it could not reserve or zero if there was an error, otherwise returns null */
+    public static Double reserveCatalogInventory(String prodCatalogId, String productId, Double quantity,
+            String orderId, String orderItemSeqId, GenericDelegator delegator, LocalDispatcher dispatcher) {
+                
+        //THIS METHOD IS CURRENTLY DISABLED BECAUSE IT IS NOT FINISHED
+        if (true) return null;
+        
+        GenericValue prodCatalog = null;
+        try {
+            prodCatalog = delegator.findByPrimaryKeyCache("ProdCatalog", UtilMisc.toMap("prodCatalogId", prodCatalogId));
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Error looking up name for prodCatalog with id " + prodCatalogId);
+        }
+
+        if (prodCatalog == null) {
+            Debug.logWarning("No catalog found with id " + prodCatalogId + ", not reserving inventory");
+            return new Double(0.0);
+        }
+        
+        if ("Y".equals(prodCatalog.getString("oneInventoryFacility"))) {
+            String inventoryFacilityId = prodCatalog.getString("inventoryFacilityId");
+            if (UtilValidate.isEmpty(inventoryFacilityId)) {
+                Debug.logWarning("Catalog with id " + prodCatalogId + " has Y for oneInventoryFacility but inventoryFacilityId is empty, not reserving inventory");
+                return new Double(0.0);
+            }
+            
+            Double quantityNotReserved = null;
+            try {
+                Map result = dispatcher.runSync("reserveProductInventoryByFacility", UtilMisc.toMap(
+                        "productId", productId, "facilityId", inventoryFacilityId,
+                        "orderId", orderId, "orderItemSeqId", orderItemSeqId, "quantity", quantity));
+                quantityNotReserved = (Double) result.get("quantityNotReserved");
+
+                if (quantityNotReserved == null) {
+                    Debug.logWarning("The getInventoryAvailableByFacility service returned a null availableToPromise, the error message was:\n" + result.get(ModelService.ERROR_MESSAGE));
+                    return new Double(0.0);
+                }
+            } catch (GenericServiceException e) {
+                Debug.logWarning(e, "Error invoking reserveProductInventoryByFacility service");
+                return new Double(0.0);
+            }
+            
+            //whew, finally here: now check to see if we were able to reserve...
+            if (quantityNotReserved.doubleValue() == 0) {
+                Debug.logInfo("Inventory IS reserved in facility with id " + inventoryFacilityId + " for product id " + productId + "; desired quantity was " + quantity);
+                return null;
+            } else {
+                Debug.logInfo("There is insufficient inventory available in facility with id " + inventoryFacilityId + " for product id " + productId + "; desired quantity is " + quantity + ", amount could not reserve is " + quantityNotReserved);
+                return quantityNotReserved;
+            }
+            
+        } else {
+            Debug.logWarning("Catalog with id " + prodCatalogId + " uses multiple inventory facilities, which is not yet implemented, not reserving inventory");
+            return new Double(0.0);
 
             //TODO: check multiple inventory locations
             

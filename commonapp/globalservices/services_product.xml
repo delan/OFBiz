@@ -421,25 +421,55 @@
     </service>
     <service name="getProductInventoryAvailable" engine="simple"
                 location="org/ofbiz/commonapp/product/inventory/InventoryServices.xml" invoke="getProductInventoryAvailable" auth="false">
-        <description>Check Inventory Availability for a Product</description>
+        <description>Get Inventory Availability for a Product</description>
         <attribute name="productId" type="String" mode="IN" optional="false"/>
         <attribute name="availableToPromise" type="Double" mode="OUT" optional="false"/>
     </service>
     <service name="getInventoryAvailableByFacility" engine="simple"
                 location="org/ofbiz/commonapp/product/inventory/InventoryServices.xml" invoke="getProductInventoryAvailable" auth="false">
-        <description>Check Inventory Availability for a Product constrained by a facilityId</description>
+        <description>Get Inventory Availability for a Product constrained by a facilityId</description>
         <attribute name="productId" type="String" mode="IN" optional="false"/>
         <attribute name="facilityId" type="String" mode="IN" optional="false"/>
         <attribute name="availableToPromise" type="Double" mode="OUT" optional="false"/>
     </service>
     <service name="getInventoryAvailableByContainer" engine="simple"
                 location="org/ofbiz/commonapp/product/inventory/InventoryServices.xml" invoke="getProductInventoryAvailable" auth="false">
-        <description>Check Inventory Availability for a Product constrained by a containerId</description>
+        <description>Get Inventory Availability for a Product constrained by a containerId</description>
         <attribute name="productId" type="String" mode="IN" optional="false"/>
         <attribute name="containerId" type="String" mode="IN" optional="false"/>
         <attribute name="availableToPromise" type="Double" mode="OUT" optional="false"/>
     </service>
-    
+
+    <service name="reserveProductInventory" engine="simple"
+                location="org/ofbiz/commonapp/product/inventory/InventoryServices.xml" invoke="reserveProductInventory" auth="true">
+        <description>Reserve Inventory for a Product</description>
+        <attribute name="productId" type="String" mode="IN" optional="false"/>
+        <attribute name="orderId" type="String" mode="IN" optional="false"/>
+        <attribute name="orderItemSeqId" type="String" mode="IN" optional="false"/>
+        <attribute name="quantity" type="Double" mode="IN" optional="false"/>
+        <attribute name="quantityNotReserved" type="Double" mode="OUT" optional="false"/>
+    </service>
+    <service name="reserveProductInventoryByFacility" engine="simple"
+                location="org/ofbiz/commonapp/product/inventory/InventoryServices.xml" invoke="reserveProductInventory" auth="true">
+        <description>Reserve Inventory for a Product By Facility</description>
+        <attribute name="productId" type="String" mode="IN" optional="false"/>
+        <attribute name="facilityId" type="String" mode="IN" optional="false"/>
+        <attribute name="orderId" type="String" mode="IN" optional="false"/>
+        <attribute name="orderItemSeqId" type="String" mode="IN" optional="false"/>
+        <attribute name="quantity" type="Double" mode="IN" optional="false"/>
+        <attribute name="quantityNotReserved" type="Double" mode="OUT" optional="false"/>
+    </service>
+    <service name="reserveProductInventoryByContainer" engine="simple"
+                location="org/ofbiz/commonapp/product/inventory/InventoryServices.xml" invoke="reserveProductInventory" auth="true">
+        <description>Reserve Inventory for a Product By Container</description>
+        <attribute name="productId" type="String" mode="IN" optional="false"/>
+        <attribute name="containerId" type="String" mode="IN" optional="false"/>
+        <attribute name="orderId" type="String" mode="IN" optional="false"/>
+        <attribute name="orderItemSeqId" type="String" mode="IN" optional="false"/>
+        <attribute name="quantity" type="Double" mode="IN" optional="false"/>
+        <attribute name="quantityNotReserved" type="Double" mode="OUT" optional="false"/>
+    </service>
+        
     <!-- Product Feature Services -->
     <service name="createProductFeatureCategory" engine="simple"
                 location="org/ofbiz/commonapp/product/feature/ProductFeatureServices.xml" invoke="createProductFeatureCategory" auth="true">

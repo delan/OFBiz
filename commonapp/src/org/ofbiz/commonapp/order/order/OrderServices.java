@@ -30,6 +30,7 @@ import org.ofbiz.core.entity.*;
 import org.ofbiz.core.service.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.commonapp.common.*;
+import org.ofbiz.commonapp.product.catalog.*;
 
 /**
  * Order Processing Services
@@ -47,6 +48,7 @@ public class OrderServices {
     public static Map createOrder(DispatchContext ctx, Map context) {
         Map result = new HashMap();
         GenericDelegator delegator = ctx.getDelegator();
+        LocalDispatcher dispatcher = ctx.getDispatcher();
         Collection toBeStored = new LinkedList();
 
         // check to make sure we have something to order
@@ -57,6 +59,36 @@ public class OrderServices {
             return result;
         }
 
+        // check inventory for each item
+        String prodCatalogId = (String) context.get("prodCatalogId");
+        List errorMessages = new LinkedList();
+        Iterator itemIter = orderItems.iterator();
+        while (itemIter.hasNext()) {
+            //if the item is out of stock, return an error to that effect
+            GenericValue orderItem = (GenericValue) itemIter.next();
+            
+            if (!CatalogWorker.isCatalogInventoryAvailable(prodCatalogId, orderItem.getString("productId"), orderItem.getDouble("quantity").doubleValue(), delegator, dispatcher)) {
+                GenericValue product = null;
+                try {
+                    product = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", orderItem.get("productId")));
+                } catch (GenericEntityException e) {
+                    Debug.logError(e, "Error when looking up product in createOrder service, product failed inventory check");
+                }
+                String invErrMsg = "The product ";
+                if (product != null) {
+                    invErrMsg += product.getString("productName");
+                }
+                invErrMsg += " with ID " + orderItem.getString("productId") + " is no longer in stock. Please try reducing the quantity or removing the product from this order.";
+                errorMessages.add(invErrMsg);
+            }
+        }
+        
+        if (errorMessages.size() > 0) {
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE_LIST, errorMessages);
+            return result;
+        }
+        
         // create the order object
         String orderId = delegator.getNextSeqId("OrderHeader").toString();
         String billingAccountId = (String) context.get("billingAccountId");
@@ -172,12 +204,61 @@ public class OrderServices {
         }
 
         try {
-            delegator.storeAll(toBeStored);
-            result.put("orderId", orderId);
-            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
-        } catch (GenericEntityException e) {
+            boolean beganTransaction = TransactionUtil.begin();
+            try {
+                //store line items, etc so that they will be there for the foreign key checks
+                delegator.storeAll(toBeStored);
+
+                //START inventory reservation
+                //decrement inventory available for each item, within the same transaction
+                List resErrorMessages = new LinkedList();
+                Iterator invDecItemIter = orderItems.iterator();
+                while (invDecItemIter.hasNext()) {
+                    GenericValue orderItem = (GenericValue) invDecItemIter.next();
+                    
+                    Double inventoryNotReserved = CatalogWorker.reserveCatalogInventory(prodCatalogId, 
+                            orderItem.getString("productId"), orderItem.getDouble("quantity"),
+                            orderItem.getString("orderId"), orderItem.getString("orderItemSeqId"),
+                            delegator, dispatcher);
+                    if (inventoryNotReserved != null) {
+                        //if inventoryNotReserved is not 0.0 then that is the amount that it couldn't reserve
+                        GenericValue product = null;
+                        try {
+                            product = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", orderItem.getString("productId")));
+                        } catch (GenericEntityException e) {
+                            Debug.logError(e, "Error when looking up product in createOrder service, product failed inventory reservation");
+                        }
+                        String invErrMsg = "The product ";
+                        if (product != null) {
+                            invErrMsg += product.getString("productName");
+                        }
+                        invErrMsg += " with ID " + orderItem.getString("productId") + " is no longer in stock. Please try reducing the quantity or removing the product from this order.";
+                        errorMessages.add(invErrMsg);
+                    }
+                }
+                
+                if (resErrorMessages.size() > 0) {
+                    TransactionUtil.rollback(beganTransaction);
+                    result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+                    result.put(ModelService.ERROR_MESSAGE_LIST, resErrorMessages);
+                    return result;
+                }
+                //END inventory reservation
+
+                TransactionUtil.commit(beganTransaction);
+
+                result.put("orderId", orderId);
+                result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
+            } catch (GenericEntityException e) {
+                TransactionUtil.rollback(beganTransaction);
+                Debug.logError(e);
+                result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+                result.put(ModelService.ERROR_MESSAGE, "ERROR: Could not create order (write error: " + e.getMessage() + ").");
+            }
+        } catch (GenericTransactionException e) {
+            Debug.logError(e);
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-            result.put(ModelService.ERROR_MESSAGE, "ERROR: Could not create order (write error: " + e.getMessage() + ").");
+            result.put(ModelService.ERROR_MESSAGE, "ERROR: Could not create order (transaction error on write: " + e.getMessage() + ").");
         }
         return result;
     }

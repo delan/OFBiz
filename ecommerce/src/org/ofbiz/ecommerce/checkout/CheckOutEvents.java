@@ -37,6 +37,7 @@ import org.ofbiz.core.util.*;
 import org.ofbiz.commonapp.common.*;
 import org.ofbiz.commonapp.party.contact.*;
 import org.ofbiz.ecommerce.shoppingcart.*;
+import org.ofbiz.ecommerce.catalog.*;
 
 /**
  * Events used for processing checkout and orders.
@@ -146,7 +147,7 @@ public class CheckOutEvents {
         String orderId = cart.getOrderId();
 
         // if the order is already stored don't store again.
-        if (cart.getOrderId() == null || cart.getOrderId().length() == 0) {
+        if (UtilValidate.isEmpty(cart.getOrderId())) {
             // build the service context
             Map context = cart.makeCartMap(delegator);
             String distributorId = (String) request.getSession().getAttribute("_DISTRIBUTOR_ID_");
@@ -154,14 +155,16 @@ public class CheckOutEvents {
             if (distributorId != null) context.put("distributorId", distributorId);
             if (affiliateId != null) context.put("affiliateId", affiliateId);
             context.put("partyId", userLogin.get("partyId"));
+            context.put("prodCatalogId", CatalogWorker.getCurrentCatalogId(request));
 
             // invoke the service
             Map result = null;
             try {
                 result = dispatcher.runSync("storeOrder", context);
                 orderId = (String) result.get("orderId");
-                if (orderId != null && orderId.length() > 0)
+                if (orderId != null && orderId.length() > 0) {
                     cart.setOrderId(orderId);
+                }
             } catch (GenericServiceException e) {
                 request.setAttribute(SiteDefs.ERROR_MESSAGE, "ERROR: Could not create order (problem invoking the service: " + e.getMessage() + ")");
                 Debug.logError(e);
@@ -169,8 +172,11 @@ public class CheckOutEvents {
             }
 
             // check for error message(s)
-            if (result.containsKey(ModelService.ERROR_MESSAGE)) {
-                request.setAttribute(SiteDefs.ERROR_MESSAGE, result.get(ModelService.ERROR_MESSAGE));
+            if (ModelService.RESPOND_ERROR.equals(result.get(ModelService.RESPONSE_MESSAGE)) || 
+                    result.containsKey(ModelService.ERROR_MESSAGE) || 
+                    result.containsKey(ModelService.ERROR_MESSAGE)) {
+                
+                request.setAttribute(SiteDefs.ERROR_MESSAGE, ServiceUtil.makeErrorMessage(result, "<li>", "</li>", "Did not complete the order, the following occurred: <ul>", "</ul>"));
                 return "error";
             }
         }
@@ -218,7 +224,7 @@ public class CheckOutEvents {
 
         try {
             java.net.URL url = new java.net.URL(serverRoot + controlPath + "/confirmorder?order_id=" + request.getAttribute("order_id") + "&security_code=" + ORDER_SECURITY_CODE);
-            //as nice as it would be to run this through localhost, we can't because the page has to have the correct host so the urls will be created for the email, etc
+            //as nice as it would be to run this through localhost, we can't because the page has to have the correct host so the urls will be created for the email, etc; we could do this and pass the base url in a parameter...
             //Debug.logInfo("Original URL: " + url);
             //url = new URL(url.getProtocol(), "127.0.0.1", url.getPort(), url.getFile());
             Debug.logInfo("About to get confirmorder page from the URL: " + url);
