@@ -1366,13 +1366,13 @@
     <view-map name="LookupPerson" page="component://content/widget/content/ContentScreens.xml#LookupPerson" type="screen"/>
     <view-map name="EditContentAttribute" page="component://content/widget/content/ContentScreens.xml#EditContentAttribute" type="screen"/>
     <view-map name="EditContentMetaData" page="component://content/widget/content/ContentScreens.xml#EditContentMetaData" type="screen"/>
-    <view-map name="EditContentType" page="/contentsetup/EditContentType.ftl" type="jpublish"/>
-    <view-map name="EditContentAssocType" page="/contentsetup/EditContentAssocType.ftl" type="jpublish"/>
-    <view-map name="EditContentPurposeType" page="/contentsetup/EditContentPurposeType.ftl" type="jpublish"/>
-    <view-map name="EditContentTypeAttr" page="/contentsetup/EditContentTypeAttr.ftl" type="jpublish"/>
-    <view-map name="EditContentAssocPredicate" page="/contentsetup/EditContentAssocPredicate.ftl" type="jpublish"/>
-    <view-map name="EditContentOperation" page="/contentsetup/EditContentOperation.ftl" type="jpublish"/>
-    <view-map name="EditContentPurposeOperation" page="/contentsetup/EditContentPurposeOperation.ftl" type="jpublish"/>
+    <view-map name="EditContentType" page="component://content/widget/contentsetup/ContentSetupScreens.xml#EditContentType" type="screen"/>
+    <view-map name="EditContentAssocType" page="component://content/widget/contentsetup/ContentSetupScreens.xml#EditContentAssocType" type="screen"/>
+    <view-map name="EditContentPurposeType" page="component://content/widget/contentsetup/ContentSetupScreens.xml#EditContentPurposeType" type="screen"/>
+    <view-map name="EditContentTypeAttr" page="component://content/widget/contentsetup/ContentSetupScreens.xml#EditContentTypeAttr" type="screen"/>
+    <view-map name="EditContentAssocPredicate" page="component://content/widget/contentsetup/ContentSetupScreens.xml#EditContentAssocPredicate" type="screen"/>
+    <view-map name="EditContentOperation" page="component://content/widget/contentsetup/ContentSetupScreens.xml#EditContentOperation" type="screen"/>
+    <view-map name="EditContentPurposeOperation"  page="component://content/widget/contentsetup/ContentSetupScreens.xml#EditContentPurposeOperation" type="screen"/>
     
     <view-map name="UploadImage" page="/data/UploadImage.ftl" type="jpublish"/>
     <view-map name="FindDataResource" page="/data/FindDataResource.ftl" type="jpublish"/>
@@ -1431,7 +1431,7 @@
     <view-map name="CMSContentEdit" page="component://content/widget/cms/CMSScreens.xml#CMSContentEdit" type="screen"/>
     <view-map name="CMSContentAdd" page="component://content/widget/cms/CMSScreens.xml#CMSContentAdd" type="screen"/>
     <view-map name="CMSContentOwnedFind" page="component://content/widget/cms/CMSScreens.xml#CMSContentOwnedFind" type="screen"/>
-    <view-map name="UserPermissions" page="component://content/widget/cms/CMSScreens.xml#UserPermissions" type="screen"/>
+    <view-map name="UserPermissions" page="component://content/widget/contentsetup/ContentSetupScreens.xml#UserPermissions" type="screen"/>
     <view-map name="CMSSites" page="component://content/widget/cms/CMSScreens.xml#CMSSites" type="screen"/>
     <view-map name="CMSEditContentPurposeOperation" page="component://content/widget/cms/CMSScreens.xml#CMSEditContentPurposeOperation" type="screen"/>
     <view-map name="addSubSite" page="component://content/widget/cms/CMSScreens.xml#addSubSite" type="screen"/>

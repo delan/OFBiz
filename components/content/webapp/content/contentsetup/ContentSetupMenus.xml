@@ -29,45 +29,40 @@
         orientation="horizontal"
         menu-width="100%"
         default-tooltip-style="tabletext" default-widget-style="tabButton"
-        default-permission-operation="HAS_AUTHOR_ROLE|CONTENT_ADMIN"
-        default-permission-entity-action="_ADMIN"
         default-associated-content-id="${userLogin.userLoginId}"
         title="" type="simple">
 
-        <menu-item name="contentPurposeOp" title="PurposeOperation" default-target-name="dflt" permission-entity-action="_ADMIN">
-            <target name="dflt" request-name="EditContentPurposeOperation"/>
+        <menu-item name="contentPurposeOp" title="PurposeOperation" >
+            <link target="EditContentPurposeOperation" target-window="_top" style="tabButton" />
+       
         </menu-item>
 
-        <menu-item name="contentOp" title="Operation" default-target-name="dflt" permission-entity-action="_ADMIN">
-            <target name="dflt" request-name="EditContentOperation"/>
+        <menu-item name="contentOp" title="Operation" >
+            <link target="EditContentOperation" target-window="_top" style="tabButton" />
         </menu-item>
 
-        <menu-item name="assocPred" title="AssocPredicate" default-target-name="dflt" permission-entity-action="_ADMIN">
-            <target name="dflt" request-name="EditContentAssocPredicate"/>
+        <menu-item name="assocPred" title="AssocPredicate" >
+            <link target="EditContentAssocPredicate" target-window="_top" style="tabButton" />
         </menu-item>
 
-        <menu-item name="typeAttr" title="TypeAttr" default-target-name="dflt" permission-entity-action="_ADMIN">
-            <target name="dflt" request-name="EditContentTypeAttr"/>
+        <menu-item name="typeAttr" title="TypeAttr" >
+            <link target="EditContentTypeAttr" target-window="_top" style="tabButton" />
         </menu-item>
 
-        <menu-item name="purposeType" title="PurposeType" default-target-name="dflt" permission-entity-action="_ADMIN">
-            <target name="dflt" request-name="EditContentPurposeType"/>
+        <menu-item name="purposeType" title="PurposeType" >
+            <link target="EditContentPurposeType" target-window="_top" style="tabButton" />
         </menu-item>
 
-        <menu-item name="assocType" title="AssocType" default-target-name="dflt" permission-entity-action="_ADMIN">
-            <target name="dflt" request-name="EditContentAssocType"/>
+        <menu-item name="assocType" title="AssocType" >
+            <link target="EditContentAssocType" target-window="_top" style="tabButton" />
         </menu-item>
 
-        <menu-item name="type" title="Type" default-target-name="dflt" permission-entity-action="_ADMIN">
-            <target name="dflt" request-name="EditContentType"/>
+        <menu-item name="type" title="Type" >
+            <link target="EditContentType" target-window="_top" style="tabButton" />
         </menu-item>
 
-        <menu-item name="userpermissions" title="Permissions" default-target-name="UserPermissions"
-                permission-entity-action="_ADMIN">
-            <target name="UserPermissions" request-name="UserPermissions">
-                <param name="partyId" value="${userpermissions.currentValue.partyId}"/>
-                <param name="userLoginId" value="${userpermissions.currentValue.userLoginId}"/>
-            </target>
+        <menu-item name="userpermissions" title="Permissions" >
+            <link name="UserPermissions" target="UserPermissions" target-window="_top" style="tabButton" />
         </menu-item>
 
     </menu>

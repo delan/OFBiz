@@ -1428,15 +1428,15 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
         GenericDelegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         String orderId = (String)context.get("orderId");
-        GenericValue order = null;
+        GenericValue orderHeader = null;
         try {
-            order = delegator.findByPrimaryKeyCache("ProductContent", UtilMisc.toMap("orderId", orderId));
-            if (order == null) {
-                String msg = "No Order found for orderId:" + orderId;
+            orderHeader = delegator.findByPrimaryKeyCache("OrderHeader", UtilMisc.toMap("orderId", orderId));
+            if (orderHeader == null) {
+                String msg = "No OrderHeader found for orderId:" + orderId;
                 Debug.logError(msg, module);
                 return ServiceUtil.returnError(msg); 
             }
-            List lst = order.getRelated("OrderItem");
+            List lst = orderHeader.getRelated("OrderItem");
             Iterator iter = lst.iterator();
     	    ModelService subscriptionModel = dispatcher.getDispatchContext().getModelService("updateSubscriptionByProduct");
             while (iter.hasNext()) {
