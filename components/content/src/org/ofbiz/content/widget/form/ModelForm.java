@@ -38,6 +38,7 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.base.util.collections.FlexibleMapAccessor;
+import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.model.ModelEntity;
@@ -117,6 +118,8 @@ public class ModelForm {
     protected int actualPageSize = 0;
     
     protected List actions;
+    protected FlexibleStringExpander rowCountExdr;
+    protected ModelFormField multiSubmitField;
 
     // ===== CONSTRUCTORS =====
     /** Default Constructor */
@@ -223,6 +226,8 @@ public class ModelForm {
         }
         if (formElement.hasAttribute("view-size"))
             setViewSize(formElement.getAttribute("view-size"));
+        if (this.rowCountExdr == null || formElement.hasAttribute("row-count"))
+            this.rowCountExdr = new FlexibleStringExpander(formElement.getAttribute("row-count"));
 
         // alt-target
         List altTargetElements = UtilXml.childElementList(formElement, "alt-target");
@@ -254,10 +259,16 @@ public class ModelForm {
         // read in add field defs, add/override one by one using the fieldList and fieldMap
         List fieldElements = UtilXml.childElementList(formElement, "field");
         Iterator fieldElementIter = fieldElements.iterator();
+        String thisType = this.getType();
         while (fieldElementIter.hasNext()) {
             Element fieldElement = (Element) fieldElementIter.next();
             ModelFormField modelFormField = new ModelFormField(fieldElement, this);
-            modelFormField = this.addUpdateField(modelFormField);
+            ModelFormField.FieldInfo fieldInfo = modelFormField.getFieldInfo();
+            if (thisType.equals("multi") && fieldInfo instanceof ModelFormField.SubmitField) {
+               multiSubmitField = modelFormField; 
+            } else {
+            	modelFormField = this.addUpdateField(modelFormField);
+            }
             //Debug.logInfo("Added field " + modelFormField.getName() + " from def, mapName=" + modelFormField.getMapName(), module);
         }
 
@@ -1428,6 +1439,14 @@ public class ModelForm {
             lowIndex = 0;
             highIndex = DEFAULT_PAGE_SIZE;
         }
+    }
+    
+    public String getRowCount(Map context) {
+    	return rowCountExdr.expandString(context);
+    }
+
+    public ModelFormField getMultiSubmitField() {
+    	return this.multiSubmitField;
     }
 
     public static class AltTarget {
