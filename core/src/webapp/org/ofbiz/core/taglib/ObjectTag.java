@@ -73,7 +73,11 @@ public class ObjectTag extends TagSupport {
     }
 
     public int doStartTag() throws JspTagException {
-        element = pageContext.findAttribute(property);
+        String realAttrName = property;
+        if (UtilValidate.isEmpty(realAttrName)) {
+            realAttrName = name;
+        }
+        element = pageContext.findAttribute(realAttrName);
         if (element != null) {
             pageContext.setAttribute(name, element);
         } else {
