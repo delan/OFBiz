@@ -1539,13 +1539,21 @@
             title="Product Data Object Entity">
       <field name="contentId" type="id-ne"></field>
       <field name="productId" type="id-ne"></field>
+      <field name="purposeEnumId" type="id-ne"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>
       <prim-key field="contentId"/>
       <prim-key field="productId"/>
+      <prim-key field="purposeEnumId"/>
+      <prim-key field="fromDate"/>
       <relation type="one" fk-name="PROD_CNT_PROD" rel-entity-name="Product">
         <key-map field-name="productId"/>
       </relation>
       <relation type="one" fk-name="PROD_CNT_CNT" rel-entity-name="Content">
         <key-map field-name="contentId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_CNT_ENUM" rel-entity-name="Enumeration">
+        <key-map field-name="purposeEnumId" rel-field-name="enumId"/>
       </relation>
     </entity>
     <entity entity-name="ProductGlAccount"
