@@ -328,7 +328,7 @@
             <hyperlink also-hidden="false" description="${contentIdTo}" target="gotoContent?contentId=${contentIdTo}"/>
         </field>
         <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
-            <hyperlink also-hidden="false" description="[Delete]" target="removeContentAssoc?contentId=${contentId}&amp;contentIdTo=${contentIdTo}"/>
+            <hyperlink also-hidden="false" description="[Delete]" target="removeContentAssoc?contentId=${contentId}&amp;contentIdTo=${contentIdTo}&amp;contentAssocTypeId=${contentAssocTypeId}&amp;fromDate=${fromDate}"/>
         </field>
         <field name="editLink" title="&amp;nbsp;" widget-style="buttontext">
             <hyperlink also-hidden="false" description="[Edit]" target="EditContentAssoc?contentId=${contentId}&amp;contentIdTo=${contentIdTo}&amp;contentAssocTypeId=${contentAssocTypeId}&amp;fromDate=${fromDate}"/>
@@ -349,7 +349,7 @@
             <hyperlink also-hidden="false" description="${contentIdTo}" target="gotoContent?contentId=${contentIdTo}"/>
         </field>
         <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
-            <hyperlink also-hidden="false" description="[Delete]" target="removeContentAssoc?contentId=${contentId}&amp;contentIdTo=${contentIdTo}"/>
+            <hyperlink also-hidden="false" description="[Delete]" target="removeContentAssoc?contentId=${contentId}&amp;contentIdTo=${contentIdTo}&amp;contentAssocTypeId=${contentAssocTypeId}&amp;fromDate=${fromDate}"/>
         </field>
         <field name="editLink" title="&amp;nbsp;" widget-style="buttontext">
             <hyperlink also-hidden="false" description="[Edit]" target="EditContentAssoc?contentId=${contentId}&amp;contentIdTo=${contentIdTo}&amp;contentAssocTypeId=${contentAssocTypeId}&amp;fromDate=${fromDate}"/>
