@@ -70,6 +70,7 @@ import org.ofbiz.entity.model.ModelRelation;
 import org.ofbiz.entity.model.ModelViewEntity;
 import org.ofbiz.entity.serialize.SerializeException;
 import org.ofbiz.entity.serialize.XmlSerializer;
+import org.ofbiz.entity.transaction.GenericTransactionException;
 import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.entity.util.DistributedCacheClear;
 import org.ofbiz.entity.util.EntityFindOptions;
@@ -2508,16 +2509,13 @@ public class GenericDelegator implements DelegatorInterface {
                 throw new IllegalArgumentException("Could not get next sequenced ID for sequence name: " + seqName);
             }
             
-            // only commit the transaction if we started one...
-            TransactionUtil.commit(beganTransaction);
-
             if (UtilValidate.isNotEmpty(this.getDelegatorInfo().sequencedIdPrefix)) {
                 return this.getDelegatorInfo().sequencedIdPrefix + nextSeqLong.toString();
             } else {
                 return nextSeqLong.toString();
             }
-        } catch (GenericEntityException e) {
-            Debug.logError(e, "Failure in operation, rolling back transaction", module);
+        } catch (Exception e) {
+            Debug.logError(e, "Failure in getNextSeqId operation, rolling back transaction", module);
             try {
                 // only rollback the transaction if we started one...
                 TransactionUtil.rollback(beganTransaction);
@@ -2526,6 +2524,13 @@ public class GenericDelegator implements DelegatorInterface {
             }
             Debug.logError(e, "[GenericDelegator] Error getting next sequence ID: " + e.toString(), module);
             return null;
+        } finally {
+            try {
+                // only commit the transaction if we started one...
+                TransactionUtil.commit(beganTransaction);
+            } catch (GenericTransactionException e1) {
+                Debug.logError(e1, "[GenericDelegator] Could not commit transaction: " + e1.toString(), module);
+            }
         }
     }
     
