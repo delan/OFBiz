@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org) 
- *@version    $Revision: 1.6 $
+ *@version    $Revision: 1.7 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -385,6 +385,49 @@
     </TD>
   </TR>
 </TABLE>
+
+<#if surveys?has_content>
+  <br>
+  <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+  <TR>
+    <TD width='100%'>
+      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
+        <tr>
+          <td valign="middle" align="left">
+            <div class="boxhead">&nbsp;Surveys</div>
+          </td>
+        </tr>
+      </table>
+    </TD>
+  </TR>
+  <TR>
+    <TD width='100%'>
+      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
+        <tr>
+          <td>
+            <table width="100%" border="0" cellpadding="1">
+              <#list surveys as surveyAppl>
+                <#assign survey = surveyAppl.getRelatedOne("Survey")>
+                <tr>
+                  <td align="right" valign="top" width="10%" nowrap><div class="tabletext"><b>${survey.surveyName?if_exists}</b>&nbsp;-&nbsp;${survey.description?if_exists}</div></td>
+                  <td width="5">&nbsp;</td>
+                  <td align="left" valign="top" width="80%">
+                    <#assign responses = Static["org.ofbiz.product.store.ProductStoreWorker"].checkSurveyResponse(request, survey.surveyId)?default(0)>
+                    <div class="tabletext"><#if (responses < 1)>Not Completed<#else>Completed</if></div>
+                  </td>
+                  <td align="right" width="10%"><a href="<@ofbizUrl>/takesurvey?productStoreSurveyId=${surveyAppl.productStoreSurveyId}</@ofbizUrl>" class="buttontext">[Take Survey]</a></td>
+                </tr>
+              </#list>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </TD>
+  </TR>
+</TABLE>
+</#if>
+
+
 <#else>
     <div class='head3'>${uiLabelMap.PartyNoPartyForCurrentUserName}: ${userLogin.userLoginId}</div>
 </#if>

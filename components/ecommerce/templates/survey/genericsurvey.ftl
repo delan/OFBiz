@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.5 $
+ *@version    $Revision: 1.6 $
  *@since      3.0
 -->
 
@@ -35,10 +35,14 @@
 
 <table border="0" cellpadding="2" cellspacing="0">
   <#list surveyQuestions as question>
+    <#assign align = "left">
+    <#if (question.surveyQuestionTypeId == "BOOLEAN" || question.surveyQuestionTypeId == "OPTION")>
+      <#assign align = "right">
+    </#if>
     <tr>
       <td align='right'><div class="tabletext">${question.question}</div></td>
       <td width='1'>&nbsp;</td>
-      <td>
+      <td align="${align}">
         <#if question.surveyQuestionTypeId == "BOOLEAN">
           <select class="selectBox" name="answers_${question.surveyQuestionId}">
             <option>Y</option>
@@ -69,7 +73,16 @@
         <#elseif question.surveyQuestionTypeId == "PASSWORD">
           <input type="password" size="30" class="textBox" name="answers_${question.surveyQuestionId}">
         <#elseif question.surveyQuestionTypeId == "OPTION">
-          <div class="tabletext">Question type OPTION is not yet supported</div>
+          <#assign options = question.getRelated("SurveyQuestionOption", sequenceSort)?if_exists>
+          <select class="selectBox" name="answers_${question.surveyQuestionId}">
+            <#if options?has_content>
+              <#list options as option>
+                <option value="${option.surveyOptionSeqId}">${option.description?if_exists}</option>
+              </#list>
+            <#else>
+              <option value="">Nothing to choose</option>
+            </#if>
+          </select>
         <#else>
           <div class="tabletext">Unsupported question type : ${question.surveyQuestionTypeId}</div>
         </#if>
