@@ -1,5 +1,5 @@
 /*
- * $Id: ByConditionFinder.java,v 1.3 2004/07/10 15:18:32 jonesde Exp $
+ * $Id: ByConditionFinder.java,v 1.4 2004/07/10 17:08:48 jonesde Exp $
  *
  *  Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -48,7 +48,7 @@ import org.w3c.dom.Element;
  * Uses the delegator to find entity values by a condition
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      3.1
  */
 public class ByConditionFinder {
@@ -417,49 +417,3 @@ public class ByConditionFinder {
     }
 }
 
-/*
-<!ELEMENT find-by-condition ( ( condition-expr | condition-list ), having-condition-list?, select-field*, order-by*, ( limit-range | limit-view | use-iterator )? )>
-<!ATTLIST find-by-condition
-    entity-name CDATA #REQUIRED
-    use-cache ( true | false ) "false"
-    filter-by-date ( true | false | by-name ) "false"
-    distinct ( true | false ) "false"
-    delegator-name CDATA #IMPLIED
-    list-name CDATA #REQUIRED
->
-    <!ELEMENT condition-list ( ( condition-expr | condition-list )+ )>
-    <!ATTLIST condition-list
-        combine ( and | or ) "and"
-    >
-    <!ELEMENT having-condition-list ( ( condition-expr | condition-list )+ )>
-    <!ATTLIST having-condition-list
-        combine ( and | or ) "and"
-    >
-    <!ELEMENT condition-expr EMPTY>
-    <!ATTLIST condition-expr
-        field-name CDATA #REQUIRED
-        operator ( less | greater | less-equals | greater-equals | equals | not-equals | in | between | like ) #REQUIRED
-        env-name CDATA #IMPLIED
-        value CDATA #IMPLIED
-    >
-    <!ELEMENT select-field EMPTY>
-    <!ATTLIST select-field
-        field-name CDATA #REQUIRED
-    >
-    <!ELEMENT order-by EMPTY>
-    <!ATTLIST order-by
-        field-name CDATA #REQUIRED
-    >
-    <!ELEMENT limit-range EMPTY>
-    <!ATTLIST limit-range
-        start CDATA #REQUIRED
-        size CDATA #REQUIRED
-    >
-    <!ELEMENT limit-view EMPTY>
-    <!ATTLIST limit-view
-        view-index CDATA #REQUIRED
-        view-size CDATA #REQUIRED
-    >
-    <!ELEMENT use-iterator EMPTY>
- * 
- */    
