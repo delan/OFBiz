@@ -26,43 +26,15 @@
  * Created    May 21, 2002
  -->
 
-<simple-methods>
-    <simple-method method-name="tellAFriend" short-description="Tell A Friend" login-required="false">
-        <call-map-processor in-map-name="parameters" out-map-name="serviceContext">
-            <simple-map-processor name="tellAFriendEmail">
-                <process field="sendTo">
-                    <validate-method method="isEmail">
-                        <fail-message message="To E-mail address not formatted correctly, must be like: name@domain"/>
-                    </validate-method>
-                    <copy/>
-                </process>
-                <process field="sendFrom">
-                    <validate-method method="isEmail">
-                        <fail-message message="From E-mail address not formatted correctly, must be like: name@domain"/>
-                    </validate-method>
-                    <copy/>
-                </process>
-                <make-in-string field="subject"><constant>Check this out at some store</constant></make-in-string>
-                <process field="subject"><copy/></process>
-                <make-in-string field="body">
-                    <constant><![CDATA[
-                    ]]></constant>
-                    <in-field field="comments"/>
-                    <constant><![CDATA[
-                    ]]></constant>
-                    <constant>http://change me/ecommerce/control/product?product_id=</constant>
-                    <in-field field="product_id"/>
-                </make-in-string>
-                <process field="body"><copy/></process>
-            </simple-map-processor>
-        </call-map-processor>
-        <webapp-property-to-field resource="/WEB-INF/ecommerce.properties" property="smtp.relay.host" map-name="serviceContext" field-name="sendVia"/>
-        <check-errors/>
-        <call-service service-name="sendMail" in-map-name="serviceContext"/>
-    </simple-method>
-    
+<simple-methods>    
     <simple-method method-name="initiateOrderWorkflow" short-description="Initiates the order processing workflow">
-        <request-to-field map-name="context" field-name="orderId" request-name="order_id"/>                
+        <request-to-field map-name="context" field-name="orderId" request-name="order_id"/>   
+        
+        <make-value entity-name="OrderHeader" value-name="lookupPKMap"/>     
+        <field-to-field field-name="orderId" map-name="context" to-field-name="orderId" to-map-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="OrderHeader" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        
+        <field-to-field field-name="statusId" map-name="lookedUpValue" to-field-name="orderStatusId" to-map-name="context"/>        
         <call-service-asynch service-name="processOrder" in-map-name="context"/>
     </simple-method>
 </simple-methods>
