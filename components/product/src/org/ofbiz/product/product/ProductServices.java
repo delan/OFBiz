@@ -1,5 +1,5 @@
 /*
- * $Id: ProductServices.java,v 1.12 2004/07/07 08:18:03 jonesde Exp $
+ * $Id: ProductServices.java,v 1.13 2004/07/28 22:06:30 ajzeneski Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -54,7 +54,7 @@ import org.ofbiz.service.ServiceUtil;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.12 $
+ * @version    $Revision: 1.13 $
  * @since      2.0
  */
 public class ProductServices {
@@ -396,7 +396,7 @@ public class ProductServices {
         Map result = new HashMap();
         String productId = (String) context.get("productId");
         Locale locale = (Locale) context.get("locale");
-        String errMsg=null;
+        String errMsg = null;
 
         if (productId == null || productId.length() == 0) {
             errMsg = UtilProperties.getMessage(resource,"productservices.invalid_productId_passed", locale);

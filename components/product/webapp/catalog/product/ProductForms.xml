@@ -195,10 +195,10 @@
                 </entity-options>
             </drop-down>
         </field>
-         <field name="fromDate" title="${uiLabelMap.CommonFromDate}" ></field>
-         <field name="thruDate" title="${uiLabelMap.CommonThruDate}" ></field>
-         <field name="sequenceNum" title="${uiLabelMap.ProductSequenceNum}" ></field>
-         <field name="quantity" title="${uiLabelMap.ProductQuantity}" ></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFromDate}" ></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThruDate}" ></field>
+        <field name="sequenceNum" title="${uiLabelMap.ProductSequenceNum}" ></field>
+        <field name="quantity" title="${uiLabelMap.ProductQuantity}" ></field>
         <field name="comments" ><ignored/></field>
         <field name="submitButton" title="${uiLabelMap.CommonAdd}" widget-style="standardSubmit"><submit button-type="button"/></field>
     </form>
