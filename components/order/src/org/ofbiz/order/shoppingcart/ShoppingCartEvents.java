@@ -262,10 +262,8 @@ public class ShoppingCartEvents {
             return "error";
         } else {
             if (cart.viewCartOnAdd()) {
-                Debug.log("Returning viewcart", module);
                 return "viewcart";
-            } else {
-                Debug.log("Returning success", module);
+            } else {                
                 return "success";
             }
         }
