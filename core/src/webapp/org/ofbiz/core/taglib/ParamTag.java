@@ -33,16 +33,18 @@ import org.ofbiz.core.service.*;
 import org.ofbiz.core.util.*;
 
 /**
- * ParamTag - Defines a parameter for the sercice tag.
+ * ParamTag - Defines a parameter for the service tag.
  *
- * @author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
+ * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
  * @version    1.0
  * @created    March 27, 2002
  */
 public class ParamTag extends TagSupport {
 
     protected String name = null;
+    protected String mode = null;
     protected String map = null;
+    protected String alias = null;
     protected String attribute = null;
     protected Object paramValue = null;
 
@@ -53,6 +55,14 @@ public class ParamTag extends TagSupport {
 
     public String getName() {
         return name;
+    }
+
+    public void setMode(String mode) {
+        this.mode = mode;
+    }
+
+    public String getMode() {
+        return this.mode;
     }
 
     public void setAttribute(String attribute) {
@@ -79,32 +89,48 @@ public class ParamTag extends TagSupport {
         return map;
     }
 
+    public void setAlias(String alias) {
+        this.alias = alias;
+    }
+
+    public String getAlias() {
+        return this.alias;
+    }
+
     public int doStartTag() throws JspTagException {
-        AbstractParameterTag sTag =  (AbstractParameterTag) findAncestorWithClass(this, AbstractParameterTag.class);
+        AbstractParameterTag sTag = (AbstractParameterTag) findAncestorWithClass(this, AbstractParameterTag.class);
         if (sTag == null)
             throw new JspTagException("ParamTag not inside a ServiceTag.");
 
-        Object value = null;
-        if (attribute != null) {
-            if (map == null) {
-                paramValue = pageContext.findAttribute(attribute);
-                if (paramValue == null)
-                    paramValue = pageContext.getRequest().getParameter(attribute);
-            } else {
-                try {
-                    Map mapObject = (Map) pageContext.findAttribute(map);
-                    paramValue = mapObject.get(attribute);
-                } catch (Exception e) {
-                    throw new JspTagException("Problem processing map (" + map + ") for attributes.");
+        if (mode != null && !mode.equals("IN") && !mode.equals("OUT") && !mode.equals("INOUT"))
+            throw new JspTagException("Invalid mode attribute. Must be IN/OUT/INOUT.");
+
+        if (mode != null && (mode.equals("OUT") || mode.equals("INOUT")))
+            sTag.addOutParameter(name, (alias != null ? alias : name));
+
+        if (mode == null || mode.equals("IN") || mode.equals("INOUT")) {
+            Object value = null;
+            if (attribute != null) {
+                if (map == null) {
+                    paramValue = pageContext.findAttribute(attribute);
+                    if (paramValue == null)
+                        paramValue = pageContext.getRequest().getParameter(attribute);
+                } else {
+                    try {
+                        Map mapObject = (Map) pageContext.findAttribute(map);
+                        paramValue = mapObject.get(attribute);
+                    } catch (Exception e) {
+                        throw new JspTagException("Problem processing map (" + map + ") for attributes.");
+                    }
                 }
             }
-        }
-        if (value == null && paramValue != null)
-            value = paramValue;
-        if (value == null)
-            throw new JspTagException("No value for this parameter could be found.");
+            if (value == null && paramValue != null)
+                value = paramValue;
+            if (value == null)
+                throw new JspTagException("No value for this parameter could be found.");
 
-        sTag.addParameter(name, value);
+            sTag.addInParameter(name, value);
+        }
 
         return SKIP_BODY;
     }

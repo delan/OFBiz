@@ -36,7 +36,7 @@ import org.ofbiz.core.util.*;
 /**
  * ServiceTag - Service invocation tag.
  *
- * @author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
+ * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
  * @version    1.0
  * @created    March 27, 2002
  */
@@ -98,7 +98,7 @@ public class ServiceTag extends AbstractParameterTag {
                 throw new JspTagException("Invaild result scope specified. (page, request, session, application)");
         }
 
-        Map context = getParameters();
+        Map context = getInParameters();
         Map result = null;
         if (userLogin != null)
             context.put("userLogin", userLogin);
@@ -112,14 +112,17 @@ public class ServiceTag extends AbstractParameterTag {
             throw new JspTagException("Problems invoking the requested service: " + e.getMessage());
         }
 
+        Map aliases = getOutParameters();
         if (result != null) {
             // expand the result
             Iterator i = result.entrySet().iterator();
             while (i.hasNext()) {
                 Map.Entry entry = (Map.Entry) i.next();
+                Object key = entry.getKey();
                 Object value = entry.getValue();
+                String ctxName = (String) (aliases.containsKey(key) ? aliases.get(key) : key);
                 if (value == null) value = new String();
-                pageContext.setAttribute((String)entry.getKey(), value, scope);
+                pageContext.setAttribute(ctxName, value, scope);
             }
         }
 

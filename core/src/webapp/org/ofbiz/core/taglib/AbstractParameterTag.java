@@ -33,29 +33,43 @@ import javax.servlet.jsp.tagext.*;
 /**
  * AbstractParameterTag - Tag which support child parameter tags.
  *
- * @author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
+ * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
  * @version    1.0
  * @created    March 27, 2002
  */
 public abstract class AbstractParameterTag extends TagSupport {
 
-    private Map parameters = null;
+    private Map inParameters = null;
+    private Map outParameters = null;
 
-    public void addParameter(Object name, Object value) {
-        if (parameters == null)
-            parameters = new HashMap();
-        parameters.put(name, value);
+    public void addInParameter(Object name, Object value) {
+        if (this.inParameters == null)
+            this.inParameters = new HashMap();
+        inParameters.put(name, value);
     }
 
-    public Map getParameters() {
-        if (parameters == null)
+    public Map getInParameters() {
+        if (this.inParameters == null)
             return new HashMap();
         else
-            return parameters;
+            return this.inParameters;
+    }
+
+    public void addOutParameter(Object name, Object alias) {
+        if (this.outParameters == null)
+            this.outParameters = new HashMap();
+        outParameters.put(name, alias);
+    }
+
+    public Map getOutParameters() {
+        if (this.outParameters == null)
+            return new HashMap();
+        else
+            return this.outParameters;
     }
 
     public int doStartTag() throws JspTagException {
-        parameters = new HashMap();
+        inParameters = new HashMap();
         return EVAL_BODY_INCLUDE;
     }
 
