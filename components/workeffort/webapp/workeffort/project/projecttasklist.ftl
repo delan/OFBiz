@@ -45,25 +45,22 @@
                 <tr>
                   <td align=right valign=top><div class='tabletext'><nobr>Project Status:</nobr></div></td>
                   <td>&nbsp;</td>
-                  <td valign=top>${projectWorkEffortStatus.description}
-                  </td>
+                  <td valign=top>${projectWorkEffortStatus.description?if_exists}</td>
                 </tr>
                 <tr>
                   <td align=right valign=top><div class='tabletext'><nobr>Description:</nobr></div></td>
                   <td>&nbsp;</td>
-                  <td valign=top>${projectWorkEffort.description}
+                  <td valign=top>${projectWorkEffort.description?if_exists}</td>
                 </tr>
                 <tr>
                   <td align=right valign=top><div class='tabletext'><nobr>Start Date/Time:</nobr></div></td>
                   <td>&nbsp;</td>
-                  <td valign=top>${projectWorkEffort.estimatedStartDate?datetime?string.short}
-                  </td>
+                  <td valign=top><#if projectWorkEffort.estimatedStartDate?exists>${projectWorkEffort.estimatedStartDate?datetime?string.short}</#if></td>
                 </tr>
                 <tr>
                   <td align=right valign=top><div class='tabletext'><nobr>End Date/Time:</nobr></div></td>
                   <td>&nbsp;</td>
-                  <td valign=top>${projectWorkEffort.estimatedCompletionDate?datetime?string.short}
-                  </td>
+                  <td valign=top><#if projectWorkEffort.estimatedCompletionDate?exists>${projectWorkEffort.estimatedCompletionDate?datetime?string.short}</#if></td>
                 </tr>
       </table>
     </TD>
