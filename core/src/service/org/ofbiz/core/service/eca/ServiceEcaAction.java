@@ -81,18 +81,18 @@ public class ServiceEcaAction {
         }
 
         // put the results in to the defined map
-        if (resultMapName != null && resultMapName.length() > 0) {
+        if (resultMapName != null && resultMapName.length() > 0) {            
             Map resultMap = (Map) context.get(resultMapName);
             if (resultMap == null) {
                 resultMap = new HashMap();
             }
-            resultMap.putAll(dctx.getModelService(this.serviceName).makeValid(actionResult, ModelService.OUT_PARAM));
+            resultMap.putAll(dctx.getModelService(this.serviceName).makeValid(actionResult, ModelService.OUT_PARAM, false));
             context.put(resultMapName, resultMap);
         }
         
         // use the result to update the context fields.
-        if (resultToContext) {
-            context.putAll(dctx.getModelService(this.serviceName).makeValid(actionResult, ModelService.OUT_PARAM));
+        if (resultToContext) {            
+            context.putAll(dctx.getModelService(this.serviceName).makeValid(actionResult, ModelService.OUT_PARAM, false));
         }
 
         // if we aren't ignoring errors check it here...
