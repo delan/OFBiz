@@ -1106,7 +1106,7 @@ public class OrderServices {
         result.put("contentType", webSiteEmail.get("contentType"));
         result.put("sendFrom", webSiteEmail.get("fromAddress"));        
         result.put("sendCc", webSiteEmail.get("ccAddress"));
-        result.put("sendBcc", webSiteEmail.get("ccAddress"));
+        result.put("sendBcc", webSiteEmail.get("bccAddress"));
         result.put("sendTo", emails.toString());
         result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);            
                    
