@@ -886,6 +886,47 @@ public class OrderReadHelper {
         return size;
     }
 
+    public long getItemPiecesIncluded(GenericValue item) {
+        GenericDelegator delegator = orderHeader.getDelegator();
+        long piecesIncluded = 1;
+
+        GenericValue product = null;
+        try {
+            product = item.getRelatedOne("Product");
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Problem getting Product from OrderItem; returning 1", module);
+            return 1;
+        }
+        if (product != null) {
+            if (ProductWorker.shippingApplies(product)) {
+                Long pieces = product.getLong("piecesIncluded");
+                String isVariant = product.getString("isVariant");
+                if (pieces == null && isVariant != null && "Y".equals(isVariant)) {
+                    // get the virtual product and check its weight
+                    GenericValue virtual = null;
+                    try {
+                        List virtuals = delegator.findByAnd("ProductAssoc", UtilMisc.toMap("productIdTo", product.getString("productId"), "productAssocTypeId", "PRODUCT_VARIENT"), UtilMisc.toList("-fromDate"));
+                        if (virtuals != null) {
+                            virtuals = EntityUtil.filterByDate(virtuals);
+                        }
+                        virtual = EntityUtil.getFirst(virtuals);
+                    } catch (GenericEntityException e) {
+                        Debug.logError(e, "Problem getting virtual product");
+                    }
+                    if (virtual != null) {
+                        pieces = virtual.getLong("piecesIncluded");
+                    }
+                }
+
+                if (pieces != null) {
+                    piecesIncluded = pieces.longValue();
+                }
+            }
+        }
+
+        return piecesIncluded;
+    }
+
    public List getShippableItemInfo(String shipGroupSeqId) {
         List shippableInfo = new LinkedList();
 
@@ -907,6 +948,7 @@ public class OrderReadHelper {
         itemInfo.put("quantity", getOrderItemQuantity(item));
         itemInfo.put("weight", new Double(this.getItemWeight(item)));
         itemInfo.put("size",  new Double(this.getItemSize(item)));
+        itemInfo.put("piecesIncluded", new Long(this.getItemPiecesIncluded(item)));
         itemInfo.put("featureSet", this.getItemFeatureSet(item));
         return itemInfo;
     }
