@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  To refer to this DTD in your XML file, use the following declaration:
+<!DOCTYPE menus PUBLIC "-//OFBiz//DTD OFBiz Form Widget//EN" "http://www.ofbiz.org/dtds/widget-menu.dtd">
+-->
+
+<!--
+ *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+ *  $Id: widget-menu.dtd,v 1.1 2004/03/04 08:11:57 byersa Exp $
+-->
+
+
+<!ELEMENT menus ( menu+ )>
+
+<!ELEMENT menu ( menu-item* )>
+<!ATTLIST menu
+    name CDATA #REQUIRED
+    type ( simple | cascade ) "simple"
+    title CDATA #IMPLIED
+    tooltip CDATA #IMPLIED
+    default-entity-name CDATA #IMPLIED
+    default-title-style CDATA #IMPLIED
+    default-widget-style CDATA #IMPLIED
+    default-tooltip-style CDATA #IMPLIED
+    default-selected-style CDATA #IMPLIED
+    orientation (vertical | horizontal) "horizontal"
+    extends CDATA #IMPLIED
+    extends-resource CDATA #IMPLIED
+    default-menu-item-name CDATA #IMPLIED
+    default-permission-operation CDATA #IMPLIED
+    default-permission-entity-action CDATA #IMPLIED
+    default-permission-status-id CDATA #IMPLIED
+    default-privilege-enum-id CDATA #IMPLIED
+    default-associated-content-id CDATA #IMPLIED
+    default-hide-if-selected (true | false) "false"
+    menu-width CDATA #IMPLIED
+    default-cell-width CDATA #IMPLIED
+>
+
+
+<!ELEMENT menu-item ( target* )>
+<!ATTLIST menu-item
+    name CDATA #REQUIRED
+    title CDATA #IMPLIED
+    tooltip CDATA #IMPLIED
+    title-style CDATA #IMPLIED
+    widget-style CDATA #IMPLIED
+    tooltip-style CDATA #IMPLIED
+    selected-style CDATA #IMPLIED
+    default-target-name CDATA #IMPLIED
+    position CDATA "1"
+    permission-operation CDATA #IMPLIED
+    permission-status-id CDATA #IMPLIED
+    permission-entity-action CDATA #IMPLIED
+    privilege-enum-id CDATA #IMPLIED
+    associated-content-id CDATA #IMPLIED
+    hide-if-selected (true | false) "false"
+    cell-width CDATA #IMPLIED
+>
+
+<!--
+-->
+<!ELEMENT target ( param* )>
+<!ATTLIST target
+    title CDATA #IMPLIED
+    request-name CDATA #REQUIRED
+    request-type CDATA #IMPLIED
+>
+
+<!--
+-->
+<!ELEMENT param EMPTY>
+<!ATTLIST param
+    name CDATA #REQUIRED
+    value CDATA #IMPLIED
+    default-value CDATA #IMPLIED
+    type (name-value | map) "name-value"
+>
+
