@@ -198,7 +198,8 @@
 					  <div class="tabltext"></div>
 					</td>                      
 					<td nowrap align="right">
-                      <a href="<@ofbizUrl>/editShoppingList?shoppingListId=${childShoppingList.shoppingListId}</@ofbizUrl>" class="buttontext">Go To</a>
+                      <a href="<@ofbizUrl>/editShoppingList?shoppingListId=${childShoppingList.shoppingListId}</@ofbizUrl>" class="buttontext">[Go To List]</a>&nbsp;
+                      <a href="<@ofbizUrl>/addListToCart?shoppingListId=${childShoppingList.shoppingListId}</@ofbizUrl>" class="buttontext">[Add List To Cart]</a>
 					</td>                      
 				  </tr>
 				</form>

@@ -137,6 +137,13 @@
         <response name="error" type="view" value="showcart"/>
     </request-map>
     
+    <request-map uri="addListToCart">
+        <security auth="true"/>
+        <event type="java" path="org.ofbiz.commonapp.order.shoppinglist.ShoppingListEvents" invoke="addListToCart"/>
+        <response name="success" type="view" value="showcart"/>
+        <response name="error" type="view" value="editShoppingList"/>
+    </request-map>
+    
     <request-map uri="updateShoppingListItem">
         <security auth="true"/>
         <event type="service" path="" invoke="updateShoppingListItem"/>

@@ -31,6 +31,7 @@ import org.ofbiz.core.service.*;
 import org.ofbiz.core.util.*;
 
 import org.ofbiz.commonapp.order.shoppingcart.*;
+import org.ofbiz.commonapp.product.catalog.*;
 
 /**
  * Shopping cart events.
@@ -102,6 +103,61 @@ public class ShoppingListEvents {
         
         // return the shoppinglist id 
         request.setAttribute("shoppingListId", shoppingListId);                
+        return "success";
+    }
+    
+    public static String addListToCart(HttpServletRequest request, HttpServletResponse response) {
+        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
+        LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+        ShoppingCart cart = (ShoppingCart) request.getSession().getAttribute(SiteDefs.SHOPPING_CART);
+        
+        String shoppingListId = request.getParameter("shoppingListId");
+        String prodCatalogId =  CatalogWorker.getCurrentCatalogId(request);
+        
+        // no list; no add
+        if (shoppingListId == null) {
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>Please choose a shopping list.");
+            return "error";
+        }
+        
+        // get the shopping list 
+        GenericValue shoppingList = null;
+        List shoppingListItems = null;
+        try {
+            shoppingList = delegator.findByPrimaryKey("ShoppingList", UtilMisc.toMap("shoppingListId", shoppingListId));
+            shoppingListItems = shoppingList.getRelated("ShoppingListItem");  
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Problems getting ShoppingList and ShoppingListItem records", module);
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>Error getting shopping list and items.");
+            return "error";
+        }
+        
+        // no items; not an error; just mention that nothing was added
+        if (shoppingListItems == null || shoppingListItems.size() == 0) {
+            request.setAttribute(SiteDefs.EVENT_MESSAGE, "<li>No items were added.");
+            return "success";
+        }
+        
+        // add the items
+        StringBuffer eventMessage = new StringBuffer();                       
+        Iterator i = shoppingListItems.iterator();
+        while (i.hasNext()) {
+            GenericValue shoppingListItem = (GenericValue) i.next();
+            String productId = shoppingListItem.getString("productId");
+            Double quantity = shoppingListItem.getDouble("quantity");
+            try {
+                cart.addOrIncreaseItem(productId, quantity.doubleValue(), null, null, prodCatalogId, dispatcher);
+                eventMessage.append("<li>Added product (" + productId + ") to cart.\n");
+            } catch (CartItemModifyException e) {
+                Debug.logWarning(e, "Problems adding item from list to cart", module);
+                eventMessage.append("<li>Could NOT add product (" + productId + ") to cart.\n");                                
+            }            
+        }
+        
+        if (eventMessage.length() > 0)
+            request.setAttribute(SiteDefs.EVENT_MESSAGE, eventMessage.toString());
+        
+        // all done
         return "success";
     }
 
