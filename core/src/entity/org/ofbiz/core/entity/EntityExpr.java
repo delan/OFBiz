@@ -133,14 +133,50 @@ public class EntityExpr extends EntityCondition {
                     whereStringBuffer.append(' ');
                     whereStringBuffer.append(this.getOperator().toString());
                     whereStringBuffer.append(' ');
-                    whereStringBuffer.append(" ? ");
                     
-                    if (this.isRUpper()) {
-                        if (rhs instanceof String) {
-                            rhs = ((String) rhs).toUpperCase();
+                    //treat the IN operator as a special case, especially with a Collection rhs
+                    if (EntityOperator.IN.equals(this.getOperator())) {
+                        whereStringBuffer.append('(');
+                        
+                        if (rhs instanceof Collection) {
+                            Iterator rhsIter = ((Collection) rhs).iterator();
+                            while (rhsIter.hasNext()) {
+                                Object inObj = rhsIter.next();
+                                
+                                whereStringBuffer.append('?');
+                                if (rhsIter.hasNext()) {
+                                    whereStringBuffer.append(", ");
+                                }
+
+                                if (this.isRUpper()) {
+                                    if (inObj instanceof String) {
+                                        inObj = ((String) inObj).toUpperCase();
+                                    }
+                                }
+                                entityConditionParams.add(new EntityConditionParam(field, inObj));
+                            }
+                        } else {
+                            whereStringBuffer.append(" ? ");
+
+                            if (this.isRUpper()) {
+                                if (rhs instanceof String) {
+                                    rhs = ((String) rhs).toUpperCase();
+                                }
+                            }
+                            entityConditionParams.add(new EntityConditionParam(field, rhs));
                         }
+                        
+                        whereStringBuffer.append(") ");
+                    } else {
+                        whereStringBuffer.append(" ? ");
+
+                        if (this.isRUpper()) {
+                            if (rhs instanceof String) {
+                                rhs = ((String) rhs).toUpperCase();
+                            }
+                        }
+                        entityConditionParams.add(new EntityConditionParam(field, rhs));
                     }
-                    entityConditionParams.add(new EntityConditionParam(field, rhs));
                 }
             } else {
                 throw new IllegalArgumentException("ModelField with field name " + (String) this.getLhs() + " not found");
