@@ -1,5 +1,5 @@
 /*
- * $Id: ServiceUtil.java,v 1.9 2003/12/06 08:13:25 jonesde Exp $
+ * $Id: ServiceUtil.java,v 1.10 2003/12/06 23:10:14 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -47,7 +47,7 @@ import org.ofbiz.service.config.ServiceConfigUtil;
  * Generic Service Utility Class
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.9 $
+ * @version    $Revision: 1.10 $
  * @since      2.0
  */
 public class ServiceUtil {
@@ -159,20 +159,27 @@ public class ServiceUtil {
         return partyId;
     }
 
-    public static void getMessages(HttpServletRequest request, Map result, String defaultMessage,
-        String msgPrefix, String msgSuffix, String errorPrefix, String errorSuffix, String successPrefix, String successSuffix) {
-        String errorMessage = ServiceUtil.makeErrorMessage(result, msgPrefix, msgSuffix, errorPrefix, errorSuffix);
-
+    public static void setMessages(HttpServletRequest request, String errorMessage, String eventMessage, String defaultMessage) {
         if (UtilValidate.isNotEmpty(errorMessage))
             request.setAttribute("_ERROR_MESSAGE_", errorMessage);
 
-        String successMessage = ServiceUtil.makeSuccessMessage(result, msgPrefix, msgSuffix, successPrefix, successSuffix);
+        if (UtilValidate.isNotEmpty(eventMessage))
+            request.setAttribute("_EVENT_MESSAGE_", eventMessage);
 
-        if (UtilValidate.isNotEmpty(successMessage))
-            request.setAttribute("_EVENT_MESSAGE_", successMessage);
-
-        if (UtilValidate.isEmpty(errorMessage) && UtilValidate.isEmpty(successMessage) && UtilValidate.isNotEmpty(defaultMessage))
+        if (UtilValidate.isEmpty(errorMessage) && UtilValidate.isEmpty(eventMessage) && UtilValidate.isNotEmpty(defaultMessage))
             request.setAttribute("_EVENT_MESSAGE_", defaultMessage);
+
+    }
+
+    public static void getMessages(HttpServletRequest request, Map result, String defaultMessage,
+            String msgPrefix, String msgSuffix, String errorPrefix, String errorSuffix, String successPrefix, String successSuffix) {
+        String errorMessage = ServiceUtil.makeErrorMessage(result, msgPrefix, msgSuffix, errorPrefix, errorSuffix);
+        String successMessage = ServiceUtil.makeSuccessMessage(result, msgPrefix, msgSuffix, successPrefix, successSuffix);
+        setMessages(request, errorMessage, successMessage, defaultMessage);
+    }
+
+    public static String getErrorMessage(Map result) {
+        return (String) result.get(ModelService.ERROR_MESSAGE);
     }
 
     public static String makeErrorMessage(Map result, String msgPrefix, String msgSuffix, String errorPrefix, String errorSuffix) {

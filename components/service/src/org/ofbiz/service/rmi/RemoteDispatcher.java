@@ -1,5 +1,5 @@
 /*
- * $Id: RemoteDispatcher.java,v 1.1 2003/12/02 06:39:32 ajzeneski Exp $
+ * $Id: RemoteDispatcher.java,v 1.2 2003/12/06 23:10:14 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -36,7 +36,7 @@ import org.ofbiz.service.GenericServiceException;
  * Generic Services Remote Dispatcher
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.0
  */
 public interface RemoteDispatcher extends Remote {
@@ -52,6 +52,17 @@ public interface RemoteDispatcher extends Remote {
     public Map runSync(String serviceName, Map context) throws GenericServiceException, RemoteException;
 
     /**
+     * Run the service synchronously with a specified timeout and return the result.
+     * @param serviceName Name of the service to run.
+     * @param context Map of name, value pairs composing the context.
+     * @param transactionTimeout the overriding timeout for the transaction (if we started it).
+     * @param requireNewTransaction if true we will suspend and create a new transaction so we are sure to start.
+     * @return Map of name, value pairs composing the result.
+     * @throws GenericServiceException
+     */
+    public Map runSync(String serviceName, Map context, int transactionTimeout, boolean requireNewTransaction) throws GenericServiceException, RemoteException;
+
+    /**
      * Run the service synchronously and IGNORE the result.
      * @param serviceName Name of the service to run.
      * @param context Map of name, value pairs composing the context.
@@ -59,6 +70,28 @@ public interface RemoteDispatcher extends Remote {
      * @throws RemoteException
      */
     public void runSyncIgnore(String serviceName, Map context) throws GenericServiceException, RemoteException;
+
+    /**
+     * Run the service synchronously with a specified timeout and IGNORE the result.
+     * @param serviceName Name of the service to run.
+     * @param context Map of name, value pairs composing the context.
+     * @param transactionTimeout the overriding timeout for the transaction (if we started it).
+     * @param requireNewTransaction if true we will suspend and create a new transaction so we are sure to start.
+     * @throws GenericServiceException
+     */
+    public void runSyncIgnore(String serviceName, Map context, int transactionTimeout, boolean requireNewTransaction) throws GenericServiceException, RemoteException;
+
+    /**
+     * Run the service asynchronously, passing an instance of GenericRequester that will receive the result.
+     * @param serviceName Name of the service to run.
+     * @param context Map of name, value pairs composing the context.
+     * @param requester Object implementing GenericRequester interface which will receive the result.
+     * @param persist True for store/run; False for run.
+     * @param transactionTimeout the overriding timeout for the transaction (if we started it).
+     * @param requireNewTransaction if true we will suspend and create a new transaction so we are sure to start.
+     * @throws GenericServiceException
+     */
+    public void runAsync(String serviceName, Map context, GenericRequester requester, boolean persist, int transactionTimeout, boolean requireNewTransaction) throws GenericServiceException, RemoteException;
 
     /**
      * Run the service asynchronously, passing an instance of GenericRequester that will receive the result.

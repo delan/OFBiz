@@ -1,5 +1,5 @@
 /*
- * $Id: RemoteDispatcherImpl.java,v 1.2 2003/12/02 17:12:55 ajzeneski Exp $
+ * $Id: RemoteDispatcherImpl.java,v 1.3 2003/12/06 23:10:14 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -37,7 +37,7 @@ import java.util.Map;
  * Generic Services Remote Dispatcher Implementation
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      3.0
  */
 public class RemoteDispatcherImpl extends UnicastRemoteObject implements RemoteDispatcher {
@@ -58,9 +58,24 @@ public class RemoteDispatcherImpl extends UnicastRemoteObject implements RemoteD
         return dispatcher.runSync(serviceName, context);
     }
 
+    public Map runSync(String serviceName, Map context, int transactionTimeout, boolean requireNewTransaction) throws GenericServiceException {
+        this.checkExportFlag(serviceName);
+        return dispatcher.runSync(serviceName, context, transactionTimeout, requireNewTransaction);
+    }
+
     public void runSyncIgnore(String serviceName, Map context) throws GenericServiceException, RemoteException {
         this.checkExportFlag(serviceName);
         dispatcher.runSyncIgnore(serviceName, context);
+    }
+
+    public void runSyncIgnore(String serviceName, Map context, int transactionTimeout, boolean requireNewTransaction) throws GenericServiceException, RemoteException {
+        this.checkExportFlag(serviceName);
+        dispatcher.runSyncIgnore(serviceName, context, transactionTimeout, requireNewTransaction);
+    }
+
+    public void runAsync(String serviceName, Map context, GenericRequester requester, boolean persist, int transactionTimeout, boolean requireNewTransaction) throws GenericServiceException, RemoteException {
+        this.checkExportFlag(serviceName);
+        dispatcher.runAsync(serviceName, context, requester, persist, transactionTimeout, requireNewTransaction);
     }
 
     public void runAsync(String serviceName, Map context, GenericRequester requester, boolean persist) throws GenericServiceException, RemoteException {
