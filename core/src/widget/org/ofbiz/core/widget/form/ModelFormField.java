@@ -509,7 +509,7 @@ public class ModelFormField {
      * @return
      */
     public String getTitle(Map context) {
-        if (!title.isEmpty()) {
+        if (this.title != null && !this.title.isEmpty()) {
             return title.expandString(context);
         } else {
             // create a title from the name of this field; expecting a Java method/field style name, ie productName or productCategoryId

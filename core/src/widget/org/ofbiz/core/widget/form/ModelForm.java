@@ -224,6 +224,23 @@ public class ModelForm {
                 continue;
             }
             if (modelParam.formDisplay) {
+                if (UtilValidate.isNotEmpty(modelParam.entityName) && UtilValidate.isNotEmpty(modelParam.fieldName)) {
+                    ModelEntity modelEntity = delegator.getModelEntity(modelParam.entityName);
+                    if (modelEntity != null) {
+                        ModelField modelField = modelEntity.getField(modelParam.fieldName);
+                        if (modelField != null) {
+                            // okay, populate using the entity field info...
+                            ModelFormField modelFormField = this.addFieldFromEntityField(modelEntity, modelField);
+                            if (UtilValidate.isNotEmpty(autoFieldsService.mapName)) {
+                                modelFormField.setMapName(autoFieldsService.mapName);
+                            }
+
+                            // continue to skip creating based on service param                            
+                            continue;
+                        }
+                    }
+                }
+                
                 ModelFormField modelFormField = this.addFieldFromServiceParam(modelService, modelParam);
                 if (UtilValidate.isNotEmpty(autoFieldsService.mapName)) {
                     modelFormField.setMapName(autoFieldsService.mapName);
