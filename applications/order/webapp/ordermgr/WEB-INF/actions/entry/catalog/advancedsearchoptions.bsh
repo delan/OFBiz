@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -54,9 +54,6 @@ if (!"AND".equals(searchOperator) && !"OR".equals(searchOperator)) {
 searchConstraintStrings = ProductSearchSession.searchGetConstraintStrings(false, session, delegator);
 searchSortOrderString = ProductSearchSession.searchGetSortOrderString(false, session);
 
-//get suppliers in system
-supplerPartyRoleAndPartyDetails = delegator.findByAnd("PartyRoleAndPartyDetail", UtilMisc.toMap("roleTypeId", "SUPPLIER"), UtilMisc.toList("groupName", "firstName"));
-
 context.put("searchCategoryId", searchCategoryId);
 context.put("searchCategory", searchCategory);
 context.put("productFeaturesByTypeMap", productFeaturesByTypeMap);
@@ -64,4 +61,3 @@ context.put("productFeatureTypeIdsOrdered", productFeatureTypeIdsOrdered);
 context.put("searchOperator", searchOperator);
 context.put("searchConstraintStrings", searchConstraintStrings);
 context.put("searchSortOrderString", searchSortOrderString);
-context.put("supplerPartyRoleAndPartyDetails", supplerPartyRoleAndPartyDetails);

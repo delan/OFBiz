@@ -88,9 +88,7 @@ if (product != null) {
     if (categoryId == null) {
         categoryId = request.getAttribute("productCategoryId");
     }
-    if (categoryId != null) {
-        context.put("categoryId", categoryId);
-    }
+    context.put("categoryId", categoryId);
 
     // get the product price
     priceMap = dispatcher.runSync("calculateProductPrice", 
