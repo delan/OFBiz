@@ -26,16 +26,30 @@ public class RecurrenceRule {
     public static final int MAX_MTH_DAY = 31;
     public static final int MIN_YEAR_DAY = -366;
     public static final int MAX_YEAR_DAY = 366;
-    public static final int MIN_WEEK_NBR = -53;
-    public static final int MAX_WEEK_NBR = 53;
+    public static final int MIN_WEEK_NO = -53;
+    public static final int MAX_WEEK_NO = 53;
     public static final int MIN_MTH = 1;
     public static final int MAX_MTH = 12;
     
+    // GenericValue objects
     GenericValue info;       
     GenericValue rRule;
     GenericValue eRule;
+    
+    // Parsed Date/Time lists
     List rDateList;
     List eDateList;
+    
+    // Parsed byXXX lists
+    List bySecondList;
+    List byMinuteList;
+    List byHourList;
+    List byDayList;
+    List byMonthDayList;
+    List byYearDayList;
+    List byWeekNoList;
+    List byMonthList;
+    List bySetPosList;
     
     /** Creates a new RecurrenceRule object from a RecurrenceInfo entity. */
     public RecurrenceRule(GenericValue info) throws RecurrenceRuleException {
@@ -45,6 +59,7 @@ public class RecurrenceRule {
     
     /** Initializes the rules for this RecurrenceInfo object. */
     public void init() throws RecurrenceRuleException {
+        
         // Initialize the rules
         try {
             rRule = info.getRelatedOne("RecurrenceRule");
@@ -66,9 +81,21 @@ public class RecurrenceRule {
         catch ( RuntimeException re ) {
             throw new RecurrenceRuleException("Invalid RecurrenceRule.",rre);
         }
+        
         // Initialize the date/time lists.
         rDateList = split(info.getString("recurrenceDateTimes"),",");
         eDateList = split(info.getString("exceptionDateTimes"),",");
+        
+        // Initialize the byXXX lists.
+        bySecondList = split(info.getString("bySecondList"),",");
+        byMinuteList = split(info.getString("byMinuteList"),",");
+        byHourList = split(info.getString("byHourList"),",");
+        byDayList = split(info.getString("byDayList"),",");
+        byMonthDayList = split(info.getString("byMonthDayList"),",");
+        byYearDayList = split(info.getString("byYearDayList"),",");
+        byWeekNoList = split(info.getString("byWeekNoList"),",");
+        byMonthList = split(info.getString("byMonthList"),",");
+        bySetPosList = split(info.getString("bySetPosList"),",");
         
     }
     
