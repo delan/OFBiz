@@ -1,5 +1,5 @@
 /*
- * $Id: ServiceMultiEventHandler.java,v 1.5 2004/02/19 18:52:35 ajzeneski Exp $
+ * $Id: ServiceMultiEventHandler.java,v 1.6 2004/06/30 19:28:41 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -55,7 +55,7 @@ import org.ofbiz.service.ServiceAuthException;
  * ServiceMultiEventHandler - Event handler for running a service multiple times; for bulk forms
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      2.2
  */
 public class ServiceMultiEventHandler implements EventHandler {
@@ -254,13 +254,11 @@ public class ServiceMultiEventHandler implements EventHandler {
                 result = dispatcher.runSync(serviceName, serviceContext);
             } catch (ServiceAuthException e) {
                 // not logging since the service engine already did
-                request.setAttribute("_ERROR_MESSAGE_", e.getNonNestedMessage());
-                return "error";
+                errorMessages.add(messagePrefixStr + "Service invocation error on row (" + i +"): " + e.getNonNestedMessage());
             } catch (ServiceValidationException e) {
                 // not logging since the service engine already did
                 request.setAttribute("serviceValidationException", e);
-                request.setAttribute("_ERROR_MESSAGE_", e.getNonNestedMessage());
-                return "error";
+                errorMessages.add(messagePrefixStr + "Service invocation error on row (" + i +"): " + e.getNonNestedMessage());
             } catch (GenericServiceException e) {
                 Debug.logError(e, "Service invocation error", module);
                 errorMessages.add(messagePrefixStr + "Service invocation error on row (" + i +"): " + e.getNested() + messageSuffixStr);                             
