@@ -46,6 +46,7 @@
         <make-value entity-name="Content" value-name="lookupKeyValue"/>
         <set-pk-fields map-name="parameters" value-name="lookupKeyValue"/>
         <find-by-primary-key entity-name="Content" map-name="lookupKeyValue" value-name="lookedUpValue"/>
+	<to-string map-name="parameters" field-name="locale" />
         <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
         <store-value value-name="lookedUpValue"/>
     </simple-method>
@@ -334,6 +335,138 @@
         <make-value entity-name="ContentAssocPredicate" value-name="lookupKeyValue"/>
         <set-pk-fields map-name="parameters" value-name="lookupKeyValue"/>
         <find-by-primary-key entity-name="ContentAssocPredicate" map-name="lookupKeyValue" value-name="lookedUpValue"/>
+        <remove-value value-name="lookedUpValue"/>
+    </simple-method>
+    
+    <!-- Methods for ContentPurposeOperation -->
+    <simple-method method-name="createContentPurposeOperation" short-description="Create Content PurposeOperation">
+        <check-permission action="_CREATE" permission="CONTENTMGR">
+            <fail-message message="Security Error: to run createContentPurposeOperation you must have the CONTENTMGR_CREATE or CONTENTMGR_ADMIN permission"/>
+        </check-permission>
+        <check-errors/>
+        <make-value entity-name="ContentPurposeOperation" value-name="newEntity"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+        <set-pk-fields map-name="parameters" value-name="newEntity"/>
+        <create-value value-name="newEntity"/>
+    </simple-method>
+    <simple-method method-name="updateContentPurposeOperation" short-description="Update Content PurposeOperation">
+        <check-permission action="_UPDATE" permission="CONTENTMGR">
+            <fail-message message="Security Error: to run updateContentPurposeOperation you must have the CONTENTMGR_UPDATE or CONTENTMGR_ADMIN permission"/>
+        </check-permission>
+        <check-errors/>
+        <make-value entity-name="ContentPurposeOperation" value-name="lookupKeyValue"/>
+        <set-pk-fields map-name="parameters" value-name="lookupKeyValue"/>
+        <find-by-primary-key entity-name="ContentPurposeOperation" map-name="lookupKeyValue" value-name="lookedUpValue"/>
+        <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
+        <store-value value-name="lookedUpValue"/>
+    </simple-method>
+    <simple-method method-name="removeContentPurposeOperation" short-description="Remove Content PurposeOperation">
+        <check-permission action="_DELETE" permission="CONTENTMGR">
+            <fail-message message="Security Error: to run removeContentPurposeOperation you must have the CONTENTMGR_DELETE or CONTENTMGR_ADMIN permission"/>
+        </check-permission>
+        <check-errors/>
+        <make-value entity-name="ContentPurposeOperation" value-name="lookupKeyValue"/>
+        <set-pk-fields map-name="parameters" value-name="lookupKeyValue"/>
+        <find-by-primary-key entity-name="ContentPurposeOperation" map-name="lookupKeyValue" value-name="lookedUpValue"/>
+        <remove-value value-name="lookedUpValue"/>
+    </simple-method>
+    
+    <!-- Methods for ContentPurpose -->
+    <simple-method method-name="createContentPurpose" short-description="Create Content Purpose">
+        <check-permission action="_CREATE" permission="CONTENTMGR">
+            <fail-message message="Security Error: to run createContentPurpose you must have the CONTENTMGR_CREATE or CONTENTMGR_ADMIN permission"/>
+        </check-permission>
+        <check-errors/>
+        <make-value entity-name="ContentPurpose" value-name="newEntity"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+        <set-pk-fields map-name="parameters" value-name="newEntity"/>
+        <create-value value-name="newEntity"/>
+    </simple-method>
+    <simple-method method-name="updateContentPurpose" short-description="Update Content Purpose">
+        <check-permission action="_UPDATE" permission="CONTENTMGR">
+            <fail-message message="Security Error: to run updateContentPurpose you must have the CONTENTMGR_UPDATE or CONTENTMGR_ADMIN permission"/>
+        </check-permission>
+        <check-errors/>
+        <make-value entity-name="ContentPurpose" value-name="lookupKeyValue"/>
+        <set-pk-fields map-name="parameters" value-name="lookupKeyValue"/>
+        <find-by-primary-key entity-name="ContentPurpose" map-name="lookupKeyValue" value-name="lookedUpValue"/>
+        <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
+        <store-value value-name="lookedUpValue"/>
+    </simple-method>
+    <simple-method method-name="removeContentPurpose" short-description="Remove Content Purpose">
+        <check-permission action="_DELETE" permission="CONTENTMGR">
+            <fail-message message="Security Error: to run removeContentPurpose you must have the CONTENTMGR_DELETE or CONTENTMGR_ADMIN permission"/>
+        </check-permission>
+        <check-errors/>
+        <make-value entity-name="ContentPurpose" value-name="lookupKeyValue"/>
+        <set-pk-fields map-name="parameters" value-name="lookupKeyValue"/>
+        <find-by-primary-key entity-name="ContentPurpose" map-name="lookupKeyValue" value-name="lookedUpValue"/>
+        <remove-value value-name="lookedUpValue"/>
+    </simple-method>
+    
+    <!-- Methods for ContentOperation -->
+    <simple-method method-name="createContentOperation" short-description="Create Content Operation">
+        <check-permission action="_CREATE" permission="CONTENTMGR">
+            <fail-message message="Security Error: to run createContentOperation you must have the CONTENTMGR_CREATE or CONTENTMGR_ADMIN permission"/>
+        </check-permission>
+        <check-errors/>
+        <make-value entity-name="ContentOperation" value-name="newEntity"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+        <set-pk-fields map-name="parameters" value-name="newEntity"/>
+        <create-value value-name="newEntity"/>
+    </simple-method>
+    <simple-method method-name="updateContentOperation" short-description="Update Content Operation">
+        <check-permission action="_UPDATE" permission="CONTENTMGR">
+            <fail-message message="Security Error: to run updateContentOperation you must have the CONTENTMGR_UPDATE or CONTENTMGR_ADMIN permission"/>
+        </check-permission>
+        <check-errors/>
+        <make-value entity-name="ContentOperation" value-name="lookupKeyValue"/>
+        <set-pk-fields map-name="parameters" value-name="lookupKeyValue"/>
+        <find-by-primary-key entity-name="ContentOperation" map-name="lookupKeyValue" value-name="lookedUpValue"/>
+        <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
+        <store-value value-name="lookedUpValue"/>
+    </simple-method>
+    <simple-method method-name="removeContentOperation" short-description="Remove Content Operation">
+        <check-permission action="_DELETE" permission="CONTENTMGR">
+            <fail-message message="Security Error: to run removeContentOperation you must have the CONTENTMGR_DELETE or CONTENTMGR_ADMIN permission"/>
+        </check-permission>
+        <check-errors/>
+        <make-value entity-name="ContentOperation" value-name="lookupKeyValue"/>
+        <set-pk-fields map-name="parameters" value-name="lookupKeyValue"/>
+        <find-by-primary-key entity-name="ContentOperation" map-name="lookupKeyValue" value-name="lookedUpValue"/>
+        <remove-value value-name="lookedUpValue"/>
+    </simple-method>
+    
+    <!-- Methods for ContentPurposeOperation -->
+    <simple-method method-name="createContentPurposeOperation" short-description="Create Content PurposeOperation">
+        <check-permission action="_CREATE" permission="CONTENTMGR">
+            <fail-message message="Security Error: to run createContentPurposeOperation you must have the CONTENTMGR_CREATE or CONTENTMGR_ADMIN permission"/>
+        </check-permission>
+        <check-errors/>
+        <make-value entity-name="ContentPurposeOperation" value-name="newEntity"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+        <set-pk-fields map-name="parameters" value-name="newEntity"/>
+        <create-value value-name="newEntity"/>
+    </simple-method>
+    <simple-method method-name="updateContentPurposeOperation" short-description="Update Content PurposeOperation">
+        <check-permission action="_UPDATE" permission="CONTENTMGR">
+            <fail-message message="Security Error: to run updateContentPurposeOperation you must have the CONTENTMGR_UPDATE or CONTENTMGR_ADMIN permission"/>
+        </check-permission>
+        <check-errors/>
+        <make-value entity-name="ContentPurposeOperation" value-name="lookupKeyValue"/>
+        <set-pk-fields map-name="parameters" value-name="lookupKeyValue"/>
+        <find-by-primary-key entity-name="ContentPurposeOperation" map-name="lookupKeyValue" value-name="lookedUpValue"/>
+        <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
+        <store-value value-name="lookedUpValue"/>
+    </simple-method>
+    <simple-method method-name="removeContentPurposeOperation" short-description="Remove Content PurposeOperation">
+        <check-permission action="_DELETE" permission="CONTENTMGR">
+            <fail-message message="Security Error: to run removeContentPurposeOperation you must have the CONTENTMGR_DELETE or CONTENTMGR_ADMIN permission"/>
+        </check-permission>
+        <check-errors/>
+        <make-value entity-name="ContentPurposeOperation" value-name="lookupKeyValue"/>
+        <set-pk-fields map-name="parameters" value-name="lookupKeyValue"/>
+        <find-by-primary-key entity-name="ContentPurposeOperation" map-name="lookupKeyValue" value-name="lookedUpValue"/>
         <remove-value value-name="lookedUpValue"/>
     </simple-method>
 </simple-methods>
