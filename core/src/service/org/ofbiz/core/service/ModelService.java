@@ -222,8 +222,9 @@ public class ModelService {
         Map optionalTest = new HashMap();
 
         if (test == null) test = new HashMap();
-
         requiredTest.putAll(test);
+        
+        List requiredButNull = new ArrayList();
         if (requiredTest != null) {
             List keyList = new ArrayList(requiredTest.keySet());
             Iterator t = keyList.iterator();
@@ -235,8 +236,24 @@ public class ModelService {
                 if (!requiredInfo.containsKey(key)) {
                     requiredTest.remove(key);
                     optionalTest.put(key, value);
+                } else if (value == null) {
+                    requiredButNull.add(key);
                 }
             }
+        }
+        
+        // check for requiredButNull fields and return an error since null values are not allowed for required fields
+        if (requiredButNull.size() > 0) {
+            String missing = "";
+            Iterator rbni = requiredButNull.iterator();
+            while (rbni.hasNext()) {
+                String missingKey = (String) rbni.next();
+                missing = missing + missingKey;
+                if (rbni.hasNext()) {
+                    missing = missing + ", ";
+                }               
+            }
+            throw new ServiceValidationException("The following required parameters found null (not allowed): " + missing);
         }
 
         if (verboseOn) {
