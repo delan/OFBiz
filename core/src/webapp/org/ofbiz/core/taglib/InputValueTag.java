@@ -3,20 +3,15 @@ package org.ofbiz.core.taglib;
 import java.io.IOException;
 import java.text.NumberFormat;
 import java.text.DateFormat;
-import java.util.Date;
-import java.util.Locale;
+import java.util.*;
 
-import javax.servlet.jsp.PageContext;
-import javax.servlet.jsp.JspTagException;
-import javax.servlet.jsp.JspWriter;
-import javax.servlet.jsp.tagext.TagSupport;
+import javax.servlet.jsp.*;
+import javax.servlet.jsp.tagext.*;
 
 import org.ofbiz.core.entity.GenericDelegator;
 import org.ofbiz.core.entity.GenericEntityException;
 import org.ofbiz.core.entity.GenericValue;
-import org.ofbiz.core.entity.model.ModelEntity;
-import org.ofbiz.core.entity.model.ModelField;
-import org.ofbiz.core.entity.model.ModelFieldType;
+import org.ofbiz.core.entity.model.*;
 import org.ofbiz.core.util.Debug;
 
 /**
@@ -92,20 +87,30 @@ public class InputValueTag extends TagSupport {
 
     public int doStartTag() throws JspTagException {
         String inputValue = null;
-        GenericValue entity = null;
         String paramValue = null;
         boolean tryEntity = true;
 
         Boolean tempBool = (Boolean) pageContext.getAttribute(tryEntityAttr);
         if (tempBool != null)
             tryEntity = tempBool.booleanValue();
-        if (tryEntity)
-            entity = (GenericValue) pageContext.getAttribute(entityAttr);
-        if (entity != null) {
-            Object fieldVal = entity.get(field);
-            if (fieldVal != null)
-                inputValue = entity.get(field).toString();
-        } else {
+        if (tryEntity) {
+            Object entTemp = pageContext.getAttribute(entityAttr);
+            if (entTemp != null) {
+                if (entTemp instanceof GenericValue) {
+                    GenericValue entity = (GenericValue) entTemp;
+                    Object fieldVal = entity.get(field);
+                    if (fieldVal != null)
+                        inputValue = fieldVal.toString();
+                } else if (entTemp instanceof Map) {
+                    Map map = (Map) entTemp;
+                    Object fieldVal = map.get(field);
+                    if (fieldVal != null)
+                        inputValue = fieldVal.toString();
+                }
+            }
+        }
+        //if nothing found in entity, or if not checked, try a parameter
+        if (inputValue == null) {
             inputValue = pageContext.getRequest().getParameter(param);
         }
 
@@ -121,4 +126,6 @@ public class InputValueTag extends TagSupport {
         return (SKIP_BODY);
     }
 }
+
+
 
