@@ -142,6 +142,11 @@ public class Msr extends GenericDevice {
         } catch (NumberFormatException e) {            
         }
 
+        // make sure we are on the POS pay screen
+        if (!"main/paypanel".equals(PosScreen.currentScreen.getName())) {
+            PosScreen.currentScreen.showPage("main/paypanel");
+        }
+
         // all implemented types
         switch (msrType) {
             case MSR_CREDIT_CARD:

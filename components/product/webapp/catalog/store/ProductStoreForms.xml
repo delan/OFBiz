@@ -50,6 +50,9 @@
                 description="[Edit Facility ${productStore.inventoryFacilityId}]" also-hidden="false"/>
         </field>
 
+         <field name="manualAuthIsCapture" widget-style="selectBox">
+            <drop-down allow-empty="false" no-current-selected-key="N"><option key="Y"/><option key="N"/></drop-down>
+        </field>
         <field name="viewCartOnAdd" widget-style="selectBox">
             <drop-down allow-empty="false" no-current-selected-key="N"><option key="Y"/><option key="N"/></drop-down>
         </field>

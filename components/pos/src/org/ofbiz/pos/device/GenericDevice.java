@@ -55,7 +55,7 @@ public abstract class GenericDevice implements JposDevice {
             if (!"[NOT IMPLEMENTED]".equals(deviceName) && !"[DISABLED]".equals(deviceName)) {
                 control.open(deviceName);
                 control.claim(timeout);
-                control.setDeviceEnabled(true);
+                this.enable(true);
                 this.initialize();
             }
         } else {
@@ -67,6 +67,14 @@ public abstract class GenericDevice implements JposDevice {
         control.release();
         control.close();
         control = null;
+    }
+
+    public void enable(boolean enable) {
+        try {
+            control.setDeviceEnabled(enable);
+        } catch (JposException e) {
+            Debug.logError(e, module);
+        }
     }
 
     protected void callEnter() {

@@ -2513,6 +2513,7 @@
       <field name="subtitle" type="description"></field>
       <field name="payToPartyId" type="id"></field>
       <field name="daysToCancelNonPay" type="numeric"></field>
+      <field name="manualAuthIsCapture" type="indicator"></field>
       <field name="prorateShipping" type="indicator"></field>
       <field name="viewCartOnAdd" type="indicator"></field>
       <field name="autoSaveCart" type="indicator"></field>
