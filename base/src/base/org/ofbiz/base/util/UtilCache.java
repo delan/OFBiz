@@ -1,7 +1,7 @@
 /*
- * $Id: UtilCache.java,v 1.1 2003/08/15 20:23:19 ajzeneski Exp $
+ * $Id: UtilCache.java,v 1.2 2004/02/26 16:22:09 jonesde Exp $
  *
- *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -40,7 +40,7 @@ import java.util.ResourceBundle;
  * </ul>
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class UtilCache {
@@ -240,8 +240,10 @@ public class UtilCache {
         hitCount++;
 
         if (maxSize > 0) {
-            keyLRUList.remove(key);
-            keyLRUList.addFirst(key);
+        	synchronized (this) {
+	            keyLRUList.remove(key);
+	            keyLRUList.addFirst(key);
+        	}
         }
         return line.getValue();
     }
@@ -356,10 +358,8 @@ public class UtilCache {
         if (this.expireTime <= 0 && expireTime > 0) {
             long currentTime = System.currentTimeMillis();
             Iterator values = cacheLineTable.values().iterator();
-
             while (values.hasNext()) {
                 UtilCache.CacheLine line = (UtilCache.CacheLine) values.next();
-
                 line.loadTime = currentTime;
             }
         } else if (this.expireTime <= 0 && expireTime > 0) {// if expire time was > 0 and is now <=, do nothing, just leave the load times in place, won't hurt anything...
@@ -380,10 +380,8 @@ public class UtilCache {
         if (this.useSoftReference != useSoftReference) {
             this.useSoftReference = useSoftReference;
             Iterator values = cacheLineTable.values().iterator();
-
             while (values.hasNext()) {
                 UtilCache.CacheLine line = (UtilCache.CacheLine) values.next();
-
                 line.setUseSoftReference(useSoftReference);
             }
         }
@@ -454,10 +452,8 @@ public class UtilCache {
     /** Clears all expired cache entries; also clear any cache entries where the SoftReference in the CacheLine object has been cleared by the gc */
     public void clearExpired() {
         Iterator keys = cacheLineTable.keySet().iterator();
-
         while (keys.hasNext()) {
             Object key = keys.next();
-
             if (hasExpired(key)) {
                 remove(key);
             }
@@ -467,11 +463,9 @@ public class UtilCache {
     /** Clears all expired cache entries from all caches */
     public static void clearExpiredFromAllCaches() {
         Iterator entries = utilCacheTable.entrySet().iterator();
-
         while (entries.hasNext()) {
             Map.Entry entry = (Map.Entry) entries.next();
             UtilCache utilCache = (UtilCache) entry.getValue();
-
             utilCache.clearExpired();
         }
     }
