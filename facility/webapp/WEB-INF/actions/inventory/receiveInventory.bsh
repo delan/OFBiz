@@ -1,0 +1,86 @@
+/*
+ *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a 
+ *  copy of this software and associated documentation files (the "Software"), 
+ *  to deal in the Software without restriction, including without limitation 
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+ *  and/or sell copies of the Software, and to permit persons to whom the 
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included 
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ *@author     Andy Zeneski (jaz@ofbiz.org)
+ *@version    $Revision$
+ *@since      2.2
+ */
+ 
+import org.ofbiz.core.entity.*;
+import org.ofbiz.core.util.*;
+
+delegator = request.getAttribute("delegator");
+facilityId = request.getParameter("facilityId"); 
+purchaseOrderId = request.getParameter("purchaseOrderId");
+productId = request.getParameter("productId");
+
+facility = null;
+if (facilityId != null) {
+    facility = delegator.findByPrimaryKey("Facility", UtilMisc.toMap("facilityId", facilityId));
+}
+context.put("facility", facility);
+
+purchaseOrder = null;
+if (purchaseOrderId != null && purchaseOrderId.length() > 0) {
+    purchaseOrder = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", purchaseOrderId));
+}
+context.put("purchaseOrder", purchaseOrder);
+
+product = null;
+if (productId != null) {  
+    product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));  
+    if (purchaseOrder != null) {
+        defaultQuantity = 0.0;
+        items = delegator.findByAnd("OrderItem", UtilMisc.toMap("productId", productId, "orderId", purchaseOrderId));   
+        itemsIter = items.iterator();
+        while (itemsIter.hasNext()) {
+            item = itemsIter.next();
+            defaultQuantity += item.getDouble("quantity").doubleValue();                        
+        }
+        context.put("defaultQuantity", defaultQuantity);
+    }    
+}
+context.put("product", product);
+
+purchaseOrderItems = null;
+if (purchaseOrder != null) {
+    purchaseOrderItems = purchaseOrder.getRelated("OrderItem");
+}
+context.put("purchaseOrderItems", purchaseOrderItems);
+
+String invalidProductId = null;
+if (productId != null && product == null) {
+    invalidProductId = "No product found with product ID: [" + productId + "]";
+    context.put("invalidProductId", invalidProductId);
+}
+
+// reject reasons
+rejectReasons = delegator.findAll("RejectionReason");
+context.put("rejectReasons", rejectReasons);
+
+// inv item types
+inventoryItemTypes = delegator.findAll("InventoryItemType");
+context.put("inventoryItemTypes", inventoryItemTypes);
+
+// facilities
+facilities = delegator.findAll("Facility");
+context.put("facilities", facilities);
+    
