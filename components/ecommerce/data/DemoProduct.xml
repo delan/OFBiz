@@ -312,7 +312,7 @@
   <ProductPromoCond inputParamEnumId="PPIP_ORDER_TOTAL" operatorEnumId="PPC_GT" condValue="100"
     productPromoId="testpromo1" productPromoRuleId="rule1" productPromoCondSeqId="2" />
   <ProductPromoAction productPromoId="testpromo1" productPromoRuleId="rule1" productPromoActionSeqId="2"
-    orderAdjustmentTypeId="PROMOTION_ADJUSTMENT" productId="WG-1111" productPromoActionTypeId="PROMO_GWP" quantity="1.0" />
+    orderAdjustmentTypeId="PROMOTION_ADJUSTMENT" productId="WG-1111" productPromoActionEnumId="PROMO_GWP" quantity="1.0" />
 
   <ProductStorePromoAppl fromDate="2001-01-01 12:00:00.0" productStoreId="9000" productPromoId="testpromo1" />
 

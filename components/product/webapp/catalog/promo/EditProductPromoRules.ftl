@@ -22,7 +22,7 @@
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Brad Steiner (bsteiner@thehungersite.com)
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Revision: 1.5 $
+ *@version    $Revision: 1.6 $
  *@since      2.2
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -173,14 +173,14 @@ ${pages.get("/promo/PromoTabBar.ftl")}
                                 <input type=hidden name="productPromoActionSeqId" value="${(productPromoAction.productPromoActionSeqId)?if_exists}">
                                 <select name="productPromoActionEnumId" size=1 class="selectBox">
                                     <#if (productPromoAction.productPromoActionEnumId)?exists>
-                                    <#assign productPromoActionType = productPromoAction.getRelatedOneCache("ProductPromoActionType")>
-                                        <option value="${(productPromoAction.productPromoActionEnumId)?if_exists}"><#if productPromoActionType?exists>${(productPromoActionType.description)?if_exists}<#else>[${(productPromoAction.productPromoActionEnumId)?if_exists}]</#if></option>
+                                        <#assign productPromoActionCurEnum = productPromoAction.getRelatedOneCache("ActionEnumeration")>
+                                        <option value="${(productPromoAction.productPromoActionEnumId)?if_exists}"><#if productPromoActionCurEnum?exists>${(productPromoActionCurEnum.description)?if_exists}<#else>[${(productPromoAction.productPromoActionEnumId)?if_exists}]</#if></option>
                                         <option value="${(productPromoAction.productPromoActionEnumId)?if_exists}">&nbsp;</option>
                                     <#else>
                                         <option value="">&nbsp;</option>
                                     </#if>
-                                    <#list productPromoActionTypes as productPromoActionType>
-                                    <option value="${(productPromoActionType.productPromoActionEnumId)?if_exists}">${(productPromoActionType.description)?if_exists}</option>
+                                    <#list productPromoActionEnums as productPromoActionEnum>
+                                        <option value="${(productPromoActionEnum.enumId)?if_exists}">${(productPromoActionEnum.description)?if_exists}</option>
                                     </#list>
                                 </select>
                                 <select name="orderAdjustmentTypeId" size=1 class="selectBox">
@@ -198,7 +198,6 @@ ${pages.get("/promo/PromoTabBar.ftl")}
                                 <input type=text size="5" name="quantity" value="${(productPromoAction.quantity)?if_exists}" class="inputBox">
                                 <input type=text size="15" name="productId" value="${(productPromoAction.productId)?if_exists}" class="inputBox">
                                 <input type=text size="10" name="partyId" value="${(productPromoAction.partyId)?if_exists}" class="inputBox">
-                                <input type=text size="4" name="actionLimit" value="${(productPromoAction.actionLimit)?if_exists}" class="inputBox">
                                 <INPUT type=submit value="${uiLabelMap.CommonUpdate}" style="font-size: x-small;">
                             </FORM>
                         </td>
@@ -216,8 +215,8 @@ ${pages.get("/promo/PromoTabBar.ftl")}
                             <span class="tabletext"><b>${uiLabelMap.CommonNew}:</b>&nbsp;</span>
                             <input type=text size="5" name="productPromoActionSeqId" value="${maxActionSeqId?if_exists}" class="inputBox">
                             <select name="productPromoActionEnumId" size=1 class="selectBox">
-                                <#list productPromoActionTypes as productPromoActionType>
-                                <option value="${(productPromoActionType.productPromoActionEnumId)?if_exists}">${(productPromoActionType.description)?if_exists}</option>
+                                <#list productPromoActionEnums as productPromoActionEnum>
+                                <option value="${(productPromoActionEnum.enumId)?if_exists}">${(productPromoActionEnum.description)?if_exists}</option>
                                 </#list>
                             </select>
                             <select name="orderAdjustmentTypeId" size=1 class="selectBox">
@@ -228,7 +227,6 @@ ${pages.get("/promo/PromoTabBar.ftl")}
                             <input type=text size="5" name="quantity" class="inputBox">
                             <input type=text size="15" name="productId" class="inputBox">
                             <input type=text size="10" name="partyId" class="inputBox">
-                            <input type=text size="4" name="actionLimit" class="inputBox">
                             <INPUT type=submit value="${uiLabelMap.CommonCreate}" style="font-size: x-small;">
                         </FORM>
                     </td>
