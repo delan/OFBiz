@@ -1,5 +1,5 @@
 /*
- * $Id: CatalogWorker.java,v 1.4 2003/08/26 18:45:06 jonesde Exp $
+ * $Id: CatalogWorker.java,v 1.5 2003/08/26 21:37:11 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -56,7 +56,7 @@ import org.ofbiz.product.store.ProductStoreWorker;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.0
  */
 public class CatalogWorker {
@@ -71,6 +71,25 @@ public class CatalogWorker {
         return WebSiteWorker.getWebSite(request);
     }
 
+    public static List getAllCatalogIds(ServletRequest request) {        
+        List catalogIds = new ArrayList();
+        List catalogs = null;
+        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
+        try {
+            catalogs = delegator.findAll("ProdCatalog", UtilMisc.toList("catalogName"));
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Error looking up all catalogs", module);
+        }
+        if (catalogs != null) {
+            Iterator i = catalogs.iterator();
+            while (i.hasNext()) {
+                GenericValue c = (GenericValue) i.next();
+                catalogIds.add(c.getString("prodCatalogId"));
+            }
+        }
+        return catalogIds;
+    }
+    
     public static List getStoreCatalogs(ServletRequest request) {
         String productStoreId = ProductStoreWorker.getProductStoreId(request);
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
@@ -78,7 +97,7 @@ public class CatalogWorker {
         try {
             return EntityUtil.filterByDate(delegator.findByAndCache("ProductStoreCatalog", UtilMisc.toMap("productStoreId", productStoreId), UtilMisc.toList("sequenceNum", "prodCatalogId")), true);
         } catch (GenericEntityException e) {
-            Debug.logError(e, "Error looking up website catalogs for store with id " + productStoreId, module);
+            Debug.logError(e, "Error looking up store catalogs for store with id " + productStoreId, module);
         }
         return null;
     }
