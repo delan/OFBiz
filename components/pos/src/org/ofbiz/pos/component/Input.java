@@ -1,5 +1,5 @@
 /*
- * $Id: Input.java,v 1.2 2004/08/06 20:55:09 ajzeneski Exp $
+ * $Id: Input.java,v 1.3 2004/08/07 01:23:07 ajzeneski Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -41,7 +41,7 @@ import org.ofbiz.pos.adaptor.KeyboardReceiver;
 /**
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      3.1
  */
 public class Input implements KeyboardReceiver {
@@ -179,30 +179,7 @@ public class Input implements KeyboardReceiver {
     }
 
     public void receiveData(int[] codes, char[] chars) {
-        // convert the stringable array
-        Debug.log("First Char : " + chars[0], module);
-        Debug.log("Last Code  : " + codes[codes.length-1], module);
-
-        // create the string
-        String charStr = new String(chars);
-        Debug.log("Char String : " + charStr, module);
-
-        // test
-        if (charStr.startsWith("%")) {
-            Debug.log("Starts with Percent!", module);
-        }
-
-        // if only pass in non-auto line feeds + some debugging for testing
-        if (charStr.endsWith("\r\n")) {
-            Debug.log("Ends w/ \\r\\n", module);
-        } else if (charStr.endsWith("\n")) {
-            Debug.log("Ends w/ \\n", module);
-        } else if (charStr.endsWith("\r")) {
-            Debug.log("Ends w/ \\r", module);
-        } else {
-            Debug.log("appending string", module);
-            this.appendString(charStr);
-        }
+        this.appendString(new String(chars));
     }
 
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: MsrKybService.java,v 1.1 2004/08/06 23:45:32 ajzeneski Exp $
+ * $Id: MsrKybService.java,v 1.2 2004/08/07 01:23:08 ajzeneski Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -31,11 +31,12 @@ import jpos.events.DataEvent;
 import jpos.events.ErrorEvent;
 
 import org.ofbiz.pos.adaptor.KeyboardReceiver;
+import org.ofbiz.pos.adaptor.KeyboardAdaptor;
 
 /**
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.2
  */
 public class MsrKybService extends BaseKybService implements jpos.services.MSRService18, KeyboardReceiver {
@@ -68,6 +69,10 @@ public class MsrKybService extends BaseKybService implements jpos.services.MSRSe
 
     protected int tracksToRead = MSRConst.MSR_TR_1_2;
     protected int errorType = MSRConst.MSR_ERT_CARD;
+
+    public MsrKybService() {
+        KeyboardAdaptor.getInstance(this, KeyboardAdaptor.MSR_DATA);    
+    }
 
     // MSRService12
     public boolean getCapISO() throws JposException {

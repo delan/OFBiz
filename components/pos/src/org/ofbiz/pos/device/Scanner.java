@@ -1,5 +1,5 @@
 /*
- * $Id: Scanner.java,v 1.2 2004/08/06 23:45:31 ajzeneski Exp $
+ * $Id: Scanner.java,v 1.3 2004/08/07 01:23:07 ajzeneski Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -28,6 +28,7 @@ import jpos.JposException;
 import jpos.ScannerConst;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.pos.adaptor.DataEventAdaptor;
 import org.ofbiz.pos.config.ButtonEventConfig;
 import org.ofbiz.pos.screen.PosScreen;
@@ -35,7 +36,7 @@ import org.ofbiz.pos.screen.PosScreen;
 /**
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      3.2
  */
 public class Scanner extends GenericDevice {
@@ -47,7 +48,7 @@ public class Scanner extends GenericDevice {
 
     public Scanner(String deviceName, int timeout, PosScreen screen) {
         super(deviceName, timeout, screen);
-        this.control = new jpos.Scanner();       
+        this.control = new jpos.Scanner();
     }
 
     protected void initialize() throws JposException {
@@ -67,12 +68,12 @@ public class Scanner extends GenericDevice {
                 try {
                     dataType = scanner.getScanDataType();
                     scanData = scanner.getScanDataLabel();
-                    scanner.clearInput();
-                    if (scanData == null) {
+                    if (scanData == null || scanData.length == 0) {
                         Debug.logWarning("Scanner driver does not support decoding data; the raw result is used instead", module);
                         scanData = scanner.getScanData();
                     }
-
+                    
+                    scanner.clearInput();
                 } catch (jpos.JposException e) {
                     Debug.logError(e, module);
                 }
