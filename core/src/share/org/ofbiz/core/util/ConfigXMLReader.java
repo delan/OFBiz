@@ -524,7 +524,7 @@ public class ConfigXMLReader {
         }
         /* Debugging */
         Debug.logVerbose("-------- Handler Mappings --------", module);
-        Map debugMap = (Map) map.get("request");
+        Map debugMap = (Map) map.get("event");
         if (debugMap != null && debugMap.size() > 0) {
             Debug.logVerbose("-------------- EVENT -------------", module);
             Set debugSet = debugMap.keySet();
