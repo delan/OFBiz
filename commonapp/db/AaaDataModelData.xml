@@ -218,6 +218,10 @@
   <Enumeration description="Category ID Product Added Is In" enumCode="CATEGORY_ID" enumId="PPIP_CATEGORY_ID" sequenceId="04" enumTypeId="PROD_PROMO_IN_PARAM"/>
   <Enumeration description="Quantity Added" enumCode="QUANTITY_ADDED" enumId="PPIP_QUANTITY_ADDED" sequenceId="05" enumTypeId="PROD_PROMO_IN_PARAM"/>
   <Enumeration description="New Product Quantity" enumCode="NEW_PROD_QUANT" enumId="PPIP_NEW_PROD_QUANT" sequenceId="06" enumTypeId="PROD_PROMO_IN_PARAM"/>
+  <Enumeration description="Party" enumCode="PARTY_ID" enumId="PPIP_PARTY_ID" sequenceId="07" enumTypeId="PROD_PROMO_IN_PARAM"/>
+  <Enumeration description="Party Group Member" enumCode="PARTY_GROUP_MEMBER" enumId="PPIP_PARTY_GRP_MEM" sequenceId="07" enumTypeId="PROD_PRICE_IN_PARAM"/>
+  <Enumeration description="Party Classification" enumCode="PARTY_CLASS" enumId="PPIP_PARTY_CLASS" sequenceId="08" enumTypeId="PROD_PRICE_IN_PARAM"/>
+  <Enumeration description="Role Type" enumCode="ROLE_TYPE" enumId="PPIP_ROLE_TYPE" sequenceId="09" enumTypeId="PROD_PROMO_IN_PARAM"/>
 
   <Enumeration description="==" enumCode="EQ" enumId="PPC_EQ" sequenceId="01" enumTypeId="PROD_PROMO_COND"/>
   <Enumeration description="!=" enumCode="NEQ" enumId="PPC_NEQ" sequenceId="02" enumTypeId="PROD_PROMO_COND"/>
@@ -482,6 +486,7 @@
   <ProductPriceType description="Average Cost" productPriceTypeId="AVERAGE_COST"/>
   <ProductPriceType description="Minimum Price" productPriceTypeId="MINIMUM_PRICE"/>
   <ProductPriceType description="Maximum Price" productPriceTypeId="MAXIMUM_PRICE"/>
+  <ProductPriceType description="Promotional Price" productPriceTypeId="PROMO_PRICE"/>
   <ProductPriceType description="Recurring Charge" productPriceTypeId="RECURRING_CHARGE"/>
   <ProductPriceType description="Usage Charge" productPriceTypeId="USAGE_CHARGE"/>
 
@@ -490,6 +495,7 @@
   <ProductPriceActionType description="Percent Of Margin" productPriceActionTypeId="PRICE_POM"/>
   <ProductPriceActionType description="Flat Amount Modify" productPriceActionTypeId="PRICE_FOL"/>
   <ProductPriceActionType description="Flat Amount Override" productPriceActionTypeId="PRICE_FLAT"/>
+  <ProductPriceActionType description="Promo Amount Override" productPriceActionTypeId="PRICE_PFLAT"/>
 
   <ProductType description="Service" hasTable="N" parentTypeId="" productTypeId="SERVICE"/>
   <ProductType description="Good" hasTable="N" parentTypeId="" productTypeId="GOOD"/>
