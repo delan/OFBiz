@@ -1,5 +1,5 @@
 /*
- * $Id: EditRenderSubContentCacheTransform.java,v 1.1 2004/01/07 19:30:11 byersa Exp $
+ * $Id: EditRenderSubContentCacheTransform.java,v 1.2 2004/01/09 23:35:27 byersa Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -53,7 +53,7 @@ import freemarker.template.TemplateTransformModel;
  * This is an interactive FreeMarker tranform that allows the user to modify the contents that are placed within it.
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  * @since 3.0
  */
 public class EditRenderSubContentCacheTransform implements TemplateTransformModel {
@@ -84,10 +84,10 @@ public class EditRenderSubContentCacheTransform implements TemplateTransformMode
         final GenericDelegator delegator = (GenericDelegator) FreeMarkerWorker.getWrappedObject("delegator", env);
         final HttpServletRequest request = (HttpServletRequest) FreeMarkerWorker.getWrappedObject("request", env);
         FreeMarkerWorker.getSiteParameters(request, templateCtx);
-        if (Debug.verboseOn()) Debug.logVerbose(FreeMarkerWorker.logMap("(L)before save", templateCtx, 0),module);
-        FreeMarkerWorker.overrideWithArgs(templateCtx, args);
-        if (Debug.verboseOn()) Debug.logVerbose(FreeMarkerWorker.logMap("(L)after overrride", templateCtx, 0),module);
+        if (Debug.verboseOn()) Debug.logVerbose(FreeMarkerWorker.logMap("(E)before save", templateCtx, 0),module);
         final Map savedValues = FreeMarkerWorker.saveValues(templateCtx, saveKeyNames);
+        FreeMarkerWorker.overrideWithArgs(templateCtx, args);
+        if (Debug.verboseOn()) Debug.logVerbose(FreeMarkerWorker.logMap("(E)after overrride", templateCtx, 0),module);
         final GenericValue userLogin = (GenericValue) FreeMarkerWorker.getWrappedObject("userLogin", env);
         String contentId = (String)templateCtx.get("contentId");
         String subContentId = (String)templateCtx.get("subContentId");
@@ -183,11 +183,6 @@ public class EditRenderSubContentCacheTransform implements TemplateTransformMode
 
             public void close() throws IOException {
                 String wrappedFTL = buf.toString();
-                    if (Debug.verboseOn()) Debug.logVerbose(FreeMarkerWorker.logMap("(T)before remove", templateCtx, 0),module);
-                    FreeMarkerWorker.removeValues(templateCtx, removeKeyNames);
-                    if (Debug.verboseOn()) Debug.logVerbose(FreeMarkerWorker.logMap("(T)after remove", templateCtx, 0),module);
-                    FreeMarkerWorker.reloadValues(templateCtx, savedValues);
-                    if (Debug.verboseOn()) Debug.logVerbose(FreeMarkerWorker.logMap("(T)after reload", templateCtx, 0),module);
                 if (Debug.verboseOn()) Debug.logVerbose("in EditRenderSubContent, wrappedFTL:" + wrappedFTL, module);
                 String editTemplate = (String)templateCtx.get("editTemplate");
                 if (editTemplate != null && editTemplate.equalsIgnoreCase("true")) {
@@ -224,6 +219,11 @@ public class EditRenderSubContentCacheTransform implements TemplateTransformMode
                 } else {
                     out.write(wrappedFTL);
                 }
+                    if (Debug.verboseOn()) Debug.logVerbose(FreeMarkerWorker.logMap("(E)before remove", templateCtx, 0),module);
+                    FreeMarkerWorker.removeValues(templateCtx, removeKeyNames);
+                    if (Debug.verboseOn()) Debug.logVerbose(FreeMarkerWorker.logMap("(E)after remove", templateCtx, 0),module);
+                    FreeMarkerWorker.reloadValues(templateCtx, savedValues);
+                    if (Debug.verboseOn()) Debug.logVerbose(FreeMarkerWorker.logMap("(E)after reload", templateCtx, 0),module);
             }
         };
     }
