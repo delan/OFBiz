@@ -294,7 +294,9 @@
         <field name="purchaseFromDate" title="${uiLabelMap.ProductPurchaseFromDate}"></field>
         <field name="purchaseThruDate" title="${uiLabelMap.ProductPurchaseThruDate}"></field>
         <field name="useCountLimit" title="${uiLabelMap.ProductUseCountLimit}"></field>
-        <field name="useDaysLimit" title="${uiLabelMap.ProductUseDaysLimit}"></field>
+        <field name="useTime" title="Use Time"></field>
+        <field name="useTimeUomId" title="Use Time Uom"></field>
+        <field name="useRoleTypeId" title="Use Role"></field>
         <field name="submitButton" title="${uiLabelMap.CommonAdd}" widget-style="standardSubmit"><submit button-type="button"/></field>
     </form>
     <form name="PrepareAddProductContentAssoc" type="single"
@@ -302,7 +304,9 @@
             default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
         <auto-fields-entity entity-name="ProductContent"/>
         <field name="contentId"><ignored/></field>
-        <field name="useDaysLimit"><ignored/></field>
+        <field name="useTime"><ignored/></field>
+        <field name="useTimeUomId"><ignored/></field>
+        <field name="useRoleTypeId"><ignored/></field>
         <field name="useCountLimit"><ignored/></field>
         <field name="purchaseThruDate"><ignored/></field>
         <field name="purchaseFromDate"><ignored/></field>
@@ -352,7 +356,9 @@
         <field name="purchaseFromDate" title="${uiLabelMap.ProductPurchaseFromDate}"></field>
         <field name="purchaseThruDate" title="${uiLabelMap.ProductPurchaseThruDate}"></field>
         <field name="useCountLimit" title="${uiLabelMap.ProductUseCountLimit}"></field>
-        <field name="useDaysLimit" title="${uiLabelMap.ProductUseDaysLimit}"></field>
+        <field name="useTime" title="Use Time"></field>
+        <field name="useTimeUomId" title="Use Time Uom"></field>
+        <field name="useRoleTypeId" title="Use Role"></field>
         <field name="description" title="${uiLabelMap.ProductDescription}" map-name="content"><text size="40"/></field>
         <field name="subject" title="${uiLabelMap.ProductSubject}" map-name="emailData"><text size="40"/></field>
         <field name="plainBody" title="${uiLabelMap.ContentPlainBody}" widget-style="textAreaBox"  map-name="emailData"><textarea cols="60" rows="7"/></field>
@@ -377,7 +383,9 @@
         <field name="purchaseFromDate" title="${uiLabelMap.ProductPurchaseFromDate}"></field>
         <field name="purchaseThruDate" title="${uiLabelMap.ProductPurchaseThruDate}"></field>
         <field name="useCountLimit" title="${uiLabelMap.ProductUseCountLimit}"></field>
-        <field name="useDaysLimit" title="${uiLabelMap.ProductUseDaysLimit}"></field>
+        <field name="useTime" title="Use Time"></field>
+        <field name="useTimeUomId" title="Use Time Uom"></field>
+        <field name="useRoleTypeId" title="Use Role"></field>
         <field name="description"  title="${uiLabelMap.ProductDescription}" map-name="content"><text size="40"/></field>
         <field use-when="contentId == null" name="contentId" title="${uiLabelMap.ProductContentId}" tooltip="${uiLabelMap.ProductOptional}"><text maxlength="20"/></field>
         <field use-when="contentId != null" name="contentId" title="${uiLabelMap.ProductContentId}" tooltip="${uiLabelMap.ProductNotModificationRecrationProductContentAssociation}" map-name="productContentData" ><display/></field>
@@ -417,7 +425,9 @@
         <field use-when="contentId != null" name="contentId" tooltip="${uiLabelMap.ProductNotModificationRecrationProductContentAssociation}" map-name="productContentData" ><display/></field>
         <field name="text"  title="${uiLabelMap.ProductText}" map-name="textData" widget-style="textAreaBox" ><textarea cols="60" rows="7"/></field>
         <field name="textDataResourceId" title="${uiLabelMap.ProductTextDataResourceId}" map-name="textData"><hidden/></field>
-        <field name="useDaysLimit"><hidden/></field>
+        <field name="useTime"><hidden/></field>
+        <field name="useTimeUomId"><hidden/></field>
+        <field name="useRoleTypeId"><hidden/></field>
         <field name="useCountLimit"><hidden/></field>
         <field name="purchaseThruDate"><hidden/></field>
         <field name="purchaseFromDate"><hidden/></field>
@@ -497,7 +507,9 @@
             default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
         <auto-fields-entity entity-name="ProductCategoryContent"/>
         <field name="contentId"><ignored/></field>
-        <field name="useDaysLimit"><ignored/></field>
+        <field name="useTime"><ignored/></field>
+        <field name="useTimeUomId"><ignored/></field>
+        <field name="useRoleTypeId"><ignored/></field>
         <field name="useCountLimit"><ignored/></field>
         <field name="purchaseThruDate"><ignored/></field>
         <field name="purchaseFromDate"><ignored/></field>
@@ -548,7 +560,9 @@
         <field use-when="contentId != null" name="contentId" tooltip="This cannot be changed without re-creating the product content association." map-name="categoryContentData" ><display/></field>
         <field name="text" map-name="textData" widget-style="textAreaBox" ><textarea cols="60" rows="7"/></field>
         <field name="textDataResourceId" map-name="textData"><hidden/></field>
-        <field name="useDaysLimit"><hidden/></field>
+        <field name="useTime"><hidden/></field>
+        <field name="useTimeUomId"><hidden/></field>
+        <field name="useRoleTypeId"><hidden/></field>
         <field name="useCountLimit"><hidden/></field>
         <field name="purchaseThruDate"><hidden/></field>
         <field name="purchaseFromDate"><hidden/></field>

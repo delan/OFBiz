@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones
  *@author     Brad Steiner
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      2.2
  */
 
@@ -68,8 +68,10 @@ if(productContent == null) {
     productContent.put("thruDate", request.getParameter("thruDate"));
     productContent.put("purchaseFromDate", request.getParameter("purchaseFromDate"));
     productContent.put("purchaseThruDate", request.getParameter("purchaseThruDate"));
-    productContent.put("useDaysLimit", request.getParameter("useDaysLimit"));
     productContent.put("useCountLimit", request.getParameter("useCountLimit"));
+    productContent.put("useTime", request.getParameter("useTime"));
+    productContent.put("useTimeUomId", request.getParameter("useTimeUomId"));
+    productContent.put("useRoleTypeId", request.getParameter("useRoleTypeId"));
 }
 context.put("productContent", productContent);
 

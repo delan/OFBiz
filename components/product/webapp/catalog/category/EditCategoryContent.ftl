@@ -23,7 +23,7 @@
  *@author     Brad Steiner (bsteiner@thehungersite.com)
  *@author	  Arukala  (arukala@gmx.de)
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      2.2
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
