@@ -1,0 +1,76 @@
+/*
+ *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a 
+ *  copy of this software and associated documentation files (the "Software"), 
+ *  to deal in the Software without restriction, including without limitation 
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+ *  and/or sell copies of the Software, and to permit persons to whom the 
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included 
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ *@author     Andy Zeneski (jaz@ofbiz.org)
+ *@version    $Revision$
+ *@since      2.2
+ */
+
+import org.ofbiz.core.entity.*;
+import org.ofbiz.core.util.*;
+import org.ofbiz.ordermgr.task.*;
+
+delegator = request.getAttribute("delegator");
+userLogin = session.getAttribute("userLogin");
+context.put("userLogin", userLogin);
+
+// create the sort order
+sort = request.getParameter("sort");
+sortOrder = UtilMisc.toList("currentStatusId", "-priority", "orderDate");
+if (sort != null) {
+    if (sort.equals("name")) {
+        sortOrder.add(0, "firstName");
+        sortOrder.add(0, "lastName");
+    } else if (sort.equals("grandTotal")) {
+        sortOrder.add(0, "-grandTotal");
+    } else {
+        sortOrder.add(0, sort);
+    }
+}
+
+partyTasks = delegator.findByAnd("OrderTaskList", UtilMisc.toMap("statusId", "CAL_ACCEPTED", "orderRoleTypeId", "PLACING_CUSTOMER", "wepaPartyId", userLogin.getString("partyId")), sortOrder);
+if (partyTasks != null) partyTasks = EntityUtil.filterByDate(partyTasks);
+context.put("partyTasks", partyTasks);
+
+// get this user's roles
+partyRoles = delegator.findByAnd("PartyRole", UtilMisc.toMap("partyId", userLogin.getString("partyId")));  
+    
+// build the role list
+pri = partyRoles.iterator();
+pRolesList = new ArrayList();
+while (pri.hasNext()) {
+    partyRole = (GenericValue) pri.next(); 
+    if (!partyRole.getString("roleTypeId").equals("_NA_"))
+        pRolesList.add(new EntityExpr("roleTypeId", EntityOperator.EQUALS, partyRole.getString("roleTypeId")));
+}
+                
+baseList = UtilMisc.toList(new EntityExpr("orderRoleTypeId", EntityOperator.EQUALS, "PLACING_CUSTOMER"), new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "CAL_COMPLETED"), new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "CAL_DELEGATED"));
+expressions = UtilMisc.toList(new EntityExprList(pRolesList, EntityOperator.OR), new EntityExprList(baseList, EntityOperator.AND));
+conditions = new EntityConditionList(expressions, EntityOperator.AND);
+    
+// invoke the query
+roleTasks = delegator.findByCondition("OrderTaskList", conditions, null, sortOrder);    
+if (roleTasks != null) roleTasks = EntityUtil.filterByAnd(roleTasks, baseList);
+if (roleTasks != null) roleTasks = EntityUtil.filterByDate(roleTasks);  
+context.put("roleTasks", roleTasks);
+
+context.put("now", UtilDateTime.nowTimestamp());
+

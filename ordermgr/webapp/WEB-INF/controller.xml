@@ -453,7 +453,7 @@
     <view-map name="potasklist" type="jpublish" page="/order/potasklist.ftl"/>
     <view-map name="schedulepo" type="jpublish" page="/order/schedulepo.ftl"/>
     <view-map name="orderview" type="region"/>   
-    <view-map name="ordertasklist" type="region"/>
+    <view-map name="ordertasklist" type="jpublish" page="/task/ordertasklist.ftl"/>    
     <view-map name="createnewnote" type="jpublish" page="/order/newnote.ftl"/>
     <view-map name="receivepayment" type="region"/>
     
