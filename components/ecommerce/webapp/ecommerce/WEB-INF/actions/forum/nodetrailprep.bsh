@@ -1,5 +1,5 @@
 /*
- * $Id: nodetrailprep.bsh,v 1.1 2004/06/06 08:02:51 jonesde Exp $
+ * $Id: nodetrailprep.bsh,v 1.2 2004/07/24 20:33:07 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -21,6 +21,9 @@
  * OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
+ * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
+ * @version    $Revision: 1.2 $
+ * @since      3.0
  */
 
 import java.util.ArrayList;
@@ -32,7 +35,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
-
 
 import org.ofbiz.base.util.*;
 import org.ofbiz.entity.*;
@@ -47,27 +49,21 @@ import org.ofbiz.entity.model.*;
 import org.ofbiz.content.webapp.ftl.FreeMarkerWorker;
 import org.ofbiz.content.ContentManagementWorker;
 
-
 import javax.servlet.*;
 import javax.servlet.http.*;
-/**
- *
- * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.1 $
- * @since      3.0
-
- */
 
 delegator = (GenericDelegator) request.getAttribute("delegator");
 
 paramMap = UtilHttp.getParameterMap(request);
 nodeTrailCsv = ContentManagementWorker.getFromSomewhere("nodeTrailCsv", paramMap, request, context);
 Map passedParams = null;
+
 if (UtilValidate.isEmpty(nodeTrailCsv)) {
     // this only happens in UploadContentAndImage
     passedParams = (Map)request.getAttribute("passedParams");
-    if (passedParams != null)
+    if (passedParams != null) {
         nodeTrailCsv = passedParams.get("nodeTrailCsv");
+    }
 }
     
 if (UtilValidate.isNotEmpty(nodeTrailCsv)) {
@@ -85,14 +81,14 @@ if (UtilValidate.isNotEmpty(nodeTrailCsv)) {
            dummy = new HashMap();
         }
         dummy.put("nodeTrailCsv", nodeTrailCsv);
-    Debug.logInfo("in nodetrailprep, dummy:" + dummy,"");
+        //Debug.logInfo("in nodetrailprep, dummy:" + dummy,"");
         singleWrapper.putInContext("dummy",dummy);
     }
     context.put("nodeTrailCsv",nodeTrailCsv);
     
-    Debug.logInfo("in nodetrailprep, nodeTrailCsv:" + nodeTrailCsv,"");
+    //Debug.logInfo("in nodetrailprep, nodeTrailCsv:" + nodeTrailCsv,"");
     trailContentList = FreeMarkerWorker.csvToContentList(nodeTrailCsv, delegator);
-    Debug.logInfo("in nodetrailprep, trailContentList:" + trailContentList,"");
+    //Debug.logInfo("in nodetrailprep, trailContentList:" + trailContentList,"");
     context.put("ancestorList", trailContentList);
     //Debug.logInfo("in vewprep, siteAncestorList:" + siteAncestorList,"");
 }

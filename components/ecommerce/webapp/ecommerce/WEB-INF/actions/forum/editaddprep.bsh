@@ -1,5 +1,5 @@
 /*
- * $Id: editaddprep.bsh,v 1.1 2004/06/06 08:02:50 jonesde Exp $
+ * $Id: editaddprep.bsh,v 1.2 2004/07/24 20:33:06 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -21,6 +21,9 @@
  * OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
+ * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
+ * @version    $Revision: 1.2 $
+ * @since      3.0
  */
 
 import java.util.ArrayList;
@@ -50,13 +53,6 @@ import freemarker.template.SimpleSequence;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
-/**
- *
- * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.1 $
- * @since      3.0
-
- */
 
 delegator = (GenericDelegator) request.getAttribute("delegator");
 userLogin = session.getAttribute("userLogin");
@@ -70,38 +66,44 @@ contentIdTo = paramMap.get("contentIdTo");
 singleWrapper.putInContext("contentIdTo", contentIdTo);
 mapKey = paramMap.get("mapKey");
 singleWrapper.putInContext("mapKey", mapKey);
-if (mapKey != null && mapKey.equals("SUMMARY")) 
+
+if (mapKey != null && mapKey.equals("SUMMARY")) {
     singleWrapper.putInContext("textSource", "summaryData");
-else
+} else {
     singleWrapper.putInContext("textSource", "textData");
+}
 
 singleWrapper.putInContext("dataResourceTypeId", "ELECTRONIC_TEXT");
 singleWrapper.putInContext("contentAssocTypeId", "SUB_CONTENT");
-Debug.logInfo("in editaddprep, contentIdTo:" + contentIdTo,"");
-Debug.logInfo("in editaddprep, mapKey:" + mapKey,"");
+//Debug.logInfo("in editaddprep, contentIdTo:" + contentIdTo,"");
+//Debug.logInfo("in editaddprep, mapKey:" + mapKey,"");
 //currentValue = request.getAttribute("currentValue");
 //currentValue = request.getAttribute("currentValue");
+
 currentValue = ContentWorker.getSubContentCache(delegator, contentIdTo, mapKey, null, userLogin, null, null, new Boolean(false), null);
-Debug.logInfo("in editaddprep, currentValue:" + currentValue,"");
+//Debug.logInfo("in editaddprep, currentValue:" + currentValue,"");
+
 if (currentValue == null) {
     parentValue = delegator.findByPrimaryKeyCache("Content", UtilMisc.toMap("contentId", contentIdTo));
     currentValue = delegator.makeValue("Content", null);
     subject =  parentValue.get("contentName");
-    if (mapKey != null && mapKey.equals("SUMMARY"))
+    if (mapKey != null && mapKey.equals("SUMMARY")) {
         subject = "Short " + subject;
+    }
     currentValue.put("contentName", subject);
     currentValue.put("description", subject);
     singleWrapper.putInContext("contentTypeId", "DOCUMENT");
 } else {
     singleWrapper.putInContext("contentTypeId", null);
-    Debug.logInfo("in editaddprep, currentValue:" + currentValue,"");
+    //Debug.logInfo("in editaddprep, currentValue:" + currentValue,"");
 }
 singleWrapper.putInContext("currentValue", currentValue);
 context.put("currentValue", currentValue);
 request.setAttribute("currentValue", currentValue);
 persistAction = paramMap.get("persistAction");
-if (UtilValidate.isEmpty(persistAction))
-    persistAction = "persistContent";
-singleWrapper.putInContext("persistAction", persistAction);
 
-Debug.logInfo("in editaddprep, currentValue:" + currentValue,"");
+if (UtilValidate.isEmpty(persistAction)) {
+    persistAction = "persistContent";
+}
+singleWrapper.putInContext("persistAction", persistAction);
+//Debug.logInfo("in editaddprep, currentValue:" + currentValue,"");

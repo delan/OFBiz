@@ -1,5 +1,5 @@
 /*
- * $Id: CheckOutEvents.java,v 1.34 2004/07/21 13:35:01 ajzeneski Exp $
+ * $Id: CheckOutEvents.java,v 1.35 2004/07/24 20:33:05 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -62,7 +62,7 @@ import org.ofbiz.service.ServiceUtil;
  * @author <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author <a href="mailto:tristana@twibble.org">Tristan Austin</a>
- * @version $Revision: 1.34 $
+ * @version $Revision: 1.35 $
  * @since 2.0
  */
 public class CheckOutEvents {
@@ -683,7 +683,7 @@ public class CheckOutEvents {
         if (mode != null && mode.equals("cust")) {
             String partyId = (String) request.getAttribute("partyId");
             if (partyId != null) {
-                request.getSession().setAttribute("orderPartyId", partyId);
+                cart.setOrderPartyId(partyId);
                 // no userLogin means we are an anonymous shopper; fake the UL for service calls
                 if (userLogin == null) {
                     try {
@@ -695,6 +695,8 @@ public class CheckOutEvents {
                         userLogin.set("partyId", partyId);
                     }
                     request.getSession().setAttribute("userLogin", userLogin);
+                    cart.setUserLogin(userLogin);
+                    Debug.logInfo("Anonymous user-login has been activated", module);
                 }
             }
         }
