@@ -109,6 +109,13 @@ function insertImageName(size,ext) {
 <br>
 <br>
 
+<hr/>
+
+<%=productFormWrapper.renderFormString()%>
+
+<hr/>
+
+
 <%if (product == null) {%>
   <%if (productId != null) {%>
     <h3>Could not find product with ID "<%=productId%>".</h3>
@@ -429,13 +436,6 @@ function insertImageName(size,ext) {
     </td>
   </tr>
 </table>
-
-<hr/>
-
-<%=productFormWrapper.renderFormString()%>
-
-<hr/>
-
 
 </form>
     <%if (productId != null) {%>

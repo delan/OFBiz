@@ -34,19 +34,19 @@
 		
 		<alt-target use-when="product==null" target="createProduct"/>
 		
-		<field use-when="product!=null" name="productId" tooltip="This cannot be changed without re-creating the product."><display/></field>
-		<field use-when="product==null&amp;&amp;productId==null" name="productId"><text size="20" maxlength="20"/></field>
-		<field use-when="product==null&amp;&amp;productId!=null" name="productId" tooltip="Could not find product with ID [${productId}]"><text size="20" maxlength="20"/></field>
+		<field use-when="product!=null" name="productId" tooltip="This cannot be changed without re-creating the product." title-style="tableheadtext"><display/></field>
+		<field use-when="product==null&amp;&amp;productId==null" name="productId" title-style="tableheadtext"><text size="20" maxlength="20"/></field>
+		<field use-when="product==null&amp;&amp;productId!=null" name="productId" tooltip="Could not find product with ID [${productId}]" title-style="tableheadtext"><text size="20" maxlength="20"/></field>
 		
-		<field position="1" name="isVirtual" title="Is VIRTUAL Product?" widget-style="selectBox">
+		<field position="1" name="isVirtual" title="Is VIRTUAL Product?" title-style="tableheadtext" widget-style="selectBox">
 			<drop-down allow-empty="true"><option key="Y"/><option key="N"/></drop-down>
 		</field>
-		<field position="2" name="isVariant" title="Is VARIANT Product?" widget-style="selectBox">
+		<field position="2" name="isVariant" title="Is VARIANT Product?" title-style="tableheadtext" widget-style="selectBox">
 			<drop-down allow-empty="true"><option key="Y"/><option key="N"/></drop-down>
 		</field>
 		<field name="productTypeId" title="Product Type" widget-style="selectBox">
 			<drop-down>
-				<entity-options entity-name="ProductType" description="${description} [${productTypeId}]"/>
+				<entity-options entity-name="ProductType" description="${description}"/> <!-- [${productTypeId}] -->
 			</drop-down>
 		</field>
 		<field name="primaryProductCategoryId" title="Product Category" widget-style="selectBox">
@@ -62,36 +62,36 @@
 		<field name="longDescription" widget-style="textAreaBox"><textarea cols="60" rows="7"/></field>
 		<field name="comments"><text size="60" maxlength="255"/></field>
 		
-		<field position="1" name="introductionDate" title="Intro Date" red-when="after-now"><date-time/></field>
-		<field position="2" name="salesDiscontinuationDate" title="Sales Thru Date" red-when="before-now"><date-time/></field>
-		<field position="1" name="supportDiscontinuationDate" title="Support Thru Date" red-when="before-now"><date-time/></field>
-		<field position="2" name="manufacturerPartyId" title="OEM Party ID" red-when="before-now"><text size="20" maxlength="20"/></field>
+		<field position="1" name="introductionDate" title="Intro Date" title-style="tableheadtext" red-when="after-now"><date-time/></field>
+		<field position="2" name="salesDiscontinuationDate" title="Sales Thru Date" title-style="tableheadtext" red-when="before-now"><date-time/></field>
+		<field position="1" name="supportDiscontinuationDate" title="Support Thru Date" title-style="tableheadtext" red-when="before-now"><date-time/></field>
+		<field position="2" name="manufacturerPartyId" title="OEM Party ID" title-style="tableheadtext" red-when="before-now"><text size="20" maxlength="20"/></field>
 		
-		<field position="1" name="requireInventory" widget-style="selectBox" tooltip="Should inventory be required to purchase this product? If not specified defaults to the Catalog setting.">
+		<field position="1" name="requireInventory" title-style="tableheadtext" widget-style="selectBox" tooltip="Should inventory be required to purchase this product? If not specified defaults to the Catalog setting.">
 			<drop-down allow-empty="true"><option key="Y"/><option key="N"/></drop-down>
 		</field>
-		<field position="2" name="inventoryMessage"><text size="20" maxlength="255"/></field>
-		<field position="1" name="weight"><text size="10" maxlength="20"/></field>
-		<field position="2" name="weightUomId"><text size="10" maxlength="20"/></field>
-		<field position="1" name="quantityIncluded"><text size="10" maxlength="20"/></field>
-		<field position="2" name="quantityUomId"><text size="10" maxlength="20"/></field>
-		<field position="1" name="piecesIncluded"><text size="10" maxlength="20"/></field>
+		<field position="2" name="inventoryMessage" title-style="tableheadtext"><text size="20" maxlength="255"/></field>
+		<field position="1" name="weight" title-style="tableheadtext"><text size="10" maxlength="20"/></field>
+		<field position="2" name="weightUomId" title-style="tableheadtext"><text size="10" maxlength="20"/></field>
+		<field position="1" name="quantityIncluded" title-style="tableheadtext"><text size="10" maxlength="20"/></field>
+		<field position="2" name="quantityUomId" title-style="tableheadtext"><text size="10" maxlength="20"/></field>
+		<field position="1" name="piecesIncluded" title-style="tableheadtext"><text size="10" maxlength="20"/></field>
 
-		<field position="1" name="taxable" widget-style="selectBox">
+		<field position="1" name="taxable" title-style="tableheadtext" widget-style="selectBox">
 			<drop-down allow-empty="true"><option key="Y"/><option key="N"/></drop-down>
 		</field>
-		<field position="2" name="taxCategory"><text size="10" maxlength="20"/></field>
-		<field position="1" name="taxVatCode"><text size="10" maxlength="20"/></field>
-		<field position="2" name="taxDutyCode"><text size="10" maxlength="20"/></field>
+		<field position="2" name="taxCategory" title-style="tableheadtext"><text size="10" maxlength="20"/></field>
+		<field position="1" name="taxVatCode" title-style="tableheadtext"><text size="10" maxlength="20"/></field>
+		<field position="2" name="taxDutyCode" title-style="tableheadtext"><text size="10" maxlength="20"/></field>
 
-		<field position="1" name="chargeShipping" widget-style="selectBox">
+		<field position="1" name="chargeShipping" title-style="tableheadtext" widget-style="selectBox">
 			<drop-down allow-empty="true"><option key="Y"/><option key="N"/></drop-down>
 		</field>
-		<field position="2" name="autoCreateKeywords" widget-style="selectBox">
+		<field position="2" name="autoCreateKeywords" title-style="tableheadtext" widget-style="selectBox">
 			<drop-down allow-empty="true"><option key="Y"/><option key="N"/></drop-down>
 		</field>
 
-		<field name="contentInfoText" title="Content" widget-style="tabletext">
+		<field name="contentInfoText" title="Content" title-style="tableheadtext" widget-style="tabletext">
 			<display description="NOTE: For more content options, use the Content tab." also-hidden="false"/>
 		</field>
 		<field name="smallImageUrl"><text size="60" maxlength="255"/></field>
@@ -102,10 +102,10 @@
 
 		<field name="submit" title="Update Product" widget-style="standardSubmit"><submit button-type="button"/></field>
 
-		<field position="1" name="lastUpdatedByText" title="Last Modified By:" widget-style="tabletext">
+		<field position="1" name="lastUpdatedByText" title="Last Modified By:" title-style="tableheadtext" widget-style="tabletext">
 			<display description="[${product.lastModifiedByUserLogin}] on ${product.lastModifiedDate}" also-hidden="false"/>
 		</field>
-		<field position="2" name="createdByText" title="Created By:" widget-style="tabletext">
+		<field position="2" name="createdByText" title="Created By:" title-style="tableheadtext" widget-style="tabletext">
 			<display description="[${product.createdByUserLogin}] on ${product.createdDate}" also-hidden="false"/>
 		</field>
 	</form>

@@ -220,58 +220,116 @@ public class ModelForm {
             
             // render each field row, except hidden & ignored rows
             fieldIter = this.fieldList.iterator();
-            boolean isFirstFieldRow = true;
-            while (fieldIter.hasNext()) {
-                ModelFormField modelFormField = (ModelFormField) fieldIter.next();
-                ModelFormField.FieldInfo fieldInfo = modelFormField.getFieldInfo();
+            ModelFormField lastFormField = null;
+            ModelFormField currentFormField = null;
+            ModelFormField nextFormField = null;
+            if (fieldIter.hasNext()) {
+                currentFormField = (ModelFormField) fieldIter.next();
+            }
+            if (fieldIter.hasNext()) {
+                nextFormField = (ModelFormField) fieldIter.next();
+            }
+
+            boolean isFirstPass = true;            
+            while (currentFormField != null) {
+                // do the check/get next stuff at the beginning so we can still use the continue stuff easily
+                // don't do it on the first pass though...
+                if (isFirstPass) {
+                    isFirstPass = false;
+                } else {
+                    if (fieldIter.hasNext()) {
+                        // at least two loops left
+                        lastFormField = currentFormField;
+                        currentFormField = nextFormField;
+                        nextFormField = (ModelFormField) fieldIter.next();
+                    } else if (nextFormField != null) {
+                        // okay, just one loop left
+                        lastFormField = currentFormField;
+                        currentFormField = nextFormField;
+                        nextFormField = null;
+                    } else {
+                        // at the end...
+                        lastFormField = currentFormField;
+                        currentFormField = null;
+                        // nextFormField is already null
+                        break;
+                    }
+                }
+                
+                ModelFormField.FieldInfo fieldInfo = currentFormField.getFieldInfo();
                 
                 if (fieldInfo.getFieldType() == ModelFormField.FieldInfo.HIDDEN || fieldInfo.getFieldType() == ModelFormField.FieldInfo.IGNORED) {
                     continue; 
                 }
 
-                if (!modelFormField.shouldUse(context)) {
+                if (!currentFormField.shouldUse(context)) {
                     continue;
                 }
-
-                if (modelFormField.getPosition() == 1) {
-                    if (isFirstFieldRow) {
-                        isFirstFieldRow = false;
+                
+                boolean stayingOnRow = false;
+                if (lastFormField != null) {
+                    if (lastFormField.getPosition() >= currentFormField.getPosition()) {
+                        // moving to next row
+                        stayingOnRow = false;
                     } else {
+                        // staying on same row
+                        stayingOnRow = true;
+                    }
+                }
+
+                int positionSpan = 1;
+                Integer nextPositionInRow = null;
+                if (nextFormField != null) {
+                    if (nextFormField.getPosition() > currentFormField.getPosition()) {
+                        positionSpan = nextFormField.getPosition() - currentFormField.getPosition() - 1;
+                        nextPositionInRow = new Integer(nextFormField.getPosition());
+                    } else {
+                        positionSpan = positions - currentFormField.getPosition();
+                        if (!stayingOnRow && nextFormField.getPosition() > 1) {
+                            // TODO: here is a weird case where it is setup such 
+                            //that the first position(s) in the row are skipped
+                            // not sure what to do about this right now...
+                        }
+                    }
+                }
+                
+                if (stayingOnRow) {
+                    // render spacer cell
+                    //formStringRenderer.renderFormatFieldRowSpacerCell(buffer, context, currentFormField);
+                } else {
+                    if (lastFormField != null) {
                         // render row formatting close
                         formStringRenderer.renderFormatFieldRowClose(buffer, context, this);
                     }
                     
                     // render row formatting open
                     formStringRenderer.renderFormatFieldRowOpen(buffer, context, this);
-                } else {
-                    // render spacer cell
-                    formStringRenderer.renderFormatFieldRowSpacerCell(buffer, context, modelFormField);
                 }
                 
                 // render title formatting open
-                formStringRenderer.renderFormatFieldRowTitleCellOpen(buffer, context, modelFormField);
+                formStringRenderer.renderFormatFieldRowTitleCellOpen(buffer, context, currentFormField);
                 
                 // render title (unless this is a submit or a reset field)
                 if (fieldInfo.getFieldType() != ModelFormField.FieldInfo.SUBMIT && fieldInfo.getFieldType() != ModelFormField.FieldInfo.RESET) {
-                    formStringRenderer.renderFieldTitle(buffer, context, modelFormField);
+                    formStringRenderer.renderFieldTitle(buffer, context, currentFormField);
                 } else {
                     formStringRenderer.renderFormatEmptySpace(buffer, context, this);
                 }
                 
                 // render title formatting close
-                formStringRenderer.renderFormatFieldRowTitleCellClose(buffer, context, modelFormField);
+                formStringRenderer.renderFormatFieldRowTitleCellClose(buffer, context, currentFormField);
                 
                 // render separator
-                formStringRenderer.renderFormatFieldRowSpacerCell(buffer, context, modelFormField);
+                formStringRenderer.renderFormatFieldRowSpacerCell(buffer, context, currentFormField);
                                 
                 // render widget formatting open
-                formStringRenderer.renderFormatFieldRowWidgetCellOpen(buffer, context, modelFormField, positions);
+                formStringRenderer.renderFormatFieldRowWidgetCellOpen(buffer, context, currentFormField, positions, positionSpan, nextPositionInRow);
                 
                 // render widget
-                modelFormField.renderFieldString(buffer, context, formStringRenderer);
+                currentFormField.renderFieldString(buffer, context, formStringRenderer);
                 
                 // render widget formatting close
-                formStringRenderer.renderFormatFieldRowWidgetCellClose(buffer, context, modelFormField, positions);
+                formStringRenderer.renderFormatFieldRowWidgetCellClose(buffer, context, currentFormField, positions, positionSpan, nextPositionInRow);
 
             }
             // always render row formatting close after the end

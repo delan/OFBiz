@@ -111,6 +111,8 @@ public class HtmlFormRenderer implements FormStringRenderer {
         buffer.append(displayField.getDescription(context));
         buffer.append("</span>");
         
+        // TODO: render the tooltip, in other methods too
+        
         this.appendWhitespace(buffer);
     }
 
@@ -287,6 +289,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
             buffer.append(modelFormField.getParameterName());
             buffer.append(", '");
             buffer.append(modelFormField.getEntry(context, dateTimeField.getDefaultDateTimeString(context)));
+            buffer.append("');\">");
             buffer.append("<img src=\"");
             this.appendContentUrl(buffer, "/images/cal.gif");
             buffer.append("\" width=\"16\" height=\"16\" border=\"0\" alt=\"Calendar\"></a>");
@@ -753,12 +756,22 @@ public class HtmlFormRenderer implements FormStringRenderer {
     /* (non-Javadoc)
      * @see org.ofbiz.core.widget.form.FormStringRenderer#renderFormatFieldRowWidgetCellOpen(java.lang.StringBuffer, java.util.Map, org.ofbiz.core.widget.form.ModelFormField, int)
      */
-    public void renderFormatFieldRowWidgetCellOpen(StringBuffer buffer, Map context, ModelFormField modelFormField, int positions) {
-        if (positions == 1) {
-            buffer.append("<td width=\"80%\" align=\"left\">");
+    public void renderFormatFieldRowWidgetCellOpen(StringBuffer buffer, Map context, ModelFormField modelFormField, int positions, int positionSpan, Integer nextPositionInRow) {
+        buffer.append("<td width=\"");
+        if (nextPositionInRow != null || modelFormField.getPosition() > 1) {
+            buffer.append("30");
         } else {
-            buffer.append("<td width=\"30%\" align=\"left\">");
+            buffer.append("80");
         }
+        buffer.append("%\" align=\"left\"");
+        if (positionSpan > 0) {
+            buffer.append(" colspan=\"");
+            // do a span of 1 for this column, plus 3 columns for each spanned 
+            //position or each blank position that this will be filling in 
+            buffer.append(1 + (positionSpan*3));
+            buffer.append("\"");
+        }
+        buffer.append(">");
         
         this.appendWhitespace(buffer);
     }
@@ -766,7 +779,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
     /* (non-Javadoc)
      * @see org.ofbiz.core.widget.form.FormStringRenderer#renderFormatFieldRowWidgetCellClose(java.lang.StringBuffer, java.util.Map, org.ofbiz.core.widget.form.ModelFormField, int)
      */
-    public void renderFormatFieldRowWidgetCellClose(StringBuffer buffer, Map context, ModelFormField modelFormField, int positions) {
+    public void renderFormatFieldRowWidgetCellClose(StringBuffer buffer, Map context, ModelFormField modelFormField, int positions, int positionSpan, Integer nextPositionInRow) {
         buffer.append("</td>");
         
         this.appendWhitespace(buffer);
