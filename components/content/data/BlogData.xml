@@ -59,7 +59,7 @@
     <ContentPurposeOperation contentPurposeTypeId="ARTICLE" contentOperationId="CONTENT_UPDATE" roleTypeId="OWNER" statusId="BLOG_DRAFT" privilegeEnumId="CNT_PRV_NA_"/>
     <ContentPurposeOperation contentPurposeTypeId="ARTICLE" contentOperationId="CONTENT_VIEW" roleTypeId="BLOG_AUTHOR" statusId="BLOG_PUBLISHED" privilegeEnumId="CNT_PRV_NA_"/>
     <ContentPurposeOperation contentPurposeTypeId="ARTICLE" contentOperationId="CONTENT_VIEW" roleTypeId="BLOG_EDITOR" statusId="_NA_" privilegeEnumId="CNT_PRV_NA_"/>
-    <ContentPurposeOperation contentPurposeTypeId="ARTICLE" contentOperationId="CONTENT_VIEW" roleTypeId="BLOG_USER" statusId="BLOG_PUBLISHED" privilegeEnumId="SUBSCRIBE_BRONZE"/>
+    <ContentPurposeOperation contentPurposeTypeId="ARTICLE" contentOperationId="CONTENT_VIEW" roleTypeId="BLOG_USER" statusId="BLOG_PUBLISHED" privilegeEnumId="CNT_PRV_BRONZE"/>
     <ContentPurposeOperation contentPurposeTypeId="ARTICLE" contentOperationId="CONTENT_VIEW" roleTypeId="OWNER" statusId="BLOG_DRAFT" privilegeEnumId="CNT_PRV_NA_"/>
     <ContentPurposeOperation contentPurposeTypeId="RESPONSE" contentOperationId="CONTENT_CREATE" roleTypeId="BLOG_EDITOR" statusId="_NA_" privilegeEnumId="CNT_PRV_NA_"/>
     <ContentPurposeOperation contentPurposeTypeId="RESPONSE" contentOperationId="CONTENT_PUBLISH" roleTypeId="BLOG_PUBLISHER" statusId="BLOG_PUBLISHED" privilegeEnumId="CNT_PRV_NA_"/>
