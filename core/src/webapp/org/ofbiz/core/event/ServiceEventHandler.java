@@ -119,9 +119,8 @@ public class ServiceEventHandler implements EventHandler {
                 value = request.getSession().getAttribute(name);
             }
             
-            if (value != null) {
-                serviceContext.put(name,value);
-            }
+            //set even if null so that values will get nulled in the db later on
+            serviceContext.put(name,value);
         }
 
         // get only the parameters for this service
