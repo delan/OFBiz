@@ -48,17 +48,17 @@
         <attribute name="productId" type="String" mode="IN" optional="false"/>
         <attribute name="productInstance" type="GenericValue" mode="IN" optional="true"/>
     </service>
-    
+
     <service name="discontinueProductSales" engine="simple"
                 location="org/ofbiz/product/product/ProductServices.xml" invoke="discontinueProductSales" auth="false">
         <description>Discontinue Product Sales</description>
         <attribute name="productId" type="String" mode="IN" optional="false"/>
     </service>
-    
+
     <service name="createProductReview" engine="simple"
             location="org/ofbiz/product/product/ProductServices.xml" invoke="createProductReview" auth="true">
-        <description>Create a product review entity</description>     
-        <attribute name="productId" type="String" mode="IN" optional="false"/>        
+        <description>Create a product review entity</description>
+        <attribute name="productId" type="String" mode="IN" optional="false"/>
         <attribute name="postedAnonymous" type="Boolean" mode="IN" optional="true"/>
         <attribute name="productRating" type="Double" mode="IN" optional="false"/>
         <attribute name="productReview" type="String" mode="IN" optional="false"/>
@@ -116,7 +116,7 @@
                 location="org/ofbiz/product/product/ProductServices.xml" invoke="deleteGoodIdentification" auth="true">
         <description>Delete a GoodIdentification</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
-    </service>    
+    </service>
 
     <!-- ProductGlAccount Services -->
     <service name="createProductGlAccount" default-entity-name="ProductGlAccount" engine="simple"
@@ -137,7 +137,7 @@
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <attribute name="productId" type="String" mode="IN" optional="false"/>
         <attribute name="productGlAccountTypeId" type="String" mode="IN" optional="false"/>
-    </service>    
+    </service>
 
     <!-- Product Catalog Services -->
     <service name="createProdCatalog" default-entity-name="ProdCatalog" engine="simple"
@@ -145,14 +145,14 @@
         <description>Create a ProdCatalog</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
-        <override name="catalogName" optional="false"/>        
+        <override name="catalogName" optional="false"/>
     </service>
     <service name="updateProdCatalog" default-entity-name="ProdCatalog" engine="simple"
                 location="org/ofbiz/product/catalog/CatalogServices.xml" invoke="updateProdCatalog" auth="true">
         <description>Update an ProdCatalog</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
-        <override name="catalogName" optional="false"/>        
+        <override name="catalogName" optional="false"/>
     </service>
     <service name="deleteProdCatalog" default-entity-name="ProdCatalog" engine="simple"
                 location="org/ofbiz/product/catalog/CatalogServices.xml" invoke="deleteProdCatalog" auth="true">
@@ -447,9 +447,139 @@
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
-    <service name="deleteProductPromo" default-entity-name="ProductPromo" engine="simple"
+    <!-- <service name="deleteProductPromo" default-entity-name="ProductPromo" engine="simple"
                 location="org/ofbiz/product/promo/PromoServices.xml" invoke="deleteProductPromo" auth="true">
         <description>Delete an ProductPromo</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service> -->
+
+    <service name="createProductPromoAction" default-entity-name="ProductPromoAction" engine="simple"
+                location="org/ofbiz/product/promo/PromoServices.xml" invoke="createProductPromoAction" auth="true">
+        <description>Create an ProductPromo</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <override name="productPromoActionSeqId" mode="OUT"/>
+        <override name="productPromoActionEnumId" optional="false"/>
+    </service>
+    <service name="updateProductPromoAction" default-entity-name="ProductPromoAction" engine="simple"
+                location="org/ofbiz/product/promo/PromoServices.xml" invoke="updateProductPromoAction" auth="true">
+        <description>Update an ProductPromo</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteProductPromoAction" default-entity-name="ProductPromoAction" engine="simple"
+                location="org/ofbiz/product/promo/PromoServices.xml" invoke="deleteProductPromoAction" auth="true">
+        <description>Delete an ProductPromo</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+
+    <service name="createProductPromoCategory" default-entity-name="ProductPromoCategory" engine="simple"
+                location="org/ofbiz/product/promo/PromoServices.xml" invoke="createProductPromoCategory" auth="true">
+        <description>Create an ProductPromoCategory</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <override name="productPromoActionSeqId" mode="OUT"/>
+    </service>
+    <service name="updateProductPromoCategory" default-entity-name="ProductPromoCategory" engine="simple"
+                location="org/ofbiz/product/promo/PromoServices.xml" invoke="updateProductPromoCategory" auth="true">
+        <description>Update an ProductPromoCategory</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteProductPromoCategory" default-entity-name="ProductPromoCategory" engine="simple"
+                location="org/ofbiz/product/promo/PromoServices.xml" invoke="deleteProductPromoCategory" auth="true">
+        <description>Delete an ProductPromoCategory</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+
+    <service name="createProductPromoCode" default-entity-name="ProductPromoCode" engine="simple"
+                location="org/ofbiz/product/promo/PromoServices.xml" invoke="createProductPromoCode" auth="true">
+        <description>Create an ProductPromoCode</description>
+        <auto-attributes include="pk" mode="OUT" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateProductPromoCode" default-entity-name="ProductPromoCode" engine="simple"
+                location="org/ofbiz/product/promo/PromoServices.xml" invoke="updateProductPromoCode" auth="true">
+        <description>Update an ProductPromoCode</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteProductPromoCode" default-entity-name="ProductPromoCode" engine="simple"
+                location="org/ofbiz/product/promo/PromoServices.xml" invoke="deleteProductPromoCode" auth="true">
+        <description>Delete an ProductPromoCode</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+
+    <service name="createProductPromoCodeEmail" default-entity-name="ProductPromoCodeEmail" engine="simple"
+                location="org/ofbiz/product/promo/PromoServices.xml" invoke="createProductPromoCodeEmail" auth="true">
+        <description>Create an ProductPromoCodeEmail</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateProductPromoCodeEmail" default-entity-name="ProductPromoCodeEmail" engine="simple"
+                location="org/ofbiz/product/promo/PromoServices.xml" invoke="updateProductPromoCodeEmail" auth="true">
+        <description>Update an ProductPromoCodeEmail</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteProductPromoCodeEmail" default-entity-name="ProductPromoCodeEmail" engine="simple"
+                location="org/ofbiz/product/promo/PromoServices.xml" invoke="deleteProductPromoCodeEmail" auth="true">
+        <description>Delete an ProductPromoCodeEmail</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+
+    <service name="createProductPromoCodeParty" default-entity-name="ProductPromoCodeParty" engine="simple"
+                location="org/ofbiz/product/promo/PromoServices.xml" invoke="createProductPromoCodeParty" auth="true">
+        <description>Create an ProductPromoCodeParty</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateProductPromoCodeParty" default-entity-name="ProductPromoCodeParty" engine="simple"
+                location="org/ofbiz/product/promo/PromoServices.xml" invoke="updateProductPromoCodeParty" auth="true">
+        <description>Update an ProductPromoCodeParty</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteProductPromoCodeParty" default-entity-name="ProductPromoCodeParty" engine="simple"
+                location="org/ofbiz/product/promo/PromoServices.xml" invoke="deleteProductPromoCodeParty" auth="true">
+        <description>Delete an ProductPromoCodeParty</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+
+    <service name="createProductPromoCond" default-entity-name="ProductPromoCond" engine="simple"
+                location="org/ofbiz/product/promo/PromoServices.xml" invoke="createProductPromoCond" auth="true">
+        <description>Create an ProductPromo</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <override name="productPromoCondSeqId" mode="OUT"/>
+    </service>
+    <service name="updateProductPromoCond" default-entity-name="ProductPromoCond" engine="simple"
+                location="org/ofbiz/product/promo/PromoServices.xml" invoke="updateProductPromoCond" auth="true">
+        <description>Update an ProductPromo</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteProductPromoCond" default-entity-name="ProductPromoCond" engine="simple"
+                location="org/ofbiz/product/promo/PromoServices.xml" invoke="deleteProductPromoCond" auth="true">
+        <description>Delete an ProductPromo</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+
+    <service name="createProductPromoProduct" default-entity-name="ProductPromoProduct" engine="simple"
+                location="org/ofbiz/product/promo/PromoServices.xml" invoke="createProductPromoProduct" auth="true">
+        <description>Create an ProductPromoProduct</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateProductPromoProduct" default-entity-name="ProductPromoProduct" engine="simple"
+                location="org/ofbiz/product/promo/PromoServices.xml" invoke="updateProductPromoProduct" auth="true">
+        <description>Update an ProductPromoProduct</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteProductPromoProduct" default-entity-name="ProductPromoProduct" engine="simple"
+                location="org/ofbiz/product/promo/PromoServices.xml" invoke="deleteProductPromoProduct" auth="true">
+        <description>Delete an ProductPromoProduct</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
 
@@ -467,43 +597,6 @@
     </service>
     <service name="deleteProductPromoRule" default-entity-name="ProductPromoRule" engine="simple"
                 location="org/ofbiz/product/promo/PromoServices.xml" invoke="deleteProductPromoRule" auth="true">
-        <description>Delete an ProductPromo</description>
-        <auto-attributes include="pk" mode="IN" optional="false"/>
-    </service>
-
-    <service name="createProductPromoCond" default-entity-name="ProductPromoCond" engine="simple"
-                location="org/ofbiz/product/promo/PromoServices.xml" invoke="createProductPromoCond" auth="true">
-        <description>Create an ProductPromo</description>
-        <auto-attributes include="pk" mode="IN" optional="false"/>
-        <auto-attributes include="nonpk" mode="IN" optional="true"/>
-    </service>
-    <service name="updateProductPromoCond" default-entity-name="ProductPromoCond" engine="simple"
-                location="org/ofbiz/product/promo/PromoServices.xml" invoke="updateProductPromoCond" auth="true">
-        <description>Update an ProductPromo</description>
-        <auto-attributes include="pk" mode="IN" optional="false"/>
-        <auto-attributes include="nonpk" mode="IN" optional="true"/>
-    </service>
-    <service name="deleteProductPromoCond" default-entity-name="ProductPromoCond" engine="simple"
-                location="org/ofbiz/product/promo/PromoServices.xml" invoke="deleteProductPromoCond" auth="true">
-        <description>Delete an ProductPromo</description>
-        <auto-attributes include="pk" mode="IN" optional="false"/>
-    </service>
-
-    <service name="createProductPromoAction" default-entity-name="ProductPromoAction" engine="simple"
-                location="org/ofbiz/product/promo/PromoServices.xml" invoke="createProductPromoAction" auth="true">
-        <description>Create an ProductPromo</description>
-        <auto-attributes include="pk" mode="IN" optional="false"/>
-        <auto-attributes include="nonpk" mode="IN" optional="true"/>
-        <override name="productPromoActionEnumId" optional="false"/>
-    </service>
-    <service name="updateProductPromoAction" default-entity-name="ProductPromoAction" engine="simple"
-                location="org/ofbiz/product/promo/PromoServices.xml" invoke="updateProductPromoAction" auth="true">
-        <description>Update an ProductPromo</description>
-        <auto-attributes include="pk" mode="IN" optional="false"/>
-        <auto-attributes include="nonpk" mode="IN" optional="true"/>
-    </service>
-    <service name="deleteProductPromoAction" default-entity-name="ProductPromoAction" engine="simple"
-                location="org/ofbiz/product/promo/PromoServices.xml" invoke="deleteProductPromoAction" auth="true">
         <description>Delete an ProductPromo</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
@@ -609,13 +702,13 @@
         <description>Batch service for checking and sending backorder notifications</description>
         <!-- this service has no parameters IN or OUT -->
     </service>
-    
+
     <service name="balanceInventoryItems" engine="simple"
             location="org/ofbiz/product/inventory/InventoryServices.xml" invoke="balanceInventoryItems" auth="true">
         <description>Balance inventory items based on the item passed</description>
         <attribute name="inventoryItemId" type="String" mode="IN" optional="false"/>
     </service>
-    
+
     <service name="reserveProductInventory" engine="simple"
             location="org/ofbiz/product/inventory/InventoryServices.xml" invoke="reserveProductInventory" auth="true">
         <description>Reserve Inventory for a Product.
@@ -678,7 +771,7 @@
             Iterates through each OrderItemInventoryRes on each OrderItem for the order
             with the given orderId and cancels the reservation by changing the status
             of the OrderItemInventoryRes and incrementing the corresponding non-serialized
-            inventoryItem's availableToPromise quantity, or setting the status of the 
+            inventoryItem's availableToPromise quantity, or setting the status of the
             corresponding serialized inventoryItem to available.
         </description>
         <attribute name="orderId" type="String" mode="IN" optional="false"/>
@@ -689,7 +782,7 @@
         <description>Cancels an inventory reservation</description>
         <auto-attributes entity-name="OrderItemInventoryRes" include="pk" mode="IN" optional="false"/>
     </service>
-    
+
     <service name="interfaceInventoryTransfer" engine="interface" location="" invoke="">
     	<description>Inventory Transfer Interface</description>
     	<attribute name="inventoryItemId" type="String" mode="IN" optional="false"/>
@@ -703,9 +796,9 @@
     	<attribute name="itemIssuanceId" type="String" mode="IN" optional="true"/>
     	<attribute name="sendDate" type="Timestamp" mode="IN" optional="true"/>
     	<attribute name="receiveDate" type="Timestamp" mode="IN" optional="true"/>
-    	<attribute name="comments" type="String" mode="IN" optional="true"/>    	
+    	<attribute name="comments" type="String" mode="IN" optional="true"/>
     </service>
-    <service name="createInventoryTransfer" engine="simple" 
+    <service name="createInventoryTransfer" engine="simple"
     		location="org/ofbiz/product/inventory/InventoryServices.xml" invoke="createInventoryTransfer" auth="true">
     	<description>Create an inventory transfer</description>
     	<implements service="interfaceInventoryTransfer"/>
@@ -718,18 +811,18 @@
     	<implements service="interfaceInventoryTransfer"/>
     	<attribute name="inventoryTransferId" type="String" mode="IN" optional="false"/>
     </service>
-    <service name="prepareInventoryTransfer" engine="java" 
+    <service name="prepareInventoryTransfer" engine="java"
             location="org.ofbiz.product.inventory.InventoryServices" invoke="prepareInventoryTransfer">
     	<description>Prepares inventory item for transfer</description>
     	<attribute name="inventoryItemId" type="String" mode="IN" optional="false"/>
-    	<attribute name="xferQty" type="Double" mode="IN" optional="false"/>    	
+    	<attribute name="xferQty" type="Double" mode="IN" optional="false"/>
     </service>
-    <service name="completeInventoryTransfer" engine="java" 
+    <service name="completeInventoryTransfer" engine="java"
             location="org.ofbiz.product.inventory.InventoryServices" invoke="completeInventoryTransfer">
     	<description>Completes the inventory transfer</description>
     	<attribute name="inventoryTransferId" type="String" mode="IN" optional="false"/>
     </service>
-    <service name="cancelInventoryTransfer" engine="java" 
+    <service name="cancelInventoryTransfer" engine="java"
             location="org.ofbiz.product.inventory.InventoryServices" invoke="cancelInventoryTransfer">
     	<description>Cancel the inventory transfer</description>
     	<attribute name="inventoryTransferId" type="String" mode="IN" optional="false"/>
@@ -905,13 +998,13 @@
         <description>Delete a Facility</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
-    
+
     <service name="createFacilityLocation" default-entity-name="FacilityLocation" engine="simple"
                 location="org/ofbiz/product/storage/StorageServices.xml" invoke="createFacilityLocation" auth="true">
         <description>Create a Facility Location</description>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
         <attribute name="facilityId" type="String" mode="IN" optional="false"/>
-        <attribute name="locationSeqId" type="String" mode="OUT" optional="false"/>       
+        <attribute name="locationSeqId" type="String" mode="OUT" optional="false"/>
     </service>
     <service name="updateFacilityLocation" default-entity-name="FacilityLocation" engine="simple"
                 location="org/ofbiz/product/storage/StorageServices.xml" invoke="updateFacilityLocation" auth="true">
@@ -923,8 +1016,8 @@
                 location="org/ofbiz/product/storage/StorageServices.xml" invoke="deleteFacilityLocation" auth="true">
         <description>Delete a Facility Location</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
-    </service>    
-    
+    </service>
+
     <service name="createFacilityGroup" default-entity-name="FacilityGroup" engine="simple"
                 location="org/ofbiz/product/storage/StorageServices.xml" invoke="createFacilityGroup" auth="true">
         <description>Create a Facility Group</description>
@@ -943,84 +1036,84 @@
                 location="org/ofbiz/product/storage/StorageServices.xml" invoke="deleteFacilityGroup" auth="true">
         <description>Delete a Facility Group</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
-    </service>    
+    </service>
 
-    <!-- Facility ContactMech services -->  
+    <!-- Facility ContactMech services -->
     <service name="createFacilityContactMech" engine="simple" debug="true"
             location="org/ofbiz/product/storage/FacilityContactMechServices.xml" invoke="createFacilityContactMech" auth="true">
-        <description>Create a FacilityContactMech</description>        
+        <description>Create a FacilityContactMech</description>
         <auto-attributes entity-name="ContactMech" include="nonpk" mode="IN" optional="true"/>
         <auto-attributes entity-name="FacilityContactMech" include="all" mode="IN" optional="true"/>
         <attribute name="contactMechPurposeTypeId" type="String" mode="IN" optional="true"/>
         <attribute name="contactMechId" type="String" mode="INOUT" optional="true"/>
-    </service>           
+    </service>
     <service name="updateFacilityContactMech" engine="simple"
             location="org/ofbiz/product/storage/FacilityContactMechServices.xml" invoke="updateFacilityContactMech" auth="true">
         <description>Update a FacilityContactMech</description>
         <auto-attributes entity-name="FacilityContactMech" include="all" mode="IN" optional="true"/>
-        <attribute name="contactMechId" type="String" mode="INOUT" optional="false"/>                
+        <attribute name="contactMechId" type="String" mode="INOUT" optional="false"/>
         <attribute name="contactMechTypeId" type="String" mode="IN" optional="false"/>
         <attribute name="infoString" type="String" mode="IN" optional="true"/>
         <attribute name="newContactMechId" type="String" mode="IN" optional="true"/>
-    </service>     
+    </service>
     <service name="deleteFacilityContactMech" engine="simple"
             location="org/ofbiz/product/storage/FacilityContactMechServices.xml" invoke="deleteFacilityContactMech" auth="true">
         <description>Delete a FacilityContactMech</description>
         <attribute name="facilityId" type="String" mode="IN" optional="false"/>
         <attribute name="contactMechId" type="String" mode="IN" optional="false"/>
-    </service>    
+    </service>
     <service name="createFacilityPostalAddress" engine="simple"
             location="org/ofbiz/product/storage/FacilityContactMechServices.xml" invoke="createFacilityPostalAddress" auth="true">
         <description>Create a Postal Address</description>
-        <auto-attributes entity-name="FacilityContactMech" include="all" mode="IN" optional="true"/>         
+        <auto-attributes entity-name="FacilityContactMech" include="all" mode="IN" optional="true"/>
         <auto-attributes entity-name="PostalAddress" include="nonpk" mode="IN" optional="true"/>
         <attribute name="paymentMethodId" type="String" mode="IN" optional="true"/>
         <attribute name="contactMechPurposeTypeId" type="String" mode="IN" optional="true"/>
         <attribute name="contactMechId" type="String" mode="OUT" optional="false"/>
         <override name="address1" optional="false"/>
         <override name="city" optional="false"/>
-        <override name="postalCode" optional="true"/>                
-    </service>    
+        <override name="postalCode" optional="true"/>
+    </service>
     <service name="updateFacilityPostalAddress" engine="simple"
             location="org/ofbiz/product/storage/FacilityContactMechServices.xml" invoke="updateFacilityPostalAddress" auth="true">
-        <description>Update a Postal Address</description>        
+        <description>Update a Postal Address</description>
         <auto-attributes entity-name="FacilityContactMech" include="all" mode="IN" optional="true"/>
         <auto-attributes entity-name="PostalAddress" include="nonpk" mode="IN" optional="true"/>
         <attribute name="contactMechId" type="String" mode="INOUT" optional="false"/>
         <attribute name="directions" type="String" mode="IN" optional="true"/>
-    </service>   
+    </service>
     <service name="createFacilityTelecomNumber" engine="simple"
             location="org/ofbiz/product/storage/FacilityContactMechServices.xml" invoke="createFacilityTelecomNumber" auth="true">
         <description>Create a Telecommunications Number</description>
-        <auto-attributes entity-name="FacilityContactMech" include="all" mode="IN" optional="true"/>        
+        <auto-attributes entity-name="FacilityContactMech" include="all" mode="IN" optional="true"/>
         <auto-attributes entity-name="TelecomNumber" include="nonpk" mode="IN" optional="true"/>
         <attribute name="contactMechPurposeTypeId" type="String" mode="IN" optional="true"/>
         <attribute name="contactMechId" type="String" mode="OUT" optional="false"/>
-    </service>    
+    </service>
     <service name="updateFacilityTelecomNumber" engine="simple"
             location="org/ofbiz/product/storage/FacilityContactMechServices.xml" invoke="updateFacilityTelecomNumber" auth="true">
-        <description>Update a Telecommunications Number</description>        
-        <auto-attributes entity-name="FacilityContactMech" include="all" mode="IN" optional="true"/>  
+        <description>Update a Telecommunications Number</description>
+        <auto-attributes entity-name="FacilityContactMech" include="all" mode="IN" optional="true"/>
         <auto-attributes entity-name="TelecomNumber" include="nonpk" mode="IN" optional="true"/>
-        <attribute name="contactMechId" type="String" mode="INOUT" optional="false"/>   
-    </service>    
+        <attribute name="contactMechId" type="String" mode="INOUT" optional="false"/>
+    </service>
     <service name="createFacilityEmailAddress" engine="simple"
             location="org/ofbiz/product/storage/FacilityContactMechServices.xml" invoke="createFacilityEmailAddress" auth="true">
-        <description>Create an Email Address</description>        
+        <description>Create an Email Address</description>
         <auto-attributes entity-name="ContactMech" include="nonpk" mode="IN" optional="true"/>
         <auto-attributes entity-name="FacilityContactMech" include="all" mode="IN" optional="true"/>
         <attribute name="contactMechPurposeTypeId" type="String" mode="IN" optional="true"/>
         <attribute name="contactMechId" type="String" mode="INOUT" optional="true"/>
-        <attribute name="emailAddress" type="String" mode="IN" optional="false"/>  
-    </service>        
+        <attribute name="emailAddress" type="String" mode="IN" optional="false"/>
+    </service>
     <service name="updateFacilityEmailAddress" engine="simple"
             location="org/ofbiz/product/storage/FacilityContactMechServices.xml" invoke="updateFacilityEmailAddress" auth="true">
         <description>Update an Email Address</description>
         <auto-attributes entity-name="FacilityContactMech" include="all" mode="IN" optional="true"/>
         <attribute name="contactMechId" type="String" mode="INOUT" optional="false"/>
-        <attribute name="emailAddress" type="String" mode="IN" optional="false"/>        
+        <attribute name="emailAddress" type="String" mode="IN" optional="false"/>
     </service>
-    
+
     <service name="createFacilityContactMechPurpose" engine="simple"
             location="org/ofbiz/product/storage/FacilityContactMechServices.xml" invoke="createFacilityContactMechPurpose">
         <description>Create a purpose for facility contact mech</description>
@@ -1033,7 +1126,7 @@
             location="org/ofbiz/product/storage/FacilityContactMechServices.xml" invoke="deleteFacilityContactMechPurpose">
         <description>Delete a purpose for facility contact mech</description>
         <auto-attributes entity-name="FacilityContactMechPurpose" include="pk" mode="IN" optional="false"/>
-    </service>    
+    </service>
 
 <!-- end cm -->
     <service name="addContactMechToFacility" engine="simple"
@@ -1048,15 +1141,15 @@
         <attribute name="facilityId" type="String" mode="IN" optional="false"/>
         <attribute name="contactMechId" type="String" mode="IN" optional="false"/>
     </service>
-    
+
     <service name="addFacilityToGroup" engine="simple"
                 location="org/ofbiz/product/storage/StorageServices.xml" invoke="addFacilityToGroup" auth="true">
         <description>Add Facility To FacilityGroup</description>
         <attribute name="facilityGroupId" type="String" mode="IN" optional="false"/>
         <attribute name="facilityId" type="String" mode="IN" optional="false"/>
         <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
-        <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>    
-        <attribute name="sequenceNum" type="Long" mode="IN" optional="true"/>   
+        <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="sequenceNum" type="Long" mode="IN" optional="true"/>
     </service>
     <service name="updateFacilityToGroup" engine="simple"
                 location="org/ofbiz/product/storage/StorageServices.xml" invoke="updateFacilityToGroup" auth="true">
@@ -1064,8 +1157,8 @@
         <attribute name="facilityGroupId" type="String" mode="IN" optional="false"/>
         <attribute name="facilityId" type="String" mode="IN" optional="false"/>
         <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
-        <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>  
-        <attribute name="sequenceNum" type="Long" mode="IN" optional="true"/>  
+        <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="sequenceNum" type="Long" mode="IN" optional="true"/>
     </service>
     <service name="removeFacilityFromGroup" engine="simple"
                 location="org/ofbiz/product/storage/StorageServices.xml" invoke="removeFacilityFromGroup" auth="true">
@@ -1073,8 +1166,8 @@
         <attribute name="facilityGroupId" type="String" mode="IN" optional="false"/>
         <attribute name="facilityId" type="String" mode="IN" optional="false"/>
         <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
-    </service>    
-    
+    </service>
+
     <service name="addFacilityGroupToGroup" engine="simple"
                 location="org/ofbiz/product/storage/StorageServices.xml" invoke="addFacilityGroupToGroup" auth="true">
         <description>Add FacilityGroup To FacilityGroup</description>
@@ -1099,53 +1192,53 @@
         <attribute name="facilityGroupId" type="String" mode="IN" optional="false"/>
         <attribute name="parentFacilityGroupId" type="String" mode="IN" optional="false"/>
         <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
-    </service>    
-    
+    </service>
+
     <service name="addPartyToFacility" engine="simple"
                 location="org/ofbiz/product/storage/StorageServices.xml" invoke="addPartyToFacility" auth="true">
         <description>Add Party To Facility</description>
         <attribute name="facilityId" type="String" mode="IN" optional="false"/>
         <attribute name="partyId" type="String" mode="IN" optional="false"/>
-        <attribute name="roleTypeId" type="String" mode="IN" optional="false"/>        
+        <attribute name="roleTypeId" type="String" mode="IN" optional="false"/>
     </service>
     <service name="addPartyToFacilityGroup" engine="simple"
                 location="org/ofbiz/product/storage/StorageServices.xml" invoke="addPartyToFacilityGroup" auth="true">
         <description>Add Party To FacilityGroup</description>
         <attribute name="facilityGroupId" type="String" mode="IN" optional="false"/>
         <attribute name="partyId" type="String" mode="IN" optional="false"/>
-        <attribute name="roleTypeId" type="String" mode="IN" optional="false"/>        
-    </service>    
-    
+        <attribute name="roleTypeId" type="String" mode="IN" optional="false"/>
+    </service>
+
     <service name="removePartyFromFacility" engine="simple"
                 location="org/ofbiz/product/storage/StorageServices.xml" invoke="removePartyFromFacility" auth="true">
         <description>Remove Party From Facility</description>
         <attribute name="facilityId" type="String" mode="IN" optional="false"/>
         <attribute name="partyId" type="String" mode="IN" optional="false"/>
-        <attribute name="roleTypeId" type="String" mode="IN" optional="false"/>        
+        <attribute name="roleTypeId" type="String" mode="IN" optional="false"/>
     </service>
     <service name="removePartyFromFacilityGroup" engine="simple"
                 location="org/ofbiz/product/storage/StorageServices.xml" invoke="removePartyFromFacilityGroup" auth="true">
         <description>Remove Party From FacilityGroup</description>
         <attribute name="facilityGroupId" type="String" mode="IN" optional="false"/>
         <attribute name="partyId" type="String" mode="IN" optional="false"/>
-        <attribute name="roleTypeId" type="String" mode="IN" optional="false"/>        
+        <attribute name="roleTypeId" type="String" mode="IN" optional="false"/>
     </service>
-    
+
     <!-- Product Store Services -->
     <service name="createProductStore" engine="simple"
             location="org/ofbiz/product/store/ProductStoreServices.xml" invoke="createProductStore">
         <description>Create a Product Store</description>
         <auto-attributes entity-name="ProductStore" include="nonpk" mode="IN" optional="true"/>
         <auto-attributes entity-name="ProductStore" include="pk" mode="OUT" optional="false"/>
-        <override name="storeName" optional="false"/>        
-    </service> 
+        <override name="storeName" optional="false"/>
+    </service>
     <service name="updateProductStore" engine="simple"
             location="org/ofbiz/product/store/ProductStoreServices.xml" invoke="updateProductStore">
         <description>Update a Product Store</description>
         <auto-attributes entity-name="ProductStore" include="pk" mode="IN" optional="false"/>
         <auto-attributes entity-name="ProductStore" include="nonpk" mode="IN" optional="true"/>
         <override name="storeName" optional="false"/>
-    </service>          
+    </service>
 
     <!-- Product Store Role Services -->
     <service name="createProductStoreRole" default-entity-name="ProductStoreRole" engine="simple"
@@ -1161,8 +1254,8 @@
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
-    
-    <!-- Product Store Catalog Services -->    
+
+    <!-- Product Store Catalog Services -->
     <service name="createProductStoreCatalog" default-entity-name="ProductStoreCatalog" engine="simple"
             location="org/ofbiz/product/store/ProductStoreServices.xml" invoke="createProductStoreCatalog" auth="true">
         <description>Create ProductStoreCatalog</description>
@@ -1181,7 +1274,7 @@
         <description>Delete ProductStoreCatalog</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
-    
+
     <service name="createProductStorePaymentSetting" default-entity-name="ProductStorePaymentSetting" engine="simple"
             location="org/ofbiz/product/store/ProductStoreServices.xml" invoke="createProductStorePaymentSetting" auth="true">
         <description>Create ProductStorePaymentSetting</description>
@@ -1197,11 +1290,11 @@
     <service name="deleteProductStorePaymentSetting" default-entity-name="ProductStorePaymentSetting" engine="simple"
             location="org/ofbiz/product/store/ProductStoreServices.xml" invoke="deleteProductStorePaymentSetting" auth="true">
         <description>Delete ProductStorePaymentSetting</description>
-        <auto-attributes include="pk" mode="IN" optional="false"/>        
-    </service> 
-        
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+
     <service name="createProductStoreEmailSetting" engine="simple"
-            location="org/ofbiz/product/store/ProductStoreServices.xml" invoke="createProductStoreEmail" auth="true">        
+            location="org/ofbiz/product/store/ProductStoreServices.xml" invoke="createProductStoreEmail" auth="true">
         <description>Create a Product Store Email Setting</description>
         <auto-attributes entity-name="ProductStoreEmailSetting" include="all" mode="IN" optional="false"/>
         <override name="ccAddress" optional="true"/>
@@ -1209,7 +1302,7 @@
         <override name="contentType" optional="true"/>
     </service>
     <service name="updateProductStoreEmailSetting" engine="simple"
-            location="org/ofbiz/product/store/ProductStoreServices.xml" invoke="updateProductStoreEmail" auth="true">        
+            location="org/ofbiz/product/store/ProductStoreServices.xml" invoke="updateProductStoreEmail" auth="true">
         <description>Update a Product Store Email Setting</description>
         <auto-attributes entity-name="ProductStoreEmailSetting" include="all" mode="IN" optional="false"/>
         <override name="ccAddress" optional="true"/>
@@ -1217,27 +1310,27 @@
         <override name="contentType" optional="true"/>
     </service>
     <service name="removeProductStoreEmailSetting" engine="simple"
-            location="org/ofbiz/product/store/ProductStoreServices.xml" invoke="removeProductStoreEmail" auth="true">        
+            location="org/ofbiz/product/store/ProductStoreServices.xml" invoke="removeProductStoreEmail" auth="true">
         <description>Remove a Product Store Email Setting</description>
         <auto-attributes entity-name="ProductStoreEmailSetting" include="pk" mode="IN" optional="false"/>
     </service>
-    
+
     <service name="createProductStoreShipMeth" default-entity-name="ProductStoreShipmentMeth" engine="simple"
-            location="org/ofbiz/product/store/ProductStoreServices.xml" invoke="createProductStoreShipMeth" auth="true">        
+            location="org/ofbiz/product/store/ProductStoreServices.xml" invoke="createProductStoreShipMeth" auth="true">
         <description>Create a Product Store Email Setting</description>
-        <auto-attributes include="all" mode="IN" optional="false"/>        
+        <auto-attributes include="all" mode="IN" optional="false"/>
     </service>
     <service name="updateProductStoreShipMeth" default-entity-name="ProductStoreShipmentMeth" engine="simple"
-            location="org/ofbiz/product/store/ProductStoreServices.xml" invoke="updateProductStoreShipMeth" auth="true">        
+            location="org/ofbiz/product/store/ProductStoreServices.xml" invoke="updateProductStoreShipMeth" auth="true">
         <description>Update a Product Store Email Setting</description>
-        <auto-attributes include="all" mode="IN" optional="false"/>        
+        <auto-attributes include="all" mode="IN" optional="false"/>
     </service>
     <service name="removeProductStoreShipMeth" default-entity-name="ProductStoreShipmentMeth" engine="simple"
-            location="org/ofbiz/product/store/ProductStoreServices.xml" invoke="removeProductStoreShipMeth" auth="true">        
+            location="org/ofbiz/product/store/ProductStoreServices.xml" invoke="removeProductStoreShipMeth" auth="true">
         <description>Remove a Product Store Email Setting</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
-    </service>               
-            	
+    </service>
+
     <!-- Product View Services -->
     <service name="getProduct" engine="java"
             location="org.ofbiz.product.product.ProductServices" invoke="prodFindProduct">

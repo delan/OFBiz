@@ -1,39 +1,39 @@
 <#--
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
- *  Permission is hereby granted, free of charge, to any person obtaining a 
- *  copy of this software and associated documentation files (the "Software"), 
- *  to deal in the Software without restriction, including without limitation 
- *  the rights to use, copy, modify, merge, publish, distribute, sublicense, 
- *  and/or sell copies of the Software, and to permit persons to whom the 
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
  *  Software is furnished to do so, subject to the following conditions:
  *
- *  The above copyright notice and this permission notice shall be included 
+ *  The above copyright notice and this permission notice shall be included
  *  in all copies or substantial portions of the Software.
  *
- *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
- *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
- *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
- *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Brad Steiner (bsteiner@thehungersite.com)
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Revision: 1.6 $
+ *@version    $Revision: 1.7 $
  *@since      2.2
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#if hasPermission>
 ${pages.get("/promo/PromoTabBar.ftl")}
-    
+
     <div class="head1">${uiLabelMap.ProductRules} <span class="head2">${uiLabelMap.CommonFor} <#if productPromo?exists>${(productPromo.promoName)?if_exists}</#if> [${uiLabelMap.CommonId}:${productPromoId?if_exists}]</span></div>
     <a href="<@ofbizUrl>/EditProductPromo</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewProductPromo}]</a>
     <br>
     <br>
-    <#if productPromoId?exists && productPromo?exists>        
+    <#if productPromoId?exists && productPromo?exists>
         <table border="1" width="100%" cellpadding="2" cellspacing="0">
         <tr>
             <td width="10%"><div class="tabletext"><b>${uiLabelMap.ProductRuleId}</b></div></td>
@@ -67,7 +67,7 @@ ${pages.get("/promo/PromoTabBar.ftl")}
             <td align="left" colspan="2">
                 <table border="1" width="100%" cellpadding="2" cellspacing="0">
                 <tr>
-                    <td width="5%"><div class="tabletext"><b>S${uiLabelMap.ProductSeqId}</b></div></td>
+                    <td width="5%"><div class="tabletext"><b>${uiLabelMap.ProductSeqId}</b></div></td>
                     <td width="85%"><div class="tabletext"><b>${uiLabelMap.ProductInputOperatorValue}</b></div></td>
                     <td width="10%"><div class="tabletext"><b>&nbsp;</b></div></td>
                 </tr>
@@ -127,7 +127,7 @@ ${pages.get("/promo/PromoTabBar.ftl")}
                             <input type=hidden name="productPromoId" value="${(productPromoRule.productPromoId)?if_exists}">
                             <input type=hidden name="productPromoRuleId" value="${(productPromoRule.productPromoRuleId)?if_exists}">
                             <span class="tabletext"><b>${uiLabelMap.CommonNew} :</b>&nbsp;</span>
-                            <input type=text size="5" name="productPromoCondSeqId" value="${maxCondSeqId}" class="inputBox">
+                            <#-- <input type=text size="5" name="productPromoCondSeqId" value="${maxCondSeqId?if_exists}" class="inputBox"> -->
                             <select name="inputParamEnumId" size=1 class="selectBox">
                                 <#list inputParamEnums as inputParamEnum>
                                     <option value="${(inputParamEnum.enumId)?if_exists}">${(inputParamEnum.description)?if_exists}</option>
@@ -152,7 +152,7 @@ ${pages.get("/promo/PromoTabBar.ftl")}
                 <table border="1" width="100%" cellpadding="2" cellspacing="0">
                 <tr>
                     <td width="5%"><div class="tabletext"><b>${uiLabelMap.ProductSeqId}</b></div></td>
-                    <td width="85%"><div class="tabletext"><b>${uiLabelMap.ProductActionTypeOrderAdjustmentTypeQuantityItemPartyLimit}</b></div></td>
+                    <td width="85%"><div class="tabletext"><b>${uiLabelMap.ProductActionUpdateFields}</b></div></td>
                     <td width="10%"><div class="tabletext"><b>&nbsp;</b></div></td>
                 </tr>
                 <#assign maxActionSeqId = 1>
@@ -163,7 +163,7 @@ ${pages.get("/promo/PromoTabBar.ftl")}
                             <#assign curActionSeqId = Static["java.lang.Integer"].valueOf(productPromoAction.productPromoActionSeqId)>
                             <#if (curActionSeqId >= maxActionSeqId)>
                                 <#assign maxActionSeqId = curActionSeqId + 1>
-                            </#if>    
+                            </#if>
                         </#if>
                         <td><div class="tabletext"><b>${(productPromoAction.productPromoActionSeqId)?if_exists}</b></div></td>
                         <td align="left">
@@ -183,7 +183,8 @@ ${pages.get("/promo/PromoTabBar.ftl")}
                                         <option value="${(productPromoActionEnum.enumId)?if_exists}">${(productPromoActionEnum.description)?if_exists}</option>
                                     </#list>
                                 </select>
-                                <select name="orderAdjustmentTypeId" size=1 class="selectBox">
+                                <input type="hidden" name="orderAdjustmentTypeId" value="${(productPromoAction.orderAdjustmentTypeId)?if_exists}">
+                                <#-- <select name="orderAdjustmentTypeId" size=1 class="selectBox">
                                     <#if (productPromoAction.orderAdjustmentTypeId)?exists>
                                         <#assign orderAdjustmentType = productPromoAction.getRelatedOneCache("OrderAdjustmentType")>
                                         <option value="${(productPromoAction.orderAdjustmentTypeId)?if_exists}"><#if orderAdjustmentType?exists>${(orderAdjustmentType.description)?if_exists}<#else>[${(productPromoAction.orderAdjustmentTypeId)?if_exists}]</#if></option>
@@ -194,8 +195,9 @@ ${pages.get("/promo/PromoTabBar.ftl")}
                                     <#list orderAdjustmentTypes as orderAdjustmentType>
                                     <option value="${(orderAdjustmentType.orderAdjustmentTypeId)?if_exists}">${(orderAdjustmentType.description)?if_exists}</option>
                                     </#list>
-                                </select>
+                                </select> -->
                                 <input type=text size="5" name="quantity" value="${(productPromoAction.quantity)?if_exists}" class="inputBox">
+                                <input type=text size="5" name="amount" value="${(productPromoAction.amount)?if_exists}" class="inputBox">
                                 <input type=text size="15" name="productId" value="${(productPromoAction.productId)?if_exists}" class="inputBox">
                                 <input type=text size="10" name="partyId" value="${(productPromoAction.partyId)?if_exists}" class="inputBox">
                                 <INPUT type=submit value="${uiLabelMap.CommonUpdate}" style="font-size: x-small;">
@@ -209,22 +211,24 @@ ${pages.get("/promo/PromoTabBar.ftl")}
                 </#list>
                 <tr>
                     <td align="left" colspan="3">
-                        <FORM method=POST action="<@ofbizUrl>/createProductPromoAction</@ofbizUrl>">
-                            <input type=hidden name="productPromoId" value="${(productPromoRule.productPromoId)?if_exists}">
-                            <input type=hidden name="productPromoRuleId" value="${(productPromoRule.productPromoRuleId)?if_exists}">
+                        <FORM method="POST" action="<@ofbizUrl>/createProductPromoAction</@ofbizUrl>">
+                            <input type="hidden" name="productPromoId" value="${(productPromoRule.productPromoId)?if_exists}">
+                            <input type="hidden" name="productPromoRuleId" value="${(productPromoRule.productPromoRuleId)?if_exists}">
                             <span class="tabletext"><b>${uiLabelMap.CommonNew}:</b>&nbsp;</span>
-                            <input type=text size="5" name="productPromoActionSeqId" value="${maxActionSeqId?if_exists}" class="inputBox">
+                            <#-- <input type=text size="5" name="productPromoActionSeqId" value="${maxActionSeqId?if_exists}" class="inputBox"> -->
                             <select name="productPromoActionEnumId" size=1 class="selectBox">
                                 <#list productPromoActionEnums as productPromoActionEnum>
                                 <option value="${(productPromoActionEnum.enumId)?if_exists}">${(productPromoActionEnum.description)?if_exists}</option>
                                 </#list>
                             </select>
-                            <select name="orderAdjustmentTypeId" size=1 class="selectBox">
+                            <input type="hidden" name="orderAdjustmentTypeId" value="PROMOTION_ADJUSTMENT">
+                            <#-- <select name="orderAdjustmentTypeId" size=1 class="selectBox">
                                 <#list orderAdjustmentTypes as orderAdjustmentType>
                                 <option value="${(orderAdjustmentType.orderAdjustmentTypeId)?if_exists}">${(orderAdjustmentType.description)?if_exists}</option>
                                 </#list>
-                            </select>
+                            </select> -->
                             <input type=text size="5" name="quantity" class="inputBox">
+                            <input type=text size="5" name="amount" class="inputBox">
                             <input type=text size="15" name="productId" class="inputBox">
                             <input type=text size="10" name="partyId" class="inputBox">
                             <INPUT type=submit value="${uiLabelMap.CommonCreate}" style="font-size: x-small;">
@@ -238,11 +242,11 @@ ${pages.get("/promo/PromoTabBar.ftl")}
         </tr>
         </#list>
         </table>
-        
+
         <br>
         <form method="POST" action="<@ofbizUrl>/createProductPromoRule</@ofbizUrl>" style="margin: 0;">
         <input type="hidden" name="productPromoId" value="${productPromoId?if_exists}">
-        
+
         <div class="head2">${uiLabelMap.ProductAddPromoRule} :</div>
         <br>
         ${uiLabelMap.CommonId} : <input type=text size="20" class="inputBox" name="productPromoRuleId">
